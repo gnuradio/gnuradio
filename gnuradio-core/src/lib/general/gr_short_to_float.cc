@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_short_to_float_sptr
 gr_make_short_to_float ()
 {
-  return gr_short_to_float_sptr (new gr_short_to_float ());
+  return gnuradio::get_initial_sptr(new gr_short_to_float ());
 }
 
 gr_short_to_float::gr_short_to_float ()

@@ -189,7 +189,7 @@ gr_udp_source_sptr
 gr_make_udp_source (size_t itemsize, const char *ipaddr, 
 		    unsigned short port, int payload_size, bool eof, bool wait)
 {
-  return gr_udp_source_sptr (new gr_udp_source (itemsize, ipaddr, 
+  return gnuradio::get_initial_sptr(new gr_udp_source (itemsize, ipaddr, 
 						port, payload_size, eof, wait));
 }
 

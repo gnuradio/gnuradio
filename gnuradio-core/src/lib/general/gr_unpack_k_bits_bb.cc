@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 
 gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (unsigned k)
 {
-  return gr_unpack_k_bits_bb_sptr (new gr_unpack_k_bits_bb (k));
+  return gnuradio::get_initial_sptr(new gr_unpack_k_bits_bb (k));
 }
 
 

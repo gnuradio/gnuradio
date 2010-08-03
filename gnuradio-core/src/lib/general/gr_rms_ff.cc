@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_rms_ff_sptr
 gr_make_rms_ff(double alpha)
 {
-  return gr_rms_ff_sptr(new gr_rms_ff(alpha));
+  return gnuradio::get_initial_sptr(new gr_rms_ff(alpha));
 }
 
 gr_rms_ff::gr_rms_ff (double alpha)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -44,7 +44,7 @@ static const int        DEC = ATSC_DATA_SEGMENT_LENGTH; // nominal decimation fa
 atsc_field_sync_demux_sptr
 atsc_make_field_sync_demux()
 {
-  return atsc_field_sync_demux_sptr(new atsc_field_sync_demux());
+  return gnuradio::get_initial_sptr(new atsc_field_sync_demux());
 }
 
 atsc_field_sync_demux::atsc_field_sync_demux()

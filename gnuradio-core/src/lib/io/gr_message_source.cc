@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -40,14 +40,14 @@
 gr_message_source_sptr
 gr_make_message_source(size_t itemsize, int msgq_limit)
 {
-  return gr_message_source_sptr(new gr_message_source(itemsize, msgq_limit));
+  return gnuradio::get_initial_sptr(new gr_message_source(itemsize, msgq_limit));
 }
 
 // public constructor that takes existing message queue
 gr_message_source_sptr
 gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq)
 {
-  return gr_message_source_sptr(new gr_message_source(itemsize, msgq));
+  return gnuradio::get_initial_sptr(new gr_message_source(itemsize, msgq));
 }
 
 gr_message_source::gr_message_source (size_t itemsize, int msgq_limit)

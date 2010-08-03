@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -69,7 +69,7 @@ gr_framer_sink_1::enter_have_header(int payload_len, int whitener_offset)
 gr_framer_sink_1_sptr
 gr_make_framer_sink_1(gr_msg_queue_sptr target_queue)
 {
-  return gr_framer_sink_1_sptr(new gr_framer_sink_1(target_queue));
+  return gnuradio::get_initial_sptr(new gr_framer_sink_1(target_queue));
 }
 
 

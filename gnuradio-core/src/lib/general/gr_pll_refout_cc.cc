@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,7 +37,7 @@
 gr_pll_refout_cc_sptr
 gr_make_pll_refout_cc (float alpha, float beta, float max_freq, float min_freq)
 {
-  return gr_pll_refout_cc_sptr (new gr_pll_refout_cc (alpha, beta, max_freq, min_freq));
+  return gnuradio::get_initial_sptr(new gr_pll_refout_cc (alpha, beta, max_freq, min_freq));
 }
 
 gr_pll_refout_cc::gr_pll_refout_cc (float alpha, float beta, float max_freq, float min_freq)

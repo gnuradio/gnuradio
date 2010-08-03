@@ -30,7 +30,7 @@
 gr_additive_scrambler_bb_sptr
 gr_make_additive_scrambler_bb(int mask, int seed, int len, int count)
 {
-  return gr_additive_scrambler_bb_sptr(new gr_additive_scrambler_bb(mask, seed, len, count));
+  return gnuradio::get_initial_sptr(new gr_additive_scrambler_bb(mask, seed, len, count));
 }
 
 gr_additive_scrambler_bb::gr_additive_scrambler_bb(int mask, int seed, int len, int count)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_interleaved_short_to_complex_sptr
 gr_make_interleaved_short_to_complex ()
 {
-  return gr_interleaved_short_to_complex_sptr (new gr_interleaved_short_to_complex ());
+  return gnuradio::get_initial_sptr(new gr_interleaved_short_to_complex ());
 }
 
 gr_interleaved_short_to_complex::gr_interleaved_short_to_complex ()

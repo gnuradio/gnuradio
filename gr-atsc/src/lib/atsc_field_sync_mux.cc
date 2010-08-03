@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@
 atsc_field_sync_mux_sptr
 atsc_make_field_sync_mux()
 {
-  return atsc_field_sync_mux_sptr(new atsc_field_sync_mux());
+  return gnuradio::get_initial_sptr(new atsc_field_sync_mux());
 }
 
 atsc_field_sync_mux::atsc_field_sync_mux()

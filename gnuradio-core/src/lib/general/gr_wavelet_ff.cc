@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -38,7 +38,7 @@ gr_make_wavelet_ff(int size,
 		   int order,
 		   bool forward)
 {
-  return gr_wavelet_ff_sptr(new gr_wavelet_ff(size,
+  return gnuradio::get_initial_sptr(new gr_wavelet_ff(size,
 					      order,
 					      forward));
 }

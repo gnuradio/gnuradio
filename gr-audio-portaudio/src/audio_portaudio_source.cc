@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -119,7 +119,7 @@ portaudio_source_callback (const void *inputBuffer,
 audio_portaudio_source_sptr
 audio_portaudio_make_source (int sampling_rate, const std::string dev, bool ok_to_block)
 {
-  return audio_portaudio_source_sptr (new audio_portaudio_source (sampling_rate,
+  return gnuradio::get_initial_sptr(new audio_portaudio_source (sampling_rate,
 								  dev, ok_to_block));
 }
 

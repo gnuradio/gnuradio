@@ -614,7 +614,7 @@ audio_osx_make_source (int sampling_freq,
 		       int channel_config,
 		       int max_sample_count)
 {
-  return audio_osx_source_sptr (new audio_osx_source (sampling_freq,
+  return gnuradio::get_initial_sptr(new audio_osx_source (sampling_freq,
 						      device_name,
 						      do_block,
 						      channel_config,

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_diff_encoder_bb_sptr
 gr_make_diff_encoder_bb (unsigned int modulus)
 {
-  return gr_diff_encoder_bb_sptr (new gr_diff_encoder_bb(modulus));
+  return gnuradio::get_initial_sptr(new gr_diff_encoder_bb(modulus));
 }
 
 gr_diff_encoder_bb::gr_diff_encoder_bb (unsigned int modulus)

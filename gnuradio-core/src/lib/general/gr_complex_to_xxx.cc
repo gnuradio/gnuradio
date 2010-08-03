@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@
 gr_complex_to_float_sptr
 gr_make_complex_to_float (unsigned int vlen)
 {
-  return gr_complex_to_float_sptr (new gr_complex_to_float (vlen));
+  return gnuradio::get_initial_sptr(new gr_complex_to_float (vlen));
 }
 
 gr_complex_to_float::gr_complex_to_float (unsigned int vlen)
@@ -81,7 +81,7 @@ gr_complex_to_float::work (int noutput_items,
 gr_complex_to_real_sptr
 gr_make_complex_to_real (unsigned int vlen)
 {
-  return gr_complex_to_real_sptr (new gr_complex_to_real (vlen));
+  return gnuradio::get_initial_sptr(new gr_complex_to_real (vlen));
 }
 
 gr_complex_to_real::gr_complex_to_real (unsigned int vlen)
@@ -112,7 +112,7 @@ gr_complex_to_real::work (int noutput_items,
 gr_complex_to_imag_sptr
 gr_make_complex_to_imag (unsigned int vlen)
 {
-  return gr_complex_to_imag_sptr (new gr_complex_to_imag (vlen));
+  return gnuradio::get_initial_sptr(new gr_complex_to_imag (vlen));
 }
 
 gr_complex_to_imag::gr_complex_to_imag (unsigned int vlen)
@@ -143,7 +143,7 @@ gr_complex_to_imag::work (int noutput_items,
 gr_complex_to_mag_sptr
 gr_make_complex_to_mag (unsigned int vlen)
 {
-  return gr_complex_to_mag_sptr (new gr_complex_to_mag (vlen));
+  return gnuradio::get_initial_sptr(new gr_complex_to_mag (vlen));
 }
 
 gr_complex_to_mag::gr_complex_to_mag (unsigned int vlen)
@@ -174,7 +174,7 @@ gr_complex_to_mag::work (int noutput_items,
 gr_complex_to_mag_squared_sptr
 gr_make_complex_to_mag_squared (unsigned int vlen)
 {
-  return gr_complex_to_mag_squared_sptr (new gr_complex_to_mag_squared (vlen));
+  return gnuradio::get_initial_sptr(new gr_complex_to_mag_squared (vlen));
 }
 
 gr_complex_to_mag_squared::gr_complex_to_mag_squared (unsigned int vlen)
@@ -207,7 +207,7 @@ gr_complex_to_mag_squared::work (int noutput_items,
 gr_complex_to_arg_sptr
 gr_make_complex_to_arg (unsigned int vlen)
 {
-  return gr_complex_to_arg_sptr (new gr_complex_to_arg (vlen));
+  return gnuradio::get_initial_sptr(new gr_complex_to_arg (vlen));
 }
 
 gr_complex_to_arg::gr_complex_to_arg (unsigned int vlen)

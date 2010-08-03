@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_repeat_sptr 
 gr_make_repeat(size_t itemsize, int interp)
 {
-  return gr_repeat_sptr(new gr_repeat(itemsize, interp));
+  return gnuradio::get_initial_sptr(new gr_repeat(itemsize, interp));
 }
 
 gr_repeat::gr_repeat(size_t itemsize, int interp)  

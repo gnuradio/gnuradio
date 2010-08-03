@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -39,7 +39,7 @@
 howto_square2_ff_sptr 
 howto_make_square2_ff ()
 {
-  return howto_square2_ff_sptr (new howto_square2_ff ());
+  return gnuradio::get_initial_sptr(new howto_square2_ff ());
 }
 
 /*

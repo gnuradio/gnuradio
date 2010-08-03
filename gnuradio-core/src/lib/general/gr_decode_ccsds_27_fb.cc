@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 gr_decode_ccsds_27_fb_sptr 
 gr_make_decode_ccsds_27_fb()
 {
-  return gr_decode_ccsds_27_fb_sptr(new gr_decode_ccsds_27_fb());
+  return gnuradio::get_initial_sptr(new gr_decode_ccsds_27_fb());
 }
 
 gr_decode_ccsds_27_fb::gr_decode_ccsds_27_fb()

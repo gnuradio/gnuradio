@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -74,7 +74,7 @@ gr_file_source::gr_file_source (size_t itemsize, const char *filename, bool repe
 gr_file_source_sptr
 gr_make_file_source (size_t itemsize, const char *filename, bool repeat)
 {
-  return gr_file_source_sptr (new gr_file_source (itemsize, filename, repeat));
+  return gnuradio::get_initial_sptr(new gr_file_source (itemsize, filename, repeat));
 }
 
 gr_file_source::~gr_file_source ()

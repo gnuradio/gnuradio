@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -46,7 +46,7 @@ gr_file_descriptor_sink::gr_file_descriptor_sink (size_t itemsize, int fd)
 gr_file_descriptor_sink_sptr
 gr_make_file_descriptor_sink (size_t itemsize, int fd)
 {
-  return gr_file_descriptor_sink_sptr (new gr_file_descriptor_sink (itemsize, fd));
+  return gnuradio::get_initial_sptr(new gr_file_descriptor_sink (itemsize, fd));
 }
 
 gr_file_descriptor_sink::~gr_file_descriptor_sink ()

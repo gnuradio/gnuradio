@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,7 +32,7 @@
 // Public constructor
 gr_fractional_interpolator_ff_sptr gr_make_fractional_interpolator_ff(float phase_shift, float interp_ratio)
 {
-  return gr_fractional_interpolator_ff_sptr(new gr_fractional_interpolator_ff(phase_shift, interp_ratio));
+  return gnuradio::get_initial_sptr(new gr_fractional_interpolator_ff(phase_shift, interp_ratio));
 }
 
 gr_fractional_interpolator_ff::gr_fractional_interpolator_ff(float phase_shift, float interp_ratio)

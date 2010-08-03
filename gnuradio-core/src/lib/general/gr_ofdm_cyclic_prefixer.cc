@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_ofdm_cyclic_prefixer_sptr
 gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size)
 {
-  return gr_ofdm_cyclic_prefixer_sptr (new gr_ofdm_cyclic_prefixer (input_size, output_size));
+  return gnuradio::get_initial_sptr(new gr_ofdm_cyclic_prefixer (input_size, output_size));
 }
 
 gr_ofdm_cyclic_prefixer::gr_ofdm_cyclic_prefixer (size_t input_size, size_t output_size)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -46,7 +46,7 @@ static float get_clean_num(float num){
 gr_histo_sink_f_sptr
 gr_make_histo_sink_f (gr_msg_queue_sptr msgq)
 {
-  return gr_histo_sink_f_sptr (new gr_histo_sink_f (msgq));
+  return gnuradio::get_initial_sptr(new gr_histo_sink_f (msgq));
 }
 
 gr_histo_sink_f::gr_histo_sink_f (gr_msg_queue_sptr msgq)

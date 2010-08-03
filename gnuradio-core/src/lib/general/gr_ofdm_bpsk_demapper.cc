@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_ofdm_bpsk_demapper_sptr
 gr_make_ofdm_bpsk_demapper (unsigned int occupied_carriers)
 {
-  return gr_ofdm_bpsk_demapper_sptr (new gr_ofdm_bpsk_demapper (occupied_carriers));
+  return gnuradio::get_initial_sptr(new gr_ofdm_bpsk_demapper (occupied_carriers));
 }
 
 gr_ofdm_bpsk_demapper::gr_ofdm_bpsk_demapper (unsigned occupied_carriers)

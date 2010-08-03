@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -52,7 +52,7 @@
 gr_wavfile_source_sptr
 gr_make_wavfile_source (const char *filename, bool repeat)
 {
-  return gr_wavfile_source_sptr (new gr_wavfile_source (filename, repeat));
+  return gnuradio::get_initial_sptr(new gr_wavfile_source (filename, repeat));
 }
 
 

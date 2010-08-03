@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -68,7 +68,7 @@ audio_alsa_source_sptr
 audio_alsa_make_source (int sampling_rate, const std::string dev,
 			bool ok_to_block)
 {
-  return audio_alsa_source_sptr (new audio_alsa_source (sampling_rate, dev,
+  return gnuradio::get_initial_sptr(new audio_alsa_source (sampling_rate, dev,
 							ok_to_block));
 }
 

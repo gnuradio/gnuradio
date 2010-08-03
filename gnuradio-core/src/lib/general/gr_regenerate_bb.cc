@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_regenerate_bb_sptr
 gr_make_regenerate_bb (int period, unsigned int max_regen)
 {
-  return gr_regenerate_bb_sptr (new gr_regenerate_bb (period, max_regen));
+  return gnuradio::get_initial_sptr(new gr_regenerate_bb (period, max_regen));
 }
 
 gr_regenerate_bb::gr_regenerate_bb (int period, unsigned int max_regen)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -40,7 +40,7 @@ qtgui_make_sink_f (int fftsize, int wintype,
 		   bool use_openGL,
 		   QWidget *parent)
 {
-  return qtgui_sink_f_sptr (new qtgui_sink_f (fftsize, wintype,
+  return gnuradio::get_initial_sptr(new qtgui_sink_f (fftsize, wintype,
 					      fc, bw, name,
 					      plotfreq, plotwaterfall,
 					      plotwaterfall3d, plottime,

@@ -39,7 +39,7 @@ gr_pfb_clock_sync_fff_sptr gr_make_pfb_clock_sync_fff (double sps, float gain,
 						       float init_phase,
 						       float max_rate_deviation)
 {
-  return gr_pfb_clock_sync_fff_sptr (new gr_pfb_clock_sync_fff (sps, gain, taps,
+  return gnuradio::get_initial_sptr(new gr_pfb_clock_sync_fff (sps, gain, taps,
 								filter_size,
 								init_phase,
 								max_rate_deviation));

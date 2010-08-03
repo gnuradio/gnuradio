@@ -267,7 +267,7 @@ audio_osx_make_sink (int sampling_freq,
 		     int channel_config,
 		     int max_sample_count)
 {
-  return audio_osx_sink_sptr (new audio_osx_sink (sampling_freq,
+  return gnuradio::get_initial_sptr(new audio_osx_sink (sampling_freq,
 						  dev,
 						  do_block,
 						  channel_config,

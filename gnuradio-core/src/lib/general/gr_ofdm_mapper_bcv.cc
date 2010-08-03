@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,7 +34,7 @@ gr_ofdm_mapper_bcv_sptr
 gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned int msgq_limit, 
 			 unsigned int occupied_carriers, unsigned int fft_length)
 {
-  return gr_ofdm_mapper_bcv_sptr (new gr_ofdm_mapper_bcv (constellation, msgq_limit, 
+  return gnuradio::get_initial_sptr(new gr_ofdm_mapper_bcv (constellation, msgq_limit, 
 							  occupied_carriers, fft_length));
 }
 

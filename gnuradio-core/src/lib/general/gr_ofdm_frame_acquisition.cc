@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -40,7 +40,7 @@ gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft
 				const std::vector<gr_complex> &known_symbol,
 				unsigned int max_fft_shift_len)
 {
-  return gr_ofdm_frame_acquisition_sptr (new gr_ofdm_frame_acquisition (occupied_carriers, fft_length, cplen,
+  return gnuradio::get_initial_sptr(new gr_ofdm_frame_acquisition (occupied_carriers, fft_length, cplen,
 									known_symbol, max_fft_shift_len));
 }
 

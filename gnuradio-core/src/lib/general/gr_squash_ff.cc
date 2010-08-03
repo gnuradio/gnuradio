@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,7 @@ gr_squash_ff_sptr
 gr_make_squash_ff(const std::vector<float> &igrid,
 		  const std::vector<float> &ogrid)
 {
-  return gr_squash_ff_sptr(new gr_squash_ff(igrid, ogrid));
+  return gnuradio::get_initial_sptr(new gr_squash_ff(igrid, ogrid));
 }
 
 gr_squash_ff::gr_squash_ff(const std::vector<float> &igrid,

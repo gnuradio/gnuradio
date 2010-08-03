@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 @SPTR_NAME@ 
 gr_make_@BASE_NAME@ (int length, @O_TYPE@ scale, int max_iter)
 {
-  return @SPTR_NAME@ (new @NAME@ (length, scale, max_iter));
+  return gnuradio::get_initial_sptr (new @NAME@ (length, scale, max_iter));
 }
 
 @NAME@::@NAME@ (int length, @O_TYPE@ scale, int max_iter)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@
 gr_cpfsk_bc_sptr 
 gr_make_cpfsk_bc(float k, float ampl, int samples_per_sym)
 {
-  return gr_cpfsk_bc_sptr(new gr_cpfsk_bc(k, ampl, samples_per_sym));
+  return gnuradio::get_initial_sptr(new gr_cpfsk_bc(k, ampl, samples_per_sym));
 }
 
 gr_cpfsk_bc::gr_cpfsk_bc(float k, float ampl, int samples_per_sym)

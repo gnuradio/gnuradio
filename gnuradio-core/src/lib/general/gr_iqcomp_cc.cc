@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_iqcomp_cc_sptr
 gr_make_iqcomp_cc (float mu)
 {
-  return gr_iqcomp_cc_sptr (new gr_iqcomp_cc (mu));
+  return gnuradio::get_initial_sptr(new gr_iqcomp_cc (mu));
 }
 
 gr_iqcomp_cc::gr_iqcomp_cc (float mu)

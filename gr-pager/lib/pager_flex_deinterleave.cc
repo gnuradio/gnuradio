@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 
 pager_flex_deinterleave_sptr pager_make_flex_deinterleave()
 {
-    return pager_flex_deinterleave_sptr(new pager_flex_deinterleave());
+    return gnuradio::get_initial_sptr(new pager_flex_deinterleave());
 }
 
 pager_flex_deinterleave::pager_flex_deinterleave() :

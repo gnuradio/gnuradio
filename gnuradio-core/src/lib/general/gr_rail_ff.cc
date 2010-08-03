@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_rail_ff_sptr
 gr_make_rail_ff(float lo, float hi)
 {
-  return gr_rail_ff_sptr(new gr_rail_ff(lo, hi));
+  return gnuradio::get_initial_sptr(new gr_rail_ff(lo, hi));
 }
 
 gr_rail_ff::gr_rail_ff(float lo, float hi)

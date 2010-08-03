@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 gr_filter_delay_fc_sptr 
 gr_make_filter_delay_fc (const std::vector<float> &taps) 
 {
-  return gr_filter_delay_fc_sptr (new gr_filter_delay_fc (taps));
+  return gnuradio::get_initial_sptr(new gr_filter_delay_fc (taps));
 }
 
 gr_filter_delay_fc::gr_filter_delay_fc (const std::vector<float> &taps)

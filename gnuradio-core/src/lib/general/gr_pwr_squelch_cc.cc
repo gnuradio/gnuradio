@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,7 +29,7 @@
 gr_pwr_squelch_cc_sptr
 gr_make_pwr_squelch_cc(double threshold, double alpha, int ramp, bool gate)
 {
-  return gr_pwr_squelch_cc_sptr(new gr_pwr_squelch_cc(threshold, alpha, ramp, gate));
+  return gnuradio::get_initial_sptr(new gr_pwr_squelch_cc(threshold, alpha, ramp, gate));
 }
 
 gr_pwr_squelch_cc::gr_pwr_squelch_cc(double threshold, double alpha, int ramp, bool gate) : 

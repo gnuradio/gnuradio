@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@ static const int INTR = ATSC_MPEG_PKT_LENGTH;
 atsc_pad_sptr
 atsc_make_pad()
 {
-  return atsc_pad_sptr(new atsc_pad());
+  return gnuradio::get_initial_sptr(new atsc_pad());
 }
 
 atsc_pad::atsc_pad()

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 atsc_randomizer_sptr
 atsc_make_randomizer()
 {
-  return atsc_randomizer_sptr(new atsc_randomizer());
+  return gnuradio::get_initial_sptr(new atsc_randomizer());
 }
 
 atsc_randomizer::atsc_randomizer()

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -36,7 +36,7 @@ gr_test_sptr gr_make_test (const std::string &name,
         unsigned int history,unsigned int output_multiple,double relative_rate,
         bool fixed_rate,gr_consume_type_t cons_type, gr_produce_type_t prod_type)
 {
-  return gr_test_sptr (new gr_test (name, min_inputs,max_inputs,sizeof_input_item,
+  return gnuradio::get_initial_sptr(new gr_test (name, min_inputs,max_inputs,sizeof_input_item,
              min_outputs,max_outputs,sizeof_output_item,
              history,output_multiple,relative_rate,fixed_rate,cons_type, prod_type));
 }

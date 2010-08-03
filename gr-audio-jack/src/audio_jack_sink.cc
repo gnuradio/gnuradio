@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -87,7 +87,7 @@ jack_sink_process (jack_nframes_t nframes, void *arg)
 audio_jack_sink_sptr
 audio_jack_make_sink(int sampling_rate, const std::string dev, bool ok_to_block)
 {
-  return audio_jack_sink_sptr (new audio_jack_sink (sampling_rate, dev,
+  return gnuradio::get_initial_sptr(new audio_jack_sink (sampling_rate, dev,
 						    ok_to_block));
 }
 
