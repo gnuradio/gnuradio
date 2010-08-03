@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -70,7 +70,7 @@ audio_alsa_make_sink (int sampling_rate,
 		      const std::string dev,
 		      bool ok_to_block)
 {
-  return audio_alsa_sink_sptr (new audio_alsa_sink (sampling_rate, dev,
+  return gnuradio::get_initial_sptr(new audio_alsa_sink (sampling_rate, dev,
 						    ok_to_block));
 }
 

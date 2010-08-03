@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@ gr_ofdm_insert_preamble_sptr
 gr_make_ofdm_insert_preamble(int fft_length,
 			     const std::vector<std::vector<gr_complex> > &preamble)
 {
-  return gr_ofdm_insert_preamble_sptr(new gr_ofdm_insert_preamble(fft_length,
+  return gnuradio::get_initial_sptr(new gr_ofdm_insert_preamble(fft_length,
 								  preamble));
 }
 

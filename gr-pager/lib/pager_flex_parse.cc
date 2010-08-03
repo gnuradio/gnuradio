@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2006,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 
 pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq)
 {
-    return pager_flex_parse_sptr(new pager_flex_parse(queue, freq));
+    return gnuradio::get_initial_sptr(new pager_flex_parse(queue, freq));
 }
 
 pager_flex_parse::pager_flex_parse(gr_msg_queue_sptr queue, float freq) :

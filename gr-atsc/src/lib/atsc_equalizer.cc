@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,7 +34,7 @@
 atsc_equalizer_sptr
 atsc_make_equalizer()
 {
-  return atsc_equalizer_sptr(new atsc_equalizer());
+  return gnuradio::get_initial_sptr(new atsc_equalizer());
 }
 
 // had atsc_equalizer(atsci_equalizer *equalizer)

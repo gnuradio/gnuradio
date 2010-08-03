@@ -36,7 +36,7 @@ gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 							 const std::vector<float> &taps,
 							 float oversample_rate)
 {
-  return gr_pfb_channelizer_ccf_sptr (new gr_pfb_channelizer_ccf (numchans, taps,
+  return gnuradio::get_initial_sptr(new gr_pfb_channelizer_ccf (numchans, taps,
 								  oversample_rate));
 }
 

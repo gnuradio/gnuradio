@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -47,7 +47,7 @@ default_device_name ()
 audio_oss_source_sptr
 audio_oss_make_source (int sampling_rate, const std::string dev, bool ok_to_block)
 {
-  return audio_oss_source_sptr (new audio_oss_source (sampling_rate, dev, ok_to_block));
+  return gnuradio::get_initial_sptr(new audio_oss_source (sampling_rate, dev, ok_to_block));
 }
 
 

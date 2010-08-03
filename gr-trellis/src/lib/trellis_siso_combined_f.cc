@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -45,7 +45,7 @@ trellis_make_siso_combined_f (
     const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE)
 {
-  return trellis_siso_combined_f_sptr (new trellis_siso_combined_f (FSM,K,S0,SK,POSTI,POSTO,SISO_TYPE,D,TABLE,TYPE));
+  return gnuradio::get_initial_sptr(new trellis_siso_combined_f (FSM,K,S0,SK,POSTI,POSTO,SISO_TYPE,D,TABLE,TYPE));
 }
 
 trellis_siso_combined_f::trellis_siso_combined_f (

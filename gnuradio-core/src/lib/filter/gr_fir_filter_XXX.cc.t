@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -36,7 +36,7 @@
 
 @SPTR_NAME@ gr_make_@BASE_NAME@ (int decimation, const std::vector<@TAP_TYPE@> &taps)
 {
-  return @SPTR_NAME@ (new @NAME@ (decimation, taps));
+  return gnuradio::get_initial_sptr (new @NAME@ (decimation, taps));
 }
 
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -118,7 +118,7 @@ video_sdl_sink_uc::~video_sdl_sink_uc ()
 video_sdl_sink_uc_sptr
 video_sdl_make_sink_uc (double framerate,int width, int height,unsigned int format,int dst_width,int dst_height)
 {
-  return video_sdl_sink_uc_sptr (new video_sdl_sink_uc (framerate, width, height,format,dst_width,dst_height));
+  return gnuradio::get_initial_sptr(new video_sdl_sink_uc (framerate, width, height,format,dst_width,dst_height));
 }
 
 void

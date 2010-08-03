@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@ gr_iir_filter_ffd_sptr
 gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
 			const std::vector<double> &fbtaps) throw (std::invalid_argument)
 {
-  return gr_iir_filter_ffd_sptr (new gr_iir_filter_ffd (fftaps, fbtaps));
+  return gnuradio::get_initial_sptr(new gr_iir_filter_ffd (fftaps, fbtaps));
 }
 
 gr_iir_filter_ffd::gr_iir_filter_ffd (const std::vector<double> &fftaps,

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_keep_one_in_n_sptr
 gr_make_keep_one_in_n (size_t item_size, int n)
 {
-  return gr_keep_one_in_n_sptr (new gr_keep_one_in_n (item_size, n));
+  return gnuradio::get_initial_sptr(new gr_keep_one_in_n (item_size, n));
 }
 
 gr_keep_one_in_n::gr_keep_one_in_n (size_t item_size, int n)

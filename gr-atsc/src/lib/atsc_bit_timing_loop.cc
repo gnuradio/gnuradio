@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,7 +37,7 @@ double ratio_of_rx_clock_to_symbol_freq = input_rate / ATSC_SYMBOL_RATE;
 atsc_bit_timing_loop_sptr
 atsc_make_bit_timing_loop()
 {
-  return atsc_bit_timing_loop_sptr(new atsc_bit_timing_loop());
+  return gnuradio::get_initial_sptr(new atsc_bit_timing_loop());
 }
 
 

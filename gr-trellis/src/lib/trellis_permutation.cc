@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 trellis_permutation_sptr 
 trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT)
 {
-  return trellis_permutation_sptr (new trellis_permutation (K,TABLE,SYMS_PER_BLOCK,NBYTES_INOUT));
+  return gnuradio::get_initial_sptr(new trellis_permutation (K,TABLE,SYMS_PER_BLOCK,NBYTES_INOUT));
 }
 
 trellis_permutation::trellis_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -38,7 +38,7 @@ gr_make_costas_loop_cc (float alpha, float beta,
 			int order
 			) throw (std::invalid_argument)
 {
-  return gr_costas_loop_cc_sptr (new gr_costas_loop_cc (alpha, beta,
+  return gnuradio::get_initial_sptr(new gr_costas_loop_cc (alpha, beta,
 							max_freq, min_freq,
 							order));
 }

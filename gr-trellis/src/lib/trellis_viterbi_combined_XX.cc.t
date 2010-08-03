@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -43,7 +43,7 @@ trellis_make_@BASE_NAME@ (
     const std::vector<@I_TYPE@> &TABLE,
     trellis_metric_type_t TYPE)
 {
-  return @SPTR_NAME@ (new @NAME@ (FSM,K,S0,SK,D,TABLE,TYPE));
+  return gnuradio::get_initial_sptr (new @NAME@ (FSM,K,S0,SK,D,TABLE,TYPE));
 }
 
 @NAME@::@NAME@ (

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2006,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,7 +28,7 @@
 
 pager_slicer_fb_sptr pager_make_slicer_fb(float alpha)
 {
-    return pager_slicer_fb_sptr(new pager_slicer_fb(alpha));
+    return gnuradio::get_initial_sptr(new pager_slicer_fb(alpha));
 }
 
 pager_slicer_fb::pager_slicer_fb(float alpha) :

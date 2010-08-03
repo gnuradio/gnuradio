@@ -34,7 +34,7 @@ gr_make_ofdm_sampler (unsigned int fft_length,
 		      unsigned int symbol_length,
 		      unsigned int timeout)
 {
-  return gr_ofdm_sampler_sptr (new gr_ofdm_sampler (fft_length, symbol_length, timeout));
+  return gnuradio::get_initial_sptr(new gr_ofdm_sampler (fft_length, symbol_length, timeout));
 }
 
 gr_ofdm_sampler::gr_ofdm_sampler (unsigned int fft_length, 

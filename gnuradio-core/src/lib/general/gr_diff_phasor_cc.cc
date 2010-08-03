@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_diff_phasor_cc_sptr
 gr_make_diff_phasor_cc ()
 {
-  return gr_diff_phasor_cc_sptr (new gr_diff_phasor_cc());
+  return gnuradio::get_initial_sptr(new gr_diff_phasor_cc());
 }
 
 gr_diff_phasor_cc::gr_diff_phasor_cc ()

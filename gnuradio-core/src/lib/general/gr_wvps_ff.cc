@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -39,7 +39,7 @@ ceil_log2(int k)
 gr_wvps_ff_sptr
 gr_make_wvps_ff(int ilen)
 {
-  return gr_wvps_ff_sptr(new gr_wvps_ff(ilen));
+  return gnuradio::get_initial_sptr(new gr_wvps_ff(ilen));
 }
 
 gr_wvps_ff::gr_wvps_ff(int ilen)

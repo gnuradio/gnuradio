@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,7 +42,7 @@ gr_lms_dfe_ff_sptr
 gr_make_lms_dfe_ff (float lambda_ff, float lambda_fb, 
 		    unsigned int num_fftaps, unsigned int num_fbtaps)
 {
-  return gr_lms_dfe_ff_sptr (new gr_lms_dfe_ff (lambda_ff,lambda_fb,num_fftaps,num_fbtaps));
+  return gnuradio::get_initial_sptr(new gr_lms_dfe_ff (lambda_ff,lambda_fb,num_fftaps,num_fbtaps));
 }
 
 gr_lms_dfe_ff::gr_lms_dfe_ff (float lambda_ff, float lambda_fb , 

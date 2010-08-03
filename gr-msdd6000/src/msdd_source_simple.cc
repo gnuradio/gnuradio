@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 msdd_source_simple_sptr
 msdd_make_source_simple (const char *src, unsigned short port_src) 
 {
-  return msdd_source_simple_sptr (new msdd_source_simple ( src, port_src)); 
+  return gnuradio::get_initial_sptr(new msdd_source_simple ( src, port_src)); 
 }
 
 

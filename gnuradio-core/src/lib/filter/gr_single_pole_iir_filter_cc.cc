@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 gr_single_pole_iir_filter_cc_sptr 
 gr_make_single_pole_iir_filter_cc (double alpha, unsigned int vlen)
 {
-  return gr_single_pole_iir_filter_cc_sptr(new gr_single_pole_iir_filter_cc(alpha, vlen));
+  return gnuradio::get_initial_sptr(new gr_single_pole_iir_filter_cc(alpha, vlen));
 }
 
 gr_single_pole_iir_filter_cc::gr_single_pole_iir_filter_cc (

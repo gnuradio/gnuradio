@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_scrambler_bb_sptr
 gr_make_scrambler_bb(int mask, int seed, int len)
 {
-  return gr_scrambler_bb_sptr(new gr_scrambler_bb(mask, seed, len));
+  return gnuradio::get_initial_sptr(new gr_scrambler_bb(mask, seed, len));
 }
 
 gr_scrambler_bb::gr_scrambler_bb(int mask, int seed, int len)

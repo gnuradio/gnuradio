@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@
 gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp, 
 							   const std::vector<float> &taps)
 {
-  return gr_pfb_interpolator_ccf_sptr (new gr_pfb_interpolator_ccf (interp, taps));
+  return gnuradio::get_initial_sptr(new gr_pfb_interpolator_ccf (interp, taps));
 }
 
 

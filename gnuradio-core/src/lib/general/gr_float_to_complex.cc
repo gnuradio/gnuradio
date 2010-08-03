@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004, 2009 Free Software Foundation, Inc.
+ * Copyright 2004, 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_float_to_complex_sptr
 gr_make_float_to_complex (size_t vlen)
 {
-  return gr_float_to_complex_sptr (new gr_float_to_complex (vlen));
+  return gnuradio::get_initial_sptr(new gr_float_to_complex (vlen));
 }
 
 gr_float_to_complex::gr_float_to_complex (size_t vlen)

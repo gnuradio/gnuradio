@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_pn_correlator_cc_sptr
 gr_make_pn_correlator_cc(int degree, int mask, int seed)
 {
-  return gr_pn_correlator_cc_sptr (new gr_pn_correlator_cc(degree, mask, seed));
+  return gnuradio::get_initial_sptr(new gr_pn_correlator_cc(degree, mask, seed));
 }
 
 gr_pn_correlator_cc::gr_pn_correlator_cc(int degree, int mask, int seed)

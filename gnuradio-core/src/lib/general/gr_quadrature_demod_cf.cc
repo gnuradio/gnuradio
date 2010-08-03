@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005 Free Software Foundation, Inc.
+ * Copyright 2004,2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -40,7 +40,7 @@ gr_quadrature_demod_cf::gr_quadrature_demod_cf (float gain)
 gr_quadrature_demod_cf_sptr
 gr_make_quadrature_demod_cf (float gain)
 {
-  return gr_quadrature_demod_cf_sptr (new gr_quadrature_demod_cf (gain));
+  return gnuradio::get_initial_sptr(new gr_quadrature_demod_cf (gain));
 }
 
 int

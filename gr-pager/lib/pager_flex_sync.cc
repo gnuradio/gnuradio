@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@
 
 pager_flex_sync_sptr pager_make_flex_sync()
 {
-    return pager_flex_sync_sptr(new pager_flex_sync());
+    return gnuradio::get_initial_sptr(new pager_flex_sync());
 }
 
 // FLEX sync block takes input from sliced baseband stream [0-3] at specified 

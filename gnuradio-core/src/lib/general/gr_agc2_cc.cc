@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@ gr_agc2_cc_sptr
 gr_make_agc2_cc (float attack_rate, float decay_rate, float reference, 
 		 float gain, float max_gain)
 {
-  return gr_agc2_cc_sptr (new gr_agc2_cc (attack_rate, decay_rate, reference, gain, max_gain));
+  return gnuradio::get_initial_sptr(new gr_agc2_cc (attack_rate, decay_rate, reference, gain, max_gain));
 }
 
 gr_agc2_cc::gr_agc2_cc (float attack_rate, float decay_rate, float reference, 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 
 gr_frequency_modulator_fc_sptr gr_make_frequency_modulator_fc (double sensitivity)
 {
-  return gr_frequency_modulator_fc_sptr (new gr_frequency_modulator_fc (sensitivity));
+  return gnuradio::get_initial_sptr(new gr_frequency_modulator_fc (sensitivity));
 }
 
 gr_frequency_modulator_fc::gr_frequency_modulator_fc (double sensitivity)

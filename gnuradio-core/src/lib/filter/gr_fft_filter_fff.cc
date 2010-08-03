@@ -37,7 +37,7 @@
 
 gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps)
 {
-  return gr_fft_filter_fff_sptr (new gr_fft_filter_fff (decimation, taps));
+  return gnuradio::get_initial_sptr(new gr_fft_filter_fff (decimation, taps));
 }
 
 

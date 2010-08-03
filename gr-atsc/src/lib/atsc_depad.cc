@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 atsc_depad_sptr
 atsc_make_depad()
 {
-  return atsc_depad_sptr(new atsc_depad());
+  return gnuradio::get_initial_sptr(new atsc_depad());
 }
 
 atsc_depad::atsc_depad()

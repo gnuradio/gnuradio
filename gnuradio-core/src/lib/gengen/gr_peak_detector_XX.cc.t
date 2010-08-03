@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,7 @@ gr_make_@BASE_NAME@ (float threshold_factor_rise,
 		     float threshold_factor_fall,
 		     int look_ahead, float alpha)
 {
-  return @SPTR_NAME@ (new @NAME@ (threshold_factor_rise, 
+  return gnuradio::get_initial_sptr (new @NAME@ (threshold_factor_rise, 
 				  threshold_factor_fall,
 				  look_ahead, alpha));
 }

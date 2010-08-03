@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_map_bb_sptr
 gr_make_map_bb (const std::vector<int> &map)
 {
-  return gr_map_bb_sptr (new gr_map_bb (map));
+  return gnuradio::get_initial_sptr(new gr_map_bb (map));
 }
 
 gr_map_bb::gr_map_bb (const std::vector<int> &map)

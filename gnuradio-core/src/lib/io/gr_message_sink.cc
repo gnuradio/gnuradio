@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -40,7 +40,7 @@
 gr_message_sink_sptr 
 gr_make_message_sink (size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block)
 {
-  return gr_message_sink_sptr(new gr_message_sink(itemsize, msgq, dont_block));
+  return gnuradio::get_initial_sptr(new gr_message_sink(itemsize, msgq, dont_block));
 }
 
 gr_message_sink::gr_message_sink (size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block)

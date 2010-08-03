@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_stream_to_streams_sptr
 gr_make_stream_to_streams (size_t item_size, size_t nstreams)
 {
-  return gr_stream_to_streams_sptr (new gr_stream_to_streams (item_size, nstreams));
+  return gnuradio::get_initial_sptr(new gr_stream_to_streams (item_size, nstreams));
 }
 
 gr_stream_to_streams::gr_stream_to_streams (size_t item_size, size_t nstreams)

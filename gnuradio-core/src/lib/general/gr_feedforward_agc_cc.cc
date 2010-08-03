@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_feedforward_agc_cc_sptr
 gr_make_feedforward_agc_cc(int nsamples, float reference)
 {
-  return gr_feedforward_agc_cc_sptr(new gr_feedforward_agc_cc (nsamples, reference));
+  return gnuradio::get_initial_sptr(new gr_feedforward_agc_cc (nsamples, reference));
 }
 
 gr_feedforward_agc_cc::gr_feedforward_agc_cc (int nsamples, float reference)

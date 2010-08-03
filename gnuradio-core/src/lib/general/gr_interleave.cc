@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 gr_interleave_sptr
 gr_make_interleave (size_t itemsize)
 {
-  return gr_interleave_sptr (new gr_interleave (itemsize));
+  return gnuradio::get_initial_sptr(new gr_interleave (itemsize));
 }
 
 gr_interleave::gr_interleave (size_t itemsize)

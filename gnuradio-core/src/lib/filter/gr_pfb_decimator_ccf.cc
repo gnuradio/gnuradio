@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -36,7 +36,7 @@ gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim,
 						     const std::vector<float> &taps,
 						     unsigned int channel)
 {
-  return gr_pfb_decimator_ccf_sptr (new gr_pfb_decimator_ccf (decim, taps, channel));
+  return gnuradio::get_initial_sptr(new gr_pfb_decimator_ccf (decim, taps, channel));
 }
 
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,7 @@ static const int PAD_VAL = 0xAA;
 gr_fake_channel_encoder_pp_sptr
 gr_make_fake_channel_encoder_pp(int input_vlen, int output_vlen)
 {
-  return gr_fake_channel_encoder_pp_sptr(new gr_fake_channel_encoder_pp(input_vlen,
+  return gnuradio::get_initial_sptr(new gr_fake_channel_encoder_pp(input_vlen,
 									output_vlen));
 }
 
@@ -77,7 +77,7 @@ gr_fake_channel_encoder_pp::work (int noutput_items,
 gr_fake_channel_decoder_pp_sptr
 gr_make_fake_channel_decoder_pp(int input_vlen, int output_vlen)
 {
-  return gr_fake_channel_decoder_pp_sptr(new gr_fake_channel_decoder_pp(input_vlen,
+  return gnuradio::get_initial_sptr(new gr_fake_channel_decoder_pp(input_vlen,
 									output_vlen));
 }
 

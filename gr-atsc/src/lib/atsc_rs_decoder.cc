@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 atsc_rs_decoder_sptr
 atsc_make_rs_decoder()
 {
-  return atsc_rs_decoder_sptr(new atsc_rs_decoder());
+  return gnuradio::get_initial_sptr(new atsc_rs_decoder());
 }
 
 atsc_rs_decoder::atsc_rs_decoder()

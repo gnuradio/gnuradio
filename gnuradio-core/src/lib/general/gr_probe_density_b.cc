@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 gr_probe_density_b_sptr 
 gr_make_probe_density_b(double alpha)
 {
-  return gr_probe_density_b_sptr(new gr_probe_density_b(alpha));
+  return gnuradio::get_initial_sptr(new gr_probe_density_b(alpha));
 }
 
 gr_probe_density_b::gr_probe_density_b(double alpha)
