@@ -39,7 +39,7 @@ namespace gnuradio {
   detail::sptr_magic::create_and_stash_initial_sptr(gr_hier_block2 *p)
   {
     gr_basic_block_sptr sptr(p);
-    gruel::scoped_lock guard();
+    gruel::scoped_lock guard(s_mutex);
     s_map.insert(sptr_map::value_type(static_cast<gr_basic_block *>(p), sptr));
   }
 
@@ -60,7 +60,7 @@ namespace gnuradio {
      * p is a subclass of gr_hier_block2, thus we've already created the shared pointer
      * and stashed it away.  Fish it out and return it.
      */
-    gruel::scoped_lock guard();
+    gruel::scoped_lock guard(s_mutex);
     sptr_map::iterator pos = s_map.find(static_cast<gr_basic_block *>(p));
     if (pos == s_map.end())
       throw std::invalid_argument("gr_sptr_magic: invalid pointer!");
