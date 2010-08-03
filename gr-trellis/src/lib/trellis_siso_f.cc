@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,7 +42,7 @@ trellis_make_siso_f (
     bool POSTO,
     trellis_siso_type_t SISO_TYPE)
 {
-  return trellis_siso_f_sptr (new trellis_siso_f (FSM,K,S0,SK,POSTI,POSTO,SISO_TYPE));
+  return gnuradio::get_initial_sptr(new trellis_siso_f (FSM,K,S0,SK,POSTI,POSTO,SISO_TYPE));
 }
 
 trellis_siso_f::trellis_siso_f (

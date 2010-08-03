@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_stretch_ff_sptr
 gr_make_stretch_ff(float lo, size_t vlen)
 {
-  return gr_stretch_ff_sptr(new gr_stretch_ff(lo, vlen));
+  return gnuradio::get_initial_sptr(new gr_stretch_ff(lo, vlen));
 }
 
 gr_stretch_ff::gr_stretch_ff(float lo, size_t vlen)

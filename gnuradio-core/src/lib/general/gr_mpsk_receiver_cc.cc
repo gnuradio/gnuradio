@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006,2007 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2007,2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -46,7 +46,7 @@ gr_make_mpsk_receiver_cc(unsigned int M, float theta,
 			 float mu, float gain_mu, 
 			 float omega, float gain_omega, float omega_rel)
 {
-  return gr_mpsk_receiver_cc_sptr (new gr_mpsk_receiver_cc (M, theta, 
+  return gnuradio::get_initial_sptr(new gr_mpsk_receiver_cc (M, theta, 
 							    alpha, beta,
 							    fmin, fmax,
 							    mu, gain_mu, 

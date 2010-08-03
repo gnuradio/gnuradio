@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,7 @@
 gr_fmdet_cf_sptr
 gr_make_fmdet_cf (float samplerate, float freq_low, float freq_high, float scl)
 {
-  return gr_fmdet_cf_sptr (new gr_fmdet_cf (samplerate, freq_low, freq_high, scl));
+  return gnuradio::get_initial_sptr(new gr_fmdet_cf (samplerate, freq_low, freq_high, scl));
 }
 
 gr_fmdet_cf::gr_fmdet_cf (float samplerate, float freq_low, float freq_high, float scl)

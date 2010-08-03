@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 gr_check_counting_s_sptr
 gr_make_check_counting_s (bool do_32bit)
 {
-  return gr_check_counting_s_sptr (new gr_check_counting_s (do_32bit));
+  return gnuradio::get_initial_sptr(new gr_check_counting_s (do_32bit));
 }
 
 gr_check_counting_s::gr_check_counting_s (bool do_32bit)

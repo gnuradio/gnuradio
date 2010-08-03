@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -57,7 +57,7 @@ gr_nanosleep(struct timespec *ts)
 gr_throttle_sptr
 gr_make_throttle(size_t itemsize, double samples_per_sec)
 {
-  return gr_throttle_sptr(new gr_throttle(itemsize, samples_per_sec));
+  return gnuradio::get_initial_sptr(new gr_throttle(itemsize, samples_per_sec));
 }
 
 gr_throttle::gr_throttle(size_t itemsize, double samples_per_sec)

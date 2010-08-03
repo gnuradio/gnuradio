@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_simple_squelch_cc_sptr
 gr_make_simple_squelch_cc(double threshold_db, double alpha)
 {
-  return gr_simple_squelch_cc_sptr(new gr_simple_squelch_cc(threshold_db, alpha));
+  return gnuradio::get_initial_sptr(new gr_simple_squelch_cc(threshold_db, alpha));
 }
 
 gr_simple_squelch_cc::gr_simple_squelch_cc (double threshold_db, double alpha)

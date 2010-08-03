@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006,2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -58,7 +58,7 @@ gr_make_wavfile_sink(const char *filename,
 		     unsigned int sample_rate,
 		     int bits_per_sample)
 {
-  return gr_wavfile_sink_sptr (new gr_wavfile_sink (filename,
+  return gnuradio::get_initial_sptr(new gr_wavfile_sink (filename,
 						    n_channels,
 						    sample_rate,
 						    bits_per_sample));

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@ gr_peak_detector2_fb_sptr
 gr_make_peak_detector2_fb (float threshold_factor_rise,
 			   int look_ahead, float alpha)
 {
-  return gr_peak_detector2_fb_sptr (new gr_peak_detector2_fb (threshold_factor_rise, 
+  return gnuradio::get_initial_sptr(new gr_peak_detector2_fb (threshold_factor_rise, 
 				  look_ahead, alpha));
 }
 

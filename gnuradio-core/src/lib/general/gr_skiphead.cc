@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2007 Free Software Foundation, Inc.
+ * Copyright 2005,2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -38,7 +38,7 @@ gr_skiphead::gr_skiphead (size_t itemsize, size_t nitems_to_skip)
 gr_skiphead_sptr
 gr_make_skiphead (size_t itemsize, size_t nitems_to_skip)
 {
-  return gr_skiphead_sptr (new gr_skiphead (itemsize, nitems_to_skip));
+  return gnuradio::get_initial_sptr(new gr_skiphead (itemsize, nitems_to_skip));
 }
 
 int

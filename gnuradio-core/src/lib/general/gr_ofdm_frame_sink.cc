@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -184,7 +184,7 @@ gr_make_ofdm_frame_sink(const std::vector<gr_complex> &sym_position,
 			gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
 			float phase_gain, float freq_gain)
 {
-  return gr_ofdm_frame_sink_sptr(new gr_ofdm_frame_sink(sym_position, sym_value_out,
+  return gnuradio::get_initial_sptr(new gr_ofdm_frame_sink(sym_position, sym_value_out,
 							target_queue, occupied_carriers,
 							phase_gain, freq_gain));
 }

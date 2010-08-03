@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_agc_ff_sptr
 gr_make_agc_ff (float rate, float reference, float gain, float max_gain)
 {
-  return gr_agc_ff_sptr (new gr_agc_ff (rate, reference, gain, max_gain));
+  return gnuradio::get_initial_sptr(new gr_agc_ff (rate, reference, gain, max_gain));
 }
 
 gr_agc_ff::gr_agc_ff (float rate, float reference, float gain, float max_gain)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,7 +34,7 @@ extern "C"{
 gsm_fr_decode_ps_sptr
 gsm_fr_make_decode_ps ()
 {
-  return gsm_fr_decode_ps_sptr (new gsm_fr_decode_ps ());
+  return gnuradio::get_initial_sptr(new gsm_fr_decode_ps ());
 }
 
 gsm_fr_decode_ps::gsm_fr_decode_ps ()

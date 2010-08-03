@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,7 +42,7 @@ cvsd_make_decode_bs (short min_step, short max_step, double step_decay,
 		     double accum_decay,  int K, int J,
 		     short pos_accum_max, short neg_accum_max)
 {
-  return cvsd_decode_bs_sptr (new cvsd_decode_bs (min_step, max_step,
+  return gnuradio::get_initial_sptr(new cvsd_decode_bs (min_step, max_step,
 						  step_decay, accum_decay, K, J,
 						  pos_accum_max, neg_accum_max));
 }

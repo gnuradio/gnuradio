@@ -34,7 +34,7 @@ gr_pfb_arb_resampler_ccf_sptr gr_make_pfb_arb_resampler_ccf (float rate,
 							     const std::vector<float> &taps,
 							     unsigned int filter_size)
 {
-  return gr_pfb_arb_resampler_ccf_sptr (new gr_pfb_arb_resampler_ccf (rate, taps,
+  return gnuradio::get_initial_sptr(new gr_pfb_arb_resampler_ccf (rate, taps,
 								      filter_size));
 }
 

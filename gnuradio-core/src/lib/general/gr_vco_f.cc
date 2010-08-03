@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_vco_f_sptr
 gr_make_vco_f(double sampling_rate, double sensitivity, double amplitude)
 {
-  return gr_vco_f_sptr(new gr_vco_f(sampling_rate, sensitivity, amplitude));
+  return gnuradio::get_initial_sptr(new gr_vco_f(sampling_rate, sensitivity, amplitude));
 }
 
 

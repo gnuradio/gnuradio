@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,7 @@
 atsc_fs_checker_sptr
 atsc_make_fs_checker()
 {
-  return atsc_fs_checker_sptr(new atsc_fs_checker());
+  return gnuradio::get_initial_sptr(new atsc_fs_checker());
 }
 
 atsc_fs_checker::atsc_fs_checker()

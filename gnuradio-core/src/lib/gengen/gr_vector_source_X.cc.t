@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -84,6 +84,6 @@ int
 @NAME@_sptr
 gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat, int vlen)
 {
-  return @NAME@_sptr (new @NAME@ (data, repeat, vlen));
+  return gnuradio::get_initial_sptr(new @NAME@ (data, repeat, vlen));
 }
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 gr_conjugate_cc_sptr
 gr_make_conjugate_cc ()
 {
-  return gr_conjugate_cc_sptr (new gr_conjugate_cc ());
+  return gnuradio::get_initial_sptr(new gr_conjugate_cc ());
 }
 
 gr_conjugate_cc::gr_conjugate_cc ()

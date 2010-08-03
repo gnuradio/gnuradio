@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_probe_avg_mag_sqrd_c_sptr
 gr_make_probe_avg_mag_sqrd_c(double threshold_db, double alpha)
 {
-  return gr_probe_avg_mag_sqrd_c_sptr(new gr_probe_avg_mag_sqrd_c(threshold_db, alpha));
+  return gnuradio::get_initial_sptr(new gr_probe_avg_mag_sqrd_c(threshold_db, alpha));
 }
 
 gr_probe_avg_mag_sqrd_c::gr_probe_avg_mag_sqrd_c (double threshold_db, double alpha)

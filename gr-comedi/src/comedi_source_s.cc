@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -49,7 +49,7 @@ default_device_name ()
 comedi_source_s_sptr
 comedi_make_source_s (int sampling_freq, const std::string dev)
 {
-  return comedi_source_s_sptr (new comedi_source_s (sampling_freq, dev));
+  return gnuradio::get_initial_sptr(new comedi_source_s (sampling_freq, dev));
 }
 
 comedi_source_s::comedi_source_s (int sampling_freq,

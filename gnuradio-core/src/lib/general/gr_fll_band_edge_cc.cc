@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -48,7 +48,7 @@ float sinc(float x)
 gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
 						   int filter_size, float gain_alpha, float gain_beta)
 {
-  return gr_fll_band_edge_cc_sptr (new gr_fll_band_edge_cc (samps_per_sym, rolloff,
+  return gnuradio::get_initial_sptr(new gr_fll_band_edge_cc (samps_per_sym, rolloff,
 							    filter_size, gain_alpha, gain_beta));
 }
 

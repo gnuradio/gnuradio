@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@ static const int BITS_PER_BYTE = 8;
 gr_bytes_to_syms_sptr 
 gr_make_bytes_to_syms ()
 {
-  return gr_bytes_to_syms_sptr (new gr_bytes_to_syms ());
+  return gnuradio::get_initial_sptr(new gr_bytes_to_syms ());
 }
 
 gr_bytes_to_syms::gr_bytes_to_syms ()

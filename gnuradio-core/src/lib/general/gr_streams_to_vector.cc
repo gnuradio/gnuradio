@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005 Free Software Foundation, Inc.
+ * Copyright 2004,2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_streams_to_vector_sptr
 gr_make_streams_to_vector (size_t item_size, size_t nstreams)
 {
-  return gr_streams_to_vector_sptr (new gr_streams_to_vector (item_size, nstreams));
+  return gnuradio::get_initial_sptr(new gr_streams_to_vector (item_size, nstreams));
 }
 
 gr_streams_to_vector::gr_streams_to_vector (size_t item_size, size_t nstreams)

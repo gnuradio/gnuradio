@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -47,7 +47,7 @@
 gr_make_@BASE_NAME@ (double sampling_freq, gr_waveform_t waveform,
 		     double frequency, double ampl, @TYPE@ offset)
 {
-  return @NAME@_sptr (new @NAME@ (sampling_freq, waveform, frequency, ampl, offset));
+  return gnuradio::get_initial_sptr(new @NAME@ (sampling_freq, waveform, frequency, ampl, offset));
 }
 
 int

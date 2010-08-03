@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@ extern "C"{
 gsm_fr_encode_sp_sptr
 gsm_fr_make_encode_sp ()
 {
-  return gsm_fr_encode_sp_sptr (new gsm_fr_encode_sp ());
+  return gnuradio::get_initial_sptr(new gsm_fr_encode_sp ());
 }
 
 gsm_fr_encode_sp::gsm_fr_encode_sp ()

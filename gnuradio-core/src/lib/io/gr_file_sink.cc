@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 gr_file_sink_sptr
 gr_make_file_sink (size_t itemsize, const char *filename)
 {
-  return gr_file_sink_sptr (new gr_file_sink (itemsize, filename));
+  return gnuradio::get_initial_sptr(new gr_file_sink (itemsize, filename));
 }
 
 gr_file_sink::gr_file_sink(size_t itemsize, const char *filename)

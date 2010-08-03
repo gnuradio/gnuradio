@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -38,7 +38,7 @@ static int max_tone_index = 37;
 gr_ctcss_squelch_ff_sptr
 gr_make_ctcss_squelch_ff(int rate, float freq, float level, int len, int ramp, bool gate)
 {
-  return gr_ctcss_squelch_ff_sptr(new gr_ctcss_squelch_ff(rate, freq, level, len, ramp, gate));
+  return gnuradio::get_initial_sptr(new gr_ctcss_squelch_ff(rate, freq, level, len, ramp, gate));
 }
 
 int gr_ctcss_squelch_ff::find_tone(float freq)

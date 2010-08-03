@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 gr_threshold_ff_sptr
 gr_make_threshold_ff (float lo, float hi, float initial_state)
 {
-  return gr_threshold_ff_sptr (new gr_threshold_ff (lo, hi, initial_state));
+  return gnuradio::get_initial_sptr(new gr_threshold_ff (lo, hi, initial_state));
 }
 
 gr_threshold_ff::gr_threshold_ff (float lo, float hi, float initial_state)

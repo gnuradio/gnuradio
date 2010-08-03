@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 atsc_derandomizer_sptr
 atsc_make_derandomizer()
 {
-  return atsc_derandomizer_sptr(new atsc_derandomizer());
+  return gnuradio::get_initial_sptr(new atsc_derandomizer());
 }
 
 atsc_derandomizer::atsc_derandomizer()

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@
 gr_fft_vcc_sptr
 gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift)
 {
-  return gr_fft_vcc_sptr (new gr_fft_vcc_fftw (fft_size, forward, window, shift));
+  return gnuradio::get_initial_sptr(new gr_fft_vcc_fftw (fft_size, forward, window, shift));
 }
 
 gr_fft_vcc_fftw::gr_fft_vcc_fftw (int fft_size, bool forward,

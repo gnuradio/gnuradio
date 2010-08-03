@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,7 @@ using std::endl;
 atsc_viterbi_decoder_sptr
 atsc_make_viterbi_decoder()
 {
-  return atsc_viterbi_decoder_sptr(new atsc_viterbi_decoder());
+  return gnuradio::get_initial_sptr(new atsc_viterbi_decoder());
 }
 
 atsc_viterbi_decoder::atsc_viterbi_decoder()

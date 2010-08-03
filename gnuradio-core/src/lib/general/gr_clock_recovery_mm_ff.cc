@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -37,7 +37,7 @@ gr_clock_recovery_mm_ff_sptr
 gr_make_clock_recovery_mm_ff(float omega, float gain_omega, float mu, float gain_mu,
 			     float omega_relative_limit)
 {
-  return gr_clock_recovery_mm_ff_sptr (new gr_clock_recovery_mm_ff (omega,
+  return gnuradio::get_initial_sptr(new gr_clock_recovery_mm_ff (omega,
 								    gain_omega, 
 								    mu,
 								    gain_mu,

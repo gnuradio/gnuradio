@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,7 +37,7 @@
 gr_correlate_access_code_bb_sptr
 gr_make_correlate_access_code_bb (const std::string &access_code, int threshold)
 {
-  return gr_correlate_access_code_bb_sptr (new gr_correlate_access_code_bb (access_code, threshold));
+  return gnuradio::get_initial_sptr(new gr_correlate_access_code_bb (access_code, threshold));
 }
 
 

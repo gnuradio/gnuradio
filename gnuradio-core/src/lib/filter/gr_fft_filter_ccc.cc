@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -45,7 +45,7 @@
 
 gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps)
 {
-  return gr_fft_filter_ccc_sptr (new gr_fft_filter_ccc (decimation, taps));
+  return gnuradio::get_initial_sptr(new gr_fft_filter_ccc (decimation, taps));
 }
 
 

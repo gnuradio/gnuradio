@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,7 +34,7 @@
 gr_stream_mux_sptr
 gr_make_stream_mux (size_t itemsize, const std::vector<int> &lengths)
 {
-  return gr_stream_mux_sptr (new gr_stream_mux (itemsize, lengths));
+  return gnuradio::get_initial_sptr(new gr_stream_mux (itemsize, lengths));
 }
 
 gr_stream_mux::gr_stream_mux (size_t itemsize, const std::vector<int> &lengths)

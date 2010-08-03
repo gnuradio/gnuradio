@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@
 gr_glfsr_source_f_sptr 
 gr_make_glfsr_source_f(int degree, bool repeat, int mask, int seed)
 {
-  return gr_glfsr_source_f_sptr(new gr_glfsr_source_f(degree, repeat, mask, seed));
+  return gnuradio::get_initial_sptr(new gr_glfsr_source_f(degree, repeat, mask, seed));
 }
 
 gr_glfsr_source_f::gr_glfsr_source_f(int degree, bool repeat, int mask, int seed)

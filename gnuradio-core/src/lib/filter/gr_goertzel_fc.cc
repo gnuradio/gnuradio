@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_goertzel_fc_sptr 
 gr_make_goertzel_fc(int rate, int len, float freq) 
 {
-  return gr_goertzel_fc_sptr (new gr_goertzel_fc(rate, len, freq));
+  return gnuradio::get_initial_sptr(new gr_goertzel_fc(rate, len, freq));
 }
 
 gr_goertzel_fc::gr_goertzel_fc(int rate, int len, float freq)

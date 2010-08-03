@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,7 +29,7 @@
 gr_probe_signal_f_sptr
 gr_make_probe_signal_f()
 {
-  return gr_probe_signal_f_sptr(new gr_probe_signal_f());
+  return gnuradio::get_initial_sptr(new gr_probe_signal_f());
 }
 
 gr_probe_signal_f::gr_probe_signal_f ()

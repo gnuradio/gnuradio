@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004,2005 Free Software Foundation, Inc.
+ * Copyright 2003,2004,2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 gr_oscope_sink_f_sptr
 gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_sptr msgq)
 {
-  return gr_oscope_sink_f_sptr (new gr_oscope_sink_f (sampling_rate, msgq));
+  return gnuradio::get_initial_sptr(new gr_oscope_sink_f (sampling_rate, msgq));
 }
 
 

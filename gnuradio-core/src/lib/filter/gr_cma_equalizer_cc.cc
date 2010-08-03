@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,7 +29,7 @@
 gr_cma_equalizer_cc_sptr
 gr_make_cma_equalizer_cc(int num_taps, float modulus, float mu)
 {
-  return gr_cma_equalizer_cc_sptr(new gr_cma_equalizer_cc(num_taps, modulus, mu));
+  return gnuradio::get_initial_sptr(new gr_cma_equalizer_cc(num_taps, modulus, mu));
 }
 
 gr_cma_equalizer_cc::gr_cma_equalizer_cc(int num_taps, float modulus, float mu)

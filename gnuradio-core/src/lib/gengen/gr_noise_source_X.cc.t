@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@
 @NAME@_sptr 
 gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed)
 {
-  return @NAME@_sptr (new @NAME@ (type, ampl, seed));
+  return gnuradio::get_initial_sptr(new @NAME@ (type, ampl, seed));
 }
 
 

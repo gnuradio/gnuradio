@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_delay_sptr
 gr_make_delay (size_t itemsize, int delay)
 {
-  return gr_delay_sptr (new gr_delay (itemsize, delay));
+  return gnuradio::get_initial_sptr(new gr_delay (itemsize, delay));
 }
 
 gr_delay::gr_delay (size_t itemsize, int delay)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_binary_slicer_fb_sptr
 gr_make_binary_slicer_fb ()
 {
-  return gr_binary_slicer_fb_sptr (new gr_binary_slicer_fb ());
+  return gnuradio::get_initial_sptr(new gr_binary_slicer_fb ());
 }
 
 gr_binary_slicer_fb::gr_binary_slicer_fb ()

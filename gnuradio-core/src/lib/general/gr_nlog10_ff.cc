@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_nlog10_ff_sptr
 gr_make_nlog10_ff (float n, unsigned vlen, float k)
 {
-  return gr_nlog10_ff_sptr(new gr_nlog10_ff(n, vlen, k));
+  return gnuradio::get_initial_sptr(new gr_nlog10_ff(n, vlen, k));
 }
 
 gr_nlog10_ff::gr_nlog10_ff(float n, unsigned vlen, float k)

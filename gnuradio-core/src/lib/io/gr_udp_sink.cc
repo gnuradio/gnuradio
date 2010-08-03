@@ -135,7 +135,7 @@ gr_make_udp_sink (size_t itemsize,
 		  const char *host, unsigned short port,
 		  int payload_size, bool eof)
 {
-  return gr_udp_sink_sptr (new gr_udp_sink (itemsize, 
+  return gnuradio::get_initial_sptr(new gr_udp_sink (itemsize, 
 					    host, port,
 					    payload_size, eof));
 }

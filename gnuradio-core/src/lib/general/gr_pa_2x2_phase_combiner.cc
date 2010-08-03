@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_pa_2x2_phase_combiner_sptr
 gr_make_pa_2x2_phase_combiner()
 {
-  return gr_pa_2x2_phase_combiner_sptr(new gr_pa_2x2_phase_combiner());
+  return gnuradio::get_initial_sptr(new gr_pa_2x2_phase_combiner());
 }
 
 gr_pa_2x2_phase_combiner::gr_pa_2x2_phase_combiner ()

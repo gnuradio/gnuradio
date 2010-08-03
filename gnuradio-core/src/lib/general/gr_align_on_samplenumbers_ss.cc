@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -48,7 +48,7 @@
 gr_align_on_samplenumbers_ss_sptr
 gr_make_align_on_samplenumbers_ss (int nchan, int align_interval)
 {
-  return gr_align_on_samplenumbers_ss_sptr (new gr_align_on_samplenumbers_ss (nchan,align_interval));
+  return gnuradio::get_initial_sptr(new gr_align_on_samplenumbers_ss (nchan,align_interval));
 }
 
 gr_align_on_samplenumbers_ss::gr_align_on_samplenumbers_ss (int nchan,int align_interval)

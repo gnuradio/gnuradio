@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,7 @@ gr_make_bin_statistics_f(unsigned int vlen,
 			size_t tune_delay,
 			size_t dwell_delay)
 {
-  return gr_bin_statistics_f_sptr(new gr_bin_statistics_f(vlen,
+  return gnuradio::get_initial_sptr(new gr_bin_statistics_f(vlen,
 							  msgq,
 							  tune,
 							  tune_delay,

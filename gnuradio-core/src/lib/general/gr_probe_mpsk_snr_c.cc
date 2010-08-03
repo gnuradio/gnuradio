@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 gr_probe_mpsk_snr_c_sptr
 gr_make_probe_mpsk_snr_c(double alpha)
 {
-  return gr_probe_mpsk_snr_c_sptr(new gr_probe_mpsk_snr_c(alpha));
+  return gnuradio::get_initial_sptr(new gr_probe_mpsk_snr_c(alpha));
 }
 
 gr_probe_mpsk_snr_c::gr_probe_mpsk_snr_c(double alpha)

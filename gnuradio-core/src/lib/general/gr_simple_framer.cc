@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,7 @@
 gr_simple_framer_sptr
 gr_make_simple_framer (int payload_bytesize)
 {
-  return gr_simple_framer_sptr (new gr_simple_framer (payload_bytesize));
+  return gnuradio::get_initial_sptr(new gr_simple_framer (payload_bytesize));
 }
 
 gr_simple_framer::gr_simple_framer (int payload_bytesize)

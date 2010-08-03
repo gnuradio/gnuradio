@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,7 @@
 atsc_ds_to_softds_sptr
 atsc_make_ds_to_softds()
 {
-  return atsc_ds_to_softds_sptr(new atsc_ds_to_softds());
+  return gnuradio::get_initial_sptr(new atsc_ds_to_softds());
 }
 
 atsc_ds_to_softds::atsc_ds_to_softds()

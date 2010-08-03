@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@
 gr_dpll_bb_sptr
 gr_make_dpll_bb (float period, float gain)
 {
-  return gr_dpll_bb_sptr (new gr_dpll_bb (period, gain));
+  return gnuradio::get_initial_sptr(new gr_dpll_bb (period, gain));
 }
 
 gr_dpll_bb::gr_dpll_bb (float period, float gain)

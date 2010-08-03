@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -128,9 +128,7 @@ audio_windows_source::~audio_windows_source ()
 audio_windows_source_sptr
 audio_windows_make_source (int sampling_freq, const std::string dev)
 {
-  return audio_windows_source_sptr (new
-				    audio_windows_source (sampling_freq,
-							  dev));
+  return gnuradio::get_initial_sptr (new audio_windows_source (sampling_freq, dev));
 }
 
 
