@@ -28,7 +28,6 @@
 #include <stdio.h>
 #include <cassert>
 #include <stdexcept>
-#include <gr_prefs.h>
 
 
 boost::mutex &
@@ -114,9 +113,7 @@ gri_fft_complex::gri_fft_complex (int fft_size, bool forward)
 			      reinterpret_cast<fftwf_complex *>(d_inbuf), 
 			      reinterpret_cast<fftwf_complex *>(d_outbuf),
 			      forward ? FFTW_FORWARD : FFTW_BACKWARD,
-			      gr_prefs::singleton()->get_bool("fftw", "estimate", false) == true ? FFTW_ESTIMATE
-			      : FFTW_MEASURE);
-
+			      FFTW_MEASURE);
 
   if (d_plan == NULL) {
     fprintf(stderr, "gri_fft_complex: error creating plan\n");
@@ -168,8 +165,7 @@ gri_fft_real_fwd::gri_fft_real_fwd (int fft_size)
   d_plan = fftwf_plan_dft_r2c_1d (fft_size,
 				  d_inbuf,
 				  reinterpret_cast<fftwf_complex *>(d_outbuf),
-				  gr_prefs::singleton()->get_bool("fftw", "estimate", false) == true ? FFTW_ESTIMATE
-			      : FFTW_MEASURE);
+				  FFTW_MEASURE);
 
   if (d_plan == NULL) {
     fprintf(stderr, "gri_fft_real_fwd: error creating plan\n");
