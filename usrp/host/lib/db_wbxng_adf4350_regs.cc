@@ -82,7 +82,7 @@ adf4350_regs::_reg_shift(uint32_t data, uint32_t shift){
 
 uint32_t
 adf4350_regs::compute_register(uint8_t addr){
-	uint32_t data;
+	uint32_t data = 0;
 	switch (addr){
 		case 0: data = (
 			_reg_shift(d_int, 15)                           |
