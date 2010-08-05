@@ -82,15 +82,17 @@ adf4350_regs::_reg_shift(uint32_t data, uint32_t shift){
 
 uint32_t
 adf4350_regs::compute_register(uint8_t addr){
-	uint32_t data;
+	uint32_t data = 0;
 	switch (addr){
 		case 0: data = (
 			_reg_shift(d_int, 15)                           |
-			_reg_shift(d_frac, 3)); break;
+			_reg_shift(d_frac, 3));
+		        break;
 		case 1: data = (
 			_reg_shift(d_prescaler, 27)                     |
 			_reg_shift(s_phase, 15)                         |
-			_reg_shift(d_mod, 3)); break;
+			_reg_shift(d_mod, 3));
+		        break;
 		case 2: data = (
 			_reg_shift(s_low_noise_and_low_spur_modes, 29)  |
 			_reg_shift(s_muxout, 26)                        |
@@ -104,11 +106,13 @@ adf4350_regs::compute_register(uint8_t addr){
 			_reg_shift(s_pd_polarity, 6)                    |
 			_reg_shift(s_power_down, 5)                     |
 			_reg_shift(s_cp_three_state, 4)                 |
-			_reg_shift(s_counter_reset, 3)); break;
+			_reg_shift(s_counter_reset, 3));
+		        break;
 		case 3: data = (
 			_reg_shift(s_csr, 18)                           |
 			_reg_shift(s_clk_div_mode, 15)                  |
-			_reg_shift(s_12_bit_clock_divider_value, 3)); break;
+			_reg_shift(s_12_bit_clock_divider_value, 3));
+		        break;
 		case 4: data = (
 			_reg_shift(s_feedback_select, 23)               |
 			_reg_shift(d_divider_select, 20)                |
@@ -119,9 +123,11 @@ adf4350_regs::compute_register(uint8_t addr){
 			_reg_shift(s_aux_output_enable, 8)              |
 			_reg_shift(s_aux_output_power, 6)               |
 			_reg_shift(s_rf_output_enable, 5)               |
-			_reg_shift(s_output_power, 3)); break;
+			_reg_shift(s_output_power, 3));
+		        break;
 		case 5: data = (
-			_reg_shift(s_ld_pin_mode, 22)); break;
+			_reg_shift(s_ld_pin_mode, 22));
+		        break;
 		default: return data;
 	}
 	/* return the data to write out to spi */
