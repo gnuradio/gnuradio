@@ -38,9 +38,9 @@ namespace usrp2 {
   struct usrp_table_entry {
     // inteface + normalized mac addr ("eth0:01:23:45:67:89:ab")
     std::string	key;
-    boost::weak_ptr<usrp2::usrp2>  value;
+    boost::weak_ptr<usrp2>  value;
 
-    usrp_table_entry(const std::string &_key, boost::weak_ptr<usrp2::usrp2> _value)
+    usrp_table_entry(const std::string &_key, boost::weak_ptr<usrp2> _value)
       : key(_key), value(_value) {}
   };
 
@@ -70,7 +70,7 @@ namespace usrp2 {
     // We don't have the USRP2 we're looking for
 
     // create a new one and stick it in the table.
-    usrp2::sptr r(new usrp2::usrp2(ifc, pr, rx_bufsize));
+    usrp2::sptr r(new usrp2(ifc, pr, rx_bufsize));
     usrp_table_entry t(key, r);
     s_table.push_back(t);
 
