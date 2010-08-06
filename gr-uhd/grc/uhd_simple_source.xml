@@ -10,6 +10,7 @@
 	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
 	<make>uhd.simple_source($args, uhd.io_type_t.$type.type)
+self.$(id).set_subdev_spec($sd_spec)
 self.$(id).set_samp_rate($samp_rate)
 self.$(id).set_center_freq($center_freq)
 self.$(id).set_gain($gain)
@@ -42,6 +43,13 @@ self.$(id).set_antenna($ant)
 		<key>args</key>
 		<value></value>
 		<type>string</type>
+	</param>
+	<param>
+		<name>Subdev Spec</name>
+		<key>sd_spec</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $sd_spec() then 'none' else 'part'#</hide>
 	</param>
 	<param>
 		<name>Samp Rate (Sps)</name>

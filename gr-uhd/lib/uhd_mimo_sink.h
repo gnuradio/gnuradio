@@ -44,6 +44,13 @@ public:
     uhd_mimo_sink(gr_io_signature_sptr sig);
 
     /*!
+     * Set the subdevice specification.
+     * \param chan the channel number from 0 to N-1
+     * \param spec the subdev spec markup string
+     */
+    virtual void set_subdev_spec(size_t chan, const std::string &spec) = 0;
+
+    /*!
      * Set the sample rate for the usrp device (across all mboards).
      * \param rate a new rate in Sps
      */

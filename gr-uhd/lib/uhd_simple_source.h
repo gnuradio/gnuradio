@@ -43,6 +43,12 @@ public:
     uhd_simple_source(gr_io_signature_sptr sig);
 
     /*!
+     * Set the subdevice specification.
+     * \param spec the subdev spec markup string
+     */
+    virtual void set_subdev_spec(const std::string &spec) = 0;
+
+    /*!
      * Set the sample rate for the usrp device.
      * \param rate a new rate in Sps
      */
