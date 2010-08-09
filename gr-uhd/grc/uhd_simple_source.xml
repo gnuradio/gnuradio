@@ -60,6 +60,7 @@ self.$(id).set_antenna($ant)
 	<param>
 		<name>Center Freq (Hz)</name>
 		<key>center_freq</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>

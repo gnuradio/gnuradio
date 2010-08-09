@@ -60,6 +60,7 @@ self.$(id).set_antenna($ant)
 	<param>
 		<name>Center Freq (Hz)</name>
 		<key>center_freq</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>
@@ -75,7 +76,7 @@ self.$(id).set_antenna($ant)
 		<hide>#if $ant() == '' then 'part' else 'none'#</hide>
 	</param>
 	<sink>
-		<name>out</name>
+		<name>in</name>
 		<type>$type</type>
 		<vlen>$type.vlen</vlen>
 	</sink>
