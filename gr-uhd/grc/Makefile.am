@@ -28,3 +28,13 @@ dist_grcblocks_DATA = \
 	uhd_mimo_sink.xml \
 	uhd_simple_source.xml \
 	uhd_simple_sink.xml
+
+########################################################################
+# Rules for generating the mimo source and sink blocks
+########################################################################
+BUILT_SOURCES = uhd_mimo_sink.xml uhd_mimo_source.xml
+EXTRA_DIST = $(srcdir)/gen_uhd_mimo_blocks_xml.py
+
+$(BUILT_SOURCES): $(srcdir)/gen_uhd_mimo_blocks_xml.py
+	@echo "generating $@..."
+	$(PYTHON) $< $@

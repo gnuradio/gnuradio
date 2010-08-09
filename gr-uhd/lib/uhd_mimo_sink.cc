@@ -53,6 +53,10 @@ public:
         //NOP
     }
 
+    void set_subdev_spec(size_t chan, const std::string &spec){
+        return _dev->set_tx_subdev_spec(chan, spec);
+    }
+
     void set_samp_rate_all(double rate){
         _dev->set_tx_rate_all(rate);
         do_samp_rate_error_message(rate, get_samp_rate_all(), "TX");

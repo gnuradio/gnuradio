@@ -51,6 +51,10 @@ public:
         set_streaming(false);
     }
 
+    void set_subdev_spec(const std::string &spec){
+        return _dev->set_rx_subdev_spec(spec);
+    }
+
     void set_samp_rate(double rate){
         _dev->set_rx_rate(rate);
         do_samp_rate_error_message(rate, get_samp_rate(), "RX");
