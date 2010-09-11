@@ -47,6 +47,7 @@ public:
   virtual bool is_symbol()  const { return false; }
   virtual bool is_number()  const { return false; }
   virtual bool is_integer() const { return false; }
+  virtual bool is_uint64()  const { return false; }
   virtual bool is_real()    const { return false; }
   virtual bool is_complex() const { return false; }
   virtual bool is_null()    const { return false; }
@@ -116,6 +117,19 @@ public:
   bool is_number()  const { return true; }
   bool is_integer() const { return true; }
   long value() const { return d_value; }
+};
+
+class pmt_uint64 : public pmt_base
+{
+public:
+  uint64_t		d_value;
+
+  pmt_uint64(uint64_t value);
+  //~pmt_uint64(){}
+
+  bool is_number()  const { return true; }
+  bool is_uint64() const { return true; }
+  uint64_t value() const { return d_value; }
 };
 
 class pmt_real : public pmt_base
