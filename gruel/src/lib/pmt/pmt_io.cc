@@ -64,6 +64,8 @@ pmt_write(pmt_t obj, std::ostream &port)
   else if (pmt_is_number(obj)){
     if (pmt_is_integer(obj))
       port << pmt_to_long(obj);
+    else if (pmt_is_uint64(obj))
+      port << pmt_to_uint64(obj);
     else if (pmt_is_real(obj))
       port << pmt_to_double(obj);
     else if (pmt_is_complex(obj)){

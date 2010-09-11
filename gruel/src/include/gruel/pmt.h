@@ -165,6 +165,27 @@ long pmt_to_long(pmt_t x);
 
 /*
  * ------------------------------------------------------------------------
+ *			       uint64_t
+ * ------------------------------------------------------------------------
+ */
+
+//! Return true if \p x is an uint64 number, else false
+bool pmt_is_uint64(pmt_t x);
+
+//! Return the pmt value that represents the uint64 \p x.
+pmt_t pmt_from_uint64(uint64_t x);
+
+/*!
+ * \brief Convert pmt to uint64 if possible.
+ *
+ * When \p x represents an exact integer that fits in a uint64,
+ * return that uint64.  Else raise an exception, either wrong_type
+ * when x is not an exact uint64, or out_of_range when it doesn't fit.
+ */
+uint64_t pmt_to_uint64(pmt_t x);
+
+/*
+ * ------------------------------------------------------------------------
  *				Reals
  * ------------------------------------------------------------------------
  */

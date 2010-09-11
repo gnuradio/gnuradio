@@ -104,6 +104,19 @@ qa_pmt_prims::test_integers()
 }
 
 void
+qa_pmt_prims::test_uint64s()
+{
+  pmt_t p1 = pmt_from_uint64((uint64_t)1);
+  pmt_t m1 = pmt_from_uint64((uint64_t)8589934592ULL);
+  CPPUNIT_ASSERT(!pmt_is_uint64(PMT_T));
+  CPPUNIT_ASSERT(pmt_is_uint64(p1));
+  CPPUNIT_ASSERT(pmt_is_uint64(m1));
+  CPPUNIT_ASSERT_THROW(pmt_to_uint64(PMT_T), pmt_wrong_type);
+  CPPUNIT_ASSERT_EQUAL((uint64_t)8589934592ULL, (uint64_t)pmt_to_uint64(m1));
+  CPPUNIT_ASSERT_EQUAL((uint64_t)1ULL, (uint64_t)pmt_to_uint64(p1));
+}
+
+void
 qa_pmt_prims::test_reals()
 {
   pmt_t p1 = pmt_from_double(1);

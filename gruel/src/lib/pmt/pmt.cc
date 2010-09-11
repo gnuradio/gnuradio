@@ -105,6 +105,12 @@ _integer(pmt_t x)
   return dynamic_cast<pmt_integer*>(x.get());
 }
 
+static pmt_uint64 *
+_uint64(pmt_t x)
+{
+  return dynamic_cast<pmt_uint64*>(x.get());
+}
+
 static pmt_real *
 _real(pmt_t x)
 {
@@ -302,6 +308,40 @@ pmt_to_long(pmt_t x)
     return i->value();
 
   throw pmt_wrong_type("pmt_to_long", x);
+}
+
+////////////////////////////////////////////////////////////////////////////
+//                             Uint64
+////////////////////////////////////////////////////////////////////////////
+
+pmt_uint64::pmt_uint64(uint64_t value) : d_value(value) {}
+
+bool
+pmt_is_uint64(pmt_t x)
+{
+  return x->is_uint64();
+}
+
+
+pmt_t
+pmt_from_uint64(uint64_t x)
+{
+  return pmt_t(new pmt_uint64(x));
+}
+
+uint64_t
+pmt_to_uint64(pmt_t x)
+{
+  if(x->is_uint64())
+    return _uint64(x)->value();
+  if(x->is_integer())
+    {
+    long tmp = _integer(x)->value();
+    if(tmp >= 0)
+        return (uint64_t) tmp;
+    }
+
+  throw pmt_wrong_type("pmt_to_uint64", x);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -929,6 +969,9 @@ pmt_eqv(const pmt_t& x, const pmt_t& y)
   if (x->is_integer() && y->is_integer())
     return _integer(x)->value() == _integer(y)->value();
 
+  if (x->is_uint64() && y->is_uint64())
+    return _uint64(x)->value() == _uint64(y)->value();
+
   if (x->is_real() && y->is_real())
     return _real(x)->value() == _real(y)->value();
 
@@ -946,6 +989,9 @@ pmt_eqv_raw(pmt_base *x, pmt_base *y)
 
   if (x->is_integer() && y->is_integer())
     return _integer(x)->value() == _integer(y)->value();
+
+  if (x->is_uint64() && y->is_uint64())
+    return _uint64(x)->value() == _uint64(y)->value();
 
   if (x->is_real() && y->is_real())
     return _real(x)->value() == _real(y)->value();
@@ -1328,6 +1374,7 @@ pmt_dump_sizeof()
   printf("sizeof(pmt_bool)           = %3zd\n", sizeof(pmt_bool));
   printf("sizeof(pmt_symbol)         = %3zd\n", sizeof(pmt_symbol));
   printf("sizeof(pmt_integer)        = %3zd\n", sizeof(pmt_integer));
+  printf("sizeof(pmt_uint64)         = %3zd\n", sizeof(pmt_uint64));
   printf("sizeof(pmt_real)           = %3zd\n", sizeof(pmt_real));
   printf("sizeof(pmt_complex)        = %3zd\n", sizeof(pmt_complex));
   printf("sizeof(pmt_null)           = %3zd\n", sizeof(pmt_null));

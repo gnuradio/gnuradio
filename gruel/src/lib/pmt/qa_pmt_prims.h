@@ -31,6 +31,7 @@ class qa_pmt_prims : public CppUnit::TestCase {
   CPPUNIT_TEST(test_symbols);
   CPPUNIT_TEST(test_booleans);
   CPPUNIT_TEST(test_integers);
+  CPPUNIT_TEST(test_uint64s);
   CPPUNIT_TEST(test_reals);
   CPPUNIT_TEST(test_complexes);
   CPPUNIT_TEST(test_pairs);
@@ -52,6 +53,7 @@ class qa_pmt_prims : public CppUnit::TestCase {
   void test_symbols();
   void test_booleans();
   void test_integers();
+  void test_uint64s();
   void test_reals();
   void test_complexes();
   void test_pairs();
