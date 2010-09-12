@@ -2,9 +2,5 @@
 
 # fetch latest config.guess and config.sub
 
-# They've moved...
-# wget -O config.guess 'http://savannah.gnu.org/cgi-bin/viewcvs/config/config/config.guess?rev=HEAD&content-type=text/plain'
-# wget -O config.sub 'http://savannah.gnu.org/cgi-bin/viewcvs/config/config/config.sub?rev=HEAD&content-type=text/plain'
-
-wget -O config.guess 'http://cvs.savannah.gnu.org/viewvc/*checkout*/config/config/config.guess?content-type=text%2Fplain&revision=HEAD'
-wget -O config.sub   'http://cvs.savannah.gnu.org/viewvc/*checkout*/config/config/config.sub?content-type=text%2Fplain&revision=HEAD'
+wget -O config.guess 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD'
+wget -O config.sub 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD'
