@@ -2,7 +2,6 @@
 #define WATERFALL_GLOBAL_DATA_HPP
 
 #include <qwt_raster_data.h>
-#include <qwt3d_function.h>
 #include <inttypes.h>
 
 
