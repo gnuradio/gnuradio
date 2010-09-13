@@ -82,7 +82,7 @@ private:
   int d_index;
   float *d_residbuf;
 
-  bool d_plotfreq, d_plotwaterfall, d_plotwaterfall3d, d_plottime, d_plotconst;
+  bool d_plotfreq, d_plotwaterfall, d_plottime, d_plotconst;
 
   double d_update_time;
 

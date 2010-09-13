@@ -64,10 +64,13 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
     d_wintype((gr_firdes::win_type)(wintype)), 
     d_center_freq(fc), d_bandwidth(bw), d_name(name),
     d_plotfreq(plotfreq), d_plotwaterfall(plotwaterfall),
-    d_plotwaterfall3d(plotwaterfall3d), d_plottime(plottime),
-    d_plotconst(plotconst),
+    d_plottime(plottime), d_plotconst(plotconst),
     d_parent(parent)
 {
+  if(plotwaterfall3d == true) {
+    fprintf(stderr, "Warning: plotting Waterfall3D has been removed; enabling plotwaterfall3d has no effect.\n");
+  }
+
   d_main_gui = NULL;
   pthread_mutex_init(&d_pmutex, NULL);
   lock();
@@ -141,8 +144,7 @@ qtgui_sink_c::initialize(const bool opengl)
 
   d_main_gui->OpenSpectrumWindow(d_parent, 
 				 d_plotfreq, d_plotwaterfall,
-				 d_plotwaterfall3d, d_plottime,
-				 d_plotconst,
+				 d_plottime, d_plotconst,
 				 opengl);
 
   // initialize update time to 10 times a second

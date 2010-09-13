@@ -5,7 +5,6 @@
 #include <qwt3d_function.h>
 #include <inttypes.h>
 
-class Waterfall3DDisplayPlot;
 
 class WaterfallData: public QwtRasterData
 {
@@ -45,35 +44,5 @@ protected:
 private:
 
 };
-
-class Waterfall3DData: public WaterfallData, public Qwt3D::Function
-{
-public:
-  Waterfall3DData(const double, const double, const uint64_t, const unsigned int);
-  virtual ~Waterfall3DData();
-    
-  virtual void ResizeData(const double, const double, const uint64_t);
-
-  virtual bool create();
-  virtual void setMesh(unsigned int columns, unsigned int rows); //!< Sets number of rows and columns. 
-
-  virtual double operator()(double x, double y);
-
-  virtual double GetFloorValue()const;
-  virtual void SetFloorValue(const double);
-
-  virtual double minZ()const;
-  virtual double maxZ()const;
-
-protected:
-  void _ResizeMesh();
-
-  double** data;
-  double _floorValue;
-
-private:
-
-};
-
 
 #endif /* WATERFALL_GLOBAL_DATA_HPP */

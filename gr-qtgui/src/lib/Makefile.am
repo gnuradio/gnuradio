@@ -31,7 +31,6 @@ QMAKE_SOURCES = 				\
 	FrequencyDisplayPlot_moc.cc	 	\
 	TimeDomainDisplayPlot_moc.cc		\
 	WaterfallDisplayPlot_moc.cc		\
-	Waterfall3DDisplayPlot_moc.cc		\
 	ConstellationDisplayPlot_moc.cc		\
 	spectrumdisplayform_ui.h
 
@@ -47,7 +46,6 @@ libgnuradio_qtgui_la_SOURCES = 	\
 	FrequencyDisplayPlot.cc 		\
 	TimeDomainDisplayPlot.cc		\
 	WaterfallDisplayPlot.cc			\
-	Waterfall3DDisplayPlot.cc		\
 	waterfallGlobalData.cc			\
 	ConstellationDisplayPlot.cc		\
 	spectrumdisplayform.cc			\
@@ -62,7 +60,6 @@ grinclude_HEADERS =			\
 	FrequencyDisplayPlot.h		\
 	TimeDomainDisplayPlot.h		\
 	WaterfallDisplayPlot.h		\
-	Waterfall3DDisplayPlot.h	\
 	waterfallGlobalData.h		\
 	ConstellationDisplayPlot.h	\
 	highResTimeFunctions.h		\
@@ -73,8 +70,6 @@ grinclude_HEADERS =			\
 	qtgui.h				\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h
-
-nodist_libqtsrc_la_SOURCES = $(QMAKE_SOURCES)
 
 %_moc.cc : %.h
 	$(QT_MOC_EXEC) -DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -p $(srcdir) $< -o $@
