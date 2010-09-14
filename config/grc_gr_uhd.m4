@@ -24,9 +24,7 @@ AC_DEFUN([GRC_GR_UHD],[
     GRC_CHECK_DEPENDENCY(gr-uhd, gnuradio-core)
 
     if test $passed = yes; then
-        #by default, cmake likes to install the uhd.pc file here
-        #so lets make life easier for everybody and add this path
-        export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+        dnl Don't do gr-uhd if the 'uhd' package is not installed
         PKG_CHECK_MODULES(
             [UHD], [uhd], [],
             [passed=no; AC_MSG_RESULT([gr-uhd requires libuhd])]
