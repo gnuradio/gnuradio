@@ -107,14 +107,13 @@ AC_DEFUN([USRP_LIBUSB], [
 
         AC_LANG_PUSH(C)
         save_LIBS="$LIBS"
-        LIBS=""
         case "$host_os" in
           darwin*)
             USB_LIBS="$USB_LIBS -lIOKit"
-            LIBS="$USB_LIBS"
             ;;
           *) ;;
         esac
+        LIBS="$USB_LIBS"
 
  	dnl find the library link name
         usb_lib_name=`echo $USB_LIBS | sed -e "s@.*-l\(usb[[^ ]]*\).*@\1@"`
