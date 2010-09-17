@@ -73,8 +73,6 @@ grinclude_HEADERS =			\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h
 
-<<<<<<< HEAD
-
 QT_MOC_FLAGS=-DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 %.moc.cc : %.h
 	$(QT_MOC_EXEC) $(QT_MOC_FLAGS) -p $(srcdir) $< -o $@
