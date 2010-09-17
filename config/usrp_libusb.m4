@@ -129,12 +129,6 @@ AC_DEFUN([USRP_LIBUSB], [
           ]], [[return $usb_lib_func ();]])],
           [libusbok=yes],[libusbok=no])
         AC_MSG_RESULT([$libusbok])
-        case "$host_os" in
-          cygwin* | mingw*)
-            USB_LIBS="$LIBS"
-            ;;
-          *) ;;
-        esac
         LIBS="$save_LIBS"
         AC_LANG_POP(C)
 
@@ -197,6 +191,12 @@ AC_DEFUN([USRP_LIBUSB], [
       AC_CHECK_LIB([$usb_lib_name], [$usb_lib_func], [], [
         libusbok=no
         AC_MSG_RESULT([USRP requires library '$usb_lib_name' with function '$usb_lib_func', which was either not found or was not usable. See http://www.libusb.org])])
+      case "$host_os" in
+        cygwin* | mingw*)
+          USB_LIBS="$LIBS"
+          ;;
+        *) ;;
+      esac
       LIBS="$save_LIBS"
       CPPFLAGS="$save_CPPFLAGS"
       AC_LANG_POP(C)
