@@ -1,7 +1,7 @@
 #ifndef SPECTRUM_DISPLAY_FORM_H
 #define SPECTRUM_DISPLAY_FORM_H
 
-#include "spectrumdisplayform_ui.h"
+#include "spectrumdisplayform.ui.h"
 
 class SpectrumGUIClass;
 #include <SpectrumGUIClass.h>
