@@ -23,12 +23,12 @@
 #ifndef INCLUDED_QTGUI_SINK_F_H
 #define INCLUDED_QTGUI_SINK_F_H
 
+#include <Python.h>
 #include <gr_block.h>
 #include <gr_firdes.h>
 #include <gri_fft.h>
 #include <qapplication.h>
 #include <qtgui.h>
-#include <Python.h>
 #include "SpectrumGUIClass.h"
 
 class qtgui_sink_f;
