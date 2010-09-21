@@ -4,10 +4,10 @@
 /.deps
 /qtgui.cc
 /qtgui.py
-/WaterfallDisplayPlot_moc.cc
-/Waterfall3DDisplayPlot_moc.cc
-/TimeDomainDisplayPlot_moc.cc
-/spectrumdisplayform_moc.cc
-/spectrumdisplayform_ui.h
-/FrequencyDisplayPlot_moc.cc
-/ConstellationDisplayPlot_moc.cc
+/WaterfallDisplayPlot.moc.cc
+/Waterfall3DDisplayPlot.moc.cc
+/TimeDomainDisplayPlot.moc.cc
+/spectrumdisplayform.moc.cc
+/spectrumdisplayform.ui.h
+/FrequencyDisplayPlot.moc.cc
+/ConstellationDisplayPlot.moc.cc
