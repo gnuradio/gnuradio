@@ -21,12 +21,20 @@
  */
 
 %include "gnuradio.i"
+%include "std_string.i"
+%include "std_vector.i"
+
+namespace std {
+    %template(StringVector) vector<string>;
+}
 
 %{
 #include <uhd_mimo_source.h>
 #include <uhd_mimo_sink.h>
 #include <uhd_simple_source.h>
 #include <uhd_simple_sink.h>
+#include <uhd_single_usrp_source.h>
+#include <uhd_single_usrp_sink.h>
 %}
 
 %include <uhd/config.hpp>
@@ -47,3 +55,9 @@ GR_SWIG_BLOCK_MAGIC(uhd,simple_source)
 
 GR_SWIG_BLOCK_MAGIC(uhd,simple_sink)
 %include <uhd_simple_sink.h>
+
+GR_SWIG_BLOCK_MAGIC(uhd,single_usrp_source)
+%include <uhd_single_usrp_source.h>
+
+GR_SWIG_BLOCK_MAGIC(uhd,single_usrp_sink)
+%include <uhd_single_usrp_sink.h>

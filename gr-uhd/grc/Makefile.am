@@ -23,18 +23,34 @@ include $(top_srcdir)/Makefile.common
 
 grcblocksdir = $(grc_blocksdir)
 
-dist_grcblocks_DATA = \
+generated_uhd_mimo_blocks = \
 	uhd_mimo_source.xml \
-	uhd_mimo_sink.xml \
+	uhd_mimo_sink.xml
+
+generated_uhd_single_usrp_blocks = \
+	uhd_single_usrp_source.xml \
+	uhd_single_usrp_sink.xml
+
+BUILT_SOURCES = \
+	$(generated_uhd_mimo_blocks) \
+	$(generated_uhd_single_usrp_blocks)
+
+dist_grcblocks_DATA = \
+	$(BUILT_SOURCES) \
 	uhd_simple_source.xml \
 	uhd_simple_sink.xml
 
 ########################################################################
 # Rules for generating the mimo source and sink blocks
 ########################################################################
-BUILT_SOURCES = uhd_mimo_sink.xml uhd_mimo_source.xml
-EXTRA_DIST = $(srcdir)/gen_uhd_mimo_blocks_xml.py
+EXTRA_DIST = \
+	$(srcdir)/gen_uhd_mimo_blocks_xml.py \
+	$(srcdir)/gen_uhd_single_usrp_blocks_xml.py
 
-$(BUILT_SOURCES): $(srcdir)/gen_uhd_mimo_blocks_xml.py
+$(generated_uhd_mimo_blocks): $(srcdir)/gen_uhd_mimo_blocks_xml.py
+	@echo "generating $@..."
+	$(PYTHON) $< $@
+
+$(generated_uhd_single_usrp_blocks): $(srcdir)/gen_uhd_single_usrp_blocks_xml.py
 	@echo "generating $@..."
 	$(PYTHON) $< $@

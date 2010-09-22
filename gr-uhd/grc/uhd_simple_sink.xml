@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>UHD Simple Sink</name>
+	<name>UHD Simple Sink (DEPRECATED)</name>
 	<key>uhd_simple_sink</key>
 	<category>UHD</category>
 	<import>from gnuradio import uhd</import>

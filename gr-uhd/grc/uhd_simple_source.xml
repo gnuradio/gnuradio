@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>UHD Simple Source</name>
+	<name>UHD Simple Source (DEPRECATED)</name>
 	<key>uhd_simple_source</key>
 	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
