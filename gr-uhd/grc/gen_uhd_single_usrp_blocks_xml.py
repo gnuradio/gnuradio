@@ -22,11 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 MAIN_TMPL = """\
 <?xml version="1.0"?>
 <block>
-	<name>UHD Single USRP $sourk.title()</name>
+	<name>UHD: Single USRP $sourk.title()</name>
 	<key>uhd_single_usrp_$(sourk)</key>
 	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
-	<make>uhd.single_usrp_$(sourk)(\$nchan, \$dev_addr, uhd.io_type_t.\$type.type)
+	<make>uhd.single_usrp_$(sourk)(\$dev_addr, uhd.io_type_t.\$type.type)
 self.\$(id).set_subdev_spec(\$sd_spec)
 self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)
@@ -86,6 +86,13 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 		<key>dev_addr</key>
 		<value>addr=192.168.10.2</value>
 		<type>string</type>
+		<hide>
+			\#if \$dev_addr()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
 	</param>
 	<param>
 		<name>Subdev Spec</name>

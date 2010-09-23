@@ -27,7 +27,7 @@
 
 class uhd_single_usrp_source;
 
-boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_source(
+boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_usrp_source(
     const std::string &args,
     const uhd::io_type_t::tid_t &type
 );
