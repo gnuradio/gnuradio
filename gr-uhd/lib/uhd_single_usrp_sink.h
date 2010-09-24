@@ -29,7 +29,8 @@ class uhd_single_usrp_sink;
 
 boost::shared_ptr<uhd_single_usrp_sink> uhd_make_single_usrp_sink(
     const std::string &args,
-    const uhd::io_type_t::tid_t &type
+    const uhd::io_type_t::tid_t &type,
+    size_t num_channels = 1
 );
 
 class uhd_single_usrp_sink : public gr_sync_block{

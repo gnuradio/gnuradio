@@ -39,8 +39,9 @@ class uhd_single_usrp_sink_impl : public uhd_single_usrp_sink{
 public:
     uhd_single_usrp_sink_impl(
         const std::string &args,
-        const uhd::io_type_t &type
-    ) : uhd_single_usrp_sink(gr_make_io_signature(1, 1, type.size)), _type(type)
+        const uhd::io_type_t &type,
+        size_t num_channels
+    ) : uhd_single_usrp_sink(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type)
     {
         _dev = uhd::usrp::single_usrp::make(args);
     }
@@ -143,9 +144,10 @@ protected:
  **********************************************************************/
 boost::shared_ptr<uhd_single_usrp_sink> uhd_make_single_usrp_sink(
     const std::string &args,
-    const uhd::io_type_t::tid_t &type
+    const uhd::io_type_t::tid_t &type,
+    size_t num_channels
 ){
     return boost::shared_ptr<uhd_single_usrp_sink>(
-        new uhd_single_usrp_sink_impl(args, type)
+        new uhd_single_usrp_sink_impl(args, type, num_channels)
     );
 }
