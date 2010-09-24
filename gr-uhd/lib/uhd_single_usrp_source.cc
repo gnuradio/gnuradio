@@ -22,6 +22,8 @@
 #include <uhd_single_usrp_source.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
+#include <iostream>
+#include <boost/format.hpp>
 #include "utils.h"
 
 /***********************************************************************
@@ -132,10 +134,25 @@ public:
 
         uhd::rx_metadata_t metadata; //not passed out of this block
 
-        return _dev->get_device()->recv(
+        size_t num_samps = _dev->get_device()->recv(
             output_items, noutput_items, metadata,
             _type, uhd::device::RECV_MODE_FULL_BUFF
         );
+
+        switch(metadata.error_code){
+        case uhd::rx_metadata_t::ERROR_CODE_NONE:
+            return num_samps;
+
+        case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
+            //ignore overflows and try work again
+            return work(noutput_items, input_items, output_items);
+
+        default:
+            std::cout << boost::format(
+                "UHD source block got error code 0x%x"
+            ) % metadata.error_code << std::endl;
+            return num_samps;
+        }
     }
 
 private:
