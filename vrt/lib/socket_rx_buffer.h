@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -41,28 +41,9 @@ namespace vrt {
   {
     
     int		  d_fd;		        // socket file descriptor
-    bool          d_using_tpring;       // using kernel mapped packet ring
-    size_t        d_buflen;             // length of our buffer
-    uint8_t      *d_buf;                // packet ring
-    unsigned int  d_frame_nr;           // max frames on ring
-    size_t        d_frame_size;         // frame storage size
-    unsigned int  d_head;               // pointer to next frame
 
-    std::vector<uint8_t *>  d_ring;     // pointers into buffer
-  
-    bool frame_available();
-
-    void inc_head()
-    {
-      if (d_head + 1 >= d_frame_nr)
-	d_head = 0;
-      else
-	d_head = d_head + 1;
-    }
-
-    bool open();
+    bool open(size_t buflen);
     bool close();
-    bool try_packet_ring();
 
   public:
 
@@ -110,11 +91,6 @@ namespace vrt {
      * \returns EB_ERROR if there was an unrecoverable error.
      */
     result rx_frames(data_handler *f, int timeout=-1);
-
-    /*
-     * \brief Returns maximum possible number of frames in buffer
-     */
-    unsigned int max_frames() const { return d_using_tpring ? d_frame_nr : 0; }
   };
 
 };  // namespace vrt
