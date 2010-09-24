@@ -84,6 +84,7 @@ namespace vrt {
     }
     else {
       fprintf(stderr, "SO_RCVBUFFORCE = %zd\n", buflen);
+      return true;
     }
 #endif
 
