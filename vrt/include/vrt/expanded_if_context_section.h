@@ -22,11 +22,11 @@
 #define INCLUDED_VRT_EXPANDED_IF_CONTEXT_SECTION_H
 
 #include <string>
+#include <vector>
 
 /*!
  * Expanded (unpacked) version of Context Section, defined in VRT section 7.1.5
  */
-
 
 #include <stdint.h>
 #include <stddef.h>

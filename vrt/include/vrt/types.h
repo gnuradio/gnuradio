@@ -18,6 +18,10 @@
 #ifndef INCLUDED_VRT_TYPES_H
 #define INCLUDED_VRT_TYPES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /* macros for dealing with fixed point numbers */
@@ -179,5 +183,9 @@ vrt_gain_stage2(uint32_t field)
 {
   return (vrt_db_t)((field >> 16) & 0xffff);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INCLUDED_VRT_TYPES_H */

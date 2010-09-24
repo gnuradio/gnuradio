@@ -1,4 +1,4 @@
-/* -*- c++ -*- */
+/* -*- c -*- */
 /*
  * Copyright 2009,2010 Free Software Foundation, Inc.
  *
@@ -17,6 +17,10 @@
  */
 #ifndef INCLUDED_VRT_BITS_H
 #define INCLUDED_VRT_BITS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*!
  * \brief Definitions of bit and fields in VRT packets
@@ -189,10 +193,10 @@ typedef struct vrt_formatted_gps_tag {
 
 //! Data Packet Payload Format Field 7.1.5.18
 
-typedef struct vrt_payload_format_tag {
+typedef struct {
   uint32_t	word0;
   uint32_t	word1;
-} vrt_payload_format_t;
+} vrt_payload_fmt_t;
 
 #define DF0_PACKED				(1 << 31)
 #define	DF0_REAL_CMPLX_TYPE_MASK		(0x3 << 29)
@@ -254,7 +258,10 @@ typedef struct {
   vrt_velocity_t  velocity_dx;		// meters/s Q16.16
   vrt_velocity_t  velocity_dy;		// meters/s Q16.16
   vrt_velocity_t  velocity_dz;		// meters/s Q16.16
-} vrt_ecef_ephemeris_t;
+} vrt_ephemeris_t;
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INCLUDED_VRT_BITS_H */
