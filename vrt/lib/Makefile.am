@@ -43,10 +43,10 @@ libvrt_la_LDFLAGS = $(LTVERSIONFLAGS)
 # Private headers not needed for above the API development
 noinst_HEADERS = \
 	data_handler.h \
-	expanded_header_parse_switch_body.h \
-	expanded_header_unparse_switch_body.h \
+	expanded_header_unpack_switch_body.h \
+	expanded_header_pack_switch_body.h \
 	socket_rx_buffer.h
 
 EXTRA_DIST = \
-	gen_parse_switch_body.py \
-	gen_unparse_switch_body.py
+	gen_unpack_switch_body.py \
+	gen_pack_switch_body.py

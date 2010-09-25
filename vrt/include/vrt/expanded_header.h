@@ -77,25 +77,29 @@ namespace vrt {
 
 
     /*!
-     * \brief unparse expanded header, fill-in the words of a vrt packet header and trailer
-     * This method is only intended to fill the buffers with header and trailer information.
-     * The actual handling of the separate header, payload, trailer buffers is up to the caller.
+     * \brief Given contents of expanded_header, fill in the words of
+     * the corresponding vrt packet header and trailer.
+     *
+     * This method only fills the buffers with header and trailer
+     * information.  The actual handling of the separate header,
+     * payload, trailer buffers is up to the caller.
      */
-    static void unparse(const expanded_header *hdr,    // in
-                        size_t n32_bit_words_payload,  // in
-                        uint32_t *header,              // out
-                        size_t *n32_bit_words_header,  // out
-                        uint32_t *trailer,             // out
-                        size_t *n32_bit_words_trailer);// out
+    static void pack(const expanded_header *hdr,    // in
+		     size_t n32_bit_words_payload,  // in
+		     uint32_t *header,              // out
+		     size_t *n32_bit_words_header,  // out
+		     uint32_t *trailer,             // out
+		     size_t *n32_bit_words_trailer);// out
 
     /*!
-     * \brief parse packet, fill-in expanded header, start of payload and len of payload
+     * \brief unpack vrt packet header into expanded_header, start of
+     * payload and len of payload
      */
-    static bool parse(const uint32_t *packet,		// in
-		      size_t n32_bit_words_packet,	// in
-		      expanded_header *hdr,		// out
-		      const uint32_t **payload,		// out
-		      size_t *n32_bit_words_payload);	// out
+    static bool unpack(const uint32_t *packet,		// in
+		       size_t n32_bit_words_packet,	// in
+		       expanded_header *hdr,		// out
+		       const uint32_t **payload,	// out
+		       size_t *n32_bit_words_payload);	// out
 		      
   private:
     static unsigned char s_if_data[16];

@@ -97,8 +97,8 @@ namespace vrt {
       const uint32_t *payload;
       size_t n32_bit_words;
       expanded_header hdr;
-      if (!expanded_header::parse(word_base, word_len,
-				  &hdr, &payload, &n32_bit_words)){
+      if (!expanded_header::unpack(word_base, word_len,
+				   &hdr, &payload, &n32_bit_words)){
 	if (1){
 	  fprintf(stderr, "vrt_data_handler: malformed VRT packet!\n");
 	  print_words(stderr, 0, word_base, word_len);

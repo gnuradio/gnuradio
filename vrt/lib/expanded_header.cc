@@ -69,16 +69,17 @@ namespace vrt {
     return cw;
   }
 
-  void expanded_header::unparse(const expanded_header *h,   // in
-                        size_t n32_bit_words_payload,  // in
-                        uint32_t *header,              // out
-                        size_t *n32_bit_words_header,  // out
-                        uint32_t *trailer,             // out
-                        size_t *n32_bit_words_trailer){// out
+  void expanded_header::pack(const expanded_header *h,      	// in
+			     size_t n32_bit_words_payload,  	// in
+			     uint32_t *header,              	// out
+			     size_t *n32_bit_words_header,  	// out
+			     uint32_t *trailer,             	// out
+			     size_t *n32_bit_words_trailer)	// out
+  {
     int cw = compute_codeword(*h);
     //fills in the header (except word0), header length, trailer, trailer length
     switch (cw & 0x1f){
-#include "expanded_header_unparse_switch_body.h"
+#include "expanded_header_pack_switch_body.h"
     }
     //fill in the header word 0 with the calculated length
     size_t n32_bit_words_packet = *n32_bit_words_header + n32_bit_words_payload + *n32_bit_words_trailer;
@@ -86,11 +87,11 @@ namespace vrt {
   }
 
   bool 
-  expanded_header::parse(const uint32_t *packet,	// in
-			size_t n32_bit_words_packet,	// in
-			expanded_header *h,		// out
-			const uint32_t **payload,	// out
-			size_t *n32_bit_words_payload)	// out
+  expanded_header::unpack(const uint32_t *packet,		// in
+			  size_t n32_bit_words_packet,		// in
+			  expanded_header *h,			// out
+			  const uint32_t **payload,		// out
+			  size_t *n32_bit_words_payload)	// out
   {
     size_t n32_bit_words_header = 0;
     size_t n32_bit_words_trailer = 0;
@@ -100,7 +101,7 @@ namespace vrt {
     *payload = 0;
     *n32_bit_words_payload = 0;
 
-    // printf("parse: n32_bit_words_packet = %zd\n", n32_bit_words_packet);
+    // printf("unpack: n32_bit_words_packet = %zd\n", n32_bit_words_packet);
 
     if (len < 1){		// must have at least the header word
       h->header = 0;
@@ -116,7 +117,7 @@ namespace vrt {
 
     int cw = compute_codeword(*h);
     switch (cw & 0x1f){
-#include "expanded_header_parse_switch_body.h"
+#include "expanded_header_unpack_switch_body.h"
     }
 
     if (n32_bit_words_header + n32_bit_words_trailer > len)
@@ -125,7 +126,7 @@ namespace vrt {
     *payload = p + n32_bit_words_header;
     *n32_bit_words_payload = len - (n32_bit_words_header + n32_bit_words_trailer);
 
-    // printf("parse: hdr = 0x%08x, cw = 0x%02x, n32_bit_words_header = %d, n32_bit_words_trailer = %d\n",
+    // printf("unpack: hdr = 0x%08x, cw = 0x%02x, n32_bit_words_header = %d, n32_bit_words_trailer = %d\n",
     //   h->header, cw, n32_bit_words_header, n32_bit_words_trailer);
 
     return true;
