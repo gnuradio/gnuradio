@@ -331,9 +331,15 @@ namespace vrt
     os << format("  %-19s  ") % (x + ":");
   }
 
-  static void wr_uint32(std::ostream &os, uint32_t x)
+  static void wr_uint32_hex(std::ostream &os, uint32_t x)
   {
     os << format("%#10x") % x;
+    os << std::endl;
+  }
+
+  static void wr_uint32_dec(std::ostream &os, uint32_t x)
+  {
+    os << format("%12d") % x;
     os << std::endl;
   }
 
@@ -361,6 +367,54 @@ namespace vrt
     os << std::endl;
   }
 
+  static void wr_payload_fmt(std::ostream &os, vrt_payload_fmt_t f)
+  {
+    if (f.word0 & DF0_PACKED)
+      os << " Packed";
+
+    switch (f.word0 & DF0_REAL_CMPLX_TYPE_MASK){
+    case DF0_REAL_CMPLX_TYPE_REAL:	    os << " Real";	break;
+    case DF0_REAL_CMPLX_TYPE_CMPLX_CART:    os << " Cmplx";	break;
+    case DF0_REAL_CMPLX_TYPE_CMPLX_POLAR:   os << " Polar";	break;
+    case DF0_REAL_CMPLX_TYPE_RESERVED:	    os << " Reserved"; 	break;
+    }
+
+    switch(f.word0 & DF0_ITEM_FMT_MASK){
+    case DF0_ITEM_FMT_SIGNED_FIXED_POINT:   os << " S-Fixed";	break;
+    case DF0_ITEM_FMT_UNSIGNED_FIXED_POINT: os << " U-Fixed";	break;
+    case DF0_ITEM_FMT_IEEE_FLOAT:           os << " float"; 	break;
+    case DF0_ITEM_FMT_IEEE_DOUBLE:          os << " double"; 	break;
+    default:
+      os << format(" ItemFmt=%#x") % ((f.word0 & DF0_ITEM_FMT_MASK) >> 24);
+      break;
+    }
+
+    if (f.word0 & DF0_SAMPLE_COMPONENT_REPEATING)
+      os << " SampleCompRpt";
+
+    uint32_t t = (f.word0 & DF0_EVENT_TAG_SIZE_MASK) >> DF0_EVENT_TAG_SIZE_SHIFT;
+    if (t != 0)
+      os << format(" EvtTagSize=%d") % t;
+
+    t = (f.word0 & DF0_CHANNEL_TAG_SIZE_MASK) >> DF0_CHANNEL_TAG_SIZE_SHIFT;
+    if (t != 0)
+      os << format(" ChanTagSize=%d") % t;
+
+    t = (f.word0 & DF0_ITEM_PACKING_FIELD_SIZE_MASK) >> DF0_ITEM_PACKING_FIELD_SIZE_SHIFT;
+    os << format(" FieldSize=%d") % (t + 1);
+
+    t = (f.word0 & DF0_DATA_ITEM_SIZE_MASK) >> DF0_DATA_ITEM_SIZE_SHIFT;
+    os << format(" ItemSize=%d") % (t + 1);
+
+    t = (f.word1 & DF1_REPEAT_COUNT_MASK) >> DF1_REPEAT_COUNT_SHIFT;
+    os << format(" RptCnt=%d") % (t + 1);
+
+    t = (f.word1 & DF1_VECTOR_SIZE_MASK) >> DF1_VECTOR_SIZE_SHIFT;
+    os << format(" VectSize=%d") % (t + 1);
+
+    os << std::endl;
+  }
+
   void
   expanded_if_context_section::write(std::ostream &port) const
   {
@@ -368,7 +422,7 @@ namespace vrt
 
     if (cif & CI_REF_POINT_ID){
       wr_name(port, "ref_point_id");
-      wr_uint32(port, ref_point_id);
+      wr_uint32_hex(port, ref_point_id);
     }
 
     if (cif & CI_BANDWIDTH){
@@ -410,7 +464,7 @@ namespace vrt
 
     if (cif & CI_OVER_RANGE_COUNT){
       wr_name(port, "over_range_count");
-      wr_uint32(port, over_range_count);
+      wr_uint32_dec(port, over_range_count);
     }
 
     if (cif & CI_SAMPLE_RATE){
@@ -422,30 +476,36 @@ namespace vrt
     if (cif & CI_TIMESTAMP_ADJ)
       if (!u.get_int64(e->timestamp_adj))
 	return false;
-
-    if (cif & CI_TIMESTAMP_CAL_TIME)
-      if (!u.get_uint32(e->timestamp_cal_time))
-	return false;
 #endif
+
+    if (cif & CI_TIMESTAMP_CAL_TIME){
+      wr_name(port, "timestamp_cal_time");
+      wr_uint32_dec(port, timestamp_cal_time);
+    }
 
     if (cif & CI_TEMPERATURE){
       wr_name(port, "temperature");
       wr_temp(port, temperature);
     }
 
+    if (cif & CI_DEVICE_ID){
+      wr_name(port, "manuf oui");
+      wr_uint32_hex(port, device_id[0] & 0x00ffffff);
+      wr_name(port, "device code");
+      wr_uint32_hex(port, device_id[1] & 0xffff);
+    }
+
+    if (cif & CI_STATE_AND_EVENT_IND){
+      wr_name(port, "state_and_event_ind");
+      wr_uint32_hex(port, state_and_event_ind);
+    }
+
+    if (cif & CI_PAYLOAD_FMT){
+      wr_name(port, "payload_fmt");
+      wr_payload_fmt(port, payload_fmt);
+    }
+
 #if 0
-    if (cif & CI_DEVICE_ID)
-      if (!u.get_uint32(e->device_id[0]) || !u.get_uint32(e->device_id[1]))
-	return false;
-
-    if (cif & CI_STATE_AND_EVENT_IND)
-      if (!u.get_uint32(e->state_and_event_ind))
-	return false;
-
-    if (cif & CI_PAYLOAD_FMT)
-      if (!u.get_uint32(e->payload_fmt.word0) || !u.get_uint32(e->payload_fmt.word1))
-	return false;
-
     if (cif & CI_FORMATTED_GPS)
       if (!u.get_formatted_gps(e->formatted_gps))
 	return false;

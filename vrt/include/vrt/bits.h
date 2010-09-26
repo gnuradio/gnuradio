@@ -206,6 +206,9 @@ typedef struct {
 #define	  DF0_REAL_CMPLX_TYPE_RESERVED		(3 << 29)
 #define DF0_ITEM_FMT_MASK			(0x1f << 24)
 #define   DF0_ITEM_FMT_SIGNED_FIXED_POINT	(0x00 << 24)
+// lots more we're not using
+#define   DF0_ITEM_FMT_IEEE_FLOAT		(0x0e << 24)
+#define   DF0_ITEM_FMT_IEEE_DOUBLE		(0x0f << 24)
 #define   DF0_ITEM_FMT_UNSIGNED_FIXED_POINT	(0x10 << 24)
 // lots more we're not using
 #define	DF0_SAMPLE_COMPONENT_REPEATING		(1 << 23)
