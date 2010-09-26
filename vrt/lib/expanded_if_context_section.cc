@@ -34,6 +34,7 @@ namespace vrt
   {
     context_indicator = 0;
     ref_point_id = 0;
+    bandwidth = 0;
     if_ref_freq = 0;
     rf_ref_freq = 0;
     rf_ref_freq_offset = 0;
@@ -65,11 +66,16 @@ namespace vrt
 
   struct unpack_info {
     const uint32_t 	*p;
-    size_t		nwords;
+    const size_t	nwords;
     size_t		i;
 
     unpack_info(const uint32_t *p_, size_t nwords_)
       : p(p_), nwords(nwords_), i(0) {}
+
+    bool consumed_all()
+    {
+      return nwords - i == 0;
+    }
 
     bool ensure(size_t n)
     {
@@ -136,6 +142,27 @@ namespace vrt
 	return false;
       x = ntohl(p[i++]);
       return true;
+    }
+
+    bool get_nwords(uint32_t *x, unsigned int nw)
+    {
+      if (!ensure(nw))
+	return false;
+
+      for (unsigned int j = 0; j < nw; j++)
+	x[j] = ntohl(p[i++]);
+
+      return true;
+    }
+
+    bool get_formatted_gps(vrt_formatted_gps_t &x)
+    {
+      return get_nwords((uint32_t *) &x, 11);
+    }
+
+    bool get_ephemeris(vrt_ephemeris_t &x)
+    {
+      return get_nwords((uint32_t *) &x, 13);
     }
 
   };
@@ -217,8 +244,21 @@ namespace vrt
       if (!u.get_uint32(e->payload_fmt.word0) || !u.get_uint32(e->payload_fmt.word1))
 	return false;
 
-    // FIXME formatted_gps, formatted_ins
-    // FIXME ecef_ephemeris, rel_ephemeris
+    if (cif & CI_FORMATTED_GPS)
+      if (!u.get_formatted_gps(e->formatted_gps))
+	return false;
+
+    if (cif & CI_FORMATTED_INS)
+      if (!u.get_formatted_gps(e->formatted_ins))
+	return false;
+
+    if (cif & CI_ECEF_EPHEMERIS)
+      if (!u.get_ephemeris(e->ecef_ephemeris))
+	return false;
+
+    if (cif & CI_REL_EPHEMERIS)
+      if (!u.get_ephemeris(e->rel_ephemeris))
+	return false;
 
     if (cif & CI_EPHEMERIS_REF_ID)
       if (!u.get_int32(e->ephemeris_ref_id))
@@ -227,6 +267,7 @@ namespace vrt
     // FIXME gps_ascii
     // FIXME cntx_assoc_lists
 
+    //return u.consumed_all();
     return true;
   }
 
