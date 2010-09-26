@@ -151,20 +151,45 @@ namespace vrt {
       return "<unknown pkt type>";
   }
 
+  static void wr_name(std::ostream &os, const std::string &x)
+  {
+    os << format("  %-19s  ") % (x + ":");
+  }
+
+  static void wr_uint32(std::ostream &os, uint32_t x)
+  {
+    os << format("%#10x") % x;
+    os << std::endl;
+  }
+
   void
   expanded_header::write(std::ostream &port) const
   {
     port << format("%s:\n") % pkt_type_name(this);
-    if (1)
-      port << format("  header:     0x%08x\n") % header;
-    if (stream_id_p())
-      port << format("  stream_id:  %#10x\n") % stream_id;
-    if (class_id_p())
-      port << format("  class_id:   0x%016llx\n") % class_id;
-    if (integer_secs_p())
-      port << format("  int secs:   %10d\n") % integer_secs;
-    if (fractional_secs_p())
-      port << format("  frac secs:  %10d\n") % fractional_secs;
+    if (1){
+      wr_name(port, "header");
+      wr_uint32(port, header);
+    }
+
+    if (stream_id_p()){
+      wr_name(port, "stream_id");
+      wr_uint32(port, stream_id);
+    }
+
+    if (class_id_p()){
+      wr_name(port, "class_id");
+      port << format("0x%016llx\n") % class_id;
+    }
+
+    if (integer_secs_p()){
+      wr_name(port, "int secs");
+      port << format("%10d\n") % integer_secs;
+    }
+
+    if (fractional_secs_p()){
+      wr_name(port, "frac secs");
+      port << format("%10d\n") % fractional_secs;
+    }
   }
 
   std::ostream& operator<<(std::ostream &os, const expanded_header &obj)

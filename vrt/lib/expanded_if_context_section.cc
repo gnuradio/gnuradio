@@ -25,6 +25,10 @@
 #include <vrt/expanded_if_context_section.h>
 #include <string.h>
 #include <gruel/inet.h>		// ntohl
+#include <boost/format.hpp>
+
+using boost::format;
+using boost::io::group;
 
 
 namespace vrt
@@ -140,7 +144,7 @@ namespace vrt
     {
       if (!ensure(1))
 	return false;
-      x = ntohl(p[i++]);
+      x = ntohl(p[i++]) & 0xffff;
       return true;
     }
 
@@ -215,9 +219,7 @@ namespace vrt
 	      && get_nwords_vector(x.async_tag, async_tag_list_size));
     }
 
-  };
-  
-
+  };
   bool 
   expanded_if_context_section::unpack(const uint32_t *context_section,	// in
 				      size_t n32_bit_words,		// in
@@ -323,6 +325,161 @@ namespace vrt
 	return false;
 
     return u.consumed_all();
+  }
+  static void wr_name(std::ostream &os, const std::string &x)
+  {
+    os << format("  %-19s  ") % (x + ":");
+  }
+
+  static void wr_uint32(std::ostream &os, uint32_t x)
+  {
+    os << format("%#10x") % x;
+    os << std::endl;
+  }
+
+  static void wr_hertz(std::ostream &os, vrt_hertz_t x)
+  {
+    os << format("%10g Hz") % vrt_hertz_to_double(x);
+    os << std::endl;
+  }
+
+  static void wr_dbm(std::ostream &os, vrt_db_t x)
+  {
+    os << format("%10g dBm") % vrt_db_to_double(x);
+    os << std::endl;
+  }
+
+  static void wr_db(std::ostream &os, vrt_db_t x)
+  {
+    os << format("%10g dB") % vrt_db_to_double(x);
+    os << std::endl;
+  }
+
+  static void wr_temp(std::ostream &os, vrt_temp_t x)
+  {
+    os << format("%10g C") % vrt_temp_to_double(x);
+    os << std::endl;
+  }
+
+  void
+  expanded_if_context_section::write(std::ostream &port) const
+  {
+    uint32_t cif = context_indicator;
+
+    if (cif & CI_REF_POINT_ID){
+      wr_name(port, "ref_point_id");
+      wr_uint32(port, ref_point_id);
+    }
+
+    if (cif & CI_BANDWIDTH){
+      wr_name(port, "bandwidth");
+      wr_hertz(port, bandwidth);
+    }
+
+    if (cif & CI_IF_REF_FREQ){
+      wr_name(port, "if_ref_freq");
+      wr_hertz(port, if_ref_freq);
+    }
+
+    if (cif & CI_RF_REF_FREQ){
+      wr_name(port, "rf_ref_freq");
+      wr_hertz(port, rf_ref_freq);
+    }
+
+    if (cif & CI_RF_REF_FREQ_OFFSET){
+      wr_name(port, "rf_ref_freq_offset");
+      wr_hertz(port, rf_ref_freq_offset);
+    }
+
+    if (cif & CI_IF_BAND_OFFSET){
+      wr_name(port, "if_band_offset");
+      wr_hertz(port, if_band_offset);
+    }
+
+    if (cif & CI_REF_LEVEL){
+      wr_name(port, "ref_level");
+      wr_dbm(port, ref_level);
+    }
+
+    if (cif & CI_GAIN){
+      wr_name(port, "gain stage1");
+      wr_db(port, vrt_gain_stage1(gain));
+      wr_name(port, "gain stage2");
+      wr_db(port, vrt_gain_stage2(gain));
+    }
+
+    if (cif & CI_OVER_RANGE_COUNT){
+      wr_name(port, "over_range_count");
+      wr_uint32(port, over_range_count);
+    }
+
+    if (cif & CI_SAMPLE_RATE){
+      wr_name(port, "sample_rate");
+      wr_hertz(port, sample_rate);
+    }
+
+#if 0
+    if (cif & CI_TIMESTAMP_ADJ)
+      if (!u.get_int64(e->timestamp_adj))
+	return false;
+
+    if (cif & CI_TIMESTAMP_CAL_TIME)
+      if (!u.get_uint32(e->timestamp_cal_time))
+	return false;
+#endif
+
+    if (cif & CI_TEMPERATURE){
+      wr_name(port, "temperature");
+      wr_temp(port, temperature);
+    }
+
+#if 0
+    if (cif & CI_DEVICE_ID)
+      if (!u.get_uint32(e->device_id[0]) || !u.get_uint32(e->device_id[1]))
+	return false;
+
+    if (cif & CI_STATE_AND_EVENT_IND)
+      if (!u.get_uint32(e->state_and_event_ind))
+	return false;
+
+    if (cif & CI_PAYLOAD_FMT)
+      if (!u.get_uint32(e->payload_fmt.word0) || !u.get_uint32(e->payload_fmt.word1))
+	return false;
+
+    if (cif & CI_FORMATTED_GPS)
+      if (!u.get_formatted_gps(e->formatted_gps))
+	return false;
+
+    if (cif & CI_FORMATTED_INS)
+      if (!u.get_formatted_gps(e->formatted_ins))
+	return false;
+
+    if (cif & CI_ECEF_EPHEMERIS)
+      if (!u.get_ephemeris(e->ecef_ephemeris))
+	return false;
+
+    if (cif & CI_REL_EPHEMERIS)
+      if (!u.get_ephemeris(e->rel_ephemeris))
+	return false;
+
+    if (cif & CI_EPHEMERIS_REF_ID)
+      if (!u.get_int32(e->ephemeris_ref_id))
+	return false;
+
+    if (cif & CI_GPS_ASCII)
+      if (!u.get_gps_ascii(e->gps_ascii))
+	return false;
+
+    if (cif & CI_CNTX_ASSOC_LISTS)
+      if (!u.get_cntx_assoc_lists(e->cntx_assoc_lists))
+	return false;
+#endif
+  }
+
+  std::ostream& operator<<(std::ostream &os, const expanded_if_context_section &obj)
+  {
+    obj.write(os);
+    return os;
   }
 
 }; // namespace vrt

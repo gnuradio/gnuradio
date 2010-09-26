@@ -107,7 +107,7 @@ namespace vrt {
     /*!
      * Write a written representation to the given \p port.
      */
-    void write(std::ostream &port);
+    void write(std::ostream &port) const;
 
   };
 
