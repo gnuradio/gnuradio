@@ -25,6 +25,7 @@ vrtinclude_HEADERS = \
 	bits.h \
 	copiers.h \
 	expanded_header.h \
+	expanded_if_context_section.h \
 	rx.h \
 	rx_packet_handler.h \
 	types.h

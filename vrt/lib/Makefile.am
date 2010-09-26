@@ -32,6 +32,7 @@ libvrt_la_SOURCES = \
 	copiers.cc \
 	data_handler.cc \
 	expanded_header.cc \
+	expanded_if_context_section.cc \
 	rx.cc \
 	rx_packet_handler.cc \
 	socket_rx_buffer.cc

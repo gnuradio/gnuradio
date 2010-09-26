@@ -1,0 +1,233 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2010 Free Software Foundation, Inc.
+ * 
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ * 
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <vrt/expanded_if_context_section.h>
+#include <cstring>
+#include <gruel/inet.h>		// ntohl
+
+
+namespace vrt
+{
+  void
+  expanded_if_context_section::clear()
+  {
+    context_indicator = 0;
+    ref_point_id = 0;
+    if_ref_freq = 0;
+    rf_ref_freq = 0;
+    rf_ref_freq_offset = 0;
+    if_band_offset = 0;
+    ref_level = 0;
+    gain = 0;
+    over_range_count = 0;
+    sample_rate = 0;
+    timestamp_adj = 0;
+    timestamp_cal_time = 0;
+    temperature = 0;
+    device_id[0] = 0;
+    device_id[1] = 0;
+    state_and_event_ind = 0;
+    memset(&payload_fmt, 0, sizeof(payload_fmt));
+    memset(&formatted_gps, 0, sizeof(formatted_gps));
+    memset(&formatted_ins, 0, sizeof(formatted_ins));
+    memset(&ecef_ephemeris, 0, sizeof(ecef_ephemeris));
+    memset(&rel_ephemeris, 0, sizeof(rel_ephemeris));
+    ephemeris_ref_id = 0;
+    gps_ascii.manuf_oui = 0;
+    gps_ascii.ascii.clear();
+    cntx_assoc_lists.source.clear();
+    cntx_assoc_lists.system.clear();
+    cntx_assoc_lists.vector_comp.clear();
+    cntx_assoc_lists.async_channel.clear();
+    cntx_assoc_lists.async_tag.clear();
+  }
+
+  struct unpack_info {
+    const uint32_t 	*p;
+    size_t		nwords;
+    size_t		i;
+
+    unpack_info(const uint32_t *p_, size_t nwords_)
+      : p(p_), nwords(nwords_), i(0) {}
+
+    bool ensure(size_t n)
+    {
+      return (nwords - i) >= n;
+    }
+
+    bool get_int32(int32_t &x)
+    {
+      if (!ensure(1))
+	return false;
+      x = ntohl(p[i++]);
+      return true;
+    }
+
+    bool get_uint32(uint32_t &x)
+    {
+      if (!ensure(1))
+	return false;
+      x = ntohl(p[i++]);
+      return true;
+    }
+
+    bool get_hertz(vrt_hertz_t &x)
+    {
+      if (!ensure(2))
+	return false;
+      
+      uint32_t hi = ntohl(p[i++]);
+      uint32_t lo = ntohl(p[i++]);
+      x = ((int64_t) hi) << 32 | lo;
+      return true;
+    }
+
+    bool get_db(vrt_db_t &x)
+    {
+      if (!ensure(1))
+	return false;
+      x = ntohl(p[i++]);
+      return true;
+    }
+
+    bool get_gain(vrt_gain_t &x)
+    {
+      if (!ensure(1))
+	return false;
+      x = ntohl(p[i++]);
+      return true;
+    }
+
+    bool get_int64(int64_t &x)
+    {
+      if (!ensure(2))
+	return false;
+      
+      uint32_t hi = ntohl(p[i++]);
+      uint32_t lo = ntohl(p[i++]);
+      x = ((int64_t) hi) << 32 | lo;
+      return true;
+    }
+
+    bool get_temp(vrt_temp_t &x)
+    {
+      if (!ensure(1))
+	return false;
+      x = ntohl(p[i++]);
+      return true;
+    }
+
+  };
+  
+
+  bool 
+  expanded_if_context_section::unpack(const uint32_t *context_section,	// in
+				      size_t n32_bit_words,		// in
+				      expanded_if_context_section *e)	// out
+  {
+    unpack_info u(context_section, n32_bit_words);
+    e->clear();
+
+    if (!u.get_uint32(e->context_indicator))
+      return false;
+    uint32_t cif = e->context_indicator;
+    
+    if (cif & CI_REF_POINT_ID)
+      if (!u.get_uint32(e->ref_point_id))
+	return false;
+
+    if (cif & CI_BANDWIDTH)
+      if (!u.get_hertz(e->bandwidth))
+	return false;
+
+    if (cif & CI_IF_REF_FREQ)
+      if (!u.get_hertz(e->if_ref_freq))
+	return false;
+
+    if (cif & CI_RF_REF_FREQ)
+      if (!u.get_hertz(e->rf_ref_freq))
+	return false;
+
+    if (cif & CI_RF_REF_FREQ_OFFSET)
+      if (!u.get_hertz(e->rf_ref_freq_offset))
+	return false;
+
+    if (cif & CI_IF_BAND_OFFSET)
+      if (!u.get_hertz(e->if_band_offset))
+	return false;
+
+    if (cif & CI_REF_LEVEL)
+      if (!u.get_db(e->ref_level))
+	return false;
+
+    if (cif & CI_GAIN)
+      if (!u.get_gain(e->gain))
+	return false;
+
+    if (cif & CI_OVER_RANGE_COUNT)
+      if (!u.get_uint32(e->over_range_count))
+	return false;
+
+    if (cif & CI_SAMPLE_RATE)
+      if (!u.get_hertz(e->sample_rate))
+	return false;
+
+    if (cif & CI_TIMESTAMP_ADJ)
+      if (!u.get_int64(e->timestamp_adj))
+	return false;
+
+    if (cif & CI_TIMESTAMP_CAL_TIME)
+      if (!u.get_uint32(e->timestamp_cal_time))
+	return false;
+
+    if (cif & CI_TEMPERATURE)
+      if (!u.get_temp(e->temperature))
+	return false;
+
+    if (cif & CI_DEVICE_ID)
+      if (!u.get_uint32(e->device_id[0]) || !u.get_uint32(e->device_id[1]))
+	return false;
+    
+    if (cif & CI_STATE_AND_EVENT_IND)
+      if (!u.get_uint32(e->state_and_event_ind))
+	return false;
+
+    if (cif & CI_PAYLOAD_FMT)
+      if (!u.get_uint32(e->payload_fmt.word0) || !u.get_uint32(e->payload_fmt.word1))
+	return false;
+
+    // FIXME formatted_gps, formatted_ins
+    // FIXME ecef_ephemeris, rel_ephemeris
+
+    if (cif & CI_EPHEMERIS_REF_ID)
+      if (!u.get_int32(e->ephemeris_ref_id))
+	return false;
+
+    // FIXME gps_ascii
+    // FIXME cntx_assoc_lists
+
+    return true;
+  }
+
+}; // namespace vrt

@@ -87,6 +87,22 @@ namespace vrt {
     int32_t	ephemeris_ref_id;	//< 7.1.5.23
     exp_gps_ascii  gps_ascii;		//< 7.1.5.24
     exp_context_assocs cntx_assoc_lists;//< 7.1.5.25
+
+    // Reset struct, empty all containers.
+    void clear();
+
+    /*!
+     * \brief Unpack IF Context section into expanded_if_context_section
+     *
+     * \param[in] context_section points to the context section of the raw IF Context pkt.
+     * \param[in] n32_bit_words is the length of the context_section.
+     * \param[out] cntx holds the result of unpacking the information found in context_section.
+     *
+     * \Returns true iff context_section is successfully parsed.
+     */
+    static bool unpack(const uint32_t *context_section,		// in
+		       size_t n32_bit_words,			// in
+		       expanded_if_context_section *cntx);	// out
   };
 
 }; // namespace vrt
