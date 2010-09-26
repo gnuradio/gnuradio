@@ -219,7 +219,8 @@ namespace vrt
 	      && get_nwords_vector(x.async_tag, async_tag_list_size));
     }
 
-  };
+  };
+
   bool 
   expanded_if_context_section::unpack(const uint32_t *context_section,	// in
 				      size_t n32_bit_words,		// in
@@ -325,7 +326,8 @@ namespace vrt
 	return false;
 
     return u.consumed_all();
-  }
+  }
+
   static void wr_name(std::ostream &os, const std::string &x)
   {
     os << format("  %-19s  ") % (x + ":");
@@ -512,7 +514,6 @@ namespace vrt
     wr_cntx_list(os, "async_tag",  x.async_tag);
   }
 
-
   void
   expanded_if_context_section::write(std::ostream &os) const
   {
@@ -570,11 +571,10 @@ namespace vrt
       wr_hertz(os, sample_rate);
     }
 
-#if 0
-    if (cif & CI_TIMESTAMP_ADJ)
-      if (!u.get_int64(e->timestamp_adj))
-	return false;
-#endif
+    if (cif & CI_TIMESTAMP_ADJ){
+      wr_name(os, "timestamp_adj");
+      os << format("%10d ps\n") % timestamp_adj;
+    }
 
     if (cif & CI_TIMESTAMP_CAL_TIME){
       wr_name(os, "timestamp_cal_time");
@@ -613,23 +613,28 @@ namespace vrt
       wr_formatted_gps(os, formatted_ins);
     }
 
-#if 0
-    if (cif & CI_ECEF_EPHEMERIS)
-      if (!u.get_ephemeris(e->ecef_ephemeris))
-	return false;
+    if (cif & CI_ECEF_EPHEMERIS){
+      wr_name(os, "ecef_ephemeris");
+      os << "<NOT IMPLEMENTED>\n";
+      // wr_ephemeris(os, ecef_ephemeris);
+    }
 
-    if (cif & CI_REL_EPHEMERIS)
-      if (!u.get_ephemeris(e->rel_ephemeris))
-	return false;
+    if (cif & CI_REL_EPHEMERIS){
+      wr_name(os, "rel_ephemeris");
+      os << "<NOT IMPLEMENTED>\n";
+      // wr_ephemeris(os, rel_ephemeris);
+    }
 
-    if (cif & CI_EPHEMERIS_REF_ID)
-      if (!u.get_int32(e->ephemeris_ref_id))
-	return false;
+    if (cif & CI_EPHEMERIS_REF_ID){
+      wr_name(os, "epemeris_ref_id");
+      wr_uint32_hex(os, ephemeris_ref_id);
+    }
 
-    if (cif & CI_GPS_ASCII)
-      if (!u.get_gps_ascii(e->gps_ascii))
-	return false;
-#endif
+    if (cif & CI_GPS_ASCII){
+      wr_name(os, "gps_ascii");
+      os << "<NOT IMPLEMENTED>\n";
+      // wr_gps_ascii(os, gps_ascii);
+    }
 
     if (cif & CI_CNTX_ASSOC_LISTS){
       wr_name(os, "cntx_assoc_lists");
