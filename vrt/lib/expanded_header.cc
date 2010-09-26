@@ -24,7 +24,11 @@
 #endif
 #include <vrt/expanded_header.h>
 #include <gruel/inet.h>
-//#include <stdio.h>
+#include <boost/format.hpp>
+
+using boost::format;
+using boost::io::group;
+
 
 namespace vrt {
 
@@ -132,5 +136,41 @@ namespace vrt {
     return true;
   }
 
+  std::string
+  pkt_type_name(const vrt::expanded_header *hdr)
+  {
+    if (hdr->if_data_p())
+      return "IF-Data";
+    if (hdr->ext_data_p())
+      return "Ext-Data";
+    if (hdr->if_context_p())
+      return "IF-Context";
+    if (hdr->ext_context_p())
+      return "Ext-Context";
+    else
+      return "<unknown pkt type>";
+  }
+
+  void
+  expanded_header::write(std::ostream &port) const
+  {
+    port << format("%s:\n") % pkt_type_name(this);
+    if (1)
+      port << format("  header:     0x%08x\n") % header;
+    if (stream_id_p())
+      port << format("  stream_id:  %#10x\n") % stream_id;
+    if (class_id_p())
+      port << format("  class_id:   0x%016llx\n") % class_id;
+    if (integer_secs_p())
+      port << format("  int secs:   %10d\n") % integer_secs;
+    if (fractional_secs_p())
+      port << format("  frac secs:  %10d\n") % fractional_secs;
+  }
+
+  std::ostream& operator<<(std::ostream &os, const expanded_header &obj)
+  {
+    obj.write(os);
+    return os;
+  }
 
 }; // vrt

@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <vrt/bits.h>
+#include <iosfwd>
 
 namespace vrt {
 
@@ -101,6 +102,12 @@ namespace vrt {
 		       const uint32_t **payload,	// out
 		       size_t *n32_bit_words_payload);	// out
 		      
+    /*!
+     * Write a written representation to the given \p port.
+     */
+    void write(std::ostream &port) const;
+
+
   private:
     static unsigned char s_if_data[16];
     static unsigned char s_ext_data[16];
@@ -109,6 +116,8 @@ namespace vrt {
     static unsigned char s_stream_id[16];
 
   };
+
+  std::ostream& operator<<(std::ostream &os, const expanded_header &obj);
 
 }; // vrt
 

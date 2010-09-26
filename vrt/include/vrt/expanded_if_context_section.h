@@ -21,9 +21,6 @@
 #ifndef INCLUDED_VRT_EXPANDED_IF_CONTEXT_SECTION_H
 #define INCLUDED_VRT_EXPANDED_IF_CONTEXT_SECTION_H
 
-#include <string>
-#include <vector>
-
 /*!
  * Expanded (unpacked) version of Context Section, defined in VRT section 7.1.5
  */
@@ -31,7 +28,10 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <vrt/bits.h>
-#include <vrt/types.h>
+#include <string>
+#include <vector>
+#include <iosfwd>
+
 
 namespace vrt {
   
@@ -103,7 +103,15 @@ namespace vrt {
     static bool unpack(const uint32_t *context_section,		// in
 		       size_t n32_bit_words,			// in
 		       expanded_if_context_section *cntx);	// out
+
+    /*!
+     * Write a written representation to the given \p port.
+     */
+    void write(std::ostream &port);
+
   };
+
+  std::ostream& operator<<(std::ostream &os, const expanded_if_context_section &obj);
 
 }; // namespace vrt
 

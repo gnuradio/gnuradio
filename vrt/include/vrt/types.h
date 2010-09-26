@@ -25,7 +25,7 @@ extern "C" {
 #include <stdint.h>
 
 /* macros for dealing with fixed point numbers */
-#define _FXPT_C(_type, _x, _rp) ((_type)((_x)*(1ll << _rp)))
+#define _FXPT_C(_type, _x, _rp) ((_type)((_x)*(1LL << _rp)))
 #define _FXPT_TO_INT(_x, _one) (((_x) + ((_one)/2))/(_one))
 #define _FXPT_TO_DOUBLE(_x, _one) ((double)(_x) * (1.0/(_one)))
 
