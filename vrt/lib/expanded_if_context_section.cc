@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include <vrt/expanded_if_context_section.h>
-#include <cstring>
+#include <string.h>
 #include <gruel/inet.h>		// ntohl
 
 
@@ -155,6 +155,14 @@ namespace vrt
       return true;
     }
 
+    bool get_nwords_vector(std::vector<uint32_t> &x, unsigned int nw)
+    {
+      if (!ensure(nw))
+	  return false;
+      x.resize(nw);
+      return get_nwords(&x[0], nw);
+    }
+
     bool get_formatted_gps(vrt_formatted_gps_t &x)
     {
       return get_nwords((uint32_t *) &x, 11);
@@ -163,6 +171,48 @@ namespace vrt
     bool get_ephemeris(vrt_ephemeris_t &x)
     {
       return get_nwords((uint32_t *) &x, 13);
+    }
+
+    bool get_gps_ascii(exp_gps_ascii &x)
+    {
+      uint32_t	manuf_oui;
+      uint32_t  nw;
+
+      if (!get_uint32(manuf_oui) || !get_uint32(nw))
+	return false;
+
+      if (!ensure(nw))
+	return false;
+
+      const char *s = (const char *)&p[i];
+      size_t nbytes = strnlen(s, nw * sizeof(uint32_t));
+      x.manuf_oui = manuf_oui;
+      x.ascii = std::string(s, nbytes);
+      i += nw;
+      return true;
+    }
+
+    bool get_cntx_assoc_lists(exp_context_assocs &x)
+    {
+      uint32_t	w0;
+      uint32_t	w1;
+
+      if (!get_uint32(w0) || !get_uint32(w1))
+	return false;
+
+      uint32_t source_list_size = (w0 >> 16) & 0x1ff;
+      uint32_t system_list_size = w0 & 0x1ff;
+      uint32_t vector_comp_list_size = (w1 >> 16) & 0xffff;
+      uint32_t async_channel_list_size =  w1 & 0x7fff;
+      bool a_bit = (w1 & 0x8000) != 0;
+      uint32_t async_tag_list_size = a_bit ? async_channel_list_size : 0;
+
+      return (true
+	      && get_nwords_vector(x.source, source_list_size)
+	      && get_nwords_vector(x.system, system_list_size)
+	      && get_nwords_vector(x.vector_comp, vector_comp_list_size)
+	      && get_nwords_vector(x.async_channel, async_channel_list_size)
+	      && get_nwords_vector(x.async_tag, async_tag_list_size));
     }
 
   };
@@ -264,11 +314,15 @@ namespace vrt
       if (!u.get_int32(e->ephemeris_ref_id))
 	return false;
 
-    // FIXME gps_ascii
-    // FIXME cntx_assoc_lists
+    if (cif & CI_GPS_ASCII)
+      if (!u.get_gps_ascii(e->gps_ascii))
+	return false;
 
-    //return u.consumed_all();
-    return true;
+    if (cif & CI_CNTX_ASSOC_LISTS)
+      if (!u.get_cntx_assoc_lists(e->cntx_assoc_lists))
+	return false;
+
+    return u.consumed_all();
   }
 
 }; // namespace vrt
