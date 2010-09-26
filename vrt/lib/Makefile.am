@@ -33,6 +33,7 @@ libvrt_la_SOURCES = \
 	data_handler.cc \
 	expanded_header.cc \
 	expanded_if_context_section.cc \
+	header_utils.cc \
 	rx.cc \
 	rx_packet_handler.cc \
 	socket_rx_buffer.cc
@@ -46,6 +47,7 @@ noinst_HEADERS = \
 	data_handler.h \
 	expanded_header_unpack_switch_body.h \
 	expanded_header_pack_switch_body.h \
+	header_utils.h \
 	socket_rx_buffer.h
 
 EXTRA_DIST = \

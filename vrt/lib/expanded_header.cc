@@ -25,12 +25,15 @@
 #include <vrt/expanded_header.h>
 #include <gruel/inet.h>
 #include <boost/format.hpp>
+#include "header_utils.h"
 
 using boost::format;
 using boost::io::group;
 
 
 namespace vrt {
+
+  using namespace detail;
 
   // lookup tables indexed by packet type
   unsigned char expanded_header::s_if_data[16] = {
@@ -183,7 +186,8 @@ namespace vrt {
 
     if (integer_secs_p()){
       wr_name(port, "int secs");
-      port << format("%10d\n") % integer_secs;
+      //port << format("%10d\n") % integer_secs;
+      wr_int_secs(port, integer_secs);
     }
 
     if (fractional_secs_p()){

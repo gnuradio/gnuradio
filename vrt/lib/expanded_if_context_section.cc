@@ -26,6 +26,7 @@
 #include <string.h>
 #include <gruel/inet.h>		// ntohl
 #include <boost/format.hpp>
+#include "header_utils.h"
 
 using boost::format;
 using boost::io::group;
@@ -33,6 +34,8 @@ using boost::io::group;
 
 namespace vrt
 {
+  using namespace detail;
+
   void
   expanded_if_context_section::clear()
   {
@@ -470,7 +473,8 @@ namespace vrt
     os << format(" manuf_oui=%#10x") % t;
 
     wr_name(os, "fix int secs");
-    os << format("%10d\n") % x.integer_secs;
+    //os << format("%10d\n") % x.integer_secs;
+    wr_int_secs(os, x.integer_secs);
 
     wr_name(os, "fix frac secs");
     os << format("%10d\n") % get_frac_secs(&x.fractional_secs);
@@ -578,7 +582,7 @@ namespace vrt
 
     if (cif & CI_TIMESTAMP_CAL_TIME){
       wr_name(os, "timestamp_cal_time");
-      wr_uint32_dec(os, timestamp_cal_time);
+      wr_int_secs(os, timestamp_cal_time);
     }
 
     if (cif & CI_TEMPERATURE){
