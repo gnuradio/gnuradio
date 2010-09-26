@@ -347,7 +347,7 @@ namespace vrt
 
   static void wr_hertz(std::ostream &os, vrt_hertz_t x)
   {
-    os << format("%10g Hz") % vrt_hertz_to_double(x);
+    os << format("%12g Hz") % vrt_hertz_to_double(x);
     os << std::endl;
   }
 
