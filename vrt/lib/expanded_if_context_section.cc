@@ -367,6 +367,36 @@ namespace vrt
     os << std::endl;
   }
 
+  static void wr_angle(std::ostream &os, vrt_angle_t x)
+  {
+    if (x == VRT_GPS_UNKNOWN_VALUE)
+      os << "UNKNOWN";
+    else
+      os << format("%10g deg") % vrt_angle_to_double(x);
+
+    os << std::endl;
+  }
+
+  static void wr_distance(std::ostream &os, vrt_distance_t x)
+  {
+    if (x == VRT_GPS_UNKNOWN_VALUE)
+      os << "UNKNOWN";
+    else
+      os << format("%10g m") % vrt_distance_to_double(x);
+
+    os << std::endl;
+  }
+
+  static void wr_velocity(std::ostream &os, vrt_velocity_t x)
+  {
+    if (x == VRT_GPS_UNKNOWN_VALUE)
+      os << "UNKNOWN";
+    else
+      os << format("%10g m/s") % vrt_velocity_to_double(x);
+
+    os << std::endl;
+  }
+
   static void wr_payload_fmt(std::ostream &os, vrt_payload_fmt_t f)
   {
     if (f.word0 & DF0_PACKED)
@@ -415,61 +445,107 @@ namespace vrt
     os << std::endl;
   }
 
+  static void wr_formatted_gps(std::ostream &os,
+			       const vrt_formatted_gps_t &x)
+  {
+    uint32_t t = (x.tsi_tsf_manuf_oui >> 26) & 0x3;
+    switch(t){
+    case 0x0:	os << " TSI_UNDEF";	break;
+    case 0x1:	os << " TSI_UTC";	break;
+    case 0x2:	os << " TSI_GPS";	break;
+    case 0x3:	os << " TSI_OTHER";	break;
+    }
+
+    t = (x.tsi_tsf_manuf_oui >> 24) & 0x3;
+    switch(t){
+    case 0x0:	os << " TSF_UNDEF";	break;
+    case 0x1:	os << " TSF_SAMPLE_CNT";break;
+    case 0x2:	os << " TSI_PICOSECS";	break;
+    case 0x3:	os << " TSI_FREE_RUN";	break;
+    }
+
+    t = x.tsi_tsf_manuf_oui & 0x00ffffff;
+    os << format(" manuf_oui=%#10x") % t;
+
+    wr_name(os, "fix int secs");
+    os << format("%10d\n") % x.integer_secs;
+
+    wr_name(os, "fix frac secs");
+    os << format("%10d\n") % get_frac_secs(&x.fractional_secs);
+
+    wr_name(os, "latitude");
+    wr_angle(os, x.latitude);
+    wr_name(os, "longitude");
+    wr_angle(os, x.longitude);
+    wr_name(os, "altitude");
+    wr_distance(os, x.altitude);
+    wr_name(os, "speed_over_ground");
+    wr_velocity(os, x.speed_over_ground);
+    wr_name(os, "heading_angle");
+    wr_angle(os, x.heading_angle);
+    wr_name(os, "track_angle");
+    wr_angle(os, x.track_angle);
+    wr_name(os, "magnetic_variation");
+    wr_angle(os, x.magnetic_variation);
+
+    os << std::endl;
+  }
+
   void
-  expanded_if_context_section::write(std::ostream &port) const
+  expanded_if_context_section::write(std::ostream &os) const
   {
     uint32_t cif = context_indicator;
 
     if (cif & CI_REF_POINT_ID){
-      wr_name(port, "ref_point_id");
-      wr_uint32_hex(port, ref_point_id);
+      wr_name(os, "ref_point_id");
+      wr_uint32_hex(os, ref_point_id);
     }
 
     if (cif & CI_BANDWIDTH){
-      wr_name(port, "bandwidth");
-      wr_hertz(port, bandwidth);
+      wr_name(os, "bandwidth");
+      wr_hertz(os, bandwidth);
     }
 
     if (cif & CI_IF_REF_FREQ){
-      wr_name(port, "if_ref_freq");
-      wr_hertz(port, if_ref_freq);
+      wr_name(os, "if_ref_freq");
+      wr_hertz(os, if_ref_freq);
     }
 
     if (cif & CI_RF_REF_FREQ){
-      wr_name(port, "rf_ref_freq");
-      wr_hertz(port, rf_ref_freq);
+      wr_name(os, "rf_ref_freq");
+      wr_hertz(os, rf_ref_freq);
     }
 
     if (cif & CI_RF_REF_FREQ_OFFSET){
-      wr_name(port, "rf_ref_freq_offset");
-      wr_hertz(port, rf_ref_freq_offset);
+      wr_name(os, "rf_ref_freq_offset");
+      wr_hertz(os, rf_ref_freq_offset);
     }
 
     if (cif & CI_IF_BAND_OFFSET){
-      wr_name(port, "if_band_offset");
-      wr_hertz(port, if_band_offset);
+      wr_name(os, "if_band_offset");
+      wr_hertz(os, if_band_offset);
     }
 
     if (cif & CI_REF_LEVEL){
-      wr_name(port, "ref_level");
-      wr_dbm(port, ref_level);
+      wr_name(os, "ref_level");
+      wr_dbm(os, ref_level);
     }
 
     if (cif & CI_GAIN){
-      wr_name(port, "gain stage1");
-      wr_db(port, vrt_gain_stage1(gain));
-      wr_name(port, "gain stage2");
-      wr_db(port, vrt_gain_stage2(gain));
+      wr_name(os, "gain stage1");
+      wr_db(os, vrt_gain_stage1(gain));
+      wr_name(os, "gain stage2");
+      wr_db(os, vrt_gain_stage2(gain));
     }
 
     if (cif & CI_OVER_RANGE_COUNT){
-      wr_name(port, "over_range_count");
-      wr_uint32_dec(port, over_range_count);
+      wr_name(os, "over_range_count");
+      wr_uint32_dec(os, over_range_count);
     }
 
     if (cif & CI_SAMPLE_RATE){
-      wr_name(port, "sample_rate");
-      wr_hertz(port, sample_rate);
+      wr_name(os, "sample_rate");
+      wr_hertz(os, sample_rate);
     }
 
 #if 0
@@ -479,41 +555,43 @@ namespace vrt
 #endif
 
     if (cif & CI_TIMESTAMP_CAL_TIME){
-      wr_name(port, "timestamp_cal_time");
-      wr_uint32_dec(port, timestamp_cal_time);
+      wr_name(os, "timestamp_cal_time");
+      wr_uint32_dec(os, timestamp_cal_time);
     }
 
     if (cif & CI_TEMPERATURE){
-      wr_name(port, "temperature");
-      wr_temp(port, temperature);
+      wr_name(os, "temperature");
+      wr_temp(os, temperature);
     }
 
     if (cif & CI_DEVICE_ID){
-      wr_name(port, "manuf oui");
-      wr_uint32_hex(port, device_id[0] & 0x00ffffff);
-      wr_name(port, "device code");
-      wr_uint32_hex(port, device_id[1] & 0xffff);
+      wr_name(os, "manuf_oui");
+      wr_uint32_hex(os, device_id[0] & 0x00ffffff);
+      wr_name(os, "device_code");
+      wr_uint32_hex(os, device_id[1] & 0xffff);
     }
 
     if (cif & CI_STATE_AND_EVENT_IND){
-      wr_name(port, "state_and_event_ind");
-      wr_uint32_hex(port, state_and_event_ind);
+      wr_name(os, "state_and_event_ind");
+      wr_uint32_hex(os, state_and_event_ind);
     }
 
     if (cif & CI_PAYLOAD_FMT){
-      wr_name(port, "payload_fmt");
-      wr_payload_fmt(port, payload_fmt);
+      wr_name(os, "payload_fmt");
+      wr_payload_fmt(os, payload_fmt);
+    }
+
+    if (cif & CI_FORMATTED_GPS){
+      wr_name(os, "formatted_gps");
+      wr_formatted_gps(os, formatted_gps);
+    }
+
+    if (cif & CI_FORMATTED_INS){
+      wr_name(os, "formatted_ins");
+      wr_formatted_gps(os, formatted_ins);
     }
 
 #if 0
-    if (cif & CI_FORMATTED_GPS)
-      if (!u.get_formatted_gps(e->formatted_gps))
-	return false;
-
-    if (cif & CI_FORMATTED_INS)
-      if (!u.get_formatted_gps(e->formatted_ins))
-	return false;
-
     if (cif & CI_ECEF_EPHEMERIS)
       if (!u.get_ephemeris(e->ecef_ephemeris))
 	return false;
