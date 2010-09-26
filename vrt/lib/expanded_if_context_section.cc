@@ -490,6 +490,28 @@ namespace vrt
 
     os << std::endl;
   }
+
+  static void wr_cntx_list(std::ostream &os, const std::string &name, const std::vector<uint32_t> &v)
+  {
+    if (v.empty())
+      return;
+
+    wr_name(os, "  " + name);
+    for (size_t j = 0; j < v.size(); j++)
+      os << format("%#x ") % v[j];
+    os << std::endl;
+  }
+
+  static void wr_cntx_assoc_lists(std::ostream &os, const exp_context_assocs &x)
+  {
+    os << std::endl;
+    wr_cntx_list(os, "source", x.source);
+    wr_cntx_list(os, "system", x.system);
+    wr_cntx_list(os, "vector", x.vector_comp);
+    wr_cntx_list(os, "async_chan", x.async_channel);
+    wr_cntx_list(os, "async_tag",  x.async_tag);
+  }
+
 
   void
   expanded_if_context_section::write(std::ostream &os) const
@@ -607,11 +629,13 @@ namespace vrt
     if (cif & CI_GPS_ASCII)
       if (!u.get_gps_ascii(e->gps_ascii))
 	return false;
-
-    if (cif & CI_CNTX_ASSOC_LISTS)
-      if (!u.get_cntx_assoc_lists(e->cntx_assoc_lists))
-	return false;
 #endif
+
+    if (cif & CI_CNTX_ASSOC_LISTS){
+      wr_name(os, "cntx_assoc_lists");
+      wr_cntx_assoc_lists(os, cntx_assoc_lists);
+    }
+
   }
 
   std::ostream& operator<<(std::ostream &os, const expanded_if_context_section &obj)
