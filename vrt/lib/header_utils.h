@@ -28,8 +28,11 @@ namespace vrt
 {
   namespace detail {
 
+    void wr_name(std::ostream &os, const std::string &x);
     void wr_int_secs(std::ostream &os, uint32_t secs);
-    
+    void wr_uint32_hex(std::ostream &os, uint32_t x);
+    void wr_uint32_dec(std::ostream &os, uint32_t x);
+
   };
 };
 

@@ -331,23 +331,6 @@ namespace vrt
     return u.consumed_all();
   }
 
-  static void wr_name(std::ostream &os, const std::string &x)
-  {
-    os << format("  %-19s  ") % (x + ":");
-  }
-
-  static void wr_uint32_hex(std::ostream &os, uint32_t x)
-  {
-    os << format("%#10x") % x;
-    os << std::endl;
-  }
-
-  static void wr_uint32_dec(std::ostream &os, uint32_t x)
-  {
-    os << format("%12d") % x;
-    os << std::endl;
-  }
-
   static void wr_hertz(std::ostream &os, vrt_hertz_t x)
   {
     os << format("%12g Hz") % vrt_hertz_to_double(x);
@@ -375,7 +358,7 @@ namespace vrt
   static void wr_angle(std::ostream &os, vrt_angle_t x)
   {
     if (x == VRT_GPS_UNKNOWN_VALUE)
-      os << "UNKNOWN";
+      os << "   UNKNOWN";
     else
       os << format("%10g deg") % vrt_angle_to_double(x);
 
@@ -385,7 +368,7 @@ namespace vrt
   static void wr_distance(std::ostream &os, vrt_distance_t x)
   {
     if (x == VRT_GPS_UNKNOWN_VALUE)
-      os << "UNKNOWN";
+      os << "   UNKNOWN";
     else
       os << format("%10g m") % vrt_distance_to_double(x);
 
@@ -395,7 +378,7 @@ namespace vrt
   static void wr_velocity(std::ostream &os, vrt_velocity_t x)
   {
     if (x == VRT_GPS_UNKNOWN_VALUE)
-      os << "UNKNOWN";
+      os << "   UNKNOWN";
     else
       os << format("%10g m/s") % vrt_velocity_to_double(x);
 
@@ -455,43 +438,43 @@ namespace vrt
   {
     uint32_t t = (x.tsi_tsf_manuf_oui >> 26) & 0x3;
     switch(t){
-    case 0x0:	os << " TSI_UNDEF";	break;
-    case 0x1:	os << " TSI_UTC";	break;
-    case 0x2:	os << " TSI_GPS";	break;
-    case 0x3:	os << " TSI_OTHER";	break;
+    case 0x0:	os << " TSI=UNDEF";	break;
+    case 0x1:	os << " TSI=UTC";	break;
+    case 0x2:	os << " TSI=GPS";	break;
+    case 0x3:	os << " TSI=OTHER";	break;
     }
 
     t = (x.tsi_tsf_manuf_oui >> 24) & 0x3;
     switch(t){
-    case 0x0:	os << " TSF_UNDEF";	break;
-    case 0x1:	os << " TSF_SAMPLE_CNT";break;
-    case 0x2:	os << " TSI_PICOSECS";	break;
-    case 0x3:	os << " TSI_FREE_RUN";	break;
+    case 0x0:	os << " TSF=UNDEF";	break;
+    case 0x1:	os << " TSF=SAMPLE_CNT";break;
+    case 0x2:	os << " TSI=PICOSECS";	break;
+    case 0x3:	os << " TSI=FREE_RUN";	break;
     }
 
     t = x.tsi_tsf_manuf_oui & 0x00ffffff;
-    os << format(" manuf_oui=%#10x") % t;
+    os << format(" manuf_oui=%#x\n") % t;
 
-    wr_name(os, "fix int secs");
+    wr_name(os, "  fix int secs");
     //os << format("%10d\n") % x.integer_secs;
     wr_int_secs(os, x.integer_secs);
 
-    wr_name(os, "fix frac secs");
+    wr_name(os, "  fix frac secs");
     os << format("%10d\n") % get_frac_secs(&x.fractional_secs);
 
-    wr_name(os, "latitude");
+    wr_name(os, "  latitude");
     wr_angle(os, x.latitude);
-    wr_name(os, "longitude");
+    wr_name(os, "  longitude");
     wr_angle(os, x.longitude);
-    wr_name(os, "altitude");
+    wr_name(os, "  altitude");
     wr_distance(os, x.altitude);
-    wr_name(os, "speed_over_ground");
+    wr_name(os, "  speed_over_ground");
     wr_velocity(os, x.speed_over_ground);
-    wr_name(os, "heading_angle");
+    wr_name(os, "  heading_angle");
     wr_angle(os, x.heading_angle);
-    wr_name(os, "track_angle");
+    wr_name(os, "  track_angle");
     wr_angle(os, x.track_angle);
-    wr_name(os, "magnetic_variation");
+    wr_name(os, "  magnetic_variation");
     wr_angle(os, x.magnetic_variation);
 
     os << std::endl;

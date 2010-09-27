@@ -48,5 +48,22 @@ namespace vrt
       os << std::endl;
     }
 
+    void wr_name(std::ostream &os, const std::string &x)
+    {
+      os << format("  %-21s ") % (x + ":");
+    }
+
+    void wr_uint32_hex(std::ostream &os, uint32_t x)
+    {
+      os << format("%#10x") % x;
+      os << std::endl;
+    }
+
+    void wr_uint32_dec(std::ostream &os, uint32_t x)
+    {
+      os << format("%12d") % x;
+      os << std::endl;
+    }
+
   };
 };
