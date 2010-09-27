@@ -19,6 +19,13 @@ dnl Boston, MA 02110-1301, USA.
 
 AC_INIT
 AC_PREREQ(2.57)
+
+dnl Set the prefix to the default when --prefix is not specified.
+dnl This is critical for variable substitutions in the configure.
+if test "${prefix}" = "NONE"; then
+    prefix=${ac_default_prefix}
+fi
+
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
 
