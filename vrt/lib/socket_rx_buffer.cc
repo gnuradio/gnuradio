@@ -43,12 +43,11 @@
 
 #define DEFAULT_MEM_SIZE 62.5e6 // ~0.5s @ 125 MB/s
 #define MAX_MEM_SIZE     1000e6 // ~10.00s @ 100 MB/s. 
-
+#define RX_BUF_ALIGNMENT 16	// 16-byte aligned for SIMD (must be power-of-2)
 
 namespace vrt {
 
   const unsigned int socket_rx_buffer::MAX_PKTLEN = 8192;
-  const unsigned int socket_rx_buffer::MIN_PKTLEN = 64;
   
   socket_rx_buffer::socket_rx_buffer(int socket_fd, size_t rx_bufsize)
     : d_fd(socket_fd)
@@ -111,11 +110,14 @@ namespace vrt {
   socket_rx_buffer::result
   socket_rx_buffer::rx_frames(data_handler *f, int timeout_in_ms)
   {
-    unsigned char buf[MAX_PKTLEN];
+    unsigned char unaligned[MAX_PKTLEN + RX_BUF_ALIGNMENT];
+    unsigned char *buf = (unsigned char *)
+      (((intptr_t)unaligned + RX_BUF_ALIGNMENT) & -RX_BUF_ALIGNMENT);
+
     bool dont_wait = timeout_in_ms == 0;  	// FIXME treating timeout as 0 or inf
     int flags = dont_wait ? MSG_DONTWAIT : 0;
 
-    ssize_t rr = recv(d_fd, buf, sizeof(buf), flags);
+    ssize_t rr = recv(d_fd, buf, MAX_PKTLEN, flags);
     if (rr == -1){		// error?
       if (errno == EAGAIN){	// non-blocking, nothing there
 	return EB_WOULD_BLOCK;
@@ -133,7 +135,7 @@ namespace vrt {
     // Now do as many as we can without blocking
 
     while (1){
-      rr = recv(d_fd, buf, sizeof(buf), MSG_DONTWAIT);
+      rr = recv(d_fd, buf, MAX_PKTLEN, MSG_DONTWAIT);
       if (rr == -1){		// error?
 	if (errno == EAGAIN)	// non-blocking, nothing there
 	  return EB_OK;	// return OK; we've processed >= 1 packets

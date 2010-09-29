@@ -55,7 +55,6 @@ namespace vrt {
     };
 
     static const unsigned int MAX_PKTLEN;
-    static const unsigned int MIN_PKTLEN;
 
     /*!
      * \param socket_fd file descriptor that corresponds to a socket
