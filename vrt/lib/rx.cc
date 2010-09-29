@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -80,13 +80,13 @@ namespace vrt {
 
     ~vrt_data_handler();
 
-    result operator()(const void *base, size_t len);
+    bool operator()(const void *base, size_t len);
   };
 
   vrt_data_handler::~vrt_data_handler(){}
 
   // N.B., There may be more than 1 VRT packet in a frame (usually IF-Context packets)
-  data_handler::result
+  bool
   vrt_data_handler::operator()(const void *base, size_t len)
   {
     const uint32_t *word_base = (const uint32_t *) base;
@@ -103,13 +103,13 @@ namespace vrt {
 	  fprintf(stderr, "vrt_data_handler: malformed VRT packet!\n");
 	  print_words(stderr, 0, word_base, word_len);
 	}
-	return 0;
+	return true;
       }
       want_more = (*d_handler)(payload, n32_bit_words, &hdr);
       word_base += hdr.pkt_size();
       word_len -= hdr.pkt_size();
     }
-    return !want_more ? data_handler::DONE : 0;
+    return want_more;
   }
 
 

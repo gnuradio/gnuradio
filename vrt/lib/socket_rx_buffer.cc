@@ -126,8 +126,8 @@ namespace vrt {
 
     // Got first packet.  Call handler
 
-    data_handler::result r = (*f)(buf, rr);
-    if (r & data_handler::DONE)
+    bool want_more = (*f)(buf, rr);
+    if (!want_more)
       return EB_OK;
 
     // Now do as many as we can without blocking
@@ -141,8 +141,8 @@ namespace vrt {
 	return EB_ERROR;
       }
 
-      r = (*f)(buf, rr);
-      if (r & data_handler::DONE)
+      want_more = (*f)(buf, rr);
+      if (!want_more)
 	break;
     }
     return EB_OK;

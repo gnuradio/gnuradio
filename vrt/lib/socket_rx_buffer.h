@@ -79,11 +79,9 @@ namespace vrt {
      * invoked.
      *
      * \p f will be called on each frame that is available.
-     * \p f returns a bit mask with one of the following set or cleared:
-     * 
-     * data_handler::DONE -  return from rx_frames now even though more frames
-     *                       might be available; otherwise continue if more 
-     *                       frames are ready.
+     * \p f returns a bool.  If false, return from rx_frames now even
+     * though more frames may be available; if true, continue if
+     * more frames are ready.
      *
      * \returns EB_OK if at least one frame was received
      * \returns EB_WOULD_BLOCK if \p timeout is 0 and the call would have blocked

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,18 +33,12 @@ namespace vrt {
   {
   public:
 
-    enum result_bits {
-      DONE	= 0x0002,    	//< do not call this object again
-    };
-    
-    typedef int result;		//< bitmask of result_bits
-
     /*!
-     * \param base points to the beginning of the data
-     * \param len is the length in bytes of the data
-     * \returns bitmask composed of DONE
+     * \param base points to the beginning of the data.
+     * \param len is the length of the data in bytes.
+     * \returns true if it wants to be called again, else false.
      */
-    virtual result operator()(const void *base, size_t len) = 0;
+    virtual bool operator()(const void *base, size_t len) = 0;
     virtual ~data_handler();
   };
 
