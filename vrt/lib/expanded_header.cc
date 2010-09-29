@@ -154,47 +154,6 @@ namespace vrt {
       return "<unknown pkt type>";
   }
 
-  static void wr_header(std::ostream &os, uint32_t x)
-  {
-    os << format("%#10x") % x;
-
-    uint32_t t = (x >> 22) & 0x3;
-    switch(t){
-    case 0x0:	os << " TSI=NONE";	break;
-    case 0x1:	os << " TSI=UTC";	break;
-    case 0x2:	os << " TSI=GPS";	break;
-    case 0x3:	os << " TSI=OTHER";	break;
-    }
-
-    t = (x >> 20) & 0x3;
-    switch(t){
-    case 0x0:	os << " TSF=NONE";	break;
-    case 0x1:	os << " TSF=SAMPLE_CNT";break;
-    case 0x2:	os << " TSI=PICOSECS";	break;
-    case 0x3:	os << " TSI=FREE_RUN";	break;
-    }
-
-    uint32_t pt = x & VRTH_PT_MASK;
-    if (pt == VRTH_PT_IF_CONTEXT || pt == VRTH_PT_EXT_CONTEXT){
-      if (x & VRTH_TSM)
-	os << " TSM=GENERAL";
-      else
-	os << " TSM=EXACT";
-    }
-    else if (0
-	     || pt == VRTH_PT_IF_DATA_WITH_SID
-	     || pt == VRTH_PT_IF_DATA_NO_SID
-	     || pt == VRTH_PT_EXT_DATA_WITH_SID
-	     || pt == VRTH_PT_EXT_DATA_NO_SID){
-      if (x & VRTH_START_OF_BURST)
-	os << " SOB";
-      if (x & VRTH_END_OF_BURST)
-	os << " EOB";
-    }
-
-    os << std::endl;
-  }
-
   void
   expanded_header::write(std::ostream &port) const
   {

@@ -22,17 +22,29 @@
 #define INCLUDED_VRT_HEADER_UTILS_H
 
 #include <iosfwd>
+#include <string>
 #include <stdint.h>
+#include <vrt/bits.h>
 
 namespace vrt 
 {
   namespace detail {
 
+    void wr_header(std::ostream &os, uint32_t x);
     void wr_name(std::ostream &os, const std::string &x);
     void wr_int_secs(std::ostream &os, uint32_t secs);
     void wr_uint32_hex(std::ostream &os, uint32_t x);
     void wr_uint32_dec(std::ostream &os, uint32_t x);
-
+    void wr_hertz(std::ostream &os, vrt_hertz_t x);
+    void wr_dbm(std::ostream &os, vrt_db_t x);
+    void wr_db(std::ostream &os, vrt_db_t x);
+    void wr_temp(std::ostream &os, vrt_temp_t x);
+    void wr_angle(std::ostream &os, vrt_angle_t x);
+    void wr_distance(std::ostream &os, vrt_distance_t x);
+    void wr_velocity(std::ostream &os, vrt_velocity_t x);
+    void wr_payload_fmt(std::ostream &os, vrt_payload_fmt_t f);
+    void wr_formatted_gps(std::ostream &os,
+			  const vrt_formatted_gps_t &x);
   };
 };
 
