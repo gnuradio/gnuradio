@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,15 +21,19 @@
  */
 
 #include <cppunit/TextTestRunner.h>
+#include <cppunit/XmlOutputter.h>
 #include <qa_general.h>
 
 int 
 main (int argc, char **argv)
 {
-  
-  CppUnit::TextTestRunner	runner;
+  CppUnit::TextTestRunner      runner;
+
+  std::ofstream xmlfile("cppunit_test_general.xml");
+  CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest (qa_general::suite ());
+  runner.setOutputter(xmlout);
   
   bool was_successful = runner.run ("", false);
 
