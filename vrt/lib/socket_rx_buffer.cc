@@ -78,24 +78,47 @@ namespace vrt {
     // If we've got CAP_NET_ADMIN or root, this will allow the
     // rmem_max limit to be overridden
     if (setsockopt(d_fd, SOL_SOCKET, SO_RCVBUFFORCE,
-		   &rcvbuf_size, sizeof(rcvbuf_size)) != 0){
-      perror("setsockopt(SO_RCVBUFFORCE)");
+		   &rcvbuf_size, sizeof(rcvbuf_size)) == 0){
+      return true;
     }
     else {
-      fprintf(stderr, "SO_RCVBUFFORCE = %zd\n", buflen);
-      return true;
+      if (errno != EPERM)
+	perror("setsockopt(SO_RCVBUFFORCE)");
     }
 #endif
 
+    // Try to set it.  On linux trying for too large of a value
+    // doesn't return an error...
     if (setsockopt(d_fd, SOL_SOCKET, SO_RCVBUF,
 		   &rcvbuf_size, sizeof(rcvbuf_size)) != 0){
       perror("setsockopt(SO_RCVBUF)");
-      fprintf(stderr,
-        "FIXME: message about configuring /proc/sys/net/core/rmem_max to %zd\n",
-	buflen);
     }
-    else {
-      fprintf(stderr, "SO_RCVBUF = %zd\n", buflen);
+
+    // See how big it actually is
+    int cursize = 0;
+    socklen_t optlen;
+    optlen = sizeof(cursize);
+    if (getsockopt(d_fd, SOL_SOCKET, SO_RCVBUF,
+		   &cursize, &optlen) != 0){
+      perror("getsockopt");
+      return false;
+    }
+
+    // fprintf(stderr, "after:  getsockopt(SO_RCVBUF) = %d\n", cursize);
+
+    // If we don't get what we asked for, treat it as an error.
+    // Otherwise the radio's probably not going to work reliably anyway.
+    if (cursize < buflen){
+      fprintf(stderr,
+"socket_rx_buffer: failed to allocate socket receive buffer of size %d.\n",
+	buflen);
+      fprintf(stderr,
+"To fix this, please increase the maximum allowed using:\n\n");
+      fprintf(stderr,
+	      "  $ sudo sysctl -w net.core.rmem_max=%d\n\n", buflen);
+      fprintf(stderr,
+"and/or edit /etc/sysctl.conf: net.core.rmem_max=%d\n\n", buflen);
+      return false;
     }
 
     return true;
