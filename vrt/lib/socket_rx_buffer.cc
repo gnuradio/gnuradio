@@ -108,16 +108,16 @@ namespace vrt {
 
     // If we don't get what we asked for, treat it as an error.
     // Otherwise the radio's probably not going to work reliably anyway.
-    if (cursize < buflen){
+    if (cursize < (int) buflen){
       fprintf(stderr,
-"socket_rx_buffer: failed to allocate socket receive buffer of size %d.\n",
+"socket_rx_buffer: failed to allocate socket receive buffer of size %zd.\n",
 	buflen);
       fprintf(stderr,
 "To fix this, please increase the maximum allowed using:\n\n");
       fprintf(stderr,
-	      "  $ sudo sysctl -w net.core.rmem_max=%d\n\n", buflen);
+	      "  $ sudo sysctl -w net.core.rmem_max=%zd\n\n", buflen);
       fprintf(stderr,
-"and/or edit /etc/sysctl.conf: net.core.rmem_max=%d\n\n", buflen);
+"and/or edit /etc/sysctl.conf: net.core.rmem_max=%zd\n\n", buflen);
       return false;
     }
 
