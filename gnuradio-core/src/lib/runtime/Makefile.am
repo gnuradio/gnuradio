@@ -120,6 +120,7 @@ grinclude_HEADERS = 				\
 	gr_timer.h				\
 	gr_tmp_path.h				\
 	gr_types.h				\
+	gr_unittests.h				\
 	gr_vmcircbuf.h				
 
 noinst_HEADERS = 				\

@@ -22,14 +22,18 @@
 
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/XmlOutputter.h>
+
+#include <gr_unittests.h>
 #include <qa_filter.h>
 
 int 
 main (int argc, char **argv)
 {
+  char path[200];
+  get_unittest_path ("gnuradio_core_atsc.xml", path, 200);
   
-  CppUnit::TextTestRunner	runner;
-  std::ofstream xmlfile("cppunit_test_filter.xml");
+  CppUnit::TextTestRunner runner;
+  std::ofstream xmlfile(path);
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest (qa_filter::suite ());

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,37 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cppunit/TextTestRunner.h>
-#include <cppunit/XmlOutputter.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
-#include "pmt/qa_pmt.h"
-
-static void get_unittest_path (const char *filename, char *fullpath, size_t pathsize);
-
-int 
-main(int argc, char **argv)
-{
-  char path[200];
-  get_unittest_path ("gruel.xml", path, 200);
-  
-  CppUnit::TextTestRunner runner;
-  std::ofstream xmlfile(path);
-  CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
-
-  runner.addTest(qa_pmt::suite ());
-  runner.setOutputter(xmlout);
-  
-  bool was_successful = runner.run("", false);
-
-  return was_successful ? 0 : 1;
-}
-
-
-// NOTE: These are defined in gr_unittest.h for the rest of the project;
-// rewriting here since we don't depend on gnuradio-core in gruel
 
 #ifdef MKDIR_TAKES_ONE_ARG
 #define gr_mkdir(pathname, mode) mkdir(pathname)
