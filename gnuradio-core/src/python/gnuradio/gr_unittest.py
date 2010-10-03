@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,8 @@
 # 
 
 import unittest
-import sys
+import gr_xmlrunner
+import sys, os, stat
 
 class TestCase(unittest.TestCase):
     """A subclass of unittest.TestCase that adds additional assertions
@@ -105,6 +106,36 @@ TestLoader = unittest.TestLoader
 TextTestRunner = unittest.TextTestRunner
 TestProgram = unittest.TestProgram
 main = TestProgram
+
+def run(PUT, filename=None):
+    ''' 
+    Runs the unittest on a TestCase and produces an optional XML report
+    PUT:      the program under test and should be a gr_unittest.TestCase
+    filename: an optional filename to save the XML report of the tests
+              this will live in $HOME/.gnuradio/unittests/python
+    '''
+
+    # Run this is given a file name
+    if(filename is not None):
+        path = os.getenv("HOME") + "/.gnuradio/unittests/python"
+
+        # Test if path exists; if not, build it
+        try:
+            st = os.stat(path)
+        except OSError:
+            os.makedirs(path, 0750)
+
+        # Create an XML runner to filename
+        fout = file(path+"/"+filename, "w")
+        runner = gr_xmlrunner.XMLTestRunner(fout)
+
+        # Run the test; runner also creates XML output file
+        suite = TestLoader().loadTestsFromTestCase(PUT)
+        runner.run(suite)
+    else:
+        # If no filename is given, just run the test
+        main()
+
 
 ##############################################################################
 # Executing this module from the command line
