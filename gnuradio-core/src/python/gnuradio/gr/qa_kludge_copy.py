@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -87,5 +87,5 @@ class test_kludge_copy(gr_unittest.TestCase):
         self.assertRaises(ValueError, self.tb.run)
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_kludge_copy, "test_kludge_copy.xml")
     

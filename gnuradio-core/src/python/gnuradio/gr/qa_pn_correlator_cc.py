@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -47,4 +47,4 @@ class test_pn_correlator_cc(gr_unittest.TestCase):
         self.assertEqual(data[-1], (1.0+0j))
         
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_pn_correlator_cc, "test_pn_correlator_cc.xml")

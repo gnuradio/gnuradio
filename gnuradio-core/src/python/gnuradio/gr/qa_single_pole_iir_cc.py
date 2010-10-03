@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -68,5 +68,5 @@ class test_single_pole_iir_cc(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_single_pole_iir_cc, "test_single_pole_iir_cc.xml")
         

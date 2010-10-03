@@ -127,11 +127,19 @@ def run(PUT, filename=None):
 
         # Create an XML runner to filename
         fout = file(path+"/"+filename, "w")
-        runner = gr_xmlrunner.XMLTestRunner(fout)
+        xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
+        txtrunner = TextTestRunner(verbosity=1)
 
         # Run the test; runner also creates XML output file
+        # FIXME: make xmlrunner output to screen so we don't have to do run and main
         suite = TestLoader().loadTestsFromTestCase(PUT)
-        runner.run(suite)
+        xmlrunner.run(suite)
+        main()
+        
+        # This will run and fail make check if problem
+        # but does not output to screen.
+        #main(testRunner = xmlrunner)
+
     else:
         # If no filename is given, just run the test
         main()

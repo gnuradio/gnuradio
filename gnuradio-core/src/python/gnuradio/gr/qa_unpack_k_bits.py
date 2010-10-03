@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -53,5 +53,5 @@ class test_unpack(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-   gr_unittest.main ()
+   gr_unittest.run(test_unpack, "test_unpack.xml")
         

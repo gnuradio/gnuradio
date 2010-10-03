@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -38,7 +38,7 @@ def np2(k):
     return m
 
 
-class qa_classify(gr_unittest.TestCase):
+class test_classify(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
@@ -178,5 +178,4 @@ class qa_classify(gr_unittest.TestCase):
         assert sum < 1e-6
 
 if __name__ == '__main__':
-    gr_unittest.main()
-    
+   gr_unittest.run(test_classify, "test_classify.xml")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007 Free Software Foundation, Inc.
+# Copyright 2006,2007,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -227,4 +227,4 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-   gr_unittest.main ()
+   gr_unittest.run(xtest_bin_statistics, "test_bin_statistics.xml")

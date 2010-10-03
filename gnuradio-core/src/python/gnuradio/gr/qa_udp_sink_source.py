@@ -23,7 +23,7 @@
 from gnuradio import gr, gr_unittest
 from threading import Timer
 
-class test_sink_source(gr_unittest.TestCase):
+class test_udp_sink_source(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb_snd = gr.top_block()
@@ -95,5 +95,5 @@ class test_sink_source(gr_unittest.TestCase):
         #print "tb_rcv stopped by Timer"
         
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_udp_sink_source, "test_udp_sink_source.xml")
     

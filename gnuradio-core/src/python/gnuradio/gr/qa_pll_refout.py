@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,7 +23,7 @@
 from gnuradio import gr, gr_unittest
 import math
 
-class test_sig_source (gr_unittest.TestCase):
+class test_pll_refout (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block()
@@ -155,4 +155,4 @@ class test_sig_source (gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 5)
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_pll_refout, "test_pll_refout.xml")

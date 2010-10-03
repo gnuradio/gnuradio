@@ -366,4 +366,4 @@ class test_hier_block2(gr_unittest.TestCase):
         
     
 if __name__ == "__main__":
-    gr_unittest.main()
+    gr_unittest.run(test_hier_block2, "test_hier_block2.xml")

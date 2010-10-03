@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -91,4 +91,4 @@ def auto_correlate(data):
     return R
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_glfsr_source, "test_glfsr_source.xml")
