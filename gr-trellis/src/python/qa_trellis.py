@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,7 +23,7 @@
 from gnuradio import gr, gr_unittest
 import trellis
 
-class qa_trellis (gr_unittest.TestCase):
+class test_trellis (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -68,11 +68,5 @@ class qa_trellis (gr_unittest.TestCase):
         i = trellis.interleaver(K,IN)
         self.assertEqual((K,IN,DIN),(i.K(),i.INTER(),i.DEINTER()))
 
-
-
-
-
-
-
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_trellis, "test_trellis.xml")
