@@ -24,7 +24,8 @@
 #endif
 #include <vrt/expanded_if_context_section.h>
 #include <string.h>
-#include <gruel/inet.h>		// ntohl
+//#include <gruel/inet.h>
+#include <arpa/inet.h>
 #include <boost/format.hpp>
 #include "header_utils.h"
 

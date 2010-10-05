@@ -23,7 +23,8 @@
 #include <config.h>
 #endif
 #include <vrt/expanded_header.h>
-#include <gruel/inet.h>
+//#include <gruel/inet.h>
+#include <arpa/inet.h>
 #include <boost/format.hpp>
 #include "header_utils.h"
 

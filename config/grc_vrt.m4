@@ -25,27 +25,13 @@ AC_DEFUN([GRC_VRT],[
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
     if test $passed = yes; then
-	dnl Needed for vrt_socket_opener
-	AC_CHECK_HEADERS(arpa/inet.h byteswap.h linux/if_packet.h sys/socket.h sys/un.h)
+	AC_CHECK_HEADERS(arpa/inet.h sys/socket.h)
     fi
     if test $passed != with; then
 	dnl how and where to find INCLUDES and LA
 	VRT_INCLUDES="-I\${abs_top_srcdir}/vrt/include"
         VRT_LA="\${abs_top_builddir}/vrt/lib/libvrt.la"
     fi
-
-    # Test host OS compatibility
-    AC_MSG_CHECKING([whether host_os is linux*])
-    case "$host_os" in
-      linux*)
-	AC_MSG_RESULT([yes])
-        ;;
-      *)
-	AC_MSG_RESULT([no])
-	AC_MSG_NOTICE([libvrt currently requires Linux host OS, not found])
-        passed="no"
-        ;;
-    esac
 
     dnl Include the vrt INCLUDES and LA
     AC_SUBST(VRT_INCLUDES)
