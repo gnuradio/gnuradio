@@ -27,13 +27,12 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 # Only include these files in the build if qtgui passes configure checks
 # This is mostly to help make distcheck pass
 QMAKE_SOURCES = 				\
-	spectrumdisplayform_moc.cc		\
-	FrequencyDisplayPlot_moc.cc	 	\
-	TimeDomainDisplayPlot_moc.cc		\
-	WaterfallDisplayPlot_moc.cc		\
-	Waterfall3DDisplayPlot_moc.cc		\
-	ConstellationDisplayPlot_moc.cc		\
-	spectrumdisplayform_ui.h
+	spectrumdisplayform.moc.cc		\
+	FrequencyDisplayPlot.moc.cc	 	\
+	TimeDomainDisplayPlot.moc.cc		\
+	WaterfallDisplayPlot.moc.cc		\
+	ConstellationDisplayPlot.moc.cc		\
+	spectrumdisplayform.ui.h
 
 EXTRA_DIST = spectrumdisplayform.ui
 
@@ -47,7 +46,6 @@ libgnuradio_qtgui_la_SOURCES = 	\
 	FrequencyDisplayPlot.cc 		\
 	TimeDomainDisplayPlot.cc		\
 	WaterfallDisplayPlot.cc			\
-	Waterfall3DDisplayPlot.cc		\
 	waterfallGlobalData.cc			\
 	ConstellationDisplayPlot.cc		\
 	spectrumdisplayform.cc			\
@@ -57,12 +55,13 @@ libgnuradio_qtgui_la_SOURCES = 	\
 	qtgui_sink_c.cc				\
 	qtgui_sink_f.cc
 
+nodist_libgnuradio_qtgui_la_SOURCES=$(BUILT_SOURCES)
+
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
 	FrequencyDisplayPlot.h		\
 	TimeDomainDisplayPlot.h		\
 	WaterfallDisplayPlot.h		\
-	Waterfall3DDisplayPlot.h	\
 	waterfallGlobalData.h		\
 	ConstellationDisplayPlot.h	\
 	highResTimeFunctions.h		\
@@ -74,12 +73,11 @@ grinclude_HEADERS =			\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h
 
-nodist_libqtsrc_la_SOURCES = $(QMAKE_SOURCES)
+QT_MOC_FLAGS=-DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+%.moc.cc : %.h
+	$(QT_MOC_EXEC) $(QT_MOC_FLAGS) -p $(srcdir) $< -o $@
 
-%_moc.cc : %.h
-	$(QT_MOC_EXEC) -DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -p $(srcdir) $< -o $@
-
-%_ui.h : %.ui
+%.ui.h : %.ui
 	$(QT_UIC_EXEC) $< -o $@
 
 # magic flags

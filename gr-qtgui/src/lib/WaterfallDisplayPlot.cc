@@ -186,6 +186,7 @@ public:
   }
 
 protected:
+  using QwtPlotZoomer::trackerText;
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
     QString yLabel("");

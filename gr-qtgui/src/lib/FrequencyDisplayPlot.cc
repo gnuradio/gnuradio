@@ -79,7 +79,8 @@ public:
   }
 
 protected:
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const 
+  using QwtPlotZoomer::trackerText;
+  virtual QwtText trackerText( const QwtDoublePoint& p ) const
   {
     QwtText t(QString("%1 %2, %3 dB").
 	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
