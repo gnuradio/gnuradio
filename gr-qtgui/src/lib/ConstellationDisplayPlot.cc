@@ -24,6 +24,7 @@ public:
   }
 
 protected:
+  using QwtPlotZoomer::trackerText;
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
     QwtText t(QString("(%1, %2)").arg(p.x(), 0, 'f', 4).

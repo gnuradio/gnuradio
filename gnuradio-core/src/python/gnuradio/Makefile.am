@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -34,6 +34,7 @@ grpython_PYTHON = 			\
 	ofdm_packet_utils.py		\
 	packet_utils.py			\
 	gr_unittest.py			\
+	gr_xmlrunner.py			\
 	optfir.py			\
 	usrp_options.py		\
 	window.py

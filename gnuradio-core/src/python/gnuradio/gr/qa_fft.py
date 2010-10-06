@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,7 +29,7 @@ primes = (2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,
           227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311)
 
 
-class test_fft_filter(gr_unittest.TestCase):
+class test_fft(gr_unittest.TestCase):
 
     def setUp(self):
 	pass
@@ -154,5 +154,5 @@ class test_fft_filter(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_fft, "test_fft.xml")
         

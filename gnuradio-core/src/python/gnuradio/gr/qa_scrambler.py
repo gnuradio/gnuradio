@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -61,4 +61,4 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(src_data, dst.data())                            
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_scrambler, "test_scrambler.xml")

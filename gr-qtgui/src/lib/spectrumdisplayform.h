@@ -1,7 +1,7 @@
 #ifndef SPECTRUM_DISPLAY_FORM_H
 #define SPECTRUM_DISPLAY_FORM_H
 
-#include "spectrumdisplayform_ui.h"
+#include "spectrumdisplayform.ui.h"
 
 class SpectrumGUIClass;
 #include <SpectrumGUIClass.h>
@@ -9,7 +9,6 @@ class SpectrumGUIClass;
 #include <SpectrumGUIClass.h>
 #include <FrequencyDisplayPlot.h>
 #include <WaterfallDisplayPlot.h>
-#include <Waterfall3DDisplayPlot.h>
 #include <TimeDomainDisplayPlot.h>
 #include <ConstellationDisplayPlot.h>
 #include <QValidator>
@@ -54,15 +53,10 @@ public slots:
   void waterfallMinimumIntensityChangedCB(double);
   void WaterfallIntensityColorTypeChanged(int);
   void WaterfallAutoScaleBtnCB();
-  void waterfall3DMaximumIntensityChangedCB(double);
-  void waterfall3DMinimumIntensityChangedCB(double);
-  void Waterfall3DIntensityColorTypeChanged(int);
-  void Waterfall3DAutoScaleBtnCB();
   void FFTComboBoxSelectedCB(const QString&);
 
   void ToggleTabFrequency(const bool state);
   void ToggleTabWaterfall(const bool state);
-  void ToggleTabWaterfall3D(const bool state);
   void ToggleTabTime(const bool state);
   void ToggleTabConstellation(const bool state);
 
@@ -92,7 +86,6 @@ private:
   QIntValidator* _intValidator;
   FrequencyDisplayPlot* _frequencyDisplayPlot;
   WaterfallDisplayPlot* _waterfallDisplayPlot;
-  Waterfall3DDisplayPlot* _waterfall3DDisplayPlot;
   TimeDomainDisplayPlot* _timeDomainDisplayPlot;
   ConstellationDisplayPlot* _constellationDisplayPlot;
   SpectrumGUIClass* _system;

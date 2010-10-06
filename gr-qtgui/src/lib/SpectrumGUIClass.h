@@ -31,8 +31,7 @@ public:
 
   void OpenSpectrumWindow(QWidget*,
 			  const bool frequency=true, const bool waterfall=true,
-			  const bool waterfall3d=true, const bool time=true,
-			  const bool constellation=true,
+			  const bool time=true, const bool constellation=true,
 			  const bool use_openGL=true);
   void SetDisplayTitle(const std::string);
 

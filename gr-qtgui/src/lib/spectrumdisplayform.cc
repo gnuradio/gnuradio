@@ -17,10 +17,6 @@ SpectrumDisplayForm::SpectrumDisplayForm(bool useOpenGL, QWidget* parent)
   _frequencyDisplayPlot = new FrequencyDisplayPlot(FrequencyPlotDisplayFrame);
   _waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
 
-  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-    //_waterfall3DDisplayPlot = new Waterfall3DDisplayPlot(Waterfall3DPlotDisplayFrame);
-  }
-
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(TimeDomainDisplayFrame);
   _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
@@ -38,14 +34,6 @@ SpectrumDisplayForm::SpectrumDisplayForm(bool useOpenGL, QWidget* parent)
   WaterfallMinimumIntensityWheel->setTickCnt(50);
   WaterfallMinimumIntensityWheel->setValue(-200);
   
-  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-    Waterfall3DMaximumIntensityWheel->setRange(-200, 0);
-    Waterfall3DMaximumIntensityWheel->setTickCnt(50);
-    Waterfall3DMinimumIntensityWheel->setRange(-200, 0);
-    Waterfall3DMinimumIntensityWheel->setTickCnt(50);
-    Waterfall3DMinimumIntensityWheel->setValue(-200);
-  }
-
   _peakFrequency = 0;
   _peakAmplitude = -HUGE_VAL;
   
@@ -68,7 +56,6 @@ SpectrumDisplayForm::SpectrumDisplayForm(bool useOpenGL, QWidget* parent)
 
   ToggleTabFrequency(false);
   ToggleTabWaterfall(false);
-  ToggleTabWaterfall3D(false);
   ToggleTabTime(false);
   ToggleTabConstellation(false);
 
@@ -134,11 +121,11 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   const std::complex<float>* complexDataPointsPtr = complexDataPoints+numFFTDataPoints/2;
   double* realFFTDataPointsPtr = _realFFTDataPoints;
 
-  double sumMean, localPeakAmplitude, localPeakFrequency;
+  double sumMean = 0.0;
+  double localPeakAmplitude = -HUGE_VAL;
+  double localPeakFrequency = 0.0;
   const double fftBinSize = (_stopFrequency-_startFrequency) /
     static_cast<double>(numFFTDataPoints);
-  localPeakAmplitude = -HUGE_VAL;
-  sumMean = 0.0;
 
   // Run this twice to perform the fftshift operation on the data here as well
   std::complex<float> scaleFactor = std::complex<float>((float)numFFTDataPoints);
@@ -229,15 +216,6 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					   d_update_time, dataTimestamp, 
 					   spectrumUpdateEvent->getDroppedFFTFrames());
       }
-      /*
-      if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-	if( _openGLWaterfall3DFlag == 1 && (tabindex == d_plot_waterfall3d)) {
-	  _waterfall3DDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
-					       d_update_time, dataTimestamp, 
-					       spectrumUpdateEvent->getDroppedFFTFrames());
-	}
-      }
-      */
     }
 
     
@@ -265,12 +243,6 @@ SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
   s.setHeight(WaterfallPlotDisplayFrame->height());
   emit _waterfallDisplayPlot->resizeSlot(&s);
 
-  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-    s.setWidth(Waterfall3DPlotDisplayFrame->width());
-    s.setHeight(Waterfall3DPlotDisplayFrame->height());
-    //emit _waterfall3DDisplayPlot->resizeSlot(&s);
-  }
-
   s.setWidth(ConstellationDisplayFrame->width());
   s.setHeight(ConstellationDisplayFrame->height());
   emit _constellationDisplayPlot->resizeSlot(&s);
@@ -288,32 +260,6 @@ SpectrumDisplayForm::customEvent( QEvent * e)
 
     waterfallMinimumIntensityChangedCB(WaterfallMinimumIntensityWheel->value());
     waterfallMaximumIntensityChangedCB(WaterfallMaximumIntensityWheel->value());
-
-    // If the video card doesn't support OpenGL then don't display the 3D Waterfall
-    if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-      waterfall3DMinimumIntensityChangedCB(Waterfall3DMinimumIntensityWheel->value());
-      waterfall3DMaximumIntensityChangedCB(Waterfall3DMaximumIntensityWheel->value());
-      
-      // Check for Hardware Acceleration of the OpenGL
-      /*
-      if(!_waterfall3DDisplayPlot->format().directRendering()){
-	// Only ask this once while the program is running...
-	if(_openGLWaterfall3DFlag == -1){
-	  _openGLWaterfall3DFlag = 0;
-	  if(QMessageBox::warning(this, "OpenGL Direct Rendering NOT Supported", "<center>The system's video card hardware or current drivers do not support direct hardware rendering of the OpenGL modules.</center><br><center>Software rendering is VERY processor intensive.</center><br><center>Do you want to use software rendering?</center>", QMessageBox::Yes, QMessageBox::No | QMessageBox::Default | QMessageBox::Escape) == QMessageBox::Yes){
-	    _openGLWaterfall3DFlag = 1;
-	  }
-	}
-      }
-      else{
-	_openGLWaterfall3DFlag = 1;
-      }
-      */
-    }
-    
-    if(_openGLWaterfall3DFlag != 1){
-      ToggleTabWaterfall3D(false);
-    }
 
     // Clear any previous display
     Reset();
@@ -347,8 +293,6 @@ SpectrumDisplayForm::UpdateGuiTimer()
   // all of the plots.
   _frequencyDisplayPlot->canvas()->update();
   _waterfallDisplayPlot->canvas()->update();
-  //if((QGLFormat::hasOpenGL()) && (_useOpenGL))
-  //_waterfall3DDisplayPlot->canvas()->update();
   _timeDomainDisplayPlot->canvas()->update();
   _constellationDisplayPlot->canvas()->update();
 }
@@ -437,15 +381,6 @@ SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
 					     _centerFrequency,
 					     UseRFFrequenciesCheckBox->isChecked(),
 					     units, strunits[iunit]);
-    if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-      /*
-      _waterfall3DDisplayPlot->SetFrequencyRange(_startFrequency,
-						 _stopFrequency,
-						 _centerFrequency,
-						 UseRFFrequenciesCheckBox->isChecked(),
-						 units, strunits[iunit]);
-      */
-    }
     _timeDomainDisplayPlot->SetSampleRate(_stopFrequency - _startFrequency,
 					  units, strtime[iunit]);
   }
@@ -536,9 +471,6 @@ SpectrumDisplayForm::Reset()
   AverageDataReset();
 
   _waterfallDisplayPlot->Reset();
-  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-    //_waterfall3DDisplayPlot->Reset();
-  }
 }
 
 
@@ -614,44 +546,6 @@ SpectrumDisplayForm::waterfallMinimumIntensityChangedCB( double newValue )
 }
 
 void
-SpectrumDisplayForm::waterfall3DMaximumIntensityChangedCB( double newValue )
-{
-  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-    if(newValue > Waterfall3DMinimumIntensityWheel->value()){
-      Waterfall3DMaximumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
-    }
-    else{
-      Waterfall3DMaximumIntensityWheel->setValue(Waterfall3DMinimumIntensityWheel->value());
-    }
-
-    /*
-    _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(),
-					       Waterfall3DMaximumIntensityWheel->value());
-    */
-  }
-}
-
-
-void
-SpectrumDisplayForm::waterfall3DMinimumIntensityChangedCB( double newValue )
-{
-  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-    if(newValue < Waterfall3DMaximumIntensityWheel->value()){
-      Waterfall3DMinimumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
-    }
-    else{
-      Waterfall3DMinimumIntensityWheel->setValue(Waterfall3DMaximumIntensityWheel->value());
-    }
-
-    /*
-    _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(),
-					       Waterfall3DMaximumIntensityWheel->value());
-    */
-  }
-}
-
-
-void
 SpectrumDisplayForm::FFTComboBoxSelectedCB( const QString &fftSizeString )
 {
   if(_systemSpecifiedFlag){
@@ -674,24 +568,6 @@ SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
   }
   WaterfallMaximumIntensityWheel->setValue(maximumIntensity);
   waterfallMaximumIntensityChangedCB(maximumIntensity);
-}
-
-void
-SpectrumDisplayForm::Waterfall3DAutoScaleBtnCB()
-{
-  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-    double minimumIntensity = _noiseFloorAmplitude - 5;
-    if(minimumIntensity < Waterfall3DMinimumIntensityWheel->minValue()){
-      minimumIntensity = Waterfall3DMinimumIntensityWheel->minValue();
-    }
-    Waterfall3DMinimumIntensityWheel->setValue(minimumIntensity);
-    double maximumIntensity = _peakAmplitude + 10;
-    if(maximumIntensity > Waterfall3DMaximumIntensityWheel->maxValue()){
-      maximumIntensity = Waterfall3DMaximumIntensityWheel->maxValue();
-    }
-    Waterfall3DMaximumIntensityWheel->setValue(maximumIntensity);
-    waterfallMaximumIntensityChangedCB(maximumIntensity);
-  }
 }
 
 void
@@ -721,37 +597,6 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
 }
 
 void
-SpectrumDisplayForm::Waterfall3DIntensityColorTypeChanged( int newType )
-{
-  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-    QColor lowIntensityColor;
-    QColor highIntensityColor;
-    if(newType == Waterfall3DDisplayPlot::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED){
-      // Select the Low Intensity Color
-      lowIntensityColor = _waterfallDisplayPlot->GetUserDefinedLowIntensityColor();
-      if(!lowIntensityColor.isValid()){
-	lowIntensityColor = Qt::black;
-      }
-      QMessageBox::information(this, "Low Intensity Color Selection", "In the next window, select the low intensity color for the waterfall display",  QMessageBox::Ok);
-      lowIntensityColor = QColorDialog::getColor(lowIntensityColor, this);
-      
-      // Select the High Intensity Color
-      highIntensityColor = _waterfallDisplayPlot->GetUserDefinedHighIntensityColor();
-      if(!highIntensityColor.isValid()){
-	highIntensityColor = Qt::white;
-      }
-      QMessageBox::information(this, "High Intensity Color Selection", "In the next window, select the high intensity color for the waterfall display",  QMessageBox::Ok);
-      highIntensityColor = QColorDialog::getColor(highIntensityColor, this);
-    }
-    /*
-    _waterfall3DDisplayPlot->SetIntensityColorMapType(newType, lowIntensityColor,
-						      highIntensityColor);
-    */
-  }
-}
-
-
-void
 SpectrumDisplayForm::ToggleTabFrequency(const bool state)
 {
   if(state == true) {
@@ -778,28 +623,6 @@ SpectrumDisplayForm::ToggleTabWaterfall(const bool state)
   else {
     SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(WaterfallPage));
     d_plot_waterfall = -1;
-  }
-}
-
-void
-SpectrumDisplayForm::ToggleTabWaterfall3D(const bool state)
-{
-  if(state == true) {
-    /*
-    if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-      if(d_plot_waterfall3d == -1) {
-	SpectrumTypeTab->addTab(Waterfall3DPage, "3D Waterfall Display");
-	d_plot_waterfall3d = SpectrumTypeTab->count()-1;
-      }
-    }
-    */
-    SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(Waterfall3DPage));
-    d_plot_waterfall3d = -1;
-    fprintf(stderr, "\nWARNING: The Waterfall3D plot has been disabled until we get it working.\n\n");
-  }
-  else {
-    SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(Waterfall3DPage));
-    d_plot_waterfall3d = -1;
   }
 }
 

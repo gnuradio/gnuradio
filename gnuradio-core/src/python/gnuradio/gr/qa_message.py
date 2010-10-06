@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -128,4 +128,4 @@ class test_message (gr_unittest.TestCase):
         self.assertEquals(tuple(map(ord, '0123456789')), dst.data())
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_message, "test_message.xml")

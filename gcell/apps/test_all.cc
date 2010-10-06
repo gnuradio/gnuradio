@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,18 +20,25 @@
  */
 
 #include <cppunit/TextTestRunner.h>
+#include <cppunit/XmlOutputter.h>
 
+#include <gr_unittests.h>
 #include "../lib/runtime/qa_gcell_runtime.h"
 #include "../lib/wrapper/qa_gcell_wrapper.h"
 
 int 
 main(int argc, char **argv)
 {
-  
-  CppUnit::TextTestRunner	runner;
+  char path[200];
+  get_unittest_path ("gcell_all.xml", path, 200);
+
+  CppUnit::TextTestRunner runner;
+  std::ofstream xmlfile(path);
+  CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest(qa_gcell_runtime::suite());
   runner.addTest(qa_gcell_wrapper::suite());
+  runner.setOutputter(xmlout);
   
   bool was_successful = runner.run("", false);
 

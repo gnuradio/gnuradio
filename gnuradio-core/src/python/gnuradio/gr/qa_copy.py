@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -55,4 +55,4 @@ class test_copy(gr_unittest.TestCase):
     
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_copy, "test_copy.xml")

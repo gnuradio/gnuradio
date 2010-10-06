@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,7 +27,7 @@ from os.path import getsize
 
 g_in_file = os.path.join (os.getenv ("srcdir"), "test_16bit_1chunk.wav")
 
-class qa_wavefile(gr_unittest.TestCase):
+class test_wavefile(gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -66,4 +66,4 @@ class qa_wavefile(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_wavefile, "test_wavefile.xml")

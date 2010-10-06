@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -154,4 +154,4 @@ class test_sig_source (gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 5)
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_sig_source, "test_sig_source.xml")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,7 +23,7 @@
 from gnuradio import gr, gr_unittest
 import ra
 
-class qa_ra (gr_unittest.TestCase):
+class test_radio_astronomy (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -35,4 +35,4 @@ class qa_ra (gr_unittest.TestCase):
         pass
         
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_radio_astronomy, "test_radio_astronomy.xml")

@@ -23,12 +23,12 @@
 #ifndef INCLUDED_QTGUI_SINK_C_H
 #define INCLUDED_QTGUI_SINK_C_H
 
+#include <Python.h>
 #include <gr_block.h>
 #include <gr_firdes.h>
 #include <gri_fft.h>
 #include <qapplication.h>
 #include <qtgui.h>
-#include <Python.h>
 #include "SpectrumGUIClass.h"
 
 class qtgui_sink_c;
@@ -84,7 +84,7 @@ private:
   int d_index;
   gr_complex *d_residbuf;
 
-  bool d_plotfreq, d_plotwaterfall, d_plotwaterfall3d, d_plottime, d_plotconst;
+  bool d_plotfreq, d_plotwaterfall, d_plottime, d_plotconst;
   
   double d_update_time;
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2008 Free Software Foundation, Inc.
+# Copyright 2005,2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,7 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 
-class test_head (gr_unittest.TestCase):
+class test_kludged_imports (gr_unittest.TestCase):
 
     def setUp(self):
         pass
@@ -40,4 +40,4 @@ class test_head (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.main ()
+    gr_unittest.run(test_kludged_imports, "test_kludged_imports.xml")
