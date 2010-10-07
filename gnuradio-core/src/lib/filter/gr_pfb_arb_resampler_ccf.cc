@@ -35,7 +35,7 @@ gr_pfb_arb_resampler_ccf_sptr gr_make_pfb_arb_resampler_ccf (float rate,
 							     unsigned int filter_size)
 {
   return gnuradio::get_initial_sptr(new gr_pfb_arb_resampler_ccf (rate, taps,
-								      filter_size));
+								  filter_size));
 }
 
 
@@ -81,6 +81,8 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
   create_diff_taps(taps, dtaps);
   create_taps(taps, d_taps, d_filters);
   create_taps(dtaps, d_dtaps, d_diff_filters);
+
+  set_relative_rate(rate);
 }
 
 gr_pfb_arb_resampler_ccf::~gr_pfb_arb_resampler_ccf ()
