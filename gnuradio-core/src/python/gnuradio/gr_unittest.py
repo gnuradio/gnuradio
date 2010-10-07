@@ -117,23 +117,36 @@ def run(PUT, filename=None):
 
     # Run this is given a file name
     if(filename is not None):
-        path = os.getenv("HOME") + "/.gnuradio/unittests/python"
+        homepath = os.getenv("HOME")
+        basepath = homepath + "/.gnuradio"
+        path = homepath + "/.gnuradio/unittests/python"
 
-        # Test if path exists; if not, build it
-        try:
-            st = os.stat(path)
-        except OSError:
-            os.makedirs(path, 0750)
+        xmlrunner = None
+        if os.path.exists(basepath):
+            # only proceed if $HOME/.gnuradio is writable
+            st = os.stat(basepath)[stat.ST_MODE]
+            if(st & stat.S_IWUSR > 0):
+                # Test if path exists; if not, build it
+                if not os.path.exists(path):
+                    os.makedirs(path, 0750)
 
-        # Create an XML runner to filename
-        fout = file(path+"/"+filename, "w")
-        xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
+                # Just for safety: make sure we can write here, too
+                st = os.stat(path)[stat.ST_MODE]
+                if(st & stat.S_IWUSR > 0):
+                    # Create an XML runner to filename
+                    fout = file(path+"/"+filename, "w")
+                    xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
+
         txtrunner = TextTestRunner(verbosity=1)
 
         # Run the test; runner also creates XML output file
         # FIXME: make xmlrunner output to screen so we don't have to do run and main
         suite = TestLoader().loadTestsFromTestCase(PUT)
-        xmlrunner.run(suite)
+
+        # use the xmlrunner if we can write the the directory
+        if(xmlrunner is not None):
+            xmlrunner.run(suite)
+
         main()
         
         # This will run and fail make check if problem
