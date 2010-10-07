@@ -60,6 +60,8 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
   if(fltp != 0.0)
     throw std::invalid_argument("gr_pfb_channelizer: oversample rate must be N/i for i in [1, N]"); 
 
+  set_relative_rate(1.0/intp);
+
   d_filters = std::vector<gr_fir_ccf*>(d_numchans);
 
   // Create an FIR filter for each channel and zero out the taps
