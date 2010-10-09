@@ -19,10 +19,10 @@ include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = \
     $(USRP2_INCLUDES) \
-    $(BOOST_CPPFLAGS) \
+    $(GRUEL_INCLUDES) \
     $(STD_DEFINES_AND_INCLUDES) \
-    $(CPPUNIT_INCLUDES) \
-    $(GRUEL_INCLUDES) 
+    $(BOOST_CPPFLAGS) \
+    $(CPPUNIT_INCLUDES)
 
 bin_PROGRAMS = usrp2_socket_opener
 usrp2_socket_opener_SOURCES = usrp2_socket_opener.cc

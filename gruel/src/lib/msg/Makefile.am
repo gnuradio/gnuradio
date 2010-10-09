@@ -1,5 +1,5 @@
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(DEFINES) $(GRUEL_INCLUDES) \
+	$(BOOST_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libmsg.la
 

@@ -23,8 +23,8 @@ include $(top_srcdir)/Makefile.common
 IBM_PPU_SYNC_INCLUDES = -I$(top_srcdir)/gcell/ibm/sync/ppu_source
 
 
-AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) \
-	$(GCELL_INCLUDES) $(IBM_PPU_SYNC_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(DEFINES) $(GCELL_INCLUDES) $(IBM_PPU_SYNC_INCLUDES) \
+	$(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 
 dist_bin_SCRIPTS = gcell-embedspu-libtool
