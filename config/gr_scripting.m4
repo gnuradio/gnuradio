@@ -26,5 +26,16 @@ AC_DEFUN([GR_SCRIPTING],[
 
   SWIG_PROG(1.3.31)
   SWIG_ENABLE_CXX
-  SWIG_PYTHON
+  dnl We need python at build time, as it's used as for utilities. If python
+  dnl isn't enabled, then we don't want the SWIG support for python.
+  AC_REQUIRE([AM_PATH_PYTHON])
+  if test x${enable_python} = xyes; then
+    SWIG_PYTHON
+  fi
+  if test x${enable_tcl} = xyes; then
+    SWIG_TCL
+  fi
+  if test x${enable_guile} = xyes; then
+    SWIG_GUILE
+  fi
 ])
