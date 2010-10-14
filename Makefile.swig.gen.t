@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += @NAME@.py @NAME@.cc
+swig_built_sources += @NAME@.py @NAME@-python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -86,7 +86,7 @@ swig_built_sources += @NAME@.py @NAME@.cc
 	_@NAME@.la
 
 _@NAME@_la_SOURCES = 			\
-	@NAME@.cc			\
+	@NAME@-python.cc			\
 	$(@NAME@_la_swig_sources)
 
 _@NAME@_la_LIBADD =			\
@@ -107,7 +107,7 @@ _@NAME@_la_CXXFLAGS =			\
 
 ## Entry rule for running SWIG
 
-@NAME@.h @NAME@.py @NAME@.cc: @NAME@.i
+@NAME@.h @NAME@.py @NAME@-python.cc: @NAME@.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +159,12 @@ _@NAME@_la_CXXFLAGS =			\
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/@NAME@-generate-stamp; \
+		rm -f $(DEPDIR)/@NAME@-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
 		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/@NAME@-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/@NAME@-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -191,6 +192,22 @@ _@NAME@_la_CXXFLAGS =			\
 		exit $$?; \
 	fi;
 
+$(DEPDIR)/@NAME@-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(@NAME@_swig_args) \
+		-MD -MF $(DEPDIR)/@NAME@.Std \
+		-module @NAME@ -o @NAME@-guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/@NAME@.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@.Std \
+			> $(DEPDIR)/@NAME@.Sd; \
+		$(RM) $(DEPDIR)/@NAME@.Std; \
+		$(MV) $(DEPDIR)/@NAME@.Sd $(DEPDIR)/@NAME@.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/@NAME@.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/@NAME@-generate-guile-stamp
+
 $(DEPDIR)/@NAME@-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -202,7 +219,7 @@ $(DEPDIR)/@NAME@-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(@NAME@_swig_args) \
 		-MD -MF $(DEPDIR)/@NAME@.Std \
-		-module @NAME@ -o @NAME@.cc $(WHAT); then \
+		-module @NAME@ -o @NAME@-python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/@NAME@.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@.Std \
