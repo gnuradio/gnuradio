@@ -42,8 +42,8 @@ ourpython_PYTHON = gnuradio_swig_python.py
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...
 
-gnuradio_swig_bug_workaround.h : gnuradio_swig_py_runtime.cc $(srcdir)/gen-swig-bug-fix
-	$(PYTHON) $(srcdir)/gen-swig-bug-fix gnuradio_swig_py_runtime.cc $@
+gnuradio_swig_bug_workaround.h : gnuradio_swig_py_runtime_python.cc $(srcdir)/gen-swig-bug-fix
+	$(PYTHON) $(srcdir)/gen-swig-bug-fix gnuradio_swig_py_runtime_python.cc $@
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
