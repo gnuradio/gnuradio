@@ -48,6 +48,19 @@ STD_SWIG_PYTHON_ARGS =				\
 	$(WITH_SWIG_INCLUDES)			\
 	$(WITH_INCLUDES)
 
+SWIG_GUILE_FLAGS =	\
+	-guile		\
+	-w511		\
+	-outdir .
+
+## standard swig flags used by most components
+
+STD_SWIG_GUILE_ARGS =				\
+	$(SWIG_GUILE_FLAGS)			\
+	$(STD_DEFINES_AND_INCLUDES)		\
+	$(WITH_SWIG_INCLUDES)			\
+	$(WITH_INCLUDES)
+
 ## standard SWIG LD flags for library creation
 
 STD_SWIG_LA_LD_FLAGS =		\
