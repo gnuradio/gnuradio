@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime-python.cc
+swig_built_sources += gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ gnuradio_swig_py_runtime_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_runtime_swiginclude_headers)
 
 gnuradio_swig_py_runtime_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_runtime.la
+	_gnuradio_swig_py_runtime_python.la
 
-_gnuradio_swig_py_runtime_la_SOURCES = 			\
-	gnuradio_swig_py_runtime-python.cc			\
+_gnuradio_swig_py_runtime_python_la_SOURCES = 		\
+	gnuradio_swig_py_runtime_python.cc		\
 	$(gnuradio_swig_py_runtime_la_swig_sources)
 
-_gnuradio_swig_py_runtime_la_LIBADD =			\
+_gnuradio_swig_py_runtime_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_runtime_la_swig_libadd)
 
-_gnuradio_swig_py_runtime_la_LDFLAGS =			\
+_gnuradio_swig_py_runtime_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_runtime_la_swig_ldflags)
 
-_gnuradio_swig_py_runtime_la_CXXFLAGS =			\
+_gnuradio_swig_py_runtime_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_runtime_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ gnuradio_swig_py_runtime_python_PYTHON =			\
 	gnuradio_swig_py_runtime.py			\
 	$(gnuradio_swig_py_runtime_python)
 
+if GUILE
+gnuradio_swig_py_runtime_pylib_LTLIBRARIES += _gnuradio_swig_py_runtime_guile.la
+
+_gnuradio_swig_py_runtime_guile_la_SOURCES = 		\
+	gnuradio_swig_py_runtime_guile.cc		\
+	$(gnuradio_swig_py_runtime_la_swig_sources)
+
+# Guile can use the same flags as python does
+_gnuradio_swig_py_runtime_guile_la_LIBADD = $(_gnuradio_swig_py_runtime_python_la_LIBADD)
+_gnuradio_swig_py_runtime_guile_la_LDFLAGS = $(_gnuradio_swig_py_runtime_python_la_LDFLAGS)
+_gnuradio_swig_py_runtime_guile_la_CXXFLAGS = $(_gnuradio_swig_py_runtime_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_runtime.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime-python.cc: gnuradio_swig_py_runtime.i
+gnuradio_swig_py_runtime.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime_python.cc: gnuradio_swig_py_runtime.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ gnuradio_swig_py_runtime.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime-
 	fi;
 
 $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_runtime_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_runtime.Std \
-		-module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime-guile.cc $(WHAT); then \
+		-module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_runtime.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/gnuradio_swig_py_runtime.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp
+endif
 
 $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_runtime_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_runtime.Std \
-		-module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime-python.cc $(WHAT); then \
+		-module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_runtime.Std \
@@ -348,7 +364,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_general.py gnuradio_swig_py_general-python.cc
+swig_built_sources += gnuradio_swig_py_general.py gnuradio_swig_py_general_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -359,21 +375,21 @@ gnuradio_swig_py_general_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_general_swiginclude_headers)
 
 gnuradio_swig_py_general_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_general.la
+	_gnuradio_swig_py_general_python.la
 
-_gnuradio_swig_py_general_la_SOURCES = 			\
-	gnuradio_swig_py_general-python.cc			\
+_gnuradio_swig_py_general_python_la_SOURCES = 		\
+	gnuradio_swig_py_general_python.cc		\
 	$(gnuradio_swig_py_general_la_swig_sources)
 
-_gnuradio_swig_py_general_la_LIBADD =			\
+_gnuradio_swig_py_general_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_general_la_swig_libadd)
 
-_gnuradio_swig_py_general_la_LDFLAGS =			\
+_gnuradio_swig_py_general_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_general_la_swig_ldflags)
 
-_gnuradio_swig_py_general_la_CXXFLAGS =			\
+_gnuradio_swig_py_general_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_general_la_swig_cxxflags)
 
@@ -381,9 +397,23 @@ gnuradio_swig_py_general_python_PYTHON =			\
 	gnuradio_swig_py_general.py			\
 	$(gnuradio_swig_py_general_python)
 
+if GUILE
+gnuradio_swig_py_general_pylib_LTLIBRARIES += _gnuradio_swig_py_general_guile.la
+
+_gnuradio_swig_py_general_guile_la_SOURCES = 		\
+	gnuradio_swig_py_general_guile.cc		\
+	$(gnuradio_swig_py_general_la_swig_sources)
+
+# Guile can use the same flags as python does
+_gnuradio_swig_py_general_guile_la_LIBADD = $(_gnuradio_swig_py_general_python_la_LIBADD)
+_gnuradio_swig_py_general_guile_la_LDFLAGS = $(_gnuradio_swig_py_general_python_la_LDFLAGS)
+_gnuradio_swig_py_general_guile_la_CXXFLAGS = $(_gnuradio_swig_py_general_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_general.h gnuradio_swig_py_general.py gnuradio_swig_py_general-python.cc: gnuradio_swig_py_general.i
+gnuradio_swig_py_general.h gnuradio_swig_py_general.py gnuradio_swig_py_general_python.cc: gnuradio_swig_py_general.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -469,9 +499,10 @@ gnuradio_swig_py_general.h gnuradio_swig_py_general.py gnuradio_swig_py_general-
 	fi;
 
 $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_general_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_general.Std \
-		-module gnuradio_swig_py_general -o gnuradio_swig_py_general-guile.cc $(WHAT); then \
+		-module gnuradio_swig_py_general -o gnuradio_swig_py_general_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_general.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_general.Std \
@@ -483,6 +514,7 @@ $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/gnuradio_swig_py_general.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp
+endif
 
 $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -495,7 +527,7 @@ $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_general_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_general.Std \
-		-module gnuradio_swig_py_general -o gnuradio_swig_py_general-python.cc $(WHAT); then \
+		-module gnuradio_swig_py_general -o gnuradio_swig_py_general_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_general.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_general.Std \
@@ -624,7 +656,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen-python.cc
+swig_built_sources += gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -635,21 +667,21 @@ gnuradio_swig_py_gengen_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_gengen_swiginclude_headers)
 
 gnuradio_swig_py_gengen_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_gengen.la
+	_gnuradio_swig_py_gengen_python.la
 
-_gnuradio_swig_py_gengen_la_SOURCES = 			\
-	gnuradio_swig_py_gengen-python.cc			\
+_gnuradio_swig_py_gengen_python_la_SOURCES = 		\
+	gnuradio_swig_py_gengen_python.cc		\
 	$(gnuradio_swig_py_gengen_la_swig_sources)
 
-_gnuradio_swig_py_gengen_la_LIBADD =			\
+_gnuradio_swig_py_gengen_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_gengen_la_swig_libadd)
 
-_gnuradio_swig_py_gengen_la_LDFLAGS =			\
+_gnuradio_swig_py_gengen_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_gengen_la_swig_ldflags)
 
-_gnuradio_swig_py_gengen_la_CXXFLAGS =			\
+_gnuradio_swig_py_gengen_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_gengen_la_swig_cxxflags)
 
@@ -657,9 +689,23 @@ gnuradio_swig_py_gengen_python_PYTHON =			\
 	gnuradio_swig_py_gengen.py			\
 	$(gnuradio_swig_py_gengen_python)
 
+if GUILE
+gnuradio_swig_py_gengen_pylib_LTLIBRARIES += _gnuradio_swig_py_gengen_guile.la
+
+_gnuradio_swig_py_gengen_guile_la_SOURCES = 		\
+	gnuradio_swig_py_gengen_guile.cc		\
+	$(gnuradio_swig_py_gengen_la_swig_sources)
+
+# Guile can use the same flags as python does
+_gnuradio_swig_py_gengen_guile_la_LIBADD = $(_gnuradio_swig_py_gengen_python_la_LIBADD)
+_gnuradio_swig_py_gengen_guile_la_LDFLAGS = $(_gnuradio_swig_py_gengen_python_la_LDFLAGS)
+_gnuradio_swig_py_gengen_guile_la_CXXFLAGS = $(_gnuradio_swig_py_gengen_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_gengen.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen-python.cc: gnuradio_swig_py_gengen.i
+gnuradio_swig_py_gengen.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen_python.cc: gnuradio_swig_py_gengen.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -745,9 +791,10 @@ gnuradio_swig_py_gengen.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen-pyt
 	fi;
 
 $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_gengen_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_gengen.Std \
-		-module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen-guile.cc $(WHAT); then \
+		-module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_gengen.Std \
@@ -759,6 +806,7 @@ $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/gnuradio_swig_py_gengen.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp
+endif
 
 $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -771,7 +819,7 @@ $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_gengen_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_gengen.Std \
-		-module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen-python.cc $(WHAT); then \
+		-module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_gengen.Std \
@@ -900,7 +948,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_filter.py gnuradio_swig_py_filter-python.cc
+swig_built_sources += gnuradio_swig_py_filter.py gnuradio_swig_py_filter_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -911,21 +959,21 @@ gnuradio_swig_py_filter_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_filter_swiginclude_headers)
 
 gnuradio_swig_py_filter_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_filter.la
+	_gnuradio_swig_py_filter_python.la
 
-_gnuradio_swig_py_filter_la_SOURCES = 			\
-	gnuradio_swig_py_filter-python.cc			\
+_gnuradio_swig_py_filter_python_la_SOURCES = 		\
+	gnuradio_swig_py_filter_python.cc		\
 	$(gnuradio_swig_py_filter_la_swig_sources)
 
-_gnuradio_swig_py_filter_la_LIBADD =			\
+_gnuradio_swig_py_filter_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_filter_la_swig_libadd)
 
-_gnuradio_swig_py_filter_la_LDFLAGS =			\
+_gnuradio_swig_py_filter_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_filter_la_swig_ldflags)
 
-_gnuradio_swig_py_filter_la_CXXFLAGS =			\
+_gnuradio_swig_py_filter_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_filter_la_swig_cxxflags)
 
@@ -933,9 +981,23 @@ gnuradio_swig_py_filter_python_PYTHON =			\
 	gnuradio_swig_py_filter.py			\
 	$(gnuradio_swig_py_filter_python)
 
+if GUILE
+gnuradio_swig_py_filter_pylib_LTLIBRARIES += _gnuradio_swig_py_filter_guile.la
+
+_gnuradio_swig_py_filter_guile_la_SOURCES = 		\
+	gnuradio_swig_py_filter_guile.cc		\
+	$(gnuradio_swig_py_filter_la_swig_sources)
+
+# Guile can use the same flags as python does
+_gnuradio_swig_py_filter_guile_la_LIBADD = $(_gnuradio_swig_py_filter_python_la_LIBADD)
+_gnuradio_swig_py_filter_guile_la_LDFLAGS = $(_gnuradio_swig_py_filter_python_la_LDFLAGS)
+_gnuradio_swig_py_filter_guile_la_CXXFLAGS = $(_gnuradio_swig_py_filter_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_filter.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter-python.cc: gnuradio_swig_py_filter.i
+gnuradio_swig_py_filter.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter_python.cc: gnuradio_swig_py_filter.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -1021,9 +1083,10 @@ gnuradio_swig_py_filter.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter-pyt
 	fi;
 
 $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_filter_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_filter.Std \
-		-module gnuradio_swig_py_filter -o gnuradio_swig_py_filter-guile.cc $(WHAT); then \
+		-module gnuradio_swig_py_filter -o gnuradio_swig_py_filter_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_filter.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_filter.Std \
@@ -1035,6 +1098,7 @@ $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/gnuradio_swig_py_filter.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp
+endif
 
 $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -1047,7 +1111,7 @@ $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_filter_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_filter.Std \
-		-module gnuradio_swig_py_filter -o gnuradio_swig_py_filter-python.cc $(WHAT); then \
+		-module gnuradio_swig_py_filter -o gnuradio_swig_py_filter_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_filter.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_filter.Std \
@@ -1176,7 +1240,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_io.py gnuradio_swig_py_io-python.cc
+swig_built_sources += gnuradio_swig_py_io.py gnuradio_swig_py_io_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -1187,21 +1251,21 @@ gnuradio_swig_py_io_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_io_swiginclude_headers)
 
 gnuradio_swig_py_io_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_io.la
+	_gnuradio_swig_py_io_python.la
 
-_gnuradio_swig_py_io_la_SOURCES = 			\
-	gnuradio_swig_py_io-python.cc			\
+_gnuradio_swig_py_io_python_la_SOURCES = 		\
+	gnuradio_swig_py_io_python.cc		\
 	$(gnuradio_swig_py_io_la_swig_sources)
 
-_gnuradio_swig_py_io_la_LIBADD =			\
+_gnuradio_swig_py_io_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_io_la_swig_libadd)
 
-_gnuradio_swig_py_io_la_LDFLAGS =			\
+_gnuradio_swig_py_io_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_io_la_swig_ldflags)
 
-_gnuradio_swig_py_io_la_CXXFLAGS =			\
+_gnuradio_swig_py_io_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_io_la_swig_cxxflags)
 
@@ -1209,9 +1273,23 @@ gnuradio_swig_py_io_python_PYTHON =			\
 	gnuradio_swig_py_io.py			\
 	$(gnuradio_swig_py_io_python)
 
+if GUILE
+gnuradio_swig_py_io_pylib_LTLIBRARIES += _gnuradio_swig_py_io_guile.la
+
+_gnuradio_swig_py_io_guile_la_SOURCES = 		\
+	gnuradio_swig_py_io_guile.cc		\
+	$(gnuradio_swig_py_io_la_swig_sources)
+
+# Guile can use the same flags as python does
+_gnuradio_swig_py_io_guile_la_LIBADD = $(_gnuradio_swig_py_io_python_la_LIBADD)
+_gnuradio_swig_py_io_guile_la_LDFLAGS = $(_gnuradio_swig_py_io_python_la_LDFLAGS)
+_gnuradio_swig_py_io_guile_la_CXXFLAGS = $(_gnuradio_swig_py_io_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_io.h gnuradio_swig_py_io.py gnuradio_swig_py_io-python.cc: gnuradio_swig_py_io.i
+gnuradio_swig_py_io.h gnuradio_swig_py_io.py gnuradio_swig_py_io_python.cc: gnuradio_swig_py_io.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -1297,9 +1375,10 @@ gnuradio_swig_py_io.h gnuradio_swig_py_io.py gnuradio_swig_py_io-python.cc: gnur
 	fi;
 
 $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_io_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_io.Std \
-		-module gnuradio_swig_py_io -o gnuradio_swig_py_io-guile.cc $(WHAT); then \
+		-module gnuradio_swig_py_io -o gnuradio_swig_py_io_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_io.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_io.Std \
@@ -1311,6 +1390,7 @@ $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/gnuradio_swig_py_io.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp
+endif
 
 $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -1323,7 +1403,7 @@ $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_io_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_io.Std \
-		-module gnuradio_swig_py_io -o gnuradio_swig_py_io-python.cc $(WHAT); then \
+		-module gnuradio_swig_py_io -o gnuradio_swig_py_io_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_io.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_io.Std \
@@ -1452,7 +1532,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_hier.py gnuradio_swig_py_hier-python.cc
+swig_built_sources += gnuradio_swig_py_hier.py gnuradio_swig_py_hier_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -1463,21 +1543,21 @@ gnuradio_swig_py_hier_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_hier_swiginclude_headers)
 
 gnuradio_swig_py_hier_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_hier.la
+	_gnuradio_swig_py_hier_python.la
 
-_gnuradio_swig_py_hier_la_SOURCES = 			\
-	gnuradio_swig_py_hier-python.cc			\
+_gnuradio_swig_py_hier_python_la_SOURCES = 		\
+	gnuradio_swig_py_hier_python.cc		\
 	$(gnuradio_swig_py_hier_la_swig_sources)
 
-_gnuradio_swig_py_hier_la_LIBADD =			\
+_gnuradio_swig_py_hier_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_hier_la_swig_libadd)
 
-_gnuradio_swig_py_hier_la_LDFLAGS =			\
+_gnuradio_swig_py_hier_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_hier_la_swig_ldflags)
 
-_gnuradio_swig_py_hier_la_CXXFLAGS =			\
+_gnuradio_swig_py_hier_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_hier_la_swig_cxxflags)
 
@@ -1485,9 +1565,23 @@ gnuradio_swig_py_hier_python_PYTHON =			\
 	gnuradio_swig_py_hier.py			\
 	$(gnuradio_swig_py_hier_python)
 
+if GUILE
+gnuradio_swig_py_hier_pylib_LTLIBRARIES += _gnuradio_swig_py_hier_guile.la
+
+_gnuradio_swig_py_hier_guile_la_SOURCES = 		\
+	gnuradio_swig_py_hier_guile.cc		\
+	$(gnuradio_swig_py_hier_la_swig_sources)
+
+# Guile can use the same flags as python does
+_gnuradio_swig_py_hier_guile_la_LIBADD = $(_gnuradio_swig_py_hier_python_la_LIBADD)
+_gnuradio_swig_py_hier_guile_la_LDFLAGS = $(_gnuradio_swig_py_hier_python_la_LDFLAGS)
+_gnuradio_swig_py_hier_guile_la_CXXFLAGS = $(_gnuradio_swig_py_hier_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_hier.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier-python.cc: gnuradio_swig_py_hier.i
+gnuradio_swig_py_hier.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier_python.cc: gnuradio_swig_py_hier.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -1573,9 +1667,10 @@ gnuradio_swig_py_hier.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier-python.cc
 	fi;
 
 $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_hier_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_hier.Std \
-		-module gnuradio_swig_py_hier -o gnuradio_swig_py_hier-guile.cc $(WHAT); then \
+		-module gnuradio_swig_py_hier -o gnuradio_swig_py_hier_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_hier.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_hier.Std \
@@ -1587,6 +1682,7 @@ $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/gnuradio_swig_py_hier.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp
+endif
 
 $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -1599,7 +1695,7 @@ $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_hier_swig_args) \
 		-MD -MF $(DEPDIR)/gnuradio_swig_py_hier.Std \
-		-module gnuradio_swig_py_hier -o gnuradio_swig_py_hier-python.cc $(WHAT); then \
+		-module gnuradio_swig_py_hier -o gnuradio_swig_py_hier_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gnuradio_swig_py_hier.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_hier.Std \

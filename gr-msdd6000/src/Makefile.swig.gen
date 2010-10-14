@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += msdd.py msdd-python.cc
+swig_built_sources += msdd.py msdd_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ msdd_swiginclude_HEADERS =		\
 	$(msdd_swiginclude_headers)
 
 msdd_pylib_LTLIBRARIES =		\
-	_msdd.la
+	_msdd_python.la
 
-_msdd_la_SOURCES = 			\
-	msdd-python.cc			\
+_msdd_python_la_SOURCES = 		\
+	msdd_python.cc		\
 	$(msdd_la_swig_sources)
 
-_msdd_la_LIBADD =			\
+_msdd_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(msdd_la_swig_libadd)
 
-_msdd_la_LDFLAGS =			\
+_msdd_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(msdd_la_swig_ldflags)
 
-_msdd_la_CXXFLAGS =			\
+_msdd_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(msdd_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ msdd_python_PYTHON =			\
 	msdd.py			\
 	$(msdd_python)
 
+if GUILE
+msdd_pylib_LTLIBRARIES += _msdd_guile.la
+
+_msdd_guile_la_SOURCES = 		\
+	msdd_guile.cc		\
+	$(msdd_la_swig_sources)
+
+# Guile can use the same flags as python does
+_msdd_guile_la_LIBADD = $(_msdd_python_la_LIBADD)
+_msdd_guile_la_LDFLAGS = $(_msdd_python_la_LDFLAGS)
+_msdd_guile_la_CXXFLAGS = $(_msdd_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-msdd.h msdd.py msdd-python.cc: msdd.i
+msdd.h msdd.py msdd_python.cc: msdd.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ msdd.h msdd.py msdd-python.cc: msdd.i
 	fi;
 
 $(DEPDIR)/msdd-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(msdd_swig_args) \
 		-MD -MF $(DEPDIR)/msdd.Std \
-		-module msdd -o msdd-guile.cc $(WHAT); then \
+		-module msdd -o msdd_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/msdd.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/msdd.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/msdd-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/msdd.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/msdd-generate-guile-stamp
+endif
 
 $(DEPDIR)/msdd-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/msdd-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(msdd_swig_args) \
 		-MD -MF $(DEPDIR)/msdd.Std \
-		-module msdd -o msdd-python.cc $(WHAT); then \
+		-module msdd -o msdd_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/msdd.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/msdd.Std \
@@ -348,7 +364,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += msdd_rs.py msdd_rs-python.cc
+swig_built_sources += msdd_rs.py msdd_rs_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -359,21 +375,21 @@ msdd_rs_swiginclude_HEADERS =		\
 	$(msdd_rs_swiginclude_headers)
 
 msdd_rs_pylib_LTLIBRARIES =		\
-	_msdd_rs.la
+	_msdd_rs_python.la
 
-_msdd_rs_la_SOURCES = 			\
-	msdd_rs-python.cc			\
+_msdd_rs_python_la_SOURCES = 		\
+	msdd_rs_python.cc		\
 	$(msdd_rs_la_swig_sources)
 
-_msdd_rs_la_LIBADD =			\
+_msdd_rs_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(msdd_rs_la_swig_libadd)
 
-_msdd_rs_la_LDFLAGS =			\
+_msdd_rs_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(msdd_rs_la_swig_ldflags)
 
-_msdd_rs_la_CXXFLAGS =			\
+_msdd_rs_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(msdd_rs_la_swig_cxxflags)
 
@@ -381,9 +397,23 @@ msdd_rs_python_PYTHON =			\
 	msdd_rs.py			\
 	$(msdd_rs_python)
 
+if GUILE
+msdd_rs_pylib_LTLIBRARIES += _msdd_rs_guile.la
+
+_msdd_rs_guile_la_SOURCES = 		\
+	msdd_rs_guile.cc		\
+	$(msdd_rs_la_swig_sources)
+
+# Guile can use the same flags as python does
+_msdd_rs_guile_la_LIBADD = $(_msdd_rs_python_la_LIBADD)
+_msdd_rs_guile_la_LDFLAGS = $(_msdd_rs_python_la_LDFLAGS)
+_msdd_rs_guile_la_CXXFLAGS = $(_msdd_rs_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-msdd_rs.h msdd_rs.py msdd_rs-python.cc: msdd_rs.i
+msdd_rs.h msdd_rs.py msdd_rs_python.cc: msdd_rs.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -469,9 +499,10 @@ msdd_rs.h msdd_rs.py msdd_rs-python.cc: msdd_rs.i
 	fi;
 
 $(DEPDIR)/msdd_rs-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(msdd_rs_swig_args) \
 		-MD -MF $(DEPDIR)/msdd_rs.Std \
-		-module msdd_rs -o msdd_rs-guile.cc $(WHAT); then \
+		-module msdd_rs -o msdd_rs_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/msdd_rs.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/msdd_rs.Std \
@@ -483,6 +514,7 @@ $(DEPDIR)/msdd_rs-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/msdd_rs.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/msdd_rs-generate-guile-stamp
+endif
 
 $(DEPDIR)/msdd_rs-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -495,7 +527,7 @@ $(DEPDIR)/msdd_rs-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(msdd_rs_swig_args) \
 		-MD -MF $(DEPDIR)/msdd_rs.Std \
-		-module msdd_rs -o msdd_rs-python.cc $(WHAT); then \
+		-module msdd_rs -o msdd_rs_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/msdd_rs.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/msdd_rs.Std \

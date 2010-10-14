@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += cvsd_vocoder.py cvsd_vocoder-python.cc
+swig_built_sources += cvsd_vocoder.py cvsd_vocoder_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ cvsd_vocoder_swiginclude_HEADERS =		\
 	$(cvsd_vocoder_swiginclude_headers)
 
 cvsd_vocoder_pylib_LTLIBRARIES =		\
-	_cvsd_vocoder.la
+	_cvsd_vocoder_python.la
 
-_cvsd_vocoder_la_SOURCES = 			\
-	cvsd_vocoder-python.cc			\
+_cvsd_vocoder_python_la_SOURCES = 		\
+	cvsd_vocoder_python.cc		\
 	$(cvsd_vocoder_la_swig_sources)
 
-_cvsd_vocoder_la_LIBADD =			\
+_cvsd_vocoder_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(cvsd_vocoder_la_swig_libadd)
 
-_cvsd_vocoder_la_LDFLAGS =			\
+_cvsd_vocoder_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(cvsd_vocoder_la_swig_ldflags)
 
-_cvsd_vocoder_la_CXXFLAGS =			\
+_cvsd_vocoder_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(cvsd_vocoder_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ cvsd_vocoder_python_PYTHON =			\
 	cvsd_vocoder.py			\
 	$(cvsd_vocoder_python)
 
+if GUILE
+cvsd_vocoder_pylib_LTLIBRARIES += _cvsd_vocoder_guile.la
+
+_cvsd_vocoder_guile_la_SOURCES = 		\
+	cvsd_vocoder_guile.cc		\
+	$(cvsd_vocoder_la_swig_sources)
+
+# Guile can use the same flags as python does
+_cvsd_vocoder_guile_la_LIBADD = $(_cvsd_vocoder_python_la_LIBADD)
+_cvsd_vocoder_guile_la_LDFLAGS = $(_cvsd_vocoder_python_la_LDFLAGS)
+_cvsd_vocoder_guile_la_CXXFLAGS = $(_cvsd_vocoder_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-cvsd_vocoder.h cvsd_vocoder.py cvsd_vocoder-python.cc: cvsd_vocoder.i
+cvsd_vocoder.h cvsd_vocoder.py cvsd_vocoder_python.cc: cvsd_vocoder.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ cvsd_vocoder.h cvsd_vocoder.py cvsd_vocoder-python.cc: cvsd_vocoder.i
 	fi;
 
 $(DEPDIR)/cvsd_vocoder-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(cvsd_vocoder_swig_args) \
 		-MD -MF $(DEPDIR)/cvsd_vocoder.Std \
-		-module cvsd_vocoder -o cvsd_vocoder-guile.cc $(WHAT); then \
+		-module cvsd_vocoder -o cvsd_vocoder_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/cvsd_vocoder.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/cvsd_vocoder.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/cvsd_vocoder-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/cvsd_vocoder.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/cvsd_vocoder-generate-guile-stamp
+endif
 
 $(DEPDIR)/cvsd_vocoder-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/cvsd_vocoder-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(cvsd_vocoder_swig_args) \
 		-MD -MF $(DEPDIR)/cvsd_vocoder.Std \
-		-module cvsd_vocoder -o cvsd_vocoder-python.cc $(WHAT); then \
+		-module cvsd_vocoder -o cvsd_vocoder_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/cvsd_vocoder.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/cvsd_vocoder.Std \

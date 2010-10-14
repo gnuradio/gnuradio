@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gcell.py gcell.cc
+swig_built_sources += gcell.py gcell_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ gcell_swiginclude_HEADERS =		\
 	$(gcell_swiginclude_headers)
 
 gcell_pylib_LTLIBRARIES =		\
-	_gcell.la
+	_gcell_python.la
 
-_gcell_la_SOURCES = 			\
-	gcell.cc			\
+_gcell_python_la_SOURCES = 		\
+	gcell_python.cc		\
 	$(gcell_la_swig_sources)
 
-_gcell_la_LIBADD =			\
+_gcell_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gcell_la_swig_libadd)
 
-_gcell_la_LDFLAGS =			\
+_gcell_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gcell_la_swig_ldflags)
 
-_gcell_la_CXXFLAGS =			\
+_gcell_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gcell_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ gcell_python_PYTHON =			\
 	gcell.py			\
 	$(gcell_python)
 
+if GUILE
+gcell_pylib_LTLIBRARIES += _gcell_guile.la
+
+_gcell_guile_la_SOURCES = 		\
+	gcell_guile.cc		\
+	$(gcell_la_swig_sources)
+
+# Guile can use the same flags as python does
+_gcell_guile_la_LIBADD = $(_gcell_python_la_LIBADD)
+_gcell_guile_la_LDFLAGS = $(_gcell_python_la_LDFLAGS)
+_gcell_guile_la_CXXFLAGS = $(_gcell_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-gcell.h gcell.py gcell.cc: gcell.i
+gcell.h gcell.py gcell_python.cc: gcell.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +173,12 @@ gcell.h gcell.py gcell.cc: gcell.i
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/gcell-generate-stamp; \
+		rm -f $(DEPDIR)/gcell-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gcell-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gcell-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gcell-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +202,27 @@ gcell.h gcell.py gcell.cc: gcell.i
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/gcell-generate-stamp; \
+		test -f $(DEPDIR)/gcell-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/gcell-generate-stamp:
+$(DEPDIR)/gcell-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gcell_swig_args) \
+		-MD -MF $(DEPDIR)/gcell.Std \
+		-module gcell -o gcell_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/gcell.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gcell.Std \
+			> $(DEPDIR)/gcell.Sd; \
+		$(RM) $(DEPDIR)/gcell.Std; \
+		$(MV) $(DEPDIR)/gcell.Sd $(DEPDIR)/gcell.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/gcell.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/gcell-generate-guile-stamp
+
+$(DEPDIR)/gcell-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -202,7 +233,7 @@ $(DEPDIR)/gcell-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gcell_swig_args) \
 		-MD -MF $(DEPDIR)/gcell.Std \
-		-module gcell -o gcell.cc $(WHAT); then \
+		-module gcell -o gcell_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gcell.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gcell.Std \
@@ -249,7 +280,7 @@ $(DEPDIR)/gcell-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/gcell-generate-stamp
+	touch $(DEPDIR)/gcell-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,

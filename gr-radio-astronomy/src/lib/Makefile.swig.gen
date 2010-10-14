@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += ra.py ra-python.cc
+swig_built_sources += ra.py ra_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ ra_swiginclude_HEADERS =		\
 	$(ra_swiginclude_headers)
 
 ra_pylib_LTLIBRARIES =		\
-	_ra.la
+	_ra_python.la
 
-_ra_la_SOURCES = 			\
-	ra-python.cc			\
+_ra_python_la_SOURCES = 		\
+	ra_python.cc		\
 	$(ra_la_swig_sources)
 
-_ra_la_LIBADD =			\
+_ra_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(ra_la_swig_libadd)
 
-_ra_la_LDFLAGS =			\
+_ra_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(ra_la_swig_ldflags)
 
-_ra_la_CXXFLAGS =			\
+_ra_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(ra_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ ra_python_PYTHON =			\
 	ra.py			\
 	$(ra_python)
 
+if GUILE
+ra_pylib_LTLIBRARIES += _ra_guile.la
+
+_ra_guile_la_SOURCES = 		\
+	ra_guile.cc		\
+	$(ra_la_swig_sources)
+
+# Guile can use the same flags as python does
+_ra_guile_la_LIBADD = $(_ra_python_la_LIBADD)
+_ra_guile_la_LDFLAGS = $(_ra_python_la_LDFLAGS)
+_ra_guile_la_CXXFLAGS = $(_ra_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-ra.h ra.py ra-python.cc: ra.i
+ra.h ra.py ra_python.cc: ra.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ ra.h ra.py ra-python.cc: ra.i
 	fi;
 
 $(DEPDIR)/ra-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(ra_swig_args) \
 		-MD -MF $(DEPDIR)/ra.Std \
-		-module ra -o ra-guile.cc $(WHAT); then \
+		-module ra -o ra_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/ra.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/ra.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/ra-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/ra.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/ra-generate-guile-stamp
+endif
 
 $(DEPDIR)/ra-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/ra-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(ra_swig_args) \
 		-MD -MF $(DEPDIR)/ra.Std \
-		-module ra -o ra-python.cc $(WHAT); then \
+		-module ra -o ra_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/ra.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/ra.Std \

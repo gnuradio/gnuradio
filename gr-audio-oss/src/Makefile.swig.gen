@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += audio_oss.py audio_oss-python.cc
+swig_built_sources += audio_oss.py audio_oss_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ audio_oss_swiginclude_HEADERS =		\
 	$(audio_oss_swiginclude_headers)
 
 audio_oss_pylib_LTLIBRARIES =		\
-	_audio_oss.la
+	_audio_oss_python.la
 
-_audio_oss_la_SOURCES = 			\
-	audio_oss-python.cc			\
+_audio_oss_python_la_SOURCES = 		\
+	audio_oss_python.cc		\
 	$(audio_oss_la_swig_sources)
 
-_audio_oss_la_LIBADD =			\
+_audio_oss_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(audio_oss_la_swig_libadd)
 
-_audio_oss_la_LDFLAGS =			\
+_audio_oss_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(audio_oss_la_swig_ldflags)
 
-_audio_oss_la_CXXFLAGS =			\
+_audio_oss_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(audio_oss_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ audio_oss_python_PYTHON =			\
 	audio_oss.py			\
 	$(audio_oss_python)
 
+if GUILE
+audio_oss_pylib_LTLIBRARIES += _audio_oss_guile.la
+
+_audio_oss_guile_la_SOURCES = 		\
+	audio_oss_guile.cc		\
+	$(audio_oss_la_swig_sources)
+
+# Guile can use the same flags as python does
+_audio_oss_guile_la_LIBADD = $(_audio_oss_python_la_LIBADD)
+_audio_oss_guile_la_LDFLAGS = $(_audio_oss_python_la_LDFLAGS)
+_audio_oss_guile_la_CXXFLAGS = $(_audio_oss_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-audio_oss.h audio_oss.py audio_oss-python.cc: audio_oss.i
+audio_oss.h audio_oss.py audio_oss_python.cc: audio_oss.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ audio_oss.h audio_oss.py audio_oss-python.cc: audio_oss.i
 	fi;
 
 $(DEPDIR)/audio_oss-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_oss_swig_args) \
 		-MD -MF $(DEPDIR)/audio_oss.Std \
-		-module audio_oss -o audio_oss-guile.cc $(WHAT); then \
+		-module audio_oss -o audio_oss_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/audio_oss.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_oss.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/audio_oss-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/audio_oss.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/audio_oss-generate-guile-stamp
+endif
 
 $(DEPDIR)/audio_oss-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/audio_oss-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(audio_oss_swig_args) \
 		-MD -MF $(DEPDIR)/audio_oss.Std \
-		-module audio_oss -o audio_oss-python.cc $(WHAT); then \
+		-module audio_oss -o audio_oss_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/audio_oss.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_oss.Std \

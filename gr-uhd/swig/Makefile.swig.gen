@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += uhd_swig.py uhd_swig.cc
+swig_built_sources += uhd_swig.py uhd_swig_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ uhd_swig_swiginclude_HEADERS =		\
 	$(uhd_swig_swiginclude_headers)
 
 uhd_swig_pylib_LTLIBRARIES =		\
-	_uhd_swig.la
+	_uhd_swig_python.la
 
-_uhd_swig_la_SOURCES = 			\
-	uhd_swig.cc			\
+_uhd_swig_python_la_SOURCES = 		\
+	uhd_swig_python.cc		\
 	$(uhd_swig_la_swig_sources)
 
-_uhd_swig_la_LIBADD =			\
+_uhd_swig_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(uhd_swig_la_swig_libadd)
 
-_uhd_swig_la_LDFLAGS =			\
+_uhd_swig_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(uhd_swig_la_swig_ldflags)
 
-_uhd_swig_la_CXXFLAGS =			\
+_uhd_swig_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(uhd_swig_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ uhd_swig_python_PYTHON =			\
 	uhd_swig.py			\
 	$(uhd_swig_python)
 
+if GUILE
+uhd_swig_pylib_LTLIBRARIES += _uhd_swig_guile.la
+
+_uhd_swig_guile_la_SOURCES = 		\
+	uhd_swig_guile.cc		\
+	$(uhd_swig_la_swig_sources)
+
+# Guile can use the same flags as python does
+_uhd_swig_guile_la_LIBADD = $(_uhd_swig_python_la_LIBADD)
+_uhd_swig_guile_la_LDFLAGS = $(_uhd_swig_python_la_LDFLAGS)
+_uhd_swig_guile_la_CXXFLAGS = $(_uhd_swig_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-uhd_swig.h uhd_swig.py uhd_swig.cc: uhd_swig.i
+uhd_swig.h uhd_swig.py uhd_swig_python.cc: uhd_swig.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +173,12 @@ uhd_swig.h uhd_swig.py uhd_swig.cc: uhd_swig.i
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/uhd_swig-generate-stamp; \
+		rm -f $(DEPDIR)/uhd_swig-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/uhd_swig-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/uhd_swig-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/uhd_swig-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +202,27 @@ uhd_swig.h uhd_swig.py uhd_swig.cc: uhd_swig.i
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/uhd_swig-generate-stamp; \
+		test -f $(DEPDIR)/uhd_swig-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/uhd_swig-generate-stamp:
+$(DEPDIR)/uhd_swig-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(uhd_swig_swig_args) \
+		-MD -MF $(DEPDIR)/uhd_swig.Std \
+		-module uhd_swig -o uhd_swig_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/uhd_swig.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/uhd_swig.Std \
+			> $(DEPDIR)/uhd_swig.Sd; \
+		$(RM) $(DEPDIR)/uhd_swig.Std; \
+		$(MV) $(DEPDIR)/uhd_swig.Sd $(DEPDIR)/uhd_swig.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/uhd_swig.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/uhd_swig-generate-guile-stamp
+
+$(DEPDIR)/uhd_swig-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -202,7 +233,7 @@ $(DEPDIR)/uhd_swig-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(uhd_swig_swig_args) \
 		-MD -MF $(DEPDIR)/uhd_swig.Std \
-		-module uhd_swig -o uhd_swig.cc $(WHAT); then \
+		-module uhd_swig -o uhd_swig_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/uhd_swig.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/uhd_swig.Std \
@@ -249,7 +280,7 @@ $(DEPDIR)/uhd_swig-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/uhd_swig-generate-stamp
+	touch $(DEPDIR)/uhd_swig-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,

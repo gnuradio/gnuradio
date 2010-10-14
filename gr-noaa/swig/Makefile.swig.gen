@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += noaa_swig.py noaa_swig-python.cc
+swig_built_sources += noaa_swig.py noaa_swig_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ noaa_swig_swiginclude_HEADERS =		\
 	$(noaa_swig_swiginclude_headers)
 
 noaa_swig_pylib_LTLIBRARIES =		\
-	_noaa_swig.la
+	_noaa_swig_python.la
 
-_noaa_swig_la_SOURCES = 			\
-	noaa_swig-python.cc			\
+_noaa_swig_python_la_SOURCES = 		\
+	noaa_swig_python.cc		\
 	$(noaa_swig_la_swig_sources)
 
-_noaa_swig_la_LIBADD =			\
+_noaa_swig_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(noaa_swig_la_swig_libadd)
 
-_noaa_swig_la_LDFLAGS =			\
+_noaa_swig_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(noaa_swig_la_swig_ldflags)
 
-_noaa_swig_la_CXXFLAGS =			\
+_noaa_swig_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(noaa_swig_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ noaa_swig_python_PYTHON =			\
 	noaa_swig.py			\
 	$(noaa_swig_python)
 
+if GUILE
+noaa_swig_pylib_LTLIBRARIES += _noaa_swig_guile.la
+
+_noaa_swig_guile_la_SOURCES = 		\
+	noaa_swig_guile.cc		\
+	$(noaa_swig_la_swig_sources)
+
+# Guile can use the same flags as python does
+_noaa_swig_guile_la_LIBADD = $(_noaa_swig_python_la_LIBADD)
+_noaa_swig_guile_la_LDFLAGS = $(_noaa_swig_python_la_LDFLAGS)
+_noaa_swig_guile_la_CXXFLAGS = $(_noaa_swig_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-noaa_swig.h noaa_swig.py noaa_swig-python.cc: noaa_swig.i
+noaa_swig.h noaa_swig.py noaa_swig_python.cc: noaa_swig.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ noaa_swig.h noaa_swig.py noaa_swig-python.cc: noaa_swig.i
 	fi;
 
 $(DEPDIR)/noaa_swig-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(noaa_swig_swig_args) \
 		-MD -MF $(DEPDIR)/noaa_swig.Std \
-		-module noaa_swig -o noaa_swig-guile.cc $(WHAT); then \
+		-module noaa_swig -o noaa_swig_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/noaa_swig.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/noaa_swig-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/noaa_swig.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
+endif
 
 $(DEPDIR)/noaa_swig-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/noaa_swig-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(noaa_swig_swig_args) \
 		-MD -MF $(DEPDIR)/noaa_swig.Std \
-		-module noaa_swig -o noaa_swig-python.cc $(WHAT); then \
+		-module noaa_swig -o noaa_swig_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/noaa_swig.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig.Std \

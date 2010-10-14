@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += usrp2.py usrp2-python.cc
+swig_built_sources += usrp2.py usrp2_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ usrp2_swiginclude_HEADERS =		\
 	$(usrp2_swiginclude_headers)
 
 usrp2_pylib_LTLIBRARIES =		\
-	_usrp2.la
+	_usrp2_python.la
 
-_usrp2_la_SOURCES = 			\
-	usrp2-python.cc			\
+_usrp2_python_la_SOURCES = 		\
+	usrp2_python.cc		\
 	$(usrp2_la_swig_sources)
 
-_usrp2_la_LIBADD =			\
+_usrp2_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(usrp2_la_swig_libadd)
 
-_usrp2_la_LDFLAGS =			\
+_usrp2_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(usrp2_la_swig_ldflags)
 
-_usrp2_la_CXXFLAGS =			\
+_usrp2_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(usrp2_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ usrp2_python_PYTHON =			\
 	usrp2.py			\
 	$(usrp2_python)
 
+if GUILE
+usrp2_pylib_LTLIBRARIES += _usrp2_guile.la
+
+_usrp2_guile_la_SOURCES = 		\
+	usrp2_guile.cc		\
+	$(usrp2_la_swig_sources)
+
+# Guile can use the same flags as python does
+_usrp2_guile_la_LIBADD = $(_usrp2_python_la_LIBADD)
+_usrp2_guile_la_LDFLAGS = $(_usrp2_python_la_LDFLAGS)
+_usrp2_guile_la_CXXFLAGS = $(_usrp2_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-usrp2.h usrp2.py usrp2-python.cc: usrp2.i
+usrp2.h usrp2.py usrp2_python.cc: usrp2.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ usrp2.h usrp2.py usrp2-python.cc: usrp2.i
 	fi;
 
 $(DEPDIR)/usrp2-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(usrp2_swig_args) \
 		-MD -MF $(DEPDIR)/usrp2.Std \
-		-module usrp2 -o usrp2-guile.cc $(WHAT); then \
+		-module usrp2 -o usrp2_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/usrp2.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/usrp2.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/usrp2-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/usrp2.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/usrp2-generate-guile-stamp
+endif
 
 $(DEPDIR)/usrp2-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/usrp2-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(usrp2_swig_args) \
 		-MD -MF $(DEPDIR)/usrp2.Std \
-		-module usrp2 -o usrp2-python.cc $(WHAT); then \
+		-module usrp2 -o usrp2_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/usrp2.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/usrp2.Std \

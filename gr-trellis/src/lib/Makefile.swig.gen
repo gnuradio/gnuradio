@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += trellis.py trellis-python.cc
+swig_built_sources += trellis.py trellis_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ trellis_swiginclude_HEADERS =		\
 	$(trellis_swiginclude_headers)
 
 trellis_pylib_LTLIBRARIES =		\
-	_trellis.la
+	_trellis_python.la
 
-_trellis_la_SOURCES = 			\
-	trellis-python.cc			\
+_trellis_python_la_SOURCES = 		\
+	trellis_python.cc		\
 	$(trellis_la_swig_sources)
 
-_trellis_la_LIBADD =			\
+_trellis_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(trellis_la_swig_libadd)
 
-_trellis_la_LDFLAGS =			\
+_trellis_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(trellis_la_swig_ldflags)
 
-_trellis_la_CXXFLAGS =			\
+_trellis_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(trellis_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ trellis_python_PYTHON =			\
 	trellis.py			\
 	$(trellis_python)
 
+if GUILE
+trellis_pylib_LTLIBRARIES += _trellis_guile.la
+
+_trellis_guile_la_SOURCES = 		\
+	trellis_guile.cc		\
+	$(trellis_la_swig_sources)
+
+# Guile can use the same flags as python does
+_trellis_guile_la_LIBADD = $(_trellis_python_la_LIBADD)
+_trellis_guile_la_LDFLAGS = $(_trellis_python_la_LDFLAGS)
+_trellis_guile_la_CXXFLAGS = $(_trellis_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-trellis.h trellis.py trellis-python.cc: trellis.i
+trellis.h trellis.py trellis_python.cc: trellis.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ trellis.h trellis.py trellis-python.cc: trellis.i
 	fi;
 
 $(DEPDIR)/trellis-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(trellis_swig_args) \
 		-MD -MF $(DEPDIR)/trellis.Std \
-		-module trellis -o trellis-guile.cc $(WHAT); then \
+		-module trellis -o trellis_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/trellis.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/trellis.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/trellis-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/trellis.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/trellis-generate-guile-stamp
+endif
 
 $(DEPDIR)/trellis-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/trellis-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(trellis_swig_args) \
 		-MD -MF $(DEPDIR)/trellis.Std \
-		-module trellis -o trellis-python.cc $(WHAT); then \
+		-module trellis -o trellis_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/trellis.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/trellis.Std \

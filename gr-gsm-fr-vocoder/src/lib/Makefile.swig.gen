@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gsm_full_rate.py gsm_full_rate-python.cc
+swig_built_sources += gsm_full_rate.py gsm_full_rate_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ gsm_full_rate_swiginclude_HEADERS =		\
 	$(gsm_full_rate_swiginclude_headers)
 
 gsm_full_rate_pylib_LTLIBRARIES =		\
-	_gsm_full_rate.la
+	_gsm_full_rate_python.la
 
-_gsm_full_rate_la_SOURCES = 			\
-	gsm_full_rate-python.cc			\
+_gsm_full_rate_python_la_SOURCES = 		\
+	gsm_full_rate_python.cc		\
 	$(gsm_full_rate_la_swig_sources)
 
-_gsm_full_rate_la_LIBADD =			\
+_gsm_full_rate_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gsm_full_rate_la_swig_libadd)
 
-_gsm_full_rate_la_LDFLAGS =			\
+_gsm_full_rate_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gsm_full_rate_la_swig_ldflags)
 
-_gsm_full_rate_la_CXXFLAGS =			\
+_gsm_full_rate_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gsm_full_rate_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ gsm_full_rate_python_PYTHON =			\
 	gsm_full_rate.py			\
 	$(gsm_full_rate_python)
 
+if GUILE
+gsm_full_rate_pylib_LTLIBRARIES += _gsm_full_rate_guile.la
+
+_gsm_full_rate_guile_la_SOURCES = 		\
+	gsm_full_rate_guile.cc		\
+	$(gsm_full_rate_la_swig_sources)
+
+# Guile can use the same flags as python does
+_gsm_full_rate_guile_la_LIBADD = $(_gsm_full_rate_python_la_LIBADD)
+_gsm_full_rate_guile_la_LDFLAGS = $(_gsm_full_rate_python_la_LDFLAGS)
+_gsm_full_rate_guile_la_CXXFLAGS = $(_gsm_full_rate_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-gsm_full_rate.h gsm_full_rate.py gsm_full_rate-python.cc: gsm_full_rate.i
+gsm_full_rate.h gsm_full_rate.py gsm_full_rate_python.cc: gsm_full_rate.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ gsm_full_rate.h gsm_full_rate.py gsm_full_rate-python.cc: gsm_full_rate.i
 	fi;
 
 $(DEPDIR)/gsm_full_rate-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gsm_full_rate_swig_args) \
 		-MD -MF $(DEPDIR)/gsm_full_rate.Std \
-		-module gsm_full_rate -o gsm_full_rate-guile.cc $(WHAT); then \
+		-module gsm_full_rate -o gsm_full_rate_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gsm_full_rate.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gsm_full_rate.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/gsm_full_rate-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/gsm_full_rate.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gsm_full_rate-generate-guile-stamp
+endif
 
 $(DEPDIR)/gsm_full_rate-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/gsm_full_rate-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gsm_full_rate_swig_args) \
 		-MD -MF $(DEPDIR)/gsm_full_rate.Std \
-		-module gsm_full_rate -o gsm_full_rate-python.cc $(WHAT); then \
+		-module gsm_full_rate -o gsm_full_rate_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gsm_full_rate.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gsm_full_rate.Std \

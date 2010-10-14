@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += audio_portaudio.py audio_portaudio.cc
+swig_built_sources += audio_portaudio.py audio_portaudio_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ audio_portaudio_swiginclude_HEADERS =		\
 	$(audio_portaudio_swiginclude_headers)
 
 audio_portaudio_pylib_LTLIBRARIES =		\
-	_audio_portaudio.la
+	_audio_portaudio_python.la
 
-_audio_portaudio_la_SOURCES = 			\
-	audio_portaudio.cc			\
+_audio_portaudio_python_la_SOURCES = 		\
+	audio_portaudio_python.cc		\
 	$(audio_portaudio_la_swig_sources)
 
-_audio_portaudio_la_LIBADD =			\
+_audio_portaudio_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(audio_portaudio_la_swig_libadd)
 
-_audio_portaudio_la_LDFLAGS =			\
+_audio_portaudio_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(audio_portaudio_la_swig_ldflags)
 
-_audio_portaudio_la_CXXFLAGS =			\
+_audio_portaudio_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(audio_portaudio_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ audio_portaudio_python_PYTHON =			\
 	audio_portaudio.py			\
 	$(audio_portaudio_python)
 
+if GUILE
+audio_portaudio_pylib_LTLIBRARIES += _audio_portaudio_guile.la
+
+_audio_portaudio_guile_la_SOURCES = 		\
+	audio_portaudio_guile.cc		\
+	$(audio_portaudio_la_swig_sources)
+
+# Guile can use the same flags as python does
+_audio_portaudio_guile_la_LIBADD = $(_audio_portaudio_python_la_LIBADD)
+_audio_portaudio_guile_la_LDFLAGS = $(_audio_portaudio_python_la_LDFLAGS)
+_audio_portaudio_guile_la_CXXFLAGS = $(_audio_portaudio_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-audio_portaudio.h audio_portaudio.py audio_portaudio.cc: audio_portaudio.i
+audio_portaudio.h audio_portaudio.py audio_portaudio_python.cc: audio_portaudio.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +173,12 @@ audio_portaudio.h audio_portaudio.py audio_portaudio.cc: audio_portaudio.i
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/audio_portaudio-generate-stamp; \
+		rm -f $(DEPDIR)/audio_portaudio-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_portaudio-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_portaudio-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_portaudio-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +202,27 @@ audio_portaudio.h audio_portaudio.py audio_portaudio.cc: audio_portaudio.i
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/audio_portaudio-generate-stamp; \
+		test -f $(DEPDIR)/audio_portaudio-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/audio_portaudio-generate-stamp:
+$(DEPDIR)/audio_portaudio-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_portaudio_swig_args) \
+		-MD -MF $(DEPDIR)/audio_portaudio.Std \
+		-module audio_portaudio -o audio_portaudio_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/audio_portaudio.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_portaudio.Std \
+			> $(DEPDIR)/audio_portaudio.Sd; \
+		$(RM) $(DEPDIR)/audio_portaudio.Std; \
+		$(MV) $(DEPDIR)/audio_portaudio.Sd $(DEPDIR)/audio_portaudio.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/audio_portaudio.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/audio_portaudio-generate-guile-stamp
+
+$(DEPDIR)/audio_portaudio-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -202,7 +233,7 @@ $(DEPDIR)/audio_portaudio-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(audio_portaudio_swig_args) \
 		-MD -MF $(DEPDIR)/audio_portaudio.Std \
-		-module audio_portaudio -o audio_portaudio.cc $(WHAT); then \
+		-module audio_portaudio -o audio_portaudio_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/audio_portaudio.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_portaudio.Std \
@@ -249,7 +280,7 @@ $(DEPDIR)/audio_portaudio-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/audio_portaudio-generate-stamp
+	touch $(DEPDIR)/audio_portaudio-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,

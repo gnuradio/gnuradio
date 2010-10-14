@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += video_sdl.py video_sdl-python.cc
+swig_built_sources += video_sdl.py video_sdl_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ video_sdl_swiginclude_HEADERS =		\
 	$(video_sdl_swiginclude_headers)
 
 video_sdl_pylib_LTLIBRARIES =		\
-	_video_sdl.la
+	_video_sdl_python.la
 
-_video_sdl_la_SOURCES = 			\
-	video_sdl-python.cc			\
+_video_sdl_python_la_SOURCES = 		\
+	video_sdl_python.cc		\
 	$(video_sdl_la_swig_sources)
 
-_video_sdl_la_LIBADD =			\
+_video_sdl_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(video_sdl_la_swig_libadd)
 
-_video_sdl_la_LDFLAGS =			\
+_video_sdl_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(video_sdl_la_swig_ldflags)
 
-_video_sdl_la_CXXFLAGS =			\
+_video_sdl_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(video_sdl_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ video_sdl_python_PYTHON =			\
 	video_sdl.py			\
 	$(video_sdl_python)
 
+if GUILE
+video_sdl_pylib_LTLIBRARIES += _video_sdl_guile.la
+
+_video_sdl_guile_la_SOURCES = 		\
+	video_sdl_guile.cc		\
+	$(video_sdl_la_swig_sources)
+
+# Guile can use the same flags as python does
+_video_sdl_guile_la_LIBADD = $(_video_sdl_python_la_LIBADD)
+_video_sdl_guile_la_LDFLAGS = $(_video_sdl_python_la_LDFLAGS)
+_video_sdl_guile_la_CXXFLAGS = $(_video_sdl_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-video_sdl.h video_sdl.py video_sdl-python.cc: video_sdl.i
+video_sdl.h video_sdl.py video_sdl_python.cc: video_sdl.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ video_sdl.h video_sdl.py video_sdl-python.cc: video_sdl.i
 	fi;
 
 $(DEPDIR)/video_sdl-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(video_sdl_swig_args) \
 		-MD -MF $(DEPDIR)/video_sdl.Std \
-		-module video_sdl -o video_sdl-guile.cc $(WHAT); then \
+		-module video_sdl -o video_sdl_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/video_sdl.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/video_sdl-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/video_sdl.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/video_sdl-generate-guile-stamp
+endif
 
 $(DEPDIR)/video_sdl-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/video_sdl-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(video_sdl_swig_args) \
 		-MD -MF $(DEPDIR)/video_sdl.Std \
-		-module video_sdl -o video_sdl-python.cc $(WHAT); then \
+		-module video_sdl -o video_sdl_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/video_sdl.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl.Std \
