@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += pager_swig.py pager_swig.cc
+swig_built_sources += pager_swig.py pager_swig-python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -86,7 +86,7 @@ pager_swig_pylib_LTLIBRARIES =		\
 	_pager_swig.la
 
 _pager_swig_la_SOURCES = 			\
-	pager_swig.cc			\
+	pager_swig-python.cc			\
 	$(pager_swig_la_swig_sources)
 
 _pager_swig_la_LIBADD =			\
@@ -107,7 +107,7 @@ pager_swig_python_PYTHON =			\
 
 ## Entry rule for running SWIG
 
-pager_swig.h pager_swig.py pager_swig.cc: pager_swig.i
+pager_swig.h pager_swig.py pager_swig-python.cc: pager_swig.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +159,12 @@ pager_swig.h pager_swig.py pager_swig.cc: pager_swig.i
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/pager_swig-generate-stamp; \
+		rm -f $(DEPDIR)/pager_swig-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/pager_swig-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/pager_swig-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/pager_swig-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +188,27 @@ pager_swig.h pager_swig.py pager_swig.cc: pager_swig.i
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/pager_swig-generate-stamp; \
+		test -f $(DEPDIR)/pager_swig-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/pager_swig-generate-stamp:
+$(DEPDIR)/pager_swig-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(pager_swig_swig_args) \
+		-MD -MF $(DEPDIR)/pager_swig.Std \
+		-module pager_swig -o pager_swig-guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/pager_swig.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/pager_swig.Std \
+			> $(DEPDIR)/pager_swig.Sd; \
+		$(RM) $(DEPDIR)/pager_swig.Std; \
+		$(MV) $(DEPDIR)/pager_swig.Sd $(DEPDIR)/pager_swig.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/pager_swig.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/pager_swig-generate-guile-stamp
+
+$(DEPDIR)/pager_swig-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -202,7 +219,7 @@ $(DEPDIR)/pager_swig-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(pager_swig_swig_args) \
 		-MD -MF $(DEPDIR)/pager_swig.Std \
-		-module pager_swig -o pager_swig.cc $(WHAT); then \
+		-module pager_swig -o pager_swig-python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/pager_swig.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/pager_swig.Std \
@@ -249,7 +266,7 @@ $(DEPDIR)/pager_swig-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/pager_swig-generate-stamp
+	touch $(DEPDIR)/pager_swig-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,

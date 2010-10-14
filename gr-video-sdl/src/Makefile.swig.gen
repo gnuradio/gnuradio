@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += video_sdl.py video_sdl.cc
+swig_built_sources += video_sdl.py video_sdl-python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -86,7 +86,7 @@ video_sdl_pylib_LTLIBRARIES =		\
 	_video_sdl.la
 
 _video_sdl_la_SOURCES = 			\
-	video_sdl.cc			\
+	video_sdl-python.cc			\
 	$(video_sdl_la_swig_sources)
 
 _video_sdl_la_LIBADD =			\
@@ -107,7 +107,7 @@ video_sdl_python_PYTHON =			\
 
 ## Entry rule for running SWIG
 
-video_sdl.h video_sdl.py video_sdl.cc: video_sdl.i
+video_sdl.h video_sdl.py video_sdl-python.cc: video_sdl.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +159,12 @@ video_sdl.h video_sdl.py video_sdl.cc: video_sdl.i
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/video_sdl-generate-stamp; \
+		rm -f $(DEPDIR)/video_sdl-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/video_sdl-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/video_sdl-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/video_sdl-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +188,27 @@ video_sdl.h video_sdl.py video_sdl.cc: video_sdl.i
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/video_sdl-generate-stamp; \
+		test -f $(DEPDIR)/video_sdl-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/video_sdl-generate-stamp:
+$(DEPDIR)/video_sdl-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(video_sdl_swig_args) \
+		-MD -MF $(DEPDIR)/video_sdl.Std \
+		-module video_sdl -o video_sdl-guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/video_sdl.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl.Std \
+			> $(DEPDIR)/video_sdl.Sd; \
+		$(RM) $(DEPDIR)/video_sdl.Std; \
+		$(MV) $(DEPDIR)/video_sdl.Sd $(DEPDIR)/video_sdl.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/video_sdl.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/video_sdl-generate-guile-stamp
+
+$(DEPDIR)/video_sdl-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -202,7 +219,7 @@ $(DEPDIR)/video_sdl-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(video_sdl_swig_args) \
 		-MD -MF $(DEPDIR)/video_sdl.Std \
-		-module video_sdl -o video_sdl.cc $(WHAT); then \
+		-module video_sdl -o video_sdl-python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/video_sdl.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl.Std \
@@ -249,7 +266,7 @@ $(DEPDIR)/video_sdl-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/video_sdl-generate-stamp
+	touch $(DEPDIR)/video_sdl-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,

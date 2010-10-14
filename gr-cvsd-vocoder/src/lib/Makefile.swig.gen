@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += cvsd_vocoder.py cvsd_vocoder.cc
+swig_built_sources += cvsd_vocoder.py cvsd_vocoder-python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -86,7 +86,7 @@ cvsd_vocoder_pylib_LTLIBRARIES =		\
 	_cvsd_vocoder.la
 
 _cvsd_vocoder_la_SOURCES = 			\
-	cvsd_vocoder.cc			\
+	cvsd_vocoder-python.cc			\
 	$(cvsd_vocoder_la_swig_sources)
 
 _cvsd_vocoder_la_LIBADD =			\
@@ -107,7 +107,7 @@ cvsd_vocoder_python_PYTHON =			\
 
 ## Entry rule for running SWIG
 
-cvsd_vocoder.h cvsd_vocoder.py cvsd_vocoder.cc: cvsd_vocoder.i
+cvsd_vocoder.h cvsd_vocoder.py cvsd_vocoder-python.cc: cvsd_vocoder.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +159,12 @@ cvsd_vocoder.h cvsd_vocoder.py cvsd_vocoder.cc: cvsd_vocoder.i
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/cvsd_vocoder-generate-stamp; \
+		rm -f $(DEPDIR)/cvsd_vocoder-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/cvsd_vocoder-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/cvsd_vocoder-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/cvsd_vocoder-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +188,27 @@ cvsd_vocoder.h cvsd_vocoder.py cvsd_vocoder.cc: cvsd_vocoder.i
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/cvsd_vocoder-generate-stamp; \
+		test -f $(DEPDIR)/cvsd_vocoder-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/cvsd_vocoder-generate-stamp:
+$(DEPDIR)/cvsd_vocoder-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(cvsd_vocoder_swig_args) \
+		-MD -MF $(DEPDIR)/cvsd_vocoder.Std \
+		-module cvsd_vocoder -o cvsd_vocoder-guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/cvsd_vocoder.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/cvsd_vocoder.Std \
+			> $(DEPDIR)/cvsd_vocoder.Sd; \
+		$(RM) $(DEPDIR)/cvsd_vocoder.Std; \
+		$(MV) $(DEPDIR)/cvsd_vocoder.Sd $(DEPDIR)/cvsd_vocoder.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/cvsd_vocoder.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/cvsd_vocoder-generate-guile-stamp
+
+$(DEPDIR)/cvsd_vocoder-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -202,7 +219,7 @@ $(DEPDIR)/cvsd_vocoder-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(cvsd_vocoder_swig_args) \
 		-MD -MF $(DEPDIR)/cvsd_vocoder.Std \
-		-module cvsd_vocoder -o cvsd_vocoder.cc $(WHAT); then \
+		-module cvsd_vocoder -o cvsd_vocoder-python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/cvsd_vocoder.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/cvsd_vocoder.Std \
@@ -249,7 +266,7 @@ $(DEPDIR)/cvsd_vocoder-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/cvsd_vocoder-generate-stamp
+	touch $(DEPDIR)/cvsd_vocoder-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,

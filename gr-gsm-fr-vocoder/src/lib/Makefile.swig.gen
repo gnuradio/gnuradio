@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gsm_full_rate.py gsm_full_rate.cc
+swig_built_sources += gsm_full_rate.py gsm_full_rate-python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -86,7 +86,7 @@ gsm_full_rate_pylib_LTLIBRARIES =		\
 	_gsm_full_rate.la
 
 _gsm_full_rate_la_SOURCES = 			\
-	gsm_full_rate.cc			\
+	gsm_full_rate-python.cc			\
 	$(gsm_full_rate_la_swig_sources)
 
 _gsm_full_rate_la_LIBADD =			\
@@ -107,7 +107,7 @@ gsm_full_rate_python_PYTHON =			\
 
 ## Entry rule for running SWIG
 
-gsm_full_rate.h gsm_full_rate.py gsm_full_rate.cc: gsm_full_rate.i
+gsm_full_rate.h gsm_full_rate.py gsm_full_rate-python.cc: gsm_full_rate.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +159,12 @@ gsm_full_rate.h gsm_full_rate.py gsm_full_rate.cc: gsm_full_rate.i
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/gsm_full_rate-generate-stamp; \
+		rm -f $(DEPDIR)/gsm_full_rate-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gsm_full_rate-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gsm_full_rate-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gsm_full_rate-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +188,27 @@ gsm_full_rate.h gsm_full_rate.py gsm_full_rate.cc: gsm_full_rate.i
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/gsm_full_rate-generate-stamp; \
+		test -f $(DEPDIR)/gsm_full_rate-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/gsm_full_rate-generate-stamp:
+$(DEPDIR)/gsm_full_rate-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gsm_full_rate_swig_args) \
+		-MD -MF $(DEPDIR)/gsm_full_rate.Std \
+		-module gsm_full_rate -o gsm_full_rate-guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/gsm_full_rate.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gsm_full_rate.Std \
+			> $(DEPDIR)/gsm_full_rate.Sd; \
+		$(RM) $(DEPDIR)/gsm_full_rate.Std; \
+		$(MV) $(DEPDIR)/gsm_full_rate.Sd $(DEPDIR)/gsm_full_rate.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/gsm_full_rate.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/gsm_full_rate-generate-guile-stamp
+
+$(DEPDIR)/gsm_full_rate-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -202,7 +219,7 @@ $(DEPDIR)/gsm_full_rate-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gsm_full_rate_swig_args) \
 		-MD -MF $(DEPDIR)/gsm_full_rate.Std \
-		-module gsm_full_rate -o gsm_full_rate.cc $(WHAT); then \
+		-module gsm_full_rate -o gsm_full_rate-python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/gsm_full_rate.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gsm_full_rate.Std \
@@ -249,7 +266,7 @@ $(DEPDIR)/gsm_full_rate-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/gsm_full_rate-generate-stamp
+	touch $(DEPDIR)/gsm_full_rate-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,

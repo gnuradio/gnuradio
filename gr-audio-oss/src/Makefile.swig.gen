@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += audio_oss.py audio_oss.cc
+swig_built_sources += audio_oss.py audio_oss-python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -86,7 +86,7 @@ audio_oss_pylib_LTLIBRARIES =		\
 	_audio_oss.la
 
 _audio_oss_la_SOURCES = 			\
-	audio_oss.cc			\
+	audio_oss-python.cc			\
 	$(audio_oss_la_swig_sources)
 
 _audio_oss_la_LIBADD =			\
@@ -107,7 +107,7 @@ audio_oss_python_PYTHON =			\
 
 ## Entry rule for running SWIG
 
-audio_oss.h audio_oss.py audio_oss.cc: audio_oss.i
+audio_oss.h audio_oss.py audio_oss-python.cc: audio_oss.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -159,11 +159,12 @@ audio_oss.h audio_oss.py audio_oss.cc: audio_oss.i
 ##
 ## Remove the stamp associated with this filename.
 ##
-		rm -f $(DEPDIR)/audio_oss-generate-stamp; \
+		rm -f $(DEPDIR)/audio_oss-generate-*stamp; \
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_oss-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_oss-generate-python-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_oss-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +188,27 @@ audio_oss.h audio_oss.py audio_oss.cc: audio_oss.i
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/audio_oss-generate-stamp; \
+		test -f $(DEPDIR)/audio_oss-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/audio_oss-generate-stamp:
+$(DEPDIR)/audio_oss-generate-guile-stamp:
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_oss_swig_args) \
+		-MD -MF $(DEPDIR)/audio_oss.Std \
+		-module audio_oss -o audio_oss-guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/audio_oss.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_oss.Std \
+			> $(DEPDIR)/audio_oss.Sd; \
+		$(RM) $(DEPDIR)/audio_oss.Std; \
+		$(MV) $(DEPDIR)/audio_oss.Sd $(DEPDIR)/audio_oss.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/audio_oss.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/audio_oss-generate-guile-stamp
+
+$(DEPDIR)/audio_oss-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -202,7 +219,7 @@ $(DEPDIR)/audio_oss-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(audio_oss_swig_args) \
 		-MD -MF $(DEPDIR)/audio_oss.Std \
-		-module audio_oss -o audio_oss.cc $(WHAT); then \
+		-module audio_oss -o audio_oss-python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/audio_oss.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_oss.Std \
@@ -249,7 +266,7 @@ $(DEPDIR)/audio_oss-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/audio_oss-generate-stamp
+	touch $(DEPDIR)/audio_oss-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,
