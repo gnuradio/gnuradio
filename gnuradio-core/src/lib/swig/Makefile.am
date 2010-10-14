@@ -32,6 +32,7 @@ swiginclude_HEADERS =			\
 	gnuradio.i			\
 	gr_swig_block_magic.i		\
 	gr_shared_ptr.i
+#	std_complex.i
 
 # special install for this top-level Python script which includes all
 # of the split Python libraries.
@@ -88,7 +89,7 @@ include $(top_srcdir)/Makefile.swig
 
 # include the SWIG-generated .h files in the BUILT SOURCES, since they
 # aren't by default when using Makefile.swig; order doesn't matter.
-BUILT_SOURCES =				\
+PYTHON_GEN =				\
 	gnuradio_swig_py_runtime.h	\
 	gnuradio_swig_py_general.h	\
 	gnuradio_swig_py_gengen.h	\
@@ -98,6 +99,15 @@ BUILT_SOURCES =				\
 	$(grinclude_HEADERS)		\
 	$(swig_built_sources)
 
+BUILT_GUILE =				\
+	$(grinclude_HEADERS)		\
+	$(swig_built_sources)
+
+BUILT_SOURCES = $(PYTHON_GEN)
+if GUILE
+BUILT_SOURCES += $(BUILT_GUILE)
+endif
+
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
-endif
+endif				# end of if python
