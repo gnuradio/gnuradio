@@ -50,7 +50,8 @@ STD_SWIG_PYTHON_ARGS =				\
 
 SWIG_GUILE_FLAGS =	\
 	-guile		\
-	-w511		\
+	-scm		\
+	-Linkage passive \
 	-outdir .
 
 ## standard swig flags used by most components
