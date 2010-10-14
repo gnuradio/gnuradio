@@ -72,7 +72,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += @NAME@.py @NAME@-python.cc
+swig_built_sources += @NAME@.py @NAME@_python.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,21 +83,21 @@ swig_built_sources += @NAME@.py @NAME@-python.cc
 	$(@NAME@_swiginclude_headers)
 
 @NAME@_pylib_LTLIBRARIES =		\
-	_@NAME@.la
+	_@NAME@_python.la
 
-_@NAME@_la_SOURCES = 			\
-	@NAME@-python.cc			\
+_@NAME@_python_la_SOURCES = 		\
+	@NAME@_python.cc		\
 	$(@NAME@_la_swig_sources)
 
-_@NAME@_la_LIBADD =			\
+_@NAME@_python_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(@NAME@_la_swig_libadd)
 
-_@NAME@_la_LDFLAGS =			\
+_@NAME@_python_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(@NAME@_la_swig_ldflags)
 
-_@NAME@_la_CXXFLAGS =			\
+_@NAME@_python_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(@NAME@_la_swig_cxxflags)
 
@@ -105,9 +105,23 @@ _@NAME@_la_CXXFLAGS =			\
 	@NAME@.py			\
 	$(@NAME@_python)
 
+if GUILE
+@NAME@_pylib_LTLIBRARIES += _@NAME@_guile.la
+
+_@NAME@_guile_la_SOURCES = 		\
+	@NAME@_guile.cc		\
+	$(@NAME@_la_swig_sources)
+
+# Guile can use the same flags as python does
+_@NAME@_guile_la_LIBADD = $(_@NAME@_python_la_LIBADD)
+_@NAME@_guile_la_LDFLAGS = $(_@NAME@_python_la_LDFLAGS)
+_@NAME@_guile_la_CXXFLAGS = $(_@NAME@_python_la_CXXFLAGS)
+
+endif				# end of GUILE
+
 ## Entry rule for running SWIG
 
-@NAME@.h @NAME@.py @NAME@-python.cc: @NAME@.i
+@NAME@.h @NAME@.py @NAME@_python.cc: @NAME@.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -193,9 +207,10 @@ _@NAME@_la_CXXFLAGS =			\
 	fi;
 
 $(DEPDIR)/@NAME@-generate-guile-stamp:
+if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(@NAME@_swig_args) \
 		-MD -MF $(DEPDIR)/@NAME@.Std \
-		-module @NAME@ -o @NAME@-guile.cc $(WHAT); then \
+		-module @NAME@ -o @NAME@_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/@NAME@.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@.Std \
@@ -207,6 +222,7 @@ $(DEPDIR)/@NAME@-generate-guile-stamp:
 	    $(RM) $(DEPDIR)/@NAME@.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/@NAME@-generate-guile-stamp
+endif
 
 $(DEPDIR)/@NAME@-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -219,7 +235,7 @@ $(DEPDIR)/@NAME@-generate-python-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(@NAME@_swig_args) \
 		-MD -MF $(DEPDIR)/@NAME@.Std \
-		-module @NAME@ -o @NAME@-python.cc $(WHAT); then \
+		-module @NAME@ -o @NAME@_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/@NAME@.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@.Std \
