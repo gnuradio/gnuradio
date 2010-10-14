@@ -163,7 +163,7 @@ _@NAME@_la_CXXFLAGS =			\
 ##
 ## Tell MAKE to run the rule for creating this stamp.
 ##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/@NAME@-generate-stamp WHAT=$<; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/@NAME@-generate-python-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -187,11 +187,11 @@ _@NAME@_la_CXXFLAGS =			\
 ## Succeed if and only if the first process succeeded; exit this
 ## process returning the status of the generated stamp.
 ##
-		test -f $(DEPDIR)/@NAME@-generate-stamp; \
+		test -f $(DEPDIR)/@NAME@-generate-python-stamp; \
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/@NAME@-generate-stamp:
+$(DEPDIR)/@NAME@-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
 ## removing the actual stamp file in order to guarantee that MAKE will
@@ -249,7 +249,7 @@ $(DEPDIR)/@NAME@-generate-stamp:
 ## executing this rule; allows other threads waiting on this process
 ## to continue.
 ##
-	touch $(DEPDIR)/@NAME@-generate-stamp
+	touch $(DEPDIR)/@NAME@-generate-python-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,
