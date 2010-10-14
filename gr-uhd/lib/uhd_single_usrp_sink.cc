@@ -41,7 +41,7 @@ public:
         const std::string &args,
         const uhd::io_type_t &type,
         size_t num_channels
-    ) : uhd_single_usrp_sink(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type)
+    ) : uhd_single_usrp_sink(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type), _nchan(num_channels)
     {
         _dev = uhd::usrp::single_usrp::make(args);
     }
@@ -134,9 +134,36 @@ public:
         );
     }
 
+    //Send an empty start-of-burst packet to begin streaming.
+    //This is not necessary since all packets are marked SOB.
+    bool start(void){
+        uhd::tx_metadata_t metadata;
+        metadata.start_of_burst = true;
+
+        _dev->get_device()->send(
+            gr_vector_const_void_star(_nchan), 0, metadata,
+            _type, uhd::device::SEND_MODE_ONE_PACKET
+        );
+        return true;
+    }
+
+    //Send an empty end-of-burst packet to end streaming.
+    //Ending the burst avoids an underflow error on stop.
+    bool stop(void){
+        uhd::tx_metadata_t metadata;
+        metadata.end_of_burst = true;
+
+        _dev->get_device()->send(
+            gr_vector_const_void_star(_nchan), 0, metadata,
+            _type, uhd::device::SEND_MODE_ONE_PACKET
+        );
+        return true;
+    }
+
 protected:
     uhd::usrp::single_usrp::sptr _dev;
     const uhd::io_type_t _type;
+    size_t _nchan;
 };
 
 /***********************************************************************

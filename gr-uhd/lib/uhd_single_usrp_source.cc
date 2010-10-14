@@ -46,11 +46,6 @@ public:
     ) : uhd_single_usrp_source(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type)
     {
         _dev = uhd::usrp::single_usrp::make(args);
-        set_streaming(false);
-    }
-
-    ~uhd_single_usrp_source_impl(void){
-        set_streaming(false);
     }
 
     void set_subdev_spec(const std::string &spec){
@@ -128,10 +123,6 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        //conditionally start streaming in the work call
-        //this prevents streaming before the runtime is ready
-        if (not _is_streaming) set_streaming(true);
-
         uhd::rx_metadata_t metadata; //not passed out of this block
 
         size_t num_samps = _dev->get_device()->recv(
@@ -155,18 +146,19 @@ public:
         }
     }
 
+    bool start(void){
+        _dev->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
+        return true;
+    }
+
+    bool stop(void){
+        _dev->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
+        return true;
+    }
+
 private:
     uhd::usrp::single_usrp::sptr _dev;
     const uhd::io_type_t _type;
-    bool _is_streaming;
-
-    void set_streaming(bool enb){
-        if (enb)
-            _dev->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
-        else
-            _dev->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
-        _is_streaming = enb;
-    }
 };
 
 
