@@ -26,7 +26,10 @@ dnl
 #
 AC_DEFUN([GUILE_DEVEL],[
     dnl see if GUILE is installed
-    AC_PATH_PROG(GUILE,guile)
+    AC_PATH_PROG(GUILE, guile)
+    GUILE_CFLAGS=""
+    GUILE_LIBS="-lguile"
+    AC_SUBST(GUILE_LIBS)
 ])
 
 # GUILE_CHECK_MODULE
