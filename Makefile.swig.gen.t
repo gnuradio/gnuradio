@@ -121,7 +121,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-@NAME@.h @NAME@.py @NAME@_python.cc: @NAME@.i
+@NAME@_python.h @NAME@.py @NAME@_python.cc @NAME@_guile.cc @NAME@_guile.h: @NAME@.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -209,19 +209,28 @@ endif				# end of GUILE
 $(DEPDIR)/@NAME@-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(@NAME@_swig_args) \
-		-MD -MF $(DEPDIR)/@NAME@.Std \
+		-MD -MF $(DEPDIR)/@NAME@_guile.Std \
 		-module @NAME@ -o @NAME@_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/@NAME@.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@.Std \
-			> $(DEPDIR)/@NAME@.Sd; \
-		$(RM) $(DEPDIR)/@NAME@.Std; \
-		$(MV) $(DEPDIR)/@NAME@.Sd $(DEPDIR)/@NAME@.Std; \
+		$(RM) $(DEPDIR)/@NAME@_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@_guile.Std \
+			> $(DEPDIR)/@NAME@_guile.Sd; \
+		$(RM) $(DEPDIR)/@NAME@_guile.Std; \
+		$(MV) $(DEPDIR)/@NAME@_guile.Sd $(DEPDIR)/@NAME@_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/@NAME@.S*; exit 1; \
+	    $(RM) $(DEPDIR)/@NAME@_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/@NAME@-generate-guile-stamp
+	$(RM) $(DEPDIR)/@NAME@_guile.d
+	cp $(DEPDIR)/@NAME@_guile.Std $(DEPDIR)/@NAME@_guile.d
+	echo "" >> $(DEPDIR)/@NAME@_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/@NAME@_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/@NAME@_guile.d
+	$(RM) $(DEPDIR)/@NAME@_guile.Std
+	touch $(DEPDIR)/@NAME@-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/@NAME@_guile.d@am__quote@
 endif
 
 $(DEPDIR)/@NAME@-generate-python-stamp:
@@ -234,17 +243,17 @@ $(DEPDIR)/@NAME@-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(@NAME@_swig_args) \
-		-MD -MF $(DEPDIR)/@NAME@.Std \
+		-MD -MF $(DEPDIR)/@NAME@_python.Std \
 		-module @NAME@ -o @NAME@_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/@NAME@.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@.Std \
-			> $(DEPDIR)/@NAME@.Sd; \
-		$(RM) $(DEPDIR)/@NAME@.Std; \
-		$(MV) $(DEPDIR)/@NAME@.Sd $(DEPDIR)/@NAME@.Std; \
+		$(RM) $(DEPDIR)/@NAME@_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@_python.Std \
+			> $(DEPDIR)/@NAME@_python.Sd; \
+		$(RM) $(DEPDIR)/@NAME@_python.Std; \
+		$(MV) $(DEPDIR)/@NAME@_python.Sd $(DEPDIR)/@NAME@_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/@NAME@.S*; exit 1; \
+	    $(RM) $(DEPDIR)/@NAME@_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -256,27 +265,27 @@ $(DEPDIR)/@NAME@-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/@NAME@.d
+	$(RM) $(DEPDIR)/@NAME@_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/@NAME@.Std $(DEPDIR)/@NAME@.d
+	cp $(DEPDIR)/@NAME@_python.Std $(DEPDIR)/@NAME@_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/@NAME@.d
+	echo "" >> $(DEPDIR)/@NAME@_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/@NAME@.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/@NAME@.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/@NAME@_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/@NAME@_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/@NAME@.Std
+	$(RM) $(DEPDIR)/@NAME@_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -288,4 +297,4 @@ $(DEPDIR)/@NAME@-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/@NAME@.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/@NAME@_python.d@am__quote@
