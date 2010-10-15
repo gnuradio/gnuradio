@@ -121,7 +121,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_runtime.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime_python.cc: gnuradio_swig_py_runtime.i
+gnuradio_swig_py_runtime_python.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime_python.cc gnuradio_swig_py_runtime_guile.cc gnuradio_swig_py_runtime_guile.h: gnuradio_swig_py_runtime.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -209,19 +209,28 @@ gnuradio_swig_py_runtime.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime_
 $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_runtime_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_runtime.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std \
 		-module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_runtime.Std \
-			> $(DEPDIR)/gnuradio_swig_py_runtime.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_runtime.Sd $(DEPDIR)/gnuradio_swig_py_runtime.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std \
+			> $(DEPDIR)/gnuradio_swig_py_runtime_guile.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_runtime_guile.Sd $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_runtime.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp
+	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.d
+	cp $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std $(DEPDIR)/gnuradio_swig_py_runtime_guile.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_runtime_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_runtime_guile.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std
+	touch $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_runtime_guile.d@am__quote@
 endif
 
 $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
@@ -234,17 +243,17 @@ $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_runtime_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_runtime.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_runtime_python.Std \
 		-module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_runtime.Std \
-			> $(DEPDIR)/gnuradio_swig_py_runtime.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_runtime.Sd $(DEPDIR)/gnuradio_swig_py_runtime.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_runtime_python.Std \
+			> $(DEPDIR)/gnuradio_swig_py_runtime_python.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_runtime_python.Sd $(DEPDIR)/gnuradio_swig_py_runtime_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_runtime.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -256,27 +265,27 @@ $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/gnuradio_swig_py_runtime.Std $(DEPDIR)/gnuradio_swig_py_runtime.d
+	cp $(DEPDIR)/gnuradio_swig_py_runtime_python.Std $(DEPDIR)/gnuradio_swig_py_runtime_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_runtime.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_runtime_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_runtime.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_runtime.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_runtime_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_runtime_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime.Std
+	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -288,7 +297,7 @@ $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_runtime.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_runtime_python.d@am__quote@
 
 # -*- Makefile -*-
 #
@@ -413,7 +422,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_general.h gnuradio_swig_py_general.py gnuradio_swig_py_general_python.cc: gnuradio_swig_py_general.i
+gnuradio_swig_py_general_python.h gnuradio_swig_py_general.py gnuradio_swig_py_general_python.cc gnuradio_swig_py_general_guile.cc gnuradio_swig_py_general_guile.h: gnuradio_swig_py_general.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -501,19 +510,28 @@ gnuradio_swig_py_general.h gnuradio_swig_py_general.py gnuradio_swig_py_general_
 $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_general_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_general.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_general_guile.Std \
 		-module gnuradio_swig_py_general -o gnuradio_swig_py_general_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_general.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_general.Std \
-			> $(DEPDIR)/gnuradio_swig_py_general.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_general.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_general.Sd $(DEPDIR)/gnuradio_swig_py_general.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_general_guile.Std \
+			> $(DEPDIR)/gnuradio_swig_py_general_guile.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_general_guile.Sd $(DEPDIR)/gnuradio_swig_py_general_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_general.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp
+	$(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.d
+	cp $(DEPDIR)/gnuradio_swig_py_general_guile.Std $(DEPDIR)/gnuradio_swig_py_general_guile.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_general_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_general_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_general_guile.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.Std
+	touch $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_general_guile.d@am__quote@
 endif
 
 $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
@@ -526,17 +544,17 @@ $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_general_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_general.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_general_python.Std \
 		-module gnuradio_swig_py_general -o gnuradio_swig_py_general_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_general.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_general.Std \
-			> $(DEPDIR)/gnuradio_swig_py_general.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_general.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_general.Sd $(DEPDIR)/gnuradio_swig_py_general.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_general_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_general_python.Std \
+			> $(DEPDIR)/gnuradio_swig_py_general_python.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_general_python.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_general_python.Sd $(DEPDIR)/gnuradio_swig_py_general_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_general.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_general_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -548,27 +566,27 @@ $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_general.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_general_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/gnuradio_swig_py_general.Std $(DEPDIR)/gnuradio_swig_py_general.d
+	cp $(DEPDIR)/gnuradio_swig_py_general_python.Std $(DEPDIR)/gnuradio_swig_py_general_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_general.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_general_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_general.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_general.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_general_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_general_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_general.Std
+	$(RM) $(DEPDIR)/gnuradio_swig_py_general_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -580,7 +598,7 @@ $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_general.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_general_python.d@am__quote@
 
 # -*- Makefile -*-
 #
@@ -705,7 +723,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_gengen.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen_python.cc: gnuradio_swig_py_gengen.i
+gnuradio_swig_py_gengen_python.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen_python.cc gnuradio_swig_py_gengen_guile.cc gnuradio_swig_py_gengen_guile.h: gnuradio_swig_py_gengen.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -793,19 +811,28 @@ gnuradio_swig_py_gengen.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen_pyt
 $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_gengen_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_gengen.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std \
 		-module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_gengen.Std \
-			> $(DEPDIR)/gnuradio_swig_py_gengen.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_gengen.Sd $(DEPDIR)/gnuradio_swig_py_gengen.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std \
+			> $(DEPDIR)/gnuradio_swig_py_gengen_guile.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_gengen_guile.Sd $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_gengen.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp
+	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.d
+	cp $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std $(DEPDIR)/gnuradio_swig_py_gengen_guile.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_gengen_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_gengen_guile.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std
+	touch $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_gengen_guile.d@am__quote@
 endif
 
 $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
@@ -818,17 +845,17 @@ $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_gengen_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_gengen.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_gengen_python.Std \
 		-module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_gengen.Std \
-			> $(DEPDIR)/gnuradio_swig_py_gengen.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_gengen.Sd $(DEPDIR)/gnuradio_swig_py_gengen.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_gengen_python.Std \
+			> $(DEPDIR)/gnuradio_swig_py_gengen_python.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_gengen_python.Sd $(DEPDIR)/gnuradio_swig_py_gengen_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_gengen.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -840,27 +867,27 @@ $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/gnuradio_swig_py_gengen.Std $(DEPDIR)/gnuradio_swig_py_gengen.d
+	cp $(DEPDIR)/gnuradio_swig_py_gengen_python.Std $(DEPDIR)/gnuradio_swig_py_gengen_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_gengen.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_gengen_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_gengen.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_gengen.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_gengen_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_gengen_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen.Std
+	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -872,7 +899,7 @@ $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_gengen.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_gengen_python.d@am__quote@
 
 # -*- Makefile -*-
 #
@@ -997,7 +1024,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_filter.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter_python.cc: gnuradio_swig_py_filter.i
+gnuradio_swig_py_filter_python.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter_python.cc gnuradio_swig_py_filter_guile.cc gnuradio_swig_py_filter_guile.h: gnuradio_swig_py_filter.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -1085,19 +1112,28 @@ gnuradio_swig_py_filter.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter_pyt
 $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_filter_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_filter.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_filter_guile.Std \
 		-module gnuradio_swig_py_filter -o gnuradio_swig_py_filter_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_filter.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_filter.Std \
-			> $(DEPDIR)/gnuradio_swig_py_filter.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_filter.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_filter.Sd $(DEPDIR)/gnuradio_swig_py_filter.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_filter_guile.Std \
+			> $(DEPDIR)/gnuradio_swig_py_filter_guile.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_filter_guile.Sd $(DEPDIR)/gnuradio_swig_py_filter_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_filter.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp
+	$(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.d
+	cp $(DEPDIR)/gnuradio_swig_py_filter_guile.Std $(DEPDIR)/gnuradio_swig_py_filter_guile.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_filter_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_filter_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_filter_guile.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.Std
+	touch $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_filter_guile.d@am__quote@
 endif
 
 $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
@@ -1110,17 +1146,17 @@ $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_filter_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_filter.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_filter_python.Std \
 		-module gnuradio_swig_py_filter -o gnuradio_swig_py_filter_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_filter.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_filter.Std \
-			> $(DEPDIR)/gnuradio_swig_py_filter.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_filter.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_filter.Sd $(DEPDIR)/gnuradio_swig_py_filter.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_filter_python.Std \
+			> $(DEPDIR)/gnuradio_swig_py_filter_python.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_filter_python.Sd $(DEPDIR)/gnuradio_swig_py_filter_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_filter.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -1132,27 +1168,27 @@ $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_filter.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/gnuradio_swig_py_filter.Std $(DEPDIR)/gnuradio_swig_py_filter.d
+	cp $(DEPDIR)/gnuradio_swig_py_filter_python.Std $(DEPDIR)/gnuradio_swig_py_filter_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_filter.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_filter_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_filter.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_filter.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_filter_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_filter_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_filter.Std
+	$(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -1164,7 +1200,7 @@ $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_filter.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_filter_python.d@am__quote@
 
 # -*- Makefile -*-
 #
@@ -1289,7 +1325,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_io.h gnuradio_swig_py_io.py gnuradio_swig_py_io_python.cc: gnuradio_swig_py_io.i
+gnuradio_swig_py_io_python.h gnuradio_swig_py_io.py gnuradio_swig_py_io_python.cc gnuradio_swig_py_io_guile.cc gnuradio_swig_py_io_guile.h: gnuradio_swig_py_io.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -1377,19 +1413,28 @@ gnuradio_swig_py_io.h gnuradio_swig_py_io.py gnuradio_swig_py_io_python.cc: gnur
 $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_io_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_io.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_io_guile.Std \
 		-module gnuradio_swig_py_io -o gnuradio_swig_py_io_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_io.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_io.Std \
-			> $(DEPDIR)/gnuradio_swig_py_io.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_io.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_io.Sd $(DEPDIR)/gnuradio_swig_py_io.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_io_guile.Std \
+			> $(DEPDIR)/gnuradio_swig_py_io_guile.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_io_guile.Sd $(DEPDIR)/gnuradio_swig_py_io_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_io.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp
+	$(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.d
+	cp $(DEPDIR)/gnuradio_swig_py_io_guile.Std $(DEPDIR)/gnuradio_swig_py_io_guile.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_io_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_io_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_io_guile.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.Std
+	touch $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_io_guile.d@am__quote@
 endif
 
 $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
@@ -1402,17 +1447,17 @@ $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_io_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_io.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_io_python.Std \
 		-module gnuradio_swig_py_io -o gnuradio_swig_py_io_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_io.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_io.Std \
-			> $(DEPDIR)/gnuradio_swig_py_io.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_io.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_io.Sd $(DEPDIR)/gnuradio_swig_py_io.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_io_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_io_python.Std \
+			> $(DEPDIR)/gnuradio_swig_py_io_python.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_io_python.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_io_python.Sd $(DEPDIR)/gnuradio_swig_py_io_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_io.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_io_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -1424,27 +1469,27 @@ $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_io.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_io_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/gnuradio_swig_py_io.Std $(DEPDIR)/gnuradio_swig_py_io.d
+	cp $(DEPDIR)/gnuradio_swig_py_io_python.Std $(DEPDIR)/gnuradio_swig_py_io_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_io.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_io_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_io.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_io.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_io_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_io_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_io.Std
+	$(RM) $(DEPDIR)/gnuradio_swig_py_io_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -1456,7 +1501,7 @@ $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_io.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_io_python.d@am__quote@
 
 # -*- Makefile -*-
 #
@@ -1581,7 +1626,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-gnuradio_swig_py_hier.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier_python.cc: gnuradio_swig_py_hier.i
+gnuradio_swig_py_hier_python.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier_python.cc gnuradio_swig_py_hier_guile.cc gnuradio_swig_py_hier_guile.h: gnuradio_swig_py_hier.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -1669,19 +1714,28 @@ gnuradio_swig_py_hier.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier_python.cc
 $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_hier_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_hier.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_hier_guile.Std \
 		-module gnuradio_swig_py_hier -o gnuradio_swig_py_hier_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_hier.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_hier.Std \
-			> $(DEPDIR)/gnuradio_swig_py_hier.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_hier.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_hier.Sd $(DEPDIR)/gnuradio_swig_py_hier.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_hier_guile.Std \
+			> $(DEPDIR)/gnuradio_swig_py_hier_guile.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_hier_guile.Sd $(DEPDIR)/gnuradio_swig_py_hier_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_hier.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp
+	$(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.d
+	cp $(DEPDIR)/gnuradio_swig_py_hier_guile.Std $(DEPDIR)/gnuradio_swig_py_hier_guile.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_hier_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_hier_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_hier_guile.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.Std
+	touch $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_hier_guile.d@am__quote@
 endif
 
 $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
@@ -1694,17 +1748,17 @@ $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_hier_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_hier.Std \
+		-MD -MF $(DEPDIR)/gnuradio_swig_py_hier_python.Std \
 		-module gnuradio_swig_py_hier -o gnuradio_swig_py_hier_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_hier.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_hier.Std \
-			> $(DEPDIR)/gnuradio_swig_py_hier.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_hier.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_hier.Sd $(DEPDIR)/gnuradio_swig_py_hier.Std; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_hier_python.Std \
+			> $(DEPDIR)/gnuradio_swig_py_hier_python.Sd; \
+		$(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.Std; \
+		$(MV) $(DEPDIR)/gnuradio_swig_py_hier_python.Sd $(DEPDIR)/gnuradio_swig_py_hier_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_hier.S*; exit 1; \
+	    $(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -1716,27 +1770,27 @@ $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_hier.d
+	$(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/gnuradio_swig_py_hier.Std $(DEPDIR)/gnuradio_swig_py_hier.d
+	cp $(DEPDIR)/gnuradio_swig_py_hier_python.Std $(DEPDIR)/gnuradio_swig_py_hier_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_hier.d
+	echo "" >> $(DEPDIR)/gnuradio_swig_py_hier_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_hier.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_hier.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_hier_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_hier_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_hier.Std
+	$(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -1748,5 +1802,5 @@ $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_hier.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_hier_python.d@am__quote@
 
