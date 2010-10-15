@@ -32,7 +32,6 @@ swiginclude_HEADERS =			\
 	gnuradio.i			\
 	gr_swig_block_magic.i		\
 	gr_shared_ptr.i
-#	std_complex.i
 
 # special install for this top-level Python script which includes all
 # of the split Python libraries.
@@ -42,8 +41,12 @@ ourpython_PYTHON = gnuradio_swig_python.py
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...
 
-gnuradio_swig_bug_workaround.h : gnuradio_swig_py_runtime_python.cc $(srcdir)/gen-swig-bug-fix
-	$(PYTHON) $(srcdir)/gen-swig-bug-fix gnuradio_swig_py_runtime_python.cc $@
+workarounds = gnuradio_swig_py_runtime_python.cc
+# if GUILE
+# workarounds += gnuradio_swig_py_runtime_guile.cc
+# endif
+gnuradio_swig_bug_workaround.h : $(workarounds) $(srcdir)/gen-swig-bug-fix
+	$(PYTHON) $(srcdir)/gen-swig-bug-fix $(workarounds) $@
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
@@ -90,13 +93,13 @@ include $(top_srcdir)/Makefile.swig
 # include the SWIG-generated .h files in the BUILT SOURCES, since they
 # aren't by default when using Makefile.swig; order doesn't matter.
 PYTHON_GEN =				\
-	gnuradio_swig_py_runtime.h	\
-	gnuradio_swig_py_general.h	\
-	gnuradio_swig_py_gengen.h	\
-	gnuradio_swig_py_filter.h	\
-	gnuradio_swig_py_io.h		\
-	gnuradio_swig_py_hier.h		\
-	$(grinclude_HEADERS)		\
+	gnuradio_swig_py_runtime_python.h	\
+	gnuradio_swig_py_general_python.h	\
+	gnuradio_swig_py_gengen_python.h	\
+	gnuradio_swig_py_filter_python.h	\
+	gnuradio_swig_py_io_python.h		\
+	gnuradio_swig_py_hier_python.h		\
+	$(grinclude_HEADERS)			\
 	$(swig_built_sources)
 
 BUILT_GUILE =				\
@@ -104,9 +107,9 @@ BUILT_GUILE =				\
 	$(swig_built_sources)
 
 BUILT_SOURCES = $(PYTHON_GEN)
-if GUILE
-BUILT_SOURCES += $(BUILT_GUILE)
-endif
+# if GUILE
+# BUILT_SOURCES += $(BUILT_GUILE)
+# endif
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
