@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -190,6 +190,7 @@ libfilter_la_common_SOURCES = 		\
 	gr_fft_filter_fff.cc		\
 	gr_goertzel_fc.cc		\
 	gr_filter_delay_fc.cc		\
+	gri_fir_filter_with_buffer_ccf.cc \
 	gr_fractional_interpolator_ff.cc \
 	gr_fractional_interpolator_cc.cc \
 	gr_hilbert_fc.cc		\
@@ -205,6 +206,7 @@ libfilter_la_common_SOURCES = 		\
 	float_dotprod_generic.c		\
 	short_dotprod_generic.c		\
 	gr_pfb_channelizer_ccf.cc	\
+	gr_pfb_synthesis_filterbank_ccf.cc\
 	gr_pfb_decimator_ccf.cc		\
 	gr_pfb_interpolator_ccf.cc	\
 	gr_pfb_arb_resampler_ccf.cc	\
@@ -220,7 +222,8 @@ libfilter_qa_la_common_SOURCES = 	\
 	qa_gr_fir_scc.cc		\
 	qa_gr_rotator.cc		\
 	qa_gri_mmse_fir_interpolator.cc	\
-	qa_gri_mmse_fir_interpolator_cc.cc	
+	qa_gri_mmse_fir_interpolator_cc.cc \
+	qa_gri_fir_filter_with_buffer_ccf.cc
 
 if MD_CPU_generic
 libfilter_la_SOURCES = $(libfilter_la_common_SOURCES) $(generic_CODE)
@@ -266,6 +269,7 @@ grinclude_HEADERS = 			\
 	gr_fft_filter_ccc.h		\
 	gr_fft_filter_fff.h		\
 	gr_filter_delay_fc.h		\
+	gri_fir_filter_with_buffer_ccf.h \
 	gr_fir_sysconfig_x86.h		\
 	gr_fir_sysconfig_powerpc.h	\
 	gr_fractional_interpolator_ff.h	\
@@ -288,6 +292,7 @@ grinclude_HEADERS = 			\
 	short_dotprod_x86.h		\
 	sse_debug.h			\
 	gr_pfb_channelizer_ccf.h	\
+	gr_pfb_synthesis_filterbank_ccf.h\
 	gr_pfb_decimator_ccf.h		\
 	gr_pfb_interpolator_ccf.h	\
 	gr_pfb_arb_resampler_ccf.h	\
@@ -324,7 +329,8 @@ noinst_HEADERS = 			\
 	qa_gr_fir_scc.h			\
 	qa_gr_rotator.h			\
 	qa_gri_mmse_fir_interpolator.h	\
-	qa_gri_mmse_fir_interpolator_cc.h	
+	qa_gri_mmse_fir_interpolator_cc.h \
+	qa_gri_fir_filter_with_buffer_ccf.h
 
 
 if PYTHON
@@ -344,6 +350,7 @@ swiginclude_HEADERS =			\
 	gr_single_pole_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
 	gr_pfb_channelizer_ccf.i	\
+	gr_pfb_synthesis_filterbank_ccf.i\
 	gr_pfb_decimator_ccf.i		\
 	gr_pfb_interpolator_ccf.i	\
 	gr_pfb_arb_resampler_ccf.i	\
