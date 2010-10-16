@@ -222,7 +222,8 @@ libfilter_qa_la_common_SOURCES = 	\
 	qa_gr_fir_scc.cc		\
 	qa_gr_rotator.cc		\
 	qa_gri_mmse_fir_interpolator.cc	\
-	qa_gri_mmse_fir_interpolator_cc.cc	
+	qa_gri_mmse_fir_interpolator_cc.cc \
+	qa_gri_fir_filter_with_buffer_ccf.cc
 
 if MD_CPU_generic
 libfilter_la_SOURCES = $(libfilter_la_common_SOURCES) $(generic_CODE)
@@ -328,7 +329,8 @@ noinst_HEADERS = 			\
 	qa_gr_fir_scc.h			\
 	qa_gr_rotator.h			\
 	qa_gri_mmse_fir_interpolator.h	\
-	qa_gri_mmse_fir_interpolator_cc.h	
+	qa_gri_mmse_fir_interpolator_cc.h \
+	qa_gri_fir_filter_with_buffer_ccf.h
 
 
 if PYTHON

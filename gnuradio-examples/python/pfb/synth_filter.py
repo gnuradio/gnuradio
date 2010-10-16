@@ -7,8 +7,7 @@ def main():
     N = 1000000
     fs = 8000
 
-    #freqs = [100, 200, 300, 400, 500]
-    freqs = [100,]
+    freqs = [100, 200, 300, 400, 500]
     nchans = 7
 
     sigs = list()

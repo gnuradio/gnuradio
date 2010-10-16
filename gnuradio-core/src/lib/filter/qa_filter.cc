@@ -36,6 +36,7 @@
 #include <qa_gri_mmse_fir_interpolator.h>
 #include <qa_gri_mmse_fir_interpolator_cc.h>
 #include <qa_gr_rotator.h>
+#include <qa_gri_fir_filter_with_buffer_ccf.h>
 
 CppUnit::TestSuite *
 qa_filter::suite ()
@@ -51,6 +52,7 @@ qa_filter::suite ()
   s->addTest (qa_gri_mmse_fir_interpolator::suite ());
   s->addTest (qa_gri_mmse_fir_interpolator_cc::suite ());
   s->addTest (qa_gr_rotator::suite ());
+  s->addTest (qa_gri_fir_filter_with_buffer_ccf::suite ());
 
   return s;
 }
