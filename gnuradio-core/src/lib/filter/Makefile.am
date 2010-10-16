@@ -195,7 +195,6 @@ libfilter_la_common_SOURCES = 		\
 	gr_fft_filter_fff.cc		\
 	gr_goertzel_fc.cc		\
 	gr_filter_delay_fc.cc		\
-	gri_fir_filter_with_buffer_ccf.cc \
 	gr_fractional_interpolator_ff.cc \
 	gr_fractional_interpolator_cc.cc \
 	gr_hilbert_fc.cc		\
@@ -228,7 +227,12 @@ libfilter_qa_la_common_SOURCES = 	\
 	qa_gr_rotator.cc		\
 	qa_gri_mmse_fir_interpolator.cc	\
 	qa_gri_mmse_fir_interpolator_cc.cc \
-	qa_gri_fir_filter_with_buffer_ccf.cc
+	qa_gri_fir_filter_with_buffer_ccf.cc \
+	qa_gri_fir_filter_with_buffer_ccc.cc \
+	qa_gri_fir_filter_with_buffer_fcc.cc \
+	qa_gri_fir_filter_with_buffer_fff.cc \
+	qa_gri_fir_filter_with_buffer_fsf.cc \
+	qa_gri_fir_filter_with_buffer_scc.cc
 
 if MD_CPU_generic
 libfilter_la_SOURCES = $(libfilter_la_common_SOURCES) $(generic_CODE)
@@ -274,7 +278,6 @@ grinclude_HEADERS = 			\
 	gr_fft_filter_ccc.h		\
 	gr_fft_filter_fff.h		\
 	gr_filter_delay_fc.h		\
-	gri_fir_filter_with_buffer_ccf.h \
 	gr_fir_sysconfig_x86.h		\
 	gr_fir_sysconfig_powerpc.h	\
 	gr_fractional_interpolator_ff.h	\
@@ -335,7 +338,12 @@ noinst_HEADERS = 			\
 	qa_gr_rotator.h			\
 	qa_gri_mmse_fir_interpolator.h	\
 	qa_gri_mmse_fir_interpolator_cc.h \
-	qa_gri_fir_filter_with_buffer_ccf.h
+	qa_gri_fir_filter_with_buffer_ccf.h \
+	qa_gri_fir_filter_with_buffer_ccc.h \
+	qa_gri_fir_filter_with_buffer_fcc.h \
+	qa_gri_fir_filter_with_buffer_fff.h \
+	qa_gri_fir_filter_with_buffer_fsf.h \
+	qa_gri_fir_filter_with_buffer_scc.h
 
 
 if PYTHON
