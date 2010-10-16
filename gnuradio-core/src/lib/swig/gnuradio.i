@@ -32,6 +32,7 @@
 #include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include <gr_types.h>
 #include <stddef.h>		// size_t
+#include <complex>
 %}
 
 %feature("autodoc","1");
@@ -57,6 +58,7 @@ namespace std {
   %template()	  vector<int>;
   %template()	  vector<float>;
   %template()	  vector<double>;
+  // %template()	  std::complex<float>;
 
   %template() 	  vector< std::complex<float> >;
   %template()     vector< std::vector< unsigned char > >;
