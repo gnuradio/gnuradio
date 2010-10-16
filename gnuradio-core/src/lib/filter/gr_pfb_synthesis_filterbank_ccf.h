@@ -32,7 +32,6 @@ typedef boost::shared_ptr<gr_pfb_synthesis_filterbank_ccf> gr_pfb_synthesis_filt
 gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
     (unsigned int numchans, const std::vector<float> &taps);
 
-class gr_fir_ccf;
 class gri_fft_complex;
 
 
@@ -62,7 +61,6 @@ class gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
   unsigned int             d_numchans;
   unsigned int             d_taps_per_filter;
   gri_fft_complex         *d_fft;
-  //gr_complex             **d_buffer;
   std::vector< gri_fir_filter_with_buffer_ccf*> d_filters;
   std::vector< std::vector<float> > d_taps;
 
