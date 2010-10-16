@@ -25,6 +25,7 @@
 #define	INCLUDED_GR_PFB_SYNTHESIS_FILTERBANK_CCF_H
 
 #include <gr_sync_interpolator.h>
+#include <gri_fir_filter_with_buffer_ccf.h>
 
 class gr_pfb_synthesis_filterbank_ccf;
 typedef boost::shared_ptr<gr_pfb_synthesis_filterbank_ccf> gr_pfb_synthesis_filterbank_ccf_sptr;
@@ -49,24 +50,29 @@ class gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
  private:
   /*!
    * Build the polyphase synthesis filterbank.
-   * \param numchans (unsigned integer) Specifies the number of channels <EM>M</EM>
-   * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
+   * \param numchans (unsigned integer) Specifies the number of 
+                     channels <EM>M</EM>
+   * \param taps    (vector/list of floats) The prototype filter to
+                    populate the filterbank.
    */
   friend gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
       (unsigned int numchans, const std::vector<float> &taps);
 
   bool			   d_updated;
   unsigned int             d_numchans;
-  std::vector<gr_fir_ccf*> d_filters;
-  std::vector< std::vector<float> > d_taps;
   unsigned int             d_taps_per_filter;
   gri_fft_complex         *d_fft;
-  gr_complex             **d_buffer;
+  //gr_complex             **d_buffer;
+  std::vector< gri_fir_filter_with_buffer_ccf*> d_filters;
+  std::vector< std::vector<float> > d_taps;
+
 
   /*!
    * Build the polyphase synthesis filterbank.
-   * \param numchans (unsigned integer) Specifies the number of channels <EM>M</EM>
-   * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
+   * \param numchans (unsigned integer) Specifies the number of
+                     channels <EM>M</EM>
+   * \param taps    (vector/list of floats) The prototype filter
+                    to populate the filterbank.
    */
   gr_pfb_synthesis_filterbank_ccf (unsigned int numchans, 
 				   const std::vector<float> &taps);
@@ -76,7 +82,8 @@ public:
   
   /*!
    * Resets the filterbank's filter taps with the new prototype filter
-   * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
+   * \param taps    (vector/list of floats) The prototype filter to
+                    populate the filterbank.
    */
   void set_taps (const std::vector<float> &taps);
 

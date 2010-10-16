@@ -48,16 +48,18 @@ gr_pfb_synthesis_filterbank_ccf::gr_pfb_synthesis_filterbank_ccf
 			  numchans),
     d_updated (false), d_numchans(numchans)
 {
-  d_filters = std::vector<gr_fir_ccf*>(d_numchans);
+  //d_filters = std::vector<gr_fir_ccf*>(d_numchans);
+  d_filters = std::vector<gri_fir_filter_with_buffer_ccf*>(d_numchans);
 
-  d_buffer = new gr_complex*[d_numchans];
+  //d_buffer = new gr_complex*[d_numchans];
 
   // Create an FIR filter for each channel and zero out the taps
   std::vector<float> vtaps(0, d_numchans);
   for(unsigned int i = 0; i < d_numchans; i++) {
-    d_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
-    d_buffer[i] = new gr_complex[65535];
-    memset(d_buffer[i], 0, 65535*sizeof(gr_complex));
+    d_filters[i] = new gri_fir_filter_with_buffer_ccf(vtaps);
+    //d_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
+    //d_buffer[i] = new gr_complex[65535];
+    //memset(d_buffer[i], 0, 65535*sizeof(gr_complex));
   }
 
   // Now, actually set the filters' taps
@@ -134,7 +136,7 @@ gr_pfb_synthesis_filterbank_ccf::work (int noutput_items,
   gr_complex *out = (gr_complex *) output_items[0];
   int numsigs = input_items.size();
   int ndiff   = d_numchans - numsigs;
-  int nhalf = (int)ceil((float)numsigs/2.0f);
+  unsigned int nhalf = (unsigned int)ceil((float)numsigs/2.0f);
 
   if (d_updated) {
     d_updated = false;
@@ -165,18 +167,22 @@ gr_pfb_synthesis_filterbank_ccf::work (int noutput_items,
     d_fft->execute();
 
     for(i = 0; i < d_numchans; i++) {
-      d_buffer[i][n+d_taps_per_filter-1] = d_fft->get_outbuf()[i];
-      out[d_numchans-i-1] = d_filters[d_numchans-i-1]->filter(&d_buffer[i][n]);
+      //d_buffer[i][n+d_taps_per_filter-1] = d_fft->get_outbuf()[i];
+      //out[d_numchans-i-1] = d_filters[d_numchans-i-1]->filter(&d_buffer[i][n]);
+      out[d_numchans-i-1] = d_filters[d_numchans-i-1]->filter(d_fft->get_outbuf()[i]);
     }
     out += d_numchans;
   }
 
   // Move the last chunk of memory to the front for the next entry
   // this make sure that the first taps_per_filter values are correct
+
+  /*
   for(i = 0; i < d_numchans; i++) {
     memcpy(d_buffer[i], &d_buffer[i][n],
 	   (d_taps_per_filter)*sizeof(gr_complex));
   }
+  */
 
   return noutput_items;
 }

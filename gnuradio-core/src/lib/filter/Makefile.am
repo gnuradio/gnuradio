@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -190,6 +190,7 @@ libfilter_la_common_SOURCES = 		\
 	gr_fft_filter_fff.cc		\
 	gr_goertzel_fc.cc		\
 	gr_filter_delay_fc.cc		\
+	gri_fir_filter_with_buffer_ccf.cc \
 	gr_fractional_interpolator_ff.cc \
 	gr_fractional_interpolator_cc.cc \
 	gr_hilbert_fc.cc		\
@@ -267,6 +268,7 @@ grinclude_HEADERS = 			\
 	gr_fft_filter_ccc.h		\
 	gr_fft_filter_fff.h		\
 	gr_filter_delay_fc.h		\
+	gri_fir_filter_with_buffer_ccf.h \
 	gr_fir_sysconfig_x86.h		\
 	gr_fir_sysconfig_powerpc.h	\
 	gr_fractional_interpolator_ff.h	\
