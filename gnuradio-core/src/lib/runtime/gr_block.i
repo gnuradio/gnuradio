@@ -54,7 +54,12 @@ class gr_block : public gr_basic_block {
   void set_detail (gr_block_detail_sptr detail) { d_detail = detail; }
 };
 
+#ifdef SWIGPYTHON
 %pythoncode %{
 gr_block_sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
 gr_block_sptr.block = lambda self: self
 %}
+#endif
+
+#ifdef SWIGGUILE
+#endif

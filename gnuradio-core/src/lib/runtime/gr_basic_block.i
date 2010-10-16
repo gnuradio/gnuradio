@@ -47,6 +47,12 @@ public:
 %rename(block_ncurrently_allocated) gr_basic_block_ncurrently_allocated;
 long gr_basic_block_ncurrently_allocated();
 
+#ifdef SWIGPYTHON
 %pythoncode %{
 gr_basic_block_sptr.__repr__ = lambda self: "<gr_basic_block %s (%d)>" % (self.name(), self.unique_id ())
 %}
+#endif
+
+#ifdef SWIGGUILE
+#endif
+

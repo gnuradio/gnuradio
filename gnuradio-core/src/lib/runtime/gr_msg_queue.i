@@ -97,9 +97,14 @@ public:
   }
 %}
 
+#ifdef SWIGPYTHON
 // smash in new python delete_head and insert_tail methods...
 %pythoncode %{
 gr_msg_queue_sptr.delete_head = gr_py_msg_queue__delete_head
 gr_msg_queue_sptr.insert_tail = gr_py_msg_queue__insert_tail
 gr_msg_queue_sptr.handle = gr_py_msg_queue__insert_tail
 %}
+#endif
+
+#ifdef SWIGGUILE
+#endif

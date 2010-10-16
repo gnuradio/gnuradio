@@ -30,10 +30,15 @@ typedef boost::shared_ptr<NAME> NAME ## _sptr;
 %template(NAME ## _sptr) boost::shared_ptr<NAME>;
 %rename(BASE_NAME) PKG ## _make_ ## BASE_NAME;
 
+#ifdef SWIGPYTHON
 %pythoncode %{
 NAME ## _sptr.block = lambda self: NAME ## _block (self)
 NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
 %}
+#endif
 
 %ignore NAME;
 %enddef
+
+#ifdef SWIGGUILE
+#endif
