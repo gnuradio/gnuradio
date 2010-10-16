@@ -33,6 +33,7 @@
 #include <gr_types.h>
 #include <gr_reverse.h>
 #include <string.h>
+#include <cstdio>
 
 /*!
  * \brief FIR with internal buffer for gr_complex input, 
@@ -100,14 +101,16 @@ public:
   void set_taps (const std::vector<float> &taps)
   {
     d_taps = gr_reverse(taps);
-    //d_taps = (taps);
 
-    if(d_buffer != NULL)
+    if(d_buffer != NULL) {
       free(d_buffer);
+      d_buffer = NULL;
+    }
     
     // FIXME: memalign this to 16-byte boundaries for SIMD later
-    d_buffer = (gr_complex*)malloc(sizeof(gr_complex) * 2 * d_taps.size());
-    memset(d_buffer, 0x00, sizeof(gr_complex) * 2 * d_taps.size());
+    size_t t = sizeof(gr_complex) * 2 * d_taps.size();
+    d_buffer = (gr_complex*)malloc(t);
+    memset(d_buffer, 0x00, t);
     d_idx = 0;
   }
 

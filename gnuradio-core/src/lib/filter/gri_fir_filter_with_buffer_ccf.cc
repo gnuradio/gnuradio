@@ -23,8 +23,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <gri_fir_filter_with_buffer_ccf.h>
-#include <cstdio>
 
 gri_fir_filter_with_buffer_ccf::gri_fir_filter_with_buffer_ccf(const std::vector<float> &taps)
 {
@@ -34,42 +34,30 @@ gri_fir_filter_with_buffer_ccf::gri_fir_filter_with_buffer_ccf(const std::vector
 
 gri_fir_filter_with_buffer_ccf::~gri_fir_filter_with_buffer_ccf()
 {
-  free(d_buffer);
+  if(d_buffer != NULL)
+    free(d_buffer);
 }
 
 gr_complex 
 gri_fir_filter_with_buffer_ccf::filter (gr_complex input)
 {
-#if 0
-  unsigned int i;
-  
-  for(i = ntaps()-1; i > 0; i--) {
-    d_buffer[i] = d_buffer[i-1];
-  }
-  d_buffer[0] = input;
-
-  gr_complex out = d_buffer[0]*d_taps[0];
-  for(i = 1; i < ntaps(); i++) {
-    out += d_buffer[i]*d_taps[i];
-  }
-  return out;
-
-#else
   unsigned int i;
 
   d_buffer[d_idx] = input;
   d_buffer[d_idx+ntaps()] = input;
+
+  // using the later for the case when ntaps=0;
+  // profiling shows this doesn't make a difference
   //d_idx = (d_idx + 1) % ntaps();
   d_idx++;
-  if(d_idx == ntaps())
+  if(d_idx >= ntaps())
     d_idx = 0;
 
-  gr_complex out = d_buffer[d_idx]*d_taps[0];
-  for(i = 1; i < ntaps(); i++) {
+  gr_complex out = gr_complex(0,0);
+  for(i = 0; i < ntaps(); i++) {
     out += d_buffer[d_idx + i]*d_taps[i];
   }
   return out;
-#endif
 }
 
 void
@@ -77,5 +65,7 @@ gri_fir_filter_with_buffer_ccf::filterN (gr_complex output[],
 					 const gr_complex input[],
 					 unsigned long n)
 {
-
+  for(unsigned long i = 0; i < n; i++) {
+    output[i] = filter(input[i]);
+  }
 }
