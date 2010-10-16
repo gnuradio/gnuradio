@@ -121,7 +121,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-noaa_swig.h noaa_swig.py noaa_swig_python.cc: noaa_swig.i
+noaa_swig_python.h noaa_swig.py noaa_swig_python.cc noaa_swig_guile.cc noaa_swig_guile.h: noaa_swig.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -209,19 +209,28 @@ noaa_swig.h noaa_swig.py noaa_swig_python.cc: noaa_swig.i
 $(DEPDIR)/noaa_swig-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(noaa_swig_swig_args) \
-		-MD -MF $(DEPDIR)/noaa_swig.Std \
+		-MD -MF $(DEPDIR)/noaa_swig_guile.Std \
 		-module noaa_swig -o noaa_swig_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/noaa_swig.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig.Std \
-			> $(DEPDIR)/noaa_swig.Sd; \
-		$(RM) $(DEPDIR)/noaa_swig.Std; \
-		$(MV) $(DEPDIR)/noaa_swig.Sd $(DEPDIR)/noaa_swig.Std; \
+		$(RM) $(DEPDIR)/noaa_swig_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig_guile.Std \
+			> $(DEPDIR)/noaa_swig_guile.Sd; \
+		$(RM) $(DEPDIR)/noaa_swig_guile.Std; \
+		$(MV) $(DEPDIR)/noaa_swig_guile.Sd $(DEPDIR)/noaa_swig_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/noaa_swig.S*; exit 1; \
+	    $(RM) $(DEPDIR)/noaa_swig_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
+	$(RM) $(DEPDIR)/noaa_swig_guile.d
+	cp $(DEPDIR)/noaa_swig_guile.Std $(DEPDIR)/noaa_swig_guile.d
+	echo "" >> $(DEPDIR)/noaa_swig_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/noaa_swig_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/noaa_swig_guile.d
+	$(RM) $(DEPDIR)/noaa_swig_guile.Std
+	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/noaa_swig_guile.d@am__quote@
 endif
 
 $(DEPDIR)/noaa_swig-generate-python-stamp:
@@ -234,17 +243,17 @@ $(DEPDIR)/noaa_swig-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(noaa_swig_swig_args) \
-		-MD -MF $(DEPDIR)/noaa_swig.Std \
+		-MD -MF $(DEPDIR)/noaa_swig_python.Std \
 		-module noaa_swig -o noaa_swig_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/noaa_swig.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig.Std \
-			> $(DEPDIR)/noaa_swig.Sd; \
-		$(RM) $(DEPDIR)/noaa_swig.Std; \
-		$(MV) $(DEPDIR)/noaa_swig.Sd $(DEPDIR)/noaa_swig.Std; \
+		$(RM) $(DEPDIR)/noaa_swig_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig_python.Std \
+			> $(DEPDIR)/noaa_swig_python.Sd; \
+		$(RM) $(DEPDIR)/noaa_swig_python.Std; \
+		$(MV) $(DEPDIR)/noaa_swig_python.Sd $(DEPDIR)/noaa_swig_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/noaa_swig.S*; exit 1; \
+	    $(RM) $(DEPDIR)/noaa_swig_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -256,27 +265,27 @@ $(DEPDIR)/noaa_swig-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/noaa_swig.d
+	$(RM) $(DEPDIR)/noaa_swig_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/noaa_swig.Std $(DEPDIR)/noaa_swig.d
+	cp $(DEPDIR)/noaa_swig_python.Std $(DEPDIR)/noaa_swig_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/noaa_swig.d
+	echo "" >> $(DEPDIR)/noaa_swig_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/noaa_swig.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/noaa_swig.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/noaa_swig_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/noaa_swig_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/noaa_swig.Std
+	$(RM) $(DEPDIR)/noaa_swig_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -288,5 +297,5 @@ $(DEPDIR)/noaa_swig-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/noaa_swig.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/noaa_swig_python.d@am__quote@
 

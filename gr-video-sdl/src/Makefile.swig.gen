@@ -121,7 +121,7 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-video_sdl.h video_sdl.py video_sdl_python.cc: video_sdl.i
+video_sdl_python.h video_sdl.py video_sdl_python.cc video_sdl_guile.cc video_sdl_guile.h: video_sdl.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -209,19 +209,28 @@ video_sdl.h video_sdl.py video_sdl_python.cc: video_sdl.i
 $(DEPDIR)/video_sdl-generate-guile-stamp:
 if GUILE
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(video_sdl_swig_args) \
-		-MD -MF $(DEPDIR)/video_sdl.Std \
+		-MD -MF $(DEPDIR)/video_sdl_guile.Std \
 		-module video_sdl -o video_sdl_guile.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/video_sdl.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl.Std \
-			> $(DEPDIR)/video_sdl.Sd; \
-		$(RM) $(DEPDIR)/video_sdl.Std; \
-		$(MV) $(DEPDIR)/video_sdl.Sd $(DEPDIR)/video_sdl.Std; \
+		$(RM) $(DEPDIR)/video_sdl_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl_guile.Std \
+			> $(DEPDIR)/video_sdl_guile.Sd; \
+		$(RM) $(DEPDIR)/video_sdl_guile.Std; \
+		$(MV) $(DEPDIR)/video_sdl_guile.Sd $(DEPDIR)/video_sdl_guile.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/video_sdl.S*; exit 1; \
+	    $(RM) $(DEPDIR)/video_sdl_guile.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/video_sdl-generate-guile-stamp
+	$(RM) $(DEPDIR)/video_sdl_guile.d
+	cp $(DEPDIR)/video_sdl_guile.Std $(DEPDIR)/video_sdl_guile.d
+	echo "" >> $(DEPDIR)/video_sdl_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/video_sdl_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/video_sdl_guile.d
+	$(RM) $(DEPDIR)/video_sdl_guile.Std
+	touch $(DEPDIR)/video_sdl-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/video_sdl_guile.d@am__quote@
 endif
 
 $(DEPDIR)/video_sdl-generate-python-stamp:
@@ -234,17 +243,17 @@ $(DEPDIR)/video_sdl-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(video_sdl_swig_args) \
-		-MD -MF $(DEPDIR)/video_sdl.Std \
+		-MD -MF $(DEPDIR)/video_sdl_python.Std \
 		-module video_sdl -o video_sdl_python.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/video_sdl.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl.Std \
-			> $(DEPDIR)/video_sdl.Sd; \
-		$(RM) $(DEPDIR)/video_sdl.Std; \
-		$(MV) $(DEPDIR)/video_sdl.Sd $(DEPDIR)/video_sdl.Std; \
+		$(RM) $(DEPDIR)/video_sdl_python.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl_python.Std \
+			> $(DEPDIR)/video_sdl_python.Sd; \
+		$(RM) $(DEPDIR)/video_sdl_python.Std; \
+		$(MV) $(DEPDIR)/video_sdl_python.Sd $(DEPDIR)/video_sdl_python.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/video_sdl.S*; exit 1; \
+	    $(RM) $(DEPDIR)/video_sdl_python.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -256,27 +265,27 @@ $(DEPDIR)/video_sdl-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/video_sdl.d
+	$(RM) $(DEPDIR)/video_sdl_python.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/video_sdl.Std $(DEPDIR)/video_sdl.d
+	cp $(DEPDIR)/video_sdl_python.Std $(DEPDIR)/video_sdl_python.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/video_sdl.d
+	echo "" >> $(DEPDIR)/video_sdl_python.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/video_sdl.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/video_sdl.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/video_sdl_python.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/video_sdl_python.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/video_sdl.Std
+	$(RM) $(DEPDIR)/video_sdl_python.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -288,5 +297,5 @@ $(DEPDIR)/video_sdl-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/video_sdl.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/video_sdl_python.d@am__quote@
 
