@@ -65,8 +65,8 @@
 //  catch (Swig::DirectorException &e) { std::cerr << e.getMessage();  SWIG_fail; }
 //}
 
+#ifdef SWIGPYTHON
 %{
-
 // class that ensures we acquire and release the Python GIL
 
 class ensure_py_gil_state {
@@ -77,6 +77,18 @@ public:
 };
 
 %}
+#endif
+
+#ifdef SWIGGUILE
+// FIXME: this is a bogus stub, just here so things build
+class ensure_py_gil_state {
+public:
+  ensure_py_gil_state()  { }
+  ~ensure_py_gil_state() { }
+};
+
+#warning "class ensure_py_gil_state needs to be implemented!"
+#endif
 
 /*
  * These are the real C++ base classes, however we don't want these exposed.
