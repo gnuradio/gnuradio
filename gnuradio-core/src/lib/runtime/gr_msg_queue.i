@@ -81,6 +81,7 @@ public:
  * functions into the gr.msg_queue wrapper class, so that everything
  * appears normal.  (An evil laugh is heard in the distance...)
  */
+#ifdef SWIGPYTHON
 %inline %{
   gr_message_sptr gr_py_msg_queue__delete_head(gr_msg_queue_sptr q) {
     gr_message_sptr msg;
@@ -97,7 +98,6 @@ public:
   }
 %}
 
-#ifdef SWIGPYTHON
 // smash in new python delete_head and insert_tail methods...
 %pythoncode %{
 gr_msg_queue_sptr.delete_head = gr_py_msg_queue__delete_head
@@ -107,4 +107,5 @@ gr_msg_queue_sptr.handle = gr_py_msg_queue__insert_tail
 #endif
 
 #ifdef SWIGGUILE
+#warning "gr_msg_queue.i: gr_msg_queue_sptr needs to be implemented!"
 #endif

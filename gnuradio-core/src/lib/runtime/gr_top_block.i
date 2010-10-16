@@ -49,6 +49,8 @@ public:
   void dump();
 };
 
+#ifdef SWIGPYTHON
+
 %inline %{
 void top_block_run_unlocked(gr_top_block_sptr r) throw (std::runtime_error) 
 {
@@ -64,3 +66,9 @@ void top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error)
     Py_END_ALLOW_THREADS;		// acquire global interpreter lock
 }
 %}
+
+#endif
+
+#ifdef SWIG_GUILE
+#warning "gr_top_block.i: top_block_run_unlocked needs to be implemented!"
+#endif

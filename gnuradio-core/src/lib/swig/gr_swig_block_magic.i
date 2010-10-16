@@ -41,4 +41,5 @@ NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.
 %enddef
 
 #ifdef SWIGGUILE
+#warning "gr_block_sptr needs to be implemented!"
 #endif

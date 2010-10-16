@@ -62,4 +62,5 @@ gr_block_sptr.block = lambda self: self
 #endif
 
 #ifdef SWIGGUILE
+#warning "gr_block.i: gr_block_sptr needs to be implemented!"
 #endif
