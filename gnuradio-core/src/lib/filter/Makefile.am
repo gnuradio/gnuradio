@@ -44,6 +44,7 @@ code_generator = 					\
 	generate_gr_fir_sysconfig_generic.py		\
 	generate_gr_fir_util.py				\
 	generate_gr_freq_xlating_fir_filter_XXX.py	\
+	generate_gri_fir_filter_with_buffer_XXX.py	\
 	generate_utils.py				\
 	gr_fir_XXX.cc.t					\
 	gr_fir_XXX.h.t					\
@@ -60,7 +61,11 @@ code_generator = 					\
 	gr_rational_resampler_base_XXX.i.t		\
 	gr_freq_xlating_fir_filter_XXX.cc.t		\
 	gr_freq_xlating_fir_filter_XXX.h.t		\
-	gr_freq_xlating_fir_filter_XXX.i.t
+	gr_freq_xlating_fir_filter_XXX.i.t		\
+	gri_fir_filter_with_buffer_XXX.cc.t		\
+	gri_fir_filter_with_buffer_XXX.h.t		\
+	gri_fir_filter_with_buffer_XXX.i.t
+
 
 # Source built by Python into $(builddir)
 BUILT_SOURCES =			\

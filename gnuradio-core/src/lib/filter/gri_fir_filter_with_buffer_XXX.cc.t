@@ -24,22 +24,39 @@
 #include <config.h>
 #endif
 
-#include <gri_fir_filter_with_buffer_ccf.h>
+#include <@NAME@.h>
 
-gri_fir_filter_with_buffer_ccf::gri_fir_filter_with_buffer_ccf(const std::vector<float> &taps)
+@NAME@::@NAME@(const std::vector<@TAP_TYPE@> &taps)
 {
   d_buffer = NULL;
   set_taps(taps);
 }
 
-gri_fir_filter_with_buffer_ccf::~gri_fir_filter_with_buffer_ccf()
+@NAME@::~@NAME@()
 {
   if(d_buffer != NULL)
     free(d_buffer);
 }
 
-gr_complex 
-gri_fir_filter_with_buffer_ccf::filter (gr_complex input)
+void
+@NAME@::set_taps (const std::vector<@TAP_TYPE@> &taps)
+{
+  d_taps = gr_reverse(taps);
+  
+  if(d_buffer != NULL) {
+    free(d_buffer);
+    d_buffer = NULL;
+  }
+  
+  // FIXME: memalign this to 16-byte boundaries for SIMD later
+  size_t t = sizeof(@I_TYPE@) * 2 * d_taps.size();
+  d_buffer = (@I_TYPE@*)malloc(t);
+  memset(d_buffer, 0x00, t);
+  d_idx = 0;
+}
+
+@O_TYPE@
+@NAME@::filter (@I_TYPE@ input)
 {
   unsigned int i;
 
@@ -53,17 +70,17 @@ gri_fir_filter_with_buffer_ccf::filter (gr_complex input)
   if(d_idx >= ntaps())
     d_idx = 0;
 
-  gr_complex out = gr_complex(0,0);
+  @O_TYPE@ out = 0;
   for(i = 0; i < ntaps(); i++) {
-    out += d_buffer[d_idx + i]*d_taps[i];
+    out += @INPUT_CAST@ d_buffer[d_idx + i] * d_taps[i];
   }
   return out;
 }
 
 void
-gri_fir_filter_with_buffer_ccf::filterN (gr_complex output[],
-					 const gr_complex input[],
-					 unsigned long n)
+@NAME@::filterN (@O_TYPE@ output[],
+		 const @I_TYPE@ input[],
+		 unsigned long n)
 {
   for(unsigned long i = 0; i < n; i++) {
     output[i] = filter(input[i]);
