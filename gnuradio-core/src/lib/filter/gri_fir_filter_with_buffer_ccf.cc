@@ -74,7 +74,7 @@ gri_fir_filter_with_buffer_ccf::filter (gr_complex input)
   for(i = 0; i < ntaps(); i++) {
     out +=  d_buffer[d_idx + i] * d_taps[i];
   }
-  return out;
+  return (gr_complex)out;
 }
 
 void

@@ -66,7 +66,6 @@ ref_dotprod (const i_type input[], const tap_type taps[], int ntaps)
   for (int i = 0; i < ntaps; i++) {
     sum += input[i] * taps[i];
   }
-      
   return sum;
 }
 
@@ -129,7 +128,7 @@ qa_gri_fir_filter_with_buffer_fff::t1 ()
       
       for (int o = 0; o < ol; o++){
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(expected_output[o], actual_output[o],
-				     abs (expected_output[o]) * ERR_DELTA);
+				     fabsf (expected_output[o]) * ERR_DELTA);
       }
       delete f1;
     }

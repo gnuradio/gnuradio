@@ -70,11 +70,11 @@ void
   if(d_idx >= ntaps())
     d_idx = 0;
 
-  @O_TYPE@ out = 0;
+  @ACC_TYPE@ out = 0;
   for(i = 0; i < ntaps(); i++) {
     out += @INPUT_CAST@ d_buffer[d_idx + i] * d_taps[i];
   }
-  return out;
+  return (@O_TYPE@)out;
 }
 
 void

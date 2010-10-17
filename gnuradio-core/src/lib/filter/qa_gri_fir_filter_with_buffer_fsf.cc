@@ -38,11 +38,9 @@
 typedef float   i_type;
 typedef short	o_type;
 typedef float	tap_type;
-typedef	int	acc_type;
+typedef	float	acc_type;
 
 using std::vector;
-
-#define	ERR_DELTA	(1e-5)
 
 #define	NELEM(x) (sizeof (x) / sizeof (x[0]))
 
@@ -56,7 +54,7 @@ static void
 random_floats (float *buf, unsigned n)
 {
   for (unsigned i = 0; i < n; i++)
-    buf[i] = (float) rint (uniform () * 32767);
+    buf[i] = (float) rint (uniform () * 128);
 }
 
 static o_type
@@ -66,8 +64,7 @@ ref_dotprod (const i_type input[], const tap_type taps[], int ntaps)
   for (int i = 0; i < ntaps; i++) {
     sum += input[i] * taps[i];
   }
-      
-  return sum;
+  return (o_type)sum;
 }
 
 //
@@ -121,15 +118,8 @@ qa_gri_fir_filter_with_buffer_fsf::t1 ()
       f1->filterN (actual_output, input, ol);
 
       // check results
-      //
-      // we use a sloppy error margin because on the x86 architecture,
-      // our reference implementation is using 80 bit floating point
-      // arithmetic, while the SSE version is using 32 bit float point
-      // arithmetic.
-      
       for (int o = 0; o < ol; o++){
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(expected_output[o], actual_output[o],
-				     abs (expected_output[o]) * ERR_DELTA);
+	CPPUNIT_ASSERT_EQUAL(expected_output[o], actual_output[o]);
       }
       delete f1;
     }
