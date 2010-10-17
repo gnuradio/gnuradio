@@ -63,8 +63,7 @@ code_generator = 					\
 	gr_freq_xlating_fir_filter_XXX.h.t		\
 	gr_freq_xlating_fir_filter_XXX.i.t		\
 	gri_fir_filter_with_buffer_XXX.cc.t		\
-	gri_fir_filter_with_buffer_XXX.h.t		\
-	gri_fir_filter_with_buffer_XXX.i.t
+	gri_fir_filter_with_buffer_XXX.h.t
 
 
 # Source built by Python into $(builddir)
