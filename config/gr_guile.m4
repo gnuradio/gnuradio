@@ -27,8 +27,16 @@ dnl
 AC_DEFUN([GUILE_DEVEL],[
     dnl see if GUILE is installed
     AC_PATH_PROG(GUILE, guile)
-    GUILE_CFLAGS=""
-    GUILE_LIBS="-lguile"
+    dnl get the config program
+    AC_PATH_PROG(GUILE_CONFIG, guile-config)
+    if test x${GUILE_CONFIG} != x; then
+      GUILE_CFLAGS="`${GUILE_CONFIG} compile`"
+      GUILE_LIBS="`${GUILE_CONFIG} link`"
+    else
+      GUILE_CFLAGS=""
+      GUILE_LIBS="Wl,-Bsymbolic-functions -lguile lgmp -lcrypt"
+    fi
+    AC_SUBST(GUILE_CFLAGS)
     AC_SUBST(GUILE_LIBS)
 ])
 
