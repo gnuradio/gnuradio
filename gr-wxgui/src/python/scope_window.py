@@ -435,6 +435,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
                 use_persistence,
                 persist_alpha,
 		trig_mode,
+		y_axis_label,
 	):
 		pubsub.pubsub.__init__(self)
 		#check num inputs
@@ -471,6 +472,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self[T_DIVS_KEY] = 8
 		self[X_DIVS_KEY] = 8
 		self[Y_DIVS_KEY] = 8
+		self[Y_AXIS_LABEL] = y_axis_label
 		self[FRAME_RATE_KEY] = frame_rate
 		self[TRIGGER_LEVEL_KEY] = 0
 		self[TRIGGER_CHANNEL_KEY] = 0
@@ -676,7 +678,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 			self.plotter.set_x_label('Time', 's')
 			self.plotter.set_x_grid(self.get_t_min(), self.get_t_max(), self[T_PER_DIV_KEY], True)
 			#update the y axis
-			self.plotter.set_y_label('Counts')
+			self.plotter.set_y_label(self[Y_AXIS_LABEL])
 			self.plotter.set_y_grid(self.get_y_min(), self.get_y_max(), self[Y_PER_DIV_KEY])
 		#redraw current sample
 		self.handle_samples()
