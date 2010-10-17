@@ -213,6 +213,8 @@
 /gr_rational_resampler_base_scc.i
 /gri_fir_filter_with_buffer_ccc.cc
 /gri_fir_filter_with_buffer_ccc.h
+/gri_fir_filter_with_buffer_ccf.cc
+/gri_fir_filter_with_buffer_ccf.h
 /gri_fir_filter_with_buffer_fcc.cc
 /gri_fir_filter_with_buffer_fcc.h
 /gri_fir_filter_with_buffer_fff.cc
