@@ -22,28 +22,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 MAIN_TMPL = """\
 <?xml version="1.0"?>
 <block>
-	<name>UHD MIMO $sourk.title()</name>
-	<key>uhd_mimo_$(sourk)</key>
+	<name>UHD: Multi USRP $sourk.title()</name>
+	<key>uhd_multi_usrp_$(sourk)</key>
 	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
-	<make>uhd.mimo_$(sourk)(\$nchan, \$args, uhd.io_type_t.\$type.type)
-self.\$(id).set_samp_rate_all(\$samp_rate)
+	<make>uhd.multi_usrp_$(sourk)(\$dev_addr, uhd.io_type_t.\$type.type, \$nchan)
+self.\$(id).set_subdev_spec(\$sd_spec)
+self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)
 \#if \$nchan() > $n
-self.\$(id).set_subdev_spec($n, \$sd_spec$(n))
-self.\$(id).set_center_freq($n, \$center_freq$(n))
-self.\$(id).set_gain($n, \$gain$(n))
+self.\$(id).set_center_freq(\$center_freq$(n), $n)
+self.\$(id).set_gain(\$gain$(n), $n)
 	\#if \$ant$(n)()
-self.\$(id).set_antenna($n, \$ant$(n))
+self.\$(id).set_antenna(\$ant$(n), $n)
 	\#end if
 \#end if
 #end for
 </make>
 	<callback>set_samp_rate(\$samp_rate)</callback>
 	#for $n in range($max_nchan)
-	<callback>set_center_freq($n, \$center_freq$(n))</callback>
-	<callback>set_gain($n, \$gain$(n))</callback>
-	<callback>set_antenna($n, \$ant$(n))</callback>
+	<callback>set_center_freq(\$center_freq$(n), $n)</callback>
+	<callback>set_gain(\$gain$(n), $n)</callback>
+	<callback>set_antenna(\$ant$(n), $n)</callback>
 	#end for
 	<param>
 		<name>Input Type</name>
@@ -65,20 +65,47 @@ self.\$(id).set_antenna($n, \$ant$(n))
 	<param>
 		<name>Num Channels</name>
 		<key>nchan</key>
-		<value>2</value>
+		<value>1</value>
 		<type>int</type>
-		#for $n in range(2, $max_nchan+1)
+		<hide>part</hide>
 		<option>
-			<name>$n Channels</name>
-			<key>$n</key>
+			<name>Multi Channel</name>
+			<key>1</key>
 		</option>
-		#end for
+		<option>
+			<name>Dual Channel</name>
+			<key>2</key>
+		</option>
+		<option>
+			<name>Quad Channel</name>
+			<key>4</key>
+		</option>
 	</param>
 	<param>
-		<name>Args</name>
-		<key>args</key>
-		<value>addr=192.168.10.2 192.168.20.2</value>
+		<name>Device Addr</name>
+		<key>dev_addr</key>
+		<value>addr=192.168.10.2</value>
 		<type>string</type>
+		<hide>
+			\#if \$dev_addr()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+	</param>
+	<param>
+		<name>Subdev Spec</name>
+		<key>sd_spec</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			\#if \$sd_spec()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
 	</param>
 	<param>
 		<name>Samp Rate (Sps)</name>
@@ -89,6 +116,7 @@ self.\$(id).set_antenna($n, \$ant$(n))
 	$params
 	<check>$max_nchan >= \$nchan</check>
 	<check>\$nchan >= 0</check>
+	<check>(len((\$sd_spec).split()) or 1) == \$nchan</check>
 	<$sourk>
 		<name>$direction</name>
 		<type>\$type</type>
@@ -96,18 +124,26 @@ self.\$(id).set_antenna($n, \$ant$(n))
 		<nports>\$nchan</nports>
 	</$sourk>
 	<doc>
-The UHD $sourk.title() Block:
+The UHD Multi USRP $sourk.title() Block:
 
-Args:
-Args is a delimited string used to locate UHD devices on your system. \\
+Device Address:
+The device address is a delimited string used to locate UHD devices on your system. \\
 If left blank, the first UHD device found will be used. \\
-Used args to specify a specfic device. \\
-USRP2 Example: addr=192.168.10.2
+Used args to specify a specfic device.
+USRP2 Example: addr=192.168.10.2 192.168.10.3
 
 Sample rate:
 The sample rate is the number of samples per second input by this block. \\
 The UHD device driver will try its best to match the requested sample rate. \\
 If the requested rate is not possible, the UHD block will print an error at runtime.
+
+Subdevice specification:
+Select the subdevice or subdevices for each channel using a markup string. \\
+The markup string consists of a list of dboard_slot:subdev_name pairs (one pair per channel). \\
+If left blank, the UHD will try to select the first subdevice on your system. \\
+See the application notes for further details.
+Single channel example: A:AB
+Dual channel example: A:AB B:0
 
 Antenna:
 For subdevices/daughterboards with only one antenna, this may be left blank. \\
@@ -118,21 +154,6 @@ See the daughterboard application notes for the possible antenna choices.
 """
 
 PARAMS_TMPL = """
-	<param>
-		<name>Ch$(n): Subdev Spec</name>
-		<key>sd_spec$(n)</key>
-		<value></value>
-		<type>string</type>
-		<hide>
-			\#if not \$nchan() > $n
-				all
-			\#elif \$sd_spec$(n)()
-				none
-			\#else
-				part
-			\#end if
-		</hide>
-	</param>
 	<param>
 		<name>Ch$(n): Center Freq (Hz)</name>
 		<key>center_freq$(n)</key>
@@ -168,7 +189,7 @@ def parse_tmpl(_tmpl, **kwargs):
 	from Cheetah import Template
 	return str(Template.Template(_tmpl, kwargs))
 
-max_num_channels = 8
+max_num_channels = 4
 
 if __name__ == '__main__':
 	import sys
