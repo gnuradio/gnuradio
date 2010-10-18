@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <block>
-	<name>UHD MIMO Sink</name>
+	<name>UHD MIMO Sink (DEPRECATED)</name>
 	<key>uhd_mimo_sink</key>
-	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
 	<make>uhd.mimo_sink($nchan, $args, uhd.io_type_t.$type.type)
 self.$(id).set_samp_rate_all($samp_rate)

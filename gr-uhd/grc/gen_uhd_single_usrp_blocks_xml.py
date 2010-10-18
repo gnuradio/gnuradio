@@ -24,7 +24,6 @@ MAIN_TMPL = """\
 <block>
 	<name>UHD: Single USRP $sourk.title()</name>
 	<key>uhd_single_usrp_$(sourk)</key>
-	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
 	<make>uhd.single_usrp_$(sourk)(\$dev_addr, uhd.io_type_t.\$type.type, \$nchan)
 self.\$(id).set_subdev_spec(\$sd_spec)
@@ -115,7 +114,7 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 	</param>
 	$params
 	<check>$max_nchan >= \$nchan</check>
-	<check>\$nchan >= 0</check>
+	<check>\$nchan > 0</check>
 	<check>(len((\$sd_spec).split()) or 1) == \$nchan</check>
 	<$sourk>
 		<name>$direction</name>

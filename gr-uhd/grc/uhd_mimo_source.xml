@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <block>
-	<name>UHD MIMO Source</name>
+	<name>UHD MIMO Source (DEPRECATED)</name>
 	<key>uhd_mimo_source</key>
-	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
 	<make>uhd.mimo_source($nchan, $args, uhd.io_type_t.$type.type)
 self.$(id).set_samp_rate_all($samp_rate)

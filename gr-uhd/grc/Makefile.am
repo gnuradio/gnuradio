@@ -36,6 +36,7 @@ BUILT_SOURCES = \
 	$(generated_uhd_single_usrp_blocks)
 
 dist_grcblocks_DATA = \
+	uhd_block_tree.xml \
 	$(BUILT_SOURCES)
 
 # add the deprecated files
