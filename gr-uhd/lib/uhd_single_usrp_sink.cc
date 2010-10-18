@@ -22,7 +22,6 @@
 #include <uhd_single_usrp_sink.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
-#include "utils.h"
 
 /***********************************************************************
  * UHD Single USPR Sink
@@ -56,7 +55,6 @@ public:
 
     void set_samp_rate(double rate){
         _dev->set_tx_rate(rate);
-        do_samp_rate_error_message(rate, get_samp_rate(), "TX");
     }
 
     double get_samp_rate(void){
@@ -65,7 +63,6 @@ public:
 
     uhd::tune_result_t set_center_freq(double freq, size_t chan){
         uhd::tune_result_t tr = _dev->set_tx_freq(freq, chan);
-        do_tune_freq_error_message(freq, _dev->get_tx_freq(chan), "TX");
         return tr;
     }
 

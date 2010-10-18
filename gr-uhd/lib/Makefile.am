@@ -29,7 +29,6 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = libgnuradio-uhd.la
 
 libgnuradio_uhd_la_SOURCES = \
-	utils.cc \
 	uhd_mimo_source.cc \
 	uhd_mimo_sink.cc \
 	uhd_simple_source.cc \
@@ -51,5 +50,4 @@ grinclude_HEADERS = \
 	uhd_single_usrp_source.h \
 	uhd_single_usrp_sink.h
 
-noinst_HEADERS = \
-	utils.h
+noinst_HEADERS =

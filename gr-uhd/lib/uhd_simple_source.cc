@@ -25,7 +25,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <boost/format.hpp>
-#include "utils.h"
+//#include "utils.h"
 
 /***********************************************************************
  * UHD Source
@@ -59,7 +59,7 @@ public:
 
     void set_samp_rate(double rate){
         _dev->set_rx_rate(rate);
-        do_samp_rate_error_message(rate, get_samp_rate(), "RX");
+        //do_samp_rate_error_message(rate, get_samp_rate(), "RX");
     }
 
     double get_samp_rate(void){
@@ -68,7 +68,7 @@ public:
 
     uhd::tune_result_t set_center_freq(double freq){
         uhd::tune_result_t tr = _dev->set_rx_freq(freq);
-        do_tune_freq_error_message(freq, _dev->get_rx_freq(), "RX");
+        //do_tune_freq_error_message(freq, _dev->get_rx_freq(), "RX");
         return tr;
     }
 
