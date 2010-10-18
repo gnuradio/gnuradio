@@ -30,3 +30,10 @@
 %include "gnuradio.i"				// the common stuff
 
 %include "runtime.i"
+
+
+#if SWIGGUILE
+%scheme %{
+(load-extension "_gnuradio_swig_py_runtime_guile" "SWIG_init")
+%}
+#endif

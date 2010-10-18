@@ -28,3 +28,9 @@
 %include "gnuradio.i"				// the common stuff
 
 %include "filter.i"
+
+#if SWIGGUILE
+%scheme %{
+(load-extension "_gnuradio_swig_py_filter_guile" "SWIG_init")
+%}
+ #endif
