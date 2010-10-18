@@ -20,6 +20,9 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
+
+BUILT_SOURCES = $(grinclude_HEADERS) $(swig_built_sources)
 
 if PYTHON
 AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
@@ -41,16 +44,11 @@ ourpython_PYTHON = gnuradio_swig_python.py
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...
 
-workarounds = gnuradio_swig_py_runtime_python.cc
-# if GUILE
-# workarounds += gnuradio_swig_py_runtime_guile.cc
-# endif
-gnuradio_swig_bug_workaround.h : $(workarounds) $(srcdir)/gen-swig-bug-fix
-	$(PYTHON) $(srcdir)/gen-swig-bug-fix $(workarounds) $@
+gnuradio_swig_bug_workaround.h : gnuradio_swig_py_runtime_python.cc $(srcdir)/gen-swig-bug-fix
+	$(PYTHON) $(srcdir)/gen-swig-bug-fix gnuradio_swig_py_runtime_python.cc $@
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
-grinclude_HEADERS =			\
-	gnuradio_swig_bug_workaround.h
+grinclude_HEADERS = gnuradio_swig_bug_workaround.h
 
 # ----------------------------------------------------------------
 # We've split the previously monstrous gnuradio_swig_python into 6
@@ -86,31 +84,20 @@ gnuradio_swig_py_filter_la_swig_libadd  = $(GNURADIO_CORE_LA)
 gnuradio_swig_py_io_la_swig_libadd      = $(GNURADIO_CORE_LA)
 gnuradio_swig_py_hier_la_swig_libadd    = $(GNURADIO_CORE_LA)
 
-include $(top_srcdir)/Makefile.swig
-
 # add some of the variables generated inside the Makefile.swig
 
 # include the SWIG-generated .h files in the BUILT SOURCES, since they
 # aren't by default when using Makefile.swig; order doesn't matter.
-PYTHON_GEN =				\
-	gnuradio_swig_py_runtime_python.h	\
-	gnuradio_swig_py_general_python.h	\
-	gnuradio_swig_py_gengen_python.h	\
-	gnuradio_swig_py_filter_python.h	\
-	gnuradio_swig_py_io_python.h		\
-	gnuradio_swig_py_hier_python.h		\
-	$(grinclude_HEADERS)			\
-	$(swig_built_sources)
+PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,_python.h,$(HFILE)))
+BUILT_SOURCES += $(PYTHON_GEN)
 
-BUILT_GUILE =				\
-	$(grinclude_HEADERS)		\
-	$(swig_built_sources)
+endif				# end of if python
 
-BUILT_SOURCES = $(PYTHON_GEN)
-# if GUILE
-# BUILT_SOURCES += $(BUILT_GUILE)
-# endif
+if GUILE
+GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,_guile.h,$(HFILE)))
+BUILT_SOURCES += $(GUILE_GEN)
+endif
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
-endif				# end of if python
+
