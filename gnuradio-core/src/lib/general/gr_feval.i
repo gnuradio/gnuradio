@@ -80,13 +80,14 @@ public:
 #endif
 
 #ifdef SWIGGUILE
+#if 0
 // FIXME: this is a bogus stub, just here so things build
 class ensure_py_gil_state {
 public:
   ensure_py_gil_state()  { }
   ~ensure_py_gil_state() { }
 };
-
+#endif
 #warning "class ensure_py_gil_state needs to be implemented!"
 #endif
 
@@ -157,7 +158,9 @@ class gr_py_feval_dd : public gr_feval_dd
  public:
   double calleval(double x)
   {
+#ifdef PYTHON
     ensure_py_gil_state _lock;
+#endif
     return eval(x);
   }
 };
@@ -167,7 +170,9 @@ class gr_py_feval_cc : public gr_feval_cc
  public:
   gr_complex calleval(gr_complex x)
   {
+#ifdef PYTHON
     ensure_py_gil_state _lock;
+#endif
     return eval(x);
   }
 };
@@ -177,7 +182,9 @@ class gr_py_feval_ll : public gr_feval_ll
  public:
   long calleval(long x)
   {
+#ifdef PYTHON
     ensure_py_gil_state _lock;
+#endif
     return eval(x);
   }
 };
@@ -187,7 +194,9 @@ class gr_py_feval : public gr_feval
  public:
   void calleval()
   {
+#ifdef PYTHON
     ensure_py_gil_state _lock;
+#endif
     eval();
   }
 };
