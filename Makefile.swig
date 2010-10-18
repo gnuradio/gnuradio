@@ -48,10 +48,11 @@ STD_SWIG_PYTHON_ARGS =				\
 	$(WITH_SWIG_INCLUDES)			\
 	$(WITH_INCLUDES)
 
+# NOTE: -Linkage passive and -Linkage module don't define SWIG_init()
 SWIG_GUILE_FLAGS =	\
 	-guile		\
 	-scm		\
-	-Linkage passive \
+	-scmstub	\
 	-outdir .
 
 ## standard swig flags used by most components
@@ -72,8 +73,7 @@ STD_SWIG_LA_LD_FLAGS =		\
 
 ## standard SWIG library additions for library creation
 
-STD_SWIG_LA_LIB_ADD =  		\
-	-lstdc++
+STD_SWIG_LA_LIB_ADD = -lstdc++
 
 ## standard SWIG CXXFLAGS
 ## This allows for code to be compiled with "-O1" instead of "-g -O2"
@@ -83,7 +83,7 @@ STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 
 ## SWIG suffix for automake to know about
 
-SUFFIXES = .i
+SUFFIXES = .i .cc .scm
 
 ## Create $(srcdir)/Makefile.swig.gen, containing all of the rules
 ## for running SWIG to generate or re-generate outputs.  SWIG file
