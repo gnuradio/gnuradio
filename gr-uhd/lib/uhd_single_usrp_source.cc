@@ -26,7 +26,7 @@
 #include <boost/format.hpp>
 
 /***********************************************************************
- * UHD Single USPR Source
+ * UHD Single USRP Source
  **********************************************************************/
 uhd_single_usrp_source::uhd_single_usrp_source(gr_io_signature_sptr sig)
 :gr_sync_block("uhd single_usrp source", gr_make_io_signature(0, 0, 0), sig){
@@ -34,7 +34,7 @@ uhd_single_usrp_source::uhd_single_usrp_source(gr_io_signature_sptr sig)
 }
 
 /***********************************************************************
- * UHD Single USPR Source Impl
+ * UHD Single USRP Source Impl
  **********************************************************************/
 class uhd_single_usrp_source_impl : public uhd_single_usrp_source{
 public:
@@ -160,7 +160,7 @@ private:
 
 
 /***********************************************************************
- * Make UHD Single USPR Source
+ * Make UHD Single USRP Source
  **********************************************************************/
 boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_usrp_source(
     const std::string &args,

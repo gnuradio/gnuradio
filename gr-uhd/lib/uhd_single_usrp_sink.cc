@@ -24,7 +24,7 @@
 #include <stdexcept>
 
 /***********************************************************************
- * UHD Single USPR Sink
+ * UHD Single USRP Sink
  **********************************************************************/
 uhd_single_usrp_sink::uhd_single_usrp_sink(gr_io_signature_sptr sig)
 :gr_sync_block("uhd single usrp sink", sig, gr_make_io_signature(0, 0, 0)){
@@ -32,7 +32,7 @@ uhd_single_usrp_sink::uhd_single_usrp_sink(gr_io_signature_sptr sig)
 }
 
 /***********************************************************************
- * UHD Single USPR Sink Impl
+ * UHD Single USRP Sink Impl
  **********************************************************************/
 class uhd_single_usrp_sink_impl : public uhd_single_usrp_sink{
 public:
@@ -43,10 +43,6 @@ public:
     ) : uhd_single_usrp_sink(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type), _nchan(num_channels)
     {
         _dev = uhd::usrp::single_usrp::make(args);
-    }
-
-    ~uhd_single_usrp_sink_impl(void){
-        //NOP
     }
 
     void set_subdev_spec(const std::string &spec){
@@ -164,7 +160,7 @@ protected:
 };
 
 /***********************************************************************
- * Make UHD Single USPR Sink
+ * Make UHD Single USRP Sink
  **********************************************************************/
 boost::shared_ptr<uhd_single_usrp_sink> uhd_make_single_usrp_sink(
     const std::string &args,

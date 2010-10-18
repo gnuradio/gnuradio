@@ -29,10 +29,13 @@ namespace std {
 }
 
 %{
-#include <uhd_mimo_source.h>
-#include <uhd_mimo_sink.h>
-#include <uhd_simple_source.h>
-#include <uhd_simple_sink.h>
+#include <uhd_mimo_source.h> //deprecated
+#include <uhd_mimo_sink.h> //deprecated
+#include <uhd_simple_source.h> //deprecated
+#include <uhd_simple_sink.h> //deprecated
+
+#include <uhd_multi_usrp_source.h>
+#include <uhd_multi_usrp_sink.h>
 #include <uhd_single_usrp_source.h>
 #include <uhd_single_usrp_sink.h>
 %}
@@ -44,17 +47,23 @@ namespace std {
 %include <uhd/types/time_spec.hpp>
 %include <uhd/types/clock_config.hpp>
 
-GR_SWIG_BLOCK_MAGIC(uhd,mimo_source)
-%include <uhd_mimo_source.h>
+GR_SWIG_BLOCK_MAGIC(uhd,mimo_source) //deprecated
+%include <uhd_mimo_source.h> //deprecated
 
-GR_SWIG_BLOCK_MAGIC(uhd,mimo_sink)
-%include <uhd_mimo_sink.h>
+GR_SWIG_BLOCK_MAGIC(uhd,mimo_sink) //deprecated
+%include <uhd_mimo_sink.h> //deprecated
 
-GR_SWIG_BLOCK_MAGIC(uhd,simple_source)
-%include <uhd_simple_source.h>
+GR_SWIG_BLOCK_MAGIC(uhd,simple_source) //deprecated
+%include <uhd_simple_source.h> //deprecated
 
-GR_SWIG_BLOCK_MAGIC(uhd,simple_sink)
-%include <uhd_simple_sink.h>
+GR_SWIG_BLOCK_MAGIC(uhd,simple_sink) //deprecated
+%include <uhd_simple_sink.h> //deprecated
+
+GR_SWIG_BLOCK_MAGIC(uhd,multi_usrp_source)
+%include <uhd_multi_usrp_source.h>
+
+GR_SWIG_BLOCK_MAGIC(uhd,multi_usrp_sink)
+%include <uhd_multi_usrp_sink.h>
 
 GR_SWIG_BLOCK_MAGIC(uhd,single_usrp_source)
 %include <uhd_single_usrp_source.h>

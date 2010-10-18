@@ -129,6 +129,12 @@ public:
     virtual void set_time_next_pps(const uhd::time_spec_t &time_spec) = 0;
 
     /*!
+     * Sync the time registers with an unknown pps edge.
+     * \param time_spec the new time
+     */
+    virtual void set_time_unknown_pps(const uhd::time_spec_t &time_spec) = 0;
+
+    /*!
      * Get access to the underlying uhd device object.
      * \return the multi usrp device object
      */
