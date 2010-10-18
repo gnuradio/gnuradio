@@ -31,6 +31,8 @@ lib_LTLIBRARIES = libgnuradio-uhd.la
 libgnuradio_uhd_la_SOURCES = \
 	uhd_mimo_source.cc \
 	uhd_mimo_sink.cc \
+	uhd_multi_usrp_source.cc \
+	uhd_multi_usrp_sink.cc \
 	uhd_simple_source.cc \
 	uhd_simple_sink.cc \
 	uhd_single_usrp_source.cc \
@@ -43,10 +45,8 @@ libgnuradio_uhd_la_LIBADD = \
 libgnuradio_uhd_la_LDFLAGS = $(LTVERSIONFLAGS)
 
 grinclude_HEADERS = \
-	uhd_mimo_source.h \
-	uhd_mimo_sink.h \
-	uhd_simple_source.h \
-	uhd_simple_sink.h \
+	uhd_multi_usrp_source.h \
+	uhd_multi_usrp_sink.h \
 	uhd_single_usrp_source.h \
 	uhd_single_usrp_sink.h
 

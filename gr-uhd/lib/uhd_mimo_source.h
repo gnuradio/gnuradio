@@ -34,6 +34,9 @@ boost::shared_ptr<uhd_mimo_source> uhd_make_mimo_source(
     const uhd::io_type_t::tid_t &type
 );
 
+/***********************************************************************
+ * DEPRECATED
+ **********************************************************************/
 class uhd_mimo_source : public gr_sync_block{
 public:
 

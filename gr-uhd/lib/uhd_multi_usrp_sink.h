@@ -1,4 +1,3 @@
-/* -*- c++ -*- */
 /*
  * Copyright 2010 Free Software Foundation, Inc.
  * 
@@ -20,36 +19,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_UHD_SIMPLE_SINK_H
-#define INCLUDED_UHD_SIMPLE_SINK_H
+#ifndef INCLUDED_UHD_MULTI_USRP_SINK_H
+#define INCLUDED_UHD_MULTI_USRP_SINK_H
 
 #include <gr_sync_block.h>
-#include <uhd/usrp/simple_usrp.hpp>
+#include <uhd/usrp/multi_usrp.hpp>
 
-class uhd_simple_sink;
+class uhd_multi_usrp_sink;
 
-boost::shared_ptr<uhd_simple_sink> uhd_make_simple_sink(
+boost::shared_ptr<uhd_multi_usrp_sink> uhd_make_multi_usrp_sink(
     const std::string &args,
-    const uhd::io_type_t::tid_t &type
+    const uhd::io_type_t::tid_t &type,
+    size_t num_channels
 );
 
-/***********************************************************************
- * DEPRECATED
- **********************************************************************/
-class uhd_simple_sink : public gr_sync_block{
+class uhd_multi_usrp_sink : public gr_sync_block{
 public:
 
     /*!
      * Set the IO signature for this block.
      * \param sig the input signature
      */
-    uhd_simple_sink(gr_io_signature_sptr sig);
+    uhd_multi_usrp_sink(gr_io_signature_sptr sig);
 
     /*!
      * Set the subdevice specification.
      * \param spec the subdev spec markup string
      */
-    virtual void set_subdev_spec(const std::string &spec) = 0;
+    virtual void set_subdev_spec(const std::string &spec, size_t mboard) = 0;
 
     /*!
      * Set the sample rate for the usrp device.
@@ -69,67 +66,61 @@ public:
      * \param freq the desired frequency in Hz
      * \return a tune result with the actual frequencies
      */
-    virtual uhd::tune_result_t set_center_freq(double freq) = 0;
+    virtual uhd::tune_result_t set_center_freq(double freq, size_t chan = 0) = 0;
 
     /*!
      * Get the tunable frequency range.
      * \return the frequency range in Hz
      */
-    virtual uhd::freq_range_t get_freq_range(void) = 0;
+    virtual uhd::freq_range_t get_freq_range(size_t chan = 0) = 0;
 
     /*!
      * Set the gain for the dboard.
      * \param gain the gain in dB
      */
-    virtual void set_gain(float gain) = 0;
+    virtual void set_gain(float gain, size_t chan = 0) = 0;
 
     /*!
      * Get the actual dboard gain setting.
      * \return the actual gain in dB
      */
-    virtual float get_gain(void) = 0;
+    virtual float get_gain(size_t chan = 0) = 0;
 
     /*!
      * Get the settable gain range.
      * \return the gain range in dB
      */
-    virtual uhd::gain_range_t get_gain_range(void) = 0;
+    virtual uhd::gain_range_t get_gain_range(size_t chan = 0) = 0;
 
     /*!
      * Set the antenna to use.
      * \param ant the antenna string
      */
-    virtual void set_antenna(const std::string &ant) = 0;
+    virtual void set_antenna(const std::string &ant, size_t chan = 0) = 0;
 
     /*!
      * Get the antenna in use.
      * \return the antenna string
      */
-    virtual std::string get_antenna(void) = 0;
+    virtual std::string get_antenna(size_t chan = 0) = 0;
 
     /*!
      * Get a list of possible antennas.
      * \return a vector of antenna strings
      */
-    virtual std::vector<std::string> get_antennas(void) = 0;
+    virtual std::vector<std::string> get_antennas(size_t chan = 0) = 0;
 
     /*!
      * Set the clock configuration.
      * \param clock_config the new configuration
      */
-    virtual void set_clock_config(const uhd::clock_config_t &clock_config) = 0;
+    virtual void set_clock_config(const uhd::clock_config_t &clock_config, size_t mboard) = 0;
 
     /*!
      * Get the current time registers.
      * \return the current usrp time
      */
     virtual uhd::time_spec_t get_time_now(void) = 0;
-
-    /*!
-     * Set the time registers asap.
-     * \param time_spec the new time
-     */
-    virtual void set_time_now(const uhd::time_spec_t &time_spec) = 0;
 
     /*!
      * Set the time registers at the next pps.
@@ -139,9 +130,9 @@ public:
 
     /*!
      * Get access to the underlying uhd device object.
-     * \return the simple usrp device object
+     * \return the multi usrp device object
      */
-    virtual uhd::usrp::simple_usrp::sptr get_device(void) = 0;
+    virtual uhd::usrp::multi_usrp::sptr get_device(void) = 0;
 };
 
-#endif /* INCLUDED_UHD_SIMPLE_SINK_H */
+#endif /* INCLUDED_UHD_MULTI_USRP_SINK_H */
