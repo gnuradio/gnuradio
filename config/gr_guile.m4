@@ -32,11 +32,16 @@ AC_DEFUN([GUILE_DEVEL],[
     if test x${GUILE_CONFIG} != x; then
       GUILE_CFLAGS="`${GUILE_CONFIG} compile`"
       GUILE_LIBS="`${GUILE_CONFIG} link`"
+      GUILE_PKLIBDIR="`${GUILE_CONFIG} info pkglibdir`"
+      GUILE_PKDATADIR="`${GUILE_CONFIG} info pkgdatadir`/site"
     else
       GUILE_CFLAGS=""
+      GUILE_PKLIBDIR=""
       GUILE_LIBS="Wl,-Bsymbolic-functions -lguile lgmp -lcrypt"
     fi
     AC_SUBST(GUILE_CFLAGS)
+    AC_SUBST(GUILE_PKLIBDIR)
+    AC_SUBST(GUILE_PKDATADIR)
     AC_SUBST(GUILE_LIBS)
 ])
 
