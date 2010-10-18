@@ -28,8 +28,8 @@
 class uhd_single_usrp_source;
 
 boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_usrp_source(
-    const std::string &args,
-    const uhd::io_type_t::tid_t &type,
+    const std::string &device_addr,
+    const uhd::io_type_t::tid_t &io_type,
     size_t num_channels = 1
 );
 

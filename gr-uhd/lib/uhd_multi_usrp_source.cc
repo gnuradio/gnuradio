@@ -39,12 +39,16 @@ uhd_multi_usrp_source::uhd_multi_usrp_source(gr_io_signature_sptr sig)
 class uhd_multi_usrp_source_impl : public uhd_multi_usrp_source{
 public:
     uhd_multi_usrp_source_impl(
-        const std::string &args,
-        const uhd::io_type_t &type,
+        const std::string &device_addr,
+        const uhd::io_type_t &io_type,
         size_t num_channels
-    ) : uhd_multi_usrp_source(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type)
+    ):
+        uhd_multi_usrp_source(gr_make_io_signature(
+            num_channels, num_channels, io_type.size
+        )),
+        _type(io_type)
     {
-        _dev = uhd::usrp::multi_usrp::make(args);
+        _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
 
     void set_subdev_spec(const std::string &spec, size_t mboard){
@@ -168,11 +172,11 @@ private:
  * Make UHD Multi USRP Source
  **********************************************************************/
 boost::shared_ptr<uhd_multi_usrp_source> uhd_make_multi_usrp_source(
-    const std::string &args,
-    const uhd::io_type_t::tid_t &type,
+    const std::string &device_addr,
+    const uhd::io_type_t::tid_t &io_type,
     size_t num_channels
 ){
     return boost::shared_ptr<uhd_multi_usrp_source>(
-        new uhd_multi_usrp_source_impl(args, type, num_channels)
+        new uhd_multi_usrp_source_impl(device_addr, io_type, num_channels)
     );
 }

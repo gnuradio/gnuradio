@@ -25,7 +25,11 @@ MAIN_TMPL = """\
 	<name>UHD: Single USRP $sourk.title()</name>
 	<key>uhd_single_usrp_$(sourk)</key>
 	<import>from gnuradio import uhd</import>
-	<make>uhd.single_usrp_$(sourk)(\$dev_addr, uhd.io_type_t.\$type.type, \$nchan)
+	<make>uhd.single_usrp_$(sourk)(
+	device_addr=\$dev_addr,
+	io_type=uhd.io_type_t.\$type.type,
+	num_channels\$nchan,
+)
 self.\$(id).set_subdev_spec(\$sd_spec)
 self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)

@@ -25,8 +25,17 @@ MAIN_TMPL = """\
 	<name>UHD: Multi USRP $sourk.title()</name>
 	<key>uhd_multi_usrp_$(sourk)</key>
 	<import>from gnuradio import uhd</import>
-	<make>uhd.multi_usrp_$(sourk)(\$dev_addr, uhd.io_type_t.\$type.type, \$nchan)
+	<make>uhd.multi_usrp_$(sourk)(
+	device_addr=\$dev_addr,
+	io_type=uhd.io_type_t.\$type.type,
+	num_channels=\$nchan,
+)
 \#if \$sync()
+clk_cfg = uhd.clock_config_t()
+clk_cfg.ref_source = uhd.clock_config_t.REF_SMA
+clk_cfg.pps_source = uhd.clock_config_t.PPS_SMA
+clk_cfg.pps_polarity = uhd.clock_config_t.PPS_POS
+self.\$(id).set_clock_config(clk_cfg, ~0);
 self.\$(id).set_time_unknown_pps(uhd.time_spec_t())
 \#end if
 #for $m in range($max_mboards)
