@@ -303,8 +303,8 @@ $(DEPDIR)/audio_alsa-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/audio_alsa_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/audio_alsa-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_alsa_swig_args) \

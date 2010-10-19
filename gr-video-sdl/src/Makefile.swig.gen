@@ -303,8 +303,8 @@ $(DEPDIR)/video_sdl-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/video_sdl_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/video_sdl-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(video_sdl_swig_args) \
