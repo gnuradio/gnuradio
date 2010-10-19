@@ -34,3 +34,15 @@
 /gnuradio_swig_py_hier.cc
 /gnuradio_swig_py_hier.h
 /gnuradio_swig_py_hier.py
+/gnuradio_swig_py_filter_python.cc
+/gnuradio_swig_py_filter_python.h
+/gnuradio_swig_py_general_python.cc
+/gnuradio_swig_py_general_python.h
+/gnuradio_swig_py_gengen_python.cc
+/gnuradio_swig_py_gengen_python.h
+/gnuradio_swig_py_hier_python.cc
+/gnuradio_swig_py_hier_python.h
+/gnuradio_swig_py_io_python.cc
+/gnuradio_swig_py_io_python.h
+/gnuradio_swig_py_runtime_python.cc
+/gnuradio_swig_py_runtime_python.h
