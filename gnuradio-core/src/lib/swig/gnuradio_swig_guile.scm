@@ -18,14 +18,17 @@
 ;;; 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ;;;
 
-(set! %load-path (append %load-path '("/usr/lib/guile/gnuradio")))
+;; Only use these if load-* fails t find a .scm or .so. If you can't
+;; find a .so. try running ldconfig. guile seems to only load modules 
+;; that are in the ldconfig paths.
+;; (set! %load-path (append %load-path '("/usr/lib/guile/gnuradio")))
+;; (set! %load-path (append %load-path '("/usr/share/gnuradio")))
 
-;;; %load-path()
-;;; (list (%site-dir) (%library-dir) (%package-data-dir) "."),
+(load "gnuradio/gnuradio_swig_py_filter.scm")
+(load "gnuradio/gnuradio_swig_py_io.scm")
+(load "gnuradio/gnuradio_swig_py_runtime.scm")
 
-;; (load "gnuradio/gnuradio_swig_py_filter.scm")
+;; FIXME: these don't load for sme reason
 ;; (load "gnuradio/gnuradio_swig_py_general.scm")
 ;; (load "gnuradio/gnuradio_swig_py_gengen.scm")
 ;; (load "gnuradio/gnuradio_swig_py_heir.scm")
-(load "gnuradio/gnuradio_swig_py_io.scm")
-(load "gnuradio/gnuradio_swig_py_runtime.scm")
