@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 GR_SWIG_BLOCK_MAGIC(gr, fft_vcc)
 
 gr_fft_vcc_sptr 
-gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> window, bool shift=false);
+gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift=false);
 
 class gr_fft_vcc : public gr_sync_block
 {

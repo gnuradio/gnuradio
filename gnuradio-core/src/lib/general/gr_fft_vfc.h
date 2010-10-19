@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@ class gr_fft_vfc;
 typedef boost::shared_ptr<gr_fft_vfc> gr_fft_vfc_sptr;
 
 gr_fft_vfc_sptr
-gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float>);
+gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float> &window);
 
 /*!
  * \brief Compute forward FFT.  float vector in / complex vector out.
@@ -41,13 +41,13 @@ gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float>);
 class gr_fft_vfc : public gr_sync_block
 {
   friend gr_fft_vfc_sptr
-  gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float>  window);
+  gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float>  &window);
 
   unsigned int  d_fft_size;
   std::vector<float> d_window;
   gri_fft_complex *d_fft;
 
-  gr_fft_vfc (int fft_size, bool forward, const std::vector<float>  window);
+  gr_fft_vfc (int fft_size, bool forward, const std::vector<float>  &window);
 
  public:
   ~gr_fft_vfc ();
@@ -55,7 +55,7 @@ class gr_fft_vfc : public gr_sync_block
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
-  bool set_window(const std::vector<float> window);
+  bool set_window(const std::vector<float> &window);
 };
 
 
