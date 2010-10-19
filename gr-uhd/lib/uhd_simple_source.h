@@ -36,7 +36,7 @@ boost::shared_ptr<uhd_simple_source> uhd_make_simple_source(
 /***********************************************************************
  * DEPRECATED
  **********************************************************************/
-class uhd_simple_source : public gr_sync_block{
+class UHD_DEPRECATED uhd_simple_source : public gr_sync_block{
 public:
 
     /*!

@@ -37,7 +37,7 @@ boost::shared_ptr<uhd_mimo_sink> uhd_make_mimo_sink(
 /***********************************************************************
  * DEPRECATED
  **********************************************************************/
-class uhd_mimo_sink : public gr_sync_block{
+class UHD_DEPRECATED uhd_mimo_sink : public gr_sync_block{
 public:
 
     /*!
