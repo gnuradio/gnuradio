@@ -206,33 +206,6 @@ usrp2_python.h usrp2.py usrp2_python.cc usrp2_guile.cc usrp2_guile.h: usrp2.i
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/usrp2-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(usrp2_swig_args) \
-		-MD -MF $(DEPDIR)/usrp2_guile.Std \
-		-module usrp2 -o usrp2_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/usrp2_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/usrp2_guile.Std \
-			> $(DEPDIR)/usrp2_guile.Sd; \
-		$(RM) $(DEPDIR)/usrp2_guile.Std; \
-		$(MV) $(DEPDIR)/usrp2_guile.Sd $(DEPDIR)/usrp2_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/usrp2_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/usrp2-generate-guile-stamp
-	$(RM) $(DEPDIR)/usrp2_guile.d
-	cp $(DEPDIR)/usrp2_guile.Std $(DEPDIR)/usrp2_guile.d
-	echo "" >> $(DEPDIR)/usrp2_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/usrp2_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/usrp2_guile.d
-	$(RM) $(DEPDIR)/usrp2_guile.Std
-	touch $(DEPDIR)/usrp2-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/usrp2_guile.d@am__quote@
-endif
-
 $(DEPDIR)/usrp2-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/usrp2-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/usrp2_python.d@am__quote@
+
+$(DEPDIR)/usrp2-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(usrp2_swig_args) \
+		-MD -MF $(DEPDIR)/usrp2_guile.Std \
+		-module usrp2 -o usrp2_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/usrp2_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/usrp2_guile.Std \
+			> $(DEPDIR)/usrp2_guile.Sd; \
+		$(RM) $(DEPDIR)/usrp2_guile.Std; \
+		$(MV) $(DEPDIR)/usrp2_guile.Sd $(DEPDIR)/usrp2_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/usrp2_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/usrp2-generate-guile-stamp
+	$(RM) $(DEPDIR)/usrp2_guile.d
+	cp $(DEPDIR)/usrp2_guile.Std $(DEPDIR)/usrp2_guile.d
+	echo "" >> $(DEPDIR)/usrp2_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/usrp2_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/usrp2_guile.d
+	$(RM) $(DEPDIR)/usrp2_guile.Std
+	touch $(DEPDIR)/usrp2-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/usrp2_guile.d@am__quote@
+endif
 

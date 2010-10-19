@@ -206,33 +206,6 @@ pager_swig_python.h pager_swig.py pager_swig_python.cc pager_swig_guile.cc pager
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/pager_swig-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(pager_swig_swig_args) \
-		-MD -MF $(DEPDIR)/pager_swig_guile.Std \
-		-module pager_swig -o pager_swig_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/pager_swig_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/pager_swig_guile.Std \
-			> $(DEPDIR)/pager_swig_guile.Sd; \
-		$(RM) $(DEPDIR)/pager_swig_guile.Std; \
-		$(MV) $(DEPDIR)/pager_swig_guile.Sd $(DEPDIR)/pager_swig_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/pager_swig_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/pager_swig-generate-guile-stamp
-	$(RM) $(DEPDIR)/pager_swig_guile.d
-	cp $(DEPDIR)/pager_swig_guile.Std $(DEPDIR)/pager_swig_guile.d
-	echo "" >> $(DEPDIR)/pager_swig_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/pager_swig_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/pager_swig_guile.d
-	$(RM) $(DEPDIR)/pager_swig_guile.Std
-	touch $(DEPDIR)/pager_swig-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/pager_swig_guile.d@am__quote@
-endif
-
 $(DEPDIR)/pager_swig-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/pager_swig-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/pager_swig_python.d@am__quote@
+
+$(DEPDIR)/pager_swig-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(pager_swig_swig_args) \
+		-MD -MF $(DEPDIR)/pager_swig_guile.Std \
+		-module pager_swig -o pager_swig_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/pager_swig_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/pager_swig_guile.Std \
+			> $(DEPDIR)/pager_swig_guile.Sd; \
+		$(RM) $(DEPDIR)/pager_swig_guile.Std; \
+		$(MV) $(DEPDIR)/pager_swig_guile.Sd $(DEPDIR)/pager_swig_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/pager_swig_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/pager_swig-generate-guile-stamp
+	$(RM) $(DEPDIR)/pager_swig_guile.d
+	cp $(DEPDIR)/pager_swig_guile.Std $(DEPDIR)/pager_swig_guile.d
+	echo "" >> $(DEPDIR)/pager_swig_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/pager_swig_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/pager_swig_guile.d
+	$(RM) $(DEPDIR)/pager_swig_guile.Std
+	touch $(DEPDIR)/pager_swig-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/pager_swig_guile.d@am__quote@
+endif
 

@@ -206,33 +206,6 @@ audio_alsa_python.h audio_alsa.py audio_alsa_python.cc audio_alsa_guile.cc audio
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/audio_alsa-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_alsa_swig_args) \
-		-MD -MF $(DEPDIR)/audio_alsa_guile.Std \
-		-module audio_alsa -o audio_alsa_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/audio_alsa_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_alsa_guile.Std \
-			> $(DEPDIR)/audio_alsa_guile.Sd; \
-		$(RM) $(DEPDIR)/audio_alsa_guile.Std; \
-		$(MV) $(DEPDIR)/audio_alsa_guile.Sd $(DEPDIR)/audio_alsa_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/audio_alsa_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/audio_alsa-generate-guile-stamp
-	$(RM) $(DEPDIR)/audio_alsa_guile.d
-	cp $(DEPDIR)/audio_alsa_guile.Std $(DEPDIR)/audio_alsa_guile.d
-	echo "" >> $(DEPDIR)/audio_alsa_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/audio_alsa_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/audio_alsa_guile.d
-	$(RM) $(DEPDIR)/audio_alsa_guile.Std
-	touch $(DEPDIR)/audio_alsa-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/audio_alsa_guile.d@am__quote@
-endif
-
 $(DEPDIR)/audio_alsa-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/audio_alsa-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/audio_alsa_python.d@am__quote@
+
+$(DEPDIR)/audio_alsa-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_alsa_swig_args) \
+		-MD -MF $(DEPDIR)/audio_alsa_guile.Std \
+		-module audio_alsa -o audio_alsa_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/audio_alsa_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_alsa_guile.Std \
+			> $(DEPDIR)/audio_alsa_guile.Sd; \
+		$(RM) $(DEPDIR)/audio_alsa_guile.Std; \
+		$(MV) $(DEPDIR)/audio_alsa_guile.Sd $(DEPDIR)/audio_alsa_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/audio_alsa_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/audio_alsa-generate-guile-stamp
+	$(RM) $(DEPDIR)/audio_alsa_guile.d
+	cp $(DEPDIR)/audio_alsa_guile.Std $(DEPDIR)/audio_alsa_guile.d
+	echo "" >> $(DEPDIR)/audio_alsa_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/audio_alsa_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/audio_alsa_guile.d
+	$(RM) $(DEPDIR)/audio_alsa_guile.Std
+	touch $(DEPDIR)/audio_alsa-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/audio_alsa_guile.d@am__quote@
+endif
 

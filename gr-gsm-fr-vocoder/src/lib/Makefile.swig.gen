@@ -206,33 +206,6 @@ gsm_full_rate_python.h gsm_full_rate.py gsm_full_rate_python.cc gsm_full_rate_gu
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/gsm_full_rate-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gsm_full_rate_swig_args) \
-		-MD -MF $(DEPDIR)/gsm_full_rate_guile.Std \
-		-module gsm_full_rate -o gsm_full_rate_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gsm_full_rate_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gsm_full_rate_guile.Std \
-			> $(DEPDIR)/gsm_full_rate_guile.Sd; \
-		$(RM) $(DEPDIR)/gsm_full_rate_guile.Std; \
-		$(MV) $(DEPDIR)/gsm_full_rate_guile.Sd $(DEPDIR)/gsm_full_rate_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gsm_full_rate_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/gsm_full_rate-generate-guile-stamp
-	$(RM) $(DEPDIR)/gsm_full_rate_guile.d
-	cp $(DEPDIR)/gsm_full_rate_guile.Std $(DEPDIR)/gsm_full_rate_guile.d
-	echo "" >> $(DEPDIR)/gsm_full_rate_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gsm_full_rate_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gsm_full_rate_guile.d
-	$(RM) $(DEPDIR)/gsm_full_rate_guile.Std
-	touch $(DEPDIR)/gsm_full_rate-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/gsm_full_rate_guile.d@am__quote@
-endif
-
 $(DEPDIR)/gsm_full_rate-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/gsm_full_rate-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/gsm_full_rate_python.d@am__quote@
+
+$(DEPDIR)/gsm_full_rate-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gsm_full_rate_swig_args) \
+		-MD -MF $(DEPDIR)/gsm_full_rate_guile.Std \
+		-module gsm_full_rate -o gsm_full_rate_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/gsm_full_rate_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gsm_full_rate_guile.Std \
+			> $(DEPDIR)/gsm_full_rate_guile.Sd; \
+		$(RM) $(DEPDIR)/gsm_full_rate_guile.Std; \
+		$(MV) $(DEPDIR)/gsm_full_rate_guile.Sd $(DEPDIR)/gsm_full_rate_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/gsm_full_rate_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/gsm_full_rate-generate-guile-stamp
+	$(RM) $(DEPDIR)/gsm_full_rate_guile.d
+	cp $(DEPDIR)/gsm_full_rate_guile.Std $(DEPDIR)/gsm_full_rate_guile.d
+	echo "" >> $(DEPDIR)/gsm_full_rate_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gsm_full_rate_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gsm_full_rate_guile.d
+	$(RM) $(DEPDIR)/gsm_full_rate_guile.Std
+	touch $(DEPDIR)/gsm_full_rate-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/gsm_full_rate_guile.d@am__quote@
+endif
 

@@ -206,33 +206,6 @@ atsc_python.h atsc.py atsc_python.cc atsc_guile.cc atsc_guile.h: atsc.i
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/atsc-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(atsc_swig_args) \
-		-MD -MF $(DEPDIR)/atsc_guile.Std \
-		-module atsc -o atsc_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/atsc_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/atsc_guile.Std \
-			> $(DEPDIR)/atsc_guile.Sd; \
-		$(RM) $(DEPDIR)/atsc_guile.Std; \
-		$(MV) $(DEPDIR)/atsc_guile.Sd $(DEPDIR)/atsc_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/atsc_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/atsc-generate-guile-stamp
-	$(RM) $(DEPDIR)/atsc_guile.d
-	cp $(DEPDIR)/atsc_guile.Std $(DEPDIR)/atsc_guile.d
-	echo "" >> $(DEPDIR)/atsc_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/atsc_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/atsc_guile.d
-	$(RM) $(DEPDIR)/atsc_guile.Std
-	touch $(DEPDIR)/atsc-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/atsc_guile.d@am__quote@
-endif
-
 $(DEPDIR)/atsc-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/atsc-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/atsc_python.d@am__quote@
+
+$(DEPDIR)/atsc-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(atsc_swig_args) \
+		-MD -MF $(DEPDIR)/atsc_guile.Std \
+		-module atsc -o atsc_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/atsc_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/atsc_guile.Std \
+			> $(DEPDIR)/atsc_guile.Sd; \
+		$(RM) $(DEPDIR)/atsc_guile.Std; \
+		$(MV) $(DEPDIR)/atsc_guile.Sd $(DEPDIR)/atsc_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/atsc_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/atsc-generate-guile-stamp
+	$(RM) $(DEPDIR)/atsc_guile.d
+	cp $(DEPDIR)/atsc_guile.Std $(DEPDIR)/atsc_guile.d
+	echo "" >> $(DEPDIR)/atsc_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/atsc_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/atsc_guile.d
+	$(RM) $(DEPDIR)/atsc_guile.Std
+	touch $(DEPDIR)/atsc-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/atsc_guile.d@am__quote@
+endif
 

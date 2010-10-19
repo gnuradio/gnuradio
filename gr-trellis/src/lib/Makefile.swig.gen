@@ -206,33 +206,6 @@ trellis_python.h trellis.py trellis_python.cc trellis_guile.cc trellis_guile.h: 
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/trellis-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(trellis_swig_args) \
-		-MD -MF $(DEPDIR)/trellis_guile.Std \
-		-module trellis -o trellis_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/trellis_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/trellis_guile.Std \
-			> $(DEPDIR)/trellis_guile.Sd; \
-		$(RM) $(DEPDIR)/trellis_guile.Std; \
-		$(MV) $(DEPDIR)/trellis_guile.Sd $(DEPDIR)/trellis_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/trellis_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/trellis-generate-guile-stamp
-	$(RM) $(DEPDIR)/trellis_guile.d
-	cp $(DEPDIR)/trellis_guile.Std $(DEPDIR)/trellis_guile.d
-	echo "" >> $(DEPDIR)/trellis_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/trellis_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/trellis_guile.d
-	$(RM) $(DEPDIR)/trellis_guile.Std
-	touch $(DEPDIR)/trellis-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/trellis_guile.d@am__quote@
-endif
-
 $(DEPDIR)/trellis-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/trellis-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/trellis_python.d@am__quote@
+
+$(DEPDIR)/trellis-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(trellis_swig_args) \
+		-MD -MF $(DEPDIR)/trellis_guile.Std \
+		-module trellis -o trellis_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/trellis_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/trellis_guile.Std \
+			> $(DEPDIR)/trellis_guile.Sd; \
+		$(RM) $(DEPDIR)/trellis_guile.Std; \
+		$(MV) $(DEPDIR)/trellis_guile.Sd $(DEPDIR)/trellis_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/trellis_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/trellis-generate-guile-stamp
+	$(RM) $(DEPDIR)/trellis_guile.d
+	cp $(DEPDIR)/trellis_guile.Std $(DEPDIR)/trellis_guile.d
+	echo "" >> $(DEPDIR)/trellis_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/trellis_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/trellis_guile.d
+	$(RM) $(DEPDIR)/trellis_guile.Std
+	touch $(DEPDIR)/trellis-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/trellis_guile.d@am__quote@
+endif
 

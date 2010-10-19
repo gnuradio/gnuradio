@@ -206,33 +206,6 @@ audio_oss_python.h audio_oss.py audio_oss_python.cc audio_oss_guile.cc audio_oss
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/audio_oss-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_oss_swig_args) \
-		-MD -MF $(DEPDIR)/audio_oss_guile.Std \
-		-module audio_oss -o audio_oss_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/audio_oss_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_oss_guile.Std \
-			> $(DEPDIR)/audio_oss_guile.Sd; \
-		$(RM) $(DEPDIR)/audio_oss_guile.Std; \
-		$(MV) $(DEPDIR)/audio_oss_guile.Sd $(DEPDIR)/audio_oss_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/audio_oss_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/audio_oss-generate-guile-stamp
-	$(RM) $(DEPDIR)/audio_oss_guile.d
-	cp $(DEPDIR)/audio_oss_guile.Std $(DEPDIR)/audio_oss_guile.d
-	echo "" >> $(DEPDIR)/audio_oss_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/audio_oss_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/audio_oss_guile.d
-	$(RM) $(DEPDIR)/audio_oss_guile.Std
-	touch $(DEPDIR)/audio_oss-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/audio_oss_guile.d@am__quote@
-endif
-
 $(DEPDIR)/audio_oss-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/audio_oss-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/audio_oss_python.d@am__quote@
+
+$(DEPDIR)/audio_oss-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_oss_swig_args) \
+		-MD -MF $(DEPDIR)/audio_oss_guile.Std \
+		-module audio_oss -o audio_oss_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/audio_oss_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/audio_oss_guile.Std \
+			> $(DEPDIR)/audio_oss_guile.Sd; \
+		$(RM) $(DEPDIR)/audio_oss_guile.Std; \
+		$(MV) $(DEPDIR)/audio_oss_guile.Sd $(DEPDIR)/audio_oss_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/audio_oss_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/audio_oss-generate-guile-stamp
+	$(RM) $(DEPDIR)/audio_oss_guile.d
+	cp $(DEPDIR)/audio_oss_guile.Std $(DEPDIR)/audio_oss_guile.d
+	echo "" >> $(DEPDIR)/audio_oss_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/audio_oss_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/audio_oss_guile.d
+	$(RM) $(DEPDIR)/audio_oss_guile.Std
+	touch $(DEPDIR)/audio_oss-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/audio_oss_guile.d@am__quote@
+endif
 

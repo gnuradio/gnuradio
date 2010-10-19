@@ -206,33 +206,6 @@ msdd_python.h msdd.py msdd_python.cc msdd_guile.cc msdd_guile.h: msdd.i
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/msdd-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(msdd_swig_args) \
-		-MD -MF $(DEPDIR)/msdd_guile.Std \
-		-module msdd -o msdd_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/msdd_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/msdd_guile.Std \
-			> $(DEPDIR)/msdd_guile.Sd; \
-		$(RM) $(DEPDIR)/msdd_guile.Std; \
-		$(MV) $(DEPDIR)/msdd_guile.Sd $(DEPDIR)/msdd_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/msdd_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/msdd-generate-guile-stamp
-	$(RM) $(DEPDIR)/msdd_guile.d
-	cp $(DEPDIR)/msdd_guile.Std $(DEPDIR)/msdd_guile.d
-	echo "" >> $(DEPDIR)/msdd_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/msdd_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/msdd_guile.d
-	$(RM) $(DEPDIR)/msdd_guile.Std
-	touch $(DEPDIR)/msdd-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/msdd_guile.d@am__quote@
-endif
-
 $(DEPDIR)/msdd-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,6 +271,33 @@ $(DEPDIR)/msdd-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/msdd_python.d@am__quote@
+
+$(DEPDIR)/msdd-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(msdd_swig_args) \
+		-MD -MF $(DEPDIR)/msdd_guile.Std \
+		-module msdd -o msdd_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/msdd_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/msdd_guile.Std \
+			> $(DEPDIR)/msdd_guile.Sd; \
+		$(RM) $(DEPDIR)/msdd_guile.Std; \
+		$(MV) $(DEPDIR)/msdd_guile.Sd $(DEPDIR)/msdd_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/msdd_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/msdd-generate-guile-stamp
+	$(RM) $(DEPDIR)/msdd_guile.d
+	cp $(DEPDIR)/msdd_guile.Std $(DEPDIR)/msdd_guile.d
+	echo "" >> $(DEPDIR)/msdd_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/msdd_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/msdd_guile.d
+	$(RM) $(DEPDIR)/msdd_guile.Std
+	touch $(DEPDIR)/msdd-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/msdd_guile.d@am__quote@
+endif
 
 # -*- Makefile -*-
 #
@@ -507,33 +507,6 @@ msdd_rs_python.h msdd_rs.py msdd_rs_python.cc msdd_rs_guile.cc msdd_rs_guile.h: 
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/msdd_rs-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(msdd_rs_swig_args) \
-		-MD -MF $(DEPDIR)/msdd_rs_guile.Std \
-		-module msdd_rs -o msdd_rs_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/msdd_rs_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/msdd_rs_guile.Std \
-			> $(DEPDIR)/msdd_rs_guile.Sd; \
-		$(RM) $(DEPDIR)/msdd_rs_guile.Std; \
-		$(MV) $(DEPDIR)/msdd_rs_guile.Sd $(DEPDIR)/msdd_rs_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/msdd_rs_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/msdd_rs-generate-guile-stamp
-	$(RM) $(DEPDIR)/msdd_rs_guile.d
-	cp $(DEPDIR)/msdd_rs_guile.Std $(DEPDIR)/msdd_rs_guile.d
-	echo "" >> $(DEPDIR)/msdd_rs_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/msdd_rs_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/msdd_rs_guile.d
-	$(RM) $(DEPDIR)/msdd_rs_guile.Std
-	touch $(DEPDIR)/msdd_rs-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/msdd_rs_guile.d@am__quote@
-endif
-
 $(DEPDIR)/msdd_rs-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -599,4 +572,31 @@ $(DEPDIR)/msdd_rs-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/msdd_rs_python.d@am__quote@
+
+$(DEPDIR)/msdd_rs-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(msdd_rs_swig_args) \
+		-MD -MF $(DEPDIR)/msdd_rs_guile.Std \
+		-module msdd_rs -o msdd_rs_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/msdd_rs_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/msdd_rs_guile.Std \
+			> $(DEPDIR)/msdd_rs_guile.Sd; \
+		$(RM) $(DEPDIR)/msdd_rs_guile.Std; \
+		$(MV) $(DEPDIR)/msdd_rs_guile.Sd $(DEPDIR)/msdd_rs_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/msdd_rs_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/msdd_rs-generate-guile-stamp
+	$(RM) $(DEPDIR)/msdd_rs_guile.d
+	cp $(DEPDIR)/msdd_rs_guile.Std $(DEPDIR)/msdd_rs_guile.d
+	echo "" >> $(DEPDIR)/msdd_rs_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/msdd_rs_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/msdd_rs_guile.d
+	$(RM) $(DEPDIR)/msdd_rs_guile.Std
+	touch $(DEPDIR)/msdd_rs-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/msdd_rs_guile.d@am__quote@
+endif
 

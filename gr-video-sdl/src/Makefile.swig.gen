@@ -206,33 +206,6 @@ video_sdl_python.h video_sdl.py video_sdl_python.cc video_sdl_guile.cc video_sdl
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/video_sdl-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(video_sdl_swig_args) \
-		-MD -MF $(DEPDIR)/video_sdl_guile.Std \
-		-module video_sdl -o video_sdl_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/video_sdl_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl_guile.Std \
-			> $(DEPDIR)/video_sdl_guile.Sd; \
-		$(RM) $(DEPDIR)/video_sdl_guile.Std; \
-		$(MV) $(DEPDIR)/video_sdl_guile.Sd $(DEPDIR)/video_sdl_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/video_sdl_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/video_sdl-generate-guile-stamp
-	$(RM) $(DEPDIR)/video_sdl_guile.d
-	cp $(DEPDIR)/video_sdl_guile.Std $(DEPDIR)/video_sdl_guile.d
-	echo "" >> $(DEPDIR)/video_sdl_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/video_sdl_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/video_sdl_guile.d
-	$(RM) $(DEPDIR)/video_sdl_guile.Std
-	touch $(DEPDIR)/video_sdl-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/video_sdl_guile.d@am__quote@
-endif
-
 $(DEPDIR)/video_sdl-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/video_sdl-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/video_sdl_python.d@am__quote@
+
+$(DEPDIR)/video_sdl-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(video_sdl_swig_args) \
+		-MD -MF $(DEPDIR)/video_sdl_guile.Std \
+		-module video_sdl -o video_sdl_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/video_sdl_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/video_sdl_guile.Std \
+			> $(DEPDIR)/video_sdl_guile.Sd; \
+		$(RM) $(DEPDIR)/video_sdl_guile.Std; \
+		$(MV) $(DEPDIR)/video_sdl_guile.Sd $(DEPDIR)/video_sdl_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/video_sdl_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/video_sdl-generate-guile-stamp
+	$(RM) $(DEPDIR)/video_sdl_guile.d
+	cp $(DEPDIR)/video_sdl_guile.Std $(DEPDIR)/video_sdl_guile.d
+	echo "" >> $(DEPDIR)/video_sdl_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/video_sdl_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/video_sdl_guile.d
+	$(RM) $(DEPDIR)/video_sdl_guile.Std
+	touch $(DEPDIR)/video_sdl-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/video_sdl_guile.d@am__quote@
+endif
 

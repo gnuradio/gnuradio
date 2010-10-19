@@ -206,33 +206,6 @@ noaa_swig_python.h noaa_swig.py noaa_swig_python.cc noaa_swig_guile.cc noaa_swig
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/noaa_swig-generate-guile-stamp:
-if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(noaa_swig_swig_args) \
-		-MD -MF $(DEPDIR)/noaa_swig_guile.Std \
-		-module noaa_swig -o noaa_swig_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/noaa_swig_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig_guile.Std \
-			> $(DEPDIR)/noaa_swig_guile.Sd; \
-		$(RM) $(DEPDIR)/noaa_swig_guile.Std; \
-		$(MV) $(DEPDIR)/noaa_swig_guile.Sd $(DEPDIR)/noaa_swig_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/noaa_swig_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
-	$(RM) $(DEPDIR)/noaa_swig_guile.d
-	cp $(DEPDIR)/noaa_swig_guile.Std $(DEPDIR)/noaa_swig_guile.d
-	echo "" >> $(DEPDIR)/noaa_swig_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/noaa_swig_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/noaa_swig_guile.d
-	$(RM) $(DEPDIR)/noaa_swig_guile.Std
-	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/noaa_swig_guile.d@am__quote@
-endif
-
 $(DEPDIR)/noaa_swig-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
 ## above rule to succeed in creating the lock directory, after
@@ -298,4 +271,31 @@ $(DEPDIR)/noaa_swig-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/noaa_swig_python.d@am__quote@
+
+$(DEPDIR)/noaa_swig-generate-guile-stamp:
+if GUILE
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(noaa_swig_swig_args) \
+		-MD -MF $(DEPDIR)/noaa_swig_guile.Std \
+		-module noaa_swig -o noaa_swig_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/noaa_swig_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig_guile.Std \
+			> $(DEPDIR)/noaa_swig_guile.Sd; \
+		$(RM) $(DEPDIR)/noaa_swig_guile.Std; \
+		$(MV) $(DEPDIR)/noaa_swig_guile.Sd $(DEPDIR)/noaa_swig_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/noaa_swig_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
+	$(RM) $(DEPDIR)/noaa_swig_guile.d
+	cp $(DEPDIR)/noaa_swig_guile.Std $(DEPDIR)/noaa_swig_guile.d
+	echo "" >> $(DEPDIR)/noaa_swig_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/noaa_swig_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/noaa_swig_guile.d
+	$(RM) $(DEPDIR)/noaa_swig_guile.Std
+	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
+
+@am__include@ @am__quote@./$(DEPDIR)/noaa_swig_guile.d@am__quote@
+endif
 
