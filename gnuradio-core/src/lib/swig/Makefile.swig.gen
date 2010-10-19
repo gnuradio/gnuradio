@@ -303,8 +303,8 @@ $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_runtime_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_runtime_swig_args) \
@@ -641,8 +641,8 @@ $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_general_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_general_swig_args) \
@@ -979,8 +979,8 @@ $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_gengen_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_gengen_swig_args) \
@@ -1317,8 +1317,8 @@ $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_filter_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_filter_swig_args) \
@@ -1655,8 +1655,8 @@ $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_io_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_io_swig_args) \
@@ -1993,8 +1993,8 @@ $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_hier_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_hier_swig_args) \
