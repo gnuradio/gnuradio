@@ -303,8 +303,8 @@ $(DEPDIR)/@NAME@-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/@NAME@_python.d@am__quote@
 
-if GUILE
 $(DEPDIR)/@NAME@-generate-guile-stamp:
+if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(@NAME@_swig_args) \

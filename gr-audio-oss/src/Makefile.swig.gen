@@ -38,6 +38,16 @@ audio_oss_pylibdir_category ?= $(audio_oss_pythondir_category)
 audio_oss_pythondir = $(pythondir)/$(audio_oss_pythondir_category)
 audio_oss_pylibdir = $(pyexecdir)/$(audio_oss_pylibdir_category)
 
+# The .so libraries for the guile modules get installed whereever guile
+# is installed, usually /usr/lib/guile/gnuradio/
+# FIXME: determince whether these should be installed with gnuradio.
+audio_oss_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+
+# The scm files for the guile modules get installed where ever guile
+# is installed, usually /usr/share/guile/site/audio_oss
+# FIXME: determince whether these should be installed with gnuradio.
+audio_oss_scmdir = @GUILE_PKDATADIR@/gnuradio
+
 ## SWIG headers are always installed into the same directory.
 
 audio_oss_swigincludedir = $(swigincludedir)
@@ -73,6 +83,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## be added manually by the including Makefile.am .
 
 swig_built_sources += audio_oss.py audio_oss_python.cc
+if GUILE
+swig_built_sources += audio_oss.scm audio_oss_guile.cc
+endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -106,11 +119,11 @@ audio_oss_python_PYTHON =			\
 	$(audio_oss_python)
 
 if GUILE
-audio_oss_pylib_LTLIBRARIES += _audio_oss_guile.la
-
+audio_oss_scmlib_LTLIBRARIES = _audio_oss_guile.la
 _audio_oss_guile_la_SOURCES = 		\
-	audio_oss_guile.cc		\
+	audio_oss_guile.cc		        \
 	$(audio_oss_la_swig_sources)
+audio_oss_scm_DATA = audio_oss.scm
 
 # Guile can use the same flags as python does
 _audio_oss_guile_la_LIBADD = $(_audio_oss_python_la_LIBADD)
@@ -121,7 +134,8 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-audio_oss_python.h audio_oss.py audio_oss_python.cc audio_oss_guile.cc audio_oss_guile.h: audio_oss.i
+# $(python_deps) $(guile_deps): audio_oss.i
+audio_oss_python.h audio_oss.py audio_oss_python.cc: audio_oss.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -178,7 +192,6 @@ audio_oss_python.h audio_oss.py audio_oss_python.cc audio_oss_guile.cc audio_oss
 ## Tell MAKE to run the rule for creating this stamp.
 ##
 		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_oss-generate-python-stamp WHAT=$<; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_oss-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -205,6 +218,24 @@ audio_oss_python.h audio_oss.py audio_oss_python.cc audio_oss_guile.cc audio_oss
 		test -f $(DEPDIR)/audio_oss-generate-python-stamp; \
 		exit $$?; \
 	fi;
+
+# the comments for the target above apply to this target as well, but it seemed
+# silly to include them twice. The only main change is for guile.
+audio_oss_guile.h audio_oss.scm audio_oss_guile.cc: audio_oss.i
+if GUILE
+	trap 'rm -rf $(DEPDIR)/audio_oss-generate-*' 1 2 13 15; \
+	if mkdir $(DEPDIR)/audio_oss-generate-lock 2>/dev/null; then \
+		rm -f $(DEPDIR)/audio_oss-generate-*stamp; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/audio_oss-generate-guile-stamp WHAT=$<; \
+		rmdir $(DEPDIR)/audio_oss-generate-lock; \
+	else \
+		while test -d $(DEPDIR)/audio_oss-generate-lock; do \
+			sleep 1; \
+		done; \
+		test -f $(DEPDIR)/audio_oss-generate-guile-stamp; \
+		exit $$?; \
+	fi;
+endif				# end of GUILE
 
 $(DEPDIR)/audio_oss-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -272,8 +303,10 @@ $(DEPDIR)/audio_oss-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/audio_oss_python.d@am__quote@
 
-$(DEPDIR)/audio_oss-generate-guile-stamp:
 if GUILE
+$(DEPDIR)/audio_oss-generate-guile-stamp:
+# the comments for the target above apply to this target as well, but it seemed
+# silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(audio_oss_swig_args) \
 		-MD -MF $(DEPDIR)/audio_oss_guile.Std \
 		-module audio_oss -o audio_oss_guile.cc $(WHAT); then \
@@ -295,7 +328,11 @@ if GUILE
 		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/audio_oss_guile.d
 	$(RM) $(DEPDIR)/audio_oss_guile.Std
 	touch $(DEPDIR)/audio_oss-generate-guile-stamp
+else
+	touch $(DEPDIR)/audio_oss-generate-guile-stamp
+endif
 
 @am__include@ @am__quote@./$(DEPDIR)/audio_oss_guile.d@am__quote@
-endif
+
+#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 

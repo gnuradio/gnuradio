@@ -38,6 +38,16 @@ noaa_swig_pylibdir_category ?= $(noaa_swig_pythondir_category)
 noaa_swig_pythondir = $(pythondir)/$(noaa_swig_pythondir_category)
 noaa_swig_pylibdir = $(pyexecdir)/$(noaa_swig_pylibdir_category)
 
+# The .so libraries for the guile modules get installed whereever guile
+# is installed, usually /usr/lib/guile/gnuradio/
+# FIXME: determince whether these should be installed with gnuradio.
+noaa_swig_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+
+# The scm files for the guile modules get installed where ever guile
+# is installed, usually /usr/share/guile/site/noaa_swig
+# FIXME: determince whether these should be installed with gnuradio.
+noaa_swig_scmdir = @GUILE_PKDATADIR@/gnuradio
+
 ## SWIG headers are always installed into the same directory.
 
 noaa_swig_swigincludedir = $(swigincludedir)
@@ -73,6 +83,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## be added manually by the including Makefile.am .
 
 swig_built_sources += noaa_swig.py noaa_swig_python.cc
+if GUILE
+swig_built_sources += noaa_swig.scm noaa_swig_guile.cc
+endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -106,11 +119,11 @@ noaa_swig_python_PYTHON =			\
 	$(noaa_swig_python)
 
 if GUILE
-noaa_swig_pylib_LTLIBRARIES += _noaa_swig_guile.la
-
+noaa_swig_scmlib_LTLIBRARIES = _noaa_swig_guile.la
 _noaa_swig_guile_la_SOURCES = 		\
-	noaa_swig_guile.cc		\
+	noaa_swig_guile.cc		        \
 	$(noaa_swig_la_swig_sources)
+noaa_swig_scm_DATA = noaa_swig.scm
 
 # Guile can use the same flags as python does
 _noaa_swig_guile_la_LIBADD = $(_noaa_swig_python_la_LIBADD)
@@ -121,7 +134,8 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-noaa_swig_python.h noaa_swig.py noaa_swig_python.cc noaa_swig_guile.cc noaa_swig_guile.h: noaa_swig.i
+# $(python_deps) $(guile_deps): noaa_swig.i
+noaa_swig_python.h noaa_swig.py noaa_swig_python.cc: noaa_swig.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -178,7 +192,6 @@ noaa_swig_python.h noaa_swig.py noaa_swig_python.cc noaa_swig_guile.cc noaa_swig
 ## Tell MAKE to run the rule for creating this stamp.
 ##
 		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/noaa_swig-generate-python-stamp WHAT=$<; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/noaa_swig-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -205,6 +218,24 @@ noaa_swig_python.h noaa_swig.py noaa_swig_python.cc noaa_swig_guile.cc noaa_swig
 		test -f $(DEPDIR)/noaa_swig-generate-python-stamp; \
 		exit $$?; \
 	fi;
+
+# the comments for the target above apply to this target as well, but it seemed
+# silly to include them twice. The only main change is for guile.
+noaa_swig_guile.h noaa_swig.scm noaa_swig_guile.cc: noaa_swig.i
+if GUILE
+	trap 'rm -rf $(DEPDIR)/noaa_swig-generate-*' 1 2 13 15; \
+	if mkdir $(DEPDIR)/noaa_swig-generate-lock 2>/dev/null; then \
+		rm -f $(DEPDIR)/noaa_swig-generate-*stamp; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/noaa_swig-generate-guile-stamp WHAT=$<; \
+		rmdir $(DEPDIR)/noaa_swig-generate-lock; \
+	else \
+		while test -d $(DEPDIR)/noaa_swig-generate-lock; do \
+			sleep 1; \
+		done; \
+		test -f $(DEPDIR)/noaa_swig-generate-guile-stamp; \
+		exit $$?; \
+	fi;
+endif				# end of GUILE
 
 $(DEPDIR)/noaa_swig-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -272,8 +303,10 @@ $(DEPDIR)/noaa_swig-generate-python-stamp:
 
 @am__include@ @am__quote@./$(DEPDIR)/noaa_swig_python.d@am__quote@
 
-$(DEPDIR)/noaa_swig-generate-guile-stamp:
 if GUILE
+$(DEPDIR)/noaa_swig-generate-guile-stamp:
+# the comments for the target above apply to this target as well, but it seemed
+# silly to include them twice. The only main change is for guile.
 	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(noaa_swig_swig_args) \
 		-MD -MF $(DEPDIR)/noaa_swig_guile.Std \
 		-module noaa_swig -o noaa_swig_guile.cc $(WHAT); then \
@@ -295,7 +328,11 @@ if GUILE
 		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/noaa_swig_guile.d
 	$(RM) $(DEPDIR)/noaa_swig_guile.Std
 	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
+else
+	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
+endif
 
 @am__include@ @am__quote@./$(DEPDIR)/noaa_swig_guile.d@am__quote@
-endif
+
+#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 
