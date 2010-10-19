@@ -38,6 +38,16 @@
 @NAME@_pythondir = $(pythondir)/$(@NAME@_pythondir_category)
 @NAME@_pylibdir = $(pyexecdir)/$(@NAME@_pylibdir_category)
 
+# The .so libraries for the guile modules get installed whereever guile
+# is installed, usually /usr/lib/guile/gnuradio/
+# FIXME: determince whether these should be installed with gnuradio.
+@NAME@_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+
+# The scm files for the guile modules get installed where ever guile
+# is installed, usually /usr/share/guile/site/@NAME@
+# FIXME: determince whether these should be installed with gnuradio.
+@NAME@_scmdir = @GUILE_PKDATADIR@/gnuradio
+
 ## SWIG headers are always installed into the same directory.
 
 @NAME@_swigincludedir = $(swigincludedir)
@@ -73,6 +83,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## be added manually by the including Makefile.am .
 
 swig_built_sources += @NAME@.py @NAME@_python.cc
+if GUILE
+swig_built_sources += @NAME@.scm @NAME@_guile.cc
+endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -106,11 +119,11 @@ _@NAME@_python_la_CXXFLAGS =		\
 	$(@NAME@_python)
 
 if GUILE
-@NAME@_pylib_LTLIBRARIES += _@NAME@_guile.la
-
+@NAME@_scmlib_LTLIBRARIES = _@NAME@_guile.la
 _@NAME@_guile_la_SOURCES = 		\
-	@NAME@_guile.cc		\
+	@NAME@_guile.cc		        \
 	$(@NAME@_la_swig_sources)
+@NAME@_scm_DATA = @NAME@.scm
 
 # Guile can use the same flags as python does
 _@NAME@_guile_la_LIBADD = $(_@NAME@_python_la_LIBADD)
@@ -121,7 +134,8 @@ endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
-@NAME@_python.h @NAME@.py @NAME@_python.cc @NAME@_guile.cc @NAME@_guile.h: @NAME@.i
+# $(python_deps) $(guile_deps): @NAME@.i
+@NAME@_python.h @NAME@.py @NAME@_python.cc: @NAME@.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -178,7 +192,6 @@ endif				# end of GUILE
 ## Tell MAKE to run the rule for creating this stamp.
 ##
 		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/@NAME@-generate-python-stamp WHAT=$<; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/@NAME@-generate-guile-stamp WHAT=$<; \
 ##
 ## Now that the .cc, .h, and .py files have been (re)created from the
 ## .i file, future checking of this rule during the same MAKE
@@ -206,32 +219,23 @@ endif				# end of GUILE
 		exit $$?; \
 	fi;
 
-$(DEPDIR)/@NAME@-generate-guile-stamp:
+# the comments for the target above apply to this target as well, but it seemed
+# silly to include them twice. The only main change is for guile.
+@NAME@_guile.h @NAME@.scm @NAME@_guile.cc: @NAME@.i
 if GUILE
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(@NAME@_swig_args) \
-		-MD -MF $(DEPDIR)/@NAME@_guile.Std \
-		-module @NAME@ -o @NAME@_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/@NAME@_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@_guile.Std \
-			> $(DEPDIR)/@NAME@_guile.Sd; \
-		$(RM) $(DEPDIR)/@NAME@_guile.Std; \
-		$(MV) $(DEPDIR)/@NAME@_guile.Sd $(DEPDIR)/@NAME@_guile.Std; \
-	    fi; \
+	trap 'rm -rf $(DEPDIR)/@NAME@-generate-*' 1 2 13 15; \
+	if mkdir $(DEPDIR)/@NAME@-generate-lock 2>/dev/null; then \
+		rm -f $(DEPDIR)/@NAME@-generate-*stamp; \
+		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/@NAME@-generate-guile-stamp WHAT=$<; \
+		rmdir $(DEPDIR)/@NAME@-generate-lock; \
 	else \
-	    $(RM) $(DEPDIR)/@NAME@_guile.S*; exit 1; \
+		while test -d $(DEPDIR)/@NAME@-generate-lock; do \
+			sleep 1; \
+		done; \
+		test -f $(DEPDIR)/@NAME@-generate-guile-stamp; \
+		exit $$?; \
 	fi;
-	touch $(DEPDIR)/@NAME@-generate-guile-stamp
-	$(RM) $(DEPDIR)/@NAME@_guile.d
-	cp $(DEPDIR)/@NAME@_guile.Std $(DEPDIR)/@NAME@_guile.d
-	echo "" >> $(DEPDIR)/@NAME@_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/@NAME@_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/@NAME@_guile.d
-	$(RM) $(DEPDIR)/@NAME@_guile.Std
-	touch $(DEPDIR)/@NAME@-generate-guile-stamp
-
-@am__include@ @am__quote@./$(DEPDIR)/@NAME@_guile.d@am__quote@
-endif
+endif				# end of GUILE
 
 $(DEPDIR)/@NAME@-generate-python-stamp:
 ## This rule will be called only by the first process issuing the
@@ -298,3 +302,36 @@ $(DEPDIR)/@NAME@-generate-python-stamp:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @am__include@ @am__quote@./$(DEPDIR)/@NAME@_python.d@am__quote@
+
+if GUILE
+$(DEPDIR)/@NAME@-generate-guile-stamp:
+# the comments for the target above apply to this target as well, but it seemed
+# silly to include them twice. The only main change is for guile.
+	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(@NAME@_swig_args) \
+		-MD -MF $(DEPDIR)/@NAME@_guile.Std \
+		-module @NAME@ -o @NAME@_guile.cc $(WHAT); then \
+	    if test $(host_os) = mingw32; then \
+		$(RM) $(DEPDIR)/@NAME@_guile.Sd; \
+		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@_guile.Std \
+			> $(DEPDIR)/@NAME@_guile.Sd; \
+		$(RM) $(DEPDIR)/@NAME@_guile.Std; \
+		$(MV) $(DEPDIR)/@NAME@_guile.Sd $(DEPDIR)/@NAME@_guile.Std; \
+	    fi; \
+	else \
+	    $(RM) $(DEPDIR)/@NAME@_guile.S*; exit 1; \
+	fi;
+	touch $(DEPDIR)/@NAME@-generate-guile-stamp
+	$(RM) $(DEPDIR)/@NAME@_guile.d
+	cp $(DEPDIR)/@NAME@_guile.Std $(DEPDIR)/@NAME@_guile.d
+	echo "" >> $(DEPDIR)/@NAME@_guile.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/@NAME@_guile.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/@NAME@_guile.d
+	$(RM) $(DEPDIR)/@NAME@_guile.Std
+	touch $(DEPDIR)/@NAME@-generate-guile-stamp
+else
+	touch $(DEPDIR)/@NAME@-generate-guile-stamp
+endif
+
+@am__include@ @am__quote@./$(DEPDIR)/@NAME@_guile.d@am__quote@
+
+#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
