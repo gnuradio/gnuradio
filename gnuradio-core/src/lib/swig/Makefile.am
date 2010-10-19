@@ -41,6 +41,12 @@ swiginclude_HEADERS =			\
 ourpythondir = $(grpythondir)/gr
 ourpython_PYTHON = gnuradio_swig_python.py
 
+# This is the top level guile file, which loads all the other scm files
+# for gnuradio. This has to be installed top level to be found in the
+# default search path.
+guiledir = @GUILE_PKDATADIR@
+guile_DATA = gnuradio_swig_guile.scm
+
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...
 
@@ -94,10 +100,17 @@ BUILT_SOURCES += $(PYTHON_GEN)
 endif				# end of if python
 
 if GUILE
-GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,_guile.h,$(HFILE)))
+GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.scm,$(HFILE)))
 BUILT_SOURCES += $(GUILE_GEN)
 endif
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
 
+#gnuradio_swig_py_runtime.scm: gnuradio_swig_py_runtime.i
+# gnuradio_swig_py_runtime_python.cc: gnuradio_swig_py_runtime.i
+# .cc..i:
+# 	@echo "FIXME1: $(BUILT_SOURCES) $<"
+
+# .scm..i:
+# 	@echo "FIXME2: $(BUILT_SOURCES) $<"
