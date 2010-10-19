@@ -29,6 +29,6 @@
 (load "gnuradio/gnuradio_swig_py_runtime.scm")
 
 ;; FIXME: these don't load for sme reason cause of issues with the .so files
-;; (load "gnuradio/gnuradio_swig_py_general.scm")
-;; (load "gnuradio/gnuradio_swig_py_gengen.scm")
+(load "gnuradio/gnuradio_swig_py_general.scm")
+(load "gnuradio/gnuradio_swig_py_gengen.scm")
 ;; (load "gnuradio/gnuradio_swig_py_heir.scm")
