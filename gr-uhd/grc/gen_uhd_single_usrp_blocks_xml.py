@@ -28,7 +28,7 @@ MAIN_TMPL = """\
 	<make>uhd.single_usrp_$(sourk)(
 	device_addr=\$dev_addr,
 	io_type=uhd.io_type_t.\$type.type,
-	num_channels\$nchan,
+	num_channels=\$nchan,
 )
 self.\$(id).set_subdev_spec(\$sd_spec)
 self.\$(id).set_samp_rate(\$samp_rate)
