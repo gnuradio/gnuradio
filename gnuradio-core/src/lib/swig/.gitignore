@@ -46,3 +46,15 @@
 /gnuradio_swig_py_io_python.h
 /gnuradio_swig_py_runtime_python.cc
 /gnuradio_swig_py_runtime_python.h
+/gnuradio_swig_py_filter.scm
+/gnuradio_swig_py_filter_guile.cc
+/gnuradio_swig_py_general.scm
+/gnuradio_swig_py_general_guile.cc
+/gnuradio_swig_py_gengen.scm
+/gnuradio_swig_py_gengen_guile.cc
+/gnuradio_swig_py_hier.scm
+/gnuradio_swig_py_hier_guile.cc
+/gnuradio_swig_py_io.scm
+/gnuradio_swig_py_io_guile.cc
+/gnuradio_swig_py_runtime.scm
+/gnuradio_swig_py_runtime_guile.cc
