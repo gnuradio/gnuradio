@@ -31,15 +31,15 @@ MAIN_TMPL = """\
 	num_channels=\$nchan,
 )
 \#if \$sync()
-clk_cfg = uhd.clock_config_t()
-clk_cfg.ref_source = uhd.clock_config_t.REF_SMA
-clk_cfg.pps_source = uhd.clock_config_t.PPS_SMA
-clk_cfg.pps_polarity = uhd.clock_config_t.PPS_POS
-self.\$(id).set_clock_config(clk_cfg, ~0);
+_clk_cfg = uhd.clock_config_t()
+_clk_cfg.ref_source = uhd.clock_config_t.REF_SMA
+_clk_cfg.pps_source = uhd.clock_config_t.PPS_SMA
+_clk_cfg.pps_polarity = uhd.clock_config_t.PPS_POS
+self.\$(id).set_clock_config(_clk_cfg, uhd.ALL_MBOARDS);
 self.\$(id).set_time_unknown_pps(uhd.time_spec_t())
 \#end if
 #for $m in range($max_mboards)
-\#if \$num_mboards() > $m
+\#if \$num_mboards() > $m and \$sd_spec$(m)()
 self.\$(id).set_subdev_spec(\$sd_spec$(m), $m)
 \#end if
 #end for
@@ -110,7 +110,7 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 		<key>num_mboards</key>
 		<value>2</value>
 		<type>int</type>
-		#for $m in range(1, $max_mboards)
+		#for $m in range(1, $max_mboards+1)
 		<option>
 			<name>$(m)</name>
 			<key>$m</key>
@@ -139,7 +139,7 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 		<key>nchan</key>
 		<value>2</value>
 		<type>int</type>
-		#for $n in range(1, $max_nchan)
+		#for $n in range(1, $max_nchan+1)
 		<option>
 			<name>$(n)</name>
 			<key>$n</key>

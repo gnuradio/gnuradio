@@ -30,7 +30,9 @@ MAIN_TMPL = """\
 	io_type=uhd.io_type_t.\$type.type,
 	num_channels=\$nchan,
 )
+\#if \$sd_spec()
 self.\$(id).set_subdev_spec(\$sd_spec)
+\#end if
 self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)
 \#if \$nchan() > $n
