@@ -111,6 +111,12 @@ public:
     virtual std::vector<std::string> get_antennas(size_t chan = 0) = 0;
 
     /*!
+     * Set the subdevice bandpass filter.
+     * \param bandwidth the filter bandwidth in Hz
+     */
+    virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
+
+    /*!
      * Set the clock configuration.
      * \param clock_config the new configuration
      */

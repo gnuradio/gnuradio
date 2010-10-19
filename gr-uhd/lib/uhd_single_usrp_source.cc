@@ -96,6 +96,10 @@ public:
         return _dev->get_rx_antennas(chan);
     }
 
+    void set_bandwidth(double bandwidth, size_t chan){
+        return _dev->set_rx_bandwidth(bandwidth, chan);
+    }
+
     void set_clock_config(const uhd::clock_config_t &clock_config){
         return _dev->set_clock_config(clock_config);
     }

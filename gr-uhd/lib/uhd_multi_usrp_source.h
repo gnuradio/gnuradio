@@ -66,49 +66,55 @@ public:
      * \param freq the desired frequency in Hz
      * \return a tune result with the actual frequencies
      */
-    virtual uhd::tune_result_t set_center_freq(double freq, size_t chan = 0) = 0;
+    virtual uhd::tune_result_t set_center_freq(double freq, size_t chan) = 0;
 
     /*!
      * Get the tunable frequency range.
      * \return the frequency range in Hz
      */
-    virtual uhd::freq_range_t get_freq_range(size_t chan = 0) = 0;
+    virtual uhd::freq_range_t get_freq_range(size_t chan) = 0;
 
     /*!
      * Set the gain for the dboard.
      * \param gain the gain in dB
      */
-    virtual void set_gain(float gain, size_t chan = 0) = 0;
+    virtual void set_gain(float gain, size_t chan) = 0;
 
     /*!
      * Get the actual dboard gain setting.
      * \return the actual gain in dB
      */
-    virtual float get_gain(size_t chan = 0) = 0;
+    virtual float get_gain(size_t chan) = 0;
 
     /*!
      * Get the settable gain range.
      * \return the gain range in dB
      */
-    virtual uhd::gain_range_t get_gain_range(size_t chan = 0) = 0;
+    virtual uhd::gain_range_t get_gain_range(size_t chan) = 0;
 
     /*!
      * Set the antenna to use.
      * \param ant the antenna string
      */
-    virtual void set_antenna(const std::string &ant, size_t chan = 0) = 0;
+    virtual void set_antenna(const std::string &ant, size_t chan) = 0;
 
     /*!
      * Get the antenna in use.
      * \return the antenna string
      */
-    virtual std::string get_antenna(size_t chan = 0) = 0;
+    virtual std::string get_antenna(size_t chan) = 0;
 
     /*!
      * Get a list of possible antennas.
      * \return a vector of antenna strings
      */
-    virtual std::vector<std::string> get_antennas(size_t chan = 0) = 0;
+    virtual std::vector<std::string> get_antennas(size_t chan) = 0;
+
+    /*!
+     * Set the subdevice bandpass filter.
+     * \param bandwidth the filter bandwidth in Hz
+     */
+    virtual void set_bandwidth(double bandwidth, size_t chan) = 0;
 
     /*!
      * Set the clock configuration.
