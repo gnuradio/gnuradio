@@ -117,6 +117,16 @@ gr_block::fixed_rate_noutput_to_ninput(int noutput)
   throw std::runtime_error("Unimplemented");
 }
 
+gr_uint64
+gr_block::n_items_read(unsigned int which_input) {
+  return d_detail->n_items_read(which_input);
+}
+
+gr_uint64
+gr_block::n_items_written(unsigned int which_output) {
+  return d_detail->n_items_written(which_output);
+}
+
 std::ostream&
 operator << (std::ostream& os, const gr_block *m)
 {

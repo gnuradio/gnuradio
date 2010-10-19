@@ -88,6 +88,20 @@ class gr_block_detail {
    */
   void _post(pmt::pmt_t msg);
 
+  // Return the number of items read on input stream which_input
+  gr_uint64 n_items_read(unsigned int which_input) {
+    if(which_input >= d_ninputs)
+      throw std::invalid_argument ("gr_block_detail::n_input_items");
+    return d_n_items_read[which_input];
+  }
+
+  // Return the number of items written on output stream which_output
+  gr_uint64 n_items_written(unsigned int which_output) {
+    if(which_output >= d_noutputs)
+      throw std::invalid_argument ("gr_block_detail::n_output_items");
+    return d_n_items_written[which_output];
+  }
+  
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
 
@@ -98,6 +112,8 @@ class gr_block_detail {
   unsigned int                       d_noutputs;
   std::vector<gr_buffer_reader_sptr> d_input;
   std::vector<gr_buffer_sptr>	     d_output;
+  std::vector<uint64_t>              d_n_items_read;
+  std::vector<uint64_t>              d_n_items_written;
   bool                               d_done;
 
 

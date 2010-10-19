@@ -49,6 +49,9 @@ class gr_block : public gr_basic_block {
   bool start();
   bool stop();
 
+  gr_uint64 n_items_read(unsigned int which_input);
+  gr_uint64 n_items_written(unsigned int which_output);
+
   // internal use
   gr_block_detail_sptr detail () const { return d_detail; }
   void set_detail (gr_block_detail_sptr detail) { d_detail = detail; }

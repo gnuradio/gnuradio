@@ -39,6 +39,7 @@ gr_block_detail::gr_block_detail (unsigned int ninputs, unsigned int noutputs)
   : d_produce_or(0),
     d_ninputs (ninputs), d_noutputs (noutputs),
     d_input (ninputs), d_output (noutputs),
+    d_n_items_read(ninputs, 0), d_n_items_written(noutputs, 0),
     d_done (false)
 {
   s_ncurrently_allocated++;
@@ -88,16 +89,25 @@ gr_block_detail::set_done (bool done)
 void 
 gr_block_detail::consume (int which_input, int how_many_items)
 {
-  if (how_many_items > 0)
+  if (how_many_items > 0) {
     input (which_input)->update_read_pointer (how_many_items);
+
+    // Carefull here; we check that which_input exists above
+    // is this good enough protection that we don't get here?
+    d_n_items_read[which_input] += how_many_items;
+  }
 }
+
 
 void
 gr_block_detail::consume_each (int how_many_items)
 {
-  if (how_many_items > 0)
-    for (int i = 0; i < ninputs (); i++)
+  if (how_many_items > 0) {
+    for (int i = 0; i < ninputs (); i++) {
       d_input[i]->update_read_pointer (how_many_items);
+      d_n_items_read[i] += how_many_items;
+    }
+  }
 }
 
 void
@@ -105,6 +115,7 @@ gr_block_detail::produce (int which_output, int how_many_items)
 {
   if (how_many_items > 0){
     d_output[which_output]->update_write_pointer (how_many_items);
+    d_n_items_written[which_output] += how_many_items;
     d_produce_or |= how_many_items;
   }
 }
@@ -112,9 +123,11 @@ gr_block_detail::produce (int which_output, int how_many_items)
 void
 gr_block_detail::produce_each (int how_many_items)
 {
-  if (how_many_items > 0){
-    for (int i = 0; i < noutputs (); i++)
+  if (how_many_items > 0) {
+    for (int i = 0; i < noutputs (); i++) {
       d_output[i]->update_write_pointer (how_many_items);
+      d_n_items_written[i] += how_many_items;
+    }
     d_produce_or |= how_many_items;
   }
 }
