@@ -128,7 +128,7 @@ public:
 
         size_t num_samps = _dev->get_device()->recv(
             output_items, noutput_items, metadata,
-            _type, uhd::device::RECV_MODE_FULL_BUFF
+            _type, uhd::device::RECV_MODE_FULL_BUFF, 1.0
         );
 
         switch(metadata.error_code){
@@ -149,7 +149,7 @@ public:
 
     bool start(void){
         //setup a stream command that starts streaming slightly in the future
-        static const double reasonable_delay = 0.05; //order of magnitude over RTT
+        static const double reasonable_delay = 0.1; //order of magnitude over RTT
         uhd::stream_cmd_t stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
         stream_cmd.stream_now = false;
         stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(reasonable_delay);

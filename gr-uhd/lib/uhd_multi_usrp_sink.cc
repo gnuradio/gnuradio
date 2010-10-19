@@ -128,7 +128,7 @@ public:
 
         return _dev->get_device()->send(
             input_items, noutput_items, metadata,
-            _type, uhd::device::SEND_MODE_FULL_BUFF
+            _type, uhd::device::SEND_MODE_FULL_BUFF, 1.0
         );
     }
 
@@ -138,11 +138,14 @@ public:
         uhd::tx_metadata_t metadata;
         metadata.start_of_burst = true;
         metadata.has_time_spec = true;
-        metadata.time_spec = get_time_now() + uhd::time_spec_t(0.01); //10ms offset in future
+        //TODO: Time in the near future, must be less than source time in future
+        //because ethernet pause frames with throttle stream commands.
+        //It will be fixed with the invention of host-based flow control.
+        metadata.time_spec = get_time_now() + uhd::time_spec_t(0.05);
 
         _dev->get_device()->send(
             gr_vector_const_void_star(_nchan), 0, metadata,
-            _type, uhd::device::SEND_MODE_ONE_PACKET
+            _type, uhd::device::SEND_MODE_ONE_PACKET, 1.0
         );
         return true;
     }
@@ -155,7 +158,7 @@ public:
 
         _dev->get_device()->send(
             gr_vector_const_void_star(_nchan), 0, metadata,
-            _type, uhd::device::SEND_MODE_ONE_PACKET
+            _type, uhd::device::SEND_MODE_ONE_PACKET, 1.0
         );
         return true;
     }
