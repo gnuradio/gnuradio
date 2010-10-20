@@ -38,7 +38,7 @@ SWIG_PYTHON_FLAGS =	\
 	-modern		\
 	-keyword	\
 	-w511		\
-	-outdir .
+	-outdir python
 
 ## standard swig flags used by most components
 
@@ -53,7 +53,7 @@ SWIG_GUILE_FLAGS =	\
 	-guile		\
 	-scm		\
 	-scmstub	\
-	-outdir .
+	-outdir guile
 
 ## standard swig flags used by most components
 
@@ -82,8 +82,7 @@ STD_SWIG_LA_LIB_ADD = -lstdc++
 STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 
 ## SWIG suffix for automake to know about
-
-SUFFIXES = .i .cc .scm
+SUFFIXES = .i .cc .scm .py
 
 ## Create $(srcdir)/Makefile.swig.gen, containing all of the rules
 ## for running SWIG to generate or re-generate outputs.  SWIG file
