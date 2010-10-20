@@ -82,9 +82,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += @NAME@.py @NAME@.cc
+swig_built_sources += @NAME@.py #@NAME@.cc
 if GUILE
-swig_built_sources += @NAME@.scm @NAME@.cc
+swig_built_sources += @NAME@.scm #@NAME@.cc
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -136,10 +136,6 @@ endif				# end of GUILE
 
 # $(python_deps) $(guile_deps): @NAME@.i
 # @NAME@.h @NAME@.py @NAME@.cc: @NAME@.i
-@NAME@.py: @NAME@.i
-@NAME@.scm: @NAME@.i
-@NAME@.h @NAME@.cc: @NAME@.i
-
 guile/@NAME@.scm @NAME@.scm: @NAME@.i
 python/@NAME@.py @NAME@.py: @NAME@.i
 
