@@ -64,12 +64,14 @@ public:
     /*!
      * Tune the usrp device to the desired center frequency.
      * \param freq the desired frequency in Hz
+     * \param chan the channel index 0 to N-1
      * \return a tune result with the actual frequencies
      */
     virtual uhd::tune_result_t set_center_freq(double freq, size_t chan = 0) = 0;
 
     /*!
      * Get the tunable frequency range.
+     * \param chan the channel index 0 to N-1
      * \return the frequency range in Hz
      */
     virtual uhd::freq_range_t get_freq_range(size_t chan = 0) = 0;
@@ -77,17 +79,20 @@ public:
     /*!
      * Set the gain for the dboard.
      * \param gain the gain in dB
+     * \param chan the channel index 0 to N-1
      */
     virtual void set_gain(float gain, size_t chan = 0) = 0;
 
     /*!
      * Get the actual dboard gain setting.
+     * \param chan the channel index 0 to N-1
      * \return the actual gain in dB
      */
     virtual float get_gain(size_t chan = 0) = 0;
 
     /*!
      * Get the settable gain range.
+     * \param chan the channel index 0 to N-1
      * \return the gain range in dB
      */
     virtual uhd::gain_range_t get_gain_range(size_t chan = 0) = 0;
@@ -95,17 +100,20 @@ public:
     /*!
      * Set the antenna to use.
      * \param ant the antenna string
+     * \param chan the channel index 0 to N-1
      */
     virtual void set_antenna(const std::string &ant, size_t chan = 0) = 0;
 
     /*!
      * Get the antenna in use.
+     * \param chan the channel index 0 to N-1
      * \return the antenna string
      */
     virtual std::string get_antenna(size_t chan = 0) = 0;
 
     /*!
      * Get a list of possible antennas.
+     * \param chan the channel index 0 to N-1
      * \return a vector of antenna strings
      */
     virtual std::vector<std::string> get_antennas(size_t chan = 0) = 0;
@@ -113,6 +121,7 @@ public:
     /*!
      * Set the subdevice bandpass filter.
      * \param bandwidth the filter bandwidth in Hz
+     * \param chan the channel index 0 to N-1
      */
     virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
