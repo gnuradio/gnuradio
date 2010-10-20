@@ -247,17 +247,17 @@ $(DEPDIR)/trellis-generate-python-stamp:
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(trellis_swig_args) \
-		-MD -MF $(DEPDIR)/trellis_python.Std \
-		-module trellis -o trellis_python.cc $(WHAT); then \
+		-MD -MF python/$(DEPDIR)/trellis.Std \
+		-module trellis -o python/trellis.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/trellis_python.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/trellis_python.Std \
-			> $(DEPDIR)/trellis_python.Sd; \
-		$(RM) $(DEPDIR)/trellis_python.Std; \
-		$(MV) $(DEPDIR)/trellis_python.Sd $(DEPDIR)/trellis_python.Std; \
+		$(RM) python/$(DEPDIR)/trellis.Sd; \
+		$(SED) 's,\\\\,/,g' < python/$(DEPDIR)/trellis.Std \
+			> python/$(DEPDIR)/trellis.Sd; \
+		$(RM) python/$(DEPDIR)/trellis.Std; \
+		$(MV) python/$(DEPDIR)/trellis.Sd python/$(DEPDIR)/trellis.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/trellis_python.S*; exit 1; \
+	    $(RM) $(DEPDIR)/trellis.S*; exit 1; \
 	fi;
 ##
 ## Mess with the SWIG output .Std dependency file, to create a
@@ -269,27 +269,27 @@ $(DEPDIR)/trellis-generate-python-stamp:
 ##
 ## (1) remove the current dependency file
 ##
-	$(RM) $(DEPDIR)/trellis_python.d
+	$(RM) python/$(DEPDIR)/trellis.d
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/trellis_python.Std $(DEPDIR)/trellis_python.d
+	cp python/$(DEPDIR)/trellis.Std python/$(DEPDIR)/trellis.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##
-	echo "" >> $(DEPDIR)/trellis_python.d
+	echo "" >> python/$(DEPDIR)/trellis.d
 ##
 ## (4) from the SWIG file, remove the first line (the target); remove
 ##     trailing " \" and " " from each line.  Append ":" to each line,
 ##     followed by 2 carriage returns, then append this to the end of
 ##     the dependency file.
 ##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/trellis_python.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/trellis_python.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < python/$(DEPDIR)/trellis.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> python/$(DEPDIR)/trellis.d
 ##
 ## (5) remove the SWIG-generated file
 ##
-	$(RM) $(DEPDIR)/trellis_python.Std
+	$(RM) python/$(DEPDIR)/trellis.Std
 ##
 ## Create the stamp for this filename generation, to signal success in
 ## executing this rule; allows other threads waiting on this process
@@ -301,38 +301,38 @@ $(DEPDIR)/trellis-generate-python-stamp:
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@am__include@ @am__quote@./$(DEPDIR)/trellis_python.d@am__quote@
+@am__include@ @am__quote@./python/$(DEPDIR)/trellis.d@am__quote@
 
 $(DEPDIR)/trellis-generate-guile-stamp:
 if GUILE
 # the comments for the target above apply to this target as well, but it seemed
 # silly to include them twice. The only main change is for guile.
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(trellis_swig_args) \
-		-MD -MF $(DEPDIR)/trellis_guile.Std \
-		-module trellis -o trellis_guile.cc $(WHAT); then \
+	if $(SWIG) $(STD_SWIG_ARGS) $(trellis_swig_args) \
+		-MD -MF guile/$(DEPDIR)/trellis.Std \
+		-module trellis -o guile/trellis.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/trellis_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/trellis_guile.Std \
-			> $(DEPDIR)/trellis_guile.Sd; \
-		$(RM) $(DEPDIR)/trellis_guile.Std; \
-		$(MV) $(DEPDIR)/trellis_guile.Sd $(DEPDIR)/trellis_guile.Std; \
+		$(RM) guile/$(DEPDIR)/trellis.Sd; \
+		$(SED) 's,\\\\,/,g' < guile/$(DEPDIR)/trellis.Std \
+			> guile/$(DEPDIR)/trellis.Sd; \
+		$(RM) guile/$(DEPDIR)/trellis.Std; \
+		$(MV) guile/$(DEPDIR)/trellis.Sd guile/$(DEPDIR)/trellis.Std; \
 	    fi; \
 	else \
-	    $(RM) $(DEPDIR)/trellis_guile.S*; exit 1; \
+	    $(RM) guile/$(DEPDIR)/trellis.S*; exit 1; \
 	fi;
 	touch $(DEPDIR)/trellis-generate-guile-stamp
-	$(RM) $(DEPDIR)/trellis_guile.d
-	cp $(DEPDIR)/trellis_guile.Std $(DEPDIR)/trellis_guile.d
-	echo "" >> $(DEPDIR)/trellis_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/trellis_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/trellis_guile.d
-	$(RM) $(DEPDIR)/trellis_guile.Std
-	touch $(DEPDIR)/trellis-generate-guile-stamp
+	$(RM) guile/$(DEPDIR)/trellis.d
+	cp guile/$(DEPDIR)/trellis.Std $(DEPDIR)/trellis.d
+	echo "" >> guile/$(DEPDIR)/trellis.d
+	$(SED) -e '1d;s, \\,,g;s, ,,g' < guile/$(DEPDIR)/trellis.Std | \
+		awk '{ printf "%s:\n\n", $$0 }' >> guile/$(DEPDIR)/trellis.d
+	$(RM) guile/$(DEPDIR)/trellis.Std
+	touch guile/$(DEPDIR)/trellis-generate-guile-stamp
 else
-	touch $(DEPDIR)/trellis-generate-guile-stamp
+	touch guile/$(DEPDIR)/trellis-generate-guile-stamp
 endif
 
-@am__include@ @am__quote@./$(DEPDIR)/trellis_guile.d@am__quote@
+@am__include@ @am__quote@./$(DEPDIR)/trellis.d@am__quote@
 
 #gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 

@@ -82,9 +82,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime_python.cc
+swig_built_sources += gnuradio_swig_py_runtime.py #gnuradio_swig_py_runtime.cc
 if GUILE
-swig_built_sources += gnuradio_swig_py_runtime.scm gnuradio_swig_py_runtime_guile.cc
+swig_built_sources += gnuradio_swig_py_runtime.scm #gnuradio_swig_py_runtime.cc
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -96,245 +96,52 @@ gnuradio_swig_py_runtime_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_runtime_swiginclude_headers)
 
 gnuradio_swig_py_runtime_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_runtime_python.la
+	_gnuradio_swig_py_runtime.la
 
-_gnuradio_swig_py_runtime_python_la_SOURCES = 		\
-	gnuradio_swig_py_runtime_python.cc		\
+_gnuradio_swig_py_runtime_la_SOURCES = 			\
+	python/gnuradio_swig_py_runtime.cc		\
 	$(gnuradio_swig_py_runtime_la_swig_sources)
 
-_gnuradio_swig_py_runtime_python_la_LIBADD =		\
+_gnuradio_swig_py_runtime_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_runtime_la_swig_libadd)
 
-_gnuradio_swig_py_runtime_python_la_LDFLAGS =		\
+_gnuradio_swig_py_runtime_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_runtime_la_swig_ldflags)
 
-_gnuradio_swig_py_runtime_python_la_CXXFLAGS =		\
+_gnuradio_swig_py_runtime_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_runtime_la_swig_cxxflags)
 
 gnuradio_swig_py_runtime_python_PYTHON =			\
-	gnuradio_swig_py_runtime.py			\
-	$(gnuradio_swig_py_runtime_python)
+	python/gnuradio_swig_py_runtime.py		\
+	$(gnuradio_swig_py_runtime)
 
 if GUILE
-gnuradio_swig_py_runtime_scmlib_LTLIBRARIES = _gnuradio_swig_py_runtime_guile.la
-_gnuradio_swig_py_runtime_guile_la_SOURCES = 		\
-	gnuradio_swig_py_runtime_guile.cc		        \
+gnuradio_swig_py_runtime_scmlib_LTLIBRARIES = gnuradio_swig_py_runtime_guile.la
+gnuradio_swig_py_runtime_guile_la_SOURCES = 		\
+	guile/gnuradio_swig_py_runtime.cc		        \
 	$(gnuradio_swig_py_runtime_la_swig_sources)
 gnuradio_swig_py_runtime_scm_DATA = gnuradio_swig_py_runtime.scm
 
 # Guile can use the same flags as python does
-_gnuradio_swig_py_runtime_guile_la_LIBADD = $(_gnuradio_swig_py_runtime_python_la_LIBADD)
-_gnuradio_swig_py_runtime_guile_la_LDFLAGS = $(_gnuradio_swig_py_runtime_python_la_LDFLAGS)
-_gnuradio_swig_py_runtime_guile_la_CXXFLAGS = $(_gnuradio_swig_py_runtime_python_la_CXXFLAGS)
+gnuradio_swig_py_runtime_guile_la_LIBADD = $(_gnuradio_swig_py_runtime_la_LIBADD)
+gnuradio_swig_py_runtime_guile_la_LDFLAGS = $(_gnuradio_swig_py_runtime_la_LDFLAGS)
+gnuradio_swig_py_runtime_guile_la_CXXFLAGS = $(_gnuradio_swig_py_runtime_la_CXXFLAGS)
 
 endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
 # $(python_deps) $(guile_deps): gnuradio_swig_py_runtime.i
-gnuradio_swig_py_runtime_python.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime_python.cc: gnuradio_swig_py_runtime.i
-## This rule will get called only when MAKE decides that one of the
-## targets needs to be created or re-created, because:
-##
-## * The .i file is newer than any or all of the generated files;
-##
-## * Any or all of the .cc, .h, or .py files does not exist and is
-##   needed (in the case this file is not needed, the rule for it is
-##   ignored); or
-##
-## * Some SWIG-based dependecy of the .cc file isn't met and hence the
-##   .cc file needs be be regenerated.  Explanation: Because MAKE
-##   knows how to handle dependencies for .cc files (regardless of
-##   their name or extension), then the .cc file is used as a target
-##   instead of the .i file -- but with the dependencies of the .i
-##   file.  It is this last reason why the line:
-##
-##     	if test -f $@; then :; else
-##
-##   cannot be used in this case: If a .i file dependecy is not met,
-##   then the .cc file needs to be rebuilt.  But if the stamp is newer
-##   than the .cc file, and the .cc file exists, then in the original
-##   version (with the 'test' above) the internal MAKE call will not
-##   be issued and hence the .cc file will not be rebuilt.
-##
-## Once execution gets to here, it should always proceed no matter the
-## state of a stamp (as discussed in link above).  The
-## $(DEPDIR)/gnuradio_swig_py_runtime-generate stuff is used to allow for parallel
-## builds to "do the right thing".  The stamp has no relationship with
-## either the target files or dependency file; it is used solely for
-## the protection of multiple builds during a given call to MAKE.
-##
-## Catch signals SIGHUP (1), SIGINT (2), SIGPIPE (13), and SIGTERM
-## (15).  At a caught signal, the quoted command will be issued before
-## exiting.  In this case, remove any stamp, whether temporary of not.
-## The trap is valid until the process exits; the process includes all
-## commands appended via "\"s.
-##
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_runtime-generate-*' 1 2 13 15; \
-##
-## Create a temporary directory, which acts as a lock.  The first
-## process to create the directory will succeed and issue the MAKE
-## command to do the actual work, while all subsequent processes will
-## fail -- leading them to wait for the first process to finish.
-##
-	if mkdir $(DEPDIR)/gnuradio_swig_py_runtime-generate-lock 2>/dev/null; then \
-##
-## This code is being executed by the first process to succeed in
-## creating the directory lock.
-##
-## Remove the stamp associated with this filename.
-##
-		rm -f $(DEPDIR)/gnuradio_swig_py_runtime-generate-*stamp; \
-##
-## Tell MAKE to run the rule for creating this stamp.
-##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp WHAT=$<; \
-##
-## Now that the .cc, .h, and .py files have been (re)created from the
-## .i file, future checking of this rule during the same MAKE
-## execution will come back that the rule doesn't need to be executed
-## because none of the conditions mentioned at the start of this rule
-## will be positive.  Remove the the directory lock, which frees up
-## any waiting process(es) to continue.
-##
-		rmdir $(DEPDIR)/gnuradio_swig_py_runtime-generate-lock; \
-	else \
-##
-## This code is being executed by any follower processes while the
-## directory lock is in place.
-##
-## Wait until the first process is done, testing once per second.
-##
-		while test -d $(DEPDIR)/gnuradio_swig_py_runtime-generate-lock; do \
-			sleep 1; \
-		done; \
-##
-## Succeed if and only if the first process succeeded; exit this
-## process returning the status of the generated stamp.
-##
-		test -f $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp; \
-		exit $$?; \
-	fi;
-
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-gnuradio_swig_py_runtime_guile.h gnuradio_swig_py_runtime.scm gnuradio_swig_py_runtime_guile.cc: gnuradio_swig_py_runtime.i
-if GUILE
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_runtime-generate-*' 1 2 13 15; \
-	if mkdir $(DEPDIR)/gnuradio_swig_py_runtime-generate-lock 2>/dev/null; then \
-		rm -f $(DEPDIR)/gnuradio_swig_py_runtime-generate-*stamp; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp WHAT=$<; \
-		rmdir $(DEPDIR)/gnuradio_swig_py_runtime-generate-lock; \
-	else \
-		while test -d $(DEPDIR)/gnuradio_swig_py_runtime-generate-lock; do \
-			sleep 1; \
-		done; \
-		test -f $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp; \
-		exit $$?; \
-	fi;
-endif				# end of GUILE
+# gnuradio_swig_py_runtime.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.cc: gnuradio_swig_py_runtime.i
+guile/gnuradio_swig_py_runtime.scm gnuradio_swig_py_runtime.scm: gnuradio_swig_py_runtime.i
+python/gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.py: gnuradio_swig_py_runtime.i
 
 $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
-## This rule will be called only by the first process issuing the
-## above rule to succeed in creating the lock directory, after
-## removing the actual stamp file in order to guarantee that MAKE will
-## execute this rule.
-##
-## Call SWIG to generate the various output files; special
-## post-processing on 'mingw32' host OS for the dependency file.
-##
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_runtime_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_runtime_python.Std \
-		-module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime_python.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_runtime_python.Std \
-			> $(DEPDIR)/gnuradio_swig_py_runtime_python.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_runtime_python.Sd $(DEPDIR)/gnuradio_swig_py_runtime_python.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.S*; exit 1; \
-	fi;
-##
-## Mess with the SWIG output .Std dependency file, to create a
-## dependecy file valid for the input .i file: Basically, simulate the
-## dependency file created for libraries by GNU's libtool for C++,
-## where all of the dependencies for the target are first listed, then
-## each individual dependency is listed as a target with no further
-## dependencies.
-##
-## (1) remove the current dependency file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.d
-##
-## (2) Copy the whole SWIG file:
-##
-	cp $(DEPDIR)/gnuradio_swig_py_runtime_python.Std $(DEPDIR)/gnuradio_swig_py_runtime_python.d
-##
-## (3) all a carriage return to the end of the dependency file.
-##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_runtime_python.d
-##
-## (4) from the SWIG file, remove the first line (the target); remove
-##     trailing " \" and " " from each line.  Append ":" to each line,
-##     followed by 2 carriage returns, then append this to the end of
-##     the dependency file.
-##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_runtime_python.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_runtime_python.d
-##
-## (5) remove the SWIG-generated file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_python.Std
-##
-## Create the stamp for this filename generation, to signal success in
-## executing this rule; allows other threads waiting on this process
-## to continue.
-##
-	touch $(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp
-
-# KLUDGE: Force runtime include of a SWIG dependency file.  This is
-# not guaranteed to be portable, but will probably work.  If it works,
-# we have accurate dependencies for our swig stuff, which is good.
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_runtime_python.d@am__quote@
 
 $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp:
-if GUILE
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_runtime_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std \
-		-module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std \
-			> $(DEPDIR)/gnuradio_swig_py_runtime_guile.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_runtime_guile.Sd $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp
-	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.d
-	cp $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std $(DEPDIR)/gnuradio_swig_py_runtime_guile.d
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_runtime_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_runtime_guile.d
-	$(RM) $(DEPDIR)/gnuradio_swig_py_runtime_guile.Std
-	touch $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp
-else
-	touch $(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp
-endif
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_runtime_guile.d@am__quote@
-
-#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 
 # -*- Makefile -*-
 #
@@ -420,9 +227,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_general.py gnuradio_swig_py_general_python.cc
+swig_built_sources += gnuradio_swig_py_general.py #gnuradio_swig_py_general.cc
 if GUILE
-swig_built_sources += gnuradio_swig_py_general.scm gnuradio_swig_py_general_guile.cc
+swig_built_sources += gnuradio_swig_py_general.scm #gnuradio_swig_py_general.cc
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -434,245 +241,52 @@ gnuradio_swig_py_general_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_general_swiginclude_headers)
 
 gnuradio_swig_py_general_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_general_python.la
+	_gnuradio_swig_py_general.la
 
-_gnuradio_swig_py_general_python_la_SOURCES = 		\
-	gnuradio_swig_py_general_python.cc		\
+_gnuradio_swig_py_general_la_SOURCES = 			\
+	python/gnuradio_swig_py_general.cc		\
 	$(gnuradio_swig_py_general_la_swig_sources)
 
-_gnuradio_swig_py_general_python_la_LIBADD =		\
+_gnuradio_swig_py_general_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_general_la_swig_libadd)
 
-_gnuradio_swig_py_general_python_la_LDFLAGS =		\
+_gnuradio_swig_py_general_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_general_la_swig_ldflags)
 
-_gnuradio_swig_py_general_python_la_CXXFLAGS =		\
+_gnuradio_swig_py_general_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_general_la_swig_cxxflags)
 
 gnuradio_swig_py_general_python_PYTHON =			\
-	gnuradio_swig_py_general.py			\
-	$(gnuradio_swig_py_general_python)
+	python/gnuradio_swig_py_general.py		\
+	$(gnuradio_swig_py_general)
 
 if GUILE
-gnuradio_swig_py_general_scmlib_LTLIBRARIES = _gnuradio_swig_py_general_guile.la
-_gnuradio_swig_py_general_guile_la_SOURCES = 		\
-	gnuradio_swig_py_general_guile.cc		        \
+gnuradio_swig_py_general_scmlib_LTLIBRARIES = gnuradio_swig_py_general_guile.la
+gnuradio_swig_py_general_guile_la_SOURCES = 		\
+	guile/gnuradio_swig_py_general.cc		        \
 	$(gnuradio_swig_py_general_la_swig_sources)
 gnuradio_swig_py_general_scm_DATA = gnuradio_swig_py_general.scm
 
 # Guile can use the same flags as python does
-_gnuradio_swig_py_general_guile_la_LIBADD = $(_gnuradio_swig_py_general_python_la_LIBADD)
-_gnuradio_swig_py_general_guile_la_LDFLAGS = $(_gnuradio_swig_py_general_python_la_LDFLAGS)
-_gnuradio_swig_py_general_guile_la_CXXFLAGS = $(_gnuradio_swig_py_general_python_la_CXXFLAGS)
+gnuradio_swig_py_general_guile_la_LIBADD = $(_gnuradio_swig_py_general_la_LIBADD)
+gnuradio_swig_py_general_guile_la_LDFLAGS = $(_gnuradio_swig_py_general_la_LDFLAGS)
+gnuradio_swig_py_general_guile_la_CXXFLAGS = $(_gnuradio_swig_py_general_la_CXXFLAGS)
 
 endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
 # $(python_deps) $(guile_deps): gnuradio_swig_py_general.i
-gnuradio_swig_py_general_python.h gnuradio_swig_py_general.py gnuradio_swig_py_general_python.cc: gnuradio_swig_py_general.i
-## This rule will get called only when MAKE decides that one of the
-## targets needs to be created or re-created, because:
-##
-## * The .i file is newer than any or all of the generated files;
-##
-## * Any or all of the .cc, .h, or .py files does not exist and is
-##   needed (in the case this file is not needed, the rule for it is
-##   ignored); or
-##
-## * Some SWIG-based dependecy of the .cc file isn't met and hence the
-##   .cc file needs be be regenerated.  Explanation: Because MAKE
-##   knows how to handle dependencies for .cc files (regardless of
-##   their name or extension), then the .cc file is used as a target
-##   instead of the .i file -- but with the dependencies of the .i
-##   file.  It is this last reason why the line:
-##
-##     	if test -f $@; then :; else
-##
-##   cannot be used in this case: If a .i file dependecy is not met,
-##   then the .cc file needs to be rebuilt.  But if the stamp is newer
-##   than the .cc file, and the .cc file exists, then in the original
-##   version (with the 'test' above) the internal MAKE call will not
-##   be issued and hence the .cc file will not be rebuilt.
-##
-## Once execution gets to here, it should always proceed no matter the
-## state of a stamp (as discussed in link above).  The
-## $(DEPDIR)/gnuradio_swig_py_general-generate stuff is used to allow for parallel
-## builds to "do the right thing".  The stamp has no relationship with
-## either the target files or dependency file; it is used solely for
-## the protection of multiple builds during a given call to MAKE.
-##
-## Catch signals SIGHUP (1), SIGINT (2), SIGPIPE (13), and SIGTERM
-## (15).  At a caught signal, the quoted command will be issued before
-## exiting.  In this case, remove any stamp, whether temporary of not.
-## The trap is valid until the process exits; the process includes all
-## commands appended via "\"s.
-##
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_general-generate-*' 1 2 13 15; \
-##
-## Create a temporary directory, which acts as a lock.  The first
-## process to create the directory will succeed and issue the MAKE
-## command to do the actual work, while all subsequent processes will
-## fail -- leading them to wait for the first process to finish.
-##
-	if mkdir $(DEPDIR)/gnuradio_swig_py_general-generate-lock 2>/dev/null; then \
-##
-## This code is being executed by the first process to succeed in
-## creating the directory lock.
-##
-## Remove the stamp associated with this filename.
-##
-		rm -f $(DEPDIR)/gnuradio_swig_py_general-generate-*stamp; \
-##
-## Tell MAKE to run the rule for creating this stamp.
-##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp WHAT=$<; \
-##
-## Now that the .cc, .h, and .py files have been (re)created from the
-## .i file, future checking of this rule during the same MAKE
-## execution will come back that the rule doesn't need to be executed
-## because none of the conditions mentioned at the start of this rule
-## will be positive.  Remove the the directory lock, which frees up
-## any waiting process(es) to continue.
-##
-		rmdir $(DEPDIR)/gnuradio_swig_py_general-generate-lock; \
-	else \
-##
-## This code is being executed by any follower processes while the
-## directory lock is in place.
-##
-## Wait until the first process is done, testing once per second.
-##
-		while test -d $(DEPDIR)/gnuradio_swig_py_general-generate-lock; do \
-			sleep 1; \
-		done; \
-##
-## Succeed if and only if the first process succeeded; exit this
-## process returning the status of the generated stamp.
-##
-		test -f $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp; \
-		exit $$?; \
-	fi;
-
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-gnuradio_swig_py_general_guile.h gnuradio_swig_py_general.scm gnuradio_swig_py_general_guile.cc: gnuradio_swig_py_general.i
-if GUILE
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_general-generate-*' 1 2 13 15; \
-	if mkdir $(DEPDIR)/gnuradio_swig_py_general-generate-lock 2>/dev/null; then \
-		rm -f $(DEPDIR)/gnuradio_swig_py_general-generate-*stamp; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp WHAT=$<; \
-		rmdir $(DEPDIR)/gnuradio_swig_py_general-generate-lock; \
-	else \
-		while test -d $(DEPDIR)/gnuradio_swig_py_general-generate-lock; do \
-			sleep 1; \
-		done; \
-		test -f $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp; \
-		exit $$?; \
-	fi;
-endif				# end of GUILE
+# gnuradio_swig_py_general.h gnuradio_swig_py_general.py gnuradio_swig_py_general.cc: gnuradio_swig_py_general.i
+guile/gnuradio_swig_py_general.scm gnuradio_swig_py_general.scm: gnuradio_swig_py_general.i
+python/gnuradio_swig_py_general.py gnuradio_swig_py_general.py: gnuradio_swig_py_general.i
 
 $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
-## This rule will be called only by the first process issuing the
-## above rule to succeed in creating the lock directory, after
-## removing the actual stamp file in order to guarantee that MAKE will
-## execute this rule.
-##
-## Call SWIG to generate the various output files; special
-## post-processing on 'mingw32' host OS for the dependency file.
-##
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_general_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_general_python.Std \
-		-module gnuradio_swig_py_general -o gnuradio_swig_py_general_python.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_general_python.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_general_python.Std \
-			> $(DEPDIR)/gnuradio_swig_py_general_python.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_general_python.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_general_python.Sd $(DEPDIR)/gnuradio_swig_py_general_python.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_general_python.S*; exit 1; \
-	fi;
-##
-## Mess with the SWIG output .Std dependency file, to create a
-## dependecy file valid for the input .i file: Basically, simulate the
-## dependency file created for libraries by GNU's libtool for C++,
-## where all of the dependencies for the target are first listed, then
-## each individual dependency is listed as a target with no further
-## dependencies.
-##
-## (1) remove the current dependency file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_general_python.d
-##
-## (2) Copy the whole SWIG file:
-##
-	cp $(DEPDIR)/gnuradio_swig_py_general_python.Std $(DEPDIR)/gnuradio_swig_py_general_python.d
-##
-## (3) all a carriage return to the end of the dependency file.
-##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_general_python.d
-##
-## (4) from the SWIG file, remove the first line (the target); remove
-##     trailing " \" and " " from each line.  Append ":" to each line,
-##     followed by 2 carriage returns, then append this to the end of
-##     the dependency file.
-##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_general_python.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_general_python.d
-##
-## (5) remove the SWIG-generated file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_general_python.Std
-##
-## Create the stamp for this filename generation, to signal success in
-## executing this rule; allows other threads waiting on this process
-## to continue.
-##
-	touch $(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp
-
-# KLUDGE: Force runtime include of a SWIG dependency file.  This is
-# not guaranteed to be portable, but will probably work.  If it works,
-# we have accurate dependencies for our swig stuff, which is good.
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_general_python.d@am__quote@
 
 $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp:
-if GUILE
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_general_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_general_guile.Std \
-		-module gnuradio_swig_py_general -o gnuradio_swig_py_general_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_general_guile.Std \
-			> $(DEPDIR)/gnuradio_swig_py_general_guile.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_general_guile.Sd $(DEPDIR)/gnuradio_swig_py_general_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp
-	$(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.d
-	cp $(DEPDIR)/gnuradio_swig_py_general_guile.Std $(DEPDIR)/gnuradio_swig_py_general_guile.d
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_general_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_general_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_general_guile.d
-	$(RM) $(DEPDIR)/gnuradio_swig_py_general_guile.Std
-	touch $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp
-else
-	touch $(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp
-endif
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_general_guile.d@am__quote@
-
-#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 
 # -*- Makefile -*-
 #
@@ -758,9 +372,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen_python.cc
+swig_built_sources += gnuradio_swig_py_gengen.py #gnuradio_swig_py_gengen.cc
 if GUILE
-swig_built_sources += gnuradio_swig_py_gengen.scm gnuradio_swig_py_gengen_guile.cc
+swig_built_sources += gnuradio_swig_py_gengen.scm #gnuradio_swig_py_gengen.cc
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -772,245 +386,52 @@ gnuradio_swig_py_gengen_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_gengen_swiginclude_headers)
 
 gnuradio_swig_py_gengen_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_gengen_python.la
+	_gnuradio_swig_py_gengen.la
 
-_gnuradio_swig_py_gengen_python_la_SOURCES = 		\
-	gnuradio_swig_py_gengen_python.cc		\
+_gnuradio_swig_py_gengen_la_SOURCES = 			\
+	python/gnuradio_swig_py_gengen.cc		\
 	$(gnuradio_swig_py_gengen_la_swig_sources)
 
-_gnuradio_swig_py_gengen_python_la_LIBADD =		\
+_gnuradio_swig_py_gengen_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_gengen_la_swig_libadd)
 
-_gnuradio_swig_py_gengen_python_la_LDFLAGS =		\
+_gnuradio_swig_py_gengen_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_gengen_la_swig_ldflags)
 
-_gnuradio_swig_py_gengen_python_la_CXXFLAGS =		\
+_gnuradio_swig_py_gengen_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_gengen_la_swig_cxxflags)
 
 gnuradio_swig_py_gengen_python_PYTHON =			\
-	gnuradio_swig_py_gengen.py			\
-	$(gnuradio_swig_py_gengen_python)
+	python/gnuradio_swig_py_gengen.py		\
+	$(gnuradio_swig_py_gengen)
 
 if GUILE
-gnuradio_swig_py_gengen_scmlib_LTLIBRARIES = _gnuradio_swig_py_gengen_guile.la
-_gnuradio_swig_py_gengen_guile_la_SOURCES = 		\
-	gnuradio_swig_py_gengen_guile.cc		        \
+gnuradio_swig_py_gengen_scmlib_LTLIBRARIES = gnuradio_swig_py_gengen_guile.la
+gnuradio_swig_py_gengen_guile_la_SOURCES = 		\
+	guile/gnuradio_swig_py_gengen.cc		        \
 	$(gnuradio_swig_py_gengen_la_swig_sources)
 gnuradio_swig_py_gengen_scm_DATA = gnuradio_swig_py_gengen.scm
 
 # Guile can use the same flags as python does
-_gnuradio_swig_py_gengen_guile_la_LIBADD = $(_gnuradio_swig_py_gengen_python_la_LIBADD)
-_gnuradio_swig_py_gengen_guile_la_LDFLAGS = $(_gnuradio_swig_py_gengen_python_la_LDFLAGS)
-_gnuradio_swig_py_gengen_guile_la_CXXFLAGS = $(_gnuradio_swig_py_gengen_python_la_CXXFLAGS)
+gnuradio_swig_py_gengen_guile_la_LIBADD = $(_gnuradio_swig_py_gengen_la_LIBADD)
+gnuradio_swig_py_gengen_guile_la_LDFLAGS = $(_gnuradio_swig_py_gengen_la_LDFLAGS)
+gnuradio_swig_py_gengen_guile_la_CXXFLAGS = $(_gnuradio_swig_py_gengen_la_CXXFLAGS)
 
 endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
 # $(python_deps) $(guile_deps): gnuradio_swig_py_gengen.i
-gnuradio_swig_py_gengen_python.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen_python.cc: gnuradio_swig_py_gengen.i
-## This rule will get called only when MAKE decides that one of the
-## targets needs to be created or re-created, because:
-##
-## * The .i file is newer than any or all of the generated files;
-##
-## * Any or all of the .cc, .h, or .py files does not exist and is
-##   needed (in the case this file is not needed, the rule for it is
-##   ignored); or
-##
-## * Some SWIG-based dependecy of the .cc file isn't met and hence the
-##   .cc file needs be be regenerated.  Explanation: Because MAKE
-##   knows how to handle dependencies for .cc files (regardless of
-##   their name or extension), then the .cc file is used as a target
-##   instead of the .i file -- but with the dependencies of the .i
-##   file.  It is this last reason why the line:
-##
-##     	if test -f $@; then :; else
-##
-##   cannot be used in this case: If a .i file dependecy is not met,
-##   then the .cc file needs to be rebuilt.  But if the stamp is newer
-##   than the .cc file, and the .cc file exists, then in the original
-##   version (with the 'test' above) the internal MAKE call will not
-##   be issued and hence the .cc file will not be rebuilt.
-##
-## Once execution gets to here, it should always proceed no matter the
-## state of a stamp (as discussed in link above).  The
-## $(DEPDIR)/gnuradio_swig_py_gengen-generate stuff is used to allow for parallel
-## builds to "do the right thing".  The stamp has no relationship with
-## either the target files or dependency file; it is used solely for
-## the protection of multiple builds during a given call to MAKE.
-##
-## Catch signals SIGHUP (1), SIGINT (2), SIGPIPE (13), and SIGTERM
-## (15).  At a caught signal, the quoted command will be issued before
-## exiting.  In this case, remove any stamp, whether temporary of not.
-## The trap is valid until the process exits; the process includes all
-## commands appended via "\"s.
-##
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_gengen-generate-*' 1 2 13 15; \
-##
-## Create a temporary directory, which acts as a lock.  The first
-## process to create the directory will succeed and issue the MAKE
-## command to do the actual work, while all subsequent processes will
-## fail -- leading them to wait for the first process to finish.
-##
-	if mkdir $(DEPDIR)/gnuradio_swig_py_gengen-generate-lock 2>/dev/null; then \
-##
-## This code is being executed by the first process to succeed in
-## creating the directory lock.
-##
-## Remove the stamp associated with this filename.
-##
-		rm -f $(DEPDIR)/gnuradio_swig_py_gengen-generate-*stamp; \
-##
-## Tell MAKE to run the rule for creating this stamp.
-##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp WHAT=$<; \
-##
-## Now that the .cc, .h, and .py files have been (re)created from the
-## .i file, future checking of this rule during the same MAKE
-## execution will come back that the rule doesn't need to be executed
-## because none of the conditions mentioned at the start of this rule
-## will be positive.  Remove the the directory lock, which frees up
-## any waiting process(es) to continue.
-##
-		rmdir $(DEPDIR)/gnuradio_swig_py_gengen-generate-lock; \
-	else \
-##
-## This code is being executed by any follower processes while the
-## directory lock is in place.
-##
-## Wait until the first process is done, testing once per second.
-##
-		while test -d $(DEPDIR)/gnuradio_swig_py_gengen-generate-lock; do \
-			sleep 1; \
-		done; \
-##
-## Succeed if and only if the first process succeeded; exit this
-## process returning the status of the generated stamp.
-##
-		test -f $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp; \
-		exit $$?; \
-	fi;
-
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-gnuradio_swig_py_gengen_guile.h gnuradio_swig_py_gengen.scm gnuradio_swig_py_gengen_guile.cc: gnuradio_swig_py_gengen.i
-if GUILE
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_gengen-generate-*' 1 2 13 15; \
-	if mkdir $(DEPDIR)/gnuradio_swig_py_gengen-generate-lock 2>/dev/null; then \
-		rm -f $(DEPDIR)/gnuradio_swig_py_gengen-generate-*stamp; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp WHAT=$<; \
-		rmdir $(DEPDIR)/gnuradio_swig_py_gengen-generate-lock; \
-	else \
-		while test -d $(DEPDIR)/gnuradio_swig_py_gengen-generate-lock; do \
-			sleep 1; \
-		done; \
-		test -f $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp; \
-		exit $$?; \
-	fi;
-endif				# end of GUILE
+# gnuradio_swig_py_gengen.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen.cc: gnuradio_swig_py_gengen.i
+guile/gnuradio_swig_py_gengen.scm gnuradio_swig_py_gengen.scm: gnuradio_swig_py_gengen.i
+python/gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen.py: gnuradio_swig_py_gengen.i
 
 $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
-## This rule will be called only by the first process issuing the
-## above rule to succeed in creating the lock directory, after
-## removing the actual stamp file in order to guarantee that MAKE will
-## execute this rule.
-##
-## Call SWIG to generate the various output files; special
-## post-processing on 'mingw32' host OS for the dependency file.
-##
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_gengen_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_gengen_python.Std \
-		-module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen_python.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_gengen_python.Std \
-			> $(DEPDIR)/gnuradio_swig_py_gengen_python.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_gengen_python.Sd $(DEPDIR)/gnuradio_swig_py_gengen_python.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.S*; exit 1; \
-	fi;
-##
-## Mess with the SWIG output .Std dependency file, to create a
-## dependecy file valid for the input .i file: Basically, simulate the
-## dependency file created for libraries by GNU's libtool for C++,
-## where all of the dependencies for the target are first listed, then
-## each individual dependency is listed as a target with no further
-## dependencies.
-##
-## (1) remove the current dependency file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.d
-##
-## (2) Copy the whole SWIG file:
-##
-	cp $(DEPDIR)/gnuradio_swig_py_gengen_python.Std $(DEPDIR)/gnuradio_swig_py_gengen_python.d
-##
-## (3) all a carriage return to the end of the dependency file.
-##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_gengen_python.d
-##
-## (4) from the SWIG file, remove the first line (the target); remove
-##     trailing " \" and " " from each line.  Append ":" to each line,
-##     followed by 2 carriage returns, then append this to the end of
-##     the dependency file.
-##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_gengen_python.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_gengen_python.d
-##
-## (5) remove the SWIG-generated file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_python.Std
-##
-## Create the stamp for this filename generation, to signal success in
-## executing this rule; allows other threads waiting on this process
-## to continue.
-##
-	touch $(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp
-
-# KLUDGE: Force runtime include of a SWIG dependency file.  This is
-# not guaranteed to be portable, but will probably work.  If it works,
-# we have accurate dependencies for our swig stuff, which is good.
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_gengen_python.d@am__quote@
 
 $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp:
-if GUILE
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_gengen_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std \
-		-module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std \
-			> $(DEPDIR)/gnuradio_swig_py_gengen_guile.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_gengen_guile.Sd $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp
-	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.d
-	cp $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std $(DEPDIR)/gnuradio_swig_py_gengen_guile.d
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_gengen_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_gengen_guile.d
-	$(RM) $(DEPDIR)/gnuradio_swig_py_gengen_guile.Std
-	touch $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp
-else
-	touch $(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp
-endif
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_gengen_guile.d@am__quote@
-
-#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 
 # -*- Makefile -*-
 #
@@ -1096,9 +517,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_filter.py gnuradio_swig_py_filter_python.cc
+swig_built_sources += gnuradio_swig_py_filter.py #gnuradio_swig_py_filter.cc
 if GUILE
-swig_built_sources += gnuradio_swig_py_filter.scm gnuradio_swig_py_filter_guile.cc
+swig_built_sources += gnuradio_swig_py_filter.scm #gnuradio_swig_py_filter.cc
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -1110,245 +531,52 @@ gnuradio_swig_py_filter_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_filter_swiginclude_headers)
 
 gnuradio_swig_py_filter_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_filter_python.la
+	_gnuradio_swig_py_filter.la
 
-_gnuradio_swig_py_filter_python_la_SOURCES = 		\
-	gnuradio_swig_py_filter_python.cc		\
+_gnuradio_swig_py_filter_la_SOURCES = 			\
+	python/gnuradio_swig_py_filter.cc		\
 	$(gnuradio_swig_py_filter_la_swig_sources)
 
-_gnuradio_swig_py_filter_python_la_LIBADD =		\
+_gnuradio_swig_py_filter_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_filter_la_swig_libadd)
 
-_gnuradio_swig_py_filter_python_la_LDFLAGS =		\
+_gnuradio_swig_py_filter_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_filter_la_swig_ldflags)
 
-_gnuradio_swig_py_filter_python_la_CXXFLAGS =		\
+_gnuradio_swig_py_filter_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_filter_la_swig_cxxflags)
 
 gnuradio_swig_py_filter_python_PYTHON =			\
-	gnuradio_swig_py_filter.py			\
-	$(gnuradio_swig_py_filter_python)
+	python/gnuradio_swig_py_filter.py		\
+	$(gnuradio_swig_py_filter)
 
 if GUILE
-gnuradio_swig_py_filter_scmlib_LTLIBRARIES = _gnuradio_swig_py_filter_guile.la
-_gnuradio_swig_py_filter_guile_la_SOURCES = 		\
-	gnuradio_swig_py_filter_guile.cc		        \
+gnuradio_swig_py_filter_scmlib_LTLIBRARIES = gnuradio_swig_py_filter_guile.la
+gnuradio_swig_py_filter_guile_la_SOURCES = 		\
+	guile/gnuradio_swig_py_filter.cc		        \
 	$(gnuradio_swig_py_filter_la_swig_sources)
 gnuradio_swig_py_filter_scm_DATA = gnuradio_swig_py_filter.scm
 
 # Guile can use the same flags as python does
-_gnuradio_swig_py_filter_guile_la_LIBADD = $(_gnuradio_swig_py_filter_python_la_LIBADD)
-_gnuradio_swig_py_filter_guile_la_LDFLAGS = $(_gnuradio_swig_py_filter_python_la_LDFLAGS)
-_gnuradio_swig_py_filter_guile_la_CXXFLAGS = $(_gnuradio_swig_py_filter_python_la_CXXFLAGS)
+gnuradio_swig_py_filter_guile_la_LIBADD = $(_gnuradio_swig_py_filter_la_LIBADD)
+gnuradio_swig_py_filter_guile_la_LDFLAGS = $(_gnuradio_swig_py_filter_la_LDFLAGS)
+gnuradio_swig_py_filter_guile_la_CXXFLAGS = $(_gnuradio_swig_py_filter_la_CXXFLAGS)
 
 endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
 # $(python_deps) $(guile_deps): gnuradio_swig_py_filter.i
-gnuradio_swig_py_filter_python.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter_python.cc: gnuradio_swig_py_filter.i
-## This rule will get called only when MAKE decides that one of the
-## targets needs to be created or re-created, because:
-##
-## * The .i file is newer than any or all of the generated files;
-##
-## * Any or all of the .cc, .h, or .py files does not exist and is
-##   needed (in the case this file is not needed, the rule for it is
-##   ignored); or
-##
-## * Some SWIG-based dependecy of the .cc file isn't met and hence the
-##   .cc file needs be be regenerated.  Explanation: Because MAKE
-##   knows how to handle dependencies for .cc files (regardless of
-##   their name or extension), then the .cc file is used as a target
-##   instead of the .i file -- but with the dependencies of the .i
-##   file.  It is this last reason why the line:
-##
-##     	if test -f $@; then :; else
-##
-##   cannot be used in this case: If a .i file dependecy is not met,
-##   then the .cc file needs to be rebuilt.  But if the stamp is newer
-##   than the .cc file, and the .cc file exists, then in the original
-##   version (with the 'test' above) the internal MAKE call will not
-##   be issued and hence the .cc file will not be rebuilt.
-##
-## Once execution gets to here, it should always proceed no matter the
-## state of a stamp (as discussed in link above).  The
-## $(DEPDIR)/gnuradio_swig_py_filter-generate stuff is used to allow for parallel
-## builds to "do the right thing".  The stamp has no relationship with
-## either the target files or dependency file; it is used solely for
-## the protection of multiple builds during a given call to MAKE.
-##
-## Catch signals SIGHUP (1), SIGINT (2), SIGPIPE (13), and SIGTERM
-## (15).  At a caught signal, the quoted command will be issued before
-## exiting.  In this case, remove any stamp, whether temporary of not.
-## The trap is valid until the process exits; the process includes all
-## commands appended via "\"s.
-##
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_filter-generate-*' 1 2 13 15; \
-##
-## Create a temporary directory, which acts as a lock.  The first
-## process to create the directory will succeed and issue the MAKE
-## command to do the actual work, while all subsequent processes will
-## fail -- leading them to wait for the first process to finish.
-##
-	if mkdir $(DEPDIR)/gnuradio_swig_py_filter-generate-lock 2>/dev/null; then \
-##
-## This code is being executed by the first process to succeed in
-## creating the directory lock.
-##
-## Remove the stamp associated with this filename.
-##
-		rm -f $(DEPDIR)/gnuradio_swig_py_filter-generate-*stamp; \
-##
-## Tell MAKE to run the rule for creating this stamp.
-##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp WHAT=$<; \
-##
-## Now that the .cc, .h, and .py files have been (re)created from the
-## .i file, future checking of this rule during the same MAKE
-## execution will come back that the rule doesn't need to be executed
-## because none of the conditions mentioned at the start of this rule
-## will be positive.  Remove the the directory lock, which frees up
-## any waiting process(es) to continue.
-##
-		rmdir $(DEPDIR)/gnuradio_swig_py_filter-generate-lock; \
-	else \
-##
-## This code is being executed by any follower processes while the
-## directory lock is in place.
-##
-## Wait until the first process is done, testing once per second.
-##
-		while test -d $(DEPDIR)/gnuradio_swig_py_filter-generate-lock; do \
-			sleep 1; \
-		done; \
-##
-## Succeed if and only if the first process succeeded; exit this
-## process returning the status of the generated stamp.
-##
-		test -f $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp; \
-		exit $$?; \
-	fi;
-
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-gnuradio_swig_py_filter_guile.h gnuradio_swig_py_filter.scm gnuradio_swig_py_filter_guile.cc: gnuradio_swig_py_filter.i
-if GUILE
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_filter-generate-*' 1 2 13 15; \
-	if mkdir $(DEPDIR)/gnuradio_swig_py_filter-generate-lock 2>/dev/null; then \
-		rm -f $(DEPDIR)/gnuradio_swig_py_filter-generate-*stamp; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp WHAT=$<; \
-		rmdir $(DEPDIR)/gnuradio_swig_py_filter-generate-lock; \
-	else \
-		while test -d $(DEPDIR)/gnuradio_swig_py_filter-generate-lock; do \
-			sleep 1; \
-		done; \
-		test -f $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp; \
-		exit $$?; \
-	fi;
-endif				# end of GUILE
+# gnuradio_swig_py_filter.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter.cc: gnuradio_swig_py_filter.i
+guile/gnuradio_swig_py_filter.scm gnuradio_swig_py_filter.scm: gnuradio_swig_py_filter.i
+python/gnuradio_swig_py_filter.py gnuradio_swig_py_filter.py: gnuradio_swig_py_filter.i
 
 $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
-## This rule will be called only by the first process issuing the
-## above rule to succeed in creating the lock directory, after
-## removing the actual stamp file in order to guarantee that MAKE will
-## execute this rule.
-##
-## Call SWIG to generate the various output files; special
-## post-processing on 'mingw32' host OS for the dependency file.
-##
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_filter_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_filter_python.Std \
-		-module gnuradio_swig_py_filter -o gnuradio_swig_py_filter_python.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_filter_python.Std \
-			> $(DEPDIR)/gnuradio_swig_py_filter_python.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_filter_python.Sd $(DEPDIR)/gnuradio_swig_py_filter_python.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.S*; exit 1; \
-	fi;
-##
-## Mess with the SWIG output .Std dependency file, to create a
-## dependecy file valid for the input .i file: Basically, simulate the
-## dependency file created for libraries by GNU's libtool for C++,
-## where all of the dependencies for the target are first listed, then
-## each individual dependency is listed as a target with no further
-## dependencies.
-##
-## (1) remove the current dependency file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.d
-##
-## (2) Copy the whole SWIG file:
-##
-	cp $(DEPDIR)/gnuradio_swig_py_filter_python.Std $(DEPDIR)/gnuradio_swig_py_filter_python.d
-##
-## (3) all a carriage return to the end of the dependency file.
-##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_filter_python.d
-##
-## (4) from the SWIG file, remove the first line (the target); remove
-##     trailing " \" and " " from each line.  Append ":" to each line,
-##     followed by 2 carriage returns, then append this to the end of
-##     the dependency file.
-##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_filter_python.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_filter_python.d
-##
-## (5) remove the SWIG-generated file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_filter_python.Std
-##
-## Create the stamp for this filename generation, to signal success in
-## executing this rule; allows other threads waiting on this process
-## to continue.
-##
-	touch $(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp
-
-# KLUDGE: Force runtime include of a SWIG dependency file.  This is
-# not guaranteed to be portable, but will probably work.  If it works,
-# we have accurate dependencies for our swig stuff, which is good.
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_filter_python.d@am__quote@
 
 $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp:
-if GUILE
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_filter_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_filter_guile.Std \
-		-module gnuradio_swig_py_filter -o gnuradio_swig_py_filter_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_filter_guile.Std \
-			> $(DEPDIR)/gnuradio_swig_py_filter_guile.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_filter_guile.Sd $(DEPDIR)/gnuradio_swig_py_filter_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp
-	$(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.d
-	cp $(DEPDIR)/gnuradio_swig_py_filter_guile.Std $(DEPDIR)/gnuradio_swig_py_filter_guile.d
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_filter_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_filter_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_filter_guile.d
-	$(RM) $(DEPDIR)/gnuradio_swig_py_filter_guile.Std
-	touch $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp
-else
-	touch $(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp
-endif
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_filter_guile.d@am__quote@
-
-#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 
 # -*- Makefile -*-
 #
@@ -1434,9 +662,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_io.py gnuradio_swig_py_io_python.cc
+swig_built_sources += gnuradio_swig_py_io.py #gnuradio_swig_py_io.cc
 if GUILE
-swig_built_sources += gnuradio_swig_py_io.scm gnuradio_swig_py_io_guile.cc
+swig_built_sources += gnuradio_swig_py_io.scm #gnuradio_swig_py_io.cc
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -1448,245 +676,52 @@ gnuradio_swig_py_io_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_io_swiginclude_headers)
 
 gnuradio_swig_py_io_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_io_python.la
+	_gnuradio_swig_py_io.la
 
-_gnuradio_swig_py_io_python_la_SOURCES = 		\
-	gnuradio_swig_py_io_python.cc		\
+_gnuradio_swig_py_io_la_SOURCES = 			\
+	python/gnuradio_swig_py_io.cc		\
 	$(gnuradio_swig_py_io_la_swig_sources)
 
-_gnuradio_swig_py_io_python_la_LIBADD =		\
+_gnuradio_swig_py_io_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_io_la_swig_libadd)
 
-_gnuradio_swig_py_io_python_la_LDFLAGS =		\
+_gnuradio_swig_py_io_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_io_la_swig_ldflags)
 
-_gnuradio_swig_py_io_python_la_CXXFLAGS =		\
+_gnuradio_swig_py_io_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_io_la_swig_cxxflags)
 
 gnuradio_swig_py_io_python_PYTHON =			\
-	gnuradio_swig_py_io.py			\
-	$(gnuradio_swig_py_io_python)
+	python/gnuradio_swig_py_io.py		\
+	$(gnuradio_swig_py_io)
 
 if GUILE
-gnuradio_swig_py_io_scmlib_LTLIBRARIES = _gnuradio_swig_py_io_guile.la
-_gnuradio_swig_py_io_guile_la_SOURCES = 		\
-	gnuradio_swig_py_io_guile.cc		        \
+gnuradio_swig_py_io_scmlib_LTLIBRARIES = gnuradio_swig_py_io_guile.la
+gnuradio_swig_py_io_guile_la_SOURCES = 		\
+	guile/gnuradio_swig_py_io.cc		        \
 	$(gnuradio_swig_py_io_la_swig_sources)
 gnuradio_swig_py_io_scm_DATA = gnuradio_swig_py_io.scm
 
 # Guile can use the same flags as python does
-_gnuradio_swig_py_io_guile_la_LIBADD = $(_gnuradio_swig_py_io_python_la_LIBADD)
-_gnuradio_swig_py_io_guile_la_LDFLAGS = $(_gnuradio_swig_py_io_python_la_LDFLAGS)
-_gnuradio_swig_py_io_guile_la_CXXFLAGS = $(_gnuradio_swig_py_io_python_la_CXXFLAGS)
+gnuradio_swig_py_io_guile_la_LIBADD = $(_gnuradio_swig_py_io_la_LIBADD)
+gnuradio_swig_py_io_guile_la_LDFLAGS = $(_gnuradio_swig_py_io_la_LDFLAGS)
+gnuradio_swig_py_io_guile_la_CXXFLAGS = $(_gnuradio_swig_py_io_la_CXXFLAGS)
 
 endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
 # $(python_deps) $(guile_deps): gnuradio_swig_py_io.i
-gnuradio_swig_py_io_python.h gnuradio_swig_py_io.py gnuradio_swig_py_io_python.cc: gnuradio_swig_py_io.i
-## This rule will get called only when MAKE decides that one of the
-## targets needs to be created or re-created, because:
-##
-## * The .i file is newer than any or all of the generated files;
-##
-## * Any or all of the .cc, .h, or .py files does not exist and is
-##   needed (in the case this file is not needed, the rule for it is
-##   ignored); or
-##
-## * Some SWIG-based dependecy of the .cc file isn't met and hence the
-##   .cc file needs be be regenerated.  Explanation: Because MAKE
-##   knows how to handle dependencies for .cc files (regardless of
-##   their name or extension), then the .cc file is used as a target
-##   instead of the .i file -- but with the dependencies of the .i
-##   file.  It is this last reason why the line:
-##
-##     	if test -f $@; then :; else
-##
-##   cannot be used in this case: If a .i file dependecy is not met,
-##   then the .cc file needs to be rebuilt.  But if the stamp is newer
-##   than the .cc file, and the .cc file exists, then in the original
-##   version (with the 'test' above) the internal MAKE call will not
-##   be issued and hence the .cc file will not be rebuilt.
-##
-## Once execution gets to here, it should always proceed no matter the
-## state of a stamp (as discussed in link above).  The
-## $(DEPDIR)/gnuradio_swig_py_io-generate stuff is used to allow for parallel
-## builds to "do the right thing".  The stamp has no relationship with
-## either the target files or dependency file; it is used solely for
-## the protection of multiple builds during a given call to MAKE.
-##
-## Catch signals SIGHUP (1), SIGINT (2), SIGPIPE (13), and SIGTERM
-## (15).  At a caught signal, the quoted command will be issued before
-## exiting.  In this case, remove any stamp, whether temporary of not.
-## The trap is valid until the process exits; the process includes all
-## commands appended via "\"s.
-##
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_io-generate-*' 1 2 13 15; \
-##
-## Create a temporary directory, which acts as a lock.  The first
-## process to create the directory will succeed and issue the MAKE
-## command to do the actual work, while all subsequent processes will
-## fail -- leading them to wait for the first process to finish.
-##
-	if mkdir $(DEPDIR)/gnuradio_swig_py_io-generate-lock 2>/dev/null; then \
-##
-## This code is being executed by the first process to succeed in
-## creating the directory lock.
-##
-## Remove the stamp associated with this filename.
-##
-		rm -f $(DEPDIR)/gnuradio_swig_py_io-generate-*stamp; \
-##
-## Tell MAKE to run the rule for creating this stamp.
-##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp WHAT=$<; \
-##
-## Now that the .cc, .h, and .py files have been (re)created from the
-## .i file, future checking of this rule during the same MAKE
-## execution will come back that the rule doesn't need to be executed
-## because none of the conditions mentioned at the start of this rule
-## will be positive.  Remove the the directory lock, which frees up
-## any waiting process(es) to continue.
-##
-		rmdir $(DEPDIR)/gnuradio_swig_py_io-generate-lock; \
-	else \
-##
-## This code is being executed by any follower processes while the
-## directory lock is in place.
-##
-## Wait until the first process is done, testing once per second.
-##
-		while test -d $(DEPDIR)/gnuradio_swig_py_io-generate-lock; do \
-			sleep 1; \
-		done; \
-##
-## Succeed if and only if the first process succeeded; exit this
-## process returning the status of the generated stamp.
-##
-		test -f $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp; \
-		exit $$?; \
-	fi;
-
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-gnuradio_swig_py_io_guile.h gnuradio_swig_py_io.scm gnuradio_swig_py_io_guile.cc: gnuradio_swig_py_io.i
-if GUILE
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_io-generate-*' 1 2 13 15; \
-	if mkdir $(DEPDIR)/gnuradio_swig_py_io-generate-lock 2>/dev/null; then \
-		rm -f $(DEPDIR)/gnuradio_swig_py_io-generate-*stamp; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp WHAT=$<; \
-		rmdir $(DEPDIR)/gnuradio_swig_py_io-generate-lock; \
-	else \
-		while test -d $(DEPDIR)/gnuradio_swig_py_io-generate-lock; do \
-			sleep 1; \
-		done; \
-		test -f $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp; \
-		exit $$?; \
-	fi;
-endif				# end of GUILE
+# gnuradio_swig_py_io.h gnuradio_swig_py_io.py gnuradio_swig_py_io.cc: gnuradio_swig_py_io.i
+guile/gnuradio_swig_py_io.scm gnuradio_swig_py_io.scm: gnuradio_swig_py_io.i
+python/gnuradio_swig_py_io.py gnuradio_swig_py_io.py: gnuradio_swig_py_io.i
 
 $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
-## This rule will be called only by the first process issuing the
-## above rule to succeed in creating the lock directory, after
-## removing the actual stamp file in order to guarantee that MAKE will
-## execute this rule.
-##
-## Call SWIG to generate the various output files; special
-## post-processing on 'mingw32' host OS for the dependency file.
-##
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_io_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_io_python.Std \
-		-module gnuradio_swig_py_io -o gnuradio_swig_py_io_python.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_io_python.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_io_python.Std \
-			> $(DEPDIR)/gnuradio_swig_py_io_python.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_io_python.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_io_python.Sd $(DEPDIR)/gnuradio_swig_py_io_python.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_io_python.S*; exit 1; \
-	fi;
-##
-## Mess with the SWIG output .Std dependency file, to create a
-## dependecy file valid for the input .i file: Basically, simulate the
-## dependency file created for libraries by GNU's libtool for C++,
-## where all of the dependencies for the target are first listed, then
-## each individual dependency is listed as a target with no further
-## dependencies.
-##
-## (1) remove the current dependency file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_io_python.d
-##
-## (2) Copy the whole SWIG file:
-##
-	cp $(DEPDIR)/gnuradio_swig_py_io_python.Std $(DEPDIR)/gnuradio_swig_py_io_python.d
-##
-## (3) all a carriage return to the end of the dependency file.
-##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_io_python.d
-##
-## (4) from the SWIG file, remove the first line (the target); remove
-##     trailing " \" and " " from each line.  Append ":" to each line,
-##     followed by 2 carriage returns, then append this to the end of
-##     the dependency file.
-##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_io_python.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_io_python.d
-##
-## (5) remove the SWIG-generated file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_io_python.Std
-##
-## Create the stamp for this filename generation, to signal success in
-## executing this rule; allows other threads waiting on this process
-## to continue.
-##
-	touch $(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp
-
-# KLUDGE: Force runtime include of a SWIG dependency file.  This is
-# not guaranteed to be portable, but will probably work.  If it works,
-# we have accurate dependencies for our swig stuff, which is good.
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_io_python.d@am__quote@
 
 $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp:
-if GUILE
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_io_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_io_guile.Std \
-		-module gnuradio_swig_py_io -o gnuradio_swig_py_io_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_io_guile.Std \
-			> $(DEPDIR)/gnuradio_swig_py_io_guile.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_io_guile.Sd $(DEPDIR)/gnuradio_swig_py_io_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp
-	$(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.d
-	cp $(DEPDIR)/gnuradio_swig_py_io_guile.Std $(DEPDIR)/gnuradio_swig_py_io_guile.d
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_io_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_io_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_io_guile.d
-	$(RM) $(DEPDIR)/gnuradio_swig_py_io_guile.Std
-	touch $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp
-else
-	touch $(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp
-endif
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_io_guile.d@am__quote@
-
-#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 
 # -*- Makefile -*-
 #
@@ -1772,9 +807,9 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_hier.py gnuradio_swig_py_hier_python.cc
+swig_built_sources += gnuradio_swig_py_hier.py #gnuradio_swig_py_hier.cc
 if GUILE
-swig_built_sources += gnuradio_swig_py_hier.scm gnuradio_swig_py_hier_guile.cc
+swig_built_sources += gnuradio_swig_py_hier.scm #gnuradio_swig_py_hier.cc
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -1786,243 +821,50 @@ gnuradio_swig_py_hier_swiginclude_HEADERS =		\
 	$(gnuradio_swig_py_hier_swiginclude_headers)
 
 gnuradio_swig_py_hier_pylib_LTLIBRARIES =		\
-	_gnuradio_swig_py_hier_python.la
+	_gnuradio_swig_py_hier.la
 
-_gnuradio_swig_py_hier_python_la_SOURCES = 		\
-	gnuradio_swig_py_hier_python.cc		\
+_gnuradio_swig_py_hier_la_SOURCES = 			\
+	python/gnuradio_swig_py_hier.cc		\
 	$(gnuradio_swig_py_hier_la_swig_sources)
 
-_gnuradio_swig_py_hier_python_la_LIBADD =		\
+_gnuradio_swig_py_hier_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_hier_la_swig_libadd)
 
-_gnuradio_swig_py_hier_python_la_LDFLAGS =		\
+_gnuradio_swig_py_hier_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_hier_la_swig_ldflags)
 
-_gnuradio_swig_py_hier_python_la_CXXFLAGS =		\
+_gnuradio_swig_py_hier_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(gnuradio_swig_py_hier_la_swig_cxxflags)
 
 gnuradio_swig_py_hier_python_PYTHON =			\
-	gnuradio_swig_py_hier.py			\
-	$(gnuradio_swig_py_hier_python)
+	python/gnuradio_swig_py_hier.py		\
+	$(gnuradio_swig_py_hier)
 
 if GUILE
-gnuradio_swig_py_hier_scmlib_LTLIBRARIES = _gnuradio_swig_py_hier_guile.la
-_gnuradio_swig_py_hier_guile_la_SOURCES = 		\
-	gnuradio_swig_py_hier_guile.cc		        \
+gnuradio_swig_py_hier_scmlib_LTLIBRARIES = gnuradio_swig_py_hier_guile.la
+gnuradio_swig_py_hier_guile_la_SOURCES = 		\
+	guile/gnuradio_swig_py_hier.cc		        \
 	$(gnuradio_swig_py_hier_la_swig_sources)
 gnuradio_swig_py_hier_scm_DATA = gnuradio_swig_py_hier.scm
 
 # Guile can use the same flags as python does
-_gnuradio_swig_py_hier_guile_la_LIBADD = $(_gnuradio_swig_py_hier_python_la_LIBADD)
-_gnuradio_swig_py_hier_guile_la_LDFLAGS = $(_gnuradio_swig_py_hier_python_la_LDFLAGS)
-_gnuradio_swig_py_hier_guile_la_CXXFLAGS = $(_gnuradio_swig_py_hier_python_la_CXXFLAGS)
+gnuradio_swig_py_hier_guile_la_LIBADD = $(_gnuradio_swig_py_hier_la_LIBADD)
+gnuradio_swig_py_hier_guile_la_LDFLAGS = $(_gnuradio_swig_py_hier_la_LDFLAGS)
+gnuradio_swig_py_hier_guile_la_CXXFLAGS = $(_gnuradio_swig_py_hier_la_CXXFLAGS)
 
 endif				# end of GUILE
 
 ## Entry rule for running SWIG
 
 # $(python_deps) $(guile_deps): gnuradio_swig_py_hier.i
-gnuradio_swig_py_hier_python.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier_python.cc: gnuradio_swig_py_hier.i
-## This rule will get called only when MAKE decides that one of the
-## targets needs to be created or re-created, because:
-##
-## * The .i file is newer than any or all of the generated files;
-##
-## * Any or all of the .cc, .h, or .py files does not exist and is
-##   needed (in the case this file is not needed, the rule for it is
-##   ignored); or
-##
-## * Some SWIG-based dependecy of the .cc file isn't met and hence the
-##   .cc file needs be be regenerated.  Explanation: Because MAKE
-##   knows how to handle dependencies for .cc files (regardless of
-##   their name or extension), then the .cc file is used as a target
-##   instead of the .i file -- but with the dependencies of the .i
-##   file.  It is this last reason why the line:
-##
-##     	if test -f $@; then :; else
-##
-##   cannot be used in this case: If a .i file dependecy is not met,
-##   then the .cc file needs to be rebuilt.  But if the stamp is newer
-##   than the .cc file, and the .cc file exists, then in the original
-##   version (with the 'test' above) the internal MAKE call will not
-##   be issued and hence the .cc file will not be rebuilt.
-##
-## Once execution gets to here, it should always proceed no matter the
-## state of a stamp (as discussed in link above).  The
-## $(DEPDIR)/gnuradio_swig_py_hier-generate stuff is used to allow for parallel
-## builds to "do the right thing".  The stamp has no relationship with
-## either the target files or dependency file; it is used solely for
-## the protection of multiple builds during a given call to MAKE.
-##
-## Catch signals SIGHUP (1), SIGINT (2), SIGPIPE (13), and SIGTERM
-## (15).  At a caught signal, the quoted command will be issued before
-## exiting.  In this case, remove any stamp, whether temporary of not.
-## The trap is valid until the process exits; the process includes all
-## commands appended via "\"s.
-##
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_hier-generate-*' 1 2 13 15; \
-##
-## Create a temporary directory, which acts as a lock.  The first
-## process to create the directory will succeed and issue the MAKE
-## command to do the actual work, while all subsequent processes will
-## fail -- leading them to wait for the first process to finish.
-##
-	if mkdir $(DEPDIR)/gnuradio_swig_py_hier-generate-lock 2>/dev/null; then \
-##
-## This code is being executed by the first process to succeed in
-## creating the directory lock.
-##
-## Remove the stamp associated with this filename.
-##
-		rm -f $(DEPDIR)/gnuradio_swig_py_hier-generate-*stamp; \
-##
-## Tell MAKE to run the rule for creating this stamp.
-##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp WHAT=$<; \
-##
-## Now that the .cc, .h, and .py files have been (re)created from the
-## .i file, future checking of this rule during the same MAKE
-## execution will come back that the rule doesn't need to be executed
-## because none of the conditions mentioned at the start of this rule
-## will be positive.  Remove the the directory lock, which frees up
-## any waiting process(es) to continue.
-##
-		rmdir $(DEPDIR)/gnuradio_swig_py_hier-generate-lock; \
-	else \
-##
-## This code is being executed by any follower processes while the
-## directory lock is in place.
-##
-## Wait until the first process is done, testing once per second.
-##
-		while test -d $(DEPDIR)/gnuradio_swig_py_hier-generate-lock; do \
-			sleep 1; \
-		done; \
-##
-## Succeed if and only if the first process succeeded; exit this
-## process returning the status of the generated stamp.
-##
-		test -f $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp; \
-		exit $$?; \
-	fi;
-
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-gnuradio_swig_py_hier_guile.h gnuradio_swig_py_hier.scm gnuradio_swig_py_hier_guile.cc: gnuradio_swig_py_hier.i
-if GUILE
-	trap 'rm -rf $(DEPDIR)/gnuradio_swig_py_hier-generate-*' 1 2 13 15; \
-	if mkdir $(DEPDIR)/gnuradio_swig_py_hier-generate-lock 2>/dev/null; then \
-		rm -f $(DEPDIR)/gnuradio_swig_py_hier-generate-*stamp; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp WHAT=$<; \
-		rmdir $(DEPDIR)/gnuradio_swig_py_hier-generate-lock; \
-	else \
-		while test -d $(DEPDIR)/gnuradio_swig_py_hier-generate-lock; do \
-			sleep 1; \
-		done; \
-		test -f $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp; \
-		exit $$?; \
-	fi;
-endif				# end of GUILE
+# gnuradio_swig_py_hier.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier.cc: gnuradio_swig_py_hier.i
+guile/gnuradio_swig_py_hier.scm gnuradio_swig_py_hier.scm: gnuradio_swig_py_hier.i
+python/gnuradio_swig_py_hier.py gnuradio_swig_py_hier.py: gnuradio_swig_py_hier.i
 
 $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
-## This rule will be called only by the first process issuing the
-## above rule to succeed in creating the lock directory, after
-## removing the actual stamp file in order to guarantee that MAKE will
-## execute this rule.
-##
-## Call SWIG to generate the various output files; special
-## post-processing on 'mingw32' host OS for the dependency file.
-##
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gnuradio_swig_py_hier_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_hier_python.Std \
-		-module gnuradio_swig_py_hier -o gnuradio_swig_py_hier_python.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_hier_python.Std \
-			> $(DEPDIR)/gnuradio_swig_py_hier_python.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_hier_python.Sd $(DEPDIR)/gnuradio_swig_py_hier_python.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.S*; exit 1; \
-	fi;
-##
-## Mess with the SWIG output .Std dependency file, to create a
-## dependecy file valid for the input .i file: Basically, simulate the
-## dependency file created for libraries by GNU's libtool for C++,
-## where all of the dependencies for the target are first listed, then
-## each individual dependency is listed as a target with no further
-## dependencies.
-##
-## (1) remove the current dependency file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.d
-##
-## (2) Copy the whole SWIG file:
-##
-	cp $(DEPDIR)/gnuradio_swig_py_hier_python.Std $(DEPDIR)/gnuradio_swig_py_hier_python.d
-##
-## (3) all a carriage return to the end of the dependency file.
-##
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_hier_python.d
-##
-## (4) from the SWIG file, remove the first line (the target); remove
-##     trailing " \" and " " from each line.  Append ":" to each line,
-##     followed by 2 carriage returns, then append this to the end of
-##     the dependency file.
-##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_hier_python.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_hier_python.d
-##
-## (5) remove the SWIG-generated file
-##
-	$(RM) $(DEPDIR)/gnuradio_swig_py_hier_python.Std
-##
-## Create the stamp for this filename generation, to signal success in
-## executing this rule; allows other threads waiting on this process
-## to continue.
-##
-	touch $(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp
-
-# KLUDGE: Force runtime include of a SWIG dependency file.  This is
-# not guaranteed to be portable, but will probably work.  If it works,
-# we have accurate dependencies for our swig stuff, which is good.
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_hier_python.d@am__quote@
 
 $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp:
-if GUILE
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(gnuradio_swig_py_hier_swig_args) \
-		-MD -MF $(DEPDIR)/gnuradio_swig_py_hier_guile.Std \
-		-module gnuradio_swig_py_hier -o gnuradio_swig_py_hier_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gnuradio_swig_py_hier_guile.Std \
-			> $(DEPDIR)/gnuradio_swig_py_hier_guile.Sd; \
-		$(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.Std; \
-		$(MV) $(DEPDIR)/gnuradio_swig_py_hier_guile.Sd $(DEPDIR)/gnuradio_swig_py_hier_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp
-	$(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.d
-	cp $(DEPDIR)/gnuradio_swig_py_hier_guile.Std $(DEPDIR)/gnuradio_swig_py_hier_guile.d
-	echo "" >> $(DEPDIR)/gnuradio_swig_py_hier_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gnuradio_swig_py_hier_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gnuradio_swig_py_hier_guile.d
-	$(RM) $(DEPDIR)/gnuradio_swig_py_hier_guile.Std
-	touch $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp
-else
-	touch $(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp
-endif
-
-@am__include@ @am__quote@./$(DEPDIR)/gnuradio_swig_py_hier_guile.d@am__quote@
-
-#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 
