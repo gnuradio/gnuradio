@@ -82,9 +82,11 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += @NAME@.py #@NAME@.cc
+# generating the py or scm file also generates the .cc or .h files,
+# but dependencies work better without the .cc ort .h files listed.
+swig_built_sources += @NAME@.py
 if GUILE
-swig_built_sources += @NAME@.scm #@NAME@.cc
+swig_built_sources += @NAME@.scm
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -106,22 +108,25 @@ _@NAME@_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(@NAME@_la_swig_libadd)
 
+# _@NAME@_la_DEPENDENCIES = python/@NAME@.lo
+
 _@NAME@_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(@NAME@_la_swig_ldflags)
 
 _@NAME@_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
 	$(@NAME@_la_swig_cxxflags)
 
 @NAME@_python_PYTHON =			\
-	python/@NAME@.py		\
+	@NAME@.py			\
 	$(@NAME@)
 
 if GUILE
 @NAME@_scmlib_LTLIBRARIES = @NAME@_guile.la
 @NAME@_guile_la_SOURCES = 		\
-	guile/@NAME@.cc		        \
+	guile/@NAME@.cc			\
 	$(@NAME@_la_swig_sources)
 @NAME@_scm_DATA = @NAME@.scm
 
@@ -130,15 +135,13 @@ if GUILE
 @NAME@_guile_la_LDFLAGS = $(_@NAME@_la_LDFLAGS)
 @NAME@_guile_la_CXXFLAGS = $(_@NAME@_la_CXXFLAGS)
 
+guile/@NAME@.lo: @NAME@.lo
+#@NAME@.lo: @NAME@.scm
+@NAME@.scm: @NAME@.i
+
 endif				# end of GUILE
 
-## Entry rule for running SWIG
+python/@NAME@.lo:
+@NAME@.lo: @NAME@.py @NAME@.scm
+@NAME@.py: @NAME@.i
 
-# $(python_deps) $(guile_deps): @NAME@.i
-# @NAME@.h @NAME@.py @NAME@.cc: @NAME@.i
-guile/@NAME@.scm @NAME@.scm: @NAME@.i
-python/@NAME@.py @NAME@.py: @NAME@.i
-
-$(DEPDIR)/@NAME@-generate-python-stamp:
-
-$(DEPDIR)/@NAME@-generate-guile-stamp:
