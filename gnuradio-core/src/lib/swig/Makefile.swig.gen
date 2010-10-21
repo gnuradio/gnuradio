@@ -136,7 +136,6 @@ gnuradio_swig_py_runtime_guile_la_LDFLAGS = $(_gnuradio_swig_py_runtime_la_LDFLA
 gnuradio_swig_py_runtime_guile_la_CXXFLAGS = $(_gnuradio_swig_py_runtime_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_runtime.lo: gnuradio_swig_py_runtime.lo
-#gnuradio_swig_py_runtime.lo: gnuradio_swig_py_runtime.scm
 gnuradio_swig_py_runtime.scm: gnuradio_swig_py_runtime.i
 
 endif				# end of GUILE
@@ -284,7 +283,6 @@ gnuradio_swig_py_general_guile_la_LDFLAGS = $(_gnuradio_swig_py_general_la_LDFLA
 gnuradio_swig_py_general_guile_la_CXXFLAGS = $(_gnuradio_swig_py_general_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_general.lo: gnuradio_swig_py_general.lo
-#gnuradio_swig_py_general.lo: gnuradio_swig_py_general.scm
 gnuradio_swig_py_general.scm: gnuradio_swig_py_general.i
 
 endif				# end of GUILE
@@ -432,7 +430,6 @@ gnuradio_swig_py_gengen_guile_la_LDFLAGS = $(_gnuradio_swig_py_gengen_la_LDFLAGS
 gnuradio_swig_py_gengen_guile_la_CXXFLAGS = $(_gnuradio_swig_py_gengen_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_gengen.lo: gnuradio_swig_py_gengen.lo
-#gnuradio_swig_py_gengen.lo: gnuradio_swig_py_gengen.scm
 gnuradio_swig_py_gengen.scm: gnuradio_swig_py_gengen.i
 
 endif				# end of GUILE
@@ -580,7 +577,6 @@ gnuradio_swig_py_filter_guile_la_LDFLAGS = $(_gnuradio_swig_py_filter_la_LDFLAGS
 gnuradio_swig_py_filter_guile_la_CXXFLAGS = $(_gnuradio_swig_py_filter_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_filter.lo: gnuradio_swig_py_filter.lo
-#gnuradio_swig_py_filter.lo: gnuradio_swig_py_filter.scm
 gnuradio_swig_py_filter.scm: gnuradio_swig_py_filter.i
 
 endif				# end of GUILE
@@ -728,7 +724,6 @@ gnuradio_swig_py_io_guile_la_LDFLAGS = $(_gnuradio_swig_py_io_la_LDFLAGS)
 gnuradio_swig_py_io_guile_la_CXXFLAGS = $(_gnuradio_swig_py_io_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_io.lo: gnuradio_swig_py_io.lo
-#gnuradio_swig_py_io.lo: gnuradio_swig_py_io.scm
 gnuradio_swig_py_io.scm: gnuradio_swig_py_io.i
 
 endif				# end of GUILE
@@ -876,7 +871,6 @@ gnuradio_swig_py_hier_guile_la_LDFLAGS = $(_gnuradio_swig_py_hier_la_LDFLAGS)
 gnuradio_swig_py_hier_guile_la_CXXFLAGS = $(_gnuradio_swig_py_hier_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_hier.lo: gnuradio_swig_py_hier.lo
-#gnuradio_swig_py_hier.lo: gnuradio_swig_py_hier.scm
 gnuradio_swig_py_hier.scm: gnuradio_swig_py_hier.i
 
 endif				# end of GUILE

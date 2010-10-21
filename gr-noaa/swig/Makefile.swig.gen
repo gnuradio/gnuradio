@@ -82,9 +82,11 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += noaa_swig.py noaa_swig_python.cc
+# generating the py or scm file also generates the .cc or .h files,
+# but dependencies work better without the .cc ort .h files listed.
+swig_built_sources += noaa_swig.py
 if GUILE
-swig_built_sources += noaa_swig.scm noaa_swig_guile.cc
+swig_built_sources += noaa_swig.scm
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -96,243 +98,50 @@ noaa_swig_swiginclude_HEADERS =		\
 	$(noaa_swig_swiginclude_headers)
 
 noaa_swig_pylib_LTLIBRARIES =		\
-	_noaa_swig_python.la
+	_noaa_swig.la
 
-_noaa_swig_python_la_SOURCES = 		\
-	noaa_swig_python.cc		\
+_noaa_swig_la_SOURCES = 			\
+	python/noaa_swig.cc		\
 	$(noaa_swig_la_swig_sources)
 
-_noaa_swig_python_la_LIBADD =		\
+_noaa_swig_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(noaa_swig_la_swig_libadd)
 
-_noaa_swig_python_la_LDFLAGS =		\
+# _noaa_swig_la_DEPENDENCIES = python/noaa_swig.lo
+
+_noaa_swig_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(noaa_swig_la_swig_ldflags)
 
-_noaa_swig_python_la_CXXFLAGS =		\
+_noaa_swig_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
 	$(noaa_swig_la_swig_cxxflags)
 
 noaa_swig_python_PYTHON =			\
 	noaa_swig.py			\
-	$(noaa_swig_python)
+	$(noaa_swig)
 
 if GUILE
-noaa_swig_scmlib_LTLIBRARIES = _noaa_swig_guile.la
-_noaa_swig_guile_la_SOURCES = 		\
-	noaa_swig_guile.cc		        \
+noaa_swig_scmlib_LTLIBRARIES = noaa_swig_guile.la
+noaa_swig_guile_la_SOURCES = 		\
+	guile/noaa_swig.cc			\
 	$(noaa_swig_la_swig_sources)
 noaa_swig_scm_DATA = noaa_swig.scm
 
 # Guile can use the same flags as python does
-_noaa_swig_guile_la_LIBADD = $(_noaa_swig_python_la_LIBADD)
-_noaa_swig_guile_la_LDFLAGS = $(_noaa_swig_python_la_LDFLAGS)
-_noaa_swig_guile_la_CXXFLAGS = $(_noaa_swig_python_la_CXXFLAGS)
+noaa_swig_guile_la_LIBADD = $(_noaa_swig_la_LIBADD)
+noaa_swig_guile_la_LDFLAGS = $(_noaa_swig_la_LDFLAGS)
+noaa_swig_guile_la_CXXFLAGS = $(_noaa_swig_la_CXXFLAGS)
+
+guile/noaa_swig.lo: noaa_swig.lo
+noaa_swig.scm: noaa_swig.i
 
 endif				# end of GUILE
 
-## Entry rule for running SWIG
+python/noaa_swig.lo:
+noaa_swig.lo: noaa_swig.py noaa_swig.scm
+noaa_swig.py: noaa_swig.i
 
-# $(python_deps) $(guile_deps): noaa_swig.i
-noaa_swig_python.h noaa_swig.py noaa_swig_python.cc: noaa_swig.i
-## This rule will get called only when MAKE decides that one of the
-## targets needs to be created or re-created, because:
-##
-## * The .i file is newer than any or all of the generated files;
-##
-## * Any or all of the .cc, .h, or .py files does not exist and is
-##   needed (in the case this file is not needed, the rule for it is
-##   ignored); or
-##
-## * Some SWIG-based dependecy of the .cc file isn't met and hence the
-##   .cc file needs be be regenerated.  Explanation: Because MAKE
-##   knows how to handle dependencies for .cc files (regardless of
-##   their name or extension), then the .cc file is used as a target
-##   instead of the .i file -- but with the dependencies of the .i
-##   file.  It is this last reason why the line:
-##
-##     	if test -f $@; then :; else
-##
-##   cannot be used in this case: If a .i file dependecy is not met,
-##   then the .cc file needs to be rebuilt.  But if the stamp is newer
-##   than the .cc file, and the .cc file exists, then in the original
-##   version (with the 'test' above) the internal MAKE call will not
-##   be issued and hence the .cc file will not be rebuilt.
-##
-## Once execution gets to here, it should always proceed no matter the
-## state of a stamp (as discussed in link above).  The
-## $(DEPDIR)/noaa_swig-generate stuff is used to allow for parallel
-## builds to "do the right thing".  The stamp has no relationship with
-## either the target files or dependency file; it is used solely for
-## the protection of multiple builds during a given call to MAKE.
-##
-## Catch signals SIGHUP (1), SIGINT (2), SIGPIPE (13), and SIGTERM
-## (15).  At a caught signal, the quoted command will be issued before
-## exiting.  In this case, remove any stamp, whether temporary of not.
-## The trap is valid until the process exits; the process includes all
-## commands appended via "\"s.
-##
-	trap 'rm -rf $(DEPDIR)/noaa_swig-generate-*' 1 2 13 15; \
-##
-## Create a temporary directory, which acts as a lock.  The first
-## process to create the directory will succeed and issue the MAKE
-## command to do the actual work, while all subsequent processes will
-## fail -- leading them to wait for the first process to finish.
-##
-	if mkdir $(DEPDIR)/noaa_swig-generate-lock 2>/dev/null; then \
-##
-## This code is being executed by the first process to succeed in
-## creating the directory lock.
-##
-## Remove the stamp associated with this filename.
-##
-		rm -f $(DEPDIR)/noaa_swig-generate-*stamp; \
-##
-## Tell MAKE to run the rule for creating this stamp.
-##
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/noaa_swig-generate-python-stamp WHAT=$<; \
-##
-## Now that the .cc, .h, and .py files have been (re)created from the
-## .i file, future checking of this rule during the same MAKE
-## execution will come back that the rule doesn't need to be executed
-## because none of the conditions mentioned at the start of this rule
-## will be positive.  Remove the the directory lock, which frees up
-## any waiting process(es) to continue.
-##
-		rmdir $(DEPDIR)/noaa_swig-generate-lock; \
-	else \
-##
-## This code is being executed by any follower processes while the
-## directory lock is in place.
-##
-## Wait until the first process is done, testing once per second.
-##
-		while test -d $(DEPDIR)/noaa_swig-generate-lock; do \
-			sleep 1; \
-		done; \
-##
-## Succeed if and only if the first process succeeded; exit this
-## process returning the status of the generated stamp.
-##
-		test -f $(DEPDIR)/noaa_swig-generate-python-stamp; \
-		exit $$?; \
-	fi;
-
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-noaa_swig_guile.h noaa_swig.scm noaa_swig_guile.cc: noaa_swig.i
-if GUILE
-	trap 'rm -rf $(DEPDIR)/noaa_swig-generate-*' 1 2 13 15; \
-	if mkdir $(DEPDIR)/noaa_swig-generate-lock 2>/dev/null; then \
-		rm -f $(DEPDIR)/noaa_swig-generate-*stamp; \
-		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/noaa_swig-generate-guile-stamp WHAT=$<; \
-		rmdir $(DEPDIR)/noaa_swig-generate-lock; \
-	else \
-		while test -d $(DEPDIR)/noaa_swig-generate-lock; do \
-			sleep 1; \
-		done; \
-		test -f $(DEPDIR)/noaa_swig-generate-guile-stamp; \
-		exit $$?; \
-	fi;
-endif				# end of GUILE
-
-$(DEPDIR)/noaa_swig-generate-python-stamp:
-## This rule will be called only by the first process issuing the
-## above rule to succeed in creating the lock directory, after
-## removing the actual stamp file in order to guarantee that MAKE will
-## execute this rule.
-##
-## Call SWIG to generate the various output files; special
-## post-processing on 'mingw32' host OS for the dependency file.
-##
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(noaa_swig_swig_args) \
-		-MD -MF $(DEPDIR)/noaa_swig_python.Std \
-		-module noaa_swig -o noaa_swig_python.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/noaa_swig_python.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig_python.Std \
-			> $(DEPDIR)/noaa_swig_python.Sd; \
-		$(RM) $(DEPDIR)/noaa_swig_python.Std; \
-		$(MV) $(DEPDIR)/noaa_swig_python.Sd $(DEPDIR)/noaa_swig_python.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/noaa_swig_python.S*; exit 1; \
-	fi;
-##
-## Mess with the SWIG output .Std dependency file, to create a
-## dependecy file valid for the input .i file: Basically, simulate the
-## dependency file created for libraries by GNU's libtool for C++,
-## where all of the dependencies for the target are first listed, then
-## each individual dependency is listed as a target with no further
-## dependencies.
-##
-## (1) remove the current dependency file
-##
-	$(RM) $(DEPDIR)/noaa_swig_python.d
-##
-## (2) Copy the whole SWIG file:
-##
-	cp $(DEPDIR)/noaa_swig_python.Std $(DEPDIR)/noaa_swig_python.d
-##
-## (3) all a carriage return to the end of the dependency file.
-##
-	echo "" >> $(DEPDIR)/noaa_swig_python.d
-##
-## (4) from the SWIG file, remove the first line (the target); remove
-##     trailing " \" and " " from each line.  Append ":" to each line,
-##     followed by 2 carriage returns, then append this to the end of
-##     the dependency file.
-##
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/noaa_swig_python.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/noaa_swig_python.d
-##
-## (5) remove the SWIG-generated file
-##
-	$(RM) $(DEPDIR)/noaa_swig_python.Std
-##
-## Create the stamp for this filename generation, to signal success in
-## executing this rule; allows other threads waiting on this process
-## to continue.
-##
-	touch $(DEPDIR)/noaa_swig-generate-python-stamp
-
-# KLUDGE: Force runtime include of a SWIG dependency file.  This is
-# not guaranteed to be portable, but will probably work.  If it works,
-# we have accurate dependencies for our swig stuff, which is good.
-
-@am__include@ @am__quote@./$(DEPDIR)/noaa_swig_python.d@am__quote@
-
-$(DEPDIR)/noaa_swig-generate-guile-stamp:
-if GUILE
-# the comments for the target above apply to this target as well, but it seemed
-# silly to include them twice. The only main change is for guile.
-	if $(SWIG) $(STD_SWIG_GUILE_ARGS) $(noaa_swig_swig_args) \
-		-MD -MF $(DEPDIR)/noaa_swig_guile.Std \
-		-module noaa_swig -o noaa_swig_guile.cc $(WHAT); then \
-	    if test $(host_os) = mingw32; then \
-		$(RM) $(DEPDIR)/noaa_swig_guile.Sd; \
-		$(SED) 's,\\\\,/,g' < $(DEPDIR)/noaa_swig_guile.Std \
-			> $(DEPDIR)/noaa_swig_guile.Sd; \
-		$(RM) $(DEPDIR)/noaa_swig_guile.Std; \
-		$(MV) $(DEPDIR)/noaa_swig_guile.Sd $(DEPDIR)/noaa_swig_guile.Std; \
-	    fi; \
-	else \
-	    $(RM) $(DEPDIR)/noaa_swig_guile.S*; exit 1; \
-	fi;
-	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
-	$(RM) $(DEPDIR)/noaa_swig_guile.d
-	cp $(DEPDIR)/noaa_swig_guile.Std $(DEPDIR)/noaa_swig_guile.d
-	echo "" >> $(DEPDIR)/noaa_swig_guile.d
-	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/noaa_swig_guile.Std | \
-		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/noaa_swig_guile.d
-	$(RM) $(DEPDIR)/noaa_swig_guile.Std
-	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
-else
-	touch $(DEPDIR)/noaa_swig-generate-guile-stamp
-endif
-
-@am__include@ @am__quote@./$(DEPDIR)/noaa_swig_guile.d@am__quote@
-
-#gnuradio_swig_py_runtime_python.h: gnuradio_swig_py_runtime.i
 
