@@ -22,8 +22,6 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
-# VPATH += python guile
-
 BUILT_SOURCES = $(grinclude_HEADERS) $(swig_built_sources)
 CLEANFILES = python/gnuradio*
 if GUILE
@@ -114,16 +112,25 @@ endif
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
 
-# Compile a .i to what guile needs
+# Compile a .i to what guile needs. We use -o to set the output file name,
+# or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
+# gnuradio_swig_py_*_wrap.cxx in the source directory.
+
+## SWIG suffixes for automake to know about
+SUFFIXES = .i .scm .pyvi
+
+if GUILE
 .i.scm:
+	@echo "Compile .i to .scm"
 	@test -d "guile" || $(mkinstalldirs) "guile"
 	$(SWIG) $(STD_SWIG_GUILE_ARGS) $($*_swig_args) \
 		-module $* -o guile/$*.cc $<
+#		-MD -MF guile/$(DEPDIR)/$*.Std 
+endif
 
 # Compile a .i file to what python needs
 .i.py:
+	@echo "Compile .i to .py"
 	@test -d "python" || $(mkinstalldirs) "python"
 	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $($*_swig_args) \
-		-MD -MF python/$(DEPDIR)/$*.Std \
 		-module $* -o python/$*.cc -oh python/$*.h $<
-
