@@ -43,7 +43,7 @@ swiginclude_HEADERS =			\
 # special install for this top-level Python script which includes all
 # of the split Python libraries.
 ourpythondir = $(grpythondir)/gr
-ourpython_PYTHON = gnuradio_swig.py
+ourpython_PYTHON = gnuradio_swig_python.py
 
 # This is the top level guile file, which loads all the other scm files
 # for gnuradio. This has to be installed top level to be found in the
