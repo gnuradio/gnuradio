@@ -37,7 +37,9 @@ lib_LTLIBRARIES = libgnuradio-video-sdl.la
 
 libgnuradio_video_sdl_la_SOURCES = 	\
 	video_sdl_sink_uc.cc		\
-	video_sdl_sink_s.cc
+	video_sdl_sink_s.cc			\
+	python/video_sdl.cc
+	
 
 libgnuradio_video_sdl_la_LIBADD =	\
 	$(SDL_LIBS)			\

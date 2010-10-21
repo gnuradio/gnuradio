@@ -34,6 +34,11 @@ noinst_HEADERS = 			\
 noinst_PYTHON = 			\
 	qa_alsa.py
 
+if GUILE
+noinst_GUILE = 			\
+	qa_alsa.scm
+endif
+
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 ###################################
@@ -44,7 +49,8 @@ lib_LTLIBRARIES = libgnuradio-audio-alsa.la
 libgnuradio_audio_alsa_la_SOURCES = 	\
 	audio_alsa_sink.cc		\
 	audio_alsa_source.cc		\
-	gri_alsa.cc
+	gri_alsa.cc			\
+	python/audio_alsa.cc
 
 libgnuradio_audio_alsa_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\
@@ -79,4 +85,5 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+
 endif

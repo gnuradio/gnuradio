@@ -32,7 +32,8 @@ lib_LTLIBRARIES = libgnuradio-cvsd-vocoder.la
 
 libgnuradio_cvsd_vocoder_la_SOURCES = 	\
 	cvsd_decode_bs.cc		\
-	cvsd_encode_sb.cc
+	cvsd_encode_sb.cc		\
+	python/cvsd_vocoder.cc
 
 libgnuradio_cvsd_vocoder_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)

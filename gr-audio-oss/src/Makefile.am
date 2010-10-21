@@ -36,7 +36,8 @@ lib_LTLIBRARIES = libgnuradio-audio-oss.la
 
 libgnuradio_audio_oss_la_SOURCES = 	\
 	audio_oss_sink.cc		\
-	audio_oss_source.cc
+	audio_oss_source.cc		\
+	python/audio_oss.cc
 
 libgnuradio_audio_oss_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\

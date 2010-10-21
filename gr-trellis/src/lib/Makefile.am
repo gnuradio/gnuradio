@@ -77,7 +77,7 @@ libgnuradio_trellis_la_SOURCES = 	\
         trellis_permutation.cc		\
 	trellis_siso_f.cc		\
 	trellis_siso_combined_f.cc	\
-	$(GENERATED_CC)
+	python/trellis.cc
 
 libgnuradio_trellis_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)

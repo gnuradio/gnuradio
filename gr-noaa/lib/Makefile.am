@@ -31,7 +31,10 @@ lib_LTLIBRARIES = \
 libgnuradio_noaa_la_SOURCES = \
 	noaa_hrpt_decoder.cc \
 	noaa_hrpt_deframer.cc \
-	noaa_hrpt_pll_cf.cc
+	noaa_hrpt_pll_cf.cc	\
+	python/noaa_hrpt_decoder.cc \
+	python/noaa_hrpt_deframer.cc \
+	python/noaa_hrpt_pll_cf.cc	
 
 noinst_HEADERS = \
 	noaa_hrpt.h

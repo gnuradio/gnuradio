@@ -84,7 +84,8 @@ libgnuradio_atsc_la_SOURCES = 			\
 	create_atsci_equalizer.cc		\
 	create_atsci_fs_checker.cc		\
 	create_atsci_fs_correlator.cc		\
-	plinfo.cc				
+	plinfo.cc				\
+	python/atsc.cc
 
 BUILT_SOURCES = 				\
 	atsci_viterbi_mux.cc
