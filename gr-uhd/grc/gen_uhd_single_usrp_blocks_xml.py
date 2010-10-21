@@ -41,6 +41,9 @@ self.\$(id).set_gain(\$gain$(n), $n)
 	\#if \$ant$(n)()
 self.\$(id).set_antenna(\$ant$(n), $n)
 	\#end if
+	\#if \$bw$(n)()
+self.\$(id).set_bandwidth(\$bw$(n), $n)
+	\#end if
 \#end if
 #end for
 </make>
@@ -49,6 +52,7 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 	<callback>set_center_freq(\$center_freq$(n), $n)</callback>
 	<callback>set_gain(\$gain$(n), $n)</callback>
 	<callback>set_antenna(\$ant$(n), $n)</callback>
+	<callback>set_bandwidth(\$bw$(n), $n)</callback>
 	#end for
 	<param>
 		<name>Input Type</name>
@@ -152,9 +156,14 @@ Single channel example: A:AB
 Dual channel example: A:AB B:0
 
 Antenna:
-For subdevices/daughterboards with only one antenna, this may be left blank. \\
+For subdevices with only one antenna, this may be left blank. \\
 Otherwise, the user should specify one of the possible antenna choices. \\
 See the daughterboard application notes for the possible antenna choices.
+
+Bandwidth:
+To use the default bandwidth filter setting, this should be zero. \\
+Only certain subdevices have configurable bandwidth filters. \\
+See the daughterboard application notes for possible configurations.
 	</doc>
 </block>
 """
@@ -183,6 +192,21 @@ PARAMS_TMPL = """
 			\#if not \$nchan() > $n
 				all
 			\#elif \$ant$(n)()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch$(n): Bandwidth (Hz)</name>
+		<key>bw$(n)</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			\#if not \$nchan() > $n
+				all
+			\#elif \$bw$(n)()
 				none
 			\#else
 				part
