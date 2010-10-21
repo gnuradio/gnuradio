@@ -114,6 +114,25 @@ grc_blocksdir = $(pkgdatadir)/grc/blocks
 STAMPS =
 MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
 
+## SWIG suffixes for automake to know about
+SUFFIXES = .i .scm .py
+
+if GUILE
+.i.scm:
+	@echo "Compile .i to .scm"
+	@test -d "guile" || $(mkinstalldirs) "guile"
+	$(SWIG) $(STD_SWIG_GUILE_ARGS) $($*_swig_args) \
+		-module $* -o guile/$*.cc $<
+#		-MD -MF guile/$(DEPDIR)/$*.Std 
+endif
+
+# Compile a .i file to what python needs
+.i.py:
+	@echo "Compile .i to .py"
+	@test -d "python" || $(mkinstalldirs) "python"
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $($*_swig_args) \
+		-module $* -o python/$*.cc -oh python/$*.h $<
+
 # Don't distribute the files defined in the variable 'no_dist_files'
 dist-hook:
 	@for file in $(no_dist_files); do \

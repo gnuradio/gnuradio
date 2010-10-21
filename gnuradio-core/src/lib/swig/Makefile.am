@@ -116,21 +116,3 @@ no_dist_files = $(swig_built_sources)
 # or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
 # gnuradio_swig_py_*_wrap.cxx in the source directory.
 
-## SWIG suffixes for automake to know about
-SUFFIXES = .i .scm .pyvi
-
-if GUILE
-.i.scm:
-	@echo "Compile .i to .scm"
-	@test -d "guile" || $(mkinstalldirs) "guile"
-	$(SWIG) $(STD_SWIG_GUILE_ARGS) $($*_swig_args) \
-		-module $* -o guile/$*.cc $<
-#		-MD -MF guile/$(DEPDIR)/$*.Std 
-endif
-
-# Compile a .i file to what python needs
-.i.py:
-	@echo "Compile .i to .py"
-	@test -d "python" || $(mkinstalldirs) "python"
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $($*_swig_args) \
-		-module $* -o python/$*.cc -oh python/$*.h $<
