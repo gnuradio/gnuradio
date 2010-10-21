@@ -82,9 +82,11 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_runtime.py #gnuradio_swig_py_runtime.cc
+# generating the py or scm file also generates the .cc or .h files,
+# but dependencies work better without the .cc ort .h files listed.
+swig_built_sources += gnuradio_swig_py_runtime.py
 if GUILE
-swig_built_sources += gnuradio_swig_py_runtime.scm #gnuradio_swig_py_runtime.cc
+swig_built_sources += gnuradio_swig_py_runtime.scm
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -106,22 +108,25 @@ _gnuradio_swig_py_runtime_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_runtime_la_swig_libadd)
 
+# _gnuradio_swig_py_runtime_la_DEPENDENCIES = python/gnuradio_swig_py_runtime.lo
+
 _gnuradio_swig_py_runtime_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_runtime_la_swig_ldflags)
 
 _gnuradio_swig_py_runtime_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
 	$(gnuradio_swig_py_runtime_la_swig_cxxflags)
 
 gnuradio_swig_py_runtime_python_PYTHON =			\
-	python/gnuradio_swig_py_runtime.py		\
+	gnuradio_swig_py_runtime.py			\
 	$(gnuradio_swig_py_runtime)
 
 if GUILE
 gnuradio_swig_py_runtime_scmlib_LTLIBRARIES = gnuradio_swig_py_runtime_guile.la
 gnuradio_swig_py_runtime_guile_la_SOURCES = 		\
-	guile/gnuradio_swig_py_runtime.cc		        \
+	guile/gnuradio_swig_py_runtime.cc			\
 	$(gnuradio_swig_py_runtime_la_swig_sources)
 gnuradio_swig_py_runtime_scm_DATA = gnuradio_swig_py_runtime.scm
 
@@ -130,18 +135,16 @@ gnuradio_swig_py_runtime_guile_la_LIBADD = $(_gnuradio_swig_py_runtime_la_LIBADD
 gnuradio_swig_py_runtime_guile_la_LDFLAGS = $(_gnuradio_swig_py_runtime_la_LDFLAGS)
 gnuradio_swig_py_runtime_guile_la_CXXFLAGS = $(_gnuradio_swig_py_runtime_la_CXXFLAGS)
 
+guile/gnuradio_swig_py_runtime.lo: gnuradio_swig_py_runtime.lo
+#gnuradio_swig_py_runtime.lo: gnuradio_swig_py_runtime.scm
+gnuradio_swig_py_runtime.scm: gnuradio_swig_py_runtime.i
+
 endif				# end of GUILE
 
-## Entry rule for running SWIG
+python/gnuradio_swig_py_runtime.lo:
+gnuradio_swig_py_runtime.lo: gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.scm
+gnuradio_swig_py_runtime.py: gnuradio_swig_py_runtime.i
 
-# $(python_deps) $(guile_deps): gnuradio_swig_py_runtime.i
-# gnuradio_swig_py_runtime.h gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.cc: gnuradio_swig_py_runtime.i
-guile/gnuradio_swig_py_runtime.scm gnuradio_swig_py_runtime.scm: gnuradio_swig_py_runtime.i
-python/gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.py: gnuradio_swig_py_runtime.i
-
-$(DEPDIR)/gnuradio_swig_py_runtime-generate-python-stamp:
-
-$(DEPDIR)/gnuradio_swig_py_runtime-generate-guile-stamp:
 
 # -*- Makefile -*-
 #
@@ -227,9 +230,11 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_general.py #gnuradio_swig_py_general.cc
+# generating the py or scm file also generates the .cc or .h files,
+# but dependencies work better without the .cc ort .h files listed.
+swig_built_sources += gnuradio_swig_py_general.py
 if GUILE
-swig_built_sources += gnuradio_swig_py_general.scm #gnuradio_swig_py_general.cc
+swig_built_sources += gnuradio_swig_py_general.scm
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -251,22 +256,25 @@ _gnuradio_swig_py_general_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_general_la_swig_libadd)
 
+# _gnuradio_swig_py_general_la_DEPENDENCIES = python/gnuradio_swig_py_general.lo
+
 _gnuradio_swig_py_general_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_general_la_swig_ldflags)
 
 _gnuradio_swig_py_general_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
 	$(gnuradio_swig_py_general_la_swig_cxxflags)
 
 gnuradio_swig_py_general_python_PYTHON =			\
-	python/gnuradio_swig_py_general.py		\
+	gnuradio_swig_py_general.py			\
 	$(gnuradio_swig_py_general)
 
 if GUILE
 gnuradio_swig_py_general_scmlib_LTLIBRARIES = gnuradio_swig_py_general_guile.la
 gnuradio_swig_py_general_guile_la_SOURCES = 		\
-	guile/gnuradio_swig_py_general.cc		        \
+	guile/gnuradio_swig_py_general.cc			\
 	$(gnuradio_swig_py_general_la_swig_sources)
 gnuradio_swig_py_general_scm_DATA = gnuradio_swig_py_general.scm
 
@@ -275,18 +283,16 @@ gnuradio_swig_py_general_guile_la_LIBADD = $(_gnuradio_swig_py_general_la_LIBADD
 gnuradio_swig_py_general_guile_la_LDFLAGS = $(_gnuradio_swig_py_general_la_LDFLAGS)
 gnuradio_swig_py_general_guile_la_CXXFLAGS = $(_gnuradio_swig_py_general_la_CXXFLAGS)
 
+guile/gnuradio_swig_py_general.lo: gnuradio_swig_py_general.lo
+#gnuradio_swig_py_general.lo: gnuradio_swig_py_general.scm
+gnuradio_swig_py_general.scm: gnuradio_swig_py_general.i
+
 endif				# end of GUILE
 
-## Entry rule for running SWIG
+python/gnuradio_swig_py_general.lo:
+gnuradio_swig_py_general.lo: gnuradio_swig_py_general.py gnuradio_swig_py_general.scm
+gnuradio_swig_py_general.py: gnuradio_swig_py_general.i
 
-# $(python_deps) $(guile_deps): gnuradio_swig_py_general.i
-# gnuradio_swig_py_general.h gnuradio_swig_py_general.py gnuradio_swig_py_general.cc: gnuradio_swig_py_general.i
-guile/gnuradio_swig_py_general.scm gnuradio_swig_py_general.scm: gnuradio_swig_py_general.i
-python/gnuradio_swig_py_general.py gnuradio_swig_py_general.py: gnuradio_swig_py_general.i
-
-$(DEPDIR)/gnuradio_swig_py_general-generate-python-stamp:
-
-$(DEPDIR)/gnuradio_swig_py_general-generate-guile-stamp:
 
 # -*- Makefile -*-
 #
@@ -372,9 +378,11 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_gengen.py #gnuradio_swig_py_gengen.cc
+# generating the py or scm file also generates the .cc or .h files,
+# but dependencies work better without the .cc ort .h files listed.
+swig_built_sources += gnuradio_swig_py_gengen.py
 if GUILE
-swig_built_sources += gnuradio_swig_py_gengen.scm #gnuradio_swig_py_gengen.cc
+swig_built_sources += gnuradio_swig_py_gengen.scm
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -396,22 +404,25 @@ _gnuradio_swig_py_gengen_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_gengen_la_swig_libadd)
 
+# _gnuradio_swig_py_gengen_la_DEPENDENCIES = python/gnuradio_swig_py_gengen.lo
+
 _gnuradio_swig_py_gengen_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_gengen_la_swig_ldflags)
 
 _gnuradio_swig_py_gengen_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
 	$(gnuradio_swig_py_gengen_la_swig_cxxflags)
 
 gnuradio_swig_py_gengen_python_PYTHON =			\
-	python/gnuradio_swig_py_gengen.py		\
+	gnuradio_swig_py_gengen.py			\
 	$(gnuradio_swig_py_gengen)
 
 if GUILE
 gnuradio_swig_py_gengen_scmlib_LTLIBRARIES = gnuradio_swig_py_gengen_guile.la
 gnuradio_swig_py_gengen_guile_la_SOURCES = 		\
-	guile/gnuradio_swig_py_gengen.cc		        \
+	guile/gnuradio_swig_py_gengen.cc			\
 	$(gnuradio_swig_py_gengen_la_swig_sources)
 gnuradio_swig_py_gengen_scm_DATA = gnuradio_swig_py_gengen.scm
 
@@ -420,18 +431,16 @@ gnuradio_swig_py_gengen_guile_la_LIBADD = $(_gnuradio_swig_py_gengen_la_LIBADD)
 gnuradio_swig_py_gengen_guile_la_LDFLAGS = $(_gnuradio_swig_py_gengen_la_LDFLAGS)
 gnuradio_swig_py_gengen_guile_la_CXXFLAGS = $(_gnuradio_swig_py_gengen_la_CXXFLAGS)
 
+guile/gnuradio_swig_py_gengen.lo: gnuradio_swig_py_gengen.lo
+#gnuradio_swig_py_gengen.lo: gnuradio_swig_py_gengen.scm
+gnuradio_swig_py_gengen.scm: gnuradio_swig_py_gengen.i
+
 endif				# end of GUILE
 
-## Entry rule for running SWIG
+python/gnuradio_swig_py_gengen.lo:
+gnuradio_swig_py_gengen.lo: gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen.scm
+gnuradio_swig_py_gengen.py: gnuradio_swig_py_gengen.i
 
-# $(python_deps) $(guile_deps): gnuradio_swig_py_gengen.i
-# gnuradio_swig_py_gengen.h gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen.cc: gnuradio_swig_py_gengen.i
-guile/gnuradio_swig_py_gengen.scm gnuradio_swig_py_gengen.scm: gnuradio_swig_py_gengen.i
-python/gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen.py: gnuradio_swig_py_gengen.i
-
-$(DEPDIR)/gnuradio_swig_py_gengen-generate-python-stamp:
-
-$(DEPDIR)/gnuradio_swig_py_gengen-generate-guile-stamp:
 
 # -*- Makefile -*-
 #
@@ -517,9 +526,11 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_filter.py #gnuradio_swig_py_filter.cc
+# generating the py or scm file also generates the .cc or .h files,
+# but dependencies work better without the .cc ort .h files listed.
+swig_built_sources += gnuradio_swig_py_filter.py
 if GUILE
-swig_built_sources += gnuradio_swig_py_filter.scm #gnuradio_swig_py_filter.cc
+swig_built_sources += gnuradio_swig_py_filter.scm
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -541,22 +552,25 @@ _gnuradio_swig_py_filter_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_filter_la_swig_libadd)
 
+# _gnuradio_swig_py_filter_la_DEPENDENCIES = python/gnuradio_swig_py_filter.lo
+
 _gnuradio_swig_py_filter_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_filter_la_swig_ldflags)
 
 _gnuradio_swig_py_filter_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
 	$(gnuradio_swig_py_filter_la_swig_cxxflags)
 
 gnuradio_swig_py_filter_python_PYTHON =			\
-	python/gnuradio_swig_py_filter.py		\
+	gnuradio_swig_py_filter.py			\
 	$(gnuradio_swig_py_filter)
 
 if GUILE
 gnuradio_swig_py_filter_scmlib_LTLIBRARIES = gnuradio_swig_py_filter_guile.la
 gnuradio_swig_py_filter_guile_la_SOURCES = 		\
-	guile/gnuradio_swig_py_filter.cc		        \
+	guile/gnuradio_swig_py_filter.cc			\
 	$(gnuradio_swig_py_filter_la_swig_sources)
 gnuradio_swig_py_filter_scm_DATA = gnuradio_swig_py_filter.scm
 
@@ -565,18 +579,16 @@ gnuradio_swig_py_filter_guile_la_LIBADD = $(_gnuradio_swig_py_filter_la_LIBADD)
 gnuradio_swig_py_filter_guile_la_LDFLAGS = $(_gnuradio_swig_py_filter_la_LDFLAGS)
 gnuradio_swig_py_filter_guile_la_CXXFLAGS = $(_gnuradio_swig_py_filter_la_CXXFLAGS)
 
+guile/gnuradio_swig_py_filter.lo: gnuradio_swig_py_filter.lo
+#gnuradio_swig_py_filter.lo: gnuradio_swig_py_filter.scm
+gnuradio_swig_py_filter.scm: gnuradio_swig_py_filter.i
+
 endif				# end of GUILE
 
-## Entry rule for running SWIG
+python/gnuradio_swig_py_filter.lo:
+gnuradio_swig_py_filter.lo: gnuradio_swig_py_filter.py gnuradio_swig_py_filter.scm
+gnuradio_swig_py_filter.py: gnuradio_swig_py_filter.i
 
-# $(python_deps) $(guile_deps): gnuradio_swig_py_filter.i
-# gnuradio_swig_py_filter.h gnuradio_swig_py_filter.py gnuradio_swig_py_filter.cc: gnuradio_swig_py_filter.i
-guile/gnuradio_swig_py_filter.scm gnuradio_swig_py_filter.scm: gnuradio_swig_py_filter.i
-python/gnuradio_swig_py_filter.py gnuradio_swig_py_filter.py: gnuradio_swig_py_filter.i
-
-$(DEPDIR)/gnuradio_swig_py_filter-generate-python-stamp:
-
-$(DEPDIR)/gnuradio_swig_py_filter-generate-guile-stamp:
 
 # -*- Makefile -*-
 #
@@ -662,9 +674,11 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_io.py #gnuradio_swig_py_io.cc
+# generating the py or scm file also generates the .cc or .h files,
+# but dependencies work better without the .cc ort .h files listed.
+swig_built_sources += gnuradio_swig_py_io.py
 if GUILE
-swig_built_sources += gnuradio_swig_py_io.scm #gnuradio_swig_py_io.cc
+swig_built_sources += gnuradio_swig_py_io.scm
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -686,22 +700,25 @@ _gnuradio_swig_py_io_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_io_la_swig_libadd)
 
+# _gnuradio_swig_py_io_la_DEPENDENCIES = python/gnuradio_swig_py_io.lo
+
 _gnuradio_swig_py_io_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_io_la_swig_ldflags)
 
 _gnuradio_swig_py_io_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
 	$(gnuradio_swig_py_io_la_swig_cxxflags)
 
 gnuradio_swig_py_io_python_PYTHON =			\
-	python/gnuradio_swig_py_io.py		\
+	gnuradio_swig_py_io.py			\
 	$(gnuradio_swig_py_io)
 
 if GUILE
 gnuradio_swig_py_io_scmlib_LTLIBRARIES = gnuradio_swig_py_io_guile.la
 gnuradio_swig_py_io_guile_la_SOURCES = 		\
-	guile/gnuradio_swig_py_io.cc		        \
+	guile/gnuradio_swig_py_io.cc			\
 	$(gnuradio_swig_py_io_la_swig_sources)
 gnuradio_swig_py_io_scm_DATA = gnuradio_swig_py_io.scm
 
@@ -710,18 +727,16 @@ gnuradio_swig_py_io_guile_la_LIBADD = $(_gnuradio_swig_py_io_la_LIBADD)
 gnuradio_swig_py_io_guile_la_LDFLAGS = $(_gnuradio_swig_py_io_la_LDFLAGS)
 gnuradio_swig_py_io_guile_la_CXXFLAGS = $(_gnuradio_swig_py_io_la_CXXFLAGS)
 
+guile/gnuradio_swig_py_io.lo: gnuradio_swig_py_io.lo
+#gnuradio_swig_py_io.lo: gnuradio_swig_py_io.scm
+gnuradio_swig_py_io.scm: gnuradio_swig_py_io.i
+
 endif				# end of GUILE
 
-## Entry rule for running SWIG
+python/gnuradio_swig_py_io.lo:
+gnuradio_swig_py_io.lo: gnuradio_swig_py_io.py gnuradio_swig_py_io.scm
+gnuradio_swig_py_io.py: gnuradio_swig_py_io.i
 
-# $(python_deps) $(guile_deps): gnuradio_swig_py_io.i
-# gnuradio_swig_py_io.h gnuradio_swig_py_io.py gnuradio_swig_py_io.cc: gnuradio_swig_py_io.i
-guile/gnuradio_swig_py_io.scm gnuradio_swig_py_io.scm: gnuradio_swig_py_io.i
-python/gnuradio_swig_py_io.py gnuradio_swig_py_io.py: gnuradio_swig_py_io.i
-
-$(DEPDIR)/gnuradio_swig_py_io-generate-python-stamp:
-
-$(DEPDIR)/gnuradio_swig_py_io-generate-guile-stamp:
 
 # -*- Makefile -*-
 #
@@ -807,9 +822,11 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += gnuradio_swig_py_hier.py #gnuradio_swig_py_hier.cc
+# generating the py or scm file also generates the .cc or .h files,
+# but dependencies work better without the .cc ort .h files listed.
+swig_built_sources += gnuradio_swig_py_hier.py
 if GUILE
-swig_built_sources += gnuradio_swig_py_hier.scm #gnuradio_swig_py_hier.cc
+swig_built_sources += gnuradio_swig_py_hier.scm
 endif
 
 ## Various SWIG variables.  These can be overloaded in the including
@@ -831,22 +848,25 @@ _gnuradio_swig_py_hier_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_swig_py_hier_la_swig_libadd)
 
+# _gnuradio_swig_py_hier_la_DEPENDENCIES = python/gnuradio_swig_py_hier.lo
+
 _gnuradio_swig_py_hier_la_LDFLAGS =			\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_swig_py_hier_la_swig_ldflags)
 
 _gnuradio_swig_py_hier_la_CXXFLAGS =			\
 	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
 	$(gnuradio_swig_py_hier_la_swig_cxxflags)
 
 gnuradio_swig_py_hier_python_PYTHON =			\
-	python/gnuradio_swig_py_hier.py		\
+	gnuradio_swig_py_hier.py			\
 	$(gnuradio_swig_py_hier)
 
 if GUILE
 gnuradio_swig_py_hier_scmlib_LTLIBRARIES = gnuradio_swig_py_hier_guile.la
 gnuradio_swig_py_hier_guile_la_SOURCES = 		\
-	guile/gnuradio_swig_py_hier.cc		        \
+	guile/gnuradio_swig_py_hier.cc			\
 	$(gnuradio_swig_py_hier_la_swig_sources)
 gnuradio_swig_py_hier_scm_DATA = gnuradio_swig_py_hier.scm
 
@@ -855,16 +875,14 @@ gnuradio_swig_py_hier_guile_la_LIBADD = $(_gnuradio_swig_py_hier_la_LIBADD)
 gnuradio_swig_py_hier_guile_la_LDFLAGS = $(_gnuradio_swig_py_hier_la_LDFLAGS)
 gnuradio_swig_py_hier_guile_la_CXXFLAGS = $(_gnuradio_swig_py_hier_la_CXXFLAGS)
 
+guile/gnuradio_swig_py_hier.lo: gnuradio_swig_py_hier.lo
+#gnuradio_swig_py_hier.lo: gnuradio_swig_py_hier.scm
+gnuradio_swig_py_hier.scm: gnuradio_swig_py_hier.i
+
 endif				# end of GUILE
 
-## Entry rule for running SWIG
+python/gnuradio_swig_py_hier.lo:
+gnuradio_swig_py_hier.lo: gnuradio_swig_py_hier.py gnuradio_swig_py_hier.scm
+gnuradio_swig_py_hier.py: gnuradio_swig_py_hier.i
 
-# $(python_deps) $(guile_deps): gnuradio_swig_py_hier.i
-# gnuradio_swig_py_hier.h gnuradio_swig_py_hier.py gnuradio_swig_py_hier.cc: gnuradio_swig_py_hier.i
-guile/gnuradio_swig_py_hier.scm gnuradio_swig_py_hier.scm: gnuradio_swig_py_hier.i
-python/gnuradio_swig_py_hier.py gnuradio_swig_py_hier.py: gnuradio_swig_py_hier.i
-
-$(DEPDIR)/gnuradio_swig_py_hier-generate-python-stamp:
-
-$(DEPDIR)/gnuradio_swig_py_hier-generate-guile-stamp:
 
