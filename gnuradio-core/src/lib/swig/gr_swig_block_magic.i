@@ -24,22 +24,27 @@
 _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, PKG ## _ ## BASE_NAME, BASE_NAME)
 %enddef
 
-%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, NAME, BASE_NAME)
+%define _GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, NAME, BASE_NAME)
 class NAME;
 typedef boost::shared_ptr<NAME> NAME ## _sptr;
 %template(NAME ## _sptr) boost::shared_ptr<NAME>;
 %rename(BASE_NAME) PKG ## _make_ ## BASE_NAME;
+%ignore NAME;
+%enddef
 
 #ifdef SWIGPYTHON
+%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, NAME, BASE_NAME)
+_GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, NAME, BASE_NAME)
 %pythoncode %{
 NAME ## _sptr.block = lambda self: NAME ## _block (self)
 NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
 %}
+%enddef
 #endif
 
-%ignore NAME;
-%enddef
-
 #ifdef SWIGGUILE
+%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, NAME, BASE_NAME)
+_GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, NAME, BASE_NAME)
 #warning "gr_block_sptr needs to be implemented!"
+%enddef
 #endif
