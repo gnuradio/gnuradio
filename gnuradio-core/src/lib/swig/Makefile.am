@@ -44,28 +44,32 @@ TOP_SWIG_IFILES =			\
 	gnuradio_swig_py_hier.i
 
 
-if PYTHON
-AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
-	 $(WITH_INCLUDES)
-
-EXTRA_DIST = gen-swig-bug-fix
-
 # SWIG headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS =			\
 	gnuradio.i			\
 	gr_swig_block_magic.i		\
 	gr_shared_ptr.i
 
-# special install for this top-level Python script which includes all
-# of the split Python libraries.
-ourpythondir = $(grpythondir)/gr
-ourpython_PYTHON = gnuradio_swig_python.py
 
+if GUILE
 # This is the top level guile file, which loads all the other scm files
 # for gnuradio. This has to be installed top level to be found in the
 # default search path.
 guiledir = @GUILE_PKDATADIR@
 guile_DATA = gnuradio_swig.scm
+endif
+
+
+if PYTHON
+AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
+	 $(WITH_INCLUDES)
+
+EXTRA_DIST = gen-swig-bug-fix
+
+# special install for this top-level Python script which includes all
+# of the split Python libraries.
+ourpythondir = $(grpythondir)/gr
+ourpython_PYTHON = gnuradio_swig_python.py
 
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...

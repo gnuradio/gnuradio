@@ -29,10 +29,10 @@ LTVERSIONFLAGS = -version-info 0:0:0 -release $(LIBVER)
 # includes
 grincludedir = $(includedir)/gnuradio
 
-if PYTHON
 # swig includes
 swigincludedir = $(grincludedir)/swig
 
+if PYTHON
 # Install the gnuradio stuff in the appropriate subdirectory
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
