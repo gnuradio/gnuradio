@@ -36,7 +36,6 @@ typedef boost::shared_ptr<NAME> NAME ## _sptr;
 %define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, NAME, BASE_NAME)
 _GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, NAME, BASE_NAME)
 %pythoncode %{
-NAME ## _sptr.block = lambda self: NAME ## _block (self)
 NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
 %}
 %enddef
