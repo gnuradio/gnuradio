@@ -28,6 +28,22 @@ if GUILE
 CLEANFILES += guile/gnuradio*
 endif
 
+# ----------------------------------------------------------------
+# We've split the previously monstrous gnuradio_swig_python into 6
+# smaller pieces.  This reduces compile time coupling and creates
+# smaller pieces for the compiler to digest.  prior to this change, on
+# X86_64, g++'s resident set size was 650MB!
+# ----------------------------------------------------------------
+
+TOP_SWIG_IFILES =			\
+	gnuradio_swig_py_runtime.i	\
+	gnuradio_swig_py_general.i	\
+	gnuradio_swig_py_gengen.i	\
+	gnuradio_swig_py_filter.i	\
+	gnuradio_swig_py_io.i		\
+	gnuradio_swig_py_hier.i
+
+
 if PYTHON
 AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	 $(WITH_INCLUDES)
@@ -59,21 +75,6 @@ gnuradio_swig_bug_workaround.h : gnuradio_swig_py_runtime.py $(srcdir)/gen-swig-
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = gnuradio_swig_bug_workaround.h
-
-# ----------------------------------------------------------------
-# We've split the previously monstrous gnuradio_swig_python into 6
-# smaller pieces.  This reduces compile time coupling and creates
-# smaller pieces for the compiler to digest.  prior to this change, on
-# X86_64, g++'s resident set size was 650MB!
-# ----------------------------------------------------------------
-
-TOP_SWIG_IFILES =			\
-	gnuradio_swig_py_runtime.i	\
-	gnuradio_swig_py_general.i	\
-	gnuradio_swig_py_gengen.i	\
-	gnuradio_swig_py_filter.i	\
-	gnuradio_swig_py_io.i		\
-	gnuradio_swig_py_hier.i
 
 # Install so that they end up available as:
 #   import gnuradio.gr
