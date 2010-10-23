@@ -20,7 +20,7 @@
  */
 
 #ifndef SWIGIMPORTED
-%module(directors="1") gnuradio_swig_py_hier
+%module(directors="1") gnuradio_hier_hier
 #endif
 
  //%feature("autodoc", "1");		// generate python docstrings
@@ -31,6 +31,6 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio_core_heir" "SWIG_init")
+(load-extension "libguile-gnuradio_core_hier" "SWIG_init")
 %}
 #endif

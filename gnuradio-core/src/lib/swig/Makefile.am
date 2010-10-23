@@ -55,7 +55,7 @@ if GUILE
 # This is the top level guile file, which loads all the other scm files
 # for gnuradio. This has to be installed top level to be found in the
 # default search path.
-grguile_DATA = gnuradio_swig.scm
+grguile_DATA = gnuradio_core.scm
 endif
 
 

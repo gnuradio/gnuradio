@@ -21,7 +21,7 @@
  */
 
 #ifndef SWIGIMPORTED
-%module(directors="1") gnuradio_swig_py_runtime
+%module(directors="1") gnuradio_core_runtime
 #endif
 
  //%feature("autodoc", "1");		// generate python docstrings
