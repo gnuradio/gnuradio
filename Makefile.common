@@ -122,8 +122,10 @@ if GUILE
 	@echo "Compile .i to .scm"
 	@test -d "guile" || $(mkinstalldirs) "guile"
 	$(SWIG) $(STD_SWIG_GUILE_ARGS) $($*_swig_args) \
+		-MD -MF guile/$*.Std \
 		-module $* -o guile/$*.cc $<
-#		-MD -MF guile/$(DEPDIR)/$*.Std 
+	sed -e 's:guile/gnuradio_swig_py_runtime.cc:gnuradio_swig_py_runtime.scm:' guile/$*.Std > guile/$*.d 
+	$(RM) guile/$*.Std
 endif
 
 # Compile a .i file to what python needs
@@ -131,7 +133,10 @@ endif
 	@echo "Compile .i to .py"
 	@test -d "python" || $(mkinstalldirs) "python"
 	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $($*_swig_args) \
+		-MD -MF python/$*.Std \
 		-module $* -o python/$*.cc -oh python/$*.h $<
+	sed -e 's:python/gnuradio_swig_py_runtime.cc:gnuradio_swig_py_runtime.py:' python/$*.Std > python/$*.d 
+	$(RM) python/$*.Std
 
 # Don't distribute the files defined in the variable 'no_dist_files'
 dist-hook:

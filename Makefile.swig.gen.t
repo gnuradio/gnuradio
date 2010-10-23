@@ -136,7 +136,6 @@ if GUILE
 @NAME@_guile_la_CXXFLAGS = $(_@NAME@_la_CXXFLAGS)
 
 guile/@NAME@.lo: @NAME@.lo
-#@NAME@.lo: @NAME@.scm
 @NAME@.scm: @NAME@.i
 
 endif				# end of GUILE
@@ -145,3 +144,4 @@ python/@NAME@.lo:
 @NAME@.lo: @NAME@.py @NAME@.scm
 @NAME@.py: @NAME@.i
 
+-include python/@NAME@.d
