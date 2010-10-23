@@ -41,7 +41,7 @@
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-@NAME@_scmlibdir = $(libdir)/guile/gnuradio
+@NAME@_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/@NAME@
@@ -124,16 +124,16 @@ _@NAME@_la_CXXFLAGS =			\
 	$(@NAME@)
 
 if GUILE
-@NAME@_scmlib_LTLIBRARIES = @NAME@_guile.la
-@NAME@_guile_la_SOURCES = 		\
+@NAME@_scmlib_LTLIBRARIES = libguile-@NAME@.la
+libguile_@NAME@_la_SOURCES = 		\
 	guile/@NAME@.cc			\
 	$(@NAME@_la_swig_sources)
 @NAME@_scm_DATA = @NAME@.scm
 
 # Guile can use the same flags as python does
-@NAME@_guile_la_LIBADD = $(_@NAME@_la_LIBADD)
-@NAME@_guile_la_LDFLAGS = $(_@NAME@_la_LDFLAGS)
-@NAME@_guile_la_CXXFLAGS = $(_@NAME@_la_CXXFLAGS)
+libguile_@NAME@_la_LIBADD = $(_@NAME@_la_LIBADD)
+libguile_@NAME@_la_LDFLAGS = $(_@NAME@_la_LDFLAGS)
+libguile_@NAME@_la_CXXFLAGS = $(_@NAME@_la_CXXFLAGS)
 
 guile/@NAME@.lo: @NAME@.lo
 @NAME@.scm: @NAME@.i
