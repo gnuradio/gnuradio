@@ -41,7 +41,7 @@ uhd_swig_pylibdir = $(pyexecdir)/$(uhd_swig_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-uhd_swig_scmlibdir = $(libdir)/guile/gnuradio
+uhd_swig_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/uhd_swig
@@ -124,16 +124,16 @@ uhd_swig_python_PYTHON =			\
 	$(uhd_swig)
 
 if GUILE
-uhd_swig_scmlib_LTLIBRARIES = uhd_swig_guile.la
-uhd_swig_guile_la_SOURCES = 		\
+uhd_swig_scmlib_LTLIBRARIES = libguile-uhd_swig.la
+libguile_uhd_swig_la_SOURCES = 		\
 	guile/uhd_swig.cc			\
 	$(uhd_swig_la_swig_sources)
 uhd_swig_scm_DATA = uhd_swig.scm
 
 # Guile can use the same flags as python does
-uhd_swig_guile_la_LIBADD = $(_uhd_swig_la_LIBADD)
-uhd_swig_guile_la_LDFLAGS = $(_uhd_swig_la_LDFLAGS)
-uhd_swig_guile_la_CXXFLAGS = $(_uhd_swig_la_CXXFLAGS)
+libguile_uhd_swig_la_LIBADD = $(_uhd_swig_la_LIBADD)
+libguile_uhd_swig_la_LDFLAGS = $(_uhd_swig_la_LDFLAGS)
+libguile_uhd_swig_la_CXXFLAGS = $(_uhd_swig_la_CXXFLAGS)
 
 guile/uhd_swig.lo: uhd_swig.lo
 uhd_swig.scm: uhd_swig.i

@@ -41,7 +41,7 @@ audio_alsa_pylibdir = $(pyexecdir)/$(audio_alsa_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-audio_alsa_scmlibdir = $(libdir)/guile/gnuradio
+audio_alsa_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_alsa
@@ -124,16 +124,16 @@ audio_alsa_python_PYTHON =			\
 	$(audio_alsa)
 
 if GUILE
-audio_alsa_scmlib_LTLIBRARIES = audio_alsa_guile.la
-audio_alsa_guile_la_SOURCES = 		\
+audio_alsa_scmlib_LTLIBRARIES = libguile-audio_alsa.la
+libguile_audio_alsa_la_SOURCES = 		\
 	guile/audio_alsa.cc			\
 	$(audio_alsa_la_swig_sources)
 audio_alsa_scm_DATA = audio_alsa.scm
 
 # Guile can use the same flags as python does
-audio_alsa_guile_la_LIBADD = $(_audio_alsa_la_LIBADD)
-audio_alsa_guile_la_LDFLAGS = $(_audio_alsa_la_LDFLAGS)
-audio_alsa_guile_la_CXXFLAGS = $(_audio_alsa_la_CXXFLAGS)
+libguile_audio_alsa_la_LIBADD = $(_audio_alsa_la_LIBADD)
+libguile_audio_alsa_la_LDFLAGS = $(_audio_alsa_la_LDFLAGS)
+libguile_audio_alsa_la_CXXFLAGS = $(_audio_alsa_la_CXXFLAGS)
 
 guile/audio_alsa.lo: audio_alsa.lo
 audio_alsa.scm: audio_alsa.i

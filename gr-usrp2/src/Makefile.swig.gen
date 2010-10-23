@@ -41,7 +41,7 @@ usrp2_pylibdir = $(pyexecdir)/$(usrp2_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-usrp2_scmlibdir = $(libdir)/guile/gnuradio
+usrp2_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/usrp2
@@ -124,16 +124,16 @@ usrp2_python_PYTHON =			\
 	$(usrp2)
 
 if GUILE
-usrp2_scmlib_LTLIBRARIES = usrp2_guile.la
-usrp2_guile_la_SOURCES = 		\
+usrp2_scmlib_LTLIBRARIES = libguile-usrp2.la
+libguile_usrp2_la_SOURCES = 		\
 	guile/usrp2.cc			\
 	$(usrp2_la_swig_sources)
 usrp2_scm_DATA = usrp2.scm
 
 # Guile can use the same flags as python does
-usrp2_guile_la_LIBADD = $(_usrp2_la_LIBADD)
-usrp2_guile_la_LDFLAGS = $(_usrp2_la_LDFLAGS)
-usrp2_guile_la_CXXFLAGS = $(_usrp2_la_CXXFLAGS)
+libguile_usrp2_la_LIBADD = $(_usrp2_la_LIBADD)
+libguile_usrp2_la_LDFLAGS = $(_usrp2_la_LDFLAGS)
+libguile_usrp2_la_CXXFLAGS = $(_usrp2_la_CXXFLAGS)
 
 guile/usrp2.lo: usrp2.lo
 usrp2.scm: usrp2.i

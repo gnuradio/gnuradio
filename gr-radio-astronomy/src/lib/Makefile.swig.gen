@@ -41,7 +41,7 @@ ra_pylibdir = $(pyexecdir)/$(ra_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-ra_scmlibdir = $(libdir)/guile/gnuradio
+ra_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/ra
@@ -124,16 +124,16 @@ ra_python_PYTHON =			\
 	$(ra)
 
 if GUILE
-ra_scmlib_LTLIBRARIES = ra_guile.la
-ra_guile_la_SOURCES = 		\
+ra_scmlib_LTLIBRARIES = libguile-ra.la
+libguile_ra_la_SOURCES = 		\
 	guile/ra.cc			\
 	$(ra_la_swig_sources)
 ra_scm_DATA = ra.scm
 
 # Guile can use the same flags as python does
-ra_guile_la_LIBADD = $(_ra_la_LIBADD)
-ra_guile_la_LDFLAGS = $(_ra_la_LDFLAGS)
-ra_guile_la_CXXFLAGS = $(_ra_la_CXXFLAGS)
+libguile_ra_la_LIBADD = $(_ra_la_LIBADD)
+libguile_ra_la_LDFLAGS = $(_ra_la_LDFLAGS)
+libguile_ra_la_CXXFLAGS = $(_ra_la_CXXFLAGS)
 
 guile/ra.lo: ra.lo
 ra.scm: ra.i

@@ -41,7 +41,7 @@ msdd_pylibdir = $(pyexecdir)/$(msdd_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-msdd_scmlibdir = $(libdir)/guile/gnuradio
+msdd_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/msdd
@@ -124,16 +124,16 @@ msdd_python_PYTHON =			\
 	$(msdd)
 
 if GUILE
-msdd_scmlib_LTLIBRARIES = msdd_guile.la
-msdd_guile_la_SOURCES = 		\
+msdd_scmlib_LTLIBRARIES = libguile-msdd.la
+libguile_msdd_la_SOURCES = 		\
 	guile/msdd.cc			\
 	$(msdd_la_swig_sources)
 msdd_scm_DATA = msdd.scm
 
 # Guile can use the same flags as python does
-msdd_guile_la_LIBADD = $(_msdd_la_LIBADD)
-msdd_guile_la_LDFLAGS = $(_msdd_la_LDFLAGS)
-msdd_guile_la_CXXFLAGS = $(_msdd_la_CXXFLAGS)
+libguile_msdd_la_LIBADD = $(_msdd_la_LIBADD)
+libguile_msdd_la_LDFLAGS = $(_msdd_la_LDFLAGS)
+libguile_msdd_la_CXXFLAGS = $(_msdd_la_CXXFLAGS)
 
 guile/msdd.lo: msdd.lo
 msdd.scm: msdd.i
@@ -189,7 +189,7 @@ msdd_rs_pylibdir = $(pyexecdir)/$(msdd_rs_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-msdd_rs_scmlibdir = $(libdir)/guile/gnuradio
+msdd_rs_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/msdd_rs
@@ -272,16 +272,16 @@ msdd_rs_python_PYTHON =			\
 	$(msdd_rs)
 
 if GUILE
-msdd_rs_scmlib_LTLIBRARIES = msdd_rs_guile.la
-msdd_rs_guile_la_SOURCES = 		\
+msdd_rs_scmlib_LTLIBRARIES = libguile-msdd_rs.la
+libguile_msdd_rs_la_SOURCES = 		\
 	guile/msdd_rs.cc			\
 	$(msdd_rs_la_swig_sources)
 msdd_rs_scm_DATA = msdd_rs.scm
 
 # Guile can use the same flags as python does
-msdd_rs_guile_la_LIBADD = $(_msdd_rs_la_LIBADD)
-msdd_rs_guile_la_LDFLAGS = $(_msdd_rs_la_LDFLAGS)
-msdd_rs_guile_la_CXXFLAGS = $(_msdd_rs_la_CXXFLAGS)
+libguile_msdd_rs_la_LIBADD = $(_msdd_rs_la_LIBADD)
+libguile_msdd_rs_la_LDFLAGS = $(_msdd_rs_la_LDFLAGS)
+libguile_msdd_rs_la_CXXFLAGS = $(_msdd_rs_la_CXXFLAGS)
 
 guile/msdd_rs.lo: msdd_rs.lo
 msdd_rs.scm: msdd_rs.i

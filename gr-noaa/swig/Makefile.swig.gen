@@ -41,7 +41,7 @@ noaa_swig_pylibdir = $(pyexecdir)/$(noaa_swig_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-noaa_swig_scmlibdir = $(libdir)/guile/gnuradio
+noaa_swig_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/noaa_swig
@@ -124,16 +124,16 @@ noaa_swig_python_PYTHON =			\
 	$(noaa_swig)
 
 if GUILE
-noaa_swig_scmlib_LTLIBRARIES = noaa_swig_guile.la
-noaa_swig_guile_la_SOURCES = 		\
+noaa_swig_scmlib_LTLIBRARIES = libguile-noaa_swig.la
+libguile_noaa_swig_la_SOURCES = 		\
 	guile/noaa_swig.cc			\
 	$(noaa_swig_la_swig_sources)
 noaa_swig_scm_DATA = noaa_swig.scm
 
 # Guile can use the same flags as python does
-noaa_swig_guile_la_LIBADD = $(_noaa_swig_la_LIBADD)
-noaa_swig_guile_la_LDFLAGS = $(_noaa_swig_la_LDFLAGS)
-noaa_swig_guile_la_CXXFLAGS = $(_noaa_swig_la_CXXFLAGS)
+libguile_noaa_swig_la_LIBADD = $(_noaa_swig_la_LIBADD)
+libguile_noaa_swig_la_LDFLAGS = $(_noaa_swig_la_LDFLAGS)
+libguile_noaa_swig_la_CXXFLAGS = $(_noaa_swig_la_CXXFLAGS)
 
 guile/noaa_swig.lo: noaa_swig.lo
 noaa_swig.scm: noaa_swig.i

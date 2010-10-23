@@ -41,7 +41,7 @@ gcell_pylibdir = $(pyexecdir)/$(gcell_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gcell_scmlibdir = $(libdir)/guile/gnuradio
+gcell_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gcell
@@ -124,16 +124,16 @@ gcell_python_PYTHON =			\
 	$(gcell)
 
 if GUILE
-gcell_scmlib_LTLIBRARIES = gcell_guile.la
-gcell_guile_la_SOURCES = 		\
+gcell_scmlib_LTLIBRARIES = libguile-gcell.la
+libguile_gcell_la_SOURCES = 		\
 	guile/gcell.cc			\
 	$(gcell_la_swig_sources)
 gcell_scm_DATA = gcell.scm
 
 # Guile can use the same flags as python does
-gcell_guile_la_LIBADD = $(_gcell_la_LIBADD)
-gcell_guile_la_LDFLAGS = $(_gcell_la_LDFLAGS)
-gcell_guile_la_CXXFLAGS = $(_gcell_la_CXXFLAGS)
+libguile_gcell_la_LIBADD = $(_gcell_la_LIBADD)
+libguile_gcell_la_LDFLAGS = $(_gcell_la_LDFLAGS)
+libguile_gcell_la_CXXFLAGS = $(_gcell_la_CXXFLAGS)
 
 guile/gcell.lo: gcell.lo
 gcell.scm: gcell.i

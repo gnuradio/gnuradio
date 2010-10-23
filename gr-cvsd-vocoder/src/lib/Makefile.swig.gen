@@ -41,7 +41,7 @@ cvsd_vocoder_pylibdir = $(pyexecdir)/$(cvsd_vocoder_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-cvsd_vocoder_scmlibdir = $(libdir)/guile/gnuradio
+cvsd_vocoder_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/cvsd_vocoder
@@ -124,16 +124,16 @@ cvsd_vocoder_python_PYTHON =			\
 	$(cvsd_vocoder)
 
 if GUILE
-cvsd_vocoder_scmlib_LTLIBRARIES = cvsd_vocoder_guile.la
-cvsd_vocoder_guile_la_SOURCES = 		\
+cvsd_vocoder_scmlib_LTLIBRARIES = libguile-cvsd_vocoder.la
+libguile_cvsd_vocoder_la_SOURCES = 		\
 	guile/cvsd_vocoder.cc			\
 	$(cvsd_vocoder_la_swig_sources)
 cvsd_vocoder_scm_DATA = cvsd_vocoder.scm
 
 # Guile can use the same flags as python does
-cvsd_vocoder_guile_la_LIBADD = $(_cvsd_vocoder_la_LIBADD)
-cvsd_vocoder_guile_la_LDFLAGS = $(_cvsd_vocoder_la_LDFLAGS)
-cvsd_vocoder_guile_la_CXXFLAGS = $(_cvsd_vocoder_la_CXXFLAGS)
+libguile_cvsd_vocoder_la_LIBADD = $(_cvsd_vocoder_la_LIBADD)
+libguile_cvsd_vocoder_la_LDFLAGS = $(_cvsd_vocoder_la_LDFLAGS)
+libguile_cvsd_vocoder_la_CXXFLAGS = $(_cvsd_vocoder_la_CXXFLAGS)
 
 guile/cvsd_vocoder.lo: cvsd_vocoder.lo
 cvsd_vocoder.scm: cvsd_vocoder.i

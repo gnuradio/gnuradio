@@ -41,7 +41,7 @@ audio_jack_pylibdir = $(pyexecdir)/$(audio_jack_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-audio_jack_scmlibdir = $(libdir)/guile/gnuradio
+audio_jack_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_jack
@@ -124,16 +124,16 @@ audio_jack_python_PYTHON =			\
 	$(audio_jack)
 
 if GUILE
-audio_jack_scmlib_LTLIBRARIES = audio_jack_guile.la
-audio_jack_guile_la_SOURCES = 		\
+audio_jack_scmlib_LTLIBRARIES = libguile-audio_jack.la
+libguile_audio_jack_la_SOURCES = 		\
 	guile/audio_jack.cc			\
 	$(audio_jack_la_swig_sources)
 audio_jack_scm_DATA = audio_jack.scm
 
 # Guile can use the same flags as python does
-audio_jack_guile_la_LIBADD = $(_audio_jack_la_LIBADD)
-audio_jack_guile_la_LDFLAGS = $(_audio_jack_la_LDFLAGS)
-audio_jack_guile_la_CXXFLAGS = $(_audio_jack_la_CXXFLAGS)
+libguile_audio_jack_la_LIBADD = $(_audio_jack_la_LIBADD)
+libguile_audio_jack_la_LDFLAGS = $(_audio_jack_la_LDFLAGS)
+libguile_audio_jack_la_CXXFLAGS = $(_audio_jack_la_CXXFLAGS)
 
 guile/audio_jack.lo: audio_jack.lo
 audio_jack.scm: audio_jack.i

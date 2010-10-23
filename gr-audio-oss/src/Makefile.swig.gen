@@ -41,7 +41,7 @@ audio_oss_pylibdir = $(pyexecdir)/$(audio_oss_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-audio_oss_scmlibdir = $(libdir)/guile/gnuradio
+audio_oss_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_oss
@@ -124,16 +124,16 @@ audio_oss_python_PYTHON =			\
 	$(audio_oss)
 
 if GUILE
-audio_oss_scmlib_LTLIBRARIES = audio_oss_guile.la
-audio_oss_guile_la_SOURCES = 		\
+audio_oss_scmlib_LTLIBRARIES = libguile-audio_oss.la
+libguile_audio_oss_la_SOURCES = 		\
 	guile/audio_oss.cc			\
 	$(audio_oss_la_swig_sources)
 audio_oss_scm_DATA = audio_oss.scm
 
 # Guile can use the same flags as python does
-audio_oss_guile_la_LIBADD = $(_audio_oss_la_LIBADD)
-audio_oss_guile_la_LDFLAGS = $(_audio_oss_la_LDFLAGS)
-audio_oss_guile_la_CXXFLAGS = $(_audio_oss_la_CXXFLAGS)
+libguile_audio_oss_la_LIBADD = $(_audio_oss_la_LIBADD)
+libguile_audio_oss_la_LDFLAGS = $(_audio_oss_la_LDFLAGS)
+libguile_audio_oss_la_CXXFLAGS = $(_audio_oss_la_CXXFLAGS)
 
 guile/audio_oss.lo: audio_oss.lo
 audio_oss.scm: audio_oss.i

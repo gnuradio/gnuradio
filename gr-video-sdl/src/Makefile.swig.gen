@@ -41,7 +41,7 @@ video_sdl_pylibdir = $(pyexecdir)/$(video_sdl_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-video_sdl_scmlibdir = $(libdir)/guile/gnuradio
+video_sdl_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/video_sdl
@@ -124,16 +124,16 @@ video_sdl_python_PYTHON =			\
 	$(video_sdl)
 
 if GUILE
-video_sdl_scmlib_LTLIBRARIES = video_sdl_guile.la
-video_sdl_guile_la_SOURCES = 		\
+video_sdl_scmlib_LTLIBRARIES = libguile-video_sdl.la
+libguile_video_sdl_la_SOURCES = 		\
 	guile/video_sdl.cc			\
 	$(video_sdl_la_swig_sources)
 video_sdl_scm_DATA = video_sdl.scm
 
 # Guile can use the same flags as python does
-video_sdl_guile_la_LIBADD = $(_video_sdl_la_LIBADD)
-video_sdl_guile_la_LDFLAGS = $(_video_sdl_la_LDFLAGS)
-video_sdl_guile_la_CXXFLAGS = $(_video_sdl_la_CXXFLAGS)
+libguile_video_sdl_la_LIBADD = $(_video_sdl_la_LIBADD)
+libguile_video_sdl_la_LDFLAGS = $(_video_sdl_la_LDFLAGS)
+libguile_video_sdl_la_CXXFLAGS = $(_video_sdl_la_CXXFLAGS)
 
 guile/video_sdl.lo: video_sdl.lo
 video_sdl.scm: video_sdl.i

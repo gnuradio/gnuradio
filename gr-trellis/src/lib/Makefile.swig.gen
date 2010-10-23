@@ -41,7 +41,7 @@ trellis_pylibdir = $(pyexecdir)/$(trellis_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-trellis_scmlibdir = $(libdir)/guile/gnuradio
+trellis_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/trellis
@@ -124,16 +124,16 @@ trellis_python_PYTHON =			\
 	$(trellis)
 
 if GUILE
-trellis_scmlib_LTLIBRARIES = trellis_guile.la
-trellis_guile_la_SOURCES = 		\
+trellis_scmlib_LTLIBRARIES = libguile-trellis.la
+libguile_trellis_la_SOURCES = 		\
 	guile/trellis.cc			\
 	$(trellis_la_swig_sources)
 trellis_scm_DATA = trellis.scm
 
 # Guile can use the same flags as python does
-trellis_guile_la_LIBADD = $(_trellis_la_LIBADD)
-trellis_guile_la_LDFLAGS = $(_trellis_la_LDFLAGS)
-trellis_guile_la_CXXFLAGS = $(_trellis_la_CXXFLAGS)
+libguile_trellis_la_LIBADD = $(_trellis_la_LIBADD)
+libguile_trellis_la_LDFLAGS = $(_trellis_la_LDFLAGS)
+libguile_trellis_la_CXXFLAGS = $(_trellis_la_CXXFLAGS)
 
 guile/trellis.lo: trellis.lo
 trellis.scm: trellis.i

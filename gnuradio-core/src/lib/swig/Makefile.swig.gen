@@ -41,7 +41,7 @@ gnuradio_swig_py_runtime_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_runtime_pyli
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_runtime_scmlibdir = $(libdir)/guile/gnuradio
+gnuradio_swig_py_runtime_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_runtime
@@ -124,16 +124,16 @@ gnuradio_swig_py_runtime_python_PYTHON =			\
 	$(gnuradio_swig_py_runtime)
 
 if GUILE
-gnuradio_swig_py_runtime_scmlib_LTLIBRARIES = gnuradio_swig_py_runtime_guile.la
-gnuradio_swig_py_runtime_guile_la_SOURCES = 		\
+gnuradio_swig_py_runtime_scmlib_LTLIBRARIES = libguile-gnuradio_swig_py_runtime.la
+libguile_gnuradio_swig_py_runtime_la_SOURCES = 		\
 	guile/gnuradio_swig_py_runtime.cc			\
 	$(gnuradio_swig_py_runtime_la_swig_sources)
 gnuradio_swig_py_runtime_scm_DATA = gnuradio_swig_py_runtime.scm
 
 # Guile can use the same flags as python does
-gnuradio_swig_py_runtime_guile_la_LIBADD = $(_gnuradio_swig_py_runtime_la_LIBADD)
-gnuradio_swig_py_runtime_guile_la_LDFLAGS = $(_gnuradio_swig_py_runtime_la_LDFLAGS)
-gnuradio_swig_py_runtime_guile_la_CXXFLAGS = $(_gnuradio_swig_py_runtime_la_CXXFLAGS)
+libguile_gnuradio_swig_py_runtime_la_LIBADD = $(_gnuradio_swig_py_runtime_la_LIBADD)
+libguile_gnuradio_swig_py_runtime_la_LDFLAGS = $(_gnuradio_swig_py_runtime_la_LDFLAGS)
+libguile_gnuradio_swig_py_runtime_la_CXXFLAGS = $(_gnuradio_swig_py_runtime_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_runtime.lo: gnuradio_swig_py_runtime.lo
 gnuradio_swig_py_runtime.scm: gnuradio_swig_py_runtime.i
@@ -189,7 +189,7 @@ gnuradio_swig_py_general_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_general_pyli
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_general_scmlibdir = $(libdir)/guile/gnuradio
+gnuradio_swig_py_general_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_general
@@ -272,16 +272,16 @@ gnuradio_swig_py_general_python_PYTHON =			\
 	$(gnuradio_swig_py_general)
 
 if GUILE
-gnuradio_swig_py_general_scmlib_LTLIBRARIES = gnuradio_swig_py_general_guile.la
-gnuradio_swig_py_general_guile_la_SOURCES = 		\
+gnuradio_swig_py_general_scmlib_LTLIBRARIES = libguile-gnuradio_swig_py_general.la
+libguile_gnuradio_swig_py_general_la_SOURCES = 		\
 	guile/gnuradio_swig_py_general.cc			\
 	$(gnuradio_swig_py_general_la_swig_sources)
 gnuradio_swig_py_general_scm_DATA = gnuradio_swig_py_general.scm
 
 # Guile can use the same flags as python does
-gnuradio_swig_py_general_guile_la_LIBADD = $(_gnuradio_swig_py_general_la_LIBADD)
-gnuradio_swig_py_general_guile_la_LDFLAGS = $(_gnuradio_swig_py_general_la_LDFLAGS)
-gnuradio_swig_py_general_guile_la_CXXFLAGS = $(_gnuradio_swig_py_general_la_CXXFLAGS)
+libguile_gnuradio_swig_py_general_la_LIBADD = $(_gnuradio_swig_py_general_la_LIBADD)
+libguile_gnuradio_swig_py_general_la_LDFLAGS = $(_gnuradio_swig_py_general_la_LDFLAGS)
+libguile_gnuradio_swig_py_general_la_CXXFLAGS = $(_gnuradio_swig_py_general_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_general.lo: gnuradio_swig_py_general.lo
 gnuradio_swig_py_general.scm: gnuradio_swig_py_general.i
@@ -337,7 +337,7 @@ gnuradio_swig_py_gengen_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_gengen_pylibd
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_gengen_scmlibdir = $(libdir)/guile/gnuradio
+gnuradio_swig_py_gengen_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_gengen
@@ -420,16 +420,16 @@ gnuradio_swig_py_gengen_python_PYTHON =			\
 	$(gnuradio_swig_py_gengen)
 
 if GUILE
-gnuradio_swig_py_gengen_scmlib_LTLIBRARIES = gnuradio_swig_py_gengen_guile.la
-gnuradio_swig_py_gengen_guile_la_SOURCES = 		\
+gnuradio_swig_py_gengen_scmlib_LTLIBRARIES = libguile-gnuradio_swig_py_gengen.la
+libguile_gnuradio_swig_py_gengen_la_SOURCES = 		\
 	guile/gnuradio_swig_py_gengen.cc			\
 	$(gnuradio_swig_py_gengen_la_swig_sources)
 gnuradio_swig_py_gengen_scm_DATA = gnuradio_swig_py_gengen.scm
 
 # Guile can use the same flags as python does
-gnuradio_swig_py_gengen_guile_la_LIBADD = $(_gnuradio_swig_py_gengen_la_LIBADD)
-gnuradio_swig_py_gengen_guile_la_LDFLAGS = $(_gnuradio_swig_py_gengen_la_LDFLAGS)
-gnuradio_swig_py_gengen_guile_la_CXXFLAGS = $(_gnuradio_swig_py_gengen_la_CXXFLAGS)
+libguile_gnuradio_swig_py_gengen_la_LIBADD = $(_gnuradio_swig_py_gengen_la_LIBADD)
+libguile_gnuradio_swig_py_gengen_la_LDFLAGS = $(_gnuradio_swig_py_gengen_la_LDFLAGS)
+libguile_gnuradio_swig_py_gengen_la_CXXFLAGS = $(_gnuradio_swig_py_gengen_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_gengen.lo: gnuradio_swig_py_gengen.lo
 gnuradio_swig_py_gengen.scm: gnuradio_swig_py_gengen.i
@@ -485,7 +485,7 @@ gnuradio_swig_py_filter_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_filter_pylibd
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_filter_scmlibdir = $(libdir)/guile/gnuradio
+gnuradio_swig_py_filter_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_filter
@@ -568,16 +568,16 @@ gnuradio_swig_py_filter_python_PYTHON =			\
 	$(gnuradio_swig_py_filter)
 
 if GUILE
-gnuradio_swig_py_filter_scmlib_LTLIBRARIES = gnuradio_swig_py_filter_guile.la
-gnuradio_swig_py_filter_guile_la_SOURCES = 		\
+gnuradio_swig_py_filter_scmlib_LTLIBRARIES = libguile-gnuradio_swig_py_filter.la
+libguile_gnuradio_swig_py_filter_la_SOURCES = 		\
 	guile/gnuradio_swig_py_filter.cc			\
 	$(gnuradio_swig_py_filter_la_swig_sources)
 gnuradio_swig_py_filter_scm_DATA = gnuradio_swig_py_filter.scm
 
 # Guile can use the same flags as python does
-gnuradio_swig_py_filter_guile_la_LIBADD = $(_gnuradio_swig_py_filter_la_LIBADD)
-gnuradio_swig_py_filter_guile_la_LDFLAGS = $(_gnuradio_swig_py_filter_la_LDFLAGS)
-gnuradio_swig_py_filter_guile_la_CXXFLAGS = $(_gnuradio_swig_py_filter_la_CXXFLAGS)
+libguile_gnuradio_swig_py_filter_la_LIBADD = $(_gnuradio_swig_py_filter_la_LIBADD)
+libguile_gnuradio_swig_py_filter_la_LDFLAGS = $(_gnuradio_swig_py_filter_la_LDFLAGS)
+libguile_gnuradio_swig_py_filter_la_CXXFLAGS = $(_gnuradio_swig_py_filter_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_filter.lo: gnuradio_swig_py_filter.lo
 gnuradio_swig_py_filter.scm: gnuradio_swig_py_filter.i
@@ -633,7 +633,7 @@ gnuradio_swig_py_io_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_io_pylibdir_categ
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_io_scmlibdir = $(libdir)/guile/gnuradio
+gnuradio_swig_py_io_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_io
@@ -716,16 +716,16 @@ gnuradio_swig_py_io_python_PYTHON =			\
 	$(gnuradio_swig_py_io)
 
 if GUILE
-gnuradio_swig_py_io_scmlib_LTLIBRARIES = gnuradio_swig_py_io_guile.la
-gnuradio_swig_py_io_guile_la_SOURCES = 		\
+gnuradio_swig_py_io_scmlib_LTLIBRARIES = libguile-gnuradio_swig_py_io.la
+libguile_gnuradio_swig_py_io_la_SOURCES = 		\
 	guile/gnuradio_swig_py_io.cc			\
 	$(gnuradio_swig_py_io_la_swig_sources)
 gnuradio_swig_py_io_scm_DATA = gnuradio_swig_py_io.scm
 
 # Guile can use the same flags as python does
-gnuradio_swig_py_io_guile_la_LIBADD = $(_gnuradio_swig_py_io_la_LIBADD)
-gnuradio_swig_py_io_guile_la_LDFLAGS = $(_gnuradio_swig_py_io_la_LDFLAGS)
-gnuradio_swig_py_io_guile_la_CXXFLAGS = $(_gnuradio_swig_py_io_la_CXXFLAGS)
+libguile_gnuradio_swig_py_io_la_LIBADD = $(_gnuradio_swig_py_io_la_LIBADD)
+libguile_gnuradio_swig_py_io_la_LDFLAGS = $(_gnuradio_swig_py_io_la_LDFLAGS)
+libguile_gnuradio_swig_py_io_la_CXXFLAGS = $(_gnuradio_swig_py_io_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_io.lo: gnuradio_swig_py_io.lo
 gnuradio_swig_py_io.scm: gnuradio_swig_py_io.i
@@ -781,7 +781,7 @@ gnuradio_swig_py_hier_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_hier_pylibdir_c
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_hier_scmlibdir = $(libdir)/guile/gnuradio
+gnuradio_swig_py_hier_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_hier
@@ -864,16 +864,16 @@ gnuradio_swig_py_hier_python_PYTHON =			\
 	$(gnuradio_swig_py_hier)
 
 if GUILE
-gnuradio_swig_py_hier_scmlib_LTLIBRARIES = gnuradio_swig_py_hier_guile.la
-gnuradio_swig_py_hier_guile_la_SOURCES = 		\
+gnuradio_swig_py_hier_scmlib_LTLIBRARIES = libguile-gnuradio_swig_py_hier.la
+libguile_gnuradio_swig_py_hier_la_SOURCES = 		\
 	guile/gnuradio_swig_py_hier.cc			\
 	$(gnuradio_swig_py_hier_la_swig_sources)
 gnuradio_swig_py_hier_scm_DATA = gnuradio_swig_py_hier.scm
 
 # Guile can use the same flags as python does
-gnuradio_swig_py_hier_guile_la_LIBADD = $(_gnuradio_swig_py_hier_la_LIBADD)
-gnuradio_swig_py_hier_guile_la_LDFLAGS = $(_gnuradio_swig_py_hier_la_LDFLAGS)
-gnuradio_swig_py_hier_guile_la_CXXFLAGS = $(_gnuradio_swig_py_hier_la_CXXFLAGS)
+libguile_gnuradio_swig_py_hier_la_LIBADD = $(_gnuradio_swig_py_hier_la_LIBADD)
+libguile_gnuradio_swig_py_hier_la_LDFLAGS = $(_gnuradio_swig_py_hier_la_LDFLAGS)
+libguile_gnuradio_swig_py_hier_la_CXXFLAGS = $(_gnuradio_swig_py_hier_la_CXXFLAGS)
 
 guile/gnuradio_swig_py_hier.lo: gnuradio_swig_py_hier.lo
 gnuradio_swig_py_hier.scm: gnuradio_swig_py_hier.i

@@ -41,7 +41,7 @@ audio_windows_pylibdir = $(pyexecdir)/$(audio_windows_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-audio_windows_scmlibdir = $(libdir)/guile/gnuradio
+audio_windows_scmlibdir = $(libdir)
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_windows
@@ -124,16 +124,16 @@ audio_windows_python_PYTHON =			\
 	$(audio_windows)
 
 if GUILE
-audio_windows_scmlib_LTLIBRARIES = audio_windows_guile.la
-audio_windows_guile_la_SOURCES = 		\
+audio_windows_scmlib_LTLIBRARIES = libguile-audio_windows.la
+libguile_audio_windows_la_SOURCES = 		\
 	guile/audio_windows.cc			\
 	$(audio_windows_la_swig_sources)
 audio_windows_scm_DATA = audio_windows.scm
 
 # Guile can use the same flags as python does
-audio_windows_guile_la_LIBADD = $(_audio_windows_la_LIBADD)
-audio_windows_guile_la_LDFLAGS = $(_audio_windows_la_LDFLAGS)
-audio_windows_guile_la_CXXFLAGS = $(_audio_windows_la_CXXFLAGS)
+libguile_audio_windows_la_LIBADD = $(_audio_windows_la_LIBADD)
+libguile_audio_windows_la_LDFLAGS = $(_audio_windows_la_LDFLAGS)
+libguile_audio_windows_la_CXXFLAGS = $(_audio_windows_la_CXXFLAGS)
 
 guile/audio_windows.lo: audio_windows.lo
 audio_windows.scm: audio_windows.i
