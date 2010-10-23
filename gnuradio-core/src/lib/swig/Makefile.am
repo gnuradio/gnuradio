@@ -35,13 +35,13 @@ endif
 # X86_64, g++'s resident set size was 650MB!
 # ----------------------------------------------------------------
 
-TOP_SWIG_IFILES =			\
-	gnuradio_swig_py_runtime.i	\
-	gnuradio_swig_py_general.i	\
-	gnuradio_swig_py_gengen.i	\
-	gnuradio_swig_py_filter.i	\
-	gnuradio_swig_py_io.i		\
-	gnuradio_swig_py_hier.i
+TOP_SWIG_IFILES =		\
+	gnuradio_core_runtime.i	\
+	gnuradio_core_general.i	\
+	gnuradio_core_gengen.i	\
+	gnuradio_core_filter.i	\
+	gnuradio_core_io.i	\
+	gnuradio_core_hier.i
 
 
 # SWIG headers get installed in ${prefix}/include/gnuradio/swig
@@ -73,8 +73,8 @@ ourpython_PYTHON = gnuradio_swig_python.py
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...
 
-gnuradio_swig_bug_workaround.h : gnuradio_swig_py_runtime.py $(srcdir)/gen-swig-bug-fix
-	$(PYTHON) $(srcdir)/gen-swig-bug-fix python/gnuradio_swig_py_runtime.cc $@
+gnuradio_swig_bug_workaround.h : gnuradio_core_runtime.py $(srcdir)/gen-swig-bug-fix
+	$(PYTHON) $(srcdir)/gen-swig-bug-fix python/gnuradio_core_runtime.cc $@
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = gnuradio_swig_bug_workaround.h
@@ -83,20 +83,20 @@ grinclude_HEADERS = gnuradio_swig_bug_workaround.h
 #   import gnuradio.gr
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio/gr
-gnuradio_swig_py_runtime_pythondir_category = gnuradio/gr
-gnuradio_swig_py_general_pythondir_category = gnuradio/gr
-gnuradio_swig_py_gengen_pythondir_category  = gnuradio/gr
-gnuradio_swig_py_filter_pythondir_category  = gnuradio/gr
-gnuradio_swig_py_io_pythondir_category      = gnuradio/gr
-gnuradio_swig_py_hier_pythondir_category    = gnuradio/gr
+gnuradio_core_runtime_pythondir_category = gnuradio/gr
+gnuradio_core_general_pythondir_category = gnuradio/gr
+gnuradio_core_gengen_pythondir_category  = gnuradio/gr
+gnuradio_core_filter_pythondir_category  = gnuradio/gr
+gnuradio_core_io_pythondir_category      = gnuradio/gr
+gnuradio_core_hier_pythondir_category    = gnuradio/gr
 
 # additional libraries for linking with each SWIG-generated library
-gnuradio_swig_py_runtime_la_swig_libadd = $(GNURADIO_CORE_LA)
-gnuradio_swig_py_general_la_swig_libadd = $(GNURADIO_CORE_LA)
-gnuradio_swig_py_gengen_la_swig_libadd  = $(GNURADIO_CORE_LA)
-gnuradio_swig_py_filter_la_swig_libadd  = $(GNURADIO_CORE_LA)
-gnuradio_swig_py_io_la_swig_libadd      = $(GNURADIO_CORE_LA)
-gnuradio_swig_py_hier_la_swig_libadd    = $(GNURADIO_CORE_LA)
+gnuradio_core_runtime_la_swig_libadd = $(GNURADIO_CORE_LA)
+gnuradio_core_general_la_swig_libadd = $(GNURADIO_CORE_LA)
+gnuradio_core_gengen_la_swig_libadd  = $(GNURADIO_CORE_LA)
+gnuradio_core_filter_la_swig_libadd  = $(GNURADIO_CORE_LA)
+gnuradio_core_io_la_swig_libadd      = $(GNURADIO_CORE_LA)
+gnuradio_core_hier_la_swig_libadd    = $(GNURADIO_CORE_LA)
 
 # add some of the variables generated inside the Makefile.swig
 
@@ -118,5 +118,5 @@ no_dist_files = $(swig_built_sources)
 
 # Compile a .i to what guile needs. We use -o to set the output file name,
 # or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
-# gnuradio_swig_py_*_wrap.cxx in the source directory.
+# gnuradio_core_*_wrap.cxx in the source directory.
 
