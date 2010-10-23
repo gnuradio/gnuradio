@@ -18,7 +18,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-# This file implements the old gnuradio_swig_python namespace
+# This file implements the old gnuradio_core namespace
 
 from gnuradio_core_runtime import *
 from gnuradio_core_general import *

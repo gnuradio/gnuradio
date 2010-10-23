@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio_swig_python import top_block_swig, \
+from gnuradio_core import top_block_swig, \
     top_block_wait_unlocked, top_block_run_unlocked
 
 #import gnuradio.gr.gr_threading as _threading

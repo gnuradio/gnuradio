@@ -29,7 +29,7 @@ CLEANFILES += guile/gnuradio*
 endif
 
 # ----------------------------------------------------------------
-# We've split the previously monstrous gnuradio_swig_python into 6
+# We've split the previously monstrous gnuradio_core into 6
 # smaller pieces.  This reduces compile time coupling and creates
 # smaller pieces for the compiler to digest.  prior to this change, on
 # X86_64, g++'s resident set size was 650MB!
@@ -68,7 +68,7 @@ EXTRA_DIST = gen-swig-bug-fix
 # special install for this top-level Python script which includes all
 # of the split Python libraries.
 ourpythondir = $(grpythondir)/gr
-ourpython_PYTHON = gnuradio_swig_python.py
+ourpython_PYTHON = gnuradio_core.py
 
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...

@@ -3,7 +3,7 @@
 ;;; We'll need to assemble the (gnuradio gr) module somewhere...
 ;;;
 
-;; # This file implements the old gnuradio_swig_python namespace
+;; # This file implements the old gnuradio_core namespace
 ;;
 ;; from gnuradio_swig_py_runtime import *
 ;; from gnuradio_swig_py_general import *

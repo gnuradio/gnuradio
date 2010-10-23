@@ -20,7 +20,7 @@
 # 
 
 from gnuradio.gr.exceptions import *
-from gnuradio_swig_python import single_threaded_scheduler, sts_pyrun
+from gnuradio_core import single_threaded_scheduler, sts_pyrun
 import gr_threading as _threading
 #import threading as _threading
 

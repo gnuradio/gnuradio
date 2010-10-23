@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio_swig_python import hier_block2_swig
+from gnuradio_core import hier_block2_swig
 
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.
