@@ -39,7 +39,6 @@ grgrpython_PYTHON = 		\
 	gr_threading_24.py	\
 	hier_block2.py		\
 	prefs.py		\
-	scheduler.py		\
 	top_block.py		\
 	pubsub.py
 
