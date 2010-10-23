@@ -34,6 +34,6 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "_gnuradio_swig_py_runtime_guile" "SWIG_init")
+(load-extension "gnuradio_swig_py_runtime_guile" "SWIG_init")
 %}
 #endif
