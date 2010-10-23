@@ -41,12 +41,12 @@ audio_windows_pylibdir = $(pyexecdir)/$(audio_windows_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-audio_windows_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+audio_windows_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_windows
 # FIXME: determince whether these should be installed with gnuradio.
-audio_windows_scmdir = @GUILE_PKDATADIR@/gnuradio
+audio_windows_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,4 +144,5 @@ python/audio_windows.lo:
 audio_windows.lo: audio_windows.py audio_windows.scm
 audio_windows.py: audio_windows.i
 
+-include python/audio_windows.d
 

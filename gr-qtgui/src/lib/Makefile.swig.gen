@@ -41,12 +41,12 @@ qtgui_pylibdir = $(pyexecdir)/$(qtgui_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-qtgui_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+qtgui_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/qtgui
 # FIXME: determince whether these should be installed with gnuradio.
-qtgui_scmdir = @GUILE_PKDATADIR@/gnuradio
+qtgui_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,4 +144,5 @@ python/qtgui.lo:
 qtgui.lo: qtgui.py qtgui.scm
 qtgui.py: qtgui.i
 
+-include python/qtgui.d
 

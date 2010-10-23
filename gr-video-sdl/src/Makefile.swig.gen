@@ -41,12 +41,12 @@ video_sdl_pylibdir = $(pyexecdir)/$(video_sdl_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-video_sdl_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+video_sdl_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/video_sdl
 # FIXME: determince whether these should be installed with gnuradio.
-video_sdl_scmdir = @GUILE_PKDATADIR@/gnuradio
+video_sdl_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,4 +144,5 @@ python/video_sdl.lo:
 video_sdl.lo: video_sdl.py video_sdl.scm
 video_sdl.py: video_sdl.i
 
+-include python/video_sdl.d
 

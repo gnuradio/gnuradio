@@ -41,12 +41,12 @@ audio_alsa_pylibdir = $(pyexecdir)/$(audio_alsa_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-audio_alsa_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+audio_alsa_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_alsa
 # FIXME: determince whether these should be installed with gnuradio.
-audio_alsa_scmdir = @GUILE_PKDATADIR@/gnuradio
+audio_alsa_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,4 +144,5 @@ python/audio_alsa.lo:
 audio_alsa.lo: audio_alsa.py audio_alsa.scm
 audio_alsa.py: audio_alsa.i
 
+-include python/audio_alsa.d
 

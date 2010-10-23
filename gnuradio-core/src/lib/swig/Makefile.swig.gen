@@ -41,12 +41,12 @@ gnuradio_swig_py_runtime_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_runtime_pyli
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_runtime_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+gnuradio_swig_py_runtime_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_runtime
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_runtime_scmdir = @GUILE_PKDATADIR@/gnuradio
+gnuradio_swig_py_runtime_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,6 +144,7 @@ python/gnuradio_swig_py_runtime.lo:
 gnuradio_swig_py_runtime.lo: gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.scm
 gnuradio_swig_py_runtime.py: gnuradio_swig_py_runtime.i
 
+-include python/gnuradio_swig_py_runtime.d
 
 # -*- Makefile -*-
 #
@@ -188,12 +189,12 @@ gnuradio_swig_py_general_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_general_pyli
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_general_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+gnuradio_swig_py_general_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_general
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_general_scmdir = @GUILE_PKDATADIR@/gnuradio
+gnuradio_swig_py_general_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -291,6 +292,7 @@ python/gnuradio_swig_py_general.lo:
 gnuradio_swig_py_general.lo: gnuradio_swig_py_general.py gnuradio_swig_py_general.scm
 gnuradio_swig_py_general.py: gnuradio_swig_py_general.i
 
+-include python/gnuradio_swig_py_general.d
 
 # -*- Makefile -*-
 #
@@ -335,12 +337,12 @@ gnuradio_swig_py_gengen_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_gengen_pylibd
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_gengen_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+gnuradio_swig_py_gengen_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_gengen
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_gengen_scmdir = @GUILE_PKDATADIR@/gnuradio
+gnuradio_swig_py_gengen_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -438,6 +440,7 @@ python/gnuradio_swig_py_gengen.lo:
 gnuradio_swig_py_gengen.lo: gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen.scm
 gnuradio_swig_py_gengen.py: gnuradio_swig_py_gengen.i
 
+-include python/gnuradio_swig_py_gengen.d
 
 # -*- Makefile -*-
 #
@@ -482,12 +485,12 @@ gnuradio_swig_py_filter_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_filter_pylibd
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_filter_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+gnuradio_swig_py_filter_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_filter
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_filter_scmdir = @GUILE_PKDATADIR@/gnuradio
+gnuradio_swig_py_filter_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -585,6 +588,7 @@ python/gnuradio_swig_py_filter.lo:
 gnuradio_swig_py_filter.lo: gnuradio_swig_py_filter.py gnuradio_swig_py_filter.scm
 gnuradio_swig_py_filter.py: gnuradio_swig_py_filter.i
 
+-include python/gnuradio_swig_py_filter.d
 
 # -*- Makefile -*-
 #
@@ -629,12 +633,12 @@ gnuradio_swig_py_io_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_io_pylibdir_categ
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_io_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+gnuradio_swig_py_io_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_io
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_io_scmdir = @GUILE_PKDATADIR@/gnuradio
+gnuradio_swig_py_io_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -732,6 +736,7 @@ python/gnuradio_swig_py_io.lo:
 gnuradio_swig_py_io.lo: gnuradio_swig_py_io.py gnuradio_swig_py_io.scm
 gnuradio_swig_py_io.py: gnuradio_swig_py_io.i
 
+-include python/gnuradio_swig_py_io.d
 
 # -*- Makefile -*-
 #
@@ -776,12 +781,12 @@ gnuradio_swig_py_hier_pylibdir = $(pyexecdir)/$(gnuradio_swig_py_hier_pylibdir_c
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_hier_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+gnuradio_swig_py_hier_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_swig_py_hier
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_swig_py_hier_scmdir = @GUILE_PKDATADIR@/gnuradio
+gnuradio_swig_py_hier_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -879,4 +884,5 @@ python/gnuradio_swig_py_hier.lo:
 gnuradio_swig_py_hier.lo: gnuradio_swig_py_hier.py gnuradio_swig_py_hier.scm
 gnuradio_swig_py_hier.py: gnuradio_swig_py_hier.i
 
+-include python/gnuradio_swig_py_hier.d
 

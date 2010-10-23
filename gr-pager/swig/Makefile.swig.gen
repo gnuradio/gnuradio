@@ -41,12 +41,12 @@ pager_swig_pylibdir = $(pyexecdir)/$(pager_swig_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-pager_swig_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+pager_swig_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/pager_swig
 # FIXME: determince whether these should be installed with gnuradio.
-pager_swig_scmdir = @GUILE_PKDATADIR@/gnuradio
+pager_swig_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,4 +144,5 @@ python/pager_swig.lo:
 pager_swig.lo: pager_swig.py pager_swig.scm
 pager_swig.py: pager_swig.i
 
+-include python/pager_swig.d
 

@@ -41,12 +41,12 @@ msdd_pylibdir = $(pyexecdir)/$(msdd_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-msdd_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+msdd_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/msdd
 # FIXME: determince whether these should be installed with gnuradio.
-msdd_scmdir = @GUILE_PKDATADIR@/gnuradio
+msdd_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,6 +144,7 @@ python/msdd.lo:
 msdd.lo: msdd.py msdd.scm
 msdd.py: msdd.i
 
+-include python/msdd.d
 
 # -*- Makefile -*-
 #
@@ -188,12 +189,12 @@ msdd_rs_pylibdir = $(pyexecdir)/$(msdd_rs_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-msdd_rs_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+msdd_rs_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/msdd_rs
 # FIXME: determince whether these should be installed with gnuradio.
-msdd_rs_scmdir = @GUILE_PKDATADIR@/gnuradio
+msdd_rs_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -291,4 +292,5 @@ python/msdd_rs.lo:
 msdd_rs.lo: msdd_rs.py msdd_rs.scm
 msdd_rs.py: msdd_rs.i
 
+-include python/msdd_rs.d
 

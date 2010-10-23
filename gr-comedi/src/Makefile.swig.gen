@@ -41,12 +41,12 @@ comedi_pylibdir = $(pyexecdir)/$(comedi_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-comedi_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+comedi_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/comedi
 # FIXME: determince whether these should be installed with gnuradio.
-comedi_scmdir = @GUILE_PKDATADIR@/gnuradio
+comedi_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,4 +144,5 @@ python/comedi.lo:
 comedi.lo: comedi.py comedi.scm
 comedi.py: comedi.i
 
+-include python/comedi.d
 

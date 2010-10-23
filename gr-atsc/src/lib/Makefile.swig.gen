@@ -41,12 +41,12 @@ atsc_pylibdir = $(pyexecdir)/$(atsc_pylibdir_category)
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-atsc_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+atsc_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/atsc
 # FIXME: determince whether these should be installed with gnuradio.
-atsc_scmdir = @GUILE_PKDATADIR@/gnuradio
+atsc_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
@@ -144,4 +144,5 @@ python/atsc.lo:
 atsc.lo: atsc.py atsc.scm
 atsc.py: atsc.i
 
+-include python/atsc.d
 
