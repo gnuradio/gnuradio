@@ -41,12 +41,12 @@
 # The .so libraries for the guile modules get installed whereever guile
 # is installed, usually /usr/lib/guile/gnuradio/
 # FIXME: determince whether these should be installed with gnuradio.
-@NAME@_scmlibdir = @GUILE_PKLIBDIR@/gnuradio
+@NAME@_scmlibdir = $(libdir)/guile/gnuradio
 
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/@NAME@
 # FIXME: determince whether these should be installed with gnuradio.
-@NAME@_scmdir = @GUILE_PKDATADIR@/gnuradio
+@NAME@_scmdir = $(guiledir)/gnuradio
 
 ## SWIG headers are always installed into the same directory.
 
