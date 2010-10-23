@@ -44,6 +44,6 @@ NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.
 #ifdef SWIGGUILE
 %define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, NAME, BASE_NAME)
 _GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, NAME, BASE_NAME)
-#warning "gr_block_sptr needs to be implemented!"
+/* FIXME May want to add something here to get a friendlier printed representation */
 %enddef
 #endif
