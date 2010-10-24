@@ -28,3 +28,10 @@
 
 %typemaps_primitive(%checkcode(CPLXDBL), std::complex<double>);
 %typemaps_primitive(%checkcode(CPLXFLT), std::complex<float>);
+
+%typecheck(SWIG_TYPECHECK_COMPLEX)
+   std::complex<float>, std::complex<double>,
+   const std::complex<float> &, const std::complex<double> &
+{
+  $1 = scm_is_complex($input) ? 1 : 0;
+}
