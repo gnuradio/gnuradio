@@ -29,6 +29,26 @@
 
 %include "general.i"
 
+ // Simple test case for complex input and output
+%inline
+%{
+  std::complex<float> complexf_add_2j(std::complex<float> x)
+  {
+    return std::complex<float>(x.real(), x.imag() + 2);
+  }
+
+  std::complex<double> complexd_add_2j(std::complex<double> x)
+  {
+    return std::complex<double>(x.real(), x.imag() + 2);
+  }
+
+  std::complex<float> complexf_add_x_2j(float x, std::complex<float> y)
+  {
+    return std::complex<float>(x + y.real(), y.imag() + 2);
+  }
+
+%}
+
 #if SWIGGUILE
 %scheme %{
 (load-extension "libguile-gnuradio_core_general" "SWIG_init")

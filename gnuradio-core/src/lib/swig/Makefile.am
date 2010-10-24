@@ -50,6 +50,10 @@ swiginclude_HEADERS =			\
 	gr_swig_block_magic.i		\
 	gr_shared_ptr.i
 
+# SWIG headers that get installed in ${prefix}/include/gnuradio/swig/...
+nobase_swiginclude_HEADERS = \
+	guile/std_complex.i
+
 
 if GUILE
 # This is the top level guile file, which loads all the other scm files

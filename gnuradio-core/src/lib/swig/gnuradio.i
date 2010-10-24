@@ -42,8 +42,12 @@
 
 // non-local SWIG files
 %include <stl.i>
-%include <std_complex.i>
 %include <std_except.i>
+#ifdef SWIGGUILE
+%include <guile/std_complex.i>
+#else
+%include <std_complex.i>
+#endif
 
 typedef std::complex<float>		gr_complex;
 typedef std::complex<double>		gr_complexd;
