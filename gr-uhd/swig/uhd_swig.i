@@ -69,6 +69,7 @@ namespace std {
 ////////////////////////////////////////////////////////////////////////
 %include <uhd/config.hpp>
 %include <uhd/types/ranges.hpp>
+%include <uhd/types/tune_request.hpp>
 %include <uhd/types/tune_result.hpp>
 %include <uhd/types/io_type.hpp>
 %include <uhd/types/time_spec.hpp>

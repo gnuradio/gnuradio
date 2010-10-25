@@ -63,11 +63,25 @@ public:
 
     /*!
      * Tune the usrp device to the desired center frequency.
+     * \param tune_request the tune request instructions
+     * \param chan the channel index 0 to N-1
+     * \return a tune result with the actual frequencies
+     */
+    virtual uhd::tune_result_t set_center_freq(
+        const uhd::tune_request_t tune_request, size_t chan
+    ) = 0;
+
+    /*!
+     * Tune the usrp device to the desired center frequency.
+     * This is a wrapper around set center freq so that in this case,
+     * the user can pass a single frequency in the call through swig.
      * \param freq the desired frequency in Hz
      * \param chan the channel index 0 to N-1
      * \return a tune result with the actual frequencies
      */
-    virtual uhd::tune_result_t set_center_freq(double freq, size_t chan = 0) = 0;
+    uhd::tune_result_t set_center_freq(double freq, size_t chan){
+        return set_center_freq(uhd::tune_request_t(freq), chan);
+    }
 
     /*!
      * Get the tunable frequency range.

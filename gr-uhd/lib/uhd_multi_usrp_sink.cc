@@ -62,9 +62,10 @@ public:
         return _dev->get_tx_rate();
     }
 
-    uhd::tune_result_t set_center_freq(double freq, size_t chan){
-        uhd::tune_result_t tr = _dev->set_tx_freq(freq, chan);
-        return tr;
+    uhd::tune_result_t set_center_freq(
+        const uhd::tune_request_t tune_request, size_t chan
+    ){
+        return _dev->set_tx_freq(tune_request, chan);
     }
 
     uhd::freq_range_t get_freq_range(size_t chan){
