@@ -101,6 +101,12 @@ class gr_block_detail {
       throw std::invalid_argument ("gr_block_detail::n_output_items");
     return d_n_items_written[which_output];
   }
+
+  // Add an item tag tuple to list of tags
+  // -> is this just based on output stream? how to handle this...
+  void add_item_tag(unsigned int which_output,
+		    uint64_t offset,
+		    const pmt::pmt_t &key, const pmt::pmt_t &value);
   
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
@@ -114,6 +120,7 @@ class gr_block_detail {
   std::vector<gr_buffer_sptr>	     d_output;
   std::vector<uint64_t>              d_n_items_read;
   std::vector<uint64_t>              d_n_items_written;
+  std::list<pmt::pmt_t>              d_item_tags;
   bool                               d_done;
 
 

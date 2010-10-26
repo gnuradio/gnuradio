@@ -127,6 +127,14 @@ gr_block::n_items_written(unsigned int which_output) {
   return d_detail->n_items_written(which_output);
 }
 
+void
+gr_block::add_item_tag(unsigned int which_output,
+		       uint64_t offset,
+		       const pmt::pmt_t &key, const pmt::pmt_t &value)
+{
+  d_detail->add_item_tag(which_output, offset, key, value);
+}
+
 std::ostream&
 operator << (std::ostream& os, const gr_block *m)
 {

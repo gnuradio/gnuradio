@@ -138,3 +138,21 @@ gr_block_detail::_post(pmt::pmt_t msg)
 {
   d_tpb.insert_tail(msg);
 }
+
+void
+gr_block_detail::add_item_tag(unsigned int which_output,
+			      uint64_t offset,
+			      const pmt::pmt_t &key, const pmt::pmt_t &value)
+{
+  if(pmt::pmt_is_symbol(key) == false) {
+    throw pmt::pmt_wrong_type("gr_block_detail::set_item_tag key", key);
+  }
+  else {
+    pmt::pmt_t nitem = pmt::pmt_from_uint64(offset);
+    pmt::pmt_t stream = pmt::pmt_string_to_symbol("NULL");
+    pmt::pmt_t tuple = pmt::pmt_make_tuple(nitem, stream, key, value);
+    d_item_tags.push_back(tuple);
+
+    // need to add prunning routing
+  }
+}

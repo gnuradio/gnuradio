@@ -204,6 +204,11 @@ class gr_block : public gr_basic_block {
   // Return the number of items written on output stream which_output
   gr_uint64 n_items_written(unsigned int which_output);
 
+  void add_item_tag(unsigned int which_output,
+		    uint64_t offset,
+		    const pmt::pmt_t &key, const pmt::pmt_t &value);
+
+
   // ----------------------------------------------------------------------------
 
  private:
