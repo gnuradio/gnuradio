@@ -129,10 +129,25 @@ gr_block::n_items_written(unsigned int which_output) {
 
 void
 gr_block::add_item_tag(unsigned int which_output,
-		       uint64_t offset,
+		       gr_uint64 offset,
 		       const pmt::pmt_t &key, const pmt::pmt_t &value)
 {
   d_detail->add_item_tag(which_output, offset, key, value);
+}
+
+std::list<pmt::pmt_t>
+gr_block::get_tags_in_range(unsigned int which_output,
+			    gr_uint64 start, gr_uint64 end)
+{
+  return d_detail->get_tags_in_range(which_output, start, end);
+}
+  
+std::list<pmt::pmt_t>
+gr_block::get_tags_in_range(unsigned int which_output,
+			    gr_uint64 start, gr_uint64 end,
+			    const pmt::pmt_t &key)
+{
+  return d_detail->get_tags_in_range(which_output, start, end, key);
 }
 
 std::ostream&

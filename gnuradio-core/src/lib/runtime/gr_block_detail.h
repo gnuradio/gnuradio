@@ -105,9 +105,16 @@ class gr_block_detail {
   // Add an item tag tuple to list of tags
   // -> is this just based on output stream? how to handle this...
   void add_item_tag(unsigned int which_output,
-		    uint64_t offset,
+		    gr_uint64 offset,
 		    const pmt::pmt_t &key, const pmt::pmt_t &value);
   
+  std::list<pmt::pmt_t> get_tags_in_range(unsigned int which_output,
+					  gr_uint64 start, gr_uint64 end);
+  
+  std::list<pmt::pmt_t> get_tags_in_range(unsigned int which_output,
+					  gr_uint64 start, gr_uint64 end,
+					  const pmt::pmt_t &key);
+
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
 

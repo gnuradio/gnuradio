@@ -141,7 +141,7 @@ gr_block_detail::_post(pmt::pmt_t msg)
 
 void
 gr_block_detail::add_item_tag(unsigned int which_output,
-			      uint64_t offset,
+			      gr_uint64 offset,
 			      const pmt::pmt_t &key, const pmt::pmt_t &value)
 {
   if(pmt::pmt_is_symbol(key) == false) {
@@ -155,4 +155,40 @@ gr_block_detail::add_item_tag(unsigned int which_output,
 
     // need to add prunning routing
   }
+}
+
+std::list<pmt::pmt_t>
+gr_block_detail::get_tags_in_range(unsigned int which_output,
+				   gr_uint64 start, gr_uint64 end)
+{
+  std::list<pmt::pmt_t> found_items;
+  std::list<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+  
+  gr_uint64 item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+  while(itr != d_item_tags.end()) {
+    if((item_time < start) && (item_time < end)) {
+      found_items.push_back(*itr);
+    }
+
+    itr++;
+    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+
+    // items are pushed onto list in sequential order; stop if we're past end
+    if(item_time > end) {
+      break;
+    }
+  }
+
+  return found_items;
+}
+
+std::list<pmt::pmt_t>
+gr_block_detail::get_tags_in_range(unsigned int which_output,
+				   gr_uint64 start, gr_uint64 end,
+				   const pmt::pmt_t &key)
+{
+  std::list<pmt::pmt_t> found_items;
+  std::list<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+
+  return found_items;
 }

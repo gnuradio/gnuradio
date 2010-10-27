@@ -24,6 +24,7 @@
 #define INCLUDED_GR_BLOCK_H
 
 #include <gr_basic_block.h>
+#include <list>
 
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
@@ -205,9 +206,15 @@ class gr_block : public gr_basic_block {
   gr_uint64 n_items_written(unsigned int which_output);
 
   void add_item_tag(unsigned int which_output,
-		    uint64_t offset,
+		    gr_uint64 offset,
 		    const pmt::pmt_t &key, const pmt::pmt_t &value);
 
+  std::list<pmt::pmt_t> get_tags_in_range(unsigned int which_output,
+					  gr_uint64 start, gr_uint64 end);
+  
+  std::list<pmt::pmt_t> get_tags_in_range(unsigned int which_output,
+					  gr_uint64 start, gr_uint64 end,
+					  const pmt::pmt_t &key);
 
   // ----------------------------------------------------------------------------
 
