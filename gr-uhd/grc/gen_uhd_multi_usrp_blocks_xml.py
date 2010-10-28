@@ -180,15 +180,6 @@ USRP2 Example: addr=192.168.10.2 192.168.10.3
 Num Motherboards:
 Selects the number of USRP motherboards in this multi-USRP configuration.
 
-Num Channels:
-Selects the total number of channels in this multi-USRP configuration.
-Ex: 4 motherboards with 2 channels per board = 8 channels total
-
-Sample rate:
-The sample rate is the number of samples per second input by this block. \\
-The UHD device driver will try its best to match the requested sample rate. \\
-If the requested rate is not possible, the UHD block will print an error at runtime.
-
 Subdevice specification:
 Each motherboard should have its own subdevice specification \\
 and all subdevice specifications should be the same length. \\
@@ -198,6 +189,21 @@ If left blank, the UHD will try to select the first subdevice on your system. \\
 See the application notes for further details.
 Single channel example: :AB
 Dual channel example: :A :B
+
+Num Channels:
+Selects the total number of channels in this multi-USRP configuration.
+Ex: 4 motherboards with 2 channels per board = 8 channels total
+
+Sample rate:
+The sample rate is the number of samples per second input by this block. \\
+The UHD device driver will try its best to match the requested sample rate. \\
+If the requested rate is not possible, the UHD block will print an error at runtime.
+
+Center frequency:
+The center frequency is the overall frequency of the RF chain. \\
+For greater control of how the UHD tunes elements in the RF chain, \\
+pass a tune_request_t object rather than a simple target frequency.
+Tuning with an LO offset example: uhd.tune_request_t(freq, lo_off)
 
 Antenna:
 For subdevices with only one antenna, this may be left blank. \\

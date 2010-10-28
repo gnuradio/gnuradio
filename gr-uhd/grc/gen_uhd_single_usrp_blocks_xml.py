@@ -142,11 +142,6 @@ Used args to specify a specfic device.
 USRP2 Example: addr=192.168.10.2
 USRP1 Example: serial=12345678
 
-Sample rate:
-The sample rate is the number of samples per second input by this block. \\
-The UHD device driver will try its best to match the requested sample rate. \\
-If the requested rate is not possible, the UHD block will print an error at runtime.
-
 Subdevice specification:
 Select the subdevice or subdevices for each channel using a markup string. \\
 The markup string consists of a list of dboard_slot:subdev_name pairs (one pair per channel). \\
@@ -154,6 +149,17 @@ If left blank, the UHD will try to select the first subdevice on your system. \\
 See the application notes for further details.
 Single channel example: A:AB
 Dual channel example: A:AB B:0
+
+Sample rate:
+The sample rate is the number of samples per second input by this block. \\
+The UHD device driver will try its best to match the requested sample rate. \\
+If the requested rate is not possible, the UHD block will print an error at runtime.
+
+Center frequency:
+The center frequency is the overall frequency of the RF chain. \\
+For greater control of how the UHD tunes elements in the RF chain, \\
+pass a tune_request_t object rather than a simple target frequency.
+Tuning with an LO offset example: uhd.tune_request_t(freq, lo_off)
 
 Antenna:
 For subdevices with only one antenna, this may be left blank. \\
