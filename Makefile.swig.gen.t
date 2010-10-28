@@ -46,7 +46,7 @@
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/@NAME@
 # FIXME: determince whether these should be installed with gnuradio.
-@NAME@_scmdir = $(guiledir)/gnuradio
+@NAME@_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ if GUILE
 libguile_@NAME@_la_SOURCES = 		\
 	guile/@NAME@.cc			\
 	$(@NAME@_la_swig_sources)
-@NAME@_scm_DATA = @NAME@.scm
+nobase_@NAME@_scm_DATA = gnuradio/@NAME@.scm gnuradio/@NAME@-primtive.scm
 
 # Guile can use the same flags as python does
 libguile_@NAME@_la_LIBADD = $(_@NAME@_la_LIBADD)

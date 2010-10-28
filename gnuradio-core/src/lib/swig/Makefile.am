@@ -59,7 +59,9 @@ if GUILE
 # This is the top level guile file, which loads all the other scm files
 # for gnuradio. This has to be installed top level to be found in the
 # default search path.
-grguile_DATA = gnuradio_core.scm
+nobase_guile_DATA = \
+	gnuradio/core.scm \
+	Swig/common.scm
 endif
 
 
@@ -112,7 +114,8 @@ BUILT_SOURCES += $(PYTHON_GEN)
 endif				# end of if python
 
 if GUILE
-GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.scm,$(HFILE)))
+GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,%.scm,$(HFILE)))
+#GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
 # BUILT_SOURCES += $(foreach HFILE,$(GUILE_GEN), $(subst gnuradio,guile/gnuradio,$(HFILE)))
 BUILT_SOURCES += $(GUILE_GEN)
 endif

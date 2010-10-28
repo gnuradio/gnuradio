@@ -51,6 +51,12 @@ SWIG_GUILE_FLAGS =	\
 	-guile		\
 	-scm		\
 	-scmstub	\
+	-package gnuradio \
+	-Linkage module \
+	-proxy \
+	-goopsprefix gr: \
+	-emit-slot-accessors \
+	-emit-setters \
 	-outdir .
 
 ## standard swig flags used by most components

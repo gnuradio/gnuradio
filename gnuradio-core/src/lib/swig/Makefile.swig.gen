@@ -46,7 +46,7 @@ gnuradio_core_runtime_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_core_runtime
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_core_runtime_scmdir = $(guiledir)/gnuradio
+gnuradio_core_runtime_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ gnuradio_core_runtime_scmlib_LTLIBRARIES = libguile-gnuradio_core_runtime.la
 libguile_gnuradio_core_runtime_la_SOURCES = 		\
 	guile/gnuradio_core_runtime.cc			\
 	$(gnuradio_core_runtime_la_swig_sources)
-gnuradio_core_runtime_scm_DATA = gnuradio_core_runtime.scm
+nobase_gnuradio_core_runtime_scm_DATA = gnuradio/gnuradio_core_runtime.scm gnuradio/gnuradio_core_runtime-primtive.scm
 
 # Guile can use the same flags as python does
 libguile_gnuradio_core_runtime_la_LIBADD = $(_gnuradio_core_runtime_la_LIBADD)
@@ -194,7 +194,7 @@ gnuradio_core_general_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_core_general
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_core_general_scmdir = $(guiledir)/gnuradio
+gnuradio_core_general_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -276,7 +276,7 @@ gnuradio_core_general_scmlib_LTLIBRARIES = libguile-gnuradio_core_general.la
 libguile_gnuradio_core_general_la_SOURCES = 		\
 	guile/gnuradio_core_general.cc			\
 	$(gnuradio_core_general_la_swig_sources)
-gnuradio_core_general_scm_DATA = gnuradio_core_general.scm
+nobase_gnuradio_core_general_scm_DATA = gnuradio/gnuradio_core_general.scm gnuradio/gnuradio_core_general-primtive.scm
 
 # Guile can use the same flags as python does
 libguile_gnuradio_core_general_la_LIBADD = $(_gnuradio_core_general_la_LIBADD)
@@ -342,7 +342,7 @@ gnuradio_core_gengen_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_core_gengen
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_core_gengen_scmdir = $(guiledir)/gnuradio
+gnuradio_core_gengen_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -424,7 +424,7 @@ gnuradio_core_gengen_scmlib_LTLIBRARIES = libguile-gnuradio_core_gengen.la
 libguile_gnuradio_core_gengen_la_SOURCES = 		\
 	guile/gnuradio_core_gengen.cc			\
 	$(gnuradio_core_gengen_la_swig_sources)
-gnuradio_core_gengen_scm_DATA = gnuradio_core_gengen.scm
+nobase_gnuradio_core_gengen_scm_DATA = gnuradio/gnuradio_core_gengen.scm gnuradio/gnuradio_core_gengen-primtive.scm
 
 # Guile can use the same flags as python does
 libguile_gnuradio_core_gengen_la_LIBADD = $(_gnuradio_core_gengen_la_LIBADD)
@@ -490,7 +490,7 @@ gnuradio_core_filter_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_core_filter
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_core_filter_scmdir = $(guiledir)/gnuradio
+gnuradio_core_filter_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -572,7 +572,7 @@ gnuradio_core_filter_scmlib_LTLIBRARIES = libguile-gnuradio_core_filter.la
 libguile_gnuradio_core_filter_la_SOURCES = 		\
 	guile/gnuradio_core_filter.cc			\
 	$(gnuradio_core_filter_la_swig_sources)
-gnuradio_core_filter_scm_DATA = gnuradio_core_filter.scm
+nobase_gnuradio_core_filter_scm_DATA = gnuradio/gnuradio_core_filter.scm gnuradio/gnuradio_core_filter-primtive.scm
 
 # Guile can use the same flags as python does
 libguile_gnuradio_core_filter_la_LIBADD = $(_gnuradio_core_filter_la_LIBADD)
@@ -638,7 +638,7 @@ gnuradio_core_io_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_core_io
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_core_io_scmdir = $(guiledir)/gnuradio
+gnuradio_core_io_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -720,7 +720,7 @@ gnuradio_core_io_scmlib_LTLIBRARIES = libguile-gnuradio_core_io.la
 libguile_gnuradio_core_io_la_SOURCES = 		\
 	guile/gnuradio_core_io.cc			\
 	$(gnuradio_core_io_la_swig_sources)
-gnuradio_core_io_scm_DATA = gnuradio_core_io.scm
+nobase_gnuradio_core_io_scm_DATA = gnuradio/gnuradio_core_io.scm gnuradio/gnuradio_core_io-primtive.scm
 
 # Guile can use the same flags as python does
 libguile_gnuradio_core_io_la_LIBADD = $(_gnuradio_core_io_la_LIBADD)
@@ -786,7 +786,7 @@ gnuradio_core_hier_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gnuradio_core_hier
 # FIXME: determince whether these should be installed with gnuradio.
-gnuradio_core_hier_scmdir = $(guiledir)/gnuradio
+gnuradio_core_hier_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -868,7 +868,7 @@ gnuradio_core_hier_scmlib_LTLIBRARIES = libguile-gnuradio_core_hier.la
 libguile_gnuradio_core_hier_la_SOURCES = 		\
 	guile/gnuradio_core_hier.cc			\
 	$(gnuradio_core_hier_la_swig_sources)
-gnuradio_core_hier_scm_DATA = gnuradio_core_hier.scm
+nobase_gnuradio_core_hier_scm_DATA = gnuradio/gnuradio_core_hier.scm gnuradio/gnuradio_core_hier-primtive.scm
 
 # Guile can use the same flags as python does
 libguile_gnuradio_core_hier_la_LIBADD = $(_gnuradio_core_hier_la_LIBADD)
