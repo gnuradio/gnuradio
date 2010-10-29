@@ -30,6 +30,13 @@ MAIN_TMPL = """\
 	io_type=uhd.io_type_t.\$type.type,
 	num_channels=\$nchan,
 )
+\#if \$ref_clk()
+_clk_cfg = uhd.clock_config_t()
+_clk_cfg.ref_source = uhd.clock_config_t.REF_SMA
+_clk_cfg.pps_source = uhd.clock_config_t.PPS_SMA
+_clk_cfg.pps_polarity = uhd.clock_config_t.PPS_POS
+self.\$(id).set_clock_config(_clk_cfg);
+\#end if
 \#if \$sd_spec()
 self.\$(id).set_subdev_spec(\$sd_spec)
 \#end if
@@ -102,6 +109,21 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 				part
 			\#end if
 		</hide>
+	</param>
+	<param>
+		<name>Ref Clock</name>
+		<key>ref_clk</key>
+		<value></value>
+		<type>enum</type>
+		<hide>\#if \$ref_clk() then 'none' else 'part'#</hide>
+		<option>
+			<name>External</name>
+			<key>ext</key>
+		</option>
+		<option>
+			<name>Internal</name>
+			<key></key>
+		</option>
 	</param>
 	<param>
 		<name>Subdev Spec</name>
