@@ -1,3 +1,37 @@
+;;;
+;;; Copyright 2010 Free Software Foundation, Inc.
+;;;
+;;; This file is part of GNU Radio
+;;;
+;;; GNU Radio is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 3, or (at your option)
+;;; any later version.
+;;;
+;;; GNU Radio is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;;
+
+;;; This module implements a macro, export-safely, that avoids
+;;; exporting symbols that are actually generic-functions imported
+;;; (explicity or implicitly) from elsewhere.
+;;;
+;;; This hackery is required so that the swig generated goops wrappers
+;;; don't stomp on each other.  For background on what this is about
+;;; see this thread:
+;;;
+;;;   http://lists.gnu.org/archive/html/guile-user/2006-05/msg00007.html
+;;;
+;;; Don't expect to understand what's going on here without looking at
+;;; the guts of the module system (implemented in ice-9/boot-9.scm) and
+;;; having a pretty good understanding of goops and generic-functions.
+
+
 (define-module (gnuradio export-safely)
   #:use-module (oop goops)
   #:use-module (srfi srfi-1)
@@ -23,7 +57,7 @@
   (let ((gf-names (generic-function-names-in-imported-modules (current-module))))
     (let ((to-export (filter (lambda (sym)
 			       (not (memq sym gf-names)))
-			     list-of-syms)))
+			     (delete-duplicates list-of-syms))))
       (module-export! (current-module) to-export))))
 	 
 (defmacro export-safely names
@@ -39,7 +73,15 @@
     lst))
 
 (define-public (names-in-imported-modules module)
-  (concatenate (map names-in-module (module-uses module))))
+  (delete-duplicates (concatenate (map names-in-module (module-uses module)))))
 
 (define-public (re-export-all module)
-  (module-re-export! module (names-in-imported-modules module)))
+  (define (ok-to-re-export? name)
+    (let ((var (module-variable module name)))
+      (cond ((not var) #f)					; Undefined var
+	    ((eq? var (module-local-variable module name)) #f)  ; local var
+	    (else #t))))					; OK
+
+  (module-re-export! module
+		     (filter ok-to-re-export?
+			     (names-in-imported-modules module))))
