@@ -60,6 +60,7 @@ if GUILE
 # for gnuradio. This has to be installed top level to be found in the
 # default search path.
 nobase_guile_DATA = \
+	gnuradio/export-safely.scm \
 	gnuradio/core.scm \
 	Swig/common.scm
 endif

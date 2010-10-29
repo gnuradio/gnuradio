@@ -36,4 +36,11 @@
 %scheme %{
 (load-extension "libguile-gnuradio_core_runtime" "scm_init_gnuradio_gnuradio_core_runtime_module")
 %}
+
+%goops %{
+(use-modules (gnuradio export-safely))
+(re-export export-syms-if-not-imported-gf)
+(re-export-syntax export-safely)
+(re-export re-export-all)
+%}
 #endif

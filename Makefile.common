@@ -131,6 +131,7 @@ if GUILE
 	sed -e 's:guile/gnuradio_core_runtime.cc:gnuradio_core_runtime.scm:' guile/$*.Std > guile/$*.d
 	$(RM) guile/$*.Std
 	$(SED) -i -e 's/<--dummy-[0-9]\+-->/<top>/g' gnuradio/$*.scm
+	$(SED) -i -e 's/^(export /(export-safely /' gnuradio/$*.scm
 endif
 
 # Compile a .i file to what python needs

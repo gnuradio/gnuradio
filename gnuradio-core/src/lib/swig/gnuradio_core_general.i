@@ -55,6 +55,6 @@
 %}
 
 %goops %{
-  (use-modules (gnuradio gnuradio_core_runtime))
+(use-modules (gnuradio gnuradio_core_runtime))
 %}
 #endif
