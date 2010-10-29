@@ -76,15 +76,6 @@ namespace std {
 
 ////////////////////////////////////////////////////////////////////////
 
-%constant int sizeof_char 	= sizeof(char);
-%constant int sizeof_short	= sizeof(short);
-%constant int sizeof_int	= sizeof(int);
-%constant int sizeof_float	= sizeof(float);
-%constant int sizeof_double	= sizeof(double);
-%constant int sizeof_gr_complex	= sizeof(gr_complex);
-
-////////////////////////////////////////////////////////////////////////
-
 #ifndef SW_RUNTIME
 // import runtime.i for all but sw_runtime, since it needs to %include
 %import <runtime.i>
