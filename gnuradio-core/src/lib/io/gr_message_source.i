@@ -20,6 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifdef SWIGGUILE
+#warning "gr_message_source.i: FIXME being ignored by swig/guile for now"
+#else
+
 GR_SWIG_BLOCK_MAGIC(gr,message_source);
 
 gr_message_source_sptr gr_make_message_source (size_t itemsize, int msgq_limit=0);
@@ -36,3 +40,4 @@ class gr_message_source : public gr_sync_block
 
   gr_msg_queue_sptr msgq() const;
 };
+#endif
