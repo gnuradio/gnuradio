@@ -53,7 +53,7 @@
 #include <gr_complex_to_xxx.h>
 #include <gr_complex_to_interleaved_short.h>
 #include <gr_interleaved_short_to_complex.h>
-#include <gr_endianness.h>
+//#include <gr_endianness.h>
 #include <gr_firdes.h>
 #include <gr_interleave.h>
 #include <gr_deinterleave.h>
@@ -173,7 +173,7 @@
 %include "gr_align_on_samplenumbers_ss.i"
 %include "gr_complex_to_xxx.i"
 %include "gr_complex_to_interleaved_short.i"
-%include "gr_endianness.i"
+//%include "gr_endianness.i"
 %include "gr_interleaved_short_to_complex.i"
 %include "gr_firdes.i"
 %include "gr_interleave.i"
