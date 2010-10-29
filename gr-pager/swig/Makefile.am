@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,10 +22,10 @@
 include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = \
+	-I$(top_srcdir)/gr-pager/lib \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
-	$(WITH_INCLUDES) \
-	-I$(top_srcdir)/gr-pager/lib
+	$(WITH_INCLUDES)
 
 ##############################
 # SWIG interface and library

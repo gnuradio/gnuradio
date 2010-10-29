@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -42,10 +42,10 @@ DISTCLEANFILES = run_tests
 # libgr-usrp.so
 # ----------------------------------------------------------------------
 AM_CPPFLAGS = \
-	$(STD_DEFINES_AND_INCLUDES)  \
 	$(GRUEL_INCLUDES) \
-	$(PYTHON_CPPFLAGS) \
 	$(USRP2_INCLUDES) \
+	$(STD_DEFINES_AND_INCLUDES)  \
+	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
 
 lib_LTLIBRARIES = libgnuradio-usrp2.la

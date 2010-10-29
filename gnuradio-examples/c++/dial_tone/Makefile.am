@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,9 +22,10 @@
 include $(top_srcdir)/Makefile.common
 
 # For compiling within the GNU Radio build tree
-AM_CPPFLAGS=$(STD_DEFINES_AND_INCLUDES) \
-         -I$(top_srcdir)/gr-audio-alsa/src \
-	 $(WITH_INCLUDES)
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/gr-audio-alsa/src \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_INCLUDES)
 
 GR_AUDIO_ALSA_LA=$(top_builddir)/gr-audio-alsa/src/libgnuradio-audio-alsa.la
 

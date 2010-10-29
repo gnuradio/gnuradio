@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2003,2004,2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(GRUEL_INCLUDES) $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libruntime.la libruntime-qa.la
 
