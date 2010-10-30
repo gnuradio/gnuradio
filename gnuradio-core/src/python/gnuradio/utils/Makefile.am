@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,20 +22,20 @@
 include $(top_srcdir)/Makefile.common
 
 if PYTHON
-SUBDIRS = gr gru gruimpl blks2 blks2impl vocoder utils
+utilspythondir = $(grpythondir)/utils
 
-grpython_PYTHON = 			\
-	__init__.py			\
-	audio.py			\
-	eng_notation.py			\
-	eng_option.py			\
-	modulation_utils.py		\
-	modulation_utils2.py		\
-	ofdm_packet_utils.py		\
-	packet_utils.py			\
-	gr_unittest.py			\
-	gr_xmlrunner.py			\
-	optfir.py			\
-	usrp_options.py		\
-	window.py
+TESTS = 				\
+	run_tests
+
+nobase_utilspython_PYTHON = \
+	__init__.py \
+	doxyxml/__init__.py \
+	doxyxml/base.py \
+	doxyxml/doxyindex.py \
+	doxyxml/text.py \
+	doxyxml/generated/__init__.py \
+	doxyxml/generated/index.py \
+	doxyxml/generated/indexsuper.py \
+	doxyxml/generated/compound.py \
+	doxyxml/generated/compoundsuper.py
 endif

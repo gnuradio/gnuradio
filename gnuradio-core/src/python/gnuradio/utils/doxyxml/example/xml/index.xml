@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.6.3">
+  <compound refid="classAadvark" kind="class"><name>Aadvark</name>
+    <member refid="classAadvark_1ab79eb58d7bb9d5ddfa5d6f783836cab9" kind="variable"><name>aadvarkness</name></member>
+    <member refid="classAadvark_1abd061aa5f998002e72080a34f512a059" kind="function"><name>print</name></member>
+    <member refid="classAadvark_1adf1a4b97a641411a74a04ab312484462" kind="function"><name>Aadvark</name></member>
+    <member refid="classAadvark_1affd2ada0a85807efcbe26615a848f53e" kind="function"><name>get_aadvarkness</name></member>
+  </compound>
+  <compound refid="aadvark_8cc" kind="file"><name>aadvark.cc</name>
+    <member refid="aadvark_8cc_1acb52858524210ec6dddc3e16d1e52946" kind="function"><name>aadvarky_enough</name></member>
+    <member refid="aadvark_8cc_1ae66f6b31b5ad750f1fe042a706a4e3d4" kind="function"><name>main</name></member>
+  </compound>
+  <compound refid="aadvark_8h" kind="file"><name>aadvark.h</name>
+    <member refid="aadvark_8h_1acb52858524210ec6dddc3e16d1e52946" kind="function"><name>aadvarky_enough</name></member>
+    <member refid="aadvark_8h_1ae66f6b31b5ad750f1fe042a706a4e3d4" kind="function"><name>main</name></member>
+  </compound>
+</doxygenindex>

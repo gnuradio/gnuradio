@@ -104,12 +104,16 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/python/gnuradio/gru/Makefile \
         gnuradio-core/src/python/gnuradio/gruimpl/Makefile \
         gnuradio-core/src/python/gnuradio/vocoder/Makefile \
+        gnuradio-core/src/python/gnuradio/utils/run_tests \
+        gnuradio-core/src/python/gnuradio/utils/Makefile \
         gnuradio-core/src/tests/Makefile \
         gnuradio-core/src/utils/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gnuradio-core, [
         dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_core],[chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests])
+        AC_CONFIG_COMMANDS([run_tests_core],[chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests]) \
+        AC_CONFIG_COMMANDS([run_tests_utils],[chmod +x gnuradio-core/src/python/gnuradio/utils/run_tests])
     ])
+
 ])
