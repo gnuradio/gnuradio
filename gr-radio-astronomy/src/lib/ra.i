@@ -55,3 +55,13 @@
 // private:
 //   ra_square2_ff ();
 // };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension "libguile-ra" "scm_init_gnuradio_ra_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

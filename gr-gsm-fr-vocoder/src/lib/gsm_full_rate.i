@@ -46,3 +46,13 @@ class gsm_fr_decode_ps : public gr_sync_interpolator {
 public:
   ~gsm_fr_decode_ps ();
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension "libguile-gsm_full_rate" "scm_init_gnuradio_gsm_full_rate_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

@@ -32,3 +32,12 @@
 %include "noaa_hrpt_deframer.i"
 %include "noaa_hrpt_pll_cf.i"
 
+#if SWIGGUILE
+%scheme %{
+(load-extension "libguile-noaa_swig" "scm_init_gnuradio_noaa_swig_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

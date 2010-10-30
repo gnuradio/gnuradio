@@ -69,3 +69,13 @@ class comedi_sink_s : public gr_sync_block {
  public:
   ~comedi_sink_s ();
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension "libguile-comedi" "scm_init_gnuradio_comedi_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

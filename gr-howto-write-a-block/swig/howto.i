@@ -9,3 +9,13 @@
 
 %include "howto_square_ff.i"
 %include "howto_square2_ff.i"
+
+#if SWIGGUILE
+%scheme %{
+(load-extension "libguile-howto" "scm_init_gnuradio_howto_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

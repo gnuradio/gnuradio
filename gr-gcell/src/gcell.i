@@ -28,3 +28,13 @@
 
 %include "gc_job_manager.i"
 %include "gcell_fft_vcc.i"
+
+#if SWIGGUILE
+%scheme %{
+(load-extension "libguile-gcell" "scm_init_gnuradio_gcell_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

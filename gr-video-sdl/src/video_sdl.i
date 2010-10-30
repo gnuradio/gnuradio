@@ -60,3 +60,13 @@ class video_sdl_sink_s : public gr_sync_block {
  public:
   ~video_sdl_sink_s ();
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension "libguile-video_sdl" "scm_init_gnuradio_video_sdl_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif
