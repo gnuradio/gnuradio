@@ -124,7 +124,3 @@ endif
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
 
-# Compile a .i to what guile needs. We use -o to set the output file name,
-# or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
-# gnuradio_core_*_wrap.cxx in the source directory.
-
