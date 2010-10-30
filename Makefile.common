@@ -122,9 +122,13 @@ MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
 SUFFIXES = .i .scm .py
 
 if GUILE
+# Compile a .i to what guile needs. We use -o to set the output file name,
+# or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
+# gnuradio_core_*_wrap.cxx in the source directory.
 .i.scm:
 	@echo "Compile .i to .scm"
 	@test -d "guile" || $(mkinstalldirs) "guile"
+	@test -d "gnuradio" || $(mkinstalldirs) "gnuradio"
 	$(SWIG) $(STD_SWIG_GUILE_ARGS) $(GNURADIO_INCLUDES) $(USRP2_INCLUDES) \
 		-MD -MF guile/$*.Std \
 		-module $* -o guile/$*.cc $<
