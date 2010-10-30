@@ -128,7 +128,7 @@ if GUILE
 libguile_@NAME@_la_SOURCES = 		\
 	guile/@NAME@.cc			\
 	$(@NAME@_la_swig_sources)
-nobase_@NAME@_scm_DATA = gnuradio/@NAME@.scm gnuradio/@NAME@-primtive.scm
+nobase_@NAME@_scm_DATA = gnuradio/@NAME@.scm gnuradio/@NAME@-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_@NAME@_la_LIBADD = $(_@NAME@_la_LIBADD)
@@ -136,7 +136,9 @@ libguile_@NAME@_la_LDFLAGS = $(_@NAME@_la_LDFLAGS)
 libguile_@NAME@_la_CXXFLAGS = $(_@NAME@_la_CXXFLAGS)
 
 guile/@NAME@.lo: @NAME@.lo
-gnuradio/@NAME@.scm: @NAME@.i
+@NAME@.scm: @NAME@.i
+gnuradio/@NAME@-primitive.scm: @NAME@.scm
+
 -include guile/@NAME@.d
 
 endif				# end of GUILE
