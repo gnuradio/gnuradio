@@ -136,7 +136,8 @@ libguile_@NAME@_la_LDFLAGS = $(_@NAME@_la_LDFLAGS)
 libguile_@NAME@_la_CXXFLAGS = $(_@NAME@_la_CXXFLAGS)
 
 guile/@NAME@.lo: @NAME@.lo
-@NAME@.scm: @NAME@.i
+gnuradio/@NAME@.scm: @NAME@.i
+-include guile/@NAME@.d
 
 endif				# end of GUILE
 
