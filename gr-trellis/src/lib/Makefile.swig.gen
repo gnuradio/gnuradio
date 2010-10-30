@@ -46,7 +46,7 @@ trellis_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/trellis
 # FIXME: determince whether these should be installed with gnuradio.
-trellis_scmdir = $(guiledir)/gnuradio
+trellis_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ trellis_scmlib_LTLIBRARIES = libguile-trellis.la
 libguile_trellis_la_SOURCES = 		\
 	guile/trellis.cc			\
 	$(trellis_la_swig_sources)
-trellis_scm_DATA = trellis.scm
+nobase_trellis_scm_DATA = gnuradio/trellis.scm gnuradio/trellis-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_trellis_la_LIBADD = $(_trellis_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_trellis_la_CXXFLAGS = $(_trellis_la_CXXFLAGS)
 
 guile/trellis.lo: trellis.lo
 trellis.scm: trellis.i
+gnuradio/trellis-primitive.scm: trellis.scm
+
+-include guile/trellis.d
 
 endif				# end of GUILE
 

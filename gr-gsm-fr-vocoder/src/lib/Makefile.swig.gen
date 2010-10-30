@@ -46,7 +46,7 @@ gsm_full_rate_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gsm_full_rate
 # FIXME: determince whether these should be installed with gnuradio.
-gsm_full_rate_scmdir = $(guiledir)/gnuradio
+gsm_full_rate_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ gsm_full_rate_scmlib_LTLIBRARIES = libguile-gsm_full_rate.la
 libguile_gsm_full_rate_la_SOURCES = 		\
 	guile/gsm_full_rate.cc			\
 	$(gsm_full_rate_la_swig_sources)
-gsm_full_rate_scm_DATA = gsm_full_rate.scm
+nobase_gsm_full_rate_scm_DATA = gnuradio/gsm_full_rate.scm gnuradio/gsm_full_rate-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_gsm_full_rate_la_LIBADD = $(_gsm_full_rate_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_gsm_full_rate_la_CXXFLAGS = $(_gsm_full_rate_la_CXXFLAGS)
 
 guile/gsm_full_rate.lo: gsm_full_rate.lo
 gsm_full_rate.scm: gsm_full_rate.i
+gnuradio/gsm_full_rate-primitive.scm: gsm_full_rate.scm
+
+-include guile/gsm_full_rate.d
 
 endif				# end of GUILE
 

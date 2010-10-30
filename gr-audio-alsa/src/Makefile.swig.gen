@@ -46,7 +46,7 @@ audio_alsa_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_alsa
 # FIXME: determince whether these should be installed with gnuradio.
-audio_alsa_scmdir = $(guiledir)/gnuradio
+audio_alsa_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ audio_alsa_scmlib_LTLIBRARIES = libguile-audio_alsa.la
 libguile_audio_alsa_la_SOURCES = 		\
 	guile/audio_alsa.cc			\
 	$(audio_alsa_la_swig_sources)
-audio_alsa_scm_DATA = audio_alsa.scm
+nobase_audio_alsa_scm_DATA = gnuradio/audio_alsa.scm gnuradio/audio_alsa-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_audio_alsa_la_LIBADD = $(_audio_alsa_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_audio_alsa_la_CXXFLAGS = $(_audio_alsa_la_CXXFLAGS)
 
 guile/audio_alsa.lo: audio_alsa.lo
 audio_alsa.scm: audio_alsa.i
+gnuradio/audio_alsa-primitive.scm: audio_alsa.scm
+
+-include guile/audio_alsa.d
 
 endif				# end of GUILE
 
