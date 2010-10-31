@@ -56,8 +56,7 @@ uhd_swig_swiginclude_headers =
 
 include $(top_srcdir)/Makefile.swig
 
-# FIXME better way to set this?
-STD_SWIG_PYTHON_ARGS += \
+uhd_swig_swig_args = \
 	$(UHD_CFLAGS) \
 	-I$(top_srcdir)/gr-uhd/lib
 
