@@ -46,7 +46,7 @@ uhd_swig_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/uhd_swig
 # FIXME: determince whether these should be installed with gnuradio.
-uhd_swig_scmdir = $(guiledir)/gnuradio
+uhd_swig_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ uhd_swig_scmlib_LTLIBRARIES = libguile-uhd_swig.la
 libguile_uhd_swig_la_SOURCES = 		\
 	guile/uhd_swig.cc			\
 	$(uhd_swig_la_swig_sources)
-uhd_swig_scm_DATA = uhd_swig.scm
+nobase_uhd_swig_scm_DATA = gnuradio/uhd_swig.scm gnuradio/uhd_swig-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_uhd_swig_la_LIBADD = $(_uhd_swig_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_uhd_swig_la_CXXFLAGS = $(_uhd_swig_la_CXXFLAGS)
 
 guile/uhd_swig.lo: uhd_swig.lo
 uhd_swig.scm: uhd_swig.i
+gnuradio/uhd_swig-primitive.scm: uhd_swig.scm
+
+-include guile/uhd_swig.d
 
 endif				# end of GUILE
 

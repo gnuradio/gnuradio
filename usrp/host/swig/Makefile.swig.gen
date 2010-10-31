@@ -46,7 +46,7 @@ usrp_prims_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/usrp_prims
 # FIXME: determince whether these should be installed with gnuradio.
-usrp_prims_scmdir = $(guiledir)/gnuradio
+usrp_prims_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ usrp_prims_scmlib_LTLIBRARIES = libguile-usrp_prims.la
 libguile_usrp_prims_la_SOURCES = 		\
 	guile/usrp_prims.cc			\
 	$(usrp_prims_la_swig_sources)
-usrp_prims_scm_DATA = usrp_prims.scm
+nobase_usrp_prims_scm_DATA = gnuradio/usrp_prims.scm gnuradio/usrp_prims-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_usrp_prims_la_LIBADD = $(_usrp_prims_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_usrp_prims_la_CXXFLAGS = $(_usrp_prims_la_CXXFLAGS)
 
 guile/usrp_prims.lo: usrp_prims.lo
 usrp_prims.scm: usrp_prims.i
+gnuradio/usrp_prims-primitive.scm: usrp_prims.scm
+
+-include guile/usrp_prims.d
 
 endif				# end of GUILE
 

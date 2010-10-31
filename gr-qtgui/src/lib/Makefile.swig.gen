@@ -46,7 +46,7 @@ qtgui_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/qtgui
 # FIXME: determince whether these should be installed with gnuradio.
-qtgui_scmdir = $(guiledir)/gnuradio
+qtgui_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ qtgui_scmlib_LTLIBRARIES = libguile-qtgui.la
 libguile_qtgui_la_SOURCES = 		\
 	guile/qtgui.cc			\
 	$(qtgui_la_swig_sources)
-qtgui_scm_DATA = qtgui.scm
+nobase_qtgui_scm_DATA = gnuradio/qtgui.scm gnuradio/qtgui-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_qtgui_la_LIBADD = $(_qtgui_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_qtgui_la_CXXFLAGS = $(_qtgui_la_CXXFLAGS)
 
 guile/qtgui.lo: qtgui.lo
 qtgui.scm: qtgui.i
+gnuradio/qtgui-primitive.scm: qtgui.scm
+
+-include guile/qtgui.d
 
 endif				# end of GUILE
 
