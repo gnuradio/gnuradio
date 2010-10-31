@@ -142,18 +142,38 @@ gr_block_detail::_post(pmt::pmt_t msg)
 void
 gr_block_detail::add_item_tag(unsigned int which_output,
 			      gr_uint64 offset,
-			      const pmt::pmt_t &key, const pmt::pmt_t &value)
+			      const pmt::pmt_t &key,
+			      const pmt::pmt_t &value)
 {
   if(pmt::pmt_is_symbol(key) == false) {
     throw pmt::pmt_wrong_type("gr_block_detail::set_item_tag key", key);
   }
   else {
-    pmt::pmt_t nitem = pmt::pmt_from_uint64(offset);
-    pmt::pmt_t stream = pmt::pmt_string_to_symbol("NULL");
-    pmt::pmt_t tuple = pmt::pmt_make_tuple(nitem, stream, key, value);
-    d_item_tags.push_back(tuple);
+    bool duplicate = false;
 
-    // need to add prunning routing
+    // Search through list of tags to see if new tag is a duplicate
+    std::list<pmt::pmt_t>::reverse_iterator itr = d_item_tags.rbegin();
+    while(itr != d_item_tags.rend()) {
+      // find the last item with this key if there is one
+      if(pmt::pmt_eqv(pmt::pmt_tuple_ref(*itr, 2), key)) {
+	// check if this value is the same as last; its a duplicate if yes
+	if(pmt::pmt_eqv(pmt::pmt_tuple_ref(*itr, 3), value)) {
+	  duplicate = true;
+	}
+	break; // only looking for the last item of this key
+      }
+      itr++;
+    }
+    
+    // It not a duplicate, add new tag to the list
+    if(!duplicate) {
+      pmt::pmt_t nitem = pmt::pmt_from_uint64(offset);
+      pmt::pmt_t stream = pmt::pmt_string_to_symbol("NULL");
+      pmt::pmt_t tuple = pmt::pmt_make_tuple(nitem, stream, key, value);
+      d_item_tags.push_back(tuple);
+    }
+
+    // need to add prunning routine
   }
 }
 
