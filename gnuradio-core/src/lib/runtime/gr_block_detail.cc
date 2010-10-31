@@ -222,7 +222,7 @@ gr_block_detail::get_tags_in_range(unsigned int which_output,
     }
 
     itemkey = pmt::pmt_tuple_ref(*itr, 2);
-    if((item_time >= start) && (item_time <= end) && (key == itemkey)) {
+    if((item_time >= start) && (item_time <= end) && pmt::pmt_eqv(key, itemkey)) {
       found_items.push_back(*itr);
     }
 
