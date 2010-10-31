@@ -129,7 +129,7 @@ if GUILE
 	@echo "Compile .i to .scm"
 	@test -d "guile" || $(mkinstalldirs) "guile"
 	@test -d "gnuradio" || $(mkinstalldirs) "gnuradio"
-	$(SWIG) $(STD_SWIG_GUILE_ARGS) $(GNURADIO_INCLUDES) $(USRP2_INCLUDES) \
+	$(SWIG) $(STD_SWIG_GUILE_ARGS) $($*_swig_args) \
 		-MD -MF guile/$*.Std \
 		-module $* -o guile/$*.cc $<
 	sed -e 's:guile/gnuradio_core_runtime.cc:gnuradio_core_runtime.scm:' guile/$*.Std > guile/$*.d
@@ -143,7 +143,7 @@ endif
 .i.py:
 	@echo "Compile .i to .py"
 	@test -d "python" || $(mkinstalldirs) "python"
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $(GNURADIO_INCLUDES) $(USRP2_INCLUDES) \
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $($*_swig_args) \
 		-MD -MF python/$*.Std \
 		-module $* -o python/$*.cc -oh python/$*.h $<
 	sed -e 's:python/gnuradio_core_runtime.cc:gnuradio_core_runtime.py:' python/$*.Std > python/$*.d
