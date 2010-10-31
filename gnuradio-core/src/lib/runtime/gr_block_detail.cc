@@ -191,5 +191,23 @@ gr_block_detail::get_tags_in_range(unsigned int which_output,
   std::list<pmt::pmt_t> found_items;
   std::list<pmt::pmt_t>::iterator itr = d_item_tags.begin();
 
+  gr_uint64 item_time;
+  pmt::pmt_t itemkey;
+  while(itr != d_item_tags.end()) {
+    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+
+    // items are pushed onto list in sequential order; stop if we're past end
+    if(item_time > end) {
+      break;
+    }
+
+    itemkey = pmt::pmt_tuple_ref(*itr, 2);
+    if((item_time > start) && (item_time < end) && (key == itemkey)) {
+      found_items.push_back(*itr);
+    }
+
+    itr++;
+  }
+
   return found_items;
 }
