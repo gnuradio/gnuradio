@@ -46,7 +46,7 @@ gcell_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/gcell
 # FIXME: determince whether these should be installed with gnuradio.
-gcell_scmdir = $(guiledir)/gnuradio
+gcell_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ gcell_scmlib_LTLIBRARIES = libguile-gcell.la
 libguile_gcell_la_SOURCES = 		\
 	guile/gcell.cc			\
 	$(gcell_la_swig_sources)
-gcell_scm_DATA = gcell.scm
+nobase_gcell_scm_DATA = gnuradio/gcell.scm gnuradio/gcell-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_gcell_la_LIBADD = $(_gcell_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_gcell_la_CXXFLAGS = $(_gcell_la_CXXFLAGS)
 
 guile/gcell.lo: gcell.lo
 gcell.scm: gcell.i
+gnuradio/gcell-primitive.scm: gcell.scm
+
+-include guile/gcell.d
 
 endif				# end of GUILE
 

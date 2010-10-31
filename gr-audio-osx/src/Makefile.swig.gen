@@ -46,7 +46,7 @@ audio_osx_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_osx
 # FIXME: determince whether these should be installed with gnuradio.
-audio_osx_scmdir = $(guiledir)/gnuradio
+audio_osx_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ audio_osx_scmlib_LTLIBRARIES = libguile-audio_osx.la
 libguile_audio_osx_la_SOURCES = 		\
 	guile/audio_osx.cc			\
 	$(audio_osx_la_swig_sources)
-audio_osx_scm_DATA = audio_osx.scm
+nobase_audio_osx_scm_DATA = gnuradio/audio_osx.scm gnuradio/audio_osx-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_audio_osx_la_LIBADD = $(_audio_osx_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_audio_osx_la_CXXFLAGS = $(_audio_osx_la_CXXFLAGS)
 
 guile/audio_osx.lo: audio_osx.lo
 audio_osx.scm: audio_osx.i
+gnuradio/audio_osx-primitive.scm: audio_osx.scm
+
+-include guile/audio_osx.d
 
 endif				# end of GUILE
 

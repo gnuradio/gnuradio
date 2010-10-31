@@ -46,7 +46,7 @@ comedi_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/comedi
 # FIXME: determince whether these should be installed with gnuradio.
-comedi_scmdir = $(guiledir)/gnuradio
+comedi_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ comedi_scmlib_LTLIBRARIES = libguile-comedi.la
 libguile_comedi_la_SOURCES = 		\
 	guile/comedi.cc			\
 	$(comedi_la_swig_sources)
-comedi_scm_DATA = comedi.scm
+nobase_comedi_scm_DATA = gnuradio/comedi.scm gnuradio/comedi-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_comedi_la_LIBADD = $(_comedi_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_comedi_la_CXXFLAGS = $(_comedi_la_CXXFLAGS)
 
 guile/comedi.lo: comedi.lo
 comedi.scm: comedi.i
+gnuradio/comedi-primitive.scm: comedi.scm
+
+-include guile/comedi.d
 
 endif				# end of GUILE
 

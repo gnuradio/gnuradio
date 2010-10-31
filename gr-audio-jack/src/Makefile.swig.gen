@@ -46,7 +46,7 @@ audio_jack_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_jack
 # FIXME: determince whether these should be installed with gnuradio.
-audio_jack_scmdir = $(guiledir)/gnuradio
+audio_jack_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ audio_jack_scmlib_LTLIBRARIES = libguile-audio_jack.la
 libguile_audio_jack_la_SOURCES = 		\
 	guile/audio_jack.cc			\
 	$(audio_jack_la_swig_sources)
-audio_jack_scm_DATA = audio_jack.scm
+nobase_audio_jack_scm_DATA = gnuradio/audio_jack.scm gnuradio/audio_jack-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_audio_jack_la_LIBADD = $(_audio_jack_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_audio_jack_la_CXXFLAGS = $(_audio_jack_la_CXXFLAGS)
 
 guile/audio_jack.lo: audio_jack.lo
 audio_jack.scm: audio_jack.i
+gnuradio/audio_jack-primitive.scm: audio_jack.scm
+
+-include guile/audio_jack.d
 
 endif				# end of GUILE
 

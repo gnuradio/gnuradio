@@ -46,7 +46,7 @@ audio_windows_scmlibdir = $(libdir)
 # The scm files for the guile modules get installed where ever guile
 # is installed, usually /usr/share/guile/site/audio_windows
 # FIXME: determince whether these should be installed with gnuradio.
-audio_windows_scmdir = $(guiledir)/gnuradio
+audio_windows_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
@@ -128,7 +128,7 @@ audio_windows_scmlib_LTLIBRARIES = libguile-audio_windows.la
 libguile_audio_windows_la_SOURCES = 		\
 	guile/audio_windows.cc			\
 	$(audio_windows_la_swig_sources)
-audio_windows_scm_DATA = audio_windows.scm
+nobase_audio_windows_scm_DATA = gnuradio/audio_windows.scm gnuradio/audio_windows-primitive.scm
 
 # Guile can use the same flags as python does
 libguile_audio_windows_la_LIBADD = $(_audio_windows_la_LIBADD)
@@ -137,6 +137,9 @@ libguile_audio_windows_la_CXXFLAGS = $(_audio_windows_la_CXXFLAGS)
 
 guile/audio_windows.lo: audio_windows.lo
 audio_windows.scm: audio_windows.i
+gnuradio/audio_windows-primitive.scm: audio_windows.scm
+
+-include guile/audio_windows.d
 
 endif				# end of GUILE
 
