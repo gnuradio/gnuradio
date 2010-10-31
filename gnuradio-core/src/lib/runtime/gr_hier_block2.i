@@ -57,4 +57,6 @@ public:
   void disconnect_all();
   void lock();
   void unlock();
+
+  gr_hier_block2_sptr to_hier_block2(); // Needed for Python/Guile type coercion
 };

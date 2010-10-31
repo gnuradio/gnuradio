@@ -47,6 +47,8 @@ public:
   void lock();
   void unlock() throw (std::runtime_error);
   void dump();
+
+  gr_top_block_sptr to_top_block(); // Needed for Python/Guile type coercion
 };
 
 #ifdef SWIGPYTHON

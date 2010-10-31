@@ -40,7 +40,7 @@ public:
     gr_io_signature_sptr input_signature() const;
     gr_io_signature_sptr output_signature() const;
     long unique_id() const;
-    gr_basic_block_sptr basic_block();
+    gr_basic_block_sptr to_basic_block();
     bool check_topology (int ninputs, int noutputs);
 };
 

@@ -81,7 +81,7 @@ public:
     std::string name() const { return d_name; }
     gr_io_signature_sptr input_signature() const  { return d_input_signature; }
     gr_io_signature_sptr output_signature() const { return d_output_signature; }
-    gr_basic_block_sptr basic_block(); // Needed for Python type coercion
+    gr_basic_block_sptr to_basic_block(); // Needed for Python/Guile type coercion
 
     /*!
      * \brief Confirm that ninputs and noutputs is an acceptable combination.
