@@ -53,8 +53,7 @@ libgnuradio_qtgui_la_SOURCES = 	\
 	spectrumUpdateEvents.cc			\
 	plot_waterfall.cc			\
 	qtgui_sink_c.cc				\
-	qtgui_sink_f.cc				\
-	python/qtgui.cc
+	qtgui_sink_f.cc
 
 nodist_libgnuradio_qtgui_la_SOURCES=$(BUILT_SOURCES)
 

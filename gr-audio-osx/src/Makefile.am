@@ -42,8 +42,7 @@ lib_LTLIBRARIES = libgnuradio-audio-osx.la
 
 libgnuradio_audio_osx_la_SOURCES = 	\
 	audio_osx_sink.cc		\
-	audio_osx_source.cc		\
-	python/audio_osx.cc
+	audio_osx_source.cc
 
 libgnuradio_audio_osx_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)

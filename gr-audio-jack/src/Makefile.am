@@ -36,8 +36,7 @@ lib_LTLIBRARIES = libgnuradio-audio-jack.la
 libgnuradio_audio_jack_la_SOURCES = 	\
 	audio_jack_sink.cc		\
 	audio_jack_source.cc	\
-	gri_jack.cc				\
-	python/audio_jack.cc
+	gri_jack.cc
 
 libgnuradio_audio_jack_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\

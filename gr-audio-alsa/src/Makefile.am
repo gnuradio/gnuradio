@@ -49,8 +49,7 @@ lib_LTLIBRARIES = libgnuradio-audio-alsa.la
 libgnuradio_audio_alsa_la_SOURCES = 	\
 	audio_alsa_sink.cc		\
 	audio_alsa_source.cc		\
-	gri_alsa.cc			\
-	python/audio_alsa.cc
+	gri_alsa.cc
 
 libgnuradio_audio_alsa_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\

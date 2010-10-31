@@ -42,8 +42,7 @@ lib_LTLIBRARIES = libgnuradio-audio-portaudio.la
 libgnuradio_audio_portaudio_la_SOURCES = \
 	audio_portaudio_sink.cc		\
 	audio_portaudio_source.cc	\
-	gri_portaudio.cc			\
-	python/audio_portaudio.cc
+	gri_portaudio.cc
 
 libgnuradio_audio_portaudio_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\

@@ -34,8 +34,7 @@ lib_LTLIBRARIES = libgnuradio-gsm-fr-vocoder.la
 
 libgnuradio_gsm_fr_vocoder_la_SOURCES = \
 	gsm_fr_decode_ps.cc		\
-	gsm_fr_encode_sp.cc		\
-	python/gsm_full_rate.cc
+	gsm_fr_encode_sp.cc
 
 libgnuradio_gsm_fr_vocoder_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\

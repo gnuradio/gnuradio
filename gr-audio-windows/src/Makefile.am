@@ -36,8 +36,7 @@ lib_LTLIBRARIES = libgnuradio-audio-windows.la
 
 libgnuradio_audio_windows_la_SOURCES = 	\
 	audio_windows_sink.cc		\
-	audio_windows_source.cc		\
-	python/audio_windows.cc
+	audio_windows_source.cc
 
 libgnuradio_audio_windows_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\

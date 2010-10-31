@@ -40,13 +40,11 @@ libgnuradio_msdd6000_rs_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 libgnuradio_msdd6000_la_SOURCES = 	\
 	msdd_source_simple.cc		\
-	msdd6000.cc			\
-	python/msdd.cc
+	msdd6000.cc
 
 libgnuradio_msdd6000_rs_la_SOURCES = 	\
 	msdd_rs_source_simple.cc	\
-	msdd6000_rs.cc			\
-	python/msdd_rs.cc
+	msdd6000_rs.cc
 
 libgnuradio_msdd6000_la_LIBADD = 	\
 	$(GNURADIO_CORE_LA)
