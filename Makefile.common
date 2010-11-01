@@ -20,6 +20,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# Make rebuilds less verbose with stuff we can safely ignore
+# about GNU make only extensions.
+AUTOMAKE += -Wno-portability -Wnone
+
 AM_CFLAGS = @autoconf_default_CFLAGS@ @lf_CFLAGS@
 AM_CXXFLAGS = @autoconf_default_CXXFLAGS@ @lf_CXXFLAGS@
 
@@ -125,7 +129,7 @@ if GUILE
 # Compile a .i to what guile needs. We use -o to set the output file name,
 # or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
 # gnuradio_core_*_wrap.cxx in the source directory.
-.i.scm:
+gnuradio/%.scm : %.i
 	@echo "Compile .i to .scm"
 	@test -d "guile" || $(mkinstalldirs) "guile"
 	@test -d "gnuradio" || $(mkinstalldirs) "gnuradio"
@@ -134,7 +138,6 @@ if GUILE
 		-module $* -o guile/$*.cc $<
 	sed -e 's:guile/gnuradio_core_runtime.cc:gnuradio_core_runtime.scm:' guile/$*.Std > guile/$*.d
 	$(RM) guile/$*.Std $*.Std
-	touch $*.scm
 	$(SED) -i -e 's/<--dummy-[0-9]\+-->/<top>/g' gnuradio/$*.scm
 	$(SED) -i -e 's/^(export /(export-safely /' gnuradio/$*.scm
 endif
@@ -150,8 +153,14 @@ endif
 	$(RM) python/$*.Std
 
 # Don't distribute the files defined in the variable 'no_dist_files'
+no_dist_dirs = python gnuradio guile
 dist-hook:
+	@for dir in $(no_dist_dirs); do \
+		echo $(RM) -fr $(distdir)/$$dir; \
+		$(RM) -fr $(distdir)/$$dir; \
+	done;
 	@for file in $(no_dist_files); do \
 		echo $(RM) $(distdir)/$$file; \
 		$(RM) $(distdir)/$$file; \
 	done;
+
