@@ -135,21 +135,28 @@ AC_DEFUN([USRP_LIBUSB], [
         if test $libusbok = yes; then
           if test ${libusb_name} != "libusb-1.0"; then
             dnl PKGCONFIG found a legacy version of libusb; make sure the
-            dnl variable _usb_debug is available in the found library
-            AC_LANG_PUSH(C)
-            save_CPPFLAGS="$CPPFLAGS"
-            CPPFLAGS="$USB_INCLUDES"
-            save_LIBS="$LIBS"
-            LIBS="$USB_LIBS"
-            AC_MSG_CHECKING([$libusb_name for symbol usb_debug in library $usb_lib_name])
-            AC_LINK_IFELSE([AC_LANG_PROGRAM([[
-              extern int usb_debug;]],
-              [[usb_debug = 0;]])],
-              [libusbok=yes],[libusbok=no])
-            AC_MSG_RESULT([$libusbok])
-            LIBS="$save_LIBS"
-            CPPFLAGS="$save_CPPFLAGS"
-            AC_LANG_POP(C)
+            dnl variable _usb_debug is available in the found library.
+	    dnl Do not test on Windows, since that symbol is not defined.
+            case "$host_os" in
+              cygwin* | mingw*)
+              ;;
+            *)
+              AC_LANG_PUSH(C)
+              save_CPPFLAGS="$CPPFLAGS"
+              CPPFLAGS="$USB_INCLUDES"
+              save_LIBS="$LIBS"
+              LIBS="$USB_LIBS"
+              AC_MSG_CHECKING([$libusb_name for symbol usb_debug in library $usb_lib_name])
+              AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+                extern int usb_debug;]],
+                [[usb_debug = 0;]])],
+                [libusbok=yes],[libusbok=no])
+              AC_MSG_RESULT([$libusbok])
+              LIBS="$save_LIBS"
+              CPPFLAGS="$save_CPPFLAGS"
+              AC_LANG_POP(C)
+              ;;
+            esac
           fi
         fi
       fi
