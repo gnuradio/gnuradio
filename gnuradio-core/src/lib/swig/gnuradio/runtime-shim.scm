@@ -17,6 +17,11 @@
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
+(define-module (gnuradio runtime-shim)
+  #:use-module (oop goops)
+  #:use-module (gnuradio gnuradio_core_runtime)
+  #:duplicates (merge-generics replace check))
+
 (define-class <gr-endpoint> (<object>)
   (block #:accessor block #:init-keyword #:block)
   (port #:init-value 0 #:accessor port #:init-keyword #:port))

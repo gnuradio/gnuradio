@@ -2,6 +2,7 @@
 
 (define-module (gnuradio core)
   #:use-module (gnuradio gnuradio_core_runtime)
+  #:use-module (gnuradio runtime-shim)
   #:use-module (gnuradio gnuradio_core_filter)
   #:use-module (gnuradio gnuradio_core_io)
   #:use-module (gnuradio gnuradio_core_general)
