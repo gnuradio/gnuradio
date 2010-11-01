@@ -81,4 +81,4 @@
 		  (loop (1+ n))))))))))
 
 
-(export-safely gr:connect gr:disconnect)
+(export-safely <gr-endpoint> gr:ep gr:connect gr:disconnect)
