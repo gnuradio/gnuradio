@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += pager_swig.py
-if GUILE
-swig_built_sources += pager_swig.scm
-endif
+# swig_built_sources += pager_swig.py
+# if GUILE
+# swig_built_sources += gnuradio/pager_swig.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_pager_swig_la_LIBADD = $(_pager_swig_la_LIBADD)
 libguile_pager_swig_la_LDFLAGS = $(_pager_swig_la_LDFLAGS)
 libguile_pager_swig_la_CXXFLAGS = $(_pager_swig_la_CXXFLAGS)
 
-guile/pager_swig.lo: pager_swig.lo
-pager_swig.scm: pager_swig.i
-gnuradio/pager_swig-primitive.scm: pager_swig.scm
+guile/pager_swig.cc: gnuradio/pager_swig.scm
+gnuradio/pager_swig.scm: pager_swig.i
+gnuradio/pager_swig-primitive.scm: gnuradio/pager_swig.scm
 
 -include guile/pager_swig.d
 
 endif				# end of GUILE
 
-python/pager_swig.lo:
 pager_swig.lo: pager_swig.py pager_swig.scm
 pager_swig.py: pager_swig.i
 

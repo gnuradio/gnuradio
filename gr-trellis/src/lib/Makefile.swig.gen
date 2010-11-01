@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += trellis.py
-if GUILE
-swig_built_sources += trellis.scm
-endif
+# swig_built_sources += trellis.py
+# if GUILE
+# swig_built_sources += gnuradio/trellis.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_trellis_la_LIBADD = $(_trellis_la_LIBADD)
 libguile_trellis_la_LDFLAGS = $(_trellis_la_LDFLAGS)
 libguile_trellis_la_CXXFLAGS = $(_trellis_la_CXXFLAGS)
 
-guile/trellis.lo: trellis.lo
-trellis.scm: trellis.i
-gnuradio/trellis-primitive.scm: trellis.scm
+guile/trellis.cc: gnuradio/trellis.scm
+gnuradio/trellis.scm: trellis.i
+gnuradio/trellis-primitive.scm: gnuradio/trellis.scm
 
 -include guile/trellis.d
 
 endif				# end of GUILE
 
-python/trellis.lo:
 trellis.lo: trellis.py trellis.scm
 trellis.py: trellis.i
 

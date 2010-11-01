@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += noaa_swig.py
-if GUILE
-swig_built_sources += noaa_swig.scm
-endif
+# swig_built_sources += noaa_swig.py
+# if GUILE
+# swig_built_sources += gnuradio/noaa_swig.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_noaa_swig_la_LIBADD = $(_noaa_swig_la_LIBADD)
 libguile_noaa_swig_la_LDFLAGS = $(_noaa_swig_la_LDFLAGS)
 libguile_noaa_swig_la_CXXFLAGS = $(_noaa_swig_la_CXXFLAGS)
 
-guile/noaa_swig.lo: noaa_swig.lo
-noaa_swig.scm: noaa_swig.i
-gnuradio/noaa_swig-primitive.scm: noaa_swig.scm
+guile/noaa_swig.cc: gnuradio/noaa_swig.scm
+gnuradio/noaa_swig.scm: noaa_swig.i
+gnuradio/noaa_swig-primitive.scm: gnuradio/noaa_swig.scm
 
 -include guile/noaa_swig.d
 
 endif				# end of GUILE
 
-python/noaa_swig.lo:
 noaa_swig.lo: noaa_swig.py noaa_swig.scm
 noaa_swig.py: noaa_swig.i
 

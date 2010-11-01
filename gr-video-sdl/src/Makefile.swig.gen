@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += video_sdl.py
-if GUILE
-swig_built_sources += video_sdl.scm
-endif
+# swig_built_sources += video_sdl.py
+# if GUILE
+# swig_built_sources += gnuradio/video_sdl.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_video_sdl_la_LIBADD = $(_video_sdl_la_LIBADD)
 libguile_video_sdl_la_LDFLAGS = $(_video_sdl_la_LDFLAGS)
 libguile_video_sdl_la_CXXFLAGS = $(_video_sdl_la_CXXFLAGS)
 
-guile/video_sdl.lo: video_sdl.lo
-video_sdl.scm: video_sdl.i
-gnuradio/video_sdl-primitive.scm: video_sdl.scm
+guile/video_sdl.cc: gnuradio/video_sdl.scm
+gnuradio/video_sdl.scm: video_sdl.i
+gnuradio/video_sdl-primitive.scm: gnuradio/video_sdl.scm
 
 -include guile/video_sdl.d
 
 endif				# end of GUILE
 
-python/video_sdl.lo:
 video_sdl.lo: video_sdl.py video_sdl.scm
 video_sdl.py: video_sdl.i
 

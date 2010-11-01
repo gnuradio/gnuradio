@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += gnuradio_core_runtime.py
-if GUILE
-swig_built_sources += gnuradio_core_runtime.scm
-endif
+# swig_built_sources += gnuradio_core_runtime.py
+# if GUILE
+# swig_built_sources += gnuradio/gnuradio_core_runtime.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_gnuradio_core_runtime_la_LIBADD = $(_gnuradio_core_runtime_la_LIBADD)
 libguile_gnuradio_core_runtime_la_LDFLAGS = $(_gnuradio_core_runtime_la_LDFLAGS)
 libguile_gnuradio_core_runtime_la_CXXFLAGS = $(_gnuradio_core_runtime_la_CXXFLAGS)
 
-guile/gnuradio_core_runtime.lo: gnuradio_core_runtime.lo
-gnuradio_core_runtime.scm: gnuradio_core_runtime.i
-gnuradio/gnuradio_core_runtime-primitive.scm: gnuradio_core_runtime.scm
+guile/gnuradio_core_runtime.cc: gnuradio/gnuradio_core_runtime.scm
+gnuradio/gnuradio_core_runtime.scm: gnuradio_core_runtime.i
+gnuradio/gnuradio_core_runtime-primitive.scm: gnuradio/gnuradio_core_runtime.scm
 
 -include guile/gnuradio_core_runtime.d
 
 endif				# end of GUILE
 
-python/gnuradio_core_runtime.lo:
 gnuradio_core_runtime.lo: gnuradio_core_runtime.py gnuradio_core_runtime.scm
 gnuradio_core_runtime.py: gnuradio_core_runtime.i
 
@@ -235,10 +234,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += gnuradio_core_general.py
-if GUILE
-swig_built_sources += gnuradio_core_general.scm
-endif
+# swig_built_sources += gnuradio_core_general.py
+# if GUILE
+# swig_built_sources += gnuradio/gnuradio_core_general.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -286,15 +285,14 @@ libguile_gnuradio_core_general_la_LIBADD = $(_gnuradio_core_general_la_LIBADD)
 libguile_gnuradio_core_general_la_LDFLAGS = $(_gnuradio_core_general_la_LDFLAGS)
 libguile_gnuradio_core_general_la_CXXFLAGS = $(_gnuradio_core_general_la_CXXFLAGS)
 
-guile/gnuradio_core_general.lo: gnuradio_core_general.lo
-gnuradio_core_general.scm: gnuradio_core_general.i
-gnuradio/gnuradio_core_general-primitive.scm: gnuradio_core_general.scm
+guile/gnuradio_core_general.cc: gnuradio/gnuradio_core_general.scm
+gnuradio/gnuradio_core_general.scm: gnuradio_core_general.i
+gnuradio/gnuradio_core_general-primitive.scm: gnuradio/gnuradio_core_general.scm
 
 -include guile/gnuradio_core_general.d
 
 endif				# end of GUILE
 
-python/gnuradio_core_general.lo:
 gnuradio_core_general.lo: gnuradio_core_general.py gnuradio_core_general.scm
 gnuradio_core_general.py: gnuradio_core_general.i
 
@@ -386,10 +384,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += gnuradio_core_gengen.py
-if GUILE
-swig_built_sources += gnuradio_core_gengen.scm
-endif
+# swig_built_sources += gnuradio_core_gengen.py
+# if GUILE
+# swig_built_sources += gnuradio/gnuradio_core_gengen.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -437,15 +435,14 @@ libguile_gnuradio_core_gengen_la_LIBADD = $(_gnuradio_core_gengen_la_LIBADD)
 libguile_gnuradio_core_gengen_la_LDFLAGS = $(_gnuradio_core_gengen_la_LDFLAGS)
 libguile_gnuradio_core_gengen_la_CXXFLAGS = $(_gnuradio_core_gengen_la_CXXFLAGS)
 
-guile/gnuradio_core_gengen.lo: gnuradio_core_gengen.lo
-gnuradio_core_gengen.scm: gnuradio_core_gengen.i
-gnuradio/gnuradio_core_gengen-primitive.scm: gnuradio_core_gengen.scm
+guile/gnuradio_core_gengen.cc: gnuradio/gnuradio_core_gengen.scm
+gnuradio/gnuradio_core_gengen.scm: gnuradio_core_gengen.i
+gnuradio/gnuradio_core_gengen-primitive.scm: gnuradio/gnuradio_core_gengen.scm
 
 -include guile/gnuradio_core_gengen.d
 
 endif				# end of GUILE
 
-python/gnuradio_core_gengen.lo:
 gnuradio_core_gengen.lo: gnuradio_core_gengen.py gnuradio_core_gengen.scm
 gnuradio_core_gengen.py: gnuradio_core_gengen.i
 
@@ -537,10 +534,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += gnuradio_core_filter.py
-if GUILE
-swig_built_sources += gnuradio_core_filter.scm
-endif
+# swig_built_sources += gnuradio_core_filter.py
+# if GUILE
+# swig_built_sources += gnuradio/gnuradio_core_filter.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -588,15 +585,14 @@ libguile_gnuradio_core_filter_la_LIBADD = $(_gnuradio_core_filter_la_LIBADD)
 libguile_gnuradio_core_filter_la_LDFLAGS = $(_gnuradio_core_filter_la_LDFLAGS)
 libguile_gnuradio_core_filter_la_CXXFLAGS = $(_gnuradio_core_filter_la_CXXFLAGS)
 
-guile/gnuradio_core_filter.lo: gnuradio_core_filter.lo
-gnuradio_core_filter.scm: gnuradio_core_filter.i
-gnuradio/gnuradio_core_filter-primitive.scm: gnuradio_core_filter.scm
+guile/gnuradio_core_filter.cc: gnuradio/gnuradio_core_filter.scm
+gnuradio/gnuradio_core_filter.scm: gnuradio_core_filter.i
+gnuradio/gnuradio_core_filter-primitive.scm: gnuradio/gnuradio_core_filter.scm
 
 -include guile/gnuradio_core_filter.d
 
 endif				# end of GUILE
 
-python/gnuradio_core_filter.lo:
 gnuradio_core_filter.lo: gnuradio_core_filter.py gnuradio_core_filter.scm
 gnuradio_core_filter.py: gnuradio_core_filter.i
 
@@ -688,10 +684,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += gnuradio_core_io.py
-if GUILE
-swig_built_sources += gnuradio_core_io.scm
-endif
+# swig_built_sources += gnuradio_core_io.py
+# if GUILE
+# swig_built_sources += gnuradio/gnuradio_core_io.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -739,15 +735,14 @@ libguile_gnuradio_core_io_la_LIBADD = $(_gnuradio_core_io_la_LIBADD)
 libguile_gnuradio_core_io_la_LDFLAGS = $(_gnuradio_core_io_la_LDFLAGS)
 libguile_gnuradio_core_io_la_CXXFLAGS = $(_gnuradio_core_io_la_CXXFLAGS)
 
-guile/gnuradio_core_io.lo: gnuradio_core_io.lo
-gnuradio_core_io.scm: gnuradio_core_io.i
-gnuradio/gnuradio_core_io-primitive.scm: gnuradio_core_io.scm
+guile/gnuradio_core_io.cc: gnuradio/gnuradio_core_io.scm
+gnuradio/gnuradio_core_io.scm: gnuradio_core_io.i
+gnuradio/gnuradio_core_io-primitive.scm: gnuradio/gnuradio_core_io.scm
 
 -include guile/gnuradio_core_io.d
 
 endif				# end of GUILE
 
-python/gnuradio_core_io.lo:
 gnuradio_core_io.lo: gnuradio_core_io.py gnuradio_core_io.scm
 gnuradio_core_io.py: gnuradio_core_io.i
 
@@ -839,10 +834,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += gnuradio_core_hier.py
-if GUILE
-swig_built_sources += gnuradio_core_hier.scm
-endif
+# swig_built_sources += gnuradio_core_hier.py
+# if GUILE
+# swig_built_sources += gnuradio/gnuradio_core_hier.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -890,15 +885,14 @@ libguile_gnuradio_core_hier_la_LIBADD = $(_gnuradio_core_hier_la_LIBADD)
 libguile_gnuradio_core_hier_la_LDFLAGS = $(_gnuradio_core_hier_la_LDFLAGS)
 libguile_gnuradio_core_hier_la_CXXFLAGS = $(_gnuradio_core_hier_la_CXXFLAGS)
 
-guile/gnuradio_core_hier.lo: gnuradio_core_hier.lo
-gnuradio_core_hier.scm: gnuradio_core_hier.i
-gnuradio/gnuradio_core_hier-primitive.scm: gnuradio_core_hier.scm
+guile/gnuradio_core_hier.cc: gnuradio/gnuradio_core_hier.scm
+gnuradio/gnuradio_core_hier.scm: gnuradio_core_hier.i
+gnuradio/gnuradio_core_hier-primitive.scm: gnuradio/gnuradio_core_hier.scm
 
 -include guile/gnuradio_core_hier.d
 
 endif				# end of GUILE
 
-python/gnuradio_core_hier.lo:
 gnuradio_core_hier.lo: gnuradio_core_hier.py gnuradio_core_hier.scm
 gnuradio_core_hier.py: gnuradio_core_hier.i
 

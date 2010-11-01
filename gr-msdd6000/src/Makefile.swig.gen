@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += msdd.py
-if GUILE
-swig_built_sources += msdd.scm
-endif
+# swig_built_sources += msdd.py
+# if GUILE
+# swig_built_sources += gnuradio/msdd.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_msdd_la_LIBADD = $(_msdd_la_LIBADD)
 libguile_msdd_la_LDFLAGS = $(_msdd_la_LDFLAGS)
 libguile_msdd_la_CXXFLAGS = $(_msdd_la_CXXFLAGS)
 
-guile/msdd.lo: msdd.lo
-msdd.scm: msdd.i
-gnuradio/msdd-primitive.scm: msdd.scm
+guile/msdd.cc: gnuradio/msdd.scm
+gnuradio/msdd.scm: msdd.i
+gnuradio/msdd-primitive.scm: gnuradio/msdd.scm
 
 -include guile/msdd.d
 
 endif				# end of GUILE
 
-python/msdd.lo:
 msdd.lo: msdd.py msdd.scm
 msdd.py: msdd.i
 
@@ -235,10 +234,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += msdd_rs.py
-if GUILE
-swig_built_sources += msdd_rs.scm
-endif
+# swig_built_sources += msdd_rs.py
+# if GUILE
+# swig_built_sources += gnuradio/msdd_rs.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -286,15 +285,14 @@ libguile_msdd_rs_la_LIBADD = $(_msdd_rs_la_LIBADD)
 libguile_msdd_rs_la_LDFLAGS = $(_msdd_rs_la_LDFLAGS)
 libguile_msdd_rs_la_CXXFLAGS = $(_msdd_rs_la_CXXFLAGS)
 
-guile/msdd_rs.lo: msdd_rs.lo
-msdd_rs.scm: msdd_rs.i
-gnuradio/msdd_rs-primitive.scm: msdd_rs.scm
+guile/msdd_rs.cc: gnuradio/msdd_rs.scm
+gnuradio/msdd_rs.scm: msdd_rs.i
+gnuradio/msdd_rs-primitive.scm: gnuradio/msdd_rs.scm
 
 -include guile/msdd_rs.d
 
 endif				# end of GUILE
 
-python/msdd_rs.lo:
 msdd_rs.lo: msdd_rs.py msdd_rs.scm
 msdd_rs.py: msdd_rs.i
 

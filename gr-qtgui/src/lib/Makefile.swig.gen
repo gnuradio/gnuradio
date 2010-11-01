@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += qtgui.py
-if GUILE
-swig_built_sources += qtgui.scm
-endif
+# swig_built_sources += qtgui.py
+# if GUILE
+# swig_built_sources += gnuradio/qtgui.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_qtgui_la_LIBADD = $(_qtgui_la_LIBADD)
 libguile_qtgui_la_LDFLAGS = $(_qtgui_la_LDFLAGS)
 libguile_qtgui_la_CXXFLAGS = $(_qtgui_la_CXXFLAGS)
 
-guile/qtgui.lo: qtgui.lo
-qtgui.scm: qtgui.i
-gnuradio/qtgui-primitive.scm: qtgui.scm
+guile/qtgui.cc: gnuradio/qtgui.scm
+gnuradio/qtgui.scm: qtgui.i
+gnuradio/qtgui-primitive.scm: gnuradio/qtgui.scm
 
 -include guile/qtgui.d
 
 endif				# end of GUILE
 
-python/qtgui.lo:
 qtgui.lo: qtgui.py qtgui.scm
 qtgui.py: qtgui.i
 

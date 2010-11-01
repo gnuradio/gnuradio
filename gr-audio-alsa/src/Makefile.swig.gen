@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += audio_alsa.py
-if GUILE
-swig_built_sources += audio_alsa.scm
-endif
+# swig_built_sources += audio_alsa.py
+# if GUILE
+# swig_built_sources += gnuradio/audio_alsa.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_audio_alsa_la_LIBADD = $(_audio_alsa_la_LIBADD)
 libguile_audio_alsa_la_LDFLAGS = $(_audio_alsa_la_LDFLAGS)
 libguile_audio_alsa_la_CXXFLAGS = $(_audio_alsa_la_CXXFLAGS)
 
-guile/audio_alsa.lo: audio_alsa.lo
-audio_alsa.scm: audio_alsa.i
-gnuradio/audio_alsa-primitive.scm: audio_alsa.scm
+guile/audio_alsa.cc: gnuradio/audio_alsa.scm
+gnuradio/audio_alsa.scm: audio_alsa.i
+gnuradio/audio_alsa-primitive.scm: gnuradio/audio_alsa.scm
 
 -include guile/audio_alsa.d
 
 endif				# end of GUILE
 
-python/audio_alsa.lo:
 audio_alsa.lo: audio_alsa.py audio_alsa.scm
 audio_alsa.py: audio_alsa.i
 

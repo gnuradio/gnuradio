@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += usrp2.py
-if GUILE
-swig_built_sources += usrp2.scm
-endif
+# swig_built_sources += usrp2.py
+# if GUILE
+# swig_built_sources += gnuradio/usrp2.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_usrp2_la_LIBADD = $(_usrp2_la_LIBADD)
 libguile_usrp2_la_LDFLAGS = $(_usrp2_la_LDFLAGS)
 libguile_usrp2_la_CXXFLAGS = $(_usrp2_la_CXXFLAGS)
 
-guile/usrp2.lo: usrp2.lo
-usrp2.scm: usrp2.i
-gnuradio/usrp2-primitive.scm: usrp2.scm
+guile/usrp2.cc: gnuradio/usrp2.scm
+gnuradio/usrp2.scm: usrp2.i
+gnuradio/usrp2-primitive.scm: gnuradio/usrp2.scm
 
 -include guile/usrp2.d
 
 endif				# end of GUILE
 
-python/usrp2.lo:
 usrp2.lo: usrp2.py usrp2.scm
 usrp2.py: usrp2.i
 
