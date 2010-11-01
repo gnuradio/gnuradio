@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += audio_osx.py
-if GUILE
-swig_built_sources += audio_osx.scm
-endif
+# swig_built_sources += audio_osx.py
+# if GUILE
+# swig_built_sources += gnuradio/audio_osx.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_audio_osx_la_LIBADD = $(_audio_osx_la_LIBADD)
 libguile_audio_osx_la_LDFLAGS = $(_audio_osx_la_LDFLAGS)
 libguile_audio_osx_la_CXXFLAGS = $(_audio_osx_la_CXXFLAGS)
 
-guile/audio_osx.lo: audio_osx.lo
-audio_osx.scm: audio_osx.i
-gnuradio/audio_osx-primitive.scm: audio_osx.scm
+guile/audio_osx.cc: gnuradio/audio_osx.scm
+gnuradio/audio_osx.scm: audio_osx.i
+gnuradio/audio_osx-primitive.scm: gnuradio/audio_osx.scm
 
 -include guile/audio_osx.d
 
 endif				# end of GUILE
 
-python/audio_osx.lo:
 audio_osx.lo: audio_osx.py audio_osx.scm
 audio_osx.py: audio_osx.i
 

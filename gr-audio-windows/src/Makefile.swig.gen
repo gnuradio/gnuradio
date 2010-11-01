@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += audio_windows.py
-if GUILE
-swig_built_sources += audio_windows.scm
-endif
+# swig_built_sources += audio_windows.py
+# if GUILE
+# swig_built_sources += gnuradio/audio_windows.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_audio_windows_la_LIBADD = $(_audio_windows_la_LIBADD)
 libguile_audio_windows_la_LDFLAGS = $(_audio_windows_la_LDFLAGS)
 libguile_audio_windows_la_CXXFLAGS = $(_audio_windows_la_CXXFLAGS)
 
-guile/audio_windows.lo: audio_windows.lo
-audio_windows.scm: audio_windows.i
-gnuradio/audio_windows-primitive.scm: audio_windows.scm
+guile/audio_windows.cc: gnuradio/audio_windows.scm
+gnuradio/audio_windows.scm: audio_windows.i
+gnuradio/audio_windows-primitive.scm: gnuradio/audio_windows.scm
 
 -include guile/audio_windows.d
 
 endif				# end of GUILE
 
-python/audio_windows.lo:
 audio_windows.lo: audio_windows.py audio_windows.scm
 audio_windows.py: audio_windows.i
 

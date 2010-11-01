@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += uhd_swig.py
-if GUILE
-swig_built_sources += uhd_swig.scm
-endif
+# swig_built_sources += uhd_swig.py
+# if GUILE
+# swig_built_sources += gnuradio/uhd_swig.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_uhd_swig_la_LIBADD = $(_uhd_swig_la_LIBADD)
 libguile_uhd_swig_la_LDFLAGS = $(_uhd_swig_la_LDFLAGS)
 libguile_uhd_swig_la_CXXFLAGS = $(_uhd_swig_la_CXXFLAGS)
 
-guile/uhd_swig.lo: uhd_swig.lo
-uhd_swig.scm: uhd_swig.i
-gnuradio/uhd_swig-primitive.scm: uhd_swig.scm
+guile/uhd_swig.cc: gnuradio/uhd_swig.scm
+gnuradio/uhd_swig.scm: uhd_swig.i
+gnuradio/uhd_swig-primitive.scm: gnuradio/uhd_swig.scm
 
 -include guile/uhd_swig.d
 
 endif				# end of GUILE
 
-python/uhd_swig.lo:
 uhd_swig.lo: uhd_swig.py uhd_swig.scm
 uhd_swig.py: uhd_swig.i
 

@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += audio_jack.py
-if GUILE
-swig_built_sources += audio_jack.scm
-endif
+# swig_built_sources += audio_jack.py
+# if GUILE
+# swig_built_sources += gnuradio/audio_jack.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_audio_jack_la_LIBADD = $(_audio_jack_la_LIBADD)
 libguile_audio_jack_la_LDFLAGS = $(_audio_jack_la_LDFLAGS)
 libguile_audio_jack_la_CXXFLAGS = $(_audio_jack_la_CXXFLAGS)
 
-guile/audio_jack.lo: audio_jack.lo
-audio_jack.scm: audio_jack.i
-gnuradio/audio_jack-primitive.scm: audio_jack.scm
+guile/audio_jack.cc: gnuradio/audio_jack.scm
+gnuradio/audio_jack.scm: audio_jack.i
+gnuradio/audio_jack-primitive.scm: gnuradio/audio_jack.scm
 
 -include guile/audio_jack.d
 
 endif				# end of GUILE
 
-python/audio_jack.lo:
 audio_jack.lo: audio_jack.py audio_jack.scm
 audio_jack.py: audio_jack.i
 
