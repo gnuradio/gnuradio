@@ -84,10 +84,10 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 
 # generating the py or scm file also generates the .cc or .h files,
 # but dependencies work better without the .cc ort .h files listed.
-swig_built_sources += @NAME@.py
-if GUILE
-swig_built_sources += @NAME@.scm
-endif
+# swig_built_sources += @NAME@.py
+# if GUILE
+# swig_built_sources += gnuradio/@NAME@.scm
+# endif
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -135,15 +135,14 @@ libguile_@NAME@_la_LIBADD = $(_@NAME@_la_LIBADD)
 libguile_@NAME@_la_LDFLAGS = $(_@NAME@_la_LDFLAGS)
 libguile_@NAME@_la_CXXFLAGS = $(_@NAME@_la_CXXFLAGS)
 
-guile/@NAME@.lo: @NAME@.lo
-@NAME@.scm: @NAME@.i
-gnuradio/@NAME@-primitive.scm: @NAME@.scm
+guile/@NAME@.cc: gnuradio/@NAME@.scm
+gnuradio/@NAME@.scm: @NAME@.i
+gnuradio/@NAME@-primitive.scm: gnuradio/@NAME@.scm
 
 -include guile/@NAME@.d
 
 endif				# end of GUILE
 
-python/@NAME@.lo:
 @NAME@.lo: @NAME@.py @NAME@.scm
 @NAME@.py: @NAME@.i
 
