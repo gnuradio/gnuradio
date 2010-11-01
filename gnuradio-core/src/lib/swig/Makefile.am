@@ -23,9 +23,10 @@ include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
 BUILT_SOURCES = $(grinclude_HEADERS) $(swig_built_sources)
-CLEANFILES = python/gnuradio*
+
+CLEANFILES = python/*.cc python/*.h
 if GUILE
-CLEANFILES += guile/gnuradio*
+CLEANFILES += guile/*.cc gnuradio/*.scm
 endif
 
 # ----------------------------------------------------------------
@@ -111,15 +112,14 @@ gnuradio_core_hier_la_swig_libadd    = $(GNURADIO_CORE_LA)
 # include the SWIG-generated .h files in the BUILT SOURCES, since they
 # aren't by default when using Makefile.swig; order doesn't matter.
 PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(HFILE)))
-#BUILT_SOURCES += $(foreach HFILE,$(PYTHON_GEN), $(subst gnuradio,python/gnuradio,$(HFILE)))
-BUILT_SOURCES += $(PYTHON_GEN)
+swig_built_sources += $(PYTHON_GEN)
 endif				# end of if python
 
 if GUILE
-GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,%.scm,$(HFILE)))
-#GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
-# BUILT_SOURCES += $(foreach HFILE,$(GUILE_GEN), $(subst gnuradio,guile/gnuradio,$(HFILE)))
-BUILT_SOURCES += $(GUILE_GEN)
+#GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,%.scm,$(HFILE)))
+GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
+# GUILE_GEN_STAMPS = $(filter %.scm,$(TOP_SWIG_IFILES))
+swig_built_sources += $(GUILE_GEN)
 endif
 
 # Do not distribute the output of SWIG
