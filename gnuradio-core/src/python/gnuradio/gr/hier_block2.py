@@ -66,7 +66,7 @@ class hier_block2(object):
             raise ValueError, ("connect requires at least one endpoint; %d provided." % (len (points),))
 	else:
 	    if len(points) == 1:
-		self._hb.connect(points[0].to_basic_block())
+		self._hb.primitive_connect(points[0].to_basic_block())
 	    else:
 		for i in range (1, len (points)):
         	    self._connect(points[i-1], points[i])
@@ -74,8 +74,8 @@ class hier_block2(object):
     def _connect(self, src, dst):
         (src_block, src_port) = self._coerce_endpoint(src)
         (dst_block, dst_port) = self._coerce_endpoint(dst)
-        self._hb.connect(src_block.to_basic_block(), src_port,
-                         dst_block.to_basic_block(), dst_port)
+        self._hb.primitive_connect(src_block.to_basic_block(), src_port,
+                                   dst_block.to_basic_block(), dst_port)
 
     def _coerce_endpoint(self, endp):
         if hasattr(endp, 'to_basic_block'):
@@ -97,10 +97,10 @@ class hier_block2(object):
         """
         
         if len (points) < 1:
-            raise ValueError, ("disconnect requires at least two endpoints; %d provided." % (len (points),))
+            raise ValueError, ("disconnect requires at least one endpoint; %d provided." % (len (points),))
         else:
             if len (points) == 1:
-                self._hb.disconnect(points[0].to_basic_block())
+                self._hb.primitive_disconnect(points[0].to_basic_block())
             else:
                 for i in range (1, len (points)):
                     self._disconnect(points[i-1], points[i])
@@ -108,6 +108,6 @@ class hier_block2(object):
     def _disconnect(self, src, dst):
         (src_block, src_port) = self._coerce_endpoint(src)
         (dst_block, dst_port) = self._coerce_endpoint(dst)
-        self._hb.disconnect(src_block.to_basic_block(), src_port,
-                            dst_block.to_basic_block(), dst_port)
+        self._hb.primitive_disconnect(src_block.to_basic_block(), src_port,
+                                      dst_block.to_basic_block(), dst_port)
 

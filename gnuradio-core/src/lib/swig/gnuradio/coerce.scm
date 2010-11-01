@@ -49,40 +49,36 @@
 	((false-if-exception (gr:to-hier-block2 block)) => (lambda (x) x))
 	(else (error "Cannot coerce to a gr_hier_block2: " block))))
 
-;;; The gr:connect variants
-;;; These work for anything derived from gr_hier_block2
-(define-method (gr:connect hb block)
+
+;;; Connect one or more block endpoints.  An endpoint is either a <gr-endpoint>,
+;;; a 2-list (block port), or a block instance.  In the latter case, the port number
+;;; is assumed to be zero.
+;;;
+;;; If multiple arguments are provided, connect will attempt to wire them in series,
+;;; interpreting the endpoints as inputs or outputs as appropriate.
+(define-method (gr:connect hb . points)
+  (dis/connect "connect" gr:primitive-connect hb points))
+
+;;; Disconnect one or more block endpoints...
+(define-method (gr:disconnect hb . points)
+  (dis/connect "disconnect" gr:primitive-disconnect hb points))
+
+(define (dis/connect name gf hb points)
   (let ((hb (coerce-to-hier-block2 hb))
-	(bb (coerce-to-basic-block block)))
-    (gr:connect hb bb)))
+	(points (list->vector (map coerce-to-endpoint points))))
 
-(define-method (gr:connect hb (src <gr-endpoint>) (dst <gr-endpoint>))
-  (let ((hb (coerce-to-hier-block2 hb)))
-    (gr:connect hb (block src) (port src) (block dst) (port dst))))
+    (define (op2 p0 p1)
+      (gf hb (block p0) (port p0) (block p1) (port p1)))
 
-(define-method (gr:connect hb src dst)
-  (let ((hb (coerce-to-hier-block2 hb))
-	(src (coerce-to-endpoint src))
-	(dst (coerce-to-endpoint dst)))
-    (gr:connect hb src dst)))
+    (let ((len (vector-length points)))
+      (case len
+	((0) (error (string-append name " requires at least 1 endpoint;  None provided.")))
+	((1) (gf hb (vector-ref points 0)))
+	(else
+	 (let loop ((n 1))
+	   (cond ((< n len)
+		  (op2 (vector-ref points (1- n)) (vector-ref points n))
+		  (loop (1+ n))))))))))
 
-;;; The gr:disconnect variants
-;;; These work for anything derived from gr_hier_block2
-(define-method (gr:disconnect-all hb)
-  (let ((hb (coerce-to-hier-block2 hb)))
-    (gr:disconnect-all hb)))
 
-(define-method (gr:disconnect hb block)
-  (let ((hb (coerce-to-hier-block2 hb))
-	(bb (coerce-to-basic-block block)))
-    (gr:disconnect hb bb)))
-
-(define-method (gr:disconnect hb (src <gr-endpoint>) (dst <gr-endpoint>))
-  (let ((hb (coerce-to-hier-block2 hb)))
-    (gr:disconnect hb (block src) (port src) (block dst) (port dst))))
-
-(define-method (gr:disconnect hb src dst)
-  (let ((hb (coerce-to-hier-block2 hb))
-	(src (coerce-to-endpoint src))
-	(dst (coerce-to-endpoint dst)))
-    (gr:disconnect hb src dst)))
+(export-safely gr:connect gr:disconnect)
