@@ -79,6 +79,7 @@ libruntime_qa_la_SOURCES = 			\
 	qa_gr_top_block.cc			\
 	qa_gr_io_signature.cc			\
 	qa_gr_vmcircbuf.cc			\
+	qa_block_tags.cc			\
 	qa_runtime.cc				
 
 grinclude_HEADERS = 				\
@@ -136,6 +137,7 @@ noinst_HEADERS = 				\
 	qa_gr_io_signature.h			\
 	qa_gr_top_block.h			\
 	qa_gr_vmcircbuf.h			\
+	qa_block_tags.h				\
 	qa_runtime.h				
 
 if PYTHON
