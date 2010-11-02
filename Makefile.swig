@@ -32,7 +32,7 @@
 ##   In some older autotools, $(builddir) is not defined, so
 ##   just use '.' instead.
 
-CLEANFILES += python/*.cc python/*.h python/*.lo python/*.o
+CLEANFILES = python/*.cc python/*.h python/*.lo python/*.o
 CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o
 
 SWIG_PYTHON_FLAGS =	\
@@ -132,3 +132,13 @@ swig_built_sources =
 ## on variables defined above.
 
 include $(srcdir)/Makefile.swig.gen
+
+# Create a list of .py files based on the top level .i files.
+PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(HFILE)))
+swig_built_sources += $(PYTHON_GEN)
+
+if GUILE
+# Create a list of .scm files based on the top level .i files.
+GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
+swig_built_sources += $(GUILE_GEN)
+endif
