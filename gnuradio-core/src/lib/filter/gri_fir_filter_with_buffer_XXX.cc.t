@@ -77,6 +77,26 @@ void
   return (@O_TYPE@)out;
 }
 
+@O_TYPE@
+@NAME@::filter (const @I_TYPE@ input[], unsigned long dec)
+{
+  unsigned int i;
+
+  for(i = 0; i < dec; i++) {
+    d_buffer[d_idx] = input[i];
+    d_buffer[d_idx+ntaps()] = input[i];
+    d_idx++;
+    if(d_idx >= ntaps())
+      d_idx = 0;
+  }
+
+  @ACC_TYPE@ out = 0;
+  for(i = 0; i < ntaps(); i++) {
+    out += @INPUT_CAST@ d_buffer[d_idx + i] * d_taps[i];
+  }
+  return (@O_TYPE@)out;
+}
+
 void
 @NAME@::filterN (@O_TYPE@ output[],
 		 const @I_TYPE@ input[],
@@ -84,5 +104,18 @@ void
 {
   for(unsigned long i = 0; i < n; i++) {
     output[i] = filter(input[i]);
+  }
+}
+
+void
+@NAME@::filterNdec (@O_TYPE@ output[],
+		    const @I_TYPE@ input[],
+		    unsigned long n,
+		    unsigned long decimate)
+{
+  unsigned long j = 0;
+  for(unsigned long i = 0; i < n; i++) {
+    output[i] = filter(&input[j], decimate);
+    j += decimate;
   }
 }

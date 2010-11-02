@@ -29,13 +29,16 @@ class qa_gri_fir_filter_with_buffer_fsf : public CppUnit::TestCase {
 
   CPPUNIT_TEST_SUITE (qa_gri_fir_filter_with_buffer_fsf);
   CPPUNIT_TEST (t1);
+  CPPUNIT_TEST (t2);
+  CPPUNIT_TEST (t3);
   CPPUNIT_TEST_SUITE_END ();
 
  private:
-
+  void test_decimate(unsigned int decimate);
+  
   void t1 ();
-  // void t2 ();
-  // void t3 ();
+  void t2 ();
+  void t3 ();
 
 };
 

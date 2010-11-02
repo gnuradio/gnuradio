@@ -69,14 +69,31 @@ ref_dotprod (const i_type input[], const tap_type taps[], int ntaps)
   return sum;
 }
 
+void
+qa_gri_fir_filter_with_buffer_fff::t1 ()  
+{
+  test_decimate(1);
+}
+
+void
+qa_gri_fir_filter_with_buffer_fff::t2 ()
+{
+  test_decimate(2);
+}
+
+void
+qa_gri_fir_filter_with_buffer_fff::t3 ()
+{
+  test_decimate(5);
+}
+
 //
 // Test for ntaps in [0,9], and input lengths in [0,17].
 // This ensures that we are building the shifted taps correctly,
 // and exercises all corner cases on input alignment and length.
 //
-
 void
-qa_gri_fir_filter_with_buffer_fff::t1 ()  
+qa_gri_fir_filter_with_buffer_fff::test_decimate(unsigned int decimate)
 {
   const int	MAX_TAPS	= 9;
   const int	OUTPUT_LEN	= 17;
@@ -103,11 +120,13 @@ qa_gri_fir_filter_with_buffer_fff::t1 ()
 
       // compute expected output values
       memset(dline, 0, INPUT_LEN*sizeof(i_type));
-      for (int o = 0; o < ol; o++){
+      for (int o = 0; o < (int)(ol/decimate); o++){
 	// use an actual delay line for this test
-	for(int oo = INPUT_LEN-1; oo > 0; oo--)
-	  dline[oo] = dline[oo-1];
-	dline[0] = input[o];
+	for(int dd = 0; dd < (int)decimate; dd++) {
+	  for(int oo = INPUT_LEN-1; oo > 0; oo--)
+	    dline[oo] = dline[oo-1];
+	  dline[0] = input[decimate*o+dd];
+	}
 	expected_output[o] = ref_dotprod (dline, taps, n);
       }
 
@@ -117,7 +136,7 @@ qa_gri_fir_filter_with_buffer_fff::t1 ()
 
       // zero the output, then do the filtering
       memset (actual_output, 0, sizeof (actual_output));
-      f1->filterN (actual_output, input, ol);
+      f1->filterNdec (actual_output, input, ol/decimate, decimate);
 
       // check results
       //
@@ -126,7 +145,7 @@ qa_gri_fir_filter_with_buffer_fff::t1 ()
       // arithmetic, while the SSE version is using 32 bit float point
       // arithmetic.
       
-      for (int o = 0; o < ol; o++){
+      for (int o = 0; o < (int)(ol/decimate); o++){
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(expected_output[o], actual_output[o],
 				     fabsf (expected_output[o]) * ERR_DELTA);
       }

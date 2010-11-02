@@ -69,12 +69,24 @@ public:
   /*!
    * \brief compute a single output value.
    *
-   * \p input must have ntaps() valid entries.
-   * input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+   * \p input is a single input value of the filter type
    *
    * \returns the filtered input value.
    */
   @O_TYPE@ filter (@I_TYPE@ input);
+
+  
+  /*!
+   * \brief compute a single output value; designed for decimating filters.
+   *
+   * \p input is a single input value of the filter type. The value of dec is the
+   *    decimating value of the filter, so input[] must have dec valid values.
+   *    The filter pushes dec number of items onto the circ. buffer before computing
+   *    a single output.
+   *
+   * \returns the filtered input value.
+   */
+  @O_TYPE@ filter (const @I_TYPE@ input[], unsigned long dec);
 
   /*!
    * \brief compute an array of N output values.
@@ -93,7 +105,7 @@ public:
    * compute the output values.
    */
   void filterNdec (@O_TYPE@ output[], const @I_TYPE@ input[],
-		   unsigned long n, unsigned decimate);
+		   unsigned long n, unsigned long decimate);
 
   /*!
    * \brief install \p new_taps as the current taps.
