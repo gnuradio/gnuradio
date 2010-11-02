@@ -120,13 +120,25 @@ gr_block::fixed_rate_noutput_to_ninput(int noutput)
 gr_uint64
 gr_block::n_items_read(unsigned int which_input) 
 {
-  return d_detail->n_items_read(which_input);
+  if(d_detail) {
+    return d_detail->n_items_read(which_input);
+  }
+  else {
+    //throw std::runtime_error("No block_detail associated with block yet");
+    return 0;
+  }
 }
 
 gr_uint64
 gr_block::n_items_written(unsigned int which_output) 
 {
-  return d_detail->n_items_written(which_output);
+  if(d_detail) {
+    return d_detail->n_items_written(which_output);
+  }
+  else {
+    //throw std::runtime_error("No block_detail associated with block yet");
+    return 0;
+  }
 }
 
 void
