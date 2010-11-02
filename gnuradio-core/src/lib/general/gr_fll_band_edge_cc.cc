@@ -161,8 +161,9 @@ gr_fll_band_edge_cc::work (int noutput_items,
   const gr_complex *in  = (const gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
 
-  float *frq, *phs;
-  gr_complex *err;
+  float *frq = NULL;
+  float *phs = NULL;
+  gr_complex *err = NULL;
   if(output_items.size() > 2) {
     frq = (float *) output_items[1];
     phs = (float *) output_items[2];
