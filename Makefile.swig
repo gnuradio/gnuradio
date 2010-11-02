@@ -32,6 +32,9 @@
 ##   In some older autotools, $(builddir) is not defined, so
 ##   just use '.' instead.
 
+CLEANFILES += python/*.cc python/*.h python/*.lo python/*.o
+CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o
+
 SWIG_PYTHON_FLAGS =	\
 	-fvirtual	\
 	-python		\
