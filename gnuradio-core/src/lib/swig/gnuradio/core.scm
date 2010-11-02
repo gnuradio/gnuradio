@@ -10,5 +10,10 @@
   #:use-module (gnuradio gnuradio_core_hier)
   #:duplicates (merge-generics check))
 
-;; re-export everything...
-(re-export-all (current-module))
+(re-export-all '(gnuradio gnuradio_core_runtime))
+(re-export-all '(gnuradio runtime-shim))
+(re-export-all '(gnuradio gnuradio_core_filter))
+(re-export-all '(gnuradio gnuradio_core_io))
+(re-export-all '(gnuradio gnuradio_core_general))
+(re-export-all '(gnuradio gnuradio_core_gengen))
+(re-export-all '(gnuradio gnuradio_core_hier))

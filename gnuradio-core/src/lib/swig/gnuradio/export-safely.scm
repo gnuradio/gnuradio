@@ -75,13 +75,16 @@
 (define-public (names-in-imported-modules module)
   (delete-duplicates (concatenate (map names-in-module (module-uses module)))))
 
-(define-public (re-export-all module)
-  (define (ok-to-re-export? name)
-    (let ((var (module-variable module name)))
-      (cond ((not var) #f)					; Undefined var
-	    ((eq? var (module-local-variable module name)) #f)  ; local var
-	    (else #t))))					; OK
+(define-public (re-export-all src-module-name)
+  (let ((current (current-module))
+	(src-module (resolve-interface src-module-name)))
 
-  (module-re-export! module
-		     (filter ok-to-re-export?
-			     (names-in-imported-modules module))))
+    (define (ok-to-re-export? name)
+      (let ((var (module-variable current name)))
+	(cond ((not var) #f)					  ; Undefined var
+	      ((eq? var (module-local-variable current name)) #f) ; local var
+	      (else #t))))					  ; OK
+
+    (module-re-export! current
+		       (filter ok-to-re-export?
+			       (names-in-module src-module)))))
