@@ -121,7 +121,7 @@ gr_uint64
 gr_block::n_items_read(unsigned int which_input) 
 {
   if(d_detail) {
-    return d_detail->n_items_read(which_input);
+    return d_detail->nitems_read(which_input);
   }
   else {
     //throw std::runtime_error("No block_detail associated with block yet");
@@ -133,7 +133,7 @@ gr_uint64
 gr_block::n_items_written(unsigned int which_output) 
 {
   if(d_detail) {
-    return d_detail->n_items_written(which_output);
+    return d_detail->nitems_written(which_output);
   }
   else {
     //throw std::runtime_error("No block_detail associated with block yet");

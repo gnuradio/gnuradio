@@ -88,6 +88,8 @@ class gr_buffer {
 
   gruel::mutex *mutex() { return &d_mutex; }
 
+  gr_uint64 nitems_written() { return d_abs_write_offset; }
+
   // -------------------------------------------------------------------------
 
  private:
@@ -106,10 +108,13 @@ class gr_buffer {
   boost::weak_ptr<gr_block>		d_link;		// block that writes to this buffer
 
   //
-  // The mutex protects d_write_index, d_done and the d_read_index's in the buffer readers.
+  // The mutex protects d_write_index, d_abs_write_offset, d_done and the d_read_index's 
+  // and d_abs_read_offset's in the buffer readers.
   //
   gruel::mutex				d_mutex;
   unsigned int				d_write_index;	// in items [0,d_bufsize)
+  gr_uint64                             d_abs_write_offset; // num items written since the start
+  //deq tag_tuples
   bool					d_done;
   
   unsigned
@@ -220,6 +225,8 @@ class gr_buffer_reader {
   gruel::mutex *mutex() { return d_buffer->mutex(); }
 
 
+  gr_uint64 nitems_read() { return d_abs_read_offset; }
+
   /*!
    * \brief Return the block that reads via this reader.
    */
@@ -236,6 +243,7 @@ class gr_buffer_reader {
 
   gr_buffer_sptr		d_buffer;
   unsigned int			d_read_index;	// in items [0,d->buffer.d_bufsize)
+  gr_uint64                     d_abs_read_offset;  // num items seen since the start
   boost::weak_ptr<gr_block>	d_link;		// block that reads via this buffer reader
 
   //! constructor is private.  Use gr_buffer::add_reader to create instances

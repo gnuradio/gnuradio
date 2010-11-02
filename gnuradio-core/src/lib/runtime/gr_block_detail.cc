@@ -39,7 +39,6 @@ gr_block_detail::gr_block_detail (unsigned int ninputs, unsigned int noutputs)
   : d_produce_or(0),
     d_ninputs (ninputs), d_noutputs (noutputs),
     d_input (ninputs), d_output (noutputs),
-    d_n_items_read(ninputs, 0), d_n_items_written(noutputs, 0),
     d_done (false)
 {
   s_ncurrently_allocated++;
@@ -91,10 +90,6 @@ gr_block_detail::consume (int which_input, int how_many_items)
 {
   if (how_many_items > 0) {
     input (which_input)->update_read_pointer (how_many_items);
-
-    // Carefull here; we check that which_input exists above
-    // is this good enough protection that we don't get here?
-    d_n_items_read[which_input] += how_many_items;
   }
 }
 
@@ -105,7 +100,6 @@ gr_block_detail::consume_each (int how_many_items)
   if (how_many_items > 0) {
     for (int i = 0; i < ninputs (); i++) {
       d_input[i]->update_read_pointer (how_many_items);
-      d_n_items_read[i] += how_many_items;
     }
   }
 }
@@ -115,7 +109,6 @@ gr_block_detail::produce (int which_output, int how_many_items)
 {
   if (how_many_items > 0){
     d_output[which_output]->update_write_pointer (how_many_items);
-    d_n_items_written[which_output] += how_many_items;
     d_produce_or |= how_many_items;
   }
 }
@@ -126,7 +119,6 @@ gr_block_detail::produce_each (int how_many_items)
   if (how_many_items > 0) {
     for (int i = 0; i < noutputs (); i++) {
       d_output[i]->update_write_pointer (how_many_items);
-      d_n_items_written[i] += how_many_items;
     }
     d_produce_or |= how_many_items;
   }
@@ -137,6 +129,22 @@ void
 gr_block_detail::_post(pmt::pmt_t msg)
 {
   d_tpb.insert_tail(msg);
+}
+
+gr_uint64
+gr_block_detail::nitems_read(unsigned int which_input) 
+{
+  if(which_input >= d_ninputs)
+    throw std::invalid_argument ("gr_block_detail::n_input_items");
+  return d_input[which_input]->nitems_read();
+}
+
+gr_uint64
+gr_block_detail::nitems_written(unsigned int which_output) 
+{
+  if(which_output >= d_noutputs)
+    throw std::invalid_argument ("gr_block_detail::n_output_items");
+  return d_output[which_output]->nitems_written();
 }
 
 void

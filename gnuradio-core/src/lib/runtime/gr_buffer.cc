@@ -80,7 +80,7 @@ minimum_buffer_items (long type_size, long page_size)
 gr_buffer::gr_buffer (int nitems, size_t sizeof_item, gr_block_sptr link)
   : d_base (0), d_bufsize (0), d_vmcircbuf (0),
     d_sizeof_item (sizeof_item), d_link(link),
-    d_write_index (0), d_done (false)
+    d_write_index (0), d_abs_write_offset(0), d_done (false)
 {
   if (!allocate_buffer (nitems, sizeof_item))
     throw std::bad_alloc ();
@@ -225,7 +225,7 @@ gr_buffer_ncurrently_allocated ()
 
 gr_buffer_reader::gr_buffer_reader(gr_buffer_sptr buffer, unsigned int read_index,
 				   gr_block_sptr link)
-  : d_buffer(buffer), d_read_index(read_index), d_link(link)
+  : d_buffer(buffer), d_read_index(read_index), d_abs_read_offset(0), d_link(link)
 {
   s_buffer_reader_count++;
 }
@@ -253,6 +253,7 @@ gr_buffer_reader::update_read_pointer (int nitems)
 {
   gruel::scoped_lock guard(*mutex());
   d_read_index = d_buffer->index_add (d_read_index, nitems);
+  d_abs_read_offset += nitems;
 }
 
 long
