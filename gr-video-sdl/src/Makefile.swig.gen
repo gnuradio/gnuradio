@@ -107,11 +107,12 @@ video_sdl_python_PYTHON =			\
 
 ## Entry rule for running SWIG
 
-video_sdl.h video_sdl.py video_sdl.cc: video_sdl.i
+video_sdl.h video_sdl.py video_sdl.cc: video_sdl.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
-## * The .i file is newer than any or all of the generated files;
+## * The .i file or the swig_doc.i are newer than any or all of the
+##   generated files;
 ##
 ## * Any or all of the .cc, .h, or .py files does not exist and is
 ##   needed (in the case this file is not needed, the rule for it is

@@ -34,7 +34,9 @@
 #include <stddef.h>		// size_t
 %}
 
-%feature("autodoc","1");
+%include <swig_doc.i>
+
+// %feature("autodoc","1");
 
 // local file
 %include <gr_shared_ptr.i>

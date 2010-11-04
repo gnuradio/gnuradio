@@ -71,6 +71,21 @@ STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 
 SUFFIXES = .i
 
+## Create the swig interface file swig_doc.i containing docstring information.
+
+$(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i: $(top_srcdir)/docs/doxygen/html/index.html
+	$(PYTHON) $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.py $(top_srcdir)/docs/doxygen/xml/ $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
+
+## Make sure the doxygen docs are generated
+
+$(top_srcdir)/docs/doxygen/html/index.html:
+	docs_prep
+	@DOXYGEN@
+
+docs_prep:
+	$(MKDIR_P) html
+	$(MKDIR_P) xml
+
 ## Create $(srcdir)/Makefile.swig.gen, containing all of the rules
 ## for running SWIG to generate or re-generate outputs.  SWIG file
 ## names are to be defined in TOP_SWIG_IFILES, and must include the
