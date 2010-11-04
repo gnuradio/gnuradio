@@ -173,9 +173,7 @@ gr_block_detail::get_tags_in_range(unsigned int which_input,
 				   gr_uint64 abs_end)
 {
   // get from gr_buffer_reader's deque of tags
-  return d_input[which_input]->get_tags_in_range(which_input,
-						 abs_start,
-						 abs_end);
+  return d_input[which_input]->get_tags_in_range(abs_start, abs_end);
 }
 
 std::deque<pmt::pmt_t>
@@ -187,9 +185,7 @@ gr_block_detail::get_tags_in_range(unsigned int which_input,
   std::deque<pmt::pmt_t> found_items, found_items_by_key;
 
   // get from gr_buffer_reader's deque of tags
-  found_items = d_input[which_input]->get_tags_in_range(which_input,
-							abs_start,
-							abs_end);
+  found_items = d_input[which_input]->get_tags_in_range(abs_start, abs_end);
 
   // Filter further by key name
   pmt::pmt_t itemkey;
