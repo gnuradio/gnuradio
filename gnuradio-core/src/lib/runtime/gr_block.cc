@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -144,19 +144,21 @@ gr_block::nitems_written(unsigned int which_output)
 void
 gr_block::add_item_tag(unsigned int which_output,
 		       gr_uint64 offset,
-		       const pmt::pmt_t &key, const pmt::pmt_t &value)
+		       const pmt::pmt_t &key,
+		       const pmt::pmt_t &value,
+		       const pmt::pmt_t &srcid)
 {
-  d_detail->add_item_tag(which_output, offset, key, value);
+  d_detail->add_item_tag(which_output, offset, key, value, srcid);
 }
 
-std::list<pmt::pmt_t>
+std::deque<pmt::pmt_t>
 gr_block::get_tags_in_range(unsigned int which_output,
 			    gr_uint64 start, gr_uint64 end)
 {
   return d_detail->get_tags_in_range(which_output, start, end);
 }
   
-std::list<pmt::pmt_t>
+std::deque<pmt::pmt_t>
 gr_block::get_tags_in_range(unsigned int which_output,
 			    gr_uint64 start, gr_uint64 end,
 			    const pmt::pmt_t &key)
