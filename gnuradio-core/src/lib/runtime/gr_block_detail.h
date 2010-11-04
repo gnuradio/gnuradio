@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -94,18 +94,66 @@ class gr_block_detail {
   // Return the number of items written on output stream which_output
   gr_uint64 nitems_written(unsigned int which_output);
 
-  // Add an item tag tuple to list of tags
-  // -> is this just based on output stream? how to handle this...
+  
+  /*!
+   * \brief  Adds a new tag to the deque of tags on a given buffer.
+   * 
+   * Adds a new tag to deque of tags on a given buffer. This takes the input
+   * parameters and builds a PMT tuple from it. It then calls
+   * gr_buffer::add_item_tag(pmt::pmt_t t), which appends the
+   * tag onto its deque of tags.
+   *
+   * \param which_ouput  an integer of which output stream to attach the tag
+   * \param abs_offset   a uint64 number of the absolute item number
+   *                     assicated with the tag. Can get from nitems_written.
+   * \param key          a PMT symbol holding the key name (i.e., a string)
+   * \param value        any PMT holding any value for the given key
+   * \param srcid        a PMT source ID specifier
+   */
   void add_item_tag(unsigned int which_output,
-		    gr_uint64 offset,
-		    const pmt::pmt_t &key, const pmt::pmt_t &value);
+		    gr_uint64 abs_offset,
+		    const pmt::pmt_t &key,
+		    const pmt::pmt_t &value,
+		    const pmt::pmt_t &srcid);
+
+  /*!
+   * \brief Given a [start,end), returns a deque copy of all tags in the range.
+   *
+   * Pass-through function to gr_buffer to get a deque of tags in given range. 
+   * Range of counts is from start to end-1.
+   *
+   * Tags are tuples of:
+   *      (item count, source id, key, value)
+   *
+   * \param which_input  an integer of which input stream to pull from
+   * \param abs_start    a uint64 count of the start of the range of interest
+   * \param abs_end      a uint64 count of the end of the range of interest
+   */
+  std::deque<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
+					   gr_uint64 abs_start,
+					   gr_uint64 abs_end);
   
-  std::list<pmt::pmt_t> get_tags_in_range(unsigned int which_output,
-					  gr_uint64 start, gr_uint64 end);
-  
-  std::list<pmt::pmt_t> get_tags_in_range(unsigned int which_output,
-					  gr_uint64 start, gr_uint64 end,
-					  const pmt::pmt_t &key);
+  /*!
+   * \brief Given a [start,end), returns a deque copy of all tags in the range
+   * with a given key.
+   *
+   * Calls get_tags_in_range(which_input, abs_start, abs_end) to get a deque of
+   * tags from the buffers. This function then provides a secondary filter to
+   * the tags to extract only tags with the given 'key'. Returns a dequeu
+   * of these tags.
+   *
+   * Tags are tuples of:
+   *      (item count, source id, key, value)
+   *
+   * \param which_input  an integer of which input stream to pull from
+   * \param abs_start    a uint64 count of the start of the range of interest
+   * \param abs_end      a uint64 count of the end of the range of interest
+   * \param key          a PMT symbol key to filter only tags of this key
+   */
+  std::deque<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
+					   gr_uint64 abs_start,
+					   gr_uint64 abs_end,
+					   const pmt::pmt_t &key);
 
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
@@ -117,7 +165,7 @@ class gr_block_detail {
   unsigned int                       d_noutputs;
   std::vector<gr_buffer_reader_sptr> d_input;
   std::vector<gr_buffer_sptr>	     d_output;
-  std::list<pmt::pmt_t>              d_item_tags;
+  std::deque<pmt::pmt_t>             d_item_tags;
   bool                               d_done;
 
 

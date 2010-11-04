@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -149,59 +149,39 @@ gr_block_detail::nitems_written(unsigned int which_output)
 
 void
 gr_block_detail::add_item_tag(unsigned int which_output,
-			      gr_uint64 offset,
+			      gr_uint64 abs_offset,
 			      const pmt::pmt_t &key,
-			      const pmt::pmt_t &value)
+			      const pmt::pmt_t &value,
+			      const pmt::pmt_t &srcid)
 {
   if(pmt::pmt_is_symbol(key) == false) {
     throw pmt::pmt_wrong_type("gr_block_detail::set_item_tag key", key);
   }
   else {
-    bool duplicate = false;
-
-    // Search through list of tags to see if new tag is a duplicate
-    std::list<pmt::pmt_t>::reverse_iterator itr = d_item_tags.rbegin();
-    while(itr != d_item_tags.rend()) {
-      // find the last item with this key if there is one
-      if(pmt::pmt_eqv(pmt::pmt_tuple_ref(*itr, 2), key)) {
-	// check if this value is the same as last; its a duplicate if yes
-	if(pmt::pmt_eqv(pmt::pmt_tuple_ref(*itr, 3), value)) {
-	  duplicate = true;
-	}
-	break; // only looking for the last item of this key
-      }
-      itr++;
-    }
-    
-    // It not a duplicate, add new tag to the list
-    if(!duplicate) {
-      pmt::pmt_t nitem = pmt::pmt_from_uint64(offset);
-      pmt::pmt_t stream = pmt::pmt_string_to_symbol("NULL");
-      pmt::pmt_t tuple = pmt::pmt_make_tuple(nitem, stream, key, value);
-      d_item_tags.push_back(tuple);
-    }
-
-    // need to add prunning routine
+    pmt::pmt_t nitem = pmt::pmt_from_uint64(abs_offset);
+    pmt::pmt_t tuple = pmt::pmt_make_tuple(nitem, srcid, key, value);
+    d_item_tags.push_back(tuple);
   }
 }
 
-std::list<pmt::pmt_t>
+std::deque<pmt::pmt_t>
 gr_block_detail::get_tags_in_range(unsigned int which_output,
-				   gr_uint64 start, gr_uint64 end)
+				   gr_uint64 abs_start,
+				   gr_uint64 abs_end)
 {
-  std::list<pmt::pmt_t> found_items;
-  std::list<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+  std::deque<pmt::pmt_t> found_items;
+  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
   
   gr_uint64 item_time;
   while(itr != d_item_tags.end()) {
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
 
     // items are pushed onto list in sequential order; stop if we're past end
-    if(item_time > end) {
+    if(item_time > abs_end) {
       break;
     }
 
-    if((item_time >= start) && (item_time <= end)) {
+    if((item_time >= abs_start) && (item_time <= abs_end)) {
       found_items.push_back(*itr);
     }
 
@@ -211,13 +191,14 @@ gr_block_detail::get_tags_in_range(unsigned int which_output,
   return found_items;
 }
 
-std::list<pmt::pmt_t>
+std::deque<pmt::pmt_t>
 gr_block_detail::get_tags_in_range(unsigned int which_output,
-				   gr_uint64 start, gr_uint64 end,
+				   gr_uint64 abs_start,
+				   gr_uint64 abs_end,
 				   const pmt::pmt_t &key)
 {
-  std::list<pmt::pmt_t> found_items;
-  std::list<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+  std::deque<pmt::pmt_t> found_items;
+  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
 
   gr_uint64 item_time;
   pmt::pmt_t itemkey;
@@ -225,12 +206,12 @@ gr_block_detail::get_tags_in_range(unsigned int which_output,
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
 
     // items are pushed onto list in sequential order; stop if we're past end
-    if(item_time > end) {
+    if(item_time > abs_end) {
       break;
     }
 
     itemkey = pmt::pmt_tuple_ref(*itr, 2);
-    if((item_time >= start) && (item_time <= end) && pmt::pmt_eqv(key, itemkey)) {
+    if((item_time >= abs_start) && (item_time <= abs_end) && pmt::pmt_eqv(key, itemkey)) {
       found_items.push_back(*itr);
     }
 
