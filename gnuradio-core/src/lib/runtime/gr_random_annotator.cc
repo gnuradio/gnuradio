@@ -26,17 +26,7 @@
 
 #include <gr_random_annotator.h>
 #include <gr_io_signature.h>
-
-gr_random_annotator::gr_random_annotator (size_t sizeof_stream_item)
-  : gr_sync_block ("random_annotator",
-		   gr_make_io_signature (1, 1, sizeof_stream_item),
-		   gr_make_io_signature (1, 1, sizeof_stream_item))
-{
-}
-
-gr_random_annotator::~gr_random_annotator ()
-{
-}
+#include <string.h>
 
 gr_random_annotator_sptr
 gr_make_random_annotator (size_t sizeof_stream_item)
@@ -44,10 +34,31 @@ gr_make_random_annotator (size_t sizeof_stream_item)
   return gnuradio::get_initial_sptr (new gr_random_annotator (sizeof_stream_item));
 }
 
+gr_random_annotator::gr_random_annotator (size_t sizeof_stream_item)
+  : gr_sync_block ("random_annotator",
+		   gr_make_io_signature (1, -1, sizeof_stream_item),
+		   gr_make_io_signature (1, -1, sizeof_stream_item)),
+    d_itemsize(sizeof_stream_item)
+{
+}
+
+gr_random_annotator::~gr_random_annotator ()
+{
+}
+
 int
 gr_random_annotator::work (int noutput_items,
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
 {
+  const float **in = (const float **) &input_items[0];
+  float **out = (float **) &output_items[0];
+
+  // Work does nothing to the data stream; just copy all inputs to outputs
+  int ninputs = input_items.size();
+  for (int i = 0; i < ninputs; i++){
+    memcpy(out[i], in[i], noutput_items * d_itemsize);
+  }
+
   return noutput_items;
 }

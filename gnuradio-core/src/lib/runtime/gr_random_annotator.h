@@ -44,6 +44,8 @@ protected:
   gr_random_annotator (size_t sizeof_stream_item);
 
  private:
+  size_t d_itemsize;
+
   friend gr_random_annotator_sptr
   gr_make_random_annotator (size_t sizeof_stream_item);
 };
