@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -216,6 +216,12 @@ gr_buffer::drop_reader (gr_buffer_reader *reader)
   d_readers.erase (result);
 }
 
+void
+gr_buffer::add_item_tag(const pmt::pmt_t &tag)
+{
+  d_item_tags.push_back(tag);
+}
+
 long
 gr_buffer_ncurrently_allocated ()
 {
@@ -255,6 +261,33 @@ gr_buffer_reader::update_read_pointer (int nitems)
   gruel::scoped_lock guard(*mutex());
   d_read_index = d_buffer->index_add (d_read_index, nitems);
   d_abs_read_offset += nitems;
+}
+
+std::deque<pmt::pmt_t>
+gr_buffer_reader::get_tags_in_range(unsigned int which_output,
+				    gr_uint64 abs_start,
+				    gr_uint64 abs_end)
+{
+  std::deque<pmt::pmt_t> found_items;
+  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+  
+  gr_uint64 item_time;
+  while(itr != d_item_tags.end()) {
+    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+
+    // items are pushed onto list in sequential order; stop if we're past end
+    if(item_time > abs_end) {
+      break;
+    }
+
+    if((item_time >= abs_start) && (item_time <= abs_end)) {
+      found_items.push_back(*itr);
+    }
+
+    itr++;
+  }
+
+  return found_items;
 }
 
 long

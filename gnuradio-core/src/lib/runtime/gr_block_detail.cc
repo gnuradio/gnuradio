@@ -158,65 +158,48 @@ gr_block_detail::add_item_tag(unsigned int which_output,
     throw pmt::pmt_wrong_type("gr_block_detail::set_item_tag key", key);
   }
   else {
+    // build tag tuple
     pmt::pmt_t nitem = pmt::pmt_from_uint64(abs_offset);
     pmt::pmt_t tuple = pmt::pmt_make_tuple(nitem, srcid, key, value);
-    d_item_tags.push_back(tuple);
+
+    // Add tag to gr_buffer's deque tags
+    d_output[which_output]->add_item_tag(tuple);
   }
 }
 
 std::deque<pmt::pmt_t>
-gr_block_detail::get_tags_in_range(unsigned int which_output,
+gr_block_detail::get_tags_in_range(unsigned int which_input,
 				   gr_uint64 abs_start,
 				   gr_uint64 abs_end)
 {
-  std::deque<pmt::pmt_t> found_items;
-  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
-  
-  gr_uint64 item_time;
-  while(itr != d_item_tags.end()) {
-    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
-
-    // items are pushed onto list in sequential order; stop if we're past end
-    if(item_time > abs_end) {
-      break;
-    }
-
-    if((item_time >= abs_start) && (item_time <= abs_end)) {
-      found_items.push_back(*itr);
-    }
-
-    itr++;
-  }
-
-  return found_items;
+  // get from gr_buffer_reader's deque of tags
+  return d_input[which_input]->get_tags_in_range(which_input,
+						 abs_start,
+						 abs_end);
 }
 
 std::deque<pmt::pmt_t>
-gr_block_detail::get_tags_in_range(unsigned int which_output,
+gr_block_detail::get_tags_in_range(unsigned int which_input,
 				   gr_uint64 abs_start,
 				   gr_uint64 abs_end,
 				   const pmt::pmt_t &key)
 {
-  std::deque<pmt::pmt_t> found_items;
-  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+  std::deque<pmt::pmt_t> found_items, found_items_by_key;
 
-  gr_uint64 item_time;
+  // get from gr_buffer_reader's deque of tags
+  found_items = d_input[which_input]->get_tags_in_range(which_input,
+							abs_start,
+							abs_end);
+
+  // Filter further by key name
   pmt::pmt_t itemkey;
-  while(itr != d_item_tags.end()) {
-    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
-
-    // items are pushed onto list in sequential order; stop if we're past end
-    if(item_time > abs_end) {
-      break;
-    }
-
+  std::deque<pmt::pmt_t>::iterator itr;
+  for(itr = found_items.begin(); itr != found_items.end(); itr++) {
     itemkey = pmt::pmt_tuple_ref(*itr, 2);
-    if((item_time >= abs_start) && (item_time <= abs_end) && pmt::pmt_eqv(key, itemkey)) {
-      found_items.push_back(*itr);
+    if(pmt::pmt_eqv(key, itemkey)) {
+      found_items_by_key.push_back(*itr);
     }
-
-    itr++;
   }
 
-  return found_items;
+  return found_items_by_key;
 }

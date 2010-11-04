@@ -119,8 +119,8 @@ class gr_block_detail {
   /*!
    * \brief Given a [start,end), returns a deque copy of all tags in the range.
    *
-   * Pass-through function to gr_buffer to get a deque of tags in given range. 
-   * Range of counts is from start to end-1.
+   * Pass-through function to gr_buffer_reader to get a deque of tags 
+   * in given range. Range of counts is from start to end-1.
    *
    * Tags are tuples of:
    *      (item count, source id, key, value)
@@ -165,7 +165,6 @@ class gr_block_detail {
   unsigned int                       d_noutputs;
   std::vector<gr_buffer_reader_sptr> d_input;
   std::vector<gr_buffer_sptr>	     d_output;
-  std::deque<pmt::pmt_t>             d_item_tags;
   bool                               d_done;
 
 

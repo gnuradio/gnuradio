@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,6 +26,7 @@
 #include <gr_runtime_types.h>
 #include <boost/weak_ptr.hpp>
 #include <gruel/thread.h>
+#include <gruel/pmt.h>
 
 class gr_vmcircbuf;
 
@@ -90,6 +91,19 @@ class gr_buffer {
 
   gr_uint64 nitems_written() { return d_abs_write_offset; }
 
+
+  /*!
+   * \brief  Adds a new tag to the deque of tags on a given buffer.
+   * 
+   * Adds a new tag to deque of tags on a given buffer. This takes the input
+   * parameters and builds a PMT tuple from it. It then calls
+   * gr_buffer::add_item_tag(pmt::pmt_t t), which appends the
+   * tag onto its deque of tags.
+   *
+   * \param tag        a PMT tuple containing the new tag
+   */
+  void add_item_tag(const pmt::pmt_t &tag);
+
   // -------------------------------------------------------------------------
 
  private:
@@ -106,6 +120,8 @@ class gr_buffer {
   size_t	 			d_sizeof_item;	// in bytes
   std::vector<gr_buffer_reader *>	d_readers;
   boost::weak_ptr<gr_block>		d_link;		// block that writes to this buffer
+
+  std::deque<pmt::pmt_t>                d_item_tags;
 
   //
   // The mutex protects d_write_index, d_abs_write_offset, d_done and the d_read_index's 
@@ -232,6 +248,23 @@ class gr_buffer_reader {
    */
   gr_block_sptr link() { return gr_block_sptr(d_link); }
 
+
+  /*!
+   * \brief Given a [start,end), returns a deque copy of all tags in the range.
+   *
+   * Get a deque of tags in given range. Range of counts is from start to end-1.
+   *
+   * Tags are tuples of:
+   *      (item count, source id, key, value)
+   *
+   * \param which_input  an integer of which input stream to pull from
+   * \param abs_start    a uint64 count of the start of the range of interest
+   * \param abs_end      a uint64 count of the end of the range of interest
+   */
+  std::deque<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
+					   gr_uint64 abs_start,
+					   gr_uint64 abs_end);
+  
   // -------------------------------------------------------------------------
 
  private:
@@ -245,6 +278,7 @@ class gr_buffer_reader {
   unsigned int			d_read_index;	// in items [0,d->buffer.d_bufsize)
   gr_uint64                     d_abs_read_offset;  // num items seen since the start
   boost::weak_ptr<gr_block>	d_link;		// block that reads via this buffer reader
+  std::deque<pmt::pmt_t>        d_item_tags;
 
   //! constructor is private.  Use gr_buffer::add_reader to create instances
   gr_buffer_reader (gr_buffer_sptr buffer, unsigned int read_index, gr_block_sptr link);
