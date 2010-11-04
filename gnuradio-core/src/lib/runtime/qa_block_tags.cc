@@ -29,6 +29,7 @@
 #include <gr_null_source.h>
 #include <gr_null_sink.h>
 #include <gr_head.h>
+#include <gr_random_annotator.h>
 #include <gruel/pmt.h>
 
 
@@ -68,51 +69,19 @@ qa_block_tags::t1 ()
 {
   printf("\nqa_block_tags::t1\n");
 
-  int N = 1000;
+  int N = 40000;
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
   gr_block_sptr head (gr_make_head(sizeof(int), N));
+  gr_block_sptr ann0 (gr_make_random_annotator(sizeof(int)));
+  gr_block_sptr ann1 (gr_make_random_annotator(sizeof(int)));
   gr_block_sptr snk (gr_make_null_sink(sizeof(int)));
   
   tb->connect(src, 0, head, 0);
-  tb->connect(head, 0, snk, 0);
+  tb->connect(head, 0, ann0, 0);
+  tb->connect(ann0, 0, ann1, 0);
+  tb->connect(ann1, 0, snk, 0);
   tb->run();
 
-  gr_uint64 W = src->nitems_written(0);
-  src->add_item_tag(0, N,
-		    pmt::pmt_string_to_symbol("test1"),
-		    pmt::pmt_from_double(1.234));
-  
-  // Make sure we can't get duplicates
-  src->add_item_tag(0, N,
-		    pmt::pmt_string_to_symbol("test1"),
-		    pmt::pmt_from_double(1.234));
-
-  // Add new tag at another position
-  src->add_item_tag(0, W,
-		    pmt::pmt_string_to_symbol("test2"),
-		    pmt::pmt_from_double(2.345));
-
-  // Test how many tags we get for different ranges
-  // should be 1, 0, 0, and 2
-  std::list<pmt::pmt_t> tags0, tags1, tags2, tags3;
-  tags0 = src->get_tags_in_range(0, N-10, N+10);
-  tags1 = src->get_tags_in_range(0, N-10, N- 1);
-  tags2 = src->get_tags_in_range(0, N+ 1, N+10);
-  tags3 = src->get_tags_in_range(0, 0, W);
-  
-  CPPUNIT_ASSERT(tags0.size() == 1);
-  CPPUNIT_ASSERT(tags1.size() == 0);
-  CPPUNIT_ASSERT(tags2.size() == 0);
-  CPPUNIT_ASSERT(tags3.size() == 2);
-
-  // Check types and values are good
-  pmt::pmt_t tuple = tags0.front();
-  pmt::pmt_t key = pmt::pmt_tuple_ref(tuple, 2);
-  double value = pmt::pmt_to_double(pmt::pmt_tuple_ref(tuple, 3));
-  
-  CPPUNIT_ASSERT(pmt::pmt_is_tuple(tuple));
-  CPPUNIT_ASSERT(pmt::pmt_eqv(key, pmt::pmt_string_to_symbol("test1")));
-  CPPUNIT_ASSERT_EQUAL(value, 1.234);
 }
 
