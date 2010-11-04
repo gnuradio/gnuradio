@@ -118,7 +118,7 @@ gr_block::fixed_rate_noutput_to_ninput(int noutput)
 }
 
 gr_uint64
-gr_block::n_items_read(unsigned int which_input) 
+gr_block::nitems_read(unsigned int which_input) 
 {
   if(d_detail) {
     return d_detail->nitems_read(which_input);
@@ -130,7 +130,7 @@ gr_block::n_items_read(unsigned int which_input)
 }
 
 gr_uint64
-gr_block::n_items_written(unsigned int which_output) 
+gr_block::nitems_written(unsigned int which_output) 
 {
   if(d_detail) {
     return d_detail->nitems_written(which_output);

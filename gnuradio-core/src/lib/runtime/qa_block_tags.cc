@@ -49,17 +49,17 @@ qa_block_tags::t0 ()
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, snk, 0);
 
-  //CPPUNIT_ASSERT_THROW(src->n_items_read(0), std::runtime_error);
-  //CPPUNIT_ASSERT_THROW(src->n_items_written(0), std::runtime_error);
-  CPPUNIT_ASSERT_EQUAL(src->n_items_read(0), (gr_uint64)0);
-  CPPUNIT_ASSERT_EQUAL(src->n_items_written(0), (gr_uint64)0);
+  //CPPUNIT_ASSERT_THROW(src->nitems_read(0), std::runtime_error);
+  //CPPUNIT_ASSERT_THROW(src->nitems_written(0), std::runtime_error);
+  CPPUNIT_ASSERT_EQUAL(src->nitems_read(0), (gr_uint64)0);
+  CPPUNIT_ASSERT_EQUAL(src->nitems_written(0), (gr_uint64)0);
 
   tb->run();
 
-  CPPUNIT_ASSERT_THROW(src->n_items_read(0), std::invalid_argument);
-  CPPUNIT_ASSERT(src->n_items_written(0) >= N);
-  CPPUNIT_ASSERT_EQUAL(snk->n_items_read(0), (gr_uint64)1000);
-  CPPUNIT_ASSERT_THROW(snk->n_items_written(0), std::invalid_argument);
+  CPPUNIT_ASSERT_THROW(src->nitems_read(0), std::invalid_argument);
+  CPPUNIT_ASSERT(src->nitems_written(0) >= N);
+  CPPUNIT_ASSERT_EQUAL(snk->nitems_read(0), (gr_uint64)1000);
+  CPPUNIT_ASSERT_THROW(snk->nitems_written(0), std::invalid_argument);
 }
 
 
@@ -78,7 +78,7 @@ qa_block_tags::t1 ()
   tb->connect(head, 0, snk, 0);
   tb->run();
 
-  gr_uint64 W = src->n_items_written(0);
+  gr_uint64 W = src->nitems_written(0);
   src->add_item_tag(0, N,
 		    pmt::pmt_string_to_symbol("test1"),
 		    pmt::pmt_from_double(1.234));

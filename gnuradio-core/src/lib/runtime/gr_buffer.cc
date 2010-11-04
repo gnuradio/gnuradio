@@ -177,6 +177,7 @@ gr_buffer::update_write_pointer (int nitems)
 {
   gruel::scoped_lock guard(*mutex());
   d_write_index = index_add (d_write_index, nitems);
+  d_abs_write_offset += nitems;
 }
 
 void

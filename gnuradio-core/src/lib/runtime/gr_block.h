@@ -200,10 +200,10 @@ class gr_block : public gr_basic_block {
   virtual int fixed_rate_noutput_to_ninput(int noutput);
 
   // Return the number of items read on input stream which_input
-  gr_uint64 n_items_read(unsigned int which_input);
+  gr_uint64 nitems_read(unsigned int which_input);
 
   // Return the number of items written on output stream which_output
-  gr_uint64 n_items_written(unsigned int which_output);
+  gr_uint64 nitems_written(unsigned int which_output);
 
   void add_item_tag(unsigned int which_output,
 		    gr_uint64 offset,
