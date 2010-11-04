@@ -49,6 +49,7 @@ libruntime_la_SOURCES = 			\
 	gr_msg_queue.cc				\
 	gr_pagesize.cc				\
 	gr_preferences.cc			\
+	gr_random_annotator.cc			\
 	gr_realtime.cc				\
 	gr_scheduler.cc				\
 	gr_scheduler_sts.cc			\
@@ -103,6 +104,7 @@ grinclude_HEADERS = 				\
 	gr_msg_queue.h				\
 	gr_pagesize.h				\
 	gr_preferences.h			\
+	gr_random_annotator.h			\
 	gr_realtime.h				\
 	gr_runtime_types.h			\
 	gr_scheduler.h				\
@@ -153,6 +155,7 @@ swiginclude_HEADERS =			\
 	gr_message.i			\
 	gr_msg_handler.i		\
 	gr_msg_queue.i			\
+	gr_random_annotator.i		\
 	gr_realtime.i			\
 	gr_single_threaded_scheduler.i	\
 	gr_sync_block.i			\
