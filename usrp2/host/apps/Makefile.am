@@ -1,5 +1,5 @@
 #
-# Copyright 2007, 2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2010 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@ include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = \
     $(USRP2_INCLUDES) \
+    $(GRUEL_INCLUDES) \
     $(STD_DEFINES_AND_INCLUDES) \
-    $(CPPUNIT_INCLUDES) \
-    $(GRUEL_INCLUDES)
+    $(CPPUNIT_INCLUDES)
 
 LDADD = \
     $(USRP2_LA) \

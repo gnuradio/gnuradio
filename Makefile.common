@@ -57,8 +57,8 @@ libspudir = $(libdir)spu
 
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
-STD_DEFINES_AND_INCLUDES = $(DEFINES) $(BOOST_CPPFLAGS) \
-	$(GNURADIO_INCLUDES) $(GRUEL_INCLUDES)
+STD_DEFINES_AND_INCLUDES = $(DEFINES) $(GNURADIO_INCLUDES) \
+	$(GRUEL_INCLUDES) $(BOOST_CPPFLAGS)
 
 # when including for compilation from pre-installed libraries and such,
 # need to make sure those are put last on the compile command

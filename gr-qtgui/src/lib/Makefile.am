@@ -21,8 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
-              $(QT_INCLUDES) -I. $(WITH_INCLUDES)
+AM_CPPFLAGS = -I. $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
+              $(QT_INCLUDES) $(WITH_INCLUDES)
 
 # Only include these files in the build if qtgui passes configure checks
 # This is mostly to help make distcheck pass
