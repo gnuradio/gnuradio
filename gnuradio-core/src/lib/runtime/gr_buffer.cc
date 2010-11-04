@@ -264,8 +264,7 @@ gr_buffer_reader::update_read_pointer (int nitems)
 }
 
 std::deque<pmt::pmt_t>
-gr_buffer_reader::get_tags_in_range(unsigned int which_output,
-				    gr_uint64 abs_start,
+gr_buffer_reader::get_tags_in_range(gr_uint64 abs_start,
 				    gr_uint64 abs_end)
 {
   std::deque<pmt::pmt_t> found_items;

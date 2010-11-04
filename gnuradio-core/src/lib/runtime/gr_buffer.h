@@ -257,12 +257,10 @@ class gr_buffer_reader {
    * Tags are tuples of:
    *      (item count, source id, key, value)
    *
-   * \param which_input  an integer of which input stream to pull from
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  std::deque<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
-					   gr_uint64 abs_start,
+  std::deque<pmt::pmt_t> get_tags_in_range(gr_uint64 abs_start,
 					   gr_uint64 abs_end);
   
   // -------------------------------------------------------------------------
