@@ -24,28 +24,43 @@ dnl Boston, MA 02110-1301, USA.
 
 
 AC_DEFUN([USRP_LIBUSB], [
-  dnl Use PKGCONFIG to check for packages first, then check to
-  dnl make sure the USB_* variables work (whether from PKGCONFIG
-  dnl or overridden by the user)
-
-  dnl do not use LDFLAGS, since PKGCONFIG will provide everything
+  dnl do not use LDFLAGS, except on Windows
   saved_LDFLAGS=${LDFLAGS}
-  LDFLAGS=
+  case "$host_os" in
+    cygwin* | mingw*)
+    ;;
+    *)
+      LDFLAGS=
+    ;;
+  esac
+
+  dnl this variable is set in usrp/usrp.pc.in as a requirement
+  dnl for libusrp; it is OK to be empty.
   LIBUSB_PKG_CONFIG_NAME=
 
-  dnl loop over various possible 'libusb' PKGCONFIG names, and choose
-  dnl the first one that meets both the user's selection (via
-  dnl configure flags) as well as what is installed
-
-  dnl create the list of libusb PKGCONFIG modules to test
+  dnl for Windows (cygin, mingw), do not use PKGCONFIG since LIBUSB
+  dnl does not install a .pc file.  For all other OSs, use
+  dnl PKGCONFIG to check for various package names first.
   libusb_list=''
-  if test x$1 = xyes; then
-    dnl libusb-1.0 was requested; just test for it
-    libusb_list="libusb-1.0"
-  else
-    dnl test for legacy libusb only
-    libusb_list="libusb libusb-legacy"
-  fi
+  case "$host_os" in
+    cygwin* | mingw*)
+      libusb_list='libusb'
+    ;;
+    *)
+      dnl create the list of libusb PKGCONFIG modules to test
+      if test x$1 = xyes; then
+        dnl libusb-1.0 was requested; just test for it
+        libusb_list="libusb-1.0"
+      else
+        dnl test for legacy libusb only
+        libusb_list="libusb libusb-legacy"
+      fi
+    ;;
+  esac
+
+  dnl loop over various possible 'libusb' names, and
+  dnl choose the first one that meets both the user's selection
+  dnl (via configure flags) as well as what is installed
   for libusb_name in ${libusb_list}; do
     dnl clear internal variables
     libusbok=no
@@ -54,31 +69,45 @@ AC_DEFUN([USRP_LIBUSB], [
     usb_lib_func=''
     usb_lib_name=''
 
-    dnl start checks
-    AC_MSG_NOTICE([Checking for LIBUSB version '${libusb_name}'])
-    if test ${libusb_name} = "libusb-1.0"; then
-      dnl see if the pkgconfig module is available
-      PKG_CHECK_MODULES(USB, ${libusb_name}, [
-        libusbok=yes
-        have_libusb1=yes
-        usb_header='libusb-1.0/libusb.h'
-        usb_lib_func='libusb_bulk_transfer'
-      ], [libusbok=no])
-    else
-      dnl see if the pkgconfig module is available
-      PKG_CHECK_MODULES(USB, ${libusb_name}, [
-        libusbok=yes
+    case "$host_os" in
+      cygwin* | mingw*)
+        USB_INCLUDEDIR=
+        USB_INCLUDES=
+        USB_LIBS=-lusb
         usb_header='usb.h'
         usb_lib_func='usb_bulk_write'
-      ], [libusbok=no])
-    fi
+        libusbok=yes
+      ;;
+      *)
+        dnl start checks
+        AC_MSG_NOTICE([Checking for LIBUSB version '${libusb_name}'])
+        if test ${libusb_name} = "libusb-1.0"; then
+          dnl see if the pkgconfig module is available
+          PKG_CHECK_MODULES(USB, ${libusb_name}, [
+            libusbok=yes
+            have_libusb1=yes
+            usb_header='libusb-1.0/libusb.h'
+            usb_lib_func='libusb_bulk_transfer'
+          ], [libusbok=no])
+        else
+          dnl see if the pkgconfig module is available
+          PKG_CHECK_MODULES(USB, ${libusb_name}, [
+            libusbok=yes
+            usb_header='usb.h'
+            usb_lib_func='usb_bulk_write'
+          ], [libusbok=no])
+        fi
+      ;;
+    esac
     if test $libusbok = yes; then
-      dnl PKGCONFIG found a version of LIBUSB.
+      dnl PKGCONFIG found a version of LIBUSB, or the info was
+      dnl provided by the user, or the OS is Windows.
+
       dnl Check it to make sure it meets enough criteria:
       dnl Verify that $usb_header is a valid header. If so, then
       dnl verify that $usb_lib_func can be found in the library
       dnl $usb_lib_name.  if so, verify that the symbol 'usb_debug' is
-      dnl found in the library.
+      dnl found in the library if not using Windows.
 
       dnl Check for the header.  Similar to AC_CHECK_HEADERS,
       dnl but doesn't append to known \#defines.
@@ -143,7 +172,9 @@ AC_DEFUN([USRP_LIBUSB], [
             *)
               AC_LANG_PUSH(C)
               save_CPPFLAGS="$CPPFLAGS"
-              CPPFLAGS="$USB_INCLUDES"
+              if test x$USB_INCLUDEDIR != x; then
+                CPPFLAGS="$USB_INCLUDES"
+              fi
               save_LIBS="$LIBS"
               LIBS="$USB_LIBS"
               AC_MSG_CHECKING([$libusb_name for symbol usb_debug in library $usb_lib_name])
@@ -163,7 +194,13 @@ AC_DEFUN([USRP_LIBUSB], [
     fi
     dnl if everything checks out OK, finish up
     if test $libusbok = yes; then
-      LIBUSB_PKG_CONFIG_NAME="${libusb_name}"
+      case "$host_os" in
+        cygwin* | mingw*)
+        ;;
+        *)
+          LIBUSB_PKG_CONFIG_NAME="${libusb_name}"
+        ;;
+      esac
       break
     else
       dnl something wasn't found in this LIBUSB version.
@@ -180,7 +217,9 @@ AC_DEFUN([USRP_LIBUSB], [
     dnl final error checking, mostly to create #define's
     AC_LANG_PUSH(C)
     save_CPPFLAGS="$CPPFLAGS"
-    CPPFLAGS="$USB_INCLUDES"
+    if test x$USB_INCLUDEDIR != x; then
+      CPPFLAGS="$USB_INCLUDES"
+    fi
     dnl Check for the header.
     AC_CHECK_HEADERS([$usb_header], [], [libusbok=no])
     CPPFLAGS="$save_CPPFLAGS"
@@ -192,18 +231,20 @@ AC_DEFUN([USRP_LIBUSB], [
       dnl check for the library (again)
       AC_LANG_PUSH(C)
       save_CPPFLAGS="$CPPFLAGS"
-      CPPFLAGS="$USB_INCLUDES"
+      if test x$USB_INCLUDEDIR != x; then
+        CPPFLAGS="$USB_INCLUDES"
+      fi
       save_LIBS="$LIBS"
       LIBS="$USB_LIBS"
       AC_CHECK_LIB([$usb_lib_name], [$usb_lib_func], [], [
         libusbok=no
         AC_MSG_RESULT([USRP requires library '$usb_lib_name' with function '$usb_lib_func', which was either not found or was not usable. See http://www.libusb.org])])
-      case "$host_os" in
-        cygwin* | mingw*)
-          USB_LIBS="$LIBS"
-          ;;
-        *) ;;
-      esac
+#      case "$host_os" in
+#        cygwin* | mingw*)
+#          USB_LIBS="$LIBS"
+#          ;;
+#        *) ;;
+#      esac
       LIBS="$save_LIBS"
       CPPFLAGS="$save_CPPFLAGS"
       AC_LANG_POP(C)
