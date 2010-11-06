@@ -27,8 +27,12 @@
 (define (vector-map f v)
   (list->vector (map f (vector->list v))))
 
-(define (test-connect-1)
-  (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
+
+;; Must precede all tests
+(test-begin "qa_0000_basics")
+
+(test-group "test-connect-1"
+ (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
 	 (src (gr:vector-source-i src-data #f))
@@ -40,10 +44,10 @@
     (gr:connect tb (gr:ep op 0) (gr:ep dst 0))
 
     (gr:run tb)
-    (let ((actual-result (gr:data dst)))
-      (test-equal expected-result actual-result))))
+    (test-equal expected-result (gr:data dst))))
 
-(define (test-connect-2)
+
+(test-group "test-connect-2"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -56,10 +60,10 @@
     (gr:connect tb op dst)
 
     (gr:run tb)
-    (let ((actual-result (gr:data dst)))
-      (test-equal expected-result actual-result))))
+    (test-equal expected-result (gr:data dst))))
 
-(define (test-connect-3)
+
+(test-group "test-connect-3"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -72,10 +76,10 @@
     (gr:connect tb `(,op 0) `(,dst 0))
 
     (gr:run tb)
-    (let ((actual-result (gr:data dst)))
-      (test-equal expected-result actual-result))))
+    (test-equal expected-result (gr:data dst))))
 
-(define (test-connect-4)
+
+(test-group "test-connect-4"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -87,10 +91,10 @@
     (gr:connect tb src op dst)
 
     (gr:run tb)
-    (let ((actual-result (gr:data dst)))
-      (test-equal expected-result actual-result))))
+    (test-equal expected-result (gr:data dst))))
 
-(define (test-io-signature-1)
+
+(test-group "test-io-signature-1"
   (let ((ios1 (gr:io-signature 1 2 8))
 	(ios2 (gr:io-signature2 1 2 16 32))
 	(ios3 (gr:io-signature3 1 -1 14 32 48))
@@ -122,12 +126,5 @@
     (test-equal '#(1 2 3) (gr:sizeof-stream-items iosv))
     ))
 
-
-
-(test-begin "qa_0000_basics")
-(test-connect-1)
-(test-connect-2)
-(test-connect-3)
-(test-connect-4)
-(test-io-signature-1)
+;; Must follow all tests
 (test-end "qa_0000_basics")
