@@ -34,5 +34,5 @@ nobase_guile_DATA = \
 	Swig/common.scm \
 	gnuradio/core.scm \
 	gnuradio/export-safely.scm \
-	gnuradio/runtime-shim.scm
-
+	gnuradio/runtime-shim.scm \
+	srfi/srfi-64.scm

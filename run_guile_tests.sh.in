@@ -62,14 +62,15 @@ echo $0: FIXME add stuff from args 1>&2
 
 # ------------------------------------------------------------------------
 
-echo "mylibdir = $mylibdir"
-echo "guile_load_path = $guile_load_path"
+#echo "mylibdir = $mylibdir"
+#echo "guile_load_path = $guile_load_path"
 
 prepend LTDL_LIBRARY_PATH "$mylibdir"
 prepend GUILE_LOAD_PATH "$guile_load_path"
 
 export LTDL_LIBRARY_PATH
 export GUILE_LOAD_PATH
+export GUILE_WARN_DEPRECATED=no
 
 # Run everything that matches qa_*.scm and return the final result.
 
@@ -77,7 +78,7 @@ ok=yes
 for file in $4/qa_*.scm
 do
   # echo $file
-  @GUILE@ $file
+  @GUILE@ -s $file
   r=$?
   if [ $r -ne 0 ]
   then
