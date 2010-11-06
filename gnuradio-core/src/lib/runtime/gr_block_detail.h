@@ -155,6 +155,14 @@ class gr_block_detail {
 					   gr_uint64 abs_end,
 					   const pmt::pmt_t &key);
 
+  /*!
+   * \brief Default tag handler; moves all tags downstream
+   *
+   * Move all tags from input to output and flows them all downstream. Each input
+   * stream's tags get appended to each output streams tags.
+   */
+  void handle_tags();
+
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
 
@@ -167,6 +175,7 @@ class gr_block_detail {
   std::vector<gr_buffer_sptr>	     d_output;
   bool                               d_done;
 
+  size_t d_last_tag;  // keep track of which tags we've already received from upstream
 
   gr_block_detail (unsigned int ninputs, unsigned int noutputs);
 

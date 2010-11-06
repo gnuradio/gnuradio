@@ -209,6 +209,15 @@ class gr_block : public gr_basic_block {
    */
   gr_uint64 nitems_written(unsigned int which_output);
 
+
+  /*!
+   * \brief Function to move tags downstream
+   *
+   * The default behavior proxies to gr_block_detail, which just moves all tags
+   * from input to output and flows them all downstream.
+   */
+  virtual void handle_tags();
+
   // ----------------------------------------------------------------------------
 
  private:

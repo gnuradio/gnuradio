@@ -107,6 +107,17 @@ class gr_buffer {
   std::deque<pmt::pmt_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
   std::deque<pmt::pmt_t>::iterator get_tags_end() { return d_item_tags.end(); }
 
+  bool get_tag(size_t n, pmt::pmt_t &t)
+  {
+    if(n < d_item_tags.size()) { 
+      t = d_item_tags[n];
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   // -------------------------------------------------------------------------
 
  private:
@@ -265,7 +276,12 @@ class gr_buffer_reader {
    */
   std::deque<pmt::pmt_t> get_tags_in_range(gr_uint64 abs_start,
 					   gr_uint64 abs_end);
-  
+
+  bool get_tag(size_t n, pmt::pmt_t &t)
+  {
+    return d_buffer->get_tag(n, t);
+  }
+    
   // -------------------------------------------------------------------------
 
  private:
