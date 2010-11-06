@@ -46,6 +46,7 @@ make.log
 /compile
 /build
 /run_tests.sh
+/run_guile_tests.sh
 ###
 ### Put these here until we get this all sorted out
 ###

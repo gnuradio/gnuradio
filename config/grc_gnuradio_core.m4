@@ -81,6 +81,8 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/gnuradio-core.pc \
         gnuradio-core/src/Makefile \
         gnuradio-core/src/gen_interpolator_taps/Makefile \
+	gnuradio-core/src/guile/Makefile \
+	gnuradio-core/src/guile/run_guile_tests \
         gnuradio-core/src/lib/Makefile \
         gnuradio-core/src/lib/filter/Makefile \
         gnuradio-core/src/lib/g72x/Makefile \
@@ -110,6 +112,10 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 
     GRC_BUILD_CONDITIONAL(gnuradio-core, [
         dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_core],[chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests])
+        AC_CONFIG_COMMANDS([run_tests_core],
+	[
+	  chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests
+	  chmod +x gnuradio-core/src/guile/run_guile_tests
+	])
     ])
 ])

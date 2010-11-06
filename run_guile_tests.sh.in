@@ -1,0 +1,97 @@
+#!/bin/sh
+
+# 1st argument is absolute path to component C++ shared library build directory
+# 2nd argument is absolute path to hand coded guile source directory
+# 3nd argument is absolute path to component SWIG build directory
+# 4rd argument is absolute path to component Guile QA test directory
+
+if [ $# -ne 4 ]
+then
+  echo "$0: requires 4 args" 1>&2
+  exit 1
+fi
+
+abs_top_srcdir=@abs_top_srcdir@
+abs_top_builddir=@abs_top_builddir@
+
+# usage: prepend <path> <dir>
+function prepend(){
+  if [ $# -ne 2 ]
+  then
+    echo "$0: prepend needs 2 args" 1>&2
+    exit 1
+  fi
+  local path="$1" dir="$2" contents=""
+  eval "contents=\$$path"
+  #echo "path = $path"
+  #echo "dir = $dir"
+  #echo "contents = $contents"
+  if [ "$dir" != "" ]
+  then
+    if [ "$contents" = "" ]
+    then
+      eval "$path=\"$dir\""
+    else
+      eval "$path=\"$dir:$contents\""
+    fi
+  fi
+
+  #echo end-of-prepend: $path=${!path}
+}
+
+# ------------------------------------------------------------------------
+# For now, everybody gets gruel and gnuradio-core for free
+# FIXME eventually this should be gruel and gnuradio-runtime
+# ------------------------------------------------------------------------
+
+# Where to search for not yet installed C++ shared libraries
+prepend mylibdir $abs_top_builddir/gruel/src/lib/.libs
+prepend mylibdir $abs_top_builddir/gnuradio-core/src/lib/.libs
+
+# Where to search for not yet installed swig generated guile libs
+prepend mylibdir $abs_top_builddir/gnuradio-core/src/lib/swig/.libs
+
+# Where to seach for guile code.
+prepend guile_load_path $abs_top_srcdir/gnuradio-core/src/guile
+prepend guile_load_path $abs_top_builddir/gnuradio-core/src/lib/swig
+
+# ------------------------------------------------------------------------
+# FIXME add the stuff from the args
+
+echo $0: FIXME add stuff from args 1>&2
+
+# ------------------------------------------------------------------------
+
+echo "mylibdir = $mylibdir"
+echo "guile_load_path = $guile_load_path"
+
+prepend LTDL_LIBRARY_PATH "$mylibdir"
+prepend GUILE_LOAD_PATH "$guile_load_path"
+
+export LTDL_LIBRARY_PATH
+export GUILE_LOAD_PATH
+
+# Run everything that matches qa_*.scm and return the final result.
+
+ok=yes
+for file in $4/qa_*.scm
+do
+  # echo $file
+  @GUILE@ $file
+  r=$?
+  if [ $r -ne 0 ]
+  then
+    if [ $r -ge 128 ]		# killed by a signal
+    then
+      exit $r
+    fi
+    ok=no
+  fi  
+done
+
+if [ $ok = yes ]
+then
+  exit 0
+else
+  exit 1
+fi

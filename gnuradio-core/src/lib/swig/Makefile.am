@@ -56,18 +56,6 @@ nobase_swiginclude_HEADERS = \
 	guile/std_complex.i
 
 
-if GUILE
-# This is the top level guile file, which loads all the other scm files
-# for gnuradio. This has to be installed top level to be found in the
-# default search path.
-nobase_guile_DATA = \
-	gnuradio/core.scm \
-	gnuradio/export-safely.scm \
-	gnuradio/runtime-shim.scm \
-	Swig/common.scm
-endif
-
-
 if PYTHON
 AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	 $(WITH_INCLUDES)

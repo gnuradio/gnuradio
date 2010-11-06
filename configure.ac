@@ -429,11 +429,12 @@ AC_SUBST(with_LIBDIRPATH)
 AC_CONFIG_FILES([\
     Makefile \
     run_tests.sh \
+    run_guile_tests.sh \
     config/Makefile
 ])
 
 dnl run_tests.sh is created from run_tests.sh.in .  Make it executable.
-AC_CONFIG_COMMANDS([run_tests_build], [chmod +x run_tests.sh])
+AC_CONFIG_COMMANDS([run_tests_build], [chmod +x run_tests.sh run_guile_tests.sh])
 
 AC_OUTPUT
 
