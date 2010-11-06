@@ -268,10 +268,10 @@ gr_buffer_reader::get_tags_in_range(gr_uint64 abs_start,
 				    gr_uint64 abs_end)
 {
   std::deque<pmt::pmt_t> found_items;
-  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+  std::deque<pmt::pmt_t>::iterator itr = d_buffer->get_tags_begin();
   
   gr_uint64 item_time;
-  while(itr != d_item_tags.end()) {
+  while(itr != d_buffer->get_tags_end()) {
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
 
     // items are pushed onto list in sequential order; stop if we're past end

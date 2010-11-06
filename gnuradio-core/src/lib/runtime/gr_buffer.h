@@ -104,6 +104,9 @@ class gr_buffer {
    */
   void add_item_tag(const pmt::pmt_t &tag);
 
+  std::deque<pmt::pmt_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
+  std::deque<pmt::pmt_t>::iterator get_tags_end() { return d_item_tags.end(); }
+
   // -------------------------------------------------------------------------
 
  private:
@@ -121,7 +124,7 @@ class gr_buffer {
   std::vector<gr_buffer_reader *>	d_readers;
   boost::weak_ptr<gr_block>		d_link;		// block that writes to this buffer
 
-  std::deque<pmt::pmt_t>                d_item_tags;
+  std::deque<pmt::pmt_t>                d_item_tags;     // temp. store tags until moved to reader
 
   //
   // The mutex protects d_write_index, d_abs_write_offset, d_done and the d_read_index's 
@@ -276,7 +279,6 @@ class gr_buffer_reader {
   unsigned int			d_read_index;	// in items [0,d->buffer.d_bufsize)
   gr_uint64                     d_abs_read_offset;  // num items seen since the start
   boost::weak_ptr<gr_block>	d_link;		// block that reads via this buffer reader
-  std::deque<pmt::pmt_t>        d_item_tags;
 
   //! constructor is private.  Use gr_buffer::add_reader to create instances
   gr_buffer_reader (gr_buffer_sptr buffer, unsigned int read_index, gr_block_sptr link);
