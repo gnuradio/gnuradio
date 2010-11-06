@@ -36,3 +36,5 @@ nobase_guile_DATA = \
 	gnuradio/export-safely.scm \
 	gnuradio/runtime-shim.scm \
 	srfi/srfi-64.scm
+
+CLEANFILES = qa_*.log
