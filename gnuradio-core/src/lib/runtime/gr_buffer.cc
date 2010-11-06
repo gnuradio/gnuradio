@@ -274,11 +274,6 @@ gr_buffer_reader::get_tags_in_range(gr_uint64 abs_start,
   while(itr != d_buffer->get_tags_end()) {
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
 
-    // items are pushed onto list in sequential order; stop if we're past end
-    if(item_time > abs_end) {
-      break;
-    }
-
     if((item_time >= abs_start) && (item_time <= abs_end)) {
       found_items.push_back(*itr);
     }
