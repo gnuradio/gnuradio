@@ -75,12 +75,14 @@ qa_block_tags::t1 ()
   gr_block_sptr head (gr_make_head(sizeof(int), N));
   gr_block_sptr ann0 (gr_make_random_annotator(sizeof(int)));
   gr_block_sptr ann1 (gr_make_random_annotator(sizeof(int)));
+  gr_block_sptr ann2 (gr_make_random_annotator(sizeof(int)));
   gr_block_sptr snk (gr_make_null_sink(sizeof(int)));
   
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
   tb->connect(ann0, 0, ann1, 0);
-  tb->connect(ann1, 0, snk, 0);
+  tb->connect(ann1, 0, ann2, 0);
+  tb->connect(ann2, 0, snk, 0);
   tb->run();
 
 }

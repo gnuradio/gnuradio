@@ -46,6 +46,7 @@ gr_random_annotator::gr_random_annotator (size_t sizeof_stream_item)
 
 gr_random_annotator::~gr_random_annotator ()
 {
+  std::cout << d_sout.str();
 }
 
 int
@@ -62,21 +63,22 @@ gr_random_annotator::work (int noutput_items,
   gr_uint64 abs_N = nitems_written(0);
   std::deque<pmt::pmt_t> all_tags = get_tags_in_range(0, (gr_uint64)0, abs_N);
   std::deque<pmt::pmt_t>::iterator itr;
-  std::cout << std::endl << "Found " << all_tags.size() << " tags." << std::endl;
 
-  std::cout.setf(std::ios::left);
-  std::cout << std::setw(25) << "Receiver" << std::setw(25) << "Sender"
-	    << std::setw(10) << "nitem" << std::setw(20) << "key"
-	    << std::setw(10) << "value" << std::endl;
+  d_sout << std::endl << "Found " << all_tags.size() << " tags." << std::endl;
+  d_sout.setf(std::ios::left);
+  d_sout << std::setw(25) << "Receiver" << std::setw(25) << "Sender"
+	 << std::setw(10) << "nitem" << std::setw(20) << "key"
+	 << std::setw(10) << "value" << std::endl;
+
   for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
     gr_uint64 nitem = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
     std::string srcid = pmt::pmt_symbol_to_string(pmt::pmt_tuple_ref(*itr, 1));
     std::string key   = pmt::pmt_symbol_to_string(pmt::pmt_tuple_ref(*itr, 2));
     gr_uint64 value = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 3));
 
-    std::cout << std::setw(25) << str.str() << std::setw(25) << srcid
-	      << std::setw(10) << nitem << std::setw(20) << key
-	      << std::setw(10) << value << std::endl;
+    d_sout << std::setw(25) << str.str() << std::setw(25) << srcid
+	   << std::setw(10) << nitem << std::setw(20) << key
+	   << std::setw(10) << value << std::endl;
   }
   
   // Work does nothing to the data stream; just copy all inputs to outputs
@@ -86,7 +88,7 @@ gr_random_annotator::work (int noutput_items,
   }
 
   // Storing the current noutput_items as the value to the "noutput_items" key
-  pmt::pmt_t cur_N = pmt::pmt_from_uint64(noutput_items);
+  pmt::pmt_t cur_N = pmt::pmt_from_uint64(random());
   pmt::pmt_t srcid = pmt::pmt_string_to_symbol(str.str());
   pmt::pmt_t key = pmt::pmt_string_to_symbol("noutput_items");
   add_item_tag(0, abs_N, key, cur_N, srcid);
