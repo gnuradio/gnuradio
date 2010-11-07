@@ -45,8 +45,6 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
     while ((msg = d->d_tpb.delete_head_nowait()))
       block->handle_msg(msg);
 
-    block->handle_tags();
-    
     d->d_tpb.clear_changed();
     s = d_exec.run_one_iteration();
 

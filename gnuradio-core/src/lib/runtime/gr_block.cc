@@ -166,12 +166,17 @@ gr_block::get_tags_in_range(unsigned int which_output,
   return d_detail->get_tags_in_range(which_output, start, end, key);
 }
 
-void 
-gr_block::handle_tags()
+int 
+gr_block::tag_handling_method()
 {
-  d_detail->handle_tags();
+  return d_detail->tag_handling_method(); 
 }
 
+void
+gr_block::set_tag_handling_method(int m)
+{
+  set_tag_handling_method(m);
+}
 
 std::ostream&
 operator << (std::ostream& os, const gr_block *m)
