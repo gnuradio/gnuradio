@@ -24,7 +24,6 @@
 #define INCLUDED_GR_BLOCK_H
 
 #include <gr_basic_block.h>
-#include <deque>
 
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
@@ -202,12 +201,12 @@ class gr_block : public gr_basic_block {
   /*!
    * \brief Return the number of items read on input stream which_input
    */
-  gr_uint64 nitems_read(unsigned int which_input);
+  uint64_t nitems_read(unsigned int which_input);
 
   /*!
    * \brief  Return the number of items written on output stream which_output
    */
-  gr_uint64 nitems_written(unsigned int which_output);
+  uint64_t nitems_written(unsigned int which_output);
 
 
   /*!
@@ -238,28 +237,25 @@ class gr_block : public gr_basic_block {
 
   
   /*!
-   * \brief  Adds a new tag to the deque of tags on a given buffer.
+   * \brief  Adds a new tag onto the given output buffer.
    * 
-   * This is a call-through method to gr_block_detail to add the new tag.
-   * gr_block_detail takes care of formatting the tuple from the inputs here,
-   * it then calls gr_buffer::add_item_tag(pmt::pmt_t t), which appends the
-   * tag onto its deque of tags.
+   * This is a call-through method to gr_block_detail.
    *
    * \param which_ouput  an integer of which output stream to attach the tag
    * \param abs_offset   a uint64 number of the absolute item number
    *                     assicated with the tag. Can get from nitems_written.
-   * \param key          a PMT symbol holding the key name (i.e., a string)
+   * \param key          a PMT symbol holding the key name
    * \param value        any PMT holding any value for the given key
-   * \param srcid        optional source ID specifier; defauls to string "NA"
+   * \param srcid        optional source ID specifier; defaults to PMT_F
    */
   void add_item_tag(unsigned int which_output,
-		    gr_uint64 abs_offset,
+		    uint64_t abs_offset,
 		    const pmt::pmt_t &key,
 		    const pmt::pmt_t &value,
-		    const pmt::pmt_t &srcid=pmt::pmt_string_to_symbol("NA"));
+		    const pmt::pmt_t &srcid=pmt::PMT_F);
 
   /*!
-   * \brief Given a [start,end), returns a deque copy of all tags in the range.
+   * \brief Given a [start,end), returns a vector of all tags in the range.
    *
    * Pass-through function to gr_block_detail. Range of counts is from
    * start to end-1.
@@ -271,12 +267,12 @@ class gr_block : public gr_basic_block {
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  std::deque<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
-					   gr_uint64 abs_start,
-					   gr_uint64 abs_end);
+  std::vector<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
+					    uint64_t abs_start,
+					    uint64_t abs_end);
   
   /*!
-   * \brief Given a [start,end), returns a deque copy of all tags in the range
+   * \brief Given a [start,end), returns a vector of all tags in the range
    * with a given key.
    *
    * Pass-through function to gr_block_detail. Range of counts is from
@@ -290,10 +286,10 @@ class gr_block : public gr_basic_block {
    * \param abs_end      a uint64 count of the end of the range of interest
    * \param key          a PMT symbol key to filter only tags of this key
    */
-  std::deque<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
-					   gr_uint64 abs_start,
-					   gr_uint64 abs_end,
-					   const pmt::pmt_t &key);
+  std::vector<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
+					    uint64_t abs_start,
+					    uint64_t abs_end,
+					    const pmt::pmt_t &key);
 
 
   // These are really only for internal use, but leaving them public avoids

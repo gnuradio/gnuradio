@@ -89,19 +89,18 @@ class gr_block_detail {
   void _post(pmt::pmt_t msg);
 
   // Return the number of items read on input stream which_input
-  gr_uint64 nitems_read(unsigned int which_input);
+  uint64_t nitems_read(unsigned int which_input);
 
   // Return the number of items written on output stream which_output
-  gr_uint64 nitems_written(unsigned int which_output);
+  uint64_t nitems_written(unsigned int which_output);
 
   
   /*!
-   * \brief  Adds a new tag to the deque of tags on a given buffer.
+   * \brief  Adds a new tag to the given output stream.
    * 
-   * Adds a new tag to deque of tags on a given buffer. This takes the input
-   * parameters and builds a PMT tuple from it. It then calls
-   * gr_buffer::add_item_tag(pmt::pmt_t t), which appends the
-   * tag onto its deque of tags.
+   * This takes the input parameters and builds a PMT tuple 
+   * from it. It then calls gr_buffer::add_item_tag(pmt::pmt_t t),
+   * which appends the tag onto its deque.
    *
    * \param which_ouput  an integer of which output stream to attach the tag
    * \param abs_offset   a uint64 number of the absolute item number
@@ -111,15 +110,15 @@ class gr_block_detail {
    * \param srcid        a PMT source ID specifier
    */
   void add_item_tag(unsigned int which_output,
-		    gr_uint64 abs_offset,
+		    uint64_t abs_offset,
 		    const pmt::pmt_t &key,
 		    const pmt::pmt_t &value,
 		    const pmt::pmt_t &srcid);
 
   /*!
-   * \brief Given a [start,end), returns a deque copy of all tags in the range.
+   * \brief Given a [start,end), returns a vector of all tags in the range.
    *
-   * Pass-through function to gr_buffer_reader to get a deque of tags 
+   * Pass-through function to gr_buffer_reader to get a vector of tags 
    * in given range. Range of counts is from start to end-1.
    *
    * Tags are tuples of:
@@ -129,18 +128,17 @@ class gr_block_detail {
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  std::deque<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
-					   gr_uint64 abs_start,
-					   gr_uint64 abs_end);
+  std::vector<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
+					    uint64_t abs_start,
+					    uint64_t abs_end);
   
   /*!
-   * \brief Given a [start,end), returns a deque copy of all tags in the range
+   * \brief Given a [start,end), returns a vector of all tags in the range
    * with a given key.
    *
-   * Calls get_tags_in_range(which_input, abs_start, abs_end) to get a deque of
+   * Calls get_tags_in_range(which_input, abs_start, abs_end) to get a vector of
    * tags from the buffers. This function then provides a secondary filter to
-   * the tags to extract only tags with the given 'key'. Returns a dequeu
-   * of these tags.
+   * the tags to extract only tags with the given 'key'.
    *
    * Tags are tuples of:
    *      (item count, source id, key, value)
@@ -148,12 +146,12 @@ class gr_block_detail {
    * \param which_input  an integer of which input stream to pull from
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
-   * \param key          a PMT symbol key to filter only tags of this key
+   * \param key          a PMT symbol key to select only tags of this key
    */
-  std::deque<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
-					   gr_uint64 abs_start,
-					   gr_uint64 abs_end,
-					   const pmt::pmt_t &key);
+  std::vector<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
+					    uint64_t abs_start,
+					    uint64_t abs_end,
+					    const pmt::pmt_t &key);
 
   /*!
    * \brief Default tag handler; moves all tags downstream

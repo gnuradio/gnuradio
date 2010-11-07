@@ -89,17 +89,12 @@ class gr_buffer {
 
   gruel::mutex *mutex() { return &d_mutex; }
 
-  gr_uint64 nitems_written() { return d_abs_write_offset; }
+  uint64_t nitems_written() { return d_abs_write_offset; }
 
 
   /*!
-   * \brief  Adds a new tag to the deque of tags on a given buffer.
+   * \brief  Adds a new tag to the buffer.
    * 
-   * Adds a new tag to deque of tags on a given buffer. This takes the input
-   * parameters and builds a PMT tuple from it. It then calls
-   * gr_buffer::add_item_tag(pmt::pmt_t t), which appends the
-   * tag onto its deque of tags.
-   *
    * \param tag        a PMT tuple containing the new tag
    */
   void add_item_tag(const pmt::pmt_t &tag);
@@ -143,7 +138,7 @@ class gr_buffer {
   //
   gruel::mutex				d_mutex;
   unsigned int				d_write_index;	// in items [0,d_bufsize)
-  gr_uint64                             d_abs_write_offset; // num items written since the start
+  uint64_t                              d_abs_write_offset; // num items written since the start
   //deq tag_tuples
   bool					d_done;
   
@@ -255,7 +250,7 @@ class gr_buffer_reader {
   gruel::mutex *mutex() { return d_buffer->mutex(); }
 
 
-  gr_uint64 nitems_read() { return d_abs_read_offset; }
+  uint64_t nitems_read() { return d_abs_read_offset; }
 
   /*!
    * \brief Return the block that reads via this reader.
@@ -264,9 +259,9 @@ class gr_buffer_reader {
 
 
   /*!
-   * \brief Given a [start,end), returns a deque copy of all tags in the range.
+   * \brief Given a [start,end), returns a vector all tags in the range.
    *
-   * Get a deque of tags in given range. Range of counts is from start to end-1.
+   * Get a vector of tags in given range. Range of counts is from start to end-1.
    *
    * Tags are tuples of:
    *      (item count, source id, key, value)
@@ -274,8 +269,8 @@ class gr_buffer_reader {
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  std::deque<pmt::pmt_t> get_tags_in_range(gr_uint64 abs_start,
-					   gr_uint64 abs_end);
+  std::vector<pmt::pmt_t> get_tags_in_range(uint64_t abs_start,
+					    uint64_t abs_end);
 
   bool get_tag(size_t n, pmt::pmt_t &t)
   {
@@ -293,7 +288,7 @@ class gr_buffer_reader {
 
   gr_buffer_sptr		d_buffer;
   unsigned int			d_read_index;	// in items [0,d->buffer.d_bufsize)
-  gr_uint64                     d_abs_read_offset;  // num items seen since the start
+  uint64_t                      d_abs_read_offset;  // num items seen since the start
   boost::weak_ptr<gr_block>	d_link;		// block that reads via this buffer reader
 
   //! constructor is private.  Use gr_buffer::add_reader to create instances

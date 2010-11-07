@@ -52,14 +52,14 @@ qa_block_tags::t0 ()
 
   //CPPUNIT_ASSERT_THROW(src->nitems_read(0), std::runtime_error);
   //CPPUNIT_ASSERT_THROW(src->nitems_written(0), std::runtime_error);
-  CPPUNIT_ASSERT_EQUAL(src->nitems_read(0), (gr_uint64)0);
-  CPPUNIT_ASSERT_EQUAL(src->nitems_written(0), (gr_uint64)0);
+  CPPUNIT_ASSERT_EQUAL(src->nitems_read(0), (uint64_t)0);
+  CPPUNIT_ASSERT_EQUAL(src->nitems_written(0), (uint64_t)0);
 
   tb->run();
 
   CPPUNIT_ASSERT_THROW(src->nitems_read(0), std::invalid_argument);
   CPPUNIT_ASSERT(src->nitems_written(0) >= N);
-  CPPUNIT_ASSERT_EQUAL(snk->nitems_read(0), (gr_uint64)1000);
+  CPPUNIT_ASSERT_EQUAL(snk->nitems_read(0), (uint64_t)1000);
   CPPUNIT_ASSERT_THROW(snk->nitems_written(0), std::invalid_argument);
 }
 

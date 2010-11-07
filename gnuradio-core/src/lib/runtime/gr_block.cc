@@ -117,7 +117,7 @@ gr_block::fixed_rate_noutput_to_ninput(int noutput)
   throw std::runtime_error("Unimplemented");
 }
 
-gr_uint64
+uint64_t
 gr_block::nitems_read(unsigned int which_input) 
 {
   if(d_detail) {
@@ -129,7 +129,7 @@ gr_block::nitems_read(unsigned int which_input)
   }
 }
 
-gr_uint64
+uint64_t
 gr_block::nitems_written(unsigned int which_output) 
 {
   if(d_detail) {
@@ -143,7 +143,7 @@ gr_block::nitems_written(unsigned int which_output)
 
 void
 gr_block::add_item_tag(unsigned int which_output,
-		       gr_uint64 offset,
+		       uint64_t offset,
 		       const pmt::pmt_t &key,
 		       const pmt::pmt_t &value,
 		       const pmt::pmt_t &srcid)
@@ -151,16 +151,16 @@ gr_block::add_item_tag(unsigned int which_output,
   d_detail->add_item_tag(which_output, offset, key, value, srcid);
 }
 
-std::deque<pmt::pmt_t>
+std::vector<pmt::pmt_t>
 gr_block::get_tags_in_range(unsigned int which_output,
-			    gr_uint64 start, gr_uint64 end)
+			    uint64_t start, uint64_t end)
 {
   return d_detail->get_tags_in_range(which_output, start, end);
 }
   
-std::deque<pmt::pmt_t>
+std::vector<pmt::pmt_t>
 gr_block::get_tags_in_range(unsigned int which_output,
-			    gr_uint64 start, gr_uint64 end,
+			    uint64_t start, uint64_t end,
 			    const pmt::pmt_t &key)
 {
   return d_detail->get_tags_in_range(which_output, start, end, key);

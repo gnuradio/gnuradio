@@ -263,14 +263,14 @@ gr_buffer_reader::update_read_pointer (int nitems)
   d_abs_read_offset += nitems;
 }
 
-std::deque<pmt::pmt_t>
-gr_buffer_reader::get_tags_in_range(gr_uint64 abs_start,
-				    gr_uint64 abs_end)
+std::vector<pmt::pmt_t>
+gr_buffer_reader::get_tags_in_range(uint64_t abs_start,
+				    uint64_t abs_end)
 {
-  std::deque<pmt::pmt_t> found_items;
+  std::vector<pmt::pmt_t> found_items;
   std::deque<pmt::pmt_t>::iterator itr = d_buffer->get_tags_begin();
   
-  gr_uint64 item_time;
+  uint64_t item_time;
   while(itr != d_buffer->get_tags_end()) {
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
 
