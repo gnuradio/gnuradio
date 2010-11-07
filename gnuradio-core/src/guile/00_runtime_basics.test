@@ -1,3 +1,4 @@
+;;; -*- Scheme -*-
 ;;;
 ;;; Copyright 2010 Free Software Foundation, Inc.
 ;;;
@@ -17,21 +18,27 @@
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
+(use-modules (gnuradio test-suite lib))
 (use-modules (gnuradio core))
 (use-modules (oop goops))
+(use-modules (ice-9 syncase))
 ;;(use-modules (ice-9 format))
 ;;(use-modules (ice-9 pretty-print))
 
-(load-from-path "srfi/srfi-64")		; unit test library
+;; (test-equal [name] expected test-expr)
+(define-syntax test-equal
+  (syntax-rules ()
+    ((_ expected test-expr)
+     (pass-if (equal? expected test-expr)))
+    ((_ name expected test-exprt)
+     (pass-if name (equal? expected test-expr)))))
+
 
 (define (vector-map f v)
   (list->vector (map f (vector->list v))))
 
 
-;; Must precede all tests
-(test-begin "qa_0000_basics")
-
-(test-group "test-connect-1"
+(with-test-prefix "test-connect-1"
  (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -44,10 +51,11 @@
     (gr:connect tb (gr:ep op 0) (gr:ep dst 0))
 
     (gr:run tb)
-    (test-equal expected-result (gr:data dst))))
+    ;;(pass-if (equal? expected-result (gr:data dst)))
+    (test-equal expected-result (gr:data dst))
+    ))
 
-
-(test-group "test-connect-2"
+(with-test-prefix "test-connect-2"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -63,7 +71,7 @@
     (test-equal expected-result (gr:data dst))))
 
 
-(test-group "test-connect-3"
+(with-test-prefix "test-connect-3"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -79,7 +87,7 @@
     (test-equal expected-result (gr:data dst))))
 
 
-(test-group "test-connect-4"
+(with-test-prefix "test-connect-4"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -94,7 +102,7 @@
     (test-equal expected-result (gr:data dst))))
 
 
-(test-group "test-io-signature-1"
+(with-test-prefix "test-io-signature-1"
   (let ((ios1 (gr:io-signature 1 2 8))
 	(ios2 (gr:io-signature2 1 2 16 32))
 	(ios3 (gr:io-signature3 1 -1 14 32 48))
@@ -126,5 +134,3 @@
     (test-equal '#(1 2 3) (gr:sizeof-stream-items iosv))
     ))
 
-;; Must follow all tests
-(test-end "qa_0000_basics")

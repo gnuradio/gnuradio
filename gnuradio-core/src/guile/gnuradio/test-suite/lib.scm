@@ -16,7 +16,7 @@
 ;;;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;;;; Boston, MA 02110-1301 USA
 
-(define-module (test-suite lib)
+(define-module (gnuradio test-suite lib)
   :use-module (ice-9 stack-catch)
   :use-module (ice-9 regex)
   :export (

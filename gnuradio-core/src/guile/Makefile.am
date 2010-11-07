@@ -38,14 +38,14 @@ nobase_guile_DATA = \
 	gnuradio/runtime-shim.scm \
 	srfi/srfi-64.scm
 
-noinst_DATA = \
-	qa_0000_basics.scm \
-	qa_0010_ctor_filter.scm \
-	qa_0010_ctor_general.scm \
-	qa_0010_ctor_gengen.scm \
-	qa_0010_ctor_hier.scm \
-	qa_0010_ctor_io.scm \
-	qa_0010_ctor_runtime.scm
-
+# noinst_DATA = \
+# 	qa_0000_basics.scm \
+# 	qa_0010_ctor_filter.scm \
+# 	qa_0010_ctor_general.scm \
+# 	qa_0010_ctor_gengen.scm \
+# 	qa_0010_ctor_hier.scm \
+# 	qa_0010_ctor_io.scm \
+# 	qa_0010_ctor_runtime.scm
+# 
 
 CLEANFILES = qa_*.log

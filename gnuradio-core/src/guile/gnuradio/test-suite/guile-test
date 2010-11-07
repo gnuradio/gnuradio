@@ -1,4 +1,4 @@
-#!../libguile/guile \
+#!/usr/bin/guile \
 -e main -s
 !#
 
@@ -77,11 +77,11 @@
 ;;;; the #! line at the top of this file, which is stupid.
 
 (define (main . args)
-  (let ((module (resolve-module '(test-suite guile-test))))
+  (let ((module (resolve-module '(gnuradio test-suite guile-test))))
     (apply (module-ref module 'main) args)))
 
-(define-module (test-suite guile-test)
-  :use-module (test-suite lib)
+(define-module (gnuradio test-suite guile-test)
+  :use-module (gnuradio test-suite lib)
   :use-module (ice-9 getopt-long)
   :use-module (ice-9 and-let-star)
   :use-module (ice-9 rdelim)
