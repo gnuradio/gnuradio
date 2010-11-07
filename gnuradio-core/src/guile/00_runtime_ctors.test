@@ -1,3 +1,4 @@
+;;; -*- Scheme -*-
 ;;;
 ;;; Copyright 2010 Free Software Foundation, Inc.
 ;;;
@@ -17,10 +18,13 @@
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
+;;; If you're using Emacs's Scheme mode:
+;;;   (put 'with-test-prefix 'scheme-indent-function 1)
+
+(use-modules (gnuradio test-suite lib))
 (use-modules (gnuradio core))
 (use-modules (oop goops))
 
-(load-from-path "srfi/srfi-64")		; unit test library
 
 ;;; Add test code for all constructors in these files
 ;;;

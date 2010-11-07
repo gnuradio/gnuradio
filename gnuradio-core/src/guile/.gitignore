@@ -1,4 +1,4 @@
 /Makefile
 /Makefile.in
 /run_guile_tests
-/qa_*.log
+/guile.log

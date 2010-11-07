@@ -36,16 +36,16 @@ nobase_guile_DATA = \
 	gnuradio/core.scm \
 	gnuradio/export-safely.scm \
 	gnuradio/runtime-shim.scm \
-	srfi/srfi-64.scm
+	gnuradio/test-suite/guile-test \
+	gnuradio/test-suite/lib.scm
 
-# noinst_DATA = \
-# 	qa_0000_basics.scm \
-# 	qa_0010_ctor_filter.scm \
-# 	qa_0010_ctor_general.scm \
-# 	qa_0010_ctor_gengen.scm \
-# 	qa_0010_ctor_hier.scm \
-# 	qa_0010_ctor_io.scm \
-# 	qa_0010_ctor_runtime.scm
-# 
+noinst_DATA = \
+	00_runtime_basics.test \
+	00_runtime_ctors.test \
+	filter_ctors.test \
+	general_ctors.test \
+	gengen_ctors.test \
+	hier_ctors.test \
+	io_ctors.test
 
-CLEANFILES = qa_*.log
+CLEANFILES = guile.log

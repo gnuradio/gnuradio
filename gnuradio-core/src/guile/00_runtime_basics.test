@@ -21,18 +21,6 @@
 (use-modules (gnuradio test-suite lib))
 (use-modules (gnuradio core))
 (use-modules (oop goops))
-(use-modules (ice-9 syncase))
-;;(use-modules (ice-9 format))
-;;(use-modules (ice-9 pretty-print))
-
-;; (test-equal [name] expected test-expr)
-(define-syntax test-equal
-  (syntax-rules ()
-    ((_ expected test-expr)
-     (pass-if (equal? expected test-expr)))
-    ((_ name expected test-exprt)
-     (pass-if name (equal? expected test-expr)))))
-
 
 (define (vector-map f v)
   (list->vector (map f (vector->list v))))

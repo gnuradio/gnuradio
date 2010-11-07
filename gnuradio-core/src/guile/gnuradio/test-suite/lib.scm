@@ -19,6 +19,7 @@
 (define-module (gnuradio test-suite lib)
   :use-module (ice-9 stack-catch)
   :use-module (ice-9 regex)
+  :use-module (ice-9 syncase)
   :export (
 
  ;; Exceptions which are commonly being tested for.
@@ -50,7 +51,13 @@
  make-count-reporter print-counts
  make-log-reporter
  full-reporter
- user-reporter))
+ user-reporter
+
+ ;; srfi-64 compatibility macros
+ test-equal
+ test-eqv
+ test-eq
+))
 
 
 ;;;; If you're using Emacs's Scheme mode:
@@ -557,3 +564,29 @@
       (apply full-reporter result name args)))
 
 (set! default-reporter full-reporter)
+
+
+;;; Macros for a bit of compatibility with srfi-64
+;;; (test-equal [name] expected test-expr)
+(define-syntax test-equal
+  (syntax-rules ()
+    ((_ expected test-expr)
+     (pass-if (equal? expected test-expr)))
+    ((_ name expected test-exprt)
+     (pass-if name (equal? expected test-expr)))))
+
+;;; (test-eqv [name] expected test-expr)
+(define-syntax test-eqv
+  (syntax-rules ()
+    ((_ expected test-expr)
+     (pass-if (eqv? expected test-expr)))
+    ((_ name expected test-exprt)
+     (pass-if name (eqv? expected test-expr)))))
+
+;;; (test-eq [name] expected test-expr)
+(define-syntax test-eq
+  (syntax-rules ()
+    ((_ expected test-expr)
+     (pass-if (eq? expected test-expr)))
+    ((_ name expected test-exprt)
+     (pass-if name (eq? expected test-expr)))))
