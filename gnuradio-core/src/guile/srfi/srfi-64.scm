@@ -850,11 +850,11 @@
   (define-syntax test-error
     (syntax-rules ()
       ((test-error name etype expr)
-       (test-assert name (%test-error etype expr)))
+       (test-assert name (%test-error (test-runner-get) etype expr)))
       ((test-error etype expr)
-       (test-assert (%test-error etype expr)))
+       (test-assert (%test-error (test-runner-get) etype expr)))
       ((test-error expr)
-       (test-assert (%test-error #t expr)))))))
+       (test-assert (%test-error (test-runner-get) #t expr)))))))
 
 (define (test-apply first . rest)
   (if (test-runner? first)
