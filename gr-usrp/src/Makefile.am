@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -34,9 +34,9 @@ noinst_PYTHON =	qa_usrp.py
 # The straight C++ library
 
 AM_CPPFLAGS = \
+	$(USRP_INCLUDES) \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
-	$(USRP_INCLUDES) \
 	$(USB_INCLUDES) \
 	$(WITH_INCLUDES)
 

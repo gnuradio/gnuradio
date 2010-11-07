@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009 Free Software Foundation, Inc.
+# Copyright 2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,19 +22,20 @@
 include $(top_srcdir)/Makefile.common
 
 # For compiling within the GNU Radio build tree
-AM_CPPFLAGS=$(STD_DEFINES_AND_INCLUDES) \
-	 -I$(top_srcdir)/gr-usrp/src \
-	 $(USRP_INCLUDES) \
-	 $(WITH_INCLUDES)
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/gr-usrp/src \
+	$(USRP_INCLUDES) \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_INCLUDES)
 
 GR_USRP_LA=$(top_builddir)/gr-usrp/src/libgnuradio-usrp.la
 
 # For compiling outside the tree, these will get fished out by pkgconfig
 
 LDADD = \
+	$(GR_USRP_LA) \
 	$(BOOST_LDFLAGS) \
-	$(BOOST_PROGRAM_OPTIONS_LIB) \
-	$(GR_USRP_LA)
+	$(BOOST_PROGRAM_OPTIONS_LIB)
 
 noinst_PROGRAMS = \
 	usrp_rx_cfile \
