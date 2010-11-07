@@ -41,8 +41,7 @@ gr_block_detail::gr_block_detail (unsigned int ninputs, unsigned int noutputs)
   : d_produce_or(0),
     d_ninputs (ninputs), d_noutputs (noutputs),
     d_input (ninputs), d_output (noutputs),
-    d_done (false),
-    d_tag_handling_method(gr_block_detail::TAGS_ALL_TO_ALL)
+    d_done (false)
 {
   s_ncurrently_allocated++;
 }
@@ -201,20 +200,4 @@ gr_block_detail::get_tags_in_range(unsigned int which_input,
   }
 
   return found_items_by_key;
-}
-
-int
-gr_block_detail::tag_handling_method()
-{
-  return d_tag_handling_method;
-}
-
-void
-gr_block_detail::set_tag_handling_method(int m)
-{
-  if((m == TAGS_ONE_TO_ONE) && (ninputs() != noutputs())) {
-    throw std::invalid_argument ("gr_block_detail::set_handling method to ONE-TO-ONE requires ninputs == noutputs");    
-  }
-
-  d_tag_handling_method = m;
 }

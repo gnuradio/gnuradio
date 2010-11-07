@@ -37,13 +37,6 @@
  */
 class gr_block_detail {
  public:
-
-  enum {
-    TAGS_NONE = 0,
-    TAGS_ALL_TO_ALL = 1,
-    TAGS_ONE_TO_ONE = 2
-  };
-
   ~gr_block_detail ();
 
   int ninputs () const { return d_ninputs; }
@@ -160,9 +153,6 @@ class gr_block_detail {
 					    uint64_t abs_end,
 					    const pmt::pmt_t &key);
 
-  int tag_handling_method();
-  void set_tag_handling_method(int m);
-
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
 
@@ -174,7 +164,6 @@ class gr_block_detail {
   std::vector<gr_buffer_reader_sptr> d_input;
   std::vector<gr_buffer_sptr>	     d_output;
   bool                               d_done;
-  int                                d_tag_handling_method;
 
   gr_block_detail (unsigned int ninputs, unsigned int noutputs);
 

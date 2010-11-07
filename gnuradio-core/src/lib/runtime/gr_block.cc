@@ -36,7 +36,8 @@ gr_block::gr_block (const std::string &name,
     d_output_multiple (1),
     d_relative_rate (1.0),
     d_history(1),
-    d_fixed_rate(false)
+    d_fixed_rate(false),
+    d_tag_handling_method(TAGS_ALL_TO_ALL)
 {
 }
   
@@ -166,16 +167,22 @@ gr_block::get_tags_in_range(unsigned int which_output,
   return d_detail->get_tags_in_range(which_output, start, end, key);
 }
 
-int 
+int
 gr_block::tag_handling_method()
 {
-  return d_detail->tag_handling_method(); 
+  return d_tag_handling_method;
 }
 
 void
 gr_block::set_tag_handling_method(int m)
 {
-  set_tag_handling_method(m);
+  /*
+  if((m == TAGS_ONE_TO_ONE) && (ninputs() != noutputs())) {
+    throw std::invalid_argument ("gr_block::set_handling method to ONE-TO-ONE requires ninputs == noutputs");    
+  }
+  */
+
+  d_tag_handling_method = m;
 }
 
 std::ostream&

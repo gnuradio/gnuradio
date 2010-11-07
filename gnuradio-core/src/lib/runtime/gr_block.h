@@ -25,6 +25,12 @@
 
 #include <gr_basic_block.h>
 
+enum {
+  TAGS_NONE = 0,
+  TAGS_ALL_TO_ALL = 1,
+  TAGS_ONE_TO_ONE = 2
+};
+
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
  * \ingroup base_blk
@@ -208,7 +214,14 @@ class gr_block : public gr_basic_block {
    */
   uint64_t nitems_written(unsigned int which_output);
 
+  /*!
+   * \brief Asks for the method used by the scheduler to moved tags downstream.
+   */
   int tag_handling_method();
+
+  /*!
+   * \brief Used by the scheduler to determine how tags are moved downstream.
+   */
   void set_tag_handling_method(int m);
 
   // ----------------------------------------------------------------------------
@@ -220,6 +233,7 @@ class gr_block : public gr_basic_block {
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
+  int                   d_tag_handling_method;
     
  protected:
 
@@ -284,7 +298,6 @@ class gr_block : public gr_basic_block {
 					    uint64_t abs_start,
 					    uint64_t abs_end,
 					    const pmt::pmt_t &key);
-
 
   // These are really only for internal use, but leaving them public avoids
   // having to work up an ever-varying list of friends
