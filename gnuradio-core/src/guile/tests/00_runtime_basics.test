@@ -18,6 +18,13 @@
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
+;;; If you're using Emacs's Scheme mode:
+;;;   (put 'with-test-prefix 'scheme-indent-function 1)
+
+;;; See the comments in gnuradio/test-suite/lib.scm for info on writing tests.
+;;; See also the very end of the file, where the test-equal, test-eqv
+;;; and test-eq macros are defined.
+
 (use-modules (gnuradio test-suite lib))
 (use-modules (gnuradio core))
 (use-modules (oop goops))
