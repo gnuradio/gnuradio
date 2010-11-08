@@ -29,9 +29,20 @@
 (use-modules (gnuradio core))
 (use-modules (oop goops))
 
+
+;;; Return #t if x is not #f
+(define (true? x)
+  (and x #t))
+
 ;;; Add test code for all constructors in these files
-;;;
+
 ;;; ./general/gr_additive_scrambler_bb.h
+(pass-if (true? (gr:additive-scrambler-bb 0 0 0 0)))
+
+;; Here's one that will throw if its arg is 0
+(pass-if (true? (gr:unpack-k-bits-bb 10)))
+(pass-if-throw "confirm throw" #t (true? (gr:unpack-k-bits-bb 0)))
+
 ;;; ./general/gr_agc2_cc.h
 ;;; ./general/gr_agc2_ff.h
 ;;; ./general/gr_agc_cc.h
@@ -142,7 +153,6 @@
 ;;; ./general/gr_threshold_ff.h
 ;;; ./general/gr_throttle.h
 ;;; ./general/gr_uchar_to_float.h
-;;; ./general/gr_unpack_k_bits_bb.h
 ;;; ./general/gr_vco_f.h
 ;;; ./general/gr_vector_to_stream.h
 ;;; ./general/gr_vector_to_streams.h
