@@ -96,6 +96,24 @@
     (gr:run tb)
     (test-equal expected-result (gr:data dst))))
 
+#!
+;;; FIXME pass-if-exception is broken if the underlying code throws
+;;; (like ours does).  Need to write our own test utility for
+;;; exceptions.
+(with-test-prefix "test-connect-5"
+  (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
+	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
+	 (tb (gr:top-block-swig "QA top block"))
+	 (src (gr:vector-source-i src-data #f))
+	 (op (gr:multiply-const-ii 2))
+	 (dst (gr:vector-sink-i)))
+
+    ;; FIXME This isn't working...
+    (pass-if-exception "bad port" exception:swig-exception
+      (gr:connect tb src op (gr:ep dst 1)))
+
+    ))
+!#
 
 (with-test-prefix "test-io-signature-1"
   (let ((ios1 (gr:io-signature 1 2 8))
