@@ -42,12 +42,12 @@ nobase_guile_DATA = \
 	gnuradio/test-suite/lib.scm
 
 noinst_DATA = \
-	00_runtime_basics.test \
-	00_runtime_ctors.test \
-	filter_ctors.test \
-	general_ctors.test \
-	gengen_ctors.test \
-	hier_ctors.test \
-	io_ctors.test
+	tests/00_runtime_basics.test \
+	tests/00_runtime_ctors.test \
+	tests/filter_ctors.test \
+	tests/general_ctors.test \
+	tests/gengen_ctors.test \
+	tests/hier_ctors.test \
+	tests/io_ctors.test
 
 CLEANFILES = guile.log
