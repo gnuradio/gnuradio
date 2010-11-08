@@ -108,14 +108,6 @@
       (gr:connect tb src op (gr:ep dst 1)))
     ))
 
-#!
-;;; FIXME currently triggers core dump.
-;;; The problem is that swig isn't paying attention to
-;;; this throw declaration:
-;;;
-;;; gr_top_block.i:
-;;;   void start() throw (std::runtime_error);
-;;;
 (with-test-prefix "gr_top_block::start throw"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
@@ -127,12 +119,10 @@
     ;; We deliberately don't connect op's output
     (gr:connect tb src op)
 
-    ;; Which should lead to an exception here...
-    ;; but currently triggers a core dump.
-    (pass-if-throw "throws std::runtime_error" #t
+    ;; Which will lead to an exception here...
+    (pass-if-throw "throws std::runtime_error" 'swig-exception
       (gr:run tb))
     ))
-!#
 
 (with-test-prefix "io-signature-1"
   (let ((ios1 (gr:io-signature 1 2 8))

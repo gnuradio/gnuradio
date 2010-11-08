@@ -43,7 +43,7 @@ public:
   void start() throw (std::runtime_error);
   void stop();
   void wait();
-  void run();
+  void run() throw (std::runtime_error);
   void lock();
   void unlock() throw (std::runtime_error);
   void dump();
