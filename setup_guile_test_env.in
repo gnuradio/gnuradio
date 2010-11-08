@@ -1,20 +1,35 @@
 #!/bin/sh
 
-# 1st argument is absolute path to component C++ shared library build directory
-# 2nd argument is absolute path to hand coded guile source directory
-# 3nd argument is absolute path to component SWIG build directory
-# 4rd argument is absolute path to component Guile QA test directory
-
-if [ $# -ne 4 ]
-then
-  echo "$0: requires 4 args" 1>&2
-  exit 1
-fi
+# This is sourced by run_guile_tests to establish the environment
+# variables required to run the tests in the build tree.
 
 abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
-# usage: prepend <path> <dir>
+
+# FIXME add in OS/X DYLD_LIBRARY_PATH
+# FIXME add in cywin*/win*/mingw* PATH
+# FIXME add in withdirs
+
+
+# 1st argument is absolute path to component C++ shared library build directory
+# 2nd argument is absolute path to hand coded guile source directory
+# 3nd argument is absolute path to component SWIG build directory
+
+function add_local_paths(){
+  if [ $# -ne 3 ]
+  then
+    echo "$0: requires 3 args" 1>&2
+    exit 1
+  fi
+  echo FIXME: $0: implement add_local_paths
+  # [ -n "$1" ] && prepend LTDL_LIBRARY_PATH "$1/.libs"
+  # [ -n "$2" ] && prepend GUILE_LOAD_PATH "$2"
+  # [ -n "$3" ] && prepend LTDL_LIBRARY_PATH "$3/.libs"
+  # [ -n "$3" ] && prepend GUILE_LOAD_PATH "$3/guile"
+}
+
+# usage: prepend <path-varname> <dir>
 function prepend(){
   if [ $# -ne 2 ]
   then
@@ -40,8 +55,8 @@ function prepend(){
 }
 
 # ------------------------------------------------------------------------
-# For now, everybody gets gruel and gnuradio-core for free
-# FIXME eventually this should be gruel and gnuradio-runtime
+# Everybody gets gruel and gnuradio-core for free.
+# FIXME Eventually this should be gruel and gnuradio-runtime.
 # ------------------------------------------------------------------------
 
 # Where to search for not yet installed C++ shared libraries
@@ -55,13 +70,6 @@ prepend mylibdir $abs_top_builddir/gnuradio-core/src/lib/swig/.libs
 prepend guile_load_path $abs_top_srcdir/gnuradio-core/src/guile
 prepend guile_load_path $abs_top_builddir/gnuradio-core/src/lib/swig
 
-# ------------------------------------------------------------------------
-# FIXME add the stuff from the args
-
-echo $0: FIXME add stuff from args 1>&2
-
-# ------------------------------------------------------------------------
-
 #echo "mylibdir = $mylibdir"
 #echo "guile_load_path = $guile_load_path"
 
@@ -71,28 +79,3 @@ prepend GUILE_LOAD_PATH "$guile_load_path"
 export LTDL_LIBRARY_PATH
 export GUILE_LOAD_PATH
 export GUILE_WARN_DEPRECATED=no
-
-# Run everything that matches qa_*.scm and return the final result.
-
-ok=yes
-for file in $4/qa_*.scm
-do
-  # echo $file
-  @GUILE@ -s $file
-  r=$?
-  if [ $r -ne 0 ]
-  then
-    if [ $r -ge 128 ]		# killed by a signal
-    then
-      exit $r
-    fi
-    ok=no
-  fi  
-done
-
-if [ $ok = yes ]
-then
-  exit 0
-else
-  exit 1
-fi

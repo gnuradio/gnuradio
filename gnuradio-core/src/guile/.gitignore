@@ -2,4 +2,3 @@
 /Makefile.in
 /run_guile_tests
 /guile.log
-/gnuradio/test-suite/guile-test
