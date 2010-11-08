@@ -24,7 +24,9 @@
 #include "config.h"
 #endif
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE		// ask for GNU extensions if available
+#endif
 
 #include <gr_sincos.h>
 #include <math.h>
