@@ -33,7 +33,7 @@
   (list->vector (map f (vector->list v))))
 
 
-(with-test-prefix "test-connect-1"
+(with-test-prefix "connect-1"
  (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -50,7 +50,7 @@
     (test-equal expected-result (gr:data dst))
     ))
 
-(with-test-prefix "test-connect-2"
+(with-test-prefix "connect-2"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -66,7 +66,7 @@
     (test-equal expected-result (gr:data dst))))
 
 
-(with-test-prefix "test-connect-3"
+(with-test-prefix "connect-3"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -82,7 +82,7 @@
     (test-equal expected-result (gr:data dst))))
 
 
-(with-test-prefix "test-connect-4"
+(with-test-prefix "connect-4"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -96,11 +96,7 @@
     (gr:run tb)
     (test-equal expected-result (gr:data dst))))
 
-#!
-;;; FIXME pass-if-exception is broken if the underlying code throws
-;;; (like ours does).  Need to write our own test utility for
-;;; exceptions.
-(with-test-prefix "test-connect-5"
+(with-test-prefix "connect-5"
   (let* ((src-data #(-5 -4 -3 -2 -1 0 1 2 3 4 5))
 	 (expected-result (vector-map (lambda (x) (* x 2)) src-data))
 	 (tb (gr:top-block-swig "QA top block"))
@@ -108,14 +104,11 @@
 	 (op (gr:multiply-const-ii 2))
 	 (dst (gr:vector-sink-i)))
 
-    ;; FIXME This isn't working...
-    (pass-if-exception "bad port" exception:swig-exception
+    (pass-if-throw "bad port exception" 'swig-exception
       (gr:connect tb src op (gr:ep dst 1)))
-
     ))
-!#
 
-(with-test-prefix "test-io-signature-1"
+(with-test-prefix "io-signature-1"
   (let ((ios1 (gr:io-signature 1 2 8))
 	(ios2 (gr:io-signature2 1 2 16 32))
 	(ios3 (gr:io-signature3 1 -1 14 32 48))

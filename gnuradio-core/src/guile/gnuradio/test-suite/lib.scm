@@ -38,6 +38,7 @@
  run-test
  pass-if expect-fail
  pass-if-exception expect-fail-exception
+ pass-if-throw expect-fail-throw
 
  ;; Naming groups of tests in a regular fashion.
  with-test-prefix with-test-prefix* current-test-prefix
@@ -340,6 +341,13 @@
       `(run-test ,name #f (lambda () ,@rest))))
 
 ;;; A helper function to implement the macros that test for exceptions.
+;;;
+;;; This doesn't work for all exceptions, just those that were
+;;; raised by scm-error or error.  This doesn't include those
+;;; raised by throw in the general case, or SWIG in particular.
+;;;
+;;; See also run-raise-exception, pass-if-throw and expect-fail-throw
+;;; for alternatives that work with all exceptions.
 (define (run-test-exception name exception expect-pass thunk)
   (run-test name expect-pass
     (lambda ()
@@ -376,6 +384,24 @@
 (defmacro expect-fail-exception (name exception body . rest)
   `(,run-test-exception ,name ,exception #f (lambda () ,body ,@rest)))
 
+
+;;; Helper for macros below
+(define (run-test-throw name exception-key expect-pass thunk)
+  (run-test name expect-pass
+    (lambda ()
+      (stack-catch exception-key
+	(lambda () (thunk) #f)
+	(lambda (key . rest) #t)))))
+
+;;; A short form for tests that expect a certain exception to be thrown,
+;;; where the exception is specified only by the exception-key symbol.
+(defmacro pass-if-throw (name exception-key body . rest)
+  `(,run-test-throw ,name ,exception-key #t (lambda () ,body ,@rest)))
+
+;;; A short form for tests that expect a certain exception to be thrown,
+;;; where the exception is specified only by the exception-key symbol.
+(defmacro expect-fail-throw (name exception-key body . rest)
+  `(,run-test-throw ,name ,exception-key #f (lambda () ,body ,@rest)))
 
 ;;;; TEST NAMES
 ;;;;
