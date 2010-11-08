@@ -71,7 +71,7 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
 
   // Create an FIR filter for each channel and zero out the taps
   std::vector<float> vtaps(0, d_int_rate);
-  for(int i = 0; i < d_int_rate; i++) {
+  for(unsigned int i = 0; i < d_int_rate; i++) {
     d_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
     d_diff_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
   }
@@ -97,8 +97,6 @@ gr_pfb_arb_resampler_ccf::create_taps (const std::vector<float> &newtaps,
 				       std::vector< std::vector<float> > &ourtaps,
 				       std::vector<gr_fir_ccf*> &ourfilter)
 {
-  int i,j;
-
   unsigned int ntaps = newtaps.size();
   d_taps_per_filter = (unsigned int)ceil((double)ntaps/(double)d_int_rate);
 
@@ -114,10 +112,10 @@ gr_pfb_arb_resampler_ccf::create_taps (const std::vector<float> &newtaps,
   }
   
   // Partition the filter
-  for(i = 0; i < d_int_rate; i++) {
+  for(unsigned int i = 0; i < d_int_rate; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
     ourtaps[d_int_rate-1-i] = std::vector<float>(d_taps_per_filter, 0);
-    for(j = 0; j < d_taps_per_filter; j++) {
+    for(unsigned int j = 0; j < d_taps_per_filter; j++) {
       ourtaps[d_int_rate - 1 - i][j] = tmp_taps[i + j*d_int_rate];
     }
     
@@ -173,7 +171,8 @@ gr_pfb_arb_resampler_ccf::general_work (int noutput_items,
     return 0;		     // history requirements may have changed.
   }
 
-  int i = 0, j, count = d_start_index;
+  int i = 0, count = d_start_index;
+  unsigned int j;
   gr_complex o0, o1;
 
   // Restore the last filter position

@@ -132,7 +132,7 @@ gr_pfb_interpolator_ccf::work (int noutput_items,
   int i = 0, count = 0;
 
   while(i < noutput_items) {
-    for(int j = 0; j < d_rate; j++) {
+    for(unsigned int j = 0; j < d_rate; j++) {
       out[i] = d_filters[j]->filter(&in[count]);
       i++;
     }
