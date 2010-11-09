@@ -94,7 +94,7 @@ propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
   // Move tags downstream
   // if a sink, we don't need to move downstream;
   // and do not bother if block uses TAGS_NONE attribute
-  if(!d->sink_p()) {
+  if(d->sink_p()) {
     return;
   }
 
