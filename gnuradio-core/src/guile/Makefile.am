@@ -22,8 +22,7 @@ include $(top_srcdir)/Makefile.common
 TESTS = run_guile_tests
 
 EXTRA_DIST = \
-	run_guile_tests.in \
-	gnuradio/test-suite/guile-test.in
+	run_guile_tests.in
 
 # These are the hand-code guile files for gnuradio-core.
 #
