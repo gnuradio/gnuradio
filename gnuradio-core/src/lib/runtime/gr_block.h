@@ -25,12 +25,6 @@
 
 #include <gr_basic_block.h>
 
-enum {
-  TAGS_NONE = 0,
-  TAGS_ALL_TO_ALL = 1,
-  TAGS_ONE_TO_ONE = 2
-};
-
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
  * \ingroup base_blk
@@ -67,6 +61,12 @@ class gr_block : public gr_basic_block {
   enum {
     WORK_CALLED_PRODUCE = -2,
     WORK_DONE = -1
+  };
+
+  enum TAG_PROPOGATION_POLICY {
+    TPP_DONT = 0,
+    TPP_ALL_TO_ALL = 1,
+    TPP_ONE_TO_ONE = 2
   };
 
   virtual ~gr_block ();
@@ -247,12 +247,10 @@ class gr_block : public gr_basic_block {
   /*!
    * \brief  Adds a new tag onto the given output buffer.
    * 
-   * This is a call-through method to gr_block_detail.
-   *
    * \param which_ouput  an integer of which output stream to attach the tag
    * \param abs_offset   a uint64 number of the absolute item number
    *                     assicated with the tag. Can get from nitems_written.
-   * \param key          a PMT symbol holding the key name
+   * \param key          the tag key as a PMT symbol
    * \param value        any PMT holding any value for the given key
    * \param srcid        optional source ID specifier; defaults to PMT_F
    */
@@ -265,8 +263,7 @@ class gr_block : public gr_basic_block {
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range.
    *
-   * Pass-through function to gr_block_detail. Range of counts is from
-   * start to end-1.
+   * Range of counts is from start to end-1.
    *
    * Tags are tuples of:
    *      (item count, source id, key, value)
@@ -283,8 +280,7 @@ class gr_block : public gr_basic_block {
    * \brief Given a [start,end), returns a vector of all tags in the range
    * with a given key.
    *
-   * Pass-through function to gr_block_detail. Range of counts is from
-   * start to end-1.
+   * Range of counts is from start to end-1.
    *
    * Tags are tuples of:
    *      (item count, source id, key, value)

@@ -157,7 +157,7 @@ gr_block_detail::add_item_tag(unsigned int which_output,
 			      const pmt_t &srcid)
 {
   if(!pmt_is_symbol(key)) {
-    throw pmt_wrong_type("gr_block_detail::set_item_tag key", key);
+    throw pmt_wrong_type("gr_block_detail::add_item_tag key", key);
   }
   else {
     // build tag tuple

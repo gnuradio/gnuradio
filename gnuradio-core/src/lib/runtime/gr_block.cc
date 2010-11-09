@@ -37,7 +37,7 @@ gr_block::gr_block (const std::string &name,
     d_relative_rate (1.0),
     d_history(1),
     d_fixed_rate(false),
-    d_tag_handling_method(TAGS_ALL_TO_ALL)
+    d_tag_handling_method(TPP_ALL_TO_ALL)
 {
 }
   

@@ -102,17 +102,6 @@ class gr_buffer {
   std::deque<pmt::pmt_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
   std::deque<pmt::pmt_t>::iterator get_tags_end() { return d_item_tags.end(); }
 
-  bool get_tag(size_t n, pmt::pmt_t &t)
-  {
-    if(n < d_item_tags.size()) { 
-      t = d_item_tags[n];
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
   // -------------------------------------------------------------------------
 
  private:
@@ -130,7 +119,8 @@ class gr_buffer {
   std::vector<gr_buffer_reader *>	d_readers;
   boost::weak_ptr<gr_block>		d_link;		// block that writes to this buffer
 
-  std::deque<pmt::pmt_t>                d_item_tags;     // temp. store tags until moved to reader
+  std::deque<pmt::pmt_t>                d_item_tags;
+
 
   //
   // The mutex protects d_write_index, d_abs_write_offset, d_done and the d_read_index's 
@@ -272,11 +262,6 @@ class gr_buffer_reader {
   std::vector<pmt::pmt_t> get_tags_in_range(uint64_t abs_start,
 					    uint64_t abs_end);
 
-  bool get_tag(size_t n, pmt::pmt_t &t)
-  {
-    return d_buffer->get_tag(n, t);
-  }
-    
   // -------------------------------------------------------------------------
 
  private:

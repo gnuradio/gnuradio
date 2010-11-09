@@ -105,7 +105,7 @@ class gr_block_detail {
    * \param which_ouput  an integer of which output stream to attach the tag
    * \param abs_offset   a uint64 number of the absolute item number
    *                     assicated with the tag. Can get from nitems_written.
-   * \param key          a PMT symbol holding the key name (i.e., a string)
+   * \param key          the tag key as a PMT symbol
    * \param value        any PMT holding any value for the given key
    * \param srcid        a PMT source ID specifier
    */
@@ -146,7 +146,7 @@ class gr_block_detail {
    * \param which_input  an integer of which input stream to pull from
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
-   * \param key          a PMT symbol key to select only tags of this key
+   * \param key          a PMT symbol to select only tags of this key
    */
   std::vector<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
 					    uint64_t abs_start,

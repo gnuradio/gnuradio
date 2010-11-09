@@ -60,7 +60,7 @@ gr_random_annotator::work (int noutput_items,
   std::stringstream str;
   str << name() << unique_id();
 
-  uint64_t abs_N = nitems_written(0);
+  uint64_t abs_N = nitems_read(0) + noutput_items;
   std::vector<pmt::pmt_t> all_tags = get_tags_in_range(0, (uint64_t)0, abs_N);
   std::vector<pmt::pmt_t>::iterator itr;
 

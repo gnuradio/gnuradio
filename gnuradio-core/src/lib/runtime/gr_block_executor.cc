@@ -295,9 +295,10 @@ gr_block_executor::run_one_iteration()
       d_output_items[i] = d->output(i)->write_pointer();
 
     // store number of items consumed so far on in stream
-    std::vector<uint64_t> start_count;
+    std::vector<uint64_t> d_start_nitems_read;
+    d_start_nitems_read.resize(d->ninputs());
     for (int i = 0; i < d->ninputs(); i++)
-      start_count.push_back(d->nitems_read(i));
+      d_start_nitems_read[i] = d->nitems_read(i);
 
     // Do the actual work of the block
     int n = m->general_work (noutput_items, d_ninput_items,
@@ -305,20 +306,15 @@ gr_block_executor::run_one_iteration()
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
 
-    // store number of items consumed after work
-    std::vector<uint64_t> end_count;
-    for (int i = 0; i < d->ninputs (); i++)
-      end_count.push_back(d->nitems_read(i));
-
     // Move tags downstream
     // if a sink, we don't need to move downstream;
     // and do not bother if block uses TAGS_NONE attribute
-    if(!d->sink_p() && (m->tag_handling_method() != TAGS_NONE)) { 
+    if(!d->sink_p() && (m->tag_handling_method() != gr_block::TPP_DONT)) { 
 
       // every tag on every input propogates to everyone downstream
-      if(m->tag_handling_method() == TAGS_ALL_TO_ALL) {
+      if(m->tag_handling_method() == gr_block::TPP_ALL_TO_ALL) {
 	for(int i = 0; i < d->ninputs(); i++) {
-	  std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, start_count[i], end_count[i]);
+	  std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, d_start_nitems_read[i], d->nitems_read(i));
 	  std::vector<pmt::pmt_t>::iterator t;
 	  for(t = tuple.begin(); t != tuple.end(); t++ ) {
 	    for(int o = 0; o < d->noutputs(); o++)
@@ -330,10 +326,10 @@ gr_block_executor::run_one_iteration()
       // tags from input i only go to output i
       // this requires d->ninputs() == d->noutputs; this is checked when this
       // type of tag-handling system is selected in gr_block_detail
-      else if(m->tag_handling_method() == TAGS_ONE_TO_ONE) {
-	if(d->ninputs() != d->noutputs()) {
+      else if(m->tag_handling_method() == gr_block::TPP_ONE_TO_ONE) {
+	if(d->ninputs() == d->noutputs()) {
 	  for(int i = 0; i < d->ninputs(); i++) {
-	    std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, start_count[i], end_count[i]);
+	    std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, d_start_nitems_read[i], d->nitems_read(i));
 	    std::vector<pmt::pmt_t>::iterator t;
 	    for(t = tuple.begin(); t != tuple.end(); t++ ) {
 	      d->output(i)->add_item_tag(*t);
