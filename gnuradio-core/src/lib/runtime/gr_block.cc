@@ -37,7 +37,7 @@ gr_block::gr_block (const std::string &name,
     d_relative_rate (1.0),
     d_history(1),
     d_fixed_rate(false),
-    d_tag_handling_method(TPP_ALL_TO_ALL)
+    d_tag_propagation_policy(TPP_ALL_TO_ALL)
 {
 }
   
@@ -168,21 +168,15 @@ gr_block::get_tags_in_range(unsigned int which_output,
 }
 
 int
-gr_block::tag_handling_method()
+gr_block::tag_propagation_policy()
 {
-  return d_tag_handling_method;
+  return d_tag_propagation_policy;
 }
 
 void
-gr_block::set_tag_handling_method(int m)
+gr_block::set_tag_propagation_policy(TAG_PROPAGATION_POLICY p)
 {
-  /*
-  if((m == TAGS_ONE_TO_ONE) && (ninputs() != noutputs())) {
-    throw std::invalid_argument ("gr_block::set_handling method to ONE-TO-ONE requires ninputs == noutputs");    
-  }
-  */
-
-  d_tag_handling_method = m;
+  d_tag_propagation_policy = p;
 }
 
 std::ostream&

@@ -309,10 +309,10 @@ gr_block_executor::run_one_iteration()
     // Move tags downstream
     // if a sink, we don't need to move downstream;
     // and do not bother if block uses TAGS_NONE attribute
-    if(!d->sink_p() && (m->tag_handling_method() != gr_block::TPP_DONT)) { 
+    if(!d->sink_p() && (m->tag_propagation_policy() != gr_block::TPP_DONT)) { 
 
       // every tag on every input propogates to everyone downstream
-      if(m->tag_handling_method() == gr_block::TPP_ALL_TO_ALL) {
+      if(m->tag_propagation_policy() == gr_block::TPP_ALL_TO_ALL) {
 	for(int i = 0; i < d->ninputs(); i++) {
 	  std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, d_start_nitems_read[i], d->nitems_read(i));
 	  std::vector<pmt::pmt_t>::iterator t;
@@ -325,8 +325,8 @@ gr_block_executor::run_one_iteration()
 
       // tags from input i only go to output i
       // this requires d->ninputs() == d->noutputs; this is checked when this
-      // type of tag-handling system is selected in gr_block_detail
-      else if(m->tag_handling_method() == gr_block::TPP_ONE_TO_ONE) {
+      // type of tag-propagation system is selected in gr_block_detail
+      else if(m->tag_propagation_policy() == gr_block::TPP_ONE_TO_ONE) {
 	if(d->ninputs() == d->noutputs()) {
 	  for(int i = 0; i < d->ninputs(); i++) {
 	    std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, d_start_nitems_read[i], d->nitems_read(i));
@@ -337,7 +337,7 @@ gr_block_executor::run_one_iteration()
 	  }
 	}
 	else 
-	  throw std::invalid_argument ("handling method 'ONE-TO-ONE' requires ninputs == noutputs");
+	  throw std::invalid_argument ("propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs");
       }
 
       // else ; do nothing
