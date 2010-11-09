@@ -64,7 +64,10 @@ msdd_rs_source_simple::work (int noutput_items,
 	/* Read a buffer out -- looking at UDP payload at this point.*/
 	rcv->read( &buffer[0], BUF_LEN );
 	
-	int seq = *((int*) &buffer[2]);
+	//int seq = *((int*) &buffer[2]);
+	int seq;
+	memcpy(&seq, &buffer[2], 4*sizeof(char));
+
 	char type = buffer[0];
 	//printf("Sequence %d\n",seq);
 	
