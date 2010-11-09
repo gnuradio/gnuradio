@@ -47,6 +47,7 @@ protected:
   gr_vector_const_void_star	d_input_items;
   std::vector<bool>		d_input_done;
   gr_vector_void_star		d_output_items;
+  std::vector<uint64_t>         d_start_nitems_read; //stores where tag counts are before work
 
  public:
   gr_block_executor(gr_block_sptr block);

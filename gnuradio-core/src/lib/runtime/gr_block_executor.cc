@@ -87,7 +87,53 @@ min_available_space (gr_block_detail *d, int output_multiple)
   return min_space;
 }
 
+static void
+propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
+	       const std::vector<uint64_t> &start_nitems_read)
+{
+  // Move tags downstream
+  // if a sink, we don't need to move downstream;
+  // and do not bother if block uses TAGS_NONE attribute
+  if(!d->sink_p()) {
+    return;
+  }
 
+  switch(policy) {
+  case(gr_block::TPP_DONT):
+    return;
+    break;
+  case(gr_block::TPP_ALL_TO_ALL):
+    // every tag on every input propogates to everyone downstream
+    for(int i = 0; i < d->ninputs(); i++) {
+      std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, start_nitems_read[i], d->nitems_read(i));
+      std::vector<pmt::pmt_t>::iterator t;
+      for(t = tuple.begin(); t != tuple.end(); t++ ) {
+	for(int o = 0; o < d->noutputs(); o++)
+	  d->output(o)->add_item_tag(*t);
+      }
+    }
+    break;
+  case(gr_block::TPP_ONE_TO_ONE):
+    // tags from input i only go to output i
+    // this requires d->ninputs() == d->noutputs; this is checked when this
+    // type of tag-propagation system is selected in gr_block_detail
+    if(d->ninputs() == d->noutputs()) {
+      for(int i = 0; i < d->ninputs(); i++) {
+	std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, start_nitems_read[i], d->nitems_read(i));
+	std::vector<pmt::pmt_t>::iterator t;
+	for(t = tuple.begin(); t != tuple.end(); t++ ) {
+	  d->output(i)->add_item_tag(*t);
+	}
+      }
+    }
+    else 
+      throw std::invalid_argument ("propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs");
+    
+    break;
+  default:
+    return;
+  }
+}
 
 gr_block_executor::gr_block_executor (gr_block_sptr block)
   : d_block(block), d_log(0)
@@ -134,6 +180,7 @@ gr_block_executor::run_one_iteration()
     d_input_items.resize (0);
     d_input_done.resize(0);
     d_output_items.resize (d->noutputs ());
+    d_start_nitems_read.resize(0);
 
     // determine the minimum available output space
     noutput_items = min_available_space (d, m->output_multiple ());
@@ -155,6 +202,7 @@ gr_block_executor::run_one_iteration()
     d_input_items.resize (d->ninputs ());
     d_input_done.resize(d->ninputs());
     d_output_items.resize (0);
+    d_start_nitems_read.resize(d->ninputs());
     LOG(*d_log << " sink\n");
 
     max_items_avail = 0;
@@ -198,6 +246,7 @@ gr_block_executor::run_one_iteration()
     d_input_items.resize (d->ninputs ());
     d_input_done.resize(d->ninputs());
     d_output_items.resize (d->noutputs ());
+    d_start_nitems_read.resize(d->ninputs());
 
     max_items_avail = 0;
     for (int i = 0; i < d->ninputs (); i++){
@@ -295,8 +344,6 @@ gr_block_executor::run_one_iteration()
       d_output_items[i] = d->output(i)->write_pointer();
 
     // store number of items consumed so far on in stream
-    std::vector<uint64_t> d_start_nitems_read;
-    d_start_nitems_read.resize(d->ninputs());
     for (int i = 0; i < d->ninputs(); i++)
       d_start_nitems_read[i] = d->nitems_read(i);
 
@@ -306,42 +353,7 @@ gr_block_executor::run_one_iteration()
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
 
-    // Move tags downstream
-    // if a sink, we don't need to move downstream;
-    // and do not bother if block uses TAGS_NONE attribute
-    if(!d->sink_p() && (m->tag_propagation_policy() != gr_block::TPP_DONT)) { 
-
-      // every tag on every input propogates to everyone downstream
-      if(m->tag_propagation_policy() == gr_block::TPP_ALL_TO_ALL) {
-	for(int i = 0; i < d->ninputs(); i++) {
-	  std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, d_start_nitems_read[i], d->nitems_read(i));
-	  std::vector<pmt::pmt_t>::iterator t;
-	  for(t = tuple.begin(); t != tuple.end(); t++ ) {
-	    for(int o = 0; o < d->noutputs(); o++)
-	      d->output(o)->add_item_tag(*t);
-	  }
-	}
-      }
-
-      // tags from input i only go to output i
-      // this requires d->ninputs() == d->noutputs; this is checked when this
-      // type of tag-propagation system is selected in gr_block_detail
-      else if(m->tag_propagation_policy() == gr_block::TPP_ONE_TO_ONE) {
-	if(d->ninputs() == d->noutputs()) {
-	  for(int i = 0; i < d->ninputs(); i++) {
-	    std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, d_start_nitems_read[i], d->nitems_read(i));
-	    std::vector<pmt::pmt_t>::iterator t;
-	    for(t = tuple.begin(); t != tuple.end(); t++ ) {
-	      d->output(i)->add_item_tag(*t);
-	    }
-	  }
-	}
-	else 
-	  throw std::invalid_argument ("propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs");
-      }
-
-      // else ; do nothing
-    }
+    propagate_tags(m->tag_propagation_policy(), d, d_start_nitems_read);
 
     if (n == gr_block::WORK_DONE)
       goto were_done;

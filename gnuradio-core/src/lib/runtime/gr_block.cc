@@ -167,7 +167,7 @@ gr_block::get_tags_in_range(unsigned int which_output,
   return d_detail->get_tags_in_range(which_output, start, end, key);
 }
 
-int
+gr_block::TAG_PROPAGATION_POLICY
 gr_block::tag_propagation_policy()
 {
   return d_tag_propagation_policy;

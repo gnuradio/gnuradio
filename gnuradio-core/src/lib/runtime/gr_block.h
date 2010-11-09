@@ -217,7 +217,7 @@ class gr_block : public gr_basic_block {
   /*!
    * \brief Asks for the policy used by the scheduler to moved tags downstream.
    */
-  int tag_propagation_policy();
+  TAG_PROPAGATION_POLICY tag_propagation_policy();
 
   /*!
    * \brief Set the policy by the scheduler to determine how tags are moved downstream.
