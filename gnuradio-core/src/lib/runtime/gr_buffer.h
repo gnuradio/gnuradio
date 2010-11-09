@@ -119,18 +119,16 @@ class gr_buffer {
   std::vector<gr_buffer_reader *>	d_readers;
   boost::weak_ptr<gr_block>		d_link;		// block that writes to this buffer
 
-  std::deque<pmt::pmt_t>                d_item_tags;
-
-
   //
-  // The mutex protects d_write_index, d_abs_write_offset, d_done and the d_read_index's 
-  // and d_abs_read_offset's in the buffer readers.
+  // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags 
+  // and the d_read_index's and d_abs_read_offset's in the buffer readers.
   //
   gruel::mutex				d_mutex;
   unsigned int				d_write_index;	// in items [0,d_bufsize)
   uint64_t                              d_abs_write_offset; // num items written since the start
-  //deq tag_tuples
   bool					d_done;
+  std::deque<pmt::pmt_t>                d_item_tags;
+
   
   unsigned
   index_add (unsigned a, unsigned b)

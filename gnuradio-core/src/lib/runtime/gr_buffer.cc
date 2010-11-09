@@ -219,6 +219,7 @@ gr_buffer::drop_reader (gr_buffer_reader *reader)
 void
 gr_buffer::add_item_tag(const pmt::pmt_t &tag)
 {
+  gruel::scoped_lock guard(*mutex());
   d_item_tags.push_back(tag);
 }
 
@@ -267,6 +268,8 @@ std::vector<pmt::pmt_t>
 gr_buffer_reader::get_tags_in_range(uint64_t abs_start,
 				    uint64_t abs_end)
 {
+  gruel::scoped_lock guard(*mutex());
+
   std::vector<pmt::pmt_t> found_items;
   std::deque<pmt::pmt_t>::iterator itr = d_buffer->get_tags_begin();
   
