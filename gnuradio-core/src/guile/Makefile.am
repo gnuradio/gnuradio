@@ -25,7 +25,6 @@ EXTRA_DIST = \
 	run_guile_tests.in \
 	gnuradio/test-suite/guile-test.in
 
-
 # These are the hand-code guile files for gnuradio-core.
 #
 # Swig/common.scm is glue that's required for the goops wrappers.
@@ -51,3 +50,7 @@ noinst_DATA = \
 	tests/io_ctors.test
 
 CLEANFILES = guile.log
+
+check-am: all-am
+	@test -d "tests" || $(mkinstalldirs) "tests"
+	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
