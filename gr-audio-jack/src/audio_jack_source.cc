@@ -110,7 +110,12 @@ audio_jack_source::audio_jack_source (int sampling_rate,
 #endif
 
   // try to become a client of the JACK server
-  if ((d_jack_client = jack_client_new (d_device_name.c_str ())) == 0) {
+  jack_options_t options = JackNullOption;
+  jack_status_t status;
+  const char *server_name = NULL;
+  if ((d_jack_client = jack_client_open (d_device_name.c_str (),
+  					 options, &status,
+					 server_name)) == NULL) {
     fprintf (stderr, "audio_jack_source[%s]: jack server not running?\n",
 	     d_device_name.c_str());
     throw std::runtime_error ("audio_jack_source");
