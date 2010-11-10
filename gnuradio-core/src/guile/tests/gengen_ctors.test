@@ -31,34 +31,98 @@
 
 ;;; Add test code for all constructors in these files
 ;;;
+
 ;;; ./gengen/gr_add_cc.h
+;; (pass-if (true? (gr:add-cc 0))) FIXME: throws gr_io_signature(3)
+
 ;;; ./gengen/gr_add_const_cc.h
+(pass-if (true? (gr:add-const-cc 0)))
+
 ;;; ./gengen/gr_add_const_ff.h
+(pass-if (true? (gr:add-const-ff 0)))
+
 ;;; ./gengen/gr_add_const_ii.h
+(pass-if (true? (gr:add-const-ii 0)))
+
 ;;; ./gengen/gr_add_const_sf.h
+(pass-if (true? (gr:add-const-sf 0)))
+
 ;;; ./gengen/gr_add_const_ss.h
-;;; ./gengen/gr_add_const_vcc.h
-;;; ./gengen/gr_add_const_vff.h
-;;; ./gengen/gr_add_const_vii.h
-;;; ./gengen/gr_add_const_vss.h
+(pass-if (true? (gr:add-const-ss 0)))
+
+;;; ./gengen/gr_add_const_vcc.h FIXME: needs complex
+;; gr_make_add_const_vcc (const std::vector<gr_complex> &k);
+;; (pass-if (true? (gr:add-const-vcc 0)))
+
+;;; ./gengen/gr_add_const_vff.h FIXME: needs vector
+;; gr_make_add_const_vff (const std::vector<float> &k);
+;; (pass-if (true? (gr:add-const-vff )))
+
+;;; ./gengen/gr_add_const_vii.h FIXME: needs vector
+;; gr_make_add_const_vii (const std::vector<int> &k);
+;; (pass-if (true? (gr:add-const-vii )))
+
+;;; ./gengen/gr_add_const_vss.h FIXME: needs vector
+;; (pass-if (true? (gr:add-const-vss )))
+
 ;;; ./gengen/gr_add_ff.h
+;; (pass-if (true? (gr:add-ff 0))) FIXME: throws gr_io_signature(3)
+
 ;;; ./gengen/gr_add_ii.h
+;; (pass-if (true? (gr:add-ii 0))) FIXME: throws gr_io_signature(3)
+
 ;;; ./gengen/gr_add_ss.h
+;; (pass-if (true? (gr:add-ss 0 ))) FIXME: throws gr_io_signature(3)
+
 ;;; ./gengen/gr_and_bb.h
+(pass-if (true? (gr:and-bb)))
+
 ;;; ./gengen/gr_and_const_bb.h
+(pass-if (true? (gr:and-const-bb 0)))
+
 ;;; ./gengen/gr_and_const_ii.h
+(pass-if (true? (gr:and-const-ii 0)))
+
 ;;; ./gengen/gr_and_const_ss.h
+(pass-if (true? (gr:and-const-ss 0)))
+
 ;;; ./gengen/gr_and_ii.h
+(pass-if (true? (gr:and-ii)))
+
 ;;; ./gengen/gr_and_ss.h
+(pass-if (true? (gr:and-ss)))
+
 ;;; ./gengen/gr_argmax_fs.h
+(pass-if (true? (gr:argmax-fs 1)))
+
 ;;; ./gengen/gr_argmax_is.h
+(pass-if (true? (gr:argmax-is 1)))
+
 ;;; ./gengen/gr_argmax_ss.h
-;;; ./gengen/gr_chunks_to_symbols_bc.h
-;;; ./gengen/gr_chunks_to_symbols_bf.h
-;;; ./gengen/gr_chunks_to_symbols_ic.h
-;;; ./gengen/gr_chunks_to_symbols_if.h
-;;; ./gengen/gr_chunks_to_symbols_sc.h
-;;; ./gengen/gr_chunks_to_symbols_sf.h
+(pass-if (true? (gr:argmax-ss 1)))
+
+;;; ./gengen/gr_chunks_to_symbols_bc.h FIXME: needs vector
+;; gr_make_chunks_to_symbols_bc (const std::vector<gr_complex> &symbol_table, const int D = 1);
+;; (pass-if (true? (gr:chunks-to-symbols-bc )))
+
+;;; ./gengen/gr_chunks_to_symbols_bf.h FIXME: needs vector
+;; gr_make_chunks_to_symbols_bf (const std::vector<float> &symbol_table, const int D = 1);
+;; (pass-if (true? (gr:chunks-to-symbols-bf )))
+
+;;; ./gengen/gr_chunks_to_symbols_ic.h FIXME: needs vector
+;; gr_make_chunks_to_symbols_ic (const std::vector<gr_complex> &symbol_table, const int D = 1);
+;; (pass-if (true? (gr:chunks-to-symbols-ic )))
+
+;;; ./gengen/gr_chunks_to_symbols_if.h FIXME: needs vector
+;; gr_make_chunks_to_symbols_if (const std::vector<float> &symbol_table, const int D = 1);
+;; (pass-if (true? (gr:chunks_to_symbols_if )))
+
+;;; ./gengen/gr_chunks_to_symbols_sc.h FIXME: needs vector
+;; (pass-if (true? (gr:chunks_to_symbols_sc )))
+
+;;; ./gengen/gr_chunks_to_symbols_sf.h FIXME: needs vector
+;; (pass-if (true? (gr:chunks_to_symbols_sf )))
+
 ;;; ./gengen/gr_divide_cc.h
 ;;; ./gengen/gr_divide_ff.h
 ;;; ./gengen/gr_divide_ii.h
