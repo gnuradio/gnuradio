@@ -33,7 +33,7 @@
 ;;;
 
 ;;; ./gengen/gr_add_cc.h
-;; (pass-if (true? (gr:add-cc 0))) FIXME: throws gr_io_signature(3)
+(pass-if (true? (gr:add-cc 1)))
 
 ;;; ./gengen/gr_add_const_cc.h
 (pass-if (true? (gr:add-const-cc 0)))
