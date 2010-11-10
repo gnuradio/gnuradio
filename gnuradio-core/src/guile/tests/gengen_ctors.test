@@ -124,77 +124,253 @@
 ;; (pass-if (true? (gr:chunks_to_symbols_sf )))
 
 ;;; ./gengen/gr_divide_cc.h
+(pass-if (true? (gr:divide-cc 1)))
+
 ;;; ./gengen/gr_divide_ff.h
+(pass-if (true? (gr:divide-ff 1)))
+
 ;;; ./gengen/gr_divide_ii.h
+(pass-if (true? (gr:divide-ii 1)))
+
 ;;; ./gengen/gr_divide_ss.h
+(pass-if (true? (gr:divide-ss 1)))
+
 ;;; ./gengen/gr_integrate_cc.h
+(pass-if (true? (gr:integrate-cc 0)))
+
 ;;; ./gengen/gr_integrate_ff.h
+(pass-if (true? (gr:integrate-ff 0)))
+
 ;;; ./gengen/gr_integrate_ii.h
+(pass-if (true? (gr:integrate-ii 0)))
+
 ;;; ./gengen/gr_integrate_ss.h
+(pass-if (true? (gr:integrate-ss 0)))
+
 ;;; ./gengen/gr_max_ff.h
+(pass-if (true? (gr:max-ff 1)))
+
 ;;; ./gengen/gr_max_ii.h
+(pass-if (true? (gr:max-ii 1)))
+
 ;;; ./gengen/gr_max_ss.h
-;;; ./gengen/gr_moving_average_cc.h
+(pass-if (true? (gr:max-ss 1)))
+
+;;; ./gengen/gr_moving_average_cc.h FIXME: needs gr_complex
+;; gr_make_moving_average_cc (int length, gr_complex scale, int max_iter=4096);
+;; (pass-if (true? (gr:moving-average-cc )))
+
 ;;; ./gengen/gr_moving_average_ff.h
+(pass-if (true? (gr:moving-average-ff 1 0 4096)))
+
 ;;; ./gengen/gr_moving_average_ii.h
+(pass-if (true? (gr:moving-average-ii 1 0 4096)))
+
 ;;; ./gengen/gr_moving_average_ss.h
+(pass-if (true? (gr:moving-average-ss 1 0 4096)))
+
 ;;; ./gengen/gr_multiply_cc.h
+(pass-if (true? (gr:multiply-cc 1)))
+
 ;;; ./gengen/gr_multiply_const_cc.h
+(pass-if (true? (gr:multiply-const-cc 1)))
+
 ;;; ./gengen/gr_multiply_const_ff.h
+(pass-if (true? (gr:multiply-const-ff 1)))
+
 ;;; ./gengen/gr_multiply_const_ii.h
+(pass-if (true? (gr:multiply-const-ii 1)))
+
 ;;; ./gengen/gr_multiply_const_ss.h
-;;; ./gengen/gr_multiply_const_vcc.h
-;;; ./gengen/gr_multiply_const_vff.h
-;;; ./gengen/gr_multiply_const_vii.h
-;;; ./gengen/gr_multiply_const_vss.h
+(pass-if (true? (gr:multiply-const-ss 1)))
+
+;;; ./gengen/gr_multiply_const_vcc.h FIXME: needs vector
+;; gr_make_multiply_const_vcc (const std::vector<gr_complex> &k);
+;; (pass-if (true? (gr:multiply-const-vcc 1)))
+
+;;; ./gengen/gr_multiply_const_vff.h FIXME: needs vector
+;; gr_make_multiply_const_vff (const std::vector<float> &k);
+;; (pass-if (true? (gr:multiply-const-vff )))
+
+;;; ./gengen/gr_multiply_const_vii.h FIXME: needs vector
+;; gr_make_multiply_const_vii (const std::vector<int> &k);
+;; (pass-if (true? (gr:multiply-const-vii )))
+
+;;; ./gengen/gr_multiply_const_vss.h FIXME: needs vector
+;; gr_make_multiply_const_vss (const std::vector<short> &k);
+;; (pass-if (true? (gr:multiply-const-vss )))
+
 ;;; ./gengen/gr_multiply_ff.h
+(pass-if (true? (gr:multiply-ff 1)))
+
 ;;; ./gengen/gr_multiply_ii.h
+(pass-if (true? (gr:multiply-ii 1)))
+
 ;;; ./gengen/gr_multiply_ss.h
-;;; ./gengen/gr_mute_cc.h
-;;; ./gengen/gr_mute_ff.h
-;;; ./gengen/gr_mute_ii.h
-;;; ./gengen/gr_mute_ss.h
-;;; ./gengen/gr_noise_source_c.h
-;;; ./gengen/gr_noise_source_f.h
-;;; ./gengen/gr_noise_source_i.h
-;;; ./gengen/gr_noise_source_s.h
+(pass-if (true? (gr:multiply-ss 1)))
+
+;;; ./gengen/gr_mute_cc.h FIXME: not found
+;; (pass-if (true? (gr:mute-cc false)))
+
+;;; ./gengen/gr_mute_ff.h FIXME: not found
+;;(pass-if (true? (gr:mute-ff false)))
+
+;;; ./gengen/gr_mute_ii.h FIXME: not found
+;; (pass-if (true? (gr:mute-ii false)))
+
+;;; ./gengen/gr_mute_ss.h FIXME: not found
+;; (pass-if (true? (gr:mute-ss false)))
+
+;;; ./gengen/gr_noise_source_c.h FIXME: needs gr_noise_type_t
+;; gr_make_noise_source_c (gr_noise_type_t type, float ampl, long seed = 3021);
+;; (pass-if (true? (gr:noise-source-c )))
+
+;;; ./gengen/gr_noise_source_f.h FIXME: needs gr_noise_type_t
+;; gr_make_noise_source_f (gr_noise_type_t type, float ampl, long seed = 3021);
+;; (pass-if (true? (gr:noise-source-f )))
+
+;;; ./gengen/gr_noise_source_i.h FIXME: needs gr_noise_type_t
+;; gr_make_noise_source_i (gr_noise_type_t type, float ampl, long seed = 3021);
+;; (pass-if (true? (gr:noise-source-i )))
+
+;;; ./gengen/gr_noise_source_s.h FIXME: needs gr_noise_type_t
+;; gr_make_noise_source_s (gr_noise_type_t type, float ampl, long seed = 3021);
+;; (pass-if (true? (gr:noise-source-s )))
+
 ;;; ./gengen/gr_not_bb.h
+(pass-if (true? (gr:not-bb)))
+
 ;;; ./gengen/gr_not_ii.h
+(pass-if (true? (gr:not-ii)))
+
 ;;; ./gengen/gr_not_ss.h
+(pass-if (true? (gr:not-ss)))
+
 ;;; ./gengen/gr_or_bb.h
+(pass-if (true? (gr:or-bb)))
+
 ;;; ./gengen/gr_or_ii.h
+(pass-if (true? (gr:or-ii)))
+
 ;;; ./gengen/gr_or_ss.h
-;;; ./gengen/gr_packed_to_unpacked_bb.h
-;;; ./gengen/gr_packed_to_unpacked_ii.h
-;;; ./gengen/gr_packed_to_unpacked_ss.h
+(pass-if (true? (gr:or-ss)))
+
+;;; ./gengen/gr_packed_to_unpacked_bb.h FIXME: needs gr_endianness_t
+;; gr_make_packed_to_unpacked_bb (unsigned int bits_per_chunk, gr_endianness_t endianness);
+;; (pass-if (true? (gr:packed-to-unpacked-bb )))
+
+;;; ./gengen/gr_packed_to_unpacked_ii.h FIXME: needs gr_endianness_t
+;; gr_make_packed_to_unpacked_ii (unsigned int bits_per_chunk, gr_endianness_t endianness);
+;; (pass-if (true? (gr:packed-to-unpacked-ii )))
+
+;;; ./gengen/gr_packed_to_unpacked_ss.h FIXME: needs gr_endianness_t
+;; gr_make_packed_to_unpacked_ss (unsigned int bits_per_chunk, gr_endianness_t endianness);
+;; (pass-if (true? (gr:packed-to-unpacked-ss )))
+
 ;;; ./gengen/gr_peak_detector_fb.h
+(pass-if (true? (gr:peak-detector-fb 0.25 0.40 10 0.001)))
+
 ;;; ./gengen/gr_peak_detector_ib.h
+(pass-if (true? (gr:peak-detector-ib  0.25 0.40 10 0.001)))
+
 ;;; ./gengen/gr_peak_detector_sb.h
+(pass-if (true? (gr:peak-detector-sb  0.25 0.40 10 0.001)))
+
 ;;; ./gengen/gr_sample_and_hold_bb.h
+(pass-if (true? (gr:sample-and-hold-bb)))
+
 ;;; ./gengen/gr_sample_and_hold_ff.h
+(pass-if (true? (gr:sample-and-hold-ff)))
+
 ;;; ./gengen/gr_sample_and_hold_ii.h
+(pass-if (true? (gr:sample-and-hold-ii)))
+
 ;;; ./gengen/gr_sample_and_hold_ss.h
-;;; ./gengen/gr_sig_source_c.h
-;;; ./gengen/gr_sig_source_f.h
-;;; ./gengen/gr_sig_source_i.h
-;;; ./gengen/gr_sig_source_s.h
+(pass-if (true? (gr:sample-and-hold-ss)))
+
+;;; ./gengen/gr_sig_source_c.h FIXME: needs gr_waveform_t
+;; gr_make_sig_source_c (double sampling_freq, gr_waveform_t waveform,
+;;                      double wave_freq, double ampl, gr_complex offset = 0);
+;; (pass-if (true? (gr:sig-source-c )))
+
+;;; ./gengen/gr_sig_source_f.h FIXME: needs gr_waveform_t
+;; gr_make_sig_source_f (double sampling_freq, gr_waveform_t waveform,
+;;                      double wave_freq, double ampl, float offset = 0);
+;; (pass-if (true? (gr:sig-source-f )))
+
+;;; ./gengen/gr_sig_source_i.h FIXME: needs gr_waveform_t
+;; gr_make_sig_source_i (double sampling_freq, gr_waveform_t waveform,
+;;                      double wave_freq, double ampl, int offset = 0);
+;; (pass-if (true? (gr:sig-source-i )))
+
+;;; ./gengen/gr_sig_source_s.h FIXME: needs gr_waveform_t
+;; gr_make_sig_source_s (double sampling_freq, gr_waveform_t waveform,
+;;                      double wave_freq, double ampl, short offset = 0);
+;; (pass-if (true? (gr:sig-source-s )))
+
 ;;; ./gengen/gr_sub_cc.h
+(pass-if (true? (gr:sub-cc 1)))
+
 ;;; ./gengen/gr_sub_ff.h
+(pass-if (true? (gr:sub-ff 1)))
+
 ;;; ./gengen/gr_sub_ii.h
+(pass-if (true? (gr:sub-ii 1)))
+
 ;;; ./gengen/gr_sub_ss.h
-;;; ./gengen/gr_unpacked_to_packed_bb.h
-;;; ./gengen/gr_unpacked_to_packed_ii.h
-;;; ./gengen/gr_unpacked_to_packed_ss.h
+(pass-if (true? (gr:sub-ss 1)))
+
+;;; ./gengen/gr_unpacked_to_packed_bb.h FIXME: needs gr_endianness_t
+;; gr_make_unpacked_to_packed_bb (unsigned int bits_per_chunk, gr_endianness_t endianness);
+;; (pass-if (true? (gr:unpacked-to-packed-bb )))
+
+;;; ./gengen/gr_unpacked_to_packed_ii.h FIXME: needs gr_endianness_t
+;; gr_make_unpacked_to_packed_ii (unsigned int bits_per_chunk, gr_endianness_t endianness);
+;; (pass-if (true? (gr:unpacked-to-packed-ii )))
+
+;;; ./gengen/gr_unpacked_to_packed_ss.h FIXME: needs gr_endianness_t
+;; gr_make_unpacked_to_packed_ss (unsigned int bits_per_chunk, gr_endianness_t endianness);
+;; (pass-if (true? (gr:unpacked-to-packed-ss )))
+
 ;;; ./gengen/gr_vector_sink_b.h
+(pass-if (true? (gr:vector-sink-b 1)))
+
 ;;; ./gengen/gr_vector_sink_c.h
+(pass-if (true? (gr:vector-sink-c 1)))
+
 ;;; ./gengen/gr_vector_sink_f.h
+(pass-if (true? (gr:vector-sink-f 1)))
+
 ;;; ./gengen/gr_vector_sink_i.h
+(pass-if (true? (gr:vector-sink-i 1)))
+
 ;;; ./gengen/gr_vector_sink_s.h
-;;; ./gengen/gr_vector_source_b.h
-;;; ./gengen/gr_vector_source_c.h
-;;; ./gengen/gr_vector_source_f.h
-;;; ./gengen/gr_vector_source_i.h
-;;; ./gengen/gr_vector_source_s.h
+(pass-if (true? (gr:vector-sink-s 1)))
+
+;;; ./gengen/gr_vector_source_b.h FIXME: needs vector, may throw
+;; gr_make_vector_source_b (const std::vector<unsigned char> &data, bool repeat = false, int vlen = 1)
+;; (pass-if (true? (gr:vector-source-b )))
+
+;;; ./gengen/gr_vector_source_c.h FIXME: needs vector, may throw
+;; gr_make_vector_source_c (const std::vector<gr_complex> &data, bool repeat = false, int vlen = 1)
+;; (pass-if (true? (gr:vector-source-c )))
+
+;;; ./gengen/gr_vector_source_f.h FIXME: needs vector, may throw
+;; gr_make_vector_source_f (const std::vector<float> &data, bool repeat = false, int vlen = 1)
+;; (pass-if (true? (gr:vector-source-f )))
+
+;;; ./gengen/gr_vector_source_i.h FIXME: needs vector, may throw
+;; gr_make_vector_source_i (const std::vector<int> &data, bool repeat = false, int vlen = 1)
+;; (pass-if (true? (gr:vector-source-i )))
+
+;;; ./gengen/gr_vector_source_s.h FIXME: needs vector, may throw
+;; (pass-if (true? (gr:vector-source-s )))
+
 ;;; ./gengen/gr_xor_bb.h
+(pass-if (true? (gr:xor-bb)))
+
 ;;; ./gengen/gr_xor_ii.h
+(pass-if (true? (gr:xor-ii)))
+
 ;;; ./gengen/gr_xor_ss.h
+(pass-if (true? (gr:xor-ss)))
