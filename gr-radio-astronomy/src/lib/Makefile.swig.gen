@@ -112,8 +112,8 @@ ra.py: ra.i
 
 if GUILE
 ra_scmlib_LTLIBRARIES = libguile-ra.la
-libguile_ra_la_SOURCES = \
-	guile/ra.cc				       \
+libguile_ra_la_SOURCES =		\
+	guile/ra.cc			\
 	$(ra_la_swig_sources)
 nobase_ra_scm_DATA = gnuradio/ra.scm gnuradio/ra-primitive.scm
 

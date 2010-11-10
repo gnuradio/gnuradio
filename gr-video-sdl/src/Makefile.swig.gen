@@ -112,8 +112,8 @@ video_sdl.py: video_sdl.i
 
 if GUILE
 video_sdl_scmlib_LTLIBRARIES = libguile-video_sdl.la
-libguile_video_sdl_la_SOURCES = \
-	guile/video_sdl.cc				       \
+libguile_video_sdl_la_SOURCES =		\
+	guile/video_sdl.cc			\
 	$(video_sdl_la_swig_sources)
 nobase_video_sdl_scm_DATA = gnuradio/video_sdl.scm gnuradio/video_sdl-primitive.scm
 

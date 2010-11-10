@@ -112,8 +112,8 @@ audio_alsa.py: audio_alsa.i
 
 if GUILE
 audio_alsa_scmlib_LTLIBRARIES = libguile-audio_alsa.la
-libguile_audio_alsa_la_SOURCES = \
-	guile/audio_alsa.cc				       \
+libguile_audio_alsa_la_SOURCES =		\
+	guile/audio_alsa.cc			\
 	$(audio_alsa_la_swig_sources)
 nobase_audio_alsa_scm_DATA = gnuradio/audio_alsa.scm gnuradio/audio_alsa-primitive.scm
 

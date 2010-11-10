@@ -112,8 +112,8 @@ gsm_full_rate.py: gsm_full_rate.i
 
 if GUILE
 gsm_full_rate_scmlib_LTLIBRARIES = libguile-gsm_full_rate.la
-libguile_gsm_full_rate_la_SOURCES = \
-	guile/gsm_full_rate.cc				       \
+libguile_gsm_full_rate_la_SOURCES =		\
+	guile/gsm_full_rate.cc			\
 	$(gsm_full_rate_la_swig_sources)
 nobase_gsm_full_rate_scm_DATA = gnuradio/gsm_full_rate.scm gnuradio/gsm_full_rate-primitive.scm
 

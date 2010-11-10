@@ -112,8 +112,8 @@ atsc.py: atsc.i
 
 if GUILE
 atsc_scmlib_LTLIBRARIES = libguile-atsc.la
-libguile_atsc_la_SOURCES = \
-	guile/atsc.cc				       \
+libguile_atsc_la_SOURCES =		\
+	guile/atsc.cc			\
 	$(atsc_la_swig_sources)
 nobase_atsc_scm_DATA = gnuradio/atsc.scm gnuradio/atsc-primitive.scm
 

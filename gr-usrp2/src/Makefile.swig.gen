@@ -112,8 +112,8 @@ usrp2.py: usrp2.i
 
 if GUILE
 usrp2_scmlib_LTLIBRARIES = libguile-usrp2.la
-libguile_usrp2_la_SOURCES = \
-	guile/usrp2.cc				       \
+libguile_usrp2_la_SOURCES =		\
+	guile/usrp2.cc			\
 	$(usrp2_la_swig_sources)
 nobase_usrp2_scm_DATA = gnuradio/usrp2.scm gnuradio/usrp2-primitive.scm
 

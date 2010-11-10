@@ -112,8 +112,8 @@ pager_swig.py: pager_swig.i
 
 if GUILE
 pager_swig_scmlib_LTLIBRARIES = libguile-pager_swig.la
-libguile_pager_swig_la_SOURCES = \
-	guile/pager_swig.cc				       \
+libguile_pager_swig_la_SOURCES =		\
+	guile/pager_swig.cc			\
 	$(pager_swig_la_swig_sources)
 nobase_pager_swig_scm_DATA = gnuradio/pager_swig.scm gnuradio/pager_swig-primitive.scm
 

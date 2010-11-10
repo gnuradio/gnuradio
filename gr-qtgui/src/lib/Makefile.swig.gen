@@ -112,8 +112,8 @@ qtgui.py: qtgui.i
 
 if GUILE
 qtgui_scmlib_LTLIBRARIES = libguile-qtgui.la
-libguile_qtgui_la_SOURCES = \
-	guile/qtgui.cc				       \
+libguile_qtgui_la_SOURCES =		\
+	guile/qtgui.cc			\
 	$(qtgui_la_swig_sources)
 nobase_qtgui_scm_DATA = gnuradio/qtgui.scm gnuradio/qtgui-primitive.scm
 

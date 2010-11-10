@@ -112,8 +112,8 @@ msdd.py: msdd.i
 
 if GUILE
 msdd_scmlib_LTLIBRARIES = libguile-msdd.la
-libguile_msdd_la_SOURCES = \
-	guile/msdd.cc				       \
+libguile_msdd_la_SOURCES =		\
+	guile/msdd.cc			\
 	$(msdd_la_swig_sources)
 nobase_msdd_scm_DATA = gnuradio/msdd.scm gnuradio/msdd-primitive.scm
 
@@ -245,8 +245,8 @@ msdd_rs.py: msdd_rs.i
 
 if GUILE
 msdd_rs_scmlib_LTLIBRARIES = libguile-msdd_rs.la
-libguile_msdd_rs_la_SOURCES = \
-	guile/msdd_rs.cc				       \
+libguile_msdd_rs_la_SOURCES =		\
+	guile/msdd_rs.cc			\
 	$(msdd_rs_la_swig_sources)
 nobase_msdd_rs_scm_DATA = gnuradio/msdd_rs.scm gnuradio/msdd_rs-primitive.scm
 

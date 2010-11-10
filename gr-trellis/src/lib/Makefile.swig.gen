@@ -112,8 +112,8 @@ trellis.py: trellis.i
 
 if GUILE
 trellis_scmlib_LTLIBRARIES = libguile-trellis.la
-libguile_trellis_la_SOURCES = \
-	guile/trellis.cc				       \
+libguile_trellis_la_SOURCES =		\
+	guile/trellis.cc			\
 	$(trellis_la_swig_sources)
 nobase_trellis_scm_DATA = gnuradio/trellis.scm gnuradio/trellis-primitive.scm
 

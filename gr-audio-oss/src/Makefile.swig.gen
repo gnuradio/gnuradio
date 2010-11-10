@@ -112,8 +112,8 @@ audio_oss.py: audio_oss.i
 
 if GUILE
 audio_oss_scmlib_LTLIBRARIES = libguile-audio_oss.la
-libguile_audio_oss_la_SOURCES = \
-	guile/audio_oss.cc				       \
+libguile_audio_oss_la_SOURCES =		\
+	guile/audio_oss.cc			\
 	$(audio_oss_la_swig_sources)
 nobase_audio_oss_scm_DATA = gnuradio/audio_oss.scm gnuradio/audio_oss-primitive.scm
 

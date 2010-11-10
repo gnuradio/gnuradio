@@ -112,8 +112,8 @@ noaa_swig.py: noaa_swig.i
 
 if GUILE
 noaa_swig_scmlib_LTLIBRARIES = libguile-noaa_swig.la
-libguile_noaa_swig_la_SOURCES = \
-	guile/noaa_swig.cc				       \
+libguile_noaa_swig_la_SOURCES =		\
+	guile/noaa_swig.cc			\
 	$(noaa_swig_la_swig_sources)
 nobase_noaa_swig_scm_DATA = gnuradio/noaa_swig.scm gnuradio/noaa_swig-primitive.scm
 

@@ -112,8 +112,8 @@ cvsd_vocoder.py: cvsd_vocoder.i
 
 if GUILE
 cvsd_vocoder_scmlib_LTLIBRARIES = libguile-cvsd_vocoder.la
-libguile_cvsd_vocoder_la_SOURCES = \
-	guile/cvsd_vocoder.cc				       \
+libguile_cvsd_vocoder_la_SOURCES =		\
+	guile/cvsd_vocoder.cc			\
 	$(cvsd_vocoder_la_swig_sources)
 nobase_cvsd_vocoder_scm_DATA = gnuradio/cvsd_vocoder.scm gnuradio/cvsd_vocoder-primitive.scm
 
