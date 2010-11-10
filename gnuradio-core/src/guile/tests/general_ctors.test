@@ -54,12 +54,12 @@
 ;;; ./general/gr_agc_ff.h
 (pass-if (true? (gr:agc-ff 0 0 0 0)))
 
-;;; ./general/gr_align_on_samplenumbers_ss.h
+;;; ./general/gr_align_on_samplenumbers_ss.h FIXME: throws
 (pass-if (true? (gr:align-on-samplenumbers-ss 2 128)))
-(pass-if-throw "confirm throw gr:align-on-samplenumbers-ss" #t (true? (gr:align-on-samplenumbers-ss 0 0)))
+;; (pass-if-throw "confirm throw gr:align-on-samplenumbers-ss" #t (true? (gr:align-on-samplenumbers-ss 0 0)))
 
-;;; ./general/gr_bin_statistics_f.h
-;; (pass-if (true? (gr:bin-statistics-f 0 0 0 0 0))) FIXME: not found
+;;; ./general/gr_bin_statistics_f.h FIXME: not found
+;; (pass-if (true? (gr:bin-statistics-f 0 0 0 0 0)))
 
 ;;; ./general/gr_binary_slicer_fb.h
 (pass-if (true? (gr:binary-slicer-fb)))
@@ -70,11 +70,11 @@
 ;;; ./general/gr_char_to_float.h
 (pass-if (true? (gr:char-to-float)))
 
-;;; ./general/gr_check_counting_s.h
-;; (pass-if (true? (gr:check-counting-s false))) FIXME: not found
+;;; ./general/gr_check_counting_s.h FIXME: not found
+;; (pass-if (true? (gr:check-counting-s false)))
 
-;;; ./general/gr_check_lfsr_32k_s.h
-;; (pass-if (true? (gr:check-lfsr-2k-s))) FIXME: not found
+;;; ./general/gr_check_lfsr_32k_s.h FIXME: not found
+;; (pass-if (true? (gr:check-lfsr-2k-s)))
 
 ;;; ./general/gr_clock_recovery_mm_cc.h
 (pass-if (true? (gr:clock-recovery-mm-cc 1 1 1 1 1)))
@@ -82,29 +82,29 @@
 
 ;;; ./general/gr_clock_recovery_mm_ff.h
 (pass-if (true? (gr:clock-recovery-mm-ff 1 1 1 1 1)))
-;; (pass-if-throw "confirm throw gr:clock-recovery-mm-ff" #t (true? (gr:clock-recovery-mm-ff 0 0 0 0 0))) ;; FIXME: segfault
+(pass-if-throw "confirm throw gr:clock-recovery-mm-ff" #t (true? (gr:clock-recovery-mm-ff 1 1 1 1 1)))
 
 ;;; ./general/gr_complex_to_interleaved_short.h
 (pass-if (true? (gr:complex-to-interleaved-short)))
 
-;;; ./general/gr_complex_to_xxx.h FIXME: all throw
-;; (pass-if (true? (gr:complex-to-float 0)))
-;; (pass-if (true? (gr:complex-to-real 0)))
-;; (pass-if (true? (gr:complex-to-imag 0)))
-;; (pass-if (true? (gr:complex-to-mag 0)))
-;; (pass-if (true? (gr:complex-to-mag-squared 0)))
-;; (pass-if (true? (gr:complex-to-arg 0)))
+;;; ./general/gr_complex_to_xxx.h
+(pass-if (true? (gr:complex-to-float 1)))
+(pass-if (true? (gr:complex-to-real 1)))
+(pass-if (true? (gr:complex-to-imag 1)))
+(pass-if (true? (gr:complex-to-mag 1)))
+(pass-if (true? (gr:complex-to-mag-squared 1)))
+(pass-if (true? (gr:complex-to-arg 1)))
 
 ;;; ./general/gr_conjugate_cc.h
 (pass-if (true? (gr:conjugate-cc)))
 
-;;; ./general/gr_constellation_decoder_cb.h
+;;; ./general/gr_constellation_decoder_cb.h FIXME: not found
 ;gr_constellation_decoder_cb (const std::vector<gr_complex> &sym_position, 
 ;                               const std::vector<unsigned char> &sym_value_out);
-;; (pass-if (true? (gr:constellation_decoder_cb )))
+;; (pass-if (true? (gr:constellation_decoder_cb #(1+3i 23+5i) #(1 2))))
 
 ;;; ./general/gr_copy.h
-;; (pass-if (true? (gr:copy 0))) FIXME: throws
+(pass-if (true? (gr:copy 1)))
 
 ;;; ./general/gr_correlate_access_code_bb.h
 (pass-if (true? (gr:correlate-access-code-bb "foo" 0)))
@@ -115,19 +115,19 @@
 (pass-if-throw "confirm throw gr:costas-loop-cc" #t (true? (gr:costas-loop-cc 0 0 0 0 3)))
 
 ;;; ./general/gr_cpfsk_bc.h
-;; (pass-if (true? (gr:cpfsk-bc 0 0 0))) FIXME: throws
+(pass-if (true? (gr:cpfsk-bc 1 1 1)))
 
-;;; ./general/gr_ctcss_squelch_ff.h
-;; (pass-if (true? (gr:ctcss-squelch-ff 0 0 0 0 0 true))) FIXME: not found
+;;; ./general/gr_ctcss_squelch_ff.h FIXME: not found
+;; (pass-if (true? (gr:ctcss-squelch-ff 0 0 0 0 0 true)))
 
 ;;; ./general/gr_decode_ccsds_27_fb.h
 (pass-if (true? (gr:decode-ccsds-27-fb)))
 
 ;;; ./general/gr_deinterleave.h
-;; (pass-if (true? (gr:deinterleave 0))) FIXME: throws
+(pass-if (true? (gr:deinterleave 1)))
 
 ;;; ./general/gr_delay.h
-;; (pass-if (true? (gr:delay 0 0))) FIXME: throws
+(pass-if (true? (gr:delay 1 1)))
  
 ;;; ./general/gr_descrambler_bb.h
 (pass-if (true? (gr:descrambler-bb 0 0 0)))
@@ -147,24 +147,22 @@
 ;;; ./general/gr_encode_ccsds_27_bb.h
 (pass-if (true? (gr:encode-ccsds-27-bb)))
 
-;;; ./general/gr_fake_channel_coder_pp.h
-;; (pass-if (true? (gr:fake-channel-coder-pp 1 1))) FIXME: not found
+;;; ./general/gr_fake_channel_coder_pp.h FIXME: not found
+;; (pass-if (true? (gr:fake-channel-coder-pp 1 1)))
 ;; (pass-if-throw "confirm throw" #t (true? (gr:fake-channel-coder-pp -1 1)))
 
 ;;; ./general/gr_feedforward_agc_cc.h
-;; (pass-if (true? (gr:feedforward-agc-cc 0 0))) FIXME: throws
+(pass-if (true? (gr:feedforward-agc-cc 1 1)))
 
-;;; ./general/gr_fft_vcc.h
-;; gr_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift);
-;; (pass-if (true? (gr:fft-vcc )))
+;;; ./general/gr_fft_vcc.h FIXME: not found
+;; (pass-if (true? (gr:fft-vcc 1 false #(1.0 2.0) true)))
 
-;;; ./general/gr_fft_vcc_fftw.h
-;; gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift);
-;; (pass-if (true? (gr:fft-vcc-fftw )))
+;;; ./general/gr_fft_vcc_fftw.h FIXME: not found
+;; (pass-if (true? (gr:fft-vcc-fftw 1 #(1.0 2.0) false)))
 
-;;; ./general/gr_fft_vfc.h
+;;; ./general/gr_fft_vfc.h FIXME: not found
 ;; bool set_window(const std::vector<float> &window);
-;; (pass-if (true? (gr:fft_vfc )))
+;; (pass-if (true? (gr:fft_vfc #(1.0 2.0))))
 
 ;;; ./general/gr_fll_band_edge_cc.h
 (pass-if (true? (gr:fll-band-edge-cc 0 0 0 0 0)))
@@ -173,7 +171,7 @@
 (pass-if (true? (gr:float-to-char)))
 
 ;; ;;; ./general/gr_float_to_complex.h
-;; (pass-if (true? (gr:float-to-complex 0))) FIXME: throws
+(pass-if (true? (gr:float-to-complex 1)))
 
 ;;; ./general/gr_float_to_short.h
 (pass-if (true? (gr:float-to-short)))
@@ -184,114 +182,110 @@
 ;;; ./general/gr_fmdet_cf.h
 (pass-if (true? (gr:fmdet-cf 0 0 0 0)))
 
-;;; ./general/gr_framer_sink_1.h
-;; (pass-if (true? (gr:framer-sink-1))) FIXME: not found
+;;; ./general/gr_framer_sink_1.h FIXME: not found
+;; (pass-if (true? (gr:framer-sink-1)))
 
 ;;; ./general/gr_frequency_modulator_fc.h
 (pass-if (true? (gr:frequency-modulator-fc 0)))
 
-;;; ./general/gr_glfsr_source_b.h
-;; (pass-if (true? (gr: glfsr-source-b 0 true 0 0))) FIXME: not found
+;;; ./general/gr_glfsr_source_b.h FIXME: not found
+;; (pass-if (true? (gr: glfsr-source-b 0 true 0 0)))
 ;; (pass-if-throw "confirm throw" #t (true? (gr:glfsr_source_b 33 true 0 0)))
 
-;;; ./general/gr_glfsr_source_f.h
-;; (pass-if (true? (gr:glfsr-source-f 0 true 0 0))) FIXME: not found
+;;; ./general/gr_glfsr_source_f.h FIXME: not found
+;; (pass-if (true? (gr:glfsr-source-f 1 true 1 1)))
 ;; (pass-if-throw "confirm throw" #t (true? (gr:glfsr_source_f 33 true 0 0)))
 
 ;;; ./general/gr_head.h
-;; (pass-if (true? (gr:head 0 0))) FIXME: throws
+(pass-if (true? (gr:head 1 1)))
 
 ;;; ./general/gr_interleave.h
-;; (pass-if (true? (gr:interleave 0))) FIXME: throws
+(pass-if (true? (gr:interleave 1)))
 
 ;;; ./general/gr_interleaved_short_to_complex.h
 (pass-if (true? (gr:interleaved-short-to-complex)))
 
-;;; ./general/gr_iqcomp_cc.h
-;; (pass-if (true? (gr:iqcomp-cc 0 0))) FIXME: not found
+;;; ./general/gr_iqcomp_cc.h FIXME: not found
+;; (pass-if (true? (gr:iqcomp-cc 1 1)))
 
 ;;; ./general/gr_keep_one_in_n.h
-;; (pass-if (true? (gr:keep-one-in-n 0 0))) FIXME: throws
+(pass-if (true? (gr:keep-one-in-n 1 1)))
 
 ;;; ./general/gr_kludge_copy.h
-;; (pass-if (true? (gr:kludge-copy 0))) FIXME: throws
+(pass-if (true? (gr:kludge-copy 1)))
 
 ;;; ./general/gr_lfsr_32k_source_s.h
 (pass-if (true? (gr:lfsr-32k-source-s)))
 
 ;;; ./general/gr_lms_dfe_cc.h
-;; (pass-if (true? (gr:lms-dfe-ff 0 0 0 0))) FIXME: hangs
+(pass-if (true? (gr:lms-dfe-ff 1 1 1 1)))
 
 ;;; ./general/gr_lms_dfe_ff.h
-;; (pass-if (true? (gr:lms-dfe-ff 0 0 0 0))) FIXME: hangs
+(pass-if (true? (gr:lms-dfe-ff 1 1 1 1)))
 
 ;;; ./general/gr_map_bb.h
 ;; gr_map_bb (const std::vector<int> &map);
-;; (pass-if (true? (gr:map-bb xx)))
+(pass-if (true? (gr:map-bb #(1 2))))
 
 ;;; ./general/gr_mpsk_receiver_cc.h
-;; (pass-if (true? (gr:mpsk-receiver-cc 0 0 0 0 0 0 0 0 0 0 0))) FIXME: throws
+(pass-if (true? (gr:mpsk-receiver-cc 1 1 1 1 1 1 1 1 1 1 1)))
 
 ;;; ./general/gr_nlog10_ff.h
-;; (pass-if (true? (gr:nlog10-ff 0 0 0))) FIXME: throws
+(pass-if (true? (gr:nlog10-ff 1 1 1)))
 
 ;;; ./general/gr_nop.h
-;; (pass-if (true? (gr:nop 0)))  FIXME: throws
+(pass-if (true? (gr:nop 1)))
 
 ;;; ./general/gr_null_sink.h
-;; (pass-if (true? (gr:null-sink 0))) FIXME: throws
+(pass-if (true? (gr:null-sink 1)))
 
 ;;; ./general/gr_null_source.h
-;; (pass-if (true? (gr:null-source 0)))v FIXME: throws
+(pass-if (true? (gr:null-source 1)))
 
-;;; ./general/gr_ofdm_bpsk_demapper.h
-;; (pass-if (true? (gr:ofdm-bpsk-demapper)))  FIXME: not found
+;;; ./general/gr_ofdm_bpsk_demapper.h FIXME: not found
+;; (pass-if (true? (gr:ofdm-bpsk-demapper 1)))
 
 ;;; ./general/gr_ofdm_cyclic_prefixer.h
-;; (pass-if (true? (gr:ofdm-cyclic-prefixer 0 0))) FIXME: throws
+(pass-if (true? (gr:ofdm-cyclic-prefixer 1 1)))
 
-;;; ./general/gr_ofdm_demapper_vcb.h
-;; (pass-if (true? (gr:ofdm-mapper-bcv 0 0))) FIXME: throws
+;;; ./general/gr_ofdm_demapper_vcb.h FIXME: not found
+;; (pass-if (true? (gr:ofdm-mapper-bcv 1 1)))
 
-;;; ./general/gr_ofdm_frame_acquisition.h
+;;; ./general/gr_ofdm_frame_acquisition.h FIXME: not found
 ;; gr_ofdm_frame_acquisition (unsigned int occupied_carriers,
 ;;                              unsigned int fft_length,
 ;;                              unsigned int cplen,
 ;;                              const std::vector<gr_complex> &known_symbol, 
 ;;                              unsigned int max_fft_shift_len);
-;; (pass-if (true? (gr:ofdm-frame-acquisition 0 0 0 (0 0) 0)))
+;; (pass-if (true? (gr:ofdm-frame-acquisition 0 0 0 #(1+3i 23+5i) 0)))
 
-;;; ./general/gr_ofdm_frame_sink.h
+;;; ./general/gr_ofdm_frame_sink.h FIXME: not found
 ;; gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
 ;;                      const std::vector<unsigned char> &sym_value_out,
 ;;                      gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
 ;;                      float phase_gain, float freq_gain);
-;; (pass-if (true? (gr:ofdm_frame_sink )))
+;; (pass-if (true? (gr:ofdm-frame-sink #(1+3i 23+5i) #(1 2) 1 1 0.25 0)))
 
-;;; ./general/gr_ofdm_insert_preamble.h
+;;; ./general/gr_ofdm_insert_preamble.h FIXME: Wrong type argument in position ~A:
 ;; gr_ofdm_insert_preamble(int fft_length,
 ;;                           const std::vector<std::vector<gr_complex> > &preamble);
-;; (pass-if (true? (gr:ofdm-insert-preamble )))
+;; (pass-if (true? (gr:ofdm-insert-preamble 1 #(#(1+3i 23+5i) #(1+3i 23+5i)))))
 
-;;; ./general/gr_ofdm_mapper_bcv.h
+;;; ./general/gr_ofdm_mapper_bcv.h FIXME: Wrong type argument in position ~A:
 ;; gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation,
 ;;                       unsigned int msgq_limit,
 ;;                       unsigned int bits_per_symbol,
 ;;                       unsigned int fft_length);
-;; (pass-if (true? (gr:ofdm-mapper-bcv )))
+;; (pass-if (true? (gr:ofdm-mapper-bcv #(1+3i 23+5i) 1 1 1)))
 
 ;;; ./general/gr_ofdm_sampler.h
-;; (pass-if (true? (gr:ofdm-sampler 0 0 0))) FIXME: throws
+(pass-if (true? (gr:ofdm-sampler 1 1 1)))
 
 ;;; ./general/gr_pa_2x2_phase_combiner.h
 (pass-if (true? (gr:pa-2x2-phase-combiner)))
 
-;;; ./general/gr_packet_sink.h
-;; (pass-if (true? gr_make_packet_sink (const std::vector<unsigned char>& sync_vector,
-;;                      gr_msg_queue_sptr target_queue,
-;;                      int threshold = -1        // -1 -> use default
-;;                      );
-;; (gr:packet-sink )))
+;;; ./general/gr_packet_sink.h FIXME: not found
+;; (pass-if (true? (gr:packet-sink #(1 2) 1 -1)))
 
 ;;; ./general/gr_peak_detector2_fb.h
 (pass-if (true? (gr:peak-detector2-fb 0 0 0)))
@@ -309,7 +303,7 @@
 (pass-if (true? (gr:pll-refout-cc 0 0 0 0)))
 
 ;;; ./general/gr_pn_correlator_cc.h
-;; (pass-if (true? (gr:pn-correlator-cc 0 0 0))) FIXME: throws
+(pass-if (true? (gr:pn-correlator-cc 1 1 1)))
 
 ;;; ./general/gr_probe_avg_mag_sqrd_c.h
 (pass-if (true? (gr:probe-avg-mag-sqrd-c 0 0)))
@@ -345,7 +339,7 @@
 (pass-if (true? (gr:regenerate-bb 0 0)))
 
 ;;; ./general/gr_repeat.h
-;; (pass-if (true? (gr:repeat 0 0))) FIXME: throws
+(pass-if (true? (gr:repeat 1 1)))
 
 ;;; ./general/gr_rms_cf.h
 (pass-if (true? (gr:rms-cf 0)))
@@ -369,12 +363,10 @@
 (pass-if (true? (gr:simple-squelch-cc 0 0)))
 
 ;;; ./general/gr_skiphead.h
-;; (pass-if (true? (gr:skiphead 0 0))) FIXME: throws
+(pass-if (true? (gr:skiphead 1 1)))
 
-;;; ./general/gr_squash_ff.h
-;; gr_squash_ff_sptr gr_make_squash_ff(const std::vector<float> &igrid,
-;;                                     const std::vector<float> &ogrid);
-;; (pass-if (true? (gr:squash_ff )))
+;;; ./general/gr_squash_ff.h FIXME: not found
+;; (pass-if (true? (gr:squash_ff #(1.0 2.0) #(1.0 2.0))))
 
 ;;; ./general/gr_squelch_base_cc.h
 ;; (pass-if (true? (gr:squelch-base-cc "foo" 0 false))) FIXME: not found
@@ -383,24 +375,22 @@
 ;; (pass-if (true? (gr:squelch-base-ff "foo" 0 false))) FIXME: not found
 
 ;;; ./general/gr_stream_mux.h
-;; gr_make_stream_mux (size_t itemsize,
-;;              const std::vector<int> &lengths);
-;; (pass-if (true? (gr:stream_mux )))
+(pass-if (true? (gr:stream-mux 1 #(1 2))))
 
 ;;; ./general/gr_stream_to_streams.h
-;; (pass-if (true? (gr:stream-to-streams 0 0))) FIXME: throws
+(pass-if (true? (gr:stream-to-streams 1 1)))
 
 ;;; ./general/gr_stream_to_vector.h
-;; (pass-if (true? (gr:stream-to-vector 0 0))) FIXME: throws
+(pass-if (true? (gr:stream-to-vector 1 1)))
 
 ;;; ./general/gr_streams_to_stream.h
-;; (pass-if (true? (gr:streams-to-stream 0 0))) FIXME: throws
+(pass-if (true? (gr:streams-to-stream 1 1)))
 
 ;;; ./general/gr_streams_to_vector.h
-;; (pass-if (true? (gr:streams-to-vector 0 0))) FIXME: throws
+(pass-if (true? (gr:streams-to-vector 1 1)))
 
 ;;; ./general/gr_stretch_ff.h
-;; (pass-if (true? (gr:stretch-ff 0 0))) FIXME: throws
+(pass-if (true? (gr:stretch-ff 1 1)))
 
 ;;; ./general/gr_test.h
 (pass-if (true? (gr:test "foo" 1 1 1 1 1 1 1 1)))
@@ -409,7 +399,7 @@
 (pass-if (true? (gr:threshold-ff 0 0)))
 
 ;;; ./general/gr_throttle.h
-;; (pass-if (true? (gr:throttle 0 0)))  FIXME: throws
+(pass-if (true? (gr:throttle 1 1)))
 
 ;;; ./general/gr_uchar_to_float.h
 (pass-if (true? (gr:uchar-to-float)))
@@ -418,13 +408,13 @@
 (pass-if (true? (gr:vco-f 0 0 0)))
 
 ;;; ./general/gr_vector_to_stream.h
-;; (pass-if (true? (gr:vector-to-stream 0 0))) FIXME: throws
+(pass-if (true? (gr:vector-to-stream 1 1)))
 
 ;;; ./general/gr_vector_to_streams.h
-;; (pass-if (true? (gr:vector-to-streams 0 0))) FIXME: throws
+(pass-if (true? (gr:vector-to-streams 1 1)))
 
-;;; ./general/gr_wavelet_ff.h
-;; (pass-if (true? (gr:wavelet-ff 0 0))) FIXME: throws
+;;; ./general/gr_wavelet_ff.h FIXME: not found
+;; (pass-if (true? (gr:wavelet-ff 1024 20 true)))
 
 ;;; ./general/gr_wvps_ff.h
-;; (pass-if (true? (gr:wvps_ff 0))) FIXME: throws
+(pass-if (true? (gr:wvps-ff 2)))
