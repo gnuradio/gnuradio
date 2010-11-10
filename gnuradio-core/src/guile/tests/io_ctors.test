@@ -41,39 +41,38 @@
 ;;; ./io/gr_file_sink.h
 (pass-if (true? (gr:file-sink 1 "foo")))
 
-;;; ./io/gr_file_source.h
-;; (pass-if (true? (gr:file-source 1 "foo" false))) FIXME: not found
+;;; ./io/gr_file_source.h FIXME: not found
+;; (pass-if (true? (gr:file-source 1 "foo" false)))
 
-;;; ./io/gr_histo_sink_f.h FIXME: needs gr_msg_queue_sptr
+;;; ./io/gr_histo_sink_f.h FIXME: not found
 ;; gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
-;; (pass-if (true? (gr:histo-sink-f )))
+;; (pass-if (true? (gr:histo-sink-f 1)))
 
-;;; ./io/gr_message_sink.h
-;; (pass-if (true? (gr:message-sink )))
+;;; ./io/gr_message_sink.h FIXME: not found
+;; (pass-if (true? (gr:message-sink 1 1 false)))
 
 ;;; ./io/gr_message_source.h
 ;; (pass-if (true? (gr:message-source )))
 
-;;; ./io/gr_oscope_sink_f.h FIXME: needs gr_io_signature_sptr
+;;; ./io/gr_oscope_sink_f.h FIXME: not found
 ;; _oscope_sink_x (const std::string name, gr_io_signature_sptr input_sig,
 ;;                     double sample_rate);
-;; (pass-if (true? (gr:oscope-sink-f )))
+;; (pass-if (true? (gr:oscope-sink-f "foo" 1 1)))
 
-;;; ./io/gr_oscope_sink_x.h
-
-;; gr_oscope_sink_x (const std::string name,
-;;                     gr_io_signature_sptr input_sig,
+;;; ./io/gr_oscope_sink_x.h FIXME: not found
+;; gr_oscope_sink_x (const std::string name, gr_io_signature_sptr input_sig,
 ;;                     double sampling_rate);
-;; (pass-if (true? (gr:oscope_sink_x )))
+;; (pass-if (true? (gr:oscope_sink_x "foo" 1 1)))
 
-;;; ./io/gr_udp_sink.h
+;;; ./io/gr_udp_sink.h FIXME: not found
+;; (pass-if (true? (gr:udp-sink 1 "foo" 1472 true)))
 
-;;; ./io/gr_udp_source.h
-;; (pass-if (true? (gr:message-source 0 "foo" 0 1472 true true))) FIXME: not found
+;;; ./io/gr_udp_source.h FIXME: not found
+;; (pass-if (true? (gr:message-source 0 "foo" 0 1472 true true)))
 
-;;; ./io/gr_wavfile_sink.h
-;; (pass-if (true? (gr:message-source "foo" 1 1 1))) FIXME: not found
+;;; ./io/gr_wavfile_sink.h FIXME: not found
+;; (pass-if (true? (gr:message-source "foo" 1 1 1)))
 
-;;; ./io/gr_wavfile_source.h
-;; (pass-if (true? (gr:message-source "foo" false))) FIXME: not found
+;;; ./io/gr_wavfile_source.h FIXME: not found
+;; (pass-if (true? (gr:message-source "foo" false)))
 
