@@ -55,7 +55,8 @@
 (pass-if (true? (gr:agc-ff 0 0 0 0)))
 
 ;;; ./general/gr_align_on_samplenumbers_ss.h
-;; (pass-if (true? (gr:align-on-samplenumbers-ss 0 0))) FIXME: throws
+(pass-if (true? (gr:align-on-samplenumbers-ss 2 128)))
+(pass-if-throw "confirm throw gr:align-on-samplenumbers-ss" #t (true? (gr:align-on-samplenumbers-ss 0 0)))
 
 ;;; ./general/gr_bin_statistics_f.h
 ;; (pass-if (true? (gr:bin-statistics-f 0 0 0 0 0))) FIXME: not found
