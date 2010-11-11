@@ -20,7 +20,7 @@
 # 
 
 include $(top_srcdir)/Makefile.common
-
+#-include $(top_builddir)/gnuradio-core/src/lib/swig/guile/gnuradio_core_hier.d
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(WITH_INCLUDES)
 
@@ -37,3 +37,17 @@ swiginclude_HEADERS = \
 	hier.i \
 	gr_channel_model.i
 endif
+
+# Produce a list of the file names with the .cc stripped off
+files = $(foreach HFILE,$(libhier_la_SOURCES), $(patsubst %.cc,%,$(HFILE)))
+
+# All .lo files depend on the .i file of the same name
+define template
+-include $(DEPDIR)/$(1).d
+$(DEPDIR)/$(1).d:
+	@echo "$(1).lo: \\" > $(DEPDIR)/$(1).d
+	@cat ../swig/guile/gnuradio_core_hier.Std | sed -e '1d;' >> $(DEPDIR)/$(1).d
+endef
+
+# Generate all the dependencies at runtime
+$(foreach prog,$(files),$(eval $(call template,$(prog))))
