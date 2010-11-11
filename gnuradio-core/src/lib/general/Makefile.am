@@ -486,17 +486,3 @@ swiginclude_HEADERS =			\
 	gr_probe_mpsk_snr_c.i		\
 	gr_probe_density_b.i
 endif
-
-# Produce a list of the file names with the .cc stripped off
-files = $(foreach HFILE,$(libgeneral_la_SOURCES), $(patsubst %.cc,%,$(HFILE)))
-
-# All .lo files depend on the .i file of the same name
-define template
--include $(DEPDIR)/$(1).d
-$(DEPDIR)/$(1).d:
-	@echo "$(1).lo: \\" > $(DEPDIR)/$(1).d
-	@cat ../swig/guile/gnuradio_core_general.Std | sed -e '1d;' >> $(DEPDIR)/$(1).d
-endef
-
-# Generate all the dependencies at runtime
-$(foreach prog,$(files),$(eval $(call template,$(prog))))

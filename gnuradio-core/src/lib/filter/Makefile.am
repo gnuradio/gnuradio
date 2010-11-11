@@ -387,17 +387,3 @@ gen_sources = $(BUILT_SOURCES)
 gen_sources_deps = $(core_generator)
 par_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
 include $(top_srcdir)/Makefile.par.gen
-
-# Produce a list of the file names with the .cc stripped off
-files = $(foreach HFILE,$(libfilter_la_SOURCES), $(patsubst %.cc,%,$(HFILE)))
-
-# All .lo files depend on the .i file of the same name
-define template
--include $(DEPDIR)/$(1).d
-$(DEPDIR)/$(1).d:
-	@echo "$(1).lo: \\" > $(DEPDIR)/$(1).d
-	@cat ../swig/guile/gnuradio_core_filter.Std | sed -e '1d;' >> $(DEPDIR)/$(1).d
-endef
-
-# Generate all the dependencies at runtime
-$(foreach prog,$(files),$(eval $(call template,$(prog))))
