@@ -46,6 +46,7 @@ protected:
  private:
   size_t d_itemsize;
   std::stringstream d_sout;
+  uint64_t d_tag_counter;
 
   friend gr_random_annotator_sptr
   gr_make_random_annotator (size_t sizeof_stream_item);

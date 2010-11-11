@@ -42,6 +42,11 @@ gr_random_annotator::gr_random_annotator (size_t sizeof_stream_item)
 		   gr_make_io_signature (1, -1, sizeof_stream_item)),
     d_itemsize(sizeof_stream_item)
 {
+  //set_tag_propagation_policy(TPP_DONT);
+  set_tag_propagation_policy(TPP_ALL_TO_ALL);
+  //set_tag_propagation_policy(TPP_ONE_TO_ONE);
+
+  d_tag_counter = 0;
 }
 
 gr_random_annotator::~gr_random_annotator ()
@@ -86,7 +91,7 @@ gr_random_annotator::work (int noutput_items,
   }
 
   // Storing the current noutput_items as the value to the "noutput_items" key
-  pmt::pmt_t cur_N = pmt::pmt_from_uint64(random());
+  pmt::pmt_t cur_N = pmt::pmt_from_uint64(d_tag_counter++);
   pmt::pmt_t srcid = pmt::pmt_string_to_symbol(str.str());
   pmt::pmt_t key = pmt::pmt_string_to_symbol("noutput_items");
   add_item_tag(0, abs_N, key, cur_N, srcid);

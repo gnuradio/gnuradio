@@ -343,9 +343,9 @@ gr_block_executor::run_one_iteration()
     for (int i = 0; i < d->noutputs (); i++)
       d_output_items[i] = d->output(i)->write_pointer();
 
-    // store number of items consumed so far on in stream
+    // determine where to start looking for new tags as 1 past nitems read
     for (int i = 0; i < d->ninputs(); i++)
-      d_start_nitems_read[i] = d->nitems_read(i);
+      d_start_nitems_read[i] = d->nitems_read(i)+1;
 
     // Do the actual work of the block
     int n = m->general_work (noutput_items, d_ninput_items,
