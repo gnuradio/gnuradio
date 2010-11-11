@@ -134,7 +134,7 @@ gnuradio/%.scm : %.i
 	@test -d "guile" || $(mkinstalldirs) "guile"
 	@test -d "gnuradio" || $(mkinstalldirs) "gnuradio"
 	$(SWIG) $(STD_SWIG_GUILE_ARGS) $($*_swig_args) \
-		-MF guile/$*.Std \
+		-MD -MF guile/$*.Std \
 		-module $* -o guile/$*.cc $<
 	sed -e 's:guile/gnuradio_core_runtime.cc:gnuradio_core_runtime.scm:' guile/$*.Std > guile/$*.d
 	$(SED) -i -e 's/<--dummy-[0-9]\+-->/<top>/g' gnuradio/$*.scm
@@ -147,7 +147,7 @@ endif
 	@echo "Compile .i to .py"
 	@test -d "python" || $(mkinstalldirs) "python"
 	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $($*_swig_args) \
-		-MF python/$*.Std \
+		-MD -MF python/$*.Std \
 		-module $* -o python/$*.cc -oh python/$*.h $<
 	sed -e 's:python/gnuradio_core_runtime.cc:gnuradio_core_runtime.py:' python/$*.Std > python/$*.d
 #	$(RM) python/$*.Std
