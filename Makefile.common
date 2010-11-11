@@ -134,12 +134,12 @@ gnuradio/%.scm : %.i
 	@test -d "guile" || $(mkinstalldirs) "guile"
 	@test -d "gnuradio" || $(mkinstalldirs) "gnuradio"
 	$(SWIG) $(STD_SWIG_GUILE_ARGS) $($*_swig_args) \
-		-MD -MF guile/$*.Std \
+		-MF guile/$*.Std \
 		-module $* -o guile/$*.cc $<
 	sed -e 's:guile/gnuradio_core_runtime.cc:gnuradio_core_runtime.scm:' guile/$*.Std > guile/$*.d
-	$(RM) guile/$*.Std $*.Std
 	$(SED) -i -e 's/<--dummy-[0-9]\+-->/<top>/g' gnuradio/$*.scm
 	$(SED) -i -e 's/^(export /(export-safely /' gnuradio/$*.scm
+#	$(RM) guile/$*.Std $*.Std
 endif
 
 # Compile a .i file to what python needs
@@ -147,10 +147,10 @@ endif
 	@echo "Compile .i to .py"
 	@test -d "python" || $(mkinstalldirs) "python"
 	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $($*_swig_args) \
-		-MD -MF python/$*.Std \
+		-MF python/$*.Std \
 		-module $* -o python/$*.cc -oh python/$*.h $<
 	sed -e 's:python/gnuradio_core_runtime.cc:gnuradio_core_runtime.py:' python/$*.Std > python/$*.d
-	$(RM) python/$*.Std
+#	$(RM) python/$*.Std
 
 # Don't distribute the files defined in the variable 'no_dist_files'
 no_dist_dirs = python gnuradio guile
