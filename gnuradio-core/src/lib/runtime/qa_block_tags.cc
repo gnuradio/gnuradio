@@ -89,8 +89,9 @@ qa_block_tags::t1 ()
   tb->connect(ann1, 0, ann3, 0);
   tb->connect(ann2, 0, ann4, 0);
 
-  tb->connect(ann1, 0, snk0, 0);
-  tb->connect(ann2, 0, snk1, 0);
+  tb->connect(ann3, 0, snk0, 0);
+  tb->connect(ann4, 0, snk1, 0);
+
   tb->run();
 }
 
