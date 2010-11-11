@@ -175,7 +175,9 @@ libgeneral_la_SOURCES = 		\
 	gr_descrambler_bb.cc		\
 	gr_scrambler_bb.cc		\
 	gr_probe_mpsk_snr_c.cc		\
-	gr_probe_density_b.cc
+	gr_probe_density_b.cc		\
+	gr_annotator_1toall.cc		\
+	gr_annotator_1to1.cc
 
 libgeneral_qa_la_SOURCES = 		\
 	qa_general.cc			\
@@ -344,7 +346,8 @@ grinclude_HEADERS = 			\
 	gr_descrambler_bb.h		\
 	gr_scrambler_bb.h		\
 	gr_probe_mpsk_snr_c.h		\
-	gr_probe_density_b.h
+	gr_probe_density_b.h		\
+	gr_annotator_1toall.h
 
 noinst_HEADERS = 			\
 	qa_general.h			\
@@ -484,5 +487,7 @@ swiginclude_HEADERS =			\
 	gr_descrambler_bb.i		\
 	gr_scrambler_bb.i		\
 	gr_probe_mpsk_snr_c.i		\
-	gr_probe_density_b.i
+	gr_probe_density_b.i		\
+	gr_annotator_1toall.i		\
+	gr_annotator_1to1.i
 endif

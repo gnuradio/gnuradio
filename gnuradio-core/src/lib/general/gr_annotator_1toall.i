@@ -20,13 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,random_annotator);
+GR_SWIG_BLOCK_MAGIC(gr,annotator_1toall);
 
-gr_random_annotator_sptr gr_make_random_annotator (size_t sizeof_stream_item);
+gr_annotator_1toall_sptr gr_make_annotator_1toall (size_t sizeof_stream_item);
 
-class gr_random_annotator : public gr_sync_block
+class gr_annotator_1toall : public gr_sync_block
 {
 private:
-  gr_random_annotator (size_t sizeof_stream_item);
+  gr_annotator_1toall (size_t sizeof_stream_item);
 };
 

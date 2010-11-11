@@ -24,38 +24,36 @@
 #include "config.h"
 #endif
 
-#include <gr_random_annotator.h>
+#include <gr_annotator_1toall.h>
 #include <gr_io_signature.h>
 #include <string.h>
 #include <iostream>
 #include <iomanip>
 
-gr_random_annotator_sptr
-gr_make_random_annotator (size_t sizeof_stream_item)
+gr_annotator_1toall_sptr
+gr_make_annotator_1toall (size_t sizeof_stream_item)
 {
-  return gnuradio::get_initial_sptr (new gr_random_annotator (sizeof_stream_item));
+  return gnuradio::get_initial_sptr (new gr_annotator_1toall (sizeof_stream_item));
 }
 
-gr_random_annotator::gr_random_annotator (size_t sizeof_stream_item)
-  : gr_sync_block ("random_annotator",
-		   gr_make_io_signature (1, -1, sizeof_stream_item),
+gr_annotator_1toall::gr_annotator_1toall (size_t sizeof_stream_item)
+  : gr_sync_block ("annotator_1toall",
+		   gr_make_io_signature (1, 1, sizeof_stream_item),
 		   gr_make_io_signature (1, -1, sizeof_stream_item)),
     d_itemsize(sizeof_stream_item)
 {
-  //set_tag_propagation_policy(TPP_DONT);
   set_tag_propagation_policy(TPP_ALL_TO_ALL);
-  //set_tag_propagation_policy(TPP_ONE_TO_ONE);
 
   d_tag_counter = 0;
 }
 
-gr_random_annotator::~gr_random_annotator ()
+gr_annotator_1toall::~gr_annotator_1toall ()
 {
   std::cout << d_sout.str();
 }
 
 int
-gr_random_annotator::work (int noutput_items,
+gr_annotator_1toall::work (int noutput_items,
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
 {
@@ -84,17 +82,18 @@ gr_random_annotator::work (int noutput_items,
 	   << std::endl;
   }
   
-  // Work does nothing to the data stream; just copy all inputs to outputs
-  int ninputs = input_items.size();
-  for (int i = 0; i < ninputs; i++){
-    memcpy(out[i], in[i], noutput_items * d_itemsize);
-  }
 
   // Storing the current noutput_items as the value to the "noutput_items" key
   pmt::pmt_t cur_N = pmt::pmt_from_uint64(d_tag_counter++);
   pmt::pmt_t srcid = pmt::pmt_string_to_symbol(str.str());
-  pmt::pmt_t key = pmt::pmt_string_to_symbol("noutput_items");
-  add_item_tag(0, abs_N, key, cur_N, srcid);
+  pmt::pmt_t key = pmt::pmt_string_to_symbol("seq");
+
+  // Work does nothing to the data stream; just copy all inputs to outputs
+  int noutputs = output_items.size();
+  for (int i = 0; i < noutputs; i++) {
+    memcpy(out[i], in[0], noutput_items * d_itemsize);
+    add_item_tag(i, abs_N, key, cur_N, srcid);
+  }
 
   return noutput_items;
 }

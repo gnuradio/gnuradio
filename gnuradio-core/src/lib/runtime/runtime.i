@@ -33,7 +33,6 @@
 #include <gr_msg_queue.h>
 #include <gr_dispatcher.h>
 #include <gr_error_handler.h>
-#include <gr_random_annotator.h>
 #include <gr_realtime.h>
 #include <gr_sync_block.h>
 #include <gr_sync_decimator.h>
@@ -54,7 +53,6 @@
 %include <gr_msg_queue.i>
 %include <gr_dispatcher.i>
 %include <gr_error_handler.i>
-%include <gr_random_annotator.i>
 %include <gr_realtime.i>
 %include <gr_sync_block.i>
 %include <gr_sync_decimator.i>

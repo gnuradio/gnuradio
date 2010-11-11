@@ -20,36 +20,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_RANDOM_ANNOTATOR_H
-#define	INCLUDED_GR_RANDOM_ANNOTATOR_H
+#ifndef INCLUDED_GR_ANNOTATOR_1TOALL_H
+#define	INCLUDED_GR_ANNOTATOR_1TOALL_H
 
 #include <gr_sync_block.h>
 
-class gr_random_annotator;
-typedef boost::shared_ptr<gr_random_annotator> gr_random_annotator_sptr;
+class gr_annotator_1toall;
+typedef boost::shared_ptr<gr_annotator_1toall> gr_annotator_1toall_sptr;
 
 // public constructor
-gr_random_annotator_sptr 
-gr_make_random_annotator (size_t sizeof_stream_item);
+gr_annotator_1toall_sptr 
+gr_make_annotator_1toall (size_t sizeof_stream_item);
 
-class gr_random_annotator : public gr_sync_block
+class gr_annotator_1toall : public gr_sync_block
 {
  public:
-  ~gr_random_annotator ();
+  ~gr_annotator_1toall ();
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
 
 protected:
-  gr_random_annotator (size_t sizeof_stream_item);
+  gr_annotator_1toall (size_t sizeof_stream_item);
 
  private:
   size_t d_itemsize;
   std::stringstream d_sout;
   uint64_t d_tag_counter;
 
-  friend gr_random_annotator_sptr
-  gr_make_random_annotator (size_t sizeof_stream_item);
+  friend gr_annotator_1toall_sptr
+  gr_make_annotator_1toall (size_t sizeof_stream_item);
 };
 
 #endif
