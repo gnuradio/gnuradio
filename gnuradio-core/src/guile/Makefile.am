@@ -49,7 +49,3 @@ noinst_DATA = \
 	tests/io_ctors.test
 
 CLEANFILES = guile.log
-
-check-am: all-am
-	@test -d "tests" || $(mkinstalldirs) "tests"
-	$(MAKE) $(AM_MAKEFLAGS) check-TESTS

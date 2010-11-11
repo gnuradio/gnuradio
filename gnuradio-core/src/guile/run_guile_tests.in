@@ -12,4 +12,4 @@
 #    "" \
 #    ""
 
-@GUILE@ -e main -c '(use-modules (gnuradio test-suite guile-test))' -t tests
+@GUILE@ -e main -c '(use-modules (gnuradio test-suite guile-test))' -t @srcdir@/tests
