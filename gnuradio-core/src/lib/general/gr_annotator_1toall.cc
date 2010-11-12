@@ -31,69 +31,69 @@
 #include <iomanip>
 
 gr_annotator_1toall_sptr
-gr_make_annotator_1toall (size_t sizeof_stream_item)
+gr_make_annotator_1toall (size_t sizeof_stream_item, float rel_rate)
 {
-  return gnuradio::get_initial_sptr (new gr_annotator_1toall (sizeof_stream_item));
+  return gnuradio::get_initial_sptr (new gr_annotator_1toall (sizeof_stream_item, rel_rate));
 }
 
-gr_annotator_1toall::gr_annotator_1toall (size_t sizeof_stream_item)
-  : gr_sync_block ("annotator_1toall",
-		   gr_make_io_signature (1, 1, sizeof_stream_item),
-		   gr_make_io_signature (1, -1, sizeof_stream_item)),
-    d_itemsize(sizeof_stream_item)
+gr_annotator_1toall::gr_annotator_1toall (size_t sizeof_stream_item, float rel_rate)
+  : gr_block ("annotator_1toall",
+	      gr_make_io_signature (1, 1, sizeof_stream_item),
+	      gr_make_io_signature (1, -1, sizeof_stream_item)),
+    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate)
 {
   set_tag_propagation_policy(TPP_ALL_TO_ALL);
 
   d_tag_counter = 0;
+  set_relative_rate(d_rel_rate);
 }
 
 gr_annotator_1toall::~gr_annotator_1toall ()
 {
-  std::cout << d_sout.str();
 }
 
 int
-gr_annotator_1toall::work (int noutput_items,
-			   gr_vector_const_void_star &input_items,
-			   gr_vector_void_star &output_items)
+gr_annotator_1toall::general_work (int noutput_items,
+				   gr_vector_int &ninput_items,
+				   gr_vector_const_void_star &input_items,
+				   gr_vector_void_star &output_items)
 {
-  const float **in = (const float **) &input_items[0];
-  float **out = (float **) &output_items[0];
+  const float *in = (const float *) input_items[0];
+  float *out = (float *) output_items[0];
 
   std::stringstream str;
   str << name() << unique_id();
 
-  uint64_t abs_N = nitems_read(0) + noutput_items;
-  std::vector<pmt::pmt_t> all_tags = get_tags_in_range(0, (uint64_t)0, abs_N);
+  uint64_t abs_N = nitems_read(0);
+  std::vector<pmt::pmt_t> all_tags = get_tags_in_range(0, abs_N, abs_N + noutput_items);
   std::vector<pmt::pmt_t>::iterator itr;
 
-  d_sout << std::endl << "Found " << all_tags.size() << " tags." << std::endl;
-  d_sout.setf(std::ios::left);
-  d_sout << std::setw(25) << "Receiver" << std::setw(25) << "Sender"
-	 << std::setw(10) << "nitem" << std::setw(20) << "key"
-	 << std::setw(10) << "value" << std::endl;
-
   for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
-    d_sout << std::setw(25) << str.str()
-	   << std::setw(25) << pmt::pmt_tuple_ref(*itr, 1)
-	   << std::setw(10) << pmt::pmt_tuple_ref(*itr, 0)
-	   << std::setw(20) << pmt::pmt_tuple_ref(*itr, 2)
-	   << std::setw(10) << pmt::pmt_tuple_ref(*itr, 3)
-	   << std::endl;
+    d_stored_tags.push_back(*itr);
   }
-  
 
-  // Storing the current noutput_items as the value to the "noutput_items" key
-  pmt::pmt_t cur_N = pmt::pmt_from_uint64(d_tag_counter++);
+  // Source ID and key for any tag that might get applied from this block
   pmt::pmt_t srcid = pmt::pmt_string_to_symbol(str.str());
   pmt::pmt_t key = pmt::pmt_string_to_symbol("seq");
 
   // Work does nothing to the data stream; just copy all inputs to outputs
+  // Adds a new tag when the number of items read is a multiple of N
+  uint64_t N = 10000;
   int noutputs = output_items.size();
-  for (int i = 0; i < noutputs; i++) {
-    memcpy(out[i], in[0], noutput_items * d_itemsize);
-    add_item_tag(i, abs_N, key, cur_N, srcid);
+  for(int j = 0; j < noutput_items; j++) {
+    abs_N++;
+    
+    for(int i = 0; i < noutputs; i++) {
+      if(abs_N % N == 0) {
+	pmt::pmt_t value = pmt::pmt_from_uint64(d_tag_counter++);
+	add_item_tag(i, abs_N, key, value, srcid);
+      }
+
+      out = (float*)output_items[i];
+      out[j] = in[j];
+    }
   }
 
+  consume_each(noutput_items);
   return noutput_items;
 }
