@@ -37,8 +37,9 @@ noinst_PYTHON = 			\
 	qa_alsa.py
 
 if GUILE
-	TESTS += run_guile_tests
-noinst_GUILE = 			\
+TESTS += run_guile_tests
+
+noinst_GUILE = \
 	audio_alsa.test
 endif
 
