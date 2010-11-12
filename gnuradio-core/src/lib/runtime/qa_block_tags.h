@@ -32,11 +32,13 @@ class qa_block_tags : public CppUnit::TestCase {
   CPPUNIT_TEST_SUITE (qa_block_tags);
   CPPUNIT_TEST (t0);
   CPPUNIT_TEST (t1);
+  //CPPUNIT_TEST (t2);
   CPPUNIT_TEST_SUITE_END ();
 
  private:
   void t0 ();
   void t1 ();
+  void t2 ();
 
 };
 
