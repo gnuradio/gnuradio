@@ -24,7 +24,7 @@ function add_local_paths(){
   fi
   [ -n "$1" ] && prepend GUILE_LOAD_PATH "$1"
   [ -n "$2" ] && prepend LTDL_LIBRARY_PATH "$2/.libs"
-  [ -n "$3" ] && prepend LTDL_LIBRARY_PATH "$3/.libs"
+  [ -n "$3" -a "$2" != "$3" ] && prepend LTDL_LIBRARY_PATH "$3/.libs"
   [ -n "$3" ] && prepend GUILE_LOAD_PATH "$3"
 }
 
