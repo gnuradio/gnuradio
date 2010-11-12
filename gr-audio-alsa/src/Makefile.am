@@ -21,7 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = run_tests.in
+TESTS =
+
+EXTRA_DIST = run_tests.in run_guile_tests.in
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
@@ -35,8 +37,9 @@ noinst_PYTHON = 			\
 	qa_alsa.py
 
 if GUILE
+	TESTS += run_guile_tests
 noinst_GUILE = 			\
-	qa_alsa.scm
+	audio_alsa.test
 endif
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
@@ -60,7 +63,7 @@ libgnuradio_audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 if PYTHON
 ###################################
 # SWIG Python interface and library
-TESTS = run_tests
+TESTS += run_tests
 DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES = 			\

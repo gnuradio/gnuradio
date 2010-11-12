@@ -6,10 +6,9 @@
 # 2nd argument is absolute path to component C++ shared library build directory
 # 3nd argument is absolute path to component SWIG build directory
 
-# We're in gnuradio-core, we don't need these
-# add_local_paths \
-#    "" \
-#    "" \
-#    ""
+add_local_paths \
+    @srcdir@ \
+    @abs_builddir@ \
+    @abs_builddir@
 
-@GUILE@ -e main -c '(use-modules (gnuradio test-suite guile-test))' -t @srcdir@/tests
+@GUILE@ -e main -c '(use-modules (gnuradio test-suite guile-test))' -t @srcdir@

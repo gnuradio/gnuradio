@@ -37,11 +37,13 @@ AC_DEFUN([GRC_GR_AUDIO_ALSA],[
         gr-audio-alsa/Makefile \
 	gr-audio-alsa/gnuradio-audio-alsa.pc \
         gr-audio-alsa/src/Makefile \
+	gr-audio-alsa/src/run_guile_tests \
         gr-audio-alsa/src/run_tests \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-audio-alsa,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_alsa], [chmod +x gr-audio-alsa/src/run_tests])
+        AC_CONFIG_COMMANDS([run_tests_alsa],
+			   [chmod +x gr-audio-alsa/src/run_tests gr-audio-alsa/src/run_guile_tests])
     ])
 ])

@@ -12,8 +12,8 @@ abs_top_builddir=@abs_top_builddir@
 # FIXME add in withdirs
 
 
-# 1st argument is absolute path to component C++ shared library build directory
-# 2nd argument is absolute path to hand coded guile source directory
+# 1st argument is absolute path to hand coded guile source directory
+# 2nd argument is absolute path to component C++ shared library build directory
 # 3nd argument is absolute path to component SWIG build directory
 
 function add_local_paths(){
@@ -22,11 +22,10 @@ function add_local_paths(){
     echo "$0: requires 3 args" 1>&2
     exit 1
   fi
-  echo FIXME: $0: implement add_local_paths
-  # [ -n "$1" ] && prepend LTDL_LIBRARY_PATH "$1/.libs"
-  # [ -n "$2" ] && prepend GUILE_LOAD_PATH "$2"
-  # [ -n "$3" ] && prepend LTDL_LIBRARY_PATH "$3/.libs"
-  # [ -n "$3" ] && prepend GUILE_LOAD_PATH "$3/guile"
+  [ -n "$1" ] && prepend GUILE_LOAD_PATH "$1"
+  [ -n "$2" ] && prepend LTDL_LIBRARY_PATH "$2/.libs"
+  [ -n "$3" ] && prepend LTDL_LIBRARY_PATH "$3/.libs"
+  [ -n "$3" ] && prepend GUILE_LOAD_PATH "$3"
 }
 
 # usage: prepend <path-varname> <dir>
