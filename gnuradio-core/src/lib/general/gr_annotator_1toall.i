@@ -27,8 +27,8 @@ gr_annotator_1toall_sptr gr_make_annotator_1toall (size_t sizeof_stream_item, fl
 class gr_annotator_1toall : public gr_block
 {
 public:
-  void set_rel_rate(float rrate) { d_rel_rate = rrate; set_relative_rate(d_rel_rate); }
-  float rel_rate() { return d_rel_rate; }
+  void set_rel_rate(float rrate);
+  float rel_rate();
   std::vector<pmt::pmt_t> data() const;
   
 private:

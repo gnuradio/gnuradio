@@ -22,11 +22,16 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,annotator_1to1);
 
-gr_annotator_1to1_sptr gr_make_annotator_1to1 (size_t sizeof_stream_item);
+gr_annotator_1to1_sptr gr_make_annotator_1to1 (size_t sizeof_stream_item, float rel_rate);
 
-class gr_annotator_1to1 : public gr_sync_block
+class gr_annotator_1to1 : public gr_block
 {
+public:
+  void set_rel_rate(float rrate);
+  float rel_rate();
+  std::vector<pmt::pmt_t> data() const;
+  
 private:
-  gr_annotator_1to1 (size_t sizeof_stream_item);
+  gr_annotator_1to1 (size_t sizeof_stream_item, float rel_rate);
 };
 
