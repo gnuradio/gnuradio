@@ -87,7 +87,7 @@ min_available_space (gr_block_detail *d, int output_multiple)
   return min_space;
 }
 
-static void
+static int
 propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
 	       const std::vector<uint64_t> &start_nitems_read)
 {
@@ -95,17 +95,18 @@ propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
   // if a sink, we don't need to move downstream;
   // and do not bother if block uses TAGS_NONE attribute
   if(d->sink_p()) {
-    return;
+    return 0;
   }
 
   switch(policy) {
   case(gr_block::TPP_DONT):
-    return;
+    return 0;
     break;
   case(gr_block::TPP_ALL_TO_ALL):
     // every tag on every input propogates to everyone downstream
     for(int i = 0; i < d->ninputs(); i++) {
-      std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, start_nitems_read[i], d->nitems_read(i));
+      std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, start_nitems_read[i],
+							   d->nitems_read(i));
       std::vector<pmt::pmt_t>::iterator t;
       for(t = tuple.begin(); t != tuple.end(); t++ ) {
 	for(int o = 0; o < d->noutputs(); o++)
@@ -119,20 +120,24 @@ propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
     // type of tag-propagation system is selected in gr_block_detail
     if(d->ninputs() == d->noutputs()) {
       for(int i = 0; i < d->ninputs(); i++) {
-	std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, start_nitems_read[i], d->nitems_read(i));
+	std::vector<pmt::pmt_t> tuple = d->get_tags_in_range(i, start_nitems_read[i],
+							     d->nitems_read(i));
 	std::vector<pmt::pmt_t>::iterator t;
 	for(t = tuple.begin(); t != tuple.end(); t++ ) {
 	  d->output(i)->add_item_tag(*t);
 	}
       }
     }
-    else 
-      throw std::invalid_argument ("propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs");
+    else  {
+      std::cerr << "Error: propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs" << std::endl;
+      return -1;
+    }
     
     break;
   default:
-    return;
+    return 0;
   }
+  return 0;
 }
 
 gr_block_executor::gr_block_executor (gr_block_sptr block)
@@ -353,7 +358,8 @@ gr_block_executor::run_one_iteration()
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
 
-    propagate_tags(m->tag_propagation_policy(), d, d_start_nitems_read);
+    if(propagate_tags(m->tag_propagation_policy(), d, d_start_nitems_read) == -1)
+      goto were_done;
 
     if (n == gr_block::WORK_DONE)
       goto were_done;
