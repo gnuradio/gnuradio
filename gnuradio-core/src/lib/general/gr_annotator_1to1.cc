@@ -64,12 +64,16 @@ gr_annotator_1to1::general_work (int noutput_items,
   std::stringstream str;
   str << name() << unique_id();
 
-  uint64_t abs_N = nitems_read(0);
-  std::vector<pmt::pmt_t> all_tags = get_tags_in_range(0, abs_N, abs_N + noutput_items);
+  uint64_t abs_N = 0;
+  int ninputs = ninput_items.size();
+  for(int i = 0; i < ninputs; i++) {
+    abs_N = nitems_read(i);
+    std::vector<pmt::pmt_t> all_tags = get_tags_in_range(i, abs_N, abs_N + noutput_items);
 
-  std::vector<pmt::pmt_t>::iterator itr;
-  for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
-    d_stored_tags.push_back(*itr);
+    std::vector<pmt::pmt_t>::iterator itr;
+    for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
+      d_stored_tags.push_back(*itr);
+    }
   }
 
   // Storing the current noutput_items as the value to the "noutput_items" key
@@ -78,12 +82,16 @@ gr_annotator_1to1::general_work (int noutput_items,
 
   // Work does nothing to the data stream; just copy all inputs to outputs
   // Adds a new tag when the number of items read is a multiple of N
+  abs_N = nitems_read(0);
   uint64_t N = 10000;
   int noutputs = output_items.size();
   for(int j = 0; j < noutput_items; j++) {
     abs_N++;
     
-    for(int i = 0; i < noutputs; i++) {
+    // the min() is a hack to make sure this doesn't segfault if there are a
+    // different number of ins and outs. This is specifically designed to test
+    // the 1-to-1 propagation policy.
+    for(int i = 0; i < std::min(noutputs, ninputs); i++) {
       if(abs_N % N == 0) {
 	pmt::pmt_t value = pmt::pmt_from_uint64(d_tag_counter++);
 	add_item_tag(i, abs_N, key, value, srcid);
