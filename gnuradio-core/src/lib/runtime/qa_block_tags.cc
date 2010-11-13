@@ -29,7 +29,7 @@
 #include <gr_null_source.h>
 #include <gr_null_sink.h>
 #include <gr_head.h>
-#include <gr_annotator_1toall.h>
+#include <gr_annotator_alltoall.h>
 #include <gr_annotator_1to1.h>
 #include <gruel/pmt.h>
 
@@ -75,11 +75,11 @@ qa_block_tags::t1 ()
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
   gr_block_sptr head (gr_make_head(sizeof(int), N));
-  gr_annotator_1toall_sptr ann0 (gr_make_annotator_1toall(sizeof(int)));
-  gr_annotator_1toall_sptr ann1 (gr_make_annotator_1toall(sizeof(int)));
-  gr_annotator_1toall_sptr ann2 (gr_make_annotator_1toall(sizeof(int)));
-  gr_annotator_1toall_sptr ann3 (gr_make_annotator_1toall(sizeof(int)));
-  gr_annotator_1toall_sptr ann4 (gr_make_annotator_1toall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann0 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann3 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann4 (gr_make_annotator_alltoall(sizeof(int)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
   
@@ -144,7 +144,6 @@ qa_block_tags::t1 ()
   }
 }
 
-
 void
 qa_block_tags::t2 ()
 {
@@ -154,9 +153,103 @@ qa_block_tags::t2 ()
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
   gr_block_sptr head (gr_make_head(sizeof(int), N));
+  gr_annotator_alltoall_sptr ann0 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann3 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann4 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
+  gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
+  gr_block_sptr snk2 (gr_make_null_sink(sizeof(int)));
+  
+  tb->connect(src, 0, head, 0);
+  tb->connect(head, 0, ann0, 0);
+
+  tb->connect(ann0, 0, ann1, 0);
+  tb->connect(ann0, 1, ann1, 1);
+  tb->connect(ann1, 0, ann2, 0);
+  tb->connect(ann1, 1, ann3, 0);
+  tb->connect(ann1, 2, ann4, 0);
+
+  tb->connect(ann2, 0, snk0, 0);
+  tb->connect(ann3, 0, snk1, 0);
+  tb->connect(ann4, 0, snk2, 0);
+
+  tb->run();
+
+  // Kludge together the tags that we know should result from the above graph
+  std::stringstream str0, str1;
+  str0 << ann0->name() << ann0->unique_id();
+  str1 << ann1->name() << ann1->unique_id();
+
+  pmt_t expected_tags2[12];
+  expected_tags2[0] = mp(pmt_from_uint64(10000), mp(str1.str()), mp("seq"), mp(0));
+  expected_tags2[1] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(0));
+  expected_tags2[2] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(1));
+  expected_tags2[3] = mp(pmt_from_uint64(20000), mp(str1.str()), mp("seq"), mp(3));
+  expected_tags2[4] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(2));
+  expected_tags2[5] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(3));
+  expected_tags2[6] = mp(pmt_from_uint64(30000), mp(str1.str()), mp("seq"), mp(6));
+  expected_tags2[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(4));
+  expected_tags2[8] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(5));
+  expected_tags2[9] = mp(pmt_from_uint64(40000), mp(str1.str()), mp("seq"), mp(9));
+  expected_tags2[10] = mp(pmt_from_uint64(40000), mp(str0.str()), mp("seq"), mp(6));
+  expected_tags2[11] = mp(pmt_from_uint64(40000), mp(str0.str()), mp("seq"), mp(7));
+
+  pmt_t expected_tags4[12];
+  expected_tags4[0] = mp(pmt_from_uint64(10000), mp(str1.str()), mp("seq"), mp(2));
+  expected_tags4[1] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(0));
+  expected_tags4[2] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(1));
+  expected_tags4[3] = mp(pmt_from_uint64(20000), mp(str1.str()), mp("seq"), mp(5));
+  expected_tags4[4] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(2));
+  expected_tags4[5] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(3));
+  expected_tags4[6] = mp(pmt_from_uint64(30000), mp(str1.str()), mp("seq"), mp(8));
+  expected_tags4[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(4));
+  expected_tags4[8] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(5));
+  expected_tags4[9] = mp(pmt_from_uint64(40000), mp(str1.str()), mp("seq"), mp(11));
+  expected_tags4[10] = mp(pmt_from_uint64(40000), mp(str0.str()), mp("seq"), mp(6));
+  expected_tags4[11] = mp(pmt_from_uint64(40000), mp(str0.str()), mp("seq"), mp(7));
+
+  std::vector<pmt::pmt_t> tags0 = ann0->data();
+  std::vector<pmt::pmt_t> tags1 = ann1->data();
+  std::vector<pmt::pmt_t> tags2 = ann2->data();
+  std::vector<pmt::pmt_t> tags4 = ann4->data();
+
+  // The first annotator does not receive any tags from the null sink upstream
+  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
+  CPPUNIT_ASSERT_EQUAL(tags1.size(), (size_t)8);
+
+  // For annotator[2-4], we know it gets tags from ann0 and ann1
+  // but the tags from the different outputs of ann1 are different for each.
+  // Just testing ann2 and ann4; if they are correct it would be
+  // inconceivable for ann3 to have it wrong.
+  for(size_t i = 0; i < tags2.size(); i++) {
+    std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
+    //pmt_equal(tags2[i], expected_tags2[i])
+    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags2[i]), pmt_write_string(expected_tags2[i]));
+  }
+
+  std::cout << std::endl;
+  for(size_t i = 0; i < tags4.size(); i++) {
+    std::cout << "tags2[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
+    //pmt_equal(tags4[i], expected_tags4[i])
+    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags4[i]), pmt_write_string(expected_tags4[i]));
+  }
+}
+
+
+void
+qa_block_tags::t3 ()
+{
+  printf("\nqa_block_tags::t3\n");
+
+  int N = 40000;
+  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr_block_sptr src (gr_make_null_source(sizeof(int)));
+  gr_block_sptr head (gr_make_head(sizeof(int), N));
   gr_annotator_1to1_sptr ann0 (gr_make_annotator_1to1(sizeof(int)));
-  gr_annotator_1toall_sptr ann1 (gr_make_annotator_1toall(sizeof(int)));
-  gr_annotator_1toall_sptr ann2 (gr_make_annotator_1toall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(sizeof(int)));
   gr_annotator_1to1_sptr ann3 (gr_make_annotator_1to1(sizeof(int)));
   gr_annotator_1to1_sptr ann4 (gr_make_annotator_1to1(sizeof(int)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
@@ -222,5 +315,33 @@ qa_block_tags::t2 ()
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags4[i]), pmt_write_string(expected_tags4[i]));
   }
+}
+
+
+void
+qa_block_tags::t4 ()
+{
+  printf("\nqa_block_tags::t4\n");
+
+  int N = 40000;
+  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr_block_sptr src (gr_make_null_source(sizeof(int)));
+  gr_block_sptr head (gr_make_head(sizeof(int), N));
+  gr_annotator_1to1_sptr ann0 (gr_make_annotator_1to1(sizeof(int)));
+  gr_annotator_1to1_sptr ann1 (gr_make_annotator_1to1(sizeof(int)));
+  gr_annotator_1to1_sptr ann2 (gr_make_annotator_1to1(sizeof(int)));
+  gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
+  gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
+
+  // using 1-to-1 tag propagation without having equal number of
+  // ins and outs. Make sure this works; will just exit run early.
+  tb->connect(src, 0, head, 0);
+  tb->connect(head, 0, ann0, 0);
+  tb->connect(ann0, 0, ann1, 0);
+  tb->connect(ann0, 1, ann2, 0);
+  tb->connect(ann1, 0, snk0, 0);
+  tb->connect(ann2, 0, snk1, 0);
+
+  tb->run();
 }
 
