@@ -23,7 +23,8 @@
 GR_SWIG_BLOCK_MAGIC(gr, fft_vfc)
 
 gr_fft_vfc_sptr 
-gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float> &window);
+gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float> &window)
+throw(std::exception);
 
 class gr_fft_vfc : public gr_sync_block
 {
