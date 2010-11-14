@@ -53,6 +53,12 @@ In no particular order:
 14) Add support to setup_guile_test_env.in for
     "withlibs", OS/X (DYLD_LIBRARY_PATH), windows (PATH)
 
+15) Rewrite gr-run-waveform as C/C++ code that embeds guile.
+    See if we can't statically link libguile into this.
+    Will need to figure out which packages provide libguile.a.
+
+16) Test this stuff with Guile 1.9 to confirm that it works and to see
+    how much faster it is.  Load time currently is currently kind of doggy.
 
 
 I'm sure I'm forgetting some things...
