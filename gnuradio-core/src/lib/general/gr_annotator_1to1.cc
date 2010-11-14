@@ -31,16 +31,19 @@
 #include <iomanip>
 
 gr_annotator_1to1_sptr
-gr_make_annotator_1to1 (size_t sizeof_stream_item, float rel_rate)
+gr_make_annotator_1to1 (uint64_t when, size_t sizeof_stream_item,
+			float rel_rate)
 {
-  return gnuradio::get_initial_sptr (new gr_annotator_1to1 (sizeof_stream_item, rel_rate));
+  return gnuradio::get_initial_sptr (new gr_annotator_1to1
+				     (when, sizeof_stream_item, rel_rate));
 }
 
-gr_annotator_1to1::gr_annotator_1to1 (size_t sizeof_stream_item, float rel_rate)
+gr_annotator_1to1::gr_annotator_1to1 (uint64_t when, size_t sizeof_stream_item,
+				      float rel_rate)
   : gr_block ("annotator_1to1",
 	      gr_make_io_signature (1, -1, sizeof_stream_item),
 	      gr_make_io_signature (1, -1, sizeof_stream_item)),
-    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate)
+    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate), d_when(when)
 {
   set_tag_propagation_policy(TPP_ONE_TO_ONE);
 
@@ -81,16 +84,15 @@ gr_annotator_1to1::general_work (int noutput_items,
   pmt::pmt_t key = pmt::pmt_string_to_symbol("seq");
 
   // Work does nothing to the data stream; just copy all inputs to outputs
-  // Adds a new tag when the number of items read is a multiple of N
+  // Adds a new tag when the number of items read is a multiple of d_when
   abs_N = nitems_read(0);
-  uint64_t N = 10000;
   int noutputs = output_items.size();
   for(int j = 0; j < noutput_items; j++) {
     // the min() is a hack to make sure this doesn't segfault if there are a
     // different number of ins and outs. This is specifically designed to test
     // the 1-to-1 propagation policy.
     for(int i = 0; i < std::min(noutputs, ninputs); i++) {
-      if(abs_N % N == 0) {
+      if(abs_N % d_when == 0) {
 	pmt::pmt_t value = pmt::pmt_from_uint64(d_tag_counter++);
 	add_item_tag(i, abs_N, key, value, srcid);
       }

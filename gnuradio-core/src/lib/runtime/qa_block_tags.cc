@@ -75,11 +75,11 @@ qa_block_tags::t1 ()
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
   gr_block_sptr head (gr_make_head(sizeof(int), N));
-  gr_annotator_alltoall_sptr ann0 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann3 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann4 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann0 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann3 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann4 (gr_make_annotator_alltoall(10000, sizeof(int)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
   
@@ -155,11 +155,11 @@ qa_block_tags::t2 ()
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
   gr_block_sptr head (gr_make_head(sizeof(int), N));
-  gr_annotator_alltoall_sptr ann0 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann3 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann4 (gr_make_annotator_alltoall(sizeof(int)));
+  gr_annotator_alltoall_sptr ann0 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann3 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann4 (gr_make_annotator_alltoall(10000, sizeof(int)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk2 (gr_make_null_sink(sizeof(int)));
@@ -255,11 +255,11 @@ qa_block_tags::t3 ()
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
   gr_block_sptr head (gr_make_head(sizeof(int), N));
-  gr_annotator_1to1_sptr ann0 (gr_make_annotator_1to1(sizeof(int)));
-  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(sizeof(int)));
-  gr_annotator_1to1_sptr ann3 (gr_make_annotator_1to1(sizeof(int)));
-  gr_annotator_1to1_sptr ann4 (gr_make_annotator_1to1(sizeof(int)));
+  gr_annotator_1to1_sptr ann0 (gr_make_annotator_1to1(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(10000, sizeof(int)));
+  gr_annotator_1to1_sptr ann3 (gr_make_annotator_1to1(10000, sizeof(int)));
+  gr_annotator_1to1_sptr ann4 (gr_make_annotator_1to1(10000, sizeof(int)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
   
@@ -337,9 +337,9 @@ qa_block_tags::t4 ()
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
   gr_block_sptr head (gr_make_head(sizeof(int), N));
-  gr_annotator_1to1_sptr ann0 (gr_make_annotator_1to1(sizeof(int)));
-  gr_annotator_1to1_sptr ann1 (gr_make_annotator_1to1(sizeof(int)));
-  gr_annotator_1to1_sptr ann2 (gr_make_annotator_1to1(sizeof(int)));
+  gr_annotator_1to1_sptr ann0 (gr_make_annotator_1to1(10000, sizeof(int)));
+  gr_annotator_1to1_sptr ann1 (gr_make_annotator_1to1(10000, sizeof(int)));
+  gr_annotator_1to1_sptr ann2 (gr_make_annotator_1to1(10000, sizeof(int)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
 
