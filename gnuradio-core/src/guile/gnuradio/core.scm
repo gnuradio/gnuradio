@@ -17,3 +17,7 @@
 (re-export-all '(gnuradio gnuradio_core_general))
 (re-export-all '(gnuradio gnuradio_core_gengen))
 (re-export-all '(gnuradio gnuradio_core_hier))
+
+;;; Return #t if x is not #f
+(define-public (true? x)
+  (and x #t))

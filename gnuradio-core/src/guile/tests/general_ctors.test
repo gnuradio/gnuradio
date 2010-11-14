@@ -29,10 +29,6 @@
 (use-modules (gnuradio core))
 (use-modules (oop goops))
 
-;;; Return #t if x is not #f
-(define (true? x)
-  (and x #t))
-
 ;;; Add test code for all constructors in these files
 
 ;;; ./general/gr_additive_scrambler_bb.h
