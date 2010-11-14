@@ -31,20 +31,20 @@
 #include <iomanip>
 
 gr_annotator_alltoall_sptr
-gr_make_annotator_alltoall (uint64_t when, size_t sizeof_stream_item,
+gr_make_annotator_alltoall (int when, size_t sizeof_stream_item,
 			    float rel_rate)
 {
   return gnuradio::get_initial_sptr (new gr_annotator_alltoall
 				     (when, sizeof_stream_item, rel_rate));
 }
 
-gr_annotator_alltoall::gr_annotator_alltoall (uint64_t when,
+gr_annotator_alltoall::gr_annotator_alltoall (int when,
 					      size_t sizeof_stream_item,
 					      float rel_rate)
   : gr_block ("annotator_alltoall",
 	      gr_make_io_signature (1, -1, sizeof_stream_item),
 	      gr_make_io_signature (1, -1, sizeof_stream_item)),
-    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate), d_when(when)
+    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate), d_when((uint64_t)when)
 {
   set_tag_propagation_policy(TPP_ALL_TO_ALL);
 

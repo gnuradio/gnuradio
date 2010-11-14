@@ -31,19 +31,19 @@
 #include <iomanip>
 
 gr_annotator_1to1_sptr
-gr_make_annotator_1to1 (uint64_t when, size_t sizeof_stream_item,
+gr_make_annotator_1to1 (int when, size_t sizeof_stream_item,
 			float rel_rate)
 {
   return gnuradio::get_initial_sptr (new gr_annotator_1to1
 				     (when, sizeof_stream_item, rel_rate));
 }
 
-gr_annotator_1to1::gr_annotator_1to1 (uint64_t when, size_t sizeof_stream_item,
+gr_annotator_1to1::gr_annotator_1to1 (int when, size_t sizeof_stream_item,
 				      float rel_rate)
   : gr_block ("annotator_1to1",
 	      gr_make_io_signature (1, -1, sizeof_stream_item),
 	      gr_make_io_signature (1, -1, sizeof_stream_item)),
-    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate), d_when(when)
+    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate), d_when((uint64_t)when)
 {
   set_tag_propagation_policy(TPP_ONE_TO_ONE);
 

@@ -22,7 +22,7 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,annotator_alltoall);
 
-gr_annotator_alltoall_sptr gr_make_annotator_alltoall (uint64_t when,
+gr_annotator_alltoall_sptr gr_make_annotator_alltoall (int when,
 						       size_t sizeof_stream_item,
 						       float rel_rate);
 
@@ -34,6 +34,6 @@ public:
   std::vector<pmt::pmt_t> data() const;
   
 private:
-  gr_annotator_alltoall (uint64_t when, size_t sizeof_stream_item, float rel_rate);
+  gr_annotator_alltoall (int when, size_t sizeof_stream_item, float rel_rate);
 };
 

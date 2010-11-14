@@ -30,7 +30,7 @@ typedef boost::shared_ptr<gr_annotator_alltoall> gr_annotator_alltoall_sptr;
 
 // public constructor
 gr_annotator_alltoall_sptr 
-gr_make_annotator_alltoall (uint64_t when, size_t sizeof_stream_item,
+gr_make_annotator_alltoall (int when, size_t sizeof_stream_item,
 			    float rel_rate=1.0);
 
 /*!
@@ -68,7 +68,7 @@ class gr_annotator_alltoall : public gr_block
   }
 
 protected:
-  gr_annotator_alltoall (uint64_t when, size_t sizeof_stream_item,
+  gr_annotator_alltoall (int when, size_t sizeof_stream_item,
 			 float rel_rate);
 
  private:
@@ -79,7 +79,7 @@ protected:
   std::vector<pmt::pmt_t> d_stored_tags;
 
   friend gr_annotator_alltoall_sptr
-  gr_make_annotator_alltoall (uint64_t when, size_t sizeof_stream_item,
+  gr_make_annotator_alltoall (int when, size_t sizeof_stream_item,
 			      float rel_rate);
 };
 
