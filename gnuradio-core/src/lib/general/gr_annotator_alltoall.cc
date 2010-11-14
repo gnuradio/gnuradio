@@ -85,8 +85,6 @@ gr_annotator_alltoall::general_work (int noutput_items,
   uint64_t N = 10000;
   int noutputs = output_items.size();
   for(int j = 0; j < noutput_items; j++) {
-    abs_N++;
-    
     for(int i = 0; i < noutputs; i++) {
       if(abs_N % N == 0) {
 	pmt::pmt_t value = pmt::pmt_from_uint64(d_tag_counter++);
@@ -101,6 +99,7 @@ gr_annotator_alltoall::general_work (int noutput_items,
 	out[j] += in[j];
       }
     }
+    abs_N++;    
   }
 
   consume_each(noutput_items);

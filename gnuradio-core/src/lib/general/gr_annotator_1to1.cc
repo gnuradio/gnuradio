@@ -86,8 +86,6 @@ gr_annotator_1to1::general_work (int noutput_items,
   uint64_t N = 10000;
   int noutputs = output_items.size();
   for(int j = 0; j < noutput_items; j++) {
-    abs_N++;
-    
     // the min() is a hack to make sure this doesn't segfault if there are a
     // different number of ins and outs. This is specifically designed to test
     // the 1-to-1 propagation policy.
@@ -101,6 +99,7 @@ gr_annotator_1to1::general_work (int noutput_items,
       out = (float*)output_items[i];
       out[j] = in[j];
     }
+    abs_N++;
   }
 
   consume_each(noutput_items);

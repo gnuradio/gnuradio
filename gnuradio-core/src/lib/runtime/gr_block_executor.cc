@@ -87,7 +87,7 @@ min_available_space (gr_block_detail *d, int output_multiple)
   return min_space;
 }
 
-static int
+static bool
 propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
 	       const std::vector<uint64_t> &start_nitems_read)
 {
@@ -95,12 +95,12 @@ propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
   // if a sink, we don't need to move downstream;
   // and do not bother if block uses TAGS_NONE attribute
   if(d->sink_p()) {
-    return 0;
+    return true;
   }
 
   switch(policy) {
   case(gr_block::TPP_DONT):
-    return 0;
+    return true;
     break;
   case(gr_block::TPP_ALL_TO_ALL):
     // every tag on every input propogates to everyone downstream
@@ -129,15 +129,15 @@ propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
       }
     }
     else  {
-      std::cerr << "Error: propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs" << std::endl;
-      return -1;
+      std::cerr << "Error: gr_block_executor: propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs" << std::endl;
+      return false;
     }
     
     break;
   default:
-    return 0;
+    return true;
   }
-  return 0;
+  return true;
 }
 
 gr_block_executor::gr_block_executor (gr_block_sptr block)
@@ -350,7 +350,7 @@ gr_block_executor::run_one_iteration()
 
     // determine where to start looking for new tags as 1 past nitems read
     for (int i = 0; i < d->ninputs(); i++)
-      d_start_nitems_read[i] = d->nitems_read(i)+1;
+      d_start_nitems_read[i] = d->nitems_read(i);
 
     // Do the actual work of the block
     int n = m->general_work (noutput_items, d_ninput_items,
@@ -358,7 +358,7 @@ gr_block_executor::run_one_iteration()
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
 
-    if(propagate_tags(m->tag_propagation_policy(), d, d_start_nitems_read) == -1)
+    if(!propagate_tags(m->tag_propagation_policy(), d, d_start_nitems_read))
       goto were_done;
 
     if (n == gr_block::WORK_DONE)
