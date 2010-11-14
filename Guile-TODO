@@ -1,0 +1,73 @@
+In no particular order:
+
+1)  Ensure that libraries containing swig generated code are regenerated
+    when any relevant .i file is touched.
+
+2)  SIGINT handling in gr_top_block::wait
+
+3)  Ensure that all 4 combinations of
+    --{enable,disable}-python --{enable,disable}-guile
+    work correctly.
+
+    When both are disabled swig should NOT be run.
+    When --enable-guile --disable-python, python swig stuff should not be generated.
+    When --disable-guile --enable-python, guile swig stuff should not be generated.
+
+4)  Fix GR_SWIG_BLOCK_MAGIC so that in the guile case we don't map all
+    the constructors into the same name.  E.g. audio_alsa_sink -> sink.
+    (Causes problem when multiple gr-* modules are used.)
+
+5)  Ensure that all gr-* components are generating guile code when
+    enabled, and that (1) and (3) are handled in all gr-* components.
+
+5b) Don't forget gr-howto-write-a-block. (It's got its own
+    configure.ac and is built separately from the rest.)
+
+6)  Fix printed representation of blocks in gr_block.i
+
+7)  Fix gr-usrp so that it works.  Probably related to
+    warning received when generating python bindings.
+    Making the swig/python warning go away will probably resolve the
+    guile problem.
+
+8)  Fix gr_message_{sink,source} so that they work under guile.
+    (Not sure if I disabled one or both of these...)
+
+9)  Any other FIXME style warnings
+
+10) Finish gnuradio-core test cases
+
+11) Write test cases for gr-* components.
+
+    For the one's that have a h/w dependency, just confirm that we can
+    load the module.  See gr_audio_alsa/src/audio_alsa.test for an
+    example.
+
+    For the others, write a test in the style of the ones in
+    gnuradio-core. 
+
+12) Swig guile modules names: s/_/-/g
+
+13) Change guile libnames to libguile-gnuradio-<module-name>
+
+14) Add support to setup_guile_test_env.in for
+    "withlibs", OS/X (DYLD_LIBRARY_PATH), windows (PATH)
+
+
+
+I'm sure I'm forgetting some things...
+
+
+
+80) Confirm make dist and make distcheck work
+
+81) Anything else that would keep us from merging into next.
+
+82) Get some other developers to try it out.
+
+
+
+
+90)  Merge to next
+
+100) Handle any fallout we missed.

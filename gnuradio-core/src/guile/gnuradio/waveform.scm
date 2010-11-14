@@ -17,20 +17,38 @@
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
-(define-module (gnuradio waveform-spec)
+(define-module (gnuradio waveform)
   #:use-module (ice-9 syncase)
-  #:export-syntax waveform-spec)
+  #:export-syntax (define-waveform))
 
-(define-syntax waveform-spec
+
+(define *registry* '())			; alist
+(define *last-registered* #f)
+
+
+(define-syntax define-waveform
   (syntax-rules (vars blocks connections)
-    ((_ (args ...)
+    ((_ (name cmd-line-args)
 	(vars (v-name v-val) ...)
 	(blocks (b-name b-val) ...)
 	(connections (endpoint1 endpoint2 ...) ...))
-     (lambda (args ...)
-       (let* ((v-name v-val) ...
-	      (b-name b-val) ...
-	      (tb (gr:top-block-swig "waveform-top-block")))
-	 (gr:connect tb endpoint1 endpoint2 ...) ...
-	 tb)))))
+     (waveform-register 'name
+      (lambda (cmd-line-args)
+	(let* ((v-name v-val) ...
+	       (b-name b-val) ...
+	       (tb (gr:top-block-swig "waveform-top-block")))
+	  (gr:connect tb endpoint1 endpoint2 ...) ...
+	  tb))))))
 
+
+(define-public (waveform-register name thunk)
+  (set! *registry* (assoc-set! *registry* name thunk))
+  (set! *last-registered* thunk)
+  #t)
+
+(define-public (waveform-lookup name)
+  (let ((r (assoc name *registry*)))
+    (and r (cdr r))))
+
+(define-public (waveform-last-registered)
+  *last-registered*)

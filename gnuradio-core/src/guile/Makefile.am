@@ -22,7 +22,8 @@ include $(top_srcdir)/Makefile.common
 TESTS = run_guile_tests
 
 EXTRA_DIST = \
-	run_guile_tests.in
+	run_guile_tests.in \
+	$(GUILE_TESTS)
 
 # These are the hand-code guile files for gnuradio-core.
 #
@@ -36,10 +37,11 @@ nobase_guile_DATA = \
 	gnuradio/core.scm \
 	gnuradio/export-safely.scm \
 	gnuradio/runtime-shim.scm \
+	gnuradio/waveform.scm \
 	gnuradio/test-suite/guile-test \
 	gnuradio/test-suite/lib.scm
 
-noinst_DATA = \
+GUILE_TESTS = \
 	tests/00_runtime_basics.test \
 	tests/00_runtime_ctors.test \
 	tests/filter_ctors.test \

@@ -389,6 +389,7 @@ GRC_GR_COMEDI
 GRC_GR_CVSD_VOCODER
 GRC_GR_GPIO
 GRC_GR_GSM_FR_VOCODER
+GRC_GR_GUILE
 GRC_GR_NOAA
 GRC_GR_PAGER
 GRC_GR_RADAR_MONO
@@ -398,7 +399,7 @@ GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_GR_QTGUI
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
-GRC_GR_UTILS                   dnl this must come after GRC_GR_WXGUI
+GRC_GR_UTILS                    dnl this must come after GRC_GR_WXGUI
 GRC_GNURADIO_EXAMPLES		dnl must come after all GRC_GR_*
 GRC_GRC
 GRC_GR_UHD

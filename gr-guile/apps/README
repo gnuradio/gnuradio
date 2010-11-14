@@ -1,0 +1,2 @@
+This applications will not run from the build tree.  They must be
+installed first using "make install"

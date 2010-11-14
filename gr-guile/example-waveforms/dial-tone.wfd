@@ -1,4 +1,4 @@
-;;; -*- Scheme -*-
+;;; Emacs, format this using -*-scheme-*- mode.
 ;;;
 ;;; Copyright 2010 Free Software Foundation, Inc.
 ;;;
@@ -18,19 +18,24 @@
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
-;;; If you're using Emacs's Scheme mode:
-;;;   (put 'with-test-prefix 'scheme-indent-function 1)
-
-;;; See the comments in gnuradio/test-suite/lib.scm for info on writing tests.
-;;; See also the very end of the file, where the test-equal, test-eqv
-;;; and test-eq macros are defined.
-
-(use-modules (gnuradio test-suite lib))
-(use-modules (gnuradio core))
-(use-modules (oop goops))
-
-;;; Just see if we can import the module...
-;;; They may not have ALSA drivers, etc.
+;;; This example waveform outputs a signal to an audio_alsa_sink
+;;; that sounds like North American dial tone.
 
 (use-modules (gnuradio audio_alsa))
 
+
+(define-waveform (dial-tone cmd-line-args)
+  (vars
+   (sample-rate 48000)
+   (ampl 0.1))
+
+  (blocks
+   (src0 (gr:sig-source-f sample-rate (gr:GR-SIN-WAVE) 350 ampl))
+   (src1 (gr:sig-source-f sample-rate (gr:GR-SIN-WAVE) 440 ampl))
+   ;;(sink (gr:audio-alsa-sink sample-rate "plughw:0,0"))
+   (sink (gr:sink sample-rate "plughw:0,0"))
+   )
+
+  (connections
+   (src0 (list sink 0))		; src0 to left input
+   (src1 (list sink 1))))	; src1 to right input
