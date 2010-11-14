@@ -32,12 +32,12 @@
 ;;; Add test code for all constructors in these files
 ;;;
 
-;;; ./filter/gr_adaptive_fir_ccf.h FIXME: not found
+;;; ./filter/gr_adaptive_fir_ccf.h WONTFIX: not wrapped
 ;; gr_adaptive_fir_ccf(char *name, int decimation, const std::vector<float> &taps);
 ;; (pass-if (true? (gr:adaptive-fir-ccf "foo" 0 #(1.0 2.0 3.0 4.0))))
 
-;;; ./filter/gr_cma_equalizer_cc.h FIXME: not found
-;; (pass-if (true? (gr:cma-equalizer-cc 0 0 0)))
+;;; ./filter/gr_cma_equalizer_cc.h
+(pass-if (true? (gr:cma-equalizer-cc 0 0 0)))
 
 ;;; ./filter/gr_fft_filter_ccc.h FIXME: not found
 ;; (pass-if (true? (gr:fft-filter-ccc 0 #(1+3i 23+5i))))
