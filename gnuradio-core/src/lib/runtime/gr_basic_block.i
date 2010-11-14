@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -52,8 +52,3 @@ long gr_basic_block_ncurrently_allocated();
 gr_basic_block_sptr.__repr__ = lambda self: "<gr_basic_block %s (%d)>" % (self.name(), self.unique_id ())
 %}
 #endif
-
-#ifdef SWIGGUILE
-#warning "gr_basic_block.i: gr_block_sptr needs to be implemented!"
-#endif
-
