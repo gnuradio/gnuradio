@@ -101,6 +101,7 @@ class gr_buffer {
 
   std::deque<pmt::pmt_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
   std::deque<pmt::pmt_t>::iterator get_tags_end() { return d_item_tags.end(); }
+  void tags_pop_front() { d_item_tags.pop_front(); }
 
   // -------------------------------------------------------------------------
 
@@ -259,6 +260,8 @@ class gr_buffer_reader {
    */
   std::vector<pmt::pmt_t> get_tags_in_range(uint64_t abs_start,
 					    uint64_t abs_end);
+
+  void prune_tags(uint64_t max_time);
 
   // -------------------------------------------------------------------------
 

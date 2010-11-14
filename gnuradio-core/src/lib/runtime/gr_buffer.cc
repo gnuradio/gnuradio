@@ -156,8 +156,15 @@ gr_buffer::space_available ()
     // Find out the maximum amount of data available to our readers
 
     int	most_data = d_readers[0]->items_available ();
-    for (unsigned int i = 1; i < d_readers.size (); i++)
+    uint64_t min_items_read = d_readers[0]->nitems_read();
+    for (size_t i = 1; i < d_readers.size (); i++) {
       most_data = std::max (most_data, d_readers[i]->items_available ());
+      min_items_read = std::min(min_items_read, d_readers[i]->nitems_read());
+    }
+
+    for (size_t i = 0; i < d_readers.size (); i++) {
+      d_readers[i]->prune_tags(min_items_read);
+    }
 
     // The -1 ensures that the case d_write_index == d_read_index is
     // unambiguous.  It indicates that there is no data for the reader
@@ -285,6 +292,25 @@ gr_buffer_reader::get_tags_in_range(uint64_t abs_start,
   }
 
   return found_items;
+}
+
+void
+gr_buffer_reader::prune_tags(uint64_t max_time)
+{
+  int n = 0;
+  uint64_t item_time;
+  std::deque<pmt::pmt_t>::iterator itr = d_buffer->get_tags_begin();
+
+  while(itr != d_buffer->get_tags_end()) {
+    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+    if(item_time < max_time) {
+      d_buffer->tags_pop_front();
+      n++;
+    }
+    else
+      break;
+    itr++;
+  }
 }
 
 long
