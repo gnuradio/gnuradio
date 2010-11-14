@@ -33,7 +33,7 @@ gr_nop::gr_nop (size_t sizeof_stream_item)
 {
 }
 
-gr_block_sptr
+gr_nop_sptr
 gr_make_nop (size_t sizeof_stream_item)
 {
   return gnuradio::get_initial_sptr (new gr_nop (sizeof_stream_item));

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,14 +26,19 @@
 #include <gr_block.h>
 #include <stddef.h>			// size_t
 
+class gr_nop;
+typedef boost::shared_ptr<gr_nop> gr_nop_sptr;
+
+gr_nop_sptr
+gr_make_nop (size_t sizeof_stream_item);
+
 /*!
  * \brief Does nothing.  Used for testing only.
  * \ingroup misc_blk
  */
 class gr_nop : public gr_block
 {
-  friend gr_block_sptr gr_make_nop (size_t sizeof_stream_item);
-
+  friend gr_nop_sptr gr_make_nop (size_t sizeof_stream_item);
   gr_nop (size_t sizeof_stream_item);
 
  public:
@@ -42,8 +47,5 @@ class gr_nop : public gr_block
 			    gr_vector_const_void_star &input_items,
 			    gr_vector_void_star &output_items);
 };
-
-gr_block_sptr
-gr_make_nop (size_t sizeof_stream_item);
 
 #endif /* INCLUDED_GR_NOP_H */
