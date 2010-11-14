@@ -1,8 +1,5 @@
 In no particular order:
 
-1)  Ensure that libraries containing swig generated code are regenerated
-    when any relevant .i file is touched.
-
 2)  SIGINT handling in gr_top_block::wait
 
 3)  Ensure that all 4 combinations of
@@ -77,3 +74,11 @@ I'm sure I'm forgetting some things...
 90)  Merge to next
 
 100) Handle any fallout we missed.
+
+
+-------------------------------------------------------------------------------
+These are done:
+
+
+1)  [DONE] Ensure that libraries containing swig generated code are regenerated
+    when any relevant .i file is touched.
