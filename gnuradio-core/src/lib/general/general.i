@@ -141,6 +141,7 @@
 #include <gr_copy.h>
 #include <gr_fll_band_edge_cc.h>
 #include <gr_additive_scrambler_bb.h>
+#include <complex_vec_test.h>
 %}
 
 %include "gr_nop.i"
@@ -262,3 +263,4 @@
 %include "gr_copy.i"
 %include "gr_fll_band_edge_cc.i"
 %include "gr_additive_scrambler_bb.i"
+%include "complex_vec_test.i"
