@@ -22,10 +22,9 @@
 #include <uhd_single_usrp_sink.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
-#include "utils.h"
 
 /***********************************************************************
- * UHD Single USPR Sink
+ * UHD Single USRP Sink
  **********************************************************************/
 uhd_single_usrp_sink::uhd_single_usrp_sink(gr_io_signature_sptr sig)
 :gr_sync_block("uhd single usrp sink", sig, gr_make_io_signature(0, 0, 0)){
@@ -33,21 +32,22 @@ uhd_single_usrp_sink::uhd_single_usrp_sink(gr_io_signature_sptr sig)
 }
 
 /***********************************************************************
- * UHD Single USPR Sink Impl
+ * UHD Single USRP Sink Impl
  **********************************************************************/
 class uhd_single_usrp_sink_impl : public uhd_single_usrp_sink{
 public:
     uhd_single_usrp_sink_impl(
-        const std::string &args,
-        const uhd::io_type_t &type,
+        const std::string &device_addr,
+        const uhd::io_type_t &io_type,
         size_t num_channels
-    ) : uhd_single_usrp_sink(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type), _nchan(num_channels)
+    ):
+        uhd_single_usrp_sink(gr_make_io_signature(
+            num_channels, num_channels, io_type.size
+        )),
+        _type(io_type),
+        _nchan(num_channels)
     {
-        _dev = uhd::usrp::single_usrp::make(args);
-    }
-
-    ~uhd_single_usrp_sink_impl(void){
-        //NOP
+        _dev = uhd::usrp::single_usrp::make(device_addr);
     }
 
     void set_subdev_spec(const std::string &spec){
@@ -56,17 +56,16 @@ public:
 
     void set_samp_rate(double rate){
         _dev->set_tx_rate(rate);
-        do_samp_rate_error_message(rate, get_samp_rate(), "TX");
     }
 
     double get_samp_rate(void){
         return _dev->get_tx_rate();
     }
 
-    uhd::tune_result_t set_center_freq(double freq, size_t chan){
-        uhd::tune_result_t tr = _dev->set_tx_freq(freq, chan);
-        do_tune_freq_error_message(freq, _dev->get_tx_freq(chan), "TX");
-        return tr;
+    uhd::tune_result_t set_center_freq(
+        const uhd::tune_request_t tune_request, size_t chan
+    ){
+        return _dev->set_tx_freq(tune_request, chan);
     }
 
     uhd::freq_range_t get_freq_range(size_t chan){
@@ -95,6 +94,10 @@ public:
 
     std::vector<std::string> get_antennas(size_t chan){
         return _dev->get_tx_antennas(chan);
+    }
+
+    void set_bandwidth(double bandwidth, size_t chan){
+        return _dev->set_tx_bandwidth(bandwidth, chan);
     }
 
     void set_clock_config(const uhd::clock_config_t &clock_config){
@@ -167,14 +170,14 @@ protected:
 };
 
 /***********************************************************************
- * Make UHD Single USPR Sink
+ * Make UHD Single USRP Sink
  **********************************************************************/
 boost::shared_ptr<uhd_single_usrp_sink> uhd_make_single_usrp_sink(
-    const std::string &args,
-    const uhd::io_type_t::tid_t &type,
+    const std::string &device_addr,
+    const uhd::io_type_t::tid_t &io_type,
     size_t num_channels
 ){
     return boost::shared_ptr<uhd_single_usrp_sink>(
-        new uhd_single_usrp_sink_impl(args, type, num_channels)
+        new uhd_single_usrp_sink_impl(device_addr, io_type, num_channels)
     );
 }

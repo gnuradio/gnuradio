@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -44,6 +44,7 @@ code_generator = 					\
 	generate_gr_fir_sysconfig_generic.py		\
 	generate_gr_fir_util.py				\
 	generate_gr_freq_xlating_fir_filter_XXX.py	\
+	generate_gri_fir_filter_with_buffer_XXX.py	\
 	generate_utils.py				\
 	gr_fir_XXX.cc.t					\
 	gr_fir_XXX.h.t					\
@@ -60,7 +61,10 @@ code_generator = 					\
 	gr_rational_resampler_base_XXX.i.t		\
 	gr_freq_xlating_fir_filter_XXX.cc.t		\
 	gr_freq_xlating_fir_filter_XXX.h.t		\
-	gr_freq_xlating_fir_filter_XXX.i.t
+	gr_freq_xlating_fir_filter_XXX.i.t		\
+	gri_fir_filter_with_buffer_XXX.cc.t		\
+	gri_fir_filter_with_buffer_XXX.h.t
+
 
 # Source built by Python into $(builddir)
 BUILT_SOURCES =			\
@@ -205,6 +209,7 @@ libfilter_la_common_SOURCES = 		\
 	float_dotprod_generic.c		\
 	short_dotprod_generic.c		\
 	gr_pfb_channelizer_ccf.cc	\
+	gr_pfb_synthesis_filterbank_ccf.cc\
 	gr_pfb_decimator_ccf.cc		\
 	gr_pfb_interpolator_ccf.cc	\
 	gr_pfb_arb_resampler_ccf.cc	\
@@ -220,7 +225,13 @@ libfilter_qa_la_common_SOURCES = 	\
 	qa_gr_fir_scc.cc		\
 	qa_gr_rotator.cc		\
 	qa_gri_mmse_fir_interpolator.cc	\
-	qa_gri_mmse_fir_interpolator_cc.cc	
+	qa_gri_mmse_fir_interpolator_cc.cc \
+	qa_gri_fir_filter_with_buffer_ccf.cc \
+	qa_gri_fir_filter_with_buffer_ccc.cc \
+	qa_gri_fir_filter_with_buffer_fcc.cc \
+	qa_gri_fir_filter_with_buffer_fff.cc \
+	qa_gri_fir_filter_with_buffer_fsf.cc \
+	qa_gri_fir_filter_with_buffer_scc.cc
 
 if MD_CPU_generic
 libfilter_la_SOURCES = $(libfilter_la_common_SOURCES) $(generic_CODE)
@@ -288,6 +299,7 @@ grinclude_HEADERS = 			\
 	short_dotprod_x86.h		\
 	sse_debug.h			\
 	gr_pfb_channelizer_ccf.h	\
+	gr_pfb_synthesis_filterbank_ccf.h\
 	gr_pfb_decimator_ccf.h		\
 	gr_pfb_interpolator_ccf.h	\
 	gr_pfb_arb_resampler_ccf.h	\
@@ -324,7 +336,13 @@ noinst_HEADERS = 			\
 	qa_gr_fir_scc.h			\
 	qa_gr_rotator.h			\
 	qa_gri_mmse_fir_interpolator.h	\
-	qa_gri_mmse_fir_interpolator_cc.h	
+	qa_gri_mmse_fir_interpolator_cc.h \
+	qa_gri_fir_filter_with_buffer_ccf.h \
+	qa_gri_fir_filter_with_buffer_ccc.h \
+	qa_gri_fir_filter_with_buffer_fcc.h \
+	qa_gri_fir_filter_with_buffer_fff.h \
+	qa_gri_fir_filter_with_buffer_fsf.h \
+	qa_gri_fir_filter_with_buffer_scc.h
 
 
 if PYTHON
@@ -344,6 +362,7 @@ swiginclude_HEADERS =			\
 	gr_single_pole_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
 	gr_pfb_channelizer_ccf.i	\
+	gr_pfb_synthesis_filterbank_ccf.i\
 	gr_pfb_decimator_ccf.i		\
 	gr_pfb_interpolator_ccf.i	\
 	gr_pfb_arb_resampler_ccf.i	\

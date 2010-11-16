@@ -30,6 +30,7 @@ import generate_gr_fir_sysconfig_generic
 import generate_gr_fir_sysconfig
 import generate_gr_fir_util
 import generate_gr_fir_XXX
+import generate_gri_fir_filter_with_buffer_XXX
 
 def generate_all():
     generate_gr_fir_XXX.generate()
@@ -40,6 +41,7 @@ def generate_all():
     generate_gr_fir_sysconfig_generic.generate()
     generate_gr_fir_sysconfig.generate()
     generate_gr_fir_util.generate()
+    generate_gri_fir_filter_with_buffer_XXX.generate()
     output_glue('filter')
 
 if __name__ == '__main__':

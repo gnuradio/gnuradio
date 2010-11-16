@@ -21,6 +21,7 @@ scopesink2.$(type.fcn)(
 	xy_mode=$xy_mode,
 	num_inputs=$num_inputs,
 	trig_mode=$trig_mode,
+	y_axis_label=$y_axis_label,
 #if $win_size()
 	size=$win_size,
 #end if
@@ -155,6 +156,12 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 			<name>Stripchart</name>
 			<key>gr.gr_TRIG_MODE_STRIPCHART</key>
 		</option>
+	</param>
+	<param>
+		<name>Y Axis Label</name>
+		<key>y_axis_label</key>
+		<value>Counts</value>
+		<type>string</type>
 	</param>
 	<check>not $win_size or len($win_size) == 2</check>
 	<check>not $xy_mode or '$type' == 'complex' or $num_inputs != 1</check>

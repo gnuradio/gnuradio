@@ -7,7 +7,6 @@
 <block>
 	<name>UHD Simple Sink (DEPRECATED)</name>
 	<key>uhd_simple_sink</key>
-	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
 	<make>uhd.simple_sink($args, uhd.io_type_t.$type.type)
 self.$(id).set_subdev_spec($sd_spec)

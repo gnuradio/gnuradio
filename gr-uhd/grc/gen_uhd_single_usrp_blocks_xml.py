@@ -24,10 +24,22 @@ MAIN_TMPL = """\
 <block>
 	<name>UHD: Single USRP $sourk.title()</name>
 	<key>uhd_single_usrp_$(sourk)</key>
-	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
-	<make>uhd.single_usrp_$(sourk)(\$dev_addr, uhd.io_type_t.\$type.type, \$nchan)
+	<make>uhd.single_usrp_$(sourk)(
+	device_addr=\$dev_addr,
+	io_type=uhd.io_type_t.\$type.type,
+	num_channels=\$nchan,
+)
+\#if \$ref_clk()
+_clk_cfg = uhd.clock_config_t()
+_clk_cfg.ref_source = uhd.clock_config_t.REF_SMA
+_clk_cfg.pps_source = uhd.clock_config_t.PPS_SMA
+_clk_cfg.pps_polarity = uhd.clock_config_t.PPS_POS
+self.\$(id).set_clock_config(_clk_cfg);
+\#end if
+\#if \$sd_spec()
 self.\$(id).set_subdev_spec(\$sd_spec)
+\#end if
 self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)
 \#if \$nchan() > $n
@@ -35,6 +47,9 @@ self.\$(id).set_center_freq(\$center_freq$(n), $n)
 self.\$(id).set_gain(\$gain$(n), $n)
 	\#if \$ant$(n)()
 self.\$(id).set_antenna(\$ant$(n), $n)
+	\#end if
+	\#if \$bw$(n)()
+self.\$(id).set_bandwidth(\$bw$(n), $n)
 	\#end if
 \#end if
 #end for
@@ -44,6 +59,7 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 	<callback>set_center_freq(\$center_freq$(n), $n)</callback>
 	<callback>set_gain(\$gain$(n), $n)</callback>
 	<callback>set_antenna(\$ant$(n), $n)</callback>
+	<callback>set_bandwidth(\$bw$(n), $n)</callback>
 	#end for
 	<param>
 		<name>Input Type</name>
@@ -95,6 +111,21 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 		</hide>
 	</param>
 	<param>
+		<name>Ref Clock</name>
+		<key>ref_clk</key>
+		<value></value>
+		<type>enum</type>
+		<hide>\#if \$ref_clk() then 'none' else 'part'#</hide>
+		<option>
+			<name>External</name>
+			<key>ext</key>
+		</option>
+		<option>
+			<name>Internal</name>
+			<key></key>
+		</option>
+	</param>
+	<param>
 		<name>Subdev Spec</name>
 		<key>sd_spec</key>
 		<value></value>
@@ -115,7 +146,7 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 	</param>
 	$params
 	<check>$max_nchan >= \$nchan</check>
-	<check>\$nchan >= 0</check>
+	<check>\$nchan > 0</check>
 	<check>(len((\$sd_spec).split()) or 1) == \$nchan</check>
 	<$sourk>
 		<name>$direction</name>
@@ -133,11 +164,6 @@ Used args to specify a specfic device.
 USRP2 Example: addr=192.168.10.2
 USRP1 Example: serial=12345678
 
-Sample rate:
-The sample rate is the number of samples per second input by this block. \\
-The UHD device driver will try its best to match the requested sample rate. \\
-If the requested rate is not possible, the UHD block will print an error at runtime.
-
 Subdevice specification:
 Select the subdevice or subdevices for each channel using a markup string. \\
 The markup string consists of a list of dboard_slot:subdev_name pairs (one pair per channel). \\
@@ -146,10 +172,26 @@ See the application notes for further details.
 Single channel example: A:AB
 Dual channel example: A:AB B:0
 
+Sample rate:
+The sample rate is the number of samples per second input by this block. \\
+The UHD device driver will try its best to match the requested sample rate. \\
+If the requested rate is not possible, the UHD block will print an error at runtime.
+
+Center frequency:
+The center frequency is the overall frequency of the RF chain. \\
+For greater control of how the UHD tunes elements in the RF chain, \\
+pass a tune_request_t object rather than a simple target frequency.
+Tuning with an LO offset example: uhd.tune_request_t(freq, lo_off)
+
 Antenna:
-For subdevices/daughterboards with only one antenna, this may be left blank. \\
+For subdevices with only one antenna, this may be left blank. \\
 Otherwise, the user should specify one of the possible antenna choices. \\
 See the daughterboard application notes for the possible antenna choices.
+
+Bandwidth:
+To use the default bandwidth filter setting, this should be zero. \\
+Only certain subdevices have configurable bandwidth filters. \\
+See the daughterboard application notes for possible configurations.
 	</doc>
 </block>
 """
@@ -178,6 +220,21 @@ PARAMS_TMPL = """
 			\#if not \$nchan() > $n
 				all
 			\#elif \$ant$(n)()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch$(n): Bandwidth (Hz)</name>
+		<key>bw$(n)</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			\#if not \$nchan() > $n
+				all
+			\#elif \$bw$(n)()
 				none
 			\#else
 				part

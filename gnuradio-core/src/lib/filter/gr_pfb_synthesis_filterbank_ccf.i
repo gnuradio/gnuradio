@@ -20,21 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_NOINST_UTILS_H
-#define INCLUDED_NOINST_UTILS_H
+GR_SWIG_BLOCK_MAGIC(gr,pfb_synthesis_filterbank_ccf);
 
-#include <string>
+gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
+    (unsigned int numchans, const std::vector<float> &taps);
 
-void do_samp_rate_error_message(
-    double target_rate,
-    double actual_rate,
-    const std::string &xx
-);
+class gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
+{
+ private:
+  gr_pfb_synthesis_filterbank_ccf (unsigned int numchans,
+				   const std::vector<float> &taps);
 
-void do_tune_freq_error_message(
-    double target_freq,
-    double actual_freq,
-    const std::string &xx
-);
+ public:
+  ~gr_pfb_synthesis_filterbank_ccf ();
 
-#endif /* INCLUDED_NOINST_UTILS_H */
+  void set_taps (const std::vector<float> &taps);
+};

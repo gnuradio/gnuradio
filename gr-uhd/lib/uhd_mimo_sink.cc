@@ -23,7 +23,7 @@
 #include <uhd_mimo_sink.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
-#include "utils.h"
+//#include "utils.h"
 
 /***********************************************************************
  * UHD Sink
@@ -59,7 +59,7 @@ public:
 
     void set_samp_rate_all(double rate){
         _dev->set_tx_rate_all(rate);
-        do_samp_rate_error_message(rate, get_samp_rate_all(), "TX");
+        //do_samp_rate_error_message(rate, get_samp_rate_all(), "TX");
     }
 
     double get_samp_rate_all(void){
@@ -68,7 +68,7 @@ public:
 
     uhd::tune_result_t set_center_freq(size_t chan, double freq){
         uhd::tune_result_t tr = _dev->set_tx_freq(chan, freq);
-        do_tune_freq_error_message(freq, _dev->get_tx_freq(chan), "TX");
+        //do_tune_freq_error_message(freq, _dev->get_tx_freq(chan), "TX");
         return tr;
     }
 

@@ -40,7 +40,14 @@ GENERATED_H = \
 	gr_rational_resampler_base_fcc.h \
 	gr_rational_resampler_base_fff.h \
 	gr_rational_resampler_base_fsf.h \
-	gr_rational_resampler_base_scc.h
+	gr_rational_resampler_base_scc.h \
+	gri_fir_filter_with_buffer_ccc.h \
+	gri_fir_filter_with_buffer_ccf.h \
+	gri_fir_filter_with_buffer_fcc.h \
+	gri_fir_filter_with_buffer_fff.h \
+	gri_fir_filter_with_buffer_fsf.h \
+	gri_fir_filter_with_buffer_scc.h
+
 
 GENERATED_I = \
 	gr_fir_filter_ccc.i \
@@ -107,5 +114,11 @@ GENERATED_CC = \
 	gr_rational_resampler_base_fcc.cc \
 	gr_rational_resampler_base_fff.cc \
 	gr_rational_resampler_base_fsf.cc \
-	gr_rational_resampler_base_scc.cc
+	gr_rational_resampler_base_scc.cc \
+	gri_fir_filter_with_buffer_ccc.cc \
+	gri_fir_filter_with_buffer_ccf.cc \
+	gri_fir_filter_with_buffer_fcc.cc \
+	gri_fir_filter_with_buffer_fff.cc \
+	gri_fir_filter_with_buffer_fsf.cc \
+	gri_fir_filter_with_buffer_scc.cc
 

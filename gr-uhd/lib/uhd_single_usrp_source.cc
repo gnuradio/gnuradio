@@ -24,10 +24,9 @@
 #include <stdexcept>
 #include <iostream>
 #include <boost/format.hpp>
-#include "utils.h"
 
 /***********************************************************************
- * UHD Single USPR Source
+ * UHD Single USRP Source
  **********************************************************************/
 uhd_single_usrp_source::uhd_single_usrp_source(gr_io_signature_sptr sig)
 :gr_sync_block("uhd single_usrp source", gr_make_io_signature(0, 0, 0), sig){
@@ -35,17 +34,21 @@ uhd_single_usrp_source::uhd_single_usrp_source(gr_io_signature_sptr sig)
 }
 
 /***********************************************************************
- * UHD Single USPR Source Impl
+ * UHD Single USRP Source Impl
  **********************************************************************/
 class uhd_single_usrp_source_impl : public uhd_single_usrp_source{
 public:
     uhd_single_usrp_source_impl(
-        const std::string &args,
-        const uhd::io_type_t &type,
+        const std::string &device_addr,
+        const uhd::io_type_t &io_type,
         size_t num_channels
-    ) : uhd_single_usrp_source(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type)
+    ):
+        uhd_single_usrp_source(gr_make_io_signature(
+            num_channels, num_channels, io_type.size
+        )),
+        _type(io_type)
     {
-        _dev = uhd::usrp::single_usrp::make(args);
+        _dev = uhd::usrp::single_usrp::make(device_addr);
     }
 
     void set_subdev_spec(const std::string &spec){
@@ -54,17 +57,16 @@ public:
 
     void set_samp_rate(double rate){
         _dev->set_rx_rate(rate);
-        do_samp_rate_error_message(rate, get_samp_rate(), "RX");
     }
 
     double get_samp_rate(void){
         return _dev->get_rx_rate();
     }
 
-    uhd::tune_result_t set_center_freq(double freq, size_t chan){
-        uhd::tune_result_t tr = _dev->set_rx_freq(freq, chan);
-        do_tune_freq_error_message(freq, _dev->get_rx_freq(chan), "RX");
-        return tr;
+    uhd::tune_result_t set_center_freq(
+        const uhd::tune_request_t tune_request, size_t chan
+    ){
+        return _dev->set_rx_freq(tune_request, chan);
     }
 
     uhd::freq_range_t get_freq_range(size_t chan){
@@ -93,6 +95,10 @@ public:
 
     std::vector<std::string> get_antennas(size_t chan){
         return _dev->get_rx_antennas(chan);
+    }
+
+    void set_bandwidth(double bandwidth, size_t chan){
+        return _dev->set_rx_bandwidth(bandwidth, chan);
     }
 
     void set_clock_config(const uhd::clock_config_t &clock_config){
@@ -163,14 +169,14 @@ private:
 
 
 /***********************************************************************
- * Make UHD Single USPR Source
+ * Make UHD Single USRP Source
  **********************************************************************/
 boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_usrp_source(
-    const std::string &args,
-    const uhd::io_type_t::tid_t &type,
+    const std::string &device_addr,
+    const uhd::io_type_t::tid_t &io_type,
     size_t num_channels
 ){
     return boost::shared_ptr<uhd_single_usrp_source>(
-        new uhd_single_usrp_source_impl(args, type, num_channels)
+        new uhd_single_usrp_source_impl(device_addr, io_type, num_channels)
     );
 }

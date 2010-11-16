@@ -33,7 +33,7 @@ libusrp_la_common_LIBADD = 		\
 
 # darwin fusb requires gruel (for threading)
 if FUSB_TECH_darwin
-AM_CPPFLAGS = $(common_INCLUDES) $(GRUEL_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(GRUEL_INCLUDES) $(common_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD) $(GRUEL_LA)
 libusrp_la_LDFLAGS = $(libusrp_la_common_LDFLAGS) -framework CoreFoundation
 else

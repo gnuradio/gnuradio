@@ -55,7 +55,6 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
   // This tests the specified input sample rate to see if it conforms to this
   // requirement within a few significant figures.
   double intp = 0;
-  double x = (10000.0*rint(numchans / oversample_rate)) / 10000.0;
   double fltp = modf(numchans / oversample_rate, &intp);
   if(fltp != 0.0)
     throw std::invalid_argument("gr_pfb_channelizer: oversample rate must be N/i for i in [1, N]"); 

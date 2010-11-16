@@ -21,8 +21,20 @@
 
 # The presence of this file turns this directory into a Python package
 
+########################################################################
 # Add SWIG generated code to this namespace
+########################################################################
 from uhd_swig import *
 
+########################################################################
 # Add other content from pure-Python modules here
+########################################################################
 
+class tune_request_t(tune_request_t, float):
+    """
+    Make the python tune request object inherit from float
+    so that it can be passed in GRC as a frequency parameter.
+    The type checking in GRC will accept the tune request.
+    """
+    def __new__(self, *args): return float.__new__(self)
+    def __float__(self): return self.target_freq

@@ -20,6 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
+////////////////////////////////////////////////////////////////////////
+// Language independent exception handler
+////////////////////////////////////////////////////////////////////////
+%include exception.i
+
+%exception {
+    try {
+        $action
+    }
+    catch(std::exception &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+    catch(...) {
+        SWIG_exception(SWIG_RuntimeError, "Unknown exception");
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////
+// standard includes
+////////////////////////////////////////////////////////////////////////
 %include "gnuradio.i"
 %include "std_string.i"
 %include "std_vector.i"
@@ -28,36 +49,63 @@ namespace std {
     %template(StringVector) vector<string>;
 }
 
+////////////////////////////////////////////////////////////////////////
+// block headers
+////////////////////////////////////////////////////////////////////////
 %{
-#include <uhd_mimo_source.h>
-#include <uhd_mimo_sink.h>
-#include <uhd_simple_source.h>
-#include <uhd_simple_sink.h>
+#include <uhd_mimo_source.h> //deprecated
+#include <uhd_mimo_sink.h> //deprecated
+#include <uhd_simple_source.h> //deprecated
+#include <uhd_simple_sink.h> //deprecated
+
+#include <uhd_multi_usrp_source.h>
+#include <uhd_multi_usrp_sink.h>
 #include <uhd_single_usrp_source.h>
 #include <uhd_single_usrp_sink.h>
 %}
 
+////////////////////////////////////////////////////////////////////////
+// used types
+////////////////////////////////////////////////////////////////////////
 %include <uhd/config.hpp>
 %include <uhd/types/ranges.hpp>
+%include <uhd/types/tune_request.hpp>
 %include <uhd/types/tune_result.hpp>
 %include <uhd/types/io_type.hpp>
 %include <uhd/types/time_spec.hpp>
 %include <uhd/types/clock_config.hpp>
 
-GR_SWIG_BLOCK_MAGIC(uhd,mimo_source)
-%include <uhd_mimo_source.h>
+////////////////////////////////////////////////////////////////////////
+// block magic
+////////////////////////////////////////////////////////////////////////
+GR_SWIG_BLOCK_MAGIC(uhd,mimo_source) //deprecated
+%include <uhd_mimo_source.h> //deprecated
 
-GR_SWIG_BLOCK_MAGIC(uhd,mimo_sink)
-%include <uhd_mimo_sink.h>
+GR_SWIG_BLOCK_MAGIC(uhd,mimo_sink) //deprecated
+%include <uhd_mimo_sink.h> //deprecated
 
-GR_SWIG_BLOCK_MAGIC(uhd,simple_source)
-%include <uhd_simple_source.h>
+GR_SWIG_BLOCK_MAGIC(uhd,simple_source) //deprecated
+%include <uhd_simple_source.h> //deprecated
 
-GR_SWIG_BLOCK_MAGIC(uhd,simple_sink)
-%include <uhd_simple_sink.h>
+GR_SWIG_BLOCK_MAGIC(uhd,simple_sink) //deprecated
+%include <uhd_simple_sink.h> //deprecated
+
+GR_SWIG_BLOCK_MAGIC(uhd,multi_usrp_source)
+%include <uhd_multi_usrp_source.h>
+
+GR_SWIG_BLOCK_MAGIC(uhd,multi_usrp_sink)
+%include <uhd_multi_usrp_sink.h>
 
 GR_SWIG_BLOCK_MAGIC(uhd,single_usrp_source)
 %include <uhd_single_usrp_source.h>
 
 GR_SWIG_BLOCK_MAGIC(uhd,single_usrp_sink)
 %include <uhd_single_usrp_sink.h>
+
+////////////////////////////////////////////////////////////////////////
+// helpful constants
+////////////////////////////////////////////////////////////////////////
+%{
+static const size_t ALL_MBOARDS = uhd::usrp::multi_usrp::ALL_MBOARDS;
+%}
+static const size_t ALL_MBOARDS;

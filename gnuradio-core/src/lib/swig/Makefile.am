@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,7 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 if PYTHON
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) -I$(srcdir) \
+AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	 $(WITH_INCLUDES)
 
 EXTRA_DIST = gen-swig-bug-fix
