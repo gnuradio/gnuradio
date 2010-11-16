@@ -53,6 +53,8 @@ aqhowto_swiginclude_headers = \
 	howto_square_ff.i \
 	howto_square2_ff.i
 
+EXTRA_DIST = $(aqhowto_swiginclude_headers)
+
 PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(HFILE)))
 swig_built_sources += $(PYTHON_GEN)
 endif
