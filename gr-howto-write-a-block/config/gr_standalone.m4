@@ -125,6 +125,23 @@ m4_define([GR_STANDALONE],
   )
   AM_CONDITIONAL([PYTHON], [test x$enable_python = xyes])
 
+  AC_ARG_ENABLE([guile],
+    [AS_HELP_STRING([--enable-guile],
+      [generate SWIG/Guile components (default is yes)])],
+    [case "${enableval}" in
+       yes) enable_guile=yes ;;
+       no) enable_guile=no ;;
+       *) AC_MSG_ERROR([bad value ${enableval} for --enable-guile]) ;;
+     esac],
+    [enable_guile=no]
+  )
+  AM_CONDITIONAL([GUILE], [test x$enable_guile = xyes])
+
+  dnl see if GUILE is installed
+  if test x${enable_guile} == xyes; then
+    AC_PATH_PROG(GUILE,guile)
+  fi
+
   dnl Define where to look for cppunit includes and libs
   dnl sets CPPUNIT_CFLAGS and CPPUNIT_LIBS
   dnl Try using pkg-config first, then fall back to cppunit-config.
