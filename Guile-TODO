@@ -10,10 +10,6 @@ In no particular order:
     When --enable-guile --disable-python, python swig stuff should not be generated.
     When --disable-guile --enable-python, guile swig stuff should not be generated.
 
-4)  Fix GR_SWIG_BLOCK_MAGIC so that in the guile case we don't map all
-    the constructors into the same name.  E.g. audio_alsa_sink -> sink.
-    (Causes problem when multiple gr-* modules are used.)
-
 5)  Ensure that all gr-* components are generating guile code when
     enabled, and that (1) and (3) are handled in all gr-* components.
 
@@ -58,6 +54,9 @@ In no particular order:
     how much faster it is.  Load time currently is currently kind of doggy.
 
 
+17) Get std::vector< std::complex<float> > working
+
+
 I'm sure I'm forgetting some things...
 
 
@@ -82,3 +81,8 @@ These are done:
 
 1)  [DONE] Ensure that libraries containing swig generated code are regenerated
     when any relevant .i file is touched.
+
+4)  [DONE] Fix GR_SWIG_BLOCK_MAGIC so that in the guile case we don't map all
+    the constructors into the same name.  E.g. audio_alsa_sink -> sink.
+    (Causes problem when multiple gr-* modules are used.)
+
