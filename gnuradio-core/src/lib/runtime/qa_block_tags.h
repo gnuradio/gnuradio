@@ -35,7 +35,7 @@ class qa_block_tags : public CppUnit::TestCase {
   CPPUNIT_TEST (t2);
   CPPUNIT_TEST (t3);
   CPPUNIT_TEST (t4);
-  //CPPUNIT_TEST (t5);
+  CPPUNIT_TEST (t5);
   CPPUNIT_TEST_SUITE_END ();
 
  private:
