@@ -29,8 +29,10 @@
  * UHD Single USRP Source
  **********************************************************************/
 uhd_single_usrp_source::uhd_single_usrp_source(gr_io_signature_sptr sig)
-:gr_sync_block("uhd single_usrp source", gr_make_io_signature(0, 0, 0), sig){
-    /* NOP */
+ :gr_sync_block("uhd single_usrp source", gr_make_io_signature(0, 0, 0), sig)
+{
+  d_num_packet_samps = 0;
+  d_tstamp_pair = pmt::pmt_cons(pmt::mp(0), pmt::mp(0));
 }
 
 /***********************************************************************
@@ -131,25 +133,54 @@ public:
     ){
         uhd::rx_metadata_t metadata; //not passed out of this block
 
-        size_t num_samps = _dev->get_device()->recv(
-            output_items, noutput_items, metadata,
-            _type, uhd::device::RECV_MODE_FULL_BUFF
-        );
+	size_t total_samps = 0;
+	while(total_samps + 362 < noutput_items) {
+	  size_t num_samps = _dev->get_device()->recv(
+              output_items, noutput_items, metadata,
+              _type, uhd::device::RECV_MODE_ONE_PACKET
+          );
+	  total_samps += num_samps;
 
-        switch(metadata.error_code){
-        case uhd::rx_metadata_t::ERROR_CODE_NONE:
-            return num_samps;
-
-        case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
+	  switch(metadata.error_code){
+	  case uhd::rx_metadata_t::ERROR_CODE_NONE:
+	    //keep track of the number of accumulated samples in this packet
+	    if (metadata.fragment_offset == 0) {
+	      d_num_packet_samps = 0;
+	      d_tstamp_pair = pmt::pmt_cons(pmt::mp(metadata.time_spec.get_full_secs()),
+					    pmt::mp(metadata.time_spec.get_frac_secs()));
+	    }
+	    d_num_packet_samps += num_samps;
+	    
+	    //don't push on to the queue until we get the final fragment
+	    if (!metadata.more_fragments) {
+	      // Create tags with time and num samples
+	      pmt::pmt_t tsamp, nsamp;
+	      pmt::pmt_t nsamp_val = pmt::mp((int)d_num_packet_samps);
+	      
+	      
+	      add_item_tag(0, nitems_written(0),
+			   pmt::mp("packet_time_stamp"),
+			   d_tstamp_pair,
+			   pmt::mp("uhd_single_usrp_source"));
+	      add_item_tag(0, nitems_written(0),
+			   pmt::mp("num_packet_samples"),
+			   nsamp_val,
+			   pmt::mp("uhd_single_usrp_source"));
+	      
+	    }
+	    return num_samps;
+	    
+	  case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
             //ignore overflows and try work again
             return work(noutput_items, input_items, output_items);
-
-        default:
+	    
+	  default:
             std::cout << boost::format(
                 "UHD source block got error code 0x%x"
             ) % metadata.error_code << std::endl;
             return num_samps;
-        }
+	  }
+	}
     }
 
     bool start(void){

@@ -168,6 +168,10 @@ public:
      * \return the single usrp device object
      */
     virtual uhd::usrp::single_usrp::sptr get_device(void) = 0;
+
+ protected:
+    size_t d_num_packet_samps;
+    pmt::pmt_t d_tstamp_pair;
 };
 
 #endif /* INCLUDED_UHD_SINGLE_USRP_SOURCE_H */
