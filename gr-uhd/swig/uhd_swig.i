@@ -68,12 +68,24 @@ namespace std {
 // used types
 ////////////////////////////////////////////////////////////////////////
 %include <uhd/config.hpp>
+%include <uhd/utils/pimpl.hpp>
 %include <uhd/types/ranges.hpp>
 %include <uhd/types/tune_request.hpp>
 %include <uhd/types/tune_result.hpp>
 %include <uhd/types/io_type.hpp>
 %include <uhd/types/time_spec.hpp>
 %include <uhd/types/clock_config.hpp>
+
+//Re-create range typedefs here with %template as they are not imported.
+//Replicate all the levels of templated inheritance so swig understands.
+
+%template(float_range_t) uhd::range_t<float>;
+%template(_float_range_vector_t) std::vector<uhd::range_t<float> >;
+%template(gain_range_t) uhd::meta_range_t<float>;
+
+%template(double_range_t) uhd::range_t<double>;
+%template(_double_range_vector_t) std::vector<uhd::range_t<double> >;
+%template(freq_range_t) uhd::meta_range_t<double>;
 
 ////////////////////////////////////////////////////////////////////////
 // block magic
