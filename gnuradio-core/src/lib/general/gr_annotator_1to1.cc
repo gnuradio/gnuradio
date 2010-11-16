@@ -31,24 +31,22 @@
 #include <iomanip>
 
 gr_annotator_1to1_sptr
-gr_make_annotator_1to1 (int when, size_t sizeof_stream_item,
-			float rel_rate)
+gr_make_annotator_1to1 (int when, size_t sizeof_stream_item)
 {
   return gnuradio::get_initial_sptr (new gr_annotator_1to1
-				     (when, sizeof_stream_item, rel_rate));
+				     (when, sizeof_stream_item));
 }
 
-gr_annotator_1to1::gr_annotator_1to1 (int when, size_t sizeof_stream_item,
-				      float rel_rate)
-  : gr_block ("annotator_1to1",
-	      gr_make_io_signature (1, -1, sizeof_stream_item),
-	      gr_make_io_signature (1, -1, sizeof_stream_item)),
-    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate), d_when((uint64_t)when)
+gr_annotator_1to1::gr_annotator_1to1 (int when, size_t sizeof_stream_item)
+  : gr_sync_block ("annotator_1to1",
+		   gr_make_io_signature (1, -1, sizeof_stream_item),
+		   gr_make_io_signature (1, -1, sizeof_stream_item)),
+    d_itemsize(sizeof_stream_item), d_when((uint64_t)when)
 {
   set_tag_propagation_policy(TPP_ONE_TO_ONE);
 
   d_tag_counter = 0;
-  set_relative_rate(d_rel_rate);
+  set_relative_rate(1.0);
 }
 
 gr_annotator_1to1::~gr_annotator_1to1 ()
@@ -56,10 +54,9 @@ gr_annotator_1to1::~gr_annotator_1to1 ()
 }
 
 int
-gr_annotator_1to1::general_work (int noutput_items,
-				 gr_vector_int &ninput_items,
-				 gr_vector_const_void_star &input_items,
-				 gr_vector_void_star &output_items)
+gr_annotator_1to1::work (int noutput_items,
+			 gr_vector_const_void_star &input_items,
+			 gr_vector_void_star &output_items)
 {
   const float *in = (const float*)input_items[0];
   float *out = (float*)output_items[0];
@@ -68,7 +65,7 @@ gr_annotator_1to1::general_work (int noutput_items,
   str << name() << unique_id();
 
   uint64_t abs_N = 0;
-  int ninputs = ninput_items.size();
+  int ninputs = input_items.size();
   for(int i = 0; i < ninputs; i++) {
     abs_N = nitems_read(i);
     std::vector<pmt::pmt_t> all_tags = get_tags_in_range(i, abs_N, abs_N + noutput_items);
@@ -104,6 +101,5 @@ gr_annotator_1to1::general_work (int noutput_items,
     abs_N++;
   }
 
-  consume_each(noutput_items);
   return noutput_items;
 }

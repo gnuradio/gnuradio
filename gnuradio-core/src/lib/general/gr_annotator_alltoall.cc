@@ -31,25 +31,22 @@
 #include <iomanip>
 
 gr_annotator_alltoall_sptr
-gr_make_annotator_alltoall (int when, size_t sizeof_stream_item,
-			    float rel_rate)
+gr_make_annotator_alltoall (int when, size_t sizeof_stream_item)
 {
   return gnuradio::get_initial_sptr (new gr_annotator_alltoall
-				     (when, sizeof_stream_item, rel_rate));
+				     (when, sizeof_stream_item));
 }
 
 gr_annotator_alltoall::gr_annotator_alltoall (int when,
-					      size_t sizeof_stream_item,
-					      float rel_rate)
-  : gr_block ("annotator_alltoall",
-	      gr_make_io_signature (1, -1, sizeof_stream_item),
-	      gr_make_io_signature (1, -1, sizeof_stream_item)),
-    d_itemsize(sizeof_stream_item), d_rel_rate(rel_rate), d_when((uint64_t)when)
+					      size_t sizeof_stream_item)
+  : gr_sync_block ("annotator_alltoall",
+		   gr_make_io_signature (1, -1, sizeof_stream_item),
+		   gr_make_io_signature (1, -1, sizeof_stream_item)),
+    d_itemsize(sizeof_stream_item), d_when((uint64_t)when)
 {
   set_tag_propagation_policy(TPP_ALL_TO_ALL);
 
   d_tag_counter = 0;
-  set_relative_rate(d_rel_rate);
 }
 
 gr_annotator_alltoall::~gr_annotator_alltoall ()
@@ -57,10 +54,9 @@ gr_annotator_alltoall::~gr_annotator_alltoall ()
 }
 
 int
-gr_annotator_alltoall::general_work (int noutput_items,
-				     gr_vector_int &ninput_items,
-				     gr_vector_const_void_star &input_items,
-				     gr_vector_void_star &output_items)
+gr_annotator_alltoall::work (int noutput_items,
+			     gr_vector_const_void_star &input_items,
+			     gr_vector_void_star &output_items)
 {
   const float *in = (const float *) input_items[0];
   float *out = (float *) output_items[0];
@@ -68,11 +64,12 @@ gr_annotator_alltoall::general_work (int noutput_items,
   std::stringstream str;
   str << name() << unique_id();
 
-  uint64_t abs_N = 0;
+  uint64_t abs_N = 0, end_N;
   int ninputs = input_items.size();
   for(int i = 0; i < ninputs; i++) {
     abs_N = nitems_read(i);
-    std::vector<pmt::pmt_t> all_tags = get_tags_in_range(i, abs_N, abs_N + noutput_items);
+    end_N = abs_N + (uint64_t)(noutput_items);
+    std::vector<pmt::pmt_t> all_tags = get_tags_in_range(i, abs_N, end_N);
 
     std::vector<pmt::pmt_t>::iterator itr;
     for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
@@ -86,7 +83,9 @@ gr_annotator_alltoall::general_work (int noutput_items,
 
   // Work does nothing to the data stream; just copy all inputs to outputs
   // Adds a new tag when the number of items read is a multiple of d_when
+  abs_N = nitems_written(0);
   int noutputs = output_items.size();
+
   for(int j = 0; j < noutput_items; j++) {
     for(int i = 0; i < noutputs; i++) {
       if(abs_N % d_when == 0) {
@@ -105,6 +104,5 @@ gr_annotator_alltoall::general_work (int noutput_items,
     abs_N++;    
   }
 
-  consume_each(noutput_items);
   return noutput_items;
 }

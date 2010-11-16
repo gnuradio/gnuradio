@@ -23,15 +23,14 @@
 #ifndef INCLUDED_GR_ANNOTATOR_ALLTOALL_H
 #define	INCLUDED_GR_ANNOTATOR_ALLTOALL_H
 
-#include <gr_block.h>
+#include <gr_sync_block.h>
 
 class gr_annotator_alltoall;
 typedef boost::shared_ptr<gr_annotator_alltoall> gr_annotator_alltoall_sptr;
 
 // public constructor
 gr_annotator_alltoall_sptr 
-gr_make_annotator_alltoall (int when, size_t sizeof_stream_item,
-			    float rel_rate=1.0);
+gr_make_annotator_alltoall (int when, size_t sizeof_stream_item);
 
 /*!
  * \brief All-to-all stream annotator testing block. FOR TESTING PURPOSES ONLY.
@@ -46,41 +45,31 @@ gr_make_annotator_alltoall (int when, size_t sizeof_stream_item,
  *
  * This block is only meant for testing and showing how to use the tags.
  */
-class gr_annotator_alltoall : public gr_block
+class gr_annotator_alltoall : public gr_sync_block
 {
  public:
   ~gr_annotator_alltoall ();
-  int general_work (int noutput_items,
-		    gr_vector_int &ninput_items,
-		    gr_vector_const_void_star &input_items,
-		    gr_vector_void_star &output_items);
+
+  int work (int noutput_items,
+	    gr_vector_const_void_star &input_items,
+	    gr_vector_void_star &output_items);
   
-  void set_rel_rate(float rrate) {
-    d_rel_rate = rrate;
-    set_relative_rate(d_rel_rate); 
-  }
-  float rel_rate() { return d_rel_rate; }
-
-
   std::vector<pmt::pmt_t> data() const
   {
     return d_stored_tags;
   }
 
 protected:
-  gr_annotator_alltoall (int when, size_t sizeof_stream_item,
-			 float rel_rate);
+  gr_annotator_alltoall (int when, size_t sizeof_stream_item);
 
  private:
   size_t d_itemsize;
-  float d_rel_rate;
   uint64_t d_when;
   uint64_t d_tag_counter;
   std::vector<pmt::pmt_t> d_stored_tags;
 
   friend gr_annotator_alltoall_sptr
-  gr_make_annotator_alltoall (int when, size_t sizeof_stream_item,
-			      float rel_rate);
+  gr_make_annotator_alltoall (int when, size_t sizeof_stream_item);
 };
 
 #endif
