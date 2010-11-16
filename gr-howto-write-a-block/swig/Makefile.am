@@ -20,8 +20,19 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
-AM_CPPFLAGS += -I$(top_srcdir)/lib
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+CLEANFILES = python/*.cc python/*.h python/*.d
+if GUILE
+CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.d
+endif
+
+AM_CPPFLAGS += -I$(top_srcdir)/lib 
+
+swig_built_sources =
 
 if PYTHON
 ###################################
@@ -34,21 +45,23 @@ TOP_SWIG_IFILES = \
 #   import howto
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)
-
 howto_la_swig_libadd =		\
 	$(top_builddir)/lib/libgnuradio-howto.la
 
-include $(top_srcdir)/Makefile.swig
+# additional SWIG files to be installed
+aqhowto_swiginclude_headers = \
+	howto_square_ff.i \
+	howto_square2_ff.i
 
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
+PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(HFILE)))
+swig_built_sources += $(PYTHON_GEN)
+endif
+
+if GUILE
+GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
+swig_built_sources += $(GUILE_GEN)
+endif
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
 
-# additional SWIG files to be installed
-howto_swiginclude_headers = \
-	howto_square_ff.i \
-	howto_square2_ff.i
-
-endif

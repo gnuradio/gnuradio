@@ -32,6 +32,9 @@
 ##   In some older autotools, $(builddir) is not defined, so
 ##   just use '.' instead.
 
+CLEANFILES = python/*.cc python/*.h python/*.lo python/*.o
+CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o
+
 SWIG_PYTHON_FLAGS =	\
 	-fvirtual	\
 	-python		\
@@ -40,13 +43,33 @@ SWIG_PYTHON_FLAGS =	\
 	-w511		\
 	-outdir .
 
-## standard swig flags used by most components
-
 STD_SWIG_PYTHON_ARGS =				\
 	$(SWIG_PYTHON_FLAGS)			\
 	$(STD_DEFINES_AND_INCLUDES)		\
 	$(WITH_SWIG_INCLUDES)			\
 	$(WITH_INCLUDES)
+
+# NOTE: -Linkage passive and -Linkage module don't define SWIG_init()
+SWIG_GUILE_FLAGS =	\
+	-guile		\
+	-scm		\
+	-scmstub	\
+	-package gnuradio \
+	-Linkage module \
+	-proxy \
+	-goopsprefix gr: \
+	-emit-slot-accessors \
+	-emit-setters \
+	-outdir .
+
+## standard swig flags used by most components
+
+STD_SWIG_GUILE_ARGS =				\
+	$(SWIG_GUILE_FLAGS)			\
+	$(STD_DEFINES_AND_INCLUDES)		\
+	$(WITH_SWIG_INCLUDES)			\
+	$(WITH_INCLUDES)			\
+	-I$(GNURADIO_CORE_INCLUDEDIR)/swig/guile
 
 ## standard SWIG LD flags for library creation
 
@@ -58,18 +81,13 @@ STD_SWIG_LA_LD_FLAGS =		\
 
 ## standard SWIG library additions for library creation
 
-STD_SWIG_LA_LIB_ADD =  		\
-	-lstdc++
+STD_SWIG_LA_LIB_ADD = -lstdc++
 
 ## standard SWIG CXXFLAGS
 ## This allows for code to be compiled with "-O1" instead of "-g -O2"
 ## for some systems, avoiding some optimization issues.
 
 STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
-
-## SWIG suffix for automake to know about
-
-SUFFIXES = .i
 
 ## Create $(srcdir)/Makefile.swig.gen, containing all of the rules
 ## for running SWIG to generate or re-generate outputs.  SWIG file
@@ -115,3 +133,4 @@ swig_built_sources =
 ## on variables defined above.
 
 include $(srcdir)/Makefile.swig.gen
+
