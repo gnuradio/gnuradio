@@ -104,6 +104,7 @@ swig_built_sources += $(PYTHON_GEN)
 endif				# end of if python
 
 if GUILE
+SWIG_GUILE_FLAGS += -DIN_GNURADIO_CORE
 #GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,%.scm,$(HFILE)))
 GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
 # GUILE_GEN_STAMPS = $(filter %.scm,$(TOP_SWIG_IFILES))

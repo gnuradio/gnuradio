@@ -32,8 +32,7 @@
   (blocks
    (src0 (gr:sig-source-f sample-rate (gr:GR-SIN-WAVE) 350 ampl))
    (src1 (gr:sig-source-f sample-rate (gr:GR-SIN-WAVE) 440 ampl))
-   ;;(sink (gr:audio-alsa-sink sample-rate "plughw:0,0"))
-   (sink (gr:sink sample-rate "plughw:0,0"))
+   (sink (gr:audio-alsa-sink sample-rate "plughw:0,0"))
    )
 
   (connections
