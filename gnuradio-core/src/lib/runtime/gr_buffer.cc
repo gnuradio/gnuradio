@@ -307,8 +307,8 @@ gr_buffer_reader::prune_tags(uint64_t max_time)
       d_buffer->tags_pop_front();
       n++;
     }
-    else
-      break;
+    //else
+    //  break;
     itr++;
   }
 }

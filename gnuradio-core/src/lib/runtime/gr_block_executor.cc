@@ -89,7 +89,7 @@ min_available_space (gr_block_detail *d, int output_multiple)
 
 static bool
 propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
-	       const std::vector<uint64_t> &start_nitems_read)
+	       const std::vector<uint64_t> &start_nitems_read, double rrate)
 {
   // Move tags downstream
   // if a sink, we don't need to move downstream;
@@ -109,8 +109,15 @@ propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
 							   d->nitems_read(i));
       std::vector<pmt::pmt_t>::iterator t;
       for(t = tuple.begin(); t != tuple.end(); t++ ) {
+	uint64_t newcount = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*t, 0));
+	pmt::pmt_t newtup = pmt::mp(pmt::pmt_from_uint64(newcount * rrate),
+				    pmt::pmt_tuple_ref(*t, 1),
+				    pmt::pmt_tuple_ref(*t, 2),
+				    pmt::pmt_tuple_ref(*t, 3));
+				    
 	for(int o = 0; o < d->noutputs(); o++)
-	  d->output(o)->add_item_tag(*t);
+	  d->output(o)->add_item_tag(newtup);
+	  //d->output(o)->add_item_tag(*t);
       }
     }
     break;
@@ -358,7 +365,8 @@ gr_block_executor::run_one_iteration()
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
 
-    if(!propagate_tags(m->tag_propagation_policy(), d, d_start_nitems_read))
+    if(!propagate_tags(m->tag_propagation_policy(), d,
+		       d_start_nitems_read, m->relative_rate()))
       goto were_done;
 
     if (n == gr_block::WORK_DONE)
