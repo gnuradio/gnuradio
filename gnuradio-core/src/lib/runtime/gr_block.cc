@@ -152,19 +152,21 @@ gr_block::add_item_tag(unsigned int which_output,
   d_detail->add_item_tag(which_output, offset, key, value, srcid);
 }
 
-std::vector<pmt::pmt_t>
-gr_block::get_tags_in_range(unsigned int which_output,
+void
+gr_block::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			    unsigned int which_output,
 			    uint64_t start, uint64_t end)
 {
-  return d_detail->get_tags_in_range(which_output, start, end);
+  d_detail->get_tags_in_range(v, which_output, start, end);
 }
   
-std::vector<pmt::pmt_t>
-gr_block::get_tags_in_range(unsigned int which_output,
+void
+gr_block::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			    unsigned int which_output,
 			    uint64_t start, uint64_t end,
 			    const pmt::pmt_t &key)
 {
-  return d_detail->get_tags_in_range(which_output, start, end, key);
+  d_detail->get_tags_in_range(v, which_output, start, end, key);
 }
 
 gr_block::TAG_PROPAGATION_POLICY

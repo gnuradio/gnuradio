@@ -268,13 +268,15 @@ class gr_block : public gr_basic_block {
    * Tags are tuples of:
    *      (item count, source id, key, value)
    *
+   * \param v            a vector reference to return tags into
    * \param which_input  an integer of which input stream to pull from
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  std::vector<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
-					    uint64_t abs_start,
-					    uint64_t abs_end);
+  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			 unsigned int which_input,
+			 uint64_t abs_start,
+			 uint64_t abs_end);
   
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range
@@ -285,15 +287,17 @@ class gr_block : public gr_basic_block {
    * Tags are tuples of:
    *      (item count, source id, key, value)
    *
+   * \param v            a vector reference to return tags into
    * \param which_input  an integer of which input stream to pull from
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    * \param key          a PMT symbol key to filter only tags of this key
    */
-  std::vector<pmt::pmt_t> get_tags_in_range(unsigned int which_input,
-					    uint64_t abs_start,
-					    uint64_t abs_end,
-					    const pmt::pmt_t &key);
+  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			 unsigned int which_input,
+			 uint64_t abs_start,
+			 uint64_t abs_end,
+			 const pmt::pmt_t &key);
 
   // These are really only for internal use, but leaving them public avoids
   // having to work up an ever-varying list of friends

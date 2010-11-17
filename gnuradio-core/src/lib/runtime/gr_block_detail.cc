@@ -169,25 +169,29 @@ gr_block_detail::add_item_tag(unsigned int which_output,
   }
 }
 
-std::vector<pmt_t>
-gr_block_detail::get_tags_in_range(unsigned int which_input,
+void
+gr_block_detail::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+				   unsigned int which_input,
 				   uint64_t abs_start,
 				   uint64_t abs_end)
 {
   // get from gr_buffer_reader's deque of tags
-  return d_input[which_input]->get_tags_in_range(abs_start, abs_end);
+  d_input[which_input]->get_tags_in_range(v, abs_start, abs_end);
 }
 
-std::vector<pmt_t>
-gr_block_detail::get_tags_in_range(unsigned int which_input,
+void
+gr_block_detail::get_tags_in_range(std::vector<pmt_t> &v,
+				   unsigned int which_input,
 				   uint64_t abs_start,
 				   uint64_t abs_end,
 				   const pmt_t &key)
 {
-  std::vector<pmt_t> found_items, found_items_by_key;
+  std::vector<pmt_t> found_items;
+  
+  v.resize(0);
 
   // get from gr_buffer_reader's deque of tags
-  found_items = d_input[which_input]->get_tags_in_range(abs_start, abs_end);
+  d_input[which_input]->get_tags_in_range(found_items, abs_start, abs_end);
 
   // Filter further by key name
   pmt_t itemkey;
@@ -195,9 +199,7 @@ gr_block_detail::get_tags_in_range(unsigned int which_input,
   for(itr = found_items.begin(); itr != found_items.end(); itr++) {
     itemkey = pmt_tuple_ref(*itr, 2);
     if(pmt_eqv(key, itemkey)) {
-      found_items_by_key.push_back(*itr);
+      v.push_back(*itr);
     }
   }
-
-  return found_items_by_key;
 }

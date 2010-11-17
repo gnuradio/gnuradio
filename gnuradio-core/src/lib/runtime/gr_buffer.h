@@ -255,11 +255,13 @@ class gr_buffer_reader {
    * Tags are tuples of:
    *      (item count, source id, key, value)
    *
+   * \param v            a vector reference to return tags into
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  std::vector<pmt::pmt_t> get_tags_in_range(uint64_t abs_start,
-					    uint64_t abs_end);
+  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			 uint64_t abs_start,
+			 uint64_t abs_end);
 
   void prune_tags(uint64_t max_time);
 

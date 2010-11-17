@@ -271,13 +271,14 @@ gr_buffer_reader::update_read_pointer (int nitems)
   d_abs_read_offset += nitems;
 }
 
-std::vector<pmt::pmt_t>
-gr_buffer_reader::get_tags_in_range(uint64_t abs_start,
+void
+gr_buffer_reader::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+				    uint64_t abs_start,
 				    uint64_t abs_end)
 {
   gruel::scoped_lock guard(*mutex());
 
-  std::vector<pmt::pmt_t> found_items;
+  v.resize(0);
   std::deque<pmt::pmt_t>::iterator itr = d_buffer->get_tags_begin();
   
   uint64_t item_time;
@@ -285,13 +286,11 @@ gr_buffer_reader::get_tags_in_range(uint64_t abs_start,
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
 
     if((item_time >= abs_start) && (item_time <= abs_end)) {
-      found_items.push_back(*itr);
+      v.push_back(*itr);
     }
 
     itr++;
   }
-
-  return found_items;
 }
 
 void
