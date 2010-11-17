@@ -49,8 +49,6 @@ In no particular order:
     how much faster it is.  Load time currently is currently kind of doggy.
 
 
-17) Get std::vector< std::complex<float> > working
-
 
 I'm sure I'm forgetting some things...
 
@@ -85,4 +83,6 @@ These are done:
     warning received when generating python bindings.
     Making the swig/python warning go away will probably resolve the
     guile problem.
+
+17) [DONE] Get std::vector< std::complex<float> > working
 
