@@ -53,7 +53,8 @@ swiginclude_HEADERS =			\
 
 # SWIG headers that get installed in ${prefix}/include/gnuradio/swig/...
 nobase_swiginclude_HEADERS = \
-	guile/std_complex.i
+	guile/std_complex.i \
+	guile/std_vector.i
 
 
 if PYTHON

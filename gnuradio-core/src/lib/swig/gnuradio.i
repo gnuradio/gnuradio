@@ -41,13 +41,22 @@
 %include <gr_shared_ptr.i>
 
 // non-local SWIG files
-%include <stl.i>
-%include <std_except.i>
-#ifdef SWIGGUILE
+#ifdef SWIGGUILE	// Local overrides to support complex
+// It's kind of screwy, but the target language subdir isn't
+// searched automatically except for under ./swig_lib which
+// doesn't really help us since we run swig in many directories
 %include <guile/std_complex.i>
+%include <guile/std_vector.i>
+%include <std_common.i>
+%include <std_string.i>
+%include <std_map.i>
+%include <std_pair.i>
 #else
 %include <std_complex.i>
+%include <std_vector.i>
+%include <stl.i>
 #endif
+%include <std_except.i>
 
 typedef std::complex<float>		gr_complex;
 typedef std::complex<double>		gr_complexd;
