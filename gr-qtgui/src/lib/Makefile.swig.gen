@@ -101,7 +101,7 @@ _qtgui_la_CXXFLAGS =			\
 
 qtgui_python_PYTHON =			\
 	qtgui.py			\
-	$(qtgui)
+	$(qtgui_python)
 
 python/qtgui.cc: qtgui.py
 qtgui.py: qtgui.i

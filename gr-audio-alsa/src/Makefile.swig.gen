@@ -101,7 +101,7 @@ _audio_alsa_la_CXXFLAGS =			\
 
 audio_alsa_python_PYTHON =			\
 	audio_alsa.py			\
-	$(audio_alsa)
+	$(audio_alsa_python)
 
 python/audio_alsa.cc: audio_alsa.py
 audio_alsa.py: audio_alsa.i

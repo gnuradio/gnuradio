@@ -101,7 +101,7 @@ _cvsd_vocoder_la_CXXFLAGS =			\
 
 cvsd_vocoder_python_PYTHON =			\
 	cvsd_vocoder.py			\
-	$(cvsd_vocoder)
+	$(cvsd_vocoder_python)
 
 python/cvsd_vocoder.cc: cvsd_vocoder.py
 cvsd_vocoder.py: cvsd_vocoder.i

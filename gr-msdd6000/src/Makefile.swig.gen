@@ -101,7 +101,7 @@ _msdd_la_CXXFLAGS =			\
 
 msdd_python_PYTHON =			\
 	msdd.py			\
-	$(msdd)
+	$(msdd_python)
 
 python/msdd.cc: msdd.py
 msdd.py: msdd.i
@@ -234,7 +234,7 @@ _msdd_rs_la_CXXFLAGS =			\
 
 msdd_rs_python_PYTHON =			\
 	msdd_rs.py			\
-	$(msdd_rs)
+	$(msdd_rs_python)
 
 python/msdd_rs.cc: msdd_rs.py
 msdd_rs.py: msdd_rs.i

@@ -101,7 +101,7 @@ _howto_la_CXXFLAGS =			\
 
 howto_python_PYTHON =			\
 	howto.py			\
-	$(howto)
+	$(howto_python)
 
 python/howto.cc: howto.py
 howto.py: howto.i

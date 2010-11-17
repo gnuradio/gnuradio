@@ -101,7 +101,7 @@ _audio_jack_la_CXXFLAGS =			\
 
 audio_jack_python_PYTHON =			\
 	audio_jack.py			\
-	$(audio_jack)
+	$(audio_jack_python)
 
 python/audio_jack.cc: audio_jack.py
 audio_jack.py: audio_jack.i

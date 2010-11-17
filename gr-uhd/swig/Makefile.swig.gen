@@ -101,7 +101,7 @@ _uhd_swig_la_CXXFLAGS =			\
 
 uhd_swig_python_PYTHON =			\
 	uhd_swig.py			\
-	$(uhd_swig)
+	$(uhd_swig_python)
 
 python/uhd_swig.cc: uhd_swig.py
 uhd_swig.py: uhd_swig.i

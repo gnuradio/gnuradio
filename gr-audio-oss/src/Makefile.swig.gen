@@ -101,7 +101,7 @@ _audio_oss_la_CXXFLAGS =			\
 
 audio_oss_python_PYTHON =			\
 	audio_oss.py			\
-	$(audio_oss)
+	$(audio_oss_python)
 
 python/audio_oss.cc: audio_oss.py
 audio_oss.py: audio_oss.i

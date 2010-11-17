@@ -101,7 +101,7 @@ _atsc_la_CXXFLAGS =			\
 
 atsc_python_PYTHON =			\
 	atsc.py			\
-	$(atsc)
+	$(atsc_python)
 
 python/atsc.cc: atsc.py
 atsc.py: atsc.i

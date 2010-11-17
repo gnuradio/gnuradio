@@ -101,7 +101,7 @@ _trellis_la_CXXFLAGS =			\
 
 trellis_python_PYTHON =			\
 	trellis.py			\
-	$(trellis)
+	$(trellis_python)
 
 python/trellis.cc: trellis.py
 trellis.py: trellis.i

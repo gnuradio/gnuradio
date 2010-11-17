@@ -101,7 +101,7 @@ _noaa_swig_la_CXXFLAGS =			\
 
 noaa_swig_python_PYTHON =			\
 	noaa_swig.py			\
-	$(noaa_swig)
+	$(noaa_swig_python)
 
 python/noaa_swig.cc: noaa_swig.py
 noaa_swig.py: noaa_swig.i

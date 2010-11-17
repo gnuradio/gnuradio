@@ -101,7 +101,7 @@ _usrp_swig_la_CXXFLAGS =			\
 
 usrp_swig_python_PYTHON =			\
 	usrp_swig.py			\
-	$(usrp_swig)
+	$(usrp_swig_python)
 
 python/usrp_swig.cc: usrp_swig.py
 usrp_swig.py: usrp_swig.i

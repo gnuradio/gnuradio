@@ -101,7 +101,7 @@ _gnuradio_core_runtime_la_CXXFLAGS =			\
 
 gnuradio_core_runtime_python_PYTHON =			\
 	gnuradio_core_runtime.py			\
-	$(gnuradio_core_runtime)
+	$(gnuradio_core_runtime_python)
 
 python/gnuradio_core_runtime.cc: gnuradio_core_runtime.py
 gnuradio_core_runtime.py: gnuradio_core_runtime.i
@@ -234,7 +234,7 @@ _gnuradio_core_general_la_CXXFLAGS =			\
 
 gnuradio_core_general_python_PYTHON =			\
 	gnuradio_core_general.py			\
-	$(gnuradio_core_general)
+	$(gnuradio_core_general_python)
 
 python/gnuradio_core_general.cc: gnuradio_core_general.py
 gnuradio_core_general.py: gnuradio_core_general.i
@@ -367,7 +367,7 @@ _gnuradio_core_gengen_la_CXXFLAGS =			\
 
 gnuradio_core_gengen_python_PYTHON =			\
 	gnuradio_core_gengen.py			\
-	$(gnuradio_core_gengen)
+	$(gnuradio_core_gengen_python)
 
 python/gnuradio_core_gengen.cc: gnuradio_core_gengen.py
 gnuradio_core_gengen.py: gnuradio_core_gengen.i
@@ -500,7 +500,7 @@ _gnuradio_core_filter_la_CXXFLAGS =			\
 
 gnuradio_core_filter_python_PYTHON =			\
 	gnuradio_core_filter.py			\
-	$(gnuradio_core_filter)
+	$(gnuradio_core_filter_python)
 
 python/gnuradio_core_filter.cc: gnuradio_core_filter.py
 gnuradio_core_filter.py: gnuradio_core_filter.i
@@ -633,7 +633,7 @@ _gnuradio_core_io_la_CXXFLAGS =			\
 
 gnuradio_core_io_python_PYTHON =			\
 	gnuradio_core_io.py			\
-	$(gnuradio_core_io)
+	$(gnuradio_core_io_python)
 
 python/gnuradio_core_io.cc: gnuradio_core_io.py
 gnuradio_core_io.py: gnuradio_core_io.i
@@ -766,7 +766,7 @@ _gnuradio_core_hier_la_CXXFLAGS =			\
 
 gnuradio_core_hier_python_PYTHON =			\
 	gnuradio_core_hier.py			\
-	$(gnuradio_core_hier)
+	$(gnuradio_core_hier_python)
 
 python/gnuradio_core_hier.cc: gnuradio_core_hier.py
 gnuradio_core_hier.py: gnuradio_core_hier.i

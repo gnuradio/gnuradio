@@ -101,7 +101,7 @@ _video_sdl_la_CXXFLAGS =			\
 
 video_sdl_python_PYTHON =			\
 	video_sdl.py			\
-	$(video_sdl)
+	$(video_sdl_python)
 
 python/video_sdl.cc: video_sdl.py
 video_sdl.py: video_sdl.i

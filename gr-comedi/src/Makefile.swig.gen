@@ -101,7 +101,7 @@ _comedi_la_CXXFLAGS =			\
 
 comedi_python_PYTHON =			\
 	comedi.py			\
-	$(comedi)
+	$(comedi_python)
 
 python/comedi.cc: comedi.py
 comedi.py: comedi.i

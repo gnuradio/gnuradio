@@ -101,7 +101,7 @@ _ra_la_CXXFLAGS =			\
 
 ra_python_PYTHON =			\
 	ra.py			\
-	$(ra)
+	$(ra_python)
 
 python/ra.cc: ra.py
 ra.py: ra.i

@@ -101,7 +101,7 @@ _gsm_full_rate_la_CXXFLAGS =			\
 
 gsm_full_rate_python_PYTHON =			\
 	gsm_full_rate.py			\
-	$(gsm_full_rate)
+	$(gsm_full_rate_python)
 
 python/gsm_full_rate.cc: gsm_full_rate.py
 gsm_full_rate.py: gsm_full_rate.i

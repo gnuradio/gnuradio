@@ -101,7 +101,7 @@ _audio_windows_la_CXXFLAGS =			\
 
 audio_windows_python_PYTHON =			\
 	audio_windows.py			\
-	$(audio_windows)
+	$(audio_windows_python)
 
 python/audio_windows.cc: audio_windows.py
 audio_windows.py: audio_windows.i

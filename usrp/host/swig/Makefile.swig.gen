@@ -101,7 +101,7 @@ _usrp_prims_la_CXXFLAGS =			\
 
 usrp_prims_python_PYTHON =			\
 	usrp_prims.py			\
-	$(usrp_prims)
+	$(usrp_prims_python)
 
 python/usrp_prims.cc: usrp_prims.py
 usrp_prims.py: usrp_prims.i

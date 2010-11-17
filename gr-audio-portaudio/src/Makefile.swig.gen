@@ -101,7 +101,7 @@ _audio_portaudio_la_CXXFLAGS =			\
 
 audio_portaudio_python_PYTHON =			\
 	audio_portaudio.py			\
-	$(audio_portaudio)
+	$(audio_portaudio_python)
 
 python/audio_portaudio.cc: audio_portaudio.py
 audio_portaudio.py: audio_portaudio.i

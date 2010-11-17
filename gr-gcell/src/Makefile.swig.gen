@@ -101,7 +101,7 @@ _gcell_la_CXXFLAGS =			\
 
 gcell_python_PYTHON =			\
 	gcell.py			\
-	$(gcell)
+	$(gcell_python)
 
 python/gcell.cc: gcell.py
 gcell.py: gcell.i

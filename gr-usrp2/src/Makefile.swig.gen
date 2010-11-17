@@ -101,7 +101,7 @@ _usrp2_la_CXXFLAGS =			\
 
 usrp2_python_PYTHON =			\
 	usrp2.py			\
-	$(usrp2)
+	$(usrp2_python)
 
 python/usrp2.cc: usrp2.py
 usrp2.py: usrp2.i
