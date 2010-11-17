@@ -177,7 +177,8 @@ libgeneral_la_SOURCES = 		\
 	gr_probe_mpsk_snr_c.cc		\
 	gr_probe_density_b.cc		\
 	gr_annotator_alltoall.cc	\
-	gr_annotator_1to1.cc
+	gr_annotator_1to1.cc		\
+	gr_burst_tagger.cc
 
 libgeneral_qa_la_SOURCES = 		\
 	qa_general.cc			\
@@ -348,7 +349,8 @@ grinclude_HEADERS = 			\
 	gr_probe_mpsk_snr_c.h		\
 	gr_probe_density_b.h		\
 	gr_annotator_alltoall.h		\
-	gr_annotator_1to1.h
+	gr_annotator_1to1.h		\
+	gr_burst_tagger.h
 
 noinst_HEADERS = 			\
 	qa_general.h			\
@@ -490,5 +492,6 @@ swiginclude_HEADERS =			\
 	gr_probe_mpsk_snr_c.i		\
 	gr_probe_density_b.i		\
 	gr_annotator_alltoall.i		\
-	gr_annotator_1to1.i
+	gr_annotator_1to1.i		\
+	gr_burst_tagger.i
 endif
