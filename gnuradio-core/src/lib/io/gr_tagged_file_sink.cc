@@ -52,7 +52,7 @@ gr_tagged_file_sink::gr_tagged_file_sink (size_t itemsize)
   : gr_sync_block ("tagged_file_sink",
 		   gr_make_io_signature (1, 1, itemsize),
 		   gr_make_io_signature (0, 0, 0)),
-    d_itemsize (itemsize)
+    d_itemsize (itemsize),d_n(0)
 {
   d_state = NOT_IN_BURST;
 }
@@ -88,6 +88,7 @@ gr_tagged_file_sink::work (int noutput_items,
   pmt::pmt_t tkey = pmt::pmt_string_to_symbol("packet_time_stamp");
   std::vector<pmt::pmt_t> all_tags = get_tags_in_range(0, start_N, end_N);
   std::sort(all_tags.begin(), all_tags.end(), pmtcompare);
+  std::cout << "Number of tags: " << all_tags.size() << std::endl;
 
   std::vector<pmt::pmt_t>::iterator vitr = all_tags.begin();
 
@@ -95,13 +96,15 @@ gr_tagged_file_sink::work (int noutput_items,
   while(idx < noutput_items) {
     if(d_state == NOT_IN_BURST) {
       while(vitr != all_tags.end()) {
+	//std::cout << "\tNot in burst: " << *vitr << std::endl;
+
 	if((pmt::pmt_eqv(pmt::pmt_tuple_ref(*vitr, 2), bkey)) &&
 	   pmt::pmt_is_true(pmt::pmt_tuple_ref(*vitr,3))) {
+
 	  uint64_t N = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*vitr, 0)) - start_N;
 	  idx = (int)N;
-	  d_state = IN_BURST;
 	  
-	  std::cout << "Found start of burst: " << N << std::endl;
+	  std::cout << std::endl << "Found start of burst: " << N << ", " << N+start_N << std::endl;
 	  
 	  std::stringstream filename;
 	  filename << "file" << d_n << ".dat";
@@ -124,23 +127,27 @@ gr_tagged_file_sink::work (int noutput_items,
 
 	  std::cout << "Created new file: " << filename.str() << std::endl;
 
+	  d_state = IN_BURST;
 	  break;
 	}
 	
 	vitr++;
       }
-      return noutput_items;
+      if(d_state == NOT_IN_BURST)
+	return noutput_items;
     }
     else {  // In burst
       while(vitr != all_tags.end()) {
+	//std::cout << "\tin burst: " << *vitr << std::endl;
+
 	if((pmt::pmt_eqv(pmt::pmt_tuple_ref(*vitr, 2), bkey)) &&
 	   pmt::pmt_is_false(pmt::pmt_tuple_ref(*vitr,3))) {
 	  uint64_t N = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*vitr, 0)) - start_N;
 	  idx_stop = (int)N;
 
-	  std::cout << "Found end of burst: " << N << std::endl;
+	  std::cout << "Found end of burst: " << N << ", " << N+start_N << std::endl;
 
-	  int count = fwrite (&inbuf[idx], d_itemsize, idx_stop-idx, d_handle);
+	  int count = fwrite (&inbuf[d_itemsize*idx], d_itemsize, idx_stop-idx, d_handle);
 	  if (count == 0)
 	    break;
 	  idx = idx_stop;
@@ -153,7 +160,7 @@ gr_tagged_file_sink::work (int noutput_items,
 	}
       }
       if(d_state == IN_BURST) {
-	std::cout << "writing part of burst: " << idx << std::endl;
+	std::cout << "writing part of burst: " << noutput_items-idx << std::endl;
 	int count = fwrite (&inbuf[idx], d_itemsize, noutput_items-idx, d_handle);
 	if (count == 0)
 	  break;
