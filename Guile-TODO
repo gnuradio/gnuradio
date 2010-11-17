@@ -18,11 +18,6 @@ In no particular order:
 
 6)  Fix printed representation of blocks in gr_block.i
 
-7)  Fix gr-usrp so that it works.  Probably related to
-    warning received when generating python bindings.
-    Making the swig/python warning go away will probably resolve the
-    guile problem.
-
 8)  Fix gr_message_{sink,source} so that they work under guile.
     (Not sure if I disabled one or both of these...)
 
@@ -85,4 +80,9 @@ These are done:
 4)  [DONE] Fix GR_SWIG_BLOCK_MAGIC so that in the guile case we don't map all
     the constructors into the same name.  E.g. audio_alsa_sink -> sink.
     (Causes problem when multiple gr-* modules are used.)
+
+7)  [DONE] Fix gr-usrp so that it works.  Probably related to
+    warning received when generating python bindings.
+    Making the swig/python warning go away will probably resolve the
+    guile problem.
 

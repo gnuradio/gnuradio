@@ -39,6 +39,7 @@
 %include "usrp_sink_c.i"
 %include "usrp_sink_s.i"
 
+#ifdef SWIGPYTHON
 //---Allow a more Pythonic interface
 %pythoncode %{
 
@@ -141,6 +142,8 @@ usrp_source_c_sptr.pick_rx_subdevice      = __pick_rx_subdevice
 usrp_source_s_sptr.pick_rx_subdevice      = __pick_rx_subdevice
 
 %}
+#endif
+
 
 #if SWIGGUILE
 %scheme %{
