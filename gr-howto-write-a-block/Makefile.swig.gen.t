@@ -101,7 +101,7 @@ _@NAME@_la_CXXFLAGS =			\
 
 @NAME@_python_PYTHON =			\
 	@NAME@.py			\
-	$(@NAME@)
+	$(@NAME@_python)
 
 python/@NAME@.cc: @NAME@.py
 @NAME@.py: @NAME@.i
