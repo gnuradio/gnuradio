@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include <iostream>
+#include <gr_tag_info.h>
 
 #ifdef O_BINARY
 #define	OUR_O_BINARY O_BINARY
@@ -85,8 +86,11 @@ gr_tagged_file_sink::work (int noutput_items,
   uint64_t start_N = nitems_read(0);
   uint64_t end_N = start_N + (uint64_t)(noutput_items);
   pmt::pmt_t bkey = pmt::pmt_string_to_symbol("burst");
-  pmt::pmt_t tkey = pmt::pmt_string_to_symbol("packet_time_stamp");
-  std::vector<pmt::pmt_t> all_tags = get_tags_in_range(0, start_N, end_N);
+  //pmt::pmt_t tkey = pmt::pmt_string_to_symbol("time"); // use gr_tags::s_key_time
+
+  std::vector<pmt::pmt_t> all_tags;
+  get_tags_in_range(all_tags, 0, start_N, end_N);
+
   std::sort(all_tags.begin(), all_tags.end(), pmtcompare);
   std::cout << "Number of tags: " << all_tags.size() << std::endl;
 
@@ -98,10 +102,10 @@ gr_tagged_file_sink::work (int noutput_items,
       while(vitr != all_tags.end()) {
 	//std::cout << "\tNot in burst: " << *vitr << std::endl;
 
-	if((pmt::pmt_eqv(pmt::pmt_tuple_ref(*vitr, 2), bkey)) &&
-	   pmt::pmt_is_true(pmt::pmt_tuple_ref(*vitr,3))) {
+	if((pmt::pmt_eqv(gr_tags::get_key(*vitr), bkey)) &&
+	   pmt::pmt_is_true(gr_tags::get_value(*vitr))) {
 
-	  uint64_t N = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*vitr, 0)) - start_N;
+	  uint64_t N = gr_tags::get_nitems(*vitr) - start_N;
 	  idx = (int)N;
 	  
 	  std::cout << std::endl << "Found start of burst: " << N << ", " << N+start_N << std::endl;
@@ -140,9 +144,9 @@ gr_tagged_file_sink::work (int noutput_items,
       while(vitr != all_tags.end()) {
 	//std::cout << "\tin burst: " << *vitr << std::endl;
 
-	if((pmt::pmt_eqv(pmt::pmt_tuple_ref(*vitr, 2), bkey)) &&
-	   pmt::pmt_is_false(pmt::pmt_tuple_ref(*vitr,3))) {
-	  uint64_t N = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*vitr, 0)) - start_N;
+	if((pmt::pmt_eqv(gr_tags::get_key(*vitr), bkey)) &&
+	   pmt::pmt_is_false(gr_tags::get_value(*vitr))) {
+	  uint64_t N = gr_tags::get_nitems(*vitr) - start_N;
 	  idx_stop = (int)N;
 
 	  std::cout << "Found end of burst: " << N << ", " << N+start_N << std::endl;
