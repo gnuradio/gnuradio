@@ -50,9 +50,8 @@
 ;;; ./gengen/gr_add_const_ss.h
 (pass-if (true? (gr:add-const-ss 0)))
 
-;;; ./gengen/gr_add_const_vcc.h FIXME: Wrong type argument in position ~A:
-;; gr_make_add_const_vcc (const std::vector<gr_complex> &k);
-;; (pass-if (true? (gr:add-const-vcc #(1+3i 23+5i))))
+;;; ./gengen/gr_add_const_vcc.h
+(pass-if (true? (gr:add-const-vcc #(1+3i 23+5i))))
 
 ;;; ./gengen/gr_add_const_vff.h
 (pass-if (true? (gr:add-const-vff #(1.0 2.0))))
@@ -99,25 +98,23 @@
 ;;; ./gengen/gr_argmax_ss.h
 (pass-if (true? (gr:argmax-ss 1)))
 
-;;; ./gengen/gr_chunks_to_symbols_bc.h FIXME: not found
-;; (pass-if (true? (gr:chunks-to-symbols-bc #(1+3i 23+5i) 1)))
+;;; ./gengen/gr_chunks_to_symbols_bc.h
+(pass-if (true? (gr:chunks-to-symbols-bc #(1+3i 23+5i) 1)))
 
 ;;; ./gengen/gr_chunks_to_symbols_bf.h
 (pass-if (true? (gr:chunks-to-symbols-bf #(1.0 2.0) 1)))
 
-;;; ./gengen/gr_chunks_to_symbols_ic.h FIXME: not found
-;; gr_make_chunks_to_symbols_ic (const std::vector<gr_complex> &symbol_table, const int D = 1);
-;; (pass-if (true? (gr:chunks-to-symbols-ic #(1+3i 23+5i) 1)))
+;;; ./gengen/gr_chunks_to_symbols_ic.h
+(pass-if (true? (gr:chunks-to-symbols-ic #(1+3i 23+5i) 1)))
 
-;;; ./gengen/gr_chunks_to_symbols_if.h FIXME: not found
-;; gr_make_chunks_to_symbols_if (const std::vector<float> &symbol_table, const int D = 1);
-;; (pass-if (true? (gr:chunks_to_symbols_if #(1.0 2.0) 1)))
+;;; ./gengen/gr_chunks_to_symbols_if.h
+(pass-if (true? (gr:chunks-to-symbols-if #(1.0 2.0) 1)))
 
-;;; ./gengen/gr_chunks_to_symbols_sc.h FIXME: not found
-;; (pass-if (true? (gr:chunks_to_symbols_sc #(1.0 2.0) 1)))
+;;; ./gengen/gr_chunks_to_symbols_sc.h
+(pass-if (true? (gr:chunks-to-symbols-sc #(1.0 2.0) 1)))
 
-;;; ./gengen/gr_chunks_to_symbols_sf.h FIXME: not found
-;; (pass-if (true? (gr:chunks_to_symbols_sf #(1.0 2.0) 1)))
+;;; ./gengen/gr_chunks_to_symbols_sf.h
+(pass-if (true? (gr:chunks-to-symbols-sf #(1.0 2.0) 1)))
 
 ;;; ./gengen/gr_divide_cc.h
 (pass-if (true? (gr:divide-cc 1)))
@@ -179,9 +176,8 @@
 ;;; ./gengen/gr_multiply_const_ss.h
 (pass-if (true? (gr:multiply-const-ss 1)))
 
-;;; ./gengen/gr_multiply_const_vcc.h FIXME: wrong type argument in position ~A:
-;; gr_make_multiply_const_vcc (const std::vector<gr_complex> &k);
-;; (pass-if (true? (gr:multiply-const-vcc #(1+3i 23+5i))))
+;;; ./gengen/gr_multiply_const_vcc.h
+(pass-if (true? (gr:multiply-const-vcc #(1+3i 23+5i))))
 
 ;;; ./gengen/gr_multiply_const_vff.h
 (pass-if (true? (gr:multiply-const-vff #(1.0 2.0))))
@@ -321,19 +317,16 @@
 ;;; ./gengen/gr_vector_sink_s.h
 (pass-if (true? (gr:vector-sink-s 1)))
 
-;;; ./gengen/gr_vector_source_b.h FIXME: not found
+;;; ./gengen/gr_vector_source_b.h
 ;; (pass-if (true? (gr:vector-source-b #(1 2) false 1)))
 
-;;; ./gengen/gr_vector_source_c.h FIXME: not found
-;; gr_make_vector_source_c (const std::vector<gr_complex> &data, bool repeat = false, int vlen = 1)
+;; ;;; ./gengen/gr_vector_source_c.h
 ;; (pass-if (true? (gr:vector-source-c #(1+3i 23+5i) false 1)))
 
-;;; ./gengen/gr_vector_source_f.h FIXME: not found
-;; gr_make_vector_source_f (const std::vector<float> &data, bool repeat = false, int vlen = 1)
+;; ;;; ./gengen/gr_vector_source_f.h
 ;; (pass-if (true? (gr:vector-source-f #(1.0 2.0) false 1)))
 
-;;; ./gengen/gr_vector_source_i.h FIXME: not found
-;; gr_make_vector_source_i (const std::vector<int> &data, bool repeat = false, int vlen = 1)
+;;; ./gengen/gr_vector_source_i.h
 ;; (pass-if (true? (gr:vector-source-i #(1 2) false 1)))
 
 ;;; ./gengen/gr_vector_source_s.h FIXME: not found

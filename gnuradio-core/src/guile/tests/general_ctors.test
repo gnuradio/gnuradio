@@ -116,10 +116,8 @@
 ;;; ./general/gr_conjugate_cc.h
 (pass-if (true? (gr:conjugate-cc)))
 
-;;; ./general/gr_constellation_decoder_cb.h FIXME: wrong-arg-type (not sure why...)
-;gr_constellation_decoder_cb (const std::vector<gr_complex> &sym_position, 
-;                               const std::vector<unsigned char> &sym_value_out);
-;; (pass-if (true? (gr:constellation-decoder-cb #(2+3i 23+5i) #(0 1))))
+;;; ./general/gr_constellation_decoder_cb.h
+(pass-if (true? (gr:constellation-decoder-cb #(2+3i 23+5i) #(0 1))))
 
 ;;; ./general/gr_copy.h
 (pass-if (true? (gr:copy 1)))
@@ -167,7 +165,7 @@
 ;;; ./general/gr_encode_ccsds_27_bb.h
 (pass-if (true? (gr:encode-ccsds-27-bb)))
 
-;;; ./general/gr_fake_channel_coder_pp.h FIXME: file name doesn't match class name
+;;; ./general/gr_fake_channel_coder_pp.h
 (pass-if (true? (gr:fake-channel-encoder-pp 1 1)))
 (pass-if-throw "confirm throw" #t (true? (gr:fake-channel-encoder-pp -1 1)))
 
@@ -178,7 +176,6 @@
 (pass-if (true? (gr:fft-vcc 1 #f #(1.0 2.0) #t)))
 
 ;;; ./general/gr_fft_vfc.h
-;; bool set_window(const std::vector<float> &window);
 (pass-if (true? (gr:fft-vfc 4 #t #(1.0 2.0 3.0 4.0))))
 (pass-if-throw "confirm throw gr:fft-vfc" #t (true? (gr:fft-vfc 4 #f #(1.0 2.0 3.0 4.0))))
 
@@ -239,7 +236,6 @@
 (pass-if (true? (gr:lms-dfe-ff 1 1 1 1)))
 
 ;;; ./general/gr_map_bb.h
-;; gr_map_bb (const std::vector<int> &map);
 (pass-if (true? (gr:map-bb #(1 2))))
 
 ;;; ./general/gr_mpsk_receiver_cc.h
@@ -260,25 +256,14 @@
 ;;; ./general/gr_ofdm_cyclic_prefixer.h
 (pass-if (true? (gr:ofdm-cyclic-prefixer 1 1)))
 
-;;; ./general/gr_ofdm_frame_acquisition.h FIXME: "No matching method for generic function `ofdm_frame_acquisition'"
-;; gr_ofdm_frame_acquisition (unsigned int occupied_carriers,
-;;                              unsigned int fft_length,
-;;                              unsigned int cplen,
-;;                              const std::vector<gr_complex> &known_symbol, 
-;;                              unsigned int max_fft_shift_len);
-;; (pass-if (true? (gr:ofdm-frame-acquisition 0 0 0 #(1+3i 23+5i) 0)))
+;;; ./general/gr_ofdm_frame_acquisition.h
+(pass-if (true? (gr:ofdm-frame-acquisition 1 1 1 #(1+3i 23+5i) 1)))
 
 ;;; ./general/gr_ofdm_frame_sink.h FIXME: "No matching method for generic function `ofdm_frame_sink'"
-;; gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
-;;                      const std::vector<unsigned char> &sym_value_out,
-;;                      gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-;;                      float phase_gain, float freq_gain);
-;;(pass-if (true? (gr:ofdm-frame-sink #(1+3i 23+5i) #(1 2) (gr:msg-queue) 1 0.25 0)))
+;; (pass-if (true? (gr:ofdm-frame-sink #(1+3i 23+5i) #(1 2) (gr:msg-queue) 1 0.25 0)))
 
-;;; ./general/gr_ofdm_insert_preamble.h FIXME: Wrong type argument in position ~A:
-;; gr_ofdm_insert_preamble(int fft_length,
-;;                           const std::vector<std::vector<gr_complex> > &preamble);
-;;(pass-if (true? (gr:ofdm-insert-preamble 1 #(#(1+3i 23+5i)))))
+;;; ./general/gr_ofdm_insert_preamble.h FIXME: "Wrong type argument in position ~A: ~S"
+;; (pass-if (true? (gr:ofdm-insert-preamble 1 #(#(1+3i 23+5i)))))
 
 ;;; ./general/gr_ofdm_mapper_bcv.h FIXME: Wrong type argument in position ~A:
 ;; gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation,

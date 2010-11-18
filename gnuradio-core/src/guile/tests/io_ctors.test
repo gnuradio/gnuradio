@@ -33,10 +33,10 @@
 ;;;
 
 ;;; ./io/gr_file_descriptor_sink.h
-;;(pass-if (true? (gr:file-descriptor-sink 0 0))) FIXME: throws gr_io_signature(3)
+(pass-if (true? (gr:file-descriptor-sink 1 1)))
 
-;;; ./io/gr_file_descriptor_source.h
-;; (pass-if (true? (gr:file-descriptor-source 1 1 false))) FIXME: not found
+;;; ./io/gr_file_descriptor_source.h  FIXME: not found
+;; (pass-if (true? (gr:file-descriptor-source 1 1 false)))
 
 ;;; ./io/gr_file_sink.h
 (pass-if (true? (gr:file-sink 1 "foo")))
@@ -51,8 +51,8 @@
 ;;; ./io/gr_message_sink.h FIXME: not found
 ;; (pass-if (true? (gr:message-sink 1 1 false)))
 
-;;; ./io/gr_message_source.h
-;; (pass-if (true? (gr:message-source )))
+;;; ./io/gr_message_source.h FIXME: not found
+;; (pass-if (true? (gr:message-source 1.0 0)))
 
 ;;; ./io/gr_oscope_sink_f.h FIXME: not found
 ;; _oscope_sink_x (const std::string name, gr_io_signature_sptr input_sig,
