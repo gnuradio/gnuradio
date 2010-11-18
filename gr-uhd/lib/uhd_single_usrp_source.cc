@@ -32,7 +32,7 @@ uhd_single_usrp_source::uhd_single_usrp_source(gr_io_signature_sptr sig)
  :gr_sync_block("uhd single_usrp source", gr_make_io_signature(0, 0, 0), sig)
 {
   d_num_packet_samps = 0;
-  d_tstamp_pair = pmt::pmt_cons(pmt::mp(0), pmt::mp(0));
+  d_tstamp_pair = pmt::mp(pmt::mp(0), pmt::mp(0));
 }
 
 /***********************************************************************
@@ -147,8 +147,8 @@ public:
 	    //keep track of the number of accumulated samples in this packet
 	    if (metadata.fragment_offset == 0) {
 	      d_num_packet_samps = 0;
-	      d_tstamp_pair = pmt::pmt_cons(pmt::mp(metadata.time_spec.get_full_secs()),
-					    pmt::mp(metadata.time_spec.get_frac_secs()));
+	      d_tstamp_pair = pmt::mp(pmt::mp(metadata.time_spec.get_full_secs()),
+				      pmt::mp(metadata.time_spec.get_frac_secs()));
 	    }
 	    d_num_packet_samps += num_samps;
 	    
