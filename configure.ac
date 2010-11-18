@@ -149,17 +149,6 @@ AC_ARG_ENABLE([python],
   [enable_python=yes]
 )
 
-AC_ARG_ENABLE([tcl],
-  [AS_HELP_STRING([--enable-tcl],
-    [generate SWIG/Tcl components (default is yes)])],
-  [case "${enableval}" in
-     yes) enable_tcl=yes ;;
-     no) enable_tcl=no ;;
-     *) AC_MSG_ERROR([bad value ${enableval} for --enable-tcl]) ;;
-   esac],
-  [enable_tcl=no]
-)
-
 AC_ARG_ENABLE([guile],
   [AS_HELP_STRING([--enable-guile],
     [generate SWIG/Guile components (default is yes)])],
@@ -170,11 +159,8 @@ AC_ARG_ENABLE([guile],
    esac],
   [enable_guile=no]
 )
-if test x${enable_guile} = xno -a x${enable_tcl} = xno; then
-  enable_python=yes
-fi
+
 AM_CONDITIONAL([PYTHON], [test x$enable_python = xyes])
-AM_CONDITIONAL([TCL], [test x$enable_tcl = xyes])
 AM_CONDITIONAL([GUILE], [test x$enable_guile = xyes])
 
 AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
