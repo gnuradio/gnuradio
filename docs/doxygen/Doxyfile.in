@@ -587,7 +587,7 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/docs/doxygen/xml-swig \
                          @abs_top_builddir@/docs/doxygen/other/doxypy.py \
                          @abs_top_builddir@/dtools \
-                         @abs_top_builddir@/gcell/ibm \
+                         @abs_top_srcdir@/gcell/ibm \
                          @abs_top_builddir@/gnuradio-core/src/lib/bug_work_around_6.cc \
                          @abs_top_builddir@/gnuradio-core/src/lib/filter/assembly.h \
                          @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_all.py \
@@ -666,7 +666,9 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/usrp/host/misc \
                          @abs_top_builddir@/usrp/host/swig \
                          @abs_top_builddir@/usrp2/firmware \
-                         @abs_top_builddir@/usrp2/fpga
+                         @abs_top_srcdir@/usrp2/firmware \
+                         @abs_top_builddir@/usrp2/fpga \
+                         @abs_top_srcdir@/usrp2/fpga
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
