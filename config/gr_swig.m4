@@ -26,7 +26,8 @@ dnl
 # is greater or equal to the value of the argument.  It should have the format:
 # N[.N[.N]] (N is a number between 0 and 999.  Only the first N is mandatory.)
 AC_DEFUN([SWIG_PROG],[
-	AC_REQUIRE([AC_PROG_MAKE_SET])
+    AC_REQUIRE([AC_PROG_MAKE_SET])
+    if test x${enable_python} = xyes -o x${enable_guile} = xyes; then
 	AC_CHECK_PROG(SWIG,swig,[`which swig`])
 	if test -z "$SWIG" ; then
 		AC_MSG_ERROR([Cannot find 'swig' program.  SWIG version >= $1 required])
@@ -48,6 +49,7 @@ AC_DEFUN([SWIG_PROG],[
 			AC_MSG_ERROR([cannot determine SWIG version])
 		fi
 	fi
+    fi
 ])
 
 # SWIG_ENABLE_CXX()
@@ -56,9 +58,11 @@ AC_DEFUN([SWIG_PROG],[
 AC_DEFUN([SWIG_ENABLE_CXX],[
 	AC_REQUIRE([SWIG_PROG])
 	AC_REQUIRE([AC_PROG_CXX])
-	if test "$SWIG" != "false" ; then
+	if test x${enable_python} = xyes -o x${enable_guile} = xyes; then
+	    if test "$SWIG" != "false" ; then
 		SWIG="$SWIG -c++"
-	fi
+	    fi
+        fi
 ])
 
 # SWIG_PYTHON([use-shadow-classes])
