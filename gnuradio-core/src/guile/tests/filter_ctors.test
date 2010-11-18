@@ -154,29 +154,29 @@
 ;;; ./filter/gr_fir_sysconfig_x86.h FIXME: virtual methods
 ;; (pass-if (true? (gr:fir-sysconfig-x86 #(1+3i 23+5i))))
 
-;;; ./filter/gr_fractional_interpolator_cc.h FIXME: file not found
-;; (pass-if (true? (gr:fractional-interpolator-cc 1.0 1.0)))
+;;; ./filter/gr_fractional_interpolator_cc.h
+(pass-if (true? (gr:fractional-interpolator-cc 1.0 1.0)))
 
-;;; ./filter/gr_fractional_interpolator_ff.h FIXME: file not found
-;; (pass-if (true? (gr:fractional-interpolator-ff 1.0 1.0)))
+;;; ./filter/gr_fractional_interpolator_ff.h
+(pass-if (true? (gr:fractional-interpolator-ff 1.0 1.0)))
 
-;;; ./filter/gr_freq_xlating_fir_filter_ccc.h FIXME: file not found
-;; (pass-if (true? (gr:freq-xlating-fir-filter-ccc 1.0 1.0)))
+;;; ./filter/gr_freq_xlating_fir_filter_ccc.h 
+(pass-if (true? (gr:freq-xlating-fir-filter-ccc 1 #(1+3i 23+5i) 1.0 1.0)))
 
-;;; ./filter/gr_freq_xlating_fir_filter_ccf.h FIXME: file not found
-;; (pass-if (true? (gr:freq-xlating-fir-filter-ccf 1.0 1.0)))
+;;; ./filter/gr_freq_xlating_fir_filter_ccf.h
+(pass-if (true? (gr:freq-xlating-fir-filter-ccf 1 #(1.0 2.0) 1.0 1.0)))
 
-;;; ./filter/gr_freq_xlating_fir_filter_fcc.h FIXME: file not found
-;; (pass-if (true? (gr:freq-xlating-fir-filter-fcc 1.0 1.0)))
+;;; ./filter/gr_freq_xlating_fir_filter_fcc.h
+(pass-if (true? (gr:freq-xlating-fir-filter-fcc 1 #(1.0 2.0) 1.0 1.0)))
 
-;;; ./filter/gr_freq_xlating_fir_filter_fcf.h FIXME: file not found
-;; (pass-if (true? (gr:freq-xlating-fir-filter-fcf 1.0 1.0)))
+;;; ./filter/gr_freq_xlating_fir_filter_fcf.h
+(pass-if (true? (gr:freq-xlating-fir-filter-fcf 1 #(1.0 2.0) 1.0 1.0)))
 
-;;; ./filter/gr_freq_xlating_fir_filter_scc.h FIXME: file not found
-;; (pass-if (true? (gr:freq-xlating-fir-filter-scc 1.0 1.0)))
+;;; ./filter/gr_freq_xlating_fir_filter_scc.h
+(pass-if (true? (gr:freq-xlating-fir-filter-scc 1 #(1.0 2.0) 1.0 1.0)))
 
-;;; ./filter/gr_freq_xlating_fir_filter_scf.h FIXME: file not found
-;; (pass-if (true? (gr:freq-xlating-fir-filter-scf 1.0 1.0)))
+;;; ./filter/gr_freq_xlating_fir_filter_scf.h
+(pass-if (true? (gr:freq-xlating-fir-filter-scf 1 #(1.0 2.0) 1.0 1.0)))
 
 ;;; ./filter/gr_goertzel_fc.h
 (pass-if (true? (gr:goertzel-fc 1 1 1)))
@@ -187,22 +187,22 @@
 ;;; ./filter/gr_iir_filter_ffd.h
 (pass-if (true? (gr:iir-filter-ffd #(1.0 2.0) #(1.0 2.0))))
 
-;;; ./filter/gr_interp_fir_filter_ccc.h FIXME: file not found
-;; (pass-if (true? (gr:interp-fir-filter-ccc )))
+;;; ./filter/gr_interp_fir_filter_ccc.h FIXME: not found
+;; (pass-if (true? (gr:interp-fir-filter-ccc #(1+3i 23+5i))))
 
-;;; ./filter/gr_interp_fir_filter_ccf.h FIXME: file not found
+;;; ./filter/gr_interp_fir_filter_ccf.h FIXME: not found
 ;; (pass-if (true? (gr:interp-fir-filter-ccf )))
 
-;;; ./filter/gr_interp_fir_filter_fcc.h FIXME: file not found
+;;; ./filter/gr_interp_fir_filter_fcc.h FIXME: not found
 ;; (pass-if (true? (gr:interp-fir-filter-fcc )))
 
-;;; ./filter/gr_interp_fir_filter_fff.h FIXME: file not found
+;;; ./filter/gr_interp_fir_filter_fff.h FIXME: not found
 ;; (pass-if (true? (gr:interp-fir-filter-fff )))
 
-;;; ./filter/gr_interp_fir_filter_fsf.h FIXME: file not found
+;;; ./filter/gr_interp_fir_filter_fsf.h FIXME: not found
 ;; (pass-if (true? (gr:interp-fir-filter-fsf )))
 
-;;; ./filter/gr_interp_fir_filter_scc.h FIXME: file not found
+;;; ./filter/gr_interp_fir_filter_scc.h FIXME: not found
 ;; (pass-if (true? (gr:interp-fir-filter-scc )))
 
 ;;; ./filter/gr_pfb_arb_resampler_ccf.h
@@ -223,22 +223,22 @@
 ;;; ./filter/gr_pfb_interpolator_ccf.h
 (pass-if (true? (gr:pfb-interpolator-ccf 1 #(1.0 2.0))))
 
-;;; ./filter/gr_rational_resampler_base_ccc.h FIXME: file not found
-;; (pass-if (true? (gr:rational-resampler-base-ccc )))
+;;; ./filter/gr_rational_resampler_base_ccc.h FIXME: not found
+;; (pass-if (true? (gr:rational-resampler-base-ccc 1 1 #(1+3i 23+5i))))
 
-;;; ./filter/gr_rational_resampler_base_ccf.h FIXME: file not found
+;;; ./filter/gr_rational_resampler_base_ccf.h FIXME: not found
 ;; (pass-if (true? (gr:rational-resampler-base-ccf )))
 
-;;; ./filter/gr_rational_resampler_base_fcc.h FIXME: file not found
+;;; ./filter/gr_rational_resampler_base_fcc.h FIXME: not found
 ;; (pass-if (true? (gr:rational-resampler-base-fcc )))
 
-;;; ./filter/gr_rational_resampler_base_fff.h FIXME: file not found
+;;; ./filter/gr_rational_resampler_base_fff.h FIXME: not found
 ;; (pass-if (true? (gr:rational-resampler-base-fff )))
 
-;;; ./filter/gr_rational_resampler_base_fsf.h FIXME: file not found
+;;; ./filter/gr_rational_resampler_base_fsf.h FIXME: not found
 ;; (pass-if (true? (gr:rational-resampler-base-fsf )))
 
-;;; ./filter/gr_rational_resampler_base_scc.h FIXME: file not found
+;;; ./filter/gr_rational_resampler_base_scc.h FIXME: not found
 ;; (pass-if (true? (gr:rational-resampler-base-scc )))
 
 ;;; ./filter/gr_single_pole_iir_filter_cc.h

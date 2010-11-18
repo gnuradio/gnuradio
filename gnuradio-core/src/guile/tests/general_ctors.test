@@ -260,7 +260,7 @@
 (pass-if (true? (gr:ofdm-frame-acquisition 1 1 1 #(1+3i 23+5i) 1)))
 
 ;;; ./general/gr_ofdm_frame_sink.h FIXME: "No matching method for generic function `ofdm_frame_sink'"
-;; (pass-if (true? (gr:ofdm-frame-sink #(1+3i 23+5i) #(1 2) (gr:msg-queue) 1 0.25 0)))
+;; (pass-if (true? (gr:ofdm-frame-sink #(1+3i 23+5i) #('a' 'b') (gr:msg-queue) 1 0.25 0)))
 
 ;;; ./general/gr_ofdm_insert_preamble.h FIXME: "Wrong type argument in position ~A: ~S"
 ;; (pass-if (true? (gr:ofdm-insert-preamble 1 #(#(1+3i 23+5i)))))
