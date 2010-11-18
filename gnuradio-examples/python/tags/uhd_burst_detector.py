@@ -70,7 +70,6 @@ class uhd_burst_detector(gr.top_block):
         self.uhd_src_0.set_samp_rate(self.samp_rate)
             
 if __name__ == '__main__':
-    a = 1
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     (options, args) = parser.parse_args()
     
