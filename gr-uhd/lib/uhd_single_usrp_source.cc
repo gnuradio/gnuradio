@@ -134,9 +134,10 @@ public:
         uhd::rx_metadata_t metadata; //not passed out of this block
 
 	size_t total_samps = 0;
-	while(total_samps + 362 < noutput_items) {
+	while(total_samps + 362 < (size_t)noutput_items) {
 	  size_t num_samps = _dev->get_device()->recv(
               output_items, noutput_items, metadata,
+	      //_type, uhd::device::RECV_MODE_FULL_BUFF
               _type, uhd::device::RECV_MODE_ONE_PACKET
           );
 	  total_samps += num_samps;
@@ -157,7 +158,6 @@ public:
 	      pmt::pmt_t tsamp, nsamp;
 	      pmt::pmt_t nsamp_val = pmt::mp((int)d_num_packet_samps);
 	      
-	      
 	      add_item_tag(0, nitems_written(0),
 			   pmt::mp("packet_time_stamp"),
 			   d_tstamp_pair,
@@ -166,7 +166,6 @@ public:
 			   pmt::mp("num_packet_samples"),
 			   nsamp_val,
 			   pmt::mp("uhd_single_usrp_source"));
-	      
 	    }
 	    return num_samps;
 	    
@@ -181,6 +180,7 @@ public:
             return num_samps;
 	  }
 	}
+	return -1;
     }
 
     bool start(void){
