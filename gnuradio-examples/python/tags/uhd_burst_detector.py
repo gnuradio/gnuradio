@@ -17,6 +17,7 @@ class uhd_burst_detector(gr.top_block):
         self.freq = frequency
         self.samp_rate = sample_rate
         self.uhd_addr = uhd_address
+        self.gain = 32
         
         self.uhd_src = uhd.single_usrp_source(
             device_addr="addr="+self.uhd_addr,
@@ -24,10 +25,10 @@ class uhd_burst_detector(gr.top_block):
             num_channels=1,
             )
         
-        self.uhd_src.set_samp_rate(samp_rate)
-        self.uhd_src.set_center_freq(freq, 0)
-        self.uhd_src.set_gain(32, 0)
-        
+        self.uhd_src.set_samp_rate(self.samp_rate)
+        self.uhd_src.set_center_freq(self.freq, 0)
+        self.uhd_src.set_gain(self.gain, 0)
+
         taps = firdes.low_pass_2(1, 1, 0.4, 0.1, 60)
         self.chanfilt = gr.fir_filter_ccc(10, taps)
         self.ann0 = gr.annotator_alltoall(100000, gr.sizeof_gr_complex)
@@ -49,14 +50,14 @@ class uhd_burst_detector(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.uhd_src_0, 0), (self.tagger, 0))
+        self.connect((self.uhd_src, 0), (self.tagger, 0))
         self.connect((self.tagger, 0), (self.fsnk, 0))
 
         # Connect a dummy signaler to the burst tagger
        	#self.connect((self.signal, 0), (self.tagger, 1))
 
         # Connect an energy detector signaler to the burst tagger
-        self.connect((self.uhd_src_0, 0), (self.c2m, 0))
+        self.connect((self.uhd_src, 0), (self.c2m, 0))
         self.connect((self.c2m, 0), (self.sub, 0))
         self.connect((self.c2m, 0), (self.iir, 0))
         self.connect((self.iir, 0), (self.sub, 1))
