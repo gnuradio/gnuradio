@@ -79,12 +79,17 @@ qtgui_swiginclude_HEADERS =		\
 	qtgui.i			\
 	$(qtgui_swiginclude_headers)
 
+if PYTHON
 qtgui_pylib_LTLIBRARIES =		\
 	_qtgui.la
 
 _qtgui_la_SOURCES = 			\
 	python/qtgui.cc		\
 	$(qtgui_la_swig_sources)
+
+qtgui_python_PYTHON =			\
+	qtgui.py			\
+	$(qtgui_python)
 
 _qtgui_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _qtgui_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(qtgui_la_swig_cxxflags)
 
-qtgui_python_PYTHON =			\
-	qtgui.py			\
-	$(qtgui_python)
-
 python/qtgui.cc: qtgui.py
 qtgui.py: qtgui.i
 
 # Include the python dependencies for this file
 -include python/qtgui.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-qtgui_scmlib_LTLIBRARIES = libguile-qtgui.la
+
+qtgui_scmlib_LTLIBRARIES = 		\
+	libguile-qtgui.la
 libguile_qtgui_la_SOURCES =		\
 	guile/qtgui.cc			\
 	$(qtgui_la_swig_sources)
-nobase_qtgui_scm_DATA = gnuradio/qtgui.scm gnuradio/qtgui-primitive.scm
-
-libguile_qtgui_la_LIBADD = $(_qtgui_la_LIBADD)
-libguile_qtgui_la_LDFLAGS = $(_qtgui_la_LDFLAGS)
-libguile_qtgui_la_CXXFLAGS = $(_qtgui_la_CXXFLAGS)
+nobase_qtgui_scm_DATA = 		\
+	gnuradio/qtgui.scm 		\
+	gnuradio/qtgui-primitive.scm
+libguile_qtgui_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(qtgui_la_swig_libadd)
+libguile_qtgui_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(qtgui_la_swig_ldflags)
+libguile_qtgui_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(qtgui_la_swig_cxxflags)
 
 guile/qtgui.cc: gnuradio/qtgui.scm
 gnuradio/qtgui.scm: qtgui.i

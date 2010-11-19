@@ -79,12 +79,17 @@ atsc_swiginclude_HEADERS =		\
 	atsc.i			\
 	$(atsc_swiginclude_headers)
 
+if PYTHON
 atsc_pylib_LTLIBRARIES =		\
 	_atsc.la
 
 _atsc_la_SOURCES = 			\
 	python/atsc.cc		\
 	$(atsc_la_swig_sources)
+
+atsc_python_PYTHON =			\
+	atsc.py			\
+	$(atsc_python)
 
 _atsc_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _atsc_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(atsc_la_swig_cxxflags)
 
-atsc_python_PYTHON =			\
-	atsc.py			\
-	$(atsc_python)
-
 python/atsc.cc: atsc.py
 atsc.py: atsc.i
 
 # Include the python dependencies for this file
 -include python/atsc.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-atsc_scmlib_LTLIBRARIES = libguile-atsc.la
+
+atsc_scmlib_LTLIBRARIES = 		\
+	libguile-atsc.la
 libguile_atsc_la_SOURCES =		\
 	guile/atsc.cc			\
 	$(atsc_la_swig_sources)
-nobase_atsc_scm_DATA = gnuradio/atsc.scm gnuradio/atsc-primitive.scm
-
-libguile_atsc_la_LIBADD = $(_atsc_la_LIBADD)
-libguile_atsc_la_LDFLAGS = $(_atsc_la_LDFLAGS)
-libguile_atsc_la_CXXFLAGS = $(_atsc_la_CXXFLAGS)
+nobase_atsc_scm_DATA = 		\
+	gnuradio/atsc.scm 		\
+	gnuradio/atsc-primitive.scm
+libguile_atsc_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(atsc_la_swig_libadd)
+libguile_atsc_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(atsc_la_swig_ldflags)
+libguile_atsc_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(atsc_la_swig_cxxflags)
 
 guile/atsc.cc: gnuradio/atsc.scm
 gnuradio/atsc.scm: atsc.i

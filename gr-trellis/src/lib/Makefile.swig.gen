@@ -79,12 +79,17 @@ trellis_swiginclude_HEADERS =		\
 	trellis.i			\
 	$(trellis_swiginclude_headers)
 
+if PYTHON
 trellis_pylib_LTLIBRARIES =		\
 	_trellis.la
 
 _trellis_la_SOURCES = 			\
 	python/trellis.cc		\
 	$(trellis_la_swig_sources)
+
+trellis_python_PYTHON =			\
+	trellis.py			\
+	$(trellis_python)
 
 _trellis_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _trellis_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(trellis_la_swig_cxxflags)
 
-trellis_python_PYTHON =			\
-	trellis.py			\
-	$(trellis_python)
-
 python/trellis.cc: trellis.py
 trellis.py: trellis.i
 
 # Include the python dependencies for this file
 -include python/trellis.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-trellis_scmlib_LTLIBRARIES = libguile-trellis.la
+
+trellis_scmlib_LTLIBRARIES = 		\
+	libguile-trellis.la
 libguile_trellis_la_SOURCES =		\
 	guile/trellis.cc			\
 	$(trellis_la_swig_sources)
-nobase_trellis_scm_DATA = gnuradio/trellis.scm gnuradio/trellis-primitive.scm
-
-libguile_trellis_la_LIBADD = $(_trellis_la_LIBADD)
-libguile_trellis_la_LDFLAGS = $(_trellis_la_LDFLAGS)
-libguile_trellis_la_CXXFLAGS = $(_trellis_la_CXXFLAGS)
+nobase_trellis_scm_DATA = 		\
+	gnuradio/trellis.scm 		\
+	gnuradio/trellis-primitive.scm
+libguile_trellis_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(trellis_la_swig_libadd)
+libguile_trellis_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(trellis_la_swig_ldflags)
+libguile_trellis_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(trellis_la_swig_cxxflags)
 
 guile/trellis.cc: gnuradio/trellis.scm
 gnuradio/trellis.scm: trellis.i

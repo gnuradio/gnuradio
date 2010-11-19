@@ -79,12 +79,17 @@ gcell_swiginclude_HEADERS =		\
 	gcell.i			\
 	$(gcell_swiginclude_headers)
 
+if PYTHON
 gcell_pylib_LTLIBRARIES =		\
 	_gcell.la
 
 _gcell_la_SOURCES = 			\
 	python/gcell.cc		\
 	$(gcell_la_swig_sources)
+
+gcell_python_PYTHON =			\
+	gcell.py			\
+	$(gcell_python)
 
 _gcell_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _gcell_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(gcell_la_swig_cxxflags)
 
-gcell_python_PYTHON =			\
-	gcell.py			\
-	$(gcell_python)
-
 python/gcell.cc: gcell.py
 gcell.py: gcell.i
 
 # Include the python dependencies for this file
 -include python/gcell.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-gcell_scmlib_LTLIBRARIES = libguile-gcell.la
+
+gcell_scmlib_LTLIBRARIES = 		\
+	libguile-gcell.la
 libguile_gcell_la_SOURCES =		\
 	guile/gcell.cc			\
 	$(gcell_la_swig_sources)
-nobase_gcell_scm_DATA = gnuradio/gcell.scm gnuradio/gcell-primitive.scm
-
-libguile_gcell_la_LIBADD = $(_gcell_la_LIBADD)
-libguile_gcell_la_LDFLAGS = $(_gcell_la_LDFLAGS)
-libguile_gcell_la_CXXFLAGS = $(_gcell_la_CXXFLAGS)
+nobase_gcell_scm_DATA = 		\
+	gnuradio/gcell.scm 		\
+	gnuradio/gcell-primitive.scm
+libguile_gcell_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(gcell_la_swig_libadd)
+libguile_gcell_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(gcell_la_swig_ldflags)
+libguile_gcell_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(gcell_la_swig_cxxflags)
 
 guile/gcell.cc: gnuradio/gcell.scm
 gnuradio/gcell.scm: gcell.i

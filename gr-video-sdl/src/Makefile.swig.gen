@@ -79,12 +79,17 @@ video_sdl_swiginclude_HEADERS =		\
 	video_sdl.i			\
 	$(video_sdl_swiginclude_headers)
 
+if PYTHON
 video_sdl_pylib_LTLIBRARIES =		\
 	_video_sdl.la
 
 _video_sdl_la_SOURCES = 			\
 	python/video_sdl.cc		\
 	$(video_sdl_la_swig_sources)
+
+video_sdl_python_PYTHON =			\
+	video_sdl.py			\
+	$(video_sdl_python)
 
 _video_sdl_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _video_sdl_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(video_sdl_la_swig_cxxflags)
 
-video_sdl_python_PYTHON =			\
-	video_sdl.py			\
-	$(video_sdl_python)
-
 python/video_sdl.cc: video_sdl.py
 video_sdl.py: video_sdl.i
 
 # Include the python dependencies for this file
 -include python/video_sdl.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-video_sdl_scmlib_LTLIBRARIES = libguile-video_sdl.la
+
+video_sdl_scmlib_LTLIBRARIES = 		\
+	libguile-video_sdl.la
 libguile_video_sdl_la_SOURCES =		\
 	guile/video_sdl.cc			\
 	$(video_sdl_la_swig_sources)
-nobase_video_sdl_scm_DATA = gnuradio/video_sdl.scm gnuradio/video_sdl-primitive.scm
-
-libguile_video_sdl_la_LIBADD = $(_video_sdl_la_LIBADD)
-libguile_video_sdl_la_LDFLAGS = $(_video_sdl_la_LDFLAGS)
-libguile_video_sdl_la_CXXFLAGS = $(_video_sdl_la_CXXFLAGS)
+nobase_video_sdl_scm_DATA = 		\
+	gnuradio/video_sdl.scm 		\
+	gnuradio/video_sdl-primitive.scm
+libguile_video_sdl_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(video_sdl_la_swig_libadd)
+libguile_video_sdl_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(video_sdl_la_swig_ldflags)
+libguile_video_sdl_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(video_sdl_la_swig_cxxflags)
 
 guile/video_sdl.cc: gnuradio/video_sdl.scm
 gnuradio/video_sdl.scm: video_sdl.i

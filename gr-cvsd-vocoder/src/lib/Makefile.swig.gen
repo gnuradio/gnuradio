@@ -79,12 +79,17 @@ cvsd_vocoder_swiginclude_HEADERS =		\
 	cvsd_vocoder.i			\
 	$(cvsd_vocoder_swiginclude_headers)
 
+if PYTHON
 cvsd_vocoder_pylib_LTLIBRARIES =		\
 	_cvsd_vocoder.la
 
 _cvsd_vocoder_la_SOURCES = 			\
 	python/cvsd_vocoder.cc		\
 	$(cvsd_vocoder_la_swig_sources)
+
+cvsd_vocoder_python_PYTHON =			\
+	cvsd_vocoder.py			\
+	$(cvsd_vocoder_python)
 
 _cvsd_vocoder_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _cvsd_vocoder_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(cvsd_vocoder_la_swig_cxxflags)
 
-cvsd_vocoder_python_PYTHON =			\
-	cvsd_vocoder.py			\
-	$(cvsd_vocoder_python)
-
 python/cvsd_vocoder.cc: cvsd_vocoder.py
 cvsd_vocoder.py: cvsd_vocoder.i
 
 # Include the python dependencies for this file
 -include python/cvsd_vocoder.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-cvsd_vocoder_scmlib_LTLIBRARIES = libguile-cvsd_vocoder.la
+
+cvsd_vocoder_scmlib_LTLIBRARIES = 		\
+	libguile-cvsd_vocoder.la
 libguile_cvsd_vocoder_la_SOURCES =		\
 	guile/cvsd_vocoder.cc			\
 	$(cvsd_vocoder_la_swig_sources)
-nobase_cvsd_vocoder_scm_DATA = gnuradio/cvsd_vocoder.scm gnuradio/cvsd_vocoder-primitive.scm
-
-libguile_cvsd_vocoder_la_LIBADD = $(_cvsd_vocoder_la_LIBADD)
-libguile_cvsd_vocoder_la_LDFLAGS = $(_cvsd_vocoder_la_LDFLAGS)
-libguile_cvsd_vocoder_la_CXXFLAGS = $(_cvsd_vocoder_la_CXXFLAGS)
+nobase_cvsd_vocoder_scm_DATA = 		\
+	gnuradio/cvsd_vocoder.scm 		\
+	gnuradio/cvsd_vocoder-primitive.scm
+libguile_cvsd_vocoder_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(cvsd_vocoder_la_swig_libadd)
+libguile_cvsd_vocoder_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(cvsd_vocoder_la_swig_ldflags)
+libguile_cvsd_vocoder_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(cvsd_vocoder_la_swig_cxxflags)
 
 guile/cvsd_vocoder.cc: gnuradio/cvsd_vocoder.scm
 gnuradio/cvsd_vocoder.scm: cvsd_vocoder.i

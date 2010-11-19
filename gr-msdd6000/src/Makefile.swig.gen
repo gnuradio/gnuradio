@@ -79,12 +79,17 @@ msdd_swiginclude_HEADERS =		\
 	msdd.i			\
 	$(msdd_swiginclude_headers)
 
+if PYTHON
 msdd_pylib_LTLIBRARIES =		\
 	_msdd.la
 
 _msdd_la_SOURCES = 			\
 	python/msdd.cc		\
 	$(msdd_la_swig_sources)
+
+msdd_python_PYTHON =			\
+	msdd.py			\
+	$(msdd_python)
 
 _msdd_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _msdd_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(msdd_la_swig_cxxflags)
 
-msdd_python_PYTHON =			\
-	msdd.py			\
-	$(msdd_python)
-
 python/msdd.cc: msdd.py
 msdd.py: msdd.i
 
 # Include the python dependencies for this file
 -include python/msdd.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-msdd_scmlib_LTLIBRARIES = libguile-msdd.la
+
+msdd_scmlib_LTLIBRARIES = 		\
+	libguile-msdd.la
 libguile_msdd_la_SOURCES =		\
 	guile/msdd.cc			\
 	$(msdd_la_swig_sources)
-nobase_msdd_scm_DATA = gnuradio/msdd.scm gnuradio/msdd-primitive.scm
-
-libguile_msdd_la_LIBADD = $(_msdd_la_LIBADD)
-libguile_msdd_la_LDFLAGS = $(_msdd_la_LDFLAGS)
-libguile_msdd_la_CXXFLAGS = $(_msdd_la_CXXFLAGS)
+nobase_msdd_scm_DATA = 		\
+	gnuradio/msdd.scm 		\
+	gnuradio/msdd-primitive.scm
+libguile_msdd_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(msdd_la_swig_libadd)
+libguile_msdd_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(msdd_la_swig_ldflags)
+libguile_msdd_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(msdd_la_swig_cxxflags)
 
 guile/msdd.cc: gnuradio/msdd.scm
 gnuradio/msdd.scm: msdd.i
@@ -212,12 +224,17 @@ msdd_rs_swiginclude_HEADERS =		\
 	msdd_rs.i			\
 	$(msdd_rs_swiginclude_headers)
 
+if PYTHON
 msdd_rs_pylib_LTLIBRARIES =		\
 	_msdd_rs.la
 
 _msdd_rs_la_SOURCES = 			\
 	python/msdd_rs.cc		\
 	$(msdd_rs_la_swig_sources)
+
+msdd_rs_python_PYTHON =			\
+	msdd_rs.py			\
+	$(msdd_rs_python)
 
 _msdd_rs_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -232,27 +249,34 @@ _msdd_rs_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(msdd_rs_la_swig_cxxflags)
 
-msdd_rs_python_PYTHON =			\
-	msdd_rs.py			\
-	$(msdd_rs_python)
-
 python/msdd_rs.cc: msdd_rs.py
 msdd_rs.py: msdd_rs.i
 
 # Include the python dependencies for this file
 -include python/msdd_rs.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-msdd_rs_scmlib_LTLIBRARIES = libguile-msdd_rs.la
+
+msdd_rs_scmlib_LTLIBRARIES = 		\
+	libguile-msdd_rs.la
 libguile_msdd_rs_la_SOURCES =		\
 	guile/msdd_rs.cc			\
 	$(msdd_rs_la_swig_sources)
-nobase_msdd_rs_scm_DATA = gnuradio/msdd_rs.scm gnuradio/msdd_rs-primitive.scm
-
-libguile_msdd_rs_la_LIBADD = $(_msdd_rs_la_LIBADD)
-libguile_msdd_rs_la_LDFLAGS = $(_msdd_rs_la_LDFLAGS)
-libguile_msdd_rs_la_CXXFLAGS = $(_msdd_rs_la_CXXFLAGS)
+nobase_msdd_rs_scm_DATA = 		\
+	gnuradio/msdd_rs.scm 		\
+	gnuradio/msdd_rs-primitive.scm
+libguile_msdd_rs_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(msdd_rs_la_swig_libadd)
+libguile_msdd_rs_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(msdd_rs_la_swig_ldflags)
+libguile_msdd_rs_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(msdd_rs_la_swig_cxxflags)
 
 guile/msdd_rs.cc: gnuradio/msdd_rs.scm
 gnuradio/msdd_rs.scm: msdd_rs.i

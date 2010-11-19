@@ -79,12 +79,17 @@ comedi_swiginclude_HEADERS =		\
 	comedi.i			\
 	$(comedi_swiginclude_headers)
 
+if PYTHON
 comedi_pylib_LTLIBRARIES =		\
 	_comedi.la
 
 _comedi_la_SOURCES = 			\
 	python/comedi.cc		\
 	$(comedi_la_swig_sources)
+
+comedi_python_PYTHON =			\
+	comedi.py			\
+	$(comedi_python)
 
 _comedi_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _comedi_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(comedi_la_swig_cxxflags)
 
-comedi_python_PYTHON =			\
-	comedi.py			\
-	$(comedi_python)
-
 python/comedi.cc: comedi.py
 comedi.py: comedi.i
 
 # Include the python dependencies for this file
 -include python/comedi.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-comedi_scmlib_LTLIBRARIES = libguile-comedi.la
+
+comedi_scmlib_LTLIBRARIES = 		\
+	libguile-comedi.la
 libguile_comedi_la_SOURCES =		\
 	guile/comedi.cc			\
 	$(comedi_la_swig_sources)
-nobase_comedi_scm_DATA = gnuradio/comedi.scm gnuradio/comedi-primitive.scm
-
-libguile_comedi_la_LIBADD = $(_comedi_la_LIBADD)
-libguile_comedi_la_LDFLAGS = $(_comedi_la_LDFLAGS)
-libguile_comedi_la_CXXFLAGS = $(_comedi_la_CXXFLAGS)
+nobase_comedi_scm_DATA = 		\
+	gnuradio/comedi.scm 		\
+	gnuradio/comedi-primitive.scm
+libguile_comedi_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(comedi_la_swig_libadd)
+libguile_comedi_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(comedi_la_swig_ldflags)
+libguile_comedi_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(comedi_la_swig_cxxflags)
 
 guile/comedi.cc: gnuradio/comedi.scm
 gnuradio/comedi.scm: comedi.i

@@ -79,12 +79,17 @@ ra_swiginclude_HEADERS =		\
 	ra.i			\
 	$(ra_swiginclude_headers)
 
+if PYTHON
 ra_pylib_LTLIBRARIES =		\
 	_ra.la
 
 _ra_la_SOURCES = 			\
 	python/ra.cc		\
 	$(ra_la_swig_sources)
+
+ra_python_PYTHON =			\
+	ra.py			\
+	$(ra_python)
 
 _ra_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _ra_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(ra_la_swig_cxxflags)
 
-ra_python_PYTHON =			\
-	ra.py			\
-	$(ra_python)
-
 python/ra.cc: ra.py
 ra.py: ra.i
 
 # Include the python dependencies for this file
 -include python/ra.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-ra_scmlib_LTLIBRARIES = libguile-ra.la
+
+ra_scmlib_LTLIBRARIES = 		\
+	libguile-ra.la
 libguile_ra_la_SOURCES =		\
 	guile/ra.cc			\
 	$(ra_la_swig_sources)
-nobase_ra_scm_DATA = gnuradio/ra.scm gnuradio/ra-primitive.scm
-
-libguile_ra_la_LIBADD = $(_ra_la_LIBADD)
-libguile_ra_la_LDFLAGS = $(_ra_la_LDFLAGS)
-libguile_ra_la_CXXFLAGS = $(_ra_la_CXXFLAGS)
+nobase_ra_scm_DATA = 		\
+	gnuradio/ra.scm 		\
+	gnuradio/ra-primitive.scm
+libguile_ra_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(ra_la_swig_libadd)
+libguile_ra_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(ra_la_swig_ldflags)
+libguile_ra_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(ra_la_swig_cxxflags)
 
 guile/ra.cc: gnuradio/ra.scm
 gnuradio/ra.scm: ra.i

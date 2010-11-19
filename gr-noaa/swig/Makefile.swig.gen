@@ -79,12 +79,17 @@ noaa_swig_swiginclude_HEADERS =		\
 	noaa_swig.i			\
 	$(noaa_swig_swiginclude_headers)
 
+if PYTHON
 noaa_swig_pylib_LTLIBRARIES =		\
 	_noaa_swig.la
 
 _noaa_swig_la_SOURCES = 			\
 	python/noaa_swig.cc		\
 	$(noaa_swig_la_swig_sources)
+
+noaa_swig_python_PYTHON =			\
+	noaa_swig.py			\
+	$(noaa_swig_python)
 
 _noaa_swig_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _noaa_swig_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(noaa_swig_la_swig_cxxflags)
 
-noaa_swig_python_PYTHON =			\
-	noaa_swig.py			\
-	$(noaa_swig_python)
-
 python/noaa_swig.cc: noaa_swig.py
 noaa_swig.py: noaa_swig.i
 
 # Include the python dependencies for this file
 -include python/noaa_swig.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-noaa_swig_scmlib_LTLIBRARIES = libguile-noaa_swig.la
+
+noaa_swig_scmlib_LTLIBRARIES = 		\
+	libguile-noaa_swig.la
 libguile_noaa_swig_la_SOURCES =		\
 	guile/noaa_swig.cc			\
 	$(noaa_swig_la_swig_sources)
-nobase_noaa_swig_scm_DATA = gnuradio/noaa_swig.scm gnuradio/noaa_swig-primitive.scm
-
-libguile_noaa_swig_la_LIBADD = $(_noaa_swig_la_LIBADD)
-libguile_noaa_swig_la_LDFLAGS = $(_noaa_swig_la_LDFLAGS)
-libguile_noaa_swig_la_CXXFLAGS = $(_noaa_swig_la_CXXFLAGS)
+nobase_noaa_swig_scm_DATA = 		\
+	gnuradio/noaa_swig.scm 		\
+	gnuradio/noaa_swig-primitive.scm
+libguile_noaa_swig_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(noaa_swig_la_swig_libadd)
+libguile_noaa_swig_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(noaa_swig_la_swig_ldflags)
+libguile_noaa_swig_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(noaa_swig_la_swig_cxxflags)
 
 guile/noaa_swig.cc: gnuradio/noaa_swig.scm
 gnuradio/noaa_swig.scm: noaa_swig.i

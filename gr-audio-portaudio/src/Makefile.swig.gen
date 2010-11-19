@@ -79,12 +79,17 @@ audio_portaudio_swiginclude_HEADERS =		\
 	audio_portaudio.i			\
 	$(audio_portaudio_swiginclude_headers)
 
+if PYTHON
 audio_portaudio_pylib_LTLIBRARIES =		\
 	_audio_portaudio.la
 
 _audio_portaudio_la_SOURCES = 			\
 	python/audio_portaudio.cc		\
 	$(audio_portaudio_la_swig_sources)
+
+audio_portaudio_python_PYTHON =			\
+	audio_portaudio.py			\
+	$(audio_portaudio_python)
 
 _audio_portaudio_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _audio_portaudio_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(audio_portaudio_la_swig_cxxflags)
 
-audio_portaudio_python_PYTHON =			\
-	audio_portaudio.py			\
-	$(audio_portaudio_python)
-
 python/audio_portaudio.cc: audio_portaudio.py
 audio_portaudio.py: audio_portaudio.i
 
 # Include the python dependencies for this file
 -include python/audio_portaudio.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-audio_portaudio_scmlib_LTLIBRARIES = libguile-audio_portaudio.la
+
+audio_portaudio_scmlib_LTLIBRARIES = 		\
+	libguile-audio_portaudio.la
 libguile_audio_portaudio_la_SOURCES =		\
 	guile/audio_portaudio.cc			\
 	$(audio_portaudio_la_swig_sources)
-nobase_audio_portaudio_scm_DATA = gnuradio/audio_portaudio.scm gnuradio/audio_portaudio-primitive.scm
-
-libguile_audio_portaudio_la_LIBADD = $(_audio_portaudio_la_LIBADD)
-libguile_audio_portaudio_la_LDFLAGS = $(_audio_portaudio_la_LDFLAGS)
-libguile_audio_portaudio_la_CXXFLAGS = $(_audio_portaudio_la_CXXFLAGS)
+nobase_audio_portaudio_scm_DATA = 		\
+	gnuradio/audio_portaudio.scm 		\
+	gnuradio/audio_portaudio-primitive.scm
+libguile_audio_portaudio_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(audio_portaudio_la_swig_libadd)
+libguile_audio_portaudio_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(audio_portaudio_la_swig_ldflags)
+libguile_audio_portaudio_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(audio_portaudio_la_swig_cxxflags)
 
 guile/audio_portaudio.cc: gnuradio/audio_portaudio.scm
 gnuradio/audio_portaudio.scm: audio_portaudio.i

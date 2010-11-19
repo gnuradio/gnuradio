@@ -79,12 +79,17 @@ usrp_prims_swiginclude_HEADERS =		\
 	usrp_prims.i			\
 	$(usrp_prims_swiginclude_headers)
 
+if PYTHON
 usrp_prims_pylib_LTLIBRARIES =		\
 	_usrp_prims.la
 
 _usrp_prims_la_SOURCES = 			\
 	python/usrp_prims.cc		\
 	$(usrp_prims_la_swig_sources)
+
+usrp_prims_python_PYTHON =			\
+	usrp_prims.py			\
+	$(usrp_prims_python)
 
 _usrp_prims_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _usrp_prims_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(usrp_prims_la_swig_cxxflags)
 
-usrp_prims_python_PYTHON =			\
-	usrp_prims.py			\
-	$(usrp_prims_python)
-
 python/usrp_prims.cc: usrp_prims.py
 usrp_prims.py: usrp_prims.i
 
 # Include the python dependencies for this file
 -include python/usrp_prims.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-usrp_prims_scmlib_LTLIBRARIES = libguile-usrp_prims.la
+
+usrp_prims_scmlib_LTLIBRARIES = 		\
+	libguile-usrp_prims.la
 libguile_usrp_prims_la_SOURCES =		\
 	guile/usrp_prims.cc			\
 	$(usrp_prims_la_swig_sources)
-nobase_usrp_prims_scm_DATA = gnuradio/usrp_prims.scm gnuradio/usrp_prims-primitive.scm
-
-libguile_usrp_prims_la_LIBADD = $(_usrp_prims_la_LIBADD)
-libguile_usrp_prims_la_LDFLAGS = $(_usrp_prims_la_LDFLAGS)
-libguile_usrp_prims_la_CXXFLAGS = $(_usrp_prims_la_CXXFLAGS)
+nobase_usrp_prims_scm_DATA = 		\
+	gnuradio/usrp_prims.scm 		\
+	gnuradio/usrp_prims-primitive.scm
+libguile_usrp_prims_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(usrp_prims_la_swig_libadd)
+libguile_usrp_prims_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(usrp_prims_la_swig_ldflags)
+libguile_usrp_prims_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(usrp_prims_la_swig_cxxflags)
 
 guile/usrp_prims.cc: gnuradio/usrp_prims.scm
 gnuradio/usrp_prims.scm: usrp_prims.i

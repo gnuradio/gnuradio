@@ -79,12 +79,17 @@ pager_swig_swiginclude_HEADERS =		\
 	pager_swig.i			\
 	$(pager_swig_swiginclude_headers)
 
+if PYTHON
 pager_swig_pylib_LTLIBRARIES =		\
 	_pager_swig.la
 
 _pager_swig_la_SOURCES = 			\
 	python/pager_swig.cc		\
 	$(pager_swig_la_swig_sources)
+
+pager_swig_python_PYTHON =			\
+	pager_swig.py			\
+	$(pager_swig_python)
 
 _pager_swig_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _pager_swig_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(pager_swig_la_swig_cxxflags)
 
-pager_swig_python_PYTHON =			\
-	pager_swig.py			\
-	$(pager_swig_python)
-
 python/pager_swig.cc: pager_swig.py
 pager_swig.py: pager_swig.i
 
 # Include the python dependencies for this file
 -include python/pager_swig.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-pager_swig_scmlib_LTLIBRARIES = libguile-pager_swig.la
+
+pager_swig_scmlib_LTLIBRARIES = 		\
+	libguile-pager_swig.la
 libguile_pager_swig_la_SOURCES =		\
 	guile/pager_swig.cc			\
 	$(pager_swig_la_swig_sources)
-nobase_pager_swig_scm_DATA = gnuradio/pager_swig.scm gnuradio/pager_swig-primitive.scm
-
-libguile_pager_swig_la_LIBADD = $(_pager_swig_la_LIBADD)
-libguile_pager_swig_la_LDFLAGS = $(_pager_swig_la_LDFLAGS)
-libguile_pager_swig_la_CXXFLAGS = $(_pager_swig_la_CXXFLAGS)
+nobase_pager_swig_scm_DATA = 		\
+	gnuradio/pager_swig.scm 		\
+	gnuradio/pager_swig-primitive.scm
+libguile_pager_swig_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(pager_swig_la_swig_libadd)
+libguile_pager_swig_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(pager_swig_la_swig_ldflags)
+libguile_pager_swig_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(pager_swig_la_swig_cxxflags)
 
 guile/pager_swig.cc: gnuradio/pager_swig.scm
 gnuradio/pager_swig.scm: pager_swig.i

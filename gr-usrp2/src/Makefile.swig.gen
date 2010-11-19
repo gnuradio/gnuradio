@@ -79,12 +79,17 @@ usrp2_swiginclude_HEADERS =		\
 	usrp2.i			\
 	$(usrp2_swiginclude_headers)
 
+if PYTHON
 usrp2_pylib_LTLIBRARIES =		\
 	_usrp2.la
 
 _usrp2_la_SOURCES = 			\
 	python/usrp2.cc		\
 	$(usrp2_la_swig_sources)
+
+usrp2_python_PYTHON =			\
+	usrp2.py			\
+	$(usrp2_python)
 
 _usrp2_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _usrp2_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(usrp2_la_swig_cxxflags)
 
-usrp2_python_PYTHON =			\
-	usrp2.py			\
-	$(usrp2_python)
-
 python/usrp2.cc: usrp2.py
 usrp2.py: usrp2.i
 
 # Include the python dependencies for this file
 -include python/usrp2.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-usrp2_scmlib_LTLIBRARIES = libguile-usrp2.la
+
+usrp2_scmlib_LTLIBRARIES = 		\
+	libguile-usrp2.la
 libguile_usrp2_la_SOURCES =		\
 	guile/usrp2.cc			\
 	$(usrp2_la_swig_sources)
-nobase_usrp2_scm_DATA = gnuradio/usrp2.scm gnuradio/usrp2-primitive.scm
-
-libguile_usrp2_la_LIBADD = $(_usrp2_la_LIBADD)
-libguile_usrp2_la_LDFLAGS = $(_usrp2_la_LDFLAGS)
-libguile_usrp2_la_CXXFLAGS = $(_usrp2_la_CXXFLAGS)
+nobase_usrp2_scm_DATA = 		\
+	gnuradio/usrp2.scm 		\
+	gnuradio/usrp2-primitive.scm
+libguile_usrp2_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(usrp2_la_swig_libadd)
+libguile_usrp2_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(usrp2_la_swig_ldflags)
+libguile_usrp2_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(usrp2_la_swig_cxxflags)
 
 guile/usrp2.cc: gnuradio/usrp2.scm
 gnuradio/usrp2.scm: usrp2.i

@@ -79,12 +79,17 @@ uhd_swig_swiginclude_HEADERS =		\
 	uhd_swig.i			\
 	$(uhd_swig_swiginclude_headers)
 
+if PYTHON
 uhd_swig_pylib_LTLIBRARIES =		\
 	_uhd_swig.la
 
 _uhd_swig_la_SOURCES = 			\
 	python/uhd_swig.cc		\
 	$(uhd_swig_la_swig_sources)
+
+uhd_swig_python_PYTHON =			\
+	uhd_swig.py			\
+	$(uhd_swig_python)
 
 _uhd_swig_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _uhd_swig_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(uhd_swig_la_swig_cxxflags)
 
-uhd_swig_python_PYTHON =			\
-	uhd_swig.py			\
-	$(uhd_swig_python)
-
 python/uhd_swig.cc: uhd_swig.py
 uhd_swig.py: uhd_swig.i
 
 # Include the python dependencies for this file
 -include python/uhd_swig.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-uhd_swig_scmlib_LTLIBRARIES = libguile-uhd_swig.la
+
+uhd_swig_scmlib_LTLIBRARIES = 		\
+	libguile-uhd_swig.la
 libguile_uhd_swig_la_SOURCES =		\
 	guile/uhd_swig.cc			\
 	$(uhd_swig_la_swig_sources)
-nobase_uhd_swig_scm_DATA = gnuradio/uhd_swig.scm gnuradio/uhd_swig-primitive.scm
-
-libguile_uhd_swig_la_LIBADD = $(_uhd_swig_la_LIBADD)
-libguile_uhd_swig_la_LDFLAGS = $(_uhd_swig_la_LDFLAGS)
-libguile_uhd_swig_la_CXXFLAGS = $(_uhd_swig_la_CXXFLAGS)
+nobase_uhd_swig_scm_DATA = 		\
+	gnuradio/uhd_swig.scm 		\
+	gnuradio/uhd_swig-primitive.scm
+libguile_uhd_swig_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(uhd_swig_la_swig_libadd)
+libguile_uhd_swig_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(uhd_swig_la_swig_ldflags)
+libguile_uhd_swig_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(uhd_swig_la_swig_cxxflags)
 
 guile/uhd_swig.cc: gnuradio/uhd_swig.scm
 gnuradio/uhd_swig.scm: uhd_swig.i
