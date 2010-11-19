@@ -133,9 +133,11 @@ swig_built_sources =
 
 include $(srcdir)/Makefile.swig.gen
 
+if PYTHON
 # Create a list of .py files based on the top level .i files.
 PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(HFILE)))
 swig_built_sources += $(PYTHON_GEN)
+endif
 
 if GUILE
 # Create a list of .scm files based on the top level .i files.
