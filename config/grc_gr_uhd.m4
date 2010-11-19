@@ -26,8 +26,8 @@ AC_DEFUN([GRC_GR_UHD],[
     if test $passed = yes; then
         dnl Don't do gr-uhd if the 'uhd' package is not installed
         PKG_CHECK_MODULES(
-            [UHD], [uhd], [],
-            [passed=no; AC_MSG_RESULT([gr-uhd requires libuhd])]
+            [UHD], [uhd >= 1.0.0 uhd < 2.0.0], [],
+            [passed=no; AC_MSG_RESULT([gr-uhd requires libuhd 1.x.x])]
         )
         AC_SUBST(UHD_CFLAGS)
         AC_SUBST(UHD_LIBS)
