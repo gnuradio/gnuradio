@@ -79,12 +79,17 @@ gnuradio_core_runtime_swiginclude_HEADERS =		\
 	gnuradio_core_runtime.i			\
 	$(gnuradio_core_runtime_swiginclude_headers)
 
+if PYTHON
 gnuradio_core_runtime_pylib_LTLIBRARIES =		\
 	_gnuradio_core_runtime.la
 
 _gnuradio_core_runtime_la_SOURCES = 			\
 	python/gnuradio_core_runtime.cc		\
 	$(gnuradio_core_runtime_la_swig_sources)
+
+gnuradio_core_runtime_python_PYTHON =			\
+	gnuradio_core_runtime.py			\
+	$(gnuradio_core_runtime_python)
 
 _gnuradio_core_runtime_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _gnuradio_core_runtime_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_runtime_la_swig_cxxflags)
 
-gnuradio_core_runtime_python_PYTHON =			\
-	gnuradio_core_runtime.py			\
-	$(gnuradio_core_runtime_python)
-
 python/gnuradio_core_runtime.cc: gnuradio_core_runtime.py
 gnuradio_core_runtime.py: gnuradio_core_runtime.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_runtime.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-gnuradio_core_runtime_scmlib_LTLIBRARIES = libguile-gnuradio_core_runtime.la
+
+gnuradio_core_runtime_scmlib_LTLIBRARIES = 		\
+	libguile-gnuradio_core_runtime.la
 libguile_gnuradio_core_runtime_la_SOURCES =		\
 	guile/gnuradio_core_runtime.cc			\
 	$(gnuradio_core_runtime_la_swig_sources)
-nobase_gnuradio_core_runtime_scm_DATA = gnuradio/gnuradio_core_runtime.scm gnuradio/gnuradio_core_runtime-primitive.scm
-
-libguile_gnuradio_core_runtime_la_LIBADD = $(_gnuradio_core_runtime_la_LIBADD)
-libguile_gnuradio_core_runtime_la_LDFLAGS = $(_gnuradio_core_runtime_la_LDFLAGS)
-libguile_gnuradio_core_runtime_la_CXXFLAGS = $(_gnuradio_core_runtime_la_CXXFLAGS)
+nobase_gnuradio_core_runtime_scm_DATA = 		\
+	gnuradio/gnuradio_core_runtime.scm 		\
+	gnuradio/gnuradio_core_runtime-primitive.scm
+libguile_gnuradio_core_runtime_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(gnuradio_core_runtime_la_swig_libadd)
+libguile_gnuradio_core_runtime_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(gnuradio_core_runtime_la_swig_ldflags)
+libguile_gnuradio_core_runtime_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(gnuradio_core_runtime_la_swig_cxxflags)
 
 guile/gnuradio_core_runtime.cc: gnuradio/gnuradio_core_runtime.scm
 gnuradio/gnuradio_core_runtime.scm: gnuradio_core_runtime.i
@@ -212,12 +224,17 @@ gnuradio_core_general_swiginclude_HEADERS =		\
 	gnuradio_core_general.i			\
 	$(gnuradio_core_general_swiginclude_headers)
 
+if PYTHON
 gnuradio_core_general_pylib_LTLIBRARIES =		\
 	_gnuradio_core_general.la
 
 _gnuradio_core_general_la_SOURCES = 			\
 	python/gnuradio_core_general.cc		\
 	$(gnuradio_core_general_la_swig_sources)
+
+gnuradio_core_general_python_PYTHON =			\
+	gnuradio_core_general.py			\
+	$(gnuradio_core_general_python)
 
 _gnuradio_core_general_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -232,27 +249,34 @@ _gnuradio_core_general_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_general_la_swig_cxxflags)
 
-gnuradio_core_general_python_PYTHON =			\
-	gnuradio_core_general.py			\
-	$(gnuradio_core_general_python)
-
 python/gnuradio_core_general.cc: gnuradio_core_general.py
 gnuradio_core_general.py: gnuradio_core_general.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_general.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-gnuradio_core_general_scmlib_LTLIBRARIES = libguile-gnuradio_core_general.la
+
+gnuradio_core_general_scmlib_LTLIBRARIES = 		\
+	libguile-gnuradio_core_general.la
 libguile_gnuradio_core_general_la_SOURCES =		\
 	guile/gnuradio_core_general.cc			\
 	$(gnuradio_core_general_la_swig_sources)
-nobase_gnuradio_core_general_scm_DATA = gnuradio/gnuradio_core_general.scm gnuradio/gnuradio_core_general-primitive.scm
-
-libguile_gnuradio_core_general_la_LIBADD = $(_gnuradio_core_general_la_LIBADD)
-libguile_gnuradio_core_general_la_LDFLAGS = $(_gnuradio_core_general_la_LDFLAGS)
-libguile_gnuradio_core_general_la_CXXFLAGS = $(_gnuradio_core_general_la_CXXFLAGS)
+nobase_gnuradio_core_general_scm_DATA = 		\
+	gnuradio/gnuradio_core_general.scm 		\
+	gnuradio/gnuradio_core_general-primitive.scm
+libguile_gnuradio_core_general_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(gnuradio_core_general_la_swig_libadd)
+libguile_gnuradio_core_general_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(gnuradio_core_general_la_swig_ldflags)
+libguile_gnuradio_core_general_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(gnuradio_core_general_la_swig_cxxflags)
 
 guile/gnuradio_core_general.cc: gnuradio/gnuradio_core_general.scm
 gnuradio/gnuradio_core_general.scm: gnuradio_core_general.i
@@ -345,12 +369,17 @@ gnuradio_core_gengen_swiginclude_HEADERS =		\
 	gnuradio_core_gengen.i			\
 	$(gnuradio_core_gengen_swiginclude_headers)
 
+if PYTHON
 gnuradio_core_gengen_pylib_LTLIBRARIES =		\
 	_gnuradio_core_gengen.la
 
 _gnuradio_core_gengen_la_SOURCES = 			\
 	python/gnuradio_core_gengen.cc		\
 	$(gnuradio_core_gengen_la_swig_sources)
+
+gnuradio_core_gengen_python_PYTHON =			\
+	gnuradio_core_gengen.py			\
+	$(gnuradio_core_gengen_python)
 
 _gnuradio_core_gengen_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -365,27 +394,34 @@ _gnuradio_core_gengen_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_gengen_la_swig_cxxflags)
 
-gnuradio_core_gengen_python_PYTHON =			\
-	gnuradio_core_gengen.py			\
-	$(gnuradio_core_gengen_python)
-
 python/gnuradio_core_gengen.cc: gnuradio_core_gengen.py
 gnuradio_core_gengen.py: gnuradio_core_gengen.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_gengen.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-gnuradio_core_gengen_scmlib_LTLIBRARIES = libguile-gnuradio_core_gengen.la
+
+gnuradio_core_gengen_scmlib_LTLIBRARIES = 		\
+	libguile-gnuradio_core_gengen.la
 libguile_gnuradio_core_gengen_la_SOURCES =		\
 	guile/gnuradio_core_gengen.cc			\
 	$(gnuradio_core_gengen_la_swig_sources)
-nobase_gnuradio_core_gengen_scm_DATA = gnuradio/gnuradio_core_gengen.scm gnuradio/gnuradio_core_gengen-primitive.scm
-
-libguile_gnuradio_core_gengen_la_LIBADD = $(_gnuradio_core_gengen_la_LIBADD)
-libguile_gnuradio_core_gengen_la_LDFLAGS = $(_gnuradio_core_gengen_la_LDFLAGS)
-libguile_gnuradio_core_gengen_la_CXXFLAGS = $(_gnuradio_core_gengen_la_CXXFLAGS)
+nobase_gnuradio_core_gengen_scm_DATA = 		\
+	gnuradio/gnuradio_core_gengen.scm 		\
+	gnuradio/gnuradio_core_gengen-primitive.scm
+libguile_gnuradio_core_gengen_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(gnuradio_core_gengen_la_swig_libadd)
+libguile_gnuradio_core_gengen_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(gnuradio_core_gengen_la_swig_ldflags)
+libguile_gnuradio_core_gengen_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(gnuradio_core_gengen_la_swig_cxxflags)
 
 guile/gnuradio_core_gengen.cc: gnuradio/gnuradio_core_gengen.scm
 gnuradio/gnuradio_core_gengen.scm: gnuradio_core_gengen.i
@@ -478,12 +514,17 @@ gnuradio_core_filter_swiginclude_HEADERS =		\
 	gnuradio_core_filter.i			\
 	$(gnuradio_core_filter_swiginclude_headers)
 
+if PYTHON
 gnuradio_core_filter_pylib_LTLIBRARIES =		\
 	_gnuradio_core_filter.la
 
 _gnuradio_core_filter_la_SOURCES = 			\
 	python/gnuradio_core_filter.cc		\
 	$(gnuradio_core_filter_la_swig_sources)
+
+gnuradio_core_filter_python_PYTHON =			\
+	gnuradio_core_filter.py			\
+	$(gnuradio_core_filter_python)
 
 _gnuradio_core_filter_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -498,27 +539,34 @@ _gnuradio_core_filter_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_filter_la_swig_cxxflags)
 
-gnuradio_core_filter_python_PYTHON =			\
-	gnuradio_core_filter.py			\
-	$(gnuradio_core_filter_python)
-
 python/gnuradio_core_filter.cc: gnuradio_core_filter.py
 gnuradio_core_filter.py: gnuradio_core_filter.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_filter.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-gnuradio_core_filter_scmlib_LTLIBRARIES = libguile-gnuradio_core_filter.la
+
+gnuradio_core_filter_scmlib_LTLIBRARIES = 		\
+	libguile-gnuradio_core_filter.la
 libguile_gnuradio_core_filter_la_SOURCES =		\
 	guile/gnuradio_core_filter.cc			\
 	$(gnuradio_core_filter_la_swig_sources)
-nobase_gnuradio_core_filter_scm_DATA = gnuradio/gnuradio_core_filter.scm gnuradio/gnuradio_core_filter-primitive.scm
-
-libguile_gnuradio_core_filter_la_LIBADD = $(_gnuradio_core_filter_la_LIBADD)
-libguile_gnuradio_core_filter_la_LDFLAGS = $(_gnuradio_core_filter_la_LDFLAGS)
-libguile_gnuradio_core_filter_la_CXXFLAGS = $(_gnuradio_core_filter_la_CXXFLAGS)
+nobase_gnuradio_core_filter_scm_DATA = 		\
+	gnuradio/gnuradio_core_filter.scm 		\
+	gnuradio/gnuradio_core_filter-primitive.scm
+libguile_gnuradio_core_filter_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(gnuradio_core_filter_la_swig_libadd)
+libguile_gnuradio_core_filter_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(gnuradio_core_filter_la_swig_ldflags)
+libguile_gnuradio_core_filter_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(gnuradio_core_filter_la_swig_cxxflags)
 
 guile/gnuradio_core_filter.cc: gnuradio/gnuradio_core_filter.scm
 gnuradio/gnuradio_core_filter.scm: gnuradio_core_filter.i
@@ -611,12 +659,17 @@ gnuradio_core_io_swiginclude_HEADERS =		\
 	gnuradio_core_io.i			\
 	$(gnuradio_core_io_swiginclude_headers)
 
+if PYTHON
 gnuradio_core_io_pylib_LTLIBRARIES =		\
 	_gnuradio_core_io.la
 
 _gnuradio_core_io_la_SOURCES = 			\
 	python/gnuradio_core_io.cc		\
 	$(gnuradio_core_io_la_swig_sources)
+
+gnuradio_core_io_python_PYTHON =			\
+	gnuradio_core_io.py			\
+	$(gnuradio_core_io_python)
 
 _gnuradio_core_io_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -631,27 +684,34 @@ _gnuradio_core_io_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_io_la_swig_cxxflags)
 
-gnuradio_core_io_python_PYTHON =			\
-	gnuradio_core_io.py			\
-	$(gnuradio_core_io_python)
-
 python/gnuradio_core_io.cc: gnuradio_core_io.py
 gnuradio_core_io.py: gnuradio_core_io.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_io.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-gnuradio_core_io_scmlib_LTLIBRARIES = libguile-gnuradio_core_io.la
+
+gnuradio_core_io_scmlib_LTLIBRARIES = 		\
+	libguile-gnuradio_core_io.la
 libguile_gnuradio_core_io_la_SOURCES =		\
 	guile/gnuradio_core_io.cc			\
 	$(gnuradio_core_io_la_swig_sources)
-nobase_gnuradio_core_io_scm_DATA = gnuradio/gnuradio_core_io.scm gnuradio/gnuradio_core_io-primitive.scm
-
-libguile_gnuradio_core_io_la_LIBADD = $(_gnuradio_core_io_la_LIBADD)
-libguile_gnuradio_core_io_la_LDFLAGS = $(_gnuradio_core_io_la_LDFLAGS)
-libguile_gnuradio_core_io_la_CXXFLAGS = $(_gnuradio_core_io_la_CXXFLAGS)
+nobase_gnuradio_core_io_scm_DATA = 		\
+	gnuradio/gnuradio_core_io.scm 		\
+	gnuradio/gnuradio_core_io-primitive.scm
+libguile_gnuradio_core_io_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(gnuradio_core_io_la_swig_libadd)
+libguile_gnuradio_core_io_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(gnuradio_core_io_la_swig_ldflags)
+libguile_gnuradio_core_io_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(gnuradio_core_io_la_swig_cxxflags)
 
 guile/gnuradio_core_io.cc: gnuradio/gnuradio_core_io.scm
 gnuradio/gnuradio_core_io.scm: gnuradio_core_io.i
@@ -744,12 +804,17 @@ gnuradio_core_hier_swiginclude_HEADERS =		\
 	gnuradio_core_hier.i			\
 	$(gnuradio_core_hier_swiginclude_headers)
 
+if PYTHON
 gnuradio_core_hier_pylib_LTLIBRARIES =		\
 	_gnuradio_core_hier.la
 
 _gnuradio_core_hier_la_SOURCES = 			\
 	python/gnuradio_core_hier.cc		\
 	$(gnuradio_core_hier_la_swig_sources)
+
+gnuradio_core_hier_python_PYTHON =			\
+	gnuradio_core_hier.py			\
+	$(gnuradio_core_hier_python)
 
 _gnuradio_core_hier_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -764,27 +829,34 @@ _gnuradio_core_hier_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_hier_la_swig_cxxflags)
 
-gnuradio_core_hier_python_PYTHON =			\
-	gnuradio_core_hier.py			\
-	$(gnuradio_core_hier_python)
-
 python/gnuradio_core_hier.cc: gnuradio_core_hier.py
 gnuradio_core_hier.py: gnuradio_core_hier.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_hier.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-gnuradio_core_hier_scmlib_LTLIBRARIES = libguile-gnuradio_core_hier.la
+
+gnuradio_core_hier_scmlib_LTLIBRARIES = 		\
+	libguile-gnuradio_core_hier.la
 libguile_gnuradio_core_hier_la_SOURCES =		\
 	guile/gnuradio_core_hier.cc			\
 	$(gnuradio_core_hier_la_swig_sources)
-nobase_gnuradio_core_hier_scm_DATA = gnuradio/gnuradio_core_hier.scm gnuradio/gnuradio_core_hier-primitive.scm
-
-libguile_gnuradio_core_hier_la_LIBADD = $(_gnuradio_core_hier_la_LIBADD)
-libguile_gnuradio_core_hier_la_LDFLAGS = $(_gnuradio_core_hier_la_LDFLAGS)
-libguile_gnuradio_core_hier_la_CXXFLAGS = $(_gnuradio_core_hier_la_CXXFLAGS)
+nobase_gnuradio_core_hier_scm_DATA = 		\
+	gnuradio/gnuradio_core_hier.scm 		\
+	gnuradio/gnuradio_core_hier-primitive.scm
+libguile_gnuradio_core_hier_la_LIBADD = 		\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(gnuradio_core_hier_la_swig_libadd)
+libguile_gnuradio_core_hier_la_LDFLAGS = 		\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(gnuradio_core_hier_la_swig_ldflags)
+libguile_gnuradio_core_hier_la_CXXFLAGS = 		\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(gnuradio_core_hier_la_swig_cxxflags)
 
 guile/gnuradio_core_hier.cc: gnuradio/gnuradio_core_hier.scm
 gnuradio/gnuradio_core_hier.scm: gnuradio_core_hier.i
