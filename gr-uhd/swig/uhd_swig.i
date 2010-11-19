@@ -53,11 +53,6 @@ namespace std {
 // block headers
 ////////////////////////////////////////////////////////////////////////
 %{
-#include <uhd_mimo_source.h> //deprecated
-#include <uhd_mimo_sink.h> //deprecated
-#include <uhd_simple_source.h> //deprecated
-#include <uhd_simple_sink.h> //deprecated
-
 #include <uhd_multi_usrp_source.h>
 #include <uhd_multi_usrp_sink.h>
 #include <uhd_single_usrp_source.h>
@@ -90,18 +85,6 @@ namespace std {
 ////////////////////////////////////////////////////////////////////////
 // block magic
 ////////////////////////////////////////////////////////////////////////
-GR_SWIG_BLOCK_MAGIC(uhd,mimo_source) //deprecated
-%include <uhd_mimo_source.h> //deprecated
-
-GR_SWIG_BLOCK_MAGIC(uhd,mimo_sink) //deprecated
-%include <uhd_mimo_sink.h> //deprecated
-
-GR_SWIG_BLOCK_MAGIC(uhd,simple_source) //deprecated
-%include <uhd_simple_source.h> //deprecated
-
-GR_SWIG_BLOCK_MAGIC(uhd,simple_sink) //deprecated
-%include <uhd_simple_sink.h> //deprecated
-
 GR_SWIG_BLOCK_MAGIC(uhd,multi_usrp_source)
 %include <uhd_multi_usrp_source.h>
 
