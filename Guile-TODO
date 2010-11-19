@@ -18,9 +18,6 @@ In no particular order:
 
 6)  Fix printed representation of blocks in gr_block.i
 
-8)  Fix gr_message_{sink,source} so that they work under guile.
-    (Not sure if I disabled one or both of these...)
-
 9)  Any other FIXME style warnings
 
 10) Finish gnuradio-core test cases
@@ -83,6 +80,9 @@ These are done:
     warning received when generating python bindings.
     Making the swig/python warning go away will probably resolve the
     guile problem.
+
+8)  [DONE] Fix gr_message_{sink,source} so that they work under guile.
+    (Not sure if I disabled one or both of these...)
 
 17) [DONE] Get std::vector< std::complex<float> > working
 
