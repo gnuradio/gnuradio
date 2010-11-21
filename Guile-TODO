@@ -16,7 +16,8 @@ In no particular order:
 
 6)  Fix printed representation of blocks in gr_block.i
 
-9)  Any other FIXME style warnings
+9)  Any other FIXME style warnings.
+    (Last one is in usrp2.i)
 
 10) Finish gnuradio-core test cases
 
@@ -42,7 +43,6 @@ In no particular order:
 
 16) Test this stuff with Guile 1.9 to confirm that it works and to see
     how much faster it is.  Load time currently is currently kind of doggy.
-
 
 
 I'm sure I'm forgetting some things...
@@ -85,4 +85,3 @@ These are done:
     (Not sure if I disabled one or both of these...)
 
 17) [DONE] Get std::vector< std::complex<float> > working
-
