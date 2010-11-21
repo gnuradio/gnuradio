@@ -34,11 +34,11 @@ namespace gr_tags {
     TAG_VALUE_REF
   };
 
-  extern const pmt::pmt_t s_key_time;
-  extern const pmt::pmt_t s_key_sample_rate;
-  extern const pmt::pmt_t s_key_frequency;
-  extern const pmt::pmt_t s_key_rssi;
-  extern const pmt::pmt_t s_key_gain;
+  extern const pmt::pmt_t key_time;
+  extern const pmt::pmt_t key_sample_rate;
+  extern const pmt::pmt_t key_frequency;
+  extern const pmt::pmt_t key_rssi;
+  extern const pmt::pmt_t key_gain;
 
   static inline uint64_t
   get_nitems(const pmt::pmt_t &tag) {
