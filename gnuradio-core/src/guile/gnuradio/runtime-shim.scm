@@ -86,4 +86,15 @@
 		  (loop (1+ n))))))))))
 
 
-(export-safely <gr-endpoint> gr:ep gr:connect gr:disconnect)
+
+
+(define-method (gr:run (self <gr-top-block-sptr>))
+  (gr:start self)
+  (gr:wait self))
+
+(define-method (gr:wait (self <gr-top-block-sptr>))
+  ;; FIXME Set up SIGINT handling here...
+  (gr:top-block-wait-unlocked self))
+
+
+(export-safely <gr-endpoint> gr:ep gr:connect gr:disconnect gr:run gr:wait)
