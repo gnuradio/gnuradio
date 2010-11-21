@@ -231,6 +231,14 @@ gr_buffer::add_item_tag(const pmt::pmt_t &tag)
 void
 gr_buffer::prune_tags(uint64_t max_time)
 {
+  /* NOTE: this function _should_ lock the mutex before editing
+     d_item_tags. In practice, this function is only called at
+     runtime by min_available_space in gr_block_executor.cc,
+     which locks the mutex itself.
+     
+     If this function is used elsewhere, remember to lock the
+     buffer's mutex al la the scoped_lock line below.
+  */
   //gruel::scoped_lock guard(*mutex());
 
   int n = 0;
