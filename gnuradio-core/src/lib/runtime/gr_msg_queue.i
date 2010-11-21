@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2009 Free Software Foundation, Inc.
+ * Copyright 2005,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -117,14 +117,16 @@ gr_msg_queue_sptr.handle = gr_py_msg_queue__insert_tail
     gr_message_sptr	msg;
   };
 
-  void *insert_tail_shim(void *arg)
+  static void *
+  insert_tail_shim(void *arg)
   {
     arg_holder *a = (arg_holder *)arg;
     a->q->insert_tail(a->msg);
     return 0;
   }
 
-  void *delete_head_shim(void *arg)
+  static void *
+  delete_head_shim(void *arg)
   {
     arg_holder *a = (arg_holder *)arg;
     a->msg = a->q->delete_head();
@@ -135,7 +137,8 @@ gr_msg_queue_sptr.handle = gr_py_msg_queue__insert_tail
 %inline %{
 
   // handle and insert_tail are equivalent
-  static void handle(gr_msg_queue_sptr q, gr_message_sptr msg)
+  static void
+  handle(gr_msg_queue_sptr q, gr_message_sptr msg)
   {
     arg_holder	a;
     a.q = q;
@@ -143,7 +146,8 @@ gr_msg_queue_sptr.handle = gr_py_msg_queue__insert_tail
     scm_without_guile(insert_tail_shim, (void *) &a);
   }
 
-  static void insert_tail(gr_msg_queue_sptr q, gr_message_sptr msg)
+  static void
+  insert_tail(gr_msg_queue_sptr q, gr_message_sptr msg)
   {
     arg_holder	a;
     a.q = q;
@@ -151,7 +155,8 @@ gr_msg_queue_sptr.handle = gr_py_msg_queue__insert_tail
     scm_without_guile(insert_tail_shim, (void *) &a);
   }
 
-  static gr_message_sptr delete_head(gr_msg_queue_sptr q)
+  static gr_message_sptr
+  delete_head(gr_msg_queue_sptr q)
   {
     arg_holder	a;
     a.q = q;
