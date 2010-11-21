@@ -1,7 +1,5 @@
 In no particular order:
 
-2)  SIGINT handling in gr_top_block::wait
-
 3)  Ensure that all 4 combinations of
     --{enable,disable}-python --{enable,disable}-guile
     work correctly.
@@ -71,6 +69,8 @@ These are done:
 
 1)  [DONE] Ensure that libraries containing swig generated code are regenerated
     when any relevant .i file is touched.
+
+2)  [DONE] SIGINT handling in gr_top_block::wait
 
 4)  [DONE] Fix GR_SWIG_BLOCK_MAGIC so that in the guile case we don't map all
     the constructors into the same name.  E.g. audio_alsa_sink -> sink.
