@@ -21,12 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = gen_interpolator_taps lib tests
-if PYTHON
-SUBDIRS += python
-endif
-if GUILE
-SUBDIRS += guile
-endif
+SUBDIRS = gen_interpolator_taps lib tests python guile
 
 DIST_SUBDIRS = gen_interpolator_taps lib tests python guile utils
