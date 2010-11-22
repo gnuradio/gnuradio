@@ -153,7 +153,6 @@ endif
 	$(RM) python/$*.Std
 
 # Don't distribute the files defined in the variable 'no_dist_files'
-no_dist_dirs = python gnuradio guile
 dist-hook:
 	@for dir in $(no_dist_dirs); do \
 		echo $(RM) -fr $(distdir)/$$dir; \
