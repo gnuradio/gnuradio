@@ -49,31 +49,25 @@
 #endif
 
 
-gr_tagged_file_sink::gr_tagged_file_sink (size_t itemsize)
+gr_tagged_file_sink::gr_tagged_file_sink (size_t itemsize, double samp_rate)
   : gr_sync_block ("tagged_file_sink",
 		   gr_make_io_signature (1, 1, itemsize),
 		   gr_make_io_signature (0, 0, 0)),
-    d_itemsize (itemsize),d_n(0)
+    d_itemsize (itemsize), d_n(0), d_sample_rate(samp_rate)
 {
   d_state = NOT_IN_BURST;
+  d_last_N = 0;
+  d_timeval = 0;
 }
 
 gr_tagged_file_sink_sptr
-gr_make_tagged_file_sink (size_t itemsize)
+gr_make_tagged_file_sink (size_t itemsize, double samp_rate)
 {
-  return gnuradio::get_initial_sptr(new gr_tagged_file_sink (itemsize));
+  return gnuradio::get_initial_sptr(new gr_tagged_file_sink (itemsize, samp_rate));
 }
 
 gr_tagged_file_sink::~gr_tagged_file_sink ()
 {
-}
-
-bool pmtcompare(pmt::pmt_t x, pmt::pmt_t y)
-{
-  uint64_t t_x, t_y;
-  t_x = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(x, 0));
-  t_y = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(y, 0));
-  return t_x < t_y;
 }
 
 int 
@@ -86,13 +80,12 @@ gr_tagged_file_sink::work (int noutput_items,
   uint64_t start_N = nitems_read(0);
   uint64_t end_N = start_N + (uint64_t)(noutput_items);
   pmt::pmt_t bkey = pmt::pmt_string_to_symbol("burst");
-  //pmt::pmt_t tkey = pmt::pmt_string_to_symbol("time"); // use gr_tags::s_key_time
+  //pmt::pmt_t tkey = pmt::pmt_string_to_symbol("time"); // use gr_tags::key_time
 
   std::vector<pmt::pmt_t> all_tags;
   get_tags_in_range(all_tags, 0, start_N, end_N);
 
-  std::sort(all_tags.begin(), all_tags.end(), pmtcompare);
-  std::cout << "Number of tags: " << all_tags.size() << std::endl;
+  std::sort(all_tags.begin(), all_tags.end(), gr_tags::nitems_compare);
 
   std::vector<pmt::pmt_t>::iterator vitr = all_tags.begin();
 
@@ -100,18 +93,53 @@ gr_tagged_file_sink::work (int noutput_items,
   while(idx < noutput_items) {
     if(d_state == NOT_IN_BURST) {
       while(vitr != all_tags.end()) {
-	//std::cout << "\tNot in burst: " << *vitr << std::endl;
-
 	if((pmt::pmt_eqv(gr_tags::get_key(*vitr), bkey)) &&
 	   pmt::pmt_is_true(gr_tags::get_value(*vitr))) {
 
-	  uint64_t N = gr_tags::get_nitems(*vitr) - start_N;
-	  idx = (int)N;
-	  
-	  std::cout << std::endl << "Found start of burst: " << N << ", " << N+start_N << std::endl;
+	  uint64_t N = gr_tags::get_nitems(*vitr);
+	  idx = (int)(N - start_N);
+
+	  std::cout << std::endl << "Found start of burst: "
+		    << idx << ", " << N << std::endl;
+
+	  // Find time burst occurred by getting latest time tag and extrapolating
+	  // to new time based on sample rate of this block.
+	  std::vector<pmt::pmt_t> time_tags;
+	  get_tags_in_range(time_tags, 0, d_last_N, N, gr_tags::key_time);
+	  if(time_tags.size() > 0) {
+	    pmt::pmt_t tag = time_tags[time_tags.size()-1];
+	    
+	    uint64_t time_nitems = gr_tags::get_nitems(tag);
+
+	    // Get time based on last time tag from USRP
+	    pmt::pmt_t time = gr_tags::get_value(tag);
+	    int tsecs = pmt::pmt_to_long(pmt::pmt_tuple_ref(time, 0));
+	    double tfrac = pmt::pmt_to_double(pmt::pmt_tuple_ref(time, 1));
+
+	    // Get new time from last time tag + difference in time to when
+	    // burst tag occured based on the sample rate
+	    double delta = (double)(N - time_nitems) / d_sample_rate;
+	    d_timeval = (double)tsecs + tfrac + delta;
+
+	    std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	    std::cout.precision(8);
+	    std::cout << "Time found: " << (double)tsecs + tfrac << std::endl;
+	    std::cout << "   time: " << d_timeval << std::endl;
+	    std::cout << "   time at N = " << time_nitems << " burst N = " << N << std::endl;
+	  }
+	  else {
+	    // if no time tag, use last seen tag and update time based on
+	    // sample rate of the block
+	    d_timeval += (double)(N - d_last_N) / d_sample_rate;
+	    std::cout << "Time not found" << std::endl;
+	    std::cout << "   time: " << d_timeval << std::endl;
+	  }
+	  d_last_N = N;
 	  
 	  std::stringstream filename;
-	  filename << "file" << d_n << ".dat";
+	  filename.setf(std::ios::fixed, std::ios::floatfield);
+	  filename.precision(8);
+	  filename << "file" << d_n << "_" << d_timeval << ".dat";
 	  d_n++;
 	  
 	  int fd;
@@ -142,14 +170,10 @@ gr_tagged_file_sink::work (int noutput_items,
     }
     else {  // In burst
       while(vitr != all_tags.end()) {
-	//std::cout << "\tin burst: " << *vitr << std::endl;
-
 	if((pmt::pmt_eqv(gr_tags::get_key(*vitr), bkey)) &&
 	   pmt::pmt_is_false(gr_tags::get_value(*vitr))) {
 	  uint64_t N = gr_tags::get_nitems(*vitr) - start_N;
 	  idx_stop = (int)N;
-
-	  std::cout << "Found end of burst: " << N << ", " << N+start_N << std::endl;
 
 	  int count = fwrite (&inbuf[d_itemsize*idx], d_itemsize, idx_stop-idx, d_handle);
 	  if (count == 0)
@@ -164,7 +188,6 @@ gr_tagged_file_sink::work (int noutput_items,
 	}
       }
       if(d_state == IN_BURST) {
-	std::cout << "writing part of burst: " << noutput_items-idx << std::endl;
 	int count = fwrite (&inbuf[idx], d_itemsize, noutput_items-idx, d_handle);
 	if (count == 0)
 	  break;

@@ -23,12 +23,12 @@
 GR_SWIG_BLOCK_MAGIC(gr,tagged_file_sink)
 
 gr_tagged_file_sink_sptr 
-gr_make_tagged_file_sink (size_t itemsize);
+gr_make_tagged_file_sink (size_t itemsize, double samp_rate);
 
 class gr_tagged_file_sink : public gr_sync_block
 {
  protected:
-  gr_tagged_file_sink (size_t itemsize);
+  gr_tagged_file_sink (size_t itemsize, double samp_rate);
 
  public:
   ~gr_tagged_file_sink ();

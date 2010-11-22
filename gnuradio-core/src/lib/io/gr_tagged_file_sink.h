@@ -28,7 +28,8 @@
 class gr_tagged_file_sink;
 typedef boost::shared_ptr<gr_tagged_file_sink> gr_tagged_file_sink_sptr;
 
-gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize);
+gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize,
+						   double samp_rate);
 
 /*!
  * \brief Write stream to file descriptor.
@@ -37,7 +38,8 @@ gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize);
 
 class gr_tagged_file_sink : public gr_sync_block
 {
-  friend gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize);
+  friend gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize,
+							    double samp_rate);
 
  private:
   enum {
@@ -49,9 +51,12 @@ class gr_tagged_file_sink : public gr_sync_block
   int	        d_state;
   FILE         *d_handle;
   int           d_n;
-  
+  double        d_sample_rate;
+  uint64_t      d_last_N;
+  double        d_timeval;
+
  protected:
-  gr_tagged_file_sink (size_t itemsize);
+  gr_tagged_file_sink (size_t itemsize, double samp_rate);
 
  public:
   ~gr_tagged_file_sink ();

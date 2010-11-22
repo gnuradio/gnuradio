@@ -40,24 +40,44 @@ namespace gr_tags {
   extern const pmt::pmt_t key_rssi;
   extern const pmt::pmt_t key_gain;
 
+  /*! 
+   * \brief Returns the item \p tag occurred at (as a uint64_t)
+   */
   static inline uint64_t
   get_nitems(const pmt::pmt_t &tag) {
     return pmt::pmt_to_uint64(pmt::pmt_tuple_ref(tag, TAG_NITEM_REF));
   }
   
+  /*! 
+   * \brief Returns the source ID of \p tag (as a PMT)
+   */
   static inline pmt::pmt_t
   get_srcid(const pmt::pmt_t &tag) {
     return pmt::pmt_tuple_ref(tag, TAG_SRCID_REF);
   }
   
+  /*! 
+   * \brief Returns the key of \p tag (as a PMT symbol)
+   */
   static inline pmt::pmt_t
   get_key(const pmt::pmt_t &tag) {
     return pmt::pmt_tuple_ref(tag, TAG_KEY_REF);
   }
 
+  /*! 
+   * \brief Returns the value of \p tag (as a PMT)
+   */
   static inline pmt::pmt_t
   get_value(const pmt::pmt_t &tag) {
     return pmt::pmt_tuple_ref(tag, TAG_VALUE_REF);
+  }
+
+  /*! 
+   * \brief Comparison function to test which tag, \p x or \p y, came first in time
+   */
+  static inline bool
+  nitems_compare(pmt::pmt_t x, pmt::pmt_t y) {
+    return get_nitems(x) < get_nitems(y);
   }
 
 }; /* namespace tags */
