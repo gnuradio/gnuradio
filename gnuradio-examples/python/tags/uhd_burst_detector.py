@@ -35,7 +35,7 @@ class uhd_burst_detector(gr.top_block):
         self.tagger = gr.burst_tagger(gr.sizeof_gr_complex)
 
         # Dummy signaler to collect a burst on known periods
-        data = 10000*[0,] + 500*[1,]
+        data = 1000*[0,] + 1000*[1,]
         self.signal = gr.vector_source_s(data, True)
 
         # Energy detector to get signal burst
@@ -44,7 +44,7 @@ class uhd_burst_detector(gr.top_block):
         self.sub = gr.sub_ff()
         self.mult = gr.multiply_const_ff(32768)
         self.f2s = gr.float_to_short()
-        self.fsnk = gr.tagged_file_sink(gr.sizeof_gr_complex)
+        self.fsnk = gr.tagged_file_sink(gr.sizeof_gr_complex, self.samp_rate)
         
 
         ##################################################
@@ -54,16 +54,16 @@ class uhd_burst_detector(gr.top_block):
         self.connect((self.tagger, 0), (self.fsnk, 0))
 
         # Connect a dummy signaler to the burst tagger
-       	#self.connect((self.signal, 0), (self.tagger, 1))
+       	self.connect((self.signal, 0), (self.tagger, 1))
 
         # Connect an energy detector signaler to the burst tagger
-        self.connect((self.uhd_src, 0), (self.c2m, 0))
-        self.connect((self.c2m, 0), (self.sub, 0))
-        self.connect((self.c2m, 0), (self.iir, 0))
-        self.connect((self.iir, 0), (self.sub, 1))
-        self.connect((self.sub, 0), (self.mult,0))
-        self.connect((self.mult, 0), (self.f2s, 0))
-        self.connect((self.f2s, 0), (self.tagger, 1))
+        #self.connect((self.uhd_src, 0), (self.c2m, 0))
+        #self.connect((self.c2m, 0), (self.sub, 0))
+        #self.connect((self.c2m, 0), (self.iir, 0))
+        #self.connect((self.iir, 0), (self.sub, 1))
+        #self.connect((self.sub, 0), (self.mult,0))
+        #self.connect((self.mult, 0), (self.f2s, 0))
+        #self.connect((self.f2s, 0), (self.tagger, 1))
         
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     (options, args) = parser.parse_args()
     
-    frequency = 418e6
+    frequency = 450e6
     samp_rate = samp_rate = 200000
     uhd_addr = "192.168.10.2"
 
