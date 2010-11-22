@@ -56,11 +56,13 @@ nobase_swiginclude_HEADERS = \
 	guile/std_complex.i \
 	guile/std_vector.i
 
+
 AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	 $(WITH_INCLUDES)
 
 EXTRA_DIST = gen-swig-bug-fix
 
+if PYTHON
 # special install for this top-level Python script which includes all
 # of the split Python libraries.
 ourpythondir = $(grpythondir)/gr
@@ -68,9 +70,8 @@ ourpython_PYTHON = gnuradio_core.py
 
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...
-if PYTHON
-gnuradio_swig_bug_workaround.h: gnuradio_core_runtime.py $(srcdir)/gen-swig-bug-fix
-	$(PYTHON) $(srcdir)/gen-swig-bug-fix python/gnuradio_core_runtime.cc $@
+# gnuradio_swig_bug_workaround.h : gnuradio_core_runtime.py $(srcdir)/gen-swig-bug-fix
+#	$(PYTHON) $(srcdir)/gen-swig-bug-fix python/gnuradio_core_runtime.cc $@
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = gnuradio_swig_bug_workaround.h
@@ -96,13 +97,17 @@ gnuradio_core_hier_la_swig_libadd    = $(GNURADIO_CORE_LA)
 
 # add some of the variables generated inside the Makefile.swig
 
-endif				# end of python
+# include the SWIG-generated .h files in the BUILT SOURCES, since they
+# aren't by default when using Makefile.swig; order doesn't matter.
+PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(HFILE)))
+swig_built_sources += $(PYTHON_GEN)
+endif		# end of if python
 
-if PYTHON
-else
-gnuradio_swig_bug_workaround.h:
-	@touch gnuradio_swig_bug_workaround.h
-endif				# end of guile
+if GUILE
+SWIG_GUILE_FLAGS += -DIN_GNURADIO_CORE
+GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
+swig_built_sources += $(GUILE_GEN)
+endif		# end of if guile
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
