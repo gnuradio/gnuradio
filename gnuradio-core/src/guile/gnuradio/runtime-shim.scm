@@ -19,6 +19,7 @@
 
 (define-module (gnuradio runtime-shim)
   #:use-module (oop goops)
+  #:use-module (ice-9 threads)
   #:use-module (gnuradio gnuradio_core_runtime)
   #:duplicates (merge-generics replace check))
 
@@ -86,4 +87,43 @@
 		  (loop (1+ n))))))))))
 
 
-(export-safely <gr-endpoint> gr:ep gr:connect gr:disconnect)
+
+
+(define-method (gr:run (self <gr-top-block-sptr>))
+  (gr:start self)
+  (gr:wait self))
+
+
+(define-method (gr:wait (tb <gr-top-block-sptr>))
+
+  (define (sigint-handler sig)
+    ;;(display "\nSIGINT!\n" (current-error-port))
+    ;; tell flow graph to stop
+    (gr:stop tb))
+
+  (let ((old-handler #f))
+    (dynamic-wind
+
+	;; Called at entry
+	(lambda ()
+	  ;; Install SIGINT handler
+	  (set! old-handler (sigaction SIGINT sigint-handler)))
+
+	;; Protected thunk
+	(lambda ()
+	  (let ((waiter (begin-thread (gr:top-block-wait-unlocked tb))))
+	    (join-thread waiter)
+	    ;;(display "\nAfter join-thread\n" (current-error-port))
+	    ))
+
+	;; Called at exit
+	(lambda ()
+	  ;; Restore SIGINT handler
+	  (if (not (car old-handler))
+	      ;; restore original C handler
+	      (sigaction SIGINT #f)
+	      ;; restore Scheme handler, SIG_IGN or SIG_DFL
+	      (sigaction SIGINT (car old-handler) (cdr old-handler)))))))
+
+
+(export-safely <gr-endpoint> gr:ep gr:connect gr:disconnect gr:run gr:wait)

@@ -1,7 +1,5 @@
 In no particular order:
 
-2)  SIGINT handling in gr_top_block::wait
-
 3)  Ensure that all 4 combinations of
     --{enable,disable}-python --{enable,disable}-guile
     work correctly.
@@ -18,7 +16,8 @@ In no particular order:
 
 6)  Fix printed representation of blocks in gr_block.i
 
-9)  Any other FIXME style warnings
+9)  Any other FIXME style warnings.
+    (Last one is in usrp2.i)
 
 10) Finish gnuradio-core test cases
 
@@ -35,16 +34,12 @@ In no particular order:
 
 13) Change guile libnames to libguile-gnuradio-<module-name>
 
-14) Add support to setup_guile_test_env.in for
-    "withlibs", OS/X (DYLD_LIBRARY_PATH), windows (PATH)
-
 15) Rewrite gr-run-waveform as C/C++ code that embeds guile.
     See if we can't statically link libguile into this.
     Will need to figure out which packages provide libguile.a.
 
 16) Test this stuff with Guile 1.9 to confirm that it works and to see
     how much faster it is.  Load time currently is currently kind of doggy.
-
 
 
 I'm sure I'm forgetting some things...
@@ -72,6 +67,8 @@ These are done:
 1)  [DONE] Ensure that libraries containing swig generated code are regenerated
     when any relevant .i file is touched.
 
+2)  [DONE] SIGINT handling in gr_top_block::wait
+
 4)  [DONE] Fix GR_SWIG_BLOCK_MAGIC so that in the guile case we don't map all
     the constructors into the same name.  E.g. audio_alsa_sink -> sink.
     (Causes problem when multiple gr-* modules are used.)
@@ -84,5 +81,7 @@ These are done:
 8)  [DONE] Fix gr_message_{sink,source} so that they work under guile.
     (Not sure if I disabled one or both of these...)
 
-17) [DONE] Get std::vector< std::complex<float> > working
+14) [DONE] Add support to setup_guile_test_env.in for
+    "withlibs", OS/X (DYLD_LIBRARY_PATH), windows (PATH)
 
+17) [DONE] Get std::vector< std::complex<float> > working

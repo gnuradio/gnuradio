@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,8 +42,8 @@ public:
 
   void start() throw (std::runtime_error);
   void stop();
-  void wait();
-  void run() throw (std::runtime_error);
+  //void wait();
+  //void run() throw (std::runtime_error);
   void lock();
   void unlock() throw (std::runtime_error);
   void dump();
@@ -71,6 +71,33 @@ void top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error)
 
 #endif
 
-#ifdef SWIG_GUILE
-#warning "gr_top_block.i: top_block_run_unlocked needs to be implemented!"
+#ifdef SWIGGUILE
+
+%{
+  struct tb_arg_holder {
+    gr_top_block_sptr	tb;
+  };
+
+  static void *
+  tb_wait_shim(void *arg)
+  {
+    tb_arg_holder *a = (tb_arg_holder *)arg;
+    a->tb->wait();
+    return 0;
+  }
+
+%}
+
+%inline %{
+
+  static void
+  top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error)
+  {
+    tb_arg_holder a;
+    a.tb = r;
+    scm_without_guile(tb_wait_shim, (void *) &a);
+  }
+
+%}
+
 #endif

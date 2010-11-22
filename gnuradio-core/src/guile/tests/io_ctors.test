@@ -37,20 +37,21 @@
 ;;;
 
 ;;; ./io/gr_file_descriptor_sink.h
-(pass-if (true? (gr:file-descriptor-sink 1 1)))
+(pass-if (true? (gr:file-descriptor-sink 1 (dup 1))))
 
-;;; ./io/gr_file_descriptor_source.h  FIXME: not found
-;; (pass-if (true? (gr:file-descriptor-source 1 1 #f)))
+;;; ./io/gr_file_descriptor_source.h
+(pass-if (true? (gr:file-descriptor-source 1 (dup 0) #f)))
 
 ;;; ./io/gr_file_sink.h
 (pass-if (true? (gr:file-sink 1 "foo")))
 
-;;; ./io/gr_file_source.h FIXME: not found
-;; (pass-if (true? (gr:file-source 1 "foo" #f)))
+;;; ./io/gr_file_source.h
+(pass-if (true? (gr:file-source 1 "foo" #f)))
+(rm-foo)
 
-;;; ./io/gr_histo_sink_f.h FIXME: not found
+;;; ./io/gr_histo_sink_f.h
 ;; gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
-;; (pass-if (true? (gr:histo-sink-f 1)))
+(pass-if (true? (gr:histo-sink-f (gr:msg-queue))))
 
 ;;; ./io/gr_message_sink.h
 (pass-if (true? (gr:message-sink 1 (gr:msg-queue) #f)))
@@ -59,25 +60,23 @@
 (pass-if (true? (gr:message-source 1 1)))
 (pass-if (true? (gr:message-source 1 (gr:msg-queue))))
 
-;;; ./io/gr_oscope_sink_f.h FIXME: not found
-;; _oscope_sink_x (const std::string name, gr_io_signature_sptr input_sig,
-;;                     double sample_rate);
-;; (pass-if (true? (gr:oscope-sink-f "foo" 1 1)))
+;;; ./io/gr_oscope_sink_f.h
+(pass-if (true? (gr:oscope-sink-f 1000 (gr:msg-queue))))
 
-;;; ./io/gr_oscope_sink_x.h FIXME: not found
-;; gr_oscope_sink_x (const std::string name, gr_io_signature_sptr input_sig,
-;;                     double sampling_rate);
-;; (pass-if (true? (gr:oscope_sink_x "foo" 1 1)))
+;;; ./io/gr_udp_sink.h
+(pass-if (true? (gr:udp-sink 4 "localhost" 80 1472 #f)))
+(pass-if-throw "confirm throw gr:udp-sink" #t
+  (true? (gr:udp-sink 4 "localhostx" 80 1472 #f)))
 
-;;; ./io/gr_udp_sink.h FIXME: not found
-;; (pass-if (true? (gr:udp-sink 1 "foo" 1472 #t)))
+;;; ./io/gr_udp_source.h
+(pass-if (true? (gr:udp-source 4 "localhost" 0 1472 #f #t)))
+(pass-if-throw "confirm throw gr:udp-sink" #t
+  (true? (gr:udp-source 4 "localhostx" 0 1472 #f #t)))
 
-;;; ./io/gr_udp_source.h FIXME: not found
-;; (pass-if (true? (gr:message-source 0 "foo" 0 1472 #t #t)))
+;;; ./io/gr_wavfile_sink.h
+(pass-if (true? (gr:wavfile-sink "foo" 2 48000 16)))
 
-;;; ./io/gr_wavfile_sink.h FIXME: not found
-;; (pass-if (true? (gr:message-source "foo" 1 1 1)))
-
-;;; ./io/gr_wavfile_source.h FIXME: not found
-;; (pass-if (true? (gr:message-source "foo" #f)))
-
+;;; ./io/gr_wavfile_source.h WONTFIX: buggy source won't accept file
+;;;                                   created immediately above.
+;;(pass-if (true? (gr:wavfile-source "foo" #f)))
+(rm-foo)
