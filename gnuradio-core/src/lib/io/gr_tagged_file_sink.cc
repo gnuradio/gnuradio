@@ -172,28 +172,37 @@ gr_tagged_file_sink::work (int noutput_items,
       while(vitr != all_tags.end()) {
 	if((pmt::pmt_eqv(gr_tags::get_key(*vitr), bkey)) &&
 	   pmt::pmt_is_false(gr_tags::get_value(*vitr))) {
-	  uint64_t N = gr_tags::get_nitems(*vitr) - start_N;
-	  idx_stop = (int)N;
+	  uint64_t N = gr_tags::get_nitems(*vitr);
+	  idx_stop = (int)N - start_N;
+
+	  std::cout << "Found end of burst: "
+		    << idx_stop << ", " << N << std::endl;
 
 	  int count = fwrite (&inbuf[d_itemsize*idx], d_itemsize, idx_stop-idx, d_handle);
-	  if (count == 0)
-	    break;
+	  if (count == 0) {
+	    if(ferror(d_handle)) {
+	      perror("gr_tagged_file_sink: error writing file");
+	    }
+	  }
 	  idx = idx_stop;
 	  d_state = NOT_IN_BURST;
 	  vitr++;
 	  fclose(d_handle);
 	  break;
-	} else {
+	}
+	else {
 	  vitr++;
 	}
       }
       if(d_state == IN_BURST) {
 	int count = fwrite (&inbuf[idx], d_itemsize, noutput_items-idx, d_handle);
-	if (count == 0)
-	  break;
+	if (count == 0) {
+	  if(ferror(d_handle)) {
+	    perror("gr_tagged_file_sink: error writing file");
+	  }
+	}
 	idx = noutput_items;
       }
-      
     }
   }
 
