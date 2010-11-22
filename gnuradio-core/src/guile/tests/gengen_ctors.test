@@ -198,16 +198,16 @@
 (pass-if (true? (gr:multiply-ss 1)))
 
 ;;; ./gengen/gr_mute_cc.h FIXME: not found
-;; (pass-if (true? (gr:mute-cc false)))
+(pass-if (true? (gr:mute-cc #f)))
 
 ;;; ./gengen/gr_mute_ff.h FIXME: not found
-;;(pass-if (true? (gr:mute-ff false)))
+(pass-if (true? (gr:mute-ff #f)))
 
 ;;; ./gengen/gr_mute_ii.h FIXME: not found
-;; (pass-if (true? (gr:mute-ii false)))
+(pass-if (true? (gr:mute-ii #f)))
 
 ;;; ./gengen/gr_mute_ss.h FIXME: not found
-;; (pass-if (true? (gr:mute-ss false)))
+(pass-if (true? (gr:mute-ss #f)))
 
 ;;; ./gengen/gr_noise_source_c.h
 (pass-if (true? (gr:noise-source-c 1 0 3021)))
@@ -318,19 +318,19 @@
 (pass-if (true? (gr:vector-sink-s 1)))
 
 ;;; ./gengen/gr_vector_source_b.h
-;; (pass-if (true? (gr:vector-source-b #(1 2) false 1)))
+;; (pass-if (true? (gr:vector-source-b #(1 2) #f 1)))
 
 ;; ;;; ./gengen/gr_vector_source_c.h
-;; (pass-if (true? (gr:vector-source-c #(1+3i 23+5i) false 1)))
+;; (pass-if (true? (gr:vector-source-c #(1+3i 23+5i) #f 1)))
 
 ;; ;;; ./gengen/gr_vector_source_f.h
-;; (pass-if (true? (gr:vector-source-f #(1.0 2.0) false 1)))
+;; (pass-if (true? (gr:vector-source-f #(1.0 2.0) #f 1)))
 
 ;;; ./gengen/gr_vector_source_i.h
-;; (pass-if (true? (gr:vector-source-i #(1 2) false 1)))
+;; (pass-if (true? (gr:vector-source-i #(1 2) #f 1)))
 
 ;;; ./gengen/gr_vector_source_s.h FIXME: not found
-;; (pass-if (true? (gr:vector-source-s #(1 2) false 1)))
+;; (pass-if (true? (gr:vector-source-s #(1 2) #f 1)))
 
 ;;; ./gengen/gr_xor_bb.h
 (pass-if (true? (gr:xor-bb)))

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -43,6 +43,9 @@
  */
 
 
+// Directors are only supported in Python, Java and C#
+#ifdef SWIGPYTHON
+
 // Enable SWIG directors for these classes
 %feature("director") gr_py_feval_dd;
 %feature("director") gr_py_feval_cc;
@@ -65,8 +68,8 @@
 //  catch (Swig::DirectorException &e) { std::cerr << e.getMessage();  SWIG_fail; }
 //}
 
-#ifdef SWIGPYTHON
 %{
+
 // class that ensures we acquire and release the Python GIL
 
 class ensure_py_gil_state {
@@ -77,19 +80,6 @@ public:
 };
 
 %}
-#endif
-
-#ifdef SWIGGUILE
-#if 0
-// FIXME: this is a bogus stub, just here so things build
-class ensure_py_gil_state {
-public:
-  ensure_py_gil_state()  { }
-  ~ensure_py_gil_state() { }
-};
-#endif
-#warning "class ensure_py_gil_state needs to be implemented!"
-#endif
 
 /*
  * These are the real C++ base classes, however we don't want these exposed.
@@ -158,9 +148,7 @@ class gr_py_feval_dd : public gr_feval_dd
  public:
   double calleval(double x)
   {
-#ifdef PYTHON
     ensure_py_gil_state _lock;
-#endif
     return eval(x);
   }
 };
@@ -170,9 +158,7 @@ class gr_py_feval_cc : public gr_feval_cc
  public:
   gr_complex calleval(gr_complex x)
   {
-#ifdef PYTHON
     ensure_py_gil_state _lock;
-#endif
     return eval(x);
   }
 };
@@ -182,9 +168,7 @@ class gr_py_feval_ll : public gr_feval_ll
  public:
   long calleval(long x)
   {
-#ifdef PYTHON
     ensure_py_gil_state _lock;
-#endif
     return eval(x);
   }
 };
@@ -194,9 +178,7 @@ class gr_py_feval : public gr_feval
  public:
   void calleval()
   {
-#ifdef PYTHON
     ensure_py_gil_state _lock;
-#endif
     eval();
   }
 };
@@ -218,3 +200,5 @@ long gr_feval_ll_example(gr_feval_ll *f, long x);
 
 %rename(feval_example) gr_feval_example;
 void gr_feval_example(gr_feval *f);
+
+#endif // SWIGPYTHON

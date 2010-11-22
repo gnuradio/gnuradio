@@ -24,11 +24,6 @@ include $(top_srcdir)/Makefile.swig
 
 BUILT_SOURCES = $(grinclude_HEADERS) $(swig_built_sources)
 
-CLEANFILES = python/*.cc python/*.h
-if GUILE
-CLEANFILES += guile/*.cc gnuradio/*.scm
-endif
-
 # ----------------------------------------------------------------
 # We've split the previously monstrous gnuradio_core into 6
 # smaller pieces.  This reduces compile time coupling and creates
@@ -62,7 +57,6 @@ AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 
 EXTRA_DIST = gen-swig-bug-fix
 
-if PYTHON
 # special install for this top-level Python script which includes all
 # of the split Python libraries.
 ourpythondir = $(grpythondir)/gr
@@ -95,20 +89,5 @@ gnuradio_core_filter_la_swig_libadd  = $(GNURADIO_CORE_LA)
 gnuradio_core_io_la_swig_libadd      = $(GNURADIO_CORE_LA)
 gnuradio_core_hier_la_swig_libadd    = $(GNURADIO_CORE_LA)
 
-# add some of the variables generated inside the Makefile.swig
 
-# include the SWIG-generated .h files in the BUILT SOURCES, since they
-# aren't by default when using Makefile.swig; order doesn't matter.
-PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(HFILE)))
-swig_built_sources += $(PYTHON_GEN)
-endif		# end of if python
-
-if GUILE
 SWIG_GUILE_FLAGS += -DIN_GNURADIO_CORE
-GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
-swig_built_sources += $(GUILE_GEN)
-endif		# end of if guile
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
-

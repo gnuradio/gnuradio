@@ -259,18 +259,18 @@
 ;;; ./general/gr_ofdm_frame_acquisition.h
 (pass-if (true? (gr:ofdm-frame-acquisition 1 1 1 #(1+3i 23+5i) 1)))
 
-;;; ./general/gr_ofdm_frame_sink.h FIXME: "No matching method for generic function `ofdm_frame_sink'"
-;; (pass-if (true? (gr:ofdm-frame-sink #(1+3i 23+5i) #('a' 'b') (gr:msg-queue) 1 0.25 0)))
+;;; ./general/gr_ofdm_frame_sink.h
+(pass-if (true? (gr:ofdm-frame-sink #(1+3i 23+5i) #(0 1) (gr:msg-queue) 128 0.25 0)))
 
 ;;; ./general/gr_ofdm_insert_preamble.h FIXME: "Wrong type argument in position ~A: ~S"
-;; (pass-if (true? (gr:ofdm-insert-preamble 1 #(#(1+3i 23+5i)))))
+;;;                                     WONTFIX: Need vector<vector<complex<float>>>
+;;(pass-if (true? (gr:ofdm-insert-preamble 2 #(#(1+3i 23+5i) #(1+3i 23+5i)))))
 
-;;; ./general/gr_ofdm_mapper_bcv.h FIXME: Wrong type argument in position ~A:
-;; gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation,
-;;                       unsigned int msgq_limit,
-;;                       unsigned int bits_per_symbol,
-;;                       unsigned int fft_length);
-;; (pass-if (true? (gr:ofdm-mapper-bcv #(1+3i 23+5i) 1 1 1)))
+;;; ./general/gr_ofdm_mapper_bcv.h
+(pass-if (true? (gr:ofdm-mapper-bcv #(0+1i 0-1i) 1 100 128)))
+(pass-if-throw "confirm throw gr:ofdm-mapper-bcv" #t
+  (true? (gr:ofdm-mapper-bcv #(0+1i 0-1i) 1 10 128)))
+
 
 ;;; ./general/gr_ofdm_sampler.h
 (pass-if (true? (gr:ofdm-sampler 1 1 1)))

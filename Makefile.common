@@ -40,7 +40,6 @@ swigincludedir = $(grincludedir)/swig
 guiledir = $(prefix)/share/guile/site
 grguiledir = $(guiledir)/gnuradio
 
-if PYTHON
 # Install the gnuradio stuff in the appropriate subdirectory
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
@@ -54,7 +53,6 @@ grpyexecdir = $(pyexecdir)/gnuradio
 
 usrppythondir = $(pythondir)/usrpm
 usrppyexecdir = $(pyexecdir)/usrpm
-endif
 
 # gcell includes
 gcellincludedir = $(includedir)/gcell
@@ -125,7 +123,6 @@ MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
 ## SWIG suffixes for automake to know about
 SUFFIXES = .i .scm .py
 
-if GUILE
 # Compile a .i to what guile needs. We use -o to set the output file name,
 # or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
 # gnuradio_core_*_wrap.cxx in the source directory.
@@ -140,7 +137,6 @@ gnuradio/%.scm : %.i
 	$(SED) -i -e 's/<--dummy-[0-9]\+-->/<top>/g' gnuradio/$*.scm
 	$(SED) -i -e 's/^(export /(export-safely /' gnuradio/$*.scm
 	$(RM) guile/$*.Std
-endif
 
 # Compile a .i file to what python needs
 .i.py:
@@ -152,7 +148,7 @@ endif
 	$(SED) -e 's|python/\(.*\)\.cc:|\1.py:|' python/$*.Std > python/$*.d
 	$(RM) python/$*.Std
 
-# Don't distribute the files defined in the variable 'no_dist_files'
+# or the directories listed in no_dist_dirs (set in Makefile.swig)
 dist-hook:
 	@for dir in $(no_dist_dirs); do \
 		echo $(RM) -fr $(distdir)/$$dir; \

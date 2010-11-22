@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,15 +25,15 @@
 ## in Makefile.am's which require SWIG wrapping / compilation.
 ## For just installing .i files, this Makefile is not required.
 
+CLEANFILES = python/*.cc python/*.h python/*.lo python/*.o
+CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o
+
 ## swig flags
 ## -w511 turns off keyword argument warning
 ## "-outdir $(builddir)" writes all generated output files to
 ##   the local builddir (which should always be '.')
 ##   In some older autotools, $(builddir) is not defined, so
 ##   just use '.' instead.
-
-CLEANFILES = python/*.cc python/*.h python/*.lo python/*.o
-CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o
 
 SWIG_PYTHON_FLAGS =	\
 	-fvirtual	\
@@ -144,3 +144,6 @@ if GUILE
 GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
 swig_built_sources += $(GUILE_GEN)
 endif
+
+no_dist_dirs = python gnuradio guile
+no_dist_files = $(swig_built_sources)
