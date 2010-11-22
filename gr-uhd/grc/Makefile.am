@@ -39,13 +39,6 @@ dist_grcblocks_DATA = \
 	uhd_block_tree.xml \
 	$(BUILT_SOURCES)
 
-# add the deprecated files
-dist_grcblocks_DATA += \
-	uhd_mimo_source.xml \
-	uhd_mimo_sink.xml \
-	uhd_simple_source.xml \
-	uhd_simple_sink.xml
-
 ########################################################################
 # Rules for generating the source and sink xml wrappers
 ########################################################################

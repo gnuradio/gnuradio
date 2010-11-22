@@ -13,11 +13,4 @@
 		<block>uhd_multi_usrp_source</block>
 		<block>uhd_multi_usrp_sink</block>
 	</cat>
-	<cat>
-		<name>UHD (DEPRECATED)</name>
-		<block>uhd_simple_source</block>
-		<block>uhd_simple_sink</block>
-		<block>uhd_mimo_source</block>
-		<block>uhd_mimo_sink</block>
-	</cat>
 </cat>
