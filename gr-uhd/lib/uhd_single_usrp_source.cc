@@ -24,6 +24,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <boost/format.hpp>
+#include <gr_tag_info.h>
 
 /***********************************************************************
  * UHD Single USRP Source
@@ -51,6 +52,8 @@ public:
         _type(io_type)
     {
         _dev = uhd::usrp::single_usrp::make(device_addr);
+
+	d_tag_srcid = pmt::mp("uhd_single_usrp_source");
     }
 
     void set_subdev_spec(const std::string &spec){
@@ -159,13 +162,13 @@ public:
 	      pmt::pmt_t nsamp_val = pmt::mp((int)d_num_packet_samps);
 	      
 	      add_item_tag(0, nitems_written(0),
-			   pmt::mp("packet_time_stamp"),
+			   gr_tags::key_time,
 			   d_tstamp_pair,
-			   pmt::mp("uhd_single_usrp_source"));
+			   d_tag_srcid);
 	      add_item_tag(0, nitems_written(0),
 			   pmt::mp("num_packet_samples"),
 			   nsamp_val,
-			   pmt::mp("uhd_single_usrp_source"));
+			   d_tag_srcid);
 	    }
 	    return num_samps;
 	    
@@ -196,6 +199,7 @@ public:
 private:
     uhd::usrp::single_usrp::sptr _dev;
     const uhd::io_type_t _type;
+    pmt::pmt_t d_tag_srcid;
 };
 
 
