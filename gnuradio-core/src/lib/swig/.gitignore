@@ -10,7 +10,6 @@
 /swigrun.py
 /swigrun_wrap.c
 /Makefile.swigdeps.new
-/gnuradio_swig_bug_workaround.h
 gnuradio_core_filter.cc
 gnuradio_core_filter.d
 gnuradio_core_filter.h
