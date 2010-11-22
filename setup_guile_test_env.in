@@ -1,16 +1,26 @@
-#!/bin/sh
+#
+# Copyright 2010 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 # This is sourced by run_guile_tests to establish the environment
 # variables required to run the tests in the build tree.
 
-abs_top_srcdir=@abs_top_srcdir@
-abs_top_builddir=@abs_top_builddir@
-
-
-# FIXME add in OS/X DYLD_LIBRARY_PATH
-# FIXME add in cywin*/win*/mingw* PATH
-# FIXME add in withdirs
-
+# add_local_paths is the only "public" function in this file
 
 # 1st argument is absolute path to hand coded guile source directory
 # 2nd argument is absolute path to component C++ shared library build directory
@@ -22,11 +32,22 @@ function add_local_paths(){
     echo "$0: requires 3 args" 1>&2
     exit 1
   fi
-  [ -n "$1" ] && prepend GUILE_LOAD_PATH "$1"
-  [ -n "$2" ] && prepend LTDL_LIBRARY_PATH "$2/.libs"
-  [ -n "$3" -a "$2" != "$3" ] && prepend LTDL_LIBRARY_PATH "$3/.libs"
-  [ -n "$3" ] && prepend GUILE_LOAD_PATH "$3"
+
+  # Add local dirs to the front
+  prepend_to_guile_load_path "$1"
+  prepend_to_libpath "$2/.libs"
+  [ "$2" != "$3" ] && prepend_to_libpath "$3/.libs"
+  prepend_to_guile_load_path "$3"
+
+  # Add withdirs to the end
+  append_to_guile_load_path "@with_GUILE_LOAD_PATH@"
+  append_to_libpath "@with_LIBDIRPATH@"
 }
+
+# ------------------------------------------------------------------------
+
+abs_top_srcdir=@abs_top_srcdir@
+abs_top_builddir=@abs_top_builddir@
 
 # usage: prepend <path-varname> <dir>
 function prepend(){
@@ -37,9 +58,6 @@ function prepend(){
   fi
   local path="$1" dir="$2" contents=""
   eval "contents=\$$path"
-  #echo "path = $path"
-  #echo "dir = $dir"
-  #echo "contents = $contents"
   if [ "$dir" != "" ]
   then
     if [ "$contents" = "" ]
@@ -49,8 +67,68 @@ function prepend(){
       eval "$path=\"$dir:$contents\""
     fi
   fi
-
   #echo end-of-prepend: $path=${!path}
+}
+
+# usage: append <path-varname> <dir>
+function append(){
+  if [ $# -ne 2 ]
+  then
+    echo "$0: append needs 2 args" 1>&2
+    exit 1
+  fi
+  local path="$1" dir="$2" contents=""
+  eval "contents=\$$path"
+  if [ "$dir" != "" ]
+  then
+    if [ "$contents" = "" ]
+    then
+      eval "$path=\"$dir\""
+    else
+      eval "$path=\"$contents:$dir\""
+    fi
+  fi
+  #echo end-of-append: $path=${!path}
+}
+
+function prepend_to_guile_load_path(){
+    prepend GUILE_LOAD_PATH "$1"
+    export GUILE_LOAD_PATH
+}
+
+function append_to_guile_load_path(){
+    append GUILE_LOAD_PATH "$1"
+    export GUILE_LOAD_PATH
+}
+
+function prepend_to_libpath(){
+    prepend LTDL_LIBRARY_PATH "$1"
+    export LTDL_LIBRARY_PATH
+    case "@host_os@" in
+	darwin*)
+	    prepend DYLD_LIBRARY_PATH "$1"
+	    export DYLD_LIBRARY_PATH
+	    ;;
+	cygwin*|win*|mingw*)
+	    prepend PATH "$1"
+	    export PATH
+	    ;;
+    esac
+}
+
+function append_to_libpath(){
+    append LTDL_LIBRARY_PATH "$1"
+    export LTDL_LIBRARY_PATH
+    case "@host_os@" in
+	darwin*)
+	    append DYLD_LIBRARY_PATH "$1"
+	    export DYLD_LIBRARY_PATH
+	    ;;
+	cygwin*|win*|mingw*)
+	    append PATH "$1"
+	    export PATH
+	    ;;
+    esac
 }
 
 # ------------------------------------------------------------------------
@@ -59,22 +137,15 @@ function prepend(){
 # ------------------------------------------------------------------------
 
 # Where to search for not yet installed C++ shared libraries
-prepend mylibdir $abs_top_builddir/gruel/src/lib/.libs
-prepend mylibdir $abs_top_builddir/gnuradio-core/src/lib/.libs
+prepend_to_libpath $abs_top_builddir/gruel/src/lib/.libs
+prepend_to_libpath $abs_top_builddir/gnuradio-core/src/lib/.libs
 
 # Where to search for not yet installed swig generated guile libs
-prepend mylibdir $abs_top_builddir/gnuradio-core/src/lib/swig/.libs
+prepend_to_libpath $abs_top_builddir/gnuradio-core/src/lib/swig/.libs
 
 # Where to seach for guile code.
-prepend guile_load_path $abs_top_srcdir/gnuradio-core/src/guile
-prepend guile_load_path $abs_top_builddir/gnuradio-core/src/lib/swig
+prepend_to_guile_load_path $abs_top_srcdir/gnuradio-core/src/guile
+prepend_to_guile_load_path $abs_top_builddir/gnuradio-core/src/lib/swig
 
-#echo "mylibdir = $mylibdir"
-#echo "guile_load_path = $guile_load_path"
 
-prepend LTDL_LIBRARY_PATH "$mylibdir"
-prepend GUILE_LOAD_PATH "$guile_load_path"
-
-export LTDL_LIBRARY_PATH
-export GUILE_LOAD_PATH
 export GUILE_WARN_DEPRECATED=no

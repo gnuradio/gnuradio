@@ -34,9 +34,6 @@ In no particular order:
 
 13) Change guile libnames to libguile-gnuradio-<module-name>
 
-14) Add support to setup_guile_test_env.in for
-    "withlibs", OS/X (DYLD_LIBRARY_PATH), windows (PATH)
-
 15) Rewrite gr-run-waveform as C/C++ code that embeds guile.
     See if we can't statically link libguile into this.
     Will need to figure out which packages provide libguile.a.
@@ -83,5 +80,8 @@ These are done:
 
 8)  [DONE] Fix gr_message_{sink,source} so that they work under guile.
     (Not sure if I disabled one or both of these...)
+
+14) [DONE] Add support to setup_guile_test_env.in for
+    "withlibs", OS/X (DYLD_LIBRARY_PATH), windows (PATH)
 
 17) [DONE] Get std::vector< std::complex<float> > working

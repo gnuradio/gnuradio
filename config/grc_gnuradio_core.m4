@@ -26,6 +26,8 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 	gnuradio_core_I="$gnuradio_core_SWIGDIRPATH/gnuradio.i"
 	gnuradio_core_SWIG_INCLUDES="-I$gnuradio_core_SWIGDIRPATH"
 	gnuradio_core_PYDIRPATH=$pythondir
+	gnuradio_core_GUILE_LOAD_PATH="`pkg-config --variable=guile_load_path gnuradio-core`"
+	gnuradio_core_LIBDIRPATH="`pkg-config --variable=libdir gnuradio-core`"
     ])
 
     dnl Don't do gnuradio-core if gruel skipped
