@@ -14,7 +14,7 @@ def main():
     ann = gr.annotator_alltoall(1000000, gr.sizeof_short)
     tagger = gr.burst_tagger(gr.sizeof_short)
 
-    fsnk = gr.tagged_file_sink(gr.sizeof_short)
+    fsnk = gr.tagged_file_sink(gr.sizeof_short, 1)
 
     tb = gr.top_block()
     tb.connect(src, thr, (tagger, 0))
