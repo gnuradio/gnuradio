@@ -53,17 +53,19 @@ class uhd_burst_detector(gr.top_block):
         self.connect((self.uhd_src, 0), (self.tagger, 0))
         self.connect((self.tagger, 0), (self.fsnk, 0))
 
-        # Connect a dummy signaler to the burst tagger
-       	self.connect((self.signal, 0), (self.tagger, 1))
+        if 0:
+            # Connect a dummy signaler to the burst tagger
+            self.connect((self.signal, 0), (self.tagger, 1))
 
-        # Connect an energy detector signaler to the burst tagger
-        #self.connect((self.uhd_src, 0), (self.c2m, 0))
-        #self.connect((self.c2m, 0), (self.sub, 0))
-        #self.connect((self.c2m, 0), (self.iir, 0))
-        #self.connect((self.iir, 0), (self.sub, 1))
-        #self.connect((self.sub, 0), (self.mult,0))
-        #self.connect((self.mult, 0), (self.f2s, 0))
-        #self.connect((self.f2s, 0), (self.tagger, 1))
+        else:
+            # Connect an energy detector signaler to the burst tagger
+            self.connect((self.uhd_src, 0), (self.c2m, 0))
+            self.connect((self.c2m, 0), (self.sub, 0))
+            self.connect((self.c2m, 0), (self.iir, 0))
+            self.connect((self.iir, 0), (self.sub, 1))
+            self.connect((self.sub, 0), (self.mult,0))
+            self.connect((self.mult, 0), (self.f2s, 0))
+            self.connect((self.f2s, 0), (self.tagger, 1))
         
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate

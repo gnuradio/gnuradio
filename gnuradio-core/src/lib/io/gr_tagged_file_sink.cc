@@ -99,8 +99,8 @@ gr_tagged_file_sink::work (int noutput_items,
 	  uint64_t N = gr_tags::get_nitems(*vitr);
 	  idx = (int)(N - start_N);
 
-	  std::cout << std::endl << "Found start of burst: "
-		    << idx << ", " << N << std::endl;
+	  //std::cout << std::endl << "Found start of burst: "
+	  //	    << idx << ", " << N << std::endl;
 
 	  // Find time burst occurred by getting latest time tag and extrapolating
 	  // to new time based on sample rate of this block.
@@ -121,18 +121,18 @@ gr_tagged_file_sink::work (int noutput_items,
 	    double delta = (double)(N - time_nitems) / d_sample_rate;
 	    d_timeval = (double)tsecs + tfrac + delta;
 
-	    std::cout.setf(std::ios::fixed, std::ios::floatfield);
-	    std::cout.precision(8);
-	    std::cout << "Time found: " << (double)tsecs + tfrac << std::endl;
-	    std::cout << "   time: " << d_timeval << std::endl;
-	    std::cout << "   time at N = " << time_nitems << " burst N = " << N << std::endl;
+	    //std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	    //std::cout.precision(8);
+	    //std::cout << "Time found: " << (double)tsecs + tfrac << std::endl;
+	    //std::cout << "   time: " << d_timeval << std::endl;
+	    //std::cout << "   time at N = " << time_nitems << " burst N = " << N << std::endl;
 	  }
 	  else {
 	    // if no time tag, use last seen tag and update time based on
 	    // sample rate of the block
 	    d_timeval += (double)(N - d_last_N) / d_sample_rate;
-	    std::cout << "Time not found" << std::endl;
-	    std::cout << "   time: " << d_timeval << std::endl;
+	    //std::cout << "Time not found" << std::endl;
+	    //std::cout << "   time: " << d_timeval << std::endl;
 	  }
 	  d_last_N = N;
 	  
@@ -157,7 +157,7 @@ gr_tagged_file_sink::work (int noutput_items,
 	    ::close(fd);		// don't leak file descriptor if fdopen fails.
 	  }
 
-	  std::cout << "Created new file: " << filename.str() << std::endl;
+	  //std::cout << "Created new file: " << filename.str() << std::endl;
 
 	  d_state = IN_BURST;
 	  break;
@@ -175,8 +175,8 @@ gr_tagged_file_sink::work (int noutput_items,
 	  uint64_t N = gr_tags::get_nitems(*vitr);
 	  idx_stop = (int)N - start_N;
 
-	  std::cout << "Found end of burst: "
-		    << idx_stop << ", " << N << std::endl;
+	  //std::cout << "Found end of burst: "
+	  //	    << idx_stop << ", " << N << std::endl;
 
 	  int count = fwrite (&inbuf[d_itemsize*idx], d_itemsize, idx_stop-idx, d_handle);
 	  if (count == 0) {
