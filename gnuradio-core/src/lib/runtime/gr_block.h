@@ -247,7 +247,7 @@ class gr_block : public gr_basic_block {
   /*!
    * \brief  Adds a new tag onto the given output buffer.
    * 
-   * \param which_ouput  an integer of which output stream to attach the tag
+   * \param which_output an integer of which output stream to attach the tag
    * \param abs_offset   a uint64 number of the absolute item number
    *                     assicated with the tag. Can get from nitems_written.
    * \param key          the tag key as a PMT symbol

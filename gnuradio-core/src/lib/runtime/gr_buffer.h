@@ -99,6 +99,11 @@ class gr_buffer {
    */
   void add_item_tag(const pmt::pmt_t &tag);
 
+  /*!
+   * \brief  Removes all tags before \p max_time from buffer
+   * 
+   * \param max_time        the time (item number) to trim up until.
+   */
   void prune_tags(uint64_t max_time);
 
   std::deque<pmt::pmt_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
@@ -244,6 +249,7 @@ class gr_buffer_reader {
 
   /*!
    * \brief Return the block that reads via this reader.
+   *
    */
   gr_block_sptr link() { return gr_block_sptr(d_link); }
 
