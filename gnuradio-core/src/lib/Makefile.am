@@ -24,10 +24,7 @@ include $(top_srcdir)/Makefile.common
 ## Process this file with automake to produce Makefile.in
 
 # We've got to build . before swig
-SUBDIRS = missing runtime filter viterbi general gengen g72x reed-solomon io hier .
-if PYTHON
-SUBDIRS += swig
-endif
+SUBDIRS = missing runtime filter viterbi general gengen g72x reed-solomon io hier . swig
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
