@@ -37,7 +37,7 @@ AC_DEFUN([GUILE_DEVEL],[
     else
       GUILE_CFLAGS=""
       GUILE_PKLIBDIR=""
-      GUILE_LIBS="Wl,-Bsymbolic-functions -lguile lgmp -lcrypt"
+      GUILE_LIBS="Wl,-Bsymbolic-functions -lguile -lgmp -lcrypt"
     fi
     AC_SUBST(GUILE_CFLAGS)
     AC_SUBST(GUILE_PKLIBDIR)
