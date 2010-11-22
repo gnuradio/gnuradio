@@ -32,9 +32,6 @@ AC_DEFUN([GR_SCRIPTING],[
   if test x${enable_python} = xyes; then
     SWIG_PYTHON
   fi
-  if test x${enable_tcl} = xyes; then
-    SWIG_TCL
-  fi
   if test x${enable_guile} = xyes; then
     SWIG_GUILE
   fi
