@@ -53,12 +53,4 @@ grinclude_HEADERS = \
 	uhd_single_usrp_source.h \
 	uhd_single_usrp_sink.h
 
-# add the deprecated headers
-grinclude_HEADERS += \
-	uhd_mimo_source.h \
-	uhd_mimo_sink.h \
-	uhd_simple_source.h \
-	uhd_simple_sink.h
-
-
 noinst_HEADERS =
