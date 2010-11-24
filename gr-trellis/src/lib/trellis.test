@@ -36,4 +36,18 @@
 (use-modules (gnuradio trellis))
 
 ;;; Now do some real testing, like that in ../python/qa_trellis.py
+;;; FIXME later.  Other problems to deal with.  Looks like
+;;; I don't understand the constructor to <fsm>
+
+(read-set! keywords 'prefix)
+
+'(with-test-prefix "test-001-fsm"
+  (let* ((I 2)
+	 (S 4)
+	 (O 4)
+	 (NS #(0 2 0 2 1 3 1 3))
+	 (OS #(0 3 3 0 1 2 2 1))
+	 (f (make <fsm> :I I :S S :O O :NS NS :OS OS)))
+    (test-equal (list I S O NS OS)
+		(list (gr:I f) (gr:S f) (gr:O f) (gr:NS f) (gr:OS f)))))
 
