@@ -154,11 +154,3 @@ dist-hook:
 		echo $(RM) $(distdir)/$$file; \
 		$(RM) $(distdir)/$$file; \
 	done
-# 	@for dir in $(no_dist_dirs); do \
-# 	    if test ! -e $(distdir)/$$dir/std_complex.i; then \
-# 		echo $(RM) -fr $(distdir)/$$dir; \
-# 		$(RM) -fr $(distdir)/$$dir; \
-# 		echo "FIXME1: $(distdir)/$$dir"; \
-# 	    fi; \
-# 	done;
-
