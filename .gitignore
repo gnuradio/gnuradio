@@ -80,7 +80,6 @@ gr-noaa/swig/gnuradio/
 gr-noaa/swig/guile/
 gr-noaa/swig/noaa_swig.scm
 gr-noaa/swig/python/
-gr-pager/swig/gnuradio/
 gr-pager/swig/guile/
 gr-pager/swig/pager_swig.scm
 gr-pager/swig/python/
