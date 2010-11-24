@@ -39,6 +39,9 @@ SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@
 DISTCLEANFILES = gnuradio*.tar.gz
 
+# we need to check both python and guile support for distcheck
+DISTCHECK_CONFIGURE_FLAGS = --enable-python --enable-guile
+
 if PYTHON
 
 export pythondir
