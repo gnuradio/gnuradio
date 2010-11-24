@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2007 Free Software Foundation, Inc.
+ * Copyright 2005,2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,9 +22,9 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,skiphead);
 
-gr_skiphead_sptr gr_make_skiphead (size_t itemsize, size_t nitems_to_skip);
+gr_skiphead_sptr gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
 
 class gr_skiphead : public gr_block {
-  friend gr_skiphead_sptr gr_make_skiphead (size_t itemsize, size_t nitems_to_skip);
-  gr_skiphead (size_t itemsize, size_t nitems_to_skip);
+  friend gr_skiphead_sptr gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
+  gr_skiphead (size_t itemsize, uint64_t nitems_to_skip);
 };
