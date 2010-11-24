@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -66,7 +66,10 @@ gr_circular_file::gr_circular_file (const char *filename,
       exit (1);
     }
 #ifdef HAVE_MMAP	/* FIXME */
-    ftruncate (d_fd, size + HEADER_SIZE);
+    if(ftruncate (d_fd, size + HEADER_SIZE) != 0) {
+      perror (filename);
+      exit (1);
+    }
 #endif
   }
   else {
