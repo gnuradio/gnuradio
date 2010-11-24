@@ -20,6 +20,7 @@
 ;;; Semi bogus module that just reexports the uhd_swig module
 
 (define-module (gnuradio uhd)
+  #:use-module (gnuradio export-safely)
   #:use-module (gnuradio uhd_swig)
   #:duplicates (merge-generics replace check))
 
