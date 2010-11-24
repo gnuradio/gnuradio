@@ -25,8 +25,8 @@
 ## in Makefile.am's which require SWIG wrapping / compilation.
 ## For just installing .i files, this Makefile is not required.
 
-CLEANFILES = python/*.cc python/*.h python/*.lo python/*.o
-CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o
+CLEANFILES = python/*.cc python/*.h python/*.lo python/*.o python/*.d
+CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o guile/*.d
 
 ## swig flags
 ## -w511 turns off keyword argument warning
