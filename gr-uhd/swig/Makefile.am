@@ -20,6 +20,7 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
@@ -28,7 +29,11 @@ AM_CPPFLAGS = \
 	$(UHD_CFLAGS) \
 	-I$(top_srcdir)/gr-uhd/lib
 
-if PYTHON
+if GUILE
+nobase_guile_DATA = \
+	gnuradio/uhd.scm
+endif
+
 # ----------------------------------------------------------------
 # The SWIG library
 # TESTS = run_tests
@@ -54,7 +59,6 @@ uhd_swig_python = \
 # additional SWIG files to be installed
 uhd_swig_swiginclude_headers =
 
-include $(top_srcdir)/Makefile.swig
 
 uhd_swig_swig_args = \
 	$(UHD_CFLAGS) \
@@ -65,4 +69,3 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
-endif

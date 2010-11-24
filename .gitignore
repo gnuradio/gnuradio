@@ -96,7 +96,6 @@ gr-trellis/src/lib/gnuradio/
 gr-trellis/src/lib/guile/
 gr-trellis/src/lib/python/
 gr-trellis/src/lib/trellis.scm
-gr-uhd/swig/gnuradio/
 gr-uhd/swig/guile/
 gr-uhd/swig/python/
 gr-uhd/swig/uhd_swig.scm
