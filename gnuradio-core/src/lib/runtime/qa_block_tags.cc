@@ -31,8 +31,7 @@
 #include <gr_head.h>
 #include <gr_annotator_alltoall.h>
 #include <gr_annotator_1to1.h>
-#include <gr_fir_filter_fff.h>
-#include <gr_interp_fir_filter_fff.h>
+#include <gr_keep_one_in_n.h>
 #include <gr_firdes.h>
 #include <gruel/pmt.h>
 
@@ -375,18 +374,14 @@ qa_block_tags::t5 ()
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(float)));
 
   // Rate change blocks
-  std::vector<float> taps = gr_firdes::low_pass_2(1, 1, 0.4, 0.1, 60);
-  gr_fir_filter_fff_sptr fir_dec10 (gr_make_fir_filter_fff(10, taps));
-  gr_interp_fir_filter_fff_sptr fir_int2 (gr_make_interp_fir_filter_fff(2, taps));
+  gr_keep_one_in_n_sptr dec10 (gr_make_keep_one_in_n(sizeof(float), 10));
 
   tb->connect(src,  0, head, 0);
   tb->connect(head, 0, ann0, 0);
   tb->connect(ann0, 0, ann1, 0);
-  tb->connect(ann1, 0, fir_dec10, 0);
-  tb->connect(fir_dec10, 0, ann2, 0);
-  tb->connect(ann2, 0, fir_int2, 0);
-  tb->connect(fir_int2, 0, ann3, 0);
-  tb->connect(ann3, 0, snk0, 0);
+  tb->connect(ann1, 0, dec10, 0);
+  tb->connect(dec10, 0, ann2, 0);
+  tb->connect(ann2, 0, snk0, 0);
 
   tb->run();
 
@@ -414,24 +409,9 @@ qa_block_tags::t5 ()
   expected_tags2[8] = mp(pmt_from_uint64(4000), mp(str1.str()), mp("seq"), mp(4));
   expected_tags2[9] = mp(pmt_from_uint64(4000), mp(str0.str()), mp("seq"), mp(4));
 
-  pmt_t expected_tags3[12];
-  expected_tags3[0] = mp(pmt_from_uint64(0),    mp(str2.str()), mp("seq"), mp(0));
-  expected_tags3[1] = mp(pmt_from_uint64(0),    mp(str1.str()), mp("seq"), mp(0));
-  expected_tags3[2] = mp(pmt_from_uint64(0),    mp(str0.str()), mp("seq"), mp(0));
-  expected_tags3[3] = mp(pmt_from_uint64(2000), mp(str2.str()), mp("seq"), mp(1));
-  expected_tags3[4] = mp(pmt_from_uint64(2000), mp(str1.str()), mp("seq"), mp(1));
-  expected_tags3[5] = mp(pmt_from_uint64(2000), mp(str0.str()), mp("seq"), mp(1));
-  expected_tags3[6] = mp(pmt_from_uint64(4000), mp(str2.str()), mp("seq"), mp(2));
-  expected_tags3[7] = mp(pmt_from_uint64(4000), mp(str1.str()), mp("seq"), mp(2));
-  expected_tags3[8] = mp(pmt_from_uint64(4000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags3[9] = mp(pmt_from_uint64(6000), mp(str2.str()), mp("seq"), mp(3));
-  expected_tags3[10] = mp(pmt_from_uint64(6000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags3[11] = mp(pmt_from_uint64(6000), mp(str0.str()), mp("seq"), mp(3));
- 
   std::vector<pmt::pmt_t> tags0 = ann0->data();
   std::vector<pmt::pmt_t> tags1 = ann1->data();
   std::vector<pmt::pmt_t> tags2 = ann2->data();
-  std::vector<pmt::pmt_t> tags3 = ann3->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -452,15 +432,6 @@ qa_block_tags::t5 ()
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags2[i]), pmt_write_string(expected_tags2[i]));
-  }
-
-  // annotator 3 gets tags from annotators 0, 1, and 2
-  std::cout << std::endl;
-  std::cout << "tags3.size(): " << tags3.size() << std::endl;
-  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)12);
-  for(size_t i = 0; i < tags3.size(); i++) {
-    std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags3[i]), pmt_write_string(expected_tags3[i]));
   }
 }
 
