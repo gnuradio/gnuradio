@@ -33,10 +33,13 @@ AC_DEFUN([GRC_GR_NOAA],[
 	gr-noaa/oct/Makefile \
 	gr-noaa/python/Makefile \
 	gr-noaa/swig/Makefile \
+	gr-noaa/swig/run_guile_tests \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-noaa,[
         dnl run_tests is created from run_tests.in.  Make it executable.
-        #AC_CONFIG_COMMANDS([run_tests_noaa], [chmod +x gr-pager/lib/run_tests])
+        AC_CONFIG_COMMANDS([run_tests_noaa],
+			   [chmod +x gr-noaa/swig/run_guile_tests])
+
     ])
 ])

@@ -76,7 +76,6 @@ gr-msdd6000/src/guile/
 gr-msdd6000/src/msdd.scm
 gr-msdd6000/src/msdd_rs.scm
 gr-msdd6000/src/python/
-gr-noaa/swig/gnuradio/
 gr-noaa/swig/guile/
 gr-noaa/swig/noaa_swig.scm
 gr-noaa/swig/python/
