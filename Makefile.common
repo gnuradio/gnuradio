@@ -150,12 +150,15 @@ gnuradio/%.scm : %.i
 
 # or the directories listed in no_dist_dirs (set in Makefile.swig)
 dist-hook:
-	@for dir in $(no_dist_dirs); do \
-		echo $(RM) -fr $(distdir)/$$dir; \
-		$(RM) -fr $(distdir)/$$dir; \
-	done;
 	@for file in $(no_dist_files); do \
 		echo $(RM) $(distdir)/$$file; \
 		$(RM) $(distdir)/$$file; \
-	done;
+	done
+# 	@for dir in $(no_dist_dirs); do \
+# 	    if test ! -e $(distdir)/$$dir/std_complex.i; then \
+# 		echo $(RM) -fr $(distdir)/$$dir; \
+# 		$(RM) -fr $(distdir)/$$dir; \
+# 		echo "FIXME1: $(distdir)/$$dir"; \
+# 	    fi; \
+# 	done;
 
