@@ -71,12 +71,12 @@ public:
     d_prev_output = 0;
   }
 
-  tap_type prev_output () { return d_prev_output; }
+  o_type prev_output () { return d_prev_output; }
     
 protected:
   tap_type	d_alpha;
   tap_type	d_one_minus_alpha;
-  tap_type	d_prev_output;
+  o_type	d_prev_output;
 };
 
 
@@ -87,7 +87,7 @@ template<class o_type, class i_type, class tap_type>
 o_type
 gr_single_pole_iir<o_type, i_type, tap_type>::filter (const i_type input)
 {
-  tap_type	output;
+  o_type	output;
 
   output = d_alpha * input + d_one_minus_alpha * d_prev_output;
   d_prev_output = output;
