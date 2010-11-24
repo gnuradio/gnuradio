@@ -20,6 +20,7 @@
   :use-module (ice-9 stack-catch)
   :use-module (ice-9 regex)
   :use-module (ice-9 syncase)
+  :use-module (ice-9 format)
   :export (
 
  ;; Exceptions which are commonly being tested for.
@@ -597,9 +598,9 @@
 (define-syntax test-equal
   (syntax-rules ()
     ((_ expected test-expr)
-     (pass-if (equal? expected test-expr)))
+     (pass-if (verbose-equal? expected test-expr)))
     ((_ name expected test-exprt)
-     (pass-if name (equal? expected test-expr)))))
+     (pass-if name (verbose-equal? expected test-expr)))))
 
 ;;; (test-eqv [name] expected test-expr)
 (define-syntax test-eqv
@@ -616,3 +617,11 @@
      (pass-if (eq? expected test-expr)))
     ((_ name expected test-exprt)
      (pass-if name (eq? expected test-expr)))))
+
+
+(define-public (verbose-equal? expected actual)
+  (cond ((equal? expected actual) #t)
+	(else
+	 (format #t "Expected:\n~y\n" expected)
+	 (format #t "Actual:\n~y\n" actual)
+	 #f)))
