@@ -21,6 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
+TESTS =
+
 # ----------------------------------------------------------------------
 # Local Python files, not installed
 #
@@ -87,7 +89,7 @@ if PYTHON
 # usrp2.py
 # _usrp2.so
 # ----------------------------------------------------------------------
-TESTS = run_tests
+TESTS += run_tests
 
 TOP_SWIG_IFILES =		\
 	usrp2.i

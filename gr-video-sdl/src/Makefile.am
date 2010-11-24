@@ -21,6 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
+TESTS =
 EXTRA_DIST = run_tests.in
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(SDL_CFLAGS) \
@@ -48,7 +49,7 @@ libgnuradio_video_sdl_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 if PYTHON
 #################################
 # SWIG interface and library
-TESTS = run_tests
+TESTS += run_tests
 DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES =			\

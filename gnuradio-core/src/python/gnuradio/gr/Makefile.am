@@ -25,8 +25,7 @@ EXTRA_DIST = 			\
 	run_tests.in		\
 	test_16bit_1chunk.wav
 
-TESTS = 			\
-	run_tests
+TESTS = run_tests
 
 
 grgrpythondir = $(grpythondir)/gr

@@ -21,6 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
+TESTS =
 EXTRA_DIST = run_tests.in
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
@@ -52,7 +53,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 if PYTHON
 ###################################
 # SWIG Python interface and library
-TESTS = run_tests
+TESTS += run_tests
 DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES = 			\

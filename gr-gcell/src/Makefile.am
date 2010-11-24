@@ -20,6 +20,8 @@
 
 include $(top_srcdir)/Makefile.common
 
+TESTS =
+
 SUBDIRS = . examples
 
 AM_CPPFLAGS = $(GCELL_INCLUDES) $(STD_DEFINES_AND_INCLUDES) \
@@ -59,7 +61,7 @@ if PYTHON
 #                         SWIG stuff
 # ----------------------------------------------------------------
 EXTRA_DIST = run_tests.in
-TESTS = run_tests
+TESTS += run_tests
 
 TOP_SWIG_IFILES =		\
 	gcell.i

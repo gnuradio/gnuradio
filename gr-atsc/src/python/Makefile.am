@@ -36,8 +36,7 @@ dist_ourdata_SCRIPTS =  \
 	xlate.py	\
 	viterbi-out.py
 
-TESTS = 				\
-	run_tests
+TESTS = run_tests
 
 noinst_PYTHON = 			\
 	atsc_utils.py			\
