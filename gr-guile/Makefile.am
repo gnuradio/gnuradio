@@ -19,4 +19,8 @@
 
 include $(top_srcdir)/Makefile.common
 
+if GUILE
+
 SUBDIRS = apps example-waveforms
+
+endif
