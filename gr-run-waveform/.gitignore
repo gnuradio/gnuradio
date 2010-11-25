@@ -1,0 +1,7 @@
+aclocal.m4
+autom4te.cache/
+depcomp
+grconfig.h.in
+install-sh
+ltmain.sh
+missing
