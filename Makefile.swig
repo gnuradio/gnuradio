@@ -85,6 +85,40 @@ STD_SWIG_LA_LIB_ADD = -lstdc++
 
 STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 
+swig_built_sources =
+
+## include the built Makefile.swig.gen, always the one from the
+## srcdir; this must be included as the last item, because it depends
+## on variables defined above.
+
+include $(srcdir)/Makefile.swig.gen
+
+if PYTHON
+# Create a list of .py files based on the top level .i files.
+PYTHON_GEN = $(foreach IFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(IFILE)))
+swig_built_sources += $(PYTHON_GEN)
+endif
+
+if GUILE
+# Create a list of .scm files based on the top level .i files.
+GUILE_GEN = $(foreach IFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(IFILE)))
+swig_built_sources += $(GUILE_GEN)
+endif
+
+BUILT_SOURCES += $(swig_built_sources)
+
+# FIXME swig_all_built_sources
+no_dist_files = $(swig_built_sources)
+
+# FIXME swig_all_built_sources
+CLEANFILES += python/*.cc python/*.h python/*.lo python/*.o python/*.d
+CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o guile/*.d
+
+
+## ------------------------------------------------------------------------
+## Rule that (re)generates Makefile.swig.gen using TOP_SWIG_IFILES and
+## Makefile.swig.gen.t
+##
 ## Create $(srcdir)/Makefile.swig.gen, containing all of the rules
 ## for running SWIG to generate or re-generate outputs.  SWIG file
 ## names are to be defined in TOP_SWIG_IFILES, and must include the
@@ -121,33 +155,4 @@ generate-makefile-swig $(srcdir)/Makefile.swig.gen: $(top_srcdir)/Makefile.swig.
 		echo "Cannot recreate $(srcdir)/Makefile.swig.gen because the directory or file is write-protected."; \
 		exit -1; \
 	fi;
-
-swig_built_sources =
-
-## include the built Makefile.swig.gen, always the one from the
-## srcdir; this must be included as the last item, because it depends
-## on variables defined above.
-
-include $(srcdir)/Makefile.swig.gen
-
-if PYTHON
-# Create a list of .py files based on the top level .i files.
-PYTHON_GEN = $(foreach IFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(IFILE)))
-swig_built_sources += $(PYTHON_GEN)
-endif
-
-if GUILE
-# Create a list of .scm files based on the top level .i files.
-GUILE_GEN = $(foreach IFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(IFILE)))
-swig_built_sources += $(GUILE_GEN)
-endif
-
-BUILT_SOURCES += $(swig_built_sources)
-
-# FIXME swig_all_built_sources
-no_dist_files = $(swig_built_sources)
-
-# FIXME swig_all_built_sources
-CLEANFILES += python/*.cc python/*.h python/*.lo python/*.o python/*.d
-CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o guile/*.d
 
