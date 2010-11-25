@@ -4,3 +4,4 @@
 /pager_swig.cc
 /*.pyc
 /run_tests
+/run_guile_tests

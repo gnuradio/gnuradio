@@ -10,5 +10,6 @@
 /usrp_swig_python.cc
 /usrp_swig_guile.cc
 /run_tests
+/run_guile_tests
 /usrp_dbids.py
 /*.pyc
