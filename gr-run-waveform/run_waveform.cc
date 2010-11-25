@@ -20,11 +20,28 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
+#include <cstdio>
+#include <cstdlib>
+
+#include <libguile.h>
+
+static SCM
+load_waveform (void)
+{
+    return SCM_BOOL_F;
+}
+
+static void
+inner_main (void *data, int argc, char **argv)
+{
+    scm_c_define_gsubr ("load-waveform", 0, 0, 0, load_waveform);
+    scm_shell (argc, argv);
+}
 
 int
 main(int argc, char *argv[])
 {
+    scm_boot_guile (argc, argv, inner_main, 0);
 
-    printf("Hello World!\n");
+    return 0; // never reached
 }
