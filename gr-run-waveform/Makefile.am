@@ -25,7 +25,7 @@ DIST_SUBDIRS = config
 bin_PROGRAMS = run_waveform
 
 run_waveform_SOURCES = run_waveform.cc
-run_waveform_CPPFLAGS = $(GUILE_CFLAGS)
+run_waveform_CPPFLAGS = $(GUILE_CFLAGS) -DSRCDIR=\"$(srcdir)\"
 run_waveform_LDADD = $(GUILE_LIBS)
 
 DISTCLEANFILES = gr-run-waveform.tar.gz
