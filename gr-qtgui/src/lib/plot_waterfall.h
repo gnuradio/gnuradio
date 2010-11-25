@@ -16,8 +16,6 @@ class QwtColorMap;
   ( the intensity ) is displayed using colors. The colors are calculated
   from the values using a color map.
   
-  \image html spectrogram3.png
-
   \sa QwtRasterData, QwtColorMap
 */
 
