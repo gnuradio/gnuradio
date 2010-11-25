@@ -19,6 +19,8 @@
 
 include $(top_srcdir)/Makefile.common
 
+if GUILE
+
 TESTS = run_guile_tests
 
 EXTRA_DIST += \
@@ -26,7 +28,7 @@ EXTRA_DIST += \
 	$(nobase_guile_DATA) \
 	$(GUILE_TESTS)
 
-# These are the hand-code guile files for gnuradio-core.
+# These are the hand-coded guile files for gnuradio-core.
 #
 # Swig/common.scm is glue that's required for the goops wrappers.
 # gnuradio/export-safely.scm works around some problems in the goops generated wrappers.
@@ -52,3 +54,5 @@ GUILE_TESTS = \
 	tests/io_ctors.test
 
 CLEANFILES = guile.log
+
+endif
