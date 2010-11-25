@@ -11,3 +11,6 @@
 /ra.cc
 /ra.py
 /*.pyc
+/gnuradio
+/guile
+/python

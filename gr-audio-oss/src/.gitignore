@@ -12,3 +12,6 @@
 /audio_oss.py
 /run_tests
 /*.pyc
+/gnuradio
+/guile
+/python

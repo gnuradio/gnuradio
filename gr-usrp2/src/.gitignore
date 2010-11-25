@@ -8,3 +8,6 @@
 /run_tests
 /test_gr_usrp2
 /*.pyc
+/gnuradio
+/guile
+/python

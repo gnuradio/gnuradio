@@ -7,9 +7,10 @@
 /usrp_swig.cc
 /usrp_swig.py
 /usrp_swig.scm
-/usrp_swig_python.cc
-/usrp_swig_guile.cc
 /run_tests
 /run_guile_tests
 /usrp_dbids.py
 /*.pyc
+/gnuradio
+/guile
+/python

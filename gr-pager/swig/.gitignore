@@ -5,3 +5,5 @@
 /*.pyc
 /run_tests
 /run_guile_tests
+/guile
+/python

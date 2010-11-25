@@ -2,3 +2,5 @@
 /uhd_swig.py
 /Makefile
 /Makefile.in
+/guile
+/python
