@@ -52,7 +52,7 @@ load_waveform (void)
     string file;
     while (std::getline(in, line)) {
         file += line;
-        cerr << line << endl;
+        cerr << line << endl;   // FIXME: this is only for debugging
     }
 
     // Evaluate the file
@@ -60,6 +60,7 @@ load_waveform (void)
     
     in.close();
 
+    // Execute our example
     return scm_c_eval_string("(hello-world)");
 }
 
