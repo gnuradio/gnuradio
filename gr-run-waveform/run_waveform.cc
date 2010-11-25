@@ -22,25 +22,61 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 #include <libguile.h>
+
+using namespace std;
+
+static std::string filename = "hello.scm";
 
 static SCM
 load_waveform (void)
 {
-    return SCM_BOOL_F;
+    ifstream in;
+    string filespec = SRCDIR;
+    filespec += '/';
+    filespec += filename;
+    
+    in.open(filespec.c_str());
+    if (!in) {
+        cerr << ("run_waveform: couldn't open data file: ") << filespec << endl;
+        return SCM_BOOL_F;
+    }
+
+    // Read in the file one line at a time, and accumulate it into
+    // a big string that'll hold the entire file.
+    string line;
+    string file;
+    while (std::getline(in, line)) {
+        file += line;
+        cerr << line << endl;
+    }
+
+    // Evaluate the file
+    scm_c_eval_string(file.c_str());
+    
+    in.close();
+
+    scm_c_eval_string("(hello-world)");
+    
+    return SCM_BOOL_T;    
 }
 
 static void
 inner_main (void *data, int argc, char **argv)
 {
     scm_c_define_gsubr ("load-waveform", 0, 0, 0, load_waveform);
+
     scm_shell (argc, argv);
 }
 
 int
 main(int argc, char *argv[])
 {
+
     scm_boot_guile (argc, argv, inner_main, 0);
 
     return 0; // never reached
