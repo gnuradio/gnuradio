@@ -29,7 +29,7 @@ dist_rbf2data_DATA = $(RBFS)
 rbf4datadir = $(prefix)/share/usrp/rev4
 dist_rbf4data_DATA = $(RBFS)
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	usrp_radar_mono.csf \
 	usrp_radar_mono.esf \
 	usrp_radar_mono.psf \

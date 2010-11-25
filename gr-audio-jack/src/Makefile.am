@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2008,2009 Free Software Foundation, Inc.
+# Copyright 2005,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,9 +20,11 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 TESTS =
-EXTRA_DIST = run_tests.in
+EXTRA_DIST += run_tests.in
+DISTCLEANFILES += run_tests
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
@@ -50,11 +52,8 @@ noinst_PYTHON = 			\
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-if PYTHON
 ###################################
-# SWIG Python interface and library
-TESTS += run_tests
-DISTCLEANFILES = run_tests
+# SWIG interfaces and libraries
 
 TOP_SWIG_IFILES = 			\
 	audio_jack.i
@@ -70,11 +69,7 @@ audio_jack_pythondir_category =		\
 audio_jack_la_swig_libadd =		\
 	libgnuradio-audio-jack.la
 
-include $(top_srcdir)/Makefile.swig
 
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+if PYTHON
+TESTS += run_tests
 endif

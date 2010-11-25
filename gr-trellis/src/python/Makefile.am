@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = run_tests.in		\
+EXTRA_DIST += run_tests.in		\
 	awgn1o2_4.fsm
 
 

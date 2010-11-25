@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST =		\
+EXTRA_DIST +=		\
 	run_tests.in
 
 ourdatadir = $(exampledir)/atsc

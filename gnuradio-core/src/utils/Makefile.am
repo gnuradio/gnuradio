@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	cic_comp_taps.m		\
 	db_width.m		\
 	filter_tools.m		\

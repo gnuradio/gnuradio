@@ -20,6 +20,16 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# Every Makefile starts with common vars so we can
+# consistently use +=
+BUILT_SOURCES =
+MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
+CLEANFILES = guile.log
+DISTCLEANFILES =
+EXTRA_DIST =
+STAMPS =
+
+
 # Make rebuilds less verbose with stuff we can safely ignore
 # about GNU make only extensions.
 AUTOMAKE += -Wno-portability -Wnone
@@ -116,10 +126,6 @@ gr_prefsdir = $(GR_PREFSDIR)
 # Data directory for grc block wrappers
 grc_blocksdir = $(pkgdatadir)/grc/blocks
 
-# Other common defines; use "+=" to add to these
-STAMPS =
-MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
-
 ## SWIG suffixes for automake to know about
 SUFFIXES = .i .scm .py
 
@@ -148,7 +154,7 @@ gnuradio/%.scm : %.i
 	$(SED) -e 's|python/\(.*\)\.cc:|\1.py:|' python/$*.Std > python/$*.d
 	$(RM) python/$*.Std
 
-# or the directories listed in no_dist_dirs (set in Makefile.swig)
+
 dist-hook:
 	@for file in $(no_dist_files); do \
 		echo $(RM) $(distdir)/$$file; \

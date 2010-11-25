@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2009 Free Software Foundation, Inc.
+# Copyright 2004,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,9 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = run_tests.in
-
-
+EXTRA_DIST += run_tests.in
+DISTCLEANFILES += run_tests
 TESTS = run_tests
 
 

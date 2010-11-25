@@ -109,4 +109,4 @@ m4macros = \
 	usrp_libusb.m4 \
 	usrp_sdcc.m4
 
-EXTRA_DIST = $(m4macros) 
+EXTRA_DIST += $(m4macros)

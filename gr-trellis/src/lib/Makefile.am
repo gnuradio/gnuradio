@@ -24,7 +24,7 @@ include $(top_srcdir)/Makefile.swig
 
 TESTS =
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	run_guile_tests.in \
 	trellis.test
 
@@ -57,7 +57,7 @@ python_built_sources =		\
 	$(GENERATED_CC)		\
 	trellis_generated.i
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	$(core_generator)
 
 # These headers get installed in ${prefix}/include/gnuradio
@@ -137,14 +137,7 @@ gen_sources_deps = $(core_generator)
 par_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
 include $(top_srcdir)/Makefile.par.gen
 
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES =				\
-	$(python_built_sources) 	\
-	$(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+BUILT_SOURCES += $(python_built_sources)
 
 if GUILE
 TESTS += run_guile_tests

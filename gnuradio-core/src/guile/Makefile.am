@@ -21,7 +21,7 @@ include $(top_srcdir)/Makefile.common
 
 TESTS = run_guile_tests
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	run_guile_tests.in \
 	$(nobase_guile_DATA) \
 	$(GUILE_TESTS)
@@ -52,5 +52,3 @@ GUILE_TESTS = \
 	tests/io_ctors.test
 
 CLEANFILES = guile.log
-
-no_dist_dirs = python guile

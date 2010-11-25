@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2008 Free Software Foundation, Inc.
+# Copyright 2001,2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -31,7 +31,7 @@ TESTS = test_all
 #	test_atsc		
 
 #Test program to test setting up buffers using gr_test which can be run manually
-EXTRA_DIST = 				\
+EXTRA_DIST += \
 	test_buffers.py \
 	benchmark_dotprod
 

@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,6 +20,8 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
+
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
@@ -53,9 +55,8 @@ libgnuradio_msdd6000_rs_la_LIBADD = 	\
 	$(GNURADIO_CORE_LA)
 
 
-if PYTHON
 #################################
-# SWIG interface and library
+# SWIG interfaces and libraries
 
 TOP_SWIG_IFILES =			\
 	msdd.i msdd_rs.i
@@ -76,12 +77,3 @@ msdd_la_swig_libadd =			\
 
 msdd_rs_la_swig_libadd =			\
 	libgnuradio-msdd6000_rs.la
-
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
-endif

@@ -1,5 +1,5 @@
 #
-# Copyright 2001 Free Software Foundation, Inc.
+# Copyright 2001,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -80,4 +80,4 @@ m4macros = \
 # Don't install m4 macros anymore
 # m4data_DATA = $(m4macros) 
 
-EXTRA_DIST = $(m4macros) 
+EXTRA_DIST += $(m4macros)

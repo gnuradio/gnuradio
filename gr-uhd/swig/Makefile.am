@@ -22,6 +22,8 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
+EXTRA_DIST += $(nobase_guile_DATA)
+
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
@@ -59,13 +61,6 @@ uhd_swig_python = \
 # additional SWIG files to be installed
 uhd_swig_swiginclude_headers =
 
-
 uhd_swig_swig_args = \
 	$(UHD_CFLAGS) \
 	-I$(top_srcdir)/gr-uhd/lib
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)

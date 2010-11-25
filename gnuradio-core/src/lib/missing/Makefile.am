@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = $(GNURADIO_INCLUDES) $(WITH_INCLUDES)
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	getopt.h 		\
 	getopt.c 		\
 	gettimeofday.c 		\

@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2004,2005,2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2001,2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,11 +20,12 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	$(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
-EXTRA_DIST =					\
+EXTRA_DIST +=					\
 	atsci_viterbi_gen.cc			\
 	gen_encoder.py				\
 	qa_atsci_trellis_encoder_t1_input.dat	\
@@ -87,7 +88,7 @@ libgnuradio_atsc_la_SOURCES = 			\
 	plinfo.cc
 
 
-BUILT_SOURCES = 				\
+BUILT_SOURCES += 				\
 	atsci_viterbi_mux.cc
 
 libgnuradio_atsc_la_LIBADD = 			\
@@ -211,12 +212,11 @@ test_atsci_LDADD   =  		\
 #  Cleanup
 # ------------------------------------------------------------------------
 
-CLEANFILES = atsci_viterbi_mux.cc atsci_viterbi_gen$(EXEEXT)
+CLEANFILES += atsci_viterbi_mux.cc atsci_viterbi_gen$(EXEEXT)
 
-if PYTHON
 # ------------------------------------------------------------------------
 #  This is the swig-ish part of the Makefile.
-#  It builds the atsc module which we'll load into python
+#  It builds the atsc modules which we'll load into python or guile
 # ------------------------------------------------------------------------
 
 TOP_SWIG_IFILES = 		\
@@ -233,11 +233,4 @@ atsc_pythondir_category =	\
 atsc_la_swig_libadd =		\
 	libgnuradio-atsc.la
 
-include $(top_srcdir)/Makefile.swig
 
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES += $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
-endif

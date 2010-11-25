@@ -31,7 +31,7 @@ generated_uhd_single_usrp_blocks = \
 	uhd_single_usrp_source.xml \
 	uhd_single_usrp_sink.xml
 
-BUILT_SOURCES = \
+BUILT_SOURCES += \
 	$(generated_uhd_multi_usrp_blocks) \
 	$(generated_uhd_single_usrp_blocks)
 
@@ -49,7 +49,7 @@ dist_grcblocks_DATA += \
 ########################################################################
 # Rules for generating the source and sink xml wrappers
 ########################################################################
-EXTRA_DIST = \
+EXTRA_DIST += \
 	$(srcdir)/gen_uhd_multi_usrp_blocks_xml.py \
 	$(srcdir)/gen_uhd_single_usrp_blocks_xml.py
 

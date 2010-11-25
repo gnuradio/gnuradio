@@ -22,7 +22,8 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
-BUILT_SOURCES = $(grinclude_HEADERS) $(swig_built_sources)
+AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
+	 $(WITH_INCLUDES)
 
 # ----------------------------------------------------------------
 # We've split the previously monstrous gnuradio_core into 6
@@ -52,11 +53,6 @@ nobase_swiginclude_HEADERS = \
 	guile/std_vector.i
 
 
-AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
-	 $(WITH_INCLUDES)
-
-EXTRA_DIST = gen-swig-bug-fix
-
 # special install for this top-level Python script which includes all
 # of the split Python libraries.
 ourpythondir = $(grpythondir)/gr
@@ -67,8 +63,11 @@ ourpython_PYTHON = gnuradio_core.py
 # gnuradio_swig_bug_workaround.h : gnuradio_core_runtime.py $(srcdir)/gen-swig-bug-fix
 #	$(PYTHON) $(srcdir)/gen-swig-bug-fix python/gnuradio_core_runtime.cc $@
 
+EXTRA_DIST += gen-swig-bug-fix
+
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = gnuradio_swig_bug_workaround.h
+
 
 # Install so that they end up available as:
 #   import gnuradio.gr
@@ -88,6 +87,5 @@ gnuradio_core_gengen_la_swig_libadd  = $(GNURADIO_CORE_LA)
 gnuradio_core_filter_la_swig_libadd  = $(GNURADIO_CORE_LA)
 gnuradio_core_io_la_swig_libadd      = $(GNURADIO_CORE_LA)
 gnuradio_core_hier_la_swig_libadd    = $(GNURADIO_CORE_LA)
-
 
 SWIG_GUILE_FLAGS += -DIN_GNURADIO_CORE

@@ -20,12 +20,11 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 TESTS =
-
-EXTRA_DIST = run_tests.in run_guile_tests.in
-
-DISTCLEANFILES = run_tests run_guile_tests
+EXTRA_DIST += run_tests.in run_guile_tests.in
+DISTCLEANFILES += run_tests run_guile_tests
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
@@ -87,11 +86,3 @@ TESTS += run_guile_tests
 endif
 
 
-# Uses the variables above to define how to generate SWIG bindings
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)

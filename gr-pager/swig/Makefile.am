@@ -23,6 +23,7 @@ include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
 TESTS =
+EXTRA_DIST += $(nobase_guile_DATA)
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/gr-pager/lib \
@@ -56,13 +57,6 @@ pager_swig_swiginclude_headers = \
 	pager_flex_parse.i \
 	pager_flex_sync.i \
 	pager_slicer_fb.i
-
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
 
 if GUILE
 TESTS += run_guile_tests

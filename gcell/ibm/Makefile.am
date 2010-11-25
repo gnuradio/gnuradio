@@ -20,7 +20,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	./README \
 	./sync/ppu_source/atomic_add.h \
 	./sync/ppu_source/atomic_add_return.h \

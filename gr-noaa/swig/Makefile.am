@@ -23,6 +23,7 @@ include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
 TESTS =
+EXTRA_DIST += $(nobase_guile_DATA)
 
 if GUILE
 nobase_guile_DATA = gnuradio/noaa.scm
@@ -62,12 +63,6 @@ noaa_swig_swiginclude_headers =	\
 	noaa_hrpt_decoder.i \
 	noaa_hrpt_deframer.i \
 	noaa_hrpt_pll_cf.i
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
 
 if GUILE
 TESTS += run_guile_tests

@@ -22,4 +22,4 @@ include $(top_srcdir)/Makefile.common
 bin_SCRIPTS = \
 	gr-run-waveform
 
-EXTRA_DIST = gr-run-waveform
+EXTRA_DIST += gr-run-waveform

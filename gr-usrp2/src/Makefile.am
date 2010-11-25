@@ -20,8 +20,12 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 TESTS =
+EXTRA_DIST += run_tests.in
+DISTCLEANFILES += run_tests
+
 
 # ----------------------------------------------------------------------
 # Local Python files, not installed
@@ -34,9 +38,6 @@ noinst_PYTHON = qa_usrp2.py
 # ----------------------------------------------------------------------
 # Miscellaneous build operations
 # ----------------------------------------------------------------------
-
-EXTRA_DIST = run_tests.in
-DISTCLEANFILES = run_tests
 
 # ----------------------------------------------------------------------
 # C++ block API interface librar(ies)
@@ -82,14 +83,12 @@ noinst_HEADERS = \
 	rx_16sc_handler.h \
 	rx_32fc_handler.h
 
-if PYTHON
 # ----------------------------------------------------------------------
-# Python SWIG wrapper around C++ library
+# SWIG wrappers around C++ library
 #
 # usrp2.py
 # _usrp2.so
 # ----------------------------------------------------------------------
-TESTS += run_tests
 
 TOP_SWIG_IFILES =		\
 	usrp2.i
@@ -109,11 +108,6 @@ usrp2_swig_args =		\
 usrp2_la_swig_libadd =		\
 	libgnuradio-usrp2.la
 
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+if PYTHON
+TESTS += run_tests
 endif

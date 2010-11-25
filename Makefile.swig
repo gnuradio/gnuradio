@@ -25,9 +25,6 @@
 ## in Makefile.am's which require SWIG wrapping / compilation.
 ## For just installing .i files, this Makefile is not required.
 
-CLEANFILES = python/*.cc python/*.h python/*.lo python/*.o python/*.d
-CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o guile/*.d
-
 ## swig flags
 ## -w511 turns off keyword argument warning
 ## "-outdir $(builddir)" writes all generated output files to
@@ -135,15 +132,22 @@ include $(srcdir)/Makefile.swig.gen
 
 if PYTHON
 # Create a list of .py files based on the top level .i files.
-PYTHON_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(HFILE)))
+PYTHON_GEN = $(foreach IFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(IFILE)))
 swig_built_sources += $(PYTHON_GEN)
 endif
 
 if GUILE
 # Create a list of .scm files based on the top level .i files.
-GUILE_GEN = $(foreach HFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(HFILE)))
+GUILE_GEN = $(foreach IFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(IFILE)))
 swig_built_sources += $(GUILE_GEN)
 endif
 
-no_dist_dirs = python gnuradio guile
+BUILT_SOURCES += $(swig_built_sources)
+
+# FIXME swig_all_built_sources
 no_dist_files = $(swig_built_sources)
+
+# FIXME swig_all_built_sources
+CLEANFILES += python/*.cc python/*.h python/*.lo python/*.o python/*.d
+CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o guile/*.d
+

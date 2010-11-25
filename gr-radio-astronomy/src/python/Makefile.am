@@ -32,7 +32,7 @@ ourlibdir    = $(grpyexecdir)
 wxguipythondir  = $(grpythondir)/wxgui
 wxguilibdir     = $(grpyexecdir)/wxgui
 
-EXTRA_DIST =				\
+EXTRA_DIST +=				\
 	run_tests.in
 
 TESTS = run_tests

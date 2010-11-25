@@ -24,5 +24,5 @@ waveformdir=$(datarootdir)/gnuradio/example-waveforms
 waveform_DATA = \
 	dial-tone.wfd
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	dial-tone.wfd

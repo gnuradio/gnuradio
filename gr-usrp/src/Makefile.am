@@ -22,18 +22,16 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
-# ----------------------------------------------------------------
-# Misc. build/installation activities
 
-EXTRA_DIST = run_tests.in
-
-DISTCLEANFILES = run_tests
+TESTS =
+EXTRA_DIST += run_tests.in run_guile_tests.in $(nobase_guile_DATA)
+DISTCLEANFILES += run_tests run_guile_tests
 
 noinst_PYTHON =	qa_usrp.py
 
+if GUILE
 nobase_guile_DATA = gnuradio/usrp.scm
-
-TESTS = 
+endif
 
 # ----------------------------------------------------------------
 # The straight C++ library
@@ -107,13 +105,6 @@ usrp_swig_swiginclude_headers =	\
 	usrp_sink_c.i		\
 	usrp_sink_s.i		\
 	usrp_standard.i
-
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
 
 
 if PYTHON

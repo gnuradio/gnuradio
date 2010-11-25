@@ -29,7 +29,7 @@ BUILT_SOURCES =
 
 # ----------------------------------------------------------------
 
-EXTRA_DIST = 				\
+EXTRA_DIST += \
 	gen_sine_table.py		\
 	gr_constants.cc.in			
 

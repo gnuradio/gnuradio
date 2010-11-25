@@ -67,7 +67,7 @@ code_generator = 					\
 
 
 # Source built by Python into $(builddir)
-BUILT_SOURCES =			\
+BUILT_SOURCES +=		\
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
@@ -178,7 +178,7 @@ EXTRA_libfilter_la_SOURCES =		\
 	$(armv7_a_qa_CODE)
 
 
-EXTRA_DIST = 					\
+EXTRA_DIST += \
 	3dnow_float_dotprod_really_simple.S	\
 	3dnow_float_dotprod_simple.S		\
 	$(code_generator)
