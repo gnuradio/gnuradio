@@ -60,9 +60,7 @@ load_waveform (void)
     
     in.close();
 
-    scm_c_eval_string("(hello-world)");
-    
-    return SCM_BOOL_T;    
+    return scm_c_eval_string("(hello-world)");
 }
 
 static void
@@ -76,7 +74,6 @@ inner_main (void *data, int argc, char **argv)
 int
 main(int argc, char *argv[])
 {
-
     scm_boot_guile (argc, argv, inner_main, 0);
 
     return 0; // never reached
