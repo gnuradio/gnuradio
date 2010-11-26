@@ -23,10 +23,27 @@ ACLOCAL_AMFLAGS = -I config
 DIST_SUBDIRS = config
 EXTRA_DIST = gen-xyzzy
 
+# build the standalone waveform application
 bin_PROGRAMS = run_waveform
 
-run_waveform_SOURCES = run_waveform.cc
-run_waveform_CPPFLAGS = $(GUILE_CFLAGS) -DSRCDIR=\"$(srcdir)\"
+# A unit test case for the XYZZY class
+check_PROGRAMS = test_xyzzy
+test_xyzzy_SOURCES = test_xyzzy.cc xyzzy.cc
+test_xyzzy_CPPFLAGS = $(GUILE_CFLAGS) \
+	-DSRCDIR=\"$(srcdir)\" \
+	-DPKGLIBDIR=\"$(pkglibdir)\"
+
+# Don't install the internal header
+noinst_HEADERS = xyzzy.h
+
+# The standalone waveform application
+run_waveform_SOURCES = run_waveform.cc xyzzy.cc
+run_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
+	-DSRCDIR=\"$(srcdir)\" \
+	-DPKGLIBDIR=\"$(pkglibdir)\"
+# Uncommenting this force make to statically link in the guile library.
+# Note that this will fail to link it you don't have libguile.a.
+# run_waveform_LDFLAGS = -static
 run_waveform_LDADD = $(GUILE_LIBS)
 
 DISTCLEANFILES = gr-run-waveform.tar.gz
