@@ -27,10 +27,12 @@
 #include <cstdlib>
 #include <string>
 #include <map>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #include <libguile.h>
 
@@ -94,10 +96,12 @@ public:
     boost::shared_ptr<struct header> read_header(boost::uint8_t *header);
     
     boost::shared_ptr<struct directory_entry> read_dir_entry(boost::uint8_t *header);
-    
+
+    void clear() { _directories.clear(); _strings.clear(); };
 private:
     std::string   _filespec;
-    std::map<std::string, directory_entry> _directories;
+    std::vector<boost::shared_ptr<struct directory_entry> > _directories;
+    std::vector<std::string> _strings;
 };
 
 // C linkage bindings for Guile

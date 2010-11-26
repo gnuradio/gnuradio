@@ -69,9 +69,59 @@ XYZZY::init(const std::string &file)
     char head[length];
     in.read(head, length);
 
-    read_header(reinterpret_cast<boost::uint8_t *>(&head));
+    boost::shared_ptr<struct header> header = read_header(reinterpret_cast<boost::uint8_t *>(&head));
+
+    // Check the magic number to make sure it's the right type of file.
+    if (strncmp(header->magic, "-XyZzY-", 8) != 0) {
+        cerr << "ERROR: bad magic number" << endl;
+        return false;
+    }
+
+    cout << "There are " << header->number_of_dir_entries << " of directory entries" << endl;
+    // Read in the Directory table
+    length = sizeof(struct directory_entry);
+    char dir[length];    
+    for (size_t i=0; i<header->number_of_dir_entries; ++i) {
+        in.read(dir, length);
+        boost::shared_ptr<struct directory_entry> entry = read_dir_entry(
+            reinterpret_cast<boost::uint8_t *>(dir));
+        _directories.push_back(entry);
+        // cout << entry->offset_to_name << " : ";
+        // cout << entry->offset_to_contents << endl;
+    }
+    cout << "Loaded " << _directories.size() << " Directory entries" << endl;
     
-    return false;
+    // Read in the String Table
+    size_t total = header->number_of_dir_entries;
+    boost::uint32_t ssize;
+    in.seekg(1540);
+    while (total) {
+        // Read just the length part
+        in.read(reinterpret_cast<char *>(&ssize), sizeof(boost::uint32_t));
+        boost::uint32_t len = __builtin_bswap32(ssize);
+        if ((len < 0) || (len > 256)) {
+            cerr << "ERROR: length out of range! " << len << ":" << ssize << endl;
+            return false;
+        }
+        // All the strings are 32 bit word aligned, so we have to adjust
+        // how many bytes to read.
+        size_t padding = sizeof(boost::uint32_t) - (len % sizeof(boost::uint32_t));
+        size_t newsize = (padding == 4) ? len : len + padding;
+        // cerr << hex << len << " : " << padding << " : "
+        //      << " : " << 4-(len % sizeof(boost::uint32_t)) << dec << endl;
+        char sstr[newsize];
+        in.read(sstr, newsize);
+        // Use the actual string length, not the padded version
+        string filespec(reinterpret_cast<const char *>(sstr), len);
+        _strings.push_back(filespec);
+        // cout << filespec << endl;
+        total--;
+    }
+    cout << "Loaded " << _strings.size() << " String entries" << endl;
+
+    in.close();
+    
+    return true;
 };
 
 // Does a file with name 'filename' exist in magic filesystem?
@@ -79,7 +129,13 @@ XYZZY::init(const std::string &file)
 bool
 XYZZY::file_exists(const std::string &filespec)
 {
-
+    std::vector<std::string>::iterator it;
+    for (it=_strings.begin(); it<_strings.end(); ++it) {
+        if ((*it) == filespec) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Return a C port that will read the file contents
@@ -129,9 +185,9 @@ XYZZY::read_dir_entry(boost::uint8_t *entry)
     struct directory_entry *ptr = reinterpret_cast<struct directory_entry *>(entry);
 
     newdir->offset_to_name   = __builtin_bswap32(ptr->offset_to_name);
-    newdir->offset_to_name     = __builtin_bswap32(ptr->offset_to_name);
+    newdir->offset_to_name   = __builtin_bswap32(ptr->offset_to_name);
 
-return newdir;
+    return newdir;
 }
 
 // C linkage for guile
@@ -140,21 +196,24 @@ extern "C" {
 static XYZZY datafile;
     
 // Initialize with the data file produced by gen-xyzzy.
-bool xyzzy_init(const std::string &filespec)
+bool
+xyzzy_init(const std::string &filespec)
 {
-    datafile.init(filespec);
+    return datafile.init(filespec);
 }
 
 // Does a file with name 'filename' exist in magic filesystem?
-bool xyzzy_file_exists(const std::string &filespec)
+bool
+xyzzy_file_exists(const std::string &filespec)
 {
-    datafile.file_exists(filespec);
+    return datafile.file_exists(filespec);
 }
 
 // Return a C port that will read the file contents
-SCM xyzzy_make_read_only_port(const std::string &filespec)
+SCM
+xyzzy_make_read_only_port(const std::string &filespec)
 {
-    datafile.make_read_only_port(filespec);
+    return datafile.make_read_only_port(filespec);
 }
 
 } // end of extern C
