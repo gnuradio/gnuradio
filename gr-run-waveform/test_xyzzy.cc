@@ -26,6 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <libguile.h>
+#include <boost/cstdint.hpp>
 
 // Include our definitions
 #include "xyzzy.h"
@@ -35,16 +36,46 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
+    // Test static methods
+    string hello("Hello World!");
+    boost::uint8_t *hi = reinterpret_cast<boost::uint8_t *>(const_cast<char *>
+                                                            (hello.c_str()));
+    struct string_entry entry = {
+        12,
+        hi
+    };
 
+    if (XYZZY::read_string(entry) == hello) {
+        cout << "PASSED: XYZZY::read_string(struct string_entry &)" << endl;
+    } else {
+        cout << "FAILED: XYZZY::read_string(struct string_entry &)" << endl;
+    }
+    
+    if (XYZZY::read_string(hi, hello.size()) == hello) {
+        cout << "PASSED: XYZZY::read_string(struct string_entry &)" << endl;
+    } else {
+        cout << "FAILED: XYZZY::read_string(struct string_entry &)" << endl;
+    }
+
+    // Test other methods
+    XYZZY xyzzy;
+
+    if (xyzzy.init()) {
+        cout << "PASSED: XYZZY::init()" << endl;
+    } else {
+        cout << "FAILED: XYZZY::init()" << endl;
+    }
+    
+    
 // Initialize with the data file produced by gen-xyzzy.
-// bool init()
-// bool init(const std::string &file)
+//    xyzzy_init();
+// bool xyzzy_init(const std::string &file)
 // Does a file with name 'filename' exist in magic filesystem?
-//    bool file_exists(handle, const std::string &filespec);
+//    bool xyzzy_file_exists(handle, const std::string &filespec);
 // bool file_exists(const std::string &filespec)
 
 // Return a C port that will read the file contents
 //    SCM make_read_only_port(handle, const std::string &filespec)
-// SCM make_read_only_port(const std::string &filespec)
+// SCM xyzzy_make_read_only_port(const std::string &filespec)
     
 }
