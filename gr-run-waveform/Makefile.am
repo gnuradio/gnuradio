@@ -31,7 +31,7 @@ check_PROGRAMS = test_xyzzy
 test_xyzzy_SOURCES = test_xyzzy.cc xyzzy.cc
 test_xyzzy_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
-	-DPKGLIBDIR=\"$(pkglibdir)\"
+	-DDATAROOTDIR=\"$(datarootdir)\"
 
 # Don't install the internal header
 noinst_HEADERS = xyzzy.h
@@ -40,7 +40,8 @@ noinst_HEADERS = xyzzy.h
 run_waveform_SOURCES = run_waveform.cc xyzzy.cc
 run_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
-	-DPKGLIBDIR=\"$(pkglibdir)\"
+	-DPKGLIBDIR=\"$(pkglibdir)\" \
+	-DDATAROOTDIR=\"$(datarootdir)\"
 # Uncommenting this force make to statically link in the guile library.
 # Note that this will fail to link it you don't have libguile.a.
 # run_waveform_LDFLAGS = -static
