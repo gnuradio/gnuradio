@@ -26,8 +26,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <map>
 #include <iostream>
 #include <fstream>
+#include <boost/cstdint.hpp>
 
 #include <libguile.h>
 
@@ -49,34 +51,63 @@ using namespace std;
 struct header {
     char     magic[8];
     
-    uint32_t offset_to_directory;	// byte offset from start of file
-    uint32_t size_of_directory;         // bytes
-    uint32_t number_of_dir_entries;
+    boost::uint32_t offset_to_directory;	// byte offset from start of file
+    boost::uint32_t size_of_directory;         // bytes
+    boost::uint32_t number_of_dir_entries;
     
-    uint32_t offset_to_strings;	// byte offset from start of file
-    uint32_t size_of_strings;	// bytes
+    boost::uint32_t offset_to_strings;	// byte offset from start of file
+    boost::uint32_t size_of_strings;	// bytes
 };
 
 struct directory_entry {
-    uint32_t offset_to_name;	 // from start of strings
-    uint32_t offset_to_contents; // from start of strings
+    boost::uint32_t offset_to_name;	 // from start of strings
+    boost::uint32_t offset_to_contents; // from start of strings
 };
     
 // Each string starts with a uint32_t length, followed by length bytes.
 // There is no trailing \0 in the string.    
 struct string_entry {
-    uint32_t	    length;
-    unsigned char c[1];		// 0 is nicer, but not portable.
+    boost::uint32_t length;
+    boost::uint8_t  *base;
 };
 
+class XYZZY {
+public:
+    XYZZY();
+    ~XYZZY();
+
+    // Initialize with the data file produced by gen-xyzzy.
+    bool init();
+    bool init(const std::string &filespec);
+    
+    // Does a file with name 'filename' exist in magic filesystem?
+    bool file_exists(const std::string &filespec);
+
+    // Return a C port that will read the file contents
+    SCM make_read_only_port(const std::string &filespec);
+
+    /// Parse a string data structure
+    static std::string read_string(boost::uint8_t *entry, size_t length);
+    static std::string read_string(struct string_entry &entry);
+    
+private:
+    std::string   _filespec;
+    struct header _header;
+    std::map<std::string, directory_entry> _directories;
+};
+
+// C linkage bindings for Guile
+extern "C" {
+    
 // Initialize with the data file produced by gen-xyzzy.
-bool init(const std::string &filespec);
-bool init();
+bool xyzzy_init(const std::string &filespec);
 
 // Does a file with name 'filename' exist in magic filesystem?
-bool file_exists(const std::string &filespec);
+bool xyzzy_file_exists(const std::string &filespec);
 
 // Return a C port that will read the file contents
-SCM make_read_only_port(const std::string &filespec);
+SCM xyzzy_make_read_only_port(const std::string &filespec);
+
+} // end of extern C
 
 #endif  // _XYZZY_H_ 1

@@ -26,6 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <libguile.h>
+#include <boost/cstdint.hpp>
 
 // Include our definitions
 #include "xyzzy.h"
@@ -34,19 +35,28 @@ using namespace std;
 
 typedef void* handle_t;
 
-handle_t datafile;
+XYZZY::XYZZY()
+{
+    // nothing to initialize
+}
 
+XYZZY::~XYZZY()
+{
+    // nothing to destruct
+}
 
 // Initialize with the data file produced by gen-xyzzy.
-bool init()
+bool
+XYZZY::init()
 {
-    string filespec = PKGLIBDIR;
-    filespec += '/';
-    filespec += "filesystem.dat";
-    return init(filespec);
+    _filespec = PKGLIBDIR;
+    _filespec += '/';
+    _filespec += "filesystem.dat";
+    return init(_filespec);
 };
 
-bool init(const std::string &file)
+bool
+XYZZY::init(const std::string &file)
 {
     return false;
 };
@@ -54,15 +64,53 @@ bool init(const std::string &file)
 // Does a file with name 'filename' exist in magic filesystem?
 //    bool file_exists(handle, const std::string &filespec);
 bool
-file_exists(const std::string &filespec)
+XYZZY::file_exists(const std::string &filespec)
 {
-//    datafile
+
 }
 
 // Return a C port that will read the file contents
 //    SCM make_read_only_port(handle, const std::string &filespec)
 SCM
-make_read_only_port(const std::string &filespec)
+XYZZY::make_read_only_port(const std::string &filespec)
 {
-//    datafile
+
 }
+
+string
+XYZZY::read_string(boost::uint8_t *entry, size_t length)
+{
+    string str(reinterpret_cast<const char *>(entry), length);
+    
+    return str;
+}
+
+string
+XYZZY::read_string(struct string_entry & entry)
+{
+    return read_string(entry.base, entry.length);
+}
+
+extern "C" {
+
+static XYZZY datafile;
+    
+// Initialize with the data file produced by gen-xyzzy.
+bool xyzzy_init(const std::string &filespec)
+{
+    datafile.init(filespec);
+}
+
+// Does a file with name 'filename' exist in magic filesystem?
+bool xyzzy_file_exists(const std::string &filespec)
+{
+    datafile.file_exists(filespec);
+}
+
+// Return a C port that will read the file contents
+SCM xyzzy_make_read_only_port(const std::string &filespec)
+{
+    datafile.make_read_only_port(filespec);
+}
+
+} // end of extern C
