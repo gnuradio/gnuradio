@@ -94,7 +94,7 @@ XYZZY::init(const std::string &file)
     // Read in the String Table
     size_t total = header->number_of_dir_entries;
     boost::uint32_t ssize;
-    in.seekg(1540);
+    // in.seekg(1540);
     while (total) {
         // Read just the length part
         in.read(reinterpret_cast<char *>(&ssize), sizeof(boost::uint32_t));
