@@ -5,3 +5,5 @@ grconfig.h.in
 install-sh
 ltmain.sh
 missing
+/configure
+Makefile.in
