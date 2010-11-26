@@ -30,6 +30,7 @@
 #include <iostream>
 #include <fstream>
 #include <boost/cstdint.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <libguile.h>
 
@@ -89,10 +90,13 @@ public:
     /// Parse a string data structure
     static std::string read_string(boost::uint8_t *entry, size_t length);
     static std::string read_string(struct string_entry &entry);
+
+    boost::shared_ptr<struct header> read_header(boost::uint8_t *header);
+    
+    boost::shared_ptr<struct directory_entry> read_dir_entry(boost::uint8_t *header);
     
 private:
     std::string   _filespec;
-    struct header _header;
     std::map<std::string, directory_entry> _directories;
 };
 

@@ -27,11 +27,16 @@
 #include <fstream>
 #include <libguile.h>
 #include <boost/cstdint.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/shared_array.hpp>
 
 // Include our definitions
 #include "xyzzy.h"
 
 using namespace std;
+
+boost::uint8_t hex2digit(boost::uint8_t digit);
+boost::shared_array<boost::uint8_t> hex2mem(const std::string &str);
 
 int
 main(int argc, char *argv[])
@@ -44,7 +49,7 @@ main(int argc, char *argv[])
         12,
         hi
     };
-
+    
     if (XYZZY::read_string(entry) == hello) {
         cout << "PASSED: XYZZY::read_string(struct string_entry &)" << endl;
     } else {
@@ -59,6 +64,25 @@ main(int argc, char *argv[])
 
     // Test other methods
     XYZZY xyzzy;
+
+    string fake_magic("-XyZzY-");
+    boost::shared_array<boost::uint8_t> fake_header_data = hex2mem(
+        "00 00 00 1c 00 00 05 e8 00 00 00 bd 00 00 06 04 00 21 ee 58");
+    boost::shared_array<boost::uint8_t> fake_header(new boost::uint8_t[28]);
+    std::copy(fake_magic.begin(), fake_magic.end(), fake_header.get());
+    std::copy(fake_header_data.get(), fake_header_data.get() + 20, fake_header.get() + 8);
+
+    boost::shared_ptr<struct header> head = xyzzy.read_header(fake_header.get());    
+    if ((head->magic == fake_magic)
+        && (head->offset_to_directory == 0)
+        && (head->size_of_directory == 0)
+        && (head->number_of_dir_entries == 1835008)
+        && (head->offset_to_strings == 0)
+        && (head->size_of_strings == 1280)) {
+        cout << "PASSED: XYZZY::read_header()" << endl;
+    } else {
+        cout << "FAILED: XYZZY::read_header()" << endl;
+    }
 
     if (xyzzy.init()) {
         cout << "PASSED: XYZZY::init()" << endl;
@@ -78,4 +102,62 @@ main(int argc, char *argv[])
 //    SCM make_read_only_port(handle, const std::string &filespec)
 // SCM xyzzy_make_read_only_port(const std::string &filespec)
     
+}
+
+/// \brief Convert a Hex digit into it's decimal value.
+///
+/// @param digit The digit as a hex value
+///
+/// @return The byte as a decimal value.
+boost::uint8_t
+hex2digit (boost::uint8_t digit)
+{  
+    if (digit == 0)
+        return 0;
+    
+    if (digit >= '0' && digit <= '9')
+        return digit - '0';
+    if (digit >= 'a' && digit <= 'f')
+        return digit - 'a' + 10;
+    if (digit >= 'A' && digit <= 'F')
+        return digit - 'A' + 10;
+    
+    // shouldn't ever get this far
+    return -1;
+}
+
+/// \brief Encode a Buffer from a hex string.
+///
+/// @param str A hex string, ex... "00 03 05 0a"
+///
+/// @return A reference to a Buffer in host endian format. This is
+///		primary used only for testing to create binary data
+///		from an easy to read and edit format.
+boost::shared_array<boost::uint8_t>
+hex2mem(const std::string &str)
+{
+//    GNASH_REPORT_FUNCTION;
+    size_t count = str.size();
+    
+    size_t size = (count/3) + 4;
+    boost::uint8_t ch = 0;
+    
+    boost::uint8_t *ptr = const_cast<boost::uint8_t *>
+        (reinterpret_cast<const boost::uint8_t *>(str.c_str()));
+    boost::uint8_t *end = ptr + count;
+
+    boost::shared_array<boost::uint8_t> data(new boost::uint8_t[count]);
+    
+    for (size_t i=0; ptr<end; i++) {
+        if (*ptr == ' ') {      // skip spaces.
+            ptr++;
+            continue;
+        }
+        ch = hex2digit(*ptr++) << 4;
+        ch |= hex2digit(*ptr++);
+        data[i] = ch;
+	    i++;
+    }
+    
+    return data;
 }
