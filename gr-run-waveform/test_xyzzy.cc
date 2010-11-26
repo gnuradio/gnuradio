@@ -67,18 +67,14 @@ main(int argc, char *argv[])
 
     string fake_magic("-XyZzY-");
     boost::shared_array<boost::uint8_t> fake_header_data = hex2mem(
-        "00 00 00 1c 00 00 05 e8 00 00 00 bd 00 00 06 04 00 21 ee 58");
-    boost::shared_array<boost::uint8_t> fake_header(new boost::uint8_t[28]);
-    std::copy(fake_magic.begin(), fake_magic.end(), fake_header.get());
-    std::copy(fake_header_data.get(), fake_header_data.get() + 20, fake_header.get() + 8);
-
-    boost::shared_ptr<struct header> head = xyzzy.read_header(fake_header.get());    
+        "2d 58 79 5a 7a 59 2d 00 00 00 00 1c 00 00 05 e8 00 00 00 bd 00 00 06 04 00 21 ee 58");
+    boost::shared_ptr<struct header> head = xyzzy.read_header(fake_header_data.get());
     if ((head->magic == fake_magic)
-        && (head->offset_to_directory == 0)
-        && (head->size_of_directory == 0)
-        && (head->number_of_dir_entries == 1835008)
-        && (head->offset_to_strings == 0)
-        && (head->size_of_strings == 1280)) {
+        && (head->offset_to_directory == 28)
+        && (head->size_of_directory == 1512)
+        && (head->number_of_dir_entries == 189)
+        && (head->offset_to_strings == 1540)
+        && (head->size_of_strings == 2223704)) {
         cout << "PASSED: XYZZY::read_header()" << endl;
     } else {
         cout << "FAILED: XYZZY::read_header()" << endl;
@@ -142,21 +138,17 @@ hex2mem(const std::string &str)
     size_t size = (count/3) + 4;
     boost::uint8_t ch = 0;
     
-    boost::uint8_t *ptr = const_cast<boost::uint8_t *>
-        (reinterpret_cast<const boost::uint8_t *>(str.c_str()));
-    boost::uint8_t *end = ptr + count;
-
     boost::shared_array<boost::uint8_t> data(new boost::uint8_t[count]);
-    
-    for (size_t i=0; ptr<end; i++) {
-        if (*ptr == ' ') {      // skip spaces.
-            ptr++;
+
+    size_t j = 0;
+    for (size_t i=0; i<count; i++) {
+        if (str[i] == ' ') {      // skip spaces.
             continue;
         }
-        ch = hex2digit(*ptr++) << 4;
-        ch |= hex2digit(*ptr++);
-        data[i] = ch;
-	    i++;
+        ch = hex2digit(str[i]) << 4;
+        ch |= hex2digit(str[i+1]);
+        data[j++] = ch;
+        i++;
     }
     
     return data;
