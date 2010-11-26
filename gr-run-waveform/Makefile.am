@@ -21,6 +21,7 @@
 
 ACLOCAL_AMFLAGS = -I config
 DIST_SUBDIRS = config
+EXTRA_DIST = gen-xyzzy
 
 bin_PROGRAMS = run_waveform
 
