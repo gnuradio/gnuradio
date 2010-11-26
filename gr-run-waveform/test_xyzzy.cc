@@ -80,18 +80,37 @@ main(int argc, char *argv[])
         cout << "FAILED: XYZZY::read_header()" << endl;
     }
 
+#if 0
     if (xyzzy.init()) {
         cout << "PASSED: XYZZY::init()" << endl;
     } else {
         cout << "FAILED: XYZZY::init()" << endl;
     }
-    
-    
+#endif
+    xyzzy.clear();
+
+    // Look for a file to exist, which shouldn't as we haven't loaded the data
+    if (xyzzy_file_exists("srfi/srfi-35.scm")) {
+        cout << "FAILED: xyzzy_file_exists(not yet)" << endl;
+    } else {
+        cout << "PASSED: xyzzy_file_exists(not yet)" << endl;
+    }    
+
 // Initialize with the data file produced by gen-xyzzy.
-//    xyzzy_init();
-// bool xyzzy_init(const std::string &file)
+    string fullspec = "/usr/local/share/gnuradio/gr-run-waveform/filesystem.dat";
+    if (xyzzy_init(fullspec)) {
+        cout << "PASSED: xyzzy_init()" << endl;
+    } else {
+        cout << "FAILED: xyzzy_init()" << endl;
+    }
+    
 // Does a file with name 'filename' exist in magic filesystem?
-//    bool xyzzy_file_exists(handle, const std::string &filespec);
+    if (xyzzy_file_exists("srfi/srfi-35.scm")) {
+        cout << "PASSED: xyzzy_file_exists()" << endl;
+    } else {
+        cout << "FAILED: xyzzy_file_exists()" << endl;
+    }    
+
 // bool file_exists(const std::string &filespec)
 
 // Return a C port that will read the file contents
