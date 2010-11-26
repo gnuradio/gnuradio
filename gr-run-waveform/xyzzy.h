@@ -64,7 +64,7 @@ struct header {
 
 struct directory_entry {
     boost::uint32_t offset_to_name;	 // from start of strings
-    boost::uint32_t offset_to_contents; // from start of strings
+    boost::uint32_t offset_to_contents;  // from start of strings
 };
     
 // Each string starts with a uint32_t length, followed by length bytes.
@@ -92,6 +92,7 @@ public:
     /// Parse a string data structure
     static std::string read_string(boost::uint8_t *entry, size_t length);
     static std::string read_string(struct string_entry &entry);
+    static std::string read_string(std::ifstream &stream);
 
     boost::shared_ptr<struct header> read_header(boost::uint8_t *header);
     
@@ -102,6 +103,7 @@ private:
     std::string   _filespec;
     std::vector<boost::shared_ptr<struct directory_entry> > _directories;
     std::vector<std::string> _strings;
+    std::map<std::string, std::string> _contents;
 };
 
 // C linkage bindings for Guile

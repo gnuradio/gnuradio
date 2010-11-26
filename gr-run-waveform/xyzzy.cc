@@ -81,44 +81,27 @@ XYZZY::init(const std::string &file)
     // Read in the Directory table
     length = sizeof(struct directory_entry);
     char dir[length];    
+    boost::uint32_t ssize;
     for (size_t i=0; i<header->number_of_dir_entries; ++i) {
         in.read(dir, length);
+        int store = in.tellg();
         boost::shared_ptr<struct directory_entry> entry = read_dir_entry(
             reinterpret_cast<boost::uint8_t *>(dir));
-        _directories.push_back(entry);
-        // cout << entry->offset_to_name << " : ";
-        // cout << entry->offset_to_contents << endl;
+        // _directories.push_back(entry);
+        // Get the file name
+        in.seekg(header->offset_to_strings + entry->offset_to_name);
+        string name = XYZZY::read_string(in);
+        cout << name << endl;
+        
+        // Get the contents, which is one big string
+        in.seekg(header->offset_to_strings + entry->offset_to_contents);
+        string contents; // = XYZZY::read_string(in);
+        // cout << contents << endl;
+        in.seekg(store);
+        _contents[name] = contents;
     }
-    cout << "Loaded " << _directories.size() << " Directory entries" << endl;
+    cout << "Loaded " << _contents.size() << " Filesystem entries" << endl;
     
-    // Read in the String Table
-    size_t total = header->number_of_dir_entries;
-    boost::uint32_t ssize;
-    // in.seekg(1540);
-    while (total) {
-        // Read just the length part
-        in.read(reinterpret_cast<char *>(&ssize), sizeof(boost::uint32_t));
-        boost::uint32_t len = __builtin_bswap32(ssize);
-        if ((len < 0) || (len > 256)) {
-            cerr << "ERROR: length out of range! " << len << ":" << ssize << endl;
-            return false;
-        }
-        // All the strings are 32 bit word aligned, so we have to adjust
-        // how many bytes to read.
-        size_t padding = sizeof(boost::uint32_t) - (len % sizeof(boost::uint32_t));
-        size_t newsize = (padding == 4) ? len : len + padding;
-        // cerr << hex << len << " : " << padding << " : "
-        //      << " : " << 4-(len % sizeof(boost::uint32_t)) << dec << endl;
-        char sstr[newsize];
-        in.read(sstr, newsize);
-        // Use the actual string length, not the padded version
-        string filespec(reinterpret_cast<const char *>(sstr), len);
-        _strings.push_back(filespec);
-        // cout << filespec << endl;
-        total--;
-    }
-    cout << "Loaded " << _strings.size() << " String entries" << endl;
-
     in.close();
     
     return true;
@@ -158,6 +141,34 @@ string
 XYZZY::read_string(struct string_entry & entry)
 {
     return read_string(entry.base, entry.length);
+}
+
+string
+XYZZY::read_string(std::ifstream &stream)
+{
+    boost::uint32_t length;
+    char num[sizeof(boost::uint32_t)];
+    
+    stream.read(reinterpret_cast<char *>(&length), sizeof(boost::uint32_t));
+    boost::uint32_t len = __builtin_bswap32(length);
+    if ((len < 0) || (len > 256)) {
+        cerr << "ERROR: length out of range! " << len << ":" << length << endl;
+        return false;
+    }
+
+    // All the strings are 32 bit word aligned, so we have to adjust
+    // how many bytes to read.
+    size_t padding = sizeof(boost::uint32_t) - (len % sizeof(boost::uint32_t));
+    size_t newsize = (padding == 4) ? len : len + padding;
+    char sstr[newsize];
+    
+    // Read the string
+    stream.read(sstr, newsize);
+    
+    // Use the actual string length, not the padded version
+    string filespec(reinterpret_cast<const char *>(sstr), len);
+
+    return filespec;
 }
 
 boost::shared_ptr<struct header>
