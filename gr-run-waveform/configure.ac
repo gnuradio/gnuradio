@@ -24,7 +24,7 @@ AC_PREREQ(2.57)
 AC_CONFIG_AUX_DIR([.])	
 
 AC_CONFIG_HEADERS([grconfig.h])
-AC_CONFIG_MACRO_DIR (config)
+AC_CONFIG_MACRO_DIR(config)
 AC_CONFIG_SRCDIR(run_waveform.cc)
 AM_INIT_AUTOMAKE("run-waveform", "0.1")
 
