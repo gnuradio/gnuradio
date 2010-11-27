@@ -28,6 +28,7 @@
 #include <vector>
 #include <map>
 #include <libguile.h>
+#include <libguile/ports.h>
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -37,6 +38,71 @@
 using namespace std;
 
 typedef void* handle_t;
+static int
+xyzzy_fill_input (SCM port)
+{
+    size_t count;
+    scm_t_port *gr_port = SCM_PTAB_ENTRY (port);
+    SCM bport = SCM_PACK(SCM_STREAM(port));
+    scm_t_port *gr_bport = SCM_PTAB_ENTRY (bport);
+
+    // FLush the output if a write is artive
+    if (gr_bport->rw_active == SCM_PORT_WRITE) {
+        scm_force_output (bport);
+    }
+    
+    count = gr_bport->read_end - gr_bport->read_pos;
+    
+    if (gr_bport->read_pos >= gr_bport->read_end) {
+        scm_fill_input (bport);
+    }
+    
+    count = gr_bport->read_end - gr_bport->read_pos;
+    if (count > gr_port->read_buf_size) {
+        count = gr_port->read_buf_size;
+    }
+
+    memcpy (gr_port->read_buf, gr_bport->read_pos, count);
+    gr_bport->read_pos += count;
+    
+    if (gr_bport->rw_random) {
+        gr_bport->rw_active = SCM_PORT_READ;
+    }
+
+    if (count == 0) {
+        return EOF;
+    } else {
+        gr_port->read_pos = gr_port->read_buf;
+        gr_port->read_end = gr_port->read_buf + count;
+        return *gr_port->read_buf;
+    }
+}
+
+static int
+xyzzy_flush (SCM port)
+{
+    SCM bport = SCM_PACK(SCM_STREAM(port));
+    scm_t_port *c_port = SCM_PTAB_ENTRY (port);
+    size_t count = c_port->write_pos - c_port->write_buf;
+    
+    scm_c_write (bport, c_port->write_buf, count);
+    
+    c_port->write_pos = c_port->write_buf;
+    c_port->rw_active = SCM_PORT_NEITHER;
+    
+    scm_force_output (bport);
+}
+
+
+static int
+xyzzy_close (SCM port)
+{
+    if (SCM_OUTPUT_PORT_P (port)) {
+        xyzzy_flush (port);
+        return scm_is_true (scm_close_port (SCM_PACK(SCM_STREAM(port)))) ? 0 : -1;
+    }
+    return 0;
+}
 
 XYZZY::XYZZY()
 {
@@ -127,7 +193,8 @@ XYZZY::file_exists(const std::string &filespec)
 SCM
 XYZZY::make_read_only_port(const std::string &filespec)
 {
-
+    scm_t_bits bits = scm_make_port_type("gnuradio", xyzzy_fill_input, 0);
+    scm_set_port_close (bits, xyzzy_close);
 }
 
 string
