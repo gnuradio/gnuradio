@@ -63,6 +63,8 @@
 #define R_OK 4
 #endif
 
+#include "xyzzy.h"
+
 
 /* Loading a file, given an absolute filename.  */
 
@@ -74,7 +76,7 @@ static SCM *scm_loc_load_hook;
 static SCM the_reader = SCM_BOOL_F;
 static size_t the_reader_fluid_num = 0;
 
-SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0, 
+SCM_DEFINE (scm_xyzzy_primitive_load, "primitive-load", 1, 0, 0, 
            (SCM filename),
 	    "Load the file named @var{filename} and evaluate its contents in\n"
 	    "the top-level environment. The load paths are not searched;\n"
@@ -83,10 +85,13 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
 	    "@code{%load-hook} is defined, it should be bound to a procedure\n"
 	    "that will be called before any code is loaded.  See the\n"
 	    "documentation for @code{%load-hook} later in this section.")
-#define FUNC_NAME s_scm_primitive_load
+#define FUNC_NAME s_scm_xyzzy_primitive_load
 {
   SCM hook = *scm_loc_load_hook;
   SCM_VALIDATE_STRING (1, filename);
+
+  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename));
+  
   if (scm_is_true (hook) && scm_is_false (scm_procedure_p (hook)))
     SCM_MISC_ERROR ("value of %load-hook is neither a procedure nor #f",
 		    SCM_EOL);
@@ -127,7 +132,7 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
 SCM
 scm_c_primitive_load (const char *filename)
 {
-  return scm_primitive_load (scm_from_locale_string (filename));
+  return scm_xyzzy_primitive_load (scm_from_locale_string (filename));
 }
 
 
@@ -305,7 +310,7 @@ stringbuf_cat (struct stringbuf *buf, char *str)
    If FILENAME is absolute, return it unchanged.
    If given, EXTENSIONS is a list of strings; for each directory 
    in PATH, we search for FILENAME concatenated with each EXTENSION.  */
-SCM_DEFINE (scm_search_path, "search-path", 2, 1, 0,
+SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
            (SCM path, SCM filename, SCM extensions),
 	    "Search @var{path} for a directory containing a file named\n"
 	    "@var{filename}. The file must be readable, and not a directory.\n"
@@ -314,22 +319,34 @@ SCM_DEFINE (scm_search_path, "search-path", 2, 1, 0,
 	    "If given, @var{extensions} is a list of strings; for each\n"
 	    "directory in @var{path}, we search for @var{filename}\n"
 	    "concatenated with each @var{extension}.")
-#define FUNC_NAME s_scm_search_path
+#define FUNC_NAME s_scm_xyzzy_search_path
 {
   struct stringbuf buf;
   char *filename_chars;
   size_t filename_len;
   SCM result = SCM_BOOL_F;
+  SCM exists;
 
   if (SCM_UNBNDP (extensions))
     extensions = SCM_EOL;
 
   scm_dynwind_begin (0);
-
   filename_chars = scm_to_locale_string (filename);
   filename_len = strlen (filename_chars);
   scm_dynwind_free (filename_chars);
 
+  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename_chars);
+
+  /* Look in the fake filesystem for this file */
+  if (xyzzy_file_exists(filename_chars)) {
+    fprintf(stderr, "TRACE %s exists in filesystem.dat!\n", filename_chars);
+    exists = scm_from_locale_string (filename_chars);
+#if 0
+    scm_dynwind_end ();
+    return exists;
+#endif
+  }
+  
   /* If FILENAME is absolute, return it unchanged.  */
 #ifdef __MINGW32__
   if (((filename_len >= 1) && 
@@ -381,6 +398,7 @@ SCM_DEFINE (scm_search_path, "search-path", 2, 1, 0,
   buf.buf = scm_malloc (buf.buf_len);
   scm_dynwind_unwind_handler (stringbuf_free, &buf, SCM_F_WIND_EXPLICITLY);
 
+  
   /* Try every path element.
    */
   for (; scm_is_pair (path); path = SCM_CDR (path))
@@ -432,7 +450,9 @@ SCM_DEFINE (scm_search_path, "search-path", 2, 1, 0,
     scm_wrong_type_arg_msg (NULL, 0, path, "proper list");
 
  end:
+  
   scm_dynwind_end ();
+  
   return result;
 }
 #undef FUNC_NAME
@@ -457,39 +477,51 @@ SCM_DEFINE (scm_sys_search_load_path, "%search-load-path", 1, 0, 0,
   SCM exts = *scm_loc_load_extensions;
   SCM_VALIDATE_STRING (1, filename);
 
+  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
+  
   if (scm_ilength (path) < 0)
     SCM_MISC_ERROR ("%load-path is not a proper list", SCM_EOL);
   if (scm_ilength (exts) < 0)
     SCM_MISC_ERROR ("%load-extension list is not a proper list", SCM_EOL);
-  return scm_search_path (path, filename, exts);
+  
+  return scm_xyzzy_search_path (path, filename, exts);
 }
 #undef FUNC_NAME
 
 
-SCM_DEFINE (scm_primitive_load_path, "primitive-load-path", 1, 0, 0, 
+SCM_DEFINE (scm_xyzzy_primitive_load_path, "primitive-load-path", 1, 0, 0, 
 	    (SCM filename),
 	    "Search @var{%load-path} for the file named @var{filename} and\n"
 	    "load it into the top-level environment.  If @var{filename} is a\n"
 	    "relative pathname and is not found in the list of search paths,\n"
 	    "an error is signalled.")
-#define FUNC_NAME s_scm_primitive_load_path
+#define FUNC_NAME s_scm_xyzzy_primitive_load_path
 {
   SCM full_filename;
+  char *filename_chars;
+  size_t filename_len;
+  
+  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename_chars);  
 
+  filename_chars = scm_to_locale_string (filename);
+  filename_len = strlen (filename_chars);
+  scm_dynwind_free (filename_chars);
+  
   full_filename = scm_sys_search_load_path (filename);
 
   if (scm_is_false (full_filename))
     SCM_MISC_ERROR ("Unable to find file ~S in load path",
 		    scm_list_1 (filename));
 
-  return scm_primitive_load (full_filename);
+  return scm_xyzzy_primitive_load (full_filename);
 }
 #undef FUNC_NAME
 
 SCM
 scm_c_primitive_load_path (const char *filename)
 {
-  return scm_primitive_load_path (scm_from_locale_string (filename));
+  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename);  
+  return scm_xyzzy_primitive_load_path (scm_from_locale_string (filename));
 }
 
 
