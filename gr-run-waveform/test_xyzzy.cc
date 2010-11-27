@@ -87,7 +87,6 @@ main(int argc, char *argv[])
         cout << "FAILED: XYZZY::init()" << endl;
     }
 #endif
-    xyzzy.clear();
 
     // Look for a file to exist, which shouldn't as we haven't loaded the data
     if (xyzzy_file_exists("srfi/srfi-35.scm")) {
