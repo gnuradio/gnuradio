@@ -95,27 +95,28 @@ main(int argc, char *argv[])
         cout << "PASSED: xyzzy_file_exists(not yet)" << endl;
     }    
 
-// Initialize with the data file produced by gen-xyzzy.
+    // Initialize with the data file produced by gen-xyzzy.
     string fullspec = "/usr/local/share/gnuradio/gr-run-waveform/filesystem.dat";
     if (xyzzy_init(fullspec)) {
         cout << "PASSED: xyzzy_init()" << endl;
     } else {
         cout << "FAILED: xyzzy_init()" << endl;
     }
-    
-// Does a file with name 'filename' exist in magic filesystem?
+     
+    // Does a file with name 'filename' exist in magic filesystem?
     if (xyzzy_file_exists("srfi/srfi-35.scm")) {
         cout << "PASSED: xyzzy_file_exists()" << endl;
     } else {
         cout << "FAILED: xyzzy_file_exists()" << endl;
     }    
 
-// bool file_exists(const std::string &filespec)
-
-// Return a C port that will read the file contents
-//    SCM make_read_only_port(handle, const std::string &filespec)
-// SCM xyzzy_make_read_only_port(const std::string &filespec)
+    // Return a C port that will read the file contents
     
+    if (xyzzy_make_read_only_port("gnuradio")) {
+        cout << "PASSED: xyzzy_make_read_only_port()" << endl;
+    } else {
+        cout << "FAILED: xyzzy_make_read_only_port()" << endl;
+    }    
 }
 
 /// \brief Convert a Hex digit into it's decimal value.
