@@ -21,26 +21,26 @@
 
 ACLOCAL_AMFLAGS = -I config
 DIST_SUBDIRS = config
-EXTRA_DIST = gen-xyzzy load.x
+EXTRA_DIST = gen-xyzzy
 
 # build the standalone waveform application
 bin_PROGRAMS = run_waveform
 
 # Rather than build a library, we just use a variable so the same code
 # can be used in test cases, as well as the run-waveform application.
-SRCS = xyzzy.cc # xyzzy-load.c
+SRCS = xyzzy.cc xyzzy-load.c
 
 # This is where the data file created by gen-xyzzy gets installed. This file
 # is needed by run-waveform and the test case.
 filesystemdir = $(datarootdir)/gnuradio/gr-run-waveform
 
-# libpath is to support xyzzy-load.c, filesystem.dat is the data file
+# libpath is to support xyzzy-load.cc, filesystem.dat is the data file
 BUILT_SOURCES = libpath.h filesystem.dat
 dist_filesystem_DATA = filesystem.dat
 
 # A unit test case for the XYZZY class
 check_PROGRAMS = test_xyzzy
-test_xyzzy_SOURCES = test_xyzzy.cc $(SRCS)
+test_xyzzy_SOURCES = test_xyzzy.cc  xyzzy.cc xyzzy-load.c #$(SRCS)
 test_xyzzy_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
 	-DDATAROOTDIR=\"$(datarootdir)\"
@@ -107,4 +107,4 @@ libpath.h: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 # that this requires GNU Radio to be installed before the outout will be correct.
 filesystem.dat:
 	-$(RM) -f filesystem.dat
-	$(PYTHON) $(srcdir)/gen-xyzzy $(GUILE_INSTALL_PATH) $(datarootdir)/guile/site > filesystem.dat
+	python $(srcdir)/gen-xyzzy $(GUILE_INSTALL_PATH) $(datarootdir)/guile/site > filesystem.dat
