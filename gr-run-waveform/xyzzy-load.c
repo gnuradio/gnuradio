@@ -24,24 +24,33 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "libguile/__scm.h"
-//#include "libguile/libpath.h"
-#include "libguile/fports.h"
-#include "libguile/read.h"
-#include "libguile/eval.h"
-#include "libguile/throw.h"
-#include "libguile/alist.h"
-#include "libguile/dynwind.h"
-#include "libguile/root.h"
-#include "libguile/strings.h"
-#include "libguile/modules.h"
-#include "libguile/lang.h"
-#include "libguile/chars.h"
-#include "libguile/srfi-13.h"
+/* libpath.h is generated whenever the Makefile is rebuilt */
+#include "libpath.h"
 
-#include "libguile/validate.h"
-#include "libguile/load.h"
-#include "libguile/fluids.h"
+#include <libguile/__scm.h>
+#include <libguile/fports.h>
+#include <libguile/read.h>
+#include <libguile/eval.h>
+#include <libguile/throw.h>
+#include <libguile/alist.h>
+#include <libguile/dynwind.h>
+#include <libguile/root.h>
+#include <libguile/strings.h>
+#include <libguile/modules.h>
+#include <libguile/lang.h>
+#include <libguile/chars.h>
+#include <libguile/tags.h>
+#include <libguile/snarf.h>
+#include <libguile/srfi-13.h>
+#include <libguile/validate.h>
+#include <libguile/load.h>
+#include <libguile/fluids.h>
+
+// these headers where not in the original version of this file.
+#include <libguile/boolean.h>
+#include <libguile/pairs.h>
+#include <libguile/gc.h>
+#include <libguile/variable.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -522,7 +531,7 @@ scm_init_load ()
 
   init_build_info ();
 
-#include "libguile/load.x"
+#include "load.x"
 }
 
 /*
