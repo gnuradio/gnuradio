@@ -34,6 +34,12 @@ AC_DEFUN([GUILE_DEVEL],[
       GUILE_LIBS="`${GUILE_CONFIG} link`"
       GUILE_PKLIBDIR="`${GUILE_CONFIG} info pkglibdir`"
       GUILE_PKDATADIR="`${GUILE_CONFIG} info pkgdatadir`/site"
+      GUILE_VERSION="`${GUILE_CONFIG} info guileversion`"
+      LIBGUILE_INTERFACE="`${GUILE_CONFIG} info libguileinterface`"
+
+      dnl This path is used by gen-xyzzy
+      version="`echo ${GUILE_VERSION} | cut -d '.' -f 1-2`"
+      GUILE_INSTALL_PATH="`${GUILE_CONFIG} info pkgdatadir`/${version}"
     else
       GUILE_CFLAGS=""
       GUILE_PKLIBDIR=""
@@ -43,6 +49,11 @@ AC_DEFUN([GUILE_DEVEL],[
     AC_SUBST(GUILE_PKLIBDIR)
     AC_SUBST(GUILE_PKDATADIR)
     AC_SUBST(GUILE_LIBS)
+    AC_SUBST(GUILE_INSTALL_PATH)
+
+    dnl These are used in libpath.h
+    AC_SUBST(GUILE_VERSION)
+    AC_SUBST(LIBGUILE_INTERFACE)
 ])
 
 # GUILE_CHECK_MODULE
