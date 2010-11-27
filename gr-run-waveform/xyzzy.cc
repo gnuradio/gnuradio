@@ -260,22 +260,23 @@ xyzzy_fill_input (SCM port)
 }
 
 // Initialize with the data file produced by gen-xyzzy.
-bool
-xyzzy_init(const std::string &filespec)
+int
+xyzzy_init(char *filespec)
 {
     return datafile.init(filespec);
 }
 
 // Does a file with name 'filename' exist in magic filesystem?
-bool
-xyzzy_file_exists(const std::string &filespec)
+int
+xyzzy_file_exists(char *filespec)
 {
+    // string filename();
     return datafile.file_exists(filespec);
 }
 
 // Return a C port that will read the file contents
 SCM
-xyzzy_make_read_only_port(const std::string &filespec)
+xyzzy_make_read_only_port(char *filespec)
 {
     return datafile.make_read_only_port(filespec);
 }

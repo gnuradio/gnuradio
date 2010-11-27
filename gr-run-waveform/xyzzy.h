@@ -23,6 +23,11 @@
 #ifndef _XYZZY_H_
 #define _XYZZY_H_ 1
 
+
+#include <libguile.h>
+
+#ifdef __cplusplus
+
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -33,8 +38,6 @@
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
-
-#include <libguile.h>
 
 using namespace std;
 
@@ -108,7 +111,8 @@ private:
 
 // C linkage bindings for Guile
 extern "C" {
-
+#endif
+    
 // These are the callbacks for thw guile ports
 int  xyzzy_fill_input (SCM port);
 void xyzzy_write (SCM port, const void *data, size_t size);
@@ -116,14 +120,16 @@ void xyzzy_flush (SCM port);
 int  xyzzy_close (SCM port);
     
 // Initialize with the data file produced by gen-xyzzy.
-bool xyzzy_init(const std::string &filespec);
+int xyzzy_init(char *filename);
 
 // Does a file with name 'filename' exist in magic filesystem?
-bool xyzzy_file_exists(const std::string &filespec);
+int xyzzy_file_exists(char *filename);
 
 // Return a C port that will read the file contents
-SCM xyzzy_make_read_only_port(const std::string &filespec);
+SCM xyzzy_make_read_only_port(char *filename);
   
+#ifdef __cplusplus
 } // end of extern C
+#endif
 
 #endif  // _XYZZY_H_ 1
