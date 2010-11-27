@@ -94,6 +94,7 @@ public:
     static std::string read_string(struct string_entry &entry);
     static std::string read_string(std::ifstream &stream);
 
+    // Read the header of the datafile
     boost::shared_ptr<struct header> read_header(boost::uint8_t *header);
     
     boost::shared_ptr<struct directory_entry> read_dir_entry(boost::uint8_t *header);
@@ -105,6 +106,12 @@ private:
 
 // C linkage bindings for Guile
 extern "C" {
+
+// These are the callbacks for thw guile ports
+int  xyzzy_fill_input (SCM port);
+void xyzzy_write (SCM port, const void *data, size_t size);
+void xyzzy_flush (SCM port);
+int  xyzzy_close (SCM port);
     
 // Initialize with the data file produced by gen-xyzzy.
 bool xyzzy_init(const std::string &filespec);
@@ -114,7 +121,7 @@ bool xyzzy_file_exists(const std::string &filespec);
 
 // Return a C port that will read the file contents
 SCM xyzzy_make_read_only_port(const std::string &filespec);
-
+  
 } // end of extern C
 
 #endif  // _XYZZY_H_ 1
