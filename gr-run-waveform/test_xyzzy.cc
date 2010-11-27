@@ -136,7 +136,8 @@ main(int argc, char *argv[])
 
     // Initialize with the data file produced by gen-xyzzy.
     string fullspec = "./filesystem.dat";
-    if (xyzzy_init(fullspec)) {
+    char *name = const_cast<char *>(fullspec.c_str());
+    if (xyzzy_init(name)) {
         cout << "PASSED: xyzzy_init()" << endl;
     } else {
         cout << "FAILED: xyzzy_init()" << endl;
