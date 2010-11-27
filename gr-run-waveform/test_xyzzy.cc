@@ -38,6 +38,45 @@ using namespace std;
 boost::uint8_t hex2digit(boost::uint8_t digit);
 boost::shared_array<boost::uint8_t> hex2mem(const std::string &str);
 
+SCM_DEFINE (scm_i_make_gnuradio,
+ "%gnuradio", 1, 0, 0,
+ (SCM port),
+ "Return a new port which reads and writes to @var{port}");
+#if 0
+#define FUNC_NAME s_scm_i_make_gnuradio
+{
+    SCM result;
+    unsigned long mode = 0;
+    
+    SCM_VALIDATE_PORT (SCM_ARG1, port);
+
+    if (scm_is_true (scm_output_port_p (port)))
+        mode |= SCM_WRTNG;
+    else if (scm_is_true (scm_input_port_p (port)))
+        mode |= SCM_RDNG;
+    
+    result = make_tp (port, mode);
+    
+    return result;
+}
+#endif
+
+static SCM
+test_xyzzy (void)
+{
+    cerr << "FIXME:" << endl;
+    SCM port;
+    scm_input_port_p(port);
+}
+
+static void
+inner_main (void *data, int argc, char **argv)
+{
+    scm_c_define_gsubr ("test-xyzzy", 0, 0, 0, test_xyzzy);
+
+//    scm_shell (argc, argv);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -111,13 +150,18 @@ main(int argc, char *argv[])
     }    
 
     // Return a C port that will read the file contents
-    
+
+#if 0
     if (xyzzy_make_read_only_port("gnuradio")) {
         cout << "PASSED: xyzzy_make_read_only_port()" << endl;
     } else {
         cout << "FAILED: xyzzy_make_read_only_port()" << endl;
-    }    
+    }
+#endif
+    
+    scm_boot_guile (argc, argv, inner_main, 0);   
 }
+
 
 /// \brief Convert a Hex digit into it's decimal value.
 ///
