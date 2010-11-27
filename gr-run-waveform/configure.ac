@@ -34,6 +34,7 @@ dnl AC_CANONICAL_TARGET
 
 dnl Find the the C++ compiler
 AC_PROG_CXX
+AM_PROG_CC_C_O
 
 dnl Checks for standard header files.
 AC_HEADER_STDC
