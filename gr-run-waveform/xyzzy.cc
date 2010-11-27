@@ -25,6 +25,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <map>
 #include <libguile.h>
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
@@ -43,7 +45,7 @@ XYZZY::XYZZY()
 
 XYZZY::~XYZZY()
 {
-    // nothing to destruct
+    _contents.clear();
 }
 
 // Initialize with the data file produced by gen-xyzzy.
@@ -87,15 +89,16 @@ XYZZY::init(const std::string &file)
         int store = in.tellg();
         boost::shared_ptr<struct directory_entry> entry = read_dir_entry(
             reinterpret_cast<boost::uint8_t *>(dir));
-        // _directories.push_back(entry);
+
         // Get the file name
         in.seekg(header->offset_to_strings + entry->offset_to_name);
         string name = XYZZY::read_string(in);
-        cout << name << endl;
+        // cout << name << endl;
         
         // Get the contents, which is one big string
+        cerr << "Contents offset: " << entry->offset_to_contents << endl;    
         in.seekg(header->offset_to_strings + entry->offset_to_contents);
-        string contents; // = XYZZY::read_string(in);
+        string contents = XYZZY::read_string(in);
         // cout << contents << endl;
         in.seekg(store);
         _contents[name] = contents;
@@ -112,11 +115,10 @@ XYZZY::init(const std::string &file)
 bool
 XYZZY::file_exists(const std::string &filespec)
 {
-    std::vector<std::string>::iterator it;
-    for (it=_strings.begin(); it<_strings.end(); ++it) {
-        if ((*it) == filespec) {
-            return true;
-        }
+    std::map<std::string, std::string>::iterator it;
+    it = _contents.find(filespec);
+    if (it != _contents.end()) {
+        return true;
     }
     return false;
 }
@@ -151,11 +153,7 @@ XYZZY::read_string(std::ifstream &stream)
     
     stream.read(reinterpret_cast<char *>(&length), sizeof(boost::uint32_t));
     boost::uint32_t len = __builtin_bswap32(length);
-    if ((len < 0) || (len > 256)) {
-        cerr << "ERROR: length out of range! " << len << ":" << length << endl;
-        return false;
-    }
-
+    cerr << "String Length is: " << len << endl;
     // All the strings are 32 bit word aligned, so we have to adjust
     // how many bytes to read.
     size_t padding = sizeof(boost::uint32_t) - (len % sizeof(boost::uint32_t));
@@ -165,9 +163,7 @@ XYZZY::read_string(std::ifstream &stream)
     // Read the string
     stream.read(sstr, newsize);
     
-    // Use the actual string length, not the padded version
     string filespec(reinterpret_cast<const char *>(sstr), len);
-
     return filespec;
 }
 
@@ -195,8 +191,8 @@ XYZZY::read_dir_entry(boost::uint8_t *entry)
     boost::shared_ptr<struct directory_entry> newdir(new struct directory_entry);
     struct directory_entry *ptr = reinterpret_cast<struct directory_entry *>(entry);
 
-    newdir->offset_to_name   = __builtin_bswap32(ptr->offset_to_name);
-    newdir->offset_to_name   = __builtin_bswap32(ptr->offset_to_name);
+    newdir->offset_to_name     = __builtin_bswap32(ptr->offset_to_name);
+    newdir->offset_to_contents = __builtin_bswap32(ptr->offset_to_contents);
 
     return newdir;
 }

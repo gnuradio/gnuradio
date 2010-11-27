@@ -98,11 +98,8 @@ public:
     
     boost::shared_ptr<struct directory_entry> read_dir_entry(boost::uint8_t *header);
 
-    void clear() { _directories.clear(); _strings.clear(); };
 private:
     std::string   _filespec;
-    std::vector<boost::shared_ptr<struct directory_entry> > _directories;
-    std::vector<std::string> _strings;
     std::map<std::string, std::string> _contents;
 };
 
