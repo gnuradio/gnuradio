@@ -135,7 +135,7 @@ main(int argc, char *argv[])
     }    
 
     // Initialize with the data file produced by gen-xyzzy.
-    string fullspec = "/usr/local/share/gnuradio/gr-run-waveform/filesystem.dat";
+    string fullspec = "./filesystem.dat";
     if (xyzzy_init(fullspec)) {
         cout << "PASSED: xyzzy_init()" << endl;
     } else {
