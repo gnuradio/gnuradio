@@ -90,8 +90,6 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "primitive-load", 1, 0, 0,
   SCM hook = *scm_loc_load_hook;
   SCM_VALIDATE_STRING (1, filename);
 
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename));
-  
   if (scm_is_true (hook) && scm_is_false (scm_procedure_p (hook)))
     SCM_MISC_ERROR ("value of %load-hook is neither a procedure nor #f",
 		    SCM_EOL);
@@ -335,8 +333,6 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   filename_len = strlen (filename_chars);
   scm_dynwind_free (filename_chars);
 
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename_chars);
-
   /* Look in the fake filesystem for this file */
   if (xyzzy_file_exists(filename_chars)) {
     fprintf(stderr, "TRACE %s exists in filesystem.dat!\n", filename_chars);
@@ -477,8 +473,6 @@ SCM_DEFINE (scm_sys_search_load_path, "%search-load-path", 1, 0, 0,
   SCM exts = *scm_loc_load_extensions;
   SCM_VALIDATE_STRING (1, filename);
 
-  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
-  
   if (scm_ilength (path) < 0)
     SCM_MISC_ERROR ("%load-path is not a proper list", SCM_EOL);
   if (scm_ilength (exts) < 0)
@@ -501,8 +495,6 @@ SCM_DEFINE (scm_xyzzy_primitive_load_path, "primitive-load-path", 1, 0, 0,
   char *filename_chars;
   size_t filename_len;
   
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename_chars);  
-
   filename_chars = scm_to_locale_string (filename);
   filename_len = strlen (filename_chars);
   scm_dynwind_free (filename_chars);
@@ -520,7 +512,6 @@ SCM_DEFINE (scm_xyzzy_primitive_load_path, "primitive-load-path", 1, 0, 0,
 SCM
 scm_c_primitive_load_path (const char *filename)
 {
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename);  
   return scm_xyzzy_primitive_load_path (scm_from_locale_string (filename));
 }
 
