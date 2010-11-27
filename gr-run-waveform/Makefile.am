@@ -32,6 +32,7 @@ test_xyzzy_SOURCES = test_xyzzy.cc xyzzy.cc
 test_xyzzy_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
 	-DDATAROOTDIR=\"$(datarootdir)\"
+test_xyzzy_LDADD = $(GUILE_LIBS)
 
 # Don't install the internal header
 noinst_HEADERS = xyzzy.h
