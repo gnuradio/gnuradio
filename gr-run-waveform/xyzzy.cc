@@ -96,7 +96,6 @@ XYZZY::init(const std::string &file)
         // cout << name << endl;
         
         // Get the contents, which is one big string
-        cerr << "Contents offset: " << entry->offset_to_contents << endl;    
         in.seekg(header->offset_to_strings + entry->offset_to_contents);
         string contents = XYZZY::read_string(in);
         // cout << contents << endl;
@@ -153,7 +152,6 @@ XYZZY::read_string(std::ifstream &stream)
     
     stream.read(reinterpret_cast<char *>(&length), sizeof(boost::uint32_t));
     boost::uint32_t len = __builtin_bswap32(length);
-    cerr << "String Length is: " << len << endl;
     // All the strings are 32 bit word aligned, so we have to adjust
     // how many bytes to read.
     size_t padding = sizeof(boost::uint32_t) - (len % sizeof(boost::uint32_t));
