@@ -99,6 +99,8 @@ public:
     
     boost::shared_ptr<struct directory_entry> read_dir_entry(boost::uint8_t *header);
 
+    std::string &get_contents(const std::string &filespec) { return _contents[filespec]; };
+    
 private:
     std::string   _filespec;
     std::map<std::string, std::string> _contents;

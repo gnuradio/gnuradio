@@ -128,7 +128,10 @@ XYZZY::file_exists(const std::string &filespec)
 SCM
 XYZZY::make_read_only_port(const std::string &filespec)
 {
-    scm_t_bits bits = scm_make_port_type("gnuradio", xyzzy_fill_input, xyzzy_write);
+    // scm_t_bits bits = scm_make_port_type(const_cast<char *>(filespec.c_str()),
+    //                                      xyzzy_fill_input, xyzzy_write);
+    char *foo = "foo";
+    scm_t_bits bits = scm_make_port_type(foo, 0, 0);
     scm_set_port_flush (bits, xyzzy_flush);
     scm_set_port_close (bits, xyzzy_close);
 }
@@ -238,15 +241,20 @@ int
 xyzzy_fill_input (SCM port)
 {
     scm_t_port *gr_port = SCM_PTAB_ENTRY (port);
-    if (gr_port->read_pos + gr_port->read_buf_size > gr_port->read_end) {
-        return EOF;
-    }
-
-    // if (_contents.empty()) {
-    //     gr_port->read_buf; // = datafile.file_exists("FOO");
-    //     gr_port->read_end = gr_port->read_buf + gr_port->read_buf_size;
-    //     gr_port->read_pos += gr_port->read_buf_size;
+    
+    // if (gr_port->read_pos + gr_port->read_buf_size > gr_port->read_end) {
+    //     return EOF;
     // }
+
+    std::string &contents = datafile.get_contents("");
+    if (contents.empty()) {
+        // buffer start.
+        gr_port->read_buf = const_cast<unsigned char *>(gr_port->read_pos);
+        // pointer to last buffered char + 1
+        gr_port->read_end = gr_port->read_buf + gr_port->read_buf_size;
+        // the next unread char.
+        gr_port->read_pos += gr_port->read_buf_size;
+    }
     
     return *gr_port->read_buf;
 }
