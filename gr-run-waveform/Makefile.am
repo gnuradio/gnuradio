@@ -107,4 +107,4 @@ libpath.h: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 # that this requires GNU Radio to be installed before the outout will be correct.
 filesystem.dat:
 	-$(RM) -f filesystem.dat
-	python $(srcdir)/gen-xyzzy $(GUILE_INSTALL_PATH) $(datarootdir)/guile/site > filesystem.dat
+	$(PYTHON) $(srcdir)/gen-xyzzy $(GUILE_INSTALL_PATH) $(datarootdir)/guile/site > filesystem.dat
