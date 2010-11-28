@@ -42,6 +42,9 @@ AC_HEADER_STDC
 dnl Get the paths to the Guile headers and library
 GUILE_DEVEL
 
+AC_PATH_PROG(PYTHON, python)
+AC_SUBST(PYTHON)
+
 AC_CONFIG_FILES([\
 	  Makefile \
 	])
