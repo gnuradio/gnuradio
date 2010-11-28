@@ -65,6 +65,9 @@
 
 #include "xyzzy.h"
 
+// This is the magic number used when loading files
+static const char *MAGIC = "-XyZzY-";
+
 
 /* Loading a file, given an absolute filename.  */
 
@@ -76,7 +79,7 @@ static SCM *scm_loc_load_hook;
 static SCM the_reader = SCM_BOOL_F;
 static size_t the_reader_fluid_num = 0;
 
-SCM_DEFINE (scm_xyzzy_primitive_load, "primitive-load", 1, 0, 0, 
+SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0, 
            (SCM filename),
 	    "Load the file named @var{filename} and evaluate its contents in\n"
 	    "the top-level environment. The load paths are not searched;\n"
@@ -85,7 +88,7 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "primitive-load", 1, 0, 0,
 	    "@code{%load-hook} is defined, it should be bound to a procedure\n"
 	    "that will be called before any code is loaded.  See the\n"
 	    "documentation for @code{%load-hook} later in this section.")
-#define FUNC_NAME s_scm_xyzzy_primitive_load
+#define FUNC_NAME s_scm_primitive_load
 {
   SCM hook = *scm_loc_load_hook;
   SCM_VALIDATE_STRING (1, filename);
@@ -99,7 +102,14 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "primitive-load", 1, 0, 0,
   if (!scm_is_false (hook))
     scm_call_1 (hook, filename);
 
+  /* if  (strncmp(scm_from_locale_string(filename), MAGIC, strlen(MAGIC))) { */
+  /*   const char *ptr = strdup(scm_from_locale_string(filename)); */
+  /*   /\* ptr += strlen(MAGIC); *\/ */
+  /*   fprintf(stderr, "FIXME: magic %s\n", ptr); */
+  /* } */
+
   { /* scope */
+    fprintf(stderr, "FIXME: magic %s\n", scm_from_locale_string(filename));
     SCM port = scm_open_file (filename, scm_from_locale_string ("r"));
     scm_dynwind_begin (SCM_F_DYNWIND_REWINDABLE);
     scm_i_dynwind_current_load_port (port);
@@ -132,7 +142,8 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "primitive-load", 1, 0, 0,
 SCM
 scm_c_primitive_load (const char *filename)
 {
-  return scm_xyzzy_primitive_load (scm_from_locale_string (filename));
+  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
+  return scm_primitive_load (scm_from_locale_string (filename));
 }
 
 
@@ -217,6 +228,8 @@ scm_init_load_path ()
 {
   char *env;
   SCM path = SCM_EOL;
+
+  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
 
 #ifdef SCM_LIBRARY_DIR
   path = scm_list_3 (scm_from_locale_string (SCM_SITE_DIR),
@@ -327,6 +340,8 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   SCM result = SCM_BOOL_F;
   SCM exists;
 
+  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename));
+
   if (SCM_UNBNDP (extensions))
     extensions = SCM_EOL;
 
@@ -335,16 +350,17 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   filename_len = strlen (filename_chars);
   scm_dynwind_free (filename_chars);
 
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename_chars);
-
   /* Look in the fake filesystem for this file */
   if (xyzzy_file_exists(filename_chars)) {
-    fprintf(stderr, "TRACE %s exists in filesystem.dat!\n", filename_chars);
-    exists = scm_from_locale_string (filename_chars);
-#if 0
+    // fprintf(stderr, "TRACE %s exists in filesystem.dat!\n", filename_chars);
+    char *modpath = (char *)malloc(filename_len + strlen(MAGIC));
+    memset(modpath, 0, filename_len + strlen(MAGIC));
+    memcpy(modpath, MAGIC, strlen(MAGIC));
+    memcpy(modpath+7, filename_chars, filename_len);
+    scm_dynwind_free (modpath);
+    exists = scm_from_locale_string (modpath);
     scm_dynwind_end ();
     return exists;
-#endif
   }
   
   /* If FILENAME is absolute, return it unchanged.  */
@@ -510,10 +526,10 @@ SCM_DEFINE (scm_xyzzy_primitive_load_path, "primitive-load-path", 1, 0, 0,
   full_filename = scm_sys_search_load_path (filename);
 
   if (scm_is_false (full_filename))
-    SCM_MISC_ERROR ("Unable to find file ~S in load path",
+    SCM_MISC_ERROR ("Unable to find the file ~S in load path",
 		    scm_list_1 (filename));
 
-  return scm_xyzzy_primitive_load (full_filename);
+  return scm_primitive_load (full_filename);
 }
 #undef FUNC_NAME
 
@@ -564,7 +580,7 @@ scm_init_load ()
   init_build_info ();
 
   /* cpp arguments: load.c -DHAVE_CONFIG_H -I.. -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m32 -march=i686 -mtune=atom -fasynchronous-unwind-tables -Wall -Wmissing-prototypes */
-  scm_c_define_gsubr (s_scm_xyzzy_primitive_load, 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load); ;
+  scm_c_define_gsubr (s_scm_primitive_load, 1, 0, 0, (SCM (*)()) scm_primitive_load); ;
   scm_c_define_gsubr (s_scm_sys_package_data_dir, 0, 0, 0, (SCM (*)()) scm_sys_package_data_dir); ;
   scm_c_define_gsubr (s_scm_sys_library_dir, 0, 0, 0, (SCM (*)()) scm_sys_library_dir); ;
   scm_c_define_gsubr (s_scm_sys_site_dir, 0, 0, 0, (SCM (*)()) scm_sys_site_dir); ;
