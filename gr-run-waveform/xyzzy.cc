@@ -81,7 +81,6 @@ XYZZY::init(const std::string &file)
         return false;
     }
 
-    cout << "There are " << header->number_of_dir_entries << " of directory entries" << endl;
     // Read in the Directory table
     length = sizeof(struct directory_entry);
     char dir[length];    
@@ -280,7 +279,7 @@ make_xyzzy (SCM binary_port, unsigned long mode)
     
     if (SCM_INPUT_PORT_P (port)) {
             c_port = SCM_PTAB_ENTRY (port);
-//            c_port->read_buf = scm_gc_malloc (XYZZY_INPUT_BUFFER_SIZE, "port buffer");
+            c_port->read_buf = (unsigned char *)scm_gc_malloc (XYZZY_INPUT_BUFFER_SIZE, "port buffer");
             c_port->read_pos = c_port->read_end = c_port->read_buf;
             c_port->read_buf_size = XYZZY_INPUT_BUFFER_SIZE;
             
