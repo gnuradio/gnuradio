@@ -129,13 +129,11 @@ main(int argc, char *argv[])
 
     // Return a C port that will read the file contents
 
-#if 0
     if (xyzzy_make_read_only_port("gnuradio")) {
         cout << "PASSED: xyzzy_make_read_only_port()" << endl;
     } else {
         cout << "FAILED: xyzzy_make_read_only_port()" << endl;
     }
-#endif
     
     scm_boot_guile (argc, argv, inner_main, 0);   
 }
