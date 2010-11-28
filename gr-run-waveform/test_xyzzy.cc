@@ -122,18 +122,30 @@ main(int argc, char *argv[])
      
     // Does a file with name 'filename' exist in magic filesystem?
     if (xyzzy_file_exists("srfi/srfi-35.scm")) {
+        cout << "FAILED: xyzzy_file_exists()" << endl;
+    } else {
+        cout << "PASSED: xyzzy_file_exists()" << endl;
+    }
+    
+    // Does a file with name 'filename' exist in magic filesystem?
+    if (xyzzy_file_exists("/-xyzzy-/srfi/srfi-35.scm")) {
         cout << "PASSED: xyzzy_file_exists()" << endl;
     } else {
         cout << "FAILED: xyzzy_file_exists()" << endl;
-    }    
+    }
+    
+// xyzzy_file_exists("abcd.scm") -> always false
+// xyzzy_file_exists("/-xyzzy-/abcd.scm") -> depends on whether "abcd.scm" is in
 
     // Return a C port that will read the file contents
-
+#if 0
     if (xyzzy_make_read_only_port("gnuradio")) {
         cout << "PASSED: xyzzy_make_read_only_port()" << endl;
     } else {
         cout << "FAILED: xyzzy_make_read_only_port()" << endl;
     }
+
+#endif
     
     scm_boot_guile (argc, argv, inner_main, 0);   
 }

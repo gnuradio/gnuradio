@@ -115,10 +115,14 @@ XYZZY::init(const std::string &file)
 bool
 XYZZY::file_exists(const std::string &filespec)
 {
-    std::map<std::string, std::string>::iterator it;
-    it = _contents.find(filespec);
-    if (it != _contents.end()) {
-        return true;
+    if (filespec.substr(0, 9) == "/-xyzzy-/") {
+        // look for prefix
+        std::map<std::string, std::string>::iterator it;
+        it = _contents.find(filespec.substr(9, filespec.size()));
+        if (it != _contents.end()) {
+            return true;
+        }
+        return false;
     }
     return false;
 }
@@ -128,15 +132,10 @@ XYZZY::file_exists(const std::string &filespec)
 SCM
 XYZZY::make_read_only_port(const std::string &filespec)
 {
-#if 0
-    char *filename = const_cast<char *>(filespec.c_str());
-    _portbits = scm_make_port_type(filename, xyzzy_fill_input, xyzzy_write);
+    _portbits = scm_make_port_type(const_cast<char *>(filespec.c_str()),
+                                   xyzzy_fill_input, xyzzy_write);
     scm_set_port_flush (_portbits, xyzzy_flush);
     scm_set_port_close (_portbits, xyzzy_close);
-#else
-    SCM result;
-    return result;
-#endif
 }
 
 string
