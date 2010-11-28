@@ -93,7 +93,9 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
   SCM hook = *scm_loc_load_hook;
   SCM_VALIDATE_STRING (1, filename);
 
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename));
+  size_t len = strlen(scm_to_locale_string(filename));
+  char *ptr = scm_to_locale_string(filename);
+  /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, ptr); */
   
   if (scm_is_true (hook) && scm_is_false (scm_procedure_p (hook)))
     SCM_MISC_ERROR ("value of %load-hook is neither a procedure nor #f",
@@ -102,15 +104,13 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
   if (!scm_is_false (hook))
     scm_call_1 (hook, filename);
 
-  /* if  (strncmp(scm_from_locale_string(filename), MAGIC, strlen(MAGIC))) { */
-  /*   const char *ptr = strdup(scm_from_locale_string(filename)); */
-  /*   /\* ptr += strlen(MAGIC); *\/ */
-  /*   fprintf(stderr, "FIXME: magic %s\n", ptr); */
-  /* } */
-
   { /* scope */
-    fprintf(stderr, "FIXME: magic %s\n", scm_from_locale_string(filename));
-    SCM port = scm_open_file (filename, scm_from_locale_string ("r"));
+    SCM port;
+    if  (strncmp(ptr, MAGIC, strlen(MAGIC)) == 0) {
+      fprintf(stderr, "FIXME: %s is a XYZZY file system file!\n", ptr+strlen(MAGIC));
+    } else {
+      port = scm_open_file (filename, scm_from_locale_string ("r"));
+    }
     scm_dynwind_begin (SCM_F_DYNWIND_REWINDABLE);
     scm_i_dynwind_current_load_port (port);
 
@@ -142,7 +142,6 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
 SCM
 scm_c_primitive_load (const char *filename)
 {
-  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
   return scm_primitive_load (scm_from_locale_string (filename));
 }
 
@@ -229,7 +228,7 @@ scm_init_load_path ()
   char *env;
   SCM path = SCM_EOL;
 
-  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
+  /* fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__); */
 
 #ifdef SCM_LIBRARY_DIR
   path = scm_list_3 (scm_from_locale_string (SCM_SITE_DIR),
@@ -340,7 +339,7 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   SCM result = SCM_BOOL_F;
   SCM exists;
 
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename));
+  /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename)); */
 
   if (SCM_UNBNDP (extensions))
     extensions = SCM_EOL;
@@ -350,11 +349,12 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   filename_len = strlen (filename_chars);
   scm_dynwind_free (filename_chars);
 
-  /* Look in the fake filesystem for this file */
+  /* Look in the fake filesystem for this file. If we find it, we prepend a
+     magic number to the front so we can identify these special files later
+     on when trying to read from them. */
   if (xyzzy_file_exists(filename_chars)) {
-    // fprintf(stderr, "TRACE %s exists in filesystem.dat!\n", filename_chars);
-    char *modpath = (char *)malloc(filename_len + strlen(MAGIC));
-    memset(modpath, 0, filename_len + strlen(MAGIC));
+    char *modpath = (char *)malloc(filename_len + strlen(MAGIC) + 1);
+    memset(modpath, 0, filename_len + strlen(MAGIC) + 1);
     memcpy(modpath, MAGIC, strlen(MAGIC));
     memcpy(modpath+7, filename_chars, filename_len);
     scm_dynwind_free (modpath);
@@ -493,7 +493,7 @@ SCM_DEFINE (scm_sys_search_load_path, "%search-load-path", 1, 0, 0,
   SCM exts = *scm_loc_load_extensions;
   SCM_VALIDATE_STRING (1, filename);
 
-  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
+  /* fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__); */
   
   if (scm_ilength (path) < 0)
     SCM_MISC_ERROR ("%load-path is not a proper list", SCM_EOL);
@@ -517,7 +517,7 @@ SCM_DEFINE (scm_xyzzy_primitive_load_path, "primitive-load-path", 1, 0, 0,
   char *filename_chars;
   size_t filename_len;
   
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename_chars);  
+  /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename_chars);   */
 
   filename_chars = scm_to_locale_string (filename);
   filename_len = strlen (filename_chars);
@@ -536,7 +536,6 @@ SCM_DEFINE (scm_xyzzy_primitive_load_path, "primitive-load-path", 1, 0, 0,
 SCM
 scm_c_primitive_load_path (const char *filename)
 {
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename);  
   return scm_xyzzy_primitive_load_path (scm_from_locale_string (filename));
 }
 

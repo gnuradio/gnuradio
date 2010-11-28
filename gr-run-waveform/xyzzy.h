@@ -112,7 +112,7 @@ private:
 // C linkage bindings for Guile
 extern "C" {
 #endif
-    
+
 // These are the callbacks for thw guile ports
 int  xyzzy_fill_input (SCM port);
 void xyzzy_write (SCM port, const void *data, size_t size);
