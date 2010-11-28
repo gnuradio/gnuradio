@@ -40,6 +40,7 @@ using namespace std;
 typedef void* handle_t;
 
 XYZZY::XYZZY()
+    : _portbits(0)
 {
     // nothing to initialize
 }
@@ -128,12 +129,10 @@ XYZZY::file_exists(const std::string &filespec)
 SCM
 XYZZY::make_read_only_port(const std::string &filespec)
 {
-    // scm_t_bits bits = scm_make_port_type(const_cast<char *>(filespec.c_str()),
-    //                                      xyzzy_fill_input, xyzzy_write);
-    char *foo = "foo";
-    scm_t_bits bits = scm_make_port_type(foo, 0, 0);
-    scm_set_port_flush (bits, xyzzy_flush);
-    scm_set_port_close (bits, xyzzy_close);
+    _portbits = scm_make_port_type(const_cast<char *>(filespec.c_str()),
+                                         xyzzy_fill_input, xyzzy_write);
+    scm_set_port_flush (_portbits, xyzzy_flush);
+    scm_set_port_close (_portbits, xyzzy_close);
 }
 
 string
@@ -206,6 +205,27 @@ extern "C" {
 
 static XYZZY datafile;
 
+SCM_DEFINE (scm_i_make_gnuradio, "%make-gnuradio-port", 1, 0, 0,
+ (SCM port),
+ "Return a new port which reads and writes to @var{port}")
+#define FUNC_NAME s_scm_i_make_gnuradio
+{
+    SCM result;
+    unsigned long mode = 0;
+    
+    SCM_VALIDATE_PORT (SCM_ARG1, port);
+
+    if (scm_is_true (scm_output_port_p (port)))
+        mode |= SCM_WRTNG;
+    else if (scm_is_true (scm_input_port_p (port)))
+        mode |= SCM_RDNG;
+
+    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
+    result = make_xyzzy (port, mode);
+    
+    return result;
+}
+    
 void
 xyzzy_write (SCM port, const void *data, size_t size)
 {
@@ -236,17 +256,54 @@ xyzzy_close (SCM port)
     }
     return 0;
 }
+
+SCM_API scm_i_pthread_mutex_t scm_i_port_table_mutex;
+const size_t XYZZY_INPUT_BUFFER_SIZE = 4096;
     
+SCM
+make_xyzzy (SCM binary_port, unsigned long mode)
+{
+    SCM port;
+    scm_t_port *c_port;
+    const unsigned long mode_bits = SCM_OPN | mode;
+    scm_t_bits bits = datafile.getPortBits();
+
+    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
+    
+    scm_i_pthread_mutex_lock (&scm_i_port_table_mutex);
+    
+    port = scm_new_port_table_entry (bits);
+
+    SCM_SETSTREAM (port, SCM_UNPACK (binary_port));
+    
+    SCM_SET_CELL_TYPE (port, bits | mode_bits);
+    
+    if (SCM_INPUT_PORT_P (port)) {
+            c_port = SCM_PTAB_ENTRY (port);
+//            c_port->read_buf = scm_gc_malloc (XYZZY_INPUT_BUFFER_SIZE, "port buffer");
+            c_port->read_pos = c_port->read_end = c_port->read_buf;
+            c_port->read_buf_size = XYZZY_INPUT_BUFFER_SIZE;
+            
+            SCM_SET_CELL_WORD_0 (port, SCM_CELL_WORD_0 (port) & ~SCM_BUF0);
+    }
+    scm_i_pthread_mutex_unlock (&scm_i_port_table_mutex);
+    
+    return port;
+}
+
 int
 xyzzy_fill_input (SCM port)
 {
     scm_t_port *gr_port = SCM_PTAB_ENTRY (port);
     
+    fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
+            
     // if (gr_port->read_pos + gr_port->read_buf_size > gr_port->read_end) {
     //     return EOF;
     // }
 
-    std::string &contents = datafile.get_contents("");
+    // FIXME: this is obviously a bogus call, as it'll always return an empty file
+    std::string &contents = datafile.get_contents("foo");
     if (contents.empty()) {
         // buffer start.
         gr_port->read_buf = const_cast<unsigned char *>(gr_port->read_pos);
@@ -270,7 +327,6 @@ xyzzy_init(char *filespec)
 int
 xyzzy_file_exists(char *filespec)
 {
-    // string filename();
     return datafile.file_exists(filespec);
 }
 

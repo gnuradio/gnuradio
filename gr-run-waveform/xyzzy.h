@@ -103,10 +103,13 @@ public:
     boost::shared_ptr<struct directory_entry> read_dir_entry(boost::uint8_t *header);
 
     std::string &get_contents(const std::string &filespec) { return _contents[filespec]; };
+
+    scm_t_bits getPortBits() { return _portbits; };
     
 private:
     std::string   _filespec;
     std::map<std::string, std::string> _contents;
+    scm_t_bits   _portbits;
 };
 
 // C linkage bindings for Guile
@@ -127,7 +130,9 @@ int xyzzy_file_exists(char *filename);
 
 // Return a C port that will read the file contents
 SCM xyzzy_make_read_only_port(char *filename);
-  
+
+SCM make_xyzzy (SCM binary_port, unsigned long mode);
+    
 #ifdef __cplusplus
 } // end of extern C
 #endif
