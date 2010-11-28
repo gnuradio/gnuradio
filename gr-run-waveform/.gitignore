@@ -7,6 +7,7 @@ ltmain.sh
 missing
 configure
 Makefile.in
+compile
 config/libtool.m4
 config/ltoptions.m4
 config/ltsugar.m4
