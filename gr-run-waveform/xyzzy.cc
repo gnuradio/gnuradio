@@ -128,10 +128,15 @@ XYZZY::file_exists(const std::string &filespec)
 SCM
 XYZZY::make_read_only_port(const std::string &filespec)
 {
-    _portbits = scm_make_port_type(const_cast<char *>(filespec.c_str()),
-                                         xyzzy_fill_input, xyzzy_write);
+#if 0
+    char *filename = const_cast<char *>(filespec.c_str());
+    _portbits = scm_make_port_type(filename, xyzzy_fill_input, xyzzy_write);
     scm_set_port_flush (_portbits, xyzzy_flush);
     scm_set_port_close (_portbits, xyzzy_close);
+#else
+    SCM result;
+    return result;
+#endif
 }
 
 string
@@ -219,18 +224,11 @@ SCM_DEFINE (scm_i_make_gnuradio, "%make-gnuradio-port", 1, 0, 0,
     else if (scm_is_true (scm_input_port_p (port)))
         mode |= SCM_RDNG;
 
-    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
     result = make_xyzzy (port, mode);
     
     return result;
 }
     
-void
-xyzzy_write (SCM port, const void *data, size_t size)
-{
-    // This is a read only file
-}
-
 void
 xyzzy_flush (SCM port)
 {
@@ -267,8 +265,6 @@ make_xyzzy (SCM binary_port, unsigned long mode)
     const unsigned long mode_bits = SCM_OPN | mode;
     scm_t_bits bits = datafile.getPortBits();
 
-    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
-    
     scm_i_pthread_mutex_lock (&scm_i_port_table_mutex);
     
     port = scm_new_port_table_entry (bits);
@@ -290,13 +286,17 @@ make_xyzzy (SCM binary_port, unsigned long mode)
     return port;
 }
 
+void
+xyzzy_write (SCM port, const void *data, size_t size)
+{
+    // This is a read only file
+}
+
 int
 xyzzy_fill_input (SCM port)
 {
     scm_t_port *gr_port = SCM_PTAB_ENTRY (port);
     
-    fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
-            
     // if (gr_port->read_pos + gr_port->read_buf_size > gr_port->read_end) {
     //     return EOF;
     // }
