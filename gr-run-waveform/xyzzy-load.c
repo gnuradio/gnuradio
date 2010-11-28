@@ -79,7 +79,7 @@ static SCM *scm_loc_load_hook;
 static SCM the_reader = SCM_BOOL_F;
 static size_t the_reader_fluid_num = 0;
 
-SCM_DEFINE (scm_xyzzy_primitive_load, "primitive-load", 1, 0, 0, 
+SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0, 
            (SCM filename),
 	    "Load the file named @var{filename} and evaluate its contents in\n"
 	    "the top-level environment. The load paths are not searched;\n"
@@ -88,7 +88,7 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "primitive-load", 1, 0, 0,
 	    "@code{%load-hook} is defined, it should be bound to a procedure\n"
 	    "that will be called before any code is loaded.  See the\n"
 	    "documentation for @code{%load-hook} later in this section.")
-#define FUNC_NAME s_scm_xyzzy_primitive_load
+#define FUNC_NAME s_scm_primitive_load
 {
   SCM hook = *scm_loc_load_hook;
   SCM_VALIDATE_STRING (1, filename);
@@ -143,7 +143,7 @@ SCM
 scm_c_primitive_load (const char *filename)
 {
     fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
-  return scm_xyzzy_primitive_load (scm_from_locale_string (filename));
+    return scm_primitive_load (scm_from_locale_string (filename));
 }
 
 
@@ -361,6 +361,12 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   if (filename_len >= 1 && filename_chars[0] == '/')
 #endif
     {
+      /* Look in the fake filesystem for this file. If we find it, we prepend a
+         magic number to the front so we can identify these special files later
+         on when trying to read from them. */
+      if (xyzzy_file_exists(filename_chars)) {
+        filename = scm_from_locale_string (filename_chars);
+      }
       scm_dynwind_end ();
       return filename;
     }
@@ -436,14 +442,6 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
 	  /* If the file exists at all, we should return it.  If the
 	     file is inaccessible, then that's an error.  */
 
-          /* Look in the fake filesystem for this file. If we find it, we prepend a
-             magic number to the front so we can identify these special files later
-             on when trying to read from them. */
-          if (xyzzy_file_exists(buf.buf)) {
-            result = scm_from_locale_string (buf.buf);
-            goto end;
-          }
-          
 	  if (stat (buf.buf, &mode) == 0
 	      && ! (mode.st_mode & S_IFDIR))
 	    {
@@ -472,7 +470,7 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
    The file must be readable, and not a directory.
    If we find one, return its full filename; otherwise, return #f.
    If FILENAME is absolute, return it unchanged.  */
-SCM_DEFINE (scm_xyzzy_sys_search_load_path, "%search-load-path", 1, 0, 0, 
+SCM_DEFINE (scm_sys_search_load_path, "%search-load-path", 1, 0, 0, 
 	    (SCM filename),
 	    "Search @var{%load-path} for the file named @var{filename},\n"
 	    "which must be readable by the current user.  If @var{filename}\n"
@@ -481,7 +479,7 @@ SCM_DEFINE (scm_xyzzy_sys_search_load_path, "%search-load-path", 1, 0, 0,
 	    "@code{#f}.  Filenames may have any of the optional extensions\n"
 	    "in the @code{%load-extensions} list; @code{%search-load-path}\n"
 	    "will try each extension automatically.")
-#define FUNC_NAME s_scm_xyzzy_sys_search_load_path
+#define FUNC_NAME s_scm_sys_search_load_path
 {
   SCM path = *scm_loc_load_path;
   SCM exts = *scm_loc_load_extensions;
@@ -517,19 +515,20 @@ SCM_DEFINE (scm_xyzzy_primitive_load_path, "primitive-load-path", 1, 0, 0,
   filename_len = strlen (filename_chars);
   scm_dynwind_free (filename_chars);
   
-  full_filename = scm_xyzzy_sys_search_load_path (filename);
+  full_filename = scm_sys_search_load_path (filename);
 
   if (scm_is_false (full_filename))
     SCM_MISC_ERROR ("Unable to find the file ~S in load path",
 		    scm_list_1 (filename));
 
-  return scm_xyzzy_primitive_load (full_filename);
+  return scm_primitive_load (full_filename);
 }
 #undef FUNC_NAME
 
 SCM
 scm_c_primitive_load_path (const char *filename)
 {
+  fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
   return scm_xyzzy_primitive_load_path (scm_from_locale_string (filename));
 }
 
@@ -561,7 +560,6 @@ scm_init_load ()
 
   scm_listofnullstr = scm_permanent_object (scm_list_1 (scm_nullstr));
   scm_loc_load_path = SCM_VARIABLE_LOC (scm_c_define ("%load-path", SCM_EOL));
-  //scm_loc_load_path = SCM_VARIABLE_LOC (scm_from_locale_string("/usr/share/guile/1.8/"));
   scm_loc_load_extensions
     = SCM_VARIABLE_LOC (scm_c_define ("%load-extensions",
 				      scm_list_2 (scm_from_locale_string (".scm"),
@@ -575,17 +573,15 @@ scm_init_load ()
 
   init_build_info ();
 
-  /* cpp arguments: load.c -DHAVE_CONFIG_H -I.. -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m32 -march=i686 -mtune=atom -fasynchronous-unwind-tables -Wall -Wmissing-prototypes */
-  scm_c_define_gsubr (s_scm_xyzzy_primitive_load, 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load); ;
   scm_c_define_gsubr (s_scm_sys_package_data_dir, 0, 0, 0, (SCM (*)()) scm_sys_package_data_dir); ;
   scm_c_define_gsubr (s_scm_sys_library_dir, 0, 0, 0, (SCM (*)()) scm_sys_library_dir); ;
   scm_c_define_gsubr (s_scm_sys_site_dir, 0, 0, 0, (SCM (*)()) scm_sys_site_dir); ;
   scm_c_define_gsubr (s_scm_parse_path, 1, 1, 0, (SCM (*)()) scm_parse_path); ;
+  scm_c_define_gsubr (s_scm_sys_search_load_path, 1, 0, 0, (SCM (*)()) scm_sys_search_load_path); ;
+
+  scm_c_define_gsubr (s_scm_primitive_load, 1, 0, 0, (SCM (*)()) scm_primitive_load); ;
   scm_c_define_gsubr (s_scm_xyzzy_search_path, 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path); ;
-  scm_c_define_gsubr (s_scm_xyzzy_sys_search_load_path, 1, 0, 0, (SCM (*)()) scm_xyzzy_sys_search_load_path); ;
   scm_c_define_gsubr (s_scm_xyzzy_primitive_load_path, 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load_path); ;
-  
-  /* #include "load.x" */
 }
 
 /*
