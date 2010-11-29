@@ -133,7 +133,7 @@ int xyzzy_file_exists(char *filename);
 // Return a C port that will read the file contents
 SCM xyzzy_make_read_only_port(char *filename);
 
-SCM make_xyzzy (SCM binary_port, unsigned long mode);
+SCM make_xyzzy (SCM binary_port);
     
 #ifdef __cplusplus
 } // end of extern C

@@ -131,10 +131,11 @@ XYZZY::file_exists(const std::string &filespec)
 SCM
 XYZZY::make_read_only_port(const std::string &filespec)
 {
-    _portbits = scm_make_port_type(const_cast<char *>(filespec.c_str()),
-                                   xyzzy_fill_input, xyzzy_write);
-    scm_set_port_flush (_portbits, xyzzy_flush);
-    scm_set_port_close (_portbits, xyzzy_close);
+    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
+    // _portbits = scm_make_port_type(const_cast<char *>(filespec.c_str()),
+    //                                xyzzy_fill_input, xyzzy_write);
+    // scm_set_port_flush (_portbits, xyzzy_flush);
+    // scm_set_port_close (_portbits, xyzzy_close);
 }
 
 string
@@ -207,6 +208,7 @@ extern "C" {
 
 static XYZZY datafile;
 
+#if 0
 void
 xyzzy_flush (SCM port)
 {
@@ -234,38 +236,6 @@ xyzzy_close (SCM port)
 
 SCM_API scm_i_pthread_mutex_t scm_i_port_table_mutex;
 const size_t XYZZY_INPUT_BUFFER_SIZE = 4096;
-    
-SCM
-make_xyzzy (SCM binary_port, unsigned long mode)
-{
-    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
-    
-    SCM port;
-    scm_t_port *c_port;
-    const unsigned long mode_bits = SCM_OPN | mode;
-    scm_t_bits bits = datafile.getPortBits();
-
-    scm_i_pthread_mutex_lock (&scm_i_port_table_mutex);
-    
-    port = scm_new_port_table_entry (bits);
-
-    SCM_SETSTREAM (port, SCM_UNPACK (binary_port));
-    
-    SCM_SET_CELL_TYPE (port, bits | mode_bits);
-    
-    if (SCM_INPUT_PORT_P (port)) {
-            c_port = SCM_PTAB_ENTRY (port);
-            c_port->read_buf = (unsigned char *)scm_gc_malloc (XYZZY_INPUT_BUFFER_SIZE, "port buffer");
-            c_port->read_pos = c_port->read_end = c_port->read_buf;
-            c_port->read_buf_size = XYZZY_INPUT_BUFFER_SIZE;
-            
-            SCM_SET_CELL_WORD_0 (port, SCM_CELL_WORD_0 (port) & ~SCM_BUF0);
-    }
-    scm_i_pthread_mutex_unlock (&scm_i_port_table_mutex);
-    
-    return port;
-}
-
 void
 xyzzy_write (SCM port, const void *data, size_t size)
 {
@@ -296,6 +266,18 @@ xyzzy_fill_input (SCM port)
     }
     
     return *gr_port->read_buf;
+}
+#endif
+    
+SCM
+make_xyzzy (SCM binary_port)
+{
+    fprintf(stderr, "TRACE %s: %d, %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(binary_port));
+    std::string &contents = datafile.get_contents(scm_to_locale_string(binary_port));
+
+    SCM port = scm_open_input_string (scm_from_locale_string (contents.c_str()));
+    
+    return port;
 }
 
 // Initialize with the data file produced by gen-xyzzy.
