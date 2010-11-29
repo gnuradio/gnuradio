@@ -297,6 +297,4 @@ scm_xyzzy_init (void)
 {
     scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
     scm_c_define_gsubr ("make-gnuradio-port", 1, 0, 0, (SCM (*)()) scm_make_gnuradio);
-
-    xyzzy_make_read_only_port("ice-9/boot-9.scm");
 }

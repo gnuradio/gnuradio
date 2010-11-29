@@ -89,9 +89,6 @@ public:
     // Does a file with name 'filename' exist in magic filesystem?
     bool file_exists(const std::string &filespec);
 
-    // Return a C port that will read the file contents
-    SCM make_read_only_port(const std::string &filespec);
-
     /// Parse a string data structure
     static std::string read_string(boost::uint8_t *entry, size_t length);
     static std::string read_string(struct string_entry &entry);
@@ -103,24 +100,15 @@ public:
     boost::shared_ptr<struct directory_entry> read_dir_entry(boost::uint8_t *header);
 
     std::string &get_contents(const std::string &filespec) { return _contents[filespec]; };
-
-    scm_t_bits getPortBits() { return _portbits; };
     
 private:
     std::string   _filespec;
     std::map<std::string, std::string> _contents;
-    scm_t_bits   _portbits;
 };
 
 // C linkage bindings for Guile
 extern "C" {
 #endif
-
-// These are the callbacks for thw guile ports
-int  xyzzy_fill_input (SCM port);
-void xyzzy_write (SCM port, const void *data, size_t size);
-void xyzzy_flush (SCM port);
-int  xyzzy_close (SCM port);
 
 void scm_xyzzy_init (void);
     

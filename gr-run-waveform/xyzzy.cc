@@ -40,7 +40,6 @@ using namespace std;
 typedef void* handle_t;
 
 XYZZY::XYZZY()
-    : _portbits(0)
 {
     // nothing to initialize
 }
@@ -127,17 +126,6 @@ XYZZY::file_exists(const std::string &filespec)
     return false;
 }
 
-// Return a C port that will read the file contents
-SCM
-XYZZY::make_read_only_port(const std::string &filespec)
-{
-    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
-    // _portbits = scm_make_port_type(const_cast<char *>(filespec.c_str()),
-    //                                xyzzy_fill_input, xyzzy_write);
-    // scm_set_port_flush (_portbits, xyzzy_flush);
-    // scm_set_port_close (_portbits, xyzzy_close);
-}
-
 string
 XYZZY::read_string(boost::uint8_t *entry, size_t length)
 {
@@ -211,7 +199,7 @@ static XYZZY datafile;
 SCM
 make_xyzzy (SCM binary_port)
 {
-    fprintf(stderr, "TRACE %s: %d, %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(binary_port));
+    // fprintf(stderr, "TRACE %s: %d, %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(binary_port));
     std::string &contents = datafile.get_contents(scm_to_locale_string(binary_port));
 
     SCM port = scm_open_input_string (scm_from_locale_string (contents.c_str()));
@@ -231,13 +219,6 @@ int
 xyzzy_file_exists(char *filespec)
 {
     return datafile.file_exists(filespec);
-}
-
-// Return a C port that will read the file contents
-SCM
-xyzzy_make_read_only_port(char *filespec)
-{
-    return datafile.make_read_only_port(filespec);
 }
     
 } // end of extern C
