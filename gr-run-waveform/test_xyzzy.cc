@@ -62,31 +62,31 @@ inner_main (void *data, int argc, char **argv)
     SCM s_symbol = scm_c_lookup("result1");
     SCM s_value = scm_variable_ref(s_symbol);
     if (scm_to_locale_string(s_value) == string("/usr/share/guile/1.8/ice-9/boot-9.scm")) {
-        fprintf(stderr, "PASSED: search-path\n");
+        fprintf(stderr, "PASSED: search-path from C\n");
     } else {
-        fprintf(stderr, "FAILED: search-path\n" );
+        fprintf(stderr, "FAILED: search-path from C\n" );
     }
     
     s_symbol = scm_c_lookup("result2");
     s_value = scm_variable_ref(s_symbol);
     if (scm_to_locale_string(s_value) == string("/usr/share/guile/1.8/ice-9/boot-9.scm")) {
-        fprintf(stderr, "PASSED: search-path path-with-xyzzy\n");
+        fprintf(stderr, "PASSED: search-path path-with-xyzzy from C\n");
     } else {
-        fprintf(stderr, "FAILED: search-path path-with-xyzzy\n" );
+        fprintf(stderr, "FAILED: search-path path-with-xyzzy from C\n" );
     }
     s_symbol = scm_c_lookup("result3");
     s_value = scm_variable_ref(s_symbol);
     if (scm_to_locale_string(s_value) == string("/usr/share/guile/1.8/ice-9/boot-9.scm")) {
-        fprintf(stderr, "PASSED: xyzzy-search\n");
+        fprintf(stderr, "PASSED: xyzzy-search from C\n");
     } else {
-        fprintf(stderr, "FAILED: xyzzy-search\n" );
+        fprintf(stderr, "FAILED: xyzzy-search from C\n" );
     }
     s_symbol = scm_c_lookup("result4");
     s_value = scm_variable_ref(s_symbol);
     if (scm_to_locale_string(s_value) == string("/-xyzzy-/ice-9/boot-9.scm")) {
-        fprintf(stderr, "PASSED: xyzzy-search-path path-with-xyzzy\n");
+        fprintf(stderr, "PASSED: xyzzy-search-path path-with-xyzzy from C\n");
     } else {
-        fprintf(stderr, "FAILED: xyzzy-search-path path-with-xyzzy\n" );
+        fprintf(stderr, "FAILED: xyzzy-search-path path-with-xyzzy from C\n" );
     }
     
     // This test loads a scheme test case that defines a 'cat' function to
@@ -101,6 +101,7 @@ inner_main (void *data, int argc, char **argv)
     // It tacky, but the test case defines the name of this input
     // port as 'foo'. So make sure that's what we got...
     s_symbol = scm_c_lookup("foo");
+    // Get the handle to the port
     s_value = scm_variable_ref(s_symbol);
     SCM result = scm_input_port_p (s_value);
     if (scm_is_true(result)) {
