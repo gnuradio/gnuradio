@@ -68,7 +68,8 @@ libruntime_la_SOURCES = 			\
 	gr_vmcircbuf_mmap_tmpfile.cc		\
 	gr_vmcircbuf_createfilemapping.cc	\
 	gr_vmcircbuf_sysv_shm.cc		\
-	gr_select_handler.cc			
+	gr_select_handler.cc			\
+	gr_tag_info.cc
 
 libruntime_qa_la_SOURCES = 			\
 	qa_gr_block.cc				\
@@ -79,6 +80,7 @@ libruntime_qa_la_SOURCES = 			\
 	qa_gr_top_block.cc			\
 	qa_gr_io_signature.cc			\
 	qa_gr_vmcircbuf.cc			\
+	qa_block_tags.cc			\
 	qa_runtime.cc				
 
 grinclude_HEADERS = 				\
@@ -121,7 +123,8 @@ grinclude_HEADERS = 				\
 	gr_tmp_path.h				\
 	gr_types.h				\
 	gr_unittests.h				\
-	gr_vmcircbuf.h				
+	gr_vmcircbuf.h				\
+	gr_tag_info.h
 
 noinst_HEADERS = 				\
 	gr_vmcircbuf_mmap_shm_open.h		\
@@ -136,6 +139,7 @@ noinst_HEADERS = 				\
 	qa_gr_io_signature.h			\
 	qa_gr_top_block.h			\
 	qa_gr_vmcircbuf.h			\
+	qa_block_tags.h				\
 	qa_runtime.h				
 
 if PYTHON

@@ -38,6 +38,7 @@
 #include <qa_gr_hier_block2.h>
 #include <qa_gr_hier_block2_derived.h>
 #include <qa_gr_buffer.h>
+#include <qa_block_tags.h>
 
 CppUnit::TestSuite *
 qa_runtime::suite ()
@@ -52,6 +53,7 @@ qa_runtime::suite ()
   s->addTest (qa_gr_hier_block2::suite ());
   s->addTest (qa_gr_hier_block2_derived::suite ());
   s->addTest (qa_gr_buffer::suite ());
+  s->addTest (qa_block_tags::suite ());
   
   return s;
 }

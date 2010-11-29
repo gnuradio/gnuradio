@@ -141,6 +141,9 @@
 #include <gr_copy.h>
 #include <gr_fll_band_edge_cc.h>
 #include <gr_additive_scrambler_bb.h>
+#include <gr_annotator_alltoall.h>
+#include <gr_annotator_1to1.h>
+#include <gr_burst_tagger.h>
 %}
 
 %include "gr_nop.i"
@@ -262,3 +265,6 @@
 %include "gr_copy.i"
 %include "gr_fll_band_edge_cc.i"
 %include "gr_additive_scrambler_bb.i"
+%include "gr_annotator_alltoall.i"
+%include "gr_annotator_1to1.i"
+%include "gr_burst_tagger.i"

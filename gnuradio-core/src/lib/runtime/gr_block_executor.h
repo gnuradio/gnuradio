@@ -25,6 +25,7 @@
 
 #include <gr_runtime_types.h>
 #include <fstream>
+#include <gruel/pmt.h>
 
 //class gr_block_executor;
 //typedef boost::shared_ptr<gr_block_executor>	gr_block_executor_sptr;
@@ -47,6 +48,8 @@ protected:
   gr_vector_const_void_star	d_input_items;
   std::vector<bool>		d_input_done;
   gr_vector_void_star		d_output_items;
+  std::vector<uint64_t>         d_start_nitems_read; //stores where tag counts are before work
+  std::vector<pmt::pmt_t>       d_returned_tags;
 
  public:
   gr_block_executor(gr_block_sptr block);

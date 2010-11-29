@@ -56,7 +56,8 @@ libio_la_SOURCES = 			\
 	gr_udp_source.cc                \
 	gr_wavfile_sink.cc              \
 	gr_wavfile_source.cc            \
-	gri_wavfile.cc
+	gri_wavfile.cc			\
+	gr_tagged_file_sink.cc
 
 grinclude_HEADERS = 			\
 	gr_file_sink.h			\
@@ -89,7 +90,8 @@ grinclude_HEADERS = 			\
 	gr_udp_source.h                 \
 	gr_wavfile_source.h	        \
 	gr_wavfile_sink.h               \
-	gri_wavfile.h
+	gri_wavfile.h			\
+	gr_tagged_file_sink.h
 
 if PYTHON
 swiginclude_HEADERS =			\
@@ -111,5 +113,6 @@ swiginclude_HEADERS =			\
 	gr_udp_sink.i			\
 	gr_udp_source.i                 \
 	gr_wavfile_source.i             \
-	gr_wavfile_sink.i
+	gr_wavfile_sink.i		\
+	gr_tagged_file_sink.i
 endif
