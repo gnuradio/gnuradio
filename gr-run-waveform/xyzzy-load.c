@@ -257,7 +257,7 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
 	  
 	  /* If the file exists at all, we should return it.  If the
 	     file is inaccessible, then that's an error.  */
-	  fprintf(stderr, "TRACE %s: %d: \"%s\"\n", __FUNCTION__, __LINE__, buf.buf);
+	  /* fprintf(stderr, "TRACE %s: %d: \"%s\"\n", __FUNCTION__, __LINE__, buf.buf); */
 
 	  if (xyzzy_file_exists(buf.buf)
 	      || (stat (buf.buf, &mode) == 0
