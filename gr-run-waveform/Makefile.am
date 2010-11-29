@@ -21,7 +21,10 @@
 
 ACLOCAL_AMFLAGS = -I config
 DIST_SUBDIRS = config
-EXTRA_DIST = gen-xyzzy
+EXTRA_DIST = gen-xyzzy \
+	guile/readline.scm \
+	guile/cat.scm \
+	guile/simple.scm
 
 # build the standalone waveform application
 bin_PROGRAMS = run_waveform
