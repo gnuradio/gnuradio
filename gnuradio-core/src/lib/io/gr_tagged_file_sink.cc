@@ -105,7 +105,9 @@ gr_tagged_file_sink::work (int noutput_items,
 	  // Find time burst occurred by getting latest time tag and extrapolating
 	  // to new time based on sample rate of this block.
 	  std::vector<pmt::pmt_t> time_tags;
-	  get_tags_in_range(time_tags, 0, d_last_N, N, gr_tags::key_time);
+	  //get_tags_in_range(time_tags, 0, d_last_N, N, gr_tags::key_time);
+	  get_tags_in_range(time_tags, 0, d_last_N, N,
+			    pmt::pmt_string_to_symbol("time"));
 	  if(time_tags.size() > 0) {
 	    pmt::pmt_t tag = time_tags[time_tags.size()-1];
 	    

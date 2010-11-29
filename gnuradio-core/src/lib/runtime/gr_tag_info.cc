@@ -28,10 +28,11 @@
 #include <gruel/pmt.h>
 
 namespace gr_tags {
-
+/*
   const pmt::pmt_t key_time = pmt::pmt_string_to_symbol("time");
   const pmt::pmt_t key_sample_rate = pmt::pmt_string_to_symbol("sample_rate");
   const pmt::pmt_t key_frequency = pmt::pmt_string_to_symbol("frequency");
   const pmt::pmt_t key_rssi = pmt::pmt_string_to_symbol("rssi");
   const pmt::pmt_t key_rx_gain = pmt::pmt_string_to_symbol("gain");
+*/
 }

@@ -34,11 +34,13 @@ namespace gr_tags {
     TAG_VALUE_REF
   };
 
+  /*
   extern const pmt::pmt_t key_time;
   extern const pmt::pmt_t key_sample_rate;
   extern const pmt::pmt_t key_frequency;
   extern const pmt::pmt_t key_rssi;
   extern const pmt::pmt_t key_gain;
+  */
 
   /*! 
    * \brief Returns the item \p tag occurred at (as a uint64_t)
