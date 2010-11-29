@@ -89,16 +89,42 @@ inner_main (void *data, int argc, char **argv)
         fprintf(stderr, "FAILED: xyzzy-search-path path-with-xyzzy\n" );
     }
     
-    
+    // This test loads a scheme test case that defines a 'cat' function to
+    // spew the contents of the file from our fake file system.
     file = srcdir;
     file += "/guile/cat.scm";
     if (scm_is_true(scm_c_primitive_load (file.c_str()))) {
         fprintf(stderr, "PASSED: loading cat.scm\n");
     } else {
         fprintf(stderr, "FAILED: loading cat.scm\n" );
-    }    
+    }
+    // It tacky, but the test case defines the name of this input
+    // port as 'foo'. So make sure that's what we got...
     s_symbol = scm_c_lookup("foo");
-    SCM result = scm_input_port_p (s_symbol);
+    s_value = scm_variable_ref(s_symbol);
+    SCM result = scm_input_port_p (s_value);
+    if (scm_is_true(result)) {
+        fprintf(stderr, "PASSED: make-gnuradio-port()\n");
+    } else {
+        fprintf(stderr, "FAILED: make-gnuradio-port()\n" );
+    }
+
+    if (scm_char_ready_p (s_value)) {
+        fprintf(stderr, "PASSED: scm_char_ready_p()\n");
+    } else {
+        fprintf(stderr, "FAILED: scm_char_ready_p()\n" );
+    }
+    
+    char *bar[20];
+    int ret = scm_c_read(s_value, bar, 10);
+    
+    if (ret) {
+        fprintf(stderr, "PASSED: read from port\n");
+    } else {
+        fprintf(stderr, "FAILED: read from port\n" );
+    }
+    
+    result = scm_output_port_p (s_value);
     if (scm_is_true(result)) {
         fprintf(stderr, "FAILED: make-gnuradio-port()\n");
     } else {
