@@ -63,7 +63,7 @@ class gr_block : public gr_basic_block {
     WORK_DONE = -1
   };
 
-  enum TAG_PROPAGATION_POLICY {
+  enum tag_propagation_policy_t {
     TPP_DONT = 0,
     TPP_ALL_TO_ALL = 1,
     TPP_ONE_TO_ONE = 2
@@ -217,12 +217,12 @@ class gr_block : public gr_basic_block {
   /*!
    * \brief Asks for the policy used by the scheduler to moved tags downstream.
    */
-  TAG_PROPAGATION_POLICY tag_propagation_policy();
+  tag_propagation_policy_t tag_propagation_policy();
 
   /*!
    * \brief Set the policy by the scheduler to determine how tags are moved downstream.
    */
-  void set_tag_propagation_policy(TAG_PROPAGATION_POLICY p);
+  void set_tag_propagation_policy(tag_propagation_policy_t p);
 
   // ----------------------------------------------------------------------------
 
@@ -233,7 +233,7 @@ class gr_block : public gr_basic_block {
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
-  TAG_PROPAGATION_POLICY d_tag_propagation_policy; // policy for moving tags downstream
+  tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
     
  protected:
 

@@ -169,14 +169,14 @@ gr_block::get_tags_in_range(std::vector<pmt::pmt_t> &v,
   d_detail->get_tags_in_range(v, which_output, start, end, key);
 }
 
-gr_block::TAG_PROPAGATION_POLICY
+gr_block::tag_propagation_policy_t
 gr_block::tag_propagation_policy()
 {
   return d_tag_propagation_policy;
 }
 
 void
-gr_block::set_tag_propagation_policy(TAG_PROPAGATION_POLICY p)
+gr_block::set_tag_propagation_policy(tag_propagation_policy_t p)
 {
   d_tag_propagation_policy = p;
 }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -88,7 +88,7 @@ min_available_space (gr_block_detail *d, int output_multiple)
 }
 
 static bool
-propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
+propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
 	       const std::vector<uint64_t> &start_nitems_read, double rrate,
 	       std::vector<pmt::pmt_t> &rtags)
 {
@@ -100,10 +100,10 @@ propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
   }
 
   switch(policy) {
-  case(gr_block::TPP_DONT):
+  case gr_block::TPP_DONT:
     return true;
     break;
-  case(gr_block::TPP_ALL_TO_ALL):
+  case gr_block::TPP_ALL_TO_ALL:
     // every tag on every input propogates to everyone downstream
     for(int i = 0; i < d->ninputs(); i++) {
       d->get_tags_in_range(rtags, i, start_nitems_read[i],
@@ -122,7 +122,7 @@ propagate_tags(gr_block::TAG_PROPAGATION_POLICY policy, gr_block_detail *d,
       }
     }
     break;
-  case(gr_block::TPP_ONE_TO_ONE):
+  case gr_block::TPP_ONE_TO_ONE:
     // tags from input i only go to output i
     // this requires d->ninputs() == d->noutputs; this is checked when this
     // type of tag-propagation system is selected in gr_block_detail
@@ -362,7 +362,7 @@ gr_block_executor::run_one_iteration()
     for (int i = 0; i < d->noutputs (); i++)
       d_output_items[i] = d->output(i)->write_pointer();
 
-    // determine where to start looking for new tags as 1 past nitems read
+    // determine where to start looking for new tags
     for (int i = 0; i < d->ninputs(); i++)
       d_start_nitems_read[i] = d->nitems_read(i);
 
