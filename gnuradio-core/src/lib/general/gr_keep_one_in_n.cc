@@ -38,8 +38,9 @@ gr_keep_one_in_n::gr_keep_one_in_n (size_t item_size, int n)
   : gr_block ("keep_one_in_n",
 	      gr_make_io_signature (1, 1, item_size),
 	      gr_make_io_signature (1, 1, item_size)),
-    d_n (n), d_count(n)
+    d_count(n)
 {
+  set_n(n);
 }
 
 void
@@ -50,6 +51,8 @@ gr_keep_one_in_n::set_n(int n)
 
   d_n = n;
   d_count = n;
+
+  set_relative_rate(1.0 / (float)n);
 }
 
 int
