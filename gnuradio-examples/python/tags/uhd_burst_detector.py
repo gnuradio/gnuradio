@@ -10,7 +10,7 @@ from optparse import OptionParser
 
 class uhd_burst_detector(gr.top_block):
     def __init__(self, frequency, sample_rate,
-                 uhd_address="192.168.10.2"):
+                 uhd_address="192.168.10.2", trigger=False):
 
         gr.top_block.__init__(self)
 
@@ -18,9 +18,10 @@ class uhd_burst_detector(gr.top_block):
         self.samp_rate = sample_rate
         self.uhd_addr = uhd_address
         self.gain = 32
+        self.trigger = trigger
         
         self.uhd_src = uhd.single_usrp_source(
-            device_addr="addr="+self.uhd_addr,
+            device_addr=self.uhd_addr,
             io_type=uhd.io_type_t.COMPLEX_FLOAT32,
             num_channels=1,
             )
@@ -53,7 +54,7 @@ class uhd_burst_detector(gr.top_block):
         self.connect((self.uhd_src, 0), (self.tagger, 0))
         self.connect((self.tagger, 0), (self.fsnk, 0))
 
-        if 0:
+        if self.trigger:
             # Connect a dummy signaler to the burst tagger
             self.connect((self.signal, 0), (self.tagger, 1))
 
@@ -74,11 +75,24 @@ class uhd_burst_detector(gr.top_block):
             
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
+    parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
+                      help="select address of the device [default=%default]")
+    #parser.add_option("-A", "--antenna", default=None,
+    #                  help="select Rx Antenna (only on RFX-series boards)")
+    parser.add_option("-f", "--freq", type="eng_float", default=450e6,
+                      help="set frequency to FREQ", metavar="FREQ")
+    parser.add_option("-g", "--gain", type="eng_float", default=0,
+                      help="set gain in dB [default=%default]")
+    parser.add_option("-R", "--rate", type="eng_float", default=200000,
+                      help="set USRP sample rate [default=%default]")
+    parser.add_option("-T", "--trigger", action="store_true", default=False,
+                      help="Use internal trigger instead of detector [default=%default]")
     (options, args) = parser.parse_args()
     
-    frequency = 450e6
-    samp_rate = samp_rate = 200000
-    uhd_addr = "192.168.10.2"
+    frequency = options.freq
+    samp_rate = samp_rate = options.rate
+    uhd_addr = options.address
+    trigger = options.trigger
 
-    tb = uhd_burst_detector(frequency, samp_rate, uhd_addr)
+    tb = uhd_burst_detector(frequency, samp_rate, uhd_addr, trigger)
     tb.run()
