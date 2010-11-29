@@ -118,9 +118,7 @@ int xyzzy_init(char *filename);
 // Does a file with name 'filename' exist in magic filesystem?
 int xyzzy_file_exists(char *filename);
 
-// Return a C port that will read the file contents
-SCM xyzzy_make_read_only_port(char *filename);
-
+// Make a readonly port
 SCM make_xyzzy (SCM binary_port);
     
 #ifdef __cplusplus
