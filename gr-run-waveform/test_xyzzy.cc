@@ -44,7 +44,6 @@ inner_main (void *data, int argc, char **argv)
     fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
     scm_xyzzy_init();
 
-//    const char *ccc = SRCDIR;
     string srcdir = SRCDIR;
 
     // Lasd readline, as it makes life on he guile command lne
@@ -98,6 +97,13 @@ inner_main (void *data, int argc, char **argv)
     } else {
         fprintf(stderr, "FAILED: loading cat.scm\n" );
     }    
+    s_symbol = scm_c_lookup("foo");
+    SCM result = scm_input_port_p (s_symbol);
+    if (scm_is_true(result)) {
+        fprintf(stderr, "FAILED: make-gnuradio-port()\n");
+    } else {
+        fprintf(stderr, "PASSED: make-gnuradio-port()\n" );
+    }
     
     scm_flush_all_ports();
     scm_shell (argc, argv);
