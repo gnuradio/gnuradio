@@ -68,181 +68,6 @@
 // This is the magic number used when loading files
 static const char *MAGIC = "-XyZzY-";
 
-
-/* Loading a file, given an absolute filename.  */
-
-/* Hook to run when we load a file, perhaps to announce the fact somewhere.
-   Applied to the full name of the file.  */
-static SCM *scm_loc_load_hook;
-
-/* The current reader (a fluid).  */
-static SCM the_reader = SCM_BOOL_F;
-static size_t the_reader_fluid_num = 0;
-
-SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0, 
-           (SCM filename),
-	    "Load the file named @var{filename} and evaluate its contents in\n"
-	    "the top-level environment. The load paths are not searched;\n"
-	    "@var{filename} must either be a full pathname or be a pathname\n"
-	    "relative to the current directory.  If the  variable\n"
-	    "@code{%load-hook} is defined, it should be bound to a procedure\n"
-	    "that will be called before any code is loaded.  See the\n"
-	    "documentation for @code{%load-hook} later in this section.")
-#define FUNC_NAME s_scm_primitive_load
-{
-  SCM hook = *scm_loc_load_hook;
-  SCM_VALIDATE_STRING (1, filename);
-
-  size_t len = strlen(scm_to_locale_string(filename));
-  char *ptr = scm_to_locale_string(filename);
-  /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, ptr); */
-  
-  if (scm_is_true (hook) && scm_is_false (scm_procedure_p (hook)))
-    SCM_MISC_ERROR ("value of %load-hook is neither a procedure nor #f",
-		    SCM_EOL);
-
-  if (!scm_is_false (hook))
-    scm_call_1 (hook, filename);
-
-  { /* scope */
-    SCM port;
-    if  (strncmp(ptr, MAGIC, strlen(MAGIC)) == 0) {
-      fprintf(stderr, "FIXME: %s is a XYZZY file system file!\n", ptr+strlen(MAGIC));
-    } else {
-      port = scm_open_file (filename, scm_from_locale_string ("r"));
-    }
-    scm_dynwind_begin (SCM_F_DYNWIND_REWINDABLE);
-    scm_i_dynwind_current_load_port (port);
-
-    while (1)
-      {
-	SCM reader, form;
-
-	/* Lookup and use the current reader to read the next
-	   expression. */
-	reader = SCM_FAST_FLUID_REF (the_reader_fluid_num);
-	if (reader == SCM_BOOL_F)
-	  form = scm_read (port);
-	else
-	  form = scm_call_1 (reader, port);
-
-	if (SCM_EOF_OBJECT_P (form))
-	  break;
-
-	scm_primitive_eval_x (form);
-      }
-
-    scm_dynwind_end ();
-    scm_close_port (port);
-  }
-  return SCM_UNSPECIFIED;
-}
-#undef FUNC_NAME
-
-SCM
-scm_c_primitive_load (const char *filename)
-{
-    return scm_primitive_load (scm_from_locale_string (filename));
-}
-
-
-/* Builtin path to scheme library files. */
-#ifdef SCM_PKGDATA_DIR
-SCM_DEFINE (scm_sys_package_data_dir, "%package-data-dir", 0, 0, 0, 
-            (),
-	    "Return the name of the directory where Scheme packages, modules and\n"
-	    "libraries are kept.  On most Unix systems, this will be\n"
-	    "@samp{/usr/local/share/guile}.")
-#define FUNC_NAME s_scm_sys_package_data_dir
-{
-  return scm_from_locale_string (SCM_PKGDATA_DIR);
-}
-#undef FUNC_NAME
-#endif /* SCM_PKGDATA_DIR */
-
-#ifdef SCM_LIBRARY_DIR
-SCM_DEFINE (scm_sys_library_dir, "%library-dir", 0,0,0,
-            (),
-	    "Return the directory where the Guile Scheme library files are installed.\n"
-	    "E.g., may return \"/usr/share/guile/1.3.5\".")
-#define FUNC_NAME s_scm_sys_library_dir
-{
-  return scm_from_locale_string (SCM_LIBRARY_DIR);
-}
-#undef FUNC_NAME
-#endif /* SCM_LIBRARY_DIR */
-
-#ifdef SCM_SITE_DIR
-SCM_DEFINE (scm_sys_site_dir, "%site-dir", 0,0,0,
-            (),
-	    "Return the directory where the Guile site files are installed.\n"
-	    "E.g., may return \"/usr/share/guile/site\".")
-#define FUNC_NAME s_scm_sys_site_dir
-{
-  return scm_from_locale_string (SCM_SITE_DIR);
-}
-#undef FUNC_NAME
-#endif /* SCM_SITE_DIR */
-
-
-
-
-/* Initializing the load path, and searching it.  */
-
-/* List of names of directories we search for files to load.  */
-static SCM *scm_loc_load_path;
-
-/* List of extensions we try adding to the filenames.  */
-static SCM *scm_loc_load_extensions;
-
-
-SCM_DEFINE (scm_parse_path, "parse-path", 1, 1, 0, 
-            (SCM path, SCM tail),
-	    "Parse @var{path}, which is expected to be a colon-separated\n"
-	    "string, into a list and return the resulting list with\n"
-	    "@var{tail} appended. If @var{path} is @code{#f}, @var{tail}\n"
-	    "is returned.")
-#define FUNC_NAME s_scm_parse_path
-{
-#ifdef __MINGW32__
-  SCM sep = SCM_MAKE_CHAR (';');
-#else
-  SCM sep = SCM_MAKE_CHAR (':');
-#endif
-  
-  if (SCM_UNBNDP (tail))
-    tail = SCM_EOL;
-  return (scm_is_false (path)
-	  ? tail
-	  : scm_append_x (scm_list_2 (scm_string_split (path, sep), tail)));
-}
-#undef FUNC_NAME
-
-
-/* Initialize the global variable %load-path, given the value of the
-   SCM_SITE_DIR and SCM_LIBRARY_DIR preprocessor symbols and the
-   GUILE_LOAD_PATH environment variable.  */
-void
-scm_init_load_path ()
-{
-  char *env;
-  SCM path = SCM_EOL;
-
-  /* fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__); */
-
-#ifdef SCM_LIBRARY_DIR
-  path = scm_list_3 (scm_from_locale_string (SCM_SITE_DIR),
-		     scm_from_locale_string (SCM_LIBRARY_DIR),
-		     scm_from_locale_string (SCM_PKGDATA_DIR));
-#endif /* SCM_LIBRARY_DIR */
-
-  env = getenv ("GUILE_LOAD_PATH");
-  if (env)
-    path = scm_parse_path (scm_from_locale_string (env), path);
-
-  *scm_loc_load_path = path;
-}
-
 SCM scm_listofnullstr;
 
 /* Utility functions for assembling C strings in a buffer.
@@ -315,14 +140,13 @@ stringbuf_cat (struct stringbuf *buf, char *str)
     }
 }
 
-  
 /* Search PATH for a directory containing a file named FILENAME.
    The file must be readable, and not a directory.
    If we find one, return its full filename; otherwise, return #f.
    If FILENAME is absolute, return it unchanged.
    If given, EXTENSIONS is a list of strings; for each directory 
    in PATH, we search for FILENAME concatenated with each EXTENSION.  */
-SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
+SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
            (SCM path, SCM filename, SCM extensions),
 	    "Search @var{path} for a directory containing a file named\n"
 	    "@var{filename}. The file must be readable, and not a directory.\n"
@@ -338,7 +162,7 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   size_t filename_len;
   SCM result = SCM_BOOL_F;
 
-  /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename)); */
+  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename)); 
 
   if (SCM_UNBNDP (extensions))
     extensions = SCM_EOL;
@@ -360,12 +184,6 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   if (filename_len >= 1 && filename_chars[0] == '/')
 #endif
     {
-      /* Look in the fake filesystem for this file. If we find it, we prepend a
-         magic number to the front so we can identify these special files later
-         on when trying to read from them. */
-      if (xyzzy_file_exists(filename_chars)) {
-        filename = scm_from_locale_string (filename_chars);
-      }
       scm_dynwind_end ();
       return filename;
     }
@@ -441,12 +259,20 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
 	  /* If the file exists at all, we should return it.  If the
 	     file is inaccessible, then that's an error.  */
 
-	  if (stat (buf.buf, &mode) == 0
-	      && ! (mode.st_mode & S_IFDIR))
-	    {
-	      result = scm_from_locale_string (buf.buf);
-	      goto end;
-	    }
+          
+          /* Look in the fake filesystem for this file. If we find it, we prepend a
+             magic number to the front so we can identify these special files later
+             on when trying to read from them. */
+          if (xyzzy_file_exists(filename_chars)) {
+            filename = scm_from_locale_string (filename_chars);
+          } else {
+            if (stat (buf.buf, &mode) == 0
+                && ! (mode.st_mode & S_IFDIR))
+              {
+                result = scm_from_locale_string (buf.buf);
+                goto end;
+              }
+          }
 	}
       
       if (!SCM_NULL_OR_NIL_P (exts))
@@ -463,127 +289,3 @@ SCM_DEFINE (scm_xyzzy_search_path, "search-path", 2, 1, 0,
   return result;
 }
 #undef FUNC_NAME
-
-
-/* Search %load-path for a directory containing a file named FILENAME.
-   The file must be readable, and not a directory.
-   If we find one, return its full filename; otherwise, return #f.
-   If FILENAME is absolute, return it unchanged.  */
-SCM_DEFINE (scm_sys_search_load_path, "%search-load-path", 1, 0, 0, 
-	    (SCM filename),
-	    "Search @var{%load-path} for the file named @var{filename},\n"
-	    "which must be readable by the current user.  If @var{filename}\n"
-	    "is found in the list of paths to search or is an absolute\n"
-	    "pathname, return its full pathname.  Otherwise, return\n"
-	    "@code{#f}.  Filenames may have any of the optional extensions\n"
-	    "in the @code{%load-extensions} list; @code{%search-load-path}\n"
-	    "will try each extension automatically.")
-#define FUNC_NAME s_scm_sys_search_load_path
-{
-  SCM path = *scm_loc_load_path;
-  SCM exts = *scm_loc_load_extensions;
-  SCM_VALIDATE_STRING (1, filename);
-
-  /* fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__); */
-  
-  if (scm_ilength (path) < 0)
-    SCM_MISC_ERROR ("%load-path is not a proper list", SCM_EOL);
-  if (scm_ilength (exts) < 0)
-    SCM_MISC_ERROR ("%load-extension list is not a proper list", SCM_EOL);
-  
-  return scm_xyzzy_search_path (path, filename, exts);
-}
-#undef FUNC_NAME
-
-
-SCM_DEFINE (scm_xyzzy_primitive_load_path, "primitive-load-path", 1, 0, 0, 
-	    (SCM filename),
-	    "Search @var{%load-path} for the file named @var{filename} and\n"
-	    "load it into the top-level environment.  If @var{filename} is a\n"
-	    "relative pathname and is not found in the list of search paths,\n"
-	    "an error is signalled.")
-#define FUNC_NAME s_scm_xyzzy_primitive_load_path
-{
-  SCM full_filename;
-  char *filename_chars;
-  size_t filename_len;
-  
-  /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, filename_chars); */
-
-  filename_chars = scm_to_locale_string (filename);
-  filename_len = strlen (filename_chars);
-  scm_dynwind_free (filename_chars);
-  
-  full_filename = scm_sys_search_load_path (filename);
-
-  if (scm_is_false (full_filename))
-    SCM_MISC_ERROR ("Unable to find the file ~S in load path",
-		    scm_list_1 (filename));
-
-  return scm_primitive_load (full_filename);
-}
-#undef FUNC_NAME
-
-SCM
-scm_c_primitive_load_path (const char *filename)
-{
-  return scm_xyzzy_primitive_load_path (scm_from_locale_string (filename));
-}
-
-
-/* Information about the build environment.  */
-
-/* Initialize the scheme variable %guile-build-info, based on data
-   provided by the Makefile, via libpath.h.  */
-static void
-init_build_info ()
-{
-  static struct { char *name; char *value; } info[] = SCM_BUILD_INFO;
-  SCM *loc = SCM_VARIABLE_LOC (scm_c_define ("%guile-build-info", SCM_EOL));
-  unsigned long i;
-
-  for (i = 0; i < (sizeof (info) / sizeof (info[0])); i++)
-    {
-      SCM key = scm_from_locale_symbol (info[i].name);
-      SCM val = scm_from_locale_string (info[i].value);
-      *loc = scm_acons (key, val, *loc);
-    }
-}
-
-
-void
-scm_init_load ()
-{
-  /* fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__); */
-
-  scm_listofnullstr = scm_permanent_object (scm_list_1 (scm_nullstr));
-  scm_loc_load_path = SCM_VARIABLE_LOC (scm_c_define ("%load-path", SCM_EOL));
-  scm_loc_load_extensions
-    = SCM_VARIABLE_LOC (scm_c_define ("%load-extensions",
-				      scm_list_2 (scm_from_locale_string (".scm"),
-						  scm_nullstr)));
-  scm_loc_load_hook = SCM_VARIABLE_LOC (scm_c_define ("%load-hook", SCM_BOOL_F));
-
-  the_reader = scm_make_fluid ();
-  the_reader_fluid_num = SCM_FLUID_NUM (the_reader);
-  SCM_FAST_FLUID_SET_X (the_reader_fluid_num, SCM_BOOL_F);
-  scm_c_define("current-reader", the_reader);
-
-  init_build_info ();
-
-  scm_c_define_gsubr (s_scm_sys_package_data_dir, 0, 0, 0, (SCM (*)()) scm_sys_package_data_dir); ;
-  scm_c_define_gsubr (s_scm_sys_library_dir, 0, 0, 0, (SCM (*)()) scm_sys_library_dir); ;
-  scm_c_define_gsubr (s_scm_sys_site_dir, 0, 0, 0, (SCM (*)()) scm_sys_site_dir); ;
-  scm_c_define_gsubr (s_scm_parse_path, 1, 1, 0, (SCM (*)()) scm_parse_path); ;
-  scm_c_define_gsubr (s_scm_sys_search_load_path, 1, 0, 0, (SCM (*)()) scm_sys_search_load_path); ;
-
-  scm_c_define_gsubr (s_scm_primitive_load, 1, 0, 0, (SCM (*)()) scm_primitive_load); ;
-  scm_c_define_gsubr (s_scm_xyzzy_search_path, 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path); ;
-  scm_c_define_gsubr (s_scm_xyzzy_primitive_load_path, 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load_path); ;
-}
-
-/*
-  Local Variables:
-  c-file-style: "gnu"
-  End:
-*/
