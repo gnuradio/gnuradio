@@ -162,10 +162,10 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
   size_t filename_len;
   SCM result = SCM_BOOL_F;
 
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(filename)); 
-
   if (SCM_UNBNDP (extensions))
     extensions = SCM_EOL;
+
+  /* fprintf(stderr, "TRACE %s: %d %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(SCM_CAR(path))); */
 
   scm_dynwind_begin (0);
   filename_chars = scm_to_locale_string (filename);
@@ -222,7 +222,6 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
   buf.buf_len = 512;
   buf.buf = scm_malloc (buf.buf_len);
   scm_dynwind_unwind_handler (stringbuf_free, &buf, SCM_F_WIND_EXPLICITLY);
-
   
   /* Try every path element.
    */
@@ -258,13 +257,15 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
 	  
 	  /* If the file exists at all, we should return it.  If the
 	     file is inaccessible, then that's an error.  */
-
-          
-          /* Look in the fake filesystem for this file. If we find it, we prepend a
-             magic number to the front so we can identify these special files later
-             on when trying to read from them. */
-          if (xyzzy_file_exists(filename_chars)) {
-            filename = scm_from_locale_string (filename_chars);
+          const char *magic = "/-xyzzy-";
+          if (strncmp(scm_to_locale_string(dir), magic, strlen(magic)) == 0) {
+            /* Look in the fake filesystem for this file. If we find it, we prepend a
+               magic number to the front so we can identify these special files later
+               on when trying to read from them. */
+            if (xyzzy_file_exists(buf.buf)) {
+              result = scm_from_locale_string (buf.buf);
+              goto end;
+            }
           } else {
             if (stat (buf.buf, &mode) == 0
                 && ! (mode.st_mode & S_IFDIR))
