@@ -207,67 +207,6 @@ XYZZY::read_dir_entry(boost::uint8_t *entry)
 extern "C" {
 
 static XYZZY datafile;
-
-#if 0
-void
-xyzzy_flush (SCM port)
-{
-    SCM bport = SCM_PACK(SCM_STREAM(port));
-    scm_t_port *c_port = SCM_PTAB_ENTRY (port);
-    size_t count = c_port->write_pos - c_port->write_buf;
-    
-    scm_c_write (bport, c_port->write_buf, count);
-    
-    c_port->write_pos = c_port->write_buf;
-    c_port->rw_active = SCM_PORT_NEITHER;
-    
-    scm_force_output (bport);
-}
-
-int
-xyzzy_close (SCM port)
-{
-    if (SCM_OUTPUT_PORT_P (port)) {
-        // XYZZY::flush (port);
-        return scm_is_true (scm_close_port (SCM_PACK(SCM_STREAM(port)))) ? 0 : -1;
-    }
-    return 0;
-}
-
-SCM_API scm_i_pthread_mutex_t scm_i_port_table_mutex;
-const size_t XYZZY_INPUT_BUFFER_SIZE = 4096;
-void
-xyzzy_write (SCM port, const void *data, size_t size)
-{
-    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
-    // This is a read only file
-}
-
-int
-xyzzy_fill_input (SCM port)
-{
-    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
-    
-    scm_t_port *gr_port = SCM_PTAB_ENTRY (port);
-    
-    // if (gr_port->read_pos + gr_port->read_buf_size > gr_port->read_end) {
-    //     return EOF;
-    // }
-
-    // FIXME: this is obviously a bogus call, as it'll always return an empty file
-    std::string &contents = datafile.get_contents("foo");
-    if (contents.empty()) {
-        // buffer start.
-        gr_port->read_buf = const_cast<unsigned char *>(gr_port->read_pos);
-        // pointer to last buffered char + 1
-        gr_port->read_end = gr_port->read_buf + gr_port->read_buf_size;
-        // the next unread char.
-        gr_port->read_pos += gr_port->read_buf_size;
-    }
-    
-    return *gr_port->read_buf;
-}
-#endif
     
 SCM
 make_xyzzy (SCM binary_port)
