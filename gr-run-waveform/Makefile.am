@@ -47,7 +47,7 @@ test_xyzzy_CPPFLAGS = $(GUILE_CFLAGS) \
 test_xyzzy_LDADD = $(GUILE_LIBS)
 test_xyzzy_DEPENDENCIES = $(BUILT_SOURCES)
 
-test_waveform_SOURCES = test_waveform.cc xyzzy.cc xyzzy-load.c
+test_waveform_SOURCES = test_waveform.c xyzzy.cc xyzzy-load.c
 test_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
 	-DDATAROOTDIR=\"$(datarootdir)\"

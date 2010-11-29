@@ -20,25 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cstdio>
-#include <cstdlib>
-#include <string>
-#include <iostream>
-#include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <libguile.h>
 
-using namespace std;
-
 #include "xyzzy.h"
-
-extern "C" {
-extern SCM scm_xyzzy_search_path (SCM path, SCM filename, SCM extensions);
-}
 
 static void
 inner_main (void *data, int argc, char **argv)
 {
-    scm_c_define_gsubr ("xyzzy_search_path", 2, 1, 0,   (SCM (*)()) scm_xyzzy_search_path);
+    scm_xyzzy_init();
 
     scm_shell (argc, argv);
 }
