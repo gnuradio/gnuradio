@@ -38,19 +38,68 @@ using namespace std;
 boost::uint8_t hex2digit(boost::uint8_t digit);
 boost::shared_array<boost::uint8_t> hex2mem(const std::string &str);
 
-static SCM
-test_xyzzy (void)
-{
-    cerr << "FIXME:" << endl;
-    SCM port;
-    scm_input_port_p(port);
-}
-
 static void
 inner_main (void *data, int argc, char **argv)
 {
-    scm_c_define_gsubr ("test-xyzzy", 0, 0, 0, test_xyzzy);
+    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
+    scm_xyzzy_init();
 
+//    const char *ccc = SRCDIR;
+    string srcdir = SRCDIR;
+
+    // Lasd readline, as it makes life on he guile command lne
+    string file = srcdir;
+    file += "/guile/readline.scm";    
+    scm_c_primitive_load (file.c_str());
+    
+    file = srcdir;
+    file += "/guile/simple.scm";
+    SCM simple = scm_c_primitive_load (file.c_str());
+    if (scm_is_true(scm_c_primitive_load (file.c_str()))) {
+        fprintf(stderr, "PASSED: loading simple.scm\n");
+    } else {
+        fprintf(stderr, "FAILED: loading simple.scm\n" );
+    }
+    SCM s_symbol = scm_c_lookup("result1");
+    SCM s_value = scm_variable_ref(s_symbol);
+    if (scm_to_locale_string(s_value) == string("/usr/share/guile/1.8/ice-9/boot-9.scm")) {
+        fprintf(stderr, "PASSED: search-path\n");
+    } else {
+        fprintf(stderr, "FAILED: search-path\n" );
+    }
+    
+    s_symbol = scm_c_lookup("result2");
+    s_value = scm_variable_ref(s_symbol);
+    if (scm_to_locale_string(s_value) == string("/usr/share/guile/1.8/ice-9/boot-9.scm")) {
+        fprintf(stderr, "PASSED: search-path path-with-xyzzy\n");
+    } else {
+        fprintf(stderr, "FAILED: search-path path-with-xyzzy\n" );
+    }
+    s_symbol = scm_c_lookup("result3");
+    s_value = scm_variable_ref(s_symbol);
+    if (scm_to_locale_string(s_value) == string("/usr/share/guile/1.8/ice-9/boot-9.scm")) {
+        fprintf(stderr, "PASSED: xyzzy-search\n");
+    } else {
+        fprintf(stderr, "FAILED: xyzzy-search\n" );
+    }
+    s_symbol = scm_c_lookup("result4");
+    s_value = scm_variable_ref(s_symbol);
+    if (scm_to_locale_string(s_value) == string("/-xyzzy-/ice-9/boot-9.scm")) {
+        fprintf(stderr, "PASSED: xyzzy-search-path path-with-xyzzy\n");
+    } else {
+        fprintf(stderr, "FAILED: xyzzy-search-path path-with-xyzzy\n" );
+    }
+    
+    
+    file = srcdir;
+    file += "/guile/cat.scm";
+    if (scm_is_true(scm_c_primitive_load (file.c_str()))) {
+        fprintf(stderr, "PASSED: loading cat.scm\n");
+    } else {
+        fprintf(stderr, "FAILED: loading cat.scm\n" );
+    }    
+    
+    scm_flush_all_ports();
     scm_shell (argc, argv);
 }
 
