@@ -110,7 +110,13 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
 			   d->nitems_read(i));
 
       std::vector<pmt::pmt_t>::iterator t;
-      if(rrate != 1.0) {
+      if(rrate == 1.0) {
+	for(t = rtags.begin(); t != rtags.end(); t++) {
+	  for(int o = 0; o < d->noutputs(); o++)
+	    d->output(o)->add_item_tag(*t);
+	}
+      }
+      else {
 	for(t = rtags.begin(); t != rtags.end(); t++) {
 	  uint64_t newcount = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*t, 0));
 	  pmt::pmt_t newtup = pmt::mp(pmt::pmt_from_uint64(newcount * rrate),
@@ -120,12 +126,6 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
 	  
 	  for(int o = 0; o < d->noutputs(); o++)
 	    d->output(o)->add_item_tag(newtup);
-	}
-      }
-      else {
-	for(t = rtags.begin(); t != rtags.end(); t++) {
-	  for(int o = 0; o < d->noutputs(); o++)
-	    d->output(o)->add_item_tag(*t);
 	}
       }
     }
