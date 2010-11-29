@@ -121,6 +121,8 @@ int  xyzzy_fill_input (SCM port);
 void xyzzy_write (SCM port, const void *data, size_t size);
 void xyzzy_flush (SCM port);
 int  xyzzy_close (SCM port);
+
+void scm_xyzzy_init (void);
     
 // Initialize with the data file produced by gen-xyzzy.
 int xyzzy_init(char *filename);

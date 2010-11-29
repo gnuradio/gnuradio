@@ -289,3 +289,10 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
   return result;
 }
 #undef FUNC_NAME
+
+void
+scm_xyzzy_init (void)
+{
+    scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
+}
+
