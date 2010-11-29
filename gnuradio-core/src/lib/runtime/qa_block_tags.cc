@@ -40,11 +40,18 @@
 
 using namespace pmt;
 
+// set to 1 to turn on debug output
+// The debug output fully checks that the tags seen are what are expected. While
+// this behavior currently works with our implementation, there is no guarentee
+// that the tags will be coming in this specific order, so it's dangerous to
+// rely on this as a test of the tag system working. We would really want to
+// tags we know we should see and then test that they all occur once, but in no
+// particular order.
+#define QA_TAGS_DEBUG 0
+
 void
 qa_block_tags::t0 ()
 {
-  printf("\nqa_block_tags::t0\n");
-
   unsigned int N = 1000;
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
@@ -71,8 +78,6 @@ qa_block_tags::t0 ()
 void
 qa_block_tags::t1 ()
 {
-  printf("\nqa_block_tags::t1\n");
-
   int N = 40000;
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
@@ -98,6 +103,16 @@ qa_block_tags::t1 ()
 
   tb->run();
 
+  std::vector<pmt::pmt_t> tags0 = ann0->data();
+  std::vector<pmt::pmt_t> tags3 = ann3->data();
+  std::vector<pmt::pmt_t> tags4 = ann4->data();
+
+  // The first annotator does not receive any tags from the null sink upstream
+  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
+  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)8);
+  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)8);
+
+#if QA_TAGS_DEBUG
   // Kludge together the tags that we know should result from the above graph
   std::stringstream str0, str1, str2;
   str0 << ann0->name() << ann0->unique_id();
@@ -123,36 +138,27 @@ qa_block_tags::t1 ()
   expected_tags4[5] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
   expected_tags4[6] = mp(pmt_from_uint64(30000), mp(str2.str()), mp("seq"), mp(3));
   expected_tags4[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+
+  std::cout << std::endl << "qa_block_tags::t1" << std::endl;
   
-  std::vector<pmt::pmt_t> tags0 = ann0->data();
-  std::vector<pmt::pmt_t> tags3 = ann3->data();
-  std::vector<pmt::pmt_t> tags4 = ann4->data();
-
-  // The first annotator does not receive any tags from the null sink upstream
-  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
-
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
-  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)8);
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    //pmt_equal(tags3[i], expected_tags3[i])
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags3[i]), pmt_write_string(expected_tags3[i]));
   }
 
   // For annotator 4, we know it gets tags from ann0 and ann2, test this
   std::cout << std::endl;
-  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)8);
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags4[i]), pmt_write_string(expected_tags4[i]));
   }
+#endif
 }
 
 void
 qa_block_tags::t2 ()
 {
-  printf("\nqa_block_tags::t2\n");
-
   int N = 40000;
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
@@ -181,6 +187,23 @@ qa_block_tags::t2 ()
 
   tb->run();
 
+  std::vector<pmt::pmt_t> tags0 = ann0->data();
+  std::vector<pmt::pmt_t> tags1 = ann1->data();
+  std::vector<pmt::pmt_t> tags2 = ann2->data();
+  std::vector<pmt::pmt_t> tags3 = ann4->data();
+  std::vector<pmt::pmt_t> tags4 = ann4->data();
+
+  // The first annotator does not receive any tags from the null sink upstream
+  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
+  CPPUNIT_ASSERT_EQUAL(tags1.size(), (size_t)8);
+
+  // Make sure the rest all have 12 tags
+  CPPUNIT_ASSERT_EQUAL(tags2.size(), (size_t)12);
+  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)12);
+  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)12);
+
+
+#if QA_TAGS_DEBUG
   // Kludge together the tags that we know should result from the above graph
   std::stringstream str0, str1;
   str0 << ann0->name() << ann0->unique_id();
@@ -214,20 +237,7 @@ qa_block_tags::t2 ()
   expected_tags4[10] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
   expected_tags4[11] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
 
-  std::vector<pmt::pmt_t> tags0 = ann0->data();
-  std::vector<pmt::pmt_t> tags1 = ann1->data();
-  std::vector<pmt::pmt_t> tags2 = ann2->data();
-  std::vector<pmt::pmt_t> tags3 = ann4->data();
-  std::vector<pmt::pmt_t> tags4 = ann4->data();
-
-  // The first annotator does not receive any tags from the null sink upstream
-  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
-  CPPUNIT_ASSERT_EQUAL(tags1.size(), (size_t)8);
-
-  // Make sure the rest all have 12 tags
-  CPPUNIT_ASSERT_EQUAL(tags2.size(), (size_t)12);
-  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)12);
-  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)12);
+  std::cout << std::endl << "qa_block_tags::t2" << std::endl;
 
   // For annotator[2-4], we know it gets tags from ann0 and ann1
   // but the tags from the different outputs of ann1 are different for each.
@@ -235,24 +245,21 @@ qa_block_tags::t2 ()
   // inconceivable for ann3 to have it wrong.
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
-    //pmt_equal(tags2[i], expected_tags2[i])
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags2[i]), pmt_write_string(expected_tags2[i]));
   }
 
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    //pmt_equal(tags4[i], expected_tags4[i])
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags4[i]), pmt_write_string(expected_tags4[i]));
   }
+#endif
 }
 
 
 void
 qa_block_tags::t3 ()
 {
-  printf("\nqa_block_tags::t3\n");
-
   int N = 40000;
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
@@ -279,6 +286,17 @@ qa_block_tags::t3 ()
 
   tb->run();
 
+  
+  std::vector<pmt::pmt_t> tags0 = ann0->data();
+  std::vector<pmt::pmt_t> tags3 = ann3->data();
+  std::vector<pmt::pmt_t> tags4 = ann4->data();
+
+  // The first annotator does not receive any tags from the null sink upstream
+  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
+  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)8);
+  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)8);
+
+#if QA_TAGS_DEBUG
   // Kludge together the tags that we know should result from the above graph
   std::stringstream str0, str1, str2;
   str0 << ann0->name() << ann0->unique_id();
@@ -304,37 +322,28 @@ qa_block_tags::t3 ()
   expected_tags4[5] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
   expected_tags4[6] = mp(pmt_from_uint64(30000), mp(str2.str()), mp("seq"), mp(3));
   expected_tags4[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+
+  std::cout << std::endl << "qa_block_tags::t3" << std::endl;
   
-  std::vector<pmt::pmt_t> tags0 = ann0->data();
-  std::vector<pmt::pmt_t> tags3 = ann3->data();
-  std::vector<pmt::pmt_t> tags4 = ann4->data();
-
-  // The first annotator does not receive any tags from the null sink upstream
-  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
-
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
-  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)8);
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    //pmt_equal(tags3[i], expected_tags3[i])
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags3[i]), pmt_write_string(expected_tags3[i]));
   }
 
   // For annotator 4, we know it gets tags from ann0 and ann2, test this
   std::cout << std::endl;
-  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)8);
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags4[i]), pmt_write_string(expected_tags4[i]));
   }
+#endif
 }
 
 
 void
 qa_block_tags::t4 ()
 {
-  printf("\nqa_block_tags::t4\n");
-
   int N = 40000;
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
@@ -354,6 +363,9 @@ qa_block_tags::t4 ()
   tb->connect(ann1, 0, snk0, 0);
   tb->connect(ann2, 0, snk1, 0);
 
+  std::cerr << std::endl
+	    << "NOTE: This is supposed to produce an error from gr_block_executor"
+	    << std::endl;
   tb->run();
 }
 
@@ -361,16 +373,13 @@ qa_block_tags::t4 ()
 void
 qa_block_tags::t5 ()
 {
-  printf("\nqa_block_tags::t5\n");
-
   int N = 40000;
   gr_top_block_sptr tb = gr_make_top_block("top");
   gr_block_sptr src (gr_make_null_source(sizeof(float)));
   gr_block_sptr head (gr_make_head(sizeof(float), N));
   gr_annotator_alltoall_sptr ann0 (gr_make_annotator_alltoall(10000, sizeof(float)));
-  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(10000,  sizeof(float)));
+  gr_annotator_alltoall_sptr ann1 (gr_make_annotator_alltoall(10000, sizeof(float)));
   gr_annotator_alltoall_sptr ann2 (gr_make_annotator_alltoall(1000,  sizeof(float)));
-  gr_annotator_alltoall_sptr ann3 (gr_make_annotator_alltoall(2000,  sizeof(float)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(float)));
 
   // Rate change blocks
@@ -385,6 +394,17 @@ qa_block_tags::t5 ()
 
   tb->run();
 
+  std::vector<pmt::pmt_t> tags0 = ann0->data();
+  std::vector<pmt::pmt_t> tags1 = ann1->data();
+  std::vector<pmt::pmt_t> tags2 = ann2->data();
+
+  // The first annotator does not receive any tags from the null sink upstream
+  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
+  CPPUNIT_ASSERT_EQUAL(tags1.size(), (size_t)4);
+  CPPUNIT_ASSERT_EQUAL(tags2.size(), (size_t)8);
+
+
+#if QA_TAGS_DEBUG
   // Kludge together the tags that we know should result from the above graph
   std::stringstream str0, str1, str2;
   str0 << ann0->name() << ann0->unique_id();
@@ -409,29 +429,22 @@ qa_block_tags::t5 ()
   expected_tags2[8] = mp(pmt_from_uint64(4000), mp(str1.str()), mp("seq"), mp(4));
   expected_tags2[9] = mp(pmt_from_uint64(4000), mp(str0.str()), mp("seq"), mp(4));
 
-  std::vector<pmt::pmt_t> tags0 = ann0->data();
-  std::vector<pmt::pmt_t> tags1 = ann1->data();
-  std::vector<pmt::pmt_t> tags2 = ann2->data();
-
-  // The first annotator does not receive any tags from the null sink upstream
-  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
+  std::cout << std::endl << "qa_block_tags::t5" << std::endl;
 
   // annotator 1 gets tags from annotator 0
   std::cout << "tags1.size(): " << tags1.size() << std::endl;
-  CPPUNIT_ASSERT_EQUAL(tags1.size(), (size_t)4);
   for(size_t i = 0; i < tags1.size(); i++) {
     std::cout << "tags1[" << i << "] = " << tags1[i] << "\t\t" << expected_tags1[i] << std::endl;
-    //pmt_equal(tags1[i], expected_tags1[i])
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags1[i]), pmt_write_string(expected_tags1[i]));
   }
 
   // annotator 2 gets tags from annotators 0 and 1
   std::cout << std::endl;
   std::cout << "tags2.size(): " << tags2.size() << std::endl;
-  CPPUNIT_ASSERT_EQUAL(tags2.size(), (size_t)8);
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
     CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags2[i]), pmt_write_string(expected_tags2[i]));
   }
+#endif
 }
 
