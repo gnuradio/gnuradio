@@ -288,21 +288,7 @@ SCM_DEFINE (scm_make_gnuradio, "make-gnuradio-port", 1, 0, 0,
  "Return a new port which reads from @var{port}")
 #define FUNC_NAME s_scm_make_gnuradio
 {
-    SCM result;
-    unsigned long mode = 0;
-
-    fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(port));
-
-    SCM_VALIDATE_PORT (SCM_ARG1, port);
-    
-    if (scm_is_true (scm_output_port_p (port)))
-        mode |= SCM_WRTNG;
-    else if (scm_is_true (scm_input_port_p (port)))
-        mode |= SCM_RDNG;
-
-    result = make_xyzzy (port, mode);
-    
-    return result;
+    return make_xyzzy (port);
 }    
 #undef FUNC_NAME
 
@@ -311,4 +297,6 @@ scm_xyzzy_init (void)
 {
     scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
     scm_c_define_gsubr ("make-gnuradio-port", 1, 0, 0, (SCM (*)()) scm_make_gnuradio);
+
+    xyzzy_make_read_only_port("ice-9/boot-9.scm");
 }
