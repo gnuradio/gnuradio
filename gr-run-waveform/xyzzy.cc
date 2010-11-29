@@ -106,7 +106,7 @@ XYZZY::init(const std::string &file)
     cout << "Loaded " << _contents.size() << " Filesystem entries" << endl;
     
     in.close();
-    
+
     return true;
 };
 
@@ -128,7 +128,6 @@ XYZZY::file_exists(const std::string &filespec)
 }
 
 // Return a C port that will read the file contents
-//    SCM make_read_only_port(handle, const std::string &filespec)
 SCM
 XYZZY::make_read_only_port(const std::string &filespec)
 {
@@ -208,26 +207,6 @@ extern "C" {
 
 static XYZZY datafile;
 
-SCM_DEFINE (scm_i_make_gnuradio, "%make-gnuradio-port", 1, 0, 0,
- (SCM port),
- "Return a new port which reads and writes to @var{port}")
-#define FUNC_NAME s_scm_i_make_gnuradio
-{
-    SCM result;
-    unsigned long mode = 0;
-    
-    SCM_VALIDATE_PORT (SCM_ARG1, port);
-
-    if (scm_is_true (scm_output_port_p (port)))
-        mode |= SCM_WRTNG;
-    else if (scm_is_true (scm_input_port_p (port)))
-        mode |= SCM_RDNG;
-
-    result = make_xyzzy (port, mode);
-    
-    return result;
-}
-    
 void
 xyzzy_flush (SCM port)
 {
@@ -259,6 +238,8 @@ const size_t XYZZY_INPUT_BUFFER_SIZE = 4096;
 SCM
 make_xyzzy (SCM binary_port, unsigned long mode)
 {
+    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
+    
     SCM port;
     scm_t_port *c_port;
     const unsigned long mode_bits = SCM_OPN | mode;
@@ -288,12 +269,15 @@ make_xyzzy (SCM binary_port, unsigned long mode)
 void
 xyzzy_write (SCM port, const void *data, size_t size)
 {
+    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
     // This is a read only file
 }
 
 int
 xyzzy_fill_input (SCM port)
 {
+    fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
+    
     scm_t_port *gr_port = SCM_PTAB_ENTRY (port);
     
     // if (gr_port->read_pos + gr_port->read_buf_size > gr_port->read_end) {

@@ -283,9 +283,32 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
 }
 #undef FUNC_NAME
 
+SCM_DEFINE (scm_make_gnuradio, "make-gnuradio-port", 1, 0, 0,
+ (SCM port),
+ "Return a new port which reads from @var{port}")
+#define FUNC_NAME s_scm_make_gnuradio
+{
+    SCM result;
+    unsigned long mode = 0;
+
+    fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(port));
+
+    SCM_VALIDATE_PORT (SCM_ARG1, port);
+    
+    if (scm_is_true (scm_output_port_p (port)))
+        mode |= SCM_WRTNG;
+    else if (scm_is_true (scm_input_port_p (port)))
+        mode |= SCM_RDNG;
+
+    result = make_xyzzy (port, mode);
+    
+    return result;
+}    
+#undef FUNC_NAME
+
 void
 scm_xyzzy_init (void)
 {
     scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
-    /* scm_make_port_type("gnuradio", xyzzy_fill_input, xyzzy_write); */
+    scm_c_define_gsubr ("make-gnuradio-port", 1, 0, 0, (SCM (*)()) scm_make_gnuradio);
 }
