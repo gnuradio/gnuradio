@@ -115,10 +115,8 @@ inner_main (void *data, int argc, char **argv)
         fprintf(stderr, "FAILED: scm_char_ready_p()\n" );
     }
     
-    char *bar[20];
-    int ret = scm_c_read(s_value, bar, 10);
-    
-    if (ret) {
+    char *bar[20];    
+    if (scm_c_read(s_value, bar, 10)) {
         fprintf(stderr, "PASSED: read from port\n");
     } else {
         fprintf(stderr, "FAILED: read from port\n" );
