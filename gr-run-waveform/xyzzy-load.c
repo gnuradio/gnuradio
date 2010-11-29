@@ -69,6 +69,13 @@
 static const char *MAGIC = "-XyZzY-";
 
 SCM scm_listofnullstr;
+static SCM *scm_loc_load_hook;
+static SCM *scm_loc_load_path;
+static SCM *scm_loc_load_extensions;
+
+/* The current reader (a fluid).  */
+static SCM the_reader = SCM_BOOL_F;
+static size_t the_reader_fluid_num = 0;
 
 /* Utility functions for assembling C strings in a buffer.
  */
@@ -283,6 +290,69 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
 }
 #undef FUNC_NAME
 
+SCM_DEFINE (scm_xyzzy_primitive_load, "xyzzy-primitive-load", 1, 0, 0, 
+           (SCM filename),
+	    "Load the file named @var{filename} and evaluate its contents in\n"
+	    "the top-level environment. The load paths are not searched;\n"
+	    "@var{filename} must either be a full pathname or be a pathname\n"
+	    "relative to the current directory.  If the  variable\n"
+	    "@code{%load-hook} is defined, it should be bound to a procedure\n"
+	    "that will be called before any code is loaded.  See the\n"
+	    "documentation for @code{%load-hook} later in this section.")
+#define FUNC_NAME s_scm_xyzzy_primitive_load
+{
+  SCM hook = *scm_loc_load_hook;
+  SCM_VALIDATE_STRING (1, filename);
+
+  size_t len = strlen(scm_to_locale_string(filename));
+  char *ptr = scm_to_locale_string(filename);
+  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, ptr);
+  
+  if (scm_is_true (hook) && scm_is_false (scm_procedure_p (hook)))
+    SCM_MISC_ERROR ("value of %load-hook is neither a procedure nor #f",
+		    SCM_EOL);
+
+  if (!scm_is_false (hook))
+    scm_call_1 (hook, filename);
+
+  { /* scope */
+    SCM port;
+    const char *magic = "/-xyzzy-";
+    if  (strncmp(ptr, magic, strlen(magic)) == 0) {
+      fprintf(stderr, "TRACE: file %s is a XYZZY file system file!\n",
+              ptr+strlen(magic));
+      port = make_xyzzy(filename);
+    } else {
+      port = scm_open_file (filename, scm_from_locale_string ("r"));
+    }
+    scm_dynwind_begin (SCM_F_DYNWIND_REWINDABLE);
+    scm_i_dynwind_current_load_port (port);
+
+    while (1)
+      {
+	SCM reader, form;
+
+	/* Lookup and use the current reader to read the next
+	   expression. */
+	reader = SCM_FAST_FLUID_REF (the_reader_fluid_num);
+	if (reader == SCM_BOOL_F)
+	  form = scm_read (port);
+	else
+	  form = scm_call_1 (reader, port);
+
+	if (SCM_EOF_OBJECT_P (form))
+	  break;
+
+	scm_primitive_eval_x (form);
+      }
+
+    scm_dynwind_end ();
+    scm_close_port (port);
+  }
+  return SCM_UNSPECIFIED;
+}
+#undef FUNC_NAME
+
 SCM_DEFINE (scm_make_gnuradio, "make-gnuradio-port", 1, 0, 0,
  (SCM port),
  "Return a new port which reads from @var{port}")
@@ -295,6 +365,32 @@ SCM_DEFINE (scm_make_gnuradio, "make-gnuradio-port", 1, 0, 0,
 void
 scm_xyzzy_init (void)
 {
-    scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
-    scm_c_define_gsubr ("make-gnuradio-port", 1, 0, 0, (SCM (*)()) scm_make_gnuradio);
+  SCM path = SCM_EOL;
+  char *env = getenv ("GUILE_LOAD_PATH");
+  fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
+  if (env) {
+    path = scm_parse_path (scm_from_locale_string (env), path);
+  }
+
+#if 0
+  scm_listofnullstr = scm_permanent_object (scm_list_1 (scm_nullstr)); 
+  scm_loc_load_path = SCM_VARIABLE_LOC (scm_c_define ("%load-path", SCM_EOL));
+  scm_loc_load_extensions
+    = SCM_VARIABLE_LOC (scm_c_define ("%load-extensions", 
+                                      scm_list_2 (scm_from_locale_string (".scm"),
+                                                  scm_nullstr)));
+#endif
+  scm_loc_load_hook = SCM_VARIABLE_LOC (scm_c_define ("%load-hook", SCM_BOOL_F));
+
+  /* initialize the current reader, which is needed by primitive-load */
+  the_reader = scm_make_fluid ();
+  the_reader_fluid_num = SCM_FLUID_NUM (the_reader);
+  SCM_FAST_FLUID_SET_X (the_reader_fluid_num, SCM_BOOL_F);
+  scm_c_define("current-reader", the_reader);
+
+  /* initialize our functions in the scheme VM */
+  scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
+  scm_c_define_gsubr ("make-gnuradio-port", 1, 0, 0, (SCM (*)()) scm_make_gnuradio);
+  scm_c_define_gsubr ("xyzzy-primitive-load", 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load);
 }
+
