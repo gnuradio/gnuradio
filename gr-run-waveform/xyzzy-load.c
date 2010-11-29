@@ -257,6 +257,7 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
 	  
 	  /* If the file exists at all, we should return it.  If the
 	     file is inaccessible, then that's an error.  */
+#if 0
           const char *magic = "/-xyzzy-";
           if (strncmp(scm_to_locale_string(dir), magic, strlen(magic)) == 0) {
             /* Look in the fake filesystem for this file. If we find it, we prepend a
@@ -274,6 +275,18 @@ SCM_DEFINE (scm_xyzzy_search_path, "xyyzy-search-path", 2, 1, 0,
                 goto end;
               }
           }
+#else
+
+	  fprintf(stderr, "TRACE %s: %d: \"%s\"\n", __FUNCTION__, __LINE__, buf.buf);
+
+	  if (xyzzy_file_exists(buf.buf)
+	      || (stat (buf.buf, &mode) == 0
+		  && ! (mode.st_mode & S_IFDIR)))
+	    {
+	      result = scm_from_locale_string (buf.buf);
+	      goto end;
+	    }
+#endif
 	}
       
       if (!SCM_NULL_OR_NIL_P (exts))
@@ -296,4 +309,3 @@ scm_xyzzy_init (void)
 {
     scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
 }
-
