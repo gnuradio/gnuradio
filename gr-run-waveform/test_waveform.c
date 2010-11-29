@@ -29,6 +29,8 @@
 static void
 inner_main (void *data, int argc, char **argv)
 {
+    xyzzy_init("./filesystem.dat");
+    
     scm_xyzzy_init();
 
     scm_shell (argc, argv);
