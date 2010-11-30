@@ -43,8 +43,18 @@ path-with-xyzzy
 (define result7 (xyzzy-primitive-load expected))
 (define result8 (xyzzy-primitive-load-path expected))
 
+;; This should return the full name, or #f if it fails.
 (define result9 (xyzzy-search-load-path filename))
-;;(if (string=? result9 expected)
-;;       (display "PASSED: xyzzy-search-load-path from guile\n")
-;;       (display "FAILED: xyzzy-search-load-path from guile\n"))
+(if (boolean? result9)
+    (display "XFAILED: xyzzy-search-load-path from guile\n")
+    (if (string=? result9 expected)
+	(display "XFAILED: xyzzy-search-load-path from guile\n")
+	(display "XPASSED: xyzzy-search-load-path from guile\n")))
+
+(define result10 (xyzzy-search-load-path expected))
+(if (boolean? result9)
+    (display "FAILED: xyzzy-search-load-path from guile\n")
+    (if (string=? result10 expected)
+	(display "PASSED: xyzzy-search-load-path from guile\n")
+	(display "FAILED: xyzzy-search-load-path from guile\n")))
 
