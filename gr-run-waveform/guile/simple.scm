@@ -47,9 +47,9 @@ path-with-xyzzy
 (define result9 (xyzzy-search-load-path filename))
 (if (boolean? result9)
     (display "FAILED: xyzzy-search-load-path from guile\n")
-    (if (string=? result9 expected)
-	(display "FAILED: xyzzy-search-load-path from guile\n")
-	(display "PASSED: xyzzy-search-load-path from guile\n")))
+    (if (string=? result9 result1)
+	(display "PASSES: xyzzy-search-load-path from guile\n")
+	(display "FAILED: xyzzy-search-load-path from guile\n")))
 
 (define result10 (xyzzy-search-load-path expected))
 (if (boolean? result9)
