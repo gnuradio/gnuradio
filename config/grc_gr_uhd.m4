@@ -29,6 +29,7 @@ AC_DEFUN([GRC_GR_UHD],[
             [UHD], [uhd >= 1.0.0 uhd < 2.0.0], [],
             [passed=no; AC_MSG_RESULT([gr-uhd requires libuhd 1.x.x])]
         )
+        UHD_CFLAGS="${UHD_CFLAGS} -I\${abs_top_srcdir}/gr-uhd/lib"
         AC_SUBST(UHD_CFLAGS)
         AC_SUBST(UHD_LIBS)
     fi

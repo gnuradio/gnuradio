@@ -25,8 +25,7 @@ AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES) \
-	$(UHD_CFLAGS) \
-	-I$(top_srcdir)/gr-uhd/lib
+	$(UHD_CFLAGS)
 
 if PYTHON
 # ----------------------------------------------------------------
