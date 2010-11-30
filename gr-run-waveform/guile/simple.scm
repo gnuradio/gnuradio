@@ -35,12 +35,16 @@ path-with-xyzzy
     (display "PASSED: xyzzy-search-path from guile\n")
     (display "FAILED: xyzzy-search-path from guile\n"))
 
-;; Add the suffix for primitice-load
-
-;; Redefine the file name to the full path
-(define filename "/usr/share/guile/1.8/ice-9/boot-9.scm")
-
-;;(define result5 (primitive-load filename))
+;; (define result5 (primitive-load filename))
 
 ;; (define result6 (xyzzy-primitive-load file))
+
+;; FIXME: not sure how to tell if this worked other than if the test doesn't crash
 (define result7 (xyzzy-primitive-load expected))
+(define result8 (xyzzy-primitive-load-path expected))
+
+(define result9 (xyzzy-search-load-path filename))
+;;(if (string=? result9 expected)
+;;       (display "PASSED: xyzzy-search-load-path from guile\n")
+;;       (display "FAILED: xyzzy-search-load-path from guile\n"))
+

@@ -353,6 +353,64 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "xyzzy-primitive-load", 1, 0, 0,
 }
 #undef FUNC_NAME
 
+/* Search %load-path for a directory containing a file named FILENAME.
+   The file must be readable, and not a directory.
+   If we find one, return its full filename; otherwise, return #f.
+   If FILENAME is absolute, return it unchanged.  */
+SCM_DEFINE (scm_xyzzy_sys_search_load_path, "%xyzzy-search-load-path", 1, 0, 0, 
+	    (SCM filename),
+	    "Search @var{%load-path} for the file named @var{filename},\n"
+	    "which must be readable by the current user.  If @var{filename}\n"
+	    "is found in the list of paths to search or is an absolute\n"
+	    "pathname, return its full pathname.  Otherwise, return\n"
+	    "@code{#f}.  Filenames may have any of the optional extensions\n"
+	    "in the @code{%load-extensions} list; @code{%search-load-path}\n"
+	    "will try each extension automatically.")
+#define FUNC_NAME s_scm_xyzzy_sys_search_load_path
+{
+  SCM path = SCM_EOL; //scm_c_lookup("%load-path");
+  SCM exts = *scm_loc_load_extensions;
+  SCM_VALIDATE_STRING (1, filename);
+
+  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
+  
+  if (scm_ilength (path) < 0)
+    SCM_MISC_ERROR ("%load-path is not a proper list", SCM_EOL);
+  if (scm_ilength (exts) < 0)
+    SCM_MISC_ERROR ("%load-extension list is not a proper list", SCM_EOL);
+  
+  return scm_xyzzy_search_path (path, filename, exts);
+}
+#undef FUNC_NAME
+
+SCM_DEFINE (scm_xyzzy_primitive_load_path, "xyzzy-primitive-load-path", 1, 0, 0, 
+	    (SCM filename),
+	    "Search @var{%load-path} for the file named @var{filename} and\n"
+	    "load it into the top-level environment.  If @var{filename} is a\n"
+	    "relative pathname and is not found in the list of search paths,\n"
+	    "an error is signalled.")
+#define FUNC_NAME s_scm_xyzzy_primitive_load_path
+{
+  SCM full_filename;
+  char *filename_chars;
+  size_t filename_len;
+  
+  filename_chars = scm_to_locale_string (filename);
+  filename_len = strlen (filename_chars);
+  scm_dynwind_free (filename_chars);
+  
+  full_filename = scm_xyzzy_sys_search_load_path (filename);
+
+  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(full_filename));
+
+  if (scm_is_false (full_filename))
+    SCM_MISC_ERROR ("Unable to find the file ~S in load path",
+		    scm_list_1 (filename));
+
+  return scm_xyzzy_primitive_load (full_filename);
+}
+#undef FUNC_NAME
+
 SCM_DEFINE (scm_make_gnuradio, "make-gnuradio-port", 1, 0, 0,
  (SCM port),
  "Return a new port which reads from @var{port}")
@@ -371,15 +429,12 @@ scm_xyzzy_init (void)
   if (env) {
     path = scm_parse_path (scm_from_locale_string (env), path);
   }
-
-#if 0
-  scm_listofnullstr = scm_permanent_object (scm_list_1 (scm_nullstr)); 
-  scm_loc_load_path = SCM_VARIABLE_LOC (scm_c_define ("%load-path", SCM_EOL));
-  scm_loc_load_extensions
-    = SCM_VARIABLE_LOC (scm_c_define ("%load-extensions", 
+  
+  scm_listofnullstr = scm_permanent_object (scm_list_1 (scm_nullstr));
+  scm_loc_load_extensions = SCM_VARIABLE_LOC (scm_c_define ("%load-extensions", 
                                       scm_list_2 (scm_from_locale_string (".scm"),
                                                   scm_nullstr)));
-#endif
+  
   scm_loc_load_hook = SCM_VARIABLE_LOC (scm_c_define ("%load-hook", SCM_BOOL_F));
 
   /* initialize the current reader, which is needed by primitive-load */
@@ -392,5 +447,8 @@ scm_xyzzy_init (void)
   scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
   scm_c_define_gsubr ("make-gnuradio-port", 1, 0, 0, (SCM (*)()) scm_make_gnuradio);
   scm_c_define_gsubr ("xyzzy-primitive-load", 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load);
+
+  scm_c_define_gsubr ("xyzzy-search-load-path", 1, 0, 0, (SCM (*)()) scm_xyzzy_sys_search_load_path);
+  scm_c_define_gsubr ("xyzzy-primitive-load-path", 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load_path);
 }
 
