@@ -368,8 +368,8 @@ SCM_DEFINE (scm_xyzzy_sys_search_load_path, "%xyzzy-search-load-path", 1, 0, 0,
 	    "will try each extension automatically.")
 #define FUNC_NAME s_scm_xyzzy_sys_search_load_path
 {
-  // SCM path = scm_list_4("/usr/share/guile/1.8/", "/usr/share/guile/site", "/usr/share/guile/1.8", "/usr/share/guile"); //scm_c_lookup("%load-path"));
-  SCM path = SCM_EOL;
+  SCM loadpath = scm_c_lookup("%load-path");
+  SCM path = scm_variable_ref(loadpath);
   SCM exts = *scm_loc_load_extensions;
   SCM_VALIDATE_STRING (1, filename);
 
