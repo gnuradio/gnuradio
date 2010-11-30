@@ -162,7 +162,8 @@ public:
 	      pmt::pmt_t nsamp_val = pmt::mp((int)d_num_packet_samps);
 	      
 	      add_item_tag(0, nitems_written(0),
-			   gr_tags::key_time,
+			   //gr_tags::key_time,
+			   pmt::pmt_string_to_symbol("time"),
 			   d_tstamp_pair,
 			   d_tag_srcid);
 	      add_item_tag(0, nitems_written(0),
