@@ -20,4 +20,4 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = host firmware
+SUBDIRS = host
