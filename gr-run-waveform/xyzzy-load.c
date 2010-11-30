@@ -306,7 +306,7 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "xyzzy-primitive-load", 1, 0, 0,
 
   size_t len = strlen(scm_to_locale_string(filename));
   char *ptr = scm_to_locale_string(filename);
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, ptr);
+  /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, ptr); */
   
   if (scm_is_true (hook) && scm_is_false (scm_procedure_p (hook)))
     SCM_MISC_ERROR ("value of %load-hook is neither a procedure nor #f",
@@ -368,11 +368,12 @@ SCM_DEFINE (scm_xyzzy_sys_search_load_path, "%xyzzy-search-load-path", 1, 0, 0,
 	    "will try each extension automatically.")
 #define FUNC_NAME s_scm_xyzzy_sys_search_load_path
 {
-  SCM path = SCM_EOL; //scm_c_lookup("%load-path");
+  // SCM path = scm_list_4("/usr/share/guile/1.8/", "/usr/share/guile/site", "/usr/share/guile/1.8", "/usr/share/guile"); //scm_c_lookup("%load-path"));
+  SCM path = SCM_EOL;
   SCM exts = *scm_loc_load_extensions;
   SCM_VALIDATE_STRING (1, filename);
 
-  fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__);
+  /* fprintf(stderr, "TRACE %s: %d:\n", __FUNCTION__, __LINE__); */
   
   if (scm_ilength (path) < 0)
     SCM_MISC_ERROR ("%load-path is not a proper list", SCM_EOL);
@@ -401,7 +402,7 @@ SCM_DEFINE (scm_xyzzy_primitive_load_path, "xyzzy-primitive-load-path", 1, 0, 0,
   
   full_filename = scm_xyzzy_sys_search_load_path (filename);
 
-  fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(full_filename));
+  /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(full_filename)); */
 
   if (scm_is_false (full_filename))
     SCM_MISC_ERROR ("Unable to find the file ~S in load path",
@@ -425,7 +426,7 @@ scm_xyzzy_init (void)
 {
   SCM path = SCM_EOL;
   char *env = getenv ("GUILE_LOAD_PATH");
-  fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__);
+  /* fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__); */
   if (env) {
     path = scm_parse_path (scm_from_locale_string (env), path);
   }
