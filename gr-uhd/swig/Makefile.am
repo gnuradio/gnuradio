@@ -24,8 +24,8 @@ include $(top_srcdir)/Makefile.common
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
-	$(WITH_INCLUDES) \
-	$(UHD_CPPFLAGS)
+	$(UHD_CPPFLAGS) \
+	$(WITH_INCLUDES)
 
 uhd_swig_swig_args = $(UHD_CPPFLAGS)
 
