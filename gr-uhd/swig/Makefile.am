@@ -25,7 +25,9 @@ AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES) \
-	$(UHD_CFLAGS)
+	$(UHD_CPPFLAGS)
+
+uhd_swig_swig_args = $(UHD_CPPFLAGS)
 
 if PYTHON
 # ----------------------------------------------------------------
@@ -54,9 +56,6 @@ uhd_swig_python = \
 uhd_swig_swiginclude_headers =
 
 include $(top_srcdir)/Makefile.swig
-
-# FIXME better way to set this?
-STD_SWIG_PYTHON_ARGS += $(UHD_CFLAGS)
 
 # add some of the variables generated inside the Makefile.swig.gen
 BUILT_SOURCES = $(swig_built_sources)
