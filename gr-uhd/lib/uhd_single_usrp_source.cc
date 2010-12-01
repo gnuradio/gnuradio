@@ -69,40 +69,40 @@ public:
     }
 
     uhd::tune_result_t set_center_freq(
-        const uhd::tune_request_t tune_request, size_t chan
+        const uhd::tune_request_t tune_request, size_t chan = 0
     ){
         return _dev->set_rx_freq(tune_request, chan);
     }
 
-    uhd::freq_range_t get_freq_range(size_t chan){
+    uhd::freq_range_t get_freq_range(size_t chan = 0){
         return _dev->get_rx_freq_range(chan);
     }
 
-    void set_gain(float gain, size_t chan){
+    void set_gain(float gain, size_t chan = 0){
         return _dev->set_rx_gain(gain, chan);
     }
 
-    float get_gain(size_t chan){
+    float get_gain(size_t chan = 0){
         return _dev->get_rx_gain(chan);
     }
 
-    uhd::gain_range_t get_gain_range(size_t chan){
+    uhd::gain_range_t get_gain_range(size_t chan = 0){
         return _dev->get_rx_gain_range(chan);
     }
 
-    void set_antenna(const std::string &ant, size_t chan){
+    void set_antenna(const std::string &ant, size_t chan = 0){
         return _dev->set_rx_antenna(ant, chan);
     }
 
-    std::string get_antenna(size_t chan){
+    std::string get_antenna(size_t chan = 0){
         return _dev->get_rx_antenna(chan);
     }
 
-    std::vector<std::string> get_antennas(size_t chan){
+    std::vector<std::string> get_antennas(size_t chan = 0){
         return _dev->get_rx_antennas(chan);
     }
 
-    void set_bandwidth(double bandwidth, size_t chan){
+    void set_bandwidth(double bandwidth, size_t chan = 0){
         return _dev->set_rx_bandwidth(bandwidth, chan);
     }
 
