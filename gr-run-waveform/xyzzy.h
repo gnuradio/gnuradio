@@ -113,10 +113,10 @@ extern "C" {
 void scm_xyzzy_init (void);
     
 // Initialize with the data file produced by gen-xyzzy.
-int xyzzy_init(char *filename);
+int xyzzy_init(const char *filename);
 
 // Does a file with name 'filename' exist in magic filesystem?
-int xyzzy_file_exists(char *filename);
+int xyzzy_file_exists(const char *filename);
 
 // Make a readonly port
 SCM make_xyzzy (SCM binary_port);

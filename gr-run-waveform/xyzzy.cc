@@ -209,14 +209,14 @@ make_xyzzy (SCM binary_port)
 
 // Initialize with the data file produced by gen-xyzzy.
 int
-xyzzy_init(char *filespec)
+xyzzy_init(const char *filespec)
 {
     return datafile.init(filespec);
 }
 
 // Does a file with name 'filename' exist in magic filesystem?
 int
-xyzzy_file_exists(char *filespec)
+xyzzy_file_exists(const char *filespec)
 {
     return datafile.file_exists(filespec);
 }
