@@ -49,5 +49,7 @@
   ;;(load-into-module waveform-filename (current-module))
   (let ((f (waveform-last-registered)))
     (if (not f)
-	(error "No define-waveform found in file \n" filename)
-	(gr:run (f args)))))
+	(error "No define-waveform found in file \n" filename))
+    (gr:run (f args))
+    ;; Attempt to get block destructors called now.
+    (gc)))
