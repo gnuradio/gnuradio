@@ -68,14 +68,15 @@
 // This is the magic number used when loading files
 static const char *MAGIC = "-XyZzY-";
 
-SCM scm_listofnullstr;
+static SCM scm_listofnullstr;
+
 static SCM *scm_loc_load_hook;
 static SCM *scm_loc_load_path;
 static SCM *scm_loc_load_extensions;
 
 /* The current reader (a fluid).  */
-static SCM the_reader = SCM_BOOL_F;
-static size_t the_reader_fluid_num = 0;
+static SCM *scm_loc_current_reader;
+
 
 /* Utility functions for assembling C strings in a buffer.
  */
@@ -332,9 +333,8 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "xyzzy-primitive-load", 1, 0, 0,
       {
 	SCM reader, form;
 
-	/* Lookup and use the current reader to read the next
-	   expression. */
-	reader = SCM_FAST_FLUID_REF (the_reader_fluid_num);
+	/* Lookup and use the current reader to read the next  expression. */
+	reader = scm_fluid_ref(*scm_loc_current_reader);
 	if (reader == SCM_BOOL_F)
 	  form = scm_read (port);
 	else
@@ -424,25 +424,10 @@ SCM_DEFINE (scm_make_gnuradio, "make-gnuradio-port", 1, 0, 0,
 void
 scm_xyzzy_init (void)
 {
-  SCM path = SCM_EOL;
-  char *env = getenv ("GUILE_LOAD_PATH");
-  /* fprintf(stderr, "TRACE %s: %d\n", __FUNCTION__, __LINE__); */
-  if (env) {
-    path = scm_parse_path (scm_from_locale_string (env), path);
-  }
-  
   scm_listofnullstr = scm_permanent_object (scm_list_1 (scm_nullstr));
-  scm_loc_load_extensions = SCM_VARIABLE_LOC (scm_c_define ("%load-extensions", 
-                                      scm_list_2 (scm_from_locale_string (".scm"),
-                                                  scm_nullstr)));
-  
-  scm_loc_load_hook = SCM_VARIABLE_LOC (scm_c_define ("%load-hook", SCM_BOOL_F));
-
-  /* initialize the current reader, which is needed by primitive-load */
-  the_reader = scm_make_fluid ();
-  the_reader_fluid_num = SCM_FLUID_NUM (the_reader);
-  SCM_FAST_FLUID_SET_X (the_reader_fluid_num, SCM_BOOL_F);
-  scm_c_define("current-reader", the_reader);
+  scm_loc_load_extensions = SCM_VARIABLE_LOC(scm_c_lookup("%load-extensions"));
+  scm_loc_load_hook = SCM_VARIABLE_LOC (scm_c_lookup("%load-hook"));
+  scm_loc_current_reader = SCM_VARIABLE_LOC (scm_c_lookup("current-reader"));
 
   /* initialize our functions in the scheme VM */
   scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
