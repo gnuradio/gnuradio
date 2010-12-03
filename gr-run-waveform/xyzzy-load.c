@@ -305,7 +305,6 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "xyzzy-primitive-load", 1, 0, 0,
   SCM hook = *scm_loc_load_hook;
   SCM_VALIDATE_STRING (1, filename);
 
-  size_t len = strlen(scm_to_locale_string(filename));
   char *ptr = scm_to_locale_string(filename);
   /* fprintf(stderr, "TRACE %s: %d: %s\n", __FUNCTION__, __LINE__, ptr); */
   
@@ -318,11 +317,10 @@ SCM_DEFINE (scm_xyzzy_primitive_load, "xyzzy-primitive-load", 1, 0, 0,
 
   { /* scope */
     SCM port;
-    const char *magic = "/-xyzzy-";
-    if  (strncmp(ptr, magic, strlen(magic)) == 0) {
-      fprintf(stderr, "TRACE: file %s is a XYZZY file system file!\n",
-              ptr+strlen(magic));
-      port = make_xyzzy(filename);
+
+    if (xyzzy_file_exists(ptr)){
+      /* fprintf(stderr, "TRACE: file %s is a XYZZY file system file!\n", ptr); */
+      port = xyzzy_open_file(filename);
     } else {
       port = scm_open_file (filename, scm_from_locale_string ("r"));
     }
@@ -412,12 +410,12 @@ SCM_DEFINE (scm_xyzzy_primitive_load_path, "xyzzy-primitive-load-path", 1, 0, 0,
 }
 #undef FUNC_NAME
 
-SCM_DEFINE (scm_make_gnuradio, "make-gnuradio-port", 1, 0, 0,
- (SCM port),
- "Return a new port which reads from @var{port}")
-#define FUNC_NAME s_scm_make_gnuradio
+SCM_DEFINE (scm_xyzzy_open_file, "xyzzy-open-file", 1, 0, 0,
+ (SCM filename),
+ "Return a new port which reads from @var{filename}")
+#define FUNC_NAME s_scm_xyzzy_open_file
 {
-    return make_xyzzy (port);
+    return xyzzy_open_file (filename);
 }    
 #undef FUNC_NAME
 
@@ -431,10 +429,8 @@ scm_xyzzy_init (void)
 
   /* initialize our functions in the scheme VM */
   scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
-  scm_c_define_gsubr ("make-gnuradio-port", 1, 0, 0, (SCM (*)()) scm_make_gnuradio);
+  scm_c_define_gsubr ("xyzzy-open-file", 1, 0, 0, (SCM (*)()) scm_xyzzy_open_file);
   scm_c_define_gsubr ("xyzzy-primitive-load", 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load);
-
   scm_c_define_gsubr ("xyzzy-search-load-path", 1, 0, 0, (SCM (*)()) scm_xyzzy_sys_search_load_path);
   scm_c_define_gsubr ("xyzzy-primitive-load-path", 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load_path);
 }
-

@@ -118,8 +118,8 @@ int xyzzy_init(const char *filename);
 // Does a file with name 'filename' exist in magic filesystem?
 int xyzzy_file_exists(const char *filename);
 
-// Make a readonly port
-SCM make_xyzzy (SCM binary_port);
+// Return a readonly port that accesses filename.
+SCM xyzzy_open_file (SCM filename);
     
 #ifdef __cplusplus
 } // end of extern C

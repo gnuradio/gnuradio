@@ -197,15 +197,23 @@ extern "C" {
 static XYZZY datafile;
     
 SCM
-make_xyzzy (SCM binary_port)
+xyzzy_open_file(SCM filename)
+#define FUNC_NAME "xyzzy-open-file"
 {
-    // fprintf(stderr, "TRACE %s: %d, %s\n", __FUNCTION__, __LINE__, scm_to_locale_string(binary_port));
-    std::string &contents = datafile.get_contents(scm_to_locale_string(binary_port));
+  const char *c_filename = scm_to_locale_string(filename);
+  // fprintf(stderr, "TRACE %s: %d, %s\n", __FUNCTION__, __LINE__, c_filename);
 
-    SCM port = scm_open_input_string (scm_from_locale_string (contents.c_str()));
+  if (!xyzzy_file_exists(c_filename)){
+    SCM_MISC_ERROR("file does not exist: ~S", scm_list_1(filename));
+  }
+
+  std::string filespec(c_filename);
+  std::string &contents = datafile.get_contents(filespec.substr(9, filespec.size()));
+  SCM port = scm_open_input_string (scm_from_locale_string (contents.c_str()));
     
-    return port;
+  return port;
 }
+#undef FUNC_NAME
 
 // Initialize with the data file produced by gen-xyzzy.
 int
