@@ -27,7 +27,7 @@ EXTRA_DIST = gen-xyzzy \
 	guile/simple.scm
 
 # build the standalone waveform application
-bin_PROGRAMS = run_waveform
+bin_PROGRAMS = gr-run-waveform
 
 # Rather than build a library, we just use a variable so the same code
 # can be used in test cases, as well as the run-waveform application.
@@ -61,16 +61,16 @@ test_waveform_DEPENDENCIES = $(BUILT_SOURCES)
 noinst_HEADERS = xyzzy.h
 
 # The standalone waveform application
-run_waveform_SOURCES = run_waveform.cc $(SRCS)
-run_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
+gr_run_waveform_SOURCES = gr-run-waveform.cc $(SRCS)
+gr_run_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
 	-DPKGLIBDIR=\"$(pkglibdir)\" \
 	-DDATAROOTDIR=\"$(datarootdir)\"
 # Uncommenting this force make to statically link in the guile library.
 # Note that this will fail to link it you don't have libguile.a.
 # run_waveform_LDFLAGS = -static
-run_waveform_LDADD = $(GUILE_LIBS)
-run_waveform_DEPENDENCIES =  $(BUILT_SOURCES)
+gr_run_waveform_LDADD = $(GUILE_LIBS)
+gr_run_waveform_DEPENDENCIES =  $(BUILT_SOURCES)
 
 DISTCLEANFILES = gr-run-waveform.tar.gz libpath.h filesystem.dat
 
