@@ -36,6 +36,8 @@ dnl Find the the C++ compiler
 AC_PROG_CXX
 AM_PROG_CC_C_O
 
+GR_LIB64		dnl check for lib64 suffix after choosing compilers
+
 dnl Checks for standard header files.
 AC_HEADER_STDC
 
@@ -47,6 +49,7 @@ AC_SUBST(PYTHON)
 
 AC_CONFIG_FILES([\
 	  Makefile \
+	  config/Makefile \
 	])
 
 AC_OUTPUT
