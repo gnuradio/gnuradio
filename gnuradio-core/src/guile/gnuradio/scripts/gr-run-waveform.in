@@ -1,4 +1,4 @@
-#!/usr/bin/guile \
+#!@GUILE@ \
 -e main -s
 !#
 ;;;

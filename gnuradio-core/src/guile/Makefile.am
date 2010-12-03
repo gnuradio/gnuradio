@@ -28,6 +28,9 @@ EXTRA_DIST += \
 	$(nobase_guile_DATA) \
 	$(GUILE_TESTS)
 
+
+SUBDIRS = example-waveforms
+
 # These are the hand-coded guile files for gnuradio-core.
 #
 # Swig/common.scm is glue that's required for the goops wrappers.
@@ -42,6 +45,7 @@ nobase_guile_DATA = \
 	gnuradio/runtime-shim.scm \
 	gnuradio/waveform.scm \
 	gnuradio/run-waveform.scm \
+	gnuradio/scripts/gr-run-waveform \
 	gnuradio/test-suite/guile-test \
 	gnuradio/test-suite/lib.scm
 
