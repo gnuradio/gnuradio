@@ -20,61 +20,54 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cstdio>
-#include <cstdlib>
-#include <string>
-#include <iostream>
-#include <fstream>
-
+#include <stdio.h>
+#include <stdlib.h>
 #include <libguile.h>
 
-using namespace std;
+#include "xyzzy.h"
 
-static std::string filename = "hello.scm";
+/*
+ * Load and run a waveform defined with define-waveform
+ * usage: gr-run-waveform filename.wfd [args...]
+ */
+static const char *code =
+"(set! %load-verbosely #t)				\n"
+"(define primitive-load xyzzy-primitive-load)		\n"
+"(define primitive-load-path xyzzy-primitive-load-path)	\n"
+"(define search-path xyzzy-search-path)			\n"
+"(define search-load-path xyzzy-search-load-path)	\n"
+"\n"
+"(primitive-load-path \"gnuradio/run-waveform\")	\n"
+"\n"
+"(define (main args)					\n"
+"  (if (not (>= (length args) 2))			\n"
+"      (let ((port (current-error-port)))		\n"
+"	(display \"usage: \" port)			\n"
+"	(display (car args) port)			\n"
+"	(display \" filename.wfd [args...]\n\" port)	\n"
+"	(exit 1)))					\n"
+"  (apply run-waveform (cdr args)))			\n"
+"\n"
+"(main (command-line))					\n"
+;
 
-static SCM
-load_waveform (void)
-{
-    ifstream in;
-    string filespec = SRCDIR;
-    filespec += '/';
-    filespec += filename;
-    
-    in.open(filespec.c_str());
-    if (!in) {
-        cerr << ("run_waveform: couldn't open data file: ") << filespec << endl;
-        return SCM_BOOL_F;
-    }
-
-    // Read in the file one line at a time, and accumulate it into
-    // a big string that'll hold the entire file.
-    string line;
-    string file;
-    while (std::getline(in, line)) {
-        file += line;
-        cerr << line << endl;   // FIXME: this is only for debugging
-    }
-
-    // Evaluate the file
-    scm_c_eval_string(file.c_str());
-    
-    in.close();
-
-    // Execute our example
-    return scm_c_eval_string("(hello-world)");
-}
 
 static void
 inner_main (void *data, int argc, char **argv)
 {
-    scm_c_define_gsubr ("load-waveform", 0, 0, 0, load_waveform);
+  if (!xyzzy_init(0))	// use compiled-in install path
+    exit(1);
 
-    scm_shell (argc, argv);
+  scm_xyzzy_init();
+  scm_c_eval_string(code);
 }
 
 int
 main(int argc, char *argv[])
 {
+    setenv("GUILE_WARN_DEPRECATED", "no", 1);
+    // setenv("LTDL_LIBRARY_PATH", "/home/eb/install/lib64", 1);
+
     scm_boot_guile (argc, argv, inner_main, 0);
 
     return 0; // never reached
