@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # 
 
 ACLOCAL_AMFLAGS = -I config
-DIST_SUBDIRS = config
+SUBDIRS = config
 EXTRA_DIST = gen-xyzzy \
 	guile/readline.scm \
 	guile/cat.scm \
@@ -83,7 +83,7 @@ libpath.h: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	@echo '#define SCM_SITE_DIR "$(pkgdatadir)/site"' >> libpath.tmp
 	@echo '#define SCM_BUILD_INFO { \' >> libpath.tmp
 	@echo '	{ "srcdir", "'"`cd @srcdir@; pwd`"'" }, \' >> libpath.tmp
-	@echo ' { "top_srcdir",    "@top_srcdir_absolute@" }, \' >> libpath.tmp
+	@echo ' { "top_srcdir",    "@abs_top_srcdir@" }, \' >> libpath.tmp
 	@echo '	{ "prefix",	   "@prefix@" }, \' >> libpath.tmp
 	@echo '	{ "exec_prefix",   "@exec_prefix@" }, \' >> libpath.tmp
 	@echo '	{ "bindir",	   "@bindir@" }, \' >> libpath.tmp
@@ -117,4 +117,7 @@ libpath.h: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 # that this requires GNU Radio to be installed before the outout will be correct.
 filesystem.dat:
 	-$(RM) -f filesystem.dat
+	echo $(PYTHON) $(srcdir)/gen-xyzzy $(GUILE_INSTALL_PATH) $(datarootdir)/guile/site > filesystem.dat
 	$(PYTHON) $(srcdir)/gen-xyzzy $(GUILE_INSTALL_PATH) $(datarootdir)/guile/site > filesystem.dat
+
+CLEANFILES = filesystem.dat
