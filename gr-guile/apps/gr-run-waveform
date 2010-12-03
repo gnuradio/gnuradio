@@ -22,42 +22,18 @@
 
 ;;; Load and run a waveform defined with define-waveform
 ;;;
-;;; usage: gr-run-waveform filename.wfd
+;;; usage: gr-run-waveform filename.wfd [args...]
 
-
-(use-modules (oop goops)
-	     (gnuradio core)
-	     (gnuradio waveform))
-
-
-(define (enable-debug-mode)
-  (display %load-path)
-  (newline)
-  (set! %load-verbosely #t)
-  (debug-enable 'backtrace 'debug))
-
-(define (usage args)
-  (let ((port (current-error-port)))
-    (display "usage: " port)
-    (display (car args) port)
-    (newline port)
-    (exit 1)))
-    
+(load-from-path "gnuradio/run-waveform")
 
 (define (main args)
   (if (not (>= (length args) 2))
-      (usage args))
-  (enable-debug-mode)
-  (let ((filename (cadr args)))
-    ;; Probably ought to handle errors here 
-    (load filename)
-    (let ((f (waveform-last-registered)))
-      (if (not f)
-	  (begin
-	    (format 1 "No define-waveform found in file '~A'\n" filename)
-	    (exit 1)))
-      (gr:run (f (cdr args))))))
-
+      (let ((port (current-error-port)))
+	(display "usage: " port)
+	(display (car args) port)
+	(display " filename.wfd [args...]\n" port)
+	(exit 1)))
+  (apply run-waveform (cdr args)))
 
 ;;; Local Variables:
 ;;; mode: scheme

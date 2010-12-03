@@ -41,6 +41,7 @@ nobase_guile_DATA = \
 	gnuradio/export-safely.scm \
 	gnuradio/runtime-shim.scm \
 	gnuradio/waveform.scm \
+	gnuradio/run-waveform.scm \
 	gnuradio/test-suite/guile-test \
 	gnuradio/test-suite/lib.scm
 
