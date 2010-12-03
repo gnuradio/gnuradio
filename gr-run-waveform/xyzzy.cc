@@ -64,8 +64,8 @@ XYZZY::init(const std::string &file)
 {
     ifstream in(file.c_str(), ios_base::binary|ios_base::in);
     if (!in) {
-        cerr << ("run_waveform: couldn't open data file: ") << file << endl;
-        return SCM_BOOL_F;
+        cerr << ("gr-run-waveform: couldn't open data file: ") << file << endl;
+        return false;
     }
 
     size_t length = sizeof(struct header);
@@ -211,6 +211,9 @@ make_xyzzy (SCM binary_port)
 int
 xyzzy_init(const char *filespec)
 {
+  if (filespec == 0 || *filespec == 0)
+    return datafile.init();
+  else
     return datafile.init(filespec);
 }
 
