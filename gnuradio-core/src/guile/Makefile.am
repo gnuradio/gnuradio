@@ -39,7 +39,6 @@ SUBDIRS = example-waveforms
 # gnuradio/runtime-shim implements "guile friendly" versions of connect & disconnect.
 
 nobase_guile_DATA = \
-	+boot+/ice-9/boot-9.scm \
 	Swig/common.scm \
 	gnuradio/core.scm \
 	gnuradio/export-safely.scm \
