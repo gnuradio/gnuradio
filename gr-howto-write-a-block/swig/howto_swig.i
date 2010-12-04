@@ -12,7 +12,7 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-howto" "scm_init_gnuradio_howto_module")
+(load-extension "libguile-gnuradio-howto_swig" "scm_init_gnuradio_howto_swig_module")
 %}
 
 %goops %{
