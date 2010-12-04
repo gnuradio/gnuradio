@@ -56,10 +56,8 @@ AC_DEFUN([SWIG_PROG],[
 AC_DEFUN([SWIG_ENABLE_CXX],[
 	AC_REQUIRE([SWIG_PROG])
 	AC_REQUIRE([AC_PROG_CXX])
-	if test x${enable_python} = xyes -o x${enable_guile} = xyes; then
-	    if test "$SWIG" != "false" ; then
+    	if test "$SWIG" != "false" ; then
 		SWIG="$SWIG -c++"
-	    fi
         fi
 ])
 
