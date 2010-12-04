@@ -48,6 +48,8 @@
 
 typedef std::complex<float>		gr_complex;
 typedef std::complex<double>		gr_complexd;
+typedef unsigned long long              uint64_t;
+typedef long long                       int64_t;
 
 
 // instantiate the required template specializations

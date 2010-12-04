@@ -27,7 +27,7 @@
 #include <gr_io_signature.h>
 #include <string.h>
 
-gr_skiphead::gr_skiphead (size_t itemsize, size_t nitems_to_skip)
+gr_skiphead::gr_skiphead (size_t itemsize, uint64_t nitems_to_skip)
   : gr_block ("skiphead",
 	      gr_make_io_signature(1, 1, itemsize),
 	      gr_make_io_signature(1, 1, itemsize)),
@@ -36,7 +36,7 @@ gr_skiphead::gr_skiphead (size_t itemsize, size_t nitems_to_skip)
 }
 
 gr_skiphead_sptr
-gr_make_skiphead (size_t itemsize, size_t nitems_to_skip)
+gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip)
 {
   return gnuradio::get_initial_sptr(new gr_skiphead (itemsize, nitems_to_skip));
 }
@@ -55,11 +55,11 @@ gr_skiphead::general_work(int noutput_items,
 
   while (ii < ninput_items){
 
-    long long ni_total = ii + d_nitems;  	// total items processed so far
+    uint64_t ni_total = ii + d_nitems;  	// total items processed so far
     if (ni_total < d_nitems_to_skip){		// need to skip some more
 
       int n_to_skip = (int) std::min(d_nitems_to_skip - ni_total,
-				     (long long)(ninput_items - ii));
+				     (uint64_t)(ninput_items - ii));
       ii += n_to_skip;
     }
 
