@@ -97,7 +97,8 @@ def handle_dir(directory):
       directory = directory + os.sep
    acc = []
    for root, dirs, files in os.walk(directory, topdown=True):
-      scm_files = [f for f in files if f.endswith('.scm')]
+      # scm_files = [f for f in files if f.endswith('.scm')]
+      scm_files = files
       for f in scm_files:
          full_name = os.path.join(root, f)
          t = (full_name[len(directory):], full_name)
