@@ -428,9 +428,9 @@ scm_xyzzy_init (void)
   scm_loc_current_reader = SCM_VARIABLE_LOC (scm_c_lookup("current-reader"));
 
   /* initialize our functions in the scheme VM */
-  scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
   scm_c_define_gsubr ("xyzzy-open-file", 1, 0, 0, (SCM (*)()) scm_xyzzy_open_file);
   scm_c_define_gsubr ("xyzzy-primitive-load", 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load);
-  scm_c_define_gsubr ("xyzzy-search-load-path", 1, 0, 0, (SCM (*)()) scm_xyzzy_sys_search_load_path);
   scm_c_define_gsubr ("xyzzy-primitive-load-path", 1, 0, 0, (SCM (*)()) scm_xyzzy_primitive_load_path);
+  scm_c_define_gsubr ("%xyzzy-search-load-path", 1, 0, 0, (SCM (*)()) scm_xyzzy_sys_search_load_path);
+  scm_c_define_gsubr ("xyzzy-search-path", 2, 1, 0, (SCM (*)()) scm_xyzzy_search_path);
 }
