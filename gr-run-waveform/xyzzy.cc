@@ -102,7 +102,7 @@ XYZZY::init(const std::string &file)
         in.seekg(store);
         _contents[name] = contents;
     }
-    cout << "Loaded " << _contents.size() << " Filesystem entries" << endl;
+    // cout << "Loaded " << _contents.size() << " Filesystem entries" << endl;
     
     in.close();
 
