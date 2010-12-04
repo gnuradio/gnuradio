@@ -27,10 +27,9 @@
 #include "xyzzy.h"
 
 /*
- * Load and run a waveform defined with define-waveform
+ * Load and run a waveform defined using define-waveform
  * usage: gr-run-waveform filename.wfd [args...]
  */
-
 
 static bool
 prepend_to_env(const char *name, const char *value)
@@ -73,10 +72,14 @@ static const char *code = "\
 static void
 inner_main (void *data, int argc, char **argv)
 {
+  // Load pseudo filesystem
   if (!xyzzy_init(0))	// use compiled-in install path
     exit(1);
 
+  // Initialize our gsubrs
   scm_xyzzy_init();
+
+  // Override standard code with our gsubrs and and run our app
   scm_c_eval_string(code);
 }
 
