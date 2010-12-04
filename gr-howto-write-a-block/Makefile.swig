@@ -92,8 +92,8 @@ STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 
 # We drive the dependencies off of swig_built_sources.  This variable
 # ends up containing only the generated .py and/or .scm files, not the .h
-# or .cc files.  This allows us to use the pattern rules in
-# Makefile.common to generate all the pieces without the parallel make
+# or .cc files.  This allows us to use the pattern rules defined
+# below to generate all the pieces without the parallel make
 # problems that occur when both the .py's and .cc's are in swig_built_sources.
 
 swig_built_sources =
@@ -136,6 +136,34 @@ CLEANFILES += $(swig_all_built_sources)
 CLEANFILES += python/*.lo python/*.o python/*.d
 CLEANFILES += guile/*.lo  guile/*.o  guile/*.d
 
+
+## SWIG suffixes for automake to know about
+SUFFIXES = .i .scm .py
+
+# Compile a .i to what guile needs. We use -o to set the output file name,
+# or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
+# gnuradio_core_*_wrap.cxx in the source directory.
+gnuradio/%.scm : %.i
+	@echo "Compile .i to .scm"
+	@test -d "guile" || $(mkinstalldirs) "guile"
+	@test -d "gnuradio" || $(mkinstalldirs) "gnuradio"
+	$(SWIG) $(STD_SWIG_GUILE_ARGS) $($*_swig_args) \
+		-MD -MF guile/$*.Std \
+		-module $* -o guile/$*.cc $<
+	$(SED) -e 's|guile/\(.*\)\.cc:|gnuradio/\1.scm:|' guile/$*.Std > guile/$*.d
+	$(SED) -i -e 's/<--dummy-[0-9]\+-->/<top>/g' gnuradio/$*.scm
+	$(SED) -i -e 's/^(export /(export-safely /' gnuradio/$*.scm
+	$(RM) guile/$*.Std
+
+# Compile a .i file to what python needs
+.i.py:
+	@echo "Compile .i to .py"
+	@test -d "python" || $(mkinstalldirs) "python"
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) $($*_swig_args) \
+		-MD -MF python/$*.Std \
+		-module $* -o python/$*.cc -oh python/$*.h $<
+	$(SED) -e 's|python/\(.*\)\.cc:|\1.py:|' python/$*.Std > python/$*.d
+	$(RM) python/$*.Std
 
 ## ------------------------------------------------------------------------
 ## Rule that (re)generates Makefile.swig.gen using TOP_SWIG_IFILES and
