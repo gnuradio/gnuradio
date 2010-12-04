@@ -30,26 +30,31 @@
  * Load and run a waveform defined with define-waveform
  * usage: gr-run-waveform filename.wfd [args...]
  */
-static const char *code =
-"(set! %load-verbosely #t)				\n"
-"(define primitive-load xyzzy-primitive-load)		\n"
-"(define primitive-load-path xyzzy-primitive-load-path)	\n"
-"(define search-path xyzzy-search-path)			\n"
-"(define search-load-path xyzzy-search-load-path)	\n"
-"\n"
-"(primitive-load-path \"gnuradio/run-waveform\")	\n"
-"\n"
-"(define (main args)					\n"
-"  (if (not (>= (length args) 2))			\n"
-"      (let ((port (current-error-port)))		\n"
-"	(display \"usage: \" port)			\n"
-"	(display (car args) port)			\n"
-"	(display \" filename.wfd [args...]\n\" port)	\n"
-"	(exit 1)))					\n"
-"  (apply run-waveform (cdr args)))			\n"
-"\n"
-"(main (command-line))					\n"
-;
+static const char *code = "\
+(set! %load-verbosely #t)				\n\
+							\n\
+(save-module-excursion					\n\
+ (lambda ()						\n\
+   (set-current-module (resolve-module '(guile)))	\n\
+   (set! primitive-load xyzzy-primitive-load)		\n\
+   (set! primitive-load-path xyzzy-primitive-load-path)	\n\
+   (set! search-path xyzzy-search-path)			\n\
+   (set! %search-load-path %xyzzy-search-load-path)))	\n\
+							\n\
+(primitive-load-path \"gnuradio/run-waveform\")		\n\
+							\n\
+(define (main args)					\n\
+  (if (not (>= (length args) 2))			\n\
+      (let ((port (current-error-port)))		\n\
+	(display \"usage: \" port)			\n\
+	(display (car args) port)			\n\
+	(display \" filename.wfd [args...]\n\" port)	\n\
+	(exit 1)))					\n\
+  (apply run-waveform (cdr args)))			\n\
+							\n\
+(main (command-line))					\n\
+";
+
 
 
 static void
