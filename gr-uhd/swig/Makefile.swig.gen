@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 uhd_swig_scmlib_LTLIBRARIES = 		\
-	libguile-uhd_swig.la
-libguile_uhd_swig_la_SOURCES =		\
+	libguile-gnuradio-uhd_swig.la
+libguile_gnuradio_uhd_swig_la_SOURCES =	\
 	guile/uhd_swig.cc			\
 	$(uhd_swig_la_swig_sources)
 nobase_uhd_swig_scm_DATA = 		\
 	gnuradio/uhd_swig.scm 		\
 	gnuradio/uhd_swig-primitive.scm
-libguile_uhd_swig_la_LIBADD = 		\
+libguile_gnuradio_uhd_swig_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(uhd_swig_la_swig_libadd)
-libguile_uhd_swig_la_LDFLAGS = 		\
+libguile_gnuradio_uhd_swig_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(uhd_swig_la_swig_ldflags)
-libguile_uhd_swig_la_CXXFLAGS = 		\
+libguile_gnuradio_uhd_swig_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(uhd_swig_la_swig_cxxflags)

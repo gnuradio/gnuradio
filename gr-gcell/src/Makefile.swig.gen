@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 gcell_scmlib_LTLIBRARIES = 		\
-	libguile-gcell.la
-libguile_gcell_la_SOURCES =		\
+	libguile-gnuradio-gcell.la
+libguile_gnuradio_gcell_la_SOURCES =	\
 	guile/gcell.cc			\
 	$(gcell_la_swig_sources)
 nobase_gcell_scm_DATA = 		\
 	gnuradio/gcell.scm 		\
 	gnuradio/gcell-primitive.scm
-libguile_gcell_la_LIBADD = 		\
+libguile_gnuradio_gcell_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gcell_la_swig_libadd)
-libguile_gcell_la_LDFLAGS = 		\
+libguile_gnuradio_gcell_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gcell_la_swig_ldflags)
-libguile_gcell_la_CXXFLAGS = 		\
+libguile_gnuradio_gcell_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(gcell_la_swig_cxxflags)

@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 gsm_full_rate_scmlib_LTLIBRARIES = 		\
-	libguile-gsm_full_rate.la
-libguile_gsm_full_rate_la_SOURCES =		\
+	libguile-gnuradio-gsm_full_rate.la
+libguile_gnuradio_gsm_full_rate_la_SOURCES =	\
 	guile/gsm_full_rate.cc			\
 	$(gsm_full_rate_la_swig_sources)
 nobase_gsm_full_rate_scm_DATA = 		\
 	gnuradio/gsm_full_rate.scm 		\
 	gnuradio/gsm_full_rate-primitive.scm
-libguile_gsm_full_rate_la_LIBADD = 		\
+libguile_gnuradio_gsm_full_rate_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gsm_full_rate_la_swig_libadd)
-libguile_gsm_full_rate_la_LDFLAGS = 		\
+libguile_gnuradio_gsm_full_rate_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gsm_full_rate_la_swig_ldflags)
-libguile_gsm_full_rate_la_CXXFLAGS = 		\
+libguile_gnuradio_gsm_full_rate_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(gsm_full_rate_la_swig_cxxflags)

@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 msdd_scmlib_LTLIBRARIES = 		\
-	libguile-msdd.la
-libguile_msdd_la_SOURCES =		\
+	libguile-gnuradio-msdd.la
+libguile_gnuradio_msdd_la_SOURCES =	\
 	guile/msdd.cc			\
 	$(msdd_la_swig_sources)
 nobase_msdd_scm_DATA = 		\
 	gnuradio/msdd.scm 		\
 	gnuradio/msdd-primitive.scm
-libguile_msdd_la_LIBADD = 		\
+libguile_gnuradio_msdd_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(msdd_la_swig_libadd)
-libguile_msdd_la_LDFLAGS = 		\
+libguile_gnuradio_msdd_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(msdd_la_swig_ldflags)
-libguile_msdd_la_CXXFLAGS = 		\
+libguile_gnuradio_msdd_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(msdd_la_swig_cxxflags)
@@ -260,20 +260,20 @@ endif		# end of if python
 if GUILE
 
 msdd_rs_scmlib_LTLIBRARIES = 		\
-	libguile-msdd_rs.la
-libguile_msdd_rs_la_SOURCES =		\
+	libguile-gnuradio-msdd_rs.la
+libguile_gnuradio_msdd_rs_la_SOURCES =	\
 	guile/msdd_rs.cc			\
 	$(msdd_rs_la_swig_sources)
 nobase_msdd_rs_scm_DATA = 		\
 	gnuradio/msdd_rs.scm 		\
 	gnuradio/msdd_rs-primitive.scm
-libguile_msdd_rs_la_LIBADD = 		\
+libguile_gnuradio_msdd_rs_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(msdd_rs_la_swig_libadd)
-libguile_msdd_rs_la_LDFLAGS = 		\
+libguile_gnuradio_msdd_rs_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(msdd_rs_la_swig_ldflags)
-libguile_msdd_rs_la_CXXFLAGS = 		\
+libguile_gnuradio_msdd_rs_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(msdd_rs_la_swig_cxxflags)

@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 gnuradio_core_runtime_scmlib_LTLIBRARIES = 		\
-	libguile-gnuradio_core_runtime.la
-libguile_gnuradio_core_runtime_la_SOURCES =		\
+	libguile-gnuradio-gnuradio_core_runtime.la
+libguile_gnuradio_gnuradio_core_runtime_la_SOURCES =	\
 	guile/gnuradio_core_runtime.cc			\
 	$(gnuradio_core_runtime_la_swig_sources)
 nobase_gnuradio_core_runtime_scm_DATA = 		\
 	gnuradio/gnuradio_core_runtime.scm 		\
 	gnuradio/gnuradio_core_runtime-primitive.scm
-libguile_gnuradio_core_runtime_la_LIBADD = 		\
+libguile_gnuradio_gnuradio_core_runtime_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_core_runtime_la_swig_libadd)
-libguile_gnuradio_core_runtime_la_LDFLAGS = 		\
+libguile_gnuradio_gnuradio_core_runtime_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_core_runtime_la_swig_ldflags)
-libguile_gnuradio_core_runtime_la_CXXFLAGS = 		\
+libguile_gnuradio_gnuradio_core_runtime_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_runtime_la_swig_cxxflags)
@@ -260,20 +260,20 @@ endif		# end of if python
 if GUILE
 
 gnuradio_core_general_scmlib_LTLIBRARIES = 		\
-	libguile-gnuradio_core_general.la
-libguile_gnuradio_core_general_la_SOURCES =		\
+	libguile-gnuradio-gnuradio_core_general.la
+libguile_gnuradio_gnuradio_core_general_la_SOURCES =	\
 	guile/gnuradio_core_general.cc			\
 	$(gnuradio_core_general_la_swig_sources)
 nobase_gnuradio_core_general_scm_DATA = 		\
 	gnuradio/gnuradio_core_general.scm 		\
 	gnuradio/gnuradio_core_general-primitive.scm
-libguile_gnuradio_core_general_la_LIBADD = 		\
+libguile_gnuradio_gnuradio_core_general_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_core_general_la_swig_libadd)
-libguile_gnuradio_core_general_la_LDFLAGS = 		\
+libguile_gnuradio_gnuradio_core_general_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_core_general_la_swig_ldflags)
-libguile_gnuradio_core_general_la_CXXFLAGS = 		\
+libguile_gnuradio_gnuradio_core_general_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_general_la_swig_cxxflags)
@@ -405,20 +405,20 @@ endif		# end of if python
 if GUILE
 
 gnuradio_core_gengen_scmlib_LTLIBRARIES = 		\
-	libguile-gnuradio_core_gengen.la
-libguile_gnuradio_core_gengen_la_SOURCES =		\
+	libguile-gnuradio-gnuradio_core_gengen.la
+libguile_gnuradio_gnuradio_core_gengen_la_SOURCES =	\
 	guile/gnuradio_core_gengen.cc			\
 	$(gnuradio_core_gengen_la_swig_sources)
 nobase_gnuradio_core_gengen_scm_DATA = 		\
 	gnuradio/gnuradio_core_gengen.scm 		\
 	gnuradio/gnuradio_core_gengen-primitive.scm
-libguile_gnuradio_core_gengen_la_LIBADD = 		\
+libguile_gnuradio_gnuradio_core_gengen_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_core_gengen_la_swig_libadd)
-libguile_gnuradio_core_gengen_la_LDFLAGS = 		\
+libguile_gnuradio_gnuradio_core_gengen_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_core_gengen_la_swig_ldflags)
-libguile_gnuradio_core_gengen_la_CXXFLAGS = 		\
+libguile_gnuradio_gnuradio_core_gengen_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_gengen_la_swig_cxxflags)
@@ -550,20 +550,20 @@ endif		# end of if python
 if GUILE
 
 gnuradio_core_filter_scmlib_LTLIBRARIES = 		\
-	libguile-gnuradio_core_filter.la
-libguile_gnuradio_core_filter_la_SOURCES =		\
+	libguile-gnuradio-gnuradio_core_filter.la
+libguile_gnuradio_gnuradio_core_filter_la_SOURCES =	\
 	guile/gnuradio_core_filter.cc			\
 	$(gnuradio_core_filter_la_swig_sources)
 nobase_gnuradio_core_filter_scm_DATA = 		\
 	gnuradio/gnuradio_core_filter.scm 		\
 	gnuradio/gnuradio_core_filter-primitive.scm
-libguile_gnuradio_core_filter_la_LIBADD = 		\
+libguile_gnuradio_gnuradio_core_filter_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_core_filter_la_swig_libadd)
-libguile_gnuradio_core_filter_la_LDFLAGS = 		\
+libguile_gnuradio_gnuradio_core_filter_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_core_filter_la_swig_ldflags)
-libguile_gnuradio_core_filter_la_CXXFLAGS = 		\
+libguile_gnuradio_gnuradio_core_filter_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_filter_la_swig_cxxflags)
@@ -695,20 +695,20 @@ endif		# end of if python
 if GUILE
 
 gnuradio_core_io_scmlib_LTLIBRARIES = 		\
-	libguile-gnuradio_core_io.la
-libguile_gnuradio_core_io_la_SOURCES =		\
+	libguile-gnuradio-gnuradio_core_io.la
+libguile_gnuradio_gnuradio_core_io_la_SOURCES =	\
 	guile/gnuradio_core_io.cc			\
 	$(gnuradio_core_io_la_swig_sources)
 nobase_gnuradio_core_io_scm_DATA = 		\
 	gnuradio/gnuradio_core_io.scm 		\
 	gnuradio/gnuradio_core_io-primitive.scm
-libguile_gnuradio_core_io_la_LIBADD = 		\
+libguile_gnuradio_gnuradio_core_io_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_core_io_la_swig_libadd)
-libguile_gnuradio_core_io_la_LDFLAGS = 		\
+libguile_gnuradio_gnuradio_core_io_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_core_io_la_swig_ldflags)
-libguile_gnuradio_core_io_la_CXXFLAGS = 		\
+libguile_gnuradio_gnuradio_core_io_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_io_la_swig_cxxflags)
@@ -840,20 +840,20 @@ endif		# end of if python
 if GUILE
 
 gnuradio_core_hier_scmlib_LTLIBRARIES = 		\
-	libguile-gnuradio_core_hier.la
-libguile_gnuradio_core_hier_la_SOURCES =		\
+	libguile-gnuradio-gnuradio_core_hier.la
+libguile_gnuradio_gnuradio_core_hier_la_SOURCES =	\
 	guile/gnuradio_core_hier.cc			\
 	$(gnuradio_core_hier_la_swig_sources)
 nobase_gnuradio_core_hier_scm_DATA = 		\
 	gnuradio/gnuradio_core_hier.scm 		\
 	gnuradio/gnuradio_core_hier-primitive.scm
-libguile_gnuradio_core_hier_la_LIBADD = 		\
+libguile_gnuradio_gnuradio_core_hier_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(gnuradio_core_hier_la_swig_libadd)
-libguile_gnuradio_core_hier_la_LDFLAGS = 		\
+libguile_gnuradio_gnuradio_core_hier_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(gnuradio_core_hier_la_swig_ldflags)
-libguile_gnuradio_core_hier_la_CXXFLAGS = 		\
+libguile_gnuradio_gnuradio_core_hier_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(gnuradio_core_hier_la_swig_cxxflags)

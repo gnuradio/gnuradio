@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 audio_jack_scmlib_LTLIBRARIES = 		\
-	libguile-audio_jack.la
-libguile_audio_jack_la_SOURCES =		\
+	libguile-gnuradio-audio_jack.la
+libguile_gnuradio_audio_jack_la_SOURCES =	\
 	guile/audio_jack.cc			\
 	$(audio_jack_la_swig_sources)
 nobase_audio_jack_scm_DATA = 		\
 	gnuradio/audio_jack.scm 		\
 	gnuradio/audio_jack-primitive.scm
-libguile_audio_jack_la_LIBADD = 		\
+libguile_gnuradio_audio_jack_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(audio_jack_la_swig_libadd)
-libguile_audio_jack_la_LDFLAGS = 		\
+libguile_gnuradio_audio_jack_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(audio_jack_la_swig_ldflags)
-libguile_audio_jack_la_CXXFLAGS = 		\
+libguile_gnuradio_audio_jack_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(audio_jack_la_swig_cxxflags)

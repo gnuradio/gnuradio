@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 cvsd_vocoder_scmlib_LTLIBRARIES = 		\
-	libguile-cvsd_vocoder.la
-libguile_cvsd_vocoder_la_SOURCES =		\
+	libguile-gnuradio-cvsd_vocoder.la
+libguile_gnuradio_cvsd_vocoder_la_SOURCES =	\
 	guile/cvsd_vocoder.cc			\
 	$(cvsd_vocoder_la_swig_sources)
 nobase_cvsd_vocoder_scm_DATA = 		\
 	gnuradio/cvsd_vocoder.scm 		\
 	gnuradio/cvsd_vocoder-primitive.scm
-libguile_cvsd_vocoder_la_LIBADD = 		\
+libguile_gnuradio_cvsd_vocoder_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(cvsd_vocoder_la_swig_libadd)
-libguile_cvsd_vocoder_la_LDFLAGS = 		\
+libguile_gnuradio_cvsd_vocoder_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(cvsd_vocoder_la_swig_ldflags)
-libguile_cvsd_vocoder_la_CXXFLAGS = 		\
+libguile_gnuradio_cvsd_vocoder_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(cvsd_vocoder_la_swig_cxxflags)

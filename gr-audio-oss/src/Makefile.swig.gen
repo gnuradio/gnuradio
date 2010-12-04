@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 audio_oss_scmlib_LTLIBRARIES = 		\
-	libguile-audio_oss.la
-libguile_audio_oss_la_SOURCES =		\
+	libguile-gnuradio-audio_oss.la
+libguile_gnuradio_audio_oss_la_SOURCES =	\
 	guile/audio_oss.cc			\
 	$(audio_oss_la_swig_sources)
 nobase_audio_oss_scm_DATA = 		\
 	gnuradio/audio_oss.scm 		\
 	gnuradio/audio_oss-primitive.scm
-libguile_audio_oss_la_LIBADD = 		\
+libguile_gnuradio_audio_oss_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(audio_oss_la_swig_libadd)
-libguile_audio_oss_la_LDFLAGS = 		\
+libguile_gnuradio_audio_oss_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(audio_oss_la_swig_ldflags)
-libguile_audio_oss_la_CXXFLAGS = 		\
+libguile_gnuradio_audio_oss_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(audio_oss_la_swig_cxxflags)

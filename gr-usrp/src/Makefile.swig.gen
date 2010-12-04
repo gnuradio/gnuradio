@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 usrp_swig_scmlib_LTLIBRARIES = 		\
-	libguile-usrp_swig.la
-libguile_usrp_swig_la_SOURCES =		\
+	libguile-gnuradio-usrp_swig.la
+libguile_gnuradio_usrp_swig_la_SOURCES =	\
 	guile/usrp_swig.cc			\
 	$(usrp_swig_la_swig_sources)
 nobase_usrp_swig_scm_DATA = 		\
 	gnuradio/usrp_swig.scm 		\
 	gnuradio/usrp_swig-primitive.scm
-libguile_usrp_swig_la_LIBADD = 		\
+libguile_gnuradio_usrp_swig_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(usrp_swig_la_swig_libadd)
-libguile_usrp_swig_la_LDFLAGS = 		\
+libguile_gnuradio_usrp_swig_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(usrp_swig_la_swig_ldflags)
-libguile_usrp_swig_la_CXXFLAGS = 		\
+libguile_gnuradio_usrp_swig_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(usrp_swig_la_swig_cxxflags)

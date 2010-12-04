@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 noaa_swig_scmlib_LTLIBRARIES = 		\
-	libguile-noaa_swig.la
-libguile_noaa_swig_la_SOURCES =		\
+	libguile-gnuradio-noaa_swig.la
+libguile_gnuradio_noaa_swig_la_SOURCES =	\
 	guile/noaa_swig.cc			\
 	$(noaa_swig_la_swig_sources)
 nobase_noaa_swig_scm_DATA = 		\
 	gnuradio/noaa_swig.scm 		\
 	gnuradio/noaa_swig-primitive.scm
-libguile_noaa_swig_la_LIBADD = 		\
+libguile_gnuradio_noaa_swig_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(noaa_swig_la_swig_libadd)
-libguile_noaa_swig_la_LDFLAGS = 		\
+libguile_gnuradio_noaa_swig_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(noaa_swig_la_swig_ldflags)
-libguile_noaa_swig_la_CXXFLAGS = 		\
+libguile_gnuradio_noaa_swig_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(noaa_swig_la_swig_cxxflags)

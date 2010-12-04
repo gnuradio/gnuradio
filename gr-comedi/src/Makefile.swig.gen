@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 comedi_scmlib_LTLIBRARIES = 		\
-	libguile-comedi.la
-libguile_comedi_la_SOURCES =		\
+	libguile-gnuradio-comedi.la
+libguile_gnuradio_comedi_la_SOURCES =	\
 	guile/comedi.cc			\
 	$(comedi_la_swig_sources)
 nobase_comedi_scm_DATA = 		\
 	gnuradio/comedi.scm 		\
 	gnuradio/comedi-primitive.scm
-libguile_comedi_la_LIBADD = 		\
+libguile_gnuradio_comedi_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(comedi_la_swig_libadd)
-libguile_comedi_la_LDFLAGS = 		\
+libguile_gnuradio_comedi_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(comedi_la_swig_ldflags)
-libguile_comedi_la_CXXFLAGS = 		\
+libguile_gnuradio_comedi_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(comedi_la_swig_cxxflags)

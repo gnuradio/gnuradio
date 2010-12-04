@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 usrp2_scmlib_LTLIBRARIES = 		\
-	libguile-usrp2.la
-libguile_usrp2_la_SOURCES =		\
+	libguile-gnuradio-usrp2.la
+libguile_gnuradio_usrp2_la_SOURCES =	\
 	guile/usrp2.cc			\
 	$(usrp2_la_swig_sources)
 nobase_usrp2_scm_DATA = 		\
 	gnuradio/usrp2.scm 		\
 	gnuradio/usrp2-primitive.scm
-libguile_usrp2_la_LIBADD = 		\
+libguile_gnuradio_usrp2_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(usrp2_la_swig_libadd)
-libguile_usrp2_la_LDFLAGS = 		\
+libguile_gnuradio_usrp2_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(usrp2_la_swig_ldflags)
-libguile_usrp2_la_CXXFLAGS = 		\
+libguile_gnuradio_usrp2_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(usrp2_la_swig_cxxflags)

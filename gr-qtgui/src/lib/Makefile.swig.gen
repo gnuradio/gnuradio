@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 qtgui_scmlib_LTLIBRARIES = 		\
-	libguile-qtgui.la
-libguile_qtgui_la_SOURCES =		\
+	libguile-gnuradio-qtgui.la
+libguile_gnuradio_qtgui_la_SOURCES =	\
 	guile/qtgui.cc			\
 	$(qtgui_la_swig_sources)
 nobase_qtgui_scm_DATA = 		\
 	gnuradio/qtgui.scm 		\
 	gnuradio/qtgui-primitive.scm
-libguile_qtgui_la_LIBADD = 		\
+libguile_gnuradio_qtgui_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(qtgui_la_swig_libadd)
-libguile_qtgui_la_LDFLAGS = 		\
+libguile_gnuradio_qtgui_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(qtgui_la_swig_ldflags)
-libguile_qtgui_la_CXXFLAGS = 		\
+libguile_gnuradio_qtgui_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(qtgui_la_swig_cxxflags)

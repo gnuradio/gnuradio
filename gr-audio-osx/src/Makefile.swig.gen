@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 audio_osx_scmlib_LTLIBRARIES = 		\
-	libguile-audio_osx.la
-libguile_audio_osx_la_SOURCES =		\
+	libguile-gnuradio-audio_osx.la
+libguile_gnuradio_audio_osx_la_SOURCES =	\
 	guile/audio_osx.cc			\
 	$(audio_osx_la_swig_sources)
 nobase_audio_osx_scm_DATA = 		\
 	gnuradio/audio_osx.scm 		\
 	gnuradio/audio_osx-primitive.scm
-libguile_audio_osx_la_LIBADD = 		\
+libguile_gnuradio_audio_osx_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(audio_osx_la_swig_libadd)
-libguile_audio_osx_la_LDFLAGS = 		\
+libguile_gnuradio_audio_osx_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(audio_osx_la_swig_ldflags)
-libguile_audio_osx_la_CXXFLAGS = 		\
+libguile_gnuradio_audio_osx_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(audio_osx_la_swig_cxxflags)

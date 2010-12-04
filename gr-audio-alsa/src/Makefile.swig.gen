@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 audio_alsa_scmlib_LTLIBRARIES = 		\
-	libguile-audio_alsa.la
-libguile_audio_alsa_la_SOURCES =		\
+	libguile-gnuradio-audio_alsa.la
+libguile_gnuradio_audio_alsa_la_SOURCES =	\
 	guile/audio_alsa.cc			\
 	$(audio_alsa_la_swig_sources)
 nobase_audio_alsa_scm_DATA = 		\
 	gnuradio/audio_alsa.scm 		\
 	gnuradio/audio_alsa-primitive.scm
-libguile_audio_alsa_la_LIBADD = 		\
+libguile_gnuradio_audio_alsa_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(audio_alsa_la_swig_libadd)
-libguile_audio_alsa_la_LDFLAGS = 		\
+libguile_gnuradio_audio_alsa_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(audio_alsa_la_swig_ldflags)
-libguile_audio_alsa_la_CXXFLAGS = 		\
+libguile_gnuradio_audio_alsa_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(audio_alsa_la_swig_cxxflags)

@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 ra_scmlib_LTLIBRARIES = 		\
-	libguile-ra.la
-libguile_ra_la_SOURCES =		\
+	libguile-gnuradio-ra.la
+libguile_gnuradio_ra_la_SOURCES =	\
 	guile/ra.cc			\
 	$(ra_la_swig_sources)
 nobase_ra_scm_DATA = 		\
 	gnuradio/ra.scm 		\
 	gnuradio/ra-primitive.scm
-libguile_ra_la_LIBADD = 		\
+libguile_gnuradio_ra_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(ra_la_swig_libadd)
-libguile_ra_la_LDFLAGS = 		\
+libguile_gnuradio_ra_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(ra_la_swig_ldflags)
-libguile_ra_la_CXXFLAGS = 		\
+libguile_gnuradio_ra_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(ra_la_swig_cxxflags)
