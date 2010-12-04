@@ -42,7 +42,7 @@ BUILT_SOURCES = libpath.h filesystem.dat
 dist_filesystem_DATA = filesystem.dat
 
 # A unit test case for the XYZZY class
-check_PROGRAMS = test_xyzzy test_waveform
+check_PROGRAMS = test_xyzzy test_embed
 test_xyzzy_SOURCES = test_xyzzy.cc  xyzzy.cc xyzzy-load.c
 test_xyzzy_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
@@ -50,15 +50,15 @@ test_xyzzy_CPPFLAGS = $(GUILE_CFLAGS) \
 test_xyzzy_LDADD = $(GUILE_LIBS)
 test_xyzzy_DEPENDENCIES = $(BUILT_SOURCES)
 
-test_waveform_SOURCES = test_waveform.c xyzzy.cc xyzzy-load.c
-test_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
+test_embed_SOURCES = test_embed.c xyzzy.cc xyzzy-load.c
+test_embed_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
 	-DPKGLIBDIR=\"$(pkglibdir)\" \
 	-DDATAROOTDIR=\"$(datarootdir)\" \
 	-DLIBDIR=\"$(libdir)\"
 
-test_waveform_LDADD = $(GUILE_LIBS)
-test_waveform_DEPENDENCIES = $(BUILT_SOURCES)
+test_embed_LDADD = $(GUILE_LIBS)
+test_embed_DEPENDENCIES = $(BUILT_SOURCES)
 
 # Don't install the internal header
 noinst_HEADERS = xyzzy.h
