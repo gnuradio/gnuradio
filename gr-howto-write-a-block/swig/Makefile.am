@@ -28,13 +28,13 @@ AM_CPPFLAGS += -I$(top_srcdir)/lib
 # SWIG interfaces and libraries
 
 TOP_SWIG_IFILES = \
-	howto.i
+	howto_swig.i
 
 # Install so that they end up available as:
 #   import howto
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)
-howto_la_swig_libadd =		\
+howto_swig_la_swig_libadd = \
 	$(top_builddir)/lib/libgnuradio-howto.la
 
 # additional SWIG files to be installed

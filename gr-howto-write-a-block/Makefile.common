@@ -20,6 +20,16 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# Every Makefile starts with common vars so we can
+# consistently use +=
+BUILT_SOURCES =
+MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
+CLEANFILES = guile.log
+DISTCLEANFILES =
+#EXTRA_DIST =
+STAMPS =
+
+
 # The name of this "out-of-tree" module
 modname = howto
 

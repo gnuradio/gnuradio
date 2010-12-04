@@ -79,12 +79,17 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 	@NAME@.i			\
 	$(@NAME@_swiginclude_headers)
 
+if PYTHON
 @NAME@_pylib_LTLIBRARIES =		\
 	_@NAME@.la
 
 _@NAME@_la_SOURCES = 			\
 	python/@NAME@.cc		\
 	$(@NAME@_la_swig_sources)
+
+@NAME@_python_PYTHON =			\
+	@NAME@.py			\
+	$(@NAME@_python)
 
 _@NAME@_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
@@ -99,27 +104,34 @@ _@NAME@_la_CXXFLAGS =			\
 	-I$(top_builddir) 		\
 	$(@NAME@_la_swig_cxxflags)
 
-@NAME@_python_PYTHON =			\
-	@NAME@.py			\
-	$(@NAME@_python)
-
 python/@NAME@.cc: @NAME@.py
 @NAME@.py: @NAME@.i
 
 # Include the python dependencies for this file
 -include python/@NAME@.d
-# end of PYTHON
+
+endif		# end of if python
 
 if GUILE
-@NAME@_scmlib_LTLIBRARIES = libguile-@NAME@.la
-libguile_@NAME@_la_SOURCES =		\
+
+@NAME@_scmlib_LTLIBRARIES = 		\
+	libguile-gnuradio-@NAME@.la
+libguile_gnuradio_@NAME@_la_SOURCES =	\
 	guile/@NAME@.cc			\
 	$(@NAME@_la_swig_sources)
-nobase_@NAME@_scm_DATA = gnuradio/@NAME@.scm gnuradio/@NAME@-primitive.scm
-
-libguile_@NAME@_la_LIBADD = $(_@NAME@_la_LIBADD)
-libguile_@NAME@_la_LDFLAGS = $(_@NAME@_la_LDFLAGS)
-libguile_@NAME@_la_CXXFLAGS = $(_@NAME@_la_CXXFLAGS)
+nobase_@NAME@_scm_DATA = 		\
+	gnuradio/@NAME@.scm 		\
+	gnuradio/@NAME@-primitive.scm
+libguile_gnuradio_@NAME@_la_LIBADD = 	\
+	$(STD_SWIG_LA_LIB_ADD)		\
+	$(@NAME@_la_swig_libadd)
+libguile_gnuradio_@NAME@_la_LDFLAGS = 	\
+	$(STD_SWIG_LA_LD_FLAGS)		\
+	$(@NAME@_la_swig_ldflags)
+libguile_gnuradio_@NAME@_la_CXXFLAGS = 	\
+	$(STD_SWIG_CXX_FLAGS)		\
+	-I$(top_builddir) 		\
+	$(@NAME@_la_swig_cxxflags)
 
 guile/@NAME@.cc: gnuradio/@NAME@.scm
 gnuradio/@NAME@.scm: @NAME@.i

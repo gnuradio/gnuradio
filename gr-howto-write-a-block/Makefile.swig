@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,15 +25,17 @@
 ## in Makefile.am's which require SWIG wrapping / compilation.
 ## For just installing .i files, this Makefile is not required.
 
+
+## include the built Makefile.swig.gen, always the one from the srcdir
+include $(srcdir)/Makefile.swig.gen
+
+
 ## swig flags
 ## -w511 turns off keyword argument warning
 ## "-outdir $(builddir)" writes all generated output files to
 ##   the local builddir (which should always be '.')
 ##   In some older autotools, $(builddir) is not defined, so
 ##   just use '.' instead.
-
-CLEANFILES = python/*.cc python/*.h python/*.lo python/*.o
-CLEANFILES += guile/*.cc gnuradio/*.scm guile/*.lo guile/*.o
 
 SWIG_PYTHON_FLAGS =	\
 	-fvirtual	\
@@ -68,8 +70,7 @@ STD_SWIG_GUILE_ARGS =				\
 	$(SWIG_GUILE_FLAGS)			\
 	$(STD_DEFINES_AND_INCLUDES)		\
 	$(WITH_SWIG_INCLUDES)			\
-	$(WITH_INCLUDES)			\
-	-I$(GNURADIO_CORE_INCLUDEDIR)/swig/guile
+	$(WITH_INCLUDES)
 
 ## standard SWIG LD flags for library creation
 
@@ -89,6 +90,57 @@ STD_SWIG_LA_LIB_ADD = -lstdc++
 
 STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 
+# We drive the dependencies off of swig_built_sources.  This variable
+# ends up containing only the generated .py and/or .scm files, not the .h
+# or .cc files.  This allows us to use the pattern rules in
+# Makefile.common to generate all the pieces without the parallel make
+# problems that occur when both the .py's and .cc's are in swig_built_sources.
+
+swig_built_sources =
+
+# swig_all_built_sources contains swig_built_sources plus the .cc and .h files.
+# It contains the files to remove from the distribution and the files to
+# remove for make clean.
+
+swig_all_built_sources =
+
+if PYTHON
+# Create a list of .py files based on the top level .i files.
+PYTHON_GEN = $(foreach IFILE,$(TOP_SWIG_IFILES), $(subst .i,.py,$(IFILE)))
+swig_built_sources += $(PYTHON_GEN)
+swig_all_built_sources += $(PYTHON_GEN)
+
+# Now add .h, .cc to _all_
+swig_all_built_sources += $(foreach IFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,python/%.h,$(IFILE)))
+swig_all_built_sources += $(foreach IFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,python/%.cc,$(IFILE)))
+endif
+
+if GUILE
+# Create a list of .scm files based on the top level .i files.
+GUILE_GEN = $(foreach IFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%.scm,$(IFILE)))
+swig_built_sources += $(GUILE_GEN)
+swig_all_built_sources += $(GUILE_GEN)
+
+# Now add -primitive.scm, .cc to _all_
+swig_all_built_sources += $(foreach IFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,gnuradio/%-primitive.scm,$(IFILE)))
+swig_all_built_sources += $(foreach IFILE,$(TOP_SWIG_IFILES), $(patsubst %.i,guile/%.cc,$(IFILE)))
+endif
+
+# N.B. Only $(swig_built_sources), not $(swig_all_built_sources)
+BUILT_SOURCES += $(swig_built_sources)
+
+# Don't distribute any of the swig generated files
+no_dist_files = $(swig_all_built_sources)
+
+CLEANFILES += $(swig_all_built_sources)
+CLEANFILES += python/*.lo python/*.o python/*.d
+CLEANFILES += guile/*.lo  guile/*.o  guile/*.d
+
+
+## ------------------------------------------------------------------------
+## Rule that (re)generates Makefile.swig.gen using TOP_SWIG_IFILES and
+## Makefile.swig.gen.t
+##
 ## Create $(srcdir)/Makefile.swig.gen, containing all of the rules
 ## for running SWIG to generate or re-generate outputs.  SWIG file
 ## names are to be defined in TOP_SWIG_IFILES, and must include the
@@ -125,12 +177,4 @@ generate-makefile-swig $(srcdir)/Makefile.swig.gen: $(top_srcdir)/Makefile.swig.
 		echo "Cannot recreate $(srcdir)/Makefile.swig.gen because the directory or file is write-protected."; \
 		exit -1; \
 	fi;
-
-swig_built_sources =
-
-## include the built Makefile.swig.gen, always the one from the
-## srcdir; this must be included as the last item, because it depends
-## on variables defined above.
-
-include $(srcdir)/Makefile.swig.gen
 
