@@ -53,7 +53,10 @@ test_xyzzy_DEPENDENCIES = $(BUILT_SOURCES)
 test_waveform_SOURCES = test_waveform.c xyzzy.cc xyzzy-load.c
 test_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
-	-DDATAROOTDIR=\"$(datarootdir)\"
+	-DPKGLIBDIR=\"$(pkglibdir)\" \
+	-DDATAROOTDIR=\"$(datarootdir)\" \
+	-DLIBDIR=\"$(libdir)\"
+
 test_waveform_LDADD = $(GUILE_LIBS)
 test_waveform_DEPENDENCIES = $(BUILT_SOURCES)
 
@@ -65,7 +68,8 @@ gr_run_waveform_SOURCES = gr-run-waveform.cc $(SRCS)
 gr_run_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
 	-DPKGLIBDIR=\"$(pkglibdir)\" \
-	-DDATAROOTDIR=\"$(datarootdir)\"
+	-DDATAROOTDIR=\"$(datarootdir)\" \
+	-DLIBDIR=\"$(libdir)\"
 # Uncommenting this force make to statically link in the guile library.
 # Note that this will fail to link it you don't have libguile.a.
 # run_waveform_LDFLAGS = -static

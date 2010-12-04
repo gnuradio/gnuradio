@@ -30,8 +30,23 @@
  * Load and run a waveform defined with define-waveform
  * usage: gr-run-waveform filename.wfd [args...]
  */
+
+
+static bool
+prepend_to_env(const char *name, const char *value)
+{
+  char *c_old = getenv(name);
+  std::string new_val;
+  if (c_old)
+    new_val = std::string(value) + std::string(":") + std::string(c_old);
+  else
+    new_val = std::string(value);
+
+  return setenv(name, new_val.c_str(), 1) == 0;
+}
+
 static const char *code = "\
-(set! %load-verbosely #t)				\n\
+;;(set! %load-verbosely #t)				\n\
 							\n\
 (save-module-excursion					\n\
  (lambda ()						\n\
@@ -55,8 +70,6 @@ static const char *code = "\
 (main (command-line))					\n\
 ";
 
-
-
 static void
 inner_main (void *data, int argc, char **argv)
 {
@@ -70,8 +83,13 @@ inner_main (void *data, int argc, char **argv)
 int
 main(int argc, char *argv[])
 {
+    // kill warnings
     setenv("GUILE_WARN_DEPRECATED", "no", 1);
-    // setenv("LTDL_LIBRARY_PATH", "/home/eb/install/lib64", 1);
+
+    // where to find our files and libraries
+    prepend_to_env("GUILE_LOAD_PATH", "/-xyzzy-");
+    prepend_to_env("LTDL_LIBRARY_PATH", LIBDIR);
+    prepend_to_env("DYLD_LIBRARY_PATH", LIBDIR);
 
     scm_boot_guile (argc, argv, inner_main, 0);
 
