@@ -22,7 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 TESTS = run_tests
-EXTRA_DIST += run_tests.in
+EXTRA_DIST = run_tests.in
 
 modpython_PYTHON = \
 	__init__.py

@@ -80,4 +80,4 @@ m4macros = \
 # Don't install m4 macros anymore
 # m4data_DATA = $(m4macros) 
 
-EXTRA_DIST += $(m4macros)
+EXTRA_DIST = $(m4macros)

@@ -42,4 +42,4 @@ howto_swiginclude_headers = \
 	howto_square_ff.i \
 	howto_square2_ff.i
 
-EXTRA_DIST += $(howto_swiginclude_headers)
+EXTRA_DIST = $(howto_swiginclude_headers)
