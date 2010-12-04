@@ -31,7 +31,7 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gcell" "scm_init_gnuradio_gcell_module")
+(load-extension "libguile-gnuradio-gcell" "scm_init_gnuradio_gcell_module")
 %}
 
 %goops %{

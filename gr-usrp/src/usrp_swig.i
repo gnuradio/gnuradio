@@ -147,7 +147,7 @@ usrp_source_s_sptr.pick_rx_subdevice      = __pick_rx_subdevice
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-usrp_swig" "scm_init_gnuradio_usrp_swig_module")
+(load-extension "libguile-gnuradio-usrp_swig" "scm_init_gnuradio_usrp_swig_module")
 %}
 
 %goops %{

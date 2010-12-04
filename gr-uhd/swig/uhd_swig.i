@@ -122,7 +122,7 @@ static const size_t ALL_MBOARDS;
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-uhd_swig" "scm_init_gnuradio_uhd_swig_module")
+(load-extension "libguile-gnuradio-uhd_swig" "scm_init_gnuradio_uhd_swig_module")
 %}
 
 %goops %{

@@ -91,7 +91,7 @@ class audio_osx_source : public gr_sync_block {
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-audio_osx" "scm_init_gnuradio_audio_osx_module")
+(load-extension "libguile-gnuradio-audio_osx" "scm_init_gnuradio_audio_osx_module")
 %}
 
 %goops %{

@@ -115,20 +115,20 @@ endif		# end of if python
 if GUILE
 
 @NAME@_scmlib_LTLIBRARIES = 		\
-	libguile-@NAME@.la
-libguile_@NAME@_la_SOURCES =		\
+	libguile-gnuradio-@NAME@.la
+libguile_gnuradio_@NAME@_la_SOURCES =	\
 	guile/@NAME@.cc			\
 	$(@NAME@_la_swig_sources)
 nobase_@NAME@_scm_DATA = 		\
 	gnuradio/@NAME@.scm 		\
 	gnuradio/@NAME@-primitive.scm
-libguile_@NAME@_la_LIBADD = 		\
+libguile_gnuradio_@NAME@_la_LIBADD = 	\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(@NAME@_la_swig_libadd)
-libguile_@NAME@_la_LDFLAGS = 		\
+libguile_gnuradio_@NAME@_la_LDFLAGS = 	\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(@NAME@_la_swig_ldflags)
-libguile_@NAME@_la_CXXFLAGS = 		\
+libguile_gnuradio_@NAME@_la_CXXFLAGS = 	\
 	$(STD_SWIG_CXX_FLAGS)		\
 	-I$(top_builddir) 		\
 	$(@NAME@_la_swig_cxxflags)

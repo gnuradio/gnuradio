@@ -46,7 +46,7 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-trellis" "scm_init_gnuradio_trellis_module")
+(load-extension "libguile-gnuradio-trellis" "scm_init_gnuradio_trellis_module")
 %}
 
 %goops %{
