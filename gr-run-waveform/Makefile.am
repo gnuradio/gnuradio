@@ -50,7 +50,7 @@ test_xyzzy_CPPFLAGS = $(GUILE_CFLAGS) \
 test_xyzzy_LDADD = $(GUILE_LIBS)
 test_xyzzy_DEPENDENCIES = $(BUILT_SOURCES)
 
-test_embed_SOURCES = test_embed.c xyzzy.cc xyzzy-load.c
+test_embed_SOURCES = test_embed.cc $(SRCS)
 test_embed_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
 	-DPKGLIBDIR=\"$(pkglibdir)\" \
