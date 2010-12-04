@@ -143,7 +143,8 @@ class demod_pkts(gr.hier_block2):
         self.framer_sink = gr.framer_sink_1(self._rcvd_pktq)
         self.connect(self, self._demodulator, self.correlator, self.framer_sink)
         
-        self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
+        if callback is not None:
+            self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
 
 
 class _queue_watcher_thread(_threading.Thread):
