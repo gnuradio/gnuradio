@@ -79,14 +79,9 @@ grc_blocksdir = $(prefix)/share/gnuradio/grc/blocks
 # here have to add a -f to be like GNU make.
 RM=$(RM_PROG) -f
 
-# Other common defines; use "+=" to add to these
-STAMPS =
-MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
-
 ## SWIG suffixes for automake to know about
 SUFFIXES = .i .scm .py
 
-if GUILE
 # Compile a .i to what guile needs. We use -o to set the output file name,
 # or even with -outdir guile in SWIG_GUILE_ARGS, swig keeps putting a 
 # gnuradio_core_*_wrap.cxx in the source directory.
@@ -101,7 +96,6 @@ gnuradio/%.scm : %.i
 	$(SED) -i -e 's/<--dummy-[0-9]\+-->/<top>/g' gnuradio/$*.scm
 	$(SED) -i -e 's/^(export /(export-safely /' gnuradio/$*.scm
 	$(RM) guile/$*.Std
-endif
 
 # Compile a .i file to what python needs
 .i.py:
@@ -113,9 +107,9 @@ endif
 	$(SED) -e 's|python/\(.*\)\.cc:|\1.py:|' python/$*.Std > python/$*.d
 	$(RM) python/$*.Std
 
-# Don't distribute the files defined in the variable 'no_dist_files'
+
 dist-hook:
 	@for file in $(no_dist_files); do \
 		echo $(RM) $(distdir)/$$file; \
 		$(RM) $(distdir)/$$file; \
-	done;
+	done

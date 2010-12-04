@@ -51,6 +51,7 @@ m4macros = \
 	gr_fortran.m4 \
 	gr_git.m4 \
 	gr_gprof.m4 \
+	gr_guile.m4 \
 	gr_lib64.m4 \
 	gr_libgnuradio_core_extra_ldflags.m4 \
 	gr_no_undefined.m4 \
