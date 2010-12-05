@@ -15,6 +15,10 @@
 from grc_gnuradio import wxgui as grc_wxgui
 import wx
 #end if
+#if $generate_options() == 'qt_gui'
+from PyQt4 import QtGui
+import sys
+#end if
 #if $generate_options() != 'hb'
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
@@ -60,6 +64,10 @@ else: self.stop(); self.wait()</callback>
 		<option>
 			<name>WX GUI</name>
 			<key>wx_gui</key>
+		</option>
+		<option>
+			<name>QT GUI</name>
+			<key>qt_gui</key>
 		</option>
 		<option>
 			<name>No GUI</name>

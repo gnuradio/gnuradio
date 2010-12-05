@@ -203,6 +203,7 @@ dist_ourdata_DATA = \
 	pad_source.xml \
 	parameter.xml \
 	probe_function.xml \
+	qtgui_sink_x.xml \
 	random_source_x.xml \
 	root_raised_cosine_filter.xml \
 	trellis_encoder_xx.xml \

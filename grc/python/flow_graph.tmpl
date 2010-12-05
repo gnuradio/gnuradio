@@ -59,6 +59,12 @@ class $(class_name)(grc_wxgui.top_block_gui):
 		_icon_path = "$icon.get_filename()"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 	#end if
+#elif $generate_options == 'qt_gui'
+class $(class_name)(gr.top_block):
+
+	def __init__($param_str):
+		gr.top_block.__init__(self, "$title")
+		self.qapp = QtGui.QApplication(sys.argv)
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
@@ -242,6 +248,9 @@ if __name__ == '__main__':
 	tb = $(class_name)($(', '.join($params_eq_list)))
 	#if $generate_options == 'wx_gui'
 	tb.Run($flow_graph.get_option('run'))
+	#elif $generate_options == 'qt_gui'
+	tb.start()
+	tb.qapp.exec_()
 	#elif $generate_options == 'no_gui'
 		#set $run_options = $flow_graph.get_option('run_options')
 		#if $run_options == 'prompt'

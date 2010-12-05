@@ -47,6 +47,7 @@
 		<block>wxgui_waterfallsink2</block>
 		<block>wxgui_histosink2</block>
 		<block>wxgui_termsink</block>
+		<block>qtgui_sink_x</block>
 	</cat>
 	<cat>
 		<name>Operators</name>
