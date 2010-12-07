@@ -26,7 +26,9 @@ include $(top_srcdir)/Makefile.common
 # other performance critical items
 #
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+# $(WITH_INCLUDES) must _always_ be last
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) \
+	$(FFTW3F_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libfilter.la libfilter-qa.la
 

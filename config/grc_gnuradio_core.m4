@@ -63,9 +63,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/g72x \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/swig \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/hier \
--I\${abs_top_builddir}/gnuradio-core/src/lib/swig \
-\$(FFTW3F_CFLAGS) \
-\$(GSL_CFLAGS)"
+-I\${abs_top_builddir}/gnuradio-core/src/lib/swig"
         gnuradio_core_LA="\${abs_top_builddir}/gnuradio-core/src/lib/libgnuradio-core.la"
 	dnl gnuradio_core_I="\${abs_top_srcdir}/gnuradio-core/src/lib/swig/gnuradio.i"
 	gnuradio_core_LIBDIRPATH="\${abs_top_builddir}/gnuradio-core/src/lib:\${abs_top_builddir}/gnuradio-core/src/lib/.libs"

@@ -21,7 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+# $(WITH_INCLUDES) must _always_ be last
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) \
+	$(FFTW3F_CPPFLAGS) $(GSL_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libgeneral.la libgeneral-qa.la
 
