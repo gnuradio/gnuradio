@@ -1,5 +1,5 @@
 dnl 
-dnl  Copyright 2004,2005,2007,2008,2009 Free Software Foundation, Inc.
+dnl  Copyright 2004,2005,2007,2008,2009,2010 Free Software Foundation, Inc.
 dnl  
 dnl  This file is part of GNU Radio
 dnl  
@@ -23,6 +23,12 @@ dnl
 AC_INIT
 AC_PREREQ(2.57)
 AC_CONFIG_AUX_DIR([.])	
+
+dnl Set the prefix to the default when --prefix is not specified.
+dnl This is critical for variable substitutions in the configure.
+if test "${prefix}" = "NONE"; then
+    prefix=${ac_default_prefix}
+fi
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
