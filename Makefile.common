@@ -48,7 +48,6 @@ swigincludedir = $(grincludedir)/swig
 
 # Guile scheme code ends up under here:
 guiledir = $(prefix)/share/guile/site
-grguiledir = $(guiledir)/gnuradio
 
 # Install the gnuradio stuff in the appropriate subdirectory
 # This usually ends up at:
