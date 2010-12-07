@@ -60,11 +60,12 @@ class $(class_name)(grc_wxgui.top_block_gui):
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 	#end if
 #elif $generate_options == 'qt_gui'
-class $(class_name)(gr.top_block):
+class $(class_name)(gr.top_block, QtGui.QWidget):
 
 	def __init__($param_str):
 		gr.top_block.__init__(self, "$title")
-		self.qapp = QtGui.QApplication(sys.argv)
+		QtGui.QWidget.__init__(self)
+		self.layout = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom, self)
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
@@ -245,15 +246,19 @@ if __name__ == '__main__':
 	if gr.enable_realtime_scheduling() != gr.RT_OK:
 		print "Error: failed to enable realtime scheduling."
 	#end if
-	tb = $(class_name)($(', '.join($params_eq_list)))
 	#if $generate_options == 'wx_gui'
+	tb = $(class_name)($(', '.join($params_eq_list)))
 	tb.Run($flow_graph.get_option('run'))
 	#elif $generate_options == 'qt_gui'
+	qapp = QtGui.QApplication(sys.argv)
+	tb = $(class_name)($(', '.join($params_eq_list)))
 	tb.start()
-	tb.qapp.exec_()
+	tb.show()
+	qapp.exec_()
 	#elif $generate_options == 'no_gui'
 		#set $run_options = $flow_graph.get_option('run_options')
 		#if $run_options == 'prompt'
+	tb = $(class_name)($(', '.join($params_eq_list)))
 	tb.start()
 	raw_input('Press Enter to quit: ')
 	tb.stop()

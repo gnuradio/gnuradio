@@ -7,6 +7,7 @@
 <block>
 	<name>QT GUI Sink</name>
 	<key>qtgui_sink_x</key>
+	<category>Graphical Sinks</category>
 	<import>from gnuradio.qtgui import qtgui</import>
 	<import>from gnuradio.gr import firdes</import>
 	<import>import sip</import>
@@ -23,7 +24,7 @@
 	$plotconst, \#plotconst
 )
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), QtGui.QWidget)
-self._$(id)_win.show()</make>
+self.layout.addWidget(self._$(id)_win)</make>
 	<callback>set_frequency_range($fc, $bw)</callback>
 	<param>
 		<name>Type</name>

@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -17,22 +17,13 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 include $(top_srcdir)/Makefile.common
 
-noinst_PYTHON = 		\
-	pyqt_example_f.py 	\
-	pyqt_example.py		\
-	qt_digital.py		\
-	qt_digital_window.py    \
-	usrp2_display.py	\
-	usrp_display.py
+qtguiformspythondir = $(grpythondir)/qtgui/forms
 
-EXTRA_DIST += \
-	qt_digital_window.ui
-
-qtguipythondir = $(grpythondir)/qtgui
-
-qtguipython_PYTHON = 			\
-	__init__.py
+qtguiformspython_PYTHON = 			\
+	forms/__init__.py \
+	forms/converters.py \
+	forms/forms.py

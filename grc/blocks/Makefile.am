@@ -1,5 +1,5 @@
 #
-# Copyright 2008, 2009 Free Software Foundation, Inc.
+# Copyright 2008-2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -203,7 +203,6 @@ dist_ourdata_DATA = \
 	pad_source.xml \
 	parameter.xml \
 	probe_function.xml \
-	qtgui_sink_x.xml \
 	random_source_x.xml \
 	root_raised_cosine_filter.xml \
 	trellis_encoder_xx.xml \

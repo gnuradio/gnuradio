@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Slider:
+##	a combined slider and text box form
+###################################################
+ -->
+<block>
+	<name>QT GUI Variable Slider</name>
+	<key>variable_qtgui_slider</key>
+	<category>Variables</category>
+	<import>from gnuradio.qtgui import forms</import>
+	<import>from PyQt4.QtCore import Qt</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>#set $win = '_%s_sizer'%$id
+$win = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom)
+self._$(id)_text_box = forms.text_box(
+	parent=self,
+	value=self.$id,
+	callback=self.set_$(id),
+	#if $label()
+	label=$label,
+	#else
+	label='$id',
+	#end if
+	converter=forms.$(converver)(),
+)
+$(win).addWidget(self._$(id)_text_box)
+self._$(id)_slider = forms.slider(
+	value=self.$id,
+	callback=self.set_$(id),
+	start=$start,
+	stop=$stop,
+	step=$step,
+	orient=$orient,
+	cast=$(converver.slider_cast),
+)
+$(win).addWidget(self._$(id)_slider)
+self.layout.addLayout($win)</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>self._$(id)_slider.set_value($id)</callback>
+	<callback>self._$(id)_text_box.set_value($id)</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Start</name>
+		<key>start</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Stop</name>
+		<key>stop</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Step</name>
+		<key>step</key>
+		<value>1</value>
+		<type>real</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Orientation</name>
+		<key>orient</key>
+		<value>Qt.Horizontal</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Horizontal</name>
+			<key>Qt.Horizontal</key>
+		</option>
+		<option>
+			<name>Vertical</name>
+			<key>Qt.Vertical</key>
+		</option>
+	</param>
+	<param>
+		<name>Converter</name>
+		<key>converver</key>
+		<value>float_converter</value>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float_converter</key>
+			<opt>slider_cast:float</opt>
+		</option>
+		<option>
+			<name>Integer</name>
+			<key>int_converter</key>
+			<opt>slider_cast:int</opt>
+		</option>
+	</param>
+	<check>$start &lt;= $value &lt;= $stop</check>
+	<check>$start &lt; $stop</check>
+	<doc>
+This block creates a variable with a slider. \
+Leave the label blank to use the variable id as the label. \
+The value must be a real number. \
+The value must be between the start and the stop.
+	</doc>
+</block>

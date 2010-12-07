@@ -82,6 +82,8 @@ AC_DEFUN([GRC_GR_QTGUI],[
 
     AC_CONFIG_FILES([ \
         gr-qtgui/Makefile \
+        gr-qtgui/grc/Makefile \
+        gr-qtgui/python/Makefile \
         gr-qtgui/src/Makefile \
         gr-qtgui/src/lib/Makefile \
         gr-qtgui/src/python/Makefile \
