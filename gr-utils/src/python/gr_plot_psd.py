@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -35,6 +35,7 @@ except ImportError:
 
 from optparse import OptionParser
 from scipy import log10
+from gnuradio.eng_option import eng_option
 
 class gr_plot_psd:
     def __init__(self, datatype, filename, options):
@@ -100,10 +101,10 @@ class gr_plot_psd:
         ''' Need to do this here and plot later so we can do the fftshift '''
         overlap = self.psdfftsize/4
         winfunc = scipy.blackman
-        psd,freq = self.sp_psd.psd(iq, self.psdfftsize, self.sample_rate,
-                                   window = lambda d: d*winfunc(self.psdfftsize),
-                                   noverlap = overlap, visible=False)
-        psd = 10.0*log10(abs(fftpack.fftshift(psd)))
+        psd,freq = mlab.psd(iq, self.psdfftsize, self.sample_rate,
+                            window = lambda d: d*winfunc(self.psdfftsize),
+                            noverlap = overlap)
+        psd = 10.0*log10(abs(psd))
         return (psd, freq)
 
     def make_plots(self):
@@ -159,6 +160,7 @@ class gr_plot_psd:
     def draw_psd(self):
         self.plot_psd[0].set_data([self.freq, self.iq_psd])
         self.sp_psd.set_ylim([min(self.iq_psd)-10, max(self.iq_psd)+10])
+        self.sp_psd.set_xlim([min(self.freq), max(self.freq)])
 
     def draw_spec(self):
         overlap = self.specfftsize/4
@@ -236,14 +238,15 @@ def setup_options():
     usage="%prog: [options] input_filename"
     description = "Takes a GNU Radio binary file (with specified data type using --data-type) and displays the I&Q data versus time as well as the power spectral density (PSD) plot. The y-axis values are plotted assuming volts as the amplitude of the I&Q streams and converted into dBm in the frequency domain (the 1/N power adjustment out of the FFT is performed internally). The script plots a certain block of data at a time, specified on the command line as -B or --block. The start position in the file can be set by specifying -s or --start and defaults to 0 (the start of the file). By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time and frequency axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples. Finally, the size of the FFT to use for the PSD and spectrogram plots can be set independently with --psd-size and --spec-size, respectively. The spectrogram plot does not display by default and is turned on with -S or --enable-spec."
 
-    parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
+    parser = OptionParser(option_class=eng_option, conflict_handler="resolve",
+                          usage=usage, description=description)
     parser.add_option("-d", "--data-type", type="string", default="complex64",
                       help="Specify the data type (complex64, float32, (u)int32, (u)int16, (u)int8) [default=%default]")
     parser.add_option("-B", "--block", type="int", default=8192,
                       help="Specify the block size [default=%default]")
     parser.add_option("-s", "--start", type="int", default=0,
                       help="Specify where to start in the file [default=%default]")
-    parser.add_option("-R", "--sample-rate", type="float", default=1.0,
+    parser.add_option("-R", "--sample-rate", type="eng_float", default=1.0,
                       help="Set the sampler rate of the data [default=%default]")
     parser.add_option("", "--psd-size", type="int", default=1024,
                       help="Set the size of the PSD FFT [default=%default]")

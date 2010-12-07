@@ -39,11 +39,11 @@ typedef boost::shared_ptr<gr_skiphead> gr_skiphead_sptr;
 
 class gr_skiphead : public gr_block
 {
-  friend gr_skiphead_sptr gr_make_skiphead (size_t itemsize, size_t nitems_to_skip);
-  gr_skiphead (size_t itemsize, size_t nitems_to_skip);
+  friend gr_skiphead_sptr gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
+  gr_skiphead (size_t itemsize, uint64_t nitems_to_skip);
 
-  long long  		d_nitems_to_skip;
-  long long		d_nitems;		// total items seen
+  uint64_t  		d_nitems_to_skip;
+  uint64_t		d_nitems;		// total items seen
 
  public:
 
@@ -54,7 +54,7 @@ class gr_skiphead : public gr_block
 };
 
 gr_skiphead_sptr
-gr_make_skiphead (size_t itemsize, size_t nitems_to_skip);
+gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
 
 
 #endif /* INCLUDED_GR_SKIPHEAD_H */

@@ -75,11 +75,20 @@ interleaver::interleaver(const char *name)
     throw std::runtime_error ("file open error in interleaver()");
     //printf("file open error in interleaver()\n");
   
-  fscanf(interleaverfile,"%d\n",&d_K);
+  if(fscanf(interleaverfile,"%d\n",&d_K) == EOF) {
+    if(ferror(interleaverfile) != 0)
+      throw std::runtime_error ("interleaver::interleaver(const char *name): file read error\n");
+  }
+
   d_INTER.resize(d_K);
   d_DEINTER.resize(d_K);
 
-  for(int i=0;i<d_K;i++) fscanf(interleaverfile,"%d",&(d_INTER[i]));
+  for(int i=0;i<d_K;i++) {
+    if(fscanf(interleaverfile,"%d",&(d_INTER[i])) == EOF) {
+      if(ferror(interleaverfile) != 0)
+	throw std::runtime_error ("interleaver::interleaver(const char *name): file read error\n");
+    }
+  }
   
   // generate DEINTER table
   for(int i=0;i<d_K;i++) {

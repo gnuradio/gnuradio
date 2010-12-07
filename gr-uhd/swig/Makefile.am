@@ -27,9 +27,10 @@ EXTRA_DIST += $(nobase_guile_DATA)
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
-	$(WITH_INCLUDES) \
-	$(UHD_CFLAGS) \
-	-I$(top_srcdir)/gr-uhd/lib
+	$(UHD_CPPFLAGS) \
+	$(WITH_INCLUDES)
+
+uhd_swig_swig_args = $(UHD_CPPFLAGS)
 
 if GUILE
 nobase_guile_DATA = \

@@ -102,7 +102,10 @@ portaudio_sink_callback (const void *inputBuffer,
 
   else {			// underrun
     self->d_nunderuns++;
-    ::write(2, "aU", 2);	// FIXME change to non-blocking call
+    ssize_t r = ::write(2, "aU", 2);	// FIXME change to non-blocking call
+    if(r == -1) {
+      perror("audio_portaudio_source::portaudio_source_callback write error to stderr.");
+    }
 
     // FIXME we should transfer what we've got and pad the rest
     memset(outputBuffer, 0, nreqd_samples * sizeof(sample_t));

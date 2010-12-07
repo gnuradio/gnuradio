@@ -52,12 +52,12 @@ gr_float_to_complex::work (int noutput_items,
 
   switch (input_items.size ()){
   case 1:
-    for (int j = 0; j < noutput_items*d_vlen; j++)
+    for (size_t j = 0; j < noutput_items*d_vlen; j++)
       out[j] = gr_complex (r[j], 0);
     break;
 
   case 2:
-    for (int j = 0; j < noutput_items*d_vlen; j++)
+    for (size_t j = 0; j < noutput_items*d_vlen; j++)
       out[j] = gr_complex (r[j], i[j]);
     break;
 

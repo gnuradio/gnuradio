@@ -86,16 +86,30 @@ fsm::fsm(const char *name)
   if((fsmfile=fopen(name,"r"))==NULL) 
     throw std::runtime_error ("fsm::fsm(const char *name): file open error\n");
     //printf("file open error in fsm()\n");
+
+  if(fscanf(fsmfile,"%d %d %d\n",&d_I,&d_S,&d_O) == EOF) {
+    if(ferror(fsmfile) != 0)
+      throw std::runtime_error ("fsm::fsm(const char *name): file read error\n");
+  }
   
-  fscanf(fsmfile,"%d %d %d\n",&d_I,&d_S,&d_O);
   d_NS.resize(d_I*d_S);
   d_OS.resize(d_I*d_S);
 
   for(int i=0;i<d_S;i++) {
-    for(int j=0;j<d_I;j++) fscanf(fsmfile,"%d",&(d_NS[i*d_I+j]));
+    for(int j=0;j<d_I;j++) {
+      if(fscanf(fsmfile,"%d",&(d_NS[i*d_I+j])) == EOF) {
+	if(ferror(fsmfile) != 0)
+	  throw std::runtime_error ("fsm::fsm(const char *name): file read error\n");
+      }
+    }
   }
   for(int i=0;i<d_S;i++) {
-    for(int j=0;j<d_I;j++) fscanf(fsmfile,"%d",&(d_OS[i*d_I+j]));
+    for(int j=0;j<d_I;j++) {
+      if(fscanf(fsmfile,"%d",&(d_OS[i*d_I+j])) == EOF) {
+	if(ferror(fsmfile) != 0)
+	  throw std::runtime_error ("fsm::fsm(const char *name): file read error\n");
+      }
+    }
   }
  
   generate_PS_PI();

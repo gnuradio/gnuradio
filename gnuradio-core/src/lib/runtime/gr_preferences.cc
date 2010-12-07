@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2003,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -77,11 +77,20 @@ gr_preferences::get (const char *key)
   static char buf[1024];
 
   FILE 	*fp = fopen (pathname (key), "r");
-  if (fp == 0)
+  if (fp == 0) {
+    perror (pathname (key));
     return 0;
+  }
 
   memset (buf, 0, sizeof (buf));
-  fread (buf, 1, sizeof (buf) - 1, fp);
+  size_t ret = fread (buf, 1, sizeof (buf) - 1, fp);
+  if(ret == 0) {
+    if(ferror(fp) != 0) {
+      perror (pathname (key));
+      fclose (fp);
+      return 0;
+    }
+  }
   fclose (fp);
   return buf;
 }
@@ -97,6 +106,13 @@ gr_preferences::set (const char *key, const char *value)
     return;
   }
 
-  fwrite (value, 1, strlen (value), fp);
+  size_t ret = fwrite (value, 1, strlen (value), fp);
+  if(ret == 0) {
+    if(ferror(fp) != 0) {
+      perror (pathname (key));
+      fclose (fp);
+      return;
+    }
+  }
   fclose (fp);
 };

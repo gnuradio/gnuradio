@@ -24,7 +24,7 @@ include $(top_srcdir)/Makefile.common
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(WITH_INCLUDES) \
-	$(UHD_CFLAGS)
+	$(UHD_CPPFLAGS)
 
 lib_LTLIBRARIES = libgnuradio-uhd.la
 
@@ -33,13 +33,6 @@ libgnuradio_uhd_la_SOURCES = \
 	uhd_multi_usrp_sink.cc \
 	uhd_single_usrp_source.cc \
 	uhd_single_usrp_sink.cc
-
-# add the deprecated sources
-libgnuradio_uhd_la_SOURCES += \
-	uhd_mimo_source.cc \
-	uhd_mimo_sink.cc \
-	uhd_simple_source.cc \
-	uhd_simple_sink.cc
 
 libgnuradio_uhd_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \
@@ -52,13 +45,5 @@ grinclude_HEADERS = \
 	uhd_multi_usrp_sink.h \
 	uhd_single_usrp_source.h \
 	uhd_single_usrp_sink.h
-
-# add the deprecated headers
-grinclude_HEADERS += \
-	uhd_mimo_source.h \
-	uhd_mimo_sink.h \
-	uhd_simple_source.h \
-	uhd_simple_sink.h
-
 
 noinst_HEADERS =
