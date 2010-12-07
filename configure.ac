@@ -149,9 +149,11 @@ AC_ARG_ENABLE([python],
   [enable_python=yes]
 )
 
+# Allow user to choose whether to generate SWIG/Guile
+# Default is disabled
 AC_ARG_ENABLE([guile],
   [AS_HELP_STRING([--enable-guile],
-    [generate SWIG/Guile components (default is yes)])],
+    [generate SWIG/Guile components (default is no)])],
   [case "${enableval}" in
      yes) enable_guile=yes ;;
      no) enable_guile=no ;;
