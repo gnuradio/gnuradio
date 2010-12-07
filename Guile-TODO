@@ -1,13 +1,5 @@
 In no particular order:
 
-3)  Ensure that all 4 combinations of
-    --{enable,disable}-python --{enable,disable}-guile
-    work correctly.
-
-    When both are disabled swig should NOT be run.
-    When --enable-guile --disable-python, python swig stuff should not be generated.
-    When --disable-guile --enable-python, guile swig stuff should not be generated.
-
 5)  Ensure that all gr-* components are generating guile code when
     enabled, and that (1) and (3) are handled in all gr-* components.
 
@@ -32,19 +24,11 @@ In no particular order:
 
 12) Swig guile modules names: s/_/-/g
 
-13) Change guile libnames to libguile-gnuradio-<module-name>
-
-15) Rewrite gr-run-waveform as C/C++ code that embeds guile.
-    See if we can't statically link libguile into this.
-    Will need to figure out which packages provide libguile.a.
-
 16) Test this stuff with Guile 1.9 to confirm that it works and to see
     how much faster it is.  Load time currently is currently kind of doggy.
 
 
 I'm sure I'm forgetting some things...
-
-
 
 80) Confirm make dist and make distcheck work
 
@@ -69,6 +53,15 @@ These are done:
 
 2)  [DONE] SIGINT handling in gr_top_block::wait
 
+3)  [DONE] Ensure that all 4 combinations of
+    --{enable,disable}-python --{enable,disable}-guile
+    work correctly.
+
+    When both are disabled swig should NOT be run.
+    When --enable-guile --disable-python, python swig stuff should not be generated.
+    When --disable-guile --enable-python, guile swig stuff should not be generated.
+
+
 4)  [DONE] Fix GR_SWIG_BLOCK_MAGIC so that in the guile case we don't map all
     the constructors into the same name.  E.g. audio_alsa_sink -> sink.
     (Causes problem when multiple gr-* modules are used.)
@@ -81,7 +74,13 @@ These are done:
 8)  [DONE] Fix gr_message_{sink,source} so that they work under guile.
     (Not sure if I disabled one or both of these...)
 
+13) [DONE] Change guile libnames to libguile-gnuradio-<module-name>
+
 14) [DONE] Add support to setup_guile_test_env.in for
     "withlibs", OS/X (DYLD_LIBRARY_PATH), windows (PATH)
+
+15) [DONE] Rewrite gr-run-waveform as C/C++ code that embeds guile.
+    See if we can't statically link libguile into this.
+    Will need to figure out which packages provide libguile.a.
 
 17) [DONE] Get std::vector< std::complex<float> > working
