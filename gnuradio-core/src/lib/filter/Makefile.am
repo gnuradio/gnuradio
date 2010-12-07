@@ -345,7 +345,6 @@ noinst_HEADERS = 			\
 	qa_gri_fir_filter_with_buffer_scc.h
 
 
-if PYTHON
 swiginclude_HEADERS =			\
 	filter.i			\
 	filter_generated.i		\
@@ -369,7 +368,7 @@ swiginclude_HEADERS =			\
 	gr_pfb_clock_sync_ccf.i		\
 	gr_pfb_clock_sync_fff.i		\
 	$(GENERATED_I)
-endif
+
 
 # Do creation and inclusion of other Makefiles last
 

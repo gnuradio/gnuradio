@@ -142,7 +142,6 @@ noinst_HEADERS = 				\
 	qa_block_tags.h				\
 	qa_runtime.h				
 
-if PYTHON
 swiginclude_HEADERS =			\
 	gr_basic_block.i		\
 	gr_block.i			\
@@ -162,4 +161,3 @@ swiginclude_HEADERS =			\
 	gr_sync_interpolator.i		\
 	gr_top_block.i			\
 	runtime.i
-endif

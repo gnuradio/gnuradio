@@ -365,7 +365,6 @@ noinst_HEADERS = 			\
 	sine_table.h			\
 	qa_gr_math.h
 
-if PYTHON
 swiginclude_HEADERS =			\
 	complex_vec_test.i		\
 	general.i			\
@@ -497,4 +496,3 @@ swiginclude_HEADERS =			\
 	gr_annotator_alltoall.i		\
 	gr_annotator_1to1.i		\
 	gr_burst_tagger.i
-endif

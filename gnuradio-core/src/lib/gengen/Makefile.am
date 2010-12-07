@@ -135,13 +135,11 @@ grinclude_HEADERS = 			\
 	gr_noise_type.h			\
 	gr_sig_source_waveform.h	
 
-if PYTHON
 swiginclude_HEADERS =			\
 	$(GENERATED_I)			\
 	gr_endianness.i			\
 	gengen.i			\
 	gengen_generated.i		
-endif
 
 # Do creation and inclusion of other Makefiles last
 
