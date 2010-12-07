@@ -64,6 +64,9 @@ modincludedir = $(includedir)/$(modname)
 # swig includes 
 swigincludedir = $(modincludedir)/swig
 
+# Guile scheme code ends up under here:
+guiledir = $(prefix)/share/guile/site
+
 # Install this stuff in the appropriate subdirectory
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)

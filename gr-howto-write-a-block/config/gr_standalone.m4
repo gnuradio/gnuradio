@@ -1,5 +1,5 @@
 dnl
-dnl Copyright 2008,2009 Free Software Foundation, Inc.
+dnl Copyright 2008,2009,2010 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -110,6 +110,11 @@ m4_define([GR_STANDALONE],
 
   PKG_CHECK_MODULES(GNURADIO_CORE, gnuradio-core >= 3)
   LIBS="$LIBS $GNURADIO_CORE_LIBS"
+
+  gnuradio_core_GUILE_LOAD_PATH="`pkg-config --variable=guile_load_path gnuradio-core`"
+  gnuradio_core_LIBDIRPATH="`pkg-config --variable=libdir gnuradio-core`"
+  AC_SUBST(gnuradio_core_GUILE_LOAD_PATH)
+  AC_SUBST(gnuradio_core_LIBDIRPATH)
 
   dnl Allow user to choose whether to generate SWIG/Python 
   dnl Default is enabled

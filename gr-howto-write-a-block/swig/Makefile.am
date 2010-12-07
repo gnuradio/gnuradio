@@ -43,3 +43,12 @@ howto_swiginclude_headers = \
 	howto_square2_ff.i
 
 EXTRA_DIST = $(howto_swiginclude_headers)
+
+
+if GUILE
+TESTS = run_guile_tests
+EXTRA_DIST += $(nobase_guile_DATA)
+
+nobase_guile_DATA = \
+	gnuradio/howto.scm
+endif
