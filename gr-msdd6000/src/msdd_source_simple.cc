@@ -64,7 +64,9 @@ msdd_source_simple::work (int noutput_items,
     char buffer[BUF_LEN];
     rcv->read( &buffer[0], BUF_LEN );
 
-    int seq = *((int*) &buffer[2]);
+    //int seq = *((int*) &buffer[2]);
+    int seq;
+    memcpy(&seq, &buffer[2], 4*sizeof(char));
 
     if(d_lastseq == -MSDD_COMPLEX_SAMPLES_PER_PACKET){
       // not started case

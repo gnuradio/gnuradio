@@ -105,12 +105,17 @@ audio_jack_sink::audio_jack_sink (int sampling_rate,
     d_nunderuns (0)
 {
 #ifndef NO_PTHREAD
-    pthread_cond_init(&d_ringbuffer_ready, NULL);;
-    pthread_mutex_init(&d_jack_process_lock, NULL);
+  pthread_cond_init(&d_ringbuffer_ready, NULL);;
+  pthread_mutex_init(&d_jack_process_lock, NULL);
 #endif
-
+  
   // try to become a client of the JACK server
-  if ((d_jack_client = jack_client_new (d_device_name.c_str ())) == 0) {
+  jack_options_t options = JackNullOption;
+  jack_status_t status;
+  const char *server_name = NULL;
+  if ((d_jack_client = jack_client_open (d_device_name.c_str (),
+  					 options, &status,
+					 server_name)) == NULL) {
     fprintf (stderr, "audio_jack_sink[%s]: jack server not running?\n",
 	     d_device_name.c_str());
     throw std::runtime_error ("audio_jack_sink");

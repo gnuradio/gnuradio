@@ -31,14 +31,21 @@ class pfb_arb_resampler_ccf(gr.hier_block2):
     streams. This block is provided to be consistent with the interface to the
     other PFB block.
     '''
-    def __init__(self, rate, taps, flt_size=32):
+    def __init__(self, rate, taps=None, flt_size=32, atten=80):
 	gr.hier_block2.__init__(self, "pfb_arb_resampler_ccf",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
         
         self._rate = rate
-        self._taps = taps
         self._size = flt_size
+
+        if taps is not None:
+            self._taps = taps
+        else:
+            # Create a filter that covers the full bandwidth of the input signal
+            bw = 0.5
+            tb = 0.1
+            self._taps = gr.firdes.low_pass_2(self._size, self._size, bw, tb, atten)
 
         self.pfb = gr.pfb_arb_resampler_ccf(self._rate, self._taps, self._size)
 

@@ -53,12 +53,12 @@ int
   int ninputs = input_items.size ();
 
   if (ninputs == 1){		// negate
-    for (int i = 0; i < noutput_items*d_vlen; i++)
+    for (size_t i = 0; i < noutput_items*d_vlen; i++)
       *optr++ = (@O_TYPE@) -((@I_TYPE@ *) input_items[0])[i];
   }
 
   else {
-    for (int i = 0; i < noutput_items*d_vlen; i++){
+    for (size_t i = 0; i < noutput_items*d_vlen; i++){
       @I_TYPE@ acc = ((@I_TYPE@ *) input_items[0])[i];
       for (int j = 1; j < ninputs; j++)
 	acc -= ((@I_TYPE@ *) input_items[j])[i];
