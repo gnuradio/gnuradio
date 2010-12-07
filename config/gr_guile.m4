@@ -35,6 +35,7 @@ AC_DEFUN([GUILE_DEVEL],[
       GUILE_PKLIBDIR="`${GUILE_CONFIG} info pkglibdir`"
       GUILE_PKDATADIR="`${GUILE_CONFIG} info pkgdatadir`/site"
     else
+      AC_MSG_ERROR([You need to install libguile-dev!])
       GUILE_CFLAGS=""
       GUILE_PKLIBDIR=""
       GUILE_LIBS="Wl,-Bsymbolic-functions -lguile -lgmp -lcrypt"
