@@ -90,7 +90,8 @@ audio_alsa_sink::audio_alsa_sink (int sampling_rate,
     d_period_size (0),
     d_buffer_size_bytes (0), d_buffer (0),
     d_worker (0), d_special_case_mono_to_stereo (false),
-    d_nunderuns (0), d_nsuspends (0), d_ok_to_block(ok_to_block)
+    d_nunderuns (0), d_nsuspends (0), d_ok_to_block(ok_to_block),
+    d_change_in_progress(false)
 {
   CHATTY_DEBUG = gr_prefs::singleton()->get_bool("audio_alsa", "verbose", false);
 
@@ -224,6 +225,11 @@ audio_alsa_sink::check_topology (int ninputs, int noutputs)
   // FIXME check_topology may be called more than once.
   // Ensure that the pcm is in a state where we can still mess with the hw_params
 
+  d_change_in_progress = true;
+  
+  if (snd_pcm_state (d_pcm_handle) == SND_PCM_STATE_RUNNING)
+    snd_pcm_drop (d_pcm_handle);
+  
   bool special_case = nchan == 1 && d_special_case_mono_to_stereo;
   if (special_case)
     nchan = 2;
@@ -232,6 +238,7 @@ audio_alsa_sink::check_topology (int ninputs, int noutputs)
 
   if (err < 0){
     output_error_msg ("set_channels failed", err);
+    d_change_in_progress = false;
     return false;
   }
 
@@ -239,6 +246,7 @@ audio_alsa_sink::check_topology (int ninputs, int noutputs)
   err = snd_pcm_hw_params(d_pcm_handle, d_hw_params);
   if (err < 0){
     output_error_msg ("snd_pcm_hw_params failed", err);
+    d_change_in_progress = false;
     return false;
   }
 
@@ -289,6 +297,7 @@ audio_alsa_sink::check_topology (int ninputs, int noutputs)
   default:
     assert (0);
   }
+  d_change_in_progress = false;
   return true;
 }
 
@@ -487,6 +496,13 @@ audio_alsa_sink::write_buffer (const void *vbuffer,
 {
   const unsigned char *buffer = (const unsigned char *) vbuffer;
 
+  int change_counter = 10;
+  while (d_change_in_progress == true && change_counter >= 0) {
+    change_counter--;
+    usleep(10000);
+  }
+  d_change_in_progress = false;
+	
   while (nframes > 0){
     int r = snd_pcm_writei (d_pcm_handle, buffer, nframes);
     if (r == -EAGAIN)
