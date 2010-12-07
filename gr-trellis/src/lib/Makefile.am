@@ -92,6 +92,7 @@ libgnuradio_trellis_la_LIBADD =	\
 
 libgnuradio_trellis_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
+trellis.py trellis.scm:	trellis_generated.i
 
 #################################
 # SWIG interface and library
