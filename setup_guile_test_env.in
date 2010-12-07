@@ -26,7 +26,7 @@
 # 2nd argument is absolute path to component C++ shared library build directory
 # 3nd argument is absolute path to component SWIG build directory
 
-function add_local_paths(){
+add_local_paths() {
   if [ $# -ne 3 ]
   then
     echo "$0: requires 3 args" 1>&2
@@ -50,7 +50,7 @@ abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
 # usage: prepend <path-varname> <dir>
-function prepend(){
+prepend() {
   if [ $# -ne 2 ]
   then
     echo "$0: prepend needs 2 args" 1>&2
@@ -71,7 +71,7 @@ function prepend(){
 }
 
 # usage: append <path-varname> <dir>
-function append(){
+append() {
   if [ $# -ne 2 ]
   then
     echo "$0: append needs 2 args" 1>&2
@@ -91,17 +91,17 @@ function append(){
   #echo end-of-append: $path=${!path}
 }
 
-function prepend_to_guile_load_path(){
+prepend_to_guile_load_path() {
     prepend GUILE_LOAD_PATH "$1"
     export GUILE_LOAD_PATH
 }
 
-function append_to_guile_load_path(){
+append_to_guile_load_path() {
     append GUILE_LOAD_PATH "$1"
     export GUILE_LOAD_PATH
 }
 
-function prepend_to_libpath(){
+prepend_to_libpath() {
     prepend LTDL_LIBRARY_PATH "$1"
     export LTDL_LIBRARY_PATH
     case "@host_os@" in
@@ -116,7 +116,7 @@ function prepend_to_libpath(){
     esac
 }
 
-function append_to_libpath(){
+append_to_libpath() {
     append LTDL_LIBRARY_PATH "$1"
     export LTDL_LIBRARY_PATH
     case "@host_os@" in
