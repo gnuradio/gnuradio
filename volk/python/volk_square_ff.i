@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,29 +19,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc", "1");		// generate python docstrings
-
-%include "exception.i"
-%import "gnuradio.i"			// the common stuff
-
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-#include <stdexcept>
-%}
-
-// ----------------------------------------------------------------
-
 /*
- * Gather all .i files in this directory together.
+ * First arg is the package prefix.
+ * Second arg is the name of the class minus the prefix.
+ *
+ * This does some behind-the-scenes magic so we can
+ * access gr_example_square_ff from python as howto.square_ff
  */
+GR_SWIG_BLOCK_MAGIC(volk,square_ff);
 
-%{
+volk_square_ff_sptr volk_make_square_ff ();
 
-// The .h files
-#include <libvector/libvector_square_ff.h>
-
-%}
-
-// The .i files
-%include <libvector_square_ff.i>
-
+class volk_square_ff : public gr_sync_block
+{
+private:
+  volk_square_ff();
+};

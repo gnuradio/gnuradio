@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2008 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,9 +21,9 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import libvector_swig as libvector
+import volk_swig as volk
 
-class qa_libvector(gr_unittest.TestCase):
+class qa_volk(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
@@ -35,7 +35,7 @@ class qa_libvector(gr_unittest.TestCase):
         src_data = (-3, 4, -5.5, 2, 3)
         expected_result = (9, 16, 30.25, 4, 9)
         src = gr.vector_source_f(src_data)
-        sqr = libvector.square_ff()
+        sqr = volk.square_ff()
         dst = gr.vector_sink_f()
         self.tb.connect(src, sqr)
         self.tb.connect(sqr, dst)

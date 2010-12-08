@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -38,12 +38,12 @@ if _RTLD_GLOBAL != 0:
 # ----------------------------------------------------------------
 
 
-# import swig generated symbols into the libvector namespace
-from libvector_swig import *
+# import swig generated symbols into the volk namespace
+from volk_swig import *
 
 # import any pure python here
-# from libvector_foo import bar
-# from libvector_baz import *
+# from volk_foo import bar
+# from volk_baz import *
 
 
 # ----------------------------------------------------------------
