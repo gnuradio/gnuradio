@@ -61,7 +61,7 @@ universal_CODE = 		\
 	volk_environment_init.c
 
 generic_CODE = 		\
-	volk_cpu_generic.cc
+	volk_cpu_generic.c
 
 x86_CODE = 		\
 	volk_cpu_x86.c
@@ -73,7 +73,7 @@ x86_64_SUBCODE = 	\
 	cpuid_x86_64.S
 
 powerpc_CODE = \
-	volk_cpu_powerpc.cc
+	volk_cpu_powerpc.c
 
 
 if MD_CPU_generic
@@ -236,6 +236,7 @@ libvolk_qa_la_LIBADD = \
 noinst_HEADERS = \
 	volk_init.h \
 	qa_volk.h \
+	assembly.h \
 	qa_16s_quad_max_star_aligned16.h \
 	qa_32fc_dot_prod_aligned16.h \
 	qa_32fc_square_dist_aligned16.h \

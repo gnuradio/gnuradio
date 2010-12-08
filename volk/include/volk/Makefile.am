@@ -30,6 +30,7 @@ volkinclude_HEADERS = \
 	volk_config.h \
 	volk_tables.h \
 	volk_typedefs.h \
+	volk_registry.h \
 	volk.h \
 	volk_cpu.h \
 	volk_environment_init.h \

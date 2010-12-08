@@ -29,7 +29,6 @@ m4macros = \
 	acx_pthread.m4 \
 	bnv_have_qt.m4 \
 	cppunit.m4 \
-	gr_check_shm_open.m4 \
 	gr_lib64.m4 \
 	gr_libgnuradio_core_extra_ldflags.m4 \
 	gr_no_undefined.m4 \
@@ -37,15 +36,12 @@ m4macros = \
 	gr_pwin32.m4 \
 	gr_set_md_cpu.m4 \
 	lv_configure.m4 \
-	gr_subversion.m4 \
 	gr_sysv_shm.m4 \
 	lf_cc.m4 \
 	lf_cxx.m4 \
 	lf_warnings.m4 \
-	lv_lf_warnings.m4 \
 	lf_x11.m4 \
 	lv_set_simd_flags.m4 \
-	lv_set_lv_arch.m4 \
 	mkstemp.m4 \
 	onceonly.m4 \
 	pkg.m4 \
