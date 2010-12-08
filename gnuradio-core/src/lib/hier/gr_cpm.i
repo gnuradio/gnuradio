@@ -1,6 +1,6 @@
-/* -*- c++ -*- */
+/* -*- C++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,15 +20,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%{
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+%rename(cpm) gr_cpm;
 
-#include <gr_channel_model.h>
-#include <gr_cpmmod_bc.h>
-%}
+class gr_cpm
+{
+ public:
+	enum cpm_type {
+	 LRC,
+	 LSRC,
+	 LREC,
+	 TFM,
+	 GAUSSIAN,
+	 GENERIC = 999
+	};
 
-%include "gr_channel_model.i"
-%include "gr_cpmmod_bc.i"
+	std::vector<float>
+	phase_response(cpm_type type, unsigned samples_per_sym, unsigned L, double beta=0.3);
+};
 
