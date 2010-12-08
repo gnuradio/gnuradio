@@ -12,7 +12,7 @@ def make_set_simd(dom) :
     tempstring = tempstring + "  (x86)\n";
     tempstring = tempstring + "    case \"$MD_SUBCPU\" in\n";
     tempstring = tempstring + "    (x86)\n";
-    tempstring = tempstring + "      if test -z \"`${CC} -o proccpu -I ./include/ -I./lib lib/volk_proccpu_sim.c lib/volk_cpu_x86.c lib/cpuid_x86.S 2>&1`\"\n";
+    tempstring = tempstring + "      if test -z \"`${CC} -o proccpu -I $srcdir/include/ -I$srcdir/lib $srcdir/lib/volk_proccpu_sim.c $srcdir/lib/volk_cpu_x86.c $srcdir/lib/cpuid_x86.S`\"\n";
     tempstring = tempstring + "        then\n";
     tempstring = tempstring + "          AC_MSG_RESULT(yes)\n";
     tempstring = tempstring + "          lv_PROCCPU=\"`./proccpu`\"\n";
@@ -23,7 +23,7 @@ def make_set_simd(dom) :
     tempstring = tempstring + "      fi\n"
     tempstring = tempstring + "    ;;\n"
     tempstring = tempstring + "    (*)\n"
-    tempstring = tempstring + "      if test -z \"`${CC} -o proccpu -I ./include/ -I./lib lib/volk_proccpu_sim.c lib/volk_cpu_x86.c lib/cpuid_x86_64.S 2>&1`\"\n";
+    tempstring = tempstring + "      if test -z \"`${CC} -o proccpu -I$srcdir/include/ -I$srcdir/lib $srcdir/lib/volk_proccpu_sim.c $srcdir/lib/volk_cpu_x86.c $srcdir/lib/cpuid_x86_64.S`\"\n";
     tempstring = tempstring + "        then\n";
     tempstring = tempstring + "          AC_MSG_RESULT(yes)\n";
     tempstring = tempstring + "          lv_PROCCPU=\"`./proccpu`\"\n";
@@ -36,7 +36,7 @@ def make_set_simd(dom) :
     tempstring = tempstring + "    esac\n"
     tempstring = tempstring + "  ;;\n";
     tempstring = tempstring + "  (powerpc)\n";
-    tempstring = tempstring + "    if test -z \"`${CC} -o proccpu -I ./include/ lib/volk_proccpu_sim.c lib/volk_cpu_powerpc.c 2>&1`\"\n";
+    tempstring = tempstring + "    if test -z \"`${CC} -o proccpu -I$srcdir/include/ $srcdir/lib/volk_proccpu_sim.c $srcdir/lib/volk_cpu_powerpc.c 2>&1`\"\n";
     tempstring = tempstring + "      then\n";
     tempstring = tempstring + "        AC_MSG_RESULT(yes)\n";
     tempstring = tempstring + "        lv_PROCCPU=\"`./proccpu`\"\n";
@@ -47,7 +47,7 @@ def make_set_simd(dom) :
     tempstring = tempstring + "    fi\n"
     tempstring = tempstring + "  ;;\n";
     tempstring = tempstring + "  (*)\n";
-    tempstring = tempstring + "    if test -z \"`${CC} -o proccpu -I ./include/ lib/volk_proccpu_sim.c lib/volk_cpu_generic.c 2>&1`\"\n";
+    tempstring = tempstring + "    if test -z \"`${CC} -o proccpu -I$srcdir/include/ $srcdir/lib/volk_proccpu_sim.c $srcdir/lib/volk_cpu_generic.c 2>&1`\"\n";
     tempstring = tempstring + "      then\n";
     tempstring = tempstring + "        AC_MSG_RESULT(yes)\n";
     tempstring = tempstring + "        lv_PROCCPU=\"`./proccpu`\"\n";

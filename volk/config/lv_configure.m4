@@ -111,7 +111,7 @@ dnl  AM_CONDITIONAL([USE_PYTHON], [test "$with_python" = yes])
   PKG_CHECK_EXISTS(cppunit,
     [PKG_CHECK_MODULES(CPPUNIT, cppunit >= 1.9.14)],
     [AM_PATH_CPPUNIT([1.9.14],[],
-		     [AC_MSG_ERROR([LIBVECTOR requires cppunit.  Stop])])])
+		     [AC_MSG_ERROR([VOLK requires cppunit.  Stop])])])
 
 dnl  PKG_CHECK_MODULES(GNURADIO_CORE, gnuradio-core >= 3)
 dnl  LIBS="$LIBS $GNURADIO_CORE_LIBS"

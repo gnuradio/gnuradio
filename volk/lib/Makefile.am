@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) $(LV_CXXFLAGS)
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) \
+	-I$(top_builddir)/include \
+	$(LV_CXXFLAGS) $(WITH_INCLUDES)
 
 
 # We build 2 libraries and 1 executable here.  One library contains
@@ -46,7 +48,10 @@ lib_LTLIBRARIES = \
 	libvolk_runtime.la \
 	libvolk_qa.la
 
-EXTRA_DIST = volk_mktables.c
+EXTRA_DIST = \
+	volk_mktables.c		\
+	volk_rank_archs.h 	\
+	volk_proccpu_sim.c
 
 # ----------------------------------------------------------------
 #                      The main library
