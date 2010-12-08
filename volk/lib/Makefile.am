@@ -20,6 +20,10 @@
 
 include $(top_srcdir)/Makefile.common
 
+#FIXME: forcing the top_builddir for distcheck seems like a bit
+# of a hack. Figure out the right way to do this to find built
+# volk_config.h and volk_tables.h
+
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) \
 	-I$(top_builddir)/include \
 	$(LV_CXXFLAGS) $(WITH_INCLUDES)
@@ -40,7 +44,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) \
 
 
 # list of programs run by "make check" and "make distcheck"
-TESTS = test_all
+#TESTS = test_all
 
 
 lib_LTLIBRARIES = \
