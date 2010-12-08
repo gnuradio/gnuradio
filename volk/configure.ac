@@ -1,7 +1,26 @@
-AC_INIT(libvector,0.0svn)
+dnl
+dnl Copyright 2010 Free Software Foundation, Inc.
+dnl
+dnl This program is free software: you can redistribute it and/or modify
+dnl it under the terms of the GNU General Public License as published by
+dnl the Free Software Foundation, either version 3 of the License, or
+dnl (at your option) any later version.
+dnl
+dnl This program is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU General Public License
+dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
+dnl
+
+AC_INIT
 AC_PREREQ(2.57)
 AC_CONFIG_AUX_DIR([.])	
-
+AC_CONFIG_SRCDIR([lib/test_all.cc])
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(volk,0.0svn)
 
 dnl This is kind of non-standard, but it sure shortens up this file :-)
 
@@ -52,10 +71,6 @@ AC_CONFIG_FILES([\
 	  lib/Makefile \
 	  volk.pc \
 	])
-
-
-
-
 
 AC_CONFIG_COMMANDS([run_system_cleanup], [chmod +x system_cleanup.sh && ./system_cleanup.sh $MYCPU $MYSUBCPU], [MYCPU=$MD_CPU MYSUBCPU=$MD_SUBCPU])
 

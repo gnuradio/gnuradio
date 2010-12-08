@@ -22,6 +22,6 @@ include $(top_srcdir)/Makefile.common
 
 # C++  stuff here
 
-if USE_PYTHON
+if PYTHON
 # python stuff here
 endif

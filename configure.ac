@@ -343,6 +343,7 @@ AC_ARG_ENABLE(
 
 build_dirs="config"
 GRC_GRUEL                       dnl must come first
+GRC_VOLK
 GRC_GCELL
 GRC_GNURADIO_CORE
 GRC_USRP

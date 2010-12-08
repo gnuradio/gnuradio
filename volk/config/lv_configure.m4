@@ -1,5 +1,20 @@
-dnl all this stuff taken and modified from GNURADIO!
 dnl
+dnl Copyright 2010 Free Software Foundation, Inc.
+dnl
+dnl This program is free software: you can redistribute it and/or modify
+dnl it under the terms of the GNU General Public License as published by
+dnl the Free Software Foundation, either version 3 of the License, or
+dnl (at your option) any later version.
+dnl
+dnl This program is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU General Public License
+dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
+dnl
+
 dnl LV_CONFIGURE
 dnl
 dnl Handles the bulk of the configure.ac work for an out-of-tree build
@@ -18,16 +33,9 @@ dnl get called too late to be useful.
 
 m4_define([LV_CONFIGURE],
 [
-
-  AC_CONFIG_SRCDIR([config/lv_configure.m4])
-  AC_CONFIG_AUX_DIR([.])	
-  AM_CONFIG_HEADER(config.h)
-
-  AC_CANONICAL_BUILD
-  AC_CANONICAL_HOST
-  AC_CANONICAL_TARGET
-
-  AM_INIT_AUTOMAKE(libvector,0.0svn)
+  #AC_CANONICAL_BUILD
+  #AC_CANONICAL_HOST
+  #AC_CANONICAL_TARGET
 
   LF_CONFIGURE_CC
   LF_CONFIGURE_CXX

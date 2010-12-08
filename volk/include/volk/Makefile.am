@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-ourinclude_HEADERS = \
+volkincludedir = $(prefix)/include/volk
+
+volkinclude_HEADERS = \
 	volk_complex.h \
 	volk_common.h \
 	volk_config_fixed.h \

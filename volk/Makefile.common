@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2004,2006,2008 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,7 +27,7 @@ ourswigincludedir = $(ourincludedir)/swig
 
 # Install this stuff in the appropriate subdirectory
 # This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/libvector
+#   ${prefix}/lib/python${python_version}/site-packages/libvolk
 
 ourpythondir = $(pythondir)/volk
 ourpyexecdir = $(pyexecdir)/volk
