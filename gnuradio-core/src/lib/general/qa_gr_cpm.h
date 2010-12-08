@@ -19,21 +19,20 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef _QA_GRI_CPM_H
-#define _QA_GRI_CPM_H
+#ifndef _QA_GR_CPM_H
+#define _QA_GR_CPM_H
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-class qa_gri_cpm : public CppUnit::TestCase {
+class qa_gr_cpm : public CppUnit::TestCase {
 
-  CPPUNIT_TEST_SUITE (qa_gri_cpm);
+  CPPUNIT_TEST_SUITE (qa_gr_cpm);
   CPPUNIT_TEST (t1);
   CPPUNIT_TEST (t2);
   CPPUNIT_TEST (t3);
   CPPUNIT_TEST (t4);
   CPPUNIT_TEST (t5);
-  CPPUNIT_TEST (t6);
   CPPUNIT_TEST_SUITE_END ();
 
  private:
@@ -42,10 +41,9 @@ class qa_gri_cpm : public CppUnit::TestCase {
   void t3 ();
   void t4 ();
   void t5 ();
-  void t6 ();
 
 };
 
 
-#endif /* _QA_GRI_CPM_H */
+#endif /* _QA_GR_CPM_H */
 

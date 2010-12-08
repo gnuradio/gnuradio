@@ -22,6 +22,8 @@
 #ifndef INCLUDED_GR_CPM_H
 #define INCLUDED_GR_CPM_H
 
+#include <vector>
+
 #define M_TWOPI (2*M_PI)
 
 class gr_cpm
@@ -67,6 +69,10 @@ class gr_cpm
 	// * GAUSSIAN: A Gaussian phase response. For a modulation index h = 1/2, this
 	//             results in GMSK.
 	//
+	// A short description of all these phase responses can be found in [1].
+	//
+	//
+	// [1]: Anderson, Aulin and Sundberg; Digital Phase Modulation
 	static std::vector<float>
 	phase_response(cpm_type type, unsigned samples_per_sym, unsigned L, double beta=0.3);
 };

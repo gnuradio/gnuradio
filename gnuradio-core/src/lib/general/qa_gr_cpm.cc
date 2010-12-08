@@ -24,6 +24,8 @@
 #include <gr_cpm.h>
 #include <cppunit/TestAssert.h>
 
+const double DELTA = 1e-5;
+
 // Check LREC phase response
 void
 qa_gr_cpm::t1 ()
@@ -33,7 +35,7 @@ qa_gr_cpm::t1 ()
 	std::vector<float> taps(gr_cpm::phase_response(gr_cpm::LREC, samples_per_sym, L));
 
 	for (int i = 0; i < L * samples_per_sym; i++) {
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(taps[i], 0.05);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(taps[i], 0.05, DELTA);
 	}
 }
 
@@ -51,8 +53,8 @@ qa_gr_cpm::t2 ()
 		sum += taps[i];
 	}
 
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(sum, 1.0);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(taps[L*samples_per_sym/2], 0.05);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(sum, 1.0, DELTA);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(taps[L*samples_per_sym/2], 0.1, DELTA);
 }
 
 
@@ -69,7 +71,7 @@ qa_gr_cpm::t3 ()
 		sum += taps[i];
 	}
 
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(sum, 1.0);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(sum, 1.0, DELTA);
 }
 
 
@@ -86,7 +88,7 @@ qa_gr_cpm::t4 ()
 		sum += taps[i];
 	}
 
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(sum, 1.0);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(sum, 1.0, DELTA);
 }
 
 

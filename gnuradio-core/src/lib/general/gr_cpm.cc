@@ -46,7 +46,7 @@ std::vector<float>
 generate_cpm_lrc_taps(unsigned samples_per_sym, unsigned L)
 {
 	std::vector<float> taps(samples_per_sym * L, 1.0/L/samples_per_sym);
-	for (int i = 0; i < samples_per_sym * L; i++) {
+	for (unsigned i = 0; i < samples_per_sym * L; i++) {
 		taps[i] *= 1 - cos(M_TWOPI * i / L / samples_per_sym);
 	}
 
@@ -74,10 +74,11 @@ std::vector<float>
 generate_cpm_lsrc_taps(unsigned samples_per_sym, unsigned L, double beta)
 {
 	double Ls = (double) L * samples_per_sym;
-	std::vector<double> taps_d(Ls, 0.0);
-	std::vector<float> taps(Ls, 0.0);
+	std::vector<double> taps_d(L * samples_per_sym, 0.0);
+	std::vector<float> taps(L * samples_per_sym, 0.0);
 
-	for (int i = 0; i < samples_per_sym * L; i++) {
+	double sum = 0;
+	for (unsigned i = 0; i < samples_per_sym * L; i++) {
 		double k =  i - Ls/2; // Causal to acausal
 
 		taps_d[i] = 1.0 / Ls * sinc(2.0 * k / Ls);
@@ -85,7 +86,7 @@ generate_cpm_lsrc_taps(unsigned samples_per_sym, unsigned L, double beta)
 		// For k = +/-Ls/4*beta, the rolloff term's cos-function becomes zero
 		// and the whole thing converges to PI/4 (to prove this, use de
 		// l'hopital's rule).
-		if (fabs(abs(k) - Ls/4/beta) < 2*DBL_EPSILON) {
+		if (fabs(fabs(k) - Ls/4/beta) < 2*DBL_EPSILON) {
 			taps_d[i] *= M_PI_4;
 		} else {
 			double tmp = 4.0 * beta * k / Ls;
@@ -93,7 +94,7 @@ generate_cpm_lsrc_taps(unsigned samples_per_sym, unsigned L, double beta)
 		}
 		sum += taps_d[i];
 	}
-	for (int i = 0; i < samples_per_sym * L; i++) {
+	for (unsigned i = 0; i < samples_per_sym * L; i++) {
 		taps[i] = (float) taps_d[i] / sum;
 	}
 
@@ -131,11 +132,11 @@ std::vector<float>
 generate_cpm_tfm_taps(unsigned sps, unsigned L)
 {
 	double causal_shift = (double) L * sps / 2;
-	std::vector<double> taps_d(Ls, 0.0);
-	std::vector<float> taps(Ls, 0.0);
+	std::vector<double> taps_d(sps * L, 0.0);
+	std::vector<float> taps(sps * L, 0.0);
 
 	double sum = 0;
-	for (int i = 0; i < sps * L; i++) {
+	for (unsigned i = 0; i < sps * L; i++) {
 		double k = (double)i - causal_shift; // Causal to acausal
 
 		taps_d[i] =     tfm_g0(k - sps, sps) +
@@ -143,7 +144,7 @@ generate_cpm_tfm_taps(unsigned sps, unsigned L)
 		                tfm_g0(k + sps, sps);
 		sum += taps_d[i];
 	}
-	for (int i = 0; i < samples_per_sym * L; i++) {
+	for (unsigned i = 0; i < sps * L; i++) {
 		taps[i] = (float) taps_d[i] / sum;
 	}
 
@@ -167,12 +168,12 @@ std::vector<float>
 generate_cpm_gaussian_taps(unsigned samples_per_sym, unsigned L, double bt)
 {
 	double Ls = (double) L * samples_per_sym;
-	std::vector<double> taps_d(Ls, 0.0);
-	std::vector<float> taps(Ls, 0.0);
+	std::vector<double> taps_d(L * samples_per_sym, 0.0);
+	std::vector<float> taps(L * samples_per_sym, 0.0);
 
 	// alpha = sqrt(2/ln(2)) * pi * BT
 	double alpha = 5.336446256636997 * bt;
-	for (int i = 0; i < samples_per_sym * L; i++) {
+	for (unsigned i = 0; i < samples_per_sym * L; i++) {
 		double k =  i - Ls/2; // Causal to acausal
 		taps_d[i] = (erf(alpha * (k / samples_per_sym + 0.5)) -
 		             erf(alpha * (k / samples_per_sym - 0.5)))

@@ -22,7 +22,6 @@
 #include "config.h"
 #endif
 
-#include <gri_cpm.h>
 #include <gr_cpmmod_bc.h>
 #include <gr_io_signature.h>
 
@@ -31,32 +30,26 @@
 gr_cpmmod_bc_sptr
 gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta)
 {
-  return gnuradio::get_initial_sptr(new gr_cpmmod_bc((cpm_type)type, h, samples_per_sym, L, beta));
+  return gnuradio::get_initial_sptr(new gr_cpmmod_bc((gr_cpm::cpm_type)type, h, samples_per_sym, L, beta));
 }
 
 
-// Parameters:
-// - type (raised cosine, spectral raised cosine, rectangular, tamed fm, gmsk.
-// - h (modulation index)
-// - L (length of filter in symbols)
-// - samples per symbol
-// - beta (for gmsk: BT product, for the RC's: rolloff)
-gr_cpmmod_bc::gr_cpmmod_bc(cpm_type type, double h, unsigned samples_per_sym,
+gr_cpmmod_bc::gr_cpmmod_bc(gr_cpm::cpm_type type, float h, unsigned samples_per_sym,
 							unsigned L, double beta)
   : gr_hier_block2("gr_cpmmod_bc",
 		   gr_make_io_signature(1, 1, sizeof(char)),
 		   gr_make_io_signature2(1, 2, sizeof(gr_complex), sizeof(float))),
+	d_taps(gr_cpm::phase_response(type, samples_per_sym, L, beta)),
 	d_char_to_float(gr_make_char_to_float()),
-	d_fm(gr_make_frequency_modulator_fc(M_TWOPI * h / samples_per_sym)),
-	d_taps(generate_cpm_taps(type, samples_per_sym, L, beta)),
-	d_pulse_shaper(gr_make_interp_fir_filter_fff(samples_per_sym, d_taps))
+	d_pulse_shaper(gr_make_interp_fir_filter_fff(samples_per_sym, d_taps)),
+	d_fm(gr_make_frequency_modulator_fc(M_TWOPI * h / samples_per_sym))
 {
   switch (type) {
-	  case CPM_LRC:
-	  case CPM_LSRC:
-	  case CPM_LREC:
-	  case CPM_TFM:
-	  case CPM_GMSK:
+	  case gr_cpm::LRC:
+	  case gr_cpm::LSRC:
+	  case gr_cpm::LREC:
+	  case gr_cpm::TFM:
+	  case gr_cpm::GAUSSIAN:
 		  break;
 
 	  default:
@@ -67,8 +60,5 @@ gr_cpmmod_bc::gr_cpmmod_bc(cpm_type type, double h, unsigned samples_per_sym,
   connect(d_char_to_float, 0, d_pulse_shaper, 0);
   connect(d_pulse_shaper, 0, d_fm, 0);
   connect(d_fm, 0, self(), 0);
-
-  // FIXME is this valid? multiple outputs?
-  connect(d_pulse_shaper, 0, self(), 1);
 }
 
