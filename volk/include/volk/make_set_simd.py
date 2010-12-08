@@ -98,7 +98,6 @@ def make_set_simd(dom) :
     tempstring = tempstring + "    cf_with_lv_arch=$lv_PROCCPU\n";
     
     tempstring = tempstring + "  fi\n";
-    tempstring = tempstring + "  echo $cf_with_lv_arch\n";
     for domarch in dom:
         if str(domarch.attributes["type"].value) != "all":
             arch = str(domarch.attributes["name"].value);

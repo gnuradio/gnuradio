@@ -46,6 +46,7 @@ lib_LTLIBRARIES = \
 	libvolk_runtime.la \
 	libvolk_qa.la
 
+EXTRA_DIST = volk_mktables.c
 
 # ----------------------------------------------------------------
 #                      The main library

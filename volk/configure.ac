@@ -72,6 +72,6 @@ AC_CONFIG_FILES([\
 	  volk.pc \
 	])
 
-AC_CONFIG_COMMANDS([run_system_cleanup], [chmod +x system_cleanup.sh && ./system_cleanup.sh $MYCPU $MYSUBCPU], [MYCPU=$MD_CPU MYSUBCPU=$MD_SUBCPU])
+AC_CONFIG_COMMANDS([run_system_cleanup], [chmod +x $srcdir/system_cleanup.sh && $srcdir/system_cleanup.sh $MYCPU $MYSUBCPU $srcdir], [MYCPU=$MD_CPU MYSUBCPU=$MD_SUBCPU])
 
 AC_OUTPUT

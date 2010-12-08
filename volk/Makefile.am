@@ -23,7 +23,7 @@ ACLOCAL_AMFLAGS = -I config
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = bootstrap configure config.h.in
+EXTRA_DIST = bootstrap configure config.h.in volk_config.h system_cleanup.sh
 SUBDIRS = config include lib
 #if USE_PYTHON
 #SUBDIRS += python 
