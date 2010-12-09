@@ -20,7 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_top_block.h>
+#ifndef INCLUDED_GR_CPMMOD_BC_H
+#define INCLUDED_GR_CPMMOD_BC_H
+
+#include <gr_hier_block2.h>
 #include <gr_char_to_float.h>
 #include <gr_interp_fir_filter_fff.h>
 #include <gr_frequency_modulator_fc.h>
@@ -33,6 +36,7 @@ typedef boost::shared_ptr<gr_cpmmod_bc> gr_cpmmod_bc_sptr;
 
 gr_cpmmod_bc_sptr
 gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta=0.3);
+
 
 /*!
  * \brief Generic CPM modulator
@@ -48,7 +52,7 @@ gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, doubl
  *         Keying variants.
  * * \p samples_per_sym: Samples per symbol.
  * * \p L: The length of the phase duration in symbols. For L=1, this yields full-
- *         response CPM symbols, for L > 1, it yields partial-response.
+ *         response CPM symbols, for L > 1, partial-response.
  * * \p beta: For LSRC, this is the rolloff factor. For Gaussian pulses, this is the 3 dB
  *            time-bandwidth product.
  *
@@ -57,25 +61,27 @@ gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, doubl
  * * Setting h = 0.5, type = GAUSSIAN and beta = 0.3 yields GMSK as used in GSM.
  *
  * The input of this block are symbols from an M-ary alphabet
- * \pm1, \pm3, ..., \pm(M-1). Usually, M = 2 and therefore, the
- * valid inputs are \pm1.
+ * +/-1, +/-3, ..., +/-(M-1). Usually, M = 2 and therefore, the
+ * valid inputs are +/-1.
  * The modulator will silently accept any other inputs, though.
  * The output is the phase-modulated signal.
  */
 class gr_cpmmod_bc : public gr_hier_block2
 {
 	friend gr_cpmmod_bc_sptr gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta);
-	gr_cpmmod_bc(gr_cpm::cpm_type type, float h, unsigned samples_per_sym, unsigned L, double beta);
 
 	std::vector<float> d_taps;
-
 	gr_char_to_float_sptr d_char_to_float;
 	gr_interp_fir_filter_fff_sptr d_pulse_shaper;
 	gr_frequency_modulator_fc_sptr d_fm;
 
+ protected:
+	gr_cpmmod_bc(gr_cpm::cpm_type type, float h, unsigned samples_per_sym, unsigned L, double beta);
 
  public:
 	//! Return the phase response FIR taps
 	 std::vector<float> get_taps() { return d_taps; };
 };
+
+#endif /* INCLUDED_GR_CPMMOD_BC_H */
 

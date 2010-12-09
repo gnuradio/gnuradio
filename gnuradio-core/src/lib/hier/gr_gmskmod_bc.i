@@ -20,12 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr, cpmmod_bc)
+GR_SWIG_BLOCK_MAGIC(gr, gmskmod_bc)
 
-gr_cpmmod_bc_sptr
-gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta=0.3);
+gr_gmskmod_bc_sptr
+gr_make_gmskmod_bc(unsigned samples_per_sym=2, unsigned L=4, double bt=0.3);
 
-class gr_cpmmod_bc : public gr_hier_block2
+class gr_gmskmod_bc : public gr_hier_block2
 {
  private:
   gr_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta);

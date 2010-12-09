@@ -28,10 +28,12 @@ noinst_LTLIBRARIES = libhier.la
 
 libhier_la_SOURCES = \
 	gr_channel_model.cc \
+	gr_gmskmod_bc.cc \
 	gr_cpmmod_bc.cc
 
 grinclude_HEADERS = \
 	gr_channel_model.h \
+	gr_gmskmod_bc.h \
 	gr_cpmmod_bc.h
 
 
@@ -39,6 +41,7 @@ if PYTHON
 swiginclude_HEADERS = \
 	hier.i \
 	gr_channel_model.i \
+	gr_gmskmod_bc.i \
 	gr_cpmmod_bc.i
 endif
 

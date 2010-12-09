@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -141,6 +141,7 @@
 #include <gr_copy.h>
 #include <gr_fll_band_edge_cc.h>
 #include <gr_additive_scrambler_bb.h>
+#include <gr_cpm.h>
 %}
 
 %include "gr_nop.i"
@@ -262,3 +263,4 @@
 %include "gr_copy.i"
 %include "gr_fll_band_edge_cc.i"
 %include "gr_additive_scrambler_bb.i"
+%include "gr_cpm.i"

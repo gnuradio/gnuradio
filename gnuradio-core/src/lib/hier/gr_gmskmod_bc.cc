@@ -2,8 +2,6 @@
 /*
  * Copyright 2010 Free Software Foundation, Inc.
  * 
- * This file is part of GNU Radio
- * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -20,17 +18,24 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr, cpmmod_bc)
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-gr_cpmmod_bc_sptr
-gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta=0.3);
+#include <gr_gmskmod_bc.h>
+#include <gr_io_signature.h>
 
-class gr_cpmmod_bc : public gr_hier_block2
+
+// Shared pointer constructor
+gr_gmskmod_bc_sptr
+gr_make_gmskmod_bc(unsigned samples_per_sym, unsigned L, double bt)
 {
- private:
-  gr_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta);
+  return gnuradio::get_initial_sptr(new gr_gmskmod_bc(samples_per_sym, L, bt));
+}
 
- public:
-  std::vector<float> get_taps();
-};
+
+gr_gmskmod_bc::gr_gmskmod_bc(unsigned samples_per_sym, unsigned L, double bt)
+	: gr_cpmmod_bc(gr_cpm::GAUSSIAN, 0.5, samples_per_sym, L, bt)
+{
+}
 

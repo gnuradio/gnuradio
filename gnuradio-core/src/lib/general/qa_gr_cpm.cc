@@ -24,10 +24,6 @@
 #include <gr_cpm.h>
 #include <cppunit/TestAssert.h>
 
-#include <iostream>
-using std::cout;
-using std::endl;
-
 const double DELTA = 1e-5;
 const int L = 5;
 const int samples_per_sym = 4;
@@ -118,9 +114,7 @@ qa_gr_cpm::t4 ()
 	std::vector<float> taps(gr_cpm::phase_response(gr_cpm::TFM, samples_per_sym, L));
 	float sum = 0;
 
-	cout << "TFM" << endl;
 	for (int i = 0; i < L * samples_per_sym; i++) {
-		cout << "i=" << i << "   " << taps[i] << "?=" << taps_tfm[i] << endl;
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(taps[i], taps_tfm[i], DELTA);
 		sum += taps[i];
 	}

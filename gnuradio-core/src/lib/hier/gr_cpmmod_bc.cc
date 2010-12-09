@@ -38,7 +38,7 @@ gr_cpmmod_bc::gr_cpmmod_bc(gr_cpm::cpm_type type, float h, unsigned samples_per_
 							unsigned L, double beta)
   : gr_hier_block2("gr_cpmmod_bc",
 		   gr_make_io_signature(1, 1, sizeof(char)),
-		   gr_make_io_signature2(1, 2, sizeof(gr_complex), sizeof(float))),
+		   gr_make_io_signature2(1, 1, sizeof(gr_complex), sizeof(float))),
 	d_taps(gr_cpm::phase_response(type, samples_per_sym, L, beta)),
 	d_char_to_float(gr_make_char_to_float()),
 	d_pulse_shaper(gr_make_interp_fir_filter_fff(samples_per_sym, d_taps)),
