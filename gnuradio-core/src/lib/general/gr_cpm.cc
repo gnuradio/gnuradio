@@ -113,7 +113,7 @@ generate_cpm_lrec_taps(unsigned samples_per_sym, unsigned L)
 //! Helper function for TFM
 double tfm_g0(double k, double sps)
 {
-	if (k < 2 * DBL_EPSILON) {
+	if (fabs(k) < 2 * DBL_EPSILON) {
 		return 1.145393004159143; // 1 + pi^2/48 / sqrt(2)
 	}
 
@@ -131,13 +131,13 @@ double tfm_g0(double k, double sps)
 std::vector<float>
 generate_cpm_tfm_taps(unsigned sps, unsigned L)
 {
-	double causal_shift = (double) L * sps / 2;
+	unsigned causal_shift = sps * L / 2;
 	std::vector<double> taps_d(sps * L, 0.0);
 	std::vector<float> taps(sps * L, 0.0);
 
 	double sum = 0;
 	for (unsigned i = 0; i < sps * L; i++) {
-		double k = (double)i - causal_shift; // Causal to acausal
+		double k = (double)(((int)i) - ((int)causal_shift)); // Causal to acausal
 
 		taps_d[i] =     tfm_g0(k - sps, sps) +
 		            2 * tfm_g0(k,       sps) +
