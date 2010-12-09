@@ -160,7 +160,7 @@ The UHD Single USRP $sourk.title() Block:
 Device Address:
 The device address is a delimited string used to locate UHD devices on your system. \\
 If left blank, the first UHD device found will be used. \\
-Used args to specify a specfic device.
+Use the device address to specify a specific device.
 USRP2 Example: addr=192.168.10.2
 USRP1 Example: serial=12345678
 
