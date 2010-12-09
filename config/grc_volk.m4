@@ -24,22 +24,16 @@ AC_DEFUN([GRC_VOLK],[
     dnl volk uses a subsidiary configure.ac
     AC_CONFIG_SUBDIRS([volk])
 
-    GRC_CHECK_DEPENDENCY(volk, gruel)
-
     dnl If execution gets to here, $passed will be:
     dnl   with : if the --with code didn't error out
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
     if test $passed != with; then
-	dnl how and where to find INCLUDES and LA
-	VOLK_INCLUDES="-I\${abs_top_srcdir}/include"
-	VOLK_LA="\${abs_top_builddir}/volk/lib/libvolk.la \
-	         ${abs_top_builddir}/volk/lib/libvolk_runtime.la"
+    	dnl how and where to find INCLUDES and LA
+	volk_INCLUDES="-I\${abs_top_srcdir}/volk/include"
+	volk_LA="\${abs_top_builddir}/volk/lib/libvolk.la \
+	         \${abs_top_builddir}/volk/lib/libvolk_runtime.la"
     fi
-
-    dnl Include the volk INCLUDES and LA
-    AC_SUBST(VOLK_INCLUDES)
-    AC_SUBST(VOLK_LA)
 
     GRC_BUILD_CONDITIONAL(volk, [])
 ])
