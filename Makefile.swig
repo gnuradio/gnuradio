@@ -79,12 +79,9 @@ $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i: $(top_srcdir)/docs/doxygen/
 ## Make sure the doxygen docs are generated
 
 $(top_srcdir)/docs/doxygen/html/index.html:
-	docs_prep
-	@DOXYGEN@
-
-docs_prep:
-	$(MKDIR_P) html
-	$(MKDIR_P) xml
+	$(MKDIR_P) $(top_srcdir)/docs/doxygen/html
+	$(MKDIR_P) $(top_srcdir)/docs/doxygen/xml
+	cd $(top_srcdir)/docs/doxygen; @DOXYGEN@
 
 ## Create $(srcdir)/Makefile.swig.gen, containing all of the rules
 ## for running SWIG to generate or re-generate outputs.  SWIG file
