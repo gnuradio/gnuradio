@@ -19,95 +19,220 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from math import pi, sqrt
-import math
+"""
+QAM modulation and demodulation.
+"""
 
-# These constellations are generated for Gray coding when symbos [1, ..., m] are used
-# Mapping to Gray coding is therefore unnecessary
+from math import pi, sqrt, log
+from itertools import islice
+
+from gnuradio import gr, gru, modulation_utils
+from gnuradio.blks2impl.generic_mod_demod import generic_mod, generic_demod
+
+
+# default values (used in __init__ and add_options)
+_def_samples_per_symbol = 2
+_def_excess_bw = 0.35
+_def_verbose = False
+_def_log = False
+
+# Frequency correction
+_def_freq_alpha = 0.010
+# Symbol timing recovery 
+_def_timing_alpha = 0.100
+_def_timing_beta = 0.010
+_def_timing_max_dev = 1.5
+# Fine frequency / Phase correction
+_def_costas_alpha = 0.1
+
+def is_power_of_four(x):
+    v = log(x)/log(4)
+    return int(v) == v
+
+def get_bit(x, n):
+    """ Get the n'th bit of integer x (from little end)."""
+    return (x&(0x01 << n)) >> n
+
+def get_bits(x, n, k):
+    """ Get the k bits of integer x starting at bit n(from little end)."""
+    # Remove the n smallest bits
+    v = x >> n 
+    # Remove all bits bigger than n+k-1
+    return v % pow(2, k)
+
+def gray_codes():
+    """ Generates gray codes."""
+    gcs = [0, 1]
+    yield 0
+    yield 1
+    # The last power of two passed through.
+    lp2 = 2
+    # The next power of two that will be passed through.
+    np2 = 4
+    i = 2
+    while True:
+        if i == lp2:
+            # if i is a power of two then gray number is of form 1100000...
+            result = i + i/2
+        else:
+            # if not we take advantage of the symmetry of all but the last bit
+            # around a power of two.
+            result = gcs[2*lp2-1-i] + lp2
+        gcs.append(result)
+        yield result
+        i += 1
+        if i == np2:
+            lp2 = i
+            np2 = i*2
 
 def make_constellation(m):
-    # number of bits/symbol (log2(M))
-    k = int(math.log10(m) / math.log10(2.0))
+    """
+    Create a constellation with m possible symbols where m must be
+    a power of 4.
 
-    coeff = 1
+    Points are laid out in a square grid.
+
+    """
+    sqrtm = pow(m, 0.5)
+    if (not isinstance(m, int) or m < 4 or not is_power_of_four(m)):
+        raise ValueError("m must be a power of 4 integer.")
+    # Each symbol holds k bits.
+    k = int(log(m) / log(2.0))
+    # First create a constellation for one quadrant containing m/4 points.
+    # The quadrant has 'side' points along each side of a quadrant.
+    side = int(sqrtm/2)
+    # Number rows and columns using gray codes.
+    gcs = list(islice(gray_codes(), side))
+    # Get inverse gray codes.
+    i_gcs = dict([(v, key) for key, v in enumerate(gcs)])
+    # The distance between points is found.
+    step = 1/(side-0.5)
+
+    gc_to_x = [(i_gcs[gc]+0.5)*step for gc in range(0, side)]
+
+    # Takes the (x, y) location of the point with the quadrant along
+    # with the quadrant number. (x, y) are integers referring to which
+    # point within the quadrant it is.
+    # A complex number representing this location of this point is returned.
+    def get_c(gc_x, gc_y, quad):
+        if quad == 0:
+            return complex(gc_to_x[gc_x], gc_to_x[gc_y])
+        if quad == 1:
+            return complex(-gc_to_x[gc_y], gc_to_x[gc_x])
+        if quad == 2:
+            return complex(-gc_to_x[gc_x], -gc_to_x[gc_y])
+        if quad == 3:
+            return complex(gc_to_x[gc_y], -gc_to_x[gc_x])
+        raise StandardError("Impossible!")
+
+    # First two bits determine quadrant.
+    # Next (k-2)/2 bits determine x position.
+    # Following (k-2)/2 bits determine y position.
+    # How x and y relate to real and imag depends on quadrant (see get_c function).
     const_map = []
     for i in range(m):
-        a = (i&(0x01 << k-1)) >> k-1
-        b = (i&(0x01 << k-2)) >> k-2
-        bits_i = [((i&(0x01 << k-j-1)) >> k-j-1) for j in range(2, k, 2)]
-        bits_q = [((i&(0x01 << k-j-1)) >> k-j-1) for j in range(3, k, 2)]
+        y = get_bits(i, 0, (k-2)/2)
+        x = get_bits(i, (k-2)/2, (k-2)/2)
+        quad = get_bits(i, k-2, 2)
+        const_map.append(get_c(x, y, quad))
 
-        ss = 0
-        ll = len(bits_i)
-        for ii in range(ll):
-            rr = 0
-            for jj in range(ll-ii):
-                rr = abs(bits_i[jj] - rr)
-            ss += rr*pow(2.0, ii+1)
-        re = (2*a-1)*(ss+1)
+    return const_map
         
-        ss = 0
-        ll = len(bits_q)
-        for ii in range(ll):
-            rr = 0
-            for jj in range(ll-ii):
-                rr = abs(bits_q[jj] - rr)
-            ss += rr*pow(2.0, ii+1)
-        im = (2*b-1)*(ss+1)
 
-        a = max(re, im)
-        if a > coeff:
-            coeff = a
-        const_map.append(complex(re, im))
+# /////////////////////////////////////////////////////////////////////////////
+#                           QAM modulator
+# /////////////////////////////////////////////////////////////////////////////
 
-    norm_map = [complex(i.real/coeff, i.imag/coeff) for i in const_map]
-    return norm_map
-        
-# Common definition of constellations for Tx and Rx
-constellation = {
-    4 :  make_constellation(4),           # QAM4 (QPSK)
-    8 :  make_constellation(8),           # QAM8
-    16:  make_constellation(16),          # QAM16
-    64:  make_constellation(64),          # QAM64
-    256: make_constellation(256)          # QAM256
-    }
+class qam_mod(generic_mod):
 
-# -----------------------
-# Do Gray code
-# -----------------------
-# binary to gray coding
-binary_to_gray = {
-    4 : range(4),
-    8 : range(8),
-    16: range(16),
-    64: range(64),
-    256: range(256)
-    }
-   
-# gray to binary
-gray_to_binary = {
-    4 : range(4),
-    8 : range(8),
-    16: range(16),
-    64: range(64),
-    256: range(256)
-    }
+    def __init__(self, m,
+                 samples_per_symbol=_def_samples_per_symbol,
+                 excess_bw=_def_excess_bw,
+                 verbose=_def_verbose,
+                 log=_def_log):
 
-# -----------------------
-# Don't Gray code
-# -----------------------
-# identity mapping
-binary_to_ungray = {
-    4 : range(4),
-    8 : range(8),
-    16: range(16),
-    64: range(64)
-    }
+        """
+	Hierarchical block for RRC-filtered QAM modulation.
+
+	The input is a byte stream (unsigned char) and the
+	output is the complex modulated signal at baseband.
+
+        @param m: Number of constellation points.  Must be a power of four.
+        @type m: integer
+	@param samples_per_symbol: samples per baud >= 2
+	@type samples_per_symbol: integer
+	@param excess_bw: Root-raised cosine filter excess bandwidth
+	@type excess_bw: float
+        @param verbose: Print information about modulator?
+        @type verbose: bool
+        @param log: Log modulation data to files?
+        @type log: bool
+	"""
+
+        if not isinstance(m, int) or not is_power_of_four(m):
+            raise ValueError("m must be a power of two integer greater than or equal to 4.")
+
+        points = make_constellation(m)
+        constellation = gr.gr_constellation(points)
+
+        super(qam_mod, self).__init__(constellation, samples_per_symbol,
+                                      excess_bw, verbose, log)
+
+
+# /////////////////////////////////////////////////////////////////////////////
+#                           QAM demodulator
+#
+# /////////////////////////////////////////////////////////////////////////////
+
+class qam_demod(generic_demod):
+
+    def __init__(self, m,
+                 samples_per_symbol=_def_samples_per_symbol,
+                 excess_bw=_def_excess_bw,
+                 freq_alpha=_def_freq_alpha,
+                 timing_alpha=_def_timing_alpha,
+                 timing_max_dev=_def_timing_max_dev,
+                 costas_alpha=_def_costas_alpha,
+                 verbose=_def_verbose,
+                 log=_def_log):
+
+        """
+	Hierarchical block for RRC-filtered QAM modulation.
+
+	The input is a byte stream (unsigned char) and the
+	output is the complex modulated signal at baseband.
+
+        @param m: Number of constellation points.  Must be a power of four.
+        @type m: integer
+	@param samples_per_symbol: samples per symbol >= 2
+	@type samples_per_symbol: float
+	@param excess_bw: Root-raised cosine filter excess bandwidth
+	@type excess_bw: float
+        @param freq_alpha: loop filter gain for frequency recovery
+        @type freq_alpha: float
+        @param timing_alpha: loop alpha gain for timing recovery
+        @type timing_alpha: float
+        @param timing_max_dev: timing loop maximum rate deviations
+        @type timing_max_dev: float
+        @param costas_alpha: loop filter gain in costas loop
+        @type costas_alphas: float
+        @param verbose: Print information about modulator?
+        @type verbose: bool
+        @param debug: Print modualtion data to files?
+        @type debug: bool
+        """
+
+        points = make_constellation(m)
+        constellation = gr.gr_constellation(points)
+
+        super(qam_demod, self).__init__(constellation, samples_per_symbol,
+                                        excess_bw, freq_alpha, timing_alpha,
+                                        timing_max_dev, costas_alpha, verbose,
+                                        log)
     
-# identity mapping
-ungray_to_binary = {
-    4 : range(4),
-    8 : range(8),
-    16: range(16),
-    64: range(64)
-    }
+#
+# Add these to the mod/demod registry
+#
+# NOT READY TO BE USED YET -- ENABLE AT YOUR OWN RISK
+#modulation_utils.add_type_1_mod('qam16', qam16_mod)
+#modulation_utils.add_type_1_demod('qam16', qam16_demod)

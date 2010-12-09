@@ -38,6 +38,7 @@ grblkspython_PYTHON =		\
 	filterbank.py		\
 	fm_demod.py		\
 	fm_emph.py		\
+	generic_mod_demod.py    \
 	generic_usrp.py	\
 	gmsk.py			\
 	cpm.py			\
