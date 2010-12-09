@@ -75,3 +75,9 @@ AC_CONFIG_FILES([\
 AC_CONFIG_COMMANDS([run_system_cleanup], [chmod +x $srcdir/system_cleanup.sh && $srcdir/system_cleanup.sh $MYCPU $MYSUBCPU $srcdir], [MYCPU=$MD_CPU MYSUBCPU=$MD_SUBCPU])
 
 AC_OUTPUT
+
+echo ""
+echo "The following architectures will be built:"
+echo "    $BUILT_ARCHS"
+echo ""
+

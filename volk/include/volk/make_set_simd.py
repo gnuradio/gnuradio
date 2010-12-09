@@ -1,3 +1,20 @@
+#
+# Copyright 2010 Free Software Foundation, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 from xml.dom import minidom
 
 def make_set_simd(dom) :
@@ -93,6 +110,7 @@ def make_set_simd(dom) :
         arch = str(domarch.attributes["name"].value);    
         tempstring = tempstring + "  AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [always set "+ arch + "!])\n";
     tempstring = tempstring + "  ADDONS=\"\"\n";
+    tempstring = tempstring + "  BUILT_ARCHS=\"generic\"\n";
     tempstring = tempstring + "  _MAKE_FAKE_PROCCPU\n";
     tempstring = tempstring + "  if test -z \"$cf_with_lv_arch\"; then\n";
     tempstring = tempstring + "    cf_with_lv_arch=$lv_PROCCPU\n";
@@ -138,6 +156,7 @@ def make_set_simd(dom) :
             tempstring = tempstring + "    if test \"$indCC\" == \"yes\" && test \"$indCXX\" == \"yes\" && test \"$indLV_ARCH\" == \"yes\"; then\n"
             tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
             tempstring = tempstring + "      ADDONS=\"${ADDONS} -" + flag + "\"\n";
+            tempstring = tempstring + "      BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"";
             tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
             tempstring = tempstring + "    fi\n"
             tempstring = tempstring + "    indCC=no\n"
@@ -182,6 +201,7 @@ def make_set_simd(dom) :
             tempstring = tempstring + "    if test \"$indCC\" = yes && test \"indCXX\" = yes && \"indLV_ARCH\" = yes; then\n"
             tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
             tempstring = tempstring + "      ADDONS=\"${ADDONS} -" + flag + "\"\n";
+            tempstring = tempstring + "      BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"";
             tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
             tempstring = tempstring + "    fi\n"
             tempstring = tempstring + "    indCC=no\n"
