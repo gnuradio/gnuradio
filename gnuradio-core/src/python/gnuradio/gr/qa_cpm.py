@@ -33,7 +33,7 @@ class test_cpm(gr_unittest.TestCase):
 
     def do_check_phase_shift(self, type, name):
         sps = 2
-        L = 5
+        L = 1
         in_bits = (1,) * 20
         src = gr.vector_source_b(in_bits, False)
         cpm = gr.cpmmod_bc(type, 0.5, sps, L)
@@ -79,6 +79,10 @@ class test_cpm(gr_unittest.TestCase):
                                (2*numpy.pi,) * (len(symbol_phases)-1))
         self.assertFloatTuplesAlmostEqual(tuple(phase_diff), (0.5 * numpy.pi,) * len(phase_diff), 5,
                                           msg="Phase shift was not correct for GMSK")
+
+    def test_phase_response(self):
+        phase_response = gr.cpm.phase_response(gr.cpm.LREC, 2, 4)
+        self.assertAlmostEqual(numpy.sum(phase_response), 1)
 
 
 if __name__ == '__main__':

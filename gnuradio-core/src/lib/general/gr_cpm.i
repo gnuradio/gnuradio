@@ -34,7 +34,7 @@ class gr_cpm
 	 GENERIC = 999
 	};
 
-	std::vector<float>
+	static std::vector<float>
 	phase_response(cpm_type type, unsigned samples_per_sym, unsigned L, double beta=0.3);
 };
 

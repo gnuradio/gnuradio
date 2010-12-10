@@ -24,10 +24,6 @@
 
 #include <vector>
 
-#ifndef M_TWOPI
-#  define M_TWOPI (2*M_PI)
-#endif
-
 class gr_cpm
 {
  public:

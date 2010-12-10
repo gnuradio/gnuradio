@@ -135,8 +135,6 @@ qa_gr_cpm::t5 ()
 		sum += taps[i];
 	}
 
-	// Need to cut this guy some slack; in theory, sum only equals one for
-	// L => infinity
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(sum, 1.0, DELTA);
 }
 

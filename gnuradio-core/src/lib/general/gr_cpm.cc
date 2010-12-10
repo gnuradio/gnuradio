@@ -28,6 +28,9 @@
 #include <cfloat>
 #include <gr_cpm.h>
 
+#ifndef M_TWOPI
+#  define M_TWOPI (2*M_PI)
+#endif
 
 //! Normalised sinc function, sinc(x)=sin(pi*x)/pi*x
 inline double

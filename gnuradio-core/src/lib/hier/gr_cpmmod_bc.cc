@@ -42,7 +42,7 @@ gr_cpmmod_bc::gr_cpmmod_bc(gr_cpm::cpm_type type, float h, unsigned samples_per_
 	d_taps(gr_cpm::phase_response(type, samples_per_sym, L, beta)),
 	d_char_to_float(gr_make_char_to_float()),
 	d_pulse_shaper(gr_make_interp_fir_filter_fff(samples_per_sym, d_taps)),
-	d_fm(gr_make_frequency_modulator_fc(M_TWOPI * h / samples_per_sym))
+	d_fm(gr_make_frequency_modulator_fc(M_PI * h))
 {
   switch (type) {
 	  case gr_cpm::LRC:
