@@ -8,17 +8,11 @@
 	<name>GMSK</name>
 	<key>gr_gmskmod_bc</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.gmskmod_bc($samples_per_symbol, $L, $bt)</make>
+	<make>gr.gmskmod_bc($samples_per_symbol, $bt, $L)</make>
 	<param>
 		<name>Samples/Symbol</name>
 		<key>samples_per_symbol</key>
-		<value>4</value>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Pulse Duration (Symbols)</name>
-		<key>L</key>
-		<value>5</value>
+		<value>2</value>
 		<type>int</type>
 	</param>
 	<param>
@@ -26,6 +20,12 @@
 		<key>bt</key>
 		<type>real</type>
 		<value>0.3</value>
+	</param>
+	<param>
+		<name>Pulse Duration (Symbols)</name>
+		<key>L</key>
+		<value>4</value>
+		<type>int</type>
 	</param>
 	<sink>
 		<name>in</name>

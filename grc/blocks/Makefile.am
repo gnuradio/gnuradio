@@ -92,6 +92,7 @@ dist_ourdata_DATA = \
 	gr_correlate_access_code_bb.xml \
 	gr_costas_loop_cc.xml \
 	gr_cpfsk_bc.xml \
+	gr_cpmmod_bc.xml \
 	gr_decode_ccsds_27_fb.xml \
 	gr_deinterleave.xml \
 	gr_delay.xml \
@@ -118,6 +119,7 @@ dist_ourdata_DATA = \
 	gr_freq_xlating_fir_filter_xxx.xml \
 	gr_frequency_modulator_fc.xml \
 	gr_glfsr_source_x.xml \
+	gr_gmskmod_bc.xml \
 	gr_goertzel_fc.xml \
 	gr_head.xml \
 	gr_hilbert_fc.xml \
