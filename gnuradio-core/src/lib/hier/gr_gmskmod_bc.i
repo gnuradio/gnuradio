@@ -23,12 +23,12 @@
 GR_SWIG_BLOCK_MAGIC(gr, gmskmod_bc)
 
 gr_gmskmod_bc_sptr
-gr_make_gmskmod_bc(unsigned samples_per_sym=2, unsigned L=4, double bt=0.3);
+gr_make_gmskmod_bc(unsigned samples_per_sym=2, double bt=0.3, unsigned L=4);
 
 class gr_gmskmod_bc : public gr_hier_block2
 {
  private:
-  gr_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta);
+  gr_cpmmod_bc(int type, float h, unsigned samples_per_sym, double beta, unsigned L);
 
  public:
   std::vector<float> get_taps();

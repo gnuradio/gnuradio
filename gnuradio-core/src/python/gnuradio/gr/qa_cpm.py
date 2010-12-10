@@ -64,9 +64,10 @@ class test_cpm(gr_unittest.TestCase):
     def test_001_lgmsk(self):
         sps = 2
         L = 5
+        bt = 0.3
         in_bits = (1,) * 20
         src = gr.vector_source_b(in_bits, False)
-        gmsk = gr.gmskmod_bc(sps, L)
+        gmsk = gr.gmskmod_bc(sps, bt, L)
         arg = gr.complex_to_arg()
         sink = gr.vector_sink_f()
 

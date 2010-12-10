@@ -28,13 +28,13 @@
 
 // Shared pointer constructor
 gr_gmskmod_bc_sptr
-gr_make_gmskmod_bc(unsigned samples_per_sym, unsigned L, double bt)
+gr_make_gmskmod_bc(unsigned samples_per_sym, double bt, unsigned L)
 {
-  return gnuradio::get_initial_sptr(new gr_gmskmod_bc(samples_per_sym, L, bt));
+  return gnuradio::get_initial_sptr(new gr_gmskmod_bc(samples_per_sym, bt, L));
 }
 
 
-gr_gmskmod_bc::gr_gmskmod_bc(unsigned samples_per_sym, unsigned L, double bt)
+gr_gmskmod_bc::gr_gmskmod_bc(unsigned samples_per_sym, double bt, unsigned L)
 	: gr_cpmmod_bc(gr_cpm::GAUSSIAN, 0.5, samples_per_sym, L, bt)
 {
 }

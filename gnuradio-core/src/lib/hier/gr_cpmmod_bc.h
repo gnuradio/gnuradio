@@ -43,22 +43,21 @@ gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, doubl
  *
  * \ingroup modulation_blk
  *
- * Parameters:
- * * \p type: The modulation type. Can be one of LREC, LRC, LSRC, TFM or GAUSSIAN. See
- *            gr_cpm::phase_response() for a detailed description.
- * * \p h: The modulation index. h*PI is the maximum phase change that can occur
- *         between two symbols, i.e., if you only send ones, the phase will increase
- *         by h*PI every \p samples_per_sym samples. Set this to 0.5 for Minimum Shift
- *         Keying variants.
- * * \p samples_per_sym: Samples per symbol.
- * * \p L: The length of the phase duration in symbols. For L=1, this yields full-
- *         response CPM symbols, for L > 1, partial-response.
- * * \p beta: For LSRC, this is the rolloff factor. For Gaussian pulses, this is the 3 dB
- *            time-bandwidth product.
+ * \param type The modulation type. Can be one of LREC, LRC, LSRC, TFM or GAUSSIAN. See
+ *             gr_cpm::phase_response() for a detailed description.
+ * \param h The modulation index. \f$ h \cdot \pi\f$ is the maximum phase change that can occur
+ *          between two symbols, i.e., if you only send ones, the phase will increase
+ *          by \f$ h \cdot \pi\f$ every \p samples_per_sym samples. Set this to 0.5 for Minimum Shift
+ *          Keying variants.
+ * \param samples_per_sym Samples per symbol.
+ * \param L The length of the phase duration in symbols. For L=1, this yields full-
+ *          response CPM symbols, for L > 1, partial-response.
+ * \param beta For LSRC, this is the rolloff factor. For Gaussian pulses, this is the 3 dB
+ *             time-bandwidth product.
  *
  * Examples:
- * * Setting h = 0.5, L = 1, type = LREC yields MSK.
- * * Setting h = 0.5, type = GAUSSIAN and beta = 0.3 yields GMSK as used in GSM.
+ * - Setting h = 0.5, L = 1, type = LREC yields MSK.
+ * - Setting h = 0.5, type = GAUSSIAN and beta = 0.3 yields GMSK as used in GSM.
  *
  * The input of this block are symbols from an M-ary alphabet
  * +/-1, +/-3, ..., +/-(M-1). Usually, M = 2 and therefore, the
