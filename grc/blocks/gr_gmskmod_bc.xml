@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>GMSK</name>
+	<name>GMSK Modulator</name>
 	<key>gr_gmskmod_bc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.gmskmod_bc($samples_per_symbol, $bt, $L)</make>
@@ -18,8 +18,8 @@
 	<param>
 		<name>3 dB Time-Bandwith Product</name>
 		<key>bt</key>
-		<type>real</type>
 		<value>0.3</value>
+		<type>real</type>
 	</param>
 	<param>
 		<name>Pulse Duration (Symbols)</name>

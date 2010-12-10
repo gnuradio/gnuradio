@@ -37,8 +37,8 @@
 	<param>
 		<name>Modulation Index</name>
 		<key>mod_index</key>
-		<type>real</type>
 		<value>0.5</value>
+		<type>real</type>
 	</param>
 	<param>
 		<name>Samples/Symbol</name>
@@ -49,14 +49,14 @@
 	<param>
 		<name>Pulse Duration (Symbols)</name>
 		<key>L</key>
-		<value>5</value>
+		<value>4</value>
 		<type>int</type>
 	</param>
 	<param>
 		<name>Phase Response Parameter (BT or Beta)</name>
 		<key>beta</key>
-		<type>real</type>
 		<value>0.3</value>
+		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>
