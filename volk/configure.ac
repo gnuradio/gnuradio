@@ -63,6 +63,13 @@ dnl AX_BOOST_WSERIALIZATION
 AC_CONFIG_HEADERS([volk_config.h])
 LV_SET_SIMD_FLAGS
 
+# FIXME: Not very extensible to supporting more processors easily
+AM_CONDITIONAL([MYCPU_X86], [test "$MD_CPU" = "x86"])
+AM_CONDITIONAL([MYSUBCPU_X86], [test "$MD_SUBCPU" = "x86"])
+AM_CONDITIONAL([MYSUBCPU_X86_64], [test "$MD_SUBCPU" = "x86_64"])
+AM_CONDITIONAL([MYSUBCPU_POWERPC], [test "$MD_SUBCPU" = "powerpc"])
+AM_CONDITIONAL([MYSUBCPU_GENERIC], [test "$MD_SUBCPU" != "powerpc" && test "$MD_SUBCPU" != "x86" && test "$MD_SUBCPU" != "x86_64"])
+
 AC_CONFIG_FILES([\
 	  Makefile \
 	  config/Makefile \
@@ -71,8 +78,6 @@ AC_CONFIG_FILES([\
 	  lib/Makefile \
 	  volk.pc \
 	])
-
-AC_CONFIG_COMMANDS([run_system_cleanup], [chmod +x $srcdir/system_cleanup.sh && $srcdir/system_cleanup.sh $MYCPU $MYSUBCPU $srcdir], [MYCPU=$MD_CPU MYSUBCPU=$MD_SUBCPU])
 
 AC_OUTPUT
 

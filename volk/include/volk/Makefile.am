@@ -20,7 +20,14 @@
 
 include $(top_srcdir)/Makefile.common
 
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) \
+	$(LV_CXXFLAGS) $(WITH_INCLUDES)
+
 volkincludedir = $(prefix)/include/volk
+
+BUILT_SOURCES: \
+	volk_config.h \
+	volk_tables.h
 
 volkinclude_HEADERS = \
 	volk_complex.h \
@@ -122,6 +129,43 @@ volkinclude_HEADERS = \
 	volk_8s_convert_32f_aligned16.h \
 	volk_8s_convert_32f_unaligned16.h 
 
+VOLK_MKTABLES_SOURCES = \
+	$(abs_top_srcdir)/lib/volk_rank_archs.c \
+	$(abs_top_srcdir)/lib/volk_mktables.c
+
+
+# FIXME: Not very extensible to supporting more processors easily
+if MYSUBCPU_X86_64
+    VOLK_MKTABLES_SOURCES += \
+        $(abs_top_srcdir)/lib/volk_cpu_x86.c \
+        $(abs_top_srcdir)/lib/cpuid_x86_64.S
+endif
+
+if MYSUBCPU_X86
+    VOLK_MKTABLES_SOURCES += \
+        $(abs_top_srcdir)/lib/volk_cpu_x86.c \
+        $(abs_top_srcdir)/lib/cpuid_x86.S
+endif
+
+if MYSUBCPU_POWERPC
+    VOLK_MKTABLES_SOURCES += \
+        $(abs_top_srcdir)/lib/volk_cpu_powerpc.c
+endif
+
+if MYSUBCPU_GENERIC
+    VOLK_MKTABLES_SOURCES += \
+        $(abs_top_srcdir)/lib/volk_cpu_generic.c
+endif
+
+volk_mktables$(EXEEXT): $(VOLK_MKTABLES_SOURCES)
+	$(CC) -o $@ $^ $(AM_CPPFLAGS)
+
+volk_tables.h: volk_mktables$(EXEEXT)
+	./volk_mktables$(EXEEXT)
+
+volk_config.h: $(abs_top_builddir)/volk_config.h 
+	cp $^ $(abs_top_builddir)/include/volk/$@
+
 distclean-local: 
 	rm -f volk_config_fixed.h 
 	rm -f volk_config.h
@@ -134,3 +178,5 @@ distclean-local:
 	rm -f *.pyc
 	rm -f Makefile.in
 	rm -f volk_environment_init.h
+	rm -f volk_mktables
+	rm -f $(BUILT_SOURCES)
