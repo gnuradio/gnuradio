@@ -64,14 +64,14 @@
 (pass-if (true? (gr:oscope-sink-f 1000 (gr:msg-queue))))
 
 ;;; ./io/gr_udp_sink.h
-(pass-if (true? (gr:udp-sink 4 "localhost" 80 1472 #f)))
-(pass-if-throw "confirm throw gr:udp-sink" #t
-  (true? (gr:udp-sink 4 "localhostx" 80 1472 #f)))
+;;(pass-if (true? (gr:udp-sink 4 "localhost" 80 1472 #f)))
+;;(pass-if-throw "confirm throw gr:udp-sink" #t
+;;  (true? (gr:udp-sink 4 "localhostx" 80 1472 #f)))
 
 ;;; ./io/gr_udp_source.h
-(pass-if (true? (gr:udp-source 4 "localhost" 0 1472 #f #t)))
-(pass-if-throw "confirm throw gr:udp-sink" #t
-  (true? (gr:udp-source 4 "localhostx" 0 1472 #f #t)))
+;;(pass-if (true? (gr:udp-source 4 "localhost" 0 1472 #f #t)))
+;;(pass-if-throw "confirm throw gr:udp-source" #t
+;;  (true? (gr:udp-source 4 "localhostx" 0 1472 #f #t)))
 
 ;;; ./io/gr_wavfile_sink.h
 (pass-if (true? (gr:wavfile-sink "foo" 2 48000 16)))
