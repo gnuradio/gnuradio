@@ -158,7 +158,7 @@ if MYSUBCPU_GENERIC
 endif
 
 volk_mktables$(EXEEXT): $(VOLK_MKTABLES_SOURCES)
-	$(CC) -o $@ $^ $(AM_CPPFLAGS)
+	$(CC) -o $@ $^ $(AM_CPPFLAGS) -I$(abs_top_builddir)/include
 
 volk_tables.h: volk_mktables$(EXEEXT)
 	./volk_mktables$(EXEEXT)
