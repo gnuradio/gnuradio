@@ -58,7 +58,7 @@ libspudir = $(libdir)spu
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES = $(DEFINES) $(GNURADIO_INCLUDES) \
-	$(GRUEL_INCLUDES) $(BOOST_CPPFLAGS)
+	$(GRUEL_INCLUDES) $(VOLK_INCLUDES) $(BOOST_CPPFLAGS)
 
 # when including for compilation from pre-installed libraries and such,
 # need to make sure those are put last on the compile command
@@ -72,9 +72,13 @@ GNURADIO_INCLUDES = @gnuradio_core_INCLUDES@
 # How to link in GNU Radio core library from inside the tree
 GNURADIO_CORE_LA = @gnuradio_core_LA@
 
-# How to link in the USRP library from inside the tree
+# How to link in the GRUEL library from inside the tree
 GRUEL_INCLUDES = @gruel_INCLUDES@
 GRUEL_LA = @gruel_LA@
+
+# How to link in the VOLK library from inside the tree
+VOLK_INCLUDES = @volk_INCLUDES@
+VOLK_LA = @volk_LA@
 
 # How to link in the USRP library from inside the tree
 USRP_INCLUDES = @usrp_INCLUDES@

@@ -31,3 +31,4 @@ automake --add-missing -Wno-portability -Wno-override -Wnone
 
 # Run bootstrap in any subprojects
 (cd usrp2/firmware ; ./bootstrap)
+(cd volk ; ./bootstrap)
