@@ -37,7 +37,7 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-pager_swig" "scm_init_gnuradio_pager_swig_module")
+(load-extension-global "libguile-gnuradio-pager_swig" "scm_init_gnuradio_pager_swig_module")
 %}
 
 %goops %{

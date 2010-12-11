@@ -34,7 +34,18 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-gnuradio_core_runtime" "scm_init_gnuradio_gnuradio_core_runtime_module")
+
+;; Load our gsubr that loads libraries using the RTLD_GLOBAL option
+(load-extension "libguile-gnuradio-dynl-global" "scm_init_gnuradio_dynl_global_module")
+
+;; Define load-extension-global in module '(guile)
+(module-define! (resolve-module '(guile)) 
+		'load-extension-global
+		(lambda (lib init)
+		  (dynamic-call init (dynamic-link-global lib))))
+
+;; Use load-extension-global to load our swig modules
+(load-extension-global "libguile-gnuradio-gnuradio_core_runtime" "scm_init_gnuradio_gnuradio_core_runtime_module")
 %}
 
 %goops %{

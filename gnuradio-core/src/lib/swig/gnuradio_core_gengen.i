@@ -31,7 +31,7 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-gnuradio_core_gengen" "scm_init_gnuradio_gnuradio_core_gengen_module")
+(load-extension-global "libguile-gnuradio-gnuradio_core_gengen" "scm_init_gnuradio_gnuradio_core_gengen_module")
 %}
 
 %goops %{

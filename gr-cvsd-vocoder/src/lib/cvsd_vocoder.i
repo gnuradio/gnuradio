@@ -82,7 +82,7 @@ private:
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-cvsd_vocoder" "scm_init_gnuradio_cvsd_vocoder_module")
+(load-extension-global "libguile-gnuradio-cvsd_vocoder" "scm_init_gnuradio_cvsd_vocoder_module")
 %}
 
 %goops %{

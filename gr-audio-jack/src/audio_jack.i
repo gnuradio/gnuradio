@@ -76,7 +76,7 @@ class audio_jack_sink : public gr_sync_block {
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-audio_jack" "scm_init_gnuradio_audio_jack_module")
+(load-extension-global "libguile-gnuradio-audio_jack" "scm_init_gnuradio_audio_jack_module")
 %}
 
 %goops %{

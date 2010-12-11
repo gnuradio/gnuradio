@@ -34,7 +34,7 @@
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-noaa_swig" "scm_init_gnuradio_noaa_swig_module")
+(load-extension-global "libguile-gnuradio-noaa_swig" "scm_init_gnuradio_noaa_swig_module")
 %}
 
 %goops %{

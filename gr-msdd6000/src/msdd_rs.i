@@ -94,7 +94,7 @@ class msdd_rs_source_simple : public gr_sync_block {
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-msdd_rs" "scm_init_gnuradio_msdd_rs_module")
+(load-extension-global "libguile-gnuradio-msdd_rs" "scm_init_gnuradio_msdd_rs_module")
 %}
 
 %goops %{

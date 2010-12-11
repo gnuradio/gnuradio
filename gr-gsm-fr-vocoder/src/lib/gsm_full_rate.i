@@ -49,7 +49,7 @@ public:
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-gsm_full_rate" "scm_init_gnuradio_gsm_full_rate_module")
+(load-extension-global "libguile-gnuradio-gsm_full_rate" "scm_init_gnuradio_gsm_full_rate_module")
 %}
 
 %goops %{
