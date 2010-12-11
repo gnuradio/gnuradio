@@ -58,8 +58,7 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
      process.
   */
   d_int_rate = filter_size;
-  d_dec_rate = (unsigned int)floor(d_int_rate/rate);
-  d_flt_rate = (d_int_rate/rate) - d_dec_rate;
+  set_rate(rate);
 
   // Store the last filter between calls to work
   d_last_filter = 0;

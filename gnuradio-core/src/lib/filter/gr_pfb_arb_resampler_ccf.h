@@ -161,7 +161,11 @@ public:
    * Print all of the filterbank taps to screen.
    */
   void print_taps();
-  
+  void set_rate (float rate) { 
+    d_dec_rate = (unsigned int)floor(d_int_rate/rate);
+    d_flt_rate = (d_int_rate/rate) - d_dec_rate;
+  }
+
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
 		    gr_vector_const_void_star &input_items,

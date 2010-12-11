@@ -48,9 +48,14 @@ class pfb_arb_resampler_ccf(gr.hier_block2):
             self._taps = gr.firdes.low_pass_2(self._size, self._size, bw, tb, atten)
 
         self.pfb = gr.pfb_arb_resampler_ccf(self._rate, self._taps, self._size)
-
+        #print "PFB has %d taps\n" % (len(self._taps),)
+        
         self.connect(self, self.pfb)
         self.connect(self.pfb, self)
-        
+
+    # Note -- set_taps not implemented in base class yet
     def set_taps(self, taps):
         self.pfb.set_taps(taps)
+
+    def set_rate(self, rate):
+        self.pfb.set_rate(rate)
