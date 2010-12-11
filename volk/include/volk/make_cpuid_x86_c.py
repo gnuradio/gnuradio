@@ -33,17 +33,33 @@ def make_cpuid_x86_c(dom) :
     
     for domarch in dom:
         if str(domarch.attributes["type"].value) == "x86":
+            if "no_test" in domarch.attributes.keys():
+                no_test = str(domarch.attributes["no_test"].value);
+                if no_test == "true":
+                    no_test = True;
+                else:
+                    no_test = False;
+            else:
+                no_test = False;
             arch = str(domarch.attributes["name"].value);
             op = domarch.getElementsByTagName("op");
-            op = str(op[0].firstChild.data);
+            if op:
+                op = str(op[0].firstChild.data);
             reg = domarch.getElementsByTagName("reg");
-            reg = str(reg[0].firstChild.data);
+            if reg:
+                reg = str(reg[0].firstChild.data);
             shift = domarch.getElementsByTagName("shift");
-            shift = str(shift[0].firstChild.data);
+            if shift:
+                shift = str(shift[0].firstChild.data);
             val = domarch.getElementsByTagName("val");
-            val = str(val[0].firstChild.data);
+            if val:
+                val = str(val[0].firstChild.data);
             
-            if op == "1":
+            if no_test:
+                tempstring = tempstring + "int i_can_has_" + arch + " () {\n"
+                tempstring = tempstring + "    return 1;\n"
+                tempstring = tempstring + "}\n\n"
+            elif op == "1":
                 tempstring = tempstring + "int i_can_has_" + arch + " () {\n"
                 tempstring = tempstring + "    unsigned int e" + reg + "x = cpuid_e" + reg + "x (" + op + ");\n"
                 tempstring = tempstring + "    return ((e" + reg + "x >> " + shift + ") & 1) == " + val + ";\n"

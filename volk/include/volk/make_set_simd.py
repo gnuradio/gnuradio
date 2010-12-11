@@ -112,9 +112,11 @@ def make_set_simd(dom) :
     tempstring = tempstring + "  ADDONS=\"\"\n";
     tempstring = tempstring + "  BUILT_ARCHS=\"generic\"\n";
     tempstring = tempstring + "  _MAKE_FAKE_PROCCPU\n";
+    tempstring = tempstring + "  OVERRULE_FLAG=\"no\"\n";
     tempstring = tempstring + "  if test -z \"$cf_with_lv_arch\"; then\n";
     tempstring = tempstring + "    cf_with_lv_arch=$lv_PROCCPU\n";
-    
+    tempstring = tempstring + "    OVERRULE_FLAG=\"yes\"\n";
+
     tempstring = tempstring + "  fi\n";
     for domarch in dom:
         if str(domarch.attributes["type"].value) != "all":
@@ -132,6 +134,16 @@ def make_set_simd(dom) :
     for domarch in dom:
         arch = str(domarch.attributes["name"].value);
         atype = str(domarch.attributes["type"].value);
+        overrule = domarch.getElementsByTagName("overrule");
+        if overrule:
+            overrule = str(overrule[0].firstChild.data);
+        else:
+            overrule = "";
+        overrule_val = domarch.getElementsByTagName("overrule_val");
+        if overrule_val:
+            overrule_val = str(overrule_val[0].firstChild.data);
+        else:
+            overrule_val = "";
         flag = domarch.getElementsByTagName("flag");
         flag = str(flag[0].firstChild.data);
         if atype == "x86":
@@ -153,10 +165,15 @@ def make_set_simd(dom) :
             tempstring = tempstring + "        indLV_ARCH=yes\n"
             tempstring = tempstring + "      fi\n"
             tempstring = tempstring + "    done\n"
-            tempstring = tempstring + "    if test \"$indCC\" == \"yes\" && test \"$indCXX\" == \"yes\" && test \"$indLV_ARCH\" == \"yes\"; then\n"
+            tempstring = tempstring + "    if  test -n \"" + overrule + "\" && test \"$" + overrule + "\" == \"" + overrule_val + "\" && test \"$OVERRULE_FLAG\" == \"yes\" && test \"$indLV_ARCH\" == \"yes\"; then\n"
+            tempstring = tempstring + "      indLV_ARCH=no\n"
+            tempstring = tempstring + "    fi\n"
+            
+            tempstring = tempstring + "    if test \"$indCC\" == \"yes\" && test \"$indCXX\" == \"yes\" && test \"$indLV_ARCH\" == \"yes\"; then\n"        
+            
             tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
             tempstring = tempstring + "      ADDONS=\"${ADDONS} -" + flag + "\"\n";
-            tempstring = tempstring + "      BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"";
+            tempstring = tempstring + "      BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"\n";
             tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
             tempstring = tempstring + "    fi\n"
             tempstring = tempstring + "    indCC=no\n"
@@ -201,7 +218,7 @@ def make_set_simd(dom) :
             tempstring = tempstring + "    if test \"$indCC\" = yes && test \"indCXX\" = yes && \"indLV_ARCH\" = yes; then\n"
             tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
             tempstring = tempstring + "      ADDONS=\"${ADDONS} -" + flag + "\"\n";
-            tempstring = tempstring + "      BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"";
+            tempstring = tempstring + "      BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"\n";
             tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
             tempstring = tempstring + "    fi\n"
             tempstring = tempstring + "    indCC=no\n"

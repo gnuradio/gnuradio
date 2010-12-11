@@ -9,12 +9,10 @@
   <flag>maltivec</flag>
 </arch>
 
-<arch name="32" type="x86">
-  <op>0x80000001</op>
+<arch name="32" type="x86" no_test="true" >
   <flag>m32</flag>
-  <reg>d</reg>
-  <shift>29</shift>
-  <val>0</val>
+  <overrule>MD_SUBCPU</overrule>
+  <overrule_val>x86_64</overrule_val>
 </arch> 
 
 <arch name="64" type="x86">
@@ -23,6 +21,8 @@
   <shift>29</shift>
   <flag>m64</flag>
   <val>1</val>
+  <overrule>MD_SUBCPU</overrule>
+  <overrule_val>x86</overrule_val>
 </arch>
 
 <arch name="3dnow" type="x86">
