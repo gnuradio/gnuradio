@@ -50,12 +50,14 @@ gr_make_constellation_receiver_cb(gr_constellation constell,
 								      fmin, fmax));
 }
 
+static int ios[] = {sizeof(char), sizeof(float), sizeof(float), sizeof(float)};
+static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
 gr_constellation_receiver_cb::gr_constellation_receiver_cb (gr_constellation constellation, 
 							    float alpha, float beta,
 							    float fmin, float fmax)
   : gr_block ("constellation_receiver_cb",
 	      gr_make_io_signature (1, 1, sizeof (gr_complex)),
-	      gr_make_io_signature (1, 1, sizeof (unsigned char))),
+	      gr_make_io_signaturev (1, 4, iosig)),
     d_constellation(constellation), 
     d_alpha(alpha), d_beta(beta), d_freq(0), d_max_freq(fmax), d_min_freq(fmin), d_phase(0),
     d_current_const_point(0)
@@ -93,29 +95,43 @@ gr_constellation_receiver_cb::general_work (int noutput_items,
   const gr_complex *in = (const gr_complex *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
 
-  int i=0, o=0;
+  int i=0;
 
   float phase_error;
   unsigned int sym_value;
-  gr_complex sample;
+  gr_complex sample, nco;
 
-  while((o < noutput_items) && (i < ninput_items[0])) {
+  float *out_err = 0, *out_phase = 0, *out_freq = 0;
+  if(output_items.size() == 4) {
+    out_err = (float *) output_items[1];
+    out_phase = (float *) output_items[2];
+    out_freq = (float *) output_items[3];
+  }
+
+  while((i < noutput_items) && (i < ninput_items[0])) {
     sample = in[i];
+    nco = gr_expj(d_phase);   // get the NCO value for derotating the current sample
+    sample = nco*sample;      // get the downconverted symbol
     sym_value = d_constellation.decision_maker(sample);
-    //std::cout << "sym_value: " << sym_value << " sample: " << sample << std::endl;
     phase_error = -arg(sample*conj(d_constellation.constellation()[sym_value]));
+    //std::cout << "sym_value: " << sym_value << " sample: " << sample << "phase_error: " << phase_error << std::endl;
     phase_error_tracking(phase_error);  // corrects phase and frequency offsets
-    out[o++] = sym_value;
+    out[i] = sym_value;
+    if(output_items.size() == 4) {
+      out_err[i] = phase_error;
+      out_phase[i] = d_phase;
+      out_freq[i] = d_freq;
+    }
     i++;
   }
 
   #if 0
   printf("ninput_items: %d   noutput_items: %d   consuming: %d   returning: %d\n",
-	 ninput_items[0], noutput_items, i, o);
+	 ninput_items[0], noutput_items, i, i);
   #endif
 
   consume_each(i);
-  return o;
+  return i;
 }
 
 // Base Constellation Class

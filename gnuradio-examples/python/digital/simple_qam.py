@@ -2,18 +2,20 @@
 from gnuradio import gr, blks2, packet_utils
 
 # Some constants
-NOISE_VOLTAGE = 0
-FREQUENCY_OFFSET = 0
+NOISE_VOLTAGE = 0.1
+FREQUENCY_OFFSET = 0.0000
 TIMING_OFFSET = 1.0
 SAMPLES_PER_SYMBOL = 2
 GAIN = 1.0
 SW_DECIM = 1
 BAND_MIDPOINT = 1.0
 BAND_WIDTH = 0.5
+FREQ_ALPHA = 0.005
+EXCESS_BW = 0.35
 
 # Modulation/Demodulation methods
-modulator = blks2.qam_mod(4, SAMPLES_PER_SYMBOL)
-demodulator = blks2.qam_demod(4, SAMPLES_PER_SYMBOL)
+modulator = blks2.qam_mod(16, SAMPLES_PER_SYMBOL)
+demodulator = blks2.qam_demod(16, SAMPLES_PER_SYMBOL, freq_alpha=FREQ_ALPHA)
 
 #Transmission Blocks
 packet_transmitter = blks2.mod_pkts(modulator, access_code=None, msgq_limit=4,
@@ -41,6 +43,11 @@ sender = packet_transmitter.send_pkt
 
 # Some some packets (The second will not be recieved because it gets cut off
 # before it can finish.  I think this occurs during modulation.)
+
+# Send some large messages to start off with to let things lock.
+for i in range(0, int(20.0/SAMPLES_PER_SYMBOL)):
+    sender('a'*4000)
+
 sender('hello1')
 sender('hello2')
 sender('hello3')
@@ -48,6 +55,11 @@ sender('hello4')
 sender('hello5')
 sender('hello6')
 sender('hello7')
+sender('hello8')
+sender('hello9')
+sender('hello10')
+sender('hello11')
+sender('hello12')
 sender('world')
 sender(eof=True)
 

@@ -26,11 +26,12 @@ QAM modulation and demodulation.
 from math import pi, sqrt, log
 from itertools import islice
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils2
 from gnuradio.blks2impl.generic_mod_demod import generic_mod, generic_demod
 
 
 # default values (used in __init__ and add_options)
+_def_constellation_points = 16
 _def_samples_per_symbol = 2
 _def_excess_bw = 0.35
 _def_verbose = False
@@ -43,7 +44,7 @@ _def_timing_alpha = 0.100
 _def_timing_beta = 0.010
 _def_timing_max_dev = 1.5
 # Fine frequency / Phase correction
-_def_costas_alpha = 0.1
+_def_phase_alpha = 0.1
 
 def is_power_of_four(x):
     v = log(x)/log(4)
@@ -145,7 +146,7 @@ def make_constellation(m):
 
 class qam_mod(generic_mod):
 
-    def __init__(self, m,
+    def __init__(self, constellation_points=_def_constellation_points,
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
                  verbose=_def_verbose,
@@ -169,15 +170,23 @@ class qam_mod(generic_mod):
         @type log: bool
 	"""
 
-        if not isinstance(m, int) or not is_power_of_four(m):
-            raise ValueError("m must be a power of two integer greater than or equal to 4.")
+        if not isinstance(constellation_points, int) or not is_power_of_four(constellation_points):
+            raise ValueError("number of constellation points must be a power of four.")
 
-        points = make_constellation(m)
+        points = make_constellation(constellation_points)
         constellation = gr.gr_constellation(points)
 
         super(qam_mod, self).__init__(constellation, samples_per_symbol,
                                       excess_bw, verbose, log)
 
+    def add_options(parser):
+        """
+        Adds QAM modulation-specific options to the standard parser
+        """
+        parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
+                          help="set the number of constellation points (must be a power of 4) [default=%default]")
+        generic_mod.add_options(parser)
+    add_options=staticmethod(add_options)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QAM demodulator
@@ -186,13 +195,13 @@ class qam_mod(generic_mod):
 
 class qam_demod(generic_demod):
 
-    def __init__(self, m,
+    def __init__(self, constellation_points=_def_constellation_points,
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
                  freq_alpha=_def_freq_alpha,
                  timing_alpha=_def_timing_alpha,
                  timing_max_dev=_def_timing_max_dev,
-                 costas_alpha=_def_costas_alpha,
+                 phase_alpha=_def_phase_alpha,
                  verbose=_def_verbose,
                  log=_def_log):
 
@@ -214,25 +223,33 @@ class qam_demod(generic_demod):
         @type timing_alpha: float
         @param timing_max_dev: timing loop maximum rate deviations
         @type timing_max_dev: float
-        @param costas_alpha: loop filter gain in costas loop
-        @type costas_alphas: float
+        @param phase_alpha: loop filter gain in phase loop
+        @type phase_alphas: float
         @param verbose: Print information about modulator?
         @type verbose: bool
         @param debug: Print modualtion data to files?
         @type debug: bool
         """
 
-        points = make_constellation(m)
+        points = make_constellation(constellation_points)
         constellation = gr.gr_constellation(points)
 
         super(qam_demod, self).__init__(constellation, samples_per_symbol,
                                         excess_bw, freq_alpha, timing_alpha,
-                                        timing_max_dev, costas_alpha, verbose,
+                                        timing_max_dev, phase_alpha, verbose,
                                         log)
-    
+
+    def add_options(parser):
+        """
+        Adds QAM demodulation-specific options to the standard parser
+        """
+        parser.add_option("", "--constellation-points", type="int", default=_def_constellation_points,
+                          help="set the number of constellation points (must be a power of 4) [default=%default]")
+        generic_demod.add_options(parser)
+    add_options=staticmethod(add_options)
+
 #
 # Add these to the mod/demod registry
 #
-# NOT READY TO BE USED YET -- ENABLE AT YOUR OWN RISK
-#modulation_utils.add_type_1_mod('qam16', qam16_mod)
-#modulation_utils.add_type_1_demod('qam16', qam16_demod)
+modulation_utils2.add_type_1_mod('qam', qam_mod)
+modulation_utils2.add_type_1_demod('qam', qam_demod)

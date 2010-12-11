@@ -25,7 +25,7 @@
 differential BPSK modulation and demodulation.
 """
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils2
 from math import pi, sqrt
 import psk
 import cmath
@@ -44,7 +44,7 @@ _def_timing_alpha = 0.100
 _def_timing_beta = 0.010
 _def_timing_max_dev = 1.5
 # Fine frequency / Phase correction
-_def_costas_alpha = 0.1
+_def_phase_alpha = 0.1
 
 # /////////////////////////////////////////////////////////////////////////////
 #                             Generic modulator
@@ -138,7 +138,8 @@ class generic_mod(gr.hier_block2):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return {}
+        return modulation_utils2.extract_kwargs_from_options(
+            generic_mod.__init__, ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
 
@@ -174,7 +175,7 @@ class generic_demod(gr.hier_block2):
                  freq_alpha=_def_freq_alpha,
                  timing_alpha=_def_timing_alpha,
                  timing_max_dev=_def_timing_max_dev,
-                 costas_alpha=_def_costas_alpha,
+                 phase_alpha=_def_phase_alpha,
                  verbose=_def_verbose,
                  log=_def_log):
         """
@@ -195,8 +196,8 @@ class generic_demod(gr.hier_block2):
         @type timing_alpha: float
         @param timing_max_dev: timing loop maximum rate deviations
         @type timing_max_dev: float
-        @param costas_alpha: loop filter gain in costas loop
-        @type costas_alphas: float
+        @param phase_alpha: loop filter gain in phase loop
+        @type phase_alphas: float
         @param verbose: Print information about modulator?
         @type verbose: bool
         @param debug: Print modualtion data to files?
@@ -210,7 +211,7 @@ class generic_demod(gr.hier_block2):
         self._constellation = constellation
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
-        self._costas_alpha = costas_alpha
+        self._phase_alpha = phase_alpha
         self._freq_alpha = freq_alpha
         self._freq_beta = 0.10*self._freq_alpha
         self._timing_alpha = timing_alpha
@@ -241,13 +242,14 @@ class generic_demod(gr.hier_block2):
                                                 taps, nfilts, nfilts/2, self._timing_max_dev)
         self.time_recov.set_beta(self._timing_beta)
 
-        self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
+        #self._phase_beta  = 0.25 * self._phase_alpha * self._phase_alpha
+        self._phase_beta  = 0.25 * self._phase_alpha * self._phase_alpha
         fmin = -0.25
         fmax = 0.25
         
         self.receiver = gr.constellation_receiver_cb(
             self._constellation,
-            self._costas_alpha, self._costas_beta,
+            self._phase_alpha, self._phase_beta,
             fmin, fmax)
             
         # Do differential decoding based on phase change of symbols
@@ -276,26 +278,43 @@ class generic_demod(gr.hier_block2):
         print "\nDemodulator:"
         print "bits per symbol:     %d"   % self.bits_per_symbol()
         print "RRC roll-off factor: %.2f" % self._excess_bw
-        print "Costas Loop alpha:   %.2e" % self._costas_alpha
-        print "Costas Loop beta:    %.2e" % self._costas_beta
-        print "M&M mu:              %.2f" % self._mm_mu
-        print "M&M mu gain:         %.2e" % self._mm_gain_mu
-        print "M&M omega:           %.2f" % self._mm_omega
-        print "M&M omega gain:      %.2e" % self._mm_gain_omega
-        print "M&M omega limit:     %.2f" % self._mm_omega_relative_limit
+        print "FLL gain:            %.2e" % self._freq_alpha
+        print "Timing alpha gain:   %.2e" % self._timing_alpha
+        print "Timing beta gain:    %.2e" % self._timing_beta
+        print "Timing max dev:      %.2f" % self._timing_max_dev
+        print "Phase track alpha:   %.2e" % self._phase_alpha
+        print "Phase track beta:    %.2e" % self._phase_beta
 
     def _setup_logging(self):
         print "Modulation logging turned on."
-        self.connect(self.pre_scaler,
-                         gr.file_sink(gr.sizeof_gr_complex, "rx_prescaler.dat"))
         self.connect(self.agc,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
-        self.connect(self.rrc_filter,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
-        self.connect(self.receiver,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_receiver.dat"))
+        self.connect((self.freq_recov, 0),
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_freq_recov.dat"))
+        self.connect((self.freq_recov, 1),
+                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_freq.dat"))
+        self.connect((self.freq_recov, 2),
+                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_phase.dat"))
+        self.connect((self.freq_recov, 3),
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_freq_recov_error.dat"))
+        self.connect((self.time_recov, 0),
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_time_recov.dat"))
+        self.connect((self.time_recov, 1),
+                     gr.file_sink(gr.sizeof_float, "rx_time_recov_error.dat"))
+        self.connect((self.time_recov, 2),
+                     gr.file_sink(gr.sizeof_float, "rx_time_recov_rate.dat"))
+        self.connect((self.time_recov, 3),
+                     gr.file_sink(gr.sizeof_float, "rx_time_recov_phase.dat"))
+        self.connect((self.receiver, 0),
+                     gr.file_sink(gr.sizeof_char, "rx_receiver.dat"))
+        self.connect((self.receiver, 1),
+                     gr.file_sink(gr.sizeof_float, "rx_receiver_error.dat"))
+        self.connect((self.receiver, 2),
+                     gr.file_sink(gr.sizeof_float, "rx_receiver_phase.dat"))
+        self.connect((self.receiver, 3),
+                     gr.file_sink(gr.sizeof_float, "rx_receiver_freq.dat"))
         self.connect(self.diffdec,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))        
+                     gr.file_sink(gr.sizeof_char, "rx_diffdec.dat"))        
         self.connect(self.unpack,
                      gr.file_sink(gr.sizeof_char, "rx_unpack.dat"))
         
@@ -304,25 +323,28 @@ class generic_demod(gr.hier_block2):
         Adds generic demodulation-specific options to the standard parser
         """
         parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
-                          help="set RRC excess bandwith factor [default=%default] (PSK)")
-        parser.add_option("", "--costas-alpha", type="float", default=None,
-                          help="set Costas loop alpha value [default=%default] (PSK)")
-        parser.add_option("", "--gain-mu", type="float", default=_def_gain_mu,
-                          help="set M&M symbol sync loop gain mu value [default=%default] (GMSK/PSK)")
-        parser.add_option("", "--mu", type="float", default=_def_mu,
-                          help="set M&M symbol sync loop mu value [default=%default] (GMSK/PSK)")
-        parser.add_option("", "--omega-relative-limit", type="float", default=_def_omega_relative_limit,
-                          help="M&M clock recovery omega relative limit [default=%default] (GMSK/PSK)")
+                          help="set RRC excess bandwith factor [default=%default]")
+        parser.add_option("", "--freq-alpha", type="float", default=_def_freq_alpha,
+                          help="set frequency lock loop alpha gain value [default=%default]")
+        parser.add_option("", "--phase-alpha", type="float", default=_def_phase_alpha,
+                          help="set phase tracking loop alpha value [default=%default]")
+        parser.add_option("", "--timing-alpha", type="float", default=_def_timing_alpha,
+                          help="set timing symbol sync loop gain alpha value [default=%default]")
+        parser.add_option("", "--timing-beta", type="float", default=_def_timing_beta,
+                          help="set timing symbol sync loop gain beta value [default=%default]")
+        parser.add_option("", "--timing-max-dev", type="float", default=_def_timing_max_dev,
+                          help="set timing symbol sync loop maximum deviation [default=%default]")
     add_options=staticmethod(add_options)
     
     def extract_kwargs_from_options(options):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return {}
+        return modulation_utils2.extract_kwargs_from_options(
+            generic_demod.__init__, ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
-#
+##
 # Add these to the mod/demod registry
 #
-#modulation_utils.add_type_1_mod('dbpsk', dbpsk_mod)
-#modulation_utils.add_type_1_demod('dbpsk', dbpsk_demod)
+#modulation_utils2.add_type_1_mod('generic', generic_mod)
+#modulation_utils2.add_type_1_demod('generic', generic_demod)
