@@ -353,7 +353,7 @@ usrp2_sink_16sc_sptr.read_gpio = __read_gpio
 
 #if SWIGGUILE
 %scheme %{
-(load-extension "libguile-gnuradio-usrp2" "scm_init_gnuradio_usrp2_module")
+(load-extension-global "libguile-gnuradio-usrp2" "scm_init_gnuradio_usrp2_module")
 %}
 
 %goops %{
