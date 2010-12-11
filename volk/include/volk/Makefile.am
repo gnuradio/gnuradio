@@ -130,41 +130,41 @@ volkinclude_HEADERS = \
 	volk_8s_convert_32f_unaligned16.h 
 
 VOLK_MKTABLES_SOURCES = \
-	$(abs_top_srcdir)/lib/volk_rank_archs.c \
-	$(abs_top_srcdir)/lib/volk_mktables.c
+	$(top_srcdir)/lib/volk_rank_archs.c \
+	$(top_srcdir)/lib/volk_mktables.c
 
 
 # FIXME: Not very extensible to supporting more processors easily
 if MYSUBCPU_X86_64
     VOLK_MKTABLES_SOURCES += \
-        $(abs_top_srcdir)/lib/volk_cpu_x86.c \
-        $(abs_top_srcdir)/lib/cpuid_x86_64.S
+        $(top_srcdir)/lib/volk_cpu_x86.c \
+        $(top_srcdir)/lib/cpuid_x86_64.S
 endif
 
 if MYSUBCPU_X86
     VOLK_MKTABLES_SOURCES += \
-        $(abs_top_srcdir)/lib/volk_cpu_x86.c \
-        $(abs_top_srcdir)/lib/cpuid_x86.S
+        $(top_srcdir)/lib/volk_cpu_x86.c \
+        $(top_srcdir)/lib/cpuid_x86.S
 endif
 
 if MYSUBCPU_POWERPC
     VOLK_MKTABLES_SOURCES += \
-        $(abs_top_srcdir)/lib/volk_cpu_powerpc.c
+        $(top_srcdir)/lib/volk_cpu_powerpc.c
 endif
 
 if MYSUBCPU_GENERIC
     VOLK_MKTABLES_SOURCES += \
-        $(abs_top_srcdir)/lib/volk_cpu_generic.c
+        $(top_srcdir)/lib/volk_cpu_generic.c
 endif
 
 volk_mktables$(EXEEXT): $(VOLK_MKTABLES_SOURCES)
-	$(CC) -o $@ $^ $(AM_CPPFLAGS) -I$(abs_top_builddir)/include
+	$(CC) -o $@ $^ $(AM_CPPFLAGS) -I$(top_builddir)/include
 
 volk_tables.h: volk_mktables$(EXEEXT)
 	./volk_mktables$(EXEEXT)
 
-volk_config.h: $(abs_top_builddir)/volk_config.h 
-	cp $^ $(abs_top_builddir)/include/volk/$@
+volk_config.h: $(top_builddir)/volk_config.h 
+	cp $^ $(top_builddir)/include/volk/$@
 
 distclean-local: 
 	rm -f volk_config_fixed.h 
