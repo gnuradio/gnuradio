@@ -139,6 +139,7 @@ append_to_libpath() {
 # Where to search for not yet installed C++ shared libraries
 prepend_to_libpath $abs_top_builddir/gruel/src/lib/.libs
 prepend_to_libpath $abs_top_builddir/gnuradio-core/src/lib/.libs
+prepend_to_libpath $abs_top_builddir/gnuradio-core/src/guile/.libs
 
 # Where to search for not yet installed swig generated guile libs
 prepend_to_libpath $abs_top_builddir/gnuradio-core/src/lib/swig/.libs
