@@ -60,4 +60,14 @@ GUILE_TESTS = \
 
 CLEANFILES = guile.log
 
+
+scmlibdir = $(libdir)
+scmdir = $(guiledir)
+
+scmlib_LTLIBRARIES = libguile-gnuradio-dynl-global.la
+
+libguile_gnuradio_dynl_global_la_SOURCES = dynl-global.c
+libguile_gnuradio_dynl_global_la_CPPFLAGS = $(GUILE_CFLAGS)
+libguile_gnuradio_dynl_global_la_LIBADD = $(GUILE_LIBS)
+
 endif
