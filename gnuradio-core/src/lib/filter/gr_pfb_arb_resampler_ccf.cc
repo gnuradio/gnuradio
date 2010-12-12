@@ -179,7 +179,8 @@ gr_pfb_arb_resampler_ccf::general_work (int noutput_items,
   j = d_last_filter;
 
   // produce output as long as we can and there are enough input samples
-  while((i < noutput_items) && (count < ninput_items[0]-d_taps_per_filter)) {
+  int max_input = ninput_items[0]-(int)d_taps_per_filter;
+  while((i < noutput_items) && (count < max_input)) {
 
     // start j by wrapping around mod the number of channels
     while((j < d_int_rate) && (i < noutput_items)) {
