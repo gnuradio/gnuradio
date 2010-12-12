@@ -164,6 +164,7 @@ public:
   void set_rate (float rate) { 
     d_dec_rate = (unsigned int)floor(d_int_rate/rate);
     d_flt_rate = (d_int_rate/rate) - d_dec_rate;
+    set_relative_rate(rate);
   }
 
   int general_work (int noutput_items,
