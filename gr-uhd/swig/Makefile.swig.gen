@@ -200,7 +200,15 @@ $(DEPDIR)/uhd_swig-generate-stamp:
 ## Call SWIG to generate the various output files; special
 ## post-processing on 'mingw32' host OS for the dependency file.
 ##
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(uhd_swig_swig_args) \
+
+## If UHD was installed, defined GR_HAVE_UHD for swigging headers
+if GR_DEFINE_HAVE_UHD
+    MY_SWIG_PYTHON_ARGS = $(STD_SWIG_PYTHON_ARGS) -DGR_HAVE_UHD
+else
+    MY_SWIG_PYTHON_ARGS = $(STD_SWIG_PYTHON_ARGS)
+endif
+
+	if $(SWIG) $(MY_SWIG_PYTHON_ARGS) $(uhd_swig_swig_args) \
 		-MD -MF $(DEPDIR)/uhd_swig.Std \
 		-module uhd_swig -o uhd_swig.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
