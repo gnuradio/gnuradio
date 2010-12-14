@@ -58,6 +58,19 @@ static inline void volk_32f_sqrt_aligned16_generic(float* cVector, const float* 
 }
 #endif /* LV_HAVE_GENERIC */
 
+#if LV_HAVE_ORC
+extern void volk_32f_sqrt_aligned16_orc_impl(float *, const float*, unsigned int);
+/*!
+  \brief Sqrts the two input vectors and store their results in the third vector
+  \param cVector The vector where the results will be stored
+  \param aVector One of the vectors to be sqrted
+  \param num_points The number of values in aVector and bVector to be sqrted together and stored into cVector
+*/
+static inline void volk_32f_sqrt_aligned16_orc(float* cVector, const float* aVector, unsigned int num_points){
+    volk_32f_sqrt_aligned16_orc_impl(cVector, aVector, num_points);
+}
+
+#endif /* LV_HAVE_ORC */
 
 
 

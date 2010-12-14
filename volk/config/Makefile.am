@@ -45,6 +45,7 @@ m4macros = \
 	mkstemp.m4 \
 	onceonly.m4 \
 	pkg.m4 \
+	orc.m4 \
 	gcc_version_workaround.m4
 
 

@@ -5,6 +5,10 @@
   <flag>none</flag>
 </arch>
 
+<arch name="orc" type="all">
+  <flag>lorc-0.4</flag>
+</arch>
+
 <arch name="altivec" type="powerpc">
   <flag>maltivec</flag>
 </arch>

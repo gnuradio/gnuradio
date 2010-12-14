@@ -111,6 +111,9 @@ def make_set_simd(dom) :
         tempstring = tempstring + "  AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [always set "+ arch + "!])\n";
     tempstring = tempstring + "  ADDONS=\"\"\n";
     tempstring = tempstring + "  BUILT_ARCHS=\"generic\"\n";
+    tempstring = tempstring + "  if test $HAVE_ORC = yes; then\n";
+    tempstring = tempstring + "    BUILT_ARCHS=\"${BUILT_ARCHS} orc\"\n";
+    tempstring = tempstring + "  fi\n";
     tempstring = tempstring + "  _MAKE_FAKE_PROCCPU\n";
     tempstring = tempstring + "  OVERRULE_FLAG=\"no\"\n";
     tempstring = tempstring + "  if test -z \"$cf_with_lv_arch\"; then\n";

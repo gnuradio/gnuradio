@@ -52,6 +52,14 @@ void qa_32f_sqrt_aligned16::t1() {
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic_time: %f\n", total);
   
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
+    volk_32f_sqrt_aligned16_manual(output0, input0, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
+  
   /*
   for(int i = 0; i < 10; ++i) {
     printf("inputs: %f\n", input0[i]);
@@ -91,6 +99,13 @@ void qa_32f_sqrt_aligned16::t1() {
   end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic_time: %f\n", total);
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
+    volk_32f_sqrt_aligned16_manual(output0, input0, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
     volk_32f_sqrt_aligned16_manual(output01, input0, vlen, "sse");

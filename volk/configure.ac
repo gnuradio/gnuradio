@@ -76,6 +76,7 @@ AC_CONFIG_FILES([\
 	  include/Makefile \
 	  include/volk/Makefile \
 	  lib/Makefile \
+	  orc/Makefile \
 	  volk.pc \
 	])
 

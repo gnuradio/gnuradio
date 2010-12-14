@@ -45,7 +45,9 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) \
 
 # list of programs run by "make check" and "make distcheck"
 #TESTS = test_all
-
+#orc stuff gets built in the ORC directory conditional to ORC being enabled.
+#it gets linked in during the build of libvolk as an added library.
+#there might be a better way to do this.
 
 lib_LTLIBRARIES = \
 	libvolk.la \
@@ -72,6 +74,9 @@ universal_CODE = 		\
 
 generic_CODE = 		\
 	volk_cpu_generic.c
+	
+orc_CODE =      \
+	volk_cpu_orc.c
 
 x86_CODE = 		\
 	volk_cpu_x86.c
@@ -133,10 +138,9 @@ endif
 
 
 
-libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 
-libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
-
-libvolk_la_LIBADD =
+libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 -lorc-0.4
+libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 -lorc-0.4
+libvolk_la_LIBADD = ../orc/libvolk_orc.a
 
 
 
@@ -233,11 +237,12 @@ libvolk_qa_la_SOURCES = \
 	qa_32f_stddev_aligned16.cc \
 	qa_32f_stddev_and_mean_aligned16.cc
 
-libvolk_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 
+libvolk_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 -lorc-0.4
 
 libvolk_qa_la_LIBADD = \
 	libvolk.la \
 	libvolk_runtime.la \
+	../orc/libvolk_orc.a \
 	$(CPPUNIT_LIBS)
 
 # ----------------------------------------------------------------
