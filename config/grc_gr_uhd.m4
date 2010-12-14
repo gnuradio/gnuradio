@@ -32,6 +32,10 @@ AC_DEFUN([GRC_GR_UHD],[
         UHD_CPPFLAGS="${UHD_CPPFLAGS} -I\${abs_top_srcdir}/gr-uhd/lib"
         AC_SUBST(UHD_CPPFLAGS)
         AC_SUBST(UHD_LIBS)
+
+	# Use this to tell the Makefile whether to define
+	# GR_HAVE_UHD for swig.
+	AM_CONDITIONAL([GR_DEFINE_HAVE_UHD],[test $passed = yes])
     fi
 
     AC_CONFIG_FILES([ \
