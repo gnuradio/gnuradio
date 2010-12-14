@@ -19,7 +19,15 @@
 #
 
 include $(top_srcdir)/Makefile.common
+lib_LTLIBRARIES = libvolk_orc.la
+libvolk_orc_la_LDFLAGS = $(ORC_LDFLAGS)
 
-libvolk_orc_a_SOURCES = volk_32f_sqrt_aligned16_orc_impl.c
-libvolk_orc_a_LDFLAGS = -lorc-0.4
-lib_LIBRARIES = libvolk_orc.a
+libvolk_orc_la_SOURCES = \
+volk_32f_sqrt_aligned16_orc_impl.orc
+
+
+
+ORCC_FLAGS = --implementation --lazy-init
+
+.orc.c:
+	$(ORCC) $(ORCC_FLAGS) -o $@ $<

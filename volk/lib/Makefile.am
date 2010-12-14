@@ -138,9 +138,9 @@ endif
 
 
 
-libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 -lorc-0.4
-libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 -lorc-0.4
-libvolk_la_LIBADD = ../orc/libvolk_orc.a
+libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(ORC_LDFLAGS) -lorc-0.4
+libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(ORC_LDFLAGS) -lorc-0.4
+libvolk_la_LIBADD = ../orc/libvolk_orc.la
 
 
 
@@ -237,12 +237,12 @@ libvolk_qa_la_SOURCES = \
 	qa_32f_stddev_aligned16.cc \
 	qa_32f_stddev_and_mean_aligned16.cc
 
-libvolk_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 -lorc-0.4
+libvolk_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(ORC_LDFLAGS) -lorc-0.4
 
 libvolk_qa_la_LIBADD = \
 	libvolk.la \
 	libvolk_runtime.la \
-	../orc/libvolk_orc.a \
+	../orc/libvolk_orc.la \
 	$(CPPUNIT_LIBS)
 
 # ----------------------------------------------------------------

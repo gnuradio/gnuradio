@@ -55,3 +55,4 @@ distclean-local:
 	-rm -f python/Makefile.in
 	-rm -f configure
 	-rm -f orc/Makefile.in
+	-rm -f orc/*.c
