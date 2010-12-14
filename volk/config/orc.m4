@@ -45,7 +45,6 @@ AC_DEFUN([ORC_CHECK],
     AC_DEFINE(DISABLE_ORC, 1, [Disable Orc])
     HAVE_ORC=no
     HAVE_ORCC=no
-    ORC_LDFLAGS=""
   fi
   AM_CONDITIONAL(HAVE_ORC, [test "x$HAVE_ORC" = "xyes"])
   AM_CONDITIONAL(HAVE_ORCC, [test "x$HAVE_ORCC" = "xyes"])

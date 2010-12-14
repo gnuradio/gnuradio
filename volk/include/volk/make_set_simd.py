@@ -183,8 +183,14 @@ def make_set_simd(dom) :
             tempstring = tempstring + "    indCXX=no\n"
             tempstring = tempstring + "    indLV_ARCH=no\n"
         elif atype == "all":
-            tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
-            tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
+            if arch == "orc":
+                tempstring = tempstring + "      if test $HAVE_ORC = yes; then\n";
+                tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
+                tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
+                tempstring = tempstring + "      fi\n";
+            else:
+                tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
+                tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
     tempstring = tempstring + "  ;;\n"
         
     tempstring = tempstring + "  (powerpc)\n"

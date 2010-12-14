@@ -104,10 +104,6 @@ dnl  AM_CONDITIONAL([USE_PYTHON], [test "$with_python" = yes])
   ORC_CHECK
   
   LDFLAGS="$LDFLAGS $LIBGNURADIO_CORE_EXTRA_LDFLAGS"
-  
-  if test HAVE_ORC = true; then
-    LDFLAGS="$LDFLAGS $ORC_LDFLAGS"
-  fi
 
   AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
   AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
