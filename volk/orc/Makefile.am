@@ -26,7 +26,8 @@ libvolk_orc_la_SOURCES = \
 volk_32f_sqrt_aligned16_orc_impl.orc \
 volk_8s_convert_16s_aligned16_orc_impl.orc \
 volk_8s_convert_32f_aligned16_orc_impl.orc \
-volk_32s_and_aligned16_orc_impl
+volk_32s_and_aligned16_orc_impl.orc \
+volk_32f_add_aligned16_orc_impl.orc
 
 
 
