@@ -86,6 +86,19 @@ static inline void volk_8s_convert_32f_aligned16_generic(float* outputVector, co
 }
 #endif /* LV_HAVE_GENERIC */
 
+#if LV_HAVE_ORC
+  /*!
+    \brief Converts the input 8 bit integer data into floating point data, and divides the each floating point output data point by the scalar value
+    \param inputVector The 8 bit input data buffer
+    \param outputVector The floating point output data buffer
+    \param scalar The value divided against each point in the output buffer
+    \param num_points The number of data values to be converted
+  */
+extern void volk_8s_convert_32f_aligned16_orc_impl(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points);
+static inline void volk_8s_convert_32f_aligned16_orc(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points){
+    volk_8s_convert_32f_aligned16_orc_impl(outputVector, inputVector, scalar, num_points);
+}
+#endif /* LV_HAVE_ORC */
 
 
 

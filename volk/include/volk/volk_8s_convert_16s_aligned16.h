@@ -65,6 +65,18 @@ static inline void volk_8s_convert_16s_aligned16_generic(int16_t* outputVector, 
 }
 #endif /* LV_HAVE_GENERIC */
 
+#if LV_HAVE_ORC
+  /*!
+    \brief Converts the input 8 bit integer data into 16 bit integer data
+    \param inputVector The 8 bit input data buffer
+    \param outputVector The 16 bit output data buffer
+    \param num_points The number of data values to be converted
+  */
+extern void volk_8s_convert_16s_aligned16_orc_impl(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points);
+static inline void volk_8s_convert_16s_aligned16_orc(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points){
+    volk_8s_convert_16s_aligned16_orc_impl(outputVector, inputVector, num_points);
+}
+#endif /* LV_HAVE_ORC */
 
 
 

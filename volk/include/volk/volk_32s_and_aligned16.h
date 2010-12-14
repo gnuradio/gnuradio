@@ -63,7 +63,19 @@ static inline void volk_32s_and_aligned16_generic(int32_t* cVector, const int32_
 }
 #endif /* LV_HAVE_GENERIC */
 
-
+#if LV_HAVE_ORC
+/*!
+  \brief Ands the two input vectors and store their results in the third vector
+  \param cVector The vector where the results will be stored
+  \param aVector One of the vectors
+  \param bVector One of the vectors
+  \param num_points The number of values in aVector and bVector to be anded together and stored into cVector
+*/
+extern void volk_32s_and_aligned16_orc_impl(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points);
+static inline void volk_32s_and_aligned16_orc(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points){
+    volk_32s_and_aligned16_orc_impl(cVector, aVector, bVector, num_points);
+}
+#endif /* LV_HAVE_ORC */
 
 
 #endif /* INCLUDED_VOLK_32s_AND_ALIGNED16_H */
