@@ -25,12 +25,15 @@ lib_LTLIBRARIES = libvolk_orc.la
 libvolk_orc_la_LDFLAGS = $(ORC_LDFLAGS)
 
 libvolk_orc_la_SOURCES = \
-volk_32f_sqrt_aligned16_orc_impl.orc \
 volk_8s_convert_16s_aligned16_orc_impl.orc \
 volk_8s_convert_32f_aligned16_orc_impl.orc \
+volk_16u_byteswap_aligned16_orc_impl.orc \
 volk_32s_and_aligned16_orc_impl.orc \
 volk_32f_add_aligned16_orc_impl.orc \
-volk_16u_byteswap_aligned16_orc_impl.orc
+volk_32f_subtract_aligned16_orc_impl.orc \
+volk_32f_divide_aligned16_orc_impl.orc \
+volk_32f_multiply_aligned16_orc_impl.orc \
+volk_32f_sqrt_aligned16_orc_impl.orc
 
 
 

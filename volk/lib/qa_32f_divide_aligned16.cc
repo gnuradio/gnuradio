@@ -35,6 +35,7 @@ void qa_32f_divide_aligned16::t1() {
   float input1[vlen] __attribute__ ((aligned (16)));
   
   float output0[vlen] __attribute__ ((aligned (16)));
+  float output1[vlen] __attribute__ ((aligned (16)));
   float output_known[vlen] __attribute__ ((aligned (16)));
 
   for(int i = 0; i < vlen; ++i) {   
@@ -51,6 +52,14 @@ void qa_32f_divide_aligned16::t1() {
   end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic_time: %f\n", total);
+  
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
+    volk_32f_divide_aligned16_manual(output1, input0, input1, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
 
   /*
   for(int i = 0; i < 10; ++i) {
@@ -61,6 +70,7 @@ void qa_32f_divide_aligned16::t1() {
   
   for(int i = 0; i < vlen; ++i) {
     CPPUNIT_ASSERT_EQUAL(output0[i], output_known[i]);
+    CPPUNIT_ASSERT_EQUAL(output1[i], output_known[i]);
   }
 }
 

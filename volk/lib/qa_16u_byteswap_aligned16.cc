@@ -30,6 +30,7 @@ void qa_16u_byteswap_aligned16::t1() {
     output0[i] = (uint16_t) ((rand() - (RAND_MAX/2)) / (RAND_MAX/2));
   }
   memcpy(output01, output0, vlen*sizeof(uint16_t));
+  memcpy(output02, output0, vlen*sizeof(uint16_t));
 
   printf("16u_byteswap_aligned\n");
 

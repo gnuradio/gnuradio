@@ -78,6 +78,7 @@ void qa_32f_multiply_aligned16::t1() {
   
   float output0[vlen] __attribute__ ((aligned (16)));
   float output01[vlen] __attribute__ ((aligned (16)));
+  float output02[vlen] __attribute__ ((aligned (16)));
 
   for(int i = 0; i < vlen; ++i) {   
     input0[i] = ((float) (rand() - (RAND_MAX/2))) / static_cast<float>((RAND_MAX/2));
@@ -94,6 +95,13 @@ void qa_32f_multiply_aligned16::t1() {
   printf("generic_time: %f\n", total);
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
+    volk_32f_multiply_aligned16_manual(output02, input0, input1, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
     volk_32f_multiply_aligned16_manual(output01, input0, input1, vlen, "sse");
   }
   end = clock();
@@ -107,6 +115,7 @@ void qa_32f_multiply_aligned16::t1() {
   for(int i = 0; i < vlen; ++i) {
     //printf("%d...%d\n", output0[i], output01[i]);
     CPPUNIT_ASSERT_EQUAL(output0[i], output01[i]);
+    CPPUNIT_ASSERT_EQUAL(output0[i], output02[i]);
   }
 }
 
