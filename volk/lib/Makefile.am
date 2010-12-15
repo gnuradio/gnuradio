@@ -133,14 +133,21 @@ libvolk_runtime_la_SOURCES =	\
 	$(universal_runtime_CODE)
 endif
 
+volk_orc_LDFLAGS = \
+	$(ORC_LDFLAGS) \
+	-lorc-0.4
+	
+volk_orc_LIBADD = \
+	../orc/libvolk_orc.la
 
-
+if HAVE_ORC
+libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
+libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
+libvolk_la_LIBADD = $(volk_orc_LIBADD)
+else
 libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
-if HAVE_ORC
-libvolk_la_LIBADD = ../orc/libvolk_orc.la
-libvolk_la_LDFLAGS += -lorc-0.4
-libvolk_runtime_la_LDFLAGS += -lorc-0.4
+libvolk_la_LIBADD =
 endif
 
 
@@ -243,12 +250,6 @@ libvolk_qa_la_LIBADD = \
 	libvolk.la \
 	libvolk_runtime.la \
 	$(CPPUNIT_LIBS)
-	
-if HAVE_ORC
-libvolk_qa_la_LIBADD += \
-    ../orc/libvolk_orc.la
-    libvolk_qa_la_LDFLAGS += -lorc-0.4
-endif
 
 # ----------------------------------------------------------------
 # headers that don't get installed
@@ -353,7 +354,7 @@ noinst_PROGRAMS = \
 	test_all
 
 test_all_SOURCES = test_all.cc
-test_all_LDADD   = libvolk_qa.la ../orc/libvolk_orc.la
+test_all_LDADD   = libvolk_qa.la
 
 
 distclean-local: 
