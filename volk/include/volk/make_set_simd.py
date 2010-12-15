@@ -110,10 +110,7 @@ def make_set_simd(dom) :
         arch = str(domarch.attributes["name"].value);    
         tempstring = tempstring + "  AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [always set "+ arch + "!])\n";
     tempstring = tempstring + "  ADDONS=\"\"\n";
-    tempstring = tempstring + "  BUILT_ARCHS=\"generic\"\n";
-    tempstring = tempstring + "  if test $HAVE_ORC = yes; then\n";
-    tempstring = tempstring + "    BUILT_ARCHS=\"${BUILT_ARCHS} orc\"\n";
-    tempstring = tempstring + "  fi\n";
+    tempstring = tempstring + "  BUILT_ARCHS=\"\"\n";
     tempstring = tempstring + "  _MAKE_FAKE_PROCCPU\n";
     tempstring = tempstring + "  OVERRULE_FLAG=\"no\"\n";
     tempstring = tempstring + "  if test -z \"$cf_with_lv_arch\"; then\n";
@@ -183,14 +180,11 @@ def make_set_simd(dom) :
             tempstring = tempstring + "    indCXX=no\n"
             tempstring = tempstring + "    indLV_ARCH=no\n"
         elif atype == "all":
-            if arch == "orc":
-                tempstring = tempstring + "      if test $HAVE_ORC = yes; then\n";
-                tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
-                tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
-                tempstring = tempstring + "      fi\n";
-            else:
-                tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
-                tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
+            tempstring = tempstring + "    if  test -z \"" + overrule + "\" || test \"$" + overrule + "\" != \"" + overrule_val + "\" || test \"$OVERRULE_FLAG\" == \"no\"; then\n"
+            tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
+            tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
+            tempstring = tempstring + "      BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"\n";
+            tempstring = tempstring + "    fi\n"
     tempstring = tempstring + "  ;;\n"
         
     tempstring = tempstring + "  (powerpc)\n"
@@ -234,11 +228,15 @@ def make_set_simd(dom) :
             tempstring = tempstring + "    indCXX=no\n"
             tempstring = tempstring + "    indLV_ARCH=no\n"
         elif atype == "all":
+            tempstring = tempstring + "    if  test -z \"" + overrule + "\" || test \"$" + overrule + "\" != \"" + overrule_val + "\" || test \"$OVERRULE_FLAG\" == \"no\"; then\n"
             tempstring = tempstring + "      AC_DEFINE(LV_HAVE_" + arch.swapcase() + ", 1, [" + arch + " flag set])\n";
             tempstring = tempstring + "      LV_HAVE_" + arch.swapcase() + "=yes\n";
+            tempstring = tempstring + "      BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"\n";
+            tempstring = tempstring + "    fi\n"
     tempstring = tempstring + "  ;;\n"
     tempstring = tempstring + "  esac\n"
     tempstring = tempstring + "  LV_CXXFLAGS=\"${LV_CXXFLAGS} ${ADDONS}\"\n"
+    tempstring = tempstring + "  AM_CONDITIONAL(LV_HAVE_ORC, [test \"$LV_HAVE_ORC\" = \"yes\"])\n";
     tempstring = tempstring + "])\n"
    
     return tempstring;

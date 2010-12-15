@@ -7,6 +7,8 @@
 
 <arch name="orc" type="all">
   <flag>lorc-0.4</flag>
+  <overrule>HAVE_ORC</overrule>
+  <overrule_val>no</overrule_val>
 </arch>
 
 <arch name="altivec" type="powerpc">
