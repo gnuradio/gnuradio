@@ -18,6 +18,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(ORC_CFLAGS)
+
 include $(top_srcdir)/Makefile.common
 lib_LTLIBRARIES = libvolk_orc.la
 libvolk_orc_la_LDFLAGS = $(ORC_LDFLAGS)
@@ -31,7 +33,7 @@ volk_32f_add_aligned16_orc_impl.orc
 
 
 
-ORCC_FLAGS = --implementation --lazy-init
+my_ORCC_FLAGS = --implementation --lazy-init $(ORCC_FLAGS)
 
 .orc.c:
-	$(ORCC) $(ORCC_FLAGS) -o $@ $<
+	$(ORCC) $(my_ORCC_FLAGS) -o $@ $<

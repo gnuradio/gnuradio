@@ -74,9 +74,6 @@ universal_CODE = 		\
 
 generic_CODE = 		\
 	volk_cpu_generic.c
-	
-orc_CODE =      \
-	volk_cpu_orc.c
 
 x86_CODE = 		\
 	volk_cpu_x86.c
@@ -356,7 +353,7 @@ noinst_PROGRAMS = \
 	test_all
 
 test_all_SOURCES = test_all.cc
-test_all_LDADD   = libvolk_qa.la
+test_all_LDADD   = libvolk_qa.la ../orc/libvolk_orc.la
 
 
 distclean-local: 

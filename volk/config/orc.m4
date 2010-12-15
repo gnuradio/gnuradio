@@ -26,8 +26,11 @@ AC_DEFUN([ORC_CHECK],
       fi
       AC_SUBST(ORCC)
       ORCC_FLAGS="--compat $ORC_REQ"
-      ORC_LDFLAGS="-lorc-0.4"
+      ORC_LDFLAGS=`$PKG_CONFIG --libs orc-0.4`
+      ORC_CFLAGS=`$PKG_CONFIG --cflags orc-0.4`
       AC_SUBST(ORCC_FLAGS)
+      AC_SUBST(ORC_LDFLAGS)
+      AC_SUBST(ORC_CFLAGS)
       HAVE_ORC=yes
       HAVE_ORCC=yes
       if test "x$cross_compiling" = "xyes" ; then
