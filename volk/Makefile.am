@@ -25,7 +25,7 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = bootstrap configure config.h.in volk_config.h
 SUBDIRS = config
-if HAVE_ORC
+if LV_HAVE_ORC
 SUBDIRS += orc
 endif
 SUBDIRS += include lib

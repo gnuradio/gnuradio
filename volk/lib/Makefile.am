@@ -140,7 +140,7 @@ volk_orc_LDFLAGS = \
 volk_orc_LIBADD = \
 	../orc/libvolk_orc.la
 
-if HAVE_ORC
+if LV_HAVE_ORC
 libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
 libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
 libvolk_la_LIBADD = $(volk_orc_LIBADD)

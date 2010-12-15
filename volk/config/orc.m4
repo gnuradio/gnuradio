@@ -6,18 +6,8 @@ dnl ORC_CHECK([REQUIRED_VERSION])
 AC_DEFUN([ORC_CHECK],
 [
   ORC_REQ=ifelse([$1], , "0.4.6", [$1])
-
-  AC_ARG_ENABLE(orc,
-  AC_HELP_STRING([--enable-orc],[use Orc if installed]),
-  [case "${enableval}" in
-    auto) enable_orc=auto ;;
-    yes) enable_orc=yes ;;
-    no)  enable_orc=no ;;
-    *) AC_MSG_ERROR(bad value ${enableval} for --enable-orc) ;;
-  esac
-  ],
-  [enable_orc=auto]) dnl Default value
-
+  
+  enable_orc = auto
   if test "x$enable_orc" != "xno" ; then
     PKG_CHECK_MODULES(ORC, orc-0.4 >= $ORC_REQ, [
       AC_DEFINE(HAVE_ORC, 1, [Use Orc])
