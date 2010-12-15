@@ -25,6 +25,7 @@ void qa_32s_and_aligned16::t1() {
   
   int32_t output0[vlen] __attribute__ ((aligned (16)));
   int32_t output01[vlen] __attribute__ ((aligned (16)));
+  int32_t output02[vlen] __attribute__ ((aligned (16)));
 
   for(int i = 0; i < vlen; ++i) {   
     input0[i] = ((int32_t) (rand() - (RAND_MAX/2)));
@@ -41,6 +42,13 @@ void qa_32s_and_aligned16::t1() {
   printf("generic_time: %f\n", total);
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
+    volk_32s_and_aligned16_manual(output02, input0, input1, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
     volk_32s_and_aligned16_manual(output01, input0, input1, vlen, "sse");
   }
   end = clock();
@@ -54,6 +62,7 @@ void qa_32s_and_aligned16::t1() {
   for(int i = 0; i < vlen; ++i) {
     //printf("%d...%d\n", output0[i], output01[i]);
     CPPUNIT_ASSERT_EQUAL(output0[i], output01[i]);
+    CPPUNIT_ASSERT_EQUAL(output0[i], output02[i]);
   }
 }
 

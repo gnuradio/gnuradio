@@ -40,6 +40,14 @@ void qa_8s_convert_32f_aligned16::t1() {
   end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic_time: %f\n", total);
+  
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
+    volk_8s_convert_32f_aligned16_manual(output_generic, input0, 128.0, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
 
   start = clock();
   for(int count = 0; count < ITERS; ++count) {

@@ -61,5 +61,17 @@ static inline void volk_16u_byteswap_aligned16_generic(uint16_t* intsToSwap, uns
 }
 #endif /* LV_HAVE_GENERIC */
 
+#if LV_HAVE_ORC
+/*!
+  \brief Byteswaps (in-place) an aligned vector of int16_t's.
+  \param intsToSwap The vector of data to byte swap
+  \param numDataPoints The number of data points
+*/
+extern void volk_16u_byteswap_aligned16_orc_impl(uint16_t* intsToSwap, uint16_t* intsToSwapAgain, unsigned int num_points);
+static inline void volk_16u_byteswap_aligned16_orc(uint16_t* intsToSwap, unsigned int num_points){
+    volk_16u_byteswap_aligned16_orc_impl(intsToSwap, intsToSwap, num_points);
+}
+#endif /* LV_HAVE_ORC */
+
 
 #endif /* INCLUDED_VOLK_16u_BYTESWAP_ALIGNED16_H */

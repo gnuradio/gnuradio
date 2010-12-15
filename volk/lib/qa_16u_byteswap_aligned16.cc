@@ -24,6 +24,7 @@ void qa_16u_byteswap_aligned16::t1() {
   
   uint16_t output0[vlen] __attribute__ ((aligned (16)));
   uint16_t output01[vlen] __attribute__ ((aligned (16)));
+  uint16_t output02[vlen] __attribute__ ((aligned (16)));
 
   for(int i = 0; i < vlen; ++i) {   
     output0[i] = (uint16_t) ((rand() - (RAND_MAX/2)) / (RAND_MAX/2));
@@ -41,6 +42,13 @@ void qa_16u_byteswap_aligned16::t1() {
   printf("generic_time: %f\n", total);
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
+    volk_16u_byteswap_aligned16_manual(output02, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
     volk_16u_byteswap_aligned16_manual(output01, vlen, "sse2");
   }
   end = clock();
@@ -54,6 +62,7 @@ void qa_16u_byteswap_aligned16::t1() {
   for(int i = 0; i < vlen; ++i) {
     //printf("%d...%d\n", output0[i], output01[i]);
     CPPUNIT_ASSERT_EQUAL(output0[i], output01[i]);
+    CPPUNIT_ASSERT_EQUAL(output0[i], output02[i]);    
   }
 }
 
