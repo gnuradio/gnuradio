@@ -164,7 +164,7 @@ static inline void volk_16sc_magnitude_16s_aligned16_generic(int16_t* magnitudeV
   const int16_t* complexVectorPtr = (const int16_t*)complexVector;
   int16_t* magnitudeVectorPtr = magnitudeVector;
   unsigned int number = 0;
-  const float scalar = 32786.0;
+  const float scalar = 32768.0;
   for(number = 0; number < num_points; number++){
     float real = ((float)(*complexVectorPtr++)) / scalar;
     float imag = ((float)(*complexVectorPtr++)) / scalar;
@@ -173,7 +173,18 @@ static inline void volk_16sc_magnitude_16s_aligned16_generic(int16_t* magnitudeV
 }
 #endif /* LV_HAVE_GENERIC */
 
-
+#if LV_HAVE_ORC
+/*!
+  \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
+  \param complexVector The vector containing the complex input values
+  \param magnitudeVector The vector containing the real output values
+  \param num_points The number of complex values in complexVector to be calculated and stored into cVector
+*/
+extern void volk_16sc_magnitude_16s_aligned16_orc_impl(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points);
+static inline void volk_16sc_magnitude_16s_aligned16_orc(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
+    volk_16sc_magnitude_16s_aligned16_orc_impl(magnitudeVector, complexVector, num_points);
+}
+#endif /* LV_HAVE_ORC */
 
 
 #endif /* INCLUDED_VOLK_16sc_MAGNITUDE_16s_ALIGNED16_H */

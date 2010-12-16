@@ -23,6 +23,7 @@ void qa_32fc_magnitude_16s_aligned16::t1() {
   std::complex<float> input0[vlen] __attribute__ ((aligned (16)));
   
   int16_t output_generic[vlen] __attribute__ ((aligned (16)));
+  int16_t output_orc[vlen] __attribute__ ((aligned (16)));
   int16_t output_sse[vlen] __attribute__ ((aligned (16)));
   int16_t output_sse3[vlen] __attribute__ ((aligned (16)));
 
@@ -39,6 +40,13 @@ void qa_32fc_magnitude_16s_aligned16::t1() {
   end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic_time: %f\n", total);
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
+    volk_32fc_magnitude_16s_aligned16_manual(output_orc, input0, 32768.0, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
     volk_32fc_magnitude_16s_aligned16_manual(output_sse, input0, 32768.0, vlen, "sse");
@@ -64,6 +72,7 @@ void qa_32fc_magnitude_16s_aligned16::t1() {
     //printf("%d...%d\n", output0[i], output01[i]);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(output_generic[i], output_sse[i], 1.1);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(output_generic[i], output_sse3[i], 1.1);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(output_generic[i], output_orc[i], 1.1);
   }
 }
 
