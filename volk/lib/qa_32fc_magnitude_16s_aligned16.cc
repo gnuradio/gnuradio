@@ -63,10 +63,10 @@ void qa_32fc_magnitude_16s_aligned16::t1() {
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("sse3_time: %f\n", total);
 
-  //for(int i = 0; i < 10; ++i) {
-  //  printf("inputs: %f, %f\n", input0[i].real(), input0[i].imag());
-  //  printf("generic... %i, sse3... %i, orc... %i\n", output_generic[i], output_sse3[i], output_orc[i]);
-  //}
+  for(int i = 0; i < 10; ++i) {
+    printf("inputs: %f, %f\n", input0[i].real(), input0[i].imag());
+    printf("generic... %i, sse3... %i, orc... %i\n", output_generic[i], output_sse3[i], output_orc[i]);
+  }
   
   for(int i = 0; i < vlen; ++i) {
     //printf("%d...%d\n", output0[i], output01[i]);

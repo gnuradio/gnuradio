@@ -2,26 +2,21 @@
 .source 4 src
 .dest 2 dst
 .floatparam 4 scalar
-.temp 2 reals
-.temp 2 imags
-.temp 4 reall
-.temp 4 imagl
-.temp 4 realf
-.temp 4 imagf
+.temp 8 iql
+.temp 8 iqf
+.temp 8 prodiqf
+.temp 4 qf
+.temp 4 if
 .temp 4 sumf
 .temp 4 rootf
 .temp 4 rootl
 
-splitlw reals, imags, src
-convswl reall, reals
-convswl imagl, imags
-convlf realf, reall
-convlf imagf, imagl
-divf realf, realf, scalar
-divf imagf, imagf, scalar
-mulf realf, realf, realf
-mulf imagf, imagf, imagf
-addf sumf, realf, imagf
+x2 convswl iql, src
+x2 convlf iqf, iql
+x2 divf iqf, iqf, scalar
+x2 mulf prodiqf, iqf, iqf
+splitql qf, if, prodiqf
+addf sumf, if, qf
 sqrtf rootf, sumf
 mulf rootf, rootf, scalar
 convfl rootl, rootf

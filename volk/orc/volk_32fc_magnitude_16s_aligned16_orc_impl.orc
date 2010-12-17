@@ -16,4 +16,4 @@ addf sumf, if, qf
 sqrtf rootf, sumf
 mulf rootf, rootf, scalar
 convfl rootl, rootf
-convssslw dst, rootl
+convlw dst, rootl

@@ -39,6 +39,7 @@ volk_32f_max_aligned16_orc_impl.orc \
 volk_32f_min_aligned16_orc_impl.orc \
 volk_32fc_magnitude_32f_aligned16_orc_impl.orc \
 volk_32fc_magnitude_16s_aligned16_orc_impl.orc \
+volk_16sc_magnitude_16s_aligned16_orc_impl.orc \
 volk_16sc_deinterleave_16s_aligned16_orc_impl.orc \
 volk_16sc_deinterleave_32f_aligned16_orc_impl.orc \
 volk_16sc_deinterleave_real_8s_aligned16_orc_impl.orc
