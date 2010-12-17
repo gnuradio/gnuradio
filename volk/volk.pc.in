@@ -10,6 +10,6 @@ Name: volk
 Description: VOLK.. Vector Optimized Library of Kernels
 Requires:
 Version: @VERSION@
-Libs: -lvolk -lvolk_runtime
+Libs: -lvolk -lvolk_runtime -lvolk_orc
 Cflags: -I${includedir} ${LV_CXXFLAGS}
 

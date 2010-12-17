@@ -24,6 +24,7 @@ void qa_16sc_deinterleave_real_8s_aligned16::t1() {
   
   int8_t output_generic[vlen] __attribute__ ((aligned (16)));
   int8_t output_ssse3[vlen] __attribute__ ((aligned (16)));
+  int8_t output_orc[vlen] __attribute__ ((aligned (16)));
 
   int16_t* loadInput = (int16_t*)input0;
   for(int i = 0; i < vlen*2; ++i) {   
@@ -40,6 +41,13 @@ void qa_16sc_deinterleave_real_8s_aligned16::t1() {
   printf("generic_time: %f\n", total);
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
+    volk_16sc_deinterleave_real_8s_aligned16_manual(output_orc, input0, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
     volk_16sc_deinterleave_real_8s_aligned16_manual(output_ssse3, input0, vlen, "ssse3");
   }
   end = clock();
@@ -54,6 +62,7 @@ void qa_16sc_deinterleave_real_8s_aligned16::t1() {
   for(int i = 0; i < vlen; ++i) {
     //printf("%d...%d\n", output0[i], output01[i]);
     CPPUNIT_ASSERT_EQUAL(output_generic[i], output_ssse3[i]);
+    CPPUNIT_ASSERT_EQUAL(output_generic[i], output_orc[i]);
   }
 }
 

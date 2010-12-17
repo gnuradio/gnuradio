@@ -67,5 +67,19 @@ static inline void volk_32f_min_aligned16_generic(float* cVector, const float* a
 }
 #endif /* LV_HAVE_GENERIC */
 
+#if LV_HAVE_ORC
+/*!
+  \brief Selects minimum value from each entry between bVector and aVector and store their results in the cVector
+  \param cVector The vector where the results will be stored
+  \param aVector The vector to be checked
+  \param bVector The vector to be checked
+  \param num_points The number of values in aVector and bVector to be checked and stored into cVector
+*/
+extern void volk_32f_min_aligned16_orc_impl(float* cVector, const float* aVector, const float* bVector, unsigned int num_points);
+static inline void volk_32f_min_aligned16_orc(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
+    volk_32f_min_aligned16_orc_impl(cVector, aVector, bVector, num_points);
+}
+#endif /* LV_HAVE_ORC */
+
 
 #endif /* INCLUDED_VOLK_32f_MIN_ALIGNED16_H */

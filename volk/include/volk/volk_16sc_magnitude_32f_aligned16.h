@@ -161,7 +161,7 @@ static inline void volk_16sc_magnitude_32f_aligned16_generic(float* magnitudeVec
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#if LV_HAVE_ORC_DISABLED
 /*!
   \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
   \param complexVector The vector containing the complex input values

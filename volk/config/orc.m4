@@ -5,7 +5,7 @@ dnl ORC_CHECK([REQUIRED_VERSION])
 
 AC_DEFUN([ORC_CHECK],
 [
-  ORC_REQ=ifelse([$1], , "0.4.6", [$1])
+  ORC_REQ=ifelse([$1], , "0.4.10", [$1])
   
   enable_orc = auto
   if test "x$enable_orc" != "xno" ; then

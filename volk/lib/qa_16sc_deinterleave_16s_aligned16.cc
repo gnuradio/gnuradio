@@ -26,6 +26,8 @@ void qa_16sc_deinterleave_16s_aligned16::t1() {
   int16_t output_generic1[vlen] __attribute__ ((aligned (16)));
   int16_t output_sse2[vlen] __attribute__ ((aligned (16)));
   int16_t output_sse21[vlen] __attribute__ ((aligned (16)));
+  int16_t output_orc[vlen] __attribute__ ((aligned (16)));
+  int16_t output_orc1[vlen] __attribute__ ((aligned (16)));
   int16_t output_ssse3[vlen] __attribute__ ((aligned (16)));
   int16_t output_ssse31[vlen] __attribute__ ((aligned (16)));
 
@@ -42,6 +44,13 @@ void qa_16sc_deinterleave_16s_aligned16::t1() {
   end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic_time: %f\n", total);
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
+    volk_16sc_deinterleave_16s_aligned16_manual(output_orc, output_orc1, input0, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
     volk_16sc_deinterleave_16s_aligned16_manual(output_sse2, output_sse21, input0, vlen, "sse2");
@@ -70,6 +79,9 @@ void qa_16sc_deinterleave_16s_aligned16::t1() {
 
     CPPUNIT_ASSERT_EQUAL(output_generic[i],  output_ssse3[i]);
     CPPUNIT_ASSERT_EQUAL(output_generic1[i],  output_ssse31[i]);
+    
+    CPPUNIT_ASSERT_EQUAL(output_generic[i],  output_orc[i]);
+    CPPUNIT_ASSERT_EQUAL(output_generic1[i],  output_orc1[i]);
   }
 }
 

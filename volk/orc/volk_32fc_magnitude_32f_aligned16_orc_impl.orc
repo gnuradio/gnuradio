@@ -1,21 +1,13 @@
 .function volk_32fc_magnitude_32f_aligned16_orc_impl
 .source 8 src
 .dest 4 dst
-.floatparam 4 scalar
-.temp 4 invscalar
-.temp 4 reall
-.temp 4 imagl
-.temp 4 realf
-.temp 4 imagf
+.temp 8 iqf
+.temp 8 prodiqf
+.temp 4 qf
+.temp 4 if
 .temp 4 sumf
 
-divf invscalar, 1.0, scalar
-splitql reall, imagl, src
-convlf realf, reall
-convlf imagf, imagl
-mulf realf, realf, invscalar
-mulf imagf, imagf, invscalar
-mulf realf, realf, realf
-mulf imagf, imagf, imagf
-addf sumf, realf, imagf
+x2 mulf prodiqf, src, src
+splitql qf, if, prodiqf
+addf sumf, if, qf
 sqrtf dst, sumf

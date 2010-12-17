@@ -89,7 +89,20 @@ static inline void volk_16sc_deinterleave_32f_aligned16_generic(float* iBuffer, 
 }
 #endif /* LV_HAVE_GENERIC */
 
-
+#if LV_HAVE_ORC
+  /*!
+    \brief Converts the complex 16 bit vector into floats,scales each data point, and deinterleaves into I & Q vector data
+    \param complexVector The complex input vector
+    \param iBuffer The I buffer output data
+    \param qBuffer The Q buffer output data
+    \param scalar The data value to be divided against each input data value of the input complex vector
+    \param num_points The number of complex data values to be deinterleaved
+  */
+extern void volk_16sc_deinterleave_32f_aligned16_orc_impl(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points);
+static inline void volk_16sc_deinterleave_32f_aligned16_orc(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points){
+    volk_16sc_deinterleave_32f_aligned16_orc_impl(iBuffer, qBuffer, complexVector, scalar, num_points);
+}
+#endif /* LV_HAVE_ORC */
 
 
 #endif /* INCLUDED_VOLK_16sc_DEINTERLEAVE_32F_ALIGNED16_H */

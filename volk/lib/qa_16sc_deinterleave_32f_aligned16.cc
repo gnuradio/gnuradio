@@ -26,6 +26,8 @@ void qa_16sc_deinterleave_32f_aligned16::t1() {
   float output_generic1[vlen] __attribute__ ((aligned (16)));
   float output_sse2[vlen] __attribute__ ((aligned (16)));
   float output_sse21[vlen] __attribute__ ((aligned (16)));
+  float output_orc[vlen] __attribute__ ((aligned (16)));
+  float output_orc1[vlen] __attribute__ ((aligned (16)));
 
   int16_t* loadInput = (int16_t*)input0;
   for(int i = 0; i < vlen*2; ++i) {   
@@ -40,6 +42,13 @@ void qa_16sc_deinterleave_32f_aligned16::t1() {
   end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic_time: %f\n", total);
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
+    volk_16sc_deinterleave_32f_aligned16_manual(output_orc, output_orc1, input0, 32768.0, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
     volk_16sc_deinterleave_32f_aligned16_manual(output_sse2, output_sse21, input0, 32768.0, vlen, "sse");
@@ -57,6 +66,8 @@ void qa_16sc_deinterleave_32f_aligned16::t1() {
     //printf("%d...%d\n", output0[i], output01[i]);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(output_generic[i], output_sse2[i], fabs(output_generic[i])*1e-4);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(output_generic1[i],  output_sse21[i], fabs(output_generic1[i])*1e-4);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(output_generic[i], output_orc[i], fabs(output_generic[i])*1e-4);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(output_generic1[i],  output_orc1[i], fabs(output_generic1[i])*1e-4);
   }
 }
 

@@ -77,7 +77,18 @@ static inline void volk_16sc_deinterleave_real_8s_aligned16_generic(int8_t* iBuf
 }
 #endif /* LV_HAVE_GENERIC */
 
-
+#if LV_HAVE_ORC
+/*!
+  \brief Deinterleaves the complex 16 bit vector into 8 bit I vector data
+  \param complexVector The complex input vector
+  \param iBuffer The I buffer output data
+  \param num_points The number of complex data values to be deinterleaved
+*/
+extern void volk_16sc_deinterleave_real_8s_aligned16_orc_impl(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points);
+static inline void volk_16sc_deinterleave_real_8s_aligned16_orc(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
+    volk_16sc_deinterleave_real_8s_aligned16_orc_impl(iBuffer, complexVector, num_points);
+}
+#endif /* LV_HAVE_ORC */
 
 
 #endif /* INCLUDED_VOLK_16sc_DEINTERLEAVE_REAL_8s_ALIGNED16_H */
