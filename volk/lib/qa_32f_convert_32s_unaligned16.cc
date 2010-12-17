@@ -2,6 +2,7 @@
 #include <qa_32f_convert_32s_unaligned16.h>
 #include <volk/volk_32f_convert_32s_unaligned16.h>
 #include <cstdlib>
+#include <ctime>
 
 //test for sse2
 

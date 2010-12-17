@@ -2,6 +2,7 @@
 #include <qa_32s_and_aligned16.h>
 #include <volk/volk_32s_and_aligned16.h>
 #include <cstdlib>
+#include <ctime>
 
 //test for sse
 

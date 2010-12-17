@@ -1,7 +1,7 @@
 #include <volk/volk.h>
 #include <qa_16s_branch_4_state_8_aligned16.h>
 #include <cstdlib>
-#include <time.h>
+#include <ctime>
 
 //test for ssse3
 

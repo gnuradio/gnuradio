@@ -2,6 +2,7 @@
 #include <qa_16s_quad_max_star_aligned16.h>
 #include <volk/volk_16s_quad_max_star_aligned16.h>
 #include <cstdlib>
+#include <ctime>
 
 //test for sse2
 

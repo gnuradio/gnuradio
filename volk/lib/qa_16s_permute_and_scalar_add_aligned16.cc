@@ -2,7 +2,7 @@
 #include <qa_16s_permute_and_scalar_add_aligned16.h>
 #include <volk/volk_16s_permute_and_scalar_add_aligned16.h>
 #include <cstdlib>
-#include <time.h>
+#include <ctime>
 
 //test for sse2
 

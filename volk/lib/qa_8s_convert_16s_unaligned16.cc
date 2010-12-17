@@ -3,6 +3,7 @@
 #include <qa_8s_convert_16s_unaligned16.h>
 #include <volk/volk_8s_convert_16s_unaligned16.h>
 #include <cstdlib>
+#include <ctime>
 
 //test for sse4_1
 
