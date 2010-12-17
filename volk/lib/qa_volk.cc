@@ -118,6 +118,7 @@ CppUnit::TestSuite *
 qa_volk::suite()
 {
   CppUnit::TestSuite *s = new CppUnit::TestSuite("volk");
+
   s->addTest(qa_16s_quad_max_star_aligned16::suite());
   s->addTest(qa_32fc_dot_prod_aligned16::suite());
   s->addTest(qa_32fc_square_dist_scalar_mult_aligned16::suite());

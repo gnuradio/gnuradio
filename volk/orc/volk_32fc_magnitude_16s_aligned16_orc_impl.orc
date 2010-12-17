@@ -9,11 +9,15 @@
 .temp 4 sumf
 .temp 4 rootf
 .temp 4 rootl
+.temp 4 maskl
 
 x2 mulf prodiqf, src, src
 splitql qf, if, prodiqf
 addf sumf, if, qf
 sqrtf rootf, sumf
 mulf rootf, rootf, scalar
+cmpltf maskl, scalar, rootf
+andl maskl, maskl, 0x80000000
+orl rootf, rootf, maskl
 convfl rootl, rootf
-convlw dst, rootl
+convssslw dst, rootl
