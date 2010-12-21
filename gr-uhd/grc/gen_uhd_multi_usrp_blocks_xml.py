@@ -84,7 +84,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<param>
 		<name>Device Addr</name>
 		<key>dev_addr</key>
-		<value>addr=192.168.10.2</value>
+		<value>addr0=192.168.10.2, addr1=192.168.10.3</value>
 		<type>string</type>
 		<hide>
 			\#if \$dev_addr()
@@ -173,9 +173,8 @@ The UHD Multi USRP $sourk.title() Block:
 
 Device Address:
 The device address is a delimited string used to locate UHD devices on your system. \\
-If left blank, the first UHD device found will be used. \\
-Used args to specify a specfic device.
-USRP2 Example: addr=192.168.10.2 192.168.10.3
+Use the device address to specify a list of devices.
+USRP2 Example: addr0=192.168.10.2, addr1=192.168.10.3
 
 Num Motherboards:
 Selects the number of USRP motherboards in this multi-USRP configuration.

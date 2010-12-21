@@ -20,6 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// Defined during configure; avoids trying to locate
+// header files if UHD was not installed.
+#ifdef GR_HAVE_UHD
+
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler
 ////////////////////////////////////////////////////////////////////////
@@ -111,4 +115,6 @@ static const size_t ALL_MBOARDS;
 %goops %{
 (use-modules (gnuradio gnuradio_core_runtime))
 %}
-#endif
+#endif	/* SWIGGUILE */
+
+#endif  /* GR_HAVE_UHD */
