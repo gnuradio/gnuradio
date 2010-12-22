@@ -83,7 +83,6 @@ class audio_alsa_sink : public gr_sync_block {
   // random stats
   int			d_nunderuns;		// count of underruns
   int			d_nsuspends;		// count of suspends
-  bool                  d_change_in_progress;   // Topology change in progress--used as spinlock for write_buffer
   bool			d_ok_to_block;      // defaults to "true", controls blocking/non-block I/O
 
   void output_error_msg (const char *msg, int err);
