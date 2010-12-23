@@ -18,6 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * This file is an attempt to work around a problem that appears on
+ * certain Ubuntu (and perhaps other) systems.  On those systems
+ * (10.04 is known to have the problem, while 10.10 and later work OK
+ * without this kludge), we end up with a situation where exceptions
+ * are not caught by the swig code, even though the swig generated
+ * code "looks right" and "is right".  Details of the issue can be
+ * found in swig bug 1863647,
+ * http://sourceforge.net/tracker/index.php?func=detail&aid=1863647&group_id=1645&atid=101645
+ *
+ * We work around the problem by loading swig generated guile modules
+ * using the equivalent of the dlopen's RTLD_GLOBAL flag.  This is
+ * only possible on systems using libtool-2.*.  Those systems contain
+ * the lt_dlavise_global function.
+ */
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -27,6 +42,10 @@
 
 extern scm_t_bits scm_tc16_dynamic_obj;
 
+#ifdef HAVE_LT_DLADVISE_GLOBAL
+/*
+ * Load shared module using the equivalent of the RTLD_GLOBAL flag
+ */
 static lt_dlhandle
 dlopenext_global (const char *filename)
 {
@@ -41,6 +60,18 @@ dlopenext_global (const char *filename)
   lt_dladvise_destroy (&advise);
   return handle;
 }
+
+#else
+
+/*
+ * We don't have lt_dladvise_global.  Fall back to lt_dlopenext.
+ */
+static lt_dlhandle
+dlopenext_global (const char *filename)
+{
+  return lt_dlopenext (filename);
+}
+#endif
 
 
 static void *

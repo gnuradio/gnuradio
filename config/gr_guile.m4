@@ -44,6 +44,12 @@ AC_DEFUN([GUILE_DEVEL],[
     AC_SUBST(GUILE_PKLIBDIR)
     AC_SUBST(GUILE_PKDATADIR)
     AC_SUBST(GUILE_LIBS)
+
+    dnl see if we've got lt_dladvise_global (libtool-2.*)
+    AC_SEARCH_LIBS([lt_dladvise_global],[ltdl],
+		   [AC_DEFINE([HAVE_LT_DLADVISE_GLOBAL], [1],
+		              [Define if lt_dladvise_global exists.])],
+		   [],[])
 ])
 
 # GUILE_CHECK_MODULE
