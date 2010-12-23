@@ -45,14 +45,13 @@
  */
 
 static void
-ensure_unittest_path (const char *grpath, const char *path)
+ensure_unittest_path (const char *path)
 {
   struct stat statbuf;
   if (stat (path, &statbuf) == 0 && S_ISDIR (statbuf.st_mode))
     return;
 
   // blindly try to make it 	// FIXME make this robust. C++ SUCKS!
-  gr_mkdir (grpath, 0750);
   gr_mkdir (path, 0750);
 }
 
@@ -60,11 +59,9 @@ static void
 get_unittest_path (const char *filename, char *fullpath, size_t pathsize)
 {
   char path[200];
-  char grpath[200];
-  snprintf (grpath, sizeof(grpath), "%s/.gnuradio", getenv ("HOME"));
-  snprintf (path, sizeof(path), "%s/unittests", grpath);
+  snprintf (path, sizeof(path), "./.unittests");
   snprintf (fullpath, pathsize, "%s/%s", path, filename);
 
-  ensure_unittest_path(grpath, path);
+  ensure_unittest_path(path);
 }
 
