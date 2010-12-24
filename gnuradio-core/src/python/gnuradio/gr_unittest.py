@@ -38,7 +38,7 @@ class TestCase(unittest.TestCase):
 
            Note that decimal places (from zero) is usually not the same
            as significant digits (measured from the most signficant digit).
-        """
+       """
         if round(second.real-first.real, places) != 0:
             raise self.failureException, \
                   (msg or '%s != %s within %s places' % (`first`, `second`, `places` ))
@@ -112,30 +112,31 @@ def run(PUT, filename=None):
     Runs the unittest on a TestCase and produces an optional XML report
     PUT:      the program under test and should be a gr_unittest.TestCase
     filename: an optional filename to save the XML report of the tests
-              this will live in $HOME/.gnuradio/unittests/python
+              this will live in ./.unittests/python
     '''
 
     # Run this is given a file name
     if(filename is not None):
-        homepath = os.getenv("HOME")
-        basepath = homepath + "/.gnuradio"
-        path = homepath + "/.gnuradio/unittests/python"
+        basepath = "./.unittests"
+        path = basepath + "/python"
+
+        if not os.path.exists(basepath):
+            os.makedirs(basepath, 0750)
 
         xmlrunner = None
-        if os.path.exists(basepath):
-            # only proceed if $HOME/.gnuradio is writable
-            st = os.stat(basepath)[stat.ST_MODE]
-            if(st & stat.S_IWUSR > 0):
-                # Test if path exists; if not, build it
-                if not os.path.exists(path):
-                    os.makedirs(path, 0750)
+        # only proceed if .unittests is writable
+        st = os.stat(basepath)[stat.ST_MODE]
+        if(st & stat.S_IWUSR > 0):
+            # Test if path exists; if not, build it
+            if not os.path.exists(path):
+                os.makedirs(path, 0750)
 
-                # Just for safety: make sure we can write here, too
-                st = os.stat(path)[stat.ST_MODE]
-                if(st & stat.S_IWUSR > 0):
-                    # Create an XML runner to filename
-                    fout = file(path+"/"+filename, "w")
-                    xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
+            # Just for safety: make sure we can write here, too
+            st = os.stat(path)[stat.ST_MODE]
+            if(st & stat.S_IWUSR > 0):
+                # Create an XML runner to filename
+                fout = file(path+"/"+filename, "w")
+                xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
 
         txtrunner = TextTestRunner(verbosity=1)
 

@@ -129,6 +129,13 @@ gr_prefsdir = $(GR_PREFSDIR)
 # Data directory for grc block wrappers
 grc_blocksdir = $(pkgdatadir)/grc/blocks
 
+# Other common defines; use "+=" to add to these
+STAMPS =
+MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT \
+	.unittests/* .unittests/python/*
+
+# Don't distribute the files defined in the variable 'no_dist_files'
+
 dist-hook:
 	@for file in $(no_dist_files); do \
 		echo $(RM) $(distdir)/$$file; \
