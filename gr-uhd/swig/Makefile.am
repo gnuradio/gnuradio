@@ -65,3 +65,9 @@ uhd_swig_swiginclude_headers =
 uhd_swig_swig_args = \
 	$(UHD_CFLAGS) \
 	-I$(top_srcdir)/gr-uhd/lib
+
+## If UHD was installed, defined GR_HAVE_UHD for swigging headers
+if GR_DEFINE_HAVE_UHD
+    uhd_swig_swig_args += -DGR_HAVE_UHD
+endif
+
