@@ -22,7 +22,12 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
-EXTRA_DIST += $(nobase_guile_DATA)
+TESTS =
+EXTRA_DIST += run_tests.in run_guile_tests.in $(nobase_guile_DATA)
+DISTCLEANFILES += run_tests run_guile_tests
+
+noinst_PYTHON =	qa_uhd.py
+noinst_GUILE = uhd.test
 
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
@@ -39,7 +44,6 @@ endif
 
 # ----------------------------------------------------------------
 # The SWIG library
-# TESTS = run_tests
 
 TOP_SWIG_IFILES = \
 	uhd_swig.i
@@ -71,3 +75,10 @@ if GR_DEFINE_HAVE_UHD
     uhd_swig_swig_args += -DGR_HAVE_UHD
 endif
 
+if PYTHON
+TESTS += run_tests
+endif
+
+if GUILE
+TESTS += run_guile_tests
+endif
