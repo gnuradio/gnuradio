@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr
+from gnuradio import gr, optfir
 
 class pfb_decimator_ccf(gr.hier_block2):
     '''
@@ -29,14 +29,30 @@ class pfb_decimator_ccf(gr.hier_block2):
     This simplifies the interface by allowing a single input stream to connect to this block.
     It will then output a stream that is the decimated output stream.
     '''
-    def __init__(self, decim, taps, channel=0):
+    def __init__(self, decim, taps=None, channel=0, atten=100):
 	gr.hier_block2.__init__(self, "pfb_decimator_ccf",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         self._decim = decim
-        self._taps = taps
         self._channel = channel
+
+        if taps is not None:
+            self._taps = taps
+        else:
+            # Create a filter that covers the full bandwidth of the input signal
+            bw = 0.4
+            tb = 0.2
+            ripple = 0.1
+            made = False
+            while not made:
+                try:
+                    self._taps = optfir.low_pass(1, self._decim, bw, bw+tb, ripple, atten)
+                    made = True
+                except RuntimeError:
+                    ripple += 0.01
+                    made = False
+                    print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
 
         self.s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, self._decim)
         self.pfb = gr.pfb_decimator_ccf(self._decim, self._taps, self._channel)
