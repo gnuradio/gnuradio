@@ -27,13 +27,12 @@ EXTRA_DIST += run_tests.in
 DISTCLEANFILES += run_tests
 
 
-# ----------------------------------------------------------------------
-# Local Python files, not installed
-#
-# qa_usrp2.py
-# ----------------------------------------------------------------------
-
 noinst_PYTHON = qa_usrp2.py
+
+if GUILE
+nobase_guile_DATA = gnuradio/usrp2.scm
+endif
+
 
 # ----------------------------------------------------------------------
 # Miscellaneous build operations
@@ -91,22 +90,26 @@ noinst_HEADERS = \
 # ----------------------------------------------------------------------
 
 TOP_SWIG_IFILES =		\
-	usrp2.i
+	usrp2_swig.i
 
 # Install so that they end up available as:
 #   import gnuradio.usrp2
 # This ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-usrp2_pythondir_category =	\
-	gnuradio
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/usrp2
+usrp2_swig_pythondir_category =	\
+	gnuradio/usrp2
 
 # additional arguments to the SWIG command
-usrp2_swig_args =		\
+usrp2_swig_swig_args =		\
 	$(USRP2_INCLUDES)
 
 # additional libraries for linking with the SWIG-generated library
-usrp2_la_swig_libadd =		\
+usrp2_swig_la_swig_libadd =	\
 	libgnuradio-usrp2.la
+
+# additional Python files to be installed along with the SWIG-generated one
+usrp2_swig_python =		\
+	__init__.py
 
 if PYTHON
 TESTS += run_tests

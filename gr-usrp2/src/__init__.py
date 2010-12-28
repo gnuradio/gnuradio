@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 #
-# Copyright 2005,2008,2010 Free Software Foundation, Inc.
+# Copyright 2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,21 +19,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
-import usrp2_swig
+# The presence of this file turns this directory into a Python package
 
-class test_usrp2(gr_unittest.TestCase):
+# Add SWIG generated code to this namespace
+from usrp2_swig import *
 
-    def setUp(self):
-        self.tb = gr.top_block()
+# Add other content from pure-Python modules here
 
-    def tearDown(self):
-        self.tb = None
-
-    def test_000_nop (self):
-        """Just see if we can import the module...
-        They may not have a USRP2 connected, etc.  Don't try to run anything"""
-        pass
-    
-if __name__ == '__main__':
-    gr_unittest.run(test_usrp2, "test_usrp2.xml")
