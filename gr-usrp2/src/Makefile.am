@@ -23,20 +23,14 @@ include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
 TESTS =
-EXTRA_DIST += run_tests.in
-DISTCLEANFILES += run_tests
-
+EXTRA_DIST += run_tests.in run_guile_tests.in
+DISTCLEANFILES += run_tests run_guile_tests
 
 noinst_PYTHON = qa_usrp2.py
 
 if GUILE
 nobase_guile_DATA = gnuradio/usrp2.scm
 endif
-
-
-# ----------------------------------------------------------------------
-# Miscellaneous build operations
-# ----------------------------------------------------------------------
 
 # ----------------------------------------------------------------------
 # C++ block API interface librar(ies)
@@ -113,4 +107,8 @@ usrp2_swig_python =		\
 
 if PYTHON
 TESTS += run_tests
+endif
+
+if GUILE
+TESTS += run_guile_tests
 endif

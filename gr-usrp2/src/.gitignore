@@ -12,3 +12,4 @@
 /guile
 /python
 /usrp2_swig.py
+/run_guile_tests
