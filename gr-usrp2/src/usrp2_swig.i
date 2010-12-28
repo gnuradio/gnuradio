@@ -348,7 +348,6 @@ usrp2_sink_32fc_sptr.read_gpio = __read_gpio
 usrp2_sink_16sc_sptr.read_gpio = __read_gpio
 
 %}
-#warning "usrp2.i needs to be implemented fr guile!"
 #endif
 
 #if SWIGGUILE
