@@ -57,6 +57,10 @@ class pfb_arb_resampler_ccf(gr.hier_block2):
                     made = False
                     print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
 
+                    # Build in an exit strategy; if we've come this far, it ain't working.
+                    if(ripple >= 1.0):
+                        raise RuntimeError("optfir could not generate an appropriate filter.")
+
         self.pfb = gr.pfb_arb_resampler_ccf(self._rate, self._taps, self._size)
 
         self.connect(self, self.pfb)
