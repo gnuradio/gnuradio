@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
 TESTS =
-EXTRA_DIST += run_tests.in run_guile_tests.in
+EXTRA_DIST += run_tests.in run_guile_tests.in $(nobase_guile_DATA)
 DISTCLEANFILES += run_tests run_guile_tests
 
 noinst_PYTHON = qa_usrp2.py
