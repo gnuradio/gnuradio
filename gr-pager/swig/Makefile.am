@@ -31,8 +31,13 @@ AM_CPPFLAGS = \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
 
+if GUILE
 nobase_guile_DATA = \
 	gnuradio/pager.scm
+endif
+
+noinst_GUILE  = pager.test
+
 
 ##############################
 # SWIG interface and library

@@ -25,6 +25,8 @@ include $(top_srcdir)/Makefile.swig
 TESTS =
 EXTRA_DIST += $(nobase_guile_DATA)
 
+noinst_GUILE = noaa.test
+
 if GUILE
 nobase_guile_DATA = gnuradio/noaa.scm
 endif

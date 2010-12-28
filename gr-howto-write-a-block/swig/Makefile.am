@@ -22,6 +22,8 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
+noinst_GUILE  = howto.test
+
 AM_CPPFLAGS += -I$(top_srcdir)/lib 
 
 ###################################

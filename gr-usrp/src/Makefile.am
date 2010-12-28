@@ -28,6 +28,7 @@ EXTRA_DIST += run_tests.in run_guile_tests.in $(nobase_guile_DATA)
 DISTCLEANFILES += run_tests run_guile_tests
 
 noinst_PYTHON =	qa_usrp.py
+noinst_GUILE  = usrp.test
 
 if GUILE
 nobase_guile_DATA = gnuradio/usrp.scm
