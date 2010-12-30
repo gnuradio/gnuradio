@@ -35,6 +35,7 @@ dnl AC_CANONICAL_TARGET
 dnl Find the the C++ compiler
 AC_PROG_CXX
 AM_PROG_CC_C_O
+AC_PROG_LN_S
 
 GR_LIB64		dnl check for lib64 suffix after choosing compilers
 

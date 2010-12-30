@@ -125,3 +125,9 @@ filesystem.dat:
 	$(PYTHON) $(srcdir)/gen-xyzzy $(GUILE_INSTALL_PATH) $(datarootdir)/guile/site > filesystem.dat
 
 CLEANFILES = filesystem.dat
+
+
+# Create a symlink from gr-run-waveform-binary to gr-run-waveform
+install-exec-hook:
+	-$(RM) $(bindir)/gr-run-waveform
+	(cd $(bindir) && $(LN_S) gr-run-waveform-binary gr-run-waveform)
