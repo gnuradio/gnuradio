@@ -25,7 +25,7 @@ AC_CONFIG_AUX_DIR([.])
 
 AC_CONFIG_HEADERS([grconfig.h])
 AC_CONFIG_MACRO_DIR(config)
-AC_CONFIG_SRCDIR(gr-run-waveform.cc)
+AC_CONFIG_SRCDIR(gr-run-waveform-binary.cc)
 AM_INIT_AUTOMAKE("gr-run-waveform", "0.1")
 
 AC_CANONICAL_BUILD
