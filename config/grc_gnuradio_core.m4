@@ -83,7 +83,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/gen_interpolator_taps/Makefile \
 	gnuradio-core/src/guile/Makefile \
 	gnuradio-core/src/guile/run_guile_tests \
-	gnuradio-core/src/guile/gnuradio/scripts/gr-run-waveform \
+	gnuradio-core/src/guile/gr-run-waveform-script \
 	gnuradio-core/src/guile/example-waveforms/Makefile \
         gnuradio-core/src/lib/Makefile \
         gnuradio-core/src/lib/filter/Makefile \
@@ -118,7 +118,6 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 	[
 	  chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests
 	  chmod +x gnuradio-core/src/guile/run_guile_tests
-	  chmod +x gnuradio-core/src/guile/gnuradio/scripts/gr-run-waveform
 	])
     ])
 ])

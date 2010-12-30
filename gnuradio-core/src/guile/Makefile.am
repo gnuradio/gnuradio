@@ -31,6 +31,10 @@ EXTRA_DIST += \
 
 SUBDIRS = example-waveforms
 
+
+bin_SCRIPTS = \
+	gr-run-waveform-script
+
 # These are the hand-coded guile files for gnuradio-core.
 #
 # Swig/common.scm is glue that's required for the goops wrappers.
@@ -42,10 +46,9 @@ nobase_guile_DATA = \
 	Swig/common.scm \
 	gnuradio/core.scm \
 	gnuradio/export-safely.scm \
+	gnuradio/run-waveform.scm \
 	gnuradio/runtime-shim.scm \
 	gnuradio/waveform.scm \
-	gnuradio/run-waveform.scm \
-	gnuradio/scripts/gr-run-waveform \
 	gnuradio/test-suite/guile-test \
 	gnuradio/test-suite/lib.scm
 
@@ -69,5 +72,10 @@ scmlib_LTLIBRARIES = libguile-gnuradio-dynl-global.la
 libguile_gnuradio_dynl_global_la_SOURCES = dynl-global.c
 libguile_gnuradio_dynl_global_la_CPPFLAGS = $(GUILE_CFLAGS)
 libguile_gnuradio_dynl_global_la_LIBADD = $(GUILE_LIBS)
+
+# Create a symlink from gr-run-waveform-script to gr-run-waveform
+install-exec-hook:
+	-$(RM) $(bindir)/gr-run-waveform
+	(cd $(bindir) && $(LN_S) gr-run-waveform-script gr-run-waveform)
 
 endif
