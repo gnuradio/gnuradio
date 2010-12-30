@@ -28,10 +28,6 @@ EXTRA_DIST += \
 	$(nobase_guile_DATA) \
 	$(GUILE_TESTS)
 
-
-SUBDIRS = example-waveforms
-
-
 bin_SCRIPTS = \
 	gr-run-waveform-script
 
@@ -74,8 +70,11 @@ libguile_gnuradio_dynl_global_la_CPPFLAGS = $(GUILE_CFLAGS)
 libguile_gnuradio_dynl_global_la_LIBADD = $(GUILE_LIBS)
 
 # Create a symlink from gr-run-waveform-script to gr-run-waveform
-install-exec-hook:
-	-$(RM) $(bindir)/gr-run-waveform
-	(cd $(bindir) && $(LN_S) gr-run-waveform-script gr-run-waveform)
+install-exec-local:
+	-$(RM) $(DESTDIR)$(bindir)/gr-run-waveform
+	(cd $(DESTDIR)$(bindir) && $(LN_S) gr-run-waveform-script gr-run-waveform)
+
+uninstall-local:
+	-$(RM) $(DESTDIR)$(bindir)/gr-run-waveform
 
 endif

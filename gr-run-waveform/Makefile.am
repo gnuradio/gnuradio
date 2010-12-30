@@ -128,6 +128,9 @@ CLEANFILES = filesystem.dat
 
 
 # Create a symlink from gr-run-waveform-binary to gr-run-waveform
-install-exec-hook:
-	-$(RM) $(bindir)/gr-run-waveform
-	(cd $(bindir) && $(LN_S) gr-run-waveform-binary gr-run-waveform)
+install-exec-local:
+	-$(RM) $(DESTDIR)$(bindir)/gr-run-waveform
+	(cd $(DESTDIR)$(bindir) && $(LN_S) gr-run-waveform-binary gr-run-waveform)
+
+uninstall-local:
+	-$(RM) $(DESTDIR)$(bindir)/gr-run-waveform
