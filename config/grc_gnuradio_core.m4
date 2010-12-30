@@ -84,7 +84,6 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 	gnuradio-core/src/guile/Makefile \
 	gnuradio-core/src/guile/run_guile_tests \
 	gnuradio-core/src/guile/gr-run-waveform-script \
-	gnuradio-core/src/guile/example-waveforms/Makefile \
         gnuradio-core/src/lib/Makefile \
         gnuradio-core/src/lib/filter/Makefile \
         gnuradio-core/src/lib/g72x/Makefile \
