@@ -128,8 +128,7 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        uhd::tx_metadata_t metadata;
-        metadata.start_of_burst = true;
+        uhd::tx_metadata_t metadata; //send a mid-burst packet
 
         return _dev->get_device()->send(
             input_items, noutput_items, metadata,
