@@ -34,7 +34,8 @@ class mod_pkts(gr.hier_block2):
 
     Send packets by calling send_pkt
     """
-    def __init__(self, modulator, access_code=None, msgq_limit=2, pad_for_usrp=True, use_whitener_offset=False):
+    def __init__(self, modulator, access_code=None, msgq_limit=2, pad_for_usrp=True, use_whitener_offset=False,
+                 modulate=True):
         """
 	Hierarchical block for sending packets
 
@@ -49,13 +50,18 @@ class mod_pkts(gr.hier_block2):
         @type msgq_limit: int
         @param pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples
         @param use_whitener_offset: If true, start of whitener XOR string is incremented each packet
+        @param modulate: If false, no modulation will be performed.
         
         See gmsk_mod for remaining parameters
         """
+        if modulate:
+            output_size = gr.sizeof_gr_complex
+        else:
+            output_size = gr.sizeof_char
 
 	gr.hier_block2.__init__(self, "mod_pkts",
 				gr.io_signature(0, 0, 0),                    # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+				gr.io_signature(1, 1, output_size))          # Output signature
 
         self._modulator = modulator
         self._pad_for_usrp = pad_for_usrp
@@ -70,7 +76,10 @@ class mod_pkts(gr.hier_block2):
 
         # accepts messages from the outside world
         self._pkt_input = gr.message_source(gr.sizeof_char, msgq_limit)
-        self.connect(self._pkt_input, self._modulator, self)
+        if modulate:
+            self.connect(self._pkt_input, self._modulator, self)
+        else:
+            self.connect(self._pkt_input, self)
 
     def send_pkt(self, payload='', eof=False):
         """
@@ -106,12 +115,14 @@ class demod_pkts(gr.hier_block2):
     app via the callback.
     """
 
-    def __init__(self, demodulator, access_code=None, callback=None, threshold=-1):
+    def __init__(self, demodulator, access_code=None, callback=None, threshold=-1, demodulate=True):
         """
 	Hierarchical block for demodulating and deframing packets.
 
 	The input is the complex modulated signal at baseband.
         Demodulated packets are sent to the handler.
+
+        If demodulator is None it is assumed the input is already demodulated.
 
         @param demodulator: instance of demodulator class (gr_block or hier_block2)
         @type demodulator: complex baseband in
@@ -123,9 +134,14 @@ class demod_pkts(gr.hier_block2):
         @type threshold: int
 	"""
 
+        if demodulator is not None:
+            input_size = gr.sizeof_gr_complex
+        else:
+            input_size = gr.sizeof_char
+
 	gr.hier_block2.__init__(self, "demod_pkts",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(0, 0, 0))                    # Output signature
+				gr.io_signature(1, 1, input_size), # Input signature
+				gr.io_signature(0, 0, 0))          # Output signature
 
         self._demodulator = demodulator
         if access_code is None:
@@ -141,7 +157,10 @@ class demod_pkts(gr.hier_block2):
         self.correlator = gr.correlate_access_code_bb(access_code, threshold)
 
         self.framer_sink = gr.framer_sink_1(self._rcvd_pktq)
-        self.connect(self, self._demodulator, self.correlator, self.framer_sink)
+        if self._demodulator is not None:
+            self.connect(self, self._demodulator, self.correlator, self.framer_sink)
+        else:
+            self.connect(self, self.correlator, self.framer_sink)
         
         if callback is not None:
             self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
