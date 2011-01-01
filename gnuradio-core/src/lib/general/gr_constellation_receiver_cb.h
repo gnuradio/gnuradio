@@ -24,40 +24,17 @@
 #define	INCLUDED_GR_CONSTELLATION_RECEIVER_CB_H
 
 #include <gr_block.h>
+#include <gr_constellation.h>
 #include <gr_complex.h>
 #include <math.h>
 #include <fstream>
-
-class gr_constellation
-{
- public:
-
-  gr_constellation (std::vector<gr_complex> constellation);
-  
-  //! Returns the set of points in this constellation.
-  std::vector<gr_complex> constellation() { return d_constellation;}
-  
-  //! Returns the constellation point that matches best.
-  //! Also calculates the phase error.
-  unsigned int decision_maker (gr_complex sample);
-  
-  unsigned int bits_per_symbol () {
-    return floor(log(d_constellation.size())/log(2));
-  }
-  
- private:
-
-  std::vector<gr_complex> d_constellation;
-};
-
-class gri_mmse_fir_interpolator_cc;
 
 class gr_constellation_receiver_cb;
 typedef boost::shared_ptr<gr_constellation_receiver_cb> gr_constellation_receiver_cb_sptr;
 
 // public constructor
 gr_constellation_receiver_cb_sptr 
-gr_make_constellation_receiver_cb (gr_constellation constellation,
+gr_make_constellation_receiver_cb (gr_constellation_sptr constellation,
 				   float alpha, float beta,
 				   float fmin, float fmax);
 
@@ -136,7 +113,7 @@ protected:
    * The constructor also chooses which phase detector and decision maker to use in the work loop based on the
    * value of M.
    */
-  gr_constellation_receiver_cb (gr_constellation constellation, 
+  gr_constellation_receiver_cb (gr_constellation_sptr constellation, 
 				float alpha, float beta,
 				float fmin, float fmax);
 
@@ -151,7 +128,7 @@ protected:
   float d_freq, d_max_freq, d_min_freq;
   float d_phase;
 
-  gr_constellation d_constellation;
+  gr_constellation_sptr d_constellation;
   unsigned int d_current_const_point;
 
   //! delay line length.
@@ -164,7 +141,7 @@ protected:
   unsigned int d_dl_idx;
 
   friend gr_constellation_receiver_cb_sptr
-  gr_make_constellation_receiver_cb (gr_constellation constell,
+  gr_make_constellation_receiver_cb (gr_constellation_sptr constell,
 				     float alpha, float beta,
 				     float fmin, float fmax);
 };

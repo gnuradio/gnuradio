@@ -22,7 +22,7 @@
 # See gnuradio-examples/python/digital for examples
 
 """
-differential BPSK modulation and demodulation.
+Generic modulation and demodulation.
 """
 
 from gnuradio import gr, gru, modulation_utils2
@@ -79,7 +79,7 @@ class generic_mod(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
-        self._constellation = constellation
+        self._constellation = constellation.base()
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
  
@@ -96,7 +96,7 @@ class generic_mod(gr.hier_block2):
 
         self.diffenc = gr.diff_encoder_bb(arity)
 
-        self.chunks2symbols = gr.chunks_to_symbols_bc(self._constellation.constellation())
+        self.chunks2symbols = gr.chunks_to_symbols_bc(self._constellation.points())
 
         # pulse shaping filter
 	self.rrc_taps = gr.firdes.root_raised_cosine(
@@ -208,7 +208,7 @@ class generic_demod(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
 				
-        self._constellation = constellation
+        self._constellation = constellation.base()
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._phase_alpha = phase_alpha

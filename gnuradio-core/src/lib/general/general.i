@@ -70,6 +70,7 @@
 #include <gr_throttle.h>
 #include <gr_mpsk_receiver_cc.h>
 #include <gr_constellation_receiver_cb.h>
+#include <gr_constellation.h>
 #include <gr_stream_mux.h>
 #include <gr_stream_to_streams.h>
 #include <gr_streams_to_stream.h>
@@ -192,6 +193,7 @@
 %include "gr_throttle.i"
 %include "gr_mpsk_receiver_cc.i"
 %include "gr_constellation_receiver_cb.i"
+%include "gr_constellation.i"
 %include "gr_stream_mux.i"
 %include "gr_stream_to_streams.i"
 %include "gr_streams_to_stream.i"

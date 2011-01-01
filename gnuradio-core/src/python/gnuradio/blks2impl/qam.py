@@ -32,19 +32,6 @@ from gnuradio.blks2impl.generic_mod_demod import generic_mod, generic_demod
 
 # default values (used in __init__ and add_options)
 _def_constellation_points = 16
-_def_samples_per_symbol = 2
-_def_excess_bw = 0.35
-_def_verbose = False
-_def_log = False
-
-# Frequency correction
-_def_freq_alpha = 0.010
-# Symbol timing recovery 
-_def_timing_alpha = 0.100
-_def_timing_beta = 0.010
-_def_timing_max_dev = 1.5
-# Fine frequency / Phase correction
-_def_phase_alpha = 0.1
 
 def is_power_of_four(x):
     v = log(x)/log(4)
@@ -146,11 +133,7 @@ def make_constellation(m):
 
 class qam_mod(generic_mod):
 
-    def __init__(self, constellation_points=_def_constellation_points,
-                 samples_per_symbol=_def_samples_per_symbol,
-                 excess_bw=_def_excess_bw,
-                 verbose=_def_verbose,
-                 log=_def_log):
+    def __init__(self, constellation_points=_def_constellation_points, *args, **kwargs):
 
         """
 	Hierarchical block for RRC-filtered QAM modulation.
@@ -174,10 +157,13 @@ class qam_mod(generic_mod):
             raise ValueError("number of constellation points must be a power of four.")
 
         points = make_constellation(constellation_points)
-        constellation = gr.gr_constellation(points)
+        side = int(sqrt(constellation_points))
+        assert(side * side == constellation_points)
+        width = 2.0/(side-1)
+        constellation = gr.constellation_sector(points, side, side, width, width)
+        #constellation = gr.constellation(points)
 
-        super(qam_mod, self).__init__(constellation, samples_per_symbol,
-                                      excess_bw, verbose, log)
+        super(qam_mod, self).__init__(constellation, *args, **kwargs)
 
     def add_options(parser):
         """
@@ -195,15 +181,7 @@ class qam_mod(generic_mod):
 
 class qam_demod(generic_demod):
 
-    def __init__(self, constellation_points=_def_constellation_points,
-                 samples_per_symbol=_def_samples_per_symbol,
-                 excess_bw=_def_excess_bw,
-                 freq_alpha=_def_freq_alpha,
-                 timing_alpha=_def_timing_alpha,
-                 timing_max_dev=_def_timing_max_dev,
-                 phase_alpha=_def_phase_alpha,
-                 verbose=_def_verbose,
-                 log=_def_log):
+    def __init__(self, constellation_points=_def_constellation_points, *args, **kwargs):
 
         """
 	Hierarchical block for RRC-filtered QAM modulation.
@@ -232,12 +210,13 @@ class qam_demod(generic_demod):
         """
 
         points = make_constellation(constellation_points)
-        constellation = gr.gr_constellation(points)
+        side = int(sqrt(constellation_points))
+        assert(side * side == constellation_points)
+        width = 2.0/(side-1)
+        constellation = gr.constellation_sector(points, side, side, width, width)
+        #constellation = gr.constellation(points)
 
-        super(qam_demod, self).__init__(constellation, samples_per_symbol,
-                                        excess_bw, freq_alpha, timing_alpha,
-                                        timing_max_dev, phase_alpha, verbose,
-                                        log)
+        super(qam_demod, self).__init__(constellation, *args, **kwargs)
 
     def add_options(parser):
         """

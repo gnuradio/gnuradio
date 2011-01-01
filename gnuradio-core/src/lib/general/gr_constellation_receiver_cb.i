@@ -22,24 +22,13 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,constellation_receiver_cb);
 
-%template(gr_complex_vector) std::vector<gr_complex>;
-
-class gr_constellation
-{
-public:
-  gr_constellation (std::vector<gr_complex> constellation);
-  std::vector<gr_complex> constellation();
-  unsigned int decision_maker (gr_complex sample);  
-  unsigned int bits_per_symbol ();
-};
-
-gr_constellation_receiver_cb_sptr gr_make_constellation_receiver_cb (gr_constellation constellation,
+gr_constellation_receiver_cb_sptr gr_make_constellation_receiver_cb (gr_constellation_sptr constellation,
 								     float alpha, float beta,
 								     float fmin, float fmax);
 class gr_constellation_receiver_cb : public gr_block
 {
  private:
-  gr_constellation_receiver_cb (gr_contellation constellation,
+  gr_constellation_receiver_cb (gr_contellation_sptr constellation,
 				float alpha, float beta,
 				float fmin, float fmax);
 public:

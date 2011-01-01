@@ -26,12 +26,11 @@
 
 #include <gr_io_signature.h>
 #include <gr_prefs.h>
+#include <gr_constellation.h>
 #include <gr_constellation_receiver_cb.h>
 #include <stdexcept>
 #include <gr_math.h>
 #include <gr_expj.h>
-// For debugging
-#include <iostream>
 
 
 #define M_TWOPI (2*M_PI)
@@ -41,7 +40,7 @@
 // Public constructor
 
 gr_constellation_receiver_cb_sptr 
-gr_make_constellation_receiver_cb(gr_constellation constell,
+gr_make_constellation_receiver_cb(gr_constellation_sptr constell,
 				  float alpha, float beta,
 				  float fmin, float fmax)
 {
@@ -49,10 +48,10 @@ gr_make_constellation_receiver_cb(gr_constellation constell,
 								      alpha, beta,
 								      fmin, fmax));
 }
-
+ 
 static int ios[] = {sizeof(char), sizeof(float), sizeof(float), sizeof(float)};
 static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
-gr_constellation_receiver_cb::gr_constellation_receiver_cb (gr_constellation constellation, 
+gr_constellation_receiver_cb::gr_constellation_receiver_cb (gr_constellation_sptr constellation, 
 							    float alpha, float beta,
 							    float fmin, float fmax)
   : gr_block ("constellation_receiver_cb",
@@ -61,12 +60,12 @@ gr_constellation_receiver_cb::gr_constellation_receiver_cb (gr_constellation con
     d_constellation(constellation), 
     d_alpha(alpha), d_beta(beta), d_freq(0), d_max_freq(fmax), d_min_freq(fmin), d_phase(0),
     d_current_const_point(0)
-{}
+{
+}
 
 void
 gr_constellation_receiver_cb::phase_error_tracking(float phase_error)
 {
-    
   d_freq += d_beta*phase_error;             // adjust frequency based on error
   d_phase += d_freq + d_alpha*phase_error;  // adjust phase based on error
 
@@ -82,7 +81,7 @@ gr_constellation_receiver_cb::phase_error_tracking(float phase_error)
 #if VERBOSE_COSTAS
   printf("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f  constellation: %f+j%f\n",
 	 phase_error, d_phase, d_freq, sample.real(), sample.imag(), 
-	 d_constellation.constellation()[d_current_const_point].real(), d_constellation.constellation()[d_current_const_point].imag());
+	 d_constellation->points()[d_current_const_point].real(), d_constellation->points()[d_current_const_point].imag());
 #endif
 }
 
@@ -112,9 +111,8 @@ gr_constellation_receiver_cb::general_work (int noutput_items,
     sample = in[i];
     nco = gr_expj(d_phase);   // get the NCO value for derotating the current sample
     sample = nco*sample;      // get the downconverted symbol
-    sym_value = d_constellation.decision_maker(sample);
-    phase_error = -arg(sample*conj(d_constellation.constellation()[sym_value]));
-    //std::cout << "sym_value: " << sym_value << " sample: " << sample << "phase_error: " << phase_error << std::endl;
+    sym_value = d_constellation->decision_maker(sample);
+    phase_error = -arg(sample*conj(d_constellation->points()[sym_value]));
     phase_error_tracking(phase_error);  // corrects phase and frequency offsets
     out[i] = sym_value;
     if(output_items.size() == 4) {
@@ -125,38 +123,7 @@ gr_constellation_receiver_cb::general_work (int noutput_items,
     i++;
   }
 
-  #if 0
-  printf("ninput_items: %d   noutput_items: %d   consuming: %d   returning: %d\n",
-	 ninput_items[0], noutput_items, i, i);
-  #endif
-
   consume_each(i);
   return i;
 }
 
-// Base Constellation Class
-
-gr_constellation::gr_constellation (std::vector<gr_complex> constellation) {
-  d_constellation = constellation;
-}
-
-// Chooses points base on shortest distance.
-// Inefficient.
-unsigned int gr_constellation::decision_maker(gr_complex sample)
-{
-  unsigned int table_size = constellation().size();
-  unsigned int min_index = 0;
-  float min_euclid_dist;
-  float euclid_dist;
-    
-  min_euclid_dist = norm(sample - constellation()[0]); 
-  min_index = 0; 
-  for (unsigned int j = 1; j < table_size; j++){
-    euclid_dist = norm(sample - constellation()[j]);
-    if (euclid_dist < min_euclid_dist){
-      min_euclid_dist = euclid_dist;
-      min_index = j;
-    }
-  }
-  return min_index;
-}

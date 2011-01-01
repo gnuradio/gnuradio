@@ -1,0 +1,127 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2010 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
+#include <gr_io_signature.h>
+#include <gr_constellation.h>
+#include <gr_math.h>
+#include <gr_complex.h>
+
+gr_constellation_sptr 
+gr_make_constellation(std::vector<gr_complex> constellation)
+{
+  return gr_constellation_sptr(new gr_constellation (constellation));
+  }
+
+// Base Constellation Class
+
+gr_constellation::gr_constellation (std::vector<gr_complex> constellation) {
+  d_constellation = constellation;
+}
+
+
+unsigned int get_closest_point(std::vector<gr_complex> constellation, gr_complex sample) {
+
+  unsigned int table_size = constellation.size();
+  unsigned int min_index = 0;
+  float min_euclid_dist;
+  float euclid_dist;
+    
+  min_euclid_dist = norm(sample - constellation[0]); 
+  min_index = 0; 
+  for (unsigned int j = 1; j < table_size; j++){
+    euclid_dist = norm(sample - constellation[j]);
+    if (euclid_dist < min_euclid_dist){
+      min_euclid_dist = euclid_dist;
+      min_index = j;
+    }
+  }
+  return min_index;
+}
+
+// Chooses points base on shortest distance.
+// Inefficient.
+unsigned int gr_constellation::decision_maker(gr_complex sample)
+{
+  unsigned int min_index;
+  min_index = get_closest_point(d_constellation, sample);
+  return min_index;
+}
+
+gr_constellation_sector_sptr 
+gr_make_constellation_sector(std::vector<gr_complex> constellation,
+			     unsigned int real_sectors, unsigned int imag_sectors,
+			     float width_real_sectors, float width_imag_sectors)
+{
+  return gr_constellation_sector_sptr(new gr_constellation_sector (constellation, real_sectors, imag_sectors, width_real_sectors, width_imag_sectors));
+  }
+
+gr_constellation_sector::gr_constellation_sector (std::vector<gr_complex> constellation,
+						  unsigned int real_sectors, unsigned int imag_sectors,
+						  float width_real_sectors, float width_imag_sectors) :
+  gr_constellation(constellation),
+  n_sectors(real_sectors * imag_sectors),
+  n_real_sectors(real_sectors), n_imag_sectors(imag_sectors),
+  d_width_real_sectors(width_real_sectors), d_width_imag_sectors(width_imag_sectors)
+{
+  find_sector_values();
+}
+
+unsigned int gr_constellation_sector::decision_maker (gr_complex sample) {
+  unsigned int sector;
+  sector = get_sector(sample);
+  return sector_values[sector];
+}
+
+unsigned int gr_constellation_sector::get_sector (gr_complex sample) {
+  int real_sector, imag_sector;
+  unsigned int sector;
+  real_sector = int(real(sample)/d_width_real_sectors + n_real_sectors/2.0);
+  if (real_sector < 0) real_sector = 0;
+  if (real_sector >= n_real_sectors) real_sector = n_real_sectors-1;
+  imag_sector = int(imag(sample)/d_width_imag_sectors + n_imag_sectors/2.0);
+  if (imag_sector < 0) imag_sector = 0;
+  if (imag_sector >= n_imag_sectors) imag_sector = n_imag_sectors-1;
+  sector = real_sector * n_imag_sectors + imag_sector;
+  return sector;
+}
+  
+unsigned int gr_constellation_sector::calc_sector_value (unsigned int sector) {
+  unsigned int real_sector, imag_sector;
+  gr_complex sector_center;
+  unsigned int closest_point;
+  real_sector = float(sector)/n_imag_sectors;
+  imag_sector = sector - real_sector * n_imag_sectors;
+  sector_center = gr_complex((real_sector + 0.5 - n_real_sectors/2.0) * d_width_real_sectors,
+			     (imag_sector + 0.5 - n_imag_sectors/2.0) * d_width_imag_sectors);
+  closest_point = get_closest_point(d_constellation, sector_center);
+  return closest_point;
+}
+
+
+void gr_constellation_sector::find_sector_values () {
+  unsigned int i;
+  sector_values.clear();
+  for (i=0; i<n_sectors; i++) {
+    sector_values.push_back(calc_sector_value(i));
+  }
+}
+
