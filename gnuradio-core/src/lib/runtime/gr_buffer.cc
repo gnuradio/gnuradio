@@ -245,14 +245,11 @@ gr_buffer::prune_tags(uint64_t max_time)
   //gruel::scoped_lock guard(*mutex());
 
   uint64_t item_time;
-  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
-
-  while(itr != d_item_tags.end()) {
-    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+  for(size_t i = 0; i < d_item_tags.size(); i++) {
+    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(d_item_tags[i], 0));
     if(item_time < max_time) {
       d_item_tags.pop_front();
     }
-    itr++;
   }
 }
 
