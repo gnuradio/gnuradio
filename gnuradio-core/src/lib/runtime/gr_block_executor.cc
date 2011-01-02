@@ -93,8 +93,7 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
 	       std::vector<pmt::pmt_t> &rtags)
 {
   // Move tags downstream
-  // if a sink, we don't need to move downstream;
-  // and do not bother if block uses TAGS_NONE attribute
+  // if a sink, we don't need to move downstream
   if(d->sink_p()) {
     return true;
   }
