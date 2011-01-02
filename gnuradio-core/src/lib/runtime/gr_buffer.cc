@@ -243,13 +243,23 @@ gr_buffer::prune_tags(uint64_t max_time)
      buffer's mutex al la the scoped_lock line below.
   */
   //gruel::scoped_lock guard(*mutex());
+  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
 
   uint64_t item_time;
-  for(size_t i = 0; i < d_item_tags.size(); i++) {
-    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(d_item_tags[i], 0));
+
+  // Since tags are not guarenteed to be in any particular order,
+  // we need to erase here instead of pop_front. An erase in the
+  // middle invalidates all iterators; so this resets the iterator
+  // to find more. Mostly, we wil be erasing from the front and
+  // therefore lose little time this way.
+  while(itr != d_item_tags.end()) {
+    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
     if(item_time < max_time) {
-      d_item_tags.pop_front();
+      d_item_tags.erase(itr);
+      itr = d_item_tags.begin();
     }
+    else
+      itr++;
   }
 }
 
