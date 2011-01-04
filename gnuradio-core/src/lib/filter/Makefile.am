@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2005,2006,2007,2008,2009,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -159,7 +159,9 @@ armv7_a_CODE = \
 	gr_fir_sysconfig_armv7_a.cc \
 	gr_cpu_armv7_a.cc \
 	gr_fir_fff_armv7_a.cc \
-	dotprod_fff_armv7_a.c
+	dotprod_fff_armv7_a.c \
+	gr_fir_ccf_armv7_a.cc \
+	dotprod_ccf_armv7_a.c
 
 armv7_a_qa_CODE = \
 	qa_dotprod_armv7_a.cc
@@ -312,6 +314,7 @@ noinst_HEADERS = 			\
 	assembly.h			\
 	dotprod_fff_altivec.h		\
 	dotprod_fff_armv7_a.h		\
+	dotprod_ccf_armv7_a.h		\
 	gr_fir_scc_simd.h		\
 	gr_fir_scc_x86.h		\
 	gr_fir_fcc_simd.h		\
@@ -322,6 +325,7 @@ noinst_HEADERS = 			\
 	gr_fir_ccc_x86.h		\
 	gr_fir_fff_altivec.h		\
 	gr_fir_fff_armv7_a.h		\
+	gr_fir_ccf_armv7_a.h		\
 	gr_fir_fff_simd.h		\
 	gr_fir_fff_x86.h		\
 	gr_fir_fsf_simd.h		\
