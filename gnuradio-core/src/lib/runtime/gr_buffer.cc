@@ -163,9 +163,10 @@ gr_buffer::space_available ()
       min_items_read = std::min(min_items_read, d_readers[i]->nitems_read());
     }
 
-    //prune_tags(min_items_read);
-    prune_tags(d_last_min_items_read);
-    d_last_min_items_read = min_items_read;
+    if(min_items_read != d_last_min_items_read) {
+      prune_tags(d_last_min_items_read);
+      d_last_min_items_read = min_items_read;
+    }
 
     // The -1 ensures that the case d_write_index == d_read_index is
     // unambiguous.  It indicates that there is no data for the reader
