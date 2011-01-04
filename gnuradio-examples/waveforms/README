@@ -17,12 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-include $(top_srcdir)/Makefile.common
+FIXME explain this stuff :-)
 
-waveformdir=$(datarootdir)/gnuradio/example-waveforms
-
-waveform_DATA = \
-	dial-tone.wfd
-
-EXTRA_DIST += \
-	dial-tone.wfd
+This directory contains example "Waveform Description Files" that are
+designed to be loaded and run using the gr-run-waveform command.

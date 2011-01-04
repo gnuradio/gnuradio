@@ -27,7 +27,7 @@ EXTRA_DIST = gen-xyzzy \
 	guile/simple.scm
 
 # build the standalone waveform application
-bin_PROGRAMS = gr-run-waveform
+bin_PROGRAMS = gr-run-waveform-binary
 
 # Rather than build a library, we just use a variable so the same code
 # can be used in test cases, as well as the run-waveform application.
@@ -64,8 +64,8 @@ test_embed_DEPENDENCIES = $(BUILT_SOURCES)
 noinst_HEADERS = xyzzy.h
 
 # The standalone waveform application
-gr_run_waveform_SOURCES = gr-run-waveform.cc $(SRCS)
-gr_run_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
+gr_run_waveform_binary_SOURCES = gr-run-waveform-binary.cc $(SRCS)
+gr_run_waveform_binary_CPPFLAGS = $(GUILE_CFLAGS) \
 	-DSRCDIR=\"$(srcdir)\" \
 	-DPKGLIBDIR=\"$(pkglibdir)\" \
 	-DDATAROOTDIR=\"$(datarootdir)\" \
@@ -73,8 +73,8 @@ gr_run_waveform_CPPFLAGS = $(GUILE_CFLAGS) \
 # Uncommenting this force make to statically link in the guile library.
 # Note that this will fail to link it you don't have libguile.a.
 # run_waveform_LDFLAGS = -static
-gr_run_waveform_LDADD = $(GUILE_LIBS)
-gr_run_waveform_DEPENDENCIES =  $(BUILT_SOURCES)
+gr_run_waveform_binary_LDADD = $(GUILE_LIBS)
+gr_run_waveform_binary_DEPENDENCIES =  $(BUILT_SOURCES)
 
 DISTCLEANFILES = gr-run-waveform.tar.gz libpath.h filesystem.dat
 
@@ -125,3 +125,12 @@ filesystem.dat:
 	$(PYTHON) $(srcdir)/gen-xyzzy $(GUILE_INSTALL_PATH) $(datarootdir)/guile/site > filesystem.dat
 
 CLEANFILES = filesystem.dat
+
+
+# Create a symlink from gr-run-waveform-binary to gr-run-waveform
+install-exec-local:
+	-$(RM) $(DESTDIR)$(bindir)/gr-run-waveform
+	(cd $(DESTDIR)$(bindir) && $(LN_S) gr-run-waveform-binary gr-run-waveform)
+
+uninstall-local:
+	-$(RM) $(DESTDIR)$(bindir)/gr-run-waveform

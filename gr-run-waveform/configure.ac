@@ -25,7 +25,7 @@ AC_CONFIG_AUX_DIR([.])
 
 AC_CONFIG_HEADERS([grconfig.h])
 AC_CONFIG_MACRO_DIR(config)
-AC_CONFIG_SRCDIR(gr-run-waveform.cc)
+AC_CONFIG_SRCDIR(gr-run-waveform-binary.cc)
 AM_INIT_AUTOMAKE("gr-run-waveform", "0.1")
 
 AC_CANONICAL_BUILD
@@ -35,6 +35,7 @@ dnl AC_CANONICAL_TARGET
 dnl Find the the C++ compiler
 AC_PROG_CXX
 AM_PROG_CC_C_O
+AC_PROG_LN_S
 
 GR_LIB64		dnl check for lib64 suffix after choosing compilers
 
