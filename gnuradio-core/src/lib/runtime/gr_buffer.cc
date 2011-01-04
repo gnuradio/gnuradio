@@ -319,7 +319,7 @@ gr_buffer_reader::get_tags_in_range(std::vector<pmt::pmt_t> &v,
   while(itr != d_buffer->get_tags_end()) {
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
 
-    if((item_time >= abs_start) && (item_time <= abs_end)) {
+    if((item_time >= abs_start) && (item_time < abs_end)) {
       v.push_back(*itr);
     }
 
