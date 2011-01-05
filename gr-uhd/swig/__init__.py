@@ -30,6 +30,12 @@ from uhd_swig import *
 # Add other content from pure-Python modules here
 ########################################################################
 
+#make the meta-range printable in python
+meta_range_t.__str__ = lambda s: s.to_pp_string().strip()
+
+class freq_range_t(meta_range_t): pass #a typedef for the user
+class gain_range_t(meta_range_t): pass #a typedef for the user
+
 class tune_request_t(tune_request_t, float):
     """
     Make the python tune request object inherit from float
