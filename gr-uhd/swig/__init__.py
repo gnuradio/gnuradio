@@ -27,13 +27,6 @@
 from uhd_swig import *
 
 ########################################################################
-# Make types with to_string functions printable
-########################################################################
-range_t.__str__ = lambda s: s.to_pp_string().strip()
-meta_range_t.__str__ = lambda s: s.to_pp_string().strip()
-device_addr_t.__str__ = lambda s: s.to_pp_string().strip()
-
-########################################################################
 # Add other content from pure-Python modules here
 ########################################################################
 class freq_range_t(meta_range_t): pass #a typedef for the user
@@ -61,9 +54,13 @@ class device_addr_t(device_addr_t, str):
 
 ########################################################################
 # Create aliases for global attributes to avoid the "_t"
+# Install the __str__ and __repr__ handlers if applicable
 ########################################################################
 for attr in globals().keys():
-    if attr.endswith('_t'): globals()[attr[:-2]] = globals()[attr]
+    myobj = globals()[attr]
+    if hasattr(myobj, 'to_string'):    myobj.__repr__ = lambda s: s.to_string().strip()
+    if hasattr(myobj, 'to_pp_string'): myobj.__str__  = lambda s: s.to_pp_string().strip()
+    if attr.endswith('_t'): globals()[attr[:-2]] = myobj
 
 ########################################################################
 # Cast constructor args (FIXME swig handle overloads?)
