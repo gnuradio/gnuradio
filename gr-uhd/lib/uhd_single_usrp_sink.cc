@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,7 +37,7 @@ uhd_single_usrp_sink::uhd_single_usrp_sink(gr_io_signature_sptr sig)
 class uhd_single_usrp_sink_impl : public uhd_single_usrp_sink{
 public:
     uhd_single_usrp_sink_impl(
-        const std::string &device_addr,
+        const uhd::device_addr_t &device_addr,
         const uhd::io_type_t &io_type,
         size_t num_channels
     ):
@@ -172,8 +172,8 @@ protected:
  * Make UHD Single USRP Sink
  **********************************************************************/
 boost::shared_ptr<uhd_single_usrp_sink> uhd_make_single_usrp_sink(
-    const std::string &device_addr,
-    const uhd::io_type_t::tid_t &io_type,
+    const uhd::device_addr_t &device_addr,
+    const uhd::io_type_t &io_type,
     size_t num_channels
 ){
     return boost::shared_ptr<uhd_single_usrp_sink>(

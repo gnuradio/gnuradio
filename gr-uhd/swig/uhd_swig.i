@@ -60,21 +60,32 @@
 %}
 
 ////////////////////////////////////////////////////////////////////////
-// templated types
-////////////////////////////////////////////////////////////////////////
-%template(string_vector_t) std::vector<std::string>;
-%template(range_vector_t) std::vector<uhd::range_t>;
-
-////////////////////////////////////////////////////////////////////////
 // used types
 ////////////////////////////////////////////////////////////////////////
+%template(string_vector_t) std::vector<std::string>;
+
 %include <uhd/config.hpp>
+
 %include <uhd/utils/pimpl.hpp>
-%include <uhd/types/ranges.hpp>
-%include <uhd/types/tune_request.hpp>
-%include <uhd/types/tune_result.hpp>
+
+%include <uhd/types/dict.hpp>
+%template(string_string_dict_t) uhd::dict<std::string, std::string>; //define after dict
+
+%include <uhd/types/device_addr.hpp>
+
 %include <uhd/types/io_type.hpp>
+
+%template(range_vector_t) std::vector<uhd::range_t>; //define before range
+%include <uhd/types/ranges.hpp>
+
+%include <uhd/types/tune_request.hpp>
+
+%include <uhd/types/tune_result.hpp>
+
+%include <uhd/types/io_type.hpp>
+
 %include <uhd/types/time_spec.hpp>
+
 %include <uhd/types/clock_config.hpp>
 
 ////////////////////////////////////////////////////////////////////////

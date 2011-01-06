@@ -29,8 +29,8 @@
 class uhd_multi_usrp_source;
 
 GR_UHD_API boost::shared_ptr<uhd_multi_usrp_source> uhd_make_multi_usrp_source(
-    const std::string &device_addr,
-    const uhd::io_type_t::tid_t &io_type,
+    const uhd::device_addr_t &device_addr,
+    const uhd::io_type_t &io_type,
     size_t num_channels
 );
 
