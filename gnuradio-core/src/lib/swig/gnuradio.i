@@ -37,6 +37,11 @@
 
 %feature("autodoc","1");
 
+#ifdef SWIGGUILE
+// Export constants and enums as scheme variables, not functions.
+%feature("constasvar");
+#endif
+
 // local file
 %include <gr_shared_ptr.i>
 
