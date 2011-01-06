@@ -30,7 +30,7 @@ int
 main (int argc, char **argv)
 {
   char path[200];
-  get_unittest_path ("gnuradio_core_atsc.xml", path, 200);
+  get_unittest_path ("gnuradio_core_filter.xml", path, 200);
   
   CppUnit::TextTestRunner runner;
   std::ofstream xmlfile(path);
