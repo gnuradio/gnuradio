@@ -30,7 +30,8 @@ from uhd_swig import *
 # Add other content from pure-Python modules here
 ########################################################################
 
-#make the meta-range printable in python
+#make the ranges printable in python
+range_t.__str__ = lambda s: s.to_pp_string().strip()
 meta_range_t.__str__ = lambda s: s.to_pp_string().strip()
 
 class freq_range_t(meta_range_t): pass #a typedef for the user
@@ -44,3 +45,9 @@ class tune_request_t(tune_request_t, float):
     """
     def __new__(self, *args): return float.__new__(self)
     def __float__(self): return self.target_freq
+
+########################################################################
+# Create aliases for global attributes to avoid the "_t"
+########################################################################
+for attr in globals().keys():
+    if attr.endswith('_t'): globals()[attr[:-2]] = globals()[attr]
