@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,18 +22,19 @@
 #ifndef INCLUDED_UHD_MULTI_USRP_SINK_H
 #define INCLUDED_UHD_MULTI_USRP_SINK_H
 
+#include <gr_uhd_api.h>
 #include <gr_sync_block.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
 class uhd_multi_usrp_sink;
 
-boost::shared_ptr<uhd_multi_usrp_sink> uhd_make_multi_usrp_sink(
+GR_UHD_API boost::shared_ptr<uhd_multi_usrp_sink> uhd_make_multi_usrp_sink(
     const std::string &device_addr,
     const uhd::io_type_t::tid_t &io_type,
     size_t num_channels
 );
 
-class uhd_multi_usrp_sink : public gr_sync_block{
+class GR_UHD_API uhd_multi_usrp_sink : public gr_sync_block{
 public:
 
     /*!

@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -41,6 +41,7 @@ libgnuradio_uhd_la_LIBADD = \
 libgnuradio_uhd_la_LDFLAGS = $(LTVERSIONFLAGS)
 
 grinclude_HEADERS = \
+	gr_uhd_api.h \
 	uhd_multi_usrp_source.h \
 	uhd_multi_usrp_sink.h \
 	uhd_single_usrp_source.h \
