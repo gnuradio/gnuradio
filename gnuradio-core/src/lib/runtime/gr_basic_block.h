@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,6 +26,7 @@
 #include <gr_runtime_types.h>
 #include <gr_sptr_magic.h>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/function.hpp>
 #include <gr_msg_accepter.h>
 #include <string>
 
@@ -42,9 +43,27 @@
 
 class gr_basic_block : public gr_msg_accepter, public boost::enable_shared_from_this<gr_basic_block>
 {
+    typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
+
+private:
+    /*
+     * This function is called by the runtime system to dispatch messages.
+     *
+     * The thread-safety guarantees mentioned in set_msg_handler are implemented
+     * by the callers of this method.
+     */
+    void dispatch_msg(pmt::pmt_t msg)
+    {
+      if (d_msg_handler)	// Is there a handler?
+	d_msg_handler(msg);	// Yes, invoke it.
+    };
+
+    msg_handler_t	 d_msg_handler;
+
 protected:
     friend class gr_flowgraph;
     friend class gr_flat_flowgraph; // TODO: will be redundant
+    friend class gr_tpb_thread_body;
 
     enum vcolor { WHITE, GREY, BLACK };
 
@@ -99,15 +118,34 @@ public:
     virtual bool check_topology(int ninputs, int noutputs) { return true; }
 
     /*!
-     * \brief Block message handler.
-     * 
-     * \param msg  Arbitrary message encapsulated as pmt::pmt_t
+     * \brief Set the callback that is fired when messages are available.
      *
-     * This function is called by the runtime system whenever there are
-     * messages in its queue.  Blocks should override this to receive
-     * messages; the default behavior is to drop them on the floor.
+     * \p msg_handler can be any kind of function pointer or function object
+     * that has the signature:
+     * <pre>
+     *    void msg_handler(pmt::pmt msg);
+     * </pre>
+     *
+     * (You may want to use boost::bind to massage your callable into the
+     * correct form.  See gr_nop.{h,cc} for an example that sets up a class
+     * method as the callback.)
+     *
+     * Blocks that desire to handle messages must call this method in their
+     * constructors to register the handler that will be invoked when messages
+     * are available.
+     *
+     * If the block inherits from gr_block, the runtime system will ensure that
+     * msg_handler is called in a thread-safe manner, such that work and
+     * msg_handler will never be called concurrently.  This allows msg_handler
+     * to update state variables without having to worry about thread-safety
+     * issues with work, general_work or another invocation of msg_handler.
+     *
+     * If the block inherits from gr_hier_block2, the runtime system will
+     * ensure that no reentrant calls are made to msg_handler.
      */
-    virtual void handle_msg(pmt::pmt_t msg) { };
+    template <typename T> void set_msg_handler(T msg_handler){
+      d_msg_handler = msg_handler_t(msg_handler);
+    }
 };
 
 inline bool operator<(gr_basic_block_sptr lhs, gr_basic_block_sptr rhs)
