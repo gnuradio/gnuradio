@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. @top_builddir@/setup_guile_test_env
+
+# Since we're in gnuradio-core, we don't need to add anything,
+# but we do need to call add_local_paths to set everything up
+
+# 1st argument is absolute path to hand coded guile source directory
+# 2nd argument is absolute path to component C++ shared library build directory
+# 3nd argument is absolute path to component SWIG build directory
+
+add_local_paths \
+    "" \
+    "" \
+    ""
+
+@GUILE@ -e main -c '(use-modules (gnuradio test-suite guile-test))' -t @srcdir@/tests

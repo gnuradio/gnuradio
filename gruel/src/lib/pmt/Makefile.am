@@ -48,7 +48,7 @@ python_built_sources = $(GENERATED_H) $(GENERATED_CC)
 PMT_SERIAL_TAGS_H = $(abs_top_builddir)/gruel/src/include/gruel/pmt_serial_tags.h
 BUILT_SOURCES = $(python_built_sources) $(PMT_SERIAL_TAGS_H)
 
-EXTRA_DIST = $(code_generator)
+EXTRA_DIST += $(code_generator)
 
 # ----------------------------------------------------------------
 

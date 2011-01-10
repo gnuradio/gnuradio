@@ -32,10 +32,13 @@ AC_DEFUN([GRC_GR_PAGER],[
 	gr-pager/python/Makefile \
 	gr-pager/python/run_tests \
 	gr-pager/swig/Makefile \
+	gr-pager/swig/run_guile_tests \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-pager,[
         dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_pager], [chmod +x gr-pager/python/run_tests])
+        AC_CONFIG_COMMANDS([run_tests_pager],
+			   [chmod +x gr-pager/python/run_tests
+			    chmod +x gr-pager/swig/run_guile_tests])
     ])
 ])

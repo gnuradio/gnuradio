@@ -49,6 +49,7 @@ public:
         _type(io_type)
     {
         _dev = uhd::usrp::single_usrp::make(device_addr);
+	d_tag_srcid = pmt::mp("uhd_single_usrp_source");
     }
 
     void set_subdev_spec(const std::string &spec){
@@ -138,7 +139,16 @@ public:
 
         switch(metadata.error_code){
         case uhd::rx_metadata_t::ERROR_CODE_NONE:
-            return num_samps;
+	  if(metadata.has_time_spec) {
+	    d_tstamp_pair = pmt::mp(pmt::mp(metadata.time_spec.get_full_secs()),
+				    pmt::mp(metadata.time_spec.get_frac_secs()));
+	    add_item_tag(0, nitems_written(0),
+			 //gr_tags::key_time,
+			 pmt::pmt_string_to_symbol("time"),
+			 d_tstamp_pair,
+			 d_tag_srcid);
+	  }
+	  return num_samps;
 
         case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
             //ignore overflows and try work again
@@ -165,6 +175,7 @@ public:
 private:
     uhd::usrp::single_usrp::sptr _dev;
     const uhd::io_type_t _type;
+    pmt::pmt_t d_tag_srcid;
 };
 
 

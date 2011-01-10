@@ -1,5 +1,5 @@
 /*
- * Copyright 2002,2007 Free Software Foundation, Inc.
+ * Copyright 2002,2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -39,6 +39,7 @@
 #include <qa_gr_hier_block2_derived.h>
 #include <qa_gr_buffer.h>
 #include <qa_block_tags.h>
+#include <qa_set_msg_handler.h>
 
 CppUnit::TestSuite *
 qa_runtime::suite ()
@@ -54,6 +55,7 @@ qa_runtime::suite ()
   s->addTest (qa_gr_hier_block2_derived::suite ());
   s->addTest (qa_gr_buffer::suite ());
   s->addTest (qa_block_tags::suite ());
+  s->addTest (qa_set_msg_handler::suite ());
   
   return s;
 }

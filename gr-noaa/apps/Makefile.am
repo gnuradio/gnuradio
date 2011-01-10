@@ -1,5 +1,5 @@
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,7 +32,7 @@ dist_bin_SCRIPTS = \
 	usrp_rx_hrpt_nogui.py \
 	usrp_rx_lrit.py
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	hrpt_decode.grc \
 	hrpt_demod.grc \
 	file_rx_hrpt.grc \

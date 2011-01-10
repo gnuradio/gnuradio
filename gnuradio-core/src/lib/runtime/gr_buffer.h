@@ -135,7 +135,7 @@ class gr_buffer {
   uint64_t                              d_abs_write_offset; // num items written since the start
   bool					d_done;
   std::deque<pmt::pmt_t>                d_item_tags;
-
+  uint64_t                              d_last_min_items_read;
   
   unsigned
   index_add (unsigned a, unsigned b)

@@ -20,7 +20,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(DEFINES) $(GCELL_INCLUDES) $(FFTW3F_CFLAGS) $(WITH_INCLUDES)
+# $(WITH_INCLUDES) must _always_ be last
+AM_CPPFLAGS = $(DEFINES) $(GCELL_INCLUDES) $(FFTW3F_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libwrapper.la libwrapper-qa.la
 

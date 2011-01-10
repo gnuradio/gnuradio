@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,5 +21,5 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = README_OSX
+EXTRA_DIST += README_OSX
 SUBDIRS = src

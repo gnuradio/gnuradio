@@ -80,7 +80,8 @@ minimum_buffer_items (long type_size, long page_size)
 gr_buffer::gr_buffer (int nitems, size_t sizeof_item, gr_block_sptr link)
   : d_base (0), d_bufsize (0), d_vmcircbuf (0),
     d_sizeof_item (sizeof_item), d_link(link),
-    d_write_index (0), d_abs_write_offset(0), d_done (false)
+    d_write_index (0), d_abs_write_offset(0), d_done (false),
+    d_last_min_items_read(0)
 {
   if (!allocate_buffer (nitems, sizeof_item))
     throw std::bad_alloc ();
@@ -162,7 +163,10 @@ gr_buffer::space_available ()
       min_items_read = std::min(min_items_read, d_readers[i]->nitems_read());
     }
 
-    prune_tags(min_items_read);
+    if(min_items_read != d_last_min_items_read) {
+      prune_tags(d_last_min_items_read);
+      d_last_min_items_read = min_items_read;
+    }
 
     // The -1 ensures that the case d_write_index == d_read_index is
     // unambiguous.  It indicates that there is no data for the reader
@@ -240,18 +244,23 @@ gr_buffer::prune_tags(uint64_t max_time)
      buffer's mutex al la the scoped_lock line below.
   */
   //gruel::scoped_lock guard(*mutex());
-
-  int n = 0;
-  uint64_t item_time;
   std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
 
+  uint64_t item_time;
+
+  // Since tags are not guarenteed to be in any particular order,
+  // we need to erase here instead of pop_front. An erase in the
+  // middle invalidates all iterators; so this resets the iterator
+  // to find more. Mostly, we wil be erasing from the front and
+  // therefore lose little time this way.
   while(itr != d_item_tags.end()) {
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
     if(item_time < max_time) {
-      d_item_tags.pop_front();
-      n++;
+      d_item_tags.erase(itr);
+      itr = d_item_tags.begin();
     }
-    itr++;
+    else
+      itr++;
   }
 }
 
@@ -310,7 +319,7 @@ gr_buffer_reader::get_tags_in_range(std::vector<pmt::pmt_t> &v,
   while(itr != d_buffer->get_tags_end()) {
     item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
 
-    if((item_time >= abs_start) && (item_time <= abs_end)) {
+    if((item_time >= abs_start) && (item_time < abs_end)) {
       v.push_back(*itr);
     }
 

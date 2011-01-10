@@ -1,5 +1,5 @@
 #
-# Copyright 2008, 2009 Free Software Foundation, Inc.
+# Copyright 2008,2009,2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -41,9 +41,9 @@ ourpython_PYTHON = __init__.py
 etcdir = $(gr_prefsdir)
 dist_etc_DATA = grc.conf
 
-EXTRA_DIST = $(srcdir)/grc.conf.in
+EXTRA_DIST += $(srcdir)/grc.conf.in
 
-BUILT_SOURCES = grc.conf
+BUILT_SOURCES += grc.conf
 
 grc.conf: $(srcdir)/grc.conf.in Makefile
 	sed \

@@ -2,3 +2,7 @@
 /uhd_swig.py
 /Makefile
 /Makefile.in
+/guile
+/python
+/run_guile_tests
+/run_tests

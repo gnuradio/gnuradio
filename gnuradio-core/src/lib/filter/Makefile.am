@@ -26,7 +26,9 @@ include $(top_srcdir)/Makefile.common
 # other performance critical items
 #
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+# $(WITH_INCLUDES) must _always_ be last
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) \
+	$(FFTW3F_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libfilter.la libfilter-qa.la
 
@@ -67,7 +69,7 @@ code_generator = 					\
 
 
 # Source built by Python into $(builddir)
-BUILT_SOURCES =			\
+BUILT_SOURCES +=		\
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
@@ -178,7 +180,7 @@ EXTRA_libfilter_la_SOURCES =		\
 	$(armv7_a_qa_CODE)
 
 
-EXTRA_DIST = 					\
+EXTRA_DIST += \
 	3dnow_float_dotprod_really_simple.S	\
 	3dnow_float_dotprod_simple.S		\
 	$(code_generator)
@@ -345,7 +347,6 @@ noinst_HEADERS = 			\
 	qa_gri_fir_filter_with_buffer_scc.h
 
 
-if PYTHON
 swiginclude_HEADERS =			\
 	filter.i			\
 	filter_generated.i		\
@@ -369,7 +370,7 @@ swiginclude_HEADERS =			\
 	gr_pfb_clock_sync_ccf.i		\
 	gr_pfb_clock_sync_fff.i		\
 	$(GENERATED_I)
-endif
+
 
 # Do creation and inclusion of other Makefiles last
 

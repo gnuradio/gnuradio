@@ -148,7 +148,22 @@ AC_ARG_ENABLE([python],
    esac],
   [enable_python=yes]
 )
+
+# Allow user to choose whether to generate SWIG/Guile
+# Default is disabled
+AC_ARG_ENABLE([guile],
+  [AS_HELP_STRING([--enable-guile],
+    [generate SWIG/Guile components (default is no)])],
+  [case "${enableval}" in
+     yes) enable_guile=yes ;;
+     no) enable_guile=no ;;
+     *) AC_MSG_ERROR([bad value ${enableval} for --enable-guile]) ;;
+   esac],
+  [enable_guile=no]
+)
+
 AM_CONDITIONAL([PYTHON], [test x$enable_python = xyes])
+AM_CONDITIONAL([GUILE], [test x$enable_guile = xyes])
 
 AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
 AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
@@ -372,7 +387,7 @@ GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_GR_QTGUI
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
-GRC_GR_UTILS                   dnl this must come after GRC_GR_WXGUI
+GRC_GR_UTILS                    dnl this must come after GRC_GR_WXGUI
 GRC_GNURADIO_EXAMPLES		dnl must come after all GRC_GR_*
 GRC_GRC
 GRC_GR_UHD
@@ -398,12 +413,14 @@ AC_SUBST(with_SWIG_INCLUDES)
 AC_SUBST(with_PYDIRPATH)
 AC_SUBST(with_SWIGDIRPATH)
 AC_SUBST(with_LIBDIRPATH)
+AC_SUBST(with_GUILE_LOAD_PATH)
 
 # Local files tweaked by AC
 AC_CONFIG_FILES([\
     Makefile \
     run_tests.sh \
-    config/Makefile \
+    setup_guile_test_env \
+    config/Makefile
 ])
 
 dnl run_tests.sh is created from run_tests.sh.in .  Make it executable.

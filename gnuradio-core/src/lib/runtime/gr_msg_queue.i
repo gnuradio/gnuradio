@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2009 Free Software Foundation, Inc.
+ * Copyright 2005,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -81,6 +81,7 @@ public:
  * functions into the gr.msg_queue wrapper class, so that everything
  * appears normal.  (An evil laugh is heard in the distance...)
  */
+#ifdef SWIGPYTHON
 %inline %{
   gr_message_sptr gr_py_msg_queue__delete_head(gr_msg_queue_sptr q) {
     gr_message_sptr msg;
@@ -103,3 +104,65 @@ gr_msg_queue_sptr.delete_head = gr_py_msg_queue__delete_head
 gr_msg_queue_sptr.insert_tail = gr_py_msg_queue__insert_tail
 gr_msg_queue_sptr.handle = gr_py_msg_queue__insert_tail
 %}
+#endif	// SWIGPYTHON
+
+/*
+ * Similar trickery as above, only this time for Guile
+ */
+#ifdef SWIGGUILE
+
+%{
+  struct arg_holder {
+    gr_msg_queue_sptr	q;
+    gr_message_sptr	msg;
+  };
+
+  static void *
+  insert_tail_shim(void *arg)
+  {
+    arg_holder *a = (arg_holder *)arg;
+    a->q->insert_tail(a->msg);
+    return 0;
+  }
+
+  static void *
+  delete_head_shim(void *arg)
+  {
+    arg_holder *a = (arg_holder *)arg;
+    a->msg = a->q->delete_head();
+    return 0;
+  }
+%}
+
+%inline %{
+
+  // handle and insert_tail are equivalent
+  static void
+  handle(gr_msg_queue_sptr q, gr_message_sptr msg)
+  {
+    arg_holder	a;
+    a.q = q;
+    a.msg = msg;
+    scm_without_guile(insert_tail_shim, (void *) &a);
+  }
+
+  static void
+  insert_tail(gr_msg_queue_sptr q, gr_message_sptr msg)
+  {
+    arg_holder	a;
+    a.q = q;
+    a.msg = msg;
+    scm_without_guile(insert_tail_shim, (void *) &a);
+  }
+
+  static gr_message_sptr
+  delete_head(gr_msg_queue_sptr q)
+  {
+    arg_holder	a;
+    a.q = q;
+    scm_without_guile(delete_head_shim, (void *) &a);
+    return a.msg;
+  }
+%}
+
+#endif	// SWIGGUILE

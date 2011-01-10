@@ -91,6 +91,7 @@ typedef boost::shared_ptr<db_base> db_base_sptr;
 %template(db_base_sptr_vector) std::vector<db_base_sptr>;
 %template(db_base_sptr_vector_vector) std::vector<std::vector<db_base_sptr> >;
 
+#ifdef SWIGPYTHON
 // Set better class name in Python
 // Enable freq_range and gain_range from public methods of class not implemented in C++
 // And create a dummy wrapper for backwards compatability with some of the example code
@@ -98,5 +99,5 @@ typedef boost::shared_ptr<db_base> db_base_sptr;
   db_base_sptr.__repr__ = lambda self: "<db_base::%s>" % (self.name(),)
   db_base_sptr.freq_range = lambda self: (self.freq_min(), self.freq_max(), 1)
   db_base_sptr.gain_range = lambda self: (self.gain_min(), self.gain_max(), self.gain_db_per_step())
-
 %}
+#endif

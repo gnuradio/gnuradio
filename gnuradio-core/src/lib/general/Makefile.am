@@ -21,7 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+# $(WITH_INCLUDES) must _always_ be last
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) \
+	$(FFTW3F_CPPFLAGS) $(GSL_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libgeneral.la libgeneral-qa.la
 
@@ -29,11 +31,12 @@ BUILT_SOURCES =
 
 # ----------------------------------------------------------------
 
-EXTRA_DIST = 				\
+EXTRA_DIST += \
 	gen_sine_table.py		\
 	gr_constants.cc.in			
 
 libgeneral_la_SOURCES = 		\
+	complex_vec_test.cc		\
 	gr_additive_scrambler_bb.cc	\
 	gr_agc_cc.cc                	\
 	gr_agc_ff.cc                	\
@@ -191,6 +194,7 @@ libgeneral_qa_la_SOURCES = 		\
 	qa_gri_lfsr.cc
 
 grinclude_HEADERS = 			\
+	complex_vec_test.h		\
 	gr_additive_scrambler_bb.h	\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
@@ -363,8 +367,8 @@ noinst_HEADERS = 			\
 	sine_table.h			\
 	qa_gr_math.h
 
-if PYTHON
 swiginclude_HEADERS =			\
+	complex_vec_test.i		\
 	general.i			\
 	gr_additive_scrambler_bb.i	\
 	gr_agc_cc.i                 	\
@@ -494,4 +498,3 @@ swiginclude_HEADERS =			\
 	gr_annotator_alltoall.i		\
 	gr_annotator_1to1.i		\
 	gr_burst_tagger.i
-endif

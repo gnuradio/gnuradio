@@ -81,6 +81,7 @@ libruntime_qa_la_SOURCES = 			\
 	qa_gr_io_signature.cc			\
 	qa_gr_vmcircbuf.cc			\
 	qa_block_tags.cc			\
+	qa_set_msg_handler.cc			\
 	qa_runtime.cc				
 
 grinclude_HEADERS = 				\
@@ -140,9 +141,9 @@ noinst_HEADERS = 				\
 	qa_gr_top_block.h			\
 	qa_gr_vmcircbuf.h			\
 	qa_block_tags.h				\
+	qa_set_msg_handler.h			\
 	qa_runtime.h				
 
-if PYTHON
 swiginclude_HEADERS =			\
 	gr_basic_block.i		\
 	gr_block.i			\
@@ -162,4 +163,3 @@ swiginclude_HEADERS =			\
 	gr_sync_interpolator.i		\
 	gr_top_block.i			\
 	runtime.i
-endif

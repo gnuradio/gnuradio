@@ -46,8 +46,6 @@
 // standard includes
 ////////////////////////////////////////////////////////////////////////
 %include "gnuradio.i"
-%include "std_string.i"
-%include "std_vector.i"
 
 namespace std {
     %template(StringVector) vector<string>;
@@ -109,5 +107,14 @@ static const size_t ALL_MBOARDS = uhd::usrp::multi_usrp::ALL_MBOARDS;
 %}
 static const size_t ALL_MBOARDS;
 
-#endif
+#if SWIGGUILE
+%scheme %{
+(load-extension-global "libguile-gnuradio-uhd_swig" "scm_init_gnuradio_uhd_swig_module")
+%}
 
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif	/* SWIGGUILE */
+
+#endif  /* GR_HAVE_UHD */

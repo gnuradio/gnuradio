@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,6 +20,7 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 SUBDIRS = gsm .
 
@@ -42,7 +43,7 @@ libgnuradio_gsm_fr_vocoder_la_LIBADD =	\
 
 libgnuradio_gsm_fr_vocoder_la_LDFLAGS =	$(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
-if PYTHON
+
 # SWIG interface and library
 TOP_SWIG_IFILES = 			\
 	gsm_full_rate.i
@@ -58,11 +59,3 @@ gsm_full_rate_pythondir_category =	\
 gsm_full_rate_la_swig_libadd =		\
 	libgnuradio-gsm-fr-vocoder.la
 
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
-endif

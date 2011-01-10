@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,14 +24,14 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@)
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> k);
+@SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k);
 
 class @NAME@ : public gr_sync_block
 {
  private:
-  @NAME@ (const std::vector<@I_TYPE@> k);
+  @NAME@ (const std::vector<@I_TYPE@> &k);
 
  public:
   std::vector<@I_TYPE@> k () const { return d_k; }
-  void set_k (const std::vector<@I_TYPE@> k) { d_k = k; }
+  void set_k (const std::vector<@I_TYPE@> &k) { d_k = k; }
 };

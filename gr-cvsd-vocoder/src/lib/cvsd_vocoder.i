@@ -79,3 +79,13 @@ private:
   
  public:
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension-global "libguile-gnuradio-cvsd_vocoder" "scm_init_gnuradio_cvsd_vocoder_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

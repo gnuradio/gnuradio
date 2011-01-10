@@ -1,0 +1,241 @@
+#!/usr/bin/guile \
+-e main -s
+!#
+
+;;;; guile-test --- run the Guile test suite
+;;;; Jim Blandy <jimb@red-bean.com> --- May 1999
+;;;;
+;;;; 	Copyright (C) 1999, 2001, 2006 Free Software Foundation, Inc.
+;;;;
+;;;; This program is free software; you can redistribute it and/or modify
+;;;; it under the terms of the GNU General Public License as published by
+;;;; the Free Software Foundation; either version 2, or (at your option)
+;;;; any later version.
+;;;;
+;;;; This program is distributed in the hope that it will be useful,
+;;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;;; GNU General Public License for more details.
+;;;;
+;;;; You should have received a copy of the GNU General Public License
+;;;; along with this software; see the file COPYING.  If not, write to
+;;;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;;;; Boston, MA 02110-1301 USA
+
+
+;;;; Usage: [guile -e main -s] guile-test [OPTIONS] [TEST ...]
+;;;;
+;;;; Run tests from the Guile test suite.  Report failures and
+;;;; unexpected passes to the standard output, along with a summary of
+;;;; all the results.  Record each reported test outcome in the log
+;;;; file, `guile.log'.  The exit status is #f if any of the tests
+;;;; fail or pass unexpectedly.
+;;;;
+;;;; Normally, guile-test scans the test directory, and executes all
+;;;; files whose names end in `.test'.  (It assumes they contain
+;;;; Scheme code.)  However, you can have it execute specific tests by
+;;;; listing their filenames on the command line.
+;;;;
+;;;; The option `--test-suite' can be given to specify the test
+;;;; directory.  If no such option is given, the test directory is
+;;;; taken from the environment variable TEST_SUITE_DIR (if defined),
+;;;; otherwise a default directory that is hardcoded in this file is
+;;;; used (see "Installation" below).
+;;;;
+;;;; If present, the `--log-file LOG' option tells `guile-test' to put
+;;;; the log output in a file named LOG.
+;;;;
+;;;; If present, the `--debug' option will enable a debugging mode.
+;;;;
+;;;; If present, the `--flag-unresolved' option will cause guile-test
+;;;; to exit with failure status if any tests are UNRESOLVED.
+;;;;
+;;;;
+;;;; Installation:
+;;;;
+;;;; If you change the #! line at the top of this script to point at
+;;;; the Guile interpreter you want to test, you can call this script
+;;;; as an executable instead of having to pass it as a parameter to
+;;;; guile via "guile -e main -s guile-test".  Further, you can edit
+;;;; the definition of default-test-suite to point to the parent
+;;;; directory of the `tests' tree, which makes it unnecessary to set
+;;;; the environment variable `TEST_SUITE_DIR'.
+;;;;
+;;;;
+;;;; Shortcomings:
+;;;;
+;;;; At the moment, due to a simple-minded implementation, test files
+;;;; must live in the test directory, and you must specify their names
+;;;; relative to the top of the test directory.  If you want to send
+;;;; me a patch that fixes this, but still leaves sane test names in
+;;;; the log file, that would be great.  At the moment, all the tests
+;;;; I care about are in the test directory, though.
+;;;;
+;;;; It would be nice if you could specify the Guile interpreter you
+;;;; want to test on the command line.  As it stands, if you want to
+;;;; change which Guile interpreter you're testing, you need to edit
+;;;; the #! line at the top of this file, which is stupid.
+
+(define (main . args)
+  (let ((module (resolve-module '(gnuradio test-suite guile-test))))
+    (apply (module-ref module 'main) args)))
+
+(define-module (gnuradio test-suite guile-test)
+  :use-module (gnuradio test-suite lib)
+  :use-module (ice-9 getopt-long)
+  :use-module (ice-9 and-let-star)
+  :use-module (ice-9 rdelim)
+  :export (main data-file-name test-file-name))
+
+
+;;; User configurable settings:
+(define default-test-suite
+  (string-append (getenv "HOME") "/bogus-path/test-suite"))
+
+
+;;; Variables that will receive their actual values later.
+(define test-suite default-test-suite)
+
+(define tmp-dir #f)
+
+
+;;; General utilities, that probably should be in a library somewhere.
+
+;;; Enable debugging
+(define (enable-debug-mode)
+  (write-line %load-path)
+  (set! %load-verbosely #t)
+  (debug-enable 'backtrace 'debug))
+
+;;; Traverse the directory tree at ROOT, applying F to the name of
+;;; each file in the tree, including ROOT itself.  For a subdirectory
+;;; SUB, if (F SUB) is true, we recurse into SUB.  Do not follow
+;;; symlinks.
+(define (for-each-file f root)
+
+  ;; A "hard directory" is a path that denotes a directory and is not a
+  ;; symlink.
+  (define (file-is-hard-directory? filename)
+    (eq? (stat:type (lstat filename)) 'directory))
+
+  (let visit ((root root))
+    (let ((should-recur (f root)))
+      (if (and should-recur (file-is-hard-directory? root))
+	  (let ((dir (opendir root)))
+	    (let loop ()
+	      (let ((entry (readdir dir)))
+		(cond
+		 ((eof-object? entry) #f)
+		 ((or (string=? entry ".")
+		      (string=? entry "..")
+                      (string=? entry "CVS")
+                      (string=? entry "RCS"))
+		  (loop))
+		 (else
+		  (visit (string-append root "/" entry))
+		  (loop))))))))))
+
+
+;;; The test driver.
+
+
+;;; Localizing test files and temporary data files.
+
+(define (data-file-name filename)
+  (in-vicinity tmp-dir filename))
+
+(define (test-file-name test)
+  (in-vicinity test-suite test))
+
+;;; Return a list of all the test files in the test tree.
+(define (enumerate-tests test-dir)
+  (let ((root-len (+ 1 (string-length test-dir)))
+	(tests '()))
+    (for-each-file (lambda (file)
+		     (if (has-suffix? file ".test")
+			 (let ((short-name
+				(substring file root-len)))
+			   (set! tests (cons short-name tests))))
+		     #t)
+		   test-dir)
+
+    ;; for-each-file presents the files in whatever order it finds
+    ;; them in the directory.  We sort them here, so they'll always
+    ;; appear in the same order.  This makes it easier to compare test
+    ;; log files mechanically.
+    (sort tests string<?)))
+
+(define (main args)
+  (let ((options (getopt-long args
+			      `((test-suite
+				 (single-char #\t)
+				 (value #t))
+                                (flag-unresolved
+                                 (single-char #\u))
+				(log-file
+				 (single-char #\l)
+				 (value #t))
+				(debug
+				 (single-char #\d))))))
+    (define (opt tag default)
+      (let ((pair (assq tag options)))
+	(if pair (cdr pair) default)))
+
+    (if (opt 'debug #f)
+	(enable-debug-mode))
+
+    (set! test-suite
+	  (or (opt 'test-suite #f)
+	      (getenv "TEST_SUITE_DIR")
+	      default-test-suite))
+
+    ;; directory where temporary files are created.
+    ;; when run from "make check", this must be under the build-dir,
+    ;; not the src-dir.
+    (set! tmp-dir (getcwd))
+
+    (let* ((tests
+	    (let ((foo (opt '() '())))
+	      (if (null? foo)
+		  (enumerate-tests test-suite)
+		  foo)))
+	   (log-file
+	    (opt 'log-file "guile.log")))
+
+      ;; Open the log file.
+      (let ((log-port (open-output-file log-file)))
+
+	;; Register some reporters.
+	(let ((global-pass #t)
+	      (counter (make-count-reporter)))
+	  (register-reporter (car counter))
+	  (register-reporter (make-log-reporter log-port))
+	  (register-reporter user-reporter)
+	  (register-reporter (lambda results
+			       (case (car results)
+                                 ((unresolved)
+                                  (and (opt 'flag-unresolved #f)
+                                       (set! global-pass #f)))
+				 ((fail upass error)
+				  (set! global-pass #f)))))
+
+	  ;; Run the tests.
+	  (for-each (lambda (test)
+                      (display (string-append "Running " test "\n"))
+		      (with-test-prefix test
+			(load (test-file-name test))))
+		    tests)
+
+	  ;; Display the final counts, both to the user and in the log
+	  ;; file.
+	  (let ((counts ((cadr counter))))
+	    (print-counts counts)
+	    (print-counts counts log-port))
+
+	  (close-port log-port)
+	  (quit global-pass))))))
+
+
+;;; Local Variables:
+;;; mode: scheme
+;;; End:

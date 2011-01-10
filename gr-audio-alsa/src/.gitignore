@@ -13,4 +13,8 @@
 /audio_alsa.py
 /audio_alsa.cc
 /run_tests
+/run_guile_tests
 /*.pyc
+/gnuradio
+/guile
+/python

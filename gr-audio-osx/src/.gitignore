@@ -11,3 +11,6 @@
 /audio_osx.cc
 /audio_osx.py
 /run_tests
+/gnuradio
+/guile
+/python

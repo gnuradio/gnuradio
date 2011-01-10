@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,6 +18,9 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
+// Directors are only supported in Python, Java and C#.  gr_feval_dd uses directors
+#ifdef SWIGPYTHON
 
 GR_SWIG_BLOCK_MAGIC(gr,bin_statistics_f);
 
@@ -40,3 +43,5 @@ private:
 public:
   ~gr_bin_statistics_f();
 };
+
+#endif

@@ -20,6 +20,14 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
+
+TESTS =
+EXTRA_DIST += run_tests.in run_guile_tests.in $(nobase_guile_DATA)
+DISTCLEANFILES += run_tests run_guile_tests
+
+noinst_PYTHON =	qa_uhd.py
+noinst_GUILE = uhd.test
 
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
@@ -29,10 +37,13 @@ AM_CPPFLAGS = \
 
 uhd_swig_swig_args = $(UHD_CPPFLAGS)
 
-if PYTHON
+if GUILE
+nobase_guile_DATA = \
+	gnuradio/uhd.scm
+endif
+
 # ----------------------------------------------------------------
 # The SWIG library
-# TESTS = run_tests
 
 TOP_SWIG_IFILES = \
 	uhd_swig.i
@@ -55,11 +66,19 @@ uhd_swig_python = \
 # additional SWIG files to be installed
 uhd_swig_swiginclude_headers =
 
-include $(top_srcdir)/Makefile.swig
+uhd_swig_swig_args = \
+	$(UHD_CFLAGS) \
+	-I$(top_srcdir)/gr-uhd/lib
 
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
+## If UHD was installed, defined GR_HAVE_UHD for swigging headers
+if GR_DEFINE_HAVE_UHD
+    uhd_swig_swig_args += -DGR_HAVE_UHD
+endif
 
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+if PYTHON
+TESTS += run_tests
+endif
+
+if GUILE
+TESTS += run_guile_tests
 endif

@@ -20,6 +20,20 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# Every Makefile starts with common vars so we can
+# consistently use +=
+BUILT_SOURCES =
+MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
+CLEANFILES = guile.log
+DISTCLEANFILES =
+EXTRA_DIST =
+STAMPS =
+
+
+# Make rebuilds less verbose with stuff we can safely ignore
+# about GNU make only extensions.
+AUTOMAKE += -Wno-portability -Wnone
+
 AM_CFLAGS = @autoconf_default_CFLAGS@ @lf_CFLAGS@
 AM_CXXFLAGS = @autoconf_default_CXXFLAGS@ @lf_CXXFLAGS@
 
@@ -29,9 +43,11 @@ LTVERSIONFLAGS = -version-info 0:0:0 -release $(LIBVER)
 # includes
 grincludedir = $(includedir)/gnuradio
 
-if PYTHON
 # swig includes
 swigincludedir = $(grincludedir)/swig
+
+# Guile scheme code ends up under here:
+guiledir = $(prefix)/share/guile/site
 
 # Install the gnuradio stuff in the appropriate subdirectory
 # This usually ends up at:
@@ -46,7 +62,6 @@ grpyexecdir = $(pyexecdir)/gnuradio
 
 usrppythondir = $(pythondir)/usrpm
 usrppyexecdir = $(pyexecdir)/usrpm
-endif
 
 # gcell includes
 gcellincludedir = $(includedir)/gcell
@@ -116,11 +131,13 @@ grc_blocksdir = $(pkgdatadir)/grc/blocks
 
 # Other common defines; use "+=" to add to these
 STAMPS =
-MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
+MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT \
+	.unittests/* .unittests/python/*
 
 # Don't distribute the files defined in the variable 'no_dist_files'
+
 dist-hook:
 	@for file in $(no_dist_files); do \
 		echo $(RM) $(distdir)/$$file; \
 		$(RM) $(distdir)/$$file; \
-	done;
+	done

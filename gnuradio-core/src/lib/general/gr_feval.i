@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,6 +42,9 @@
  * aren't shipping that version yet.  Thus we kludge...]
  */
 
+
+// Directors are only supported in Python, Java and C#
+#ifdef SWIGPYTHON
 
 // Enable SWIG directors for these classes
 %feature("director") gr_py_feval_dd;
@@ -197,3 +200,5 @@ long gr_feval_ll_example(gr_feval_ll *f, long x);
 
 %rename(feval_example) gr_feval_example;
 void gr_feval_example(gr_feval *f);
+
+#endif // SWIGPYTHON

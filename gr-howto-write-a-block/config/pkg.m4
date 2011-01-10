@@ -111,8 +111,11 @@ fi[]dnl
 # explicit call to PKG_PROG_PKG_CONFIG in your configure.ac
 #
 # --------------------------------------------------------------
-AC_DEFUN([PKG_CHECK_MODULES],
-[AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+AC_DEFUN([PKG_CHECK_MODULES],[
+AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+AC_REQUIRE([AC_CANONICAL_HOST])dnl
+AC_REQUIRE([AC_CANONICAL_BUILD])dnl
+
 AC_ARG_VAR([$1][_CFLAGS], [C compiler flags for $1, overriding pkg-config])dnl
 AC_ARG_VAR([$1][_LIBS], [linker flags for $1, overriding pkg-config])dnl
 AC_ARG_VAR([$1][_INCLUDEDIR], [includedir for $1, overriding pkg-config])dnl
@@ -124,7 +127,17 @@ _PKG_CONFIG([$1][_CFLAGS], [cflags], [$2])
 
 if test x$cross_compiling = xyes
 then
-  _PKG_CONFIG([$1][_LIBS], [libs-only-l --static], [$2])
+  dnl _PKG_CONFIG([$1][_LIBS], [libs-only-l --static], [$2])
+  _PKG_CONFIG([$1][_LIBS], [libs --static], [$2])
+  dnl prune out any -L/lib or -L/usr/lib since they're pointing to the wrong filesystem root
+  _pkg_tmp=
+  for flag in [$]pkg_cv_[$1][_LIBS]; do
+    case $flag in
+    (-L/lib* | -L/usr/lib* )	   ;; # ignore
+    (*) _pkg_tmp="$_pkg_tmp $flag" ;;
+    esac
+  done
+  pkg_cv_[$1][_LIBS]="$_pkg_tmp"
 else
   _PKG_CONFIG([$1][_LIBS], [libs --static], [$2])
 fi

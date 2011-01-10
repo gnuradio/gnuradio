@@ -39,8 +39,8 @@ dist_pkglibexec_SCRIPTS = grc_setup_freedesktop
 grc_setup_freedesktop: $(srcdir)/grc_setup_freedesktop.in Makefile
 	sed -e 's|@SRCDIR[@]|$(ourdatadir)|g' $< > $@
 
-EXTRA_DIST = $(srcdir)/grc_setup_freedesktop.in
-BUILT_SOURCES = grc_setup_freedesktop
+EXTRA_DIST += $(srcdir)/grc_setup_freedesktop.in
+BUILT_SOURCES += grc_setup_freedesktop
 
 install-data-hook:
 	@printf "\n*** GRC Post-Install Message ***\

@@ -87,13 +87,13 @@ class gr_plot_psd:
     def get_data(self):
         self.position = self.hfile.tell()/self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % self.position)
-        self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
-        #print "Read in %d items" % len(self.iq)
-        if(len(self.iq) == 0):
+        try:
+            self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
+        except MemoryError:
             print "End of File"
         else:
             tstep = 1.0 / self.sample_rate
-            self.time = [tstep*(self.position + i) for i in xrange(len(self.iq))]
+            self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
 
             self.iq_psd, self.freq = self.dopsd(self.iq)
             
@@ -153,14 +153,14 @@ class gr_plot_psd:
         imags = self.iq.imag
         self.plot_iq[0].set_data([self.time, reals])
         self.plot_iq[1].set_data([self.time, imags])
-        self.sp_iq.set_xlim(min(self.time), max(self.time))
-        self.sp_iq.set_ylim([1.5*min([min(reals), min(imags)]),
-                             1.5*max([max(reals), max(imags)])])
+        self.sp_iq.set_xlim(self.time.min(), self.time.max())
+        self.sp_iq.set_ylim([1.5*min([reals.min(), imags.min()]),
+                             1.5*max([reals.max(), imags.max()])])
 
     def draw_psd(self):
         self.plot_psd[0].set_data([self.freq, self.iq_psd])
-        self.sp_psd.set_ylim([min(self.iq_psd)-10, max(self.iq_psd)+10])
-        self.sp_psd.set_xlim([min(self.freq), max(self.freq)])
+        self.sp_psd.set_ylim([self.iq_psd.min()-10, self.iq_psd.max()+10])
+        self.sp_psd.set_xlim([self.freq.min(), self.freq.max()])
 
     def draw_spec(self):
         overlap = self.specfftsize/4
@@ -168,7 +168,7 @@ class gr_plot_psd:
         self.sp_spec.clear()
         self.sp_spec.specgram(self.iq, self.specfftsize, self.sample_rate,
                               window = lambda d: d*winfunc(self.specfftsize),
-                              noverlap = overlap, xextent=[min(self.time), max(self.time)])
+                              noverlap = overlap, xextent=[self.time.min(), self.time.max()])
 
     def update_plots(self):
         self.draw_time()
@@ -188,14 +188,14 @@ class gr_plot_psd:
             xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0] - self.position))))
             xmax = min(int(ceil(self.sample_rate*(self.xlim[1] - self.position))), len(self.iq))
 
-            iq = self.iq[xmin : xmax]
-            time = self.time[xmin : xmax]
+            iq = scipy.array(self.iq[xmin : xmax])
+            time = scipy.array(self.time[xmin : xmax])
 
             iq_psd, freq = self.dopsd(iq)
             
             self.plot_psd[0].set_data(freq, iq_psd)
-            self.sp_psd.axis([min(freq), max(freq),
-                              min(iq_psd)-10, max(iq_psd)+10])
+            self.sp_psd.axis([freq.min(), freq.max(),
+                              iq_psd.min()-10, iq_psd.max()+10])
 
             draw()
 

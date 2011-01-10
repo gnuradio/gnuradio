@@ -3,7 +3,7 @@
 #include <qa_8sc_multiply_conjugate_16sc_aligned16.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
+#include <ctime>
 
 #define assertcomplexEqual(expected, actual, delta)			\
   CPPUNIT_ASSERT_DOUBLES_EQUAL (std::real(expected), std::real(actual), fabs(std::real(expected)) * delta); \

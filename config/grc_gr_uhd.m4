@@ -44,7 +44,13 @@ AC_DEFUN([GRC_GR_UHD],[
         gr-uhd/grc/Makefile \
         gr-uhd/lib/Makefile \
         gr-uhd/swig/Makefile \
+        gr-uhd/swig/run_tests \
+        gr-uhd/swig/run_guile_tests \
     ])
 
-    GRC_BUILD_CONDITIONAL(gr-uhd)
+    GRC_BUILD_CONDITIONAL(gr-uhd,[
+	dnl run_tests is created from run_tests.in.  Make it executable.
+	AC_CONFIG_COMMANDS([run_tests_uhd],
+			   [chmod +x gr-uhd/swig/run_tests gr-uhd/swig/run_guile_tests])
+    ])
 ])

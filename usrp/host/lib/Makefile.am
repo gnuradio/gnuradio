@@ -42,11 +42,11 @@ libusrp_la_LIBADD = $(libusrp_la_common_LIBADD)
 libusrp_la_LDFLAGS = $(libusrp_la_common_LDFLAGS)
 endif
 
-EXTRA_DIST = 				\
+EXTRA_DIST += 				\
 	std_paths.h.in			\
 	usrp_dbid.dat
 
-BUILT_SOURCES = $(abs_top_builddir)/usrp/host/include/usrp/usrp_dbid.h
+BUILT_SOURCES += $(abs_top_builddir)/usrp/host/include/usrp/usrp_dbid.h
 
 BUILT_SOURCES += usrp_dbid.cc \
 		 usrp_dbid.py

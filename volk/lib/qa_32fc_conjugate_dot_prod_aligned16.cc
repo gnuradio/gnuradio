@@ -2,6 +2,7 @@
 #include <qa_32fc_conjugate_dot_prod_aligned16.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 
 #define assertcomplexEqual(expected, actual, delta)			\

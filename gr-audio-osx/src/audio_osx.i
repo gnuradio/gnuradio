@@ -88,3 +88,13 @@ class audio_osx_source : public gr_sync_block {
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension-global "libguile-gnuradio-audio_osx" "scm_init_gnuradio_audio_osx_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

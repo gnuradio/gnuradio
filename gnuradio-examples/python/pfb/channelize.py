@@ -36,7 +36,7 @@ class pfb_top_block(gr.top_block):
 
         # Create a set of taps for the PFB channelizer
         self._taps = gr.firdes.low_pass_2(1, self._fs, 475.50, 50, 
-                                          attenuation_dB=10, window=gr.firdes.WIN_BLACKMAN_hARRIS)
+                                          attenuation_dB=100, window=gr.firdes.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
         tpc = scipy.ceil(float(len(self._taps)) /  float(self._M))

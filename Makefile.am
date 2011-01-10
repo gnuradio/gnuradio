@@ -23,7 +23,7 @@ ACLOCAL_AMFLAGS = -I config
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	bootstrap \
 	configure \
 	configure-cell-cross \
@@ -38,6 +38,9 @@ EXTRA_DIST = \
 SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@
 DISTCLEANFILES = gnuradio*.tar.gz
+
+# we need to check both python and guile support for distcheck
+DISTCHECK_CONFIGURE_FLAGS = --enable-python --enable-guile
 
 if PYTHON
 

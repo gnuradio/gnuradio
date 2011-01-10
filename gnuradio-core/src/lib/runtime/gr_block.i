@@ -56,8 +56,3 @@ class gr_block : public gr_basic_block {
   gr_block_detail_sptr detail () const { return d_detail; }
   void set_detail (gr_block_detail_sptr detail) { d_detail = detail; }
 };
-
-%pythoncode %{
-gr_block_sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
-gr_block_sptr.block = lambda self: self
-%}

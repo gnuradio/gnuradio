@@ -21,13 +21,12 @@
 
 include $(top_srcdir)/Makefile.common
 
-BUILT_SOURCES = \
-	inet.h
+EXTRA_DIST += inet.h.in
 
 gruelincludedir = $(prefix)/include/gruel
 
 gruelinclude_HEADERS = \
-	$(BUILT_SOURCES) \
+	inet.h \
 	msg_accepter.h \
 	msg_accepter_msgq.h \
 	msg_queue.h \

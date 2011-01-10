@@ -1,5 +1,5 @@
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -47,10 +47,8 @@ usrpinclude_HEADERS = \
 	usrp_subdev_spec.h \
 	usrp_tune_result.h
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	libusb_types.h.in
 
-if PYTHON
 swiginclude_HEADERS = \
 	db_base.i
-endif

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,19 +21,40 @@
  */
 
 %define GR_SWIG_BLOCK_MAGIC(PKG, BASE_NAME)
-_GR_SWIG_BLOCK_MAGIC_HELPER(PKG, PKG ## _ ## BASE_NAME, BASE_NAME)
+_GR_SWIG_BLOCK_MAGIC_HELPER(PKG, BASE_NAME, PKG ## _ ## BASE_NAME)
 %enddef
 
-%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, NAME, BASE_NAME)
-class NAME;
-typedef boost::shared_ptr<NAME> NAME ## _sptr;
-%template(NAME ## _sptr) boost::shared_ptr<NAME>;
+%define _GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, BASE_NAME, FULL_NAME)
+class FULL_NAME;
+typedef boost::shared_ptr<FULL_NAME> FULL_NAME ## _sptr;
+%template(FULL_NAME ## _sptr) boost::shared_ptr<FULL_NAME>;
 %rename(BASE_NAME) PKG ## _make_ ## BASE_NAME;
-
-%pythoncode %{
-NAME ## _sptr.block = lambda self: NAME ## _block (self)
-NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
-%}
-
-%ignore NAME;
+%ignore FULL_NAME;
 %enddef
+
+#ifdef SWIGPYTHON
+%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, BASE_NAME, FULL_NAME)
+_GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, BASE_NAME, FULL_NAME)
+%pythoncode %{
+FULL_NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
+%}
+%enddef
+#endif
+
+#ifdef SWIGGUILE
+#ifdef IN_GNURADIO_CORE		// normal behavior
+%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, BASE_NAME, FULL_NAME)
+_GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, BASE_NAME, FULL_NAME)
+/* FIXME May want to add something here to get a friendlier printed representation */
+%enddef
+#else				// Don't strip PKG from name
+%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, BASE_NAME, FULL_NAME)
+class FULL_NAME;
+typedef boost::shared_ptr<FULL_NAME> FULL_NAME ## _sptr;
+%template(FULL_NAME ## _sptr) boost::shared_ptr<FULL_NAME>;
+%ignore FULL_NAME;
+%rename(FULL_NAME) PKG ## _make_ ## BASE_NAME;
+/* FIXME May want to add something here to get a friendlier printed representation */
+%enddef
+#endif
+#endif

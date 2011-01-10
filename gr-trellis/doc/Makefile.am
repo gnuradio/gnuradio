@@ -30,7 +30,7 @@ endif
 
 all: $(HTML_FILES)
 
-EXTRA_DIST = \
+EXTRA_DIST += \
     gr-trellis.xml \
     make_numbered_listing.py \
     test_tcm.py \

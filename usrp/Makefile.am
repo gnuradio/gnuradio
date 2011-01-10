@@ -19,7 +19,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = \
+include $(top_srcdir)/Makefile.common
+
+EXTRA_DIST += \
 	usrp.pc.in \
 	usrp.iss.in \
 	usrp.inf

@@ -19,6 +19,11 @@
 #
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
+
+TESTS =
+EXTRA_DIST += run_tests.in
+DISTCLEANFILES += run_tests
 
 SUBDIRS = . examples
 
@@ -30,9 +35,6 @@ AM_CPPFLAGS = $(GCELL_INCLUDES) $(STD_DEFINES_AND_INCLUDES) \
 noinst_PYTHON =  \
 	qa_fft.py
 
-DISTCLEANFILES = \
-	gcell.d \
-	run_tests
 
 # ----------------------------------------------------------------
 #                        The C++ blocks
@@ -54,12 +56,9 @@ libgnuradio_gcell_la_LIBADD = \
 
 libgnuradio_gcell_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
-if PYTHON
 # ----------------------------------------------------------------
 #                         SWIG stuff
 # ----------------------------------------------------------------
-EXTRA_DIST = run_tests.in
-TESTS = run_tests
 
 TOP_SWIG_IFILES =		\
 	gcell.i
@@ -84,11 +83,7 @@ gcell_swiginclude_headers =	\
 	gc_job_manager.i	\
 	gcell_fft_vcc.i
 
-include $(top_srcdir)/Makefile.swig
 
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+if PYTHON
+TESTS += run_tests
 endif

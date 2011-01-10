@@ -63,3 +63,13 @@ class audio_oss_source : public gr_sync_block {
  public:
   ~audio_oss_source ();
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension-global "libguile-gnuradio-audio_oss" "scm_init_gnuradio_audio_oss_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

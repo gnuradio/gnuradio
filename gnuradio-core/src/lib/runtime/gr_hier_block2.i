@@ -34,6 +34,11 @@ gr_hier_block2_sptr gr_make_hier_block2(const std::string name,
                                         gr_io_signature_sptr output_signature)
   throw (std::runtime_error);
 
+// Rename connect and disconnect so that we can more easily build a
+// better interface in scripting land.
+%rename(primitive_connect) gr_hier_block2::connect;
+%rename(primitive_disconnect) gr_hier_block2::disconnect;
+
 class gr_hier_block2 : public gr_basic_block
 {
 private:
@@ -57,4 +62,6 @@ public:
   void disconnect_all();
   void lock();
   void unlock();
+
+  gr_hier_block2_sptr to_hier_block2(); // Needed for Python/Guile type coercion
 };

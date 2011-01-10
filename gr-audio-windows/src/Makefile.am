@@ -20,8 +20,11 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
-EXTRA_DIST = run_tests.in
+TESTS =
+DISTCLEANFILES += run_tests
+EXTRA_DIST += run_tests.in
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
@@ -36,7 +39,7 @@ lib_LTLIBRARIES = libgnuradio-audio-windows.la
 
 libgnuradio_audio_windows_la_SOURCES = 	\
 	audio_windows_sink.cc		\
-	audio_windows_source.cc		
+	audio_windows_source.cc
 
 libgnuradio_audio_windows_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\
@@ -47,11 +50,8 @@ libgnuradio_audio_windows_la_LDFLAGS =	\
 	$(NO_UNDEFINED) \
 	$(LTVERSIONFLAGS)
 
-if PYTHON
 ###################################
-# SWIG Python interface and library
-TESTS = run_tests
-DISTCLEANFILES = run_tests
+# SWIG interface and library
 
 TOP_SWIG_IFILES = 			\
 	audio_windows.i
@@ -67,11 +67,6 @@ audio_windows_pythondir_category =	\
 audio_windows_la_swig_libadd =		\
 	libgnuradio-audio-windows.la
 
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+if PYTHON
+TESTS += run_tests
 endif

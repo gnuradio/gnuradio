@@ -1,0 +1,54 @@
+;;; -*- Scheme -*-
+;;;
+;;; Copyright 2010 Free Software Foundation, Inc.
+;;;
+;;; This file is part of GNU Radio
+;;;
+;;; GNU Radio is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 3, or (at your option)
+;;; any later version.
+;;;
+;;; GNU Radio is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;;
+
+;;; If you're using Emacs's Scheme mode:
+;;;   (put 'with-test-prefix 'scheme-indent-function 1)
+
+;;; See the comments in gnuradio/test-suite/lib.scm for info on writing tests.
+;;; See also the very end of the file where the test-equal, test-eqv
+;;; and test-eq macros are defined.
+
+(use-modules (gnuradio test-suite lib))
+(use-modules (gnuradio core))
+(use-modules (oop goops))
+
+;;; Add test code for all constructors in these files
+;;;
+;;; ./runtime/gr_hier_block2.h
+
+;;; ./runtime/gr_msg_queue.h
+
+(define (equal-message? a b)
+  (equal? (gr:to-string a) (gr:to-string b)))
+
+(with-test-prefix "gr:message/gr:msg-queue"
+  (let ((msg1 (gr:message-from-string "Hello"))
+	(msg2 (gr:message-from-string "World!"))
+	(q (gr:msg-queue)))
+    (pass-if (equal? "Hello" (gr:to-string msg1)))
+    (pass-if (equal? "World!" (gr:to-string msg2)))
+    (pass-if (gr:empty-p q))
+    (gr:insert-tail q msg1)
+    (pass-if (not (gr:empty-p q)))
+    (gr:insert-tail q msg2)
+    (let ((r1 (gr:delete-head q))
+	  (r2 (gr:delete-head q)))
+      (pass-if (equal-message? r1 msg1))
+      (pass-if (equal-message? r2 msg2)))))

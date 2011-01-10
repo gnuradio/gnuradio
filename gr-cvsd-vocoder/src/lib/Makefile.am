@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,6 +20,7 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
@@ -39,9 +40,8 @@ libgnuradio_cvsd_vocoder_la_LIBADD =	\
 
 libgnuradio_cvsd_vocoder_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
-if PYTHON
 ###################################
-# SWIG Python interface and library
+# SWIG interface and library
 
 TOP_SWIG_IFILES = 			\
 	cvsd_vocoder.i
@@ -56,12 +56,3 @@ cvsd_vocoder_pythondir_category =	\
 # additional libraries for linking with the SWIG-generated library
 cvsd_vocoder_la_swig_libadd =		\
 	libgnuradio-cvsd-vocoder.la
-
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
-endif

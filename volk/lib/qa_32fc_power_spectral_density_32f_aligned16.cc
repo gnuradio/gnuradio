@@ -2,6 +2,7 @@
 #include <qa_32fc_power_spectral_density_32f_aligned16.h>
 #include <volk/volk_32fc_power_spectral_density_32f_aligned16.h>
 #include <cstdlib>
+#include <ctime>
 
 //test for sse3
 

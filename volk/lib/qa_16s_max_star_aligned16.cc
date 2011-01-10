@@ -2,7 +2,7 @@
 #include <qa_16s_max_star_aligned16.h>
 #include <volk/volk_16s_max_star_aligned16.h>
 #include <cstdlib>
-#include <time.h>
+#include <ctime>
 //test for ssse3
 
 #ifndef LV_HAVE_SSSE3

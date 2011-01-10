@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
     $(bin_SCRIPTS) \
     README.plot \
     pyqt_plot.ui \

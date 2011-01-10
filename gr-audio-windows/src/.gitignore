@@ -33,3 +33,6 @@
 /run_tests
 /audio_windows.cc
 /audio_windows.py
+/gnuradio
+/guile
+/python
