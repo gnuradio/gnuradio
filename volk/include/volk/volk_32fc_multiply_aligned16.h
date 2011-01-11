@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <volk/volk_complex.h>
+#include <float.h>
 
 #if LV_HAVE_SSE3
 #include <pmmintrin.h>
@@ -71,6 +72,22 @@ static inline void volk_32fc_multiply_aligned16_generic(lv_32fc_t* cVector, cons
     }
 }
 #endif /* LV_HAVE_GENERIC */
+
+#if LV_HAVE_ORC
+  /*!
+    \brief Multiplies the two input complex vectors and stores their results in the third vector
+    \param cVector The vector where the results will be stored
+    \param aVector One of the vectors to be multiplied
+    \param bVector One of the vectors to be multiplied
+    \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
+  */
+extern void volk_32fc_multiply_aligned16_orc_impl(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t* bVector, float mask, unsigned int num_points);
+static inline void volk_32fc_multiply_aligned16_orc(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t* bVector, unsigned int num_points){
+    static const float mask = -0.0;
+    volk_32fc_multiply_aligned16_orc_impl(cVector, aVector, bVector, mask, num_points);
+}
+#endif /* LV_HAVE_ORC */
+
 
 
 

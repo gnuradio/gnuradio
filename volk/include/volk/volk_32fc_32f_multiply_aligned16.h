@@ -76,6 +76,19 @@ static inline void volk_32fc_32f_multiply_aligned16_generic(lv_32fc_t* cVector, 
 }
 #endif /* LV_HAVE_GENERIC */
 
+#if LV_HAVE_ORC
+  /*!
+    \brief Multiplies the input complex vector with the input lv_32fc_t vector and store their results in the third vector
+    \param cVector The vector where the results will be stored
+    \param aVector The complex vector to be multiplied
+    \param bVector The vectors containing the lv_32fc_t values to be multiplied against each complex value in aVector
+    \param num_points The number of values in aVector and bVector to be multiplied together and stored into cVector
+  */
+extern void volk_32fc_32f_multiply_aligned16_orc_impl(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points);
+static inline void volk_32fc_32f_multiply_aligned16_orc(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points){
+    volk_32fc_32f_multiply_aligned16_orc_impl(cVector, aVector, bVector, num_points);
+}
+#endif /* LV_HAVE_GENERIC */
 
 
 

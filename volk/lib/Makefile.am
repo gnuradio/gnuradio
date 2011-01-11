@@ -156,6 +156,7 @@ endif
 # ----------------------------------------------------------------
 libvolk_qa_la_SOURCES = \
 	qa_volk.cc \
+	qa_utils.cc \
 	qa_16s_quad_max_star_aligned16.cc \
 	qa_32fc_dot_prod_aligned16.cc \
 	qa_32fc_square_dist_aligned16.cc \
@@ -257,6 +258,7 @@ libvolk_qa_la_LIBADD = \
 noinst_HEADERS = \
 	volk_init.h \
 	qa_volk.h \
+	qa_utils.h \
 	assembly.h \
 	qa_16s_quad_max_star_aligned16.h \
 	qa_32fc_dot_prod_aligned16.h \

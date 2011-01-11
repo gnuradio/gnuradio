@@ -2,28 +2,12 @@
 #include <volk/volk.h>
 #include <qa_32fc_32f_multiply_aligned16.h>
 #include <stdlib.h>
-#include <math.h>
 #include <time.h>
-
-#define assertcomplexEqual(expected, actual, delta)			\
-  CPPUNIT_ASSERT_DOUBLES_EQUAL (std::real(expected), std::real(actual), fabs(std::real(expected)) * delta); \
-  CPPUNIT_ASSERT_DOUBLES_EQUAL (std::imag(expected), std::imag(actual), fabs(std::imag(expected))* delta);	
+#include <string.h>
+#include <qa_utils.h>
 
 #define	ERR_DELTA	(1e-4)
 
-//test for sse
-static float uniform() {
-  return 2.0 * ((float) rand() / RAND_MAX - 0.5);	// uniformly (-1, 1)
-}
-
-static void
-random_floats (float *buf, unsigned n)
-{
-  for (unsigned i = 0; i < n; i++)
-    buf[i] = uniform ();
-}
-
-#ifdef LV_HAVE_SSE3
 void qa_32fc_32f_multiply_aligned16::t1() {
 
   const int vlen = 2046;
@@ -36,50 +20,56 @@ void qa_32fc_32f_multiply_aligned16::t1() {
   std::complex<float>* input;
   float * taps;
   int i;
+  std::vector<std::string> archs;
+  archs.push_back("generic");
+#ifdef LV_HAVE_SSE3
+  archs.push_back("sse3");
+#endif
+#ifdef LV_HAVE_ORC
+  archs.push_back("orc");
+#endif
   
-  std::complex<float>* result_generic;
-  std::complex<float>* result_sse3;
+  std::vector<std::complex<float>* > results;
 
   ret = posix_memalign((void**)&input, 16, vlen * 2 * sizeof(float));
   ret = posix_memalign((void**)&taps, 16, vlen * sizeof(float));
-  ret = posix_memalign((void**)&result_generic, 16, vlen * 2 * sizeof(float));
-  ret = posix_memalign((void**)&result_sse3, 16, vlen * 2 * sizeof(float));
+  
+  for(i=0; i < archs.size(); i++) {
+      std::complex<float> *ptr;
+      ret = posix_memalign((void**)&ptr, 16, vlen * 2 * sizeof(float));
+      if(ret) {
+          printf("Couldn't allocate memory\n");
+          exit(1);
+      }
+      results.push_back(ptr);
+  }
 
   random_floats((float*)input, vlen * 2);
   random_floats(taps, vlen);
   
   printf("32fc_32f_multiply_aligned16\n");
 
-  start = clock();
-  for(int count = 0; count < ITERS; ++count) {
-    volk_32fc_32f_multiply_aligned16_manual(result_generic, input, taps, vlen,  "generic");
+  for(i=0; i < archs.size(); i++) {
+    start = clock();
+    for(int count = 0; count < ITERS; ++count) {
+      volk_32fc_32f_multiply_aligned16_manual(results[i], input, taps, vlen, archs[i].c_str());
+    }
+    end = clock();
+    total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+    printf("%s_time: %f\n", archs[i].c_str(), total);
   }
-  end = clock();
-  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
-  printf("generic_time: %f\n", total);
 
-  start = clock();
-  for(int count = 0; count < ITERS; ++count) {
-    volk_32fc_32f_multiply_aligned16_manual(result_sse3, input, taps, vlen, "sse3");
-  }
-  end = clock();
-  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
-  printf("sse3_time: %f\n", total);
-
-  for(i = 0; i < vlen; i++){
-    assertcomplexEqual(result_generic[i], result_sse3[i], ERR_DELTA);
+  for(i=0; i < vlen; i++) {
+      int j = 1;
+      for(j; j < archs.size(); j++) {
+          assertcomplexEqual(results[0][i], results[j][i], ERR_DELTA);
+      }
   }
 
   free(input);
   free(taps);
-  free(result_generic);
-  free(result_sse3);
-  
+  for(i=0; i < archs.size(); i++) {      
+    free(results[i]);
+  }
 }
-#else
-void qa_32fc_32f_multiply_aligned16::t1() {
-  printf("sse3 not available... no test performed\n");
-}
-
-#endif /* LV_HAVE_SSE3 */
 

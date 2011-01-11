@@ -41,11 +41,13 @@ void qa_32fc_multiply_aligned16::t1() {
   
   std::complex<float>* result_generic;
   std::complex<float>* result_sse3;
+  std::complex<float>* result_orc;
 
   ret = posix_memalign((void**)&input, 16, vlen*2*sizeof(float));
   ret = posix_memalign((void**)&taps, 16, vlen*2*sizeof(float));
   ret = posix_memalign((void**)&result_generic, 16, vlen*2*sizeof(float));
   ret = posix_memalign((void**)&result_sse3, 16, vlen*2*sizeof(float));
+  ret = posix_memalign((void**)&result_orc, 16, vlen*2*sizeof(float));
   
   random_floats((float*)input, vlen * 2);
   random_floats((float*)taps, vlen * 2);
@@ -67,15 +69,25 @@ void qa_32fc_multiply_aligned16::t1() {
   end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("sse3_time: %f\n", total);
+  
+  start = clock();
+  for(int count = 0; count < ITERS; ++count) {
+    volk_32fc_multiply_aligned16_manual(result_orc, input, taps, vlen, "orc");
+  }
+  end = clock();
+  total = (double)(end-start)/(double)CLOCKS_PER_SEC;
+  printf("orc_time: %f\n", total);
 
   for(i = 0; i < vlen; i++){
     assertcomplexEqual(result_generic[i], result_sse3[i], ERR_DELTA);
+    assertcomplexEqual(result_generic[i], result_orc[i], ERR_DELTA);
   }
 
   free(input);
   free(taps);
   free(result_generic);
   free(result_sse3);
+  free(result_orc);
   
 }
 #else

@@ -34,9 +34,12 @@ volk_32f_add_aligned16_orc_impl.orc \
 volk_32f_subtract_aligned16_orc_impl.orc \
 volk_32f_divide_aligned16_orc_impl.orc \
 volk_32f_multiply_aligned16_orc_impl.orc \
+volk_32fc_multiply_aligned16_orc_impl.orc \
+volk_32fc_32f_multiply_aligned16_orc_impl.orc \
 volk_32f_sqrt_aligned16_orc_impl.orc \
 volk_32f_max_aligned16_orc_impl.orc \
 volk_32f_min_aligned16_orc_impl.orc \
+volk_32f_normalize_aligned16_orc_impl.orc \
 volk_32fc_magnitude_32f_aligned16_orc_impl.orc \
 volk_32fc_magnitude_16s_aligned16_orc_impl.orc \
 volk_16sc_magnitude_16s_aligned16_orc_impl.orc \

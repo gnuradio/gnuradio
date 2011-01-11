@@ -60,6 +60,21 @@ static inline void volk_32f_normalize_aligned16_generic(float* vecBuffer, const 
 }
 #endif /* LV_HAVE_GENERIC */
 
+#if LV_HAVE_ORC
+/*!
+  \brief Normalizes the two input vectors and store their results in the third vector
+  \param cVector The vector where the results will be stored
+  \param aVector One of the vectors to be normalizeed
+  \param bVector One of the vectors to be normalizeed
+  \param num_points The number of values in aVector and bVector to be normalizeed together and stored into cVector
+*/
+extern void volk_32f_normalize_aligned16_orc_impl(float* vecBuffer, const float scalar, unsigned int num_points);
+static inline void volk_32f_normalize_aligned16_orc(float* vecBuffer, const float scalar, unsigned int num_points){
+    float invscalar = 1.0 / scalar;
+    volk_32f_normalize_aligned16_orc_impl(vecBuffer, invscalar, num_points);
+}
+#endif /* LV_HAVE_GENERIC */
+
 
 
 
