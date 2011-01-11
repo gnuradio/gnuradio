@@ -74,8 +74,8 @@ void qa_set_msg_handler::t0()
   // core.
   send(src, mp(mp("example-msg"), mp(0)));
 
-  // Surrender our CPU for a bit
-  boost::this_thread::yield();
+  // Give the messages a chance to be processed
+  boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
   tb->stop();
   tb->wait();
