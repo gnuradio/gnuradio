@@ -22,6 +22,17 @@
 # The presence of this file turns this directory into a Python package
 
 ########################################################################
+# Create aliases for uhd swig attributes to avoid the "_t"
+# Install the __str__ and __repr__ handlers if applicable
+########################################################################
+import uhd_swig
+for attr in dir(uhd_swig):
+    myobj = getattr(uhd_swig, attr)
+    if hasattr(myobj, 'to_string'):    myobj.__repr__ = lambda s: s.to_string().strip()
+    if hasattr(myobj, 'to_pp_string'): myobj.__str__  = lambda s: s.to_pp_string().strip()
+    if attr.endswith('_t'): setattr(uhd_swig, attr[:-2], myobj)
+
+########################################################################
 # Add SWIG generated code to this namespace
 ########################################################################
 from uhd_swig import *
@@ -51,16 +62,6 @@ class device_addr_t(device_addr_t, str):
     def __new__(self, *args): return str.__new__(self)
     def __getitem__(self, key): return self.get(key)
     def __setitem__(self, key, val): self.set(key, val)
-
-########################################################################
-# Create aliases for global attributes to avoid the "_t"
-# Install the __str__ and __repr__ handlers if applicable
-########################################################################
-for attr in globals().keys():
-    myobj = globals()[attr]
-    if hasattr(myobj, 'to_string'):    myobj.__repr__ = lambda s: s.to_string().strip()
-    if hasattr(myobj, 'to_pp_string'): myobj.__str__  = lambda s: s.to_pp_string().strip()
-    if attr.endswith('_t'): globals()[attr[:-2]] = myobj
 
 ########################################################################
 # Cast constructor args (FIXME swig handle overloads?)
