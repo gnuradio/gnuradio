@@ -72,11 +72,11 @@ public:
         return _dev->get_tx_freq_range(chan);
     }
 
-    void set_gain(float gain, size_t chan){
+    void set_gain(double gain, size_t chan){
         return _dev->set_tx_gain(gain, chan);
     }
 
-    float get_gain(size_t chan){
+    double get_gain(size_t chan){
         return _dev->get_tx_gain(chan);
     }
 

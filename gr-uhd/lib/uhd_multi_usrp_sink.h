@@ -97,14 +97,14 @@ public:
      * \param gain the gain in dB
      * \param chan the channel index 0 to N-1
      */
-    virtual void set_gain(float gain, size_t chan) = 0;
+    virtual void set_gain(double gain, size_t chan) = 0;
 
     /*!
      * Get the actual dboard gain setting.
      * \param chan the channel index 0 to N-1
      * \return the actual gain in dB
      */
-    virtual float get_gain(size_t chan) = 0;
+    virtual double get_gain(size_t chan) = 0;
 
     /*!
      * Get the settable gain range.
