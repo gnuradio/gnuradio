@@ -309,10 +309,12 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
     //for(int i=0; i<inputsig.size(); i++) std::cout << "Input: " << inputsig[i].str << std::endl;
     //for(int i=0; i<outputsig.size(); i++) std::cout << "Output: " << outputsig[i].str << std::endl;
     std::vector<void *> inbuffs;
-
+    std::vector<void *> free_buffs; //this is just a list of void*'s that i'll have to free later.
+                                    //we need it because we dupe void*s in test_data below.
     make_buffer_for_signature(inbuffs, inputsig, vlen);
     for(int i=0; i<inbuffs.size(); i++) {
-        load_random_data(inbuffs[i], inputsig[i], vlen);        
+        load_random_data(inbuffs[i], inputsig[i], vlen);   
+        free_buffs.push_back(inbuffs[i]);
     }
     
     //ok let's make a vector of vector of void buffers, which holds the input/output vectors for each arch
@@ -321,6 +323,7 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
         std::vector<void *> arch_buffs;
         for(int j=0; j<outputsig.size(); j++) {
             arch_buffs.push_back(make_aligned_buffer(vlen, outputsig[j].size*(outputsig[j].is_complex ? 2 : 1)));
+            free_buffs.push_back(arch_buffs.back());
         }
         for(int j=0; j<inputsig.size(); j++) {
             arch_buffs.push_back(inbuffs[j]);
@@ -433,6 +436,11 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
             }
         }
     }
+
+    BOOST_FOREACH(void *buf, free_buffs) {
+        free(buf);
+    }
+
     return fail_global;
 }
 
