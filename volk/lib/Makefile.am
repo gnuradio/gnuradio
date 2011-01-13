@@ -156,7 +156,6 @@ endif
 # ----------------------------------------------------------------
 libvolk_qa_la_SOURCES = \
 	qa_volk.cc \
-	qa_utils.cc \
 	qa_16s_quad_max_star_aligned16.cc \
 	qa_32fc_dot_prod_aligned16.cc \
 	qa_32fc_square_dist_aligned16.cc \
@@ -181,7 +180,6 @@ libvolk_qa_la_SOURCES = \
 	qa_32f_dot_prod_aligned16.cc \
 	qa_32f_dot_prod_unaligned16.cc \
 	qa_32f_fm_detect_aligned16.cc \
-	qa_32fc_32f_multiply_aligned16.cc \
 	qa_32fc_multiply_aligned16.cc \
 	qa_32f_divide_aligned16.cc \
 	qa_32f_multiply_aligned16.cc \

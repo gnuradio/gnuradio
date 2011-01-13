@@ -5,10 +5,11 @@
 #include <time.h>
 #include <string.h>
 #include <qa_utils.h>
+#include <boost/test/unit_test.hpp>
 
-#define	ERR_DELTA	(1e-4)
+#define	TOLERANCE	(1e-4)
 
-void qa_32fc_32f_multiply_aligned16::t1() {
+void qa_32fc_32f_multiply_aligned16(void) {
 
   const int vlen = 2046;
   const int ITERS = 100000;
@@ -72,4 +73,3 @@ void qa_32fc_32f_multiply_aligned16::t1() {
     free(results[i]);
   }
 }
-

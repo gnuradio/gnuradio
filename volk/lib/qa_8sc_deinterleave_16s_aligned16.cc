@@ -40,7 +40,7 @@ void qa_8sc_deinterleave_16s_aligned16::t1() {
 
   start = clock();
   for(int count = 0; count < ITERS; ++count) {
-    volk_8sc_deinterleave_16s_aligned16_manual(output_generic, output_generic1, input0, vlen, "generic");
+    volk_8sc_deinterleave_16s_aligned16_manual(output_generic, output_generic1, input0, vlen, "monkeys");
   }
   end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;

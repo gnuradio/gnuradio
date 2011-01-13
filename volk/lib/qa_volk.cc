@@ -143,7 +143,7 @@ qa_volk::suite()
   s->addTest(qa_32f_dot_prod_aligned16::suite());
   s->addTest(qa_32f_dot_prod_unaligned16::suite());
   s->addTest(qa_32f_fm_detect_aligned16::suite());
-  s->addTest(qa_32fc_32f_multiply_aligned16::suite());
+  //s->addTest(qa_32fc_32f_multiply_aligned16::suite());
   s->addTest(qa_32fc_multiply_aligned16::suite());
   s->addTest(qa_32f_divide_aligned16::suite());
   s->addTest(qa_32f_multiply_aligned16::suite());
