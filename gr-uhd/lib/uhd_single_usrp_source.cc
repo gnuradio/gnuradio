@@ -49,7 +49,6 @@ public:
         _type(io_type)
     {
         _dev = uhd::usrp::single_usrp::make(device_addr);
-	d_tag_srcid = pmt::mp("uhd_single_usrp_source");
     }
 
     void set_subdev_spec(const std::string &spec){
@@ -125,7 +124,7 @@ public:
 /***********************************************************************
  * Work
  **********************************************************************/
-    int work(
+    virtual int work(
         int noutput_items,
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
@@ -139,16 +138,7 @@ public:
 
         switch(metadata.error_code){
         case uhd::rx_metadata_t::ERROR_CODE_NONE:
-	  if(metadata.has_time_spec) {
-	    d_tstamp_pair = pmt::mp(pmt::mp(metadata.time_spec.get_full_secs()),
-				    pmt::mp(metadata.time_spec.get_frac_secs()));
-	    add_item_tag(0, nitems_written(0),
-			 //gr_tags::key_time,
-			 pmt::pmt_string_to_symbol("time"),
-			 d_tstamp_pair,
-			 d_tag_srcid);
-	  }
-	  return num_samps;
+            return num_samps;
 
         case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
             //ignore overflows and try work again
@@ -172,9 +162,68 @@ public:
         return true;
     }
 
-private:
+protected:
     uhd::usrp::single_usrp::sptr _dev;
     const uhd::io_type_t _type;
+};
+
+/***********************************************************************
+ * UHD Single USRP Source Impl with Tags
+ **********************************************************************/
+class uhd_single_usrp_source_impl_with_tags : public uhd_single_usrp_source_impl{
+public:
+    uhd_single_usrp_source_impl_with_tags(
+        const uhd::device_addr_t &device_addr,
+        const uhd::io_type_t &io_type,
+        size_t num_channels
+    ):
+        uhd_single_usrp_source_impl(device_addr, io_type, num_channels)
+    {
+        d_tag_srcid = pmt::mp("uhd_single_usrp_source");
+    }
+
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        uhd::rx_metadata_t metadata; //not passed out of this block
+
+        size_t num_samps = _dev->get_device()->recv(
+            output_items, noutput_items, metadata,
+            _type, uhd::device::RECV_MODE_FULL_BUFF
+        );
+
+        switch(metadata.error_code){
+        case uhd::rx_metadata_t::ERROR_CODE_NONE:
+        //FIXME in RECV_MODE_FULL_BUFF we are probably get remainders,
+        //there is no guarantee of has_time_spec, its random
+	  if(metadata.has_time_spec) {
+	    d_tstamp_pair = pmt::mp(pmt::mp(metadata.time_spec.get_full_secs()),
+				    pmt::mp(metadata.time_spec.get_frac_secs()));
+	    add_item_tag(0, nitems_written(0),
+			 //gr_tags::key_time,
+			 pmt::pmt_string_to_symbol("time"),
+			 d_tstamp_pair,
+			 d_tag_srcid);
+	  }
+	  return num_samps;
+
+        case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
+            //ignore overflows and try work again
+            return work(noutput_items, input_items, output_items);
+
+        default:
+            std::cout << boost::format(
+                "UHD source block got error code 0x%x"
+            ) % metadata.error_code << std::endl;
+            return num_samps;
+        }
+    }
+
+private:
+    size_t d_num_packet_samps;
+    pmt::pmt_t d_tstamp_pair;
     pmt::pmt_t d_tag_srcid;
 };
 
@@ -182,11 +231,18 @@ private:
 /***********************************************************************
  * Make UHD Single USRP Source
  **********************************************************************/
+#include <gr_prefs.h>
 boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,
     size_t num_channels
 ){
+    //use the tags constructor if tags is set to on
+    bool tags_enabled = (gr_prefs().get_string("gr-uhd", "tags", "off") == "on");
+    if (tags_enabled) return boost::shared_ptr<uhd_single_usrp_source>(
+        new uhd_single_usrp_source_impl_with_tags(device_addr, io_type, num_channels)
+    );
+
     return boost::shared_ptr<uhd_single_usrp_source>(
         new uhd_single_usrp_source_impl(device_addr, io_type, num_channels)
     );
