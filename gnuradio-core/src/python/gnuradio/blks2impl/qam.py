@@ -24,13 +24,12 @@ QAM modulation and demodulation.
 """
 
 from math import pi, sqrt, log
-from itertools import islice
 
 from gnuradio import gr, gru, modulation_utils2
 from gnuradio.blks2impl.generic_mod_demod import generic_mod, generic_demod
+from gnuradio.utils.gray_code import gray_code
 
-
-# default values (used in __init__ and add_options)
+# Default number of points in constellation.
 _def_constellation_points = 16
 
 def is_power_of_four(x):
@@ -47,31 +46,6 @@ def get_bits(x, n, k):
     v = x >> n 
     # Remove all bits bigger than n+k-1
     return v % pow(2, k)
-
-def gray_codes():
-    """ Generates gray codes."""
-    gcs = [0, 1]
-    yield 0
-    yield 1
-    # The last power of two passed through.
-    lp2 = 2
-    # The next power of two that will be passed through.
-    np2 = 4
-    i = 2
-    while True:
-        if i == lp2:
-            # if i is a power of two then gray number is of form 1100000...
-            result = i + i/2
-        else:
-            # if not we take advantage of the symmetry of all but the last bit
-            # around a power of two.
-            result = gcs[2*lp2-1-i] + lp2
-        gcs.append(result)
-        yield result
-        i += 1
-        if i == np2:
-            lp2 = i
-            np2 = i*2
 
 def make_constellation(m):
     """
@@ -90,7 +64,7 @@ def make_constellation(m):
     # The quadrant has 'side' points along each side of a quadrant.
     side = int(sqrtm/2)
     # Number rows and columns using gray codes.
-    gcs = list(islice(gray_codes(), side))
+    gcs = gray_code(side)
     # Get inverse gray codes.
     i_gcs = dict([(v, key) for key, v in enumerate(gcs)])
     # The distance between points is found.
@@ -125,7 +99,21 @@ def make_constellation(m):
         const_map.append(get_c(x, y, quad))
 
     return const_map
-        
+
+
+# /////////////////////////////////////////////////////////////////////////////
+#                           QAM constellation
+# /////////////////////////////////////////////////////////////////////////////
+
+def qam_constellation(constellation_points=_def_constellation_points):
+    """
+    Creates a QAM constellation object.
+    """
+    points = make_constellation(constellation_points)
+    side = int(sqrt(constellation_points))
+    width = 2.0/(side-1)
+    constellation = gr.constellation_sector(points, side, side, width, width)
+    return constellation
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QAM modulator
@@ -141,38 +129,13 @@ class qam_mod(generic_mod):
 	The input is a byte stream (unsigned char) and the
 	output is the complex modulated signal at baseband.
 
-        @param m: Number of constellation points.  Must be a power of four.
-        @type m: integer
-	@param samples_per_symbol: samples per baud >= 2
-	@type samples_per_symbol: integer
-	@param excess_bw: Root-raised cosine filter excess bandwidth
-	@type excess_bw: float
-        @param verbose: Print information about modulator?
-        @type verbose: bool
-        @param log: Log modulation data to files?
-        @type log: bool
+        See generic_mod block for list of parameters.
 	"""
 
         if not isinstance(constellation_points, int) or not is_power_of_four(constellation_points):
             raise ValueError("number of constellation points must be a power of four.")
-
-        points = make_constellation(constellation_points)
-        side = int(sqrt(constellation_points))
-        assert(side * side == constellation_points)
-        width = 2.0/(side-1)
-        constellation = gr.constellation_sector(points, side, side, width, width)
-        #constellation = gr.constellation(points)
-
+        constellation = qam_constellation(constellation_points)
         super(qam_mod, self).__init__(constellation, *args, **kwargs)
-
-    def add_options(parser):
-        """
-        Adds QAM modulation-specific options to the standard parser
-        """
-        parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
-                          help="set the number of constellation points (must be a power of 4) [default=%default]")
-        generic_mod.add_options(parser)
-    add_options=staticmethod(add_options)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QAM demodulator
@@ -189,43 +152,11 @@ class qam_demod(generic_demod):
 	The input is a byte stream (unsigned char) and the
 	output is the complex modulated signal at baseband.
 
-        @param m: Number of constellation points.  Must be a power of four.
-        @type m: integer
-	@param samples_per_symbol: samples per symbol >= 2
-	@type samples_per_symbol: float
-	@param excess_bw: Root-raised cosine filter excess bandwidth
-	@type excess_bw: float
-        @param freq_alpha: loop filter gain for frequency recovery
-        @type freq_alpha: float
-        @param timing_alpha: loop alpha gain for timing recovery
-        @type timing_alpha: float
-        @param timing_max_dev: timing loop maximum rate deviations
-        @type timing_max_dev: float
-        @param phase_alpha: loop filter gain in phase loop
-        @type phase_alphas: float
-        @param verbose: Print information about modulator?
-        @type verbose: bool
-        @param debug: Print modualtion data to files?
-        @type debug: bool
+        See generic_demod block for list of parameters.
         """
 
-        points = make_constellation(constellation_points)
-        side = int(sqrt(constellation_points))
-        assert(side * side == constellation_points)
-        width = 2.0/(side-1)
-        constellation = gr.constellation_sector(points, side, side, width, width)
-        #constellation = gr.constellation(points)
-
+        constellation = qam_constellation(constellation_points)
         super(qam_demod, self).__init__(constellation, *args, **kwargs)
-
-    def add_options(parser):
-        """
-        Adds QAM demodulation-specific options to the standard parser
-        """
-        parser.add_option("", "--constellation-points", type="int", default=_def_constellation_points,
-                          help="set the number of constellation points (must be a power of 4) [default=%default]")
-        generic_demod.add_options(parser)
-    add_options=staticmethod(add_options)
 
 #
 # Add these to the mod/demod registry

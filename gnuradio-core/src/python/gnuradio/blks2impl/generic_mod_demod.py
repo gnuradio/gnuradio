@@ -45,6 +45,8 @@ _def_timing_beta = 0.010
 _def_timing_max_dev = 1.5
 # Fine frequency / Phase correction
 _def_phase_alpha = 0.1
+# Number of points in constellation
+_def_constellation_points = 16
 
 # /////////////////////////////////////////////////////////////////////////////
 #                             Generic modulator
@@ -128,8 +130,10 @@ class generic_mod(gr.hier_block2):
 
     def add_options(parser):
         """
-        Adds generic modulation-specific options to the standard parser
+        Adds generic modulation options to the standard parser
         """
+        parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
+                          help="set the number of constellation points (must be a power of 4 for QAM) [default=%default]")
         parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
                           help="set RRC excess bandwith factor [default=%default]")
     add_options=staticmethod(add_options)
@@ -320,8 +324,10 @@ class generic_demod(gr.hier_block2):
         
     def add_options(parser):
         """
-        Adds generic demodulation-specific options to the standard parser
+        Adds generic demodulation options to the standard parser
         """
+        parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
+                          help="set the number of constellation points (must be a power of 4 for QAM) [default=%default]")
         parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
                           help="set RRC excess bandwith factor [default=%default]")
         parser.add_option("", "--freq-alpha", type="float", default=_def_freq_alpha,
