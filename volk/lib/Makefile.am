@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -61,76 +61,16 @@ EXTRA_DIST = \
 #                      The main library
 # ----------------------------------------------------------------
 
-universal_runtime_CODE = 	\
-	volk_runtime.c	\
-	volk_init.c \
+libvolk_runtime_la_SOURCES = 	\
+	$(platform_CODE) 	\
+	volk_runtime.c		\
+	volk_init.c 		\
 	volk_rank_archs.c	
 
-universal_CODE = 		\
+libvolk_la_SOURCES = 		\
+	$(platform_CODE) 	\
 	volk.c 			\
 	volk_environment_init.c
-
-generic_CODE = 		\
-	volk_cpu_generic.c
-
-x86_CODE = 		\
-	volk_cpu_x86.c
-
-x86_SUBCODE = 		\
-	cpuid_x86.S
-
-x86_64_SUBCODE = 	\
-	cpuid_x86_64.S
-
-powerpc_CODE = \
-	volk_cpu_powerpc.c
-
-
-if MD_CPU_generic
-libvolk_la_SOURCES =	\
-	$(generic_CODE)		\
-	$(universal_CODE)
-libvolk_runtime_la_SOURCES =	\
-	$(generic_CODE)		\
-	$(universal_runtime_CODE)
-
-endif
-
-if MD_CPU_x86
-if MD_SUBCPU_x86_64
-libvolk_la_SOURCES =	\
-	$(x86_CODE)		\
-	$(x86_64_SUBCODE)		\
-	$(universal_CODE) 		
-
-libvolk_runtime_la_SOURCES =	\
-	$(x86_CODE)		\
-	$(x86_64_SUBCODE)		\
-	$(universal_runtime_CODE) 		
-else
-libvolk_la_SOURCES =	\
-	$(x86_CODE)		\
-	$(x86_SUBCODE)	\
-	$(universal_CODE)
-
-libvolk_runtime_la_SOURCES =	\
-	$(x86_CODE)		\
-	$(x86_SUBCODE)	\
-	$(universal_runtime_CODE)
-endif
-endif
-
-
-if MD_CPU_powerpc
-libvolk_la_SOURCES =	\
-	$(powerpc_CODE)		\
-	$(universal_CODE)
-
-libvolk_runtime_la_SOURCES =	\
-	$(powerpc_CODE)		\
-	$(universal_runtime_CODE)
-endif
-
 
 
 libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 
