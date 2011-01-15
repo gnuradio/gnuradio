@@ -28,7 +28,6 @@ def make_proccpu_sim(dom) :
     tempstring = tempstring + "#include <volk/volk_cpu.h>\n"
     tempstring = tempstring + "#include <stdio.h>\n"
     tempstring = tempstring + "\n\n"
-    tempstring = tempstring + "struct VOLK_CPU volk_cpu;\n\n"
 
     tempstring = tempstring + "void test_append(char* buf,  int val, char* newkey){\n";
     tempstring = tempstring + "    if(val==1){\n";
