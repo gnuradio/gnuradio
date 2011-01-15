@@ -60,8 +60,10 @@ class gr_plot_psd:
         rcParams['xtick.labelsize'] = self.axis_font_size
         rcParams['ytick.labelsize'] = self.axis_font_size
         
-        self.text_file     = figtext(0.10, 0.95, ("File: %s" % filename), weight="heavy", size=self.text_size)
-        self.text_file_pos = figtext(0.10, 0.92, "File Position: ", weight="heavy", size=self.text_size)
+        self.text_file     = figtext(0.10, 0.95, ("File: %s" % filename),
+                                     weight="heavy", size=self.text_size)
+        self.text_file_pos = figtext(0.10, 0.92, "File Position: ",
+                                     weight="heavy", size=self.text_size)
         self.text_block    = figtext(0.35, 0.92, ("Block Size: %d" % self.block_length),
                                      weight="heavy", size=self.text_size)
         self.text_sr       = figtext(0.60, 0.915, ("Sample Rate: %.2f" % self.sample_rate),
@@ -86,9 +88,9 @@ class gr_plot_psd:
     def get_data(self):
         self.position = self.hfile.tell()/self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % self.position)
-        self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
-        #print "Read in %d items" % len(self.iq)
-        if(len(self.iq) == 0):
+        try:
+            self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
+        except MemoryError:
             print "End of File"
         else:
             tstep = 1.0 / self.sample_rate
