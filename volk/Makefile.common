@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,6 +19,33 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 # 
+
+if MD_CPU_generic
+    platform_CODE = \
+	$(top_srcdir)/lib/volk_cpu_generic.c
+endif
+
+if MD_CPU_x86
+if MD_SUBCPU_x86_64
+    platform_CODE = \
+	$(top_srcdir)/lib/volk_cpu_x86.c \
+	$(top_srcdir)/lib/cpuid_x86_64.S
+endif
+endif
+
+if MD_CPU_x86
+if !MD_SUBCPU_x86_64
+    platform_CODE = \
+	$(top_srcdir)/lib/volk_cpu_x86.c \
+	$(top_srcdir)/lib/cpuid_x86.S
+endif
+endif
+
+if MD_CPU_powerpc
+    platform_CODE = \
+	$(top_srcdir)/lib/volk_cpu_powerpc.c
+endif
+
 
 ourincludedir   = $(includedir)/volk
 
@@ -44,3 +71,4 @@ STD_DEFINES_AND_INCLUDES=-I$(top_srcdir)/include -I$(top_srcdir)/lib  $(GNURADIO
 # not. We define it now in configure.ac using AM_PATH_PROG, but now
 # here have to add a -f to be like GNU make.
 RM=$(RM_PROG) -f
+
