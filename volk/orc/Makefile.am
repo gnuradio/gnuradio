@@ -25,27 +25,27 @@ lib_LTLIBRARIES = libvolk_orc.la
 libvolk_orc_la_LDFLAGS = $(ORC_LDFLAGS)
 
 libvolk_orc_la_SOURCES = \
-volk_8s_convert_16s_aligned16_orc_impl.orc \
-volk_8s_convert_32f_aligned16_orc_impl.orc \
-volk_16u_byteswap_aligned16_orc_impl.orc \
-volk_32s_and_aligned16_orc_impl.orc \
-volk_32s_or_aligned16_orc_impl.orc \
-volk_32f_add_aligned16_orc_impl.orc \
-volk_32f_subtract_aligned16_orc_impl.orc \
-volk_32f_divide_aligned16_orc_impl.orc \
-volk_32f_multiply_aligned16_orc_impl.orc \
-volk_32fc_multiply_aligned16_orc_impl.orc \
-volk_32fc_32f_multiply_aligned16_orc_impl.orc \
-volk_32f_sqrt_aligned16_orc_impl.orc \
-volk_32f_max_aligned16_orc_impl.orc \
-volk_32f_min_aligned16_orc_impl.orc \
-volk_32f_normalize_aligned16_orc_impl.orc \
-volk_32fc_magnitude_32f_aligned16_orc_impl.orc \
-volk_32fc_magnitude_16s_aligned16_orc_impl.orc \
-volk_16sc_magnitude_16s_aligned16_orc_impl.orc \
-volk_16sc_deinterleave_16s_aligned16_orc_impl.orc \
-volk_16sc_deinterleave_32f_aligned16_orc_impl.orc \
-volk_16sc_deinterleave_real_8s_aligned16_orc_impl.orc
+volk_8s_convert_16s_a16_orc_impl.orc \
+volk_8s_s32f_convert_32f_a16_orc_impl.orc \
+volk_16u_byteswap_a16_orc_impl.orc \
+volk_32s_32s_and_32s_a16_orc_impl.orc \
+volk_32s_32s_or_32s_a16_orc_impl.orc \
+volk_32f_32f_add_32f_a16_orc_impl.orc \
+volk_32f_32f_subtract_32f_a16_orc_impl.orc \
+volk_32f_32f_divide_32f_a16_orc_impl.orc \
+volk_32f_32f_multiply_32f_a16_orc_impl.orc \
+volk_32fc_32fc_multiply_32fc_a16_orc_impl.orc \
+volk_32fc_32f_multiply_32fc_a16_orc_impl.orc \
+volk_32f_sqrt_32f_a16_orc_impl.orc \
+volk_32f_32f_max_32f_a16_orc_impl.orc \
+volk_32f_32f_min_32f_a16_orc_impl.orc \
+volk_32f_s32f_normalize_a16_orc_impl.orc \
+volk_32fc_magnitude_32f_a16_orc_impl.orc \
+volk_32fc_s32f_magnitude_16s_a16_orc_impl.orc \
+volk_16sc_magnitude_16s_a16_orc_impl.orc \
+volk_16sc_deinterleave_16s_16s_a16_orc_impl.orc \
+volk_16sc_s32f_deinterleave_32f_32f_a16_orc_impl.orc \
+volk_16sc_deinterleave_real_8s_a16_orc_impl.orc
 
 
 

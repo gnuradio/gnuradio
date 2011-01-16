@@ -184,7 +184,8 @@ testqa_CPPFLAGS = -DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN
 testqa_LDFLAGS = -lboost_unit_test_framework
 testqa_LDADD  = \
 	libvolk.la \
-	libvolk_runtime.la
+	libvolk_runtime.la \
+	../orc/libvolk_orc.la
 
 
 distclean-local: 

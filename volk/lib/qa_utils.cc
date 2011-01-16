@@ -110,7 +110,11 @@ static std::vector<std::string> get_arch_list(const int archs[]) {
 }
 
 static bool is_valid_type(std::string type) {
-    std::vector<std::string> valid_types = boost::assign::list_of("64f")("64u")("32fc")("32f")("32s")("32u")("16sc")("16s")("16u")("8s")("8sc")("8u");
+    std::vector<std::string> valid_types = boost::assign::list_of("64f")("64u")("32fc")("32f")
+                                                                 ("32s")("32u")("16sc")("16s")
+                                                                 ("16u")("8s")("8sc")("8u")
+                                                                 ("s32f")("s16u")("s16s")("s8u")
+                                                                 ("s8s");
     
     BOOST_FOREACH(std::string this_type, valid_types) {
         if(type == this_type) return true;
@@ -148,17 +152,11 @@ static void get_function_signature(std::vector<std::string> &inputsig,
         pos++;
     }
     
-    //if there's no output sig and only one input sig, assume there are 2 inputs
-    //this handles conversion fn's (which have a specified output sig) and most of the rest
-    if(outputsig.size() == 0 && inputsig.size() == 1) {
-        outputsig.push_back(inputsig[0]);
-        inputsig.push_back(inputsig[0]);
-    }//if there's no explicit output sig then assume the output is the same as the first input
-    else if(outputsig.size() == 0) outputsig.push_back(inputsig[0]);
-    
-    
     assert(inputsig.size() != 0);
-    assert(outputsig.size() != 0);
+}
+
+inline void run_cast_test1(volk_fn_1arg func, void *buff, unsigned int vlen, unsigned int iter, std::string arch) {
+    while(iter--) func(buff, vlen, arch.c_str());
 }
 
 inline void run_cast_test2(volk_fn_2arg func, void *outbuff, std::vector<void *> &inbuffs, unsigned int vlen, unsigned int iter, std::string arch) {
@@ -190,26 +188,42 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
     for(int i=0; i<inputsig.size(); i++) std::cout << "Input: " << inputsig[i] << std::endl;
     for(int i=0; i<outputsig.size(); i++) std::cout << "Output: " << outputsig[i] << std::endl;
     
-    //now that we have that, we'll set up input and output buffers based on the function signature
+    //now that we have that, we'll set up input buffers based on the function signature
     std::vector<void *> inbuffs;
     make_buffer_for_signature(inbuffs, inputsig, vlen);
-    
-    //and set the input buffers to something random
-    for(int i=0; i<inputsig.size(); i++) {
-        load_random_data(inbuffs[i], inputsig[i], vlen);        
-    }
     
     //allocate output buffers -- one for each output for each arch
     std::vector<void *> outbuffs;
     BOOST_FOREACH(std::string arch, arch_list) {
         make_buffer_for_signature(outbuffs, outputsig, vlen);
     }
+
+    //and set the input buffers to something random
+    for(int i=0; i<inputsig.size(); i++) {
+        load_random_data(inbuffs[i], inputsig[i], vlen);        
+    }
+    
+    //so let's see here. if the operation has no output sig, it operates in place,
+    //and we want the output buffers to be the input buffers; we want to copy the input buffer to allllll the output buffers.
+    if(outputsig.size() == 0) {
+        //make a set of output buffers according to the input signature
+        BOOST_FOREACH(std::string arch, arch_list) {
+            make_buffer_for_signature(outbuffs, inputsig, vlen);
+        }
+        //copy input buffer[0] to all the output buffers so it has something to operate on
+        //output buffer element size is the same as input buffer[0]
+        if(
+    }
+        
     
     //now run the test
     clock_t start, end;
     for(int i = 0; i < arch_list.size(); i++) {
         start = clock();
         switch(outputsig.size()+inputsig.size()) {
+            case 1:
+                run_cast_test1((volk_fn_1arg)(manual_func), outbuffs[i], vlen, iter, arch_list[i]); 
+                break;
             case 2:
                 run_cast_test2((volk_fn_2arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
                 break;
@@ -259,6 +273,13 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
                 for(int j=0; j<vlen; j++) {
                     if(((uint16_t *)(outbuffs[generic_offset]))[j] != ((uint16_t *)(outbuffs[i]))[j]) {
                         std::cout << "Generic: " << ((uint16_t *)(outbuffs[generic_offset]))[j] << " " << arch_list[i] << ": " << ((uint16_t *)(outbuffs[i]))[j] << std::endl;
+                        return 1;
+                    }
+                }
+            } else if(outputsig[0] == "8s" || outputsig[0] == "8u") {
+                for(int j=0; j<vlen; j++) {
+                    if(((uint8_t *)(outbuffs[generic_offset]))[j] != ((uint8_t *)(outbuffs[i]))[j]) {
+                        std::cout << "Generic: " << ((uint8_t *)(outbuffs[generic_offset]))[j] << " " << arch_list[i] << ": " << ((uint8_t *)(outbuffs[i]))[j] << std::endl;
                         return 1;
                     }
                 }
