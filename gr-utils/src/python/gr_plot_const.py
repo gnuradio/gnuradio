@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -80,15 +80,15 @@ class draw_constellation:
 
     def get_data(self):
         self.text_file_pos.set_text("File Position: %d" % (self.hfile.tell()//self.sizeof_data))
-        iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
-        #print "Read in %d items" % len(iq)
-        if(len(iq) == 0):
+        try:
+            iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
+        except MemoryError:
             print "End of File"
         else:
-            self.reals = [r.real for r in iq]
-            self.imags = [i.imag for i in iq]
+            self.reals = scipy.array([r.real for r in iq])
+            self.imags = scipy.array([i.imag for i in iq])
 
-            self.time = [i*(1/self.sample_rate) for i in range(len(self.reals))]
+            self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
             
     def make_plots(self):
         # if specified on the command-line, set file pointer
@@ -117,9 +117,9 @@ class draw_constellation:
         self.plot_const += self.sp_const.plot([self.reals[self.indx],], [self.imags[self.indx],], 'mo', ms=12)
 
         # Adjust axis
-        self.sp_iq.axis([min(self.time), max(self.time),
-                         1.5*min([min(self.reals), min(self.imags)]),
-                         1.5*max([max(self.reals), max(self.imags)])])
+        self.sp_iq.axis([self.time.min(), self.time.max(),
+                         1.5*min([self.reals.min(), self.imags.min()]),
+                         1.5*max([self.reals.max(), self.imags.max()])])
         self.sp_const.axis([-2, 2, -2, 2])
 
         draw()
@@ -127,9 +127,9 @@ class draw_constellation:
     def update_plots(self):
         self.plot_iq[0].set_data([self.time, self.reals])
         self.plot_iq[1].set_data([self.time, self.imags])
-        self.sp_iq.axis([min(self.time), max(self.time),
-                         1.5*min([min(self.reals), min(self.imags)]),
-                         1.5*max([max(self.reals), max(self.imags)])])
+        self.sp_iq.axis([self.time.min(), self.time.max(),
+                         1.5*min([self.reals.min(), self.imags.min()]),
+                         1.5*max([self.reals.max(), self.imags.max()])])
 
         self.plot_const[0].set_data([self.reals, self.imags])
         self.sp_const.axis([-2, 2, -2, 2])
@@ -138,7 +138,7 @@ class draw_constellation:
     def zoom(self, event):
         newxlim = scipy.array(self.sp_iq.get_xlim())
         curxlim = scipy.array(self.xlim)
-        if(newxlim.all() != curxlim.all()):
+        if(newxlim[0] != curxlim[0] or newxlim[1] != curxlim[1]):
             self.xlim = newxlim
             r = self.reals[int(ceil(self.xlim[0])) : int(ceil(self.xlim[1]))]
             i = self.imags[int(ceil(self.xlim[0])) : int(ceil(self.xlim[1]))]
