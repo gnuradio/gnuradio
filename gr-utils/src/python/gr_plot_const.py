@@ -138,7 +138,7 @@ class draw_constellation:
     def zoom(self, event):
         newxlim = scipy.array(self.sp_iq.get_xlim())
         curxlim = scipy.array(self.xlim)
-        if(newxlim.all() != curxlim.all()):
+        if(newxlim[0] != curxlim[0] or newxlim[1] != curxlim[1]):
             self.xlim = newxlim
             r = self.reals[int(ceil(self.xlim[0])) : int(ceil(self.xlim[1]))]
             i = self.imags[int(ceil(self.xlim[0])) : int(ceil(self.xlim[1]))]

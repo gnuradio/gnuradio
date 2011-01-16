@@ -89,7 +89,8 @@ class gr_plot_fft:
             self.iq_fft = self.dofft(self.iq)
             
             tstep = 1.0 / self.sample_rate
-            self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
+            #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
+            self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
 
             self.freq = self.calc_freq(self.time, self.sample_rate)
 
@@ -158,10 +159,12 @@ class gr_plot_fft:
     def zoom(self, event):
         newxlim = scipy.array(self.sp_iq.get_xlim())
         curxlim = scipy.array(self.xlim)
-        if(newxlim.all() != curxlim.all()):
+        if(newxlim[0] != curxlim[0] or newxlim[1] != curxlim[1]):
             self.xlim = newxlim
-            xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0] - self.position))))
-            xmax = min(int(ceil(self.sample_rate*(self.xlim[1] - self.position))), len(self.iq))
+            #xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0] - self.position))))
+            #xmax = min(int(ceil(self.sample_rate*(self.xlim[1] - self.position))), len(self.iq))
+            xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0]))))
+            xmax = min(int(ceil(self.sample_rate*(self.xlim[1]))), len(self.iq))
 
             iq = self.iq[xmin : xmax]
             time = self.time[xmin : xmax]
@@ -171,7 +174,7 @@ class gr_plot_fft:
             
             self.plot_fft[0].set_data(freq, iq_fft)
             self.sp_fft.axis([freq.min(), freq.max(),
-                              iq_fft.min()-10, iq_fftmax()+10])
+                              iq_fft.min()-10, iq_fft.max()+10])
 
             draw()
 
