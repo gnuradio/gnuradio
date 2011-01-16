@@ -78,7 +78,7 @@ class gr_plot_psd:
         self.button_right = Button(self.button_right_axes, ">")
         self.button_right_callback = self.button_right.on_clicked(self.button_right_click)
 
-        self.xlim = self.sp_iq.get_xlim()
+        self.xlim = scipy.array(self.sp_iq.get_xlim())
 
         self.manager = get_current_fig_manager()
         connect('draw_event', self.zoom)
@@ -94,10 +94,11 @@ class gr_plot_psd:
             print "End of File"
         else:
             tstep = 1.0 / self.sample_rate
-            self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
+            #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
+            self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
 
             self.iq_psd, self.freq = self.dopsd(self.iq)
-            
+          
     def dopsd(self, iq):
         ''' Need to do this here and plot later so we can do the fftshift '''
         overlap = self.psdfftsize/4
@@ -132,10 +133,10 @@ class gr_plot_psd:
         
         self.plot_iq  = self.sp_iq.plot([], 'bo-') # make plot for reals
         self.plot_iq += self.sp_iq.plot([], 'ro-') # make plot for imags
-        self.draw_time()                           # draw the plot
+        self.draw_time(self.time, self.iq)         # draw the plot
 
         self.plot_psd = self.sp_psd.plot([], 'b')  # make plot for PSD
-        self.draw_psd()                            # draw the plot
+        self.draw_psd(self.freq, self.iq_psd)      # draw the plot
 
 
         if self.dospec:
@@ -145,58 +146,59 @@ class gr_plot_psd:
             self.sp_spec.set_xlabel("Time (s)", fontsize=self.label_font_size, fontweight="bold")
             self.sp_spec.set_ylabel("Frequency (Hz)", fontsize=self.label_font_size, fontweight="bold")
 
-            self.draw_spec()
+            self.draw_spec(self.time, self.iq)
         
         draw()
 
-    def draw_time(self):
-        reals = self.iq.real
-        imags = self.iq.imag
-        self.plot_iq[0].set_data([self.time, reals])
-        self.plot_iq[1].set_data([self.time, imags])
-        self.sp_iq.set_xlim(self.time.min(), self.time.max())
+    def draw_time(self, t, iq):
+        reals = iq.real
+        imags = iq.imag
+        self.plot_iq[0].set_data([t, reals])
+        self.plot_iq[1].set_data([t, imags])
+        self.sp_iq.set_xlim(t.min(), t.max())
         self.sp_iq.set_ylim([1.5*min([reals.min(), imags.min()]),
                              1.5*max([reals.max(), imags.max()])])
 
-    def draw_psd(self):
-        self.plot_psd[0].set_data([self.freq, self.iq_psd])
-        self.sp_psd.set_ylim([self.iq_psd.min()-10, self.iq_psd.max()+10])
-        self.sp_psd.set_xlim([self.freq.min(), self.freq.max()])
+    def draw_psd(self, f, p):
+        self.plot_psd[0].set_data([f, p])
+        self.sp_psd.set_ylim([p.min()-10, p.max()+10])
+        self.sp_psd.set_xlim([f.min(), f.max()])
 
-    def draw_spec(self):
+    def draw_spec(self, t, s):
         overlap = self.specfftsize/4
         winfunc = scipy.blackman
         self.sp_spec.clear()
-        self.sp_spec.specgram(self.iq, self.specfftsize, self.sample_rate,
+        self.sp_spec.specgram(s, self.specfftsize, self.sample_rate,
                               window = lambda d: d*winfunc(self.specfftsize),
-                              noverlap = overlap, xextent=[self.time.min(), self.time.max()])
+                              noverlap = overlap, xextent=[t.min(), t.max()])
 
     def update_plots(self):
-        self.draw_time()
-        self.draw_psd()
+        self.draw_time(self.time, self.iq)
+        self.draw_psd(self.freq, self.iq_psd)
 
         if self.dospec:
-            self.draw_spec()
+            self.draw_spec(self.time, self.iq)
 
-        self.xlim = self.sp_iq.get_xlim() # so zoom doesn't get called
+        self.xlim = scipy.array(self.sp_iq.get_xlim()) # so zoom doesn't get called
+        
         draw()
         
     def zoom(self, event):
         newxlim = scipy.array(self.sp_iq.get_xlim())
         curxlim = scipy.array(self.xlim)
-        if(newxlim.all() != curxlim.all()):
-            self.xlim = newxlim
-            xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0] - self.position))))
-            xmax = min(int(ceil(self.sample_rate*(self.xlim[1] - self.position))), len(self.iq))
+        if(newxlim[0] != curxlim[0] or newxlim[1] != curxlim[1]):
+            #xmin = max(0, int(ceil(self.sample_rate*(newxlim[0] - self.position))))
+            #xmax = min(int(ceil(self.sample_rate*(newxlim[1] - self.position))), len(self.iq))
+            xmin = max(0, int(ceil(self.sample_rate*(newxlim[0]))))
+            xmax = min(int(ceil(self.sample_rate*(newxlim[1]))), len(self.iq))
 
             iq = self.iq[xmin : xmax]
             time = self.time[xmin : xmax]
 
             iq_psd, freq = self.dopsd(iq)
             
-            self.plot_psd[0].set_data(freq, iq_psd)
-            self.sp_psd.axis([freq.min(), freq.max(),
-                              iq_psd.min()-10, iq_psd.max()+10])
+            self.draw_psd(freq, iq_psd)
+            self.xlim = scipy.array(self.sp_iq.get_xlim())
 
             draw()
 
