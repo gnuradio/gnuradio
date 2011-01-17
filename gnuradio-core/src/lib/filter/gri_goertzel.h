@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,6 +34,7 @@ class gri_goertzel
 public:
   gri_goertzel() {}
   gri_goertzel(int rate, int len, float freq);
+  void gri_setparms(int rate, int len, float freq);
 
   // Process a input array
   gr_complex batch(float *in);

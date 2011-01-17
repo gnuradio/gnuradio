@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,15 +26,21 @@
 
 gri_goertzel::gri_goertzel(int rate, int len, float freq)
 {
+  gri_setparms(rate, len, freq);
+}
+
+void
+gri_goertzel::gri_setparms(int rate, int len, float freq)
+{
   d_d1 = 0.0;
   d_d2 = 0.0;
 
   float w = 2.0*M_PI*freq/rate;
   d_wr = 2.0*std::cos(w);
   d_wi = std::sin(w);
-
   d_len = len;
   d_processed = 0;
+
 }
 
 gr_complex gri_goertzel::batch(float *in)
