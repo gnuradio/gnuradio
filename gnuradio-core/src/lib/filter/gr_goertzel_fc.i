@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,4 +28,8 @@ class gr_goertzel_fc : public gr_sync_decimator
 {
 private:
   gr_goertzel_fc();
+
+public:
+  void set_freq (float freq);
+  void set_rate (int rate);
 };
