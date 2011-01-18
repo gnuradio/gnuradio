@@ -19,7 +19,7 @@ class QwtColorMap;
   \sa QwtRasterData, QwtColorMap
 */
 
-class QWT_EXPORT PlotWaterfall: public QwtPlotRasterItem
+class PlotWaterfall: public QwtPlotRasterItem
 {
 public:
     explicit PlotWaterfall(WaterfallData* data, const QString &title = QString::null);
