@@ -28,6 +28,7 @@
 #include <atsci_diag_output.h>
 #include <gr_math.h>
 #include <stdio.h>
+#include <boost/math/special_functions/sign.hpp>
 
 /*
  * ----------------------------------------------------------------
@@ -141,7 +142,7 @@ atsci_sssr::update (sssr::sample_t sample_in,	 // input
   double qo = d_quad_filter.update (sample_in);
   d_quad_output[d_counter] = qo;
 
-  int bit = gr_signbit (sample_in) ^ 1;	// slice on sign: + => 1, - => 0
+  int bit = boost::math::signbit (sample_in) ^ 1;	// slice on sign: + => 1, - => 0
   int corr_out = d_correlator.update (bit);
   int weight = sipp (corr_out);
   int corr_value = d_integrator.update (weight, d_counter);
