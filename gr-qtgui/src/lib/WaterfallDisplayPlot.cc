@@ -210,12 +210,6 @@ private:
 };
 
 
-const int WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR;
-const int WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT;
-const int WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT;
-const int WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT;
-const int WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED;
-
 WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   : QwtPlot(parent)
 {

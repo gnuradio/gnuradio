@@ -67,8 +67,8 @@ public:
   void DecrementPendingGUIUpdateEvents();
   void ResetPendingGUIUpdateEvents();
 
-  static const long MAX_FFT_SIZE = /*1048576*/32768;
-  static const long MIN_FFT_SIZE = 1024;
+  static const long MAX_FFT_SIZE;
+  static const long MIN_FFT_SIZE;
 
   QWidget* qwidget();
 
