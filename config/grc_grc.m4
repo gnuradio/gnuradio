@@ -20,8 +20,6 @@ dnl Boston, MA 02110-1301, USA.
 AC_DEFUN([GRC_GRC],[
     GRC_ENABLE(grc)
 
-dnl    GRC_CHECK_DEPENDENCY(grc, gr-wxgui)
-
     AC_CHECK_PROG(XDG_UTILS, xdg-mime, true, false)
     AM_CONDITIONAL(XDG_UTILS, $XDG_UTILS)
 
@@ -33,6 +31,7 @@ dnl    GRC_CHECK_DEPENDENCY(grc, gr-wxgui)
         PYTHON_CHECK_MODULE([Cheetah],[Python Cheetah templates >= 2.0.0],[],[passed=no],[Cheetah.Version >= "2.0.0"])
         PYTHON_CHECK_MODULE([lxml.etree],[Python lxml wrappers >= 1.3.6],[],[passed=no],[lxml.etree.LXML_VERSION >= (1, 3, 6, 0)])
         PYTHON_CHECK_MODULE([gtk],[Python gtk wrappers >= 2.10.0],[],[passed=no],[gtk.pygtk_version >= (2, 10, 0)])
+        PYTHON_CHECK_MODULE([numpy],[NumPy],[],[passed=no],[True])
     fi
 
     dnl ########################################
