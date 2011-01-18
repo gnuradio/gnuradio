@@ -39,7 +39,7 @@ gr_decode_ccsds_27_fb::gr_decode_ccsds_27_fb()
 {
     float RATE = 0.5;
     float ebn0 = 12.0;
-    float esn0 = RATE*pow(10.0, ebn0/10);
+    float esn0 = RATE*pow(10.0, ebn0/10.0);
 
     gen_met(d_mettab, 100, esn0, 0.0, 256);
     viterbi_chunks_init(d_state0);

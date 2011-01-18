@@ -113,7 +113,7 @@ gr_ofdm_mapper_bcv::gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constella
     throw std::invalid_argument("gr_ofdm_mapper_bcv: subcarriers allocated exceeds size of occupied carriers");
   }
   
-  d_nbits = (unsigned long)ceil(log10(d_constellation.size()) / log10(2.0));
+  d_nbits = (unsigned long)ceil(log10(float(d_constellation.size())) / log10(2.0));
 }
 
 gr_ofdm_mapper_bcv::~gr_ofdm_mapper_bcv(void)
