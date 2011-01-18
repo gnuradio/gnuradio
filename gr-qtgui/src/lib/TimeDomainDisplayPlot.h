@@ -1,6 +1,7 @@
 #ifndef TIME_DOMAIN_DISPLAY_PLOT_HPP
 #define TIME_DOMAIN_DISPLAY_PLOT_HPP
 
+#include <stdint.h>
 #include <cstdio>
 #include <qwt_plot.h>
 #include <qwt_painter.h>
