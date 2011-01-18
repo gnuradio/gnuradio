@@ -29,6 +29,17 @@
 #include <cassert>
 #include <stdexcept>
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+namespace fs = boost::filesystem;
+
+static std::string get_home_dir(void){
+    #if defined(BOOST_WINDOWS)
+        return getenv ("APPDATA");
+    #else
+        return getenv ("HOME");
+    #endif
+}
 
 boost::mutex &
 gri_fft_planner::mutex()
@@ -38,26 +49,18 @@ gri_fft_planner::mutex()
   return s_planning_mutex;
 }
 
-static char *
+static const char *
 wisdom_filename ()
 {
-  static const char *filename = ".gr_fftw_wisdom";
-
-  char	*home = getenv ("HOME");
-  if (home){
-    char *p = new char[strlen (home) + strlen (filename) + 2];
-    strcpy (p, home);
-    strcat (p, "/");
-    strcat (p, filename);
-    return p;
-  }
-  return 0;
+  static fs::path path;
+  path = fs::path(get_home_dir()) / ".gr_fftw_wisdom";
+  return path.string().c_str();
 }
 
 static void 
 gri_fftw_import_wisdom ()
 {
-  char *filename = wisdom_filename ();
+  const char *filename = wisdom_filename ();
   FILE *fp = fopen (filename, "r");
   if (fp != 0){
     int r = fftwf_import_wisdom_from_file (fp);
@@ -66,13 +69,12 @@ gri_fftw_import_wisdom ()
       fprintf (stderr, "gri_fftw: can't import wisdom from %s\n", filename);
     }
   }
-  delete [] filename;
 }
 
 static void
 gri_fftw_export_wisdom ()
 {
-  char *filename = wisdom_filename ();
+  const char *filename = wisdom_filename ();
   FILE *fp = fopen (filename, "w");
   if (fp != 0){
     fftwf_export_wisdom_to_file (fp);
@@ -82,7 +84,6 @@ gri_fftw_export_wisdom ()
     fprintf (stderr, "gri_fftw: ");
     perror (filename);
   }
-  delete [] filename;
 }
 
 // ----------------------------------------------------------------

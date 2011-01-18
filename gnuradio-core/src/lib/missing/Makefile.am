@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(GNURADIO_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(GRUEL_INCLUDES) $(GNURADIO_INCLUDES) $(WITH_INCLUDES)
 
 EXTRA_DIST += 			\
 	getopt.h 		\

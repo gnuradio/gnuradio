@@ -33,12 +33,17 @@
 #include <unistd.h>
 #include <string.h>
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+namespace fs = boost::filesystem;
 
-#ifdef MKDIR_TAKES_ONE_ARG
-#define gr_mkdir(pathname, mode) mkdir(pathname)
-#else
-#define gr_mkdir(pathname, mode) mkdir((pathname), (mode))
-#endif
+static std::string get_home_dir(void){
+    #if defined(BOOST_WINDOWS)
+        return getenv ("APPDATA");
+    #else
+        return getenv ("HOME");
+    #endif
+}
 
 /*
  * The simplest thing that could possibly work:
@@ -48,27 +53,19 @@
 static const char *
 pathname (const char *key)
 {
-  static char buf[200];
-  snprintf (buf, sizeof (buf), "%s/.gnuradio/prefs/%s", getenv ("HOME"), key);
-  return buf;
+  static fs::path path;
+  path = fs::path(get_home_dir()) / ".gnuradio" / "prefs" / key;
+  return path.string().c_str();
 }
 
 static void
 ensure_dir_path ()
 {
-  char path[200];
-  struct stat	statbuf;
+  fs::path path = fs::path(get_home_dir()) / ".gnuradio";
+  if (!fs::is_directory(path)) fs::create_directory(path);
 
-  snprintf (path, sizeof (path), "%s/.gnuradio/prefs", getenv ("HOME"));
-  if (stat (path, &statbuf) == 0 && S_ISDIR (statbuf.st_mode))
-    return;
-
-  // blindly try to make it 	// FIXME make this robust. C++ SUCKS!
-
-  snprintf (path, sizeof (path), "%s/.gnuradio", getenv ("HOME"));
-  gr_mkdir (path, 0750);
-  snprintf (path, sizeof (path), "%s/.gnuradio/prefs", getenv ("HOME"));
-  gr_mkdir (path, 0750);
+  path = path / "prefs";
+  if (!fs::is_directory(path)) fs::create_directory(path);
 }
 
 const char *

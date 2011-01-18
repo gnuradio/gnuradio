@@ -28,16 +28,19 @@
 
 #include "pmt/qa_pmt.h"
 
-static void get_unittest_path (const char *filename, char *fullpath, size_t pathsize);
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+namespace fs = boost::filesystem;
 
 int 
 main(int argc, char **argv)
 {
-  char path[200];
-  get_unittest_path ("gruel.xml", path, 200);
-  
+  fs::path path = fs::current_path() / ".unittests";
+  if (!fs::is_directory(path)) fs::create_directory(path);
+  path = path / "gruel.xml";
+
   CppUnit::TextTestRunner runner;
-  std::ofstream xmlfile(path);
+  std::ofstream xmlfile(path.string().c_str());
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest(qa_pmt::suite ());
@@ -47,41 +50,3 @@ main(int argc, char **argv)
 
   return was_successful ? 0 : 1;
 }
-
-
-// NOTE: These are defined in gr_unittest.h for the rest of the project;
-// rewriting here since we don't depend on gnuradio-core in gruel
-
-#ifdef MKDIR_TAKES_ONE_ARG
-#define gr_mkdir(pathname, mode) mkdir(pathname)
-#else
-#define gr_mkdir(pathname, mode) mkdir((pathname), (mode))
-#endif
-
-/*
- * Mostly taken from gr_preferences.cc/h
- * The simplest thing that could possibly work:
- *  the key is the filename; the value is the file contents.
- */
-
-static void
-ensure_unittest_path (const char *path)
-{
-  struct stat statbuf;
-  if (stat (path, &statbuf) == 0 && S_ISDIR (statbuf.st_mode))
-    return;
-
-  // blindly try to make it 	// FIXME make this robust. C++ SUCKS!
-  gr_mkdir (path, 0750);
-}
-
-static void
-get_unittest_path (const char *filename, char *fullpath, size_t pathsize)
-{
-  char path[200];
-  snprintf (path, sizeof(path), "./.unittests");
-  snprintf (fullpath, pathsize, "%s/%s", path, filename);
-
-  ensure_unittest_path(path);
-}
-

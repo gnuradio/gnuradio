@@ -29,11 +29,8 @@
 int 
 main (int argc, char **argv)
 {
-  char path[200];
-  get_unittest_path ("gr_howto_write_a_block.xml", path, 200);
- 
   CppUnit::TextTestRunner runner;
-  std::ofstream xmlfile(path);
+  std::ofstream xmlfile(get_unittest_path("gr_howto_write_a_block.xml").c_str());
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest(qa_howto::suite ());
