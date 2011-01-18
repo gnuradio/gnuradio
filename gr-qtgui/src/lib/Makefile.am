@@ -25,7 +25,7 @@ include $(top_srcdir)/Makefile.swig
 EXTRA_DIST += spectrumdisplayform.ui
 
 AM_CPPFLAGS = -I. $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
-              $(QT_INCLUDES) $(WITH_INCLUDES)
+              $(QT_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
 
 # Only include these files in the build if qtgui passes configure checks
 # This is mostly to help make distcheck pass
@@ -82,10 +82,12 @@ QT_MOC_FLAGS=-DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LI
 	$(QT_UIC_EXEC) $< -o $@
 
 # magic flags
-libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
+libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS) $(LTVERSIONFLAGS)
 
 libgnuradio_qtgui_la_LIBADD = 		\
 	$(GNURADIO_CORE_LA)	\
+	$(BOOST_THREAD_LIB) \
+	$(BOOST_DATE_TIME_LIB) \
 	-lstdc++		\
 	$(QT_LIBS)
 

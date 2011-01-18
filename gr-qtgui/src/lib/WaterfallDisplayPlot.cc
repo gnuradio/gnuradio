@@ -12,6 +12,8 @@
 
 #include <qapplication.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 class FreqOffsetAndPrecisionClass
 {
 public:
@@ -138,8 +140,7 @@ public:
     QwtText returnLabel("");
 
     timespec lineTime = timespec_add(GetZeroTime(), (-value) * GetSecondsPerLine());
-    struct tm timeTm;
-    gmtime_r(&lineTime.tv_sec, &timeTm);
+    tm timeTm(boost::posix_time::to_tm(boost::posix_time::from_time_t(lineTime.tv_sec)));
     returnLabel = (QString("").sprintf("%04d/%02d/%02d\n%02d:%02d:%02d.%03ld",
 				       timeTm.tm_year+1900, timeTm.tm_mon+1,
 				       timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
@@ -192,8 +193,7 @@ protected:
     QString yLabel("");
 
     timespec lineTime = timespec_add(GetZeroTime(), (-p.y()) * GetSecondsPerLine());
-    struct tm timeTm;
-    gmtime_r(&lineTime.tv_sec, &timeTm);
+    tm timeTm(boost::posix_time::to_tm(boost::posix_time::from_time_t(lineTime.tv_sec)));
     yLabel = (QString("").sprintf("%04d/%02d/%02d %02d:%02d:%02d.%03ld",
 				  timeTm.tm_year+1900, timeTm.tm_mon+1,
 				  timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
