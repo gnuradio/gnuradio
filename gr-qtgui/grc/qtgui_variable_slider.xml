@@ -9,37 +9,35 @@
 	<name>QT GUI Variable Slider</name>
 	<key>variable_qtgui_slider</key>
 	<category>Variables</category>
-	<import>from gnuradio.qtgui import forms</import>
-	<import>from PyQt4.QtCore import Qt</import>
+	<import>from PyQt4 import Qt</import>
+	<import>import PyQt4.Qwt5 as Qwt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $win = '_%s_sizer'%$id
-$win = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom)
-self._$(id)_text_box = forms.text_box(
-	parent=self,
-	value=self.$id,
-	callback=self.set_$(id),
-	#if $label()
-	label=$label,
-	#else
-	label='$id',
-	#end if
-	converter=forms.$(converver)(),
-)
-$(win).addWidget(self._$(id)_text_box)
-self._$(id)_slider = forms.slider(
-	value=self.$id,
-	callback=self.set_$(id),
-	start=$start,
-	stop=$stop,
-	step=$step,
-	orient=$orient,
-	cast=$(converver.slider_cast),
-)
+$win = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom)
+self._$(id)_tool_bar = Qt.QToolBar(self)
+$(win).addWidget(self._$(id)_tool_bar)
+#if $label()
+self._$(id)_tool_bar.addWidget(Qt.QLabel($label, self._$(id)_tool_bar))
+#else
+self._$(id)_tool_bar.addWidget(Qt.QLabel($id, self._$(id)_tool_bar))
+#end if
+self._$(id)_counter = Qwt.QwtCounter(self._$(id)_tool_bar)
+self._$(id)_counter.setRange($start, $stop, $step)
+self._$(id)_counter.setNumButtons(2)
+self._$(id)_counter.setValue($value)
+self._$(id)_tool_bar.addWidget(self._$(id)_counter)
+$(win).connect(self._$(id)_counter, Qt.SIGNAL('valueChanged(double)'), self.set_$(id))
+self._$(id)_slider = Qwt.QwtSlider(self._$(id)_tool_bar)
+self._$(id)_slider.setRange($start, $stop, $step)
+self._$(id)_slider.setValue($value)
+self._$(id)_slider.setOrientation(Qt.$orient)
+self._$(id)_slider.setScalePosition($orient.scalepos)
+$(win).connect(self._$(id)_slider, Qt.SIGNAL('valueChanged(double)'), self.set_$(id))
 $(win).addWidget(self._$(id)_slider)
 self.layout.addLayout($win)</make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self._$(id)_slider.set_value($id)</callback>
-	<callback>self._$(id)_text_box.set_value($id)</callback>
+	<callback>self._$(id)_counter.setValue($id)</callback>
+	<callback>self._$(id)_slider.setValue($id)</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>
@@ -81,26 +79,12 @@ self.layout.addLayout($win)</make>
 		<option>
 			<name>Horizontal</name>
 			<key>Qt.Horizontal</key>
+			<opt>scalepos:Qwt.QwtSlider.BottomScale</opt>
 		</option>
 		<option>
 			<name>Vertical</name>
 			<key>Qt.Vertical</key>
-		</option>
-	</param>
-	<param>
-		<name>Converter</name>
-		<key>converver</key>
-		<value>float_converter</value>
-		<type>enum</type>
-		<option>
-			<name>Float</name>
-			<key>float_converter</key>
-			<opt>slider_cast:float</opt>
-		</option>
-		<option>
-			<name>Integer</name>
-			<key>int_converter</key>
-			<opt>slider_cast:int</opt>
+			<opt>scalepos:Qwt.QwtSlider.RightScale</opt>
 		</option>
 	</param>
 	<check>$start &lt;= $value &lt;= $stop</check>

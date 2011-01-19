@@ -20,6 +20,8 @@ dnl Boston, MA 02110-1301, USA.
 AC_DEFUN([GRC_GRC],[
     GRC_ENABLE(grc)
 
+dnl    GRC_CHECK_DEPENDENCY(grc, gr-wxgui)
+
     AC_CHECK_PROG(XDG_UTILS, xdg-mime, true, false)
     AM_CONDITIONAL(XDG_UTILS, $XDG_UTILS)
 
