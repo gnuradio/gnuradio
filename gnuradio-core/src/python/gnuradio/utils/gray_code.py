@@ -29,16 +29,23 @@ class GrayCodeGenerator(object):
             if self.i == self.lp2:
                 # if i is a power of two then gray number is of form 1100000...
                 result = self.i + self.i/2
-        else:
-            # if not we take advantage of the symmetry of all but the last bit
-            # around a power of two.
-            result = self.gcs[2*self.lp2-1-self.i] + self.lp2
-        self.gcs.append(result)
-        self.i += 1
-        if self.i == self.np2:
-            self.lp2 = self.i
-            self.np2 = self.i*2
+            else:
+                # if not we take advantage of the symmetry of all but the last bit
+                # around a power of two.
+                result = self.gcs[2*self.lp2-1-self.i] + self.lp2
+            self.gcs.append(result)
+            self.i += 1
+            if self.i == self.np2:
+                self.lp2 = self.i
+                self.np2 = self.i*2
 
 _gray_code_generator = GrayCodeGenerator()
 
 gray_code = _gray_code_generator.get_gray_code
+
+def inverse_gray_code(length):
+    gc = enumerate(gray_code(length))
+    igc = [(b, a) for (a, b) in gc]
+    igc.sort()
+    return [a for (b, a) in igc]
+    

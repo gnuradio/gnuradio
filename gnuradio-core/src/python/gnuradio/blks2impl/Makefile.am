@@ -57,6 +57,7 @@ grblkspython_PYTHON =		\
 	pfb_interpolator.py	\
 	pkt.py			\
 	psk.py			\
+	psk2.py			\
 	qam.py			\
 	rational_resampler.py	\
 	standard_squelch.py	\

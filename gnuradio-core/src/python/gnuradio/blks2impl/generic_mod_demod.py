@@ -25,11 +25,9 @@
 Generic modulation and demodulation.
 """
 
-from gnuradio import gr, gru, modulation_utils2
-from math import pi, sqrt
-import psk
-import cmath
-from pprint import pprint
+from gnuradio import gr
+from gnuradio.modulation_utils2 import extract_kwargs_from_options_for_class
+from gnuradio.utils.gray_code import gray_code, inverse_gray_code
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2
@@ -47,6 +45,27 @@ _def_timing_max_dev = 1.5
 _def_phase_alpha = 0.1
 # Number of points in constellation
 _def_constellation_points = 16
+# Whether differential coding is used.
+_def_differential = True
+_def_gray_coded = True
+
+def add_common_options(parser):
+    """
+    Sets options common to both modulator and demodulator.
+    """
+    parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
+                      help="set the number of constellation points (must be a power of 2 (power of 4 for QAM) [default=%default]")
+    parser.add_option("", "--differential", action="store_true", dest="differential", default=True,
+                      help="use differential encoding [default=%default]")
+    parser.add_option("", "--not-differential", action="store_false", dest="differential",
+                      help="do not use differential encoding [default=%default]")
+    parser.add_option("", "--gray-coded", action="store_true", dest="gray_coded", default=True,
+                      help="use gray code [default=%default]")
+    parser.add_option("", "--not-gray-coded", action="store_false", dest="gray_coded",
+                      help="do not use gray code [default=%default]")
+    parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
+                      help="set RRC excess bandwith factor [default=%default]")
+    
 
 # /////////////////////////////////////////////////////////////////////////////
 #                             Generic modulator
@@ -55,6 +74,8 @@ _def_constellation_points = 16
 class generic_mod(gr.hier_block2):
 
     def __init__(self, constellation,
+                 differential=_def_differential,
+                 gray_coded=_def_gray_coded,
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
                  verbose=_def_verbose,
@@ -84,6 +105,8 @@ class generic_mod(gr.hier_block2):
         self._constellation = constellation.base()
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
+        self._differential = differential
+        self._gray_coded = gray_coded
  
         if not isinstance(self._samples_per_symbol, int) or self._samples_per_symbol < 2:
             raise TypeError, ("sbp must be an integer >= 2, is %d" % self._samples_per_symbol)
@@ -96,7 +119,11 @@ class generic_mod(gr.hier_block2):
         self.bytes2chunks = \
           gr.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
 
-        self.diffenc = gr.diff_encoder_bb(arity)
+        if gray_coded:
+            self.symbol_mapper = gr.map_bb(gray_code(arity))
+
+        if differential:
+            self.diffenc = gr.diff_encoder_bb(arity)
 
         self.chunks2symbols = gr.chunks_to_symbols_bc(self._constellation.points())
 
@@ -112,8 +139,13 @@ class generic_mod(gr.hier_block2):
                                                    self.rrc_taps)
 
 	# Connect
-        self.connect(self, self.bytes2chunks, self.diffenc,
-                     self.chunks2symbols, self.rrc_filter, self)
+        blocks = [self, self.bytes2chunks]
+        if gray_coded:
+            blocks.append(self.symbol_mapper)
+        if differential:
+            blocks.append(self.diffenc)
+        blocks += [self.chunks2symbols, self.rrc_filter, self]
+        self.connect(*blocks)
 
         if verbose:
             self._print_verbage()
@@ -132,19 +164,15 @@ class generic_mod(gr.hier_block2):
         """
         Adds generic modulation options to the standard parser
         """
-        parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
-                          help="set the number of constellation points (must be a power of 4 for QAM) [default=%default]")
-        parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
-                          help="set RRC excess bandwith factor [default=%default]")
+        add_common_options(parser)
     add_options=staticmethod(add_options)
 
-    def extract_kwargs_from_options(options):
+    def extract_kwargs_from_options(cls, options):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils2.extract_kwargs_from_options(
-            generic_mod.__init__, ('self',), options)
-    extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
+        return extract_kwargs_from_options_for_class(cls, options)
+    extract_kwargs_from_options=classmethod(extract_kwargs_from_options)
 
 
     def _print_verbage(self):
@@ -156,8 +184,12 @@ class generic_mod(gr.hier_block2):
         print "Modulation logging turned on."
         self.connect(self.bytes2chunks,
                      gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.dat"))
-        self.connect(self.diffenc,
-                     gr.file_sink(gr.sizeof_char, "tx_diffenc.dat"))
+        if self._gray_coded:
+            self.connect(self.symbol_mapper,
+                         gr.file_sink(gr.sizeof_char, "tx_symbol_mapper.dat"))
+        if self._differential:
+            self.connect(self.diffenc,
+                         gr.file_sink(gr.sizeof_char, "tx_diffenc.dat"))
         self.connect(self.chunks2symbols,
                      gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.dat"))
         self.connect(self.rrc_filter,
@@ -175,6 +207,8 @@ class generic_demod(gr.hier_block2):
 
     def __init__(self, constellation,
                  samples_per_symbol=_def_samples_per_symbol,
+                 differential=_def_differential,
+                 gray_coded=_def_gray_coded,
                  excess_bw=_def_excess_bw,
                  freq_alpha=_def_freq_alpha,
                  timing_alpha=_def_timing_alpha,
@@ -221,7 +255,9 @@ class generic_demod(gr.hier_block2):
         self._timing_alpha = timing_alpha
         self._timing_beta = _def_timing_beta
         self._timing_max_dev=timing_max_dev
-        
+        self._differential = differential
+        self._gray_coded = gray_coded
+
         if not isinstance(self._samples_per_symbol, int) or self._samples_per_symbol < 2:
             raise TypeError, ("sbp must be an integer >= 2, is %d" % self._samples_per_symbol)
 
@@ -255,9 +291,13 @@ class generic_demod(gr.hier_block2):
             self._constellation,
             self._phase_alpha, self._phase_beta,
             fmin, fmax)
-            
+        
         # Do differential decoding based on phase change of symbols
-        self.diffdec = gr.diff_decoder_bb(arity)
+        if differential:
+            self.diffdec = gr.diff_decoder_bb(arity)
+
+        if gray_coded:
+            self.symbol_mapper = gr.map_bb(inverse_gray_code(arity))
 
         # unpack the k bit vector into a stream of bits
         self.unpack = gr.unpack_k_bits_bb(self.bits_per_symbol())
@@ -269,8 +309,13 @@ class generic_demod(gr.hier_block2):
             self._setup_logging()
 
         # Connect and Initialize base class
-        self.connect(self, self.agc, self.freq_recov, self.time_recov, self.receiver,
-                     self.diffdec, self.unpack, self)
+        blocks = [self, self.agc, self.freq_recov, self.time_recov, self.receiver]
+        if differential:
+            blocks.append(self.diffdec)
+        if gray_coded:
+            blocks.append(self.symbol_mapper)
+        blocks += [self.unpack, self]
+        self.connect(*blocks)
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
@@ -317,8 +362,12 @@ class generic_demod(gr.hier_block2):
                      gr.file_sink(gr.sizeof_float, "rx_receiver_phase.dat"))
         self.connect((self.receiver, 3),
                      gr.file_sink(gr.sizeof_float, "rx_receiver_freq.dat"))
-        self.connect(self.diffdec,
-                     gr.file_sink(gr.sizeof_char, "rx_diffdec.dat"))        
+        if self._differential:
+            self.connect(self.diffdec,
+                         gr.file_sink(gr.sizeof_char, "rx_diffdec.dat"))        
+        if self._gray_coded:
+            self.connect(self.symbol_mapper,
+                         gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.dat"))        
         self.connect(self.unpack,
                      gr.file_sink(gr.sizeof_char, "rx_unpack.dat"))
         
@@ -326,10 +375,9 @@ class generic_demod(gr.hier_block2):
         """
         Adds generic demodulation options to the standard parser
         """
-        parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
-                          help="set the number of constellation points (must be a power of 4 for QAM) [default=%default]")
-        parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
-                          help="set RRC excess bandwith factor [default=%default]")
+        # Add options shared with modulator.
+        add_common_options(parser)
+        # Add options specific to demodulator.
         parser.add_option("", "--freq-alpha", type="float", default=_def_freq_alpha,
                           help="set frequency lock loop alpha gain value [default=%default]")
         parser.add_option("", "--phase-alpha", type="float", default=_def_phase_alpha,
@@ -342,15 +390,10 @@ class generic_demod(gr.hier_block2):
                           help="set timing symbol sync loop maximum deviation [default=%default]")
     add_options=staticmethod(add_options)
     
-    def extract_kwargs_from_options(options):
+    def extract_kwargs_from_options(cls, options):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils2.extract_kwargs_from_options(
-            generic_demod.__init__, ('self',), options)
-    extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
-##
-# Add these to the mod/demod registry
-#
-#modulation_utils2.add_type_1_mod('generic', generic_mod)
-#modulation_utils2.add_type_1_demod('generic', generic_demod)
+        return extract_kwargs_from_options_for_class(cls, options)
+    extract_kwargs_from_options=classmethod(extract_kwargs_from_options)
+

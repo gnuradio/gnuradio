@@ -24,19 +24,24 @@
 #include <gr_constellation.h>
 #include <gr_math.h>
 #include <gr_complex.h>
+#include <math.h>
+#include <iostream>
+#include <stdlib.h>
+
+#define M_TWOPI (2*M_PI)
 
 gr_constellation_sptr 
 gr_make_constellation(std::vector<gr_complex> constellation)
 {
   return gr_constellation_sptr(new gr_constellation (constellation));
-  }
+}
 
 // Base Constellation Class
 
-gr_constellation::gr_constellation (std::vector<gr_complex> constellation) {
-  d_constellation = constellation;
+gr_constellation::gr_constellation (std::vector<gr_complex> constellation) :
+  d_constellation(constellation)
+{
 }
-
 
 unsigned int get_closest_point(std::vector<gr_complex> constellation, gr_complex sample) {
 
@@ -66,23 +71,11 @@ unsigned int gr_constellation::decision_maker(gr_complex sample)
   return min_index;
 }
 
-gr_constellation_sector_sptr 
-gr_make_constellation_sector(std::vector<gr_complex> constellation,
-			     unsigned int real_sectors, unsigned int imag_sectors,
-			     float width_real_sectors, float width_imag_sectors)
-{
-  return gr_constellation_sector_sptr(new gr_constellation_sector (constellation, real_sectors, imag_sectors, width_real_sectors, width_imag_sectors));
-  }
-
 gr_constellation_sector::gr_constellation_sector (std::vector<gr_complex> constellation,
-						  unsigned int real_sectors, unsigned int imag_sectors,
-						  float width_real_sectors, float width_imag_sectors) :
+						  unsigned int n_sectors) :
   gr_constellation(constellation),
-  n_sectors(real_sectors * imag_sectors),
-  n_real_sectors(real_sectors), n_imag_sectors(imag_sectors),
-  d_width_real_sectors(width_real_sectors), d_width_imag_sectors(width_imag_sectors)
+  n_sectors(n_sectors)
 {
-  find_sector_values();
 }
 
 unsigned int gr_constellation_sector::decision_maker (gr_complex sample) {
@@ -91,7 +84,33 @@ unsigned int gr_constellation_sector::decision_maker (gr_complex sample) {
   return sector_values[sector];
 }
 
-unsigned int gr_constellation_sector::get_sector (gr_complex sample) {
+void gr_constellation_sector::find_sector_values () {
+  unsigned int i;
+  sector_values.clear();
+  for (i=0; i<n_sectors; i++) {
+    sector_values.push_back(calc_sector_value(i));
+  }
+}
+
+gr_constellation_rect_sptr 
+gr_make_constellation_rect(std::vector<gr_complex> constellation,
+			   unsigned int real_sectors, unsigned int imag_sectors,
+			   float width_real_sectors, float width_imag_sectors)
+{
+  return gr_constellation_rect_sptr(new gr_constellation_rect (constellation, real_sectors, imag_sectors, width_real_sectors, width_imag_sectors));
+  }
+
+gr_constellation_rect::gr_constellation_rect (std::vector<gr_complex> constellation,
+					      unsigned int real_sectors, unsigned int imag_sectors,
+					      float width_real_sectors, float width_imag_sectors) :
+  gr_constellation_sector(constellation, real_sectors * imag_sectors),
+  n_real_sectors(real_sectors), n_imag_sectors(imag_sectors),
+  d_width_real_sectors(width_real_sectors), d_width_imag_sectors(width_imag_sectors)
+{
+  find_sector_values();
+}
+
+unsigned int gr_constellation_rect::get_sector (gr_complex sample) {
   int real_sector, imag_sector;
   unsigned int sector;
   real_sector = int(real(sample)/d_width_real_sectors + n_real_sectors/2.0);
@@ -104,7 +123,7 @@ unsigned int gr_constellation_sector::get_sector (gr_complex sample) {
   return sector;
 }
   
-unsigned int gr_constellation_sector::calc_sector_value (unsigned int sector) {
+unsigned int gr_constellation_rect::calc_sector_value (unsigned int sector) {
   unsigned int real_sector, imag_sector;
   gr_complex sector_center;
   unsigned int closest_point;
@@ -117,11 +136,36 @@ unsigned int gr_constellation_sector::calc_sector_value (unsigned int sector) {
 }
 
 
-void gr_constellation_sector::find_sector_values () {
-  unsigned int i;
-  sector_values.clear();
-  for (i=0; i<n_sectors; i++) {
-    sector_values.push_back(calc_sector_value(i));
-  }
+gr_constellation_psk_sptr 
+gr_make_constellation_psk(std::vector<gr_complex> constellation, unsigned int n_sectors)
+{
+  return gr_constellation_psk_sptr(new gr_constellation_psk (constellation, n_sectors));
 }
+
+gr_constellation_psk::gr_constellation_psk (std::vector<gr_complex> constellation,
+					    unsigned int n_sectors) :
+  gr_constellation_sector(constellation, n_sectors)
+{
+  find_sector_values();
+}
+
+unsigned int gr_constellation_psk::get_sector (gr_complex sample) {
+  float phase = arg(sample);
+  float width = M_TWOPI / n_sectors;
+  int sector = floor(phase/width + 0.5);
+  unsigned int u_sector;
+  if (sector < 0) sector += n_sectors;
+  u_sector = sector;
+  //  std::cout << phase << " " << width << " " << sector << std::endl;
+  return sector;
+}
+  
+unsigned int gr_constellation_psk::calc_sector_value (unsigned int sector) {
+  float phase = sector * M_TWOPI / n_sectors;
+  gr_complex sector_center = gr_complex(cos(phase), sin(phase));
+  unsigned int closest_point = get_closest_point(d_constellation, sector_center);
+  //  std::cout << phase << " " << sector_center << " " << closest_point << std::endl;
+  return closest_point;
+}
+
 

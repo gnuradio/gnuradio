@@ -25,12 +25,17 @@ QAM modulation and demodulation.
 
 from math import pi, sqrt, log
 
-from gnuradio import gr, gru, modulation_utils2
+from gnuradio import gr, modulation_utils2
 from gnuradio.blks2impl.generic_mod_demod import generic_mod, generic_demod
 from gnuradio.utils.gray_code import gray_code
 
 # Default number of points in constellation.
 _def_constellation_points = 16
+# Whether the quadrant bits are coded differentially.
+_def_differential = True
+# Whether gray coding is used.  If differential is True then gray
+# coding is used within but not between each quadrant.
+_def_gray_coded = True
 
 def is_power_of_four(x):
     v = log(x)/log(4)
@@ -47,12 +52,15 @@ def get_bits(x, n, k):
     # Remove all bits bigger than n+k-1
     return v % pow(2, k)
 
-def make_constellation(m):
+def make_differential_constellation(m, gray_coded=_def_gray_coded):
     """
     Create a constellation with m possible symbols where m must be
     a power of 4.
 
     Points are laid out in a square grid.
+
+    Bits referring to the quadrant are differentilly encoded,
+    remaining bits are gray coded.
 
     """
     sqrtm = pow(m, 0.5)
@@ -63,10 +71,13 @@ def make_constellation(m):
     # First create a constellation for one quadrant containing m/4 points.
     # The quadrant has 'side' points along each side of a quadrant.
     side = int(sqrtm/2)
-    # Number rows and columns using gray codes.
-    gcs = gray_code(side)
-    # Get inverse gray codes.
-    i_gcs = dict([(v, key) for key, v in enumerate(gcs)])
+    if gray_coded:
+        # Number rows and columns using gray codes.
+        gcs = gray_code(side)
+        # Get inverse gray codes.
+        i_gcs = dict([(v, key) for key, v in enumerate(gcs)])
+    else:
+        i_gcs = dict([(i, i) for i in range(0, side)])
     # The distance between points is found.
     step = 1/(side-0.5)
 
@@ -100,19 +111,51 @@ def make_constellation(m):
 
     return const_map
 
+def make_not_differential_constellation(m, gray_coded=_def_gray_coded):
+    side = pow(m, 0.5)
+    if (not isinstance(m, int) or m < 4 or not is_power_of_four(m)):
+        raise ValueError("m must be a power of 4 integer.")
+    # Each symbol holds k bits.
+    k = int(log(m) / log(2.0))
+    if gray_coded:
+        # Number rows and columns using gray codes.
+        gcs = gray_code(side)
+        # Get inverse gray codes.
+        i_gcs = dict([(v, key) for key, v in enumerate(gcs)])
+    else:
+        i_gcs = dict([(i, i) for i in range(0, m)])
+    # The distance between points is found.
+    step = 2/(side-1)
+
+    gc_to_x = [-1 + i_gcs[gc]*step for gc in range(0, side)]
+
+    # First k/2 bits determine x position.
+    # Following k/2 bits determine y position.
+    const_map = []
+    for i in range(m):
+        y = gc_to_x(get_bits(i, 0, k/2))
+        x = gc_to_x(get_bits(i, k/2, k/2))
+        const_map.append(complex(x,y))
+    
+    return const_map
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QAM constellation
 # /////////////////////////////////////////////////////////////////////////////
 
-def qam_constellation(constellation_points=_def_constellation_points):
+def qam_constellation(constellation_points=_def_constellation_points,
+                      differential=_def_differential,
+                      gray_coded=_def_gray_coded,):
     """
     Creates a QAM constellation object.
     """
-    points = make_constellation(constellation_points)
+    if differential:
+        points = make_differential_constellation(constellation_points, gray_coded)
+    else:
+        points = make_not_differential_constellation(constellation_points, gray_coded)
     side = int(sqrt(constellation_points))
     width = 2.0/(side-1)
-    constellation = gr.constellation_sector(points, side, side, width, width)
+    constellation = gr.constellation_rect(points, side, side, width, width)
     return constellation
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -121,7 +164,10 @@ def qam_constellation(constellation_points=_def_constellation_points):
 
 class qam_mod(generic_mod):
 
-    def __init__(self, constellation_points=_def_constellation_points, *args, **kwargs):
+    def __init__(self, constellation_points=_def_constellation_points,
+                 differential=_def_differential,
+                 gray_coded=_def_gray_coded,
+                 *args, **kwargs):
 
         """
 	Hierarchical block for RRC-filtered QAM modulation.
@@ -132,10 +178,11 @@ class qam_mod(generic_mod):
         See generic_mod block for list of parameters.
 	"""
 
-        if not isinstance(constellation_points, int) or not is_power_of_four(constellation_points):
-            raise ValueError("number of constellation points must be a power of four.")
-        constellation = qam_constellation(constellation_points)
-        super(qam_mod, self).__init__(constellation, *args, **kwargs)
+        constellation = qam_constellation(constellation_points, differential, gray_coded)
+        # We take care of the gray coding in the constellation generation so it doesn't 
+        # need to be done in the block.
+        super(qam_mod, self).__init__(constellation, differential=differential,
+                                      gray_coded=False, *args, **kwargs)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QAM demodulator
@@ -144,7 +191,10 @@ class qam_mod(generic_mod):
 
 class qam_demod(generic_demod):
 
-    def __init__(self, constellation_points=_def_constellation_points, *args, **kwargs):
+    def __init__(self, constellation_points=_def_constellation_points,
+                 differential=_def_differential,
+                 gray_coded=_def_gray_coded,
+                 *args, **kwargs):
 
         """
 	Hierarchical block for RRC-filtered QAM modulation.
@@ -154,12 +204,18 @@ class qam_demod(generic_demod):
 
         See generic_demod block for list of parameters.
         """
-
-        constellation = qam_constellation(constellation_points)
-        super(qam_demod, self).__init__(constellation, *args, **kwargs)
+        print(args)
+        print(kwargs)
+        constellation = qam_constellation(constellation_points, differential, gray_coded)
+        # We take care of the gray coding in the constellation generation so it doesn't 
+        # need to be done in the block.
+        super(qam_demod, self).__init__(constellation, differential=differential,
+                                        gray_coded=False,
+                                        *args, **kwargs)
 
 #
 # Add these to the mod/demod registry
 #
 modulation_utils2.add_type_1_mod('qam', qam_mod)
 modulation_utils2.add_type_1_demod('qam', qam_demod)
+modulation_utils2.add_type_1_constellation('qam', qam_constellation)

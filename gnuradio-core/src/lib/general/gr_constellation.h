@@ -28,6 +28,12 @@
 #include <gr_complex.h>
 #include <boost/enable_shared_from_this.hpp>
 
+/************************************************************/
+/* gr_constellation                                         */
+/*                                                          */
+/* Decision maker uses nearest-point method.                */
+/************************************************************/
+
 class gr_constellation;
 typedef boost::shared_ptr<gr_constellation> gr_constellation_sptr;
 
@@ -36,6 +42,7 @@ gr_constellation_sptr
   gr_make_constellation (std::vector<gr_complex> constellation);
 
 class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
+//class gr_constellation
 {
  public:
 
@@ -53,6 +60,7 @@ class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
   }
 
   gr_constellation_sptr base() {
+    //return gr_constellation_sptr(this);
     return shared_from_this();
   }  
 
@@ -65,43 +73,118 @@ class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
   gr_make_constellation (std::vector<gr_complex> constellation);
 };
 
-class gr_constellation_sector;
-typedef boost::shared_ptr<gr_constellation_sector> gr_constellation_sector_sptr;
-
-// public constructor
-gr_constellation_sector_sptr 
-gr_make_constellation_sector (std::vector<gr_complex> constellation, unsigned int real_sectors, unsigned int imag_sectors,
-			      float width_real_sectors, float width_imag_sectors);
+/************************************************************/
+/* gr_constellation_sector                                  */
+/*                                                          */
+/* An abstract class.                                       */
+/* Constellation space is divided into sectors.             */
+/* Each sector is associated with the nearest constellation */
+/* point.                                                   */
+/************************************************************/
 
 class gr_constellation_sector : public gr_constellation
 {
  public:
 
-  gr_constellation_sector (std::vector<gr_complex> constellation, unsigned int real_sectors, unsigned int imag_sectors,
-			   float width_real_sectors, float width_imag_sectors);
+  gr_constellation_sector (std::vector<gr_complex> constellation,
+			   unsigned int n_sectors);
 
   unsigned int decision_maker (gr_complex sample);
 
- protected:
+  // protected:
 
-  virtual unsigned int get_sector (gr_complex sample);
+  virtual unsigned int get_sector (gr_complex sample) = 0;
   
-  virtual unsigned int calc_sector_value (unsigned int sector);
+  virtual unsigned int calc_sector_value (unsigned int sector) = 0;
 
   void find_sector_values ();
 
- private:
+  unsigned int n_sectors;
+
+  // private:
 
   std::vector<unsigned int> sector_values;
-  unsigned int n_sectors;
+
+};
+
+/************************************************************/
+/* gr_constellation_rect                                    */
+/*                                                          */
+/* Constellation space is divided into rectangular sectors. */
+/* Each sector is associated with the nearest constellation */
+/* point.                                                   */
+/* Works well for square QAM.                               */
+/* Works for any generic constellation provided sectors are */
+/* not too large.                                           */
+/************************************************************/
+
+class gr_constellation_rect;
+typedef boost::shared_ptr<gr_constellation_rect> gr_constellation_rect_sptr;
+
+// public constructor
+gr_constellation_rect_sptr 
+gr_make_constellation_rect (std::vector<gr_complex> constellation, unsigned int real_sectors, unsigned int imag_sectors,
+			    float width_real_sectors, float width_imag_sectors);
+
+class gr_constellation_rect : public gr_constellation_sector
+{
+ public:
+
+  gr_constellation_rect (std::vector<gr_complex> constellation, unsigned int real_sectors, unsigned int imag_sectors,
+			   float width_real_sectors, float width_imag_sectors);
+
+  // protected:
+
+  unsigned int get_sector (gr_complex sample);
+  
+  unsigned int calc_sector_value (unsigned int sector);
+
+  // private:
+
   unsigned int n_real_sectors;
   unsigned int n_imag_sectors;
   float d_width_real_sectors;
   float d_width_imag_sectors;
 
-  friend gr_constellation_sector_sptr
-  gr_make_constellation_sector (std::vector<gr_complex> constellation, unsigned int real_sectors, unsigned int imag_sectors,
+  friend gr_constellation_rect_sptr
+  gr_make_constellation_rect (std::vector<gr_complex> constellation, unsigned int real_sectors, unsigned int imag_sectors,
 			   float width_real_sectors, float width_imag_sectors);
+  
+};
+
+/************************************************************/
+/* gr_constellation_psk                                     */
+/*                                                          */
+/* Constellation space is divided into pie slices sectors.  */
+/* Each slice is associated with the nearest constellation  */
+/* point.                                                   */
+/* Works well for PSK but nothing else.                     */
+/* Assumes that there is a constellation point at 1.        */
+/************************************************************/
+
+class gr_constellation_psk;
+typedef boost::shared_ptr<gr_constellation_psk> gr_constellation_psk_sptr;
+
+// public constructor
+gr_constellation_psk_sptr 
+gr_make_constellation_psk (std::vector<gr_complex> constellation, unsigned int n_sectors);
+
+class gr_constellation_psk : public gr_constellation_sector
+{
+ public:
+
+  gr_constellation_psk (std::vector<gr_complex> constellation, unsigned int n_sectors);
+
+  // protected:
+
+  unsigned int get_sector (gr_complex sample);
+  
+  unsigned int calc_sector_value (unsigned int sector);
+
+  // private:
+
+  friend gr_constellation_psk_sptr
+  gr_make_constellation_psk (std::vector<gr_complex> constellation, unsigned int n_sectors);
   
 };
 
