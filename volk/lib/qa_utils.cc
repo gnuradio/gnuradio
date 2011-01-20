@@ -7,7 +7,8 @@
 #include <iostream>
 #include <vector>
 #include <time.h>
-//#include <math.h>
+#include <math.h>
+#include <boost/lexical_cast.hpp>
 //#include <volk/volk_runtime.h>
 #include <volk/volk_registry.h>
 #include <volk/volk.h>
@@ -24,44 +25,53 @@ void random_floats (float *buf, unsigned n)
     buf[i] = uniform ();
 }
 
-void load_random_data(void *data, std::string sig, unsigned int n) {
-    if(sig == "32fc") {
-        random_floats((float *)data, n*2);
-    } else if(sig == "32f") {
+void load_random_data(void *data, volk_type_t type, unsigned int n) {
+    if(type.is_complex) n *= 2;
+    if(type.is_float) {
+        assert(type.size == 4); //TODO: double support
         random_floats((float *)data, n);
-    } else if(sig == "32u") {
-        for(int i=0; i<n; i++) ((uint32_t *)data)[i] = (uint32_t) ((rand() - (RAND_MAX/2)) / (RAND_MAX/2));
-    } else if(sig == "32s") {
-        for(int i=0; i<n; i++) ((int32_t *)data)[i] = ((int32_t) (rand() - (RAND_MAX/2)));
-    } else if(sig == "16u") {
-        for(int i=0; i<n; i++) ((uint16_t *)data)[i] = (uint16_t) ((rand() - (RAND_MAX/2)) / (RAND_MAX/2));
-    } else if(sig == "16s") {
-        for(int i=0; i<n; i++) ((int16_t *)data)[i] = ((int16_t)((((float) (rand() - (RAND_MAX/2))) / static_cast<float>((RAND_MAX/2))) * 32768.0));
-    } else if(sig == "16sc") {
-        for(int i=0; i<n*2; i++) ((int16_t *)data)[i] = ((int16_t)((((float) (rand() - (RAND_MAX/2))) / static_cast<float>((RAND_MAX/2))) * 32768.0));
-    } else if(sig == "8u") {
-        for(int i=0; i<n; i++) ((uint8_t *)data)[i] = ((uint8_t)(((float) (rand() - (RAND_MAX/2))) / static_cast<float>((RAND_MAX/2)) * 256.0));
-    } else if(sig == "8s") {
-        for(int i=0; i<n; i++) ((int8_t *)data)[i] = ((int8_t)(((float) (rand() - (RAND_MAX/2))) / static_cast<float>((RAND_MAX/2)) * 128.0));
-    } else std::cout << "load_random_data(): Invalid sig: " << sig << std::endl;
+    } else {
+        float int_max = pow(2, type.size*8);
+        if(type.is_signed) int_max /= 2.0;
+        for(int i=0; i<n; i++) {
+            float scaled_rand = (((float) (rand() - (RAND_MAX/2))) / static_cast<float>((RAND_MAX/2))) * int_max;
+            //man i really don't know how to do this in a more clever way, you have to cast down at some point
+            switch(type.size) {
+            case 8:
+                if(type.is_signed) ((int64_t *)data)[i] = (int64_t) scaled_rand;
+                else ((uint64_t *)data)[i] = (uint64_t) scaled_rand;
+            break;
+            case 4:
+                if(type.is_signed) ((int32_t *)data)[i] = (int32_t) scaled_rand;
+                else ((uint32_t *)data)[i] = (uint32_t) scaled_rand;
+            break;           
+            case 2:
+                if(type.is_signed) ((int16_t *)data)[i] = (int16_t) scaled_rand;
+                else ((uint16_t *)data)[i] = (uint16_t) scaled_rand;
+            break;
+            case 1:
+                if(type.is_signed) ((int8_t *)data)[i] = (int8_t) scaled_rand;
+                else ((uint8_t *)data)[i] = (uint8_t) scaled_rand;
+            break;
+            default:
+                throw; //no shenanigans here
+            }
+        }
+    }
 }
 
-template <class t>
-t *make_aligned_buffer(unsigned int len) {
-  t *buf;
+void *make_aligned_buffer(unsigned int len, unsigned int size) {
+  void *buf;
   int ret;
-  ret = posix_memalign((void**)&buf, 16, len * sizeof(t));
+  ret = posix_memalign((void**)&buf, 16, len * size);
   assert(ret == 0);
   return buf;
 }
 
-void make_buffer_for_signature(std::vector<void *> &buffs, std::vector<std::string> inputsig, unsigned int vlen) {
-    BOOST_FOREACH(std::string sig, inputsig) {
-        if     (sig=="32fc" || sig=="64f" || sig=="64u") buffs.push_back((void *) make_aligned_buffer<uint64_t>(vlen));
-        else if(sig=="32f" || sig=="32u" || sig=="32s" || sig=="16sc") buffs.push_back((void *) make_aligned_buffer<uint32_t>(vlen));
-        else if(sig=="16s" || sig=="16u" || sig=="8sc") buffs.push_back((void *) make_aligned_buffer<uint16_t>(vlen));
-        else if(sig=="8s" || sig=="8u") buffs.push_back((void *) make_aligned_buffer<uint8_t>(vlen));
-        else std::cout << "Invalid type: " << sig << std::endl;
+void make_buffer_for_signature(std::vector<void *> &buffs, std::vector<volk_type_t> inputsig, unsigned int vlen) {
+    BOOST_FOREACH(volk_type_t sig, inputsig) {
+        if(!sig.is_scalar) //we don't make buffers for scalars
+          buffs.push_back(make_aligned_buffer(vlen, sig.size*(sig.is_complex ? 2 : 1)));
     }
 }
 
@@ -109,22 +119,56 @@ static std::vector<std::string> get_arch_list(const int archs[]) {
     return archlist;
 }
 
-static bool is_valid_type(std::string type) {
-    std::vector<std::string> valid_types = boost::assign::list_of("64f")("64u")("32fc")("32f")
-                                                                 ("32s")("32u")("16sc")("16s")
-                                                                 ("16u")("8s")("8sc")("8u")
-                                                                 ("s32f")("s16u")("s16s")("s8u")
-                                                                 ("s8s");
+volk_type_t volk_type_from_string(std::string name) {
+    volk_type_t type;
+    type.is_float = false;
+    type.is_scalar = false;
+    type.is_complex = false;
+    type.is_signed = false;
+    type.size = 0;
+    type.str = name;
     
-    BOOST_FOREACH(std::string this_type, valid_types) {
-        if(type == this_type) return true;
+    assert(name.size() > 1);
+    
+    //is it a scalar?
+    if(name[0] == 's') { 
+        type.is_scalar = true;
+        name = name.substr(1, name.size()-1);
     }
-    return false;
-}
     
+    //get the data size
+    int last_size_pos = name.find_last_of("0123456789");
+    if(last_size_pos < 0) throw 0;
+    //will throw if malformed
+    int size = boost::lexical_cast<int>(name.substr(0, last_size_pos+1));
 
-static void get_function_signature(std::vector<std::string> &inputsig, 
-                                   std::vector<std::string> &outputsig, 
+    assert(((size % 8) == 0) && (size <= 64) && (size != 0));
+    type.size = size/8; //in bytes
+    
+    for(int i=last_size_pos+1; i < name.size(); i++) {
+        switch (name[i]) {
+        case 'f':
+            type.is_float = true;
+            break;
+        case 'i':
+            type.is_signed = true;
+            break;
+        case 'c':
+            type.is_complex = true;
+            break;
+        case 'u':
+            type.is_signed = false;
+            break;
+        default:
+            throw;
+        }
+    }
+    
+    return type;
+}
+
+static void get_signatures_from_name(std::vector<volk_type_t> &inputsig, 
+                                   std::vector<volk_type_t> &outputsig, 
                                    std::string name) {
     boost::char_separator<char> sep("_");
     boost::tokenizer<boost::char_separator<char> > tok(name, sep);
@@ -133,25 +177,38 @@ static void get_function_signature(std::vector<std::string> &inputsig,
     toked.assign(tok.begin(), tok.end());
     
     assert(toked[0] == "volk");
-    
-    inputsig.push_back(toked[1]); //mandatory
-    int pos = 2;
-    bool valid_type = true;
-    while(valid_type && pos < toked.size()) {
-        if(is_valid_type(toked[pos])) inputsig.push_back(toked[pos]);
-        else valid_type = false;
-        pos++;
+    toked.erase(toked.begin());
+
+    //ok. we're assuming a string in the form
+    //(sig)_(multiplier-opt)_..._(name)_(sig)_(multiplier-opt)_..._(alignment)
+
+    enum { SIDE_INPUT, SIDE_OUTPUT } side = SIDE_INPUT;
+    std::string fn_name;
+    volk_type_t type;
+    BOOST_FOREACH(std::string token, toked) {
+        try {
+            type = volk_type_from_string(token);
+            if(side == SIDE_INPUT) inputsig.push_back(type);
+            else outputsig.push_back(type);
+        } catch (...){
+            if(token[0] == 'x') { //it's a multiplier
+                if(side == SIDE_INPUT) assert(inputsig.size() > 0);
+                else assert(outputsig.size() > 0);
+                int multiplier = boost::lexical_cast<int>(token.substr(1, token.size()-1)); //will throw if invalid
+                for(int i=1; i<multiplier; i++) {
+                    if(side == SIDE_INPUT) inputsig.push_back(inputsig.back());
+                    else outputsig.push_back(outputsig.back());
+                }
+            }
+            else if(side == SIDE_INPUT) { //it's the function name, at least it better be
+                side = SIDE_OUTPUT;
+                fn_name = token;
+            } else {
+                if(token != toked.back()) throw; //the last token in the name is the alignment
+            }
+        }
     }
-    while(!valid_type && pos < toked.size()) {
-        if(is_valid_type(toked[pos])) valid_type = true;
-        else pos++;
-    }
-    while(valid_type && pos < toked.size()) {
-        if(is_valid_type(toked[pos])) outputsig.push_back(toked[pos]);
-        else valid_type = false;
-        pos++;
-    }
-    
+    //we don't need an output signature (some fn's operate on the input data, "in place"), but we do need at least one input!
     assert(inputsig.size() != 0);
 }
 
@@ -171,61 +228,98 @@ inline void run_cast_test4(volk_fn_4arg func, void *outbuff, std::vector<void *>
     while(iter--) func(outbuff, inbuffs[0], inbuffs[1], inbuffs[2], vlen, arch.c_str());
 }
 
+inline void run_cast_test1_s32f(volk_fn_1arg_s32f func, void *buff, float scalar, unsigned int vlen, unsigned int iter, std::string arch) {
+    while(iter--) func(buff, scalar, vlen, arch.c_str());
+}
+
+inline void run_cast_test2_s32f(volk_fn_2arg_s32f func, void *outbuff, std::vector<void *> &inbuffs, float scalar, unsigned int vlen, unsigned int iter, std::string arch) {
+    while(iter--) func(outbuff, inbuffs[0], scalar, vlen, arch.c_str());
+}
+
+template <class t>
+bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
+    for(int i=0; i<vlen; i++) {
+        if(fabs(((t *)(in1))[i] - ((t *)(in2))[i]) > tol) return 1;
+    }
+    return 0;
+}
+
+template <class t>
+bool icompare(t *in1, t *in2, unsigned int vlen) {
+    for(int i=0; i<vlen; i++) {
+        if(((t *)(in1))[i] != ((t *)(in2))[i]) return 1;
+    }
+    return 0;
+}
+
 bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, int vlen, int iter) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
     
     //first let's get a list of available architectures for the test
     std::vector<std::string> arch_list = get_arch_list(archs);
     
-    BOOST_FOREACH(std::string arch, arch_list) {
-        std::cout << "Found an arch: " << arch << std::endl;
-    }
-    
     //now we have to get a function signature by parsing the name
-    std::vector<std::string> inputsig, outputsig;
-    get_function_signature(inputsig, outputsig, name);
-
-    for(int i=0; i<inputsig.size(); i++) std::cout << "Input: " << inputsig[i] << std::endl;
-    for(int i=0; i<outputsig.size(); i++) std::cout << "Output: " << outputsig[i] << std::endl;
+    std::vector<volk_type_t> inputsig, outputsig;
+    get_signatures_from_name(inputsig, outputsig, name);
     
-    //now that we have that, we'll set up input buffers based on the function signature
-    std::vector<void *> inbuffs;
-    make_buffer_for_signature(inbuffs, inputsig, vlen);
-    
-    //allocate output buffers -- one for each output for each arch
-    std::vector<void *> outbuffs;
-    BOOST_FOREACH(std::string arch, arch_list) {
-        make_buffer_for_signature(outbuffs, outputsig, vlen);
-    }
-
-    //and set the input buffers to something random
+    std::vector<volk_type_t> inputsc, outputsc;
     for(int i=0; i<inputsig.size(); i++) {
-        load_random_data(inbuffs[i], inputsig[i], vlen);        
-    }
-    
-    //so let's see here. if the operation has no output sig, it operates in place,
-    //and we want the output buffers to be the input buffers; we want to copy the input buffer to allllll the output buffers.
-    if(outputsig.size() == 0) {
-        //make a set of output buffers according to the input signature
-        BOOST_FOREACH(std::string arch, arch_list) {
-            make_buffer_for_signature(outbuffs, inputsig, vlen);
+        if(inputsig[i].is_scalar) {
+            inputsc.push_back(inputsig[i]);
+            inputsig.erase(inputsig.begin() + i);
         }
-        //copy input buffer[0] to all the output buffers so it has something to operate on
-        //output buffer element size is the same as input buffer[0]
-        if(
     }
-        
+    for(int i=0; i<outputsig.size(); i++) {
+        if(outputsig[i].is_scalar) {
+            outputsc.push_back(outputsig[i]);
+            outputsig.erase(outputsig.begin() + i);
+        }
+    }
+    assert(outputsc.size() == 0); //we don't do output scalars yet
+
+    //for(int i=0; i<inputsig.size(); i++) std::cout << "Input: " << inputsig[i].str << std::endl;
+    //for(int i=0; i<outputsig.size(); i++) std::cout << "Output: " << outputsig[i].str << std::endl;
+    std::vector<void *> inbuffs, outbuffs;
+    
+    if(outputsig.size() == 0) { //we're operating in place...
+        //assert(inputsig.size() == 1); //we only support 0 output 1 input right now...
+        make_buffer_for_signature(inbuffs, inputsig, vlen); //let's make an input buffer
+        load_random_data(inbuffs[0], inputsig[0], vlen); //and load it with random data
+        BOOST_FOREACH(std::string arch, arch_list) { //then copy the same random data to each output buffer
+            make_buffer_for_signature(outbuffs, inputsig, vlen);
+            memcpy(outbuffs.back(), inbuffs[0], vlen*inputsig[0].size*(inputsig[0].is_complex?2:1));
+        }
+    } else {
+        make_buffer_for_signature(inbuffs, inputsig, vlen);
+        BOOST_FOREACH(std::string arch, arch_list) {
+            make_buffer_for_signature(outbuffs, outputsig, vlen);
+        }
+    
+        //and set the input buffers to something random
+        for(int i=0; i<inbuffs.size(); i++) {
+            load_random_data(inbuffs[i], inputsig[i], vlen);        
+        }
+    }
     
     //now run the test
     clock_t start, end;
     for(int i = 0; i < arch_list.size(); i++) {
         start = clock();
-        switch(outputsig.size()+inputsig.size()) {
+
+        switch(inputsig.size() + outputsig.size()) {
             case 1:
-                run_cast_test1((volk_fn_1arg)(manual_func), outbuffs[i], vlen, iter, arch_list[i]); 
+                if(inputsc.size() == 0) {
+                    run_cast_test1((volk_fn_1arg)(manual_func), outbuffs[i], vlen, iter, arch_list[i]); 
+                } else if(inputsc.size() == 1 && inputsc[0].is_float) {
+                    run_cast_test1_s32f((volk_fn_1arg_s32f)(manual_func), outbuffs[i], 1000.0, vlen, iter, arch_list[i]);
+                } else throw "unsupported 1 arg function >1 scalars";
                 break;
             case 2:
-                run_cast_test2((volk_fn_2arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
+                if(inputsc.size() == 0) {
+                    run_cast_test2((volk_fn_2arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
+                } else if(inputsc.size() == 1 && inputsc[0].is_float) {
+                    run_cast_test2_s32f((volk_fn_2arg_s32f)(manual_func), outbuffs[i], inbuffs, 1000.0, vlen, iter, arch_list[i]);
+                } else throw "unsupported 2 arg function >1 scalars";
                 break;
             case 3:
                 run_cast_test3((volk_fn_3arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
@@ -234,69 +328,52 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
                 run_cast_test4((volk_fn_4arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
                 break;
             default:
+                throw "no function handler for this signature";
                 break;
         }
+        
         end = clock();
         std::cout << arch_list[i] << " completed in " << (double)(end-start)/(double)CLOCKS_PER_SEC << "s" << std::endl;
     }
-
     //and now compare each output to the generic output
     //first we have to know which output is the generic one, they aren't in order...
     int generic_offset;
     for(int i=0; i<arch_list.size(); i++) 
         if(arch_list[i] == "generic") generic_offset=i;
-    
+        
+    //now compare
+    if(outputsig.size() == 0) outputsig = inputsig; //a hack, i know
+
+    bool fail = false;
     for(int i=0; i<arch_list.size(); i++) {
         if(i != generic_offset) {
-            if(outputsig[0] == "32fc") {
-                for(int j=0; j<vlen*2; j++) {
-                    if(fabs(((float *)(outbuffs[generic_offset]))[j] - ((float *)(outbuffs[i]))[j]) > tol) {
-                        std::cout << "Generic: " << ((float *)(outbuffs[generic_offset]))[j] << " " << arch_list[i] << ": " << ((float *)(outbuffs[i]))[j] << std::endl;
-                        return 1;
-                    }
-                }
-            } else if(outputsig[0] == "32f") {
-                for(int j=0; j<vlen; j++) {
-                    if(fabs(((float *)(outbuffs[generic_offset]))[j] - ((float *)(outbuffs[i]))[j]) > tol) {
-                        std::cout << "Generic: " << ((float *)(outbuffs[generic_offset]))[j] << " " << arch_list[i] << ": " << ((float *)(outbuffs[i]))[j] << std::endl;
-                        return 1;
-                    }
-                }
-            } else if(outputsig[0] == "32u" || outputsig[0] == "32s" || outputsig[0] == "16sc") {
-                for(int j=0; j<vlen; j++) {
-                    if(((uint32_t *)(outbuffs[generic_offset]))[j] != ((uint32_t *)(outbuffs[i]))[j]) {
-                        std::cout << "Generic: " << ((uint32_t *)(outbuffs[generic_offset]))[j] << " " << arch_list[i] << ": " << ((uint32_t *)(outbuffs[i]))[j] << std::endl;
-                        return 1;
-                    }
-                }
-            } else if(outputsig[0] == "16u" || outputsig[0] == "16s" || outputsig[0] == "8sc") {
-                for(int j=0; j<vlen; j++) {
-                    if(((uint16_t *)(outbuffs[generic_offset]))[j] != ((uint16_t *)(outbuffs[i]))[j]) {
-                        std::cout << "Generic: " << ((uint16_t *)(outbuffs[generic_offset]))[j] << " " << arch_list[i] << ": " << ((uint16_t *)(outbuffs[i]))[j] << std::endl;
-                        return 1;
-                    }
-                }
-            } else if(outputsig[0] == "8s" || outputsig[0] == "8u") {
-                for(int j=0; j<vlen; j++) {
-                    if(((uint8_t *)(outbuffs[generic_offset]))[j] != ((uint8_t *)(outbuffs[i]))[j]) {
-                        std::cout << "Generic: " << ((uint8_t *)(outbuffs[generic_offset]))[j] << " " << arch_list[i] << ": " << ((uint8_t *)(outbuffs[i]))[j] << std::endl;
-                        return 1;
-                    }
-                }
+            if(outputsig[0].str == "32fc") {
+                fail = fcompare((float *) outbuffs[generic_offset], (float *) outbuffs[i], vlen*2, tol);
+            } else if(outputsig[0].str == "32f") {
+                fail = fcompare((float *) outbuffs[generic_offset], (float *) outbuffs[i], vlen, tol);
+            } else if(outputsig[0].str == "32u" || outputsig[0].str == "32s" || outputsig[0].str == "16sc") {
+                fail = icompare((uint32_t *) outbuffs[generic_offset], (uint32_t *) outbuffs[i], vlen);
+            } else if(outputsig[0].size == 2) {
+                fail = icompare((uint16_t *) outbuffs[generic_offset], (uint16_t *) outbuffs[i], vlen);
+            } else if(outputsig[0].size == 1) {
+                fail = icompare((uint8_t *) outbuffs[generic_offset], (uint8_t *) outbuffs[i], vlen);
             } else { 
-                std::cout << "Error: invalid type " << outputsig[0] << std::endl;
-                return 1;
+                std::cout << "Error: invalid type " << outputsig[0].str << std::endl;
+                fail = true;
+            }
+            if(fail) {
+                std::cout << name << ": fail on arch " << arch_list[i] << std::endl;
             }
         }
     }
 
-    BOOST_FOREACH(void *buf, inbuffs) {
-        free(buf);
-    }
-    BOOST_FOREACH(void *buf, outbuffs) {
-        free(buf);
-    }
-    return 0;
+//    BOOST_FOREACH(void *buf, inbuffs) {
+//        free(buf);
+//    }
+//    BOOST_FOREACH(void *buf, outbuffs) {
+//        free(buf);
+//    }
+    return fail;
 }
 
 
