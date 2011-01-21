@@ -19,7 +19,8 @@ float uniform() {
   return 2.0 * ((float) rand() / RAND_MAX - 0.5);	// uniformly (-1, 1)
 }
 
-void random_floats (float *buf, unsigned n)
+template <class t>
+void random_floats (t *buf, unsigned n)
 {
   for (unsigned i = 0; i < n; i++)
     buf[i] = uniform ();
@@ -28,8 +29,8 @@ void random_floats (float *buf, unsigned n)
 void load_random_data(void *data, volk_type_t type, unsigned int n) {
     if(type.is_complex) n *= 2;
     if(type.is_float) {
-        assert(type.size == 4); //TODO: double support
-        random_floats((float *)data, n);
+        if(type.size == 8) random_floats<double>((double *)data, n);
+        else random_floats<float>((float *)data, n);
     } else {
         float int_max = pow(2, type.size*8);
         if(type.is_signed) int_max /= 2.0;
@@ -54,7 +55,7 @@ void load_random_data(void *data, volk_type_t type, unsigned int n) {
                 else ((uint8_t *)data)[i] = (uint8_t) scaled_rand;
             break;
             default:
-                throw; //no shenanigans here
+                throw "load_random_data: no support for data size > 8 or < 1"; //no shenanigans here
             }
         }
     }
@@ -94,6 +95,9 @@ static std::vector<std::string> get_arch_list(const int archs[]) {
         case (1<<LV_SSE2):
             archlist.push_back("sse2");
             break;
+        case (1<<LV_SSE3):
+            archlist.push_back("sse3");
+            break;
         case (1<<LV_SSSE3):
             archlist.push_back("ssse3");
             break;
@@ -128,7 +132,7 @@ volk_type_t volk_type_from_string(std::string name) {
     type.size = 0;
     type.str = name;
     
-    assert(name.size() > 1);
+    if(name.size() < 2) throw std::string("name too short to be a datatype");
     
     //is it a scalar?
     if(name[0] == 's') { 
@@ -138,7 +142,7 @@ volk_type_t volk_type_from_string(std::string name) {
     
     //get the data size
     int last_size_pos = name.find_last_of("0123456789");
-    if(last_size_pos < 0) throw 0;
+    if(last_size_pos < 0) throw std::string("no size spec in type ").append(name);
     //will throw if malformed
     int size = boost::lexical_cast<int>(name.substr(0, last_size_pos+1));
 
@@ -182,12 +186,14 @@ static void get_signatures_from_name(std::vector<volk_type_t> &inputsig,
     //ok. we're assuming a string in the form
     //(sig)_(multiplier-opt)_..._(name)_(sig)_(multiplier-opt)_..._(alignment)
 
-    enum { SIDE_INPUT, SIDE_OUTPUT } side = SIDE_INPUT;
+    enum { SIDE_INPUT, SIDE_NAME, SIDE_OUTPUT } side = SIDE_INPUT;
     std::string fn_name;
     volk_type_t type;
     BOOST_FOREACH(std::string token, toked) {
         try {
             type = volk_type_from_string(token);
+            if(side == SIDE_NAME) side = SIDE_OUTPUT; //if this is the first one after the name...
+            
             if(side == SIDE_INPUT) inputsig.push_back(type);
             else outputsig.push_back(type);
         } catch (...){
@@ -201,9 +207,11 @@ static void get_signatures_from_name(std::vector<volk_type_t> &inputsig,
                 }
             }
             else if(side == SIDE_INPUT) { //it's the function name, at least it better be
-                side = SIDE_OUTPUT;
-                fn_name = token;
-            } else {
+                side = SIDE_NAME;
+                fn_name.append("_");
+                fn_name.append(token);
+            } 
+            else if(side == SIDE_OUTPUT) {
                 if(token != toked.back()) throw; //the last token in the name is the alignment
             }
         }
@@ -236,20 +244,40 @@ inline void run_cast_test2_s32f(volk_fn_2arg_s32f func, void *outbuff, std::vect
     while(iter--) func(outbuff, inbuffs[0], scalar, vlen, arch.c_str());
 }
 
-template <class t>
-bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
-    for(int i=0; i<vlen; i++) {
-        if(fabs(((t *)(in1))[i] - ((t *)(in2))[i]) > tol) return 1;
-    }
-    return 0;
+inline void run_cast_test3_s32f(volk_fn_3arg_s32f func, void *outbuff, std::vector<void *> &inbuffs, float scalar, unsigned int vlen, unsigned int iter, std::string arch) {
+    while(iter--) func(outbuff, inbuffs[0], inbuffs[1], scalar, vlen, arch.c_str());
 }
 
 template <class t>
-bool icompare(t *in1, t *in2, unsigned int vlen) {
+bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
+    bool fail = false;
+    int print_max_errs = 10;
     for(int i=0; i<vlen; i++) {
-        if(((t *)(in1))[i] != ((t *)(in2))[i]) return 1;
+        if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/(((t *)in1)[i]) > tol) {
+            fail=true;
+            if(print_max_errs-- > 0) {
+                std::cout << "offset " << i << " in1: " << t(((t *)(in1))[i]) << " in2: " << t(((t *)(in2))[i]) << std::endl;
+            }
+        }
     }
-    return 0;
+    
+    return fail;
+}
+
+template <class t>
+bool icompare(t *in1, t *in2, unsigned int vlen, float tol) {
+    bool fail = false;
+    int print_max_errs = 10;
+    for(int i=0; i<vlen; i++) {
+        if(((t *)(in1))[i] != ((t *)(in2))[i]) {
+            fail=true;
+            if(print_max_errs-- > 0) {
+                std::cout << "offset " << i << " in1: " << int(((t *)(in1))[i]) << " in2: " << int(((t *)(in2))[i]) << std::endl;
+            }
+        }
+    }
+    
+    return fail;
 }
 
 bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, int vlen, int iter) {
@@ -300,7 +328,7 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
             load_random_data(inbuffs[i], inputsig[i], vlen);        
         }
     }
-    
+
     //now run the test
     clock_t start, end;
     for(int i = 0; i < arch_list.size(); i++) {
@@ -311,18 +339,22 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
                 if(inputsc.size() == 0) {
                     run_cast_test1((volk_fn_1arg)(manual_func), outbuffs[i], vlen, iter, arch_list[i]); 
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
-                    run_cast_test1_s32f((volk_fn_1arg_s32f)(manual_func), outbuffs[i], 1000.0, vlen, iter, arch_list[i]);
+                    run_cast_test1_s32f((volk_fn_1arg_s32f)(manual_func), outbuffs[i], 255.0, vlen, iter, arch_list[i]);
                 } else throw "unsupported 1 arg function >1 scalars";
                 break;
             case 2:
                 if(inputsc.size() == 0) {
                     run_cast_test2((volk_fn_2arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
-                    run_cast_test2_s32f((volk_fn_2arg_s32f)(manual_func), outbuffs[i], inbuffs, 1000.0, vlen, iter, arch_list[i]);
+                    run_cast_test2_s32f((volk_fn_2arg_s32f)(manual_func), outbuffs[i], inbuffs, 255.0, vlen, iter, arch_list[i]);
                 } else throw "unsupported 2 arg function >1 scalars";
                 break;
             case 3:
-                run_cast_test3((volk_fn_3arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
+                if(inputsc.size() == 0) {
+                    run_cast_test3((volk_fn_3arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
+                } else if(inputsc.size() == 1 && inputsc[0].is_float) {
+                    run_cast_test3_s32f((volk_fn_3arg_s32f)(manual_func), outbuffs[i], inbuffs, 255.0, vlen, iter, arch_list[i]);
+                } else throw "unsupported 3 arg function >1 scalars";
                 break;
             case 4:
                 run_cast_test4((volk_fn_4arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
@@ -337,29 +369,24 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
     }
     //and now compare each output to the generic output
     //first we have to know which output is the generic one, they aren't in order...
-    int generic_offset;
+    int generic_offset=0;
     for(int i=0; i<arch_list.size(); i++) 
         if(arch_list[i] == "generic") generic_offset=i;
-        
+
     //now compare
     if(outputsig.size() == 0) outputsig = inputsig; //a hack, i know
 
     bool fail = false;
     for(int i=0; i<arch_list.size(); i++) {
         if(i != generic_offset) {
-            if(outputsig[0].str == "32fc") {
-                fail = fcompare((float *) outbuffs[generic_offset], (float *) outbuffs[i], vlen*2, tol);
-            } else if(outputsig[0].str == "32f") {
-                fail = fcompare((float *) outbuffs[generic_offset], (float *) outbuffs[i], vlen, tol);
-            } else if(outputsig[0].str == "32u" || outputsig[0].str == "32s" || outputsig[0].str == "16sc") {
-                fail = icompare((uint32_t *) outbuffs[generic_offset], (uint32_t *) outbuffs[i], vlen);
-            } else if(outputsig[0].size == 2) {
-                fail = icompare((uint16_t *) outbuffs[generic_offset], (uint16_t *) outbuffs[i], vlen);
-            } else if(outputsig[0].size == 1) {
-                fail = icompare((uint8_t *) outbuffs[generic_offset], (uint8_t *) outbuffs[i], vlen);
-            } else { 
-                std::cout << "Error: invalid type " << outputsig[0].str << std::endl;
-                fail = true;
+            if(outputsig[0].is_float) {
+                if(outputsig[0].size == 8) {
+                    fail = fcompare((double *) outbuffs[generic_offset], (double *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                } else {
+                    fail = fcompare((float *) outbuffs[generic_offset], (float *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                }
+            } else {
+                fail = memcmp(outbuffs[generic_offset], outbuffs[i], outputsig[0].size * vlen * (outputsig[0].is_complex ? 2:1));
             }
             if(fail) {
                 std::cout << name << ": fail on arch " << arch_list[i] << std::endl;
@@ -367,12 +394,6 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
         }
     }
 
-//    BOOST_FOREACH(void *buf, inbuffs) {
-//        free(buf);
-//    }
-//    BOOST_FOREACH(void *buf, outbuffs) {
-//        free(buf);
-//    }
     return fail;
 }
 

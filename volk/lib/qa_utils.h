@@ -28,5 +28,6 @@ typedef void (*volk_fn_3arg)(void *, void *, void *, unsigned int, const char*);
 typedef void (*volk_fn_4arg)(void *, void *, void *, void *, unsigned int, const char*);
 typedef void (*volk_fn_1arg_s32f)(void *, float, unsigned int, const char*); //one input vector, one scalar float input
 typedef void (*volk_fn_2arg_s32f)(void *, void *, float, unsigned int, const char*);
+typedef void (*volk_fn_3arg_s32f)(void *, void *, void *, float, unsigned int, const char*);
 
 #endif //VOLK_QA_UTILS_H
