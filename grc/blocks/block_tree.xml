@@ -286,11 +286,6 @@
 	<cat>
 		<name>Variables</name>
 		<block>variable</block>
-		<block>variable_slider</block>
-		<block>variable_chooser</block>
-		<block>variable_check_box</block>
-		<block>variable_text_box</block>
-		<block>variable_static_text</block>
 		<block>variable_config</block>
 		<block>parameter</block>
 	</cat>

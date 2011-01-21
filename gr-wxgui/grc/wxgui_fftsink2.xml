@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>FFT Sink</name>
+	<name>WX GUI FFT Sink</name>
 	<key>wxgui_fftsink2</key>
 	<import>from gnuradio import window</import>
 	<import>from gnuradio.wxgui import fftsink2</import>

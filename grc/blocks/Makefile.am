@@ -221,20 +221,8 @@ dist_ourdata_DATA = \
 	usrp_simple_sink_x.xml \
 	usrp_simple_source_x.xml \
 	variable.xml \
-	variable_check_box.xml \
-	variable_chooser.xml \
 	variable_config.xml \
-	variable_slider.xml \
-	variable_static_text.xml \
-	variable_text_box.xml \
 	virtual_sink.xml \
 	virtual_source.xml \
-	wxgui_constellationsink2.xml \
-	wxgui_fftsink2.xml \
-	wxgui_histosink2.xml \
-	wxgui_numbersink2.xml \
-	wxgui_scopesink2.xml \
-	wxgui_termsink.xml \
-	wxgui_waterfallsink2.xml \
 	xmlrpc_client.xml \
 	xmlrpc_server.xml

@@ -1,18 +1,19 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Static Text:
-##	a gui static text form
+##Variable Check Box:
+##	a gui check box form
 ###################################################
  -->
 <block>
-	<name>Variable Static Text</name>
-	<key>variable_static_text</key>
+	<name>WX GUI Check Box</name>
+	<key>variable_check_box</key>
+	<category>Variables</category>
 	<import>from gnuradio.wxgui import forms</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
-#set $win = 'self._%s_static_text'%$id
-$win = forms.static_text(
+#set $win = 'self._%s_check_box'%$id
+$win = forms.check_box(
 	parent=$(parent).GetWin(),
 	value=self.$id,
 	callback=self.set_$(id),
@@ -21,11 +22,8 @@ $win = forms.static_text(
 	#else
 	label='$id',
 	#end if
-	#if $formatter()
-	converter=forms.$(converver)(formatter=$formatter),
-	#else
-	converter=forms.$(converver)(),
-	#end if
+	true=$true,
+	false=$false,
 )
 #if not $grid_pos()
 $(parent).Add($win)
@@ -33,7 +31,7 @@ $(parent).Add($win)
 $(parent).GridAdd($win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self._$(id)_static_text.set_value($id)</callback>
+	<callback>self._$(id)_check_box.set_value($id)</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>
@@ -44,33 +42,20 @@ $(parent).GridAdd($win, $(', '.join(map(str, $grid_pos()))))
 	<param>
 		<name>Default Value</name>
 		<key>value</key>
-		<value>0</value>
+		<value>True</value>
 		<type>raw</type>
 	</param>
 	<param>
-		<name>Converter</name>
-		<key>converver</key>
-		<value>float_converter</value>
-		<type>enum</type>
-		<option>
-			<name>Float</name>
-			<key>float_converter</key>
-		</option>
-		<option>
-			<name>Integer</name>
-			<key>int_converter</key>
-		</option>
-		<option>
-			<name>String</name>
-			<key>str_converter</key>
-		</option>
+		<name>True</name>
+		<key>true</key>
+		<value>True</value>
+		<type>raw</type>
 	</param>
 	<param>
-		<name>Formatter</name>
-		<key>formatter</key>
-		<value>None</value>
+		<name>False</name>
+		<key>false</key>
+		<value>False</value>
 		<type>raw</type>
-		<hide>part</hide>
 	</param>
 	<param>
 		<name>Grid Position</name>
@@ -84,11 +69,14 @@ $(parent).GridAdd($win, $(', '.join(map(str, $grid_pos()))))
 		<value></value>
 		<type>notebook</type>
 	</param>
+	<check>$value in ($true, $false)</check>
 	<doc>
-This block creates a variable with a static text form. \
+This block creates a variable with a check box form. \
 Leave the label blank to use the variable id as the label.
 
-Format should be a function/lambda that converts a value into a string or None for the default formatter.
+A check box form can switch between two states; \
+the default being True and False. \
+Override True and False to use alternative states.
 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
 

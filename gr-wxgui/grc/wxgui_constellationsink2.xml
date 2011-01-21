@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Constellation Sink</name>
+	<name>WX GUI Constellation Sink</name>
 	<key>wxgui_constellationsink2</key>
 	<import>from gnuradio.wxgui import constsink_gl</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'

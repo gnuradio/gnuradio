@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Waterfall Sink</name>
+	<name>WX GUI Waterfall Sink</name>
 	<key>wxgui_waterfallsink2</key>
 	<import>from gnuradio import window</import>
 	<import>from gnuradio.wxgui import waterfallsink2</import>

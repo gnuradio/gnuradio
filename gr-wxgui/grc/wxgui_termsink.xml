@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Terminal Sink</name>
+	<name>WX GUI Terminal Sink</name>
 	<key>wxgui_termsink</key>
 
 	<import>from gnuradio.wxgui import termsink</import>
