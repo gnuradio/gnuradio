@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,6 +23,8 @@
 // Defined during configure; avoids trying to locate
 // header files if UHD was not installed.
 #ifdef GR_HAVE_UHD
+
+#define GR_UHD_API
 
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler
@@ -47,10 +49,6 @@
 ////////////////////////////////////////////////////////////////////////
 %include "gnuradio.i"
 
-namespace std {
-    %template(StringVector) vector<string>;
-}
-
 ////////////////////////////////////////////////////////////////////////
 // block headers
 ////////////////////////////////////////////////////////////////////////
@@ -64,25 +62,36 @@ namespace std {
 ////////////////////////////////////////////////////////////////////////
 // used types
 ////////////////////////////////////////////////////////////////////////
+%template(string_vector_t) std::vector<std::string>;
+
 %include <uhd/config.hpp>
+
 %include <uhd/utils/pimpl.hpp>
-%include <uhd/types/ranges.hpp>
-%include <uhd/types/tune_request.hpp>
-%include <uhd/types/tune_result.hpp>
+
+%include <uhd/types/dict.hpp>
+%template(string_string_dict_t) uhd::dict<std::string, std::string>; //define after dict
+
+%include <uhd/types/device_addr.hpp>
+
 %include <uhd/types/io_type.hpp>
+
+%template(range_vector_t) std::vector<uhd::range_t>; //define before range
+%include <uhd/types/ranges.hpp>
+
+%include <uhd/types/tune_request.hpp>
+
+%include <uhd/types/tune_result.hpp>
+
+%include <uhd/types/io_type.hpp>
+
 %include <uhd/types/time_spec.hpp>
+
 %include <uhd/types/clock_config.hpp>
 
-//Re-create range typedefs here with %template as they are not imported.
-//Replicate all the levels of templated inheritance so swig understands.
+%include <uhd/types/metadata.hpp>
 
-%template(float_range_t) uhd::range_t<float>;
-%template(_float_range_vector_t) std::vector<uhd::range_t<float> >;
-%template(gain_range_t) uhd::meta_range_t<float>;
-
-%template(double_range_t) uhd::range_t<double>;
-%template(_double_range_vector_t) std::vector<uhd::range_t<double> >;
-%template(freq_range_t) uhd::meta_range_t<double>;
+%include <uhd/device.hpp>
+%template(device_addr_vector_t) std::vector<uhd::device_addr_t>;
 
 ////////////////////////////////////////////////////////////////////////
 // block magic

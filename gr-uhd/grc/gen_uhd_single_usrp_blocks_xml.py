@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Copyright 2010 Free Software Foundation, Inc.
+Copyright 2010-2011 Free Software Foundation, Inc.
 
 This file is part of GNU Radio
 
@@ -27,15 +27,11 @@ MAIN_TMPL = """\
 	<import>from gnuradio import uhd</import>
 	<make>uhd.single_usrp_$(sourk)(
 	device_addr=\$dev_addr,
-	io_type=uhd.io_type_t.\$type.type,
+	io_type=uhd.io_type.\$type.type,
 	num_channels=\$nchan,
 )
 \#if \$ref_clk()
-_clk_cfg = uhd.clock_config_t()
-_clk_cfg.ref_source = uhd.clock_config_t.REF_SMA
-_clk_cfg.pps_source = uhd.clock_config_t.PPS_SMA
-_clk_cfg.pps_polarity = uhd.clock_config_t.PPS_POS
-self.\$(id).set_clock_config(_clk_cfg);
+self.\$(id).set_clock_config(uhd.clock_config.external());
 \#end if
 \#if \$sd_spec()
 self.\$(id).set_subdev_spec(\$sd_spec)
@@ -180,8 +176,8 @@ If the requested rate is not possible, the UHD block will print an error at runt
 Center frequency:
 The center frequency is the overall frequency of the RF chain. \\
 For greater control of how the UHD tunes elements in the RF chain, \\
-pass a tune_request_t object rather than a simple target frequency.
-Tuning with an LO offset example: uhd.tune_request_t(freq, lo_off)
+pass a tune_request object rather than a simple target frequency.
+Tuning with an LO offset example: uhd.tune_request(freq, lo_off)
 
 Antenna:
 For subdevices with only one antenna, this may be left blank. \\

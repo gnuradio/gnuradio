@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,18 +22,19 @@
 #ifndef INCLUDED_UHD_SINGLE_USRP_SOURCE_H
 #define INCLUDED_UHD_SINGLE_USRP_SOURCE_H
 
+#include <gr_uhd_api.h>
 #include <gr_sync_block.h>
 #include <uhd/usrp/single_usrp.hpp>
 
 class uhd_single_usrp_source;
 
-boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_usrp_source(
-    const std::string &device_addr,
-    const uhd::io_type_t::tid_t &io_type,
+GR_UHD_API boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_usrp_source(
+    const uhd::device_addr_t &device_addr,
+    const uhd::io_type_t &io_type,
     size_t num_channels = 1
 );
 
-class uhd_single_usrp_source : public gr_sync_block{
+class GR_UHD_API uhd_single_usrp_source : public gr_sync_block{
 public:
 
     /*!
@@ -95,14 +96,14 @@ public:
      * \param gain the gain in dB
      * \param chan the channel index 0 to N-1
      */
-    virtual void set_gain(float gain, size_t chan = 0) = 0;
+    virtual void set_gain(double gain, size_t chan = 0) = 0;
 
     /*!
      * Get the actual dboard gain setting.
      * \param chan the channel index 0 to N-1
      * \return the actual gain in dB
      */
-    virtual float get_gain(size_t chan = 0) = 0;
+    virtual double get_gain(size_t chan = 0) = 0;
 
     /*!
      * Get the settable gain range.
@@ -168,10 +169,6 @@ public:
      * \return the single usrp device object
      */
     virtual uhd::usrp::single_usrp::sptr get_device(void) = 0;
-
- protected:
-    size_t d_num_packet_samps;
-    pmt::pmt_t d_tstamp_pair;
 };
 
 #endif /* INCLUDED_UHD_SINGLE_USRP_SOURCE_H */

@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -130,32 +130,10 @@ volkinclude_HEADERS = \
 	volk_8i_s32f_convert_32f_u.h 
 
 VOLK_MKTABLES_SOURCES = \
+	$(platform_CODE) \
 	$(top_srcdir)/lib/volk_rank_archs.c \
 	$(top_srcdir)/lib/volk_mktables.c
 
-
-# FIXME: Not very extensible to supporting more processors easily
-if MYSUBCPU_X86_64
-    VOLK_MKTABLES_SOURCES += \
-        $(top_srcdir)/lib/volk_cpu_x86.c \
-        $(top_srcdir)/lib/cpuid_x86_64.S
-endif
-
-if MYSUBCPU_X86
-    VOLK_MKTABLES_SOURCES += \
-        $(top_srcdir)/lib/volk_cpu_x86.c \
-        $(top_srcdir)/lib/cpuid_x86.S
-endif
-
-if MYSUBCPU_POWERPC
-    VOLK_MKTABLES_SOURCES += \
-        $(top_srcdir)/lib/volk_cpu_powerpc.c
-endif
-
-if MYSUBCPU_GENERIC
-    VOLK_MKTABLES_SOURCES += \
-        $(top_srcdir)/lib/volk_cpu_generic.c
-endif
 
 volk_mktables$(EXEEXT): $(VOLK_MKTABLES_SOURCES)
 	$(CC) -o $@ $^ $(AM_CPPFLAGS) -I$(top_builddir)/include

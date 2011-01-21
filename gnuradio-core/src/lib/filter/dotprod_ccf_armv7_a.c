@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 
-#include <dotprod_fff_armv7_a.h>
+#include <dotprod_ccf_armv7_a.h>
 
 /*!
  * \param x any value
@@ -39,15 +39,17 @@ gr_p2_round_down(size_t x, size_t pow2)
 
 #if 0
 
-float
-dotprod_fff_armv7_a(const float *a, const float *b, size_t n)
+void
+dotprod_ccf_armv7_a(const float *a, const float *b, float *res, size_t n)
 {
-  float	sum = 0;
   size_t i;
+  res[0] = 0;
+  res[1] = 0;
+
   for (i = 0; i < n; i++){
-    sum += a[i] * b[i];
+    res[0] += a[2*i] * b[i];
+    res[1] += a[2*i+1] * b[i];
   }
-  return sum;
 }
 
 #else
@@ -59,29 +61,30 @@ dotprod_fff_armv7_a(const float *a, const float *b, size_t n)
  *    a   4-byte aligned
  *    b  16-byte aligned
  */
-float
-dotprod_fff_armv7_a(const float *a, const float *b, size_t n)
+void
+dotprod_ccf_armv7_a(const float *a, const float *b, float *res, size_t n)
 {
-     float s = 0;
 
-    asm ("vmov.f32  q8, #0.0                  \n\t"
-         "vmov.f32  q9, #0.0                  \n\t"
-         "1:                                  \n\t"
-         "subs      %3, %3, #8                \n\t"
-         "vld1.32   {d0,d1,d2,d3}, [%1]!      \n\t"
-         "vld1.32   {d4,d5,d6,d7}, [%2]!      \n\t"
-         "vmla.f32  q8, q0, q2                \n\t"
-         "vmla.f32  q9, q1, q3                \n\t"
-         "bgt       1b                        \n\t"
-         "vadd.f32  q8, q8, q9                \n\t"
-         "vpadd.f32 d0, d16, d17              \n\t"
-         "vadd.f32  %0, s0, s1                \n\t"
-         : "=w"(s), "+r"(a), "+r"(b), "+r"(n)
-         :: "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7",
-	 "d16", "d17", "d18", "d19");
+        asm volatile(
+		"vmov.f32       q14, #0.0               \n\t"
+		"vmov.f32       q15, #0.0               \n\t"
+		"1:                                     \n\t"
+		"subs           %2, %2, #4              \n\t"
+		"vld2.f32       {q0-q1}, [%0]!          \n\t"
+		"vld1.f32       {q2}, [%1]!             \n\t"
+		"vmla.f32       q14, q0, q2             \n\t"
+		"vmla.f32       q15, q1, q2             \n\t"
+		"bgt            1b                      \n\t"
+		"vpadd.f32      d0, d28, d29            \n\t"
+		"vpadd.f32      d1, d30, d31            \n\t"
+		"vpadd.f32	d0, d0, d1              \n\t"
+		"vst1.f32       {d0}, [%3]              \n\t"
 
-    return s;
-
+		: "+&r"(a), "+&r"(b), "+&r"(n)
+		: "r"(res)
+		: "memory", "d0", "d1", "d2", "d3", "d4", "d5",
+		   "d28", "d29", "d30", "d31" );
 }
+
 
 #endif

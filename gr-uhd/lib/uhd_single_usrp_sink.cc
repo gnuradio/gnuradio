@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,7 +37,7 @@ uhd_single_usrp_sink::uhd_single_usrp_sink(gr_io_signature_sptr sig)
 class uhd_single_usrp_sink_impl : public uhd_single_usrp_sink{
 public:
     uhd_single_usrp_sink_impl(
-        const std::string &device_addr,
+        const uhd::device_addr_t &device_addr,
         const uhd::io_type_t &io_type,
         size_t num_channels
     ):
@@ -72,11 +72,11 @@ public:
         return _dev->get_tx_freq_range(chan);
     }
 
-    void set_gain(float gain, size_t chan){
+    void set_gain(double gain, size_t chan){
         return _dev->set_tx_gain(gain, chan);
     }
 
-    float get_gain(size_t chan){
+    double get_gain(size_t chan){
         return _dev->get_tx_gain(chan);
     }
 
@@ -128,8 +128,7 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        uhd::tx_metadata_t metadata;
-        metadata.start_of_burst = true;
+        uhd::tx_metadata_t metadata; //send a mid-burst packet
 
         return _dev->get_device()->send(
             input_items, noutput_items, metadata,
@@ -173,8 +172,8 @@ protected:
  * Make UHD Single USRP Sink
  **********************************************************************/
 boost::shared_ptr<uhd_single_usrp_sink> uhd_make_single_usrp_sink(
-    const std::string &device_addr,
-    const uhd::io_type_t::tid_t &io_type,
+    const uhd::device_addr_t &device_addr,
+    const uhd::io_type_t &io_type,
     size_t num_channels
 ){
     return boost::shared_ptr<uhd_single_usrp_sink>(

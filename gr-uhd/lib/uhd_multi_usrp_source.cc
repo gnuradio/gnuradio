@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -39,7 +39,7 @@ uhd_multi_usrp_source::uhd_multi_usrp_source(gr_io_signature_sptr sig)
 class uhd_multi_usrp_source_impl : public uhd_multi_usrp_source{
 public:
     uhd_multi_usrp_source_impl(
-        const std::string &device_addr,
+        const uhd::device_addr_t &device_addr,
         const uhd::io_type_t &io_type,
         size_t num_channels
     ):
@@ -73,11 +73,11 @@ public:
         return _dev->get_rx_freq_range(chan);
     }
 
-    void set_gain(float gain, size_t chan){
+    void set_gain(double gain, size_t chan){
         return _dev->set_rx_gain(gain, chan);
     }
 
-    float get_gain(size_t chan){
+    double get_gain(size_t chan){
         return _dev->get_rx_gain(chan);
     }
 
@@ -177,8 +177,8 @@ private:
  * Make UHD Multi USRP Source
  **********************************************************************/
 boost::shared_ptr<uhd_multi_usrp_source> uhd_make_multi_usrp_source(
-    const std::string &device_addr,
-    const uhd::io_type_t::tid_t &io_type,
+    const uhd::device_addr_t &device_addr,
+    const uhd::io_type_t &io_type,
     size_t num_channels
 ){
     return boost::shared_ptr<uhd_multi_usrp_source>(

@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -81,13 +81,13 @@ class plot_data:
         
     def get_data(self, hfile):
         self.text_file_pos.set_text("File Position: %d" % (hfile.tell()//self.sizeof_data))
-        f = scipy.fromfile(hfile, dtype=self.datatype, count=self.block_length)
-        #print "Read in %d items" % len(self.f)
-        if(len(f) == 0):
+        try:
+            f = scipy.fromfile(hfile, dtype=self.datatype, count=self.block_length)
+        except MemoryError:
             print "End of File"
         else:
-            self.f = f
-            self.time = [i*(1/self.sample_rate) for i in range(len(self.f))]
+            self.f = scipy.array(f)
+            self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.f))])
         
     def make_plots(self):
         self.sp_f = self.fig.add_subplot(2,1,1, position=[0.075, 0.2, 0.875, 0.6])
@@ -107,8 +107,8 @@ class plot_data:
         
             # Subplot for real and imaginary parts of signal
             self.plot_f += plot(self.time, self.f, 'o-')
-            maxval = max(maxval, max(self.f))
-            minval = min(minval, min(self.f))
+            maxval = max(maxval, self.f.max())
+            minval = min(minval, self.f.min())
 
         self.sp_f.set_ylim([1.5*minval, 1.5*maxval])
 
@@ -122,8 +122,8 @@ class plot_data:
         for hf,p in zip(self.hfile,self.plot_f):
             self.get_data(hf)
             p.set_data([self.time, self.f])
-            maxval = max(maxval, max(self.f))
-            minval = min(minval, min(self.f))
+            maxval = max(maxval, self.f.max())
+            minval = min(minval, self.f.min())
 
         self.sp_f.set_ylim([1.5*minval, 1.5*maxval])
         

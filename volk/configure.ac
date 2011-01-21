@@ -1,5 +1,5 @@
 dnl
-dnl Copyright 2010 Free Software Foundation, Inc.
+dnl Copyright 2010,2011 Free Software Foundation, Inc.
 dnl
 dnl This program is free software: you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -62,13 +62,6 @@ dnl AX_BOOST_WSERIALIZATION
 
 AC_CONFIG_HEADERS([volk_config.h])
 LV_SET_SIMD_FLAGS
-
-# FIXME: Not very extensible to supporting more processors easily
-AM_CONDITIONAL([MYCPU_X86], [test "$MD_CPU" = "x86"])
-AM_CONDITIONAL([MYSUBCPU_X86], [test "$MD_SUBCPU" = "x86"])
-AM_CONDITIONAL([MYSUBCPU_X86_64], [test "$MD_SUBCPU" = "x86_64"])
-AM_CONDITIONAL([MYSUBCPU_POWERPC], [test "$MD_SUBCPU" = "powerpc"])
-AM_CONDITIONAL([MYSUBCPU_GENERIC], [test "$MD_SUBCPU" != "powerpc" && test "$MD_SUBCPU" != "x86" && test "$MD_SUBCPU" != "x86_64"])
 
 AC_CONFIG_FILES([\
 	  Makefile \

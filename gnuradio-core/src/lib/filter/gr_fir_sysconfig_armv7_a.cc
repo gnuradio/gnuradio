@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2002,2008,2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,6 +28,7 @@
 
 #include <gr_fir_ccf.h>
 #include <gr_fir_ccf_generic.h>
+#include <gr_fir_ccf_armv7_a.h>
 #include <gr_fir_fcc.h>
 #include <gr_fir_fcc_generic.h>
 #include <gr_fir_fff.h>
@@ -51,13 +52,13 @@ using std::cerr;
  * ----------------------------------------------------------------
  */
 
-#if 0
 static gr_fir_ccf *
-make_gr_fir_ccf_altivec(const std::vector<float> &taps)
+make_gr_fir_ccf_armv7_a (const std::vector<float> &taps)
 {
-  return new gr_fir_ccf_altivec(taps);
+  return new gr_fir_ccf_armv7_a(taps);
 }
 
+#if 0
 static gr_fir_fcc *
 make_gr_fir_fcc_altivec(const std::vector<gr_complex> &taps)
 {
@@ -107,15 +108,13 @@ gr_fir_sysconfig_armv7_a::create_gr_fir_ccf (const std::vector<float> &taps)
 {
   static bool first = true;
 
-#if 0
-  if (gr_cpu::has_altivec ()){
+  if (gr_cpu::has_armv7_a ()){
     if (first){
-      cerr << ">>> gr_fir_ccf: using altivec\n";
+      cerr << ">>> gr_fir_ccf: using armv7_a\n";
       first = false;
     }
-    return make_gr_fir_ccf_altivec (taps);
+    return make_gr_fir_ccf_armv7_a (taps);
   }
-#endif
 
   if (0 && first){
     cerr << ">>> gr_fir_ccf: handing off to parent class\n";
@@ -245,15 +244,13 @@ gr_fir_sysconfig_armv7_a::get_gr_fir_ccf_info (std::vector<gr_fir_ccf_info> *inf
   // invoke parent..
   gr_fir_sysconfig_generic::get_gr_fir_ccf_info (info);
 
-#if 0  
   // add our stuff...
   gr_fir_ccf_info	t;
-  if (gr_cpu::has_altivec ()){
-    t.name = "altivec";
-    t.create = make_gr_fir_ccf_altivec;
+  if (gr_cpu::has_armv7_a ()){
+    t.name = "armv7_a";
+    t.create = make_gr_fir_ccf_armv7_a;
     (*info).push_back (t);
   }
-#endif
 }
 
 void 

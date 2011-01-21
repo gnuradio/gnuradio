@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,7 +37,7 @@ uhd_multi_usrp_sink::uhd_multi_usrp_sink(gr_io_signature_sptr sig)
 class uhd_multi_usrp_sink_impl : public uhd_multi_usrp_sink{
 public:
     uhd_multi_usrp_sink_impl(
-        const std::string &device_addr,
+        const uhd::device_addr_t &device_addr,
         const uhd::io_type_t &io_type,
         size_t num_channels
     ):
@@ -56,6 +56,7 @@ public:
 
     void set_samp_rate(double rate){
         _dev->set_tx_rate(rate);
+        _sample_rate = this->get_samp_rate();
     }
 
     double get_samp_rate(void){
@@ -72,11 +73,11 @@ public:
         return _dev->get_tx_freq_range(chan);
     }
 
-    void set_gain(float gain, size_t chan){
+    void set_gain(double gain, size_t chan){
         return _dev->set_tx_gain(gain, chan);
     }
 
-    float get_gain(size_t chan){
+    double get_gain(size_t chan){
         return _dev->get_tx_gain(chan);
     }
 
@@ -128,28 +129,31 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        uhd::tx_metadata_t metadata;
-        metadata.start_of_burst = true;
+        //send a mid-burst packet with time spec
+        _metadata.start_of_burst = false;
+        _metadata.end_of_burst = false;
+        _metadata.has_time_spec = true;
 
-        return _dev->get_device()->send(
-            input_items, noutput_items, metadata,
+        size_t num_sent = _dev->get_device()->send(
+            input_items, noutput_items, _metadata,
             _type, uhd::device::SEND_MODE_FULL_BUFF, 1.0
         );
+
+        //increment the timespec by the number of samples sent
+        _metadata.time_spec += uhd::time_spec_t(0, num_sent, _sample_rate);
+        return num_sent;
     }
 
     //Send an empty start-of-burst packet to begin streaming.
-    //Set at a time in the near future so data will be sync'd.
+    //Set at a time in the near future to avoid late packets.
     bool start(void){
-        uhd::tx_metadata_t metadata;
-        metadata.start_of_burst = true;
-        metadata.has_time_spec = true;
-        //TODO: Time in the near future, must be less than source time in future
-        //because ethernet pause frames with throttle stream commands.
-        //It will be fixed with the invention of host-based flow control.
-        metadata.time_spec = get_time_now() + uhd::time_spec_t(0.05);
+        _metadata.start_of_burst = true;
+        _metadata.end_of_burst = false;
+        _metadata.has_time_spec = true;
+        _metadata.time_spec = get_time_now() + uhd::time_spec_t(0.01);
 
         _dev->get_device()->send(
-            gr_vector_const_void_star(_nchan), 0, metadata,
+            gr_vector_const_void_star(_nchan), 0, _metadata,
             _type, uhd::device::SEND_MODE_ONE_PACKET, 1.0
         );
         return true;
@@ -158,11 +162,12 @@ public:
     //Send an empty end-of-burst packet to end streaming.
     //Ending the burst avoids an underflow error on stop.
     bool stop(void){
-        uhd::tx_metadata_t metadata;
-        metadata.end_of_burst = true;
+        _metadata.start_of_burst = false;
+        _metadata.end_of_burst = true;
+        _metadata.has_time_spec = false;
 
         _dev->get_device()->send(
-            gr_vector_const_void_star(_nchan), 0, metadata,
+            gr_vector_const_void_star(_nchan), 0, _metadata,
             _type, uhd::device::SEND_MODE_ONE_PACKET, 1.0
         );
         return true;
@@ -172,14 +177,16 @@ protected:
     uhd::usrp::multi_usrp::sptr _dev;
     const uhd::io_type_t _type;
     size_t _nchan;
+    uhd::tx_metadata_t _metadata;
+    double _sample_rate;
 };
 
 /***********************************************************************
  * Make UHD Multi USRP Sink
  **********************************************************************/
 boost::shared_ptr<uhd_multi_usrp_sink> uhd_make_multi_usrp_sink(
-    const std::string &device_addr,
-    const uhd::io_type_t::tid_t &io_type,
+    const uhd::device_addr_t &device_addr,
+    const uhd::io_type_t &io_type,
     size_t num_channels
 ){
     return boost::shared_ptr<uhd_multi_usrp_sink>(

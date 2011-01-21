@@ -9,6 +9,8 @@
 	<key>gr_goertzel_fc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.goertzel_fc($rate, $len, $freq)</make>
+        <callback>set_freq($freq)</callback>
+        <callback>set_rate($rate)</callback>
 	<param>
 		<name>Rate</name>
 		<key>rate</key>
