@@ -253,6 +253,7 @@ bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
     bool fail = false;
     int print_max_errs = 10;
     for(int i=0; i<vlen; i++) {
+        if(((t *)(in1))[i] < 1e-30) continue; //below around here we'll start to get roundoff errors due to float precision
         if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/(((t *)in1)[i]) > tol) {
             fail=true;
             if(print_max_errs-- > 0) {
@@ -265,14 +266,14 @@ bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
 }
 
 template <class t>
-bool icompare(t *in1, t *in2, unsigned int vlen, float tol) {
+bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
     bool fail = false;
     int print_max_errs = 10;
     for(int i=0; i<vlen; i++) {
-        if(((t *)(in1))[i] != ((t *)(in2))[i]) {
+        if(abs(((t *)(in1))[i] - ((t *)(in2))[i]) > tol) {
             fail=true;
             if(print_max_errs-- > 0) {
-                std::cout << "offset " << i << " in1: " << int(((t *)(in1))[i]) << " in2: " << int(((t *)(in2))[i]) << std::endl;
+                std::cout << "offset " << i << " in1: " << static_cast<int>(t(((t *)(in1))[i])) << " in2: " << static_cast<int>(t(((t *)(in2))[i])) << std::endl;
             }
         }
     }
@@ -339,21 +340,21 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
                 if(inputsc.size() == 0) {
                     run_cast_test1((volk_fn_1arg)(manual_func), outbuffs[i], vlen, iter, arch_list[i]); 
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
-                    run_cast_test1_s32f((volk_fn_1arg_s32f)(manual_func), outbuffs[i], 255.0, vlen, iter, arch_list[i]);
+                    run_cast_test1_s32f((volk_fn_1arg_s32f)(manual_func), outbuffs[i], 127.0, vlen, iter, arch_list[i]);
                 } else throw "unsupported 1 arg function >1 scalars";
                 break;
             case 2:
                 if(inputsc.size() == 0) {
                     run_cast_test2((volk_fn_2arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
-                    run_cast_test2_s32f((volk_fn_2arg_s32f)(manual_func), outbuffs[i], inbuffs, 255.0, vlen, iter, arch_list[i]);
+                    run_cast_test2_s32f((volk_fn_2arg_s32f)(manual_func), outbuffs[i], inbuffs, 127.0, vlen, iter, arch_list[i]);
                 } else throw "unsupported 2 arg function >1 scalars";
                 break;
             case 3:
                 if(inputsc.size() == 0) {
                     run_cast_test3((volk_fn_3arg)(manual_func), outbuffs[i], inbuffs, vlen, iter, arch_list[i]);
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
-                    run_cast_test3_s32f((volk_fn_3arg_s32f)(manual_func), outbuffs[i], inbuffs, 255.0, vlen, iter, arch_list[i]);
+                    run_cast_test3_s32f((volk_fn_3arg_s32f)(manual_func), outbuffs[i], inbuffs, 127.0, vlen, iter, arch_list[i]);
                 } else throw "unsupported 3 arg function >1 scalars";
                 break;
             case 4:
@@ -375,7 +376,7 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
 
     //now compare
     if(outputsig.size() == 0) outputsig = inputsig; //a hack, i know
-
+    //TODO: loop over the output signature as well
     bool fail = false;
     for(int i=0; i<arch_list.size(); i++) {
         if(i != generic_offset) {
@@ -386,7 +387,41 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
                     fail = fcompare((float *) outbuffs[generic_offset], (float *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
                 }
             } else {
-                fail = memcmp(outbuffs[generic_offset], outbuffs[i], outputsig[0].size * vlen * (outputsig[0].is_complex ? 2:1));
+                //i could replace this whole switch statement with a memcmp if i wasn't interested in printing the outputs where they differ
+                switch(outputsig[0].size) {
+                case 8:
+                    if(outputsig[0].is_signed) {
+                        fail = icompare((int64_t *) outbuffs[generic_offset], (int64_t *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                    } else {
+                        fail = icompare((uint64_t *) outbuffs[generic_offset], (uint64_t *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                    }
+                    break;
+                case 4:
+                    if(outputsig[0].is_signed) {
+                        fail = icompare((int32_t *) outbuffs[generic_offset], (int32_t *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                    } else {
+                        fail = icompare((uint32_t *) outbuffs[generic_offset], (uint32_t *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                    }
+                    break;
+                case 2:
+                    if(outputsig[0].is_signed) {
+                        fail = icompare((int16_t *) outbuffs[generic_offset], (int16_t *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                    } else {
+                        fail = icompare((uint16_t *) outbuffs[generic_offset], (uint16_t *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                    }
+                    break;
+                case 1:
+                    if(outputsig[0].is_signed) {
+                        fail = icompare((int8_t *) outbuffs[generic_offset], (int8_t *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                    } else {
+                        fail = icompare((uint8_t *) outbuffs[generic_offset], (uint8_t *) outbuffs[i], vlen*(outputsig[0].is_complex ? 2 : 1), tol);
+                    }
+                    break;
+                default:
+                    fail=1;
+                }
+                    
+                //fail = memcmp(outbuffs[generic_offset], outbuffs[i], outputsig[0].size * vlen * (outputsig[0].is_complex ? 2:1));
             }
             if(fail) {
                 std::cout << name << ": fail on arch " << arch_list[i] << std::endl;
