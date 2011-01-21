@@ -110,7 +110,6 @@ endif
 # ----------------------------------------------------------------
 noinst_HEADERS = \
 	volk_init.h \
-	qa_volk.h \
 	qa_utils.h \
 	assembly.h
 

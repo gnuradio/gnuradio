@@ -18,7 +18,6 @@ dnl
 AC_INIT
 AC_PREREQ(2.57)
 AC_CONFIG_AUX_DIR([.])	
-AC_CONFIG_SRCDIR([lib/test_all.cc])
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(volk,0.1)
 
