@@ -19,7 +19,7 @@ $(win).addWidget(self._$(id)_tool_bar)
 #if $label()
 self._$(id)_tool_bar.addWidget(Qt.QLabel($label, None))
 #else
-self._$(id)_tool_bar.addWidget(Qt.QLabel($id, None))
+self._$(id)_tool_bar.addWidget(Qt.QLabel("$id", None))
 #end if
 self._$(id)_counter = Qwt.QwtCounter(None)
 self._$(id)_counter.setRange($start, $stop, $step)

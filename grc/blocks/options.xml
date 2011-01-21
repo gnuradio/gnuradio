@@ -60,7 +60,6 @@ else: self.stop(); self.wait()</callback>
 		<key>generate_options</key>
 		<value>wx_gui</value>
 		<type>enum</type>
-		<hide>#if $generate_options() == 'wx_gui' then 'part' else 'none'#</hide>
 		<option>
 			<name>WX GUI</name>
 			<key>wx_gui</key>
