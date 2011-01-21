@@ -282,7 +282,7 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
     return fail;
 }
 
-bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, int vlen, int iter) {
+bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
     
     //first let's get a list of available architectures for the test
@@ -337,21 +337,21 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
                 if(inputsc.size() == 0) {
                     run_cast_test1((volk_fn_1arg)(manual_func), test_data[i], vlen, iter, arch_list[i]); 
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
-                    run_cast_test1_s32f((volk_fn_1arg_s32f)(manual_func), test_data[i], 127.0, vlen, iter, arch_list[i]);
+                    run_cast_test1_s32f((volk_fn_1arg_s32f)(manual_func), test_data[i], scalar, vlen, iter, arch_list[i]);
                 } else throw "unsupported 1 arg function >1 scalars";
                 break;
             case 2:
                 if(inputsc.size() == 0) {
                     run_cast_test2((volk_fn_2arg)(manual_func), test_data[i], vlen, iter, arch_list[i]);
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
-                    run_cast_test2_s32f((volk_fn_2arg_s32f)(manual_func), test_data[i], 127.0, vlen, iter, arch_list[i]);
+                    run_cast_test2_s32f((volk_fn_2arg_s32f)(manual_func), test_data[i], scalar, vlen, iter, arch_list[i]);
                 } else throw "unsupported 2 arg function >1 scalars";
                 break;
             case 3:
                 if(inputsc.size() == 0) {
                     run_cast_test3((volk_fn_3arg)(manual_func), test_data[i], vlen, iter, arch_list[i]);
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
-                    run_cast_test3_s32f((volk_fn_3arg_s32f)(manual_func), test_data[i], 127.0, vlen, iter, arch_list[i]);
+                    run_cast_test3_s32f((volk_fn_3arg_s32f)(manual_func), test_data[i], scalar, vlen, iter, arch_list[i]);
                 } else throw "unsupported 3 arg function >1 scalars";
                 break;
             case 4:
