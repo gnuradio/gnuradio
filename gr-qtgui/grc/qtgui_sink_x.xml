@@ -8,10 +8,12 @@
 	<name>QT GUI Sink</name>
 	<key>qtgui_sink_x</key>
 	<category>Graphical Sinks</category>
+	<import>from PyQt4 import Qt</import>
 	<import>from gnuradio.qtgui import qtgui</import>
 	<import>from gnuradio.gr import firdes</import>
 	<import>import sip</import>
-	<make>qtgui.$(type.fcn)(
+	<make>#set $win = 'self._%s_win'%$id
+qtgui.$(type.fcn)(
 	$fftsize, \#fftsize
 	$wintype, \#wintype
 	$fc, \#fc
@@ -23,8 +25,8 @@
 	$plottime, \#plottime
 	$plotconst, \#plotconst
 )
-self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), QtGui.QWidget)
-self.layout.addWidget(self._$(id)_win)</make>
+self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
+$(gui_hint()($win))</make>
 	<callback>set_frequency_range($fc, $bw)</callback>
 	<param>
 		<name>Type</name>
@@ -114,11 +116,21 @@ self.layout.addWidget(self._$(id)_win)</make>
 		<option><name>On</name><key>True</key></option>
 		<option><name>Off</name><key>False</key></option>
 	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
 		<nports>$num_inputs</nports>
 	</sink>
 	<doc>
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
 	</doc>
 </block>

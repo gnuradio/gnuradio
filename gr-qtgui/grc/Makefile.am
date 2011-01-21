@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,4 +25,5 @@ grcblocksdir = $(grc_blocksdir)
 
 dist_grcblocks_DATA = \
 	qtgui_sink_x.xml \
+	qtgui_tab_widget.xml \
 	qtgui_variable_slider.xml

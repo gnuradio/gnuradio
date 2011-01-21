@@ -100,6 +100,10 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 			filter(lambda b: b.get_key() == 'notebook', blocks),
 			lambda n: n.get_id(), lambda n: n.get_param('notebook').get_value(),
 		)
+		notebooks += expr_utils.sort_objects(
+			filter(lambda b: b.get_key() == 'qtgui_tab_widget', blocks),
+			lambda n: n.get_id(), lambda n: n.get_param('gui_hint').get_value(),
+		)
 		#list of regular blocks (all blocks minus the special ones)
 		blocks = filter(lambda b: b not in (imports + parameters + variables + probes + notebooks), blocks) + probes
 		#list of connections where each endpoint is enabled

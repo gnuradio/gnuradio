@@ -16,7 +16,7 @@ from grc_gnuradio import wxgui as grc_wxgui
 import wx
 #end if
 #if $generate_options() == 'qt_gui'
-from PyQt4 import QtGui
+from PyQt4 import Qt
 import sys
 #end if
 #if $generate_options() != 'hb'

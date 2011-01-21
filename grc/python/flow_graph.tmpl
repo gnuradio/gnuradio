@@ -60,12 +60,14 @@ class $(class_name)(grc_wxgui.top_block_gui):
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 	#end if
 #elif $generate_options == 'qt_gui'
-class $(class_name)(gr.top_block, QtGui.QWidget):
+class $(class_name)(gr.top_block, Qt.QWidget):
 
 	def __init__($param_str):
 		gr.top_block.__init__(self, "$title")
-		QtGui.QWidget.__init__(self)
-		self.layout = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom, self)
+		Qt.QWidget.__init__(self)
+		self.top_layout = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self)
+		self.top_grid_layout = Qt.QGridLayout()
+		self.top_layout.addLayout(self.top_grid_layout)
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
@@ -203,6 +205,9 @@ self.$port.get_parent().get_id()#slurp
 ########################################################
 #for $var in $parameters + $variables
 	#set $id = $var.get_id()
+	def get_$(id)(self):
+		return self.$id
+
 	def set_$(id)(self, $id):
 		self.$id = $id
 	#for $callback in $var_id2cbs[$id]
@@ -250,7 +255,7 @@ if __name__ == '__main__':
 	tb = $(class_name)($(', '.join($params_eq_list)))
 	tb.Run($flow_graph.get_option('run'))
 	#elif $generate_options == 'qt_gui'
-	qapp = QtGui.QApplication(sys.argv)
+	qapp = Qt.QApplication(sys.argv)
 	tb = $(class_name)($(', '.join($params_eq_list)))
 	tb.start()
 	tb.show()

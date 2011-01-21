@@ -99,7 +99,7 @@ class Param(_Param, _GUIParam):
 		'hex', 'string', 'bool',
 		'file_open', 'file_save',
 		'id', 'stream_id',
-		'grid_pos', 'notebook',
+		'grid_pos', 'notebook', 'gui_hint',
 		'import',
 	)
 
@@ -353,6 +353,29 @@ class Param(_Param, _GUIParam):
 				try: assert v in ids
 				except: raise Exception, 'Stream ID "%s" is not found.'%v
 			return v
+		#########################
+		# GUI Position/Hint
+		#########################
+		elif t == 'gui_hint':
+			if ':' in v: tab, pos = v.split(':')
+			elif '@' in v: tab, pos = v, ''
+			else: tab, pos = '', v
+
+			if '@' in tab: tab, index = tab.split('@')
+			else: index = '?'
+
+			widget_str = ({
+				(True, True): 'self.%(tab)s_grid_layout_%(index)s.addWidget(%(widget)s, %(pos)s)',
+				(True, False): 'self.%(tab)s_layout_%(index)s.addWidget(%(widget)s)',
+				(False, True): 'self.top_grid_layout.addWidget(%(widget)s, %(pos)s)',
+				(False, False): 'self.top_layout.addWidget(%(widget)s)',
+			}[bool(tab), bool(pos)])%{'tab': tab, 'index': index, 'widget': '%s', 'pos': pos}
+
+			def gui_hint(ws, w):
+				if 'layout' in w: ws = ws.replace('addWidget', 'addLayout')
+				return ws%w
+
+			return lambda w: gui_hint(widget_str, w)
 		#########################
 		# Grid Position Type
 		#########################

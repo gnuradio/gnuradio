@@ -26,5 +26,4 @@ DIST_SUBDIRS = src
 
 if PYTHON
 SUBDIRS += grc
-SUBDIRS += python
 endif

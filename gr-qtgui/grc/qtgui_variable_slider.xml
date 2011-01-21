@@ -6,35 +6,35 @@
 ###################################################
  -->
 <block>
-	<name>QT GUI Variable Slider</name>
+	<name>QT GUI Slider</name>
 	<key>variable_qtgui_slider</key>
 	<category>Variables</category>
 	<import>from PyQt4 import Qt</import>
 	<import>import PyQt4.Qwt5 as Qwt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
-	<make>#set $win = '_%s_sizer'%$id
+	<make>#set $win = '_%s_layout'%$id
 $win = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom)
 self._$(id)_tool_bar = Qt.QToolBar(self)
 $(win).addWidget(self._$(id)_tool_bar)
 #if $label()
-self._$(id)_tool_bar.addWidget(Qt.QLabel($label, self._$(id)_tool_bar))
+self._$(id)_tool_bar.addWidget(Qt.QLabel($label, None))
 #else
-self._$(id)_tool_bar.addWidget(Qt.QLabel($id, self._$(id)_tool_bar))
+self._$(id)_tool_bar.addWidget(Qt.QLabel($id, None))
 #end if
-self._$(id)_counter = Qwt.QwtCounter(self._$(id)_tool_bar)
+self._$(id)_counter = Qwt.QwtCounter(None)
 self._$(id)_counter.setRange($start, $stop, $step)
 self._$(id)_counter.setNumButtons(2)
 self._$(id)_counter.setValue($value)
 self._$(id)_tool_bar.addWidget(self._$(id)_counter)
-$(win).connect(self._$(id)_counter, Qt.SIGNAL('valueChanged(double)'), self.set_$(id))
-self._$(id)_slider = Qwt.QwtSlider(self._$(id)_tool_bar)
+self._$(id)_counter.valueChanged.connect(self.set_$(id))
+self._$(id)_slider = Qwt.QwtSlider(None)
 self._$(id)_slider.setRange($start, $stop, $step)
 self._$(id)_slider.setValue($value)
 self._$(id)_slider.setOrientation(Qt.$orient)
 self._$(id)_slider.setScalePosition($orient.scalepos)
-$(win).connect(self._$(id)_slider, Qt.SIGNAL('valueChanged(double)'), self.set_$(id))
+self._$(id)_slider.valueChanged.connect(self.set_$(id))
 $(win).addWidget(self._$(id)_slider)
-self.layout.addLayout($win)</make>
+$(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
 	<callback>self._$(id)_counter.setValue($id)</callback>
 	<callback>self._$(id)_slider.setValue($id)</callback>
@@ -68,7 +68,6 @@ self.layout.addLayout($win)</make>
 		<key>step</key>
 		<value>1</value>
 		<type>real</type>
-		<hide>part</hide>
 	</param>
 	<param>
 		<name>Orientation</name>
@@ -87,6 +86,13 @@ self.layout.addLayout($win)</make>
 			<opt>scalepos:Qwt.QwtSlider.RightScale</opt>
 		</option>
 	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
 	<check>$start &lt;= $value &lt;= $stop</check>
 	<check>$start &lt; $stop</check>
 	<doc>
@@ -94,5 +100,9 @@ This block creates a variable with a slider. \
 Leave the label blank to use the variable id as the label. \
 The value must be a real number. \
 The value must be between the start and the stop.
+
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
 	</doc>
 </block>
