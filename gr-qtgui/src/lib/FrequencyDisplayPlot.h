@@ -1,6 +1,7 @@
 #ifndef FREQUENCY_DISPLAY_PLOT_HPP
 #define FREQUENCY_DISPLAY_PLOT_HPP
 
+#include <stdint.h>
 #include <cstdio>
 #include <qwt_plot.h>
 #include <qwt_painter.h>
