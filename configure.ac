@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+dnl Copyright 2001-2011 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -304,13 +304,13 @@ dnl
 dnl all the rest of these call AC_SUBST(BOOST_<foo>_LIB) and define HAVE_BOOST_<foo>
 dnl
 AX_BOOST_DATE_TIME
-dnl AX_BOOST_FILESYSTEM
+AX_BOOST_FILESYSTEM
 dnl AX_BOOST_IOSTREAMS
 AX_BOOST_PROGRAM_OPTIONS
 dnl AX_BOOST_REGEX
 dnl AX_BOOST_SERIALIZATION
 dnl AX_BOOST_SIGNALS
-dnl AX_BOOST_SYSTEM
+AX_BOOST_SYSTEM
 dnl AX_BOOST_TEST_EXEC_MONITOR
 dnl AX_BOOST_UNIT_TEST_FRAMEWORK
 dnl AX_BOOST_WSERIALIZATION
