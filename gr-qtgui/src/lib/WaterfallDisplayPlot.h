@@ -40,11 +40,13 @@ public:
   const QColor GetUserDefinedLowIntensityColor()const;
   const QColor GetUserDefinedHighIntensityColor()const;
 
-  static const int INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR = 0;
-  static const int INTENSITY_COLOR_MAP_TYPE_WHITE_HOT = 1;
-  static const int INTENSITY_COLOR_MAP_TYPE_BLACK_HOT = 2;
-  static const int INTENSITY_COLOR_MAP_TYPE_INCANDESCENT = 3;
-  static const int INTENSITY_COLOR_MAP_TYPE_USER_DEFINED = 4;
+  enum{
+    INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR = 0,
+    INTENSITY_COLOR_MAP_TYPE_WHITE_HOT = 1,
+    INTENSITY_COLOR_MAP_TYPE_BLACK_HOT = 2,
+    INTENSITY_COLOR_MAP_TYPE_INCANDESCENT = 3,
+    INTENSITY_COLOR_MAP_TYPE_USER_DEFINED = 4
+  };
 
 public slots:
   void resizeSlot( QSize *s );
