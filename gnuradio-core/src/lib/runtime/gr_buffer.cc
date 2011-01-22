@@ -31,6 +31,7 @@
 #include <iostream>
 #include <assert.h>
 #include <algorithm>
+#include <boost/math/common_factor_rt.hpp>
 
 static long s_buffer_count = 0;		// counts for debugging storage mgmt
 static long s_buffer_reader_count = 0;
@@ -73,7 +74,7 @@ static long s_buffer_reader_count = 0;
 static long
 minimum_buffer_items (long type_size, long page_size)
 {
-  return page_size / gr_gcd (type_size, page_size);
+  return page_size / boost::math::gcd (type_size, page_size);
 }
 
 

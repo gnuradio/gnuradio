@@ -46,22 +46,5 @@ AC_DEFUN([LF_CXX_PORTABILITY],[
   dnl Check for common C++ portability problems
   dnl
 
-  dnl AC_LANG_PUSH
-  dnl AC_LANG_CPLUSPLUS
-  AC_LANG_SAVE
-  AC_LANG_CPLUSPLUS
-
-
-  dnl Test whether C++ has std::isnan
-  AC_MSG_CHECKING(whether C++ has std::isnan)
-  AC_TRY_COMPILE([#include <cmath>], [
-   std::isnan(0);
-], [ AC_MSG_RESULT(yes)
-	AC_DEFINE(CXX_HAS_STD_ISNAN,[],[Define if has std::isnan]) ],
-   [ AC_MSG_RESULT(no) ])
-
-  dnl Done with the portability checks
-  dnl AC_LANG_POP([C++])
-  AC_LANG_RESTORE
 ])
 

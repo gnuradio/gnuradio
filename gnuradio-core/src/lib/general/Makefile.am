@@ -100,7 +100,6 @@ libgeneral_la_SOURCES = 		\
 	gr_lms_dfe_cc.cc		\
 	gr_lms_dfe_ff.cc		\
 	gr_map_bb.cc			\
-	gr_math.cc			\
 	gr_misc.cc			\
 	gr_mpsk_receiver_cc.cc		\
 	gr_nlog10_ff.cc			\

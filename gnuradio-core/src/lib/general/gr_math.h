@@ -35,19 +35,6 @@ gr_is_power_of_2(long x)
   return x != 0 && (x & (x-1)) == 0;
 }
 
-long gr_gcd (long m, long n);
-
-// returns a non-zero value if value is "not-a-number" (NaN), and 0 otherwise
-int gr_isnan (double value);
-
-// returns a non-zero value if the value of x has its sign bit set.
-//
-// This  is  not  the  same  as `x < 0.0', because IEEE 754 floating point
-// allows zero to be signed.  The comparison `-0.0 < 0.0'  is  false,  but
-// `gr_signbit (-0.0)' will return a nonzero value.
-
-int gr_signbit (double x);
-  
 /*!
  * \brief Fast arc tangent using table lookup and linear interpolation
  * \ingroup misc
