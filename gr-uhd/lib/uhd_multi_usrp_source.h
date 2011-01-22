@@ -167,6 +167,12 @@ public:
     virtual void set_time_unknown_pps(const uhd::time_spec_t &time_spec) = 0;
 
     /*!
+     * Get access to the underlying uhd dboard iface object.
+     * \return the dboard_iface object
+     */
+    virtual uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan) = 0;
+
+    /*!
      * Get access to the underlying uhd device object.
      * \return the multi usrp device object
      */

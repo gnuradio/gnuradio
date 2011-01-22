@@ -117,6 +117,10 @@ public:
         return _dev->set_time_next_pps(time_spec);
     }
 
+    uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan){
+        return _dev->get_rx_dboard_iface(chan);
+    }
+
     uhd::usrp::single_usrp::sptr get_device(void){
         return _dev;
     }
