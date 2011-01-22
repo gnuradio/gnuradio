@@ -106,7 +106,7 @@ static inline void volk_32f_s32f_convert_8i_a16_generic(int8_t* outputVector, co
   unsigned int number = 0;
 
   for(number = 0; number < num_points; number++){
-    *outputVectorPtr++ = ((int8_t)(*inputVectorPtr++  * scalar));
+    *outputVectorPtr++ = (int8_t)(*inputVectorPtr++  * scalar);
   }
 }
 #endif /* LV_HAVE_GENERIC */

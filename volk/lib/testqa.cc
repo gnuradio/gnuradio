@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(volk_test_all) {
     VOLK_RUN_TESTS(volk_32fc_deinterleave_real_64f_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_x2_dot_prod_32fc_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_index_max_16u_a16, 0, 0, 2046, 10000);
-    VOLK_RUN_TESTS(volk_32fc_s32f_magnitude_16i_a16, 0, 32768, 2046, 10000);
+    VOLK_RUN_TESTS(volk_32fc_s32f_magnitude_16i_a16, 1, 32768, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_magnitude_32f_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_x2_multiply_32fc_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32f_s32f_convert_16i_a16, 1, 32768, 2046, 10000);

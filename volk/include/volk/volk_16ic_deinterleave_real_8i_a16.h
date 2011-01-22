@@ -53,7 +53,7 @@ static inline void volk_16ic_deinterleave_real_8i_a16_ssse3(int8_t* iBuffer, con
   number = sixteenthPoints * 16;
   int16_t* int16ComplexVectorPtr = (int16_t*)complexVectorPtr;
   for(; number < num_points; number++){
-    *iBufferPtr++ = ((int8_t)(*int16ComplexVectorPtr++ / 256));
+    *iBufferPtr++ = ((int8_t)(*int16ComplexVectorPtr++ >> 8));
     int16ComplexVectorPtr++;
   }
 }
@@ -71,7 +71,7 @@ static inline void volk_16ic_deinterleave_real_8i_a16_generic(int8_t* iBuffer, c
   int16_t* complexVectorPtr = (int16_t*)complexVector;
   int8_t* iBufferPtr = iBuffer;
   for(number = 0; number < num_points; number++){
-    *iBufferPtr++ = ((int8_t)(*complexVectorPtr++ / 256));
+    *iBufferPtr++ = ((int8_t)(*complexVectorPtr++ >> 8));
     complexVectorPtr++;
   }
 }
