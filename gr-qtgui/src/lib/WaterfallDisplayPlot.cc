@@ -13,6 +13,7 @@
 #include <qapplication.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
+namespace pt = boost::posix_time;
 
 class FreqOffsetAndPrecisionClass
 {
@@ -137,15 +138,9 @@ public:
 
   virtual QwtText label(double value) const
   {
-    QwtText returnLabel("");
-
     timespec lineTime = timespec_add(GetZeroTime(), (-value) * GetSecondsPerLine());
-    tm timeTm(boost::posix_time::to_tm(boost::posix_time::from_time_t(lineTime.tv_sec)));
-    returnLabel = (QString("").sprintf("%04d/%02d/%02d\n%02d:%02d:%02d.%03ld",
-				       timeTm.tm_year+1900, timeTm.tm_mon+1,
-				       timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
-				       timeTm.tm_sec, lineTime.tv_nsec/1000000));
-    return returnLabel;
+    std::string time_str = pt::to_simple_string(pt::from_time_t(lineTime.tv_sec));
+    return QwtText(QString("").sprintf("%s.%03ld", time_str.c_str(), lineTime.tv_nsec/1000000));
   }
 
   virtual void initiateUpdate()
@@ -190,14 +185,9 @@ protected:
   using QwtPlotZoomer::trackerText;
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    QString yLabel("");
-
     timespec lineTime = timespec_add(GetZeroTime(), (-p.y()) * GetSecondsPerLine());
-    tm timeTm(boost::posix_time::to_tm(boost::posix_time::from_time_t(lineTime.tv_sec)));
-    yLabel = (QString("").sprintf("%04d/%02d/%02d %02d:%02d:%02d.%03ld",
-				  timeTm.tm_year+1900, timeTm.tm_mon+1,
-				  timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
-				  timeTm.tm_sec, lineTime.tv_nsec/1000000));
+    std::string time_str = pt::to_simple_string(pt::from_time_t(lineTime.tv_sec));
+    QString yLabel(QString("").sprintf("%s.%03ld", time_str.c_str(), lineTime.tv_nsec/1000000));
 
     QwtText t(QString("%1 %2, %3").
 	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
