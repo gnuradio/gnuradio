@@ -59,7 +59,7 @@ noinst_SCRIPTS = \
 	benchmark_dotprod
 
 
-LIBGNURADIO = 	$(GNURADIO_CORE_LA)
+LIBGNURADIO = 	$(GNURADIO_CORE_LA) $(BOOST_FILESYSTEM_LIB)
 LIBGNURADIOQA = $(top_builddir)/gnuradio-core/src/lib/libgnuradio-core-qa.la $(LIBGNURADIO)
 
 benchmark_dotprod_fff_SOURCES = benchmark_dotprod_fff.cc
