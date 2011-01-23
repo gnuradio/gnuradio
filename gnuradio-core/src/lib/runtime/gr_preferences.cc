@@ -25,6 +25,7 @@
 #endif
 
 #include <gr_preferences.h>
+#include <gr_sys_paths.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,14 +38,6 @@
 #include <boost/filesystem/path.hpp>
 namespace fs = boost::filesystem;
 
-static std::string get_home_dir(void){
-    #if defined(BOOST_WINDOWS)
-        return getenv ("APPDATA");
-    #else
-        return getenv ("HOME");
-    #endif
-}
-
 /*
  * The simplest thing that could possibly work:
  *  the key is the filename; the value is the file contents.
@@ -54,14 +47,14 @@ static const char *
 pathname (const char *key)
 {
   static fs::path path;
-  path = fs::path(get_home_dir()) / ".gnuradio" / "prefs" / key;
+  path = fs::path(gr_appdata_path()) / ".gnuradio" / "prefs" / key;
   return path.string().c_str();
 }
 
 static void
 ensure_dir_path ()
 {
-  fs::path path = fs::path(get_home_dir()) / ".gnuradio";
+  fs::path path = fs::path(gr_appdata_path()) / ".gnuradio";
   if (!fs::is_directory(path)) fs::create_directory(path);
 
   path = path / "prefs";

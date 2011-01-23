@@ -21,6 +21,7 @@
  */
 
 #include <gri_fft.h>
+#include <gr_sys_paths.h>
 #include <fftw3.h>
 #include <gr_complex.h>
 #include <stdlib.h>
@@ -32,14 +33,6 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 namespace fs = boost::filesystem;
-
-static std::string get_home_dir(void){
-    #if defined(BOOST_WINDOWS)
-        return getenv ("APPDATA");
-    #else
-        return getenv ("HOME");
-    #endif
-}
 
 boost::mutex &
 gri_fft_planner::mutex()
@@ -53,7 +46,7 @@ static const char *
 wisdom_filename ()
 {
   static fs::path path;
-  path = fs::path(get_home_dir()) / ".gr_fftw_wisdom";
+  path = fs::path(gr_appdata_path()) / ".gr_fftw_wisdom";
   return path.string().c_str();
 }
 

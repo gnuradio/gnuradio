@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2003,2004,2007,2008,2009,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -58,7 +58,7 @@ libruntime_la_SOURCES = 			\
 	gr_sync_block.cc			\
 	gr_sync_decimator.cc			\
 	gr_sync_interpolator.cc			\
-	gr_tmp_path.cc				\
+	gr_sys_paths.cc				\
 	gr_top_block.cc				\
 	gr_top_block_impl.cc			\
 	gr_tpb_detail.cc			\
@@ -121,7 +121,7 @@ grinclude_HEADERS = 				\
 	gr_tpb_detail.h				\
 	gr_tpb_thread_body.h			\
 	gr_timer.h				\
-	gr_tmp_path.h				\
+	gr_sys_paths.h				\
 	gr_types.h				\
 	gr_unittests.h				\
 	gr_vmcircbuf.h				\
