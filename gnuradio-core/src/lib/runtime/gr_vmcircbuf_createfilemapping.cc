@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2005 Free Software Foundation, Inc.
+ * Copyright 2003,2005,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -36,7 +36,6 @@
 #include <errno.h>
 #include <stdio.h>
 #include <gr_pagesize.h>
-#include <gr_tmp_path.h>
 #include <gr_vmcircbuf_createfilemapping.h>
 
 #ifdef HAVE_CREATEFILEMAPPING

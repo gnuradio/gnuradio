@@ -1,6 +1,5 @@
-/* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,33 +19,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_tmp_path.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef _GR_SYS_PATHS_H_
+#define _GR_SYS_PATHS_H_
 
-const char *
-gr_tmp_path ()
-{
-  static char *pp = 0;
+//! directory to create temporary files
+const char *gr_tmp_path();
 
-  if (pp)
-    return pp;
+//! directory to store application data
+const char *gr_appdata_path();
 
-  char *s = getenv ("TMP");
-  if (s){
-    pp = strdup (s);
-    return pp;
-  }
-
-#ifdef P_tmpdir
-  if (P_tmpdir){
-    pp = strdup (P_tmpdir);
-    return pp;
-  }
-#endif
-
-  pp = strdup ("/tmp");
-  return pp;
-}
-
+#endif /* _GR_SYS_PATHS_H_ */
