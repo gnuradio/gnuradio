@@ -26,19 +26,8 @@ if MD_CPU_generic
 endif
 
 if MD_CPU_x86
-if MD_SUBCPU_x86_64
     platform_CODE = \
-	$(top_srcdir)/lib/volk_cpu_x86.c \
-	$(top_srcdir)/lib/cpuid_x86_64.S
-endif
-endif
-
-if MD_CPU_x86
-if !MD_SUBCPU_x86_64
-    platform_CODE = \
-	$(top_srcdir)/lib/volk_cpu_x86.c \
-	$(top_srcdir)/lib/cpuid_x86.S
-endif
+	$(top_srcdir)/lib/volk_cpu_x86.c
 endif
 
 if MD_CPU_powerpc

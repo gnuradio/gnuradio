@@ -120,8 +120,7 @@ x86_SUBCODE = 				\
 	ccomplex_dotprod_sse.S		\
 	fcomplex_dotprod_3dnow.S	\
 	fcomplex_dotprod_sse.S		\
-	short_dotprod_mmx.S		\
-	cpuid_x86.S
+	short_dotprod_mmx.S
 
 x86_64_SUBCODE = 			\
 	float_dotprod_sse64.S		\
@@ -134,8 +133,7 @@ x86_64_SUBCODE = 			\
 	ccomplex_dotprod_sse64.S	\
 	fcomplex_dotprod_3dnow64.S	\
 	fcomplex_dotprod_sse64.S	\
-	short_dotprod_mmx64.S		\
-	cpuid_x86_64.S
+	short_dotprod_mmx64.S
 
 x86_qa_CODE = 				\
 	qa_dotprod_x86.cc		\
@@ -312,6 +310,7 @@ grinclude_HEADERS = 			\
 
 noinst_HEADERS = 			\
 	assembly.h			\
+	gcc_x86_cpuid.h			\
 	dotprod_fff_altivec.h		\
 	dotprod_fff_armv7_a.h		\
 	dotprod_ccf_armv7_a.h		\

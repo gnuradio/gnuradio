@@ -186,7 +186,7 @@ libvolk_qa_la_LIBADD = \
 noinst_HEADERS = \
 	volk_init.h \
 	qa_volk.h \
-	assembly.h \
+	gcc_x86_cpuid.h \
 	qa_16s_quad_max_star_aligned16.h \
 	qa_32fc_dot_prod_aligned16.h \
 	qa_32fc_square_dist_aligned16.h \
