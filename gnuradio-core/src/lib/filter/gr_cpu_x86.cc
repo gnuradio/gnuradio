@@ -34,28 +34,28 @@
 
 static inline unsigned int cpuid_eax(unsigned int op)
 {
-  unsigned int	regs[4];
+  unsigned int	regs[4] = {0,0,0,0};
   cpuid_x86 (op, regs);
   return regs[0];
 }
 
 static inline unsigned int cpuid_ebx(unsigned int op)
 {
-  unsigned int	regs[4];
+  unsigned int	regs[4] = {0,0,0,0};
   cpuid_x86 (op, regs);
   return regs[1];
 }
 
 static inline unsigned int cpuid_ecx(unsigned int op)
 {
-  unsigned int	regs[4];
+  unsigned int	regs[4] = {0,0,0,0};
   cpuid_x86 (op, regs);
   return regs[2];
 }
 
 static inline unsigned int cpuid_edx(unsigned int op)
 {
-  unsigned int	regs[4];
+  unsigned int	regs[4] = {0,0,0,0};
   cpuid_x86 (op, regs);
   return regs[3];
 }
