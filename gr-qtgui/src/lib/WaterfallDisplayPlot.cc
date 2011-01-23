@@ -140,6 +140,11 @@ public:
   {
     timespec lineTime = timespec_add(GetZeroTime(), (-value) * GetSecondsPerLine());
     std::string time_str = pt::to_simple_string(pt::from_time_t(lineTime.tv_sec));
+
+    // lops off the YYYY-mmm-DD part of the string
+    int ind =  time_str.find(" ");
+    if(ind != std::string::npos)
+      time_str = time_str.substr(ind);
     return QwtText(QString("").sprintf("%s.%03ld", time_str.c_str(), lineTime.tv_nsec/1000000));
   }
 
@@ -187,6 +192,11 @@ protected:
   {
     timespec lineTime = timespec_add(GetZeroTime(), (-p.y()) * GetSecondsPerLine());
     std::string time_str = pt::to_simple_string(pt::from_time_t(lineTime.tv_sec));
+
+    // lops off the YYYY-mmm-DD part of the string
+    int ind =  time_str.find(" ");
+    if(ind != std::string::npos)
+      time_str = time_str.substr(ind);
     QString yLabel(QString("").sprintf("%s.%03ld", time_str.c_str(), lineTime.tv_nsec/1000000));
 
     QwtText t(QString("%1 %2, %3").
