@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,6 +27,7 @@
 #include <boost/weak_ptr.hpp>
 #include <gruel/thread.h>
 #include <gruel/pmt.h>
+#include <deque>
 
 class gr_vmcircbuf;
 
