@@ -34,6 +34,7 @@
 #include <qa_32fc_index_max_aligned16.h>
 #include <qa_32f_index_max_aligned16.h>
 #include <qa_32fc_conjugate_dot_prod_aligned16.h>
+#include <qa_32fc_conjugate_dot_prod_unaligned.h>
 #include <qa_16s_permute_and_scalar_add_aligned16.h>
 #include <qa_16s_branch_4_state_8_aligned16.h>
 #include <qa_16s_max_star_horizontal_aligned16.h>
@@ -127,6 +128,7 @@ qa_volk::suite()
   s->addTest(qa_32fc_index_max_aligned16::suite());
   s->addTest(qa_32f_index_max_aligned16::suite());
   s->addTest(qa_32fc_conjugate_dot_prod_aligned16::suite());
+  s->addTest(qa_32fc_conjugate_dot_prod_unaligned::suite());
   s->addTest(qa_16s_permute_and_scalar_add_aligned16::suite());
   s->addTest(qa_16s_branch_4_state_8_aligned16::suite());
   s->addTest(qa_16s_max_star_horizontal_aligned16::suite());

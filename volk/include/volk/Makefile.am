@@ -66,6 +66,7 @@ volkinclude_HEADERS = \
 	volk_32f_calc_spectral_noise_floor_aligned16.h \
 	volk_32fc_atan2_32f_aligned16.h \
 	volk_32fc_conjugate_dot_prod_aligned16.h \
+	volk_32fc_conjugate_dot_prod_unaligned.h \
 	volk_32fc_deinterleave_32f_aligned16.h \
 	volk_32fc_deinterleave_64f_aligned16.h \
 	volk_32fc_deinterleave_real_16s_aligned16.h \

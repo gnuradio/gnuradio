@@ -93,6 +93,7 @@ libvolk_qa_la_SOURCES = \
 	qa_32fc_index_max_aligned16.cc \
 	qa_32f_index_max_aligned16.cc \
 	qa_32fc_conjugate_dot_prod_aligned16.cc \
+	qa_32fc_conjugate_dot_prod_unaligned.cc \
 	qa_16s_permute_and_scalar_add_aligned16.cc \
 	qa_16s_branch_4_state_8_aligned16.cc \
 	qa_16s_max_star_horizontal_aligned16.cc \
@@ -195,6 +196,7 @@ noinst_HEADERS = \
 	qa_32fc_index_max_aligned16.h \
 	qa_32f_index_max_aligned16.h \
 	qa_32fc_conjugate_dot_prod_aligned16.h \
+	qa_32fc_conjugate_dot_prod_unaligned.h \
 	qa_16s_permute_and_scalar_add_aligned16.h \
 	qa_16s_branch_4_state_8_aligned16.h \
 	qa_16s_max_star_horizontal_aligned16.h \
