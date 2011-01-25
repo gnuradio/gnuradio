@@ -288,6 +288,11 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
     //first let's get a list of available architectures for the test
     std::vector<std::string> arch_list = get_arch_list(archs);
     
+    if(arch_list.size() < 2) {
+        std::cout << "no architectures to test" << std::endl;
+        return false;
+    }
+    
     //now we have to get a function signature by parsing the name
     std::vector<volk_type_t> inputsig, outputsig;
     get_signatures_from_name(inputsig, outputsig, name);
