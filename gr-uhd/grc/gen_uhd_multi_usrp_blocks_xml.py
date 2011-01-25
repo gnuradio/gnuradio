@@ -32,7 +32,7 @@ MAIN_TMPL = """\
 )
 \#if \$sync()
 self.\$(id).set_clock_config(uhd.clock_config.external(), uhd.ALL_MBOARDS);
-self.\$(id).setime_unknown_pps(uhd.time_spec())
+self.\$(id).set_time_unknown_pps(uhd.time_spec())
 \#end if
 #for $m in range($max_mboards)
 \#if \$num_mboards() > $m and \$sd_spec$(m)()
