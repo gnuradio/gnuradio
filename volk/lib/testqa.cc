@@ -49,8 +49,8 @@ BOOST_AUTO_TEST_CASE(volk_test_all) {
     VOLK_RUN_TESTS(volk_32f_s32f_convert_32i_u, 1, 2<<31, 2046, 10000);
     VOLK_RUN_TESTS(volk_32f_convert_64f_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32f_convert_64f_u, 1e-4, 0, 2046, 10000);
-    VOLK_RUN_TESTS(volk_32f_s32f_convert_8i_a16, 0, 128, 2046, 10000);
-    VOLK_RUN_TESTS(volk_32f_s32f_convert_8i_u, 0, 128, 2046, 10000);
+    VOLK_RUN_TESTS(volk_32f_s32f_convert_8i_a16, 1, 128, 2046, 10000);
+    VOLK_RUN_TESTS(volk_32f_s32f_convert_8i_u, 1, 128, 2046, 10000);
 //    VOLK_RUN_TESTS(volk_32fc_s32f_x2_power_spectral_density_32f_a16, 1e-4, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_s32f_power_spectrum_32f_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_x2_square_dist_32f_a16, 1e-4, 0, 2046, 10000);
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(volk_test_all) {
     VOLK_RUN_TESTS(volk_32f_x2_dot_prod_32f_u, 1e-4, 0, 2046, 10000);
 //    VOLK_RUN_TESTS(volk_32f_s32f_32f_fm_detect_32f_a16, 1e-4, 2046, 10000);
     VOLK_RUN_TESTS(volk_32f_index_max_16u_a16, 0, 0, 2046, 10000);
-    VOLK_RUN_TESTS(volk_32f_x2_s32f_interleave_16ic_a16, 0, 32768, 2046, 10000);
+    VOLK_RUN_TESTS(volk_32f_x2_s32f_interleave_16ic_a16, 1, 32768, 2046, 10000);
     VOLK_RUN_TESTS(volk_32f_x2_interleave_32fc_a16, 0, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32f_x2_max_32f_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32f_x2_min_32f_a16, 1e-4, 0, 2046, 10000);
