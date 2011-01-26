@@ -168,7 +168,7 @@ public:
      * Get access to the underlying uhd dboard iface object.
      * \return the dboard_iface object
      */
-    virtual uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan) = 0;
+    virtual uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan = 0) = 0;
 
     /*!
      * Get access to the underlying uhd device object.
