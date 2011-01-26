@@ -121,7 +121,7 @@ noinst_PROGRAMS = \
 
 testqa_SOURCES = testqa.cc qa_utils.cc
 testqa_CPPFLAGS = -DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN
-testqa_LDFLAGS = -lboost_unit_test_framework
+testqa_LDFLAGS = $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
 if LV_HAVE_ORC
 testqa_LDADD  = \
 	libvolk.la \

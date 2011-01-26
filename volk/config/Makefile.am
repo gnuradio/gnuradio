@@ -27,6 +27,8 @@ m4datadir = $(datadir)/aclocal
 # List your m4 macros here
 m4macros = \
 	acx_pthread.m4 \
+	ax_boost_base.m4 \
+	ax_boost_unit_test_framework.m4 \
 	bnv_have_qt.m4 \
 	cppunit.m4 \
 	gr_lib64.m4 \

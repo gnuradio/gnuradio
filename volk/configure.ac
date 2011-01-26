@@ -43,7 +43,7 @@ dnl If you need additional boost libraries, you'll need to
 dnl uncomment AX_BOOST_BASE, plus some of the following:
 dnl
 dnl calls AC_SUBST(BOOST_CPPFLAGS), AC_SUBST(BOOST_LDFLAGS) and defines HAVE_BOOST
-dnl AX_BOOST_BASE([1.35])
+AX_BOOST_BASE([1.35])
 dnl
 dnl All the rest of these call AC_SUBST(BOOST_<foo>_LIB) and define HAVE_BOOST_<foo>
 dnl
@@ -56,7 +56,7 @@ dnl AX_BOOST_SERIALIZATION
 dnl AX_BOOST_SIGNALS
 dnl AX_BOOST_SYSTEM
 dnl AX_BOOST_TEST_EXEC_MONITOR
-dnl AX_BOOST_UNIT_TEST_FRAMEWORK
+AX_BOOST_UNIT_TEST_FRAMEWORK
 dnl AX_BOOST_WSERIALIZATION
 
 AC_CONFIG_HEADERS([volk_config.h])
