@@ -1,6 +1,6 @@
 #include "qa_utils.h"
-#include "../include/volk/volk.h"
-#include "../include/volk/volk_registry.h"
+#include <volk/volk.h>
+#include <volk/volk_registry.h>
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE(volk_test_all) {    
