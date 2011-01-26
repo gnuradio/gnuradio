@@ -285,7 +285,7 @@ noinst_PROGRAMS = \
 	test_all
 
 test_all_SOURCES = test_all.cc
-test_all_LDADD   = libvolk_qa.la
+test_all_LDADD   = libvolk.la libvolk_runtime.la libvolk_qa.la
 
 
 distclean-local: 
