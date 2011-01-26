@@ -81,10 +81,9 @@ static inline void volk_32fc_x2_multiply_32fc_a16_generic(lv_32fc_t* cVector, co
     \param bVector One of the vectors to be multiplied
     \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
   */
-extern void volk_32fc_x2_multiply_32fc_a16_orc_impl(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t* bVector, float mask, unsigned int num_points);
+extern void volk_32fc_x2_multiply_32fc_a16_orc_impl(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t* bVector, unsigned int num_points);
 static inline void volk_32fc_x2_multiply_32fc_a16_orc(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t* bVector, unsigned int num_points){
-    static const float mask = -0.0;
-    volk_32fc_x2_multiply_32fc_a16_orc_impl(cVector, aVector, bVector, mask, num_points);
+    volk_32fc_x2_multiply_32fc_a16_orc_impl(cVector, aVector, bVector, num_points);
 }
 #endif /* LV_HAVE_ORC */
 
