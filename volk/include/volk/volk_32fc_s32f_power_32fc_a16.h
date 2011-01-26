@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_32f_power_32fc_a16_H
-#define INCLUDED_volk_32fc_32f_power_32fc_a16_H
+#ifndef INCLUDED_volk_32fc_s32f_power_32fc_a16_H
+#define INCLUDED_volk_32fc_s32f_power_32fc_a16_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -18,7 +18,7 @@
   \param power The power value to be applied to each data point
   \param num_points The number of values in aVector to be taken to the specified power level and stored into cVector
 */
-static inline void volk_32fc_32f_power_32fc_a16_sse(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float power, unsigned int num_points){
+static inline void volk_32fc_s32f_power_32fc_a16_sse(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float power, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
   
@@ -89,7 +89,7 @@ static inline void volk_32fc_32f_power_32fc_a16_sse(lv_32fc_t* cVector, const lv
     \param power The power value to be applied to each data point
     \param num_points The number of values in aVector to be taken to the specified power level and stored into cVector
   */
-static inline void volk_32fc_32f_power_32fc_a16_generic(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float power, unsigned int num_points){
+static inline void volk_32fc_s32f_power_32fc_a16_generic(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float power, unsigned int num_points){
   lv_32fc_t* cPtr = cVector;
   const lv_32fc_t* aPtr = aVector;
   unsigned int number = 0;
@@ -106,4 +106,4 @@ static inline void volk_32fc_32f_power_32fc_a16_generic(lv_32fc_t* cVector, cons
 
 
 
-#endif /* INCLUDED_volk_32fc_32f_power_32fc_a16_H */
+#endif /* INCLUDED_volk_32fc_s32f_power_32fc_a16_H */
