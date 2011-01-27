@@ -47,7 +47,7 @@ class gr_fir_ccf;
  * derivative of the filtered signal, which in turn maximizes the SNR and 
  * minimizes ISI.
  *
- * This approach works by setting up two filterbanks; one filterbanke contains the 
+ * This approach works by setting up two filterbanks; one filterbank contains the 
  * signal's pulse shaping matched filter (such as a root raised cosine filter),
  * where each branch of the filterbank contains a different phase of the filter.
  * The second filterbank contains the derivatives of the filters in the first 
