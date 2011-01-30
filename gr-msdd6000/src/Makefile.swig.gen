@@ -105,7 +105,7 @@ _msdd_la_CXXFLAGS =			\
 	$(msdd_la_swig_cxxflags)
 
 python/msdd.cc: msdd.py
-msdd.py: msdd.i
+msdd.py: msdd.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/msdd.d
@@ -250,7 +250,7 @@ _msdd_rs_la_CXXFLAGS =			\
 	$(msdd_rs_la_swig_cxxflags)
 
 python/msdd_rs.cc: msdd_rs.py
-msdd_rs.py: msdd_rs.i
+msdd_rs.py: msdd_rs.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/msdd_rs.d

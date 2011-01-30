@@ -105,7 +105,7 @@ _cvsd_vocoder_la_CXXFLAGS =			\
 	$(cvsd_vocoder_la_swig_cxxflags)
 
 python/cvsd_vocoder.cc: cvsd_vocoder.py
-cvsd_vocoder.py: cvsd_vocoder.i
+cvsd_vocoder.py: cvsd_vocoder.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/cvsd_vocoder.d

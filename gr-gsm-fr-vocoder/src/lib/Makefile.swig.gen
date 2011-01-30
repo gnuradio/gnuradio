@@ -105,7 +105,7 @@ _gsm_full_rate_la_CXXFLAGS =			\
 	$(gsm_full_rate_la_swig_cxxflags)
 
 python/gsm_full_rate.cc: gsm_full_rate.py
-gsm_full_rate.py: gsm_full_rate.i
+gsm_full_rate.py: gsm_full_rate.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/gsm_full_rate.d

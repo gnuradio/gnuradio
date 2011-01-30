@@ -105,7 +105,7 @@ _gnuradio_core_runtime_la_CXXFLAGS =			\
 	$(gnuradio_core_runtime_la_swig_cxxflags)
 
 python/gnuradio_core_runtime.cc: gnuradio_core_runtime.py
-gnuradio_core_runtime.py: gnuradio_core_runtime.i
+gnuradio_core_runtime.py: gnuradio_core_runtime.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_runtime.d
@@ -250,7 +250,7 @@ _gnuradio_core_general_la_CXXFLAGS =			\
 	$(gnuradio_core_general_la_swig_cxxflags)
 
 python/gnuradio_core_general.cc: gnuradio_core_general.py
-gnuradio_core_general.py: gnuradio_core_general.i
+gnuradio_core_general.py: gnuradio_core_general.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_general.d
@@ -395,7 +395,7 @@ _gnuradio_core_gengen_la_CXXFLAGS =			\
 	$(gnuradio_core_gengen_la_swig_cxxflags)
 
 python/gnuradio_core_gengen.cc: gnuradio_core_gengen.py
-gnuradio_core_gengen.py: gnuradio_core_gengen.i
+gnuradio_core_gengen.py: gnuradio_core_gengen.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_gengen.d
@@ -540,7 +540,7 @@ _gnuradio_core_filter_la_CXXFLAGS =			\
 	$(gnuradio_core_filter_la_swig_cxxflags)
 
 python/gnuradio_core_filter.cc: gnuradio_core_filter.py
-gnuradio_core_filter.py: gnuradio_core_filter.i
+gnuradio_core_filter.py: gnuradio_core_filter.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_filter.d
@@ -685,7 +685,7 @@ _gnuradio_core_io_la_CXXFLAGS =			\
 	$(gnuradio_core_io_la_swig_cxxflags)
 
 python/gnuradio_core_io.cc: gnuradio_core_io.py
-gnuradio_core_io.py: gnuradio_core_io.i
+gnuradio_core_io.py: gnuradio_core_io.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_io.d
@@ -830,7 +830,7 @@ _gnuradio_core_hier_la_CXXFLAGS =			\
 	$(gnuradio_core_hier_la_swig_cxxflags)
 
 python/gnuradio_core_hier.cc: gnuradio_core_hier.py
-gnuradio_core_hier.py: gnuradio_core_hier.i
+gnuradio_core_hier.py: gnuradio_core_hier.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/gnuradio_core_hier.d

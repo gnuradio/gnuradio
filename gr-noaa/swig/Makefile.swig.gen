@@ -105,7 +105,7 @@ _noaa_swig_la_CXXFLAGS =			\
 	$(noaa_swig_la_swig_cxxflags)
 
 python/noaa_swig.cc: noaa_swig.py
-noaa_swig.py: noaa_swig.i
+noaa_swig.py: noaa_swig.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/noaa_swig.d

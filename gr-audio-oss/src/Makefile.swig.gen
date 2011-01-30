@@ -105,7 +105,7 @@ _audio_oss_la_CXXFLAGS =			\
 	$(audio_oss_la_swig_cxxflags)
 
 python/audio_oss.cc: audio_oss.py
-audio_oss.py: audio_oss.i
+audio_oss.py: audio_oss.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/audio_oss.d

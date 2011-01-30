@@ -105,7 +105,7 @@ _trellis_la_CXXFLAGS =			\
 	$(trellis_la_swig_cxxflags)
 
 python/trellis.cc: trellis.py
-trellis.py: trellis.i
+trellis.py: trellis.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/trellis.d

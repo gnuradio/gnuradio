@@ -105,7 +105,7 @@ _usrp2_swig_la_CXXFLAGS =			\
 	$(usrp2_swig_la_swig_cxxflags)
 
 python/usrp2_swig.cc: usrp2_swig.py
-usrp2_swig.py: usrp2_swig.i
+usrp2_swig.py: usrp2_swig.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
 
 # Include the python dependencies for this file
 -include python/usrp2_swig.d

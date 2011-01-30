@@ -1270,6 +1270,82 @@ bitwise boolean and across all input streams.
 
 Params: (NONE)"
 
+%feature("docstring") gr_annotator_1to1 "1-to-1 stream annotator testing block. FOR TESTING PURPOSES ONLY.
+
+This block creates tags to be sent downstream every 10,000 items it sees. The tags contain the name and ID of the instantiated block, use \"seq\" as a key, and have a counter that increments by 1 for every tag produced that is used as the tag's value. The tags are propagated using the 1-to-1 policy.
+
+It also stores a copy of all tags it sees flow past it. These tags can be recalled externally with the data() member.
+
+This block is only meant for testing and showing how to use the tags."
+
+%feature("docstring") gr_annotator_1to1::~gr_annotator_1to1 "
+
+Params: (NONE)"
+
+%feature("docstring") gr_annotator_1to1::work "just like gr_block::general_work, only this arranges to call consume_each for you
+
+The user must override work to define the signal processing code
+
+Params: (noutput_items, input_items, output_items)"
+
+%feature("docstring") gr_annotator_1to1::data "
+
+Params: (NONE)"
+
+%feature("docstring") gr_annotator_1to1::gr_annotator_1to1 "
+
+Params: (when, sizeof_stream_item)"
+
+%feature("docstring") gr_make_annotator_1to1 "Creates a annotator_1to1 block.
+
+1-to-1 stream annotator testing block. FOR TESTING PURPOSES ONLY.
+
+This block creates tags to be sent downstream every 10,000 items it sees. The tags contain the name and ID of the instantiated block, use \"seq\" as a key, and have a counter that increments by 1 for every tag produced that is used as the tag's value. The tags are propagated using the 1-to-1 policy.
+
+It also stores a copy of all tags it sees flow past it. These tags can be recalled externally with the data() member.
+
+This block is only meant for testing and showing how to use the tags.
+
+Params: (when, sizeof_stream_item)"
+
+%feature("docstring") gr_annotator_alltoall "All-to-all stream annotator testing block. FOR TESTING PURPOSES ONLY.
+
+This block creates tags to be sent downstream every 10,000 items it sees. The tags contain the name and ID of the instantiated block, use \"seq\" as a key, and have a counter that increments by 1 for every tag produced that is used as the tag's value. The tags are propagated using the all-to-all policy.
+
+It also stores a copy of all tags it sees flow past it. These tags can be recalled externally with the data() member.
+
+This block is only meant for testing and showing how to use the tags."
+
+%feature("docstring") gr_annotator_alltoall::~gr_annotator_alltoall "
+
+Params: (NONE)"
+
+%feature("docstring") gr_annotator_alltoall::work "just like gr_block::general_work, only this arranges to call consume_each for you
+
+The user must override work to define the signal processing code
+
+Params: (noutput_items, input_items, output_items)"
+
+%feature("docstring") gr_annotator_alltoall::data "
+
+Params: (NONE)"
+
+%feature("docstring") gr_annotator_alltoall::gr_annotator_alltoall "
+
+Params: (when, sizeof_stream_item)"
+
+%feature("docstring") gr_make_annotator_alltoall "Creates a annotator_alltoall block.
+
+All-to-all stream annotator testing block. FOR TESTING PURPOSES ONLY.
+
+This block creates tags to be sent downstream every 10,000 items it sees. The tags contain the name and ID of the instantiated block, use \"seq\" as a key, and have a counter that increments by 1 for every tag produced that is used as the tag's value. The tags are propagated using the all-to-all policy.
+
+It also stores a copy of all tags it sees flow past it. These tags can be recalled externally with the data() member.
+
+This block is only meant for testing and showing how to use the tags.
+
+Params: (when, sizeof_stream_item)"
+
 
 
 %feature("docstring") gr_argmax_fs::gr_argmax_fs "
@@ -1476,6 +1552,28 @@ Params: (how_many_items)"
 
 Params: (msg)"
 
+%feature("docstring") gr_block_detail::nitems_read "
+
+Params: (which_input)"
+
+%feature("docstring") gr_block_detail::nitems_written "
+
+Params: (which_output)"
+
+%feature("docstring") gr_block_detail::add_item_tag "Adds a new tag to the given output stream.
+
+This takes the input parameters and builds a PMT tuple from it. It then calls gr_buffer::add_item_tag(pmt::pmt_t t), which appends the tag onto its deque.
+
+Params: (which_output, abs_offset, key, value, srcid)"
+
+%feature("docstring") gr_block_detail::get_tags_in_range "Given a [start,end), returns a vector of all tags in the range.
+
+Pass-through function to gr_buffer_reader to get a vector of tags in given range. Range of counts is from start to end-1.
+
+Tags are tuples of: (item count, source id, key, value)
+
+Params: (v, which_input, abs_start, abs_end)"
+
 %feature("docstring") gr_block_detail::gr_block_detail "
 
 Params: (ninputs, noutputs)"
@@ -1536,6 +1634,26 @@ Params: (index)"
 
 Params: (NONE)"
 
+%feature("docstring") gr_buffer::nitems_written "
+
+Params: (NONE)"
+
+%feature("docstring") gr_buffer::add_item_tag "Adds a new tag to the buffer.
+
+Params: (tag)"
+
+%feature("docstring") gr_buffer::prune_tags "Removes all tags before  from buffer.
+
+Params: (max_time)"
+
+%feature("docstring") gr_buffer::get_tags_begin "
+
+Params: (NONE)"
+
+%feature("docstring") gr_buffer::get_tags_end "
+
+Params: (NONE)"
+
 %feature("docstring") gr_buffer::index_add "
 
 Params: (a, b)"
@@ -1566,6 +1684,28 @@ Params: (reader)"
 Single writer, multiple reader fifo.
 
 Params: (nitems, sizeof_item, link)"
+
+%feature("docstring") gr_burst_tagger "output[i] = input[i]"
+
+%feature("docstring") gr_burst_tagger::gr_burst_tagger "
+
+Params: (itemsize)"
+
+%feature("docstring") gr_burst_tagger::~gr_burst_tagger "
+
+Params: (NONE)"
+
+%feature("docstring") gr_burst_tagger::work "just like gr_block::general_work, only this arranges to call consume_each for you
+
+The user must override work to define the signal processing code
+
+Params: (noutput_items, input_items, output_items)"
+
+%feature("docstring") gr_make_burst_tagger "Creates a burst_tagger block.
+
+output[i] = input[i]
+
+Params: (itemsize)"
 
 %feature("docstring") gr_bytes_to_syms "Convert stream of bytes to stream of +/- 1 symbols
 
@@ -2355,6 +2495,34 @@ output = complex conjugate of input
 
 Params: (NONE)"
 
+
+
+%feature("docstring") gr_constellation::gr_constellation "
+
+Params: (constellation)"
+
+%feature("docstring") gr_constellation::points "Returns the set of points in this constellation.
+
+Params: (NONE)"
+
+%feature("docstring") gr_constellation::decision_maker "Returns the constellation point that matches best. Also calculates the phase error.
+
+Params: (sample)"
+
+%feature("docstring") gr_constellation::bits_per_symbol "
+
+Params: (NONE)"
+
+%feature("docstring") gr_constellation::base "
+
+Params: (NONE)"
+
+%feature("docstring") gr_make_constellation "Creates a constellation block.
+
+
+
+Params: (constellation)"
+
 %feature("docstring") gr_constellation_decoder_cb "Constellation Decoder."
 
 %feature("docstring") gr_constellation_decoder_cb::gr_constellation_decoder_cb "
@@ -2380,6 +2548,128 @@ Params: (noutput_items, input_items, output_items)"
 Constellation Decoder.
 
 Params: (sym_position, sym_value_out)"
+
+
+
+%feature("docstring") gr_constellation_psk::gr_constellation_psk "
+
+Params: (constellation, n_sectors)"
+
+%feature("docstring") gr_constellation_psk::get_sector "
+
+Params: (sample)"
+
+%feature("docstring") gr_constellation_psk::calc_sector_value "
+
+Params: (sector)"
+
+%feature("docstring") gr_make_constellation_psk "Creates a constellation_psk block.
+
+
+
+Params: (constellation, n_sectors)"
+
+%feature("docstring") gr_constellation_receiver_cb "This block takes care of receiving generic modulated signals through phase, frequency, and symbol synchronization.
+
+This block takes care of receiving generic modulated signals through phase, frequency, and symbol synchronization. It performs carrier frequency and phase locking as well as symbol timing recovery.
+
+The phase and frequency synchronization are based on a Costas loop that finds the error of the incoming signal point compared to its nearest constellation point. The frequency and phase of the NCO are updated according to this error.
+
+The symbol synchronization is done using a modified Mueller and Muller circuit from the paper:
+
+G. R. Danesfahani, T.G. Jeans, \"Optimisation of modified Mueller and Muller 
+    algorithm,\" Electronics Letters, Vol. 31, no. 13, 22 June 1995, pp. 1032 - 1033.
+
+This circuit interpolates the downconverted sample (using the NCO developed by the Costas loop) every mu samples, then it finds the sampling error based on this and the past symbols and the decision made on the samples. Like the phase error detector, there are optimized decision algorithms for BPSK and QPKS, but 8PSK uses another brute force computation against all possible symbols. The modifications to the M&M used here reduce self-noise."
+
+%feature("docstring") gr_constellation_receiver_cb::general_work "compute output items from input items
+
+general_work must call consume or consume_each to indicate how many items were consumed on each input stream.
+
+Params: (noutput_items, ninput_items, input_items, output_items)"
+
+%feature("docstring") gr_constellation_receiver_cb::alpha "(CL) Returns the value for alpha (the phase gain term)
+
+Params: (NONE)"
+
+%feature("docstring") gr_constellation_receiver_cb::beta "(CL) Returns the value of beta (the frequency gain term)
+
+Params: (NONE)"
+
+%feature("docstring") gr_constellation_receiver_cb::freq "(CL) Returns the current value of the frequency of the NCO in the Costas loop
+
+Params: (NONE)"
+
+%feature("docstring") gr_constellation_receiver_cb::phase "(CL) Returns the current value of the phase of the NCO in the Costal loop
+
+Params: (NONE)"
+
+%feature("docstring") gr_constellation_receiver_cb::set_alpha "(CL) Sets the value for alpha (the phase gain term)
+
+Params: (alpha)"
+
+%feature("docstring") gr_constellation_receiver_cb::set_beta "(CL) Setss the value of beta (the frequency gain term)
+
+Params: (beta)"
+
+%feature("docstring") gr_constellation_receiver_cb::set_freq "(CL) Sets the current value of the frequency of the NCO in the Costas loop
+
+Params: (freq)"
+
+%feature("docstring") gr_constellation_receiver_cb::set_phase "(CL) Setss the current value of the phase of the NCO in the Costal loop
+
+Params: (phase)"
+
+%feature("docstring") gr_constellation_receiver_cb::gr_constellation_receiver_cb "Constructor to synchronize incoming M-PSK symbols.
+
+The constructor also chooses which phase detector and decision maker to use in the work loop based on the value of M.
+
+Params: (constellation, alpha, beta, fmin, fmax)"
+
+%feature("docstring") gr_constellation_receiver_cb::phase_error_tracking "
+
+Params: (phase_error)"
+
+%feature("docstring") gr_constellation_receiver_cb::__attribute__ "delay line plus some length for overflow protection
+
+Params: ()"
+
+%feature("docstring") gr_make_constellation_receiver_cb "Creates a constellation_receiver_cb block.
+
+This block takes care of receiving generic modulated signals through phase, frequency, and symbol synchronization.
+
+This block takes care of receiving generic modulated signals through phase, frequency, and symbol synchronization. It performs carrier frequency and phase locking as well as symbol timing recovery.
+
+The phase and frequency synchronization are based on a Costas loop that finds the error of the incoming signal point compared to its nearest constellation point. The frequency and phase of the NCO are updated according to this error.
+
+The symbol synchronization is done using a modified Mueller and Muller circuit from the paper:
+
+G. R. Danesfahani, T.G. Jeans, \"Optimisation of modified Mueller and Muller 
+    algorithm,\" Electronics Letters, Vol. 31, no. 13, 22 June 1995, pp. 1032 - 1033.
+
+This circuit interpolates the downconverted sample (using the NCO developed by the Costas loop) every mu samples, then it finds the sampling error based on this and the past symbols and the decision made on the samples. Like the phase error detector, there are optimized decision algorithms for BPSK and QPKS, but 8PSK uses another brute force computation against all possible symbols. The modifications to the M&M used here reduce self-noise.
+
+Params: (constellation, alpha, beta, fmin, fmax)"
+
+
+
+%feature("docstring") gr_constellation_rect::gr_constellation_rect "
+
+Params: (constellation, real_sectors, imag_sectors, width_real_sectors, width_imag_sectors)"
+
+%feature("docstring") gr_constellation_rect::get_sector "
+
+Params: (sample)"
+
+%feature("docstring") gr_constellation_rect::calc_sector_value "
+
+Params: (sector)"
+
+%feature("docstring") gr_make_constellation_rect "Creates a constellation_rect block.
+
+
+
+Params: (constellation, real_sectors, imag_sectors, width_real_sectors, width_imag_sectors)"
 
 %feature("docstring") gr_copy "output[i] = input[i]
 
@@ -4219,6 +4509,14 @@ The user must override work to define the signal processing code
 
 Params: (noutput_items, input_items, output_items)"
 
+%feature("docstring") gr_goertzel_fc::set_freq "
+
+Params: (freq)"
+
+%feature("docstring") gr_goertzel_fc::set_rate "
+
+Params: (rate)"
+
 %feature("docstring") gr_make_goertzel_fc "Creates a goertzel_fc block.
 
 Goertzel single-bin DFT calculation.
@@ -4298,6 +4596,10 @@ N.B. lock() and unlock() may not be called from a flowgraph thread (E.g., gr_blo
 Params: (NONE)"
 
 %feature("docstring") gr_hier_block2::flatten "
+
+Params: (NONE)"
+
+%feature("docstring") gr_hier_block2::to_hier_block2 "
 
 Params: (NONE)"
 
@@ -5937,17 +6239,51 @@ random number source
 
 Params: (type, ampl, seed)"
 
+%feature("docstring") gr_nonrecursive_convolutional_encoder_bb "Peforms nonrecursive convolutional encoding. ???
+
+More detailed description goes here."
+
+%feature("docstring") gr_nonrecursive_convolutional_encoder_bb::general_work "compute output items from input items
+
+general_work must call consume or consume_each to indicate how many items were consumed on each input stream.
+
+Params: (noutput_items, ninput_items, input_items, output_items)"
+
+%feature("docstring") gr_nonrecursive_convolutional_encoder_bb::gr_nonrecursive_convolutional_encoder_bb "Constructor to perform nonrecursive convolutional encoding.
+
+Params: (generator_coeffs)"
+
+%feature("docstring") gr_nonrecursive_convolutional_encoder_bb::generate_partab "
+
+Params: (NONE)"
+
+%feature("docstring") gr_make_nonrecursive_convolutional_encoder_bb "Creates a nonrecursive_convolutional_encoder_bb block.
+
+Peforms nonrecursive convolutional encoding. ???
+
+More detailed description goes here.
+
+Params: (generator_coeffs)"
+
 %feature("docstring") gr_nop "Does nothing. Used for testing only."
 
 %feature("docstring") gr_nop::gr_nop "
 
 Params: (sizeof_stream_item)"
 
+%feature("docstring") gr_nop::count_received_msgs "
+
+Params: (msg)"
+
 %feature("docstring") gr_nop::general_work "compute output items from input items
 
 general_work must call consume or consume_each to indicate how many items were consumed on each input stream.
 
 Params: (noutput_items, ninput_items, input_items, output_items)"
+
+%feature("docstring") gr_nop::nmsgs_received "
+
+Params: (NONE)"
 
 %feature("docstring") gr_make_nop "Creates a nop block.
 
@@ -6895,6 +7231,10 @@ Params: (NONE)"
 
 Params: (NONE)"
 
+%feature("docstring") gr_pfb_arb_resampler_ccf::set_rate "
+
+Params: (rate)"
+
 %feature("docstring") gr_pfb_arb_resampler_ccf::general_work "compute output items from input items
 
 general_work must call consume or consume_each to indicate how many items were consumed on each input stream.
@@ -7001,13 +7341,13 @@ Params: (numchans, taps, oversample_rate)"
 
 This block performs timing synchronization for PAM signals by minimizing the derivative of the filtered signal, which in turn maximizes the SNR and minimizes ISI.
 
-This approach works by setting up two filterbanks; one filterbanke contains the signal's pulse shaping matched filter (such as a root raised cosine filter), where each branch of the filterbank contains a different phase of the filter. The second filterbank contains the derivatives of the filters in the first filterbank. Thinking of this in the time domain, the first filterbank contains filters that have a sinc shape to them. We want to align the output signal to be sampled at exactly the peak of the sinc shape. The derivative of the sinc contains a zero at the maximum point of the sinc (sinc(0) = 1, sinc(0)' = 0). Furthermore, the region around the zero point is relatively linear. We make use of this fact to generate the error signal.
+This approach works by setting up two filterbanks; one filterbank contains the signal's pulse shaping matched filter (such as a root raised cosine filter), where each branch of the filterbank contains a different phase of the filter. The second filterbank contains the derivatives of the filters in the first filterbank. Thinking of this in the time domain, the first filterbank contains filters that have a sinc shape to them. We want to align the output signal to be sampled at exactly the peak of the sinc shape. The derivative of the sinc contains a zero at the maximum point of the sinc (sinc(0) = 1, sinc(0)' = 0). Furthermore, the region around the zero point is relatively linear. We make use of this fact to generate the error signal.
 
 If the signal out of the derivative filters is d_i[n] for the ith filter, and the output of the matched filter is x_i[n], we calculate the error as: e[n] = (Re{x_i[n]} * Re{d_i[n]} + Im{x_i[n]} * Im{d_i[n]}) / 2.0 This equation averages the error in the real and imaginary parts. There are two reasons we multiply by the signal itself. First, if the symbol could be positive or negative going, but we want the error term to always tell us to go in the same direction depending on which side of the zero point we are on. The sign of x_i[n] adjusts the error term to do this. Second, the magnitude of x_i[n] scales the error term depending on the symbol's amplitude, so larger signals give us a stronger error term because we have more confidence in that symbol's value. Using the magnitude of x_i[n] instead of just the sign is especially good for signals with low SNR.
 
 The error signal, e[n], gives us a value proportional to how far away from the zero point we are in the derivative signal. We want to drive this value to zero, so we set up a second order loop. We have two variables for this loop; d_k is the filter number in the filterbank we are on and d_rate is the rate which we travel through the filters in the steady state. That is, due to the natural clock differences between the transmitter and receiver, d_rate represents that difference and would traverse the filter phase paths to keep the receiver locked. Thinking of this as a second-order PLL, the d_rate is the frequency and d_k is the phase. So we update d_rate and d_k using the standard loop equations based on two error signals, d_alpha and d_beta. We have these two values set based on each other for a critically damped system, so in the block constructor, we just ask for \"gain,\" which is d_alpha while d_beta is equal to (gain^2)/4.
 
-The clock sync block needs to know the number of samples per second (sps), because it only returns a single point representing the sample. The sps can be any positive real number and does not need to be an integer. The filter taps must also be specified. The taps are generated by first conceiving of the prototype filter that would be the signal's matched filter. Then interpolate this by the number of filters in the filterbank. These are then distributed among all of the filters. So if the prototype filter was to have 45 taps in it, then each path of the filterbank will also have 45 taps. This is easily done by building the filter with the sample rate multiplied by the number of filters to use.
+The clock sync block needs to know the number of samples per symbol (sps), because it only returns a single point representing the symbol. The sps can be any positive real number and does not need to be an integer. The filter taps must also be specified. The taps are generated by first conceiving of the prototype filter that would be the signal's matched filter. Then interpolate this by the number of filters in the filterbank. These are then distributed among all of the filters. So if the prototype filter was to have 45 taps in it, then each path of the filterbank will also have 45 taps. This is easily done by building the filter with the sample rate multiplied by the number of filters to use.
 
 The number of filters can also be set and defaults to 32. With 32 filters, you get a good enough resolution in the phase to produce very small, almost unnoticeable, ISI. Going to 64 filters can reduce this more, but after that there is very little gained for the extra complexity.
 
@@ -7077,13 +7417,13 @@ Timing synchronizer using polyphase filterbanks.
 
 This block performs timing synchronization for PAM signals by minimizing the derivative of the filtered signal, which in turn maximizes the SNR and minimizes ISI.
 
-This approach works by setting up two filterbanks; one filterbanke contains the signal's pulse shaping matched filter (such as a root raised cosine filter), where each branch of the filterbank contains a different phase of the filter. The second filterbank contains the derivatives of the filters in the first filterbank. Thinking of this in the time domain, the first filterbank contains filters that have a sinc shape to them. We want to align the output signal to be sampled at exactly the peak of the sinc shape. The derivative of the sinc contains a zero at the maximum point of the sinc (sinc(0) = 1, sinc(0)' = 0). Furthermore, the region around the zero point is relatively linear. We make use of this fact to generate the error signal.
+This approach works by setting up two filterbanks; one filterbank contains the signal's pulse shaping matched filter (such as a root raised cosine filter), where each branch of the filterbank contains a different phase of the filter. The second filterbank contains the derivatives of the filters in the first filterbank. Thinking of this in the time domain, the first filterbank contains filters that have a sinc shape to them. We want to align the output signal to be sampled at exactly the peak of the sinc shape. The derivative of the sinc contains a zero at the maximum point of the sinc (sinc(0) = 1, sinc(0)' = 0). Furthermore, the region around the zero point is relatively linear. We make use of this fact to generate the error signal.
 
 If the signal out of the derivative filters is d_i[n] for the ith filter, and the output of the matched filter is x_i[n], we calculate the error as: e[n] = (Re{x_i[n]} * Re{d_i[n]} + Im{x_i[n]} * Im{d_i[n]}) / 2.0 This equation averages the error in the real and imaginary parts. There are two reasons we multiply by the signal itself. First, if the symbol could be positive or negative going, but we want the error term to always tell us to go in the same direction depending on which side of the zero point we are on. The sign of x_i[n] adjusts the error term to do this. Second, the magnitude of x_i[n] scales the error term depending on the symbol's amplitude, so larger signals give us a stronger error term because we have more confidence in that symbol's value. Using the magnitude of x_i[n] instead of just the sign is especially good for signals with low SNR.
 
 The error signal, e[n], gives us a value proportional to how far away from the zero point we are in the derivative signal. We want to drive this value to zero, so we set up a second order loop. We have two variables for this loop; d_k is the filter number in the filterbank we are on and d_rate is the rate which we travel through the filters in the steady state. That is, due to the natural clock differences between the transmitter and receiver, d_rate represents that difference and would traverse the filter phase paths to keep the receiver locked. Thinking of this as a second-order PLL, the d_rate is the frequency and d_k is the phase. So we update d_rate and d_k using the standard loop equations based on two error signals, d_alpha and d_beta. We have these two values set based on each other for a critically damped system, so in the block constructor, we just ask for \"gain,\" which is d_alpha while d_beta is equal to (gain^2)/4.
 
-The clock sync block needs to know the number of samples per second (sps), because it only returns a single point representing the sample. The sps can be any positive real number and does not need to be an integer. The filter taps must also be specified. The taps are generated by first conceiving of the prototype filter that would be the signal's matched filter. Then interpolate this by the number of filters in the filterbank. These are then distributed among all of the filters. So if the prototype filter was to have 45 taps in it, then each path of the filterbank will also have 45 taps. This is easily done by building the filter with the sample rate multiplied by the number of filters to use.
+The clock sync block needs to know the number of samples per symbol (sps), because it only returns a single point representing the symbol. The sps can be any positive real number and does not need to be an integer. The filter taps must also be specified. The taps are generated by first conceiving of the prototype filter that would be the signal's matched filter. Then interpolate this by the number of filters in the filterbank. These are then distributed among all of the filters. So if the prototype filter was to have 45 taps in it, then each path of the filterbank will also have 45 taps. This is easily done by building the filter with the sample rate multiplied by the number of filters to use.
 
 The number of filters can also be set and defaults to 32. With 32 filters, you get a good enough resolution in the phase to produce very small, almost unnoticeable, ISI. Going to 64 filters can reduce this more, but after that there is very little gained for the extra complexity.
 
@@ -8729,6 +9069,66 @@ inverse of gr_simple_framer (more or less)
 
 Params: (payload_bytesize)"
 
+%feature("docstring") gr_simple_correlator_bb "Inverse of simple_framer. Takes a stream of bits from gr_correlate_access_code_bb and returns a stream of items of size payload_bytesize.
+
+input: stream of bits from gr_correlate_access_code_bb output: steam of items of size payload_bytesize.
+
+The framer expects a fixed length header of 1 byte giving the packet number.
+
+The input data consists of bytes that have two bits used. Bit 0, the LSB, contains the data bit. Bit 1 if set, indicates that the corresponding bit is the the first bit of the packet. That is, this bit is the first one after the access code."
+
+%feature("docstring") gr_simple_correlator_bb::gr_simple_correlator_bb "
+
+Params: (target_queue)"
+
+%feature("docstring") gr_simple_correlator_bb::enter_search "
+
+Params: (NONE)"
+
+%feature("docstring") gr_simple_correlator_bb::enter_have_sync "
+
+Params: (NONE)"
+
+%feature("docstring") gr_simple_correlator_bb::enter_have_header "
+
+Params: (seq)"
+
+%feature("docstring") gr_simple_correlator_bb::header_ok "
+
+Params: (NONE)"
+
+%feature("docstring") gr_simple_correlator_bb::header_payload "
+
+Params: (seq)"
+
+%feature("docstring") gr_simple_correlator_bb::~gr_simple_correlator_bb "
+
+Params: (NONE)"
+
+%feature("docstring") gr_simple_correlator_bb::forecast "Estimate input requirements given output request.
+
+Given a request to product , estimate the number of data items required on each input stream. The estimate doesn't have to be exact, but should be close.
+
+Params: (noutput_items, ninput_items_required)"
+
+%feature("docstring") gr_simple_correlator_bb::work "just like gr_block::general_work, only this arranges to call consume_each for you
+
+The user must override work to define the signal processing code
+
+Params: (noutput_items, input_items, output_items)"
+
+%feature("docstring") gr_make_simple_correlator_bb "Creates a simple_correlator_bb block.
+
+Inverse of simple_framer. Takes a stream of bits from gr_correlate_access_code_bb and returns a stream of items of size payload_bytesize.
+
+input: stream of bits from gr_correlate_access_code_bb output: steam of items of size payload_bytesize.
+
+The framer expects a fixed length header of 1 byte giving the packet number.
+
+The input data consists of bytes that have two bits used. Bit 0, the LSB, contains the data bit. Bit 1 if set, indicates that the corresponding bit is the the first bit of the packet. That is, this bit is the first one after the access code.
+
+Params: (target_queue)"
+
 %feature("docstring") gr_simple_framer "add sync field, seq number and command field to payload"
 
 %feature("docstring") gr_simple_framer::gr_simple_framer "
@@ -9189,6 +9589,28 @@ Subtract across all input streams.
 
 Params: (vlen)"
 
+%feature("docstring") gr_tagged_file_sink "Write stream to file descriptor."
+
+%feature("docstring") gr_tagged_file_sink::gr_tagged_file_sink "
+
+Params: (itemsize, samp_rate)"
+
+%feature("docstring") gr_tagged_file_sink::~gr_tagged_file_sink "
+
+Params: (NONE)"
+
+%feature("docstring") gr_tagged_file_sink::work "just like gr_block::general_work, only this arranges to call consume_each for you
+
+The user must override work to define the signal processing code
+
+Params: (noutput_items, input_items, output_items)"
+
+%feature("docstring") gr_make_tagged_file_sink "Creates a tagged_file_sink block.
+
+Write stream to file descriptor.
+
+Params: (itemsize, samp_rate)"
+
 %feature("docstring") gr_test "Test class for testing runtime system (setting up buffers and such.)
 
 This block does not do any usefull actual data processing. It just exposes setting all standard block parameters using the contructor or public methods.
@@ -9412,6 +9834,10 @@ N.B. lock() and unlock() may not be called from a flowgraph thread (E.g., gr_blo
 Params: (NONE)"
 
 %feature("docstring") gr_top_block::dump "Displays flattened flowgraph edges and block connectivity
+
+Params: (NONE)"
+
+%feature("docstring") gr_top_block::to_top_block "
 
 Params: (NONE)"
 
@@ -11927,6 +12353,14 @@ output: 1 stream of short.
 
 Params: (which_board, decim_rate, nchan, mux, mode, fusb_block_size, fusb_nblocks, fpga_filename, firmware_filename)"
 
+%feature("docstring") aadvarky_enough "
+
+Params: (aad)"
+
+%feature("docstring") main "
+
+Params: (NONE)"
+
 %feature("docstring") audio_alsa_make_sink "make an alsa audio sink.
 
 Params: (sampling_rate, device_name, ok_to_block)"
@@ -12035,6 +12469,54 @@ Params: (input, taps, n_2_complex_blocks, result)"
 
 Params: (input, taps, n_2_complex_blocks, result)"
 
+%feature("docstring") complex_vec_test0 "
+
+Params: (NONE)"
+
+%feature("docstring") complex_vec_test1 "
+
+Params: (input)"
+
+%feature("docstring") complex_scalar_test0 "
+
+Params: (NONE)"
+
+%feature("docstring") complex_scalar_test1 "
+
+Params: (input)"
+
+%feature("docstring") int_vec_test0 "
+
+Params: (NONE)"
+
+%feature("docstring") int_vec_test1 "
+
+Params: (input)"
+
+%feature("docstring") float_vec_test0 "
+
+Params: (NONE)"
+
+%feature("docstring") float_vec_test1 "
+
+Params: (input)"
+
+%feature("docstring") getopt "
+
+Params: (argc, argv, optstring)"
+
+%feature("docstring") usleep "
+
+Params: (usec)"
+
+%feature("docstring") nanosleep "
+
+Params: (req, rem)"
+
+%feature("docstring") gettimeofday "
+
+Params: (tv, tz)"
+
 %feature("docstring") create_atsci_equalizer_nop "
 
 Params: (NONE)"
@@ -12094,6 +12576,10 @@ Params: (str)"
 %feature("docstring") make_dial_tone "
 
 Params: (NONE)"
+
+%feature("docstring") dotprod_ccf_armv7_a "
+
+Params: (a, b, res, n)"
 
 %feature("docstring") dotprod_fff_altivec "
 
@@ -12305,6 +12791,22 @@ Params: (ea)"
 
 Params: (p)"
 
+%feature("docstring") __get_cpuid_max "
+
+Params: (__ext, __sig)"
+
+%feature("docstring") __get_cpuid "
+
+Params: (__level, __eax, __ebx, __ecx, __edx)"
+
+%feature("docstring") __get_cpuid_max "
+
+Params: (__ext, __sig)"
+
+%feature("docstring") __get_cpuid "
+
+Params: (__level, __eax, __ebx, __ecx, __edx)"
+
 %feature("docstring") gcp_fft_1d_r2_submit "Submit a job that computes the forward or inverse FFT.
 
 Returns a shared_ptr to a job descriptor which should be passed to wait_job*. Throws an exception in the event of a problem. This uses the FFTW conventions for scaling. That is, neither the forward nor inverse are scaled by 1/fft_length.
@@ -12499,18 +13001,6 @@ Params: (NONE)"
 
 Params: (x)"
 
-%feature("docstring") gr_gcd "
-
-Params: (m, n)"
-
-%feature("docstring") gr_isnan "
-
-Params: (value)"
-
-%feature("docstring") gr_signbit "
-
-Params: (x)"
-
 %feature("docstring") gr_fast_atan2f "Fast arc tangent using table lookup and linear interpolation.
 
 This function calculates the angle of the vector (x,y) based on a table lookup and linear interpolation. The table uses a 256 point table covering -45 to +45 degrees and uses symetry to determine the final angle value in the range of -180 to 180 degrees. Note that this function uses the small angle approximation for values close to zero. This routine calculates the arc tangent with an average error of +/- 0.045 degrees.
@@ -12614,17 +13104,17 @@ Params: (x, sin, cos)"
 
 Params: (x, sin, cos)"
 
-%feature("docstring") gr_tmp_path "return directory portion of pathname used for temporary files.
+%feature("docstring") gr_tmp_path "directory to create temporary files
 
 Params: (NONE)"
 
-%feature("docstring") ensure_unittest_path "
+%feature("docstring") gr_appdata_path "directory to store application data
 
-Params: (grpath, path)"
+Params: (NONE)"
 
 %feature("docstring") get_unittest_path "
 
-Params: (filename, fullpath, pathsize)"
+Params: (filename)"
 
 %feature("docstring") gri_add_const_ss "Low-level, high-speed add_const_ss primitive.
 
@@ -12840,6 +13330,14 @@ Params: (which_pp)"
 
 Params: (which)"
 
+%feature("docstring") make_psk "
+
+Params: (gr_constell)"
+
+%feature("docstring") make_qam "
+
+Params: (gr_constell)"
+
 %feature("docstring") SWAP "
 
 Params: (a, b)"
@@ -12911,6 +13409,22 @@ Params: (s, result)"
 %feature("docstring") calc_metric "
 
 Params: (O, D, TABLE, in, metric, type)"
+
+%feature("docstring") uhd_make_multi_usrp_sink "
+
+Params: (device_addr, io_type, num_channels)"
+
+%feature("docstring") uhd_make_multi_usrp_source "
+
+Params: (device_addr, io_type, num_channels)"
+
+%feature("docstring") uhd_make_single_usrp_sink "
+
+Params: (device_addr, io_type, num_channels)"
+
+%feature("docstring") uhd_make_single_usrp_source "
+
+Params: (device_addr, io_type, num_channels)"
 
 %feature("docstring") operator<< "
 
@@ -13252,6 +13766,1122 @@ Params: (symbols, mettab, state0, state1)"
 
 Params: (state, outbuf)"
 
+%feature("docstring") volk_16s_add_quad_aligned16 "
+
+Params: (target0, target1, target2, target3, src0, src1, src2, src3, src4, num_bytes)"
+
+%feature("docstring") volk_16s_add_quad_aligned16_manual "
+
+Params: (target0, target1, target2, target3, src0, src1, src2, src3, src4, num_bytes, arch)"
+
+%feature("docstring") volk_16s_branch_4_state_8_aligned16 "
+
+Params: (target, src0, permuters, cntl2, cntl3, scalars)"
+
+%feature("docstring") volk_16s_branch_4_state_8_aligned16_manual "
+
+Params: (target, src0, permuters, cntl2, cntl3, scalars, arch)"
+
+%feature("docstring") volk_16sc_deinterleave_16s_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_16sc_deinterleave_16s_aligned16_manual "
+
+Params: (iBuffer, qBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_16sc_deinterleave_32f_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") volk_16sc_deinterleave_32f_aligned16_manual "
+
+Params: (iBuffer, qBuffer, complexVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_16sc_deinterleave_real_16s_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_16sc_deinterleave_real_16s_aligned16_manual "
+
+Params: (iBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_16sc_deinterleave_real_32f_aligned16 "
+
+Params: (iBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") volk_16sc_deinterleave_real_32f_aligned16_manual "
+
+Params: (iBuffer, complexVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_16sc_deinterleave_real_8s_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_16sc_deinterleave_real_8s_aligned16_manual "
+
+Params: (iBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_16sc_magnitude_16s_aligned16 "
+
+Params: (magnitudeVector, complexVector, num_points)"
+
+%feature("docstring") volk_16sc_magnitude_16s_aligned16_manual "
+
+Params: (magnitudeVector, complexVector, num_points, arch)"
+
+%feature("docstring") volk_16sc_magnitude_32f_aligned16 "
+
+Params: (magnitudeVector, complexVector, scalar, num_points)"
+
+%feature("docstring") volk_16sc_magnitude_32f_aligned16_manual "
+
+Params: (magnitudeVector, complexVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_16s_convert_32f_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_16s_convert_32f_aligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_16s_convert_32f_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_16s_convert_32f_unaligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_16s_convert_8s_aligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") volk_16s_convert_8s_aligned16_manual "
+
+Params: (outputVector, inputVector, num_points, arch)"
+
+%feature("docstring") volk_16s_convert_8s_unaligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") volk_16s_convert_8s_unaligned16_manual "
+
+Params: (outputVector, inputVector, num_points, arch)"
+
+%feature("docstring") volk_16s_max_star_aligned16 "
+
+Params: (target, src0, num_bytes)"
+
+%feature("docstring") volk_16s_max_star_aligned16_manual "
+
+Params: (target, src0, num_bytes, arch)"
+
+%feature("docstring") volk_16s_max_star_horizontal_aligned16 "
+
+Params: (target, src0, num_bytes)"
+
+%feature("docstring") volk_16s_max_star_horizontal_aligned16_manual "
+
+Params: (target, src0, num_bytes, arch)"
+
+%feature("docstring") volk_16s_permute_and_scalar_add_aligned16 "
+
+Params: (target, src0, permute_indexes, cntl0, cntl1, cntl2, cntl3, scalars, num_bytes)"
+
+%feature("docstring") volk_16s_permute_and_scalar_add_aligned16_manual "
+
+Params: (target, src0, permute_indexes, cntl0, cntl1, cntl2, cntl3, scalars, num_bytes, arch)"
+
+%feature("docstring") volk_16s_quad_max_star_aligned16 "
+
+Params: (target, src0, src1, src2, src3, num_bytes)"
+
+%feature("docstring") volk_16s_quad_max_star_aligned16_manual "
+
+Params: (target, src0, src1, src2, src3, num_bytes, arch)"
+
+%feature("docstring") volk_16u_byteswap_aligned16 "
+
+Params: (intsToSwap, num_points)"
+
+%feature("docstring") volk_16u_byteswap_aligned16_manual "
+
+Params: (intsToSwap, num_points, arch)"
+
+%feature("docstring") volk_32f_accumulator_aligned16 "
+
+Params: (result, inputBuffer, num_points)"
+
+%feature("docstring") volk_32f_accumulator_aligned16_manual "
+
+Params: (result, inputBuffer, num_points, arch)"
+
+%feature("docstring") volk_32f_add_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32f_add_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32fc_32f_multiply_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32fc_32f_multiply_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32fc_32f_power_32fc_aligned16 "
+
+Params: (cVector, aVector, power, num_points)"
+
+%feature("docstring") volk_32fc_32f_power_32fc_aligned16_manual "
+
+Params: (cVector, aVector, power, num_points, arch)"
+
+%feature("docstring") volk_32f_calc_spectral_noise_floor_aligned16 "
+
+Params: (noiseFloorAmplitude, realDataPoints, spectralExclusionValue, num_points)"
+
+%feature("docstring") volk_32f_calc_spectral_noise_floor_aligned16_manual "
+
+Params: (noiseFloorAmplitude, realDataPoints, spectralExclusionValue, num_points, arch)"
+
+%feature("docstring") volk_32fc_atan2_32f_aligned16 "
+
+Params: (outputVector, inputVector, normalizeFactor, num_points)"
+
+%feature("docstring") volk_32fc_atan2_32f_aligned16_manual "
+
+Params: (outputVector, inputVector, normalizeFactor, num_points, arch)"
+
+%feature("docstring") volk_32fc_conjugate_dot_prod_aligned16 "
+
+Params: (result, input, taps, num_bytes)"
+
+%feature("docstring") volk_32fc_conjugate_dot_prod_aligned16_manual "
+
+Params: (result, input, taps, num_bytes, arch)"
+
+%feature("docstring") volk_32fc_conjugate_dot_prod_unaligned "
+
+Params: (result, input, taps, num_bytes)"
+
+%feature("docstring") volk_32fc_conjugate_dot_prod_unaligned_manual "
+
+Params: (result, input, taps, num_bytes, arch)"
+
+%feature("docstring") volk_32fc_deinterleave_32f_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_32fc_deinterleave_32f_aligned16_manual "
+
+Params: (iBuffer, qBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_32fc_deinterleave_64f_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_32fc_deinterleave_64f_aligned16_manual "
+
+Params: (iBuffer, qBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_32fc_deinterleave_real_16s_aligned16 "
+
+Params: (iBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") volk_32fc_deinterleave_real_16s_aligned16_manual "
+
+Params: (iBuffer, complexVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32fc_deinterleave_real_32f_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_32fc_deinterleave_real_32f_aligned16_manual "
+
+Params: (iBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_32fc_deinterleave_real_64f_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_32fc_deinterleave_real_64f_aligned16_manual "
+
+Params: (iBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_32fc_dot_prod_aligned16 "
+
+Params: (result, input, taps, num_bytes)"
+
+%feature("docstring") volk_32fc_dot_prod_aligned16_manual "
+
+Params: (result, input, taps, num_bytes, arch)"
+
+%feature("docstring") volk_32fc_index_max_aligned16 "
+
+Params: (target, src0, num_bytes)"
+
+%feature("docstring") volk_32fc_index_max_aligned16_manual "
+
+Params: (target, src0, num_bytes, arch)"
+
+%feature("docstring") volk_32fc_magnitude_16s_aligned16 "
+
+Params: (magnitudeVector, complexVector, scalar, num_points)"
+
+%feature("docstring") volk_32fc_magnitude_16s_aligned16_manual "
+
+Params: (magnitudeVector, complexVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32fc_magnitude_32f_aligned16 "
+
+Params: (magnitudeVector, complexVector, num_points)"
+
+%feature("docstring") volk_32fc_magnitude_32f_aligned16_manual "
+
+Params: (magnitudeVector, complexVector, num_points, arch)"
+
+%feature("docstring") volk_32fc_multiply_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32fc_multiply_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32f_convert_16s_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_32f_convert_16s_aligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32f_convert_16s_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_32f_convert_16s_unaligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32f_convert_32s_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_32f_convert_32s_aligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32f_convert_32s_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_32f_convert_32s_unaligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32f_convert_64f_aligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") volk_32f_convert_64f_aligned16_manual "
+
+Params: (outputVector, inputVector, num_points, arch)"
+
+%feature("docstring") volk_32f_convert_64f_unaligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") volk_32f_convert_64f_unaligned16_manual "
+
+Params: (outputVector, inputVector, num_points, arch)"
+
+%feature("docstring") volk_32f_convert_8s_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_32f_convert_8s_aligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32f_convert_8s_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_32f_convert_8s_unaligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32fc_power_spectral_density_32f_aligned16 "
+
+Params: (logPowerOutput, complexFFTInput, normalizationFactor, rbw, num_points)"
+
+%feature("docstring") volk_32fc_power_spectral_density_32f_aligned16_manual "
+
+Params: (logPowerOutput, complexFFTInput, normalizationFactor, rbw, num_points, arch)"
+
+%feature("docstring") volk_32fc_power_spectrum_32f_aligned16 "
+
+Params: (logPowerOutput, complexFFTInput, normalizationFactor, num_points)"
+
+%feature("docstring") volk_32fc_power_spectrum_32f_aligned16_manual "
+
+Params: (logPowerOutput, complexFFTInput, normalizationFactor, num_points, arch)"
+
+%feature("docstring") volk_32fc_square_dist_aligned16 "
+
+Params: (target, src0, points, num_bytes)"
+
+%feature("docstring") volk_32fc_square_dist_aligned16_manual "
+
+Params: (target, src0, points, num_bytes, arch)"
+
+%feature("docstring") volk_32fc_square_dist_scalar_mult_aligned16 "
+
+Params: (target, src0, points, scalar, num_bytes)"
+
+%feature("docstring") volk_32fc_square_dist_scalar_mult_aligned16_manual "
+
+Params: (target, src0, points, scalar, num_bytes, arch)"
+
+%feature("docstring") volk_32f_divide_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32f_divide_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32f_dot_prod_aligned16 "
+
+Params: (result, input, taps, num_points)"
+
+%feature("docstring") volk_32f_dot_prod_aligned16_manual "
+
+Params: (result, input, taps, num_points, arch)"
+
+%feature("docstring") volk_32f_dot_prod_unaligned16 "
+
+Params: (result, input, taps, num_points)"
+
+%feature("docstring") volk_32f_dot_prod_unaligned16_manual "
+
+Params: (result, input, taps, num_points, arch)"
+
+%feature("docstring") volk_32f_fm_detect_aligned16 "
+
+Params: (outputVector, inputVector, bound, saveValue, num_points)"
+
+%feature("docstring") volk_32f_fm_detect_aligned16_manual "
+
+Params: (outputVector, inputVector, bound, saveValue, num_points, arch)"
+
+%feature("docstring") volk_32f_index_max_aligned16 "
+
+Params: (target, src0, num_points)"
+
+%feature("docstring") volk_32f_index_max_aligned16_manual "
+
+Params: (target, src0, num_points, arch)"
+
+%feature("docstring") volk_32f_interleave_16sc_aligned16 "
+
+Params: (complexVector, iBuffer, qBuffer, scalar, num_points)"
+
+%feature("docstring") volk_32f_interleave_16sc_aligned16_manual "
+
+Params: (complexVector, iBuffer, qBuffer, scalar, num_points, arch)"
+
+%feature("docstring") volk_32f_interleave_32fc_aligned16 "
+
+Params: (complexVector, iBuffer, qBuffer, num_points)"
+
+%feature("docstring") volk_32f_interleave_32fc_aligned16_manual "
+
+Params: (complexVector, iBuffer, qBuffer, num_points, arch)"
+
+%feature("docstring") volk_32f_max_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32f_max_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32f_min_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32f_min_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32f_multiply_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32f_multiply_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32f_normalize_aligned16 "
+
+Params: (vecBuffer, scalar, num_points)"
+
+%feature("docstring") volk_32f_normalize_aligned16_manual "
+
+Params: (vecBuffer, scalar, num_points, arch)"
+
+%feature("docstring") volk_32f_power_aligned16 "
+
+Params: (cVector, aVector, power, num_points)"
+
+%feature("docstring") volk_32f_power_aligned16_manual "
+
+Params: (cVector, aVector, power, num_points, arch)"
+
+%feature("docstring") volk_32f_sqrt_aligned16 "
+
+Params: (cVector, aVector, num_points)"
+
+%feature("docstring") volk_32f_sqrt_aligned16_manual "
+
+Params: (cVector, aVector, num_points, arch)"
+
+%feature("docstring") volk_32f_stddev_aligned16 "
+
+Params: (stddev, inputBuffer, mean, num_points)"
+
+%feature("docstring") volk_32f_stddev_aligned16_manual "
+
+Params: (stddev, inputBuffer, mean, num_points, arch)"
+
+%feature("docstring") volk_32f_stddev_and_mean_aligned16 "
+
+Params: (stddev, mean, inputBuffer, num_points)"
+
+%feature("docstring") volk_32f_stddev_and_mean_aligned16_manual "
+
+Params: (stddev, mean, inputBuffer, num_points, arch)"
+
+%feature("docstring") volk_32f_subtract_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32f_subtract_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32f_sum_of_poly_aligned16 "
+
+Params: (target, src0, center_point_array, cutoff, num_bytes)"
+
+%feature("docstring") volk_32f_sum_of_poly_aligned16_manual "
+
+Params: (target, src0, center_point_array, cutoff, num_bytes, arch)"
+
+%feature("docstring") volk_32s_and_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32s_and_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32s_convert_32f_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_32s_convert_32f_aligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32s_convert_32f_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_32s_convert_32f_unaligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_32s_or_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_32s_or_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_32u_byteswap_aligned16 "
+
+Params: (intsToSwap, num_points)"
+
+%feature("docstring") volk_32u_byteswap_aligned16_manual "
+
+Params: (intsToSwap, num_points, arch)"
+
+%feature("docstring") volk_32u_popcnt_aligned16 "
+
+Params: (ret, value)"
+
+%feature("docstring") volk_32u_popcnt_aligned16_manual "
+
+Params: (ret, value, arch)"
+
+%feature("docstring") volk_64f_convert_32f_aligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") volk_64f_convert_32f_aligned16_manual "
+
+Params: (outputVector, inputVector, num_points, arch)"
+
+%feature("docstring") volk_64f_convert_32f_unaligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") volk_64f_convert_32f_unaligned16_manual "
+
+Params: (outputVector, inputVector, num_points, arch)"
+
+%feature("docstring") volk_64f_max_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_64f_max_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_64f_min_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_64f_min_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_64u_byteswap_aligned16 "
+
+Params: (intsToSwap, num_points)"
+
+%feature("docstring") volk_64u_byteswap_aligned16_manual "
+
+Params: (intsToSwap, num_points, arch)"
+
+%feature("docstring") volk_64u_popcnt_aligned16 "
+
+Params: (ret, value)"
+
+%feature("docstring") volk_64u_popcnt_aligned16_manual "
+
+Params: (ret, value, arch)"
+
+%feature("docstring") volk_8sc_deinterleave_16s_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_8sc_deinterleave_16s_aligned16_manual "
+
+Params: (iBuffer, qBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_8sc_deinterleave_32f_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") volk_8sc_deinterleave_32f_aligned16_manual "
+
+Params: (iBuffer, qBuffer, complexVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_8sc_deinterleave_real_16s_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_8sc_deinterleave_real_16s_aligned16_manual "
+
+Params: (iBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_8sc_deinterleave_real_32f_aligned16 "
+
+Params: (iBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") volk_8sc_deinterleave_real_32f_aligned16_manual "
+
+Params: (iBuffer, complexVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_8sc_deinterleave_real_8s_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") volk_8sc_deinterleave_real_8s_aligned16_manual "
+
+Params: (iBuffer, complexVector, num_points, arch)"
+
+%feature("docstring") volk_8sc_multiply_conjugate_16sc_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") volk_8sc_multiply_conjugate_16sc_aligned16_manual "
+
+Params: (cVector, aVector, bVector, num_points, arch)"
+
+%feature("docstring") volk_8sc_multiply_conjugate_32fc_aligned16 "
+
+Params: (cVector, aVector, bVector, scalar, num_points)"
+
+%feature("docstring") volk_8sc_multiply_conjugate_32fc_aligned16_manual "
+
+Params: (cVector, aVector, bVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_8s_convert_16s_aligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") volk_8s_convert_16s_aligned16_manual "
+
+Params: (outputVector, inputVector, num_points, arch)"
+
+%feature("docstring") volk_8s_convert_16s_unaligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") volk_8s_convert_16s_unaligned16_manual "
+
+Params: (outputVector, inputVector, num_points, arch)"
+
+%feature("docstring") volk_8s_convert_32f_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_8s_convert_32f_aligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") volk_8s_convert_32f_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_8s_convert_32f_unaligned16_manual "
+
+Params: (outputVector, inputVector, scalar, num_points, arch)"
+
+%feature("docstring") lv_creal "
+
+Params: (x)"
+
+%feature("docstring") lv_cimag "
+
+Params: (x)"
+
+%feature("docstring") lv_conj "
+
+Params: (x)"
+
+%feature("docstring") lv_cpow "
+
+Params: (x, y)"
+
+%feature("docstring") lv_32fc_init "
+
+Params: (x, y)"
+
+%feature("docstring") volk_cpu_init "
+
+Params: (NONE)"
+
+%feature("docstring") volk_get_lvarch "
+
+Params: (NONE)"
+
+%feature("docstring") volk_environment_init "
+
+Params: (NONE)"
+
+%feature("docstring") default_acquire_volk_16s_add_quad_aligned16 "
+
+Params: (target0, target1, target2, target3, src0, src1, src2, src3, src4, num_bytes)"
+
+%feature("docstring") default_acquire_volk_16s_branch_4_state_8_aligned16 "
+
+Params: (target, src0, permuters, cntl2, cntl3, scalars)"
+
+%feature("docstring") default_acquire_volk_16sc_deinterleave_16s_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_16sc_deinterleave_32f_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_16sc_deinterleave_real_16s_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_16sc_deinterleave_real_32f_aligned16 "
+
+Params: (iBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_16sc_deinterleave_real_8s_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_16sc_magnitude_16s_aligned16 "
+
+Params: (magnitudeVector, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_16sc_magnitude_32f_aligned16 "
+
+Params: (magnitudeVector, complexVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_16s_convert_32f_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_16s_convert_32f_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_16s_convert_8s_aligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") default_acquire_volk_16s_convert_8s_unaligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") default_acquire_volk_16s_max_star_aligned16 "
+
+Params: (target, src0, num_bytes)"
+
+%feature("docstring") default_acquire_volk_16s_max_star_horizontal_aligned16 "
+
+Params: (target, src0, num_bytes)"
+
+%feature("docstring") default_acquire_volk_16s_permute_and_scalar_add_aligned16 "
+
+Params: (target, src0, permute_indexes, cntl0, cntl1, cntl2, cntl3, scalars, num_bytes)"
+
+%feature("docstring") default_acquire_volk_16s_quad_max_star_aligned16 "
+
+Params: (target, src0, src1, src2, src3, num_bytes)"
+
+%feature("docstring") default_acquire_volk_16u_byteswap_aligned16 "
+
+Params: (intsToSwap, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_accumulator_aligned16 "
+
+Params: (result, inputBuffer, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_add_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_32f_multiply_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_32f_power_32fc_aligned16 "
+
+Params: (cVector, aVector, power, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_calc_spectral_noise_floor_aligned16 "
+
+Params: (noiseFloorAmplitude, realDataPoints, spectralExclusionValue, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_atan2_32f_aligned16 "
+
+Params: (outputVector, inputVector, normalizeFactor, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_conjugate_dot_prod_aligned16 "
+
+Params: (result, input, taps, num_bytes)"
+
+%feature("docstring") default_acquire_volk_32fc_conjugate_dot_prod_unaligned "
+
+Params: (result, input, taps, num_bytes)"
+
+%feature("docstring") default_acquire_volk_32fc_deinterleave_32f_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_deinterleave_64f_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_deinterleave_real_16s_aligned16 "
+
+Params: (iBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_deinterleave_real_32f_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_deinterleave_real_64f_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_dot_prod_aligned16 "
+
+Params: (result, input, taps, num_bytes)"
+
+%feature("docstring") default_acquire_volk_32fc_index_max_aligned16 "
+
+Params: (target, src0, num_bytes)"
+
+%feature("docstring") default_acquire_volk_32fc_magnitude_16s_aligned16 "
+
+Params: (magnitudeVector, complexVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_magnitude_32f_aligned16 "
+
+Params: (magnitudeVector, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_multiply_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_convert_16s_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_convert_16s_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_convert_32s_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_convert_32s_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_convert_64f_aligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_convert_64f_unaligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_convert_8s_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_convert_8s_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_power_spectral_density_32f_aligned16 "
+
+Params: (logPowerOutput, complexFFTInput, normalizationFactor, rbw, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_power_spectrum_32f_aligned16 "
+
+Params: (logPowerOutput, complexFFTInput, normalizationFactor, num_points)"
+
+%feature("docstring") default_acquire_volk_32fc_square_dist_aligned16 "
+
+Params: (target, src0, points, num_bytes)"
+
+%feature("docstring") default_acquire_volk_32fc_square_dist_scalar_mult_aligned16 "
+
+Params: (target, src0, points, scalar, num_bytes)"
+
+%feature("docstring") default_acquire_volk_32f_divide_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_dot_prod_aligned16 "
+
+Params: (result, input, taps, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_dot_prod_unaligned16 "
+
+Params: (result, input, taps, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_fm_detect_aligned16 "
+
+Params: (outputVector, inputVector, bound, saveValue, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_index_max_aligned16 "
+
+Params: (target, src0, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_interleave_16sc_aligned16 "
+
+Params: (complexVector, iBuffer, qBuffer, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_interleave_32fc_aligned16 "
+
+Params: (complexVector, iBuffer, qBuffer, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_max_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_min_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_multiply_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_normalize_aligned16 "
+
+Params: (vecBuffer, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_power_aligned16 "
+
+Params: (cVector, aVector, power, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_sqrt_aligned16 "
+
+Params: (cVector, aVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_stddev_aligned16 "
+
+Params: (stddev, inputBuffer, mean, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_stddev_and_mean_aligned16 "
+
+Params: (stddev, mean, inputBuffer, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_subtract_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32f_sum_of_poly_aligned16 "
+
+Params: (target, src0, center_point_array, cutoff, num_bytes)"
+
+%feature("docstring") default_acquire_volk_32s_and_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32s_convert_32f_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32s_convert_32f_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_32s_or_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_32u_byteswap_aligned16 "
+
+Params: (intsToSwap, num_points)"
+
+%feature("docstring") default_acquire_volk_32u_popcnt_aligned16 "
+
+Params: (ret, value)"
+
+%feature("docstring") default_acquire_volk_64f_convert_32f_aligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") default_acquire_volk_64f_convert_32f_unaligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") default_acquire_volk_64f_max_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_64f_min_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_64u_byteswap_aligned16 "
+
+Params: (intsToSwap, num_points)"
+
+%feature("docstring") default_acquire_volk_64u_popcnt_aligned16 "
+
+Params: (ret, value)"
+
+%feature("docstring") default_acquire_volk_8sc_deinterleave_16s_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_8sc_deinterleave_32f_aligned16 "
+
+Params: (iBuffer, qBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_8sc_deinterleave_real_16s_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_8sc_deinterleave_real_32f_aligned16 "
+
+Params: (iBuffer, complexVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_8sc_deinterleave_real_8s_aligned16 "
+
+Params: (iBuffer, complexVector, num_points)"
+
+%feature("docstring") default_acquire_volk_8sc_multiply_conjugate_16sc_aligned16 "
+
+Params: (cVector, aVector, bVector, num_points)"
+
+%feature("docstring") default_acquire_volk_8sc_multiply_conjugate_32fc_aligned16 "
+
+Params: (cVector, aVector, bVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_8s_convert_16s_aligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") default_acquire_volk_8s_convert_16s_unaligned16 "
+
+Params: (outputVector, inputVector, num_points)"
+
+%feature("docstring") default_acquire_volk_8s_convert_32f_aligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") default_acquire_volk_8s_convert_32f_unaligned16 "
+
+Params: (outputVector, inputVector, scalar, num_points)"
+
+%feature("docstring") volk_rank_archs "
+
+Params: (arch_defs, arch)"
+
+%feature("docstring") get_volk_runtime "
+
+Params: (NONE)"
+
+%feature("docstring") volk_runtime_init "
+
+Params: (NONE)"
+
+%feature("docstring") scm_xyzzy_init "
+
+Params: ()"
+
+%feature("docstring") xyzzy_init "
+
+Params: (filename)"
+
+%feature("docstring") xyzzy_file_exists "
+
+Params: (filename)"
+
+%feature("docstring") xyzzy_open_file "
+
+Params: (filename)"
+
 
 
 %feature("docstring") _1200_common::_1200_common "
@@ -13501,6 +15131,24 @@ Params: (main_or_aux, divisor)"
 %feature("docstring") _lo_common::set_freq "
 
 Params: (freq)"
+
+%feature("docstring") Aadvark "Models the mammal Aadvark.
+
+Sadly the model is incomplete and cannot capture all aspects of an aadvark yet.
+
+This line is uninformative and is only to test line breaks in the comments."
+
+%feature("docstring") Aadvark::print "Outputs the vital aadvark statistics.
+
+Params: (NONE)"
+
+%feature("docstring") Aadvark::Aadvark "
+
+Params: (aaness)"
+
+%feature("docstring") Aadvark::get_aadvarkness "
+
+Params: (NONE)"
 
 
 
@@ -14914,17 +16562,17 @@ Params: (NONE)"
 
 %feature("docstring") std::multimap::const_iterator "STL iterator class."
 
+%feature("docstring") std::set::const_iterator "STL iterator class."
+
 %feature("docstring") std::multiset::const_iterator "STL iterator class."
 
 %feature("docstring") std::vector::const_iterator "STL iterator class."
 
-%feature("docstring") std::set::const_iterator "STL iterator class."
-
 %feature("docstring") std::basic_string::const_reverse_iterator "STL iterator class."
 
-%feature("docstring") std::wstring::const_reverse_iterator "STL iterator class."
-
 %feature("docstring") std::string::const_reverse_iterator "STL iterator class."
+
+%feature("docstring") std::wstring::const_reverse_iterator "STL iterator class."
 
 %feature("docstring") std::deque::const_reverse_iterator "STL iterator class."
 
@@ -17536,6 +19184,10 @@ Params: (s)"
 
 Basic blocks are the bare abstraction of an entity that has a name, a set of inputs and outputs, and a message queue. These are never instantiated directly; rather, this is the abstract parent class of both gr_hier_block, which is a recursive container, and gr_block, which implements actual signal processing functions."
 
+%feature("docstring") gr_basic_block::dispatch_msg "
+
+Params: (msg)"
+
 %feature("docstring") gr_basic_block::gr_basic_block "Protected constructor prevents instantiation by non-derived classes.
 
 Params: (name, input_signature, output_signature)"
@@ -17576,7 +19228,7 @@ Params: (NONE)"
 
 Params: (NONE)"
 
-%feature("docstring") gr_basic_block::basic_block "
+%feature("docstring") gr_basic_block::to_basic_block "
 
 Params: (NONE)"
 
@@ -17586,11 +19238,19 @@ This function is called by the runtime system whenever the topology changes. Mos
 
 Params: (ninputs, noutputs)"
 
-%feature("docstring") gr_basic_block::handle_msg "Block message handler.
+%feature("docstring") gr_basic_block::set_msg_handler "Set the callback that is fired when messages are available.
 
-This function is called by the runtime system whenever there are messages in its queue. Blocks should override this to receive messages; the default behavior is to drop them on the floor.
+can be any kind of function pointer or function object that has the signature: 
 
-Params: (msg)"
+(You may want to use boost::bind to massage your callable into the correct form. See gr_nop.{h,cc} for an example that sets up a class method as the callback.)
+
+Blocks that desire to handle messages must call this method in their constructors to register the handler that will be invoked when messages are available.
+
+If the block inherits from gr_block, the runtime system will ensure that msg_handler is called in a thread-safe manner, such that work and msg_handler will never be called concurrently. This allows msg_handler to update state variables without having to worry about thread-safety issues with work, general_work or another invocation of msg_handler.
+
+If the block inherits from gr_hier_block2, the runtime system will ensure that no reentrant calls are made to msg_handler.
+
+Params: (msg_handler)"
 
 %feature("docstring") gr_block "The abstract base class for all 'terminal' processing blocks.
 
@@ -17688,6 +19348,22 @@ Params: (ninput)"
 
 Params: (noutput)"
 
+%feature("docstring") gr_block::nitems_read "Return the number of items read on input stream which_input.
+
+Params: (which_input)"
+
+%feature("docstring") gr_block::nitems_written "Return the number of items written on output stream which_output.
+
+Params: (which_output)"
+
+%feature("docstring") gr_block::tag_propagation_policy "Asks for the policy used by the scheduler to moved tags downstream.
+
+Params: (NONE)"
+
+%feature("docstring") gr_block::set_tag_propagation_policy "Set the policy by the scheduler to determine how tags are moved downstream.
+
+Params: (p)"
+
 %feature("docstring") gr_block::detail "
 
 Params: (NONE)"
@@ -17703,6 +19379,18 @@ Params: (name, input_signature, output_signature)"
 %feature("docstring") gr_block::set_fixed_rate "
 
 Params: (fixed_rate)"
+
+%feature("docstring") gr_block::add_item_tag "Adds a new tag onto the given output buffer.
+
+Params: (which_output, abs_offset, key, value, srcid)"
+
+%feature("docstring") gr_block::get_tags_in_range "Given a [start,end), returns a vector of all tags in the range.
+
+Range of counts is from start to end-1.
+
+Tags are tuples of: (item count, source id, key, value)
+
+Params: (v, which_input, abs_start, abs_end)"
 
 %feature("docstring") gr_block_executor "Manage the execution of a single block."
 
@@ -17758,9 +19446,21 @@ Params: (NONE)"
 
 Params: (NONE)"
 
+%feature("docstring") gr_buffer_reader::nitems_read "
+
+Params: (NONE)"
+
 %feature("docstring") gr_buffer_reader::link "Return the block that reads via this reader.
 
 Params: (NONE)"
+
+%feature("docstring") gr_buffer_reader::get_tags_in_range "Given a [start,end), returns a vector all tags in the range.
+
+Get a vector of tags in given range. Range of counts is from start to end-1.
+
+Tags are tuples of: (item count, source id, key, value)
+
+Params: (v, abs_start, abs_end)"
 
 %feature("docstring") gr_buffer_reader::gr_buffer_reader "constructor is private. Use gr_buffer::add_reader to create instances
 
@@ -17785,6 +19485,28 @@ Params: (data, nbytes)"
 Params: (data, nbytes)"
 
 %feature("docstring") gr_circular_file::reset_read_pointer "
+
+Params: (NONE)"
+
+
+
+%feature("docstring") gr_constellation_sector::gr_constellation_sector "
+
+Params: (constellation, n_sectors)"
+
+%feature("docstring") gr_constellation_sector::decision_maker "Returns the constellation point that matches best. Also calculates the phase error.
+
+Params: (sample)"
+
+%feature("docstring") gr_constellation_sector::get_sector "
+
+Params: (sample)"
+
+%feature("docstring") gr_constellation_sector::calc_sector_value "
+
+Params: (sector)"
+
+%feature("docstring") gr_constellation_sector::find_sector_values "
 
 Params: (NONE)"
 
@@ -18191,6 +19913,26 @@ Params: (NONE)"
 %feature("docstring") gr_fir_ccf_3dnow::gr_fir_ccf_3dnow "
 
 Params: (NONE)"
+
+%feature("docstring") gr_fir_ccf_armv7_a "armv7_a using NEON coprocessor version of gr_fir_ccf"
+
+%feature("docstring") gr_fir_ccf_armv7_a::gr_fir_ccf_armv7_a "
+
+Params: (NONE)"
+
+%feature("docstring") gr_fir_ccf_armv7_a::~gr_fir_ccf_armv7_a "
+
+Params: (NONE)"
+
+%feature("docstring") gr_fir_ccf_armv7_a::set_taps "install  as the current taps.
+
+Params: (taps)"
+
+%feature("docstring") gr_fir_ccf_armv7_a::filter "compute a single output value.
+
+must have ntaps() valid entries. input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+
+Params: (input)"
 
 %feature("docstring") gr_fir_ccf_generic "Concrete class for generic implementation of FIR with gr_complex input, gr_complex output and float taps.
 
@@ -20806,7 +22548,7 @@ Params: (NONE)"
 
 %feature("docstring") gri_fir_filter_with_buffer_ccc::filter "compute a single output value.
 
-must have ntaps() valid entries. input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+is a single input value of the filter type
 
 Params: (input)"
 
@@ -20848,7 +22590,7 @@ Params: (NONE)"
 
 %feature("docstring") gri_fir_filter_with_buffer_ccf::filter "compute a single output value.
 
-must have ntaps() valid entries. input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+is a single input value of the filter type
 
 Params: (input)"
 
@@ -20890,7 +22632,7 @@ Params: (NONE)"
 
 %feature("docstring") gri_fir_filter_with_buffer_fcc::filter "compute a single output value.
 
-must have ntaps() valid entries. input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+is a single input value of the filter type
 
 Params: (input)"
 
@@ -20932,7 +22674,7 @@ Params: (NONE)"
 
 %feature("docstring") gri_fir_filter_with_buffer_fff::filter "compute a single output value.
 
-must have ntaps() valid entries. input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+is a single input value of the filter type
 
 Params: (input)"
 
@@ -20974,7 +22716,7 @@ Params: (NONE)"
 
 %feature("docstring") gri_fir_filter_with_buffer_fsf::filter "compute a single output value.
 
-must have ntaps() valid entries. input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+is a single input value of the filter type
 
 Params: (input)"
 
@@ -21016,7 +22758,7 @@ Params: (NONE)"
 
 %feature("docstring") gri_fir_filter_with_buffer_scc::filter "compute a single output value.
 
-must have ntaps() valid entries. input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+is a single input value of the filter type
 
 Params: (input)"
 
@@ -21069,6 +22811,10 @@ Params: (degree)"
 %feature("docstring") gri_goertzel::gri_goertzel "
 
 Params: (NONE)"
+
+%feature("docstring") gri_goertzel::gri_setparms "
+
+Params: (rate, len, freq)"
 
 %feature("docstring") gri_goertzel::batch "
 
@@ -21791,25 +23537,25 @@ Params: (input)"
 
 %feature("docstring") std::istringstream "STL class."
 
+%feature("docstring") std::basic_string::iterator "STL iterator class."
+
 %feature("docstring") std::multimap::iterator "STL iterator class."
+
+%feature("docstring") std::wstring::iterator "STL iterator class."
+
+%feature("docstring") std::set::iterator "STL iterator class."
 
 %feature("docstring") std::map::iterator "STL iterator class."
 
 %feature("docstring") std::deque::iterator "STL iterator class."
 
-%feature("docstring") std::multiset::iterator "STL iterator class."
-
 %feature("docstring") std::list::iterator "STL iterator class."
 
-%feature("docstring") std::set::iterator "STL iterator class."
-
-%feature("docstring") std::basic_string::iterator "STL iterator class."
+%feature("docstring") std::multiset::iterator "STL iterator class."
 
 %feature("docstring") std::string::iterator "STL iterator class."
 
 %feature("docstring") std::vector::iterator "STL iterator class."
-
-%feature("docstring") std::wstring::iterator "STL iterator class."
 
 %feature("docstring") std::length_error "STL class."
 
@@ -22541,44 +24287,6 @@ Params: (NONE)"
 
 
 
-%feature("docstring") pmt_c32vector::pmt_c32vector "
-
-Params: (k, fill)"
-
-%feature("docstring") pmt_c32vector::is_c32vector "
-
-Params: (NONE)"
-
-%feature("docstring") pmt_c32vector::length "
-
-Params: (NONE)"
-
-%feature("docstring") pmt_c32vector::ref "
-
-Params: (k)"
-
-%feature("docstring") pmt_c32vector::set "
-
-Params: (k, x)"
-
-%feature("docstring") pmt_c32vector::elements "
-
-Params: (len)"
-
-%feature("docstring") pmt_c32vector::writable_elements "
-
-Params: (len)"
-
-%feature("docstring") pmt_c32vector::uniform_elements "
-
-Params: (len)"
-
-%feature("docstring") pmt_c32vector::uniform_writable_elements "
-
-Params: (len)"
-
-
-
 %feature("docstring") pmt::pmt_c32vector::pmt_c32vector "
 
 Params: (k, fill)"
@@ -22617,39 +24325,39 @@ Params: (len)"
 
 
 
-%feature("docstring") pmt_c64vector::pmt_c64vector "
+%feature("docstring") pmt_c32vector::pmt_c32vector "
 
 Params: (k, fill)"
 
-%feature("docstring") pmt_c64vector::is_c64vector "
+%feature("docstring") pmt_c32vector::is_c32vector "
 
 Params: (NONE)"
 
-%feature("docstring") pmt_c64vector::length "
+%feature("docstring") pmt_c32vector::length "
 
 Params: (NONE)"
 
-%feature("docstring") pmt_c64vector::ref "
+%feature("docstring") pmt_c32vector::ref "
 
 Params: (k)"
 
-%feature("docstring") pmt_c64vector::set "
+%feature("docstring") pmt_c32vector::set "
 
 Params: (k, x)"
 
-%feature("docstring") pmt_c64vector::elements "
+%feature("docstring") pmt_c32vector::elements "
 
 Params: (len)"
 
-%feature("docstring") pmt_c64vector::writable_elements "
+%feature("docstring") pmt_c32vector::writable_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt_c64vector::uniform_elements "
+%feature("docstring") pmt_c32vector::uniform_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt_c64vector::uniform_writable_elements "
+%feature("docstring") pmt_c32vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -22688,6 +24396,44 @@ Params: (len)"
 Params: (len)"
 
 %feature("docstring") pmt::pmt_c64vector::uniform_writable_elements "
+
+Params: (len)"
+
+
+
+%feature("docstring") pmt_c64vector::pmt_c64vector "
+
+Params: (k, fill)"
+
+%feature("docstring") pmt_c64vector::is_c64vector "
+
+Params: (NONE)"
+
+%feature("docstring") pmt_c64vector::length "
+
+Params: (NONE)"
+
+%feature("docstring") pmt_c64vector::ref "
+
+Params: (k)"
+
+%feature("docstring") pmt_c64vector::set "
+
+Params: (k, x)"
+
+%feature("docstring") pmt_c64vector::elements "
+
+Params: (len)"
+
+%feature("docstring") pmt_c64vector::writable_elements "
+
+Params: (len)"
+
+%feature("docstring") pmt_c64vector::uniform_elements "
+
+Params: (len)"
+
+%feature("docstring") pmt_c64vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -22793,44 +24539,6 @@ Params: (len)"
 
 
 
-%feature("docstring") pmt::pmt_f64vector::pmt_f64vector "
-
-Params: (k, fill)"
-
-%feature("docstring") pmt::pmt_f64vector::is_f64vector "
-
-Params: (NONE)"
-
-%feature("docstring") pmt::pmt_f64vector::length "
-
-Params: (NONE)"
-
-%feature("docstring") pmt::pmt_f64vector::ref "
-
-Params: (k)"
-
-%feature("docstring") pmt::pmt_f64vector::set "
-
-Params: (k, x)"
-
-%feature("docstring") pmt::pmt_f64vector::elements "
-
-Params: (len)"
-
-%feature("docstring") pmt::pmt_f64vector::writable_elements "
-
-Params: (len)"
-
-%feature("docstring") pmt::pmt_f64vector::uniform_elements "
-
-Params: (len)"
-
-%feature("docstring") pmt::pmt_f64vector::uniform_writable_elements "
-
-Params: (len)"
-
-
-
 %feature("docstring") pmt_f64vector::pmt_f64vector "
 
 Params: (k, fill)"
@@ -22864,6 +24572,44 @@ Params: (len)"
 Params: (len)"
 
 %feature("docstring") pmt_f64vector::uniform_writable_elements "
+
+Params: (len)"
+
+
+
+%feature("docstring") pmt::pmt_f64vector::pmt_f64vector "
+
+Params: (k, fill)"
+
+%feature("docstring") pmt::pmt_f64vector::is_f64vector "
+
+Params: (NONE)"
+
+%feature("docstring") pmt::pmt_f64vector::length "
+
+Params: (NONE)"
+
+%feature("docstring") pmt::pmt_f64vector::ref "
+
+Params: (k)"
+
+%feature("docstring") pmt::pmt_f64vector::set "
+
+Params: (k, x)"
+
+%feature("docstring") pmt::pmt_f64vector::elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_f64vector::writable_elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_f64vector::uniform_elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_f64vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -23049,44 +24795,6 @@ Params: (len)"
 
 
 
-%feature("docstring") pmt::pmt_s32vector::pmt_s32vector "
-
-Params: (k, fill)"
-
-%feature("docstring") pmt::pmt_s32vector::is_s32vector "
-
-Params: (NONE)"
-
-%feature("docstring") pmt::pmt_s32vector::length "
-
-Params: (NONE)"
-
-%feature("docstring") pmt::pmt_s32vector::ref "
-
-Params: (k)"
-
-%feature("docstring") pmt::pmt_s32vector::set "
-
-Params: (k, x)"
-
-%feature("docstring") pmt::pmt_s32vector::elements "
-
-Params: (len)"
-
-%feature("docstring") pmt::pmt_s32vector::writable_elements "
-
-Params: (len)"
-
-%feature("docstring") pmt::pmt_s32vector::uniform_elements "
-
-Params: (len)"
-
-%feature("docstring") pmt::pmt_s32vector::uniform_writable_elements "
-
-Params: (len)"
-
-
-
 %feature("docstring") pmt_s32vector::pmt_s32vector "
 
 Params: (k, fill)"
@@ -23125,39 +24833,39 @@ Params: (len)"
 
 
 
-%feature("docstring") pmt_s64vector::pmt_s64vector "
+%feature("docstring") pmt::pmt_s32vector::pmt_s32vector "
 
 Params: (k, fill)"
 
-%feature("docstring") pmt_s64vector::is_s64vector "
+%feature("docstring") pmt::pmt_s32vector::is_s32vector "
 
 Params: (NONE)"
 
-%feature("docstring") pmt_s64vector::length "
+%feature("docstring") pmt::pmt_s32vector::length "
 
 Params: (NONE)"
 
-%feature("docstring") pmt_s64vector::ref "
+%feature("docstring") pmt::pmt_s32vector::ref "
 
 Params: (k)"
 
-%feature("docstring") pmt_s64vector::set "
+%feature("docstring") pmt::pmt_s32vector::set "
 
 Params: (k, x)"
 
-%feature("docstring") pmt_s64vector::elements "
+%feature("docstring") pmt::pmt_s32vector::elements "
 
 Params: (len)"
 
-%feature("docstring") pmt_s64vector::writable_elements "
+%feature("docstring") pmt::pmt_s32vector::writable_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt_s64vector::uniform_elements "
+%feature("docstring") pmt::pmt_s32vector::uniform_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt_s64vector::uniform_writable_elements "
+%feature("docstring") pmt::pmt_s32vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -23201,39 +24909,39 @@ Params: (len)"
 
 
 
-%feature("docstring") pmt::pmt_s8vector::pmt_s8vector "
+%feature("docstring") pmt_s64vector::pmt_s64vector "
 
 Params: (k, fill)"
 
-%feature("docstring") pmt::pmt_s8vector::is_s8vector "
+%feature("docstring") pmt_s64vector::is_s64vector "
 
 Params: (NONE)"
 
-%feature("docstring") pmt::pmt_s8vector::length "
+%feature("docstring") pmt_s64vector::length "
 
 Params: (NONE)"
 
-%feature("docstring") pmt::pmt_s8vector::ref "
+%feature("docstring") pmt_s64vector::ref "
 
 Params: (k)"
 
-%feature("docstring") pmt::pmt_s8vector::set "
+%feature("docstring") pmt_s64vector::set "
 
 Params: (k, x)"
 
-%feature("docstring") pmt::pmt_s8vector::elements "
+%feature("docstring") pmt_s64vector::elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_s8vector::writable_elements "
+%feature("docstring") pmt_s64vector::writable_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_s8vector::uniform_elements "
+%feature("docstring") pmt_s64vector::uniform_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_s8vector::uniform_writable_elements "
+%feature("docstring") pmt_s64vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -23272,6 +24980,44 @@ Params: (len)"
 Params: (len)"
 
 %feature("docstring") pmt_s8vector::uniform_writable_elements "
+
+Params: (len)"
+
+
+
+%feature("docstring") pmt::pmt_s8vector::pmt_s8vector "
+
+Params: (k, fill)"
+
+%feature("docstring") pmt::pmt_s8vector::is_s8vector "
+
+Params: (NONE)"
+
+%feature("docstring") pmt::pmt_s8vector::length "
+
+Params: (NONE)"
+
+%feature("docstring") pmt::pmt_s8vector::ref "
+
+Params: (k)"
+
+%feature("docstring") pmt::pmt_s8vector::set "
+
+Params: (k, x)"
+
+%feature("docstring") pmt::pmt_s8vector::elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_s8vector::writable_elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_s8vector::uniform_elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_s8vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -23325,44 +25071,6 @@ Params: (k, v)"
 
 
 
-%feature("docstring") pmt_u16vector::pmt_u16vector "
-
-Params: (k, fill)"
-
-%feature("docstring") pmt_u16vector::is_u16vector "
-
-Params: (NONE)"
-
-%feature("docstring") pmt_u16vector::length "
-
-Params: (NONE)"
-
-%feature("docstring") pmt_u16vector::ref "
-
-Params: (k)"
-
-%feature("docstring") pmt_u16vector::set "
-
-Params: (k, x)"
-
-%feature("docstring") pmt_u16vector::elements "
-
-Params: (len)"
-
-%feature("docstring") pmt_u16vector::writable_elements "
-
-Params: (len)"
-
-%feature("docstring") pmt_u16vector::uniform_elements "
-
-Params: (len)"
-
-%feature("docstring") pmt_u16vector::uniform_writable_elements "
-
-Params: (len)"
-
-
-
 %feature("docstring") pmt::pmt_u16vector::pmt_u16vector "
 
 Params: (k, fill)"
@@ -23401,39 +25109,39 @@ Params: (len)"
 
 
 
-%feature("docstring") pmt::pmt_u32vector::pmt_u32vector "
+%feature("docstring") pmt_u16vector::pmt_u16vector "
 
 Params: (k, fill)"
 
-%feature("docstring") pmt::pmt_u32vector::is_u32vector "
+%feature("docstring") pmt_u16vector::is_u16vector "
 
 Params: (NONE)"
 
-%feature("docstring") pmt::pmt_u32vector::length "
+%feature("docstring") pmt_u16vector::length "
 
 Params: (NONE)"
 
-%feature("docstring") pmt::pmt_u32vector::ref "
+%feature("docstring") pmt_u16vector::ref "
 
 Params: (k)"
 
-%feature("docstring") pmt::pmt_u32vector::set "
+%feature("docstring") pmt_u16vector::set "
 
 Params: (k, x)"
 
-%feature("docstring") pmt::pmt_u32vector::elements "
+%feature("docstring") pmt_u16vector::elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_u32vector::writable_elements "
+%feature("docstring") pmt_u16vector::writable_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_u32vector::uniform_elements "
+%feature("docstring") pmt_u16vector::uniform_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_u32vector::uniform_writable_elements "
+%feature("docstring") pmt_u16vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -23477,39 +25185,39 @@ Params: (len)"
 
 
 
-%feature("docstring") pmt::pmt_u64vector::pmt_u64vector "
+%feature("docstring") pmt::pmt_u32vector::pmt_u32vector "
 
 Params: (k, fill)"
 
-%feature("docstring") pmt::pmt_u64vector::is_u64vector "
+%feature("docstring") pmt::pmt_u32vector::is_u32vector "
 
 Params: (NONE)"
 
-%feature("docstring") pmt::pmt_u64vector::length "
+%feature("docstring") pmt::pmt_u32vector::length "
 
 Params: (NONE)"
 
-%feature("docstring") pmt::pmt_u64vector::ref "
+%feature("docstring") pmt::pmt_u32vector::ref "
 
 Params: (k)"
 
-%feature("docstring") pmt::pmt_u64vector::set "
+%feature("docstring") pmt::pmt_u32vector::set "
 
 Params: (k, x)"
 
-%feature("docstring") pmt::pmt_u64vector::elements "
+%feature("docstring") pmt::pmt_u32vector::elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_u64vector::writable_elements "
+%feature("docstring") pmt::pmt_u32vector::writable_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_u64vector::uniform_elements "
+%feature("docstring") pmt::pmt_u32vector::uniform_elements "
 
 Params: (len)"
 
-%feature("docstring") pmt::pmt_u64vector::uniform_writable_elements "
+%feature("docstring") pmt::pmt_u32vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -23548,6 +25256,44 @@ Params: (len)"
 Params: (len)"
 
 %feature("docstring") pmt_u64vector::uniform_writable_elements "
+
+Params: (len)"
+
+
+
+%feature("docstring") pmt::pmt_u64vector::pmt_u64vector "
+
+Params: (k, fill)"
+
+%feature("docstring") pmt::pmt_u64vector::is_u64vector "
+
+Params: (NONE)"
+
+%feature("docstring") pmt::pmt_u64vector::length "
+
+Params: (NONE)"
+
+%feature("docstring") pmt::pmt_u64vector::ref "
+
+Params: (k)"
+
+%feature("docstring") pmt::pmt_u64vector::set "
+
+Params: (k, x)"
+
+%feature("docstring") pmt::pmt_u64vector::elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_u64vector::writable_elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_u64vector::uniform_elements "
+
+Params: (len)"
+
+%feature("docstring") pmt::pmt_u64vector::uniform_writable_elements "
 
 Params: (len)"
 
@@ -23777,6 +25523,18 @@ Params: (NONE)"
 
 %feature("docstring") std::priority_queue "STL class."
 
+
+
+%feature("docstring") psk::psk "
+
+Params: (gr_constell)"
+
+
+
+%feature("docstring") qam::qam "
+
+Params: (gr_constell)"
+
 %feature("docstring") sssr::quad_filter "quad filter (used to compute timing error)"
 
 %feature("docstring") sssr::quad_filter::quad_filter "
@@ -23795,25 +25553,25 @@ Params: (sample)"
 
 %feature("docstring") std::range_error "STL class."
 
+%feature("docstring") std::wstring::reverse_iterator "STL iterator class."
+
+%feature("docstring") std::multimap::reverse_iterator "STL iterator class."
+
+%feature("docstring") std::vector::reverse_iterator "STL iterator class."
+
+%feature("docstring") std::deque::reverse_iterator "STL iterator class."
+
 %feature("docstring") std::multiset::reverse_iterator "STL iterator class."
 
 %feature("docstring") std::basic_string::reverse_iterator "STL iterator class."
 
-%feature("docstring") std::string::reverse_iterator "STL iterator class."
+%feature("docstring") std::set::reverse_iterator "STL iterator class."
 
 %feature("docstring") std::map::reverse_iterator "STL iterator class."
 
 %feature("docstring") std::list::reverse_iterator "STL iterator class."
 
-%feature("docstring") std::wstring::reverse_iterator "STL iterator class."
-
-%feature("docstring") std::set::reverse_iterator "STL iterator class."
-
-%feature("docstring") std::deque::reverse_iterator "STL iterator class."
-
-%feature("docstring") std::multimap::reverse_iterator "STL iterator class."
-
-%feature("docstring") std::vector::reverse_iterator "STL iterator class."
+%feature("docstring") std::string::reverse_iterator "STL iterator class."
 
 
 
@@ -24155,6 +25913,302 @@ Params: (NONE)"
 %feature("docstring") usrp2::tune_result::tune_result "
 
 Params: (baseband, dxc, residual, inverted)"
+
+
+
+%feature("docstring") uhd_multi_usrp_sink::uhd_multi_usrp_sink "Set the IO signature for this block.
+
+Params: (sig)"
+
+%feature("docstring") uhd_multi_usrp_sink::set_subdev_spec "Set the subdevice specification.
+
+Params: (spec, mboard)"
+
+%feature("docstring") uhd_multi_usrp_sink::set_samp_rate "Set the sample rate for the usrp device.
+
+Params: (rate)"
+
+%feature("docstring") uhd_multi_usrp_sink::get_samp_rate "Get the sample rate for the usrp device. This is the actual sample rate and may differ from the rate set.
+
+Params: ()"
+
+%feature("docstring") uhd_multi_usrp_sink::set_center_freq "Tune the usrp device to the desired center frequency.
+
+Params: (tune_request, chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::get_freq_range "Get the tunable frequency range.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::set_gain "Set the gain for the dboard.
+
+Params: (gain, chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::get_gain "Get the actual dboard gain setting.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::get_gain_range "Get the settable gain range.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::set_antenna "Set the antenna to use.
+
+Params: (ant, chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::get_antenna "Get the antenna in use.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::get_antennas "Get a list of possible antennas.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::set_bandwidth "Set the subdevice bandpass filter.
+
+Params: (bandwidth, chan)"
+
+%feature("docstring") uhd_multi_usrp_sink::set_clock_config "Set the clock configuration.
+
+Params: (clock_config, mboard)"
+
+%feature("docstring") uhd_multi_usrp_sink::get_time_now "Get the current time registers.
+
+Params: ()"
+
+%feature("docstring") uhd_multi_usrp_sink::set_time_next_pps "Set the time registers at the next pps.
+
+Params: (time_spec)"
+
+%feature("docstring") uhd_multi_usrp_sink::set_time_unknown_pps "Sync the time registers with an unknown pps edge.
+
+Params: (time_spec)"
+
+%feature("docstring") uhd_multi_usrp_sink::get_device "Get access to the underlying uhd device object.
+
+Params: ()"
+
+
+
+%feature("docstring") uhd_multi_usrp_source::uhd_multi_usrp_source "Set the IO signature for this block.
+
+Params: (sig)"
+
+%feature("docstring") uhd_multi_usrp_source::set_subdev_spec "Set the subdevice specification.
+
+Params: (spec, mboard)"
+
+%feature("docstring") uhd_multi_usrp_source::set_samp_rate "Set the sample rate for the usrp device.
+
+Params: (rate)"
+
+%feature("docstring") uhd_multi_usrp_source::get_samp_rate "Get the sample rate for the usrp device. This is the actual sample rate and may differ from the rate set.
+
+Params: ()"
+
+%feature("docstring") uhd_multi_usrp_source::set_center_freq "Tune the usrp device to the desired center frequency.
+
+Params: (tune_request, chan)"
+
+%feature("docstring") uhd_multi_usrp_source::get_freq_range "Get the tunable frequency range.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_source::set_gain "Set the gain for the dboard.
+
+Params: (gain, chan)"
+
+%feature("docstring") uhd_multi_usrp_source::get_gain "Get the actual dboard gain setting.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_source::get_gain_range "Get the settable gain range.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_source::set_antenna "Set the antenna to use.
+
+Params: (ant, chan)"
+
+%feature("docstring") uhd_multi_usrp_source::get_antenna "Get the antenna in use.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_source::get_antennas "Get a list of possible antennas.
+
+Params: (chan)"
+
+%feature("docstring") uhd_multi_usrp_source::set_bandwidth "Set the subdevice bandpass filter.
+
+Params: (bandwidth, chan)"
+
+%feature("docstring") uhd_multi_usrp_source::set_clock_config "Set the clock configuration.
+
+Params: (clock_config, mboard)"
+
+%feature("docstring") uhd_multi_usrp_source::get_time_now "Get the current time registers.
+
+Params: ()"
+
+%feature("docstring") uhd_multi_usrp_source::set_time_next_pps "Set the time registers at the next pps.
+
+Params: (time_spec)"
+
+%feature("docstring") uhd_multi_usrp_source::set_time_unknown_pps "Sync the time registers with an unknown pps edge.
+
+Params: (time_spec)"
+
+%feature("docstring") uhd_multi_usrp_source::get_device "Get access to the underlying uhd device object.
+
+Params: ()"
+
+
+
+%feature("docstring") uhd_single_usrp_sink::uhd_single_usrp_sink "Set the IO signature for this block.
+
+Params: (sig)"
+
+%feature("docstring") uhd_single_usrp_sink::set_subdev_spec "Set the subdevice specification.
+
+Params: (spec)"
+
+%feature("docstring") uhd_single_usrp_sink::set_samp_rate "Set the sample rate for the usrp device.
+
+Params: (rate)"
+
+%feature("docstring") uhd_single_usrp_sink::get_samp_rate "Get the sample rate for the usrp device. This is the actual sample rate and may differ from the rate set.
+
+Params: ()"
+
+%feature("docstring") uhd_single_usrp_sink::set_center_freq "Tune the usrp device to the desired center frequency.
+
+Params: (tune_request, chan)"
+
+%feature("docstring") uhd_single_usrp_sink::get_freq_range "Get the tunable frequency range.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_sink::set_gain "Set the gain for the dboard.
+
+Params: (gain, chan)"
+
+%feature("docstring") uhd_single_usrp_sink::get_gain "Get the actual dboard gain setting.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_sink::get_gain_range "Get the settable gain range.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_sink::set_antenna "Set the antenna to use.
+
+Params: (ant, chan)"
+
+%feature("docstring") uhd_single_usrp_sink::get_antenna "Get the antenna in use.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_sink::get_antennas "Get a list of possible antennas.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_sink::set_bandwidth "Set the subdevice bandpass filter.
+
+Params: (bandwidth, chan)"
+
+%feature("docstring") uhd_single_usrp_sink::set_clock_config "Set the clock configuration.
+
+Params: (clock_config)"
+
+%feature("docstring") uhd_single_usrp_sink::get_time_now "Get the current time registers.
+
+Params: ()"
+
+%feature("docstring") uhd_single_usrp_sink::set_time_now "Set the time registers asap.
+
+Params: (time_spec)"
+
+%feature("docstring") uhd_single_usrp_sink::set_time_next_pps "Set the time registers at the next pps.
+
+Params: (time_spec)"
+
+%feature("docstring") uhd_single_usrp_sink::get_device "Get access to the underlying uhd device object.
+
+Params: ()"
+
+
+
+%feature("docstring") uhd_single_usrp_source::uhd_single_usrp_source "Set the IO signature for this block.
+
+Params: (sig)"
+
+%feature("docstring") uhd_single_usrp_source::set_subdev_spec "Set the subdevice specification.
+
+Params: (spec)"
+
+%feature("docstring") uhd_single_usrp_source::set_samp_rate "Set the sample rate for the usrp device.
+
+Params: (rate)"
+
+%feature("docstring") uhd_single_usrp_source::get_samp_rate "Get the sample rate for the usrp device. This is the actual sample rate and may differ from the rate set.
+
+Params: ()"
+
+%feature("docstring") uhd_single_usrp_source::set_center_freq "Tune the usrp device to the desired center frequency.
+
+Params: (tune_request, chan)"
+
+%feature("docstring") uhd_single_usrp_source::get_freq_range "Get the tunable frequency range.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_source::set_gain "Set the gain for the dboard.
+
+Params: (gain, chan)"
+
+%feature("docstring") uhd_single_usrp_source::get_gain "Get the actual dboard gain setting.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_source::get_gain_range "Get the settable gain range.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_source::set_antenna "Set the antenna to use.
+
+Params: (ant, chan)"
+
+%feature("docstring") uhd_single_usrp_source::get_antenna "Get the antenna in use.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_source::get_antennas "Get a list of possible antennas.
+
+Params: (chan)"
+
+%feature("docstring") uhd_single_usrp_source::set_bandwidth "Set the subdevice bandpass filter.
+
+Params: (bandwidth, chan)"
+
+%feature("docstring") uhd_single_usrp_source::set_clock_config "Set the clock configuration.
+
+Params: (clock_config)"
+
+%feature("docstring") uhd_single_usrp_source::get_time_now "Get the current time registers.
+
+Params: ()"
+
+%feature("docstring") uhd_single_usrp_source::set_time_now "Set the time registers asap.
+
+Params: (time_spec)"
+
+%feature("docstring") uhd_single_usrp_source::set_time_next_pps "Set the time registers at the next pps.
+
+Params: (time_spec)"
+
+%feature("docstring") uhd_single_usrp_source::get_device "Get access to the underlying uhd device object.
+
+Params: ()"
 
 %feature("docstring") std::underflow_error "STL class."
 
@@ -24896,7 +26950,7 @@ Params: (candidates)"
 
 Params: (NONE)"
 
-%feature("docstring") usrp_basic::init_db "One time call, made only only from usrp_standard_*make after shared_ptr is created.
+%feature("docstring") usrp_basic::init_db "
 
 Params: (u)"
 
