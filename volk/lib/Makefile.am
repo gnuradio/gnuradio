@@ -45,7 +45,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
 
 
 # list of programs run by "make check" and "make distcheck"
-TESTS = testqa
+#TESTS = testqa
 #orc stuff gets built in the ORC directory conditional to ORC being enabled.
 #it gets linked in during the build of libvolk as an added library.
 #there might be a better way to do this.
@@ -77,7 +77,7 @@ libvolk_la_SOURCES = 		\
 volk_orc_LDFLAGS = \
 	$(ORC_LDFLAGS) \
 	-lorc-0.4
-	
+
 volk_orc_LIBADD = \
 	../orc/libvolk_orc.la
 
@@ -103,7 +103,6 @@ endif
 #libvolk_qa_la_LIBADD = \
 #	libvolk.la \
 #	libvolk_runtime.la
-	
 
 # ----------------------------------------------------------------
 # headers that don't get installed

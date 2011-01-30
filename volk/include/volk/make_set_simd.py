@@ -280,7 +280,6 @@ def make_set_simd(dom) :
     tempstring = tempstring + "  ;;\n"
     tempstring = tempstring + "  esac\n"
     tempstring = tempstring + "  LV_CXXFLAGS=\"${LV_CXXFLAGS} ${ADDONS}\"\n"
-    tempstring = tempstring + "  AM_CONDITIONAL(LV_HAVE_ORC, [test \"$LV_HAVE_ORC\" = \"yes\"])\n";
     tempstring = tempstring + "])\n"
    
     return tempstring;

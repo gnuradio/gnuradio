@@ -68,12 +68,9 @@ AC_CONFIG_FILES([\
 	  include/Makefile \
 	  include/volk/Makefile \
 	  lib/Makefile \
+	  orc/Makefile \
 	  volk.pc \
 	])
-	
-if test "$HAVE_ORC" = yes; then
-  AC_CONFIG_FILES([orc/Makefile])
-fi
 
 AC_OUTPUT
 
