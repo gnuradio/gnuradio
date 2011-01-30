@@ -1,0 +1,53 @@
+;;; -*- Scheme -*-
+;;;
+;;; Copyright 2010 Free Software Foundation, Inc.
+;;;
+;;; This file is part of GNU Radio
+;;;
+;;; GNU Radio is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 3, or (at your option)
+;;; any later version.
+;;;
+;;; GNU Radio is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;;
+
+;;; If you're using Emacs's Scheme mode:
+;;;   (put 'with-test-prefix 'scheme-indent-function 1)
+
+;;; See the comments in gnuradio/test-suite/lib.scm for info on writing tests.
+;;; See also the very end of the file, where the test-equal, test-eqv
+;;; and test-eq macros are defined.
+
+(define-module (test-module)
+  #:use-module (oop goops)
+  #:use-module (gnuradio core)
+  #:use-module (gnuradio test-suite lib)
+  #:duplicates (merge-generics replace check))
+  
+
+;;; See if we can import the module...
+(use-modules (gnuradio trellis))
+
+;;; Now do some real testing, like that in ../python/qa_trellis.py
+;;; FIXME later.  Other problems to deal with.  Looks like
+;;; I don't understand the constructor to <fsm>
+
+(read-set! keywords 'prefix)
+
+'(with-test-prefix "test-001-fsm"
+  (let* ((I 2)
+	 (S 4)
+	 (O 4)
+	 (NS #(0 2 0 2 1 3 1 3))
+	 (OS #(0 3 3 0 1 2 2 1))
+	 (f (make <fsm> :I I :S S :O O :NS NS :OS OS)))
+    (test-equal (list I S O NS OS)
+		(list (gr:I f) (gr:S f) (gr:O f) (gr:NS f) (gr:OS f)))))
+

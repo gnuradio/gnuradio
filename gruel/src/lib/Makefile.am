@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -51,6 +51,8 @@ libgruel_la_SOURCES = 			\
 
 libgruel_la_LIBADD = 			\
 	$(BOOST_THREAD_LIB) 		\
+	$(BOOST_SYSTEM_LIB) 		\
+	$(BOOST_FILESYSTEM_LIB) 	\
 	$(PMT_LIB)			\
 	$(MSG_LIB)			\
 	-lstdc++

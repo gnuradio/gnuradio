@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+dnl Copyright 2001-2011 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -19,6 +19,13 @@ dnl Boston, MA 02110-1301, USA.
 
 AC_INIT
 AC_PREREQ(2.57)
+
+dnl Set the prefix to the default when --prefix is not specified.
+dnl This is critical for variable substitutions in the configure.
+if test "${prefix}" = "NONE"; then
+    prefix=${ac_default_prefix}
+fi
+
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
 
@@ -141,7 +148,22 @@ AC_ARG_ENABLE([python],
    esac],
   [enable_python=yes]
 )
+
+# Allow user to choose whether to generate SWIG/Guile
+# Default is disabled
+AC_ARG_ENABLE([guile],
+  [AS_HELP_STRING([--enable-guile],
+    [generate SWIG/Guile components (default is no)])],
+  [case "${enableval}" in
+     yes) enable_guile=yes ;;
+     no) enable_guile=no ;;
+     *) AC_MSG_ERROR([bad value ${enableval} for --enable-guile]) ;;
+   esac],
+  [enable_guile=no]
+)
+
 AM_CONDITIONAL([PYTHON], [test x$enable_python = xyes])
+AM_CONDITIONAL([GUILE], [test x$enable_guile = xyes])
 
 AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
 AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
@@ -282,13 +304,13 @@ dnl
 dnl all the rest of these call AC_SUBST(BOOST_<foo>_LIB) and define HAVE_BOOST_<foo>
 dnl
 AX_BOOST_DATE_TIME
-dnl AX_BOOST_FILESYSTEM
+AX_BOOST_FILESYSTEM
 dnl AX_BOOST_IOSTREAMS
 AX_BOOST_PROGRAM_OPTIONS
 dnl AX_BOOST_REGEX
 dnl AX_BOOST_SERIALIZATION
 dnl AX_BOOST_SIGNALS
-dnl AX_BOOST_SYSTEM
+AX_BOOST_SYSTEM
 dnl AX_BOOST_TEST_EXEC_MONITOR
 dnl AX_BOOST_UNIT_TEST_FRAMEWORK
 dnl AX_BOOST_WSERIALIZATION
@@ -336,6 +358,7 @@ AC_ARG_ENABLE(
 
 build_dirs="config"
 GRC_GRUEL                       dnl must come first
+GRC_VOLK
 GRC_GCELL
 GRC_GNURADIO_CORE
 GRC_USRP
@@ -364,9 +387,10 @@ GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_GR_QTGUI
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
-GRC_GR_UTILS                   dnl this must come after GRC_GR_WXGUI
+GRC_GR_UTILS                    dnl this must come after GRC_GR_WXGUI
 GRC_GNURADIO_EXAMPLES		dnl must come after all GRC_GR_*
 GRC_GRC
+GRC_GR_UHD
 GRC_DOCS			dnl must be last
 
 # Each component is now either to be built, was skipped, will be
@@ -389,12 +413,14 @@ AC_SUBST(with_SWIG_INCLUDES)
 AC_SUBST(with_PYDIRPATH)
 AC_SUBST(with_SWIGDIRPATH)
 AC_SUBST(with_LIBDIRPATH)
+AC_SUBST(with_GUILE_LOAD_PATH)
 
 # Local files tweaked by AC
 AC_CONFIG_FILES([\
     Makefile \
     run_tests.sh \
-    config/Makefile \
+    setup_guile_test_env \
+    config/Makefile
 ])
 
 dnl run_tests.sh is created from run_tests.sh.in .  Make it executable.

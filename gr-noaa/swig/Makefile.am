@@ -20,6 +20,17 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
+
+TESTS =
+EXTRA_DIST += $(nobase_guile_DATA)
+
+noinst_GUILE = noaa.test
+
+if GUILE
+nobase_guile_DATA = gnuradio/noaa.scm
+endif
+
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/gr-noaa/lib \
@@ -27,7 +38,6 @@ AM_CPPFLAGS = \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
 
-if PYTHON
 # ----------------------------------------------------------------
 # The SWIG library
 # TESTS = run_tests
@@ -56,11 +66,6 @@ noaa_swig_swiginclude_headers =	\
 	noaa_hrpt_deframer.i \
 	noaa_hrpt_pll_cf.i
 
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+if GUILE
+TESTS += run_guile_tests
 endif

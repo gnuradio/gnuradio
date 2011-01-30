@@ -25,3 +25,6 @@ SUBDIRS = c++
 if PYTHON
 SUBDIRS += python grc
 endif
+if GUILE
+SUBDIRS += waveforms
+endif

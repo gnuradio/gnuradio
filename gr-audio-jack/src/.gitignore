@@ -10,3 +10,6 @@
 /audio_jack.cc
 /audio_jack.py
 /run_tests
+/gnuradio
+/guile
+/python

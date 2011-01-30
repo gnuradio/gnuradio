@@ -1,0 +1,152 @@
+#
+# Copyright 2010 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# This is sourced by run_guile_tests to establish the environment
+# variables required to run the tests in the build tree.
+
+# add_local_paths is the only "public" function in this file
+
+# 1st argument is absolute path to hand coded guile source directory
+# 2nd argument is absolute path to component C++ shared library build directory
+# 3nd argument is absolute path to component SWIG build directory
+
+add_local_paths() {
+  if [ $# -ne 3 ]
+  then
+    echo "$0: requires 3 args" 1>&2
+    exit 1
+  fi
+
+  # Add local dirs to the front
+  prepend_to_guile_load_path "$1"
+  prepend_to_libpath "$2/.libs"
+  [ "$2" != "$3" ] && prepend_to_libpath "$3/.libs"
+  prepend_to_guile_load_path "$3"
+
+  # Add withdirs to the end
+  append_to_guile_load_path "@with_GUILE_LOAD_PATH@"
+  append_to_libpath "@with_LIBDIRPATH@"
+}
+
+# ------------------------------------------------------------------------
+
+abs_top_srcdir=@abs_top_srcdir@
+abs_top_builddir=@abs_top_builddir@
+
+# usage: prepend <path-varname> <dir>
+prepend() {
+  if [ $# -ne 2 ]
+  then
+    echo "$0: prepend needs 2 args" 1>&2
+    exit 1
+  fi
+  local path="$1" dir="$2" contents=""
+  eval "contents=\$$path"
+  if [ "$dir" != "" ]
+  then
+    if [ "$contents" = "" ]
+    then
+      eval "$path=\"$dir\""
+    else
+      eval "$path=\"$dir:$contents\""
+    fi
+  fi
+  #echo end-of-prepend: $path=${!path}
+}
+
+# usage: append <path-varname> <dir>
+append() {
+  if [ $# -ne 2 ]
+  then
+    echo "$0: append needs 2 args" 1>&2
+    exit 1
+  fi
+  local path="$1" dir="$2" contents=""
+  eval "contents=\$$path"
+  if [ "$dir" != "" ]
+  then
+    if [ "$contents" = "" ]
+    then
+      eval "$path=\"$dir\""
+    else
+      eval "$path=\"$contents:$dir\""
+    fi
+  fi
+  #echo end-of-append: $path=${!path}
+}
+
+prepend_to_guile_load_path() {
+    prepend GUILE_LOAD_PATH "$1"
+    export GUILE_LOAD_PATH
+}
+
+append_to_guile_load_path() {
+    append GUILE_LOAD_PATH "$1"
+    export GUILE_LOAD_PATH
+}
+
+prepend_to_libpath() {
+    prepend LTDL_LIBRARY_PATH "$1"
+    export LTDL_LIBRARY_PATH
+    case "@host_os@" in
+	darwin*)
+	    prepend DYLD_LIBRARY_PATH "$1"
+	    export DYLD_LIBRARY_PATH
+	    ;;
+	cygwin*|win*|mingw*)
+	    prepend PATH "$1"
+	    export PATH
+	    ;;
+    esac
+}
+
+append_to_libpath() {
+    append LTDL_LIBRARY_PATH "$1"
+    export LTDL_LIBRARY_PATH
+    case "@host_os@" in
+	darwin*)
+	    append DYLD_LIBRARY_PATH "$1"
+	    export DYLD_LIBRARY_PATH
+	    ;;
+	cygwin*|win*|mingw*)
+	    append PATH "$1"
+	    export PATH
+	    ;;
+    esac
+}
+
+# ------------------------------------------------------------------------
+# Everybody gets gruel and gnuradio-core for free.
+# FIXME Eventually this should be gruel and gnuradio-runtime.
+# ------------------------------------------------------------------------
+
+# Where to search for not yet installed C++ shared libraries
+prepend_to_libpath $abs_top_builddir/gruel/src/lib/.libs
+prepend_to_libpath $abs_top_builddir/gnuradio-core/src/lib/.libs
+prepend_to_libpath $abs_top_builddir/gnuradio-core/src/guile/.libs
+
+# Where to search for not yet installed swig generated guile libs
+prepend_to_libpath $abs_top_builddir/gnuradio-core/src/lib/swig/.libs
+
+# Where to seach for guile code.
+prepend_to_guile_load_path $abs_top_srcdir/gnuradio-core/src/guile
+prepend_to_guile_load_path $abs_top_builddir/gnuradio-core/src/lib/swig
+
+
+export GUILE_WARN_DEPRECATED=no

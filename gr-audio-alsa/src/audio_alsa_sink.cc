@@ -90,7 +90,7 @@ audio_alsa_sink::audio_alsa_sink (int sampling_rate,
     d_period_size (0),
     d_buffer_size_bytes (0), d_buffer (0),
     d_worker (0), d_special_case_mono_to_stereo (false),
-    d_nunderuns (0), d_nsuspends (0)
+    d_nunderuns (0), d_nsuspends (0), d_ok_to_block(ok_to_block)
 {
   CHATTY_DEBUG = gr_prefs::singleton()->get_bool("audio_alsa", "verbose", false);
 
@@ -100,6 +100,8 @@ audio_alsa_sink::audio_alsa_sink (int sampling_rate,
   // open the device for playback
   error = snd_pcm_open(&d_pcm_handle, d_device_name.c_str (),
 		       SND_PCM_STREAM_PLAYBACK, 0);
+  if (ok_to_block == false)
+    snd_pcm_nonblock(d_pcm_handle, !ok_to_block);
   if (error < 0){
     fprintf (stderr, "audio_alsa_sink[%s]: %s\n",
 	     d_device_name.c_str(), snd_strerror(error));
@@ -219,9 +221,15 @@ audio_alsa_sink::check_topology (int ninputs, int noutputs)
   int nchan = ninputs;
   int err;
 
-  // FIXME check_topology may be called more than once.
+  // Check the state of the stream
   // Ensure that the pcm is in a state where we can still mess with the hw_params
-
+  snd_pcm_state_t state;
+  state=snd_pcm_state(d_pcm_handle);
+  if ( state== SND_PCM_STATE_RUNNING)
+    return true;  // If stream is running, don't change any parameters
+  else if(state == SND_PCM_STATE_XRUN )
+    snd_pcm_prepare ( d_pcm_handle ); // Prepare stream on underrun, and we can set parameters;
+  
   bool special_case = nchan == 1 && d_special_case_mono_to_stereo;
   if (special_case)
     nchan = 2;
@@ -287,7 +295,6 @@ audio_alsa_sink::check_topology (int ninputs, int noutputs)
   default:
     assert (0);
   }
-
   return true;
 }
 
@@ -489,7 +496,12 @@ audio_alsa_sink::write_buffer (const void *vbuffer,
   while (nframes > 0){
     int r = snd_pcm_writei (d_pcm_handle, buffer, nframes);
     if (r == -EAGAIN)
-      continue;			// try again
+    {
+      if (d_ok_to_block == true)
+	continue;		// try again
+      
+      break;
+    }
 
     else if (r == -EPIPE){	// underrun
       d_nunderuns++;

@@ -26,6 +26,8 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 	gnuradio_core_I="$gnuradio_core_SWIGDIRPATH/gnuradio.i"
 	gnuradio_core_SWIG_INCLUDES="-I$gnuradio_core_SWIGDIRPATH"
 	gnuradio_core_PYDIRPATH=$pythondir
+	gnuradio_core_GUILE_LOAD_PATH="`pkg-config --variable=guile_load_path gnuradio-core`"
+	gnuradio_core_LIBDIRPATH="`pkg-config --variable=libdir gnuradio-core`"
     ])
 
     dnl Don't do gnuradio-core if gruel skipped
@@ -61,9 +63,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/g72x \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/swig \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/hier \
--I\${abs_top_builddir}/gnuradio-core/src/lib/swig \
-\$(FFTW3F_CFLAGS) \
-\$(GSL_CFLAGS)"
+-I\${abs_top_builddir}/gnuradio-core/src/lib/swig"
         gnuradio_core_LA="\${abs_top_builddir}/gnuradio-core/src/lib/libgnuradio-core.la"
 	dnl gnuradio_core_I="\${abs_top_srcdir}/gnuradio-core/src/lib/swig/gnuradio.i"
 	gnuradio_core_LIBDIRPATH="\${abs_top_builddir}/gnuradio-core/src/lib:\${abs_top_builddir}/gnuradio-core/src/lib/.libs"
@@ -81,6 +81,9 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/gnuradio-core.pc \
         gnuradio-core/src/Makefile \
         gnuradio-core/src/gen_interpolator_taps/Makefile \
+	gnuradio-core/src/guile/Makefile \
+	gnuradio-core/src/guile/run_guile_tests \
+	gnuradio-core/src/guile/gr-run-waveform-script \
         gnuradio-core/src/lib/Makefile \
         gnuradio-core/src/lib/filter/Makefile \
         gnuradio-core/src/lib/g72x/Makefile \
@@ -112,7 +115,11 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 
     GRC_BUILD_CONDITIONAL(gnuradio-core, [
         dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_core],[chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests]) \
+        AC_CONFIG_COMMANDS([run_tests_core],
+	[
+	  chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests
+	  chmod +x gnuradio-core/src/guile/run_guile_tests
+	]) \
         AC_CONFIG_COMMANDS([run_tests_utils],[chmod +x gnuradio-core/src/python/gnuradio/utils/run_tests])
     ])
 

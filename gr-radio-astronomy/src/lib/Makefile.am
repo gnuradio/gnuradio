@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,10 +20,10 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-if PYTHON
 TOP_SWIG_IFILES =		\
 	ra.i
 
@@ -33,12 +33,3 @@ TOP_SWIG_IFILES =		\
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
 ra_pythondir_category =		\
 	gnuradio
-
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
-endif

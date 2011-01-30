@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -44,11 +44,16 @@ private:
   gr_goertzel_fc(int rate, int len, float freq);
   gri_goertzel d_goertzel;
   int          d_len;
+  float	       d_freq;
+  int          d_rate;
 
 public:
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,
 	   gr_vector_void_star &output_items);
+
+  void set_freq (float freq);
+  void set_rate (int rate);
 };
 
 #endif /* INCLUDED_GR_GOERTZEL_FC_H */

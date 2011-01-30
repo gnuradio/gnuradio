@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2006,2010 Free Software Foundation, Inc.
+ * Copyright 2002,2006,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,11 +28,8 @@
 int 
 main (int argc, char **argv)
 {
-  char path[200];
-  get_unittest_path ("gr_atsc.xml", path, 200);
-
   CppUnit::TextTestRunner runner;
-  std::ofstream xmlfile(path);
+  std::ofstream xmlfile(get_unittest_path("gr_atsc.xml").c_str());
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest (qa_atsc::suite ());

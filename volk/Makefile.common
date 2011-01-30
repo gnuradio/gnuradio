@@ -1,0 +1,63 @@
+# -*- Makefile -*-
+#
+# Copyright 2010,2011 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
+
+if MD_CPU_generic
+    platform_CODE = \
+	$(top_srcdir)/lib/volk_cpu_generic.c
+endif
+
+if MD_CPU_x86
+    platform_CODE = \
+	$(top_srcdir)/lib/volk_cpu_x86.c
+endif
+
+if MD_CPU_powerpc
+    platform_CODE = \
+	$(top_srcdir)/lib/volk_cpu_powerpc.c
+endif
+
+
+ourincludedir   = $(includedir)/volk
+
+# swig includes 
+ourswigincludedir = $(ourincludedir)/swig
+
+# Install this stuff in the appropriate subdirectory
+# This usually ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/libvolk
+
+ourpythondir = $(pythondir)/volk
+ourpyexecdir = $(pyexecdir)/volk
+
+
+# swig flags
+SWIGPYTHONFLAGS = -fvirtual -python -modern
+SWIGGRFLAGS = -I$(GNURADIO_CORE_INCLUDEDIR)/swig -I$(GNURADIO_CORE_INCLUDEDIR)
+
+# standard defins and includes
+STD_DEFINES_AND_INCLUDES=-I$(top_srcdir)/include -I$(top_srcdir)/lib  $(GNURADIO_CORE_CPPFLAGS)
+
+# Don't assume that make predefines $(RM), because BSD make does
+# not. We define it now in configure.ac using AM_PATH_PROG, but now
+# here have to add a -f to be like GNU make.
+RM=$(RM_PROG) -f
+

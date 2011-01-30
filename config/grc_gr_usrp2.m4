@@ -29,10 +29,12 @@ AC_DEFUN([GRC_GR_USRP2],[
 	gr-usrp2/gnuradio-usrp2.pc \
         gr-usrp2/src/Makefile \
         gr-usrp2/src/run_tests \
+        gr-usrp2/src/run_guile_tests \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-usrp2,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
-	AC_CONFIG_COMMANDS([run_tests_usrp2], [chmod +x gr-usrp2/src/run_tests])
+	AC_CONFIG_COMMANDS([run_tests_usrp2],
+			   [chmod +x gr-usrp2/src/run_tests gr-usrp2/src/run_guile_tests])
     ])
 ])

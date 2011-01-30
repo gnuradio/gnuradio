@@ -30,9 +30,8 @@ const float gr_fxpt::s_sine_table[1 << NBITS][2] = {
 #include "sine_table.h"
 };
 
-// gcc 4.x fix
-const float gr_fxpt::TWO_TO_THE_31;
-const float gr_fxpt::PI;
+const float gr_fxpt::PI = 3.14159265358979323846;
+const float gr_fxpt::TWO_TO_THE_31 = 2147483648.0;
 
 #if 0
 /*

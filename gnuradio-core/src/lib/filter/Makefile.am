@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2005,2006,2007,2008,2009,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,7 +26,9 @@ include $(top_srcdir)/Makefile.common
 # other performance critical items
 #
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+# $(WITH_INCLUDES) must _always_ be last
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) \
+	$(FFTW3F_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libfilter.la libfilter-qa.la
 
@@ -67,7 +69,7 @@ code_generator = 					\
 
 
 # Source built by Python into $(builddir)
-BUILT_SOURCES =			\
+BUILT_SOURCES +=		\
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
@@ -118,8 +120,7 @@ x86_SUBCODE = 				\
 	ccomplex_dotprod_sse.S		\
 	fcomplex_dotprod_3dnow.S	\
 	fcomplex_dotprod_sse.S		\
-	short_dotprod_mmx.S		\
-	cpuid_x86.S
+	short_dotprod_mmx.S
 
 x86_64_SUBCODE = 			\
 	float_dotprod_sse64.S		\
@@ -132,8 +133,7 @@ x86_64_SUBCODE = 			\
 	ccomplex_dotprod_sse64.S	\
 	fcomplex_dotprod_3dnow64.S	\
 	fcomplex_dotprod_sse64.S	\
-	short_dotprod_mmx64.S		\
-	cpuid_x86_64.S
+	short_dotprod_mmx64.S
 
 x86_qa_CODE = 				\
 	qa_dotprod_x86.cc		\
@@ -157,7 +157,9 @@ armv7_a_CODE = \
 	gr_fir_sysconfig_armv7_a.cc \
 	gr_cpu_armv7_a.cc \
 	gr_fir_fff_armv7_a.cc \
-	dotprod_fff_armv7_a.c
+	dotprod_fff_armv7_a.c \
+	gr_fir_ccf_armv7_a.cc \
+	dotprod_ccf_armv7_a.c
 
 armv7_a_qa_CODE = \
 	qa_dotprod_armv7_a.cc
@@ -178,7 +180,7 @@ EXTRA_libfilter_la_SOURCES =		\
 	$(armv7_a_qa_CODE)
 
 
-EXTRA_DIST = 					\
+EXTRA_DIST += \
 	3dnow_float_dotprod_really_simple.S	\
 	3dnow_float_dotprod_simple.S		\
 	$(code_generator)
@@ -308,8 +310,10 @@ grinclude_HEADERS = 			\
 
 noinst_HEADERS = 			\
 	assembly.h			\
+	gcc_x86_cpuid.h			\
 	dotprod_fff_altivec.h		\
 	dotprod_fff_armv7_a.h		\
+	dotprod_ccf_armv7_a.h		\
 	gr_fir_scc_simd.h		\
 	gr_fir_scc_x86.h		\
 	gr_fir_fcc_simd.h		\
@@ -320,6 +324,7 @@ noinst_HEADERS = 			\
 	gr_fir_ccc_x86.h		\
 	gr_fir_fff_altivec.h		\
 	gr_fir_fff_armv7_a.h		\
+	gr_fir_ccf_armv7_a.h		\
 	gr_fir_fff_simd.h		\
 	gr_fir_fff_x86.h		\
 	gr_fir_fsf_simd.h		\
@@ -345,7 +350,6 @@ noinst_HEADERS = 			\
 	qa_gri_fir_filter_with_buffer_scc.h
 
 
-if PYTHON
 swiginclude_HEADERS =			\
 	filter.i			\
 	filter_generated.i		\
@@ -369,7 +373,7 @@ swiginclude_HEADERS =			\
 	gr_pfb_clock_sync_ccf.i		\
 	gr_pfb_clock_sync_fff.i		\
 	$(GENERATED_I)
-endif
+
 
 # Do creation and inclusion of other Makefiles last
 

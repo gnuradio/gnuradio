@@ -32,18 +32,37 @@
 #include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include <gr_types.h>
 #include <stddef.h>		// size_t
+#include <complex>
 %}
 
 %include <swig_doc.i>
 
 // %feature("autodoc","1");
 
+#ifdef SWIGGUILE
+// Export constants and enums as scheme variables, not functions.
+%feature("constasvar");
+#endif
+
 // local file
 %include <gr_shared_ptr.i>
 
 // non-local SWIG files
-%include <stl.i>
+#ifdef SWIGGUILE	// Local overrides to support complex
+// It's kind of screwy, but the target language subdir isn't
+// searched automatically except for under ./swig_lib which
+// doesn't really help us since we run swig in many directories
+%include <guile/std_complex.i>
+%include <guile/std_vector.i>
+%include <std_common.i>
+%include <std_string.i>
+%include <std_map.i>
+%include <std_pair.i>
+#else
 %include <std_complex.i>
+%include <std_vector.i>
+%include <stl.i>
+#endif
 %include <std_except.i>
 
 typedef std::complex<float>		gr_complex;
@@ -61,6 +80,7 @@ namespace std {
   %template()	  vector<int>;
   %template()	  vector<float>;
   %template()	  vector<double>;
+  // %template()	  std::complex<float>;
 
   %template() 	  vector< std::complex<float> >;
   %template()     vector< std::vector< unsigned char > >;
@@ -71,15 +91,6 @@ namespace std {
   %template()     vector< std::vector< double > >;
   %template()     vector< std::vector< std::complex<float> > >;
 };
-
-////////////////////////////////////////////////////////////////////////
-
-%constant int sizeof_char 	= sizeof(char);
-%constant int sizeof_short	= sizeof(short);
-%constant int sizeof_int	= sizeof(int);
-%constant int sizeof_float	= sizeof(float);
-%constant int sizeof_double	= sizeof(double);
-%constant int sizeof_gr_complex	= sizeof(gr_complex);
 
 ////////////////////////////////////////////////////////////////////////
 

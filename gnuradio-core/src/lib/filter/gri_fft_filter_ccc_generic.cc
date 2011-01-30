@@ -99,7 +99,7 @@ gri_fft_filter_ccc_generic::compute_sizes(int ntaps)
 {
   int old_fftsize = d_fftsize;
   d_ntaps = ntaps;
-  d_fftsize = (int) (2 * pow(2.0, ceil(log(ntaps) / log(2))));
+  d_fftsize = (int) (2 * pow(2.0, ceil(log(double(ntaps)) / log(2.0))));
   d_nsamples = d_fftsize - d_ntaps + 1;
 
   if (0)

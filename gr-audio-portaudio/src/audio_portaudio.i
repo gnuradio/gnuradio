@@ -70,3 +70,13 @@ class audio_portaudio_sink : public gr_sync_block {
  public:
   ~audio_portaudio_sink ();
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension-global "libguile-gnuradio-audio_portaudio" "scm_init_gnuradio_audio_portaudio_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

@@ -56,7 +56,7 @@ gr_basic_block::~gr_basic_block()
 }
 
 gr_basic_block_sptr 
-gr_basic_block::basic_block()
+gr_basic_block::to_basic_block()
 {
     return shared_from_this();
 }

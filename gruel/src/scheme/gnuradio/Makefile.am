@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2009 Free Software Foundation, Inc.
+# Copyright 2007,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,12 +18,14 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+include $(top_srcdir)/Makefile.common
+
 #pkgdatadir = $(datadir)/gnuradio
 
-EXTRA_DIST = 				\
+EXTRA_DIST += \
 	gen-serial-tags.scm
 
-# really scheme source files
+# really scheme source files FIXME wrong location
 dist_pkgdata_DATA =			\
 	pmt-serial-tags.scm		\
 	pmt-serialize.scm		\

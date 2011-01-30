@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,6 +26,8 @@
 
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
+
+using namespace pmt;
 
 static long s_ncurrently_allocated = 0;
 
@@ -88,16 +90,20 @@ gr_block_detail::set_done (bool done)
 void 
 gr_block_detail::consume (int which_input, int how_many_items)
 {
-  if (how_many_items > 0)
+  if (how_many_items > 0) {
     input (which_input)->update_read_pointer (how_many_items);
+  }
 }
+
 
 void
 gr_block_detail::consume_each (int how_many_items)
 {
-  if (how_many_items > 0)
-    for (int i = 0; i < ninputs (); i++)
+  if (how_many_items > 0) {
+    for (int i = 0; i < ninputs (); i++) {
       d_input[i]->update_read_pointer (how_many_items);
+    }
+  }
 }
 
 void
@@ -112,16 +118,88 @@ gr_block_detail::produce (int which_output, int how_many_items)
 void
 gr_block_detail::produce_each (int how_many_items)
 {
-  if (how_many_items > 0){
-    for (int i = 0; i < noutputs (); i++)
+  if (how_many_items > 0) {
+    for (int i = 0; i < noutputs (); i++) {
       d_output[i]->update_write_pointer (how_many_items);
+    }
     d_produce_or |= how_many_items;
   }
 }
 
 
 void
-gr_block_detail::_post(pmt::pmt_t msg)
+gr_block_detail::_post(pmt_t msg)
 {
   d_tpb.insert_tail(msg);
+}
+
+uint64_t
+gr_block_detail::nitems_read(unsigned int which_input) 
+{
+  if(which_input >= d_ninputs)
+    throw std::invalid_argument ("gr_block_detail::n_input_items");
+  return d_input[which_input]->nitems_read();
+}
+
+uint64_t
+gr_block_detail::nitems_written(unsigned int which_output) 
+{
+  if(which_output >= d_noutputs)
+    throw std::invalid_argument ("gr_block_detail::n_output_items");
+  return d_output[which_output]->nitems_written();
+}
+
+void
+gr_block_detail::add_item_tag(unsigned int which_output,
+			      uint64_t abs_offset,
+			      const pmt_t &key,
+			      const pmt_t &value,
+			      const pmt_t &srcid)
+{
+  if(!pmt_is_symbol(key)) {
+    throw pmt_wrong_type("gr_block_detail::add_item_tag key", key);
+  }
+  else {
+    // build tag tuple
+    pmt_t nitem = pmt_from_uint64(abs_offset);
+    pmt_t tuple = pmt_make_tuple(nitem, srcid, key, value);
+
+    // Add tag to gr_buffer's deque tags
+    d_output[which_output]->add_item_tag(tuple);
+  }
+}
+
+void
+gr_block_detail::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+				   unsigned int which_input,
+				   uint64_t abs_start,
+				   uint64_t abs_end)
+{
+  // get from gr_buffer_reader's deque of tags
+  d_input[which_input]->get_tags_in_range(v, abs_start, abs_end);
+}
+
+void
+gr_block_detail::get_tags_in_range(std::vector<pmt_t> &v,
+				   unsigned int which_input,
+				   uint64_t abs_start,
+				   uint64_t abs_end,
+				   const pmt_t &key)
+{
+  std::vector<pmt_t> found_items;
+  
+  v.resize(0);
+
+  // get from gr_buffer_reader's deque of tags
+  d_input[which_input]->get_tags_in_range(found_items, abs_start, abs_end);
+
+  // Filter further by key name
+  pmt_t itemkey;
+  std::vector<pmt_t>::iterator itr;
+  for(itr = found_items.begin(); itr != found_items.end(); itr++) {
+    itemkey = pmt_tuple_ref(*itr, 2);
+    if(pmt_eqv(key, itemkey)) {
+      v.push_back(*itr);
+    }
+  }
 }

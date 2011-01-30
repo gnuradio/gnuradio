@@ -4,3 +4,6 @@ Makefile.in
 .libs
 noaa_swig.cc
 noaa_swig.py
+/run_guile_tests
+/guile
+/python

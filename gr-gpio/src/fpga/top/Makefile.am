@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	config.vh    \
 	usrp_gpio.csf \
 	usrp_gpio.esf \

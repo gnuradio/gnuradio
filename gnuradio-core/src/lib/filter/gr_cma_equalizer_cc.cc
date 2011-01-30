@@ -36,6 +36,7 @@ gr_cma_equalizer_cc::gr_cma_equalizer_cc(int num_taps, float modulus, float mu)
   : gr_adaptive_fir_ccf("cma_equalizer_cc", 1, std::vector<float>(num_taps)),
     d_modulus(modulus), d_mu(mu)
 {
-  d_taps[0] = 1.0;
+  if (num_taps > 0)
+    d_taps[0] = 1.0;
 }
 

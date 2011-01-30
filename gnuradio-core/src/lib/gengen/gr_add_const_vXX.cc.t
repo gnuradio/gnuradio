@@ -30,12 +30,12 @@
 #include <gr_io_signature.h>
 
 @SPTR_NAME@
-gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> k)
+gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k)
 {
   return gnuradio::get_initial_sptr (new @NAME@ (k));
 }
 
-@NAME@::@NAME@ (const std::vector<@I_TYPE@> k)
+@NAME@::@NAME@ (const std::vector<@I_TYPE@> &k)
   : gr_sync_block ("@BASE_NAME@",
 		   gr_make_io_signature (1, 1, sizeof(@I_TYPE@)*k.size()),
 		   gr_make_io_signature (1, 1, sizeof(@O_TYPE@)*k.size()))

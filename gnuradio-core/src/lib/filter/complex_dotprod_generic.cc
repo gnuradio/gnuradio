@@ -24,7 +24,6 @@
 #include <config.h>
 #endif
 #include <gr_complex.h>
-#include "gr_fir_scc_simd.h"
 #include "complex_dotprod_generic.h"
 
 

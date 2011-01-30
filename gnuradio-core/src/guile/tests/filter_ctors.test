@@ -1,0 +1,248 @@
+;;; -*- Scheme -*-
+;;;
+;;; Copyright 2010 Free Software Foundation, Inc.
+;;;
+;;; This file is part of GNU Radio
+;;;
+;;; GNU Radio is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 3, or (at your option)
+;;; any later version.
+;;;
+;;; GNU Radio is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;;
+
+;;; If you're using Emacs's Scheme mode:
+;;;   (put 'with-test-prefix 'scheme-indent-function 1)
+
+;;; See the comments in gnuradio/test-suite/lib.scm for info on writing tests.
+;;; See also the very end of the file, where the test-equal, test-eqv
+;;; and test-eq macros are defined.
+
+(use-modules (gnuradio test-suite lib))
+(use-modules (gnuradio core))
+(use-modules (oop goops))
+
+;;; Add test code for all constructors in these files
+;;;
+
+;;; ./filter/gr_adaptive_fir_ccf.h WONTFIX: not wrapped
+;; gr_adaptive_fir_ccf(char *name, int decimation, const std::vector<float> &taps);
+;; (pass-if (true? (gr:adaptive-fir-ccf "foo" 0 #(1.0 2.0 3.0 4.0))))
+
+;;; ./filter/gr_cma_equalizer_cc.h
+(pass-if (true? (gr:cma-equalizer-cc 0 0 0)))
+
+;;; ./filter/gr_fft_filter_ccc.h
+(pass-if (true? (gr:fft-filter-ccc 0 #(1+3i 23+5i))))
+
+;;; ./filter/gr_fft_filter_fff.h
+(pass-if (true? (gr:fft-filter-fff 0 #(1.0 2.0))))
+
+;;; ./filter/gr_filter_delay_fc.h
+(pass-if (true? (gr:filter-delay-fc #(1.0 2.0))))
+
+;;; ./filter/gr_fir_ccc_generic. FIXME: Unbound variable: ~S" (gr:fir-ccc-generic) #f))
+;;  (pass-if (true? (gr:fir-ccc-generic)))
+;; (pass-if (true? (gr:fir-ccc-generic #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_ccc_simd.h FIXME: not found
+;; (pass-if (true? (gr:fir-ccc-simd)))
+;; (pass-if (true? (gr:fir-ccc-simd #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_ccc_x86.h FIXME: not found
+;; (pass-if (true? (gr:fir-ccc-x86)))
+;; (pass-if (true? (gr:fir-ccc-x86 #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_ccf_generic.h FIXME: not found
+;; (pass-if (true? (gr:fir-ccf-generic)))
+;; (pass-if (true? (gr:fir-ccf-generic #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_ccf_simd.h FIXME: not found
+;; (pass-if (true? (gr:fir-ccf-simd 0 0 0 0)))
+
+;;; ./filter/gr_fir_ccf_x86.h FIXME: not found
+;; (pass-if (true? (gr:fir-ccf-x86)))
+;; (pass-if (true? (gr:fir-ccf-x86 #(1.0 2.0))))
+
+;;; ./filter/gr_fir_fcc_generic.h FIXME: not found
+;; (pass-if (true? (gr:fir-fcc-generic)))
+;; (pass-if (true? (gr:fir-fcc-generic #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_fcc_simd.h FIXME: not found
+;; (pass-if (true? (gr:fir-fcc-simd 0 0 0 0)))
+
+;;; ./filter/gr_fir_fcc_x86.h FIXME: not found
+;; (pass-if (true? (gr:fir-fcc-x86)))
+;; (pass-if (true? (gr:fir-fcc-x86 #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_fff_altivec.h FIXME: not found
+;; (pass-if (true? (gr:fir-fff-altivec)))
+;; (pass-if (true? (gr:fir-fff-altivec #(1.0 2.0))))
+
+;;; ./filter/gr_fir_fff_armv7_a.h FIXME: not found
+;; (pass-if (true? (gr:fir-fff-armv7-a)))
+;; (pass-if (true? (gr:fir-fff-armv7-a #(1.0 2.0))))
+
+;;; ./filter/gr_fir_fff_generic.h FIXME: not found
+;; (pass-if (true? (gr:fir-fff-generic)))
+;; (pass-if (true? (gr:fir-fff-generic #(1.0 2.0))))
+
+;;; ./filter/gr_fir_fff_simd.h FIXME: not found
+;; (pass-if (true? (gr:fir-fff-simd 0 0 0)))
+
+;;; ./filter/gr_fir_fff_x86.h FIXME: not found
+;; (pass-if (true? (gr:fir-fff-x86)))
+;; (pass-if (true? (gr:fir-fff-x86 #(1.0 2.0))))
+
+;;; ./filter/gr_fir_filter_ccc.h FIXME: not found
+;; (pass-if (true? (gr:fir-filter-ccc 1 #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_filter_ccf.h
+(pass-if (true? (gr:fir-filter-ccf 1 #(1.0 2.0))))
+
+;;; ./filter/gr_fir_filter_fcc.h
+(pass-if (true? (gr:fir-filter-fcc 1 #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_filter_fff.h
+(pass-if (true? (gr:fir-filter-fff 1 #(1.0 2.0))))
+
+;;; ./filter/gr_fir_filter_fsf.h
+(pass-if (true? (gr:fir-filter-fsf 1 #(1.0 2.0))))
+
+;;; ./filter/gr_fir_filter_scc.h
+(pass-if (true? (gr:fir-filter-scc 1 #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_fsf_generic.h FIXME: "Unbound variable: ~S" (gr:fir-fsf-generic) #f))
+;; (pass-if (true? (gr:fir-fsf-generic)))
+;; (pass-if (true? (gr:fir-fsf-generic #(1.0 2.0))))
+
+;;; ./filter/gr_fir_fsf_simd.h FIXME: not found
+;; (pass-if (true? (gr:fir-fsf-simd 0 0 0)))
+
+;;; ./filter/gr_fir_fsf_x86.h FIXME: "Unbound variable: ~S" (gr:fir-fsf-x86) #f))
+;; (pass-if (true? (gr:fir-fsf-x86)))
+;; (pass-if (true? (gr:fir-fsf-x86  #(1.0 2.0))))
+
+;;; ./filter/gr_fir_scc_generic.h FIXME: file not found
+;; (pass-if (true? (gr:fir-scc-generic)))
+;; (pass-if (true? (gr:fir-scc-generic #(1+3i 23+5i))))
+ 
+;;; ./filter/gr_fir_scc_simd.h FIXME: Unbound variable: ~S" (gr:fir-scc-simd) #f))
+;; (pass-if (true? (gr:fir-scc-simd)))
+;; (pass-if (true? (gr:fir-scc-simd #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_scc_x86.h FIXME: "Unbound variable: ~S" (gr:fir-scc-x86) #f))
+;; (pass-if (true? (gr:fir-scc-x86)))
+;; (pass-if (true? (gr:fir-scc-x86 #(1+3i 23+5i))))
+
+;;; ./filter/gr_fir_sysconfig_armv7_a.h FIXME: virtual methods
+;; (pass-if (true? (gr:fir-sysconfig-armv7-a )))
+
+;;; ./filter/gr_fir_sysconfig_generic.h FIXME: virtual methods
+;; (pass-if (true? (gr:fir-sysconfig-generic )))
+
+;;; ./filter/gr_fir_sysconfig_powerpc.h FIXME: virtual methods
+;; (pass-if (true? (gr:fir-sysconfig-powerpc )))
+
+;;; ./filter/gr_fir_sysconfig_x86.h FIXME: virtual methods
+;; (pass-if (true? (gr:fir-sysconfig-x86 #(1+3i 23+5i))))
+
+;;; ./filter/gr_fractional_interpolator_cc.h
+(pass-if (true? (gr:fractional-interpolator-cc 1.0 1.0)))
+
+;;; ./filter/gr_fractional_interpolator_ff.h
+(pass-if (true? (gr:fractional-interpolator-ff 1.0 1.0)))
+
+;;; ./filter/gr_freq_xlating_fir_filter_ccc.h 
+(pass-if (true? (gr:freq-xlating-fir-filter-ccc 1 #(1+3i 23+5i) 1.0 1.0)))
+
+;;; ./filter/gr_freq_xlating_fir_filter_ccf.h
+(pass-if (true? (gr:freq-xlating-fir-filter-ccf 1 #(1.0 2.0) 1.0 1.0)))
+
+;;; ./filter/gr_freq_xlating_fir_filter_fcc.h
+(pass-if (true? (gr:freq-xlating-fir-filter-fcc 1 #(1.0 2.0) 1.0 1.0)))
+
+;;; ./filter/gr_freq_xlating_fir_filter_fcf.h
+(pass-if (true? (gr:freq-xlating-fir-filter-fcf 1 #(1.0 2.0) 1.0 1.0)))
+
+;;; ./filter/gr_freq_xlating_fir_filter_scc.h
+(pass-if (true? (gr:freq-xlating-fir-filter-scc 1 #(1.0 2.0) 1.0 1.0)))
+
+;;; ./filter/gr_freq_xlating_fir_filter_scf.h
+(pass-if (true? (gr:freq-xlating-fir-filter-scf 1 #(1.0 2.0) 1.0 1.0)))
+
+;;; ./filter/gr_goertzel_fc.h
+(pass-if (true? (gr:goertzel-fc 1 1 1)))
+
+;;; ./filter/gr_hilbert_fc.h
+(pass-if (true? (gr:hilbert-fc 1)))
+
+;;; ./filter/gr_iir_filter_ffd.h
+(pass-if (true? (gr:iir-filter-ffd #(1.0 2.0) #(1.0 2.0))))
+
+;;; ./filter/gr_interp_fir_filter_ccc.h FIXME: not found
+;; (pass-if (true? (gr:interp-fir-filter-ccc #(1+3i 23+5i))))
+
+;;; ./filter/gr_interp_fir_filter_ccf.h FIXME: not found
+;; (pass-if (true? (gr:interp-fir-filter-ccf )))
+
+;;; ./filter/gr_interp_fir_filter_fcc.h FIXME: not found
+;; (pass-if (true? (gr:interp-fir-filter-fcc )))
+
+;;; ./filter/gr_interp_fir_filter_fff.h FIXME: not found
+;; (pass-if (true? (gr:interp-fir-filter-fff )))
+
+;;; ./filter/gr_interp_fir_filter_fsf.h FIXME: not found
+;; (pass-if (true? (gr:interp-fir-filter-fsf )))
+
+;;; ./filter/gr_interp_fir_filter_scc.h FIXME: not found
+;; (pass-if (true? (gr:interp-fir-filter-scc )))
+
+;;; ./filter/gr_pfb_arb_resampler_ccf.h
+(pass-if (true? (gr:pfb-arb-resampler-ccf 1.0 #(1.0 2.0) 32)))
+
+;;; ./filter/gr_pfb_channelizer_ccf.h
+(pass-if (true? (gr:pfb-channelizer-ccf 1 #(1.0 2.0) 1)))
+
+;;; ./filter/gr_pfb_clock_sync_ccf.h
+(pass-if (true? (gr:pfb-clock-sync-ccf 1.0 1.0 #(1.0 2.0) 32 0 1.5)))
+
+;;; ./filter/gr_pfb_clock_sync_fff.h
+(pass-if (true? (gr:pfb-clock-sync-fff 1.0 1.0 #(1.0 2.0) 32 0 1.5)))
+
+;;; ./filter/gr_pfb_decimator_ccf.h
+(pass-if (true? (gr:pfb-decimator-ccf 1 #(1.0 2.0) 0)))
+
+;;; ./filter/gr_pfb_interpolator_ccf.h
+(pass-if (true? (gr:pfb-interpolator-ccf 1 #(1.0 2.0))))
+
+;;; ./filter/gr_rational_resampler_base_ccc.h FIXME: not found
+;; (pass-if (true? (gr:rational-resampler-base-ccc 1 1 #(1+3i 23+5i))))
+
+;;; ./filter/gr_rational_resampler_base_ccf.h FIXME: not found
+;; (pass-if (true? (gr:rational-resampler-base-ccf )))
+
+;;; ./filter/gr_rational_resampler_base_fcc.h FIXME: not found
+;; (pass-if (true? (gr:rational-resampler-base-fcc )))
+
+;;; ./filter/gr_rational_resampler_base_fff.h FIXME: not found
+;; (pass-if (true? (gr:rational-resampler-base-fff )))
+
+;;; ./filter/gr_rational_resampler_base_fsf.h FIXME: not found
+;; (pass-if (true? (gr:rational-resampler-base-fsf )))
+
+;;; ./filter/gr_rational_resampler_base_scc.h FIXME: not found
+;; (pass-if (true? (gr:rational-resampler-base-scc )))
+
+;;; ./filter/gr_single_pole_iir_filter_cc.h
+(pass-if (true? (gr:single-pole-iir-filter-cc 1.0 1)))
+
+;;; ./filter/gr_single_pole_iir_filter_ff.h
+(pass-if (true? (gr:single-pole-iir-filter-ff 1.0 1)))

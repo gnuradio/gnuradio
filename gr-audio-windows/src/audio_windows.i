@@ -61,3 +61,13 @@ class audio_windows_source : public gr_sync_block {
  public:
   ~audio_windows_source ();
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension-global "libguile-gnuradio-audio_windows" "scm_init_gnuradio_audio_windows_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

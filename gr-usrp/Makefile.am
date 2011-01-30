@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	README_MULTI_USRP.txt \
 	gnuradio-usrp.pc.in
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,6 +26,7 @@
 #include <gr_runtime_types.h>
 #include <boost/weak_ptr.hpp>
 #include <gruel/thread.h>
+#include <gruel/pmt.h>
 
 class gr_vmcircbuf;
 
@@ -88,6 +89,26 @@ class gr_buffer {
 
   gruel::mutex *mutex() { return &d_mutex; }
 
+  uint64_t nitems_written() { return d_abs_write_offset; }
+
+
+  /*!
+   * \brief  Adds a new tag to the buffer.
+   * 
+   * \param tag        a PMT tuple containing the new tag
+   */
+  void add_item_tag(const pmt::pmt_t &tag);
+
+  /*!
+   * \brief  Removes all tags before \p max_time from buffer
+   * 
+   * \param max_time        the time (item number) to trim up until.
+   */
+  void prune_tags(uint64_t max_time);
+
+  std::deque<pmt::pmt_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
+  std::deque<pmt::pmt_t>::iterator get_tags_end() { return d_item_tags.end(); }
+
   // -------------------------------------------------------------------------
 
  private:
@@ -106,11 +127,15 @@ class gr_buffer {
   boost::weak_ptr<gr_block>		d_link;		// block that writes to this buffer
 
   //
-  // The mutex protects d_write_index, d_done and the d_read_index's in the buffer readers.
+  // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags 
+  // and the d_read_index's and d_abs_read_offset's in the buffer readers.
   //
   gruel::mutex				d_mutex;
   unsigned int				d_write_index;	// in items [0,d_bufsize)
+  uint64_t                              d_abs_write_offset; // num items written since the start
   bool					d_done;
+  std::deque<pmt::pmt_t>                d_item_tags;
+  uint64_t                              d_last_min_items_read;
   
   unsigned
   index_add (unsigned a, unsigned b)
@@ -220,10 +245,30 @@ class gr_buffer_reader {
   gruel::mutex *mutex() { return d_buffer->mutex(); }
 
 
+  uint64_t nitems_read() { return d_abs_read_offset; }
+
   /*!
    * \brief Return the block that reads via this reader.
+   *
    */
   gr_block_sptr link() { return gr_block_sptr(d_link); }
+
+
+  /*!
+   * \brief Given a [start,end), returns a vector all tags in the range.
+   *
+   * Get a vector of tags in given range. Range of counts is from start to end-1.
+   *
+   * Tags are tuples of:
+   *      (item count, source id, key, value)
+   *
+   * \param v            a vector reference to return tags into
+   * \param abs_start    a uint64 count of the start of the range of interest
+   * \param abs_end      a uint64 count of the end of the range of interest
+   */
+  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			 uint64_t abs_start,
+			 uint64_t abs_end);
 
   // -------------------------------------------------------------------------
 
@@ -236,6 +281,7 @@ class gr_buffer_reader {
 
   gr_buffer_sptr		d_buffer;
   unsigned int			d_read_index;	// in items [0,d->buffer.d_bufsize)
+  uint64_t                      d_abs_read_offset;  // num items seen since the start
   boost::weak_ptr<gr_block>	d_link;		// block that reads via this buffer reader
 
   //! constructor is private.  Use gr_buffer::add_reader to create instances

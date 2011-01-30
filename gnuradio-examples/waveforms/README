@@ -1,0 +1,270 @@
+#
+# Copyright 2010 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+Introduction
+------------
+
+This directory contains example "Waveform Description Files" that are
+designed to be loaded and run using the gr-run-waveform command.
+
+"Waveform Description Files" are written in an extended dialect of the
+Scheme language.  The dialect is "The Revised^5 Report on the
+Algorithmic Language Scheme" (R5RS)[1] as implemented and extended by
+Guile 1.8 [2], extended with the GNU Radio specific "define-waveform"
+macro and "gr-run-waveform" command.
+
+For those of you who may be unfamiliar with the Scheme language,
+it's a very simple high-level language defined by a brief 50 page
+specification[1].  Those 50 pages define the language, standard
+libraries and the formal semantics!
+
+For a quick tutorial introduction see the first 30 pages of "How to
+Teach Yourself Scheme in Fixnum Days"[3] (This covers a different
+Scheme dialect, but the first 30 pages or so are valid for Guile too.)
+
+Another text worth mentioning is "How To Design Programs"[4], a book
+on the systematic design of computer programs which utilizes Scheme.
+
+
+A Quick Walk-Through
+--------------------
+
+We'll use dial-tone.wfd as our example.
+
+Assuming that you've already built and installed GNU Radio, you can
+run dial-tone.wfd using:
+
+  $ gr-run-waveform <prefix>/share/gnuradio/examples/waveforms/dial-tone.wfd
+
+where <prefix> is the location where GNU Radio is installed, typically /usr/local.
+
+
+Here is dial-tone.wfd in its entirety:
+
+;; Start of dial-tone.wfd
+
+(use-modules (gnuradio audio_alsa))
+
+(define-waveform (dial-tone cmd-line-args)
+  (vars
+   (sample-rate 48000)
+   (ampl 0.1))
+
+  (blocks
+   (src0 (gr:sig-source-f sample-rate gr:GR-SIN-WAVE 350 ampl))
+   (src1 (gr:sig-source-f sample-rate gr:GR-SIN-WAVE 440 ampl))
+   (sink (gr:audio-alsa-sink sample-rate "plughw:0,0")))
+
+  (connections
+   (src0 (list sink 0))         ; src0 to left input
+   (src1 (list sink 1))))       ; src1 to right input
+
+;; End of dial-tone.wfd
+
+
+By default, waveforms have all of gnuradio-core available for their
+use.  This line:
+
+  (use-modules (gnuradio audio_alsa))
+
+imports the audio_alsa module, which we need for the audio sink.
+Unlike python, there's no gr.<foo> notation.  All names exported by
+the (gnuradio audio_alsa) module are made available in the current
+module.
+
+
+"define-waveform" is where the real work gets done.
+It has this general structure:
+
+(define-waveform (<waveform-name> cmd-line-args)
+  (vars
+   (<variable-name-1> <variable-value-1>)
+   ...)
+
+  (blocks
+   (<block-variable-name-1> <block-value-1>)
+   ...)
+
+  (connections
+   (<endpoint-1> ...)
+   ...))
+
+
+<waveform-name> is an identifier that names the waveform.
+
+Identifiers are similar to identifiers in other programming languages.
+They are a sequence of letters, digits and "extended alphabetic
+characters" that begins with a character that cannot begin a number.
+"extended alphabetic characters" include:
+
+          ! $ % & * + - . / : < = > ? @ ^ _ -
+
+By convention in Scheme and LISP, '-' is used in preference to '_' in identifiers.
+
+<variable-names> and <block-variable-names> name variables that store
+associated values, which may be any Scheme value.  (<block-variables>
+should contain only instances of GNU Radio blocks.)
+
+
+<variable-value-*> and <block-value-*> may be any valid Scheme expression.
+E.g., constants, nested function calls, bindings using "let", or
+lambda expressions.
+
+
+The (connections ...) section contains 0 or more lists of endpoints,
+specifying which endpoints are to be connected together.  In the
+general case, endpoints have both a block and a port number, though
+the port number defaults to zero if not specified.
+
+To specify a port number, create a two element list of the block and
+port number as illustrated above.
+
+Like the python implementation, more than a pair of endpoints can be
+strung together.   Assuming blk0, blk1 and blk2 are block variables,
+this would connect blk0, output 0, to blk1, input 0; blk1, output 0 to
+blk2, input 0:
+
+  (connect
+    (blk0 blk1 blk2))
+
+It could also be written like this:
+
+  (connect
+    (blk0 blk1)
+    (blk1 blk2))
+
+Or even more verbosely as:
+
+  (connect
+    ((list blk0 0) (list blk1 0))
+    ((list blk1 0) (list blk2 0)))
+
+And finally, using Scheme's quasiquote mechanism, this works too:
+
+  (connect
+    (`(,blk0 0) (,blk1 0))
+    (`(,blk1 0) (,blk2 0)))
+
+
+When gr-run-waveform loads the waveform file, it expands the
+define-waveform section into code that creates a GNU Radio top block,
+creates and initializes all variables and blocks specified in the
+respective sections and connects them together according the
+connections specifications.  Finally it runs the resulting GNU Radio
+flowgraph.
+
+
+Naming conventions (or what's my block called???!!!)
+----------------------------------------------------
+
+All GNU Radio block constructors as well as everything else wrapped
+for export by SWIG starts with a "gr:" prefix.  This is to avoid
+collisions with any built in Scheme procedures.
+
+All blocks contained in gnuradio-core are named like this:
+
+  C++ name           Python name         Guile name
+  --------           -----------         ----------
+  gr_head            gr.head             gr:head
+  gr_add_const_ff    gr.add_const_ff     gr:add-const-ff
+
+
+GNU Radio blocks in any other component besides gnuradio-core use a
+slightly different convention.  They also start with gr: but in
+addition include the component name after the gr:.  This is because
+Scheme implements its namespace differently than Python does.
+Thus:
+
+  C++ name           Python name         Guile name
+  --------           -----------         ----------
+  audio_alsa_sink    audio_alsa.sink     gr:audio-alsa-sink
+  audio_jack_sink    audio_jack.sink     gr:audio-jack-sink
+  usrp2_sink_32fc    usrp2.sink_32fc     gr:usrp2-sink-32fc
+
+
+Now, because we're working in Scheme and not C++ or Python, the
+calling of class methods (member functions) is different too.  SWIG
+converts C++ member functions into what are called "generic functions"
+using GOOPS[5], Guile's object oriented extension.  (For those familar
+with Common Lisp, GOOPS is very close in spirit to CLOS, the Common
+Lisp Object System, but adapted for the Scheme language.)
+
+Assuming "u2" is a variable holding an instance of a usrp2 sink,
+these all retrieve the current interpolation value:
+
+  C++                Python              Guile
+  --------           -----------         ----------
+  u2->interp()       u2.interp()         (gr:interp u2)
+
+
+Mapping of Guile types to/from C++
+----------------------------------
+
+The mapping is similar in flavor to the Python <-> C++ mapping
+
+  C++                Python              Guile
+  --------           -----------         ----------
+  true               True                #t
+  false              False               #f
+  "a string"         "a string"          "a string"
+  3.14159            3.14159             3.14159
+  gr_complex(1,-1)   1-1j                1-1i
+  vector<int>        (1, 2, 3)           #(1 2 3)
+  vector<float>      (1.0, 2.0, 3.0)     #(1.0 2.0 3.0)
+
+
+You can find examples of each block constructor being called by
+looking in the guile QA code contained in gnuradio-core/src/guile/tests/*.test
+The types and values passed are syntactically correct, but don't
+necessarily doing anything meaningful.
+
+
+gr-run-waveform vs gr-run-waveform-script vs gr-run-waveform-binary
+-------------------------------------------------------------------
+
+There are two implementations of gr-run-waveform:
+gr-run-waveform-script and gr-run-waveform-binary.  gr-run-waveform is
+symlinked to one of them, with preference to gr-run-waveform-binary if
+the gr-run-waveform component was built and installed.
+
+gr-run-waveform-script is contained in gnuradio-core and uses the
+system's Guile interpreter and assocated files to implement this
+functionality.
+
+gr-run-waveform-binary is built by the optional standalone component
+gr-run-waveform.  gr-run-waveform-binary is a C binary that requires
+only handful of shared libraries and a single data file.  To function
+it requires the main program: gr-run-waveform-binary; the GNU Radio
+C++ libraries: libgnuradio-*.so; the SWIG generated wrapper libraries:
+libguile-gnuradio-*.so; and one additional file:
+<prefix>/share/gnuradio/gr-run-waveform/filesystem.dat.
+
+The two programs run waveform files identically.  They differ only in
+the details of how they are implemented.
+
+
+References
+----------
+
+[1] http://www.schemers.org/Documents/Standards/R5RS/r5rs.pdf
+[2] http://www.gnu.org/software/guile/guile.html
+[3] html: http://www.ccs.neu.edu/home/dorai/t-y-scheme/t-y-scheme.html
+    pdf:  http://download.plt-scheme.org/doc/205/pdf/t-y-scheme.pdf
+[4] http://www.htdp.org/2003-09-26
+[5] http://www.gnu.org/software/guile/docs/goops/index.html

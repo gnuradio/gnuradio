@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -78,14 +78,14 @@ class draw_iq:
 
     def get_data(self):
         self.text_file_pos.set_text("File Position: %d" % (self.hfile.tell()//self.sizeof_data))
-        self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
-        #print "Read in %d items" % len(self.iq)
-        if(len(self.iq) == 0):
+        try:
+            self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
+        except MemoryError:
             print "End of File"
         else:
-            self.reals = [r.real for r in self.iq]
-            self.imags = [i.imag for i in self.iq]
-            self.time = [i*(1/self.sample_rate) for i in range(len(self.reals))]
+            self.reals = scipy.array([r.real for r in self.iq])
+            self.imags = scipy.array([i.imag for i in self.iq])
+            self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
             
     def make_plots(self):
         # if specified on the command-line, set file pointer
@@ -99,16 +99,17 @@ class draw_iq:
         self.sp_iq.set_xlabel("Time (s)", fontsize=self.label_font_size, fontweight="bold")
         self.sp_iq.set_ylabel("Amplitude (V)", fontsize=self.label_font_size, fontweight="bold")
         self.plot_iq = plot(self.time, self.reals, 'bo-', self.time, self.imags, 'ro-')
-        self.sp_iq.set_ylim([1.5*min([min(self.reals), min(self.imags)]),
-                             1.5*max([max(self.reals), max(self.imags)])])
-        
+        self.sp_iq.set_ylim([1.5*min([self.reals.min(), self.imags.min()]),
+                             1.5*max([self.reals.max(), self.imags.max()])])
+        self.sp_iq.set_xlim(self.time.min(), self.time.max())
         draw()
 
     def update_plots(self):
         self.plot_iq[0].set_data([self.time, self.reals])
         self.plot_iq[1].set_data([self.time, self.imags])
-        self.sp_iq.set_ylim([1.5*min([min(self.reals), min(self.imags)]),
-                             1.5*max([max(self.reals), max(self.imags)])])
+        self.sp_iq.set_ylim([1.5*min([self.reals.min(), self.imags.min()]),
+                             1.5*max([self.reals.max(), self.imags.max()])])
+        self.sp_iq.set_xlim(self.time.min(), self.time.max())
         draw()
         
     def click(self, event):

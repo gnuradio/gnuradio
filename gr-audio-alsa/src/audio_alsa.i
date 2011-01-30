@@ -73,3 +73,13 @@ class audio_alsa_sink : public gr_sync_block {
  public:
   ~audio_alsa_sink ();
 };
+
+#if SWIGGUILE
+%scheme %{
+(load-extension-global "libguile-gnuradio-audio_alsa" "scm_init_gnuradio_audio_alsa_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

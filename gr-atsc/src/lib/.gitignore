@@ -12,3 +12,6 @@
 /atsci_viterbi_mux.cc
 /test_atsci
 /*.pyc
+/gnuradio
+/guile
+/python

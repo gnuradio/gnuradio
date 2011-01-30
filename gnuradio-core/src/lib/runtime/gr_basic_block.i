@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -40,13 +40,15 @@ public:
     gr_io_signature_sptr input_signature() const;
     gr_io_signature_sptr output_signature() const;
     long unique_id() const;
-    gr_basic_block_sptr basic_block();
+    gr_basic_block_sptr to_basic_block();
     bool check_topology (int ninputs, int noutputs);
 };
 
 %rename(block_ncurrently_allocated) gr_basic_block_ncurrently_allocated;
 long gr_basic_block_ncurrently_allocated();
 
+#ifdef SWIGPYTHON
 %pythoncode %{
 gr_basic_block_sptr.__repr__ = lambda self: "<gr_basic_block %s (%d)>" % (self.name(), self.unique_id ())
 %}
+#endif

@@ -281,7 +281,7 @@ gr_ofdm_frame_sink::set_sym_value_out(const std::vector<gr_complex> &sym_positio
 
   d_sym_position  = sym_position;
   d_sym_value_out = sym_value_out;
-  d_nbits = (unsigned long)ceil(log10(d_sym_value_out.size()) / log10(2.0));
+  d_nbits = (unsigned long)ceil(log10(float(d_sym_value_out.size())) / log10(2.0));
 
   return true;
 }

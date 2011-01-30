@@ -15,3 +15,6 @@
 /audio_portaudio.py
 /audio_portaudio.cc
 /run_tests
+/gnuradio
+/guile
+/python

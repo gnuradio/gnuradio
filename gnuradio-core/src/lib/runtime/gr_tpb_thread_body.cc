@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -43,7 +43,7 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
  
     // handle any queued up messages
     while ((msg = d->d_tpb.delete_head_nowait()))
-      block->handle_msg(msg);
+      block->dispatch_msg(msg);
 
     d->d_tpb.clear_changed();
     s = d_exec.run_one_iteration();
@@ -73,7 +73,7 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
 	  // handle all pending messages
 	  while ((msg = d->d_tpb.delete_head_nowait_already_holding_mutex())){
 	    guard.unlock();			// release lock while processing msg
-	    block->handle_msg(msg);
+	    block->dispatch_msg(msg);
 	    guard.lock();
 	  }
 	}
@@ -93,7 +93,7 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
 	  // handle all pending messages
 	  while ((msg = d->d_tpb.delete_head_nowait_already_holding_mutex())){
 	    guard.unlock();			// release lock while processing msg
-	    block->handle_msg(msg);
+	    block->dispatch_msg(msg);
 	    guard.lock();
 	  }
 	}

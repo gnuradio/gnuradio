@@ -29,7 +29,7 @@ noinst_PYTHON = 		\
 	usrp2_display.py	\
 	usrp_display.py
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	qt_digital_window.ui
 
 qtguipythondir = $(grpythondir)/qtgui

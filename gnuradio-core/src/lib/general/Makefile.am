@@ -21,7 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+# $(WITH_INCLUDES) must _always_ be last
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) \
+	$(FFTW3F_CPPFLAGS) $(GSL_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libgeneral.la libgeneral-qa.la
 
@@ -29,11 +31,12 @@ BUILT_SOURCES =
 
 # ----------------------------------------------------------------
 
-EXTRA_DIST = 				\
+EXTRA_DIST += \
 	gen_sine_table.py		\
 	gr_constants.cc.in			
 
 libgeneral_la_SOURCES = 		\
+	complex_vec_test.cc		\
 	gr_additive_scrambler_bb.cc	\
 	gr_agc_cc.cc                	\
 	gr_agc_ff.cc                	\
@@ -99,7 +102,6 @@ libgeneral_la_SOURCES = 		\
 	gr_lms_dfe_cc.cc		\
 	gr_lms_dfe_ff.cc		\
 	gr_map_bb.cc			\
-	gr_math.cc			\
 	gr_misc.cc			\
 	gr_mpsk_receiver_cc.cc		\
 	gr_nlog10_ff.cc			\
@@ -177,7 +179,10 @@ libgeneral_la_SOURCES = 		\
 	gr_descrambler_bb.cc		\
 	gr_scrambler_bb.cc		\
 	gr_probe_mpsk_snr_c.cc		\
-	gr_probe_density_b.cc
+	gr_probe_density_b.cc		\
+	gr_annotator_alltoall.cc	\
+	gr_annotator_1to1.cc		\
+	gr_burst_tagger.cc
 
 libgeneral_qa_la_SOURCES = 		\
 	qa_general.cc			\
@@ -190,6 +195,7 @@ libgeneral_qa_la_SOURCES = 		\
 	qa_gri_lfsr.cc
 
 grinclude_HEADERS = 			\
+	complex_vec_test.h		\
 	gr_additive_scrambler_bb.h	\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
@@ -347,7 +353,10 @@ grinclude_HEADERS = 			\
 	gr_descrambler_bb.h		\
 	gr_scrambler_bb.h		\
 	gr_probe_mpsk_snr_c.h		\
-	gr_probe_density_b.h
+	gr_probe_density_b.h		\
+	gr_annotator_alltoall.h		\
+	gr_annotator_1to1.h		\
+	gr_burst_tagger.h
 
 noinst_HEADERS = 			\
 	qa_general.h			\
@@ -360,8 +369,8 @@ noinst_HEADERS = 			\
 	sine_table.h			\
 	qa_gr_math.h
 
-if PYTHON
 swiginclude_HEADERS =			\
+	complex_vec_test.i		\
 	general.i			\
 	gr_additive_scrambler_bb.i	\
 	gr_agc_cc.i                 	\
@@ -488,5 +497,7 @@ swiginclude_HEADERS =			\
 	gr_descrambler_bb.i		\
 	gr_scrambler_bb.i		\
 	gr_probe_mpsk_snr_c.i		\
-	gr_probe_density_b.i
-endif
+	gr_probe_density_b.i		\
+	gr_annotator_alltoall.i		\
+	gr_annotator_1to1.i		\
+	gr_burst_tagger.i

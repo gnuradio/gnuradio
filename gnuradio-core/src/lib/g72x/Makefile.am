@@ -24,4 +24,4 @@ include $(top_srcdir)/Makefile.common
 noinst_LTLIBRARIES = libccitt.la
 libccitt_la_SOURCES = g711.c g72x.c g721.c g723_24.c g723_40.c g72x.h
 
-EXTRA_DIST = encode.c decode.c
+EXTRA_DIST += encode.c decode.c
