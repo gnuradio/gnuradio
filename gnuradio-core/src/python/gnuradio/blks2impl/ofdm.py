@@ -216,11 +216,11 @@ class ofdm_demod(gr.hier_block2):
                                        self._occupied_tones, self._snr, preambles,
                                        options.log)
 
-        constell = modulation_utils2.type_1_constellations()[self._modulation](arity).points()
+        constell = modulation_utils2.type_1_constellations()[self._modulation](arity)
 
         phgain = 0.25
         frgain = phgain*phgain / 4.0
-        self.ofdm_demod = gr.ofdm_frame_sink(constell, range(arity),
+        self.ofdm_demod = gr.ofdm_frame_sink2(constell.base(),
                                              self._rcvd_pktq,
                                              self._occupied_tones,
                                              phgain, frgain)
