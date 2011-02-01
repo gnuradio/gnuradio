@@ -213,4 +213,30 @@ class gr_constellation_bpsk : public gr_constellation
   
 };
 
+/************************************************************/
+/* gr_constellation_qpsk                                    */
+/*                                                          */
+/* Only works for QPSK.                                     */
+/*                                                          */
+/************************************************************/
+
+class gr_constellation_qpsk;
+typedef boost::shared_ptr<gr_constellation_qpsk> gr_constellation_qpsk_sptr;
+
+// public constructor
+gr_constellation_qpsk_sptr 
+gr_make_constellation_qpsk ();
+
+class gr_constellation_qpsk : public gr_constellation
+{
+ public:
+
+  gr_constellation_qpsk ();
+  unsigned int decision_maker (gr_complex sample);
+
+  friend gr_constellation_qpsk_sptr
+  gr_make_constellation_qpsk ();
+  
+};
+
 #endif

@@ -97,3 +97,20 @@ public:
   gr_constellation_sptr base ();
 };
 
+class gr_constellation_qpsk;
+typedef boost::shared_ptr<gr_constellation_qpsk> gr_constellation_qpsk_sptr;
+%template(gr_constellation_qpsk_sptr) boost::shared_ptr<gr_constellation_qpsk>;
+%rename(constellation_qpsk) gr_make_constellation_qpsk;
+gr_constellation_qpsk_sptr gr_make_constellation_qpsk();
+%ignore gr_constellation_qpsk;
+
+class gr_constellation_qpsk : public gr_constellation
+{
+public:
+  gr_constellation_qpsk ();
+  std::vector<gr_complex> points();
+  unsigned int decision_maker (gr_complex sample);  
+  unsigned int bits_per_symbol ();
+  gr_constellation_sptr base ();
+};
+

@@ -60,6 +60,7 @@ grblkspython_PYTHON =		\
 	psk.py			\
 	psk2.py			\
 	qam.py			\
+	qpsk.py			\
 	rational_resampler.py	\
 	standard_squelch.py	\
 	stream_to_vector_decimator.py \

@@ -32,7 +32,7 @@ def _add_common_options(normal, expert):
     Adds OFDM-specific options to the Options Parser that are common
     both to the modulator and demodulator.
     """
-    mods_list = ", ".join(modulation_utils2.type_1_mods().keys())
+    mods_list = ", ".join(modulation_utils2.type_1_constellations().keys())
     normal.add_option("-m", "--modulation", type="string", default="psk",
                       help="set modulation type (" + mods_list + ") [default=%default]")
     expert.add_option("", "--fft-length", type="intx", default=512,
@@ -248,8 +248,8 @@ class ofdm_demod(gr.hier_block2):
         Adds OFDM-specific options to the Options Parser
         """
         _add_common_options(normal, expert)
-        for demod in modulation_utils2.type_1_demods().values():
-            demod.add_options(expert)
+        for mod in modulation_utils2.type_1_mods().values():
+            mod.add_options(expert)
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)
 

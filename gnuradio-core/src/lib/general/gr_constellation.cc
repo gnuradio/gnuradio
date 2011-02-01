@@ -29,6 +29,7 @@
 #include <stdlib.h>
 
 #define M_TWOPI (2*M_PI)
+#define SQRT_TWO 0.707107
 
 gr_constellation_sptr 
 gr_make_constellation(std::vector<gr_complex> constellation)
@@ -189,4 +190,28 @@ gr_constellation_bpsk::gr_constellation_bpsk ()
 unsigned int gr_constellation_bpsk::decision_maker(gr_complex sample)
 {
   return (real(sample) > 0);
+}
+
+
+gr_constellation_qpsk_sptr 
+gr_make_constellation_qpsk()
+{
+  return gr_constellation_qpsk_sptr(new gr_constellation_qpsk ());
+}
+
+gr_constellation_qpsk::gr_constellation_qpsk ()
+{
+  d_constellation.resize(4);
+  // Gray-coded
+  d_constellation[0] = gr_complex(-SQRT_TWO, -SQRT_TWO);
+  d_constellation[1] = gr_complex(SQRT_TWO, -SQRT_TWO);
+  d_constellation[2] = gr_complex(-SQRT_TWO, SQRT_TWO);
+  d_constellation[3] = gr_complex(SQRT_TWO, SQRT_TWO);
+}
+
+unsigned int gr_constellation_qpsk::decision_maker(gr_complex sample)
+{
+  // Real component determines small bit.
+  // Imag component determines big bit.
+  return 2*(imag(sample)>0) + (real(sample)>0);
 }
