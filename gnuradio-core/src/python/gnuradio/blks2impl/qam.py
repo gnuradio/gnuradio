@@ -204,8 +204,6 @@ class qam_demod(generic_demod):
 
         See generic_demod block for list of parameters.
         """
-        print(args)
-        print(kwargs)
         constellation = qam_constellation(constellation_points, differential, gray_coded)
         # We take care of the gray coding in the constellation generation so it doesn't 
         # need to be done in the block.
