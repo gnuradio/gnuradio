@@ -29,6 +29,7 @@ grblkspythondir = $(grpythondir)/blks2impl
 grblkspython_PYTHON =		\
 	__init__.py		\
 	am_demod.py		\
+	bpsk.py			\
 	channel_model.py	\
 	dbpsk.py		\
 	dbpsk2.py		\

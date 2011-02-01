@@ -42,12 +42,12 @@ gr_constellation_sptr
   gr_make_constellation (std::vector<gr_complex> constellation);
 
 class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
-//class gr_constellation
 {
  public:
 
   gr_constellation (std::vector<gr_complex> constellation);
-  
+  gr_constellation ();
+
   //! Returns the set of points in this constellation.
   std::vector<gr_complex> points() { return d_constellation;}
   
@@ -60,7 +60,6 @@ class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
   }
 
   gr_constellation_sptr base() {
-    //return gr_constellation_sptr(this);
     return shared_from_this();
   }  
 
@@ -91,7 +90,7 @@ class gr_constellation_sector : public gr_constellation
 
   unsigned int decision_maker (gr_complex sample);
 
-  // protected:
+ protected:
 
   virtual unsigned int get_sector (gr_complex sample) = 0;
   
@@ -101,7 +100,7 @@ class gr_constellation_sector : public gr_constellation
 
   unsigned int n_sectors;
 
-  // private:
+ private:
 
   std::vector<unsigned int> sector_values;
 
@@ -133,13 +132,13 @@ class gr_constellation_rect : public gr_constellation_sector
   gr_constellation_rect (std::vector<gr_complex> constellation, unsigned int real_sectors, unsigned int imag_sectors,
 			   float width_real_sectors, float width_imag_sectors);
 
-  // protected:
+ protected:
 
   unsigned int get_sector (gr_complex sample);
   
   unsigned int calc_sector_value (unsigned int sector);
 
-  // private:
+ private:
 
   unsigned int n_real_sectors;
   unsigned int n_imag_sectors;
@@ -175,16 +174,42 @@ class gr_constellation_psk : public gr_constellation_sector
 
   gr_constellation_psk (std::vector<gr_complex> constellation, unsigned int n_sectors);
 
-  // protected:
+ protected:
 
   unsigned int get_sector (gr_complex sample);
   
   unsigned int calc_sector_value (unsigned int sector);
 
-  // private:
+ private:
 
   friend gr_constellation_psk_sptr
   gr_make_constellation_psk (std::vector<gr_complex> constellation, unsigned int n_sectors);
+  
+};
+
+/************************************************************/
+/* gr_constellation_bpsk                                    */
+/*                                                          */
+/* Only works for BPSK.                                     */
+/*                                                          */
+/************************************************************/
+
+class gr_constellation_bpsk;
+typedef boost::shared_ptr<gr_constellation_bpsk> gr_constellation_bpsk_sptr;
+
+// public constructor
+gr_constellation_bpsk_sptr 
+gr_make_constellation_bpsk ();
+
+class gr_constellation_bpsk : public gr_constellation
+{
+ public:
+
+  gr_constellation_bpsk ();
+  unsigned int decision_maker (gr_complex sample);
+
+  friend gr_constellation_bpsk_sptr
+  gr_make_constellation_bpsk ();
   
 };
 

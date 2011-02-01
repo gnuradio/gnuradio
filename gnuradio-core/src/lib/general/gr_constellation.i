@@ -77,12 +77,23 @@ public:
   std::vector<gr_complex> points ();
   unsigned int decision_maker (gr_complex sample);  
   unsigned int bits_per_symbol ();
-  
   gr_constellation_sptr base ();
-
-  unsigned int get_sector (gr_complex sample);
-  unsigned int calc_sector_value (unsigned int sector);
-  void find_sector_values ();
-  unsigned int n_sectors;
-  std::vector<unsigned int> sector_values;
 };
+
+class gr_constellation_bpsk;
+typedef boost::shared_ptr<gr_constellation_bpsk> gr_constellation_bpsk_sptr;
+%template(gr_constellation_bpsk_sptr) boost::shared_ptr<gr_constellation_bpsk>;
+%rename(constellation_bpsk) gr_make_constellation_bpsk;
+gr_constellation_bpsk_sptr gr_make_constellation_bpsk();
+%ignore gr_constellation_bpsk;
+
+class gr_constellation_bpsk : public gr_constellation
+{
+public:
+  gr_constellation_bpsk ();
+  std::vector<gr_complex> points();
+  unsigned int decision_maker (gr_complex sample);  
+  unsigned int bits_per_symbol ();
+  gr_constellation_sptr base ();
+};
+

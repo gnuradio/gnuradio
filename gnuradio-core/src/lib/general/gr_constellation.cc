@@ -43,6 +43,10 @@ gr_constellation::gr_constellation (std::vector<gr_complex> constellation) :
 {
 }
 
+gr_constellation::gr_constellation ()
+{
+}
+
 unsigned int get_closest_point(std::vector<gr_complex> constellation, gr_complex sample) {
 
   unsigned int table_size = constellation.size();
@@ -169,3 +173,20 @@ unsigned int gr_constellation_psk::calc_sector_value (unsigned int sector) {
 }
 
 
+gr_constellation_bpsk_sptr 
+gr_make_constellation_bpsk()
+{
+  return gr_constellation_bpsk_sptr(new gr_constellation_bpsk ());
+}
+
+gr_constellation_bpsk::gr_constellation_bpsk ()
+{
+  d_constellation.resize(2);
+  d_constellation[0] = gr_complex(-1, 0);
+  d_constellation[1] = gr_complex(1, 0);
+}
+
+unsigned int gr_constellation_bpsk::decision_maker(gr_complex sample)
+{
+  return (real(sample) > 0);
+}
