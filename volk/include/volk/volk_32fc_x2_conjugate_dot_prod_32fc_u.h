@@ -1,5 +1,5 @@
-#ifndef INCLUDED_VOLK_32fc_CONJUGATE_DOT_PROD_UNALIGNED_H
-#define INCLUDED_VOLK_32fc_CONJUGATE_DOT_PROD_UNALIGNED_H
+#ifndef INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_u_H
+#define INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_u_H
 
 
 #include<volk/volk_complex.h>
@@ -8,7 +8,7 @@
 #if LV_HAVE_GENERIC
 
 
-static inline void volk_32fc_conjugate_dot_prod_unaligned_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
   float * res = (float*) result;
   float * in = (float*) input;
@@ -64,7 +64,7 @@ static inline void volk_32fc_conjugate_dot_prod_unaligned_generic(lv_32fc_t* res
 #include <mmintrin.h>
 
 
-static inline void volk_32fc_conjugate_dot_prod_unaligned_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
 
   static const uint32_t conjugator[4] __attribute__((aligned(16)))= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
 
@@ -138,7 +138,7 @@ static inline void volk_32fc_conjugate_dot_prod_unaligned_sse3(lv_32fc_t* result
 #endif /*LV_HAVE_SSE3*/
 
 
-#endif /*INCLUDED_VOLK_32fc_CONJUGATE_DOT_PROD_UNALIGNED_H*/
+#endif /*INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_u_H*/
 
 
 

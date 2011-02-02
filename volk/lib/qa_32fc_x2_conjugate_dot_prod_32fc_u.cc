@@ -1,5 +1,5 @@
 #include <volk/volk.h>
-#include <qa_32fc_conjugate_dot_prod_unaligned.h>
+#include <qa_32fc_x2_conjugate_dot_prod_32fc_u.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -27,9 +27,9 @@ random_floats (float *buf, unsigned n)
 }
 
 
-void qa_32fc_conjugate_dot_prod_unaligned::t1() {
+void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
   const int vlen = 789743;
-  
+
   volk_environment_init();
   int ret;
 
@@ -53,12 +53,12 @@ void qa_32fc_conjugate_dot_prod_unaligned::t1() {
   
   
 
-  volk_32fc_conjugate_dot_prod_unaligned_manual(result_generic, input, taps, vlen * 8,  "generic");
+  volk_32fc_x2_conjugate_dot_prod_32fc_u_manual(result_generic, input, taps, vlen * 8,  "generic");
 
   
-  volk_32fc_conjugate_dot_prod_unaligned_manual(result, input, taps, vlen * 8, "sse");
+  volk_32fc_x2_conjugate_dot_prod_32fc_u_manual(result, input, taps, vlen * 8, "sse");
 
-  printf("32fc_conjugate_dot_prod_unaligned\n");
+  printf("32fc_x2_conjugate_dot_prod_32fc_u\n");
   printf("generic: %f +i%f ... sse: %f +i%f\n", std::real(result_generic[0]), std::imag(result_generic[0]), std::real(result[0]), std::imag(result[0]));
 
   assertcomplexEqual(result_generic[0], result[0], ERR_DELTA);
@@ -85,7 +85,7 @@ random_floats (float *buf, unsigned n)
 }
 
 
-void qa_32fc_conjugate_dot_prod_unaligned::t1() {
+void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
   const int vlen = 789743;
   
   volk_environment_init();
@@ -111,12 +111,12 @@ void qa_32fc_conjugate_dot_prod_unaligned::t1() {
   
   
 
-  volk_32fc_conjugate_dot_prod_unaligned_manual(result_generic, input, taps, vlen * 8,  "generic");
+  volk_32fc_x2_conjugate_dot_prod_32fc_u_manual(result_generic, input, taps, vlen * 8,  "generic");
 
   
-  volk_32fc_conjugate_dot_prod_unaligned_manual(result, input, taps, vlen * 8, "sse_32");
+  volk_32fc_x2_conjugate_dot_prod_32fc_u_manual(result, input, taps, vlen * 8, "sse_32");
 
-  printf("32fc_conjugate_dot_prod_unaligned\n");
+  printf("32fc_x2_conjugate_dot_prod_32fc_u\n");
   printf("generic: %f +i%f ... sse: %f +i%f\n", std::real(result_generic[0]), std::imag(result_generic[0]), std::real(result[0]), std::imag(result[0]));
 
   assertcomplexEqual(result_generic[0], result[0], ERR_DELTA);
@@ -131,7 +131,7 @@ void qa_32fc_conjugate_dot_prod_unaligned::t1() {
 
 #else
 
-void qa_32fc_conjugate_dot_prod_unaligned::t1() {
+void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
   printf("sse not available... no test performed\n");
 }
 

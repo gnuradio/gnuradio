@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE(volk_test_all) {
     VOLK_RUN_TESTS(volk_32f_s32f_calc_spectral_noise_floor_32f_a16, 1e-4, 20.0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_s32f_atan2_32f_a16, 1e-4, 10.0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_x2_conjugate_dot_prod_32fc_a16, 1e-4, 0, 2046, 10000);
+    VOLK_RUN_TESTS(volk_32fc_x2_conjugate_dot_prod_32fc_u, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_deinterleave_32f_x2_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_deinterleave_64f_x2_a16, 1e-4, 0, 2046, 10000);
     VOLK_RUN_TESTS(volk_32fc_s32f_deinterleave_real_16i_a16, 0, 32768, 2046, 10000);
