@@ -57,7 +57,8 @@ lib_LTLIBRARIES = \
 EXTRA_DIST = \
 	volk_mktables.c		\
 	volk_rank_archs.h 	\
-	volk_proccpu_sim.c
+	volk_proccpu_sim.c	\
+	gcc_x86_cpuid.h
 
 # ----------------------------------------------------------------
 #                      The main library
@@ -109,8 +110,7 @@ endif
 # ----------------------------------------------------------------
 noinst_HEADERS = \
 	volk_init.h \
-	qa_utils.h \
-	assembly.h
+	qa_utils.h
 
 # ----------------------------------------------------------------
 # Our test program
