@@ -24,7 +24,12 @@ ACLOCAL_AMFLAGS = -I config
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = bootstrap configure config.h.in volk_config.h
-SUBDIRS = config include lib
+SUBDIRS = config
+if LV_HAVE_ORC
+SUBDIRS += orc
+endif
+SUBDIRS += include lib
+
 #if USE_PYTHON
 #SUBDIRS += python 
 #endif
@@ -54,3 +59,5 @@ distclean-local:
 	-rm -f lib/Makefile.in
 	-rm -f python/Makefile.in
 	-rm -f configure
+	-rm -f orc/Makefile.in
+	-rm -f orc/*.c

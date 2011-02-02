@@ -25,7 +25,6 @@ def make_c(funclist, taglist, arched_arglist, retlist, my_arglist, fcountlist) :
     tempstring = tempstring + "    return 0;\n"
     tempstring = tempstring + "}\n"
 
-
     for i in range(len(funclist)): 
         tempstring = tempstring + "static const " + replace_volk.sub("p", funclist[i]) + " " + funclist[i] + "_archs[] = {\n";
         
