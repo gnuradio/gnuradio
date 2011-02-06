@@ -23,6 +23,9 @@
 %template(gr_complex_vector) std::vector<gr_complex>;
 %template(unsigned_int_vector) std::vector<unsigned int>;
 
+// Make sure metric types get SWIGed.
+%include gr_metric_type.h
+
 class gr_constellation;
 typedef boost::shared_ptr<gr_constellation> gr_constellation_sptr;
 %template(gr_constellation_sptr) boost::shared_ptr<gr_constellation>;

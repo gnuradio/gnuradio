@@ -27,6 +27,7 @@
 #include <math.h>
 #include <gr_complex.h>
 #include <boost/enable_shared_from_this.hpp>
+#include <gr_metric_type.h>
 
 /************************************************************/
 /* gr_constellation                                         */
@@ -55,8 +56,18 @@ class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
   //! Also calculates the phase error.
   virtual unsigned int decision_maker (gr_complex sample);
   
+  //! Calculates metrics for all points in the constellation.
+  //! For use with the viterbi algorithm.
+  void calc_metric(gr_complex sample, float *metric, trellis_metric_type_t type);
+  void calc_euclidean_metric(gr_complex sample, float *metric);
+  void calc_hard_symbol_metric(gr_complex sample, float *metric);
+  
   unsigned int bits_per_symbol () {
     return floor(log(d_constellation.size())/log(2));
+  }
+  
+  unsigned int arity () {
+    return d_constellation.size();
   }
 
   gr_constellation_sptr base() {

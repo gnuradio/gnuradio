@@ -22,11 +22,14 @@
 
 #include <gr_io_signature.h>
 #include <gr_constellation.h>
+#include <gr_metric_type.h>
 #include <gr_math.h>
 #include <gr_complex.h>
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>
+#include <float.h>
+#include <stdexcept>
 
 #define M_TWOPI (2*M_PI)
 #define SQRT_TWO 0.707107
@@ -74,6 +77,45 @@ unsigned int gr_constellation::decision_maker(gr_complex sample)
   unsigned int min_index;
   min_index = get_closest_point(d_constellation, sample);
   return min_index;
+}
+
+void gr_constellation::calc_metric(gr_complex sample, float *metric, trellis_metric_type_t type) {
+  switch (type){
+  case TRELLIS_EUCLIDEAN:
+    calc_euclidean_metric(sample, metric);
+    break;
+  case TRELLIS_HARD_SYMBOL:
+    calc_hard_symbol_metric(sample, metric);
+    break;
+  case TRELLIS_HARD_BIT:
+    throw std::runtime_error ("Invalid metric type (not yet implemented).");
+    break;
+  default:
+    throw std::runtime_error ("Invalid metric type.");
+  }
+}
+
+void gr_constellation::calc_euclidean_metric(gr_complex sample, float *metric) {
+  for (int o=0; o<d_constellation.size(); o++) {
+    gr_complex s = sample - d_constellation[o];
+    metric[o] = s.real()*s.real()+s.imag()*s.imag();
+  }
+}
+
+void gr_constellation::calc_hard_symbol_metric(gr_complex sample, float *metric){
+  float minm = FLT_MAX;
+  int minmi = 0;
+  for (int o=0; o<d_constellation.size(); o++) {
+    gr_complex s = sample - d_constellation[o];
+    float dist = s.real()*s.real()+s.imag()*s.imag();
+    if (dist < minm) {
+      minm = dist;
+      minmi = o;
+    }
+  }
+  for(int o=0; o<d_constellation.size(); o++) {
+    metric[o] = (o==minmi?0.0:1.0);
+  }
 }
 
 gr_constellation_sector::gr_constellation_sector (std::vector<gr_complex> constellation,

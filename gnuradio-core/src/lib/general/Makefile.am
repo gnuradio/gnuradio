@@ -266,6 +266,7 @@ grinclude_HEADERS = 			\
 	gr_log2_const.h			\
 	gr_map_bb.h			\
 	gr_math.h			\
+	gr_metric_type.h		\
 	gr_misc.h			\
 	gr_nco.h			\
 	gr_nlog10_ff.h			\
