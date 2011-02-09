@@ -43,9 +43,3 @@ _gray_code_generator = GrayCodeGenerator()
 
 gray_code = _gray_code_generator.get_gray_code
 
-def inverse_gray_code(length):
-    gc = enumerate(gray_code(length))
-    igc = [(b, a) for (a, b) in gc]
-    igc.sort()
-    return [a for (b, a) in igc]
-    

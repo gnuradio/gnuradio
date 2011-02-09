@@ -35,19 +35,27 @@
 #define SQRT_TWO 0.707107
 
 gr_constellation_sptr 
-gr_make_constellation(std::vector<gr_complex> constellation)
+gr_make_constellation(std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code)
 {
-  return gr_constellation_sptr(new gr_constellation (constellation));
+  return gr_constellation_sptr(new gr_constellation (constellation, pre_diff_code));
 }
 
 // Base Constellation Class
 
-gr_constellation::gr_constellation (std::vector<gr_complex> constellation) :
-  d_constellation(constellation)
+gr_constellation::gr_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code) :
+  d_constellation(constellation),
+  d_pre_diff_code(pre_diff_code)
 {
+  if (pre_diff_code.size() == 0)
+    d_apply_pre_diff_code = false;
+  else if (pre_diff_code.size() != constellation.size())
+    throw std::runtime_error ("The constellation and pre-diff code must be of the same length.");
+  else
+    d_apply_pre_diff_code = true;
 }
 
-gr_constellation::gr_constellation ()
+gr_constellation::gr_constellation () :
+  d_apply_pre_diff_code(false)
 {
 }
 
@@ -119,8 +127,9 @@ void gr_constellation::calc_hard_symbol_metric(gr_complex sample, float *metric)
 }
 
 gr_constellation_sector::gr_constellation_sector (std::vector<gr_complex> constellation,
+						  std::vector<unsigned int> pre_diff_code,
 						  unsigned int n_sectors) :
-  gr_constellation(constellation),
+  gr_constellation(constellation, pre_diff_code),						    
   n_sectors(n_sectors)
 {
 }
@@ -141,16 +150,18 @@ void gr_constellation_sector::find_sector_values () {
 
 gr_constellation_rect_sptr 
 gr_make_constellation_rect(std::vector<gr_complex> constellation,
+			   std::vector<unsigned int> pre_diff_code,
 			   unsigned int real_sectors, unsigned int imag_sectors,
 			   float width_real_sectors, float width_imag_sectors)
 {
-  return gr_constellation_rect_sptr(new gr_constellation_rect (constellation, real_sectors, imag_sectors, width_real_sectors, width_imag_sectors));
+  return gr_constellation_rect_sptr(new gr_constellation_rect (constellation, pre_diff_code, real_sectors, imag_sectors, width_real_sectors, width_imag_sectors));
   }
 
 gr_constellation_rect::gr_constellation_rect (std::vector<gr_complex> constellation,
+					      std::vector<unsigned int> pre_diff_code,
 					      unsigned int real_sectors, unsigned int imag_sectors,
 					      float width_real_sectors, float width_imag_sectors) :
-  gr_constellation_sector(constellation, real_sectors * imag_sectors),
+  gr_constellation_sector(constellation, pre_diff_code, real_sectors * imag_sectors),
   n_real_sectors(real_sectors), n_imag_sectors(imag_sectors),
   d_width_real_sectors(width_real_sectors), d_width_imag_sectors(width_imag_sectors)
 {
@@ -184,14 +195,17 @@ unsigned int gr_constellation_rect::calc_sector_value (unsigned int sector) {
 
 
 gr_constellation_psk_sptr 
-gr_make_constellation_psk(std::vector<gr_complex> constellation, unsigned int n_sectors)
+gr_make_constellation_psk(std::vector<gr_complex> constellation, 
+			  std::vector<unsigned int> pre_diff_code,
+			  unsigned int n_sectors)
 {
-  return gr_constellation_psk_sptr(new gr_constellation_psk (constellation, n_sectors));
+  return gr_constellation_psk_sptr(new gr_constellation_psk (constellation, pre_diff_code, n_sectors));
 }
 
 gr_constellation_psk::gr_constellation_psk (std::vector<gr_complex> constellation,
+					    std::vector<unsigned int> pre_diff_code,
 					    unsigned int n_sectors) :
-  gr_constellation_sector(constellation, n_sectors)
+  gr_constellation_sector(constellation, pre_diff_code, n_sectors)
 {
   find_sector_values();
 }

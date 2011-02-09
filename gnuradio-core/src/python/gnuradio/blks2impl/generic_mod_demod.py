@@ -27,7 +27,7 @@ Generic modulation and demodulation.
 
 from gnuradio import gr
 from gnuradio.modulation_utils2 import extract_kwargs_from_options_for_class
-from gnuradio.utils.gray_code import gray_code, inverse_gray_code
+from gnuradio.utils import mod_codes
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2
@@ -47,7 +47,6 @@ _def_phase_alpha = 0.1
 _def_constellation_points = 16
 # Whether differential coding is used.
 _def_differential = True
-_def_gray_coded = True
 
 def add_common_options(parser):
     """
@@ -59,10 +58,10 @@ def add_common_options(parser):
                       help="use differential encoding [default=%default]")
     parser.add_option("", "--not-differential", action="store_false", dest="differential",
                       help="do not use differential encoding [default=%default]")
-    parser.add_option("", "--gray-coded", action="store_true", dest="gray_coded", default=True,
-                      help="use gray code [default=%default]")
-    parser.add_option("", "--not-gray-coded", action="store_false", dest="gray_coded",
-                      help="do not use gray code [default=%default]")
+    parser.add_option("", "--mod-code", type="choice", choices=mod_codes.codes,
+                      default=mod_codes.NO_CODE,
+                      help="Select modulation code from: %s [default=%%default]"
+                            % (', '.join(mod_codes.codes),))
     parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
                       help="set RRC excess bandwith factor [default=%default]")
     
@@ -75,7 +74,6 @@ class generic_mod(gr.hier_block2):
 
     def __init__(self, constellation,
                  differential=_def_differential,
-                 gray_coded=_def_gray_coded,
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
                  verbose=_def_verbose,
@@ -106,7 +104,6 @@ class generic_mod(gr.hier_block2):
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._differential = differential
-        self._gray_coded = gray_coded
  
         if not isinstance(self._samples_per_symbol, int) or self._samples_per_symbol < 2:
             raise TypeError, ("sbp must be an integer >= 2, is %d" % self._samples_per_symbol)
@@ -119,8 +116,8 @@ class generic_mod(gr.hier_block2):
         self.bytes2chunks = \
           gr.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
 
-        if gray_coded:
-            self.symbol_mapper = gr.map_bb(gray_code(arity))
+        if self._constellation.apply_pre_diff_code():
+            self.symbol_mapper = gr.map_bb(self._constellation.pre_diff_code())
 
         if differential:
             self.diffenc = gr.diff_encoder_bb(arity)
@@ -140,7 +137,7 @@ class generic_mod(gr.hier_block2):
 
 	# Connect
         blocks = [self, self.bytes2chunks]
-        if gray_coded:
+        if self._constellation.apply_pre_diff_code():
             blocks.append(self.symbol_mapper)
         if differential:
             blocks.append(self.diffenc)
@@ -184,7 +181,7 @@ class generic_mod(gr.hier_block2):
         print "Modulation logging turned on."
         self.connect(self.bytes2chunks,
                      gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.dat"))
-        if self._gray_coded:
+        if self._constellation.apply_pre_diff_code():
             self.connect(self.symbol_mapper,
                          gr.file_sink(gr.sizeof_char, "tx_symbol_mapper.dat"))
         if self._differential:
@@ -208,7 +205,6 @@ class generic_demod(gr.hier_block2):
     def __init__(self, constellation,
                  samples_per_symbol=_def_samples_per_symbol,
                  differential=_def_differential,
-                 gray_coded=_def_gray_coded,
                  excess_bw=_def_excess_bw,
                  freq_alpha=_def_freq_alpha,
                  timing_alpha=_def_timing_alpha,
@@ -256,7 +252,6 @@ class generic_demod(gr.hier_block2):
         self._timing_beta = _def_timing_beta
         self._timing_max_dev=timing_max_dev
         self._differential = differential
-        self._gray_coded = gray_coded
 
         if not isinstance(self._samples_per_symbol, int) or self._samples_per_symbol < 2:
             raise TypeError, ("sbp must be an integer >= 2, is %d" % self._samples_per_symbol)
@@ -296,8 +291,9 @@ class generic_demod(gr.hier_block2):
         if differential:
             self.diffdec = gr.diff_decoder_bb(arity)
 
-        if gray_coded:
-            self.symbol_mapper = gr.map_bb(inverse_gray_code(arity))
+        if self._constellation.apply_pre_diff_code():
+            self.symbol_mapper = gr.map_bb(
+                mod_codes.invert_code(self._constellation.pre_diff_code()))
 
         # unpack the k bit vector into a stream of bits
         self.unpack = gr.unpack_k_bits_bb(self.bits_per_symbol())
@@ -312,7 +308,7 @@ class generic_demod(gr.hier_block2):
         blocks = [self, self.agc, self.freq_recov, self.time_recov, self.receiver]
         if differential:
             blocks.append(self.diffdec)
-        if gray_coded:
+        if self._constellation.apply_pre_diff_code():
             blocks.append(self.symbol_mapper)
         blocks += [self.unpack, self]
         self.connect(*blocks)
@@ -365,7 +361,7 @@ class generic_demod(gr.hier_block2):
         if self._differential:
             self.connect(self.diffdec,
                          gr.file_sink(gr.sizeof_char, "rx_diffdec.dat"))        
-        if self._gray_coded:
+        if self._constellation.apply_pre_diff_code():
             self.connect(self.symbol_mapper,
                          gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.dat"))        
         self.connect(self.unpack,
