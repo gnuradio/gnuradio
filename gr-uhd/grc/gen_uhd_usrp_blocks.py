@@ -153,7 +153,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<param>
 		<name>Num Channels</name>
 		<key>nchan</key>
-		<value>2</value>
+		<value>1</value>
 		<type>int</type>
 		#for $n in range(1, $max_nchan+1)
 		<option>

@@ -3,7 +3,7 @@
 	<name>UHD: USRP Sink</name>
 	<key>uhd_usrp_sink</key>
 	<import>from gnuradio import uhd</import>
-	<make>uhd.multi_usrp_sink(
+	<make>uhd.usrp_sink(
 	device_addr=$dev_addr,
 	io_type=uhd.io_type.$type.type,
 	num_channels=$nchan,
@@ -398,7 +398,7 @@ self.$(id).set_bandwidth($bw15, 15)
 	<param>
 		<name>Num Channels</name>
 		<key>nchan</key>
-		<value>2</value>
+		<value>1</value>
 		<type>int</type>
 		<option>
 			<name>1</name>
