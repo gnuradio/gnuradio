@@ -156,6 +156,20 @@ public:
     virtual void set_clock_config(const uhd::clock_config_t &clock_config, size_t mboard = 0) = 0;
 
     /*!
+     * Get the master clock rate.
+     * \param mboard the motherboard index 0 to M-1
+     * \return the clock rate in Hz
+     */
+    virtual double get_clock_rate(size_t mboard = 0) = 0;
+
+    /*!
+     * Set the master clock rate.
+     * \param rate the new rate in Hz
+     * \param mboard the motherboard index 0 to M-1
+     */
+    virtual void set_clock_rate(double rate, size_t mboard = 0) = 0;
+
+    /*!
      * Get the current time registers.
      * \return the current usrp time
      */

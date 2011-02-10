@@ -30,10 +30,13 @@ MAIN_TMPL = """\
 	num_channels=\$nchan,
 )
 \#if \$ref_clk()
-self.\$(id).set_clock_config(uhd.clock_config.external(), uhd.ALL_MBOARDS);
+self.\$(id).set_clock_config(uhd.clock_config.external(), uhd.ALL_MBOARDS)
 \#end if
 \#if \$sync()
 self.\$(id).set_time_unknown_pps(uhd.time_spec())
+\#end if
+\#if \$clock_rate()
+self.\$(id).set_clock_rate(\$clock_rate, uhd.ALL_MBOARDS)
 \#end if
 #for $m in range($max_mboards)
 \#if \$num_mboards() > $m and \$sd_spec$(m)()
@@ -109,7 +112,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<param>
 		<name>Sync</name>
 		<key>sync</key>
-		<value>sync</value>
+		<value></value>
 		<type>enum</type>
 		<hide>\#if \$sync() then 'none' else 'part'#</hide>
 		<option>
@@ -119,6 +122,17 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<option>
 			<name>don't sync</name>
 			<key></key>
+		</option>
+	</param>
+	<param>
+		<name>Clock Rate (Hz)</name>
+		<key>clock_rate</key>
+		<value>0.0</value>
+		<type>real</type>
+		<hide>\#if \$clock_rate() then 'none' else 'part'#</hide>
+		<option>
+			<name>Default</name>
+			<key>0.0</key>
 		</option>
 	</param>
 	<param>

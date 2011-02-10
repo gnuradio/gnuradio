@@ -109,6 +109,14 @@ public:
         return _dev->set_clock_config(clock_config, mboard);
     }
 
+    double get_clock_rate(size_t mboard){
+        return _dev->get_master_clock_rate(mboard);
+    }
+
+    void set_clock_rate(double rate, size_t mboard){
+        return _dev->set_master_clock_rate(rate, mboard);
+    }
+
     uhd::time_spec_t get_time_now(void){
         return _dev->get_time_now();
     }
