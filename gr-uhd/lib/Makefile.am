@@ -29,22 +29,13 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = libgnuradio-uhd.la
 
 libgnuradio_uhd_la_SOURCES = \
-	uhd_multi_usrp_source.cc \
-	uhd_multi_usrp_sink.cc \
-	uhd_single_usrp_source.cc \
-	uhd_single_usrp_sink.cc
+	gr_uhd_usrp_source.cc \
+	gr_uhd_usrp_sink.cc
 
 libgnuradio_uhd_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \
 	$(UHD_LIBS)
 
 libgnuradio_uhd_la_LDFLAGS = $(LTVERSIONFLAGS)
-
-grinclude_HEADERS = \
-	gr_uhd_api.h \
-	uhd_multi_usrp_source.h \
-	uhd_multi_usrp_sink.h \
-	uhd_single_usrp_source.h \
-	uhd_single_usrp_sink.h
 
 noinst_HEADERS =

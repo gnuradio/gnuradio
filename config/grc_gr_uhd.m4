@@ -1,4 +1,4 @@
-dnl Copyright 2010 Free Software Foundation, Inc.
+dnl Copyright 2010-2011 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -29,7 +29,7 @@ AC_DEFUN([GRC_GR_UHD],[
             [UHD], [uhd >= 2.0.0 uhd < 3.0.0], [],
             [passed=no; AC_MSG_RESULT([gr-uhd requires libuhd 2.x.x])]
         )
-        UHD_CPPFLAGS="${UHD_CPPFLAGS} -I\${abs_top_srcdir}/gr-uhd/lib"
+        UHD_CPPFLAGS="${UHD_CPPFLAGS} -I\${abs_top_srcdir}/gr-uhd/include"
         AC_SUBST(UHD_CPPFLAGS)
         AC_SUBST(UHD_LIBS)
 
@@ -40,8 +40,8 @@ AC_DEFUN([GRC_GR_UHD],[
 
     AC_CONFIG_FILES([ \
         gr-uhd/Makefile \
-        gr-uhd/apps/Makefile \
         gr-uhd/grc/Makefile \
+        gr-uhd/include/Makefile \
         gr-uhd/lib/Makefile \
         gr-uhd/swig/Makefile \
         gr-uhd/swig/run_tests \

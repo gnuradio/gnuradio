@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -66,9 +66,7 @@ uhd_swig_python = \
 # additional SWIG files to be installed
 uhd_swig_swiginclude_headers =
 
-uhd_swig_swig_args = \
-	$(UHD_CFLAGS) \
-	-I$(top_srcdir)/gr-uhd/lib
+uhd_swig_swig_args = $(UHD_CPPFLAGS)
 
 ## If UHD was installed, defined GR_HAVE_UHD for swigging headers
 if GR_DEFINE_HAVE_UHD

@@ -66,10 +66,7 @@ class device_addr_t(device_addr_t, str):
 ########################################################################
 # Cast constructor args (FIXME swig handle overloads?)
 ########################################################################
-for attr in (
-    'single_usrp_source', 'single_usrp_sink',
-    'multi_usrp_source', 'multi_usrp_sink'
-):
+for attr in ('usrp_source', 'usrp_sink'):
     def constructor_factory(old_constructor):
         def constructor_interceptor(*args, **kwargs):
             args = list(args)
@@ -84,3 +81,11 @@ for attr in (
         return constructor_interceptor
     import uhd_swig
     globals()[attr] = constructor_factory(getattr(uhd_swig, attr))
+
+########################################################################
+# Aliases for deprecated constructors
+########################################################################
+single_usrp_source = usrp_source
+single_usrp_sink = usrp_sink
+multi_usrp_source = usrp_source
+multi_usrp_sink = usrp_sink
