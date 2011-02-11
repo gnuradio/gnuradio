@@ -171,9 +171,17 @@ public:
 
     /*!
      * Get the current time registers.
+     * \param mboard the motherboard index 0 to M-1
      * \return the current usrp time
      */
-    virtual uhd::time_spec_t get_time_now(void) = 0;
+    virtual uhd::time_spec_t get_time_now(size_t mboard = 0) = 0;
+
+    /*!
+     * Get the time when the last pps pulse occured.
+     * \param mboard the motherboard index 0 to M-1
+     * \return the current usrp time
+     */
+    virtual uhd::time_spec_t get_time_last_pps(size_t mboard = 0) = 0;
 
     /*!
      * Sets the time registers immediately.

@@ -117,8 +117,12 @@ public:
         return _dev->set_master_clock_rate(rate, mboard);
     }
 
-    uhd::time_spec_t get_time_now(void){
-        return _dev->get_time_now();
+    uhd::time_spec_t get_time_now(size_t mboard = 0){
+        return _dev->get_time_now(mboard);
+    }
+
+    uhd::time_spec_t get_time_last_pps(size_t mboard){
+        return _dev->get_time_last_pps(mboard);
     }
 
     void set_time_now(const uhd::time_spec_t &time_spec, size_t mboard){
