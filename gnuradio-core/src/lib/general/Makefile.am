@@ -58,6 +58,7 @@ libgeneral_la_SOURCES = 		\
 	gr_copy.cc			\
 	gr_constellation.cc             \
 	gr_constellation_decoder_cb.cc	\
+	gr_constellation_decoder2_cb.cc	\
 	gr_constellation_receiver_cb.cc \
 	gr_correlate_access_code_bb.cc	\
 	gr_costas_loop_cc.cc		\
@@ -217,6 +218,7 @@ grinclude_HEADERS = 			\
 	gr_conjugate_cc.h		\
 	gr_constellation.h	        \
 	gr_constellation_decoder_cb.h	\
+	gr_constellation_decoder2_cb.h	\
 	gr_constellation_receiver_cb.h	\
 	gr_copy.h			\
 	gr_correlate_access_code_bb.h	\
@@ -394,6 +396,7 @@ swiginclude_HEADERS =			\
 	gr_conjugate_cc.i		\
 	gr_constellation.i	        \
 	gr_constellation_decoder_cb.i	\
+	gr_constellation_decoder2_cb.i	\
 	gr_constellation_receiver_cb.i	\
 	gr_copy.i			\
 	gr_correlate_access_code_bb.i	\

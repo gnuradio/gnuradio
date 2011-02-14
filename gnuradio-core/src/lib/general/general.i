@@ -114,6 +114,7 @@
 #include <gr_correlate_access_code_bb.h>
 #include <gr_diff_phasor_cc.h>
 #include <gr_constellation_decoder_cb.h>
+#include <gr_constellation_decoder2_cb.h>
 #include <gr_binary_slicer_fb.h>
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
@@ -242,6 +243,7 @@
 %include "gr_correlate_access_code_bb.i"
 %include "gr_diff_phasor_cc.i"
 %include "gr_constellation_decoder_cb.i"
+%include "gr_constellation_decoder2_cb.i"
 %include "gr_binary_slicer_fb.i"
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"
