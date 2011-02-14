@@ -31,14 +31,16 @@ typedef boost::shared_ptr<gr_constellation> gr_constellation_sptr;
 %template(gr_constellation_sptr) boost::shared_ptr<gr_constellation>;
 %rename(constellation) gr_make_constellation;
 gr_constellation_sptr gr_make_constellation(std::vector<gr_complex> constellation,
-					    std::vector<unsigned int> pre_diff_code);
+					    std::vector<unsigned int> pre_diff_code,
+					    unsigned int rotational_symmetry);
 %ignore gr_constellation;
 
 class gr_constellation
 {
 public:
   gr_constellation (std::vector<gr_complex> constellation,
-		    std::vector<unsigned int> pre_diff_code);
+		    std::vector<unsigned int> pre_diff_code,
+		    unsigned int rotational_symmetry);
   std::vector<gr_complex> points();
   unsigned int decision_maker (gr_complex sample);  
   unsigned int bits_per_symbol ();
@@ -46,6 +48,7 @@ public:
   gr_constellation_sptr base ();
   bool apply_pre_diff_code();
   std::vector<unsigned int> pre_diff_code();
+  unsigned int rotational_symmetry();
 };
 
 class gr_constellation_sector: public gr_constellation
@@ -58,6 +61,7 @@ typedef boost::shared_ptr<gr_constellation_rect> gr_constellation_rect_sptr;
 %rename(constellation_rect) gr_make_constellation_rect;
 gr_constellation_rect_sptr gr_make_constellation_rect(std::vector<gr_complex> constellation,
 						      std::vector<unsigned int> pre_diff_code,
+						      unsigned int rotational_symmetry,
 						      unsigned int real_sectors, unsigned int imag_sectors,
 						      float width_real_sectors, float width_imag_sectors);
 %ignore gr_constellation_rect;
@@ -67,6 +71,7 @@ class gr_constellation_rect : public gr_constellation_sector
 public:
   gr_constellation_rect (std::vector<gr_complex> constellation,
 			 std::vector<unsigned int> pre_diff_code,
+			 unsigned int rotational_symmetry,
 			 unsigned int real_sectors, unsigned int imag_sectors,
 			 float width_real_sectors, float width_imag_sectors);
 };

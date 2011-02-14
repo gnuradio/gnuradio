@@ -35,16 +35,19 @@
 #define SQRT_TWO 0.707107
 
 gr_constellation_sptr 
-gr_make_constellation(std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code)
+gr_make_constellation(std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+		      unsigned int rotational_symmetry)
 {
-  return gr_constellation_sptr(new gr_constellation (constellation, pre_diff_code));
+  return gr_constellation_sptr(new gr_constellation (constellation, pre_diff_code, rotational_symmetry));
 }
 
 // Base Constellation Class
 
-gr_constellation::gr_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code) :
+gr_constellation::gr_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+				    unsigned int rotational_symmetry) :
   d_constellation(constellation),
-  d_pre_diff_code(pre_diff_code)
+  d_pre_diff_code(pre_diff_code),
+  d_rotational_symmetry(rotational_symmetry)
 {
   if (pre_diff_code.size() == 0)
     d_apply_pre_diff_code = false;
@@ -55,7 +58,8 @@ gr_constellation::gr_constellation (std::vector<gr_complex> constellation, std::
 }
 
 gr_constellation::gr_constellation () :
-  d_apply_pre_diff_code(false)
+  d_apply_pre_diff_code(false),
+  d_rotational_symmetry(0)
 {
 }
 
@@ -128,8 +132,9 @@ void gr_constellation::calc_hard_symbol_metric(gr_complex sample, float *metric)
 
 gr_constellation_sector::gr_constellation_sector (std::vector<gr_complex> constellation,
 						  std::vector<unsigned int> pre_diff_code,
+						  unsigned int rotational_symmetry,
 						  unsigned int n_sectors) :
-  gr_constellation(constellation, pre_diff_code),						    
+  gr_constellation(constellation, pre_diff_code, rotational_symmetry),						    
   n_sectors(n_sectors)
 {
 }
@@ -151,17 +156,21 @@ void gr_constellation_sector::find_sector_values () {
 gr_constellation_rect_sptr 
 gr_make_constellation_rect(std::vector<gr_complex> constellation,
 			   std::vector<unsigned int> pre_diff_code,
+			   unsigned int rotational_symmetry,
 			   unsigned int real_sectors, unsigned int imag_sectors,
 			   float width_real_sectors, float width_imag_sectors)
 {
-  return gr_constellation_rect_sptr(new gr_constellation_rect (constellation, pre_diff_code, real_sectors, imag_sectors, width_real_sectors, width_imag_sectors));
+  return gr_constellation_rect_sptr(new gr_constellation_rect (constellation, pre_diff_code, rotational_symmetry,
+							       real_sectors, imag_sectors, width_real_sectors,
+							       width_imag_sectors));
   }
 
 gr_constellation_rect::gr_constellation_rect (std::vector<gr_complex> constellation,
 					      std::vector<unsigned int> pre_diff_code,
+					      unsigned int rotational_symmetry,
 					      unsigned int real_sectors, unsigned int imag_sectors,
 					      float width_real_sectors, float width_imag_sectors) :
-  gr_constellation_sector(constellation, pre_diff_code, real_sectors * imag_sectors),
+  gr_constellation_sector(constellation, pre_diff_code, rotational_symmetry, real_sectors * imag_sectors),
   n_real_sectors(real_sectors), n_imag_sectors(imag_sectors),
   d_width_real_sectors(width_real_sectors), d_width_imag_sectors(width_imag_sectors)
 {
@@ -199,13 +208,14 @@ gr_make_constellation_psk(std::vector<gr_complex> constellation,
 			  std::vector<unsigned int> pre_diff_code,
 			  unsigned int n_sectors)
 {
-  return gr_constellation_psk_sptr(new gr_constellation_psk (constellation, pre_diff_code, n_sectors));
+  return gr_constellation_psk_sptr(new gr_constellation_psk (constellation, pre_diff_code,
+							     n_sectors));
 }
 
 gr_constellation_psk::gr_constellation_psk (std::vector<gr_complex> constellation,
 					    std::vector<unsigned int> pre_diff_code,
 					    unsigned int n_sectors) :
-  gr_constellation_sector(constellation, pre_diff_code, n_sectors)
+  gr_constellation_sector(constellation, pre_diff_code, constellation.size(), n_sectors)
 {
   find_sector_values();
 }
@@ -241,6 +251,7 @@ gr_constellation_bpsk::gr_constellation_bpsk ()
   d_constellation.resize(2);
   d_constellation[0] = gr_complex(-1, 0);
   d_constellation[1] = gr_complex(1, 0);
+  d_rotational_symmetry = 2;
 }
 
 unsigned int gr_constellation_bpsk::decision_maker(gr_complex sample)
@@ -263,6 +274,7 @@ gr_constellation_qpsk::gr_constellation_qpsk ()
   d_constellation[1] = gr_complex(SQRT_TWO, -SQRT_TWO);
   d_constellation[2] = gr_complex(-SQRT_TWO, SQRT_TWO);
   d_constellation[3] = gr_complex(SQRT_TWO, SQRT_TWO);
+  d_rotational_symmetry = 4;
 }
 
 unsigned int gr_constellation_qpsk::decision_maker(gr_complex sample)
