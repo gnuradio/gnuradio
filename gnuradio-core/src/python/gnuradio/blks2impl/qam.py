@@ -113,7 +113,7 @@ def make_differential_constellation(m, gray_coded):
     return const_map
 
 def make_not_differential_constellation(m, gray_coded):
-    side = pow(m, 0.5)
+    side = int(pow(m, 0.5))
     if (not isinstance(m, int) or m < 4 or not is_power_of_four(m)):
         raise ValueError("m must be a power of 4 integer.")
     # Each symbol holds k bits.
@@ -122,22 +122,20 @@ def make_not_differential_constellation(m, gray_coded):
         # Number rows and columns using gray codes.
         gcs = gray_code(side)
         # Get inverse gray codes.
-        i_gcs = dict([(v, key) for key, v in enumerate(gcs)])
+        i_gcs = mod_codes.invert_code(gcs)
     else:
-        i_gcs = dict([(i, i) for i in range(0, m)])
+        i_gcs = range(0, side)
     # The distance between points is found.
-    step = 2/(side-1)
+    step = 2.0/(side-1)
 
     gc_to_x = [-1 + i_gcs[gc]*step for gc in range(0, side)]
-
     # First k/2 bits determine x position.
     # Following k/2 bits determine y position.
     const_map = []
     for i in range(m):
-        y = gc_to_x(get_bits(i, 0, k/2))
-        x = gc_to_x(get_bits(i, k/2, k/2))
+        y = gc_to_x[get_bits(i, 0, k/2)]
+        x = gc_to_x[get_bits(i, k/2, k/2)]
         const_map.append(complex(x,y))
-    
     return const_map
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -165,7 +163,7 @@ def qam_constellation(constellation_points=_def_constellation_points,
     # No pre-diff code
     # Should add one so that we can gray-code the quadrant bits too.
     pre_diff_code = []
-    constellation = gr.constellation_rect(points, pre_diff_code, side, side, width, width)
+    constellation = gr.constellation_rect(points, pre_diff_code, 4, side, side, width, width)
     return constellation
 
 # /////////////////////////////////////////////////////////////////////////////
