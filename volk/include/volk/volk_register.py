@@ -229,7 +229,7 @@ outfile_set_simd.close();
 outfile_config_in.write(make_config_in(filearchs));
 outfile_config_in.close();
     
-outfile_reg.write(make_registry(filearchs, functions, fcountlist));
+outfile_reg.write(make_registry(filearchs, functions, fcountlist, taglist));
 outfile_reg.close();
 
 outfile_h.write(make_h(functions, arched_arglist, retlist));

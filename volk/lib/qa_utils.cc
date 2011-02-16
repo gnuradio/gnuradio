@@ -12,6 +12,7 @@
 //#include <volk/volk_runtime.h>
 #include <volk/volk_registry.h>
 #include <volk/volk.h>
+#include <volk/volk_cpu.h>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits.hpp>
 
@@ -77,49 +78,14 @@ void make_buffer_for_signature(std::vector<void *> &buffs, std::vector<volk_type
     }
 }
 
-static std::vector<std::string> get_arch_list(const int archs[]) {
+static std::vector<std::string> get_arch_list(const char **indices, const int archs[]) {
     std::vector<std::string> archlist;
     int num_archs = archs[0];
-    
-    //there has got to be a way to query these arches
+
     for(int i = 0; i < num_archs; i++) {
-        switch(archs[i+1]) {
-        case (1<<LV_GENERIC):
-            archlist.push_back("generic");
-            break;
-        case (1<<LV_ORC):
-            archlist.push_back("orc");
-            break;
-        case (1<<LV_SSE):
-            archlist.push_back("sse");
-            break;
-        case (1<<LV_SSE2):
-            archlist.push_back("sse2");
-            break;
-        case (1<<LV_SSE3):
-            archlist.push_back("sse3");
-            break;
-        case (1<<LV_SSSE3):
-            archlist.push_back("ssse3");
-            break;
-        case (1<<LV_SSE4_1):
-            archlist.push_back("sse4_1");
-            break;
-        case (1<<LV_SSE4_2):
-            archlist.push_back("sse4_2");
-            break;
-        case (1<<LV_SSE4_A):
-            archlist.push_back("sse4_a");
-            break;
-        case (1<<LV_MMX):
-            archlist.push_back("mmx");
-            break;
-        case (1<<LV_AVX):
-            archlist.push_back("avx");
-            break;
-        default:
-            break;
-        }
+        //std::cout << "the archs this fn is avail on is " << archs[0] << std::endl;
+        if(!(archs[i+1] & volk_get_lvarch())) continue; //this arch isn't available on this pc
+        archlist.push_back(std::string(indices[i]));
     }
     return archlist;
 }
@@ -282,11 +248,11 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
     return fail;
 }
 
-bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
+bool run_volk_tests(const char **indices, const int archs[], void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
     
     //first let's get a list of available architectures for the test
-    std::vector<std::string> arch_list = get_arch_list(archs);
+    std::vector<std::string> arch_list = get_arch_list(indices, archs);
     
     if(arch_list.size() < 2) {
         std::cout << "no architectures to test" << std::endl;

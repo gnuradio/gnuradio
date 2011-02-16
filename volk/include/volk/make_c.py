@@ -43,24 +43,6 @@ def make_c(funclist, taglist, arched_arglist, retlist, my_arglist, fcountlist) :
         lindex = tempstring.rfind(",");
         tempstring = tempstring[0:lindex] + string.replace(tempstring[lindex:len(tempstring)], ",", "");
         tempstring = tempstring + "};\n\n";
-
-        tempstring = tempstring + "static const char* " + funclist[i] + "_indices[] = {\n";
-        
-        tags_counter = 0;    
-        for arch_list in fcountlist[i]:
-            tempstring = tempstring + "#if LV_HAVE_"
-            for ind in range(len(arch_list)):
-                
-                tempstring = tempstring + arch_list[ind];
-                if ind < len(arch_list) - 1:
-                    tempstring = tempstring + " && LV_HAVE_";
-                
-            tempstring = tempstring + "\n \"" + str(taglist[i][tags_counter]) + "\",\n#endif\n";
-            tags_counter = tags_counter + 1;
-                
-        lindex = tempstring.rfind(",");
-        tempstring = tempstring[0:lindex] + string.replace(tempstring[lindex:len(tempstring)], ",", "");
-        tempstring = tempstring + "};\n\n";
                                                                           
         tempstring = tempstring + retlist[i] + "inline " + funclist[i] + "_manual" + arched_arglist[i] + '\n';
         tempstring = tempstring + "return " + funclist[i] + "_archs[volk_get_index(" + funclist[i] + "_indices, arch, " + funclist[i] + "_arch_defs)](" + my_arglist[i] + ");" + "\n}\n";
