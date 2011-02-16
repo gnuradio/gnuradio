@@ -129,8 +129,7 @@ testqa_LDADD  = \
 	../orc/libvolk_orc.la
 else 
 testqa_LDADD  = \
-	libvolk.la \
-	libvolk_runtime.la
+	libvolk.la
 endif
 
 distclean-local: 
