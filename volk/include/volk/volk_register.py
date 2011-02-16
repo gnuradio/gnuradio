@@ -18,9 +18,9 @@ from make_runtime_c import make_runtime_c
 from make_init_c import make_init_c
 from make_runtime import make_runtime
 from make_typedefs import make_typedefs
-from make_mktables import make_mktables
 from make_environment_init_c import make_environment_init_c
 from make_environment_init_h import make_environment_init_h
+from make_mktables import make_mktables
 
 outfile_set_simd = open("../../config/lv_set_simd_flags.m4", "w");
 outfile_reg = open("volk_registry.h", "w");
@@ -213,9 +213,6 @@ for func in functions:
     fcountlist.append(fcount);
     taglist.append(tags);               
 
-outfile_mktables.write(make_mktables(functions));
-outfile_mktables.close();
-
 
 outfile_cpu_h.write(make_cpuid_h(filearchs));
 outfile_cpu_h.close();
@@ -261,3 +258,6 @@ outfile_environment_c.close();
 
 outfile_environment_h.write(make_environment_init_h());
 outfile_environment_h.close();
+
+outfile_mktables.write(make_mktables(functions));
+outfile_mktables.close();

@@ -83,10 +83,10 @@ static std::vector<std::string> get_arch_list(const char **indices, const int ar
     int num_archs = archs[0];
 
     for(int i = 0; i < num_archs; i++) {
-        //std::cout << "the archs this fn is avail on is " << archs[0] << std::endl;
         if(!(archs[i+1] & volk_get_lvarch())) continue; //this arch isn't available on this pc
         archlist.push_back(std::string(indices[i]));
     }
+    
     return archlist;
 }
 
