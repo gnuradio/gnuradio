@@ -55,9 +55,7 @@ lib_LTLIBRARIES = \
 	libvolk_runtime.la
 
 EXTRA_DIST = \
-	volk_mktables.c		\
 	volk_rank_archs.h 	\
-	volk_proccpu_sim.c	\
 	gcc_x86_cpuid.h
 
 # ----------------------------------------------------------------
@@ -140,7 +138,6 @@ distclean-local:
 	rm -f volk_cpu_x86.c
 	rm -f volk_init.c
 	rm -f volk_init.h
-	rm -f volk_mktables.c
 	rm -f volk_proccpu_sim.c
 	rm -f volk_runtime.c
 	rm -f volk_tables.h
