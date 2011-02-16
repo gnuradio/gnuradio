@@ -15,16 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-#TODO: add in checking for 32-bit and 64-bit compiler support, to pick
-#which version to use.
-
-#for a given compiler: first try 64 bit, then fall back to 32 bit.
-#to try 64 bit, just try compiling a program with -m64
-#if it passes, whee you're 64-bit
-#if not, 32
-#this should probably be elsewhere and just referred in here
-#actually, why the fuck does LF_CHECK_CC_FLAG([-m64]) work at all? it doesn't even COMPILE
-
 from xml.dom import minidom
 
 def make_set_simd(dom) :
