@@ -68,7 +68,8 @@ libvolk_runtime_la_SOURCES = 	\
 	$(platform_CODE) 	\
 	volk_runtime.c		\
 	volk_init.c 		\
-	volk_rank_archs.c	
+	volk_rank_archs.c	\
+	volk_cpu.c
 
 libvolk_la_SOURCES = 		\
 	$(platform_CODE) 	\

@@ -5,12 +5,9 @@ import re
 import string
 from xml.dom import minidom
 from volk_regexp import *
-from make_cpuid_x86_c import make_cpuid_x86_c
+from make_cpuid_c import make_cpuid_c
 from make_cpuid_h import make_cpuid_h
-from make_proccpu_sim import make_proccpu_sim
 from make_set_simd import make_set_simd
-from make_cpuid_generic_c import make_cpuid_generic_c
-from make_cpuid_powerpc_c import make_cpuid_powerpc_c
 from make_registry import make_registry
 from make_h import make_h
 from make_init_h import make_init_h
@@ -35,10 +32,7 @@ outfile_typedefs = open("volk_typedefs.h", "w");
 outfile_init_h = open("../../lib/volk_init.h", "w");
 outfile_init_c = open("../../lib/volk_init.c", "w");
 outfile_cpu_h = open("volk_cpu.h", "w");
-outfile_cpu_x86_c = open("../../lib/volk_cpu_x86.c", "w");
-outfile_cpu_generic_c = open("../../lib/volk_cpu_generic.c", "w");
-outfile_cpu_powerpc_c = open("../../lib/volk_cpu_powerpc.c", "w");
-outfile_proccpu_sim = open("../../lib/volk_proccpu_sim.c", "w");
+outfile_cpu_c = open("../../lib/volk_cpu.c", "w");
 outfile_config_in = open("../../volk_config.h.in", "w");
 outfile_config_fixed = open("volk_config_fixed.h", "w");
 outfile_mktables = open("../../lib/volk_mktables.c", "w");
@@ -226,20 +220,11 @@ outfile_mktables.close();
 outfile_cpu_h.write(make_cpuid_h(filearchs));
 outfile_cpu_h.close();
 
-outfile_cpu_x86_c.write(make_cpuid_x86_c(filearchs));
-outfile_cpu_x86_c.close();
-
-outfile_proccpu_sim.write(make_proccpu_sim(filearchs));
-outfile_proccpu_sim.close();
+outfile_cpu_c.write(make_cpuid_c(filearchs));
+outfile_cpu_c.close();
 
 outfile_set_simd.write(make_set_simd(filearchs));
 outfile_set_simd.close();
-
-outfile_cpu_generic_c.write(make_cpuid_generic_c(filearchs)); 
-outfile_cpu_generic_c.close();
-
-outfile_cpu_powerpc_c.write(make_cpuid_powerpc_c(filearchs));
-outfile_cpu_powerpc_c.close();
 
 outfile_config_in.write(make_config_in(filearchs));
 outfile_config_in.close();

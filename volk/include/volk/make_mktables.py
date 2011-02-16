@@ -18,7 +18,7 @@ def make_mktables(funclist) :
     tempstring = tempstring + '  fprintf(output, "#define INCLUDED_VOLK_TABLES_H\\n\\n");\n';
     
     for func in funclist:
-        tempstring = tempstring + '  fprintf(output, "static const ' + func + '_func_table = %u;\\n", volk_rank_archs(' + func + '_arch_defs, volk_get_lvarch()));\n';
+        tempstring = tempstring + '  fprintf(output, "static const ' + func + '_func_table = %u;\\n", 0);\n';
     tempstring = tempstring + '  fprintf(output, "#endif /*INCLUDED_VOLK_TABLES_H*/\\n");\n';
     tempstring = tempstring + '  fclose(output);\n'
     tempstring = tempstring + '}\n';
