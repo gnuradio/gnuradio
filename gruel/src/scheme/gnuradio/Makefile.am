@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2009,2010 Free Software Foundation, Inc.
+# Copyright 2007,2009,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 #pkgdatadir = $(datadir)/gnuradio
 
 EXTRA_DIST += \
-	gen-serial-tags.scm
+	gen-serial-tags.py
 
 # really scheme source files FIXME wrong location
 dist_pkgdata_DATA =			\
