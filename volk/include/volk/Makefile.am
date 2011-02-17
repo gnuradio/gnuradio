@@ -133,7 +133,8 @@ volkinclude_HEADERS = \
 VOLK_MKTABLES_SOURCES = \
 	$(platform_CODE) \
 	$(top_srcdir)/lib/volk_rank_archs.c \
-	$(top_srcdir)/lib/volk_mktables.c
+	$(top_srcdir)/lib/volk_mktables.c \
+	$(top_srcdir)/lib/volk_cpu.c
 
 
 volk_mktables$(EXEEXT): $(VOLK_MKTABLES_SOURCES)
