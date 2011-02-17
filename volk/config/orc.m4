@@ -22,6 +22,7 @@ AC_DEFUN([ORC_CHECK],
       AC_SUBST(ORC_CFLAGS)
       LV_HAVE_ORC=yes
       LV_HAVE_ORCC=yes
+      LV_ORC_PKGCONFIG="-lvolk_orc"
       if test "x$cross_compiling" = "xyes" ; then
         LV_HAVE_ORCC=no
       fi
@@ -32,14 +33,17 @@ AC_DEFUN([ORC_CHECK],
       AC_DEFINE(DISABLE_ORC, 1, [Disable Orc])
       LV_HAVE_ORC=no
       LV_HAVE_ORCC=no
+      LV_ORC_PKGCONFIG=""
     ])
   else
     AC_DEFINE(DISABLE_ORC, 1, [Disable Orc])
     LV_HAVE_ORC=no
     LV_HAVE_ORCC=no
+    LV_ORC_PKGCONFIG=""
   fi
   AM_CONDITIONAL(LV_HAVE_ORC, [test "x$LV_HAVE_ORC" = "xyes"])
   AM_CONDITIONAL(LV_HAVE_ORCC, [test "x$LV_HAVE_ORCC" = "xyes"])
+  AC_SUBST(LV_ORC_PKGCONFIG)
 ]))
 
 AC_DEFUN([ORC_OUTPUT],
