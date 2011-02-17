@@ -241,13 +241,13 @@ outfile_config_fixed.close();
 outfile_c.write( make_c(functions, taglist, arched_arglist, retlist, my_arglist, fcountlist));
 outfile_c.close();
 
-outfile_runtime_c.write(make_runtime_c(functions, taglist, arched_arglist, retlist, my_arglist, fcountlist));
+outfile_runtime_c.write(make_runtime_c(functions, taglist, arched_arglist, retlist, my_arglist, fcountlist, my_argtypelist));
 outfile_runtime_c.close();
 
 outfile_init_c.write(make_init_c(functions, filearchs));
 outfile_init_c.close();
 
-outfile_runtime.write(make_runtime(functions));
+outfile_runtime.write(make_runtime(functions, my_argtypelist));
 outfile_runtime.close();
 
 outfile_typedefs.write(make_typedefs(functions, retlist, my_argtypelist));

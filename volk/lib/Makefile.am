@@ -53,6 +53,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
 lib_LTLIBRARIES = \
 	libvolk.la \
 	libvolk_runtime.la
+	libvolk_orc.la
 
 EXTRA_DIST = \
 	volk_mktables.c		\
@@ -67,7 +68,6 @@ EXTRA_DIST = \
 libvolk_runtime_la_SOURCES = 	\
 	$(platform_CODE) 	\
 	volk_runtime.c		\
-	volk_init.c 		\
 	volk_rank_archs.c	\
 	volk_cpu.c
 
