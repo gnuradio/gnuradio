@@ -28,12 +28,14 @@ import re
 
 other_roots = [
     'trellis_encoder_XX',
+    'trellis_sccc_encoder_XX',
     'trellis_metrics_X',
     'trellis_viterbi_X',
     'trellis_viterbi_combined_XX',
     ]
 
 other_signatures = (
+    ['bb','bs','bi','ss','si','ii'],
     ['bb','bs','bi','ss','si','ii'],
     ['s','i','f','c'],
     ['b','s','i'],
