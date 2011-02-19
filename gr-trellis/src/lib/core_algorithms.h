@@ -27,10 +27,12 @@
 #include <vector>
 //#include <gr_complex.h>
 #include "metric_type.h"
+#include "fsm.h"
+#include "interleaver.h"
 
 
-inline float min(float a, float b);
-inline float min_star(float a, float b);
+float min(float a, float b);
+float min_star(float a, float b);
 
 template <class T> 
 void viterbi_algorithm(int I, int S, int O,
@@ -72,6 +74,7 @@ void siso_algorithm(int I, int S, int O,
 );
 
 
+template <class T>
 void siso_algorithm_combined(int I, int S, int O,
              const std::vector<int> &NS,
              const std::vector<int> &OS,
@@ -82,10 +85,25 @@ void siso_algorithm_combined(int I, int S, int O,
              bool POSTI, bool POSTO,
              float (*p2mymin)(float,float),
              int D,
-             const std::vector<float> &TABLE,
+             const std::vector<T> &TABLE,
              trellis_metric_type_t TYPE,
-             const float *priori, const float *observations, float *post
+             const float *priori, const T *observations, float *post
 );
+
+
+template<class Ti, class To>
+void sccc_decoder_combined(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<Ti> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      const Ti *observations, To *data
+);
+
+
+
 
 
 #endif

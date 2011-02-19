@@ -27,6 +27,19 @@
 
 static const float INF = 1.0e9;
 
+float min(float a, float b)
+{
+  return a <= b ? a : b;
+}
+
+float min_star(float a, float b)
+{
+  return (a <= b ? a : b)-log(1+exp(a <= b ? a-b : b-a));
+}
+
+
+
+
 template <class T> 
 void viterbi_algorithm(int I, int S, int O, 
              const std::vector<int> &NS,
@@ -399,16 +412,6 @@ void viterbi_algorithm_combined<gr_complex,int>(int I, int S, int O,
 
 //===============================================
 
-inline float min(float a, float b)
-{
-  return a <= b ? a : b;
-}
-
-inline float min_star(float a, float b)
-{
-  return (a <= b ? a : b)-log(1+exp(a <= b ? a-b : b-a));
-  //return 0;
-}
 
 void siso_algorithm(int I, int S, int O, 
              const std::vector<int> &NS,
@@ -557,6 +560,7 @@ else
 
 //===========================================================
 
+template <class T>
 void siso_algorithm_combined(int I, int S, int O, 
              const std::vector<int> &NS,
              const std::vector<int> &OS,
@@ -567,12 +571,10 @@ void siso_algorithm_combined(int I, int S, int O,
              bool POSTI, bool POSTO,
              float (*p2mymin)(float,float),
              int D,
-             const std::vector<float> &TABLE,
+             const std::vector<T> &TABLE,
              trellis_metric_type_t TYPE,
-             const float *priori, const float *observations, float *post//,
-             //std::vector<float> &alpha,
-             //std::vector<float> &beta
-             ) 
+             const float *priori, const T *observations, float *post
+) 
 {
   float norm,mm,minm;
   std::vector<float> alpha(S*(K+1));
@@ -707,4 +709,114 @@ void siso_algorithm_combined(int I, int S, int O,
   delete [] prioro;
 
 }
+
+//---------
+
+template
+void siso_algorithm_combined<short>(int I, int S, int O,
+             const std::vector<int> &NS,
+             const std::vector<int> &OS,
+             const std::vector< std::vector<int> > &PS,
+             const std::vector< std::vector<int> > &PI,
+             int K,
+             int S0,int SK,
+             bool POSTI, bool POSTO,
+             float (*p2mymin)(float,float),
+             int D,
+             const std::vector<short> &TABLE,
+             trellis_metric_type_t TYPE,
+             const float *priori, const short *observations, float *post
+);
+
+template
+void siso_algorithm_combined<int>(int I, int S, int O,
+             const std::vector<int> &NS,
+             const std::vector<int> &OS,
+             const std::vector< std::vector<int> > &PS,
+             const std::vector< std::vector<int> > &PI,
+             int K,
+             int S0,int SK,
+             bool POSTI, bool POSTO,
+             float (*p2mymin)(float,float),
+             int D,
+             const std::vector<int> &TABLE,
+             trellis_metric_type_t TYPE,
+             const float *priori, const int *observations, float *post
+);
+
+template
+void siso_algorithm_combined<float>(int I, int S, int O,
+             const std::vector<int> &NS,
+             const std::vector<int> &OS,
+             const std::vector< std::vector<int> > &PS,
+             const std::vector< std::vector<int> > &PI,
+             int K,
+             int S0,int SK,
+             bool POSTI, bool POSTO,
+             float (*p2mymin)(float,float),
+             int D,
+             const std::vector<float> &TABLE,
+             trellis_metric_type_t TYPE,
+             const float *priori, const float *observations, float *post
+);
+
+template
+void siso_algorithm_combined<gr_complex>(int I, int S, int O,
+             const std::vector<int> &NS,
+             const std::vector<int> &OS,
+             const std::vector< std::vector<int> > &PS,
+             const std::vector< std::vector<int> > &PI,
+             int K,
+             int S0,int SK,
+             bool POSTI, bool POSTO,
+             float (*p2mymin)(float,float),
+             int D,
+             const std::vector<gr_complex> &TABLE,
+             trellis_metric_type_t TYPE,
+             const float *priori, const gr_complex *observations, float *post
+);
+
+//=========================================================
+
+template<class Ti, class To>
+void sccc_decoder_combined(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<Ti> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      const Ti *observations, To *data
+)
+{
+
+// to be implemented 
+
+}
+
+//-------
+
+template
+void sccc_decoder_combined<short,short>(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<short> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      const short *observations, short *data
+);
+
+template
+void sccc_decoder_combined<int,int>(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<int> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      const int *observations, int *data
+);
+
+
 
