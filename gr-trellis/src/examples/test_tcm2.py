@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import audio
 from gnuradio import trellis
 from gnuradio import eng_notation
 import math
