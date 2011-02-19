@@ -20,12 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_TRELLIS_CALC_METRIC_H
-#define INCLUDED_TRELLIS_CALC_METRIC_H
+#ifndef INCLUDED_CALC_METRIC_H
+#define INCLUDED_CALC_METRIC_H
 
 #include <vector>
 #include <gr_complex.h>
-#include <trellis_metric_type.h>
+#include <metric_type.h>
 
 
 template <class T> 

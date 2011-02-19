@@ -112,6 +112,12 @@
 /trellis_viterbi_combined_ss.i
 /trellis_viterbi_combined_ib.cc
 /trellis_viterbi_combined_sb.cc
+/trellis_sccc_decoder_combined_ii.h
+/trellis_sccc_decoder_combined_ii.i
+/trellis_sccc_decoder_combined_ii.cc
+/trellis_sccc_decoder_combined_ss.h
+/trellis_sccc_decoder_combined_ss.i
+/trellis_sccc_decoder_combined_ss.cc
 /trellis_generated.i
 /generate-stamp
 /stamp-*

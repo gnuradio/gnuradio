@@ -41,6 +41,9 @@ core_generator = 				\
 	trellis_viterbi_combined_XX.cc.t	\
 	trellis_viterbi_combined_XX.h.t		\
 	trellis_viterbi_combined_XX.i.t		\
+	trellis_sccc_decoder_combined_XX.cc.t	\
+	trellis_sccc_decoder_combined_XX.h.t		\
+	trellis_sccc_decoder_combined_XX.i.t		\
 	trellis_viterbi_X.cc.t			\
 	trellis_viterbi_X.h.t			\
 	trellis_viterbi_X.i.t
@@ -61,10 +64,11 @@ grinclude_HEADERS =			\
         quicksort_index.h		\
         base.h				\
         interleaver.h			\
-        trellis_metric_type.h		\
-        trellis_calc_metric.h		\
+        metric_type.h		\
+        calc_metric.h		\
+        core_algorithms.h		\
         trellis_permutation.h		\
-        trellis_siso_type.h		\
+        siso_type.h		\
 	trellis_siso_f.h		\
 	trellis_siso_combined_f.h	\
 	$(GENERATED_H)
@@ -76,7 +80,8 @@ libgnuradio_trellis_la_SOURCES = 	\
         quicksort_index.cc		\
         base.cc				\
         interleaver.cc			\
-        trellis_calc_metric.cc		\
+        calc_metric.cc		\
+        core_algorithms.cc		\
         trellis_permutation.cc		\
 	trellis_siso_f.cc		\
 	trellis_siso_combined_f.cc	\

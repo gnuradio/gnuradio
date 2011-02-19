@@ -24,7 +24,8 @@
 #define INCLUDED_TRELLIS_SISO_F_H
 
 #include "fsm.h"
-#include "trellis_siso_type.h"
+#include "siso_type.h"
+#include "core_algorithms.h"
 #include <gr_block.h>
 
 class trellis_siso_f;

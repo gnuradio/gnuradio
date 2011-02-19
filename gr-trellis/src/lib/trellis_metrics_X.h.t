@@ -26,7 +26,7 @@
 #define @GUARD_NAME@
 
 #include <gr_block.h>
-#include "trellis_calc_metric.h"
+#include "calc_metric.h"
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
