@@ -41,7 +41,7 @@ other_signatures = (
     ['s','i','f','c'],
     ['b','s','i'],
     ['sb','ss','si','ib','is','ii','fb','fs','fi','cb','cs','ci'],
-    ['ss','ii'],
+    ['fb','fs','fi','cb','cs','ci'],
     )
 
 

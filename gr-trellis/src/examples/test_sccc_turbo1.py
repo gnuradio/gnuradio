@@ -9,58 +9,14 @@ import random
 import fsm_utils
 
 
-
-def make_rx(tb,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,type):
-    metrics_in = trellis.metrics_f(fi.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner Viterbi
-    scale = gr.multiply_const_ff(1.0/N0)
-    gnd = gr.vector_source_f([0],True);
-
-    inter=[]
-    deinter=[]
-    siso_in=[]
-    siso_out=[]
-
-    # generate all blocks
-    for it in range(IT):
-      inter.append( trellis.permutation(interleaver.K(),interleaver.INTER(),fi.I(),gr.sizeof_float) )
-      siso_in.append( trellis.siso_f(fi,K,0,-1,True,False,type) )
-      deinter.append( trellis.permutation(interleaver.K(),interleaver.DEINTER(),fi.I(),gr.sizeof_float) )
-      if it < IT-1:
-        siso_out.append( trellis.siso_f(fo,K,0,-1,False,True,type) )
-      else:
-        siso_out.append( trellis.viterbi_s(fo,K,0,-1) ) # no soft outputs needed
-
-    # connect first stage
-    tb.connect (gnd,inter[0])
-    tb.connect (metrics_in,scale)
-    tb.connect (scale,(siso_in[0],1))
-
-    # connect the rest
-    for it in range(IT):
-      if it < IT-1:
-        tb.connect (metrics_in,(siso_in[it+1],1))
-        tb.connect (siso_in[it],deinter[it],(siso_out[it],1))
-        tb.connect (gnd,(siso_out[it],0))
-        tb.connect (siso_out[it],inter[it+1])
-        tb.connect (inter[it],(siso_in[it],0))
-      else:
-        tb.connect (siso_in[it],deinter[it],siso_out[it])
-        tb.connect (inter[it],(siso_in[it],0))
-
-    return (metrics_in,siso_out[IT-1])
-
-
 def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,Es,N0,IT,seed):
     tb = gr.top_block ()
-
 
     # TX
     src = gr.lfsr_32k_source_s()
     src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
-    enc_out = trellis.encoder_ss(fo,0) # initial state = 0
-    inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)
-    enc_in = trellis.encoder_ss(fi,0) # initial state = 0
+    enc = trellis.sccc_encoder_ss(fo,0,fi,0,interleaver,K)
     mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
@@ -68,16 +24,17 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX
-    (head,tail) = make_rx(tb,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM)
-    #(head,tail) = make_rx(tb,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_SUM_PRODUCT)
+    dec = trellis.sccc_decoder_combined_fs(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM,dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN)
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
     
-    tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
+    #tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
+    tb.connect (src,src_head,s2fsmi,enc,mod)
     tb.connect (mod,(add,0))
     tb.connect (noise,(add,1))
-    tb.connect (add,head)
-    tb.connect (tail,fsmi2s,dst)
+    #tb.connect (add,head)
+    #tb.connect (tail,fsmi2s,dst)
+    tb.connect (add,dec,fsmi2s,dst)
 
     tb.run()
  
@@ -98,7 +55,7 @@ def main(args):
         IT=int(args[3])
         rep=int(args[4]) # number of times the experiment is run to collect enough errors
     else:
-        sys.stderr.write ('usage: test_sccc_turbo.py fsm_name_out fsm_fname_in Es/No_db iterations repetitions\n')
+        sys.stderr.write ('usage: test_tcm.py fsm_name_out fsm_fname_in Es/No_db iterations repetitions\n')
         sys.exit (1)
 
     # system parameters

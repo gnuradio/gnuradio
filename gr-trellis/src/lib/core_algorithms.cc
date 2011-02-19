@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <float.h>
+#include <cstring>
 #include <stdexcept>
 #include "core_algorithms.h"
 #include "calc_metric.h"
@@ -790,33 +790,167 @@ void sccc_decoder_combined(
 )
 {
 
-// to be implemented 
+//allocate space for priori, prioro and posti of inner FSM
+std::vector<float> ipriori(blocklength*FSMi.I(),0.0);
+std::vector<float> iprioro(blocklength*FSMi.O());
+std::vector<float> iposti(blocklength*FSMi.I());
+
+//allocate space for priori, prioro and posto of outer FSM
+std::vector<float> opriori(blocklength*FSMo.I(),0.0);
+std::vector<float> oprioro(blocklength*FSMo.O());
+std::vector<float> oposti(blocklength*FSMo.I());
+std::vector<float> oposto(blocklength*FSMo.O());
+
+// turn observations to neg-log-priors
+for(int k=0;k<blocklength;k++)
+  calc_metric(FSMi.O(), D, TABLE, &(observations[k*D]), &(iprioro[k*FSMi.O()]),METRIC_TYPE);
+
+for(int rep=0;rep<repetitions;rep++) {
+  // run inner SISO
+  siso_algorithm(FSMi.I(),FSMi.S(),FSMi.O(),
+             FSMi.NS(), FSMi.OS(), FSMi.PS(), FSMi.PI(),
+             blocklength,
+             STi0,STiK,
+             true, false,
+             p2mymin,
+             &(ipriori[0]),  &(iprioro[0]), &(iposti[0])
+  );
+
+  //interleave soft info inner -> outer
+  for(int k=0;k<blocklength;k++) {
+    int ki = INTERLEAVER.DEINTER()[k];
+    //for(int i=0;i<FSMi.I();i++) {
+      //oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
+    //}
+    memcpy(&(oprioro[k*FSMi.I()]),&(iposti[ki*FSMi.I()]),FSMi.I()*sizeof(float));
+  } 
+
+  // run outer SISO
+
+  if(rep<repetitions-1) { // do not produce posti
+    siso_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
+             FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
+             blocklength,
+             STo0,SToK,
+             false, true,
+             p2mymin,
+             &(opriori[0]),  &(oprioro[0]), &(oposto[0])
+    );
+
+    //interleave soft info outer --> inner
+    for(int k=0;k<blocklength;k++) {
+      int ki = INTERLEAVER.DEINTER()[k];
+      //for(int i=0;i<FSMi.I();i++) {
+        //ipriori[ki*FSMi.I()+i]=oposto[k*FSMi.I()+i];
+      //}
+      memcpy(&(ipriori[ki*FSMi.I()]),&(oposto[k*FSMi.I()]),FSMi.I()*sizeof(float));
+    } 
+  }
+  else // produce posti but not posto
+    
+    siso_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
+             FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
+             blocklength,
+             STo0,SToK,
+             true, false,
+             p2mymin,
+             &(opriori[0]),  &(oprioro[0]), &(oposti[0])
+    );
+   
+    /*
+    viterbi_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
+             FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
+             blocklength,
+             STo0,SToK,
+             &(oprioro[0]), data
+    );
+    */
+
+}
+
+
+// generate hard decisions
+for(int k=0;k<blocklength;k++) {
+  float min=INF;
+  int mini=0;
+  for(int i=0;i<FSMo.I();i++) {
+    if(oposti[k*FSMo.I()+i]<min) {
+      min=oposti[k*FSMo.I()+i];
+      mini=i;
+    }
+  }
+  data[k]=(To)mini;
+}
+
+
 
 }
 
 //-------
 
 template
-void sccc_decoder_combined<short,short>(
+void sccc_decoder_combined<float,unsigned char>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
       const interleaver &INTERLEAVER, int blocklength, int repetitions,
       float (*p2mymin)(float,float),
-      int D, const std::vector<short> &TABLE,
+      int D, const std::vector<float> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
-      const short *observations, short *data
+      const float *observations, unsigned char *data
 );
 
 template
-void sccc_decoder_combined<int,int>(
+void sccc_decoder_combined<float,short>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
       const interleaver &INTERLEAVER, int blocklength, int repetitions,
       float (*p2mymin)(float,float),
-      int D, const std::vector<int> &TABLE,
+      int D, const std::vector<float> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
-      const int *observations, int *data
+      const float *observations, short *data
 );
 
+template
+void sccc_decoder_combined<float,int>(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<float> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      const float *observations, int *data
+);
 
+template
+void sccc_decoder_combined<gr_complex,unsigned char>(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<gr_complex> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      const gr_complex *observations, unsigned char *data
+);
+
+template
+void sccc_decoder_combined<gr_complex,short>(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<gr_complex> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      const gr_complex *observations, short *data
+);
+
+template
+void sccc_decoder_combined<gr_complex,int>(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<gr_complex> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      const gr_complex *observations, int *data
+);
 

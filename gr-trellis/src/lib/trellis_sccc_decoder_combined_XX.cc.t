@@ -94,10 +94,7 @@ void
 {
   assert (noutput_items % d_blocklength == 0);
   int input_required =  d_D * noutput_items ;
-  unsigned ninputs = ninput_items_required.size();
-  for (unsigned int i = 0; i < ninputs; i++) {
-    ninput_items_required[i] = input_required;
-  }
+  ninput_items_required[0] = input_required;
 }
 
 
