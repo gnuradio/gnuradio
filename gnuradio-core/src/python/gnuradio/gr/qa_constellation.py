@@ -22,6 +22,7 @@
 
 import random
 from cmath import exp, pi, log
+from itertools import product
 
 from gnuradio import gr, gr_unittest, blks2
 from gnuradio.utils import mod_codes
@@ -36,6 +37,27 @@ tested_mod_codes = (mod_codes.NO_CODE, mod_codes.GRAY_CODE)
 # Third item is whether differential encoding should be tested.
 # Fourth item is the name of the argument to constructor that specifices
 # whether differential encoding is used.
+
+def twod_constell():
+    """
+    
+    """
+    points = ((1+0j), (0+1j),
+              (-1+0j), (0-1j))
+    rot_sym = 2
+    dim = 2
+    return gr.constellation_calcdist(points, [], rot_sym, dim)
+
+def threed_constell():
+    oned_points = ((1+0j), (0+1j), (-1+0j), (0-1j))
+    points = []
+    r4 = range(0, 4)
+    for ia, ib, ic in product(r4, r4, r4):
+        points += [oned_points[ia], oned_points[ib], oned_points[ic]]
+    rot_sym = 4
+    dim = 3
+    return gr.constellation_calcdist(points, [], rot_sym, dim)
+
 tested_constellations = (
     (blks2.psk_constellation, 
      {'m': (2, 4, 8, 16, 32, 64),
@@ -50,6 +72,8 @@ tested_constellations = (
     # This is because soft decision making is simpler if we can assume
     # gray coding.
     (blks2.qpsk_constellation, {}, False, None),
+    (twod_constell, {}, True, None),
+    (threed_constell, {}, True, None),
     )
 
 class test_constellation (gr_unittest.TestCase):
@@ -85,7 +109,7 @@ class test_constellation (gr_unittest.TestCase):
                         rs = constellation.rotational_symmetry()
                         rotations = [exp(i*2*pi*(0+1j)/rs) for i in range(0, rs)] 
                     else:
-                        rotations = [1]
+                        rotations = [None]
                     for rotation in rotations:
                         src = gr.vector_source_b(self.src_data)
                         content = mod_demod(constellation, current_diff, rotation)
@@ -143,11 +167,11 @@ class mod_demod(gr.hier_block2):
         if self.differential:
             self.blocks.append(gr.diff_encoder_bb(arity))
         # Convert to constellation symbols.
-        self.blocks.append(gr.chunks_to_symbols_bc(self.constellation.points()))
-
+        self.blocks.append(gr.chunks_to_symbols_bc(self.constellation.points(), self.constellation.dimensionality()))
         # CHANNEL
         # Channel just consists of a rotation to check differential coding.
-        self.blocks.append(gr.multiply_const_cc(rotation))
+        if rotation is not None:
+            self.blocks.append(gr.multiply_const_cc(rotation))
 
         # RX
         # Convert the constellation symbols back to binary values.
@@ -163,6 +187,8 @@ class mod_demod(gr.hier_block2):
         self.blocks.append(gr.unpack_k_bits_bb(
                 self.constellation.bits_per_symbol()))
         # connect to block output
+        check_index = len(self.blocks)
+        self.blocks = self.blocks[:check_index]
         self.blocks.append(self)
 
         self.connect(*self.blocks)

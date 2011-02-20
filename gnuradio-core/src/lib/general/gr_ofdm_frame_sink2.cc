@@ -113,7 +113,7 @@ unsigned int gr_ofdm_frame_sink2::demapper(const gr_complex *in,
 	d_derotated_output[i] = sigrot;
       }
       
-      unsigned char bits = d_constell->decision_maker(sigrot);
+      unsigned char bits = d_constell->decision_maker(&sigrot);
 
       gr_complex closest_sym = d_constell->points()[bits];
       
@@ -185,6 +185,9 @@ gr_ofdm_frame_sink2::gr_ofdm_frame_sink2(gr_constellation_sptr constell,
     d_resid(0), d_nresid(0),d_phase(0),d_freq(0),d_phase_gain(phase_gain),d_freq_gain(freq_gain),
     d_eq_gain(0.05)
 {
+  if (d_constell->dimensionality() != 1)
+    throw std::runtime_error ("This receiver only works with constellations of dimension 1.");
+
   std::string carriers = "FE7F";
 
   // A bit hacky to fill out carriers to occupied_carriers length

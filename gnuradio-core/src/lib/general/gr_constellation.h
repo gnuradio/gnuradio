@@ -32,50 +32,60 @@
 /************************************************************/
 /* gr_constellation                                         */
 /*                                                          */
-/* Decision maker uses nearest-point method.                */
+/* Base class defining interface.                           */
 /************************************************************/
 
 class gr_constellation;
 typedef boost::shared_ptr<gr_constellation> gr_constellation_sptr;
 
-// public constructor
-gr_constellation_sptr 
-gr_make_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-		       unsigned int rotational_symmetry);
-
 class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
 {
- public:
-
+public:
   gr_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-		    unsigned int rotational_symmetry);
+		    unsigned int rotational_symmetry, unsigned int dimensionality);
   gr_constellation ();
 
+  //! Returns the constellation points for a symbol value
+  void map_to_points(unsigned int value, gr_complex *points);
+  std::vector<gr_complex> map_to_points_v(unsigned int value);
+
+  //! Returns the constellation point that matches best.
+  virtual unsigned int decision_maker (const gr_complex *sample) = 0;
+  //! Takes a vector rather than a pointer.  Better for SWIG wrapping.
+  unsigned int decision_maker_v (std::vector<gr_complex> sample);
+  //! Also calculates the phase error.
+  unsigned int decision_maker_pe (const gr_complex *sample, float *phase_error);
+  //! Calculates distance.
+  unsigned int decision_maker_e (const gr_complex *sample, float *error);
+  
+  //! Calculates metrics for all points in the constellation.
+  //! For use with the viterbi algorithm.
+  virtual void calc_metric(const gr_complex *sample, float *metric, trellis_metric_type_t type);
+  virtual void calc_euclidean_metric(const gr_complex *sample, float *metric);
+  virtual void calc_hard_symbol_metric(const gr_complex *sample, float *metric);
+  
   //! Returns the set of points in this constellation.
   std::vector<gr_complex> points() { return d_constellation;}
+  //! Returns the vector of points in this constellation.
+  //! Raise error if dimensionality is not one.
+  std::vector<gr_complex> s_points();
+  //! Returns a vector of vectors of points.
+  std::vector<std::vector<gr_complex> > v_points();
   //! Whether to apply an encoding before doing differential encoding. (e.g. gray coding)
   bool apply_pre_diff_code() { return d_apply_pre_diff_code;}
   //! Returns the encoding to apply before differential encoding.
   std::vector<unsigned int> pre_diff_code() { return d_pre_diff_code;}
   //! Returns the order of rotational symmetry.
   unsigned int rotational_symmetry() { return d_rotational_symmetry;}
+  //! Returns the number of complex numbers in a single symbol.
+  unsigned int dimensionality() {return d_dimensionality;}
 
-  //! Returns the constellation point that matches best.
-  //! Also calculates the phase error.
-  virtual unsigned int decision_maker (gr_complex sample);
-  
-  //! Calculates metrics for all points in the constellation.
-  //! For use with the viterbi algorithm.
-  void calc_metric(gr_complex sample, float *metric, trellis_metric_type_t type);
-  void calc_euclidean_metric(gr_complex sample, float *metric);
-  void calc_hard_symbol_metric(gr_complex sample, float *metric);
-  
   unsigned int bits_per_symbol () {
-    return floor(log(d_constellation.size())/log(2));
+    return floor(log(d_constellation.size())/d_dimensionality/log(2));
   }
   
   unsigned int arity () {
-    return d_constellation.size();
+    return d_arity;
   }
 
   gr_constellation_sptr base() {
@@ -88,10 +98,46 @@ class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
   std::vector<unsigned int> d_pre_diff_code; 
   bool d_apply_pre_diff_code;
   unsigned int d_rotational_symmetry;
+  unsigned int d_dimensionality;
+  unsigned int d_arity;
+
+  float get_distance(unsigned int index, const gr_complex *sample);
+  unsigned int get_closest_point(const gr_complex *sample);
+  void calc_arity ();
+};
+
+/************************************************************/
+/* gr_constellation_calcdist                                */
+/*                                                          */
+/* Constellation which calculates the distance to each      */
+/* point in the constellation for decision making.          */
+/* Inefficient for large constellations.                    */
+/************************************************************/
+
+class gr_constellation_calcdist;
+typedef boost::shared_ptr<gr_constellation_calcdist> gr_constellation_calcdist_sptr;
+
+// public constructor
+gr_constellation_calcdist_sptr
+gr_make_constellation_calcdist (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+				unsigned int rotational_symmetry, unsigned int dimensionality);
+
+
+class gr_constellation_calcdist : public gr_constellation
+{
+ public:
+  gr_constellation_calcdist (std::vector<gr_complex> constellation,
+			   std::vector<unsigned int> pre_diff_code,
+			   unsigned int rotational_symmetry,
+			   unsigned int dimensionality);
+  unsigned int decision_maker (const gr_complex *sample);
+  // void calc_metric(gr_complex *sample, float *metric, trellis_metric_type_t type);
+  // void calc_euclidean_metric(gr_complex *sample, float *metric);
+  // void calc_hard_symbol_metric(gr_complex *sample, float *metric);
   
  private:
-  friend gr_constellation_sptr
-  gr_make_constellation (std::vector<gr_complex> constellation);
+  friend gr_constellation_calcdist_sptr
+  gr_make_constellation_calcdist (std::vector<gr_complex> constellation);
 };
 
 /************************************************************/
@@ -110,16 +156,15 @@ class gr_constellation_sector : public gr_constellation
   gr_constellation_sector (std::vector<gr_complex> constellation,
 			   std::vector<unsigned int> pre_diff_code,
 			   unsigned int rotational_symmetry,
+			   unsigned int dimensionality,
 			   unsigned int n_sectors);
 
-  unsigned int decision_maker (gr_complex sample);
+  unsigned int decision_maker (const gr_complex *sample);
 
  protected:
 
-  virtual unsigned int get_sector (gr_complex sample) = 0;
-  
+  virtual unsigned int get_sector (const gr_complex *sample) = 0;
   virtual unsigned int calc_sector_value (unsigned int sector) = 0;
-
   void find_sector_values ();
 
   unsigned int n_sectors;
@@ -133,6 +178,8 @@ class gr_constellation_sector : public gr_constellation
 /************************************************************/
 /* gr_constellation_rect                                    */
 /*                                                          */
+/* Only implemented for 1-(complex)dimensional              */
+/* constellation.                                           */
 /* Constellation space is divided into rectangular sectors. */
 /* Each sector is associated with the nearest constellation */
 /* point.                                                   */
@@ -162,7 +209,7 @@ class gr_constellation_rect : public gr_constellation_sector
 
  protected:
 
-  unsigned int get_sector (gr_complex sample);
+  unsigned int get_sector (const gr_complex *sample);
   
   unsigned int calc_sector_value (unsigned int sector);
 
@@ -208,7 +255,7 @@ class gr_constellation_psk : public gr_constellation_sector
 
  protected:
 
-  unsigned int get_sector (gr_complex sample);
+  unsigned int get_sector (const gr_complex *sample);
   
   unsigned int calc_sector_value (unsigned int sector);
 
@@ -239,7 +286,7 @@ class gr_constellation_bpsk : public gr_constellation
  public:
 
   gr_constellation_bpsk ();
-  unsigned int decision_maker (gr_complex sample);
+  unsigned int decision_maker (const gr_complex *sample);
 
   friend gr_constellation_bpsk_sptr
   gr_make_constellation_bpsk ();
@@ -265,7 +312,7 @@ class gr_constellation_qpsk : public gr_constellation
  public:
 
   gr_constellation_qpsk ();
-  unsigned int decision_maker (gr_complex sample);
+  unsigned int decision_maker (const gr_complex *sample);
 
   friend gr_constellation_qpsk_sptr
   gr_make_constellation_qpsk ();

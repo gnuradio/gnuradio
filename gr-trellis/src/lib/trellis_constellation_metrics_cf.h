@@ -52,6 +52,7 @@ class trellis_constellation_metrics_cf : public gr_block
   gr_constellation_sptr d_constellation;
   trellis_metric_type_t d_TYPE;
   unsigned int d_O;
+  unsigned int d_D;
   friend trellis_constellation_metrics_cf_sptr trellis_make_constellation_metrics_cf (gr_constellation_sptr constellation, trellis_metric_type_t TYPE);
 
 };

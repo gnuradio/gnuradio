@@ -27,6 +27,7 @@
 #include <gr_constellation_decoder2_cb.h>
 #include <gr_constellation.h>
 #include <gr_io_signature.h>
+#include <iostream>
 
 gr_constellation_decoder2_cb_sptr
 gr_make_constellation_decoder2_cb (gr_constellation_sptr constellation)
@@ -37,27 +38,41 @@ gr_make_constellation_decoder2_cb (gr_constellation_sptr constellation)
 
 gr_constellation_decoder2_cb::
 gr_constellation_decoder2_cb (gr_constellation_sptr constellation)
-  : gr_sync_block ("constellation_decoder2_cb",
-		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
-		   gr_make_io_signature (1, 1, sizeof (unsigned char))),
-    d_constellation(constellation)
+  : gr_block ("constellation_decoder2_cb",
+	      gr_make_io_signature (1, 1, sizeof (gr_complex)),
+	      gr_make_io_signature (1, 1, sizeof (unsigned char))),
+    d_constellation(constellation),
+    d_dim(constellation->dimensionality())
 {
+  set_relative_rate (1.0 / ((double) d_dim));
+}
+
+void
+gr_constellation_decoder2_cb::forecast (int noutput_items,
+					gr_vector_int &ninput_items_required)
+{
+  unsigned int input_required = noutput_items * d_dim;
+
+  unsigned ninputs = ninput_items_required.size();
+  for (unsigned int i = 0; i < ninputs; i++)
+    ninput_items_required[i] = input_required;
 }
 
 
-gr_constellation_decoder2_cb::~gr_constellation_decoder2_cb(){}
-
 int
-gr_constellation_decoder2_cb::work(int noutput_items,
-				  gr_vector_const_void_star &input_items,
-				  gr_vector_void_star &output_items)
+gr_constellation_decoder2_cb::
+general_work (int noutput_items,
+	      gr_vector_int &ninput_items,
+	      gr_vector_const_void_star &input_items,
+	      gr_vector_void_star &output_items)
 {
   gr_complex const *in = (const gr_complex *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
-    
+
   for(int i = 0; i < noutput_items; i++){
-    out[i] = d_constellation->decision_maker(in[i]);
+    out[i] = d_constellation->decision_maker(&(in[i*d_dim]));
   }
 
+  consume_each (noutput_items * d_dim);
   return noutput_items;
 }

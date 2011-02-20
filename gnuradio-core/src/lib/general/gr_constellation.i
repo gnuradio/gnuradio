@@ -29,26 +29,51 @@
 class gr_constellation;
 typedef boost::shared_ptr<gr_constellation> gr_constellation_sptr;
 %template(gr_constellation_sptr) boost::shared_ptr<gr_constellation>;
-%rename(constellation) gr_make_constellation;
-gr_constellation_sptr gr_make_constellation(std::vector<gr_complex> constellation,
-					    std::vector<unsigned int> pre_diff_code,
-					    unsigned int rotational_symmetry);
-%ignore gr_constellation;
 
 class gr_constellation
 {
 public:
   gr_constellation (std::vector<gr_complex> constellation,
 		    std::vector<unsigned int> pre_diff_code,
-		    unsigned int rotational_symmetry);
+		    unsigned int rotational_symmetry,
+		    unsigned int dimensionality);
   std::vector<gr_complex> points();
-  unsigned int decision_maker (gr_complex sample);  
+  std::vector<gr_complex> s_points();
+  std::vector<std::vector<gr_complex> > v_points();
+  virtual unsigned int decision_maker (gr_complex *sample) = 0;  
+  unsigned int decision_maker_v (std::vector<gr_complex> sample);  
+  //  void calc_metric(gr_complex *sample, float *metric, trellis_metric_type_t type);
+  //  void calc_euclidean_metric(gr_complex *sample, float *metric);
+  //  void calc_hard_symbol_metric(gr_complex *sample, float *metric);
+  std::vector<gr_complex> map_to_points_v(unsigned int value);
   unsigned int bits_per_symbol ();
   unsigned int arity ();
   gr_constellation_sptr base ();
   bool apply_pre_diff_code();
   std::vector<unsigned int> pre_diff_code();
   unsigned int rotational_symmetry();
+  unsigned int dimensionality();
+};
+
+class gr_constellation_calcdist;
+typedef boost::shared_ptr<gr_constellation_calcdist> gr_constellation_calcdist_sptr;
+%template(gr_constellation_calcdist_sptr) boost::shared_ptr<gr_constellation_calcdist>;
+%rename(constellation_calcdist) gr_make_constellation_calcdist;
+gr_constellation_calcdist_sptr
+gr_make_constellation_calcdist(std::vector<gr_complex> constellation,
+			       std::vector<unsigned int> pre_diff_code,
+			       unsigned int rotational_symmetry,
+			       unsigned int dimensionality);
+%ignore gr_constellation_calcdist;
+
+class gr_constellation_calcdist: public gr_constellation
+{
+ public:
+  gr_constellation_calcdist (std::vector<gr_complex> constellation,
+			   std::vector<unsigned int> pre_diff_code,
+			   unsigned int rotational_symmetry,
+			   unsigned int dimensionality);
+  unsigned int decision_maker (const gr_complex *sample);
 };
 
 class gr_constellation_sector: public gr_constellation

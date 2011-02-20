@@ -61,6 +61,8 @@ gr_constellation_receiver_cb::gr_constellation_receiver_cb (gr_constellation_spt
     d_alpha(alpha), d_beta(beta), d_freq(0), d_max_freq(fmax), d_min_freq(fmin), d_phase(0),
     d_current_const_point(0)
 {
+  if (d_constellation->dimensionality() != 1)
+    throw std::runtime_error ("This receiver only works with constellations of dimension 1.");
 }
 
 void
@@ -111,8 +113,8 @@ gr_constellation_receiver_cb::general_work (int noutput_items,
     sample = in[i];
     nco = gr_expj(d_phase);   // get the NCO value for derotating the current sample
     sample = nco*sample;      // get the downconverted symbol
-    sym_value = d_constellation->decision_maker(sample);
-    phase_error = -arg(sample*conj(d_constellation->points()[sym_value]));
+    sym_value = d_constellation->decision_maker_pe(&sample, &phase_error);
+    //    phase_error = -arg(sample*conj(d_constellation->points()[sym_value]));
     phase_error_tracking(phase_error);  // corrects phase and frequency offsets
     out[i] = sym_value;
     if(output_items.size() == 4) {

@@ -34,20 +34,14 @@
 #define M_TWOPI (2*M_PI)
 #define SQRT_TWO 0.707107
 
-gr_constellation_sptr 
-gr_make_constellation(std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-		      unsigned int rotational_symmetry)
-{
-  return gr_constellation_sptr(new gr_constellation (constellation, pre_diff_code, rotational_symmetry));
-}
-
 // Base Constellation Class
 
 gr_constellation::gr_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-				    unsigned int rotational_symmetry) :
+				    unsigned int rotational_symmetry, unsigned int dimensionality) :
   d_constellation(constellation),
   d_pre_diff_code(pre_diff_code),
-  d_rotational_symmetry(rotational_symmetry)
+  d_rotational_symmetry(rotational_symmetry),
+  d_dimensionality(dimensionality)
 {
   if (pre_diff_code.size() == 0)
     d_apply_pre_diff_code = false;
@@ -55,25 +49,48 @@ gr_constellation::gr_constellation (std::vector<gr_complex> constellation, std::
     throw std::runtime_error ("The constellation and pre-diff code must be of the same length.");
   else
     d_apply_pre_diff_code = true;
+  calc_arity();
 }
 
 gr_constellation::gr_constellation () :
   d_apply_pre_diff_code(false),
-  d_rotational_symmetry(0)
+  d_rotational_symmetry(0),
+  d_dimensionality(1)
 {
+  calc_arity();
 }
 
-unsigned int get_closest_point(std::vector<gr_complex> constellation, gr_complex sample) {
+//! Returns the constellation points for a symbol value
+void gr_constellation::map_to_points(unsigned int value, gr_complex *points) {
+  for (unsigned int i=0; i<d_dimensionality; i++)
+    points[i] = d_constellation[value*d_dimensionality + i];
+}
 
-  unsigned int table_size = constellation.size();
+std::vector<gr_complex> gr_constellation::map_to_points_v(unsigned int value) {
+  std::vector<gr_complex> points_v;
+  points_v.resize(d_dimensionality);
+  map_to_points(value, &(points_v[0]));
+  return points_v;
+}
+
+float gr_constellation::get_distance(unsigned int index, const gr_complex *sample) {
+  float dist = 0;
+  for (unsigned int i=0; i<d_dimensionality; i++) {
+    dist += norm(sample[i] - d_constellation[index*d_dimensionality + i]);
+  }
+  return dist;
+}
+
+unsigned int gr_constellation::get_closest_point(const gr_complex *sample) {
+
   unsigned int min_index = 0;
   float min_euclid_dist;
   float euclid_dist;
     
-  min_euclid_dist = norm(sample - constellation[0]); 
-  min_index = 0; 
-  for (unsigned int j = 1; j < table_size; j++){
-    euclid_dist = norm(sample - constellation[j]);
+  min_euclid_dist = get_distance(0, sample);
+  min_index = 0;
+  for (unsigned int j = 1; j < d_arity; j++){
+    euclid_dist = get_distance(j, sample);
     if (euclid_dist < min_euclid_dist){
       min_euclid_dist = euclid_dist;
       min_index = j;
@@ -82,16 +99,48 @@ unsigned int get_closest_point(std::vector<gr_complex> constellation, gr_complex
   return min_index;
 }
 
-// Chooses points base on shortest distance.
-// Inefficient.
-unsigned int gr_constellation::decision_maker(gr_complex sample)
+unsigned int gr_constellation::decision_maker_pe(const gr_complex *sample, float *phase_error)
 {
-  unsigned int min_index;
-  min_index = get_closest_point(d_constellation, sample);
-  return min_index;
+  unsigned int index = decision_maker(sample);
+  *phase_error = 0;
+  for (unsigned int d=0; d<d_dimensionality; d++)
+    *phase_error += -arg(sample[d]*conj(d_constellation[index+d]));
+  return index;
 }
 
-void gr_constellation::calc_metric(gr_complex sample, float *metric, trellis_metric_type_t type) {
+/*
+unsigned int gr_constellation::decision_maker_e(const gr_complex *sample, float *error)
+{
+  unsigned int index = decision_maker(sample);
+  *error = 0;
+  for (unsigned int d=0; d<d_dimensionality; d++)
+    *error += sample[d]*conj(d_constellation[index+d]);
+  return index;
+}
+*/
+
+std::vector<gr_complex> gr_constellation::s_points () {
+  if (d_dimensionality != 1)
+    throw std::runtime_error ("s_points only works for dimensionality 1 constellations.");
+  else
+    return d_constellation;
+}
+
+std::vector<std::vector<gr_complex> > gr_constellation::v_points () {
+  std::vector<std::vector<gr_complex> > vv_const;
+  vv_const.resize(d_arity);
+  for (unsigned int p=0; p<d_arity; p++) {
+    std::vector<gr_complex> v_const;
+    v_const.resize(d_dimensionality);
+    for (unsigned int d=0; d<d_dimensionality; d++) {
+      v_const[d] = d_constellation[p*d_dimensionality+d];
+    }
+    vv_const[p] = v_const;
+  }
+  return vv_const;
+}
+
+void gr_constellation::calc_metric(const gr_complex *sample, float *metric, trellis_metric_type_t type) {
   switch (type){
   case TRELLIS_EUCLIDEAN:
     calc_euclidean_metric(sample, metric);
@@ -107,39 +156,71 @@ void gr_constellation::calc_metric(gr_complex sample, float *metric, trellis_met
   }
 }
 
-void gr_constellation::calc_euclidean_metric(gr_complex sample, float *metric) {
-  for (int o=0; o<d_constellation.size(); o++) {
-    gr_complex s = sample - d_constellation[o];
-    metric[o] = s.real()*s.real()+s.imag()*s.imag();
+void gr_constellation::calc_euclidean_metric(const gr_complex *sample, float *metric) {
+  for (unsigned int o=0; o<d_arity; o++) {
+    metric[o] = get_distance(o, sample);
   }
 }
 
-void gr_constellation::calc_hard_symbol_metric(gr_complex sample, float *metric){
+void gr_constellation::calc_hard_symbol_metric(const gr_complex *sample, float *metric){
   float minm = FLT_MAX;
-  int minmi = 0;
-  for (int o=0; o<d_constellation.size(); o++) {
-    gr_complex s = sample - d_constellation[o];
-    float dist = s.real()*s.real()+s.imag()*s.imag();
+  unsigned int minmi = 0;
+  for (unsigned int o=0; o<d_arity; o++) {
+    float dist = get_distance(o, sample);
     if (dist < minm) {
       minm = dist;
       minmi = o;
     }
   }
-  for(int o=0; o<d_constellation.size(); o++) {
+  for(unsigned int o=0; o<d_arity; o++) {
     metric[o] = (o==minmi?0.0:1.0);
   }
+}
+
+void gr_constellation::calc_arity () {
+  if (d_constellation.size() % d_dimensionality != 0)
+    throw std::runtime_error ("Constellation vector size must be a multiple of the dimensionality.");    
+  d_arity = d_constellation.size()/d_dimensionality;
+}
+
+unsigned int gr_constellation::decision_maker_v (std::vector<gr_complex> sample) {
+  assert(sample.size() == d_dimensionality);
+  return decision_maker (&(sample[0]));
+}
+
+gr_constellation_calcdist_sptr 
+gr_make_constellation_calcdist(std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+				unsigned int rotational_symmetry, unsigned int dimensionality)
+{
+  return gr_constellation_calcdist_sptr(new gr_constellation_calcdist (constellation, pre_diff_code, rotational_symmetry,
+								       dimensionality));
+}
+
+gr_constellation_calcdist::gr_constellation_calcdist(std::vector<gr_complex> constellation,
+						      std::vector<unsigned int> pre_diff_code,
+						      unsigned int rotational_symmetry,
+						      unsigned int dimensionality) :
+  gr_constellation(constellation, pre_diff_code, rotational_symmetry, dimensionality)
+{}
+
+// Chooses points base on shortest distance.
+// Inefficient.
+unsigned int gr_constellation_calcdist::decision_maker(const gr_complex *sample)
+{
+  return get_closest_point(sample);
 }
 
 gr_constellation_sector::gr_constellation_sector (std::vector<gr_complex> constellation,
 						  std::vector<unsigned int> pre_diff_code,
 						  unsigned int rotational_symmetry,
+						  unsigned int dimensionality,
 						  unsigned int n_sectors) :
-  gr_constellation(constellation, pre_diff_code, rotational_symmetry),						    
+  gr_constellation(constellation, pre_diff_code, rotational_symmetry, dimensionality),
   n_sectors(n_sectors)
 {
 }
 
-unsigned int gr_constellation_sector::decision_maker (gr_complex sample) {
+unsigned int gr_constellation_sector::decision_maker (const gr_complex *sample) {
   unsigned int sector;
   sector = get_sector(sample);
   return sector_values[sector];
@@ -170,20 +251,20 @@ gr_constellation_rect::gr_constellation_rect (std::vector<gr_complex> constellat
 					      unsigned int rotational_symmetry,
 					      unsigned int real_sectors, unsigned int imag_sectors,
 					      float width_real_sectors, float width_imag_sectors) :
-  gr_constellation_sector(constellation, pre_diff_code, rotational_symmetry, real_sectors * imag_sectors),
+  gr_constellation_sector(constellation, pre_diff_code, rotational_symmetry, 1, real_sectors * imag_sectors),
   n_real_sectors(real_sectors), n_imag_sectors(imag_sectors),
   d_width_real_sectors(width_real_sectors), d_width_imag_sectors(width_imag_sectors)
 {
   find_sector_values();
 }
 
-unsigned int gr_constellation_rect::get_sector (gr_complex sample) {
+unsigned int gr_constellation_rect::get_sector (const gr_complex *sample) {
   int real_sector, imag_sector;
   unsigned int sector;
-  real_sector = int(real(sample)/d_width_real_sectors + n_real_sectors/2.0);
+  real_sector = int(real(*sample)/d_width_real_sectors + n_real_sectors/2.0);
   if (real_sector < 0) real_sector = 0;
   if (real_sector >= n_real_sectors) real_sector = n_real_sectors-1;
-  imag_sector = int(imag(sample)/d_width_imag_sectors + n_imag_sectors/2.0);
+  imag_sector = int(imag(*sample)/d_width_imag_sectors + n_imag_sectors/2.0);
   if (imag_sector < 0) imag_sector = 0;
   if (imag_sector >= n_imag_sectors) imag_sector = n_imag_sectors-1;
   sector = real_sector * n_imag_sectors + imag_sector;
@@ -198,7 +279,7 @@ unsigned int gr_constellation_rect::calc_sector_value (unsigned int sector) {
   imag_sector = sector - real_sector * n_imag_sectors;
   sector_center = gr_complex((real_sector + 0.5 - n_real_sectors/2.0) * d_width_real_sectors,
 			     (imag_sector + 0.5 - n_imag_sectors/2.0) * d_width_imag_sectors);
-  closest_point = get_closest_point(d_constellation, sector_center);
+  closest_point = get_closest_point(&sector_center);
   return closest_point;
 }
 
@@ -215,27 +296,25 @@ gr_make_constellation_psk(std::vector<gr_complex> constellation,
 gr_constellation_psk::gr_constellation_psk (std::vector<gr_complex> constellation,
 					    std::vector<unsigned int> pre_diff_code,
 					    unsigned int n_sectors) :
-  gr_constellation_sector(constellation, pre_diff_code, constellation.size(), n_sectors)
+  gr_constellation_sector(constellation, pre_diff_code, constellation.size(), 1, n_sectors)
 {
   find_sector_values();
 }
 
-unsigned int gr_constellation_psk::get_sector (gr_complex sample) {
-  float phase = arg(sample);
+unsigned int gr_constellation_psk::get_sector (const gr_complex *sample) {
+  float phase = arg(*sample);
   float width = M_TWOPI / n_sectors;
   int sector = floor(phase/width + 0.5);
   unsigned int u_sector;
   if (sector < 0) sector += n_sectors;
   u_sector = sector;
-  //  std::cout << phase << " " << width << " " << sector << std::endl;
   return sector;
 }
   
 unsigned int gr_constellation_psk::calc_sector_value (unsigned int sector) {
   float phase = sector * M_TWOPI / n_sectors;
   gr_complex sector_center = gr_complex(cos(phase), sin(phase));
-  unsigned int closest_point = get_closest_point(d_constellation, sector_center);
-  //  std::cout << phase << " " << sector_center << " " << closest_point << std::endl;
+  unsigned int closest_point = get_closest_point(&sector_center);
   return closest_point;
 }
 
@@ -252,11 +331,13 @@ gr_constellation_bpsk::gr_constellation_bpsk ()
   d_constellation[0] = gr_complex(-1, 0);
   d_constellation[1] = gr_complex(1, 0);
   d_rotational_symmetry = 2;
+  d_dimensionality = 1;
+  calc_arity();
 }
 
-unsigned int gr_constellation_bpsk::decision_maker(gr_complex sample)
+unsigned int gr_constellation_bpsk::decision_maker(const gr_complex *sample)
 {
-  return (real(sample) > 0);
+  return (real(*sample) > 0);
 }
 
 
@@ -275,11 +356,13 @@ gr_constellation_qpsk::gr_constellation_qpsk ()
   d_constellation[2] = gr_complex(-SQRT_TWO, SQRT_TWO);
   d_constellation[3] = gr_complex(SQRT_TWO, SQRT_TWO);
   d_rotational_symmetry = 4;
+  d_dimensionality = 1;
+  calc_arity();
 }
 
-unsigned int gr_constellation_qpsk::decision_maker(gr_complex sample)
+unsigned int gr_constellation_qpsk::decision_maker(const gr_complex *sample)
 {
   // Real component determines small bit.
   // Imag component determines big bit.
-  return 2*(imag(sample)>0) + (real(sample)>0);
+  return 2*(imag(*sample)>0) + (real(*sample)>0);
 }

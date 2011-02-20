@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_CONSTELLATION_DECODER2_CB_H
 #define INCLUDED_GR_CONSTELLATION_DECODER2_CB_H
 
-#include <gr_sync_block.h>
+#include <gr_block.h>
 #include <gr_constellation.h>
 #include <vector>
 
@@ -38,11 +38,12 @@ gr_make_constellation_decoder2_cb (gr_constellation_sptr constellation);
  * \ingroup coding_blk
  *
  */
-class gr_constellation_decoder2_cb : public gr_sync_block
+class gr_constellation_decoder2_cb : public gr_block
 {
 
  private:
   gr_constellation_sptr d_constellation;
+  unsigned int d_dim;
 
   friend gr_constellation_decoder2_cb_sptr 
   gr_make_constellation_decoder2_cb (gr_constellation_sptr constellation);
@@ -51,11 +52,13 @@ class gr_constellation_decoder2_cb : public gr_sync_block
 
  public:
 
-  ~gr_constellation_decoder2_cb();	//destructor
-
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  void forecast (int noutput_items,
+		 gr_vector_int &ninput_items_required);
+  
+  int general_work (int noutput_items,
+		    gr_vector_int &ninput_items,
+		    gr_vector_const_void_star &input_items,
+		    gr_vector_void_star &output_items);
 };
 
 #endif

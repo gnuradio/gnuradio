@@ -48,18 +48,21 @@ trellis_constellation_metrics_cf::trellis_constellation_metrics_cf (gr_constella
 	      gr_make_io_signature (1, -1, sizeof (float))),
     d_constellation (constellation),
     d_TYPE (TYPE),
-    d_O (constellation->arity())
+    d_O (constellation->arity()),
+    d_D (constellation->dimensionality())
 {
-  set_relative_rate (d_O);
-  set_output_multiple (d_O);
+  set_relative_rate (1.0 * d_O / ((double) d_D));
+  set_output_multiple ((int)d_O);
 }
 
 void
 trellis_constellation_metrics_cf::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {
   assert (noutput_items % d_O == 0);
-  int input_required =  noutput_items / d_O;
-  ninput_items_required[0] = input_required;
+  unsigned int input_required =  d_D * noutput_items / d_O;
+  unsigned int ninputs = ninput_items_required.size();
+  for (unsigned int i = 0; i < ninputs; i++)
+    ninput_items_required[i] = input_required;
 }
 
 
@@ -72,14 +75,18 @@ trellis_constellation_metrics_cf::general_work (int noutput_items,
 {
 
   assert (noutput_items % d_O == 0);
+  assert (input_items.size() == output_items.size());
+  unsigned int nstreams = input_items.size();
 
-  const gr_complex *in = (gr_complex *) input_items[0];
-  float *out = (float *) output_items[0];
+for (unsigned int m=0;m<nstreams;m++) {
+  const gr_complex *in = (gr_complex *) input_items[m];
+  float *out = (float *) output_items[m];
 
-  for (int i = 0; i < noutput_items / d_O ; i++){
-    d_constellation->calc_metric(in[i], &(out[i*d_O]), d_TYPE); 
+  for (unsigned int i = 0; i < noutput_items / d_O ; i++){
+    d_constellation->calc_metric(&(in[i*d_D]), &(out[i*d_O]), d_TYPE); 
   } 
+}
 
-  consume_each (noutput_items / d_O);
+  consume_each (d_D * noutput_items / d_O);
   return noutput_items;
 }
