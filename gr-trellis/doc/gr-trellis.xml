@@ -279,6 +279,15 @@ The fourth way is specific to FSMs resulting from shift registers, and the outpu
 </programlisting>
 </listitem>
 
+<listitem>
+<para>
+I have added other constructors as well, eg, one that constructs an FSM appropriate for modeling an arbitrary CPM scheme; one that constructs the radix-n version of a given FSM; one that constructs the "concatenation" of two FSMs, etc.
+</para>
+</listitem>
+
+
+
+
 </itemizedlist>
 
 
@@ -397,8 +406,8 @@ r<subscript>k</subscript>=
 evaluates
 </para>
 <para>
-i<subscript>0</subscript>= argmax<subscript>i</subscript> ||r<subscript>k</subscript>-c<subscript>i</subscript>||<superscript>2</superscript> = 
-argmax<subscript>i</subscript> sum<subscript>j=1</subscript><superscript>D</superscript> |r<subscript>k,j</subscript>-c<subscript>i,j</subscript>|<superscript>2</superscript>
+i<subscript>0</subscript>= argmin<subscript>i</subscript> ||r<subscript>k</subscript>-c<subscript>i</subscript>||<superscript>2</superscript> = 
+argmin<subscript>i</subscript> sum<subscript>j=1</subscript><superscript>D</superscript> |r<subscript>k,j</subscript>-c<subscript>i,j</subscript>|<superscript>2</superscript>
 </para>
 <para>
 and outputs a sequence of O floats of the form (0,...,0,1,0,...,0), where the 
@@ -413,8 +422,8 @@ r<subscript>k</subscript>=
 evaluates
 </para>
 <para>
-i<subscript>0</subscript>= argmax<subscript>i</subscript> ||r<subscript>k</subscript>-c<subscript>i</subscript>||<superscript>2</superscript> = 
-argmax<subscript>i</subscript> sum<subscript>j=1</subscript><superscript>D</superscript> (r<subscript>k,j</subscript>-c<subscript>i,j</subscript>)<superscript>2</superscript>
+i<subscript>0</subscript>= argmin<subscript>i</subscript> ||r<subscript>k</subscript>-c<subscript>i</subscript>||<superscript>2</superscript> = 
+argmin<subscript>i</subscript> sum<subscript>j=1</subscript><superscript>D</superscript> (r<subscript>k,j</subscript>-c<subscript>i,j</subscript>)<superscript>2</superscript>
 </para>
 <para>
 and outputs a sequence of O floats of the form (d<subscript>1</subscript>,d<subscript>2</subscript>,...,d<subscript>O</subscript>), where the 
@@ -863,7 +872,10 @@ The function returns the number of symbols and the number of symbols in error. O
 <sect1 id="turbo"><title>Support for Concatenated Coding and Turbo Decoding</title>
 
 <para>
-To do...
+Soft versions of the algorithms have been implemented.
+Also examples of turbo equalization/decoding and of sccc can be found in the examples directory.
+
+Still need to document them...
 </para>
 
 
