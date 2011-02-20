@@ -786,6 +786,7 @@ void sccc_decoder_combined(
       float (*p2mymin)(float,float),
       int D, const std::vector<Ti> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
+      float scaling,
       const Ti *observations, To *data
 )
 {
@@ -802,8 +803,10 @@ std::vector<float> oposti(blocklength*FSMo.I());
 std::vector<float> oposto(blocklength*FSMo.O());
 
 // turn observations to neg-log-priors
-for(int k=0;k<blocklength;k++)
+for(int k=0;k<blocklength;k++) {
   calc_metric(FSMi.O(), D, TABLE, &(observations[k*D]), &(iprioro[k*FSMi.O()]),METRIC_TYPE);
+  iprioro[k*FSMi.O()] *= scaling;
+}
 
 for(int rep=0;rep<repetitions;rep++) {
   // run inner SISO
@@ -896,6 +899,7 @@ void sccc_decoder_combined<float,unsigned char>(
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
+      float scaling,
       const float *observations, unsigned char *data
 );
 
@@ -907,6 +911,7 @@ void sccc_decoder_combined<float,short>(
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
+      float scaling,
       const float *observations, short *data
 );
 
@@ -918,6 +923,7 @@ void sccc_decoder_combined<float,int>(
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
+      float scaling,
       const float *observations, int *data
 );
 
@@ -929,6 +935,7 @@ void sccc_decoder_combined<gr_complex,unsigned char>(
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
+      float scaling,
       const gr_complex *observations, unsigned char *data
 );
 
@@ -940,6 +947,7 @@ void sccc_decoder_combined<gr_complex,short>(
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
+      float scaling,
       const gr_complex *observations, short *data
 );
 
@@ -951,6 +959,7 @@ void sccc_decoder_combined<gr_complex,int>(
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
+      float scaling,
       const gr_complex *observations, int *data
 );
 

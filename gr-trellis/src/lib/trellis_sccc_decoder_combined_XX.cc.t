@@ -45,7 +45,8 @@ trellis_make_@BASE_NAME@ (
   trellis_siso_type_t SISO_TYPE,
   int D,
   const std::vector<@I_TYPE@> &TABLE,
-  trellis_metric_type_t METRIC_TYPE
+  trellis_metric_type_t METRIC_TYPE,
+  float scaling
 )
 {
   return gnuradio::get_initial_sptr (new @NAME@ (
@@ -56,7 +57,8 @@ trellis_make_@BASE_NAME@ (
     repetitions,
     SISO_TYPE,
     D,
-    TABLE,METRIC_TYPE
+    TABLE,METRIC_TYPE,
+    scaling
     ));
 }
 
@@ -69,7 +71,8 @@ trellis_make_@BASE_NAME@ (
   trellis_siso_type_t SISO_TYPE,
   int D,
   const std::vector<@I_TYPE@> &TABLE,
-  trellis_metric_type_t METRIC_TYPE
+  trellis_metric_type_t METRIC_TYPE,
+  float scaling
 )
   : gr_block ("@BASE_NAME@",
 			  gr_make_io_signature (1, 1, sizeof (@I_TYPE@)),
@@ -82,10 +85,16 @@ trellis_make_@BASE_NAME@ (
   d_SISO_TYPE (SISO_TYPE),
   d_D (D),
   d_TABLE (TABLE),
-  d_METRIC_TYPE (METRIC_TYPE)
+  d_METRIC_TYPE (METRIC_TYPE),
+  d_scaling (scaling)
 {
     set_relative_rate (1.0 / ((double) d_D));
     set_output_multiple (d_blocklength);
+}
+
+void @NAME@::set_scaling(float scaling)
+{
+  d_scaling = scaling;
 }
 
 
@@ -127,6 +136,7 @@ int
       p2min, 
       d_D,d_TABLE, 
       d_METRIC_TYPE, 
+      d_scaling,
       &(in[n*d_blocklength*d_D]),&(out[n*d_blocklength])
     );
   }

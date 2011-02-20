@@ -24,7 +24,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX
-    dec = trellis.sccc_decoder_combined_fs(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM,dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN)
+    dec = trellis.sccc_decoder_combined_fs(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM,dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN,1.0)
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
     

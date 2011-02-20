@@ -99,6 +99,7 @@ void sccc_decoder_combined(
       float (*p2mymin)(float,float),
       int D, const std::vector<Ti> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
+      float scaling,
       const Ti *observations, To *data
 );
 

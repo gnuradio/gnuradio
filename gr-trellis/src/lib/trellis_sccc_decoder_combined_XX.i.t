@@ -33,7 +33,8 @@ GR_SWIG_BLOCK_MAGIC(trellis,@BASE_NAME@);
   trellis_siso_type_t SISO_TYPE,
   int D,
   const std::vector<@I_TYPE@> &TABLE,
-  trellis_metric_type_t METRIC_TYPE
+  trellis_metric_type_t METRIC_TYPE,
+  float scaling
 );
 
 
@@ -49,7 +50,8 @@ private:
     trellis_siso_type_t SISO_TYPE,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t METRIC_TYPE
+    trellis_metric_type_t METRIC_TYPE,
+    float scaling
   );
 
 public:
@@ -66,4 +68,6 @@ public:
   std::vector<@I_TYPE@> TABLE () const { return d_TABLE; }
   trellis_metric_type_t METRIC_TYPE () const { return d_METRIC_TYPE; }
   trellis_siso_type_t SISO_TYPE () const { return d_SISO_TYPE; }
+  float scaling() const { return d_scaling; }
+  void set_scaling (float scaling);
 };
