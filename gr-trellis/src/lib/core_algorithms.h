@@ -104,6 +104,15 @@ void sccc_decoder_combined(
 );
 
 
+template<class T>
+void sccc_decoder(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      float (*p2mymin)(float,float),
+      const float *iprioro, T *data
+);
+
 
 
 

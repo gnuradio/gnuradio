@@ -131,6 +131,15 @@
 /trellis_sccc_decoder_combined_ci.h
 /trellis_sccc_decoder_combined_ci.i
 /trellis_sccc_decoder_combined_ci.cc
+/trellis_sccc_decoder_b.h
+/trellis_sccc_decoder_b.i
+/trellis_sccc_decoder_b.cc
+/trellis_sccc_decoder_s.h
+/trellis_sccc_decoder_s.i
+/trellis_sccc_decoder_s.cc
+/trellis_sccc_decoder_i.h
+/trellis_sccc_decoder_i.i
+/trellis_sccc_decoder_i.cc
 /trellis_generated.i
 /generate-stamp
 /stamp-*
