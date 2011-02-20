@@ -32,32 +32,32 @@
 
 @SPTR_NAME@ 
 trellis_make_@BASE_NAME@ (
-  const fsm &FSMo, int STo,
-  const fsm &FSMi, int STi,
+  const fsm &FSM1, int ST1,
+  const fsm &FSM2, int ST2,
   const interleaver &INTERLEAVER,
   int blocklength
 )
 {
-  return gnuradio::get_initial_sptr (new @NAME@ (FSMo,STo,FSMi,STi,INTERLEAVER,blocklength));
+  return gnuradio::get_initial_sptr (new @NAME@ (FSM1,ST1,FSM2,ST2,INTERLEAVER,blocklength));
 }
 
 @NAME@::@NAME@ (
-  const fsm &FSMo, int STo,
-  const fsm &FSMi, int STi,
+  const fsm &FSM1, int ST1,
+  const fsm &FSM2, int ST2,
   const interleaver &INTERLEAVER,
   int blocklength
 )
   : gr_sync_block ("@BASE_NAME@",
 		   gr_make_io_signature (1, 1, sizeof (@I_TYPE@)),
 		   gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),
-    d_FSMo (FSMo),
-    d_STo (STo),
-    d_FSMi (FSMi),
-    d_STi (STi),
+    d_FSM1 (FSM1),
+    d_ST1 (ST1),
+    d_FSM2 (FSM2),
+    d_ST2 (ST2),
     d_INTERLEAVER (INTERLEAVER),
     d_blocklength (blocklength)
 {
-  assert(d_FSMo.O() == d_FSMi.I());
+  assert(d_FSM1.I() == d_FSM2.I());
   set_output_multiple(d_blocklength);
   d_buffer.resize(d_blocklength);
 }
@@ -74,16 +74,15 @@ int
     const @I_TYPE@ *in = (const @I_TYPE@ *) input_items[0]+b*d_blocklength;
     @O_TYPE@ *out = (@O_TYPE@ *) output_items[0]+b*d_blocklength;
 
-    int STo_tmp = d_STo;
-    for (int i = 0; i < d_blocklength; i++){
-      d_buffer[i] = d_FSMo.OS()[STo_tmp*d_FSMo.I()+in[i]];
-      STo_tmp = (int) d_FSMo.NS()[STo_tmp*d_FSMo.I()+in[i]];
-    }
-    int STi_tmp = d_STi;
+    int ST1_tmp = d_ST1;
+    int ST2_tmp = d_ST2;
     for (int i = 0; i < d_blocklength; i++){
       int k = d_INTERLEAVER.INTER()[i];
-      out[i] = (@O_TYPE@) d_FSMi.OS()[STi_tmp*d_FSMi.I()+d_buffer[k]];
-      STi_tmp = (int) d_FSMi.NS()[STi_tmp*d_FSMi.I()+d_buffer[k]];
+      int o1 = d_FSM1.OS()[ST1_tmp*d_FSM1.I()+in[i]];
+      ST1_tmp = (int) d_FSM1.NS()[ST1_tmp*d_FSM1.I()+in[i]];
+      int o2 = d_FSM2.OS()[ST2_tmp*d_FSM2.I()+in[k]];
+      ST2_tmp = (int) d_FSM2.NS()[ST2_tmp*d_FSM2.I()+in[k]];
+      out[i] = (@O_TYPE@) (o1*d_FSM1.O() + o2);
     }
   }
   return noutput_items;

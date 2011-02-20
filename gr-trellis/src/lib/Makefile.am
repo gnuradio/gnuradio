@@ -35,6 +35,9 @@ core_generator = 				\
 	trellis_sccc_encoder_XX.cc.t			\
 	trellis_sccc_encoder_XX.h.t			\
 	trellis_sccc_encoder_XX.i.t			\
+	trellis_pccc_encoder_XX.cc.t			\
+	trellis_pccc_encoder_XX.h.t			\
+	trellis_pccc_encoder_XX.i.t			\
 	trellis_metrics_X.cc.t			\
 	trellis_metrics_X.h.t			\
 	trellis_metrics_X.i.t			\

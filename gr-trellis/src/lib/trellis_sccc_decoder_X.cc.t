@@ -73,6 +73,7 @@ trellis_make_@BASE_NAME@ (
   d_repetitions (repetitions),
   d_SISO_TYPE (SISO_TYPE)
 {
+    assert(d_FSMo.O() == d_FSMi.I());
     set_relative_rate (1.0 / ((double) d_FSMi.O()));
     set_output_multiple (d_blocklength);
 }
