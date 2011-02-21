@@ -50,6 +50,9 @@ core_generator = 				\
 	trellis_sccc_decoder_X.cc.t	\
 	trellis_sccc_decoder_X.h.t		\
 	trellis_sccc_decoder_X.i.t		\
+	trellis_pccc_decoder_X.cc.t	\
+	trellis_pccc_decoder_X.h.t		\
+	trellis_pccc_decoder_X.i.t		\
 	trellis_viterbi_X.cc.t			\
 	trellis_viterbi_X.h.t			\
 	trellis_viterbi_X.i.t

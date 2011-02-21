@@ -140,6 +140,15 @@
 /trellis_sccc_decoder_i.h
 /trellis_sccc_decoder_i.i
 /trellis_sccc_decoder_i.cc
+/trellis_pccc_decoder_b.h
+/trellis_pccc_decoder_b.i
+/trellis_pccc_decoder_b.cc
+/trellis_pccc_decoder_s.h
+/trellis_pccc_decoder_s.i
+/trellis_pccc_decoder_s.cc
+/trellis_pccc_decoder_i.h
+/trellis_pccc_decoder_i.i
+/trellis_pccc_decoder_i.cc
 /trellis_pccc_encoder_bb.cc
 /trellis_pccc_encoder_bb.h
 /trellis_pccc_encoder_bb.i

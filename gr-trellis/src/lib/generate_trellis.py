@@ -35,6 +35,7 @@ other_roots = [
     'trellis_viterbi_combined_XX',
     'trellis_sccc_decoder_combined_XX',
     'trellis_sccc_decoder_X',
+    'trellis_pccc_decoder_X',
     ]
 
 other_signatures = (
@@ -45,6 +46,7 @@ other_signatures = (
     ['b','s','i'],
     ['sb','ss','si','ib','is','ii','fb','fs','fi','cb','cs','ci'],
     ['fb','fs','fi','cb','cs','ci'],
+    ['b','s','i'],
     ['b','s','i'],
     )
 
