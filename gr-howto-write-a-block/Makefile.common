@@ -71,8 +71,8 @@ guiledir = $(prefix)/share/guile/site
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)
 
-modpythondir = $(pythondir)/gnuradio/$(modname)
-modpyexecdir = $(pyexecdir)/gnuradio/$(modname)
+modpythondir = $(pythondir)/$(modname)
+modpyexecdir = $(pyexecdir)/$(modname)
 
 # Data directory for grc block wrappers
 grc_blocksdir = $(prefix)/share/gnuradio/grc/blocks

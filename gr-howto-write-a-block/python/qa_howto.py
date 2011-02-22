@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-from gnuradio import howto
+import howto_swig
 
 class qa_howto (gr_unittest.TestCase):
 
@@ -35,7 +35,7 @@ class qa_howto (gr_unittest.TestCase):
         src_data = (-3, 4, -5.5, 2, 3)
         expected_result = (9, 16, 30.25, 4, 9)
         src = gr.vector_source_f (src_data)
-        sqr = howto.square_ff ()
+        sqr = howto_swig.square_ff ()
         dst = gr.vector_sink_f ()
         self.tb.connect (src, sqr)
         self.tb.connect (sqr, dst)
@@ -47,7 +47,7 @@ class qa_howto (gr_unittest.TestCase):
         src_data = (-3, 4, -5.5, 2, 3)
         expected_result = (9, 16, 30.25, 4, 9)
         src = gr.vector_source_f (src_data)
-        sqr = howto.square2_ff ()
+        sqr = howto_swig.square2_ff ()
         dst = gr.vector_sink_f ()
         self.tb.connect (src, sqr)
         self.tb.connect (sqr, dst)
