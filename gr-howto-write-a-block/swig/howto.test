@@ -33,7 +33,7 @@
 
 
 ;; Use our module
-(use-modules (gnuradio howto))
+(use-modules (gnuradio howto_swig))
 
 
 (define (vector-map f v)
