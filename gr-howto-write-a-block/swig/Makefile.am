@@ -50,9 +50,9 @@ howto_swiginclude_headers = \
 EXTRA_DIST = $(howto_swiginclude_headers)
 
 if GUILE
+TESTS = run_guile_tests
 nobase_guile_DATA = \
 	gnuradio/howto_swig.scm
 endif
 
-TESTS = run_guile_tests
 EXTRA_DIST += $(nobase_guile_DATA)
