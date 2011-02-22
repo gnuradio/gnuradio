@@ -33,7 +33,7 @@
 ## this has to be done in the including Makefile.am -before-
 ## Makefile.swig is included.
 
-howto_swig_pythondir_category ?= howto
+howto_swig_pythondir_category ?= gnuradio/howto
 howto_swig_pylibdir_category ?= $(howto_swig_pythondir_category)
 howto_swig_pythondir = $(pythondir)/$(howto_swig_pythondir_category)
 howto_swig_pylibdir = $(pyexecdir)/$(howto_swig_pylibdir_category)
