@@ -149,6 +149,36 @@ public:
     virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
     /*!
+     * Get a daughterboard sensor value.
+     * \param name the name of the sensor
+     * \param chan the channel index 0 to N-1
+     * \return a sensor value object
+     */
+    virtual uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan = 0) = 0;
+
+    /*!
+     * Get a list of possible daughterboard sensor names.
+     * \param chan the channel index 0 to N-1
+     * \return a vector of sensor names
+     */
+    virtual std::vector<std::string> get_dboard_sensor_names(size_t chan = 0) = 0;
+
+    /*!
+     * Get a motherboard sensor value.
+     * \param name the name of the sensor
+     * \param mboard the motherboard index 0 to M-1
+     * \return a sensor value object
+     */
+    virtual uhd::sensor_value_t get_mboard_sensor(const std::string &name, size_t mboard = 0) = 0;
+
+    /*!
+     * Get a list of possible motherboard sensor names.
+     * \param mboard the motherboard index 0 to M-1
+     * \return a vector of sensor names
+     */
+    virtual std::vector<std::string> get_mboard_sensor_names(size_t mboard = 0) = 0;
+
+    /*!
      * Set the clock configuration.
      * \param clock_config the new configuration
      * \param mboard the motherboard index 0 to M-1

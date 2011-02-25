@@ -52,8 +52,11 @@ def _prepare_uhd_swig():
     #Create aliases for uhd swig attributes to avoid the "_t"
     for attr in dir(uhd_swig):
         myobj = getattr(uhd_swig, attr)
-        if hasattr(myobj, 'to_string'):    myobj.__repr__ = lambda s: s.to_string().strip()
-        if hasattr(myobj, 'to_pp_string'): myobj.__str__  = lambda s: s.to_pp_string().strip()
+        if hasattr(myobj, 'to_string'):    myobj.__repr__     = lambda o: o.to_string().strip()
+        if hasattr(myobj, 'to_pp_string'): myobj.__str__      = lambda o: o.to_pp_string().strip()
+        if hasattr(myobj, 'to_bool'):      myobj.__nonzero__  = lambda o: o.to_bool()
+        if hasattr(myobj, 'to_int'):       myobj.__int__      = lambda o: o.to_int()
+        if hasattr(myobj, 'to_real'):      myobj.__float__    = lambda o: o.to_real()
         if attr.endswith('_t'): setattr(uhd_swig, attr[:-2], myobj)
 
     #Cast constructor args (FIXME swig handle overloads?)

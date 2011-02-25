@@ -105,6 +105,22 @@ public:
         return _dev->set_tx_bandwidth(bandwidth, chan);
     }
 
+    uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan){
+        return _dev->get_tx_sensor(name, chan);
+    }
+
+    std::vector<std::string> get_dboard_sensor_names(size_t chan){
+        return _dev->get_tx_sensor_names(chan);
+    }
+
+    uhd::sensor_value_t get_mboard_sensor(const std::string &name, size_t mboard){
+        return _dev->get_mboard_sensor(name, mboard);
+    }
+
+    std::vector<std::string> get_mboard_sensor_names(size_t mboard){
+        return _dev->get_mboard_sensor_names(mboard);
+    }
+
     void set_clock_config(const uhd::clock_config_t &clock_config, size_t mboard){
         return _dev->set_clock_config(clock_config, mboard);
     }
