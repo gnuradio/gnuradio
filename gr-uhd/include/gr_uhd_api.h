@@ -27,7 +27,7 @@
 #ifdef gnuradio_uhd_EXPORTS
 #  define GR_UHD_API UHD_EXPORT
 #else
-#  define GR_UHD_API UHD_EXPORT
+#  define GR_UHD_API UHD_IMPORT
 #endif
 
 #endif /* INCLUDED_GR_UHD_API_H */

@@ -24,7 +24,8 @@ include $(top_srcdir)/Makefile.common
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(WITH_INCLUDES) \
-	$(UHD_CPPFLAGS)
+	$(UHD_CPPFLAGS) \
+	-Dgnuradio_uhd_EXPORTS
 
 lib_LTLIBRARIES = libgnuradio-uhd.la
 
