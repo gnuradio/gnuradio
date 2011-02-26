@@ -19,29 +19,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <uhd_multi_usrp_sink.h>
+#include <gr_uhd_usrp_sink.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 
 /***********************************************************************
  * UHD Multi USRP Sink
  **********************************************************************/
-uhd_multi_usrp_sink::uhd_multi_usrp_sink(gr_io_signature_sptr sig)
-:gr_sync_block("uhd multi usrp sink", sig, gr_make_io_signature(0, 0, 0)){
+uhd_usrp_sink::uhd_usrp_sink(gr_io_signature_sptr sig)
+:gr_sync_block("gr uhd usrp sink", sig, gr_make_io_signature(0, 0, 0)){
     /* NOP */
 }
 
 /***********************************************************************
  * UHD Multi USRP Sink Impl
  **********************************************************************/
-class uhd_multi_usrp_sink_impl : public uhd_multi_usrp_sink{
+class uhd_usrp_sink_impl : public uhd_usrp_sink{
 public:
-    uhd_multi_usrp_sink_impl(
+    uhd_usrp_sink_impl(
         const uhd::device_addr_t &device_addr,
         const uhd::io_type_t &io_type,
         size_t num_channels
     ):
-        uhd_multi_usrp_sink(gr_make_io_signature(
+        uhd_usrp_sink(gr_make_io_signature(
             num_channels, num_channels, io_type.size
         )),
         _type(io_type),
@@ -67,6 +67,10 @@ public:
         const uhd::tune_request_t tune_request, size_t chan
     ){
         return _dev->set_tx_freq(tune_request, chan);
+    }
+
+    double get_center_freq(size_t chan){
+        return _dev->get_tx_freq(chan);
     }
 
     uhd::freq_range_t get_freq_range(size_t chan){
@@ -101,12 +105,44 @@ public:
         return _dev->set_tx_bandwidth(bandwidth, chan);
     }
 
+    uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan){
+        return _dev->get_tx_sensor(name, chan);
+    }
+
+    std::vector<std::string> get_dboard_sensor_names(size_t chan){
+        return _dev->get_tx_sensor_names(chan);
+    }
+
+    uhd::sensor_value_t get_mboard_sensor(const std::string &name, size_t mboard){
+        return _dev->get_mboard_sensor(name, mboard);
+    }
+
+    std::vector<std::string> get_mboard_sensor_names(size_t mboard){
+        return _dev->get_mboard_sensor_names(mboard);
+    }
+
     void set_clock_config(const uhd::clock_config_t &clock_config, size_t mboard){
         return _dev->set_clock_config(clock_config, mboard);
     }
 
-    uhd::time_spec_t get_time_now(void){
-        return _dev->get_time_now();
+    double get_clock_rate(size_t mboard){
+        return _dev->get_master_clock_rate(mboard);
+    }
+
+    void set_clock_rate(double rate, size_t mboard){
+        return _dev->set_master_clock_rate(rate, mboard);
+    }
+
+    uhd::time_spec_t get_time_now(size_t mboard = 0){
+        return _dev->get_time_now(mboard);
+    }
+
+    uhd::time_spec_t get_time_last_pps(size_t mboard){
+        return _dev->get_time_last_pps(mboard);
+    }
+
+    void set_time_now(const uhd::time_spec_t &time_spec, size_t mboard){
+        return _dev->set_time_now(time_spec, mboard);
     }
 
     void set_time_next_pps(const uhd::time_spec_t &time_spec){
@@ -115,6 +151,10 @@ public:
 
     void set_time_unknown_pps(const uhd::time_spec_t &time_spec){
         return _dev->set_time_unknown_pps(time_spec);
+    }
+
+    uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan){
+        return _dev->get_tx_dboard_iface(chan);
     }
 
     uhd::usrp::multi_usrp::sptr get_device(void){
@@ -184,12 +224,12 @@ protected:
 /***********************************************************************
  * Make UHD Multi USRP Sink
  **********************************************************************/
-boost::shared_ptr<uhd_multi_usrp_sink> uhd_make_multi_usrp_sink(
+boost::shared_ptr<uhd_usrp_sink> uhd_make_usrp_sink(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,
     size_t num_channels
 ){
-    return boost::shared_ptr<uhd_multi_usrp_sink>(
-        new uhd_multi_usrp_sink_impl(device_addr, io_type, num_channels)
+    return boost::shared_ptr<uhd_usrp_sink>(
+        new uhd_usrp_sink_impl(device_addr, io_type, num_channels)
     );
 }

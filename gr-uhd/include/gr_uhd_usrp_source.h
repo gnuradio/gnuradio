@@ -19,35 +19,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_UHD_SINGLE_USRP_SOURCE_H
-#define INCLUDED_UHD_SINGLE_USRP_SOURCE_H
+#ifndef INCLUDED_GR_UHD_USRP_SOURCE_H
+#define INCLUDED_GR_UHD_USRP_SOURCE_H
 
 #include <gr_uhd_api.h>
 #include <gr_sync_block.h>
-#include <uhd/usrp/single_usrp.hpp>
+#include <uhd/usrp/multi_usrp.hpp>
 
-class uhd_single_usrp_source;
+class uhd_usrp_source;
 
-GR_UHD_API boost::shared_ptr<uhd_single_usrp_source> uhd_make_single_usrp_source(
+GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,
-    size_t num_channels = 1
+    size_t num_channels
 );
 
-class GR_UHD_API uhd_single_usrp_source : public gr_sync_block{
+class GR_UHD_API uhd_usrp_source : public gr_sync_block{
 public:
 
     /*!
      * Set the IO signature for this block.
      * \param sig the output signature
      */
-    uhd_single_usrp_source(gr_io_signature_sptr sig);
+    uhd_usrp_source(gr_io_signature_sptr sig);
 
     /*!
      * Set the subdevice specification.
      * \param spec the subdev spec markup string
+     * \param mboard the motherboard index 0 to M-1
      */
-    virtual void set_subdev_spec(const std::string &spec) = 0;
+    virtual void set_subdev_spec(const std::string &spec, size_t mboard = 0) = 0;
 
     /*!
      * Set the sample rate for the usrp device.
@@ -69,7 +70,7 @@ public:
      * \return a tune result with the actual frequencies
      */
     virtual uhd::tune_result_t set_center_freq(
-        const uhd::tune_request_t tune_request, size_t chan
+        const uhd::tune_request_t tune_request, size_t chan = 0
     ) = 0;
 
     /*!
@@ -80,9 +81,16 @@ public:
      * \param chan the channel index 0 to N-1
      * \return a tune result with the actual frequencies
      */
-    uhd::tune_result_t set_center_freq(double freq, size_t chan){
+    uhd::tune_result_t set_center_freq(double freq, size_t chan = 0){
         return set_center_freq(uhd::tune_request_t(freq), chan);
     }
+
+    /*!
+     * Get the center frequency.
+     * \param chan the channel index 0 to N-1
+     * \return the frequency in Hz
+     */
+    virtual double get_center_freq(size_t chan = 0) = 0;
 
     /*!
      * Get the tunable frequency range.
@@ -141,22 +149,76 @@ public:
     virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
     /*!
+     * Get a daughterboard sensor value.
+     * \param name the name of the sensor
+     * \param chan the channel index 0 to N-1
+     * \return a sensor value object
+     */
+    virtual uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan = 0) = 0;
+
+    /*!
+     * Get a list of possible daughterboard sensor names.
+     * \param chan the channel index 0 to N-1
+     * \return a vector of sensor names
+     */
+    virtual std::vector<std::string> get_dboard_sensor_names(size_t chan = 0) = 0;
+
+    /*!
+     * Get a motherboard sensor value.
+     * \param name the name of the sensor
+     * \param mboard the motherboard index 0 to M-1
+     * \return a sensor value object
+     */
+    virtual uhd::sensor_value_t get_mboard_sensor(const std::string &name, size_t mboard = 0) = 0;
+
+    /*!
+     * Get a list of possible motherboard sensor names.
+     * \param mboard the motherboard index 0 to M-1
+     * \return a vector of sensor names
+     */
+    virtual std::vector<std::string> get_mboard_sensor_names(size_t mboard = 0) = 0;
+
+    /*!
      * Set the clock configuration.
      * \param clock_config the new configuration
+     * \param mboard the motherboard index 0 to M-1
      */
-    virtual void set_clock_config(const uhd::clock_config_t &clock_config) = 0;
+    virtual void set_clock_config(const uhd::clock_config_t &clock_config, size_t mboard = 0) = 0;
+
+    /*!
+     * Get the master clock rate.
+     * \param mboard the motherboard index 0 to M-1
+     * \return the clock rate in Hz
+     */
+    virtual double get_clock_rate(size_t mboard = 0) = 0;
+
+    /*!
+     * Set the master clock rate.
+     * \param rate the new rate in Hz
+     * \param mboard the motherboard index 0 to M-1
+     */
+    virtual void set_clock_rate(double rate, size_t mboard = 0) = 0;
 
     /*!
      * Get the current time registers.
+     * \param mboard the motherboard index 0 to M-1
      * \return the current usrp time
      */
-    virtual uhd::time_spec_t get_time_now(void) = 0;
+    virtual uhd::time_spec_t get_time_now(size_t mboard = 0) = 0;
 
     /*!
-     * Set the time registers asap.
-     * \param time_spec the new time
+     * Get the time when the last pps pulse occured.
+     * \param mboard the motherboard index 0 to M-1
+     * \return the current usrp time
      */
-    virtual void set_time_now(const uhd::time_spec_t &time_spec) = 0;
+    virtual uhd::time_spec_t get_time_last_pps(size_t mboard = 0) = 0;
+
+    /*!
+     * Sets the time registers immediately.
+     * \param time_spec the new time
+     * \param mboard the motherboard index 0 to M-1
+     */
+    virtual void set_time_now(const uhd::time_spec_t &time_spec, size_t mboard = 0) = 0;
 
     /*!
      * Set the time registers at the next pps.
@@ -165,10 +227,22 @@ public:
     virtual void set_time_next_pps(const uhd::time_spec_t &time_spec) = 0;
 
     /*!
-     * Get access to the underlying uhd device object.
-     * \return the single usrp device object
+     * Sync the time registers with an unknown pps edge.
+     * \param time_spec the new time
      */
-    virtual uhd::usrp::single_usrp::sptr get_device(void) = 0;
+    virtual void set_time_unknown_pps(const uhd::time_spec_t &time_spec) = 0;
+
+    /*!
+     * Get access to the underlying uhd dboard iface object.
+     * \return the dboard_iface object
+     */
+    virtual uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan = 0) = 0;
+
+    /*!
+     * Get access to the underlying uhd device object.
+     * \return the multi usrp device object
+     */
+    virtual uhd::usrp::multi_usrp::sptr get_device(void) = 0;
 };
 
-#endif /* INCLUDED_UHD_SINGLE_USRP_SOURCE_H */
+#endif /* INCLUDED_GR_UHD_USRP_SOURCE_H */
