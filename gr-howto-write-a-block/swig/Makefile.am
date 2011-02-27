@@ -36,6 +36,9 @@ TOP_SWIG_IFILES = \
 #   import howto
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)
+howto_swig_pythondir_category = $(modname)
+
+# additional libraries for linking with the SWIG-generated library
 howto_swig_la_swig_libadd = \
 	$(top_builddir)/lib/libgnuradio-howto.la
 
@@ -46,11 +49,10 @@ howto_swiginclude_headers = \
 
 EXTRA_DIST = $(howto_swiginclude_headers)
 
-
 if GUILE
 TESTS = run_guile_tests
-EXTRA_DIST += $(nobase_guile_DATA)
-
 nobase_guile_DATA = \
-	gnuradio/howto.scm
+	gnuradio/howto_swig.scm
 endif
+
+EXTRA_DIST += $(nobase_guile_DATA)

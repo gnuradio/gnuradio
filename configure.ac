@@ -276,7 +276,7 @@ CPPUNIT_INCLUDES=$CPPUNIT_CFLAGS
 AC_SUBST(CPPUNIT_INCLUDES)
 
 dnl see if GUILE is installed
-AC_PATH_PROG(GUILE,guile)
+dnl AC_PATH_PROG(GUILE,guile)
 
 dnl
 dnl We require the boost headers, thread lib and date_time lib.
