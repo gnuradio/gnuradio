@@ -105,7 +105,7 @@ _atsc_la_CXXFLAGS =			\
 	$(atsc_la_swig_cxxflags)
 
 python/atsc.cc: atsc.py
-atsc.py: atsc.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
+atsc.py: atsc.i 
 
 # Include the python dependencies for this file
 -include python/atsc.d

@@ -98,18 +98,6 @@ STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 
 swig_built_sources =
 
-## Create the swig interface file swig_doc.i containing docstring information.
-
-$(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i: $(top_srcdir)/docs/doxygen/html/index.html
-	$(PYTHON) $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.py $(top_srcdir)/docs/doxygen/xml/ $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
-
-## Make sure the doxygen docs are generated
-
-$(top_srcdir)/docs/doxygen/html/index.html:
-	$(MKDIR_P) $(top_srcdir)/docs/doxygen/html
-	$(MKDIR_P) $(top_srcdir)/docs/doxygen/xml
-	cd $(top_srcdir)/docs/doxygen; @DOXYGEN@
-
 # swig_all_built_sources contains swig_built_sources plus the .cc and .h files.
 # It contains the files to remove from the distribution and the files to
 # remove for make clean.

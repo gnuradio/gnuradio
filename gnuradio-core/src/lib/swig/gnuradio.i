@@ -35,8 +35,6 @@
 #include <complex>
 %}
 
-%include <swig_doc.i>
-
 // %feature("autodoc","1");
 
 #ifdef SWIGGUILE

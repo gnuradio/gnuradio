@@ -31,14 +31,5 @@ nobase_utilspython_PYTHON = \
 	__init__.py \
 	gray_code.py \
 	mod_codes.py \
-	alignment.py \
-	doxyxml/__init__.py \
-	doxyxml/base.py \
-	doxyxml/doxyindex.py \
-	doxyxml/text.py \
-	doxyxml/generated/__init__.py \
-	doxyxml/generated/index.py \
-	doxyxml/generated/indexsuper.py \
-	doxyxml/generated/compound.py \
-	doxyxml/generated/compoundsuper.py
+	alignment.py
 endif

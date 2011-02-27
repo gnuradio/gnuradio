@@ -105,7 +105,7 @@ _ra_la_CXXFLAGS =			\
 	$(ra_la_swig_cxxflags)
 
 python/ra.cc: ra.py
-ra.py: ra.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
+ra.py: ra.i 
 
 # Include the python dependencies for this file
 -include python/ra.d

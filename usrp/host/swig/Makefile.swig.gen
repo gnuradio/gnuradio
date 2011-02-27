@@ -105,7 +105,7 @@ _usrp_prims_la_CXXFLAGS =			\
 	$(usrp_prims_la_swig_cxxflags)
 
 python/usrp_prims.cc: usrp_prims.py
-usrp_prims.py: usrp_prims.i $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
+usrp_prims.py: usrp_prims.i 
 
 # Include the python dependencies for this file
 -include python/usrp_prims.d
