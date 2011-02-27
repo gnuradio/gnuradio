@@ -31,6 +31,7 @@ nobase_utilspython_PYTHON = \
 	__init__.py \
 	gray_code.py \
 	mod_codes.py \
+	alignment.py \
 	doxyxml/__init__.py \
 	doxyxml/base.py \
 	doxyxml/doxyindex.py \
