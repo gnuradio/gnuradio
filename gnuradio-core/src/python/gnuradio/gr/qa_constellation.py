@@ -58,7 +58,7 @@ def threed_constell():
     dim = 3
     return gr.constellation_calcdist(points, [], rot_sym, dim)
 
-tested_constellations = (
+tested_constellation_info = (
     (blks2.psk_constellation, 
      {'m': (2, 4, 8, 16, 32, 64),
       'mod_code': tested_mod_codes, },
@@ -76,6 +76,36 @@ tested_constellations = (
     (threed_constell, {}, True, None),
     )
 
+def tested_constellations():
+    """
+    Generator to produce (constellation, differential) tuples for testing purposes.
+    """
+    for constructor, poss_args, differential, diff_argname in tested_constellation_info:
+        if differential:
+            diff_poss = (True, False)
+        else:
+            diff_poss = (False,)
+        poss_args = [[argname, argvalues, 0] for argname, argvalues in poss_args.items()]
+        for current_diff in diff_poss:
+            # Add an index into args to keep track of current position in argvalues
+            while True:
+                current_args = dict([(argname, argvalues[argindex])
+                                     for argname, argvalues, argindex in poss_args])
+                if diff_argname is not None:
+                    current_args[diff_argname] = current_diff
+                constellation = constructor(**current_args)
+                yield (constellation, current_diff)
+                for this_poss_arg in poss_args:
+                    argname, argvalues, argindex = this_poss_arg
+                    if argindex < len(argvalues) - 1:
+                        this_poss_arg[2] += 1
+                        break
+                    else:
+                        this_poss_arg[2] = 0
+                if sum([argindex for argname, argvalues, argindex in poss_args]) == 0:
+                    break
+            
+
 class test_constellation (gr_unittest.TestCase):
 
     src_length = 256
@@ -88,49 +118,23 @@ class test_constellation (gr_unittest.TestCase):
         pass
 
     def test_hard_decision(self):
-        for constructor, poss_args, differential, diff_argname in tested_constellations:
+        for constellation, differential in tested_constellations():
             if differential:
-                diff_poss = (True, False)
+                rs = constellation.rotational_symmetry()
+                rotations = [exp(i*2*pi*(0+1j)/rs) for i in range(0, rs)] 
             else:
-                diff_poss = (False,)
-            poss_args = [[argname, argvalues, 0] for argname, argvalues in poss_args.items()]
-            for current_diff in diff_poss:
-                # Add an index into args to keep track of current position in argvalues
-                while True:
-                    current_args = dict([(argname, argvalues[argindex])
-                                         for argname, argvalues, argindex in poss_args])
-                    if diff_argname is not None:
-                        current_args[diff_argname] = current_diff
-                    constellation = constructor(**current_args)
-                    # If we're differentially encoding test for possible rotations
-                    # Testing for every possible rotation seems a bit overkill
-                    # but better safe than sorry.
-                    if current_diff:
-                        rs = constellation.rotational_symmetry()
-                        rotations = [exp(i*2*pi*(0+1j)/rs) for i in range(0, rs)] 
-                    else:
-                        rotations = [None]
-                    for rotation in rotations:
-                        src = gr.vector_source_b(self.src_data)
-                        content = mod_demod(constellation, current_diff, rotation)
-                        dst = gr.vector_sink_b()
-                        self.tb = gr.top_block()
-                        self.tb.connect(src, content, dst)
-                        self.tb.run()
-                        data = dst.data()
-                        # Don't worry about cut off data for now.
-                        first = constellation.bits_per_symbol()
-                        self.assertEqual (self.src_data[first:len(data)], data[first:])
-                    # Move to next arg combination
-                    for this_poss_arg in poss_args:
-                        argname, argvalues, argindex = this_poss_arg
-                        if argindex < len(argvalues) - 1:
-                            this_poss_arg[2] += 1
-                            break
-                        else:
-                            this_poss_arg[2] = 0
-                    if sum([argindex for argname, argvalues, argindex in poss_args]) == 0:
-                        break
+                rotations = [None]
+            for rotation in rotations:
+                src = gr.vector_source_b(self.src_data)
+                content = mod_demod(constellation, differential, rotation)
+                dst = gr.vector_sink_b()
+                self.tb = gr.top_block()
+                self.tb.connect(src, content, dst)
+                self.tb.run()
+                data = dst.data()
+                # Don't worry about cut off data for now.
+                first = constellation.bits_per_symbol()
+                self.assertEqual (self.src_data[first:len(data)], data[first:])
 
 
 class mod_demod(gr.hier_block2):
