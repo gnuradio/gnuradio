@@ -22,7 +22,6 @@
 
 import random
 from cmath import exp, pi, log
-from itertools import product
 
 from gnuradio import gr, gr_unittest, blks2
 from gnuradio.utils import mod_codes
@@ -52,8 +51,10 @@ def threed_constell():
     oned_points = ((1+0j), (0+1j), (-1+0j), (0-1j))
     points = []
     r4 = range(0, 4)
-    for ia, ib, ic in product(r4, r4, r4):
-        points += [oned_points[ia], oned_points[ib], oned_points[ic]]
+    for ia in r4:
+        for ib in r4:
+            for ic in r4:
+                points += [oned_points[ia], oned_points[ib], oned_points[ic]]
     rot_sym = 4
     dim = 3
     return gr.constellation_calcdist(points, [], rot_sym, dim)
