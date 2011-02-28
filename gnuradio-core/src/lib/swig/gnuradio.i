@@ -35,7 +35,7 @@
 #include <complex>
 %}
 
-// %feature("autodoc","1");
+%feature("autodoc","1");
 
 #ifdef SWIGGUILE
 // Export constants and enums as scheme variables, not functions.

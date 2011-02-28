@@ -94,20 +94,8 @@ class test_constellation_receiver (gr_unittest.TestCase):
             d2 = data[:int(len(data)*self.ignore_fraction)]
             correct, overlap, offset, indices = alignment.align_sequences(
                 d1, d2, indices=self.indices)
-            print(constellation, constellation.arity(), differential, correct, overlap, offset)
             self.assertTrue(correct > REQ_CORRECT)
             
-    def single(self):
-        constellation = blks2.psk_constellation(64, mod_codes.NO_CODE)
-        tb = rec_test_tb(constellation, True, DATA_LENGTH)
-        tb.run()
-        data = tb.dst.data()
-        d1 = tb.src_data[:int(len(tb.src_data)*self.ignore_fraction)]
-        d2 = data[:int(len(data)*self.ignore_fraction)]
-        seed = random.randint(0, 256)
-        correct, overlap, offset, indices = alignment.align_sequences(d1, d2, seed=seed)
-        print(constellation, constellation.arity(), correct, overlap, offset)
-
 
 class rec_test_tb (gr.top_block):
     """
@@ -134,7 +122,7 @@ class rec_test_tb (gr.top_block):
         # Channel
         channel = gr.channel_model(NOISE_VOLTAGE, FREQUENCY_OFFSET, TIMING_OFFSET)
         # Receiver Blocks
-        demod = blks2.generic_demod(constellation, differential=differential, log=True,
+        demod = blks2.generic_demod(constellation, differential=differential,
                                     freq_alpha=FREQ_ALPHA,
                                     phase_alpha=PHASE_ALPHA)
         self.dst = gr.vector_sink_b()
