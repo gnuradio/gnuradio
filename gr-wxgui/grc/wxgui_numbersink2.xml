@@ -7,6 +7,7 @@
 <block>
 	<name>WX GUI Number Sink</name>
 	<key>wxgui_numbersink2</key>
+	<category>WX GUI Widgets</category>
 	<import>from gnuradio.wxgui import numbersink2</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 numbersink2.$(type.fcn)(

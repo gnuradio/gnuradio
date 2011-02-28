@@ -1,5 +1,5 @@
 #
-# Copyright 2008-2010 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -197,7 +197,6 @@ dist_ourdata_DATA = \
 	import.xml \
 	low_pass_filter.xml \
 	note.xml \
-	notebook.xml \
 	options.xml \
 	pad_sink.xml \
 	pad_source.xml \

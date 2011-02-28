@@ -39,17 +39,6 @@
 		<block>virtual_sink</block>
 	</cat>
 	<cat>
-		<name>Graphical Sinks</name>
-		<block>wxgui_numbersink2</block>
-		<block>wxgui_scopesink2</block>
-		<block>wxgui_fftsink2</block>
-		<block>wxgui_constellationsink2</block>
-		<block>wxgui_waterfallsink2</block>
-		<block>wxgui_histosink2</block>
-		<block>wxgui_termsink</block>
-		<block>qtgui_sink_x</block>
-	</cat>
-	<cat>
 		<name>Operators</name>
 		<block>gr_add_xx</block>
 		<block>gr_sub_xx</block>
@@ -139,7 +128,7 @@
 		<block>gr_pll_freqdet_cf</block>
 		<block>gr_pll_refout_cc</block>
 
-                <block>gr_fll_band_edge_cc</block>
+		<block>gr_fll_band_edge_cc</block>
 
 		<block>gr_correlate_access_code_bb</block>
 		<block>gr_pn_correlator_cc</block>
@@ -263,7 +252,7 @@
 		<block>gr_additive_scrambler_bb</block>
 	</cat>
 	<cat>
-	        <name>Vocoders</name>
+		<name>Vocoders</name>
 		<block>blks2_cvsd_encode</block>
 		<block>blks2_cvsd_decode</block>
 	</cat>
@@ -311,7 +300,5 @@
 
 		<block>xmlrpc_server</block>
 		<block>xmlrpc_client</block>
-
-		<block>notebook</block>
 	</cat>
 </cat>

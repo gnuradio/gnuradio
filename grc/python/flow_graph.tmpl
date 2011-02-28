@@ -5,8 +5,6 @@
 ##@param imports the import statements
 ##@param flow_graph the flow_graph
 ##@param variables the variable blocks
-##@param notebooks a list of notebook blocks
-##@param controls the variables with gui controls
 ##@param parameters the paramater blocks
 ##@param blocks the signal blocks
 ##@param connections the connections
@@ -121,30 +119,6 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 		$indent($var.get_var_make())
 #end for
 ########################################################
-##Create Notebooks
-########################################################
-#if $notebooks
-
-		$DIVIDER
-		# Notebooks
-		$DIVIDER
-#end if
-#for $notebook in $notebooks
-		$indent($notebook.get_make())
-#end for
-########################################################
-##Create Controls
-########################################################
-#if $controls
-
-		$DIVIDER
-		# Controls
-		$DIVIDER
-#end if
-#for $ctrl in $controls
-		$indent($ctrl.get_make())
-#end for
-########################################################
 ##Create Message Queues
 ########################################################
 #if $messages
@@ -166,7 +140,11 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 		$DIVIDER
 #end if
 #for $blk in filter(lambda b: b.get_make(), $blocks)
+	#if $blk in $variables
+		$indent($blk.get_make())
+	#else
 		self.$blk.get_id() = $indent($blk.get_make())
+	#end if
 #end for
 ########################################################
 ##Create Connections

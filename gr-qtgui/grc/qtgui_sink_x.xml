@@ -7,7 +7,7 @@
 <block>
 	<name>QT GUI Sink</name>
 	<key>qtgui_sink_x</key>
-	<category>Graphical Sinks</category>
+	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<import>from gnuradio.qtgui import qtgui</import>
 	<import>from gnuradio.gr import firdes</import>

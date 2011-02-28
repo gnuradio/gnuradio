@@ -23,6 +23,7 @@ include $(top_srcdir)/Makefile.common
 
 grcblocksdir = $(grc_blocksdir)
 dist_grcblocks_DATA = \
+	notebook.xml \
 	variable_check_box.xml \
 	variable_chooser.xml \
 	variable_slider.xml \

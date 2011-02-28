@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Slider:
-##	a combined slider and text box form
+##Variable Chooser:
+##	A chooser, radio buttons
 ###################################################
  -->
 <block>
 	<name>QT GUI Chooser</name>
 	<key>variable_qtgui_chooser</key>
-	<category>Variables</category>
+	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<import>import PyQt4.Qwt5 as Qwt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
