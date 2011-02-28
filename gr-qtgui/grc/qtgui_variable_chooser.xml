@@ -21,17 +21,43 @@ $(win).addWidget(Qt.QLabel("$id", None))
 #end if
 self._$(id)_chooser = Qt.QComboBox(None)
 $(win).addWidget(self._$(id)_chooser)
-
-self._$(id)_options = ['a', 'b', 'c']
-
-self._$(id)_chooser.addItem('A')
-self._$(id)_chooser.addItem('B')
-self._$(id)_chooser.addItem('C')
-
+#set $all_options = [$option0, $option1, $option2][:int($num_opts())]
+#set $all_labels = [$label0, $label1, $label2][:int($num_opts())]
+########################################################################
+## Create the options list
+########################################################################
+#if $num_opts()
+self._$(id)_options = (
+	#for $ch in $all_options
+	$ch,
+	#end for
+)
+#else
+self._$(id)_options = $options
+#end if
+########################################################################
+## Create a widget for each item
+########################################################################
+#if $num_opts()
+self._$(id)_labels = (
+	#for i, $lbl in enumerate($all_labels)
+	#if $lbl()
+	$lbl,
+	#else
+	str(self._$(id)_options[$i]),
+	#end if
+	#end for
+)
+#elif $labels
+self._$(id)_labels = $labels
+#else
+self._$(id)_labels = map(str, self._$(id)_options)
+#end if
+for label in self._$(id)_labels:
+	self._$(id)_chooser.addItem(label)
 self._$(id)_chooser.currentIndexChanged.connect(
 	lambda i: self.set_$(id)(self._$(id)_options[i])
 )
-
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
 	<callback>self._$(id)_chooser.setCurrentIndex(
@@ -44,7 +70,6 @@ $(gui_hint()($win))</make>
 		<type>string</type>
 		<hide>#if $label() then 'none' else 'part'#</hide>
 	</param>
-
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -56,16 +81,78 @@ $(gui_hint()($win))</make>
 		<option><name>String</name><key>string</key></option>
 		<option><name>Any</name><key>raw</key></option>
 	</param>
-
+	<param>
+		<name>Num Options</name>
+		<key>num_opts</key>
+		<value>3</value>
+		<type>enum</type>
+		<option><name>List</name><key>0</key></option>
+		<option><name>1</name><key>1</key></option>
+		<option><name>2</name><key>2</key></option>
+		<option><name>3</name><key>3</key></option>
+	</param>
 	<param>
 		<name>Default Value</name>
 		<key>value</key>
 		<value>50</value>
 		<type>$type</type>
 	</param>
-
-
-
+	<param>
+		<name>Options</name>
+		<key>options</key>
+		<value>[0, 1, 2]</value>
+		<type>raw</type>
+		<hide>#if int($num_opts()) then 'all' else 'none'#</hide>
+	</param>
+	<param>
+		<name>Labels</name>
+		<key>labels</key>
+		<value>[]</value>
+		<type>raw</type>
+		<hide>#if int($num_opts()) then 'all' else 'none'#</hide>
+	</param>
+	<param>
+		<name>Option 0</name>
+		<key>option0</key>
+		<value>0</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 0 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 0</name>
+		<key>label0</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 0) and ($label0() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Option 1</name>
+		<key>option1</key>
+		<value>1</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 1 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 1</name>
+		<key>label1</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 1) and ($label1() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Option 2</name>
+		<key>option2</key>
+		<value>2</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 2 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 2</name>
+		<key>label2</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 2) and ($label2() and 'none' or 'part') or 'all')</hide>
+	</param>
 	<param>
 		<name>GUI Hint</name>
 		<key>gui_hint</key>
@@ -74,9 +161,14 @@ $(gui_hint()($win))</make>
 		<hide>part</hide>
 	</param>
 	<doc>
-This block creates a variable with enumerated choices. \
+This block creates a variable with enumerated options. \
 The gui widget is implemented as a combo box or radio button group. \
 Leave the label blank to use the variable id as the label.
+
+Choose the number of options available to your chooser. \
+When the label is left blank, the option will be used as the label. \
+Set the number of options to "list" to enter a single list of options and labels. \
+When the labels is an empty list, the options will be used as the label.
 
 The GUI hint can be used to position the widget within the application. \
 The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \

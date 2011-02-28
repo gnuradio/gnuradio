@@ -11,14 +11,13 @@
 	<import>from PyQt4 import Qt</import>
 	<make>#set $win = 'self.%s'%$id
 Qt.QTabWidget(None)
-#for i, label in enumerate([$label0, $label1, $label2, $label3, $label4])
-#if int($num_tabs()) > $i
+#set $all_labels = [$label0, $label1, $label2, $label3, $label4][:int($num_tabs())]
+#for i, label in enumerate($all_labels)
 self.$(id)_widget_$(i) = Qt.QWidget()
 self.$(id)_layout_$(i) = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.$(id)_widget_$(i))
 self.$(id)_grid_layout_$(i) = Qt.QGridLayout()
 self.$(id)_layout_$(i).addLayout(self.$(id)_grid_layout_$(i))
 $(win).addTab(self.$(id)_widget_$(i), $label)
-#end if
 #end for
 $(gui_hint()($win))</make>
 	<param>
