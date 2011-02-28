@@ -8,9 +8,4 @@
 # correct, as it will result in a partially bogus PYTHONPATH, but it
 # does make the correct paths in the second half so all is well.
 
-@PYTHON@ @srcdir@/doxyxml/__init__.py
-
-# @top_builddir@/run_tests.sh \
-#    @abs_top_srcdir@/gnuradio-core \
-#    @abs_top_builddir@/gnuradio-core \
-#    @srcdir@
+# Nothing in here at the moment.
