@@ -62,8 +62,7 @@ for label in self._$(id)_labels: self._$(id)_combo_box.addItem(label)
 self._$(id)_callback = lambda i: self._$(id)_combo_box.setCurrentIndex(self._$(id)_options.index(i))
 self._$(id)_callback(self.$id)
 self._$(id)_combo_box.currentIndexChanged.connect(
-	lambda i: self.set_$(id)(self._$(id)_options[i])
-)
+	lambda i: self.set_$(id)(self._$(id)_options[i]))
 #end if
 ########################################################################
 ## Create the radio buttons
@@ -84,9 +83,8 @@ for i, label in enumerate(self._$(id)_labels):
 	self._$(id)_button_group.addButton(radio_button, i)
 self._$(id)_callback = lambda i: self._$(id)_button_group.button(self._$(id)_options.index(i)).setChecked(True)
 self._$(id)_callback(self.$id)
-self._$(id)_button_group.buttonClicked.connect(
-	lambda i: self.set_$(id)(self._$(id)_options[self._$(id)_button_group.checkedId()])
-)
+self._$(id)_button_group.buttonClicked[int].connect(
+	lambda i: self.set_$(id)(self._$(id)_options[i]))
 #end if
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
