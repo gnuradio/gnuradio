@@ -12,39 +12,31 @@
 	<import>from PyQt4 import Qt</import>
 	<import>import PyQt4.Qwt5 as Qwt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
-	<make>#set $win = 'self._%s_tool_bar'%$id
-$win = Qt.QToolBar(self)
-#if $label()
-$(win).addWidget(Qt.QLabel($label, None))
-#else
-$(win).addWidget(Qt.QLabel("$id", None))
-#end if
-self._$(id)_chooser = Qt.QComboBox(None)
-$(win).addWidget(self._$(id)_chooser)
-#set $all_options = [$option0, $option1, $option2][:int($num_opts())]
-#set $all_labels = [$label0, $label1, $label2][:int($num_opts())]
+	<make>#slurp
+#set $all_options = [$option0, $option1, $option2, $option3, $option4][:int($num_opts())]
+#set $all_labels = [$label0, $label1, $label2, $label3, $label4][:int($num_opts())]
 ########################################################################
 ## Create the options list
 ########################################################################
 #if $num_opts()
-self._$(id)_options = (
+self._$(id)_options = (#slurp
 	#for $ch in $all_options
-	$ch,
+$ch, #slurp
 	#end for
 )
 #else
 self._$(id)_options = $options
 #end if
 ########################################################################
-## Create a widget for each item
+## Create the labels list
 ########################################################################
 #if $num_opts()
-self._$(id)_labels = (
+self._$(id)_labels = (#slurp
 	#for i, $lbl in enumerate($all_labels)
 	#if $lbl()
-	$lbl,
+$lbl, #slurp
 	#else
-	str(self._$(id)_options[$i]),
+str(self._$(id)_options[$i]), #slurp
 	#end if
 	#end for
 )
@@ -53,16 +45,52 @@ self._$(id)_labels = $labels
 #else
 self._$(id)_labels = map(str, self._$(id)_options)
 #end if
-for label in self._$(id)_labels:
-	self._$(id)_chooser.addItem(label)
-self._$(id)_chooser.currentIndexChanged.connect(
+########################################################################
+## Create the combo box
+########################################################################
+#if $widget() == 'combo_box'
+#set $win = 'self._%s_tool_bar'%$id
+$win = Qt.QToolBar(self)
+#if $label()
+$(win).addWidget(Qt.QLabel($label+" ", None))
+#else
+$(win).addWidget(Qt.QLabel("$id ", None))
+#end if
+self._$(id)_combo_box = Qt.QComboBox(None)
+$(win).addWidget(self._$(id)_combo_box)
+for label in self._$(id)_labels: self._$(id)_combo_box.addItem(label)
+self._$(id)_callback = lambda i: self._$(id)_combo_box.setCurrentIndex(self._$(id)_options.index(i))
+self._$(id)_callback(self.$id)
+self._$(id)_combo_box.currentIndexChanged.connect(
 	lambda i: self.set_$(id)(self._$(id)_options[i])
 )
+#end if
+########################################################################
+## Create the radio buttons
+########################################################################
+#if $widget() == 'radio_buttons'
+#set $win = 'self._%s_radio_group'%$id
+#if $label()
+$win = Qt.QGroupBox($label)
+#else
+$win = Qt.QGroupBox("$id")
+#end if
+self._$(id)_box = $(orient)()
+self._$(id)_button_group = Qt.QButtonGroup()
+$(win).setLayout(self._$(id)_box)
+for i, label in enumerate(self._$(id)_labels):
+	radio_button = Qt.QRadioButton(label)
+	self._$(id)_box.addWidget(radio_button)
+	self._$(id)_button_group.addButton(radio_button, i)
+self._$(id)_callback = lambda i: self._$(id)_button_group.button(self._$(id)_options.index(i)).setChecked(True)
+self._$(id)_callback(self.$id)
+self._$(id)_button_group.buttonClicked.connect(
+	lambda i: self.set_$(id)(self._$(id)_options[self._$(id)_button_group.checkedId()])
+)
+#end if
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self._$(id)_chooser.setCurrentIndex(
-	self._$(id)_options.index($id)
-)</callback>
+	<callback>self._$(id)_callback($id)</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>
@@ -73,7 +101,7 @@ $(gui_hint()($win))</make>
 	<param>
 		<name>Type</name>
 		<key>type</key>
-		<value>real</value>
+		<value>int</value>
 		<type>enum</type>
 		<hide>part</hide>
 		<option><name>Real</name><key>real</key></option>
@@ -90,11 +118,13 @@ $(gui_hint()($win))</make>
 		<option><name>1</name><key>1</key></option>
 		<option><name>2</name><key>2</key></option>
 		<option><name>3</name><key>3</key></option>
+		<option><name>4</name><key>4</key></option>
+		<option><name>5</name><key>5</key></option>
 	</param>
 	<param>
 		<name>Default Value</name>
 		<key>value</key>
-		<value>50</value>
+		<value>0</value>
 		<type>$type</type>
 	</param>
 	<param>
@@ -152,6 +182,58 @@ $(gui_hint()($win))</make>
 		<value></value>
 		<type>string</type>
 		<hide>$((int($num_opts()) > 2) and ($label2() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Option 3</name>
+		<key>option3</key>
+		<value>3</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 3 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 3</name>
+		<key>label3</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 3) and ($label3() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Option 4</name>
+		<key>option4</key>
+		<value>4</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 4 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 4</name>
+		<key>label4</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 4) and ($label4() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Widget</name>
+		<key>widget</key>
+		<value>combo_box</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option><name>Combo Box</name><key>combo_box</key></option>
+		<option><name>Radio Buttons</name><key>radio_buttons</key></option>
+	</param>
+	<param>
+		<name>Orientation</name>
+		<key>orient</key>
+		<value>Qt.QVBoxLayout</value>
+		<type>enum</type>
+		<hide>#if $widget() == 'radio_buttons' then 'part' else 'all'#</hide>
+		<option>
+			<name>Horizontal</name>
+			<key>Qt.QHBoxLayout</key>
+		</option>
+		<option>
+			<name>Vertical</name>
+			<key>Qt.QVBoxLayout</key>
+		</option>
 	</param>
 	<param>
 		<name>GUI Hint</name>
