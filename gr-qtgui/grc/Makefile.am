@@ -25,6 +25,8 @@ grcblocksdir = $(grc_blocksdir)
 
 dist_grcblocks_DATA = \
 	qtgui_sink_x.xml \
+	qtgui_static_text.xml \
 	qtgui_tab_widget.xml \
-	qtgui_variable_chooser.xml \
-	qtgui_variable_slider.xml
+	qtgui_text_box.xml \
+	qtgui_chooser.xml \
+	qtgui_slider.xml

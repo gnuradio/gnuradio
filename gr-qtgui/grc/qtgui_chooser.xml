@@ -10,7 +10,6 @@
 	<key>variable_qtgui_chooser</key>
 	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
-	<import>import PyQt4.Qwt5 as Qwt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#slurp
 #set $all_options = [$option0, $option1, $option2, $option3, $option4][:int($num_opts())]
@@ -102,8 +101,8 @@ $(gui_hint()($win))</make>
 		<value>int</value>
 		<type>enum</type>
 		<hide>part</hide>
-		<option><name>Real</name><key>real</key></option>
-		<option><name>Int</name><key>int</key></option>
+		<option><name>Float</name><key>real</key></option>
+		<option><name>Integer</name><key>int</key></option>
 		<option><name>String</name><key>string</key></option>
 		<option><name>Any</name><key>raw</key></option>
 	</param>
