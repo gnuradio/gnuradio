@@ -14,6 +14,9 @@
 	<make>#slurp
 #set $all_options = [$option0, $option1, $option2, $option3, $option4][:int($num_opts())]
 #set $all_labels = [$label0, $label1, $label2, $label3, $label4][:int($num_opts())]
+#if not $label()
+	#set $label = '"%s"'%$id
+#end if
 ########################################################################
 ## Create the options list
 ########################################################################
@@ -50,11 +53,7 @@ self._$(id)_labels = map(str, self._$(id)_options)
 #if $widget() == 'combo_box'
 #set $win = 'self._%s_tool_bar'%$id
 $win = Qt.QToolBar(self)
-#if $label()
 $(win).addWidget(Qt.QLabel($label+" ", None))
-#else
-$(win).addWidget(Qt.QLabel("$id ", None))
-#end if
 self._$(id)_combo_box = Qt.QComboBox(None)
 $(win).addWidget(self._$(id)_combo_box)
 for label in self._$(id)_labels: self._$(id)_combo_box.addItem(label)
@@ -67,12 +66,8 @@ self._$(id)_combo_box.currentIndexChanged.connect(
 ## Create the radio buttons
 ########################################################################
 #if $widget() == 'radio_buttons'
-#set $win = 'self._%s_radio_group'%$id
-#if $label()
+#set $win = 'self._%s_group_box'%$id
 $win = Qt.QGroupBox($label)
-#else
-$win = Qt.QGroupBox("$id")
-#end if
 self._$(id)_box = $(orient)()
 self._$(id)_button_group = Qt.QButtonGroup()
 $(win).setLayout(self._$(id)_box)

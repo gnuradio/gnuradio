@@ -24,6 +24,7 @@ include $(top_srcdir)/Makefile.common
 grcblocksdir = $(grc_blocksdir)
 
 dist_grcblocks_DATA = \
+	qtgui_check_box.xml \
 	qtgui_sink_x.xml \
 	qtgui_static_text.xml \
 	qtgui_tab_widget.xml \

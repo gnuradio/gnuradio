@@ -13,11 +13,10 @@
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $win = 'self._%s_tool_bar'%$id
 $win = Qt.QToolBar(self)
-#if $label()
-$(win).addWidget(Qt.QLabel($label+" ", None))
-#else
-$(win).addWidget(Qt.QLabel("$id ", None))
+#if not $label()
+	#set $label = '"%s"'%$id
 #end if
+$(win).addWidget(Qt.QLabel($label+" ", None))
 self._$(id)_label = Qt.QLabel(str(self.$id))
 self._$(id)_tool_bar.addWidget(self._$(id)_label)
 $(gui_hint()($win))</make>
@@ -39,6 +38,7 @@ $(gui_hint()($win))</make>
 		<option><name>Float</name><key>real</key><opt>conv:float</opt></option>
 		<option><name>Integer</name><key>int</key><opt>conv:int</opt></option>
 		<option><name>String</name><key>string</key><opt>conv:str</opt></option>
+		<option><name>Boolean</name><key>bool</key><opt>conv:bool</opt></option>
 		<option><name>Any</name><key>raw</key><opt>conv:eval</opt></option>
 	</param>
 	<param>

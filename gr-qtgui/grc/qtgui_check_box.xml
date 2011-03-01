@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Text Box:
-##	a gui text box form
+##Variable Check Box:
+##	a gui check box form
 ###################################################
  -->
 <block>
-	<name>QT GUI Text Box</name>
-	<key>variable_qtgui_text_box</key>
+	<name>QT GUI Check Box</name>
+	<key>variable_qtgui_check_box</key>
 	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
-	<make>#set $win = 'self._%s_tool_bar'%$id
-$win = Qt.QToolBar(self)
+	<make>#set $win = '_%s_check_box'%$id
 #if not $label()
 	#set $label = '"%s"'%$id
 #end if
-$(win).addWidget(Qt.QLabel($label+" ", None))
-self._$(id)_line_edit = Qt.QLineEdit(str(self.$id))
-self._$(id)_tool_bar.addWidget(self._$(id)_line_edit)
-self._$(id)_line_edit.returnPressed.connect(
-	lambda: self.set_$(id)($(type.conv)(self._$(id)_line_edit.text())))
+$win = Qt.QCheckBox($label)
+self._$(id)_choices = {True: $true, False: $false}
+self._$(id)_choices_inv = dict((v,k) for k,v in self._$(id)_choices.iteritems())
+self._$(id)_callback = lambda i: $(win).setChecked(self._$(id)_choices_inv[i])
+self._$(id)_callback(self.$id)
+$(win).stateChanged.connect(lambda i: self.set_$(id)(self._$(id)_choices[bool(i)]))
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self._$(id)_line_edit.setText(str($id))</callback>
+	<callback>self._$(id)_callback($id)</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>
@@ -46,7 +46,19 @@ $(gui_hint()($win))</make>
 	<param>
 		<name>Default Value</name>
 		<key>value</key>
-		<value>0</value>
+		<value>True</value>
+		<type>$type</type>
+	</param>
+	<param>
+		<name>True</name>
+		<key>true</key>
+		<value>True</value>
+		<type>$type</type>
+	</param>
+	<param>
+		<name>False</name>
+		<key>false</key>
+		<value>False</value>
 		<type>$type</type>
 	</param>
 	<param>
@@ -56,9 +68,13 @@ $(gui_hint()($win))</make>
 		<type>gui_hint</type>
 		<hide>part</hide>
 	</param>
+	<check>$value in ($true, $false)</check>
 	<doc>
-This block creates a variable with text box entry. \
+This block creates a variable check box. \
 Leave the label blank to use the variable id as the label.
+
+A check box selects between two values of similar type. \
+Te values do not necessarily need to be of boolean type.
 
 The GUI hint can be used to position the widget within the application. \
 The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \

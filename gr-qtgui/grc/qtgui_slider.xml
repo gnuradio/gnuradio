@@ -16,11 +16,10 @@
 $win = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom)
 self._$(id)_tool_bar = Qt.QToolBar(self)
 $(win).addWidget(self._$(id)_tool_bar)
-#if $label()
-self._$(id)_tool_bar.addWidget(Qt.QLabel($label, None))
-#else
-self._$(id)_tool_bar.addWidget(Qt.QLabel("$id", None))
+#if not $label()
+	#set $label = '"%s"'%$id
 #end if
+self._$(id)_tool_bar.addWidget(Qt.QLabel($label, None))
 self._$(id)_counter = Qwt.QwtCounter(None)
 self._$(id)_counter.setRange($start, $stop, $step)
 self._$(id)_counter.setNumButtons(2)
