@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Text Box:
+##Variable Text Entry:
 ##	a gui text box form
 ###################################################
  -->
 <block>
-	<name>QT GUI Text Box</name>
-	<key>variable_qtgui_text_box</key>
+	<name>QT GUI Entry</name>
+	<key>variable_qtgui_entry</key>
 	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
@@ -57,7 +57,7 @@ $(gui_hint()($win))</make>
 		<hide>part</hide>
 	</param>
 	<doc>
-This block creates a variable with text box entry. \
+This block creates a variable with a text entry box. \
 Leave the label blank to use the variable id as the label.
 
 The GUI hint can be used to position the widget within the application. \

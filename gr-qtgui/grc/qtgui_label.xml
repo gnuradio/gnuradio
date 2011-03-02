@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Static Text:
+##Variable Label Text:
 ##	a gui static text form
 ###################################################
  -->
 <block>
-	<name>QT GUI Static Text</name>
-	<key>variable_qtgui_static_text</key>
+	<name>QT GUI Label</name>
+	<key>variable_qtgui_label</key>
 	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
@@ -55,7 +55,7 @@ $(gui_hint()($win))</make>
 		<hide>part</hide>
 	</param>
 	<doc>
-This block creates a variable with a static text widget. \
+This block creates a variable with a label widget for text. \
 Leave the label blank to use the variable id as the label.
 
 The GUI hint can be used to position the widget within the application. \
