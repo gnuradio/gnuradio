@@ -46,7 +46,10 @@ public:
         uhd_usrp_source(gr_make_io_signature(
             num_channels, num_channels, io_type.size
         )),
-        _type(io_type)
+        _type(io_type),
+        _nchan(num_channels),
+        _stream_now(_nchan == 1),
+        _tmp_buffs(_nchan)
     {
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
@@ -169,16 +172,16 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        uhd::rx_metadata_t metadata; //not passed out of this block
-
+        //wait for a packet to become available
         size_t num_samps = _dev->get_device()->recv(
-            output_items, noutput_items, metadata,
-            _type, uhd::device::RECV_MODE_FULL_BUFF, 1.0
+            output_items, noutput_items, _metadata,
+            _type, uhd::device::RECV_MODE_ONE_PACKET, 1.0
         );
 
-        switch(metadata.error_code){
+        //handle possible errors conditions
+        switch(_metadata.error_code){
         case uhd::rx_metadata_t::ERROR_CODE_NONE:
-            return num_samps;
+            break;
 
         case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
             //ignore overflows and try work again
@@ -187,16 +190,30 @@ public:
         default:
             std::cout << boost::format(
                 "UHD source block got error code 0x%x"
-            ) % metadata.error_code << std::endl;
+            ) % _metadata.error_code << std::endl;
             return num_samps;
         }
+
+        //advance the pointers and count by num_samps
+        noutput_items -= num_samps;
+        for (size_t i = 0; i < _nchan; i++){
+            _tmp_buffs[i] = static_cast<char *>(output_items[i]) + num_samps*_type.size;
+        }
+
+        //receive all available packets without timeout
+        num_samps += _dev->get_device()->recv(
+            _tmp_buffs, noutput_items, _metadata,
+            _type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
+        );
+
+        return num_samps;
     }
 
     bool start(void){
         //setup a stream command that starts streaming slightly in the future
         static const double reasonable_delay = 0.1; //order of magnitude over RTT
         uhd::stream_cmd_t stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
-        stream_cmd.stream_now = false;
+        stream_cmd.stream_now = _stream_now;
         stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(reasonable_delay);
         _dev->issue_stream_cmd(stream_cmd);
         return true;
@@ -210,6 +227,10 @@ public:
 private:
     uhd::usrp::multi_usrp::sptr _dev;
     const uhd::io_type_t _type;
+    size_t _nchan;
+    bool _stream_now;
+    gr_vector_void_star _tmp_buffs;
+    uhd::rx_metadata_t _metadata;
 };
 
 
