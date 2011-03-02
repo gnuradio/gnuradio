@@ -105,7 +105,7 @@ else: self.stop(); self.wait()</callback>
 		<value>True</value>
 		<type>bool</type>
 		<hide>
-#if $generate_options() == 'wx_gui'
+#if $generate_options() in ('qt_gui', 'wx_gui')
 	#if $run()
 		part
 	#else
