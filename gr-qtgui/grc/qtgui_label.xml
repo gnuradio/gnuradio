@@ -10,18 +10,19 @@
 	<key>variable_qtgui_label</key>
 	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
+	<import>from gnuradio import eng_notation</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $win = 'self._%s_tool_bar'%$id
 $win = Qt.QToolBar(self)
 #if not $label()
 	#set $label = '"%s"'%$id
 #end if
-$(win).addWidget(Qt.QLabel($label+" ", None))
+$(win).addWidget(Qt.QLabel($label+": ", None))
 self._$(id)_label = Qt.QLabel(str(self.$id))
 self._$(id)_tool_bar.addWidget(self._$(id)_label)
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self._$(id)_label.setText(str($id))</callback>
+	<callback>self._$(id)_label.setText($(type.str)($id))</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>
@@ -35,11 +36,11 @@ $(gui_hint()($win))</make>
 		<value>int</value>
 		<type>enum</type>
 		<hide>part</hide>
-		<option><name>Float</name><key>real</key><opt>conv:float</opt></option>
-		<option><name>Integer</name><key>int</key><opt>conv:int</opt></option>
-		<option><name>String</name><key>string</key><opt>conv:str</opt></option>
-		<option><name>Boolean</name><key>bool</key><opt>conv:bool</opt></option>
-		<option><name>Any</name><key>raw</key><opt>conv:eval</opt></option>
+		<option><name>Float</name><key>real</key><opt>conv:eng_notation.str_to_num</opt><opt>str:eng_notation.num_to_str</opt></option>
+		<option><name>Integer</name><key>int</key><opt>conv:int</opt><opt>str:str</opt></option>
+		<option><name>String</name><key>string</key><opt>conv:str</opt><opt>str:str</opt></option>
+		<option><name>Boolean</name><key>bool</key><opt>conv:bool</opt><opt>str:str</opt></option>
+		<option><name>Any</name><key>raw</key><opt>conv:eval</opt><opt>str:repr</opt></option>
 	</param>
 	<param>
 		<name>Default Value</name>

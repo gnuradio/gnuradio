@@ -19,7 +19,7 @@ $(win).addWidget(self._$(id)_tool_bar)
 #if not $label()
 	#set $label = '"%s"'%$id
 #end if
-self._$(id)_tool_bar.addWidget(Qt.QLabel($label, None))
+self._$(id)_tool_bar.addWidget(Qt.QLabel($label+": ", None))
 self._$(id)_counter = Qwt.QwtCounter(None)
 self._$(id)_counter.setRange($start, $stop, $step)
 self._$(id)_counter.setNumButtons(2)
