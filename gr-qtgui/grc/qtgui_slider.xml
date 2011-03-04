@@ -20,23 +20,31 @@ $(win).addWidget(self._$(id)_tool_bar)
 	#set $label = '"%s"'%$id
 #end if
 self._$(id)_tool_bar.addWidget(Qt.QLabel($label+": ", None))
+#if int($widget.counter)
 self._$(id)_counter = Qwt.QwtCounter(None)
 self._$(id)_counter.setRange($start, $stop, $step)
 self._$(id)_counter.setNumButtons(2)
-self._$(id)_counter.setValue($value)
+self._$(id)_counter.setValue(self.$id)
 self._$(id)_tool_bar.addWidget(self._$(id)_counter)
 self._$(id)_counter.valueChanged.connect(self.set_$(id))
+#end if
+#if int($widget.slider)
 self._$(id)_slider = Qwt.QwtSlider(None)
 self._$(id)_slider.setRange($start, $stop, $step)
-self._$(id)_slider.setValue($value)
+self._$(id)_slider.setValue(self.$id)
 self._$(id)_slider.setOrientation(Qt.$orient)
 self._$(id)_slider.setScalePosition($orient.scalepos)
 self._$(id)_slider.valueChanged.connect(self.set_$(id))
 $(win).addWidget(self._$(id)_slider)
+#end if
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self._$(id)_counter.setValue($id)</callback>
-	<callback>self._$(id)_slider.setValue($id)</callback>
+	<callback>#if int($widget.counter)
+self._$(id)_counter.setValue($id)
+#end if
+#if int($widget.slider)
+self._$(id)_slider.setValue($id)
+#end if</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>
@@ -67,6 +75,16 @@ $(gui_hint()($win))</make>
 		<key>step</key>
 		<value>1</value>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Widget</name>
+		<key>widget</key>
+		<value>all</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option><name>Counter + Slider</name>  <key>both</key>     <opt>counter:1</opt><opt>slider:1</opt></option>
+		<option><name>Counter only</name>      <key>counter</key>  <opt>counter:1</opt><opt>slider:0</opt></option>
+		<option><name>Slider only</name>       <key>slider</key>   <opt>counter:0</opt><opt>slider:1</opt></option>
 	</param>
 	<param>
 		<name>Orientation</name>
