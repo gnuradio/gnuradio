@@ -63,7 +63,7 @@ class $(class_name)(gr.top_block, Qt.QWidget):
 	def __init__($param_str):
 		gr.top_block.__init__(self, "$title")
 		Qt.QWidget.__init__(self)
-		self.top_layout = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self)
+		self.top_layout = Qt.QVBoxLayout(self)
 		self.top_grid_layout = Qt.QGridLayout()
 		self.top_layout.addLayout(self.top_grid_layout)
 #elif $generate_options == 'no_gui'
