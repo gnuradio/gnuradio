@@ -7,49 +7,20 @@
 <block>
 	<name>Probe MPSK SNR</name>
 	<key>gr_probe_mpsk_snr_c</key>
-	<import>from grc_gnuradio import blks2 as grc_blks2</import>
-	<make>grc_blks2.probe_mpsk_snr_c(
-	type='$type',
-	alpha=$alpha,
-	probe_rate=$probe_rate,
-)</make>
+	<import>from gnuradio import gr</import>
+	<make>gr.probe_mpsk_snr_c($alpha)</make>
 	<callback>set_alpha($alpha)</callback>
-	<callback>set_probe_rate($probe_rate)</callback>
-	<param>
-		<name>Type</name>
-		<key>type</key>
-		<type>enum</type>
-		<option>
-			<name>SNR</name>
-			<key>snr</key>
-		</option>
-		<option>
-			<name>Signal Mean</name>
-			<key>signal_mean</key>
-		</option>
-		<option>
-			<name>Noise Variance</name>
-			<key>noise_variance</key>
-		</option>
-	</param>
 	<param>
 		<name>Alpha</name>
 		<key>alpha</key>
 		<value>1</value>
 		<type>real</type>
 	</param>
-	<param>
-		<name>Probe Rate</name>
-		<key>probe_rate</key>
-		<value>10</value>
-		<type>real</type>
-	</param>
 	<sink>
 		<name>in</name>
 		<type>complex</type>
 	</sink>
-	<source>
-		<name>out</name>
-		<type>float</type>
-	</source>
+	<doc>
+Available functions to probe: signal_mean, noise_variance
+	</doc>
 </block>

@@ -60,7 +60,6 @@ dist_ourdata_DATA = \
 	blks2_tcp_sink.xml \
 	blks2_tcp_source.xml \
 	blks2_valve.xml \
-	blks2_variable_sink_x.xml \
 	blks2_wfm_rcv.xml \
 	blks2_wfm_rcv_pll.xml \
 	blks2_wfm_tx.xml \
@@ -158,6 +157,7 @@ dist_ourdata_DATA = \
 	gr_probe_avg_mag_sqrd_x.xml \
 	gr_probe_density_b.xml \
 	gr_probe_mpsk_snr_c.xml \
+	gr_probe_signal_f.xml \
 	gr_pwr_squelch_xx.xml \
 	gr_quadrature_demod_cf.xml \
 	gr_rational_resampler_base_xxx.xml \
@@ -201,7 +201,6 @@ dist_ourdata_DATA = \
 	pad_sink.xml \
 	pad_source.xml \
 	parameter.xml \
-	probe_function.xml \
 	random_source_x.xml \
 	root_raised_cosine_filter.xml \
 	trellis_encoder_xx.xml \
@@ -221,6 +220,7 @@ dist_ourdata_DATA = \
 	usrp_simple_source_x.xml \
 	variable.xml \
 	variable_config.xml \
+	variable_function_probe.xml \
 	virtual_sink.xml \
 	virtual_source.xml \
 	xmlrpc_client.xml \
