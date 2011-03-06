@@ -27,7 +27,7 @@ dist_grcblocks_DATA = \
 	qtgui_check_box.xml \
 	qtgui_entry.xml \
 	qtgui_label.xml \
+	qtgui_range.xml \
 	qtgui_sink_x.xml \
 	qtgui_tab_widget.xml \
-	qtgui_chooser.xml \
-	qtgui_slider.xml
+	qtgui_chooser.xml
