@@ -21,6 +21,8 @@
 		<type>complex</type>
 	</sink>
 	<doc>
-Available functions to probe: signal_mean, noise_variance
+Available functions to probe: signal_mean(), noise_variance()
+
+Use with the function probe block.
 	</doc>
 </block>

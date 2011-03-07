@@ -43,6 +43,8 @@
 		<type>$type.input</type>
 	</sink>
 	<doc>
-Available functions to probe: level
+Available functions to probe: level()
+
+Use with the function probe block.
 	</doc>
 </block>

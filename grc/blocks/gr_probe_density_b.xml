@@ -27,6 +27,8 @@
 		<type>byte</type>
 	</sink>
 	<doc>
-Available functions to probe: density
+Available functions to probe: density()
+
+Use with the function probe block.
 	</doc>
 </block>
