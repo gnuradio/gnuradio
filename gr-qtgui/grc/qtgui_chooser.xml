@@ -20,7 +20,7 @@
 ########################################################################
 ## Create the options list
 ########################################################################
-#if $num_opts()
+#if int($num_opts())
 self._$(id)_options = (#slurp
 	#for $ch in $all_options
 $ch, #slurp
@@ -32,7 +32,7 @@ self._$(id)_options = $options
 ########################################################################
 ## Create the labels list
 ########################################################################
-#if $num_opts()
+#if int($num_opts())
 self._$(id)_labels = (#slurp
 	#for i, $lbl in enumerate($all_labels)
 	#if $lbl()
@@ -42,7 +42,7 @@ str(self._$(id)_options[$i]), #slurp
 	#end if
 	#end for
 )
-#elif $labels
+#elif $labels()
 self._$(id)_labels = $labels
 #else
 self._$(id)_labels = map(str, self._$(id)_options)
