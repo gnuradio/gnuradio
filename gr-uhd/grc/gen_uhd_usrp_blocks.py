@@ -65,7 +65,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<callback>set_bandwidth(\$bw$(n), $n)</callback>
 	#end for
 	<param>
-		<name>Input Type</name>
+		<name>$(direction.title())put Type</name>
 		<key>type</key>
 		<type>enum</type>
 		<option>
@@ -140,6 +140,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<key>num_mboards</key>
 		<value>1</value>
 		<type>int</type>
+		<hide>part</hide>
 		#for $m in range(1, $max_mboards+1)
 		<option>
 			<name>$(m)</name>
