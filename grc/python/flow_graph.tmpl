@@ -235,6 +235,7 @@ if __name__ == '__main__':
 	#elif $generate_options == 'qt_gui'
 	qapp = Qt.QApplication(sys.argv)
 	tb = $(class_name)($(', '.join($params_eq_list)))
+	tb.setWindowTitle("$title")
 	#if $flow_graph.get_option('run')
 	tb.start()
 	#end if

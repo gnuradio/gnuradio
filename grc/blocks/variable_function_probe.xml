@@ -13,7 +13,9 @@
 	<make>#slurp
 def _$(id)_probe():
 	while True:
-		self.set_$(id)(self.$(block_id()).$(function_name())($(function_args())))
+		val = self.$(block_id()).$(function_name())($(function_args()))
+		try: self.set_$(id)(val)
+		except AttributeError, e: pass
 		time.sleep(1.0/($poll_rate))
 _$(id)_thread = threading.Thread(target=_$(id)_probe)
 _$(id)_thread.daemon = True
@@ -57,7 +59,8 @@ Set the values for block ID, function name, and function args appropriately: \
 Block ID should be the ID of another block in this flow graph. \
 Function name should be the name of a class method on that block. \
 Function args are the parameters passed into that function. \
-For a function with no arguments, leave function args blank.
+For a function with no arguments, leave function args blank. \
+When passing a string for the function arguments, quote the string literal: '"arg"'.
 
 The values will used literally, and generated into the following form:
 self.block_id.function_name(function_args)

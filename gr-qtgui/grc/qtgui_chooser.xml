@@ -53,8 +53,8 @@ self._$(id)_labels = map(str, self._$(id)_options)
 #if $widget() == 'combo_box'
 #set $win = 'self._%s_tool_bar'%$id
 $win = Qt.QToolBar(self)
-$(win).addWidget(Qt.QLabel($label+": ", None))
-self._$(id)_combo_box = Qt.QComboBox(None)
+$(win).addWidget(Qt.QLabel($label+": "))
+self._$(id)_combo_box = Qt.QComboBox()
 $(win).addWidget(self._$(id)_combo_box)
 for label in self._$(id)_labels: self._$(id)_combo_box.addItem(label)
 self._$(id)_callback = lambda i: self._$(id)_combo_box.setCurrentIndex(self._$(id)_options.index(i))

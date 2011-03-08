@@ -10,7 +10,7 @@
 	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<make>#set $win = 'self.%s'%$id
-Qt.QTabWidget(None)
+Qt.QTabWidget()
 #set $all_labels = [$label0, $label1, $label2, $label3, $label4][:int($num_tabs())]
 #for i, label in enumerate($all_labels)
 self.$(id)_widget_$(i) = Qt.QWidget()

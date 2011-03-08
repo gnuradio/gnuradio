@@ -17,7 +17,7 @@ $win = Qt.QToolBar(self)
 #if not $label()
 	#set $label = '"%s"'%$id
 #end if
-$(win).addWidget(Qt.QLabel($label+": ", None))
+$(win).addWidget(Qt.QLabel($label+": "))
 self._$(id)_label = Qt.QLabel(str(self.$id))
 self._$(id)_tool_bar.addWidget(self._$(id)_label)
 $(gui_hint()($win))</make>

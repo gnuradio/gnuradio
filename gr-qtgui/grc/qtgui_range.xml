@@ -11,7 +11,6 @@
 	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<import>import PyQt4.Qwt5 as Qwt</import>
-	<import>from gnuradio import eng_notation</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $win = 'self._%s_layout'%$id
 #if not $label()
@@ -33,14 +32,22 @@ $(win).addWidget(self._$(id)_label)
 ########################################################################
 #if $widget() == "thermo"
 ########################################################################
-$win = $(orient.layout)()
-$(win).addWidget(Qt.QLabel($label))
+$win = Qt.QVBoxLayout()
+self._$(id)_label = Qt.QLabel($label)
 self._$(id)_thermo = Qwt.QwtThermo()
 self._$(id)_thermo.setScalePosition(Qwt.QwtThermo.$orient.scalepos)
 self._$(id)_thermo.setRange($start, $stop)
 self._$(id)_thermo.setValue(self.$id)
 self._$(id)_thermo.$(orient.minfcn)($min_len)
+#if 'horizontal' in $orient().lower()
+self._$(id)_label.setAlignment(Qt.Qt.AlignBottom | Qt.Qt.AlignHCenter)
+$(win).addWidget(self._$(id)_label)
 $(win).addWidget(self._$(id)_thermo)
+#elif 'vertical' in $orient().lower()
+self._$(id)_label.setAlignment(Qt.Qt.AlignTop)
+$(win).addWidget(self._$(id)_thermo)
+$(win).addWidget(self._$(id)_label)
+#end if
 #end if
 ########################################################################
 #if $widget() == "counter"
@@ -58,15 +65,22 @@ self._$(id)_counter.valueChanged.connect(self.set_$(id))
 ########################################################################
 #if $widget() == "slider"
 ########################################################################
-$win = $(orient.layout)()
+$win = Qt.QVBoxLayout()
+self._$(id)_label = Qt.QLabel($label)
 self._$(id)_slider = Qwt.QwtSlider(None, Qt.$orient, Qwt.QwtSlider.$orient.scalepos, Qwt.QwtSlider.BgSlot)
 self._$(id)_slider.setRange($start, $stop, $step)
 self._$(id)_slider.setValue(self.$id)
 self._$(id)_slider.$(orient.minfcn)($min_len)
 self._$(id)_slider.valueChanged.connect(self.set_$(id))
+#if 'horizontal' in $orient().lower()
+self._$(id)_label.setAlignment(Qt.Qt.AlignBottom | Qt.Qt.AlignHCenter)
+$(win).addWidget(self._$(id)_label)
 $(win).addWidget(self._$(id)_slider)
-self._$(id)_num = Qt.QLabel(eng_notation.num_to_str($id))
-$(win).addWidget(self._$(id)_num)
+#elif 'vertical' in $orient().lower()
+self._$(id)_label.setAlignment(Qt.Qt.AlignTop)
+$(win).addWidget(self._$(id)_slider)
+$(win).addWidget(self._$(id)_label)
+#end if
 #end if
 ########################################################################
 #if $widget() == "counter_slider"
@@ -101,7 +115,6 @@ self._$(id)_counter.setValue($id)
 #end if
 #if $widget() == "slider"
 self._$(id)_slider.setValue($id)
-self._$(id)_num.setText(eng_notation.num_to_str($id))
 #end if
 #if $widget() == "counter_slider"
 self._$(id)_counter.setValue($id)
@@ -161,14 +174,12 @@ self._$(id)_slider.setValue($id)
 			<key>Qt.Horizontal</key>
 			<opt>scalepos:BottomScale</opt>
 			<opt>minfcn:setMinimumWidth</opt>
-			<opt>layout:Qt.QHBoxLayout</opt>
 		</option>
 		<option>
 			<name>Vertical</name>
 			<key>Qt.Vertical</key>
 			<opt>scalepos:LeftScale</opt>
 			<opt>minfcn:setMinimumHeight</opt>
-			<opt>layout:Qt.QVBoxLayout</opt>
 		</option>
 	</param>
 	<param>
