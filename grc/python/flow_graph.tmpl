@@ -63,6 +63,8 @@ class $(class_name)(gr.top_block, Qt.QWidget):
 	def __init__($param_str):
 		gr.top_block.__init__(self, "$title")
 		Qt.QWidget.__init__(self)
+		self.setWindowTitle("$title")
+		self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
 		self.top_layout = Qt.QVBoxLayout(self)
 		self.top_grid_layout = Qt.QGridLayout()
 		self.top_layout.addLayout(self.top_grid_layout)
@@ -235,7 +237,6 @@ if __name__ == '__main__':
 	#elif $generate_options == 'qt_gui'
 	qapp = Qt.QApplication(sys.argv)
 	tb = $(class_name)($(', '.join($params_eq_list)))
-	tb.setWindowTitle("$title")
 	#if $flow_graph.get_option('run')
 	tb.start()
 	#end if
