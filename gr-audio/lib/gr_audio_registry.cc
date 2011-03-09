@@ -79,11 +79,11 @@ void audio_register_sink(
  * Factory functions
  **********************************************************************/
 static std::string default_arch_name(void){
-    return gr_prefs::singleton()->get_string("audio", "default_arch", "");
+    return gr_prefs::singleton()->get_string("audio", "audio_module", "auto");
 }
 
 static void do_arch_warning(const std::string &arch){
-    if (arch.empty()) return; //no warning when arch not specified
+    if (arch == "auto") return; //no warning when arch not specified
     std::cerr << "Could not find audio architecture \"" << arch << "\" in registry." << std::endl;
     std::cerr << "    Defaulting to the first available architecture..." << std::endl;
 }
