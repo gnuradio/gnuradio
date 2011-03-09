@@ -29,21 +29,27 @@
 typedef audio_source::sptr(*source_factory_t)(int, const std::string &, bool);
 typedef audio_sink::sptr(*sink_factory_t)(int, const std::string &, bool);
 
-void audio_register_source(const std::string &name, source_factory_t source);
-void audio_register_sink(const std::string &name, sink_factory_t sink);
+enum reg_prio_type{
+    REG_PRIO_LOW = 100,
+    REG_PRIO_MED = 200,
+    REG_PRIO_HIGH = 300
+};
+
+void audio_register_source(reg_prio_type prio, const std::string &arch, source_factory_t source);
+void audio_register_sink(reg_prio_type prio, const std::string &arch, sink_factory_t sink);
 
 #define AUDIO_REGISTER_FIXTURE(x) static struct x{x();}x;x::x()
 
-#define AUDIO_REGISTER_SOURCE(name) \
-    static audio_source::sptr name##_source_fcn(int, const std::string &, bool); \
-    AUDIO_REGISTER_FIXTURE(name##_source_reg){ \
-        audio_register_source(#name, &name##_source_fcn); \
-    } static audio_source::sptr name##_source_fcn
+#define AUDIO_REGISTER_SOURCE(prio, arch) \
+    static audio_source::sptr arch##_source_fcn(int, const std::string &, bool); \
+    AUDIO_REGISTER_FIXTURE(arch##_source_reg){ \
+        audio_register_source(prio, #arch, &arch##_source_fcn); \
+    } static audio_source::sptr arch##_source_fcn
 
-#define AUDIO_REGISTER_SINK(name) \
-    static audio_sink::sptr name##_sink_fcn(int, const std::string &, bool); \
-    AUDIO_REGISTER_FIXTURE(name##_sink_reg){ \
-        audio_register_sink(#name, &name##_sink_fcn); \
-    } static audio_sink::sptr name##_sink_fcn
+#define AUDIO_REGISTER_SINK(prio, arch) \
+    static audio_sink::sptr arch##_sink_fcn(int, const std::string &, bool); \
+    AUDIO_REGISTER_FIXTURE(arch##_sink_reg){ \
+        audio_register_sink(prio, #arch, &arch##_sink_fcn); \
+    } static audio_sink::sptr arch##_sink_fcn
 
 #endif /* INCLUDED_GR_AUDIO_REGISTRY_H */

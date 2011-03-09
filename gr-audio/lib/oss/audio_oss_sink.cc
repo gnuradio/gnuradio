@@ -38,7 +38,7 @@
 #include <iostream>
 #include <stdexcept>
 
-AUDIO_REGISTER_SINK(oss)(
+AUDIO_REGISTER_SINK(REG_PRIO_LOW, oss)(
     int sampling_rate, const std::string &device_name, bool ok_to_block
 ){
     return audio_sink::sptr(new audio_oss_sink(sampling_rate, device_name, ok_to_block));

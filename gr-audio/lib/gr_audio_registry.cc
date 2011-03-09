@@ -24,33 +24,55 @@
 #include <gr_prefs.h>
 #include <stdexcept>
 #include <vector>
-#include <utility>
 #include <iostream>
 
 /***********************************************************************
  * Create registries
  **********************************************************************/
-typedef std::pair<std::string, source_factory_t> source_pair_t;
-static std::vector<source_pair_t> &get_source_registry(void){
-    static std::vector<source_pair_t> _registry;
+
+struct source_entry_t{
+    reg_prio_type prio;
+    std::string arch;
+    source_factory_t source;
+};
+
+static std::vector<source_entry_t> &get_source_registry(void){
+    static std::vector<source_entry_t> _registry;
     return _registry;
 }
 
-typedef std::pair<std::string, sink_factory_t> sink_pair_t;
-static std::vector<sink_pair_t> &get_sink_registry(void){
-    static std::vector<sink_pair_t> _registry;
+struct sink_entry_t{
+    reg_prio_type prio;
+    std::string arch;
+    sink_factory_t sink;
+};
+
+static std::vector<sink_entry_t> &get_sink_registry(void){
+    static std::vector<sink_entry_t> _registry;
     return _registry;
 }
 
 /***********************************************************************
  * Register functions
  **********************************************************************/
-void audio_register_source(const std::string &name, source_factory_t source){
-    get_source_registry().push_back(std::make_pair(name, source));
+void audio_register_source(
+    reg_prio_type prio, const std::string &arch, source_factory_t source
+){
+    source_entry_t entry;
+    entry.prio = prio;
+    entry.arch = arch;
+    entry.source = source;
+    get_source_registry().push_back(entry);
 }
 
-void audio_register_sink(const std::string &name, sink_factory_t sink){
-    get_sink_registry().push_back(std::make_pair(name, sink));
+void audio_register_sink(
+    reg_prio_type prio, const std::string &arch, sink_factory_t sink
+){
+    sink_entry_t entry;
+    entry.prio = prio;
+    entry.arch = arch;
+    entry.sink = sink;
+    get_sink_registry().push_back(entry);
 }
 
 /***********************************************************************
@@ -61,6 +83,7 @@ static std::string default_arch_name(void){
 }
 
 static void do_arch_warning(const std::string &arch){
+    if (arch.empty()) return; //no warning when arch not specified
     std::cerr << "Could not find audio architecture \"" << arch << "\" in registry." << std::endl;
     std::cerr << "    Defaulting to the first available architecture..." << std::endl;
 }
@@ -73,14 +96,17 @@ audio_source::sptr audio_make_source(
     if (get_source_registry().empty()){
         throw std::runtime_error("no available audio source factories");
     }
+
     std::string arch = default_arch_name();
-    BOOST_FOREACH(const source_pair_t &e, get_source_registry()){
-        if (arch.empty() || arch == e.first){
-            return e.second(sampling_rate, device_name, ok_to_block);
-        }
+    source_entry_t entry = get_source_registry().front();
+
+    BOOST_FOREACH(const source_entry_t &e, get_source_registry()){
+        if (e.prio > entry.prio) entry = e; //entry is highest prio
+        if (arch != e.arch) continue; //continue when no match
+        return e.source(sampling_rate, device_name, ok_to_block);
     }
-    do_arch_warning(arch);
-    return get_source_registry().front().second(sampling_rate, device_name, ok_to_block);
+    //std::cout << "Audio source arch: " << entry.name << std::endl;
+    return entry.source(sampling_rate, device_name, ok_to_block);
 }
 
 audio_sink::sptr audio_make_sink(
@@ -91,14 +117,18 @@ audio_sink::sptr audio_make_sink(
     if (get_sink_registry().empty()){
         throw std::runtime_error("no available audio sink factories");
     }
+
     std::string arch = default_arch_name();
-    BOOST_FOREACH(const sink_pair_t &e, get_sink_registry()){
-        if (arch.empty() || arch == e.first){
-            return e.second(sampling_rate, device_name, ok_to_block);
-        }
+    sink_entry_t entry = get_sink_registry().front();
+
+    BOOST_FOREACH(const sink_entry_t &e, get_sink_registry()){
+        if (e.prio > entry.prio) entry = e; //entry is highest prio
+        if (arch != e.arch) continue; //continue when no match
+        return e.sink(sampling_rate, device_name, ok_to_block);
     }
     do_arch_warning(arch);
-    return get_sink_registry().front().second(sampling_rate, device_name, ok_to_block);
+    //std::cout << "Audio sink arch: " << entry.name << std::endl;
+    return entry.sink(sampling_rate, device_name, ok_to_block);
 }
 
 /***********************************************************************

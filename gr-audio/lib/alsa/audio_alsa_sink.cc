@@ -33,7 +33,7 @@
 #include <stdexcept>
 #include <gri_alsa.h>
 
-AUDIO_REGISTER_SINK(alsa)(
+AUDIO_REGISTER_SINK(REG_PRIO_HIGH, alsa)(
     int sampling_rate, const std::string &device_name, bool ok_to_block
 ){
     return audio_sink::sptr(new audio_alsa_sink(sampling_rate, device_name, ok_to_block));

@@ -38,7 +38,7 @@
 #include <iostream>
 #include <stdexcept>
 
-AUDIO_REGISTER_SOURCE(oss)(
+AUDIO_REGISTER_SOURCE(REG_PRIO_LOW, oss)(
     int sampling_rate, const std::string &device_name, bool ok_to_block
 ){
     return audio_source::sptr(new audio_oss_source(sampling_rate, device_name, ok_to_block));
