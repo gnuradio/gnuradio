@@ -1,18 +1,19 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Audio Source
+##Audio Sink
 ###################################################
  -->
 <block>
-	<name>Audio Source</name>
-	<key>audio_source</key>
+	<name>Audio Sink</name>
+	<key>audio_sink</key>
+	<category>Sinks</category>
 	<import>from gnuradio import audio</import>
-	<make>audio.source($samp_rate, $device_name, $ok_to_block)</make>
+	<make>audio.sink($samp_rate, $device_name, $ok_to_block)</make>
 	<param>
 		<name>Sample Rate</name>
 		<key>samp_rate</key>
-		<value>32000</value>
+		<value>samp_rate</value>
 		<type>int</type>
 		<option>
 			<name>16KHz</name>
@@ -62,24 +63,24 @@
 		</option>
 	</param>
 	<param>
-		<name>Num Outputs</name>
-		<key>num_outputs</key>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
 		<value>1</value>
 		<type>int</type>
 	</param>
-	<check>0 &lt; $num_outputs</check>
-	<source>
-		<name>out</name>
+	<check>0 &lt; $num_inputs</check>
+	<sink>
+		<name>in</name>
 		<type>float</type>
-		<nports>$num_outputs</nports>
-	</source>
+		<nports>$num_inputs</nports>
+	</sink>
 	<doc>
 Not all sampling rates will be supported by your hardware.
 
 Leave the device name blank to choose deafult audio device. \
 ALSA users with audio trouble may try setting the device name to plughw:0,0
 
-The audio source can have multiple outputs depending upon your hardware. \
-For example, set the outputs to 2 for stereo audio.
+The audio sink can have multiple inputs depending upon your hardware. \
+For example, set the inputs to 2 for stereo audio.
 	</doc>
 </block>

@@ -18,7 +18,6 @@
 		<block>gr_file_source</block>
 		<block>blks2_tcp_source</block>
 		<block>gr_udp_source</block>
-		<block>audio_source</block>
 		<block>gr_wavfile_source</block>
 		<block>gr_message_source</block>
 		<block>pad_source</block>
@@ -32,7 +31,6 @@
 		<block>gr_file_sink</block>
 		<block>blks2_tcp_sink</block>
 		<block>gr_udp_sink</block>
-		<block>audio_sink</block>
 		<block>gr_wavfile_sink</block>
 		<block>gr_message_sink</block>
 		<block>pad_sink</block>

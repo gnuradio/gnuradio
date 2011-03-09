@@ -17,15 +17,13 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
+# 
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = include lib
+grcblocksdir = $(grc_blocksdir)
 
-if PYTHON
-SUBDIRS += grc swig
-endif
+dist_grcblocks_DATA = \
+	audio_source.xml \
+	audio_sink.xml
 
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-audio.pc

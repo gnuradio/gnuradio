@@ -24,8 +24,6 @@ include $(top_srcdir)/Makefile.common
 ourdatadir = $(grc_blocksdir)
 dist_ourdata_DATA = \
 	block_tree.xml \
-	audio_sink.xml \
-	audio_source.xml \
 	band_pass_filter.xml \
 	band_reject_filter.xml \
 	blks2_am_demod_cf.xml \
