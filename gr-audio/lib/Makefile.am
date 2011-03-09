@@ -47,20 +47,22 @@ dist_etc_DATA = gr-audio.conf
 ########################################################################
 if GR_AUDIO_ALSA_SUPPORT
 
-AM_CPPFLAGS += $(ALSA_CPPFLAGS)
+AM_CPPFLAGS += \
+	-I$(srcdir)/alsa \
+	$(ALSA_CPPFLAGS)
 
 libgnuradio_audio_la_LIBADD += $(ALSA_LIBS)
 
 libgnuradio_audio_la_SOURCES += \
-	gri_alsa.cc \
-	audio_alsa_source.cc \
-	audio_alsa_sink.cc
+	alsa/gri_alsa.cc \
+	alsa/audio_alsa_source.cc \
+	alsa/audio_alsa_sink.cc
 
 noinst_HEADERS += \
-	gri_alsa.h \
-	audio_alsa_source.h \
-	audio_alsa_sink.h
+	alsa/gri_alsa.h \
+	alsa/audio_alsa_source.h \
+	alsa/audio_alsa_sink.h
 
-dist_etc_DATA += gr-audio-alsa.conf
+dist_etc_DATA += alsa/gr-audio-alsa.conf
 
 endif
