@@ -26,24 +26,24 @@
 #include <gr_audio_source.h>
 #include <string>
 
-typedef gr_audio_source::sptr(*source_factory_t)(int, const std::string &, bool);
-typedef gr_audio_sink::sptr(*sink_factory_t)(int, const std::string &, bool);
+typedef audio_source::sptr(*source_factory_t)(int, const std::string &, bool);
+typedef audio_sink::sptr(*sink_factory_t)(int, const std::string &, bool);
 
-void gr_audio_register_source(const std::string &name, source_factory_t source);
-void gr_audio_register_sink(const std::string &name, sink_factory_t sink);
+void audio_register_source(const std::string &name, source_factory_t source);
+void audio_register_sink(const std::string &name, sink_factory_t sink);
 
-#define GR_AUDIO_REGISTER_FIXTURE(x) static struct x{x();}x;x::x()
+#define AUDIO_REGISTER_FIXTURE(x) static struct x{x();}x;x::x()
 
-#define GR_AUDIO_REGISTER_SOURCE(name) \
-    static gr_audio_source::sptr name##_source_fcn(int, const std::string &, bool); \
-    GR_AUDIO_REGISTER_FIXTURE(name##_source_reg){ \
-        gr_audio_register_source(#name, &name##_source_fcn); \
-    } static gr_audio_source::sptr name##_source_fcn
+#define AUDIO_REGISTER_SOURCE(name) \
+    static audio_source::sptr name##_source_fcn(int, const std::string &, bool); \
+    AUDIO_REGISTER_FIXTURE(name##_source_reg){ \
+        audio_register_source(#name, &name##_source_fcn); \
+    } static audio_source::sptr name##_source_fcn
 
-#define GR_AUDIO_REGISTER_SINK(name) \
-    static gr_audio_sink::sptr name##_sink_fcn(int, const std::string &, bool); \
-    GR_AUDIO_REGISTER_FIXTURE(name##_sink_reg){ \
-        gr_audio_register_sink(#name, &name##_sink_fcn); \
-    } static gr_audio_sink::sptr name##_sink_fcn
+#define AUDIO_REGISTER_SINK(name) \
+    static audio_sink::sptr name##_sink_fcn(int, const std::string &, bool); \
+    AUDIO_REGISTER_FIXTURE(name##_sink_reg){ \
+        audio_register_sink(#name, &name##_sink_fcn); \
+    } static audio_sink::sptr name##_sink_fcn
 
 #endif /* INCLUDED_GR_AUDIO_REGISTRY_H */

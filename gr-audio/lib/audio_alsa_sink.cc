@@ -33,10 +33,10 @@
 #include <stdexcept>
 #include <gri_alsa.h>
 
-GR_AUDIO_REGISTER_SINK(alsa)(
+AUDIO_REGISTER_SINK(alsa)(
     int sampling_rate, const std::string &device_name, bool ok_to_block
 ){
-    return gr_audio_sink::sptr(new audio_alsa_sink(sampling_rate, device_name, ok_to_block));
+    return audio_sink::sptr(new audio_alsa_sink(sampling_rate, device_name, ok_to_block));
 }
 
 static bool CHATTY_DEBUG = false;
@@ -74,7 +74,7 @@ default_nperiods ()
 audio_alsa_sink::audio_alsa_sink (int sampling_rate,
 				  const std::string device_name,
 				  bool ok_to_block)
-  : gr_audio_sink ("audio_alsa_sink",
+  : audio_sink ("audio_alsa_sink",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (0, 0, 0)),
     d_sampling_rate (sampling_rate),

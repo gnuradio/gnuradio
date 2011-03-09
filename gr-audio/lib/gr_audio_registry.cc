@@ -40,18 +40,18 @@ static std::vector<std::pair<std::string, sink_factory_t> > &get_sink_registry(v
 /***********************************************************************
  * Register functions
  **********************************************************************/
-void gr_audio_register_source(const std::string &name, source_factory_t source){
+void audio_register_source(const std::string &name, source_factory_t source){
     get_source_registry().push_back(std::make_pair(name, source));
 }
 
-void gr_audio_register_sink(const std::string &name, sink_factory_t sink){
+void audio_register_sink(const std::string &name, sink_factory_t sink){
     get_sink_registry().push_back(std::make_pair(name, sink));
 }
 
 /***********************************************************************
  * Factory functions
  **********************************************************************/
-gr_audio_source::sptr gr_make_audio_source(
+audio_source::sptr audio_make_source(
     int sampling_rate,
     const std::string device_name,
     bool ok_to_block
@@ -63,7 +63,7 @@ gr_audio_source::sptr gr_make_audio_source(
     return get_source_registry().front().second(sampling_rate, device_name, ok_to_block);
 }
 
-gr_audio_sink::sptr gr_make_audio_sink(
+audio_sink::sptr audio_make_sink(
     int sampling_rate,
     const std::string device_name,
     bool ok_to_block
@@ -80,7 +80,7 @@ gr_audio_sink::sptr gr_make_audio_sink(
  **********************************************************************/
 #include <gr_io_signature.h>
 
-gr_audio_sink::gr_audio_sink(
+audio_sink::audio_sink(
         const std::string &name,
         gr_io_signature_sptr insig,
         gr_io_signature_sptr outsig
@@ -88,7 +88,7 @@ gr_audio_sink::gr_audio_sink(
     gr_sync_block(name, insig, outsig)
 {}
 
-gr_audio_source::gr_audio_source(
+audio_source::audio_source(
         const std::string &name,
         gr_io_signature_sptr insig,
         gr_io_signature_sptr outsig

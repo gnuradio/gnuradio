@@ -40,7 +40,7 @@
  *
  * Input samples must be in the range [-1,1].
  */
-class audio_alsa_sink : public gr_audio_sink {
+class audio_alsa_sink : public audio_sink {
   // typedef for pointer to class work method
   typedef int (audio_alsa_sink::*work_t)(int noutput_items,
 					 gr_vector_const_void_star &input_items,

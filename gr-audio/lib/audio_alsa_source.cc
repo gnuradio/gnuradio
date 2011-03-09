@@ -33,10 +33,10 @@
 #include <stdexcept>
 #include <gri_alsa.h>
 
-GR_AUDIO_REGISTER_SOURCE(alsa)(
+AUDIO_REGISTER_SOURCE(alsa)(
     int sampling_rate, const std::string &device_name, bool ok_to_block
 ){
-    return gr_audio_source::sptr(new audio_alsa_source(sampling_rate, device_name, ok_to_block));
+    return audio_source::sptr(new audio_alsa_source(sampling_rate, device_name, ok_to_block));
 }
 
 static bool CHATTY_DEBUG = false;
@@ -73,7 +73,7 @@ default_nperiods ()
 audio_alsa_source::audio_alsa_source (int sampling_rate,
 				      const std::string device_name,
 				      bool ok_to_block)
-  : gr_audio_source ("audio_alsa_source",
+  : audio_source ("audio_alsa_source",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (0, 0, 0)),
     d_sampling_rate (sampling_rate),

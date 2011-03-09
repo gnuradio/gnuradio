@@ -43,7 +43,7 @@ typedef boost::shared_ptr<audio_alsa_source> audio_alsa_source_sptr;
  *
  * Output samples will be in the range [-1,1].
  */
-class audio_alsa_source : public gr_audio_source {
+class audio_alsa_source : public audio_source {
   // typedef for pointer to class work method
   typedef int (audio_alsa_source::*work_t)(int noutput_items,
 					   gr_vector_const_void_star &input_items,

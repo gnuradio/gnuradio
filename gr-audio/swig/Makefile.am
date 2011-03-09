@@ -20,3 +20,38 @@
 #
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
+
+AUDIO_CPPFLAGS = -I$(abs_top_srcdir)/gr-audio/include
+
+AM_CPPFLAGS = \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(PYTHON_CPPFLAGS) \
+	$(AUDIO_CPPFLAGS) \
+	$(WITH_INCLUDES)
+
+# ----------------------------------------------------------------
+# The SWIG library
+
+TOP_SWIG_IFILES = \
+	audio_swig.i
+
+# Install so that they end up available as:
+#   import gnuradio.audio
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/audio
+audio_swig_pythondir_category = \
+	gnuradio/audio
+
+# additional libraries for linking with the SWIG-generated library
+audio_swig_la_swig_libadd = \
+	$(top_builddir)/gr-audio/lib/libgnuradio-audio.la
+
+# additional Python files to be installed along with the SWIG-generated one
+audio_swig_python = \
+	__init__.py
+
+# additional SWIG files to be installed
+audio_swig_swiginclude_headers =
+
+audio_swig_swig_args = $(AUDIO_CPPFLAGS)
