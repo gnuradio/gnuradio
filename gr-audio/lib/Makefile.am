@@ -66,3 +66,26 @@ noinst_HEADERS += \
 dist_etc_DATA += alsa/gr-audio-alsa.conf
 
 endif
+
+########################################################################
+## OSS Support
+########################################################################
+if GR_AUDIO_OSS_SUPPORT
+
+AM_CPPFLAGS += \
+	-I$(srcdir)/oss \
+	$(OSS_CPPFLAGS)
+
+libgnuradio_audio_la_LIBADD += $(OSS_LIBS)
+
+libgnuradio_audio_la_SOURCES += \
+	oss/audio_oss_source.cc \
+	oss/audio_oss_sink.cc
+
+noinst_HEADERS += \
+	oss/audio_oss_source.h \
+	oss/audio_oss_sink.h
+
+dist_etc_DATA += oss/gr-audio-oss.conf
+
+endif
