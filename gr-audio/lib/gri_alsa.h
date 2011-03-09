@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2004 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,28 +20,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_AUDIO_SINK_H
-#define INCLUDED_GR_AUDIO_SINK_H
+#ifndef INCLUDED_GRI_ALSA_H
+#define INCLUDED_GRI_ALSA_H
 
-#include <gr_audio_api.h>
-#include <gr_sync_block.h>
+#include <stdio.h>
+#include <alsa/asoundlib.h>
 
-class GR_AUDIO_API gr_audio_sink : public gr_sync_block{
-public:
-    typedef boost::shared_ptr<gr_audio_sink> sptr;
+void 
+gri_alsa_dump_hw_params (snd_pcm_t *pcm,
+			 snd_pcm_hw_params_t *hwparams,
+			 FILE *fp);
 
-    gr_audio_sink(
-        const std::string &name,
-        gr_io_signature_sptr insig,
-        gr_io_signature_sptr outsig
-    );
+bool
+gri_alsa_pick_acceptable_format (snd_pcm_t *pcm,
+				 snd_pcm_hw_params_t *hwparams,
+				 snd_pcm_format_t acceptable_formats[],
+				 unsigned nacceptable_formats,
+				 snd_pcm_format_t *selected_format,
+				 const char *error_msg_tag,
+				 bool verbose);
 
-};
 
-GR_AUDIO_API gr_audio_sink::sptr gr_make_audio_sink(
-    int sampling_rate,
-    const std::string device_name = "",
-    bool ok_to_block = true
-);
-
-#endif /* INCLUDED_GR_AUDIO_SINK_H */
+#endif /* INCLUDED_GRI_ALSA_H */

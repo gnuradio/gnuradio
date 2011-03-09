@@ -38,3 +38,29 @@ libgnuradio_audio_la_LIBADD = \
 libgnuradio_audio_la_LDFLAGS = $(LTVERSIONFLAGS)
 
 noinst_HEADERS = gr_audio_registry.h
+
+etcdir = $(gr_prefsdir)
+dist_etc_DATA = gr-audio.conf
+
+########################################################################
+## ALSA Support
+########################################################################
+if GR_AUDIO_ALSA_SUPPORT
+
+AM_CPPFLAGS += $(ALSA_CPPFLAGS)
+
+libgnuradio_audio_la_LIBADD += $(ALSA_LIBS)
+
+libgnuradio_audio_la_SOURCES += \
+	gri_alsa.cc \
+	audio_alsa_source.cc \
+	audio_alsa_sink.cc
+
+noinst_HEADERS += \
+	gri_alsa.h \
+	audio_alsa_source.h \
+	audio_alsa_sink.h
+
+dist_etc_DATA += gr-audio-alsa.conf
+
+endif

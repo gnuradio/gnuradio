@@ -23,6 +23,9 @@ AC_DEFUN([GRC_GR_AUDIO],[
     dnl Don't do gr-audio-alsa if gnuradio-core skipped
     GRC_CHECK_DEPENDENCY(gr-audio, gnuradio-core)
 
+    PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[GR_AUDIO_ALSA_SUPPORT=true],[GR_AUDIO_ALSA_SUPPORT=false])
+    AM_CONDITIONAL(GR_AUDIO_ALSA_SUPPORT, $GR_AUDIO_ALSA_SUPPORT)
+
     AC_CONFIG_FILES([ \
         gr-audio/Makefile \
         gr-audio/include/Makefile \
