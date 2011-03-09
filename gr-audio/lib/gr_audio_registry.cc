@@ -20,20 +20,25 @@
  */
 
 #include "gr_audio_registry.h"
+#include <boost/foreach.hpp>
+#include <gr_prefs.h>
 #include <stdexcept>
 #include <vector>
 #include <utility>
+#include <iostream>
 
 /***********************************************************************
  * Create registries
  **********************************************************************/
-static std::vector<std::pair<std::string, source_factory_t> > &get_source_registry(void){
-    static std::vector<std::pair<std::string, source_factory_t> > _registry;
+typedef std::pair<std::string, source_factory_t> source_pair_t;
+static std::vector<source_pair_t> &get_source_registry(void){
+    static std::vector<source_pair_t> _registry;
     return _registry;
 }
 
-static std::vector<std::pair<std::string, sink_factory_t> > &get_sink_registry(void){
-    static std::vector<std::pair<std::string, sink_factory_t> > _registry;
+typedef std::pair<std::string, sink_factory_t> sink_pair_t;
+static std::vector<sink_pair_t> &get_sink_registry(void){
+    static std::vector<sink_pair_t> _registry;
     return _registry;
 }
 
@@ -51,15 +56,30 @@ void audio_register_sink(const std::string &name, sink_factory_t sink){
 /***********************************************************************
  * Factory functions
  **********************************************************************/
+static std::string default_arch_name(void){
+    return gr_prefs::singleton()->get_string("audio", "default_arch", "");
+}
+
+static void do_arch_warning(const std::string &arch){
+    std::cerr << "Could not find audio architecture \"" << arch << "\" in registry." << std::endl;
+    std::cerr << "    Defaulting to the first available architecture..." << std::endl;
+}
+
 audio_source::sptr audio_make_source(
     int sampling_rate,
     const std::string device_name,
     bool ok_to_block
 ){
     if (get_source_registry().empty()){
-        throw std::runtime_error("no available audio factories");
+        throw std::runtime_error("no available audio source factories");
     }
-    //TODO we may prefer to use a specific entry in the registry
+    std::string arch = default_arch_name();
+    BOOST_FOREACH(const source_pair_t &e, get_source_registry()){
+        if (arch.empty() || arch == e.first){
+            return e.second(sampling_rate, device_name, ok_to_block);
+        }
+    }
+    do_arch_warning(arch);
     return get_source_registry().front().second(sampling_rate, device_name, ok_to_block);
 }
 
@@ -69,9 +89,15 @@ audio_sink::sptr audio_make_sink(
     bool ok_to_block
 ){
     if (get_sink_registry().empty()){
-        throw std::runtime_error("no available audio factories");
+        throw std::runtime_error("no available audio sink factories");
     }
-    //TODO we may prefer to use a specific entry in the registry
+    std::string arch = default_arch_name();
+    BOOST_FOREACH(const sink_pair_t &e, get_sink_registry()){
+        if (arch.empty() || arch == e.first){
+            return e.second(sampling_rate, device_name, ok_to_block);
+        }
+    }
+    do_arch_warning(arch);
     return get_sink_registry().front().second(sampling_rate, device_name, ok_to_block);
 }
 
