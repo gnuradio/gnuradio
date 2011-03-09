@@ -27,3 +27,8 @@ if PYTHON
 SUBDIRS += swig
 endif
 
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = gnuradio-audio.pc
+
+etcdir = $(gr_prefsdir)
+dist_etc_DATA = gr-audio.conf

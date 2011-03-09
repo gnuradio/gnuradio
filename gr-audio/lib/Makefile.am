@@ -20,3 +20,21 @@
 #
 
 include $(top_srcdir)/Makefile.common
+
+AM_CPPFLAGS = \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_INCLUDES) \
+	-I$(abs_top_srcdir)/gr-audio/include \
+	-Dgnuradio_audio_EXPORTS
+
+lib_LTLIBRARIES = libgnuradio-audio.la
+
+libgnuradio_audio_la_SOURCES = \
+	gr_audio_registry.cc
+
+libgnuradio_audio_la_LIBADD = \
+	$(GNURADIO_CORE_LA)
+
+libgnuradio_audio_la_LDFLAGS = $(LTVERSIONFLAGS)
+
+noinst_HEADERS = gr_audio_registry.h

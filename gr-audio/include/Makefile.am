@@ -20,3 +20,8 @@
 #
 
 include $(top_srcdir)/Makefile.common
+
+grinclude_HEADERS = \
+	gr_audio_api.h \
+	gr_audio_source.h \
+	gr_audio_sink.h
