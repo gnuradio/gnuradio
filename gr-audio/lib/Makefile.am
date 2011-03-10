@@ -73,8 +73,7 @@ endif
 if GR_AUDIO_OSS_SUPPORT
 
 AM_CPPFLAGS += \
-	-I$(srcdir)/oss \
-	$(OSS_CPPFLAGS)
+	-I$(srcdir)/oss
 
 libgnuradio_audio_la_LIBADD += $(OSS_LIBS)
 
@@ -87,5 +86,97 @@ noinst_HEADERS += \
 	oss/audio_oss_sink.h
 
 dist_etc_DATA += oss/gr-audio-oss.conf
+
+endif
+
+########################################################################
+## Jack Support
+########################################################################
+if GR_AUDIO_JACK_SUPPORT
+
+AM_CPPFLAGS += \
+	-I$(srcdir)/jack \
+	$(JACK_CPPFLAGS)
+
+libgnuradio_audio_la_LIBADD += $(JACK_LIBS)
+
+libgnuradio_audio_la_SOURCES += \
+	jack/gri_jack.cc \
+	jack/audio_jack_source.cc \
+	jack/audio_jack_sink.cc
+
+noinst_HEADERS += \
+	jack/gri_jack.h \
+	jack/audio_jack_source.h \
+	jack/audio_jack_sink.h
+
+dist_etc_DATA += jack/gr-audio-jack.conf
+
+endif
+
+########################################################################
+## OSX Support
+########################################################################
+if GR_AUDIO_OSX_SUPPORT
+
+AM_CPPFLAGS += \
+	-I$(srcdir)/osx
+
+libgnuradio_audio_la_SOURCES += \
+	osx/audio_osx_source.cc \
+	osx/audio_osx_sink.cc
+
+noinst_HEADERS += \
+	osx/audio_osx_source.h \
+	osx/audio_osx_sink.h
+
+dist_etc_DATA += osx/gr-audio-osx.conf
+
+endif
+
+########################################################################
+## PortAudio Support
+########################################################################
+if GR_AUDIO_PORTAUDIO_SUPPORT
+
+AM_CPPFLAGS += \
+	-I$(srcdir)/portaudio \
+	$(PORTAUDIO_CPPFLAGS)
+
+libgnuradio_audio_la_LIBADD += $(PORTAUDIO_LIBS)
+
+libgnuradio_audio_la_SOURCES += \
+	portaudio/gri_portaudio.cc \
+	portaudio/audio_portaudio_source.cc \
+	portaudio/audio_portaudio_sink.cc
+
+noinst_HEADERS += \
+	portaudio/gri_portaudio.h \
+	portaudio/audio_portaudio_source.h \
+	portaudio/audio_portaudio_sink.h
+
+dist_etc_DATA += portaudio/gr-audio-portaudio.conf
+
+endif
+
+########################################################################
+## Windows Support
+########################################################################
+if GR_AUDIO_WINDOWS_SUPPORT
+
+AM_CPPFLAGS += \
+	-I$(srcdir)/windows
+
+libgnuradio_audio_la_LIBADD += $(WINAUDIO_LIBS)
+
+libgnuradio_audio_la_SOURCES += \
+	windows/audio_windows_source.cc \
+	windows/audio_windows_sink.cc
+
+noinst_HEADERS += \
+	windows/audio_windows_source.h \
+	windows/audio_windows_sink.h
+
+dist_etc_DATA += windows/gr-audio-windows.conf
 
 endif

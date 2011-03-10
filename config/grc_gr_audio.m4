@@ -20,15 +20,12 @@ dnl Boston, MA 02110-1301, USA.
 AC_DEFUN([GRC_GR_AUDIO],[
     GRC_ENABLE(gr-audio)
 
-    dnl Don't do gr-audio-alsa if gnuradio-core skipped
     GRC_CHECK_DEPENDENCY(gr-audio, gnuradio-core)
 
     ####################################################################
     ## ALSA Support
     ####################################################################
-    GR_AUDIO_ALSA_SUPPORT=true
-    dnl Don't do gr-audio-alsa if the 'alsa' package is not installed.
-    PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[],
+    PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[GR_AUDIO_ALSA_SUPPORT=true],
         [GR_AUDIO_ALSA_SUPPORT=false;AC_MSG_RESULT([gr-audio alsa support requires package alsa, not found.])])
     AM_CONDITIONAL(GR_AUDIO_ALSA_SUPPORT, $GR_AUDIO_ALSA_SUPPORT)
 
@@ -36,10 +33,9 @@ AC_DEFUN([GRC_GR_AUDIO],[
     ## OSS Support
     ####################################################################
     dnl Make sure the correct library and/or headers are available.
-    GR_AUDIO_OSS_SUPPORT=true
     case $host_os in
     netbsd*)
-        AC_HAVE_LIBRARY(ossaudio,[],
+        AC_HAVE_LIBRARY(ossaudio,[GR_AUDIO_OSS_SUPPORT=true],
             [GR_AUDIO_OSS_SUPPORT=false;AC_MSG_RESULT([gr-audio oss support requires library ossaudio, not found.])])
         if test $GR_AUDIO_OSS_SUPPORT != false; then
             OSS_LIBS=-lossaudio
@@ -52,12 +48,56 @@ AC_DEFUN([GRC_GR_AUDIO],[
         GR_AUDIO_OSS_SUPPORT=false
         ;;
     *)
-        AC_CHECK_HEADER(sys/soundcard.h,[],
+        AC_CHECK_HEADER(sys/soundcard.h,[GR_AUDIO_OSS_SUPPORT=true],
             [GR_AUDIO_OSS_SUPPORT=false;AC_MSG_RESULT([gr-audio oss support requires sys/soundcard.h, not found.])])
     esac
     AM_CONDITIONAL(GR_AUDIO_OSS_SUPPORT, $GR_AUDIO_OSS_SUPPORT)
 
+    ####################################################################
+    ## Jack Support
+    ####################################################################
+    PKG_CHECK_MODULES(JACK, jack >= 0.8, [GR_AUDIO_JACK_SUPPORT=true],
+        [GR_AUDIO_JACK_SUPPORT=false;AC_MSG_RESULT([gr-audio jack support requires package jack, not found.])])
+    AM_CONDITIONAL(GR_AUDIO_JACK_SUPPORT, $GR_AUDIO_JACK_SUPPORT)
 
+    ####################################################################
+    ## OSX Support
+    ####################################################################
+    case "$host_os" in
+    darwin*)
+        MACOSX_AUDIOUNIT([GR_AUDIO_OSX_SUPPORT=true],
+            [GR_AUDIO_OSX_SUPPORT=false;AC_MSG_RESULT([gr-audio osx support requires AudioUnit, not found.])])
+        ;;
+    *)
+        AC_MSG_RESULT([gr-audio osx support will build on Mac OS X and Darwin only.])
+        GR_AUDIO_OSX_SUPPORT=false
+        ;;
+    esac
+    AM_CONDITIONAL(GR_AUDIO_OSX_SUPPORT, $GR_AUDIO_OSX_SUPPORT)
+
+    ####################################################################
+    ## PortAudio Support
+    ####################################################################
+    PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[GR_AUDIO_PORTAUDIO_SUPPORT=true],
+        [GR_AUDIO_PORTAUDIO_SUPPORT=false;AC_MSG_RESULT([gr-audio portaudio support requires package portaudio, not found.])])
+    AM_CONDITIONAL(GR_AUDIO_PORTAUDIO_SUPPORT, $GR_AUDIO_PORTAUDIO_SUPPORT)
+
+    ####################################################################
+    ## Windows Support
+    ####################################################################
+    case "$host_os" in
+        cygwin*|win*|mingw*)
+        AC_HAVE_LIBRARY(winmm, [GR_AUDIO_WINDOWS_SUPPORT=true],
+            [GR_AUDIO_WINDOWS_SUPPORT=false;AC_MSG_RESULT([gr-audio windows support requires library winmm, not found.])])
+        ;;
+    *)
+        AC_MSG_RESULT([gr-audio windows support will build on a Windows Unix environment only.])
+        GR_AUDIO_WINDOWS_SUPPORT=false
+        ;;
+    esac
+    WINAUDIO_LIBS=-lwinmm
+    AC_SUBST(WINAUDIO_LIBS)
+    AM_CONDITIONAL(GR_AUDIO_WINDOWS_SUPPORT, $GR_AUDIO_WINDOWS_SUPPORT)
 
     AC_CONFIG_FILES([ \
         gr-audio/Makefile \
