@@ -32,7 +32,7 @@
 
 #define _OSX_AU_DEBUG_ 0
 
-AUDIO_REGISTER_SINK(REG_PRIO_MED, osx)(
+AUDIO_REGISTER_SINK(REG_PRIO_HIGH, osx)(
     int sampling_rate, const std::string &device_name, bool ok_to_block
 ){
     return audio_sink::sptr(new audio_osx_sink(sampling_rate, device_name, ok_to_block));
