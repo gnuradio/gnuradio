@@ -127,10 +127,9 @@ libgnuradio_audio_la_SOURCES += \
 	osx/audio_osx_sink.cc
 
 noinst_HEADERS += \
+	osx/audio_osx.h \
 	osx/audio_osx_source.h \
 	osx/audio_osx_sink.h
-
-dist_etc_DATA += osx/gr-audio-osx.conf
 
 endif
 
@@ -176,7 +175,5 @@ libgnuradio_audio_la_SOURCES += \
 noinst_HEADERS += \
 	windows/audio_windows_source.h \
 	windows/audio_windows_sink.h
-
-dist_etc_DATA += windows/gr-audio-windows.conf
 
 endif
