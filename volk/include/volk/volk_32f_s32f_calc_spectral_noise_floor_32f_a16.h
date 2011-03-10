@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Calculates the spectral noise floor of an input power spectrum
@@ -116,7 +116,7 @@ static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a16_sse(float* no
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Calculates the spectral noise floor of an input power spectrum
 

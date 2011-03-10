@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
 /*!
   \brief Deinterleaves the complex vector into I vector data
@@ -42,7 +42,7 @@ static inline void volk_32fc_deinterleave_real_64f_a16_sse2(double* iBuffer, con
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Deinterleaves the complex vector into I vector data
   \param complexVector The complex input vector

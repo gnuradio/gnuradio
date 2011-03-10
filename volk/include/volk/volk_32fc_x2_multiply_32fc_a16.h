@@ -6,7 +6,7 @@
 #include <volk/volk_complex.h>
 #include <float.h>
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 #include <pmmintrin.h>
   /*!
     \brief Multiplies the two input complex vectors and stores their results in the third vector
@@ -53,7 +53,7 @@ static inline void volk_32fc_x2_multiply_32fc_a16_sse3(lv_32fc_t* cVector, const
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Multiplies the two input complex vectors and stores their results in the third vector
     \param cVector The vector where the results will be stored
@@ -73,7 +73,7 @@ static inline void volk_32fc_x2_multiply_32fc_a16_generic(lv_32fc_t* cVector, co
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#ifdef LV_HAVE_ORC
   /*!
     \brief Multiplies the two input complex vectors and stores their results in the third vector
     \param cVector The vector where the results will be stored

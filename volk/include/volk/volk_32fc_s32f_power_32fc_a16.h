@@ -4,10 +4,10 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
 #include <simdmath.h>
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
@@ -25,7 +25,7 @@ static inline void volk_32fc_s32f_power_32fc_a16_sse(lv_32fc_t* cVector, const l
   lv_32fc_t* cPtr = cVector;
   const lv_32fc_t* aPtr = aVector;
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
   __m128 vPower = _mm_set_ps1(power);
   
   __m128 cplxValue1, cplxValue2, magnitude, phase, iValue, qValue;
@@ -81,7 +81,7 @@ static inline void volk_32fc_s32f_power_32fc_a16_sse(lv_32fc_t* cVector, const l
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Takes each the input complex vector value to the specified power and stores the results in the return vector
     \param cVector The vector where the results will be stored

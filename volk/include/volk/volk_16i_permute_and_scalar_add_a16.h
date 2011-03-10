@@ -8,7 +8,7 @@
 
 
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 
 #include<xmmintrin.h>
 #include<emmintrin.h>
@@ -116,7 +116,7 @@ static inline  void volk_16i_permute_and_scalar_add_a16_sse2(short* target,  sho
 #endif /*LV_HAVE_SSEs*/
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 static inline void volk_16i_permute_and_scalar_add_a16_generic(short* target, short* src0, short* permute_indexes, short* cntl0, short* cntl1, short* cntl2, short* cntl3, short* scalars, unsigned int num_bytes) {
 	
 	int i = 0;

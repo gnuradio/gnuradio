@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 
   /*!
@@ -58,7 +58,7 @@ static inline void volk_16i_s32f_convert_32f_a16_sse4_1(float* outputVector, con
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 
   /*!
@@ -94,7 +94,7 @@ static inline void volk_16i_s32f_convert_32f_a16_sse(float* outputVector, const 
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Converts the input 16 bit integer data into floating point data, and divides the each floating point output data point by the scalar value
     \param inputVector The 16 bit input data buffer

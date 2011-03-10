@@ -26,7 +26,6 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) \
 volkincludedir = $(prefix)/include/volk
 
 BUILT_SOURCES: \
-	volk_config.h \
 	volk_tables.h
 
 volkinclude_HEADERS = \
@@ -34,7 +33,6 @@ volkinclude_HEADERS = \
 	volk_common.h \
 	volk_config_fixed.h \
 	volk_runtime.h \
-	volk_config.h \
 	volk_tables.h \
 	volk_typedefs.h \
 	volk_registry.h \
@@ -143,12 +141,8 @@ volk_mktables$(EXEEXT): $(VOLK_MKTABLES_SOURCES)
 volk_tables.h: volk_mktables$(EXEEXT)
 	./volk_mktables$(EXEEXT)
 
-volk_config.h: $(top_builddir)/volk_config.h 
-	cp $^ $(top_builddir)/include/volk/$@
-
 distclean-local: 
 	rm -f volk_config_fixed.h 
-	rm -f volk_config.h
 	rm -f volk_cpu.h
 	rm -f volk.h
 	rm -f volk_registry.h

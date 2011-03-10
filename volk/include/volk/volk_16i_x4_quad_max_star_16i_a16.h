@@ -9,7 +9,7 @@
 
 
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 
 #include<emmintrin.h>
 
@@ -167,7 +167,7 @@ static inline  void volk_16i_x4_quad_max_star_16i_a16_sse2(short* target, short*
 #endif /*LV_HAVE_SSE2*/
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 static inline void volk_16i_x4_quad_max_star_16i_a16_generic(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_bytes) {
 	
 	int i = 0;

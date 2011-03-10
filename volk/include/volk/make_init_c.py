@@ -12,7 +12,7 @@ def make_init_c(funclist, dom) :
         incs = domarch.getElementsByTagName("include");
         for inc in incs:
             my_inc = str(inc.firstChild.data);
-            tempstring = tempstring + "#if LV_HAVE_" + arch.swapcase() + "\n";
+            tempstring = tempstring + "#ifdef LV_HAVE_" + arch.swapcase() + "\n";
             tempstring = tempstring + "#include<" + my_inc + ">\n";
             tempstring = tempstring + "#endif\n"
     tempstring = tempstring + '\n\n';
@@ -32,7 +32,7 @@ def make_init_c(funclist, dom) :
         for env in envs:
             cmd = str(env.firstChild.data);
             tempstring = tempstring + "    if(volk_cpu.has_" + arch + "()){\n";
-            tempstring = tempstring + "#if LV_HAVE_" + arch.swapcase() + "\n";
+            tempstring = tempstring + "#ifdef LV_HAVE_" + arch.swapcase() + "\n";
             tempstring = tempstring + "        " + cmd + "\n";
             tempstring = tempstring + "#endif\n"     
             tempstring = tempstring + "    }\n";

@@ -21,6 +21,7 @@ from make_typedefs import make_typedefs
 from make_environment_init_c import make_environment_init_c
 from make_environment_init_h import make_environment_init_h
 from make_mktables import make_mktables
+from make_makefile_am import make_makefile_am
 
 outfile_set_simd = open("../../config/lv_set_simd_flags.m4", "w");
 outfile_reg = open("volk_registry.h", "w");
@@ -33,11 +34,12 @@ outfile_init_h = open("../../lib/volk_init.h", "w");
 outfile_init_c = open("../../lib/volk_init.c", "w");
 outfile_cpu_h = open("volk_cpu.h", "w");
 outfile_cpu_c = open("../../lib/volk_cpu.c", "w");
-outfile_config_in = open("../../volk_config.h.in", "w");
+#outfile_config_in = open("../../volk_config.h.in", "w");
 outfile_config_fixed = open("volk_config_fixed.h", "w");
 outfile_mktables = open("../../lib/volk_mktables.c", "w");
 outfile_environment_c = open("../../lib/volk_environment_init.c", "w");
 outfile_environment_h = open("volk_environment_init.h", "w");
+outfile_makefile_am = open("../../lib/Makefile.am", "w");
 infile = open("Makefile.am", "r");
 
 
@@ -223,8 +225,8 @@ outfile_cpu_c.close();
 outfile_set_simd.write(make_set_simd(filearchs));
 outfile_set_simd.close();
 
-outfile_config_in.write(make_config_in(filearchs));
-outfile_config_in.close();
+#outfile_config_in.write(make_config_in(filearchs));
+#outfile_config_in.close();
     
 outfile_reg.write(make_registry(filearchs, functions, fcountlist, taglist));
 outfile_reg.close();
@@ -261,3 +263,6 @@ outfile_environment_h.close();
 
 outfile_mktables.write(make_mktables(functions));
 outfile_mktables.close();
+
+outfile_makefile_am.write(make_makefile_am(filearchs))
+outfile_makefile_am.close()

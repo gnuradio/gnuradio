@@ -2,7 +2,7 @@
 #define INCLUDED_LIBVECTOR_COMMON_H
 
 #include<inttypes.h>
-#if LV_HAVE_MMX
+#ifdef LV_HAVE_MMX
 #include<xmmintrin.h>
 union bit128{
   uint16_t i16[8];

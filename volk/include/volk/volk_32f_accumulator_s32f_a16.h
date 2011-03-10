@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Accumulates the values in the input buffer
@@ -42,7 +42,7 @@ static inline void volk_32f_accumulator_s32f_a16_sse(float* result, const float*
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Accumulates the values in the input buffer
   \param result The accumulated result

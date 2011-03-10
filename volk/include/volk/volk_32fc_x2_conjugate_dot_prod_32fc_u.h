@@ -5,7 +5,7 @@
 #include<volk/volk_complex.h>
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 
 
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
@@ -57,7 +57,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_generic(lv_32fc_t* res
 
 #endif /*LV_HAVE_GENERIC*/
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 
 #include <xmmintrin.h>
 #include <pmmintrin.h>

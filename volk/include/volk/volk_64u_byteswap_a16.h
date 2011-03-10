@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
 
 /*!
@@ -59,7 +59,7 @@ static inline void volk_64u_byteswap_a16_sse2(uint64_t* intsToSwap, unsigned int
 }
 #endif /* LV_HAVE_SSE2 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Byteswaps (in-place) an aligned vector of int64_t's.
   \param intsToSwap The vector of data to byte swap

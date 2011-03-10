@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 #include <pmmintrin.h>
 /*!
   \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
@@ -76,7 +76,7 @@ static inline void volk_16ic_magnitude_16i_a16_sse3(int16_t* magnitudeVector, co
 }
 #endif /* LV_HAVE_SSE3 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
@@ -153,7 +153,7 @@ static inline void volk_16ic_magnitude_16i_a16_sse(int16_t* magnitudeVector, con
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
   \param complexVector The vector containing the complex input values
@@ -173,7 +173,7 @@ static inline void volk_16ic_magnitude_16i_a16_generic(int16_t* magnitudeVector,
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC_DISABLED
+#ifdef LV_HAVE_ORC_DISABLED
 /*!
   \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
   \param complexVector The vector containing the complex input values

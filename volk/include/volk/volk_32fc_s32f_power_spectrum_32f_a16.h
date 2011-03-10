@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 #include <pmmintrin.h>
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
 #include <simdmath.h>
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
@@ -24,7 +24,7 @@ static inline void volk_32fc_s32f_power_spectrum_32f_a16_sse3(float* logPowerOut
   float* destPtr = logPowerOutput;
   uint64_t number = 0;
   const float iNormalizationFactor = 1.0 / normalizationFactor;
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
   __m128 magScalar = _mm_set_ps1(10.0);
   magScalar = _mm_div_ps(magScalar, logf4(magScalar));
 
@@ -88,7 +88,7 @@ static inline void volk_32fc_s32f_power_spectrum_32f_a16_sse3(float* logPowerOut
 }
 #endif /* LV_HAVE_SSE3 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Calculates the log10 power value for each input point
   \param logPowerOutput The 10.0 * log10(r*r + i*i) for each data point

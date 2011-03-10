@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <volk/volk_complex.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 /*!
   \brief Multiplys the one complex vector with the complex conjugate of the second complex vector and stores their results in the third vector
@@ -68,7 +68,7 @@ static inline void volk_8ic_x2_multiply_conjugate_16ic_a16_sse4_1(lv_16sc_t* cVe
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Multiplys the one complex vector with the complex conjugate of the second complex vector and stores their results in the third vector
   \param cVector The complex vector where the results will be stored

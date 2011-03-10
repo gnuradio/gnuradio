@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Ands the two input vectors and store their results in the third vector
@@ -43,7 +43,7 @@ static inline void volk_32i_x2_and_32i_a16_sse(int32_t* cVector, const int32_t* 
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Ands the two input vectors and store their results in the third vector
   \param cVector The vector where the results will be stored
@@ -63,7 +63,7 @@ static inline void volk_32i_x2_and_32i_a16_generic(int32_t* cVector, const int32
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#ifdef LV_HAVE_ORC
 /*!
   \brief Ands the two input vectors and store their results in the third vector
   \param cVector The vector where the results will be stored

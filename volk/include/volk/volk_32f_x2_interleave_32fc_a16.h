@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Interleaves the I & Q vector data into the complex vector
@@ -48,7 +48,7 @@ static inline void volk_32f_x2_interleave_32fc_a16_sse(lv_32fc_t* complexVector,
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Interleaves the I & Q vector data into the complex vector.
   \param iBuffer The I buffer data to be interleaved

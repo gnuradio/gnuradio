@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
   /*!
     \brief Interleaves the I & Q vector data into the complex vector, scales the output values by the scalar, and converts to 16 bit data.
@@ -62,7 +62,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a16_sse2(lv_16sc_t* complexV
 }
 #endif /* LV_HAVE_SSE2 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
   /*!
     \brief Interleaves the I & Q vector data into the complex vector, scales the output values by the scalar, and converts to 16 bit data.
@@ -127,7 +127,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a16_sse(lv_16sc_t* complexVe
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Interleaves the I & Q vector data into the complex vector, scales the output values by the scalar, and converts to 16 bit data.
     \param iBuffer The I buffer data to be interleaved

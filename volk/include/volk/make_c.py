@@ -30,12 +30,12 @@ def make_c(funclist, taglist, arched_arglist, retlist, my_arglist, fcountlist) :
         
         tags_counter = 0;    
         for arch_list in fcountlist[i]:
-            tempstring = tempstring + "#if LV_HAVE_"
+            tempstring = tempstring + "#if defined(LV_HAVE_"
             for ind in range(len(arch_list)):
                 
-                tempstring = tempstring + arch_list[ind];
+                tempstring = tempstring + arch_list[ind] + ")";
                 if ind < len(arch_list) - 1:
-                    tempstring = tempstring + " && LV_HAVE_";
+                    tempstring = tempstring + " && defined(LV_HAVE_";
                 
             tempstring = tempstring + "\n " + funclist[i] + "_" + str(taglist[i][tags_counter]) + ",\n#endif\n";
             tags_counter = tags_counter + 1;

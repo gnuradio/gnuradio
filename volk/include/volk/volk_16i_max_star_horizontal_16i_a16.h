@@ -6,7 +6,7 @@
 #include<stdio.h>	
 
 
-#if LV_HAVE_SSSE3
+#ifdef LV_HAVE_SSSE3
 
 #include<xmmintrin.h>
 #include<emmintrin.h>
@@ -109,7 +109,7 @@ static inline  void volk_16i_max_star_horizontal_16i_a16_ssse3(int16_t* target, 
 #endif /*LV_HAVE_SSSE3*/
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 static inline void volk_16i_max_star_horizontal_16i_a16_generic(int16_t* target, int16_t* src0, unsigned int num_bytes) {
 	
 	int i = 0;

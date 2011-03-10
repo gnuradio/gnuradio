@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
   /*!
     \brief Converts the float values into double values

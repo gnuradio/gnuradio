@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief performs the FM-detect differentiation on the input vector and stores the results in the output vector.
@@ -78,7 +78,7 @@ static inline void volk_32f_s32f_32f_fm_detect_32f_a16_sse(float* outputVector, 
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief performs the FM-detect differentiation on the input vector and stores the results in the output vector.
   \param outputVector The byte-aligned vector where the results will be stored.

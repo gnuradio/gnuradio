@@ -4,7 +4,7 @@
 #include<stdio.h>
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 
 
 static inline void volk_32f_x2_dot_prod_32f_a16_generic(float * result, const float * input, const float * taps, unsigned int num_points) {
@@ -24,7 +24,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_generic(float * result, const fl
 #endif /*LV_HAVE_GENERIC*/
 
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 
 
 static inline void volk_32f_x2_dot_prod_32f_a16_sse( float* result, const  float* input, const  float* taps, unsigned int num_points) {
@@ -73,7 +73,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_sse( float* result, const  float
 
 #endif /*LV_HAVE_SSE*/  
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 
 #include <pmmintrin.h>
 
@@ -120,7 +120,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_sse3(float * result, const float
 
 #endif /*LV_HAVE_SSE3*/
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 
 #include <smmintrin.h>
 

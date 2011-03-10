@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
   /*!
     \brief Multiplies each point in the input buffer by the scalar value, then converts the result into a 8 bit integer value
@@ -51,7 +51,7 @@ static inline void volk_32f_s32f_convert_8i_a16_sse2(int8_t* outputVector, const
 }
 #endif /* LV_HAVE_SSE2 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
   /*!
     \brief Multiplies each point in the input buffer by the scalar value, then converts the result into a 8 bit integer value

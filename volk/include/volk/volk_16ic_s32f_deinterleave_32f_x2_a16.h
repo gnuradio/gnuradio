@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
   /*!
     \brief Converts the complex 16 bit vector into floats,scales each data point, and deinterleaves into I & Q vector data
@@ -68,7 +68,7 @@ static inline void volk_16ic_s32f_deinterleave_32f_x2_a16_sse(float* iBuffer, fl
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Converts the complex 16 bit vector into floats,scales each data point, and deinterleaves into I & Q vector data
     \param complexVector The complex input vector
@@ -89,7 +89,7 @@ static inline void volk_16ic_s32f_deinterleave_32f_x2_a16_generic(float* iBuffer
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#ifdef LV_HAVE_ORC
   /*!
     \brief Converts the complex 16 bit vector into floats,scales each data point, and deinterleaves into I & Q vector data
     \param complexVector The complex input vector

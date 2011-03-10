@@ -11,7 +11,6 @@ def make_h(funclist, arched_arglist, retlist) :
     tempstring = tempstring + '\n#define INCLUDED_VOLK_H';
     tempstring = tempstring + '\n\n#include<inttypes.h>\n';
     tempstring = tempstring + '#include<volk/volk_complex.h>\n';
-    tempstring = tempstring + '#include<volk/volk_config.h>\n';
     tempstring = tempstring + '#include<volk/volk_config_fixed.h>\n';
     tempstring = tempstring + '#include<volk/volk_environment_init.h>\n'
     tempstring = tempstring + emit_prolog()

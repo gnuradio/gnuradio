@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 /*!
   \brief Deinterleaves the complex 8 bit vector into I & Q floating point vector data
@@ -74,7 +74,7 @@ static inline void volk_8ic_s32f_deinterleave_32f_x2_a16_sse4_1(float* iBuffer, 
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Deinterleaves the complex 8 bit vector into I & Q floating point vector data
@@ -136,7 +136,7 @@ static inline void volk_8ic_s32f_deinterleave_32f_x2_a16_sse(float* iBuffer, flo
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Deinterleaves the complex 8 bit vector into I & Q floating point vector data
   \param complexVector The complex input vector

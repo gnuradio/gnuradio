@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 #include <pmmintrin.h>
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
 #include <simdmath.h>
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
@@ -27,7 +27,7 @@ static inline void volk_32fc_s32f_x2_power_spectral_density_32f_a16_sse3(float* 
   const float iRBW = 1.0 / rbw;
   const float iNormalizationFactor = 1.0 / normalizationFactor;
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
   __m128 magScalar = _mm_set_ps1(10.0);
   magScalar = _mm_div_ps(magScalar, logf4(magScalar));
 
@@ -94,7 +94,7 @@ static inline void volk_32fc_s32f_x2_power_spectral_density_32f_a16_sse3(float* 
 }
 #endif /* LV_HAVE_SSE3 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Calculates the log10 power value divided by the RBW for each input point
   \param logPowerOutput The 10.0 * log10((r*r + i*i)/RBW) for each data point

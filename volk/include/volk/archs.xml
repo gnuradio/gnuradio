@@ -126,4 +126,12 @@
   <flag>msse4.2</flag>
 </arch>
 
+<arch name="avx" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>c</reg>
+  <shift>28</shift>
+  <flag>mavx</flag>
+</arch>
+
 </grammar>
