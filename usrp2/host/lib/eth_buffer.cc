@@ -156,8 +156,12 @@ namespace usrp2 {
   {
     // if we have background thread, stop it here
 
-    if (!d_using_tpring && d_buf)
+    if(d_buf) {
+      if (!d_using_tpring)
 	free(d_buf);
+      else
+	munmap(d_buf, d_buflen);
+    }
 	
     return d_ethernet->close();
   }
