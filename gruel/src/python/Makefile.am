@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,11 +19,21 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = lib include scheme 
+include $(top_srcdir)/Makefile.common
+
+TESTS =
+EXTRA_DIST += run_tests.in
 
 if PYTHON
+TESTS += run_tests
 
-SUBDIRS += . swig python
+grueldir = $(pythondir)/gruel
+
+noinst_PYTHON = \
+    qa_pmt.py
+
+gruel_PYTHON = \
+    __init__.py 
 
 endif
 
