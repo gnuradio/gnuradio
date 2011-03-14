@@ -31,13 +31,5 @@ blks2_python_PYTHON = \
 	blks2/__init__.py \
 	blks2/error_rate.py \
 	blks2/packet.py \
-	blks2/probe.py \
 	blks2/selector.py \
-	blks2/tcp.py \
-	blks2/variable_sink.py
-
-wxgui_pythondir = $(grc_gnuradio_prefix)/wxgui
-wxgui_python_PYTHON = \
-	wxgui/__init__.py \
-	wxgui/panel.py \
-	wxgui/top_block_gui.py
+	blks2/tcp.py

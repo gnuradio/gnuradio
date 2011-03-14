@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##FFT Sink
+##Waterfall Sink
 ###################################################
  -->
 <block>
-	<name>FFT Sink</name>
-	<key>wxgui_fftsink2</key>
+	<name>WX GUI Waterfall Sink</name>
+	<key>wxgui_waterfallsink2</key>
+	<category>WX GUI Widgets</category>
 	<import>from gnuradio import window</import>
-	<import>from gnuradio.wxgui import fftsink2</import>
+	<import>from gnuradio.wxgui import waterfallsink2</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
-fftsink2.$(type.fcn)(
+waterfallsink2.$(type.fcn)(
 	$(parent).GetWin(),
 	baseband_freq=$baseband_freq,
-	y_per_div=$y_per_div,
-	y_divs=$y_divs,
+	dynamic_range=$dynamic_range,
 	ref_level=$ref_level,
 	ref_scale=$ref_scale,
 	sample_rate=$samp_rate,
@@ -23,7 +23,6 @@ fftsink2.$(type.fcn)(
 	average=$average,
 	avg_alpha=#if $avg_alpha() then $avg_alpha else 'None'#,
 	title=$title,
-	peak_hold=$peak_hold,
 #if $win()
 	win=$win,
 #end if
@@ -46,18 +45,18 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<option>
 			<name>Complex</name>
 			<key>complex</key>
-			<opt>fcn:fft_sink_c</opt>
+			<opt>fcn:waterfall_sink_c</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>float</key>
-			<opt>fcn:fft_sink_f</opt>
+			<opt>fcn:waterfall_sink_f</opt>
 		</option>
 	</param>
 	<param>
 		<name>Title</name>
 		<key>title</key>
-		<value>FFT Plot</value>
+		<value>Waterfall Plot</value>
 		<type>string</type>
 	</param>
 	<param>
@@ -73,39 +72,13 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<type>real</type>
 	</param>
 	<param>
-		<name>Y per Div</name>
-		<key>y_per_div</key>
-		<value>10</value>
-		<type>enum</type>
-		<option>
-			<name>1 dB</name>
-			<key>1</key>
-		</option>
-		<option>
-			<name>2 dB</name>
-			<key>2</key>
-		</option>
-		<option>
-			<name>5 dB</name>
-			<key>5</key>
-		</option>
-		<option>
-			<name>10 dB</name>
-			<key>10</key>
-		</option>
-		<option>
-			<name>20 dB</name>
-			<key>20</key>
-		</option>
+		<name>Dynamic Range</name>
+		<key>dynamic_range</key>
+		<value>100</value>
+		<type>real</type>
 	</param>
 	<param>
-		<name>Y Divs</name>
-		<key>y_divs</key>
-		<value>10</value>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Ref Level (dB)</name>
+		<name>Reference Level</name>
 		<key>ref_level</key>
 		<value>50</value>
 		<type>real</type>
@@ -119,29 +92,14 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 	<param>
 		<name>FFT Size</name>
 		<key>fft_size</key>
-		<value>1024</value>
+		<value>512</value>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Refresh Rate</name>
+		<name>FFT Rate</name>
 		<key>fft_rate</key>
-		<value>30</value>
+		<value>15</value>
 		<type>int</type>
-	</param>
-	<param>
-		<name>Peak Hold</name>
-		<key>peak_hold</key>
-		<value>False</value>
-		<type>enum</type>
-		<hide>#if $peak_hold() == 'True' then 'none' else 'part'#</hide>
-		<option>
-			<name>On</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>Off</name>
-			<key>False</key>
-		</option>
 	</param>
 	<param>
 		<name>Average</name>

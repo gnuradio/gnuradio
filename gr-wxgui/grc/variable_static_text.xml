@@ -6,8 +6,9 @@
 ###################################################
  -->
 <block>
-	<name>Variable Static Text</name>
+	<name>WX GUI Static Text</name>
 	<key>variable_static_text</key>
+	<category>WX GUI Widgets</category>
 	<import>from gnuradio.wxgui import forms</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
