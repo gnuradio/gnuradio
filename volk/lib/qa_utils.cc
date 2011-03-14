@@ -6,6 +6,7 @@
 //#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <vector>
+#include <list>
 #include <ctime>
 #include <cmath>
 #include <boost/lexical_cast.hpp>
@@ -14,7 +15,6 @@
 #include <volk/volk.h>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/shared_array.hpp>
 
 float uniform() {
   return 2.0 * ((float) rand() / RAND_MAX - 0.5);	// uniformly (-1, 1)
@@ -270,13 +270,11 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
 class volk_qa_aligned_mem_pool{
 public:
     void *get_new(size_t size, size_t alignment = 16){
-        boost::shared_array<char> mem(new char[size + alignment-1]);
-        size_t ptr = size_t(mem.get() + alignment-1) & ~(alignment-1);
-        std::memset((void *)ptr, 0x00, size);
-        _mems.push_back(mem);
-        return (void *)ptr;
+        _mems.push_back(std::vector<char>(size + alignment-1, 0));
+        size_t ptr = size_t(&_mems.back().front());
+        return (void *)((ptr + alignment-1) & ~(alignment-1));
     }
-private: std::vector<boost::shared_array<char> > _mems;
+private: std::list<std::vector<char> > _mems;
 };
 
 bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
