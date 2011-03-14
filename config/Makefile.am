@@ -51,12 +51,7 @@ m4macros = \
 	grc_gnuradio_examples.m4 \
 	grc_grc.m4 \
 	grc_gr_atsc.m4 \
-	grc_gr_audio_alsa.m4 \
-	grc_gr_audio_jack.m4 \
-	grc_gr_audio_oss.m4 \
-	grc_gr_audio_osx.m4 \
-	grc_gr_audio_portaudio.m4 \
-	grc_gr_audio_windows.m4 \
+	grc_gr_audio.m4 \
 	grc_gr_comedi.m4 \
 	grc_gr_gcell.m4 \
 	grc_gr_gpio.m4 \
