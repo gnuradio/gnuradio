@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -35,13 +35,6 @@ blks2_python_PYTHON = \
 	blks2/selector.py \
 	blks2/tcp.py \
 	blks2/variable_sink.py
-
-usrp_pythondir = $(grc_gnuradio_prefix)/usrp
-usrp_python_PYTHON = \
-	usrp/__init__.py \
-	usrp/common.py \
-	usrp/dual_usrp.py \
-	usrp/simple_usrp.py
 
 wxgui_pythondir = $(grc_gnuradio_prefix)/wxgui
 wxgui_python_PYTHON = \

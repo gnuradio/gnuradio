@@ -1,5 +1,5 @@
 #
-# Copyright 2008-2011 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,4 +21,22 @@
 
 include $(top_srcdir)/Makefile.common
 
-dist_bin_SCRIPTS = gnuradio-companion
+usrp_pythondir = $(pythondir)/grc_gnuradio/usrp
+usrp_python_PYTHON = \
+	__init__.py \
+	common.py \
+	dual_usrp.py \
+	simple_usrp.py
+
+dist_bin_SCRIPTS = usrp_probe
+
+grcblocksdir = $(grc_blocksdir)
+dist_grcblocks_DATA = \
+	usrp_dual_sink_x.xml \
+	usrp_simple_sink_x.xml \
+	usrp_dual_source_x.xml \
+	usrp_simple_source_x.xml \
+	usrp_probe.xml
+
+ourdatadir = $(pkgdatadir)/grc/freedesktop
+dist_ourdata_DATA = gnuradio-usrp_probe.desktop

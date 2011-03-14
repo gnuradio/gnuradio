@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -28,7 +28,6 @@
 ##################################################
 
 ICON_SIZES="32 48 64 128 256"
-MENU_ITEMS="grc usrp2_probe usrp_probe"
 if [ -n "$2" ]; then
 	SRCDIR="$2"
 else
@@ -49,9 +48,7 @@ case "$1" in
 	echo "Install mime type"
 	xdg-mime install ${SRCDIR}/gnuradio-grc.xml
 	echo "Install menu items"
-	for menu_item in ${MENU_ITEMS}; do \
-		xdg-desktop-menu install ${SRCDIR}/gnuradio-${menu_item}.desktop; \
-	done
+	xdg-desktop-menu install ${SRCDIR}/*.desktop
 	echo "Done!"
 	echo ""
 	;;
@@ -68,9 +65,7 @@ case "$1" in
 	echo "Uninstall mime type"
 	xdg-mime uninstall ${SRCDIR}/gnuradio-grc.xml
 	echo "Uninstall menu items"
-	for menu_item in ${MENU_ITEMS}; do \
-		xdg-desktop-menu uninstall gnuradio-${menu_item}.desktop; \
-	done
+	xdg-desktop-menu uninstall `ls ${SRCDIR}/*.desktop | xargs -n1 basename`
 	echo "Done!"
 	echo ""
 	;;

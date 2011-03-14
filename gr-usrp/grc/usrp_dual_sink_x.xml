@@ -5,8 +5,9 @@
 ###################################################
  -->
 <block>
-	<name>USRP Dual Sink</name>
+	<name>USRP1 Dual Sink</name>
 	<key>usrp_dual_sink_x</key>
+	<category>USRP</category>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
 	<make>grc_usrp.dual_sink_$(type.fcn)(which=$which)
 self.$(id).set_interp_rate($interpolation)

@@ -1,5 +1,5 @@
 #
-# Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -29,9 +29,7 @@ dist_ourdata_DATA = \
 	grc-icon-48.png \
 	grc-icon-32.png \
 	gnuradio-grc.xml \
-	gnuradio-grc.desktop \
-	gnuradio-usrp2_probe.desktop \
-	gnuradio-usrp_probe.desktop
+	gnuradio-grc.desktop
 
 pkglibexecdir = $(libexecdir)/$(PACKAGE)
 dist_pkglibexec_SCRIPTS = grc_setup_freedesktop
@@ -42,6 +40,7 @@ grc_setup_freedesktop: $(srcdir)/grc_setup_freedesktop.in Makefile
 EXTRA_DIST += $(srcdir)/grc_setup_freedesktop.in
 BUILT_SOURCES += grc_setup_freedesktop
 
+if XDG_UTILS
 install-data-hook:
 	@printf "\n*** GRC Post-Install Message ***\
 	\nTo install icons, mime type, and menu items\
@@ -53,3 +52,4 @@ uninstall-hook:
 	\nTo uninstall icons, mime type, and menu items\
 	\nfor a freedesktop.org system (Gnome/KDE/Xfce):\
 	\n  >>> sudo $(pkglibexecdir)/grc_setup_freedesktop uninstall\n\n"
+endif

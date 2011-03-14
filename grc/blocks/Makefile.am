@@ -212,14 +212,6 @@ dist_ourdata_DATA = \
 	trellis_siso_f.xml \
 	trellis_viterbi_combined_xx.xml \
 	trellis_viterbi_x.xml \
-	usrp2_probe.xml \
-	usrp2_sink_xxxx.xml \
-	usrp2_source_xxxx.xml \
-	usrp_dual_sink_x.xml \
-	usrp_dual_source_x.xml \
-	usrp_probe.xml \
-	usrp_simple_sink_x.xml \
-	usrp_simple_source_x.xml \
 	variable.xml \
 	variable_check_box.xml \
 	variable_chooser.xml \

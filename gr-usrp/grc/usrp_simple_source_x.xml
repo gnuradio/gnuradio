@@ -5,8 +5,9 @@
 ###################################################
  -->
 <block>
-	<name>USRP Source</name>
+	<name>USRP1 Source</name>
 	<key>usrp_simple_source_x</key>
+	<category>USRP</category>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
 	<make>grc_usrp.simple_source_$(type.fcn)(which=$which, side=$side, rx_ant=$rx_ant#if $hb_filters() then ', no_hb=True' else ''#)
 #if $format()

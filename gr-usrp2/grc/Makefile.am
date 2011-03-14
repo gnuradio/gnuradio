@@ -1,5 +1,5 @@
 #
-# Copyright 2008-2011 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,4 +21,13 @@
 
 include $(top_srcdir)/Makefile.common
 
-dist_bin_SCRIPTS = gnuradio-companion
+dist_bin_SCRIPTS = usrp2_probe
+
+grcblocksdir = $(grc_blocksdir)
+dist_grcblocks_DATA = \
+	usrp2_probe.xml \
+	usrp2_source_xxxx.xml \
+	usrp2_sink_xxxx.xml
+
+ourdatadir = $(pkgdatadir)/grc/freedesktop
+dist_ourdata_DATA = gnuradio-usrp2_probe.desktop

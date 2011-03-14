@@ -5,8 +5,9 @@
 ###################################################
  -->
 <block>
-	<name>USRP Dual Source</name>
+	<name>USRP1 Dual Source</name>
 	<key>usrp_dual_source_x</key>
+	<category>USRP</category>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
 	<make>grc_usrp.dual_source_$(type.fcn)(
 	which=$which,

@@ -1,29 +1,30 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##USRP2 Sink
+##USRP2 Source
 ##  Note: the center freq must be set after the lo offset
 ###################################################
  -->
 <block>
-	<name>USRP2 Sink</name>
-	<key>usrp2_sink_xxxx</key>
+	<name>USRP2 Source</name>
+	<key>usrp2_source_xxxx</key>
+	<category>USRP</category>
 	<import>from gnuradio import usrp2</import>
 	<make>#if not $interface() and not $mac_addr()
-usrp2.sink_$(type.fcn)()
+usrp2.source_$(type.fcn)()
 #elif not $mac_addr()
-usrp2.sink_$(type.fcn)($interface)
+usrp2.source_$(type.fcn)($interface)
 #else
-usrp2.sink_$(type.fcn)($interface, $mac_addr)
+usrp2.source_$(type.fcn)($interface, $mac_addr)
 #end if
-self.$(id).set_interp($interpolation)
+self.$(id).set_decim($decimation)
 #if $lo_offset() != float('inf')
 self.$(id).set_lo_offset($lo_offset)
 #end if
 self.$(id).set_center_freq($frequency)
 self.$(id).set_gain($gain)
 self.$(id).config_mimo($usrp2_clock_src)</make>
-	<callback>set_interp($interpolation)</callback>
+	<callback>set_decim($decimation)</callback>
 	<callback>#if $lo_offset() != float('inf')
 self.$(id).set_lo_offset($lo_offset)
 #end if
@@ -59,8 +60,8 @@ self.$(id).set_center_freq($frequency)</callback>
 		<type>string</type>
 	</param>
 	<param>
-		<name>Interpolation</name>
-		<key>interpolation</key>
+		<name>Decimation</name>
+		<key>decimation</key>
 		<type>int</type>
 	</param>
 	<param>
@@ -103,15 +104,13 @@ self.$(id).set_center_freq($frequency)</callback>
 			<key>usrp2.MC_WE_LOCK_TO_MIMO</key>
 		</option>
 	</param>
-	<sink>
-		<name>in</name>
+	<source>
+		<name>out</name>
 		<type>$type</type>
 		<vlen>$type.vlen</vlen>
-	</sink>
+	</source>
 	<doc>
-The USRP2 sink inputs 100 Megasamples per second / interpolation.
-
-Input amplitude should be between 0.0 and 1.0.
+The USRP2 source outputs 100 Megasamples per second / decimation.
 
 To use the default ethernet device, leave interface blank. \
 For systems with only 1 USRP2, you may leave the mac address blank. \
