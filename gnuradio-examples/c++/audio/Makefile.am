@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,25 +21,18 @@
 
 include $(top_srcdir)/Makefile.common
 
-# For compiling within the GNU Radio build tree
+# For compiling with the GNU Radio build tree, use include dir below.
+# For compiling outside the tree, use 'pkg-config --cflags gnuradio-audio'
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/gr-audio-alsa/src \
+	-I$(top_srcdir)/gr-audio/include \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(WITH_INCLUDES)
 
-GR_AUDIO_ALSA_LA=$(top_builddir)/gr-audio-alsa/src/libgnuradio-audio-alsa.la
-
-# For compiling outside the tree, these will get fished out by pkgconfig
+# For compiling within the GNU Radio build tree, link against GR_AUDIO_LA
+# For compiling outside the tree, use 'pkg-config --libs gnuradio-audio'
+GR_AUDIO_LA=$(top_builddir)/gr-audio/lib/libgnuradio-audio.la
 
 noinst_PROGRAMS = dial_tone
 
-noinst_HEADERS = \
-    dial_tone.h
-
-dial_tone_SOURCES = \
-    dial_tone.cc	   \
-    main.cc
-
-dial_tone_LDADD = \
-    $(GNURADIO_CORE_LA) \
-    $(GR_AUDIO_ALSA_LA)
+dial_tone_SOURCES = dial_tone.cc
+dial_tone_LDADD = $(GNURADIO_CORE_LA) $(GR_AUDIO_LA)
