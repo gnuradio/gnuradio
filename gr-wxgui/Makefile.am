@@ -27,7 +27,7 @@ EXTRA_DIST += \
     README.gl
 
 if PYTHON
-SUBDIRS = src
+SUBDIRS = src grc
 
 etcdir = $(gr_prefsdir)
 dist_etc_DATA = gr-wxgui.conf

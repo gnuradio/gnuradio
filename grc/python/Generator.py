@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -90,18 +90,20 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		imports = self._flow_graph.get_imports()
 		variables = self._flow_graph.get_variables()
 		parameters = self._flow_graph.get_parameters()
-		#list of variables with controls
-		controls = filter(lambda v: v.get_make(), variables)
 		#list of blocks not including variables and imports and parameters and disabled
-		blocks = sorted(self._flow_graph.get_enabled_blocks(), lambda x, y: cmp(x.get_id(), y.get_id()))
-		probes = filter(lambda b: b.get_key().startswith('probe_'), blocks) #ensure probes are last in the block list
-		#get a list of notebooks and sort them according dependencies
-		notebooks = expr_utils.sort_objects(
-			filter(lambda b: b.get_key() == 'notebook', blocks),
-			lambda n: n.get_id(), lambda n: n.get_param('notebook').get_value(),
+		def _get_block_sort_text(block):
+			code = block.get_make().replace(block.get_id(), ' ')
+			try: code += block.get_param('notebook').get_value() #older gui markup w/ wxgui
+			except: pass
+			try: code += block.get_param('gui_hint').get_value() #newer gui markup w/ qtgui
+			except: pass
+			return code
+		blocks = expr_utils.sort_objects(
+			self._flow_graph.get_enabled_blocks(),
+			lambda b: b.get_id(), _get_block_sort_text
 		)
 		#list of regular blocks (all blocks minus the special ones)
-		blocks = filter(lambda b: b not in (imports + parameters + variables + probes + notebooks), blocks) + probes
+		blocks = filter(lambda b: b not in (imports + parameters), blocks)
 		#list of connections where each endpoint is enabled
 		connections = filter(lambda c: not c.is_msg(), self._flow_graph.get_enabled_connections())
 		messages = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
@@ -125,8 +127,6 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 			'imports': imports,
 			'flow_graph': self._flow_graph,
 			'variables': variables,
-			'notebooks': notebooks,
-			'controls': controls,
 			'parameters': parameters,
 			'blocks': blocks,
 			'connections': connections,

@@ -1,29 +1,33 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Number Sink
+##FFT Sink
 ###################################################
  -->
 <block>
-	<name>Number Sink</name>
-	<key>wxgui_numbersink2</key>
-	<import>from gnuradio.wxgui import numbersink2</import>
+	<name>WX GUI FFT Sink</name>
+	<key>wxgui_fftsink2</key>
+	<category>WX GUI Widgets</category>
+	<import>from gnuradio import window</import>
+	<import>from gnuradio.wxgui import fftsink2</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
-numbersink2.$(type.fcn)(
+fftsink2.$(type.fcn)(
 	$(parent).GetWin(),
-	unit=$units,
-	minval=$min_value,
-	maxval=$max_value,
-	factor=$factor,
-	decimal_places=$decimal_places,
+	baseband_freq=$baseband_freq,
+	y_per_div=$y_per_div,
+	y_divs=$y_divs,
 	ref_level=$ref_level,
+	ref_scale=$ref_scale,
 	sample_rate=$samp_rate,
-	number_rate=$number_rate,
+	fft_size=$fft_size,
+	fft_rate=$fft_rate,
 	average=$average,
 	avg_alpha=#if $avg_alpha() then $avg_alpha else 'None'#,
-	label=$title,
+	title=$title,
 	peak_hold=$peak_hold,
-	show_gauge=$show_gauge,
+#if $win()
+	win=$win,
+#end if
 #if $win_size()
 	size=$win_size,
 #end if
@@ -33,6 +37,8 @@ $(parent).Add(self.$(id).win)
 #else
 $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
+	<callback>set_baseband_freq($baseband_freq)</callback>
+	<callback>set_sample_rate($samp_rate)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -41,24 +47,18 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<option>
 			<name>Complex</name>
 			<key>complex</key>
-			<opt>fcn:number_sink_c</opt>
+			<opt>fcn:fft_sink_c</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>float</key>
-			<opt>fcn:number_sink_f</opt>
+			<opt>fcn:fft_sink_f</opt>
 		</option>
 	</param>
 	<param>
 		<name>Title</name>
 		<key>title</key>
-		<value>Number Plot</value>
-		<type>string</type>
-	</param>
-	<param>
-		<name>Units</name>
-		<key>units</key>
-		<value>Units</value>
+		<value>FFT Plot</value>
 		<type>string</type>
 	</param>
 	<param>
@@ -68,39 +68,65 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<type>real</type>
 	</param>
 	<param>
-		<name>Min Value</name>
-		<key>min_value</key>
-		<value>-100</value>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Max Value</name>
-		<key>max_value</key>
-		<value>100</value>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Factor</name>
-		<key>factor</key>
-		<value>1.0</value>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Decimal Places</name>
-		<key>decimal_places</key>
-		<value>10</value>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Reference Level</name>
-		<key>ref_level</key>
+		<name>Baseband Freq</name>
+		<key>baseband_freq</key>
 		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Number Rate</name>
-		<key>number_rate</key>
-		<value>15</value>
+		<name>Y per Div</name>
+		<key>y_per_div</key>
+		<value>10</value>
+		<type>enum</type>
+		<option>
+			<name>1 dB</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>2 dB</name>
+			<key>2</key>
+		</option>
+		<option>
+			<name>5 dB</name>
+			<key>5</key>
+		</option>
+		<option>
+			<name>10 dB</name>
+			<key>10</key>
+		</option>
+		<option>
+			<name>20 dB</name>
+			<key>20</key>
+		</option>
+	</param>
+	<param>
+		<name>Y Divs</name>
+		<key>y_divs</key>
+		<value>10</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Ref Level (dB)</name>
+		<key>ref_level</key>
+		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Ref Scale (p2p)</name>
+		<key>ref_scale</key>
+		<value>2.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>FFT Size</name>
+		<key>fft_size</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Refresh Rate</name>
+		<key>fft_rate</key>
+		<value>30</value>
 		<type>int</type>
 	</param>
 	<param>
@@ -141,17 +167,34 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<hide>#if $average() == 'True' then 'none' else 'all'#</hide>
 	</param>
 	<param>
-		<name>Show Gauge</name>
-		<key>show_gauge</key>
-		<value>True</value>
-		<type>enum</type>
+		<name>Window</name>
+		<key>win</key>
+		<value>None</value>
+		<type>raw</type>
+		<hide>#if $win() is None then 'part' else 'none'#</hide>
 		<option>
-			<name>Show</name>
-			<key>True</key>
+			<name>Automatic</name>
+			<key>None</key>
 		</option>
 		<option>
-			<name>Hide</name>
-			<key>False</key>
+			<name>Blackman-Harris</name>
+			<key>window.blackmanharris</key>
+		</option>
+		<option>
+			<name>Hamming</name>
+			<key>window.hamming</key>
+		</option>
+		<option>
+			<name>Hanning</name>
+			<key>window.hanning</key>
+		</option>
+		<option>
+			<name>Rectangular</name>
+			<key>window.rectangular</key>
+		</option>
+		<option>
+			<name>Flattop</name>
+			<key>window.flattop</key>
 		</option>
 	</param>
 	<param>
@@ -186,7 +229,5 @@ Leave the window blank for the default size, otherwise enter a tuple of (width, 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
 
 Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
-
-Incoming numbers are multiplied by the factor, and then added-to by the reference level.
 	</doc>
 </block>

@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Range:
+##	ranged widgets like a slider or a knob
+###################################################
+ -->
+<block>
+	<name>QT GUI Range</name>
+	<key>variable_qtgui_range</key>
+	<category>QT GUI Widgets</category>
+	<import>from PyQt4 import Qt</import>
+	<import>import PyQt4.Qwt5 as Qwt</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>#set $win = 'self._%s_layout'%$id
+#if not $label()
+	#set $label = '"%s"'%$id
+#end if
+########################################################################
+#if $widget() == "knob"
+########################################################################
+$win = Qt.QVBoxLayout()
+self._$(id)_knob = Qwt.QwtKnob()
+self._$(id)_knob.setRange($start, $stop, $step)
+self._$(id)_knob.setValue(self.$id)
+self._$(id)_knob.valueChanged.connect(self.set_$(id))
+$(win).addWidget(self._$(id)_knob)
+self._$(id)_label = Qt.QLabel($label)
+self._$(id)_label.setAlignment(Qt.Qt.AlignTop | Qt.Qt.AlignHCenter)
+$(win).addWidget(self._$(id)_label)
+#end if
+########################################################################
+#if $widget() == "thermo"
+########################################################################
+$win = Qt.QVBoxLayout()
+self._$(id)_label = Qt.QLabel($label)
+self._$(id)_thermo = Qwt.QwtThermo()
+self._$(id)_thermo.setScalePosition(Qwt.QwtThermo.$orient.scalepos)
+self._$(id)_thermo.setRange($start, $stop)
+self._$(id)_thermo.setValue(self.$id)
+self._$(id)_thermo.$(orient.minfcn)($min_len)
+#if 'horizontal' in $orient().lower()
+self._$(id)_label.setAlignment(Qt.Qt.AlignBottom | Qt.Qt.AlignHCenter)
+$(win).addWidget(self._$(id)_label)
+$(win).addWidget(self._$(id)_thermo)
+#elif 'vertical' in $orient().lower()
+self._$(id)_label.setAlignment(Qt.Qt.AlignTop)
+$(win).addWidget(self._$(id)_thermo)
+$(win).addWidget(self._$(id)_label)
+#end if
+#end if
+########################################################################
+#if $widget() == "counter"
+########################################################################
+$win = Qt.QHBoxLayout()
+$(win).addWidget(Qt.QLabel($label+": "))
+self._$(id)_counter = Qwt.QwtCounter()
+self._$(id)_counter.setRange($start, $stop, $step)
+self._$(id)_counter.setNumButtons(2)
+self._$(id)_counter.setMinimumWidth($min_len)
+self._$(id)_counter.setValue(self.$id)
+$(win).addWidget(self._$(id)_counter)
+self._$(id)_counter.valueChanged.connect(self.set_$(id))
+#end if
+########################################################################
+#if $widget() == "slider"
+########################################################################
+$win = Qt.QVBoxLayout()
+self._$(id)_label = Qt.QLabel($label)
+self._$(id)_slider = Qwt.QwtSlider(None, Qt.$orient, Qwt.QwtSlider.$orient.scalepos, Qwt.QwtSlider.BgSlot)
+self._$(id)_slider.setRange($start, $stop, $step)
+self._$(id)_slider.setValue(self.$id)
+self._$(id)_slider.$(orient.minfcn)($min_len)
+self._$(id)_slider.valueChanged.connect(self.set_$(id))
+#if 'horizontal' in $orient().lower()
+self._$(id)_label.setAlignment(Qt.Qt.AlignBottom | Qt.Qt.AlignHCenter)
+$(win).addWidget(self._$(id)_label)
+$(win).addWidget(self._$(id)_slider)
+#elif 'vertical' in $orient().lower()
+self._$(id)_label.setAlignment(Qt.Qt.AlignTop)
+$(win).addWidget(self._$(id)_slider)
+$(win).addWidget(self._$(id)_label)
+#end if
+#end if
+########################################################################
+#if $widget() == "counter_slider"
+########################################################################
+$win = Qt.QVBoxLayout()
+self._$(id)_tool_bar = Qt.QToolBar(self)
+$(win).addWidget(self._$(id)_tool_bar)
+self._$(id)_tool_bar.addWidget(Qt.QLabel($label+": "))
+self._$(id)_counter = Qwt.QwtCounter()
+self._$(id)_counter.setRange($start, $stop, $step)
+self._$(id)_counter.setNumButtons(2)
+self._$(id)_counter.setValue(self.$id)
+self._$(id)_tool_bar.addWidget(self._$(id)_counter)
+self._$(id)_counter.valueChanged.connect(self.set_$(id))
+self._$(id)_slider = Qwt.QwtSlider(None, Qt.Qt.Horizontal, Qwt.QwtSlider.BottomScale, Qwt.QwtSlider.BgSlot)
+self._$(id)_slider.setRange($start, $stop, $step)
+self._$(id)_slider.setValue(self.$id)
+self._$(id)_slider.setMinimumWidth($min_len)
+self._$(id)_slider.valueChanged.connect(self.set_$(id))
+$(win).addWidget(self._$(id)_slider)
+#end if
+$(gui_hint()($win))</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>#if $widget() == "knob"
+self._$(id)_knob.setValue($id)
+#end if
+#if $widget() == "thermo"
+self._$(id)_thermo.setValue($id)
+#end if
+#if $widget() == "counter"
+self._$(id)_counter.setValue($id)
+#end if
+#if $widget() == "slider"
+self._$(id)_slider.setValue($id)
+#end if
+#if $widget() == "counter_slider"
+self._$(id)_counter.setValue($id)
+self._$(id)_slider.setValue($id)
+#end if</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Start</name>
+		<key>start</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Stop</name>
+		<key>stop</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Step</name>
+		<key>step</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Widget</name>
+		<key>widget</key>
+		<value>counter_slider</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option><name>Counter + Slider</name><key>counter_slider</key></option>
+		<option><name>Counter</name><key>counter</key></option>
+		<option><name>Slider</name><key>slider</key></option>
+		<option><name>Knob</name><key>knob</key></option>
+		<option><name>Thermo</name><key>thermo</key></option>
+	</param>
+	<param>
+		<name>Orientation</name>
+		<key>orient</key>
+		<value>Qt.Horizontal</value>
+		<type>enum</type>
+		<hide>#if $widget() in ("slider", "thermo") then 'part' else 'all'#</hide>
+		<option>
+			<name>Horizontal</name>
+			<key>Qt.Horizontal</key>
+			<opt>scalepos:BottomScale</opt>
+			<opt>minfcn:setMinimumWidth</opt>
+		</option>
+		<option>
+			<name>Vertical</name>
+			<key>Qt.Vertical</key>
+			<opt>scalepos:LeftScale</opt>
+			<opt>minfcn:setMinimumHeight</opt>
+		</option>
+	</param>
+	<param>
+		<name>Minimum Length</name>
+		<key>min_len</key>
+		<value>200</value>
+		<type>int</type>
+		<hide>#if $widget().split('_')[0] in ("slider", "counter", "thermo") then 'part' else 'all'#</hide>
+	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<check>$start &lt;= $value &lt;= $stop</check>
+	<check>$start &lt; $stop</check>
+	<doc>
+This block creates a variable with a slider. \
+Leave the label blank to use the variable id as the label. \
+The value must be a real number. \
+The value must be between the start and the stop.
+
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>

@@ -7,15 +7,10 @@
 <block>
 	<name>Probe Avg Mag^2</name>
 	<key>gr_probe_avg_mag_sqrd_x</key>
-	<import>from grc_gnuradio import blks2 as grc_blks2</import>
-	<make>grc_blks2.probe_avg_mag_sqrd_$(type)(
-	threshold=$threshold,
-	alpha=$alpha,
-	probe_rate=$probe_rate,
-)</make>
+	<import>from gnuradio import gr</import>
+	<make>gr.probe_avg_mag_sqrd_$(type)($threshold, $alpha)</make>
 	<callback>set_alpha($alpha)</callback>
 	<callback>set_threshold($threshold)</callback>
-	<callback>set_probe_rate($probe_rate)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -43,18 +38,13 @@
 		<value>1</value>
 		<type>real</type>
 	</param>
-	<param>
-		<name>Probe Rate</name>
-		<key>probe_rate</key>
-		<value>10</value>
-		<type>real</type>
-	</param>
 	<sink>
 		<name>in</name>
 		<type>$type.input</type>
 	</sink>
-	<source>
-		<name>out</name>
-		<type>float</type>
-	</source>
+	<doc>
+Available functions to probe: level()
+
+Use with the function probe block.
+	</doc>
 </block>

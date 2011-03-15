@@ -5,8 +5,9 @@
 ###################################################
  -->
 <block>
-	<name>Histo Sink</name>
+	<name>WX GUI Histo Sink</name>
 	<key>wxgui_histosink2</key>
+	<category>WX GUI Widgets</category>
 	<import>from gnuradio.wxgui import histosink_gl</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 histosink_gl.histo_sink_f(

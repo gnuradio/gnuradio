@@ -5,8 +5,9 @@
 ###################################################
  -->
 <block>
-	<name>Scope Sink</name>
+	<name>WX GUI Scope Sink</name>
 	<key>wxgui_scopesink2</key>
+	<category>WX GUI Widgets</category>
 	<import>from gnuradio.wxgui import scopesink2</import>
 	<import>from gnuradio import gr</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'

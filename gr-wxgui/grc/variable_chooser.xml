@@ -7,8 +7,9 @@
 ###################################################
  -->
 <block>
-	<name>Variable Chooser</name>
+	<name>WX GUI Chooser</name>
 	<key>variable_chooser</key>
+	<category>WX GUI Widgets</category>
 	<import>from gnuradio.wxgui import forms</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'

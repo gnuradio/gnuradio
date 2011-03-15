@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##WX GUI Notebook
+###################################################
+ -->
+<block>
+	<name>QT GUI Tab Widget</name>
+	<key>qtgui_tab_widget</key>
+	<category>QT GUI Widgets</category>
+	<import>from PyQt4 import Qt</import>
+	<make>#set $win = 'self.%s'%$id
+Qt.QTabWidget()
+#set $all_labels = [$label0, $label1, $label2, $label3, $label4][:int($num_tabs())]
+#for i, label in enumerate($all_labels)
+self.$(id)_widget_$(i) = Qt.QWidget()
+self.$(id)_layout_$(i) = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.$(id)_widget_$(i))
+self.$(id)_grid_layout_$(i) = Qt.QGridLayout()
+self.$(id)_layout_$(i).addLayout(self.$(id)_grid_layout_$(i))
+$(win).addTab(self.$(id)_widget_$(i), $label)
+#end for
+$(gui_hint()($win))</make>
+	<param>
+		<name>Num Tabs</name>
+		<key>num_tabs</key>
+		<value>1</value>
+		<type>enum</type>
+		<option><name>1</name><key>1</key></option>
+		<option><name>2</name><key>2</key></option>
+		<option><name>3</name><key>3</key></option>
+		<option><name>4</name><key>4</key></option>
+		<option><name>5</name><key>5</key></option>
+	</param>
+	<param>
+		<name>Label 0</name>
+		<key>label0</key>
+		<value>Tab 0</value>
+		<type>string</type>
+		<hide>#if int($num_tabs()) > 0 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 1</name>
+		<key>label1</key>
+		<value>Tab 1</value>
+		<type>string</type>
+		<hide>#if int($num_tabs()) > 1 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 2</name>
+		<key>label2</key>
+		<value>Tab 2</value>
+		<type>string</type>
+		<hide>#if int($num_tabs()) > 2 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 3</name>
+		<key>label3</key>
+		<value>Tab 3</value>
+		<type>string</type>
+		<hide>#if int($num_tabs()) > 3 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 4</name>
+		<key>label4</key>
+		<value>Tab 4</value>
+		<type>string</type>
+		<hide>#if int($num_tabs()) > 4 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<doc>
+This block creates a tabbed widget to organize other widgets. \
+The ID of this block can be used as the tab_id in the GUI hints of other widgets.
+
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>
