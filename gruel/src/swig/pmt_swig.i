@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,9 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_PMT_H
-#define INCLUDED_PMT_H
-
+%module pmt
+%include "std_string.i"
+%include "stdint.i"
+%{
 #include <boost/intrusive_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
@@ -31,58 +32,16 @@
 #include <stdint.h>
 #include <iosfwd>
 #include <stdexcept>
+#include <gruel/pmt.h>
+using namespace pmt;
+%}
 
-namespace gruel {
-  class msg_accepter;
-};
-
-/*!
- * This file defines a polymorphic type and the operations on it.
- *
- * It draws heavily on the idea of scheme and lisp data types.
- * The interface parallels that in Guile 1.8, with the notable
- * exception that these objects are transparently reference counted.
- */
-
-namespace pmt {
-
-/*!
- * \brief base class of all pmt types
- */
+// Template intrusive_ptr for Swig to avoid dereferencing issues
 class pmt_base;
- 
-/*!
- * \brief typedef for shared pointer (transparent reference counting).
- * See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
- */
+%import <intrusive_ptr.i>
+%template(swig_int_ptr) boost::intrusive_ptr<pmt_base>;
+
 typedef boost::intrusive_ptr<pmt_base> pmt_t;
-
-extern void intrusive_ptr_add_ref(pmt_base*);
-extern void intrusive_ptr_release(pmt_base*);
-
-class pmt_exception : public std::logic_error
-{
-public:
-  pmt_exception(const std::string &msg, pmt_t obj);
-};
-
-class pmt_wrong_type : public pmt_exception
-{
-public:
-  pmt_wrong_type(const std::string &msg, pmt_t obj);
-};
-
-class pmt_out_of_range : public pmt_exception
-{
-public:
-  pmt_out_of_range(const std::string &msg, pmt_t obj);
-};
-
-class pmt_notimplemented : public pmt_exception
-{
-public:
-  pmt_notimplemented(const std::string &msg, pmt_t obj);
-};
 
 /*
  * ------------------------------------------------------------------------
@@ -92,8 +51,8 @@ public:
  * I.e., there is a single false value, #f.
  * ------------------------------------------------------------------------
  */
-extern const pmt_t PMT_T;	//< \#t : boolean true constant
-extern const pmt_t PMT_F;	//< \#f : boolean false constant
+extern const pmt_t PMT_T;
+extern const pmt_t PMT_F;
 
 //! Return true if obj is \#t or \#f, else return false.
 bool pmt_is_bool(pmt_t obj);
@@ -416,8 +375,6 @@ pmt_t pmt_init_u16vector(size_t k, const uint16_t *data);
 pmt_t pmt_init_s16vector(size_t k, const int16_t *data);
 pmt_t pmt_init_u32vector(size_t k, const uint32_t *data);
 pmt_t pmt_init_s32vector(size_t k, const int32_t *data);
-pmt_t pmt_init_u64vector(size_t k, const uint64_t *data);
-pmt_t pmt_init_s64vector(size_t k, const int64_t *data);
 pmt_t pmt_init_f32vector(size_t k, const float *data);
 pmt_t pmt_init_f64vector(size_t k, const double *data);
 pmt_t pmt_init_c32vector(size_t k, const std::complex<float> *data);
@@ -768,8 +725,6 @@ void pmt_write(pmt_t obj, std::ostream &port);
 std::string pmt_write_string(pmt_t obj);
 
 
-std::ostream& operator<<(std::ostream &os, pmt_t obj);
-
 /*!
  * \brief Write pmt string representation to stdout.
  */
@@ -803,9 +758,3 @@ std::string pmt_serialize_str(pmt_t obj);
  * \brief Provide a simple string generating interface to pmt's deserialize function
  */
 pmt_t pmt_deserialize_str(std::string str);
-
-} /* namespace pmt */
-
-#include <gruel/pmt_sugar.h>
-
-#endif /* INCLUDED_PMT_H */

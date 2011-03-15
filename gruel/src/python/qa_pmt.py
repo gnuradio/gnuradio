@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,11 +20,23 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = lib include scheme 
+import unittest
+import pmt_swig
 
-if PYTHON
+class test_gruel_pmt(unittest.TestCase):
 
-SUBDIRS += . swig python
+    def test01 (self):
+        a = pmt_swig.pmt_intern("a")
+        b = pmt_swig.pmt_from_double(123765)
+        d1 = pmt_swig.pmt_make_dict()
+        d2 = pmt_swig.pmt_dict_add(d1, a, b)
+        pmt_swig.pmt_print(d2)
 
-endif
+    def test02 (self):
+        const = 123765
+        x_pmt = pmt_swig.pmt_from_double(const)
+        x_int = pmt_swig.pmt_to_double(x_pmt)
+        self.assertEqual(x_int, const)
 
+if __name__ == '__main__':
+    unittest.main()

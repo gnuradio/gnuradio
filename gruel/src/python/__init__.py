@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,11 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = lib include scheme 
+# The presence of this file turns this directory into a Python package
 
-if PYTHON
-
-SUBDIRS += . swig python
-
-endif
+from pmt_swig import *
 
