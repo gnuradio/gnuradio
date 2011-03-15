@@ -12,6 +12,6 @@ export DYLD_LIBRARY_PATH
 PATH=@abs_top_builddir@/gruel/:@abs_top_builddir@/gruel/.libs:$PATH
 
 @top_builddir@/run_tests.sh \
-    @abs_top_srcdir@/gruel \
-    @abs_top_builddir@/gruel \
+    @abs_top_srcdir@/gruel/src \
+    @abs_top_builddir@/gruel/src \
     @srcdir@

@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,50 +22,34 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
-AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
-	 $(WITH_INCLUDES)
+TESTS =
+
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/gruel/src/lib \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(PYTHON_CPPFLAGS) \
+	$(WITH_INCLUDES)
 
 TOP_SWIG_IFILES =		\
-	pmt.i
+	pmt_swig.i
 
-
-# SWIG headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS =			\
-	pmt.i			
-
-# SWIG headers that get installed in ${prefix}/include/gnuradio/swig/...
-nobase_swiginclude_HEADERS = 
-
-
-# special install for this top-level Python script which includes all
-# of the split Python libraries.
-ourpythondir = $(pythondir)/gruel
-ourpython_PYTHON =  \
-    pmt.py      \
-    __init__.py
-
-# ----------------------------------------------------------------
-# FIXME As of swig 1.3.31, this still seems to be required...
-# gnuradio_swig_bug_workaround.h : gnuradio_core_runtime.py $(srcdir)/gen-swig-bug-fix
-#	$(PYTHON) $(srcdir)/gen-swig-bug-fix python/gnuradio_core_runtime.cc $@
-
-EXTRA_DIST += gen-swig-bug-fix
-
-# C/C++ headers get installed in ${prefix}/include/gnuradio
-#grinclude_HEADERS = gnuradio_swig_bug_workaround.h
-grinclude_HEADERS = 
-
+##############################
+# SWIG interface and library
+TOP_SWIG_IFILES = \
+	pmt_swig.i
 
 # Install so that they end up available as:
-#   import gnuradio.gr
+#   import gruel.pmt
 # This ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/gr
-pmt_pythondir_category = gruel
+#   ${prefix}/lib/python${python_version}/site-packages/gruel/pmt
+pmt_swig_pythondir_category = \
+	gruel/pmt
 
-# additional libraries for linking with each SWIG-generated library
-pmt_la_swig_libadd = $(GRUEL_LA)
+# additional libraries for linking with the SWIG-generated library
+pmt_swig_la_swig_libadd = \
+	$(abs_top_builddir)/gruel/src/lib/pmt/libpmt.la
 
-SWIG_GUILE_FLAGS += -DIN_GNURADIO_CORE
-
+# additional SWIG files to be installed
+pmt_swig_swiginclude_headers = 
 
 
