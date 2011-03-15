@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,30 +23,31 @@
 #ifndef INCLUDED_QTGUI_H
 #define INCLUDED_QTGUI_H
 
+#include <gruel/thread.h>
 #include <qapplication.h>
 #include "SpectrumGUIClass.h"
 
 class qtgui_event : public QEvent
 {
 private:
-  pthread_mutex_t *pmutex;
+  gruel::mutex &d_mutex;
 
 public:
-  qtgui_event(pthread_mutex_t *mut)
-    : QEvent((QEvent::Type)(QEvent::User+101))
+  qtgui_event(gruel::mutex &mutex)
+    : QEvent((QEvent::Type)(QEvent::User+101)),
+    d_mutex(mutex)
   {
-    pmutex = mut;
+    //nop
   }
 
   void lock()
   {
-    pthread_mutex_lock(pmutex);
-    
+    d_mutex.lock();
   }
 
   void unlock()
   {
-    pthread_mutex_unlock(pmutex);
+    d_mutex.unlock();
   }
 };
 
