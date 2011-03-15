@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Probe Signal
+###################################################
+ -->
+<block>
+	<name>Probe Signal</name>
+	<key>gr_probe_signal_f</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.probe_signal_f()</make>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<doc>
+Available functions to probe: level()
+
+Use with the function probe block.
+	</doc>
+</block>

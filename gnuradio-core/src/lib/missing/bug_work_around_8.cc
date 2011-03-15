@@ -1,2 +1,3 @@
 // if libmisc has no sources, it doesn't get built correctly
-static int gr_bug_work_around_8 __attribute__((unused));
+#include <gruel/attributes.h>
+static int gr_bug_work_around_8 __GR_ATTR_UNUSED;

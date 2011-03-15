@@ -45,7 +45,6 @@ MSG_LIB = msg/libmsg.la
 libgruel_la_SOURCES = 			\
 	realtime.cc 			\
 	sys_pri.cc 			\
-	thread.cc			\
 	thread_body_wrapper.cc 		\
 	thread_group.cc
 

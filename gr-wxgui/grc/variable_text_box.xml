@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Text Box:
+##	a gui text box form
+###################################################
+ -->
+<block>
+	<name>WX GUI Text Box</name>
+	<key>variable_text_box</key>
+	<category>WX GUI Widgets</category>
+	<import>from gnuradio.wxgui import forms</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+#set $win = 'self._%s_text_box'%$id
+$win = forms.text_box(
+	parent=$(parent).GetWin(),
+	value=self.$id,
+	callback=self.set_$(id),
+	#if $label()
+	label=$label,
+	#else
+	label='$id',
+	#end if
+	#if $formatter()
+	converter=forms.$(converver)(formatter=$formatter),
+	#else
+	converter=forms.$(converver)(),
+	#end if
+)
+#if not $grid_pos()
+$(parent).Add($win)
+#else
+$(parent).GridAdd($win, $(', '.join(map(str, $grid_pos()))))
+#end if</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>self._$(id)_text_box.set_value($id)</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>0</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Converter</name>
+		<key>converver</key>
+		<value>float_converter</value>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float_converter</key>
+		</option>
+		<option>
+			<name>Integer</name>
+			<key>int_converter</key>
+		</option>
+		<option>
+			<name>String</name>
+			<key>str_converter</key>
+		</option>
+		<option>
+			<name>Evaluate</name>
+			<key>eval_converter</key>
+		</option>
+	</param>
+	<param>
+		<name>Formatter</name>
+		<key>formatter</key>
+		<value>None</value>
+		<type>raw</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
+	<doc>
+This block creates a variable with a text box. \
+Leave the label blank to use the variable id as the label.
+
+Format should be a function/lambda that converts a value into a string or None for the default formatter.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
+	</doc>
+</block>

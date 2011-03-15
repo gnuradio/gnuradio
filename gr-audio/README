@@ -1,0 +1,11 @@
+The gnuradio audio component provides an audio_source and audio_sink block.
+The audio blocks stream floating point samples to and from audio hardware.
+
+The gr-audio will be built automatically when gnuradio-core is enabled.
+Support for underlying audio architectures depends on OS and installed libraries.
+At the time of writing, gr-audio supports oss, alsa, jack, portaudio, audiounit, and winmm.
+
+At runtime, gr-audio will automatically select from the available architectures.
+The user can override the selection via configuration file by setting "audio_module"
+to one of the following strings: oss, alsa, jack, portaudio, osx, or windows.
+See gr-audio.conf for an example.

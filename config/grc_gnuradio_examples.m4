@@ -20,12 +20,14 @@ dnl Boston, MA 02110-1301, USA.
 AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
     GRC_ENABLE(gnuradio-examples)
 
-    dnl Do not do gnuradio-examples if gnuradio-core skipped
+    dnl Do not do gnuradio-examples if gnuradio-core or gr-audio skipped
     GRC_CHECK_DEPENDENCY(gnuradio-examples, gnuradio-core)
+    GRC_CHECK_DEPENDENCY(gnuradio-examples, gr-audio)
 
     AC_CONFIG_FILES([ \
         gnuradio-examples/Makefile \
 	gnuradio-examples/c++/Makefile \
+	gnuradio-examples/c++/audio/Makefile \
 	gnuradio-examples/python/Makefile \
 	gnuradio-examples/grc/Makefile \
 	gnuradio-examples/python/apps/hf_explorer/Makefile \

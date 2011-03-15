@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,15 +25,11 @@ if PYTHON
 SUBDIRS = \
 	base \
 	blocks \
+	freedesktop \
 	grc_gnuradio \
 	gui \
 	python \
 	scripts
-
-## append freedesktop to the list of subdirs when xdg utils are present
-if XDG_UTILS
-SUBDIRS += freedesktop
-endif
 
 ourpythondir = $(pkgpythondir)/grc
 ourpython_PYTHON = __init__.py

@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008, 2009, 2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -216,7 +216,7 @@ class MainWindow(gtk.Window):
 		"""
 		if not self.page_to_be_closed: self.page_to_be_closed = self.get_page()
 		#show the page if it has an executing flow graph or is unsaved
-		if self.page_to_be_closed.get_pid() or not self.page_to_be_closed.get_saved():
+		if self.page_to_be_closed.get_proc() or not self.page_to_be_closed.get_saved():
 			self._set_page(self.page_to_be_closed)
 		#unsaved? ask the user
 		if not self.page_to_be_closed.get_saved() and self._save_changes():
@@ -225,7 +225,7 @@ class MainWindow(gtk.Window):
 				self.page_to_be_closed = None #set the page to be closed back to None
 				return
 		#stop the flow graph if executing
-		if self.page_to_be_closed.get_pid(): Actions.FLOW_GRAPH_KILL()
+		if self.page_to_be_closed.get_proc(): Actions.FLOW_GRAPH_KILL()
 		#remove the page
 		self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
 		if ensure and self.notebook.get_n_pages() == 0: self.new_page() #no pages, make a new one
