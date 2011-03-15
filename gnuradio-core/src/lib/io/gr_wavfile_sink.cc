@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007,2008,2009,2010,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,6 +33,7 @@
 #include <cmath>
 #include <fcntl.h>
 #include <gruel/thread.h>
+#include <boost/math/special_functions/round.hpp>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H
@@ -224,7 +225,7 @@ gr_wavfile_sink::convert_to_short(float sample)
     sample = d_min_sample_val;
   }
   
-  return (short int) roundf(sample);
+  return (short int) boost::math::iround(sample);
 }
 
 
