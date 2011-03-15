@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,6 +26,7 @@ EXTRA_DIST += inet.h.in
 gruelincludedir = $(prefix)/include/gruel
 
 gruelinclude_HEADERS = \
+	attributes.h \
 	inet.h \
 	msg_accepter.h \
 	msg_accepter_msgq.h \
