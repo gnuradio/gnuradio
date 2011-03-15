@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <gr_sincos.h>
 #include <math.h>
+#include <boost/math/special_functions/trunc.hpp>
 
 
 gr_frequency_modulator_fc_sptr gr_make_frequency_modulator_fc (double sensitivity)
@@ -62,7 +63,7 @@ gr_frequency_modulator_fc::work (int noutput_items,
   // to avoid loss of precision in the addition above.
 
   if (fabs (d_phase) > 16 * M_PI){
-    double ii = trunc (d_phase / (2 * M_PI));
+    double ii = boost::math::trunc (d_phase / (2 * M_PI));
     d_phase = d_phase - (ii * 2 * M_PI);
   }
 
