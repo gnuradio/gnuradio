@@ -24,14 +24,6 @@
 #include <stdexcept>
 
 /***********************************************************************
- * UHD Multi USRP Sink
- **********************************************************************/
-uhd_usrp_sink::uhd_usrp_sink(gr_io_signature_sptr sig)
-:gr_sync_block("gr uhd usrp sink", sig, gr_make_io_signature(0, 0, 0)){
-    /* NOP */
-}
-
-/***********************************************************************
  * UHD Multi USRP Sink Impl
  **********************************************************************/
 class uhd_usrp_sink_impl : public uhd_usrp_sink{
@@ -41,9 +33,11 @@ public:
         const uhd::io_type_t &io_type,
         size_t num_channels
     ):
-        uhd_usrp_sink(gr_make_io_signature(
-            num_channels, num_channels, io_type.size
-        )),
+        gr_sync_block(
+            "gr uhd usrp sink",
+            gr_make_io_signature(num_channels, num_channels, io_type.size),
+            gr_make_io_signature(0, 0, 0)
+        ),
         _type(io_type),
         _nchan(num_channels),
         _has_time_spec(_nchan > 1)
