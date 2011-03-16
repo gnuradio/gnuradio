@@ -53,7 +53,7 @@ default_device_name ()
 audio_oss_sink::audio_oss_sink (int sampling_rate,
 				const std::string device_name,
 				bool ok_to_block)
-  : audio_sink ("audio_oss_sink",
+  : gr_sync_block ("audio_oss_sink",
 		   gr_make_io_signature (1, 2, sizeof (float)),
 		   gr_make_io_signature (0, 0, 0)),
     d_sampling_rate (sampling_rate),
