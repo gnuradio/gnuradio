@@ -20,9 +20,12 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
+
+EXTRA_DIST += spectrumdisplayform.ui
 
 AM_CPPFLAGS = -I. $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
-              $(QT_INCLUDES) $(WITH_INCLUDES)
+              $(QT_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
 
 # Only include these files in the build if qtgui passes configure checks
 # This is mostly to help make distcheck pass
@@ -34,9 +37,7 @@ QMAKE_SOURCES = 				\
 	ConstellationDisplayPlot.moc.cc		\
 	spectrumdisplayform.ui.h
 
-EXTRA_DIST = spectrumdisplayform.ui
-
-BUILT_SOURCES = $(QMAKE_SOURCES)
+BUILT_SOURCES += $(QMAKE_SOURCES)
 
 # Build the normal library for C++ apps to link against
 lib_LTLIBRARIES = libgnuradio-qtgui.la
@@ -55,7 +56,7 @@ libgnuradio_qtgui_la_SOURCES = 	\
 	qtgui_sink_c.cc				\
 	qtgui_sink_f.cc
 
-nodist_libgnuradio_qtgui_la_SOURCES=$(BUILT_SOURCES)
+nodist_libgnuradio_qtgui_la_SOURCES=$(QMAKE_SOURCES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
@@ -81,16 +82,18 @@ QT_MOC_FLAGS=-DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LI
 	$(QT_UIC_EXEC) $< -o $@
 
 # magic flags
-libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
+libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS) $(LTVERSIONFLAGS)
 
 libgnuradio_qtgui_la_LIBADD = 		\
 	$(GNURADIO_CORE_LA)	\
+	$(BOOST_THREAD_LIB) \
+	$(BOOST_DATE_TIME_LIB) \
 	-lstdc++		\
 	$(QT_LIBS)
 
-if PYTHON
+
 ##############################
-# SWIG interface and library
+# SWIG interfaces and libraries
 
 TOP_SWIG_IFILES = 		\
 	qtgui.i
@@ -105,14 +108,3 @@ qtgui_pythondir_category =	\
 # additional libraries for linking with the SWIG-generated library
 qtgui_la_swig_libadd =		\
 	libgnuradio-qtgui.la
-
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES += 		\
-	$(swig_built_sources)
-endif
-
-# Do not distribute built sources, they may contain generated paths
-# which are invalid on other systems
-no_dist_files = $(BUILT_SOURCES)

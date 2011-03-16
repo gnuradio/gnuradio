@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2008,2009 Free Software Foundation, Inc.
+# Copyright 2003,2004,2008,2009,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,9 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(GNURADIO_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(GRUEL_INCLUDES) $(GNURADIO_INCLUDES) $(WITH_INCLUDES)
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	getopt.h 		\
 	getopt.c 		\
 	gettimeofday.c 		\

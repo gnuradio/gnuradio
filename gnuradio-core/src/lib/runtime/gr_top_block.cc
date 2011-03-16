@@ -95,3 +95,9 @@ gr_top_block::dump()
 {
   d_impl->dump();
 }
+
+gr_top_block_sptr
+gr_top_block::to_top_block()
+{
+  return cast_to_top_block_sptr(shared_from_this());
+}

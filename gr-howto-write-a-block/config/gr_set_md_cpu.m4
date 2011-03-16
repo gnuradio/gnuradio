@@ -80,7 +80,7 @@ AC_DEFUN([GR_SET_MD_CPU],[
    x86 | i[[3-7]]86)	MD_CPU=x86	MD_SUBCPU=x86 ;;
    x86_64)		MD_CPU=x86	MD_SUBCPU=x86_64 ;;
    powerpc*)            MD_CPU=powerpc ;;
-   arm)
+   arm*)
        _FIND_ARM_ISA
        if test $is_armv5 = yes; then MD_CPU=armv5;
        elif test $is_armv7_a = yes; then MD_CPU=armv7_a;

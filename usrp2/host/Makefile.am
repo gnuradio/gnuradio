@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = usrp2.pc
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	usrp2.pc.in        
 
 SUBDIRS = include lib apps

@@ -16,12 +16,10 @@ class QwtColorMap;
   ( the intensity ) is displayed using colors. The colors are calculated
   from the values using a color map.
   
-  \image html spectrogram3.png
-
   \sa QwtRasterData, QwtColorMap
 */
 
-class QWT_EXPORT PlotWaterfall: public QwtPlotRasterItem
+class PlotWaterfall: public QwtPlotRasterItem
 {
 public:
     explicit PlotWaterfall(WaterfallData* data, const QString &title = QString::null);

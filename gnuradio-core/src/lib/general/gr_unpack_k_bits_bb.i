@@ -22,7 +22,7 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,unpack_k_bits_bb)
 
-gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (int k);
+gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (int k) throw(std::exception);
 
 class gr_unpack_k_bits_bb : public gr_sync_interpolator
 {

@@ -21,13 +21,13 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
     gr-wxgui.pc.in \
     README \
     README.gl
 
 if PYTHON
-SUBDIRS = src
+SUBDIRS = src grc
 
 etcdir = $(gr_prefsdir)
 dist_etc_DATA = gr-wxgui.conf

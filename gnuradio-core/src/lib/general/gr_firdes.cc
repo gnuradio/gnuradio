@@ -574,7 +574,7 @@ gr_firdes::gaussian (double gain,
   vector<float> taps(ntaps);
   double scale = 0;
   double dt = 1.0/spb;
-  double s = 1.0/(sqrt(log(2)) / (2*M_PI*bt));
+  double s = 1.0/(sqrt(log(2.0)) / (2*M_PI*bt));
   double t0 = -0.5 * ntaps;
   double ts;
   for(int i=0;i<ntaps;i++)

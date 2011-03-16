@@ -1,0 +1,15 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+LV_CXXFLAGS=@LV_CXXFLAGS@
+
+
+
+Name: volk
+Description: VOLK.. Vector Optimized Library of Kernels
+Requires:
+Version: @VERSION@
+Libs: -lvolk -lvolk_runtime @LV_ORC_PKGCONFIG@
+Cflags: -I${includedir} ${LV_CXXFLAGS}
+

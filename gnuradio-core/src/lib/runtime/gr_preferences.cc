@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2010 Free Software Foundation, Inc.
+ * Copyright 2003,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,6 +25,7 @@
 #endif
 
 #include <gr_preferences.h>
+#include <gr_sys_paths.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,12 +34,9 @@
 #include <unistd.h>
 #include <string.h>
 
-
-#ifdef MKDIR_TAKES_ONE_ARG
-#define gr_mkdir(pathname, mode) mkdir(pathname)
-#else
-#define gr_mkdir(pathname, mode) mkdir((pathname), (mode))
-#endif
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+namespace fs = boost::filesystem;
 
 /*
  * The simplest thing that could possibly work:
@@ -48,27 +46,19 @@
 static const char *
 pathname (const char *key)
 {
-  static char buf[200];
-  snprintf (buf, sizeof (buf), "%s/.gnuradio/prefs/%s", getenv ("HOME"), key);
-  return buf;
+  static fs::path path;
+  path = fs::path(gr_appdata_path()) / ".gnuradio" / "prefs" / key;
+  return path.string().c_str();
 }
 
 static void
 ensure_dir_path ()
 {
-  char path[200];
-  struct stat	statbuf;
+  fs::path path = fs::path(gr_appdata_path()) / ".gnuradio";
+  if (!fs::is_directory(path)) fs::create_directory(path);
 
-  snprintf (path, sizeof (path), "%s/.gnuradio/prefs", getenv ("HOME"));
-  if (stat (path, &statbuf) == 0 && S_ISDIR (statbuf.st_mode))
-    return;
-
-  // blindly try to make it 	// FIXME make this robust. C++ SUCKS!
-
-  snprintf (path, sizeof (path), "%s/.gnuradio", getenv ("HOME"));
-  gr_mkdir (path, 0750);
-  snprintf (path, sizeof (path), "%s/.gnuradio/prefs", getenv ("HOME"));
-  gr_mkdir (path, 0750);
+  path = path / "prefs";
+  if (!fs::is_directory(path)) fs::create_directory(path);
 }
 
 const char *

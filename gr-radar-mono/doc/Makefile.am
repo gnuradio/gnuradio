@@ -21,4 +21,4 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = registers.ods
+EXTRA_DIST += registers.ods

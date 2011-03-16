@@ -120,3 +120,12 @@ public:
   void set_constellation_pen_size(int size);
 };
 
+#if SWIGGUILE
+%scheme %{
+(load-extension-global "libguile-gnuradio-qtgui" "scm_init_gnuradio_qtgui_module")
+%}
+
+%goops %{
+(use-modules (gnuradio gnuradio_core_runtime))
+%}
+#endif

@@ -20,8 +20,11 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
-EXTRA_DIST = run_tests.in
+TESTS =
+EXTRA_DIST += run_tests.in
+DISTCLEANFILES += run_tests
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(SDL_CFLAGS) \
 	$(WITH_INCLUDES)
@@ -45,11 +48,9 @@ libgnuradio_video_sdl_la_LIBADD =	\
 
 libgnuradio_video_sdl_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
-if PYTHON
+
 #################################
-# SWIG interface and library
-TESTS = run_tests
-DISTCLEANFILES = run_tests
+# SWIG interfaces and libraries
 
 TOP_SWIG_IFILES =			\
 	video_sdl.i
@@ -65,11 +66,6 @@ video_sdl_pythondir_category =		\
 video_sdl_la_swig_libadd =		\
 	libgnuradio-video-sdl.la
 
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+if PYTHON
+TESTS += run_tests
 endif

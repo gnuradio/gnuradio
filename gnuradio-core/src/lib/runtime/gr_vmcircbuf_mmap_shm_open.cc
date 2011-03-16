@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2003,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,7 +37,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <gr_pagesize.h>
-#include <gr_tmp_path.h>
+#include <gr_sys_paths.h>
 
 
 gr_vmcircbuf_mmap_shm_open::gr_vmcircbuf_mmap_shm_open (int size)

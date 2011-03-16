@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,12 +42,16 @@ public:
 
   void start() throw (std::runtime_error);
   void stop();
-  void wait();
-  void run();
+  //void wait();
+  //void run() throw (std::runtime_error);
   void lock();
   void unlock() throw (std::runtime_error);
   void dump();
+
+  gr_top_block_sptr to_top_block(); // Needed for Python/Guile type coercion
 };
+
+#ifdef SWIGPYTHON
 
 %inline %{
 void top_block_run_unlocked(gr_top_block_sptr r) throw (std::runtime_error) 
@@ -64,3 +68,36 @@ void top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error)
     Py_END_ALLOW_THREADS;		// acquire global interpreter lock
 }
 %}
+
+#endif
+
+#ifdef SWIGGUILE
+
+%{
+  struct tb_arg_holder {
+    gr_top_block_sptr	tb;
+  };
+
+  static void *
+  tb_wait_shim(void *arg)
+  {
+    tb_arg_holder *a = (tb_arg_holder *)arg;
+    a->tb->wait();
+    return 0;
+  }
+
+%}
+
+%inline %{
+
+  static void
+  top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error)
+  {
+    tb_arg_holder a;
+    a.tb = r;
+    scm_without_guile(tb_wait_shim, (void *) &a);
+  }
+
+%}
+
+#endif

@@ -14,7 +14,10 @@
 	$taps,
 	$size,
 )</make>
-	<callback>set_taps($taps)</callback>
+	<!-- Set taps not implemented yet 
+           <callback>set_taps($taps)</callback>
+         -->
+	<callback>set_rate($rate)</callback>
 	<param>
 		<name>Resample Rate</name>
 		<key>rate</key>

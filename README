@@ -262,3 +262,16 @@ locations:
 
 	LDFLAGS="-L/usr/pkg/lib -R/usr/pkg/lib" CPPFLAGS="-I/usr/pkg/include" ./configure --prefix=/usr/gnuradio
 
+
+-------------------------------------------------------------------------------
+
+			  Legal Matters
+
+-------------------------------------------------------------------------------
+
+Some files have been changed many times throughout the
+years. Copyright notices at the tops of these files list which years
+changes have been made. For some files, changes have occurred in many
+consecutive years. These files may often have the format of a year
+range (e.g., "2006 - 2011"), which indicates that these files have had
+copyrightable changes made during each year in the range, inclusive.

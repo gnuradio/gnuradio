@@ -59,6 +59,26 @@ serialize_untagged_u32(unsigned int i, std::streambuf &sb)
   return sb.sputc((i >> 0) & 0xff) != std::streambuf::traits_type::eof();
 }
 
+static bool
+serialize_untagged_f64(double i, std::streambuf &sb)
+{
+ typedef union {
+	double id;
+	uint64_t ii;
+	} iu_t;
+  iu_t iu;
+  iu.id = i;
+  sb.sputc((iu.ii >> 56) & 0xff);
+  sb.sputc((iu.ii >> 48) & 0xff);
+  sb.sputc((iu.ii >> 40) & 0xff);
+  sb.sputc((iu.ii >> 32) & 0xff);
+  sb.sputc((iu.ii >> 24) & 0xff);
+  sb.sputc((iu.ii >> 16) & 0xff);
+  sb.sputc((iu.ii >>  8) & 0xff);
+  return sb.sputc((iu.ii >>  0) & 0xff) != std::streambuf::traits_type::eof();
+}
+
+
 #if 0
 // always writes big-endian
 static bool
@@ -163,6 +183,41 @@ deserialize_untagged_u64(uint64_t *ip, std::streambuf &sb)
 }
 #endif
 
+static bool
+deserialize_untagged_f64(double *ip, std::streambuf &sb)
+{
+  std::streambuf::traits_type::int_type t;
+
+  typedef union {
+    double id;
+    uint64_t ii;
+  } iu_t;
+
+  iu_t iu;
+
+  t = sb.sbumpc();
+  iu.ii = t & 0xff;
+
+  t = sb.sbumpc();
+  iu.ii = (iu.ii<<8) | (t & 0xff);
+  t = sb.sbumpc();
+  iu.ii = (iu.ii<<8) | (t & 0xff);
+  t = sb.sbumpc();
+  iu.ii = (iu.ii<<8) | (t & 0xff);
+  t = sb.sbumpc();
+  iu.ii = (iu.ii<<8) | (t & 0xff);
+  t = sb.sbumpc();
+  iu.ii = (iu.ii<<8) | (t & 0xff);
+  t = sb.sbumpc();
+  iu.ii = (iu.ii<<8) | (t & 0xff);
+  t = sb.sbumpc();
+  iu.ii = (iu.ii<<8) | (t & 0xff);
+
+  *ip = iu.id;
+  return t != std::streambuf::traits_type::eof();
+}
+ 
+
 /*
  * Write portable byte-serial representation of \p obj to \p sb
  *
@@ -172,7 +227,7 @@ bool
 pmt_serialize(pmt_t obj, std::streambuf &sb)
 {
   bool ok = true;
-
+  
  tail_recursion:
 
   if (pmt_is_bool(obj)){
@@ -217,11 +272,21 @@ pmt_serialize(pmt_t obj, std::streambuf &sb)
       return ok;
     }
 
-    if (pmt_is_real(obj))
-      throw pmt_notimplemented("pmt_serialize (real)", obj);
+    if (pmt_is_real(obj)){
+      float i = pmt_to_double(obj);
+      ok = serialize_untagged_u8(PST_DOUBLE, sb);
+      ok &= serialize_untagged_f64(i, sb);
+      return ok;
+    }
 
-    if (pmt_is_complex(obj))
-      throw pmt_notimplemented("pmt_serialize (complex)", obj);
+    if (pmt_is_complex(obj)){
+      std::complex<double> i = pmt_to_complex(obj);
+      ok = serialize_untagged_u8(PST_COMPLEX, sb);
+      ok &= serialize_untagged_f64(i.real(), sb);
+      ok &= serialize_untagged_f64(i.imag(), sb);
+      return ok;
+    }
+
   }
 
   if (pmt_is_vector(obj))
@@ -251,6 +316,7 @@ pmt_deserialize(std::streambuf &sb)
   uint16_t	u16;
   uint32_t	u32;
   //uint32_t	u64;
+  double	f64;
   static char   tmpbuf[1024];
 
   if (!deserialize_untagged_u8(&tag, sb))
@@ -285,7 +351,18 @@ pmt_deserialize(std::streambuf &sb)
     return parse_pair(sb);
 
   case PST_DOUBLE:
+    if(!deserialize_untagged_f64(&f64, sb))
+      goto error;
+    return pmt_from_double( f64 );
+
   case PST_COMPLEX:
+    {
+    double r,i;
+    if(!deserialize_untagged_f64(&r, sb) && !deserialize_untagged_f64(&i, sb))
+      goto error;
+    return pmt_make_rectangular( r,i );
+    }
+
   case PST_VECTOR:
   case PST_DICT:
   case PST_UNIFORM_VECTOR:
@@ -301,6 +378,26 @@ pmt_deserialize(std::streambuf &sb)
  error:
   throw pmt_exception("pmt_deserialize: malformed input stream", PMT_F);
 }
+
+
+/*
+ * provide a simple string accessor to the serialized pmt form
+ */
+std::string pmt_serialize_str(pmt_t obj){
+  std::stringbuf sb;
+  pmt_serialize(obj, sb);
+  return sb.str();
+}
+
+
+/*
+ * provide a simple string accessor to the deserialized pmt form
+ */
+pmt_t pmt_deserialize_str(std::string s){
+  std::stringbuf sb(s);
+  return pmt_deserialize(sb);
+}
+
 
 /*
  * This is a mostly non-recursive implementation that allows us to

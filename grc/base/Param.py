@@ -94,7 +94,7 @@ class Param(Element):
 				try: assert set(opt_keys) == set(option.get_opt_keys())
 				except AssertionError: raise Exception, 'Opt keys "%s" are not identical across all options.'%opt_keys
 			#if a value is specified, it must be in the options keys
-			self._value = value or self.get_option_keys()[0]
+			self._value = value if value or value in self.get_option_keys() else self.get_option_keys()[0]
 			try: assert self.get_value() in self.get_option_keys()
 			except AssertionError: raise Exception, 'The value "%s" is not in the possible values of "%s".'%(self.get_value(), self.get_option_keys())
 		else: self._value = value or ''

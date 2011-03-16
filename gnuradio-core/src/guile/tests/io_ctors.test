@@ -1,0 +1,82 @@
+;;; -*- Scheme -*-
+;;;
+;;; Copyright 2010 Free Software Foundation, Inc.
+;;;
+;;; This file is part of GNU Radio
+;;;
+;;; GNU Radio is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 3, or (at your option)
+;;; any later version.
+;;;
+;;; GNU Radio is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;;
+
+;;; If you're using Emacs's Scheme mode:
+;;;   (put 'with-test-prefix 'scheme-indent-function 1)
+
+;;; See the comments in gnuradio/test-suite/lib.scm for info on writing tests.
+;;; See also the very end of the file, where the test-equal, test-eqv
+;;; and test-eq macros are defined.
+
+(use-modules (gnuradio test-suite lib))
+(use-modules (gnuradio core))
+(use-modules (oop goops))
+
+
+(define (rm-foo)
+  (false-if-exception (delete-file "foo")))
+
+;;; Add test code for all constructors in these files
+;;;
+
+;;; ./io/gr_file_descriptor_sink.h
+(pass-if (true? (gr:file-descriptor-sink 1 (dup 1))))
+
+;;; ./io/gr_file_descriptor_source.h
+(pass-if (true? (gr:file-descriptor-source 1 (dup 0) #f)))
+
+;;; ./io/gr_file_sink.h
+(pass-if (true? (gr:file-sink 1 "foo")))
+
+;;; ./io/gr_file_source.h
+(pass-if (true? (gr:file-source 1 "foo" #f)))
+(rm-foo)
+
+;;; ./io/gr_histo_sink_f.h
+;; gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
+(pass-if (true? (gr:histo-sink-f (gr:msg-queue))))
+
+;;; ./io/gr_message_sink.h
+(pass-if (true? (gr:message-sink 1 (gr:msg-queue) #f)))
+
+;;; ./io/gr_message_source.h
+(pass-if (true? (gr:message-source 1 1)))
+(pass-if (true? (gr:message-source 1 (gr:msg-queue))))
+
+;;; ./io/gr_oscope_sink_f.h
+(pass-if (true? (gr:oscope-sink-f 1000 (gr:msg-queue))))
+
+;;; ./io/gr_udp_sink.h
+;;(pass-if (true? (gr:udp-sink 4 "localhost" 80 1472 #f)))
+;;(pass-if-throw "confirm throw gr:udp-sink" #t
+;;  (true? (gr:udp-sink 4 "localhostx" 80 1472 #f)))
+
+;;; ./io/gr_udp_source.h
+;;(pass-if (true? (gr:udp-source 4 "localhost" 0 1472 #f #t)))
+;;(pass-if-throw "confirm throw gr:udp-source" #t
+;;  (true? (gr:udp-source 4 "localhostx" 0 1472 #f #t)))
+
+;;; ./io/gr_wavfile_sink.h
+(pass-if (true? (gr:wavfile-sink "foo" 2 48000 16)))
+
+;;; ./io/gr_wavfile_source.h WONTFIX: buggy source won't accept file
+;;;                                   created immediately above.
+;;(pass-if (true? (gr:wavfile-source "foo" #f)))
+(rm-foo)

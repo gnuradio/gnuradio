@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	radar_tb.v \
 	radar_tb.sav \
 	radar_tb.sh \

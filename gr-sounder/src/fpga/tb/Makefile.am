@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2009 Free Software Foundation, Inc.
+# Copyright 2007,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	sounder_tb.v \
 	sounder_tb.sav \
 	sounder_tb.sh \

@@ -19,7 +19,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = \
+include $(top_srcdir)/Makefile.common
+
+EXTRA_DIST += \
     common_config_2rxhb_2tx_dig.vh \
     common_config_2rxint_2tx_dig.vh \
     common_config_bottom.vh

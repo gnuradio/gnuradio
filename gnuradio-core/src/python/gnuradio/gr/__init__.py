@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2003,2004,2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -40,7 +40,7 @@ if _RTLD_GLOBAL != 0:
     _dlopenflags = sys.getdlopenflags()
     sys.setdlopenflags(_dlopenflags|_RTLD_GLOBAL)
 
-from gnuradio_swig_python import *
+from gnuradio_core import *
 from exceptions import *
 from hier_block2 import *
 from top_block import *

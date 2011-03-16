@@ -20,8 +20,22 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# Every Makefile starts with common vars so we can
+# consistently use +=
+BUILT_SOURCES =
+MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
+CLEANFILES = guile.log
+DISTCLEANFILES =
+#EXTRA_DIST =
+STAMPS =
+
+
 # The name of this "out-of-tree" module
 modname = howto
+
+# Make rebuilds less verbose with stuff we can safely ignore
+# about GNU make only extensions.
+AUTOMAKE += -Wno-portability -Wnone
 
 # these flags are used when compiling non-SWIG-wrapper files
 # when going in to non-SWIG libraries
@@ -50,6 +64,9 @@ modincludedir = $(includedir)/$(modname)
 # swig includes 
 swigincludedir = $(modincludedir)/swig
 
+# Guile scheme code ends up under here:
+guiledir = $(prefix)/share/guile/site
+
 # Install this stuff in the appropriate subdirectory
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)
@@ -65,13 +82,8 @@ grc_blocksdir = $(prefix)/share/gnuradio/grc/blocks
 # here have to add a -f to be like GNU make.
 RM=$(RM_PROG) -f
 
-# Other common defines; use "+=" to add to these
-STAMPS =
-MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
-
-# Don't distribute the files defined in the variable 'no_dist_files'
 dist-hook:
 	@for file in $(no_dist_files); do \
 		echo $(RM) $(distdir)/$$file; \
 		$(RM) $(distdir)/$$file; \
-	done;
+	done

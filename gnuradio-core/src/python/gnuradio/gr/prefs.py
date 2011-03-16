@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import gnuradio_swig_python as gsp
+import gnuradio_core as gsp
 _prefs_base = gsp.gr_prefs
 
 

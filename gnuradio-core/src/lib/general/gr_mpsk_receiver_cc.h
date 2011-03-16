@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_MPSK_RECEIVER_CC_H
 #define	INCLUDED_GR_MPSK_RECEIVER_CC_H
 
+#include <gruel/attributes.h>
 #include <gr_block.h>
 #include <gr_complex.h>
 #include <fstream>
@@ -299,7 +300,7 @@ protected:
   static const unsigned int DLLEN = 8;
   
   //! delay line plus some length for overflow protection
-  gr_complex d_dl[2*DLLEN] __attribute__ ((aligned(8)));
+  __GR_ATTR_ALIGNED(8) gr_complex d_dl[2*DLLEN];
   
   //! index to delay line
   unsigned int d_dl_idx;

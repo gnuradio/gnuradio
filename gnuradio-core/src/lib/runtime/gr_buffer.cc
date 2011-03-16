@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,6 +31,7 @@
 #include <iostream>
 #include <assert.h>
 #include <algorithm>
+#include <boost/math/common_factor_rt.hpp>
 
 static long s_buffer_count = 0;		// counts for debugging storage mgmt
 static long s_buffer_reader_count = 0;
@@ -73,14 +74,15 @@ static long s_buffer_reader_count = 0;
 static long
 minimum_buffer_items (long type_size, long page_size)
 {
-  return page_size / gr_gcd (type_size, page_size);
+  return page_size / boost::math::gcd (type_size, page_size);
 }
 
 
 gr_buffer::gr_buffer (int nitems, size_t sizeof_item, gr_block_sptr link)
   : d_base (0), d_bufsize (0), d_vmcircbuf (0),
     d_sizeof_item (sizeof_item), d_link(link),
-    d_write_index (0), d_done (false)
+    d_write_index (0), d_abs_write_offset(0), d_done (false),
+    d_last_min_items_read(0)
 {
   if (!allocate_buffer (nitems, sizeof_item))
     throw std::bad_alloc ();
@@ -156,8 +158,16 @@ gr_buffer::space_available ()
     // Find out the maximum amount of data available to our readers
 
     int	most_data = d_readers[0]->items_available ();
-    for (unsigned int i = 1; i < d_readers.size (); i++)
+    uint64_t min_items_read = d_readers[0]->nitems_read();
+    for (size_t i = 1; i < d_readers.size (); i++) {
       most_data = std::max (most_data, d_readers[i]->items_available ());
+      min_items_read = std::min(min_items_read, d_readers[i]->nitems_read());
+    }
+
+    if(min_items_read != d_last_min_items_read) {
+      prune_tags(d_last_min_items_read);
+      d_last_min_items_read = min_items_read;
+    }
 
     // The -1 ensures that the case d_write_index == d_read_index is
     // unambiguous.  It indicates that there is no data for the reader
@@ -177,6 +187,7 @@ gr_buffer::update_write_pointer (int nitems)
 {
   gruel::scoped_lock guard(*mutex());
   d_write_index = index_add (d_write_index, nitems);
+  d_abs_write_offset += nitems;
 }
 
 void
@@ -215,6 +226,45 @@ gr_buffer::drop_reader (gr_buffer_reader *reader)
   d_readers.erase (result);
 }
 
+void
+gr_buffer::add_item_tag(const pmt::pmt_t &tag)
+{
+  gruel::scoped_lock guard(*mutex());
+  d_item_tags.push_back(tag);
+}
+
+void
+gr_buffer::prune_tags(uint64_t max_time)
+{
+  /* NOTE: this function _should_ lock the mutex before editing
+     d_item_tags. In practice, this function is only called at
+     runtime by min_available_space in gr_block_executor.cc,
+     which locks the mutex itself.
+     
+     If this function is used elsewhere, remember to lock the
+     buffer's mutex al la the scoped_lock line below.
+  */
+  //gruel::scoped_lock guard(*mutex());
+  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+
+  uint64_t item_time;
+
+  // Since tags are not guarenteed to be in any particular order,
+  // we need to erase here instead of pop_front. An erase in the
+  // middle invalidates all iterators; so this resets the iterator
+  // to find more. Mostly, we wil be erasing from the front and
+  // therefore lose little time this way.
+  while(itr != d_item_tags.end()) {
+    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+    if(item_time < max_time) {
+      d_item_tags.erase(itr);
+      itr = d_item_tags.begin();
+    }
+    else
+      itr++;
+  }
+}
+
 long
 gr_buffer_ncurrently_allocated ()
 {
@@ -225,7 +275,7 @@ gr_buffer_ncurrently_allocated ()
 
 gr_buffer_reader::gr_buffer_reader(gr_buffer_sptr buffer, unsigned int read_index,
 				   gr_block_sptr link)
-  : d_buffer(buffer), d_read_index(read_index), d_link(link)
+  : d_buffer(buffer), d_read_index(read_index), d_abs_read_offset(0), d_link(link)
 {
   s_buffer_reader_count++;
 }
@@ -253,6 +303,29 @@ gr_buffer_reader::update_read_pointer (int nitems)
 {
   gruel::scoped_lock guard(*mutex());
   d_read_index = d_buffer->index_add (d_read_index, nitems);
+  d_abs_read_offset += nitems;
+}
+
+void
+gr_buffer_reader::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+				    uint64_t abs_start,
+				    uint64_t abs_end)
+{
+  gruel::scoped_lock guard(*mutex());
+
+  v.resize(0);
+  std::deque<pmt::pmt_t>::iterator itr = d_buffer->get_tags_begin();
+  
+  uint64_t item_time;
+  while(itr != d_buffer->get_tags_end()) {
+    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+
+    if((item_time >= abs_start) && (item_time < abs_end)) {
+      v.push_back(*itr);
+    }
+
+    itr++;
+  }
 }
 
 long

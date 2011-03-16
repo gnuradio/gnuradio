@@ -20,6 +20,7 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
 AM_CPPFLAGS =			\
 	$(USRP_INCLUDES)	\
@@ -53,11 +54,3 @@ usrp_prims_la_swig_libadd =	\
 usrp_prims_python =		\
 	__init__.py		\
 	usrp_fpga_regs.py
-
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)

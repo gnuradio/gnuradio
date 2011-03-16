@@ -1,0 +1,139 @@
+<!-- archs appear in order of significance for blind, de-facto version ordering -->
+<grammar>
+
+<arch name="generic" type="all">
+  <flag>none</flag>
+</arch>
+
+<arch name="orc" type="all">
+  <flag>lorc-0.4</flag>
+  <overrule>LV_HAVE_ORC</overrule>
+  <overrule_val>no</overrule_val>
+</arch>
+
+<arch name="altivec" type="powerpc">
+  <flag>maltivec</flag>
+</arch>
+
+<arch name="32" type="x86" no_test="true" >
+  <flag>m32</flag>
+  <overrule>MD_SUBCPU</overrule>
+  <overrule_val>x86_64</overrule_val>
+</arch> 
+
+<arch name="64" type="x86">
+  <op>0x80000001</op>
+  <reg>d</reg>
+  <shift>29</shift>
+  <flag>m64</flag>
+  <val>1</val>
+  <overrule>MD_SUBCPU</overrule>
+  <overrule_val>x86</overrule_val>
+</arch>
+
+<arch name="3dnow" type="x86">
+  <op>0x80000001</op>
+  <reg>d</reg>
+  <shift>31</shift>
+  <flag>m3dnow</flag>
+  <val>1</val>
+</arch>
+
+<arch name="abm" type="x86">
+  <val>1</val>
+  <op>0x80000001</op>
+  <reg>d</reg>
+  <shift>5</shift>
+  <flag>sse4.2</flag>
+</arch>
+
+<arch name="popcount" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>c</reg>
+  <shift>23</shift>
+  <flag>mpopcnt</flag>
+</arch>
+
+<arch name="mmx" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>d</reg>
+  <shift>23</shift>
+  <flag>mmmx</flag>
+</arch>
+
+
+<arch name="sse" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>d</reg>
+  <shift>25</shift>
+  <flag>msse</flag>
+  <environment>_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);</environment>
+  <include>xmmintrin.h</include>
+</arch>
+
+
+<arch name="sse2" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>d</reg>
+  <shift>26</shift>
+  <flag>msse2</flag>
+</arch>
+
+<arch name="sse3" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>c</reg>
+  <shift>0</shift>
+  <flag>msse3</flag>
+  <environment>_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);</environment>
+  <include>pmmintrin.h</include>
+</arch>
+
+<arch name="ssse3" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>c</reg>
+  <shift>9</shift>
+  <flag>mssse3</flag>
+</arch>
+
+<arch name="sse4_a" type="x86">
+  <val>1</val>
+  <op>0x80000001</op>
+  <reg>c</reg>
+  <shift>6</shift>
+  <flag>msse4a</flag>
+</arch>
+
+
+<arch name="sse4_1" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>c</reg>
+  <shift>19</shift>
+  <flag>msse4.1</flag>
+</arch>
+
+<arch name="sse4_2" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>c</reg>
+  <shift>20</shift>
+  <flag>msse4.2</flag>
+</arch>
+
+
+<arch name="avx" type="x86">
+  <val>1</val>
+  <op>1</op>
+  <reg>c</reg>
+  <shift>28</shift>
+  <flag>mavx</flag>
+</arch>
+
+
+</grammar>

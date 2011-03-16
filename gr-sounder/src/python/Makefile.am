@@ -27,7 +27,7 @@ include $(top_srcdir)/Makefile.common
 
 sounder_pythondir = $(grpythondir)
 
-EXTRA_DIST = 		\
+EXTRA_DIST += 		\
 	sounder_loopback.sh \
 	qa_nothing.py	\
 	run_tests.in

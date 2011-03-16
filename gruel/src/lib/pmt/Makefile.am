@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -48,7 +48,7 @@ python_built_sources = $(GENERATED_H) $(GENERATED_CC)
 PMT_SERIAL_TAGS_H = $(abs_top_builddir)/gruel/src/include/gruel/pmt_serial_tags.h
 BUILT_SOURCES = $(python_built_sources) $(PMT_SERIAL_TAGS_H)
 
-EXTRA_DIST = $(code_generator)
+EXTRA_DIST += $(code_generator)
 
 # ----------------------------------------------------------------
 
@@ -99,7 +99,7 @@ gen_sources_deps = $(core_generator)
 par_gen_command = PYTHONPATH=$(top_srcdir)/gruel/src/lib/pmt srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_unv.py
 include $(top_srcdir)/Makefile.par.gen
 
-# Rule to create the build header file using GUILE
+# Rule to create the build header file using python
 # Doesn't need parallel protections because there is a single target
-$(PMT_SERIAL_TAGS_H): $(srcdir)/../../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../../scheme/gnuradio/pmt-serial-tags.scm
-	$(RUN_GUILE) $(srcdir)/../../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../../scheme/gnuradio/pmt-serial-tags.scm $(PMT_SERIAL_TAGS_H)
+$(PMT_SERIAL_TAGS_H): $(top_srcdir)/gruel/src/scheme/gnuradio/gen-serial-tags.py $(top_srcdir)/gruel/src/scheme/gnuradio/pmt-serial-tags.scm
+	$(PYTHON) $^ $@

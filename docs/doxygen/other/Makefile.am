@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	doxypy.py \
 	group_defs.dox \
 	shared_ptr_docstub.h \
