@@ -24,7 +24,7 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-    from pyqt_filter import Ui_MainWindow
+    from gnuradio.pyqt_filter import Ui_MainWindow
 except ImportError:
     print "Could not import from pyqt_filter. Please build with \"pyuic4 pyqt_filter.ui -o pyqt_filter.py\""
     raise SystemExit, 1
