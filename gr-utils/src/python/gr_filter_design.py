@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os
+import sys, os, csv
 from optparse import OptionParser
 from gnuradio import gr, blks2, eng_notation
 
@@ -24,7 +24,7 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-    from gnuradio.pyqt_filter import Ui_MainWindow
+    from pyqt_filter import Ui_MainWindow
 except ImportError:
     print "Could not import from pyqt_filter. Please build with \"pyuic4 pyqt_filter.ui -o pyqt_filter.py\""
     raise SystemExit, 1
@@ -35,6 +35,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         QtGui.QWidget.__init__(self, None)
         self.gui = Ui_MainWindow()
         self.gui.setupUi(self)
+
+        self.connect(self.gui.action_save,
+                     Qt.SIGNAL("activated()"),
+                     self.action_save_dialog)
+        self.connect(self.gui.action_open,
+                     Qt.SIGNAL("activated()"),
+                     self.action_open_dialog)
+
 
         self.connect(self.gui.filterTypeComboBox,
                      Qt.SIGNAL("currentIndexChanged(const QString&)"),
@@ -306,17 +314,10 @@ class gr_plot_filter(QtGui.QMainWindow):
                             "Root Raised Cosine" :  self.design_win_rrc,
                             "Gaussian" :  self.design_win_gaus}
                 wintype = self.filterWindows[winstr]
-                taps,r = designer[ftype](fs, gain, wintype)
+                taps,design,r = designer[ftype](fs, gain, wintype)
 
             if(r):
-                self.taps = scipy.array(taps)
-                self.get_fft(fs, self.taps, self.nfftpts)
-                self.update_time_curves()
-                self.update_freq_curves()
-                self.update_phase_curves()
-                self.update_group_curves()
-
-                self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+                self.draw_plots(taps, design)
 
 
     # Filter design functions using a window
@@ -334,9 +335,12 @@ class gr_plot_filter(QtGui.QMainWindow):
             
             taps = gr.firdes.low_pass_2(gain, fs, pb, tb,
                                         atten, wintype)
-            return (taps, ret)
+            design = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "lpf", "passband": pb, "stopband": sb,
+                      "atten": atten}
+            return (taps, design, ret)
         else:
-            return ([], ret)
+            return ([], [], ret)
     
     def design_win_bpf(self, fs, gain, wintype):
         ret = True
@@ -651,6 +655,81 @@ class gr_plot_filter(QtGui.QMainWindow):
             
             self.gui.groupPlot.replot()
 
+    def action_save_dialog(self):
+        filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
+        handle = open(filename, "wb")
+        csvhandle = csv.writer(handle, delimiter=",")
+        for k in self.design.keys():
+            csvhandle.writerow([k, self.design[k]])
+        csvhandle.writerow(["taps",] + self.taps.tolist())
+        handle.close()
+
+    def action_open_dialog(self):
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
+        handle = open(filename, "rb")
+        csvhandle = csv.reader(handle, delimiter=",")
+        taps = []
+        design = {}
+        for row in csvhandle:
+            if(row[0] != "taps"):
+                try: # if it's not a float, its a string
+                    design[row[0]] = float(row[1])
+                except ValueError:
+                    design[row[0]] = row[1]
+            else:
+                taps = [float(r) for r in row[1:]]
+        handle.close()
+        self.draw_plots(taps, design)
+
+        self.gui.sampleRateEdit.setText(Qt.QString("%1").arg(design["fs"]))
+        self.gui.filterGainEdit.setText(Qt.QString("%1").arg(design["gain"]))
+
+        #FIXME: work on setting filter type and window type dropdown boxes
+        #FIXME: enable this and design for all other filt types
+        if(design["filttype"] == "lpf"):
+            self.gui.endofLpfPassBandEdit.setText(Qt.QString("%1").arg(design["passband"]))
+            self.gui.startofLpfStopBandEdit.setText(Qt.QString("%1").arg(design["stopband"]))
+            self.gui.lpfStopBandAttenEdit.setText(Qt.QString("%1").arg(design["atten"]))
+        elif(design["filttype"] == "bpf"):
+            self.gui.startofBpfPassBandEdit
+            self.gui.endofBpfPassBandEdit
+            self.gui.bpfTransitionEdit
+            self.gui.bpfStopBandAttenEdit
+        elif(design["filttype"] == "cbpf"):
+            self.gui.startofBpfPassBandEdit
+            self.gui.endofBpfPassBandEdit
+            self.gui.bpfTransitionEdit
+            self.gui.bpfStopBandAttenEdit
+        elif(design["filttype"] == "bnf"):
+            self.gui.startofBnfStopBandEdit
+            self.gui.endofBnfStopBandEdit
+            self.gui.bnfTransitionEdit
+            self.gui.bnfStopBandAttenEdit
+        elif(design["filttype"] == "hpf"):
+            self.gui.endofHpfStopBandEdit
+            self.gui.startofHpfPassBandEdit
+            self.gui.hpfStopBandAttenEdit
+        elif(design["filttype"] == "rrc"):
+            self.gui.rrcSymbolRateEdit
+            self.gui.rrcAlphaEdit
+            self.gui.rrcNumTapsEdit
+        elif(design["filttype"] == "gauss"):
+            self.gui.gausSymbolRateEdit
+            self.gui.gausBTEdit
+            self.gui.gausNumTapsEdit
+
+
+    def draw_plots(self, taps, design):
+        self.design = design
+        self.taps = scipy.array(taps)
+        self.get_fft(self.design["fs"], self.taps, self.nfftpts)
+        self.update_time_curves()
+        self.update_freq_curves()
+        self.update_phase_curves()
+        self.update_group_curves()
+        
+        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+        
 
 def setup_options():
     usage="%prog: [options] (input_filename)"
