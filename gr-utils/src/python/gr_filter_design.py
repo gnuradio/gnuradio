@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, csv
+import sys, os, re, csv
 from optparse import OptionParser
 from gnuradio import gr, blks2, eng_notation
 
@@ -190,6 +190,12 @@ class gr_plot_filter(QtGui.QMainWindow):
                               "Rectangular Window" : gr.firdes.WIN_RECTANGULAR,
                               "Kaiser Window" : gr.firdes.WIN_KAISER,
                               "Blackman-harris Window" : gr.firdes.WIN_BLACKMAN_hARRIS}
+        self.filterWindowsMap = ["Hamming Window",
+                                 "Hann Window",
+                                 "Blackman Window",
+                                 "Rectangular Window",
+                                 "Kaiser Window",
+                                 "Blackman-harris Window"]
 
         self.show()
 
@@ -336,8 +342,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             taps = gr.firdes.low_pass_2(gain, fs, pb, tb,
                                         atten, wintype)
             params = {"fs": fs, "gain": gain, "wintype": wintype,
-                      "filttype": "lpf", "passband": pb, "stopband": sb,
-                      "atten": atten}
+                      "filttype": "lpf", "pbend": pb, "sbstart": sb,
+                      "atten": atten, "ntaps": len(taps)}
             return (taps, params, ret)
         else:
             return ([], [], ret)
@@ -356,9 +362,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.band_pass_2(gain, fs, pb1, pb2, tb,
                                          atten, wintype)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "bpf", "pbstart": pb1, "pbend": pb2,
+                      "tb": tb, "atten": atten, "ntaps": len(taps)}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_cbpf(self, fs, gain, wintype):
         ret = True
@@ -374,9 +383,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.complex_band_pass_2(gain, fs, pb1, pb2, tb,
                                                  atten, wintype)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "cbpf", "pbstart": pb1, "pbend": pb2,
+                      "tb": tb, "atten": atten, "ntaps": len(taps)}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_bnf(self, fs, gain, wintype):
         ret = True
@@ -392,9 +404,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.band_reject_2(gain, fs, pb1, pb2, tb,
                                            atten, wintype)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "bnf", "sbstart": pb1, "sbend": pb2,
+                      "tb": tb, "atten": atten, "ntaps": len(taps)}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_hpf(self, fs, gain, wintype):
         ret = True
@@ -409,9 +424,12 @@ class gr_plot_filter(QtGui.QMainWindow):
             tb = pb - sb
             taps = gr.firdes.high_pass_2(gain, fs, pb, tb,
                                          atten, wintype)            
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "hpf", "sbend": sb, "pbstart": pb,
+                      "atten": atten, "ntaps": len(taps)}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_rrc(self, fs, gain, wintype):
         ret = True
@@ -425,9 +443,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.root_raised_cosine(gain, fs, sr,
                                                 alpha, ntaps)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "rrc", "srate": sr, "alpha": alpha,
+                      "ntaps": ntaps}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_gaus(self, fs, gain, wintype):
         ret = True
@@ -441,9 +462,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             spb = fs / sr
             taps = gr.firdes.gaussian(gain, spb, bt, ntaps)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "gaus", "srate": sr, "bt": bt,
+                      "ntaps": ntaps}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     # Design Functions for Equiripple Filters
     def design_opt_lpf(self, fs, gain):
@@ -672,51 +696,79 @@ class gr_plot_filter(QtGui.QMainWindow):
         params = {}
         for row in csvhandle:
             if(row[0] != "taps"):
-                try: # if it's not a float, its a string
-                    params[row[0]] = float(row[1])
-                except ValueError:
-                    params[row[0]] = row[1]
+                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                if(len(testcpx) > 0): # it's a complex
+                    params[row[0]] = complex(row[1])
+                else: # assume it's a float
+                    try: # if it's not a float, its a string
+                        params[row[0]] = float(row[1])
+                    except ValueError:
+                        params[row[0]] = row[1]
             else:
-                taps = [float(r) for r in row[1:]]
+                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                if(len(testcpx) > 0): # it's a complex
+                    taps = [complex(r) for r in row[1:]]
+                else:
+                    taps = [float(r) for r in row[1:]]
         handle.close()
         self.draw_plots(taps, params)
 
         self.gui.sampleRateEdit.setText(Qt.QString("%1").arg(params["fs"]))
         self.gui.filterGainEdit.setText(Qt.QString("%1").arg(params["gain"]))
 
-        #FIXME: work on setting filter type and window type dropdown boxes
-        #FIXME: enable this and design for all other filt types
+        # Set up GUI parameters for each filter type
         if(params["filttype"] == "lpf"):
-            self.gui.endofLpfPassBandEdit.setText(Qt.QString("%1").arg(params["passband"]))
-            self.gui.startofLpfStopBandEdit.setText(Qt.QString("%1").arg(params["stopband"]))
+            self.gui.filterTypeComboBox.setCurrentIndex(0)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.endofLpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+            self.gui.startofLpfStopBandEdit.setText(Qt.QString("%1").arg(params["sbstart"]))
             self.gui.lpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
         elif(params["filttype"] == "bpf"):
-            self.gui.startofBpfPassBandEdit
-            self.gui.endofBpfPassBandEdit
-            self.gui.bpfTransitionEdit
-            self.gui.bpfStopBandAttenEdit
+            self.gui.filterTypeComboBox.setCurrentIndex(1)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.startofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+            self.gui.endofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+            self.gui.bpfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+            self.gui.bpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
         elif(params["filttype"] == "cbpf"):
-            self.gui.startofBpfPassBandEdit
-            self.gui.endofBpfPassBandEdit
-            self.gui.bpfTransitionEdit
-            self.gui.bpfStopBandAttenEdit
+            self.gui.filterTypeComboBox.setCurrentIndex(2)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.startofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+            self.gui.endofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+            self.gui.bpfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+            self.gui.bpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
         elif(params["filttype"] == "bnf"):
-            self.gui.startofBnfStopBandEdit
-            self.gui.endofBnfStopBandEdit
-            self.gui.bnfTransitionEdit
-            self.gui.bnfStopBandAttenEdit
+            self.gui.filterTypeComboBox.setCurrentIndex(3)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.startofBnfStopBandEdit.setText(Qt.QString("%1").arg(params["sbstart"]))
+            self.gui.endofBnfStopBandEdit.setText(Qt.QString("%1").arg(params["sbend"]))
+            self.gui.bnfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+            self.gui.bnfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
         elif(params["filttype"] == "hpf"):
-            self.gui.endofHpfStopBandEdit
-            self.gui.startofHpfPassBandEdit
-            self.gui.hpfStopBandAttenEdit
+            self.gui.filterTypeComboBox.setCurrentIndex(4)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.endofHpfStopBandEdit.setText(Qt.QString("%1").arg(params["sbend"]))
+            self.gui.startofHpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+            self.gui.hpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
         elif(params["filttype"] == "rrc"):
-            self.gui.rrcSymbolRateEdit
-            self.gui.rrcAlphaEdit
-            self.gui.rrcNumTapsEdit
-        elif(params["filttype"] == "gauss"):
-            self.gui.gausSymbolRateEdit
-            self.gui.gausBTEdit
-            self.gui.gausNumTapsEdit
+            self.gui.filterTypeComboBox.setCurrentIndex(5)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.rrcSymbolRateEdit.setText(Qt.QString("%1").arg(params["srate"]))
+            self.gui.rrcAlphaEdit.setText(Qt.QString("%1").arg(params["alpha"]))
+            self.gui.rrcNumTapsEdit.setText(Qt.QString("%1").arg(params["ntaps"]))
+        elif(params["filttype"] == "gaus"):
+            self.gui.filterTypeComboBox.setCurrentIndex(6)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.gausSymbolRateEdit.setText(Qt.QString("%1").arg(params["srate"]))
+            self.gui.gausBTEdit.setText(Qt.QString("%1").arg(params["bt"]))
+            self.gui.gausNumTapsEdit.setText(Qt.QString("%1").arg(params["ntaps"]))
 
 
     def draw_plots(self, taps, params):
