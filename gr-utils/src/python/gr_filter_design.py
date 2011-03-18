@@ -314,10 +314,10 @@ class gr_plot_filter(QtGui.QMainWindow):
                             "Root Raised Cosine" :  self.design_win_rrc,
                             "Gaussian" :  self.design_win_gaus}
                 wintype = self.filterWindows[winstr]
-                taps,design,r = designer[ftype](fs, gain, wintype)
+                taps,params,r = designer[ftype](fs, gain, wintype)
 
             if(r):
-                self.draw_plots(taps, design)
+                self.draw_plots(taps, params)
 
 
     # Filter design functions using a window
@@ -335,10 +335,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             
             taps = gr.firdes.low_pass_2(gain, fs, pb, tb,
                                         atten, wintype)
-            design = {"fs": fs, "gain": gain, "wintype": wintype,
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
                       "filttype": "lpf", "passband": pb, "stopband": sb,
                       "atten": atten}
-            return (taps, design, ret)
+            return (taps, params, ret)
         else:
             return ([], [], ret)
     
@@ -659,8 +659,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
         handle = open(filename, "wb")
         csvhandle = csv.writer(handle, delimiter=",")
-        for k in self.design.keys():
-            csvhandle.writerow([k, self.design[k]])
+        for k in self.params.keys():
+            csvhandle.writerow([k, self.params[k]])
         csvhandle.writerow(["taps",] + self.taps.tolist())
         handle.close()
 
@@ -669,60 +669,60 @@ class gr_plot_filter(QtGui.QMainWindow):
         handle = open(filename, "rb")
         csvhandle = csv.reader(handle, delimiter=",")
         taps = []
-        design = {}
+        params = {}
         for row in csvhandle:
             if(row[0] != "taps"):
                 try: # if it's not a float, its a string
-                    design[row[0]] = float(row[1])
+                    params[row[0]] = float(row[1])
                 except ValueError:
-                    design[row[0]] = row[1]
+                    params[row[0]] = row[1]
             else:
                 taps = [float(r) for r in row[1:]]
         handle.close()
-        self.draw_plots(taps, design)
+        self.draw_plots(taps, params)
 
-        self.gui.sampleRateEdit.setText(Qt.QString("%1").arg(design["fs"]))
-        self.gui.filterGainEdit.setText(Qt.QString("%1").arg(design["gain"]))
+        self.gui.sampleRateEdit.setText(Qt.QString("%1").arg(params["fs"]))
+        self.gui.filterGainEdit.setText(Qt.QString("%1").arg(params["gain"]))
 
         #FIXME: work on setting filter type and window type dropdown boxes
         #FIXME: enable this and design for all other filt types
-        if(design["filttype"] == "lpf"):
-            self.gui.endofLpfPassBandEdit.setText(Qt.QString("%1").arg(design["passband"]))
-            self.gui.startofLpfStopBandEdit.setText(Qt.QString("%1").arg(design["stopband"]))
-            self.gui.lpfStopBandAttenEdit.setText(Qt.QString("%1").arg(design["atten"]))
-        elif(design["filttype"] == "bpf"):
+        if(params["filttype"] == "lpf"):
+            self.gui.endofLpfPassBandEdit.setText(Qt.QString("%1").arg(params["passband"]))
+            self.gui.startofLpfStopBandEdit.setText(Qt.QString("%1").arg(params["stopband"]))
+            self.gui.lpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+        elif(params["filttype"] == "bpf"):
             self.gui.startofBpfPassBandEdit
             self.gui.endofBpfPassBandEdit
             self.gui.bpfTransitionEdit
             self.gui.bpfStopBandAttenEdit
-        elif(design["filttype"] == "cbpf"):
+        elif(params["filttype"] == "cbpf"):
             self.gui.startofBpfPassBandEdit
             self.gui.endofBpfPassBandEdit
             self.gui.bpfTransitionEdit
             self.gui.bpfStopBandAttenEdit
-        elif(design["filttype"] == "bnf"):
+        elif(params["filttype"] == "bnf"):
             self.gui.startofBnfStopBandEdit
             self.gui.endofBnfStopBandEdit
             self.gui.bnfTransitionEdit
             self.gui.bnfStopBandAttenEdit
-        elif(design["filttype"] == "hpf"):
+        elif(params["filttype"] == "hpf"):
             self.gui.endofHpfStopBandEdit
             self.gui.startofHpfPassBandEdit
             self.gui.hpfStopBandAttenEdit
-        elif(design["filttype"] == "rrc"):
+        elif(params["filttype"] == "rrc"):
             self.gui.rrcSymbolRateEdit
             self.gui.rrcAlphaEdit
             self.gui.rrcNumTapsEdit
-        elif(design["filttype"] == "gauss"):
+        elif(params["filttype"] == "gauss"):
             self.gui.gausSymbolRateEdit
             self.gui.gausBTEdit
             self.gui.gausNumTapsEdit
 
 
-    def draw_plots(self, taps, design):
-        self.design = design
+    def draw_plots(self, taps, params):
+        self.params = params
         self.taps = scipy.array(taps)
-        self.get_fft(self.design["fs"], self.taps, self.nfftpts)
+        self.get_fft(self.params["fs"], self.taps, self.nfftpts)
         self.update_time_curves()
         self.update_freq_curves()
         self.update_phase_curves()
