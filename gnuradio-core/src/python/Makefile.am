@@ -21,9 +21,10 @@
 
 include $(top_srcdir)/Makefile.common
 
+if PYTHON
 SUBDIRS = gnuradio bin
 
 noinst_PYTHON =			\
 	build_utils.py		\
 	build_utils_codes.py	
-
+endif

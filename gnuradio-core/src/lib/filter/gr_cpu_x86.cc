@@ -21,13 +21,12 @@
  */
 
 #include <gr_cpu.h>
+#include "gcc_x86_cpuid.h"
 
 /*
  * execute CPUID instruction, return EAX, EBX, ECX and EDX values in result
  */
-extern "C" {
-void cpuid_x86 (unsigned int op, unsigned int result[4]);
-};
+#define cpuid_x86(op, r) __get_cpuid(op, r+0, r+1, r+2, r+3)
 
 /*
  * CPUID functions returning a single datum
@@ -35,28 +34,28 @@ void cpuid_x86 (unsigned int op, unsigned int result[4]);
 
 static inline unsigned int cpuid_eax(unsigned int op)
 {
-  unsigned int	regs[4];
+  unsigned int	regs[4] = {0,0,0,0};
   cpuid_x86 (op, regs);
   return regs[0];
 }
 
 static inline unsigned int cpuid_ebx(unsigned int op)
 {
-  unsigned int	regs[4];
+  unsigned int	regs[4] = {0,0,0,0};
   cpuid_x86 (op, regs);
   return regs[1];
 }
 
 static inline unsigned int cpuid_ecx(unsigned int op)
 {
-  unsigned int	regs[4];
+  unsigned int	regs[4] = {0,0,0,0};
   cpuid_x86 (op, regs);
   return regs[2];
 }
 
 static inline unsigned int cpuid_edx(unsigned int op)
 {
-  unsigned int	regs[4];
+  unsigned int	regs[4] = {0,0,0,0};
   cpuid_x86 (op, regs);
   return regs[3];
 }

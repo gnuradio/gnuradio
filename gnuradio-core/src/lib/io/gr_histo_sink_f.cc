@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2010 Free Software Foundation, Inc.
+ * Copyright 2009,2010,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,6 +26,7 @@
 
 #include <gr_histo_sink_f.h>
 #include <gr_io_signature.h>
+#include <boost/math/special_functions/round.hpp>
 
 static float get_clean_num(float num){
   if (num == 0) return 0;
@@ -101,7 +102,7 @@ gr_histo_sink_f::send_frame(void){
   int index;
   float bin_width = (maximum - minimum)/(d_num_bins-1);
   for (unsigned int i = 0; i < d_sample_count; i++){
-    index = round((d_samps[i] - minimum)/bin_width);
+    index = boost::math::iround((d_samps[i] - minimum)/bin_width);
     /* ensure the index range in case a small floating point error is involed */
     if (index < 0) index = 0;
     if (index >= (int)d_num_bins) index = d_num_bins-1;

@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008, 2009, 2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ class NotebookPage(gtk.HBox):
 		@param file_path path to a flow graph file
 		"""
 		self._flow_graph = flow_graph
-		self.set_pid(None)
+		self.set_proc(None)
 		#import the file
 		self.main_window = main_window
 		self.set_file_path(file_path)
@@ -119,19 +119,19 @@ class NotebookPage(gtk.HBox):
 		"""
 		return self.tab
 
-	def get_pid(self):
+	def get_proc(self):
 		"""
-		Get the pid for the flow graph.
-		@return the pid number
+		Get the subprocess for the flow graph.
+		@return the subprocess object
 		"""
-		return self.pid
+		return self.process
 
-	def set_pid(self, pid):
+	def set_proc(self, process):
 		"""
-		Set the pid number.
-		@param pid the new pid number
+		Set the subprocess object.
+		@param process the new subprocess
 		"""
-		self.pid = pid
+		self.process = process
 
 	def get_flow_graph(self):
 		"""

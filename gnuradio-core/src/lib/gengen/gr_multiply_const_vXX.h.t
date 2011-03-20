@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> k);
+@SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k);
 
 /*!
  * \brief output vector = input vector * constant vector (element-wise)
@@ -38,14 +38,14 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
  */
 class @NAME@ : public gr_sync_block
 {
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> k);
+  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k);
 
   std::vector<@I_TYPE@> d_k; // the constant
-  @NAME@ (const std::vector<@I_TYPE@> k);
+  @NAME@ (const std::vector<@I_TYPE@> &k);
 
  public:
   const std::vector<@I_TYPE@> k () const { return d_k; }
-  void set_k (const std::vector<@I_TYPE@> k) { d_k = k; }
+  void set_k (const std::vector<@I_TYPE@> &k) { d_k = k; }
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,

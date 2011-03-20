@@ -35,7 +35,7 @@ gr_null_source::gr_null_source (size_t sizeof_stream_item)
 {
 }
 
-gr_block_sptr
+gr_null_source_sptr
 gr_make_null_source (size_t sizeof_stream_item)
 {
   return gnuradio::get_initial_sptr (new gr_null_source (sizeof_stream_item));

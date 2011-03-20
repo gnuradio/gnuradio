@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <sstream>
+#include <iterator>
 
 #define GR_FLOWGRAPH_DEBUG 0
 

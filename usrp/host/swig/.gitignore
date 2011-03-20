@@ -6,9 +6,11 @@
 /.libs
 /*.la
 /*.lo
-/gnuradio_swig_python.cc
-/gnuradio_swig_python.py
 /usrp_prims.cc
 /usrp_prims.py
+/usrp_prims.scm
 /prims.cc
 /prims.py
+/gnuradio
+/guile
+/python

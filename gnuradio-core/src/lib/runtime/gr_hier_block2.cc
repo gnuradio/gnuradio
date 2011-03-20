@@ -61,6 +61,11 @@ gr_hier_block2::self()
   return shared_from_this();
 }
 
+gr_hier_block2_sptr
+gr_hier_block2::to_hier_block2()
+{
+  return cast_to_hier_block2_sptr(shared_from_this());
+}
 
 void 
 gr_hier_block2::connect(gr_basic_block_sptr block)

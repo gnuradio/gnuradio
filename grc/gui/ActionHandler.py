@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -282,7 +282,7 @@ class ActionHandler:
 		# Gen/Exec/Stop
 		##################################################
 		elif action == Actions.FLOW_GRAPH_GEN:
-			if not self.get_page().get_pid():
+			if not self.get_page().get_proc():
 				if not self.get_page().get_saved() or not self.get_page().get_file_path():
 					Actions.FLOW_GRAPH_SAVE() #only save if file path missing or not saved
 				if self.get_page().get_saved() and self.get_page().get_file_path():
@@ -293,14 +293,14 @@ class ActionHandler:
 					except Exception,e: Messages.send_fail_gen(e)
 				else: self.generator = None
 		elif action == Actions.FLOW_GRAPH_EXEC:
-			if not self.get_page().get_pid():
+			if not self.get_page().get_proc():
 				Actions.FLOW_GRAPH_GEN()
 				if self.get_page().get_saved() and self.get_page().get_file_path():
 					ExecFlowGraphThread(self)
 		elif action == Actions.FLOW_GRAPH_KILL:
-			if self.get_page().get_pid():
-				try: os.kill(self.get_page().get_pid(), signal.SIGKILL)
-				except: print "could not kill pid: %s"%self.get_page().get_pid()
+			if self.get_page().get_proc():
+				try: self.get_page().get_proc().kill()
+				except: print "could not kill process: %d"%self.get_page().get_proc().pid
 		elif action == Actions.PAGE_CHANGE: #pass and run the global actions
 			pass
 		else: print '!!! Action "%s" not handled !!!'%action
@@ -340,10 +340,10 @@ class ActionHandler:
 		Update the exec and stop buttons.
 		Lock and unlock the mutex for race conditions with exec flow graph threads.
 		"""
-		sensitive = self.get_flow_graph().is_valid() and not self.get_page().get_pid()
+		sensitive = self.get_flow_graph().is_valid() and not self.get_page().get_proc()
 		Actions.FLOW_GRAPH_GEN.set_sensitive(sensitive)
 		Actions.FLOW_GRAPH_EXEC.set_sensitive(sensitive)
-		Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_pid() != None)
+		Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_proc() != None)
 
 class ExecFlowGraphThread(Thread):
 	"""Execute the flow graph as a new process and wait on it to finish."""
@@ -362,7 +362,7 @@ class ExecFlowGraphThread(Thread):
 		#get the popen
 		try:
 			self.p = self.page.get_generator().get_popen()
-			self.page.set_pid(self.p.pid)
+			self.page.set_proc(self.p)
 			#update
 			self.update_exec_stop()
 			self.start()
@@ -385,5 +385,5 @@ class ExecFlowGraphThread(Thread):
 	def done(self):
 		"""Perform end of execution tasks."""
 		Messages.send_end_exec()
-		self.page.set_pid(None)
+		self.page.set_proc(None)
 		self.update_exec_stop()

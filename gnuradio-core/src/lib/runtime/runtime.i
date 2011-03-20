@@ -40,6 +40,13 @@
 #include <gr_top_block.h>
 %}
 
+%constant int sizeof_char 	= sizeof(char);
+%constant int sizeof_short	= sizeof(short);
+%constant int sizeof_int	= sizeof(int);
+%constant int sizeof_float	= sizeof(float);
+%constant int sizeof_double	= sizeof(double);
+%constant int sizeof_gr_complex	= sizeof(gr_complex);
+
 %include <gr_io_signature.i>
 %include <gr_buffer.i>
 %include <gr_basic_block.i>

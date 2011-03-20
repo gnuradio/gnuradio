@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -72,7 +72,6 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
   }
 
   d_main_gui = NULL;
-  pthread_mutex_init(&d_pmutex, NULL);
   lock();
 
   // Perform fftshift operation;
@@ -107,12 +106,12 @@ qtgui_sink_f::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 
 void qtgui_sink_f::lock()
 {
-  pthread_mutex_lock(&d_pmutex);
+  d_mutex.lock();
 }
 
 void qtgui_sink_f::unlock()
 {
-  pthread_mutex_unlock(&d_pmutex);
+  d_mutex.unlock();
 }
 
 void
@@ -146,7 +145,7 @@ qtgui_sink_f::initialize(const bool opengl)
   set_update_time(0.1);
 
   d_object = new qtgui_obj(d_qApplication);
-  qApp->postEvent(d_object, new qtgui_event(&d_pmutex));
+  qApp->postEvent(d_object, new qtgui_event(d_mutex));
 }
 
 void
@@ -284,7 +283,7 @@ qtgui_sink_f::general_work (int noutput_items,
   int j=0;
   const float *in = (const float*)input_items[0];
 
-  pthread_mutex_lock(&d_pmutex);
+  gruel::scoped_lock lock(d_mutex);
 
   // Update the FFT size from the application
   fftresize();
@@ -316,8 +315,6 @@ qtgui_sink_f::general_work (int noutput_items,
       j += datasize;
     }   
   }
-
-  pthread_mutex_unlock(&d_pmutex);
 
   consume_each(j);
   return j;

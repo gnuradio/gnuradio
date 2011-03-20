@@ -1,0 +1,192 @@
+#!/usr/bin/env python
+
+"""
+    usage: gen-xyzzy [-o output] directory...
+
+    Typical usage:
+      gen-xyzzy -o filesystem.dat /usr/share/guile/1.8 /usr/local/share/guile/site
+
+    Where /usr/share/guile points to the system guile installation and
+    /usr/local/share/guile/site points to the GNU Radio installed guile files
+
+
+    Build a single file that contains all of the *.scm files from the
+    guile installation and from the GR installation.  I figure it's
+    basically a table that maps strings to strings.  That is,
+    "/foo/bar/filename" -> "file contents".  We could just mmap
+    it in read-only, or just read it in.  Reading is more portable,
+    let's do that.
+
+    File: [ header | directory | strings ]
+
+    All integers are net-endian.
+
+    struct header {
+      char magic[8];
+
+      uint32_t	offset_to_directory;	// byte offset from start of file
+      uint32_t	size_of_directory;	// bytes
+      uint32_t  number_of_dir_entries;
+
+      uint32_t	offset_to_strings;	// byte offset from start of file
+      uint32_t  size_of_strings;	// bytes
+    };
+
+    struct directory_entry {
+      uint32_t	     offset_to_name;	 // from start of strings
+      uint32_t	     offset_to_contents; // from start of strings
+    }
+
+    Each string starts with a uint32_t length, followed by length bytes.
+    There is no trailing \0 in the string.  Each string entry is followed
+    with enough padding to bring it up to a multiple of 4 bytes.
+
+    struct string_entry {
+      uint32_t	    length;
+      unsigned char c[1];		// 0 is nicer, but not portable.
+    }
+"""
+
+
+from optparse import OptionParser
+import sys
+import os
+import os.path
+from pprint import pprint
+import struct
+
+
+def main():
+   parser = OptionParser(usage="usage: %prog [options] directory...")
+   parser.add_option("-o", type="string", default=None, metavar="FILENAME",
+                          help="Specify output filename [default=stdout]")
+   (options, args) = parser.parse_args()
+
+   if len(args) == 0:
+      parser.print_help()
+      raise SystemExit, 1
+
+   if options.o:
+      output = open(options.o, 'wb')
+   else:
+      output = sys.stdout
+
+   doit(output, args)
+
+
+def doit(output, dirs):
+   acc = []
+   for d in dirs:
+      acc.extend(handle_dir(d))
+
+   uniq = {}
+   for key, val in acc:
+      if key in uniq:
+         if val != uniq[key]:
+            sys.stderr.write("Duplicate key: %s %s %s\n" % (key, uniq[key], val))
+      else:
+         uniq[key] = val
+
+   t = uniq.items()
+   t.sort()
+   write_xyzzy(output, t)
+
+
+def handle_dir(directory):
+   if not directory.endswith(os.sep):
+      directory = directory + os.sep
+   acc = []
+   for root, dirs, files in os.walk(directory, topdown=True):
+      # scm_files = [f for f in files if f.endswith('.scm')]
+      scm_files = files
+      for f in scm_files:
+         full_name = os.path.join(root, f)
+         t = (full_name[len(directory):], full_name)
+         acc.append(t)
+   return acc
+
+
+def file_length(filename):
+   statinfo = os.stat(filename)
+   return statinfo.st_size
+
+
+# return n rounded up to a multiple of 4
+def round_up(n):
+   return (n + 3) & -4
+
+
+class string_table(object):
+   def __init__(self):
+      self._table = ''
+      self._padding = '\0\0\0\0'
+
+   def add_string(self, s):
+      r = len(self._table)
+      len_s = len(s)
+      padding = self._padding[0:round_up(len_s) - len_s]
+      self._table = ''.join((self._table, struct.pack('>I', len(s)), s, padding))
+      return r
+
+
+def write_xyzzy(f, list_of_tuples):
+   # tuples: (name, filename)
+   names = [s[0] for s in list_of_tuples]
+   number_of_dir_entries = len(list_of_tuples)
+   number_of_names = number_of_dir_entries
+   number_of_files = number_of_dir_entries
+   sizeof_uint32 = 4
+
+   contents = {}
+   for name, filename in list_of_tuples:
+      t = open(filename, 'rb').read()
+      contents[name] = t
+
+   offset_to_directory = 28
+   size_of_directory = number_of_dir_entries * 8
+   offset_to_strings = offset_to_directory + size_of_directory
+
+   st = string_table()
+
+   # Insert names in string table first to help locality
+   name_str_offset = {}
+   for name in names:
+      name_str_offset[name] = st.add_string(name)
+
+   # Now add file contents
+   content_str_offset = {}
+   for name in names:
+      content_str_offset[name] = st.add_string(contents[name])
+
+   size_of_strings = len(st._table)
+
+   if 0:
+      print "offset_to_directory\t", offset_to_directory
+      print "size_of_directory\t", size_of_directory
+      print "number_of_dir_entries\t", number_of_dir_entries
+      print "offset_to_strings\t", offset_to_strings
+      print "size_of_strings\t\t", size_of_strings
+
+   magic = '-XyZzY-\0'
+
+   # Write header
+   f.write(struct.pack('>8s5I',
+                       magic,
+                       offset_to_directory,
+                       size_of_directory,
+                       number_of_dir_entries,
+                       offset_to_strings,
+                       size_of_strings))
+
+   # Write directory
+   for name in names:
+      f.write(struct.pack('>2I',
+                          name_str_offset[name],
+                          content_str_offset[name]))
+
+   # Write string table
+   f.write(st._table)
+
+
+if __name__ == "__main__":
+   main()

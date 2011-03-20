@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -87,7 +87,79 @@ min_available_space (gr_block_detail *d, int output_multiple)
   return min_space;
 }
 
+static bool
+propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
+	       const std::vector<uint64_t> &start_nitems_read, double rrate,
+	       std::vector<pmt::pmt_t> &rtags)
+{
+  // Move tags downstream
+  // if a sink, we don't need to move downstream
+  if(d->sink_p()) {
+    return true;
+  }
 
+  switch(policy) {
+  case gr_block::TPP_DONT:
+    return true;
+    break;
+  case gr_block::TPP_ALL_TO_ALL:
+    // every tag on every input propogates to everyone downstream
+    for(int i = 0; i < d->ninputs(); i++) {
+      d->get_tags_in_range(rtags, i, start_nitems_read[i],
+			   d->nitems_read(i));
+
+      std::vector<pmt::pmt_t>::iterator t;
+      if(rrate == 1.0) {
+	for(t = rtags.begin(); t != rtags.end(); t++) {
+	  for(int o = 0; o < d->noutputs(); o++)
+	    d->output(o)->add_item_tag(*t);
+	}
+      }
+      else {
+	for(t = rtags.begin(); t != rtags.end(); t++) {
+	  uint64_t newcount = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*t, 0));
+	  pmt::pmt_t newtup = pmt::mp(pmt::pmt_from_uint64(newcount * rrate),
+				      pmt::pmt_tuple_ref(*t, 1),
+				      pmt::pmt_tuple_ref(*t, 2),
+				      pmt::pmt_tuple_ref(*t, 3));
+	  
+	  for(int o = 0; o < d->noutputs(); o++)
+	    d->output(o)->add_item_tag(newtup);
+	}
+      }
+    }
+    break;
+  case gr_block::TPP_ONE_TO_ONE:
+    // tags from input i only go to output i
+    // this requires d->ninputs() == d->noutputs; this is checked when this
+    // type of tag-propagation system is selected in gr_block_detail
+    if(d->ninputs() == d->noutputs()) {
+      for(int i = 0; i < d->ninputs(); i++) {
+	d->get_tags_in_range(rtags, i, start_nitems_read[i],
+			     d->nitems_read(i));
+
+	std::vector<pmt::pmt_t>::iterator t;
+	for(t = rtags.begin(); t != rtags.end(); t++) {
+	  uint64_t newcount = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*t, 0));
+	  pmt::pmt_t newtup = pmt::mp(pmt::pmt_from_uint64(newcount * rrate),
+				      pmt::pmt_tuple_ref(*t, 1),
+				      pmt::pmt_tuple_ref(*t, 2),
+				      pmt::pmt_tuple_ref(*t, 3));
+	  d->output(i)->add_item_tag(newtup);
+	}
+      }
+    }
+    else  {
+      std::cerr << "Error: gr_block_executor: propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs" << std::endl;
+      return false;
+    }
+    
+    break;
+  default:
+    return true;
+  }
+  return true;
+}
 
 gr_block_executor::gr_block_executor (gr_block_sptr block)
   : d_block(block), d_log(0)
@@ -134,6 +206,7 @@ gr_block_executor::run_one_iteration()
     d_input_items.resize (0);
     d_input_done.resize(0);
     d_output_items.resize (d->noutputs ());
+    d_start_nitems_read.resize(0);
 
     // determine the minimum available output space
     noutput_items = min_available_space (d, m->output_multiple ());
@@ -155,6 +228,7 @@ gr_block_executor::run_one_iteration()
     d_input_items.resize (d->ninputs ());
     d_input_done.resize(d->ninputs());
     d_output_items.resize (0);
+    d_start_nitems_read.resize(d->ninputs());
     LOG(*d_log << " sink\n");
 
     max_items_avail = 0;
@@ -198,6 +272,7 @@ gr_block_executor::run_one_iteration()
     d_input_items.resize (d->ninputs ());
     d_input_done.resize(d->ninputs());
     d_output_items.resize (d->noutputs ());
+    d_start_nitems_read.resize(d->ninputs());
 
     max_items_avail = 0;
     for (int i = 0; i < d->ninputs (); i++){
@@ -294,11 +369,20 @@ gr_block_executor::run_one_iteration()
     for (int i = 0; i < d->noutputs (); i++)
       d_output_items[i] = d->output(i)->write_pointer();
 
+    // determine where to start looking for new tags
+    for (int i = 0; i < d->ninputs(); i++)
+      d_start_nitems_read[i] = d->nitems_read(i);
+
     // Do the actual work of the block
     int n = m->general_work (noutput_items, d_ninput_items,
 			     d_input_items, d_output_items);
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
+
+    if(!propagate_tags(m->tag_propagation_policy(), d,
+		       d_start_nitems_read, m->relative_rate(),
+		       d_returned_tags))
+      goto were_done;
 
     if (n == gr_block::WORK_DONE)
       goto were_done;

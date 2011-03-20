@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import usrp2
+import usrp2_swig
 
 class test_usrp2(gr_unittest.TestCase):
 

@@ -19,9 +19,11 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 SUBDIRS =
 
-EXTRA_DIST = 		\
+EXTRA_DIST += 		\
     gpio_input.v 	\
     io_pins.v		\
     rx_chain_dig.v 	\

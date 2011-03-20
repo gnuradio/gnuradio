@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	cic_comp_taps.m		\
 	db_width.m		\
 	filter_tools.m		\
@@ -42,4 +42,15 @@ EXTRA_DIST = 			\
 	read_cshort_binary.m 	\
 	single_pole_iir.m	\
 	write_float_binary.m	\
-	write_short_binary.m
+	write_short_binary.m	\
+	is_complex.m		\
+	split_vect.m		\
+	rainbow.m		\
+	lp_to_bp.m		\
+	cool.m			\
+	read_xambi.m		\
+	runsum.m		\
+	plot_cic_decimator_response.m
+
+# partition-cascaded-decimating-filters.scm
+# permute.scm

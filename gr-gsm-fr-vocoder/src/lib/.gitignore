@@ -9,3 +9,6 @@
 /gsm_full_rate.py
 /gsm_full_rate.cc
 /*.pyc
+/gnuradio
+/guile
+/python

@@ -15,6 +15,10 @@
 from grc_gnuradio import wxgui as grc_wxgui
 import wx
 #end if
+#if $generate_options() == 'qt_gui'
+from PyQt4 import Qt
+import sys
+#end if
 #if $generate_options() != 'hb'
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
@@ -56,10 +60,13 @@ else: self.stop(); self.wait()</callback>
 		<key>generate_options</key>
 		<value>wx_gui</value>
 		<type>enum</type>
-		<hide>#if $generate_options() == 'wx_gui' then 'part' else 'none'#</hide>
 		<option>
 			<name>WX GUI</name>
 			<key>wx_gui</key>
+		</option>
+		<option>
+			<name>QT GUI</name>
+			<key>qt_gui</key>
 		</option>
 		<option>
 			<name>No GUI</name>
@@ -98,7 +105,7 @@ else: self.stop(); self.wait()</callback>
 		<value>True</value>
 		<type>bool</type>
 		<hide>
-#if $generate_options() == 'wx_gui'
+#if $generate_options() in ('qt_gui', 'wx_gui')
 	#if $run()
 		part
 	#else

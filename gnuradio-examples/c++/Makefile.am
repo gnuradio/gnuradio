@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2008 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,4 +20,4 @@
 # 
 
 include $(top_srcdir)/Makefile.common
-#SUBDIRS = dial_tone
+SUBDIRS = audio

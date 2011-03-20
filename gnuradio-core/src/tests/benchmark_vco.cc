@@ -63,7 +63,7 @@ benchmark (void test (float *x, const float *y), const char *implementation_name
   // touch memory
   memset(output, 0, BLOCK_SIZE*sizeof(float));
   for (int i = 0; i<BLOCK_SIZE; i++)
-    input[i] = sin(i);
+    input[i] = sin(double(i));
 
   // get starting CPU usage
 #ifdef HAVE_SYS_RESOURCE_H

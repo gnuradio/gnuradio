@@ -27,6 +27,9 @@
 #include <iostream>
 #include <gruel/thread.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+namespace pt = boost::posix_time;
+
 namespace usrp2 {
 
   pending_reply::pending_reply(unsigned int rid, void *buffer, size_t len)
@@ -44,10 +47,9 @@ namespace usrp2 {
   pending_reply::wait_for_completion(double secs)
   {
     gruel::scoped_lock l(d_mutex);
-    boost::system_time to(gruel::get_new_timeout(secs));
 
     while (!d_complete) {
-      if (!d_cond.timed_wait(l, to))
+      if (!d_cond.timed_wait(l, pt::milliseconds(long(secs*1e3))))
 	return 0; // timed out
     }
 

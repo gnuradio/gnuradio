@@ -22,6 +22,7 @@
 \#*#
 .deps
 .libs
+guile.log
 TAGS
 *-stamp
 !.gitattributes
@@ -46,3 +47,4 @@ make.log
 /compile
 /build
 /run_tests.sh
+/setup_guile_test_env

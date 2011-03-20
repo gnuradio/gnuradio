@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Block Tree for uhd blocks.
+###################################################
+ -->
+<cat>
+	<name></name> <!-- Blank for Root Name -->
+	<cat>
+		<name>UHD</name>
+		<block>uhd_usrp_source</block>
+		<block>uhd_usrp_sink</block>
+	</cat>
+</cat>

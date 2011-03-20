@@ -32,8 +32,6 @@ libhier_la_SOURCES = \
 grinclude_HEADERS = \
 	gr_channel_model.h
 
-if PYTHON
 swiginclude_HEADERS = \
 	hier.i \
 	gr_channel_model.i
-endif

@@ -115,7 +115,7 @@ core_generator = 			\
 	gr_moving_average_XX.i.t
 
 # Source built by Python into $(builddir)
-BUILT_SOURCES =			\
+BUILT_SOURCES +=		\
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
@@ -123,7 +123,7 @@ BUILT_SOURCES =			\
 
 # ----------------------------------------------------------------
 
-EXTRA_DIST = 				\
+EXTRA_DIST += \
 	$(core_generator)
 
 libgengen_la_SOURCES = 			\
@@ -135,13 +135,11 @@ grinclude_HEADERS = 			\
 	gr_noise_type.h			\
 	gr_sig_source_waveform.h	
 
-if PYTHON
 swiginclude_HEADERS =			\
 	$(GENERATED_I)			\
 	gr_endianness.i			\
 	gengen.i			\
 	gengen_generated.i		
-endif
 
 # Do creation and inclusion of other Makefiles last
 

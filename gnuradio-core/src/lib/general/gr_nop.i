@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,11 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%ignore gr_nop;
+GR_SWIG_BLOCK_MAGIC(gr,nop)
+
+gr_nop_sptr gr_make_nop (size_t sizeof_stream_item);
+
 class gr_nop : public gr_block {
-  friend gr_block_sptr gr_make_nop (size_t sizeof_stream_item);
+private:
   gr_nop (size_t sizeof_stream_item);
 };
 
-%rename(nop) gr_make_nop;
-gr_block_sptr gr_make_nop (size_t sizeof_stream_item);

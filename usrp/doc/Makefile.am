@@ -27,7 +27,7 @@ SUBDIRS = other
 man3dir = $(mandir)/man3
 usrp_docdir  = $(prefix)/share/doc/usrp-$(DOCVER)
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	Doxyfile.in		\
 	ddc.eps			\
 	ddc.png			\

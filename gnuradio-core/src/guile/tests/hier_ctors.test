@@ -1,0 +1,40 @@
+;;; -*- Scheme -*-
+;;;
+;;; Copyright 2010 Free Software Foundation, Inc.
+;;;
+;;; This file is part of GNU Radio
+;;;
+;;; GNU Radio is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 3, or (at your option)
+;;; any later version.
+;;;
+;;; GNU Radio is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;;
+
+;;; If you're using Emacs's Scheme mode:
+;;;   (put 'with-test-prefix 'scheme-indent-function 1)
+
+;;; See the comments in gnuradio/test-suite/lib.scm for info on writing tests.
+;;; See also the very end of the file, where the test-equal, test-eqv
+;;; and test-eq macros are defined.
+
+(use-modules (gnuradio test-suite lib))
+(use-modules (gnuradio core))
+(use-modules (oop goops))
+
+;;; Add test code for all constructors in these files
+;;;
+
+;;; ./hier/gr_channel_model.h FIXME: Unbound variable: ~S" (gr:channel_model) #f))
+;; gr_make_channel_model(double noise_voltage=0.0, double frequency_offset=0.0,
+;;                       double epsilon=1.0,
+;; 		      const std::vector<gr_complex> &taps=std::vector<gr_complex>(1, 1),
+;;                       double noise_seed=3021);
+;; (pass-if (true? (gr:channel_model 0.0 0.0 1.0 #(1 1) 3021)))

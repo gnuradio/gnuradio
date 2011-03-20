@@ -1,5 +1,5 @@
 dnl 
-dnl  Copyright 2004,2005,2007,2008,2009 Free Software Foundation, Inc.
+dnl  Copyright 2004,2005,2007,2008,2009,2010 Free Software Foundation, Inc.
 dnl  
 dnl  This file is part of GNU Radio
 dnl  
@@ -23,6 +23,12 @@ dnl
 AC_INIT
 AC_PREREQ(2.57)
 AC_CONFIG_AUX_DIR([.])	
+
+dnl Set the prefix to the default when --prefix is not specified.
+dnl This is critical for variable substitutions in the configure.
+if test "${prefix}" = "NONE"; then
+    prefix=${ac_default_prefix}
+fi
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
@@ -71,6 +77,7 @@ dnl AX_BOOST_WSERIALIZATION
 
 AC_CONFIG_FILES([\
 	  Makefile \
+	  setup_guile_test_env \
 	  apps/Makefile \
 	  config/Makefile \
 	  grc/Makefile \
@@ -78,10 +85,15 @@ AC_CONFIG_FILES([\
 	  python/Makefile \
 	  python/run_tests \
 	  swig/Makefile \
+	  swig/run_guile_tests \
 	])
 
 dnl run_tests is created from run_tests.in.  Make it executable.
-AC_CONFIG_COMMANDS([run_tests], [chmod +x python/run_tests])
+AC_CONFIG_COMMANDS([run_tests],
+		   [
+		    chmod +x python/run_tests
+		    chmod +x swig/run_guile_tests
+		   ])
 
 AC_OUTPUT
 

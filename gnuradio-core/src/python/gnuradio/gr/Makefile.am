@@ -21,12 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	run_tests.in		\
 	test_16bit_1chunk.wav
 
-TESTS = 			\
-	run_tests
+TESTS = run_tests
 
 
 grgrpythondir = $(grpythondir)/gr
@@ -39,7 +38,6 @@ grgrpython_PYTHON = 		\
 	gr_threading_24.py	\
 	hier_block2.py		\
 	prefs.py		\
-	scheduler.py		\
 	top_block.py		\
 	pubsub.py
 

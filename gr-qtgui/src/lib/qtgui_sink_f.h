@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -74,7 +74,7 @@ private:
   double d_bandwidth;
   std::string d_name;
   
-  pthread_mutex_t d_pmutex;
+  gruel::mutex d_mutex;
 
   bool d_shift;
   gri_fft_complex *d_fft;

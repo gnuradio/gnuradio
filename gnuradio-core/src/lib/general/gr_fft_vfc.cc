@@ -40,12 +40,12 @@
 
 
 gr_fft_vfc_sptr
-gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float> window)
+gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float> &window)
 {
   return gnuradio::get_initial_sptr(new gr_fft_vfc (fft_size, forward, window));
 }
 
-gr_fft_vfc::gr_fft_vfc (int fft_size, bool forward, const std::vector<float> window)
+gr_fft_vfc::gr_fft_vfc (int fft_size, bool forward, const std::vector<float> &window)
   : gr_sync_block ("fft_vfc",
 		   gr_make_io_signature (1, 1, fft_size * sizeof (float)),
 		   gr_make_io_signature (1, 1, fft_size * sizeof (gr_complex))),
@@ -107,7 +107,7 @@ gr_fft_vfc::work (int noutput_items,
 }
 
 bool 
-gr_fft_vfc::set_window(const std::vector<float> window)
+gr_fft_vfc::set_window(const std::vector<float> &window)
 {
   if(window.size()==0 || window.size()==d_fft_size) {
     d_window=window;

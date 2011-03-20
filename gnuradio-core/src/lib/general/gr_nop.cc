@@ -25,18 +25,30 @@
 #endif
 #include <gr_nop.h>
 #include <gr_io_signature.h>
+#include <boost/bind.hpp>
 
-gr_nop::gr_nop (size_t sizeof_stream_item)
-  : gr_block ("nop",
-	       gr_make_io_signature (0, -1, sizeof_stream_item),
-	       gr_make_io_signature (0, -1, sizeof_stream_item))
-{
-}
-
-gr_block_sptr
+gr_nop_sptr
 gr_make_nop (size_t sizeof_stream_item)
 {
   return gnuradio::get_initial_sptr (new gr_nop (sizeof_stream_item));
+}
+
+gr_nop::gr_nop (size_t sizeof_stream_item)
+  : gr_block ("nop",
+	      gr_make_io_signature (0, -1, sizeof_stream_item),
+	      gr_make_io_signature (0, -1, sizeof_stream_item)),
+    d_nmsgs_recvd(0)
+{
+  // Arrange to have count_received_msgs called when messages are received.
+  set_msg_handler(boost::bind(&gr_nop::count_received_msgs, this, _1));
+}
+
+// Trivial message handler that just counts them.
+// (N.B., This feature is used in qa_set_msg_handler)
+void
+gr_nop::count_received_msgs(pmt::pmt_t msg)
+{
+  d_nmsgs_recvd++;
 }
 
 int
@@ -51,5 +63,3 @@ gr_nop::general_work (int noutput_items,
   
   return noutput_items;
 }
-
-

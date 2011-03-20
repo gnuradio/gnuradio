@@ -264,16 +264,13 @@ void gr_flat_flowgraph::dump()
     int no = detail->noutputs();
     for (int i = 0; i < no; i++) {
       gr_buffer_sptr buffer = detail->output(i);
-      std::cout << "   output " << i << ": " << buffer 
-                << " space=" << buffer->space_available() << std::endl;
+      std::cout << "   output " << i << ": " << buffer << std::endl;
     }
 
     for (int i = 0; i < ni; i++) {
       gr_buffer_reader_sptr reader = detail->input(i);
       std::cout << "   reader " <<  i << ": " << reader
-                << " reading from buffer=" << reader->buffer()
-		<< " avail=" << reader->items_available() << " items"
-		<< std::endl;
+                << " reading from buffer=" << reader->buffer() << std::endl;
     }
   }
 

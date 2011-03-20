@@ -88,7 +88,7 @@ protected:
    */
   std::vector< std::vector<db_base_sptr> > d_db;
 
-  //! One time call, made only only from usrp_standard_*::make after shared_ptr is created.
+  // One time call, made only only from usrp_standard_*::make after shared_ptr is created.
   void init_db(usrp_basic_sptr u);
 
 

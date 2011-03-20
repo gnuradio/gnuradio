@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -36,7 +36,8 @@ gr_block::gr_block (const std::string &name,
     d_output_multiple (1),
     d_relative_rate (1.0),
     d_history(1),
-    d_fixed_rate(false)
+    d_fixed_rate(false),
+    d_tag_propagation_policy(TPP_ALL_TO_ALL)
 {
 }
   
@@ -115,6 +116,69 @@ int
 gr_block::fixed_rate_noutput_to_ninput(int noutput)
 {
   throw std::runtime_error("Unimplemented");
+}
+
+uint64_t
+gr_block::nitems_read(unsigned int which_input) 
+{
+  if(d_detail) {
+    return d_detail->nitems_read(which_input);
+  }
+  else {
+    //throw std::runtime_error("No block_detail associated with block yet");
+    return 0;
+  }
+}
+
+uint64_t
+gr_block::nitems_written(unsigned int which_output) 
+{
+  if(d_detail) {
+    return d_detail->nitems_written(which_output);
+  }
+  else {
+    //throw std::runtime_error("No block_detail associated with block yet");
+    return 0;
+  }
+}
+
+void
+gr_block::add_item_tag(unsigned int which_output,
+		       uint64_t offset,
+		       const pmt::pmt_t &key,
+		       const pmt::pmt_t &value,
+		       const pmt::pmt_t &srcid)
+{
+  d_detail->add_item_tag(which_output, offset, key, value, srcid);
+}
+
+void
+gr_block::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			    unsigned int which_output,
+			    uint64_t start, uint64_t end)
+{
+  d_detail->get_tags_in_range(v, which_output, start, end);
+}
+  
+void
+gr_block::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			    unsigned int which_output,
+			    uint64_t start, uint64_t end,
+			    const pmt::pmt_t &key)
+{
+  d_detail->get_tags_in_range(v, which_output, start, end, key);
+}
+
+gr_block::tag_propagation_policy_t
+gr_block::tag_propagation_policy()
+{
+  return d_tag_propagation_policy;
+}
+
+void
+gr_block::set_tag_propagation_policy(tag_propagation_policy_t p)
+{
+  d_tag_propagation_policy = p;
 }
 
 std::ostream&
