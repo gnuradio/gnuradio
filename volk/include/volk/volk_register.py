@@ -22,6 +22,7 @@ from make_environment_init_c import make_environment_init_c
 from make_environment_init_h import make_environment_init_h
 from make_mktables import make_mktables
 from make_makefile_am import make_makefile_am
+import copy
 
 outfile_set_simd = open("../../config/lv_set_simd_flags.m4", "w");
 outfile_reg = open("volk_registry.h", "w");
@@ -91,7 +92,41 @@ for arch in archs:
 archs_or = archs_or[0:len(archs_or)-1];
 archs_or = archs_or + ")";
 
-    
+#get machine list and parse to a list of machines, each with a list of archs (none of this DOM crap)
+machine_str_dict = {}
+mfile = minidom.parse("machines.xml");
+filemachines = mfile.getElementsByTagName("machine")
+
+for filemachine in filemachines:
+    machine_str_dict[str(filemachine.attributes["name"].value)] = str(filemachine.getElementsByTagName("archs")[0].firstChild.data).split()
+
+#all right now you have a dict of arch lists
+#next we expand it
+#this is an expanded list accounting for the OR syntax
+#TODO: make this work for multiple "|" machines
+machines = {}
+already_done = False
+for machine_name in machine_str_dict:
+    already_done = False
+    marchlist = machine_str_dict[machine_name]
+    for march in marchlist:
+        or_marchs = march.split("|")
+        if len(or_marchs) > 1:
+            marchlist.remove(march)
+            for or_march in or_marchs:
+                tempmarchlist = copy.deepcopy(marchlist)
+                tempmarchlist.append(or_march)
+                machines[machine_name + "_" + or_march] = tempmarchlist
+                already_done = True
+
+    if not already_done:
+        machines[machine_name] = marchlist
+ 
+#for machine_name in machines:
+#    print machine_name + ": " + str(machines[machine_name])
+
+#ok, now we have all the machines we're going to build. next step is to generate a Makefile.am where they're all laid out and compiled
+
 taglist = [];
 fcountlist = [];
 arched_arglist = [];
@@ -107,7 +142,7 @@ for func in functions:
     sourcefile = infile_source.readlines();
     infile_source.close();
     for line in sourcefile:
-
+#FIXME: make it work for multiple #if define()s
         archline = re.search("^\#if.*?LV_HAVE_" + archs_or + ".*", line);
         if archline:
             arch = archline.group(0);
@@ -222,7 +257,7 @@ outfile_cpu_h.close();
 outfile_cpu_c.write(make_cpuid_c(filearchs));
 outfile_cpu_c.close();
 
-outfile_set_simd.write(make_set_simd(filearchs));
+outfile_set_simd.write(make_set_simd(filearchs, machines));
 outfile_set_simd.close();
 
 #outfile_config_in.write(make_config_in(filearchs));
@@ -264,5 +299,5 @@ outfile_environment_h.close();
 outfile_mktables.write(make_mktables(functions));
 outfile_mktables.close();
 
-outfile_makefile_am.write(make_makefile_am(filearchs))
+outfile_makefile_am.write(make_makefile_am(filearchs, machines))
 outfile_makefile_am.close()

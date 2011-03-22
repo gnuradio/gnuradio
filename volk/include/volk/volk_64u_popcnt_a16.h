@@ -36,7 +36,7 @@ static inline void volk_64u_popcnt_a16_generic(uint64_t* ret, const uint64_t val
 
 #endif /*LV_HAVE_GENERIC*/
 
-#if defined(LV_HAVE_SSE4_2) && defined(LV_HAVE_64)
+#if LV_HAVE_SSE4_2 && LV_HAVE_64
 
 #include <nmmintrin.h>
 

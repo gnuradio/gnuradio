@@ -56,7 +56,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_generic(lv_32fc_t* result, con
 #endif /*LV_HAVE_GENERIC*/
 
 
-#if defined(LV_HAVE_SSE) && defined(LV_HAVE_64)
+#if LV_HAVE_SSE && LV_HAVE_64
 
 
 static inline void volk_32fc_x2_dot_prod_32fc_a16_sse_64(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
@@ -192,7 +192,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse_64(lv_32fc_t* result, cons
 
 #endif
 
-#if defined(LV_HAVE_SSE) && defined(LV_HAVE_32)
+#if LV_HAVE_SSE && LV_HAVE_32
 
 static inline void volk_32fc_x2_dot_prod_32fc_a16_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
