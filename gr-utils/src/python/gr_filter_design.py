@@ -476,12 +476,18 @@ class gr_plot_filter(QtGui.QMainWindow):
         ret = r and ret
 
         if(ret):
-            taps = blks2.optfir.low_pass(gain, fs, pb, sb,
-                                         ripple, atten)
-            params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
-                      "filttype": "lpf", "pbend": pb, "sbstart": sb,
-                      "atten": atten, "ripple": ripple, "ntaps": len(taps)}
-            return (taps, params, ret)
+            try:
+                taps = blks2.optfir.low_pass(gain, fs, pb, sb,
+                                             ripple, atten)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "lpf", "pbend": pb, "sbstart": sb,
+                          "atten": atten, "ripple": ripple, "ntaps": len(taps)}
+                return (taps, params, ret)
         else:
             return ([], [], ret)
     
@@ -501,13 +507,20 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             sb1 = pb1 - tb
             sb2 = pb2 + tb
-            taps = blks2.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
-                                          ripple, atten)
-            params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
-                      "filttype": "bpf", "pbstart": pb1, "pbend": pb2,
-                      "tb": tb, "atten": atten, "ripple": ripple,
-                      "ntaps": len(taps)}
-            return (taps,params,r)
+            try:
+                taps = blks2.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
+                                              ripple, atten)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "bpf", "pbstart": pb1, "pbend": pb2,
+                          "tb": tb, "atten": atten, "ripple": ripple,
+                          "ntaps": len(taps)}
+                return (taps,params,r)
         else:
             return ([],[],r)
 
@@ -527,13 +540,19 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             sb1 = pb1 - tb
             sb2 = pb2 + tb
-            taps = blks2.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
-                                                  ripple, atten)
-            params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
-                      "filttype": "cbpf", "pbstart": pb1, "pbend": pb2,
-                      "tb": tb, "atten": atten, "ripple": ripple,
-                      "ntaps": len(taps)}
-            return (taps,params,r)
+            try:
+                taps = blks2.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
+                                                      ripple, atten)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "cbpf", "pbstart": pb1, "pbend": pb2,
+                          "tb": tb, "atten": atten, "ripple": ripple,
+                          "ntaps": len(taps)}
+                return (taps,params,r)
         else:
             return ([],[],r)
 
@@ -553,13 +572,19 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             pb1 = sb1 - tb
             pb2 = sb2 + tb
-            taps = blks2.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
-                                            ripple, atten)
-            params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
-                      "filttype": "bnf", "sbstart": pb1, "sbend": pb2,
-                      "tb": tb, "atten": atten, "ripple": ripple,
-                      "ntaps": len(taps)}
-            return (taps,params,r)
+            try:
+                taps = blks2.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
+                                                ripple, atten)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "bnf", "sbstart": pb1, "sbend": pb2,
+                          "tb": tb, "atten": atten, "ripple": ripple,
+                          "ntaps": len(taps)}
+                return (taps,params,r)
         else:
             return ([],[],r)
 
@@ -575,13 +600,19 @@ class gr_plot_filter(QtGui.QMainWindow):
         ret = r and ret
 
         if(r):
-            taps = blks2.optfir.high_pass(gain, fs, sb, pb,
-                                          atten, ripple)
-            params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
-                      "filttype": "hpf", "sbend": sb, "pbstart": pb,
-                      "atten": atten, "ripple": ripple,
-                      "ntaps": len(taps)}
-            return (taps,params,r)
+            try:
+                taps = blks2.optfir.high_pass(gain, fs, sb, pb,
+                                              atten, ripple)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "hpf", "sbend": sb, "pbstart": pb,
+                          "atten": atten, "ripple": ripple,
+                          "ntaps": len(taps)}
+                return (taps,params,r)
         else:
             return ([],[],r)
 
