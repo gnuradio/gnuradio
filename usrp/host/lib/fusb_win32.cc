@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <stdexcept>
 #include <string.h>
+#include <cstdio>
 
 static const int MAX_BLOCK_SIZE = fusb_sysconfig::max_block_size();
 static const int DEFAULT_BLOCK_SIZE = MAX_BLOCK_SIZE;

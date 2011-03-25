@@ -26,6 +26,9 @@
 #include "db_wbxng_adf4350.h"
 #include <db_base_impl.h>
 #include <stdio.h>
+#ifdef HAVE_TIME_H
+#include <ctime>
+#endif
 
 // d'board i/o pin defs
 // Tx and Rx have shared defs, but different i/o regs

@@ -56,7 +56,8 @@ benchmark (fir_maker_t filter_maker, const char *implementation_name)
 {
   int	i;
   gr_complex   coeffs[NTAPS];
-  gr_complex   input[BLOCK_SIZE + NTAPS];
+  //gr_complex   input[BLOCK_SIZE + NTAPS];  // not always 16-bit aligned
+  gr_complex   *input = new gr_complex[BLOCK_SIZE + NTAPS];
   long	n;
   gr_complex	result;
 #ifdef HAVE_SYS_RESOURCE_H
@@ -86,7 +87,7 @@ benchmark (fir_maker_t filter_maker, const char *implementation_name)
     exit (1);
   }
 #else
-  clock_start= (double) clock() * (1000000. / CLOCKS_PER_SEC);
+  clock_start= (double) clock() / CLOCKS_PER_SEC;
 #endif
   // do the actual work
 
@@ -116,7 +117,7 @@ benchmark (fir_maker_t filter_maker, const char *implementation_name)
 
   double total = user + sys;
 #else
-  clock_end = (double) clock() * (1000000. / CLOCKS_PER_SEC);
+  clock_end = (double) clock() / CLOCKS_PER_SEC;
   double total = clock_end - clock_start;
 #endif
 
@@ -126,6 +127,7 @@ benchmark (fir_maker_t filter_maker, const char *implementation_name)
 	  implementation_name, NTAPS, (double) TOTAL_TEST_SIZE, total, macs / total);
 
   delete f;
+  delete [] input;
 }
 
 static void

@@ -24,6 +24,7 @@
 #define INCLUDED_GR_WAVFILE_SOURCE_H
 
 #include <gr_sync_block.h>
+#include <cstdio>  // for FILE
 
 class gr_wavfile_source;
 typedef boost::shared_ptr<gr_wavfile_source> gr_wavfile_source_sptr;

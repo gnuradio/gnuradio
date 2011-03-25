@@ -48,7 +48,6 @@
 #include <assert.h>
 #include <stdexcept>
 #include <unistd.h>
-#include <stdio.h>
 
 #ifdef HAVE_IO_H
 #include <io.h>

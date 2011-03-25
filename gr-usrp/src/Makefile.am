@@ -86,6 +86,7 @@ usrp_swig_pythondir_category = 	\
 
 # additional arguments to the SWIG command
 usrp_swig_swig_args =		\
+	$(DEFAULT_INCLUDES)	\
 	$(USRP_INCLUDES)
 
 # additional libraries for linking with the SWIG-generated library

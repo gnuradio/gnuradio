@@ -24,6 +24,7 @@
 #define INCLUDED_GR_TAGGED_FILE_SINK_H
 
 #include <gr_sync_block.h>
+#include <cstdio>  // for FILE
 
 class gr_tagged_file_sink;
 typedef boost::shared_ptr<gr_tagged_file_sink> gr_tagged_file_sink_sptr;

@@ -42,6 +42,7 @@ typedef	gr_complex	acc_type;
 
 using std::vector;
 
+#define MAX_DATA        (32767)
 #define	ERR_DELTA	(1e-5)
 
 #define	NELEM(x) (sizeof (x) / sizeof (x[0]))
@@ -56,8 +57,8 @@ static void
 random_complex (gr_complex *buf, unsigned n)
 {
   for (unsigned i = 0; i < n; i++){
-    float re = rint (uniform () * 32767);
-    float im = rint (uniform () * 32767);
+    float re = rint (uniform () * MAX_DATA);
+    float im = rint (uniform () * MAX_DATA);
     buf[i] = gr_complex (re, im);
   }
 }
@@ -151,7 +152,7 @@ qa_gri_fir_filter_with_buffer_ccc::test_decimate(unsigned int decimate)
       
       for (int o = 0; o < (int)(ol/decimate); o++){
 	CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected_output[o], actual_output[o],
-				       abs (expected_output[o]) * ERR_DELTA);
+				       sqrt((float)n)*0.25*MAX_DATA*MAX_DATA * ERR_DELTA);
       }
       delete f1;
     }

@@ -35,8 +35,9 @@ AC_DEFUN([GRC_GR_UHD],[
 
 	# Use this to tell the Makefile whether to define
 	# GR_HAVE_UHD for swig.
-	AM_CONDITIONAL([GR_DEFINE_HAVE_UHD],[test $passed = yes])
     fi
+
+    AM_CONDITIONAL([GR_DEFINE_HAVE_UHD],[test $passed = yes])
 
     AC_CONFIG_FILES([ \
         gr-uhd/Makefile \
