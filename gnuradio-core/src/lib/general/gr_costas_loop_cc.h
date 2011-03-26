@@ -89,6 +89,12 @@ class gr_costas_loop_cc : public gr_sync_block
 		     int order
 		     ) throw (std::invalid_argument);
 
+  /*! \brief the phase detector circuit for 8th-order PSK loops
+   *  \param sample complex sample
+   *  \return the phase error
+   */
+  float phase_detector_8(gr_complex sample) const;    // for 8PSK
+
   /*! \brief the phase detector circuit for fourth-order loops
    *  \param sample complex sample
    *  \return the phase error
