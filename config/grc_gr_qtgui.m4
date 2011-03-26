@@ -85,7 +85,12 @@ AC_DEFUN([GRC_GR_QTGUI],[
         gr-qtgui/src/Makefile \
         gr-qtgui/src/lib/Makefile \
         gr-qtgui/src/python/Makefile \
+        gr-qtgui/src/python/run_tests \
     ])
 
-    GRC_BUILD_CONDITIONAL(gr-qtgui)
+    GRC_BUILD_CONDITIONAL(gr-qtgui,[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_qtgui],
+			   [chmod +x gr-qtgui/src/python/run_tests])
+    ])
 ])
