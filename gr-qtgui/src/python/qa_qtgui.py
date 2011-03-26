@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 #
-# Copyright 2008,2009 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,27 +20,27 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+from gnuradio import gr, gr_unittest
+import qtgui
+from PyQt4 import QtGui, QtCore
+import sys, sip
 
-TESTS = 
-EXTRA_DIST += run_tests.in \
-	qt_digital_window.ui
+class test_qtgui(gr_unittest.TestCase):
 
-if PYTHON
-TESTS += run_tests
-DISTCLEANFILES += run_tests
+    def setUp (self):
+        self.tb = gr.top_block ()
 
-qtguipythondir = $(grpythondir)/qtgui
-
-noinst_PYTHON = 		\
-	pyqt_example_f.py 	\
-	pyqt_example.py		\
-	qt_digital.py		\
-	qt_digital_window.py    \
-	usrp2_display.py	\
-	usrp_display.py		\
-	qa_qtgui.py
-
-qtguipython_PYTHON =		\
-	__init__.py
-endif
+    def tearDown (self):
+        self.tb = None
+    
+    def test01 (self):
+        pass
+        # Test to make sure we can instantiate these
+        #self.qapp = QtGui.QApplication(sys.argv)
+        #self.qtsnk = qtgui.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS, 
+        #                          0, 1, "Test",
+        #                          True, True, False, True, True)
+        
+        
+if __name__ == '__main__':
+    gr_unittest.run(test_qtgui, "test_qtgui.xml")
