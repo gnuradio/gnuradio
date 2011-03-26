@@ -30,9 +30,6 @@ AM_CPPFLAGS = \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
 
-TOP_SWIG_IFILES =		\
-	pmt_swig.i
-
 ##############################
 # SWIG interface and library
 TOP_SWIG_IFILES = \
@@ -50,6 +47,6 @@ pmt_swig_la_swig_libadd = \
 	$(abs_top_builddir)/gruel/src/lib/pmt/libpmt.la
 
 # additional SWIG files to be installed
-pmt_swig_swiginclude_headers = 
-
+pmt_swig_swiginclude_headers =  \
+	gr_intrusive_ptr.i
 
