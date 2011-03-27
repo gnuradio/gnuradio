@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import qtgui
+import qtgui_swig
 from PyQt4 import QtGui, QtCore
 import sys, sip
 
@@ -37,9 +37,9 @@ class test_qtgui(gr_unittest.TestCase):
         pass
         # Test to make sure we can instantiate these
         #self.qapp = QtGui.QApplication(sys.argv)
-        #self.qtsnk = qtgui.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS, 
-        #                          0, 1, "Test",
-        #                          True, True, False, True, True)
+        #self.qtsnk = qtgui_swig.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS, 
+        #                               0, 1, "Test",
+        #                               True, True, False, True, True)
         
         
 if __name__ == '__main__':
