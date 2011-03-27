@@ -99,8 +99,6 @@ private:
 public:
   ~qtgui_sink_c();
   void exec_();
-  void lock();
-  void unlock();
   QWidget*  qwidget();
   PyObject* pyqwidget();
 

@@ -71,8 +71,8 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
     fprintf(stderr, "Warning: plotting Waterfall3D has been removed; enabling plotwaterfall3d has no effect.\n");
   }
 
+  gruel::scoped_lock lock(d_mutex);
   d_main_gui = NULL;
-  lock();
 
   // Perform fftshift operation;
   // this is usually desired when plotting
@@ -103,17 +103,6 @@ qtgui_sink_c::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     ninput_items_required[i] = std::min(d_fftsize, 8191);
   }
 }
-
-void qtgui_sink_c::lock()
-{
-  d_mutex.lock();
-}
-
-void qtgui_sink_c::unlock()
-{
-  d_mutex.unlock();
-}
-
 
 void
 qtgui_sink_c::initialize(const bool opengl)
