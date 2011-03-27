@@ -28,11 +28,13 @@ class control_box(QtGui.QWidget):
 
         # Control the first signal
         self.freq1Edit = QtGui.QLineEdit(self)
+        self.freq1Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 1 Frequency:", self.freq1Edit)
         self.connect(self.freq1Edit, QtCore.SIGNAL("editingFinished()"),
                      self.freq1EditText)
 
         self.amp1Edit = QtGui.QLineEdit(self)
+        self.amp1Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 1 Amplitude:", self.amp1Edit)
         self.connect(self.amp1Edit, QtCore.SIGNAL("editingFinished()"),
                      self.amp1EditText)
@@ -40,17 +42,20 @@ class control_box(QtGui.QWidget):
 
         # Control the second signal
         self.freq2Edit = QtGui.QLineEdit(self)
+        self.freq2Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 2 Frequency:", self.freq2Edit)
         self.connect(self.freq2Edit, QtCore.SIGNAL("editingFinished()"),
                      self.freq2EditText)
 
 
         self.amp2Edit = QtGui.QLineEdit(self)
+        self.amp2Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 2 Amplitude:", self.amp2Edit)
         self.connect(self.amp2Edit, QtCore.SIGNAL("editingFinished()"),
                      self.amp2EditText)
 
         self.quit = QtGui.QPushButton('Close', self)
+        self.quit.setMinimumWidth(100)
         self.layout.addWidget(self.quit)
 
         self.connect(self.quit, QtCore.SIGNAL('clicked()'),
@@ -140,5 +145,5 @@ class my_top_block(gr.top_block):
 if __name__ == "__main__":
     tb = my_top_block();
     tb.start()
-    tb.qapp.exec_()
+    sys.exit(tb.qapp.exec_())
     
