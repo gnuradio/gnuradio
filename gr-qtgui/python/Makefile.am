@@ -22,8 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 TESTS = 
-EXTRA_DIST += run_tests.in \
-	qt_digital_window.ui
+EXTRA_DIST += run_tests.in
 
 if PYTHON
 TESTS += run_tests
@@ -32,12 +31,6 @@ DISTCLEANFILES += run_tests
 qtguipythondir = $(grpythondir)/qtgui
 
 noinst_PYTHON = 		\
-	pyqt_example_f.py 	\
-	pyqt_example.py		\
-	qt_digital.py		\
-	qt_digital_window.py    \
-	usrp2_display.py	\
-	usrp_display.py		\
 	qa_qtgui.py
 
 qtguipython_PYTHON =		\
