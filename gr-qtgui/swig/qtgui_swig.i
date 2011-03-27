@@ -122,7 +122,7 @@ public:
 
 #if SWIGGUILE
 %scheme %{
-(load-extension-global "libguile-gnuradio-qtgui" "scm_init_gnuradio_qtgui_module")
+(load-extension-global "libguile-gnuradio-qtgui_swig" "scm_init_gnuradio_qtgui_swig_module")
 %}
 
 %goops %{

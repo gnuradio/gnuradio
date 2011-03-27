@@ -27,8 +27,10 @@ EXTRA_DIST += $(nobase_guile_DATA)
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/gr-qtgui/lib \
+	-I$(top_builddir)/gr-qtgui/lib \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
+	$(QT_INCLUDES) \
 	$(WITH_INCLUDES)
 
 if GUILE
