@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,6 @@
 # 
 
 include $(top_srcdir)/Makefile.common
-include $(top_srcdir)/Makefile.swig
 
 EXTRA_DIST += spectrumdisplayform.ui
 
@@ -90,7 +89,6 @@ libgnuradio_qtgui_la_LIBADD = 		\
 	$(BOOST_DATE_TIME_LIB) \
 	-lstdc++		\
 	$(QT_LIBS)
-
 
 ##############################
 # SWIG interfaces and libraries

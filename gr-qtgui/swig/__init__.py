@@ -1,5 +1,5 @@
 #
-# Copyright 2008-2011 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,13 +19,6 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+# The presence of this file turns this directory into a Python package
 
-SUBDIRS = lib
-
-if PYTHON
-SUBDIRS += swig python apps grc
-endif
-
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-qtgui.pc
+from qtgui_swig import *
