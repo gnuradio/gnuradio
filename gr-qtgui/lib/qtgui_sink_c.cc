@@ -93,6 +93,7 @@ qtgui_sink_c::~qtgui_sink_c()
   delete d_main_gui;
   delete [] d_residbuf;
   delete d_fft;
+  delete d_object;
 }
 
 void
@@ -111,7 +112,7 @@ qtgui_sink_c::initialize(const bool opengl)
     d_qApplication = qApp;
   }
   else {
-    int argc;
+    int argc=0;
     char **argv = NULL;
     d_qApplication = new QApplication(argc, argv);
   }

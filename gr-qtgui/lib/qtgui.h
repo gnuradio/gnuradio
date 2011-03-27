@@ -40,6 +40,8 @@ public:
     //nop
   }
 
+  ~qtgui_event() {}
+
   void lock()
   {
     d_mutex.lock();
@@ -58,7 +60,9 @@ public:
     : QObject(p)
   { 
   }
-  
+
+  ~qtgui_obj() {}
+
   void customEvent(QEvent *e)
   {
     if(e->type() == (QEvent::Type)(QEvent::User+101)) {
