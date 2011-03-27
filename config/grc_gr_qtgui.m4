@@ -88,7 +88,7 @@ AC_DEFUN([GRC_GR_QTGUI],[
         gr-qtgui/python/Makefile \
         gr-qtgui/python/run_tests \
         gr-qtgui/swig/Makefile \
-        gr-qtgui/dswig/run_guile_tests \
+        gr-qtgui/swig/run_guile_tests \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-qtgui,[
