@@ -129,7 +129,8 @@ libgnuradio_audio_la_SOURCES += \
 noinst_HEADERS += \
 	osx/audio_osx.h \
 	osx/audio_osx_source.h \
-	osx/audio_osx_sink.h
+	osx/audio_osx_sink.h \
+	osx/circular_buffer.h
 
 endif
 
