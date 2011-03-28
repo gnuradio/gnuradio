@@ -42,7 +42,7 @@ noinst_GUILE  = digital.test
 ##############################
 # SWIG interface and library
 TOP_SWIG_IFILES = \
-	gr_costas_loop_cc.i
+	digital_swig.i
 
 # Install so that they end up available as:
 #   import gnuradio.digital
@@ -56,8 +56,8 @@ digital_swig_la_swig_libadd = \
 	$(abs_top_builddir)/gr-digital/lib/libgnuradio-digital.la
 
 # additional SWIG files to be installed
-digital_swig_swiginclude_headers = 
-
+digital_swig_swiginclude_headers = \
+	gr_costas_loop_cc.i
 if GUILE
 TESTS += run_guile_tests
 endif
