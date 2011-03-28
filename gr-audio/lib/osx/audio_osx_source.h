@@ -36,7 +36,7 @@
  * Samples must be in the range [-1,1].
  */
 
-class audio_osx_source : public gr_sync_block {
+class audio_osx_source : public audio_source {
 
   Float64             d_deviceSampleRate, d_outputSampleRate;
   int                 d_channel_config;
