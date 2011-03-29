@@ -8,27 +8,17 @@
 	<name>Costas Loop</name>
 	<key>digital_costas_loop_cc</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.costas_loop_cc($alpha, $beta, $max_freq, $min_freq, $order)</make>
-	<callback>set_alpha($alpha)</callback>
-	<callback>set_beta($beta)</callback>
+	<make>digital.costas_loop_cc($eta, $w, $order)</make>
+	<callback>set_damping_factor($eta)</callback>
+	<callback>set_natural_freq($w)</callback>
 	<param>
-		<name>Alpha</name>
-		<key>alpha</key>
+		<name>Damping Factor</name>
+		<key>eta</key>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Beta</name>
-		<key>beta</key>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Max Freq</name>
-		<key>max_freq</key>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Min Freq</name>
-		<key>min_freq</key>
+		<name>Natural Frequency</name>
+		<key>w</key>
 		<type>real</type>
 	</param>
 	<param>
@@ -44,9 +34,11 @@
 		<name>out</name>
 		<type>complex</type>
 	</source>
+
+	<!-- Optional Outputs -->
 	<source>
-		<name>out</name>
-		<type>complex</type>
+		<name>frequency</name>
+		<type>float</type>
 		<optional>1</optional>
 	</source>
 </block>

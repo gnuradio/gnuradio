@@ -33,28 +33,29 @@
 #define M_TWOPI (2*M_PI)
 
 digital_costas_loop_cc_sptr
-digital_make_costas_loop_cc (float alpha, float beta,
-			     float max_freq, float min_freq,
+digital_make_costas_loop_cc (float damping, float nat_freq,
 			     int order
 			     ) throw (std::invalid_argument)
 {
-  return gnuradio::get_initial_sptr(new digital_costas_loop_cc (alpha, beta,
-								max_freq, min_freq,
+  return gnuradio::get_initial_sptr(new digital_costas_loop_cc (damping,
+								nat_freq,
 								order));
 }
 
-digital_costas_loop_cc::digital_costas_loop_cc (float alpha, float beta,
-						float max_freq, float min_freq,
+digital_costas_loop_cc::digital_costas_loop_cc (float damping, float nat_freq,
 						int order
 						) throw (std::invalid_argument)
   : gr_sync_block ("costas_loop_cc",
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
-		   gr_make_io_signature (1, 2, sizeof (gr_complex))),
-    d_alpha(alpha), d_beta(beta), 
-    d_max_freq(max_freq), d_min_freq(min_freq),
-    d_phase(0), d_freq((max_freq+min_freq)/2),
-    d_order(order), d_phase_detector(0)
+		   gr_make_io_signature2 (1, 2, sizeof (gr_complex), sizeof(float))),
+    
+    d_max_freq(1.0), d_min_freq(-1.0), d_freq(0.0),
+    d_damping(damping), d_nat_freq(nat_freq),
+    d_phase(0), d_order(order), d_phase_detector(NULL)
 {
+  // initialize gains from the natural freq and damping factors
+  update_gains();
+
   switch(d_order) {
   case 2:
     d_phase_detector = &digital_costas_loop_cc::phase_detector_2;
@@ -78,7 +79,6 @@ float
 digital_costas_loop_cc::phase_detector_8(gr_complex sample) const
 {
   float K = sqrt(2.0) - 1;
-  
   if(abs(sample.real()) >= abs(sample.imag())) {
     return ((sample.real()>0 ? 1.0 : -1.0) * sample.imag() -
 	    (sample.imag()>0 ? 1.0 : -1.0) * sample.real() * K);
@@ -104,15 +104,24 @@ digital_costas_loop_cc::phase_detector_2(gr_complex sample) const
 }
 
 void
-digital_costas_loop_cc::set_alpha(float alpha)
+digital_costas_loop_cc::set_natural_freq(float w)
 {
-  d_alpha = alpha;
+  d_nat_freq = w;
+  update_gains();
 }
 
 void
-digital_costas_loop_cc::set_beta(float beta)
+digital_costas_loop_cc::set_damping_factor(float eta)
 {
-  d_beta = beta;
+  d_damping = eta;
+  update_gains();
+}
+
+void
+digital_costas_loop_cc::update_gains()
+{
+  d_beta = d_nat_freq*d_nat_freq;
+  d_alpha = 2*d_damping*d_nat_freq;
 }
 
 int
@@ -122,7 +131,7 @@ digital_costas_loop_cc::work (int noutput_items,
 {
   const gr_complex *iptr = (gr_complex *) input_items[0];
   gr_complex *optr = (gr_complex *) output_items[0];
-  gr_complex *foptr = (gr_complex *) output_items[1];
+  float *foptr = (float *) output_items[1];
 
   bool write_foptr = output_items.size() >= 2;
 
@@ -140,21 +149,21 @@ digital_costas_loop_cc::work (int noutput_items,
 	error = 1;
       else if (error < -1)
 	error = -1;
-      
+	
       d_freq = d_freq + d_beta * error;
       d_phase = d_phase + d_freq + d_alpha * error;
-      
+
       while(d_phase>M_TWOPI)
 	d_phase -= M_TWOPI;
       while(d_phase<-M_TWOPI)
 	d_phase += M_TWOPI;
-      
+
       if (d_freq > d_max_freq)
-	d_freq = d_max_freq;
-      else if (d_freq < d_min_freq)
 	d_freq = d_min_freq;
+      else if (d_freq < d_min_freq)
+	d_freq = d_max_freq;
       
-      foptr[i] = gr_complex(error,0);
+      foptr[i] = d_freq;
     } 
   } else {
     for (int i = 0; i < noutput_items; i++){

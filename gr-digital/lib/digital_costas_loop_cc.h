@@ -58,8 +58,7 @@ typedef boost::shared_ptr<digital_costas_loop_cc> digital_costas_loop_cc_sptr;
 
 
 digital_costas_loop_cc_sptr 
-digital_make_costas_loop_cc (float alpha, float beta,
-			     float max_freq, float min_freq, 
+digital_make_costas_loop_cc (float damping, float nat_freq,
 			     int order
 			     ) throw (std::invalid_argument);
 
@@ -77,18 +76,30 @@ digital_make_costas_loop_cc (float alpha, float beta,
 class digital_costas_loop_cc : public gr_sync_block
 {
   friend digital_costas_loop_cc_sptr
-  digital_make_costas_loop_cc (float alpha, float beta,
-			       float max_freq, float min_freq, 
+  digital_make_costas_loop_cc (float damping, float nat_freq,
 			       int order
 			       ) throw (std::invalid_argument);
 
   float d_alpha, d_beta, d_max_freq, d_min_freq, d_phase, d_freq;
+  float d_nat_freq, d_damping;
   int d_order;
 
-  digital_costas_loop_cc (float alpha, float beta,
-		     float max_freq, float min_freq, 
-		     int order
-		     ) throw (std::invalid_argument);
+  digital_costas_loop_cc (float damping, float nat_freq,
+			  int order
+			  ) throw (std::invalid_argument);
+  
+  
+  /*! \brief update the system gains from omega and eta
+   *
+   *  This function updates the system gains based on the natural
+   *  frequency (omega) and damping factor (eta) of the system.
+   *  These two factors can be set separately through their own
+   *  set functions.
+   *
+   *  These equations are summarized nicely in this paper from Berkeley:
+   *  http://www.complextoreal.com/chapters/pll.pdf
+   */
+  void update_gains();
 
   /*! \brief the phase detector circuit for 8th-order PSK loops
    *  \param sample complex sample
@@ -113,21 +124,14 @@ class digital_costas_loop_cc : public gr_sync_block
 
 public:
 
-  /*! \brief set the first order gain
-   *  \param alpha
-   */
-  void set_alpha(float alpha);
+  void set_natural_freq(float w);
+  void set_damping_factor(float eta);
 
   /*! \brief get the first order gain
    * 
    */
   float alpha() const { return d_alpha; }
   
-  /*! \brief set the second order gain
-   *  \param beta
-   */
-  void set_beta(float beta);
-
   /*! \brief get the second order gain
    * 
    */
