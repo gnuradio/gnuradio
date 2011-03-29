@@ -22,10 +22,10 @@
 %include "gnuradio.i"
 
 %{
-#include "gr_costas_loop_cc.h"
+#include "digital_costas_loop_cc.h"
 %}
 
-%include "gr_costas_loop_cc.i"
+%include "digital_costas_loop_cc.i"
 
 #if SWIGGUILE
 %scheme %{

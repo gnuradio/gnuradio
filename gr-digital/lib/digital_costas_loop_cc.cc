@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_costas_loop_cc.h>
+#include <digital_costas_loop_cc.h>
 #include <gr_io_signature.h>
 #include <gr_expj.h>
 #include <gr_sincos.h>
@@ -32,21 +32,21 @@
 
 #define M_TWOPI (2*M_PI)
 
-gr_costas_loop_cc_sptr
-gr_make_costas_loop_cc (float alpha, float beta,
-			float max_freq, float min_freq,
-			int order
-			) throw (std::invalid_argument)
+digital_costas_loop_cc_sptr
+digital_make_costas_loop_cc (float alpha, float beta,
+			     float max_freq, float min_freq,
+			     int order
+			     ) throw (std::invalid_argument)
 {
-  return gnuradio::get_initial_sptr(new gr_costas_loop_cc (alpha, beta,
-							max_freq, min_freq,
-							order));
+  return gnuradio::get_initial_sptr(new digital_costas_loop_cc (alpha, beta,
+								max_freq, min_freq,
+								order));
 }
 
-gr_costas_loop_cc::gr_costas_loop_cc (float alpha, float beta,
-				      float max_freq, float min_freq,
-				      int order
-				      ) throw (std::invalid_argument)
+digital_costas_loop_cc::digital_costas_loop_cc (float alpha, float beta,
+						float max_freq, float min_freq,
+						int order
+						) throw (std::invalid_argument)
   : gr_sync_block ("costas_loop_cc",
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature (1, 2, sizeof (gr_complex))),
@@ -57,15 +57,15 @@ gr_costas_loop_cc::gr_costas_loop_cc (float alpha, float beta,
 {
   switch(d_order) {
   case 2:
-    d_phase_detector = &gr_costas_loop_cc::phase_detector_2;
+    d_phase_detector = &digital_costas_loop_cc::phase_detector_2;
     break;
 
   case 4:
-    d_phase_detector = &gr_costas_loop_cc::phase_detector_4;
+    d_phase_detector = &digital_costas_loop_cc::phase_detector_4;
     break;
 
   case 8:
-    d_phase_detector = &gr_costas_loop_cc::phase_detector_8;
+    d_phase_detector = &digital_costas_loop_cc::phase_detector_8;
     break;
 
   default: 
@@ -75,7 +75,7 @@ gr_costas_loop_cc::gr_costas_loop_cc (float alpha, float beta,
 }
 
 float
-gr_costas_loop_cc::phase_detector_8(gr_complex sample) const
+digital_costas_loop_cc::phase_detector_8(gr_complex sample) const
 {
   float K = sqrt(2.0) - 1;
   
@@ -90,7 +90,7 @@ gr_costas_loop_cc::phase_detector_8(gr_complex sample) const
 }
 
 float
-gr_costas_loop_cc::phase_detector_4(gr_complex sample) const
+digital_costas_loop_cc::phase_detector_4(gr_complex sample) const
 {
 
   return ((sample.real()>0 ? 1.0 : -1.0) * sample.imag() -
@@ -98,27 +98,27 @@ gr_costas_loop_cc::phase_detector_4(gr_complex sample) const
 }
 
 float
-gr_costas_loop_cc::phase_detector_2(gr_complex sample) const
+digital_costas_loop_cc::phase_detector_2(gr_complex sample) const
 {
   return (sample.real()*sample.imag());
 }
 
 void
-gr_costas_loop_cc::set_alpha(float alpha)
+digital_costas_loop_cc::set_alpha(float alpha)
 {
   d_alpha = alpha;
 }
 
 void
-gr_costas_loop_cc::set_beta(float beta)
+digital_costas_loop_cc::set_beta(float beta)
 {
   d_beta = beta;
 }
 
 int
-gr_costas_loop_cc::work (int noutput_items,
-			 gr_vector_const_void_star &input_items,
-			 gr_vector_void_star &output_items)
+digital_costas_loop_cc::work (int noutput_items,
+			      gr_vector_const_void_star &input_items,
+			      gr_vector_void_star &output_items)
 {
   const gr_complex *iptr = (gr_complex *) input_items[0];
   gr_complex *optr = (gr_complex *) output_items[0];
@@ -154,7 +154,7 @@ gr_costas_loop_cc::work (int noutput_items,
       else if (d_freq < d_min_freq)
 	d_freq = d_min_freq;
       
-      foptr[i] = gr_complex(d_freq,0);
+      foptr[i] = gr_complex(error,0);
     } 
   } else {
     for (int i = 0; i < noutput_items; i++){

@@ -25,12 +25,12 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
-	gr_costas_loop_cc.h
+	digital_costas_loop_cc.h
 
 lib_LTLIBRARIES = libgnuradio-digital.la
 
 libgnuradio_digital_la_SOURCES = \
-	gr_costas_loop_cc.cc
+	digital_costas_loop_cc.cc
 
 libgnuradio_digital_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)

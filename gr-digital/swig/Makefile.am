@@ -57,7 +57,7 @@ digital_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 digital_swig_swiginclude_headers = \
-	gr_costas_loop_cc.i
+	digital_costas_loop_cc.i
 if GUILE
 TESTS += run_guile_tests
 endif

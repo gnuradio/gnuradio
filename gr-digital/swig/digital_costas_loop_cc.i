@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,20 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,costas_loop_cc);
+GR_SWIG_BLOCK_MAGIC(digital,costas_loop_cc);
 
-gr_costas_loop_cc_sptr
-gr_make_costas_loop_cc (float alpha, float beta, 
+digital_costas_loop_cc_sptr
+digital_make_costas_loop_cc (float alpha, float beta, 
 			float max_freq, float min_freq,
 			int order
 			) throw (std::invalid_argument);
 
 
-class gr_costas_loop_cc : public gr_sync_block
+class digital_costas_loop_cc : public gr_sync_block
 {
  private:
-  gr_costas_loop_cc (float alpha, float beta,
-		     float max_freq, float min_freq, int order);
+  digital_costas_loop_cc (float alpha, float beta,
+			  float max_freq, float min_freq, int order);
 
  public:
    void set_alpha(float alpha);

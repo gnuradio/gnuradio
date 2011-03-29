@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,8 +21,8 @@
  */
 
 
-#ifndef INCLUDED_GR_COSTAS_LOOP_CC_H
-#define INCLUDED_GR_COSTAS_LOOP_CC_H
+#ifndef INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
+#define INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 
 #include <gr_sync_block.h>
 #include <stdexcept>
@@ -53,15 +53,15 @@
  * \param min_freq the minimum frequency deviation (radians/sample) the loop can handle
  * \param order the loop order, either 2 or 4
  */
-class gr_costas_loop_cc;
-typedef boost::shared_ptr<gr_costas_loop_cc> gr_costas_loop_cc_sptr;
+class digital_costas_loop_cc;
+typedef boost::shared_ptr<digital_costas_loop_cc> digital_costas_loop_cc_sptr;
 
 
-gr_costas_loop_cc_sptr 
-gr_make_costas_loop_cc (float alpha, float beta,
-			float max_freq, float min_freq, 
-			int order
-			) throw (std::invalid_argument);
+digital_costas_loop_cc_sptr 
+digital_make_costas_loop_cc (float alpha, float beta,
+			     float max_freq, float min_freq, 
+			     int order
+			     ) throw (std::invalid_argument);
 
 
 /*!
@@ -74,17 +74,18 @@ gr_make_costas_loop_cc (float alpha, float beta,
  *
  * \p order must be 2 or 4.
  */
-class gr_costas_loop_cc : public gr_sync_block
+class digital_costas_loop_cc : public gr_sync_block
 {
-  friend gr_costas_loop_cc_sptr gr_make_costas_loop_cc (float alpha, float beta,
-							float max_freq, float min_freq, 
-							int order
-							) throw (std::invalid_argument);
+  friend digital_costas_loop_cc_sptr
+  digital_make_costas_loop_cc (float alpha, float beta,
+			       float max_freq, float min_freq, 
+			       int order
+			       ) throw (std::invalid_argument);
 
   float d_alpha, d_beta, d_max_freq, d_min_freq, d_phase, d_freq;
   int d_order;
 
-  gr_costas_loop_cc (float alpha, float beta,
+  digital_costas_loop_cc (float alpha, float beta,
 		     float max_freq, float min_freq, 
 		     int order
 		     ) throw (std::invalid_argument);
@@ -108,7 +109,7 @@ class gr_costas_loop_cc : public gr_sync_block
   float phase_detector_2(gr_complex sample) const;    // for BPSK
 
 
-  float (gr_costas_loop_cc::*d_phase_detector)(gr_complex sample) const;
+  float (digital_costas_loop_cc::*d_phase_detector)(gr_complex sample) const;
 
 public:
 
