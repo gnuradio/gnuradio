@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,11 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+%{
+#include <gr_throttle.h>
+%}
+
 GR_SWIG_BLOCK_MAGIC(gr,throttle);
 
-gr_throttle_sptr gr_make_throttle (size_t itemsize, double samples_per_sec);
-
-class gr_throttle : public gr_sync_block
-{
-  gr_throttle (size_t itemsize, double samples_per_sec);
-};
+%include <gr_throttle.h>
