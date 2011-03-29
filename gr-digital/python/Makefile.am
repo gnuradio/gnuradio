@@ -30,7 +30,8 @@ TESTS += run_tests
 digitaldir = $(grpythondir)/digital
 
 noinst_PYTHON = \
-	qa_digital.py
+	qa_digital.py		\
+	qa_costas_loop_cc.py
 
 digital_PYTHON = \
 	__init__.py
