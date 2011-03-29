@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Block Tree for GR Digital blocks.
+###################################################
+ -->
+<cat>
+	<name></name> <!-- Blank for Root Name -->
+	<cat>
+		<name>Digital</name>
+		<block>digital_costas_loop_cc</block>
+	</cat>
+</cat>

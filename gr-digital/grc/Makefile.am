@@ -23,5 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 grcblocksdir = $(grc_blocksdir)
 
-dist_grcblocks_DATA = 
-
+dist_grcblocks_DATA = \
+	digital_block_tree.xml		\
+	digital_costas_loop_cc.xml
