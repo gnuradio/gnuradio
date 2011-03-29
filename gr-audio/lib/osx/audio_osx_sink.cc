@@ -43,7 +43,7 @@ audio_osx_sink::audio_osx_sink (int sample_rate,
 				bool do_block,
 				int channel_config,
 				int max_sample_count)
-  : audio_sink ("audio_osx_sink",
+  : gr_sync_block ("audio_osx_sink",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (0, 0, 0)),
     d_sample_rate (0.0), d_channel_config (0), d_n_channels (0),

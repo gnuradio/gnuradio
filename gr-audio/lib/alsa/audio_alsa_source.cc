@@ -73,7 +73,7 @@ default_nperiods ()
 audio_alsa_source::audio_alsa_source (int sampling_rate,
 				      const std::string device_name,
 				      bool ok_to_block)
-  : audio_source ("audio_alsa_source",
+  : gr_sync_block ("audio_alsa_source",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (0, 0, 0)),
     d_sampling_rate (sampling_rate),
