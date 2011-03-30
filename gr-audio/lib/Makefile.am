@@ -35,7 +35,7 @@ libgnuradio_audio_la_SOURCES = \
 libgnuradio_audio_la_LIBADD = \
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_audio_la_LDFLAGS = $(LTVERSIONFLAGS)
+libgnuradio_audio_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 noinst_HEADERS = gr_audio_registry.h
 

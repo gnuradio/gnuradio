@@ -37,6 +37,6 @@ libgnuradio_uhd_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \
 	$(UHD_LIBS)
 
-libgnuradio_uhd_la_LDFLAGS = $(LTVERSIONFLAGS)
+libgnuradio_uhd_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 noinst_HEADERS =
