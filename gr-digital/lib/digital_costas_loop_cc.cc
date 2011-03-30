@@ -28,7 +28,7 @@
 #include <gr_io_signature.h>
 #include <gr_expj.h>
 #include <gr_sincos.h>
-#include <math.h>
+#include <gr_math.h>
 
 #define M_TWOPI (2*M_PI)
 
@@ -49,9 +49,9 @@ digital_costas_loop_cc::digital_costas_loop_cc (float damping, float nat_freq,
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature2 (1, 2, sizeof (gr_complex), sizeof(float))),
     
-    d_max_freq(1.0), d_min_freq(-1.0), d_freq(0.0),
-    d_damping(damping), d_nat_freq(nat_freq),
-    d_phase(0), d_order(order), d_phase_detector(NULL)
+    d_max_freq(1.0), d_min_freq(-1.0),  d_phase(0.0), d_freq(0.0),
+    d_damping(damping), d_nat_freq(nat_freq), d_order(order),
+    d_phase_detector(NULL)
 {
   // initialize gains from the natural freq and damping factors
   update_gains();
@@ -78,8 +78,21 @@ digital_costas_loop_cc::digital_costas_loop_cc (float damping, float nat_freq,
 float
 digital_costas_loop_cc::phase_detector_8(gr_complex sample) const
 {
-  float K = sqrt(2.0) - 1;
-  if(abs(sample.real()) >= abs(sample.imag())) {
+  /* This technique splits the 8PSK constellation into 2 squashed
+     QPSK constellations, one when I is larger than Q and one where
+     Q is larger than I. The error is then calculated proportionally
+     to these squashed constellations by the const K = sqrt(2)-1.
+
+     The signal magnitude must be > 1 or K will incorrectly bias
+     the error value. 
+
+     Ref: Z. Huang, Z. Yi, M. Zhang, K. Wang, "8PSK demodulation for
+     new generation DVB-S2", IEEE Proc. Int. Conf. Communications,
+     Circuits and Systems, Vol. 2, pp. 1447 - 1450, 2004.
+  */
+
+  float K = (sqrt(2.0) - 1);
+  if(fabsf(sample.real()) >= fabsf(sample.imag())) {
     return ((sample.real()>0 ? 1.0 : -1.0) * sample.imag() -
 	    (sample.imag()>0 ? 1.0 : -1.0) * sample.real() * K);
   }
@@ -145,10 +158,7 @@ digital_costas_loop_cc::work (int noutput_items,
       optr[i] = iptr[i] * nco_out;
       
       error = (*this.*d_phase_detector)(optr[i]);
-      if (error > 1)
-	error = 1;
-      else if (error < -1)
-	error = -1;
+      error = gr_branchless_clip(error, 1.0);
 	
       d_freq = d_freq + d_beta * error;
       d_phase = d_phase + d_freq + d_alpha * error;
@@ -171,10 +181,7 @@ digital_costas_loop_cc::work (int noutput_items,
       optr[i] = iptr[i] * nco_out;
       
       error = (*this.*d_phase_detector)(optr[i]);
-      if (error > 1)
-	error = 1;
-      else if (error < -1)
-	error = -1;
+      error = gr_branchless_clip(error, 1.0);
       
       d_freq = d_freq + d_beta * error;
       d_phase = d_phase + d_freq + d_alpha * error;
@@ -185,9 +192,9 @@ digital_costas_loop_cc::work (int noutput_items,
 	d_phase += M_TWOPI;
       
       if (d_freq > d_max_freq)
-	d_freq = d_max_freq;
-      else if (d_freq < d_min_freq)
 	d_freq = d_min_freq;
+      else if (d_freq < d_min_freq)
+	d_freq = d_max_freq;
       
     }
   }
