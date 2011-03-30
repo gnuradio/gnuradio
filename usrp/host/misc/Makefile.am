@@ -24,10 +24,8 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST += \
 	getopt.c getopt.h \
 	gettimeofday.c \
-	tempname.c mkstemp.c \
 	usleep.c
 
 noinst_LTLIBRARIES = libmisc.la
 
 libmisc_la_SOURCES = bug_work_around_8.cc
-libmisc_la_LIBADD = @LTLIBOBJS@
