@@ -5,6 +5,11 @@ from gnuradio import qtgui
 from PyQt4 import QtGui, QtCore
 import sys, sip
 
+import os
+print os.getpid()
+raw_input()
+
+
 class dialog_box(QtGui.QWidget):
     def __init__(self, display, control):
         QtGui.QWidget.__init__(self, None)

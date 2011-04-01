@@ -74,10 +74,10 @@ SpectrumDisplayForm::~SpectrumDisplayForm()
   delete[] _realFFTDataPoints;
   delete[] _averagedValues;
 
-  delete _frequencyDisplayPlot;
-  delete _waterfallDisplayPlot;
-  delete _timeDomainDisplayPlot;
-  delete _constellationDisplayPlot;
+  //delete _frequencyDisplayPlot;
+  //delete _waterfallDisplayPlot;
+  //delete _timeDomainDisplayPlot;
+  //delete _constellationDisplayPlot;
 
   for(unsigned int count = 0; count < _historyVector->size(); count++){
     delete[] _historyVector->operator[](count);

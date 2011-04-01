@@ -1,14 +1,12 @@
 #ifndef SPECTRUM_GUI_CLASS_HPP
 #define SPECTRUM_GUI_CLASS_HPP
 
-//#include <mutexClass.hpp>
+#include <gruel/thread.h>
 #include <qwidget.h>
 #include <qapplication.h>
 #include <qlabel.h>
 #include <qslider.h>
 #include <spectrumUpdateEvents.h>
-
-//#include <Windowing.hpp>
 
 class SpectrumDisplayForm;
 #include <spectrumdisplayform.h>
@@ -39,9 +37,9 @@ public:
   void SetWindowOpenFlag(const bool);
 
   void SetFrequencyRange(const double, const double, const double);
-  double GetStartFrequency()const;
-  double GetStopFrequency()const;
-  double GetCenterFrequency()const;
+  double GetStartFrequency();
+  double GetStopFrequency();
+  double GetCenterFrequency();
 
   void UpdateWindow(const bool, const std::complex<float>*,
 		    const uint64_t, const float*,
@@ -49,20 +47,20 @@ public:
 		    const uint64_t,
 		    const timespec, const bool);
 
-  float GetPowerValue()const;
+  float GetPowerValue();
   void SetPowerValue(const float);
 
-  int GetWindowType()const;
+  int GetWindowType();
   void SetWindowType(const int);
 
-  int GetFFTSize()const;
-  int GetFFTSizeIndex()const;
+  int GetFFTSize();
+  int GetFFTSizeIndex();
   void SetFFTSize(const int);
 
-  timespec GetLastGUIUpdateTime()const;
+  timespec GetLastGUIUpdateTime();
   void SetLastGUIUpdateTime(const timespec);
 
-  unsigned int GetPendingGUIUpdateEvents()const;
+  unsigned int GetPendingGUIUpdateEvents();
   void IncrementPendingGUIUpdateEvents();
   void DecrementPendingGUIUpdateEvents();
   void ResetPendingGUIUpdateEvents();
@@ -84,7 +82,7 @@ protected:
 
 private:
 
-  //MutexClass* _windowStateLock;
+  gruel::mutex d_mutex;
   int64_t _dataPoints;
   std::string _title;
   double _centerFrequency;
