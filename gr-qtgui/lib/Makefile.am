@@ -69,7 +69,6 @@ grinclude_HEADERS =			\
 	spectrumdisplayform.h		\
 	SpectrumGUIClass.h		\
 	spectrumUpdateEvents.h		\
-	qtgui.h				\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h
 
