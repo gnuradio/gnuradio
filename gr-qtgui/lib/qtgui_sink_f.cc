@@ -72,7 +72,6 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
   }
 
   d_main_gui = NULL;
-  lock();
 
   // Perform fftshift operation;
   // this is usually desired when plotting
