@@ -35,7 +35,7 @@ libgnuradio_audio_la_SOURCES = \
 libgnuradio_audio_la_LIBADD = \
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_audio_la_LDFLAGS = $(LTVERSIONFLAGS)
+libgnuradio_audio_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 noinst_HEADERS = gr_audio_registry.h
 
@@ -129,7 +129,8 @@ libgnuradio_audio_la_SOURCES += \
 noinst_HEADERS += \
 	osx/audio_osx.h \
 	osx/audio_osx_source.h \
-	osx/audio_osx_sink.h
+	osx/audio_osx_sink.h \
+	osx/circular_buffer.h
 
 endif
 

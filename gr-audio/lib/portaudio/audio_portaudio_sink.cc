@@ -130,7 +130,7 @@ portaudio_sink_callback (const void *inputBuffer,
 audio_portaudio_sink::audio_portaudio_sink(int sampling_rate,
 					   const std::string device_name,
 					   bool ok_to_block)
-  : audio_sink ("audio_portaudio_sink",
+  : gr_sync_block ("audio_portaudio_sink",
 		   gr_make_io_signature(0, 0, 0),
 		   gr_make_io_signature(0, 0, 0)),
     d_sampling_rate(sampling_rate),

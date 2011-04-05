@@ -26,14 +26,6 @@
 #include <boost/format.hpp>
 
 /***********************************************************************
- * UHD Multi USRP Source
- **********************************************************************/
-uhd_usrp_source::uhd_usrp_source(gr_io_signature_sptr sig)
-:gr_sync_block("gr uhd usrp source", gr_make_io_signature(0, 0, 0), sig){
-    /* NOP */
-}
-
-/***********************************************************************
  * UHD Multi USRP Source Impl
  **********************************************************************/
 class uhd_usrp_source_impl : public uhd_usrp_source{
@@ -43,9 +35,11 @@ public:
         const uhd::io_type_t &io_type,
         size_t num_channels
     ):
-        uhd_usrp_source(gr_make_io_signature(
-            num_channels, num_channels, io_type.size
-        )),
+        gr_sync_block(
+            "gr uhd usrp source",
+            gr_make_io_signature(0, 0, 0),
+            gr_make_io_signature(num_channels, num_channels, io_type.size)
+        ),
         _type(io_type),
         _nchan(num_channels),
         _stream_now(_nchan == 1),
