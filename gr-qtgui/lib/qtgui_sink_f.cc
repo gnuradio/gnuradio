@@ -104,16 +104,6 @@ qtgui_sink_f::forecast(int noutput_items, gr_vector_int &ninput_items_required)
   }
 }
 
-void qtgui_sink_f::lock()
-{
-  d_mutex.lock();
-}
-
-void qtgui_sink_f::unlock()
-{
-  d_mutex.unlock();
-}
-
 void
 qtgui_sink_f::initialize(const bool opengl)
 {
@@ -143,9 +133,6 @@ qtgui_sink_f::initialize(const bool opengl)
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
-
-  d_object = new qtgui_obj(d_qApplication);
-  qApp->postEvent(d_object, new qtgui_event(d_mutex));
 }
 
 void
@@ -282,8 +269,6 @@ qtgui_sink_f::general_work (int noutput_items,
 {
   int j=0;
   const float *in = (const float*)input_items[0];
-
-  gruel::scoped_lock lock(d_mutex);
 
   // Update the FFT size from the application
   fftresize();

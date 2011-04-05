@@ -71,7 +71,6 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
     fprintf(stderr, "Warning: plotting Waterfall3D has been removed; enabling plotwaterfall3d has no effect.\n");
   }
 
-  gruel::scoped_lock lock(d_mutex);
   d_main_gui = NULL;
 
   // Perform fftshift operation;
@@ -93,7 +92,6 @@ qtgui_sink_c::~qtgui_sink_c()
   delete d_main_gui;
   delete [] d_residbuf;
   delete d_fft;
-  delete d_object;
 }
 
 void
@@ -138,9 +136,6 @@ qtgui_sink_c::initialize(const bool opengl)
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
-
-  d_object = new qtgui_obj(d_qApplication);
-  qApp->postEvent(d_object, new qtgui_event(d_mutex));
 }
 
 
@@ -277,8 +272,6 @@ qtgui_sink_c::general_work (int noutput_items,
 {
   int j=0;
   const gr_complex *in = (const gr_complex*)input_items[0];
-
-  gruel::scoped_lock lock(d_mutex);
 
   // Update the FFT size from the application
   fftresize();
