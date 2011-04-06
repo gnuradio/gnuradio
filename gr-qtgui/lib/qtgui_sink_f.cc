@@ -35,16 +35,14 @@ qtgui_make_sink_f (int fftsize, int wintype,
 		   double fc, double bw,
 		   const std::string &name,
 		   bool plotfreq, bool plotwaterfall,
-		   bool plotwaterfall3d, bool plottime,
-		   bool plotconst,
+		   bool plottime, bool plotconst,
 		   bool use_openGL,
 		   QWidget *parent)
 {
   return gnuradio::get_initial_sptr(new qtgui_sink_f (fftsize, wintype,
 					      fc, bw, name,
 					      plotfreq, plotwaterfall,
-					      plotwaterfall3d, plottime,
-					      plotconst,
+					      plottime, plotconst,
 					      use_openGL,
 					      parent));
 }
@@ -53,8 +51,7 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
 			    double fc, double bw,
 			    const std::string &name,
 			    bool plotfreq, bool plotwaterfall,
-			    bool plotwaterfall3d, bool plottime,
-			    bool plotconst,
+			    bool plottime, bool plotconst,
 			    bool use_openGL,
 			    QWidget *parent)
   : gr_block ("sink_f",
@@ -67,10 +64,6 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
     d_plottime(plottime), d_plotconst(plotconst),
     d_parent(parent)
 {
-  if(plotwaterfall3d == true) {
-    fprintf(stderr, "Warning: plotting Waterfall3D has been removed; enabling plotwaterfall3d has no effect.\n");
-  }
-
   d_main_gui = NULL;
 
   // Perform fftshift operation;

@@ -34,12 +34,12 @@ class test_qtgui(gr_unittest.TestCase):
         self.tb = None
     
     def test01 (self):
-        pass
+        #pass
         # Test to make sure we can instantiate these
-        #self.qapp = QtGui.QApplication(sys.argv)
-        #self.qtsnk = qtgui_swig.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS, 
-        #                               0, 1, "Test",
-        #                               True, True, False, True, True)
+        self.qapp = QtGui.QApplication(sys.argv)
+        self.qtsnk = qtgui_swig.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS, 
+                                       0, 1, "Test",
+                                       True, True, True, True)
         
         
 if __name__ == '__main__':

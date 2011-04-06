@@ -121,7 +121,7 @@ class my_top_block(gr.top_block):
         self.snk1 = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                  0, Rs,
                                  "Complex Signal Example",
-                                 True, True, False, True, False)
+                                 True, True, True, False)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))

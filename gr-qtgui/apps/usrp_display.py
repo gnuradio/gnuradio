@@ -229,7 +229,7 @@ class my_top_block(gr.top_block):
         self.snk = qtgui.sink_c(self._fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                 self._freq, self._bandwidth,
                                 "USRP Display",
-                                True, True, False, True, False)
+                                True, True, True, False)
 
         # Set up internal amplifier
         self.amp = gr.multiply_const_cc(0.0)

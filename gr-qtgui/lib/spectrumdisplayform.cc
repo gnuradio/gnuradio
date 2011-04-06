@@ -3,8 +3,6 @@
 #include <QMessageBox>
 #include <spectrumdisplayform.h>
 
-int SpectrumDisplayForm::_openGLWaterfall3DFlag = -1;
-
 SpectrumDisplayForm::SpectrumDisplayForm(bool useOpenGL, QWidget* parent)
   : QWidget(parent)
 {

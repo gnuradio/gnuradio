@@ -28,7 +28,6 @@
 #include <gr_firdes.h>
 #include <gri_fft.h>
 #include <qapplication.h>
-//#include <qtgui.h>
 #include "SpectrumGUIClass.h"
 
 class qtgui_sink_c;
@@ -38,8 +37,7 @@ qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
 				     double fc=0, double bandwidth=1.0,
 				     const std::string &name="Spectrum Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
-				     bool plotwaterfall3d=true, bool plottime=true,
-				     bool plotconst=true,
+				     bool plottime=true, bool plotconst=true,
 				     bool use_openGL=true,
 				     QWidget *parent=NULL);
 
@@ -50,16 +48,14 @@ private:
 					      double fc, double bw,
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,
-					      bool plotwaterfall3d, bool plottime,
-					      bool plotconst,
+					      bool plottime, bool plotconst,
 					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
 		double fc, double bw, 
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
-		bool plotwaterfall3d, bool plottime,
-		bool plotconst,
+		bool plottime, bool plotconst,
 		bool use_openGL,
 		QWidget *parent);
 

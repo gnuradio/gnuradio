@@ -38,8 +38,7 @@ qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
 				     double fc=0, double bw=1.0,
 				     const std::string &name="Spectrum Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
-				     bool plotwaterfall3d=true, bool plottime=true,
-				     bool plotconst=true,
+				     bool plottime=true, bool plotconst=true,
 				     bool use_openGL=true,
 				     QWidget *parent=NULL);
 
@@ -50,16 +49,14 @@ private:
 					      double fc, double bw,
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,
-					      bool plotwaterfall3d, bool plottime,
-					      bool plotconst,
+					      bool plottime, bool plotconst,
 					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_f (int fftsize, int wintype,
 		double fc, double bw,
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
-		bool plotwaterfall3d, bool plottime,
-		bool plotconst,
+		bool plottime, bool plotconst,
 		bool use_openGL,
 		QWidget *parent);
 

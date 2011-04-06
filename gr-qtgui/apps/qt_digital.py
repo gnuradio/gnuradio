@@ -185,11 +185,11 @@ class my_top_block(gr.top_block):
         self.thr = gr.throttle(gr.sizeof_char, self._sample_rate)
         self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 
                                    0, self._sample_rate*self.sps,
-                                   "Tx", True, True, False, True, True)
+                                   "Tx", True, True, True, True)
 
         self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                    0, self._sample_rate,
-                                   "Rx", True, True, False, True, True)
+                                   "Rx", True, True, True, True)
 
         self.connect(self.src, self.thr, self.mod, self.channel, self.snk_tx)
         self.connect(self.channel, self.rx_rrc, self.receiver, self.snk_rx)

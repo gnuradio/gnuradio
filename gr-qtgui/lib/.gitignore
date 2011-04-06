@@ -5,7 +5,6 @@
 /qtgui.cc
 /qtgui.py
 /WaterfallDisplayPlot.moc.cc
-/Waterfall3DDisplayPlot.moc.cc
 /TimeDomainDisplayPlot.moc.cc
 /spectrumdisplayform.moc.cc
 /spectrumdisplayform.ui.h

@@ -95,7 +95,6 @@ private:
   double _noiseFloorAmplitude;
   double _peakFrequency;
   double _peakAmplitude;
-  static int _openGLWaterfall3DFlag;
   double _stopFrequency;
   
   //SpectrumUpdateEvent _lastSpectrumEvent;
@@ -103,7 +102,6 @@ private:
   // whether or not to use a particular display
   int d_plot_fft;
   int d_plot_waterfall;
-  int d_plot_waterfall3d;
   int d_plot_time;
   int d_plot_constellation;
 
