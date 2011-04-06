@@ -42,10 +42,12 @@ SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
 
 SpectrumGUIClass::~SpectrumGUIClass()
 {
-  if(GetWindowOpenFlag()){
-    printf("spectrumDisplayForm: %p\n", _spectrumDisplayForm);
-    delete _spectrumDisplayForm;
-  }
+  // We don't need to delete this since as a QWidget, it is supposed to be destroyed
+  // with it's parent. Deleting it causes a segmentation fault, and not deleting it
+  // does not leave any extra memory.
+  //if(GetWindowOpenFlag()){
+    //delete _spectrumDisplayForm;
+  //}
 
   if(_fftBuffersCreatedFlag){
     delete[] _fftPoints;
@@ -78,7 +80,6 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
     
     // Called from the Event Thread
     _spectrumDisplayForm = new SpectrumDisplayForm(use_openGL, parent);
-    printf("spectrumDisplayForm: %p\n", _spectrumDisplayForm);
     
     // Toggle Windows on/off
     _spectrumDisplayForm->ToggleTabFrequency(frequency);
@@ -100,8 +101,6 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
 
   qApp->postEvent(_spectrumDisplayForm,
 		  new QEvent(QEvent::Type(QEvent::User+3)));
-
-  //qApp->processEvents();
 
   timespec_reset(&_lastGUIUpdateTime);
 
