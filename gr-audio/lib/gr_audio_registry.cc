@@ -130,24 +130,3 @@ audio_sink::sptr audio_make_sink(
     //std::cout << "Audio sink arch: " << entry.name << std::endl;
     return entry.sink(sampling_rate, device_name, ok_to_block);
 }
-
-/***********************************************************************
- * Default constructors
- **********************************************************************/
-#include <gr_io_signature.h>
-
-audio_sink::audio_sink(
-        const std::string &name,
-        gr_io_signature_sptr insig,
-        gr_io_signature_sptr outsig
-):
-    gr_sync_block(name, insig, outsig)
-{}
-
-audio_source::audio_source(
-        const std::string &name,
-        gr_io_signature_sptr insig,
-        gr_io_signature_sptr outsig
-):
-    gr_sync_block(name, insig, outsig)
-{}

@@ -25,16 +25,9 @@
 #include <gr_audio_api.h>
 #include <gr_sync_block.h>
 
-class GR_AUDIO_API audio_sink : public gr_sync_block{
+class GR_AUDIO_API audio_sink : virtual public gr_sync_block{
 public:
     typedef boost::shared_ptr<audio_sink> sptr;
-
-    audio_sink(
-        const std::string &name,
-        gr_io_signature_sptr insig,
-        gr_io_signature_sptr outsig
-    );
-
 };
 
 GR_AUDIO_API audio_sink::sptr audio_make_sink(
