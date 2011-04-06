@@ -367,8 +367,6 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
 
     SetUpperIntensityLevel(_peakAmplitude);
 
-    replot();
-    
     _lastReplot = get_highres_clock();
   }
 }

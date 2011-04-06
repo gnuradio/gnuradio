@@ -59,6 +59,9 @@ SpectrumDisplayForm::SpectrumDisplayForm(bool useOpenGL, QWidget* parent)
   ToggleTabTime(false);
   ToggleTabConstellation(false);
 
+  _historyEntry = 0;
+  _historyEntryCount = 0;
+
   // Create a timer to update plots at the specified rate
   displayTimer = new QTimer(this);
   connect(displayTimer, SIGNAL(timeout()), this, SLOT(UpdateGuiTimer()));
@@ -73,11 +76,6 @@ SpectrumDisplayForm::~SpectrumDisplayForm()
 
   delete[] _realFFTDataPoints;
   delete[] _averagedValues;
-
-  //delete _frequencyDisplayPlot;
-  //delete _waterfallDisplayPlot;
-  //delete _timeDomainDisplayPlot;
-  //delete _constellationDisplayPlot;
 
   for(unsigned int count = 0; count < _historyVector->size(); count++){
     delete[] _historyVector->operator[](count);

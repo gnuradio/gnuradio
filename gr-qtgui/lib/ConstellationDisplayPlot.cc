@@ -74,8 +74,6 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   memset(_realDataPoints, 0x0, _numPoints*sizeof(double));
   memset(_imagDataPoints, 0x0, _numPoints*sizeof(double));
 
-  replot();
-
   _zoomer = new ConstellationDisplayZoomer(canvas());
 #if QT_VERSION < 0x040000
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
@@ -178,8 +176,6 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
     memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
     memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
 
-    replot();
-    
     _lastReplot = get_highres_clock();
   }
 }

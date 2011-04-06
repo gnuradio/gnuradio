@@ -121,8 +121,6 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
   _sampleRate = 1;
   _resetXAxisPoints();
 
-  replot();
-
 #if QT_VERSION < 0x040000
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
 			  Qt::RightButton, Qt::ControlModifier);
@@ -219,8 +217,6 @@ void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints,
 
     memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
     memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
-
-    replot();
 
     _lastReplot = get_highres_clock();
   }
