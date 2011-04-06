@@ -705,42 +705,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>Waterfall3DAutoScaleBtn</sender>
-   <signal>clicked()</signal>
-   <receiver>SpectrumDisplayForm</receiver>
-   <slot>Waterfall3DAutoScaleBtnCB()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>22</x>
-     <y>349</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>WaterfallIntensityComboBox</sender>
    <signal>activated(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
    <slot>WaterfallIntensityColorTypeChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>92</x>
-     <y>44</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Waterfall3DIntensityComboBox</sender>
-   <signal>activated(int)</signal>
-   <receiver>SpectrumDisplayForm</receiver>
-   <slot>Waterfall3DIntensityColorTypeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>92</x>
