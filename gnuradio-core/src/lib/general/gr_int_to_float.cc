@@ -42,15 +42,15 @@ gr_int_to_float::gr_int_to_float ()
 
 int
 gr_int_to_float::work (int noutput_items,
-			 gr_vector_const_void_star &input_items,
-			 gr_vector_void_star &output_items)
+		       gr_vector_const_void_star &input_items,
+		       gr_vector_void_star &output_items)
 {
   const int32_t *in = (const int32_t *) input_items[0];
   float *out = (float *) output_items[0];
 
-  for(int i=0; i<noutput_items; i++){
-    out[i] = (float) in[i];
-    }
+  for(int i=0; i < noutput_items; i++) {
+    out[i] = (float)in[i];
+  }
   
   return noutput_items;
 }
