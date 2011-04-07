@@ -420,6 +420,7 @@ swiginclude_HEADERS =			\
 	gr_glfsr_source_b.i		\
 	gr_glfsr_source_f.i		\
 	gr_head.i			\
+	gr_int_to_float.i		\
 	gr_interleave.i 		\
 	gr_interleaved_short_to_complex.i \
 	gr_iqcomp_cc.i			\
