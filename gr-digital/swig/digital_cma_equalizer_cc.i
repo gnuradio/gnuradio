@@ -37,4 +37,6 @@ private:
   digital_cma_equalizer_cc(int num_taps, float modulus, float mu);
 
 public:
+  void set_gain(float mu);
+  void set_modulus(float mod);
 };

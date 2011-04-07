@@ -9,6 +9,8 @@
 	<key>digital_cma_equalizer_cc</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.cma_equalizer_cc($num_taps, $modulus, $mu)</make>
+	<callback>set_gain($mu)</callback>
+	<callback>set_modulus($modulus)</callback>
 	<param>
 		<name>Num. Taps</name>
 		<key>num_taps</key>

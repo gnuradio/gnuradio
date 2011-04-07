@@ -24,6 +24,7 @@
 #define	INCLUDED_DIGITAL_CMA_EQUALIZER_CC_H
 
 #include <gr_adaptive_fir_ccc.h>
+#include <gr_math.h>
 #include <iostream>
 
 class digital_cma_equalizer_cc;
@@ -58,7 +59,9 @@ protected:
   virtual gr_complex error(const gr_complex &out) 
   { 
     gr_complex error = out*(norm(out) - d_modulus);
-    return error;
+    float re = gr_clip(error.real(), 1.0);
+    float im = gr_clip(error.imag(), 1.0);
+    return gr_complex(re, im);
   }
 
   virtual void update_tap(gr_complex &tap, const gr_complex &in) 
