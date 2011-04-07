@@ -49,9 +49,9 @@ digital_costas_loop_cc::digital_costas_loop_cc (float damping, float nat_freq,
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature2 (1, 2, sizeof (gr_complex), sizeof(float))),
     
-    d_max_freq(1.0), d_min_freq(-1.0), d_freq(0.0),
-    d_damping(damping), d_nat_freq(nat_freq),
-    d_phase(0), d_order(order), d_phase_detector(NULL)
+    d_max_freq(1.0), d_min_freq(-1.0), d_phase(0), d_freq(0.0),
+    d_nat_freq(nat_freq), d_damping(damping),
+    d_order(order), d_phase_detector(NULL)
 {
   // initialize gains from the natural freq and damping factors
   update_gains();
