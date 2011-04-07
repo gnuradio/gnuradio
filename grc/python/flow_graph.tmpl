@@ -243,9 +243,9 @@ if __name__ == '__main__':
 	tb.show()
 	qapp.exec_()
 	#elif $generate_options == 'no_gui'
+	tb = $(class_name)($(', '.join($params_eq_list)))
 		#set $run_options = $flow_graph.get_option('run_options')
 		#if $run_options == 'prompt'
-	tb = $(class_name)($(', '.join($params_eq_list)))
 	tb.start()
 	raw_input('Press Enter to quit: ')
 	tb.stop()
