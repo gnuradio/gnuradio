@@ -9,5 +9,6 @@
 	<cat>
 		<name>Digital</name>
 		<block>digital_costas_loop_cc</block>
+		<block>digital_cma_equalizer_cc</block>
 	</cat>
 </cat>
