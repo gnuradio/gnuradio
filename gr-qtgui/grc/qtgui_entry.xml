@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Text Entry:
+##	a gui text box form
+###################################################
+ -->
+<block>
+	<name>QT GUI Entry</name>
+	<key>variable_qtgui_entry</key>
+	<category>QT GUI Widgets</category>
+	<import>from PyQt4 import Qt</import>
+	<import>from gnuradio import eng_notation</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>#set $win = 'self._%s_tool_bar'%$id
+$win = Qt.QToolBar(self)
+#if not $label()
+	#set $label = '"%s"'%$id
+#end if
+$(win).addWidget(Qt.QLabel($label+": "))
+self._$(id)_line_edit = Qt.QLineEdit(str(self.$id))
+self._$(id)_tool_bar.addWidget(self._$(id)_line_edit)
+self._$(id)_line_edit.returnPressed.connect(
+	lambda: self.set_$(id)($(type.conv)(self._$(id)_line_edit.text().toAscii())))
+$(gui_hint()($win))</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>self._$(id)_line_edit.setText($(type.str)($id))</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>int</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option><name>Float</name><key>real</key><opt>conv:eng_notation.str_to_num</opt><opt>str:eng_notation.num_to_str</opt></option>
+		<option><name>Integer</name><key>int</key><opt>conv:int</opt><opt>str:str</opt></option>
+		<option><name>String</name><key>string</key><opt>conv:str</opt><opt>str:str</opt></option>
+		<option><name>Boolean</name><key>bool</key><opt>conv:bool</opt><opt>str:str</opt></option>
+		<option><name>Any</name><key>raw</key><opt>conv:eval</opt><opt>str:repr</opt></option>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>0</value>
+		<type>$type</type>
+	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<doc>
+This block creates a variable with a text entry box. \
+Leave the label blank to use the variable id as the label.
+
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>

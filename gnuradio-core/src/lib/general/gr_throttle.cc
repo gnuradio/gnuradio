@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2010 Free Software Foundation, Inc.
+ * Copyright 2005-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,92 +26,64 @@
 
 #include <gr_throttle.h>
 #include <gr_io_signature.h>
-#include <errno.h>
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
-#ifdef HAVE_TIME_H
-#include <time.h>
-#endif
-#if !defined(HAVE_NANOSLEEP) && defined(HAVE_SSLEEP)
-#include <windows.h>
-#endif
+#include <cstring>
+#include <boost/thread/thread.hpp>
 
+class gr_throttle_impl : public gr_throttle{
+public:
+    gr_throttle_impl(size_t itemsize):
+        gr_sync_block("throttle",
+            gr_make_io_signature(1, 1, itemsize),
+            gr_make_io_signature(1, 1, itemsize)),
+        d_itemsize(itemsize)
+    {
+        /* NOP */
+    }
 
-#ifdef HAVE_NANOSLEEP
-void
-gr_nanosleep(struct timespec *ts)
-{
-  struct timespec	*req = ts;
-  struct timespec	rem;
-  int r = nanosleep(req, &rem);
-  while (r < 0 && errno == EINTR){
-    req = &rem;
-    r = nanosleep(req, &rem);
-  }
-  if (r < 0)
-    perror ("gr_nanosleep");
-}
-#endif
+    void set_sample_rate(double rate){
+        //changing the sample rate performs a reset of state params
+        d_start = boost::get_system_time();
+        d_total_samples = 0;
+        d_samps_per_tick = rate/boost::posix_time::time_duration::ticks_per_second();
+        d_samps_per_us = rate/1e6;
+    }
 
-gr_throttle_sptr
+    int work (
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        //calculate the expected number of samples to have passed through
+        boost::system_time now = boost::get_system_time();
+        boost::int64_t ticks = (now - d_start).ticks();
+        uint64_t expected_samps = uint64_t(d_samps_per_tick*ticks);
+
+        //if the expected samples was less, we need to throttle back
+        if (d_total_samples > expected_samps){
+            boost::this_thread::sleep(boost::posix_time::microseconds(
+                long((d_total_samples - expected_samps)/d_samps_per_us)
+            ));
+        }
+
+        //copy all samples output[i] <= input[i]
+        const char *in = (const char *) input_items[0];
+        char *out = (char *) output_items[0];
+        std::memcpy(out, in, noutput_items * d_itemsize);
+        d_total_samples += noutput_items;
+        return noutput_items;
+    }
+
+private:
+    boost::system_time d_start;
+    size_t d_itemsize;
+    uint64_t d_total_samples;
+    double d_samps_per_tick, d_samps_per_us;
+};
+
+gr_throttle::sptr
 gr_make_throttle(size_t itemsize, double samples_per_sec)
 {
-  return gnuradio::get_initial_sptr(new gr_throttle(itemsize, samples_per_sec));
-}
-
-gr_throttle::gr_throttle(size_t itemsize, double samples_per_sec)
-  : gr_sync_block("throttle",
-		  gr_make_io_signature(1, 1, itemsize),
-		  gr_make_io_signature(1, 1, itemsize)),
-    d_itemsize(itemsize), d_samples_per_sec(samples_per_sec),
-    d_total_samples(0)
-{
-#ifdef HAVE_GETTIMEOFDAY
-  gettimeofday(&d_start, 0);
-#endif  
-}
-
-gr_throttle::~gr_throttle()
-{
-}
-
-int
-gr_throttle::work (int noutput_items,
-		   gr_vector_const_void_star &input_items,
-		   gr_vector_void_star &output_items)
-{
-  const char *in = (const char *) input_items[0];
-  char *out = (char *) output_items[0];
-
-#if defined(HAVE_GETTIMEOFDAY)
-  //
-  // If our average sample rate exceeds our target sample rate,
-  // delay long enough to reduce to our target rate.
-  //
-  struct timeval now;
-  gettimeofday(&now, 0);
-  long t_usec = now.tv_usec - d_start.tv_usec;
-  long t_sec  = now.tv_sec - d_start.tv_sec;
-  double t = (double)t_sec + (double)t_usec * 1e-6;
-  if (t < 1e-6)		// avoid unlikely divide by zero
-    t = 1e-6;
-
-  double actual_samples_per_sec = d_total_samples / t;
-  if (actual_samples_per_sec > d_samples_per_sec){	// need to delay
-    double delay = d_total_samples / d_samples_per_sec - t;
-#ifdef HAVE_NANOSLEEP
-    struct timespec ts;
-    ts.tv_sec = (time_t)floor(delay);
-    ts.tv_nsec = (long)((delay - floor(delay)) * 1e9);
-    gr_nanosleep(&ts);
-#elif HAVE_SSLEEP
-    Sleep( (DWORD)(delay*1000) );
-#endif
-  }
-#endif  
-
-  memcpy(out, in, noutput_items * d_itemsize);
-  d_total_samples += noutput_items;
-  return noutput_items;
+    gr_throttle::sptr throttle(new gr_throttle_impl(itemsize));
+    throttle->set_sample_rate(samples_per_sec);
+    return throttle;
 }

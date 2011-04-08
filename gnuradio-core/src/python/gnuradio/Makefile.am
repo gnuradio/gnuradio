@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2004-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,7 +26,6 @@ SUBDIRS = gr gru gruimpl blks2 blks2impl vocoder utils
 
 grpython_PYTHON = 			\
 	__init__.py			\
-	audio.py			\
 	eng_notation.py			\
 	eng_option.py			\
 	modulation_utils.py		\

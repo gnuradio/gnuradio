@@ -23,6 +23,7 @@
 %include "gnuradio.i"	// the common stuff
 
 %{
+#include "config.h"    // for NOMINMAX
 #include <vector>
 %}
 

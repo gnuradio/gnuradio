@@ -45,6 +45,7 @@
 
 #include <stdarg.h>
 #include <string>
+#include <cstdio>  // for FILE
 
 /*!
  * \brief abstract error handler

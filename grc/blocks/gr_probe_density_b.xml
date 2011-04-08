@@ -7,13 +7,9 @@
 <block>
 	<name>Probe Density</name>
 	<key>gr_probe_density_b</key>
-	<import>from grc_gnuradio import blks2 as grc_blks2</import>
-	<make>grc_blks2.probe_density_b(
-	alpha=$alpha,
-	probe_rate=$probe_rate,
-)</make>
+	<import>from gnuradio import gr</import>
+	<make>gr.probe_density_b($alpha)</make>
 	<callback>set_alpha($alpha)</callback>
-	<callback>set_probe_rate($probe_rate)</callback>
 	<param>
 		<name>Alpha</name>
 		<key>alpha</key>
@@ -30,8 +26,9 @@
 		<name>in</name>
 		<type>byte</type>
 	</sink>
-	<source>
-		<name>out</name>
-		<type>float</type>
-	</source>
+	<doc>
+Available functions to probe: density()
+
+Use with the function probe block.
+	</doc>
 </block>

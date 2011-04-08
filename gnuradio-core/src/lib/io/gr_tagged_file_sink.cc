@@ -26,7 +26,6 @@
 
 #include <gr_tagged_file_sink.h>
 #include <gr_io_signature.h>
-#include <cstdio>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>

@@ -24,14 +24,6 @@
 #include <stdexcept>
 
 /***********************************************************************
- * UHD Multi USRP Sink
- **********************************************************************/
-uhd_usrp_sink::uhd_usrp_sink(gr_io_signature_sptr sig)
-:gr_sync_block("gr uhd usrp sink", sig, gr_make_io_signature(0, 0, 0)){
-    /* NOP */
-}
-
-/***********************************************************************
  * UHD Multi USRP Sink Impl
  **********************************************************************/
 class uhd_usrp_sink_impl : public uhd_usrp_sink{
@@ -41,11 +33,14 @@ public:
         const uhd::io_type_t &io_type,
         size_t num_channels
     ):
-        uhd_usrp_sink(gr_make_io_signature(
-            num_channels, num_channels, io_type.size
-        )),
+        gr_sync_block(
+            "gr uhd usrp sink",
+            gr_make_io_signature(num_channels, num_channels, io_type.size),
+            gr_make_io_signature(0, 0, 0)
+        ),
         _type(io_type),
-        _nchan(num_channels)
+        _nchan(num_channels),
+        _has_time_spec(_nchan > 1)
     {
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
@@ -172,7 +167,7 @@ public:
         //send a mid-burst packet with time spec
         _metadata.start_of_burst = false;
         _metadata.end_of_burst = false;
-        _metadata.has_time_spec = true;
+        _metadata.has_time_spec = _has_time_spec;
 
         size_t num_sent = _dev->get_device()->send(
             input_items, noutput_items, _metadata,
@@ -189,7 +184,7 @@ public:
     bool start(void){
         _metadata.start_of_burst = true;
         _metadata.end_of_burst = false;
-        _metadata.has_time_spec = true;
+        _metadata.has_time_spec = _has_time_spec;
         _metadata.time_spec = get_time_now() + uhd::time_spec_t(0.01);
 
         _dev->get_device()->send(
@@ -217,6 +212,7 @@ protected:
     uhd::usrp::multi_usrp::sptr _dev;
     const uhd::io_type_t _type;
     size_t _nchan;
+    bool _has_time_spec;
     uhd::tx_metadata_t _metadata;
     double _sample_rate;
 };

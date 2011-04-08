@@ -1,13 +1,14 @@
 #include "qa_utils.h"
-#include <stdlib.h>
+#include <cstring>
 #include <boost/foreach.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/tokenizer.hpp>
 //#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <math.h>
+#include <list>
+#include <ctime>
+#include <cmath>
 #include <boost/lexical_cast.hpp>
 //#include <volk/volk_runtime.h>
 #include <volk/volk_registry.h>
@@ -58,22 +59,6 @@ void load_random_data(void *data, volk_type_t type, unsigned int n) {
                 throw "load_random_data: no support for data size > 8 or < 1"; //no shenanigans here
             }
         }
-    }
-}
-
-void *make_aligned_buffer(unsigned int len, unsigned int size) {
-  void *buf;
-  int ret;
-  ret = posix_memalign((void**)&buf, 16, len * size);
-  assert(ret == 0);
-  memset(buf, 0x00, len*size);
-  return buf;
-}
-
-void make_buffer_for_signature(std::vector<void *> &buffs, std::vector<volk_type_t> inputsig, unsigned int vlen) {
-    BOOST_FOREACH(volk_type_t sig, inputsig) {
-        if(!sig.is_scalar) //we don't make buffers for scalars
-          buffs.push_back(make_aligned_buffer(vlen, sig.size*(sig.is_complex ? 2 : 1)));
     }
 }
 
@@ -282,6 +267,16 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
     return fail;
 }
 
+class volk_qa_aligned_mem_pool{
+public:
+    void *get_new(size_t size, size_t alignment = 16){
+        _mems.push_back(std::vector<char>(size + alignment-1, 0));
+        size_t ptr = size_t(&_mems.back().front());
+        return (void *)((ptr + alignment-1) & ~(alignment-1));
+    }
+private: std::list<std::vector<char> > _mems;
+};
+
 bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
     
@@ -292,7 +287,10 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
         std::cout << "no architectures to test" << std::endl;
         return false;
     }
-    
+
+    //something that can hang onto memory and cleanup when this function exits
+    volk_qa_aligned_mem_pool mem_pool;
+
     //now we have to get a function signature by parsing the name
     std::vector<volk_type_t> inputsig, outputsig;
     get_signatures_from_name(inputsig, outputsig, name);
@@ -309,12 +307,12 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
     //for(int i=0; i<inputsig.size(); i++) std::cout << "Input: " << inputsig[i].str << std::endl;
     //for(int i=0; i<outputsig.size(); i++) std::cout << "Output: " << outputsig[i].str << std::endl;
     std::vector<void *> inbuffs;
-    std::vector<void *> free_buffs; //this is just a list of void*'s that i'll have to free later.
-                                    //we need it because we dupe void*s in test_data below.
-    make_buffer_for_signature(inbuffs, inputsig, vlen);
+    BOOST_FOREACH(volk_type_t sig, inputsig) {
+        if(!sig.is_scalar) //we don't make buffers for scalars
+          inbuffs.push_back(mem_pool.get_new(vlen*sig.size*(sig.is_complex ? 2 : 1)));
+    }
     for(int i=0; i<inbuffs.size(); i++) {
-        load_random_data(inbuffs[i], inputsig[i], vlen);   
-        free_buffs.push_back(inbuffs[i]);
+        load_random_data(inbuffs[i], inputsig[i], vlen);
     }
     
     //ok let's make a vector of vector of void buffers, which holds the input/output vectors for each arch
@@ -322,8 +320,7 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
     for(int i=0; i<arch_list.size(); i++) {
         std::vector<void *> arch_buffs;
         for(int j=0; j<outputsig.size(); j++) {
-            arch_buffs.push_back(make_aligned_buffer(vlen, outputsig[j].size*(outputsig[j].is_complex ? 2 : 1)));
-            free_buffs.push_back(arch_buffs.back());
+            arch_buffs.push_back(mem_pool.get_new(vlen*outputsig[j].size*(outputsig[j].is_complex ? 2 : 1)));
         }
         for(int j=0; j<inputsig.size(); j++) {
             arch_buffs.push_back(inbuffs[j]);
@@ -435,10 +432,6 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
                 //fail = memcmp(outbuffs[generic_offset], outbuffs[i], outputsig[0].size * vlen * (outputsig[0].is_complex ? 2:1));
             }
         }
-    }
-
-    BOOST_FOREACH(void *buf, free_buffs) {
-        free(buf);
     }
 
     return fail_global;

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os
+import sys, os, re, csv
 from optparse import OptionParser
 from gnuradio import gr, blks2, eng_notation
 
@@ -24,7 +24,7 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-    from pyqt_filter import Ui_MainWindow
+    from gnuradio.pyqt_filter import Ui_MainWindow
 except ImportError:
     print "Could not import from pyqt_filter. Please build with \"pyuic4 pyqt_filter.ui -o pyqt_filter.py\""
     raise SystemExit, 1
@@ -35,6 +35,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         QtGui.QWidget.__init__(self, None)
         self.gui = Ui_MainWindow()
         self.gui.setupUi(self)
+
+        self.connect(self.gui.action_save,
+                     Qt.SIGNAL("activated()"),
+                     self.action_save_dialog)
+        self.connect(self.gui.action_open,
+                     Qt.SIGNAL("activated()"),
+                     self.action_open_dialog)
+
 
         self.connect(self.gui.filterTypeComboBox,
                      Qt.SIGNAL("currentIndexChanged(const QString&)"),
@@ -182,7 +190,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                               "Rectangular Window" : gr.firdes.WIN_RECTANGULAR,
                               "Kaiser Window" : gr.firdes.WIN_KAISER,
                               "Blackman-harris Window" : gr.firdes.WIN_BLACKMAN_hARRIS}
-
+        self.EQUIRIPPLE_FILT = 6 # const for equiripple filter window types
         self.show()
 
     def changed_filter_type(self, ftype):
@@ -295,7 +303,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                             "Complex Band Pass" : self.design_opt_cbpf,
                             "Band Notch" : self.design_opt_bnf,
                             "High Pass" :  self.design_opt_hpf}
-                taps,r = designer[ftype](fs, gain)
+                taps,params,r = designer[ftype](fs, gain)
 
             else:
                 designer = {"Low Pass" : self.design_win_lpf,
@@ -306,17 +314,10 @@ class gr_plot_filter(QtGui.QMainWindow):
                             "Root Raised Cosine" :  self.design_win_rrc,
                             "Gaussian" :  self.design_win_gaus}
                 wintype = self.filterWindows[winstr]
-                taps,r = designer[ftype](fs, gain, wintype)
+                taps,params,r = designer[ftype](fs, gain, wintype)
 
             if(r):
-                self.taps = scipy.array(taps)
-                self.get_fft(fs, self.taps, self.nfftpts)
-                self.update_time_curves()
-                self.update_freq_curves()
-                self.update_phase_curves()
-                self.update_group_curves()
-
-                self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+                self.draw_plots(taps, params)
 
 
     # Filter design functions using a window
@@ -334,9 +335,12 @@ class gr_plot_filter(QtGui.QMainWindow):
             
             taps = gr.firdes.low_pass_2(gain, fs, pb, tb,
                                         atten, wintype)
-            return (taps, ret)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "lpf", "pbend": pb, "sbstart": sb,
+                      "atten": atten, "ntaps": len(taps)}
+            return (taps, params, ret)
         else:
-            return ([], ret)
+            return ([], [], ret)
     
     def design_win_bpf(self, fs, gain, wintype):
         ret = True
@@ -352,9 +356,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.band_pass_2(gain, fs, pb1, pb2, tb,
                                          atten, wintype)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "bpf", "pbstart": pb1, "pbend": pb2,
+                      "tb": tb, "atten": atten, "ntaps": len(taps)}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_cbpf(self, fs, gain, wintype):
         ret = True
@@ -370,9 +377,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.complex_band_pass_2(gain, fs, pb1, pb2, tb,
                                                  atten, wintype)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "cbpf", "pbstart": pb1, "pbend": pb2,
+                      "tb": tb, "atten": atten, "ntaps": len(taps)}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_bnf(self, fs, gain, wintype):
         ret = True
@@ -388,9 +398,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.band_reject_2(gain, fs, pb1, pb2, tb,
                                            atten, wintype)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "bnf", "sbstart": pb1, "sbend": pb2,
+                      "tb": tb, "atten": atten, "ntaps": len(taps)}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_hpf(self, fs, gain, wintype):
         ret = True
@@ -405,9 +418,12 @@ class gr_plot_filter(QtGui.QMainWindow):
             tb = pb - sb
             taps = gr.firdes.high_pass_2(gain, fs, pb, tb,
                                          atten, wintype)            
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "hpf", "sbend": sb, "pbstart": pb,
+                      "atten": atten, "ntaps": len(taps)}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_rrc(self, fs, gain, wintype):
         ret = True
@@ -421,9 +437,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.root_raised_cosine(gain, fs, sr,
                                                 alpha, ntaps)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "rrc", "srate": sr, "alpha": alpha,
+                      "ntaps": ntaps}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_win_gaus(self, fs, gain, wintype):
         ret = True
@@ -437,9 +456,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             spb = fs / sr
             taps = gr.firdes.gaussian(gain, spb, bt, ntaps)
-            return (taps,r)
+            params = {"fs": fs, "gain": gain, "wintype": wintype,
+                      "filttype": "gaus", "srate": sr, "bt": bt,
+                      "ntaps": ntaps}
+            return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     # Design Functions for Equiripple Filters
     def design_opt_lpf(self, fs, gain):
@@ -454,11 +476,20 @@ class gr_plot_filter(QtGui.QMainWindow):
         ret = r and ret
 
         if(ret):
-            taps = blks2.optfir.low_pass(gain, fs, pb, sb,
-                                         ripple, atten)
-            return (taps, ret)
+            try:
+                taps = blks2.optfir.low_pass(gain, fs, pb, sb,
+                                             ripple, atten)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "lpf", "pbend": pb, "sbstart": sb,
+                          "atten": atten, "ripple": ripple, "ntaps": len(taps)}
+                return (taps, params, ret)
         else:
-            return ([], ret)
+            return ([], [], ret)
     
     def design_opt_bpf(self, fs, gain):
         ret = True
@@ -476,11 +507,22 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             sb1 = pb1 - tb
             sb2 = pb2 + tb
-            taps = blks2.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
-                                          ripple, atten)
-            return (taps,r)
+            try:
+                taps = blks2.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
+                                              ripple, atten)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "bpf", "pbstart": pb1, "pbend": pb2,
+                          "tb": tb, "atten": atten, "ripple": ripple,
+                          "ntaps": len(taps)}
+                return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_opt_cbpf(self, fs, gain):
         ret = True
@@ -498,11 +540,21 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             sb1 = pb1 - tb
             sb2 = pb2 + tb
-            taps = blks2.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
-                                                  ripple, atten)
-            return (taps,r)
+            try:
+                taps = blks2.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
+                                                      ripple, atten)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "cbpf", "pbstart": pb1, "pbend": pb2,
+                          "tb": tb, "atten": atten, "ripple": ripple,
+                          "ntaps": len(taps)}
+                return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_opt_bnf(self, fs, gain):
         ret = True
@@ -520,11 +572,21 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             pb1 = sb1 - tb
             pb2 = sb2 + tb
-            taps = blks2.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
-                                            ripple, atten)
-            return (taps,r)
+            try:
+                taps = blks2.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
+                                                ripple, atten)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "bnf", "sbstart": pb1, "sbend": pb2,
+                          "tb": tb, "atten": atten, "ripple": ripple,
+                          "ntaps": len(taps)}
+                return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def design_opt_hpf(self, fs, gain):
         ret = True
@@ -538,11 +600,21 @@ class gr_plot_filter(QtGui.QMainWindow):
         ret = r and ret
 
         if(r):
-            taps = blks2.optfir.high_pass(gain, fs, sb, pb,
-                                          atten, ripple)
-            return (taps,r)
+            try:
+                taps = blks2.optfir.high_pass(gain, fs, sb, pb,
+                                              atten, ripple)
+            except RuntimeError, e:
+                reply = QtGui.QMessageBox.information(self, "Filter did not converge",
+                                                      e.args[0], "&Ok")
+                return ([],[],False)
+            else:
+                params = {"fs": fs, "gain": gain, "wintype": self.EQUIRIPPLE_FILT,
+                          "filttype": "hpf", "sbend": sb, "pbstart": pb,
+                          "atten": atten, "ripple": ripple,
+                          "ntaps": len(taps)}
+                return (taps,params,r)
         else:
-            return ([],r)
+            return ([],[],r)
 
     def nfft_edit_changed(self, nfft):
         infft,r = nfft.toInt()
@@ -651,6 +723,135 @@ class gr_plot_filter(QtGui.QMainWindow):
             
             self.gui.groupPlot.replot()
 
+    def action_save_dialog(self):
+        filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
+        try:
+            handle = open(filename, "wb")
+        except IOError:
+            reply = QtGui.QMessageBox.information(self, 'File Name',
+                                                  ("Could not save to file: %s" % filename),
+                                                  "&Ok")
+            return
+            
+        csvhandle = csv.writer(handle, delimiter=",")
+        for k in self.params.keys():
+            csvhandle.writerow([k, self.params[k]])
+        csvhandle.writerow(["taps",] + self.taps.tolist())
+        handle.close()
+
+    def action_open_dialog(self):
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
+        if(len(filename) == 0):
+            return
+        
+        try:
+            handle = open(filename, "rb")
+        except IOError:
+            reply = QtGui.QMessageBox.information(self, 'File Name',
+                                                  ("Could not open file: %s" % filename),
+                                                  "&Ok")
+            return
+
+        csvhandle = csv.reader(handle, delimiter=",")
+        taps = []
+        params = {}
+        for row in csvhandle:
+            if(row[0] != "taps"):
+                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                if(len(testcpx) > 0): # it's a complex
+                    params[row[0]] = complex(row[1])
+                else: # assume it's a float
+                    try: # if it's not a float, its a string
+                        params[row[0]] = float(row[1])
+                    except ValueError:
+                        params[row[0]] = row[1]
+            else:
+                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                if(len(testcpx) > 0): # it's a complex
+                    taps = [complex(r) for r in row[1:]]
+                else:
+                    taps = [float(r) for r in row[1:]]
+        handle.close()
+        self.draw_plots(taps, params)
+
+        self.gui.sampleRateEdit.setText(Qt.QString("%1").arg(params["fs"]))
+        self.gui.filterGainEdit.setText(Qt.QString("%1").arg(params["gain"]))
+
+        # Set up GUI parameters for each filter type
+        if(params["filttype"] == "lpf"):
+            self.gui.filterTypeComboBox.setCurrentIndex(0)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.endofLpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+            self.gui.startofLpfStopBandEdit.setText(Qt.QString("%1").arg(params["sbstart"]))
+            self.gui.lpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+            if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                self.gui.lpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+        elif(params["filttype"] == "bpf"):
+            self.gui.filterTypeComboBox.setCurrentIndex(1)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.startofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+            self.gui.endofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+            self.gui.bpfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+            self.gui.bpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+            if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                self.gui.bpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+        elif(params["filttype"] == "cbpf"):
+            self.gui.filterTypeComboBox.setCurrentIndex(2)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.startofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+            self.gui.endofBpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbend"]))
+            self.gui.bpfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+            self.gui.bpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+            if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                self.gui.bpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+        elif(params["filttype"] == "bnf"):
+            self.gui.filterTypeComboBox.setCurrentIndex(3)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.startofBnfStopBandEdit.setText(Qt.QString("%1").arg(params["sbstart"]))
+            self.gui.endofBnfStopBandEdit.setText(Qt.QString("%1").arg(params["sbend"]))
+            self.gui.bnfTransitionEdit.setText(Qt.QString("%1").arg(params["tb"]))
+            self.gui.bnfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+            if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                self.gui.bnfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+        elif(params["filttype"] == "hpf"):
+            self.gui.filterTypeComboBox.setCurrentIndex(4)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.endofHpfStopBandEdit.setText(Qt.QString("%1").arg(params["sbend"]))
+            self.gui.startofHpfPassBandEdit.setText(Qt.QString("%1").arg(params["pbstart"]))
+            self.gui.hpfStopBandAttenEdit.setText(Qt.QString("%1").arg(params["atten"]))
+            if(params["wintype"] == self.EQUIRIPPLE_FILT):
+                self.gui.hpfPassBandRippleEdit.setText(Qt.QString("%1").arg(params["ripple"]))
+        elif(params["filttype"] == "rrc"):
+            self.gui.filterTypeComboBox.setCurrentIndex(5)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.rrcSymbolRateEdit.setText(Qt.QString("%1").arg(params["srate"]))
+            self.gui.rrcAlphaEdit.setText(Qt.QString("%1").arg(params["alpha"]))
+            self.gui.rrcNumTapsEdit.setText(Qt.QString("%1").arg(params["ntaps"]))
+        elif(params["filttype"] == "gaus"):
+            self.gui.filterTypeComboBox.setCurrentIndex(6)
+            self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+
+            self.gui.gausSymbolRateEdit.setText(Qt.QString("%1").arg(params["srate"]))
+            self.gui.gausBTEdit.setText(Qt.QString("%1").arg(params["bt"]))
+            self.gui.gausNumTapsEdit.setText(Qt.QString("%1").arg(params["ntaps"]))
+
+    def draw_plots(self, taps, params):
+        self.params = params
+        self.taps = scipy.array(taps)
+        self.get_fft(self.params["fs"], self.taps, self.nfftpts)
+        self.update_time_curves()
+        self.update_freq_curves()
+        self.update_phase_curves()
+        self.update_group_curves()
+        
+        self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+        
 
 def setup_options():
     usage="%prog: [options] (input_filename)"

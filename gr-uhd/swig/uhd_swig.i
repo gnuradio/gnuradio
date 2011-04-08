@@ -66,6 +66,7 @@
 
 %include <uhd/utils/pimpl.hpp>
 
+%ignore uhd::dict::operator[]; //ignore warnings about %extend
 %include <uhd/types/dict.hpp>
 %template(string_string_dict_t) uhd::dict<std::string, std::string>; //define after dict
 
@@ -88,6 +89,7 @@
 
 %include <uhd/types/metadata.hpp>
 
+%ignore uhd::device::register_device; //causes compile to choke in MSVC
 %include <uhd/device.hpp>
 %template(device_addr_vector_t) std::vector<uhd::device_addr_t>;
 

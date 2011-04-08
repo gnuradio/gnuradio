@@ -98,12 +98,13 @@ dnl  AM_CONDITIONAL([USE_PYTHON], [test "$with_python" = yes])
 
   dnl Check for Mingw support
   GR_PWIN32
-  GR_LIBGNURADIO_CORE_EXTRA_LDFLAGS
+  dnl GR_LIBGNURADIO_CORE_EXTRA_LDFLAGS
   
   dnl Check for liborc
   ORC_CHECK
   
-  LDFLAGS="$LDFLAGS $LIBGNURADIO_CORE_EXTRA_LDFLAGS"
+  dnl Following causes test for -lboost_unit_test_framework to fail on Cygwin
+  dnl LDFLAGS="$LDFLAGS $LIBGNURADIO_CORE_EXTRA_LDFLAGS"
 
   AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
   AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])

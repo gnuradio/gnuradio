@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Scope Sink
+###################################################
+ -->
+<block>
+	<name>WX GUI Scope Sink</name>
+	<key>wxgui_scopesink2</key>
+	<category>WX GUI Widgets</category>
+	<import>from gnuradio.wxgui import scopesink2</import>
+	<import>from gnuradio import gr</import>
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+scopesink2.$(type.fcn)(
+	$(parent).GetWin(),
+	title=$title,
+	sample_rate=$samp_rate,
+	v_scale=$v_scale,
+	v_offset=$v_offset,
+	t_scale=$t_scale,
+	ac_couple=$ac_couple,
+	xy_mode=$xy_mode,
+	num_inputs=$num_inputs,
+	trig_mode=$trig_mode,
+	y_axis_label=$y_axis_label,
+#if $win_size()
+	size=$win_size,
+#end if
+)
+#if not $grid_pos()
+$(parent).Add(self.$(id).win)
+#else
+$(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
+#end if</make>
+	<callback>set_sample_rate($samp_rate)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>complex</value>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:scope_sink_c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:scope_sink_f</opt>
+		</option>
+	</param>
+	<param>
+		<name>Title</name>
+		<key>title</key>
+		<value>Scope Plot</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>V Scale</name>
+		<key>v_scale</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $v_scale() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>V Offset</name>
+		<key>v_offset</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $v_offset() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>T Scale</name>
+		<key>t_scale</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $t_scale() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>AC Couple</name>
+		<key>ac_couple</key>
+		<value>False</value>
+		<type>bool</type>
+		<hide>#if $ac_couple() then 'none' else 'part'#</hide>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+	</param>
+	<param>
+		<name>XY Mode</name>
+		<key>xy_mode</key>
+		<value>False</value>
+		<type>enum</type>
+		<hide>#if $xy_mode() == 'True' then 'none' else 'part'#</hide>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+	</param>
+	<param>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Window Size</name>
+		<key>win_size</key>
+		<value></value>
+		<type>int_vector</type>
+		<hide>#if $win_size() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
+	<param>
+		<name>Trigger Mode</name>
+		<key>trig_mode</key>
+		<type>enum</type>
+		<option>
+			<name>Auto</name>
+			<key>gr.gr_TRIG_MODE_AUTO</key>
+		</option>
+		<option>
+			<name>Normal</name>
+			<key>gr.gr_TRIG_MODE_NORM</key>
+		</option>
+		<option>
+			<name>Freerun</name>
+			<key>gr.gr_TRIG_MODE_FREE</key>
+		</option>
+		<option>
+			<name>Stripchart</name>
+			<key>gr.gr_TRIG_MODE_STRIPCHART</key>
+		</option>
+	</param>
+	<param>
+		<name>Y Axis Label</name>
+		<key>y_axis_label</key>
+		<value>Counts</value>
+		<type>string</type>
+	</param>
+	<check>not $win_size or len($win_size) == 2</check>
+	<check>not $xy_mode or '$type' == 'complex' or $num_inputs != 1</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<nports>$num_inputs</nports>
+	</sink>
+	<doc>
+Set the V Scale to 0 for the scope to auto-scale.
+
+Set the T Scale to 0 for automatic setting.
+
+XY Mode allows the scope to initialize as an XY plotter.
+
+Leave the window blank for the default size, otherwise enter a tuple of (width, height) pixels.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
+	</doc>
+</block>

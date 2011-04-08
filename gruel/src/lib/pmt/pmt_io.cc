@@ -26,6 +26,7 @@
 #include <gruel/pmt.h>
 #include "pmt_int.h"
 #include <sstream>
+#include <iostream>
 
 namespace pmt {
 
@@ -156,3 +157,12 @@ pmt_deserialize(std::istream &source)
 }
 
 } /* namespace pmt */
+
+
+void 
+pmt::pmt_print(pmt_t v)
+{
+  std::cout << pmt_write_string(v) << std::endl;
+}
+
+

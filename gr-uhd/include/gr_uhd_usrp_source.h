@@ -34,14 +34,8 @@ GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     size_t num_channels
 );
 
-class GR_UHD_API uhd_usrp_source : public gr_sync_block{
+class GR_UHD_API uhd_usrp_source : virtual public gr_sync_block{
 public:
-
-    /*!
-     * Set the IO signature for this block.
-     * \param sig the output signature
-     */
-    uhd_usrp_source(gr_io_signature_sptr sig);
 
     /*!
      * Set the subdevice specification.

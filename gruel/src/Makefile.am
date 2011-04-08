@@ -19,5 +19,11 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = lib include scheme
+SUBDIRS = lib include scheme 
+
+if PYTHON
+
+SUBDIRS += . swig python
+
+endif
 

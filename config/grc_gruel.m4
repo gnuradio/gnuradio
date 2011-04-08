@@ -42,11 +42,15 @@ AC_DEFUN([GRC_GRUEL],[
         gruel/src/include/gruel/Makefile \
 	gruel/src/include/gruel/inet.h \
         gruel/src/lib/Makefile \
+        gruel/src/swig/Makefile \
+        gruel/src/python/Makefile \
+        gruel/src/python/run_tests \
 	gruel/src/lib/pmt/Makefile \
 	gruel/src/lib/msg/Makefile \
 	gruel/src/scheme/Makefile \
 	gruel/src/scheme/gnuradio/Makefile \
     ])
+
 
     dnl Allow creating autoconf independent header files for bytesex routines
     AC_CHECK_HEADER(arpa/inet.h, [GR_HAVE_ARPA_INET=1],[GR_HAVE_ARPA_INET=0])
@@ -56,5 +60,7 @@ AC_DEFUN([GRC_GRUEL],[
     AC_SUBST(GR_HAVE_NETINET_IN)
     AC_SUBST(GR_HAVE_BYTESWAP)
 
-    GRC_BUILD_CONDITIONAL(gruel,[])
+    GRC_BUILD_CONDITIONAL(gruel,[
+        AC_CONFIG_COMMANDS([run_tests_gruel],[chmod +x gruel/src/python/run_tests])
+    ])
 ])

@@ -1,5 +1,9 @@
 AC_DEFUN([LV_GCC_VERSION_WORKAROUND], 
 [
+    case "${host_os}" in
+      *cygwin*)
+      ;;
+      *)
 	AC_REQUIRE([LF_CONFIGURE_CXX])
 	
 	cxx_version=`$CXX --version`
@@ -44,6 +48,6 @@ AC_DEFUN([LV_GCC_VERSION_WORKAROUND],
 	
 	fi
     	
-	
+    esac
 
 	])

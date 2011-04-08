@@ -1,4 +1,4 @@
-dnl Copyright 2008 Free Software Foundation, Inc.
+dnl Copyright 2008,2011 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -26,6 +26,7 @@ AC_DEFUN([GRC_GR_USRP2],[
 
     AC_CONFIG_FILES([ \
         gr-usrp2/Makefile \
+        gr-usrp2/grc/Makefile \
 	gr-usrp2/gnuradio-usrp2.pc \
         gr-usrp2/src/Makefile \
         gr-usrp2/src/run_tests \
