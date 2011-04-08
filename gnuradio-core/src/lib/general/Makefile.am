@@ -56,7 +56,10 @@ libgeneral_la_SOURCES = 		\
 	gr_complex_to_xxx.cc		\
 	gr_conjugate_cc.cc		\
 	gr_copy.cc			\
+	gr_constellation.cc             \
 	gr_constellation_decoder_cb.cc	\
+	gr_constellation_decoder2_cb.cc	\
+	gr_constellation_receiver_cb.cc \
 	gr_correlate_access_code_bb.cc	\
 	gr_costas_loop_cc.cc		\
 	gr_count_bits.cc		\
@@ -111,6 +114,7 @@ libgeneral_la_SOURCES = 		\
         gr_ofdm_demapper_vcb.cc         \
         gr_ofdm_mapper_bcv.cc           \
 	gr_ofdm_frame_sink.cc		\
+	gr_ofdm_frame_sink2.cc		\
 	gr_ofdm_insert_preamble.cc	\
         gr_ofdm_sampler.cc              \
 	gr_pa_2x2_phase_combiner.cc	\
@@ -139,6 +143,7 @@ libgeneral_la_SOURCES = 		\
 	gr_rms_cf.cc			\
 	gr_rms_ff.cc			\
 	gr_short_to_float.cc		\
+	gr_int_to_float.cc		\
 	gr_simple_correlator.cc		\
 	gr_simple_framer.cc		\
 	gr_simple_squelch_cc.cc		\
@@ -212,7 +217,10 @@ grinclude_HEADERS = 			\
 	gr_complex_to_interleaved_short.h \
 	gr_complex_to_xxx.h		\
 	gr_conjugate_cc.h		\
+	gr_constellation.h	        \
 	gr_constellation_decoder_cb.h	\
+	gr_constellation_decoder2_cb.h	\
+	gr_constellation_receiver_cb.h	\
 	gr_copy.h			\
 	gr_correlate_access_code_bb.h	\
 	gr_costas_loop_cc.h		\
@@ -261,8 +269,8 @@ grinclude_HEADERS = 			\
 	gr_log2_const.h			\
 	gr_map_bb.h			\
 	gr_math.h			\
+	gr_metric_type.h		\
 	gr_misc.h			\
-	gr_mpsk_receiver_cc.h		\
 	gr_nco.h			\
 	gr_nlog10_ff.h			\
 	gr_nop.h			\
@@ -273,6 +281,7 @@ grinclude_HEADERS = 			\
         gr_ofdm_demapper_vcb.h          \
         gr_ofdm_mapper_bcv.h            \
         gr_ofdm_frame_sink.h		\
+        gr_ofdm_frame_sink2.h		\
 	gr_ofdm_insert_preamble.h	\
 	gr_ofdm_sampler.h               \
 	gr_pa_2x2_phase_combiner.h	\
@@ -301,6 +310,7 @@ grinclude_HEADERS = 			\
 	gr_rms_cf.h			\
 	gr_rms_ff.h			\
 	gr_short_to_float.h		\
+	gr_int_to_float.h		\
 	gr_simple_correlator.h		\
 	gr_simple_framer.h		\
 	gr_simple_framer_sync.h		\
@@ -386,7 +396,10 @@ swiginclude_HEADERS =			\
 	gr_complex_to_interleaved_short.i \
 	gr_complex_to_xxx.i		\
 	gr_conjugate_cc.i		\
+	gr_constellation.i	        \
 	gr_constellation_decoder_cb.i	\
+	gr_constellation_decoder2_cb.i	\
+	gr_constellation_receiver_cb.i	\
 	gr_copy.i			\
 	gr_correlate_access_code_bb.i	\
 	gr_costas_loop_cc.i		\
@@ -418,6 +431,7 @@ swiginclude_HEADERS =			\
 	gr_glfsr_source_b.i		\
 	gr_glfsr_source_f.i		\
 	gr_head.i			\
+	gr_int_to_float.i		\
 	gr_interleave.i 		\
 	gr_interleaved_short_to_complex.i \
 	gr_iqcomp_cc.i			\
@@ -427,7 +441,6 @@ swiginclude_HEADERS =			\
 	gr_lms_dfe_cc.i			\
 	gr_lms_dfe_ff.i			\
 	gr_map_bb.i			\
-	gr_mpsk_receiver_cc.i		\
 	gr_nlog10_ff.i			\
 	gr_nop.i			\
 	gr_null_sink.i			\
@@ -437,6 +450,7 @@ swiginclude_HEADERS =			\
         gr_ofdm_demapper_vcb.i          \
         gr_ofdm_mapper_bcv.i            \
         gr_ofdm_frame_sink.i		\
+        gr_ofdm_frame_sink2.i		\
 	gr_ofdm_insert_preamble.i	\
 	gr_ofdm_sampler.i               \
 	gr_pa_2x2_phase_combiner.i	\

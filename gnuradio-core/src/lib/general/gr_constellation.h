@@ -1,0 +1,322 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2010, 2011 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
+#ifndef INCLUDED_GR_CONSTELLATION_H
+#define	INCLUDED_GR_CONSTELLATION_H
+
+#include <vector>
+#include <math.h>
+#include <gr_complex.h>
+#include <boost/enable_shared_from_this.hpp>
+#include <gr_metric_type.h>
+
+/************************************************************/
+/* gr_constellation                                         */
+/*                                                          */
+/* Base class defining interface.                           */
+/************************************************************/
+
+class gr_constellation;
+typedef boost::shared_ptr<gr_constellation> gr_constellation_sptr;
+
+class gr_constellation : public boost::enable_shared_from_this<gr_constellation>
+{
+public:
+  gr_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+		    unsigned int rotational_symmetry, unsigned int dimensionality);
+  gr_constellation ();
+
+  //! Returns the constellation points for a symbol value
+  void map_to_points(unsigned int value, gr_complex *points);
+  std::vector<gr_complex> map_to_points_v(unsigned int value);
+
+  //! Returns the constellation point that matches best.
+  virtual unsigned int decision_maker (const gr_complex *sample) = 0;
+  //! Takes a vector rather than a pointer.  Better for SWIG wrapping.
+  unsigned int decision_maker_v (std::vector<gr_complex> sample);
+  //! Also calculates the phase error.
+  unsigned int decision_maker_pe (const gr_complex *sample, float *phase_error);
+  //! Calculates distance.
+  unsigned int decision_maker_e (const gr_complex *sample, float *error);
+  
+  //! Calculates metrics for all points in the constellation.
+  //! For use with the viterbi algorithm.
+  virtual void calc_metric(const gr_complex *sample, float *metric, trellis_metric_type_t type);
+  virtual void calc_euclidean_metric(const gr_complex *sample, float *metric);
+  virtual void calc_hard_symbol_metric(const gr_complex *sample, float *metric);
+  
+  //! Returns the set of points in this constellation.
+  std::vector<gr_complex> points() { return d_constellation;}
+  //! Returns the vector of points in this constellation.
+  //! Raise error if dimensionality is not one.
+  std::vector<gr_complex> s_points();
+  //! Returns a vector of vectors of points.
+  std::vector<std::vector<gr_complex> > v_points();
+  //! Whether to apply an encoding before doing differential encoding. (e.g. gray coding)
+  bool apply_pre_diff_code() { return d_apply_pre_diff_code;}
+  //! Returns the encoding to apply before differential encoding.
+  std::vector<unsigned int> pre_diff_code() { return d_pre_diff_code;}
+  //! Returns the order of rotational symmetry.
+  unsigned int rotational_symmetry() { return d_rotational_symmetry;}
+  //! Returns the number of complex numbers in a single symbol.
+  unsigned int dimensionality() {return d_dimensionality;}
+
+  unsigned int bits_per_symbol () {
+    return floor(log(d_constellation.size())/d_dimensionality/log(2));
+  }
+  
+  unsigned int arity () {
+    return d_arity;
+  }
+
+  gr_constellation_sptr base() {
+    return shared_from_this();
+  }  
+
+ protected:
+
+  std::vector<gr_complex> d_constellation;
+  std::vector<unsigned int> d_pre_diff_code; 
+  bool d_apply_pre_diff_code;
+  unsigned int d_rotational_symmetry;
+  unsigned int d_dimensionality;
+  unsigned int d_arity;
+
+  float get_distance(unsigned int index, const gr_complex *sample);
+  unsigned int get_closest_point(const gr_complex *sample);
+  void calc_arity ();
+};
+
+/************************************************************/
+/* gr_constellation_calcdist                                */
+/*                                                          */
+/* Constellation which calculates the distance to each      */
+/* point in the constellation for decision making.          */
+/* Inefficient for large constellations.                    */
+/************************************************************/
+
+class gr_constellation_calcdist;
+typedef boost::shared_ptr<gr_constellation_calcdist> gr_constellation_calcdist_sptr;
+
+// public constructor
+gr_constellation_calcdist_sptr
+gr_make_constellation_calcdist (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+				unsigned int rotational_symmetry, unsigned int dimensionality);
+
+
+class gr_constellation_calcdist : public gr_constellation
+{
+ public:
+  gr_constellation_calcdist (std::vector<gr_complex> constellation,
+			   std::vector<unsigned int> pre_diff_code,
+			   unsigned int rotational_symmetry,
+			   unsigned int dimensionality);
+  unsigned int decision_maker (const gr_complex *sample);
+  // void calc_metric(gr_complex *sample, float *metric, trellis_metric_type_t type);
+  // void calc_euclidean_metric(gr_complex *sample, float *metric);
+  // void calc_hard_symbol_metric(gr_complex *sample, float *metric);
+  
+ private:
+  friend gr_constellation_calcdist_sptr
+  gr_make_constellation_calcdist (std::vector<gr_complex> constellation);
+};
+
+/************************************************************/
+/* gr_constellation_sector                                  */
+/*                                                          */
+/* An abstract class.                                       */
+/* Constellation space is divided into sectors.             */
+/* Each sector is associated with the nearest constellation */
+/* point.                                                   */
+/************************************************************/
+
+class gr_constellation_sector : public gr_constellation
+{
+ public:
+
+  gr_constellation_sector (std::vector<gr_complex> constellation,
+			   std::vector<unsigned int> pre_diff_code,
+			   unsigned int rotational_symmetry,
+			   unsigned int dimensionality,
+			   unsigned int n_sectors);
+
+  unsigned int decision_maker (const gr_complex *sample);
+
+ protected:
+
+  virtual unsigned int get_sector (const gr_complex *sample) = 0;
+  virtual unsigned int calc_sector_value (unsigned int sector) = 0;
+  void find_sector_values ();
+
+  unsigned int n_sectors;
+
+ private:
+
+  std::vector<unsigned int> sector_values;
+
+};
+
+/************************************************************/
+/* gr_constellation_rect                                    */
+/*                                                          */
+/* Only implemented for 1-(complex)dimensional              */
+/* constellation.                                           */
+/* Constellation space is divided into rectangular sectors. */
+/* Each sector is associated with the nearest constellation */
+/* point.                                                   */
+/* Works well for square QAM.                               */
+/* Works for any generic constellation provided sectors are */
+/* not too large.                                           */
+/************************************************************/
+
+class gr_constellation_rect;
+typedef boost::shared_ptr<gr_constellation_rect> gr_constellation_rect_sptr;
+
+// public constructor
+gr_constellation_rect_sptr 
+gr_make_constellation_rect (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+			    unsigned int rotational_symmetry,
+			    unsigned int real_sectors, unsigned int imag_sectors,
+			    float width_real_sectors, float width_imag_sectors);
+
+class gr_constellation_rect : public gr_constellation_sector
+{
+ public:
+
+  gr_constellation_rect (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+			 unsigned int rotational_symmetry,
+			 unsigned int real_sectors, unsigned int imag_sectors,
+			 float width_real_sectors, float width_imag_sectors);
+
+ protected:
+
+  unsigned int get_sector (const gr_complex *sample);
+  
+  unsigned int calc_sector_value (unsigned int sector);
+
+ private:
+
+  unsigned int n_real_sectors;
+  unsigned int n_imag_sectors;
+  float d_width_real_sectors;
+  float d_width_imag_sectors;
+
+  friend gr_constellation_rect_sptr
+  gr_make_constellation_rect (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+			      unsigned int rotational_symmetry,
+			      unsigned int real_sectors, unsigned int imag_sectors,
+			      float width_real_sectors, float width_imag_sectors);
+  
+};
+
+/************************************************************/
+/* gr_constellation_psk                                     */
+/*                                                          */
+/* Constellation space is divided into pie slices sectors.  */
+/* Each slice is associated with the nearest constellation  */
+/* point.                                                   */
+/* Works well for PSK but nothing else.                     */
+/* Assumes that there is a constellation point at 1.        */
+/************************************************************/
+
+class gr_constellation_psk;
+typedef boost::shared_ptr<gr_constellation_psk> gr_constellation_psk_sptr;
+
+// public constructor
+gr_constellation_psk_sptr 
+gr_make_constellation_psk (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+			   unsigned int n_sectors);
+
+class gr_constellation_psk : public gr_constellation_sector
+{
+ public:
+
+  gr_constellation_psk (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+			unsigned int n_sectors);
+
+ protected:
+
+  unsigned int get_sector (const gr_complex *sample);
+  
+  unsigned int calc_sector_value (unsigned int sector);
+
+ private:
+
+  friend gr_constellation_psk_sptr
+  gr_make_constellation_psk (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
+			     unsigned int n_sectors);
+  
+};
+
+/************************************************************/
+/* gr_constellation_bpsk                                    */
+/*                                                          */
+/* Only works for BPSK.                                     */
+/*                                                          */
+/************************************************************/
+
+class gr_constellation_bpsk;
+typedef boost::shared_ptr<gr_constellation_bpsk> gr_constellation_bpsk_sptr;
+
+// public constructor
+gr_constellation_bpsk_sptr 
+gr_make_constellation_bpsk ();
+
+class gr_constellation_bpsk : public gr_constellation
+{
+ public:
+
+  gr_constellation_bpsk ();
+  unsigned int decision_maker (const gr_complex *sample);
+
+  friend gr_constellation_bpsk_sptr
+  gr_make_constellation_bpsk ();
+  
+};
+
+/************************************************************/
+/* gr_constellation_qpsk                                    */
+/*                                                          */
+/* Only works for QPSK.                                     */
+/*                                                          */
+/************************************************************/
+
+class gr_constellation_qpsk;
+typedef boost::shared_ptr<gr_constellation_qpsk> gr_constellation_qpsk_sptr;
+
+// public constructor
+gr_constellation_qpsk_sptr 
+gr_make_constellation_qpsk ();
+
+class gr_constellation_qpsk : public gr_constellation
+{
+ public:
+
+  gr_constellation_qpsk ();
+  unsigned int decision_maker (const gr_complex *sample);
+
+  friend gr_constellation_qpsk_sptr
+  gr_make_constellation_qpsk ();
+  
+};
+
+#endif

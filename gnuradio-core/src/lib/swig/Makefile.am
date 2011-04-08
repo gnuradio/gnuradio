@@ -45,7 +45,7 @@ TOP_SWIG_IFILES =		\
 swiginclude_HEADERS =			\
 	gnuradio.i			\
 	gr_swig_block_magic.i		\
-	gr_shared_ptr.i
+	gr_shared_ptr.i                
 
 # SWIG headers that get installed in ${prefix}/include/gnuradio/swig/...
 nobase_swiginclude_HEADERS = \

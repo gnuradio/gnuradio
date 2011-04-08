@@ -66,12 +66,12 @@ grinclude_HEADERS =			\
         quicksort_index.h		\
         base.h				\
         interleaver.h			\
-        trellis_metric_type.h		\
         trellis_calc_metric.h		\
         trellis_permutation.h		\
         trellis_siso_type.h		\
 	trellis_siso_f.h		\
 	trellis_siso_combined_f.h	\
+	trellis_constellation_metrics_cf.h \
 	$(GENERATED_H)
 
 lib_LTLIBRARIES = libgnuradio-trellis.la
@@ -85,6 +85,7 @@ libgnuradio_trellis_la_SOURCES = 	\
         trellis_permutation.cc		\
 	trellis_siso_f.cc		\
 	trellis_siso_combined_f.cc	\
+	trellis_constellation_metrics_cf.cc \
 	$(GENERATED_CC)
 
 libgnuradio_trellis_la_LIBADD =	\
@@ -119,6 +120,7 @@ trellis_swiginclude_headers = 		\
 	trellis_permutation.i		\
 	trellis_siso_f.i		\
 	trellis_siso_combined_f.i	\
+	trellis_constellation_metrics_cf.i \
 	trellis_generated.i
 
 # Do creation and inclusion of other Makefiles last

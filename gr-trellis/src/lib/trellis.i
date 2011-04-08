@@ -28,7 +28,10 @@
 #include "trellis_permutation.h"
 #include "trellis_siso_f.h"
 #include "trellis_siso_combined_f.h"
+#include "trellis_constellation_metrics_cf.h"
+#include "gr_constellation.h"
 %}
+
 
 // ----------------------------------------------------------------
 
@@ -38,11 +41,18 @@
 %include "trellis_siso_f.i"
 %include "trellis_siso_combined_f.i"
 
-%include "trellis_metric_type.h"
 %include "trellis_siso_type.h"
 
+%include "trellis_constellation_metrics_cf.i"
 
 %include "trellis_generated.i"
+
+%import "gr_metric_type.h"
+%import "gr_constellation.i"
+
+%pythoncode %{
+  from gnuradio.gr import TRELLIS_EUCLIDEAN, TRELLIS_HARD_SYMBOL, TRELLIS_HARD_BIT
+  %}
 
 #if SWIGGUILE
 %scheme %{

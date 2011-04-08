@@ -105,7 +105,7 @@ _pager_swig_la_CXXFLAGS =			\
 	$(pager_swig_la_swig_cxxflags)
 
 python/pager_swig.cc: pager_swig.py
-pager_swig.py: pager_swig.i
+pager_swig.py: pager_swig.i 
 
 # Include the python dependencies for this file
 -include python/pager_swig.d
