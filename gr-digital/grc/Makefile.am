@@ -26,4 +26,5 @@ grcblocksdir = $(grc_blocksdir)
 dist_grcblocks_DATA = \
 	digital_block_tree.xml		\
 	digital_costas_loop_cc.xml	\
-	digital_cma_equalizer_cc.xml
+	digital_cma_equalizer_cc.xml	\
+	digital_kurtotic_equalizer_cc.xml

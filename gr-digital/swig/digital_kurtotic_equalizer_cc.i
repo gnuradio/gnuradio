@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
  * 
@@ -19,24 +20,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+GR_SWIG_BLOCK_MAGIC(digital,kurtotic_equalizer_cc)
 
-%{
-#include "digital_costas_loop_cc.h"
-#include "digital_cma_equalizer_cc.h"
-#include "digital_kurtotic_equalizer_cc.h"
-%}
+// retrieve info on the base class, without generating wrappers since
+// the base class has a pure virual method.
+%import "gr_adaptive_fir_ccc.i"
 
-%include "digital_costas_loop_cc.i"
-%include "digital_cma_equalizer_cc.i"
-%include "digital_kurtotic_equalizer_cc.i"
+digital_kurtotic_equalizer_cc_sptr
+digital_make_kurtotic_equalizer_cc(int num_taps,
+				   float mu);
 
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-digital_swig" "scm_init_gnuradio_digital_swig_module")
-%}
+class digital_kurtotic_equalizer_cc : public gr_adaptive_fir_ccc
+{
+private:
+  digital_kurtotic_equalizer_cc(int num_taps, float mu);
 
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif
+public:
+  void set_gain(float mu);
+};

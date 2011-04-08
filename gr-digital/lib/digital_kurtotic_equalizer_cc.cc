@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
  * 
@@ -19,24 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
-
-%{
-#include "digital_costas_loop_cc.h"
-#include "digital_cma_equalizer_cc.h"
-#include "digital_kurtotic_equalizer_cc.h"
-%}
-
-%include "digital_costas_loop_cc.i"
-%include "digital_cma_equalizer_cc.i"
-%include "digital_kurtotic_equalizer_cc.i"
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-digital_swig" "scm_init_gnuradio_digital_swig_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
+#ifdef HAVE_CONFIG_H
+#include "config.h"
 #endif
+
+#include <digital_kurtotic_equalizer_cc.h>
+
+digital_kurtotic_equalizer_cc_sptr
+digital_make_kurtotic_equalizer_cc(int num_taps, float mu)
+{
+  return gnuradio::get_initial_sptr(new digital_kurtotic_equalizer_cc(num_taps, mu));
+}
+
+digital_kurtotic_equalizer_cc::digital_kurtotic_equalizer_cc(int num_taps, float mu)
+  : gr_adaptive_fir_ccc("kurtotic_equalizer_cc", 1, std::vector<gr_complex>(num_taps))
+{
+  set_gain(mu);
+  if (num_taps > 0)
+    d_taps[0] = 1.0;
+
+  d_alpha_p = 0.01;
+  d_alpha_q = 0.01;
+  d_alpha_m = 0.01;
+
+  d_p = 0.0f;
+  d_m = 0.0f;
+  d_q = gr_complex(0,0);
+  d_u = gr_complex(0,0);
+}
+

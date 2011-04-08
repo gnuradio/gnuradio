@@ -58,7 +58,8 @@ digital_swig_la_swig_libadd = \
 # additional SWIG files to be installed
 digital_swig_swiginclude_headers =	\
 	digital_costas_loop_cc.i	\
-	digital_cma_equalizer_cc.i
+	digital_cma_equalizer_cc.i	\
+	digital_kurtotic_equalizer_cc.i
 
 if GUILE
 TESTS += run_guile_tests
