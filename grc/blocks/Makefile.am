@@ -119,6 +119,7 @@ dist_ourdata_DATA = \
 	gr_head.xml \
 	gr_hilbert_fc.xml \
 	gr_iir_filter_ffd.xml \
+	gr_int_to_float.xml \
 	gr_integrate_xx.xml \
 	gr_interleave.xml \
 	gr_interleaved_short_to_complex.xml \
