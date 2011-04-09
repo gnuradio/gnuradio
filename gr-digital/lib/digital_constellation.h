@@ -30,7 +30,7 @@
 #include <gr_metric_type.h>
 
 /************************************************************/
-/* digital_constellation                                         */
+/* digital_constellation                                    */
 /*                                                          */
 /* Base class defining interface.                           */
 /************************************************************/
@@ -42,7 +42,7 @@ class digital_constellation : public boost::enable_shared_from_this<digital_cons
 {
 public:
   digital_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-		    unsigned int rotational_symmetry, unsigned int dimensionality);
+			 unsigned int rotational_symmetry, unsigned int dimensionality);
   digital_constellation ();
 
   //! Returns the constellation points for a symbol value
@@ -120,7 +120,7 @@ typedef boost::shared_ptr<digital_constellation_calcdist> digital_constellation_
 // public constructor
 digital_constellation_calcdist_sptr
 digital_make_constellation_calcdist (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-				unsigned int rotational_symmetry, unsigned int dimensionality);
+				     unsigned int rotational_symmetry, unsigned int dimensionality);
 
 
 class digital_constellation_calcdist : public digital_constellation
@@ -141,7 +141,7 @@ class digital_constellation_calcdist : public digital_constellation
 };
 
 /************************************************************/
-/* digital_constellation_sector                                  */
+/* digital_constellation_sector                             */
 /*                                                          */
 /* An abstract class.                                       */
 /* Constellation space is divided into sectors.             */
@@ -176,7 +176,7 @@ class digital_constellation_sector : public digital_constellation
 };
 
 /************************************************************/
-/* digital_constellation_rect                                    */
+/* digital_constellation_rect                               */
 /*                                                          */
 /* Only implemented for 1-(complex)dimensional              */
 /* constellation.                                           */
@@ -229,7 +229,7 @@ class digital_constellation_rect : public digital_constellation_sector
 };
 
 /************************************************************/
-/* digital_constellation_psk                                     */
+/* digital_constellation_psk                                */
 /*                                                          */
 /* Constellation space is divided into pie slices sectors.  */
 /* Each slice is associated with the nearest constellation  */
@@ -243,15 +243,17 @@ typedef boost::shared_ptr<digital_constellation_psk> digital_constellation_psk_s
 
 // public constructor
 digital_constellation_psk_sptr 
-digital_make_constellation_psk (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-			   unsigned int n_sectors);
+digital_make_constellation_psk (std::vector<gr_complex> constellation,
+				std::vector<unsigned int> pre_diff_code,
+				unsigned int n_sectors);
 
 class digital_constellation_psk : public digital_constellation_sector
 {
  public:
 
-  digital_constellation_psk (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-			unsigned int n_sectors);
+  digital_constellation_psk (std::vector<gr_complex> constellation,
+			     std::vector<unsigned int> pre_diff_code,
+			     unsigned int n_sectors);
 
  protected:
 
@@ -262,13 +264,14 @@ class digital_constellation_psk : public digital_constellation_sector
  private:
 
   friend digital_constellation_psk_sptr
-  digital_make_constellation_psk (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
-			     unsigned int n_sectors);
+  digital_make_constellation_psk (std::vector<gr_complex> constellation,
+				  std::vector<unsigned int> pre_diff_code,
+				  unsigned int n_sectors);
   
 };
 
 /************************************************************/
-/* digital_constellation_bpsk                                    */
+/* digital_constellation_bpsk                               */
 /*                                                          */
 /* Only works for BPSK.                                     */
 /*                                                          */
@@ -294,7 +297,7 @@ class digital_constellation_bpsk : public digital_constellation
 };
 
 /************************************************************/
-/* digital_constellation_qpsk                                    */
+/* digital_constellation_qpsk                               */
 /*                                                          */
 /* Only works for QPSK.                                     */
 /*                                                          */
@@ -316,6 +319,33 @@ class digital_constellation_qpsk : public digital_constellation
 
   friend digital_constellation_qpsk_sptr
   digital_make_constellation_qpsk ();
+  
+};
+
+
+/************************************************************/
+/* digital_constellation_8psk                               */
+/*                                                          */
+/* Only works for 8PSK.                                     */
+/*                                                          */
+/************************************************************/
+
+class digital_constellation_8psk;
+typedef boost::shared_ptr<digital_constellation_8psk> digital_constellation_8psk_sptr;
+
+// public constructor
+digital_constellation_8psk_sptr 
+digital_make_constellation_8psk ();
+
+class digital_constellation_8psk : public digital_constellation
+{
+ public:
+
+  digital_constellation_8psk ();
+  unsigned int decision_maker (const gr_complex *sample);
+
+  friend digital_constellation_8psk_sptr
+  digital_make_constellation_8psk ();
   
 };
 
