@@ -26,7 +26,6 @@
 
 #include <gr_io_signature.h>
 #include <gr_prefs.h>
-#include <gr_constellation.h>
 #include <gr_constellation_receiver_cb.h>
 #include <stdexcept>
 #include <gr_math.h>

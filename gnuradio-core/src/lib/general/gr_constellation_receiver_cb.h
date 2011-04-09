@@ -24,7 +24,7 @@
 #define	INCLUDED_GR_CONSTELLATION_RECEIVER_CB_H
 
 #include <gr_block.h>
-#include <gr_constellation.h>
+#include <digital_constellation.h>
 #include <gr_complex.h>
 #include <math.h>
 #include <fstream>

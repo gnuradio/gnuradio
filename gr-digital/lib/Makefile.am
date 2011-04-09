@@ -25,6 +25,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = 			\
+	digital_constellation.h		\
 	digital_costas_loop_cc.h	\
 	digital_cma_equalizer_cc.h	\
 	digital_kurtotic_equalizer_cc.h
@@ -32,6 +33,7 @@ grinclude_HEADERS = 			\
 lib_LTLIBRARIES = libgnuradio-digital.la
 
 libgnuradio_digital_la_SOURCES = 	\
+	digital_constellation.cc	\
 	digital_costas_loop_cc.cc	\
 	digital_cma_equalizer_cc.cc	\
 	digital_kurtotic_equalizer_cc.cc

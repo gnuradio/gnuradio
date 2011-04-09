@@ -70,8 +70,6 @@
 #include <gr_fake_channel_coder_pp.h>
 #include <gr_throttle.h>
 #include <gr_mpsk_receiver_cc.h>
-#include <gr_constellation_receiver_cb.h>
-#include <gr_constellation.h>
 #include <gr_stream_mux.h>
 #include <gr_stream_to_streams.h>
 #include <gr_streams_to_stream.h>
@@ -100,7 +98,7 @@
 #include <gr_ofdm_cyclic_prefixer.h>
 #include <gr_ofdm_mapper_bcv.h>
 #include <gr_ofdm_frame_sink.h>
-#include <gr_ofdm_frame_sink2.h>
+  //#include <gr_ofdm_frame_sink2.h>
 #include <gr_ofdm_insert_preamble.h>
 #include <gr_ofdm_sampler.h>
 #include <gr_regenerate_bb.h>
@@ -115,7 +113,6 @@
 #include <gr_correlate_access_code_bb.h>
 #include <gr_diff_phasor_cc.h>
 #include <gr_constellation_decoder_cb.h>
-#include <gr_constellation_decoder2_cb.h>
 #include <gr_binary_slicer_fb.h>
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
@@ -200,8 +197,6 @@
 %include "gr_fake_channel_coder_pp.i"
 %include "gr_throttle.i"
 %include "gr_mpsk_receiver_cc.i"
-%include "gr_constellation_receiver_cb.i"
-%include "gr_constellation.i"
 %include "gr_stream_mux.i"
 %include "gr_stream_to_streams.i"
 %include "gr_streams_to_stream.i"
@@ -230,7 +225,7 @@
 %include "gr_ofdm_cyclic_prefixer.i"
 %include "gr_ofdm_mapper_bcv.i"
 %include "gr_ofdm_frame_sink.i"
-%include "gr_ofdm_frame_sink2.i"
+ //%include "gr_ofdm_frame_sink2.i"
 %include "gr_ofdm_insert_preamble.i"
 %include "gr_ofdm_sampler.i"
 %include "gr_regenerate_bb.i"
@@ -245,7 +240,6 @@
 %include "gr_correlate_access_code_bb.i"
 %include "gr_diff_phasor_cc.i"
 %include "gr_constellation_decoder_cb.i"
-%include "gr_constellation_decoder2_cb.i"
 %include "gr_binary_slicer_fb.i"
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"

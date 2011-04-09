@@ -22,11 +22,13 @@
 %include "gnuradio.i"
 
 %{
+#include "digital_constellation.h"
 #include "digital_costas_loop_cc.h"
 #include "digital_cma_equalizer_cc.h"
 #include "digital_kurtotic_equalizer_cc.h"
 %}
 
+%include "digital_constellation.i"
 %include "digital_costas_loop_cc.i"
 %include "digital_cma_equalizer_cc.i"
 %include "digital_kurtotic_equalizer_cc.i"
