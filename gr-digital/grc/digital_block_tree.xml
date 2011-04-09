@@ -12,4 +12,8 @@
 		<block>digital_cma_equalizer_cc</block>
 		<block>digital_kurtotic_equalizer_cc</block>
 	</cat>
+	<cat>
+		<name>Digital Mods</name>
+		<block>digital_dxpsk_mod</block>
+	</cat>
 </cat>
