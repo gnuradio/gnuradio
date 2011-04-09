@@ -232,7 +232,8 @@ class dqpsk_demod(gr.hier_block2):
         self._excess_bw = excess_bw
         self._freq_alpha = freq_alpha
         self._freq_beta = 0.25*self._freq_alpha**2
-        self._phase_alpha = phase_alpha
+        self._phase_damping = phase_damping
+        self._phase_natfreq = phase_natfreq
         self._timing_alpha = timing_alpha
         self._timing_beta = _def_timing_beta
         self._timing_max_dev=timing_max_dev
@@ -296,7 +297,7 @@ class dqpsk_demod(gr.hier_block2):
         self.connect(self, self.agc, 
                      self.freq_recov, self.time_recov, self.phase_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
-        if sync_out: self.connect(self.time_recov, (self, 1))
+        if sync_out: self.connect(self.phase_recov, (self, 1))
 
     def samples_per_symbol(self):
         return self._samples_per_symbol

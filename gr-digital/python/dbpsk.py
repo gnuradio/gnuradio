@@ -294,7 +294,7 @@ class dbpsk_demod(gr.hier_block2):
         self.connect(self, self.agc,
                      self.freq_recov, self.time_recov, self.phase_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
-        if sync_out: self.connect(self.time_recov, (self, 1))
+        if sync_out: self.connect(self.phase_recov, (self, 1))
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
