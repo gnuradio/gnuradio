@@ -39,7 +39,6 @@ qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
 				     const std::string &name="Spectrum Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
 				     bool plottime=true, bool plotconst=true,
-				     bool use_openGL=true,
 				     QWidget *parent=NULL);
 
 class qtgui_sink_f : public gr_block
@@ -50,19 +49,17 @@ private:
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,
 					      bool plottime, bool plotconst,
-					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_f (int fftsize, int wintype,
 		double fc, double bw,
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
 		bool plottime, bool plotconst,
-		bool use_openGL,
 		QWidget *parent);
 
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
-  void initialize(const bool opengl=true);
+  void initialize();
 
   int d_fftsize;
   gr_firdes::win_type d_wintype;

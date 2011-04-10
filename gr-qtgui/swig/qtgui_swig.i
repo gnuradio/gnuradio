@@ -34,7 +34,6 @@ GR_SWIG_BLOCK_MAGIC(qtgui,sink_c)
 				       const std::string &name="Display",
 				       bool plotfreq=true, bool plotwaterfall=true,
 				       bool plottime=true, bool plotconst=true,
-				       bool use_openGL=true,
 				       QWidget *parent=NULL);
 
 class qtgui_sink_c : public gr_block
@@ -45,14 +44,12 @@ private:
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,
 					      bool plottime, bool plotconst,
-					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
 		double fc, double bw,
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
 		bool plottime, bool plotconst,
-		bool use_openGL,
 		QWidget *parent);
 
 public:
@@ -80,7 +77,6 @@ qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
 				     const std::string &name="Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
 				     bool plottime=true, bool plotconst=true,
-				     bool use_openGL=true,
 				     QWidget *parent=NULL);
 
 class qtgui_sink_f : public gr_block
@@ -91,14 +87,12 @@ private:
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,
 					      bool plottime, bool plotconst,
-					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_f (int fftsize, int wintype,
 		double fc, double bw,
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
 		bool plottime, bool plotconst,
-		bool use_openGL,
 		QWidget *parent);
 
 public:

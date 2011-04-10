@@ -38,7 +38,6 @@ qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
 				     const std::string &name="Spectrum Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
 				     bool plottime=true, bool plotconst=true,
-				     bool use_openGL=true,
 				     QWidget *parent=NULL);
 
 class qtgui_sink_c : public gr_block
@@ -49,21 +48,17 @@ private:
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,
 					      bool plottime, bool plotconst,
-					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
 		double fc, double bw, 
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
 		bool plottime, bool plotconst,
-		bool use_openGL,
 		QWidget *parent);
 
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
-  // use opengl to force OpenGL on or off
-  // this might be necessary for sessions over SSH
-  void initialize(const bool opengl=true);
+  void initialize();
 
   int d_fftsize;
   gr_firdes::win_type d_wintype;

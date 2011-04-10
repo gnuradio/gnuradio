@@ -3,12 +3,11 @@
 #include <QMessageBox>
 #include <spectrumdisplayform.h>
 
-SpectrumDisplayForm::SpectrumDisplayForm(bool useOpenGL, QWidget* parent)
+SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   : QWidget(parent)
 {
   setupUi(this);
 
-  _useOpenGL = useOpenGL;
   _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);

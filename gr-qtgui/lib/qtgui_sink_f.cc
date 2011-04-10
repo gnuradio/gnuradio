@@ -36,14 +36,12 @@ qtgui_make_sink_f (int fftsize, int wintype,
 		   const std::string &name,
 		   bool plotfreq, bool plotwaterfall,
 		   bool plottime, bool plotconst,
-		   bool use_openGL,
 		   QWidget *parent)
 {
   return gnuradio::get_initial_sptr(new qtgui_sink_f (fftsize, wintype,
 					      fc, bw, name,
 					      plotfreq, plotwaterfall,
 					      plottime, plotconst,
-					      use_openGL,
 					      parent));
 }
 
@@ -52,7 +50,6 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
 			    const std::string &name,
 			    bool plotfreq, bool plotwaterfall,
 			    bool plottime, bool plotconst,
-			    bool use_openGL,
 			    QWidget *parent)
   : gr_block ("sink_f",
 	      gr_make_io_signature (1, 1, sizeof(float)),
@@ -77,7 +74,7 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
 
   buildwindow();
 
-  initialize(use_openGL);
+  initialize();
 }
 
 qtgui_sink_f::~qtgui_sink_f()
@@ -97,7 +94,7 @@ qtgui_sink_f::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 }
 
 void
-qtgui_sink_f::initialize(const bool opengl)
+qtgui_sink_f::initialize()
 {
   if(qApp != NULL) {
     d_qApplication = qApp;
@@ -120,8 +117,7 @@ qtgui_sink_f::initialize(const bool opengl)
 
   d_main_gui->OpenSpectrumWindow(d_parent,
 				 d_plotfreq, d_plotwaterfall,
-				 d_plottime, d_plotconst,
-				 opengl);
+				 d_plottime, d_plotconst);
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
