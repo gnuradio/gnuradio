@@ -253,7 +253,7 @@ class d8psk_demod(gr.hier_block2):
         # symbol timing recovery with RRC data filter
         nfilts = 32
         ntaps = 11 * int(samples_per_symbol*nfilts)
-        taps = gr.firdes.root_raised_cosine(nfilts, nfilts,
+        taps = gr.firdes.root_raised_cosine(1.41*nfilts, nfilts,
                                             1.0/float(self._samples_per_symbol),
                                             self._excess_bw, ntaps)
         self.time_recov = gr.pfb_clock_sync_ccf(self._samples_per_symbol,
