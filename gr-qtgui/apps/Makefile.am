@@ -1,5 +1,5 @@
 #
-# Copyright 2008-2011 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,11 +21,25 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = lib
-
 if PYTHON
-SUBDIRS += swig python apps grc
+
+nodist_bin_SCRIPTS =		\
+	qt_digital_window.ui 	\
+	usrp_display_qtgui.ui
+
+noinst_PYTHON = 		\
+	pyqt_example_f.py 	\
+	pyqt_example_c.py	\
+	qt_digital.py		\
+	qt_digital_window.py    \
+	usrp2_display.py	\
+	usrp_display.py		\
+	qt_digital_window.py	\
+	usrp_display_qtgui.py
+
+EXTRA_DIST += 			\
+	qt_digital_window.ui 	\
+	usrp_display_qtgui.ui
 endif
 
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-qtgui.pc
+EXTRA_DIST +=

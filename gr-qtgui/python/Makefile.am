@@ -1,5 +1,5 @@
 #
-# Copyright 2008-2011 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,11 +21,18 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = lib
+TESTS = 
+EXTRA_DIST += run_tests.in
 
 if PYTHON
-SUBDIRS += swig python apps grc
-endif
+TESTS += run_tests
+DISTCLEANFILES += run_tests
 
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-qtgui.pc
+qtguipythondir = $(grpythondir)/qtgui
+
+noinst_PYTHON = 		\
+	qa_qtgui.py
+
+qtguipython_PYTHON =		\
+	__init__.py
+endif

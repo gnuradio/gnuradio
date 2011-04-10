@@ -21,7 +21,6 @@ qtgui.$(type.fcn)(
 	$name, \#name
 	$plotfreq, \#plotfreq
 	$plotwaterfall, \#plotwaterfall
-	$plotwaterfall3d, \#plotwaterfall3d
 	$plottime, \#plottime
 	$plotconst, \#plotconst
 )
@@ -83,15 +82,6 @@ $(gui_hint()($win))</make>
 	<param>
 		<name>Plot Waterfall</name>
 		<key>plotwaterfall</key>
-		<value>True</value>
-		<type>bool</type>
-		<hide>part</hide>
-		<option><name>On</name><key>True</key></option>
-		<option><name>Off</name><key>False</key></option>
-	</param>
-	<param>
-		<name>Plot Waterfall 3D</name>
-		<key>plotwaterfall3d</key>
 		<value>True</value>
 		<type>bool</type>
 		<hide>part</hide>
