@@ -33,14 +33,6 @@ AM_CPPFLAGS = \
 	$(QT_INCLUDES) \
 	$(WITH_INCLUDES)
 
-if GUILE
-nobase_guile_DATA = \
-	gnuradio/qtgui.scm
-endif
-
-noinst_GUILE  = qtgui.test
-
-
 ##############################
 # SWIG interface and library
 TOP_SWIG_IFILES = \
@@ -59,7 +51,3 @@ qtgui_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 qtgui_swig_swiginclude_headers = 
-
-if GUILE
-TESTS += run_guile_tests
-endif
