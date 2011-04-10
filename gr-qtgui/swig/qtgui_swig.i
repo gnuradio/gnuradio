@@ -63,6 +63,7 @@ public:
 			      double ymin, double ymax);
   void set_frequency_axis(double min, double max);
   void set_constellation_pen_size(int size);
+  void set_update_time(double t);
 };
 
 
@@ -106,6 +107,7 @@ public:
 			      double ymin, double ymax);
   void set_frequency_axis(double min, double max);
   void set_constellation_pen_size(int size);
+  void set_update_time(double t);
 };
 
 #if SWIGGUILE

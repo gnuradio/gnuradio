@@ -39,10 +39,10 @@ qtgui_make_sink_c (int fftsize, int wintype,
 		   QWidget *parent)
 {
   return gnuradio::get_initial_sptr(new qtgui_sink_c (fftsize, wintype,
-					      fc, bw, name,
-					      plotfreq, plotwaterfall,
-					      plottime, plotconst,
-					      parent));
+						      fc, bw, name,
+						      plotfreq, plotwaterfall,
+						      plottime, plotconst,
+						      parent));
 }
 
 qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
