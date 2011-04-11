@@ -27,7 +27,6 @@
 #include <qtgui_sink_f.h>
 %}
 
-%include "qtgui_sink_c.i"
-%include "qtgui_sink_f.i"
+%include "qtgui.i"
 
 
