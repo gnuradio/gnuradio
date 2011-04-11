@@ -5,7 +5,7 @@
 
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
-
+#include <iostream>
 
 class ConstellationDisplayZoomer: public QwtPlotZoomer
 {
@@ -75,15 +75,11 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   memset(_imagDataPoints, 0x0, _numPoints*sizeof(double));
 
   _zoomer = new ConstellationDisplayZoomer(canvas());
-#if QT_VERSION < 0x040000
+  _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			  Qt::RightButton, Qt::ControlModifier);
-#else
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			  Qt::RightButton, Qt::ControlModifier);
-#endif
+			   Qt::RightButton, Qt::ControlModifier);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
-			  Qt::RightButton);
+			   Qt::RightButton);
 
   _panner = new QwtPlotPanner(canvas());
   _panner->setAxisEnabled(QwtPlot::yRight, false);
@@ -100,8 +96,13 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
 
-  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ), 
-	  this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
+  // emit the position of clicks on widget
+  _picker = new QwtDblClickPlotPicker(canvas());
+  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
+          this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+
+  connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool ) ), 
+	  this, SLOT(LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
 ConstellationDisplayPlot::~ConstellationDisplayPlot()
@@ -184,6 +185,14 @@ void
 ConstellationDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
   plotItem->setVisible(!on);
+}
+
+void
+ConstellationDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  emit plotPointSelected(point);
 }
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_C */

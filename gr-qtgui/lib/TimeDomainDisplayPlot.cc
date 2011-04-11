@@ -82,6 +82,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
   _xAxisPoints = new double[_numPoints];
 
   _zoomer = new TimeDomainDisplayZoomer(canvas(), 0);
+  _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
 
   // Disable polygon clipping
   QwtPainter::setDeviceClipping(false);
@@ -134,6 +135,15 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
   _panner = new QwtPlotPanner(canvas());
   _panner->setAxisEnabled(QwtPlot::yRight, false);
   _panner->setMouseButton(Qt::MidButton);
+
+  // emit the position of clicks on widget
+  _picker = new QwtDblClickPlotPicker(canvas());
+  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
+	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+
+  // Configure magnify on mouse wheel
+  _magnifier = new QwtPlotMagnifier(canvas());
+  _magnifier->setAxisEnabled(QwtPlot::xBottom, false);
 
   // Avoid jumping when labels with more/less digits
   // appear/disappear when scrolling vertically
@@ -267,6 +277,14 @@ TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
     ((TimeDomainDisplayZoomer*)_zoomer)->SetTimePrecision(display_units);
     ((TimeDomainDisplayZoomer*)_zoomer)->SetUnitType(strunits);
   }
+}
+
+void
+TimeDomainDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  emit plotPointSelected(point);
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

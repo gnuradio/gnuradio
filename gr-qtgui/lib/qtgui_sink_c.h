@@ -67,8 +67,6 @@ private:
   double d_bandwidth;
   std::string d_name;
   
-  //gruel::mutex d_mutex;
-
   bool d_shift;
   gri_fft_complex *d_fft;
 
@@ -105,7 +103,6 @@ public:
   void set_update_time(double t);
 
   QApplication *d_qApplication;
-  //qtgui_obj *d_object;
 
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,

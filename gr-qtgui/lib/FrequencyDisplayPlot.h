@@ -12,8 +12,10 @@
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
 #include <qwt_plot_marker.h>
+#include <qwt_plot_magnifier.h>
 #include <highResTimeFunctions.h>
 #include <qwt_symbol.h>
+#include <qtgui_util.h>
 
 class FrequencyDisplayPlot:public QwtPlot{
   Q_OBJECT
@@ -43,10 +45,19 @@ public:
 
   void set_yaxis(double min, double max);
 
+  void SetTraceColour (QColor);
+  void SetBGColour (QColor c);
+  void ShowCFMarker (const bool);
+
 public slots:
   void resizeSlot( QSize *e );
   void SetLowerIntensityLevel(const double);
   void SetUpperIntensityLevel(const double);
+
+  void OnPickerPointSelected(const QwtDoublePoint & p);
+
+signals:
+  void plotPointSelected(const QPointF p);
 
 protected:
 
@@ -71,9 +82,14 @@ private:
 
   QwtPlotMarker *_markerPeakAmplitude;
   QwtPlotMarker *_markerNoiseFloorAmplitude;
+  QwtPlotMarker *_markerCF;
+
+  QwtDblClickPlotPicker *_picker;
+  QwtPlotMagnifier *_magnifier;
   
   double* _dataPoints;
   double* _xAxisPoints;
+  int     _xAxisMultiplier;
 
   double* _minFFTPoints;
   double* _maxFFTPoints;

@@ -86,25 +86,8 @@ QT_MOC_FLAGS=-DQT_SHARED -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB
 libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS) $(LTVERSIONFLAGS)
 
 libgnuradio_qtgui_la_LIBADD = 		\
-	$(GNURADIO_CORE_LA)	\
-	$(BOOST_THREAD_LIB) \
-	$(BOOST_DATE_TIME_LIB) \
-	-lstdc++		\
+	$(GNURADIO_CORE_LA)		\
+	$(BOOST_THREAD_LIB) 		\
+	$(BOOST_DATE_TIME_LIB) 		\
+	-lstdc++			\
 	$(QT_LIBS)
-
-##############################
-# SWIG interfaces and libraries
-
-TOP_SWIG_IFILES = 		\
-	qtgui.i
-
-# Install so that they end up available as:
-#   import gnuradio.qtgui
-# This ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-qtgui_pythondir_category =	\
-	gnuradio/qtgui
-
-# additional libraries for linking with the SWIG-generated library
-qtgui_la_swig_libadd =		\
-	libgnuradio-qtgui.la

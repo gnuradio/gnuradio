@@ -7,6 +7,7 @@
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
 
+#include <qtgui_util.h>
 #include <plot_waterfall.h>
 
 #include <highResTimeFunctions.h>
@@ -50,10 +51,12 @@ public:
 
 public slots:
   void resizeSlot( QSize *s );
-
+  void OnPickerPointSelected(const QwtDoublePoint & p);
+ 
 signals:
   void UpdatedLowerIntensityLevel(const double);
   void UpdatedUpperIntensityLevel(const double);
+  void plotPointSelected(const QPointF p);
 
 protected:
 
@@ -62,11 +65,14 @@ private:
 
   double _startFrequency;
   double _stopFrequency;
+  int    _xAxisMultiplier;
 
   PlotWaterfall *d_spectrogram;
 
   QwtPlotPanner* _panner;
   QwtPlotZoomer* _zoomer;
+
+  QwtDblClickPlotPicker *_picker;
 
   WaterfallData* _waterfallData;
 

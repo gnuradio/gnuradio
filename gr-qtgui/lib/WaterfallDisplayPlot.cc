@@ -253,19 +253,20 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   // Ctrl+RighButton: zoom out to full size
   
   _zoomer = new WaterfallZoomer(canvas(), 0);
-#if QT_VERSION < 0x040000
+  _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
 			   Qt::RightButton, Qt::ControlModifier);
-#else
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			   Qt::RightButton, Qt::ControlModifier);
-#endif
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
 			   Qt::RightButton);
   
   _panner = new QwtPlotPanner(canvas());
   _panner->setAxisEnabled(QwtPlot::yRight, false);
   _panner->setMouseButton(Qt::MidButton);
+  
+  // emit the position of clicks on widget
+  _picker = new QwtDblClickPlotPicker(canvas());
+  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
+	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
   
   // Avoid jumping when labels with more/less digits
   // appear/disappear when scrolling vertically
@@ -279,6 +280,8 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   _zoomer->setTrackerPen(c);
 
   _UpdateIntensityRangeDisplay();
+
+  _xAxisMultiplier = 1;
 }
 
 WaterfallDisplayPlot::~WaterfallDisplayPlot()
@@ -314,6 +317,8 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
   double startFreq = constStartFreq / units;
   double stopFreq = constStopFreq / units;
   double centerFreq = constCenterFreq / units;
+
+  _xAxisMultiplier = units;
 
   _useCenterFrequencyFlag = useCenterFrequencyFlag;
 
@@ -542,6 +547,15 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
 
   // Update the last replot timer
   _lastReplot = get_highres_clock();
+}
+
+void
+WaterfallDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f %d\n", point.x(), point.y(), _xAxisMultiplier);
+  point.setX(point.x() * _xAxisMultiplier);
+  emit plotPointSelected(point);
 }
 
 #endif /* WATERFALL_DISPLAY_PLOT_C */

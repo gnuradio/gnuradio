@@ -148,7 +148,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   _max_fft_plot_curve->setRawData(_xAxisPoints, _maxFFTPoints, _numPoints);
   _max_fft_plot_curve->setVisible(false);
 
-  _lower_intensity_marker = new QwtPlotMarker();
+  _lower_intensity_marker= new QwtPlotMarker();
   _lower_intensity_marker->setLineStyle(QwtPlotMarker::HLine);
   _lower_intensity_marker->setLinePen(QPen(Qt::cyan));
   _lower_intensity_marker->attach(this);
@@ -183,6 +183,12 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   _markerNoiseFloorAmplitude->setLinePen(QPen(Qt::darkRed, 0, Qt::DotLine));
   _markerNoiseFloorAmplitude->attach(this);
 
+  _markerCF= new QwtPlotMarker();
+  _markerCF->setLineStyle(QwtPlotMarker::VLine);
+  _markerCF->setLinePen(QPen(Qt::lightGray, 0, Qt::DotLine));
+  _markerCF->attach(this);
+  _markerCF->hide();
+
   _peakFrequency = 0;
   _peakAmplitude = -HUGE_VAL;
 
@@ -190,14 +196,19 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 
   replot();
 
+  // emit the position of clicks on widget
+  _picker = new QwtDblClickPlotPicker(canvas());
+  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
+	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+
+  // Configure magnify on mouse wheel
+  _magnifier = new QwtPlotMagnifier(canvas());
+  _magnifier->setAxisEnabled(QwtPlot::xBottom, false);
+
   _zoomer = new FreqDisplayZoomer(canvas(), 0);
-#if QT_VERSION < 0x040000
+  _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
 			  Qt::RightButton, Qt::ControlModifier);
-#else
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			  Qt::RightButton, Qt::ControlModifier);
-#endif
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
 			  Qt::RightButton);
 
@@ -256,6 +267,7 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
   double stopFreq = constStopFreq / units;
   double centerFreq = constCenterFreq / units;
 
+  _xAxisMultiplier = units;
   _useCenterFrequencyFlag = useCenterFrequencyFlag;
 
   if(_useCenterFrequencyFlag){
@@ -433,5 +445,36 @@ FrequencyDisplayPlot::SetUpperIntensityLevel(const double upperIntensityLevel)
   _upper_intensity_marker->setYValue( upperIntensityLevel );
 }
 
+void
+FrequencyDisplayPlot::SetTraceColour (QColor c)
+{
+  _fft_plot_curve->setPen(QPen(c));
+}
+
+void 
+FrequencyDisplayPlot::SetBGColour (QColor c)
+{
+  QPalette palette;
+  palette.setColor(canvas()->backgroundRole(), c);
+  canvas()->setPalette(palette);  
+}
+
+void
+FrequencyDisplayPlot::ShowCFMarker (const bool show)
+{
+  if (show)
+    _markerCF->show();
+  else
+    _markerCF->hide();
+}
+
+void
+FrequencyDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f %d\n", point.x(), point.y(), _xAxisMultiplier);
+  point.setX(point.x() * _xAxisMultiplier);
+  emit plotPointSelected(point);
+}
 
 #endif /* FREQUENCY_DISPLAY_PLOT_C */
