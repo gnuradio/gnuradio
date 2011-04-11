@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2004-2006,2008-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -50,4 +50,5 @@ qtgui_swig_la_swig_libadd = \
 	$(abs_top_builddir)/gr-qtgui/lib/libgnuradio-qtgui.la
 
 # additional SWIG files to be installed
-qtgui_swig_swiginclude_headers = 
+qtgui_swig_swiginclude_headers = 	\
+	qtgui.i
