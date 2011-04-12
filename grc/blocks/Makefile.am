@@ -48,6 +48,7 @@ dist_ourdata_DATA = \
 	blks2_packet_decoder.xml \
 	blks2_packet_encoder.xml \
 	blks2_pfb_arb_resampler.xml \
+	blks2_pfb_channelizer.xml \
 	blks2_qamx_demod.xml \
 	blks2_qamx_mod.xml \
 	blks2_rational_resampler_xxx.xml \
