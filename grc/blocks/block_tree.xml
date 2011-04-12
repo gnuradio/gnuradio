@@ -175,6 +175,7 @@
 		<block>blks2_analysis_filterbank</block>
 		<!-- Polyphase filters -->
 		<block>blks2_pfb_arb_resampler_ccf</block>
+		<block>gr_pfb_synthesis_filterbank_ccf</block>
 		<!-- Other filters -->
 		<block>gr_single_pole_iir_filter_xx</block>
 		<block>gr_hilbert_fc</block>
