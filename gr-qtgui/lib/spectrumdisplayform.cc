@@ -62,6 +62,19 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   // Create a timer to update plots at the specified rate
   displayTimer = new QTimer(this);
   connect(displayTimer, SIGNAL(timeout()), this, SLOT(UpdateGuiTimer()));
+
+  // Connect double click signals up
+  connect(_frequencyDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
+	  this, SLOT(onFFTPlotPointSelected(const QPointF)));
+  
+  connect(_waterfallDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
+	  this, SLOT(onWFallPlotPointSelected(const QPointF)));
+  
+  connect(_timeDomainDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
+	  this, SLOT(onTimePlotPointSelected(const QPointF)));
+  
+  connect(_constellationDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
+	  this, SLOT(onConstPlotPointSelected(const QPointF)));
 }
 
 SpectrumDisplayForm::~SpectrumDisplayForm()
@@ -688,4 +701,28 @@ SpectrumDisplayForm::SetUpdateTime(double t)
   d_update_time = t;
   // QTimer class takes millisecond input
   displayTimer->start(d_update_time*1000);
+}
+
+void
+SpectrumDisplayForm::onFFTPlotPointSelected(const QPointF p)
+{
+  emit plotPointSelected(p, 1);
+}
+
+void
+SpectrumDisplayForm::onWFallPlotPointSelected(const QPointF p)
+{
+  emit plotPointSelected(p, 2);
+}
+
+void
+SpectrumDisplayForm::onTimePlotPointSelected(const QPointF p)
+{
+  emit plotPointSelected(p, 3);
+}
+
+void
+SpectrumDisplayForm::onConstPlotPointSelected(const QPointF p)
+{
+  emit plotPointSelected(p, 4);
 }

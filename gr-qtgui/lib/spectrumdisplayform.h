@@ -71,7 +71,13 @@ private slots:
   void newFrequencyData( const SpectrumUpdateEvent* );
   void UpdateGuiTimer();
 
-protected:
+  void onFFTPlotPointSelected(const QPointF p);
+  void onWFallPlotPointSelected(const QPointF p);
+  void onTimePlotPointSelected(const QPointF p);
+  void onConstPlotPointSelected(const QPointF p);
+
+signals:
+  void plotPointSelected(const QPointF p, int type);
 
 private:
   void _AverageHistory( const double * newBuffer );
