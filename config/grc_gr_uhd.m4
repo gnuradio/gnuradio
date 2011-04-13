@@ -40,6 +40,7 @@ AC_DEFUN([GRC_GR_UHD],[
     AM_CONDITIONAL([GR_DEFINE_HAVE_UHD],[test $passed = yes])
 
     AC_CONFIG_FILES([ \
+        gr-uhd/gnuradio-uhd.pc \
         gr-uhd/Makefile \
         gr-uhd/grc/Makefile \
         gr-uhd/include/Makefile \

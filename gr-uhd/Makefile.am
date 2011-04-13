@@ -27,3 +27,5 @@ if PYTHON
 SUBDIRS += swig grc
 endif
 
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = gnuradio-uhd.pc
