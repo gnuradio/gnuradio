@@ -48,6 +48,7 @@ dist_ourdata_DATA = \
 	blks2_packet_decoder.xml \
 	blks2_packet_encoder.xml \
 	blks2_pfb_arb_resampler.xml \
+	blks2_pfb_channelizer.xml \
 	blks2_qamx_demod.xml \
 	blks2_qamx_mod.xml \
 	blks2_rational_resampler_xxx.xml \
@@ -148,6 +149,7 @@ dist_ourdata_DATA = \
 	gr_peak_detector2_fb.xml \
 	gr_peak_detector_xb.xml \
 	gr_pfb_clock_sync.xml \
+	gr_pfb_synthesis_filterbank.xml \
 	gr_phase_modulator_fc.xml \
 	gr_pll_carriertracking_cc.xml \
 	gr_pll_freqdet_cf.xml \
