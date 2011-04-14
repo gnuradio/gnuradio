@@ -83,8 +83,12 @@ for arch in archs:
     a_var = re.search("^\$", arch);
     if a_var:
         archs.remove(arch);
+        
+        
 
-
+archflags_dict = {}
+for filearch in filearchs:
+    archflags_dict[str(filearch.attributes["name"].value)] = str(filearch.getElementsByTagName("flag")[0].firstChild.data)
 
 archs_or = "("
 for arch in archs:
@@ -299,5 +303,5 @@ outfile_environment_h.close();
 outfile_mktables.write(make_mktables(functions));
 outfile_mktables.close();
 
-outfile_makefile_am.write(make_makefile_am(filearchs, machines))
+outfile_makefile_am.write(make_makefile_am(filearchs, machines, archflags_dict))
 outfile_makefile_am.close()
