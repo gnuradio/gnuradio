@@ -213,8 +213,7 @@ class Param(_Param, _GUIParam):
 			lambda p: p._vlen, self.get_parent().get_ports())
 		):
 			try:
-				assert int(self.get_evaluated()) == 1
-				return 'part'
+				if int(self.get_evaluated()) == 1: return 'part'
 			except: pass
 		#hide empty grid positions
 		if self.get_key() in ('grid_pos', 'notebook') and not self.get_value(): return 'part'
@@ -244,8 +243,7 @@ class Param(_Param, _GUIParam):
 		def eval_string(v):
 			try:
 				e = self.get_parent().get_parent().evaluate(v)
-				assert isinstance(e, str)
-				return e
+				if isinstance(e, str): return e
 			except:
 				self._stringify_flag = True
 				return v
@@ -265,21 +263,21 @@ class Param(_Param, _GUIParam):
 			#raise an exception if the data is invalid
 			if t == 'raw': return e
 			elif t == 'complex':
-				try: assert isinstance(e, COMPLEX_TYPES)
-				except AssertionError: raise Exception, 'Expression "%s" is invalid for type complex.'%str(e)
+				if not isinstance(e, COMPLEX_TYPES):
+					raise Exception, 'Expression "%s" is invalid for type complex.'%str(e)
 				return e
 			elif t == 'real':
-				try: assert isinstance(e, REAL_TYPES)
-				except AssertionError: raise Exception, 'Expression "%s" is invalid for type real.'%str(e)
+				if not isinstance(e, REAL_TYPES):
+					raise Exception, 'Expression "%s" is invalid for type real.'%str(e)
 				return e
 			elif t == 'int':
-				try: assert isinstance(e, INT_TYPES)
-				except AssertionError: raise Exception, 'Expression "%s" is invalid for type integer.'%str(e)
+				if not isinstance(e, INT_TYPES):
+					raise Exception, 'Expression "%s" is invalid for type integer.'%str(e)
 				return e
 			elif t == 'hex': return hex(e)
 			elif t == 'bool':
-				try: assert isinstance(e, bool)
-				except AssertionError: raise Exception, 'Expression "%s" is invalid for type bool.'%str(e)
+				if not isinstance(e, bool):
+					raise Exception, 'Expression "%s" is invalid for type bool.'%str(e)
 				return e
 			else: raise TypeError, 'Type "%s" not handled'%t
 		#########################
@@ -295,25 +293,25 @@ class Param(_Param, _GUIParam):
 				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
-				try:
-					for ei in e: assert isinstance(ei, COMPLEX_TYPES)
-				except AssertionError: raise Exception, 'Expression "%s" is invalid for type complex vector.'%str(e)
+				for ei in e:
+					if not isinstance(ei, COMPLEX_TYPES):
+						raise Exception, 'Expression "%s" is invalid for type complex vector.'%str(e)
 				return e
 			elif t == 'real_vector':
 				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
-				try:
-					for ei in e: assert isinstance(ei, REAL_TYPES)
-				except AssertionError: raise Exception, 'Expression "%s" is invalid for type real vector.'%str(e)
+				for ei in e:
+					if not isinstance(ei, REAL_TYPES):
+						raise Exception, 'Expression "%s" is invalid for type real vector.'%str(e)
 				return e
 			elif t == 'int_vector':
 				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
-				try:
-					for ei in e: assert isinstance(ei, INT_TYPES)
-				except AssertionError: raise Exception, 'Expression "%s" is invalid for type integer vector.'%str(e)
+				for ei in e:
+					if not isinstance(ei, INT_TYPES):
+						raise Exception, 'Expression "%s" is invalid for type integer vector.'%str(e)
 				return e
 		#########################
 		# String Types
@@ -327,13 +325,13 @@ class Param(_Param, _GUIParam):
 		#########################
 		elif t == 'id':
 			#can python use this as a variable?
-			try: assert _check_id_matcher.match(v)
-			except AssertionError: raise Exception, 'ID "%s" must begin with a letter and may contain letters, numbers, and underscores.'%v
+			if not _check_id_matcher.match(v):
+				raise Exception, 'ID "%s" must begin with a letter and may contain letters, numbers, and underscores.'%v
 			ids = [param.get_value() for param in self.get_all_params(t)]
-			try: assert ids.count(v) <= 1 #id should only appear once, or zero times if block is disabled
-			except: raise Exception, 'ID "%s" is not unique.'%v
-			try: assert v not in ID_BLACKLIST
-			except: raise Exception, 'ID "%s" is blacklisted.'%v
+			if ids.count(v) > 1: #id should only appear once, or zero times if block is disabled
+				raise Exception, 'ID "%s" is not unique.'%v
+			if v in ID_BLACKLIST:
+				raise Exception, 'ID "%s" is blacklisted.'%v
 			return v
 		#########################
 		# Stream ID Type
@@ -346,12 +344,12 @@ class Param(_Param, _GUIParam):
 			)]
 			#check that the virtual sink's stream id is unique
 			if self.get_parent().is_virtual_sink():
-				try: assert ids.count(v) <= 1 #id should only appear once, or zero times if block is disabled
-				except: raise Exception, 'Stream ID "%s" is not unique.'%v
+				if ids.count(v) > 1: #id should only appear once, or zero times if block is disabled
+					raise Exception, 'Stream ID "%s" is not unique.'%v
 			#check that the virtual source's steam id is found
 			if self.get_parent().is_virtual_source():
-				try: assert v in ids
-				except: raise Exception, 'Stream ID "%s" is not found.'%v
+				if v not in ids:
+					raise Exception, 'Stream ID "%s" is not found.'%v
 			return v
 		#########################
 		# GUI Position/Hint
@@ -382,17 +380,15 @@ class Param(_Param, _GUIParam):
 		elif t == 'grid_pos':
 			if not v: return '' #allow for empty grid pos
 			e = self.get_parent().get_parent().evaluate(v)
-			try:
-				assert isinstance(e, (list, tuple)) and len(e) == 4
-				for ei in e: assert isinstance(ei, int)
-			except AssertionError: raise Exception, 'A grid position must be a list of 4 integers.'
+			if not isinstance(e, (list, tuple)) or len(e) != 4 or not all([isinstance(ei, int) for ei in e]):
+				raise Exception, 'A grid position must be a list of 4 integers.'
 			row, col, row_span, col_span = e
 			#check row, col
-			try: assert row >= 0 and col >= 0
-			except AssertionError: raise Exception, 'Row and column must be non-negative.'
+			if row < 0 or col < 0:
+				raise Exception, 'Row and column must be non-negative.'
 			#check row span, col span
-			try: assert row_span > 0 and col_span > 0
-			except AssertionError: raise Exception, 'Row and column span must be greater than zero.'
+			if row_span <= 0 or col_span <= 0:
+				raise Exception, 'Row and column span must be greater than zero.'
 			#get hostage cell parent
 			try: my_parent = self.get_parent().get_param('notebook').evaluate()
 			except: my_parent = ''
@@ -421,8 +417,8 @@ class Param(_Param, _GUIParam):
 			try: notebook_block = filter(lambda b: b.get_id() == notebook_id, notebook_blocks)[0]
 			except: raise Exception, 'Notebook id "%s" is not an existing notebook id.'%notebook_id
 			#check that page index exists
-			try: assert int(page_index) in range(len(notebook_block.get_param('labels').evaluate()))
-			except: raise Exception, 'Page index "%s" is not a valid index number.'%page_index
+			if int(page_index) not in range(len(notebook_block.get_param('labels').evaluate())):
+				raise Exception, 'Page index "%s" is not a valid index number.'%page_index
 			return notebook_id, page_index
 		#########################
 		# Import Type
