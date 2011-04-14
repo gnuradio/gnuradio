@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+Copyright 2007-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -290,10 +290,10 @@ class FlowGraph(Element):
 		for selected in selected_elements:
 			if selected in elements: continue
 			selected_elements.remove(selected)
-		try: assert self._old_selected_port.get_parent() in elements
-		except: self._old_selected_port = None
-		try: assert self._new_selected_port.get_parent() in elements
-		except: self._new_selected_port = None
+		if self._old_selected_port and self._old_selected_port.get_parent() not in elements:
+			self._old_selected_port = None
+		if self._new_selected_port and self._new_selected_port.get_parent() not in elements:
+			self._new_selected_port = None
 		#update highlighting
 		for element in elements:
 			element.set_highlighted(element in selected_elements)

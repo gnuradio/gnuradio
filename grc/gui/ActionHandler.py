@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009, 2011 Free Software Foundation, Inc.
+Copyright 2007-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -78,8 +78,7 @@ class ActionHandler:
 		When not in focus, gtk and the accelerators handle the the key press.
 		@return false to let gtk handle the key action
 		"""
-		try: assert self.get_focus_flag()
-		except AssertionError: return False
+		if not self.get_focus_flag(): return False
 		return Actions.handle_key_press(event)
 
 	def _quit(self, window, event):
