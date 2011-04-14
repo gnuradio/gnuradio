@@ -1,4 +1,4 @@
-dnl Copyright 2010 Free Software Foundation, Inc.
+dnl Copyright 2010-2011 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -26,22 +26,23 @@ AC_DEFUN([GRC_GR_UHD],[
     if test $passed = yes; then
         dnl Don't do gr-uhd if the 'uhd' package is not installed
         PKG_CHECK_MODULES(
-            [UHD], [uhd >= 2.0.0 uhd < 3.0.0], [],
-            [passed=no; AC_MSG_RESULT([gr-uhd requires libuhd 2.x.x])]
+            [UHD], [uhd >= 3.0.0 uhd < 4.0.0], [],
+            [passed=no; AC_MSG_RESULT([gr-uhd requires libuhd 3.x.x])]
         )
-        UHD_CPPFLAGS="${UHD_CPPFLAGS} -I\${abs_top_srcdir}/gr-uhd/lib"
+        UHD_CPPFLAGS="${UHD_CPPFLAGS} -I\${abs_top_srcdir}/gr-uhd/include"
         AC_SUBST(UHD_CPPFLAGS)
         AC_SUBST(UHD_LIBS)
 
 	# Use this to tell the Makefile whether to define
 	# GR_HAVE_UHD for swig.
-	AM_CONDITIONAL([GR_DEFINE_HAVE_UHD],[test $passed = yes])
     fi
+
+    AM_CONDITIONAL([GR_DEFINE_HAVE_UHD],[test $passed = yes])
 
     AC_CONFIG_FILES([ \
         gr-uhd/Makefile \
-        gr-uhd/apps/Makefile \
         gr-uhd/grc/Makefile \
+        gr-uhd/include/Makefile \
         gr-uhd/lib/Makefile \
         gr-uhd/swig/Makefile \
         gr-uhd/swig/run_tests \

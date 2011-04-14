@@ -39,7 +39,8 @@ SWIGPYTHONFLAGS = -fvirtual -python -modern
 SWIGGRFLAGS = -I$(GNURADIO_CORE_INCLUDEDIR)/swig -I$(GNURADIO_CORE_INCLUDEDIR)
 
 # standard defins and includes
-STD_DEFINES_AND_INCLUDES=-I$(top_srcdir)/include -I$(top_srcdir)/lib
+STD_DEFINES_AND_INCLUDES=-I$(top_srcdir)/include -I$(top_srcdir)/lib  \
+	$(BOOST_CPPFLAGS) $(GNURADIO_CORE_CPPFLAGS)
 
 # Don't assume that make predefines $(RM), because BSD make does
 # not. We define it now in configure.ac using AM_PATH_PROG, but now

@@ -770,6 +770,11 @@ std::string pmt_write_string(pmt_t obj);
 
 std::ostream& operator<<(std::ostream &os, pmt_t obj);
 
+/*!
+ * \brief Write pmt string representation to stdout.
+ */
+void pmt_print(pmt_t v);
+
 
 /*
  * ------------------------------------------------------------------------
@@ -789,8 +794,17 @@ pmt_t pmt_deserialize(std::streambuf &source);
 
 void pmt_dump_sizeof();	// debugging
 
-} /* namespace pmt */
+/*!
+ * \brief Provide a simple string generating interface to pmt's serialize function
+ */
+std::string pmt_serialize_str(pmt_t obj);
 
+/*!
+ * \brief Provide a simple string generating interface to pmt's deserialize function
+ */
+pmt_t pmt_deserialize_str(std::string str);
+
+} /* namespace pmt */
 
 #include <gruel/pmt_sugar.h>
 

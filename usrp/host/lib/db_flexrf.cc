@@ -24,6 +24,9 @@
 
 #include <usrp/db_flexrf.h>
 #include <db_base_impl.h>
+#ifdef HAVE_TIME_H
+#include <ctime>
+#endif
 
 // d'board i/o pin defs
 // Tx and Rx have shared defs, but different i/o regs

@@ -33,7 +33,7 @@
 ## this has to be done in the including Makefile.am -before-
 ## Makefile.swig is included.
 
-@NAME@_pythondir_category ?= gnuradio/@NAME@
+@NAME@_pythondir_category ?= @NAME@
 @NAME@_pylibdir_category ?= $(@NAME@_pythondir_category)
 @NAME@_pythondir = $(pythondir)/$(@NAME@_pythondir_category)
 @NAME@_pylibdir = $(pyexecdir)/$(@NAME@_pylibdir_category)

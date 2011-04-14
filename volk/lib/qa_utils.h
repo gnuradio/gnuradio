@@ -1,7 +1,7 @@
 #ifndef VOLK_QA_UTILS_H
 #define VOLK_QA_UTILS_H
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 
 struct volk_type_t {

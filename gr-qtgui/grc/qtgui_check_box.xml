@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Check Box:
+##	a gui check box form
+###################################################
+ -->
+<block>
+	<name>QT GUI Check Box</name>
+	<key>variable_qtgui_check_box</key>
+	<category>QT GUI Widgets</category>
+	<import>from PyQt4 import Qt</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>#set $win = '_%s_check_box'%$id
+#if not $label()
+	#set $label = '"%s"'%$id
+#end if
+$win = Qt.QCheckBox($label)
+self._$(id)_choices = {True: $true, False: $false}
+self._$(id)_choices_inv = dict((v,k) for k,v in self._$(id)_choices.iteritems())
+self._$(id)_callback = lambda i: $(win).setChecked(self._$(id)_choices_inv[i])
+self._$(id)_callback(self.$id)
+$(win).stateChanged.connect(lambda i: self.set_$(id)(self._$(id)_choices[bool(i)]))
+$(gui_hint()($win))</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>self._$(id)_callback($id)</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>int</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option><name>Float</name><key>real</key><opt>conv:float</opt></option>
+		<option><name>Integer</name><key>int</key><opt>conv:int</opt></option>
+		<option><name>String</name><key>string</key><opt>conv:str</opt></option>
+		<option><name>Boolean</name><key>bool</key><opt>conv:bool</opt></option>
+		<option><name>Any</name><key>raw</key><opt>conv:eval</opt></option>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>True</value>
+		<type>$type</type>
+	</param>
+	<param>
+		<name>True</name>
+		<key>true</key>
+		<value>True</value>
+		<type>$type</type>
+	</param>
+	<param>
+		<name>False</name>
+		<key>false</key>
+		<value>False</value>
+		<type>$type</type>
+	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<check>$value in ($true, $false)</check>
+	<doc>
+This block creates a variable check box. \
+Leave the label blank to use the variable id as the label.
+
+A check box selects between two values of similar type. \
+Te values do not necessarily need to be of boolean type.
+
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>

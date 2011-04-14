@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Chooser:
+##	A chooser, radio buttons
+###################################################
+ -->
+<block>
+	<name>QT GUI Chooser</name>
+	<key>variable_qtgui_chooser</key>
+	<category>QT GUI Widgets</category>
+	<import>from PyQt4 import Qt</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>#slurp
+#set $all_options = [$option0, $option1, $option2, $option3, $option4][:int($num_opts())]
+#set $all_labels = [$label0, $label1, $label2, $label3, $label4][:int($num_opts())]
+#if not $label()
+	#set $label = '"%s"'%$id
+#end if
+########################################################################
+## Create the options list
+########################################################################
+#if int($num_opts())
+self._$(id)_options = (#slurp
+	#for $ch in $all_options
+$ch, #slurp
+	#end for
+)
+#else
+self._$(id)_options = $options
+#end if
+########################################################################
+## Create the labels list
+########################################################################
+#if int($num_opts())
+self._$(id)_labels = (#slurp
+	#for i, $lbl in enumerate($all_labels)
+	#if $lbl()
+$lbl, #slurp
+	#else
+str(self._$(id)_options[$i]), #slurp
+	#end if
+	#end for
+)
+#elif $labels()
+self._$(id)_labels = $labels
+#else
+self._$(id)_labels = map(str, self._$(id)_options)
+#end if
+########################################################################
+## Create the combo box
+########################################################################
+#if $widget() == 'combo_box'
+#set $win = 'self._%s_tool_bar'%$id
+$win = Qt.QToolBar(self)
+$(win).addWidget(Qt.QLabel($label+": "))
+self._$(id)_combo_box = Qt.QComboBox()
+$(win).addWidget(self._$(id)_combo_box)
+for label in self._$(id)_labels: self._$(id)_combo_box.addItem(label)
+self._$(id)_callback = lambda i: self._$(id)_combo_box.setCurrentIndex(self._$(id)_options.index(i))
+self._$(id)_callback(self.$id)
+self._$(id)_combo_box.currentIndexChanged.connect(
+	lambda i: self.set_$(id)(self._$(id)_options[i]))
+#end if
+########################################################################
+## Create the radio buttons
+########################################################################
+#if $widget() == 'radio_buttons'
+#set $win = 'self._%s_group_box'%$id
+$win = Qt.QGroupBox($label)
+self._$(id)_box = $(orient)()
+self._$(id)_button_group = Qt.QButtonGroup()
+$(win).setLayout(self._$(id)_box)
+for i, label in enumerate(self._$(id)_labels):
+	radio_button = Qt.QRadioButton(label)
+	self._$(id)_box.addWidget(radio_button)
+	self._$(id)_button_group.addButton(radio_button, i)
+self._$(id)_callback = lambda i: self._$(id)_button_group.button(self._$(id)_options.index(i)).setChecked(True)
+self._$(id)_callback(self.$id)
+self._$(id)_button_group.buttonClicked[int].connect(
+	lambda i: self.set_$(id)(self._$(id)_options[i]))
+#end if
+$(gui_hint()($win))</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>self._$(id)_callback($id)</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>int</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option><name>Float</name><key>real</key></option>
+		<option><name>Integer</name><key>int</key></option>
+		<option><name>String</name><key>string</key></option>
+		<option><name>Any</name><key>raw</key></option>
+	</param>
+	<param>
+		<name>Num Options</name>
+		<key>num_opts</key>
+		<value>3</value>
+		<type>enum</type>
+		<option><name>List</name><key>0</key></option>
+		<option><name>1</name><key>1</key></option>
+		<option><name>2</name><key>2</key></option>
+		<option><name>3</name><key>3</key></option>
+		<option><name>4</name><key>4</key></option>
+		<option><name>5</name><key>5</key></option>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>0</value>
+		<type>$type</type>
+	</param>
+	<param>
+		<name>Options</name>
+		<key>options</key>
+		<value>[0, 1, 2]</value>
+		<type>raw</type>
+		<hide>#if int($num_opts()) then 'all' else 'none'#</hide>
+	</param>
+	<param>
+		<name>Labels</name>
+		<key>labels</key>
+		<value>[]</value>
+		<type>raw</type>
+		<hide>#if int($num_opts()) then 'all' else 'none'#</hide>
+	</param>
+	<param>
+		<name>Option 0</name>
+		<key>option0</key>
+		<value>0</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 0 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 0</name>
+		<key>label0</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 0) and ($label0() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Option 1</name>
+		<key>option1</key>
+		<value>1</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 1 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 1</name>
+		<key>label1</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 1) and ($label1() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Option 2</name>
+		<key>option2</key>
+		<value>2</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 2 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 2</name>
+		<key>label2</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 2) and ($label2() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Option 3</name>
+		<key>option3</key>
+		<value>3</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 3 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 3</name>
+		<key>label3</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 3) and ($label3() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Option 4</name>
+		<key>option4</key>
+		<value>4</value>
+		<type>$type</type>
+		<hide>#if int($num_opts()) > 4 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Label 4</name>
+		<key>label4</key>
+		<value></value>
+		<type>string</type>
+		<hide>$((int($num_opts()) > 4) and ($label4() and 'none' or 'part') or 'all')</hide>
+	</param>
+	<param>
+		<name>Widget</name>
+		<key>widget</key>
+		<value>combo_box</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option><name>Combo Box</name><key>combo_box</key></option>
+		<option><name>Radio Buttons</name><key>radio_buttons</key></option>
+	</param>
+	<param>
+		<name>Orientation</name>
+		<key>orient</key>
+		<value>Qt.QVBoxLayout</value>
+		<type>enum</type>
+		<hide>#if $widget() == 'radio_buttons' then 'part' else 'all'#</hide>
+		<option>
+			<name>Horizontal</name>
+			<key>Qt.QHBoxLayout</key>
+		</option>
+		<option>
+			<name>Vertical</name>
+			<key>Qt.QVBoxLayout</key>
+		</option>
+	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<doc>
+This block creates a variable with enumerated options. \
+The gui widget is implemented as a combo box or radio button group. \
+Leave the label blank to use the variable id as the label.
+
+Choose the number of options available to your chooser. \
+When the label is left blank, the option will be used as the label. \
+Set the number of options to "list" to enter a single list of options and labels. \
+When the labels is an empty list, the options will be used as the label.
+
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>

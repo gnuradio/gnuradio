@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -17,11 +17,11 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = lib apps
+SUBDIRS = include lib
 
 if PYTHON
 SUBDIRS += swig grc

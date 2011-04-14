@@ -27,7 +27,6 @@
 #include <gr_wavfile_source.h>
 #include <gr_io_signature.h>
 #include <gri_wavfile.h>
-#include <cstdio>
 #include <sys/types.h>
 #include <fcntl.h>
 #include <stdexcept>

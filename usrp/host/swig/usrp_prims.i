@@ -37,6 +37,7 @@
 
 %{
 #include <usrp/usrp_prims.h>
+#include <stddef.h>		// ptrdiff_t
 %}
 
 

@@ -236,7 +236,7 @@ class gr_block : public gr_basic_block {
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
     
  protected:
-
+  gr_block (void){} //allows pure virtual interface sub-classes
   gr_block (const std::string &name,
             gr_io_signature_sptr input_signature,
             gr_io_signature_sptr output_signature);

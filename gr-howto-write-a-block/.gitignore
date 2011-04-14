@@ -24,3 +24,4 @@
 /depcomp
 /ltmain.sh
 /install-sh
+/setup_guile_test_env

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Terminal window
+###################################################
+ -->
+<block>
+	<name>WX GUI Terminal Sink</name>
+	<key>wxgui_termsink</key>
+	<category>WX GUI Widgets</category>
+
+	<import>from gnuradio.wxgui import termsink</import>
+
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+termsink.termsink(
+	parent=$(parent).GetWin(),
+#if $win_size()
+	size=$win_size,
+#end if
+	msgq=$(id)_msgq_in,
+)
+#if not $grid_pos()
+$(parent).Add(self.$(id))
+#else
+$(parent).GridAdd(self.$(id), $(', '.join(map(str, $grid_pos()))))
+#end if</make>
+
+	<param>
+		<name>Window Size</name>
+		<key>win_size</key>
+		<value></value>
+		<type>int_vector</type>
+		<hide>#if $win_size() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
+
+	<check>not $win_size or len($win_size) == 2</check>
+
+	<sink>
+		<name>in</name>
+		<type>msg</type>
+	</sink>
+
+</block>

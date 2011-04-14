@@ -53,10 +53,8 @@
 // block headers
 ////////////////////////////////////////////////////////////////////////
 %{
-#include <uhd_multi_usrp_source.h>
-#include <uhd_multi_usrp_sink.h>
-#include <uhd_single_usrp_source.h>
-#include <uhd_single_usrp_sink.h>
+#include <gr_uhd_usrp_source.h>
+#include <gr_uhd_usrp_sink.h>
 %}
 
 ////////////////////////////////////////////////////////////////////////
@@ -68,6 +66,7 @@
 
 %include <uhd/utils/pimpl.hpp>
 
+%ignore uhd::dict::operator[]; //ignore warnings about %extend
 %include <uhd/types/dict.hpp>
 %template(string_string_dict_t) uhd::dict<std::string, std::string>; //define after dict
 
@@ -90,23 +89,29 @@
 
 %include <uhd/types/metadata.hpp>
 
+%ignore uhd::device::register_device; //causes compile to choke in MSVC
 %include <uhd/device.hpp>
 %template(device_addr_vector_t) std::vector<uhd::device_addr_t>;
+
+%include <uhd/types/sensors.hpp>
+
+////////////////////////////////////////////////////////////////////////
+// swig dboard_iface for python access
+////////////////////////////////////////////////////////////////////////
+%include stdint.i
+%include <uhd/types/serial.hpp>
+%include <uhd/usrp/dboard_iface.hpp>
+
+%template(dboard_iface_sptr) boost::shared_ptr<uhd::usrp::dboard_iface>;
 
 ////////////////////////////////////////////////////////////////////////
 // block magic
 ////////////////////////////////////////////////////////////////////////
-GR_SWIG_BLOCK_MAGIC(uhd,multi_usrp_source)
-%include <uhd_multi_usrp_source.h>
+GR_SWIG_BLOCK_MAGIC(uhd,usrp_source)
+%include <gr_uhd_usrp_source.h>
 
-GR_SWIG_BLOCK_MAGIC(uhd,multi_usrp_sink)
-%include <uhd_multi_usrp_sink.h>
-
-GR_SWIG_BLOCK_MAGIC(uhd,single_usrp_source)
-%include <uhd_single_usrp_source.h>
-
-GR_SWIG_BLOCK_MAGIC(uhd,single_usrp_sink)
-%include <uhd_single_usrp_sink.h>
+GR_SWIG_BLOCK_MAGIC(uhd,usrp_sink)
+%include <gr_uhd_usrp_sink.h>
 
 ////////////////////////////////////////////////////////////////////////
 // helpful constants

@@ -139,6 +139,7 @@ libgeneral_la_SOURCES = 		\
 	gr_rms_cf.cc			\
 	gr_rms_ff.cc			\
 	gr_short_to_float.cc		\
+	gr_int_to_float.cc		\
 	gr_simple_correlator.cc		\
 	gr_simple_framer.cc		\
 	gr_simple_squelch_cc.cc		\
@@ -301,6 +302,7 @@ grinclude_HEADERS = 			\
 	gr_rms_cf.h			\
 	gr_rms_ff.h			\
 	gr_short_to_float.h		\
+	gr_int_to_float.h		\
 	gr_simple_correlator.h		\
 	gr_simple_framer.h		\
 	gr_simple_framer_sync.h		\
@@ -418,6 +420,7 @@ swiginclude_HEADERS =			\
 	gr_glfsr_source_b.i		\
 	gr_glfsr_source_f.i		\
 	gr_head.i			\
+	gr_int_to_float.i		\
 	gr_interleave.i 		\
 	gr_interleaved_short_to_complex.i \
 	gr_iqcomp_cc.i			\

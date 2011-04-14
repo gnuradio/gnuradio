@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##WX GUI Notebook
+###################################################
+ -->
+<block>
+	<name>WX GUI Notebook</name>
+	<key>notebook</key>
+	<category>WX GUI Widgets</category>
+	<import>from grc_gnuradio import wxgui as grc_wxgui</import>
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+self.$(id) = wx.Notebook($(parent).GetWin(), style=$style)
+#for $label in $labels()
+self.$(id).AddPage(grc_wxgui.Panel(self.$(id)), "$label")
+#end for
+#if not $grid_pos()
+$(parent).Add(self.$(id))
+#else
+$(parent).GridAdd(self.$(id), $(', '.join(map(str, $grid_pos()))))
+#end if</make>
+	<param>
+		<name>Tab Orientation</name>
+		<key>style</key>
+		<value>wx.NB_TOP</value>
+		<type>enum</type>
+		<option>
+			<name>Top</name>
+			<key>wx.NB_TOP</key>
+		</option>
+		<option>
+			<name>Right</name>
+			<key>wx.NB_RIGHT</key>
+		</option>
+		<option>
+			<name>Bottom</name>
+			<key>wx.NB_BOTTOM</key>
+		</option>
+		<option>
+			<name>Left</name>
+			<key>wx.NB_LEFT</key>
+		</option>
+	</param>
+	<param>
+		<name>Labels</name>
+		<key>labels</key>
+		<value>['tab1', 'tab2', 'tab3']</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
+	<check>isinstance($labels, (list, tuple))</check>
+	<check>all(map(lambda x: isinstance(x, str), $labels))</check>
+	<check>len($labels) &gt; 0</check>
+	<doc>
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
+	</doc>
+</block>

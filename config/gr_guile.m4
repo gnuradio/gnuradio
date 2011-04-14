@@ -35,7 +35,11 @@ AC_DEFUN([GUILE_DEVEL],[
       GUILE_PKLIBDIR="`${GUILE_CONFIG} info pkglibdir`"
       GUILE_PKDATADIR="`${GUILE_CONFIG} info pkgdatadir`/site"
     else
-      AC_MSG_ERROR([You need to install the guile development files (e.g., libguile-dev, guile-devel, etc.)!])
+      dnl Only break on an error if we are using guile.
+      dnl This should be taken care of in gr_scripting.m4 and I don't know why it's not.
+      if test x${enable_guile} = xyes; then
+         AC_MSG_ERROR([You need to install the guile development files (e.g., libguile-dev, guile-devel, etc.)!])
+      fi
       GUILE_CFLAGS=""
       GUILE_PKLIBDIR=""
       GUILE_LIBS="Wl,-Bsymbolic-functions -lguile -lgmp -lcrypt"

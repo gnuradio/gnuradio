@@ -219,20 +219,11 @@ AC_CHECK_LIB(m, sincos, [AC_DEFINE([HAVE_SINCOS],[1],[Define to 1 if your system
 AC_CHECK_LIB(m, sincosf,[AC_DEFINE([HAVE_SINCOSF],[1],[Define to 1 if your system has `sincosf'.])])
 AC_CHECK_LIB(m, sinf, [AC_DEFINE([HAVE_SINF],[1],[Define to 1 if your system has `sinf'.])])
 AC_CHECK_LIB(m, cosf, [AC_DEFINE([HAVE_COSF],[1],[Define to 1 if your system has `cosf'.])])
-AC_CHECK_LIB(m, trunc, [AC_DEFINE([HAVE_TRUNC],[1],[Define to 1 if your system has `trunc'.])])
 AC_CHECK_LIB(m, exp10, [AC_DEFINE([HAVE_EXP10],[1],[Define to 1 if your system has 'exp10'.])])
 AC_CHECK_LIB(m, log2, [AC_DEFINE([HAVE_LOG2],[1],[Define to 1 if your system has 'log2'.])])
 #AC_FUNC_MKTIME
 
 AH_BOTTOM([
-#ifndef HAVE_TRUNC
-#include <math.h>
-inline static double trunc(double x)
-{
-  return x >= 0 ? floor(x) : ceil(x);
-}
-#endif
-
 #ifndef HAVE_EXP10
 #include <math.h>
 inline static double exp10(double x)
@@ -276,7 +267,7 @@ CPPUNIT_INCLUDES=$CPPUNIT_CFLAGS
 AC_SUBST(CPPUNIT_INCLUDES)
 
 dnl see if GUILE is installed
-AC_PATH_PROG(GUILE,guile)
+dnl AC_PATH_PROG(GUILE,guile)
 
 dnl
 dnl We require the boost headers, thread lib and date_time lib.
@@ -367,12 +358,7 @@ GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_USRP2
 GRC_GR_GCELL			dnl this must come after GRC_GCELL and GRC_GNURADIO_CORE
 GRC_GR_MSDD6000	
-GRC_GR_AUDIO_ALSA
-GRC_GR_AUDIO_JACK
-GRC_GR_AUDIO_OSS
-GRC_GR_AUDIO_OSX
-GRC_GR_AUDIO_PORTAUDIO
-GRC_GR_AUDIO_WINDOWS
+GRC_GR_AUDIO
 GRC_GR_ATSC
 GRC_GR_COMEDI
 GRC_GR_CVSD_VOCODER

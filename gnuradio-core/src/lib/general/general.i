@@ -42,6 +42,7 @@
 #include <gr_float_to_char.h>
 #include <gr_float_to_uchar.h>
 #include <gr_short_to_float.h>
+#include <gr_int_to_float.h>
 #include <gr_char_to_float.h>
 #include <gr_uchar_to_float.h>
 #include <gr_frequency_modulator_fc.h>
@@ -167,6 +168,7 @@
 %include "gr_float_to_char.i"
 %include "gr_float_to_uchar.i"
 %include "gr_short_to_float.i"
+%include "gr_int_to_float.i"
 %include "gr_char_to_float.i"
 %include "gr_uchar_to_float.i"
 %include "gr_frequency_modulator_fc.i"

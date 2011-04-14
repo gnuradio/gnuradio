@@ -34,7 +34,7 @@
 class gr_sync_block : public gr_block
 {
  protected:
-
+  gr_sync_block (void){} //allows pure virtual interface sub-classes
   gr_sync_block (const std::string &name,
 		 gr_io_signature_sptr input_signature,
 		 gr_io_signature_sptr output_signature);

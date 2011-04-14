@@ -11,7 +11,8 @@
 	<make>blks2.$(type)2_demod(
 	samples_per_symbol=$samples_per_symbol,
 	excess_bw=$excess_bw,
-	costas_alpha=$costas_alpha,
+        freq_alpha=$freq_alpha,
+        phase_alpha=$phase_alpha,
 	timing_alpha=$timing_alpha,
 	timing_max_dev=$timing_max_dev,
 	gray_code=$gray_code,
@@ -48,9 +49,15 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Costas Alpha</name>
-		<key>costas_alpha</key>
-		<value>0.175</value>
+		<name>FLL Alpha</name>
+		<key>freq_alpha</key>
+		<value>0.010</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Phase Alpha</name>
+		<key>phase_alpha</key>
+		<value>0.100</value>
 		<type>real</type>
 	</param>
 	<param>

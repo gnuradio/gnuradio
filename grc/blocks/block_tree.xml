@@ -18,7 +18,6 @@
 		<block>gr_file_source</block>
 		<block>blks2_tcp_source</block>
 		<block>gr_udp_source</block>
-		<block>audio_source</block>
 		<block>gr_wavfile_source</block>
 		<block>gr_message_source</block>
 		<block>pad_source</block>
@@ -26,27 +25,15 @@
 	</cat>
 	<cat>
 		<name>Sinks</name>
-		<block>blks2_variable_sink_x</block>
 		<block>gr_vector_sink_x</block>
 		<block>gr_null_sink</block>
 		<block>gr_file_sink</block>
 		<block>blks2_tcp_sink</block>
 		<block>gr_udp_sink</block>
-		<block>audio_sink</block>
 		<block>gr_wavfile_sink</block>
 		<block>gr_message_sink</block>
 		<block>pad_sink</block>
 		<block>virtual_sink</block>
-	</cat>
-	<cat>
-		<name>Graphical Sinks</name>
-		<block>wxgui_numbersink2</block>
-		<block>wxgui_scopesink2</block>
-		<block>wxgui_fftsink2</block>
-		<block>wxgui_constellationsink2</block>
-		<block>wxgui_waterfallsink2</block>
-		<block>wxgui_histosink2</block>
-		<block>wxgui_termsink</block>
 	</cat>
 	<cat>
 		<name>Operators</name>
@@ -88,6 +75,8 @@
 
 		<block>gr_float_to_short</block>
 		<block>gr_short_to_float</block>
+
+		<block>gr_int_to_float</block>
 
 		<block>gr_float_to_char</block>
 		<block>gr_char_to_float</block>
@@ -138,7 +127,7 @@
 		<block>gr_pll_freqdet_cf</block>
 		<block>gr_pll_refout_cc</block>
 
-                <block>gr_fll_band_edge_cc</block>
+		<block>gr_fll_band_edge_cc</block>
 
 		<block>gr_correlate_access_code_bb</block>
 		<block>gr_pn_correlator_cc</block>
@@ -186,6 +175,8 @@
 		<block>blks2_analysis_filterbank</block>
 		<!-- Polyphase filters -->
 		<block>blks2_pfb_arb_resampler_ccf</block>
+		<block>blks2_pfb_channelizer_ccf</block>
+		<block>gr_pfb_synthesis_filterbank_ccf</block>
 		<!-- Other filters -->
 		<block>gr_single_pole_iir_filter_xx</block>
 		<block>gr_hilbert_fc</block>
@@ -262,7 +253,7 @@
 		<block>gr_additive_scrambler_bb</block>
 	</cat>
 	<cat>
-	        <name>Vocoders</name>
+		<name>Vocoders</name>
 		<block>blks2_cvsd_encode</block>
 		<block>blks2_cvsd_decode</block>
 	</cat>
@@ -271,26 +262,13 @@
 		<block>gr_probe_avg_mag_sqrd_x</block>
 		<block>gr_probe_density_b</block>
 		<block>gr_probe_mpsk_snr_c</block>
-		<block>probe_function</block>
-	</cat>
-	<cat>
-		<name>USRP</name>
-		<block>usrp_simple_source_x</block>
-		<block>usrp_simple_sink_x</block>
-		<block>usrp_dual_source_x</block>
-		<block>usrp_dual_sink_x</block>
-		<block>usrp2_source_xxxx</block>
-		<block>usrp2_sink_xxxx</block>
+		<block>gr_probe_signal_f</block>
 	</cat>
 	<cat>
 		<name>Variables</name>
 		<block>variable</block>
-		<block>variable_slider</block>
-		<block>variable_chooser</block>
-		<block>variable_check_box</block>
-		<block>variable_text_box</block>
-		<block>variable_static_text</block>
 		<block>variable_config</block>
+		<block>variable_function_probe</block>
 		<block>parameter</block>
 	</cat>
 	<cat>
@@ -315,7 +293,5 @@
 
 		<block>xmlrpc_server</block>
 		<block>xmlrpc_client</block>
-
-		<block>notebook</block>
 	</cat>
 </cat>

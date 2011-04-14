@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SpectrumDisplayForm</class>
+ <widget class="QWidget" name="SpectrumDisplayForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>712</width>
+    <height>560</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Spectrum Display</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="3">
+    <widget class="QComboBox" name="FFTSizeComboBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <item>
+      <property name="text">
+       <string>1024</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2048</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>4096</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>8192</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>16384</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>32768</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="FFTSizeLabel">
+     <property name="text">
+      <string>FFT Size:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="UseRFFrequenciesCheckBox">
+     <property name="text">
+      <string>Display RF Frequencies</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="WindowLbl">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Window:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="WindowComboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>120</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <item>
+        <property name="text">
+         <string>Hamming</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Hann</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Blackman</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rectangular</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Kaiser</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Blackman-harris</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0" colspan="4">
+    <widget class="QTabWidget" name="SpectrumTypeTab">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="FrequencyPage">
+      <attribute name="title">
+       <string>Frequency Display</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QFrame" name="FrequencyPlotDisplayFrame">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>617</width>
+             <height>400</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>1</width>
+             <height>1</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="MaxHoldCheckBox">
+             <property name="text">
+              <string>Max Hold</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="MinHoldCheckBox">
+             <property name="text">
+              <string>Min Hold</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="MaxHoldResetBtn">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>25</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Reset</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLabel" name="AvgLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>62</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Average</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="MinHoldResetBtn">
+             <property name="text">
+              <string>Reset</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QSpinBox" name="AvgLineEdit"/>
+           </item>
+           <item row="1" column="2">
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>200</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="WaterfallPage">
+      <attribute name="title">
+       <string>Waterfall Display</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="textLabel1">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Intensity Display:</string>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QwtWheel" name="WaterfallMaximumIntensityWheel">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::WheelFocus</enum>
+         </property>
+         <property name="valid">
+          <bool>true</bool>
+         </property>
+         <property name="totalAngle">
+          <double>200.000000000000000</double>
+         </property>
+         <property name="viewAngle">
+          <double>20.000000000000000</double>
+         </property>
+         <property name="mass">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="WaterfallMaximumIntensityLabel">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>100 dB</string>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="4">
+        <widget class="QFrame" name="WaterfallPlotDisplayFrame">
+         <property name="minimumSize">
+          <size>
+           <width>617</width>
+           <height>338</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QwtWheel" name="WaterfallMinimumIntensityWheel">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="valid">
+          <bool>true</bool>
+         </property>
+         <property name="totalAngle">
+          <double>200.000000000000000</double>
+         </property>
+         <property name="viewAngle">
+          <double>20.000000000000000</double>
+         </property>
+         <property name="mass">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLabel" name="WaterfallMinimumIntensityLabel">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>-100 dB</string>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QPushButton" name="WaterfallAutoScaleBtn">
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Scales the Intensity to the current data extremes.</string>
+         </property>
+         <property name="text">
+          <string>Auto Scale</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="WaterfallIntensityComboBox">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <item>
+          <property name="text">
+           <string>Color</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>White Hot</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Black Hot</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Incandescent</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>User Defined</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="TimeDomainPage">
+      <attribute name="title">
+       <string>Time Domain Display</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="QFrame" name="TimeDomainDisplayFrame">
+         <property name="minimumSize">
+          <size>
+           <width>617</width>
+           <height>404</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="ConstellationPage">
+      <attribute name="title">
+       <string>Constellation Display</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QFrame" name="ConstellationDisplayFrame">
+         <property name="minimumSize">
+          <size>
+           <width>617</width>
+           <height>406</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>QwtWheel</class>
+   <extends>QWidget</extends>
+   <header>qwt_wheel.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>SpectrumTypeTab</tabstop>
+  <tabstop>UseRFFrequenciesCheckBox</tabstop>
+  <tabstop>FFTSizeComboBox</tabstop>
+  <tabstop>WaterfallMaximumIntensityWheel</tabstop>
+  <tabstop>WaterfallMinimumIntensityWheel</tabstop>
+ </tabstops>
+ <includes>
+  <include location="global">SpectrumGUIClass.h</include>
+  <include location="global">FrequencyDisplayPlot.h</include>
+  <include location="global">WaterfallDisplayPlot.h</include>
+  <include location="global">TimeDomainDisplayPlot.h</include>
+  <include location="global">qvalidator.h</include>
+  <include location="global">vector</include>
+  <include location="local">qwt_wheel.h</include>
+ </includes>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>MaxHoldCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>MaxHoldCheckBox_toggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>22</x>
+     <y>324</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MaxHoldResetBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>MaxHoldResetBtn_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>324</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MinHoldCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>MinHoldCheckBox_toggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>22</x>
+     <y>349</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MinHoldResetBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>MinHoldResetBtn_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>349</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>WindowComboBox</sender>
+   <signal>activated(int)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>WindowTypeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseRFFrequenciesCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>UseRFFrequenciesCB(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>WaterfallMaximumIntensityWheel</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>waterfallMaximumIntensityChangedCB(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>217</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>WaterfallMinimumIntensityWheel</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>waterfallMinimumIntensityChangedCB(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>217</x>
+     <y>349</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FFTSizeComboBox</sender>
+   <signal>activated(QString)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>FFTComboBoxSelectedCB(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>WaterfallAutoScaleBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>WaterfallAutoScaleBtnCB()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>22</x>
+     <y>349</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>WaterfallIntensityComboBox</sender>
+   <signal>activated(int)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>WaterfallIntensityColorTypeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>92</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>SpectrumTypeTab</sender>
+   <signal>currentChanged(int)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>TabChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>314</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>316</x>
+     <y>217</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>AvgLineEdit</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>AvgLineEdit_valueChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>604</x>
+     <y>421</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>328</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -36,6 +36,7 @@ AC_DEFUN([GRC_GR_WXGUI],[
     AC_CONFIG_FILES([ \
         gr-wxgui/Makefile \
         gr-wxgui/gr-wxgui.pc \
+        gr-wxgui/grc/Makefile \
         gr-wxgui/src/Makefile \
         gr-wxgui/src/python/Makefile \
         gr-wxgui/src/python/plotter/Makefile \
