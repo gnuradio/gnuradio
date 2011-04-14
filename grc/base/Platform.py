@@ -17,16 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-#Perform python integrity checks:
-# GRC will not work with interpreters that fail the checks below.
-# This can fail on interpreters built with special optimizations.
-try:
-	assert False
-	raise Exception, 'Failed python integrity check: assert not supported'
-except AssertionError: pass
-if __doc__ is None:
-	raise Exception, 'Failed python integrity check: __doc__ not supported'
-
 import os
 import sys
 from .. base import ParseXML, odict
