@@ -242,6 +242,7 @@ if __name__ == '__main__':
 	#end if
 	tb.show()
 	qapp.exec_()
+	tb.stop()
 	#elif $generate_options == 'no_gui'
 	tb = $(class_name)($(', '.join($params_eq_list)))
 		#set $run_options = $flow_graph.get_option('run_options')
