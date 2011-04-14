@@ -293,25 +293,22 @@ class Param(_Param, _GUIParam):
 				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
-				for ei in e:
-					if not isinstance(ei, COMPLEX_TYPES):
-						raise Exception, 'Expression "%s" is invalid for type complex vector.'%str(e)
+				if not all([isinstance(ei, COMPLEX_TYPES) for ei in e]):
+					raise Exception, 'Expression "%s" is invalid for type complex vector.'%str(e)
 				return e
 			elif t == 'real_vector':
 				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
-				for ei in e:
-					if not isinstance(ei, REAL_TYPES):
-						raise Exception, 'Expression "%s" is invalid for type real vector.'%str(e)
+				if not all([isinstance(ei, REAL_TYPES) for ei in e]):
+					raise Exception, 'Expression "%s" is invalid for type real vector.'%str(e)
 				return e
 			elif t == 'int_vector':
 				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
-				for ei in e:
-					if not isinstance(ei, INT_TYPES):
-						raise Exception, 'Expression "%s" is invalid for type integer vector.'%str(e)
+				if not all([isinstance(ei, INT_TYPES) for ei in e]):
+					raise Exception, 'Expression "%s" is invalid for type integer vector.'%str(e)
 				return e
 		#########################
 		# String Types

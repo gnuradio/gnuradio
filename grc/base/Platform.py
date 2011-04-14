@@ -81,13 +81,12 @@ class Platform(_Element):
 				block = self.Block(self._flow_graph, n)
 				key = block.get_key()
 				#test against repeated keys
-				try:
-					assert key not in self.get_block_keys()
-					#store the block
+				if key in self.get_block_keys():
+					print >> sys.stderr, 'Warning: Block with key "%s" already exists.\n\tIgnoring: %s'%(key, xml_file)
+				#store the block
+				else:
 					self._blocks[key] = block
 					self._blocks_n[key] = n
-				except AssertionError:
-					print >> sys.stderr, 'Warning: Block with key "%s" already exists.\n\tIgnoring: %s'%(key, xml_file)
 			except ParseXML.XMLSyntaxError, e: 
 				try: #try to add the xml file as a block tree
 					ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)

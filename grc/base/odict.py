@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ class odict(DictMixin):
 		@param val the value for the new entry
 		"""
 		index = (pos_key is None) and len(self._keys) or self._keys.index(pos_key)
-		assert key not in self._keys
+		if key in self._keys: raise KeyError('Cannot insert, key "%s" already exists'%str(key))
 		self._keys.insert(index+1, key)
 		self._data[key] = val
 
@@ -67,8 +67,8 @@ class odict(DictMixin):
 		@param key the key for the new entry
 		@param val the value for the new entry
 		"""
-		index = (pos_key is not None) and self._keys.index(pos_key) or 0 
-		assert key not in self._keys
+		index = (pos_key is not None) and self._keys.index(pos_key) or 0
+		if key in self._keys: raise KeyError('Cannot insert, key "%s" already exists'%str(key))
 		self._keys.insert(index, key)
 		self._data[key] = val
 
