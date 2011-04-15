@@ -22,6 +22,9 @@ from make_environment_init_c import make_environment_init_c
 from make_environment_init_h import make_environment_init_h
 from make_mktables import make_mktables
 from make_makefile_am import make_makefile_am
+from make_machines_h import make_machines_h
+from make_machines_c import make_machines_c
+from make_each_machine_c import make_each_machine_c
 import copy
 
 outfile_set_simd = open("../../config/lv_set_simd_flags.m4", "w");
@@ -41,6 +44,8 @@ outfile_mktables = open("../../lib/volk_mktables.c", "w");
 outfile_environment_c = open("../../lib/volk_environment_init.c", "w");
 outfile_environment_h = open("volk_environment_init.h", "w");
 outfile_makefile_am = open("../../lib/Makefile.am", "w");
+outfile_machines_h = open("volk_machines.h", "w");
+outfile_machines_c = open("../../lib/volk_machines.c", "w");
 infile = open("Makefile.am", "r");
 
 
@@ -305,3 +310,15 @@ outfile_mktables.close();
 
 outfile_makefile_am.write(make_makefile_am(filearchs, machines, archflags_dict))
 outfile_makefile_am.close()
+
+outfile_machines_h.write(make_machines_h(functions, machines))
+outfile_machines_h.close()
+
+outfile_machines_c.write(make_machines_c(machines))
+outfile_machines_c.close()
+
+for machine in machines:
+    machine_c_filename = "../../lib/volk_machine_" + machine + ".c"
+    outfile_machine_c = open(machine_c_filename, "w")
+    outfile_machine_c.write(make_each_machine_c(machine, machines[machine], functions, fcountlist, taglist))
+    outfile_machine_c.close()

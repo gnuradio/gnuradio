@@ -69,17 +69,16 @@ volk_orc_LIBADD = \
 	#here be dragons
     for machine_name in machines:
         tempstring += "if LV_MACHINE_" + machine_name.swapcase() + "\n"
-        tempstring += "libvolk_" + machine_name + "_la_LDFLAGS = " 
+        tempstring += "libvolk_" + machine_name + "_ar_LDFLAGS = " 
         for arch in machines[machine_name]:
             if archflags_dict[arch] != "none":
                 tempstring += "-" + archflags_dict[arch] + " "
                 
-        tempstring += "\nlibvolk_" + machine_name + "_la_CFLAGS = "
-        for arch in machines[machine_name]:
-            if archflags_dict[arch] != "none":
-                tempstring += "-DLV_HAVE_" + arch.swapcase() + " "
-        tempstring += "\nlibvolk_" + machine_name + "_la_SOURCES = $(libvolk_la_SOURCES)"
-        tempstring += "\nlibvolk_la_LIBADD = libvolk_" + machine_name + ".la"
+#        tempstring += "\nlibvolk_" + machine_name + "_ar_CFLAGS = "
+#        for arch in machines[machine_name]:
+#            tempstring += "-DLV_HAVE_" + arch.swapcase() + " "
+        tempstring += "\nlibvolk_" + machine_name + "_ar_SOURCES = libvolk_machine_" + machine_name + ".cc"
+        tempstring += "\nlibvolk_la_LIBADD = libvolk_" + machine_name + ".ar"
         tempstring += "\nendif\n"
 
 

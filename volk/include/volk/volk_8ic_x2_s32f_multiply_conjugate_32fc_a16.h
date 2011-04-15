@@ -24,7 +24,7 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_sse4_1(lv_32fc_t
   const lv_8sc_t* a = aVector;
   const lv_8sc_t* b = bVector;
   __m128i conjugateSign = _mm_set_epi16(-1, 1, -1, 1, -1, 1, -1, 1);
-  const int shuffleMask = _MM_SHUFFLE(2,3,0,1);
+
   __m128 invScalar = _mm_set_ps1(1.0/scalar);
 
   for(;number < quarterPoints; number++){
@@ -39,7 +39,7 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_sse4_1(lv_32fc_t
     y = _mm_sign_epi16(y, conjugateSign);
 
     // Shift the order of the cr and ci values
-    y = _mm_shufflehi_epi16(_mm_shufflelo_epi16(y, shuffleMask ), shuffleMask);
+    y = _mm_shufflehi_epi16(_mm_shufflelo_epi16(y, _MM_SHUFFLE(2,3,0,1) ), _MM_SHUFFLE(2,3,0,1));
 
     // Calculate the ar*(-ci) + cr*(ai)
     imagz = _mm_madd_epi16(x,y);

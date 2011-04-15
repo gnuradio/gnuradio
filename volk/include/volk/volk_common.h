@@ -1,5 +1,5 @@
-#ifndef INCLUDED_LIBVECTOR_COMMON_H
-#define INCLUDED_LIBVECTOR_COMMON_H
+#ifndef INCLUDED_LIBVOLK_COMMON_H
+#define INCLUDED_LIBVOLK_COMMON_H
 
 #include<inttypes.h>
 #ifdef LV_HAVE_MMX
@@ -15,4 +15,9 @@ union bit128{
 };
 #endif /*LV_HAVE_MMX*/
 
-#endif /*INCLUDED_LIBVECTOR_COMMON_H*/
+struct volk_func_desc {
+     const char **indices;
+     const int *arch_defs;
+};
+
+#endif /*INCLUDED_LIBVOLK_COMMON_H*/
