@@ -274,3 +274,4 @@ if __name__ == "__main__":
     tb = my_top_block();
     tb.start()
     tb.qapp.exec_()
+    tb.stop()
