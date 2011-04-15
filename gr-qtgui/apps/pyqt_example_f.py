@@ -144,5 +144,5 @@ class my_top_block(gr.top_block):
 if __name__ == "__main__":
     tb = my_top_block();
     tb.start()
-    sys.exit(tb.qapp.exec_())
-    
+    tb.qapp.exec_()
+    tb.stop()
