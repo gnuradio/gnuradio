@@ -281,7 +281,7 @@ outfile_machines_c.close()
 outfile_c.write(make_c(machines, archs, functions, arched_arglist, my_arglist))
 outfile_c.close()
 
-outfile_h.write(make_h(functions))
+outfile_h.write(make_h(functions, arched_arglist))
 outfile_h.close()
 
 for machine in machines:

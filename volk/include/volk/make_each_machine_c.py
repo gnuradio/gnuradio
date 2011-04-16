@@ -77,7 +77,7 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist):
     tempstring = strip_trailing(tempstring, ",")
     tempstring += "};\n"
     tempstring += emit_epilog();
-        
+
     return tempstring
 
 

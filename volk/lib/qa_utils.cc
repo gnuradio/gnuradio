@@ -14,6 +14,7 @@
 #include <volk/volk_registry.h>
 #include <volk/volk.h>
 #include <volk/volk_cpu.h>
+#include <volk/volk_common.h>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits.hpp>
 
@@ -63,13 +64,12 @@ void load_random_data(void *data, volk_type_t type, unsigned int n) {
     }
 }
 
-static std::vector<std::string> get_arch_list(const int archs[]) {
+static std::vector<std::string> get_arch_list(struct volk_func_desc desc) {
     std::vector<std::string> archlist;
-    int num_archs = archs[0];
 
-    for(int i = 0; i < num_archs; i++) {
-        if(!(archs[i+1] & volk_get_lvarch())) continue; //this arch isn't available on this pc
-        archlist.push_back(std::string(indices[i]));
+    for(int i = 0; i < desc.n_archs; i++) {
+        //if(!(archs[i+1] & volk_get_lvarch())) continue; //this arch isn't available on this pc
+        archlist.push_back(std::string(desc.indices[i]));
     }
     
     return archlist;
@@ -243,11 +243,11 @@ public:
 private: std::list<std::vector<char> > _mems;
 };
 
-bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
+bool run_volk_tests(struct volk_func_desc desc, void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
     
     //first let's get a list of available architectures for the test
-    std::vector<std::string> arch_list = get_arch_list(indices, archs);
+    std::vector<std::string> arch_list = get_arch_list(desc);
     
     if(arch_list.size() < 2) {
         std::cout << "no architectures to test" << std::endl;

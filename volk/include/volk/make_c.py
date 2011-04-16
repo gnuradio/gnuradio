@@ -36,6 +36,7 @@ def make_c(machines, archs, functions, arched_arglist, my_arglist):
 #include "volk_rank_archs.h"
 #include <volk/volk.h>
 #include <stdio.h>
+#include <string.h>
 
 """
     tempstring += emit_prolog();
@@ -68,11 +69,15 @@ struct volk_machine *get_machine(void) {
     }
 }
 
-static unsigned int get_index(const char **indices, char *arch_name) {
-    
-
-
-
+static unsigned int get_index(const char *indices[], unsigned int n_archs, const char *arch_name) {
+    int i;
+    for(i=0; i<n_archs; i++) {
+        if(!strncmp(indices[i], arch_name, 20)) {
+            return i;
+        }
+    }
+    //something terrible should happen here
+    return 0; //but we'll fake it for now
 }
 
 """
@@ -82,7 +87,10 @@ static unsigned int get_index(const char **indices, char *arch_name) {
         tempstring += "    %s = get_machine()->%s_archs[volk_rank_archs(get_machine()->%s_desc.arch_defs, get_machine()->%s_desc.n_archs, volk_get_lvarch())];\n" % (functions[i], functions[i], functions[i], functions[i])
         tempstring += "    %s(%s);\n}\n\n" % (functions[i], my_arglist[i])
         tempstring += replace_volk.sub("p", functions[i]) + " " + functions[i] + " = &get_" + functions[i] + ";\n\n"
-        
+        tempstring += "void %s_manual%s\n" % (functions[i], arched_arglist[i])
+        tempstring += "    get_machine()->%s_archs[get_index(get_machine()->%s_desc.indices, get_machine()->%s_desc.n_archs, arch)](%s);\n}\n" % (functions[i], functions[i], functions[i], my_arglist[i])
+        tempstring += "struct volk_func_desc %s_get_func_desc(void) {\n" % (functions[i])
+        tempstring += "    return get_machine()->%s_desc;\n}\n" % (functions[i])
 
     tempstring += emit_epilog();
         

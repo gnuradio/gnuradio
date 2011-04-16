@@ -3,6 +3,8 @@
 
 #include <cstdlib>
 #include <string>
+#include <volk/volk.h>
+#include <volk/volk_common.h>
 
 struct volk_type_t {
     bool is_float;
@@ -18,9 +20,9 @@ volk_type_t volk_type_from_string(std::string);
 float uniform(void);
 void random_floats(float *buf, unsigned n);
 
-bool run_volk_tests(const char **, const int[], void(*)(), std::string, float, float, int, int);
+bool run_volk_tests(struct volk_func_desc, void(*)(), std::string, float, float, int, int);
 
-#define VOLK_RUN_TESTS(func, tol, scalar, len, iter) BOOST_CHECK_EQUAL(run_volk_tests(func##_indices, func##_arch_defs, (void (*)())func##_manual, std::string(#func), tol, scalar, len, iter), 0)
+#define VOLK_RUN_TESTS(func, tol, scalar, len, iter) BOOST_CHECK_EQUAL(run_volk_tests(func##_get_func_desc(), (void (*)())func##_manual, std::string(#func), tol, scalar, len, iter), 0)
 
 typedef void (*volk_fn_1arg)(void *, unsigned int, const char*); //one input, operate in place
 typedef void (*volk_fn_2arg)(void *, void *, unsigned int, const char*);
