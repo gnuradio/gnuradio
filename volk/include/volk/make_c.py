@@ -77,7 +77,8 @@ static unsigned int get_index(const char *indices[], unsigned int n_archs, const
         }
     }
     //something terrible should happen here
-    return 0; //but we'll fake it for now
+    printf("Volk warning: no arch found, returning generic impl\n");
+    return get_index(indices, n_archs, "generic"); //but we'll fake it for now
 }
 
 """

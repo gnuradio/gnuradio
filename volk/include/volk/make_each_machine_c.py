@@ -36,11 +36,10 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist):
 #include <volk/volk_registry.h>
 
 """
+    tempstring += emit_prolog();
     for func in functions:
         tempstring += "#include <volk/" + func + ".h>\n"
     tempstring += "\n\n"
-    
-    tempstring += emit_prolog();
     
     for i in range(len(functions)):
         tempstring += "static const " + replace_volk.sub("p", functions[i]) + " " + functions[i] + "_archs[] = {\n"

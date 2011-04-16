@@ -47,46 +47,52 @@ libvolk_la_SOURCES = 	\
 	volk_rank_archs.c	\
 	volk_machines.cc
 
+	
 libvolk_la_LDFLAGS =
+libvolk_la_LIBADD = 
 
-volk_orc_LDFLAGS = \
-	$(ORC_LDFLAGS) \
-	-lorc-0.4
+if LV_HAVE_ORC
+volk_orc_CFLAGS = -DLV_HAVE_ORC=1
+volk_orc_LDFLAGS = $(ORC_LDFLAGS) -lorc-0.4
+volk_orc_LIBADD = ../orc/libvolk_orc.la
+else
+volk_orc_CFLAGS = 
+volk_orc_LDFLAGS =
+volk_orc_LIBADD = 
+endif
 
-volk_orc_LIBADD = \
-	../orc/libvolk_orc.la
+libvolk_la_CPPFLAGS = $(AM_CPPFLAGS) $(volk_orc_CFLAGS)
+libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
+libvolk_la_LIBADD = $(volk_orc_LIBADD)
+
+noinst_LTLIBRARIES = 
     
 """
 
     #here be dragons
-    tempstring += "libvolk_la_LIBADD = \n"
-    tempstring += "libvolk_la_CPPFLAGS = $(AM_CPPFLAGS)\n"
-    tempstring += "noinst_LTLIBRARIES = \n"
     for machine_name in machines:
         tempstring += "if LV_MACHINE_" + machine_name.swapcase() + "\n"
 	tempstring += "libvolk_" + machine_name + "_la_SOURCES = volk_machine_" + machine_name + ".cc\n"
         tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_builddir)/include $(volk_orc_CFLAGS) "
+	#tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_builddir)/include "
         for arch in machines[machine_name]:
             if archflags_dict[arch] != "none":
                 tempstring += "-" + archflags_dict[arch] + " "
                 
 	tempstring += "\nnoinst_LTLIBRARIES += libvolk_" + machine_name + ".la "
         tempstring += "\nlibvolk_la_LIBADD += libvolk_" + machine_name + ".la\n"
-	tempstring += "libvolk_la_CPPFLAGS += -DLV_MACHINE_" + machine_name.swapcase() + " "
-        tempstring += "\nendif\n"
+	tempstring += "libvolk_la_CPPFLAGS += -DLV_MACHINE_" + machine_name.swapcase() + " \n"
+	#tempstring += "if LV_HAVE_ORC\n"
+	#tempstring += "libvolk_" + machine_name + "_la_LIBADD = $(volk_orc_LIBADD)\n"
+	#tempstring += "libvolk_" + machine_name + "_la_LDFLAGS = $(volk_orc_LDFLAGS)\n"
+	#tempstring += "else\n"
+	#tempstring += "libvolk_" + machine_name + "_la_LIBADD = \n"
+	#tempstring += "libvolk_" + machine_name + "_la_LDFLAGS = \n"
+	#tempstring += "endif\n"
+        tempstring += "endif\n"
 
 
-    tempstring += """
-if LV_HAVE_ORC
-libvolk_la_LDFLAGS += $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
-libvolk_la_LIBADD += $(volk_orc_LIBADD)
-volk_orc_CFLAGS = -DLV_HAVE_ORC
-else
-libvolk_la_LDFLAGS += $(NO_UNDEFINED) -version-info 0:0:0
-libvolk_la_LIBADD +=
-volk_orc_CFLAGS = 
-endif
-
+    tempstring += r"""
 
 # ----------------------------------------------------------------
 #        The QA library.  Note libvolk.la in LIBADD
@@ -116,14 +122,8 @@ noinst_PROGRAMS = \
 testqa_SOURCES = testqa.cc qa_utils.cc
 testqa_CPPFLAGS = -DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN $(AM_CPPFLAGS)
 testqa_LDFLAGS = $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
-if LV_HAVE_ORC
-testqa_LDADD  = \
-	libvolk.la \
-	../orc/libvolk_orc.la
-else 
 testqa_LDADD  = \
 	libvolk.la
-endif
 
 distclean-local: 
 	rm -f volk.c
