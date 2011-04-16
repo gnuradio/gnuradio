@@ -71,7 +71,7 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist):
     tempstring += "    name,\n"
     
     for i in range(len(functions)):
-        tempstring += "    { " + functions[i] + "_indices, " + functions[i] + "_arch_defs },\n"
+        tempstring += "    { " + functions[i] + "_indices, " + functions[i] + "_arch_defs, " + functions[i] + "_n_archs },\n"
         tempstring += "    " + functions[i] + "_archs,\n"
     
     tempstring = strip_trailing(tempstring, ",")

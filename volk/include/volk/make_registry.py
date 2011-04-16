@@ -1,5 +1,6 @@
 from xml.dom import minidom
 from emit_omnilog import *
+from volk_regexp import *
 import string
 
 def make_registry(dom, funclist, fcountlist, taglist) :
@@ -39,24 +40,13 @@ def make_registry(dom, funclist, fcountlist, taglist) :
             tempstring = tempstring + "\n \"" + str(taglist[i][tags_counter]) + "\",\n#endif\n";
             tags_counter = tags_counter + 1;
                 
-        lindex = tempstring.rfind(",");
-        tempstring = tempstring[0:lindex] + string.replace(tempstring[lindex:len(tempstring)], ",", "");
+        tempstring = strip_trailing(tempstring, ",")
         tempstring = tempstring + "};\n\n";
 
     
     for fcount in fcountlist:
         tempstring = tempstring + "static const int " + funclist[counter] + "_arch_defs[] = {\n";
-        counter = counter + 1;
-        for arch_list in fcount:
-            tempstring = tempstring + " (LV_"
-            for ind in range(len(arch_list)): 
-                tempstring = tempstring + arch_list[ind] + "_CNT";
-                if ind < len(arch_list) - 1:
-                    tempstring = tempstring + " * LV_";
-            tempstring = tempstring + ") + ";
-        lindex = tempstring.rfind(" + ");
-        tempstring = tempstring[0:lindex] + string.replace(tempstring[lindex:len(tempstring)], " + ", "");
-        tempstring = tempstring + ",\n"
+        counter += 1;
         for arch_list in fcount:
             tempstring = tempstring + "#if defined(LV_HAVE_"
             for ind in range(len(arch_list)): 
@@ -70,9 +60,22 @@ def make_registry(dom, funclist, fcountlist, taglist) :
                 if ind < len(arch_list) - 1:
                     tempstring = tempstring + ") + (1 << LV_"
             tempstring = tempstring + "),\n#endif\n"
-        lindex = tempstring.rfind(",");
-        tempstring = tempstring[0:lindex] + string.replace(tempstring[lindex:len(tempstring)], ",", "");
+        tempstring = strip_trailing(tempstring, ",")
         tempstring = tempstring + "};\n\n"
+        
+    counter = 0;
+    for fcount in fcountlist:
+        tempstring += "static const int " + funclist[counter] + "_n_archs = "
+        counter += 1;
+        for arch_list in fcount:
+            tempstring = tempstring + " (LV_"
+            for ind in range(len(arch_list)): 
+                tempstring = tempstring + arch_list[ind] + "_CNT";
+                if ind < len(arch_list) - 1:
+                    tempstring = tempstring + " * LV_";
+            tempstring = tempstring + ") + ";
+        tempstring = strip_trailing(tempstring, " + ");
+        tempstring = tempstring + ";\n"
 
     
     tempstring = tempstring + emit_epilog();

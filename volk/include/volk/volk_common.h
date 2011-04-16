@@ -18,6 +18,7 @@ union bit128{
 struct volk_func_desc {
      const char **indices;
      const int *arch_defs;
+     const int n_archs;
 };
 
 #endif /*INCLUDED_LIBVOLK_COMMON_H*/

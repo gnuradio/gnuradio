@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-unsigned int volk_rank_archs(const int* arch_defs, unsigned int arch);
+unsigned int volk_rank_archs(const int* arch_defs, unsigned int n_archs, unsigned int arch);
  
 
 #ifdef __cplusplus
