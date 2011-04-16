@@ -82,13 +82,6 @@ noinst_LTLIBRARIES =
 	tempstring += "\nnoinst_LTLIBRARIES += libvolk_" + machine_name + ".la "
         tempstring += "\nlibvolk_la_LIBADD += libvolk_" + machine_name + ".la\n"
 	tempstring += "libvolk_la_CPPFLAGS += -DLV_MACHINE_" + machine_name.swapcase() + " \n"
-	#tempstring += "if LV_HAVE_ORC\n"
-	#tempstring += "libvolk_" + machine_name + "_la_LIBADD = $(volk_orc_LIBADD)\n"
-	#tempstring += "libvolk_" + machine_name + "_la_LDFLAGS = $(volk_orc_LDFLAGS)\n"
-	#tempstring += "else\n"
-	#tempstring += "libvolk_" + machine_name + "_la_LIBADD = \n"
-	#tempstring += "libvolk_" + machine_name + "_la_LDFLAGS = \n"
-	#tempstring += "endif\n"
         tempstring += "endif\n"
 
 

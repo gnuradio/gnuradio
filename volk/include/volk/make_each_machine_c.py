@@ -46,12 +46,12 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist):
 
         tags_counter = 0
         for arch_list in fcountlist[i]:
-            ok = True
+            tempstring += "#if "
             for arch in arch_list:
-                if arch.swapcase() not in archs:
-                    ok = False
-            if ok:
-                tempstring += "      " + functions[i] + "_" + str(taglist[i][tags_counter]) + ",\n"
+                tempstring += "defined(LV_HAVE_" + arch + ") && "
+            tempstring = strip_trailing(tempstring, " && ")
+            tempstring += "\n      " + functions[i] + "_" + str(taglist[i][tags_counter]) + ",\n"
+            tempstring += "#endif\n"
             tags_counter += 1
 
         tempstring = strip_trailing(tempstring, ",")
