@@ -26,7 +26,7 @@ def make_machines_c(machines):
 #include <volk_typedefs.h>
 #include <volk_machines.h>
 
-volk_machine volk_machines[] = {    
+struct volk_machine volk_machines[] = {    
 """
     for machine in machines:
         tempstring += """#if LV_MACHINE_""" + machine.swapcase() + "\n"
