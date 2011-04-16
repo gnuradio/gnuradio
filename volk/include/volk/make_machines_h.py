@@ -25,8 +25,8 @@ def make_machines_h(functions, machines):
 #ifndef INCLUDED_LIBVOLK_MACHINES_H
 #define INCLUDED_LIBVOLK_MACHINES_H
 
-#include <volk_common.h>
-#include <volk_typedefs.h>
+#include <volk/volk_common.h>
+#include <volk/volk_typedefs.h>
 
 struct volk_machine {
    const unsigned int caps; //capabilities (i.e., archs compiled into this machine, in the volk_get_lvarch format)

@@ -24,7 +24,7 @@ import copy
 outfile_set_simd = open("../../config/lv_set_simd_flags.m4", "w");
 outfile_reg = open("volk_registry.h", "w");
 outfile_h = open("volk.h", "w");
-outfile_c = open("../../lib/volk.c", "w");
+outfile_c = open("../../lib/volk.cc", "w");
 outfile_typedefs = open("volk_typedefs.h", "w");
 outfile_init_h = open("../../lib/volk_init.h", "w");
 outfile_cpu_h = open("volk_cpu.h", "w");
@@ -36,7 +36,7 @@ outfile_environment_c = open("../../lib/volk_environment_init.c", "w");
 outfile_environment_h = open("volk_environment_init.h", "w");
 outfile_makefile_am = open("../../lib/Makefile.am", "w");
 outfile_machines_h = open("volk_machines.h", "w");
-outfile_machines_c = open("../../lib/volk_machines.c", "w");
+outfile_machines_c = open("../../lib/volk_machines.cc", "w");
 infile = open("Makefile.am", "r");
 
 
@@ -285,7 +285,7 @@ outfile_h.write(make_h(functions))
 outfile_h.close()
 
 for machine in machines:
-    machine_c_filename = "../../lib/volk_machine_" + machine + ".c"
+    machine_c_filename = "../../lib/volk_machine_" + machine + ".cc"
     outfile_machine_c = open(machine_c_filename, "w")
     outfile_machine_c.write(make_each_machine_c(machine, machines[machine], functions, fcountlist, taglist))
     outfile_machine_c.close()

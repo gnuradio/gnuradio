@@ -25,15 +25,10 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) \
 
 volkincludedir = $(prefix)/include/volk
 
-BUILT_SOURCES: \
-	volk_tables.h
-
 volkinclude_HEADERS = \
 	volk_complex.h \
 	volk_common.h \
 	volk_config_fixed.h \
-	volk_runtime.h \
-	volk_tables.h \
 	volk_typedefs.h \
 	volk_registry.h \
 	volk.h \
@@ -127,19 +122,6 @@ volkinclude_HEADERS = \
 	volk_8i_convert_16i_u.h \
 	volk_8i_s32f_convert_32f_a16.h \
 	volk_8i_s32f_convert_32f_u.h 
-
-VOLK_MKTABLES_SOURCES = \
-	$(platform_CODE) \
-	$(top_srcdir)/lib/volk_rank_archs.c \
-	$(top_srcdir)/lib/volk_mktables.c \
-	$(top_srcdir)/lib/volk_cpu.c
-
-
-volk_mktables$(EXEEXT): $(VOLK_MKTABLES_SOURCES)
-	$(CC) -o $@ $^ $(AM_CPPFLAGS) -I$(top_builddir)/include
-
-volk_tables.h: volk_mktables$(EXEEXT)
-	./volk_mktables$(EXEEXT)
 
 distclean-local: 
 	rm -f volk_config_fixed.h 

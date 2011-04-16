@@ -24,20 +24,14 @@ def make_makefile_am(dom, machines, archflags_dict):
     
 include $(top_srcdir)/Makefile.common
 
-#FIXME: forcing the top_builddir for distcheck seems like a bit
-# of a hack. Figure out the right way to do this to find built
-# volk_config.h and volk_tables.h
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
 	-I$(top_builddir)/include \
 	$(WITH_INCLUDES)
 
 lib_LTLIBRARIES = \
-	libvolk.la \
-	libvolk_runtime.la
+	libvolk.la
 
 EXTRA_DIST = \
-	volk_mktables.c		\
 	volk_rank_archs.h 	\
 	volk_proccpu_sim.c	\
 	gcc_x86_cpuid.h
@@ -46,16 +40,14 @@ EXTRA_DIST = \
 #                      The main library
 # ----------------------------------------------------------------
 
-libvolk_runtime_la_SOURCES = 	\
+libvolk_la_SOURCES = 	\
 	$(platform_CODE) 	\
-	volk_runtime.c		\
+	volk.cc			\
+	volk_cpu.c 		\
 	volk_rank_archs.c	\
-	volk_cpu.c
+	volk_machines.cc
 
-libvolk_la_SOURCES = 		\
-	$(platform_CODE) 	\
-	volk.c 			\
-	volk_environment_init.c
+libvolk_la_LDFLAGS =
 
 volk_orc_LDFLAGS = \
 	$(ORC_LDFLAGS) \
@@ -66,31 +58,31 @@ volk_orc_LIBADD = \
     
 """
 
-	#here be dragons
+    #here be dragons
+    tempstring += "libvolk_la_LIBADD = \n"
+    tempstring += "libvolk_la_CPPFLAGS = $(AM_CPPFLAGS)\n"
+    tempstring += "noinst_LTLIBRARIES = \n"
     for machine_name in machines:
         tempstring += "if LV_MACHINE_" + machine_name.swapcase() + "\n"
-        tempstring += "libvolk_" + machine_name + "_ar_LDFLAGS = " 
+	tempstring += "libvolk_" + machine_name + "_la_SOURCES = volk_machine_" + machine_name + ".cc\n"
+        tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_builddir)/include " 
         for arch in machines[machine_name]:
             if archflags_dict[arch] != "none":
                 tempstring += "-" + archflags_dict[arch] + " "
                 
-#        tempstring += "\nlibvolk_" + machine_name + "_ar_CFLAGS = "
-#        for arch in machines[machine_name]:
-#            tempstring += "-DLV_HAVE_" + arch.swapcase() + " "
-        tempstring += "\nlibvolk_" + machine_name + "_ar_SOURCES = libvolk_machine_" + machine_name + ".cc"
-        tempstring += "\nlibvolk_la_LIBADD = libvolk_" + machine_name + ".ar"
+	tempstring += "\nnoinst_LTLIBRARIES += libvolk_" + machine_name + ".la "
+        tempstring += "\nlibvolk_la_LIBADD += libvolk_" + machine_name + ".la\n"
+	tempstring += "libvolk_la_CPPFLAGS += -DLV_MACHINE_" + machine_name.swapcase() + " "
         tempstring += "\nendif\n"
 
 
     tempstring += """
 if LV_HAVE_ORC
-libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
-libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
-libvolk_la_LIBADD = $(volk_orc_LIBADD)
+libvolk_la_LDFLAGS += $(NO_UNDEFINED) -version-info 0:0:0 $(volk_orc_LDFLAGS)
+libvolk_la_LIBADD += $(volk_orc_LIBADD)
 else
-libvolk_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
-libvolk_runtime_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
-libvolk_la_LIBADD =
+libvolk_la_LDFLAGS += $(NO_UNDEFINED) -version-info 0:0:0
+libvolk_la_LIBADD +=
 endif
 
 
@@ -125,7 +117,6 @@ testqa_LDFLAGS = $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
 if LV_HAVE_ORC
 testqa_LDADD  = \
 	libvolk.la \
-	libvolk_runtime.la \
 	../orc/libvolk_orc.la
 else 
 testqa_LDADD  = \
@@ -141,7 +132,6 @@ distclean-local:
 	rm -f volk_init.h
 	rm -f volk_mktables.c
 	rm -f volk_proccpu_sim.c
-	rm -f volk_runtime.c
 	rm -f volk_tables.h
 	rm -f volk_environment_init.c
 """

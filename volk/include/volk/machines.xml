@@ -4,6 +4,7 @@
 <archs>generic</archs>
 </machine>
 
+<!--
 <machine name="mmx">
 <archs>generic 32|64 mmx</archs>
 </machine>
@@ -11,6 +12,7 @@
 <machine name="sse">
 <archs>generic 32|64 mmx sse</archs>
 </machine>
+-->
 
 <machine name="sse2">
 <archs>generic 32|64 mmx sse sse2</archs>
