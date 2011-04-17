@@ -47,10 +47,6 @@ libvolk_la_SOURCES = 	\
 	volk_rank_archs.c	\
 	volk_machines.cc
 
-	
-libvolk_la_LDFLAGS =
-libvolk_la_LIBADD = 
-
 if LV_HAVE_ORC
 volk_orc_CFLAGS = -DLV_HAVE_ORC=1
 volk_orc_LDFLAGS = $(ORC_LDFLAGS) -lorc-0.4
@@ -73,8 +69,7 @@ noinst_LTLIBRARIES =
     for machine_name in machines:
         tempstring += "if LV_MACHINE_" + machine_name.swapcase() + "\n"
 	tempstring += "libvolk_" + machine_name + "_la_SOURCES = volk_machine_" + machine_name + ".cc\n"
-        tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_builddir)/include $(volk_orc_CFLAGS) "
-	#tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_builddir)/include "
+        tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_srcdir)/include $(volk_orc_CFLAGS) "
         for arch in machines[machine_name]:
             if archflags_dict[arch] != "none":
                 tempstring += "-" + archflags_dict[arch] + " "

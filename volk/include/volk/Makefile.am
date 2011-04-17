@@ -33,6 +33,7 @@ volkinclude_HEADERS = \
 	volk_registry.h \
 	volk.h \
 	volk_cpu.h \
+	volk_machines.h \
 	volk_environment_init.h \
 	volk_16i_x5_add_quad_16i_x4_a16.h \
 	volk_16i_branch_4_state_8_a16.h \
