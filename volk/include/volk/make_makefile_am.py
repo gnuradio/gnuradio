@@ -26,6 +26,8 @@ include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
 	-I$(top_builddir)/include \
+	-Dvolk_EXPORTS \
+	-fvisibility=hidden \
 	$(WITH_INCLUDES)
 
 lib_LTLIBRARIES = \
