@@ -35,7 +35,6 @@ lib_LTLIBRARIES = \
 
 EXTRA_DIST = \
 	volk_rank_archs.h 	\
-	volk_proccpu_sim.c	\
 	gcc_x86_cpuid.h
 
 # ----------------------------------------------------------------
