@@ -365,10 +365,6 @@ gr_block_executor::run_one_iteration()
 
   setup_call_to_work:
 
-    //!!!! Here is where you put the logic to work in place !!!!//
-    if(m->name() == std::string("test")) std::cout << "WAT" << std::endl;
-    else std::cout << m->name() << std::endl;
-    
     d->d_produce_or = 0;
     for (int i = 0; i < d->noutputs (); i++)
       d_output_items[i] = d->output(i)->write_pointer();
