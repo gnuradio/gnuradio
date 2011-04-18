@@ -9,12 +9,9 @@
 /Makefile
 /Makefile.in
 /volk.h
-/volk_config.h
 /volk_config_fixed.h
 /volk_cpu.h
 /volk_environment_init.h
 /volk_registry.h
-/volk_runtime.h
-/volk_tables.h
 /volk_typedefs.h
-/volk_mktables
+/volk_machines.h
