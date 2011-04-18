@@ -25,10 +25,10 @@ void qa_64u_popcnt_aligned16::t1() {
   double total;
 
   const int ITERS = 10000000;
-  uint64_t input0 __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) uint64_t input0;
   
-  uint64_t output0 __attribute__ ((aligned (16)));
-  uint64_t output01 __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) uint64_t output0;
+  __VOLK_ATTR_ALIGNED(16) uint64_t output01;
 
     input0 = ((uint64_t) (rand() - (RAND_MAX/2)));
     output0 = 0;

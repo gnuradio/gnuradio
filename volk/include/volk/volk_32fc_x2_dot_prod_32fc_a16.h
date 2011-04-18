@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_32fc_x2_dot_prod_32fc_a16_H
 #define INCLUDED_volk_32fc_x2_dot_prod_32fc_a16_H
 
+#include <volk/volk_attributes.h>
 #include <volk/volk_complex.h>
 #include <stdio.h>
 #include <string.h>
@@ -358,7 +359,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse3(lv_32fc_t* result, const 
     b += 2;
   }
 
-  lv_32fc_t dotProductVector[2] __attribute__((aligned(16)));
+  __VOLK_ATTR_ALIGNED(16) lv_32fc_t dotProductVector[2];
 
   _mm_store_ps((float*)dotProductVector,dotProdVal); // Store the results back into the dot product vector
 

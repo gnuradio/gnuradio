@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_32f_index_max_16u_a16_H
 #define INCLUDED_volk_32f_index_max_16u_a16_H
 
+#include <volk/volk_attributes.h>
 #include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -25,8 +26,8 @@ static inline void volk_32f_index_max_16u_a16_sse4_1(unsigned int* target, const
     __m128 compareResults;
     __m128 currentValues;
 
-    float maxValuesBuffer[4] __attribute__((aligned(16)));
-    float maxIndexesBuffer[4] __attribute__((aligned(16)));
+    __VOLK_ATTR_ALIGNED(16) float maxValuesBuffer[4];
+    __VOLK_ATTR_ALIGNED(16) float maxIndexesBuffer[4];
 
     for(;number < quarterPoints; number++){
 
@@ -83,8 +84,8 @@ static inline void volk_32f_index_max_16u_a16_sse(unsigned int* target, const fl
     __m128 compareResults;
     __m128 currentValues;
 
-    float maxValuesBuffer[4] __attribute__((aligned(16)));
-    float maxIndexesBuffer[4] __attribute__((aligned(16)));
+    __VOLK_ATTR_ALIGNED(16) float maxValuesBuffer[4];
+    __VOLK_ATTR_ALIGNED(16) float maxIndexesBuffer[4];
 
     for(;number < quarterPoints; number++){
 

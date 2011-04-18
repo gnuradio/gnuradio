@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_32f_x2_dot_prod_32f_a16_H
 #define INCLUDED_volk_32f_x2_dot_prod_32f_a16_H
 
+#include <volk/volk_attributes.h>
 #include<stdio.h>
 
 
@@ -53,7 +54,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_sse( float* result, const  float
     bPtr += 4;
   }
 
-  float dotProductVector[4] __attribute__((aligned(16)));
+  __VOLK_ATTR_ALIGNED(16) float dotProductVector[4];
 
   _mm_store_ps(dotProductVector,dotProdVal); // Store the results back into the dot product vector
 
@@ -102,7 +103,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_sse3(float * result, const float
     bPtr += 4;
   }
 
-  float dotProductVector[4] __attribute__((aligned(16)));
+  __VOLK_ATTR_ALIGNED(16) float dotProductVector[4];
   dotProdVal = _mm_hadd_ps(dotProdVal, dotProdVal);
 
   _mm_store_ps(dotProductVector,dotProdVal); // Store the results back into the dot product vector
@@ -163,7 +164,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_sse4_1(float * result, const flo
     dotProdVal = _mm_add_ps(dotProdVal, cVal1);
   }
 
-  float dotProductVector[4] __attribute__((aligned(16)));
+  __VOLK_ATTR_ALIGNED(16) float dotProductVector[4];
   _mm_store_ps(dotProductVector, dotProdVal); // Store the results back into the dot product vector
 
   dotProduct = dotProductVector[0];

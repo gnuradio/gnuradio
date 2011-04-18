@@ -66,7 +66,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_generic(lv_32fc_t* res
 
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
 
-  static const uint32_t conjugator[4] __attribute__((aligned(16)))= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
+  __VOLK_ATTR_ALIGNED(16) static const uint32_t conjugator[4]= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
 
   union HalfMask {
     uint32_t intRep[4];

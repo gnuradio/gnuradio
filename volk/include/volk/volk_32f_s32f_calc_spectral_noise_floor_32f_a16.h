@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_32f_s32f_calc_spectral_noise_floor_32f_a16_H
 #define INCLUDED_volk_32f_s32f_calc_spectral_noise_floor_32f_a16_H
 
+#include <volk/volk_attributes.h>
 #include <inttypes.h>
 #include <stdio.h>
 
@@ -21,7 +22,7 @@ static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a16_sse(float* no
   const unsigned int quarterPoints = num_points / 4;
 
   const float* dataPointsPtr = realDataPoints;
-  float avgPointsVector[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float avgPointsVector[4];
     
   __m128 dataPointsVal;
   __m128 avgPointsVal = _mm_setzero_ps();
@@ -87,7 +88,7 @@ static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a16_sse(float* no
   sumMean += avgPointsVector[3];
 
   // Calculate the number of valid bins from the remaning count
-  float validBinCountVector[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float validBinCountVector[4];
   _mm_store_ps(validBinCountVector, vValidBinCount);
 
   float validBinCount = 0;

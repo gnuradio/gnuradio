@@ -23,15 +23,15 @@ void qa_16s_permute_and_scalar_add_aligned16::t1() {
   clock_t start, end;
   double total;
   
-  short target[vlen] __attribute__ ((aligned (16)));
-  short target2[vlen] __attribute__ ((aligned (16)));
-  short src0[vlen] __attribute__ ((aligned (16)));
-  short permute_indexes[vlen] __attribute__ ((aligned (16)));
-  short cntl0[vlen] __attribute__ ((aligned (16)));
-  short cntl1[vlen] __attribute__ ((aligned (16)));
-  short cntl2[vlen] __attribute__ ((aligned (16)));
-  short cntl3[vlen] __attribute__ ((aligned (16)));
-  short scalars[4] __attribute__ ((aligned (16))) = {1, 2, 3, 4};
+  __VOLK_ATTR_ALIGNED(16) short target[vlen];
+  __VOLK_ATTR_ALIGNED(16) short target2[vlen];
+  __VOLK_ATTR_ALIGNED(16) short src0[vlen];
+  __VOLK_ATTR_ALIGNED(16) short permute_indexes[vlen];
+  __VOLK_ATTR_ALIGNED(16) short cntl0[vlen];
+  __VOLK_ATTR_ALIGNED(16) short cntl1[vlen];
+  __VOLK_ATTR_ALIGNED(16) short cntl2[vlen];
+  __VOLK_ATTR_ALIGNED(16) short cntl3[vlen];
+  __VOLK_ATTR_ALIGNED(16) short scalars[4] = {1, 2, 3, 4};
 
   for(int i = 0; i < vlen; ++i) {
     src0[i] = i;

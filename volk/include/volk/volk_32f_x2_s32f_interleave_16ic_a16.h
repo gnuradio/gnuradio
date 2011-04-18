@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_32f_x2_s32f_interleave_16ic_a16_H
 #define INCLUDED_volk_32f_x2_s32f_interleave_16ic_a16_H
 
+#include <volk/volk_attributes.h>
 #include <inttypes.h>
 #include <stdio.h>
 
@@ -85,7 +86,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a16_sse(lv_16sc_t* complexVe
 
     int16_t* complexVectorPtr = (int16_t*)complexVector;
 
-    float floatBuffer[4] __attribute__((aligned(128)));
+    __VOLK_ATTR_ALIGNED(16) float floatBuffer[4];
 
     for(;number < quarterPoints; number++){
       iValue = _mm_load_ps(iBufferPtr);

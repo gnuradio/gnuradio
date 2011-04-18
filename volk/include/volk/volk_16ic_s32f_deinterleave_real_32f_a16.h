@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_16ic_s32f_deinterleave_real_32f_a16_H
 #define INCLUDED_volk_16ic_s32f_deinterleave_real_32f_a16_H
 
+#include <volk/volk_attributes.h>
 #include <inttypes.h>
 #include <stdio.h>
 
@@ -72,7 +73,7 @@ static inline void volk_16ic_s32f_deinterleave_real_32f_a16_sse(float* iBuffer, 
   __m128 invScalar = _mm_set_ps1(iScalar);
   int16_t* complexVectorPtr = (int16_t*)complexVector;
 
-  float floatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float floatBuffer[4];
 
   for(;number < quarterPoints; number++){
     floatBuffer[0] = (float)(*complexVectorPtr); complexVectorPtr += 2;

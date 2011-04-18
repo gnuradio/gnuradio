@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_32f_accumulator_s32f_a16_H
 #define INCLUDED_volk_32f_accumulator_s32f_a16_H
 
+#include <volk/volk_attributes.h>
 #include <inttypes.h>
 #include <stdio.h>
 
@@ -18,7 +19,7 @@ static inline void volk_32f_accumulator_s32f_a16_sse(float* result, const float*
   const unsigned int quarterPoints = num_points / 4;
 
   const float* aPtr = inputBuffer;
-  float tempBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float tempBuffer[4];
   
   __m128 accumulator = _mm_setzero_ps();
   __m128 aVal = _mm_setzero_ps();

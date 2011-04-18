@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_32f_s32f_convert_8i_a16_H
 #define INCLUDED_volk_32f_s32f_convert_8i_a16_H
 
+#include <volk/volk_attributes.h>
 #include <inttypes.h>
 #include <stdio.h>
 
@@ -70,7 +71,7 @@ static inline void volk_32f_s32f_convert_8i_a16_sse(int8_t* outputVector, const 
   __m128 vScalar = _mm_set_ps1(scalar);
   __m128 ret;
 
-  float outputFloatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float outputFloatBuffer[4];
 
   for(;number < quarterPoints; number++){
     ret = _mm_load_ps(inputVectorPtr);

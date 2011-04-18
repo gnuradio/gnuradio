@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_32fc_s32f_magnitude_16i_a16_H
 #define INCLUDED_volk_32fc_s32f_magnitude_16i_a16_H
 
+#include <volk/volk_attributes.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
@@ -25,7 +26,7 @@ static inline void volk_32fc_s32f_magnitude_16i_a16_sse3(int16_t* magnitudeVecto
 
   __m128 cplxValue1, cplxValue2, result;
 
-  float floatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float floatBuffer[4];
 
   for(;number < quarterPoints; number++){
     cplxValue1 = _mm_load_ps(complexVectorPtr);
@@ -80,7 +81,7 @@ static inline void volk_32fc_s32f_magnitude_16i_a16_sse(int16_t* magnitudeVector
 
   __m128 cplxValue1, cplxValue2, iValue, qValue, result;
 
-  float floatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float floatBuffer[4];
 
   for(;number < quarterPoints; number++){
     cplxValue1 = _mm_load_ps(complexVectorPtr);
