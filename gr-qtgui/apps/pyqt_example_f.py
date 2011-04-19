@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from gnuradio import gr, blks2
+from gnuradio import gr
 from gnuradio import qtgui
 from PyQt4 import QtGui, QtCore
 import sys, sip
@@ -117,6 +117,8 @@ class my_top_block(gr.top_block):
         src2 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
         src  = gr.add_ff()
         thr = gr.throttle(gr.sizeof_float, 100*fftsize)
+        noise = gr.noise_source_f(gr.GR_GAUSSIAN, 0.001)
+        add = gr.add_ff()
         self.snk1 = qtgui.sink_f(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                  0, Rs,
                                  "Float Signal Example",
@@ -124,7 +126,9 @@ class my_top_block(gr.top_block):
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
-        self.connect(src, thr, self.snk1)
+        self.connect(src, thr, (add,0))
+        self.connect(noise, (add,1))
+        self.connect(add, self.snk1)
 
         self.ctrl_win = control_box()
         self.ctrl_win.attach_signal1(src1)
@@ -145,4 +149,5 @@ if __name__ == "__main__":
     tb = my_top_block();
     tb.start()
     sys.exit(tb.qapp.exec_())
+    tb.stop()
     
