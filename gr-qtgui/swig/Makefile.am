@@ -51,4 +51,5 @@ qtgui_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 qtgui_swig_swiginclude_headers = 	\
-	qtgui.i
+	qtgui.i				\
+	qtgui_time_sink_c.i

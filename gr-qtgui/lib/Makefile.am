@@ -49,11 +49,13 @@ libgnuradio_qtgui_la_SOURCES = 	\
 	waterfallGlobalData.cc			\
 	ConstellationDisplayPlot.cc		\
 	spectrumdisplayform.cc			\
+	timedisplayform.cc			\
 	SpectrumGUIClass.cc			\
 	spectrumUpdateEvents.cc			\
 	plot_waterfall.cc			\
 	qtgui_sink_c.cc				\
 	qtgui_sink_f.cc				\
+	qtgui_time_sink_c.cc			\
 	qtgui_util.cc
 
 nodist_libgnuradio_qtgui_la_SOURCES=$(QMAKE_SOURCES)
@@ -68,10 +70,12 @@ grinclude_HEADERS =			\
 	highResTimeFunctions.h		\
 	plot_waterfall.h		\
 	spectrumdisplayform.h		\
+	timedisplayform.h		\
 	SpectrumGUIClass.h		\
 	spectrumUpdateEvents.h		\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h			\
+	qtgui_time_sink_c.h		\
 	qtgui_util.h
 
 #QT_MOC_FLAGS=-DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB
