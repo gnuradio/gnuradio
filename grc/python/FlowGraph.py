@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -48,15 +48,16 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		#return from cache
 		return self._eval_cache[my_hash]
 
-	def _get_io_signaturev(self, pad_key):
+	def get_io_signaturev(self, direction):
 		"""
 		Get a list of io signatures for this flow graph.
-		The pad key determines the directionality of the io signature.
-		@param pad_key a string of pad_source or pad_sink
+		@param direction a string of 'in' or 'out'
 		@return a list of dicts with: type, label, vlen, size
 		"""
-		pads = filter(lambda b: b.get_key() == pad_key, self.get_enabled_blocks())
-		sorted_pads = sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
+		sorted_pads = {
+			'in': self.get_pad_sources(),
+			'out': self.get_pad_sinks(),
+		}[direction]
 		#load io signature
 		return [{
 			'label': str(pad.get_param('label').get_evaluated()),
@@ -65,19 +66,21 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 			'size': pad.get_param('type').get_opt('size'),
 		} for pad in sorted_pads]
 
-	def get_input_signaturev(self):
+	def get_pad_sources(self):
 		"""
-		Get the io signature for the input side of this flow graph.
-		@return a list of io signature structures
+		Get a list of pad source blocks sorted by id order.
+		@return a list of pad source blocks in this flow graph
 		"""
-		return self._get_io_signaturev('pad_source')
+		pads = filter(lambda b: b.get_key() == 'pad_source', self.get_enabled_blocks())
+		return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
 
-	def get_output_signaturev(self):
+	def get_pad_sinks(self):
 		"""
-		Get the io signature for the output side of this flow graph.
-		@return a list of io signature structures
+		Get a list of pad sink blocks sorted by id order.
+		@return a list of pad sink blocks in this flow graph
 		"""
-		return self._get_io_signaturev('pad_sink')
+		pads = filter(lambda b: b.get_key() == 'pad_sink', self.get_enabled_blocks())
+		return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
 
 	def get_imports(self):
 		"""
