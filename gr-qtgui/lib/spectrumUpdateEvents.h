@@ -6,6 +6,7 @@
 #include <QString>
 #include <complex>
 #include <highResTimeFunctions.h>
+#include <gr_complex.h>
 
 class SpectrumUpdateEvent:public QEvent{
 
@@ -86,6 +87,31 @@ private:
   double _centerFrequency;
   double _startFrequency;
   double _stopFrequency;
+};
+
+
+class TimeUpdateEvent: public QEvent
+{
+public:
+  TimeUpdateEvent(const gr_complex *timeDomainPoints,
+		  const uint64_t numTimeDomainDataPoints,
+		  const timespec dataTimestamp,
+		  const bool repeatDataFlag);
+  
+  ~TimeUpdateEvent();
+
+  const gr_complex *getTimeDomainPoints() const;
+  uint64_t getNumTimeDomainDataPoints() const;
+  timespec getDataTimestamp() const;
+  bool getRepeatDataFlag() const;
+
+protected:
+
+private:
+  gr_complex *_dataTimeDomainPoints;
+  uint64_t _numTimeDomainDataPoints;
+  timespec _dataTimestamp;
+  bool _repeatDataFlag;
 };
 
 

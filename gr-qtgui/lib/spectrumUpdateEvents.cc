@@ -177,4 +177,60 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
   return _stopFrequency;
 }
 
+
+/***************************************************************************/
+
+TimeUpdateEvent::TimeUpdateEvent(const gr_complex *timeDomainPoints,
+				 const uint64_t numTimeDomainDataPoints,
+				 const timespec dataTimestamp,
+				 const bool repeatDataFlag)
+  : QEvent(QEvent::Type(10005))
+{
+  if(numTimeDomainDataPoints < 1) {
+    _numTimeDomainDataPoints = 1;
+  }
+  else {
+    _numTimeDomainDataPoints = numTimeDomainDataPoints;
+  }
+
+  _dataTimeDomainPoints = new gr_complex[_numTimeDomainDataPoints];
+  memset(_dataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(gr_complex));
+  if(numTimeDomainDataPoints > 0) {
+    memcpy(_dataTimeDomainPoints, timeDomainPoints,
+	   numTimeDomainDataPoints*sizeof(gr_complex));
+  }
+
+  _dataTimestamp = dataTimestamp;
+  _repeatDataFlag = repeatDataFlag;
+}
+
+TimeUpdateEvent::~TimeUpdateEvent()
+{
+  delete[] _dataTimeDomainPoints;
+}
+
+const gr_complex*
+TimeUpdateEvent::getTimeDomainPoints() const
+{
+  return _dataTimeDomainPoints;
+}
+
+uint64_t
+TimeUpdateEvent::getNumTimeDomainDataPoints() const
+{
+  return _numTimeDomainDataPoints;
+}
+
+timespec
+TimeUpdateEvent::getDataTimestamp() const
+{
+  return _dataTimestamp;
+}
+
+bool
+TimeUpdateEvent::getRepeatDataFlag() const
+{
+  return _repeatDataFlag;
+}
+
 #endif /* SPECTRUM_UPDATE_EVENTS_C */
