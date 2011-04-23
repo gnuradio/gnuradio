@@ -144,13 +144,8 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
   _sampleRate = 1;
   _resetXAxisPoints();
 
-#if QT_VERSION < 0x040000
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
 			  Qt::RightButton, Qt::ControlModifier);
-#else
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			  Qt::RightButton, Qt::ControlModifier);
-#endif
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
 			  Qt::RightButton);
 
@@ -186,12 +181,12 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
 	  this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
-TimeDomainDisplayPlot::~TimeDomainDisplayPlot(){
+TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
+{
   delete[] _realDataPoints;
   delete[] _imagDataPoints;
   delete[] _xAxisPoints;
 
-  // _fft_plot_curves deleted when parent deleted
   // _zoomer and _panner deleted when parent deleted
 }
 
