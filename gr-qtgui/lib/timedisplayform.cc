@@ -24,6 +24,7 @@
 #include <QColorDialog>
 #include <QMessageBox>
 #include <timedisplayform.h>
+#include <iostream>
 
 TimeDisplayForm::TimeDisplayForm(QWidget* parent)
   : QWidget(parent)
@@ -31,10 +32,15 @@ TimeDisplayForm::TimeDisplayForm(QWidget* parent)
   _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
+
+  _layout = new QGridLayout(this);
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(this);
+  _layout->addWidget(_timeDomainDisplayPlot, 0, 0);
 
   _numRealDataPoints = 1024;
-  
+
+  setLayout(_layout);
+
   Reset();
 
   // Create a timer to update plots at the specified rate
@@ -75,12 +81,6 @@ TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
 				      numTimeDomainDataPoints,
 				      d_update_time);
 
-  // Tell the system the GUI has been updated
-  //if(_systemSpecifiedFlag){
-  //  _system->SetLastGUIUpdateTime(generatedTimestamp);
-  //  _system->DecrementPendingGUIUpdateEvents();
-  //}
-
   delete [] real;
   delete [] imag;
 }
@@ -88,10 +88,7 @@ TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
 void
 TimeDisplayForm::resizeEvent( QResizeEvent *e )
 {
-  QSize s(0,0);
-  //s.setWidth(TimeDomainDisplayFrame->width());
-  //s.setHeight(TimeDomainDisplayFrame->height());
-  emit _timeDomainDisplayPlot->resizeSlot(&s);
+  emit _timeDomainDisplayPlot->resizeSlot(&size());
 }
 
 void

@@ -29,6 +29,7 @@
 #include <TimeDomainDisplayPlot.h>
 #include <ConstellationDisplayPlot.h>
 #include <QtGui/QApplication>
+#include <QtGui/QGridLayout>
 #include <QValidator>
 #include <QTimer>
 #include <vector>
@@ -67,6 +68,8 @@ signals:
 private:
   uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
+
+  QGridLayout *_layout;
   TimeDomainDisplayPlot* _timeDomainDisplayPlot;
   bool _systemSpecifiedFlag;
   double _startFrequency;

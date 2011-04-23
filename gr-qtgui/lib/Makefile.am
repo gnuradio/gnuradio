@@ -30,6 +30,7 @@ AM_CPPFLAGS = -I. $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 # This is mostly to help make distcheck pass
 QMAKE_SOURCES = 				\
 	spectrumdisplayform.moc.cc		\
+	timedisplayform.moc.cc			\
 	FrequencyDisplayPlot.moc.cc	 	\
 	TimeDomainDisplayPlot.moc.cc		\
 	WaterfallDisplayPlot.moc.cc		\

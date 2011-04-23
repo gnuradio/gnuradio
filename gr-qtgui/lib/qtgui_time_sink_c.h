@@ -35,7 +35,7 @@ typedef boost::shared_ptr<qtgui_time_sink_c> qtgui_time_sink_c_sptr;
 
 qtgui_time_sink_c_sptr qtgui_make_time_sink_c(int size, double bw,
 					      const std::string &name,
-					      QWidget *parent);
+					      QWidget *parent=NULL);
 
 class qtgui_time_sink_c : public gr_block
 {
@@ -45,7 +45,7 @@ private:
 						       QWidget *parent);
   qtgui_time_sink_c(int size, double bw,
 		    const std::string &name,
-		    QWidget *parent);
+		    QWidget *parent=NULL);
   
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
