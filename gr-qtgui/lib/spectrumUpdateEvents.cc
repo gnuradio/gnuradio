@@ -180,14 +180,10 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 
 /***************************************************************************/
 #include <iostream>
-TimeUpdateEvent::TimeUpdateEvent(const int which,
-				 const double *timeDomainPoints,
-				 const uint64_t numTimeDomainDataPoints,
-				 const timespec dataTimestamp,
-				 const bool repeatDataFlag)
+TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
+				 const uint64_t numTimeDomainDataPoints)
   : QEvent(QEvent::Type(10005))
 {
-  _which = which;
   if(numTimeDomainDataPoints < 1) {
     _numTimeDomainDataPoints = 1;
   }
@@ -195,29 +191,25 @@ TimeUpdateEvent::TimeUpdateEvent(const int which,
     _numTimeDomainDataPoints = numTimeDomainDataPoints;
   }
 
-  _dataTimeDomainPoints = new double[_numTimeDomainDataPoints];
-  memset(_dataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(double));
-  if(numTimeDomainDataPoints > 0) {
-    memcpy(_dataTimeDomainPoints, timeDomainPoints,
-	   numTimeDomainDataPoints*sizeof(double));
-  }
+  _nplots = timeDomainPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _dataTimeDomainPoints.push_back(new double[_numTimeDomainDataPoints]);
 
-  _dataTimestamp = dataTimestamp;
-  _repeatDataFlag = repeatDataFlag;
+    if(numTimeDomainDataPoints > 0) {
+      memcpy(_dataTimeDomainPoints[i], timeDomainPoints[i],
+	     numTimeDomainDataPoints*sizeof(double));
+    }
+  }
 }
 
 TimeUpdateEvent::~TimeUpdateEvent()
 {
-  delete[] _dataTimeDomainPoints;
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _dataTimeDomainPoints[i];
+  }
 }
 
-int
-TimeUpdateEvent::which() const
-{
-  return _which;
-}
-
-const double*
+const std::vector<double*>
 TimeUpdateEvent::getTimeDomainPoints() const
 {
   return _dataTimeDomainPoints;
@@ -227,18 +219,6 @@ uint64_t
 TimeUpdateEvent::getNumTimeDomainDataPoints() const
 {
   return _numTimeDomainDataPoints;
-}
-
-timespec
-TimeUpdateEvent::getDataTimestamp() const
-{
-  return _dataTimestamp;
-}
-
-bool
-TimeUpdateEvent::getRepeatDataFlag() const
-{
-  return _repeatDataFlag;
 }
 
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

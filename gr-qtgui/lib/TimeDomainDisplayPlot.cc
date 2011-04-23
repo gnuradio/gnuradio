@@ -95,8 +95,6 @@ private:
 TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   : QwtPlot(parent), _nplots(nplots)
 {
-  timespec_reset(&_lastReplot);
-
   resize(parent->width(), parent->height());
 
   _numPoints = 1024;
@@ -215,36 +213,30 @@ TimeDomainDisplayPlot::resizeSlot( QSize *s )
   resize(s->width(), s->height());
 }
 
-void TimeDomainDisplayPlot::PlotNewData(const int which,
-					const double* dataPoints,
+void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
 					const int64_t numDataPoints,
 					const double timeInterval)
 {
-  if((numDataPoints > 0) && 
-     (diff_timespec(get_highres_clock(), _lastReplot) > timeInterval)) {
-  
+  if((numDataPoints > 0)) {
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
 
-      delete[] _dataPoints[which];
-      _dataPoints[which] = new double[_numPoints];
-
       delete[] _xAxisPoints;
       _xAxisPoints = new double[_numPoints];
+
+      for(int i = 0; i < _nplots; i++) {
+	delete[] _dataPoints[i];
+	_dataPoints[i] = new double[_numPoints];
+	_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+      }
       
-      _plot_curve[which]->setRawData(_xAxisPoints, _dataPoints[which], _numPoints);
-
       set_xaxis(0, numDataPoints);
-
       _resetXAxisPoints();
     }
 
-    std::cout << "DisplayPlot: " << which << std::endl;
-    memcpy(_dataPoints[which], dataPoints, numDataPoints*sizeof(double));
-    std::cout << "after" << std::endl;
-
-    if(which == _nplots-1)
-      _lastReplot = get_highres_clock();
+    for(int i = 0; i < _nplots; i++) {
+      memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
+    }
   }
 }
 

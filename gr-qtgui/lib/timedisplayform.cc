@@ -65,13 +65,11 @@ TimeDisplayForm::~TimeDisplayForm()
 void
 TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
 {
-  const int which = spectrumUpdateEvent->which();
-  const double* timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
+  const std::vector<double*> timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
-  const timespec generatedTimestamp = spectrumUpdateEvent->getDataTimestamp();
+  const timespec generatedTimestamp = {0,0};
   
-  //std::cout << "TimeDisplayForm: which: " << which << std::endl;
-  _timeDomainDisplayPlot->PlotNewData(which, timeDomainDataPoints,
+  _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints,
 				      numTimeDomainDataPoints,
 				      d_update_time);
 }

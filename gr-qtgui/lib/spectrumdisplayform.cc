@@ -141,13 +141,17 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   //_lastSpectrumEvent = (SpectrumUpdateEvent)(*spectrumUpdateEvent);
   const std::complex<float>* complexDataPoints = spectrumUpdateEvent->getFFTPoints();
   const uint64_t numFFTDataPoints = spectrumUpdateEvent->getNumFFTDataPoints();
-  const double* realTimeDomainDataPoints = spectrumUpdateEvent->getRealTimeDomainPoints();
-  const double* imagTimeDomainDataPoints = spectrumUpdateEvent->getImagTimeDomainPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
   const timespec dataTimestamp = spectrumUpdateEvent->getDataTimestamp();
   const bool repeatDataFlag = spectrumUpdateEvent->getRepeatDataFlag();
   const bool lastOfMultipleUpdatesFlag = spectrumUpdateEvent->getLastOfMultipleUpdateFlag();
   const timespec generatedTimestamp = spectrumUpdateEvent->getEventGeneratedTimestamp();
+  double* realTimeDomainDataPoints = (double*)spectrumUpdateEvent->getRealTimeDomainPoints();
+  double* imagTimeDomainDataPoints = (double*)spectrumUpdateEvent->getImagTimeDomainPoints();
+
+  std::vector<double*> timeDomainDataPoints;
+  timeDomainDataPoints.push_back(realTimeDomainDataPoints);
+  timeDomainDataPoints.push_back(imagTimeDomainDataPoints);
 
   // REMEMBER: The dataTimestamp is NOT valid when the repeat data flag is true...
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
@@ -232,14 +236,9 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					 _peakAmplitude, d_update_time);
     }
     if(tabindex == d_plot_time) {
-      _timeDomainDisplayPlot->PlotNewData(0,
-					  realTimeDomainDataPoints, 
+      _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints, 
 					  numTimeDomainDataPoints,
 					  d_update_time);
-      _timeDomainDisplayPlot->PlotNewData(1,
-					  imagTimeDomainDataPoints, 
-					  numTimeDomainDataPoints,
-					  d_update_time); 
    }
     if(tabindex == d_plot_constellation) {
       _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 

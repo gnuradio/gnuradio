@@ -47,7 +47,7 @@ public:
   TimeDomainDisplayPlot(int nplots, QWidget*);
   virtual ~TimeDomainDisplayPlot();
 
-  void PlotNewData(const int which, const double* dataPoints, 
+  void PlotNewData(const std::vector<double*> dataPoints, 
 		   const int64_t numDataPoints, const double timeInterval);
     
   virtual void replot();
@@ -86,8 +86,6 @@ private:
   double* _xAxisPoints;
 
   double _sampleRate;
-
-  timespec _lastReplot;
 
   int64_t _numPoints;
 };

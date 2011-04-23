@@ -142,26 +142,26 @@ qtgui_time_sink_c::general_work (int noutput_items,
   for(int i=0; i < noutput_items; i+=d_size) {
     unsigned int datasize = noutput_items - i;
     unsigned int resid = d_size-d_index;
-
-    // If we have enough input for one full FFT, do it
+    
+    // If we have enough input for one full plot, do it
     if(datasize >= resid) {
-      const timespec currentTime = get_highres_clock();
+      d_current_time = get_highres_clock();
       
-      // Fill up residbufs with d_fftsize number of items
+      // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n+=2) {
 	for(unsigned int k = 0; k < resid; k++) {
 	  d_residbufs[n][d_index+k] = in[j+k].real();
 	  d_residbufs[n+1][d_index+k] = in[j+k].imag();
 	}
+      }	
 
+      // Update the plot if its time
+      if(diff_timespec(d_current_time, d_last_time) > d_update_time) {
+	d_last_time = d_current_time;
 	d_qApplication->postEvent(d_main_gui,
-				  new TimeUpdateEvent(n, d_residbufs[n], d_size,
-						      currentTime, true));
-	//d_qApplication->postEvent(d_main_gui,
-	//			  new TimeUpdateEvent(n+1, d_residbufs[n+1], d_size,
-	//					      currentTime, true));
+				  new TimeUpdateEvent(d_residbufs, d_size));	
       }
-
+      
       d_index = 0;
       j += resid;
     }
@@ -169,8 +169,8 @@ qtgui_time_sink_c::general_work (int noutput_items,
     else {
       for(n = 0; n < d_nconnections; n+=2) {
 	for(unsigned int k = 0; k < resid; k++) {
-	  d_residbufs[n][d_index+k] = in[j+k].real();
-	  d_residbufs[n+1][d_index+k] = in[j+k].imag();
+	    d_residbufs[n][d_index+k] = in[j+k].real();
+	    d_residbufs[n+1][d_index+k] = in[j+k].imag();
 	}
       }
       d_index += datasize;
