@@ -48,14 +48,14 @@ qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
 	      gr_make_io_signature (nconnections, nconnections, sizeof(gr_complex)),
 	      gr_make_io_signature (0, 0, 0)),
     d_size(size), d_bandwidth(bw), d_name(name),
-    d_nconnections(nconnections), d_parent(parent)
+    d_nconnections(2*nconnections), d_parent(parent)
 {
   d_main_gui = NULL;
 
   d_index = 0;
 
   for(int i = 0; i < d_nconnections; i++) {
-    d_residbufs.push_back(new gr_complex[d_size]);
+    d_residbufs.push_back(new double[d_size]);
   }
 
   initialize();
@@ -90,7 +90,7 @@ qtgui_time_sink_c::initialize()
     d_qApplication = new QApplication(argc, argv);
   }
 
-  d_main_gui = new TimeDisplayForm(d_parent);
+  d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
@@ -148,22 +148,30 @@ qtgui_time_sink_c::general_work (int noutput_items,
       const timespec currentTime = get_highres_clock();
       
       // Fill up residbufs with d_fftsize number of items
-      for(n = 0; n < d_nconnections; n++) {
-	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*resid);
+      for(n = 0; n < d_nconnections; n+=2) {
+	for(unsigned int k = 0; k < resid; k++) {
+	  d_residbufs[n][d_index+k] = in[j+k].real();
+	  d_residbufs[n+1][d_index+k] = in[j+k].imag();
+	}
+
+	d_qApplication->postEvent(d_main_gui,
+				  new TimeUpdateEvent(n, d_residbufs[n], d_size,
+						      currentTime, true));
+	//d_qApplication->postEvent(d_main_gui,
+	//			  new TimeUpdateEvent(n+1, d_residbufs[n+1], d_size,
+	//					      currentTime, true));
       }
 
       d_index = 0;
-
       j += resid;
-      
-      d_qApplication->postEvent(d_main_gui,
-				new TimeUpdateEvent(d_residbufs, d_size,
-						    currentTime, true));
     }
     // Otherwise, copy what we received into the residbufs for next time
     else {
-      for(n = 0; n < d_nconnections; n++) {
-	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*datasize);
+      for(n = 0; n < d_nconnections; n+=2) {
+	for(unsigned int k = 0; k < resid; k++) {
+	  d_residbufs[n][d_index+k] = in[j+k].real();
+	  d_residbufs[n+1][d_index+k] = in[j+k].imag();
+	}
       }
       d_index += datasize;
       j += datasize;

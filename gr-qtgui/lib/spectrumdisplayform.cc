@@ -36,7 +36,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _frequencyDisplayPlot = new FrequencyDisplayPlot(FrequencyPlotDisplayFrame);
   _waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
 
-  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(TimeDomainDisplayFrame);
+  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(2, TimeDomainDisplayFrame);
   _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
   _realFFTDataPoints = new double[_numRealDataPoints];
@@ -232,11 +232,15 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					 _peakAmplitude, d_update_time);
     }
     if(tabindex == d_plot_time) {
-      _timeDomainDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
-					  imagTimeDomainDataPoints, 
+      _timeDomainDisplayPlot->PlotNewData(0,
+					  realTimeDomainDataPoints, 
 					  numTimeDomainDataPoints,
 					  d_update_time);
-    }
+      _timeDomainDisplayPlot->PlotNewData(1,
+					  imagTimeDomainDataPoints, 
+					  numTimeDomainDataPoints,
+					  d_update_time); 
+   }
     if(tabindex == d_plot_constellation) {
       _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
 					     imagTimeDomainDataPoints, 

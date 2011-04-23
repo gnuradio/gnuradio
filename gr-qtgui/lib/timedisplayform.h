@@ -39,7 +39,7 @@ class TimeDisplayForm : public QWidget
   Q_OBJECT
 
   public:
-  TimeDisplayForm(QWidget* parent = 0);
+  TimeDisplayForm(int nplots=1, QWidget* parent = 0);
   ~TimeDisplayForm();
   
   void Reset();

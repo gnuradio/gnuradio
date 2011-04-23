@@ -179,13 +179,15 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 
 
 /***************************************************************************/
-
-TimeUpdateEvent::TimeUpdateEvent(const std::vector<gr_complex*> &timeDomainPoints,
+#include <iostream>
+TimeUpdateEvent::TimeUpdateEvent(const int which,
+				 const double *timeDomainPoints,
 				 const uint64_t numTimeDomainDataPoints,
 				 const timespec dataTimestamp,
 				 const bool repeatDataFlag)
   : QEvent(QEvent::Type(10005))
 {
+  _which = which;
   if(numTimeDomainDataPoints < 1) {
     _numTimeDomainDataPoints = 1;
   }
@@ -193,11 +195,11 @@ TimeUpdateEvent::TimeUpdateEvent(const std::vector<gr_complex*> &timeDomainPoint
     _numTimeDomainDataPoints = numTimeDomainDataPoints;
   }
 
-  _dataTimeDomainPoints = new gr_complex[_numTimeDomainDataPoints];
-  memset(_dataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(gr_complex));
+  _dataTimeDomainPoints = new double[_numTimeDomainDataPoints];
+  memset(_dataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(double));
   if(numTimeDomainDataPoints > 0) {
-    memcpy(_dataTimeDomainPoints, timeDomainPoints[0],
-	   numTimeDomainDataPoints*sizeof(gr_complex));
+    memcpy(_dataTimeDomainPoints, timeDomainPoints,
+	   numTimeDomainDataPoints*sizeof(double));
   }
 
   _dataTimestamp = dataTimestamp;
@@ -209,7 +211,13 @@ TimeUpdateEvent::~TimeUpdateEvent()
   delete[] _dataTimeDomainPoints;
 }
 
-const gr_complex*
+int
+TimeUpdateEvent::which() const
+{
+  return _which;
+}
+
+const double*
 TimeUpdateEvent::getTimeDomainPoints() const
 {
   return _dataTimeDomainPoints;

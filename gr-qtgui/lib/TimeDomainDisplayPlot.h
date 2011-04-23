@@ -25,6 +25,7 @@
 
 #include <stdint.h>
 #include <cstdio>
+#include <vector>
 #include <qwt_plot.h>
 #include <qwt_painter.h>
 #include <qwt_plot_canvas.h>
@@ -43,14 +44,12 @@ class TimeDomainDisplayPlot:public QwtPlot{
   Q_OBJECT
 
 public:
-  TimeDomainDisplayPlot(QWidget*);
+  TimeDomainDisplayPlot(int nplots, QWidget*);
   virtual ~TimeDomainDisplayPlot();
 
-  void PlotNewData(const double* realDataPoints, const double* imagDataPoints, 
+  void PlotNewData(const int which, const double* dataPoints, 
 		   const int64_t numDataPoints, const double timeInterval);
     
-  void SetImaginaryDataVisible(const bool);
-				   
   virtual void replot();
 
   void set_yaxis(double min, double max);
@@ -74,8 +73,8 @@ protected:
 private:
   void _resetXAxisPoints();
 
-  QwtPlotCurve* _real_plot_curve;
-  QwtPlotCurve* _imag_plot_curve;
+  int _nplots;
+  std::vector<QwtPlotCurve*> _plot_curve;
 
   QwtPlotPanner* _panner;
   QwtPlotZoomer* _zoomer;
@@ -83,8 +82,7 @@ private:
   QwtDblClickPlotPicker *_picker;
   QwtPlotMagnifier *_magnifier;
   
-  double* _realDataPoints;
-  double* _imagDataPoints;
+  std::vector<double*> _dataPoints;
   double* _xAxisPoints;
 
   double _sampleRate;

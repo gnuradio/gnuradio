@@ -60,7 +60,7 @@ private:
   int d_nconnections;
 
   int d_index;
-  std::vector<gr_complex*> d_residbufs;
+  std::vector<double*> d_residbufs;
 
   double d_update_time;
 

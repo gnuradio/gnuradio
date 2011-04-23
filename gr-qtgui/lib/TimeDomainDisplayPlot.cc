@@ -27,7 +27,7 @@
 
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
-
+#include <iostream>
 
 class TimePrecisionClass
 {
@@ -92,16 +92,16 @@ private:
   std::string _unitType;
 };
 
-TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
+TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
+  : QwtPlot(parent), _nplots(nplots)
 {
   timespec_reset(&_lastReplot);
 
   resize(parent->width(), parent->height());
 
   _numPoints = 1024;
-  _realDataPoints = new double[_numPoints];
-  _imagDataPoints = new double[_numPoints];
   _xAxisPoints = new double[_numPoints];
+  memset(_xAxisPoints, 0x0, _numPoints*sizeof(double));
 
   _zoomer = new TimeDomainDisplayZoomer(canvas(), 0);
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
@@ -125,21 +125,20 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
   set_yaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Normalized Voltage");
 
+  // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
-  _real_plot_curve = new QwtPlotCurve("Real Data");
-  _real_plot_curve->attach(this);
-  _real_plot_curve->setPen(QPen(Qt::blue));
-  _real_plot_curve->setRawData(_xAxisPoints, _realDataPoints, _numPoints);
+  for(int i = 0; i < _nplots; i++) {
+    _dataPoints.push_back(new double[_numPoints]);
+    memset(_dataPoints[i], 0x0, _numPoints*sizeof(double));
 
-  _imag_plot_curve = new QwtPlotCurve("Imaginary Data");
-  _imag_plot_curve->attach(this);
-  _imag_plot_curve->setPen(QPen(Qt::magenta));
-  _imag_plot_curve->setRawData(_xAxisPoints, _imagDataPoints, _numPoints);
-  // _imag_plot_curve->setVisible(false);
-
-  memset(_realDataPoints, 0x0, _numPoints*sizeof(double));
-  memset(_imagDataPoints, 0x0, _numPoints*sizeof(double));
-  memset(_xAxisPoints, 0x0, _numPoints*sizeof(double));
+    _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
+    _plot_curve[i]->attach(this);
+    if(i == 0)
+      _plot_curve[i]->setPen(QPen(Qt::blue));
+    else
+      _plot_curve[i]->setPen(QPen(Qt::red));
+    _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+  }
 
   _sampleRate = 1;
   _resetXAxisPoints();
@@ -183,8 +182,8 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
 
 TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
 {
-  delete[] _realDataPoints;
-  delete[] _imagDataPoints;
+  for(int i = 0; i < _nplots; i++)
+    delete [] _dataPoints[i];
   delete[] _xAxisPoints;
 
   // _zoomer and _panner deleted when parent deleted
@@ -216,8 +215,8 @@ TimeDomainDisplayPlot::resizeSlot( QSize *s )
   resize(s->width(), s->height());
 }
 
-void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints,
-					const double* imagDataPoints,
+void TimeDomainDisplayPlot::PlotNewData(const int which,
+					const double* dataPoints,
 					const int64_t numDataPoints,
 					const double timeInterval)
 {
@@ -227,31 +226,26 @@ void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints,
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
 
-      delete[] _realDataPoints;
-      delete[] _imagDataPoints;
+      delete[] _dataPoints[which];
+      _dataPoints[which] = new double[_numPoints];
+
       delete[] _xAxisPoints;
-      _realDataPoints = new double[_numPoints];
-      _imagDataPoints = new double[_numPoints];
       _xAxisPoints = new double[_numPoints];
       
-      _real_plot_curve->setRawData(_xAxisPoints, _realDataPoints, _numPoints);
-      _imag_plot_curve->setRawData(_xAxisPoints, _imagDataPoints, _numPoints);
+      _plot_curve[which]->setRawData(_xAxisPoints, _dataPoints[which], _numPoints);
 
       set_xaxis(0, numDataPoints);
 
       _resetXAxisPoints();
     }
 
-    memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
-    memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
+    std::cout << "DisplayPlot: " << which << std::endl;
+    memcpy(_dataPoints[which], dataPoints, numDataPoints*sizeof(double));
+    std::cout << "after" << std::endl;
 
-    _lastReplot = get_highres_clock();
+    if(which == _nplots-1)
+      _lastReplot = get_highres_clock();
   }
-}
-
-void TimeDomainDisplayPlot::SetImaginaryDataVisible(const bool visibleFlag)
-{
-  _imag_plot_curve->setVisible(visibleFlag);
 }
 
 void TimeDomainDisplayPlot::_resetXAxisPoints()

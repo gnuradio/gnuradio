@@ -26,7 +26,7 @@
 #include <timedisplayform.h>
 #include <iostream>
 
-TimeDisplayForm::TimeDisplayForm(QWidget* parent)
+TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   : QWidget(parent)
 {
   _systemSpecifiedFlag = false;
@@ -34,8 +34,8 @@ TimeDisplayForm::TimeDisplayForm(QWidget* parent)
   _intValidator->setBottom(0);
 
   _layout = new QGridLayout(this);
-  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(this);
-  _layout->addWidget(_timeDomainDisplayPlot, 0, 0);
+  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(nplots, this);
+  _layout->addWidget(_timeDomainDisplayPlot, 0, 0, 100, 100);
 
   _numRealDataPoints = 1024;
 
@@ -65,24 +65,15 @@ TimeDisplayForm::~TimeDisplayForm()
 void
 TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
 {
-  const gr_complex* timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
+  const int which = spectrumUpdateEvent->which();
+  const double* timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
   const timespec generatedTimestamp = spectrumUpdateEvent->getDataTimestamp();
-
-  // FIXME: make time domain display take complex inputs
-  double *real = new double[numTimeDomainDataPoints];
-  double *imag = new double[numTimeDomainDataPoints];
-  for(uint64_t i = 0; i < numTimeDomainDataPoints; i++) {
-    real[i] = timeDomainDataPoints[i].real();
-    imag[i] = timeDomainDataPoints[i].imag();
-  }
   
-  _timeDomainDisplayPlot->PlotNewData(real, imag,
+  //std::cout << "TimeDisplayForm: which: " << which << std::endl;
+  _timeDomainDisplayPlot->PlotNewData(which, timeDomainDataPoints,
 				      numTimeDomainDataPoints,
 				      d_update_time);
-
-  delete [] real;
-  delete [] imag;
 }
 
 void

@@ -5,9 +5,7 @@
 #include <QEvent>
 #include <QString>
 #include <complex>
-#include <vector>
 #include <highResTimeFunctions.h>
-#include <gr_complex.h>
 
 class SpectrumUpdateEvent:public QEvent{
 
@@ -94,14 +92,16 @@ private:
 class TimeUpdateEvent: public QEvent
 {
 public:
-  TimeUpdateEvent(const std::vector<gr_complex*> &timeDomainPoints,
+  TimeUpdateEvent(const int which,
+		  const double *timeDomainPoints,
 		  const uint64_t numTimeDomainDataPoints,
 		  const timespec dataTimestamp,
 		  const bool repeatDataFlag);
   
   ~TimeUpdateEvent();
 
-  const gr_complex *getTimeDomainPoints() const;
+  int which() const;
+  const double *getTimeDomainPoints() const;
   uint64_t getNumTimeDomainDataPoints() const;
   timespec getDataTimestamp() const;
   bool getRepeatDataFlag() const;
@@ -109,7 +109,8 @@ public:
 protected:
 
 private:
-  gr_complex *_dataTimeDomainPoints;
+  int _which;
+  double *_dataTimeDomainPoints;
   uint64_t _numTimeDomainDataPoints;
   timespec _dataTimestamp;
   bool _repeatDataFlag;
