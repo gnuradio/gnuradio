@@ -33,25 +33,30 @@
 qtgui_time_sink_c_sptr
 qtgui_make_time_sink_c (int size, double bw,
 			const std::string &name,
+			int nconnections,
 			QWidget *parent)
 {
   return gnuradio::get_initial_sptr(new qtgui_time_sink_c (size, bw, name,
-							   parent));
+							   nconnections, parent));
 }
 
 qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
 				      const std::string &name,
+				      int nconnections,
 				      QWidget *parent)
   : gr_block ("time_sink_c",
-	      gr_make_io_signature (1, -1, sizeof(gr_complex)),
+	      gr_make_io_signature (nconnections, nconnections, sizeof(gr_complex)),
 	      gr_make_io_signature (0, 0, 0)),
     d_size(size), d_bandwidth(bw), d_name(name),
-    d_parent(parent)
+    d_nconnections(nconnections), d_parent(parent)
 {
   d_main_gui = NULL;
 
   d_index = 0;
-  d_residbuf = new gr_complex[d_size];
+
+  for(int i = 0; i < d_nconnections; i++) {
+    d_residbufs.push_back(new gr_complex[d_size]);
+  }
 
   initialize();
 }
@@ -59,7 +64,9 @@ qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
 qtgui_time_sink_c::~qtgui_time_sink_c()
 {
   // d_main_gui is a qwidget destroyed with its parent
-  delete [] d_residbuf;
+  for(int i = 0; i < d_nconnections; i++) {
+    delete [] d_residbufs[i];
+  }
 }
 
 void
@@ -129,7 +136,7 @@ qtgui_time_sink_c::general_work (int noutput_items,
 				 gr_vector_const_void_star &input_items,
 				 gr_vector_void_star &output_items)
 {
-  int j=0;
+  int n=0, j=0;
   const gr_complex *in = (const gr_complex*)input_items[0];
 
   for(int i=0; i < noutput_items; i+=d_size) {
@@ -140,19 +147,24 @@ qtgui_time_sink_c::general_work (int noutput_items,
     if(datasize >= resid) {
       const timespec currentTime = get_highres_clock();
       
-      // Fill up residbuf with d_fftsize number of items
-      memcpy(d_residbuf+d_index, &in[j], sizeof(gr_complex)*resid);
+      // Fill up residbufs with d_fftsize number of items
+      for(n = 0; n < d_nconnections; n++) {
+	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*resid);
+      }
+
       d_index = 0;
 
       j += resid;
       
       d_qApplication->postEvent(d_main_gui,
-				new TimeUpdateEvent(d_residbuf, d_size,
+				new TimeUpdateEvent(d_residbufs, d_size,
 						    currentTime, true));
     }
-    // Otherwise, copy what we received into the residbuf for next time
+    // Otherwise, copy what we received into the residbufs for next time
     else {
-      memcpy(d_residbuf+d_index, &in[j], sizeof(gr_complex)*datasize);
+      for(n = 0; n < d_nconnections; n++) {
+	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*datasize);
+      }
       d_index += datasize;
       j += datasize;
     }   

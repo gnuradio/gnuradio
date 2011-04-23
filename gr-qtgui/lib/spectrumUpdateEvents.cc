@@ -180,7 +180,7 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 
 /***************************************************************************/
 
-TimeUpdateEvent::TimeUpdateEvent(const gr_complex *timeDomainPoints,
+TimeUpdateEvent::TimeUpdateEvent(const std::vector<gr_complex*> &timeDomainPoints,
 				 const uint64_t numTimeDomainDataPoints,
 				 const timespec dataTimestamp,
 				 const bool repeatDataFlag)
@@ -196,7 +196,7 @@ TimeUpdateEvent::TimeUpdateEvent(const gr_complex *timeDomainPoints,
   _dataTimeDomainPoints = new gr_complex[_numTimeDomainDataPoints];
   memset(_dataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(gr_complex));
   if(numTimeDomainDataPoints > 0) {
-    memcpy(_dataTimeDomainPoints, timeDomainPoints,
+    memcpy(_dataTimeDomainPoints, timeDomainPoints[0],
 	   numTimeDomainDataPoints*sizeof(gr_complex));
   }
 

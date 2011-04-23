@@ -30,6 +30,7 @@ GR_SWIG_BLOCK_MAGIC(qtgui,time_sink_c)
 
 qtgui_time_sink_c_sptr qtgui_make_time_sink_c(int size, double bw,
 					      const std::string &name,
+					      int nconnections=1,
 					      QWidget *parent=NULL);
 
 class qtgui_time_sink_c : public gr_block
@@ -37,9 +38,11 @@ class qtgui_time_sink_c : public gr_block
 private:
   friend qtgui_time_sink_c_sptr qtgui_make_time_sink_c(int size, double bw,
 						       const std::string &name,
+						       int nconnections,
 						       QWidget *parent);
   qtgui_time_sink_c(int size, double bw,
 		    const std::string &name,
+		    int nconnections,
 		    QWidget *parent=NULL);
   
 public:
