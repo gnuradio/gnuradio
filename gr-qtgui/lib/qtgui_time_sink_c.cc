@@ -58,7 +58,7 @@ qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
 
 qtgui_time_sink_c::~qtgui_time_sink_c()
 {
-  delete d_main_gui;
+  // d_main_gui is a qwidget destroyed with its parent
   delete [] d_residbuf;
 }
 
@@ -82,21 +82,6 @@ qtgui_time_sink_c::initialize()
     char **argv = NULL;
     d_qApplication = new QApplication(argc, argv);
   }
-
-  /*
-  uint64_t maxBufferSize = 32768;
-  d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize, 
-				    d_center_freq, 
-				    -d_bandwidth/2.0, 
-				    d_bandwidth/2.0);
-
-  d_main_gui->SetDisplayTitle(d_name);
-  d_main_gui->SetFFTSize(d_size);
-
-  d_main_gui->OpenSpectrumWindow(d_parent, 
-				 d_plotfreq, d_plotwaterfall,
-				 d_plottime, d_plotconst);
-  */
 
   d_main_gui = new TimeDisplayForm(d_parent);
 
