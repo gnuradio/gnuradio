@@ -47,21 +47,21 @@ class TimeDisplayForm : public QWidget
 public slots:
   void resizeEvent( QResizeEvent * e );
   void customEvent( QEvent * e );
-  void SetFrequencyRange( const double newCenterFrequency,
+  void setFrequencyRange( const double newCenterFrequency,
 			  const double newStartFrequency,
 			  const double newStopFrequency );
   void closeEvent( QCloseEvent * e );
 
-  void SetTimeDomainAxis(double min, double max);
+  void setTimeDomainAxis(double min, double max);
 
-  void SetUpdateTime(double t);
+  void setUpdateTime(double t);
 
-  void SetTitle(int which, QString title);
-  void SetColor(int which, QString color);
+  void setTitle(int which, QString title);
+  void setColor(int which, QString color);
 
 private slots:
   void newData( const TimeUpdateEvent* );
-  void UpdateGuiTimer();
+  void updateGuiTimer();
 
   void onTimePlotPointSelected(const QPointF p);
 

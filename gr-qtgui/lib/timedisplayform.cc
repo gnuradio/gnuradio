@@ -45,7 +45,7 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
 
   // Create a timer to update plots at the specified rate
   displayTimer = new QTimer(this);
-  connect(displayTimer, SIGNAL(timeout()), this, SLOT(UpdateGuiTimer()));
+  connect(displayTimer, SIGNAL(timeout()), this, SLOT(updateGuiTimer()));
 
   connect(_timeDomainDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
 	  this, SLOT(onTimePlotPointSelected(const QPointF)));
@@ -99,7 +99,7 @@ TimeDisplayForm::customEvent( QEvent * e)
 }
 
 void
-TimeDisplayForm::UpdateGuiTimer()
+TimeDisplayForm::updateGuiTimer()
 {
   _timeDomainDisplayPlot->canvas()->update();
 }
@@ -111,7 +111,7 @@ TimeDisplayForm::onTimePlotPointSelected(const QPointF p)
 }
 
 void
-TimeDisplayForm::SetFrequencyRange(const double newCenterFrequency,
+TimeDisplayForm::setFrequencyRange(const double newCenterFrequency,
 				   const double newStartFrequency, 
 				   const double newStopFrequency)
 {
@@ -151,13 +151,13 @@ TimeDisplayForm::closeEvent( QCloseEvent *e )
 }
 
 void
-TimeDisplayForm::SetTimeDomainAxis(double min, double max)
+TimeDisplayForm::setTimeDomainAxis(double min, double max)
 {
   _timeDomainDisplayPlot->setYaxis(min, max);
 }
 
 void
-TimeDisplayForm::SetUpdateTime(double t)
+TimeDisplayForm::setUpdateTime(double t)
 {
   d_update_time = t;
   // QTimer class takes millisecond input
@@ -165,13 +165,13 @@ TimeDisplayForm::SetUpdateTime(double t)
 }
 
 void
-TimeDisplayForm::SetTitle(int which, QString title)
+TimeDisplayForm::setTitle(int which, QString title)
 {
   _timeDomainDisplayPlot->setTitle(which, title);
 }
 
 void
-TimeDisplayForm::SetColor(int which, QString color)
+TimeDisplayForm::setColor(int which, QString color)
 {
   _timeDomainDisplayPlot->setColor(which, color);
 }

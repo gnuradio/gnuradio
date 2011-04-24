@@ -120,26 +120,26 @@ qtgui_time_sink_c::pyqwidget()
 void
 qtgui_time_sink_c::set_time_domain_axis(double min, double max)
 {
-  d_main_gui->SetTimeDomainAxis(min, max);
+  d_main_gui->setTimeDomainAxis(min, max);
 }
 
 void
 qtgui_time_sink_c::set_update_time(double t)
 {
   d_update_time = t;
-  d_main_gui->SetUpdateTime(d_update_time);
+  d_main_gui->setUpdateTime(d_update_time);
 }
 
 void
 qtgui_time_sink_c::set_title(int which, const std::string &title)
 {
-  d_main_gui->SetTitle(which, title.c_str());
+  d_main_gui->setTitle(which, title.c_str());
 }
 
 void
 qtgui_time_sink_c::set_color(int which, const std::string &color)
 {
-  d_main_gui->SetColor(which, color.c_str());
+  d_main_gui->setColor(which, color.c_str());
 }
 
 int
