@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
+ * 
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ * 
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #include <cmath>
 #include <QColorDialog>
 #include <QMessageBox>
@@ -14,13 +36,16 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _frequencyDisplayPlot = new FrequencyDisplayPlot(FrequencyPlotDisplayFrame);
   _waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
 
-  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(TimeDomainDisplayFrame);
+  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(2, TimeDomainDisplayFrame);
   _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
   _realFFTDataPoints = new double[_numRealDataPoints];
   _averagedValues = new double[_numRealDataPoints];
   _historyVector = new std::vector<double*>;
   
+  _timeDomainDisplayPlot->setTitle(0, "real");
+  _timeDomainDisplayPlot->setTitle(1, "imag");
+
   AvgLineEdit->setRange(0, 500);                 // Set range of Average box value from 0 to 500
   MinHoldCheckBox_toggled( false );
   MaxHoldCheckBox_toggled( false );
@@ -119,13 +144,17 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   //_lastSpectrumEvent = (SpectrumUpdateEvent)(*spectrumUpdateEvent);
   const std::complex<float>* complexDataPoints = spectrumUpdateEvent->getFFTPoints();
   const uint64_t numFFTDataPoints = spectrumUpdateEvent->getNumFFTDataPoints();
-  const double* realTimeDomainDataPoints = spectrumUpdateEvent->getRealTimeDomainPoints();
-  const double* imagTimeDomainDataPoints = spectrumUpdateEvent->getImagTimeDomainPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
   const timespec dataTimestamp = spectrumUpdateEvent->getDataTimestamp();
   const bool repeatDataFlag = spectrumUpdateEvent->getRepeatDataFlag();
   const bool lastOfMultipleUpdatesFlag = spectrumUpdateEvent->getLastOfMultipleUpdateFlag();
   const timespec generatedTimestamp = spectrumUpdateEvent->getEventGeneratedTimestamp();
+  double* realTimeDomainDataPoints = (double*)spectrumUpdateEvent->getRealTimeDomainPoints();
+  double* imagTimeDomainDataPoints = (double*)spectrumUpdateEvent->getImagTimeDomainPoints();
+
+  std::vector<double*> timeDomainDataPoints;
+  timeDomainDataPoints.push_back(realTimeDomainDataPoints);
+  timeDomainDataPoints.push_back(imagTimeDomainDataPoints);
 
   // REMEMBER: The dataTimestamp is NOT valid when the repeat data flag is true...
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
@@ -210,11 +239,10 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					 _peakAmplitude, d_update_time);
     }
     if(tabindex == d_plot_time) {
-      _timeDomainDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
-					  imagTimeDomainDataPoints, 
+      _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints, 
 					  numTimeDomainDataPoints,
 					  d_update_time);
-    }
+   }
     if(tabindex == d_plot_constellation) {
       _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
 					     imagTimeDomainDataPoints, 
@@ -673,7 +701,7 @@ SpectrumDisplayForm::ToggleTabConstellation(const bool state)
 void
 SpectrumDisplayForm::SetTimeDomainAxis(double min, double max)
 {
-  _timeDomainDisplayPlot->set_yaxis(min, max);
+  _timeDomainDisplayPlot->setYaxis(min, max);
 }
 
 void

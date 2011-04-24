@@ -177,4 +177,47 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
   return _stopFrequency;
 }
 
+
+/***************************************************************************/
+#include <iostream>
+TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
+				 const uint64_t numTimeDomainDataPoints)
+  : QEvent(QEvent::Type(10005))
+{
+  if(numTimeDomainDataPoints < 1) {
+    _numTimeDomainDataPoints = 1;
+  }
+  else {
+    _numTimeDomainDataPoints = numTimeDomainDataPoints;
+  }
+
+  _nplots = timeDomainPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _dataTimeDomainPoints.push_back(new double[_numTimeDomainDataPoints]);
+    if(numTimeDomainDataPoints > 0) {
+      memcpy(_dataTimeDomainPoints[i], timeDomainPoints[i],
+	     _numTimeDomainDataPoints*sizeof(double));
+    }
+  }
+}
+
+TimeUpdateEvent::~TimeUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _dataTimeDomainPoints[i];
+  }
+}
+
+const std::vector<double*>
+TimeUpdateEvent::getTimeDomainPoints() const
+{
+  return _dataTimeDomainPoints;
+}
+
+uint64_t
+TimeUpdateEvent::getNumTimeDomainDataPoints() const
+{
+  return _numTimeDomainDataPoints;
+}
+
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

@@ -5,6 +5,7 @@
 #include <QEvent>
 #include <QString>
 #include <complex>
+#include <vector>
 #include <highResTimeFunctions.h>
 
 class SpectrumUpdateEvent:public QEvent{
@@ -86,6 +87,29 @@ private:
   double _centerFrequency;
   double _startFrequency;
   double _stopFrequency;
+};
+
+
+class TimeUpdateEvent: public QEvent
+{
+public:
+  TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
+		  const uint64_t numTimeDomainDataPoints);
+  
+  ~TimeUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getTimeDomainPoints() const;
+  uint64_t getNumTimeDomainDataPoints() const;
+  timespec getDataTimestamp() const;
+  bool getRepeatDataFlag() const;
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _dataTimeDomainPoints;
+  uint64_t _numTimeDomainDataPoints;
 };
 
 
