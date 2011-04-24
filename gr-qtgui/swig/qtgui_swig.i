@@ -29,6 +29,7 @@
 #include <qtgui_time_sink_f.h>
 %}
 
-%include "qtgui.i"
+%include "qtgui_sink_c.i"
+%include "qtgui_sink_f.i"
 %include "qtgui_time_sink_c.i"
 %include "qtgui_time_sink_f.i"

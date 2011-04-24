@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,53 +23,8 @@
 %include "gnuradio.i"
 
 %{
-#include <qtgui_sink_c.h>
 #include <qtgui_sink_f.h>
 %}
-
-GR_SWIG_BLOCK_MAGIC(qtgui,sink_c)
-
-qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
-				     double fc=0, double bw=1.0,
-				     const std::string &name="Display",
-				     bool plotfreq=true, bool plotwaterfall=true,
-				     bool plottime=true, bool plotconst=true,
-				     QWidget *parent=NULL);
-
-class qtgui_sink_c : public gr_block
-{
-private:
-  friend qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
-					      double fc, double bw,
-					      const std::string &name,
-					      bool plotfreq, bool plotwaterfall,
-					      bool plottime, bool plotconst,
-					      QWidget *parent);
-  qtgui_sink_c (int fftsize, int wintype,
-		double fc, double bw,
-		const std::string &name,
-		bool plotfreq, bool plotwaterfall,
-		bool plottime, bool plotconst,
-		QWidget *parent);
-  
-public:
-  void exec_();
-  PyObject* pyqwidget();
-
-  void set_frequency_range(const double centerfreq,
-			   const double bandwidth);
-  void set_time_domain_axis(double min, double max);
-  void set_constellation_axis(double xmin, double xmax,
-			      double ymin, double ymax);
-  void set_frequency_axis(double min, double max);
-  void set_constellation_pen_size(int size);
-  void set_update_time(double t);
-};
-
-
-
-/*********************************************************************/
-
 
 GR_SWIG_BLOCK_MAGIC(qtgui,sink_f)
   
