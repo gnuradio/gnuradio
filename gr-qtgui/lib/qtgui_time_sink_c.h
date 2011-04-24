@@ -78,6 +78,7 @@ public:
 
   void set_time_domain_axis(double min, double max);
   void set_update_time(double t);
+  void set_title(int which, const std::string &title);
 
   QApplication *d_qApplication;
 

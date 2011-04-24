@@ -54,6 +54,7 @@ public:
 
   void set_yaxis(double min, double max);
   void set_xaxis(double min, double max);
+  void set_title(int which, QString title);
 
 public slots:
   void resizeSlot( QSize *s );

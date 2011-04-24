@@ -164,3 +164,8 @@ TimeDisplayForm::SetUpdateTime(double t)
   displayTimer->start(d_update_time*1000);
 }
 
+void
+TimeDisplayForm::SetTitle(int which, QString title)
+{
+  _timeDomainDisplayPlot->set_title(which, title);
+}

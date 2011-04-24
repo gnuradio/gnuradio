@@ -208,6 +208,11 @@ TimeDomainDisplayPlot::set_xaxis(double min, double max)
   _zoomer->setZoomBase();
 }
 
+void
+TimeDomainDisplayPlot::set_title(int which, QString title)
+{
+  _plot_curve[which]->setTitle(title);
+}
 
 void TimeDomainDisplayPlot::replot()
 {

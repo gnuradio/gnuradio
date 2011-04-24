@@ -130,6 +130,12 @@ qtgui_time_sink_c::set_update_time(double t)
   d_main_gui->SetUpdateTime(d_update_time);
 }
 
+void
+qtgui_time_sink_c::set_title(int which, const std::string &title)
+{
+  d_main_gui->SetTitle(which, title.c_str());
+}
+
 int
 qtgui_time_sink_c::general_work (int noutput_items,
 				 gr_vector_int &ninput_items,

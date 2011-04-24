@@ -56,6 +56,8 @@ public slots:
 
   void SetUpdateTime(double t);
 
+  void SetTitle(int which, QString title);
+
 private slots:
   void newData( const TimeUpdateEvent* );
   void UpdateGuiTimer();
