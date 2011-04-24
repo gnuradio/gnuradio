@@ -136,12 +136,13 @@ qtgui_time_sink_c::general_work (int noutput_items,
 				 gr_vector_const_void_star &input_items,
 				 gr_vector_void_star &output_items)
 {
-  int n=0, j=0;
-  const gr_complex *in = (const gr_complex*)input_items[0];
+  int n=0, j=0, idx=0;
+  const gr_complex *in = (const gr_complex*)input_items[idx];
 
   for(int i=0; i < noutput_items; i+=d_size) {
     unsigned int datasize = noutput_items - i;
     unsigned int resid = d_size-d_index;
+    idx = 0;
     
     // If we have enough input for one full plot, do it
     if(datasize >= resid) {
@@ -149,6 +150,7 @@ qtgui_time_sink_c::general_work (int noutput_items,
       
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n+=2) {
+	in = (const gr_complex*)input_items[idx++];
 	for(unsigned int k = 0; k < resid; k++) {
 	  d_residbufs[n][d_index+k] = in[j+k].real();
 	  d_residbufs[n+1][d_index+k] = in[j+k].imag();
@@ -168,6 +170,7 @@ qtgui_time_sink_c::general_work (int noutput_items,
     // Otherwise, copy what we received into the residbufs for next time
     else {
       for(n = 0; n < d_nconnections; n+=2) {
+	in = (const gr_complex*)input_items[idx++];
 	for(unsigned int k = 0; k < resid; k++) {
 	    d_residbufs[n][d_index+k] = in[j+k].real();
 	    d_residbufs[n+1][d_index+k] = in[j+k].imag();

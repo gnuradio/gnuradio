@@ -194,10 +194,9 @@ TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
   _nplots = timeDomainPoints.size();
   for(size_t i = 0; i < _nplots; i++) {
     _dataTimeDomainPoints.push_back(new double[_numTimeDomainDataPoints]);
-
     if(numTimeDomainDataPoints > 0) {
       memcpy(_dataTimeDomainPoints[i], timeDomainPoints[i],
-	     numTimeDomainDataPoints*sizeof(double));
+	     _numTimeDomainDataPoints*sizeof(double));
     }
   }
 }

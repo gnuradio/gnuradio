@@ -27,6 +27,7 @@
 
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
+#include <QColor>
 #include <iostream>
 
 class TimePrecisionClass
@@ -122,7 +123,16 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   set_yaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Normalized Voltage");
+  
+  //QColor clr(Qt::blue);
+  QList<QColor> colors;
+  colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
+	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
+	 << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
+	 << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
 
+  int ncolors = colors.size();
+  
   // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
   for(int i = 0; i < _nplots; i++) {
@@ -131,10 +141,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
     _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
     _plot_curve[i]->attach(this);
-    if(i == 0)
-      _plot_curve[i]->setPen(QPen(Qt::blue));
-    else
-      _plot_curve[i]->setPen(QPen(Qt::red));
+    _plot_curve[i]->setPen(QPen(colors[i]));
     _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
   }
 
