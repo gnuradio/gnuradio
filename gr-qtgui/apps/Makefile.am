@@ -30,6 +30,7 @@ nodist_bin_SCRIPTS =		\
 noinst_PYTHON = 		\
 	pyqt_example_f.py 	\
 	pyqt_example_c.py	\
+	pyqt_time_c.py		\
 	qt_digital.py		\
 	qt_digital_window.py    \
 	usrp2_display.py	\
