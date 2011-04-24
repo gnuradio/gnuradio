@@ -52,11 +52,11 @@ public:
     
   virtual void replot();
 
-  void set_yaxis(double min, double max);
-  void set_xaxis(double min, double max);
-  void set_title(int which, QString title);
-
 public slots:
+  void setYaxis(double min, double max);
+  void setXaxis(double min, double max);
+  void setTitle(int which, QString title);
+
   void resizeSlot( QSize *s );
   void SetSampleRate(double sr, double units, 
 		     const std::string &strunits);

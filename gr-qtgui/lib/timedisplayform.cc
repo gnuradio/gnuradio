@@ -35,7 +35,7 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
 
   _layout = new QGridLayout(this);
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(nplots, this);
-  _layout->addWidget(_timeDomainDisplayPlot, 0, 0, 100, 100);
+  _layout->addWidget(_timeDomainDisplayPlot, 0, 0);
 
   _numRealDataPoints = 1024;
 
@@ -67,7 +67,6 @@ TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
 {
   const std::vector<double*> timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
-  const timespec generatedTimestamp = {0,0};
   
   _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints,
 				      numTimeDomainDataPoints,
@@ -77,7 +76,8 @@ TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
 void
 TimeDisplayForm::resizeEvent( QResizeEvent *e )
 {
-  emit _timeDomainDisplayPlot->resizeSlot(&size());
+  QSize s = size();
+  emit _timeDomainDisplayPlot->resizeSlot(&s);
 }
 
 void
@@ -153,7 +153,7 @@ TimeDisplayForm::closeEvent( QCloseEvent *e )
 void
 TimeDisplayForm::SetTimeDomainAxis(double min, double max)
 {
-  _timeDomainDisplayPlot->set_yaxis(min, max);
+  _timeDomainDisplayPlot->setYaxis(min, max);
 }
 
 void
@@ -167,5 +167,5 @@ TimeDisplayForm::SetUpdateTime(double t)
 void
 TimeDisplayForm::SetTitle(int which, QString title)
 {
-  _timeDomainDisplayPlot->set_title(which, title);
+  _timeDomainDisplayPlot->setTitle(which, title);
 }

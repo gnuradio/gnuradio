@@ -117,14 +117,13 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   canvas()->setPalette(palette);  
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
-  set_xaxis(0, _numPoints);
+  setXaxis(0, _numPoints);
   setAxisTitle(QwtPlot::xBottom, "Time (sec)");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  set_yaxis(-2.0, 2.0);
-  setAxisTitle(QwtPlot::yLeft, "Normalized Voltage");
-  
-  //QColor clr(Qt::blue);
+  setYaxis(-2.0, 2.0);
+  setAxisTitle(QwtPlot::yLeft, "Amplitude");
+
   QList<QColor> colors;
   colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
 	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
@@ -149,9 +148,9 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   _resetXAxisPoints();
 
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			  Qt::RightButton, Qt::ControlModifier);
+			   Qt::RightButton, Qt::ControlModifier);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
-			  Qt::RightButton);
+			   Qt::RightButton);
 
   _panner = new QwtPlotPanner(canvas());
   _panner->setAxisEnabled(QwtPlot::yRight, false);
@@ -195,21 +194,21 @@ TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
 }
 
 void
-TimeDomainDisplayPlot::set_yaxis(double min, double max)
+TimeDomainDisplayPlot::setYaxis(double min, double max)
 {
   setAxisScale(QwtPlot::yLeft, min, max);
   _zoomer->setZoomBase();
 }
 
 void
-TimeDomainDisplayPlot::set_xaxis(double min, double max)
+TimeDomainDisplayPlot::setXaxis(double min, double max)
 {
   setAxisScale(QwtPlot::xBottom, min, max);
   _zoomer->setZoomBase();
 }
 
 void
-TimeDomainDisplayPlot::set_title(int which, QString title)
+TimeDomainDisplayPlot::setTitle(int which, QString title)
 {
   _plot_curve[which]->setTitle(title);
 }
@@ -242,7 +241,7 @@ void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
 	_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
       }
       
-      set_xaxis(0, numDataPoints);
+      setXaxis(0, numDataPoints);
       _resetXAxisPoints();
     }
 

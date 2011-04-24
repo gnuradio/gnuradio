@@ -43,6 +43,9 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _averagedValues = new double[_numRealDataPoints];
   _historyVector = new std::vector<double*>;
   
+  _timeDomainDisplayPlot->setTitle(0, "real");
+  _timeDomainDisplayPlot->setTitle(1, "imag");
+
   AvgLineEdit->setRange(0, 500);                 // Set range of Average box value from 0 to 500
   MinHoldCheckBox_toggled( false );
   MaxHoldCheckBox_toggled( false );
@@ -698,7 +701,7 @@ SpectrumDisplayForm::ToggleTabConstellation(const bool state)
 void
 SpectrumDisplayForm::SetTimeDomainAxis(double min, double max)
 {
-  _timeDomainDisplayPlot->set_yaxis(min, max);
+  _timeDomainDisplayPlot->setYaxis(min, max);
 }
 
 void
