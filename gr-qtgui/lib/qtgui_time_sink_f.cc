@@ -24,31 +24,31 @@
 #include <config.h>
 #endif
 
-#include <qtgui_time_sink_c.h>
+#include <qtgui_time_sink_f.h>
 #include <gr_io_signature.h>
 #include <string.h>
 
 #include <QTimer>
 
-qtgui_time_sink_c_sptr
-qtgui_make_time_sink_c (int size, double bw,
+qtgui_time_sink_f_sptr
+qtgui_make_time_sink_f (int size, double bw,
 			const std::string &name,
 			int nconnections,
 			QWidget *parent)
 {
-  return gnuradio::get_initial_sptr(new qtgui_time_sink_c (size, bw, name,
+  return gnuradio::get_initial_sptr(new qtgui_time_sink_f (size, bw, name,
 							   nconnections, parent));
 }
 
-qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
+qtgui_time_sink_f::qtgui_time_sink_f (int size, double bw,
 				      const std::string &name,
 				      int nconnections,
 				      QWidget *parent)
-  : gr_block ("time_sink_c",
-	      gr_make_io_signature (nconnections, nconnections, sizeof(gr_complex)),
+  : gr_block ("time_sink_f",
+	      gr_make_io_signature (nconnections, nconnections, sizeof(float)),
 	      gr_make_io_signature (0, 0, 0)),
     d_size(size), d_bandwidth(bw), d_name(name),
-    d_nconnections(2*nconnections), d_parent(parent)
+    d_nconnections(nconnections), d_parent(parent)
 {
   d_main_gui = NULL;
 
@@ -61,7 +61,7 @@ qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
   initialize();
 }
 
-qtgui_time_sink_c::~qtgui_time_sink_c()
+qtgui_time_sink_f::~qtgui_time_sink_f()
 {
   // d_main_gui is a qwidget destroyed with its parent
   for(int i = 0; i < d_nconnections; i++) {
@@ -70,7 +70,7 @@ qtgui_time_sink_c::~qtgui_time_sink_c()
 }
 
 void
-qtgui_time_sink_c::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+qtgui_time_sink_f::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned int ninputs = ninput_items_required.size();
   for (unsigned int i = 0; i < ninputs; i++) {
@@ -79,7 +79,7 @@ qtgui_time_sink_c::forecast(int noutput_items, gr_vector_int &ninput_items_requi
 }
 
 void
-qtgui_time_sink_c::initialize()
+qtgui_time_sink_f::initialize()
 {
   if(qApp != NULL) {
     d_qApplication = qApp;
@@ -99,19 +99,19 @@ qtgui_time_sink_c::initialize()
 
 
 void
-qtgui_time_sink_c::exec_()
+qtgui_time_sink_f::exec_()
 {
   d_qApplication->exec();
 }
 
 QWidget*
-qtgui_time_sink_c::qwidget()
+qtgui_time_sink_f::qwidget()
 {
   return d_main_gui;
 }
 
 PyObject*
-qtgui_time_sink_c::pyqwidget()
+qtgui_time_sink_f::pyqwidget()
 {
   PyObject *w = PyLong_FromVoidPtr((void*)d_main_gui);
   PyObject *retarg = Py_BuildValue("N", w);
@@ -119,38 +119,38 @@ qtgui_time_sink_c::pyqwidget()
 }
 
 void
-qtgui_time_sink_c::set_time_domain_axis(double min, double max)
+qtgui_time_sink_f::set_time_domain_axis(double min, double max)
 {
   d_main_gui->setTimeDomainAxis(min, max);
 }
 
 void
-qtgui_time_sink_c::set_update_time(double t)
+qtgui_time_sink_f::set_update_time(double t)
 {
   d_update_time = t;
   d_main_gui->setUpdateTime(d_update_time);
 }
 
 void
-qtgui_time_sink_c::set_title(int which, const std::string &title)
+qtgui_time_sink_f::set_title(int which, const std::string &title)
 {
   d_main_gui->setTitle(which, title.c_str());
 }
 
 void
-qtgui_time_sink_c::set_color(int which, const std::string &color)
+qtgui_time_sink_f::set_color(int which, const std::string &color)
 {
   d_main_gui->setColor(which, color.c_str());
 }
 
 int
-qtgui_time_sink_c::general_work (int noutput_items,
+qtgui_time_sink_f::general_work (int noutput_items,
 				 gr_vector_int &ninput_items,
 				 gr_vector_const_void_star &input_items,
 				 gr_vector_void_star &output_items)
 {
   int n=0, j=0, idx=0;
-  const gr_complex *in = (const gr_complex*)input_items[idx];
+  const float *in = (const float*)input_items[idx];
 
   for(int i=0; i < noutput_items; i+=d_size) {
     unsigned int datasize = noutput_items - i;
@@ -162,11 +162,10 @@ qtgui_time_sink_c::general_work (int noutput_items,
       d_current_time = get_highres_clock();
       
       // Fill up residbufs with d_size number of items
-      for(n = 0; n < d_nconnections; n+=2) {
-	in = (const gr_complex*)input_items[idx++];
+      for(n = 0; n < d_nconnections; n++) {
+	in = (const float*)input_items[idx++];
 	for(unsigned int k = 0; k < resid; k++) {
-	  d_residbufs[n][d_index+k] = in[j+k].real();
-	  d_residbufs[n+1][d_index+k] = in[j+k].imag();
+	  d_residbufs[n][d_index+k] = in[j+k];
 	}
       }	
 
@@ -182,16 +181,15 @@ qtgui_time_sink_c::general_work (int noutput_items,
     }
     // Otherwise, copy what we received into the residbufs for next time
     else {
-      for(n = 0; n < d_nconnections; n+=2) {
-	in = (const gr_complex*)input_items[idx++];
+      for(n = 0; n < d_nconnections; n++) {
+	in = (const float*)input_items[idx++];
 	for(unsigned int k = 0; k < resid; k++) {
-	    d_residbufs[n][d_index+k] = in[j+k].real();
-	    d_residbufs[n+1][d_index+k] = in[j+k].imag();
+	  d_residbufs[n][d_index+k] = in[j+k];
 	}
       }
       d_index += datasize;
       j += datasize;
-    }   
+    }
   }
   
   consume_each(j);
