@@ -136,6 +136,12 @@ qtgui_time_sink_c::set_title(int which, const std::string &title)
   d_main_gui->SetTitle(which, title.c_str());
 }
 
+void
+qtgui_time_sink_c::set_color(int which, const std::string &color)
+{
+  d_main_gui->SetColor(which, color.c_str());
+}
+
 int
 qtgui_time_sink_c::general_work (int noutput_items,
 				 gr_vector_int &ninput_items,

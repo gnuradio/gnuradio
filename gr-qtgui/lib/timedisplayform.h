@@ -57,6 +57,7 @@ public slots:
   void SetUpdateTime(double t);
 
   void SetTitle(int which, QString title);
+  void SetColor(int which, QString color);
 
 private slots:
   void newData( const TimeUpdateEvent* );

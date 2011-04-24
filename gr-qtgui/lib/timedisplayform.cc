@@ -169,3 +169,9 @@ TimeDisplayForm::SetTitle(int which, QString title)
 {
   _timeDomainDisplayPlot->setTitle(which, title);
 }
+
+void
+TimeDisplayForm::SetColor(int which, QString color)
+{
+  _timeDomainDisplayPlot->setColor(which, color);
+}

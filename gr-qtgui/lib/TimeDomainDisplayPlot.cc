@@ -213,6 +213,12 @@ TimeDomainDisplayPlot::setTitle(int which, QString title)
   _plot_curve[which]->setTitle(title);
 }
 
+void
+TimeDomainDisplayPlot::setColor(int which, QString color)
+{
+  _plot_curve[which]->setPen(QPen(color));
+}
+
 void TimeDomainDisplayPlot::replot()
 {
   QwtPlot::replot();
@@ -221,7 +227,8 @@ void TimeDomainDisplayPlot::replot()
 void
 TimeDomainDisplayPlot::resizeSlot( QSize *s )
 {
-  resize(s->width(), s->height());
+  // -10 is to spare some room for the legend and x-axis label
+  resize(s->width()-10, s->height()-10);
 }
 
 void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,

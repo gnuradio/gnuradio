@@ -56,6 +56,7 @@ public slots:
   void setYaxis(double min, double max);
   void setXaxis(double min, double max);
   void setTitle(int which, QString title);
+  void setColor(int which, QString color);
 
   void resizeSlot( QSize *s );
   void SetSampleRate(double sr, double units, 
