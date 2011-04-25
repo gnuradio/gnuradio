@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_TIME_SINK_F_H
 
 #include <Python.h>
+#include <gr_qtgui_api.h>
 #include <gr_block.h>
 #include <gr_firdes.h>
 #include <gri_fft.h>
@@ -33,15 +34,15 @@
 class qtgui_time_sink_f;
 typedef boost::shared_ptr<qtgui_time_sink_f> qtgui_time_sink_f_sptr;
 
-qtgui_time_sink_f_sptr qtgui_make_time_sink_f(int size, double bw,
+GR_QTGUI_API qtgui_time_sink_f_sptr qtgui_make_time_sink_f(int size, double bw,
 					      const std::string &name,
 					      int nconnectons=1,
 					      QWidget *parent=NULL);
 
-class qtgui_time_sink_f : public gr_block
+class GR_QTGUI_API qtgui_time_sink_f : public gr_block
 {
 private:
-  friend qtgui_time_sink_f_sptr qtgui_make_time_sink_f(int size, double bw,
+  friend GR_QTGUI_API qtgui_time_sink_f_sptr qtgui_make_time_sink_f(int size, double bw,
 						       const std::string &name,
 						       int nconnections,
 						       QWidget *parent);

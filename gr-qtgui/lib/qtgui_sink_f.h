@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_SINK_F_H
 
 #include <Python.h>
+#include <gr_qtgui_api.h>
 #include <gr_block.h>
 #include <gr_firdes.h>
 #include <gri_fft.h>
@@ -34,17 +35,17 @@
 class qtgui_sink_f;
 typedef boost::shared_ptr<qtgui_sink_f> qtgui_sink_f_sptr;
 
-qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
+GR_QTGUI_API qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
 				     double fc=0, double bw=1.0,
 				     const std::string &name="Spectrum Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
 				     bool plottime=true, bool plotconst=true,
 				     QWidget *parent=NULL);
 
-class qtgui_sink_f : public gr_block
+class GR_QTGUI_API qtgui_sink_f : public gr_block
 {
 private:
-  friend qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
+  friend GR_QTGUI_API qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
 					      double fc, double bw,
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,

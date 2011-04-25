@@ -1,6 +1,5 @@
-/* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,31 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QTGUI_UTIL_H
-#define INCLUDED_QTGUI_UTIL_H
+#ifndef INCLUDED_GR_QTGUI_API_H
+#define INCLUDED_GR_QTGUI_API_H
 
-#include <qevent.h>
-#include <gr_qtgui_api.h>
-#include <qwt_plot_picker.h>
-#include <qwt_picker_machine.h>
+#include <gruel/attributes.h>
 
+#ifdef libgnuradio_qtgui_EXPORTS
+#  define GR_QTGUI_API __GR_ATTR_EXPORT
+#else
+#  define GR_QTGUI_API __GR_ATTR_IMPORT
+#endif
 
-class GR_QTGUI_API QwtDblClickPlotPicker: public QwtPlotPicker
-{
-public:
-    QwtDblClickPlotPicker(QwtPlotCanvas *);
-    ~QwtDblClickPlotPicker();
-
-    virtual QwtPickerMachine * stateMachine(int) const;
-};
-
-class GR_QTGUI_API QwtPickerDblClickPointMachine: public QwtPickerMachine
-{
-public:
-  QwtPickerDblClickPointMachine();
-  ~QwtPickerDblClickPointMachine();
-  
-  virtual CommandList transition( const QwtEventPattern &eventPattern, const QEvent *e);
-};
-
-#endif /* INCLUDED_QTGUI_UTIL_H */
+#endif /* INCLUDED_GR_QTGUI_API_H */
