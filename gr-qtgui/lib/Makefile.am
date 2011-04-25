@@ -24,7 +24,8 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST += spectrumdisplayform.ui
 
 AM_CPPFLAGS = -I. $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
-              $(QT_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
+              $(QT_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES) \
+              -Dlibgnuradio_qtgui_EXPORTS
 
 # Only include these files in the build if qtgui passes configure checks
 # This is mostly to help make distcheck pass
@@ -75,6 +76,7 @@ grinclude_HEADERS =			\
 	timedisplayform.h		\
 	SpectrumGUIClass.h		\
 	spectrumUpdateEvents.h		\
+	gr_qtgui_api.h			\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h			\
 	qtgui_time_sink_c.h		\
