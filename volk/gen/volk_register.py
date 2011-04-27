@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import sys
+import os
 import re
 import string
 from xml.dom import minidom
@@ -21,23 +22,36 @@ from make_c import make_c
 from make_h import make_h
 import copy
 
-outfile_set_simd = open("../../config/lv_set_simd_flags.m4", "w");
-outfile_reg = open("volk_registry.h", "w");
-outfile_h = open("volk.h", "w");
-outfile_c = open("../../lib/volk.cc", "w");
-outfile_typedefs = open("volk_typedefs.h", "w");
-outfile_init_h = open("../../lib/volk_init.h", "w");
-outfile_cpu_h = open("volk_cpu.h", "w");
-outfile_cpu_c = open("../../lib/volk_cpu.c", "w");
-#outfile_config_in = open("../../volk_config.h.in", "w");
-outfile_config_fixed = open("volk_config_fixed.h", "w");
-#outfile_mktables = open("../../lib/volk_mktables.c", "w");
-outfile_environment_c = open("../../lib/volk_environment_init.c", "w");
-outfile_environment_h = open("volk_environment_init.h", "w");
-outfile_makefile_am = open("../../lib/Makefile.am", "w");
-outfile_machines_h = open("volk_machines.h", "w");
-outfile_machines_c = open("../../lib/volk_machines.cc", "w");
-infile = open("Makefile.am", "r");
+#set srcdir and gendir
+srcdir = os.path.dirname(os.path.dirname(__file__))
+try: gendir = sys.argv[1]
+except: gendir = os.path.dirname(__file__)
+
+#ensure directories exist
+for dir in (
+    (os.path.join(gendir, 'include', 'volk')),
+    (os.path.join(gendir, 'lib')),
+    (os.path.join(gendir, 'config'))
+):
+    if not os.path.exists(dir): os.makedirs(dir)
+
+outfile_set_simd = open(os.path.join(gendir, "config/lv_set_simd_flags.m4"), "w")
+outfile_reg = open(os.path.join(gendir, "include/volk/volk_registry.h"), "w")
+outfile_h = open(os.path.join(gendir, "include/volk/volk.h"), "w")
+outfile_c = open(os.path.join(gendir, "lib/volk.cc"), "w")
+outfile_typedefs = open(os.path.join(gendir, "include/volk/volk_typedefs.h"), "w")
+outfile_init_h = open(os.path.join(gendir, "lib/volk_init.h"), "w")
+outfile_cpu_h = open(os.path.join(gendir, "include/volk/volk_cpu.h"), "w")
+outfile_cpu_c = open(os.path.join(gendir, "lib/volk_cpu.c"), "w")
+#outfile_config_in = open(os.path.join(gendir, "include/volk/volk_config.h.in"), "w")
+outfile_config_fixed = open(os.path.join(gendir, "include/volk/volk_config_fixed.h"), "w")
+#outfile_mktables = open(os.path.join(gendir, "lib/volk_mktables.c"), "w")
+outfile_environment_c = open(os.path.join(gendir, "lib/volk_environment_init.c"), "w")
+outfile_environment_h = open(os.path.join(gendir, "include/volk/volk_environment_init.h"), "w")
+outfile_makefile_am = open(os.path.join(gendir, "lib/Makefile.am"), "w")
+outfile_machines_h = open(os.path.join(gendir, "include/volk/volk_machines.h"), "w")
+outfile_machines_c = open(os.path.join(gendir, "lib/volk_machines.cc"), "w")
+infile = open(os.path.join(srcdir, "include/volk/Makefile.am"), "r")
 
 
 mfile = infile.readlines();
@@ -70,7 +84,7 @@ for line in mfile:
                 functions.append(subsubline.group(0));
 
 archs = [];
-afile = minidom.parse("archs.xml");
+afile = minidom.parse(os.path.join(srcdir, "gen/archs.xml"))
 filearchs = afile.getElementsByTagName("arch");
 for filearch in filearchs:
     archs.append(str(filearch.attributes["name"].value));
@@ -94,7 +108,7 @@ archs_or = archs_or + ")";
 
 #get machine list and parse to a list of machines, each with a list of archs (none of this DOM crap)
 machine_str_dict = {}
-mfile = minidom.parse("machines.xml");
+mfile = minidom.parse(os.path.join(srcdir, "gen/machines.xml"))
 filemachines = mfile.getElementsByTagName("machine")
 
 for filemachine in filemachines:
@@ -136,7 +150,7 @@ my_argtypelist = [];
 for func in functions:
     tags = [];
     fcount = [];
-    infile_source = open(func + ".h");
+    infile_source = open(os.path.join(srcdir, 'include', 'volk', func + ".h"))
     begun_name = 0;
     begun_paren = 0;
     sourcefile = infile_source.readlines();
@@ -285,7 +299,7 @@ outfile_h.write(make_h(functions, arched_arglist))
 outfile_h.close()
 
 for machine in machines:
-    machine_c_filename = "../../lib/volk_machine_" + machine + ".cc"
+    machine_c_filename = os.path.join(gendir, "lib/volk_machine_" + machine + ".cc")
     outfile_machine_c = open(machine_c_filename, "w")
     outfile_machine_c.write(make_each_machine_c(machine, machines[machine], functions, fcountlist, taglist))
     outfile_machine_c.close()

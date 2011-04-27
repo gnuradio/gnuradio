@@ -25,7 +25,7 @@ def make_makefile_am(dom, machines, archflags_dict):
 include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
-	-I$(top_builddir)/include \
+	-I$(top_gendir)/include \
 	-Dvolk_EXPORTS \
 	-fvisibility=hidden \
 	$(WITH_INCLUDES)
@@ -43,10 +43,10 @@ EXTRA_DIST = \
 
 libvolk_la_SOURCES = 	\
 	$(platform_CODE) 	\
-	volk.cc			\
-	volk_cpu.c 		\
+	$(top_gendir)/lib/volk.cc			\
+	$(top_gendir)/lib/volk_cpu.c 		\
 	volk_rank_archs.c	\
-	volk_machines.cc
+	$(top_gendir)/lib/volk_machines.cc
 
 if LV_HAVE_ORC
 volk_orc_CFLAGS = -DLV_HAVE_ORC=1
@@ -69,8 +69,8 @@ noinst_LTLIBRARIES =
     #here be dragons
     for machine_name in machines:
         tempstring += "if LV_MACHINE_" + machine_name.swapcase() + "\n"
-	tempstring += "libvolk_" + machine_name + "_la_SOURCES = volk_machine_" + machine_name + ".cc\n"
-        tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_srcdir)/include $(volk_orc_CFLAGS) "
+        tempstring += "libvolk_" + machine_name + "_la_SOURCES = $(top_gendir)/lib/volk_machine_" + machine_name + ".cc\n"
+        tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_srcdir)/include -I$(top_gendir)/include $(volk_orc_CFLAGS) "
         for arch in machines[machine_name]:
             if archflags_dict[arch] != "none":
                 tempstring += "-" + archflags_dict[arch] + " "
@@ -99,7 +99,7 @@ noinst_LTLIBRARIES =
 # headers that don't get installed
 # ----------------------------------------------------------------
 noinst_HEADERS = \
-	volk_init.h \
+	$(top_gendir)/lib/volk_init.h \
 	qa_utils.h
 
 # ----------------------------------------------------------------
@@ -113,18 +113,6 @@ testqa_CPPFLAGS = -DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN $(AM_CPPFLAGS)
 testqa_LDFLAGS = $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
 testqa_LDADD  = \
 	libvolk.la
-
-distclean-local: 
-	rm -f volk.c
-	rm -f volk_cpu_generic.c
-	rm -f volk_cpu_powerpc.c
-	rm -f volk_cpu_x86.c
-	rm -f volk_init.c
-	rm -f volk_init.h
-	rm -f volk_mktables.c
-	rm -f volk_proccpu_sim.c
-	rm -f volk_tables.h
-	rm -f volk_environment_init.c
 """
 
 

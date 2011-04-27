@@ -29,13 +29,13 @@ volkinclude_HEADERS = \
 	volk_attributes.h \
 	volk_complex.h \
 	volk_common.h \
-	volk_config_fixed.h \
-	volk_typedefs.h \
-	volk_registry.h \
-	volk.h \
-	volk_cpu.h \
-	volk_machines.h \
-	volk_environment_init.h \
+	$(top_gendir)/include/volk/volk_config_fixed.h \
+	$(top_gendir)/include/volk/volk_typedefs.h \
+	$(top_gendir)/include/volk/volk_registry.h \
+	$(top_gendir)/include/volk/volk.h \
+	$(top_gendir)/include/volk/volk_cpu.h \
+	$(top_gendir)/include/volk/volk_machines.h \
+	$(top_gendir)/include/volk/volk_environment_init.h \
 	volk_16i_x5_add_quad_16i_x4_a16.h \
 	volk_16i_branch_4_state_8_a16.h \
 	volk_16ic_deinterleave_16i_x2_a16.h \
@@ -124,17 +124,3 @@ volkinclude_HEADERS = \
 	volk_8i_convert_16i_u.h \
 	volk_8i_s32f_convert_32f_a16.h \
 	volk_8i_s32f_convert_32f_u.h 
-
-distclean-local: 
-	rm -f volk_config_fixed.h 
-	rm -f volk_cpu.h
-	rm -f volk.h
-	rm -f volk_registry.h
-	rm -f volk_runtime.h
-	rm -f volk_typedefs.h
-	rm -f volk_tables.h
-	rm -f *.pyc
-	rm -f Makefile.in
-	rm -f volk_environment_init.h
-	rm -f volk_mktables
-	rm -f $(BUILT_SOURCES)

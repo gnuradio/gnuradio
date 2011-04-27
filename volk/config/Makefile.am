@@ -42,7 +42,7 @@ m4macros = \
 	lf_cxx.m4 \
 	lf_warnings.m4 \
 	lf_x11.m4 \
-	lv_set_simd_flags.m4 \
+	$(top_gendir)/config/lv_set_simd_flags.m4 \
 	mkstemp.m4 \
 	onceonly.m4 \
 	pkg.m4 \
