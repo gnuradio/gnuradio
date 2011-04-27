@@ -30,7 +30,6 @@ m4macros = \
 	ax_boost_base.m4 \
 	ax_boost_unit_test_framework.m4 \
 	bnv_have_qt.m4 \
-	cppunit.m4 \
 	gr_lib64.m4 \
 	gr_libgnuradio_core_extra_ldflags.m4 \
 	gr_no_undefined.m4 \

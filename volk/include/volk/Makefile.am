@@ -20,7 +20,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_CPPFLAGS) \
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
 	$(LV_CXXFLAGS) $(WITH_INCLUDES)
 
 volkincludedir = $(prefix)/include/volk
