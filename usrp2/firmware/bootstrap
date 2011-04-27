@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2001,2005 Free Software Foundation, Inc.
+# Copyright 2001-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,12 +19,14 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
+srcdir=$(cd $(dirname $0) ; pwd)
 
-rm -fr config.cache autom4te*.cache
+echo "Bootstrap'n usrp2 firmware... ${srcdir}"
 
-aclocal -I config
-autoconf
-autoheader
-# libtoolize --automake
-automake --add-missing -Wno-portability
+(cd ${srcdir} ; rm -fr config.cache autom4te*.cache)
+(cd ${srcdir} ; aclocal -I config)
+(cd ${srcdir} ; autoconf)
+(cd ${srcdir} ; autoheader)
+# (cd ${srcdir} ; libtoolize --automake)
+(cd ${srcdir} ; automake --add-missing -Wno-portability)
 
