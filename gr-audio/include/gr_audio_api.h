@@ -22,10 +22,12 @@
 #ifndef INCLUDED_GR_AUDIO_API_H
 #define INCLUDED_GR_AUDIO_API_H
 
+#include <gruel/attributes.h>
+
 #ifdef gnuradio_audio_EXPORTS
-#  define GR_AUDIO_API //FIXME needs attributes defines
+#  define GR_AUDIO_API __GR_ATTR_EXPORT
 #else
-#  define GR_AUDIO_API //FIXME needs attributes defines
+#  define GR_AUDIO_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_GR_AUDIO_API_H */
