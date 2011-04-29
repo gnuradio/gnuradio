@@ -29,7 +29,7 @@
 #include <QCustomEvent>
 
 const long SpectrumGUIClass::MAX_FFT_SIZE = 32768;
-const long SpectrumGUIClass::MIN_FFT_SIZE = 1024;
+const long SpectrumGUIClass::MIN_FFT_SIZE = 256;
 
 SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
 				   const uint64_t fftSize,
