@@ -29,6 +29,7 @@
 #include <gr_firdes.h>
 #include <gri_fft.h>
 #include <qapplication.h>
+#include <gruel/high_res_timer.h>
 #include "SpectrumGUIClass.h"
 
 class qtgui_sink_c;
@@ -78,6 +79,8 @@ private:
   double d_center_freq;
   double d_bandwidth;
   std::string d_name;
+  gruel::high_res_timer_type  d_last_update;
+  bool d_update_active;
   
   bool d_shift;
   gri_fft_complex *d_fft;

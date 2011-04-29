@@ -125,6 +125,9 @@ qtgui_sink_c::initialize()
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
+
+  d_last_update = gruel::high_res_timer_now();
+  d_update_active = false;
 }
 
 
@@ -270,6 +273,14 @@ qtgui_sink_c::general_work (int noutput_items,
     unsigned int datasize = noutput_items - i;
     unsigned int resid = d_fftsize-d_index;
 
+    if (!d_update_active && (gruel::high_res_timer_now() - d_last_update) < d_update_time) {
+      consume_each(noutput_items);
+      return noutput_items;
+    } else {
+      d_last_update = gruel::high_res_timer_now();
+      d_update_active = true;
+    }
+
     // If we have enough input for one full FFT, do it
     if(datasize >= resid) {
       const gruel::high_res_timer_type currentTime = gruel::high_res_timer_now();
@@ -284,6 +295,7 @@ qtgui_sink_c::general_work (int noutput_items,
       d_main_gui->UpdateWindow(true, d_fft->get_outbuf(), d_fftsize,
 			       NULL, 0, (float*)d_residbuf, d_fftsize,
 			       currentTime, true);
+      d_update_active = false;
     }
     // Otherwise, copy what we received into the residbuf for next time
     else {
