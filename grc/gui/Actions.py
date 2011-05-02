@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -76,7 +76,8 @@ class Action(gtk.Action):
 		for i in range(len(keypresses)/2):
 			keyval, mod_mask = keypresses[i*2:(i+1)*2]
 			#register this keypress
-			assert not _actions_keypress_dict.has_key((keyval, mod_mask))
+			if _actions_keypress_dict.has_key((keyval, mod_mask)):
+				raise KeyError('keyval/mod_mask pair already registered "%s"'%str((keyval, mod_mask)))
 			_actions_keypress_dict[(keyval, mod_mask)] = self
 			#set the accelerator group, and accelerator path
 			#register the key name and mod mask with the accelerator path

@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -34,16 +34,16 @@ class Option(Element):
 		self._opts = dict()
 		opts = n.findall('opt')
 		#test against opts when non enum
-		try: assert self.get_parent().is_enum() or not opts
-		except AssertionError: raise Exception, 'Options for non-enum types cannot have sub-options'
+		if not self.get_parent().is_enum() and opts:
+			raise Exception, 'Options for non-enum types cannot have sub-options'
 		#extract opts
 		for opt in opts:
 			#separate the key:value
 			try: key, value = opt.split(':')
 			except: raise Exception, 'Error separating "%s" into key:value'%opt
 			#test against repeated keys
-			try: assert not self._opts.has_key(key)
-			except AssertionError: raise Exception, 'Key "%s" already exists in option'%key
+			if self._opts.has_key(key):
+				raise Exception, 'Key "%s" already exists in option'%key
 			#store the option
 			self._opts[key] = value
 
@@ -79,24 +79,24 @@ class Param(Element):
 		for option in map(lambda o: Option(param=self, n=o), n.findall('option')):
 			key = option.get_key()
 			#test against repeated keys
-			try: assert key not in self.get_option_keys()
-			except AssertionError: raise Exception, 'Key "%s" already exists in options'%key
+			if key in self.get_option_keys():
+				raise Exception, 'Key "%s" already exists in options'%key
 			#store the option
 			self.get_options().append(option)
 		#test the enum options
 		if self.is_enum():
 			#test against options with identical keys
-			try: assert len(set(self.get_option_keys())) == len(self.get_options())
-			except AssertionError: raise Exception, 'Options keys "%s" are not unique.'%self.get_option_keys()
+			if len(set(self.get_option_keys())) != len(self.get_options()):
+				raise Exception, 'Options keys "%s" are not unique.'%self.get_option_keys()
 			#test against inconsistent keys in options
 			opt_keys = self.get_options()[0].get_opt_keys()
 			for option in self.get_options():
-				try: assert set(opt_keys) == set(option.get_opt_keys())
-				except AssertionError: raise Exception, 'Opt keys "%s" are not identical across all options.'%opt_keys
+				if set(opt_keys) != set(option.get_opt_keys()):
+					raise Exception, 'Opt keys "%s" are not identical across all options.'%opt_keys
 			#if a value is specified, it must be in the options keys
 			self._value = value if value or value in self.get_option_keys() else self.get_option_keys()[0]
-			try: assert self.get_value() in self.get_option_keys()
-			except AssertionError: raise Exception, 'The value "%s" is not in the possible values of "%s".'%(self.get_value(), self.get_option_keys())
+			if self.get_value() not in self.get_option_keys():
+				raise Exception, 'The value "%s" is not in the possible values of "%s".'%(self.get_value(), self.get_option_keys())
 		else: self._value = value or ''
 
 	def validate(self):
@@ -105,8 +105,8 @@ class Param(Element):
 		The value must be evaluated and type must a possible type.
 		"""
 		Element.validate(self)
-		try: assert self.get_type() in self.get_types()
-		except AssertionError: self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
+		if self.get_type() not in self.get_types():
+			self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
 
 	def get_evaluated(self): raise NotImplementedError
 

@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -65,9 +65,8 @@ class Block(_Block, _GUIBlock):
 		for check in self._checks:
 			check_res = self.resolve_dependencies(check)
 			try:
-				check_eval = self.get_parent().evaluate(check_res)
-				try: assert check_eval
-				except AssertionError: self.add_error_message('Check "%s" failed.'%check)
+				if not self.get_parent().evaluate(check_res):
+					self.add_error_message('Check "%s" failed.'%check)
 			except: self.add_error_message('Check "%s" did not evaluate.'%check)
 
 	def rewrite(self):
@@ -134,9 +133,9 @@ class Block(_Block, _GUIBlock):
 			try:
 				value = param.get_evaluated()
 				value = value + direction
-				assert 0 < value
-				param.set_value(value)
-				changed = True
+				if 0 < value:
+					param.set_value(value)
+					changed = True
 			except: pass
 		return changed
 

@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -92,8 +92,8 @@ class Block(Element):
 		for param in map(lambda n: self.get_parent().get_parent().Param(block=self, n=n), params):
 			key = param.get_key()
 			#test against repeated keys
-			try: assert key not in self.get_param_keys()
-			except AssertionError: raise Exception, 'Key "%s" already exists in params'%key
+			if key in self.get_param_keys():
+				raise Exception, 'Key "%s" already exists in params'%key
 			#store the param
 			self.get_params().append(param)
 		#create the source objects
@@ -101,8 +101,8 @@ class Block(Element):
 		for source in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='source'), sources):
 			key = source.get_key()
 			#test against repeated keys
-			try: assert key not in self.get_source_keys()
-			except AssertionError: raise Exception, 'Key "%s" already exists in sources'%key
+			if key in self.get_source_keys():
+				raise Exception, 'Key "%s" already exists in sources'%key
 			#store the port
 			self.get_sources().append(source)
 		#create the sink objects
@@ -110,8 +110,8 @@ class Block(Element):
 		for sink in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='sink'), sinks):
 			key = sink.get_key()
 			#test against repeated keys
-			try: assert key not in self.get_sink_keys()
-			except AssertionError: raise Exception, 'Key "%s" already exists in sinks'%key
+			if key in self.get_sink_keys():
+				raise Exception, 'Key "%s" already exists in sinks'%key
 			#store the port
 			self.get_sinks().append(sink)
 

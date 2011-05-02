@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -37,10 +37,12 @@ class Connection(Element):
 		for port in (porta, portb):
 			if port.is_source(): source = port
 			if port.is_sink(): sink = port
-		assert(source and sink)
+		if not source: raise ValueError('Connection could not isolate source')
+		if not sink: raise ValueError('Connection could not isolate sink')
 		#ensure that this connection (source -> sink) is unique
 		for connection in self.get_parent().get_connections():
-			assert not (connection.get_source() is source and connection.get_sink() is sink)
+			if connection.get_source() is source and connection.get_sink() is sink:
+				raise Exception('This connection between source and sink is not unique.')
 		self._source = source
 		self._sink = sink
 
@@ -62,8 +64,8 @@ class Connection(Element):
 		Element.validate(self)
 		source_type = self.get_source().get_type()
 		sink_type = self.get_sink().get_type()
-		try: assert source_type == sink_type
-		except AssertionError: self.add_error_message('Source type "%s" does not match sink type "%s".'%(source_type, sink_type))
+		if source_type != sink_type:
+			self.add_error_message('Source type "%s" does not match sink type "%s".'%(source_type, sink_type))
 
 	def get_enabled(self):
 		"""

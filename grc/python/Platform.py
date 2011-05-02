@@ -1,5 +1,5 @@
-"""
-Copyright 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
+__doc__ = """
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or

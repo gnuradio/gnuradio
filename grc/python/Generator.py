@@ -18,14 +18,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
+import sys
 import subprocess
 import tempfile
 from Cheetah.Template import Template
 import expr_utils
 from Constants import \
 	TOP_BLOCK_FILE_MODE, HIER_BLOCK_FILE_MODE, \
-	HIER_BLOCKS_LIB_DIR, PYEXEC, \
-	FLOW_GRAPH_TEMPLATE
+	HIER_BLOCKS_LIB_DIR, FLOW_GRAPH_TEMPLATE
 import convert_hier
 from .. gui import Messages
 
@@ -74,10 +74,20 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		Execute this python flow graph.
 		@return a popen object
 		"""
-		#execute
-		cmds = [PYEXEC, '-u', self.get_file_path()] #-u is unbuffered stdio
-		if self._generate_options == 'no_gui':
+		#extract the path to the python executable
+		python_exe = sys.executable
+
+		#when using wx gui on mac os, execute with pythonw
+		if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
+			python_exe += 'w'
+
+		#setup the command args to run
+		cmds = [python_exe, '-u', self.get_file_path()] #-u is unbuffered stdio
+
+		#when in no gui mode on linux, use an xterm (looks nice)
+		if self._generate_options == 'no_gui' and 'linux' in sys.platform.lower():
 			cmds = ['xterm', '-e'] + cmds
+
 		p = subprocess.Popen(args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, universal_newlines=True)
 		return p
 

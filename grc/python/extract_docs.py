@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -81,8 +81,8 @@ def extract(key):
 	@param key the block key
 	@return a string with documentation
 	"""
-	try: assert _docs_cache.has_key(key)
-	except: _docs_cache[key] = _extract(key)
+	if not _docs_cache.has_key(key):
+		_docs_cache[key] = _extract(key)
 	return _docs_cache[key]
 
 if __name__ == '__main__':

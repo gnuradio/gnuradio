@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -38,5 +38,5 @@ class Connection(_Connection, _GUIConnection):
 		#check vector length
 		source_vlen = self.get_source().get_vlen()
 		sink_vlen = self.get_sink().get_vlen()
-		try: assert source_vlen == sink_vlen
-		except AssertionError: self.add_error_message('Source vector length "%s" does not match sink vector length "%s".'%(source_vlen, sink_vlen))
+		if source_vlen != sink_vlen:
+			self.add_error_message('Source vector length "%s" does not match sink vector length "%s".'%(source_vlen, sink_vlen))

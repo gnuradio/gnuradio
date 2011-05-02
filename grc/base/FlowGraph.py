@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -194,18 +194,26 @@ class FlowGraph(Element):
 				sink_key = connection_n.find('sink_key')
 				#verify the blocks
 				block_ids = map(lambda b: b.get_id(), self.get_blocks())
-				assert(source_block_id in block_ids)
-				assert(sink_block_id in block_ids)
+				if source_block_id not in block_ids:
+					raise LookupError('source block id "%s" not in block ids'%source_block_id)
+				if sink_block_id not in block_ids:
+					raise LookupError('sink block id "%s" not in block ids'%sink_block_id)
 				#get the blocks
 				source_block = self.get_block(source_block_id)
 				sink_block = self.get_block(sink_block_id)
 				#verify the ports
-				assert(source_key in source_block.get_source_keys())
-				assert(sink_key in sink_block.get_sink_keys())
+				if source_key not in source_block.get_source_keys():
+					raise LookupError('source key "%s" not in source block keys'%source_key)
+				if sink_key not in sink_block.get_sink_keys():
+					raise LookupError('sink key "%s" not in sink block keys'%sink_key)
 				#get the ports
 				source = source_block.get_source(source_key)
 				sink = sink_block.get_sink(sink_key)
 				#build the connection
 				self.connect(source, sink)
-			except AssertionError: Messages.send_error_load('Connection between %s(%s) and %s(%s) could not be made.'%(source_block_id, source_key, sink_block_id, sink_key))
+			except LookupError, e: Messages.send_error_load(
+				'Connection between %s(%s) and %s(%s) could not be made.\n\t%s'%(
+					source_block_id, source_key, sink_block_id, sink_key, e
+				)
+			)
 		self.rewrite() #global rewrite

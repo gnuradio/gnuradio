@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -23,10 +23,8 @@ from gnuradio import gr
 
 _gr_prefs = gr.prefs()
 
-PYEXEC = os.environ.get('PYTHONW', _gr_prefs.get_string('grc', 'pythonw', ''))
-
 #setup paths
-PATH_SEP = ':'
+PATH_SEP = {'/':':', '\\':';'}[os.path.sep]
 DOCS_DIR = os.environ.get('GR_DOC_DIR', _gr_prefs.get_string('grc', 'doc_dir', ''))
 HIER_BLOCKS_LIB_DIR = os.path.join(os.path.expanduser('~'), '.grc_gnuradio')
 BLOCKS_DIRS = filter( #filter blank strings
