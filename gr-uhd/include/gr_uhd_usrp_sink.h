@@ -101,6 +101,14 @@ public:
     virtual void set_gain(double gain, size_t chan = 0) = 0;
 
     /*!
+     * Set the named gain on the dboard.
+     * \param gain the gain in dB
+     * \param name the name of the gain stage
+     * \param chan the channel index 0 to N-1
+     */
+    virtual void set_gain(double gain, const std::string &name, size_t chan = 0) = 0;
+
+    /*!
      * Get the actual dboard gain setting.
      * \param chan the channel index 0 to N-1
      * \return the actual gain in dB
@@ -108,11 +116,35 @@ public:
     virtual double get_gain(size_t chan = 0) = 0;
 
     /*!
+     * Get the actual dboard gain setting of named stage.
+     * \param name the name of the gain stage
+     * \param chan the channel index 0 to N-1
+     * \return the actual gain in dB
+     */
+    virtual double get_gain(const std::string &name, size_t chan = 0) = 0;
+
+    /*!
+     * Get the actual dboard gain setting of named stage.
+     * \param name the name of the gain stage
+     * \param chan the channel index 0 to N-1
+     * \return the actual gain in dB
+     */
+    virtual std::vector<std::string> get_gain_names(size_t chan = 0) = 0;
+
+    /*!
      * Get the settable gain range.
      * \param chan the channel index 0 to N-1
      * \return the gain range in dB
      */
     virtual uhd::gain_range_t get_gain_range(size_t chan = 0) = 0;
+
+    /*!
+     * Get the settable gain range.
+     * \param name the name of the gain stage
+     * \param chan the channel index 0 to N-1
+     * \return the gain range in dB
+     */
+    virtual uhd::gain_range_t get_gain_range(const std::string &name, size_t chan = 0) = 0;
 
     /*!
      * Set the antenna to use.

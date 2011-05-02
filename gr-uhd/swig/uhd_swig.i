@@ -100,6 +100,7 @@
 ////////////////////////////////////////////////////////////////////////
 %include stdint.i
 %include <uhd/types/serial.hpp>
+%template(byte_vector_t) std::vector<uint8_t>;
 %include <uhd/usrp/dboard_iface.hpp>
 
 %template(dboard_iface_sptr) boost::shared_ptr<uhd::usrp::dboard_iface>;
@@ -129,6 +130,6 @@ static const size_t ALL_MBOARDS;
 %goops %{
 (use-modules (gnuradio gnuradio_core_runtime))
 %}
-#endif	/* SWIGGUILE */
+#endif  /* SWIGGUILE */
 
 #endif  /* GR_HAVE_UHD */
