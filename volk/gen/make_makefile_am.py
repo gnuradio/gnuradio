@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2011 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ libvolk_la_SOURCES = 	\
 	$(top_gendir)/lib/volk.cc			\
 	$(top_gendir)/lib/volk_cpu.c 		\
 	volk_rank_archs.c	\
-	$(top_gendir)/lib/volk_machines.cc
+	$(top_gendir)/lib/volk_machines.c
 
 if LV_HAVE_ORC
 volk_orc_CFLAGS = -DLV_HAVE_ORC=1

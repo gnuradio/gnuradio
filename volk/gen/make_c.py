@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2011 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ def make_c(machines, archs, functions, arched_arglist, my_arglist):
 #here do static fn get arch
     tempstring += r"""
 struct volk_machine *get_machine(void) {
-    extern struct volk_machine volk_machines[];
+    extern struct volk_machine *volk_machines[];
     extern unsigned int n_volk_machines;
     static struct volk_machine *machine = NULL;
     
@@ -57,10 +57,10 @@ struct volk_machine *get_machine(void) {
         unsigned int max_score = 0;
         int i;
         for(i=0; i<n_volk_machines; i++) {
-            if(!(volk_machines[i].caps & (~volk_get_lvarch()))) {
-                if(volk_machines[i].caps > max_score) {
-                    max_score = volk_machines[i].caps;
-                    machine = &(volk_machines[i]);
+            if(!(volk_machines[i]->caps & (~volk_get_lvarch()))) {
+                if(volk_machines[i]->caps > max_score) {
+                    max_score = volk_machines[i]->caps;
+                    machine = volk_machines[i];
                 }
             }
         }

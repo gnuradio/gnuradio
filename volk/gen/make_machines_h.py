@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2011 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ struct volk_machine {
 """
     for machine in machines:
         tempstring += """#if LV_MACHINE_""" + machine.swapcase() + "\n"
-        tempstring += "extern const struct volk_machine volk_machine_" + machine + ";\n"
+        tempstring += "extern struct volk_machine volk_machine_" + machine + ";\n"
         tempstring += """#endif\n"""
     
     tempstring += r"""

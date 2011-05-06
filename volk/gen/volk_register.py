@@ -50,7 +50,7 @@ outfile_environment_c = open(os.path.join(gendir, "lib/volk_environment_init.c")
 outfile_environment_h = open(os.path.join(gendir, "include/volk/volk_environment_init.h"), "w")
 outfile_makefile_am = open(os.path.join(gendir, "lib/Makefile.am"), "w")
 outfile_machines_h = open(os.path.join(gendir, "include/volk/volk_machines.h"), "w")
-outfile_machines_c = open(os.path.join(gendir, "lib/volk_machines.cc"), "w")
+outfile_machines_c = open(os.path.join(gendir, "lib/volk_machines.c"), "w")
 infile = open(os.path.join(srcdir, "include/volk/Makefile.am"), "r")
 
 

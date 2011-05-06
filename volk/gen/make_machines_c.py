@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2011 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,32 +26,16 @@ def make_machines_c(machines):
 #include <volk/volk_typedefs.h>
 #include <volk/volk_machines.h>
 
-struct volk_machine volk_machines[] = {    
+struct volk_machine *volk_machines[] = {
 """
     for machine in machines:
         tempstring += """#if LV_MACHINE_""" + machine.swapcase() + "\n"
-        tempstring += "volk_machine_" + machine
+        tempstring += "&volk_machine_" + machine
         tempstring += ","
         tempstring += "\n#endif\n"
     
     tempstring += r"""
 };
-
+unsigned int n_volk_machines = sizeof(volk_machines)/sizeof(*volk_machines);
 """
-
-    for machine in machines:
-        tempstring += "#if LV_MACHINE_" + machine.swapcase() + "\n"
-        tempstring += "#define LV_MACHINE_" + machine.swapcase() + "_CNT 1\n"
-        tempstring += "#else\n"
-        tempstring += "#define LV_MACHINE_" + machine.swapcase() + "_CNT 0\n"
-        tempstring += "#endif\n"
-        
-    tempstring += """unsigned int n_volk_machines = 
-"""
-    for machine in machines:
-        tempstring += "(LV_MACHINE_" + machine.swapcase() + "_CNT) "
-        tempstring += "+ "
-    tempstring = tempstring[:-2]
-    tempstring += ";\n"
-
     return tempstring
