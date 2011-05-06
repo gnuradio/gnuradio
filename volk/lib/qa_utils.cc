@@ -3,15 +3,12 @@
 #include <boost/foreach.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/tokenizer.hpp>
-//#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <vector>
 #include <list>
 #include <ctime>
 #include <cmath>
 #include <boost/lexical_cast.hpp>
-//#include <volk/volk_runtime.h>
-#include <volk/volk_registry.h>
 #include <volk/volk.h>
 #include <volk/volk_cpu.h>
 #include <volk/volk_common.h>

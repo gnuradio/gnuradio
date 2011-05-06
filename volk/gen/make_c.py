@@ -30,7 +30,6 @@ def make_c(machines, archs, functions, arched_arglist, my_arglist):
     tempstring += """
 #include <volk/volk_common.h>
 #include <volk/volk_machines.h>
-#include <volk/volk_registry.h>
 #include <volk/volk_typedefs.h>
 #include <volk/volk_cpu.h>
 #include "volk_rank_archs.h"

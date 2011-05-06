@@ -9,7 +9,6 @@ from volk_regexp import *
 from make_cpuid_c import make_cpuid_c
 from make_cpuid_h import make_cpuid_h
 from make_set_simd import make_set_simd
-from make_registry import make_registry
 from make_config_fixed import make_config_fixed
 from make_typedefs import make_typedefs
 from make_environment_init_c import make_environment_init_c
@@ -36,7 +35,6 @@ for dir in (
     if not os.path.exists(dir): os.makedirs(dir)
 
 outfile_set_simd = open(os.path.join(gendir, "config/lv_set_simd_flags.m4"), "w")
-outfile_reg = open(os.path.join(gendir, "include/volk/volk_registry.h"), "w")
 outfile_h = open(os.path.join(gendir, "include/volk/volk.h"), "w")
 outfile_c = open(os.path.join(gendir, "lib/volk.cc"), "w")
 outfile_typedefs = open(os.path.join(gendir, "include/volk/volk_typedefs.h"), "w")
@@ -45,7 +43,6 @@ outfile_cpu_h = open(os.path.join(gendir, "include/volk/volk_cpu.h"), "w")
 outfile_cpu_c = open(os.path.join(gendir, "lib/volk_cpu.c"), "w")
 #outfile_config_in = open(os.path.join(gendir, "include/volk/volk_config.h.in"), "w")
 outfile_config_fixed = open(os.path.join(gendir, "include/volk/volk_config_fixed.h"), "w")
-#outfile_mktables = open(os.path.join(gendir, "lib/volk_mktables.c"), "w")
 outfile_environment_c = open(os.path.join(gendir, "lib/volk_environment_init.c"), "w")
 outfile_environment_h = open(os.path.join(gendir, "include/volk/volk_environment_init.h"), "w")
 outfile_makefile_am = open(os.path.join(gendir, "lib/Makefile.am"), "w")
@@ -273,9 +270,6 @@ outfile_cpu_c.close();
 
 outfile_set_simd.write(make_set_simd(filearchs, machines));
 outfile_set_simd.close();
-    
-outfile_reg.write(make_registry(filearchs, functions, fcountlist, taglist));
-outfile_reg.close();
 
 outfile_config_fixed.write(make_config_fixed(filearchs));
 outfile_config_fixed.close();

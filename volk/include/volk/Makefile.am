@@ -31,7 +31,6 @@ volkinclude_HEADERS = \
 	volk_common.h \
 	$(top_gendir)/include/volk/volk_config_fixed.h \
 	$(top_gendir)/include/volk/volk_typedefs.h \
-	$(top_gendir)/include/volk/volk_registry.h \
 	$(top_gendir)/include/volk/volk.h \
 	$(top_gendir)/include/volk/volk_cpu.h \
 	$(top_gendir)/include/volk/volk_machines.h \
