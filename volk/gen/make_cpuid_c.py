@@ -31,8 +31,20 @@ HEADER_TEMPL = """\
 struct VOLK_CPU volk_cpu;
 
 #if defined(__i386__) || (__x86_64__)
+
+//implement get cpuid for gcc compilers using a copy of cpuid.h
+#if defined(__GNUC__)
 #include <gcc_x86_cpuid.h>
 #define cpuid_x86(op, r) __get_cpuid(op, r+0, r+1, r+2, r+3)
+
+//implement get cpuid for MSVC compilers using __cpuid intrinsic
+#elif defined(_MSC_VER)
+#include <intrin.h>
+#define cpuid(op, r) __cpuid(r, op)
+
+#else
+#error "A get cpuid for volk is not available on this compiler..."
+#endif
 
 static inline unsigned int cpuid_eax(unsigned int op) {
     unsigned int regs[4];
