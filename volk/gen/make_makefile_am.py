@@ -25,6 +25,7 @@ def make_makefile_am(dom, machines, archflags_dict):
 include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
+	-I$(top_srcdir)/include \
 	-I$(top_gendir)/include \
 	-Dvolk_EXPORTS \
 	-fvisibility=hidden \
@@ -43,7 +44,7 @@ EXTRA_DIST = \
 
 libvolk_la_SOURCES = 	\
 	$(platform_CODE) 	\
-	$(top_gendir)/lib/volk.cc			\
+	$(top_gendir)/lib/volk.c			\
 	$(top_gendir)/lib/volk_cpu.c 		\
 	volk_rank_archs.c	\
 	$(top_gendir)/lib/volk_machines.c

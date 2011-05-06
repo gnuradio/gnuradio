@@ -36,7 +36,7 @@ for dir in (
 
 outfile_set_simd = open(os.path.join(gendir, "config/lv_set_simd_flags.m4"), "w")
 outfile_h = open(os.path.join(gendir, "include/volk/volk.h"), "w")
-outfile_c = open(os.path.join(gendir, "lib/volk.cc"), "w")
+outfile_c = open(os.path.join(gendir, "lib/volk.c"), "w")
 outfile_typedefs = open(os.path.join(gendir, "include/volk/volk_typedefs.h"), "w")
 outfile_init_h = open(os.path.join(gendir, "lib/volk_init.h"), "w")
 outfile_cpu_h = open(os.path.join(gendir, "include/volk/volk_cpu.h"), "w")

@@ -26,7 +26,6 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
 volkincludedir = $(prefix)/include/volk
 
 volkinclude_HEADERS = \
-	volk_attributes.h \
 	volk_complex.h \
 	volk_common.h \
 	$(top_gendir)/include/volk/volk_config_fixed.h \

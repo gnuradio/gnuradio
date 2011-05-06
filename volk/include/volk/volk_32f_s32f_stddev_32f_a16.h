@@ -1,7 +1,7 @@
 #ifndef INCLUDED_volk_32f_s32f_stddev_32f_a16_H
 #define INCLUDED_volk_32f_s32f_stddev_32f_a16_H
 
-#include <volk/volk_attributes.h>
+#include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_volk_32fc_s32f_deinterleave_real_16i_a16_H
 #define INCLUDED_volk_32fc_s32f_deinterleave_real_16i_a16_H
 
-#include <volk/volk_attributes.h>
+#include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
 

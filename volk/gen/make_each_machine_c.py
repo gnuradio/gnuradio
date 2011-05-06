@@ -17,7 +17,6 @@
 
 from volk_regexp import *
 import string
-from emit_omnilog import *
 
 def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist):
 
@@ -47,7 +46,6 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist):
 #include <volk/volk_config_fixed.h>
 
 """
-    tempstring += emit_prolog();
     for func in functions:
         tempstring += "#include <volk/" + func + ".h>\n"
     tempstring += "\n\n"
@@ -66,7 +64,6 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist):
 
     tempstring = strip_trailing(tempstring, ",")
     tempstring += "};\n"
-    tempstring += emit_epilog();
 
     return tempstring
 

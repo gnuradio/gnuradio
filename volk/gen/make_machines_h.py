@@ -28,6 +28,8 @@ def make_machines_h(functions, machines, archs):
 #include <volk/volk_common.h>
 #include <volk/volk_typedefs.h>
 
+__VOLK_DECL_BEGIN
+
 struct volk_machine {
    const unsigned int caps; //capabilities (i.e., archs compiled into this machine, in the volk_get_lvarch format)
    const char *name;
@@ -47,6 +49,9 @@ struct volk_machine {
         tempstring += """#endif\n"""
     
     tempstring += r"""
+
+__VOLK_DECL_END
+
 #endif //INCLUDED_LIBVOLK_MACHINES_H"""
 
     return tempstring

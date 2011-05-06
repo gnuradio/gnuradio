@@ -1,15 +1,5 @@
 from xml.dom import minidom
-from emit_omnilog import *
 from volk_regexp import *
-
-# http://gcc.gnu.org/wiki/Visibility
-volk_api_defines = """
-#ifdef volk_EXPORTS
-#  define VOLK_API __VOLK_ATTR_EXPORT
-#else
-#  define VOLK_API __VOLK_ATTR_IMPORT
-#endif
-"""
 
 def make_h(funclist, arched_arglist) :
     tempstring = "";
@@ -19,20 +9,26 @@ def make_h(funclist, arched_arglist) :
     tempstring = tempstring + '\n#define INCLUDED_VOLK_RUNTIME';
     tempstring = tempstring + '\n\n#include<volk/volk_typedefs.h>\n';
     tempstring = tempstring + '#include<volk/volk_config_fixed.h>\n';
-    tempstring = tempstring + '#include<volk/volk_attributes.h>\n';
+    tempstring = tempstring + '#include<volk/volk_common.h>\n';
     tempstring = tempstring + '#include<volk/volk_complex.h>\n';
-    tempstring = tempstring + volk_api_defines
-    tempstring = tempstring + emit_prolog();
+    tempstring = tempstring + '__VOLK_DECL_BEGIN\n';
 
     tempstring = tempstring + '\n';
 
+    tempstring += """
+struct volk_func_desc {
+     const char **indices;
+     const int *arch_defs;
+     const int n_archs;
+};
+"""
     for i in range(len(funclist)):
         tempstring += "extern " + replace_volk.sub("p", funclist[i]) + " " + funclist[i] + ";\n"
         tempstring += "extern VOLK_API void %s_manual%s;\n" % (funclist[i], arched_arglist[i])
         tempstring = strip_trailing(tempstring, " {")
         tempstring += "extern VOLK_API struct volk_func_desc %s_get_func_desc(void);\n" % (funclist[i])
 
-    tempstring = tempstring + emit_epilog();
+    tempstring = tempstring + '__VOLK_DECL_END\n';
     tempstring = tempstring + "#endif /*INCLUDED_VOLK_RUNTIME*/\n";
 
     return tempstring;

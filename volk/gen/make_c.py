@@ -17,7 +17,6 @@
 
 from volk_regexp import *
 import string
-from emit_omnilog import *
 
 #ok todo list:
 #put n_archs into the info struct so it doesn't have to be arch_defs[0].
@@ -38,8 +37,7 @@ def make_c(machines, archs, functions, arched_arglist, my_arglist):
 #include <string.h>
 
 """
-    tempstring += emit_prolog();
-    
+
 #OK here's the deal. the .h prototypes the functions. the .c impls them as fptrs, can use p_whatever.
 #also .c impls the get_machine call
 #also .c impls the default call for each fn
@@ -93,8 +91,6 @@ static unsigned int get_index(const char *indices[], unsigned int n_archs, const
         tempstring += "    struct volk_func_desc desc = {get_machine()->%s_indices, get_machine()->%s_arch_defs, get_machine()->%s_n_archs};\n" % (functions[i], functions[i], functions[i])
         tempstring += "    return desc;\n}\n"
 
-    tempstring += emit_epilog();
-        
     return tempstring
 
 

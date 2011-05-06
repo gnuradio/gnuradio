@@ -1,5 +1,4 @@
 from xml.dom import minidom
-from emit_omnilog import *
 
 def make_environment_init_h() :
     tempstring = "";
@@ -7,9 +6,10 @@ def make_environment_init_h() :
     tempstring = tempstring + "#ifndef INCLUDE_LIBVECTOR_ENVIRONMENT_INIT_H\n";
     tempstring = tempstring + "#define INCLUDE_LIBVECTOR_ENVIRONMENT_INIT_H\n";
     tempstring = tempstring + "\n";
-    tempstring = tempstring + emit_prolog();
+    tempstring = tempstring + "#include <volk/volk_common.h>\n\n";
+    tempstring = tempstring + "__VOLK_DECL_BEGIN\n";
     tempstring = tempstring + "void volk_environment_init();\n";
-    tempstring = tempstring + emit_epilog();
+    tempstring = tempstring + "__VOLK_DECL_END\n";
     tempstring = tempstring + "#endif\n"
     return tempstring;
             

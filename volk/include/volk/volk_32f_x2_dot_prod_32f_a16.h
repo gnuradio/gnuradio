@@ -1,7 +1,7 @@
 #ifndef INCLUDED_volk_32f_x2_dot_prod_32f_a16_H
 #define INCLUDED_volk_32f_x2_dot_prod_32f_a16_H
 
-#include <volk/volk_attributes.h>
+#include <volk/volk_common.h>
 #include<stdio.h>
 
 
