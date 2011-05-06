@@ -85,13 +85,14 @@ static unsigned int get_index(const char *indices[], unsigned int n_archs, const
     
     for i in range(len(functions)):
         tempstring += "void get_" + functions[i] + replace_arch.sub("", arched_arglist[i]) + "\n"
-        tempstring += "    %s = get_machine()->%s_archs[volk_rank_archs(get_machine()->%s_desc.arch_defs, get_machine()->%s_desc.n_archs, volk_get_lvarch())];\n" % (functions[i], functions[i], functions[i], functions[i])
+        tempstring += "    %s = get_machine()->%s_archs[volk_rank_archs(get_machine()->%s_arch_defs, get_machine()->%s_n_archs, volk_get_lvarch())];\n" % (functions[i], functions[i], functions[i], functions[i])
         tempstring += "    %s(%s);\n}\n\n" % (functions[i], my_arglist[i])
         tempstring += replace_volk.sub("p", functions[i]) + " " + functions[i] + " = &get_" + functions[i] + ";\n\n"
         tempstring += "void %s_manual%s\n" % (functions[i], arched_arglist[i])
-        tempstring += "    get_machine()->%s_archs[get_index(get_machine()->%s_desc.indices, get_machine()->%s_desc.n_archs, arch)](%s);\n}\n" % (functions[i], functions[i], functions[i], my_arglist[i])
+        tempstring += "    get_machine()->%s_archs[get_index(get_machine()->%s_indices, get_machine()->%s_n_archs, arch)](%s);\n}\n" % (functions[i], functions[i], functions[i], my_arglist[i])
         tempstring += "struct volk_func_desc %s_get_func_desc(void) {\n" % (functions[i])
-        tempstring += "    return get_machine()->%s_desc;\n}\n" % (functions[i])
+        tempstring += "    struct volk_func_desc desc = {get_machine()->%s_indices, get_machine()->%s_arch_defs, get_machine()->%s_n_archs};\n" % (functions[i], functions[i], functions[i])
+        tempstring += "    return desc;\n}\n"
 
     tempstring += emit_epilog();
         

@@ -69,7 +69,7 @@ noinst_LTLIBRARIES =
     #here be dragons
     for machine_name in machines:
         tempstring += "if LV_MACHINE_" + machine_name.swapcase() + "\n"
-        tempstring += "libvolk_" + machine_name + "_la_SOURCES = $(top_gendir)/lib/volk_machine_" + machine_name + ".cc\n"
+        tempstring += "libvolk_" + machine_name + "_la_SOURCES = $(top_gendir)/lib/volk_machine_" + machine_name + ".c\n"
         tempstring += "libvolk_" + machine_name + "_la_CPPFLAGS = -I$(top_srcdir)/include -I$(top_gendir)/include $(volk_orc_CFLAGS) "
         for arch in machines[machine_name]:
             if archflags_dict[arch] != "none":

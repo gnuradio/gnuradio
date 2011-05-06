@@ -286,7 +286,7 @@ outfile_typedefs.close();
 outfile_makefile_am.write(make_makefile_am(filearchs, machines, archflags_dict))
 outfile_makefile_am.close()
 
-outfile_machines_h.write(make_machines_h(functions, machines))
+outfile_machines_h.write(make_machines_h(functions, machines, archs))
 outfile_machines_h.close()
 
 outfile_machines_c.write(make_machines_c(machines))
@@ -299,7 +299,7 @@ outfile_h.write(make_h(functions, arched_arglist))
 outfile_h.close()
 
 for machine in machines:
-    machine_c_filename = os.path.join(gendir, "lib/volk_machine_" + machine + ".cc")
+    machine_c_filename = os.path.join(gendir, "lib/volk_machine_" + machine + ".c")
     outfile_machine_c = open(machine_c_filename, "w")
     outfile_machine_c.write(make_each_machine_c(machine, machines[machine], functions, fcountlist, taglist))
     outfile_machine_c.close()
