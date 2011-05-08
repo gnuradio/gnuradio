@@ -135,7 +135,6 @@ class test_digital(gr_unittest.TestCase):
         data = [2*rot*const[d] for d in data]
         
         N = 40 # settling time
-        data = [rot1*const[d] for d in data] # rotate to align with sync
         expected_result = data[N:]
 
         rot = cmath.exp(0.1j) # some small rotation
