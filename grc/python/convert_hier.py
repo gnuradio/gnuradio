@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -23,11 +23,11 @@ from .. base import odict
 
 def convert_hier(flow_graph, python_file):
 	#extract info from the flow graph
-	input_sigs = flow_graph.get_input_signaturev()
-	output_sigs = flow_graph.get_output_signaturev()
+	input_sigs = flow_graph.get_io_signaturev('in')
+	output_sigs = flow_graph.get_io_signaturev('out')
 	parameters = flow_graph.get_parameters()
 	block_key = flow_graph.get_option('id')
-	block_name = flow_graph.get_option('title')
+	block_name = flow_graph.get_option('title') or flow_graph.get_option('id').replace('_', ' ').title()
 	block_category = flow_graph.get_option('category')
 	block_desc = flow_graph.get_option('description')
 	block_author = flow_graph.get_option('author')
@@ -56,19 +56,21 @@ def convert_hier(flow_graph, python_file):
 		params_n.append(param_n)
 	block_n['param'] = params_n
 	#sink data
+	block_n['sink'] = list()
 	for input_sig in input_sigs:
 		sink_n = odict()
 		sink_n['name'] = input_sig['label']
 		sink_n['type'] = input_sig['type']
 		sink_n['vlen'] = input_sig['vlen']
-		block_n['sink'] = sink_n
+		block_n['sink'].append(sink_n)
 	#source data
+	block_n['source'] = list()
 	for output_sig in output_sigs:
 		source_n = odict()
 		source_n['name'] = output_sig['label']
 		source_n['type'] = output_sig['type']
 		source_n['vlen'] = output_sig['vlen']
-		block_n['source'] = source_n
+		block_n['source'].append(source_n)
 	#doc data
 	block_n['doc'] = "%s\n%s\n%s"%(block_author, block_desc, python_file)
 	#write the block_n to file

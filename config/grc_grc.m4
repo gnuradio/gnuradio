@@ -34,17 +34,6 @@ AC_DEFUN([GRC_GRC],[
         PYTHON_CHECK_MODULE([numpy],[NumPy],[],[passed=no],[True])
     fi
 
-    dnl ########################################
-    dnl # platform dependency pythonw
-    dnl ########################################
-    dnl FIXME: move this test to Python config m4
-    if test `${PYTHON} -c "import sys; print sys.platform"` = 'darwin'; then
-        PYTHONW=pythonw
-    else
-        PYTHONW=python
-    fi
-    AC_SUBST(PYTHONW)
-
     AC_CONFIG_FILES([ \
         grc/Makefile \
         grc/base/Makefile \

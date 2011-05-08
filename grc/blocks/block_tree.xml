@@ -76,6 +76,8 @@
 		<block>gr_float_to_short</block>
 		<block>gr_short_to_float</block>
 
+		<block>gr_int_to_float</block>
+
 		<block>gr_float_to_char</block>
 		<block>gr_char_to_float</block>
 
@@ -173,6 +175,8 @@
 		<block>blks2_analysis_filterbank</block>
 		<!-- Polyphase filters -->
 		<block>blks2_pfb_arb_resampler_ccf</block>
+		<block>blks2_pfb_channelizer_ccf</block>
+		<block>gr_pfb_synthesis_filterbank_ccf</block>
 		<!-- Other filters -->
 		<block>gr_single_pole_iir_filter_xx</block>
 		<block>gr_hilbert_fc</block>

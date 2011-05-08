@@ -76,12 +76,28 @@ public:
         return _dev->set_tx_gain(gain, chan);
     }
 
+    void set_gain(double gain, const std::string &name, size_t chan){
+        return _dev->set_tx_gain(gain, name, chan);
+    }
+
     double get_gain(size_t chan){
         return _dev->get_tx_gain(chan);
     }
 
+    double get_gain(const std::string &name, size_t chan){
+        return _dev->get_tx_gain(name, chan);
+    }
+
+    std::vector<std::string> get_gain_names(size_t chan){
+        return _dev->get_tx_gain_names(chan);
+    }
+
     uhd::gain_range_t get_gain_range(size_t chan){
         return _dev->get_tx_gain_range(chan);
+    }
+
+    uhd::gain_range_t get_gain_range(const std::string &name, size_t chan){
+        return _dev->get_tx_gain_range(name, chan);
     }
 
     void set_antenna(const std::string &ant, size_t chan){

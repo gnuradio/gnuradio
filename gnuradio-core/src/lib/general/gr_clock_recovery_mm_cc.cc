@@ -33,7 +33,7 @@
 
 
 // Public constructor
-
+static const int FUDGE = 16;
 
 gr_clock_recovery_mm_cc_sptr 
 gr_make_clock_recovery_mm_cc(float omega, float gain_omega, float mu, float gain_mu,
@@ -78,7 +78,7 @@ gr_clock_recovery_mm_cc::forecast(int noutput_items, gr_vector_int &ninput_items
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i=0; i < ninputs; i++)
     ninput_items_required[i] =
-      (int) ceil((noutput_items * d_omega) + d_interp->ntaps());
+      (int) ceil((noutput_items * d_omega) + d_interp->ntaps()) + FUDGE;
 }
 
 gr_complex
@@ -110,8 +110,6 @@ gr_clock_recovery_mm_cc::slicer_45deg (gr_complex sample)
      G. R. Danesfahani, T.G. Jeans, "Optimisation of modified Mueller and Muller 
      algorithm,"  Electronics Letters, Vol. 31, no. 13,  22 June 1995, pp. 1032 - 1033.
 */
-
-static const int FUDGE = 16;
 
 int
 gr_clock_recovery_mm_cc::general_work (int noutput_items,

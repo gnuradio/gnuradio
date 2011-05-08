@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -53,7 +53,8 @@ def get_rotated_coordinate(coor, rotation):
 	"""
 	#handles negative angles
 	rotation = (rotation + 360)%360
-	assert rotation in POSSIBLE_ROTATIONS
+	if rotation not in POSSIBLE_ROTATIONS:
+		raise ValueError('unusable rotation angle "%s"'%str(rotation))
 	#determine the number of degrees to rotate
 	cos_r, sin_r = {
 		0: (1, 0),

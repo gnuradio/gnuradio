@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009, 2011 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -16,16 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
-
-#Perform python integrity checks:
-# GRC will not work with interpreters that fail the checks below.
-# This can fail on interpreters built with special optimizations.
-try:
-	assert False
-	raise Exception, 'Failed python integrity check: assert not supported'
-except AssertionError: pass
-if __doc__ is None:
-	raise Exception, 'Failed python integrity check: __doc__ not supported'
 
 import os
 import sys
@@ -91,13 +81,12 @@ class Platform(_Element):
 				block = self.Block(self._flow_graph, n)
 				key = block.get_key()
 				#test against repeated keys
-				try:
-					assert key not in self.get_block_keys()
-					#store the block
+				if key in self.get_block_keys():
+					print >> sys.stderr, 'Warning: Block with key "%s" already exists.\n\tIgnoring: %s'%(key, xml_file)
+				#store the block
+				else:
 					self._blocks[key] = block
 					self._blocks_n[key] = n
-				except AssertionError:
-					print >> sys.stderr, 'Warning: Block with key "%s" already exists.\n\tIgnoring: %s'%(key, xml_file)
 			except ParseXML.XMLSyntaxError, e: 
 				try: #try to add the xml file as a block tree
 					ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Polyphase Channelizer
+###################################################
+ -->
+<block>
+	<name>Polyphase Channelizer</name>
+	<key>blks2_pfb_channelizer_ccf</key>
+	<import>from gnuradio import blks2</import>
+	<import>from gnuradio.gr import firdes</import>
+	<make>blks2.pfb_channelizer_ccf(
+	  $nchans,
+	  $taps,
+	  $osr,
+	  $atten)
+	</make>
+	<!-- Set taps not implemented yet 
+           <callback>set_taps($taps)</callback>
+         -->
+	<param>
+		<name>Channels</name>
+		<key>nchans</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<value>None</value>
+		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Over Sample Ratio</name>
+		<key>osr</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Attenuation</name>
+		<key>atten</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<nports>$nchans</nports>
+	</source>
+</block>

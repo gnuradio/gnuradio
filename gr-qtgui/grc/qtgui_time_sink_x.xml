@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##QT GUI Sink
+###################################################
+ -->
+<block>
+	<name>QT GUI Time Sink</name>
+	<key>qtgui_time_sink_x</key>
+	<category>QT GUI Widgets</category>
+	<import>from PyQt4 import Qt</import>
+	<import>from gnuradio.qtgui import qtgui</import>
+	<import>from gnuradio.gr import firdes</import>
+	<import>import sip</import>
+	<make>#set $win = 'self._%s_win'%$id
+qtgui.$(type.fcn)(
+	$size, \#size
+	$bw, \#bw
+	$name, \#name
+	$nconnections \#number of inputs
+)
+self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
+$(gui_hint()($win))</make>
+        <callback>set_time_domain_axis($min, $max)</callback>
+	<callback>set_update_time($t)</callback>
+	<callback>set_title($which, $title)</callback>
+	<callback>set_color($which, $color)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>complex</value>
+		<type>enum</type>
+		<option><name>Complex</name><key>complex</key><opt>fcn:time_sink_c</opt></option>
+		<option><name>Float</name><key>float</key><opt>fcn:time_sink_f</opt></option>
+	</param>
+	<param>
+		<name>Name</name>
+		<key>name</key>
+		<value>QT GUI Plot</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Number of Points</name>
+		<key>size</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Bandwidth (Hz)</name>
+		<key>bw</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Number of Inputs</name>
+		<key>nconnections</key>
+		<value>1</value>
+		<type>int</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<nports>$nconnections</nports>
+	</sink>
+	<doc>
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>

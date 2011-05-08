@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -42,8 +42,8 @@ class Port(Element):
 		The port must be non-empty and type must a possible type.
 		"""
 		Element.validate(self)
-		try: assert self.get_type() in self.get_types()
-		except AssertionError: self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
+		if self.get_type() not in self.get_types():
+			self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
 
 	def __str__(self):
 		if self.is_source():

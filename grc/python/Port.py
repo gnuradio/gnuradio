@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -83,16 +83,16 @@ class Port(_Port, _GUIPort):
 
 	def validate(self):
 		_Port.validate(self)
-		try: assert self.get_enabled_connections() or self.get_optional()
-		except AssertionError: self.add_error_message('Port is not connected.')
-		try: assert self.is_source() or len(self.get_enabled_connections()) <= 1
-		except AssertionError: self.add_error_message('Port has too many connections.')
+		if not self.get_enabled_connections() and not self.get_optional():
+			self.add_error_message('Port is not connected.')
+		if not self.is_source() and len(self.get_enabled_connections()) > 1:
+			self.add_error_message('Port has too many connections.')
 		#message port logic
 		if self.get_type() == 'msg':
-			try: assert not self.get_nports()
-			except AssertionError: self.add_error_message('A port of type "msg" cannot have "nports" set.')
-			try: assert self.get_vlen() == 1
-			except AssertionError: self.add_error_message('A port of type "msg" must have a "vlen" of 1.')
+			if self.get_nports():
+				self.add_error_message('A port of type "msg" cannot have "nports" set.')
+			if self.get_vlen() != 1:
+				self.add_error_message('A port of type "msg" must have a "vlen" of 1.')
 
 	def rewrite(self):
 		"""
@@ -134,8 +134,7 @@ class Port(_Port, _GUIPort):
 		if not nports: return ''
 		try:
 			nports = int(self.get_parent().get_parent().evaluate(nports))
-			assert 0 < nports
-			return nports
+			if 0 < nports: return nports
 		except: return 1
 
 	def get_optional(self): return bool(self._optional)

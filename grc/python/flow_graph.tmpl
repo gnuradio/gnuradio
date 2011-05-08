@@ -74,8 +74,8 @@ class $(class_name)(gr.top_block):
 	def __init__($param_str):
 		gr.top_block.__init__(self, "$title")
 #elif $generate_options == 'hb'
-	#set $in_sigs = $flow_graph.get_input_signaturev()
-	#set $out_sigs = $flow_graph.get_output_signaturev()
+	#set $in_sigs = $flow_graph.get_io_signaturev('in')
+	#set $out_sigs = $flow_graph.get_io_signaturev('out')
 class $(class_name)(gr.hier_block2):
 #def make_io_sig($io_sigs)
 	#set $size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in $io_sigs]
@@ -153,11 +153,13 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 ##	The port name should be the id of the parent block.
 ##	However, port names for IO pads should be self.
 ########################################################
-#def make_port_name($port)
-	#if $port.get_parent().get_key().startswith('pad_')
-self#slurp
+#def make_port_sig($port)
+	#if $port.get_parent().get_key() == 'pad_source'
+(self, $flow_graph.get_pad_sources().index($port.get_parent()))#slurp
+	#elif $port.get_parent().get_key() == 'pad_sink'
+(self, $flow_graph.get_pad_sinks().index($port.get_parent()))#slurp
 	#else
-self.$port.get_parent().get_id()#slurp
+(self.$port.get_parent().get_id(), $port.get_key())#slurp
 	#end if
 #end def
 #if $connections
@@ -175,7 +177,7 @@ self.$port.get_parent().get_id()#slurp
 	#end if
 	##do not generate connections with virtual sinks
 	#if not $sink.get_parent().is_virtual_sink()
-		self.connect(($make_port_name($source), $source.get_key()), ($make_port_name($sink), $sink.get_key()))
+		self.connect($make_port_sig($source), $make_port_sig($sink))
 	#end if
 #end for
 
@@ -242,6 +244,7 @@ if __name__ == '__main__':
 	#end if
 	tb.show()
 	qapp.exec_()
+	tb.stop()
 	#elif $generate_options == 'no_gui'
 	tb = $(class_name)($(', '.join($params_eq_list)))
 		#set $run_options = $flow_graph.get_option('run_options')
