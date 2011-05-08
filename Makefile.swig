@@ -169,6 +169,7 @@ gnuradio/%.scm : %.i
 ## Rule that (re)generates Makefile.swig.gen using TOP_SWIG_IFILES and
 ## Makefile.swig.gen.t
 ##
+
 ## Create $(srcdir)/Makefile.swig.gen, containing all of the rules
 ## for running SWIG to generate or re-generate outputs.  SWIG file
 ## names are to be defined in TOP_SWIG_IFILES, and must include the

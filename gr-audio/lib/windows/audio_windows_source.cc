@@ -54,7 +54,7 @@ default_device_name ()
 }
 
 audio_windows_source::audio_windows_source (int sampling_freq, const std::string device_name)
-  : audio_source ("audio_windows_source",
+  : gr_sync_block ("audio_windows_source",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (1, 2, sizeof (float))),
     d_sampling_freq (sampling_freq),

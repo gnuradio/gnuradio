@@ -73,6 +73,8 @@ protected:
     long                 d_unique_id;
     vcolor               d_color;
 
+    gr_basic_block(void){} //allows pure virtual interface sub-classes
+
     //! Protected constructor prevents instantiation by non-derived classes
     gr_basic_block(const std::string &name,
                    gr_io_signature_sptr input_signature,

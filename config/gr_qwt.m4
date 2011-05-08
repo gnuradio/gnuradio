@@ -59,25 +59,25 @@ AC_DEFUN([GR_QWT],
 
     dnl if not set by user
     if test "$qwt_incdir" = "" ; then
-        dnl check qwt/qwt.h (as in Fedora)
+        dnl check qwt-qt4/qwt.h (as in Ubuntu)
         AC_CHECK_HEADER(
-            [qwt/qwt.h],
-	    [qwt_qwt_h=yes],
-            [qwt_qwt_h=no]
+            [qwt-qt4/qwt_double_interval.h],
+            [qwt_qt4_qwt_h=yes],
+            [qwt_qt4_qwt_h=no]
         )
         dnl If it was found, set the flags and move on
-        if test "$qwt_qwt_h" = "yes" ; then
-            QWT_CFLAGS="$QWT_CFLAGS -I/usr/include/qwt"
+        if test "$qwt_qt4_qwt_h" = "yes" ; then
+            QWT_CFLAGS="$QWT_CFLAGS -I/usr/include/qwt-qt4"
         else
-            dnl otherwise, check qwt-qt4/qwt.h (as in Ubuntu)
+            dnl check qwt/qwt.h (as in Fedora)
             AC_CHECK_HEADER(
-                [qwt-qt4/qwt.h],
-                [qwt_qt4_qwt_h=yes],
-                [qwt_qt4_qwt_h=no]
+                [qwt/qwt_double_interval.h],
+	        [qwt_qwt_h=yes],
+                [qwt_qwt_h=no]
             )
             dnl if it was found, set the flags and move on
-            if test "$qwt_qt4_qwt_h" = "yes" ; then
-                QWT_CFLAGS="$QWT_CFLAGS -I/usr/include/qwt-qt4"
+            if test "$qwt_qwt_h" = "yes" ; then
+                QWT_CFLAGS="$QWT_CFLAGS -I/usr/include/qwt"
             else
                 dnl otherwise, qwt.h wasn't found, so set the flag to no
                 libqwt_ok=no

@@ -74,7 +74,7 @@ default_nperiods ()
 audio_alsa_sink::audio_alsa_sink (int sampling_rate,
 				  const std::string device_name,
 				  bool ok_to_block)
-  : audio_sink ("audio_alsa_sink",
+  : gr_sync_block ("audio_alsa_sink",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (0, 0, 0)),
     d_sampling_rate (sampling_rate),

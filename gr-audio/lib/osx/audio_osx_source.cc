@@ -65,7 +65,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 				    bool do_block,
 				    int channel_config,
 				    int max_sample_count)
-  : audio_source ("audio_osx_source",
+  : gr_sync_block ("audio_osx_source",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (0, 0, 0)),
     d_deviceSampleRate (0.0), d_outputSampleRate (0.0),

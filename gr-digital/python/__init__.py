@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,3 +22,6 @@
 # The presence of this file turns this directory into a Python package
 
 from digital_swig import *
+from dbpsk import *
+from dqpsk import *
+from d8psk import *

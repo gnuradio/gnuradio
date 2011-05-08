@@ -105,7 +105,7 @@ _@NAME@_la_CXXFLAGS =			\
 	$(@NAME@_la_swig_cxxflags)
 
 python/@NAME@.cc: @NAME@.py
-@NAME@.py: @NAME@.i
+@NAME@.py: @NAME@.i 
 
 # Include the python dependencies for this file
 -include python/@NAME@.d

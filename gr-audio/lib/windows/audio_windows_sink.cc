@@ -54,7 +54,7 @@ default_device_name ()
 }
 
 audio_windows_sink::audio_windows_sink (int sampling_freq, const std::string device_name)
-  : audio_sink ("audio_windows_sink",
+  : gr_sync_block ("audio_windows_sink",
 		   gr_make_io_signature (1, 2, sizeof (float)),
 		   gr_make_io_signature (0, 0, 0)),
     d_sampling_freq (sampling_freq),

@@ -34,6 +34,9 @@ noinst_PYTHON = \
 	qa_costas_loop_cc.py
 
 digital_PYTHON = \
-	__init__.py
-
+	__init__.py	\
+	psk.py		\
+	dbpsk.py	\
+	dqpsk.py	\
+	d8psk.py
 endif

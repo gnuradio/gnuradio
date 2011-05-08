@@ -6,8 +6,6 @@ XML Test Runner for PyUnit
 # the Public Domain. With contributions by Paolo Borelli and others.
 # Added to GNU Radio Oct. 3, 2010
 
-from __future__ import with_statement
-
 __version__ = "0.1"
 
 import os.path
@@ -185,7 +183,9 @@ class XMLTestRunner(object):
         result = _XMLTestResult(classname)
         start_time = time.time()
 
-        with _fake_std_streams():
+        fss = _fake_std_streams()
+        fss.__enter__()
+        try:
             test(result)
             try:
                 out_s = sys.stdout.getvalue()
@@ -195,6 +195,8 @@ class XMLTestRunner(object):
                 err_s = sys.stderr.getvalue()
             except AttributeError:
                 err_s = ""
+        finally:
+            fss.__exit__(None, None, None)
 
         time_taken = time.time() - start_time
         result.print_report(stream, time_taken, out_s, err_s)
@@ -218,8 +220,8 @@ class _fake_std_streams(object):
     def __enter__(self):
         self._orig_stdout = sys.stdout
         self._orig_stderr = sys.stderr
-        sys.stdout = StringIO()
-        sys.stderr = StringIO()
+        #sys.stdout = StringIO()
+        #sys.stderr = StringIO()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         sys.stdout = self._orig_stdout

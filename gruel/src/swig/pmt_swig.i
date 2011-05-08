@@ -38,7 +38,8 @@ using namespace pmt;
 
 // Template intrusive_ptr for Swig to avoid dereferencing issues
 class pmt_base;
-%import <intrusive_ptr.i>
+//%import <intrusive_ptr.i>
+%import <gr_intrusive_ptr.i>
 %template(swig_int_ptr) boost::intrusive_ptr<pmt_base>;
 
 typedef boost::intrusive_ptr<pmt_base> pmt_t;

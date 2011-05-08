@@ -25,7 +25,7 @@
 
 #include <vector>
 #include <gr_complex.h>
-#include <trellis_metric_type.h>
+#include <gr_metric_type.h>
 
 
 template <class T> 

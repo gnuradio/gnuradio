@@ -51,6 +51,7 @@ noinst_PYTHON = 			\
 	qa_classify.py			\
 	qa_cma_equalizer.py		\
 	qa_complex_to_xxx.py		\
+	qa_constellation.py		\
 	qa_constellation_decoder_cb.py  \
 	qa_copy.py			\
 	qa_correlate_access_code.py	\
@@ -71,6 +72,7 @@ noinst_PYTHON = 			\
 	qa_hier_block2.py		\
 	qa_hilbert.py			\
 	qa_iir.py			\
+	qa_int_to_float.py		\
 	qa_interleave.py		\
 	qa_interp_fir_filter.py		\
 	qa_kludge_copy.py		\

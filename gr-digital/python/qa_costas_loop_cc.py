@@ -34,9 +34,11 @@ class test_digital(gr_unittest.TestCase):
 
     def test01 (self):
         # test basic functionality by setting all gains to 0
-        damp = nfreq = max_freq = min_freq = 0.0
+        damp = 0.4
+        natfreq = 0.25
         order = 2
-        self.test = digital_swig.costas_loop_cc(damp, nfreq, order)
+        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+
         data = 100*[complex(1,0),]
         self.src = gr.vector_source_c(data, False)
         self.snk = gr.vector_sink_c()
@@ -51,9 +53,10 @@ class test_digital(gr_unittest.TestCase):
     def test02 (self):
         # Make sure it doesn't diverge given perfect data
         damp = 0.4
-        nfreq = 0.4
+        natfreq = 0.25
         order = 2
-        self.test = digital_swig.costas_loop_cc(damp, nfreq, order)
+        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+
         data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
         self.src = gr.vector_source_c(data, False)
         self.snk = gr.vector_sink_c()
@@ -69,9 +72,10 @@ class test_digital(gr_unittest.TestCase):
     def test03 (self):
         # BPSK Convergence test with static rotation
         damp = 0.4
-        nfreq = 0.4
+        natfreq = 0.25
         order = 2
-        self.test = digital_swig.costas_loop_cc(damp, nfreq, order)
+        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+
         rot = cmath.exp(0.2j) # some small rotation
         data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
         
@@ -93,10 +97,11 @@ class test_digital(gr_unittest.TestCase):
 
     def test04 (self):
         # QPSK Convergence test with static rotation
-        damp = 0.25
-        nfreq = 0.25
+        damp = 0.4
+        natfreq = 0.25
         order = 4
-        self.test = digital_swig.costas_loop_cc(damp, nfreq, order)
+        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+
         rot = cmath.exp(0.2j) # some small rotation
         data = [complex(2*random.randint(0,1)-1, 2*random.randint(0,1)-1)
                 for i in xrange(100)]
@@ -120,20 +125,21 @@ class test_digital(gr_unittest.TestCase):
     def test05 (self):
         # 8PSK Convergence test with static rotation
         damp = 0.5
-        nfreq = 0.5
+        natfreq = 0.5
         order = 8
-        self.test = digital_swig.costas_loop_cc(damp, nfreq, order)
-        rot1 = 1.41*cmath.exp(1j*cmath.pi/8.0) # rotate and scale to align in and out
-        rot2 = cmath.exp(0.2j) # some small phase rotation
+        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+
+        rot = cmath.exp(-cmath.pi/8.0j) # rotate to match Costas rotation
         const = blks2.psk.make_constellation(order)
         data = [random.randint(0,7) for i in xrange(100)]
-
+        data = [2*rot*const[d] for d in data]
+        
         N = 40 # settling time
         data = [rot1*const[d] for d in data] # rotate to align with sync
         expected_result = data[N:]
 
-        # apply "channel" rotation to input data
-        data = [rot2*d for d in data]
+        rot = cmath.exp(0.1j) # some small rotation
+        data = [rot*d for d in data]
 
         self.src = gr.vector_source_c(data, False)
         self.snk = gr.vector_sink_c()
@@ -142,8 +148,8 @@ class test_digital(gr_unittest.TestCase):
         self.tb.run()
 
         dst_data = self.snk.data()[N:]
-
-        # generously compare results; the loop will converge near to, but
+        
+	# generously compare results; the loop will converge near to, but
         # not exactly on, the target data
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 2)
 

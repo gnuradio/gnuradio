@@ -42,6 +42,7 @@
 #include <gr_float_to_char.h>
 #include <gr_float_to_uchar.h>
 #include <gr_short_to_float.h>
+#include <gr_int_to_float.h>
 #include <gr_char_to_float.h>
 #include <gr_uchar_to_float.h>
 #include <gr_frequency_modulator_fc.h>
@@ -97,6 +98,7 @@
 #include <gr_ofdm_cyclic_prefixer.h>
 #include <gr_ofdm_mapper_bcv.h>
 #include <gr_ofdm_frame_sink.h>
+  //#include <gr_ofdm_frame_sink2.h>
 #include <gr_ofdm_insert_preamble.h>
 #include <gr_ofdm_sampler.h>
 #include <gr_regenerate_bb.h>
@@ -167,6 +169,7 @@
 %include "gr_float_to_char.i"
 %include "gr_float_to_uchar.i"
 %include "gr_short_to_float.i"
+%include "gr_int_to_float.i"
 %include "gr_char_to_float.i"
 %include "gr_uchar_to_float.i"
 %include "gr_frequency_modulator_fc.i"
@@ -222,6 +225,7 @@
 %include "gr_ofdm_cyclic_prefixer.i"
 %include "gr_ofdm_mapper_bcv.i"
 %include "gr_ofdm_frame_sink.i"
+ //%include "gr_ofdm_frame_sink2.i"
 %include "gr_ofdm_insert_preamble.i"
 %include "gr_ofdm_sampler.i"
 %include "gr_regenerate_bb.i"

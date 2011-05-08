@@ -139,6 +139,7 @@ libgeneral_la_SOURCES = 		\
 	gr_rms_cf.cc			\
 	gr_rms_ff.cc			\
 	gr_short_to_float.cc		\
+	gr_int_to_float.cc		\
 	gr_simple_correlator.cc		\
 	gr_simple_framer.cc		\
 	gr_simple_squelch_cc.cc		\
@@ -261,8 +262,8 @@ grinclude_HEADERS = 			\
 	gr_log2_const.h			\
 	gr_map_bb.h			\
 	gr_math.h			\
+	gr_metric_type.h		\
 	gr_misc.h			\
-	gr_mpsk_receiver_cc.h		\
 	gr_nco.h			\
 	gr_nlog10_ff.h			\
 	gr_nop.h			\
@@ -301,6 +302,7 @@ grinclude_HEADERS = 			\
 	gr_rms_cf.h			\
 	gr_rms_ff.h			\
 	gr_short_to_float.h		\
+	gr_int_to_float.h		\
 	gr_simple_correlator.h		\
 	gr_simple_framer.h		\
 	gr_simple_framer_sync.h		\
@@ -418,6 +420,7 @@ swiginclude_HEADERS =			\
 	gr_glfsr_source_b.i		\
 	gr_glfsr_source_f.i		\
 	gr_head.i			\
+	gr_int_to_float.i		\
 	gr_interleave.i 		\
 	gr_interleaved_short_to_complex.i \
 	gr_iqcomp_cc.i			\
@@ -427,7 +430,6 @@ swiginclude_HEADERS =			\
 	gr_lms_dfe_cc.i			\
 	gr_lms_dfe_ff.i			\
 	gr_map_bb.i			\
-	gr_mpsk_receiver_cc.i		\
 	gr_nlog10_ff.i			\
 	gr_nop.i			\
 	gr_null_sink.i			\

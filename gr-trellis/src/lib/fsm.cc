@@ -417,7 +417,7 @@ void fsm::generate_TM()
       done = find_es(s);
       attempts ++;
     }
-    if (done == false) {
+    if (done == false and d_S > 1) {
       //throw std::runtime_error ("fsm::generate_TM(): FSM appears to be disconnected\n");
       printf("fsm::generate_TM(): FSM appears to be disconnected\n");
       printf("state %d cannot be reached from all other states\n",s);
