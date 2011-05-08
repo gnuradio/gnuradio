@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -105,7 +105,7 @@ _audio_swig_la_CXXFLAGS =			\
 	$(audio_swig_la_swig_cxxflags)
 
 python/audio_swig.cc: audio_swig.py
-audio_swig.py: audio_swig.i
+audio_swig.py: audio_swig.i 
 
 # Include the python dependencies for this file
 -include python/audio_swig.d

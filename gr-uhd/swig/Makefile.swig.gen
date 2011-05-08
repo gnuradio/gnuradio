@@ -105,7 +105,7 @@ _uhd_swig_la_CXXFLAGS =			\
 	$(uhd_swig_la_swig_cxxflags)
 
 python/uhd_swig.cc: uhd_swig.py
-uhd_swig.py: uhd_swig.i
+uhd_swig.py: uhd_swig.i 
 
 # Include the python dependencies for this file
 -include python/uhd_swig.d
