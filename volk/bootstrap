@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2001-2011 Free Software Foundation, Inc.
+# Copyright 2001,2005,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,19 +18,14 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+rm -fr config.cache autom4te*.cache
 
-srcdir=$(cd $(dirname $0) ; pwd)
-gendir=${srcdir}/gen
+python -B gen/volk_register.py
+mv gen/lib/Makefile.am lib/
 
-echo "Bootstrap'n volk... ${srcdir}"
-
-python -B ${srcdir}/gen/volk_register.py
-mv ${gendir}/lib/Makefile.am ${srcdir}/lib/
-
-(cd ${srcdir} ; rm -fr config.cache autom4te*.cache)
-(cd ${srcdir} ; aclocal -I config -I ${gendir}/config)
-(cd ${srcdir} ; autoconf)
-(cd ${srcdir} ; autoheader)
-(cd ${srcdir} ; libtoolize --automake)
-(cd ${srcdir} ; automake --add-missing -Wno-portability -Wno-override -Wnone)
+aclocal -I config -I gen/config
+autoconf
+autoheader
+libtoolize --automake
+automake --add-missing -Wno-portability -Wno-override -Wnone
 
