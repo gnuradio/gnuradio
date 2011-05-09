@@ -44,9 +44,9 @@ qtgui_time_sink_f::qtgui_time_sink_f (int size, double bw,
 				      const std::string &name,
 				      int nconnections,
 				      QWidget *parent)
-  : gr_block ("time_sink_f",
-	      gr_make_io_signature (nconnections, nconnections, sizeof(float)),
-	      gr_make_io_signature (0, 0, 0)),
+  : gr_sync_block ("time_sink_f",
+		   gr_make_io_signature (nconnections, nconnections, sizeof(float)),
+		   gr_make_io_signature (0, 0, 0)),
     d_size(size), d_bandwidth(bw), d_name(name),
     d_nconnections(nconnections), d_parent(parent)
 {
@@ -59,6 +59,7 @@ qtgui_time_sink_f::qtgui_time_sink_f (int size, double bw,
   }
 
   initialize();
+  set_output_multiple(d_size);
 }
 
 qtgui_time_sink_f::~qtgui_time_sink_f()
@@ -66,15 +67,6 @@ qtgui_time_sink_f::~qtgui_time_sink_f()
   // d_main_gui is a qwidget destroyed with its parent
   for(int i = 0; i < d_nconnections; i++) {
     delete [] d_residbufs[i];
-  }
-}
-
-void
-qtgui_time_sink_f::forecast(int noutput_items, gr_vector_int &ninput_items_required)
-{
-  unsigned int ninputs = ninput_items_required.size();
-  for (unsigned int i = 0; i < ninputs; i++) {
-    ninput_items_required[i] = std::min(d_size, 8191);
   }
 }
 
@@ -144,10 +136,9 @@ qtgui_time_sink_f::set_color(int which, const std::string &color)
 }
 
 int
-qtgui_time_sink_f::general_work (int noutput_items,
-				 gr_vector_int &ninput_items,
-				 gr_vector_const_void_star &input_items,
-				 gr_vector_void_star &output_items)
+qtgui_time_sink_f::work (int noutput_items,
+			 gr_vector_const_void_star &input_items,
+			 gr_vector_void_star &output_items)
 {
   int n=0, j=0, idx=0;
   const float *in = (const float*)input_items[idx];
@@ -180,7 +171,9 @@ qtgui_time_sink_f::general_work (int noutput_items,
       j += resid;
     }
     // Otherwise, copy what we received into the residbufs for next time
+    // because we set the output_multiple, this should never need to be called
     else {
+      assert(0);
       for(n = 0; n < d_nconnections; n++) {
 	in = (const float*)input_items[idx++];
 	for(unsigned int k = 0; k < resid; k++) {
@@ -192,6 +185,5 @@ qtgui_time_sink_f::general_work (int noutput_items,
     }
   }
   
-  consume_each(j);
-  return j;
+  return noutput_items;
 }
