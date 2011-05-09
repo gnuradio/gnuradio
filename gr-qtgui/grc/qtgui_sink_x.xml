@@ -57,6 +57,26 @@ $(gui_hint()($win))</make>
 			<name>Blackman-harris</name>
 			<key>firdes.WIN_BLACKMAN_hARRIS</key>
 		</option>
+		<option>
+			<name>Hamming</name>
+			<key>firdes.WIN_HAMMING</key>
+		</option>
+		<option>
+			<name>Hann</name>
+			<key>firdes.WIN_HANN</key>
+		</option>
+		<option>
+			<name>Blackman</name>
+			<key>firdes.WIN_BLACKMAN</key>
+		</option>
+		<option>
+			<name>Rectangular</name>
+			<key>firdes.WIN_RECTANGULAR</key>
+		</option>
+		<option>
+			<name>Kaiser</name>
+			<key>firdes.WIN_KAISER</key>
+		</option>
 	</param>
 	<param>
 		<name>Center Frequency (Hz)</name>
