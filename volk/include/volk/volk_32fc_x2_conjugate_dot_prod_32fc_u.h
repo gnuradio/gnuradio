@@ -131,7 +131,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result
     Isum += Im;
   }
 
-  result[0] = lv_32fc_init(Rsum,Isum);
+  result[0] = lv_cmake(Rsum,Isum);
   return;
 }
 

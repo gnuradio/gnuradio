@@ -3,6 +3,14 @@
 
 #include <inttypes.h>
 #include <stdio.h>
+#include <math.h>
+
+//! raise a complex float to a real float power
+static inline lv_32fc_t __volk_s32fc_s32f_power_s32fc_a16(const lv_32fc_t exp, const float power){
+    const float arg = power*atan2f(lv_creal(exp), lv_cimag(exp));
+    const float mag = powf(lv_creal(exp)*lv_creal(exp) + lv_cimag(exp)*lv_cimag(exp), power/2);
+    return mag*lv_cmake(cosf(arg), sinf(arg));
+}
 
 #ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
@@ -72,11 +80,8 @@ static inline void volk_32fc_s32f_power_32fc_a16_sse(lv_32fc_t* cVector, const l
   number = quarterPoints * 4;
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
-  lv_32fc_t complexPower;
-  ((float*)&complexPower)[0] = power;
-  ((float*)&complexPower)[1] = 0;
   for(;number < num_points; number++){
-    *cPtr++ = lv_cpow((*aPtr++), complexPower);
+    *cPtr++ = __volk_s32fc_s32f_power_s32fc_a16((*aPtr++), power);
   }
 }
 #endif /* LV_HAVE_SSE */
@@ -93,12 +98,9 @@ static inline void volk_32fc_s32f_power_32fc_a16_generic(lv_32fc_t* cVector, con
   lv_32fc_t* cPtr = cVector;
   const lv_32fc_t* aPtr = aVector;
   unsigned int number = 0;
-  lv_32fc_t complexPower;
-  ((float*)&complexPower)[0] = power;
-  ((float*)&complexPower)[1] = 0.0;
 
   for(number = 0; number < num_points; number++){
-    *cPtr++ = lv_cpow((*aPtr++), complexPower);
+    *cPtr++ = __volk_s32fc_s32f_power_s32fc_a16((*aPtr++), power);
   }
 }
 #endif /* LV_HAVE_GENERIC */

@@ -55,10 +55,10 @@ static inline void volk_8ic_x2_multiply_conjugate_16ic_a16_sse4_1(lv_16sc_t* cVe
   for(; number < num_points; number++){
     float aReal =  (float)*a8Ptr++;
     float aImag =  (float)*a8Ptr++;
-    lv_32fc_t aVal = lv_32fc_init(aReal, aImag );
+    lv_32fc_t aVal = lv_cmake(aReal, aImag );
     float bReal = (float)*b8Ptr++;
     float bImag = (float)*b8Ptr++;
-    lv_32fc_t bVal = lv_32fc_init( bReal, -bImag );
+    lv_32fc_t bVal = lv_cmake( bReal, -bImag );
     lv_32fc_t temp = aVal * bVal;
 
     *c16Ptr++ = (int16_t)lv_creal(temp);
@@ -83,10 +83,10 @@ static inline void volk_8ic_x2_multiply_conjugate_16ic_a16_generic(lv_16sc_t* cV
   for(number =0; number < num_points; number++){
     float aReal =  (float)*a8Ptr++;
     float aImag =  (float)*a8Ptr++;
-    lv_32fc_t aVal = lv_32fc_init(aReal, aImag );
+    lv_32fc_t aVal = lv_cmake(aReal, aImag );
     float bReal = (float)*b8Ptr++;
     float bImag = (float)*b8Ptr++;
-    lv_32fc_t bVal = lv_32fc_init( bReal, -bImag );
+    lv_32fc_t bVal = lv_cmake( bReal, -bImag );
     lv_32fc_t temp = aVal * bVal;
 
     *c16Ptr++ = (int16_t)lv_creal(temp);
