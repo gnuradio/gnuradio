@@ -124,6 +124,42 @@ ENDFOREACH(machine_line)
 MESSAGE(STATUS "Available machines: ${available_machines}")
 
 ########################################################################
+# Handle orc support
+########################################################################
+FIND_PACKAGE(PkgConfig)
+IF(PKG_CONFIG_FOUND)
+PKG_CHECK_MODULES(ORC "orc-0.4")
+ENDIF(PKG_CONFIG_FOUND)
+
+FIND_PROGRAM(ORCC_EXECUTABLE orcc)
+
+IF(ORC_FOUND AND ORCC_EXECUTABLE)
+    #setup orc library usage
+    INCLUDE_DIRECTORIES(${ORC_INCLUDE_DIRS})
+    LINK_DIRECTORIES(${ORC_LIBRARY_DIRS})
+    ADD_DEFINITIONS(-DLV_HAVE_ORC)
+
+    #setup orc functions
+    FILE(GLOB orc_files ${CMAKE_SOURCE_DIR}/orc/*.orc)
+    FOREACH(orc_file ${orc_files})
+
+        #extract the name for the generated c source from the orc file
+        GET_FILENAME_COMPONENT(orc_file_name_we ${orc_file} NAME_WE)
+        SET(orcc_gen ${CMAKE_CURRENT_BINARY_DIR}/${orc_file_name_we}.c)
+
+        #create a rule to generate the source and add to the list of sources
+        ADD_CUSTOM_COMMAND(
+            COMMAND ${ORCC_EXECUTABLE} --implementation -o ${orcc_gen} ${orc_file}
+            DEPENDS ${orc_file} OUTPUT ${orcc_gen}
+        )
+        LIST(APPEND machine_sources ${orcc_gen})
+
+    ENDFOREACH(orc_file)
+ELSE()
+    MESSAGE(STATUS "Did not find liborc and orcc, disabling orc support...")
+ENDIF()
+
+########################################################################
 # Setup volk and volk-runtime libraries
 ########################################################################
 IF(MSVC)
@@ -159,6 +195,7 @@ ENDIF(MSVC)
 #create the volk runtime library
 ADD_LIBRARY(volk SHARED ${volk_sources})
 ADD_DEPENDENCIES(volk volk_register)
+TARGET_LINK_LIBRARIES(volk ${ORC_LIBRARIES})
 SET_TARGET_PROPERTIES(volk PROPERTIES SOVERSION ${LIBVER})
 SET_TARGET_PROPERTIES(volk PROPERTIES DEFINE_SYMBOL "volk_EXPORTS")
 
