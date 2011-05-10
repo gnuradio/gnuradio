@@ -19,11 +19,15 @@
 # Project setup
 ########################################################################
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+IF(DEFINED CMAKE_BUILD_TYPE)
+    SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose build type: None Debug Release RelWithDebInfo MinSizeRel")
+ELSE()
+    SET(CMAKE_BUILD_TYPE Release CACHE STRING "Choose build type: None Debug Release RelWithDebInfo MinSizeRel")
+ENDIF()
 PROJECT(volk)
 ENABLE_LANGUAGE(CXX)
 ENABLE_LANGUAGE(C)
 ENABLE_TESTING()
-SET(CMAKE_BUILD_TYPE Release)
 SET(VERSION 0.1)
 SET(LIBVER 0.0.0)
 
