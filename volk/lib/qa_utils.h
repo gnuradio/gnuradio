@@ -22,7 +22,7 @@ void random_floats(float *buf, unsigned n);
 
 bool run_volk_tests(struct volk_func_desc, void(*)(), std::string, float, float, int, int);
 
-#define VOLK_RUN_TESTS(func, tol, scalar, len, iter) BOOST_CHECK_EQUAL(run_volk_tests(func##_get_func_desc(), (void (*)())func##_manual, std::string(#func), tol, scalar, len, iter), 0)
+#define VOLK_RUN_TESTS(func, tol, scalar, len, iter) BOOST_AUTO_TEST_CASE(func##_test) { BOOST_CHECK_EQUAL(run_volk_tests(func##_get_func_desc(), (void (*)())func##_manual, std::string(#func), tol, scalar, len, iter), 0); }
 
 typedef void (*volk_fn_1arg)(void *, unsigned int, const char*); //one input, operate in place
 typedef void (*volk_fn_2arg)(void *, void *, unsigned int, const char*);
