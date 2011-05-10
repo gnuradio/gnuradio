@@ -21,6 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
+EXTRA_DIST += \
+    $(bin_SCRIPTS)
+
 ourpythondir = $(grpythondir)
 
 bin_SCRIPTS = \
