@@ -87,7 +87,8 @@ class wfm_rx_block (stdgui2.std_top_block):
                 dbid == 0x0040 or #usrp_dbid.TV_RX_REV_3
                 dbid == 0x0043 or #usrp_dbid.TV_RX_MIMO
                 dbid == 0x0044 or #usrp_dbid.TV_RX_REV_2_MIMO
-                dbid == 0x0045 ): #usrp_dbid.TV_RX_REV_3_MIMO
+                dbid == 0x0045 or #usrp_dbid.TV_RX_REV_3_MIMO
+                dbid == 0x0053 ): #usrp_dbid.WBX
             print "This daughterboard does not cover the required frequency range"
             print "for this application.  Please use a BasicRX or TVRX daughterboard."
             raw_input("Press ENTER to continue anyway, or Ctrl-C to exit.")
