@@ -19,11 +19,10 @@
 # Project setup
 ########################################################################
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-IF(DEFINED CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose build type: None Debug Release RelWithDebInfo MinSizeRel")
-ELSE()
-    SET(CMAKE_BUILD_TYPE Release CACHE STRING "Choose build type: None Debug Release RelWithDebInfo MinSizeRel")
+IF(NOT DEFINED CMAKE_BUILD_TYPE)
+    SET(CMAKE_BUILD_TYPE Release)
 ENDIF()
+SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose build type: None Debug Release RelWithDebInfo MinSizeRel")
 PROJECT(volk)
 ENABLE_LANGUAGE(CXX)
 ENABLE_LANGUAGE(C)
@@ -38,29 +37,6 @@ FIND_PACKAGE(PythonInterp)
 IF(NOT PYTHONINTERP_FOUND)
     MESSAGE(FATAL_ERROR "Python interpreter required by the build system.")
 ENDIF(NOT PYTHONINTERP_FOUND)
-
-########################################################################
-# Create rules to run the volk generator
-########################################################################
-#only list some of the generated sources (enough to make the rules work)
-SET(some_gen_sources
-    ${CMAKE_BINARY_DIR}/lib/volk.c
-    ${CMAKE_BINARY_DIR}/include/volk/volk.h
-)
-
-#dependencies are all python and xml files
-FILE(GLOB xml_files ${CMAKE_SOURCE_DIR}/gen/*.xml)
-FILE(GLOB py_files ${CMAKE_SOURCE_DIR}/gen/*.py)
-
-ADD_CUSTOM_COMMAND(
-    OUTPUT ${some_gen_sources}
-    DEPENDS ${xml_files} ${py_files}
-    COMMAND ${PYTHON_EXECUTABLE} -B
-        ${CMAKE_SOURCE_DIR}/gen/volk_register.py
-        ${CMAKE_BINARY_DIR}
-    COMMENT "Generating volk sources..."
-)
-ADD_CUSTOM_TARGET(volk_register DEPENDS ${some_gen_sources})
 
 ########################################################################
 # Setup the package config file

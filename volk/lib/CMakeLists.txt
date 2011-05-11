@@ -124,6 +124,36 @@ ENDFOREACH(machine_line)
 MESSAGE(STATUS "Available machines: ${available_machines}")
 
 ########################################################################
+# Create rules to run the volk generator
+########################################################################
+#list of the generated sources
+SET(volk_gen_sources
+    ${CMAKE_BINARY_DIR}/include/volk/volk.h
+    ${CMAKE_BINARY_DIR}/lib/volk.c
+    ${CMAKE_BINARY_DIR}/lib/volk_init.h
+    ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
+    ${CMAKE_BINARY_DIR}/lib/volk_cpu.c
+    ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
+    ${CMAKE_BINARY_DIR}/lib/volk_environment_init.c
+    ${CMAKE_BINARY_DIR}/include/volk/volk_environment_init.h
+    ${CMAKE_BINARY_DIR}/include/volk/volk_machines.h
+    ${CMAKE_BINARY_DIR}/lib/volk_machines.c
+    ${machine_sources}
+)
+
+#dependencies are all python and xml files
+FILE(GLOB xml_files ${CMAKE_SOURCE_DIR}/gen/*.xml)
+FILE(GLOB py_files ${CMAKE_SOURCE_DIR}/gen/*.py)
+
+ADD_CUSTOM_COMMAND(
+    OUTPUT ${volk_gen_sources}
+    DEPENDS ${xml_files} ${py_files}
+    COMMAND ${PYTHON_EXECUTABLE} -B
+        ${CMAKE_SOURCE_DIR}/gen/volk_register.py
+        ${CMAKE_BINARY_DIR}
+)
+
+########################################################################
 # Handle orc support
 ########################################################################
 FIND_PACKAGE(PkgConfig)
@@ -152,7 +182,7 @@ IF(ORC_FOUND AND ORCC_EXECUTABLE)
             COMMAND ${ORCC_EXECUTABLE} --implementation -o ${orcc_gen} ${orc_file}
             DEPENDS ${orc_file} OUTPUT ${orcc_gen}
         )
-        LIST(APPEND machine_sources ${orcc_gen})
+        LIST(APPEND volk_sources ${orcc_gen})
 
     ENDFOREACH(orc_file)
 ELSE()
@@ -160,12 +190,8 @@ ELSE()
 ENDIF()
 
 ########################################################################
-# Setup volk and volk-runtime libraries
+# Setup the volk sources list and library
 ########################################################################
-IF(MSVC)
-    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/msvc)
-ENDIF(MSVC)
-
 INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_BINARY_DIR}/include
@@ -173,28 +199,26 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-SET(volk_sources
-    ${CMAKE_CURRENT_BINARY_DIR}/volk.c
-    ${CMAKE_CURRENT_BINARY_DIR}/volk_cpu.c
+LIST(APPEND volk_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/volk_rank_archs.c
-    ${CMAKE_CURRENT_BINARY_DIR}/volk_machines.c
+    ${volk_gen_sources}
 )
 
-#set the machine definitions but only on the non-machine sources
-SET_SOURCE_FILES_PROPERTIES(${volk_sources} PROPERTIES COMPILE_DEFINITIONS "${machine_defs}")
+#set the machine definitions where applicable
+SET_SOURCE_FILES_PROPERTIES(
+    ${CMAKE_CURRENT_BINARY_DIR}/volk.c
+    ${CMAKE_CURRENT_BINARY_DIR}/volk_machines.c
+PROPERTIES COMPILE_DEFINITIONS "${machine_defs}")
 
-#append the generated machine sources to volk sources and set generated
-LIST(APPEND volk_sources ${machine_sources})
-SET_SOURCE_FILES_PROPERTIES(${volk_sources} PROPERTIES GENERATED TRUE)
-
-#compile the sources as C++ due to the lack of complex.h for non GCC
 IF(MSVC)
-SET_SOURCE_FILES_PROPERTIES(${volk_sources} PROPERTIES LANGUAGE CXX)
+    #add compatibility includes for stdint types
+    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/msvc)
+    #compile the sources as C++ due to the lack of complex.h under MSVC
+    SET_SOURCE_FILES_PROPERTIES(${volk_sources} PROPERTIES LANGUAGE CXX)
 ENDIF(MSVC)
 
 #create the volk runtime library
 ADD_LIBRARY(volk SHARED ${volk_sources})
-ADD_DEPENDENCIES(volk volk_register)
 TARGET_LINK_LIBRARIES(volk ${ORC_LIBRARIES})
 SET_TARGET_PROPERTIES(volk PROPERTIES SOVERSION ${LIBVER})
 SET_TARGET_PROPERTIES(volk PROPERTIES DEFINE_SYMBOL "volk_EXPORTS")
