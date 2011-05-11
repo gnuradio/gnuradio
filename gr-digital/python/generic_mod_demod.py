@@ -27,7 +27,7 @@ Generic modulation and demodulation.
 
 from gnuradio import gr
 from gnuradio.modulation_utils2 import extract_kwargs_from_options_for_class
-from gnuradio.utils import mod_codes
+from gnuradio.digital.utils import mod_codes
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2

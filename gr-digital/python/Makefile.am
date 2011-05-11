@@ -38,5 +38,10 @@ digital_PYTHON = \
 	psk.py		\
 	dbpsk.py	\
 	dqpsk.py	\
-	d8psk.py
+	d8psk.py	\
+	psk2.py		\
+	generic_mod_demod.py	\
+	qam.py		\
+	bpsk.py		\
+	qpsk.py
 endif

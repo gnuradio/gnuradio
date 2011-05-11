@@ -27,8 +27,8 @@ from math import pi, log
 from cmath import exp
 
 from gnuradio import gr, modulation_utils2
-from gnuradio.blks2impl.generic_mod_demod import generic_mod, generic_demod
-from gnuradio.utils import mod_codes, gray_code
+from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
+from gnuradio.digital.utils import mod_codes, gray_code
 
 # Default number of points in constellation.
 _def_constellation_points = 4

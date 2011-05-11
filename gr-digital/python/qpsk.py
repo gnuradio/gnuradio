@@ -27,7 +27,7 @@ doesn't work for non-differential encodings.
 """
 
 from gnuradio import gr, modulation_utils2
-from gnuradio.blks2impl.generic_mod_demod import generic_mod
+from gnuradio.digital.generic_mod_demod import generic_mod
 
 
 # Default number of points in constellation.

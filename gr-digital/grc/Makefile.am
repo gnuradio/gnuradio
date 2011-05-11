@@ -29,4 +29,8 @@ dist_grcblocks_DATA = \
 	digital_cma_equalizer_cc.xml		\
 	digital_kurtotic_equalizer_cc.xml	\
 	digital_dxpsk_mod.xml			\
-	digital_dxpsk_demod.xml
+	digital_dxpsk_demod.xml			\
+	digital_psk_mod.xml			\
+	digital_psk_demod.xml			\
+	digital_qam_mod.xml			\
+	digital_qam_demod.xml
