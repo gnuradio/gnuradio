@@ -35,14 +35,14 @@
 
 
 trellis_constellation_metrics_cf_sptr
-trellis_make_constellation_metrics_cf (gr_constellation_sptr constellation, trellis_metric_type_t TYPE)
+trellis_make_constellation_metrics_cf (digital_constellation_sptr constellation, trellis_metric_type_t TYPE)
 {
   return gnuradio::get_initial_sptr (new trellis_constellation_metrics_cf (constellation, TYPE));
 }
 
 
 
-trellis_constellation_metrics_cf::trellis_constellation_metrics_cf (gr_constellation_sptr constellation, trellis_metric_type_t TYPE)
+trellis_constellation_metrics_cf::trellis_constellation_metrics_cf (digital_constellation_sptr constellation, trellis_metric_type_t TYPE)
   : gr_block ("constellation_metrics_cf",
 	      gr_make_io_signature (1, -1, sizeof (gr_complex)),
 	      gr_make_io_signature (1, -1, sizeof (float))),

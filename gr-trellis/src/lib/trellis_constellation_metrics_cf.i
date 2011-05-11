@@ -24,10 +24,10 @@
 
 GR_SWIG_BLOCK_MAGIC(trellis,constellation_metrics_cf);
 
-trellis_constellation_metrics_cf_sptr trellis_make_constellation_metrics_cf (gr_constellation_sptr constellation, trellis_metric_type_t TYPE);
+trellis_constellation_metrics_cf_sptr trellis_make_constellation_metrics_cf (digital_constellation_sptr constellation, trellis_metric_type_t TYPE);
 
 class trellis_constellation_metrics_cf : public gr_block
 {
 private:
-  trellis_constellation_metrics_cf (gr_constellation_sptr constellation, trellis_metric_type_t TYPE);
+  trellis_constellation_metrics_cf (digital_constellation_sptr constellation, trellis_metric_type_t TYPE);
 };
