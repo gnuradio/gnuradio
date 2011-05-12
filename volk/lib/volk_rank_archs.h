@@ -5,13 +5,7 @@
 extern "C" {
 #endif
 
-unsigned int volk_rank_archs(const int* arch_defs, unsigned int n_archs, unsigned int arch);
-
-////////////////////////////////////////////////////////////////////////
-//get path to volk_config profiling info
-////////////////////////////////////////////////////////////////////////
-void get_config_path(char *);
-void load_preferences(void); //FIXME DEBUG shouldn't be exported
+unsigned int volk_rank_archs(const int* arch_defs, unsigned int n_archs, const char *name, unsigned int arch);
 
 #ifdef __cplusplus
 }

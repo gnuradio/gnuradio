@@ -82,7 +82,7 @@ static unsigned int get_index(const char *indices[], unsigned int n_archs, const
     
     for i in range(len(functions)):
         tempstring += "void get_" + functions[i] + replace_arch.sub("", arched_arglist[i]) + "\n"
-        tempstring += "    %s = get_machine()->%s_archs[volk_rank_archs(get_machine()->%s_arch_defs, get_machine()->%s_n_archs, volk_get_lvarch())];\n" % (functions[i], functions[i], functions[i], functions[i])
+        tempstring += "    %s = get_machine()->%s_archs[volk_rank_archs(get_machine()->%s_arch_defs, get_machine()->%s_n_archs, get_machine()->%s_name, volk_get_lvarch())];\n" % (functions[i], functions[i], functions[i], functions[i], functions[i])
         tempstring += "    %s(%s);\n}\n\n" % (functions[i], my_arglist[i])
         tempstring += replace_volk.sub("p", functions[i]) + " " + functions[i] + " = &get_" + functions[i] + ";\n\n"
         tempstring += "void %s_manual%s\n" % (functions[i], arched_arglist[i])

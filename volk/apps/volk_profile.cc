@@ -1,7 +1,6 @@
 #include "qa_utils.h"
 #include <volk/volk.h>
-#include <volk_rank_archs.h>
-#include <boost/test/unit_test.hpp>
+#include <volk/volk_prefs.h>
 #include <vector>
 #include <boost/foreach.hpp>
 #include <iostream>
@@ -10,10 +9,7 @@
 int main(int argc, char *argv[]) {
 
     std::vector<std::string> results;
-    char path[512];
-    get_config_path(path);
-    std::string config_path(path);
-    
+    std::string config_path = get_config_path();    
 /*
     //VOLK_PROFILE(volk_16i_x5_add_quad_16i_x4_a16, 1e-4, 2046, 10000, &results);
     //VOLK_PROFILE(volk_16i_branch_4_state_8_a16, 1e-4, 2046, 10000, &results);

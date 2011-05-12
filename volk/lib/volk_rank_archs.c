@@ -7,6 +7,8 @@
 #include <Windows.h>
 #endif
 
+//this should be used by the profiler app to find the path as well
+//possibly all this stuff should go in a separate volk_prefs.cc
 void get_config_path(char *path) {
     const char *suffix = "/.gnuradio/volk_config";
     memcpy(path, getenv("HOME"), strlen(getenv("HOME"))+1);
@@ -25,8 +27,19 @@ void get_config_path(char *path) {
  * 
  * also means you don't have to also spec the fn name in qa_utils.h/c, you can
  * pass it in along with the func_desc
+ *
+ * your prefs reader should also have a prefs writer which takes a vector of prefs and writes them
+ * then your profiler can just write the prefs by passing that out
  * 
  */
+
+struct volk_arch_pref {
+    const char *name;
+    const char *arch;
+};
+
+//if we end up with more this will have to use realloc
+struct volk_arch_pref volk_arch_prefs[400];
  
 void load_preferences(void) {
     static int prefs_loaded = 0;
@@ -56,7 +69,7 @@ void load_preferences(void) {
     prefs_loaded = 1;
 }
 
-unsigned int volk_rank_archs(const int* arch_defs, unsigned int n_archs, unsigned int arch) {
+unsigned int volk_rank_archs(const int* arch_defs, unsigned int n_archs, const char* name, unsigned int arch) {
   int i = 1;
   unsigned int best_val = 0;
   for(; i < n_archs; ++i) {
