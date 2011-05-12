@@ -12,8 +12,8 @@ extern "C" {
 
 int main(int argc, char *argv[]) {
 
-    std::vector<std::string> results;  
-/*
+    std::vector<std::string> results;
+    
     //VOLK_PROFILE(volk_16i_x5_add_quad_16i_x4_a16, 1e-4, 2046, 10000, &results);
     //VOLK_PROFILE(volk_16i_branch_4_state_8_a16, 1e-4, 2046, 10000, &results);
     VOLK_PROFILE(volk_16ic_s32f_deinterleave_real_32f_a16, 1e-5, 32768.0, 204600, 10000, &results);
@@ -100,7 +100,6 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_8ic_x2_s32f_multiply_conjugate_32fc_a16, 1e-4, 100, 204600, 400, &results);
     VOLK_PROFILE(volk_8i_convert_16i_a16, 0, 0, 204600, 20000, &results);
     VOLK_PROFILE(volk_8i_convert_16i_u, 0, 0, 204600, 2000, &results);
-    */
     VOLK_PROFILE(volk_8i_s32f_convert_32f_a16, 1e-4, 100, 204600, 2000, &results);
     VOLK_PROFILE(volk_8i_s32f_convert_32f_u, 1e-4, 100, 204600, 2000, &results);
 
