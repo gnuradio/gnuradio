@@ -30,7 +30,7 @@ unsigned int volk_rank_archs(const char *indices[], const int* arch_defs, unsign
   //now look for the function name in the prefs list
   for(i=0; i < n_arch_prefs; i++) {
       if(!strncmp(name, volk_arch_prefs[i].name, 128)) { //found it
-        best_val = get_index(indices, n_archs, volk_arch_prefs[i].arch);
+        return get_index(indices, n_archs, volk_arch_prefs[i].arch);
       }
   }
   
