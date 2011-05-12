@@ -8,7 +8,7 @@
 //#endif
 
 void get_config_path(char *path) {
-    const char *suffix = "/.gnuradio/volk_config";
+    const char *suffix = "/.volk/volk_config";
     strcpy(path, getenv("HOME"));
     strcat(path, suffix);
 }
