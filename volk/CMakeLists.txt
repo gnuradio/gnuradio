@@ -52,8 +52,8 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_BINARY_DIR}/volk.pc
 @ONLY)
 
-INSTALL_FILES(
-    ${CMAKE_CURRENT_BINARY_DIR}/volk.pc
+INSTALL(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/volk.pc
     DESTINATION lib${LIB_SUFFIX}/pkgconfig
 )
 
@@ -70,6 +70,11 @@ INSTALL(
 # Setup the library
 ########################################################################
 ADD_SUBDIRECTORY(lib)
+
+########################################################################
+# And the utility apps
+########################################################################
+ADD_SUBDIRECTORY(apps)
 
 ########################################################################
 # Print summary

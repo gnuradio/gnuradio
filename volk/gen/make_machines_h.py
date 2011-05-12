@@ -35,6 +35,7 @@ struct volk_machine {
    const char *name;
 """
     for function in functions:
+        tempstring += "    const char *%s_name;\n"%function
         tempstring += "    const char *%s_indices[%d];\n"%(function, len(archs))
         tempstring += "    const int %s_arch_defs[%d];\n"%(function, len(archs))
         tempstring += "    const %s %s_archs[%d];\n"%(replace_volk.sub("p", function), function, len(archs))

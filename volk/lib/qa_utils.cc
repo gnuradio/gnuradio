@@ -8,6 +8,7 @@
 #include <list>
 #include <ctime>
 #include <cmath>
+#include <limits>
 #include <boost/lexical_cast.hpp>
 #include <volk/volk.h>
 #include <volk/volk_cpu.h>
@@ -240,7 +241,15 @@ public:
 private: std::list<std::vector<char> > _mems;
 };
 
-bool run_volk_tests(struct volk_func_desc desc, void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
+bool run_volk_tests(struct volk_func_desc desc,
+                    void (*manual_func)(),
+                    std::string name,
+                    float tol,
+                    float scalar,
+                    int vlen,
+                    int iter,
+                    std::vector<std::string> *best_arch_vector = 0
+                   ) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
     
     //first let's get a list of available architectures for the test
@@ -297,6 +306,7 @@ bool run_volk_tests(struct volk_func_desc desc, void (*manual_func)(), std::stri
 
     //now run the test
     clock_t start, end;
+    std::vector<double> profile_times;
     for(int i = 0; i < arch_list.size(); i++) {
         start = clock();
 
@@ -331,8 +341,12 @@ bool run_volk_tests(struct volk_func_desc desc, void (*manual_func)(), std::stri
         }
         
         end = clock();
-        std::cout << arch_list[i] << " completed in " << (double)(end-start)/(double)CLOCKS_PER_SEC << "s" << std::endl;
+        double arch_time = (double)(end-start)/(double)CLOCKS_PER_SEC;
+        std::cout << arch_list[i] << " completed in " << arch_time << "s" << std::endl;
+
+        profile_times.push_back(arch_time);
     }
+    
     //and now compare each output to the generic output
     //first we have to know which output is the generic one, they aren't in order...
     int generic_offset=0;
@@ -344,7 +358,9 @@ bool run_volk_tests(struct volk_func_desc desc, void (*manual_func)(), std::stri
     
     bool fail = false;
     bool fail_global = false;
+    std::vector<bool> arch_results;
     for(int i=0; i<arch_list.size(); i++) {
+        fail = false;
         if(i != generic_offset) {
             for(int j=0; j<both_sigs.size(); j++) {
                 if(both_sigs[j].is_float) {
@@ -395,6 +411,21 @@ bool run_volk_tests(struct volk_func_desc desc, void (*manual_func)(), std::stri
                 //fail = memcmp(outbuffs[generic_offset], outbuffs[i], outputsig[0].size * vlen * (outputsig[0].is_complex ? 2:1));
             }
         }
+        arch_results.push_back(!fail);
+    }
+        
+    double best_time = std::numeric_limits<double>::max();
+    std::string best_arch = "generic";
+    for(int i=0; i < arch_list.size(); i++) {
+        if((profile_times[i] < best_time) && arch_results[i]) {
+            best_time = profile_times[i];
+            best_arch = arch_list[i];
+        }
+    }
+        
+    std::cout << "Best arch: " << best_arch << std::endl;
+    if(best_arch_vector) {
+        best_arch_vector->push_back(name + std::string(" ") + best_arch);
     }
 
     return fail_global;

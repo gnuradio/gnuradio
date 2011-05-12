@@ -200,6 +200,7 @@ INCLUDE_DIRECTORIES(
 )
 
 LIST(APPEND volk_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/volk_prefs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/volk_rank_archs.c
     ${volk_gen_sources}
 )

@@ -41,6 +41,7 @@ def _make_each_machine_struct(machine_name, archs, functions, fcountlist, taglis
 
     #fill in the description for each function
     for i in range(len(functions)):
+        tempstring += "    \"%s\",\n"%functions[i]
         tempstring += "    {%s},\n"%(', '.join(['"%s"'%tag for tag in machine_taglists[i]]))
         tempstring += "    {%s},\n"%(', '.join([' | '.join(['(1 << LV_%s)'%fc for fc in fcount]) for fcount in machine_fcountlists[i]]))
         tempstring += "    {%s},\n"%(', '.join(['%s_%s'%(functions[i], tag) for tag in machine_taglists[i]]))
