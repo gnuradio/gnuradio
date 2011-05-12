@@ -1,78 +1,40 @@
 #include <volk_rank_archs.h>
+#include <volk/volk_prefs.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#if defined(_WIN32)
-#include <Windows.h>
-#endif
-
-//this should be used by the profiler app to find the path as well
-//possibly all this stuff should go in a separate volk_prefs.cc
-void get_config_path(char *path) {
-    const char *suffix = "/.gnuradio/volk_config";
-    memcpy(path, getenv("HOME"), strlen(getenv("HOME"))+1);
-    strcat(path, suffix);
-}
-
-/*
- * ok so volk stuff has to be loaded piecemeal, and to avoid reading
- * the whole config file in at startup we should probably create a static
- * prefs struct that can be read in by rank_archs with minimal modification.
- * this makes rank_archs slower and load_preferences more complex, but
- * we don't have to export load_preferences and we don't have to include volk.h.
- * means we need to pass the name into rank_archs, though
- * problem is that names don't appear anywhere in the volk function descriptor.
- * so we have to modify things to include the name in the descriptor.
- * 
- * also means you don't have to also spec the fn name in qa_utils.h/c, you can
- * pass it in along with the func_desc
- *
- * your prefs reader should also have a prefs writer which takes a vector of prefs and writes them
- * then your profiler can just write the prefs by passing that out
- * 
- */
-
-struct volk_arch_pref {
-    const char *name;
-    const char *arch;
-};
-
-//if we end up with more this will have to use realloc
-struct volk_arch_pref volk_arch_prefs[400];
- 
-void load_preferences(void) {
-    static int prefs_loaded = 0;
-    FILE *config_file;
-    char path[512], line[512], function[256], arch[64];
-
-    if(prefs_loaded) return;
-    
-    int n_arch_preferences = 0;
-    
-    //get the config path
-    get_config_path(path);
-    config_file = fopen(path, "r");
-    if(!config_file) return; //no prefs found
-
-    while(fgets(line, 512, config_file) != NULL) {
-        if(sscanf(line, "%s %s", function, arch) == 2 && !strncmp(function, "volk_", 5)) {
-            printf("func: %s, arch: %s\n", function, arch);
-            //we have a function and we have an arch, let's set it
-            n_arch_preferences++;
+unsigned int get_index(const char *indices[], unsigned int n_archs, const char *arch_name) {
+    int i;
+    for(i=0; i<n_archs; i++) {
+        if(!strncmp(indices[i], arch_name, 20)) {
+            return i;
         }
     }
-
-    fclose(config_file);
-    
-    printf("Found %d prefs\n", n_arch_preferences);
-    prefs_loaded = 1;
+    //something terrible should happen here
+    printf("Volk warning: no arch found, returning generic impl\n");
+    return get_index(indices, n_archs, "generic"); //but we'll fake it for now
 }
 
-unsigned int volk_rank_archs(const int* arch_defs, unsigned int n_archs, const char* name, unsigned int arch) {
-  int i = 1;
+unsigned int volk_rank_archs(const char *indices[], const int* arch_defs, unsigned int n_archs, const char* name, unsigned int arch) {
+  int i;
   unsigned int best_val = 0;
-  for(; i < n_archs; ++i) {
+  static struct volk_arch_pref *volk_arch_prefs;
+  static int n_arch_prefs = 0;
+  static int prefs_loaded = 0;
+  if(!prefs_loaded) {
+      n_arch_prefs = load_preferences(&volk_arch_prefs);
+      prefs_loaded = 1;
+  }
+  
+  //now look for the function name in the prefs list
+  for(i=0; i < n_arch_prefs; i++) {
+      if(!strncmp(name, volk_arch_prefs[i].name, 128)) { //found it
+        best_val = get_index(indices, n_archs, volk_arch_prefs[i].arch);
+      }
+  }
+  
+  for(i=1; i < n_archs; ++i) {
     if((arch_defs[i]&(!arch)) == 0) {
       best_val = (arch_defs[i] > arch_defs[best_val + 1]) ? i-1 : best_val;
     }

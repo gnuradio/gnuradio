@@ -33,7 +33,6 @@ INCLUDE_DIRECTORIES(
 ADD_EXECUTABLE(volk_profile
     ${CMAKE_CURRENT_SOURCE_DIR}/volk_profile.cc
     ${CMAKE_SOURCE_DIR}/lib/qa_utils.cc
-    ${CMAKE_SOURCE_DIR}/lib/volk_prefs.cc
 )
 
 TARGET_LINK_LIBRARIES(volk_profile volk ${Boost_LIBRARIES})

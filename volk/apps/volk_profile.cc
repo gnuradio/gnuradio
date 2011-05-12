@@ -1,6 +1,8 @@
 #include "qa_utils.h"
+extern "C" {
 #include <volk/volk.h>
 #include <volk/volk_prefs.h>
+}
 #include <vector>
 #include <boost/foreach.hpp>
 #include <iostream>
@@ -9,8 +11,10 @@
 int main(int argc, char *argv[]) {
 
     std::vector<std::string> results;
-    std::string config_path = get_config_path();    
-/*
+    char path[256];
+    get_config_path(path);
+    std::string config_path(path);    
+
     //VOLK_PROFILE(volk_16i_x5_add_quad_16i_x4_a16, 1e-4, 2046, 10000, &results);
     //VOLK_PROFILE(volk_16i_branch_4_state_8_a16, 1e-4, 2046, 10000, &results);
     VOLK_PROFILE(volk_16ic_s32f_deinterleave_real_32f_a16, 1e-5, 32768.0, 204600, 10000, &results);
@@ -97,7 +101,6 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_8ic_x2_s32f_multiply_conjugate_32fc_a16, 1e-4, 100, 204600, 400, &results);
     VOLK_PROFILE(volk_8i_convert_16i_a16, 0, 0, 204600, 20000, &results);
     VOLK_PROFILE(volk_8i_convert_16i_u, 0, 0, 204600, 2000, &results);
-*/
     VOLK_PROFILE(volk_8i_s32f_convert_32f_a16, 1e-4, 100, 204600, 2000, &results);
     VOLK_PROFILE(volk_8i_s32f_convert_32f_u, 1e-4, 100, 204600, 2000, &results);
 
@@ -114,6 +117,4 @@ int main(int argc, char *argv[]) {
         config << result << std::endl;
     }
     config.close();
-
-    load_preferences();
 }

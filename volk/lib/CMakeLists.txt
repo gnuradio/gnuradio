@@ -176,6 +176,7 @@ INCLUDE_DIRECTORIES(
 SET(volk_sources
     ${CMAKE_CURRENT_BINARY_DIR}/volk.c
     ${CMAKE_CURRENT_BINARY_DIR}/volk_cpu.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/volk_prefs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/volk_rank_archs.c
     ${CMAKE_CURRENT_BINARY_DIR}/volk_machines.c
 )
