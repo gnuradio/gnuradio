@@ -135,8 +135,8 @@ SET(volk_gen_sources
     ${CMAKE_BINARY_DIR}/lib/volk_cpu.c
     ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
     ${CMAKE_BINARY_DIR}/lib/volk_environment_init.c
-    ${CMAKE_BINARY_DIR}/include/volk/volk_environment_init.h
-    ${CMAKE_BINARY_DIR}/include/volk/volk_machines.h
+    ${CMAKE_BINARY_DIR}/lib/volk_environment_init.h
+    ${CMAKE_BINARY_DIR}/lib/volk_machines.h
     ${CMAKE_BINARY_DIR}/lib/volk_machines.c
     ${machine_sources}
 )
@@ -193,6 +193,10 @@ ENDIF()
 ########################################################################
 # Setup the volk sources list and library
 ########################################################################
+IF(NOT WIN32)
+    ADD_DEFINITIONS(-fvisibility=hidden)
+ENDIF()
+
 INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_BINARY_DIR}/include

@@ -62,9 +62,14 @@ INSTALL(
 ########################################################################
 INSTALL(
     DIRECTORY ${CMAKE_SOURCE_DIR}/include/volk
-    DIRECTORY ${CMAKE_BINARY_DIR}/include/volk
     DESTINATION include FILES_MATCHING PATTERN "*.h"
 )
+
+INSTALL(FILES
+    ${CMAKE_BINARY_DIR}/include/volk/volk.h
+    ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
+    ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
+DESTINATION include/volk)
 
 ########################################################################
 # Setup the library

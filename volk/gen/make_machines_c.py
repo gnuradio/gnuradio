@@ -24,7 +24,7 @@ def make_machines_c(machines):
 
 #include <volk/volk_common.h>
 #include <volk/volk_typedefs.h>
-#include <volk/volk_machines.h>
+#include "volk_machines.h"
 
 struct volk_machine *volk_machines[] = {
 """

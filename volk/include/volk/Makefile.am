@@ -28,12 +28,11 @@ volkincludedir = $(prefix)/include/volk
 volkinclude_HEADERS = \
 	volk_complex.h \
 	volk_common.h \
+	volk_prefs.h \
 	$(top_gendir)/include/volk/volk_config_fixed.h \
 	$(top_gendir)/include/volk/volk_typedefs.h \
 	$(top_gendir)/include/volk/volk.h \
 	$(top_gendir)/include/volk/volk_cpu.h \
-	$(top_gendir)/include/volk/volk_machines.h \
-	$(top_gendir)/include/volk/volk_environment_init.h \
 	volk_16i_x5_add_quad_16i_x4_a16.h \
 	volk_16i_branch_4_state_8_a16.h \
 	volk_16ic_deinterleave_16i_x2_a16.h \

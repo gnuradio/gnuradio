@@ -47,6 +47,7 @@ libvolk_la_SOURCES = 	\
 	$(top_gendir)/lib/volk.c			\
 	$(top_gendir)/lib/volk_cpu.c 		\
 	volk_rank_archs.c	\
+	volk_prefs.c	\
 	$(top_gendir)/lib/volk_machines.c
 
 if LV_HAVE_ORC
@@ -101,6 +102,8 @@ noinst_LTLIBRARIES =
 # ----------------------------------------------------------------
 noinst_HEADERS = \
 	$(top_gendir)/lib/volk_init.h \
+	$(top_gendir)/lib/volk_machines.h \
+	$(top_gendir)/lib/volk_environment_init.h \
 	qa_utils.h
 
 # ----------------------------------------------------------------

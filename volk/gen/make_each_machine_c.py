@@ -62,7 +62,7 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist):
     
     tempstring += """
 #include <volk/volk_common.h>
-#include <volk/volk_machines.h>
+#include "volk_machines.h"
 #include <volk/volk_config_fixed.h>
 
 """
