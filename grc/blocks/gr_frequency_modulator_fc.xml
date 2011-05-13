@@ -9,6 +9,7 @@
 	<key>gr_frequency_modulator_fc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.frequency_modulator_fc($sensitivity)</make>
+	<callback>set_sensitivity($sensitivity)</callback>
 	<param>
 		<name>Sensitivity</name>
 		<key>sensitivity</key>
