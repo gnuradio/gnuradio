@@ -141,13 +141,14 @@ SET(volk_gen_sources
     ${machine_sources}
 )
 
-#dependencies are all python and xml files
+#dependencies are all python, xml, and header implementation files
 FILE(GLOB xml_files ${CMAKE_SOURCE_DIR}/gen/*.xml)
 FILE(GLOB py_files ${CMAKE_SOURCE_DIR}/gen/*.py)
+FILE(GLOB h_files ${CMAKE_SOURCE_DIR}/include/volk/*.h)
 
 ADD_CUSTOM_COMMAND(
     OUTPUT ${volk_gen_sources}
-    DEPENDS ${xml_files} ${py_files}
+    DEPENDS ${xml_files} ${py_files} ${h_files}
     COMMAND ${PYTHON_EXECUTABLE} -B
         ${CMAKE_SOURCE_DIR}/gen/volk_register.py
         ${CMAKE_BINARY_DIR}
