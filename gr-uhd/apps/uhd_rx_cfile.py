@@ -62,7 +62,8 @@ class rx_cfile_block(gr.top_block):
         self._u.set_gain(options.gain)
 
         # Set the antenna
-        self._u.set_antenna(options.antenna, 0)
+        if(options.antenna):
+            self._u.set_antenna(options.antenna, 0)
 
         # Set frequency (tune request takes lo_offset)
         if(options.lo_offset is not None):
@@ -90,7 +91,7 @@ class rx_cfile_block(gr.top_block):
         if options.verbose:
             print "Address:", options.address
             print "Rx gain:", options.gain
-            print "Rx baseband frequency:", n2s(tr.actual_inter_freq)
+            print "Rx baseband frequency:", n2s(tr.actual_rf_freq)
             print "Rx DDC frequency:", n2s(tr.actual_dsp_freq)
             print "Rx Sample Rate:", n2s(input_rate)
             if options.nsamples is None:
@@ -108,7 +109,7 @@ def get_options():
     parser = OptionParser(option_class=eng_option, usage=usage)
     parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
                       help="Address of UHD device, [default=%default]")
-    parser.add_option("-A", "--antenna", type="string", default="RX2",
+    parser.add_option("-A", "--antenna", type="string", default=None,
                       help="select Rx Antenna where appropriate")
     parser.add_option("", "--samp-rate", type="eng_float", default=1e6,
                       help="set sample rate (bandwidth) [default=%default]")

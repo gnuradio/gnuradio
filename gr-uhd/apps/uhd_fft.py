@@ -40,7 +40,7 @@ class app_top_block(stdgui2.std_top_block):
         parser = OptionParser(option_class=eng_option)
         parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
                           help="Address of UHD device, [default=%default]")
-        parser.add_option("-A", "--antenna", type="string", default="RX2",
+        parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
                           help="set sample rate (bandwidth) [default=%default]")
@@ -68,7 +68,6 @@ class app_top_block(stdgui2.std_top_block):
         self.u = uhd.usrp_source(device_addr=options.address,
                                  io_type=uhd.io_type.COMPLEX_FLOAT32,
                                  num_channels=1)
-        self.u.set_clock_config(uhd.clock_config.internal(), uhd.ALL_MBOARDS)
 
         self.u.set_samp_rate(options.samp_rate)
         input_rate = self.u.get_samp_rate()
@@ -110,7 +109,8 @@ class app_top_block(stdgui2.std_top_block):
             
         self.set_gain(options.gain)
 
-        self.u.set_antenna(options.antenna, 0)
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
 
         if self.show_debug_info:
             self.myform['samprate'].set_value(self.u.get_samp_rate())
@@ -209,7 +209,7 @@ class app_top_block(stdgui2.std_top_block):
         if r:
             self.myform['freq'].set_value(target_freq)     # update displayed value
             if self.show_debug_info:
-                self.myform['baseband'].set_value(r.actual_inter_freq)
+                self.myform['baseband'].set_value(r.actual_rf_freq)
                 self.myform['ddc'].set_value(r.actual_dsp_freq)
 	    if not self.options.oscilloscope:
 		self.scope.set_baseband_freq(target_freq)
