@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_convert_64f_a16_H
-#define INCLUDED_volk_32f_convert_64f_a16_H
+#ifndef INCLUDED_volk_32f_convert_64f_a_H
+#define INCLUDED_volk_32f_convert_64f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -12,7 +12,7 @@
     \param fVector The float vector values to be converted
     \param num_points The number of points in the two vectors to be converted
   */
-static inline void volk_32f_convert_64f_a16_sse2(double* outputVector, const float* inputVector, unsigned int num_points){
+static inline void volk_32f_convert_64f_a_sse2(double* outputVector, const float* inputVector, unsigned int num_points){
   unsigned int number = 0;
 
   const unsigned int quarterPoints = num_points / 4;
@@ -53,7 +53,7 @@ static inline void volk_32f_convert_64f_a16_sse2(double* outputVector, const flo
   \param fVector The float vector values to be converted
   \param num_points The number of points in the two vectors to be converted
 */
-static inline void volk_32f_convert_64f_a16_generic(double* outputVector, const float* inputVector, unsigned int num_points){
+static inline void volk_32f_convert_64f_a_generic(double* outputVector, const float* inputVector, unsigned int num_points){
   double* outputVectorPtr = outputVector;
   const float* inputVectorPtr = inputVector;
   unsigned int number = 0;
@@ -67,4 +67,4 @@ static inline void volk_32f_convert_64f_a16_generic(double* outputVector, const 
 
 
 
-#endif /* INCLUDED_volk_32f_convert_64f_a16_H */
+#endif /* INCLUDED_volk_32f_convert_64f_a_H */

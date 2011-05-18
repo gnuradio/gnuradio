@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_index_max_16u_a16_H
-#define INCLUDED_volk_32fc_index_max_16u_a16_H
+#ifndef INCLUDED_volk_32fc_index_max_16u_a_H
+#define INCLUDED_volk_32fc_index_max_16u_a_H
 
 #include <volk/volk_common.h>
 #include<inttypes.h>
@@ -11,7 +11,7 @@
 #include<pmmintrin.h>
 
 
-static inline void volk_32fc_index_max_16u_a16_sse3(unsigned int* target, lv_32fc_t* src0, unsigned int num_bytes) {
+static inline void volk_32fc_index_max_16u_a_sse3(unsigned int* target, lv_32fc_t* src0, unsigned int num_bytes) {
   
   
   
@@ -189,7 +189,7 @@ static inline void volk_32fc_index_max_16u_a16_sse3(unsigned int* target, lv_32f
 #endif /*LV_HAVE_SSE3*/
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_32fc_index_max_16u_a16_generic(unsigned int* target, lv_32fc_t* src0, unsigned int num_bytes) {
+static inline void volk_32fc_index_max_16u_a_generic(unsigned int* target, lv_32fc_t* src0, unsigned int num_bytes) {
   float sq_dist = 0.0;
   float max = 0.0;
   unsigned int index = 0;
@@ -212,4 +212,4 @@ static inline void volk_32fc_index_max_16u_a16_generic(unsigned int* target, lv_
 #endif /*LV_HAVE_GENERIC*/
 
 
-#endif /*INCLUDED_volk_32fc_index_max_16u_a16_H*/
+#endif /*INCLUDED_volk_32fc_index_max_16u_a_H*/

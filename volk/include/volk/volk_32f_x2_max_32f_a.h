@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_x2_max_32f_a16_H
-#define INCLUDED_volk_32f_x2_max_32f_a16_H
+#ifndef INCLUDED_volk_32f_x2_max_32f_a_H
+#define INCLUDED_volk_32f_x2_max_32f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
   \param bVector The vector to be checked
   \param num_points The number of values in aVector and bVector to be checked and stored into cVector
 */
-static inline void volk_32f_x2_max_32f_a16_sse(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
+static inline void volk_32f_x2_max_32f_a_sse(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
 
@@ -53,7 +53,7 @@ static inline void volk_32f_x2_max_32f_a16_sse(float* cVector, const float* aVec
   \param bVector The vector to be checked
   \param num_points The number of values in aVector and bVector to be checked and stored into cVector
 */
-static inline void volk_32f_x2_max_32f_a16_generic(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
+static inline void volk_32f_x2_max_32f_a_generic(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
     float* cPtr = cVector;
     const float* aPtr = aVector;
     const float* bPtr=  bVector;
@@ -75,11 +75,11 @@ static inline void volk_32f_x2_max_32f_a16_generic(float* cVector, const float* 
   \param bVector The vector to be checked
   \param num_points The number of values in aVector and bVector to be checked and stored into cVector
 */
-extern void volk_32f_x2_max_32f_a16_orc_impl(float* cVector, const float* aVector, const float* bVector, unsigned int num_points);
-static inline void volk_32f_x2_max_32f_a16_orc(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
-    volk_32f_x2_max_32f_a16_orc_impl(cVector, aVector, bVector, num_points);
+extern void volk_32f_x2_max_32f_a_orc_impl(float* cVector, const float* aVector, const float* bVector, unsigned int num_points);
+static inline void volk_32f_x2_max_32f_a_orc(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
+    volk_32f_x2_max_32f_a_orc_impl(cVector, aVector, bVector, num_points);
 }
 #endif /* LV_HAVE_ORC */
 
 
-#endif /* INCLUDED_volk_32f_x2_max_32f_a16_H */
+#endif /* INCLUDED_volk_32f_x2_max_32f_a_H */

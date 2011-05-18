@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_H
-#define INCLUDED_volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_H
+#ifndef INCLUDED_volk_8ic_x2_s32f_multiply_conjugate_32fc_a_H
+#define INCLUDED_volk_8ic_x2_s32f_multiply_conjugate_32fc_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -14,7 +14,7 @@
   \param bVector The complex vector which will be converted to complex conjugate and multiplied
   \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
 */
-static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_sse4_1(lv_32fc_t* cVector, const lv_8sc_t* aVector, const lv_8sc_t* bVector, const float scalar, unsigned int num_points){
+static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a_sse4_1(lv_32fc_t* cVector, const lv_8sc_t* aVector, const lv_8sc_t* bVector, const float scalar, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
 
@@ -95,7 +95,7 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_sse4_1(lv_32fc_t
   \param bVector The complex vector which will be converted to complex conjugate and multiplied
   \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
 */
-static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_generic(lv_32fc_t* cVector, const lv_8sc_t* aVector, const lv_8sc_t* bVector, const float scalar, unsigned int num_points){
+static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a_generic(lv_32fc_t* cVector, const lv_8sc_t* aVector, const lv_8sc_t* bVector, const float scalar, unsigned int num_points){
   unsigned int number = 0;
   float* cPtr = (float*)cVector;
   const float invScalar = 1.0 / scalar;
@@ -119,4 +119,4 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_generic(lv_32fc_
 
 
 
-#endif /* INCLUDED_volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_H */
+#endif /* INCLUDED_volk_8ic_x2_s32f_multiply_conjugate_32fc_a_H */

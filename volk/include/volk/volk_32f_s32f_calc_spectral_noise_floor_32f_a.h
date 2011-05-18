@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_s32f_calc_spectral_noise_floor_32f_a16_H
-#define INCLUDED_volk_32f_s32f_calc_spectral_noise_floor_32f_a16_H
+#ifndef INCLUDED_volk_32f_s32f_calc_spectral_noise_floor_32f_a_H
+#define INCLUDED_volk_32f_s32f_calc_spectral_noise_floor_32f_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -17,7 +17,7 @@
   \param spectralExclusionValue The number of dB above the noise floor that a data point must be to be excluded from the noise floor calculation - default value is 20
   \param noiseFloorAmplitude The noise floor of the input spectrum, in dB
 */
-static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a16_sse(float* noiseFloorAmplitude, const float* realDataPoints, const float spectralExclusionValue, const unsigned int num_points){
+static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a_sse(float* noiseFloorAmplitude, const float* realDataPoints, const float spectralExclusionValue, const unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
 
@@ -128,7 +128,7 @@ static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a16_sse(float* no
   \param spectralExclusionValue The number of dB above the noise floor that a data point must be to be excluded from the noise floor calculation - default value is 20
   \param noiseFloorAmplitude The noise floor of the input spectrum, in dB
 */
-static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a16_generic(float* noiseFloorAmplitude, const float* realDataPoints, const float spectralExclusionValue, const unsigned int num_points){
+static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a_generic(float* noiseFloorAmplitude, const float* realDataPoints, const float spectralExclusionValue, const unsigned int num_points){
   float sumMean = 0.0;
   unsigned int number;
   // find the sum (for mean), etc
@@ -165,4 +165,4 @@ static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a16_generic(float
 
 
 
-#endif /* INCLUDED_volk_32f_s32f_calc_spectral_noise_floor_32f_a16_H */
+#endif /* INCLUDED_volk_32f_s32f_calc_spectral_noise_floor_32f_a_H */

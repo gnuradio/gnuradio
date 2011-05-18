@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_x2_s32f_interleave_16ic_a16_H
-#define INCLUDED_volk_32f_x2_s32f_interleave_16ic_a16_H
+#ifndef INCLUDED_volk_32f_x2_s32f_interleave_16ic_a_H
+#define INCLUDED_volk_32f_x2_s32f_interleave_16ic_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -15,7 +15,7 @@
     \param scalar The scaling value being multiplied against each data point
     \param num_points The number of complex data values to be interleaved
   */
-static inline void volk_32f_x2_s32f_interleave_16ic_a16_sse2(lv_16sc_t* complexVector, const float* iBuffer, const float* qBuffer, const float scalar, unsigned int num_points){
+static inline void volk_32f_x2_s32f_interleave_16ic_a_sse2(lv_16sc_t* complexVector, const float* iBuffer, const float* qBuffer, const float scalar, unsigned int num_points){
     unsigned int number = 0;
     const float* iBufferPtr = iBuffer;
     const float* qBufferPtr = qBuffer;
@@ -73,7 +73,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a16_sse2(lv_16sc_t* complexV
     \param scalar The scaling value being multiplied against each data point
     \param num_points The number of complex data values to be interleaved
   */
-static inline void volk_32f_x2_s32f_interleave_16ic_a16_sse(lv_16sc_t* complexVector, const float* iBuffer, const float* qBuffer, const float scalar, unsigned int num_points){
+static inline void volk_32f_x2_s32f_interleave_16ic_a_sse(lv_16sc_t* complexVector, const float* iBuffer, const float* qBuffer, const float scalar, unsigned int num_points){
     unsigned int number = 0;
     const float* iBufferPtr = iBuffer;
     const float* qBufferPtr = qBuffer;
@@ -137,7 +137,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a16_sse(lv_16sc_t* complexVe
     \param scalar The scaling value being multiplied against each data point
     \param num_points The number of complex data values to be interleaved
   */
-static inline void volk_32f_x2_s32f_interleave_16ic_a16_generic(lv_16sc_t* complexVector, const float* iBuffer, const float* qBuffer, const float scalar, unsigned int num_points){
+static inline void volk_32f_x2_s32f_interleave_16ic_a_generic(lv_16sc_t* complexVector, const float* iBuffer, const float* qBuffer, const float scalar, unsigned int num_points){
   int16_t* complexVectorPtr = (int16_t*)complexVector;
   const float* iBufferPtr = iBuffer;
   const float* qBufferPtr = qBuffer;
@@ -153,4 +153,4 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a16_generic(lv_16sc_t* compl
 
 
 
-#endif /* INCLUDED_volk_32f_x2_s32f_interleave_16ic_a16_H */
+#endif /* INCLUDED_volk_32f_x2_s32f_interleave_16ic_a_H */

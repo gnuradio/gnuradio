@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_8i_s32f_convert_32f_a16_H
-#define INCLUDED_volk_8i_s32f_convert_32f_a16_H
+#ifndef INCLUDED_volk_8i_s32f_convert_32f_a_H
+#define INCLUDED_volk_8i_s32f_convert_32f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -14,7 +14,7 @@
     \param scalar The value divided against each point in the output buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_8i_s32f_convert_32f_a16_sse4_1(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points){
+static inline void volk_8i_s32f_convert_32f_a_sse4_1(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int sixteenthPoints = num_points / 16;
     
@@ -74,7 +74,7 @@ static inline void volk_8i_s32f_convert_32f_a16_sse4_1(float* outputVector, cons
     \param scalar The value divided against each point in the output buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_8i_s32f_convert_32f_a16_generic(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points){
+static inline void volk_8i_s32f_convert_32f_a_generic(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points){
   float* outputVectorPtr = outputVector;
   const int8_t* inputVectorPtr = inputVector;
   unsigned int number = 0;
@@ -94,10 +94,10 @@ static inline void volk_8i_s32f_convert_32f_a16_generic(float* outputVector, con
     \param scalar The value divided against each point in the output buffer
     \param num_points The number of data values to be converted
   */
-extern void volk_8i_s32f_convert_32f_a16_orc_impl(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points);
-static inline void volk_8i_s32f_convert_32f_a16_orc(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points){
+extern void volk_8i_s32f_convert_32f_a_orc_impl(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points);
+static inline void volk_8i_s32f_convert_32f_a_orc(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points){
     float invscalar = 1.0 / scalar;
-    volk_8i_s32f_convert_32f_a16_orc_impl(outputVector, inputVector, invscalar, num_points);
+    volk_8i_s32f_convert_32f_a_orc_impl(outputVector, inputVector, invscalar, num_points);
 }
 #endif /* LV_HAVE_ORC */
 

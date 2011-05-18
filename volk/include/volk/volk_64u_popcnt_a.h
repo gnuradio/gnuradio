@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_64u_popcnt_a16_H
-#define INCLUDED_volk_64u_popcnt_a16_H
+#ifndef INCLUDED_volk_64u_popcnt_a_H
+#define INCLUDED_volk_64u_popcnt_a_H
 
 #include <stdio.h>
 #include <inttypes.h>
@@ -8,7 +8,7 @@
 #ifdef LV_HAVE_GENERIC
 
 
-static inline void volk_64u_popcnt_a16_generic(uint64_t* ret, const uint64_t value) {
+static inline void volk_64u_popcnt_a_generic(uint64_t* ret, const uint64_t value) {
 
   const uint32_t* valueVector = (const uint32_t*)&value;
   
@@ -40,11 +40,11 @@ static inline void volk_64u_popcnt_a16_generic(uint64_t* ret, const uint64_t val
 
 #include <nmmintrin.h>
 
-static inline void volk_64u_popcnt_a16_sse4_2(uint64_t* ret, const uint64_t value) {
+static inline void volk_64u_popcnt_a_sse4_2(uint64_t* ret, const uint64_t value) {
   *ret = _mm_popcnt_u64(value);
 
 }
 
 #endif /*LV_HAVE_SSE4_2*/
 
-#endif /*INCLUDED_volk_64u_popcnt_a16_H*/
+#endif /*INCLUDED_volk_64u_popcnt_a_H*/

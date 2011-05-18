@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16i_max_star_horizontal_16i_a16_H
-#define INCLUDED_volk_16i_max_star_horizontal_16i_a16_H
+#ifndef INCLUDED_volk_16i_max_star_horizontal_16i_a_H
+#define INCLUDED_volk_16i_max_star_horizontal_16i_a_H
 
 
 #include<inttypes.h>
@@ -12,7 +12,7 @@
 #include<emmintrin.h>
 #include<tmmintrin.h>
 
-static inline  void volk_16i_max_star_horizontal_16i_a16_ssse3(int16_t* target, int16_t* src0, unsigned int num_bytes) {
+static inline  void volk_16i_max_star_horizontal_16i_a_ssse3(int16_t* target, int16_t* src0, unsigned int num_bytes) {
 
   const static uint8_t shufmask0[16] = {0x00, 0x01, 0x04, 0x05, 0x08, 0x09, 0x0c, 0x0d, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
   const static uint8_t shufmask1[16] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x01, 0x04, 0x05, 0x08, 0x09, 0x0c, 0x0d};
@@ -110,7 +110,7 @@ static inline  void volk_16i_max_star_horizontal_16i_a16_ssse3(int16_t* target, 
 
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_16i_max_star_horizontal_16i_a16_generic(int16_t* target, int16_t* src0, unsigned int num_bytes) {
+static inline void volk_16i_max_star_horizontal_16i_a_generic(int16_t* target, int16_t* src0, unsigned int num_bytes) {
 	
 	int i = 0;
 	
@@ -127,4 +127,4 @@ static inline void volk_16i_max_star_horizontal_16i_a16_generic(int16_t* target,
 
 #endif /*LV_HAVE_GENERIC*/
 
-#endif /*INCLUDED_volk_16i_max_star_horizontal_16i_a16_H*/
+#endif /*INCLUDED_volk_16i_max_star_horizontal_16i_a_H*/

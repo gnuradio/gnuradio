@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16i_permute_and_scalar_add_a16_H
-#define INCLUDED_volk_16i_permute_and_scalar_add_a16_H
+#ifndef INCLUDED_volk_16i_permute_and_scalar_add_a_H
+#define INCLUDED_volk_16i_permute_and_scalar_add_a_H
 
 
 #include<inttypes.h>
@@ -13,7 +13,7 @@
 #include<xmmintrin.h>
 #include<emmintrin.h>
 
-static inline  void volk_16i_permute_and_scalar_add_a16_sse2(short* target,  short* src0, short* permute_indexes, short* cntl0, short* cntl1, short* cntl2, short* cntl3, short* scalars, unsigned int num_bytes) {
+static inline  void volk_16i_permute_and_scalar_add_a_sse2(short* target,  short* src0, short* permute_indexes, short* cntl0, short* cntl1, short* cntl2, short* cntl3, short* scalars, unsigned int num_bytes) {
 	
 
   __m128i xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7;
@@ -117,7 +117,7 @@ static inline  void volk_16i_permute_and_scalar_add_a16_sse2(short* target,  sho
 
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_16i_permute_and_scalar_add_a16_generic(short* target, short* src0, short* permute_indexes, short* cntl0, short* cntl1, short* cntl2, short* cntl3, short* scalars, unsigned int num_bytes) {
+static inline void volk_16i_permute_and_scalar_add_a_generic(short* target, short* src0, short* permute_indexes, short* cntl0, short* cntl1, short* cntl2, short* cntl3, short* scalars, unsigned int num_bytes) {
 	
 	int i = 0;
 	
@@ -136,4 +136,4 @@ static inline void volk_16i_permute_and_scalar_add_a16_generic(short* target, sh
 #endif /*LV_HAVE_GENERIC*/
 
 
-#endif /*INCLUDED_volk_16i_permute_and_scalar_add_a16_H*/
+#endif /*INCLUDED_volk_16i_permute_and_scalar_add_a_H*/

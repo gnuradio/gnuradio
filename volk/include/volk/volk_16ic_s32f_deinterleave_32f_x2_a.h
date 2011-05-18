@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16ic_s32f_deinterleave_32f_x2_a16_H
-#define INCLUDED_volk_16ic_s32f_deinterleave_32f_x2_a16_H
+#ifndef INCLUDED_volk_16ic_s32f_deinterleave_32f_x2_a_H
+#define INCLUDED_volk_16ic_s32f_deinterleave_32f_x2_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -15,7 +15,7 @@
     \param scalar The data value to be divided against each input data value of the input complex vector
     \param num_points The number of complex data values to be deinterleaved
   */
-static inline void volk_16ic_s32f_deinterleave_32f_x2_a16_sse(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points){
+static inline void volk_16ic_s32f_deinterleave_32f_x2_a_sse(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points){
     float* iBufferPtr = iBuffer;
     float* qBufferPtr = qBuffer;
 
@@ -78,7 +78,7 @@ static inline void volk_16ic_s32f_deinterleave_32f_x2_a16_sse(float* iBuffer, fl
     \param scalar The data value to be divided against each input data value of the input complex vector
     \param num_points The number of complex data values to be deinterleaved
   */
-static inline void volk_16ic_s32f_deinterleave_32f_x2_a16_generic(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points){
+static inline void volk_16ic_s32f_deinterleave_32f_x2_a_generic(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points){
   const int16_t* complexVectorPtr = (const int16_t*)complexVector;
   float* iBufferPtr = iBuffer;
   float* qBufferPtr = qBuffer;
@@ -99,11 +99,11 @@ static inline void volk_16ic_s32f_deinterleave_32f_x2_a16_generic(float* iBuffer
     \param scalar The data value to be divided against each input data value of the input complex vector
     \param num_points The number of complex data values to be deinterleaved
   */
-extern void volk_16ic_s32f_deinterleave_32f_x2_a16_orc_impl(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points);
-static inline void volk_16ic_s32f_deinterleave_32f_x2_a16_orc(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points){
-    volk_16ic_s32f_deinterleave_32f_x2_a16_orc_impl(iBuffer, qBuffer, complexVector, scalar, num_points);
+extern void volk_16ic_s32f_deinterleave_32f_x2_a_orc_impl(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points);
+static inline void volk_16ic_s32f_deinterleave_32f_x2_a_orc(float* iBuffer, float* qBuffer, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points){
+    volk_16ic_s32f_deinterleave_32f_x2_a_orc_impl(iBuffer, qBuffer, complexVector, scalar, num_points);
 }
 #endif /* LV_HAVE_ORC */
 
 
-#endif /* INCLUDED_volk_16ic_s32f_deinterleave_32f_x2_a16_H */
+#endif /* INCLUDED_volk_16ic_s32f_deinterleave_32f_x2_a_H */

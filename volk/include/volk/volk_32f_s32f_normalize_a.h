@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_s32f_normalize_a16_H
-#define INCLUDED_volk_32f_s32f_normalize_a16_H
+#ifndef INCLUDED_volk_32f_s32f_normalize_a_H
+#define INCLUDED_volk_32f_s32f_normalize_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -12,7 +12,7 @@
   \param num_points The number of values in vecBuffer
   \param scalar The scale value to be applied to each buffer value
 */
-static inline void volk_32f_s32f_normalize_a16_sse(float* vecBuffer, const float scalar, unsigned int num_points){
+static inline void volk_32f_s32f_normalize_a_sse(float* vecBuffer, const float scalar, unsigned int num_points){
   unsigned int number = 0;
   float* inputPtr = vecBuffer;
 
@@ -49,7 +49,7 @@ static inline void volk_32f_s32f_normalize_a16_sse(float* vecBuffer, const float
   \param bVector One of the vectors to be normalizeed
   \param num_points The number of values in aVector and bVector to be normalizeed together and stored into cVector
 */
-static inline void volk_32f_s32f_normalize_a16_generic(float* vecBuffer, const float scalar, unsigned int num_points){
+static inline void volk_32f_s32f_normalize_a_generic(float* vecBuffer, const float scalar, unsigned int num_points){
   unsigned int number = 0;
   float* inputPtr = vecBuffer;
   const float invScalar = 1.0 / scalar;
@@ -68,14 +68,14 @@ static inline void volk_32f_s32f_normalize_a16_generic(float* vecBuffer, const f
   \param bVector One of the vectors to be normalizeed
   \param num_points The number of values in aVector and bVector to be normalizeed together and stored into cVector
 */
-extern void volk_32f_s32f_normalize_a16_orc_impl(float* dst, float* src, const float scalar, unsigned int num_points);
-static inline void volk_32f_s32f_normalize_a16_orc(float* vecBuffer, const float scalar, unsigned int num_points){
+extern void volk_32f_s32f_normalize_a_orc_impl(float* dst, float* src, const float scalar, unsigned int num_points);
+static inline void volk_32f_s32f_normalize_a_orc(float* vecBuffer, const float scalar, unsigned int num_points){
     float invscalar = 1.0 / scalar;
-    volk_32f_s32f_normalize_a16_orc_impl(vecBuffer, vecBuffer, invscalar, num_points);
+    volk_32f_s32f_normalize_a_orc_impl(vecBuffer, vecBuffer, invscalar, num_points);
 }
 #endif /* LV_HAVE_GENERIC */
 
 
 
 
-#endif /* INCLUDED_volk_32f_s32f_normalize_a16_H */
+#endif /* INCLUDED_volk_32f_s32f_normalize_a_H */

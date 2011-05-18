@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_8ic_x2_multiply_conjugate_16ic_a16_H
-#define INCLUDED_volk_8ic_x2_multiply_conjugate_16ic_a16_H
+#ifndef INCLUDED_volk_8ic_x2_multiply_conjugate_16ic_a_H
+#define INCLUDED_volk_8ic_x2_multiply_conjugate_16ic_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -14,7 +14,7 @@
   \param bVector The complex vector which will be converted to complex conjugate and multiplied
   \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
 */
-static inline void volk_8ic_x2_multiply_conjugate_16ic_a16_sse4_1(lv_16sc_t* cVector, const lv_8sc_t* aVector, const lv_8sc_t* bVector, unsigned int num_points){
+static inline void volk_8ic_x2_multiply_conjugate_16ic_a_sse4_1(lv_16sc_t* cVector, const lv_8sc_t* aVector, const lv_8sc_t* bVector, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
 
@@ -75,7 +75,7 @@ static inline void volk_8ic_x2_multiply_conjugate_16ic_a16_sse4_1(lv_16sc_t* cVe
   \param bVector The complex vector which will be converted to complex conjugate and multiplied
   \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
 */
-static inline void volk_8ic_x2_multiply_conjugate_16ic_a16_generic(lv_16sc_t* cVector, const lv_8sc_t* aVector, const lv_8sc_t* bVector, unsigned int num_points){
+static inline void volk_8ic_x2_multiply_conjugate_16ic_a_generic(lv_16sc_t* cVector, const lv_8sc_t* aVector, const lv_8sc_t* bVector, unsigned int num_points){
   unsigned int number = 0;
   int16_t* c16Ptr = (int16_t*)cVector;
   int8_t* a8Ptr = (int8_t*)aVector;
@@ -98,4 +98,4 @@ static inline void volk_8ic_x2_multiply_conjugate_16ic_a16_generic(lv_16sc_t* cV
 
 
 
-#endif /* INCLUDED_volk_8ic_x2_multiply_conjugate_16ic_a16_H */
+#endif /* INCLUDED_volk_8ic_x2_multiply_conjugate_16ic_a_H */

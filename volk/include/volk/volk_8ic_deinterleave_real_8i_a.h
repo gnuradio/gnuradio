@@ -12,7 +12,7 @@
   \param iBuffer The I buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_8ic_deinterleave_real_8i_a16_ssse3(int8_t* iBuffer, const lv_8sc_t* complexVector, unsigned int num_points){
+static inline void volk_8ic_deinterleave_real_8i_a_ssse3(int8_t* iBuffer, const lv_8sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const int8_t* complexVectorPtr = (int8_t*)complexVector;
   int8_t* iBufferPtr = iBuffer;
@@ -50,7 +50,7 @@ static inline void volk_8ic_deinterleave_real_8i_a16_ssse3(int8_t* iBuffer, cons
   \param iBuffer The I buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_8ic_deinterleave_real_8i_a16_generic(int8_t* iBuffer, const lv_8sc_t* complexVector, unsigned int num_points){
+static inline void volk_8ic_deinterleave_real_8i_a_generic(int8_t* iBuffer, const lv_8sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const int8_t* complexVectorPtr = (int8_t*)complexVector;
   int8_t* iBufferPtr = iBuffer;

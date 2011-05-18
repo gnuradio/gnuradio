@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32i_s32f_convert_32f_a16_H
-#define INCLUDED_volk_32i_s32f_convert_32f_a16_H
+#ifndef INCLUDED_volk_32i_s32f_convert_32f_a_H
+#define INCLUDED_volk_32i_s32f_convert_32f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -14,7 +14,7 @@
     \param scalar The value divided against each point in the output buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_32i_s32f_convert_32f_a16_sse2(float* outputVector, const int32_t* inputVector, const float scalar, unsigned int num_points){
+static inline void volk_32i_s32f_convert_32f_a_sse2(float* outputVector, const int32_t* inputVector, const float scalar, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
     
@@ -55,7 +55,7 @@ static inline void volk_32i_s32f_convert_32f_a16_sse2(float* outputVector, const
     \param scalar The value divided against each point in the output buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_32i_s32f_convert_32f_a16_generic(float* outputVector, const int32_t* inputVector, const float scalar, unsigned int num_points){
+static inline void volk_32i_s32f_convert_32f_a_generic(float* outputVector, const int32_t* inputVector, const float scalar, unsigned int num_points){
   float* outputVectorPtr = outputVector;
   const int32_t* inputVectorPtr = inputVector;
   unsigned int number = 0;
@@ -70,4 +70,4 @@ static inline void volk_32i_s32f_convert_32f_a16_generic(float* outputVector, co
 
 
 
-#endif /* INCLUDED_volk_32i_s32f_convert_32f_a16_H */
+#endif /* INCLUDED_volk_32i_s32f_convert_32f_a_H */

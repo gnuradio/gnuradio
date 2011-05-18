@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_s32f_atan2_32f_a16_H
-#define INCLUDED_volk_32fc_s32f_atan2_32f_a16_H
+#ifndef INCLUDED_volk_32fc_s32f_atan2_32f_a_H
+#define INCLUDED_volk_32fc_s32f_atan2_32f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -19,7 +19,7 @@
   \param normalizeFactor The atan2 results will be divided by this normalization factor.
   \param num_points The number of complex values in the input vector.
 */
-static inline void volk_32fc_s32f_atan2_32f_a16_sse4_1(float* outputVector,  const lv_32fc_t* complexVector, const float normalizeFactor, unsigned int num_points){
+static inline void volk_32fc_s32f_atan2_32f_a_sse4_1(float* outputVector,  const lv_32fc_t* complexVector, const float normalizeFactor, unsigned int num_points){
   const float* complexVectorPtr = (float*)complexVector;
   float* outPtr = outputVector;
 
@@ -81,7 +81,7 @@ static inline void volk_32fc_s32f_atan2_32f_a16_sse4_1(float* outputVector,  con
   \param normalizeFactor The atan2 results will be divided by this normalization factor.
   \param num_points The number of complex values in the input vector.
 */
-static inline void volk_32fc_s32f_atan2_32f_a16_sse(float* outputVector,  const lv_32fc_t* complexVector, const float normalizeFactor, unsigned int num_points){
+static inline void volk_32fc_s32f_atan2_32f_a_sse(float* outputVector,  const lv_32fc_t* complexVector, const float normalizeFactor, unsigned int num_points){
   const float* complexVectorPtr = (float*)complexVector;
   float* outPtr = outputVector;
 
@@ -139,7 +139,7 @@ static inline void volk_32fc_s32f_atan2_32f_a16_sse(float* outputVector,  const 
   \param normalizeFactor The atan2 results will be divided by this normalization factor.
   \param num_points The number of complex values in the input vector.
 */
-static inline void volk_32fc_s32f_atan2_32f_a16_generic(float* outputVector, const lv_32fc_t* inputVector, const float normalizeFactor, unsigned int num_points){
+static inline void volk_32fc_s32f_atan2_32f_a_generic(float* outputVector, const lv_32fc_t* inputVector, const float normalizeFactor, unsigned int num_points){
   float* outPtr = outputVector;
   const float* inPtr = (float*)inputVector;
   const float invNormalizeFactor = 1.0 / normalizeFactor;
@@ -155,4 +155,4 @@ static inline void volk_32fc_s32f_atan2_32f_a16_generic(float* outputVector, con
 
 
 
-#endif /* INCLUDED_volk_32fc_s32f_atan2_32f_a16_H */
+#endif /* INCLUDED_volk_32fc_s32f_atan2_32f_a_H */

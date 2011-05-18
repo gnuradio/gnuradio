@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_s32f_stddev_32f_a16_H
-#define INCLUDED_volk_32f_s32f_stddev_32f_a16_H
+#ifndef INCLUDED_volk_32f_s32f_stddev_32f_a_H
+#define INCLUDED_volk_32f_s32f_stddev_32f_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -15,7 +15,7 @@
   \param mean The mean of the input buffer
   \param num_points The number of values in input buffer to used in the stddev calculation
 */
-static inline void volk_32f_s32f_stddev_32f_a16_sse4_1(float* stddev, const float* inputBuffer, const float mean, unsigned int num_points){
+static inline void volk_32f_s32f_stddev_32f_a_sse4_1(float* stddev, const float* inputBuffer, const float mean, unsigned int num_points){
   float returnValue = 0;
   if(num_points > 0){
     unsigned int number = 0;
@@ -75,7 +75,7 @@ static inline void volk_32f_s32f_stddev_32f_a16_sse4_1(float* stddev, const floa
   \param mean The mean of the input buffer
   \param num_points The number of values in input buffer to used in the stddev calculation
 */
-static inline void volk_32f_s32f_stddev_32f_a16_sse(float* stddev, const float* inputBuffer, const float mean, unsigned int num_points){
+static inline void volk_32f_s32f_stddev_32f_a_sse(float* stddev, const float* inputBuffer, const float mean, unsigned int num_points){
   float returnValue = 0;
   if(num_points > 0){
     unsigned int number = 0;
@@ -120,7 +120,7 @@ static inline void volk_32f_s32f_stddev_32f_a16_sse(float* stddev, const float* 
   \param mean The mean of the input buffer
   \param num_points The number of values in input buffer to used in the stddev calculation
 */
-static inline void volk_32f_s32f_stddev_32f_a16_generic(float* stddev, const float* inputBuffer, const float mean, unsigned int num_points){
+static inline void volk_32f_s32f_stddev_32f_a_generic(float* stddev, const float* inputBuffer, const float mean, unsigned int num_points){
   float returnValue = 0;
   if(num_points > 0){
     const float* aPtr = inputBuffer;
@@ -142,4 +142,4 @@ static inline void volk_32f_s32f_stddev_32f_a16_generic(float* stddev, const flo
 
 
 
-#endif /* INCLUDED_volk_32f_s32f_stddev_32f_a16_H */
+#endif /* INCLUDED_volk_32f_s32f_stddev_32f_a_H */

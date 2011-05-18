@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_x2_interleave_32fc_a16_H
-#define INCLUDED_volk_32f_x2_interleave_32fc_a16_H
+#ifndef INCLUDED_volk_32f_x2_interleave_32fc_a_H
+#define INCLUDED_volk_32f_x2_interleave_32fc_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
   \param complexVector The complex output vector
   \param num_points The number of complex data values to be interleaved
 */
-static inline void volk_32f_x2_interleave_32fc_a16_sse(lv_32fc_t* complexVector, const float* iBuffer, const float* qBuffer, unsigned int num_points){
+static inline void volk_32f_x2_interleave_32fc_a_sse(lv_32fc_t* complexVector, const float* iBuffer, const float* qBuffer, unsigned int num_points){
   unsigned int number = 0;
   float* complexVectorPtr = (float*)complexVector;
   const float* iBufferPtr = iBuffer;
@@ -56,7 +56,7 @@ static inline void volk_32f_x2_interleave_32fc_a16_sse(lv_32fc_t* complexVector,
   \param complexVector The complex output vector
   \param num_points The number of complex data values to be interleaved
 */
-static inline void volk_32f_x2_interleave_32fc_a16_generic(lv_32fc_t* complexVector, const float* iBuffer, const float* qBuffer, unsigned int num_points){
+static inline void volk_32f_x2_interleave_32fc_a_generic(lv_32fc_t* complexVector, const float* iBuffer, const float* qBuffer, unsigned int num_points){
   float* complexVectorPtr = (float*)complexVector;
   const float* iBufferPtr = iBuffer;
   const float* qBufferPtr = qBuffer;
@@ -72,4 +72,4 @@ static inline void volk_32f_x2_interleave_32fc_a16_generic(lv_32fc_t* complexVec
 
 
 
-#endif /* INCLUDED_volk_32f_x2_interleave_32fc_a16_H */
+#endif /* INCLUDED_volk_32f_x2_interleave_32fc_a_H */

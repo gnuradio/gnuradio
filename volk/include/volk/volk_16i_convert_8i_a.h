@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16i_convert_8i_a16_H
-#define INCLUDED_volk_16i_convert_8i_a16_H
+#ifndef INCLUDED_volk_16i_convert_8i_a_H
+#define INCLUDED_volk_16i_convert_8i_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -12,7 +12,7 @@
   \param outputVector The 8 bit output data buffer
   \param num_points The number of data values to be converted
 */
-static inline void volk_16i_convert_8i_a16_sse2(int8_t* outputVector, const int16_t* inputVector, unsigned int num_points){
+static inline void volk_16i_convert_8i_a_sse2(int8_t* outputVector, const int16_t* inputVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int sixteenthPoints = num_points / 16;
     
@@ -52,7 +52,7 @@ static inline void volk_16i_convert_8i_a16_sse2(int8_t* outputVector, const int1
   \param outputVector The 8 bit output data buffer
   \param num_points The number of data values to be converted
 */
-static inline void volk_16i_convert_8i_a16_generic(int8_t* outputVector, const int16_t* inputVector, unsigned int num_points){
+static inline void volk_16i_convert_8i_a_generic(int8_t* outputVector, const int16_t* inputVector, unsigned int num_points){
   int8_t* outputVectorPtr = outputVector;
   const int16_t* inputVectorPtr = inputVector;
   unsigned int number = 0;
@@ -66,4 +66,4 @@ static inline void volk_16i_convert_8i_a16_generic(int8_t* outputVector, const i
 
 
 
-#endif /* INCLUDED_volk_16i_convert_8i_a16_H */
+#endif /* INCLUDED_volk_16i_convert_8i_a_H */

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a16_H
-#define INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a16_H
+#ifndef INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a_H
+#define INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a_H
 
 #include <volk/volk_common.h>
 #include<volk/volk_complex.h>
@@ -9,7 +9,7 @@
 #ifdef LV_HAVE_GENERIC
 
 
-static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
   float * res = (float*) result;
   float * in = (float*) input;
@@ -63,7 +63,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_generic(lv_32fc_t* r
 #if LV_HAVE_SSE && LV_HAVE_64
 
 
-static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_sse(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_sse(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
   __VOLK_ATTR_ALIGNED(16) static const uint32_t conjugator[4]= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
   
@@ -204,7 +204,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_sse(lv_32fc_t* resul
 #endif
 
 #if LV_HAVE_SSE && LV_HAVE_32
-static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
   __VOLK_ATTR_ALIGNED(16) static const uint32_t conjugator[4]= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
 
@@ -342,4 +342,4 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_sse_32(lv_32fc_t* re
 
 
 
-#endif /*INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a16_H*/
+#endif /*INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a_H*/

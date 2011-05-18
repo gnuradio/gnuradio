@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a16_H
-#define INCLUDED_volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a16_H
+#ifndef INCLUDED_volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a_H
+#define INCLUDED_volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a_H
 
 #include<inttypes.h>
 #include<stdio.h>
@@ -10,7 +10,7 @@
 #include<xmmintrin.h>
 #include<pmmintrin.h>
 
-static inline void volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a16_sse3(float* target, lv_32fc_t* src0, lv_32fc_t* points, float scalar, unsigned int num_bytes) {
+static inline void volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a_sse3(float* target, lv_32fc_t* src0, lv_32fc_t* points, float scalar, unsigned int num_bytes) {
   
 
   __m128 xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, xmm8;
@@ -106,7 +106,7 @@ static inline void volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a16_sse3(float*
 #endif /*LV_HAVE_SSE3*/
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a16_generic(float* target, lv_32fc_t* src0, lv_32fc_t* points, float scalar, unsigned int num_bytes) {
+static inline void volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a_generic(float* target, lv_32fc_t* src0, lv_32fc_t* points, float scalar, unsigned int num_bytes) {
   lv_32fc_t diff;
   float sq_dist;
   int i = 0; 
@@ -123,4 +123,4 @@ static inline void volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a16_generic(flo
 #endif /*LV_HAVE_GENERIC*/
 
 
-#endif /*INCLUDED_volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a16_H*/
+#endif /*INCLUDED_volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a_H*/

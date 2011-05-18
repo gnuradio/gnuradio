@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_32f_multiply_32fc_a16_H
-#define INCLUDED_volk_32fc_32f_multiply_32fc_a16_H
+#ifndef INCLUDED_volk_32fc_32f_multiply_32fc_a_H
+#define INCLUDED_volk_32fc_32f_multiply_32fc_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
     \param bVector The vectors containing the float values to be multiplied against each complex value in aVector
     \param num_points The number of values in aVector and bVector to be multiplied together and stored into cVector
   */
-static inline void volk_32fc_32f_multiply_32fc_a16_sse(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points){
+static inline void volk_32fc_32f_multiply_32fc_a_sse(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
 
@@ -64,7 +64,7 @@ static inline void volk_32fc_32f_multiply_32fc_a16_sse(lv_32fc_t* cVector, const
     \param bVector The vectors containing the lv_32fc_t values to be multiplied against each complex value in aVector
     \param num_points The number of values in aVector and bVector to be multiplied together and stored into cVector
   */
-static inline void volk_32fc_32f_multiply_32fc_a16_generic(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points){
+static inline void volk_32fc_32f_multiply_32fc_a_generic(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points){
   lv_32fc_t* cPtr = cVector;
   const lv_32fc_t* aPtr = aVector;
   const float* bPtr=  bVector;
@@ -84,12 +84,12 @@ static inline void volk_32fc_32f_multiply_32fc_a16_generic(lv_32fc_t* cVector, c
     \param bVector The vectors containing the lv_32fc_t values to be multiplied against each complex value in aVector
     \param num_points The number of values in aVector and bVector to be multiplied together and stored into cVector
   */
-extern void volk_32fc_32f_multiply_32fc_a16_orc_impl(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points);
-static inline void volk_32fc_32f_multiply_32fc_a16_orc(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points){
-    volk_32fc_32f_multiply_32fc_a16_orc_impl(cVector, aVector, bVector, num_points);
+extern void volk_32fc_32f_multiply_32fc_a_orc_impl(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points);
+static inline void volk_32fc_32f_multiply_32fc_a_orc(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float* bVector, unsigned int num_points){
+    volk_32fc_32f_multiply_32fc_a_orc_impl(cVector, aVector, bVector, num_points);
 }
 #endif /* LV_HAVE_GENERIC */
 
 
 
-#endif /* INCLUDED_volk_32fc_32f_multiply_32fc_a16_H */
+#endif /* INCLUDED_volk_32fc_32f_multiply_32fc_a_H */

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_x2_dot_prod_32fc_a16_H
-#define INCLUDED_volk_32fc_x2_dot_prod_32fc_a16_H
+#ifndef INCLUDED_volk_32fc_x2_dot_prod_32fc_a_H
+#define INCLUDED_volk_32fc_x2_dot_prod_32fc_a_H
 
 #include <volk/volk_common.h>
 #include <volk/volk_complex.h>
@@ -10,7 +10,7 @@
 #ifdef LV_HAVE_GENERIC 
 
 
-static inline void volk_32fc_x2_dot_prod_32fc_a16_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
   float * res = (float*) result;
   float * in = (float*) input;
@@ -60,7 +60,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_generic(lv_32fc_t* result, con
 #if LV_HAVE_SSE && LV_HAVE_64
 
 
-static inline void volk_32fc_x2_dot_prod_32fc_a16_sse_64(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
 
   asm 
@@ -195,7 +195,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse_64(lv_32fc_t* result, cons
 
 #if LV_HAVE_SSE && LV_HAVE_32
 
-static inline void volk_32fc_x2_dot_prod_32fc_a16_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
   asm volatile 
     (
@@ -321,7 +321,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse_32(lv_32fc_t* result, cons
 
 #include <pmmintrin.h>
 
-static inline void volk_32fc_x2_dot_prod_32fc_a16_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
 
   lv_32fc_t dotProduct;
@@ -378,8 +378,8 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse3(lv_32fc_t* result, const 
 
 #include <smmintrin.h>
 
-static inline void volk_32fc_x2_dot_prod_32fc_a16_sse4_1(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
-  volk_32fc_x2_dot_prod_32fc_a16_sse3(result, input, taps, num_bytes);
+static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+  volk_32fc_x2_dot_prod_32fc_a_sse3(result, input, taps, num_bytes);
   // SSE3 version runs twice as fast as the SSE4.1 version, so turning off SSE4 version for now
    /* 
     __m128 xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, real0, real1, im0, im1;
@@ -466,4 +466,4 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse4_1(lv_32fc_t* result, cons
 
 #endif /*LV_HAVE_SSE4_1*/
 
-#endif /*INCLUDED_volk_32fc_x2_dot_prod_32fc_a16_H*/
+#endif /*INCLUDED_volk_32fc_x2_dot_prod_32fc_a_H*/

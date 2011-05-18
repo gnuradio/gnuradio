@@ -7,7 +7,7 @@
 
 #ifdef LV_HAVE_GENERIC
 
-static inline void volk_32u_popcnt_a16_generic(uint32_t* ret, const uint32_t value) {
+static inline void volk_32u_popcnt_a_generic(uint32_t* ret, const uint32_t value) {
 
   // This is faster than a lookup table
   uint32_t retVal = value;
@@ -27,7 +27,7 @@ static inline void volk_32u_popcnt_a16_generic(uint32_t* ret, const uint32_t val
 
 #include <nmmintrin.h>
 
-static inline void volk_32u_popcnt_a16_sse4_2(uint32_t* ret, const uint32_t value) {
+static inline void volk_32u_popcnt_a_sse4_2(uint32_t* ret, const uint32_t value) {
   *ret = _mm_popcnt_u32(value);
 }
 

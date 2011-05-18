@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16i_max_star_16i_a16_H
-#define INCLUDED_volk_16i_max_star_16i_a16_H
+#ifndef INCLUDED_volk_16i_max_star_16i_a_H
+#define INCLUDED_volk_16i_max_star_16i_a_H
 
 
 #include<inttypes.h>
@@ -12,7 +12,7 @@
 #include<emmintrin.h>
 #include<tmmintrin.h>
 
-static inline  void volk_16i_max_star_16i_a16_ssse3(short* target, short* src0, unsigned int num_bytes) {
+static inline  void volk_16i_max_star_16i_a_ssse3(short* target, short* src0, unsigned int num_bytes) {
 
 
   
@@ -87,7 +87,7 @@ static inline  void volk_16i_max_star_16i_a16_ssse3(short* target, short* src0, 
 
 #ifdef LV_HAVE_GENERIC
 
-static inline void volk_16i_max_star_16i_a16_generic(short* target, short* src0, unsigned int num_bytes) {
+static inline void volk_16i_max_star_16i_a_generic(short* target, short* src0, unsigned int num_bytes) {
 	
 	int i = 0;
 	
@@ -105,4 +105,4 @@ static inline void volk_16i_max_star_16i_a16_generic(short* target, short* src0,
 #endif /*LV_HAVE_GENERIC*/
 
 
-#endif /*INCLUDED_volk_16i_max_star_16i_a16_H*/
+#endif /*INCLUDED_volk_16i_max_star_16i_a_H*/

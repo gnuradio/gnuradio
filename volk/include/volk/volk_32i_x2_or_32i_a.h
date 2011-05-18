@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32i_x2_or_32i_a16_H
-#define INCLUDED_volk_32i_x2_or_32i_a16_H
+#ifndef INCLUDED_volk_32i_x2_or_32i_a_H
+#define INCLUDED_volk_32i_x2_or_32i_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
   \param bVector One of the vectors to be ored
   \param num_points The number of values in aVector and bVector to be ored together and stored into cVector
 */
-static inline void volk_32i_x2_or_32i_a16_sse(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points){
+static inline void volk_32i_x2_or_32i_a_sse(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
 
@@ -51,7 +51,7 @@ static inline void volk_32i_x2_or_32i_a16_sse(int32_t* cVector, const int32_t* a
   \param bVector One of the vectors to be ored
   \param num_points The number of values in aVector and bVector to be ored together and stored into cVector
 */
-static inline void volk_32i_x2_or_32i_a16_generic(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points){
+static inline void volk_32i_x2_or_32i_a_generic(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points){
     int32_t* cPtr = cVector;
     const int32_t* aPtr = aVector;
     const int32_t* bPtr=  bVector;
@@ -71,11 +71,11 @@ static inline void volk_32i_x2_or_32i_a16_generic(int32_t* cVector, const int32_
   \param bVector One of the vectors to be ored
   \param num_points The number of values in aVector and bVector to be ored together and stored into cVector
 */
-extern void volk_32i_x2_or_32i_a16_orc_impl(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points);
-static inline void volk_32i_x2_or_32i_a16_orc(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points){
-    volk_32i_x2_or_32i_a16_orc_impl(cVector, aVector, bVector, num_points);
+extern void volk_32i_x2_or_32i_a_orc_impl(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points);
+static inline void volk_32i_x2_or_32i_a_orc(int32_t* cVector, const int32_t* aVector, const int32_t* bVector, unsigned int num_points){
+    volk_32i_x2_or_32i_a_orc_impl(cVector, aVector, bVector, num_points);
 }
 #endif /* LV_HAVE_ORC */
 
 
-#endif /* INCLUDED_volk_32i_x2_or_32i_a16_H */
+#endif /* INCLUDED_volk_32i_x2_or_32i_a_H */

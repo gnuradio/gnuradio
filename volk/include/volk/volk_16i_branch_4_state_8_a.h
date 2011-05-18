@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16i_branch_4_state_8_a16_H
-#define INCLUDED_volk_16i_branch_4_state_8_a16_H
+#ifndef INCLUDED_volk_16i_branch_4_state_8_a_H
+#define INCLUDED_volk_16i_branch_4_state_8_a_H
 
 
 #include<inttypes.h>
@@ -14,7 +14,7 @@
 #include<emmintrin.h>
 #include<tmmintrin.h>
 
-static inline  void volk_16i_branch_4_state_8_a16_ssse3(short* target,  short* src0, char** permuters, short* cntl2, short* cntl3, short* scalars) {
+static inline  void volk_16i_branch_4_state_8_a_ssse3(short* target,  short* src0, char** permuters, short* cntl2, short* cntl3, short* scalars) {
 	
   
   __m128i xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, xmm8, xmm9, xmm10, xmm11;
@@ -138,7 +138,7 @@ static inline  void volk_16i_branch_4_state_8_a16_ssse3(short* target,  short* s
 #endif /*LV_HAVE_SSEs*/
 
 #ifdef LV_HAVE_GENERIC
-static inline  void volk_16i_branch_4_state_8_a16_generic(short* target,  short* src0, char** permuters, short* cntl2, short* cntl3, short* scalars) {
+static inline  void volk_16i_branch_4_state_8_a_generic(short* target,  short* src0, char** permuters, short* cntl2, short* cntl3, short* scalars) {
 	int i = 0;
 	
 	int bound = 4;
@@ -191,4 +191,4 @@ static inline  void volk_16i_branch_4_state_8_a16_generic(short* target,  short*
 #endif /*LV_HAVE_GENERIC*/
 
 
-#endif /*INCLUDED_volk_16i_branch_4_state_8_a16_H*/
+#endif /*INCLUDED_volk_16i_branch_4_state_8_a_H*/

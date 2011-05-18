@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_s32f_32f_fm_detect_32f_a16_H
-#define INCLUDED_volk_32f_s32f_32f_fm_detect_32f_a16_H
+#ifndef INCLUDED_volk_32f_s32f_32f_fm_detect_32f_a_H
+#define INCLUDED_volk_32f_s32f_32f_fm_detect_32f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -14,7 +14,7 @@
   \param saveValue A pointer to a float which contains the phase value of the sample before the first input sample.
   \param num_noints The number of real values in the input vector.
 */
-static inline void volk_32f_s32f_32f_fm_detect_32f_a16_sse(float* outputVector, const float* inputVector, const float bound, float* saveValue, unsigned int num_points){
+static inline void volk_32f_s32f_32f_fm_detect_32f_a_sse(float* outputVector, const float* inputVector, const float bound, float* saveValue, unsigned int num_points){
   if (num_points < 1) {
     return;
   }
@@ -87,7 +87,7 @@ static inline void volk_32f_s32f_32f_fm_detect_32f_a16_sse(float* outputVector, 
   \param saveValue A pointer to a float which contains the phase value of the sample before the first input sample.
   \param num_points The number of real values in the input vector.
 */
-static inline void volk_32f_s32f_32f_fm_detect_32f_a16_generic(float* outputVector, const float* inputVector, const float bound, float* saveValue, unsigned int num_points){
+static inline void volk_32f_s32f_32f_fm_detect_32f_a_generic(float* outputVector, const float* inputVector, const float bound, float* saveValue, unsigned int num_points){
   if (num_points < 1) {
     return;
   }
@@ -117,4 +117,4 @@ static inline void volk_32f_s32f_32f_fm_detect_32f_a16_generic(float* outputVect
 
 
 
-#endif /* INCLUDED_volk_32f_s32f_32f_fm_detect_32f_a16_H */
+#endif /* INCLUDED_volk_32f_s32f_32f_fm_detect_32f_a_H */

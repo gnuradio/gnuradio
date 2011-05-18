@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_x3_sum_of_poly_32f_a16_H
-#define INCLUDED_volk_32f_x3_sum_of_poly_32f_a16_H
+#ifndef INCLUDED_volk_32f_x3_sum_of_poly_32f_a_H
+#define INCLUDED_volk_32f_x3_sum_of_poly_32f_a_H
 
 #include<inttypes.h>
 #include<stdio.h>
@@ -13,7 +13,7 @@
 #include<xmmintrin.h>
 #include<pmmintrin.h>
 
-static inline void volk_32f_x3_sum_of_poly_32f_a16_sse3(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_bytes) {
+static inline void volk_32f_x3_sum_of_poly_32f_a_sse3(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_bytes) {
   
   
   float result = 0.0;
@@ -100,7 +100,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_a16_sse3(float* target, float* sr
 
 #ifdef LV_HAVE_GENERIC
 
-static inline void volk_32f_x3_sum_of_poly_32f_a16_generic(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_bytes) {
+static inline void volk_32f_x3_sum_of_poly_32f_a_generic(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_bytes) {
 
 
     
@@ -148,4 +148,4 @@ static inline void volk_32f_x3_sum_of_poly_32f_a16_generic(float* target, float*
 #endif /*LV_HAVE_GENERIC*/
 
 
-#endif /*INCLUDED_volk_32f_x3_sum_of_poly_32f_a16_H*/
+#endif /*INCLUDED_volk_32f_x3_sum_of_poly_32f_a_H*/

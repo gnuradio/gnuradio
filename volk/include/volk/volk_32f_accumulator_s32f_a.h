@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_accumulator_s32f_a16_H
-#define INCLUDED_volk_32f_accumulator_s32f_a16_H
+#ifndef INCLUDED_volk_32f_accumulator_s32f_a_H
+#define INCLUDED_volk_32f_accumulator_s32f_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -13,7 +13,7 @@
   \param inputBuffer The buffer of data to be accumulated
   \param num_points The number of values in inputBuffer to be accumulated
 */
-static inline void volk_32f_accumulator_s32f_a16_sse(float* result, const float* inputBuffer, unsigned int num_points){
+static inline void volk_32f_accumulator_s32f_a_sse(float* result, const float* inputBuffer, unsigned int num_points){
   float returnValue = 0;
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
@@ -50,7 +50,7 @@ static inline void volk_32f_accumulator_s32f_a16_sse(float* result, const float*
   \param inputBuffer The buffer of data to be accumulated
   \param num_points The number of values in inputBuffer to be accumulated
 */
-static inline void volk_32f_accumulator_s32f_a16_generic(float* result, const float* inputBuffer, unsigned int num_points){
+static inline void volk_32f_accumulator_s32f_a_generic(float* result, const float* inputBuffer, unsigned int num_points){
   const float* aPtr = inputBuffer;
   unsigned int number = 0;
   float returnValue = 0;
@@ -65,4 +65,4 @@ static inline void volk_32f_accumulator_s32f_a16_generic(float* result, const fl
 
 
 
-#endif /* INCLUDED_volk_32f_accumulator_s32f_a16_H */
+#endif /* INCLUDED_volk_32f_accumulator_s32f_a_H */

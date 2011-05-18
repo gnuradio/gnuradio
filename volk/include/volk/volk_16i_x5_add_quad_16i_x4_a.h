@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16i_x5_add_quad_16i_x4_a16_H
-#define INCLUDED_volk_16i_x5_add_quad_16i_x4_a16_H
+#ifndef INCLUDED_volk_16i_x5_add_quad_16i_x4_a_H
+#define INCLUDED_volk_16i_x5_add_quad_16i_x4_a_H
 
 
 #include<inttypes.h>
@@ -13,7 +13,7 @@
 #include<xmmintrin.h>
 #include<emmintrin.h>
 
-static inline  void volk_16i_x5_add_quad_16i_x4_a16_sse2(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_bytes) {
+static inline  void volk_16i_x5_add_quad_16i_x4_a_sse2(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_bytes) {
   
   __m128i xmm0, xmm1, xmm2, xmm3, xmm4;
   __m128i *p_target0, *p_target1, *p_target2, *p_target3,  *p_src0, *p_src1, *p_src2, *p_src3, *p_src4;
@@ -65,9 +65,9 @@ static inline  void volk_16i_x5_add_quad_16i_x4_a16_sse2(short* target0, short* 
   }
     /*asm volatile
 		(
-		 ".%=volk_16i_x5_add_quad_16i_x4_a16_sse2_L1:\n\t"
+		 ".%=volk_16i_x5_add_quad_16i_x4_a_sse2_L1:\n\t"
 		 "cmp $0, %[bound]\n\t"
-		 "je .%=volk_16i_x5_add_quad_16i_x4_a16_sse2_END\n\t"
+		 "je .%=volk_16i_x5_add_quad_16i_x4_a_sse2_END\n\t"
 		 "movaps (%[src0]), %%xmm1\n\t"
 		 "movaps (%[src1]), %%xmm2\n\t"
 		 "movaps (%[src2]), %%xmm3\n\t"
@@ -91,8 +91,8 @@ static inline  void volk_16i_x5_add_quad_16i_x4_a16_sse2(short* target0, short* 
 		 "add $16, %[target1]\n\t"
 		 "add $16, %[target2]\n\t"
 		 "add $16, %[target3]\n\t"
-		 "jmp .%=volk_16i_x5_add_quad_16i_x4_a16_sse2_L1\n\t"
-		 ".%=volk_16i_x5_add_quad_16i_x4_a16_sse2_END:\n\t"
+		 "jmp .%=volk_16i_x5_add_quad_16i_x4_a_sse2_L1\n\t"
+		 ".%=volk_16i_x5_add_quad_16i_x4_a_sse2_END:\n\t"
 		 :
 		 :[bound]"r"(bound), [src0]"r"(src0), [src1]"r"(src1), [src2]"r"(src2), [src3]"r"(src3), [src4]"r"(src4), [target0]"r"(target0), [target1]"r"(target1), [target2]"r"(target2), [target3]"r"(target3)
 		 :"xmm1", "xmm2", "xmm3", "xmm4", "xmm5"
@@ -113,7 +113,7 @@ static inline  void volk_16i_x5_add_quad_16i_x4_a16_sse2(short* target0, short* 
 
 #ifdef LV_HAVE_GENERIC
 
-static inline void volk_16i_x5_add_quad_16i_x4_a16_generic(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_bytes) {
+static inline void volk_16i_x5_add_quad_16i_x4_a_generic(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_bytes) {
 	
 	int i = 0;
 	
@@ -133,4 +133,4 @@ static inline void volk_16i_x5_add_quad_16i_x4_a16_generic(short* target0, short
 
 
 
-#endif /*INCLUDED_volk_16i_x5_add_quad_16i_x4_a16_H*/
+#endif /*INCLUDED_volk_16i_x5_add_quad_16i_x4_a_H*/

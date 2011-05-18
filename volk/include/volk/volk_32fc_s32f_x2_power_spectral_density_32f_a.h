@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_s32f_x2_power_spectral_density_32f_a16_H
-#define INCLUDED_volk_32fc_s32f_x2_power_spectral_density_32f_a16_H
+#ifndef INCLUDED_volk_32fc_s32f_x2_power_spectral_density_32f_a_H
+#define INCLUDED_volk_32fc_s32f_x2_power_spectral_density_32f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -20,7 +20,7 @@
   \param rbw The resolution bandwith of the fft spectrum
   \param num_points The number of fft data points
 */
-static inline void volk_32fc_s32f_x2_power_spectral_density_32f_a16_sse3(float* logPowerOutput, const lv_32fc_t* complexFFTInput, const float normalizationFactor, const float rbw, unsigned int num_points){
+static inline void volk_32fc_s32f_x2_power_spectral_density_32f_a_sse3(float* logPowerOutput, const lv_32fc_t* complexFFTInput, const float normalizationFactor, const float rbw, unsigned int num_points){
   const float* inputPtr = (const float*)complexFFTInput;
   float* destPtr = logPowerOutput;
   uint64_t number = 0;
@@ -103,7 +103,7 @@ static inline void volk_32fc_s32f_x2_power_spectral_density_32f_a16_sse3(float* 
   \param rbw The resolution bandwith of the fft spectrum
   \param num_points The number of fft data points
 */
-static inline void volk_32fc_s32f_x2_power_spectral_density_32f_a16_generic(float* logPowerOutput, const lv_32fc_t* complexFFTInput, const float normalizationFactor, const float rbw, unsigned int num_points){
+static inline void volk_32fc_s32f_x2_power_spectral_density_32f_a_generic(float* logPowerOutput, const lv_32fc_t* complexFFTInput, const float normalizationFactor, const float rbw, unsigned int num_points){
   // Calculate the Power of the complex point
   const float* inputPtr = (float*)complexFFTInput;
   float* realFFTDataPointsPtr = logPowerOutput;
@@ -131,4 +131,4 @@ static inline void volk_32fc_s32f_x2_power_spectral_density_32f_a16_generic(floa
 
 
 
-#endif /* INCLUDED_volk_32fc_s32f_x2_power_spectral_density_32f_a16_H */
+#endif /* INCLUDED_volk_32fc_s32f_x2_power_spectral_density_32f_a_H */

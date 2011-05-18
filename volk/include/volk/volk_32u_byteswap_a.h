@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32u_byteswap_a16_H
-#define INCLUDED_volk_32u_byteswap_a16_H
+#ifndef INCLUDED_volk_32u_byteswap_a_H
+#define INCLUDED_volk_32u_byteswap_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -12,7 +12,7 @@
   \param intsToSwap The vector of data to byte swap
   \param numDataPoints The number of data points
 */
-static inline void volk_32u_byteswap_a16_sse2(uint32_t* intsToSwap, unsigned int num_points){
+static inline void volk_32u_byteswap_a_sse2(uint32_t* intsToSwap, unsigned int num_points){
   unsigned int number = 0;
 
   uint32_t* inputPtr = intsToSwap;
@@ -57,7 +57,7 @@ static inline void volk_32u_byteswap_a16_sse2(uint32_t* intsToSwap, unsigned int
   \param intsToSwap The vector of data to byte swap
   \param numDataPoints The number of data points
 */
-static inline void volk_32u_byteswap_a16_generic(uint32_t* intsToSwap, unsigned int num_points){
+static inline void volk_32u_byteswap_a_generic(uint32_t* intsToSwap, unsigned int num_points){
   uint32_t* inputPtr = intsToSwap;
 
   unsigned int point;
@@ -74,4 +74,4 @@ static inline void volk_32u_byteswap_a16_generic(uint32_t* intsToSwap, unsigned 
 
 
 
-#endif /* INCLUDED_volk_32u_byteswap_a16_H */
+#endif /* INCLUDED_volk_32u_byteswap_a_H */

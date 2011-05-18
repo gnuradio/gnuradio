@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16ic_deinterleave_real_16i_a16_H
-#define INCLUDED_volk_16ic_deinterleave_real_16i_a16_H
+#ifndef INCLUDED_volk_16ic_deinterleave_real_16i_a_H
+#define INCLUDED_volk_16ic_deinterleave_real_16i_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -12,7 +12,7 @@
   \param iBuffer The I buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_16ic_deinterleave_real_16i_a16_ssse3(int16_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
+static inline void volk_16ic_deinterleave_real_16i_a_ssse3(int16_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const int16_t* complexVectorPtr = (int16_t*)complexVector;
   int16_t* iBufferPtr = iBuffer;
@@ -55,7 +55,7 @@ static inline void volk_16ic_deinterleave_real_16i_a16_ssse3(int16_t* iBuffer, c
   \param iBuffer The I buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_16ic_deinterleave_real_16i_a16_sse2(int16_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
+static inline void volk_16ic_deinterleave_real_16i_a_sse2(int16_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const int16_t* complexVectorPtr = (int16_t*)complexVector;
   int16_t* iBufferPtr = iBuffer;
@@ -103,7 +103,7 @@ static inline void volk_16ic_deinterleave_real_16i_a16_sse2(int16_t* iBuffer, co
   \param iBuffer The I buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_16ic_deinterleave_real_16i_a16_generic(int16_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
+static inline void volk_16ic_deinterleave_real_16i_a_generic(int16_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const int16_t* complexVectorPtr = (int16_t*)complexVector;
   int16_t* iBufferPtr = iBuffer;
@@ -117,4 +117,4 @@ static inline void volk_16ic_deinterleave_real_16i_a16_generic(int16_t* iBuffer,
 
 
 
-#endif /* INCLUDED_volk_16ic_deinterleave_real_16i_a16_H */
+#endif /* INCLUDED_volk_16ic_deinterleave_real_16i_a_H */

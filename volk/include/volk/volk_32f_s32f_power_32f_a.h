@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_s32f_power_32f_a16_H
-#define INCLUDED_volk_32f_s32f_power_32f_a16_H
+#ifndef INCLUDED_volk_32f_s32f_power_32f_a_H
+#define INCLUDED_volk_32f_s32f_power_32f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -19,7 +19,7 @@
   \param power The power value to be applied to each data point
   \param num_points The number of values in aVector to be taken to the specified power level and stored into cVector
 */
-static inline void volk_32f_s32f_power_32f_a16_sse4_1(float* cVector, const float* aVector, const float power, unsigned int num_points){
+static inline void volk_32f_s32f_power_32f_a_sse4_1(float* cVector, const float* aVector, const float power, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
   
@@ -76,7 +76,7 @@ static inline void volk_32f_s32f_power_32f_a16_sse4_1(float* cVector, const floa
   \param power The power value to be applied to each data point
   \param num_points The number of values in aVector to be taken to the specified power level and stored into cVector
 */
-static inline void volk_32f_s32f_power_32f_a16_sse(float* cVector, const float* aVector, const float power, unsigned int num_points){
+static inline void volk_32f_s32f_power_32f_a_sse(float* cVector, const float* aVector, const float power, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
   
@@ -127,7 +127,7 @@ static inline void volk_32f_s32f_power_32f_a16_sse(float* cVector, const float* 
     \param power The power value to be applied to each data point
     \param num_points The number of values in aVector to be taken to the specified power level and stored into cVector
   */
-static inline void volk_32f_s32f_power_32f_a16_generic(float* cVector, const float* aVector, const float power, unsigned int num_points){
+static inline void volk_32f_s32f_power_32f_a_generic(float* cVector, const float* aVector, const float power, unsigned int num_points){
   float* cPtr = cVector;
   const float* aPtr = aVector;
   unsigned int number = 0;
@@ -141,4 +141,4 @@ static inline void volk_32f_s32f_power_32f_a16_generic(float* cVector, const flo
 
 
 
-#endif /* INCLUDED_volk_32f_s32f_power_32f_a16_H */
+#endif /* INCLUDED_volk_32f_s32f_power_32f_a_H */

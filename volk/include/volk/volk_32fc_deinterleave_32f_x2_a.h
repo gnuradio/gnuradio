@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32fc_deinterleave_32f_x2_a16_H
-#define INCLUDED_volk_32fc_deinterleave_32f_x2_a16_H
+#ifndef INCLUDED_volk_32fc_deinterleave_32f_x2_a_H
+#define INCLUDED_volk_32fc_deinterleave_32f_x2_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
   \param qBuffer The Q buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_32fc_deinterleave_32f_x2_a16_sse(float* iBuffer, float* qBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
+static inline void volk_32fc_deinterleave_32f_x2_a_sse(float* iBuffer, float* qBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
   const float* complexVectorPtr = (float*)complexVector;
   float* iBufferPtr = iBuffer;
   float* qBufferPtr = qBuffer;
@@ -57,7 +57,7 @@ static inline void volk_32fc_deinterleave_32f_x2_a16_sse(float* iBuffer, float* 
   \param qBuffer The Q buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_32fc_deinterleave_32f_x2_a16_generic(float* iBuffer, float* qBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
+static inline void volk_32fc_deinterleave_32f_x2_a_generic(float* iBuffer, float* qBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
   const float* complexVectorPtr = (float*)complexVector;
   float* iBufferPtr = iBuffer;
   float* qBufferPtr = qBuffer;
@@ -72,4 +72,4 @@ static inline void volk_32fc_deinterleave_32f_x2_a16_generic(float* iBuffer, flo
 
 
 
-#endif /* INCLUDED_volk_32fc_deinterleave_32f_x2_a16_H */
+#endif /* INCLUDED_volk_32fc_deinterleave_32f_x2_a_H */

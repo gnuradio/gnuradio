@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_s32f_convert_8i_a16_H
-#define INCLUDED_volk_32f_s32f_convert_8i_a16_H
+#ifndef INCLUDED_volk_32f_s32f_convert_8i_a_H
+#define INCLUDED_volk_32f_s32f_convert_8i_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -14,7 +14,7 @@
     \param scalar The value multiplied against each point in the input buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_32f_s32f_convert_8i_a16_sse2(int8_t* outputVector, const float* inputVector, const float scalar, unsigned int num_points){
+static inline void volk_32f_s32f_convert_8i_a_sse2(int8_t* outputVector, const float* inputVector, const float scalar, unsigned int num_points){
   unsigned int number = 0;
 
   const unsigned int sixteenthPoints = num_points / 16;
@@ -61,7 +61,7 @@ static inline void volk_32f_s32f_convert_8i_a16_sse2(int8_t* outputVector, const
     \param scalar The value multiplied against each point in the input buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_32f_s32f_convert_8i_a16_sse(int8_t* outputVector, const float* inputVector, const float scalar, unsigned int num_points){
+static inline void volk_32f_s32f_convert_8i_a_sse(int8_t* outputVector, const float* inputVector, const float scalar, unsigned int num_points){
   unsigned int number = 0;
 
   const unsigned int quarterPoints = num_points / 4;
@@ -101,7 +101,7 @@ static inline void volk_32f_s32f_convert_8i_a16_sse(int8_t* outputVector, const 
     \param scalar The value multiplied against each point in the input buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_32f_s32f_convert_8i_a16_generic(int8_t* outputVector, const float* inputVector, const float scalar, unsigned int num_points){
+static inline void volk_32f_s32f_convert_8i_a_generic(int8_t* outputVector, const float* inputVector, const float scalar, unsigned int num_points){
   int8_t* outputVectorPtr = outputVector;
   const float* inputVectorPtr = inputVector;
   unsigned int number = 0;
@@ -115,4 +115,4 @@ static inline void volk_32f_s32f_convert_8i_a16_generic(int8_t* outputVector, co
 
 
 
-#endif /* INCLUDED_volk_32f_s32f_convert_8i_a16_H */
+#endif /* INCLUDED_volk_32f_s32f_convert_8i_a_H */

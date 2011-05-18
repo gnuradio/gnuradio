@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16u_byteswap_a16_H
-#define INCLUDED_volk_16u_byteswap_a16_H
+#ifndef INCLUDED_volk_16u_byteswap_a_H
+#define INCLUDED_volk_16u_byteswap_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -12,7 +12,7 @@
   \param intsToSwap The vector of data to byte swap
   \param numDataPoints The number of data points
 */
-static inline void volk_16u_byteswap_a16_sse2(uint16_t* intsToSwap, unsigned int num_points){
+static inline void volk_16u_byteswap_a_sse2(uint16_t* intsToSwap, unsigned int num_points){
   unsigned int number = 0;
   uint16_t* inputPtr = intsToSwap;
   __m128i input, left, right, output;
@@ -49,7 +49,7 @@ static inline void volk_16u_byteswap_a16_sse2(uint16_t* intsToSwap, unsigned int
   \param intsToSwap The vector of data to byte swap
   \param numDataPoints The number of data points
 */
-static inline void volk_16u_byteswap_a16_generic(uint16_t* intsToSwap, unsigned int num_points){
+static inline void volk_16u_byteswap_a_generic(uint16_t* intsToSwap, unsigned int num_points){
   unsigned int point;
   uint16_t* inputPtr = intsToSwap;
   for(point = 0; point < num_points; point++){
@@ -67,11 +67,11 @@ static inline void volk_16u_byteswap_a16_generic(uint16_t* intsToSwap, unsigned 
   \param intsToSwap The vector of data to byte swap
   \param numDataPoints The number of data points
 */
-extern void volk_16u_byteswap_a16_orc_impl(uint16_t* intsToSwap, unsigned int num_points);
-static inline void volk_16u_byteswap_a16_orc(uint16_t* intsToSwap, unsigned int num_points){
-    volk_16u_byteswap_a16_orc_impl(intsToSwap, num_points);
+extern void volk_16u_byteswap_a_orc_impl(uint16_t* intsToSwap, unsigned int num_points);
+static inline void volk_16u_byteswap_a_orc(uint16_t* intsToSwap, unsigned int num_points){
+    volk_16u_byteswap_a_orc_impl(intsToSwap, num_points);
 }
 #endif /* LV_HAVE_ORC */
 
 
-#endif /* INCLUDED_volk_16u_byteswap_a16_H */
+#endif /* INCLUDED_volk_16u_byteswap_a_H */

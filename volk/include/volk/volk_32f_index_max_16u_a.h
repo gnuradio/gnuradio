@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_index_max_16u_a16_H
-#define INCLUDED_volk_32f_index_max_16u_a16_H
+#ifndef INCLUDED_volk_32f_index_max_16u_a_H
+#define INCLUDED_volk_32f_index_max_16u_a_H
 
 #include <volk/volk_common.h>
 #include <volk/volk_common.h>
@@ -9,7 +9,7 @@
 #ifdef LV_HAVE_SSE4_1
 #include<smmintrin.h>
 
-static inline void volk_32f_index_max_16u_a16_sse4_1(unsigned int* target, const float* src0, unsigned int num_points) {
+static inline void volk_32f_index_max_16u_a_sse4_1(unsigned int* target, const float* src0, unsigned int num_points) {
   if(num_points > 0){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
@@ -67,7 +67,7 @@ static inline void volk_32f_index_max_16u_a16_sse4_1(unsigned int* target, const
 #ifdef LV_HAVE_SSE
 #include<xmmintrin.h>
 
-static inline void volk_32f_index_max_16u_a16_sse(unsigned int* target, const float* src0, unsigned int num_points) {
+static inline void volk_32f_index_max_16u_a_sse(unsigned int* target, const float* src0, unsigned int num_points) {
   if(num_points > 0){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
@@ -124,7 +124,7 @@ static inline void volk_32f_index_max_16u_a16_sse(unsigned int* target, const fl
 #endif /*LV_HAVE_SSE*/
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_32f_index_max_16u_a16_generic(unsigned int* target, const float* src0, unsigned int num_points) {
+static inline void volk_32f_index_max_16u_a_generic(unsigned int* target, const float* src0, unsigned int num_points) {
   if(num_points > 0){
     float max = src0[0];
     unsigned int index = 0;
@@ -146,4 +146,4 @@ static inline void volk_32f_index_max_16u_a16_generic(unsigned int* target, cons
 #endif /*LV_HAVE_GENERIC*/
 
 
-#endif /*INCLUDED_volk_32f_index_max_16u_a16_H*/
+#endif /*INCLUDED_volk_32f_index_max_16u_a_H*/

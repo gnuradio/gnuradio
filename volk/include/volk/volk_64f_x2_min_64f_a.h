@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_64f_x2_min_64f_a16_H
-#define INCLUDED_volk_64f_x2_min_64f_a16_H
+#ifndef INCLUDED_volk_64f_x2_min_64f_a_H
+#define INCLUDED_volk_64f_x2_min_64f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
   \param bVector The vector to be checked
   \param num_points The number of values in aVector and bVector to be checked and stored into cVector
 */
-static inline void volk_64f_x2_min_64f_a16_sse2(double* cVector, const double* aVector, const double* bVector, unsigned int num_points){
+static inline void volk_64f_x2_min_64f_a_sse2(double* cVector, const double* aVector, const double* bVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int halfPoints = num_points / 2;
 
@@ -53,7 +53,7 @@ static inline void volk_64f_x2_min_64f_a16_sse2(double* cVector, const double* a
   \param bVector The vector to be checked
   \param num_points The number of values in aVector and bVector to be checked and stored into cVector
 */
-static inline void volk_64f_x2_min_64f_a16_generic(double* cVector, const double* aVector, const double* bVector, unsigned int num_points){
+static inline void volk_64f_x2_min_64f_a_generic(double* cVector, const double* aVector, const double* bVector, unsigned int num_points){
     double* cPtr = cVector;
     const double* aPtr = aVector;
     const double* bPtr=  bVector;
@@ -68,4 +68,4 @@ static inline void volk_64f_x2_min_64f_a16_generic(double* cVector, const double
 #endif /* LV_HAVE_GENERIC */
 
 
-#endif /* INCLUDED_volk_64f_x2_min_64f_a16_H */
+#endif /* INCLUDED_volk_64f_x2_min_64f_a_H */

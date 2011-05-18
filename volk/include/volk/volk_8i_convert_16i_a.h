@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_8i_convert_16i_a16_H
-#define INCLUDED_volk_8i_convert_16i_a16_H
+#ifndef INCLUDED_volk_8i_convert_16i_a_H
+#define INCLUDED_volk_8i_convert_16i_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
     \param outputVector The 16 bit output data buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_8i_convert_16i_a16_sse4_1(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points){
+static inline void volk_8i_convert_16i_a_sse4_1(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int sixteenthPoints = num_points / 16;
 
@@ -54,7 +54,7 @@ static inline void volk_8i_convert_16i_a16_sse4_1(int16_t* outputVector, const i
     \param outputVector The 16 bit output data buffer
     \param num_points The number of data values to be converted
   */
-static inline void volk_8i_convert_16i_a16_generic(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points){
+static inline void volk_8i_convert_16i_a_generic(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points){
   int16_t* outputVectorPtr = outputVector;
   const int8_t* inputVectorPtr = inputVector;
   unsigned int number = 0;
@@ -72,9 +72,9 @@ static inline void volk_8i_convert_16i_a16_generic(int16_t* outputVector, const 
     \param outputVector The 16 bit output data buffer
     \param num_points The number of data values to be converted
   */
-extern void volk_8i_convert_16i_a16_orc_impl(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points);
-static inline void volk_8i_convert_16i_a16_orc(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points){
-    volk_8i_convert_16i_a16_orc_impl(outputVector, inputVector, num_points);
+extern void volk_8i_convert_16i_a_orc_impl(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points);
+static inline void volk_8i_convert_16i_a_orc(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points){
+    volk_8i_convert_16i_a_orc_impl(outputVector, inputVector, num_points);
 }
 #endif /* LV_HAVE_ORC */
 

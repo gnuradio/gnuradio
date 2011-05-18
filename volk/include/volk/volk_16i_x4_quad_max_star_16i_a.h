@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16i_x4_quad_max_star_16i_a16_H
-#define INCLUDED_volk_16i_x4_quad_max_star_16i_a16_H
+#ifndef INCLUDED_volk_16i_x4_quad_max_star_16i_a_H
+#define INCLUDED_volk_16i_x4_quad_max_star_16i_a_H
 
 
 #include<inttypes.h>
@@ -13,7 +13,7 @@
 
 #include<emmintrin.h>
 
-static inline  void volk_16i_x4_quad_max_star_16i_a16_sse2(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_bytes) {
+static inline  void volk_16i_x4_quad_max_star_16i_a_sse2(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_bytes) {
 	
 
 
@@ -96,9 +96,9 @@ static inline  void volk_16i_x4_quad_max_star_16i_a16_sse2(short* target, short*
 
 	/*asm volatile
 		(
-		 "volk_16i_x4_quad_max_star_16i_a16_sse2_L1:\n\t"
+		 "volk_16i_x4_quad_max_star_16i_a_sse2_L1:\n\t"
 		 "cmp $0, %[bound]\n\t"
-		 "je volk_16i_x4_quad_max_star_16i_a16_sse2_END\n\t"
+		 "je volk_16i_x4_quad_max_star_16i_a_sse2_END\n\t"
 
 		 "movaps (%[src0]), %%xmm1\n\t"
 		 "movaps (%[src1]), %%xmm2\n\t"
@@ -143,9 +143,9 @@ static inline  void volk_16i_x4_quad_max_star_16i_a16_sse2(short* target, short*
 
 		 "movaps %%xmm1, (%[target])\n\t"
 		 "addw $16, %[target]\n\t"
-		 "jmp volk_16i_x4_quad_max_star_16i_a16_sse2_L1\n\t"
+		 "jmp volk_16i_x4_quad_max_star_16i_a_sse2_L1\n\t"
 		 
-		 "volk_16i_x4_quad_max_star_16i_a16_sse2_END:\n\t"
+		 "volk_16i_x4_quad_max_star_16i_a_sse2_END:\n\t"
 		 :
 		 :[bound]"r"(bound), [src0]"r"(src0), [src1]"r"(src1), [src2]"r"(src2), [src3]"r"(src3), [target]"r"(target)
 		 :
@@ -168,7 +168,7 @@ static inline  void volk_16i_x4_quad_max_star_16i_a16_sse2(short* target, short*
 
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_16i_x4_quad_max_star_16i_a16_generic(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_bytes) {
+static inline void volk_16i_x4_quad_max_star_16i_a_generic(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_bytes) {
 	
 	int i = 0;
 	
@@ -188,4 +188,4 @@ static inline void volk_16i_x4_quad_max_star_16i_a16_generic(short* target, shor
 
 #endif /*LV_HAVE_GENERIC*/
 
-#endif /*INCLUDED_volk_16i_x4_quad_max_star_16i_a16_H*/
+#endif /*INCLUDED_volk_16i_x4_quad_max_star_16i_a_H*/

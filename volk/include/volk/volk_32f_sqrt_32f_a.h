@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_sqrt_32f_a16_H
-#define INCLUDED_volk_32f_sqrt_32f_a16_H
+#ifndef INCLUDED_volk_32f_sqrt_32f_a_H
+#define INCLUDED_volk_32f_sqrt_32f_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
   \param aVector One of the vectors to be sqrted
   \param num_points The number of values in aVector and bVector to be sqrted together and stored into cVector
 */
-static inline void volk_32f_sqrt_32f_a16_sse(float* cVector, const float* aVector, unsigned int num_points){
+static inline void volk_32f_sqrt_32f_a_sse(float* cVector, const float* aVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
 
@@ -47,7 +47,7 @@ static inline void volk_32f_sqrt_32f_a16_sse(float* cVector, const float* aVecto
   \param aVector One of the vectors to be sqrted
   \param num_points The number of values in aVector and bVector to be sqrted together and stored into cVector
 */
-static inline void volk_32f_sqrt_32f_a16_generic(float* cVector, const float* aVector, unsigned int num_points){
+static inline void volk_32f_sqrt_32f_a_generic(float* cVector, const float* aVector, unsigned int num_points){
     float* cPtr = cVector;
     const float* aPtr = aVector;
     unsigned int number = 0;
@@ -59,19 +59,19 @@ static inline void volk_32f_sqrt_32f_a16_generic(float* cVector, const float* aV
 #endif /* LV_HAVE_GENERIC */
 
 #ifdef LV_HAVE_ORC
-extern void volk_32f_sqrt_32f_a16_orc_impl(float *, const float*, unsigned int);
+extern void volk_32f_sqrt_32f_a_orc_impl(float *, const float*, unsigned int);
 /*!
   \brief Sqrts the two input vectors and store their results in the third vector
   \param cVector The vector where the results will be stored
   \param aVector One of the vectors to be sqrted
   \param num_points The number of values in aVector and bVector to be sqrted together and stored into cVector
 */
-static inline void volk_32f_sqrt_32f_a16_orc(float* cVector, const float* aVector, unsigned int num_points){
-    volk_32f_sqrt_32f_a16_orc_impl(cVector, aVector, num_points);
+static inline void volk_32f_sqrt_32f_a_orc(float* cVector, const float* aVector, unsigned int num_points){
+    volk_32f_sqrt_32f_a_orc_impl(cVector, aVector, num_points);
 }
 
 #endif /* LV_HAVE_ORC */
 
 
 
-#endif /* INCLUDED_volk_32f_sqrt_32f_a16_H */
+#endif /* INCLUDED_volk_32f_sqrt_32f_a_H */

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16ic_deinterleave_real_8i_a16_H
-#define INCLUDED_volk_16ic_deinterleave_real_8i_a16_H
+#ifndef INCLUDED_volk_16ic_deinterleave_real_8i_a_H
+#define INCLUDED_volk_16ic_deinterleave_real_8i_a_H
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -12,7 +12,7 @@
   \param iBuffer The I buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_16ic_deinterleave_real_8i_a16_ssse3(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
+static inline void volk_16ic_deinterleave_real_8i_a_ssse3(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const int8_t* complexVectorPtr = (int8_t*)complexVector;
   int8_t* iBufferPtr = iBuffer;
@@ -66,7 +66,7 @@ static inline void volk_16ic_deinterleave_real_8i_a16_ssse3(int8_t* iBuffer, con
   \param iBuffer The I buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_16ic_deinterleave_real_8i_a16_generic(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
+static inline void volk_16ic_deinterleave_real_8i_a_generic(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   int16_t* complexVectorPtr = (int16_t*)complexVector;
   int8_t* iBufferPtr = iBuffer;
@@ -84,11 +84,11 @@ static inline void volk_16ic_deinterleave_real_8i_a16_generic(int8_t* iBuffer, c
   \param iBuffer The I buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
-extern void volk_16ic_deinterleave_real_8i_a16_orc_impl(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points);
-static inline void volk_16ic_deinterleave_real_8i_a16_orc(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
-    volk_16ic_deinterleave_real_8i_a16_orc_impl(iBuffer, complexVector, num_points);
+extern void volk_16ic_deinterleave_real_8i_a_orc_impl(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points);
+static inline void volk_16ic_deinterleave_real_8i_a_orc(int8_t* iBuffer, const lv_16sc_t* complexVector, unsigned int num_points){
+    volk_16ic_deinterleave_real_8i_a_orc_impl(iBuffer, complexVector, num_points);
 }
 #endif /* LV_HAVE_ORC */
 
 
-#endif /* INCLUDED_volk_16ic_deinterleave_real_8i_a16_H */
+#endif /* INCLUDED_volk_16ic_deinterleave_real_8i_a_H */

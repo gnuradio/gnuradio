@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_stddev_and_mean_32f_x2_a16_H
-#define INCLUDED_volk_32f_stddev_and_mean_32f_x2_a16_H
+#ifndef INCLUDED_volk_32f_stddev_and_mean_32f_x2_a_H
+#define INCLUDED_volk_32f_stddev_and_mean_32f_x2_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -15,7 +15,7 @@
   \param inputBuffer The buffer of points to calculate the std deviation for
   \param num_points The number of values in input buffer to used in the stddev and mean calculations
 */
-static inline void volk_32f_stddev_and_mean_32f_x2_a16_sse4_1(float* stddev, float* mean, const float* inputBuffer, unsigned int num_points){
+static inline void volk_32f_stddev_and_mean_32f_x2_a_sse4_1(float* stddev, float* mean, const float* inputBuffer, unsigned int num_points){
   float returnValue = 0;
   float newMean = 0;
   if(num_points > 0){
@@ -88,7 +88,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a16_sse4_1(float* stddev, flo
   \param inputBuffer The buffer of points to calculate the std deviation for
   \param num_points The number of values in input buffer to used in the stddev and mean calculations
 */
-static inline void volk_32f_stddev_and_mean_32f_x2_a16_sse(float* stddev, float* mean, const float* inputBuffer, unsigned int num_points){
+static inline void volk_32f_stddev_and_mean_32f_x2_a_sse(float* stddev, float* mean, const float* inputBuffer, unsigned int num_points){
   float returnValue = 0;
   float newMean = 0;
   if(num_points > 0){
@@ -143,7 +143,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a16_sse(float* stddev, float*
   \param inputBuffer The buffer of points to calculate the std deviation for
   \param num_points The number of values in input buffer to used in the stddev and mean calculations
 */
-static inline void volk_32f_stddev_and_mean_32f_x2_a16_generic(float* stddev, float* mean, const float* inputBuffer, unsigned int num_points){
+static inline void volk_32f_stddev_and_mean_32f_x2_a_generic(float* stddev, float* mean, const float* inputBuffer, unsigned int num_points){
   float returnValue = 0;
   float newMean = 0;
   if(num_points > 0){
@@ -167,4 +167,4 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a16_generic(float* stddev, fl
 
 
 
-#endif /* INCLUDED_volk_32f_stddev_and_mean_32f_x2_a16_H */
+#endif /* INCLUDED_volk_32f_stddev_and_mean_32f_x2_a_H */

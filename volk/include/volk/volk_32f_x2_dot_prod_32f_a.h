@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_x2_dot_prod_32f_a16_H
-#define INCLUDED_volk_32f_x2_dot_prod_32f_a16_H
+#ifndef INCLUDED_volk_32f_x2_dot_prod_32f_a_H
+#define INCLUDED_volk_32f_x2_dot_prod_32f_a_H
 
 #include <volk/volk_common.h>
 #include<stdio.h>
@@ -8,7 +8,7 @@
 #ifdef LV_HAVE_GENERIC
 
 
-static inline void volk_32f_x2_dot_prod_32f_a16_generic(float * result, const float * input, const float * taps, unsigned int num_points) {
+static inline void volk_32f_x2_dot_prod_32f_a_generic(float * result, const float * input, const float * taps, unsigned int num_points) {
 
   float dotProduct = 0;
   const float* aPtr = input;
@@ -28,7 +28,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_generic(float * result, const fl
 #ifdef LV_HAVE_SSE
 
 
-static inline void volk_32f_x2_dot_prod_32f_a16_sse( float* result, const  float* input, const  float* taps, unsigned int num_points) {
+static inline void volk_32f_x2_dot_prod_32f_a_sse( float* result, const  float* input, const  float* taps, unsigned int num_points) {
   
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
@@ -78,7 +78,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_sse( float* result, const  float
 
 #include <pmmintrin.h>
 
-static inline void volk_32f_x2_dot_prod_32f_a16_sse3(float * result, const float * input, const float * taps, unsigned int num_points) {
+static inline void volk_32f_x2_dot_prod_32f_a_sse3(float * result, const float * input, const float * taps, unsigned int num_points) {
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
 
@@ -125,7 +125,7 @@ static inline void volk_32f_x2_dot_prod_32f_a16_sse3(float * result, const float
 
 #include <smmintrin.h>
 
-static inline void volk_32f_x2_dot_prod_32f_a16_sse4_1(float * result, const float * input, const float* taps, unsigned int num_points) {
+static inline void volk_32f_x2_dot_prod_32f_a_sse4_1(float * result, const float * input, const float* taps, unsigned int num_points) {
   unsigned int number = 0;
   const unsigned int sixteenthPoints = num_points / 16;
 
@@ -182,4 +182,4 @@ static inline void volk_32f_x2_dot_prod_32f_a16_sse4_1(float * result, const flo
 
 #endif /*LV_HAVE_SSE4_1*/
 
-#endif /*INCLUDED_volk_32f_x2_dot_prod_32f_a16_H*/
+#endif /*INCLUDED_volk_32f_x2_dot_prod_32f_a_H*/

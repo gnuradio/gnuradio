@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_8ic_s32f_deinterleave_32f_x2_a16_H
-#define INCLUDED_volk_8ic_s32f_deinterleave_32f_x2_a16_H
+#ifndef INCLUDED_volk_8ic_s32f_deinterleave_32f_x2_a_H
+#define INCLUDED_volk_8ic_s32f_deinterleave_32f_x2_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -15,7 +15,7 @@
   \param scalar The scaling value being multiplied against each data point
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_8ic_s32f_deinterleave_32f_x2_a16_sse4_1(float* iBuffer, float* qBuffer, const lv_8sc_t* complexVector, const float scalar, unsigned int num_points){
+static inline void volk_8ic_s32f_deinterleave_32f_x2_a_sse4_1(float* iBuffer, float* qBuffer, const lv_8sc_t* complexVector, const float scalar, unsigned int num_points){
   float* iBufferPtr = iBuffer;
   float* qBufferPtr = qBuffer;
 
@@ -85,7 +85,7 @@ static inline void volk_8ic_s32f_deinterleave_32f_x2_a16_sse4_1(float* iBuffer, 
   \param scalar The scaling value being multiplied against each data point
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_8ic_s32f_deinterleave_32f_x2_a16_sse(float* iBuffer, float* qBuffer, const lv_8sc_t* complexVector, const float scalar, unsigned int num_points){
+static inline void volk_8ic_s32f_deinterleave_32f_x2_a_sse(float* iBuffer, float* qBuffer, const lv_8sc_t* complexVector, const float scalar, unsigned int num_points){
   float* iBufferPtr = iBuffer;
   float* qBufferPtr = qBuffer;
 
@@ -146,7 +146,7 @@ static inline void volk_8ic_s32f_deinterleave_32f_x2_a16_sse(float* iBuffer, flo
   \param scalar The scaling value being multiplied against each data point
   \param num_points The number of complex data values to be deinterleaved
 */
-static inline void volk_8ic_s32f_deinterleave_32f_x2_a16_generic(float* iBuffer, float* qBuffer, const lv_8sc_t* complexVector, const float scalar, unsigned int num_points){
+static inline void volk_8ic_s32f_deinterleave_32f_x2_a_generic(float* iBuffer, float* qBuffer, const lv_8sc_t* complexVector, const float scalar, unsigned int num_points){
   const int8_t* complexVectorPtr = (const int8_t*)complexVector;
   float* iBufferPtr = iBuffer;
   float* qBufferPtr = qBuffer;
@@ -162,4 +162,4 @@ static inline void volk_8ic_s32f_deinterleave_32f_x2_a16_generic(float* iBuffer,
 
 
 
-#endif /* INCLUDED_volk_8ic_s32f_deinterleave_32f_x2_a16_H */
+#endif /* INCLUDED_volk_8ic_s32f_deinterleave_32f_x2_a_H */

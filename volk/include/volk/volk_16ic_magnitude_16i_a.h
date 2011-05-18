@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_16ic_magnitude_16i_a16_H
-#define INCLUDED_volk_16ic_magnitude_16i_a16_H
+#ifndef INCLUDED_volk_16ic_magnitude_16i_a_H
+#define INCLUDED_volk_16ic_magnitude_16i_a_H
 
 #include <volk/volk_common.h>
 #include <inttypes.h>
@@ -14,7 +14,7 @@
   \param magnitudeVector The vector containing the real output values
   \param num_points The number of complex values in complexVector to be calculated and stored into cVector
 */
-static inline void volk_16ic_magnitude_16i_a16_sse3(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
+static inline void volk_16ic_magnitude_16i_a_sse3(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
    
@@ -85,7 +85,7 @@ static inline void volk_16ic_magnitude_16i_a16_sse3(int16_t* magnitudeVector, co
   \param magnitudeVector The vector containing the real output values
   \param num_points The number of complex values in complexVector to be calculated and stored into cVector
 */
-static inline void volk_16ic_magnitude_16i_a16_sse(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
+static inline void volk_16ic_magnitude_16i_a_sse(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
 
@@ -161,7 +161,7 @@ static inline void volk_16ic_magnitude_16i_a16_sse(int16_t* magnitudeVector, con
   \param magnitudeVector The vector containing the real output values
   \param num_points The number of complex values in complexVector to be calculated and stored into cVector
 */
-static inline void volk_16ic_magnitude_16i_a16_generic(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
+static inline void volk_16ic_magnitude_16i_a_generic(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
   const int16_t* complexVectorPtr = (const int16_t*)complexVector;
   int16_t* magnitudeVectorPtr = magnitudeVector;
   unsigned int number = 0;
@@ -181,11 +181,11 @@ static inline void volk_16ic_magnitude_16i_a16_generic(int16_t* magnitudeVector,
   \param magnitudeVector The vector containing the real output values
   \param num_points The number of complex values in complexVector to be calculated and stored into cVector
 */
-extern void volk_16ic_magnitude_16i_a16_orc_impl(int16_t* magnitudeVector, const lv_16sc_t* complexVector, float scalar, unsigned int num_points);
-static inline void volk_16ic_magnitude_16i_a16_orc(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
-    volk_16ic_magnitude_16i_a16_orc_impl(magnitudeVector, complexVector, 32768.0, num_points);
+extern void volk_16ic_magnitude_16i_a_orc_impl(int16_t* magnitudeVector, const lv_16sc_t* complexVector, float scalar, unsigned int num_points);
+static inline void volk_16ic_magnitude_16i_a_orc(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
+    volk_16ic_magnitude_16i_a_orc_impl(magnitudeVector, complexVector, 32768.0, num_points);
 }
 #endif /* LV_HAVE_ORC */
 
 
-#endif /* INCLUDED_volk_16ic_magnitude_16i_a16_H */
+#endif /* INCLUDED_volk_16ic_magnitude_16i_a_H */
