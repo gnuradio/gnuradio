@@ -32,7 +32,8 @@ gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size=32,
 						       float init_phase=0,
-						       float max_rate_deviation=1.5);
+						       float max_rate_deviation=1.5,
+						       int osps=1);
 
 class gr_fir_ccf;
 
@@ -128,7 +129,8 @@ class gr_pfb_clock_sync_ccf : public gr_block
 								const std::vector<float> &taps,
 								unsigned int filter_size,
 								float init_phase,
-								float max_rate_deviation);
+								float max_rate_deviation,
+								int osps);
 
   bool			   d_updated;
   double                   d_sps;
@@ -147,6 +149,7 @@ class gr_pfb_clock_sync_ccf : public gr_block
   float                    d_max_dev;
   int                      d_filtnum;
   int                      d_taps_per_filter;
+  int                      d_osps;
 
   /*!
    * Build the polyphase filterbank timing synchronizer.
@@ -155,7 +158,8 @@ class gr_pfb_clock_sync_ccf : public gr_block
 			 const std::vector<float> &taps,
 			 unsigned int filter_size,
 			 float init_phase,
-			 float max_rate_deviation);
+			 float max_rate_deviation,
+			 int osps);
   
   void create_diff_taps(const std::vector<float> &newtaps,
 			std::vector<float> &difftaps);

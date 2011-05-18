@@ -37,12 +37,14 @@ gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size,
 						       float init_phase,
-						       float max_rate_deviation)
+						       float max_rate_deviation,
+						       int osps)
 {
   return gnuradio::get_initial_sptr(new gr_pfb_clock_sync_ccf (sps, gain, taps,
-								filter_size,
-								init_phase,
-								max_rate_deviation));
+							       filter_size,
+							       init_phase,
+							       max_rate_deviation,
+							       osps));
 }
 
 static int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
@@ -51,12 +53,14 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
 					      const std::vector<float> &taps,
 					      unsigned int filter_size,
 					      float init_phase,
-					      float max_rate_deviation)
+					      float max_rate_deviation,
+					      int osps)
   : gr_block ("pfb_clock_sync_ccf",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
 	      gr_make_io_signaturev (1, 4, iosig)),
     d_updated (false), d_nfilters(filter_size),
-    d_max_dev(max_rate_deviation)
+    d_max_dev(max_rate_deviation),
+    d_osps(osps)
 {
   d_nfilters = filter_size;
   d_sps = floor(sps);
@@ -239,13 +243,13 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   }
 
   // We need this many to process one output
-  int nrequired = ninput_items[0] - d_taps_per_filter;
+  int nrequired = ninput_items[0] - d_taps_per_filter - d_osps;
 
   int i = 0, count = 0;
   float error, error_r, error_i;
 
   // produce output as long as we can and there are enough input samples
-  while((i < noutput_items) && (count < nrequired)) {
+  while((i < noutput_items-d_osps) && (count < nrequired)) {
     d_filtnum = (int)floor(d_k);
 
     // Keep the current filter number in [0, d_nfilters]
@@ -262,7 +266,10 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
       count -= 1;
     }
 
-    out[i] = d_filters[d_filtnum]->filter(&in[count]);
+    for(int k = 0; k < d_osps; k++) {
+      out[i+k] = d_filters[d_filtnum]->filter(&in[count+k]);
+    }
+
     gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
     error_r  = out[i].real() * diff.real();
     error_i  = out[i].imag() * diff.imag();
@@ -275,14 +282,17 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     // Keep our rate within a good range
     d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
 
-    i++;
-    count += (int)floor(d_sps);
-
     if(output_items.size() == 4) {
-      err[i] = error;
-      outrate[i] = d_rate_f;
-      outk[i] = d_k;
+      // FIXME: don't really know what to do about d_osps>1
+      for(int k = 0; k < d_osps; k++) {
+	err[i] = error;
+	outrate[i] = d_rate_f;
+	outk[i] = d_k;
+      }
     }
+
+    i+=d_osps;
+    count += (int)floor(d_sps);
   }
   consume_each(count);
 
