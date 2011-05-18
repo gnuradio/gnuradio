@@ -59,7 +59,7 @@ functions = [];
 
 
 for line in mfile:
-    subline = re.search(".*_(a16|u)\.h.*", line);
+    subline = re.search(".*_(a|u)\.h.*", line);
     if subline:
         subsubline = re.search("(?<=volk_).*", subline.group(0));
         if subsubline:
@@ -74,7 +74,7 @@ datatypes = set(datatypes);
 for line in mfile:
     for dt in datatypes:
         if dt in line:
-            subline = re.search("(volk_" + dt +"_.*(a16|u).*\.h)", line);
+            subline = re.search("(volk_" + dt +"_.*(a|u).*\.h)", line);
             if subline:
                 
                 subsubline = re.search(".+(?=\.h)", subline.group(0));

@@ -1,4 +1,4 @@
-.function volk_32f_x2_dot_prod_32f_a16_orc_impl
+.function volk_32f_x2_dot_prod_32f_a_orc_impl
 .source 4 src1
 .source 4 src2
 .dest 4 dst

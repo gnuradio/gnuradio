@@ -1,4 +1,4 @@
-.function volk_8i_convert_16i_a16_orc_impl
+.function volk_8i_convert_16i_a_orc_impl
 .source 1 src
 .dest 2 dst
 convsbw dst, src

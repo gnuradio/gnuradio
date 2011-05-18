@@ -1,4 +1,4 @@
-.function volk_32fc_magnitude_32f_a16_orc_impl
+.function volk_32fc_magnitude_32f_a_orc_impl
 .source 8 src
 .dest 4 dst
 .temp 8 iqf

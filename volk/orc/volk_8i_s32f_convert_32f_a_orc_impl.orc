@@ -1,4 +1,4 @@
-.function volk_8i_s32f_convert_32f_a16_orc_impl
+.function volk_8i_s32f_convert_32f_a_orc_impl
 .source 1 src
 .dest 4 dst
 .floatparam 4 scalar

@@ -1,4 +1,4 @@
-.function volk_32fc_32f_multiply_32fc_a16_orc_impl
+.function volk_32fc_32f_multiply_32fc_a_orc_impl
 .source 8 src1
 .source 4 src2
 .dest 8 dst
