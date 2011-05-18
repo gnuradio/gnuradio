@@ -45,6 +45,8 @@ protected:
   // Override to calculate new weight from old, corresponding input
   virtual void update_tap(gr_complex &tap, const gr_complex &in) = 0;
 
+  gr_complex filter(gr_complex *x);
+
   gr_adaptive_fir_ccc(const char *name, int decimation,
 		      const std::vector<gr_complex> &taps);
 
