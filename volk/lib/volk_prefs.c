@@ -13,7 +13,7 @@ void get_config_path(char *path) {
     strcat(path, suffix);
 }
 
-//passing by reference in C can suck my balls
+//passing by reference in C can (***********)
 int load_preferences(struct volk_arch_pref **prefs) {
     FILE *config_file;
     char path[512], line[512], function[128], arch[32];
