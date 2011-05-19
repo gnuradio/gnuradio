@@ -10,6 +10,11 @@
   <alignment>16</alignment>
 </arch>
 
+<arch name="neon" type="arm">
+  <flag>mneon</flag>
+  <alignment>16</alignment>
+</arch>
+
 <arch name="32" type="x86" no_test="true" >
   <flag>m32</flag>
   <overrule>MD_SUBCPU</overrule>

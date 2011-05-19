@@ -20,6 +20,11 @@ This machine is intended to support the MSVC compiler on x86/amd64.
 The MSVC compiler has intrinsic support for SSE and SSE2,
 however it does not support the gcc style inline assembly.
 -->
+
+<machine name="neon">
+<archs>generic neon</archs>
+</machine>
+
 <machine name="sse2_only">
 <archs>generic mmx sse sse2</archs>
 </machine>

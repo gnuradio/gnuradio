@@ -144,8 +144,8 @@ machine_alignment_dict = {}
 for machine in machines:
     machine_alignment_dict[machine] = max((archalign_dict.get(k, 1)) for k in machines[machine])
 
-for machine in machine_alignment_dict:
-    print machine + ": %d" % machine_alignment_dict[machine]
+#for machine in machine_alignment_dict:
+#    print machine + ": %d" % machine_alignment_dict[machine]
 
 taglist = [];
 fcountlist = [];

@@ -153,6 +153,19 @@ int i_can_has_%s () {
 }
 
 """ % (arch)
+
+        elif str(domarch.attributes["type"].value) == "arm":
+            arch = str(domarch.attributes["name"].value);
+            tempstring = tempstring + """\
+int i_can_has_%s () {
+#ifdef __NEON__
+    return 1;
+#else
+    return 0;
+#endif
+}
+
+""" % (arch)
         
         elif str(domarch.attributes["type"].value) == "all":
             arch = str(domarch.attributes["name"].value);
