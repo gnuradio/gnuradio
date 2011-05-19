@@ -21,6 +21,9 @@ struct volk_func_desc {
      const int *arch_defs;
      const int n_archs;
 };
+
+VOLK_API unsigned int volk_get_alignment(void);
+
 """
     for i in range(len(funclist)):
         tempstring += "extern " + replace_volk.sub("p", funclist[i]) + " " + funclist[i] + ";\n"

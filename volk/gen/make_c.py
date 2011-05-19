@@ -66,6 +66,10 @@ struct volk_machine *get_machine(void) {
     }
 }
 
+unsigned int volk_get_alignment(void) {
+    return get_machine()->alignment;
+}
+
 """
     
     for i in range(len(functions)):

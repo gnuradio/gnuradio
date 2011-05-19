@@ -33,6 +33,7 @@ __VOLK_DECL_BEGIN
 struct volk_machine {
    const unsigned int caps; //capabilities (i.e., archs compiled into this machine, in the volk_get_lvarch format)
    const char *name;
+   const unsigned int alignment; //the maximum byte alignment required for functions in this library
 """
     for function in functions:
         tempstring += "    const char *%s_name;\n"%function
