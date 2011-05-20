@@ -11,7 +11,7 @@
 </arch>
 
 <arch name="neon" type="arm">
-  <flag>mneon</flag>
+  <flag>mfpu=neon</flag>
   <alignment>16</alignment>
 </arch>
 
