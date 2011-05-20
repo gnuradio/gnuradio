@@ -11,7 +11,7 @@
 </arch>
 
 <arch name="neon" type="arm">
-  <flag>mfpu=neon -funsafe-math-optimizations</flag>
+  <flag>mfpu=neon -mfloat-abi=softfp -funsafe-math-optimizations</flag>
   <alignment>16</alignment>
 </arch>
 
