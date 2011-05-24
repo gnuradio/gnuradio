@@ -93,12 +93,20 @@ class gr_plot_psd:
             self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
             print "End of File"
+            return False
         else:
-            tstep = 1.0 / self.sample_rate
-            #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
-            self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
-
-            self.iq_psd, self.freq = self.dopsd(self.iq)
+            # retesting length here as newer version of scipy does not throw a MemoryError, just
+            # returns a zero-length array
+            if(len(self.iq) > 0):
+                tstep = 1.0 / self.sample_rate
+                #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
+                self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
+                
+                self.iq_psd, self.freq = self.dopsd(self.iq)
+                return True
+            else:
+                print "End of File"
+                return False
           
     def dopsd(self, iq):
         ''' Need to do this here and plot later so we can do the fftshift '''
@@ -130,7 +138,7 @@ class gr_plot_psd:
         self.sp_psd.set_xlabel("Frequency (Hz)", fontsize=self.label_font_size, fontweight="bold")
         self.sp_psd.set_ylabel("Power Spectrum (dBm)", fontsize=self.label_font_size, fontweight="bold")
 
-        self.get_data()
+        r = self.get_data()
         
         self.plot_iq  = self.sp_iq.plot([], 'bo-') # make plot for reals
         self.plot_iq += self.sp_iq.plot([], 'ro-') # make plot for imags
@@ -220,8 +228,9 @@ class gr_plot_psd:
         self.step_forward()
 
     def step_forward(self):
-        self.get_data()
-        self.update_plots()
+        r = self.get_data()
+        if(r):
+            self.update_plots()
 
     def step_backward(self):
         # Step back in file position
@@ -229,8 +238,9 @@ class gr_plot_psd:
             self.hfile.seek(-2*self.sizeof_data*self.block_length, 1)
         else:
             self.hfile.seek(-self.hfile.tell(),1)
-        self.get_data()
-        self.update_plots()
+        r = self.get_data()
+        if(r):
+            self.update_plots()
         
 def find(item_in, list_search):
     try:
