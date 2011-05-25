@@ -56,11 +56,11 @@ gr_dc_blocker_cc_sptr gr_make_dc_blocker_cc (int D=32, bool long_form=true);
  *    <B><EM>R. Yates, "DC Blocker Algorithms," IEEE Signal Processing Magazine,
  *        Mar. 2008, pp 132-134.</EM></B>
  */
-class moving_averager
+class moving_averager_c
 {
 public:
-  moving_averager(int D);
-  ~moving_averager();
+  moving_averager_c(int D);
+  ~moving_averager_c();
 
   gr_complex filter(gr_complex x);
   gr_complex delayed_sig() { return d_out; }
@@ -84,10 +84,10 @@ class gr_dc_blocker_cc : public gr_sync_block
 
   int d_length;
   bool d_long_form;
-  moving_averager *d_ma_0;
-  moving_averager *d_ma_1;
-  moving_averager *d_ma_2;
-  moving_averager *d_ma_3;
+  moving_averager_c *d_ma_0;
+  moving_averager_c *d_ma_1;
+  moving_averager_c *d_ma_2;
+  moving_averager_c *d_ma_3;
   std::deque<gr_complex> d_delay_line;
 
   gr_dc_blocker_cc (int D, bool long_form);

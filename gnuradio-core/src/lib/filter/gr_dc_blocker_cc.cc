@@ -28,18 +28,18 @@
 #include <gr_io_signature.h>
 #include <cstdio>
 
-moving_averager::moving_averager(int D)
+moving_averager_c::moving_averager_c(int D)
   : d_length(D), d_out(0), d_out_d1(0), d_out_d2(0)
 {
   d_delay_line = std::deque<gr_complex>(d_length-1, gr_complex(0,0));
 }
 
-moving_averager::~moving_averager()
+moving_averager_c::~moving_averager_c()
 {
 }
 
 gr_complex
-moving_averager::filter(gr_complex x)
+moving_averager_c::filter(gr_complex x)
 {
   d_out_d1 = d_out;
   d_delay_line.push_back(x);
@@ -67,15 +67,15 @@ gr_dc_blocker_cc::gr_dc_blocker_cc (int D, bool long_form)
     d_length(D), d_long_form(long_form)
 {
   if(d_long_form) {
-    d_ma_0 = new moving_averager(D);
-    d_ma_1 = new moving_averager(D);
-    d_ma_2 = new moving_averager(D);
-    d_ma_3 = new moving_averager(D);
+    d_ma_0 = new moving_averager_c(D);
+    d_ma_1 = new moving_averager_c(D);
+    d_ma_2 = new moving_averager_c(D);
+    d_ma_3 = new moving_averager_c(D);
     d_delay_line = std::deque<gr_complex>(d_length-1, gr_complex(0,0));
   }
   else {
-    d_ma_0 = new moving_averager(D);
-    d_ma_1 = new moving_averager(D);
+    d_ma_0 = new moving_averager_c(D);
+    d_ma_1 = new moving_averager_c(D);
   }
 }
 
