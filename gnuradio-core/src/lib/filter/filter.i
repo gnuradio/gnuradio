@@ -40,6 +40,7 @@
 #include <gr_pfb_clock_sync_ccf.h>
 #include <gr_pfb_clock_sync_fff.h>
 #include <gr_dc_blocker_cc.h>
+#include <gr_dc_blocker_ff.h>
 %}
 
 %include "gr_iir_filter_ffd.i"
@@ -64,5 +65,6 @@
 %include "gr_pfb_clock_sync_ccf.i"
 %include "gr_pfb_clock_sync_fff.i"
 %include "gr_dc_blocker_cc.i"
+%include "gr_dc_blocker_ff.i"
 
 %include "filter_generated.i"
