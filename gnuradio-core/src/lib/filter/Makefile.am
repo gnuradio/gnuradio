@@ -216,7 +216,8 @@ libfilter_la_common_SOURCES = 		\
 	gr_pfb_interpolator_ccf.cc	\
 	gr_pfb_arb_resampler_ccf.cc	\
 	gr_pfb_clock_sync_ccf.cc	\
-	gr_pfb_clock_sync_fff.cc
+	gr_pfb_clock_sync_fff.cc	\
+	gr_dc_blocker_cc.cc
 
 libfilter_qa_la_common_SOURCES = 	\
 	qa_filter.cc			\
@@ -306,7 +307,8 @@ grinclude_HEADERS = 			\
 	gr_pfb_interpolator_ccf.h	\
 	gr_pfb_arb_resampler_ccf.h	\
 	gr_pfb_clock_sync_ccf.h		\
-	gr_pfb_clock_sync_fff.h
+	gr_pfb_clock_sync_fff.h		\
+	gr_dc_blocker_cc.h
 
 noinst_HEADERS = 			\
 	assembly.h			\
@@ -372,6 +374,7 @@ swiginclude_HEADERS =			\
 	gr_pfb_arb_resampler_ccf.i	\
 	gr_pfb_clock_sync_ccf.i		\
 	gr_pfb_clock_sync_fff.i		\
+	gr_dc_blocker_cc.i		\
 	$(GENERATED_I)
 
 
