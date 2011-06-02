@@ -11,25 +11,27 @@
 	<make>gr.dc_blocker_$(type)($length, $long_form)</make>
 	<!-- <callback>set_length($lenght)</callback> -->
 	<param>
-		<name>Length</name>
-		<key>length</key>
-		<value>32</value>
-		<type>int</type>
-	</param>
-	<param>
 		<name>Type</name>
 		<key>type</key>
 		<type>enum</type>
 		<option>
-			<name>Complex</name>
-			<key>complex</key>
-			<opt>size:gr.sizeof_gr_complex</opt>
+			<name>Complex->Complex</name>
+			<key>cc</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
 		</option>
 		<option>
-			<name>Float</name>
-			<key>float</key>
-			<opt>size:gr.sizeof_float</opt>
+			<name>Float->Float</name>
+			<key>ff</key>
+			<opt>input:float</opt>
+			<opt>output:float</opt>
 		</option>
+	</param>
+	<param>
+		<name>Length</name>
+		<key>length</key>
+		<value>32</value>
+		<type>int</type>
 	</param>
 	<param>
 		<name>Long Form</name>
@@ -40,10 +42,10 @@
 
 	<sink>
 		<name>in</name>
-		<type>$type</type>
+		<type>$type.input</type>
 	</sink>
 	<source>
 		<name>out</name>
-		<type>$type</type>
+		<type>$type.output</type>
 	</source>
 </block>
