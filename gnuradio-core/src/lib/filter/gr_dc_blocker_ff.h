@@ -39,7 +39,8 @@ gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D=32, bool long_form=true);
  * 
  * This block implements a computationally efficient DC blocker that produces
  * a tigher notch filter around DC for a smaller group delay than an
- * equivalent FIR filter or using a single pole IIR filter.
+ * equivalent FIR filter or using a single pole IIR filter (though the IIR
+ * filter is computationally cheaper).
  *
  * The block defaults to using a delay line of length 32 and the long form
  * of the filter. Optionally, the delay line length can be changed to alter
@@ -48,7 +49,7 @@ gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D=32, bool long_form=true);
  * The long form of the filter produces a nearly flat response outside of
  * the notch but at the cost of a group delay of 2D-2.
  *
- * The short form of the filter does not have a flat a response in the
+ * The short form of the filter does not have as flat a response in the
  * passband but has a group delay of only D-1 and is cheaper to compute.
  *
  * The theory behind this block can be found in the paper:
