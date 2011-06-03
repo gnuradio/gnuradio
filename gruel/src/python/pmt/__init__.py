@@ -21,5 +21,5 @@
 
 # The presence of this file turns this directory into a Python package
 
-import pmt;
+from pmt_swig import *
 

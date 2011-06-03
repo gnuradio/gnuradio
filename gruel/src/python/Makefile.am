@@ -35,5 +35,9 @@ noinst_PYTHON = \
 gruel_PYTHON = \
     __init__.py 
 
+gruelpmtdir = $(pythondir)/gruel/pmt
+
+gruelpmt_PYTHON = pmt/__init__.py
+
 endif
 

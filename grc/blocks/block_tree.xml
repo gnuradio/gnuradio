@@ -188,6 +188,7 @@
 		<block>gr_keep_one_in_n</block>
 		<block>gr_moving_average_xx</block>
 		<block>gr_iqcomp_cc</block>
+		<block>gr_dc_blocker</block>
 	</cat>
 	<cat>
 		<name>Modulators</name>
