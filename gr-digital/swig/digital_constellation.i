@@ -118,6 +118,10 @@ public:
 			     unsigned int n_sectors);
 };
 
+/*
+  BPSK Constellation
+*/
+
 class digital_constellation_bpsk;
 typedef boost::shared_ptr<digital_constellation_bpsk> digital_constellation_bpsk_sptr;
 %template(digital_constellation_bpsk_sptr) boost::shared_ptr<digital_constellation_bpsk>;
@@ -130,6 +134,10 @@ class digital_constellation_bpsk : public digital_constellation
 public:
   digital_constellation_bpsk ();
 };
+
+/*
+  QPSK Constellation
+*/
 
 class digital_constellation_qpsk;
 typedef boost::shared_ptr<digital_constellation_qpsk> digital_constellation_qpsk_sptr;
@@ -144,3 +152,20 @@ public:
   digital_constellation_qpsk ();
 };
 
+
+/*
+  8PSK Constellation
+*/
+
+class digital_constellation_8psk;
+typedef boost::shared_ptr<digital_constellation_8psk> digital_constellation_8psk_sptr;
+%template(digital_constellation_8psk_sptr) boost::shared_ptr<digital_constellation_8psk>;
+%rename(constellation_8psk) digital_make_constellation_8psk;
+digital_constellation_8psk_sptr digital_make_constellation_8psk();
+%ignore digital_constellation_8psk;
+
+class digital_constellation_8psk : public digital_constellation
+{
+public:
+  digital_constellation_8psk ();
+};
