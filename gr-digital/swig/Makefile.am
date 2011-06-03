@@ -60,6 +60,7 @@ digital_swig_swiginclude_headers =	\
 	digital_constellation.i		\
 	digital_costas_loop_cc.i	\
 	digital_cma_equalizer_cc.i	\
+	digital_lms_dd_equalizer_cc.i	\
 	digital_kurtotic_equalizer_cc.i
 
 if GUILE

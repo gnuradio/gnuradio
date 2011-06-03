@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
  * 
@@ -19,28 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
 
-%{
-#include "digital_constellation.h"
-#include "digital_costas_loop_cc.h"
-#include "digital_cma_equalizer_cc.h"
-#include "digital_lms_dd_equalizer_cc.h"
-#include "digital_kurtotic_equalizer_cc.h"
-%}
+GR_SWIG_BLOCK_MAGIC(digital,lms_dd_equalizer_cc)
 
-%include "digital_constellation.i"
-%include "digital_costas_loop_cc.i"
-%include "digital_cma_equalizer_cc.i"
-%include "digital_lms_dd_equalizer_cc.i"
-%include "digital_kurtotic_equalizer_cc.i"
+digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (float mu, int ntaps,
+								   digital_constellation_sptr cnst);
 
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-digital_swig" "scm_init_gnuradio_digital_swig_module")
-%}
+class digital_lms_dd_equalizer_cc : public gr_sync_block
+{
+public:
+  float get_mu();
+  void  set_mu(float mu);
 
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif
+private:
+  digital_lms_dd_equalizer_cc (float mu, int ntaps,
+			       digital_constellation_sptr cnst);
+};
