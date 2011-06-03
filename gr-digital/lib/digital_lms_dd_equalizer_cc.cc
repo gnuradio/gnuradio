@@ -92,7 +92,7 @@ digital_lms_dd_equalizer_cc::work (int noutput_items,
     for (size_t j=0; j < d_taps.size(); j++)
       d_taps[j] += d_mu * conj(error) * in[i+j];
     
-    out[i] = acc;   // Output decision
+    out[i] = acc;
   }
 
   return noutput_items;

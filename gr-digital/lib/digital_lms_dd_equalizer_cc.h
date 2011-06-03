@@ -47,7 +47,7 @@ digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (float mu, int
  * w[n+1] = w[n] + mu u[n] conj(e[n])
  *
  * Where mu is a gain value (between 0 and 1 and usualy small,
- * around 0.01 - 0.1.
+ * around 0.001 - 0.01.
  *
  * This block uses the digital_constellation object for making
  * the decision from y[n]. Create the constellation object for
