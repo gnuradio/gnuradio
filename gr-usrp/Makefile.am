@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,11 +21,15 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	README_MULTI_USRP.txt \
 	gnuradio-usrp.pc.in
 
 SUBDIRS = src apps
+
+if PYTHON
+SUBDIRS += grc
+endif
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gnuradio-usrp.pc

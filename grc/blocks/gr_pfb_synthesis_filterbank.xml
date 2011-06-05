@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Polyphase Synthesis Filterbank
+###################################################
+ -->
+<block>
+	<name>Polyphase Synthesis Filterbank</name>
+	<key>gr_pfb_synthesis_filterbank_ccf</key>
+	<import>from gnuradio import gr</import>
+	<import>from gnuradio.gr import firdes</import>
+	<make>gr.pfb_synthesis_filterbank_ccf(
+	  $numchans, $taps)
+	</make>
+        <callback>set_taps($taps)</callback>
+
+	<param>
+		<name>Channels</name>
+		<key>numchans</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Connections</name>
+		<key>connections</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>real_vector</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+		<nports>$connections</nports>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

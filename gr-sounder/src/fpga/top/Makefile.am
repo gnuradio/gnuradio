@@ -29,7 +29,7 @@ dist_rbf2data_DATA = $(RBFS)
 rbf4datadir = $(prefix)/share/usrp/rev4
 dist_rbf4data_DATA = $(RBFS)
 
-EXTRA_DIST =			\
+EXTRA_DIST +=			\
 	config.vh		\
 	usrp_sounder.v		\
 	usrp_sounder.csf	\

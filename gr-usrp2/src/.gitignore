@@ -4,6 +4,11 @@
 /.deps
 /usrp2.py
 /usrp2.cc
+/usrp2_python.cc
 /run_tests
 /test_gr_usrp2
 /*.pyc
+/guile
+/python
+/usrp2_swig.py
+/run_guile_tests

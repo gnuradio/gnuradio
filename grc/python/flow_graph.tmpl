@@ -5,8 +5,6 @@
 ##@param imports the import statements
 ##@param flow_graph the flow_graph
 ##@param variables the variable blocks
-##@param notebooks a list of notebook blocks
-##@param controls the variables with gui controls
 ##@param parameters the paramater blocks
 ##@param blocks the signal blocks
 ##@param connections the connections
@@ -59,14 +57,25 @@ class $(class_name)(grc_wxgui.top_block_gui):
 		_icon_path = "$icon.get_filename()"
 		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 	#end if
+#elif $generate_options == 'qt_gui'
+class $(class_name)(gr.top_block, Qt.QWidget):
+
+	def __init__($param_str):
+		gr.top_block.__init__(self, "$title")
+		Qt.QWidget.__init__(self)
+		self.setWindowTitle("$title")
+		self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+		self.top_layout = Qt.QVBoxLayout(self)
+		self.top_grid_layout = Qt.QGridLayout()
+		self.top_layout.addLayout(self.top_grid_layout)
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
 	def __init__($param_str):
 		gr.top_block.__init__(self, "$title")
 #elif $generate_options == 'hb'
-	#set $in_sigs = $flow_graph.get_input_signaturev()
-	#set $out_sigs = $flow_graph.get_output_signaturev()
+	#set $in_sigs = $flow_graph.get_io_signaturev('in')
+	#set $out_sigs = $flow_graph.get_io_signaturev('out')
 class $(class_name)(gr.hier_block2):
 #def make_io_sig($io_sigs)
 	#set $size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in $io_sigs]
@@ -112,30 +121,6 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 		$indent($var.get_var_make())
 #end for
 ########################################################
-##Create Notebooks
-########################################################
-#if $notebooks
-
-		$DIVIDER
-		# Notebooks
-		$DIVIDER
-#end if
-#for $notebook in $notebooks
-		$indent($notebook.get_make())
-#end for
-########################################################
-##Create Controls
-########################################################
-#if $controls
-
-		$DIVIDER
-		# Controls
-		$DIVIDER
-#end if
-#for $ctrl in $controls
-		$indent($ctrl.get_make())
-#end for
-########################################################
 ##Create Message Queues
 ########################################################
 #if $messages
@@ -157,18 +142,24 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 		$DIVIDER
 #end if
 #for $blk in filter(lambda b: b.get_make(), $blocks)
+	#if $blk in $variables
+		$indent($blk.get_make())
+	#else
 		self.$blk.get_id() = $indent($blk.get_make())
+	#end if
 #end for
 ########################################################
 ##Create Connections
 ##	The port name should be the id of the parent block.
 ##	However, port names for IO pads should be self.
 ########################################################
-#def make_port_name($port)
-	#if $port.get_parent().get_key().startswith('pad_')
-self#slurp
+#def make_port_sig($port)
+	#if $port.get_parent().get_key() == 'pad_source'
+(self, $flow_graph.get_pad_sources().index($port.get_parent()))#slurp
+	#elif $port.get_parent().get_key() == 'pad_sink'
+(self, $flow_graph.get_pad_sinks().index($port.get_parent()))#slurp
 	#else
-self.$port.get_parent().get_id()#slurp
+(self.$port.get_parent().get_id(), $port.get_key())#slurp
 	#end if
 #end def
 #if $connections
@@ -186,7 +177,7 @@ self.$port.get_parent().get_id()#slurp
 	#end if
 	##do not generate connections with virtual sinks
 	#if not $sink.get_parent().is_virtual_sink()
-		self.connect(($make_port_name($source), $source.get_key()), ($make_port_name($sink), $sink.get_key()))
+		self.connect($make_port_sig($source), $make_port_sig($sink))
 	#end if
 #end for
 
@@ -196,6 +187,9 @@ self.$port.get_parent().get_id()#slurp
 ########################################################
 #for $var in $parameters + $variables
 	#set $id = $var.get_id()
+	def get_$(id)(self):
+		return self.$id
+
 	def set_$(id)(self, $id):
 		self.$id = $id
 	#for $callback in $var_id2cbs[$id]
@@ -239,10 +233,20 @@ if __name__ == '__main__':
 	if gr.enable_realtime_scheduling() != gr.RT_OK:
 		print "Error: failed to enable realtime scheduling."
 	#end if
-	tb = $(class_name)($(', '.join($params_eq_list)))
 	#if $generate_options == 'wx_gui'
+	tb = $(class_name)($(', '.join($params_eq_list)))
 	tb.Run($flow_graph.get_option('run'))
+	#elif $generate_options == 'qt_gui'
+	qapp = Qt.QApplication(sys.argv)
+	tb = $(class_name)($(', '.join($params_eq_list)))
+	#if $flow_graph.get_option('run')
+	tb.start()
+	#end if
+	tb.show()
+	qapp.exec_()
+	tb.stop()
 	#elif $generate_options == 'no_gui'
+	tb = $(class_name)($(', '.join($params_eq_list)))
 		#set $run_options = $flow_graph.get_option('run_options')
 		#if $run_options == 'prompt'
 	tb.start()

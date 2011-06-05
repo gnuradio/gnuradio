@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -61,6 +61,12 @@ class gr_block : public gr_basic_block {
   enum {
     WORK_CALLED_PRODUCE = -2,
     WORK_DONE = -1
+  };
+
+  enum tag_propagation_policy_t {
+    TPP_DONT = 0,
+    TPP_ALL_TO_ALL = 1,
+    TPP_ONE_TO_ONE = 2
   };
 
   virtual ~gr_block ();
@@ -198,6 +204,26 @@ class gr_block : public gr_basic_block {
    */
   virtual int fixed_rate_noutput_to_ninput(int noutput);
 
+  /*!
+   * \brief Return the number of items read on input stream which_input
+   */
+  uint64_t nitems_read(unsigned int which_input);
+
+  /*!
+   * \brief  Return the number of items written on output stream which_output
+   */
+  uint64_t nitems_written(unsigned int which_output);
+
+  /*!
+   * \brief Asks for the policy used by the scheduler to moved tags downstream.
+   */
+  tag_propagation_policy_t tag_propagation_policy();
+
+  /*!
+   * \brief Set the policy by the scheduler to determine how tags are moved downstream.
+   */
+  void set_tag_propagation_policy(tag_propagation_policy_t p);
+
   // ----------------------------------------------------------------------------
 
  private:
@@ -207,14 +233,71 @@ class gr_block : public gr_basic_block {
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
+  tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
     
  protected:
-
+  gr_block (void){} //allows pure virtual interface sub-classes
   gr_block (const std::string &name,
             gr_io_signature_sptr input_signature,
             gr_io_signature_sptr output_signature);
 
   void set_fixed_rate(bool fixed_rate){ d_fixed_rate = fixed_rate; }
+
+  
+  /*!
+   * \brief  Adds a new tag onto the given output buffer.
+   * 
+   * \param which_output an integer of which output stream to attach the tag
+   * \param abs_offset   a uint64 number of the absolute item number
+   *                     assicated with the tag. Can get from nitems_written.
+   * \param key          the tag key as a PMT symbol
+   * \param value        any PMT holding any value for the given key
+   * \param srcid        optional source ID specifier; defaults to PMT_F
+   */
+  void add_item_tag(unsigned int which_output,
+		    uint64_t abs_offset,
+		    const pmt::pmt_t &key,
+		    const pmt::pmt_t &value,
+		    const pmt::pmt_t &srcid=pmt::PMT_F);
+
+  /*!
+   * \brief Given a [start,end), returns a vector of all tags in the range.
+   *
+   * Range of counts is from start to end-1.
+   *
+   * Tags are tuples of:
+   *      (item count, source id, key, value)
+   *
+   * \param v            a vector reference to return tags into
+   * \param which_input  an integer of which input stream to pull from
+   * \param abs_start    a uint64 count of the start of the range of interest
+   * \param abs_end      a uint64 count of the end of the range of interest
+   */
+  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			 unsigned int which_input,
+			 uint64_t abs_start,
+			 uint64_t abs_end);
+  
+  /*!
+   * \brief Given a [start,end), returns a vector of all tags in the range
+   * with a given key.
+   *
+   * Range of counts is from start to end-1.
+   *
+   * Tags are tuples of:
+   *      (item count, source id, key, value)
+   *
+   * \param v            a vector reference to return tags into
+   * \param which_input  an integer of which input stream to pull from
+   * \param abs_start    a uint64 count of the start of the range of interest
+   * \param abs_end      a uint64 count of the end of the range of interest
+   * \param key          a PMT symbol key to filter only tags of this key
+   */
+  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+			 unsigned int which_input,
+			 uint64_t abs_start,
+			 uint64_t abs_end,
+			 const pmt::pmt_t &key);
 
   // These are really only for internal use, but leaving them public avoids
   // having to work up an ever-varying list of friends

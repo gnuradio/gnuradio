@@ -20,6 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <gruel/attributes.h>
 #include <cppunit/TestAssert.h>
 #include <qa_gri_mmse_fir_interpolator_cc.h>
 #include <gri_mmse_fir_interpolator_cc.h>
@@ -55,7 +60,7 @@ void
 qa_gri_mmse_fir_interpolator_cc::t1()
 {
   static const unsigned	N = 100;
-  gr_complex input[N + 10] __attribute__ ((aligned (8)));
+  __GR_ATTR_ALIGNED(8) gr_complex input[N + 10];
 
   for (unsigned i = 0; i < NELEM(input); i++)
     input[i] = test_fcn ((double) i);

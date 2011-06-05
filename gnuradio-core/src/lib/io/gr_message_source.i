@@ -22,6 +22,14 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,message_source);
 
+#ifdef SWIGGUILE
+// Rename these.  Without this, the primitive bindings are OK, but the
+// goops bindings try to create a bogus generic-function...
+// See core.scm for the second part of the workaround.
+%rename(message_source_limit_ctor) gr_make_message_source(size_t itemsize, int msgq_limit);
+%rename(message_source_msgq_ctor)  gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq);
+#endif
+
 gr_message_source_sptr gr_make_message_source (size_t itemsize, int msgq_limit=0);
 gr_message_source_sptr gr_make_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
 

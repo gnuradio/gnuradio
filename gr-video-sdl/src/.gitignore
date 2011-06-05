@@ -10,3 +10,6 @@
 /video_sdl.cc
 /video_sdl.py
 /run_tests
+/gnuradio
+/guile
+/python

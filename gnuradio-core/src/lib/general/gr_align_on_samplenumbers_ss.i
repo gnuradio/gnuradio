@@ -22,7 +22,8 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,align_on_samplenumbers_ss);
 
-gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss(int nchan=2, int align_interval=128);
+gr_align_on_samplenumbers_ss_sptr
+gr_make_align_on_samplenumbers_ss(int nchan=2, int align_interval=128) throw (std::exception);
 
 class gr_align_on_samplenumbers_ss : public gr_block
 {

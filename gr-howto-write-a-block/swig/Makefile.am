@@ -20,35 +20,39 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
-AM_CPPFLAGS += -I$(top_srcdir)/lib
+noinst_GUILE  = howto.test
 
-if PYTHON
+AM_CPPFLAGS += -I$(top_srcdir)/lib 
+
 ###################################
-# SWIG Python interface and library
+# SWIG interfaces and libraries
 
 TOP_SWIG_IFILES = \
-	howto.i
+	howto_swig.i
 
 # Install so that they end up available as:
 #   import howto
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)
+howto_swig_pythondir_category = $(modname)
 
-howto_la_swig_libadd =		\
+# additional libraries for linking with the SWIG-generated library
+howto_swig_la_swig_libadd = \
 	$(top_builddir)/lib/libgnuradio-howto.la
-
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
 
 # additional SWIG files to be installed
 howto_swiginclude_headers = \
 	howto_square_ff.i \
 	howto_square2_ff.i
 
+EXTRA_DIST = $(howto_swiginclude_headers)
+
+if GUILE
+TESTS = run_guile_tests
+nobase_guile_DATA = \
+	gnuradio/howto_swig.scm
 endif
+
+EXTRA_DIST += $(nobase_guile_DATA)

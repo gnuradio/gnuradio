@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008,2011 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -29,13 +29,12 @@ AC_DEFUN([GRC_GR_QTGUI],[
     dnl   no   : otherwise
 
     PYTHON_CHECK_MODULE([PyQt4.QtCore], [PyQt4 for Qt4], \
-	[passed=yes], [passed=no], \
-	[PyQt4.QtCore.PYQT_VERSION >= 260000])
+        [], [passed=no], \
+        [PyQt4.QtCore.PYQT_VERSION >= 260000])
 
-    # Enable this if we want to test for PyQwt, too
-    #PYTHON_CHECK_MODULE([PyQt4.Qwt5], [PyQwt5 for Qt4], \
-    #   [passed=yes], [passed=no], \
-    #   [PyQt4.Qwt5.QWT_VERSION >= 327000])
+    PYTHON_CHECK_MODULE([PyQt4.Qwt5], [PyQwt5 for Qt4], \
+       [], [passed=no], \
+       [PyQt4.Qwt5.QWT_VERSION >= 327000])
 
 # Check for: 
 #	QtOpenGL
@@ -48,12 +47,12 @@ AC_DEFUN([GRC_GR_QTGUI],[
 
     if test $passed = yes; then
         dnl Check for package qt or qt-mt, set QT_CFLAGS and QT_LIBS
-        PKG_CHECK_MODULES(QTCORE, QtCore >= 4.2, [],
-	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtCore >= 4.2.])])
-        PKG_CHECK_MODULES(QTGUI, QtGui >= 4.2, [],
-	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtGui >= 4.2.])])
-        PKG_CHECK_MODULES(QTOPENGL, QtOpenGL >= 4.2, [],
-	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtOpenGL >- 4.2.])])
+        PKG_CHECK_MODULES(QTCORE, QtCore >= 4.4, [],
+	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtCore >= 4.4.])])
+        PKG_CHECK_MODULES(QTGUI, QtGui >= 4.4, [],
+	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtGui >= 4..])])
+        PKG_CHECK_MODULES(QTOPENGL, QtOpenGL >= 4.4, [],
+	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtOpenGL >- 4.4.])])
 	
         dnl Fetch QWT variables
         GR_QWT([], [passed=no])
@@ -82,10 +81,18 @@ AC_DEFUN([GRC_GR_QTGUI],[
 
     AC_CONFIG_FILES([ \
         gr-qtgui/Makefile \
-        gr-qtgui/src/Makefile \
-        gr-qtgui/src/lib/Makefile \
-        gr-qtgui/src/python/Makefile \
+	gr-qtgui/gnuradio-qtgui.pc \
+        gr-qtgui/apps/Makefile \
+        gr-qtgui/grc/Makefile \
+        gr-qtgui/lib/Makefile \
+        gr-qtgui/python/Makefile \
+        gr-qtgui/python/run_tests \
+        gr-qtgui/swig/Makefile \
     ])
 
-    GRC_BUILD_CONDITIONAL(gr-qtgui)
+    GRC_BUILD_CONDITIONAL(gr-qtgui,[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_qtgui],
+			   [chmod +x gr-qtgui/python/run_tests])
+    ])
 ])

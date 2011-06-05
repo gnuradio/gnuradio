@@ -38,4 +38,4 @@ SUBDIRS = config lib swig python grc apps
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA =
 
-DISTCLEANFILES = gr-howto-write-a-block*.tar.gz
+DISTCLEANFILES += gr-howto-write-a-block*.tar.gz

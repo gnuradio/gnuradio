@@ -22,9 +22,10 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,clock_recovery_mm_cc);
 
-gr_clock_recovery_mm_cc_sptr gr_make_clock_recovery_mm_cc (float omega, float gain_omega, 
-							   float mu, float gain_mu,
-							   float omega_relative_limit);
+gr_clock_recovery_mm_cc_sptr
+gr_make_clock_recovery_mm_cc (float omega, float gain_omega,
+			      float mu, float gain_mu,
+			      float omega_relative_limit) throw(std::exception);
 
 class gr_clock_recovery_mm_cc : public gr_sync_block
 {

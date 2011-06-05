@@ -105,6 +105,13 @@ public:
    * Displays flattened flowgraph edges and block connectivity
    */
   void dump();
+
+  gr_top_block_sptr to_top_block(); // Needed for Python/Guile type coercion
 };
+
+inline gr_top_block_sptr cast_to_top_block_sptr(gr_basic_block_sptr block) {
+  return boost::dynamic_pointer_cast<gr_top_block, gr_basic_block>(block);
+}
+
 
 #endif /* INCLUDED_GR_TOP_BLOCK_H */

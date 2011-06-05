@@ -33,6 +33,8 @@ GR_USRP_LA=$(top_builddir)/gr-usrp/src/libgnuradio-usrp.la
 # For compiling outside the tree, these will get fished out by pkgconfig
 
 LDADD = \
+	$(GNURADIO_CORE_LA) \
+	$(USRP_LA) \
 	$(GR_USRP_LA) \
 	$(BOOST_LDFLAGS) \
 	$(BOOST_PROGRAM_OPTIONS_LIB)

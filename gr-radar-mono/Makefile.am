@@ -21,5 +21,5 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = README
+EXTRA_DIST += README
 SUBDIRS = src doc

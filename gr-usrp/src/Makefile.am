@@ -20,15 +20,19 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
-# ----------------------------------------------------------------
-# Misc. build/installation activities
 
-EXTRA_DIST = run_tests.in
-
-DISTCLEANFILES = run_tests
+TESTS =
+EXTRA_DIST += run_tests.in run_guile_tests.in $(nobase_guile_DATA)
+DISTCLEANFILES += run_tests run_guile_tests
 
 noinst_PYTHON =	qa_usrp.py
+noinst_GUILE  = usrp.test
+
+if GUILE
+nobase_guile_DATA = gnuradio/usrp.scm
+endif
 
 # ----------------------------------------------------------------
 # The straight C++ library
@@ -67,10 +71,8 @@ grinclude_HEADERS = \
 	usrp_source_c.h \
 	usrp_source_s.h
 
-if PYTHON
 # ----------------------------------------------------------------
 # The SWIG library
-TESTS = run_tests
 
 TOP_SWIG_IFILES =		\
 	usrp_swig.i
@@ -84,6 +86,7 @@ usrp_swig_pythondir_category = 	\
 
 # additional arguments to the SWIG command
 usrp_swig_swig_args =		\
+	$(DEFAULT_INCLUDES)	\
 	$(USRP_INCLUDES)
 
 # additional libraries for linking with the SWIG-generated library
@@ -105,11 +108,12 @@ usrp_swig_swiginclude_headers =	\
 	usrp_sink_s.i		\
 	usrp_standard.i
 
-include $(top_srcdir)/Makefile.swig
 
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+if PYTHON
+TESTS += run_tests
 endif
+
+if GUILE
+TESTS += run_guile_tests
+endif
+

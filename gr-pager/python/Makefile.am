@@ -21,7 +21,12 @@
 
 include $(top_srcdir)/Makefile.common
 
+TESTS =
+EXTRA_DIST += run_tests.in
+
 if PYTHON
+TESTS += run_tests
+
 pagerdir = $(grpythondir)/pager
 
 noinst_PYTHON = \
@@ -31,9 +36,4 @@ pager_PYTHON = \
 	__init__.py \
 	pager_utils.py \
 	flex_demod.py
-
-TESTS = run_tests
-
-EXTRA_DIST = run_tests.in
-
 endif

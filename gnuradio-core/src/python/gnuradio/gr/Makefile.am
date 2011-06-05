@@ -21,12 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	run_tests.in		\
 	test_16bit_1chunk.wav
 
-TESTS = 			\
-	run_tests
+TESTS = run_tests
 
 
 grgrpythondir = $(grpythondir)/gr
@@ -39,7 +38,6 @@ grgrpython_PYTHON = 		\
 	gr_threading_24.py	\
 	hier_block2.py		\
 	prefs.py		\
-	scheduler.py		\
 	top_block.py		\
 	pubsub.py
 
@@ -57,6 +55,7 @@ noinst_PYTHON = 			\
 	qa_copy.py			\
 	qa_correlate_access_code.py	\
 	qa_delay.py			\
+	qa_dc_blocker.py		\
 	qa_diff_encoder.py		\
 	qa_diff_phasor_cc.py		\
 	qa_ecc_ccsds_27.py		\
@@ -73,6 +72,7 @@ noinst_PYTHON = 			\
 	qa_hier_block2.py		\
 	qa_hilbert.py			\
 	qa_iir.py			\
+	qa_int_to_float.py		\
 	qa_interleave.py		\
 	qa_interp_fir_filter.py		\
 	qa_kludge_copy.py		\

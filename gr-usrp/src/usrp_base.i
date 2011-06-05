@@ -24,6 +24,7 @@
 #include "usrp_base.h"
 %}
 
+%ignore usrp_base;
 class usrp_base : public gr_sync_block 
 {
 protected:

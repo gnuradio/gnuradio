@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -18,14 +18,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
+import sys
 import subprocess
 import tempfile
 from Cheetah.Template import Template
 import expr_utils
 from Constants import \
 	TOP_BLOCK_FILE_MODE, HIER_BLOCK_FILE_MODE, \
-	HIER_BLOCKS_LIB_DIR, PYEXEC, \
-	FLOW_GRAPH_TEMPLATE
+	HIER_BLOCKS_LIB_DIR, FLOW_GRAPH_TEMPLATE
 import convert_hier
 from .. gui import Messages
 
@@ -58,7 +58,7 @@ class Generator(object):
 	def write(self):
 		#do throttle warning
 		all_keys = ' '.join(map(lambda b: b.get_key(), self._flow_graph.get_enabled_blocks()))
-		if ('usrp' not in all_keys) and ('audio' not in all_keys) and ('throttle' not in all_keys) and self._generate_options != 'hb':
+		if ('usrp' not in all_keys) and ('uhd' not in all_keys) and ('audio' not in all_keys) and ('throttle' not in all_keys) and self._generate_options != 'hb':
 			Messages.send_warning('''\
 This flow graph may not have flow control: no audio or usrp blocks found. \
 Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
@@ -74,10 +74,20 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		Execute this python flow graph.
 		@return a popen object
 		"""
-		#execute
-		cmds = [PYEXEC, '-u', self.get_file_path()] #-u is unbuffered stdio
-		if self._generate_options == 'no_gui':
+		#extract the path to the python executable
+		python_exe = sys.executable
+
+		#when using wx gui on mac os, execute with pythonw
+		if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
+			python_exe += 'w'
+
+		#setup the command args to run
+		cmds = [python_exe, '-u', self.get_file_path()] #-u is unbuffered stdio
+
+		#when in no gui mode on linux, use an xterm (looks nice)
+		if self._generate_options == 'no_gui' and 'linux' in sys.platform.lower():
 			cmds = ['xterm', '-e'] + cmds
+
 		p = subprocess.Popen(args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, universal_newlines=True)
 		return p
 
@@ -90,18 +100,20 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		imports = self._flow_graph.get_imports()
 		variables = self._flow_graph.get_variables()
 		parameters = self._flow_graph.get_parameters()
-		#list of variables with controls
-		controls = filter(lambda v: v.get_make(), variables)
 		#list of blocks not including variables and imports and parameters and disabled
-		blocks = sorted(self._flow_graph.get_enabled_blocks(), lambda x, y: cmp(x.get_id(), y.get_id()))
-		probes = filter(lambda b: b.get_key().startswith('probe_'), blocks) #ensure probes are last in the block list
-		#get a list of notebooks and sort them according dependencies
-		notebooks = expr_utils.sort_objects(
-			filter(lambda b: b.get_key() == 'notebook', blocks),
-			lambda n: n.get_id(), lambda n: n.get_param('notebook').get_value(),
+		def _get_block_sort_text(block):
+			code = block.get_make().replace(block.get_id(), ' ')
+			try: code += block.get_param('notebook').get_value() #older gui markup w/ wxgui
+			except: pass
+			try: code += block.get_param('gui_hint').get_value() #newer gui markup w/ qtgui
+			except: pass
+			return code
+		blocks = expr_utils.sort_objects(
+			self._flow_graph.get_enabled_blocks(),
+			lambda b: b.get_id(), _get_block_sort_text
 		)
 		#list of regular blocks (all blocks minus the special ones)
-		blocks = filter(lambda b: b not in (imports + parameters + variables + probes + notebooks), blocks) + probes
+		blocks = filter(lambda b: b not in (imports + parameters), blocks)
 		#list of connections where each endpoint is enabled
 		connections = filter(lambda c: not c.is_msg(), self._flow_graph.get_enabled_connections())
 		messages = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
@@ -125,8 +137,6 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 			'imports': imports,
 			'flow_graph': self._flow_graph,
 			'variables': variables,
-			'notebooks': notebooks,
-			'controls': controls,
 			'parameters': parameters,
 			'blocks': blocks,
 			'connections': connections,

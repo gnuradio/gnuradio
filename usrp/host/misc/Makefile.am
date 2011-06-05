@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004 Free Software Foundation, Inc.
+# Copyright 2003,2004,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,13 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	getopt.c getopt.h \
 	gettimeofday.c \
-	tempname.c mkstemp.c \
 	usleep.c
 
 noinst_LTLIBRARIES = libmisc.la
 
 libmisc_la_SOURCES = bug_work_around_8.cc
-libmisc_la_LIBADD = @LTLIBOBJS@

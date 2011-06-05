@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008,2011 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -26,14 +26,18 @@ AC_DEFUN([GRC_GR_USRP],[
 
     AC_CONFIG_FILES([ \
         gr-usrp/Makefile \
+        gr-usrp/grc/Makefile \
 	gr-usrp/gnuradio-usrp.pc \
         gr-usrp/src/Makefile \
         gr-usrp/src/run_tests \
+	gr-usrp/src/run_guile_tests \
 	gr-usrp/apps/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-usrp,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
-	AC_CONFIG_COMMANDS([run_tests_usrp], [chmod +x gr-usrp/src/run_tests])
+	AC_CONFIG_COMMANDS([run_tests_usrp],
+			   [chmod +x gr-usrp/src/run_tests
+			    chmod +x gr-usrp/src/run_guile_tests])
     ])
 ])

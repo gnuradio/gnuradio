@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,131 +10,131 @@
     <height>696</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>GNU Radio Filter Design Tool</string>
   </property>
-  <widget class="QWidget" name="centralwidget" >
-   <layout class="QGridLayout" name="gridLayout" >
-    <item row="1" column="0" >
-     <widget class="QFrame" name="filterFrame" >
-      <property name="minimumSize" >
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QFrame" name="filterFrame">
+      <property name="minimumSize">
        <size>
         <width>300</width>
         <height>0</height>
        </size>
       </property>
-      <property name="maximumSize" >
+      <property name="maximumSize">
        <size>
         <width>300</width>
         <height>16777215</height>
        </size>
       </property>
-      <property name="frameShape" >
+      <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
-      <property name="frameShadow" >
+      <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout" >
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QComboBox" name="filterTypeComboBox" >
+        <widget class="QComboBox" name="filterTypeComboBox">
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Low Pass</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Band Pass</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Complex Band Pass</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Band Notch</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>High Pass</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Root Raised Cosine</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Gaussian</string>
           </property>
          </item>
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="filterDesignTypeComboBox" >
+        <widget class="QComboBox" name="filterDesignTypeComboBox">
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Hamming Window</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Hann Window</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Blackman Window</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Rectangular Window</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Kaiser Window</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Blackman-harris Window</string>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Equiripple</string>
           </property>
          </item>
         </widget>
        </item>
        <item>
-        <layout class="QFormLayout" name="globalParamsLayout" >
-         <property name="fieldGrowthPolicy" >
+        <layout class="QFormLayout" name="globalParamsLayout">
+         <property name="fieldGrowthPolicy">
           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
          </property>
-         <item row="0" column="0" >
-          <widget class="QLabel" name="sampleRateLabel" >
-           <property name="maximumSize" >
+         <item row="0" column="0">
+          <widget class="QLabel" name="sampleRateLabel">
+           <property name="maximumSize">
             <size>
              <width>16777215</width>
              <height>30</height>
             </size>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Sample Rate (sps)</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1" >
-          <widget class="QLineEdit" name="sampleRateEdit" >
-           <property name="maximumSize" >
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="sampleRateEdit">
+           <property name="maximumSize">
             <size>
              <width>16777215</width>
              <height>30</height>
@@ -141,332 +142,332 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="filterGainLabel" >
-           <property name="text" >
+         <item row="1" column="0">
+          <widget class="QLabel" name="filterGainLabel">
+           <property name="text">
             <string>Filter Gain</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1" >
-          <widget class="QLineEdit" name="filterGainEdit" />
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="filterGainEdit"/>
          </item>
         </layout>
        </item>
        <item>
-        <widget class="QStackedWidget" name="filterTypeWidget" >
-         <property name="currentIndex" >
-          <number>0</number>
+        <widget class="QStackedWidget" name="filterTypeWidget">
+         <property name="currentIndex">
+          <number>5</number>
          </property>
-         <widget class="QWidget" name="firlpfPage" >
-          <layout class="QFormLayout" name="formLayout" >
-           <item row="0" column="0" >
-            <widget class="QLabel" name="endofLpfPassBandLabel" >
-             <property name="text" >
+         <widget class="QWidget" name="firlpfPage">
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="endofLpfPassBandLabel">
+             <property name="text">
               <string>End of Pass Band (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="QLineEdit" name="endofLpfPassBandEdit" />
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="endofLpfPassBandEdit"/>
            </item>
-           <item row="1" column="0" >
-            <widget class="QLabel" name="startofLpfStopBandLabel" >
-             <property name="text" >
+           <item row="1" column="0">
+            <widget class="QLabel" name="startofLpfStopBandLabel">
+             <property name="text">
               <string>Start of Stop Band (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1" >
-            <widget class="QLineEdit" name="startofLpfStopBandEdit" />
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="startofLpfStopBandEdit"/>
            </item>
-           <item row="2" column="0" >
-            <widget class="QLabel" name="lpfStopBandAttenLabel" >
-             <property name="text" >
+           <item row="2" column="0">
+            <widget class="QLabel" name="lpfStopBandAttenLabel">
+             <property name="text">
               <string>Stop Band Attenuation (dB)</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1" >
-            <widget class="QLineEdit" name="lpfStopBandAttenEdit" />
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="lpfStopBandAttenEdit"/>
            </item>
-           <item row="3" column="1" >
-            <widget class="QLineEdit" name="lpfPassBandRippleEdit" />
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="lpfPassBandRippleEdit"/>
            </item>
-           <item row="3" column="0" >
-            <widget class="QLabel" name="lpfPassBandRippleLabel" >
-             <property name="text" >
+           <item row="3" column="0">
+            <widget class="QLabel" name="lpfPassBandRippleLabel">
+             <property name="text">
               <string>Pass Band Ripple (dB)</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="firbpfPage" >
-          <layout class="QFormLayout" name="formLayout_2" >
-           <item row="0" column="0" >
-            <widget class="QLabel" name="startofBpfPassBandLabel" >
-             <property name="text" >
+         <widget class="QWidget" name="firbpfPage">
+          <layout class="QFormLayout" name="formLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="startofBpfPassBandLabel">
+             <property name="text">
               <string>Start of Pass Band (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="QLineEdit" name="startofBpfPassBandEdit" />
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="startofBpfPassBandEdit"/>
            </item>
-           <item row="1" column="0" >
-            <widget class="QLabel" name="endofBpfPassBandLabel" >
-             <property name="text" >
+           <item row="1" column="0">
+            <widget class="QLabel" name="endofBpfPassBandLabel">
+             <property name="text">
               <string>End of Pass Band (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1" >
-            <widget class="QLineEdit" name="endofBpfPassBandEdit" />
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="endofBpfPassBandEdit"/>
            </item>
-           <item row="3" column="1" >
-            <widget class="QLineEdit" name="bpfStopBandAttenEdit" />
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="bpfStopBandAttenEdit"/>
            </item>
-           <item row="3" column="0" >
-            <widget class="QLabel" name="bpfStopBandAttenLabel" >
-             <property name="text" >
+           <item row="3" column="0">
+            <widget class="QLabel" name="bpfStopBandAttenLabel">
+             <property name="text">
               <string>Stop Band Attenuation (dB)</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0" >
-            <widget class="QLabel" name="bpfTransitionLabel" >
-             <property name="text" >
+           <item row="2" column="0">
+            <widget class="QLabel" name="bpfTransitionLabel">
+             <property name="text">
               <string>Transition Width (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1" >
-            <widget class="QLineEdit" name="bpfTransitionEdit" />
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="bpfTransitionEdit"/>
            </item>
-           <item row="4" column="1" >
-            <widget class="QLineEdit" name="bpfPassBandRippleEdit" />
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="bpfPassBandRippleEdit"/>
            </item>
-           <item row="4" column="0" >
-            <widget class="QLabel" name="bpfPassBandRippleLabel" >
-             <property name="text" >
+           <item row="4" column="0">
+            <widget class="QLabel" name="bpfPassBandRippleLabel">
+             <property name="text">
               <string>Pass Band Ripple (dB)</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="firbnfPage" >
-          <layout class="QFormLayout" name="formLayout_5" >
-           <property name="fieldGrowthPolicy" >
+         <widget class="QWidget" name="firbnfPage">
+          <layout class="QFormLayout" name="formLayout_5">
+           <property name="fieldGrowthPolicy">
             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
            </property>
-           <item row="0" column="0" >
-            <widget class="QLabel" name="startofBnfStopBandLabel" >
-             <property name="text" >
+           <item row="0" column="0">
+            <widget class="QLabel" name="startofBnfStopBandLabel">
+             <property name="text">
               <string>Start of Stop Band (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="QLineEdit" name="startofBnfStopBandEdit" />
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="startofBnfStopBandEdit"/>
            </item>
-           <item row="1" column="0" >
-            <widget class="QLabel" name="endofBnfStopBandLabel" >
-             <property name="text" >
+           <item row="1" column="0">
+            <widget class="QLabel" name="endofBnfStopBandLabel">
+             <property name="text">
               <string>End of Stop Band (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1" >
-            <widget class="QLineEdit" name="endofBnfStopBandEdit" />
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="endofBnfStopBandEdit"/>
            </item>
-           <item row="2" column="0" >
-            <widget class="QLabel" name="bnfTransitionLabel" >
-             <property name="text" >
+           <item row="2" column="0">
+            <widget class="QLabel" name="bnfTransitionLabel">
+             <property name="text">
               <string>Transition Width (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1" >
-            <widget class="QLineEdit" name="bnfTransitionEdit" />
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="bnfTransitionEdit"/>
            </item>
-           <item row="3" column="0" >
-            <widget class="QLabel" name="bnfStopBandAttenLabel" >
-             <property name="text" >
+           <item row="3" column="0">
+            <widget class="QLabel" name="bnfStopBandAttenLabel">
+             <property name="text">
               <string>Stop Band Attenuation (dB)</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="1" >
-            <widget class="QLineEdit" name="bnfStopBandAttenEdit" />
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="bnfStopBandAttenEdit"/>
            </item>
-           <item row="4" column="0" >
-            <widget class="QLabel" name="bnfPassBandRippleLabel" >
-             <property name="text" >
+           <item row="4" column="0">
+            <widget class="QLabel" name="bnfPassBandRippleLabel">
+             <property name="text">
               <string>Pass Band Ripple (dB)</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1" >
-            <widget class="QLineEdit" name="bnfPassBandRippleEdit" />
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="bnfPassBandRippleEdit"/>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="firhpfPage" >
-          <layout class="QFormLayout" name="formLayout_3" >
-           <property name="fieldGrowthPolicy" >
+         <widget class="QWidget" name="firhpfPage">
+          <layout class="QFormLayout" name="formLayout_3">
+           <property name="fieldGrowthPolicy">
             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
            </property>
-           <item row="0" column="0" >
-            <widget class="QLabel" name="endofHpfStopBandLabel" >
-             <property name="text" >
+           <item row="0" column="0">
+            <widget class="QLabel" name="endofHpfStopBandLabel">
+             <property name="text">
               <string>End of Stop Band (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="QLineEdit" name="endofHpfStopBandEdit" />
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="endofHpfStopBandEdit"/>
            </item>
-           <item row="1" column="0" >
-            <widget class="QLabel" name="startofHpfPassBandLabel" >
-             <property name="text" >
+           <item row="1" column="0">
+            <widget class="QLabel" name="startofHpfPassBandLabel">
+             <property name="text">
               <string>Start of Pass Band (Hz)</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1" >
-            <widget class="QLineEdit" name="startofHpfPassBandEdit" />
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="startofHpfPassBandEdit"/>
            </item>
-           <item row="2" column="0" >
-            <widget class="QLabel" name="hpfStopBandAttenLabel" >
-             <property name="text" >
+           <item row="2" column="0">
+            <widget class="QLabel" name="hpfStopBandAttenLabel">
+             <property name="text">
               <string>Stop Band Attenuation (dB)</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1" >
-            <widget class="QLineEdit" name="hpfStopBandAttenEdit" />
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="hpfStopBandAttenEdit"/>
            </item>
-           <item row="3" column="0" >
-            <widget class="QLabel" name="hpfPassBandRippleLabel" >
-             <property name="text" >
+           <item row="3" column="0">
+            <widget class="QLabel" name="hpfPassBandRippleLabel">
+             <property name="text">
               <string>Pass Band Ripple (dB)</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="1" >
-            <widget class="QLineEdit" name="hpfPassBandRippleEdit" />
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="hpfPassBandRippleEdit"/>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="rrcPage" >
-          <layout class="QFormLayout" name="formLayout_6" >
-           <item row="0" column="0" >
-            <widget class="QLabel" name="rrcSymbolRateLabel" >
-             <property name="text" >
+         <widget class="QWidget" name="rrcPage">
+          <layout class="QFormLayout" name="formLayout_6">
+           <item row="0" column="0">
+            <widget class="QLabel" name="rrcSymbolRateLabel">
+             <property name="text">
               <string>Symbol Rate (sps)</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0" >
-            <widget class="QLabel" name="rrcAlphaLabel" >
-             <property name="text" >
+           <item row="1" column="0">
+            <widget class="QLabel" name="rrcAlphaLabel">
+             <property name="text">
               <string>Roll-off Factor</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0" >
-            <widget class="QLabel" name="rrcNumTapsLabel" >
-             <property name="text" >
+           <item row="2" column="0">
+            <widget class="QLabel" name="rrcNumTapsLabel">
+             <property name="text">
               <string>Number of Taps</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="QLineEdit" name="rrcSymbolRateEdit" />
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="rrcSymbolRateEdit"/>
            </item>
-           <item row="1" column="1" >
-            <widget class="QLineEdit" name="rrcAlphaEdit" />
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="rrcAlphaEdit"/>
            </item>
-           <item row="2" column="1" >
-            <widget class="QLineEdit" name="rrcNumTapsEdit" />
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="rrcNumTapsEdit"/>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="gausPage" >
-          <layout class="QFormLayout" name="formLayout_7" >
-           <item row="0" column="0" >
-            <widget class="QLabel" name="gausSymbolRateLabel" >
-             <property name="text" >
+         <widget class="QWidget" name="gausPage">
+          <layout class="QFormLayout" name="formLayout_7">
+           <item row="0" column="0">
+            <widget class="QLabel" name="gausSymbolRateLabel">
+             <property name="text">
               <string>Symbol Rate (sps)</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="QLineEdit" name="gausSymbolRateEdit" />
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="gausSymbolRateEdit"/>
            </item>
-           <item row="1" column="0" >
-            <widget class="QLabel" name="gausBTLabel" >
-             <property name="text" >
+           <item row="1" column="0">
+            <widget class="QLabel" name="gausBTLabel">
+             <property name="text">
               <string>Roll-off Factor</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1" >
-            <widget class="QLineEdit" name="gausBTEdit" />
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="gausBTEdit"/>
            </item>
-           <item row="2" column="0" >
-            <widget class="QLabel" name="gausNumTapsLabel" >
-             <property name="text" >
+           <item row="2" column="0">
+            <widget class="QLabel" name="gausNumTapsLabel">
+             <property name="text">
               <string>Number of Taps</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1" >
-            <widget class="QLineEdit" name="gausNumTapsEdit" />
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="gausNumTapsEdit"/>
            </item>
           </layout>
          </widget>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="filterPropsBox" >
-         <property name="title" >
+        <widget class="QGroupBox" name="filterPropsBox">
+         <property name="title">
           <string>Filter Properties</string>
          </property>
-         <layout class="QFormLayout" name="formLayout_8" >
-          <property name="fieldGrowthPolicy" >
+         <layout class="QFormLayout" name="formLayout_8">
+          <property name="fieldGrowthPolicy">
            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
           </property>
-          <item row="1" column="0" >
-           <widget class="QLabel" name="nTapsLabel" >
-            <property name="minimumSize" >
+          <item row="1" column="0">
+           <widget class="QLabel" name="nTapsLabel">
+            <property name="minimumSize">
              <size>
               <width>150</width>
               <height>0</height>
              </size>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>Number of Taps:</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1" >
-           <widget class="QLabel" name="nTapsEdit" >
-            <property name="maximumSize" >
+          <item row="1" column="1">
+           <widget class="QLabel" name="nTapsEdit">
+            <property name="maximumSize">
              <size>
               <width>100</width>
               <height>16777215</height>
              </size>
             </property>
-            <property name="frameShape" >
+            <property name="frameShape">
              <enum>QFrame::Box</enum>
             </property>
-            <property name="frameShadow" >
+            <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
            </widget>
@@ -475,23 +476,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="sysParamsBox" >
-         <property name="title" >
+        <widget class="QGroupBox" name="sysParamsBox">
+         <property name="title">
           <string>System Parameters</string>
          </property>
-         <layout class="QFormLayout" name="formLayout_4" >
-          <item row="1" column="1" >
-           <widget class="QLineEdit" name="nfftEdit" />
+         <layout class="QFormLayout" name="formLayout_4">
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="nfftEdit"/>
           </item>
-          <item row="1" column="0" >
-           <widget class="QLabel" name="nfftLabel" >
-            <property name="minimumSize" >
+          <item row="1" column="0">
+           <widget class="QLabel" name="nfftLabel">
+            <property name="minimumSize">
              <size>
               <width>150</width>
               <height>0</height>
              </size>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>Num FFT points</string>
             </property>
            </widget>
@@ -500,26 +501,26 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="designButton" >
-         <property name="minimumSize" >
+        <widget class="QPushButton" name="designButton">
+         <property name="minimumSize">
           <size>
            <width>0</width>
            <height>0</height>
           </size>
          </property>
-         <property name="maximumSize" >
+         <property name="maximumSize">
           <size>
            <width>200</width>
            <height>16777215</height>
           </size>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Design</string>
          </property>
-         <property name="autoDefault" >
+         <property name="autoDefault">
           <bool>true</bool>
          </property>
-         <property name="default" >
+         <property name="default">
           <bool>true</bool>
          </property>
         </widget>
@@ -527,54 +528,54 @@
       </layout>
      </widget>
     </item>
-    <item row="1" column="1" >
-     <widget class="QTabWidget" name="tabGroup" >
-      <property name="minimumSize" >
+    <item row="1" column="1">
+     <widget class="QTabWidget" name="tabGroup">
+      <property name="minimumSize">
        <size>
         <width>800</width>
         <height>0</height>
        </size>
       </property>
-      <property name="currentIndex" >
+      <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="freqTab" >
-       <attribute name="title" >
+      <widget class="QWidget" name="freqTab">
+       <attribute name="title">
         <string>Frequency Domain</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_2" >
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QwtPlot" name="freqPlot" />
+         <widget class="QwtPlot" name="freqPlot"/>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="timeTab" >
-       <attribute name="title" >
+      <widget class="QWidget" name="timeTab">
+       <attribute name="title">
         <string>Time Domain</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout" >
+       <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QwtPlot" name="timePlot" />
+         <widget class="QwtPlot" name="timePlot"/>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="phaseTab" >
-       <attribute name="title" >
+      <widget class="QWidget" name="phaseTab">
+       <attribute name="title">
         <string>Phase</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_3" >
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QwtPlot" name="phasePlot" />
+         <widget class="QwtPlot" name="phasePlot"/>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="groupTab" >
-       <attribute name="title" >
+      <widget class="QWidget" name="groupTab">
+       <attribute name="title">
         <string>Group Delay</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_4" >
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QwtPlot" name="groupPlot" />
+         <widget class="QwtPlot" name="groupPlot"/>
         </item>
        </layout>
       </widget>
@@ -582,35 +583,45 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar" >
-   <property name="geometry" >
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>1124</width>
-     <height>24</height>
+     <height>27</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_File" >
-    <property name="title" >
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_exit" />
+    <addaction name="action_open"/>
+    <addaction name="action_save"/>
+    <addaction name="action_exit"/>
    </widget>
-   <addaction name="menu_File" />
+   <addaction name="menu_File"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
-  <action name="action_open" >
-   <property name="text" >
-    <string>&amp;Open</string>
-   </property>
-   <property name="shortcut" >
-    <string>Ctrl+O</string>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_exit">
+   <property name="text">
+    <string>E&amp;xit</string>
    </property>
   </action>
-  <action name="action_exit" >
-   <property name="text" >
-    <string>E&amp;xit</string>
+  <action name="action_save">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_open">
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>
@@ -662,11 +673,11 @@
    <receiver>MainWindow</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>399</x>
      <y>347</y>
     </hint>

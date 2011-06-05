@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,15 +23,6 @@
 #define INCLUDED_GR_THROTTLE_H
 
 #include <gr_sync_block.h>
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-
-class gr_throttle;
-typedef boost::shared_ptr<gr_throttle> gr_throttle_sptr;
-
-
-gr_throttle_sptr gr_make_throttle(size_t itemsize, double samples_per_sec);
 
 /*!
  * \brief throttle flow of samples such that the average rate does not exceed samples_per_sec.
@@ -44,25 +35,15 @@ gr_throttle_sptr gr_make_throttle(size_t itemsize, double samples_per_sec);
  * controlling the rate of samples.  That should be controlled by a
  * source or sink tied to sample clock.  E.g., a USRP or audio card.
  */
-class gr_throttle : public gr_sync_block
+class gr_throttle : virtual public gr_sync_block
 {
-  friend gr_throttle_sptr gr_make_throttle(size_t itemsize, double samples_per_sec);
-  size_t		d_itemsize;
-  double		d_samples_per_sec;
-  double		d_total_samples;
-#ifdef HAVE_SYS_TIME_H
-  struct timeval	d_start;
-#endif
-
-  gr_throttle(size_t itemsize, double samples_per_sec);
-
 public:
-  ~gr_throttle();
+    typedef boost::shared_ptr<gr_throttle> sptr;
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    //! Sets the sample rate in samples per second
+    virtual void set_sample_rate(double rate) = 0;
 };
- 
+
+gr_throttle::sptr gr_make_throttle(size_t itemsize, double samples_per_sec);
 
 #endif /* INCLUDED_GR_THROTTLE_H */

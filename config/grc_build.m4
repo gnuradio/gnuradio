@@ -259,6 +259,7 @@ AC_DEFUN([_GRC_BUILD_CONDITIONAL],[
 	    GRC_ADD_TO_LIST($3, PYDIRPATH, ":")
 	    GRC_ADD_TO_LIST($3, SWIGDIRPATH, ":")
 	    GRC_ADD_TO_LIST($3, LIBDIRPATH, ":")
+	    GRC_ADD_TO_LIST($3, GUILE_LOAD_PATH, ":")
 	    AC_MSG_RESULT([Component $1 will be included from a pre-installed library and includes.])
 	    $3[_with]=yes
 	else

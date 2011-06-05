@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable function probe
+###################################################
+ -->
+<block>
+	<name>Function Probe</name>
+	<key>variable_function_probe</key>
+	<import>import time</import>
+	<import>import threading</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>#slurp
+def _$(id)_probe():
+	while True:
+		val = self.$(block_id()).$(function_name())($(function_args()))
+		try: self.set_$(id)(val)
+		except AttributeError, e: pass
+		time.sleep(1.0/($poll_rate))
+_$(id)_thread = threading.Thread(target=_$(id)_probe)
+_$(id)_thread.daemon = True
+_$(id)_thread.start()</make>
+	<callback>self.set_$(id)($value)</callback>
+	<param>
+		<name>Value</name>
+		<key>value</key>
+		<value>0</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Block ID</name>
+		<key>block_id</key>
+		<value>my_block_0</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Function Name</name>
+		<key>function_name</key>
+		<value>get_number</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Function Args</name>
+		<key>function_args</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $function_args() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Poll Rate (Hz)</name>
+		<key>poll_rate</key>
+		<value>10</value>
+		<type>real</type>
+	</param>
+	<doc>
+Periodically probe a function and set its value to this variable.
+
+Set the values for block ID, function name, and function args appropriately: \
+Block ID should be the ID of another block in this flow graph. \
+Function name should be the name of a class method on that block. \
+Function args are the parameters passed into that function. \
+For a function with no arguments, leave function args blank. \
+When passing a string for the function arguments, quote the string literal: '"arg"'.
+
+The values will used literally, and generated into the following form:
+self.block_id.function_name(function_args)
+
+To poll a stream for a level, use this with the probe signal block.
+	</doc>
+</block>

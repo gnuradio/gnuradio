@@ -169,3 +169,7 @@
 /trellis_generated.i
 /generate-stamp
 /stamp-*
+/run_guile_tests
+/gnuradio
+/guile
+/python

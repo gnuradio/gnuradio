@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2007,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2003,2004,2007,2008,2009,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -58,7 +58,7 @@ libruntime_la_SOURCES = 			\
 	gr_sync_block.cc			\
 	gr_sync_decimator.cc			\
 	gr_sync_interpolator.cc			\
-	gr_tmp_path.cc				\
+	gr_sys_paths.cc				\
 	gr_top_block.cc				\
 	gr_top_block_impl.cc			\
 	gr_tpb_detail.cc			\
@@ -68,7 +68,8 @@ libruntime_la_SOURCES = 			\
 	gr_vmcircbuf_mmap_tmpfile.cc		\
 	gr_vmcircbuf_createfilemapping.cc	\
 	gr_vmcircbuf_sysv_shm.cc		\
-	gr_select_handler.cc			
+	gr_select_handler.cc			\
+	gr_tag_info.cc
 
 libruntime_qa_la_SOURCES = 			\
 	qa_gr_block.cc				\
@@ -79,6 +80,8 @@ libruntime_qa_la_SOURCES = 			\
 	qa_gr_top_block.cc			\
 	qa_gr_io_signature.cc			\
 	qa_gr_vmcircbuf.cc			\
+	qa_block_tags.cc			\
+	qa_set_msg_handler.cc			\
 	qa_runtime.cc				
 
 grinclude_HEADERS = 				\
@@ -118,10 +121,11 @@ grinclude_HEADERS = 				\
 	gr_tpb_detail.h				\
 	gr_tpb_thread_body.h			\
 	gr_timer.h				\
-	gr_tmp_path.h				\
+	gr_sys_paths.h				\
 	gr_types.h				\
 	gr_unittests.h				\
-	gr_vmcircbuf.h				
+	gr_vmcircbuf.h				\
+	gr_tag_info.h
 
 noinst_HEADERS = 				\
 	gr_vmcircbuf_mmap_shm_open.h		\
@@ -136,9 +140,10 @@ noinst_HEADERS = 				\
 	qa_gr_io_signature.h			\
 	qa_gr_top_block.h			\
 	qa_gr_vmcircbuf.h			\
+	qa_block_tags.h				\
+	qa_set_msg_handler.h			\
 	qa_runtime.h				
 
-if PYTHON
 swiginclude_HEADERS =			\
 	gr_basic_block.i		\
 	gr_block.i			\
@@ -158,4 +163,3 @@ swiginclude_HEADERS =			\
 	gr_sync_interpolator.i		\
 	gr_top_block.i			\
 	runtime.i
-endif

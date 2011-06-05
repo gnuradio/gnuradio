@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -49,12 +49,10 @@ class gr_block : public gr_basic_block {
   bool start();
   bool stop();
 
+  uint64_t nitems_read(unsigned int which_input);
+  uint64_t nitems_written(unsigned int which_output);
+
   // internal use
   gr_block_detail_sptr detail () const { return d_detail; }
   void set_detail (gr_block_detail_sptr detail) { d_detail = detail; }
 };
-
-%pythoncode %{
-gr_block_sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
-gr_block_sptr.block = lambda self: self
-%}

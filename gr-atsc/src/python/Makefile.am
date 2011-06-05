@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST =		\
+EXTRA_DIST +=		\
 	run_tests.in
 
 ourdatadir = $(exampledir)/atsc
@@ -36,8 +36,7 @@ dist_ourdata_SCRIPTS =  \
 	xlate.py	\
 	viterbi-out.py
 
-TESTS = 				\
-	run_tests
+TESTS = run_tests
 
 noinst_PYTHON = 			\
 	atsc_utils.py			\

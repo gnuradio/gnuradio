@@ -1,0 +1,10 @@
+/*.cache
+/*.la
+/*.lo
+/*.pc
+/.deps
+/.la
+/.libs
+/.lo
+/Makefile
+/Makefile.in

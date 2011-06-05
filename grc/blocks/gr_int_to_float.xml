@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Int to Float:
+###################################################
+ -->
+<block>
+	<name>Int To Float</name>
+	<key>gr_int_to_float</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.int_to_float()</make>
+	<sink>
+		<name>in</name>
+		<type>int</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>

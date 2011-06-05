@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -118,7 +118,7 @@ def sort_variables(exprs):
 	Get a list of variables in order of dependencies.
 	@param exprs a mapping of variable name to expression
 	@return a list of variable names
-	@throws AssertionError circular dependencies
+	@throws Exception circular dependencies
 	"""
 	var_graph = get_graph(exprs)
 	sorted_vars = list()
@@ -126,7 +126,7 @@ def sort_variables(exprs):
 	while var_graph.get_nodes():
 		#get a list of nodes with no edges
 		indep_vars = filter(lambda var: not var_graph.get_edges(var), var_graph.get_nodes())
-		assert indep_vars
+		if not indep_vars: raise Exception('circular dependency caught in sort_variables')
 		#add the indep vars to the end of the list
 		sorted_vars.extend(sorted(indep_vars))
 		#remove each edge-less node from the graph

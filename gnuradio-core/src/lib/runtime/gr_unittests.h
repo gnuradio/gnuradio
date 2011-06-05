@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,37 +31,11 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 
-#ifdef MKDIR_TAKES_ONE_ARG
-#define gr_mkdir(pathname, mode) mkdir(pathname)
-#else
-#define gr_mkdir(pathname, mode) mkdir((pathname), (mode))
-#endif
-
-/*
- * Mostly taken from gr_preferences.cc/h
- * The simplest thing that could possibly work:
- *  the key is the filename; the value is the file contents.
- */
-
-static void
-ensure_unittest_path (const char *path)
-{
-  struct stat statbuf;
-  if (stat (path, &statbuf) == 0 && S_ISDIR (statbuf.st_mode))
-    return;
-
-  // blindly try to make it 	// FIXME make this robust. C++ SUCKS!
-  gr_mkdir (path, 0750);
+static std::string get_unittest_path(const std::string &filename){
+    boost::filesystem::path path = boost::filesystem::current_path() / ".unittests";
+    if (!boost::filesystem::is_directory(path)) boost::filesystem::create_directory(path);
+    return (path / filename).string();
 }
-
-static void
-get_unittest_path (const char *filename, char *fullpath, size_t pathsize)
-{
-  char path[200];
-  snprintf (path, sizeof(path), "./.unittests");
-  snprintf (fullpath, pathsize, "%s/%s", path, filename);
-
-  ensure_unittest_path(path);
-}
-

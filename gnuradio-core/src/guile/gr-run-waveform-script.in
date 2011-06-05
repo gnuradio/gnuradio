@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# usage: prepend <path-varname> <dir>
+prepend() {
+  if [ $# -ne 2 ]
+  then
+    echo "$0: prepend needs 2 args" 1>&2
+    exit 1
+  fi
+  local path="$1" dir="$2" contents=""
+  eval "contents=\$$path"
+  if [ "$dir" != "" ]
+  then
+    if [ "$contents" = "" ]
+    then
+      eval "$path=\"$dir\""
+    else
+      eval "$path=\"$dir:$contents\""
+    fi
+  fi
+  #echo end-of-prepend: $path=${!path}
+}
+
+prefix="@prefix@"
+exec_prefix="@exec_prefix@"
+
+prepend GUILE_LOAD_PATH "${prefix}/share/guile/site"
+prepend LTDL_LIBRARY_PATH "@libdir@"
+prepend DYLD_LIBRARY_PATH "@libdir@"
+
+export GUILE_LOAD_PATH LTDL_LIBRARY_PATH DYLD_LIBRARY_PATH
+
+export GUILE_WARN_DEPRECATED="no"
+
+exec @GUILE@ -e main -s $0 "$@"
+!#
+
+;;; Load and run a waveform defined with define-waveform
+;;;
+;;; usage: gr-run-waveform filename.wfd [args...]
+
+(load-from-path "gnuradio/run-waveform")
+
+(define (main args)
+  (if (not (>= (length args) 2))
+      (let ((port (current-error-port)))
+	(display "usage: " port)
+	(display (car args) port)
+	(display " filename.wfd [args...]\n" port)
+	(exit 1)))
+  (apply run-waveform (cdr args)))

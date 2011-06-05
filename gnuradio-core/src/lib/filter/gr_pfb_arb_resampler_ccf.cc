@@ -58,8 +58,7 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
      process.
   */
   d_int_rate = filter_size;
-  d_dec_rate = (unsigned int)floor(d_int_rate/rate);
-  d_flt_rate = (d_int_rate/rate) - d_dec_rate;
+  set_rate(rate);
 
   // Store the last filter between calls to work
   d_last_filter = 0;
@@ -81,8 +80,6 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
   create_diff_taps(taps, dtaps);
   create_taps(taps, d_taps, d_filters);
   create_taps(dtaps, d_dtaps, d_diff_filters);
-
-  set_relative_rate(rate);
 }
 
 gr_pfb_arb_resampler_ccf::~gr_pfb_arb_resampler_ccf ()
@@ -181,7 +178,6 @@ gr_pfb_arb_resampler_ccf::general_work (int noutput_items,
   // produce output as long as we can and there are enough input samples
   int max_input = ninput_items[0]-(int)d_taps_per_filter;
   while((i < noutput_items) && (count < max_input)) {
-
     // start j by wrapping around mod the number of channels
     while((j < d_int_rate) && (i < noutput_items)) {
       // Take the current filter and derivative filter output

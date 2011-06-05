@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Slider:
+##	a combined slider and text box form
+###################################################
+ -->
+<block>
+	<name>WX GUI Slider</name>
+	<key>variable_slider</key>
+	<category>WX GUI Widgets</category>
+	<import>from gnuradio.wxgui import forms</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+#set $win = '_%s_sizer'%$id
+$win = wx.BoxSizer(wx.VERTICAL)
+self._$(id)_text_box = forms.text_box(
+	parent=$(parent).GetWin(),
+	sizer=$win,
+	value=self.$id,
+	callback=self.set_$(id),
+	#if $label()
+	label=$label,
+	#else
+	label='$id',
+	#end if
+	converter=forms.$(converver)(),
+	proportion=0,
+)
+self._$(id)_slider = forms.slider(
+	parent=$(parent).GetWin(),
+	sizer=$win,
+	value=self.$id,
+	callback=self.set_$(id),
+	minimum=$min,
+	maximum=$max,
+	num_steps=$num_steps,
+	style=$style,
+	cast=$(converver.slider_cast),
+	proportion=1,
+)
+#if not $grid_pos()
+$(parent).Add($win)
+#else
+$(parent).GridAdd($win, $(', '.join(map(str, $grid_pos()))))
+#end if</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>self._$(id)_slider.set_value($id)</callback>
+	<callback>self._$(id)_text_box.set_value($id)</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Minimum</name>
+		<key>min</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Maximum</name>
+		<key>max</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Num Steps</name>
+		<key>num_steps</key>
+		<value>100</value>
+		<type>int</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Style</name>
+		<key>style</key>
+		<value>wx.SL_HORIZONTAL</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Horizontal</name>
+			<key>wx.SL_HORIZONTAL</key>
+		</option>
+		<option>
+			<name>Vertical</name>
+			<key>wx.SL_VERTICAL</key>
+		</option>
+	</param>
+	<param>
+		<name>Converter</name>
+		<key>converver</key>
+		<value>float_converter</value>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float_converter</key>
+			<opt>slider_cast:float</opt>
+		</option>
+		<option>
+			<name>Integer</name>
+			<key>int_converter</key>
+			<opt>slider_cast:int</opt>
+		</option>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
+	<check>$min &lt;= $value &lt;= $max</check>
+	<check>$min &lt; $max</check>
+	<check>0 &lt; $num_steps &lt;= 1000</check>
+	<doc>
+This block creates a variable with a slider. \
+Leave the label blank to use the variable id as the label. \
+The value must be a real number. \
+The value must be between the minimum and the maximum. \
+The number of steps must be between 0 and 1000.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
+	</doc>
+</block>

@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <gr_math.h>
 #include <stdio.h>
+#include <boost/math/special_functions/fpclassify.hpp>
 
 using std::min;
 using std::max;
@@ -55,7 +56,7 @@ wrap (int d)
 static inline float 
 slice (float d)
 {
-  if (gr_isnan (d))
+  if (boost::math::isnan (d))
     return 0.0;
   
   if (d >= 0.0){
@@ -247,7 +248,7 @@ atsci_equalizer_lms2::filter1 (const float input[])
     acc -= d_taps_fb[i] * d_old_output[wrap(i + d_output_ptr)];
   }
 
-  if (gr_isnan (acc)){
+  if (boost::math::isnan (acc)){
     abort ();
   }
 

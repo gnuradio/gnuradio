@@ -1,5 +1,5 @@
 #
-# Copyright 2008, 2009 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,8 +24,6 @@ include $(top_srcdir)/Makefile.common
 ourdatadir = $(grc_blocksdir)
 dist_ourdata_DATA = \
 	block_tree.xml \
-	audio_sink.xml \
-	audio_source.xml \
 	band_pass_filter.xml \
 	band_reject_filter.xml \
 	blks2_am_demod_cf.xml \
@@ -50,6 +48,7 @@ dist_ourdata_DATA = \
 	blks2_packet_decoder.xml \
 	blks2_packet_encoder.xml \
 	blks2_pfb_arb_resampler.xml \
+	blks2_pfb_channelizer.xml \
 	blks2_qamx_demod.xml \
 	blks2_qamx_mod.xml \
 	blks2_rational_resampler_xxx.xml \
@@ -60,7 +59,6 @@ dist_ourdata_DATA = \
 	blks2_tcp_sink.xml \
 	blks2_tcp_source.xml \
 	blks2_valve.xml \
-	blks2_variable_sink_x.xml \
 	blks2_wfm_rcv.xml \
 	blks2_wfm_rcv_pll.xml \
 	blks2_wfm_tx.xml \
@@ -92,6 +90,7 @@ dist_ourdata_DATA = \
 	gr_correlate_access_code_bb.xml \
 	gr_costas_loop_cc.xml \
 	gr_cpfsk_bc.xml \
+	gr_dc_blocker.xml \
 	gr_decode_ccsds_27_fb.xml \
 	gr_deinterleave.xml \
 	gr_delay.xml \
@@ -122,6 +121,7 @@ dist_ourdata_DATA = \
 	gr_head.xml \
 	gr_hilbert_fc.xml \
 	gr_iir_filter_ffd.xml \
+	gr_int_to_float.xml \
 	gr_integrate_xx.xml \
 	gr_interleave.xml \
 	gr_interleaved_short_to_complex.xml \
@@ -150,6 +150,7 @@ dist_ourdata_DATA = \
 	gr_peak_detector2_fb.xml \
 	gr_peak_detector_xb.xml \
 	gr_pfb_clock_sync.xml \
+	gr_pfb_synthesis_filterbank.xml \
 	gr_phase_modulator_fc.xml \
 	gr_pll_carriertracking_cc.xml \
 	gr_pll_freqdet_cf.xml \
@@ -158,6 +159,7 @@ dist_ourdata_DATA = \
 	gr_probe_avg_mag_sqrd_x.xml \
 	gr_probe_density_b.xml \
 	gr_probe_mpsk_snr_c.xml \
+	gr_probe_signal_f.xml \
 	gr_pwr_squelch_xx.xml \
 	gr_quadrature_demod_cf.xml \
 	gr_rational_resampler_base_xxx.xml \
@@ -197,12 +199,10 @@ dist_ourdata_DATA = \
 	import.xml \
 	low_pass_filter.xml \
 	note.xml \
-	notebook.xml \
 	options.xml \
 	pad_sink.xml \
 	pad_source.xml \
 	parameter.xml \
-	probe_function.xml \
 	random_source_x.xml \
 	root_raised_cosine_filter.xml \
 	trellis_encoder_xx.xml \
@@ -212,29 +212,10 @@ dist_ourdata_DATA = \
 	trellis_siso_f.xml \
 	trellis_viterbi_combined_xx.xml \
 	trellis_viterbi_x.xml \
-	usrp2_probe.xml \
-	usrp2_sink_xxxx.xml \
-	usrp2_source_xxxx.xml \
-	usrp_dual_sink_x.xml \
-	usrp_dual_source_x.xml \
-	usrp_probe.xml \
-	usrp_simple_sink_x.xml \
-	usrp_simple_source_x.xml \
 	variable.xml \
-	variable_check_box.xml \
-	variable_chooser.xml \
 	variable_config.xml \
-	variable_slider.xml \
-	variable_static_text.xml \
-	variable_text_box.xml \
+	variable_function_probe.xml \
 	virtual_sink.xml \
 	virtual_source.xml \
-	wxgui_constellationsink2.xml \
-	wxgui_fftsink2.xml \
-	wxgui_histosink2.xml \
-	wxgui_numbersink2.xml \
-	wxgui_scopesink2.xml \
-	wxgui_termsink.xml \
-	wxgui_waterfallsink2.xml \
 	xmlrpc_client.xml \
 	xmlrpc_server.xml

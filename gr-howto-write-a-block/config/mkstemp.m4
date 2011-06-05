@@ -75,15 +75,4 @@ AC_DEFUN([jm_PREREQ_TEMPNAME],
   AC_CHECK_FUNCS(__secure_getenv gettimeofday lstat)
   AC_CHECK_DECLS_ONCE(getenv)
   # AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
-
-  dnl Under Win32, mkdir prototype in io.h has only one arg
-  AC_MSG_CHECKING(whether mkdir accepts only one arg)
-  AC_TRY_COMPILE([#include <sys/types.h>
-       #include <sys/stat.h>
-       #include <fcntl.h>], [
-       mkdir("")
-  ], [ AC_MSG_RESULT(yes)
-     AC_DEFINE(MKDIR_TAKES_ONE_ARG,[],[Define if mkdir accepts only one arg]) ],
-   [ AC_MSG_RESULT(no)
-     ])
 ])

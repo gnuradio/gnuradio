@@ -51,12 +51,7 @@ m4macros = \
 	grc_gnuradio_examples.m4 \
 	grc_grc.m4 \
 	grc_gr_atsc.m4 \
-	grc_gr_audio_alsa.m4 \
-	grc_gr_audio_jack.m4 \
-	grc_gr_audio_oss.m4 \
-	grc_gr_audio_osx.m4 \
-	grc_gr_audio_portaudio.m4 \
-	grc_gr_audio_windows.m4 \
+	grc_gr_audio.m4 \
 	grc_gr_comedi.m4 \
 	grc_gr_gcell.m4 \
 	grc_gr_gpio.m4 \
@@ -90,7 +85,6 @@ m4macros = \
 	gr_require_mc4020.m4 \
 	gr_scripting.m4 \
 	gr_set_md_cpu.m4 \
-	gr_standalone.m4 \
 	gr_subversion.m4 \
 	gr_swig.m4 \
 	gr_sysv_shm.m4 \
@@ -108,4 +102,4 @@ m4macros = \
 	usrp_libusb.m4 \
 	usrp_sdcc.m4
 
-EXTRA_DIST = $(m4macros) 
+EXTRA_DIST += $(m4macros)

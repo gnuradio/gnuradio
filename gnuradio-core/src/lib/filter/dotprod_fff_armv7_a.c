@@ -77,7 +77,8 @@ dotprod_fff_armv7_a(const float *a, const float *b, size_t n)
          "vpadd.f32 d0, d16, d17              \n\t"
          "vadd.f32  %0, s0, s1                \n\t"
          : "=w"(s), "+r"(a), "+r"(b), "+r"(n)
-         :: "q0", "q1", "q2", "q3", "q8", "q9");
+         :: "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7",
+	 "d16", "d17", "d18", "d19");
 
     return s;
 

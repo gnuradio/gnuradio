@@ -20,6 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <gruel/attributes.h>
 #include <cppunit/TestAssert.h>
 #include <qa_gr_rotator.h>
 #include <gr_rotator.h>
@@ -29,7 +34,7 @@
 
 
 // error vector magnitude
-__attribute__((unused)) static float
+__GR_ATTR_UNUSED static float
 error_vector_mag(gr_complex a, gr_complex b) 
 {
   return abs(a-b);
