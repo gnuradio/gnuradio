@@ -30,44 +30,29 @@
 #include <iostream>
 
 digital_lms_dd_equalizer_cc_sptr
-digital_make_lms_dd_equalizer_cc (float mu, int ntaps,
-				  digital_constellation_sptr cnst)
+digital_make_lms_dd_equalizer_cc(int num_taps, float mu, int sps,
+				 digital_constellation_sptr cnst)
 {
-  return gnuradio::get_initial_sptr(new digital_lms_dd_equalizer_cc (mu, ntaps, cnst));
+  return gnuradio::get_initial_sptr(new digital_lms_dd_equalizer_cc(num_taps, mu,
+								    sps, cnst));
 }
 
-digital_lms_dd_equalizer_cc::digital_lms_dd_equalizer_cc (float mu, int ntaps,
-							  digital_constellation_sptr cnst)
-  : gr_sync_block ("lms_dd_equalizer_cc",
-		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
-		   gr_make_io_signature (1, 1, sizeof (gr_complex))),
-    d_taps(ntaps), d_cnst(cnst)
+digital_lms_dd_equalizer_cc::digital_lms_dd_equalizer_cc(int num_taps, float mu,
+							 int sps,
+							 digital_constellation_sptr cnst)
+  : gr_adaptive_fir_ccc("lms_dd_equalizer_cc", sps,
+			std::vector<gr_complex>(num_taps, gr_complex(0,0))),
+    d_taps(num_taps), d_cnst(cnst)
 {
-  set_mu(mu);
-
-  gr_zero_vector(d_taps);
-  d_taps [d_taps.size()/2] = 1;
-
-  set_history(ntaps+1);
+  set_gain(mu);
+  if (num_taps > 0)
+    d_taps[num_taps/2] = 1.0;
 }
 
-float
-digital_lms_dd_equalizer_cc::get_mu()
-{
-  return d_mu;
-}
 
-void
-digital_lms_dd_equalizer_cc::set_mu(float mu)
-{
-  if(mu < 0.0f || mu > 1.0f) {
-    throw std::out_of_range("digital_lms_dd_equalizer::set_mu: Gain value must in [0, 1]");
-  }
-  else {
-    d_mu = mu;
-  }
-}
 
+
+/*
 int
 digital_lms_dd_equalizer_cc::work (int noutput_items,
 				   gr_vector_const_void_star &input_items,
@@ -97,3 +82,4 @@ digital_lms_dd_equalizer_cc::work (int noutput_items,
 
   return noutput_items;
 }
+*/

@@ -8,16 +8,21 @@
 	<name>LMS DD Equalizer</name>
 	<key>digital_lms_dd_equalizer_cc</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.lms_dd_equalizer_cc($mu, $num_taps, $cnst)</make>
+	<make>digital.lms_dd_equalizer_cc($num_taps, $mu, $sps, $cnst)</make>
 	<callback>set_gain($mu)</callback>
 	<param>
-		<name>Mu</name>
+		<name>Gain</name>
 		<key>mu</key>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Num. Taps</name>
 		<key>num_taps</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Samples per Symbol</name>
+		<key>sps</key>
 		<type>int</type>
 	</param>
 	<param>

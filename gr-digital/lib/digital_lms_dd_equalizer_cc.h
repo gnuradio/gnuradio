@@ -23,15 +23,16 @@
 #ifndef INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_H
 #define INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_H
 
-#include <gr_sync_block.h>
+#include <gr_adaptive_fir_ccc.h>
 #include <digital_constellation.h>
 
 class digital_lms_dd_equalizer_cc;
 typedef boost::shared_ptr<digital_lms_dd_equalizer_cc> digital_lms_dd_equalizer_cc_sptr;
 
-digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (float mu, int ntaps,
+digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (int num_taps,
+								   float mu, int sps,
 								   digital_constellation_sptr cnst);
-
+								   
 /*!
  * \brief Least-Mean-Square Decision Directed Equalizer (complex in/out)
  * \ingroup eq_blk
@@ -64,25 +65,52 @@ digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (float mu, int
  *    Prentice Hall, 1996.
  *
  */
-class digital_lms_dd_equalizer_cc : public gr_sync_block
+class digital_lms_dd_equalizer_cc : public gr_adaptive_fir_ccc
 {
 private:
-  friend digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (float mu, int ntaps,
+  friend digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (int num_taps,
+									    float mu, int sps,
 									    digital_constellation_sptr cnst);
   
   float	d_mu;
   std::vector<gr_complex>  d_taps;
   digital_constellation_sptr d_cnst;
 
-  digital_lms_dd_equalizer_cc (float mu, int ntaps,
+  digital_lms_dd_equalizer_cc (int num_taps,
+			       float mu, int sps,
 			       digital_constellation_sptr cnst);
 
+protected:
+
+  virtual gr_complex error(const gr_complex &out) 
+  { 
+    gr_complex decision, error;
+    d_cnst->map_to_points(d_cnst->decision_maker(&out), &decision);
+    error = decision - out;
+    return error;
+  }
+
+  virtual void update_tap(gr_complex &tap, const gr_complex &in) 
+  {
+    tap += d_mu*conj(in)*d_error;
+  }
+
 public:
-  float get_mu();
-  void  set_mu(float mu);
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  float get_gain()
+  {
+    return d_mu;
+  }
+  
+  void set_gain(float mu)
+  {
+    if(mu < 0.0f || mu > 1.0f) {
+      throw std::out_of_range("digital_lms_dd_equalizer::set_mu: Gain value must in [0, 1]");
+    }
+    else {
+      d_mu = mu;
+    }
+  }
+  
 };
 
 #endif
