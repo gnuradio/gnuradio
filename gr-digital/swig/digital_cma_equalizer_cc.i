@@ -27,17 +27,18 @@ GR_SWIG_BLOCK_MAGIC(digital,cma_equalizer_cc)
 %import "gr_adaptive_fir_ccc.i"
 
 digital_cma_equalizer_cc_sptr
-digital_make_cma_equalizer_cc(int num_taps,
-			      float modulus,
-			      float mu,
-			      int sps);
+digital_make_cma_equalizer_cc(int num_taps, float modulus,
+			      float mu, int sps);
 
 class digital_cma_equalizer_cc : public gr_adaptive_fir_ccc
 {
 private:
-  digital_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps);
+  digital_cma_equalizer_cc(int num_taps, float modulus,
+			   float mu, int sps);
 
 public:
+  float get_gain();
   void set_gain(float mu);
+  float get_modulus();
   void set_modulus(float mod);
 };

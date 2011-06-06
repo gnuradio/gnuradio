@@ -22,7 +22,7 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Mu</name>
+		<name>Gain</name>
 		<key>mu</key>
 		<type>real</type>
 	</param>

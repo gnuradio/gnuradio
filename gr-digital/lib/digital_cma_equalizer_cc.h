@@ -72,11 +72,22 @@ protected:
   }
   
 public:
+  float get_gain() 
+  {
+    return d_mu;
+  }
+
   void set_gain(float mu) 
   {
-    if(mu < 0)
-      throw std::out_of_range("digital_cma_equalizer::set_gain: Gain value must be >= 0");
+    if(mu < 0.0f || mu > 1.0f) {
+      throw std::out_of_range("digital_cma_equalizer::set_gain: Gain value must be in [0,1]");
+    }
     d_mu = mu;
+  }
+    
+  float get_modulus() 
+  {
+    return d_modulus;
   }
 
   void set_modulus(float mod) 
