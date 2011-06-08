@@ -110,7 +110,7 @@ class TimeScaleData
 public:
   TimeScaleData()
   {
-    timespec_reset(&_zeroTime);
+    highres_timespec_reset(&_zeroTime);
     _secondsPerLine = 1.0;
   }
   
@@ -118,12 +118,12 @@ public:
   {    
   }
 
-  virtual timespec GetZeroTime() const
+  virtual highres_timespec GetZeroTime() const
   {
     return _zeroTime;
   }
   
-  virtual void SetZeroTime(const timespec newTime)
+  virtual void SetZeroTime(const highres_timespec newTime)
   {
     _zeroTime = newTime;
   }
@@ -140,7 +140,7 @@ public:
 
   
 protected:
-  timespec _zeroTime;
+  highres_timespec _zeroTime;
   double _secondsPerLine;
   
 private:
@@ -160,7 +160,7 @@ public:
 
   virtual QwtText label(double value) const
   {
-    timespec lineTime = timespec_add(GetZeroTime(), (-value) * GetSecondsPerLine());
+    highres_timespec lineTime = highres_timespec_add(GetZeroTime(), -value*GetSecondsPerLine());
     std::string time_str = pt::to_simple_string(pt::from_time_t(lineTime.tv_sec));
 
     // lops off the YYYY-mmm-DD part of the string
@@ -212,7 +212,7 @@ protected:
   using QwtPlotZoomer::trackerText;
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    timespec lineTime = timespec_add(GetZeroTime(), (-p.y()) * GetSecondsPerLine());
+    highres_timespec lineTime = highres_timespec_add(GetZeroTime(), -p.y()*GetSecondsPerLine());
     std::string time_str = pt::to_simple_string(pt::from_time_t(lineTime.tv_sec));
 
     // lops off the YYYY-mmm-DD part of the string
@@ -254,7 +254,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   setAxisTitle(QwtPlot::yLeft, "Time");
   setAxisScaleDraw(QwtPlot::yLeft, new QwtTimeScaleDraw());
 
-  timespec_reset(&_lastReplot);
+  highres_timespec_reset(&_lastReplot);
 
   d_spectrogram = new PlotWaterfall(_waterfallData, "Waterfall Display");
 
@@ -389,7 +389,7 @@ void
 WaterfallDisplayPlot::PlotNewData(const double* dataPoints, 
 				  const int64_t numDataPoints,
 				  const double timePerFFT,
-				  const timespec timestamp,
+				  const highres_timespec timestamp,
 				  const int droppedFrames)
 {
   if(numDataPoints > 0){
@@ -408,7 +408,7 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
       _lastReplot = get_highres_clock();
     }
 
-    if(diff_timespec(get_highres_clock(), _lastReplot) > timePerFFT) {
+    if(diff_highres_timespec(get_highres_clock(), _lastReplot) > timePerFFT) {
       //FIXME: We may want to average the data between these updates to smooth display
       _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
       _waterfallData->IncrementNumLinesToUpdate();

@@ -16,10 +16,10 @@ public:
 		      const double* realTimeDomainPoints,
 		      const double* imagTimeDomainPoints,
 		      const uint64_t numTimeDomainDataPoints,
-		      const timespec dataTimestamp,
+		      const highres_timespec dataTimestamp,
 		      const bool repeatDataFlag,
 		      const bool lastOfMultipleUpdateFlag,
-		      const timespec generatedTimestamp,
+		      const highres_timespec generatedTimestamp,
 		      const int droppedFFTFrames);
 
   ~SpectrumUpdateEvent();
@@ -29,10 +29,10 @@ public:
   const double* getImagTimeDomainPoints() const;
   uint64_t getNumFFTDataPoints() const;
   uint64_t getNumTimeDomainDataPoints() const;
-  timespec getDataTimestamp() const;
+  highres_timespec getDataTimestamp() const;
   bool getRepeatDataFlag() const;
   bool getLastOfMultipleUpdateFlag() const;
-  timespec getEventGeneratedTimestamp() const;
+  highres_timespec getEventGeneratedTimestamp() const;
   int getDroppedFFTFrames() const;
 
 protected:
@@ -43,10 +43,10 @@ private:
   double* _imagDataTimeDomainPoints;
   uint64_t _numFFTDataPoints;
   uint64_t _numTimeDomainDataPoints;
-  timespec _dataTimestamp;
+  highres_timespec _dataTimestamp;
   bool _repeatDataFlag;
   bool _lastOfMultipleUpdateFlag;
-  timespec _eventGeneratedTimestamp;
+  highres_timespec _eventGeneratedTimestamp;
   int _droppedFFTFrames;
 };
 

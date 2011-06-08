@@ -51,7 +51,7 @@ public:
   double GetStopFrequency()const;
 
   void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
-		   const double timePerFFT, const timespec timestamp,
+		   const double timePerFFT, const highres_timespec timestamp,
 		   const int droppedFrames);
 
   void SetIntensityRange(const double minIntensity, const double maxIntensity);
@@ -98,7 +98,7 @@ private:
 
   WaterfallData* _waterfallData;
 
-  timespec _lastReplot;
+  highres_timespec _lastReplot;
 
   bool _useCenterFrequencyFlag;
 

@@ -122,7 +122,7 @@ private:
 
   double _noiseFloorAmplitude;
 
-  timespec _lastReplot;
+  highres_timespec _lastReplot;
 
   bool _useCenterFrequencyFlag;
 };

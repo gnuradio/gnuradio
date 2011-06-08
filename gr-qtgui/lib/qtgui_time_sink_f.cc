@@ -94,7 +94,7 @@ qtgui_time_sink_f::initialize()
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
-  timespec_reset(&d_last_time);
+  highres_timespec_reset(&d_last_time);
 }
 
 
@@ -170,7 +170,7 @@ qtgui_time_sink_f::general_work (int noutput_items,
       }	
 
       // Update the plot if its time
-      if(diff_timespec(d_current_time, d_last_time) > d_update_time) {
+      if(diff_highres_timespec(d_current_time, d_last_time) > d_update_time) {
 	d_last_time = d_current_time;
 	d_qApplication->postEvent(d_main_gui,
 				  new TimeUpdateEvent(d_residbufs, d_size));	

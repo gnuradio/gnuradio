@@ -66,7 +66,7 @@ public:
 		    const uint64_t, const float*,
 		    const uint64_t, const float*,
 		    const uint64_t,
-		    const timespec, const bool);
+		    const highres_timespec, const bool);
 
   float GetPowerValue();
   void SetPowerValue(const float);
@@ -78,8 +78,8 @@ public:
   int GetFFTSizeIndex();
   void SetFFTSize(const int);
 
-  timespec GetLastGUIUpdateTime();
-  void SetLastGUIUpdateTime(const timespec);
+  highres_timespec GetLastGUIUpdateTime();
+  void SetLastGUIUpdateTime(const highres_timespec);
 
   unsigned int GetPendingGUIUpdateEvents();
   void IncrementPendingGUIUpdateEvents();
@@ -114,7 +114,7 @@ private:
   int _windowType;
   int64_t _lastDataPointCount;
   int _fftSize;
-  timespec _lastGUIUpdateTime;
+  highres_timespec _lastGUIUpdateTime;
   unsigned int _pendingGUIUpdateEventsCount;
   int _droppedEntriesCount;
   bool _fftBuffersCreatedFlag;

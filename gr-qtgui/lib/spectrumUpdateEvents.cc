@@ -8,10 +8,10 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
 					 const double* realTimeDomainPoints,
 					 const double* imagTimeDomainPoints,
 					 const uint64_t numTimeDomainDataPoints,
-					 const timespec dataTimestamp,
+					 const highres_timespec dataTimestamp,
 					 const bool repeatDataFlag,
 					 const bool lastOfMultipleUpdateFlag,
-					 const timespec generatedTimestamp,
+					 const highres_timespec generatedTimestamp,
 					 const int droppedFFTFrames)
   : QEvent(QEvent::Type(10005))
 {
@@ -90,7 +90,7 @@ SpectrumUpdateEvent::getNumTimeDomainDataPoints() const
   return _numTimeDomainDataPoints;
 }
 
-timespec
+highres_timespec
 SpectrumUpdateEvent::getDataTimestamp() const
 {
   return _dataTimestamp;
@@ -108,7 +108,7 @@ SpectrumUpdateEvent::getLastOfMultipleUpdateFlag() const
   return _lastOfMultipleUpdateFlag;
 }
 
-timespec
+highres_timespec
 SpectrumUpdateEvent::getEventGeneratedTimestamp() const
 {
   return _eventGeneratedTimestamp;

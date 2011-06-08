@@ -83,7 +83,7 @@ private:
   double* _realDataPoints;
   double* _imagDataPoints;
 
-  timespec _lastReplot;
+  highres_timespec _lastReplot;
 
   int64_t _numPoints;
   int64_t _penSize;
