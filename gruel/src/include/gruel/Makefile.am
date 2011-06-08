@@ -27,6 +27,7 @@ gruelincludedir = $(prefix)/include/gruel
 
 gruelinclude_HEADERS = \
 	attributes.h \
+	high_res_timer.h \
 	inet.h \
 	msg_accepter.h \
 	msg_accepter_msgq.h \
