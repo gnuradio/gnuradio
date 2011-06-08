@@ -147,6 +147,19 @@ private:
   
 };
 
+static QString
+make_time_label(double secs)
+{
+  std::string time_str = pt::to_simple_string(pt::from_time_t(time_t(secs)));
+
+  // lops off the YYYY-mmm-DD part of the string
+  size_t ind =  time_str.find(" ");
+  if(ind != std::string::npos)
+    time_str = time_str.substr(ind);
+
+  return QString("").sprintf("%s.%03ld", time_str.c_str(), long(std::fmod(secs*1000, 1000)));
+}
+
 class QwtTimeScaleDraw: public QwtScaleDraw, public TimeScaleData
 {
 public:
@@ -161,14 +174,7 @@ public:
   virtual QwtText label(double value) const
   {
     double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (value * GetSecondsPerLine());
-    std::string time_str = pt::to_simple_string(pt::from_time_t(time_t(secs)));
-
-    // lops off the YYYY-mmm-DD part of the string
-    size_t ind =  time_str.find(" ");
-    if(ind != std::string::npos)
-      time_str = time_str.substr(ind);
-    return QwtText(QString("").sprintf("%s.%03ld", time_str.c_str(),
-				       long(std::fmod(secs*1000, 1000))));
+    return QwtText(make_time_label(secs));
   }
 
   virtual void initiateUpdate()
@@ -214,18 +220,9 @@ protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
     double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (p.y() * GetSecondsPerLine());
-    std::string time_str = pt::to_simple_string(pt::from_time_t(time_t(secs)));
-
-    // lops off the YYYY-mmm-DD part of the string
-    size_t ind =  time_str.find(" ");
-    if(ind != std::string::npos)
-      time_str = time_str.substr(ind);
-    QString yLabel(QString("").sprintf("%s.%03ld", time_str.c_str(),
-				       long(std::fmod(secs*1000, 1000))));
-
     QwtText t(QString("%1 %2, %3").
-	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
-	      arg(_unitType.c_str()).arg(yLabel));
+ 	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
+	      arg(_unitType.c_str()).arg(make_time_label(secs)));
     return t;
   }
 
