@@ -125,7 +125,7 @@ public:
   
   virtual void SetZeroTime(const gruel::high_res_timer_type newTime)
   {
-    _zeroTime = newTime;
+    _zeroTime = newTime - gruel::high_res_timer_epoch();
   }
 
   virtual void SetSecondsPerLine(const double newTime)
