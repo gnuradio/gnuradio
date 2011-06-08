@@ -159,7 +159,7 @@ qtgui_time_sink_f::general_work (int noutput_items,
     
     // If we have enough input for one full plot, do it
     if(datasize >= resid) {
-      d_current_time = get_highres_clock();
+      d_current_time = gruel::high_res_timer_now();
       
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n++) {
@@ -170,7 +170,7 @@ qtgui_time_sink_f::general_work (int noutput_items,
       }	
 
       // Update the plot if its time
-      if(get_highres_clock() - d_last_time > d_update_time) {
+      if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	d_last_time = d_current_time;
 	d_qApplication->postEvent(d_main_gui,
 				  new TimeUpdateEvent(d_residbufs, d_size));	

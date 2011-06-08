@@ -183,8 +183,8 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
 					   const double timeInterval)
 {
   if((numDataPoints > 0) && 
-     (get_highres_clock() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
-    
+     (gruel::high_res_timer_now() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
+
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
 
@@ -199,7 +199,7 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
     memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
     memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
 
-    _lastReplot = get_highres_clock();
+    _lastReplot = gruel::high_res_timer_now();
   }
 }
 

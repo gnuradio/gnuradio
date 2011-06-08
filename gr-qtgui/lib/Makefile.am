@@ -70,7 +70,6 @@ grinclude_HEADERS =			\
 	WaterfallDisplayPlot.h		\
 	waterfallGlobalData.h		\
 	ConstellationDisplayPlot.h	\
-	highResTimeFunctions.h		\
 	plot_waterfall.h		\
 	spectrumdisplayform.h		\
 	timedisplayform.h		\

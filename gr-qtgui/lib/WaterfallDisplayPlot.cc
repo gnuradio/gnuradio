@@ -118,12 +118,12 @@ public:
   {    
   }
 
-  virtual highres_timespec GetZeroTime() const
+  virtual gruel::high_res_timer_type GetZeroTime() const
   {
     return _zeroTime;
   }
   
-  virtual void SetZeroTime(const highres_timespec newTime)
+  virtual void SetZeroTime(const gruel::high_res_timer_type newTime)
   {
     _zeroTime = newTime;
   }
@@ -140,7 +140,7 @@ public:
 
   
 protected:
-  highres_timespec _zeroTime;
+  gruel::high_res_timer_type _zeroTime;
   double _secondsPerLine;
   
 private:
@@ -391,7 +391,7 @@ void
 WaterfallDisplayPlot::PlotNewData(const double* dataPoints, 
 				  const int64_t numDataPoints,
 				  const double timePerFFT,
-				  const highres_timespec timestamp,
+				  const gruel::high_res_timer_type timestamp,
 				  const int droppedFrames)
 {
   if(numDataPoints > 0){
@@ -407,10 +407,10 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
 	replot();
       }
       
-      _lastReplot = get_highres_clock();
+      _lastReplot = gruel::high_res_timer_now();
     }
 
-    if(get_highres_clock() - _lastReplot > timePerFFT*gruel::high_res_timer_tps()) {
+    if(gruel::high_res_timer_now() - _lastReplot > timePerFFT*gruel::high_res_timer_tps()) {
       //FIXME: We may want to average the data between these updates to smooth display
       _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
       _waterfallData->IncrementNumLinesToUpdate();
@@ -427,7 +427,7 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
       
       replot();
 
-      _lastReplot = get_highres_clock();
+      _lastReplot = gruel::high_res_timer_now();
     }
   }
 }
@@ -570,7 +570,7 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
   replot();
 
   // Update the last replot timer
-  _lastReplot = get_highres_clock();
+  _lastReplot = gruel::high_res_timer_now();
 }
 
 void
