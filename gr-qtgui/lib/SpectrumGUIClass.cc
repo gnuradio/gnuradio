@@ -54,7 +54,7 @@ SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
 
   _windowType = 5;
 
-  highres_timespec_reset(_lastGUIUpdateTime);
+  _lastGUIUpdateTime = 0;  
 
   _windowOpennedFlag = false;
   _fftBuffersCreatedFlag = false;
@@ -123,7 +123,7 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
   qApp->postEvent(_spectrumDisplayForm,
 		  new QEvent(QEvent::Type(QEvent::User+3)));
 
-  highres_timespec_reset(_lastGUIUpdateTime);
+  _lastGUIUpdateTime = 0;
 
   // Draw Blank Display
   UpdateWindow(false, NULL, 0, NULL, 0, NULL, 0, get_highres_clock(), true);
@@ -286,8 +286,8 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
   const highres_timespec currentTime = get_highres_clock();
   const highres_timespec lastUpdateGUITime = GetLastGUIUpdateTime();
 
-  if((diff_highres_timespec(currentTime, lastUpdateGUITime) > (4*_updateTime)) &&
-     (GetPendingGUIUpdateEvents() > 0) && !highres_timespec_empty(lastUpdateGUITime)) {
+  if((currentTime - lastUpdateGUITime > (4*_updateTime)*gruel::high_res_timer_tps()) &&
+     (GetPendingGUIUpdateEvents() > 0) && lastUpdateGUITime != 0) {
     // Do not update the display if too much data is pending to be displayed
     _droppedEntriesCount++;
   }

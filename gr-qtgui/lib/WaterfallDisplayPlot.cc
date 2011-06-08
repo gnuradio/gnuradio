@@ -110,7 +110,7 @@ class TimeScaleData
 public:
   TimeScaleData()
   {
-    highres_timespec_reset(_zeroTime);
+    _zeroTime = 0;
     _secondsPerLine = 1.0;
   }
   
@@ -160,15 +160,15 @@ public:
 
   virtual QwtText label(double value) const
   {
-    highres_timespec lineTime = highres_timespec_add(GetZeroTime(), -value*GetSecondsPerLine());
-    unsigned long milliseconds = lineTime*1000/gruel::high_res_timer_tps();
-    std::string time_str = pt::to_simple_string(pt::from_time_t(milliseconds/1000));
+    double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (value * GetSecondsPerLine());
+    std::string time_str = pt::to_simple_string(pt::from_time_t(time_t(secs)));
 
     // lops off the YYYY-mmm-DD part of the string
     size_t ind =  time_str.find(" ");
     if(ind != std::string::npos)
       time_str = time_str.substr(ind);
-    return QwtText(QString("").sprintf("%s.%03ld", time_str.c_str(), milliseconds%1000));
+    return QwtText(QString("").sprintf("%s.%03ld", time_str.c_str(),
+				       long(std::fmod(secs*1000, 1000))));
   }
 
   virtual void initiateUpdate()
@@ -213,15 +213,15 @@ protected:
   using QwtPlotZoomer::trackerText;
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    highres_timespec lineTime = highres_timespec_add(GetZeroTime(), -p.y()*GetSecondsPerLine());
-    unsigned long milliseconds = lineTime*1000/gruel::high_res_timer_tps();
-    std::string time_str = pt::to_simple_string(pt::from_time_t(milliseconds/1000));
+    double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (p.y() * GetSecondsPerLine());
+    std::string time_str = pt::to_simple_string(pt::from_time_t(time_t(secs)));
 
     // lops off the YYYY-mmm-DD part of the string
     size_t ind =  time_str.find(" ");
     if(ind != std::string::npos)
       time_str = time_str.substr(ind);
-    QString yLabel(QString("").sprintf("%s.%03ld", time_str.c_str(), milliseconds%1000));
+    QString yLabel(QString("").sprintf("%s.%03ld", time_str.c_str(),
+				       long(std::fmod(secs*1000, 1000))));
 
     QwtText t(QString("%1 %2, %3").
 	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
@@ -256,7 +256,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   setAxisTitle(QwtPlot::yLeft, "Time");
   setAxisScaleDraw(QwtPlot::yLeft, new QwtTimeScaleDraw());
 
-  highres_timespec_reset(_lastReplot);
+  _lastReplot = 0;
 
   d_spectrogram = new PlotWaterfall(_waterfallData, "Waterfall Display");
 
@@ -410,7 +410,7 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
       _lastReplot = get_highres_clock();
     }
 
-    if(diff_highres_timespec(get_highres_clock(), _lastReplot) > timePerFFT) {
+    if(get_highres_clock() - _lastReplot > timePerFFT*gruel::high_res_timer_tps()) {
       //FIXME: We may want to average the data between these updates to smooth display
       _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
       _waterfallData->IncrementNumLinesToUpdate();

@@ -58,7 +58,7 @@ protected:
 ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   : QwtPlot(parent)
 {
-  highres_timespec_reset(_lastReplot);
+  _lastReplot = 0;
 
   resize(parent->width(), parent->height());
 
@@ -183,7 +183,7 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
 					   const double timeInterval)
 {
   if((numDataPoints > 0) && 
-     (diff_highres_timespec(get_highres_clock(), _lastReplot) > timeInterval)) {
+     (get_highres_clock() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
     
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
