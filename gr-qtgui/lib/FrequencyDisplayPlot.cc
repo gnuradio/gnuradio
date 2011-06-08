@@ -120,7 +120,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   _startFrequency = 0;
   _stopFrequency = 4000;
   
-  highres_timespec_reset(&_lastReplot);
+  highres_timespec_reset(_lastReplot);
 
   resize(parent->width(), parent->height());
   

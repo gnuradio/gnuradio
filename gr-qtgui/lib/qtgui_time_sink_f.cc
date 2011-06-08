@@ -94,7 +94,7 @@ qtgui_time_sink_f::initialize()
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
-  highres_timespec_reset(&d_last_time);
+  highres_timespec_reset(d_last_time);
 }
 
 

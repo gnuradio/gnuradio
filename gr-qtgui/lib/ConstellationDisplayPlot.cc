@@ -58,7 +58,7 @@ protected:
 ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   : QwtPlot(parent)
 {
-  highres_timespec_reset(&_lastReplot);
+  highres_timespec_reset(_lastReplot);
 
   resize(parent->width(), parent->height());
 
