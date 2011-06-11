@@ -181,15 +181,39 @@ bitshark_rx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *d
     struct db_bitshark_rx_dummy *db = (struct db_bitshark_rx_dummy *) dbb;    
     unsigned char args[NUM_BYTES_IN_I2C_CMD];
     unsigned char val[4];
-    uint32_t freq_in_khz = (uint32_t)(u2_fxpt_freq_round_to_uint(freq)/1000);
-    
+    uint32_t freq_in_hz = (uint32_t)(u2_fxpt_freq_round_to_uint(freq));
+    uint32_t freq_div_5mhz = freq_in_hz/5000000;
+    uint32_t freq_rounded_to_5mhz_in_khz = freq_div_5mhz*5000;
+    uint64_t freq_rounded_to_5mhz_in_hz = ((uint64_t)freq_rounded_to_5mhz_in_khz)*1000;
+    uint64_t temp;
+   
     if(!(freq>=db->base.freq_min && freq<=db->base.freq_max)) 
     {
 	return false;
     }
+
+    /* There is a bug in the BURX firmware where tuning to frequencies
+       above 2.2 GHz will result in a small final frequency error
+       (up to a few KHz).  This bug is due to an overflow of a 16-bit
+       value when the input reference clock is sufficiently high (such
+       as the 100 MHz clock used on the USRP2), AND the requested tuning
+       frequency is not a multiple of 5 MHz.  A fix for the BURX firmware
+       is available from Epiq Solutions, but requires an AVR microcontroller 
+       programmer to update the firmware on the BURX card directly.  An 
+       alternate solution is to enforce a policy where the BURX card only
+       tunes to frequencies that are multiples of 5 MHz, and uses the
+       DDC in the FPGA to perform any fine-tuning less than 5 MHz.  So
+       an application can still request an abribrary RF tuning frequency,
+       but the BURX card will be directed to tune to the next lowest
+       multiple of 5 MHz, and return the DC-centered freq to the calling
+       function to allow the DDC in the FPGA to perform the final 
+       down-conversion digitally.  This policy also reduces the overall
+       spurious content due to the LO synthesizer, as the Frac-N portion
+       of the ADF4350 synthesizer isn't being invoked in modes where
+       high spur content would be seen. */
     
     memset(args,0x00,NUM_BYTES_IN_I2C_CMD);
-    memcpy(val,&freq_in_khz,4);
+    memcpy(val,&freq_rounded_to_5mhz_in_khz,4);
     args[0] = RF_CENTER_FREQ_REG;
     args[5] = val[3];
     args[6] = val[2];
@@ -211,7 +235,13 @@ bitshark_rx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *d
        delays too, but this seems to be stable. */
     mdelay(5);
 
-   *dc = freq;
+    /* shift the value up so that it is represented properly in the fixed
+       point mode...
+    */
+    temp = freq_rounded_to_5mhz_in_hz << U2_FPF_RP;
+
+
+    *dc = (u2_fxpt_freq_t)temp;
     return true;
 }
 
