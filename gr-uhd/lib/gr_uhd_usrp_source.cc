@@ -182,19 +182,37 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        //wait for a packet to become available
+        //In order to allow for low-latency:
+        //We receive all available packets without timeout.
+        //This call can timeout under regular operation...
         size_t num_samps = _dev->get_device()->recv(
             output_items, noutput_items, _metadata,
-            _type, uhd::device::RECV_MODE_ONE_PACKET, 1.0
+            _type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
         );
+
+        //If receive resulted in a timeout condition:
+        //We now receive a single packet with a large timeout.
+        if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT){
+            num_samps = _dev->get_device()->recv(
+                output_items, noutput_items, _metadata,
+                _type, uhd::device::RECV_MODE_ONE_PACKET, 1.0
+            );
+        }
 
         //handle possible errors conditions
         switch(_metadata.error_code){
         case uhd::rx_metadata_t::ERROR_CODE_NONE:
+            //TODO insert tag for time stamp
             break;
+
+        case uhd::rx_metadata_t::ERROR_CODE_TIMEOUT:
+            //Assume that the user called stop() on the flow graph.
+            //However, a timeout can occur under error conditions.
+            return WORK_DONE;
 
         case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
             //ignore overflows and try work again
+            //TODO insert tag for overflow
             return work(noutput_items, input_items, output_items);
 
         default:
@@ -203,18 +221,6 @@ public:
             ) % _metadata.error_code << std::endl;
             return num_samps;
         }
-
-        //advance the pointers and count by num_samps
-        noutput_items -= num_samps;
-        for (size_t i = 0; i < _nchan; i++){
-            _tmp_buffs[i] = static_cast<char *>(output_items[i]) + num_samps*_type.size;
-        }
-
-        //receive all available packets without timeout
-        num_samps += _dev->get_device()->recv(
-            _tmp_buffs, noutput_items, _metadata,
-            _type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
-        );
 
         return num_samps;
     }
