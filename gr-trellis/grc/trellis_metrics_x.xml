@@ -5,11 +5,11 @@
 ###################################################
  -->
 
-<category>Trellis</category>
 
 <block>
 	<name>Trellis Metrics</name>
 	<key>trellis_metrics_x</key>
+	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.metrics_$(type)($card, $dim, $table, $metric_type)</make>
 	<callback>set_TABLE($table)</callback>

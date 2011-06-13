@@ -5,11 +5,11 @@
 ###################################################
  -->
 
-<category>Trellis</category>
 
 <block>
 	<name>Trellis Permutation</name>
 	<key>trellis_permutation</key>
+	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.permutation($block_size, $table, $syms_per_block, $type.size*$vlen)</make>
 	<param>

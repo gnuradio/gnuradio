@@ -5,11 +5,10 @@
 ###################################################
  -->
 
-<category>Trellis</category>
-
 <block>
 	<name>Trellis Encoder</name>
 	<key>trellis_encoder_xx</key>
+	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.encoder_$(type)(trellis.fsm($fsm_args), $init_state)</make>
 	<param>

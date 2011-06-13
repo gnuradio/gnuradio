@@ -5,11 +5,11 @@
 ###################################################
  -->
 
-<category>Trellis</category>
 
 <block>
 	<name>Trellis Viterbi</name>
 	<key>trellis_viterbi_x</key>
+	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.viterbi_$(type)(trellis.fsm($fsm_args), $block_size, $init_state, $final_state)</make>
 	<param>
