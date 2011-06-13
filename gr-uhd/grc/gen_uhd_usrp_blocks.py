@@ -298,7 +298,7 @@ def parse_tmpl(_tmpl, **kwargs):
 	from Cheetah import Template
 	return str(Template.Template(_tmpl, kwargs))
 
-max_num_mboards = 4
+max_num_mboards = 8
 max_num_channels = max_num_mboards*4
 
 if __name__ == '__main__':

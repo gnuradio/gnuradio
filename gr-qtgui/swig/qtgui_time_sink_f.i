@@ -33,7 +33,7 @@ qtgui_time_sink_f_sptr qtgui_make_time_sink_f(int size, double bw,
 					      int nconnections=1,
 					      QWidget *parent=NULL);
 
-class qtgui_time_sink_f : public gr_block
+class qtgui_time_sink_f : public gr_sync_block
 {
 private:
   friend qtgui_time_sink_f_sptr qtgui_make_time_sink_f(int size, double bw,

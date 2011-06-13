@@ -32,7 +32,7 @@
 #include <qtgui_util.h>
 #include <plot_waterfall.h>
 
-#include <highResTimeFunctions.h>
+#include <gruel/high_res_timer.h>
 
 class WaterfallDisplayPlot:public QwtPlot{
   Q_OBJECT
@@ -51,7 +51,7 @@ public:
   double GetStopFrequency()const;
 
   void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
-		   const double timePerFFT, const timespec timestamp,
+		   const double timePerFFT, const gruel::high_res_timer_type timestamp,
 		   const int droppedFrames);
 
   void SetIntensityRange(const double minIntensity, const double maxIntensity);
@@ -98,7 +98,7 @@ private:
 
   WaterfallData* _waterfallData;
 
-  timespec _lastReplot;
+  gruel::high_res_timer_type _lastReplot;
 
   bool _useCenterFrequencyFlag;
 

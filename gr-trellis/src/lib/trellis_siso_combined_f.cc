@@ -125,6 +125,13 @@ trellis_siso_combined_f::forecast (int noutput_items, gr_vector_int &ninput_item
   }
 }
 
+
+
+
+
+/*
+
+
 inline float min(float a, float b)
 {
   return a <= b ? a : b;
@@ -286,7 +293,7 @@ void siso_algorithm_combined(int I, int S, int O,
 
 }
 
-
+*/
 
 
 

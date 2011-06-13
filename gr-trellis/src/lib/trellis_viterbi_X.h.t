@@ -27,6 +27,7 @@
 
 #include "fsm.h"
 #include <gr_block.h>
+#include "core_algorithms.h"
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
@@ -77,5 +78,13 @@ public:
                     gr_vector_const_void_star &input_items,
                     gr_vector_void_star &output_items);
 };
+
+
+
+
+
+
+
+
 
 #endif

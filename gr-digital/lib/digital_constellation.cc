@@ -433,7 +433,7 @@ digital_constellation_8psk::digital_constellation_8psk ()
   d_constellation.resize(8);
   // Gray-coded
   d_constellation[0] = gr_complex(cos( 1*angle), sin( 1*angle));
-  d_constellation[1] = gr_complex(cos( 7*angle), sin( 3*angle));
+  d_constellation[1] = gr_complex(cos( 7*angle), sin( 7*angle));
   d_constellation[2] = gr_complex(cos(15*angle), sin(15*angle));
   d_constellation[3] = gr_complex(cos( 9*angle), sin( 9*angle));
   d_constellation[4] = gr_complex(cos( 3*angle), sin( 3*angle));
@@ -448,17 +448,17 @@ digital_constellation_8psk::digital_constellation_8psk ()
 unsigned int
 digital_constellation_8psk::decision_maker(const gr_complex *sample)
 {
-  // Real component determines small bit.
-  // Imag component determines big bit.
-  return 2*(imag(*sample)>0) + (real(*sample)>0);
+  unsigned int ret = 0;
 
-  unsigned int real, imag;
-  imag = 2*(sample->imag()<=0);
-  real = (sample->real()<=0);
-  if(abs(sample->real()) >= abs(sample->imag())) {
-    return 0 + imag + real;
-  }
-  else {
-    return 4 + imag + real;
-  }
+  float re = sample->real();
+  float im = sample->imag();
+
+  if(fabsf(re) <= fabsf(im))
+    ret  = 4;
+  if(re <= 0)
+    ret |= 1;
+  if(im <= 0)
+    ret |= 2;
+
+  return ret;
 }

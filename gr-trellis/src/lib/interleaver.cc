@@ -124,7 +124,7 @@ interleaver::interleaver(int K, int seed)
 
 
 //######################################################################
-//# Write an INTERLEAVER specification from a file.
+//# Write an INTERLEAVER specification to a file.
 //# Format
 //# K
 //# blank line

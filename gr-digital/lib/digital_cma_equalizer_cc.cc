@@ -25,19 +25,22 @@
 #endif
 
 #include <digital_cma_equalizer_cc.h>
+#include <cstdio>
 
 digital_cma_equalizer_cc_sptr
-digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu)
+digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps)
 {
-  return gnuradio::get_initial_sptr(new digital_cma_equalizer_cc(num_taps, modulus, mu));
+  return gnuradio::get_initial_sptr(new digital_cma_equalizer_cc(num_taps, modulus,
+								 mu, sps));
 }
 
-digital_cma_equalizer_cc::digital_cma_equalizer_cc(int num_taps, float modulus, float mu)
-  : gr_adaptive_fir_ccc("cma_equalizer_cc", 1, std::vector<gr_complex>(num_taps))
+digital_cma_equalizer_cc::digital_cma_equalizer_cc(int num_taps, float modulus,
+						   float mu, int sps)
+  : gr_adaptive_fir_ccc("cma_equalizer_cc", sps,
+			std::vector<gr_complex>(num_taps, gr_complex(0,0)))
 {
   set_modulus(modulus);
   set_gain(mu);
   if (num_taps > 0)
     d_taps[0] = 1.0;
 }
-

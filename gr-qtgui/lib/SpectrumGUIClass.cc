@@ -54,7 +54,7 @@ SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
 
   _windowType = 5;
 
-  timespec_reset(&_lastGUIUpdateTime);
+  _lastGUIUpdateTime = 0;  
 
   _windowOpennedFlag = false;
   _fftBuffersCreatedFlag = false;
@@ -123,10 +123,10 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
   qApp->postEvent(_spectrumDisplayForm,
 		  new QEvent(QEvent::Type(QEvent::User+3)));
 
-  timespec_reset(&_lastGUIUpdateTime);
+  _lastGUIUpdateTime = 0;
 
   // Draw Blank Display
-  UpdateWindow(false, NULL, 0, NULL, 0, NULL, 0, get_highres_clock(), true);
+  UpdateWindow(false, NULL, 0, NULL, 0, NULL, 0, gruel::high_res_timer_now(), true);
 
   // Set up the initial frequency axis settings
   SetFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
@@ -229,7 +229,7 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
 			       const uint64_t realTimeDomainDataSize,
 			       const float* complexTimeDomainData,
 			       const uint64_t complexTimeDomainDataSize,
-			       const timespec timestamp,
+			       const gruel::high_res_timer_type timestamp,
 			       const bool lastOfMultipleFFTUpdateFlag)
 {
   //gruel::scoped_lock lock(d_mutex);
@@ -283,11 +283,11 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
     _lastDataPointCount = bufferSize;
   }
 
-  const timespec currentTime = get_highres_clock();
-  const timespec lastUpdateGUITime = GetLastGUIUpdateTime();
+  const gruel::high_res_timer_type currentTime = gruel::high_res_timer_now();
+  const gruel::high_res_timer_type lastUpdateGUITime = GetLastGUIUpdateTime();
 
-  if((diff_timespec(currentTime, lastUpdateGUITime) > (4*_updateTime)) &&
-     (GetPendingGUIUpdateEvents() > 0) && !timespec_empty(&lastUpdateGUITime)) {
+  if((currentTime - lastUpdateGUITime > (4*_updateTime)*gruel::high_res_timer_tps()) &&
+     (GetPendingGUIUpdateEvents() > 0) && lastUpdateGUITime != 0) {
     // Do not update the display if too much data is pending to be displayed
     _droppedEntriesCount++;
   }
@@ -376,17 +376,17 @@ SpectrumGUIClass::SetFFTSize(const int newSize)
   _fftSize = newSize;
 }
 
-timespec
+gruel::high_res_timer_type
 SpectrumGUIClass::GetLastGUIUpdateTime()
 {
   gruel::scoped_lock lock(d_mutex);
-  timespec returnValue;
+  gruel::high_res_timer_type returnValue;
   returnValue = _lastGUIUpdateTime;
   return returnValue;
 }
 
 void
-SpectrumGUIClass::SetLastGUIUpdateTime(const timespec newTime)
+SpectrumGUIClass::SetLastGUIUpdateTime(const gruel::high_res_timer_type newTime)
 {
   gruel::scoped_lock lock(d_mutex);
   _lastGUIUpdateTime = newTime;

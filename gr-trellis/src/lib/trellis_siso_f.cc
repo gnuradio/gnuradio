@@ -116,6 +116,11 @@ trellis_siso_f::forecast (int noutput_items, gr_vector_int &ninput_items_require
   }
 }
 
+
+
+
+/* Moved it to "core_algorithms.cc" */
+/*
 inline float min(float a, float b)
 {
   return a <= b ? a : b;
@@ -270,7 +275,7 @@ else
 
 }
 
-
+*/
 
 
 

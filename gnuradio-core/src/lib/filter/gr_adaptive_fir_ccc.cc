@@ -33,9 +33,8 @@ gr_adaptive_fir_ccc::gr_adaptive_fir_ccc(const char *name, int decimation,
 		       gr_make_io_signature (1, 1, sizeof(gr_complex)),
 		       gr_make_io_signature (1, 1, sizeof(gr_complex)),
 		       decimation),
-    d_updated(false)
+    d_taps(taps), d_updated(false)
 {
-  d_taps = taps;
   set_history(d_taps.size());
 }
 
@@ -44,6 +43,17 @@ gr_adaptive_fir_ccc::set_taps(const std::vector<gr_complex> &taps)
 {
   d_new_taps = taps;
   d_updated = true;
+}
+
+gr_complex
+gr_adaptive_fir_ccc::filter(gr_complex *x)
+{
+  // Generic dot product of d_taps[] and in[]
+  gr_complex acc(0.0, 0.0);
+  int l = d_taps.size();
+  for (int k = 0; k < l; k++)
+    acc += d_taps[l-k-1] * x[k];
+  return acc;
 }
 
 int
@@ -63,20 +73,14 @@ gr_adaptive_fir_ccc::work(int noutput_items,
   
   int j = 0, k, l = d_taps.size();
   for (int i = 0; i < noutput_items; i++) {
-    // Generic dot product of d_taps[] and in[]
-    gr_complex sum(0.0, 0.0);
-    for (k = 0; k < l; k++)
-      sum += d_taps[l-k-1]*in[j+k];
-    out[i] = sum;
+    out[i] = filter(&in[j]);
     
     // Adjust taps
-    d_error = error(sum);
+    d_error = error(out[i]);
     for (k = 0; k < l; k++) {
-      //printf("%f ", d_taps[k]);
       update_tap(d_taps[l-k-1], in[j+k]);
     }
-    //printf("\n");
-    
+
     j += decimation();
   }
 

@@ -39,8 +39,7 @@ simpledatadir = $(grc_examples_prefix)/simple
 dist_simpledata_DATA = \
 	simple/ber_simulation.grc \
 	simple/dpsk_loopback.grc \
-	simple/variable_config.grc \
-	simple/var_sink_taps.grc
+	simple/variable_config.grc
 
 trellisdatadir = $(grc_examples_prefix)/trellis
 dist_trellisdata_DATA = \

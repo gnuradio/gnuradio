@@ -47,7 +47,9 @@ class gr_frequency_modulator_fc : public gr_sync_block
   gr_frequency_modulator_fc (double sensitivity);
 
  public:
-
+  void set_sensitivity(float sens) { d_sensitivity = sens; }
+  float get_sensitivity() { return d_sensitivity; }
+  
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);

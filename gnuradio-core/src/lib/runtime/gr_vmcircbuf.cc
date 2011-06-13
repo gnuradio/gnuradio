@@ -100,8 +100,10 @@ gr_vmcircbuf_sysconfig::all_factories ()
   std::vector<gr_vmcircbuf_factory *> result;
 
   result.push_back (gr_vmcircbuf_createfilemapping_factory::singleton ());
+#ifdef TRY_SHM_VMCIRCBUF
   result.push_back (gr_vmcircbuf_sysv_shm_factory::singleton ());
   result.push_back (gr_vmcircbuf_mmap_shm_open_factory::singleton ());
+#endif
   result.push_back (gr_vmcircbuf_mmap_tmpfile_factory::singleton ());
 
   return result;

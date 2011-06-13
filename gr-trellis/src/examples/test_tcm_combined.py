@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import audio
 from gnuradio import trellis
 from gnuradio import eng_notation
 import math
 import sys
 import fsm_utils
+from gnuradio.eng_option import eng_option
+from optparse import OptionParser
+
 
 def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     tb = gr.top_block ()
@@ -52,15 +54,20 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
 
 
 
-def main(args):
-    nargs = len (args)
-    if nargs == 3:
-        fname=args[0]
-        esn0_db=float(args[1]) # Es/No in dB
-        rep=int(args[2]) # number of times the experiment is run to collect enough errors
-    else:
-        sys.stderr.write ('usage: test_tcm_combined.py fsm_fname  Es/No_db  repetitions\n')
-        sys.exit (1)
+def main():
+    parser = OptionParser(option_class=eng_option)
+    parser.add_option("-f", "--fsm_file", type="string", default="fsm_files/awgn1o2_4.fsm", help="Filename containing the fsm specification, e.g. -f fsm_files/awgn1o2_4.fsm (default=fsm_files/awgn1o2_4.fsm)")
+    parser.add_option("-e", "--esn0", type="eng_float", default=10.0, help="Symbol energy to noise PSD level ratio in dB, e.g., -e 10.0 (default=10.0)")
+    parser.add_option("-r", "--repetitions", type="int", default=100, help="Number of packets to be generated for the simulation, e.g., -r 100 (default=100)")
+
+    (options, args) = parser.parse_args ()
+    if len(args) != 0:
+        parser.print_help()
+        raise SystemExit, 1
+
+    fname=options.fsm_file
+    esn0_db=float(options.esn0)
+    rep=int(options.repetitions)
 
     # system parameters
     f=trellis.fsm(fname) # get the FSM specification from a file (will hopefully be automated in the future...)
@@ -96,5 +103,5 @@ def main(args):
 
 
 if __name__ == '__main__':
-    main (sys.argv[1:])
+    main()
 

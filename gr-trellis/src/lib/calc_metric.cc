@@ -22,7 +22,7 @@
 
 #include <float.h>
 #include <stdexcept>
-#include "trellis_calc_metric.h"
+#include "calc_metric.h"
 
 
 

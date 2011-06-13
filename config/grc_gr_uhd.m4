@@ -48,6 +48,7 @@ AC_DEFUN([GRC_GR_UHD],[
         gr-uhd/swig/Makefile \
         gr-uhd/swig/run_tests \
         gr-uhd/swig/run_guile_tests \
+        gr-uhd/apps/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-uhd,[

@@ -120,7 +120,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   _startFrequency = 0;
   _stopFrequency = 4000;
   
-  timespec_reset(&_lastReplot);
+  _lastReplot = 0;
 
   resize(parent->width(), parent->height());
   
@@ -362,7 +362,7 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
 {
   // Only update plot if there is data and if the time interval has elapsed
   if((numDataPoints > 0) && 
-     (diff_timespec(get_highres_clock(), _lastReplot) > timeInterval)) {
+     (gruel::high_res_timer_now() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
     
     if(numDataPoints != _numPoints) {
       _numPoints = numDataPoints;
@@ -401,7 +401,7 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
 
     SetUpperIntensityLevel(_peakAmplitude);
 
-    _lastReplot = get_highres_clock();
+    _lastReplot = gruel::high_res_timer_now();
   }
 }
 

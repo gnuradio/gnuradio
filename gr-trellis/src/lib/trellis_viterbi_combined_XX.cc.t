@@ -90,6 +90,7 @@ void
 
 
 
+/*
 void viterbi_algorithm_combined(int I, int S, int O, 
              const std::vector<int> &NS,
              const std::vector<int> &OS,
@@ -162,7 +163,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
 }
 
 
-
+*/
 
 
 

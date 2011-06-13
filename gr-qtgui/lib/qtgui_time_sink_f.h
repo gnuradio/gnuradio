@@ -25,7 +25,7 @@
 
 #include <Python.h>
 #include <gr_qtgui_api.h>
-#include <gr_block.h>
+#include <gr_sync_block.h>
 #include <gr_firdes.h>
 #include <gri_fft.h>
 #include <qapplication.h>
@@ -39,7 +39,7 @@ GR_QTGUI_API qtgui_time_sink_f_sptr qtgui_make_time_sink_f(int size, double bw,
 					      int nconnectons=1,
 					      QWidget *parent=NULL);
 
-class GR_QTGUI_API qtgui_time_sink_f : public gr_block
+class GR_QTGUI_API qtgui_time_sink_f : public gr_sync_block
 {
 private:
   friend GR_QTGUI_API qtgui_time_sink_f_sptr qtgui_make_time_sink_f(int size, double bw,
@@ -51,8 +51,6 @@ private:
 		    int nconnections,
 		    QWidget *parent=NULL);
   
-  void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-
   void initialize();
 
   int d_size;
@@ -68,8 +66,8 @@ private:
   QWidget *d_parent;
   TimeDisplayForm *d_main_gui;
 
-  timespec d_current_time;
-  timespec d_last_time;
+  gruel::high_res_timer_type d_current_time;
+  gruel::high_res_timer_type d_last_time;
 
 public:
   ~qtgui_time_sink_f();
@@ -84,10 +82,9 @@ public:
 
   QApplication *d_qApplication;
 
-  int general_work (int noutput_items,
-		    gr_vector_int &ninput_items,
-		    gr_vector_const_void_star &input_items,
-		    gr_vector_void_star &output_items);
+  int work (int noutput_items,
+	    gr_vector_const_void_star &input_items,
+	    gr_vector_void_star &output_items);
 };
 
 #endif /* INCLUDED_QTGUI_TIME_SINK_F_H */

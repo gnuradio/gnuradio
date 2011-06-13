@@ -31,8 +31,6 @@ dist_ourdata_DATA =	\
 dist_ourdata_SCRIPTS =			\
 	fsm_utils.py			\
 	test_tcm.py			\
-	test_tcm1.py			\
-	test_tcm2.py          		\
 	test_tcm_parallel.py		\
 	test_tcm_combined.py		\
 	test_sccc_hard.py		\

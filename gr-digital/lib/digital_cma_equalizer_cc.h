@@ -31,7 +31,7 @@ class digital_cma_equalizer_cc;
 typedef boost::shared_ptr<digital_cma_equalizer_cc> digital_cma_equalizer_cc_sptr;
 
 digital_cma_equalizer_cc_sptr 
-digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu);
+digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps);
 
 /*!
  * \brief Implements constant modulus adaptive filter on complex stream
@@ -51,8 +51,9 @@ private:
   
   friend digital_cma_equalizer_cc_sptr digital_make_cma_equalizer_cc(int num_taps,
 								     float modulus,
-								     float mu);
-  digital_cma_equalizer_cc(int num_taps, float modulus, float mu);
+								     float mu,
+								     int sps);
+  digital_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps);
 
 protected:
 
@@ -71,11 +72,22 @@ protected:
   }
   
 public:
+  float get_gain() 
+  {
+    return d_mu;
+  }
+
   void set_gain(float mu) 
   {
-    if(mu < 0)
-      throw std::out_of_range("digital_cma_equalizer::set_gain: Gain value must be >= 0");
+    if(mu < 0.0f || mu > 1.0f) {
+      throw std::out_of_range("digital_cma_equalizer::set_gain: Gain value must be in [0,1]");
+    }
     d_mu = mu;
+  }
+    
+  float get_modulus() 
+  {
+    return d_modulus;
   }
 
   void set_modulus(float mod) 

@@ -8,7 +8,7 @@
 	<name>CMA Equalizer</name>
 	<key>digital_cma_equalizer_cc</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.cma_equalizer_cc($num_taps, $modulus, $mu)</make>
+	<make>digital.cma_equalizer_cc($num_taps, $modulus, $mu, $sps)</make>
 	<callback>set_gain($mu)</callback>
 	<callback>set_modulus($modulus)</callback>
 	<param>
@@ -22,9 +22,14 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Mu</name>
+		<name>Gain</name>
 		<key>mu</key>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Samples per Symbol</name>
+		<key>sps</key>
+		<type>int</type>
 	</param>
 	<sink>
 		<name>in</name>

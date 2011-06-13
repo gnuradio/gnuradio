@@ -44,9 +44,9 @@ qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
 				      const std::string &name,
 				      int nconnections,
 				      QWidget *parent)
-  : gr_block ("time_sink_c",
-	      gr_make_io_signature (nconnections, nconnections, sizeof(gr_complex)),
-	      gr_make_io_signature (0, 0, 0)),
+  : gr_sync_block ("time_sink_c",
+		   gr_make_io_signature (nconnections, nconnections, sizeof(gr_complex)),
+		   gr_make_io_signature (0, 0, 0)),
     d_size(size), d_bandwidth(bw), d_name(name),
     d_nconnections(2*nconnections), d_parent(parent)
 {
@@ -59,6 +59,7 @@ qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
   }
 
   initialize();
+  set_output_multiple(d_size);
 }
 
 qtgui_time_sink_c::~qtgui_time_sink_c()
@@ -66,15 +67,6 @@ qtgui_time_sink_c::~qtgui_time_sink_c()
   // d_main_gui is a qwidget destroyed with its parent
   for(int i = 0; i < d_nconnections; i++) {
     delete [] d_residbufs[i];
-  }
-}
-
-void
-qtgui_time_sink_c::forecast(int noutput_items, gr_vector_int &ninput_items_required)
-{
-  unsigned int ninputs = ninput_items_required.size();
-  for (unsigned int i = 0; i < ninputs; i++) {
-    ninput_items_required[i] = std::min(d_size, 8191);
   }
 }
 
@@ -94,7 +86,7 @@ qtgui_time_sink_c::initialize()
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
-  timespec_reset(&d_last_time);
+  d_last_time = 0;
 }
 
 
@@ -144,10 +136,9 @@ qtgui_time_sink_c::set_color(int which, const std::string &color)
 }
 
 int
-qtgui_time_sink_c::general_work (int noutput_items,
-				 gr_vector_int &ninput_items,
-				 gr_vector_const_void_star &input_items,
-				 gr_vector_void_star &output_items)
+qtgui_time_sink_c::work (int noutput_items,
+			 gr_vector_const_void_star &input_items,
+			 gr_vector_void_star &output_items)
 {
   int n=0, j=0, idx=0;
   const gr_complex *in = (const gr_complex*)input_items[idx];
@@ -159,7 +150,7 @@ qtgui_time_sink_c::general_work (int noutput_items,
     
     // If we have enough input for one full plot, do it
     if(datasize >= resid) {
-      d_current_time = get_highres_clock();
+      d_current_time = gruel::high_res_timer_now();
       
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n+=2) {
@@ -171,7 +162,7 @@ qtgui_time_sink_c::general_work (int noutput_items,
       }	
 
       // Update the plot if its time
-      if(diff_timespec(d_current_time, d_last_time) > d_update_time) {
+      if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	d_last_time = d_current_time;
 	d_qApplication->postEvent(d_main_gui,
 				  new TimeUpdateEvent(d_residbufs, d_size));	
@@ -181,7 +172,9 @@ qtgui_time_sink_c::general_work (int noutput_items,
       j += resid;
     }
     // Otherwise, copy what we received into the residbufs for next time
+    // because we set the output_multiple, this should never need to be called
     else {
+      assert(0);
       for(n = 0; n < d_nconnections; n+=2) {
 	in = (const gr_complex*)input_items[idx++];
 	for(unsigned int k = 0; k < resid; k++) {
@@ -193,7 +186,6 @@ qtgui_time_sink_c::general_work (int noutput_items,
       j += datasize;
     }   
   }
-  
-  consume_each(j);
-  return j;
+
+  return noutput_items;
 }

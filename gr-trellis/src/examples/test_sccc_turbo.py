@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import audio
 from gnuradio import trellis
 from gnuradio import eng_notation
 import math
@@ -92,13 +91,14 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
 
 def main(args):
     nargs = len (args)
-    if nargs == 4:
+    if nargs == 5:
         fname_out=args[0]
         fname_in=args[1]
         esn0_db=float(args[2]) # Es/No in dB
-        rep=int(args[3]) # number of times the experiment is run to collect enough errors
+        IT=int(args[3])
+        rep=int(args[4]) # number of times the experiment is run to collect enough errors
     else:
-        sys.stderr.write ('usage: test_tcm.py fsm_name_out fsm_fname_in Es/No_db  repetitions\n')
+        sys.stderr.write ('usage: test_sccc_turbo.py fsm_name_out fsm_fname_in Es/No_db iterations repetitions\n')
         sys.exit (1)
 
     # system parameters
@@ -123,7 +123,6 @@ def main(args):
         Es = Es + constellation[i]**2
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # calculate noise variance
-    IT = 3 # number of turbo iterations
     
     tot_s=0 # total number of transmitted shorts
     terr_s=0 # total number of shorts in error

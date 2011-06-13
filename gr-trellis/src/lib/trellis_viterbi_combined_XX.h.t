@@ -27,7 +27,8 @@
 
 #include "fsm.h"
 #include <gr_block.h>
-#include "trellis_calc_metric.h"
+#include "calc_metric.h"
+#include "core_algorithms.h"
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
