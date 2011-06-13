@@ -12,6 +12,30 @@ GENERATED_H = \
 	trellis_metrics_f.h \
 	trellis_metrics_i.h \
 	trellis_metrics_s.h \
+	trellis_pccc_decoder_b.h \
+	trellis_pccc_decoder_i.h \
+	trellis_pccc_decoder_s.h \
+	trellis_pccc_encoder_bb.h \
+	trellis_pccc_encoder_bi.h \
+	trellis_pccc_encoder_bs.h \
+	trellis_pccc_encoder_ii.h \
+	trellis_pccc_encoder_si.h \
+	trellis_pccc_encoder_ss.h \
+	trellis_sccc_decoder_b.h \
+	trellis_sccc_decoder_combined_cb.h \
+	trellis_sccc_decoder_combined_ci.h \
+	trellis_sccc_decoder_combined_cs.h \
+	trellis_sccc_decoder_combined_fb.h \
+	trellis_sccc_decoder_combined_fi.h \
+	trellis_sccc_decoder_combined_fs.h \
+	trellis_sccc_decoder_i.h \
+	trellis_sccc_decoder_s.h \
+	trellis_sccc_encoder_bb.h \
+	trellis_sccc_encoder_bi.h \
+	trellis_sccc_encoder_bs.h \
+	trellis_sccc_encoder_ii.h \
+	trellis_sccc_encoder_si.h \
+	trellis_sccc_encoder_ss.h \
 	trellis_viterbi_b.h \
 	trellis_viterbi_combined_cb.h \
 	trellis_viterbi_combined_ci.h \
@@ -39,6 +63,30 @@ GENERATED_I = \
 	trellis_metrics_f.i \
 	trellis_metrics_i.i \
 	trellis_metrics_s.i \
+	trellis_pccc_decoder_b.i \
+	trellis_pccc_decoder_i.i \
+	trellis_pccc_decoder_s.i \
+	trellis_pccc_encoder_bb.i \
+	trellis_pccc_encoder_bi.i \
+	trellis_pccc_encoder_bs.i \
+	trellis_pccc_encoder_ii.i \
+	trellis_pccc_encoder_si.i \
+	trellis_pccc_encoder_ss.i \
+	trellis_sccc_decoder_b.i \
+	trellis_sccc_decoder_combined_cb.i \
+	trellis_sccc_decoder_combined_ci.i \
+	trellis_sccc_decoder_combined_cs.i \
+	trellis_sccc_decoder_combined_fb.i \
+	trellis_sccc_decoder_combined_fi.i \
+	trellis_sccc_decoder_combined_fs.i \
+	trellis_sccc_decoder_i.i \
+	trellis_sccc_decoder_s.i \
+	trellis_sccc_encoder_bb.i \
+	trellis_sccc_encoder_bi.i \
+	trellis_sccc_encoder_bs.i \
+	trellis_sccc_encoder_ii.i \
+	trellis_sccc_encoder_si.i \
+	trellis_sccc_encoder_ss.i \
 	trellis_viterbi_b.i \
 	trellis_viterbi_combined_cb.i \
 	trellis_viterbi_combined_ci.i \
@@ -66,6 +114,30 @@ GENERATED_CC = \
 	trellis_metrics_f.cc \
 	trellis_metrics_i.cc \
 	trellis_metrics_s.cc \
+	trellis_pccc_decoder_b.cc \
+	trellis_pccc_decoder_i.cc \
+	trellis_pccc_decoder_s.cc \
+	trellis_pccc_encoder_bb.cc \
+	trellis_pccc_encoder_bi.cc \
+	trellis_pccc_encoder_bs.cc \
+	trellis_pccc_encoder_ii.cc \
+	trellis_pccc_encoder_si.cc \
+	trellis_pccc_encoder_ss.cc \
+	trellis_sccc_decoder_b.cc \
+	trellis_sccc_decoder_combined_cb.cc \
+	trellis_sccc_decoder_combined_ci.cc \
+	trellis_sccc_decoder_combined_cs.cc \
+	trellis_sccc_decoder_combined_fb.cc \
+	trellis_sccc_decoder_combined_fi.cc \
+	trellis_sccc_decoder_combined_fs.cc \
+	trellis_sccc_decoder_i.cc \
+	trellis_sccc_decoder_s.cc \
+	trellis_sccc_encoder_bb.cc \
+	trellis_sccc_encoder_bi.cc \
+	trellis_sccc_encoder_bs.cc \
+	trellis_sccc_encoder_ii.cc \
+	trellis_sccc_encoder_si.cc \
+	trellis_sccc_encoder_ss.cc \
 	trellis_viterbi_b.cc \
 	trellis_viterbi_combined_cb.cc \
 	trellis_viterbi_combined_ci.cc \

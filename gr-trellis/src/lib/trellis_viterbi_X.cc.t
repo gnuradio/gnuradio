@@ -73,9 +73,22 @@ void
   }
 }
 
+/*
+template
+void viterbi_algorithm<@O_TYPE@>(int I, int S, int O,
+             const std::vector<int> &NS,
+             const std::vector<int> &OS,
+             const std::vector< std::vector<int> > &PS,
+             const std::vector< std::vector<int> > &PI,
+             int K,
+             int S0,int SK,
+             const float *in, @O_TYPE@ *out);
+*/
 
 
 
+/* Moved it to "core_algorithms.cc" */
+/*
 void viterbi_algorithm(int I, int S, int O, 
              const std::vector<int> &NS,
              const std::vector<int> &OS,
@@ -141,7 +154,7 @@ void viterbi_algorithm(int I, int S, int O,
 
 }
 
-
+*/
 
 
 

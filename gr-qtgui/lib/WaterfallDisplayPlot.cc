@@ -110,7 +110,7 @@ class TimeScaleData
 public:
   TimeScaleData()
   {
-    timespec_reset(&_zeroTime);
+    _zeroTime = 0;
     _secondsPerLine = 1.0;
   }
   
@@ -118,14 +118,14 @@ public:
   {    
   }
 
-  virtual timespec GetZeroTime() const
+  virtual gruel::high_res_timer_type GetZeroTime() const
   {
     return _zeroTime;
   }
   
-  virtual void SetZeroTime(const timespec newTime)
+  virtual void SetZeroTime(const gruel::high_res_timer_type newTime)
   {
-    _zeroTime = newTime;
+    _zeroTime = newTime - gruel::high_res_timer_epoch();
   }
 
   virtual void SetSecondsPerLine(const double newTime)
@@ -140,12 +140,25 @@ public:
 
   
 protected:
-  timespec _zeroTime;
+  gruel::high_res_timer_type _zeroTime;
   double _secondsPerLine;
   
 private:
   
 };
+
+static QString
+make_time_label(double secs)
+{
+  std::string time_str = pt::to_simple_string(pt::from_time_t(time_t(secs)));
+
+  // lops off the YYYY-mmm-DD part of the string
+  size_t ind =  time_str.find(" ");
+  if(ind != std::string::npos)
+    time_str = time_str.substr(ind);
+
+  return QString("").sprintf("%s.%03ld", time_str.c_str(), long(std::fmod(secs*1000, 1000)));
+}
 
 class QwtTimeScaleDraw: public QwtScaleDraw, public TimeScaleData
 {
@@ -160,14 +173,8 @@ public:
 
   virtual QwtText label(double value) const
   {
-    timespec lineTime = timespec_add(GetZeroTime(), (-value) * GetSecondsPerLine());
-    std::string time_str = pt::to_simple_string(pt::from_time_t(lineTime.tv_sec));
-
-    // lops off the YYYY-mmm-DD part of the string
-    size_t ind =  time_str.find(" ");
-    if(ind != std::string::npos)
-      time_str = time_str.substr(ind);
-    return QwtText(QString("").sprintf("%s.%03ld", time_str.c_str(), lineTime.tv_nsec/1000000));
+    double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (value * GetSecondsPerLine());
+    return QwtText(make_time_label(secs));
   }
 
   virtual void initiateUpdate()
@@ -212,18 +219,10 @@ protected:
   using QwtPlotZoomer::trackerText;
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    timespec lineTime = timespec_add(GetZeroTime(), (-p.y()) * GetSecondsPerLine());
-    std::string time_str = pt::to_simple_string(pt::from_time_t(lineTime.tv_sec));
-
-    // lops off the YYYY-mmm-DD part of the string
-    size_t ind =  time_str.find(" ");
-    if(ind != std::string::npos)
-      time_str = time_str.substr(ind);
-    QString yLabel(QString("").sprintf("%s.%03ld", time_str.c_str(), lineTime.tv_nsec/1000000));
-
+    double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (p.y() * GetSecondsPerLine());
     QwtText t(QString("%1 %2, %3").
-	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
-	      arg(_unitType.c_str()).arg(yLabel));
+ 	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
+	      arg(_unitType.c_str()).arg(make_time_label(secs)));
     return t;
   }
 
@@ -254,7 +253,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   setAxisTitle(QwtPlot::yLeft, "Time");
   setAxisScaleDraw(QwtPlot::yLeft, new QwtTimeScaleDraw());
 
-  timespec_reset(&_lastReplot);
+  _lastReplot = 0;
 
   d_spectrogram = new PlotWaterfall(_waterfallData, "Waterfall Display");
 
@@ -389,7 +388,7 @@ void
 WaterfallDisplayPlot::PlotNewData(const double* dataPoints, 
 				  const int64_t numDataPoints,
 				  const double timePerFFT,
-				  const timespec timestamp,
+				  const gruel::high_res_timer_type timestamp,
 				  const int droppedFrames)
 {
   if(numDataPoints > 0){
@@ -405,10 +404,10 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
 	replot();
       }
       
-      _lastReplot = get_highres_clock();
+      _lastReplot = gruel::high_res_timer_now();
     }
 
-    if(diff_timespec(get_highres_clock(), _lastReplot) > timePerFFT) {
+    if(gruel::high_res_timer_now() - _lastReplot > timePerFFT*gruel::high_res_timer_tps()) {
       //FIXME: We may want to average the data between these updates to smooth display
       _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
       _waterfallData->IncrementNumLinesToUpdate();
@@ -425,7 +424,7 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
       
       replot();
 
-      _lastReplot = get_highres_clock();
+      _lastReplot = gruel::high_res_timer_now();
     }
   }
 }
@@ -568,7 +567,7 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
   replot();
 
   // Update the last replot timer
-  _lastReplot = get_highres_clock();
+  _lastReplot = gruel::high_res_timer_now();
 }
 
 void

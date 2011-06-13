@@ -41,7 +41,8 @@
 %include "trellis_siso_f.i"
 %include "trellis_siso_combined_f.i"
 
-%include "trellis_siso_type.h"
+%include "metric_type.h"
+%include "siso_type.h"
 
 %include "trellis_constellation_metrics_cf.i"
 

@@ -145,10 +145,10 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   const std::complex<float>* complexDataPoints = spectrumUpdateEvent->getFFTPoints();
   const uint64_t numFFTDataPoints = spectrumUpdateEvent->getNumFFTDataPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
-  const timespec dataTimestamp = spectrumUpdateEvent->getDataTimestamp();
+  const gruel::high_res_timer_type dataTimestamp = spectrumUpdateEvent->getDataTimestamp();
   const bool repeatDataFlag = spectrumUpdateEvent->getRepeatDataFlag();
   const bool lastOfMultipleUpdatesFlag = spectrumUpdateEvent->getLastOfMultipleUpdateFlag();
-  const timespec generatedTimestamp = spectrumUpdateEvent->getEventGeneratedTimestamp();
+  const gruel::high_res_timer_type generatedTimestamp = spectrumUpdateEvent->getEventGeneratedTimestamp();
   double* realTimeDomainDataPoints = (double*)spectrumUpdateEvent->getRealTimeDomainPoints();
   double* imagTimeDomainDataPoints = (double*)spectrumUpdateEvent->getImagTimeDomainPoints();
 

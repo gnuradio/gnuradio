@@ -66,8 +66,8 @@ private:
   QWidget *d_parent;
   TimeDisplayForm *d_main_gui;
 
-  timespec d_current_time;
-  timespec d_last_time;
+  gruel::high_res_timer_type d_current_time;
+  gruel::high_res_timer_type d_last_time;
 
 public:
   ~qtgui_time_sink_c();

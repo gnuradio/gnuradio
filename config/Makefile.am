@@ -89,6 +89,7 @@ m4macros = \
 	gr_swig.m4 \
 	gr_sysv_shm.m4 \
 	gr_version.m4 \
+	gr_vmcircbuf.m4 \
 	lf_cc.m4 \
 	lf_cxx.m4 \
 	lf_warnings.m4 \

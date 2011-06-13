@@ -268,7 +268,7 @@ qtgui_sink_f::general_work (int noutput_items,
 
     // If we have enough input for one full FFT, do it
     if(datasize >= resid) {
-      const timespec currentTime = get_highres_clock();
+      const gruel::high_res_timer_type currentTime = gruel::high_res_timer_now();
       
       // Fill up residbuf with d_fftsize number of items
       memcpy(d_residbuf+d_index, &in[j], sizeof(float)*resid);

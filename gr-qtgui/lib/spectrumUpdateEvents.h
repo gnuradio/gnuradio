@@ -6,7 +6,7 @@
 #include <QString>
 #include <complex>
 #include <vector>
-#include <highResTimeFunctions.h>
+#include <gruel/high_res_timer.h>
 
 class SpectrumUpdateEvent:public QEvent{
 
@@ -16,10 +16,10 @@ public:
 		      const double* realTimeDomainPoints,
 		      const double* imagTimeDomainPoints,
 		      const uint64_t numTimeDomainDataPoints,
-		      const timespec dataTimestamp,
+		      const gruel::high_res_timer_type dataTimestamp,
 		      const bool repeatDataFlag,
 		      const bool lastOfMultipleUpdateFlag,
-		      const timespec generatedTimestamp,
+		      const gruel::high_res_timer_type generatedTimestamp,
 		      const int droppedFFTFrames);
 
   ~SpectrumUpdateEvent();
@@ -29,10 +29,10 @@ public:
   const double* getImagTimeDomainPoints() const;
   uint64_t getNumFFTDataPoints() const;
   uint64_t getNumTimeDomainDataPoints() const;
-  timespec getDataTimestamp() const;
+  gruel::high_res_timer_type getDataTimestamp() const;
   bool getRepeatDataFlag() const;
   bool getLastOfMultipleUpdateFlag() const;
-  timespec getEventGeneratedTimestamp() const;
+  gruel::high_res_timer_type getEventGeneratedTimestamp() const;
   int getDroppedFFTFrames() const;
 
 protected:
@@ -43,10 +43,10 @@ private:
   double* _imagDataTimeDomainPoints;
   uint64_t _numFFTDataPoints;
   uint64_t _numTimeDomainDataPoints;
-  timespec _dataTimestamp;
+  gruel::high_res_timer_type _dataTimestamp;
   bool _repeatDataFlag;
   bool _lastOfMultipleUpdateFlag;
-  timespec _eventGeneratedTimestamp;
+  gruel::high_res_timer_type _eventGeneratedTimestamp;
   int _droppedFFTFrames;
 };
 

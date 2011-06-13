@@ -36,7 +36,6 @@
 #include <qwt_plot_panner.h>
 #include <qwt_plot_magnifier.h>
 #include <qwt_plot_marker.h>
-#include <highResTimeFunctions.h>
 #include <qwt_symbol.h>
 #include <qtgui_util.h>
 

@@ -35,7 +35,7 @@
 #include <qwt_plot_panner.h>
 #include <qwt_plot_marker.h>
 #include <qwt_plot_magnifier.h>
-#include <highResTimeFunctions.h>
+#include <gruel/high_res_timer.h>
 #include <qwt_symbol.h>
 #include <qtgui_util.h>
 
@@ -122,7 +122,7 @@ private:
 
   double _noiseFloorAmplitude;
 
-  timespec _lastReplot;
+  gruel::high_res_timer_type _lastReplot;
 
   bool _useCenterFrequencyFlag;
 };

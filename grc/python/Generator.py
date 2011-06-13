@@ -78,8 +78,9 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		python_exe = sys.executable
 
 		#when using wx gui on mac os, execute with pythonw
-		if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
-			python_exe += 'w'
+		#using pythonw is not necessary anymore, disabled below
+		#if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
+		#	python_exe = 'pythonw'
 
 		#setup the command args to run
 		cmds = [python_exe, '-u', self.get_file_path()] #-u is unbuffered stdio
