@@ -41,14 +41,13 @@
 %include "trellis_siso_f.i"
 %include "trellis_siso_combined_f.i"
 
-%include "metric_type.h"
 %include "siso_type.h"
 
 %include "trellis_constellation_metrics_cf.i"
 
 %include "trellis_generated.i"
 
-%import "gr_metric_type.h"
+%import "digital_metric_type.h"
 %import "digital_constellation.i"
 
 %pythoncode %{

@@ -82,7 +82,6 @@ grinclude_HEADERS =			\
         quicksort_index.h		\
         base.h				\
         interleaver.h			\
-        metric_type.h		\
         calc_metric.h		\
         core_algorithms.h		\
         trellis_permutation.h		\

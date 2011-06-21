@@ -25,7 +25,7 @@
 
 #include <gr_block.h>
 #include <digital_constellation.h>
-#include <gr_metric_type.h>
+#include <digital_metric_type.h>
 
 class trellis_constellation_metrics_cf;
 typedef boost::shared_ptr<trellis_constellation_metrics_cf> trellis_constellation_metrics_cf_sptr;

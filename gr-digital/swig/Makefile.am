@@ -63,6 +63,9 @@ digital_swig_swiginclude_headers =	\
 	digital_lms_dd_equalizer_cc.i	\
 	digital_kurtotic_equalizer_cc.i
 
+digital_swig_swig_args = \
+	-I$(abs_top_builddir)/gr-digital/lib
+
 if GUILE
 TESTS += run_guile_tests
 endif
