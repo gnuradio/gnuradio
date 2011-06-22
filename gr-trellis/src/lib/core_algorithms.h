@@ -26,7 +26,7 @@
 #include <cmath>
 #include <vector>
 //#include <gr_complex.h>
-#include "metric_type.h"
+#include "digital_metric_type.h"
 #include "fsm.h"
 #include "interleaver.h"
 

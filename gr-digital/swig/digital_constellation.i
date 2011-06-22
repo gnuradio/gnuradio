@@ -24,7 +24,7 @@
 %template(unsigned_int_vector) std::vector<unsigned int>;
 
 // Make sure metric types get SWIGed.
-%include gr_metric_type.h
+%include digital_metric_type.h
 
 class digital_constellation;
 typedef boost::shared_ptr<digital_constellation> digital_constellation_sptr;

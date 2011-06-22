@@ -29,8 +29,9 @@ EXTRA_DIST += \
 	trellis.test
 
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES) \
+	-I$(abs_top_builddir)/gr-digital/lib
+ 
 # ----------------------------------------------------------------
 # these scripts generate trellis codes from template files
 
@@ -81,7 +82,6 @@ grinclude_HEADERS =			\
         quicksort_index.h		\
         base.h				\
         interleaver.h			\
-        metric_type.h		\
         calc_metric.h		\
         core_algorithms.h		\
         trellis_permutation.h		\
@@ -159,6 +159,11 @@ par_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(src
 include $(top_srcdir)/Makefile.par.gen
 
 BUILT_SOURCES += $(python_built_sources)
+
+# Location of non-standard SWIG interface files
+trellis_swig_args =    \
+	-I$(abs_top_builddir)/gr-digital/lib \
+	-I$(abs_top_builddir)/gr-digital/swig
 
 if GUILE
 TESTS += run_guile_tests

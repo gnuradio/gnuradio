@@ -39,5 +39,9 @@
 		<name>Digital Modulators</name>
 		<block>digital_dxpsk_mod</block>
 		<block>digital_dxpsk_demod</block>
+		<block>digital_psk_mod</block>
+		<block>digital_psk_demod</block>
+		<block>digital_qam_mod</block>
+		<block>digital_qam_demod</block>
 	</cat>
 </cat>

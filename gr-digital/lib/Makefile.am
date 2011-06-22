@@ -29,7 +29,8 @@ grinclude_HEADERS = 			\
 	digital_costas_loop_cc.h	\
 	digital_cma_equalizer_cc.h	\
 	digital_lms_dd_equalizer_cc.h	\
-	digital_kurtotic_equalizer_cc.h
+	digital_kurtotic_equalizer_cc.h \
+	digital_metric_type.h
 
 lib_LTLIBRARIES = libgnuradio-digital.la
 

@@ -27,7 +27,7 @@
 #include <math.h>
 #include <gr_complex.h>
 #include <boost/enable_shared_from_this.hpp>
-#include <gr_metric_type.h>
+#include <digital_metric_type.h>
 
 /************************************************************/
 /* digital_constellation                                    */

@@ -29,7 +29,6 @@ grblkspythondir = $(grpythondir)/blks2impl
 grblkspython_PYTHON =		\
 	__init__.py		\
 	am_demod.py		\
-	bpsk.py			\
 	channel_model.py	\
 	dbpsk.py		\
 	dbpsk2.py		\
@@ -39,7 +38,6 @@ grblkspython_PYTHON =		\
 	filterbank.py		\
 	fm_demod.py		\
 	fm_emph.py		\
-	generic_mod_demod.py    \
 	generic_usrp.py	\
 	gmsk.py			\
 	cpm.py			\
@@ -58,9 +56,6 @@ grblkspython_PYTHON =		\
 	pfb_interpolator.py	\
 	pkt.py			\
 	psk.py			\
-	psk2.py			\
-	qam.py			\
-	qpsk.py			\
 	rational_resampler.py	\
 	standard_squelch.py	\
 	stream_to_vector_decimator.py \
