@@ -29,20 +29,34 @@ MAIN_TMPL = """\
 	io_type=uhd.io_type.\$type.type,
 	num_channels=\$nchan,
 )
-\#if \$ref_clk()
-self.\$(id).set_clock_config(uhd.clock_config.external(), uhd.ALL_MBOARDS)
-\#end if
-\#if \$sync()
-self.\$(id).set_time_unknown_pps(uhd.time_spec())
-\#end if
 \#if \$clock_rate()
 self.\$(id).set_clock_rate(\$clock_rate, uhd.ALL_MBOARDS)
 \#end if
 #for $m in range($max_mboards)
+########################################################################
+\#if \$num_mboards() > $m and \$ref_source$(m)() == 'external'
+self.\$(id).set_clock_config(uhd.clock_config.external(), $m)
+\#end if
+########################################################################
+\#if \$num_mboards() > $m and \$ref_source$(m)() == 'internal'
+self.\$(id).set_clock_config(uhd.clock_config.internal(), $m)
+\#end if
+########################################################################
+\#if \$num_mboards() > $m and \$ref_source$(m)() == 'mimo'
+_config = uhd.clock_config
+_config.ref_source = uhd.clock_config.REF_MIMO
+_config.pps_source = uhd.clock_config.PPS_MIMO
+self.\$(id).set_clock_config(_config, $m)
+\#end if
+########################################################################
 \#if \$num_mboards() > $m and \$sd_spec$(m)()
 self.\$(id).set_subdev_spec(\$sd_spec$(m), $m)
 \#end if
+########################################################################
 #end for
+\#if \$sync()
+self.\$(id).set_time_unknown_pps(uhd.time_spec())
+\#end if
 self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)
 \#if \$nchan() > $n
@@ -95,21 +109,6 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		</hide>
 	</param>
 	<param>
-		<name>Ref Clock</name>
-		<key>ref_clk</key>
-		<value></value>
-		<type>enum</type>
-		<hide>\#if \$ref_clk() then 'none' else 'part'#</hide>
-		<option>
-			<name>External</name>
-			<key>ext</key>
-		</option>
-		<option>
-			<name>Internal</name>
-			<key></key>
-		</option>
-	</param>
-	<param>
 		<name>Sync</name>
 		<key>sync</key>
 		<value></value>
@@ -149,6 +148,25 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		#end for
 	</param>
 	#for $m in range($max_mboards)
+	<param>
+		<name>Mb$(m): Ref Source</name>
+		<key>ref_source$(m)</key>
+		<value></value>
+		<type>enum</type>
+		<hide>
+			\#if not \$num_mboards() > $m
+				all
+			\#elif \$ref_source$(m)()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+		<option><name>Default</name><key></key></option>
+		<option><name>Internal</name><key>internal</key></option>
+		<option><name>External</name><key>external</key></option>
+		<option><name>MIMO Cable</name><key>mimo</key></option>
+	</param>
 	<param>
 		<name>Mb$(m): Subdev Spec</name>
 		<key>sd_spec$(m)</key>
@@ -208,6 +226,11 @@ USRP2 Example: addr0=192.168.10.2, addr1=192.168.10.3
 
 Num Motherboards:
 Selects the number of USRP motherboards in this device configuration.
+
+Reference Source:
+Where the motherboard should sync its time and clock references.
+If source and sink blocks reference the same device,
+it is only necessary to set the reference source on one of the blocks.
 
 Subdevice specification:
 Each motherboard should have its own subdevice specification \\
