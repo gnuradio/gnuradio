@@ -27,4 +27,8 @@ gr_quadrature_demod_cf_sptr gr_make_quadrature_demod_cf (float gain);
 class gr_quadrature_demod_cf : public gr_sync_block
 {
   gr_quadrature_demod_cf (float gain);
+
+public:
+  void set_gain(float gain) { d_gain = gain; }
+  float gain() const { return d_gain; }
 };
