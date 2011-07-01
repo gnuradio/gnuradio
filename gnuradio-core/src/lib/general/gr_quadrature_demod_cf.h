@@ -45,7 +45,7 @@ class gr_quadrature_demod_cf : public gr_sync_block
 
  public:
   void set_gain(float gain) { d_gain = gain; }
-  float get_gain() { return d_gain; }
+  float gain() const { return d_gain; }
 
   int work (int noutput_items,
 		 gr_vector_const_void_star &input_items,
