@@ -9,6 +9,7 @@
 	<key>gr_quadrature_demod_cf</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.quadrature_demod_cf($gain)</make>
+    <callback>set_gain($gain)</callback>
 	<param>
 		<name>Gain</name>
 		<key>gain</key>

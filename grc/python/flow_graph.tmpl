@@ -65,9 +65,18 @@ class $(class_name)(gr.top_block, Qt.QWidget):
 		Qt.QWidget.__init__(self)
 		self.setWindowTitle("$title")
 		self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
-		self.top_layout = Qt.QVBoxLayout(self)
+		self.top_scroll_layout = Qt.QVBoxLayout()
+		self.setLayout(self.top_scroll_layout)
+		self.top_scroll = Qt.QScrollArea()
+		self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+		self.top_scroll_layout.addWidget(self.top_scroll)
+		self.top_scroll.setWidgetResizable(True)
+		self.top_widget = Qt.QWidget()
+		self.top_scroll.setWidget(self.top_widget)
+		self.top_layout = Qt.QVBoxLayout(self.top_widget)
 		self.top_grid_layout = Qt.QGridLayout()
 		self.top_layout.addLayout(self.top_grid_layout)
+
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
