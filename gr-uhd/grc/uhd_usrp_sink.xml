@@ -1,0 +1,2366 @@
+<?xml version="1.0"?>
+<block>
+	<name>UHD: USRP Sink</name>
+	<key>uhd_usrp_sink</key>
+	<import>from gnuradio import uhd</import>
+	<make>uhd.usrp_sink(
+	device_addr=$dev_addr,
+	io_type=uhd.io_type.$type.type,
+	num_channels=$nchan,
+)
+#if $ref_clk()
+self.$(id).set_clock_config(uhd.clock_config.external(), uhd.ALL_MBOARDS)
+#end if
+#if $sync()
+self.$(id).set_time_unknown_pps(uhd.time_spec())
+#end if
+#if $clock_rate()
+self.$(id).set_clock_rate($clock_rate, uhd.ALL_MBOARDS)
+#end if
+#if $num_mboards() > 0 and $sd_spec0()
+self.$(id).set_subdev_spec($sd_spec0, 0)
+#end if
+#if $num_mboards() > 1 and $sd_spec1()
+self.$(id).set_subdev_spec($sd_spec1, 1)
+#end if
+#if $num_mboards() > 2 and $sd_spec2()
+self.$(id).set_subdev_spec($sd_spec2, 2)
+#end if
+#if $num_mboards() > 3 and $sd_spec3()
+self.$(id).set_subdev_spec($sd_spec3, 3)
+#end if
+#if $num_mboards() > 4 and $sd_spec4()
+self.$(id).set_subdev_spec($sd_spec4, 4)
+#end if
+#if $num_mboards() > 5 and $sd_spec5()
+self.$(id).set_subdev_spec($sd_spec5, 5)
+#end if
+#if $num_mboards() > 6 and $sd_spec6()
+self.$(id).set_subdev_spec($sd_spec6, 6)
+#end if
+#if $num_mboards() > 7 and $sd_spec7()
+self.$(id).set_subdev_spec($sd_spec7, 7)
+#end if
+self.$(id).set_samp_rate($samp_rate)
+#if $nchan() > 0
+self.$(id).set_center_freq($center_freq0, 0)
+self.$(id).set_gain($gain0, 0)
+	#if $ant0()
+self.$(id).set_antenna($ant0, 0)
+	#end if
+	#if $bw0()
+self.$(id).set_bandwidth($bw0, 0)
+	#end if
+#end if
+#if $nchan() > 1
+self.$(id).set_center_freq($center_freq1, 1)
+self.$(id).set_gain($gain1, 1)
+	#if $ant1()
+self.$(id).set_antenna($ant1, 1)
+	#end if
+	#if $bw1()
+self.$(id).set_bandwidth($bw1, 1)
+	#end if
+#end if
+#if $nchan() > 2
+self.$(id).set_center_freq($center_freq2, 2)
+self.$(id).set_gain($gain2, 2)
+	#if $ant2()
+self.$(id).set_antenna($ant2, 2)
+	#end if
+	#if $bw2()
+self.$(id).set_bandwidth($bw2, 2)
+	#end if
+#end if
+#if $nchan() > 3
+self.$(id).set_center_freq($center_freq3, 3)
+self.$(id).set_gain($gain3, 3)
+	#if $ant3()
+self.$(id).set_antenna($ant3, 3)
+	#end if
+	#if $bw3()
+self.$(id).set_bandwidth($bw3, 3)
+	#end if
+#end if
+#if $nchan() > 4
+self.$(id).set_center_freq($center_freq4, 4)
+self.$(id).set_gain($gain4, 4)
+	#if $ant4()
+self.$(id).set_antenna($ant4, 4)
+	#end if
+	#if $bw4()
+self.$(id).set_bandwidth($bw4, 4)
+	#end if
+#end if
+#if $nchan() > 5
+self.$(id).set_center_freq($center_freq5, 5)
+self.$(id).set_gain($gain5, 5)
+	#if $ant5()
+self.$(id).set_antenna($ant5, 5)
+	#end if
+	#if $bw5()
+self.$(id).set_bandwidth($bw5, 5)
+	#end if
+#end if
+#if $nchan() > 6
+self.$(id).set_center_freq($center_freq6, 6)
+self.$(id).set_gain($gain6, 6)
+	#if $ant6()
+self.$(id).set_antenna($ant6, 6)
+	#end if
+	#if $bw6()
+self.$(id).set_bandwidth($bw6, 6)
+	#end if
+#end if
+#if $nchan() > 7
+self.$(id).set_center_freq($center_freq7, 7)
+self.$(id).set_gain($gain7, 7)
+	#if $ant7()
+self.$(id).set_antenna($ant7, 7)
+	#end if
+	#if $bw7()
+self.$(id).set_bandwidth($bw7, 7)
+	#end if
+#end if
+#if $nchan() > 8
+self.$(id).set_center_freq($center_freq8, 8)
+self.$(id).set_gain($gain8, 8)
+	#if $ant8()
+self.$(id).set_antenna($ant8, 8)
+	#end if
+	#if $bw8()
+self.$(id).set_bandwidth($bw8, 8)
+	#end if
+#end if
+#if $nchan() > 9
+self.$(id).set_center_freq($center_freq9, 9)
+self.$(id).set_gain($gain9, 9)
+	#if $ant9()
+self.$(id).set_antenna($ant9, 9)
+	#end if
+	#if $bw9()
+self.$(id).set_bandwidth($bw9, 9)
+	#end if
+#end if
+#if $nchan() > 10
+self.$(id).set_center_freq($center_freq10, 10)
+self.$(id).set_gain($gain10, 10)
+	#if $ant10()
+self.$(id).set_antenna($ant10, 10)
+	#end if
+	#if $bw10()
+self.$(id).set_bandwidth($bw10, 10)
+	#end if
+#end if
+#if $nchan() > 11
+self.$(id).set_center_freq($center_freq11, 11)
+self.$(id).set_gain($gain11, 11)
+	#if $ant11()
+self.$(id).set_antenna($ant11, 11)
+	#end if
+	#if $bw11()
+self.$(id).set_bandwidth($bw11, 11)
+	#end if
+#end if
+#if $nchan() > 12
+self.$(id).set_center_freq($center_freq12, 12)
+self.$(id).set_gain($gain12, 12)
+	#if $ant12()
+self.$(id).set_antenna($ant12, 12)
+	#end if
+	#if $bw12()
+self.$(id).set_bandwidth($bw12, 12)
+	#end if
+#end if
+#if $nchan() > 13
+self.$(id).set_center_freq($center_freq13, 13)
+self.$(id).set_gain($gain13, 13)
+	#if $ant13()
+self.$(id).set_antenna($ant13, 13)
+	#end if
+	#if $bw13()
+self.$(id).set_bandwidth($bw13, 13)
+	#end if
+#end if
+#if $nchan() > 14
+self.$(id).set_center_freq($center_freq14, 14)
+self.$(id).set_gain($gain14, 14)
+	#if $ant14()
+self.$(id).set_antenna($ant14, 14)
+	#end if
+	#if $bw14()
+self.$(id).set_bandwidth($bw14, 14)
+	#end if
+#end if
+#if $nchan() > 15
+self.$(id).set_center_freq($center_freq15, 15)
+self.$(id).set_gain($gain15, 15)
+	#if $ant15()
+self.$(id).set_antenna($ant15, 15)
+	#end if
+	#if $bw15()
+self.$(id).set_bandwidth($bw15, 15)
+	#end if
+#end if
+#if $nchan() > 16
+self.$(id).set_center_freq($center_freq16, 16)
+self.$(id).set_gain($gain16, 16)
+	#if $ant16()
+self.$(id).set_antenna($ant16, 16)
+	#end if
+	#if $bw16()
+self.$(id).set_bandwidth($bw16, 16)
+	#end if
+#end if
+#if $nchan() > 17
+self.$(id).set_center_freq($center_freq17, 17)
+self.$(id).set_gain($gain17, 17)
+	#if $ant17()
+self.$(id).set_antenna($ant17, 17)
+	#end if
+	#if $bw17()
+self.$(id).set_bandwidth($bw17, 17)
+	#end if
+#end if
+#if $nchan() > 18
+self.$(id).set_center_freq($center_freq18, 18)
+self.$(id).set_gain($gain18, 18)
+	#if $ant18()
+self.$(id).set_antenna($ant18, 18)
+	#end if
+	#if $bw18()
+self.$(id).set_bandwidth($bw18, 18)
+	#end if
+#end if
+#if $nchan() > 19
+self.$(id).set_center_freq($center_freq19, 19)
+self.$(id).set_gain($gain19, 19)
+	#if $ant19()
+self.$(id).set_antenna($ant19, 19)
+	#end if
+	#if $bw19()
+self.$(id).set_bandwidth($bw19, 19)
+	#end if
+#end if
+#if $nchan() > 20
+self.$(id).set_center_freq($center_freq20, 20)
+self.$(id).set_gain($gain20, 20)
+	#if $ant20()
+self.$(id).set_antenna($ant20, 20)
+	#end if
+	#if $bw20()
+self.$(id).set_bandwidth($bw20, 20)
+	#end if
+#end if
+#if $nchan() > 21
+self.$(id).set_center_freq($center_freq21, 21)
+self.$(id).set_gain($gain21, 21)
+	#if $ant21()
+self.$(id).set_antenna($ant21, 21)
+	#end if
+	#if $bw21()
+self.$(id).set_bandwidth($bw21, 21)
+	#end if
+#end if
+#if $nchan() > 22
+self.$(id).set_center_freq($center_freq22, 22)
+self.$(id).set_gain($gain22, 22)
+	#if $ant22()
+self.$(id).set_antenna($ant22, 22)
+	#end if
+	#if $bw22()
+self.$(id).set_bandwidth($bw22, 22)
+	#end if
+#end if
+#if $nchan() > 23
+self.$(id).set_center_freq($center_freq23, 23)
+self.$(id).set_gain($gain23, 23)
+	#if $ant23()
+self.$(id).set_antenna($ant23, 23)
+	#end if
+	#if $bw23()
+self.$(id).set_bandwidth($bw23, 23)
+	#end if
+#end if
+#if $nchan() > 24
+self.$(id).set_center_freq($center_freq24, 24)
+self.$(id).set_gain($gain24, 24)
+	#if $ant24()
+self.$(id).set_antenna($ant24, 24)
+	#end if
+	#if $bw24()
+self.$(id).set_bandwidth($bw24, 24)
+	#end if
+#end if
+#if $nchan() > 25
+self.$(id).set_center_freq($center_freq25, 25)
+self.$(id).set_gain($gain25, 25)
+	#if $ant25()
+self.$(id).set_antenna($ant25, 25)
+	#end if
+	#if $bw25()
+self.$(id).set_bandwidth($bw25, 25)
+	#end if
+#end if
+#if $nchan() > 26
+self.$(id).set_center_freq($center_freq26, 26)
+self.$(id).set_gain($gain26, 26)
+	#if $ant26()
+self.$(id).set_antenna($ant26, 26)
+	#end if
+	#if $bw26()
+self.$(id).set_bandwidth($bw26, 26)
+	#end if
+#end if
+#if $nchan() > 27
+self.$(id).set_center_freq($center_freq27, 27)
+self.$(id).set_gain($gain27, 27)
+	#if $ant27()
+self.$(id).set_antenna($ant27, 27)
+	#end if
+	#if $bw27()
+self.$(id).set_bandwidth($bw27, 27)
+	#end if
+#end if
+#if $nchan() > 28
+self.$(id).set_center_freq($center_freq28, 28)
+self.$(id).set_gain($gain28, 28)
+	#if $ant28()
+self.$(id).set_antenna($ant28, 28)
+	#end if
+	#if $bw28()
+self.$(id).set_bandwidth($bw28, 28)
+	#end if
+#end if
+#if $nchan() > 29
+self.$(id).set_center_freq($center_freq29, 29)
+self.$(id).set_gain($gain29, 29)
+	#if $ant29()
+self.$(id).set_antenna($ant29, 29)
+	#end if
+	#if $bw29()
+self.$(id).set_bandwidth($bw29, 29)
+	#end if
+#end if
+#if $nchan() > 30
+self.$(id).set_center_freq($center_freq30, 30)
+self.$(id).set_gain($gain30, 30)
+	#if $ant30()
+self.$(id).set_antenna($ant30, 30)
+	#end if
+	#if $bw30()
+self.$(id).set_bandwidth($bw30, 30)
+	#end if
+#end if
+#if $nchan() > 31
+self.$(id).set_center_freq($center_freq31, 31)
+self.$(id).set_gain($gain31, 31)
+	#if $ant31()
+self.$(id).set_antenna($ant31, 31)
+	#end if
+	#if $bw31()
+self.$(id).set_bandwidth($bw31, 31)
+	#end if
+#end if
+</make>
+	<callback>set_samp_rate($samp_rate)</callback>
+	<callback>set_center_freq($center_freq0, 0)</callback>
+	<callback>set_gain($gain0, 0)</callback>
+	<callback>set_antenna($ant0, 0)</callback>
+	<callback>set_bandwidth($bw0, 0)</callback>
+	<callback>set_center_freq($center_freq1, 1)</callback>
+	<callback>set_gain($gain1, 1)</callback>
+	<callback>set_antenna($ant1, 1)</callback>
+	<callback>set_bandwidth($bw1, 1)</callback>
+	<callback>set_center_freq($center_freq2, 2)</callback>
+	<callback>set_gain($gain2, 2)</callback>
+	<callback>set_antenna($ant2, 2)</callback>
+	<callback>set_bandwidth($bw2, 2)</callback>
+	<callback>set_center_freq($center_freq3, 3)</callback>
+	<callback>set_gain($gain3, 3)</callback>
+	<callback>set_antenna($ant3, 3)</callback>
+	<callback>set_bandwidth($bw3, 3)</callback>
+	<callback>set_center_freq($center_freq4, 4)</callback>
+	<callback>set_gain($gain4, 4)</callback>
+	<callback>set_antenna($ant4, 4)</callback>
+	<callback>set_bandwidth($bw4, 4)</callback>
+	<callback>set_center_freq($center_freq5, 5)</callback>
+	<callback>set_gain($gain5, 5)</callback>
+	<callback>set_antenna($ant5, 5)</callback>
+	<callback>set_bandwidth($bw5, 5)</callback>
+	<callback>set_center_freq($center_freq6, 6)</callback>
+	<callback>set_gain($gain6, 6)</callback>
+	<callback>set_antenna($ant6, 6)</callback>
+	<callback>set_bandwidth($bw6, 6)</callback>
+	<callback>set_center_freq($center_freq7, 7)</callback>
+	<callback>set_gain($gain7, 7)</callback>
+	<callback>set_antenna($ant7, 7)</callback>
+	<callback>set_bandwidth($bw7, 7)</callback>
+	<callback>set_center_freq($center_freq8, 8)</callback>
+	<callback>set_gain($gain8, 8)</callback>
+	<callback>set_antenna($ant8, 8)</callback>
+	<callback>set_bandwidth($bw8, 8)</callback>
+	<callback>set_center_freq($center_freq9, 9)</callback>
+	<callback>set_gain($gain9, 9)</callback>
+	<callback>set_antenna($ant9, 9)</callback>
+	<callback>set_bandwidth($bw9, 9)</callback>
+	<callback>set_center_freq($center_freq10, 10)</callback>
+	<callback>set_gain($gain10, 10)</callback>
+	<callback>set_antenna($ant10, 10)</callback>
+	<callback>set_bandwidth($bw10, 10)</callback>
+	<callback>set_center_freq($center_freq11, 11)</callback>
+	<callback>set_gain($gain11, 11)</callback>
+	<callback>set_antenna($ant11, 11)</callback>
+	<callback>set_bandwidth($bw11, 11)</callback>
+	<callback>set_center_freq($center_freq12, 12)</callback>
+	<callback>set_gain($gain12, 12)</callback>
+	<callback>set_antenna($ant12, 12)</callback>
+	<callback>set_bandwidth($bw12, 12)</callback>
+	<callback>set_center_freq($center_freq13, 13)</callback>
+	<callback>set_gain($gain13, 13)</callback>
+	<callback>set_antenna($ant13, 13)</callback>
+	<callback>set_bandwidth($bw13, 13)</callback>
+	<callback>set_center_freq($center_freq14, 14)</callback>
+	<callback>set_gain($gain14, 14)</callback>
+	<callback>set_antenna($ant14, 14)</callback>
+	<callback>set_bandwidth($bw14, 14)</callback>
+	<callback>set_center_freq($center_freq15, 15)</callback>
+	<callback>set_gain($gain15, 15)</callback>
+	<callback>set_antenna($ant15, 15)</callback>
+	<callback>set_bandwidth($bw15, 15)</callback>
+	<callback>set_center_freq($center_freq16, 16)</callback>
+	<callback>set_gain($gain16, 16)</callback>
+	<callback>set_antenna($ant16, 16)</callback>
+	<callback>set_bandwidth($bw16, 16)</callback>
+	<callback>set_center_freq($center_freq17, 17)</callback>
+	<callback>set_gain($gain17, 17)</callback>
+	<callback>set_antenna($ant17, 17)</callback>
+	<callback>set_bandwidth($bw17, 17)</callback>
+	<callback>set_center_freq($center_freq18, 18)</callback>
+	<callback>set_gain($gain18, 18)</callback>
+	<callback>set_antenna($ant18, 18)</callback>
+	<callback>set_bandwidth($bw18, 18)</callback>
+	<callback>set_center_freq($center_freq19, 19)</callback>
+	<callback>set_gain($gain19, 19)</callback>
+	<callback>set_antenna($ant19, 19)</callback>
+	<callback>set_bandwidth($bw19, 19)</callback>
+	<callback>set_center_freq($center_freq20, 20)</callback>
+	<callback>set_gain($gain20, 20)</callback>
+	<callback>set_antenna($ant20, 20)</callback>
+	<callback>set_bandwidth($bw20, 20)</callback>
+	<callback>set_center_freq($center_freq21, 21)</callback>
+	<callback>set_gain($gain21, 21)</callback>
+	<callback>set_antenna($ant21, 21)</callback>
+	<callback>set_bandwidth($bw21, 21)</callback>
+	<callback>set_center_freq($center_freq22, 22)</callback>
+	<callback>set_gain($gain22, 22)</callback>
+	<callback>set_antenna($ant22, 22)</callback>
+	<callback>set_bandwidth($bw22, 22)</callback>
+	<callback>set_center_freq($center_freq23, 23)</callback>
+	<callback>set_gain($gain23, 23)</callback>
+	<callback>set_antenna($ant23, 23)</callback>
+	<callback>set_bandwidth($bw23, 23)</callback>
+	<callback>set_center_freq($center_freq24, 24)</callback>
+	<callback>set_gain($gain24, 24)</callback>
+	<callback>set_antenna($ant24, 24)</callback>
+	<callback>set_bandwidth($bw24, 24)</callback>
+	<callback>set_center_freq($center_freq25, 25)</callback>
+	<callback>set_gain($gain25, 25)</callback>
+	<callback>set_antenna($ant25, 25)</callback>
+	<callback>set_bandwidth($bw25, 25)</callback>
+	<callback>set_center_freq($center_freq26, 26)</callback>
+	<callback>set_gain($gain26, 26)</callback>
+	<callback>set_antenna($ant26, 26)</callback>
+	<callback>set_bandwidth($bw26, 26)</callback>
+	<callback>set_center_freq($center_freq27, 27)</callback>
+	<callback>set_gain($gain27, 27)</callback>
+	<callback>set_antenna($ant27, 27)</callback>
+	<callback>set_bandwidth($bw27, 27)</callback>
+	<callback>set_center_freq($center_freq28, 28)</callback>
+	<callback>set_gain($gain28, 28)</callback>
+	<callback>set_antenna($ant28, 28)</callback>
+	<callback>set_bandwidth($bw28, 28)</callback>
+	<callback>set_center_freq($center_freq29, 29)</callback>
+	<callback>set_gain($gain29, 29)</callback>
+	<callback>set_antenna($ant29, 29)</callback>
+	<callback>set_bandwidth($bw29, 29)</callback>
+	<callback>set_center_freq($center_freq30, 30)</callback>
+	<callback>set_gain($gain30, 30)</callback>
+	<callback>set_antenna($ant30, 30)</callback>
+	<callback>set_bandwidth($bw30, 30)</callback>
+	<callback>set_center_freq($center_freq31, 31)</callback>
+	<callback>set_gain($gain31, 31)</callback>
+	<callback>set_antenna($ant31, 31)</callback>
+	<callback>set_bandwidth($bw31, 31)</callback>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>type:COMPLEX_FLOAT32</opt>
+			<opt>vlen:1</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>type:COMPLEX_INT16</opt>
+			<opt>vlen:2</opt>
+		</option>
+	</param>
+	<param>
+		<name>Device Addr</name>
+		<key>dev_addr</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if $dev_addr()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ref Clock</name>
+		<key>ref_clk</key>
+		<value></value>
+		<type>enum</type>
+		<hide>#if $ref_clk() then 'none' else 'part'#</hide>
+		<option>
+			<name>External</name>
+			<key>ext</key>
+		</option>
+		<option>
+			<name>Internal</name>
+			<key></key>
+		</option>
+	</param>
+	<param>
+		<name>Sync</name>
+		<key>sync</key>
+		<value></value>
+		<type>enum</type>
+		<hide>#if $sync() then 'none' else 'part'#</hide>
+		<option>
+			<name>unknown PPS</name>
+			<key>sync</key>
+		</option>
+		<option>
+			<name>don't sync</name>
+			<key></key>
+		</option>
+	</param>
+	<param>
+		<name>Clock Rate (Hz)</name>
+		<key>clock_rate</key>
+		<value>0.0</value>
+		<type>real</type>
+		<hide>#if $clock_rate() then 'none' else 'part'#</hide>
+		<option>
+			<name>Default</name>
+			<key>0.0</key>
+		</option>
+	</param>
+	<param>
+		<name>Num Mboards</name>
+		<key>num_mboards</key>
+		<value>1</value>
+		<type>int</type>
+		<hide>part</hide>
+		<option>
+			<name>1</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>2</name>
+			<key>2</key>
+		</option>
+		<option>
+			<name>3</name>
+			<key>3</key>
+		</option>
+		<option>
+			<name>4</name>
+			<key>4</key>
+		</option>
+		<option>
+			<name>5</name>
+			<key>5</key>
+		</option>
+		<option>
+			<name>6</name>
+			<key>6</key>
+		</option>
+		<option>
+			<name>7</name>
+			<key>7</key>
+		</option>
+		<option>
+			<name>8</name>
+			<key>8</key>
+		</option>
+	</param>
+	<param>
+		<name>Mb0: Subdev Spec</name>
+		<key>sd_spec0</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $num_mboards() > 0
+				all
+			#elif $sd_spec0()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Mb1: Subdev Spec</name>
+		<key>sd_spec1</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $num_mboards() > 1
+				all
+			#elif $sd_spec1()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Mb2: Subdev Spec</name>
+		<key>sd_spec2</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $num_mboards() > 2
+				all
+			#elif $sd_spec2()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Mb3: Subdev Spec</name>
+		<key>sd_spec3</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $num_mboards() > 3
+				all
+			#elif $sd_spec3()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Mb4: Subdev Spec</name>
+		<key>sd_spec4</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $num_mboards() > 4
+				all
+			#elif $sd_spec4()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Mb5: Subdev Spec</name>
+		<key>sd_spec5</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $num_mboards() > 5
+				all
+			#elif $sd_spec5()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Mb6: Subdev Spec</name>
+		<key>sd_spec6</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $num_mboards() > 6
+				all
+			#elif $sd_spec6()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Mb7: Subdev Spec</name>
+		<key>sd_spec7</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $num_mboards() > 7
+				all
+			#elif $sd_spec7()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Num Channels</name>
+		<key>nchan</key>
+		<value>1</value>
+		<type>int</type>
+		<option>
+			<name>1</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>2</name>
+			<key>2</key>
+		</option>
+		<option>
+			<name>3</name>
+			<key>3</key>
+		</option>
+		<option>
+			<name>4</name>
+			<key>4</key>
+		</option>
+		<option>
+			<name>5</name>
+			<key>5</key>
+		</option>
+		<option>
+			<name>6</name>
+			<key>6</key>
+		</option>
+		<option>
+			<name>7</name>
+			<key>7</key>
+		</option>
+		<option>
+			<name>8</name>
+			<key>8</key>
+		</option>
+		<option>
+			<name>9</name>
+			<key>9</key>
+		</option>
+		<option>
+			<name>10</name>
+			<key>10</key>
+		</option>
+		<option>
+			<name>11</name>
+			<key>11</key>
+		</option>
+		<option>
+			<name>12</name>
+			<key>12</key>
+		</option>
+		<option>
+			<name>13</name>
+			<key>13</key>
+		</option>
+		<option>
+			<name>14</name>
+			<key>14</key>
+		</option>
+		<option>
+			<name>15</name>
+			<key>15</key>
+		</option>
+		<option>
+			<name>16</name>
+			<key>16</key>
+		</option>
+		<option>
+			<name>17</name>
+			<key>17</key>
+		</option>
+		<option>
+			<name>18</name>
+			<key>18</key>
+		</option>
+		<option>
+			<name>19</name>
+			<key>19</key>
+		</option>
+		<option>
+			<name>20</name>
+			<key>20</key>
+		</option>
+		<option>
+			<name>21</name>
+			<key>21</key>
+		</option>
+		<option>
+			<name>22</name>
+			<key>22</key>
+		</option>
+		<option>
+			<name>23</name>
+			<key>23</key>
+		</option>
+		<option>
+			<name>24</name>
+			<key>24</key>
+		</option>
+		<option>
+			<name>25</name>
+			<key>25</key>
+		</option>
+		<option>
+			<name>26</name>
+			<key>26</key>
+		</option>
+		<option>
+			<name>27</name>
+			<key>27</key>
+		</option>
+		<option>
+			<name>28</name>
+			<key>28</key>
+		</option>
+		<option>
+			<name>29</name>
+			<key>29</key>
+		</option>
+		<option>
+			<name>30</name>
+			<key>30</key>
+		</option>
+		<option>
+			<name>31</name>
+			<key>31</key>
+		</option>
+		<option>
+			<name>32</name>
+			<key>32</key>
+		</option>
+	</param>
+	<param>
+		<name>Samp Rate (Sps)</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	
+	<param>
+		<name>Ch0: Center Freq (Hz)</name>
+		<key>center_freq0</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 0 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch0: Gain (dB)</name>
+		<key>gain0</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 0 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch0: Antenna</name>
+		<key>ant0</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 0
+				all
+			#elif $ant0()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch0: Bandwidth (Hz)</name>
+		<key>bw0</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 0
+				all
+			#elif $bw0()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch1: Center Freq (Hz)</name>
+		<key>center_freq1</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 1 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch1: Gain (dB)</name>
+		<key>gain1</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 1 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch1: Antenna</name>
+		<key>ant1</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 1
+				all
+			#elif $ant1()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch1: Bandwidth (Hz)</name>
+		<key>bw1</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 1
+				all
+			#elif $bw1()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch2: Center Freq (Hz)</name>
+		<key>center_freq2</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 2 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch2: Gain (dB)</name>
+		<key>gain2</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 2 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch2: Antenna</name>
+		<key>ant2</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 2
+				all
+			#elif $ant2()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch2: Bandwidth (Hz)</name>
+		<key>bw2</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 2
+				all
+			#elif $bw2()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch3: Center Freq (Hz)</name>
+		<key>center_freq3</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 3 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch3: Gain (dB)</name>
+		<key>gain3</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 3 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch3: Antenna</name>
+		<key>ant3</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 3
+				all
+			#elif $ant3()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch3: Bandwidth (Hz)</name>
+		<key>bw3</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 3
+				all
+			#elif $bw3()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch4: Center Freq (Hz)</name>
+		<key>center_freq4</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 4 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch4: Gain (dB)</name>
+		<key>gain4</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 4 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch4: Antenna</name>
+		<key>ant4</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 4
+				all
+			#elif $ant4()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch4: Bandwidth (Hz)</name>
+		<key>bw4</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 4
+				all
+			#elif $bw4()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch5: Center Freq (Hz)</name>
+		<key>center_freq5</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 5 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch5: Gain (dB)</name>
+		<key>gain5</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 5 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch5: Antenna</name>
+		<key>ant5</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 5
+				all
+			#elif $ant5()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch5: Bandwidth (Hz)</name>
+		<key>bw5</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 5
+				all
+			#elif $bw5()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch6: Center Freq (Hz)</name>
+		<key>center_freq6</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 6 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch6: Gain (dB)</name>
+		<key>gain6</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 6 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch6: Antenna</name>
+		<key>ant6</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 6
+				all
+			#elif $ant6()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch6: Bandwidth (Hz)</name>
+		<key>bw6</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 6
+				all
+			#elif $bw6()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch7: Center Freq (Hz)</name>
+		<key>center_freq7</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 7 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch7: Gain (dB)</name>
+		<key>gain7</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 7 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch7: Antenna</name>
+		<key>ant7</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 7
+				all
+			#elif $ant7()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch7: Bandwidth (Hz)</name>
+		<key>bw7</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 7
+				all
+			#elif $bw7()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch8: Center Freq (Hz)</name>
+		<key>center_freq8</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 8 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch8: Gain (dB)</name>
+		<key>gain8</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 8 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch8: Antenna</name>
+		<key>ant8</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 8
+				all
+			#elif $ant8()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch8: Bandwidth (Hz)</name>
+		<key>bw8</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 8
+				all
+			#elif $bw8()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch9: Center Freq (Hz)</name>
+		<key>center_freq9</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 9 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch9: Gain (dB)</name>
+		<key>gain9</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 9 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch9: Antenna</name>
+		<key>ant9</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 9
+				all
+			#elif $ant9()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch9: Bandwidth (Hz)</name>
+		<key>bw9</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 9
+				all
+			#elif $bw9()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch10: Center Freq (Hz)</name>
+		<key>center_freq10</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 10 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch10: Gain (dB)</name>
+		<key>gain10</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 10 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch10: Antenna</name>
+		<key>ant10</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 10
+				all
+			#elif $ant10()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch10: Bandwidth (Hz)</name>
+		<key>bw10</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 10
+				all
+			#elif $bw10()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch11: Center Freq (Hz)</name>
+		<key>center_freq11</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 11 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch11: Gain (dB)</name>
+		<key>gain11</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 11 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch11: Antenna</name>
+		<key>ant11</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 11
+				all
+			#elif $ant11()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch11: Bandwidth (Hz)</name>
+		<key>bw11</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 11
+				all
+			#elif $bw11()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch12: Center Freq (Hz)</name>
+		<key>center_freq12</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 12 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch12: Gain (dB)</name>
+		<key>gain12</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 12 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch12: Antenna</name>
+		<key>ant12</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 12
+				all
+			#elif $ant12()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch12: Bandwidth (Hz)</name>
+		<key>bw12</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 12
+				all
+			#elif $bw12()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch13: Center Freq (Hz)</name>
+		<key>center_freq13</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 13 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch13: Gain (dB)</name>
+		<key>gain13</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 13 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch13: Antenna</name>
+		<key>ant13</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 13
+				all
+			#elif $ant13()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch13: Bandwidth (Hz)</name>
+		<key>bw13</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 13
+				all
+			#elif $bw13()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch14: Center Freq (Hz)</name>
+		<key>center_freq14</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 14 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch14: Gain (dB)</name>
+		<key>gain14</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 14 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch14: Antenna</name>
+		<key>ant14</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 14
+				all
+			#elif $ant14()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch14: Bandwidth (Hz)</name>
+		<key>bw14</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 14
+				all
+			#elif $bw14()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch15: Center Freq (Hz)</name>
+		<key>center_freq15</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 15 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch15: Gain (dB)</name>
+		<key>gain15</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 15 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch15: Antenna</name>
+		<key>ant15</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 15
+				all
+			#elif $ant15()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch15: Bandwidth (Hz)</name>
+		<key>bw15</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 15
+				all
+			#elif $bw15()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch16: Center Freq (Hz)</name>
+		<key>center_freq16</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 16 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch16: Gain (dB)</name>
+		<key>gain16</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 16 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch16: Antenna</name>
+		<key>ant16</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 16
+				all
+			#elif $ant16()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch16: Bandwidth (Hz)</name>
+		<key>bw16</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 16
+				all
+			#elif $bw16()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch17: Center Freq (Hz)</name>
+		<key>center_freq17</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 17 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch17: Gain (dB)</name>
+		<key>gain17</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 17 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch17: Antenna</name>
+		<key>ant17</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 17
+				all
+			#elif $ant17()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch17: Bandwidth (Hz)</name>
+		<key>bw17</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 17
+				all
+			#elif $bw17()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch18: Center Freq (Hz)</name>
+		<key>center_freq18</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 18 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch18: Gain (dB)</name>
+		<key>gain18</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 18 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch18: Antenna</name>
+		<key>ant18</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 18
+				all
+			#elif $ant18()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch18: Bandwidth (Hz)</name>
+		<key>bw18</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 18
+				all
+			#elif $bw18()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch19: Center Freq (Hz)</name>
+		<key>center_freq19</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 19 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch19: Gain (dB)</name>
+		<key>gain19</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 19 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch19: Antenna</name>
+		<key>ant19</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 19
+				all
+			#elif $ant19()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch19: Bandwidth (Hz)</name>
+		<key>bw19</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 19
+				all
+			#elif $bw19()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch20: Center Freq (Hz)</name>
+		<key>center_freq20</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 20 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch20: Gain (dB)</name>
+		<key>gain20</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 20 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch20: Antenna</name>
+		<key>ant20</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 20
+				all
+			#elif $ant20()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch20: Bandwidth (Hz)</name>
+		<key>bw20</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 20
+				all
+			#elif $bw20()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch21: Center Freq (Hz)</name>
+		<key>center_freq21</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 21 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch21: Gain (dB)</name>
+		<key>gain21</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 21 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch21: Antenna</name>
+		<key>ant21</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 21
+				all
+			#elif $ant21()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch21: Bandwidth (Hz)</name>
+		<key>bw21</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 21
+				all
+			#elif $bw21()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch22: Center Freq (Hz)</name>
+		<key>center_freq22</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 22 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch22: Gain (dB)</name>
+		<key>gain22</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 22 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch22: Antenna</name>
+		<key>ant22</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 22
+				all
+			#elif $ant22()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch22: Bandwidth (Hz)</name>
+		<key>bw22</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 22
+				all
+			#elif $bw22()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch23: Center Freq (Hz)</name>
+		<key>center_freq23</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 23 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch23: Gain (dB)</name>
+		<key>gain23</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 23 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch23: Antenna</name>
+		<key>ant23</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 23
+				all
+			#elif $ant23()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch23: Bandwidth (Hz)</name>
+		<key>bw23</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 23
+				all
+			#elif $bw23()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch24: Center Freq (Hz)</name>
+		<key>center_freq24</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 24 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch24: Gain (dB)</name>
+		<key>gain24</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 24 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch24: Antenna</name>
+		<key>ant24</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 24
+				all
+			#elif $ant24()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch24: Bandwidth (Hz)</name>
+		<key>bw24</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 24
+				all
+			#elif $bw24()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch25: Center Freq (Hz)</name>
+		<key>center_freq25</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 25 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch25: Gain (dB)</name>
+		<key>gain25</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 25 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch25: Antenna</name>
+		<key>ant25</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 25
+				all
+			#elif $ant25()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch25: Bandwidth (Hz)</name>
+		<key>bw25</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 25
+				all
+			#elif $bw25()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch26: Center Freq (Hz)</name>
+		<key>center_freq26</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 26 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch26: Gain (dB)</name>
+		<key>gain26</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 26 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch26: Antenna</name>
+		<key>ant26</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 26
+				all
+			#elif $ant26()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch26: Bandwidth (Hz)</name>
+		<key>bw26</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 26
+				all
+			#elif $bw26()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch27: Center Freq (Hz)</name>
+		<key>center_freq27</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 27 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch27: Gain (dB)</name>
+		<key>gain27</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 27 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch27: Antenna</name>
+		<key>ant27</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 27
+				all
+			#elif $ant27()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch27: Bandwidth (Hz)</name>
+		<key>bw27</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 27
+				all
+			#elif $bw27()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch28: Center Freq (Hz)</name>
+		<key>center_freq28</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 28 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch28: Gain (dB)</name>
+		<key>gain28</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 28 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch28: Antenna</name>
+		<key>ant28</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 28
+				all
+			#elif $ant28()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch28: Bandwidth (Hz)</name>
+		<key>bw28</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 28
+				all
+			#elif $bw28()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch29: Center Freq (Hz)</name>
+		<key>center_freq29</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 29 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch29: Gain (dB)</name>
+		<key>gain29</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 29 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch29: Antenna</name>
+		<key>ant29</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 29
+				all
+			#elif $ant29()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch29: Bandwidth (Hz)</name>
+		<key>bw29</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 29
+				all
+			#elif $bw29()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch30: Center Freq (Hz)</name>
+		<key>center_freq30</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 30 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch30: Gain (dB)</name>
+		<key>gain30</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 30 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch30: Antenna</name>
+		<key>ant30</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 30
+				all
+			#elif $ant30()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch30: Bandwidth (Hz)</name>
+		<key>bw30</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 30
+				all
+			#elif $bw30()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<param>
+		<name>Ch31: Center Freq (Hz)</name>
+		<key>center_freq31</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 31 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch31: Gain (dB)</name>
+		<key>gain31</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $nchan() > 31 then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch31: Antenna</name>
+		<key>ant31</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if not $nchan() > 31
+				all
+			#elif $ant31()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+	<param>
+		<name>Ch31: Bandwidth (Hz)</name>
+		<key>bw31</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>
+			#if not $nchan() > 31
+				all
+			#elif $bw31()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+
+	<check>32 >= $nchan</check>
+	<check>$nchan > 0</check>
+	<check>8 >= $num_mboards</check>
+	<check>$num_mboards > 0</check>
+	<check>$nchan >= $num_mboards</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$type.vlen</vlen>
+		<nports>$nchan</nports>
+	</sink>
+	<doc>
+The UHD USRP Sink Block:
+
+Device Address:
+The device address is a delimited string used to locate UHD devices on your system. \
+If left blank, the first UHD device found will be used. \
+Use the device address to specify a specific device or list of devices.
+USRP1 Example: serial=12345678
+USRP2 Example: addr=192.168.10.2
+USRP2 Example: addr0=192.168.10.2, addr1=192.168.10.3
+
+Num Motherboards:
+Selects the number of USRP motherboards in this device configuration.
+
+Subdevice specification:
+Each motherboard should have its own subdevice specification \
+and all subdevice specifications should be the same length. \
+Select the subdevice or subdevices for each channel using a markup string. \
+The markup string consists of a list of dboard_slot:subdev_name pairs (one pair per channel). \
+If left blank, the UHD will try to select the first subdevice on your system. \
+See the application notes for further details.
+Single channel example: :AB
+Dual channel example: :A :B
+
+Num Channels:
+Selects the total number of channels in this multi-USRP configuration.
+Ex: 4 motherboards with 2 channels per board = 8 channels total
+
+Sample rate:
+The sample rate is the number of samples per second input by this block. \
+The UHD device driver will try its best to match the requested sample rate. \
+If the requested rate is not possible, the UHD block will print an error at runtime.
+
+Center frequency:
+The center frequency is the overall frequency of the RF chain. \
+For greater control of how the UHD tunes elements in the RF chain, \
+pass a tune_request object rather than a simple target frequency.
+Tuning with an LO offset example: uhd.tune_request(freq, lo_off)
+
+Antenna:
+For subdevices with only one antenna, this may be left blank. \
+Otherwise, the user should specify one of the possible antenna choices. \
+See the daughterboard application notes for the possible antenna choices.
+
+Bandwidth:
+To use the default bandwidth filter setting, this should be zero. \
+Only certain subdevices have configurable bandwidth filters. \
+See the daughterboard application notes for possible configurations.
+	</doc>
+</block>

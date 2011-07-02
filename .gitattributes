@@ -1,9 +1,0 @@
-#
-# The following turn off LF->CRLF conversion for some files on Windows.
-# these conversions cause syntax errors on MinGW/MSYS.  They should not
-# have any effect on non-Windows systems or on Cygwin.  Any files that
-# required svn:eof-style=lf under subversion should be included here.
-#
-*.m4	-crlf
-*.ac	-crlf
-*.scm	-crlf

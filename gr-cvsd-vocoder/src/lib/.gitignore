@@ -1,9 +1,0 @@
-/Makefile
-/Makefile.in
-/.libs
-/.deps
-/cvsd_vocoder.cc
-/cvsd_vocoder.py*
-/gnuradio
-/guile
-/python

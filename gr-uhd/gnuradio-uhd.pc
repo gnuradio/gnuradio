@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: gnuradio-qtgui
+Description: GNU Radio blocks for UHD
+Requires: gnuradio-core
+Version: 3.4.0
+Libs: -L${libdir} -lgnuradio-uhd
+Cflags: -I${includedir}

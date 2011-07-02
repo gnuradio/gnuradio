@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: gnuradio-comedi
+Description: GNU Radio blocks implementing a GSM full rate vocoder
+Requires: gnuradio-core
+Version: 3.4.0
+Libs: -L${libdir} -lgnuradio-gsm-fr-vocoder-$3.4.0
+Cflags: -I${includedir}

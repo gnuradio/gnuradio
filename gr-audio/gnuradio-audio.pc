@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: gnuradio-audio
+Description: The GNU Radio block for all supported audio sound systems
+Requires: gnuradio-core
+Version: 3.4.0
+Libs: -L${libdir} -lgnuradio-audio
+Cflags: -I${includedir}

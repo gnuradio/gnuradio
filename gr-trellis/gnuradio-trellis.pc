@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: gnuradio-trellis
+Description: GNU Radio blocks for trellis coded modulation
+Requires: gnuradio-core
+Version: 3.4.0
+Libs: -L${libdir} -lgnuradio-trellis
+Cflags: -I${includedir}
