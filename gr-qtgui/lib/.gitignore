@@ -10,6 +10,7 @@
 /spectrumdisplayform.ui.h
 /FrequencyDisplayPlot.moc.cc
 /ConstellationDisplayPlot.moc.cc
+/timedisplayform.moc.cc
 /gnuradio
 /guile
 /python
