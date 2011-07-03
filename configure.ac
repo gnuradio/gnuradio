@@ -371,7 +371,6 @@ GRC_GR_TRELLIS
 GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_GR_QTGUI
-GRC_GR_SOUNDER			dnl this must come after GRC_USRP
 GRC_GR_UTILS                    dnl this must come after GRC_GR_WXGUI
 GRC_GNURADIO_EXAMPLES		dnl must come after all GRC_GR_*
 GRC_GRC
