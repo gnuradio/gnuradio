@@ -43,7 +43,7 @@ self.\$(id).set_clock_config(uhd.clock_config.internal(), $m)
 \#end if
 ########################################################################
 \#if \$num_mboards() > $m and \$ref_source$(m)() == 'mimo'
-_config = uhd.clock_config
+_config = uhd.clock_config()
 _config.ref_source = uhd.clock_config.REF_MIMO
 _config.pps_source = uhd.clock_config.PPS_MIMO
 self.\$(id).set_clock_config(_config, $m)
