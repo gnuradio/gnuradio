@@ -56,7 +56,6 @@ m4macros = \
 	grc_gr_gcell.m4 \
 	grc_gr_gsm_fr_vocoder.m4 \
 	grc_gr_noaa.m4 \
-	grc_gr_radar_mono.m4 \
 	grc_gr_radio_astronomy.m4 \
 	grc_gr_sounder.m4 \
 	grc_gr_trellis.m4 \
