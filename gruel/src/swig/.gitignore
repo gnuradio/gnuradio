@@ -1,2 +1,4 @@
 /Makefile
 /Makefile.in
+/python
+/pmt_swig.py
