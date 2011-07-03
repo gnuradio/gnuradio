@@ -68,7 +68,6 @@ m4macros = \
 	gr_check_usrp.m4 \
 	grc_usrp.m4 \
 	grc_usrp2.m4 \
-	grc_gr_msdd6000.m4 \
 	gr_doxygen.m4 \
 	gr_fortran.m4 \
 	gr_gcell.m4 \
