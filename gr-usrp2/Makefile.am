@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = src
+SUBDIRS = src apps
 
 if PYTHON
 SUBDIRS += grc

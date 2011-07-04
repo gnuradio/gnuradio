@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,45 +21,12 @@
 
 include $(top_srcdir)/Makefile.common
 
-# For compiling within the GNU Radio build tree
-AM_CPPFLAGS = \
-	-I$(top_srcdir)/gr-usrp/src \
-	$(USRP_INCLUDES) \
-	$(STD_DEFINES_AND_INCLUDES) \
-	$(WITH_INCLUDES)
-
-GR_USRP_LA=$(top_builddir)/gr-usrp/src/libgnuradio-usrp.la
-
-# For compiling outside the tree, these will get fished out by pkgconfig
-
-LDADD = \
-	$(GNURADIO_CORE_LA) \
-	$(USRP_LA) \
-	$(GR_USRP_LA) \
-	$(BOOST_LDFLAGS) \
-	$(BOOST_PROGRAM_OPTIONS_LIB)
-
-noinst_PROGRAMS = \
-	usrp_rx_cfile \
-	usrp_siggen
-
-noinst_HEADERS = 	\
-	usrp_rx_cfile.h	\
-	usrp_siggen.h
-
-usrp_rx_cfile_SOURCES = 	\
-    usrp_rx_cfile.cc
-
-usrp_siggen_SOURCES = 	\
-    usrp_siggen.cc
+EXTRA_DIST += \
+    $(bin_SCRIPTS)
 
 if PYTHON
 
 bin_SCRIPTS = \
-    lsusrp \
-    usrp_print_db.py \
-    usrp_rx_cfile.py \
-    usrp_test_counting.py \
-    usrp_test_loopback.py
+    usrp2_rx_cfile.py
 
 endif
