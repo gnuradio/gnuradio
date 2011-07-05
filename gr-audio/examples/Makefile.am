@@ -20,4 +20,9 @@
 # 
 
 include $(top_srcdir)/Makefile.common
-SUBDIRS = audio
+
+SUBDIRS = c++
+
+if PYTHON
+SUBDIRS += python
+endif

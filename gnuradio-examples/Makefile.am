@@ -21,7 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = c++
+SUBDIRS =
+
 if PYTHON
 SUBDIRS += python grc
 endif
