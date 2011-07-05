@@ -101,6 +101,9 @@ AC_DEFUN([GRC_GR_AUDIO],[
 
     AC_CONFIG_FILES([ \
         gr-audio/Makefile \
+	gr-audio/examples/Makefile \
+	gr-audio/examples/c++/Makefile \
+	gr-audio/examples/python/Makefile \
         gr-audio/grc/Makefile \
         gr-audio/include/Makefile \
         gr-audio/lib/Makefile \
