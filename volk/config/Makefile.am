@@ -30,7 +30,6 @@ m4macros = \
 	ax_boost_base.m4 \
 	ax_boost_unit_test_framework.m4 \
 	bnv_have_qt.m4 \
-	cppunit.m4 \
 	gr_lib64.m4 \
 	gr_libgnuradio_core_extra_ldflags.m4 \
 	gr_no_undefined.m4 \
@@ -43,7 +42,7 @@ m4macros = \
 	lf_cxx.m4 \
 	lf_warnings.m4 \
 	lf_x11.m4 \
-	lv_set_simd_flags.m4 \
+	$(top_gendir)/config/lv_set_simd_flags.m4 \
 	mkstemp.m4 \
 	onceonly.m4 \
 	pkg.m4 \

@@ -1,11 +1,12 @@
 #ifndef INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a16_H
 #define INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a16_H
 
+#include <volk/volk_common.h>
 #include<volk/volk_complex.h>
 #include<stdio.h>
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 
 
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
@@ -64,7 +65,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_generic(lv_32fc_t* r
 
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_sse(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
-  static const uint32_t conjugator[4] __attribute__((aligned(16)))= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
+  __VOLK_ATTR_ALIGNED(16) static const uint32_t conjugator[4]= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
   
 
 
@@ -205,7 +206,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_sse(lv_32fc_t* resul
 #if LV_HAVE_SSE && LV_HAVE_32
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a16_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
   
-  static const uint32_t conjugator[4] __attribute__((aligned(16)))= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
+  __VOLK_ATTR_ALIGNED(16) static const uint32_t conjugator[4]= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
 
   int bound = num_bytes >> 4;
   int leftovers = num_bytes % 16;

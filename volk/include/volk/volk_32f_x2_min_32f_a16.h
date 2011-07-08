@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Selects minimum value from each entry between bVector and aVector and store their results in the cVector
@@ -45,7 +45,7 @@ static inline void volk_32f_x2_min_32f_a16_sse(float* cVector, const float* aVec
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Selects minimum value from each entry between bVector and aVector and store their results in the cVector
   \param cVector The vector where the results will be stored
@@ -67,7 +67,7 @@ static inline void volk_32f_x2_min_32f_a16_generic(float* cVector, const float* 
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#ifdef LV_HAVE_ORC
 /*!
   \brief Selects minimum value from each entry between bVector and aVector and store their results in the cVector
   \param cVector The vector where the results will be stored

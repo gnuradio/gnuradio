@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSSE3
+#ifdef LV_HAVE_SSSE3
 #include <tmmintrin.h>
 /*!
   \brief Deinterleaves the complex 16 bit vector into I vector data
@@ -47,7 +47,7 @@ static inline void volk_16ic_deinterleave_real_16i_a16_ssse3(int16_t* iBuffer, c
 #endif /* LV_HAVE_SSSE3 */
 
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
 /*!
   \brief Deinterleaves the complex 16 bit vector into I vector data
@@ -96,7 +96,7 @@ static inline void volk_16ic_deinterleave_real_16i_a16_sse2(int16_t* iBuffer, co
 }
 #endif /* LV_HAVE_SSE2 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Deinterleaves the complex 16 bit vector into I vector data
   \param complexVector The complex input vector

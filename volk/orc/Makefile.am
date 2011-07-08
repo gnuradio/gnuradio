@@ -21,7 +21,7 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(ORC_CFLAGS)
 
 include $(top_srcdir)/Makefile.common
-lib_LTLIBRARIES = libvolk_orc.la
+noinst_LTLIBRARIES = libvolk_orc.la
 libvolk_orc_la_LDFLAGS = $(ORC_LDFLAGS)
 
 libvolk_orc_la_SOURCES = \

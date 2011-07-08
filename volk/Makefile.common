@@ -20,21 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-if MD_CPU_generic
-    platform_CODE = \
-	$(top_srcdir)/lib/volk_cpu_generic.c
-endif
-
-if MD_CPU_x86
-    platform_CODE = \
-	$(top_srcdir)/lib/volk_cpu_x86.c
-endif
-
-if MD_CPU_powerpc
-    platform_CODE = \
-	$(top_srcdir)/lib/volk_cpu_powerpc.c
-endif
-
+#define gendir for files generated during bootstrap
+top_gendir = $(top_srcdir)/gen
 
 ourincludedir   = $(includedir)/volk
 

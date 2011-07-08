@@ -1,50 +1,54 @@
 #! /usr/bin/env python
 
 import sys
+import os
 import re
 import string
 from xml.dom import minidom
 from volk_regexp import *
-from make_cpuid_x86_c import make_cpuid_x86_c
+from make_cpuid_c import make_cpuid_c
 from make_cpuid_h import make_cpuid_h
-from make_proccpu_sim import make_proccpu_sim
 from make_set_simd import make_set_simd
-from make_cpuid_generic_c import make_cpuid_generic_c
-from make_cpuid_powerpc_c import make_cpuid_powerpc_c
-from make_registry import make_registry
-from make_h import make_h
-from make_init_h import make_init_h
 from make_config_fixed import make_config_fixed
-from make_config_in import make_config_in
-from make_c import make_c
-from make_runtime_c import make_runtime_c
-from make_init_c import make_init_c
-from make_runtime import make_runtime
 from make_typedefs import make_typedefs
-from make_mktables import make_mktables
 from make_environment_init_c import make_environment_init_c
 from make_environment_init_h import make_environment_init_h
+from make_makefile_am import make_makefile_am
+from make_machines_h import make_machines_h
+from make_machines_c import make_machines_c
+from make_each_machine_c import make_each_machine_c
+from make_c import make_c
+from make_h import make_h
+import copy
 
-outfile_set_simd = open("../../config/lv_set_simd_flags.m4", "w");
-outfile_reg = open("volk_registry.h", "w");
-outfile_h = open("volk.h", "w");
-outfile_c = open("../../lib/volk.c", "w");
-outfile_runtime = open("volk_runtime.h", "w");
-outfile_runtime_c = open("../../lib/volk_runtime.c", "w");
-outfile_typedefs = open("volk_typedefs.h", "w");
-outfile_init_h = open("../../lib/volk_init.h", "w");
-outfile_init_c = open("../../lib/volk_init.c", "w");
-outfile_cpu_h = open("volk_cpu.h", "w");
-outfile_cpu_x86_c = open("../../lib/volk_cpu_x86.c", "w");
-outfile_cpu_generic_c = open("../../lib/volk_cpu_generic.c", "w");
-outfile_cpu_powerpc_c = open("../../lib/volk_cpu_powerpc.c", "w");
-outfile_proccpu_sim = open("../../lib/volk_proccpu_sim.c", "w");
-outfile_config_in = open("../../volk_config.h.in", "w");
-outfile_config_fixed = open("volk_config_fixed.h", "w");
-outfile_mktables = open("../../lib/volk_mktables.c", "w");
-outfile_environment_c = open("../../lib/volk_environment_init.c", "w");
-outfile_environment_h = open("volk_environment_init.h", "w");
-infile = open("Makefile.am", "r");
+#set srcdir and gendir
+srcdir = os.path.dirname(os.path.dirname(__file__))
+try: gendir = sys.argv[1]
+except: gendir = os.path.dirname(__file__)
+
+#ensure directories exist
+for dir in (
+    (os.path.join(gendir, 'include', 'volk')),
+    (os.path.join(gendir, 'lib')),
+    (os.path.join(gendir, 'config'))
+):
+    if not os.path.exists(dir): os.makedirs(dir)
+
+outfile_set_simd = open(os.path.join(gendir, "config/lv_set_simd_flags.m4"), "w")
+outfile_h = open(os.path.join(gendir, "include/volk/volk.h"), "w")
+outfile_c = open(os.path.join(gendir, "lib/volk.c"), "w")
+outfile_typedefs = open(os.path.join(gendir, "include/volk/volk_typedefs.h"), "w")
+outfile_init_h = open(os.path.join(gendir, "lib/volk_init.h"), "w")
+outfile_cpu_h = open(os.path.join(gendir, "include/volk/volk_cpu.h"), "w")
+outfile_cpu_c = open(os.path.join(gendir, "lib/volk_cpu.c"), "w")
+#outfile_config_in = open(os.path.join(gendir, "include/volk/volk_config.h.in"), "w")
+outfile_config_fixed = open(os.path.join(gendir, "include/volk/volk_config_fixed.h"), "w")
+outfile_environment_c = open(os.path.join(gendir, "lib/volk_environment_init.c"), "w")
+outfile_environment_h = open(os.path.join(gendir, "lib/volk_environment_init.h"), "w")
+outfile_makefile_am = open(os.path.join(gendir, "lib/Makefile.am"), "w")
+outfile_machines_h = open(os.path.join(gendir, "lib/volk_machines.h"), "w")
+outfile_machines_c = open(os.path.join(gendir, "lib/volk_machines.c"), "w")
+infile = open(os.path.join(srcdir, "include/volk/Makefile.am"), "r")
 
 
 mfile = infile.readlines();
@@ -77,7 +81,7 @@ for line in mfile:
                 functions.append(subsubline.group(0));
 
 archs = [];
-afile = minidom.parse("archs.xml");
+afile = minidom.parse(os.path.join(srcdir, "gen/archs.xml"))
 filearchs = afile.getElementsByTagName("arch");
 for filearch in filearchs:
     archs.append(str(filearch.attributes["name"].value));
@@ -86,8 +90,12 @@ for arch in archs:
     a_var = re.search("^\$", arch);
     if a_var:
         archs.remove(arch);
+        
+        
 
-
+archflags_dict = {}
+for filearch in filearchs:
+    archflags_dict[str(filearch.attributes["name"].value)] = str(filearch.getElementsByTagName("flag")[0].firstChild.data)
 
 archs_or = "("
 for arch in archs:
@@ -95,7 +103,41 @@ for arch in archs:
 archs_or = archs_or[0:len(archs_or)-1];
 archs_or = archs_or + ")";
 
-    
+#get machine list and parse to a list of machines, each with a list of archs (none of this DOM crap)
+machine_str_dict = {}
+mfile = minidom.parse(os.path.join(srcdir, "gen/machines.xml"))
+filemachines = mfile.getElementsByTagName("machine")
+
+for filemachine in filemachines:
+    machine_str_dict[str(filemachine.attributes["name"].value)] = str(filemachine.getElementsByTagName("archs")[0].firstChild.data).split()
+
+#all right now you have a dict of arch lists
+#next we expand it
+#this is an expanded list accounting for the OR syntax
+#TODO: make this work for multiple "|" machines
+machines = {}
+already_done = False
+for machine_name in machine_str_dict:
+    already_done = False
+    marchlist = machine_str_dict[machine_name]
+    for march in marchlist:
+        or_marchs = march.split("|")
+        if len(or_marchs) > 1:
+            marchlist.remove(march)
+            for or_march in or_marchs:
+                tempmarchlist = copy.deepcopy(marchlist)
+                tempmarchlist.append(or_march)
+                machines[machine_name + "_" + or_march] = tempmarchlist
+                already_done = True
+
+    if not already_done:
+        machines[machine_name] = marchlist
+ 
+#for machine_name in machines:
+#    print machine_name + ": " + str(machines[machine_name])
+
+#ok, now we have all the machines we're going to build. next step is to generate a Makefile.am where they're all laid out and compiled
+
 taglist = [];
 fcountlist = [];
 arched_arglist = [];
@@ -105,13 +147,13 @@ my_argtypelist = [];
 for func in functions:
     tags = [];
     fcount = [];
-    infile_source = open(func + ".h");
+    infile_source = open(os.path.join(srcdir, 'include', 'volk', func + ".h"))
     begun_name = 0;
     begun_paren = 0;
     sourcefile = infile_source.readlines();
     infile_source.close();
     for line in sourcefile:
-
+#FIXME: make it work for multiple #if define()s
         archline = re.search("^\#if.*?LV_HAVE_" + archs_or + ".*", line);
         if archline:
             arch = archline.group(0);
@@ -219,60 +261,39 @@ for func in functions:
     fcountlist.append(fcount);
     taglist.append(tags);               
 
-outfile_mktables.write(make_mktables(functions));
-outfile_mktables.close();
-
 
 outfile_cpu_h.write(make_cpuid_h(filearchs));
 outfile_cpu_h.close();
 
-outfile_cpu_x86_c.write(make_cpuid_x86_c(filearchs));
-outfile_cpu_x86_c.close();
+outfile_cpu_c.write(make_cpuid_c(filearchs));
+outfile_cpu_c.close();
 
-outfile_proccpu_sim.write(make_proccpu_sim(filearchs));
-outfile_proccpu_sim.close();
-
-outfile_set_simd.write(make_set_simd(filearchs));
+outfile_set_simd.write(make_set_simd(filearchs, machines));
 outfile_set_simd.close();
-
-outfile_cpu_generic_c.write(make_cpuid_generic_c(filearchs)); 
-outfile_cpu_generic_c.close();
-
-outfile_cpu_powerpc_c.write(make_cpuid_powerpc_c(filearchs));
-outfile_cpu_powerpc_c.close();
-
-outfile_config_in.write(make_config_in(filearchs));
-outfile_config_in.close();
-    
-outfile_reg.write(make_registry(filearchs, functions, fcountlist));
-outfile_reg.close();
-
-outfile_h.write(make_h(functions, arched_arglist, retlist));
-outfile_h.close();  
-
-outfile_init_h.write(make_init_h(functions, arched_arglist, retlist));
-outfile_init_h.close();
 
 outfile_config_fixed.write(make_config_fixed(filearchs));
 outfile_config_fixed.close();
 
-outfile_c.write( make_c(functions, taglist, arched_arglist, retlist, my_arglist, fcountlist));
-outfile_c.close();
-
-outfile_runtime_c.write(make_runtime_c(functions, taglist, arched_arglist, retlist, my_arglist, fcountlist));
-outfile_runtime_c.close();
-
-outfile_init_c.write(make_init_c(functions, filearchs));
-outfile_init_c.close();
-
-outfile_runtime.write(make_runtime(functions));
-outfile_runtime.close();
-
 outfile_typedefs.write(make_typedefs(functions, retlist, my_argtypelist));
 outfile_typedefs.close();
 
-outfile_environment_c.write(make_environment_init_c(filearchs));
-outfile_environment_c.close();
+outfile_makefile_am.write(make_makefile_am(filearchs, machines, archflags_dict))
+outfile_makefile_am.close()
 
-outfile_environment_h.write(make_environment_init_h());
-outfile_environment_h.close();
+outfile_machines_h.write(make_machines_h(functions, machines, archs))
+outfile_machines_h.close()
+
+outfile_machines_c.write(make_machines_c(machines))
+outfile_machines_c.close()
+
+outfile_c.write(make_c(machines, archs, functions, arched_arglist, my_arglist))
+outfile_c.close()
+
+outfile_h.write(make_h(functions, arched_arglist))
+outfile_h.close()
+
+for machine in machines:
+    machine_c_filename = os.path.join(gendir, "lib/volk_machine_" + machine + ".c")
+    outfile_machine_c = open(machine_c_filename, "w")
+    outfile_machine_c.write(make_each_machine_c(machine, machines[machine], functions, fcountlist, taglist))
+    outfile_machine_c.close()

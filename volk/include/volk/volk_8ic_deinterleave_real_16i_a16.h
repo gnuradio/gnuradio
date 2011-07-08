@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 /*!
   \brief Deinterleaves the complex 8 bit vector into I 16 bit vector data
@@ -42,7 +42,7 @@ static inline void volk_8ic_deinterleave_real_16i_a16_sse4_1(int16_t* iBuffer, c
 #endif /* LV_HAVE_SSE4_1 */
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Deinterleaves the complex 8 bit vector into I 16 bit vector data
   \param complexVector The complex input vector

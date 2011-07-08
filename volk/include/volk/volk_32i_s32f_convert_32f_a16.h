@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
 
   /*!
@@ -47,7 +47,7 @@ static inline void volk_32i_s32f_convert_32f_a16_sse2(float* outputVector, const
 #endif /* LV_HAVE_SSE2 */
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Converts the input 32 bit integer data into floating point data, and divides the each floating point output data point by the scalar value
     \param inputVector The 32 bit input data buffer

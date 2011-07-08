@@ -5,11 +5,10 @@ includedir=@includedir@
 LV_CXXFLAGS=@LV_CXXFLAGS@
 
 
-
 Name: volk
-Description: VOLK.. Vector Optimized Library of Kernels
+Description: VOLK: Vector Optimized Library of Kernels
 Requires:
 Version: @VERSION@
-Libs: -lvolk -lvolk_runtime @LV_ORC_PKGCONFIG@
+Libs: -lvolk
 Cflags: -I${includedir} ${LV_CXXFLAGS}
 

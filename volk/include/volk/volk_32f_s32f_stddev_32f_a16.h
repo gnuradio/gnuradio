@@ -1,11 +1,12 @@
 #ifndef INCLUDED_volk_32f_s32f_stddev_32f_a16_H
 #define INCLUDED_volk_32f_s32f_stddev_32f_a16_H
 
+#include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 /*!
   \brief Calculates the standard deviation of the input buffer using the supplied mean
@@ -22,7 +23,7 @@ static inline void volk_32f_s32f_stddev_32f_a16_sse4_1(float* stddev, const floa
 
     const float* aPtr = inputBuffer;
 
-    float squareBuffer[4] __attribute__((aligned(128)));
+    __VOLK_ATTR_ALIGNED(16) float squareBuffer[4];
 
     __m128 squareAccumulator = _mm_setzero_ps();
     __m128 aVal1, aVal2, aVal3, aVal4;
@@ -65,7 +66,7 @@ static inline void volk_32f_s32f_stddev_32f_a16_sse4_1(float* stddev, const floa
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Calculates the standard deviation of the input buffer using the supplied mean
@@ -82,7 +83,7 @@ static inline void volk_32f_s32f_stddev_32f_a16_sse(float* stddev, const float* 
 
     const float* aPtr = inputBuffer;
 
-    float squareBuffer[4] __attribute__((aligned(128)));
+    __VOLK_ATTR_ALIGNED(16) float squareBuffer[4];
 
     __m128 squareAccumulator = _mm_setzero_ps();
     __m128 aVal = _mm_setzero_ps();
@@ -111,7 +112,7 @@ static inline void volk_32f_s32f_stddev_32f_a16_sse(float* stddev, const float* 
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Calculates the standard deviation of the input buffer using the supplied mean
   \param stddev The calculated standard deviation

@@ -3,16 +3,16 @@
 #include <boost/foreach.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/tokenizer.hpp>
-//#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <vector>
 #include <list>
 #include <ctime>
 #include <cmath>
+#include <limits>
 #include <boost/lexical_cast.hpp>
-//#include <volk/volk_runtime.h>
-#include <volk/volk_registry.h>
 #include <volk/volk.h>
+#include <volk/volk_cpu.h>
+#include <volk/volk_common.h>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits.hpp>
 
@@ -62,50 +62,14 @@ void load_random_data(void *data, volk_type_t type, unsigned int n) {
     }
 }
 
-static std::vector<std::string> get_arch_list(const int archs[]) {
+static std::vector<std::string> get_arch_list(struct volk_func_desc desc) {
     std::vector<std::string> archlist;
-    int num_archs = archs[0];
-    
-    //there has got to be a way to query these arches
-    for(int i = 0; i < num_archs; i++) {
-        switch(archs[i+1]) {
-        case (1<<LV_GENERIC):
-            archlist.push_back("generic");
-            break;
-        case (1<<LV_ORC):
-            archlist.push_back("orc");
-            break;
-        case (1<<LV_SSE):
-            archlist.push_back("sse");
-            break;
-        case (1<<LV_SSE2):
-            archlist.push_back("sse2");
-            break;
-        case (1<<LV_SSE3):
-            archlist.push_back("sse3");
-            break;
-        case (1<<LV_SSSE3):
-            archlist.push_back("ssse3");
-            break;
-        case (1<<LV_SSE4_1):
-            archlist.push_back("sse4_1");
-            break;
-        case (1<<LV_SSE4_2):
-            archlist.push_back("sse4_2");
-            break;
-        case (1<<LV_SSE4_A):
-            archlist.push_back("sse4_a");
-            break;
-        case (1<<LV_MMX):
-            archlist.push_back("mmx");
-            break;
-        case (1<<LV_AVX):
-            archlist.push_back("avx");
-            break;
-        default:
-            break;
-        }
+
+    for(int i = 0; i < desc.n_archs; i++) {
+        //if(!(archs[i+1] & volk_get_lvarch())) continue; //this arch isn't available on this pc
+        archlist.push_back(std::string(desc.indices[i]));
     }
+    
     return archlist;
 }
 
@@ -256,7 +220,7 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
     bool fail = false;
     int print_max_errs = 10;
     for(int i=0; i<vlen; i++) {
-        if(abs(((t *)(in1))[i] - ((t *)(in2))[i]) > tol) {
+        if(abs(int(((t *)(in1))[i]) - int(((t *)(in2))[i])) > tol) {
             fail=true;
             if(print_max_errs-- > 0) {
                 std::cout << "offset " << i << " in1: " << static_cast<int>(t(((t *)(in1))[i])) << " in2: " << static_cast<int>(t(((t *)(in2))[i])) << std::endl;
@@ -269,7 +233,7 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
 
 class volk_qa_aligned_mem_pool{
 public:
-    void *get_new(size_t size, size_t alignment = 16){
+    void *get_new(size_t size, size_t alignment = 32){
         _mems.push_back(std::vector<char>(size + alignment-1, 0));
         size_t ptr = size_t(&_mems.back().front());
         return (void *)((ptr + alignment-1) & ~(alignment-1));
@@ -277,11 +241,19 @@ public:
 private: std::list<std::vector<char> > _mems;
 };
 
-bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, float tol, float scalar, int vlen, int iter) {
+bool run_volk_tests(struct volk_func_desc desc,
+                    void (*manual_func)(),
+                    std::string name,
+                    float tol,
+                    float scalar,
+                    int vlen,
+                    int iter,
+                    std::vector<std::string> *best_arch_vector = 0
+                   ) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
     
     //first let's get a list of available architectures for the test
-    std::vector<std::string> arch_list = get_arch_list(archs);
+    std::vector<std::string> arch_list = get_arch_list(desc);
     
     if(arch_list.size() < 2) {
         std::cout << "no architectures to test" << std::endl;
@@ -334,6 +306,7 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
 
     //now run the test
     clock_t start, end;
+    std::vector<double> profile_times;
     for(int i = 0; i < arch_list.size(); i++) {
         start = clock();
 
@@ -368,8 +341,12 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
         }
         
         end = clock();
-        std::cout << arch_list[i] << " completed in " << (double)(end-start)/(double)CLOCKS_PER_SEC << "s" << std::endl;
+        double arch_time = (double)(end-start)/(double)CLOCKS_PER_SEC;
+        std::cout << arch_list[i] << " completed in " << arch_time << "s" << std::endl;
+
+        profile_times.push_back(arch_time);
     }
+    
     //and now compare each output to the generic output
     //first we have to know which output is the generic one, they aren't in order...
     int generic_offset=0;
@@ -381,7 +358,9 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
     
     bool fail = false;
     bool fail_global = false;
+    std::vector<bool> arch_results;
     for(int i=0; i<arch_list.size(); i++) {
+        fail = false;
         if(i != generic_offset) {
             for(int j=0; j<both_sigs.size(); j++) {
                 if(both_sigs[j].is_float) {
@@ -432,6 +411,21 @@ bool run_volk_tests(const int archs[], void (*manual_func)(), std::string name, 
                 //fail = memcmp(outbuffs[generic_offset], outbuffs[i], outputsig[0].size * vlen * (outputsig[0].is_complex ? 2:1));
             }
         }
+        arch_results.push_back(!fail);
+    }
+        
+    double best_time = std::numeric_limits<double>::max();
+    std::string best_arch = "generic";
+    for(int i=0; i < arch_list.size(); i++) {
+        if((profile_times[i] < best_time) && arch_results[i]) {
+            best_time = profile_times[i];
+            best_arch = arch_list[i];
+        }
+    }
+        
+    std::cout << "Best arch: " << best_arch << std::endl;
+    if(best_arch_vector) {
+        best_arch_vector->push_back(name + std::string(" ") + best_arch);
     }
 
     return fail_global;

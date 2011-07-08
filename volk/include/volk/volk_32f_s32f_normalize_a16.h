@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Normalizes all points in the buffer by the scalar value ( divides each data point by the scalar value )
@@ -41,7 +41,7 @@ static inline void volk_32f_s32f_normalize_a16_sse(float* vecBuffer, const float
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Normalizes the two input vectors and store their results in the third vector
   \param cVector The vector where the results will be stored
@@ -60,7 +60,7 @@ static inline void volk_32f_s32f_normalize_a16_generic(float* vecBuffer, const f
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#ifdef LV_HAVE_ORC
 /*!
   \brief Normalizes the two input vectors and store their results in the third vector
   \param cVector The vector where the results will be stored

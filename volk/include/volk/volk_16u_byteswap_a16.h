@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
 
 /*!
@@ -43,7 +43,7 @@ static inline void volk_16u_byteswap_a16_sse2(uint16_t* intsToSwap, unsigned int
 }
 #endif /* LV_HAVE_SSE2 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Byteswaps (in-place) an aligned vector of int16_t's.
   \param intsToSwap The vector of data to byte swap
@@ -61,7 +61,7 @@ static inline void volk_16u_byteswap_a16_generic(uint16_t* intsToSwap, unsigned 
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#ifdef LV_HAVE_ORC
 /*!
   \brief Byteswaps (in-place) an aligned vector of int16_t's.
   \param intsToSwap The vector of data to byte swap

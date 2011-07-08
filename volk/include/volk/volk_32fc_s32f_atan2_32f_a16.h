@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
 #include <simdmath.h>
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
@@ -27,7 +27,7 @@ static inline void volk_32fc_s32f_atan2_32f_a16_sse4_1(float* outputVector,  con
   const unsigned int quarterPoints = num_points / 4;    
   const float invNormalizeFactor = 1.0 / normalizeFactor;
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
   __m128 testVector = _mm_set_ps1(2*M_PI);
   __m128 correctVector = _mm_set_ps1(M_PI);
   __m128 vNormalizeFactor = _mm_set_ps1(invNormalizeFactor);
@@ -67,10 +67,10 @@ static inline void volk_32fc_s32f_atan2_32f_a16_sse4_1(float* outputVector,  con
 #endif /* LV_HAVE_SSE4_1 */
 
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
 #include <simdmath.h>
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
@@ -89,7 +89,7 @@ static inline void volk_32fc_s32f_atan2_32f_a16_sse(float* outputVector,  const 
   const unsigned int quarterPoints = num_points / 4;    
   const float invNormalizeFactor = 1.0 / normalizeFactor;
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
   __m128 testVector = _mm_set_ps1(2*M_PI);
   __m128 correctVector = _mm_set_ps1(M_PI);
   __m128 vNormalizeFactor = _mm_set_ps1(invNormalizeFactor);
@@ -131,7 +131,7 @@ static inline void volk_32fc_s32f_atan2_32f_a16_sse(float* outputVector,  const 
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief performs the atan2 on the input vector and stores the results in the output vector.
   \param outputVector The vector where the results will be stored.

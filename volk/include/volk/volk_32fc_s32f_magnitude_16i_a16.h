@@ -1,11 +1,12 @@
 #ifndef INCLUDED_volk_32fc_s32f_magnitude_16i_a16_H
 #define INCLUDED_volk_32fc_s32f_magnitude_16i_a16_H
 
+#include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 #include <pmmintrin.h>
 /*!
   \brief Calculates the magnitude of the complexVector, scales the resulting value and stores the results in the magnitudeVector
@@ -25,7 +26,7 @@ static inline void volk_32fc_s32f_magnitude_16i_a16_sse3(int16_t* magnitudeVecto
 
   __m128 cplxValue1, cplxValue2, result;
 
-  float floatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float floatBuffer[4];
 
   for(;number < quarterPoints; number++){
     cplxValue1 = _mm_load_ps(complexVectorPtr);
@@ -60,7 +61,7 @@ static inline void volk_32fc_s32f_magnitude_16i_a16_sse3(int16_t* magnitudeVecto
 }
 #endif /* LV_HAVE_SSE3 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Calculates the magnitude of the complexVector, scales the resulting value and stores the results in the magnitudeVector
@@ -80,7 +81,7 @@ static inline void volk_32fc_s32f_magnitude_16i_a16_sse(int16_t* magnitudeVector
 
   __m128 cplxValue1, cplxValue2, iValue, qValue, result;
 
-  float floatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float floatBuffer[4];
 
   for(;number < quarterPoints; number++){
     cplxValue1 = _mm_load_ps(complexVectorPtr);
@@ -120,7 +121,7 @@ static inline void volk_32fc_s32f_magnitude_16i_a16_sse(int16_t* magnitudeVector
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Calculates the magnitude of the complexVector, scales the resulting value and stores the results in the magnitudeVector
   \param complexVector The vector containing the complex input values
@@ -140,7 +141,7 @@ static inline void volk_32fc_s32f_magnitude_16i_a16_generic(int16_t* magnitudeVe
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#ifdef LV_HAVE_ORC
 /*!
   \brief Calculates the magnitude of the complexVector, scales the resulting value and stores the results in the magnitudeVector
   \param complexVector The vector containing the complex input values

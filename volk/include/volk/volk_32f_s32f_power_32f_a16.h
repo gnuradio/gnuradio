@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <tmmintrin.h>
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
 #include <simdmath.h>
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
@@ -26,7 +26,7 @@ static inline void volk_32f_s32f_power_32f_a16_sse4_1(float* cVector, const floa
   float* cPtr = cVector;
   const float* aPtr = aVector;
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
   __m128 vPower = _mm_set_ps1(power);
   __m128 zeroValue = _mm_setzero_ps();
   __m128 signMask;
@@ -62,10 +62,10 @@ static inline void volk_32f_s32f_power_32f_a16_sse4_1(float* cVector, const floa
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
 #include <simdmath.h>
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
@@ -83,7 +83,7 @@ static inline void volk_32f_s32f_power_32f_a16_sse(float* cVector, const float* 
   float* cPtr = cVector;
   const float* aPtr = aVector;
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
   __m128 vPower = _mm_set_ps1(power);
   __m128 zeroValue = _mm_setzero_ps();
   __m128 signMask;
@@ -119,7 +119,7 @@ static inline void volk_32f_s32f_power_32f_a16_sse(float* cVector, const float* 
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Takes each the input vector value to the specified power and stores the results in the return vector
     \param cVector The vector where the results will be stored

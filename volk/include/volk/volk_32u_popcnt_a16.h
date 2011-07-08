@@ -5,7 +5,7 @@
 #include <inttypes.h>
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 
 static inline void volk_32u_popcnt_a16_generic(uint32_t* ret, const uint32_t value) {
 
@@ -23,7 +23,7 @@ static inline void volk_32u_popcnt_a16_generic(uint32_t* ret, const uint32_t val
 
 #endif /*LV_HAVE_GENERIC*/
 
-#if LV_HAVE_SSE4_2
+#ifdef LV_HAVE_SSE4_2
 
 #include <nmmintrin.h>
 

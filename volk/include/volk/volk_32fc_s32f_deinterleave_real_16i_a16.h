@@ -1,10 +1,11 @@
 #ifndef INCLUDED_volk_32fc_s32f_deinterleave_real_16i_a16_H
 #define INCLUDED_volk_32fc_s32f_deinterleave_real_16i_a16_H
 
+#include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Deinterleaves the complex vector, multiply the value by the scalar, convert to 16t, and in I vector data
@@ -24,7 +25,7 @@ static inline void volk_32fc_s32f_deinterleave_real_16i_a16_sse(int16_t* iBuffer
 
   __m128 cplxValue1, cplxValue2, iValue;
 
-  float floatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float floatBuffer[4];
 
   for(;number < quarterPoints; number++){
     cplxValue1 = _mm_load_ps(complexVectorPtr);
@@ -54,7 +55,7 @@ static inline void volk_32fc_s32f_deinterleave_real_16i_a16_sse(int16_t* iBuffer
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Deinterleaves the complex vector, multiply the value by the scalar, convert to 16t, and in I vector data
   \param complexVector The complex input vector

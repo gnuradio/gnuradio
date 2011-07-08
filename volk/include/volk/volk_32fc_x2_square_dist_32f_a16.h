@@ -5,7 +5,7 @@
 #include<stdio.h>
 #include<volk/volk_complex.h>
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 #include<xmmintrin.h>
 #include<pmmintrin.h>
 
@@ -91,7 +91,7 @@ static inline void volk_32fc_x2_square_dist_32f_a16_sse3(float* target, lv_32fc_
 
 #endif /*LV_HAVE_SSE3*/
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 static inline void volk_32fc_x2_square_dist_32f_a16_generic(float* target, lv_32fc_t* src0, lv_32fc_t* points, unsigned int num_bytes) {
   lv_32fc_t diff;
   float sq_dist;

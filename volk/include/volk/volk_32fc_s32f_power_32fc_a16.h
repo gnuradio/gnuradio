@@ -3,11 +3,19 @@
 
 #include <inttypes.h>
 #include <stdio.h>
+#include <math.h>
 
-#if LV_HAVE_SSE
+//! raise a complex float to a real float power
+static inline lv_32fc_t __volk_s32fc_s32f_power_s32fc_a16(const lv_32fc_t exp, const float power){
+    const float arg = power*atan2f(lv_creal(exp), lv_cimag(exp));
+    const float mag = powf(lv_creal(exp)*lv_creal(exp) + lv_cimag(exp)*lv_cimag(exp), power/2);
+    return mag*lv_cmake(cosf(arg), sinf(arg));
+}
+
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
 #include <simdmath.h>
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
@@ -25,7 +33,7 @@ static inline void volk_32fc_s32f_power_32fc_a16_sse(lv_32fc_t* cVector, const l
   lv_32fc_t* cPtr = cVector;
   const lv_32fc_t* aPtr = aVector;
 
-#if LV_HAVE_LIB_SIMDMATH
+#ifdef LV_HAVE_LIB_SIMDMATH
   __m128 vPower = _mm_set_ps1(power);
   
   __m128 cplxValue1, cplxValue2, magnitude, phase, iValue, qValue;
@@ -72,16 +80,13 @@ static inline void volk_32fc_s32f_power_32fc_a16_sse(lv_32fc_t* cVector, const l
   number = quarterPoints * 4;
 #endif /* LV_HAVE_LIB_SIMDMATH */
 
-  lv_32fc_t complexPower;
-  ((float*)&complexPower)[0] = power;
-  ((float*)&complexPower)[1] = 0;
   for(;number < num_points; number++){
-    *cPtr++ = lv_cpow((*aPtr++), complexPower);
+    *cPtr++ = __volk_s32fc_s32f_power_s32fc_a16((*aPtr++), power);
   }
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Takes each the input complex vector value to the specified power and stores the results in the return vector
     \param cVector The vector where the results will be stored
@@ -93,12 +98,9 @@ static inline void volk_32fc_s32f_power_32fc_a16_generic(lv_32fc_t* cVector, con
   lv_32fc_t* cPtr = cVector;
   const lv_32fc_t* aPtr = aVector;
   unsigned int number = 0;
-  lv_32fc_t complexPower;
-  ((float*)&complexPower)[0] = power;
-  ((float*)&complexPower)[1] = 0.0;
 
   for(number = 0; number < num_points; number++){
-    *cPtr++ = lv_cpow((*aPtr++), complexPower);
+    *cPtr++ = __volk_s32fc_s32f_power_s32fc_a16((*aPtr++), power);
   }
 }
 #endif /* LV_HAVE_GENERIC */

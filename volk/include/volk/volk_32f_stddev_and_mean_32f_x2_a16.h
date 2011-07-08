@@ -1,11 +1,12 @@
 #ifndef INCLUDED_volk_32f_stddev_and_mean_32f_x2_a16_H
 #define INCLUDED_volk_32f_stddev_and_mean_32f_x2_a16_H
 
+#include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 /*!
   \brief Calculates the standard deviation and mean of the input buffer
@@ -22,8 +23,8 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a16_sse4_1(float* stddev, flo
     const unsigned int sixteenthPoints = num_points / 16;
 
     const float* aPtr = inputBuffer;
-    float meanBuffer[4] __attribute__((aligned(128)));
-    float squareBuffer[4] __attribute__((aligned(128)));
+    __VOLK_ATTR_ALIGNED(16) float meanBuffer[4];
+    __VOLK_ATTR_ALIGNED(16) float squareBuffer[4];
 
     __m128 accumulator = _mm_setzero_ps();
     __m128 squareAccumulator = _mm_setzero_ps();
@@ -78,7 +79,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a16_sse4_1(float* stddev, flo
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Calculates the standard deviation and mean of the input buffer
@@ -95,8 +96,8 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a16_sse(float* stddev, float*
     const unsigned int quarterPoints = num_points / 4;
 
     const float* aPtr = inputBuffer;
-    float meanBuffer[4] __attribute__((aligned(128)));
-    float squareBuffer[4] __attribute__((aligned(128)));
+    __VOLK_ATTR_ALIGNED(16) float meanBuffer[4];
+    __VOLK_ATTR_ALIGNED(16) float squareBuffer[4];
 
     __m128 accumulator = _mm_setzero_ps();
     __m128 squareAccumulator = _mm_setzero_ps();
@@ -134,7 +135,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a16_sse(float* stddev, float*
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Calculates the standard deviation and mean of the input buffer
   \param stddev The calculated standard deviation

@@ -9,7 +9,7 @@
 #define MAX(X,Y) ((X) > (Y)?(X):(Y))
 #endif
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 #include<xmmintrin.h>
 #include<pmmintrin.h>
 
@@ -98,7 +98,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_a16_sse3(float* target, float* sr
 
 #endif /*LV_HAVE_SSE3*/
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 
 static inline void volk_32f_x3_sum_of_poly_32f_a16_generic(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_bytes) {
 

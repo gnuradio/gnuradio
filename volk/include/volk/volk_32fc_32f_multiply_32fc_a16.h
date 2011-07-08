@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
   /*!
     \brief Multiplies the input complex vector with the input float vector and store their results in the third vector
@@ -56,7 +56,7 @@ static inline void volk_32fc_32f_multiply_32fc_a16_sse(lv_32fc_t* cVector, const
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Multiplies the input complex vector with the input lv_32fc_t vector and store their results in the third vector
     \param cVector The vector where the results will be stored
@@ -76,7 +76,7 @@ static inline void volk_32fc_32f_multiply_32fc_a16_generic(lv_32fc_t* cVector, c
 }
 #endif /* LV_HAVE_GENERIC */
 
-#if LV_HAVE_ORC
+#ifdef LV_HAVE_ORC
   /*!
     \brief Multiplies the input complex vector with the input lv_32fc_t vector and store their results in the third vector
     \param cVector The vector where the results will be stored

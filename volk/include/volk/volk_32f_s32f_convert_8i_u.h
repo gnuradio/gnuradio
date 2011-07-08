@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE2
+#ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
   /*!
     \brief Multiplies each point in the input buffer by the scalar value, then converts the result into a 8 bit integer value
@@ -52,7 +52,7 @@ static inline void volk_32f_s32f_convert_8i_u_sse2(int8_t* outputVector, const f
 }
 #endif /* LV_HAVE_SSE2 */
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
   /*!
     \brief Multiplies each point in the input buffer by the scalar value, then converts the result into a 8 bit integer value
@@ -72,7 +72,7 @@ static inline void volk_32f_s32f_convert_8i_u_sse(int8_t* outputVector, const fl
   __m128 vScalar = _mm_set_ps1(scalar);
   __m128 ret;
 
-  float outputFloatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float outputFloatBuffer[4];
 
   for(;number < quarterPoints; number++){
     ret = _mm_loadu_ps(inputVectorPtr);

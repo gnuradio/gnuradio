@@ -1,12 +1,13 @@
 #ifndef INCLUDED_volk_32fc_x2_dot_prod_32fc_a16_H
 #define INCLUDED_volk_32fc_x2_dot_prod_32fc_a16_H
 
+#include <volk/volk_common.h>
 #include <volk/volk_complex.h>
 #include <stdio.h>
 #include <string.h>
 
 
-#if LV_HAVE_GENERIC 
+#ifdef LV_HAVE_GENERIC 
 
 
 static inline void volk_32fc_x2_dot_prod_32fc_a16_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
@@ -316,7 +317,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse_32(lv_32fc_t* result, cons
 
 #endif /*LV_HAVE_SSE*/  
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 
 #include <pmmintrin.h>
 
@@ -358,7 +359,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse3(lv_32fc_t* result, const 
     b += 2;
   }
 
-  lv_32fc_t dotProductVector[2] __attribute__((aligned(16)));
+  __VOLK_ATTR_ALIGNED(16) lv_32fc_t dotProductVector[2];
 
   _mm_store_ps((float*)dotProductVector,dotProdVal); // Store the results back into the dot product vector
 
@@ -373,7 +374,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a16_sse3(lv_32fc_t* result, const 
 
 #endif /*LV_HAVE_SSE3*/
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 
 #include <smmintrin.h>
 

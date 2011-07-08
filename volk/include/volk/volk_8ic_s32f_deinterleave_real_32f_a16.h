@@ -1,10 +1,11 @@
 #ifndef INCLUDED_volk_8ic_s32f_deinterleave_real_32f_a16_H
 #define INCLUDED_volk_8ic_s32f_deinterleave_real_32f_a16_H
 
+#include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 /*!
   \brief Deinterleaves the complex 8 bit vector into I float vector data
@@ -61,7 +62,7 @@ static inline void volk_8ic_s32f_deinterleave_real_32f_a16_sse4_1(float* iBuffer
 #endif /* LV_HAVE_SSE4_1 */
 
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
   \brief Deinterleaves the complex 8 bit vector into I float vector data
@@ -81,7 +82,7 @@ static inline void volk_8ic_s32f_deinterleave_real_32f_a16_sse(float* iBuffer, c
   __m128 invScalar = _mm_set_ps1(iScalar);
   int8_t* complexVectorPtr = (int8_t*)complexVector;
 
-  float floatBuffer[4] __attribute__((aligned(128)));
+  __VOLK_ATTR_ALIGNED(16) float floatBuffer[4];
 
   for(;number < quarterPoints; number++){
     floatBuffer[0] = (float)(*complexVectorPtr); complexVectorPtr += 2;
@@ -107,7 +108,7 @@ static inline void volk_8ic_s32f_deinterleave_real_32f_a16_sse(float* iBuffer, c
 }
 #endif /* LV_HAVE_SSE */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Deinterleaves the complex 8 bit vector into I float vector data
   \param complexVector The complex input vector

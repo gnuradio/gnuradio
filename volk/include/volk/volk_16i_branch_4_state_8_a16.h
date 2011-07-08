@@ -8,7 +8,7 @@
 
 
 
-#if LV_HAVE_SSSE3
+#ifdef LV_HAVE_SSSE3
 
 #include<xmmintrin.h>
 #include<emmintrin.h>
@@ -137,7 +137,7 @@ static inline  void volk_16i_branch_4_state_8_a16_ssse3(short* target,  short* s
 	
 #endif /*LV_HAVE_SSEs*/
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 static inline  void volk_16i_branch_4_state_8_a16_generic(short* target,  short* src0, char** permuters, short* cntl2, short* cntl3, short* scalars) {
 	int i = 0;
 	

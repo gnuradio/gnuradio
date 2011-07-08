@@ -5,7 +5,7 @@
 #include <inttypes.h>
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 
 
 static inline void volk_64u_popcnt_a16_generic(uint64_t* ret, const uint64_t value) {

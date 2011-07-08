@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <volk/volk_complex.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 /*!
   \brief Multiplys the one complex vector with the complex conjugate of the second complex vector and stores their results in the third vector
@@ -24,7 +24,7 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_sse4_1(lv_32fc_t
   const lv_8sc_t* a = aVector;
   const lv_8sc_t* b = bVector;
   __m128i conjugateSign = _mm_set_epi16(-1, 1, -1, 1, -1, 1, -1, 1);
-  const int shuffleMask = _MM_SHUFFLE(2,3,0,1);
+
   __m128 invScalar = _mm_set_ps1(1.0/scalar);
 
   for(;number < quarterPoints; number++){
@@ -39,7 +39,7 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_sse4_1(lv_32fc_t
     y = _mm_sign_epi16(y, conjugateSign);
 
     // Shift the order of the cr and ci values
-    y = _mm_shufflehi_epi16(_mm_shufflelo_epi16(y, shuffleMask ), shuffleMask);
+    y = _mm_shufflehi_epi16(_mm_shufflelo_epi16(y, _MM_SHUFFLE(2,3,0,1) ), _MM_SHUFFLE(2,3,0,1));
 
     // Calculate the ar*(-ci) + cr*(ai)
     imagz = _mm_madd_epi16(x,y);
@@ -75,10 +75,10 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_sse4_1(lv_32fc_t
   for(; number < num_points; number++){
     float aReal =  (float)*a8Ptr++;
     float aImag =  (float)*a8Ptr++;
-    lv_32fc_t aVal = lv_32fc_init(aReal, aImag );
+    lv_32fc_t aVal = lv_cmake(aReal, aImag );
     float bReal = (float)*b8Ptr++;
     float bImag = (float)*b8Ptr++;
-    lv_32fc_t bVal = lv_32fc_init( bReal, -bImag );
+    lv_32fc_t bVal = lv_cmake( bReal, -bImag );
     lv_32fc_t temp = aVal * bVal;
     
     *cFloatPtr++ = lv_creal(temp) / scalar;
@@ -87,7 +87,7 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_sse4_1(lv_32fc_t
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 /*!
   \brief Multiplys the one complex vector with the complex conjugate of the second complex vector and stores their results in the third vector
   \param cVector The complex vector where the results will be stored
@@ -104,10 +104,10 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a16_generic(lv_32fc_
   for(number = 0; number < num_points; number++){
     float aReal =  (float)*a8Ptr++;
     float aImag =  (float)*a8Ptr++;
-    lv_32fc_t aVal = lv_32fc_init(aReal, aImag );
+    lv_32fc_t aVal = lv_cmake(aReal, aImag );
     float bReal = (float)*b8Ptr++;
     float bImag = (float)*b8Ptr++;
-    lv_32fc_t bVal = lv_32fc_init( bReal, -bImag );
+    lv_32fc_t bVal = lv_cmake( bReal, -bImag );
     lv_32fc_t temp = aVal * bVal;
     
     *cPtr++ = (lv_creal(temp) * invScalar);
