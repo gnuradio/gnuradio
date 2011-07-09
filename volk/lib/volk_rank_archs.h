@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-unsigned int volk_rank_archs(const int* arch_defs, unsigned int arch);
- 
+unsigned int get_index(const char *indices[], unsigned int n_archs, const char *arch_name);
+unsigned int volk_rank_archs(const char *indices[], const int* arch_defs, unsigned int n_archs, const char *name, unsigned int arch);
 
 #ifdef __cplusplus
 }

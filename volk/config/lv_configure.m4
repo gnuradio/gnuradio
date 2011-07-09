@@ -109,14 +109,6 @@ dnl  AM_CONDITIONAL([USE_PYTHON], [test "$with_python" = yes])
   AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
   AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 
-  dnl Define where to look for cppunit includes and libs
-  dnl sets CPPUNIT_CFLAGS and CPPUNIT_LIBS
-  dnl Try using pkg-config first, then fall back to cppunit-config.
-  PKG_CHECK_EXISTS(cppunit,
-    [PKG_CHECK_MODULES(CPPUNIT, cppunit >= 1.9.14)],
-    [AM_PATH_CPPUNIT([1.9.14],[],
-		     [AC_MSG_ERROR([VOLK requires cppunit.  Stop])])])
-
 dnl  PKG_CHECK_MODULES(GNURADIO_CORE, gnuradio-core >= 3)
 dnl  LIBS="$LIBS $GNURADIO_CORE_LIBS"
 ])

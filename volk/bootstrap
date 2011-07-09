@@ -20,8 +20,10 @@
 # Boston, MA 02110-1301, USA.
 rm -fr config.cache autom4te*.cache
 
-cd include/volk && chmod +x volk_register.py && ./volk_register.py && cd ../..
-aclocal -I config
+python -B gen/volk_register.py
+mv gen/lib/Makefile.am lib/
+
+aclocal -I config -I gen/config
 autoconf
 autoheader
 libtoolize --automake

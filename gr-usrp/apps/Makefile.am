@@ -62,4 +62,6 @@ bin_SCRIPTS = \
     usrp_test_counting.py \
     usrp_test_loopback.py
 
+EXTRA_DIST += $(bin_SCRIPTS)
+
 endif

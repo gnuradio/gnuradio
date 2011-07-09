@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 
   /*!
@@ -48,7 +48,7 @@ static inline void volk_8i_convert_16i_u_sse4_1(int16_t* outputVector, const int
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Converts the input 8 bit integer data into 16 bit integer data
     \param inputVector The 8 bit input data buffer

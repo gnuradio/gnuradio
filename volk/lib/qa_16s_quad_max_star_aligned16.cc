@@ -17,13 +17,13 @@ void qa_16s_quad_max_star_aligned16::t1() {
 void qa_16s_quad_max_star_aligned16::t1() {
   const int vlen = 34;
   
-  short input0[vlen] __attribute__ ((aligned (16)));
-  short input1[vlen] __attribute__ ((aligned (16)));
-  short input2[vlen] __attribute__ ((aligned (16)));
-  short input3[vlen] __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) short input0[vlen];
+  __VOLK_ATTR_ALIGNED(16) short input1[vlen];
+  __VOLK_ATTR_ALIGNED(16) short input2[vlen];
+  __VOLK_ATTR_ALIGNED(16) short input3[vlen];
 
-  short output0[vlen] __attribute__ ((aligned (16)));
-  short output1[vlen] __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) short output0[vlen];
+  __VOLK_ATTR_ALIGNED(16) short output1[vlen];
 
   for(int i = 0; i < vlen; ++i) {
     short plus0 = (short) (rand() - (RAND_MAX/2));
