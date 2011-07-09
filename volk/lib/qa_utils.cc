@@ -233,7 +233,8 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
 
 class volk_qa_aligned_mem_pool{
 public:
-    void *get_new(size_t size, size_t alignment = 32){
+    void *get_new(size_t size){
+        size_t alignment = volk_get_alignment();
         _mems.push_back(std::vector<char>(size + alignment-1, 0));
         size_t ptr = size_t(&_mems.back().front());
         return (void *)((ptr + alignment-1) & ~(alignment-1));

@@ -131,6 +131,7 @@ SET(volk_gen_sources
     ${CMAKE_BINARY_DIR}/include/volk/volk.h
     ${CMAKE_BINARY_DIR}/lib/volk.c
     ${CMAKE_BINARY_DIR}/lib/volk_init.h
+    ${CMAKE_BINARY_DIR}/include/volk/volk_typedefs.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
     ${CMAKE_BINARY_DIR}/lib/volk_cpu.c
     ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h

@@ -7,6 +7,12 @@
 
 <arch name="altivec" type="powerpc">
   <flag>maltivec</flag>
+  <alignment>16</alignment>
+</arch>
+
+<arch name="neon" type="arm">
+  <flag>mfpu=neon -mfloat-abi=softfp -funsafe-math-optimizations</flag>
+  <alignment>16</alignment>
 </arch>
 
 <arch name="32" type="x86" no_test="true" >
@@ -31,6 +37,7 @@
   <shift>31</shift>
   <flag>m3dnow</flag>
   <val>1</val>
+  <alignment>8</alignment>
 </arch>
 
 <arch name="abm" type="x86">
@@ -39,6 +46,7 @@
   <reg>d</reg>
   <shift>5</shift>
   <flag>sse4.2</flag>
+  <alignment>16</alignment>
 </arch>
 
 <arch name="popcount" type="x86">
@@ -55,6 +63,7 @@
   <reg>d</reg>
   <shift>23</shift>
   <flag>mmmx</flag>
+  <alignment>8</alignment>
 </arch>
 
 
@@ -66,6 +75,7 @@
   <flag>msse</flag>
   <environment>_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);</environment>
   <include>xmmintrin.h</include>
+  <alignment>16</alignment>
 </arch>
 
 
@@ -75,6 +85,7 @@
   <reg>d</reg>
   <shift>26</shift>
   <flag>msse2</flag>
+  <alignment>16</alignment>
 </arch>
 
 <arch name="orc" type="all">
@@ -91,6 +102,7 @@
   <flag>msse3</flag>
   <environment>_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);</environment>
   <include>pmmintrin.h</include>
+  <alignment>16</alignment>
 </arch>
 
 <arch name="ssse3" type="x86">
@@ -99,6 +111,7 @@
   <reg>c</reg>
   <shift>9</shift>
   <flag>mssse3</flag>
+  <alignment>16</alignment>
 </arch>
 
 <arch name="sse4_a" type="x86">
@@ -107,6 +120,7 @@
   <reg>c</reg>
   <shift>6</shift>
   <flag>msse4a</flag>
+  <alignment>16</alignment>
 </arch>
 
 
@@ -116,6 +130,7 @@
   <reg>c</reg>
   <shift>19</shift>
   <flag>msse4.1</flag>
+  <alignment>16</alignment>
 </arch>
 
 <arch name="sse4_2" type="x86">
@@ -124,6 +139,7 @@
   <reg>c</reg>
   <shift>20</shift>
   <flag>msse4.2</flag>
+  <alignment>16</alignment>
 </arch>
 
 <arch name="avx" type="x86">
@@ -132,6 +148,7 @@
   <reg>c</reg>
   <shift>28</shift>
   <flag>mavx</flag>
+  <alignment>32</alignment>
 </arch>
 
 </grammar>

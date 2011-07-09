@@ -69,6 +69,7 @@ INSTALL(FILES
     ${CMAKE_BINARY_DIR}/include/volk/volk.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
+    ${CMAKE_BINARY_DIR}/include/volk/volk_typedefs.h
 DESTINATION include/volk)
 
 ########################################################################

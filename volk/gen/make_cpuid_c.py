@@ -153,6 +153,45 @@ int i_can_has_%s () {
 }
 
 """ % (arch)
+
+        elif str(domarch.attributes["type"].value) == "arm":
+            arch = str(domarch.attributes["name"].value);
+            tempstring = tempstring + """\
+#if defined(__arm__) && defined(__linux__)
+#include <asm/hwcap.h>
+#include <linux/auxvec.h>
+#include <stdio.h>
+#define LOOK_FOR_NEON
+#endif
+
+int i_can_has_%s () {
+//it's linux-specific, but if you're compiling libvolk for NEON
+//on Windows you have other problems
+
+#ifdef LOOK_FOR_NEON
+    FILE *auxvec_f;
+    unsigned long auxvec[2];
+    unsigned int found_neon = 0;
+    auxvec_f = fopen("/proc/self/auxv", "rb");
+    if(!auxvec_f) return 0;
+    
+    //so auxv is basically 32b of ID and 32b of value
+    //so it goes like this
+    while(!found_neon && auxvec_f) {
+      fread(auxvec, sizeof(unsigned long), 2, auxvec_f);
+      if((auxvec[0] == AT_HWCAP) && (auxvec[1] & HWCAP_NEON))
+        found_neon = 1;
+    }
+    
+    fclose(auxvec_f);
+    return found_neon;
+
+#else
+    return 0;
+#endif
+}
+
+""" % (arch)
         
         elif str(domarch.attributes["type"].value) == "all":
             arch = str(domarch.attributes["name"].value);

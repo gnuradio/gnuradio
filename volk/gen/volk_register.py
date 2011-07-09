@@ -59,7 +59,7 @@ functions = [];
 
 
 for line in mfile:
-    subline = re.search(".*_(a16|u)\.h.*", line);
+    subline = re.search(".*_(a|u)\.h.*", line);
     if subline:
         subsubline = re.search("(?<=volk_).*", subline.group(0));
         if subsubline:
@@ -74,7 +74,7 @@ datatypes = set(datatypes);
 for line in mfile:
     for dt in datatypes:
         if dt in line:
-            subline = re.search("(volk_" + dt +"_.*(a16|u).*\.h)", line);
+            subline = re.search("(volk_" + dt +"_.*(a|u).*\.h)", line);
             if subline:
                 
                 subsubline = re.search(".+(?=\.h)", subline.group(0));
@@ -96,6 +96,12 @@ for arch in archs:
 archflags_dict = {}
 for filearch in filearchs:
     archflags_dict[str(filearch.attributes["name"].value)] = str(filearch.getElementsByTagName("flag")[0].firstChild.data)
+
+archalign_dict = {}
+for filearch in filearchs:
+    alignelem = filearch.getElementsByTagName("alignment")
+    if(alignelem):
+        archalign_dict[str(filearch.attributes["name"].value)] = int(alignelem[0].firstChild.data)
 
 archs_or = "("
 for arch in archs:
@@ -132,11 +138,14 @@ for machine_name in machine_str_dict:
 
     if not already_done:
         machines[machine_name] = marchlist
- 
-#for machine_name in machines:
-#    print machine_name + ": " + str(machines[machine_name])
 
-#ok, now we have all the machines we're going to build. next step is to generate a Makefile.am where they're all laid out and compiled
+#get the maximum alignment for all archs in a machine
+machine_alignment_dict = {}
+for machine in machines:
+    machine_alignment_dict[machine] = max((archalign_dict.get(k, 1)) for k in machines[machine])
+
+#for machine in machine_alignment_dict:
+#    print machine + ": %d" % machine_alignment_dict[machine]
 
 taglist = [];
 fcountlist = [];
@@ -295,5 +304,5 @@ outfile_h.close()
 for machine in machines:
     machine_c_filename = os.path.join(gendir, "lib/volk_machine_" + machine + ".c")
     outfile_machine_c = open(machine_c_filename, "w")
-    outfile_machine_c.write(make_each_machine_c(machine, machines[machine], functions, fcountlist, taglist))
+    outfile_machine_c.write(make_each_machine_c(machine, machines[machine], functions, fcountlist, taglist, machine_alignment_dict[machine]))
     outfile_machine_c.close()
