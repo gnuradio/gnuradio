@@ -20,6 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #define _ISOC9X_SOURCE
 #include <gri_float_to_char.h>
 #include <math.h>
