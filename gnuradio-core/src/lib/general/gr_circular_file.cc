@@ -42,6 +42,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef HAVE_IO_H
+#include <io.h>
+#endif
+
 static const int HEADER_SIZE = 4096;
 static const int HEADER_MAGIC = 0xEB021026;
 
