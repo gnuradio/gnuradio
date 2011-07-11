@@ -217,8 +217,14 @@ audio_alsa_source::check_topology (int ninputs, int noutputs)
   unsigned int nchan = noutputs;
   int err;
 
-  // FIXME check_topology may be called more than once.
+  // Check the state of the stream
   // Ensure that the pcm is in a state where we can still mess with the hw_params
+  snd_pcm_state_t state;
+  state=snd_pcm_state(d_pcm_handle);
+  if ( state== SND_PCM_STATE_RUNNING)
+    return true;  // If stream is running, don't change any parameters
+  else if(state == SND_PCM_STATE_XRUN )
+    snd_pcm_prepare ( d_pcm_handle ); // Prepare stream on underrun, and we can set parameters;
 
   bool special_case = nchan == 1 && d_special_case_stereo_to_mono;
   if (special_case)
