@@ -81,7 +81,7 @@ class digital_costas_loop_cc : public gr_sync_block
 			       ) throw (std::invalid_argument);
 
   float d_alpha, d_beta, d_max_freq, d_min_freq, d_phase, d_freq;
-  float d_damping, d_nat_freq;
+  float d_nat_freq, d_damping;
   int d_order;
 
   digital_costas_loop_cc (float damping, float nat_freq,
