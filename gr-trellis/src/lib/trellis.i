@@ -50,9 +50,9 @@
 %import "digital_metric_type.h"
 %import "digital_constellation.i"
 
-%pythoncode %{
-  from gnuradio.gr import TRELLIS_EUCLIDEAN, TRELLIS_HARD_SYMBOL, TRELLIS_HARD_BIT
-  %}
+ //%pythoncode %{
+ //  from gnuradio.gr import TRELLIS_EUCLIDEAN, TRELLIS_HARD_SYMBOL, TRELLIS_HARD_BIT
+ //  %}
 
 #if SWIGGUILE
 %scheme %{

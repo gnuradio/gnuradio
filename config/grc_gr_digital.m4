@@ -31,6 +31,7 @@ AC_DEFUN([GRC_GR_DIGITAL],[
         gr-digital/lib/Makefile \
 	gr-digital/python/Makefile \
 	gr-digital/python/run_tests \
+	gr-digital/python/utils/Makefile \
 	gr-digital/swig/Makefile \
 	gr-digital/swig/run_guile_tests \
     ])

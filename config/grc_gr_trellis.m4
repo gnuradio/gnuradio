@@ -22,6 +22,7 @@ AC_DEFUN([GRC_GR_TRELLIS],[
 
     dnl Don't do gr-trellis if gnuradio-core skipped
     GRC_CHECK_DEPENDENCY(gr-trellis, gnuradio-core)
+    GRC_CHECK_DEPENDENCY(gr-trellis, gr-digital)
 
     AC_CONFIG_FILES([\
         gr-trellis/Makefile \
