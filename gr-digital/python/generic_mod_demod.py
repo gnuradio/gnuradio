@@ -85,7 +85,7 @@ class generic_mod(gr.hier_block2):
 	output is the complex modulated signal at baseband.
         
 	@param constellation: determines the modulation type
-	@type constellation: gnuradio.gr.gr_constellation
+	@type constellation: gnuradio.digital.gr_constellation
 	@param samples_per_symbol: samples per baud >= 2
 	@type samples_per_symbol: integer
 	@param excess_bw: Root-raised cosine filter excess bandwidth
@@ -219,7 +219,7 @@ class generic_demod(gr.hier_block2):
 	The output is a stream of bits packed 1 bit per byte (LSB)
 
 	@param constellation: determines the modulation type
-	@type constellation: gnuradio.gr.gr_constellation
+	@type constellation: gnuradio.digital.gr_constellation
 	@param samples_per_symbol: samples per symbol >= 2
 	@type samples_per_symbol: float
 	@param excess_bw: Root-raised cosine filter excess bandwidth

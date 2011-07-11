@@ -25,6 +25,7 @@ TESTS =
 EXTRA_DIST += run_tests.in
 
 if PYTHON
+SUBDIRS = utils
 TESTS += run_tests
 
 digitaldir = $(grpythondir)/digital

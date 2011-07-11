@@ -26,7 +26,8 @@ TESTS =
 EXTRA_DIST += $(nobase_guile_DATA)
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/gr-digital/lib \
+	-I$(abs_top_srcdir)/gr-digital/lib \
+	-I$(abs_top_builddir)/gr-digital/lib \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
@@ -56,14 +57,17 @@ digital_swig_la_swig_libadd = \
 	$(abs_top_builddir)/gr-digital/lib/libgnuradio-digital.la
 
 # additional SWIG files to be installed
-digital_swig_swiginclude_headers =	\
-	digital_constellation.i		\
-	digital_costas_loop_cc.i	\
-	digital_cma_equalizer_cc.i	\
-	digital_lms_dd_equalizer_cc.i	\
+digital_swig_swiginclude_headers =		\
+	digital_constellation.i			\
+	digital_constellation_receiver_cb.i 	\
+	digital_constellation_decoder_cb.i	\
+	digital_costas_loop_cc.i		\
+	digital_cma_equalizer_cc.i		\
+	digital_lms_dd_equalizer_cc.i		\
 	digital_kurtotic_equalizer_cc.i
 
 digital_swig_swig_args = \
+	-I$(abs_top_srcdir)/gr-digital/lib \
 	-I$(abs_top_builddir)/gr-digital/lib
 
 if GUILE

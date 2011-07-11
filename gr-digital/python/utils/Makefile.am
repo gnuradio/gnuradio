@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2009 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,12 +22,11 @@
 include $(top_srcdir)/Makefile.common
 
 if PYTHON
-utilspythondir = $(grpythondir)/utils
+utilspythondir = $(grpythondir)/digital/utils
 
-TESTS = 				\
-	run_tests
+TESTS = 
 
-nobase_utilspython_PYTHON = \
+utilspython_PYTHON = \
 	__init__.py \
 	gray_code.py \
 	mod_codes.py \
