@@ -1,0 +1,25 @@
+#ifndef INCLUDED_VOLK_PREFS_H
+#define INCLUDED_VOLK_PREFS_H
+
+#include <volk/volk_common.h>
+
+__VOLK_DECL_BEGIN
+
+struct VOLK_API volk_arch_pref {
+    char name[128];
+    char arch[32];
+};
+
+////////////////////////////////////////////////////////////////////////
+// get path to volk_config profiling info
+////////////////////////////////////////////////////////////////////////
+VOLK_API void get_config_path(char *);
+
+////////////////////////////////////////////////////////////////////////
+// load prefs into global prefs struct
+////////////////////////////////////////////////////////////////////////
+VOLK_API int load_preferences(struct volk_arch_pref **);
+
+__VOLK_DECL_END
+
+#endif //INCLUDED_VOLK_PREFS_H

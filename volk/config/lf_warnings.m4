@@ -29,7 +29,8 @@ dnl distribution terms that you use for the rest of that program.
 # -------------------------------------------------------------------------
 
 AC_DEFUN([LF_CHECK_CXX_FLAG],[
-  echo 'void f(){}' > conftest.cc
+  echo "#include <stdio.h>
+int main(int argc, char **argv){return 0;}" > conftest.cc
   for i in $1
   do
     AC_MSG_CHECKING([whether $CXX accepts $i])
@@ -54,7 +55,8 @@ AC_DEFUN([LF_CHECK_CXX_FLAG],[
 # -------------------------------------------------------------------------
 
 AC_DEFUN([LF_CHECK_CC_FLAG],[
-  echo 'void f(){}' > conftest.c
+  echo "#include <stdio.h>
+int main(int argc, char **argv){return 0;}" > conftest.c
   for i in $1
   do
     AC_MSG_CHECKING([whether $CC accepts $i])

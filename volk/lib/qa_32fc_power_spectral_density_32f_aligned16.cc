@@ -21,10 +21,10 @@ void qa_32fc_power_spectral_density_32f_aligned16::t1() {
   double total;
   const int vlen = 3201;
   const int ITERS = 10000;
-  std::complex<float> input0[vlen] __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) std::complex<float> input0[vlen];
   
-  float output_generic[vlen] __attribute__ ((aligned (16)));
-  float output_sse3[vlen] __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) float output_generic[vlen];
+  __VOLK_ATTR_ALIGNED(16) float output_sse3[vlen];
 
   const float scalar = vlen;
   const float rbw = 1.7;

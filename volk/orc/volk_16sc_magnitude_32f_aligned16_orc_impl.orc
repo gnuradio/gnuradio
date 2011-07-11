@@ -1,4 +1,4 @@
-.function volk_16ic_magnitude_32f_a16_orc_impl
+.function volk_16ic_magnitude_32f_a_orc_impl
 .source 4 src
 .dest 4 dst
 .floatparam 4 scalar

@@ -4,7 +4,7 @@
 #include<stdio.h>
 
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
 
 
 static inline void volk_32f_x2_dot_prod_32f_u_generic(float * result, const float * input, const float * taps, unsigned int num_points) {
@@ -24,7 +24,7 @@ static inline void volk_32f_x2_dot_prod_32f_u_generic(float * result, const floa
 #endif /*LV_HAVE_GENERIC*/
 
 
-#if LV_HAVE_SSE
+#ifdef LV_HAVE_SSE
 
 
 static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* input, const  float* taps, unsigned int num_points) {
@@ -53,7 +53,7 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* 
     bPtr += 4;
   }
 
-  float dotProductVector[4] __attribute__((aligned(16)));
+  __VOLK_ATTR_ALIGNED(16) float dotProductVector[4];
 
   _mm_store_ps(dotProductVector,dotProdVal); // Store the results back into the dot product vector
 
@@ -73,7 +73,7 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* 
 
 #endif /*LV_HAVE_SSE*/  
 
-#if LV_HAVE_SSE3
+#ifdef LV_HAVE_SSE3
 
 #include <pmmintrin.h>
 
@@ -102,7 +102,7 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse3(float * result, const float *
     bPtr += 4;
   }
 
-  float dotProductVector[4] __attribute__((aligned(16)));
+  __VOLK_ATTR_ALIGNED(16) float dotProductVector[4];
   dotProdVal = _mm_hadd_ps(dotProdVal, dotProdVal);
 
   _mm_store_ps(dotProductVector,dotProdVal); // Store the results back into the dot product vector
@@ -120,7 +120,7 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse3(float * result, const float *
 
 #endif /*LV_HAVE_SSE3*/
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 
 #include <smmintrin.h>
 
@@ -163,7 +163,7 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse4_1(float * result, const float
     dotProdVal = _mm_add_ps(dotProdVal, cVal1);
   }
 
-  float dotProductVector[4] __attribute__((aligned(16)));
+  __VOLK_ATTR_ALIGNED(16) float dotProductVector[4];
   _mm_store_ps(dotProductVector, dotProdVal); // Store the results back into the dot product vector
 
   dotProduct = dotProductVector[0];
