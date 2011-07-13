@@ -27,7 +27,9 @@ Generic modulation and demodulation.
 
 from gnuradio import gr
 from gnuradio.modulation_utils2 import extract_kwargs_from_options_for_class
-from gnuradio.digital.utils import mod_codes
+#from gnuradio.digital.utils import mod_codes
+from utils import mod_codes
+import digital_swig
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2
@@ -282,7 +284,7 @@ class generic_demod(gr.hier_block2):
         fmin = -0.25
         fmax = 0.25
         
-        self.receiver = gr.constellation_receiver_cb(
+        self.receiver = digital_swig.constellation_receiver_cb(
             self._constellation,
             self._phase_alpha, self._phase_beta,
             fmin, fmax)

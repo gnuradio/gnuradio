@@ -38,13 +38,12 @@ lib_LTLIBRARIES = libgnuradio-digital.la
 
 libgnuradio_digital_la_SOURCES = 		\
 	digital_constellation.cc		\
-	digital_constellation_receiver_cb.h	\
-	digital_constellation_decoder_cb.h	\
+	digital_constellation_receiver_cb.cc	\
+	digital_constellation_decoder_cb.cc	\
 	digital_costas_loop_cc.cc		\
 	digital_cma_equalizer_cc.cc		\
 	digital_lms_dd_equalizer_cc.cc		\
-	digital_kurtotic_equalizer_cc.cc	\
-	digital_constellation_receiver_cb.h
+	digital_kurtotic_equalizer_cc.cc
 
 libgnuradio_digital_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)

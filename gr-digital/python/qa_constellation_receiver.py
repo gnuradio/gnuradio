@@ -25,8 +25,10 @@ import random
 from gnuradio import gr, blks2, packet_utils, gr_unittest
 from utils import mod_codes, alignment
 import digital_swig
+from generic_mod_demod import generic_mod, generic_demod
 
 from qa_constellation import tested_constellations, twod_constell
+
 
 # Set a seed so that if errors turn up they are reproducible.
 # 1234 fails
@@ -68,6 +70,7 @@ class test_constellation_receiver (gr_unittest.TestCase):
         demodulation uses constellation_receiver which is what
         we're really trying to test.
         """
+
         # Assumes not more than 64 points in a constellation
         # Generates some random input data to use.
         self.src_data = tuple(
@@ -76,7 +79,7 @@ class test_constellation_receiver (gr_unittest.TestCase):
         # output data (a full comparison is too slow in python).
         self.indices = alignment.random_sample(
             self.max_data_length, self.max_num_samples, self.seed)
-        
+
         for constellation, differential in tested_constellations():
             # The constellation_receiver doesn't work for constellations
             # of multple dimensions (i.e. multiple complex numbers to a
@@ -119,13 +122,13 @@ class rec_test_tb (gr.top_block):
             self.src_data = src_data
         packer = gr.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
         src = gr.vector_source_b(self.src_data)
-        mod = blks2.generic_mod(constellation, differential=differential)
+        mod = generic_mod(constellation, differential=differential)
         # Channel
         channel = gr.channel_model(NOISE_VOLTAGE, FREQUENCY_OFFSET, TIMING_OFFSET)
         # Receiver Blocks
-        demod = blks2.generic_demod(constellation, differential=differential,
-                                    freq_alpha=FREQ_ALPHA,
-                                    phase_alpha=PHASE_ALPHA)
+        demod = generic_demod(constellation, differential=differential,
+                              freq_alpha=FREQ_ALPHA,
+                              phase_alpha=PHASE_ALPHA)
         self.dst = gr.vector_sink_b()
         self.connect(src, packer, mod, channel, demod, self.dst)
 

@@ -27,6 +27,9 @@ from gnuradio import gr, gr_unittest, blks2
 from utils import mod_codes
 import digital_swig
 
+# import from local folder
+import psk2
+import qam
 
 tested_mod_codes = (mod_codes.NO_CODE, mod_codes.GRAY_CODE)
 
@@ -47,7 +50,7 @@ def twod_constell():
               (-1+0j), (0-1j))
     rot_sym = 2
     dim = 2
-    return gr.constellation_calcdist(points, [], rot_sym, dim)
+    return digital_swig.constellation_calcdist(points, [], rot_sym, dim)
 
 def threed_constell():
     oned_points = ((1+0j), (0+1j), (-1+0j), (0-1j))
@@ -59,22 +62,19 @@ def threed_constell():
                 points += [oned_points[ia], oned_points[ib], oned_points[ic]]
     rot_sym = 4
     dim = 3
-    return gr.constellation_calcdist(points, [], rot_sym, dim)
+    return digital_swig.constellation_calcdist(points, [], rot_sym, dim)
 
 tested_constellation_info = (
-    (blks2.psk_constellation, 
+    (psk2.psk_constellation,
      {'m': (2, 4, 8, 16, 32, 64),
       'mod_code': tested_mod_codes, },
      True, None),
-    (blks2.qam_constellation, 
-     {'constellation_points': (4, 16, 64),
-      'mod_code': tested_mod_codes, },
-     True, 'differential'),
-    (blks2.bpsk_constellation, {}, True, None),
+    (digital_swig.constellation_bpsk, {}, True, None),
     # No differential testing for qpsk because it is gray-coded.
     # This is because soft decision making is simpler if we can assume
     # gray coding.
-    (blks2.qpsk_constellation, {}, False, None),
+    (digital_swig.constellation_qpsk, {}, False, None),
+    (digital_swig.constellation_8psk, {}, False, None),
     (twod_constell, {}, True, None),
     (threed_constell, {}, True, None),
     )
@@ -182,7 +182,7 @@ class mod_demod(gr.hier_block2):
 
         # RX
         # Convert the constellation symbols back to binary values.
-        self.blocks.append(gr.constellation_decoder2_cb(self.constellation.base()))
+        self.blocks.append(digital_swig.constellation_decoder_cb(self.constellation.base()))
         # Differential decoding.
         if self.differential:
             self.blocks.append(gr.diff_decoder_bb(arity))

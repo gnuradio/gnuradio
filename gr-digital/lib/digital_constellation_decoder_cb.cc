@@ -32,7 +32,7 @@
 digital_constellation_decoder_cb_sptr
 digital_make_constellation_decoder_cb (digital_constellation_sptr constellation)
 {
-  return digital_constellation_decoder_cb_sptr 
+  return gnuradio::get_initial_sptr
     (new digital_constellation_decoder_cb(constellation));
 }
 

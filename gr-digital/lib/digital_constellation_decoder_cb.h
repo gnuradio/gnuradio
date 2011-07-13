@@ -46,7 +46,7 @@ class digital_constellation_decoder_cb : public gr_block
   unsigned int d_dim;
 
   friend digital_constellation_decoder_cb_sptr 
-  gr_make_constellation_decoder_cb (digital_constellation_sptr constellation);
+  digital_make_constellation_decoder_cb (digital_constellation_sptr constellation);
   
   digital_constellation_decoder_cb (digital_constellation_sptr constellation);
 

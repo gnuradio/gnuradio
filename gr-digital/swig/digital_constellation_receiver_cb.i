@@ -22,7 +22,7 @@
 
 GR_SWIG_BLOCK_MAGIC(digital,constellation_receiver_cb);
 
-%import "digital_constellation.i"
+%include "digital_constellation.i"
 
 digital_constellation_receiver_cb_sptr
 digital_make_constellation_receiver_cb (digital_constellation_sptr constellation,

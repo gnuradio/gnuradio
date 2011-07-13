@@ -31,7 +31,9 @@ TESTS += run_tests
 digitaldir = $(grpythondir)/digital
 
 noinst_PYTHON = \
-	qa_digital.py		\
+	qa_digital.py			\
+	qa_constellation.py		\
+	qa_constellation_receiver.py	\
 	qa_costas_loop_cc.py
 
 digital_PYTHON = \

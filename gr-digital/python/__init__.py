@@ -25,3 +25,5 @@ from digital_swig import *
 from dbpsk import *
 from dqpsk import *
 from d8psk import *
+from psk2 import *
+from qam import *
