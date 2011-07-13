@@ -4,6 +4,8 @@
 # 2nd parameter is absolute path to component build directory
 # 3rd parameter is path to Python QA directory
 
+PYTHONPATH=@top_builddir@/gr-digital/swig:@top_builddir@/gr-digital/swig/.libs:@top_srcdir@/gr-digital/swig:$PYTHONPATH
+
 @top_builddir@/run_tests.sh \
     @abs_top_srcdir@/gr-trellis \
     @abs_top_builddir@/gr-trellis \
