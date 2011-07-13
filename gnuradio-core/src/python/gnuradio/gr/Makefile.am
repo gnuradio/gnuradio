@@ -51,7 +51,6 @@ noinst_PYTHON = 			\
 	qa_classify.py			\
 	qa_cma_equalizer.py		\
 	qa_complex_to_xxx.py		\
-	qa_constellation.py		\
 	qa_constellation_decoder_cb.py  \
 	qa_copy.py			\
 	qa_correlate_access_code.py	\

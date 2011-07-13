@@ -56,6 +56,11 @@ grblkspython_PYTHON =		\
 	pfb_interpolator.py	\
 	pkt.py			\
 	psk.py			\
+	qam.py			\
+	qam8.py			\
+	qam16.py		\
+	qam64.py		\
+	qam256.py		\
 	rational_resampler.py	\
 	standard_squelch.py	\
 	stream_to_vector_decimator.py \

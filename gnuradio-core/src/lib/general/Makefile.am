@@ -264,6 +264,7 @@ grinclude_HEADERS = 			\
 	gr_math.h			\
 	gr_misc.h			\
 	gr_nco.h			\
+	gr_mpsk_receiver_cc.h		\
 	gr_nlog10_ff.h			\
 	gr_nop.h			\
 	gr_null_sink.h			\
@@ -429,6 +430,7 @@ swiginclude_HEADERS =			\
 	gr_lms_dfe_cc.i			\
 	gr_lms_dfe_ff.i			\
 	gr_map_bb.i			\
+	gr_mpsk_receiver_cc.i		\
 	gr_nlog10_ff.i			\
 	gr_nop.i			\
 	gr_null_sink.i			\
