@@ -60,6 +60,7 @@ m4macros = \
 	grc_gr_trellis.m4 \
 	grc_gr_usrp.m4 \
 	grc_gr_video_sdl.m4 \
+	grc_gr_vocoder.m4 \
 	grc_gr_wxgui.m4 \
 	grc_gruel.m4 \
 	gr_check_createfilemapping.m4 \
