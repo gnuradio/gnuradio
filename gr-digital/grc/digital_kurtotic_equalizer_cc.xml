@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Kurtotic Equalizer
+###################################################
+ -->
+<block>
+	<name>Kurtotic Equalizer</name>
+	<key>digital_kurtotic_equalizer_cc</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.kurtotic_equalizer_cc($num_taps, $mu)</make>
+	<callback>set_gain($mu)</callback>
+	<param>
+		<name>Num. Taps</name>
+		<key>num_taps</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Mu</name>
+		<key>mu</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

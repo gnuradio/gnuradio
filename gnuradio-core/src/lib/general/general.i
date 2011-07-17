@@ -98,6 +98,7 @@
 #include <gr_ofdm_cyclic_prefixer.h>
 #include <gr_ofdm_mapper_bcv.h>
 #include <gr_ofdm_frame_sink.h>
+  //#include <gr_ofdm_frame_sink2.h>
 #include <gr_ofdm_insert_preamble.h>
 #include <gr_ofdm_sampler.h>
 #include <gr_regenerate_bb.h>
@@ -224,6 +225,7 @@
 %include "gr_ofdm_cyclic_prefixer.i"
 %include "gr_ofdm_mapper_bcv.i"
 %include "gr_ofdm_frame_sink.i"
+ //%include "gr_ofdm_frame_sink2.i"
 %include "gr_ofdm_insert_preamble.i"
 %include "gr_ofdm_sampler.i"
 %include "gr_regenerate_bb.i"

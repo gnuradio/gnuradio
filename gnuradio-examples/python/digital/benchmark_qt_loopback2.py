@@ -20,11 +20,11 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils2
+from gnuradio import gr, modulation_utils2
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-import random, time, struct, sys, os, math
+import struct, sys, math
 
 from threading import Thread
 
@@ -319,6 +319,13 @@ class my_top_block(gr.top_block):
             # Connect components
             self.connect(self.txpath, self.throttle, self.rxpath)
 
+        if options.verbose:
+            self._print_verbage()
+            
+        if options.log:
+            self._setup_logging()
+
+
 
 
     # System Parameters
@@ -396,6 +403,15 @@ class my_top_block(gr.top_block):
         self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_freq/10.0)
         #self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_fre_beta)
 
+    def _print_verbage(self):
+        print "\nChannel:"
+        print "SNR:                 %d"   % self.snr()
+        print "Noise voltage:       %.2e" % self.get_noise_voltage(self.snr())
+        print "Frequency offset:    %.2e" % self.frequency_offset()
+        print "Timing offset:   %.2e" % self.timing_offset()
+
+    def _setup_logging(self):
+        pass
 
 # /////////////////////////////////////////////////////////////////////////////
 #       Thread to handle the packet sending procedure
@@ -466,7 +482,7 @@ def main():
     channel_grp = parser.add_option_group("Channel")
 
     parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
-                      default='dbpsk2',
+                      default='psk',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(mods.keys()),))
 
@@ -512,6 +528,7 @@ def main():
     tb = my_top_block(mods[options.modulation],
                       demods[options.modulation],
                       rx_callback, options)
+
     tb.start()
 
     packet_sender = th_send(send_pkt, options.megabytes, options.size)
@@ -527,7 +544,7 @@ def main():
                 packet_sender.join(1)
             except KeyboardInterrupt:
                 packet_sender.stop()
-        
+
     
 if __name__ == '__main__':
     try:

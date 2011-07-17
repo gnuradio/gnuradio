@@ -263,8 +263,8 @@ grinclude_HEADERS = 			\
 	gr_map_bb.h			\
 	gr_math.h			\
 	gr_misc.h			\
-	gr_mpsk_receiver_cc.h		\
 	gr_nco.h			\
+	gr_mpsk_receiver_cc.h		\
 	gr_nlog10_ff.h			\
 	gr_nop.h			\
 	gr_null_sink.h			\

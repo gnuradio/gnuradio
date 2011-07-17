@@ -188,6 +188,7 @@ EXTRA_DIST += \
 # work around automake deficiency
 libfilter_la_common_SOURCES = 		\
 	$(GENERATED_CC)			\
+	gr_adaptive_fir_ccc.cc		\
 	gr_adaptive_fir_ccf.cc		\
 	gr_cma_equalizer_cc.cc		\
 	gri_fft_filter_fff_generic.cc	\
@@ -272,6 +273,7 @@ grinclude_HEADERS = 			\
 	ccomplex_dotprod_x86.h		\
 	float_dotprod_generic.h		\
 	float_dotprod_x86.h		\
+	gr_adaptive_fir_ccc.h		\
 	gr_adaptive_fir_ccf.h		\
 	gr_altivec.h			\
 	gr_cma_equalizer_cc.h		\
@@ -357,6 +359,7 @@ noinst_HEADERS = 			\
 swiginclude_HEADERS =			\
 	filter.i			\
 	filter_generated.i		\
+	gr_adaptive_fir_ccc.i		\
 	gr_adaptive_fir_ccf.i		\
 	gr_cma_equalizer_cc.i		\
 	gr_fft_filter_ccc.i		\

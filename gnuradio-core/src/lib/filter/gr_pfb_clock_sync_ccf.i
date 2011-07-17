@@ -26,7 +26,8 @@ gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size=32,
 						       float init_phase=0,
-						       float max_rate_deviation=1.5);
+						       float max_rate_deviation=1.5,
+						       int osps=1);
 
 class gr_pfb_clock_sync_ccf : public gr_block
 {
@@ -35,7 +36,8 @@ class gr_pfb_clock_sync_ccf : public gr_block
 			 const std::vector<float> &taps,
 			 unsigned int filter_size,
 			 float init_phase,
-			 float max_rate_deviation);
+			 float max_rate_deviation,
+			 int osps);
 
  public:
   ~gr_pfb_clock_sync_ccf ();

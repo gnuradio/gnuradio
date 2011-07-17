@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## CMA Equalizer
+###################################################
+ -->
+<block>
+	<name>CMA Equalizer</name>
+	<key>digital_cma_equalizer_cc</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.cma_equalizer_cc($num_taps, $modulus, $mu, $sps)</make>
+	<callback>set_gain($mu)</callback>
+	<callback>set_modulus($modulus)</callback>
+	<param>
+		<name>Num. Taps</name>
+		<key>num_taps</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Modulus</name>
+		<key>modulus</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>mu</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Samples per Symbol</name>
+		<key>sps</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: gnuradio-comedi
+Name: gnuradio-pager
 Description: GNU Radio blocks implementing a FLEX pager decoder
 Requires: gnuradio-core
 Version: @LIBVER@

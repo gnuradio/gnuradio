@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010 Free Software Foundation, Inc.
+ * Copyright 2006,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -64,12 +64,30 @@ gr_costas_loop_cc::gr_costas_loop_cc (float alpha, float beta,
     d_phase_detector = &gr_costas_loop_cc::phase_detector_4;
     break;
 
+  case 8:
+    d_phase_detector = &gr_costas_loop_cc::phase_detector_8;
+    break;
+
   default: 
-    throw std::invalid_argument("order must be 2 or 4");
+    throw std::invalid_argument("order must be 2, 4, or 8");
     break;
   }
 }
 
+float
+gr_costas_loop_cc::phase_detector_8(gr_complex sample) const
+{
+  float K = sqrt(2.0) - 1;
+  
+  if(abs(sample.real()) >= abs(sample.imag())) {
+    return ((sample.real()>0 ? 1.0 : -1.0) * sample.imag() -
+	    (sample.imag()>0 ? 1.0 : -1.0) * sample.real() * K);
+  }
+  else {
+    return ((sample.real()>0 ? 1.0 : -1.0) * sample.imag() * K -
+	    (sample.imag()>0 ? 1.0 : -1.0) * sample.real());
+  }
+}
 
 float
 gr_costas_loop_cc::phase_detector_4(gr_complex sample) const

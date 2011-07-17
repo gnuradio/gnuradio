@@ -353,6 +353,7 @@ GRC_GRUEL                       dnl must come first
 GRC_VOLK
 GRC_GCELL
 GRC_GNURADIO_CORE
+GRC_GR_DIGITAL
 GRC_USRP
 GRC_USRP2
 GRC_GR_USRP			dnl this must come after GRC_USRP

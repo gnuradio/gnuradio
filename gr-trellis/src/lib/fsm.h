@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,31 +27,114 @@
 #include <iosfwd>
 
 /*!
- * \brief  FSM class
+ * \brief  Finite State Machine Specification class.
+ *
+ * An instance of this class represents a finite state machine specification (FSMS)
+ * rather than the FSM itself.  It particular the state of the FSM
+ * is not stored within an instance of this class.
  */
 class fsm {
 private:
+  // Input alphabet cardinality.
   int d_I;
+  // Number of states.
   int d_S;
+  // Output alphabet cardinality.
   int d_O;
+  // NS means Next State.
+  // next_state = d_NS[current_state * d_I + input_symbol]
   std::vector<int> d_NS;
+  // OS means Output Symbol.
+  // output_symbol = d_OS[current_state * d_I + input_symbol]          
   std::vector<int> d_OS;
+  // PS means Previous State.
   std::vector< std::vector<int> > d_PS;
+  // PI means Previous Input Symbol.
+  // d_PS[current_state][k] and d_PI[current_state][k], is a pair of the form
+  // (previous_state, previous_input_symbol) that could have produced the
+  // current state.
   std::vector< std::vector<int> > d_PI;
-  std::vector<int> d_TMi;
+  // TM means Termination matrix.
+  // d_TMl[s*d_S+es] is the shortest number of steps to get from state s to
+  // state es.
   std::vector<int> d_TMl;
+  // d_TMi[s*d_S+es] is the input symbol required to set off on the shortest
+  // path from state s to es.
+  std::vector<int> d_TMi;
   void generate_PS_PI ();
   void generate_TM ();
   bool find_es(int es);
 public:
+ /*!
+   * \brief Constructor to create an uninitialized FSMS.
+   */
   fsm();
+ /*!
+   * \brief Constructor to copy an FSMS.
+   */
   fsm(const fsm &FSM);
+ /*!
+   * \brief Constructor to to create an FSMS.
+   *
+   * \param I	        The number of possible input symbols.
+   * \param S           The number of possible FSM states.
+   * \param O           The number of possible output symbols.
+   * \param NS          A mapping from (current state, input symbol) to next state.
+   *                    next_state = NS[current_state * I + input_symbol]
+   * \param OS          A mapping from (current state, input symbol) to output symbol.
+   *                    output_symbol = OS[current_state * I + input_symbol]          
+   *
+   */
   fsm(int I, int S, int O, const std::vector<int> &NS, const std::vector<int> &OS);
+ /*!
+   * \brief Constructor to create an FSMS from file contents.
+   *
+   * \param name        filename
+   *
+   */
   fsm(const char *name);
+ /*!
+   * \brief Creates an FSMS from the generator matrix of a (n, k) binary convolutional code.
+   *
+   * \param k      ???
+   * \param n      ???
+   * \param G      ???
+   *
+   */
   fsm(int k, int n, const std::vector<int> &G);
+  /*!
+   * \brief Creates an FSMS describing ISI.
+   *
+   * \param mod_size    modulation size
+   * \param ch_lenth    channel length
+   *
+   */
   fsm(int mod_size, int ch_length);
+  /*!
+   * \brief Creates an FSMS describing the trellis for a CPM.
+   *
+   * \param P    ???? h=K/P (relatively prime)
+   * \param M    alphabet size
+   * \param L    pulse duration
+   *
+   * This FSM is based on the paper by B. Rimoldi
+   * "A decomposition approach to CPM", IEEE Trans. Info Theory, March 1988
+   * See also my own notes at http://www.eecs.umich.edu/~anastas/docs/cpm.pdf
+   */
   fsm(int P, int M, int L);
+  /*!
+   * \brief Creates an FSMS describing the joint trellis of two FSMs.
+   *
+   * \param fsm1  first FSMS
+   * \param fsm2  second FSMS
+   */
   fsm(const fsm &FSM1, const fsm &FSM2);
+  /*!
+   * \brief Creates an FSMS representing n stages through the originial FSM (AKA radix-n FSM).
+   *
+   * \param original FSMS
+   * \param n        Number of stages.
+   */
   fsm(const fsm &FSM, int n);
   int I () const { return d_I; }
   int S () const { return d_S; }
@@ -62,7 +145,20 @@ public:
   const std::vector< std::vector<int> > & PI () const { return d_PI; }
   const std::vector<int> & TMi () const { return d_TMi; }
   const std::vector<int> & TMl () const { return d_TMl; }
+  /*!
+   * \brief Creates an svg image of the trellis representation.
+   *
+   * \param filename         filename
+   * \param number_stages    ????
+   *
+   */  
   void write_trellis_svg(std::string filename ,int number_stages);
+  /*!
+   * \brief Write the FSMS to a file.
+   *
+   * \param filename   filename
+   *
+   */
   void write_fsm_txt(std::string filename);
 };
 

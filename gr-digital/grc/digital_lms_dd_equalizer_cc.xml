@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## LMS DD Equalizer
+###################################################
+ -->
+<block>
+	<name>LMS DD Equalizer</name>
+	<key>digital_lms_dd_equalizer_cc</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.lms_dd_equalizer_cc($num_taps, $mu, $sps, $cnst)</make>
+	<callback>set_gain($mu)</callback>
+	<param>
+		<name>Gain</name>
+		<key>mu</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Num. Taps</name>
+		<key>num_taps</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Samples per Symbol</name>
+		<key>sps</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Constellation Object</name>
+		<key>cnst</key>
+		<type>raw</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

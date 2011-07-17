@@ -117,6 +117,8 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 	[
 	  chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests
 	  chmod +x gnuradio-core/src/guile/run_guile_tests
-	])
+	]) \
+        AC_CONFIG_COMMANDS([run_tests_utils],[chmod +x gnuradio-core/src/python/gnuradio/utils/run_tests])
     ])
+
 ])

@@ -29,7 +29,8 @@ EXTRA_DIST += \
 	trellis.test
 
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES) \
+	-I$(abs_top_srcdir)/gr-digital/lib -I/home
 
 # ----------------------------------------------------------------
 # these scripts generate trellis codes from template files
@@ -81,13 +82,13 @@ grinclude_HEADERS =			\
         quicksort_index.h		\
         base.h				\
         interleaver.h			\
-        metric_type.h		\
         calc_metric.h		\
         core_algorithms.h		\
         trellis_permutation.h		\
         siso_type.h		\
 	trellis_siso_f.h		\
 	trellis_siso_combined_f.h	\
+	trellis_constellation_metrics_cf.h \
 	$(GENERATED_H)
 
 lib_LTLIBRARIES = libgnuradio-trellis.la
@@ -102,6 +103,7 @@ libgnuradio_trellis_la_SOURCES = 	\
         trellis_permutation.cc		\
 	trellis_siso_f.cc		\
 	trellis_siso_combined_f.cc	\
+	trellis_constellation_metrics_cf.cc \
 	$(GENERATED_CC)
 
 libgnuradio_trellis_la_LIBADD =	\
@@ -136,6 +138,7 @@ trellis_swiginclude_headers = 		\
 	trellis_permutation.i		\
 	trellis_siso_f.i		\
 	trellis_siso_combined_f.i	\
+	trellis_constellation_metrics_cf.i \
 	trellis_generated.i
 
 # Do creation and inclusion of other Makefiles last
@@ -156,6 +159,11 @@ par_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(src
 include $(top_srcdir)/Makefile.par.gen
 
 BUILT_SOURCES += $(python_built_sources)
+
+# Location of non-standard SWIG interface files
+trellis_swig_args =    \
+	-I$(top_srcdir)/gr-digital/lib \
+	-I$(top_srcdir)/gr-digital/swig
 
 if GUILE
 TESTS += run_guile_tests
