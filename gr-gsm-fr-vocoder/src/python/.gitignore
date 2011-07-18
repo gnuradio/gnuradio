@@ -1,9 +1,0 @@
-/Makefile
-/Makefile.in
-/.deps
-/.libs
-/*.la
-/*.lo
-/*.pyc
-/*.pyo
-/run_tests
