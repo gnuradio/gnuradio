@@ -26,9 +26,9 @@ PSK modulation and demodulation.
 from math import pi, log
 from cmath import exp
 
-from gnuradio import gr, modulation_utils2
+from gnuradio import gr
 import digital_swig
-#from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
+import modulation_utils2
 from utils import mod_codes, gray_code
 from generic_mod_demod import generic_mod, generic_demod
 

@@ -46,5 +46,9 @@ digital_PYTHON = \
 	generic_mod_demod.py	\
 	qam.py		\
 	bpsk.py		\
-	qpsk.py
+	qpsk.py		\
+	ofdm.py		\
+	pkt.py		\
+	modulation_utils2.py
+
 endif
