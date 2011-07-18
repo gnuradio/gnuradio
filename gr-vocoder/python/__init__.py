@@ -20,3 +20,4 @@
 # 
 
 from vocoder_swig import *
+from cvsd import *

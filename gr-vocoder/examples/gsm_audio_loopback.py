@@ -42,3 +42,4 @@ if __name__ == '__main__':
     tb.start()
     raw_input ('Press Enter to exit: ')
     tb.stop()
+    tb.wait()

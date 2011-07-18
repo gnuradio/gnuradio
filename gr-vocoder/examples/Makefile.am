@@ -24,6 +24,5 @@ include $(top_srcdir)/Makefile.common
 ourdatadir = $(exampledir)/vocoder
 
 dist_ourdata_SCRIPTS = \
+	cvsd_audio_loopback.py \
 	gsm_audio_loopback.py
-
-

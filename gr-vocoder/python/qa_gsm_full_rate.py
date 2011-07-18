@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import gsm_full_rate
+import vocoder_swig
 
 class test_gsm_vocoder (gr_unittest.TestCase):
 
@@ -30,6 +30,10 @@ class test_gsm_vocoder (gr_unittest.TestCase):
 
     def tearDown (self):
         self.tb = None
+
+    def test001_module_load (self):
+        enc = vocoder_swig.gsm_fr_encode_sp();
+        dec = vocoder_swig.gsm_fr_decode_ps();
 
 if __name__ == '__main__':
     gr_unittest.run(test_gsm_vocoder, "test_gsm_vocoder.xml")
