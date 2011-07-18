@@ -23,6 +23,8 @@ include $(top_srcdir)/Makefile.common
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
+	vocoder_codec2_decode_ps.h \
+	vocoder_codec2_encode_sp.h \
 	vocoder_cvsd_decode_bs.h \
 	vocoder_cvsd_encode_sb.h \
 	vocoder_gsm_fr_decode_ps.h \

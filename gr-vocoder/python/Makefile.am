@@ -26,8 +26,9 @@ vocoderdir = $(grpythondir)/vocoder
 TESTS = run_tests
 
 noinst_PYTHON = \
-	qa_gsm_full_rate.py \
-	qa_cvsd_vocoder.py
+	qa_codec2_vocoder.py \
+	qa_cvsd_vocoder.py \
+	qa_gsm_full_rate.py
 
 vocoder_PYTHON = \
 	__init__.py \

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Copyright 2011 Free Software Foundation, Inc.
 # 
@@ -19,26 +20,20 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+from gnuradio import gr, gr_unittest
+from vocoder_swig import *
 
-SUBDIRS = codec2 gsm .
+class test_codec2_vocoder (gr_unittest.TestCase):
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES) \
-	      -I$(top_srcdir)/gr-vocoder/include
+    def setUp (self):
+        self.tb = gr.top_block()
+        
+    def tearDown (self):
+        self.tb = None
 
-lib_LTLIBRARIES = libgnuradio-vocoder.la
-
-libgnuradio_vocoder_la_SOURCES = \
-	vocoder_codec2_decode_ps.cc \
-	vocoder_codec2_encode_sp.cc \
-	vocoder_cvsd_encode_sb.cc \
-	vocoder_cvsd_decode_bs.cc \
-	vocoder_gsm_fr_decode_ps.cc \
-	vocoder_gsm_fr_encode_sp.cc
-
-libgnuradio_vocoder_la_LIBADD =	\
-	$(GNURADIO_CORE_LA) \
-	codec2/libcodec2.la \
-	gsm/libgsm.la
-
-libgnuradio_vocoder_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
+    def test001_module_load (self):
+        raw_enc = codec2_encode_sp();
+        raw_dec = codec2_decode_ps();
+    
+if __name__ == '__main__':
+    gr_unittest.run(test_codec2_vocoder, "test_codec2_vocoder.xml")

@@ -19,22 +19,32 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#ifndef INCLUDED_VOCODER_CODEC2_DECODE_PS_H
+#define INCLUDED_VOCODER_CODEC2_DECODE_PS_H
 
-%include "gnuradio.i"
+#include <gr_sync_interpolator.h>
 
-%include "vocoder_codec2_encode_sp.i"
-%include "vocoder_codec2_decode_ps.i"
-%include "vocoder_cvsd_decode_bs.i"
-%include "vocoder_cvsd_encode_sb.i"
-%include "vocoder_gsm_fr_encode_sp.i"
-%include "vocoder_gsm_fr_decode_ps.i"
+class vocoder_codec2_decode_ps;
+typedef boost::shared_ptr<vocoder_codec2_decode_ps> vocoder_codec2_decode_ps_sptr;
 
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-vocoder" "scm_init_gnuradio_gsm_vocoder_module")
-%}
+vocoder_codec2_decode_ps_sptr vocoder_make_codec2_decode_ps ();
 
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif
+/*!
+ * \brief CODEC2 Vocoder Decoder
+ * \ingroup vocoder_blk
+ */
+class vocoder_codec2_decode_ps : public gr_sync_interpolator {
+  void *d_codec2;
+
+  friend vocoder_codec2_decode_ps_sptr vocoder_make_codec2_decode_ps ();
+  vocoder_codec2_decode_ps ();
+
+public:
+  ~vocoder_codec2_decode_ps ();
+
+  int work (int noutput_items,
+	    gr_vector_const_void_star &input_items,
+	    gr_vector_void_star &output_items);
+};
+
+#endif /* INCLUDED_VOCODER_CODEC2_DECODE_PS_H */

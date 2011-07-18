@@ -20,21 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
-
-%include "vocoder_codec2_encode_sp.i"
-%include "vocoder_codec2_decode_ps.i"
-%include "vocoder_cvsd_decode_bs.i"
-%include "vocoder_cvsd_encode_sb.i"
-%include "vocoder_gsm_fr_encode_sp.i"
-%include "vocoder_gsm_fr_decode_ps.i"
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-vocoder" "scm_init_gnuradio_gsm_vocoder_module")
+%{
+#include "vocoder_codec2_decode_ps.h"
 %}
 
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif
+GR_SWIG_BLOCK_MAGIC(vocoder,codec2_decode_ps);
+
+vocoder_codec2_decode_ps_sptr vocoder_make_codec2_decode_ps ();
+
+class vocoder_codec2_decode_ps : public gr_sync_interpolator {
+public:
+  ~vocoder_codec2_decode_ps ();
+};

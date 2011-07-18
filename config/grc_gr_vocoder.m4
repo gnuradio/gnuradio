@@ -32,6 +32,7 @@ AC_DEFUN([GRC_GR_VOCODER],[
         gr-vocoder/grc/Makefile \
         gr-vocoder/include/Makefile \
         gr-vocoder/lib/Makefile \
+	gr-vocoder/lib/codec2/Makefile \
 	gr-vocoder/lib/gsm/Makefile \
         gr-vocoder/python/Makefile \
 	gr-vocoder/python/run_tests \
