@@ -26,7 +26,7 @@ Generic modulation and demodulation.
 """
 
 from gnuradio import gr
-from gnuradio.modulation_utils2 import extract_kwargs_from_options_for_class
+from modulation_utils2 import extract_kwargs_from_options_for_class
 #from gnuradio.digital.utils import mod_codes
 from utils import mod_codes
 import digital_swig
