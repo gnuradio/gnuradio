@@ -21,4 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = 
+# C/C++ headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS = \
+	vocoder_gsm_fr_decode_ps.h \
+	vocoder_gsm_fr_encode_sp.h

@@ -21,4 +21,14 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = 
+vocoderdir = $(grpythondir)/vocoder
+
+TESTS = run_tests
+
+noinst_PYTHON = \
+	qa_gsm_full_rate.py		
+
+vocoder_PYTHON = \
+	__init__.py
+
+EXTRA_DIST += run_tests.in

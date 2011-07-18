@@ -106,7 +106,6 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/python/gnuradio/gr/run_tests \
         gnuradio-core/src/python/gnuradio/gru/Makefile \
         gnuradio-core/src/python/gnuradio/gruimpl/Makefile \
-        gnuradio-core/src/python/gnuradio/vocoder/Makefile \
         gnuradio-core/src/tests/Makefile \
         gnuradio-core/src/utils/Makefile \
     ])

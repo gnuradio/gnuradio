@@ -20,5 +20,49 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/Makefile.swig
 
-SUBDIRS = 
+TESTS =
+EXTRA_DIST += $(nobase_guile_DATA)
+
+AM_CPPFLAGS = \
+	-I$(abs_top_srcdir)/gr-vocoder/include \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(PYTHON_CPPFLAGS) \
+	$(WITH_INCLUDES)
+
+if GUILE
+nobase_guile_DATA = \
+	gnuradio/vocoder_swig.scm
+endif
+
+noinst_GUILE  = vocoder.test
+
+
+##############################
+# SWIG interface and library
+TOP_SWIG_IFILES = \
+	vocoder_swig.i
+
+# Install so that they end up available as:
+#   import gnuradio.vocoder
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/vocoder
+vocoder_swig_pythondir_category = \
+	gnuradio/vocoder
+
+# additional libraries for linking with the SWIG-generated library
+vocoder_swig_la_swig_libadd = \
+	$(abs_top_builddir)/gr-vocoder/lib/libgnuradio-vocoder.la
+
+# additional SWIG files to be installed
+vocoder_swig_swiginclude_headers = \
+	vocoder_gsm_fr_encode_sp.i \
+	vocoder_gsm_fr_decode_ps.i
+
+vocoder_swig_swig_args = \
+	-I$(abs_top_builddir)/gr-vocoder/lib
+
+if GUILE
+TESTS += run_guile_tests
+endif

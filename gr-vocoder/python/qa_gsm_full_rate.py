@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,8 +20,16 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+from gnuradio import gr, gr_unittest
+import gsm_full_rate
 
-grvocoderpythondir = $(grpythondir)/vocoder
-grvocoderpython_PYTHON = \
-	__init__.py
+class test_gsm_vocoder (gr_unittest.TestCase):
+
+    def setUp (self):
+        self.tb = gr.top_block ()
+
+    def tearDown (self):
+        self.tb = None
+
+if __name__ == '__main__':
+    gr_unittest.run(test_gsm_vocoder, "test_gsm_vocoder.xml")

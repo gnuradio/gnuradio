@@ -19,21 +19,4 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
-
-SUBDIRS = gsm .
-
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES) \
-	      -I$(top_srcdir)/gr-vocoder/include
-
-lib_LTLIBRARIES = libgnuradio-vocoder.la
-
-libgnuradio_vocoder_la_SOURCES = \
-	vocoder_gsm_fr_decode_ps.cc \
-	vocoder_gsm_fr_encode_sp.cc
-
-libgnuradio_vocoder_la_LIBADD =	\
-	$(GNURADIO_CORE_LA) \
-	gsm/libgsm.la
-
-libgnuradio_vocoder_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
+from vocoder_swig import *

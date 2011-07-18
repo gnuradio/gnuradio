@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2005,2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,21 +20,25 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+from gnuradio import gr
+from gnuradio import audio
+from gnuradio import vocoder
 
-SUBDIRS = gsm .
+def build_graph():
+    tb = gr.top_block()
+    src = audio.source(8000)
+    src_scale = gr.multiply_const_ff(32767)
+    f2s = gr.float_to_short ()
+    enc = vocoder.gsm_fr_encode_sp()
+    dec = vocoder.gsm_fr_decode_ps()
+    s2f = gr.short_to_float ()
+    sink_scale = gr.multiply_const_ff(1.0/32767.)
+    sink = audio.sink(8000)
+    tb.connect(src, src_scale, f2s, enc, dec, s2f, sink_scale, sink)
+    return tb
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES) \
-	      -I$(top_srcdir)/gr-vocoder/include
-
-lib_LTLIBRARIES = libgnuradio-vocoder.la
-
-libgnuradio_vocoder_la_SOURCES = \
-	vocoder_gsm_fr_decode_ps.cc \
-	vocoder_gsm_fr_encode_sp.cc
-
-libgnuradio_vocoder_la_LIBADD =	\
-	$(GNURADIO_CORE_LA) \
-	gsm/libgsm.la
-
-libgnuradio_vocoder_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
+if __name__ == '__main__':
+    tb = build_graph()
+    tb.start()
+    raw_input ('Press Enter to exit: ')
+    tb.stop()

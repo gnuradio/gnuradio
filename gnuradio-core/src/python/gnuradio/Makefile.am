@@ -22,7 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 if PYTHON
-SUBDIRS = gr gru gruimpl blks2 blks2impl vocoder
+SUBDIRS = gr gru gruimpl blks2 blks2impl
 
 grpython_PYTHON = 			\
 	__init__.py			\

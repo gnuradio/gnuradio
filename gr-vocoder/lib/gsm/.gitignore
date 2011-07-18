@@ -1,9 +1,8 @@
 /Makefile
 /Makefile.in
+/.la
+/.lo
 /.deps
 /.libs
 /*.la
 /*.lo
-/*.pyc
-/*.pyo
-/run_tests
