@@ -54,7 +54,6 @@ m4macros = \
 	grc_gr_audio.m4 \
 	grc_gr_comedi.m4 \
 	grc_gr_gcell.m4 \
-	grc_gr_codec2_vocoder.m4 \
 	grc_gr_noaa.m4 \
 	grc_gr_radio_astronomy.m4 \
 	grc_gr_trellis.m4 \
