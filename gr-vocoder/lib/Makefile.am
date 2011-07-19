@@ -29,6 +29,8 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES) \
 lib_LTLIBRARIES = libgnuradio-vocoder.la
 
 libgnuradio_vocoder_la_SOURCES = \
+	vocoder_alaw_decode_bs.cc \
+	vocoder_alaw_encode_sb.cc \
 	vocoder_codec2_decode_ps.cc \
 	vocoder_codec2_encode_sp.cc \
 	vocoder_cvsd_encode_sb.cc \

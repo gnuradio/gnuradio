@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Copyright 2011 Free Software Foundation, Inc.
 # 
@@ -19,17 +20,20 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+from gnuradio import gr, gr_unittest
+from vocoder_swig import *
 
-# C/C++ headers get installed in ${prefix}/include/gnuradio
-grinclude_HEADERS = \
-	vocoder_alaw_decode_bs.h \
-	vocoder_alaw_encode_sb.h \
-	vocoder_codec2_decode_ps.h \
-	vocoder_codec2_encode_sp.h \
-	vocoder_cvsd_decode_bs.h \
-	vocoder_cvsd_encode_sb.h \
-	vocoder_gsm_fr_decode_ps.h \
-	vocoder_gsm_fr_encode_sp.h \
-	vocoder_ulaw_decode_bs.h \
-	vocoder_ulaw_encode_sb.h
+class test_alaw_vocoder (gr_unittest.TestCase):
+
+    def setUp (self):
+        self.tb = gr.top_block()
+        
+    def tearDown (self):
+        self.tb = None
+
+    def test001_module_load (self):
+        enc = alaw_encode_sb();
+        dec = alaw_decode_bs();
+
+if __name__ == '__main__':
+    gr_unittest.run(test_alaw_vocoder, "test_alaw_vocoder.xml")
