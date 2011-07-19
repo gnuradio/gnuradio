@@ -1,5 +1,5 @@
 #
-# Copyright 2001 Free Software Foundation, Inc.
+# Copyright 2001,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-noinst_LTLIBRARIES = libccitt.la
-libccitt_la_SOURCES = g711.c g72x.c g721.c g723_24.c g723_40.c g72x.h
+noinst_LTLIBRARIES = libg7xx.la
+libg7xx_la_SOURCES = g711.c g72x.c g721.c g723_24.c g723_40.c g72x.h
 
 EXTRA_DIST += encode.c decode.c

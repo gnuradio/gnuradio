@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = codec2 gsm .
+SUBDIRS = codec2 g7xx gsm .
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES) \
 	      -I$(top_srcdir)/gr-vocoder/include
@@ -39,6 +39,7 @@ libgnuradio_vocoder_la_SOURCES = \
 libgnuradio_vocoder_la_LIBADD =	\
 	$(GNURADIO_CORE_LA) \
 	codec2/libcodec2.la \
+	g7xx/libg7xx.la \
 	gsm/libgsm.la
 
 libgnuradio_vocoder_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
