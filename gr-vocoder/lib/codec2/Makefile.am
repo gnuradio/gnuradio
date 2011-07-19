@@ -99,9 +99,13 @@ libcodec2_la_SOURCES = \
 	pack.c \
 	$(GENERATED_C)
 
+# Evil inclusion of glottal.c by phase.c
+EXTRA_DIST += glottal.c
+
 # Headers used locally but not installed in system
 noinst_HEADERS = \
 	codec2.h \
+	codec2_internal.h \
 	defines.h \
 	kiss_fft.h\
 	_kiss_fft_guts.h \
@@ -118,3 +122,4 @@ noinst_HEADERS = \
 	sine.h
 
 EXTRA_DIST += $(CODEBOOKS) $(CODEBOOKSD) $(CODEBOOKSDVQ)
+
