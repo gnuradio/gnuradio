@@ -27,6 +27,14 @@ EXECUTE_PROCESS(
     OUTPUT_VARIABLE arch_lines OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+#get any mutually exclusive archs so we can exclude them
+#this is really for compilers which can do both 32- and 64-bit compilations.
+EXECUTE_PROCESS(
+    COMMAND ${PYTHON_EXECUTABLE} -c
+    "from xml.dom import minidom; print ';'.join(map(lambda a: '%s %s'%(a.parentNode.attributes['name'].value,a.firstChild.data),minidom.parse('../gen/archs.xml').getElementsByTagName('mutex')))"
+    OUTPUT_VARIABLE mutex_lines OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 #This macro sets the ${arch}_flag variable,
 #and handles special cases for MSVC arch flags.
 MACRO(set_arch_flag name flag)
@@ -59,11 +67,24 @@ MACRO(handle_arch name flag)
     ENDIF()
 ENDMACRO(handle_arch)
 
+MACRO(remove_mutex name mutex)
+    IF(have_${name})
+        UNSET(have_${mutex})
+    ENDIF()
+    LIST(REMOVE_ITEM available_arches ${mutex})
+ENDMACRO(remove_mutex)
+
 #create a list of available arches
 FOREACH(arch_line ${arch_lines})
     SEPARATE_ARGUMENTS(args UNIX_COMMAND "${arch_line}")
     handle_arch(${args})
 ENDFOREACH(arch_line)
+
+#strip out mutex archs
+FOREACH(mutex_line ${mutex_lines})
+    SEPARATE_ARGUMENTS(args UNIX_COMMAND "${mutex_line}")
+    remove_mutex(${args})
+ENDFOREACH(mutex_line)
 
 MESSAGE(STATUS "Available arches: ${available_arches}")
 

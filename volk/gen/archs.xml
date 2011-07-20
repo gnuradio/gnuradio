@@ -29,6 +29,7 @@
   <val>1</val>
   <overrule>MD_SUBCPU</overrule>
   <overrule_val>x86</overrule_val>
+  <mutex>32</mutex>
 </arch>
 
 <arch name="3dnow" type="x86">

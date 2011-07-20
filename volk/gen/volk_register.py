@@ -91,7 +91,7 @@ for arch in archs:
     if a_var:
         archs.remove(arch);
         
-        
+#strip out mutex archs        
 
 archflags_dict = {}
 for filearch in filearchs:
