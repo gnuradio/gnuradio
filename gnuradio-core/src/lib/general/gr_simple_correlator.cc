@@ -50,6 +50,7 @@ gr_simple_correlator::gr_simple_correlator (int payload_bytesize)
     d_state (ST_LOOKING), d_osi (0),
     d_bblen ((payload_bytesize + GRSF_PAYLOAD_OVERHEAD) * GRSF_BITS_PER_BYTE),
     d_bitbuf (new unsigned char [d_bblen]),
+    d_pktbuf (new unsigned char [d_bblen/GRSF_BITS_PER_BYTE]),
     d_bbi (0)
 {
   d_avbi = 0;
@@ -71,6 +72,7 @@ gr_simple_correlator::~gr_simple_correlator ()
   fclose(d_debug_fp);
 #endif  
   delete [] d_bitbuf;
+  delete [] d_pktbuf;
 }
    
 
@@ -184,10 +186,9 @@ gr_simple_correlator::general_work (int noutput_items,
 	d_bbi++;
 	if (d_bbi >= d_bblen){
 	  // printf ("got whole packet\n");
-	  unsigned char pktbuf[d_bblen/GRSF_BITS_PER_BYTE];
-	  packit (pktbuf, d_bitbuf, d_bbi);
-	  printf ("seqno %3d\n", pktbuf[0]);
-	  memcpy (out, &pktbuf[GRSF_PAYLOAD_OVERHEAD], d_payload_bytesize);
+	  packit (d_pktbuf, d_bitbuf, d_bbi);
+	  printf ("seqno %3d\n", d_pktbuf[0]);
+	  memcpy (out, &d_pktbuf[GRSF_PAYLOAD_OVERHEAD], d_payload_bytesize);
 	  enter_looking ();
 	  consume_each (n + 1);
 	  return d_payload_bytesize;

@@ -50,6 +50,7 @@ class gr_simple_correlator : public gr_block
   unsigned long long int d_shift_reg[OVERSAMPLE];
   int		 d_bblen;			// length of bitbuf
   unsigned char	*d_bitbuf;			// demodulated bits
+  unsigned char	*d_pktbuf;			// temp packet buf
   int		 d_bbi;				// bitbuf index
 
   static const int AVG_PERIOD = 512;		// must be power of 2 (for freq offset correction)

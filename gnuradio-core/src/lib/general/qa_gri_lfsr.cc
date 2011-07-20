@@ -24,6 +24,7 @@
 #include <cppunit/TestAssert.h>
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 
 void
 qa_gri_lfsr::test_lfsr ()
@@ -90,12 +91,12 @@ qa_gri_lfsr::test_scrambler()
       1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, };
 
   int len = sizeof(src);
-  unsigned char actual[len];
+  std::vector<unsigned char> actual(len);
 
   for (int i = 0; i < len; i++)
     actual[i] = scrambler.next_bit_scramble(src[i]);
 
-  CPPUNIT_ASSERT(memcmp(expected, actual, len) == 0);
+  CPPUNIT_ASSERT(memcmp(expected, &actual[0], len) == 0);
 }
 
 void
@@ -132,10 +133,10 @@ qa_gri_lfsr::test_descrambler()
       0, 0, 0, 0, 0, 0, 0, 0, 0 };
   
   int len = sizeof(src);
-  unsigned char actual[len];
+  std::vector<unsigned char> actual(len);
 
   for (int i = 0; i < len; i++)
     actual[i] = descrambler.next_bit_descramble(src[i]);
 
-  CPPUNIT_ASSERT(memcmp(expected, actual, len) == 0);
+  CPPUNIT_ASSERT(memcmp(expected, &actual[0], len) == 0);
 }
