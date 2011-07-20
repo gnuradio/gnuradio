@@ -71,9 +71,6 @@
 ;;; ./general/gr_bin_statistics_f.h WONTFIX: requires gr_feval_dd & swig directors
 ;;;(pass-if (true? (gr:bin-statistics-f 1 (gr:msg-queue) 0 0 0)))
 
-;;; ./general/gr_binary_slicer_fb.h
-(pass-if (true? (gr:binary-slicer-fb)))
-
 ;;; ./general/gr_bytes_to_syms.h
 (pass-if (true? (gr:bytes-to-syms)))
 
@@ -107,9 +104,6 @@
 
 ;;; ./general/gr_conjugate_cc.h
 (pass-if (true? (gr:conjugate-cc)))
-
-;;; ./general/gr_constellation_decoder_cb.h
-(pass-if (true? (gr:constellation-decoder-cb #(2+3i 23+5i) #(0 1))))
 
 ;;; ./general/gr_copy.h
 (pass-if (true? (gr:copy 1)))

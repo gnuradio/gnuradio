@@ -274,7 +274,7 @@ class dbpsk_demod(gr.hier_block2):
         # find closest constellation point
         rot = 1
         rotated_const = map(lambda pt: pt * rot, psk.constellation[arity])
-        self.slicer = gr.constellation_decoder_cb(rotated_const, range(arity))
+        self.slicer = digital.constellation_decoder_cb(rotated_const, range(arity))
 
         if self._gray_code:
             self.symbol_mapper = gr.map_bb(psk.gray_to_binary[arity])

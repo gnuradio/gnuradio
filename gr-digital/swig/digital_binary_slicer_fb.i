@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,14 +20,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,binary_slicer_fb);
+GR_SWIG_BLOCK_MAGIC(digital,binary_slicer_fb);
 
-gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
+digital_binary_slicer_fb_sptr digital_make_binary_slicer_fb ();
 
-class gr_binary_slicer_fb : public gr_sync_block
+class digital_binary_slicer_fb : public gr_sync_block
 {
  private:
-  gr_binary_slicer_fb ();
+  digital_binary_slicer_fb ();
 
  public:
 };

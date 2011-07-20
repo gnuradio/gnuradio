@@ -22,6 +22,7 @@
 %include "gnuradio.i"
 
 %{
+#include "digital_binary_slicer_fb.h"
 #include "digital_constellation.h"
 #include "digital_costas_loop_cc.h"
 #include "digital_cma_equalizer_cc.h"
@@ -31,6 +32,7 @@
 #include "digital_constellation_decoder_cb.h"
 %}
 
+%include "digital_binary_slicer_fb.i"
 %include "digital_constellation.i"
 %include "digital_costas_loop_cc.i"
 %include "digital_cma_equalizer_cc.i"

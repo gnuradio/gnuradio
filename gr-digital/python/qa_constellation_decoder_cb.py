@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
+import digital_swig
 import math
 
 class test_constellation_decoder (gr_unittest.TestCase):
@@ -31,17 +32,39 @@ class test_constellation_decoder (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test_constellation_decoder_cb (self):
-        symbol_positions  = [1 + 0j, 0 + 1j , -1 + 0j, 0 - 1j]
-        symbol_values_out = [0, 1, 2, 3]
-	expected_result = (       0,          3,           2,            1,        0,       0,          3)
-  	src_data =        (0.5 + 0j, 0.1 - 1.2j, -0.8 - 0.1j, -0.45 + 0.8j, 0.8 - 0j, 0.5 + 0j, 0.1 - 1.2j)
+    def test_constellation_decoder_cb_bpsk (self):
+        cnst = digital_swig.constellation_bpsk()
+  	src_data =        (0.5 + 0.5j,  0.1 - 1.2j, -0.8 - 0.1j, -0.45 + 0.8j,
+                           0.8 + 1.0j, -0.5 + 0.1j,  0.1 - 1.2j)
+	expected_result = (        1,           1,           0,            0,
+                                   1,           0,           1)
         src = gr.vector_source_c (src_data)
-        op = gr.constellation_decoder_cb (symbol_positions, symbol_values_out)
+        op = digital_swig.constellation_decoder_cb (cnst.base())
         dst = gr.vector_sink_b ()
+
         self.tb.connect (src, op)
         self.tb.connect (op, dst)
         self.tb.run ()               # run the graph and wait for it to finish
+
+        actual_result = dst.data ()  # fetch the contents of the sink
+	#print "actual result", actual_result
+	#print "expected result", expected_result
+        self.assertFloatTuplesAlmostEqual (expected_result, actual_result)
+
+    def test_constellation_decoder_cb_qpsk (self):
+        cnst = digital_swig.constellation_qpsk()
+  	src_data =        (0.5 + 0.5j,  0.1 - 1.2j, -0.8 - 0.1j, -0.45 + 0.8j,
+                           0.8 + 1.0j, -0.5 + 0.1j,  0.1 - 1.2j)
+	expected_result = (        3,           1,           0,            2,
+                                   3,           2,           1)
+        src = gr.vector_source_c (src_data)
+        op = digital_swig.constellation_decoder_cb (cnst.base())
+        dst = gr.vector_sink_b ()
+
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()               # run the graph and wait for it to finish
+
         actual_result = dst.data ()  # fetch the contents of the sink
 	#print "actual result", actual_result
 	#print "expected result", expected_result

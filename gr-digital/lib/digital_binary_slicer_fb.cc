@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010 Free Software Foundation, Inc.
+ * Copyright 2006,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,40 +24,35 @@
 #include "config.h"
 #endif
 
-#include <gr_binary_slicer_fb.h>
+#include <digital_binary_slicer_fb.h>
 #include <gr_io_signature.h>
+#include <gr_math.h>
 #include <stdexcept>
 
-gr_binary_slicer_fb_sptr
-gr_make_binary_slicer_fb ()
+digital_binary_slicer_fb_sptr
+digital_make_binary_slicer_fb ()
 {
-  return gnuradio::get_initial_sptr(new gr_binary_slicer_fb ());
+  return gnuradio::get_initial_sptr(new digital_binary_slicer_fb ());
 }
 
-gr_binary_slicer_fb::gr_binary_slicer_fb ()
+digital_binary_slicer_fb::digital_binary_slicer_fb ()
   : gr_sync_block ("binary_slicer_fb",
 		   gr_make_io_signature (1, 1, sizeof (float)),
 		   gr_make_io_signature (1, 1, sizeof (unsigned char)))
 {
 }
 
-static inline int
-slice(float x)
-{
-  return x < 0 ? 0 : 1;
-}
-
 int
-gr_binary_slicer_fb::work (int noutput_items,
-			   gr_vector_const_void_star &input_items,
-			   gr_vector_void_star &output_items)
+digital_binary_slicer_fb::work (int noutput_items,
+				gr_vector_const_void_star &input_items,
+				gr_vector_void_star &output_items)
 {
   const float *in = (const float *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
 
 
   for (int i = 0; i < noutput_items; i++){
-    out[i] = slice(in[i]);
+    out[i] = gr_binary_slicer(in[i]);
   }
   
   return noutput_items;

@@ -44,7 +44,6 @@ libgeneral_la_SOURCES = 		\
 	gr_agc2_ff.cc                	\
 	gr_align_on_samplenumbers_ss.cc	\
 	gr_bin_statistics_f.cc		\
-	gr_binary_slicer_fb.cc		\
 	gr_bytes_to_syms.cc		\
 	gr_char_to_float.cc		\
 	gr_check_counting_s.cc		\
@@ -56,7 +55,6 @@ libgeneral_la_SOURCES = 		\
 	gr_complex_to_xxx.cc		\
 	gr_conjugate_cc.cc		\
 	gr_copy.cc			\
-	gr_constellation_decoder_cb.cc	\
 	gr_correlate_access_code_bb.cc	\
 	gr_costas_loop_cc.cc		\
 	gr_count_bits.cc		\
@@ -202,7 +200,6 @@ grinclude_HEADERS = 			\
 	gr_agc2_ff.h                	\
 	gr_align_on_samplenumbers_ss.h	\
 	gr_bin_statistics_f.h		\
-	gr_binary_slicer_fb.h		\
 	gr_bytes_to_syms.h		\
 	gr_char_to_float.h		\
 	gr_check_counting_s.h		\
@@ -213,7 +210,6 @@ grinclude_HEADERS = 			\
 	gr_complex_to_interleaved_short.h \
 	gr_complex_to_xxx.h		\
 	gr_conjugate_cc.h		\
-	gr_constellation_decoder_cb.h	\
 	gr_copy.h			\
 	gr_correlate_access_code_bb.h	\
 	gr_costas_loop_cc.h		\
@@ -378,7 +374,6 @@ swiginclude_HEADERS =			\
 	gr_agc2_ff.i                 	\
 	gr_align_on_samplenumbers_ss.i	\
 	gr_bin_statistics_f.i		\
-	gr_binary_slicer_fb.i		\
 	gr_bytes_to_syms.i		\
 	gr_char_to_float.i		\
 	gr_check_counting_s.i		\
@@ -388,7 +383,6 @@ swiginclude_HEADERS =			\
 	gr_complex_to_interleaved_short.i \
 	gr_complex_to_xxx.i		\
 	gr_conjugate_cc.i		\
-	gr_constellation_decoder_cb.i	\
 	gr_copy.i			\
 	gr_correlate_access_code_bb.i	\
 	gr_costas_loop_cc.i		\

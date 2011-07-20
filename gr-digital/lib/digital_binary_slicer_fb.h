@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,15 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_BINARY_SLICER_FB_H
-#define INCLUDED_GR_BINARY_SLICER_FB_H
+#ifndef INCLUDED_DIGITAL_BINARY_SLICER_FB_H
+#define INCLUDED_DIGITAL_BINARY_SLICER_FB_H
 
 #include <gr_sync_block.h>
 
-class gr_binary_slicer_fb;
-typedef boost::shared_ptr<gr_binary_slicer_fb> gr_binary_slicer_fb_sptr;
+class digital_binary_slicer_fb;
+typedef boost::shared_ptr<digital_binary_slicer_fb> digital_binary_slicer_fb_sptr;
 
-gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
+digital_binary_slicer_fb_sptr digital_make_binary_slicer_fb ();
 
 /*!
  * \brief slice float binary symbol outputting 1 bit output
@@ -37,10 +37,10 @@ gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
  * x <  0 --> 0
  * x >= 0 --> 1
  */
-class gr_binary_slicer_fb : public gr_sync_block
+class digital_binary_slicer_fb : public gr_sync_block
 {
-  friend gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
-  gr_binary_slicer_fb ();
+  friend digital_binary_slicer_fb_sptr digital_make_binary_slicer_fb ();
+  digital_binary_slicer_fb ();
 
  public:
   int work (int noutput_items,

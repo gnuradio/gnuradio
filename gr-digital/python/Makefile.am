@@ -32,8 +32,10 @@ digitaldir = $(grpythondir)/digital
 
 noinst_PYTHON = \
 	qa_digital.py			\
+	qa_binary_slicer_fb.py		\
 	qa_constellation.py		\
 	qa_constellation_receiver.py	\
+	qa_constellation_decoder_cb.py	\
 	qa_costas_loop_cc.py
 
 digital_PYTHON = \
@@ -46,5 +48,6 @@ digital_PYTHON = \
 	generic_mod_demod.py	\
 	qam.py		\
 	bpsk.py		\
-	qpsk.py
+	qpsk.py		\
+	gmsk.py
 endif
