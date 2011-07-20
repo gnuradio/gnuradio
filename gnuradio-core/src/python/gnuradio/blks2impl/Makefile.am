@@ -30,16 +30,10 @@ grblkspython_PYTHON =		\
 	__init__.py		\
 	am_demod.py		\
 	channel_model.py	\
-	dbpsk.py		\
-	dbpsk2.py		\
-	dqpsk.py		\
-	dqpsk2.py		\
-	d8psk.py		\
 	filterbank.py		\
 	fm_demod.py		\
 	fm_emph.py		\
 	generic_usrp.py	\
-	gmsk.py			\
 	cpm.py			\
 	logpwrfft.py		\
 	nbfm_rx.py		\
