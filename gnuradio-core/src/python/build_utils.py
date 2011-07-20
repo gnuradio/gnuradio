@@ -93,7 +93,7 @@ def output_makefile_fragment ():
         return
 # overwrite the source, which must be writable; this should have been
 # checked for beforehand in the top-level Makefile.gen.gen .
-    f = open_src ('Makefile.gen', 'w')
+    f = open (os.path.join (os.environ.get('gendir', os.environ.get('srcdir', '.')), 'Makefile.gen'), 'w')
     f.write ('#\n# This file is machine generated.  All edits will be overwritten\n#\n')
     output_subfrag (f, 'h')
     output_subfrag (f, 'i')
