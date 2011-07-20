@@ -49,8 +49,6 @@ libgeneral_la_SOURCES = 		\
 	gr_check_counting_s.cc		\
 	gr_check_lfsr_32k_s.cc		\
 	gr_circular_file.cc		\
-	gr_clock_recovery_mm_cc.cc	\
-	gr_clock_recovery_mm_ff.cc	\
 	gr_complex_to_interleaved_short.cc \
 	gr_complex_to_xxx.cc		\
 	gr_conjugate_cc.cc		\
@@ -205,8 +203,6 @@ grinclude_HEADERS = 			\
 	gr_check_counting_s.h		\
 	gr_check_lfsr_32k_s.h		\
 	gr_circular_file.h		\
-	gr_clock_recovery_mm_cc.h	\
-	gr_clock_recovery_mm_ff.h	\
 	gr_complex_to_interleaved_short.h \
 	gr_complex_to_xxx.h		\
 	gr_conjugate_cc.h		\
@@ -378,8 +374,6 @@ swiginclude_HEADERS =			\
 	gr_char_to_float.i		\
 	gr_check_counting_s.i		\
 	gr_check_lfsr_32k_s.i		\
-	gr_clock_recovery_mm_cc.i	\
-	gr_clock_recovery_mm_ff.i	\
 	gr_complex_to_interleaved_short.i \
 	gr_complex_to_xxx.i		\
 	gr_conjugate_cc.i		\

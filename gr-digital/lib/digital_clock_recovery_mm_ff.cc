@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,7 +25,7 @@
 #endif
 
 #include <gr_io_signature.h>
-#include <gr_clock_recovery_mm_ff.h>
+#include <digital_clock_recovery_mm_ff.h>
 #include <gri_mmse_fir_interpolator.h>
 #include <stdexcept>
 
@@ -33,19 +33,21 @@
 
 // Public constructor
 
-gr_clock_recovery_mm_ff_sptr 
-gr_make_clock_recovery_mm_ff(float omega, float gain_omega, float mu, float gain_mu,
-			     float omega_relative_limit)
+digital_clock_recovery_mm_ff_sptr 
+digital_make_clock_recovery_mm_ff(float omega, float gain_omega,
+				  float mu, float gain_mu,
+				  float omega_relative_limit)
 {
-  return gnuradio::get_initial_sptr(new gr_clock_recovery_mm_ff (omega,
-								    gain_omega, 
-								    mu,
-								    gain_mu,
-								    omega_relative_limit));
+  return gnuradio::get_initial_sptr(new digital_clock_recovery_mm_ff (omega,
+								      gain_omega, 
+								      mu,
+								      gain_mu,
+								      omega_relative_limit));
 }
 
-gr_clock_recovery_mm_ff::gr_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gain_mu,
-						  float omega_relative_limit)
+digital_clock_recovery_mm_ff::digital_clock_recovery_mm_ff (float omega, float gain_omega,
+							    float mu, float gain_mu,
+							    float omega_relative_limit)
   : gr_block ("clock_recovery_mm_ff",
 	      gr_make_io_signature (1, 1, sizeof (float)),
 	      gr_make_io_signature (1, 1, sizeof (float))),
@@ -65,7 +67,7 @@ gr_clock_recovery_mm_ff::gr_clock_recovery_mm_ff (float omega, float gain_omega,
     d_logfile = fopen("cr_mm_ff.dat", "wb");
 }
 
-gr_clock_recovery_mm_ff::~gr_clock_recovery_mm_ff ()
+digital_clock_recovery_mm_ff::~digital_clock_recovery_mm_ff ()
 {
   delete d_interp;
 
@@ -76,7 +78,7 @@ gr_clock_recovery_mm_ff::~gr_clock_recovery_mm_ff ()
 }
 
 void
-gr_clock_recovery_mm_ff::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+digital_clock_recovery_mm_ff::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i=0; i < ninputs; i++)
@@ -98,10 +100,10 @@ slice(float x)
  * ISBN 0-471-50275-8.
  */
 int
-gr_clock_recovery_mm_ff::general_work (int noutput_items,
-				       gr_vector_int &ninput_items,
-				       gr_vector_const_void_star &input_items,
-				       gr_vector_void_star &output_items)
+digital_clock_recovery_mm_ff::general_work (int noutput_items,
+					    gr_vector_int &ninput_items,
+					    gr_vector_const_void_star &input_items,
+					    gr_vector_void_star &output_items)
 {
   const float *in = (const float *) input_items[0];
   float *out = (float *) output_items[0];

@@ -79,8 +79,6 @@
 #include <gr_vco_f.h>
 #include <gr_crc32.h>
 #include <gr_threshold_ff.h>
-#include <gr_clock_recovery_mm_ff.h>
-#include <gr_clock_recovery_mm_cc.h>
 #include <gr_packet_sink.h>
 #include <gr_lms_dfe_cc.h>
 #include <gr_lms_dfe_ff.h>
@@ -204,8 +202,6 @@
 %include "gr_vco_f.i"
 %include "gr_crc32.i"
 %include "gr_threshold_ff.i"
-%include "gr_clock_recovery_mm_ff.i"
-%include "gr_clock_recovery_mm_cc.i"
 %include "gr_packet_sink.i"
 %include "gr_lms_dfe_cc.i"
 %include "gr_lms_dfe_ff.i"

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,18 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,clock_recovery_mm_cc);
+GR_SWIG_BLOCK_MAGIC(digital,clock_recovery_mm_cc);
 
-gr_clock_recovery_mm_cc_sptr
-gr_make_clock_recovery_mm_cc (float omega, float gain_omega,
-			      float mu, float gain_mu,
-			      float omega_relative_limit) throw(std::exception);
+digital_clock_recovery_mm_cc_sptr
+digital_make_clock_recovery_mm_cc (float omega, float gain_omega,
+				   float mu, float gain_mu,
+				   float omega_relative_limit) throw(std::exception);
 
-class gr_clock_recovery_mm_cc : public gr_sync_block
+class digital_clock_recovery_mm_cc : public gr_sync_block
 {
  private:
-  gr_clock_recovery_mm_cc (float omega, float gain_omega, float mu, 
-			   float gain_mu, float omega_relative_limit);
+  digital_clock_recovery_mm_cc (float omega, float gain_omega,
+				float mu, float gain_mu,
+				float omega_relative_limit);
 
 public:
   float mu() const { return d_mu;}

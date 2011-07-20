@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_CLOCK_RECOVERY_MM_FF_H
-#define	INCLUDED_GR_CLOCK_RECOVERY_MM_FF_H
+#ifndef INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_FF_H
+#define	INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_FF_H
 
 #include <gr_block.h>
 #include <gr_math.h>
@@ -29,13 +29,14 @@
 
 class gri_mmse_fir_interpolator;
 
-class gr_clock_recovery_mm_ff;
-typedef boost::shared_ptr<gr_clock_recovery_mm_ff> gr_clock_recovery_mm_ff_sptr;
+class digital_clock_recovery_mm_ff;
+typedef boost::shared_ptr<digital_clock_recovery_mm_ff> digital_clock_recovery_mm_ff_sptr;
 
 // public constructor
-gr_clock_recovery_mm_ff_sptr 
-gr_make_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gain_mu,
-			      float omega_relative_limit=0.001);
+digital_clock_recovery_mm_ff_sptr 
+digital_make_clock_recovery_mm_ff (float omega, float gain_omega,
+				   float mu, float gain_mu,
+				   float omega_relative_limit=0.001);
 
 /*!
  * \brief Mueller and Müller (M&M) based clock recovery block with float input, float output.
@@ -47,10 +48,10 @@ gr_make_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gai
  * Estimation and Signal Processing" by Heinrich Meyr, Marc Moeneclaey, & Stefan Fechtel.
  * ISBN 0-471-50275-8.
  */
-class gr_clock_recovery_mm_ff : public gr_block
+class digital_clock_recovery_mm_ff : public gr_block
 {
  public:
-  ~gr_clock_recovery_mm_ff ();
+  ~digital_clock_recovery_mm_ff ();
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
@@ -72,7 +73,7 @@ class gr_clock_recovery_mm_ff : public gr_block
   }
 
 protected:
-  gr_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gain_mu,
+  digital_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gain_mu,
 			   float omega_relative_limit);
 
  private:
@@ -88,9 +89,10 @@ protected:
   FILE				*d_logfile;
   float				d_omega_relative_limit;	// used to compute min and max omega
 
-  friend gr_clock_recovery_mm_ff_sptr
-  gr_make_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gain_mu,
-				float omega_relative_limit);
+  friend digital_clock_recovery_mm_ff_sptr
+  digital_make_clock_recovery_mm_ff (float omega, float gain_omega,
+				     float mu, float gain_mu,
+				     float omega_relative_limit);
 };
 
 #endif

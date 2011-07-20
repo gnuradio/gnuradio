@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_CLOCK_RECOVERY_MM_CC_H
-#define	INCLUDED_GR_CLOCK_RECOVERY_MM_CC_H
+#ifndef INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_CC_H
+#define	INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_CC_H
 
 #include <gr_block.h>
 #include <gr_complex.h>
@@ -29,13 +29,14 @@
 
 class gri_mmse_fir_interpolator_cc;
 
-class gr_clock_recovery_mm_cc;
-typedef boost::shared_ptr<gr_clock_recovery_mm_cc> gr_clock_recovery_mm_cc_sptr;
+class digital_clock_recovery_mm_cc;
+typedef boost::shared_ptr<digital_clock_recovery_mm_cc> digital_clock_recovery_mm_cc_sptr;
 
 // public constructor
-gr_clock_recovery_mm_cc_sptr 
-gr_make_clock_recovery_mm_cc (float omega, float gain_omega, float mu, float gain_mu,
-			      float omega_relative_limit=0.001);
+digital_clock_recovery_mm_cc_sptr 
+digital_make_clock_recovery_mm_cc (float omega, float gain_omega,
+				   float mu, float gain_mu,
+				   float omega_relative_limit=0.001);
 
 /*!
  * \brief Mueller and Müller (M&M) based clock recovery block with complex input, complex output.
@@ -48,10 +49,10 @@ gr_make_clock_recovery_mm_cc (float omega, float gain_omega, float mu, float gai
  *    G. R. Danesfahani, T.G. Jeans, "Optimisation of modified Mueller and Muller 
  *    algorithm,"  Electronics Letters, Vol. 31, no. 13,  22 June 1995, pp. 1032 - 1033.
  */
-class gr_clock_recovery_mm_cc : public gr_block
+class digital_clock_recovery_mm_cc : public gr_block
 {
  public:
-  ~gr_clock_recovery_mm_cc ();
+  ~digital_clock_recovery_mm_cc ();
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
@@ -74,8 +75,9 @@ class gr_clock_recovery_mm_cc : public gr_block
   }
 
 protected:
-  gr_clock_recovery_mm_cc (float omega, float gain_omega, float mu, float gain_mu,
-			   float omega_relative_limi);
+  digital_clock_recovery_mm_cc (float omega, float gain_omega,
+				float mu, float gain_mu,
+				float omega_relative_limi);
 
  private:
   float 			d_mu;
@@ -101,9 +103,10 @@ protected:
   gr_complex slicer_0deg (gr_complex sample);
   gr_complex slicer_45deg (gr_complex sample);
 
-  friend gr_clock_recovery_mm_cc_sptr
-  gr_make_clock_recovery_mm_cc (float omega, float gain_omega, float mu, float gain_mu, 
-				float omega_relative_limit);
+  friend digital_clock_recovery_mm_cc_sptr
+  digital_make_clock_recovery_mm_cc (float omega, float gain_omega,
+				     float mu, float gain_mu, 
+				     float omega_relative_limit);
 };
 
 #endif

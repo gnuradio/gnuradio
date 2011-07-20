@@ -59,6 +59,8 @@ digital_swig_la_swig_libadd = \
 # additional SWIG files to be installed
 digital_swig_swiginclude_headers =		\
 	digital_binary_slicer_fb.i		\
+	digital_clock_recovery_mm_cc.i		\
+	digital_clock_recovery_mm_ff.i		\
 	digital_constellation.i			\
 	digital_constellation_receiver_cb.i 	\
 	digital_constellation_decoder_cb.i	\

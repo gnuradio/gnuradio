@@ -83,14 +83,6 @@
 ;;; ./general/gr_check_lfsr_32k_s.h
 (pass-if (true? (gr:check-lfsr-32k-s)))
 
-;;; ./general/gr_clock_recovery_mm_cc.h
-(pass-if (true? (gr:clock-recovery-mm-cc 1 1 1 1 1)))
-(pass-if-throw "confirm throw gr:clock-recovery-mm-cc" #t (true? (gr:clock-recovery-mm-cc -1 1 1 1 1)))
-
-;;; ./general/gr_clock_recovery_mm_ff.h
-(pass-if (true? (gr:clock-recovery-mm-ff 1 1 1 1 1)))
-(pass-if-throw "confirm throw gr:clock-recovery-mm-ff" #t (true? (gr:clock-recovery-mm-ff -1 1 1 1 1)))
-
 ;;; ./general/gr_complex_to_interleaved_short.h
 (pass-if (true? (gr:complex-to-interleaved-short)))
 

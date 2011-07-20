@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006,2010 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2010,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,7 +26,7 @@
 
 #include <gr_io_signature.h>
 #include <gr_prefs.h>
-#include <gr_clock_recovery_mm_cc.h>
+#include <digital_clock_recovery_mm_cc.h>
 #include <gri_mmse_fir_interpolator_cc.h>
 #include <stdexcept>
 #include <cstdio>
@@ -35,19 +35,21 @@
 // Public constructor
 static const int FUDGE = 16;
 
-gr_clock_recovery_mm_cc_sptr 
-gr_make_clock_recovery_mm_cc(float omega, float gain_omega, float mu, float gain_mu,
-			     float omega_relative_limit)
+digital_clock_recovery_mm_cc_sptr 
+digital_make_clock_recovery_mm_cc(float omega, float gain_omega,
+				  float mu, float gain_mu,
+				  float omega_relative_limit)
 {
-  return gnuradio::get_initial_sptr(new gr_clock_recovery_mm_cc (omega, 
-								    gain_omega, 
-								    mu,
-								    gain_mu,
-								    omega_relative_limit));
+  return gnuradio::get_initial_sptr(new digital_clock_recovery_mm_cc (omega, 
+								      gain_omega, 
+								      mu,
+								      gain_mu,
+								      omega_relative_limit));
 }
 
-gr_clock_recovery_mm_cc::gr_clock_recovery_mm_cc (float omega, float gain_omega, float mu, 
-						  float gain_mu, float omega_relative_limit)
+digital_clock_recovery_mm_cc::digital_clock_recovery_mm_cc (float omega, float gain_omega,
+							    float mu, float gain_mu,
+							    float omega_relative_limit)
   : gr_block ("clock_recovery_mm_cc",
 	      gr_make_io_signature (1, 1, sizeof (gr_complex)),
 	      gr_make_io_signature (1, 2, sizeof (gr_complex))),
@@ -67,13 +69,13 @@ gr_clock_recovery_mm_cc::gr_clock_recovery_mm_cc (float omega, float gain_omega,
   set_history(3);			// ensure 2 extra input sample is available
 }
 
-gr_clock_recovery_mm_cc::~gr_clock_recovery_mm_cc ()
+digital_clock_recovery_mm_cc::~digital_clock_recovery_mm_cc ()
 {
   delete d_interp;
 }
 
 void
-gr_clock_recovery_mm_cc::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+digital_clock_recovery_mm_cc::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i=0; i < ninputs; i++)
@@ -82,7 +84,7 @@ gr_clock_recovery_mm_cc::forecast(int noutput_items, gr_vector_int &ninput_items
 }
 
 gr_complex
-gr_clock_recovery_mm_cc::slicer_0deg (gr_complex sample)
+digital_clock_recovery_mm_cc::slicer_0deg (gr_complex sample)
 {
   float real=0, imag=0;
 
@@ -94,7 +96,7 @@ gr_clock_recovery_mm_cc::slicer_0deg (gr_complex sample)
 }
 
 gr_complex
-gr_clock_recovery_mm_cc::slicer_45deg (gr_complex sample)
+digital_clock_recovery_mm_cc::slicer_45deg (gr_complex sample)
 {
   float real= -1, imag = -1;
   if(sample.real() > 0)
@@ -112,10 +114,10 @@ gr_clock_recovery_mm_cc::slicer_45deg (gr_complex sample)
 */
 
 int
-gr_clock_recovery_mm_cc::general_work (int noutput_items,
-				       gr_vector_int &ninput_items,
-				       gr_vector_const_void_star &input_items,
-				       gr_vector_void_star &output_items)
+digital_clock_recovery_mm_cc::general_work (int noutput_items,
+					    gr_vector_int &ninput_items,
+					    gr_vector_const_void_star &input_items,
+					    gr_vector_void_star &output_items)
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
