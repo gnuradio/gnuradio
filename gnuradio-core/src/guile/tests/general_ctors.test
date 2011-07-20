@@ -106,10 +106,6 @@
   (true? (gr:correlate-access-code-bb
 	  "00000000000000000000000000000000000000000000000000000000000000000" 0)))
 
-;;; ./general/gr_costas_loop_cc.h
-(pass-if (true? (gr:costas-loop-cc 0 0 0 0 2)))
-(pass-if-throw "confirm throw gr:costas-loop-cc" #t (true? (gr:costas-loop-cc 0 0 0 0 3)))
-
 ;;; ./general/gr_cpfsk_bc.h
 (pass-if (true? (gr:cpfsk-bc 1 1 1)))
 
