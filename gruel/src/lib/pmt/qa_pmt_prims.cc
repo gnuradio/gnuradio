@@ -23,6 +23,7 @@
 #include <qa_pmt_prims.h>
 #include <cppunit/TestAssert.h>
 #include <gruel/msg_passing.h>
+#include <boost/format.hpp>
 #include <cstdio>
 #include <cstring>
 #include <sstream>
@@ -54,9 +55,8 @@ qa_pmt_prims::test_symbols()
 
   // generate a bunch of symbols
   for (int i = 0; i < N; i++){
-    char buf[100];
-    snprintf(buf, sizeof(buf), "test-%d", i);
-    v1[i] = mp(buf);
+    std::string buf = str(boost::format("test-%d") % i);
+    v1[i] = mp(buf.c_str());
   }
 
   // confirm that they are all unique
@@ -66,9 +66,8 @@ qa_pmt_prims::test_symbols()
 
   // generate the same symbols again
   for (int i = 0; i < N; i++){
-    char buf[100];
-    snprintf(buf, sizeof(buf), "test-%d", i);
-    v2[i] = mp(buf);
+    std::string buf = str(boost::format("test-%d") % i);
+    v2[i] = mp(buf.c_str());
   }
 
   // confirm that we get the same ones back

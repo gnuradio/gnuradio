@@ -29,6 +29,7 @@
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
 #include <boost/thread.hpp>
+#include <boost/format.hpp>
 #include <iostream>
 #include <limits>
 #include <assert.h>
@@ -165,9 +166,8 @@ gr_block_executor::gr_block_executor (gr_block_sptr block)
   : d_block(block), d_log(0)
 {
   if (ENABLE_LOGGING){
-    char name[100];
-    snprintf(name, sizeof(name), "sst-%03d.log", which_scheduler++);
-    d_log = new std::ofstream(name);
+    std::string name = str(boost::format("sst-%03d.log") % which_scheduler++);
+    d_log = new std::ofstream(name.c_str());
     std::unitbuf(*d_log);		// make it unbuffered...
     *d_log << "gr_block_executor: "
 	   << d_block << std::endl;

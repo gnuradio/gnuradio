@@ -30,6 +30,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <gr_local_sighandler.h>
+#include <vector>
+#include <boost/format.hpp>
 
 // all the factories we know about
 #include <gr_vmcircbuf_createfilemapping.h>
@@ -130,7 +132,7 @@ init_buffer (gr_vmcircbuf *c, int counter, int size)
 }
 
 static bool
-check_mapping (gr_vmcircbuf *c, int counter, int size, char *msg, bool verbose)
+check_mapping (gr_vmcircbuf *c, int counter, int size, const char *msg, bool verbose)
 {
   bool ok = true;
   
@@ -163,28 +165,28 @@ check_mapping (gr_vmcircbuf *c, int counter, int size, char *msg, bool verbose)
   return ok;
 }
 
-static char *
+static const char *
 memsize (int size)
 {
-  static char buf[100];
+  static std::string buf;
   if (size >= (1 << 20)){
-    snprintf (buf, sizeof (buf), "%dMB", size / (1 << 20));
+    buf = str(boost::format("%dMB") % (size / (1 << 20)));
   }
   else if (size >= (1 << 10)){
-    snprintf (buf, sizeof (buf), "%dKB", size / (1 << 10));
+    buf = str(boost::format("%dKB") % (size / (1 << 10)));
   }
   else {
-    snprintf (buf, sizeof (buf), "%d", size);
+    buf = str(boost::format("%d") % size);
   }
-  return buf;
+  return buf.c_str();
 }
 
 static bool
 test_a_bunch (gr_vmcircbuf_factory *factory, int n, int size, int *start_ptr, bool verbose)
 {
   bool		ok = true;
-  int		counter[n];
-  gr_vmcircbuf *c[n];
+  std::vector<int>		counter(n);
+  std::vector<gr_vmcircbuf *> c(n);
   int		cum_size = 0;
 
   for (int i = 0; i < n; i++){
@@ -202,9 +204,8 @@ test_a_bunch (gr_vmcircbuf_factory *factory, int n, int size, int *start_ptr, bo
   }
 
   for (int i = 0; i < n; i++){
-    char msg[100];
-    snprintf (msg, sizeof (msg), "test_a_bunch_%dx%s[%d]", n, memsize (size), i);
-    ok &= check_mapping (c[i], counter[i], size, msg, verbose);
+    std::string msg = str(boost::format("test_a_bunch_%dx%s[%d]") % n % memsize (size) % i);
+    ok &= check_mapping (c[i], counter[i], size, msg.c_str(), verbose);
   }
 
   for (int i = 0; i < n; i++){

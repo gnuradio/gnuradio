@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <gr_pagesize.h>
 #include <gr_vmcircbuf_createfilemapping.h>
+#include <boost/format.hpp>
 
 #ifdef HAVE_CREATEFILEMAPPING
 // Print Windows error (could/should be global?)
@@ -72,23 +73,21 @@ gr_vmcircbuf_createfilemapping::gr_vmcircbuf_createfilemapping (int size)
     throw std::runtime_error ("gr_vmcircbuf_createfilemapping");
   }
 
-  char    seg_name[1024];
-  snprintf (seg_name, sizeof (seg_name), "/gnuradio-%d-%d", getpid (), s_seg_counter);
+  std::string seg_name = str(boost::format("/gnuradio-%d-%d") % getpid () % s_seg_counter);
 
   d_handle = CreateFileMapping(INVALID_HANDLE_VALUE,    // use paging file
 			       NULL,                    // default security
 			       PAGE_READWRITE,          // read/write access
 			       0,                       // max. object size
 			       size,                    // buffer size
-			       seg_name);               // name of mapping object
+			       seg_name.c_str());       // name of mapping object
 
   s_seg_counter++;
   if (d_handle == NULL || d_handle == INVALID_HANDLE_VALUE){
-    char msg[1024];
-    snprintf( msg, sizeof(msg),
-	      "gr_vmcircbuf_mmap_createfilemapping: CreateFileMapping [%s]",
+    std::string msg = str(boost::format(
+	      "gr_vmcircbuf_mmap_createfilemapping: CreateFileMapping [%s]") %
 	      seg_name );
-    werror( msg, GetLastError() );
+    werror((char *) msg.c_str(), GetLastError() );
     throw std::runtime_error ("gr_vmcircbuf_mmap_createfilemapping");
   }
 
