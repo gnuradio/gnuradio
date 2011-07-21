@@ -23,6 +23,7 @@
 #ifndef INCLUDED_DIGITAL_CONSTELLATION_H
 #define	INCLUDED_DIGITAL_CONSTELLATION_H
 
+#include <gr_digital_api.h>
 #include <vector>
 #include <math.h>
 #include <gr_complex.h>
@@ -38,7 +39,7 @@
 class digital_constellation;
 typedef boost::shared_ptr<digital_constellation> digital_constellation_sptr;
 
-class digital_constellation : public boost::enable_shared_from_this<digital_constellation>
+class GR_DIGITAL_API digital_constellation : public boost::enable_shared_from_this<digital_constellation>
 {
 public:
   digital_constellation (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
@@ -81,7 +82,7 @@ public:
   unsigned int dimensionality() {return d_dimensionality;}
 
   unsigned int bits_per_symbol () {
-    return floor(log(d_constellation.size())/d_dimensionality/log(2));
+    return floor(log(double(d_constellation.size()))/d_dimensionality/log(2.0));
   }
   
   unsigned int arity () {
@@ -118,12 +119,12 @@ class digital_constellation_calcdist;
 typedef boost::shared_ptr<digital_constellation_calcdist> digital_constellation_calcdist_sptr;
 
 // public constructor
-digital_constellation_calcdist_sptr
+GR_DIGITAL_API digital_constellation_calcdist_sptr
 digital_make_constellation_calcdist (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
 				     unsigned int rotational_symmetry, unsigned int dimensionality);
 
 
-class digital_constellation_calcdist : public digital_constellation
+class GR_DIGITAL_API digital_constellation_calcdist : public digital_constellation
 {
  public:
   digital_constellation_calcdist (std::vector<gr_complex> constellation,
@@ -136,7 +137,7 @@ class digital_constellation_calcdist : public digital_constellation
   // void calc_hard_symbol_metric(gr_complex *sample, float *metric);
   
  private:
-  friend digital_constellation_calcdist_sptr
+  friend GR_DIGITAL_API digital_constellation_calcdist_sptr
   digital_make_constellation_calcdist (std::vector<gr_complex> constellation);
 };
 
@@ -149,7 +150,7 @@ class digital_constellation_calcdist : public digital_constellation
 /* point.                                                   */
 /************************************************************/
 
-class digital_constellation_sector : public digital_constellation
+class GR_DIGITAL_API digital_constellation_sector : public digital_constellation
 {
  public:
 
@@ -192,13 +193,13 @@ class digital_constellation_rect;
 typedef boost::shared_ptr<digital_constellation_rect> digital_constellation_rect_sptr;
 
 // public constructor
-digital_constellation_rect_sptr 
+GR_DIGITAL_API digital_constellation_rect_sptr 
 digital_make_constellation_rect (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
 			    unsigned int rotational_symmetry,
 			    unsigned int real_sectors, unsigned int imag_sectors,
 			    float width_real_sectors, float width_imag_sectors);
 
-class digital_constellation_rect : public digital_constellation_sector
+class GR_DIGITAL_API digital_constellation_rect : public digital_constellation_sector
 {
  public:
 
@@ -220,7 +221,7 @@ class digital_constellation_rect : public digital_constellation_sector
   float d_width_real_sectors;
   float d_width_imag_sectors;
 
-  friend digital_constellation_rect_sptr
+  friend GR_DIGITAL_API digital_constellation_rect_sptr
   digital_make_constellation_rect (std::vector<gr_complex> constellation, std::vector<unsigned int> pre_diff_code,
 			      unsigned int rotational_symmetry,
 			      unsigned int real_sectors, unsigned int imag_sectors,
@@ -242,12 +243,12 @@ class digital_constellation_psk;
 typedef boost::shared_ptr<digital_constellation_psk> digital_constellation_psk_sptr;
 
 // public constructor
-digital_constellation_psk_sptr 
+GR_DIGITAL_API digital_constellation_psk_sptr 
 digital_make_constellation_psk (std::vector<gr_complex> constellation,
 				std::vector<unsigned int> pre_diff_code,
 				unsigned int n_sectors);
 
-class digital_constellation_psk : public digital_constellation_sector
+class GR_DIGITAL_API digital_constellation_psk : public digital_constellation_sector
 {
  public:
 
@@ -263,7 +264,7 @@ class digital_constellation_psk : public digital_constellation_sector
 
  private:
 
-  friend digital_constellation_psk_sptr
+  friend GR_DIGITAL_API digital_constellation_psk_sptr
   digital_make_constellation_psk (std::vector<gr_complex> constellation,
 				  std::vector<unsigned int> pre_diff_code,
 				  unsigned int n_sectors);
@@ -281,17 +282,17 @@ class digital_constellation_bpsk;
 typedef boost::shared_ptr<digital_constellation_bpsk> digital_constellation_bpsk_sptr;
 
 // public constructor
-digital_constellation_bpsk_sptr 
+GR_DIGITAL_API digital_constellation_bpsk_sptr 
 digital_make_constellation_bpsk ();
 
-class digital_constellation_bpsk : public digital_constellation
+class GR_DIGITAL_API digital_constellation_bpsk : public digital_constellation
 {
  public:
 
   digital_constellation_bpsk ();
   unsigned int decision_maker (const gr_complex *sample);
 
-  friend digital_constellation_bpsk_sptr
+  friend GR_DIGITAL_API digital_constellation_bpsk_sptr
   digital_make_constellation_bpsk ();
   
 };
@@ -307,17 +308,17 @@ class digital_constellation_qpsk;
 typedef boost::shared_ptr<digital_constellation_qpsk> digital_constellation_qpsk_sptr;
 
 // public constructor
-digital_constellation_qpsk_sptr 
+GR_DIGITAL_API digital_constellation_qpsk_sptr 
 digital_make_constellation_qpsk ();
 
-class digital_constellation_qpsk : public digital_constellation
+class GR_DIGITAL_API digital_constellation_qpsk : public digital_constellation
 {
  public:
 
   digital_constellation_qpsk ();
   unsigned int decision_maker (const gr_complex *sample);
 
-  friend digital_constellation_qpsk_sptr
+  friend GR_DIGITAL_API digital_constellation_qpsk_sptr
   digital_make_constellation_qpsk ();
   
 };
@@ -334,17 +335,17 @@ class digital_constellation_8psk;
 typedef boost::shared_ptr<digital_constellation_8psk> digital_constellation_8psk_sptr;
 
 // public constructor
-digital_constellation_8psk_sptr 
+GR_DIGITAL_API digital_constellation_8psk_sptr 
 digital_make_constellation_8psk ();
 
-class digital_constellation_8psk : public digital_constellation
+class GR_DIGITAL_API digital_constellation_8psk : public digital_constellation
 {
  public:
 
   digital_constellation_8psk ();
   unsigned int decision_maker (const gr_complex *sample);
 
-  friend digital_constellation_8psk_sptr
+  friend GR_DIGITAL_API digital_constellation_8psk_sptr
   digital_make_constellation_8psk ();
   
 };

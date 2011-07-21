@@ -61,6 +61,7 @@ INSTALL(TARGETS gnuradio-digital
 # Install header files
 ########################################################################
 INSTALL(FILES
+    gr_digital_api.h
     digital_constellation.h
     digital_constellation_receiver_cb.h
     digital_constellation_decoder_cb.h

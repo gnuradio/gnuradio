@@ -23,6 +23,7 @@
 #ifndef INCLUDED_DIGITAL_CMA_EQUALIZER_CC_H
 #define	INCLUDED_DIGITAL_CMA_EQUALIZER_CC_H
 
+#include <gr_digital_api.h>
 #include <gr_adaptive_fir_ccc.h>
 #include <gr_math.h>
 #include <iostream>
@@ -30,7 +31,7 @@
 class digital_cma_equalizer_cc;
 typedef boost::shared_ptr<digital_cma_equalizer_cc> digital_cma_equalizer_cc_sptr;
 
-digital_cma_equalizer_cc_sptr 
+GR_DIGITAL_API digital_cma_equalizer_cc_sptr 
 digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps);
 
 /*!
@@ -43,13 +44,13 @@ digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps);
  * Two-Dimensional Data Communication Systems," IEEE Transactions on
  * Communications, Vol. 28, No. 11, pp. 1867 - 1875, 1980,
  */
-class digital_cma_equalizer_cc : public gr_adaptive_fir_ccc
+class GR_DIGITAL_API digital_cma_equalizer_cc : public gr_adaptive_fir_ccc
 {
 private:
   float d_modulus;
   float d_mu;
   
-  friend digital_cma_equalizer_cc_sptr digital_make_cma_equalizer_cc(int num_taps,
+  friend GR_DIGITAL_API digital_cma_equalizer_cc_sptr digital_make_cma_equalizer_cc(int num_taps,
 								     float modulus,
 								     float mu,
 								     int sps);

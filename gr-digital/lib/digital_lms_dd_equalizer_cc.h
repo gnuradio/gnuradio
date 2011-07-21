@@ -23,13 +23,14 @@
 #ifndef INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_H
 #define INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_H
 
+#include <gr_digital_api.h>
 #include <gr_adaptive_fir_ccc.h>
 #include <digital_constellation.h>
 
 class digital_lms_dd_equalizer_cc;
 typedef boost::shared_ptr<digital_lms_dd_equalizer_cc> digital_lms_dd_equalizer_cc_sptr;
 
-digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (int num_taps,
+GR_DIGITAL_API digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (int num_taps,
 								   float mu, int sps,
 								   digital_constellation_sptr cnst);
 								   
@@ -65,10 +66,10 @@ digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (int num_taps,
  *    Prentice Hall, 1996.
  *
  */
-class digital_lms_dd_equalizer_cc : public gr_adaptive_fir_ccc
+class GR_DIGITAL_API digital_lms_dd_equalizer_cc : public gr_adaptive_fir_ccc
 {
 private:
-  friend digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (int num_taps,
+  friend GR_DIGITAL_API digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (int num_taps,
 									    float mu, int sps,
 									    digital_constellation_sptr cnst);
   

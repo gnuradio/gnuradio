@@ -25,6 +25,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = 				\
+	gr_digital_api.h			\
 	digital_constellation.h			\
 	digital_constellation_receiver_cb.h 	\
 	digital_constellation_decoder_cb.h 	\

@@ -24,6 +24,7 @@
 #ifndef INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 #define INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 
+#include <gr_digital_api.h>
 #include <gr_sync_block.h>
 #include <stdexcept>
 #include <fstream>
@@ -57,7 +58,7 @@ class digital_costas_loop_cc;
 typedef boost::shared_ptr<digital_costas_loop_cc> digital_costas_loop_cc_sptr;
 
 
-digital_costas_loop_cc_sptr 
+GR_DIGITAL_API digital_costas_loop_cc_sptr 
 digital_make_costas_loop_cc (float damping, float nat_freq,
 			     int order
 			     ) throw (std::invalid_argument);
@@ -73,9 +74,9 @@ digital_make_costas_loop_cc (float damping, float nat_freq,
  *
  * \p order must be 2 or 4.
  */
-class digital_costas_loop_cc : public gr_sync_block
+class GR_DIGITAL_API digital_costas_loop_cc : public gr_sync_block
 {
-  friend digital_costas_loop_cc_sptr
+  friend GR_DIGITAL_API digital_costas_loop_cc_sptr
   digital_make_costas_loop_cc (float damping, float nat_freq,
 			       int order
 			       ) throw (std::invalid_argument);
