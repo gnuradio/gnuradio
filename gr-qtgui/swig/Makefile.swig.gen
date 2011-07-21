@@ -105,7 +105,7 @@ _qtgui_swig_la_CXXFLAGS =			\
 	$(qtgui_swig_la_swig_cxxflags)
 
 python/qtgui_swig.cc: qtgui_swig.py
-qtgui_swig.py: qtgui_swig.i
+qtgui_swig.py: qtgui_swig.i 
 
 # Include the python dependencies for this file
 -include python/qtgui_swig.d

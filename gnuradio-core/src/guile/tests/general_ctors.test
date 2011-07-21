@@ -203,12 +203,6 @@
 ;;; ./general/gr_lfsr_32k_source_s.h
 (pass-if (true? (gr:lfsr-32k-source-s)))
 
-;;; ./general/gr_lms_dfe_cc.h
-(pass-if (true? (gr:lms-dfe-ff 1 1 1 1)))
-
-;;; ./general/gr_lms_dfe_ff.h
-(pass-if (true? (gr:lms-dfe-ff 1 1 1 1)))
-
 ;;; ./general/gr_map_bb.h
 (pass-if (true? (gr:map-bb #(1 2))))
 

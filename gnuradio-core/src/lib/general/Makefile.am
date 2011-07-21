@@ -92,8 +92,6 @@ libgeneral_la_SOURCES = 		\
 	gr_keep_one_in_n.cc		\
 	gr_kludge_copy.cc		\
 	gr_lfsr_32k_source_s.cc		\
-	gr_lms_dfe_cc.cc		\
-	gr_lms_dfe_ff.cc		\
 	gr_map_bb.cc			\
 	gr_misc.cc			\
 	gr_mpsk_receiver_cc.cc		\
@@ -247,8 +245,6 @@ grinclude_HEADERS = 			\
 	gr_keep_one_in_n.h		\
 	gr_kludge_copy.h		\
 	gr_lfsr_32k_source_s.h		\
-	gr_lms_dfe_cc.h			\
-	gr_lms_dfe_ff.h			\
 	gr_log2_const.h			\
 	gr_map_bb.h			\
 	gr_math.h			\
@@ -412,8 +408,6 @@ swiginclude_HEADERS =			\
 	gr_keep_one_in_n.i		\
 	gr_kludge_copy.i		\
 	gr_lfsr_32k_source_s.i		\
-	gr_lms_dfe_cc.i			\
-	gr_lms_dfe_ff.i			\
 	gr_map_bb.i			\
 	gr_mpsk_receiver_cc.i		\
 	gr_nlog10_ff.i			\

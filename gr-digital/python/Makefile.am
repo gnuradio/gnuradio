@@ -33,6 +33,7 @@ digitaldir = $(grpythondir)/digital
 noinst_PYTHON = \
 	qa_digital.py			\
 	qa_binary_slicer_fb.py		\
+	qa_cma_equalizer.py		\
 	qa_constellation.py		\
 	qa_constellation_receiver.py	\
 	qa_constellation_decoder_cb.py	\

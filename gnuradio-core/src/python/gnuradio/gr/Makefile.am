@@ -49,7 +49,6 @@ noinst_PYTHON = 			\
 	qa_argmax.py			\
 	qa_bin_statistics.py		\
 	qa_classify.py			\
-	qa_cma_equalizer.py		\
 	qa_complex_to_xxx.py		\
 	qa_copy.py			\
 	qa_correlate_access_code.py	\

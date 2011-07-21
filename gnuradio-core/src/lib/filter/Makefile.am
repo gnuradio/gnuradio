@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2005,2006,2007,2008,2009,2010,2011 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -190,7 +190,6 @@ libfilter_la_common_SOURCES = 		\
 	$(GENERATED_CC)			\
 	gr_adaptive_fir_ccc.cc		\
 	gr_adaptive_fir_ccf.cc		\
-	gr_cma_equalizer_cc.cc		\
 	gri_fft_filter_fff_generic.cc	\
 	gri_fft_filter_ccc_generic.cc	\
 	gr_fft_filter_ccc.cc		\
@@ -276,7 +275,6 @@ grinclude_HEADERS = 			\
 	gr_adaptive_fir_ccc.h		\
 	gr_adaptive_fir_ccf.h		\
 	gr_altivec.h			\
-	gr_cma_equalizer_cc.h		\
 	gr_cpu.h			\
 	gri_fft_filter_fff_generic.h	\
 	gri_fft_filter_ccc_generic.h	\
@@ -361,7 +359,6 @@ swiginclude_HEADERS =			\
 	filter_generated.i		\
 	gr_adaptive_fir_ccc.i		\
 	gr_adaptive_fir_ccf.i		\
-	gr_cma_equalizer_cc.i		\
 	gr_fft_filter_ccc.i		\
 	gr_fft_filter_fff.i		\
 	gr_filter_delay_fc.i		\
