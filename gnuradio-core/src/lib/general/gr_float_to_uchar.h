@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_FLOAT_TO_UCHAR_H
 #define INCLUDED_GR_FLOAT_TO_UCHAR_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_float_to_uchar;
 typedef boost::shared_ptr<gr_float_to_uchar> gr_float_to_uchar_sptr;
 
-gr_float_to_uchar_sptr
+GR_CORE_API gr_float_to_uchar_sptr
 gr_make_float_to_uchar ();
 
 /*!
@@ -36,9 +37,9 @@ gr_make_float_to_uchar ();
  * \ingroup converter_blk
  */
 
-class gr_float_to_uchar : public gr_sync_block
+class GR_CORE_API gr_float_to_uchar : public gr_sync_block
 {
-  friend gr_float_to_uchar_sptr gr_make_float_to_uchar ();
+  friend GR_CORE_API gr_float_to_uchar_sptr gr_make_float_to_uchar ();
   gr_float_to_uchar ();
 
  public:

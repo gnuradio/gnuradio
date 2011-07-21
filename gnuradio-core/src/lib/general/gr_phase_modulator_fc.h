@@ -23,24 +23,25 @@
 #ifndef INCLUDED_GR_PHASE_MODULATOR_FC_H
 #define INCLUDED_GR_PHASE_MODULATOR_FC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_phase_modulator_fc;
 typedef boost::shared_ptr<gr_phase_modulator_fc> gr_phase_modulator_fc_sptr;
 
-gr_phase_modulator_fc_sptr gr_make_phase_modulator_fc (double sensitivity);
+GR_CORE_API gr_phase_modulator_fc_sptr gr_make_phase_modulator_fc (double sensitivity);
 
 /*!
  * \brief Phase modulator block
  * \ingroup modulation_blk 
  * output=complex(cos(in*sensitivity),sin(in*sensitivity))
  */
-class gr_phase_modulator_fc : public gr_sync_block
+class GR_CORE_API gr_phase_modulator_fc : public gr_sync_block
 {
   double	d_sensitivity;
   double	d_phase;
 
-  friend gr_phase_modulator_fc_sptr
+  friend GR_CORE_API gr_phase_modulator_fc_sptr
   gr_make_phase_modulator_fc (double sensitivity);
 
   gr_phase_modulator_fc (double sensitivity);

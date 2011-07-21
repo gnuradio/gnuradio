@@ -22,19 +22,20 @@
 #ifndef INCLUDED_GR_MSG_QUEUE_H
 #define INCLUDED_GR_MSG_QUEUE_H
 
+#include <gr_core_api.h>
 #include <gr_msg_handler.h>
 #include <gruel/thread.h>
 
 class gr_msg_queue;
 typedef boost::shared_ptr<gr_msg_queue> gr_msg_queue_sptr;
 
-gr_msg_queue_sptr gr_make_msg_queue(unsigned int limit=0);
+GR_CORE_API gr_msg_queue_sptr gr_make_msg_queue(unsigned int limit=0);
 
 /*!
  * \brief thread-safe message queue
  * \ingroup misc
  */
-class gr_msg_queue : public gr_msg_handler {
+class GR_CORE_API gr_msg_queue : public gr_msg_handler {
 
   gruel::mutex		    d_mutex;
   gruel::condition_variable d_not_empty;

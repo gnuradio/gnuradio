@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_BUFFER_H
 #define INCLUDED_GR_BUFFER_H
 
+#include <gr_core_api.h>
 #include <gr_runtime_types.h>
 #include <boost/weak_ptr.hpp>
 #include <gruel/thread.h>
@@ -42,14 +43,14 @@ class gr_vmcircbuf;
  * \param sizeof_item is the size of an item in bytes.
  * \param link is the block that writes to this buffer.
  */
-gr_buffer_sptr gr_make_buffer (int nitems, size_t sizeof_item, gr_block_sptr link=gr_block_sptr());
+GR_CORE_API gr_buffer_sptr gr_make_buffer (int nitems, size_t sizeof_item, gr_block_sptr link=gr_block_sptr());
 
 
 /*!
  * \brief Single writer, multiple reader fifo.
  * \ingroup internal
  */
-class gr_buffer {
+class GR_CORE_API gr_buffer {
  public:
 
   virtual ~gr_buffer ();
@@ -115,8 +116,8 @@ class gr_buffer {
  private:
 
   friend class gr_buffer_reader;
-  friend gr_buffer_sptr gr_make_buffer (int nitems, size_t sizeof_item, gr_block_sptr link);
-  friend gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload, gr_block_sptr link);
+  friend GR_CORE_API gr_buffer_sptr gr_make_buffer (int nitems, size_t sizeof_item, gr_block_sptr link);
+  friend GR_CORE_API gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload, gr_block_sptr link);
 
  protected:
   char				       *d_base;		// base address of buffer
@@ -192,11 +193,11 @@ class gr_buffer {
  * \param nzero_preload -- number of zero items to "preload" into buffer.
  * \param link is the block that reads from the buffer using this gr_buffer_reader.
  */
-gr_buffer_reader_sptr 
+GR_CORE_API gr_buffer_reader_sptr 
 gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload, gr_block_sptr link=gr_block_sptr());
 
 //! returns # of gr_buffers currently allocated
-long gr_buffer_ncurrently_allocated ();
+GR_CORE_API long gr_buffer_ncurrently_allocated ();
 
 
 // ---------------------------------------------------------------------------
@@ -206,7 +207,7 @@ long gr_buffer_ncurrently_allocated ();
  * \ingroup internal
  */
 
-class gr_buffer_reader {
+class GR_CORE_API gr_buffer_reader {
  public:
 
   ~gr_buffer_reader ();
@@ -276,7 +277,7 @@ class gr_buffer_reader {
  private:
 
   friend class gr_buffer;
-  friend gr_buffer_reader_sptr 
+  friend GR_CORE_API gr_buffer_reader_sptr 
   gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload, gr_block_sptr link);
 
 
@@ -290,7 +291,7 @@ class gr_buffer_reader {
 };
 
 //! returns # of gr_buffer_readers currently allocated
-long gr_buffer_reader_ncurrently_allocated ();
+GR_CORE_API long gr_buffer_reader_ncurrently_allocated ();
 
 
 #endif /* INCLUDED_GR_BUFFER_H */

@@ -25,7 +25,7 @@ from generate_utils import *
 def make_info_struct (out, sig):
     out.write (
 '''
-struct gr_fir_%s_info {
+struct GR_CORE_API gr_fir_%s_info {
   const char    *name;             // implementation name, e.g., "generic", "SSE", "3DNow!"
   gr_fir_%s	*(*create)(const std::vector<%s> &taps);
 };
@@ -74,6 +74,7 @@ def make_gr_fir_util_h ():
  * 'i' (short)
  */
 
+#include <gr_core_api.h>
 #include <gr_types.h>
 
 ''')
@@ -87,7 +88,7 @@ def make_gr_fir_util_h ():
         make_info_struct (out, sig)
 
     out.write ('''
-struct gr_fir_util {
+struct GR_CORE_API gr_fir_util {
 
   // create a fast version of gr_fir_XXX.
 

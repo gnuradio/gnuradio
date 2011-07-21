@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_PLL_FREQDET_CF_H
 #define INCLUDED_GR_PLL_FREQDET_CF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_pll_freqdet_cf;
 typedef boost::shared_ptr<gr_pll_freqdet_cf> gr_pll_freqdet_cf_sptr;
 
-gr_pll_freqdet_cf_sptr gr_make_pll_freqdet_cf (float alpha, float beta,
+GR_CORE_API gr_pll_freqdet_cf_sptr gr_make_pll_freqdet_cf (float alpha, float beta,
 					       float max_freq, float min_freq);
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs 
@@ -45,9 +46,9 @@ gr_pll_freqdet_cf_sptr gr_make_pll_freqdet_cf (float alpha, float beta,
  * \sa gr_pll_refout_cc, gr_pll_carriertracking_cc
  */
 
-class gr_pll_freqdet_cf : public gr_sync_block
+class GR_CORE_API gr_pll_freqdet_cf : public gr_sync_block
 {
-  friend gr_pll_freqdet_cf_sptr gr_make_pll_freqdet_cf (float alpha, float beta,
+  friend GR_CORE_API gr_pll_freqdet_cf_sptr gr_make_pll_freqdet_cf (float alpha, float beta,
 							float max_freq, float min_freq);
 
   float d_alpha,d_beta,d_max_freq,d_min_freq,d_phase,d_freq;

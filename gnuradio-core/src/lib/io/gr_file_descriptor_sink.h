@@ -23,21 +23,22 @@
 #ifndef INCLUDED_GR_FILE_DESCRIPTOR_SINK_H
 #define INCLUDED_GR_FILE_DESCRIPTOR_SINK_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_file_descriptor_sink;
 typedef boost::shared_ptr<gr_file_descriptor_sink> gr_file_descriptor_sink_sptr;
 
-gr_file_descriptor_sink_sptr gr_make_file_descriptor_sink (size_t itemsize, int fd);
+GR_CORE_API gr_file_descriptor_sink_sptr gr_make_file_descriptor_sink (size_t itemsize, int fd);
 
 /*!
  * \brief Write stream to file descriptor.
  * \ingroup sink_blk
  */
 
-class gr_file_descriptor_sink : public gr_sync_block
+class GR_CORE_API gr_file_descriptor_sink : public gr_sync_block
 {
-  friend gr_file_descriptor_sink_sptr gr_make_file_descriptor_sink (size_t itemsize, int fd);
+  friend GR_CORE_API gr_file_descriptor_sink_sptr gr_make_file_descriptor_sink (size_t itemsize, int fd);
 
  private:
   size_t	d_itemsize;

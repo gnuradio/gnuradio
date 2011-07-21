@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_FIR_CCC_SIMD_H
 #define INCLUDED_GR_FIR_CCC_SIMD_H
 
+#include <gr_core_api.h>
 #include <gr_fir_ccc_generic.h>
 
 /*!
@@ -32,7 +33,7 @@
  * subclasses.
  */
 
-class gr_fir_ccc_simd : public gr_fir_ccc_generic
+class GR_CORE_API gr_fir_ccc_simd : public gr_fir_ccc_generic
 {
 protected:
   typedef void (*ccomplex_dotprod_t)(const float *input,

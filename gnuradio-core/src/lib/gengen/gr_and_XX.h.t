@@ -25,12 +25,13 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ ();
+GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ ();
 
 /*!
  * \brief output = input_0 & input_1 & , ... & input_N)
@@ -38,9 +39,9 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
  *
  * bitwise boolean and across all input streams.
  */
-class @NAME@ : public gr_sync_block
+class GR_CORE_API @NAME@ : public gr_sync_block
 {
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@ ();
+  friend GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ ();
 
   @NAME@ ();
 

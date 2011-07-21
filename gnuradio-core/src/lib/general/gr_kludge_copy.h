@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_KLUDGE_COPY_H
 #define INCLUDED_GR_KLUDGE_COPY_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_kludge_copy;
 typedef boost::shared_ptr<gr_kludge_copy> gr_kludge_copy_sptr;
 
-gr_kludge_copy_sptr gr_make_kludge_copy(size_t itemsize);
+GR_CORE_API gr_kludge_copy_sptr gr_make_kludge_copy(size_t itemsize);
 
 /*!
  * \brief output[i] = input[i]
@@ -36,11 +37,11 @@ gr_kludge_copy_sptr gr_make_kludge_copy(size_t itemsize);
  *
  * This is a short term kludge to work around a problem with the hierarchical block impl.
  */
-class gr_kludge_copy : public gr_sync_block
+class GR_CORE_API gr_kludge_copy : public gr_sync_block
 {
   size_t		d_itemsize;
 
-  friend gr_kludge_copy_sptr gr_make_kludge_copy(size_t itemsize);
+  friend GR_CORE_API gr_kludge_copy_sptr gr_make_kludge_copy(size_t itemsize);
   gr_kludge_copy(size_t itemsize);
 
  public:

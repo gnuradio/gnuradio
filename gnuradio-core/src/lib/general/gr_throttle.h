@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_THROTTLE_H
 #define INCLUDED_GR_THROTTLE_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 /*!
@@ -35,7 +36,7 @@
  * controlling the rate of samples.  That should be controlled by a
  * source or sink tied to sample clock.  E.g., a USRP or audio card.
  */
-class gr_throttle : virtual public gr_sync_block
+class GR_CORE_API gr_throttle : virtual public gr_sync_block
 {
 public:
     typedef boost::shared_ptr<gr_throttle> sptr;
@@ -44,6 +45,6 @@ public:
     virtual void set_sample_rate(double rate) = 0;
 };
 
-gr_throttle::sptr gr_make_throttle(size_t itemsize, double samples_per_sec);
+GR_CORE_API gr_throttle::sptr gr_make_throttle(size_t itemsize, double samples_per_sec);
 
 #endif /* INCLUDED_GR_THROTTLE_H */

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_CORRELATE_ACCESS_CODE_BB_H
 #define INCLUDED_GR_CORRELATE_ACCESS_CODE_BB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <string>
 
@@ -33,7 +34,7 @@ typedef boost::shared_ptr<gr_correlate_access_code_bb> gr_correlate_access_code_
  * \param access_code is represented with 1 byte per bit, e.g., "010101010111000100"
  * \param threshold maximum number of bits that may be wrong
  */
-gr_correlate_access_code_bb_sptr 
+GR_CORE_API gr_correlate_access_code_bb_sptr 
 gr_make_correlate_access_code_bb (const std::string &access_code, int threshold);
 
 /*!
@@ -49,9 +50,9 @@ gr_make_correlate_access_code_bb (const std::string &access_code, int threshold)
  * flag bit and is 1 if the corresponding data bit is the first data
  * bit following the access code. Otherwise the flag bit is 0.
  */
-class gr_correlate_access_code_bb : public gr_sync_block
+class GR_CORE_API gr_correlate_access_code_bb : public gr_sync_block
 {
-  friend gr_correlate_access_code_bb_sptr 
+  friend GR_CORE_API gr_correlate_access_code_bb_sptr 
   gr_make_correlate_access_code_bb (const std::string &access_code, int threshold);
  private:
   unsigned long long d_access_code;	// access code to locate start of packet

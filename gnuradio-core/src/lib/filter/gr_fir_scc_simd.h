@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_FIR_SCC_SIMD_H
 #define INCLUDED_GR_FIR_SCC_SIMD_H
 
+#include <gr_core_api.h>
 #include <gr_fir_scc_generic.h>
 
 
@@ -32,7 +33,7 @@
  * This base class handles alignment issues common to SSE and 3DNOW
  * subclasses.
  */
-class gr_fir_scc_simd : public gr_fir_scc_generic
+class GR_CORE_API gr_fir_scc_simd : public gr_fir_scc_generic
 {
 protected:
   typedef void (*complex_dotprod_t)(const short *input,

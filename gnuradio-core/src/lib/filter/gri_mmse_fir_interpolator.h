@@ -22,6 +22,7 @@
 #ifndef _GRI_MMSE_FIR_INTERPOLATOR_H_
 #define _GRI_MMSE_FIR_INTERPOLATOR_H_
 
+#include <gr_core_api.h>
 #include <vector>
 
 class gr_fir_fff;
@@ -39,7 +40,7 @@ class gr_fir_fff;
  * method to 32nd's of a sample.
  */
 
-class gri_mmse_fir_interpolator {
+class GR_CORE_API gri_mmse_fir_interpolator {
 public:
   gri_mmse_fir_interpolator ();
   ~gri_mmse_fir_interpolator ();

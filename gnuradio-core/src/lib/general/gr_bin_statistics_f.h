@@ -24,6 +24,7 @@
 #define INCLUDED_GR_BIN_STATISTICS_F_H
 
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_feval.h>
 #include <gr_message.h>
@@ -33,7 +34,7 @@ class gr_bin_statistics_f;
 typedef boost::shared_ptr<gr_bin_statistics_f> gr_bin_statistics_f_sptr;
 
 
-gr_bin_statistics_f_sptr
+GR_CORE_API gr_bin_statistics_f_sptr
 gr_make_bin_statistics_f(unsigned int vlen,	// vector length
 			 gr_msg_queue_sptr msgq,
 			 gr_feval_dd *tune,	// callback
@@ -44,9 +45,9 @@ gr_make_bin_statistics_f(unsigned int vlen,	// vector length
  * \brief control scanning and record frequency domain statistics
  * \ingroup sink_blk
  */
-class gr_bin_statistics_f : public gr_sync_block
+class GR_CORE_API gr_bin_statistics_f : public gr_sync_block
 {
-  friend gr_bin_statistics_f_sptr
+  friend GR_CORE_API gr_bin_statistics_f_sptr
   gr_make_bin_statistics_f(unsigned int vlen,	   // vector length
 			   gr_msg_queue_sptr msgq,
 			   gr_feval_dd *tune,      // callback

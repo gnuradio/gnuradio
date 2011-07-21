@@ -23,6 +23,7 @@
 #ifndef INCLUDED_SDR_1000_H
 #define INCLUDED_SDR_1000_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 
 class ppio;
@@ -36,7 +37,7 @@ enum { L_EXT = 0, L_BAND = 1, L_DDS0 = 2, L_DDS1 = 3 };
  * \sa sdr_1000.py for a higher level interface.
  * \ingroup hardware
  */
-class sdr_1000_base {
+class GR_CORE_API sdr_1000_base {
   ppio_sptr	d_ppio;
   int	 	d_shadow[4];	// shadow latches
   

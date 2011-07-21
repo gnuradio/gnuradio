@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GRI_FFT_FILTER_CCC_SSE_H
 #define INCLUDED_GRI_FFT_FILTER_CCC_SSE_H
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 #include <vector>
 
@@ -32,7 +33,7 @@ class gri_fft_complex;
  * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
  * \ingroup filter_blk
  */
-class gri_fft_filter_ccc_sse
+class GR_CORE_API gri_fft_filter_ccc_sse
 {
  private:
   int			   d_ntaps;

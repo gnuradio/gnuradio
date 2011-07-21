@@ -23,21 +23,22 @@
 #ifndef INCLUDED_GR_FEEDFORWARD_AGC_CC_H
 #define INCLUDED_GR_FEEDFORWARD_AGC_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_feedforward_agc_cc;
 typedef boost::shared_ptr<gr_feedforward_agc_cc> gr_feedforward_agc_cc_sptr;
 
-gr_feedforward_agc_cc_sptr
+GR_CORE_API gr_feedforward_agc_cc_sptr
 gr_make_feedforward_agc_cc(int nsamples, float reference = 1.0);
 
 /*!
  * \brief Non-causal AGC which computes required gain based on max absolute value over nsamples
  * \ingroup level_blk
  */
-class gr_feedforward_agc_cc : public gr_sync_block
+class GR_CORE_API gr_feedforward_agc_cc : public gr_sync_block
 {
-  friend gr_feedforward_agc_cc_sptr 
+  friend GR_CORE_API gr_feedforward_agc_cc_sptr 
   gr_make_feedforward_agc_cc(int nsamples, float reference);
   
   int		d_nsamples;

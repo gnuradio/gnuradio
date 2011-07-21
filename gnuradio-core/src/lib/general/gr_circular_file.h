@@ -23,6 +23,8 @@
 #ifndef _GR_CIRCULAR_FILE_H_
 #define _GR_CIRCULAR_FILE_H_
 
+#include <gr_core_api.h>
+
 /*
  * writes input data into a circular buffer on disk.
  *
@@ -35,7 +37,7 @@
  *		      current start of data
  *
  */
-class gr_circular_file {
+class GR_CORE_API gr_circular_file {
   int		 d_fd;
   int		*d_header;
   unsigned char	*d_buffer;

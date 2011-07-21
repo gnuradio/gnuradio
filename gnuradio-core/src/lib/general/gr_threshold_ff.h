@@ -23,20 +23,21 @@
 #ifndef INCLUDED_GR_THRESHOLD_FF_H
 #define INCLUDED_GR_THRESHOLD_FF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_threshold_ff;
 typedef boost::shared_ptr<gr_threshold_ff> gr_threshold_ff_sptr;
 
-gr_threshold_ff_sptr gr_make_threshold_ff (float lo, float hi, float initial_state=0);
+GR_CORE_API gr_threshold_ff_sptr gr_make_threshold_ff (float lo, float hi, float initial_state=0);
 
 /*!
  * \brief Please fix my documentation
  * \ingroup misc_blk
  */
-class gr_threshold_ff : public gr_sync_block
+class GR_CORE_API gr_threshold_ff : public gr_sync_block
 {
-  friend gr_threshold_ff_sptr gr_make_threshold_ff (float lo, float hi, float initial_state);
+  friend GR_CORE_API gr_threshold_ff_sptr gr_make_threshold_ff (float lo, float hi, float initial_state);
 
   float	d_lo,d_hi;		// the constant
   float d_last_state;

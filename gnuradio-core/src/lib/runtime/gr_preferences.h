@@ -23,7 +23,9 @@
 #ifndef _GR_PREFERENCES_H_
 #define _GR_PREFERENCES_H_
 
-class gr_preferences {
+#include <gr_core_api.h>
+
+class GR_CORE_API gr_preferences {
  public:
   static const char *get (const char *key);
   static void set (const char *key, const char *value);

@@ -22,10 +22,12 @@
 #ifndef _GR_SYS_PATHS_H_
 #define _GR_SYS_PATHS_H_
 
+#include <gr_core_api.h>
+
 //! directory to create temporary files
-const char *gr_tmp_path();
+GR_CORE_API const char *gr_tmp_path();
 
 //! directory to store application data
-const char *gr_appdata_path();
+GR_CORE_API const char *gr_appdata_path();
 
 #endif /* _GR_SYS_PATHS_H_ */

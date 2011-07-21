@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_ALIGN_ON_SAMPLE_NUMBERS_SS_H
 #define INCLUDED_GR_ALIGN_ON_SAMPLE_NUMBERS_SS_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 /*!
@@ -45,19 +46,19 @@
 class gr_align_on_samplenumbers_ss;
 typedef boost::shared_ptr<gr_align_on_samplenumbers_ss> gr_align_on_samplenumbers_ss_sptr;
 
-gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss (int nchan=2, int align_interval=128);
+GR_CORE_API gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss (int nchan=2, int align_interval=128);
 
 
 
 
-class gr_align_on_samplenumbers_ss : public gr_block
+class GR_CORE_API gr_align_on_samplenumbers_ss : public gr_block
 {
   int  d_align_interval;
   int  d_sample_counter;
   int  d_nchan;
   bool d_in_presync;
   unsigned int d_ninputs;
-  class align_state {
+  class GR_CORE_API align_state {
       public:
         unsigned int ucounter_end;
         unsigned int ucounter_begin;
@@ -72,7 +73,7 @@ class gr_align_on_samplenumbers_ss : public gr_block
       };
   std::vector<align_state>   d_state;
     
-  friend gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss (int nchan,int align_interval);
+  friend GR_CORE_API gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss (int nchan,int align_interval);
   gr_align_on_samplenumbers_ss (int nchan,int align_interval);
 
  public:

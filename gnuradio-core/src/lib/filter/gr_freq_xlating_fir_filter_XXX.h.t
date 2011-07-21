@@ -29,6 +29,7 @@
 #ifndef @GUARD_NAME@
 #define	@GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 #include <gr_rotator.h>
 
@@ -40,7 +41,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
  * translation that shifts center_freq down to zero Hz.  The frequency 
  * translation logically comes before the filtering operation.
  */
-@SPTR_NAME@ 
+GR_CORE_API @SPTR_NAME@ 
 gr_make_@BASE_NAME@ (int decimation, const std::vector<@TAP_TYPE@> &taps,
 		     double center_freq, double sampling_freq);
 
@@ -60,7 +61,7 @@ class @FIR_TYPE@;
  * Uses a single input array to produce a single output array.
  * Additional inputs and/or outputs are ignored.
  */
-class @NAME@ : public gr_sync_decimator
+class GR_CORE_API @NAME@ : public gr_sync_decimator
 {
  public:
   virtual ~@NAME@ ();
@@ -73,7 +74,7 @@ class @NAME@ : public gr_sync_decimator
 	    gr_vector_void_star &output_items);
 
  private:
-  friend @SPTR_NAME@ 
+  friend GR_CORE_API @SPTR_NAME@ 
   gr_make_@BASE_NAME@ (int decimation, const std::vector<@TAP_TYPE@> &taps,
 		       double center_freq, double sampling_freq);
 

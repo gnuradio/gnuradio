@@ -23,6 +23,7 @@
 #ifndef INCLUDED_MICROTUNE_4702_EVAL_BOARD_H
 #define INCLUDED_MICROTUNE_4702_EVAL_BOARD_H
 
+#include <gr_core_api.h>
 #include "microtune_xxxx_eval_board.h"
 
 /*!
@@ -30,7 +31,7 @@
  * \ingroup hardware
  */
 
-class microtune_4702_eval_board : public microtune_xxxx_eval_board {
+class GR_CORE_API microtune_4702_eval_board : public microtune_xxxx_eval_board {
 public:
   microtune_4702_eval_board (int which_pp = 0);
   ~microtune_4702_eval_board ();

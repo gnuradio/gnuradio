@@ -22,13 +22,14 @@
 #ifndef INCLUDED_GR_DESCRAMBLER_BB_H
 #define INCLUDED_GR_DESCRAMBLER_BB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include "gri_lfsr.h"
 
 class gr_descrambler_bb;
 typedef boost::shared_ptr<gr_descrambler_bb> gr_descrambler_bb_sptr;
 
-gr_descrambler_bb_sptr gr_make_descrambler_bb(int mask, int seed, int len);
+GR_CORE_API gr_descrambler_bb_sptr gr_make_descrambler_bb(int mask, int seed, int len);
 
 /*!
  * Descramble an input stream using an LFSR.  This block works on the LSB only
@@ -42,9 +43,9 @@ gr_descrambler_bb_sptr gr_make_descrambler_bb(int mask, int seed, int len);
  * \ingroup coding_blk
  */
 
-class gr_descrambler_bb : public gr_sync_block
+class GR_CORE_API gr_descrambler_bb : public gr_sync_block
 {
-  friend gr_descrambler_bb_sptr gr_make_descrambler_bb(int mask, int seed, int len);
+  friend GR_CORE_API gr_descrambler_bb_sptr gr_make_descrambler_bb(int mask, int seed, int len);
 
   gri_lfsr d_lfsr;
 

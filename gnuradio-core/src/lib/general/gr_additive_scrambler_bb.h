@@ -22,13 +22,14 @@
 #ifndef INCLUDED_GR_ADDITIVE_SCRAMBLER_BB_H
 #define INCLUDED_GR_ADDITIVE_SCRAMBLER_BB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include "gri_lfsr.h"
 
 class gr_additive_scrambler_bb;
 typedef boost::shared_ptr<gr_additive_scrambler_bb> gr_additive_scrambler_bb_sptr;
 
-gr_additive_scrambler_bb_sptr gr_make_additive_scrambler_bb(int mask, int seed, int len, int count=0);
+GR_CORE_API gr_additive_scrambler_bb_sptr gr_make_additive_scrambler_bb(int mask, int seed, int len, int count=0);
 
 /*!
  * Scramble an input stream using an LFSR.  This block works on the LSB only
@@ -48,9 +49,9 @@ gr_additive_scrambler_bb_sptr gr_make_additive_scrambler_bb(int mask, int seed, 
  * \ingroup coding_blk
  */
 
-class gr_additive_scrambler_bb : public gr_sync_block
+class GR_CORE_API gr_additive_scrambler_bb : public gr_sync_block
 {
-  friend gr_additive_scrambler_bb_sptr gr_make_additive_scrambler_bb(int mask, int seed, int len, int count);
+  friend GR_CORE_API gr_additive_scrambler_bb_sptr gr_make_additive_scrambler_bb(int mask, int seed, int len, int count);
 
   gri_lfsr d_lfsr;
   int      d_count;

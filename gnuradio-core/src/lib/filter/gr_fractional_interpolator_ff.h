@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_FRACTIONAL_INTERPOLATOR_FF_H
 #define	INCLUDED_GR_FRACTIONAL_INTERPOLATOR_FF_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 class gri_mmse_fir_interpolator;
@@ -31,13 +32,13 @@ class gr_fractional_interpolator_ff;
 typedef boost::shared_ptr<gr_fractional_interpolator_ff> gr_fractional_interpolator_ff_sptr;
 
 // public constructor
-gr_fractional_interpolator_ff_sptr gr_make_fractional_interpolator_ff (float phase_shift, float interp_ratio);
+GR_CORE_API gr_fractional_interpolator_ff_sptr gr_make_fractional_interpolator_ff (float phase_shift, float interp_ratio);
 
 /*!
  * \brief Interpolating mmse filter with float input, float output
  * \ingroup filter_blk
  */
-class gr_fractional_interpolator_ff : public gr_block
+class GR_CORE_API gr_fractional_interpolator_ff : public gr_block
 {
 public:
   ~gr_fractional_interpolator_ff ();
@@ -60,7 +61,7 @@ private:
   float 			d_mu_inc;
   gri_mmse_fir_interpolator 	*d_interp;
 
-  friend gr_fractional_interpolator_ff_sptr
+  friend GR_CORE_API gr_fractional_interpolator_ff_sptr
   gr_make_fractional_interpolator_ff (float phase_shift, float interp_ratio);
 };
 

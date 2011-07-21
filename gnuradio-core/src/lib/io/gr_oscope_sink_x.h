@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_OSCOPE_SINK_X_H
 #define INCLUDED_GR_OSCOPE_SINK_X_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_trigger_mode.h>
 
@@ -34,7 +35,7 @@ class gr_oscope_guts;
  *
  * Don't instantiate this.  Use gr_oscope_sink_f or gr_oscope_sink_c instead.
  */
-class gr_oscope_sink_x : public gr_sync_block
+class GR_CORE_API gr_oscope_sink_x : public gr_sync_block
 {
 protected:
   double			 d_sampling_rate;

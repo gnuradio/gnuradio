@@ -21,12 +21,13 @@
 #ifndef INCLUDED_GR_FIR_FFF_ALTIVEC_H
 #define INCLUDED_GR_FIR_FFF_ALTIVEC_H
 
+#include <gr_core_api.h>
 #include <gr_fir_fff_generic.h>
 
 /*!
  * \brief altivec version of gr_fir_fff
  */
-class gr_fir_fff_altivec : public gr_fir_fff_generic
+class GR_CORE_API gr_fir_fff_altivec : public gr_fir_fff_generic
 {
 protected:
 

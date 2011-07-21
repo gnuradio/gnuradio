@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_FILE_SOURCE_H
 #define INCLUDED_GR_FILE_SOURCE_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_file_source;
 typedef boost::shared_ptr<gr_file_source> gr_file_source_sptr;
 
-gr_file_source_sptr
+GR_CORE_API gr_file_source_sptr
 gr_make_file_source (size_t itemsize, const char *filename, bool repeat = false);
 
 /*!
@@ -36,9 +37,9 @@ gr_make_file_source (size_t itemsize, const char *filename, bool repeat = false)
  * \ingroup source_blk
  */
 
-class gr_file_source : public gr_sync_block
+class GR_CORE_API gr_file_source : public gr_sync_block
 {
-  friend gr_file_source_sptr gr_make_file_source (size_t itemsize,
+  friend GR_CORE_API gr_file_source_sptr gr_make_file_source (size_t itemsize,
 						  const char *filename,
 						  bool repeat);
  private:

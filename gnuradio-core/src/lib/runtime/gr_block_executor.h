@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_BLOCK_EXECUTOR_H
 #define INCLUDED_GR_BLOCK_EXECUTOR_H
 
+#include <gr_core_api.h>
 #include <gr_runtime_types.h>
 #include <fstream>
 #include <gruel/pmt.h>
@@ -36,7 +37,7 @@
  * \ingroup internal
  */
 
-class gr_block_executor {
+class GR_CORE_API gr_block_executor {
 protected:
   gr_block_sptr			d_block;	// The block we're trying to run
   std::ofstream	       	       *d_log;

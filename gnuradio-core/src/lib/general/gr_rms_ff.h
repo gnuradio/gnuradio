@@ -22,25 +22,26 @@
 #ifndef INCLUDED_GR_RMS_FF_H
 #define INCLUDED_GR_RMS_FF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_single_pole_iir.h>
 
 class gr_rms_ff;
 typedef boost::shared_ptr<gr_rms_ff> gr_rms_ff_sptr;
 
-gr_rms_ff_sptr
+GR_CORE_API gr_rms_ff_sptr
 gr_make_rms_ff (double alpha = 0.0001);
 
 /*!
  * \brief RMS average power
  * \ingroup math_blk
  */
-class gr_rms_ff : public gr_sync_block
+class GR_CORE_API gr_rms_ff : public gr_sync_block
 {
   gr_single_pole_iir<double,double,double>	d_iir;
   bool						d_unmuted;
 
-  friend gr_rms_ff_sptr
+  friend GR_CORE_API gr_rms_ff_sptr
   gr_make_rms_ff (double alpha);
 
   gr_rms_ff (double alpha);

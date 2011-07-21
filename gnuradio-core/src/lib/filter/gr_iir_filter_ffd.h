@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_IIR_FILTER_FFD_H
 #define	INCLUDED_GR_IIR_FILTER_FFD_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gri_iir.h>
 #include <stdexcept>
 
 class gr_iir_filter_ffd;
 typedef boost::shared_ptr<gr_iir_filter_ffd> gr_iir_filter_ffd_sptr;
-gr_iir_filter_ffd_sptr 
+GR_CORE_API gr_iir_filter_ffd_sptr 
 gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
 			const std::vector<double> &fbtaps) throw (std::invalid_argument);
 
@@ -56,10 +57,10 @@ gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
  * Note that some texts define the system function with a + in the denominator.
  * If you're using that convention, you'll need to negate the feedback taps.
  */
-class gr_iir_filter_ffd : public gr_sync_block
+class GR_CORE_API gr_iir_filter_ffd : public gr_sync_block
 {
  private:
-  friend gr_iir_filter_ffd_sptr 
+  friend GR_CORE_API gr_iir_filter_ffd_sptr 
   gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
 			  const std::vector<double> &fbtaps) throw (std::invalid_argument);
 

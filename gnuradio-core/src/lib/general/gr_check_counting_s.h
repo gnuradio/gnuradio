@@ -22,12 +22,13 @@
 #ifndef INCLUDED_GR_CHECK_COUNTING_S_H
 #define INCLUDED_GR_CHECK_COUNTING_S_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_check_counting_s;
 typedef boost::shared_ptr<gr_check_counting_s> gr_check_counting_s_sptr;
 
-gr_check_counting_s_sptr gr_make_check_counting_s (bool do_32bit=false);
+GR_CORE_API gr_check_counting_s_sptr gr_make_check_counting_s (bool do_32bit=false);
 
 /*!
  * \brief sink that checks if its input stream consists of a counting sequence.
@@ -36,9 +37,9 @@ gr_check_counting_s_sptr gr_make_check_counting_s (bool do_32bit=false);
  *
  * This sink is typically used to test the USRP "Counting Mode" or "Counting mode 32 bit".
  */
-class gr_check_counting_s : public gr_sync_block
+class GR_CORE_API gr_check_counting_s : public gr_sync_block
 {
-  friend gr_check_counting_s_sptr gr_make_check_counting_s (bool do_32bit);
+  friend GR_CORE_API gr_check_counting_s_sptr gr_make_check_counting_s (bool do_32bit);
 
   enum state {
     SEARCHING,    // searching for synchronization

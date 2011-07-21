@@ -23,13 +23,14 @@
 #ifndef _GR_VMCIRCBUF_H_
 #define _GR_VMCIRCBUF_H_
 
+#include <gr_core_api.h>
 #include <vector>
 
 /*!
  * \brief abstract class to implement doubly mapped virtual memory circular buffers
  * \ingroup internal
  */
-class gr_vmcircbuf {
+class GR_CORE_API gr_vmcircbuf {
  protected:
   int	 d_size;
   char	*d_base;
@@ -48,7 +49,7 @@ class gr_vmcircbuf {
 /*!
  * \brief abstract factory for creating circular buffers
  */
-class gr_vmcircbuf_factory {
+class GR_CORE_API gr_vmcircbuf_factory {
  protected:
   gr_vmcircbuf_factory () {};
   virtual ~gr_vmcircbuf_factory ();
@@ -76,7 +77,7 @@ class gr_vmcircbuf_factory {
 /*
  * \brief pulls together all implementations of gr_vmcircbuf
  */
-class gr_vmcircbuf_sysconfig {
+class GR_CORE_API gr_vmcircbuf_sysconfig {
  public:
 
   /*

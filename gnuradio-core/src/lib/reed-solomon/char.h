@@ -6,6 +6,8 @@
 
 #define DTYPE unsigned char
 
+#include <gr_core_api.h>
+
 /* Reed-Solomon codec control block */
 struct rs {
   unsigned int mm;              /* Bits per symbol */
@@ -44,12 +46,11 @@ static inline int modnn(struct rs *rs,int x){
 #define INIT_RS init_rs_char
 #define FREE_RS free_rs_char
 
-void ENCODE_RS(void *p,DTYPE *data,DTYPE *parity);
-int DECODE_RS(void *p,DTYPE *data,int *eras_pos,int no_eras);
+GR_CORE_API void ENCODE_RS(void *p,DTYPE *data,DTYPE *parity);
+GR_CORE_API int DECODE_RS(void *p,DTYPE *data,int *eras_pos,int no_eras);
 void *INIT_RS(unsigned int symsize,unsigned int gfpoly,unsigned int fcr,
 		   unsigned int prim,unsigned int nroots);
-void FREE_RS(void *p);
-
+GR_CORE_API void FREE_RS(void *p);
 
 
 

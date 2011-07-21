@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_BASIC_BLOCK_H
 #define INCLUDED_GR_BASIC_BLOCK_H
 
+#include <gr_core_api.h>
 #include <gr_runtime_types.h>
 #include <gr_sptr_magic.h>
 #include <boost/enable_shared_from_this.hpp>
@@ -41,7 +42,7 @@
  * signal processing functions.
  */
 
-class gr_basic_block : public gr_msg_accepter, public boost::enable_shared_from_this<gr_basic_block>
+class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_shared_from_this<gr_basic_block>
 {
     typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
 
@@ -158,7 +159,7 @@ inline bool operator<(gr_basic_block_sptr lhs, gr_basic_block_sptr rhs)
 typedef std::vector<gr_basic_block_sptr> gr_basic_block_vector_t;
 typedef std::vector<gr_basic_block_sptr>::iterator gr_basic_block_viter_t;
 
-long gr_basic_block_ncurrently_allocated();
+GR_CORE_API long gr_basic_block_ncurrently_allocated();
 
 inline std::ostream &operator << (std::ostream &os, gr_basic_block_sptr basic_block)
 {

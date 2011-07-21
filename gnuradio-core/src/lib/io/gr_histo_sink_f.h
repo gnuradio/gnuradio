@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_HISTO_SINK_F_H
 #define INCLUDED_GR_HISTO_SINK_F_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_msg_queue.h>
 #include <gruel/thread.h>
@@ -30,13 +31,13 @@
 class gr_histo_sink_f;
 typedef boost::shared_ptr<gr_histo_sink_f> gr_histo_sink_f_sptr;
 
-gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
+GR_CORE_API gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
 
 /*!
  * \brief Histogram module.
  * \ingroup sink_blk
  */
-class gr_histo_sink_f : public gr_sync_block
+class GR_CORE_API gr_histo_sink_f : public gr_sync_block
 {
 private:
   gr_msg_queue_sptr	d_msgq;
@@ -47,7 +48,7 @@ private:
   float *d_samps;
   gruel::mutex d_mutex;
 
-  friend gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
+  friend GR_CORE_API gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
   gr_histo_sink_f (gr_msg_queue_sptr msgq);
   void send_frame(void);
   void clear(void);

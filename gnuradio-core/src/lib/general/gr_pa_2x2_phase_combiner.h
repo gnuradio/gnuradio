@@ -22,12 +22,13 @@
 #ifndef INCLUDED_GR_PA_2X2_PHASE_COMBINER_H
 #define INCLUDED_GR_PA_2X2_PHASE_COMBINER_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_pa_2x2_phase_combiner;
 typedef boost::shared_ptr<gr_pa_2x2_phase_combiner> gr_pa_2x2_phase_combiner_sptr;
 
-gr_pa_2x2_phase_combiner_sptr gr_make_pa_2x2_phase_combiner ();
+GR_CORE_API gr_pa_2x2_phase_combiner_sptr gr_make_pa_2x2_phase_combiner ();
 
 /*!
  * \brief pa_2x2 phase combiner
@@ -40,7 +41,7 @@ gr_pa_2x2_phase_combiner_sptr gr_make_pa_2x2_phase_combiner ();
  *
  * dx and dy are lambda/2.
  */
-class gr_pa_2x2_phase_combiner : public gr_sync_block
+class GR_CORE_API gr_pa_2x2_phase_combiner : public gr_sync_block
 {
   static const int	NM = 4;
 
@@ -48,7 +49,7 @@ class gr_pa_2x2_phase_combiner : public gr_sync_block
   gr_complex	d_phase[NM];
 
   gr_pa_2x2_phase_combiner ();
-  friend gr_pa_2x2_phase_combiner_sptr gr_make_pa_2x2_phase_combiner();
+  friend GR_CORE_API gr_pa_2x2_phase_combiner_sptr gr_make_pa_2x2_phase_combiner();
 
  public:
   float theta() const { return d_theta; }

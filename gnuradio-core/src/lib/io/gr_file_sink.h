@@ -23,22 +23,23 @@
 #ifndef INCLUDED_GR_FILE_SINK_H
 #define INCLUDED_GR_FILE_SINK_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_file_sink_base.h>
 
 class gr_file_sink;
 typedef boost::shared_ptr<gr_file_sink> gr_file_sink_sptr;
 
-gr_file_sink_sptr gr_make_file_sink(size_t itemsize, const char *filename);
+GR_CORE_API gr_file_sink_sptr gr_make_file_sink(size_t itemsize, const char *filename);
 
 /*!
  * \brief Write stream to file.
  * \ingroup sink_blk
  */
 
-class gr_file_sink : public gr_sync_block, public gr_file_sink_base
+class GR_CORE_API gr_file_sink : public gr_sync_block, public gr_file_sink_base
 {
-  friend gr_file_sink_sptr gr_make_file_sink(size_t itemsize, const char *filename);
+  friend GR_CORE_API gr_file_sink_sptr gr_make_file_sink(size_t itemsize, const char *filename);
 
  private:
   size_t	d_itemsize;

@@ -24,13 +24,14 @@
 #define INCLUDED_GR_OFDM_BPSK_DEMAPPER_H
 
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <vector>
 
 class gr_ofdm_bpsk_demapper;
 typedef boost::shared_ptr<gr_ofdm_bpsk_demapper> gr_ofdm_bpsk_demapper_sptr;
 
-gr_ofdm_bpsk_demapper_sptr 
+GR_CORE_API gr_ofdm_bpsk_demapper_sptr 
 gr_make_ofdm_bpsk_demapper (unsigned int occupied_carriers);
 
 
@@ -39,9 +40,9 @@ gr_make_ofdm_bpsk_demapper (unsigned int occupied_carriers);
  * and demodulate to a stream of bits. Simple BPSK version.
  * \ingroup ofdm_blk
  */
-class gr_ofdm_bpsk_demapper : public gr_block
+class GR_CORE_API gr_ofdm_bpsk_demapper : public gr_block
 {
-  friend gr_ofdm_bpsk_demapper_sptr
+  friend GR_CORE_API gr_ofdm_bpsk_demapper_sptr
     gr_make_ofdm_bpsk_demapper (unsigned int occupied_carriers);
   
  protected:

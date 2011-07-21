@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_OFDM_SAMPLER_H
 #define INCLUDED_GR_OFDM_SAMPLER_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_ofdm_sampler;
 typedef boost::shared_ptr<gr_ofdm_sampler> gr_ofdm_sampler_sptr;
 
-gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
+GR_CORE_API gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
 					   unsigned int symbol_length,
 					   unsigned int timeout=1000);
 
@@ -36,9 +37,9 @@ gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length,
  * \brief does the rest of the OFDM stuff
  * \ingroup ofdm_blk
  */
-class gr_ofdm_sampler : public gr_block
+class GR_CORE_API gr_ofdm_sampler : public gr_block
 {
-  friend gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
+  friend GR_CORE_API gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
 						    unsigned int symbol_length,
 						    unsigned int timeout);
 

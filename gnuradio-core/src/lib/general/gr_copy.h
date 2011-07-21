@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_COPY_H
 #define INCLUDED_GR_COPY_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 class gr_copy;
 typedef boost::shared_ptr<gr_copy> gr_copy_sptr;
 
-gr_copy_sptr gr_make_copy(size_t itemsize);
+GR_CORE_API gr_copy_sptr gr_make_copy(size_t itemsize);
 
 /*!
  * \brief output[i] = input[i]
@@ -38,12 +39,12 @@ gr_copy_sptr gr_make_copy(size_t itemsize);
  * When disabled, this block drops its input on the floor.
  *
  */
-class gr_copy : public gr_block
+class GR_CORE_API gr_copy : public gr_block
 {
   size_t		d_itemsize;
   bool			d_enabled;
 
-  friend gr_copy_sptr gr_make_copy(size_t itemsize);
+  friend GR_CORE_API gr_copy_sptr gr_make_copy(size_t itemsize);
   gr_copy(size_t itemsize);
 
  public:

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_TEST_H
 #define INCLUDED_GR_TEST_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <string>
 #include "gr_test_types.h"
@@ -31,7 +32,7 @@ class gr_test;
 typedef boost::shared_ptr<gr_test> gr_test_sptr;
 
 // public constructor
-gr_test_sptr gr_make_test (const std::string &name=std::string("gr_test"),
+GR_CORE_API gr_test_sptr gr_make_test (const std::string &name=std::string("gr_test"),
         int min_inputs=1, int max_inputs=1, unsigned int sizeof_input_item=1,
         int min_outputs=1, int max_outputs=1, unsigned int sizeof_output_item=1,
         unsigned int history=1,unsigned int output_multiple=1,double relative_rate=1.0,
@@ -50,7 +51,7 @@ gr_test_sptr gr_make_test (const std::string &name=std::string("gr_test"),
  * The runtime system should detect this and create large enough buffers
  * all through the signal chain.
  */
-class gr_test : public gr_block {
+class GR_CORE_API gr_test : public gr_block {
 
  public:
   
@@ -183,7 +184,7 @@ int general_work (int noutput_items,
 
 
 
-  friend gr_test_sptr gr_make_test (const std::string &name,int min_inputs, int max_inputs, unsigned int sizeof_input_item,
+  friend GR_CORE_API gr_test_sptr gr_make_test (const std::string &name,int min_inputs, int max_inputs, unsigned int sizeof_input_item,
                                    int min_outputs, int max_outputs, unsigned int sizeof_output_item,
                                    unsigned int history,unsigned int output_multiple,double relative_rate,
                                    bool fixed_rate,gr_consume_type_t cons_type, gr_produce_type_t prod_type);

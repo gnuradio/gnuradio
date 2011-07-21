@@ -25,12 +25,13 @@
 #ifndef INCLUDED_GR_PLL_REFOUT_CC_H
 #define INCLUDED_GR_PLL_REFOUT_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_pll_refout_cc;
 typedef boost::shared_ptr<gr_pll_refout_cc> gr_pll_refout_cc_sptr;
 
-gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta,
+GR_CORE_API gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta,
 					       float max_freq, float min_freq);
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs a carrier
@@ -47,9 +48,9 @@ gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta,
  * and beta is the frequency gain (second order, units of radians per sample per radian)
  * \sa gr_pll_freqdet_cf, gr_pll_carriertracking_cc
  */
-class gr_pll_refout_cc : public gr_sync_block
+class GR_CORE_API gr_pll_refout_cc : public gr_sync_block
 {
-  friend gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta,
+  friend GR_CORE_API gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta,
 							float max_freq, float min_freq);
 
   float d_alpha,d_beta,d_max_freq,d_min_freq,d_phase,d_freq;

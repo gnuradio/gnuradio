@@ -23,10 +23,11 @@
 #ifndef INCLUDED_GRI_FLOAT_TO_SHORT_H
 #define INCLUDED_GRI_FLOAT_TO_SHORT_H
 
+#include <gr_core_api.h>
+
 /*!
  * convert array of floats to shorts with rounding and saturation.
  */
-void gri_float_to_short (const float *in, short *out, int nsamples);
+GR_CORE_API void gri_float_to_short (const float *in, short *out, int nsamples);
 
 #endif /* INCLUDED_GRI_FLOAT_TO_SHORT_H */
-

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_PPIO_H
 #define INCLUDED_PPIO_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 
 class ppio;
@@ -34,7 +35,7 @@ typedef boost::shared_ptr<ppio> ppio_sptr;
  * \ingroup hardware
  */
 
-class ppio {
+class GR_CORE_API ppio {
  public:
   ppio () {}
   virtual ~ppio ();
@@ -55,7 +56,7 @@ class ppio {
  * Split out from class to make life easier for SWIG
  */
 
-ppio_sptr make_ppio (int which_pp);
+GR_CORE_API ppio_sptr make_ppio (int which_pp);
 
 
 #endif /* INCLUDED_PPIO_H */

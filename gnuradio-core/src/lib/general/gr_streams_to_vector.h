@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_STREAMS_TO_VECTOR_H
 #define INCLUDED_GR_STREAMS_TO_VECTOR_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_streams_to_vector;
 typedef boost::shared_ptr<gr_streams_to_vector> gr_streams_to_vector_sptr;
 
-gr_streams_to_vector_sptr 
+GR_CORE_API gr_streams_to_vector_sptr 
 gr_make_streams_to_vector (size_t item_size, size_t nstreams);
 
 
@@ -36,9 +37,9 @@ gr_make_streams_to_vector (size_t item_size, size_t nstreams);
  * \brief convert N streams of items to 1 stream of vector length N
  * \ingroup slicedice_blk
  */
-class gr_streams_to_vector : public gr_sync_block
+class GR_CORE_API gr_streams_to_vector : public gr_sync_block
 {
-  friend gr_streams_to_vector_sptr
+  friend GR_CORE_API gr_streams_to_vector_sptr
     gr_make_streams_to_vector (size_t item_size, size_t nstreams);
 
  protected:

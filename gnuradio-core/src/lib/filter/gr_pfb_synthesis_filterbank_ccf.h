@@ -24,12 +24,13 @@
 #ifndef INCLUDED_GR_PFB_SYNTHESIS_FILTERBANK_CCF_H
 #define	INCLUDED_GR_PFB_SYNTHESIS_FILTERBANK_CCF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 #include <gri_fir_filter_with_buffer_ccf.h>
 
 class gr_pfb_synthesis_filterbank_ccf;
 typedef boost::shared_ptr<gr_pfb_synthesis_filterbank_ccf> gr_pfb_synthesis_filterbank_ccf_sptr;
-gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
+GR_CORE_API gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
     (unsigned int numchans, const std::vector<float> &taps);
 
 class gri_fft_complex;
@@ -44,7 +45,7 @@ class gri_fft_complex;
  * \ingroup filter_blk
  */
 
-class gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
+class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
 {
  private:
   /*!
@@ -54,7 +55,7 @@ class gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
    * \param taps    (vector/list of floats) The prototype filter to
                     populate the filterbank.
    */
-  friend gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
+  friend GR_CORE_API gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
       (unsigned int numchans, const std::vector<float> &taps);
 
   bool			   d_updated;

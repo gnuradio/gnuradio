@@ -23,10 +23,11 @@
 #ifndef INCLUDED_GRI_FLOAT_TO_CHAR_H
 #define INCLUDED_GRI_FLOAT_TO_CHAR_H
 
+#include <gr_core_api.h>
+
 /*!
  * convert array of floats to chars with rounding and saturation.
  */
-void gri_float_to_char (const float *in, char *out, int nsamples);
+GR_CORE_API void gri_float_to_char (const float *in, char *out, int nsamples);
 
 #endif /* INCLUDED_GRI_FLOAT_TO_CHAR_H */
-

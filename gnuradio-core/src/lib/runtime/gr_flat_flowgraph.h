@@ -23,22 +23,23 @@
 #ifndef INCLUDED_GR_FLAT_FLOWGRAPH_H
 #define INCLUDED_GR_FLAT_FLOWGRAPH_H
 
+#include <gr_core_api.h>
 #include <gr_flowgraph.h>
 #include <gr_block.h>
 
 // Create a shared pointer to a heap allocated gr_flat_flowgraph
 // (types defined in gr_runtime_types.h)
-gr_flat_flowgraph_sptr gr_make_flat_flowgraph();
+GR_CORE_API gr_flat_flowgraph_sptr gr_make_flat_flowgraph();
 
 /*!
  *\brief Class specializing gr_flat_flowgraph that has all nodes
  * as gr_blocks, with no hierarchy
  * \ingroup internal
  */
-class gr_flat_flowgraph : public gr_flowgraph
+class GR_CORE_API gr_flat_flowgraph : public gr_flowgraph
 {
 public:
-  friend gr_flat_flowgraph_sptr gr_make_flat_flowgraph();
+  friend GR_CORE_API gr_flat_flowgraph_sptr gr_make_flat_flowgraph();
 
   // Destruct an arbitrary gr_flat_flowgraph
   ~gr_flat_flowgraph();

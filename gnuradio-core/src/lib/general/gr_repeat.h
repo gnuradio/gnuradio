@@ -22,23 +22,24 @@
 #ifndef INCLUDED_GR_REPEAT_H
 #define INCLUDED_GR_REPEAT_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_repeat;
 
 typedef boost::shared_ptr<gr_repeat> gr_repeat_sptr;
 
-gr_repeat_sptr gr_make_repeat(size_t itemsize, int interp);
+GR_CORE_API gr_repeat_sptr gr_make_repeat(size_t itemsize, int interp);
 
 /*!
  * \brief Repeat a sample 'interp' times in output stream
  * \ingroup misc_blk
  */
 
-class gr_repeat : public gr_sync_interpolator
+class GR_CORE_API gr_repeat : public gr_sync_interpolator
 {
 private:
-  friend gr_repeat_sptr gr_make_repeat(size_t itemsize, int interp);
+  friend GR_CORE_API gr_repeat_sptr gr_make_repeat(size_t itemsize, int interp);
 						     
   gr_repeat(size_t itemsize, int interp);
 

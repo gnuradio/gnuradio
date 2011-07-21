@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_OFDM_FRAME_SINK_H
 #define INCLUDED_GR_OFDM_FRAME_SINK_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_msg_queue.h>
 
 class gr_ofdm_frame_sink;
 typedef boost::shared_ptr<gr_ofdm_frame_sink> gr_ofdm_frame_sink_sptr;
 
-gr_ofdm_frame_sink_sptr 
+GR_CORE_API gr_ofdm_frame_sink_sptr 
 gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
 			 const std::vector<unsigned char> &sym_value_out,
 			 gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
@@ -45,9 +46,9 @@ gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position,
  * we want to be able to pass in a reference to an object to do the demapping and slicing
  * for a given modulation type.
  */
-class gr_ofdm_frame_sink : public gr_sync_block
+class GR_CORE_API gr_ofdm_frame_sink : public gr_sync_block
 {
-  friend gr_ofdm_frame_sink_sptr 
+  friend GR_CORE_API gr_ofdm_frame_sink_sptr 
   gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
 			   const std::vector<unsigned char> &sym_value_out,
 			   gr_msg_queue_sptr target_queue, unsigned int occupied_tones,

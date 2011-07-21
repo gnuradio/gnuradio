@@ -24,11 +24,12 @@
 #ifndef INCLUDED_GR_PFB_CLOCK_SYNC_FFF_H
 #define	INCLUDED_GR_PFB_CLOCK_SYNC_FFF_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 class gr_pfb_clock_sync_fff;
 typedef boost::shared_ptr<gr_pfb_clock_sync_fff> gr_pfb_clock_sync_fff_sptr;
-gr_pfb_clock_sync_fff_sptr gr_make_pfb_clock_sync_fff (double sps, float gain,
+GR_CORE_API gr_pfb_clock_sync_fff_sptr gr_make_pfb_clock_sync_fff (double sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size=32,
 						       float init_phase=0,
@@ -110,7 +111,7 @@ class gr_fir_fff;
  *
  */
 
-class gr_pfb_clock_sync_fff : public gr_block
+class GR_CORE_API gr_pfb_clock_sync_fff : public gr_block
 {
  private:
   /*!
@@ -124,7 +125,7 @@ class gr_pfb_clock_sync_fff : public gr_block
    * \param max_rate_deviation (float) Distance from 0 d_rate can get (default = 1.5).
    *
    */
-  friend gr_pfb_clock_sync_fff_sptr gr_make_pfb_clock_sync_fff (double sps, float gain,
+  friend GR_CORE_API gr_pfb_clock_sync_fff_sptr gr_make_pfb_clock_sync_fff (double sps, float gain,
 								const std::vector<float> &taps,
 								unsigned int filter_size,
 								float init_phase,

@@ -23,6 +23,8 @@
 #ifndef INCLUDED_GRI_LFSR_15_1_0_H
 #define INCLUDED_GRI_LFSR_15_1_0_H
 
+#include <gr_core_api.h>
+
 /*!
  * \brief Linear Feedback Shift Register using primitive polynomial x^15 + x + 1
  * \ingroup misc
@@ -30,7 +32,7 @@
  * Generates a maximal length pseudo-random sequence of length 2^15 - 1 bits.
  */
 
-class gri_lfsr_15_1_0 {
+class GR_CORE_API gri_lfsr_15_1_0 {
   unsigned long	d_sr;		// shift register
 
  public:

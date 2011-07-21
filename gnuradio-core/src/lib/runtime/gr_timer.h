@@ -22,13 +22,14 @@
 #ifndef INCLUDED_GR_TIMER_H
 #define INCLUDED_GR_TIMER_H
 
+#include <gr_core_api.h>
 #include <gr_types.h>
 
 class gr_timer;
 
 typedef boost::shared_ptr<gr_timer> gr_timer_sptr;
 
-typedef void (*gr_timer_hook)(gr_timer *, void *);
+GR_CORE_API typedef void (*gr_timer_hook)(gr_timer *, void *);
 
 /*!
  * \brief create a timeout.
@@ -36,18 +37,18 @@ typedef void (*gr_timer_hook)(gr_timer *, void *);
  * \ingroup misc
  * gr_timer_hook is called when timer fires.
  */
-gr_timer_sptr gr_make_timer (gr_timer_hook, void *);
+GR_CORE_API gr_timer_sptr gr_make_timer (gr_timer_hook, void *);
 
 /*!
  * \brief implement timeouts
  */
-class gr_timer {
+class GR_CORE_API gr_timer {
   double	d_expiry;
   double	d_period;
   gr_timer_hook	d_hook;
   void	       *d_hook_arg;
 
-  friend gr_timer_sptr gr_make_timer (gr_timer_hook, void *);
+  friend GR_CORE_API gr_timer_sptr gr_make_timer (gr_timer_hook, void *);
 
   gr_timer (...);
 

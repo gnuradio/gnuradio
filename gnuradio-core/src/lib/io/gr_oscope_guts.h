@@ -24,6 +24,7 @@
 #ifndef INCLUDED_GR_OSCOPE_GUTS_H
 #define INCLUDED_GR_OSCOPE_GUTS_H
 
+#include <gr_core_api.h>
 #include <gr_trigger_mode.h>
 #include <gr_msg_queue.h>
 
@@ -40,7 +41,7 @@
  * consist of 50% pre-trigger data and 50% post-trigger data.
  */
 
-class gr_oscope_guts {
+class GR_CORE_API gr_oscope_guts {
 public:
   static const int	MAX_CHANNELS = 8;
 private:

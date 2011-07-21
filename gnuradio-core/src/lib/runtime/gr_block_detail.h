@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_BLOCK_DETAIL_H
 #define INCLUDED_GR_BLOCK_DETAIL_H
 
+#include <gr_core_api.h>
 #include <gr_runtime_types.h>
 #include <gr_tpb_detail.h>
 #include <gr_tag_info.h>
@@ -36,7 +37,7 @@
  * of almost all users of GNU Radio.  This decoupling also means that
  * we can make changes to the guts without having to recompile everything.
  */
-class gr_block_detail {
+class GR_CORE_API gr_block_detail {
  public:
   ~gr_block_detail ();
 
@@ -172,16 +173,16 @@ class gr_block_detail {
 
   gr_block_detail (unsigned int ninputs, unsigned int noutputs);
 
-  friend class gr_tpb_detail;
+  friend struct gr_tpb_detail;
 
-  friend gr_block_detail_sptr
+  friend GR_CORE_API gr_block_detail_sptr
   gr_make_block_detail (unsigned int ninputs, unsigned int noutputs);
 };
 
-gr_block_detail_sptr
+GR_CORE_API gr_block_detail_sptr
 gr_make_block_detail (unsigned int ninputs, unsigned int noutputs);
 
-long
+GR_CORE_API long
 gr_block_detail_ncurrently_allocated ();
 
 #endif /* INCLUDED_GR_BLOCK_DETAIL_H */

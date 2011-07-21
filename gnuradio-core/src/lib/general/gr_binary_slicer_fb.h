@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_BINARY_SLICER_FB_H
 #define INCLUDED_GR_BINARY_SLICER_FB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_binary_slicer_fb;
 typedef boost::shared_ptr<gr_binary_slicer_fb> gr_binary_slicer_fb_sptr;
 
-gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
+GR_CORE_API gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
 
 /*!
  * \brief slice float binary symbol outputting 1 bit output
@@ -37,9 +38,9 @@ gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
  * x <  0 --> 0
  * x >= 0 --> 1
  */
-class gr_binary_slicer_fb : public gr_sync_block
+class GR_CORE_API gr_binary_slicer_fb : public gr_sync_block
 {
-  friend gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
+  friend GR_CORE_API gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
   gr_binary_slicer_fb ();
 
  public:

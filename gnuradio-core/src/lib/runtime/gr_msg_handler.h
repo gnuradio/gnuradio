@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_MSG_HANDLER_H
 #define INCLUDED_GR_MSG_HANDLER_H
 
+#include <gr_core_api.h>
 #include <gr_message.h>
 
 class gr_msg_handler;
@@ -31,7 +32,7 @@ typedef boost::shared_ptr<gr_msg_handler> gr_msg_handler_sptr;
  * \brief abstract class of message handlers
  * \ingroup base
  */
-class gr_msg_handler {
+class GR_CORE_API gr_msg_handler {
 public:
   virtual ~gr_msg_handler ();
   

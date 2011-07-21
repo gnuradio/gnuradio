@@ -25,12 +25,13 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
-@NAME@_sptr
+GR_CORE_API @NAME@_sptr
 gr_make_@BASE_NAME@ (int vlen = 1);
 
 
@@ -39,8 +40,8 @@ gr_make_@BASE_NAME@ (int vlen = 1);
  * \ingroup sink_blk
  */
 
-class @NAME@ : public gr_sync_block {
-  friend @NAME@_sptr gr_make_@BASE_NAME@ (int vlen);
+class GR_CORE_API @NAME@ : public gr_sync_block {
+  friend GR_CORE_API @NAME@_sptr gr_make_@BASE_NAME@ (int vlen);
   std::vector<@TYPE@>	d_data;
   int			d_vlen;
   @NAME@ (int vlen);

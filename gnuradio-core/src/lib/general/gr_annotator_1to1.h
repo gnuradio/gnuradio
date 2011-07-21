@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_ANNOTATOR_1TO1_H
 #define	INCLUDED_GR_ANNOTATOR_1TO1_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_annotator_1to1;
 typedef boost::shared_ptr<gr_annotator_1to1> gr_annotator_1to1_sptr;
 
 // public constructor
-gr_annotator_1to1_sptr 
+GR_CORE_API gr_annotator_1to1_sptr 
 gr_make_annotator_1to1 (int when, size_t sizeof_stream_item);
 
 /*!
@@ -45,7 +46,7 @@ gr_make_annotator_1to1 (int when, size_t sizeof_stream_item);
  *
  * This block is only meant for testing and showing how to use the tags.
  */
-class gr_annotator_1to1 : public gr_sync_block
+class GR_CORE_API gr_annotator_1to1 : public gr_sync_block
 {
  public:
   ~gr_annotator_1to1 ();
@@ -67,7 +68,7 @@ protected:
   uint64_t d_tag_counter;
   std::vector<pmt::pmt_t> d_stored_tags;
 
-  friend gr_annotator_1to1_sptr
+  friend GR_CORE_API gr_annotator_1to1_sptr
   gr_make_annotator_1to1 (int when, size_t sizeof_stream_item);
 };
 

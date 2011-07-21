@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_COMPLEX_TO_INTERLEAVED_SHORT_H
 #define INCLUDED_GR_COMPLEX_TO_INTERLEAVED_SHORT_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_complex_to_interleaved_short;
 typedef boost::shared_ptr<gr_complex_to_interleaved_short>
   gr_complex_to_interleaved_short_sptr;
 
-gr_complex_to_interleaved_short_sptr
+GR_CORE_API gr_complex_to_interleaved_short_sptr
 gr_make_complex_to_interleaved_short ();
 
 /*!
@@ -37,9 +38,9 @@ gr_make_complex_to_interleaved_short ();
  * \ingroup converter_blk
  */
 
-class gr_complex_to_interleaved_short : public gr_sync_interpolator
+class GR_CORE_API gr_complex_to_interleaved_short : public gr_sync_interpolator
 {
-  friend gr_complex_to_interleaved_short_sptr gr_make_complex_to_interleaved_short ();
+  friend GR_CORE_API gr_complex_to_interleaved_short_sptr gr_make_complex_to_interleaved_short ();
   gr_complex_to_interleaved_short ();
 
  public:

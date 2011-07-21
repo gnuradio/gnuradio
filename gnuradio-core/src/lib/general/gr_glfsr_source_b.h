@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_GLFSR_SOURCE_B_H
 #define INCLUDED_GR_GLFSR_SOURCE_B_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gri_glfsr;
@@ -30,16 +31,16 @@ class gri_glfsr;
 class gr_glfsr_source_b;
 typedef boost::shared_ptr<gr_glfsr_source_b> gr_glfsr_source_b_sptr;
 
-gr_glfsr_source_b_sptr gr_make_glfsr_source_b(int degree, bool repeat=true, int mask=0, int seed=1);
+GR_CORE_API gr_glfsr_source_b_sptr gr_make_glfsr_source_b(int degree, bool repeat=true, int mask=0, int seed=1);
 
 /*!
  * \brief Galois LFSR pseudo-random source
  * \ingroup source_blk
  */
-class gr_glfsr_source_b : public gr_sync_block 
+class GR_CORE_API gr_glfsr_source_b : public gr_sync_block
 {
  private:
-  friend gr_glfsr_source_b_sptr
+  friend GR_CORE_API gr_glfsr_source_b_sptr
   gr_make_glfsr_source_b(int degree, bool repeat, int mask, int seed);
   
   gri_glfsr *d_glfsr;

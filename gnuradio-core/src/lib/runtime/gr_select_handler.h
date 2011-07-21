@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_SELECT_HANDLER_H
 #define INCLUDED_GR_SELECT_HANDLER_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 
 class gr_select_handler;
@@ -35,7 +36,7 @@ typedef boost::shared_ptr<gr_select_handler> gr_select_handler_sptr;
  *
  * \sa gr_dispatcher
  */
-class gr_select_handler
+class GR_CORE_API gr_select_handler
 {
   int	d_fd;
 

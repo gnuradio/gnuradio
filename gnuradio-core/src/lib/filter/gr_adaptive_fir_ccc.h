@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_ADAPTIVE_FIR_CCC_H
 #define	INCLUDED_GR_ADAPTIVE_FIR_CCC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 /*!
  * \brief Adaptive FIR filter with gr_complex input, gr_complex output and float taps
  * \ingroup filter_blk
  */
-class gr_adaptive_fir_ccc : public gr_sync_decimator
+class GR_CORE_API gr_adaptive_fir_ccc : public gr_sync_decimator
 {
 private:
   std::vector<gr_complex>  d_new_taps;

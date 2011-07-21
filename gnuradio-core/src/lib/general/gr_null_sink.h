@@ -23,23 +23,23 @@
 #ifndef INCLUDED_GR_NULL_SINK_H
 #define INCLUDED_GR_NULL_SINK_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <stddef.h>			// size_t
 
 class gr_null_sink;
 typedef boost::shared_ptr<gr_null_sink> gr_null_sink_sptr;
 
-gr_null_sink_sptr
+GR_CORE_API gr_null_sink_sptr
 gr_make_null_sink (size_t sizeof_stream_item);
-
 
 /*!
  * \brief Bit bucket
  * \ingroup sink_blk
  */
-class gr_null_sink : public gr_sync_block
+class GR_CORE_API gr_null_sink : public gr_sync_block
 {
-  friend gr_null_sink_sptr gr_make_null_sink (size_t sizeof_stream_item);
+  friend GR_CORE_API gr_null_sink_sptr gr_make_null_sink (size_t sizeof_stream_item);
   gr_null_sink (size_t sizeof_stream_item);
 
  public:

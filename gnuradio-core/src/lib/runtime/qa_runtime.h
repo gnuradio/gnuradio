@@ -23,11 +23,12 @@
 #ifndef _QA_RUNTIME_H_
 #define _QA_RUNTIME_H_
 
+#include <gruel/attributes.h>
 #include <cppunit/TestSuite.h>
 
 //! collect all the tests for the runtime directory
 
-class qa_runtime {
+class __GR_ATTR_EXPORT qa_runtime {
  public:
   //! return suite of tests for all of runtime directory
   static CppUnit::TestSuite *suite ();

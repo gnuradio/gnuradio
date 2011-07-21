@@ -23,6 +23,7 @@
 #ifndef INCLUDED_I2C_BBIO_PP_H
 #define INCLUDED_I2C_BBIO_PP_H
 
+#include <gr_core_api.h>
 #include "i2c_bbio.h"
 #include "ppio.h"
 
@@ -33,8 +34,8 @@
  * This class talks to the i2c bus on the microtune eval board using
  * the parallel port.  This works for both the 4937 and 4702 boards.
  */
-class i2c_bbio_pp : public i2c_bbio {
-  friend i2c_bbio_sptr make_i2c_bbio_pp (ppio_sptr pp);
+class GR_CORE_API i2c_bbio_pp : public i2c_bbio {
+  friend GR_CORE_API i2c_bbio_sptr make_i2c_bbio_pp (ppio_sptr pp);
   i2c_bbio_pp (ppio_sptr pp);
 
  public:
@@ -50,7 +51,7 @@ class i2c_bbio_pp : public i2c_bbio {
   ppio_sptr	d_pp;
 };
 
-i2c_bbio_sptr make_i2c_bbio_pp (ppio_sptr pp);
+GR_CORE_API i2c_bbio_sptr make_i2c_bbio_pp (ppio_sptr pp);
 
 
 #endif /* INCLUDED_I2C_BBIO_PP_H */

@@ -20,17 +20,18 @@
 #ifndef INCLUDED_GR_DECODE_CCSDS_27_FB_H
 #define INCLUDED_GR_DECODE_CCSDS_27_FB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 extern "C" {
-#include "../viterbi/viterbi.h"
+#include <viterbi.h>
 }
 
 class gr_decode_ccsds_27_fb;
 
 typedef boost::shared_ptr<gr_decode_ccsds_27_fb> gr_decode_ccsds_27_fb_sptr;
 
-gr_decode_ccsds_27_fb_sptr gr_make_decode_ccsds_27_fb();
+GR_CORE_API gr_decode_ccsds_27_fb_sptr gr_make_decode_ccsds_27_fb();
 
 /*! \brief A rate 1/2, k=7 convolutional decoder for the CCSDS standard
  * \ingroup ecc
@@ -51,10 +52,10 @@ gr_decode_ccsds_27_fb_sptr gr_make_decode_ccsds_27_fb();
  * from the corresponding inputs.
  */
 
-class gr_decode_ccsds_27_fb : public gr_sync_decimator
+class GR_CORE_API gr_decode_ccsds_27_fb : public gr_sync_decimator
 {
 private:
-  friend gr_decode_ccsds_27_fb_sptr gr_make_decode_ccsds_27_fb();
+  friend GR_CORE_API gr_decode_ccsds_27_fb_sptr gr_make_decode_ccsds_27_fb();
 
   gr_decode_ccsds_27_fb();
 

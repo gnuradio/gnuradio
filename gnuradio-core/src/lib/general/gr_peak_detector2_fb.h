@@ -23,12 +23,13 @@
 #ifndef INCLUDED_gr_peak_detector2_FB_H
 #define INCLUDED_gr_peak_detector2_FB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_peak_detector2_fb;
 typedef boost::shared_ptr<gr_peak_detector2_fb> gr_peak_detector2_fb_sptr;
 
-gr_peak_detector2_fb_sptr gr_make_peak_detector2_fb (float threshold_factor_rise = 7,
+GR_CORE_API gr_peak_detector2_fb_sptr gr_make_peak_detector2_fb (float threshold_factor_rise = 7,
 						     int look_ahead = 1000,
 						     float alpha = 0.001);
 
@@ -49,9 +50,9 @@ gr_peak_detector2_fb_sptr gr_make_peak_detector2_fb (float threshold_factor_rise
  * \param alpha The gain value of a single-pole moving average filter
  */
 
-class gr_peak_detector2_fb : public gr_sync_block
+class GR_CORE_API gr_peak_detector2_fb : public gr_sync_block
 {
-  friend gr_peak_detector2_fb_sptr 
+  friend GR_CORE_API gr_peak_detector2_fb_sptr 
   gr_make_peak_detector2_fb (float threshold_factor_rise, int look_ahead, float alpha);
   
   gr_peak_detector2_fb (float threshold_factor_rise, int look_ahead, float alpha);

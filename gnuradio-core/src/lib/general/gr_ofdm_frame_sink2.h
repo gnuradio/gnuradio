@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_OFDM_FRAME_SINK2_H
 #define INCLUDED_GR_OFDM_FRAME_SINK2_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_msg_queue.h>
 #include <gr_constellation.h>
@@ -30,7 +31,7 @@
 class gr_ofdm_frame_sink2;
 typedef boost::shared_ptr<gr_ofdm_frame_sink2> gr_ofdm_frame_sink2_sptr;
 
-gr_ofdm_frame_sink2_sptr 
+GR_CORE_API gr_ofdm_frame_sink2_sptr 
 gr_make_ofdm_frame_sink2 (gr_constellation_sptr constell,
 			 gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
 			 float phase_gain=0.25, float freq_gain=0.25*0.25/4.0);
@@ -45,9 +46,9 @@ gr_make_ofdm_frame_sink2 (gr_constellation_sptr constell,
  * we want to be able to pass in a reference to an object to do the demapping and slicing
  * for a given modulation type.
  */
-class gr_ofdm_frame_sink2 : public gr_sync_block
+class GR_CORE_API gr_ofdm_frame_sink2 : public gr_sync_block
 {
-  friend gr_ofdm_frame_sink2_sptr 
+  friend GR_CORE_API gr_ofdm_frame_sink2_sptr 
   gr_make_ofdm_frame_sink2 (gr_constellation_sptr constell, 
 			   gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
 			   float phase_gain, float freq_gain);

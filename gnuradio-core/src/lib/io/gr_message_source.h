@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_MESSAGE_SOURCE_H
 #define INCLUDED_GR_MESSAGE_SOURCE_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_message.h>
 #include <gr_msg_queue.h>
@@ -30,14 +31,14 @@
 class gr_message_source;
 typedef boost::shared_ptr<gr_message_source> gr_message_source_sptr;
 
-gr_message_source_sptr gr_make_message_source (size_t itemsize, int msgq_limit=0);
-gr_message_source_sptr gr_make_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
+GR_CORE_API gr_message_source_sptr gr_make_message_source (size_t itemsize, int msgq_limit=0);
+GR_CORE_API gr_message_source_sptr gr_make_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
 
 /*!
  * \brief Turn received messages into a stream
  * \ingroup source_blk
  */
-class gr_message_source : public gr_sync_block
+class GR_CORE_API gr_message_source : public gr_sync_block
 {
  private:
   size_t	 	d_itemsize;
@@ -46,9 +47,9 @@ class gr_message_source : public gr_sync_block
   unsigned		d_msg_offset;
   bool			d_eof;
 
-  friend gr_message_source_sptr
+  friend GR_CORE_API gr_message_source_sptr
   gr_make_message_source(size_t itemsize, int msgq_limit);
-  friend gr_message_source_sptr
+  friend GR_CORE_API gr_message_source_sptr
   gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq);
 
  protected:

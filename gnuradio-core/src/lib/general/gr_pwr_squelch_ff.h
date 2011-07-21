@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_PWR_SQUELCH_FF_H
 #define INCLUDED_GR_PWR_SQUELCH_FF_H
 
+#include <gr_core_api.h>
 #include <cmath>
 #include <gr_squelch_base_ff.h>
 #include <gr_single_pole_iir.h>
@@ -30,21 +31,21 @@
 class gr_pwr_squelch_ff;
 typedef boost::shared_ptr<gr_pwr_squelch_ff> gr_pwr_squelch_ff_sptr;
 
-gr_pwr_squelch_ff_sptr 
+GR_CORE_API gr_pwr_squelch_ff_sptr 
 gr_make_pwr_squelch_ff(double db, double alpha = 0.0001, int ramp=0, bool gate=false);
 
 /*!
  * \brief gate or zero output when input power below threshold
  * \ingroup level_blk
  */
-class gr_pwr_squelch_ff : public gr_squelch_base_ff
+class GR_CORE_API gr_pwr_squelch_ff : public gr_squelch_base_ff
 {
 private:
   double d_threshold;
   double d_pwr;
   gr_single_pole_iir<double,double,double> d_iir;
 
-  friend gr_pwr_squelch_ff_sptr gr_make_pwr_squelch_ff(double db, double alpha, int ramp, bool gate);
+  friend GR_CORE_API gr_pwr_squelch_ff_sptr gr_make_pwr_squelch_ff(double db, double alpha, int ramp, bool gate);
   gr_pwr_squelch_ff(double db, double alpha, int ramp, bool gate);
 
 protected:

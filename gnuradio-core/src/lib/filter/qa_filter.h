@@ -23,11 +23,12 @@
 #ifndef _QA_FILTER_H_
 #define _QA_FILTER_H_
 
+#include <gruel/attributes.h>
 #include <cppunit/TestSuite.h>
 
 //! collect all the tests for the gr directory
 
-class qa_filter {
+class __GR_ATTR_EXPORT qa_filter {
  public:
   //! return suite of tests for all of gr directory
   static CppUnit::TestSuite *suite ();

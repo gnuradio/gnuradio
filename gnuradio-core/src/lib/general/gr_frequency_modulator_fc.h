@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_FREQUENCY_MODULATOR_FC_H
 #define INCLUDED_GR_FREQUENCY_MODULATOR_FC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_frequency_modulator_fc;
 typedef boost::shared_ptr<gr_frequency_modulator_fc> gr_frequency_modulator_fc_sptr;
 
-gr_frequency_modulator_fc_sptr gr_make_frequency_modulator_fc (double sensitivity);
+GR_CORE_API gr_frequency_modulator_fc_sptr gr_make_frequency_modulator_fc (double sensitivity);
 
 /*!
  * \brief Frequency modulator block
@@ -36,12 +37,12 @@ gr_frequency_modulator_fc_sptr gr_make_frequency_modulator_fc (double sensitivit
  *
  * float input; complex baseband output
  */
-class gr_frequency_modulator_fc : public gr_sync_block
+class GR_CORE_API gr_frequency_modulator_fc : public gr_sync_block
 {
   double	d_sensitivity;
   double	d_phase;
 
-  friend gr_frequency_modulator_fc_sptr
+  friend GR_CORE_API gr_frequency_modulator_fc_sptr
   gr_make_frequency_modulator_fc (double sensitivity);
 
   gr_frequency_modulator_fc (double sensitivity);

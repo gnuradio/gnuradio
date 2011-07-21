@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_VCO_F_H
 #define INCLUDED_GR_VCO_F_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_fxpt_vco.h>
 
@@ -37,7 +38,7 @@ class gr_vco_f;
 typedef boost::shared_ptr<gr_vco_f> gr_vco_f_sptr;
 
 
-gr_vco_f_sptr gr_make_vco_f(double sampling_rate, double sensitivity, double amplitude);
+GR_CORE_API gr_vco_f_sptr gr_make_vco_f(double sampling_rate, double sensitivity, double amplitude);
 
 /*!
  * \brief VCO - Voltage controlled oscillator
@@ -45,9 +46,9 @@ gr_vco_f_sptr gr_make_vco_f(double sampling_rate, double sensitivity, double amp
  *
  * input: float stream of control voltages; output: float oscillator output
  */
-class gr_vco_f : public gr_sync_block
+class GR_CORE_API gr_vco_f : public gr_sync_block
 {
-  friend gr_vco_f_sptr gr_make_vco_f(double sampling_rate, double sensitivity, double amplitude);
+  friend GR_CORE_API gr_vco_f_sptr gr_make_vco_f(double sampling_rate, double sensitivity, double amplitude);
 
   /*!
    * \brief VCO - Voltage controlled oscillator

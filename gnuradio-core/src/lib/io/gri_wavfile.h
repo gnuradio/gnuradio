@@ -23,6 +23,7 @@
 // This file stores all the RIFF file type knowledge for the gr_wavfile_*
 // blocks.
 
+#include <gr_core_api.h>
 #include <cstdio>
 
 /*!

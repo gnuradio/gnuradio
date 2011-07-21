@@ -1,27 +1,28 @@
+#include <gr_core_api.h>
 #include <vector>
 #include <complex>
 
-std::vector<std::complex<float> >
+GR_CORE_API std::vector<std::complex<float> >
 complex_vec_test0();
 
-std::vector<std::complex<float> >
+GR_CORE_API std::vector<std::complex<float> >
 complex_vec_test1(const std::vector<std::complex<float> > &input);
 
-std::complex<float>
+GR_CORE_API std::complex<float>
 complex_scalar_test0();
 
-std::complex<float>
+GR_CORE_API std::complex<float>
 complex_scalar_test1(std::complex<float> input);
 
-std::vector<int>
+GR_CORE_API std::vector<int>
 int_vec_test0();
 
-std::vector<int>
+GR_CORE_API std::vector<int>
 int_vec_test1(const std::vector<int> &input);
 
-std::vector<float>
+GR_CORE_API std::vector<float>
 float_vec_test0();
 
-std::vector<float>
+GR_CORE_API std::vector<float>
 float_vec_test1(const std::vector<float> &input);
 

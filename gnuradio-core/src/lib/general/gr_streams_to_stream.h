@@ -22,12 +22,13 @@
 #ifndef INCLUDED_GR_STREAMS_TO_STREAM_H
 #define INCLUDED_GR_STREAMS_TO_STREAM_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_streams_to_stream;
 typedef boost::shared_ptr<gr_streams_to_stream> gr_streams_to_stream_sptr;
 
-gr_streams_to_stream_sptr 
+GR_CORE_API gr_streams_to_stream_sptr 
 gr_make_streams_to_stream (size_t item_size, size_t nstreams);
 
 
@@ -38,9 +39,9 @@ gr_make_streams_to_stream (size_t item_size, size_t nstreams);
  * Convert N streams of 1 item into 1 stream of N items.
  * Repeat ad infinitum.
  */
-class gr_streams_to_stream : public gr_sync_interpolator
+class GR_CORE_API gr_streams_to_stream : public gr_sync_interpolator
 {
-  friend gr_streams_to_stream_sptr
+  friend GR_CORE_API gr_streams_to_stream_sptr
     gr_make_streams_to_stream (size_t item_size, size_t nstreams);
 
  protected:

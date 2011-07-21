@@ -21,12 +21,13 @@
 #ifndef INCLUDED_GR_FIR_FFF_ARMV7_A_H
 #define INCLUDED_GR_FIR_FFF_ARMV7_A_H
 
+#include <gr_core_api.h>
 #include <gr_fir_fff_generic.h>
 
 /*!
  * \brief armv7_a using NEON coprocessor version of gr_fir_fff
  */
-class gr_fir_fff_armv7_a : public gr_fir_fff_generic
+class GR_CORE_API gr_fir_fff_armv7_a : public gr_fir_fff_generic
 {
 protected:
 

@@ -23,11 +23,12 @@
 #ifndef INCLUDED_GR_QUADRATURE_DEMOD_CF_H
 #define INCLUDED_GR_QUADRATURE_DEMOD_CF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_quadrature_demod_cf;
 typedef boost::shared_ptr<gr_quadrature_demod_cf> gr_quadrature_demod_cf_sptr;
-gr_quadrature_demod_cf_sptr gr_make_quadrature_demod_cf (float gain);
+GR_CORE_API gr_quadrature_demod_cf_sptr gr_make_quadrature_demod_cf (float gain);
 
 /*!
  * \brief quadrature demodulator: complex in, float out
@@ -36,9 +37,9 @@ gr_quadrature_demod_cf_sptr gr_make_quadrature_demod_cf (float gain);
  * This can be used to demod FM, FSK, GMSK, etc.
  * The input is complex baseband.
  */
-class gr_quadrature_demod_cf : public gr_sync_block
+class GR_CORE_API gr_quadrature_demod_cf : public gr_sync_block
 {
-  friend gr_quadrature_demod_cf_sptr gr_make_quadrature_demod_cf (float gain);
+  friend GR_CORE_API gr_quadrature_demod_cf_sptr gr_make_quadrature_demod_cf (float gain);
   gr_quadrature_demod_cf (float gain);
 
   float		d_gain;

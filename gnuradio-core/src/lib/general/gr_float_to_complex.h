@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_FLOAT_TO_COMPLEX_H
 #define INCLUDED_GR_FLOAT_TO_COMPLEX_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_complex.h>
 
 class gr_float_to_complex;
 typedef boost::shared_ptr<gr_float_to_complex> gr_float_to_complex_sptr;
 
-gr_float_to_complex_sptr
+GR_CORE_API gr_float_to_complex_sptr
 gr_make_float_to_complex (size_t vlen = 1);
 
 /*!
@@ -37,9 +38,9 @@ gr_make_float_to_complex (size_t vlen = 1);
  * \ingroup converter_blk
  */
 
-class gr_float_to_complex : public gr_sync_block
+class GR_CORE_API gr_float_to_complex : public gr_sync_block
 {
-  friend gr_float_to_complex_sptr gr_make_float_to_complex (size_t vlen);
+  friend GR_CORE_API gr_float_to_complex_sptr gr_make_float_to_complex (size_t vlen);
   gr_float_to_complex (size_t vlen);
 
   size_t d_vlen;

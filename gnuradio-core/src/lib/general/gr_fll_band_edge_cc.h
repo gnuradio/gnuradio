@@ -24,11 +24,12 @@
 #ifndef INCLUDED_GR_FLL_BAND_EDGE_CC_H
 #define	INCLUDED_GR_FLL_BAND_EDGE_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_fll_band_edge_cc;
 typedef boost::shared_ptr<gr_fll_band_edge_cc> gr_fll_band_edge_cc_sptr;
-gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
+GR_CORE_API gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
 						   int filter_size, float alpha, float beta);
 
 class gr_fir_ccc;
@@ -65,7 +66,7 @@ class gri_fft_complex;
  * entire frequency range to allow their comparisons to be valid.
  */
 
-class gr_fll_band_edge_cc : public gr_sync_block
+class GR_CORE_API gr_fll_band_edge_cc : public gr_sync_block
 {
  private:
   /*!
@@ -76,7 +77,7 @@ class gr_fll_band_edge_cc : public gr_sync_block
    * \param alpha            (float) Loop gain 1
    * \param beta             (float) Loop gain 2
    */
-  friend gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
+  friend GR_CORE_API gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
 							    int filter_size, float alpha, float beta);
 
   float                   d_alpha;

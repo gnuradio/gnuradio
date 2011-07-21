@@ -19,6 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <gr_core_api.h>
 #include <gr_top_block.h>
 #include <gr_fractional_interpolator_cc.h>
 #include <gr_sig_source_c.h>
@@ -31,7 +32,7 @@ class gr_channel_model;
 typedef boost::shared_ptr<gr_channel_model> gr_channel_model_sptr;
 
 
-gr_channel_model_sptr gr_make_channel_model(double noise_voltage=0.0,
+GR_CORE_API gr_channel_model_sptr gr_make_channel_model(double noise_voltage=0.0,
 					    double frequency_offset=0.0,
 					    double epsilon=1.0,
 					    const std::vector<gr_complex> &taps=std::vector<gr_complex>(1, 1),
@@ -41,7 +42,7 @@ gr_channel_model_sptr gr_make_channel_model(double noise_voltage=0.0,
  * \brief channel simulator
  * \ingroup misc_blk
  */
-class gr_channel_model : public gr_hier_block2
+class GR_CORE_API gr_channel_model : public gr_hier_block2
 {
  private:
   gr_channel_model(double noise_voltage,
@@ -50,7 +51,7 @@ class gr_channel_model : public gr_hier_block2
 		   const std::vector<gr_complex> &taps,
 		   double noise_seed);
 
-  friend gr_channel_model_sptr gr_make_channel_model(double noise_voltage,
+  friend GR_CORE_API gr_channel_model_sptr gr_make_channel_model(double noise_voltage,
 						     double frequency_offset,
 						     double epsilon,
 						     const std::vector<gr_complex> &taps,

@@ -29,6 +29,7 @@
  * (included below)
  */
 
+#include <gr_core_api.h>
 #include <altivec.h>
 #undef bool		// repair namespace pollution
 #undef vector		// repair namespace pollution
@@ -55,8 +56,8 @@ union v_float_u {
   float		f[FLOATS_PER_VEC];
 };
 
-void gr_print_vector_float(FILE *fp, vec_float4 v);
-void gr_pvf(FILE *fp, const char *label, vec_float4 v);
+GR_CORE_API void gr_print_vector_float(FILE *fp, vec_float4 v);
+GR_CORE_API void gr_pvf(FILE *fp, const char *label, vec_float4 v);
 
 static inline float
 horizontal_add_f(vec_float4 v)

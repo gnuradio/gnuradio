@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_WAVFILE_SOURCE_H
 #define INCLUDED_GR_WAVFILE_SOURCE_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <cstdio>  // for FILE
 
 class gr_wavfile_source;
 typedef boost::shared_ptr<gr_wavfile_source> gr_wavfile_source_sptr;
 
-gr_wavfile_source_sptr
+GR_CORE_API gr_wavfile_source_sptr
 gr_make_wavfile_source (const char *filename, bool repeat = false);
 
 /*!
@@ -41,10 +42,10 @@ gr_make_wavfile_source (const char *filename, bool repeat = false);
  * \ingroup source_blk
  */
 
-class gr_wavfile_source : public gr_sync_block
+class GR_CORE_API gr_wavfile_source : public gr_sync_block
 {
 private:
-  friend gr_wavfile_source_sptr gr_make_wavfile_source (const char *filename,
+  friend GR_CORE_API gr_wavfile_source_sptr gr_make_wavfile_source (const char *filename,
 		                                              bool repeat);
   gr_wavfile_source(const char *filename, bool repeat);
 

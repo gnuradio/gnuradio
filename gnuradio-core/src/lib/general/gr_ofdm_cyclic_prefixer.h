@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_OFDM_CYCLIC_PREFIXER_H
 #define INCLUDED_GR_OFDM_CYCLIC_PREFIXER_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 #include <stdio.h>
 
 class gr_ofdm_cyclic_prefixer;
 typedef boost::shared_ptr<gr_ofdm_cyclic_prefixer> gr_ofdm_cyclic_prefixer_sptr;
 
-gr_ofdm_cyclic_prefixer_sptr 
+GR_CORE_API gr_ofdm_cyclic_prefixer_sptr 
 gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 
 
@@ -38,9 +39,9 @@ gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
  * symbol(vector) and converts vector to a stream output_size long.
  * \ingroup ofdm_blk
  */
-class gr_ofdm_cyclic_prefixer : public gr_sync_interpolator
+class GR_CORE_API gr_ofdm_cyclic_prefixer : public gr_sync_interpolator
 {
-  friend gr_ofdm_cyclic_prefixer_sptr
+  friend GR_CORE_API gr_ofdm_cyclic_prefixer_sptr
     gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 
  protected:

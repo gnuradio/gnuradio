@@ -23,11 +23,12 @@
 #ifndef _QA_GENERAL_H_
 #define _QA_GENERAL_H_
 
+#include <gruel/attributes.h>
 #include <cppunit/TestSuite.h>
 
 //! collect all the tests for the gr directory
 
-class qa_general {
+class __GR_ATTR_EXPORT qa_general {
  public:
   //! return suite of tests for all of gr directory
   static CppUnit::TestSuite *suite ();

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GRI_IIR_H
 #define INCLUDED_GRI_IIR_H
 
+#include <gr_core_api.h>
 #include <vector>
 #include <stdexcept>
 

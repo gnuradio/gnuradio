@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_MESSAGE_SINK_H
 #define INCLUDED_GR_MESSAGE_SINK_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_message.h>
 #include <gr_msg_queue.h>
@@ -30,7 +31,7 @@
 class gr_message_sink;
 typedef boost::shared_ptr<gr_message_sink> gr_message_sink_sptr;
 
-gr_message_sink_sptr gr_make_message_sink (size_t itemsize,
+GR_CORE_API gr_message_sink_sptr gr_make_message_sink (size_t itemsize,
 					   gr_msg_queue_sptr msgq,
 					   bool dont_block);
 
@@ -38,14 +39,14 @@ gr_message_sink_sptr gr_make_message_sink (size_t itemsize,
  * \brief Gather received items into messages and insert into msgq
  * \ingroup sink_blk
  */
-class gr_message_sink : public gr_sync_block
+class GR_CORE_API gr_message_sink : public gr_sync_block
 {
  private:
   size_t	 	d_itemsize;
   gr_msg_queue_sptr	d_msgq;
   bool			d_dont_block;
 
-  friend gr_message_sink_sptr
+  friend GR_CORE_API gr_message_sink_sptr
   gr_make_message_sink(size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block);
 
  protected:

@@ -22,31 +22,32 @@
 #ifndef INCLUDED_GR_CONSTANTS_H
 #define INCLUDED_GR_CONSTANTS_H
 
+#include <gr_core_api.h>
 #include <string>
 
 /*!
  * \brief return ./configure --prefix argument.  Typically /usr/local
  */
-const std::string gr_prefix();
+GR_CORE_API const std::string gr_prefix();
 
 /*!
  * \brief return ./configure --sysconfdir argument.  Typically $prefix/etc or /etc
  */
-const std::string gr_sysconfdir();
+GR_CORE_API const std::string gr_sysconfdir();
 
 /*!
  * \brief return preferences file directory.  Typically $sysconfdir/etc/conf.d
  */
-const std::string gr_prefsdir();
+GR_CORE_API const std::string gr_prefsdir();
 
 /*!
  * \brief return date/time of build, as set when 'bootstrap' is run
  */
-const std::string gr_build_date();
+GR_CORE_API const std::string gr_build_date();
 
 /*!
  * \brief return version string defined in configure.ac
  */
-const std::string gr_version();
+GR_CORE_API const std::string gr_version();
 
 #endif /* INCLUDED_GR_CONSTANTS_H */

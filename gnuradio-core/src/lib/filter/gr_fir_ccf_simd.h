@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_FIR_CCF_SIMD_H
 #define INCLUDED_GR_FIR_CCF_SIMD_H
 
+#include <gr_core_api.h>
 #include <gr_fir_ccf_generic.h>
 
 
@@ -33,7 +34,7 @@
  * subclasses.
  */
 
-class gr_fir_ccf_simd : public gr_fir_ccf_generic
+class GR_CORE_API gr_fir_ccf_simd : public gr_fir_ccf_generic
 {
 protected:
   typedef void (*fcomplex_dotprod_t)(const float *taps,

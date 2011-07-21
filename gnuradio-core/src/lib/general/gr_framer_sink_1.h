@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_FRAMER_SINK_1_H
 #define INCLUDED_GR_FRAMER_SINK_1_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_msg_queue.h>
 
 class gr_framer_sink_1;
 typedef boost::shared_ptr<gr_framer_sink_1> gr_framer_sink_1_sptr;
 
-gr_framer_sink_1_sptr 
+GR_CORE_API gr_framer_sink_1_sptr 
 gr_make_framer_sink_1 (gr_msg_queue_sptr target_queue);
 
 /*!
@@ -50,9 +51,9 @@ gr_make_framer_sink_1 (gr_msg_queue_sptr target_queue);
  * the first bit of the packet.  That is, this bit is the first
  * one after the access code.
  */
-class gr_framer_sink_1 : public gr_sync_block
+class GR_CORE_API gr_framer_sink_1 : public gr_sync_block
 {
-  friend gr_framer_sink_1_sptr 
+  friend GR_CORE_API gr_framer_sink_1_sptr 
   gr_make_framer_sink_1 (gr_msg_queue_sptr target_queue);
 
  private:

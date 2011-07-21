@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_WAVELET_FF_H
 #define INCLUDED_GR_WAVELET_FF_H
 
+#include <gr_core_api.h>
 #include <iostream>
 #include <gr_sync_block.h>
 
@@ -31,7 +32,7 @@
 class gr_wavelet_ff;
 typedef boost::shared_ptr<gr_wavelet_ff> gr_wavelet_ff_sptr;
 
-gr_wavelet_ff_sptr
+GR_CORE_API gr_wavelet_ff_sptr
 gr_make_wavelet_ff(int size = 1024,
 		   int order = 20,
 		   bool forward = true);
@@ -41,7 +42,7 @@ gr_make_wavelet_ff(int size = 1024,
  * \ingroup wavelet_blk
  */
 
-class gr_wavelet_ff : public gr_sync_block
+class GR_CORE_API gr_wavelet_ff : public gr_sync_block
 {
   int                    d_size;
   int                    d_order;
@@ -50,7 +51,7 @@ class gr_wavelet_ff : public gr_sync_block
   gsl_wavelet_workspace *d_workspace;
   double                *d_temp;
 
-  friend gr_wavelet_ff_sptr
+  friend GR_CORE_API gr_wavelet_ff_sptr
     gr_make_wavelet_ff(int size,
 		       int order,
 		       bool forward);

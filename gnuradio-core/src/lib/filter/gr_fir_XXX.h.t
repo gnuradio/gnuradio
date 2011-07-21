@@ -29,6 +29,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <vector>
 @VRCOMPLEX_INCLUDE@
 #include <gr_reverse.h>
@@ -44,7 +45,7 @@
  * I,O,T are elements of the set 's' (short), 'f' (float), 'c' (gr_complex), 'i' (int)
  */
 
-class @FIR_TYPE@ {
+class GR_CORE_API @FIR_TYPE@ {
 
 protected:
   std::vector<@TAP_TYPE@>	d_taps;		// reversed taps

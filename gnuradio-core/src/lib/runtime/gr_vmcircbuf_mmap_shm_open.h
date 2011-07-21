@@ -23,13 +23,14 @@
 #ifndef _GR_VMCIRCBUF_MMAP_SHM_OPEN_H_
 #define _GR_VMCIRCBUF_MMAP_SHM_OPEN_H_
 
+#include <gr_core_api.h>
 #include <gr_vmcircbuf.h>
 
 /*!
  * \brief concrete class to implement circular buffers with mmap and shm_open
  * \ingroup internal
  */
-class gr_vmcircbuf_mmap_shm_open : public gr_vmcircbuf {
+class GR_CORE_API gr_vmcircbuf_mmap_shm_open : public gr_vmcircbuf {
  public:
 
   // CREATORS
@@ -41,7 +42,7 @@ class gr_vmcircbuf_mmap_shm_open : public gr_vmcircbuf {
 /*!
  * \brief concrete factory for circular buffers built using mmap and shm_open
  */
-class gr_vmcircbuf_mmap_shm_open_factory : public gr_vmcircbuf_factory {
+class GR_CORE_API gr_vmcircbuf_mmap_shm_open_factory : public gr_vmcircbuf_factory {
  private:
   static gr_vmcircbuf_factory	*s_the_factory;
 

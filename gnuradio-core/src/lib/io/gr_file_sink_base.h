@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_FILE_SINK_BASE_H
 #define INCLUDED_GR_FILE_SINK_BASE_H
 
+#include <gr_core_api.h>
 #include <boost/thread.hpp>
 #include <cstdio>
 
 /*!
  * \brief Common base class for file sinks
  */
-class gr_file_sink_base 
+class GR_CORE_API gr_file_sink_base
 {
  protected:
   FILE	       *d_fp;		// current FILE pointer

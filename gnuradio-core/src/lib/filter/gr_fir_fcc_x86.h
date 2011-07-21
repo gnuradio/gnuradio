@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_FIR_FCC_X86_H
 #define INCLUDED_GR_FIR_FCC_X86_H
 
+#include <gr_core_api.h>
 #include <gr_fir_fcc_simd.h>
 
 /*!
  * \brief 3DNow! version of gr_fir_fcc
  * \ingroup filter_primitive
  */
-class gr_fir_fcc_3dnow : public gr_fir_fcc_simd
+class GR_CORE_API gr_fir_fcc_3dnow : public gr_fir_fcc_simd
 {
 public:
   gr_fir_fcc_3dnow ();
@@ -40,7 +41,7 @@ public:
  * \brief SSE version of gr_fir_fcc
  * \ingroup filter_blk
  */
-class gr_fir_fcc_sse : public gr_fir_fcc_simd
+class GR_CORE_API gr_fir_fcc_sse : public gr_fir_fcc_simd
 {
 public:
   gr_fir_fcc_sse ();

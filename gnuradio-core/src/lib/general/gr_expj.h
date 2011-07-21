@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_EXPJ_H
 #define INCLUDED_GR_EXPJ_H
 
+#include <gr_core_api.h>
 #include <gr_sincos.h>
 #include <gr_types.h>
 

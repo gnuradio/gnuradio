@@ -22,11 +22,13 @@
 #ifndef _GR_PAGESIZE_H_
 #define _GR_PAGESIZE_H_
 
+#include <gr_core_api.h>
+
 /*!
  * \brief return the page size in bytes
  */
 
-int gr_pagesize ();
+GR_CORE_API int gr_pagesize ();
 
 
 #endif /* _GR_PAGESIZE_H_ */

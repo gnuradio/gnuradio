@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_FLOAT_TO_SHORT_H
 #define INCLUDED_GR_FLOAT_TO_SHORT_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_float_to_short;
 typedef boost::shared_ptr<gr_float_to_short> gr_float_to_short_sptr;
 
-gr_float_to_short_sptr
+GR_CORE_API gr_float_to_short_sptr
 gr_make_float_to_short ();
 
 /*!
@@ -36,9 +37,9 @@ gr_make_float_to_short ();
  * \ingroup converter_blk
  */
 
-class gr_float_to_short : public gr_sync_block
+class GR_CORE_API gr_float_to_short : public gr_sync_block
 {
-  friend gr_float_to_short_sptr gr_make_float_to_short ();
+  friend GR_CORE_API gr_float_to_short_sptr gr_make_float_to_short ();
   gr_float_to_short ();
 
  public:

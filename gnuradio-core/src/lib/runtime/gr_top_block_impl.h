@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_TOP_BLOCK_IMPL_H
 #define INCLUDED_GR_TOP_BLOCK_IMPL_H
 
+#include <gr_core_api.h>
 #include <gr_scheduler.h>
 #include <gruel/thread.h>
 
@@ -34,7 +35,7 @@
  * decoupling of changes from dependent classes.
  *
  */
-class gr_top_block_impl
+class GR_CORE_API gr_top_block_impl
 {
 public:
   gr_top_block_impl(gr_top_block *owner);

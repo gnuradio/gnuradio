@@ -23,6 +23,7 @@
 #ifndef _GR_FIRDES_H_
 #define _GR_FIRDES_H_
 
+#include <gr_core_api.h>
 #include <vector>
 #include <cmath>
 #include <gr_complex.h>
@@ -32,7 +33,7 @@
  * \ingroup filter_design
  */
 
-class gr_firdes {
+class GR_CORE_API gr_firdes {
  public:
 
   enum win_type {

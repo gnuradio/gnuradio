@@ -20,13 +20,14 @@
 #ifndef INCLUDED_GR_PROBE_DENSITY_B_H
 #define INCLUDED_GR_PROBE_DENSITY_B_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_probe_density_b;
 
 typedef boost::shared_ptr<gr_probe_density_b> gr_probe_density_b_sptr;
 
-gr_probe_density_b_sptr gr_make_probe_density_b(double alpha);
+GR_CORE_API gr_probe_density_b_sptr gr_make_probe_density_b(double alpha);
 
 /*!
  * This block maintains a running average of the input stream and
@@ -40,10 +41,10 @@ gr_probe_density_b_sptr gr_make_probe_density_b(double alpha);
  *
  */
 
-class gr_probe_density_b : public gr_sync_block
+class GR_CORE_API gr_probe_density_b : public gr_sync_block
 {
 private:
-  friend gr_probe_density_b_sptr gr_make_probe_density_b(double alpha);
+  friend GR_CORE_API gr_probe_density_b_sptr gr_make_probe_density_b(double alpha);
 
   double d_alpha;
   double d_beta;

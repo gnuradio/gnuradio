@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_MESSAGE_H
 #define INCLUDED_GR_MESSAGE_H
 
+#include <gr_core_api.h>
 #include <gr_types.h>
 #include <string>
 
@@ -31,10 +32,10 @@ typedef boost::shared_ptr<gr_message> gr_message_sptr;
 /*!
  * \brief public constructor for gr_message
  */
-gr_message_sptr 
+GR_CORE_API gr_message_sptr 
 gr_make_message(long type = 0, double arg1 = 0, double arg2 = 0, size_t length = 0);
 
-gr_message_sptr
+GR_CORE_API gr_message_sptr
 gr_make_message_from_string(const std::string s, long type = 0, double arg1 = 0, double arg2 = 0);
 
 /*!
@@ -44,7 +45,7 @@ gr_make_message_from_string(const std::string s, long type = 0, double arg1 = 0,
  * The ideas and method names for adjustable message length were
  * lifted from the click modular router "Packet" class.
  */
-class gr_message {
+class GR_CORE_API gr_message {
   gr_message_sptr d_next;	// link field for msg queue
   long		  d_type;	// type of the message
   double	  d_arg1;	// optional arg1
@@ -57,10 +58,10 @@ class gr_message {
   
   gr_message (long type, double arg1, double arg2, size_t length);
 
-  friend gr_message_sptr
+  friend GR_CORE_API gr_message_sptr
     gr_make_message (long type, double arg1, double arg2, size_t length);
 
-  friend gr_message_sptr
+  friend GR_CORE_API gr_message_sptr
     gr_make_message_from_string (const std::string s, long type, double arg1, double arg2);
 
   friend class gr_msg_queue;
@@ -85,6 +86,6 @@ public:
 
 };
 
-long gr_message_ncurrently_allocated ();
+GR_CORE_API long gr_message_ncurrently_allocated ();
 
 #endif /* INCLUDED_GR_MESSAGE_H */

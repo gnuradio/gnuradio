@@ -27,6 +27,7 @@
 #ifndef INCLUDED_GR_LOG2_CONST_H
 #define INCLUDED_GR_LOG2_CONST_H
 
+#include <gr_core_api.h>
 #include <assert.h>
 
 template<unsigned int k> static inline int gr_log2_const() { assert(0); return 0; }

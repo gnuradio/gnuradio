@@ -22,10 +22,11 @@
 #ifndef INCLUDED_GR_FXPT_H
 #define INCLUDED_GR_FXPT_H
 
+#include <gr_core_api.h>
 #include <gr_types.h>
 
 /*!
- * \brief fixed point sine and cosine and friends.
+ * \brief fixed point sine and cosine and friend GR_CORE_APIs.
  * \ingroup misc
  *
  *   fixed pt	radians
@@ -35,7 +36,7 @@
  *  2**31-1        pi - epsilon
  *
  */
-class gr_fxpt
+class GR_CORE_API gr_fxpt
 {
   static const int WORDBITS = 32;
   static const int NBITS = 10;

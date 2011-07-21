@@ -23,22 +23,23 @@
 #ifndef INCLUDED_GR_NOP_H
 #define INCLUDED_GR_NOP_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <stddef.h>			// size_t
 
 class gr_nop;
 typedef boost::shared_ptr<gr_nop> gr_nop_sptr;
 
-gr_nop_sptr
+GR_CORE_API gr_nop_sptr
 gr_make_nop (size_t sizeof_stream_item);
 
 /*!
  * \brief Does nothing.  Used for testing only.
  * \ingroup misc_blk
  */
-class gr_nop : public gr_block
+class GR_CORE_API gr_nop : public gr_block
 {
-  friend gr_nop_sptr gr_make_nop (size_t sizeof_stream_item);
+  friend GR_CORE_API gr_nop_sptr gr_make_nop (size_t sizeof_stream_item);
   gr_nop (size_t sizeof_stream_item);
 
 protected:

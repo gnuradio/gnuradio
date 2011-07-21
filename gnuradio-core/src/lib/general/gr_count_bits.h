@@ -23,9 +23,11 @@
 #ifndef _GR_COUNT_BITS_H_
 #define _GR_COUNT_BITS_H_
 
-unsigned int gr_count_bits8(unsigned int x);	// return number of set bits in the low  8 bits of x
-unsigned int gr_count_bits16(unsigned int x);	// return number of set bits in the low 16 bits of x
-unsigned int gr_count_bits32(unsigned int x);	// return number of set bits in the low 32 bits of x
-unsigned int gr_count_bits64(unsigned long long int x);
+#include <gr_core_api.h>
+
+GR_CORE_API unsigned int gr_count_bits8(unsigned int x);	// return number of set bits in the low  8 bits of x
+GR_CORE_API unsigned int gr_count_bits16(unsigned int x);	// return number of set bits in the low 16 bits of x
+GR_CORE_API unsigned int gr_count_bits32(unsigned int x);	// return number of set bits in the low 32 bits of x
+GR_CORE_API unsigned int gr_count_bits64(unsigned long long int x);
 
 #endif /* _GR_COUNT_BITS_H_ */

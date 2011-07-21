@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_CONSTELLATION_DECODER_CB_H
 #define INCLUDED_GR_CONSTELLATION_DECODER_CB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <vector>
 
 class gr_constellation_decoder_cb;
 typedef boost::shared_ptr<gr_constellation_decoder_cb> gr_constellation_decoder_cb_sptr;
 
-gr_constellation_decoder_cb_sptr 
+GR_CORE_API gr_constellation_decoder_cb_sptr 
 	gr_make_constellation_decoder_cb (const std::vector<gr_complex> &sym_position,
 					  const std::vector<unsigned char> &sym_value_out);
 
@@ -38,14 +39,14 @@ gr_constellation_decoder_cb_sptr
  * \ingroup coding_blk
  *
  */
-class gr_constellation_decoder_cb : public gr_sync_block
+class GR_CORE_API gr_constellation_decoder_cb : public gr_sync_block
 {
 
  private:
   std::vector<gr_complex> d_sym_position;
   std::vector<unsigned char> d_sym_value_out;
 
-  friend gr_constellation_decoder_cb_sptr 
+  friend GR_CORE_API gr_constellation_decoder_cb_sptr 
 		gr_make_constellation_decoder_cb (const std::vector<gr_complex> &sym_position, 						          const std::vector<unsigned char> &sym_value_out);
   
   gr_constellation_decoder_cb (const std::vector<gr_complex> &sym_position, 

@@ -23,21 +23,22 @@
 #ifndef INCLUDED_GR_TOP_BLOCK_H
 #define INCLUDED_GR_TOP_BLOCK_H
 
+#include <gr_core_api.h>
 #include <gr_hier_block2.h>
 
 class gr_top_block_impl;
 
-gr_top_block_sptr gr_make_top_block(const std::string &name);
+GR_CORE_API gr_top_block_sptr gr_make_top_block(const std::string &name);
 
 /*!
  *\brief Top-level hierarchical block representing a flowgraph
  * \ingroup container_blk
  *
  */
-class gr_top_block : public gr_hier_block2
+class GR_CORE_API gr_top_block : public gr_hier_block2
 {
 private:
-  friend gr_top_block_sptr gr_make_top_block(const std::string &name);
+  friend GR_CORE_API gr_top_block_sptr gr_make_top_block(const std::string &name);
 
   gr_top_block_impl *d_impl;
 

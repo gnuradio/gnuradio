@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_OFDM_DEMAPPER_VCB_H
 #define INCLUDED_GR_OFDM_DEMAPPER_VCB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 class gr_ofdm_demapper_vcb;
 typedef boost::shared_ptr<gr_ofdm_demapper_vcb> gr_ofdm_demapper_vcb_sptr;
 
-gr_ofdm_demapper_vcb_sptr 
+GR_CORE_API gr_ofdm_demapper_vcb_sptr 
 gr_make_ofdm_demapper_vcb (unsigned int bits_per_symbol, unsigned int vlen);
 
 
@@ -39,9 +40,9 @@ gr_make_ofdm_demapper_vcb (unsigned int bits_per_symbol, unsigned int vlen);
  * \ingroup demodulation_blk
  * \ingroup ofdm_blk
  */
-class gr_ofdm_demapper_vcb : public gr_sync_decimator
+class GR_CORE_API gr_ofdm_demapper_vcb : public gr_sync_decimator
 {
-  friend gr_ofdm_demapper_vcb_sptr
+  friend GR_CORE_API gr_ofdm_demapper_vcb_sptr
   gr_make_ofdm_demapper_vcb (unsigned int bits_per_symbol, unsigned int vlen);
 
 protected:

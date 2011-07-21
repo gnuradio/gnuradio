@@ -24,20 +24,21 @@
 #ifndef INCLUDED_GR_IQCOMP_CC_H
 #define INCLUDED_GR_IQCOMP_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_iqcomp_cc;
 typedef boost::shared_ptr<gr_iqcomp_cc> gr_iqcomp_cc_sptr;
 
-gr_iqcomp_cc_sptr gr_make_iqcomp_cc (float mu);
+GR_CORE_API gr_iqcomp_cc_sptr gr_make_iqcomp_cc (float mu);
 
 /*!
  * \brief 
  * \ingroup misc_blk
  */
-class gr_iqcomp_cc : public gr_sync_block
+class GR_CORE_API gr_iqcomp_cc : public gr_sync_block
 {
-  friend gr_iqcomp_cc_sptr gr_make_iqcomp_cc (float mu);
+  friend GR_CORE_API gr_iqcomp_cc_sptr gr_make_iqcomp_cc (float mu);
 
   float	d_mu, d_wi, d_wq;
   gr_iqcomp_cc (float mu);

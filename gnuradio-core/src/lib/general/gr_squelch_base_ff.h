@@ -23,9 +23,10 @@
 #ifndef INCLUDED_GR_SQUELCH_BASE_FF_H
 #define INCLUDED_GR_SQUELCH_BASE_FF_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
-class gr_squelch_base_ff : public gr_block
+class GR_CORE_API gr_squelch_base_ff : public gr_block
 {
 private:
   int	 d_ramp;

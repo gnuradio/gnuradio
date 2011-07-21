@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_OSCOPE_SINK_F_H
 #define INCLUDED_GR_OSCOPE_SINK_F_H
 
+#include <gr_core_api.h>
 #include <gr_oscope_sink_x.h>
 #include <gr_msg_queue.h>
 
 class gr_oscope_sink_f;
 typedef boost::shared_ptr<gr_oscope_sink_x> gr_oscope_sink_f_sptr;
 
-gr_oscope_sink_f_sptr gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_sptr msgq);
+GR_CORE_API gr_oscope_sink_f_sptr gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_sptr msgq);
 
 
 /*!
@@ -38,10 +39,10 @@ gr_oscope_sink_f_sptr gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_
  *
  * Accepts multiple float streams.
  */
-class gr_oscope_sink_f : public gr_oscope_sink_x
+class GR_CORE_API gr_oscope_sink_f : public gr_oscope_sink_x
 {
 private:
-  friend gr_oscope_sink_f_sptr
+  friend GR_CORE_API gr_oscope_sink_f_sptr
   gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_sptr msgq);
 
   gr_oscope_sink_f (double sampling_rate, gr_msg_queue_sptr msgq);

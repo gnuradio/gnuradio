@@ -25,9 +25,10 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
-class @NAME@;
+class GR_CORE_API @NAME@;
 typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
 /*!
@@ -36,7 +37,7 @@ typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
  */
 
 class @NAME@ : public gr_sync_block {
-  friend @NAME@_sptr 
+  friend GR_CORE_API @NAME@_sptr 
   gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat, int vlen);
 
   std::vector<@TYPE@>	d_data;
@@ -53,7 +54,7 @@ class @NAME@ : public gr_sync_block {
 		    gr_vector_void_star &output_items);
 };
 
-@NAME@_sptr
+GR_CORE_API @NAME@_sptr
 gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat = false, int vlen = 1);
 
 #endif

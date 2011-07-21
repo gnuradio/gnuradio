@@ -22,20 +22,21 @@
 #ifndef INCLUDED_GR_NLOG10_FF_H
 #define INCLUDED_GR_NLOG10_FF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_nlog10_ff;
 typedef boost::shared_ptr<gr_nlog10_ff> gr_nlog10_ff_sptr;
 
-gr_nlog10_ff_sptr gr_make_nlog10_ff (float n=1.0, unsigned vlen=1, float k=0);
+GR_CORE_API gr_nlog10_ff_sptr gr_make_nlog10_ff (float n=1.0, unsigned vlen=1, float k=0);
 
 /*!
  * \brief output = n*log10(input) + k
  * \ingroup math_blk
  */
-class gr_nlog10_ff : public gr_sync_block
+class GR_CORE_API gr_nlog10_ff : public gr_sync_block
 {
-  friend gr_nlog10_ff_sptr gr_make_nlog10_ff (float n, unsigned vlen, float k);
+  friend GR_CORE_API gr_nlog10_ff_sptr gr_make_nlog10_ff (float n, unsigned vlen, float k);
 
   unsigned int		d_vlen;
   float			d_n;

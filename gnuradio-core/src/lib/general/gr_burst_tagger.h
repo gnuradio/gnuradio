@@ -23,26 +23,27 @@
 #ifndef INCLUDED_GR_BURST_TAGGER_H
 #define INCLUDED_GR_BURST_TAGGER_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_burst_tagger;
 typedef boost::shared_ptr<gr_burst_tagger> gr_burst_tagger_sptr;
 
-gr_burst_tagger_sptr gr_make_burst_tagger(size_t itemsize);
+GR_CORE_API gr_burst_tagger_sptr gr_make_burst_tagger(size_t itemsize);
 
 /*!
  * \brief output[i] = input[i]
  * \ingroup misc_blk
  *
  */
-class gr_burst_tagger : public gr_sync_block
+class GR_CORE_API gr_burst_tagger : public gr_sync_block
 {
   size_t		d_itemsize;
   bool                  d_state;
   pmt::pmt_t            d_key;
   pmt::pmt_t            d_id;
 
-  friend gr_burst_tagger_sptr gr_make_burst_tagger(size_t itemsize);
+  friend GR_CORE_API gr_burst_tagger_sptr gr_make_burst_tagger(size_t itemsize);
   gr_burst_tagger(size_t itemsize);
 
  public:

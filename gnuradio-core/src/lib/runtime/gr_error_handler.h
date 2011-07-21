@@ -43,6 +43,7 @@
 #ifndef INCLUDED_GR_ERROR_HANDLER_H
 #define INCLUDED_GR_ERROR_HANDLER_H
 
+#include <gr_core_api.h>
 #include <stdarg.h>
 #include <string>
 #include <cstdio>  // for FILE
@@ -51,7 +52,7 @@
  * \brief abstract error handler
  * \ingroup base
  */
-class gr_error_handler {
+class GR_CORE_API gr_error_handler {
 public:
   enum seriousness {
     ERR_DEBUG		= 0x00000000,
@@ -90,7 +91,7 @@ protected:
 };
 
 
-class gr_base_error_handler : public gr_error_handler {
+class GR_CORE_API gr_base_error_handler : public gr_error_handler {
   int	d_nwarnings;
   int	d_nerrors;
 
@@ -102,7 +103,7 @@ public:
   void count_error(seriousness s);
 };
 
-class gr_file_error_handler : public gr_base_error_handler {
+class GR_CORE_API gr_file_error_handler : public gr_base_error_handler {
   FILE		*d_file;
   int		 d_fd;
 public:

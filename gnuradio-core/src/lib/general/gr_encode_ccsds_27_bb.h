@@ -20,13 +20,14 @@
 #ifndef INCLUDED_GR_ENCODE_CCSDS_27_BB_H
 #define INCLUDED_GR_ENCODE_CCSDS_27_BB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_encode_ccsds_27_bb;
 
 typedef boost::shared_ptr<gr_encode_ccsds_27_bb> gr_encode_ccsds_27_bb_sptr;
 
-gr_encode_ccsds_27_bb_sptr gr_make_encode_ccsds_27_bb();
+GR_CORE_API gr_encode_ccsds_27_bb_sptr gr_make_encode_ccsds_27_bb();
 
 /*! \brief A rate 1/2, k=7 convolutional encoder for the CCSDS standard
  * \ingroup ecc
@@ -44,10 +45,10 @@ gr_encode_ccsds_27_bb_sptr gr_make_encode_ccsds_27_bb();
  * There is no provision to "flush" the encoder.
  */
 
-class gr_encode_ccsds_27_bb : public gr_sync_interpolator
+class GR_CORE_API gr_encode_ccsds_27_bb : public gr_sync_interpolator
 {
 private:
-  friend gr_encode_ccsds_27_bb_sptr gr_make_encode_ccsds_27_bb();
+  friend GR_CORE_API gr_encode_ccsds_27_bb_sptr gr_make_encode_ccsds_27_bb();
 
   gr_encode_ccsds_27_bb();
   unsigned char d_encstate;

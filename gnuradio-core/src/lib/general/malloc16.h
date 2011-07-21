@@ -20,15 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <gr_core_api.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdlib.h>
 
-void *malloc16Align(int size);
-void *calloc16Align(size_t nmemb,size_t size);
-void free16Align(void *p);
+GR_CORE_API void *malloc16Align(int size);
+GR_CORE_API void *calloc16Align(size_t nmemb,size_t size);
+GR_CORE_API void free16Align(void *p);
 
 #ifdef __cplusplus
 }

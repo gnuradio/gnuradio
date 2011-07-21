@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_REALTIME_H
 #define INCLUDED_GR_REALTIME_H
 
+#include <gr_core_api.h>
 #include <gruel/realtime.h>
 
 typedef gruel::rt_status_t gr_rt_status_t;
@@ -31,6 +32,6 @@ typedef gruel::rt_status_t gr_rt_status_t;
  * \brief If possible, enable high-priority "real time" scheduling.
  * \ingroup misc
  */
-gr_rt_status_t gr_enable_realtime_scheduling();
+GR_CORE_API gr_rt_status_t gr_enable_realtime_scheduling();
 
 #endif /* INCLUDED_GR_REALTIME_H */

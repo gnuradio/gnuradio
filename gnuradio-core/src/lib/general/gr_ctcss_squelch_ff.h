@@ -23,20 +23,21 @@
 #ifndef INCLUDED_GR_CTCSS_SQUELCH_FF_H
 #define INCLUDED_GR_CTCSS_SQUELCH_FF_H
 
+#include <gr_core_api.h>
 #include <gr_squelch_base_ff.h>
 #include <gri_goertzel.h>
 
 class gr_ctcss_squelch_ff;
 typedef boost::shared_ptr<gr_ctcss_squelch_ff> gr_ctcss_squelch_ff_sptr;
 
-gr_ctcss_squelch_ff_sptr 
+GR_CORE_API gr_ctcss_squelch_ff_sptr 
 gr_make_ctcss_squelch_ff(int rate, float freq, float level=0.01, int len=0, int ramp=0, bool gate=false);
 
 /*!
  * \brief gate or zero output if ctcss tone not present
  * \ingroup level_blk
  */
-class gr_ctcss_squelch_ff : public gr_squelch_base_ff
+class GR_CORE_API gr_ctcss_squelch_ff : public gr_squelch_base_ff
 {
 private:
   float d_freq;
@@ -48,7 +49,7 @@ private:
   gri_goertzel d_goertzel_c;
   gri_goertzel d_goertzel_r;
 
-  friend gr_ctcss_squelch_ff_sptr gr_make_ctcss_squelch_ff(int rate, float freq, float level, int len, int ramp, bool gate);
+  friend GR_CORE_API gr_ctcss_squelch_ff_sptr gr_make_ctcss_squelch_ff(int rate, float freq, float level, int len, int ramp, bool gate);
   gr_ctcss_squelch_ff(int rate, float freq, float level, int len, int ramp, bool gate);
 
   int find_tone(float freq);

@@ -23,27 +23,31 @@
  * than we'd like for K=7, especially since we chain back every 8 bits.
  * But it fits so nicely into a 32-bit machine word...
  */
-struct viterbi_state {
+
+#include <gr_core_api.h>
+
+struct GR_CORE_API viterbi_state {
   unsigned long path;	/* Decoded path to this state */
   long metric;		/* Cumulative metric to this state */
 };
 
+GR_CORE_API
 int gen_met(int mettab[2][256],	/* Metric table */
 	    int amp,		/* Signal amplitude */
 	    double esn0,	/* Es/N0 ratio in dB */
 	    double bias, 	/* Metric bias */
 	    int scale);		/* Scale factor */
 
-unsigned char
+GR_CORE_API unsigned char
 encode(unsigned char *symbols, unsigned char *data,
        unsigned int nbytes,unsigned char encstate);
 
-void 
+GR_CORE_API void
 viterbi_chunks_init(struct viterbi_state* state);
 
-void 
+ GR_CORE_API void
 viterbi_butterfly2(unsigned char *symbols, int mettab[2][256], 
 		   struct viterbi_state *state0, struct viterbi_state *state1);
 
-unsigned char
+GR_CORE_API unsigned char
 viterbi_get_output(struct viterbi_state *state, unsigned char *outbuf);

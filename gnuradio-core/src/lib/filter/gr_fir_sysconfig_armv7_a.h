@@ -22,9 +22,10 @@
 #ifndef INCLUDED_GR_FIR_SYSCONFIG_ARMV7_A_H
 #define INCLUDED_GR_FIR_SYSCONFIG_ARMV7_A_H
 
+#include <gr_core_api.h>
 #include <gr_fir_sysconfig_generic.h>
 
-class gr_fir_sysconfig_armv7_a : public gr_fir_sysconfig_generic {
+class GR_CORE_API gr_fir_sysconfig_armv7_a : public gr_fir_sysconfig_generic {
 public:
   virtual gr_fir_ccf *create_gr_fir_ccf (const std::vector<float> &taps);
   virtual gr_fir_fcc *create_gr_fir_fcc (const std::vector<gr_complex> &taps);

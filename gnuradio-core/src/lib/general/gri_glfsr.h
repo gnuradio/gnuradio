@@ -23,6 +23,8 @@
 #ifndef INCLUDED_GRI_GLFSR_H
 #define INCLUDED_GRI_GLFSR_H
 
+#include <gr_core_api.h>
+
 /*!
  * \brief Galois Linear Feedback Shift Register using specified polynomial mask
  * \ingroup misc
@@ -30,7 +32,7 @@
  * Generates a maximal length pseudo-random sequence of length 2^degree-1
  */
 
-class gri_glfsr
+class GR_CORE_API gri_glfsr
 {
  private:
   int d_shift_register;

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_WAVFILE_SINK_H
 #define INCLUDED_GR_WAVFILE_SINK_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_file_sink_base.h>
 #include <boost/thread.hpp>
@@ -36,7 +37,7 @@ typedef boost::shared_ptr<gr_wavfile_sink> gr_wavfile_sink_sptr;
  * \p sample_rate Sample rate [S/s]
  * \p bits_per_sample 16 or 8 bit, default is 16
  */
-gr_wavfile_sink_sptr
+GR_CORE_API gr_wavfile_sink_sptr
 gr_make_wavfile_sink (const char *filename,
 		      int n_channels,
 		      unsigned int sample_rate,
@@ -50,10 +51,10 @@ gr_make_wavfile_sink (const char *filename,
  *
  * \ingroup sink_blk
  */
-class gr_wavfile_sink : public gr_sync_block
+class GR_CORE_API gr_wavfile_sink : public gr_sync_block
 {
 private:
-  friend gr_wavfile_sink_sptr gr_make_wavfile_sink (const char *filename,
+  friend GR_CORE_API gr_wavfile_sink_sptr gr_make_wavfile_sink (const char *filename,
 						    int n_channels,
 						    unsigned int sample_rate,
 						    int bits_per_sample);

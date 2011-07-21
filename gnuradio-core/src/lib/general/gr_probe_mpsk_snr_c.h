@@ -22,12 +22,13 @@
 #ifndef INCLUDED_GR_PROBE_MPSK_SNR_C_H
 #define INCLUDED_GR_PROBE_MPSK_SNR_C_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_probe_mpsk_snr_c;
 typedef boost::shared_ptr<gr_probe_mpsk_snr_c> gr_probe_mpsk_snr_c_sptr;
 
-gr_probe_mpsk_snr_c_sptr
+GR_CORE_API gr_probe_mpsk_snr_c_sptr
 gr_make_probe_mpsk_snr_c(double alpha = 0.0001);
 
 /*!
@@ -46,7 +47,7 @@ gr_make_probe_mpsk_snr_c(double alpha = 0.0001);
  * This SNR estimator is inaccurate below about 7dB SNR.
  *
  */
-class gr_probe_mpsk_snr_c : public gr_sync_block
+class GR_CORE_API gr_probe_mpsk_snr_c : public gr_sync_block
 {
   double d_alpha;
   double d_beta;
@@ -54,7 +55,7 @@ class gr_probe_mpsk_snr_c : public gr_sync_block
   double d_noise_variance;
 
   // Factory function returning shared pointer of this class
-  friend gr_probe_mpsk_snr_c_sptr
+  friend GR_CORE_API gr_probe_mpsk_snr_c_sptr
   gr_make_probe_mpsk_snr_c(double alpha);
 
   // Private constructor

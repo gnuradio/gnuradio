@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_SYNC_BLOCK_H
 #define INCLUDED_GR_SYNC_BLOCK_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 /*!
@@ -31,7 +32,7 @@
  *
  * Override work to provide the signal processing implementation.
  */
-class gr_sync_block : public gr_block
+class GR_CORE_API gr_sync_block : public gr_block
 {
  protected:
   gr_sync_block (void){} //allows pure virtual interface sub-classes

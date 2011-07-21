@@ -23,7 +23,9 @@
 #ifndef _GR_CPU_H_
 #define _GR_CPU_H_
 
-struct gr_cpu {
+#include <gr_core_api.h>
+
+struct GR_CORE_API gr_cpu {
   static bool has_mmx ();
   static bool has_sse ();
   static bool has_sse2 ();

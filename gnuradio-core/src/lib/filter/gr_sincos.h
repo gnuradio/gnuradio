@@ -23,14 +23,16 @@
 #ifndef INCLUDED_GR_SINCOS_H
 #define INCLUDED_GR_SINCOS_H
 
+#include <gr_core_api.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
   
 // compute sine and cosine at the same time
 
-void gr_sincos (double x, double *sin, double *cos);
-void gr_sincosf (float x, float *sin, float *cos);
+GR_CORE_API void gr_sincos (double x, double *sin, double *cos);
+GR_CORE_API void gr_sincosf (float x, float *sin, float *cos);
 
 #ifdef __cplusplus
 };

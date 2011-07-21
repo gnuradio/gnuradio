@@ -24,11 +24,12 @@
 #ifndef INCLUDED_GR_PFB_CHANNELIZER_CCF_H
 #define	INCLUDED_GR_PFB_CHANNELIZER_CCF_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 class gr_pfb_channelizer_ccf;
 typedef boost::shared_ptr<gr_pfb_channelizer_ccf> gr_pfb_channelizer_ccf_sptr;
-gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans, 
+GR_CORE_API gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans, 
 							 const std::vector<float> &taps,
 							 float oversample_rate=1);
 
@@ -110,7 +111,7 @@ class gri_fft_complex;
  *
  */
 
-class gr_pfb_channelizer_ccf : public gr_block
+class GR_CORE_API gr_pfb_channelizer_ccf : public gr_block
 {
  private:
   /*!
@@ -130,7 +131,7 @@ class gr_pfb_channelizer_ccf : public gr_block
    *				      sample rate of a 6/1 oversample ratio is 6000 Hz, or
    *				      6 times the normal 1000 Hz.
    */
-  friend gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
+  friend GR_CORE_API gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 								  const std::vector<float> &taps,
 								  float oversample_rate);
 

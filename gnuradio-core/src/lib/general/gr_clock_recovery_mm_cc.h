@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_CLOCK_RECOVERY_MM_CC_H
 #define	INCLUDED_GR_CLOCK_RECOVERY_MM_CC_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <gr_complex.h>
 #include <gr_math.h>
@@ -33,7 +34,7 @@ class gr_clock_recovery_mm_cc;
 typedef boost::shared_ptr<gr_clock_recovery_mm_cc> gr_clock_recovery_mm_cc_sptr;
 
 // public constructor
-gr_clock_recovery_mm_cc_sptr 
+GR_CORE_API gr_clock_recovery_mm_cc_sptr 
 gr_make_clock_recovery_mm_cc (float omega, float gain_omega, float mu, float gain_mu,
 			      float omega_relative_limit=0.001);
 
@@ -48,7 +49,7 @@ gr_make_clock_recovery_mm_cc (float omega, float gain_omega, float mu, float gai
  *    G. R. Danesfahani, T.G. Jeans, "Optimisation of modified Mueller and Muller 
  *    algorithm,"  Electronics Letters, Vol. 31, no. 13,  22 June 1995, pp. 1032 - 1033.
  */
-class gr_clock_recovery_mm_cc : public gr_block
+class GR_CORE_API gr_clock_recovery_mm_cc : public gr_block
 {
  public:
   ~gr_clock_recovery_mm_cc ();
@@ -101,7 +102,7 @@ protected:
   gr_complex slicer_0deg (gr_complex sample);
   gr_complex slicer_45deg (gr_complex sample);
 
-  friend gr_clock_recovery_mm_cc_sptr
+  friend GR_CORE_API gr_clock_recovery_mm_cc_sptr
   gr_make_clock_recovery_mm_cc (float omega, float gain_omega, float mu, float gain_mu, 
 				float omega_relative_limit);
 };

@@ -27,6 +27,7 @@
 #include <signal.h>
 #endif
 
+#include <gr_core_api.h>
 #include <string>
 
 /*!
@@ -36,7 +37,7 @@
  * Constructor installs new handler, destructor reinstalls
  * original value.
  */
-class gr_local_sighandler {
+class GR_CORE_API gr_local_sighandler {
   int			d_signum;
 #ifdef HAVE_SIGACTION
   struct sigaction	d_old_action;
@@ -52,7 +53,7 @@ public:
 /*!
  * \brief Representation of signal.
  */
-class gr_signal
+class GR_CORE_API gr_signal
 {
   int	d_signum;
 public:

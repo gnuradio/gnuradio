@@ -21,6 +21,8 @@ include $(top_srcdir)/Makefile.common
 
 LIBS = -lm
 
+AM_CPPFLAGS = -I$(top_srcdir)/gnuradio-core/src/lib/general
+
 noinst_LTLIBRARIES = libviterbi.la
 
 libviterbi_la_SOURCES = \

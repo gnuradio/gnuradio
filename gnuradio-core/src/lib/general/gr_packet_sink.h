@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_PACKET_SINK_H
 #define INCLUDED_GR_PACKET_SINK_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_msg_queue.h>
 
 class gr_packet_sink;
 typedef boost::shared_ptr<gr_packet_sink> gr_packet_sink_sptr;
 
-gr_packet_sink_sptr 
+GR_CORE_API gr_packet_sink_sptr 
 gr_make_packet_sink (const std::vector<unsigned char>& sync_vector,
 		     gr_msg_queue_sptr target_queue,
 		     int threshold = -1	                // -1 -> use default
@@ -38,9 +39,9 @@ gr_make_packet_sink (const std::vector<unsigned char>& sync_vector,
  * \brief process received  bits looking for packet sync, header, and process bits into packet
  * \ingroup sink_blk
  */
-class gr_packet_sink : public gr_sync_block
+class GR_CORE_API gr_packet_sink : public gr_sync_block
 {
-  friend gr_packet_sink_sptr 
+  friend GR_CORE_API gr_packet_sink_sptr 
   gr_make_packet_sink (const std::vector<unsigned char>& sync_vector,
 		       gr_msg_queue_sptr target_queue,
 		       int threshold);

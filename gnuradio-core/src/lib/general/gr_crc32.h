@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_CRC32_H
 #define INCLUDED_GR_CRC32_H
 
+#include <gr_core_api.h>
 #include <string>
 #include <gr_types.h>
 
@@ -35,16 +36,16 @@
  * complement of the final running CRC.  The resulting CRC should be
  * transmitted in big endian order.
  */
-unsigned int 
+GR_CORE_API unsigned int 
 gr_update_crc32(unsigned int crc, const unsigned char *buf, size_t len);
 
-unsigned int 
+GR_CORE_API unsigned int 
 gr_update_crc32(unsigned int crc, const std::string buf);
 
-unsigned int 
+GR_CORE_API unsigned int 
 gr_crc32(const unsigned char *buf, size_t len);
 
-unsigned int 
+GR_CORE_API unsigned int 
 gr_crc32(const std::string buf);
 
 #endif /* INCLUDED_CRC32_H */

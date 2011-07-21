@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_SINGLE_THREADED_SCHEDULER_H
 #define INCLUDED_GR_SINGLE_THREADED_SCHEDULER_H
 
+#include <gr_core_api.h>
 #include <gr_runtime_types.h>
 #include <fstream>
 
@@ -35,7 +36,7 @@ typedef boost::shared_ptr<gr_single_threaded_scheduler>	gr_single_threaded_sched
  * \ingroup internal
  */
 
-class gr_single_threaded_scheduler {
+class GR_CORE_API gr_single_threaded_scheduler {
  public:
   ~gr_single_threaded_scheduler ();
 
@@ -51,11 +52,11 @@ class gr_single_threaded_scheduler {
 
   void main_loop ();
   
-  friend gr_single_threaded_scheduler_sptr
+  friend GR_CORE_API gr_single_threaded_scheduler_sptr
   gr_make_single_threaded_scheduler (const std::vector<gr_block_sptr> &blocks);
 };
 
-gr_single_threaded_scheduler_sptr
+GR_CORE_API gr_single_threaded_scheduler_sptr
 gr_make_single_threaded_scheduler (const std::vector<gr_block_sptr> &blocks);
 
 #endif /* INCLUDED_GR_SINGLE_THREADED_SCHEDULER_H */

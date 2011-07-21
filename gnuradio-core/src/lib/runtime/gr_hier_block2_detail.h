@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_HIER_BLOCK2_DETAIL_H
 #define INCLUDED_GR_HIER_BLOCK2_DETAIL_H
 
+#include <gr_core_api.h>
 #include <gr_hier_block2.h>
 #include <gr_flat_flowgraph.h>
 #include <boost/utility.hpp>
@@ -29,7 +30,7 @@
 /*!
  * \ingroup internal
  */
-class gr_hier_block2_detail : boost::noncopyable
+class GR_CORE_API gr_hier_block2_detail : boost::noncopyable
 {
 public:
   gr_hier_block2_detail(gr_hier_block2 *owner);

@@ -25,13 +25,14 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 class @NAME@;
 
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (int decim);
+GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (int decim);
 
 /*!
  * \brief output = sum(input[0]...input[n])
@@ -39,10 +40,10 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
  *
  * Integrate successive samples in input stream and decimate
  */
-class @NAME@ : public gr_sync_decimator
+class GR_CORE_API @NAME@ : public gr_sync_decimator
 {
 private:
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@(int decim);
+  friend GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@(int decim);
 
   @NAME@ (int decim);
 

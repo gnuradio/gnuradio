@@ -23,21 +23,22 @@
 #ifndef INCLUDED_GR_LMS_DFE_CC_H
 #define INCLUDED_GR_LMS_DFE_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_lms_dfe_cc;
 typedef boost::shared_ptr<gr_lms_dfe_cc> gr_lms_dfe_cc_sptr;
 
-gr_lms_dfe_cc_sptr gr_make_lms_dfe_cc (float lambda_ff, float lambda_fb,
+GR_CORE_API gr_lms_dfe_cc_sptr gr_make_lms_dfe_cc (float lambda_ff, float lambda_fb,
 				       unsigned int num_fftaps, unsigned int num_fbtaps);
 
 /*!
  * \brief Least-Mean-Square Decision Feedback Equalizer (complex in/out)
  * \ingroup eq_blk
  */
-class gr_lms_dfe_cc : public gr_sync_block
+class GR_CORE_API gr_lms_dfe_cc : public gr_sync_block
 {
-  friend gr_lms_dfe_cc_sptr gr_make_lms_dfe_cc (float lambda_ff, float lambda_fb,
+  friend GR_CORE_API gr_lms_dfe_cc_sptr gr_make_lms_dfe_cc (float lambda_ff, float lambda_fb,
 						unsigned int num_fftaps, unsigned int num_fbtaps);
   
   float	d_lambda_ff;

@@ -21,13 +21,14 @@
 #ifndef INCLUDED_GR_SCHEDULER_STS_H
 #define INCLUDED_GR_SCHEDULER_STS_H
 
+#include <gr_core_api.h>
 #include <gr_scheduler.h>
 #include <gruel/thread_group.h>
 
 /*!
  * \brief Concrete scheduler that uses the single_threaded_scheduler
  */
-class gr_scheduler_sts : public gr_scheduler
+class GR_CORE_API gr_scheduler_sts : public gr_scheduler
 {
   gruel::thread_group		       d_threads;
 

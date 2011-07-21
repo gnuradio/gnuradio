@@ -22,11 +22,12 @@
 #ifndef INCLUDED_GR_FFT_FILTER_CCC_H
 #define INCLUDED_GR_FFT_FILTER_CCC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 class gr_fft_filter_ccc;
 typedef boost::shared_ptr<gr_fft_filter_ccc> gr_fft_filter_ccc_sptr;
-gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
+GR_CORE_API gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
 
 //class gri_fft_filter_ccc_sse;
 class gri_fft_filter_ccc_generic;
@@ -35,10 +36,10 @@ class gri_fft_filter_ccc_generic;
  * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
  * \ingroup filter_blk
  */
-class gr_fft_filter_ccc : public gr_sync_decimator
+class GR_CORE_API gr_fft_filter_ccc : public gr_sync_decimator
 {
  private:
-  friend gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
+  friend GR_CORE_API gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
 
   int			   d_nsamples;
   bool			   d_updated;

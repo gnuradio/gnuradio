@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_CLOCK_RECOVERY_MM_FF_H
 #define	INCLUDED_GR_CLOCK_RECOVERY_MM_FF_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <gr_math.h>
 #include <stdio.h>
@@ -33,7 +34,7 @@ class gr_clock_recovery_mm_ff;
 typedef boost::shared_ptr<gr_clock_recovery_mm_ff> gr_clock_recovery_mm_ff_sptr;
 
 // public constructor
-gr_clock_recovery_mm_ff_sptr 
+GR_CORE_API gr_clock_recovery_mm_ff_sptr 
 gr_make_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gain_mu,
 			      float omega_relative_limit=0.001);
 
@@ -47,7 +48,7 @@ gr_make_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gai
  * Estimation and Signal Processing" by Heinrich Meyr, Marc Moeneclaey, & Stefan Fechtel.
  * ISBN 0-471-50275-8.
  */
-class gr_clock_recovery_mm_ff : public gr_block
+class GR_CORE_API gr_clock_recovery_mm_ff : public gr_block
 {
  public:
   ~gr_clock_recovery_mm_ff ();
@@ -88,7 +89,7 @@ protected:
   FILE				*d_logfile;
   float				d_omega_relative_limit;	// used to compute min and max omega
 
-  friend gr_clock_recovery_mm_ff_sptr
+  friend GR_CORE_API gr_clock_recovery_mm_ff_sptr
   gr_make_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gain_mu,
 				float omega_relative_limit);
 };

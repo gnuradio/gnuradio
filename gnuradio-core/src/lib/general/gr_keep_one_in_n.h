@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_KEEP_ONE_IN_N_H
 #define INCLUDED_GR_KEEP_ONE_IN_N_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 class gr_keep_one_in_n;
 typedef boost::shared_ptr<gr_keep_one_in_n> gr_keep_one_in_n_sptr;
 
-gr_keep_one_in_n_sptr 
+GR_CORE_API gr_keep_one_in_n_sptr 
 gr_make_keep_one_in_n (size_t item_size, int n);
 
 
@@ -36,9 +37,9 @@ gr_make_keep_one_in_n (size_t item_size, int n);
  * \brief decimate a stream, keeping one item out of every n.
  * \ingroup slicedice_blk
  */
-class gr_keep_one_in_n : public gr_block
+class GR_CORE_API gr_keep_one_in_n : public gr_block
 {
-  friend gr_keep_one_in_n_sptr
+  friend GR_CORE_API gr_keep_one_in_n_sptr
   gr_make_keep_one_in_n (size_t item_size, int n);
 
   int	d_n;

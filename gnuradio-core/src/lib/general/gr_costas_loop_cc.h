@@ -24,6 +24,7 @@
 #ifndef INCLUDED_GR_COSTAS_LOOP_CC_H
 #define INCLUDED_GR_COSTAS_LOOP_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <stdexcept>
 #include <fstream>
@@ -57,7 +58,7 @@ class gr_costas_loop_cc;
 typedef boost::shared_ptr<gr_costas_loop_cc> gr_costas_loop_cc_sptr;
 
 
-gr_costas_loop_cc_sptr 
+GR_CORE_API gr_costas_loop_cc_sptr 
 gr_make_costas_loop_cc (float alpha, float beta,
 			float max_freq, float min_freq, 
 			int order
@@ -74,9 +75,9 @@ gr_make_costas_loop_cc (float alpha, float beta,
  *
  * \p order must be 2 or 4.
  */
-class gr_costas_loop_cc : public gr_sync_block
+class GR_CORE_API gr_costas_loop_cc : public gr_sync_block
 {
-  friend gr_costas_loop_cc_sptr gr_make_costas_loop_cc (float alpha, float beta,
+  friend GR_CORE_API gr_costas_loop_cc_sptr gr_make_costas_loop_cc (float alpha, float beta,
 							float max_freq, float min_freq, 
 							int order
 							) throw (std::invalid_argument);

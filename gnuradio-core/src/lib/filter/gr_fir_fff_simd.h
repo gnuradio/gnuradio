@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_FIR_FFF_SIMD_H
 #define INCLUDED_GR_FIR_FFF_SIMD_H
 
+#include <gr_core_api.h>
 #include <gr_fir_fff_generic.h>
 
 /*!
@@ -32,7 +33,7 @@
  * subclasses.
  */
 
-class gr_fir_fff_simd : public gr_fir_fff_generic
+class GR_CORE_API gr_fir_fff_simd : public gr_fir_fff_generic
 {
 protected:
   typedef float (*float_dotprod_t)(const float *input,

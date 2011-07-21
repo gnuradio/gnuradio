@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_FIR_FFF_X86_H
 #define INCLUDED_GR_FIR_FFF_X86_H
 
+#include <gr_core_api.h>
 #include <gr_fir_fff_simd.h>
 
 /*!
  * \brief 3DNow! version of gr_fir_fff
  */
-class gr_fir_fff_3dnow : public gr_fir_fff_simd
+class GR_CORE_API gr_fir_fff_3dnow : public gr_fir_fff_simd
 {
 public:
   gr_fir_fff_3dnow ();
@@ -38,7 +39,7 @@ public:
 /*!
  * \brief SSE version of gr_fir_fff
  */
-class gr_fir_fff_sse : public gr_fir_fff_simd
+class GR_CORE_API gr_fir_fff_sse : public gr_fir_fff_simd
 {
 public:
   gr_fir_fff_sse ();

@@ -27,6 +27,7 @@
 #ifndef _GR_MATH_H_
 #define _GR_MATH_H_
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 
 static inline bool
@@ -51,7 +52,7 @@ gr_is_power_of_2(long x)
  * to zero. This routine calculates the arc tangent with an average
  * error of +/- 0.045 degrees.
  */
-float gr_fast_atan2f(float y, float x);
+GR_CORE_API float gr_fast_atan2f(float y, float x);
 
 static inline float gr_fast_atan2f(gr_complex z) 
 { 

@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_SCHEDULER_H
 #define INCLUDED_GR_SCHEDULER_H
 
+#include <gr_core_api.h>
 #include <boost/utility.hpp>
 #include <gr_block.h>
 #include <gr_flat_flowgraph.h>
@@ -36,7 +37,7 @@ typedef boost::shared_ptr<gr_scheduler> gr_scheduler_sptr;
  *
  * Preconditions: details, buffers and buffer readers have been assigned.
  */
-class gr_scheduler : boost::noncopyable
+class GR_CORE_API gr_scheduler : boost::noncopyable
 {
 
 public:

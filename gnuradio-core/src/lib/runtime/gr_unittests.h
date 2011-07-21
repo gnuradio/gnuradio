@@ -24,12 +24,14 @@
 #include "config.h"
 #endif
 
+#include <gr_core_api.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>

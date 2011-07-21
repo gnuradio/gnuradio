@@ -23,7 +23,9 @@
 #ifndef _COMPLEX_DOTPROD_GENERIC_H_
 #define _COMPLEX_DOTPROD_GENERIC_H_
 
-void
+#include <gr_core_api.h>
+
+GR_CORE_API void
 complex_dotprod_generic (const short *input,
 		       const float *taps, unsigned n_2_complex_blocks,
 		       float *result);

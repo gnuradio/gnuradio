@@ -22,6 +22,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <@FIR_TYPE@.h>
 
 /*!
@@ -32,7 +33,7 @@
  * I,O,T are elements of the set 's' (short), 'f' (float), 'c' (gr_complex), 'i' (int)
  */
 
-class @FIR_TYPE@_generic : public @FIR_TYPE@ {
+class GR_CORE_API @FIR_TYPE@_generic : public @FIR_TYPE@ {
 
 public:
 

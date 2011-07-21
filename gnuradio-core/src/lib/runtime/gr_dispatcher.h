@@ -23,14 +23,15 @@
 #ifndef INCLUDED_GR_DISPATCHER_H
 #define INCLUDED_GR_DISPATCHER_H
 
+#include <gr_core_api.h>
 #include <gr_select_handler.h>
 #include <vector>
 
 class gr_dispatcher;
 typedef boost::shared_ptr<gr_dispatcher> gr_dispatcher_sptr;
 
-gr_dispatcher_sptr gr_dispatcher_singleton();
-gr_dispatcher_sptr gr_make_dispatcher();
+GR_CORE_API gr_dispatcher_sptr gr_dispatcher_singleton();
+GR_CORE_API gr_dispatcher_sptr gr_make_dispatcher();
 
 /*!
  * \brief invoke callbacks based on select.
@@ -38,10 +39,10 @@ gr_dispatcher_sptr gr_make_dispatcher();
  *
  * \sa gr_select_handler
  */
-class gr_dispatcher
+class GR_CORE_API gr_dispatcher
 {
   gr_dispatcher();
-  friend gr_dispatcher_sptr gr_make_dispatcher();
+  friend GR_CORE_API gr_dispatcher_sptr gr_make_dispatcher();
 
   std::vector<gr_select_handler_sptr> d_handler;
   int			      	      d_max_index;

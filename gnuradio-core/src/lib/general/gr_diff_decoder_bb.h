@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_DIFF_DECODER_BB_H
 #define INCLUDED_GR_DIFF_DECODER_BB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_diff_decoder_bb;
 typedef boost::shared_ptr<gr_diff_decoder_bb> gr_diff_decoder_bb_sptr;
 
-gr_diff_decoder_bb_sptr gr_make_diff_decoder_bb (unsigned int modulus);
+GR_CORE_API gr_diff_decoder_bb_sptr gr_make_diff_decoder_bb (unsigned int modulus);
 
 /*!
  * \brief y[0] = (x[0] - x[-1]) % M
@@ -36,9 +37,9 @@ gr_diff_decoder_bb_sptr gr_make_diff_decoder_bb (unsigned int modulus);
  *
  * Differential decoder
  */
-class gr_diff_decoder_bb : public gr_sync_block
+class GR_CORE_API gr_diff_decoder_bb : public gr_sync_block
 {
-  friend gr_diff_decoder_bb_sptr gr_make_diff_decoder_bb (unsigned int modulus);
+  friend GR_CORE_API gr_diff_decoder_bb_sptr gr_make_diff_decoder_bb (unsigned int modulus);
   gr_diff_decoder_bb(unsigned int modulus);
 
   unsigned int	d_modulus;

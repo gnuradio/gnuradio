@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_FLOWGRAPH_H
 #define INCLUDED_GR_FLOWGRAPH_H
 
+#include <gr_core_api.h>
 #include <gr_basic_block.h>
 #include <iostream>
 
@@ -30,7 +31,7 @@
  * \brief Class representing a specific input or output graph endpoint
  * \ingroup internal
  */
-class gr_endpoint
+class GR_CORE_API gr_endpoint
 {
 private:
   gr_basic_block_sptr d_basic_block;
@@ -59,7 +60,7 @@ typedef std::vector<gr_endpoint>::iterator gr_endpoint_viter_t;
  *\brief Class representing a connection between to graph endpoints
  *
  */
-class gr_edge
+class GR_CORE_API gr_edge
 {
 public:
   gr_edge() : d_src(), d_dst() { };
@@ -81,16 +82,16 @@ typedef std::vector<gr_edge>::iterator gr_edge_viter_t;
 
 // Create a shared pointer to a heap allocated flowgraph
 // (types defined in gr_runtime_types.h)
-gr_flowgraph_sptr gr_make_flowgraph();
+GR_CORE_API gr_flowgraph_sptr gr_make_flowgraph();
 
 /*!
  * \brief Class representing a directed, acyclic graph of basic blocks
  * \ingroup internal
  */
-class gr_flowgraph
+class GR_CORE_API gr_flowgraph
 {
 public:
-  friend gr_flowgraph_sptr gr_make_flowgraph();
+  friend GR_CORE_API gr_flowgraph_sptr gr_make_flowgraph();
 
   // Destruct an arbitrary flowgraph
   ~gr_flowgraph();

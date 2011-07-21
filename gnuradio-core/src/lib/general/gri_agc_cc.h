@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GRI_AGC_CC_H
 #define INCLUDED_GRI_AGC_CC_H
 
+#include <gr_core_api.h>
 #include <math.h>
 
 /*!
@@ -31,7 +32,7 @@
  * For Power the absolute value of the complex number is used.
  */
 
-class gri_agc_cc {
+class GR_CORE_API gri_agc_cc {
 
  public:
   gri_agc_cc (float rate = 1e-4, float reference = 1.0, 

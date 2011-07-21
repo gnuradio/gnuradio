@@ -22,13 +22,14 @@
 #ifndef INCLUDED_GR_OFDM_INSERT_PREAMBLE_H
 #define INCLUDED_GR_OFDM_INSERT_PREAMBLE_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <vector>
 
 class gr_ofdm_insert_preamble;
 typedef boost::shared_ptr<gr_ofdm_insert_preamble> gr_ofdm_insert_preamble_sptr;
 
-gr_ofdm_insert_preamble_sptr
+GR_CORE_API gr_ofdm_insert_preamble_sptr
 gr_make_ofdm_insert_preamble(int fft_length,
 			     const std::vector<std::vector<gr_complex> > &preamble);
 
@@ -62,9 +63,9 @@ gr_make_ofdm_insert_preamble(int fft_length,
  * \param preamble   vector of symbols that represent the pre-modulated preamble.
  */
 
-class gr_ofdm_insert_preamble : public gr_block
+class GR_CORE_API gr_ofdm_insert_preamble : public gr_block
 {
-  friend gr_ofdm_insert_preamble_sptr
+  friend GR_CORE_API gr_ofdm_insert_preamble_sptr
   gr_make_ofdm_insert_preamble(int fft_length,
 			       const std::vector<std::vector<gr_complex> > &preamble);
 

@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GRI_FFT_FILTER_FFF_SSE_H
 #define INCLUDED_GRI_FFT_FILTER_FFF_SSE_H
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 #include <vector>
 
 class gri_fft_real_fwd;
 class gri_fft_real_rev;
 
-class gri_fft_filter_fff_sse
+class GR_CORE_API gri_fft_filter_fff_sse
 {
  private:
   int			   d_ntaps;

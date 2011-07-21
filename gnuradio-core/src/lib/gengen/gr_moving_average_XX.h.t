@@ -25,13 +25,14 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class @NAME@;
 
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (int length, @O_TYPE@ scale, int max_iter = 4096);
+GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (int length, @O_TYPE@ scale, int max_iter = 4096);
 
 /*!
  * \brief output is the moving sum of the last N samples, scaled by the scale factor
@@ -40,10 +41,10 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
  * max_iter limits how long we go without flushing the accumulator
  * This is necessary to avoid numerical instability for float and complex.
  */
-class @NAME@ : public gr_sync_block
+class GR_CORE_API @NAME@ : public gr_sync_block
 {
 private:
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@(int length, @O_TYPE@ scale, int max_iter);
+  friend GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@(int length, @O_TYPE@ scale, int max_iter);
 
   @NAME@ (int length, @O_TYPE@ scale, int max_iter = 4096);
 

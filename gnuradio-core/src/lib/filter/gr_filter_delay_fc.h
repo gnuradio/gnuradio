@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_FILTER_DELAY_FC_H
 #define INCLUDED_GR_FILTER_DELAY_FC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_io_signature.h>
 #include <gr_types.h>
@@ -31,7 +32,7 @@ class gr_filter_delay_fc;
 typedef boost::shared_ptr<gr_filter_delay_fc> gr_filter_delay_fc_sptr;
 
 // public constructor
-gr_filter_delay_fc_sptr gr_make_filter_delay_fc (const std::vector<float> &taps);
+GR_CORE_API gr_filter_delay_fc_sptr gr_make_filter_delay_fc (const std::vector<float> &taps);
 
 class gr_fir_fff;
 
@@ -50,7 +51,7 @@ class gr_fir_fff;
  * before initializing this block.
  *
  */
-class gr_filter_delay_fc : public gr_sync_block
+class GR_CORE_API gr_filter_delay_fc : public gr_sync_block
 {
  public:
   ~gr_filter_delay_fc ();
@@ -66,7 +67,7 @@ class gr_filter_delay_fc : public gr_sync_block
   unsigned int  d_delay;
   gr_fir_fff	*d_fir;
 
-  friend gr_filter_delay_fc_sptr gr_make_filter_delay_fc (const std::vector<float> &taps);
+  friend GR_CORE_API gr_filter_delay_fc_sptr gr_make_filter_delay_fc (const std::vector<float> &taps);
 };
 
 #endif /* INCLUDED_GR_FILTER_DELAY_FC_H */

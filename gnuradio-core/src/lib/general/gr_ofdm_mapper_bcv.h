@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_OFDM_MAPPER_BCV_H
 #define INCLUDED_GR_OFDM_MAPPER_BCV_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_message.h>
 #include <gr_msg_queue.h>
@@ -30,7 +31,7 @@
 class gr_ofdm_mapper_bcv;
 typedef boost::shared_ptr<gr_ofdm_mapper_bcv> gr_ofdm_mapper_bcv_sptr;
 
-gr_ofdm_mapper_bcv_sptr 
+GR_CORE_API gr_ofdm_mapper_bcv_sptr 
 gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
 			 unsigned occupied_carriers, unsigned int fft_length);
 
@@ -42,9 +43,9 @@ gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned 
  * \ingroup ofdm_blk
  */
 
-class gr_ofdm_mapper_bcv : public gr_sync_block
+class GR_CORE_API gr_ofdm_mapper_bcv : public gr_sync_block
 {
-  friend gr_ofdm_mapper_bcv_sptr
+  friend GR_CORE_API gr_ofdm_mapper_bcv_sptr
   gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
 			   unsigned occupied_carriers, unsigned int fft_length);
  protected:

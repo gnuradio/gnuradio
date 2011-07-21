@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_BLOCK_H
 #define INCLUDED_GR_BLOCK_H
 
+#include <gr_core_api.h>
 #include <gr_basic_block.h>
 
 /*!
@@ -53,7 +54,7 @@
  * It reads the input items and writes the output items.
  */
 
-class gr_block : public gr_basic_block {
+class GR_CORE_API gr_block : public gr_basic_block {
 
  public:
   
@@ -300,7 +301,7 @@ class gr_block : public gr_basic_block {
 			 const pmt::pmt_t &key);
 
   // These are really only for internal use, but leaving them public avoids
-  // having to work up an ever-varying list of friends
+  // having to work up an ever-varying list of friend GR_CORE_APIs
 
  public:
   gr_block_detail_sptr detail () const { return d_detail; }

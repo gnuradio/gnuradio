@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_SIMPLE_CORRELATOR_H
 #define INCLUDED_GR_SIMPLE_CORRELATOR_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <assert.h>
 
@@ -31,13 +32,13 @@
 class gr_simple_correlator;
 typedef boost::shared_ptr<gr_simple_correlator> gr_simple_correlator_sptr;
 
-gr_simple_correlator_sptr gr_make_simple_correlator (int payload_bytesize);
+GR_CORE_API gr_simple_correlator_sptr gr_make_simple_correlator (int payload_bytesize);
 
 /*!
  * \brief inverse of gr_simple_framer (more or less)
  * \ingroup sync_blk
  */
-class gr_simple_correlator : public gr_block
+class GR_CORE_API gr_simple_correlator : public gr_block
 {
   static const int OVERSAMPLE = 8;
   enum state_t { ST_LOOKING, ST_UNDER_THRESHOLD, ST_LOCKED };
@@ -63,7 +64,7 @@ class gr_simple_correlator : public gr_block
   FILE		*d_debug_fp;			// binary log file
 #endif
 
-  friend gr_simple_correlator_sptr gr_make_simple_correlator (int payload_bytesize);
+  friend GR_CORE_API gr_simple_correlator_sptr gr_make_simple_correlator (int payload_bytesize);
   gr_simple_correlator (int payload_bytesize);
 
 

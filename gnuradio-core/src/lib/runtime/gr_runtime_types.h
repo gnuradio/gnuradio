@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_RUNTIME_TYPES_H
 #define INCLUDED_GR_RUNTIME_TYPES_H
 
+#include <gr_core_api.h>
 #include <gr_types.h>
 
 /*

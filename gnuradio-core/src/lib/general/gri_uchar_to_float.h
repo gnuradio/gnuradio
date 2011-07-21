@@ -23,10 +23,12 @@
 #ifndef INCLUDED_GRI_UCHAR_TO_FLOAT_H
 #define INCLUDED_GRI_UCHAR_TO_FLOAT_H
 
+#include <gr_core_api.h>
+
 /*
  * convert array of unsigned chars to floats
  */
-void gri_uchar_to_float (const unsigned char *in, float *out, int nsamples);
+GR_CORE_API void gri_uchar_to_float (const unsigned char *in, float *out, int nsamples);
 
 
 #endif /* INCLUDED_GRI_UCHAR_TO_FLOAT_H */

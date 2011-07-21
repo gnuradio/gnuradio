@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_SYNC_INTERPOLATOR_H
 #define INCLUDED_GR_SYNC_INTERPOLATOR_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 /*!
@@ -31,7 +32,7 @@
  *
  * Override work to provide the signal processing implementation.
  */
-class gr_sync_interpolator : public gr_sync_block
+class GR_CORE_API gr_sync_interpolator : public gr_sync_block
 {
  private:
   unsigned	d_interpolation;

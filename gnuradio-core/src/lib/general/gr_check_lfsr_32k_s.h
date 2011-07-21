@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_CHECK_LFSR_32K_S_H
 #define INCLUDED_GR_CHECK_LFSR_32K_S_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gri_lfsr_32k.h>
 
@@ -29,7 +30,7 @@
 class gr_check_lfsr_32k_s;
 typedef boost::shared_ptr<gr_check_lfsr_32k_s> gr_check_lfsr_32k_s_sptr;
 
-gr_check_lfsr_32k_s_sptr gr_make_check_lfsr_32k_s ();
+GR_CORE_API gr_check_lfsr_32k_s_sptr gr_make_check_lfsr_32k_s ();
 
 /*!
  * \brief sink that checks if its input stream consists of a lfsr_32k sequence.
@@ -38,9 +39,9 @@ gr_check_lfsr_32k_s_sptr gr_make_check_lfsr_32k_s ();
  * This sink is typically used along with gr_lfsr_32k_source_s to test
  * the USRP using its digital loopback mode.
  */
-class gr_check_lfsr_32k_s : public gr_sync_block
+class GR_CORE_API gr_check_lfsr_32k_s : public gr_sync_block
 {
-  friend gr_check_lfsr_32k_s_sptr gr_make_check_lfsr_32k_s ();
+  friend GR_CORE_API gr_check_lfsr_32k_s_sptr gr_make_check_lfsr_32k_s ();
 
   enum state {
     SEARCHING,		// searching for synchronization

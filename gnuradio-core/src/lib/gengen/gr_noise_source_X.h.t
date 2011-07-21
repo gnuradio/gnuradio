@@ -25,6 +25,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_noise_type.h>
 #include <gr_random.h>
@@ -33,15 +34,15 @@
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
-@NAME@_sptr 
+GR_CORE_API @NAME@_sptr 
 gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 3021);
 
 /*!
  * \brief random number source
  * \ingroup source_blk
  */
-class @NAME@ : public gr_sync_block {
-  friend @NAME@_sptr 
+class GR_CORE_API @NAME@ : public gr_sync_block {
+  friend GR_CORE_API @NAME@_sptr 
   gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed);
 
   gr_noise_type_t	d_type;

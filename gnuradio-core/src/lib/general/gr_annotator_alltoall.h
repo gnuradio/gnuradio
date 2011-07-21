@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_ANNOTATOR_ALLTOALL_H
 #define	INCLUDED_GR_ANNOTATOR_ALLTOALL_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_annotator_alltoall;
 typedef boost::shared_ptr<gr_annotator_alltoall> gr_annotator_alltoall_sptr;
 
 // public constructor
-gr_annotator_alltoall_sptr 
+GR_CORE_API gr_annotator_alltoall_sptr 
 gr_make_annotator_alltoall (int when, size_t sizeof_stream_item);
 
 /*!
@@ -45,7 +46,7 @@ gr_make_annotator_alltoall (int when, size_t sizeof_stream_item);
  *
  * This block is only meant for testing and showing how to use the tags.
  */
-class gr_annotator_alltoall : public gr_sync_block
+class GR_CORE_API gr_annotator_alltoall : public gr_sync_block
 {
  public:
   ~gr_annotator_alltoall ();
@@ -68,7 +69,7 @@ protected:
   uint64_t d_tag_counter;
   std::vector<pmt::pmt_t> d_stored_tags;
 
-  friend gr_annotator_alltoall_sptr
+  friend GR_CORE_API gr_annotator_alltoall_sptr
   gr_make_annotator_alltoall (int when, size_t sizeof_stream_item);
 };
 

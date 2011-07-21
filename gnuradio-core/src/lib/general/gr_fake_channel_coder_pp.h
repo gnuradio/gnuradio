@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_FAKE_CHANNEL_CODER_PP_H
 #define INCLUDED_GR_FAKE_CHANNEL_CODER_PP_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_fake_channel_encoder_pp;
 typedef boost::shared_ptr<gr_fake_channel_encoder_pp> gr_fake_channel_encoder_pp_sptr;
 
-gr_fake_channel_encoder_pp_sptr
+GR_CORE_API gr_fake_channel_encoder_pp_sptr
 gr_make_fake_channel_encoder_pp(int input_vlen, int output_vlen);
 
 /*!
@@ -37,14 +38,14 @@ gr_make_fake_channel_encoder_pp(int input_vlen, int output_vlen);
  *
  * input: stream of byte vectors; output: stream of byte vectors
  */
-class gr_fake_channel_encoder_pp : public gr_sync_block
+class GR_CORE_API gr_fake_channel_encoder_pp : public gr_sync_block
 {
   int	d_input_vlen;
   int	d_output_vlen;
   
   gr_fake_channel_encoder_pp(int input_vlen, int output_vlen);
 
-  friend gr_fake_channel_encoder_pp_sptr
+  friend GR_CORE_API gr_fake_channel_encoder_pp_sptr
          gr_make_fake_channel_encoder_pp(int input_vlen, int output_vlen);
   
 public:
@@ -60,7 +61,7 @@ public:
 class gr_fake_channel_decoder_pp;
 typedef boost::shared_ptr<gr_fake_channel_decoder_pp> gr_fake_channel_decoder_pp_sptr;
 
-gr_fake_channel_decoder_pp_sptr
+GR_CORE_API gr_fake_channel_decoder_pp_sptr
 gr_make_fake_channel_decoder_pp(int input_vlen, int output_vlen);
 
 /*!
@@ -69,14 +70,14 @@ gr_make_fake_channel_decoder_pp(int input_vlen, int output_vlen);
  *
  * input: stream of byte vectors; output: stream of byte vectors
  */
-class gr_fake_channel_decoder_pp : public gr_sync_block
+class GR_CORE_API gr_fake_channel_decoder_pp : public gr_sync_block
 {
   int	d_input_vlen;
   int	d_output_vlen;
   
   gr_fake_channel_decoder_pp(int input_vlen, int output_vlen);
 
-  friend gr_fake_channel_decoder_pp_sptr
+  friend GR_CORE_API gr_fake_channel_decoder_pp_sptr
          gr_make_fake_channel_decoder_pp(int input_vlen, int output_vlen);
   
 public:

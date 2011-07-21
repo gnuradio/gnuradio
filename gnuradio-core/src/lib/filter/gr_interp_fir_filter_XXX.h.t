@@ -28,11 +28,12 @@
 #ifndef @GUARD_NAME@
 #define	@GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
-@SPTR_NAME@ gr_make_@BASE_NAME@ (unsigned interpolation, const std::vector<@TAP_TYPE@> &taps);
+GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (unsigned interpolation, const std::vector<@TAP_TYPE@> &taps);
 
 class @FIR_TYPE@;
 
@@ -40,10 +41,10 @@ class @FIR_TYPE@;
  * \brief Interpolating FIR filter with @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
  * \ingroup filter_blk
  */
-class @NAME@ : public gr_sync_interpolator
+class GR_CORE_API @NAME@ : public gr_sync_interpolator
 {
  private:
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (unsigned interpolation, const std::vector<@TAP_TYPE@> &taps);
+  friend GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (unsigned interpolation, const std::vector<@TAP_TYPE@> &taps);
 
   std::vector<@TAP_TYPE@>	d_new_taps;
   bool			d_updated;

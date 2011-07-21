@@ -25,20 +25,21 @@
 #ifndef INCLUDED_GR_CONJUGATE_CC_H
 #define INCLUDED_GR_CONJUGATE_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_conjugate_cc;
 typedef boost::shared_ptr<gr_conjugate_cc> gr_conjugate_cc_sptr;
 
-gr_conjugate_cc_sptr gr_make_conjugate_cc ();
+GR_CORE_API gr_conjugate_cc_sptr gr_make_conjugate_cc ();
 
 /*!
  * \brief output = complex conjugate of input
  * \ingroup math_blk
  */
-class gr_conjugate_cc : public gr_sync_block
+class GR_CORE_API gr_conjugate_cc : public gr_sync_block
 {
-  friend gr_conjugate_cc_sptr gr_make_conjugate_cc ();
+  friend GR_CORE_API gr_conjugate_cc_sptr gr_make_conjugate_cc ();
 
   gr_conjugate_cc ();
 

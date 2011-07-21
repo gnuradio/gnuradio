@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_PREFS_H
 #define INCLUDED_GR_PREFS_H
 
+#include <gr_core_api.h>
 #include <string>
 
 /*!
@@ -32,7 +33,7 @@
  * via the magic of SWIG directors.
  */
 
-class gr_prefs
+class GR_CORE_API gr_prefs
 {
 public:
   static gr_prefs *singleton();

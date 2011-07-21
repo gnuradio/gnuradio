@@ -22,6 +22,7 @@
 #ifndef _GR_SINGLE_POLE_IIR_H_
 #define _GR_SINGLE_POLE_IIR_H_
 
+#include <gr_core_api.h>
 #include <stdexcept>
 #include <gr_complex.h>
 /*!

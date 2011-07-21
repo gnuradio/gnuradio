@@ -29,6 +29,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <vector>
 #include <gr_types.h>
 #include <gr_reverse.h>
@@ -42,7 +43,7 @@
  * 
  */
 
-class @NAME@ {
+class GR_CORE_API @NAME@ {
 
 protected:
   std::vector<@TAP_TYPE@>	d_taps;		// reversed taps

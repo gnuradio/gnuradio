@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_DIFF_PHASOR_CC_H
 #define INCLUDED_GR_DIFF_PHASOR_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 /*!
@@ -32,12 +33,12 @@
 class gr_diff_phasor_cc;
 typedef boost::shared_ptr<gr_diff_phasor_cc> gr_diff_phasor_cc_sptr;
 
-gr_diff_phasor_cc_sptr gr_make_diff_phasor_cc ();
+GR_CORE_API gr_diff_phasor_cc_sptr gr_make_diff_phasor_cc ();
 
 
-class gr_diff_phasor_cc : public gr_sync_block
+class GR_CORE_API gr_diff_phasor_cc : public gr_sync_block
 {
-  friend gr_diff_phasor_cc_sptr gr_make_diff_phasor_cc ();
+  friend GR_CORE_API gr_diff_phasor_cc_sptr gr_make_diff_phasor_cc ();
 
   gr_diff_phasor_cc ();  //constructor
 

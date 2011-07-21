@@ -22,23 +22,24 @@
 #ifndef INCLUDED_GR_PROBE_SIGNAL_F_H
 #define INCLUDED_GR_PROBE_SIGNAL_F_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_probe_signal_f;
 typedef boost::shared_ptr<gr_probe_signal_f> gr_probe_signal_f_sptr;
 
-gr_probe_signal_f_sptr
+GR_CORE_API gr_probe_signal_f_sptr
 gr_make_probe_signal_f ();
 
 /*!
  * \brief Sink that allows a sample to be grabbed from Python.
  * \ingroup sink_blk
  */
-class gr_probe_signal_f : public gr_sync_block
+class GR_CORE_API gr_probe_signal_f : public gr_sync_block
 {
   float	d_level;
 
-  friend gr_probe_signal_f_sptr
+  friend GR_CORE_API gr_probe_signal_f_sptr
   gr_make_probe_signal_f();
 
   gr_probe_signal_f();

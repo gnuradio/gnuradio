@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_REMEZ_H
 #define INCLUDED_GR_REMEZ_H
 
+#include <gr_core_api.h>
 #include <gr_types.h>
 #include <string>
 #include <stdexcept>
@@ -51,7 +52,7 @@
  * \throws std::runtime_error if args are invalid or calculation fails to converge.
  */
 
-std::vector<double>
+GR_CORE_API std::vector<double>
 gr_remez (int order,
 	  const std::vector<double> &bands,
 	  const std::vector<double> &ampl,

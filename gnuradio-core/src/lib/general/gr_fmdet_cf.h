@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_FMDET_CF_H
 #define INCLUDED_GR_FMDET_CF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_fmdet_cf;
 typedef boost::shared_ptr<gr_fmdet_cf> gr_fmdet_cf_sptr;
 
-gr_fmdet_cf_sptr gr_make_fmdet_cf (float samplerate, float freq_low, float freq_high, float scl);
+GR_CORE_API gr_fmdet_cf_sptr gr_make_fmdet_cf (float samplerate, float freq_low, float freq_high, float scl);
 
 class gr_fir_ccf;
 
@@ -43,9 +44,9 @@ class gr_fir_ccf;
  * normalization by the magnitude of the sample 
  */
 
-class gr_fmdet_cf : public gr_sync_block
+class GR_CORE_API gr_fmdet_cf : public gr_sync_block
 {
-  friend gr_fmdet_cf_sptr gr_make_fmdet_cf (float samplerate, float freq_low,
+  friend GR_CORE_API gr_fmdet_cf_sptr gr_make_fmdet_cf (float samplerate, float freq_low,
 					    float freq_high, float scl);
 
   gr_complex d_S1,d_S2,d_S3,d_S4;

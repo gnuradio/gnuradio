@@ -23,16 +23,17 @@
 #ifndef INCLUDED_GR_MISC_H
 #define INCLUDED_GR_MISC_H
 
+#include <gr_core_api.h>
 #include <gr_types.h>
 
 unsigned int 
 gr_rounduppow2(unsigned int n);
 
 // FIXME should be template
-void gr_zero_vector(std::vector<float> &v);
-void gr_zero_vector(std::vector<double> &v);
-void gr_zero_vector(std::vector<int> &v);
-void gr_zero_vector(std::vector<gr_complex> &v);
+GR_CORE_API void gr_zero_vector(std::vector<float> &v);
+GR_CORE_API void gr_zero_vector(std::vector<double> &v);
+GR_CORE_API void gr_zero_vector(std::vector<int> &v);
+GR_CORE_API void gr_zero_vector(std::vector<gr_complex> &v);
 
 
 #endif /* INCLUDED_GR_MISC_H */

@@ -23,11 +23,12 @@
 #ifndef INCLUDED_GR_UNPACK_K_BITS_BB_H
 #define	INCLUDED_GR_UNPACK_K_BITS_BB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_unpack_k_bits_bb;
 typedef boost::shared_ptr<gr_unpack_k_bits_bb> gr_unpack_k_bits_bb_sptr;
-gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (unsigned k);
+GR_CORE_API gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (unsigned k);
 
 class gr_unpack_k_bits_bb;
 
@@ -35,10 +36,10 @@ class gr_unpack_k_bits_bb;
  * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB.
  * \ingroup converter_blk
  */
-class gr_unpack_k_bits_bb : public gr_sync_interpolator
+class GR_CORE_API gr_unpack_k_bits_bb : public gr_sync_interpolator
 {
  private:
-  friend gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (unsigned k);
+  friend GR_CORE_API gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (unsigned k);
 
   gr_unpack_k_bits_bb (unsigned k);
 

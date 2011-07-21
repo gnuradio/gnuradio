@@ -21,6 +21,7 @@
 #ifndef INCLUDED_GR_TPB_THREAD_BODY_H
 #define INCLUDED_GR_TPB_THREAD_BODY_H
 
+#include <gr_core_api.h>
 #include <gr_block_executor.h>
 #include <gr_block.h>
 #include <gr_block_detail.h>
@@ -33,7 +34,7 @@
  * done or is interrupted.
  */
 
-class gr_tpb_thread_body {
+class GR_CORE_API gr_tpb_thread_body {
   gr_block_executor	d_exec;
 
 public:

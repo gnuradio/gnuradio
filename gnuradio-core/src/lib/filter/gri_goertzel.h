@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GRI_GOERTZEL_H
 #define INCLUDED_GRI_GOERTZEL_H
 
+#include <gr_core_api.h>
 #include <gr_types.h>
 
 /*!
  * \brief Implements Goertzel single-bin DFT calculation
  * \ingroup misc
  */
-class gri_goertzel
+class GR_CORE_API gri_goertzel
 {
 public:
   gri_goertzel() {}

@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_RANDOM_H
 #define INCLUDED_GR_RANDOM_H
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 
 /*!
  * \brief pseudo random number generator
  * \ingroup math_blk
  */
-class gr_random {
+class GR_CORE_API gr_random {
 protected:
   static const int NTAB  = 32;
   long  d_seed;

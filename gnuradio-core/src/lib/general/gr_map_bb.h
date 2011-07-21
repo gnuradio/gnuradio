@@ -22,21 +22,22 @@
 #ifndef INCLUDED_GR_MAP_BB_H
 #define INCLUDED_GR_MAP_BB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_map_bb;
 typedef boost::shared_ptr<gr_map_bb> gr_map_bb_sptr;
 
-gr_map_bb_sptr gr_make_map_bb(const std::vector<int> &map);
+GR_CORE_API gr_map_bb_sptr gr_make_map_bb(const std::vector<int> &map);
 
 /*!
  * \brief output[i] = map[input[i]]
  * \ingroup coding_blk
  */
 
-class gr_map_bb : public gr_sync_block
+class GR_CORE_API gr_map_bb : public gr_sync_block
 {
-  friend gr_map_bb_sptr gr_make_map_bb(const std::vector<int> &map);
+  friend GR_CORE_API gr_map_bb_sptr gr_make_map_bb(const std::vector<int> &map);
 
   unsigned char d_map[0x100];
 

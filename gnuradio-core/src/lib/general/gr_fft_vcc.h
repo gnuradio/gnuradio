@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_FFT_VCC_H
 #define INCLUDED_GR_FFT_VCC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_fft_vcc;
 typedef boost::shared_ptr<gr_fft_vcc> gr_fft_vcc_sptr;
 
-gr_fft_vcc_sptr
+GR_CORE_API gr_fft_vcc_sptr
 gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift=false);
 
 /*!
@@ -37,10 +38,10 @@ gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, b
  *
  * Abstract base class
  */
-class gr_fft_vcc : public gr_sync_block
+class GR_CORE_API gr_fft_vcc : public gr_sync_block
 {
 protected:
-  friend gr_fft_vcc_sptr
+  friend GR_CORE_API gr_fft_vcc_sptr
   gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift);
 
   unsigned int	       d_fft_size;

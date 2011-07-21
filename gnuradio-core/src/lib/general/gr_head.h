@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_HEAD_H
 #define INCLUDED_GR_HEAD_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <stddef.h>			// size_t
 
@@ -36,9 +37,9 @@ typedef boost::shared_ptr<gr_head> gr_head_sptr;
  * Useful for building test cases
  */
 
-class gr_head : public gr_sync_block
+class GR_CORE_API gr_head : public gr_sync_block
 {
-  friend gr_head_sptr gr_make_head (size_t sizeof_stream_item, unsigned long long nitems);
+  friend GR_CORE_API gr_head_sptr gr_make_head (size_t sizeof_stream_item, unsigned long long nitems);
   gr_head (size_t sizeof_stream_item, unsigned long long nitems);
 
   unsigned long long	d_nitems;
@@ -52,7 +53,7 @@ class gr_head : public gr_sync_block
   void reset() { d_ncopied_items = 0; }
 };
 
-gr_head_sptr
+GR_CORE_API gr_head_sptr
 gr_make_head (size_t sizeof_stream_item, unsigned long long nitems);
 
 

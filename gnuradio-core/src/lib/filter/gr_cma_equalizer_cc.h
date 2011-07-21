@@ -23,25 +23,26 @@
 #ifndef INCLUDED_GR_CMA_EQUALIZER_CC_H
 #define	INCLUDED_GR_CMA_EQUALIZER_CC_H
 
+#include <gr_core_api.h>
 #include <gr_adaptive_fir_ccf.h>
 
 class gr_cma_equalizer_cc;
 typedef boost::shared_ptr<gr_cma_equalizer_cc> gr_cma_equalizer_cc_sptr;
 
-gr_cma_equalizer_cc_sptr 
+GR_CORE_API gr_cma_equalizer_cc_sptr 
 gr_make_cma_equalizer_cc(int num_taps, float modulus, float mu);
 
 /*!
  * \brief Implements constant modulus adaptive filter on complex stream
  * \ingroup eq_blk
  */
-class gr_cma_equalizer_cc : public gr_adaptive_fir_ccf
+class GR_CORE_API gr_cma_equalizer_cc : public gr_adaptive_fir_ccf
 {
 private:
   float d_modulus;
   float d_mu;
   
-  friend gr_cma_equalizer_cc_sptr gr_make_cma_equalizer_cc(int num_taps, float modulus, float mu);
+  friend GR_CORE_API gr_cma_equalizer_cc_sptr gr_make_cma_equalizer_cc(int num_taps, float modulus, float mu);
   gr_cma_equalizer_cc(int num_taps, float modulus, float mu);
 
 protected:

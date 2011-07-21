@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GRI_AGC_FF_H
 #define INCLUDED_GRI_AGC_FF_H
 
+#include <gr_core_api.h>
 #include <math.h>
 
 /*!
@@ -30,7 +31,7 @@
  *
  * Power is approximated by absolute value
  */
-class gri_agc_ff {
+class GR_CORE_API gri_agc_ff {
 
  public:
   gri_agc_ff (float rate = 1e-4, float reference = 1.0,

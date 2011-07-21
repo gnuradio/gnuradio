@@ -21,6 +21,7 @@
 #ifndef INCLUDED_GR_SPTR_MAGIC_H
 #define INCLUDED_GR_SPTR_MAGIC_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 
 class gr_basic_block;
@@ -30,7 +31,7 @@ namespace gnuradio {
 
   namespace detail {
     
-    class sptr_magic {
+    class GR_CORE_API sptr_magic {
     public:
       static boost::shared_ptr<gr_basic_block> fetch_initial_sptr(gr_basic_block *p);
       static void create_and_stash_initial_sptr(gr_hier_block2 *p);

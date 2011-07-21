@@ -23,25 +23,26 @@
 #ifndef INCLUDED_GR_SIMPLE_FRAMER_H
 #define INCLUDED_GR_SIMPLE_FRAMER_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 class gr_simple_framer;
 typedef boost::shared_ptr<gr_simple_framer> gr_simple_framer_sptr;
 
-gr_simple_framer_sptr gr_make_simple_framer (int payload_bytesize);
+GR_CORE_API gr_simple_framer_sptr gr_make_simple_framer (int payload_bytesize);
 
 /*!
  * \brief add sync field, seq number and command field to payload
  * \ingroup sync_blk
  */
-class gr_simple_framer : public gr_block
+class GR_CORE_API gr_simple_framer : public gr_block
 {
   int	d_seqno;
   int	d_payload_bytesize;
   int	d_input_block_size;	// bytes
   int	d_output_block_size;	// bytes
 
-  friend gr_simple_framer_sptr gr_make_simple_framer (int payload_bytesize);
+  friend GR_CORE_API gr_simple_framer_sptr gr_make_simple_framer (int payload_bytesize);
   gr_simple_framer (int payload_bytesize);
 
  public:

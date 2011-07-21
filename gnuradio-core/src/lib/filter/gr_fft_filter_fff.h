@@ -22,11 +22,12 @@
 #ifndef INCLUDED_GR_FFT_FILTER_FFF_H
 #define INCLUDED_GR_FFT_FILTER_FFF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 class gr_fft_filter_fff;
 typedef boost::shared_ptr<gr_fft_filter_fff> gr_fft_filter_fff_sptr;
-gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps);
+GR_CORE_API gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps);
 
 class gri_fft_filter_fff_generic;
 //class gri_fft_filter_fff_sse;
@@ -35,10 +36,10 @@ class gri_fft_filter_fff_generic;
  * \brief Fast FFT filter with float input, float output and float taps
  * \ingroup filter_blk
  */
-class gr_fft_filter_fff : public gr_sync_decimator
+class GR_CORE_API gr_fft_filter_fff : public gr_sync_decimator
 {
  private:
-  friend gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps);
+  friend GR_CORE_API gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps);
 
   int			   d_nsamples;
   bool			   d_updated;

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GRI_LFSR_32k_H
 #define INCLUDED_GRI_LFSR_32k_H
 
+#include <gr_core_api.h>
 #include <gri_lfsr_15_1_0.h>
 
 /*!
@@ -33,7 +34,7 @@
  * of the sequence.
  */
 
-class gri_lfsr_32k {
+class GR_CORE_API gri_lfsr_32k {
   gri_lfsr_15_1_0	d_lfsr;
   unsigned int		d_count;
 

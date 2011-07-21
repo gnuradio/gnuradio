@@ -20,13 +20,14 @@
 #ifndef INCLUDED_GR_CPFSK_BC_H
 #define INCLUDED_GR_CPFSK_BC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_cpfsk_bc;
 
 typedef boost::shared_ptr<gr_cpfsk_bc> gr_cpfsk_bc_sptr;
 
-gr_cpfsk_bc_sptr gr_make_cpfsk_bc(float k, float ampl, int samples_per_sym);
+GR_CORE_API gr_cpfsk_bc_sptr gr_make_cpfsk_bc(float k, float ampl, int samples_per_sym);
 
 /*!
  * \brief Perform continuous phase 2-level frequency shift keying modulation 
@@ -38,10 +39,10 @@ gr_cpfsk_bc_sptr gr_make_cpfsk_bc(float k, float ampl, int samples_per_sym);
  * \param samples_per_sym	number of output samples per input bit
  */
 
-class gr_cpfsk_bc : public gr_sync_interpolator
+class GR_CORE_API gr_cpfsk_bc : public gr_sync_interpolator
 {
 private:
-  friend gr_cpfsk_bc_sptr gr_make_cpfsk_bc(float k, float ampl, int samples_per_sym);
+  friend GR_CORE_API gr_cpfsk_bc_sptr gr_make_cpfsk_bc(float k, float ampl, int samples_per_sym);
 
   gr_cpfsk_bc(float k, float ampl, int samples_per_sym);
 

@@ -21,6 +21,7 @@
 #ifndef INCLUDED_DOTPROD_FFF_ARMV7_A_H
 #define INCLUDED_DOTPROD_FFF_ARMV7_A_H
 
+#include <gr_core_api.h>
 #include <stddef.h>
 
 #ifdef __cplusplus

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GRI_LFSR_H
 #define INCLUDED_GRI_LFSR_H
 
+#include <gr_core_api.h>
 #include <stdexcept>
 #include <stdint.h>
 
@@ -81,7 +82,7 @@
  *
  */
 
-class gri_lfsr
+class GR_CORE_API gri_lfsr
 {
  private:
   uint32_t d_shift_register;

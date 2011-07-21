@@ -24,6 +24,7 @@
 #define	INCLUDED_GR_MPSK_RECEIVER_CC_H
 
 #include <gruel/attributes.h>
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <gr_complex.h>
 #include <fstream>
@@ -34,7 +35,7 @@ class gr_mpsk_receiver_cc;
 typedef boost::shared_ptr<gr_mpsk_receiver_cc> gr_mpsk_receiver_cc_sptr;
 
 // public constructor
-gr_mpsk_receiver_cc_sptr 
+GR_CORE_API gr_mpsk_receiver_cc_sptr 
 gr_make_mpsk_receiver_cc (unsigned int M, float theta, 
 			  float alpha, float beta,
 			  float fmin, float fmax,
@@ -70,7 +71,7 @@ gr_make_mpsk_receiver_cc (unsigned int M, float theta,
  *
  */
 
-class gr_mpsk_receiver_cc : public gr_block
+class GR_CORE_API gr_mpsk_receiver_cc : public gr_block
 {
  public:
   ~gr_mpsk_receiver_cc ();
@@ -305,7 +306,7 @@ protected:
   //! index to delay line
   unsigned int d_dl_idx;
 
-  friend gr_mpsk_receiver_cc_sptr
+  friend GR_CORE_API gr_mpsk_receiver_cc_sptr
   gr_make_mpsk_receiver_cc (unsigned int M, float theta,
 			    float alpha, float beta,
 			    float fmin, float fmax,

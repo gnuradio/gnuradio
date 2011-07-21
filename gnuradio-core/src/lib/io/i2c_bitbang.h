@@ -23,6 +23,7 @@
 #ifndef INCLUDED_I2C_BITBANG_H
 #define INCLUDED_I2C_BITBANG_H
 
+#include <gr_core_api.h>
 #include <i2c.h>
 #include <i2c_bbio.h>
 
@@ -30,8 +31,8 @@
  * \brief class for controlling i2c bus
  * \ingroup base
  */
-class i2c_bitbang : public i2c {
-  friend i2c_sptr make_i2c_bitbang (i2c_bbio_sptr io);
+class GR_CORE_API i2c_bitbang : public i2c {
+  friend GR_CORE_API i2c_sptr make_i2c_bitbang (i2c_bbio_sptr io);
   i2c_bitbang (i2c_bbio_sptr io);
 
  public:
@@ -57,7 +58,7 @@ private:
   i2c_bbio_sptr		d_io;
 };
 
-i2c_sptr make_i2c_bitbang (i2c_bbio_sptr io);
+GR_CORE_API i2c_sptr make_i2c_bitbang (i2c_bbio_sptr io);
 
 #endif /* INCLUDED_I2C_BITBANG_H */
 

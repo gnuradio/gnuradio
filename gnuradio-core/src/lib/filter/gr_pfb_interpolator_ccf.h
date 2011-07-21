@@ -24,11 +24,12 @@
 #ifndef INCLUDED_GR_PFB_INTERPOLATOR_CCF_H
 #define	INCLUDED_GR_PFB_INTERPOLATOR_CCF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_pfb_interpolator_ccf;
 typedef boost::shared_ptr<gr_pfb_interpolator_ccf> gr_pfb_interpolator_ccf_sptr;
-gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp, 
+GR_CORE_API gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp, 
 							   const std::vector<float> &taps);
 
 class gr_fir_ccf;
@@ -79,7 +80,7 @@ class gr_fir_ccf;
  *       Inc. 2004.</EM></B>
  */
 
-class gr_pfb_interpolator_ccf : public gr_sync_interpolator
+class GR_CORE_API gr_pfb_interpolator_ccf : public gr_sync_interpolator
 {
  private:
   /*!
@@ -88,7 +89,7 @@ class gr_pfb_interpolator_ccf : public gr_sync_interpolator
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank. The taps
    *                                        should be generated at the interpolated sampling rate.
    */
-  friend gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp,
+  friend GR_CORE_API gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp,
 								    const std::vector<float> &taps);
 
   std::vector<gr_fir_ccf*> d_filters;

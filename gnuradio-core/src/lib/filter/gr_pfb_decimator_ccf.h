@@ -24,11 +24,12 @@
 #ifndef INCLUDED_GR_PFB_DECIMATOR_CCF_H
 #define	INCLUDED_GR_PFB_DECIMATOR_CCF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_pfb_decimator_ccf;
 typedef boost::shared_ptr<gr_pfb_decimator_ccf> gr_pfb_decimator_ccf_sptr;
-gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim, 
+GR_CORE_API gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim, 
 						     const std::vector<float> &taps,
 						     unsigned int channel=0);
 
@@ -92,7 +93,7 @@ class gri_fft_complex;
  *       Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
  */
 
-class gr_pfb_decimator_ccf : public gr_sync_block
+class GR_CORE_API gr_pfb_decimator_ccf : public gr_sync_block
 {
  private:
   /*!
@@ -101,7 +102,7 @@ class gr_pfb_decimator_ccf : public gr_sync_block
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
    * \param channel (unsigned integer) Selects the channel to return [default=0].
    */
-  friend gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim,
+  friend GR_CORE_API gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim,
 							      const std::vector<float> &taps,
 							      unsigned int channel);
 

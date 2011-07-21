@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_REVERSE_H
 #define INCLUDED_GR_REVERSE_H
 
+#include <gr_core_api.h>
 #include <vector>
 #include <gr_complex.h>
 

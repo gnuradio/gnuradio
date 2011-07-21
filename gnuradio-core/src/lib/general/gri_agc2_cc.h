@@ -23,6 +23,7 @@
 #ifndef _GRI_AGC2_CC_H_
 #define _GRI_AGC2_CC_H_
 
+#include <gr_core_api.h>
 #include <math.h>
 
 /*!
@@ -30,7 +31,7 @@
  *
  * For Power the absolute value of the complex number is used.
  */
-class gri_agc2_cc {
+class GR_CORE_API gri_agc2_cc {
 
  public:
   gri_agc2_cc (float attack_rate = 1e-1, float decay_rate = 1e-2, float reference = 1.0, 

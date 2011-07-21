@@ -22,12 +22,13 @@
 #ifndef INCLUDED_GR_BYTES_TO_SYMS_H
 #define INCLUDED_GR_BYTES_TO_SYMS_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_bytes_to_syms;
 typedef boost::shared_ptr<gr_bytes_to_syms> gr_bytes_to_syms_sptr;
 
-gr_bytes_to_syms_sptr gr_make_bytes_to_syms ();
+GR_CORE_API gr_bytes_to_syms_sptr gr_make_bytes_to_syms ();
 
 /*!
  * \brief Convert stream of bytes to stream of +/- 1 symbols
@@ -45,9 +46,9 @@ gr_bytes_to_syms_sptr gr_make_bytes_to_syms ();
  * \sa gr_packed_to_unpacked_bb, gr_unpacked_to_packed_bb,
  * \sa gr_chunks_to_symbols_bf, gr_chunks_to_symbols_bc.
  */
-class gr_bytes_to_syms : public gr_sync_interpolator
+class GR_CORE_API gr_bytes_to_syms : public gr_sync_interpolator
 {
-  friend gr_bytes_to_syms_sptr gr_make_bytes_to_syms ();
+  friend GR_CORE_API gr_bytes_to_syms_sptr gr_make_bytes_to_syms ();
 
   gr_bytes_to_syms ();
 

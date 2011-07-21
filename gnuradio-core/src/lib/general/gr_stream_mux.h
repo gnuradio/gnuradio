@@ -24,6 +24,7 @@
 #define INCLUDED_GR_STREAM_MUX_H
 
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 #include <vector>
 
@@ -45,7 +46,7 @@ typedef boost::shared_ptr<gr_stream_mux> gr_stream_mux_sptr;
 
 
 
-gr_stream_mux_sptr 
+GR_CORE_API gr_stream_mux_sptr 
 gr_make_stream_mux (size_t itemsize, const std::vector<int> &lengths);
 
 
@@ -60,9 +61,9 @@ gr_make_stream_mux (size_t itemsize, const std::vector<int> &lengths);
  * [N0, N1, N2, ..., Nm, N0, N1, ...]
  */
 
-class gr_stream_mux : public gr_block
+class GR_CORE_API gr_stream_mux : public gr_block
 {
-  friend gr_stream_mux_sptr
+  friend GR_CORE_API gr_stream_mux_sptr
     gr_make_stream_mux (size_t itemsize, const std::vector<int> &lengths);
   
  protected:

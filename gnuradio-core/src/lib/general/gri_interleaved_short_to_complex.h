@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GRI_INTERLEAVED_SHORT_TO_COMPLEX_H
 #define INCLUDED_GRI_INTERLEAVED_SHORT_TO_COMPLEX_H
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 
 /*
@@ -30,7 +31,7 @@
  * the shorts contains real, imaginary, real, imaginary...
  * nsamples is the number of shorts; it must be even.
  */
-void gri_interleaved_short_to_complex (const short *in, gr_complex *out, int nsamples);
+GR_CORE_API void gri_interleaved_short_to_complex (const short *in, gr_complex *out, int nsamples);
 
 #endif /* INCLUDED_GRI_INTERLEAVED_SHORT_TO_COMPLEX_H */
 

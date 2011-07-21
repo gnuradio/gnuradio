@@ -29,11 +29,12 @@
 #ifndef @GUARD_NAME@
 #define	@GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
-@SPTR_NAME@
+GR_CORE_API @SPTR_NAME@
 gr_make_@BASE_NAME@ (unsigned interpolation,
 		     unsigned decimation,
 		     const std::vector<@TAP_TYPE@> &taps);
@@ -44,7 +45,7 @@ class @FIR_TYPE@;
  * \brief Rational Resampling Polyphase FIR filter with @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
  * \ingroup filter_blk
  */
-class @NAME@ : public gr_block
+class GR_CORE_API @NAME@ : public gr_block
 {
  private:
   unsigned 			d_history;
@@ -54,7 +55,7 @@ class @NAME@ : public gr_block
   bool				d_updated;
   std::vector<@FIR_TYPE@ *> d_firs;
 
-  friend @SPTR_NAME@ 
+  friend GR_CORE_API @SPTR_NAME@ 
   gr_make_@BASE_NAME@ (unsigned interpolation, unsigned decimation, const std::vector<@TAP_TYPE@> &taps);
 
 

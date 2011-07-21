@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_AGC2_CC_H
 #define INCLUDED_GR_AGC2_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gri_agc2_cc.h>
 
 class gr_agc2_cc;
 typedef boost::shared_ptr<gr_agc2_cc> gr_agc2_cc_sptr;
 
-gr_agc2_cc_sptr
+GR_CORE_API gr_agc2_cc_sptr
 gr_make_agc2_cc (float attack_rate = 1e-1, float decay_rate = 1e-2, float reference = 1.0, 
 		 float gain = 1.0, float max_gain = 0.0);
 /*!
@@ -39,9 +40,9 @@ gr_make_agc2_cc (float attack_rate = 1e-1, float decay_rate = 1e-2, float refere
  * For Power the absolute value of the complex number is used.
  */
 
-class gr_agc2_cc : public gr_sync_block, public gri_agc2_cc
+class GR_CORE_API gr_agc2_cc : public gr_sync_block, public gri_agc2_cc
 {
-  friend gr_agc2_cc_sptr gr_make_agc2_cc (float attack_rate, float decay_rate, float reference, 
+  friend GR_CORE_API gr_agc2_cc_sptr gr_make_agc2_cc (float attack_rate, float decay_rate, float reference, 
 					  float gain, float max_gain);
   gr_agc2_cc (float attack_rate, float decay_rate, float reference, 
 	      float gain, float max_gain);

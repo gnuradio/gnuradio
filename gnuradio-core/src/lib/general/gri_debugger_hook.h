@@ -23,6 +23,8 @@
 #ifndef INCLUDED_GRI_DEBUGGER_HOOK_H
 #define INCLUDED_GRI_DEBUGGER_HOOK_H
 
-void gri_debugger_hook ();
+#include <gr_core_api.h>
+
+GR_CORE_API void gri_debugger_hook ();
 
 #endif /* INCLUDED_GRI_DEBUGGER_HOOK_H */

@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_PN_CORRELATOR_CC_H
 #define INCLUDED_GR_PN_CORRELATOR_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 #include <gri_glfsr.h>
 
 class gr_pn_correlator_cc;
 typedef boost::shared_ptr<gr_pn_correlator_cc> gr_pn_correlator_cc_sptr;
 
-gr_pn_correlator_cc_sptr
+GR_CORE_API gr_pn_correlator_cc_sptr
 gr_make_pn_correlator_cc(int degree, int mask=0, int seed=1);
 /*!
  * \brief PN code sequential search correlator
@@ -39,9 +40,9 @@ gr_make_pn_correlator_cc(int degree, int mask=0, int seed=1);
  * reference PN code, one sample per PN code period
  */
 
-class gr_pn_correlator_cc : public gr_sync_decimator
+class GR_CORE_API gr_pn_correlator_cc : public gr_sync_decimator
 {
-  friend gr_pn_correlator_cc_sptr gr_make_pn_correlator_cc(int degree, int mask, int seed);
+  friend GR_CORE_API gr_pn_correlator_cc_sptr gr_make_pn_correlator_cc(int degree, int mask, int seed);
 
   int        d_len;
   float      d_pn;

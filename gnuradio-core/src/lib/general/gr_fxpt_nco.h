@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_FXPT_NCO_H
 #define INCLUDED_GR_FXPT_NCO_H
 
+#include <gr_core_api.h>
 #include <gr_fxpt.h>
 #include <gr_complex.h>
 
@@ -29,7 +30,7 @@
  * \brief Numerically Controlled Oscillator (NCO)
  * \ingroup misc
  */
-class gr_fxpt_nco {
+class GR_CORE_API gr_fxpt_nco {
   gr_uint32	d_phase;
   gr_int32	d_phase_inc;
 

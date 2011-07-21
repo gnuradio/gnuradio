@@ -23,6 +23,7 @@
 #ifndef   	INCLUDED_GR_STRETCH_FF_H_
 # define   	INCLUDED_GR_STRETCH_FF_H_
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 /*!
@@ -36,11 +37,11 @@
 class gr_stretch_ff;
 typedef boost::shared_ptr<gr_stretch_ff> gr_stretch_ff_sptr;
 
-gr_stretch_ff_sptr gr_make_stretch_ff(float lo, size_t vlen);
+GR_CORE_API gr_stretch_ff_sptr gr_make_stretch_ff(float lo, size_t vlen);
 
-class gr_stretch_ff : public gr_sync_block
+class GR_CORE_API gr_stretch_ff : public gr_sync_block
 {
-  friend gr_stretch_ff_sptr gr_make_stretch_ff(float lo, size_t vlen);
+  friend GR_CORE_API gr_stretch_ff_sptr gr_make_stretch_ff(float lo, size_t vlen);
 
   float	d_lo;		// the constant
   size_t d_vlen;

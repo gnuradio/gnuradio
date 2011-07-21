@@ -7,6 +7,8 @@
  */
 #define DTYPE unsigned char
 
+#include <gr_core_api.h>
+
 static inline int mod255(int x){
   while (x >= 255) {
     x -= 255;
@@ -34,5 +36,5 @@ extern unsigned char CCSDS_poly[];
 #define ENCODE_RS encode_rs_8
 #define DECODE_RS decode_rs_8
 
-void ENCODE_RS(DTYPE *data,DTYPE *parity);
-int DECODE_RS(DTYPE *data, int *eras_pos, int no_eras);
+GR_CORE_API void ENCODE_RS(DTYPE *data,DTYPE *parity);
+GR_CORE_API int DECODE_RS(DTYPE *data, int *eras_pos, int no_eras);

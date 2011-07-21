@@ -23,6 +23,7 @@
 #ifndef INCLUDED_MICROTUNE_XXXX_H
 #define INCLUDED_MICROTUNE_XXXX_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 
 class i2c;
@@ -32,7 +33,7 @@ typedef boost::shared_ptr<i2c> i2c_sptr;
  * \brief abstract class for controlling microtune {4937,4702} tuner modules
  * \ingroup base
  */
-class microtune_xxxx {
+class GR_CORE_API microtune_xxxx {
 public:
   microtune_xxxx () {}
   virtual ~microtune_xxxx ();

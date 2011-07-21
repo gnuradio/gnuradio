@@ -25,6 +25,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_sig_source_waveform.h>
 #include <gr_fxpt_nco.h>
@@ -37,8 +38,8 @@ typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
  * \ingroup source_blk
  */
 
-class @NAME@ : public gr_sync_block {
-  friend @NAME@_sptr 
+class GR_CORE_API @NAME@ : public gr_sync_block {
+  friend GR_CORE_API @NAME@_sptr 
   gr_make_@BASE_NAME@ (double sampling_freq, gr_waveform_t waveform,
 		       double frequency, double ampl, @TYPE@ offset);
 
@@ -73,7 +74,7 @@ class @NAME@ : public gr_sync_block {
   void set_offset (@TYPE@ offset);
 };
 
-@NAME@_sptr
+GR_CORE_API @NAME@_sptr
 gr_make_@BASE_NAME@ (double sampling_freq, gr_waveform_t waveform,
 		     double wave_freq, double ampl, @TYPE@ offset = 0);
 

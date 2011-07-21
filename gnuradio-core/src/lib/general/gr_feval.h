@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_FEVAL_H
 #define INCLUDED_GR_FEVAL_H
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 
 /*!
@@ -37,7 +38,7 @@
  * Use calleval to invoke eval (this kludge is required to allow a
  * python specific "shim" to be inserted.
  */
-class gr_feval_dd
+class GR_CORE_API gr_feval_dd
 {
 protected:
   /*!
@@ -65,7 +66,7 @@ public:
  * Use calleval to invoke eval (this kludge is required to allow a
  * python specific "shim" to be inserted.
  */
-class gr_feval_cc
+class GR_CORE_API gr_feval_cc
 {
 protected:
   /*!
@@ -93,7 +94,7 @@ public:
  * Use calleval to invoke eval (this kludge is required to allow a
  * python specific "shim" to be inserted.
  */
-class gr_feval_ll
+class GR_CORE_API gr_feval_ll
 {
 protected:
   /*!
@@ -121,7 +122,7 @@ public:
  * Use calleval to invoke eval (this kludge is required to allow a
  * python specific "shim" to be inserted.
  */
-class gr_feval
+class GR_CORE_API gr_feval
 {
 protected:
   /*!
@@ -139,9 +140,9 @@ public:
 /*!
  * \brief trivial examples / test cases showing C++ calling Python code
  */
-double     gr_feval_dd_example(gr_feval_dd *f, double x);
-gr_complex gr_feval_cc_example(gr_feval_cc *f, gr_complex x);
-long       gr_feval_ll_example(gr_feval_ll *f, long x);
-void       gr_feval_example(gr_feval *f);
+GR_CORE_API double     gr_feval_dd_example(gr_feval_dd *f, double x);
+GR_CORE_API gr_complex gr_feval_cc_example(gr_feval_cc *f, gr_complex x);
+GR_CORE_API long       gr_feval_ll_example(gr_feval_ll *f, long x);
+GR_CORE_API void       gr_feval_example(gr_feval *f);
 
 #endif /* INCLUDED_GR_FEVAL_H */

@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_TAGGED_FILE_SINK_H
 #define INCLUDED_GR_TAGGED_FILE_SINK_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <cstdio>  // for FILE
 
 class gr_tagged_file_sink;
 typedef boost::shared_ptr<gr_tagged_file_sink> gr_tagged_file_sink_sptr;
 
-gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize,
+GR_CORE_API gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize,
 						   double samp_rate);
 
 /*!
@@ -37,9 +38,9 @@ gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize,
  * \ingroup sink_blk
  */
 
-class gr_tagged_file_sink : public gr_sync_block
+class GR_CORE_API gr_tagged_file_sink : public gr_sync_block
 {
-  friend gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize,
+  friend GR_CORE_API gr_tagged_file_sink_sptr gr_make_tagged_file_sink (size_t itemsize,
 							    double samp_rate);
 
  private:

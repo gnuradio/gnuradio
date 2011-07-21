@@ -23,20 +23,21 @@
 #ifndef INCLUDED_GR_DEINTERLEAVE_H
 #define INCLUDED_GR_DEINTERLEAVE_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 class gr_deinterleave;
 typedef boost::shared_ptr<gr_deinterleave> gr_deinterleave_sptr;
 
-gr_deinterleave_sptr gr_make_deinterleave (size_t itemsize);
+GR_CORE_API gr_deinterleave_sptr gr_make_deinterleave (size_t itemsize);
 
 /*!
  * \brief deinterleave a single input into N outputs
  * \ingroup slicedice_blk
  */
-class gr_deinterleave : public gr_sync_decimator
+class GR_CORE_API gr_deinterleave : public gr_sync_decimator
 {
-  friend gr_deinterleave_sptr gr_make_deinterleave (size_t itemsize);
+  friend GR_CORE_API gr_deinterleave_sptr gr_make_deinterleave (size_t itemsize);
 
   size_t	d_itemsize;
 

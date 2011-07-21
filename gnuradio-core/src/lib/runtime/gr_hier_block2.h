@@ -22,13 +22,14 @@
 #ifndef INCLUDED_GR_HIER_BLOCK2_H
 #define INCLUDED_GR_HIER_BLOCK2_H
 
+#include <gr_core_api.h>
 #include <gr_basic_block.h>
 
 /*!
  * \brief public constructor for gr_hier_block2
 
  */
-gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
+GR_CORE_API gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
                                         gr_io_signature_sptr input_signature,
                                         gr_io_signature_sptr output_signature);
 
@@ -40,11 +41,11 @@ class gr_hier_block2_detail;
  * \ingroup base_blk
  *
  */
-class gr_hier_block2 : public gr_basic_block
+class GR_CORE_API gr_hier_block2 : public gr_basic_block
 {
 private:
   friend class gr_hier_block2_detail;
-  friend gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
+  friend GR_CORE_API gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
 						 gr_io_signature_sptr input_signature,
 						 gr_io_signature_sptr output_signature);
   

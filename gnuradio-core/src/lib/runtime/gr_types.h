@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_TYPES_H
 #define INCLUDED_GR_TYPES_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 #include <vector>
 #include <stddef.h>				// size_t

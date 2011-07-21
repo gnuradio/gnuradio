@@ -23,6 +23,7 @@
 #ifndef INCLUDED_I2C_BBIO_H
 #define INCLUDED_I2C_BBIO_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 
 class i2c_bbio;
@@ -33,7 +34,7 @@ typedef boost::shared_ptr<i2c_bbio>	i2c_bbio_sptr;
  * \brief abstract class that implements bit banging i/o for i2c bus.
  * \ingroup base
  */
-class i2c_bbio {
+class GR_CORE_API i2c_bbio {
  public:
 
   i2c_bbio () {}

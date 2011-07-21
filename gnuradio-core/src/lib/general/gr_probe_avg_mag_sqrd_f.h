@@ -22,13 +22,14 @@
 #ifndef INCLUDED_GR_PROBE_AVG_MAG_SQRD_F_H
 #define INCLUDED_GR_PROBE_AVG_MAG_SQRD_F_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_single_pole_iir.h>
 
 class gr_probe_avg_mag_sqrd_f;
 typedef boost::shared_ptr<gr_probe_avg_mag_sqrd_f> gr_probe_avg_mag_sqrd_f_sptr;
 
-gr_probe_avg_mag_sqrd_f_sptr
+GR_CORE_API gr_probe_avg_mag_sqrd_f_sptr
 gr_make_probe_avg_mag_sqrd_f (double threshold_db, double alpha = 0.0001);
 
 /*!
@@ -41,14 +42,14 @@ gr_make_probe_avg_mag_sqrd_f (double threshold_db, double alpha = 0.0001);
  * The level and indication as to whether the level exceeds threshold
  * can be retrieved with the level and unmuted accessors.
  */
-class gr_probe_avg_mag_sqrd_f : public gr_sync_block
+class GR_CORE_API gr_probe_avg_mag_sqrd_f : public gr_sync_block
 {
   double					d_threshold;
   gr_single_pole_iir<double,double,double>	d_iir;
   bool						d_unmuted;
   double					d_level;
 
-  friend gr_probe_avg_mag_sqrd_f_sptr
+  friend GR_CORE_API gr_probe_avg_mag_sqrd_f_sptr
   gr_make_probe_avg_mag_sqrd_f (double threshold_db, double alpha);
 
   gr_probe_avg_mag_sqrd_f (double threshold_db, double alpha);

@@ -23,11 +23,15 @@
 #ifndef INCLUDED_GR_SKIPHEAD_H
 #define INCLUDED_GR_SKIPHEAD_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <stddef.h>      // size_t
 
 class gr_skiphead;
 typedef boost::shared_ptr<gr_skiphead> gr_skiphead_sptr;
+
+GR_CORE_API gr_skiphead_sptr
+gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
 
 
 /*!
@@ -37,9 +41,9 @@ typedef boost::shared_ptr<gr_skiphead> gr_skiphead_sptr;
  * Useful for building test cases and sources which have metadata or junk at the start
  */
 
-class gr_skiphead : public gr_block
+class GR_CORE_API gr_skiphead : public gr_block
 {
-  friend gr_skiphead_sptr gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
+  friend GR_CORE_API gr_skiphead_sptr gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
   gr_skiphead (size_t itemsize, uint64_t nitems_to_skip);
 
   uint64_t  		d_nitems_to_skip;
@@ -52,9 +56,5 @@ class gr_skiphead : public gr_block
 		   gr_vector_const_void_star &input_items,
 		   gr_vector_void_star &output_items);
 };
-
-gr_skiphead_sptr
-gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
-
 
 #endif /* INCLUDED_GR_SKIPHEAD_H */

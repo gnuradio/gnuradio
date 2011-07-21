@@ -25,12 +25,13 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (float threshold_factor_rise = 0.25,
+GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (float threshold_factor_rise = 0.25,
 				 float threshold_factor_fall = 0.40,
 				 int look_ahead = 10,
 				 float alpha = 0.001);
@@ -57,9 +58,9 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
  *        This look-ahead range.
  * \param alpha The gain value of a moving average filter
  */
-class @NAME@ : public gr_sync_block
+class GR_CORE_API @NAME@ : public gr_sync_block
 {
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (float threshold_factor_rise,
+  friend GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (float threshold_factor_rise,
 					  float threshold_factor_fall,
 					  int look_ahead, float alpha);
 

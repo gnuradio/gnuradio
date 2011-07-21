@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_SINGLE_POLE_IIR_FILTER_CC_H
 #define	INCLUDED_GR_SINGLE_POLE_IIR_FILTER_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_single_pole_iir.h>
 #include <gr_complex.h>
@@ -31,7 +32,7 @@
 class gr_single_pole_iir_filter_cc;
 typedef boost::shared_ptr<gr_single_pole_iir_filter_cc> gr_single_pole_iir_filter_cc_sptr;
 
-gr_single_pole_iir_filter_cc_sptr 
+GR_CORE_API gr_single_pole_iir_filter_cc_sptr 
 gr_make_single_pole_iir_filter_cc (double alpha, unsigned int vlen=1);
 
 /*!
@@ -53,10 +54,10 @@ gr_make_single_pole_iir_filter_cc (double alpha, unsigned int vlen=1);
  * Note that some texts define the system function with a + in the denominator.
  * If you're using that convention, you'll need to negate the feedback tap.
  */
-class gr_single_pole_iir_filter_cc : public gr_sync_block
+class GR_CORE_API gr_single_pole_iir_filter_cc : public gr_sync_block
 {
  private:
-  friend gr_single_pole_iir_filter_cc_sptr 
+  friend GR_CORE_API gr_single_pole_iir_filter_cc_sptr 
   gr_make_single_pole_iir_filter_cc (double alpha, unsigned int vlen);
 
   unsigned int			        		d_vlen;

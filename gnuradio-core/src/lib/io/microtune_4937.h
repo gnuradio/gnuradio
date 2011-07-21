@@ -23,13 +23,14 @@
 #ifndef INCLUDED_MICROTUNE_4937_H
 #define INCLUDED_MICROTUNE_4937_H
 
+#include <gr_core_api.h>
 #include <microtune_xxxx.h>
 
 /*!
  * \brief class for controlling microtune 4937 tuner module
  * \ingroup hardware
  */
-class microtune_4937 : public microtune_xxxx {
+class GR_CORE_API microtune_4937 : public microtune_xxxx {
 public:
   microtune_4937 (i2c_sptr i2c, int i2c_addr = 0x61);
   virtual ~microtune_4937 ();

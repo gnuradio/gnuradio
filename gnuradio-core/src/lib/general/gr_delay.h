@@ -23,20 +23,21 @@
 #ifndef INCLUDED_GR_DELAY_H
 #define INCLUDED_GR_DELAY_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_delay;
 typedef boost::shared_ptr<gr_delay> gr_delay_sptr;
 
-gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
+GR_CORE_API gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
 
 /*!
  * \brief delay the input by a certain number of samples
  * \ingroup misc_blk
  */
-class gr_delay : public gr_sync_block
+class GR_CORE_API gr_delay : public gr_sync_block
 {
-  friend gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
+  friend GR_CORE_API gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
 
   gr_delay (size_t itemsize, int delay);
 

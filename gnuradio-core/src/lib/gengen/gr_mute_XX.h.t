@@ -25,20 +25,21 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (bool mute=false);
+GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (bool mute=false);
 
 /*!
  * \brief output = input or zero if muted.
  * \ingroup level_blk
  */
-class @NAME@ : public gr_sync_block
+class GR_CORE_API @NAME@ : public gr_sync_block
 {
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (bool mute);
+  friend GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (bool mute);
 
   bool		d_mute;
   @NAME@ (bool mute);

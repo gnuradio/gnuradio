@@ -23,20 +23,21 @@
 #ifndef INCLUDED_GR_INTERLEAVE_H
 #define INCLUDED_GR_INTERLEAVE_H
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class gr_interleave;
 typedef boost::shared_ptr<gr_interleave> gr_interleave_sptr;
 
-gr_interleave_sptr gr_make_interleave (size_t itemsize);
+GR_CORE_API gr_interleave_sptr gr_make_interleave (size_t itemsize);
 
 /*!
  * \brief interleave N inputs to a single output
  * \ingroup slicedice_blk
  */
-class gr_interleave : public gr_sync_interpolator
+class GR_CORE_API gr_interleave : public gr_sync_interpolator
 {
-  friend gr_interleave_sptr gr_make_interleave (size_t itemsize);
+  friend GR_CORE_API gr_interleave_sptr gr_make_interleave (size_t itemsize);
 
   size_t	d_itemsize;
 

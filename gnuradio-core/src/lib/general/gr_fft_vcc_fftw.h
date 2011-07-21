@@ -23,11 +23,12 @@
 #ifndef INCLUDED_GR_FFT_VCC_FFTW_H
 #define INCLUDED_GR_FFT_VCC_FFTW_H
 
+#include <gr_core_api.h>
 #include <gr_fft_vcc.h>
 
 class gri_fft_complex;
 
-gr_fft_vcc_sptr
+GR_CORE_API gr_fft_vcc_sptr
 gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift=false);
 
 /*!
@@ -36,9 +37,9 @@ gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &wind
  *
  * Concrete class that uses FFTW.
  */
-class gr_fft_vcc_fftw : public gr_fft_vcc
+class GR_CORE_API gr_fft_vcc_fftw : public gr_fft_vcc
 {
-  friend gr_fft_vcc_sptr
+  friend GR_CORE_API gr_fft_vcc_sptr
   gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift);
 
   gri_fft_complex *d_fft;

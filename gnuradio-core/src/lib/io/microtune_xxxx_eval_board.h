@@ -23,6 +23,7 @@
 #ifndef INCLUDED_MICROTUNE_XXXX_EVAL_BOARD_H
 #define INCLUDED_MICROTUNE_XXXX_EVAL_BOARD_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 
 class microtune_xxxx;
@@ -37,7 +38,7 @@ typedef boost::shared_ptr<i2c> i2c_sptr;
  * \brief abstract class for controlling microtune xxxx eval board
  * \ingroup hardware
  */
-class microtune_xxxx_eval_board {
+class GR_CORE_API microtune_xxxx_eval_board {
 public:
   microtune_xxxx_eval_board (int which_pp = 0);
   virtual ~microtune_xxxx_eval_board ();

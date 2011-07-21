@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_HILBERT_FC_H
 #define INCLUDED_GR_HILBERT_FC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_io_signature.h>
 #include <gr_types.h>
@@ -31,7 +32,7 @@ class gr_hilbert_fc;
 typedef boost::shared_ptr<gr_hilbert_fc> gr_hilbert_fc_sptr;
 
 // public constructor
-gr_hilbert_fc_sptr gr_make_hilbert_fc (unsigned int ntaps);
+GR_CORE_API gr_hilbert_fc_sptr gr_make_hilbert_fc (unsigned int ntaps);
 
 
 class gr_fir_fff;
@@ -44,7 +45,7 @@ class gr_fir_fff;
  * imaginary output is hilbert filtered (90 degree phase shift)
  * version of input.
  */
-class gr_hilbert_fc : public gr_sync_block
+class GR_CORE_API gr_hilbert_fc : public gr_sync_block
 {
  public:
   ~gr_hilbert_fc ();
@@ -60,7 +61,7 @@ class gr_hilbert_fc : public gr_sync_block
   unsigned int	 d_ntaps;
   gr_fir_fff	*d_hilb;
 
-  friend gr_hilbert_fc_sptr gr_make_hilbert_fc (unsigned int ntaps);
+  friend GR_CORE_API gr_hilbert_fc_sptr gr_make_hilbert_fc (unsigned int ntaps);
 };
 
 

@@ -23,9 +23,10 @@
 #ifndef _GR_ROTATOR_H_
 #define _GR_ROTATOR_H_
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 
-class gr_rotator {
+class GR_CORE_API gr_rotator {
   gr_complex	d_phase;
   gr_complex	d_phase_incr;
   unsigned int	d_counter;

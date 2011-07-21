@@ -23,6 +23,7 @@
 #ifndef   	INCLUDED_GR_SQUASH_FF_H_
 # define   	INCLUDED_GR_SQUASH_FF_H_
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_interp.h>
@@ -36,12 +37,12 @@
 class gr_squash_ff;
 typedef boost::shared_ptr<gr_squash_ff> gr_squash_ff_sptr;
 
-gr_squash_ff_sptr gr_make_squash_ff(const std::vector<float> &igrid,
+GR_CORE_API gr_squash_ff_sptr gr_make_squash_ff(const std::vector<float> &igrid,
 				    const std::vector<float> &ogrid);
 
-class gr_squash_ff : public gr_sync_block
+class GR_CORE_API gr_squash_ff : public gr_sync_block
 {
-  friend gr_squash_ff_sptr gr_make_squash_ff(const std::vector<float> &igrid,
+  friend GR_CORE_API gr_squash_ff_sptr gr_make_squash_ff(const std::vector<float> &igrid,
 					     const std::vector<float> &ogrid);
   
   size_t  d_inum;

@@ -25,12 +25,13 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@O_TYPE@> &symbol_table, const int D = 1);
+GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@O_TYPE@> &symbol_table, const int D = 1);
 
 /*!
  * \brief Map a stream of symbol indexes (unpacked bytes or shorts) to stream of float or complex onstellation points.in \p D dimensions (\p D = 1 by default)
@@ -51,9 +52,9 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
  * \sa gr_chunks_to_symbols_sf, gr_chunks_to_symbols_sc.
  */
 
-class @NAME@ : public gr_sync_interpolator
+class GR_CORE_API @NAME@ : public gr_sync_interpolator
 {
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@O_TYPE@> &symbol_table, const int D);
+  friend GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@O_TYPE@> &symbol_table, const int D);
 
   int d_D;
   std::vector<@O_TYPE@> d_symbol_table;

@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_WVPS_FF_H
 #define INCLUDED_GR_WVPS_FF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_decimator.h>
 
 class gr_wvps_ff;
 typedef boost::shared_ptr<gr_wvps_ff> gr_wvps_ff_sptr;
 
-gr_wvps_ff_sptr 
+GR_CORE_API gr_wvps_ff_sptr 
 gr_make_wvps_ff(int ilen);
 
 
@@ -36,9 +37,9 @@ gr_make_wvps_ff(int ilen);
  * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
  * \ingroup wavelet_blk
  */
-class gr_wvps_ff : public gr_sync_block
+class GR_CORE_API gr_wvps_ff : public gr_sync_block
 {
-  friend gr_wvps_ff_sptr
+  friend GR_CORE_API gr_wvps_ff_sptr
   gr_make_wvps_ff(int ilen);
 
   int d_ilen;

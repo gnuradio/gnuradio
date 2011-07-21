@@ -23,13 +23,14 @@
 #ifndef INCLUDED_GR_LFSR_32K_SOURCE_S_H
 #define INCLUDED_GR_LFSR_32K_SOURCE_S_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gri_lfsr_32k.h>
 
 class gr_lfsr_32k_source_s;
 typedef boost::shared_ptr<gr_lfsr_32k_source_s> gr_lfsr_32k_source_s_sptr;
 
-gr_lfsr_32k_source_s_sptr gr_make_lfsr_32k_source_s ();
+GR_CORE_API gr_lfsr_32k_source_s_sptr gr_make_lfsr_32k_source_s ();
 
 /*!
  * \brief LFSR pseudo-random source with period of 2^15 bits (2^11 shorts)
@@ -38,9 +39,9 @@ gr_lfsr_32k_source_s_sptr gr_make_lfsr_32k_source_s ();
  * This source is typically used along with gr_check_lfsr_32k_s to test
  * the USRP using its digital loopback mode.
  */
-class gr_lfsr_32k_source_s : public gr_sync_block 
+class GR_CORE_API gr_lfsr_32k_source_s : public gr_sync_block
 {
-  friend gr_lfsr_32k_source_s_sptr gr_make_lfsr_32k_source_s ();
+  friend GR_CORE_API gr_lfsr_32k_source_s_sptr gr_make_lfsr_32k_source_s ();
 
   
   static const int BUFSIZE = 2048 - 1;	// ensure pattern isn't packet aligned

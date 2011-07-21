@@ -21,6 +21,7 @@
 #ifndef INCLUDED_GR_TPB_DETAIL_H
 #define INCLUDED_GR_TPB_DETAIL_H
 
+#include <gr_core_api.h>
 #include <gruel/thread.h>
 #include <deque>
 #include <gruel/pmt.h>
@@ -30,7 +31,7 @@ class gr_block_detail;
 /*!
  * \brief used by thread-per-block scheduler
  */
-struct gr_tpb_detail {
+struct GR_CORE_API gr_tpb_detail {
 
   gruel::mutex			mutex;			//< protects all vars
   bool				input_changed;

@@ -23,6 +23,7 @@
 #ifndef   	INCLUDED_GR_RAIL_FF_H_
 # define   	INCLUDED_GR_RAIL_FF_H_
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 /*!
@@ -33,11 +34,11 @@
 class gr_rail_ff;
 typedef boost::shared_ptr<gr_rail_ff> gr_rail_ff_sptr;
 
-gr_rail_ff_sptr gr_make_rail_ff(float lo, float hi);
+GR_CORE_API gr_rail_ff_sptr gr_make_rail_ff(float lo, float hi);
 
-class gr_rail_ff : public gr_sync_block
+class GR_CORE_API gr_rail_ff : public gr_sync_block
 {
-  friend gr_rail_ff_sptr gr_make_rail_ff (float lo, float hi);
+  friend GR_CORE_API gr_rail_ff_sptr gr_make_rail_ff (float lo, float hi);
 
   float	d_lo, d_hi;		// the constant
   gr_rail_ff(float lo, float hi);

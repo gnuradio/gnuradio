@@ -26,6 +26,7 @@
  * Wrappers for FFTW single precision 1d dft
  */
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 #include <boost/thread.hpp>
 
@@ -33,7 +34,7 @@
  * \brief Export reference to planner mutex for those apps that
  * want to use FFTW w/o using the gri_fftw* classes.
  */
-class gri_fft_planner {
+class GR_CORE_API gri_fft_planner {
 public:
   typedef boost::mutex::scoped_lock scoped_lock;
   /*!
@@ -46,7 +47,7 @@ public:
  * \brief FFT: complex in, complex out
  * \ingroup misc
  */
-class gri_fft_complex {
+class GR_CORE_API gri_fft_complex {
   int	      d_fft_size;
   gr_complex *d_inbuf;
   gr_complex *d_outbuf;
@@ -77,7 +78,7 @@ public:
  * \brief FFT: real in, complex out
  * \ingroup misc
  */
-class gri_fft_real_fwd {
+class GR_CORE_API gri_fft_real_fwd {
   int	      d_fft_size;
   float	     *d_inbuf;
   gr_complex *d_outbuf;
@@ -108,7 +109,7 @@ public:
  * \brief FFT: complex in, float out
  * \ingroup misc
  */
-class gri_fft_real_rev {
+class GR_CORE_API gri_fft_real_rev {
   int	      d_fft_size;
   gr_complex *d_inbuf;
   float	     *d_outbuf;

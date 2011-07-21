@@ -23,6 +23,7 @@
 #ifndef INCLUDED_PPIO_PPDEV_H
 #define INCLUDED_PPIO_PPDEV_H
 
+#include <gr_core_api.h>
 #include <ppio.h>
 
 class ppio_ppdev;
@@ -33,8 +34,8 @@ typedef boost::shared_ptr<ppio_ppdev> ppio_ppdev_sptr;
  * \ingroup hardware
  */
 
-class ppio_ppdev : public ppio {
-  friend ppio_ppdev_sptr make_ppio_ppdev (int which = 0);
+class GR_CORE_API ppio_ppdev : public ppio {
+  friend GR_CORE_API ppio_ppdev_sptr make_ppio_ppdev (int which = 0);
   ppio_ppdev (int which = 0);
 
  public:

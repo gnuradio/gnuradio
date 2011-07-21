@@ -22,26 +22,27 @@
 #ifndef INCLUDED_GR_SIMPLE_SQUELCH_CC_H
 #define INCLUDED_GR_SIMPLE_SQUELCH_CC_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gr_single_pole_iir.h>
 
 class gr_simple_squelch_cc;
 typedef boost::shared_ptr<gr_simple_squelch_cc> gr_simple_squelch_cc_sptr;
 
-gr_simple_squelch_cc_sptr
+GR_CORE_API gr_simple_squelch_cc_sptr
 gr_make_simple_squelch_cc (double threshold_db, double alpha = 0.0001);
 
 /*!
  * \brief simple squelch block based on average signal power and threshold in dB.
  * \ingroup level_blk
  */
-class gr_simple_squelch_cc : public gr_sync_block
+class GR_CORE_API gr_simple_squelch_cc : public gr_sync_block
 {
   double					d_threshold;
   gr_single_pole_iir<double,double,double>	d_iir;
   bool						d_unmuted;
 
-  friend gr_simple_squelch_cc_sptr
+  friend GR_CORE_API gr_simple_squelch_cc_sptr
   gr_make_simple_squelch_cc (double threshold_db, double alpha);
 
   gr_simple_squelch_cc (double threshold_db, double alpha);

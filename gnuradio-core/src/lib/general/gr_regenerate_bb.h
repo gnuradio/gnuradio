@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_REGENERATE_BB_H
 #define INCLUDED_GR_REGENERATE_BB_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class gr_regenerate_bb;
 typedef boost::shared_ptr<gr_regenerate_bb> gr_regenerate_bb_sptr;
 
-gr_regenerate_bb_sptr gr_make_regenerate_bb (int period, unsigned int max_regen=500);
+GR_CORE_API gr_regenerate_bb_sptr gr_make_regenerate_bb (int period, unsigned int max_regen=500);
 
 /*!
  * \brief Detect the peak of a signal and repeat every period samples
@@ -40,7 +41,7 @@ gr_regenerate_bb_sptr gr_make_regenerate_bb (int period, unsigned int max_regen=
  *
  * Note that if max_regen=(-1)/ULONG_MAX then the regeneration will run forever.
  */
-class gr_regenerate_bb : public gr_sync_block
+class GR_CORE_API gr_regenerate_bb : public gr_sync_block
 {
   /*!
    * \brief Make a regenerate block
@@ -48,7 +49,7 @@ class gr_regenerate_bb : public gr_sync_block
    * \param max_regen The maximum number of regenerations to perform; if set to 
    * ULONG_MAX, it will regenerate continuously.
    */
-  friend gr_regenerate_bb_sptr gr_make_regenerate_bb (int period, unsigned int max_regen);
+  friend GR_CORE_API gr_regenerate_bb_sptr gr_make_regenerate_bb (int period, unsigned int max_regen);
 
   gr_regenerate_bb (int period, unsigned int max_regen);
 

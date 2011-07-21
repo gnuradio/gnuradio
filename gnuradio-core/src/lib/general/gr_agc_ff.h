@@ -23,12 +23,13 @@
 #ifndef INCLUDED_GR_AGC_FF_H
 #define INCLUDED_GR_AGC_FF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <gri_agc_ff.h>
 class gr_agc_ff;
 typedef boost::shared_ptr<gr_agc_ff> gr_agc_ff_sptr;
 
-gr_agc_ff_sptr
+GR_CORE_API gr_agc_ff_sptr
 gr_make_agc_ff (float rate = 1e-4, float reference = 1.0, 
 		float gain = 1.0, float max_gain = 0.0);
 
@@ -39,9 +40,9 @@ gr_make_agc_ff (float rate = 1e-4, float reference = 1.0,
  * Power is approximated by absolute value
  */
 
-class gr_agc_ff : public gr_sync_block, public gri_agc_ff
+class GR_CORE_API gr_agc_ff : public gr_sync_block, public gri_agc_ff
 {
-  friend gr_agc_ff_sptr gr_make_agc_ff (float rate, float reference, 
+  friend GR_CORE_API gr_agc_ff_sptr gr_make_agc_ff (float rate, float reference, 
 					float gain, float max_gain);
   gr_agc_ff (float rate, float reference, float gain, float max_gain);
 

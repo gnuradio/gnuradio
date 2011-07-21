@@ -25,20 +25,21 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k);
+GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k);
 
 /*!
  * \brief output vector = input vector + constant vector
  * \ingroup math_blk
  */
-class @NAME@ : public gr_sync_block
+class GR_CORE_API @NAME@ : public gr_sync_block
 {
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k);
+  friend GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k);
 
   std::vector<@I_TYPE@> d_k; // the constant
   @NAME@ (const std::vector<@I_TYPE@> &k);

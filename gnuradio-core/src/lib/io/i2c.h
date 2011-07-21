@@ -23,6 +23,7 @@
 #ifndef INCLUDED_I2C_H
 #define INCLUDED_I2C_H
 
+#include <gr_core_api.h>
 #include <boost/shared_ptr.hpp>
 
 class i2c;
@@ -31,7 +32,7 @@ typedef boost::shared_ptr<i2c> i2c_sptr;
 /*!
  * \brief abstract class for controlling i2c bus
  */
-class i2c {
+class GR_CORE_API i2c {
  public:
   
   i2c () {}

@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_FXPT_VCO_H
 #define INCLUDED_GR_FXPT_VCO_H
 
+#include <gr_core_api.h>
 #include <gr_fxpt.h>
 #include <gr_complex.h>
 
@@ -29,7 +30,7 @@
  * \brief Voltage Controlled Oscillator (VCO)
  * \ingroup misc
  */
-class gr_fxpt_vco {
+class GR_CORE_API gr_fxpt_vco {
   gr_int32	d_phase;
 
 public:

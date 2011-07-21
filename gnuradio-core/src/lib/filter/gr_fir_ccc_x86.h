@@ -23,19 +23,20 @@
 #ifndef INCLUDED_GR_FIR_CCC_X86_H
 #define INCLUDED_GR_FIR_CCC_X86_H
 
+#include <gr_core_api.h>
 #include <gr_fir_ccc_simd.h>
 
 /*!
  * \brief 3DNow! version of gr_fir_ccc
  */
-class gr_fir_ccc_3dnow : public gr_fir_ccc_simd
+class GR_CORE_API gr_fir_ccc_3dnow : public gr_fir_ccc_simd
 {
 public:
   gr_fir_ccc_3dnow ();
   gr_fir_ccc_3dnow (const std::vector<gr_complex> &taps);
 };
 
-class gr_fir_ccc_3dnowext : public gr_fir_ccc_simd
+class GR_CORE_API gr_fir_ccc_3dnowext : public gr_fir_ccc_simd
 {
 public:
   gr_fir_ccc_3dnowext ();
@@ -45,7 +46,7 @@ public:
 /*!
  * \brief SSE version of gr_fir_ccc
  */
-class gr_fir_ccc_sse : public gr_fir_ccc_simd
+class GR_CORE_API gr_fir_ccc_sse : public gr_fir_ccc_simd
 {
 public:
   gr_fir_ccc_sse ();

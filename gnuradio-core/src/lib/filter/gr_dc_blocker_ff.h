@@ -24,12 +24,13 @@
 #ifndef INCLUDED_GR_DC_BLOCKER_FF_H
 #define	INCLUDED_GR_DC_BLOCKER_FF_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <deque>
 
 class gr_dc_blocker_ff;
 typedef boost::shared_ptr<gr_dc_blocker_ff> gr_dc_blocker_ff_sptr;
-gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D=32, bool long_form=true);
+GR_CORE_API gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D=32, bool long_form=true);
 
 /*!
  * \class gr_dc_blocker_ff
@@ -57,7 +58,7 @@ gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D=32, bool long_form=true);
  *    <B><EM>R. Yates, "DC Blocker Algorithms," IEEE Signal Processing Magazine,
  *        Mar. 2008, pp 132-134.</EM></B>
  */
-class moving_averager_f
+class GR_CORE_API moving_averager_f
 {
 public:
   moving_averager_f(int D);
@@ -72,7 +73,7 @@ private:
   std::deque<float> d_delay_line;
 };
 
-class gr_dc_blocker_ff : public gr_sync_block
+class GR_CORE_API gr_dc_blocker_ff : public gr_sync_block
 {
  private:
   /*!
@@ -81,7 +82,7 @@ class gr_dc_blocker_ff : public gr_sync_block
    * \param long_form  (bool) whether to use long (true, default) or short form
    * \param channel (unsigned integer) Selects the channel to return [default=0].
    */
-  friend gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D, bool long_form);
+  GR_CORE_API friend gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D, bool long_form);
 
   int d_length;
   bool d_long_form;

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_GOERTZEL_FC_H
 #define INCLUDED_GR_GOERTZEL_FC_H
 
+#include <gr_core_api.h>
 #include <gri_goertzel.h>
 #include <gr_sync_decimator.h>
 
@@ -30,16 +31,16 @@ class gr_goertzel_fc;
 typedef boost::shared_ptr<gr_goertzel_fc> gr_goertzel_fc_sptr;
 
 // public constructor
-gr_goertzel_fc_sptr gr_make_goertzel_fc(int rate, int len, float freq);
+GR_CORE_API gr_goertzel_fc_sptr gr_make_goertzel_fc(int rate, int len, float freq);
 
 /*!
  * \brief Goertzel single-bin DFT calculation.
  * \ingroup dft_blk
  */
-class gr_goertzel_fc : public gr_sync_decimator
+class GR_CORE_API gr_goertzel_fc : public gr_sync_decimator
 {
 private:
-  friend gr_goertzel_fc_sptr gr_make_goertzel_fc (int rate, int len, float freq);
+  friend GR_CORE_API gr_goertzel_fc_sptr gr_make_goertzel_fc (int rate, int len, float freq);
 
   gr_goertzel_fc(int rate, int len, float freq);
   gri_goertzel d_goertzel;
