@@ -256,6 +256,6 @@ ADD_EXECUTABLE(test_all
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_utils.cc
 )
 TARGET_LINK_LIBRARIES(test_all volk ${Boost_LIBRARIES})
-ADD_TEST(qa_volk_test_all test_all)
+#ADD_TEST(qa_volk_test_all test_all)
 
 ENDIF()

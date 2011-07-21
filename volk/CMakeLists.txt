@@ -30,6 +30,9 @@ ENABLE_TESTING()
 SET(VERSION 0.1)
 SET(LIBVER 0.0.0)
 
+SET(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}) #allows this to be a sub-project
+SET(CMAKE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}) #allows this to be a sub-project
+
 ########################################################################
 # Dependencies setup
 ########################################################################

@@ -18,6 +18,10 @@
 ########################################################################
 # Setup profiler
 ########################################################################
+FIND_PACKAGE(Boost)
+
+IF(Boost_FOUND AND UNIX) #uses mkdir and $HOME
+
 IF(MSVC)
     INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/msvc)
 ENDIF(MSVC)
@@ -28,6 +32,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${Boost_INCLUDE_DIRS}
 )
 
 ADD_EXECUTABLE(volk_profile
@@ -36,3 +41,5 @@ ADD_EXECUTABLE(volk_profile
 )
 
 TARGET_LINK_LIBRARIES(volk_profile volk ${Boost_LIBRARIES})
+
+ENDIF(Boost_FOUND AND UNIX)

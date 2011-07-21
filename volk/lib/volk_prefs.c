@@ -23,7 +23,7 @@ int load_preferences(struct volk_arch_pref **prefs) {
     //get the config path
     get_config_path(path);
     config_file = fopen(path, "r");
-    if(!config_file) return; //no prefs found
+    if(!config_file) return n_arch_prefs; //no prefs found
 
     while(fgets(line, 512, config_file) != NULL) {
         if(sscanf(line, "%s %s", function, arch) == 2 && !strncmp(function, "volk_", 5)) {
