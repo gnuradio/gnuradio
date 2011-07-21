@@ -22,6 +22,7 @@
 #ifndef INCLUDED_MSG_QUEUE_H
 #define INCLUDED_MSG_QUEUE_H
 
+#include <gruel/api.h>
 #include <gruel/thread.h>
 #include <gruel/pmt.h>
 #include <deque>
@@ -36,7 +37,7 @@ namespace gruel {
   /*!
    * \brief thread-safe message queue
    */
-  class msg_queue {
+  class GRUEL_API msg_queue {
 
     gruel::mutex              d_mutex;
     gruel::condition_variable d_not_empty;

@@ -21,6 +21,7 @@
 #ifndef INCLUDED_THREAD_H
 #define INCLUDED_THREAD_H
 
+#include <gruel/api.h>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/locks.hpp>

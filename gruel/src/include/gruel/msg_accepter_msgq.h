@@ -22,6 +22,7 @@
 #ifndef INCLUDED_MSG_ACCEPTER_MSGQ_H
 #define INCLUDED_MSG_ACCEPTER_MSGQ_H
 
+#include <gruel/api.h>
 #include <gruel/msg_accepter.h>
 #include <gruel/msg_queue.h>
 
@@ -30,7 +31,7 @@ namespace gruel {
   /*!
    * \brief Concrete class that accepts messages and inserts them into a message queue.
    */
-  class msg_accepter_msgq : public msg_accepter 
+  class GRUEL_API msg_accepter_msgq : public msg_accepter
   {
   protected:
     msg_queue_sptr d_msg_queue;

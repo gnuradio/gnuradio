@@ -21,6 +21,7 @@
 #ifndef INCLUDED_PMT_POOL_H
 #define INCLUDED_PMT_POOL_H
 
+#include <gruel/api.h>
 #include <cstddef>
 #include <vector>
 #include <boost/thread.hpp>
@@ -33,9 +34,9 @@ namespace pmt {
  * FIXME may want to go to global allocation with per-thread free list.
  * This would eliminate virtually all lock contention.
  */
-class pmt_pool {
+class GRUEL_API pmt_pool {
 
-  struct item {
+  struct GRUEL_API item {
     struct item	*d_next;
   };
   

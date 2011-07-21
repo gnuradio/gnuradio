@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GRUEL_SYS_PRI_H
 #define INCLUDED_GRUEL_SYS_PRI_H
 
+#include <gruel/api.h>
 #include <gruel/realtime.h>
 
 /*
@@ -29,7 +30,7 @@
  */
 namespace gruel {
 
-  struct sys_pri {
+  struct GRUEL_API sys_pri {
     static rt_sched_param python();		  // python code
     static rt_sched_param normal();		  // normal blocks
     static rt_sched_param gcell_event_handler();

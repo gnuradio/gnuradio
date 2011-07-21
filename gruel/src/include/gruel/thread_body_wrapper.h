@@ -21,6 +21,7 @@
 #ifndef INCLUDED_THREAD_BODY_WRAPPER_H
 #define INCLUDED_THREAD_BODY_WRAPPER_H
 
+#include <gruel/api.h>
 #include <gruel/thread.h>
 #include <exception>
 #include <iostream>
@@ -28,7 +29,7 @@
 namespace gruel 
 {
 
-  void mask_signals();
+  GRUEL_API void mask_signals();
 
   template <class F>
   class thread_body_wrapper

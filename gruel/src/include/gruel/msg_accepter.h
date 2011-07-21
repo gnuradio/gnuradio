@@ -21,6 +21,7 @@
 #ifndef INCLUDED_GRUEL_MSG_ACCEPTER_H
 #define INCLUDED_GRUEL_MSG_ACCEPTER_H
 
+#include <gruel/api.h>
 #include <gruel/pmt.h>
 #include <boost/shared_ptr.hpp>
 
@@ -29,7 +30,7 @@ namespace gruel {
   /*!
    * \brief Virtual base class that accepts messages
    */
-  class msg_accepter
+  class GRUEL_API msg_accepter
   {
   public:
     msg_accepter() {};

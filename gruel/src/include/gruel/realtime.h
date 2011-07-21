@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GRUEL_REALTIME_H
 #define INCLUDED_GRUEL_REALTIME_H
 
+#include <gruel/api.h>
 #include <stdexcept>
 
 /*!
@@ -58,7 +59,7 @@ namespace gruel {
   static inline int rt_priority_max() { return 15; }
   static inline int rt_priority_default() { return 1; }
 
-  struct rt_sched_param {
+  struct GRUEL_API rt_sched_param {
     int			priority;
     rt_sched_policy	policy;
 
@@ -88,7 +89,7 @@ namespace gruel {
   // NOTE: If you change this, you need to change the code in 
   // gnuradio-core/src/lib/runtime/gr_realtime.i, see note there.
   rt_status_t
-  enable_realtime_scheduling(rt_sched_param = rt_sched_param());
+  GRUEL_API enable_realtime_scheduling(rt_sched_param = rt_sched_param());
 
 } // namespace gruel
 

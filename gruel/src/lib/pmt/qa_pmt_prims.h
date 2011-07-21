@@ -22,10 +22,12 @@
 #ifndef INCLUDED_QA_PMT_PRIMS_H
 #define INCLUDED_QA_PMT_PRIMS_H
 
+#include <gruel/attributes.h>
+#include <gruel/api.h> //reason: suppress warnings
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-class qa_pmt_prims : public CppUnit::TestCase {
+class __GR_ATTR_EXPORT qa_pmt_prims : public CppUnit::TestCase {
 
   CPPUNIT_TEST_SUITE(qa_pmt_prims);
   CPPUNIT_TEST(test_symbols);

@@ -19,6 +19,7 @@
 #ifndef INCLUDED_INET_H
 #define INCLUDED_INET_H
 
+#include <gruel/api.h>
 #include <stdint.h>
 
 #if 1 /* missing htonll or ntohll */

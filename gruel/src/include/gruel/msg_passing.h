@@ -25,6 +25,7 @@
  * \brief Include this header to use the message passing features
  */
 
+#include <gruel/api.h>
 #include <gruel/pmt.h>
 #include <gruel/msg_accepter.h>
 

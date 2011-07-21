@@ -15,6 +15,7 @@
 #ifndef INCLUDED_GRUEL_THREAD_GROUP_H
 #define INCLUDED_GRUEL_THREAD_GROUP_H
 
+#include <gruel/api.h>
 #include <gruel/thread.h>
 #include <boost/utility.hpp>
 #include <boost/thread/shared_mutex.hpp>
@@ -22,7 +23,7 @@
 
 namespace gruel
 {
-  class thread_group : public boost::noncopyable
+  class GRUEL_API thread_group : public boost::noncopyable
   {
   public:
     thread_group();

@@ -53,4 +53,15 @@
 #  define __GR_ATTR_IMPORT
 #endif
 
+////////////////////////////////////////////////////////////////////////
+// suppress warnings
+////////////////////////////////////////////////////////////////////////
+#ifdef _MSC_VER
+#  pragma warning(disable: 4251) // class 'A<T>' needs to have dll-interface to be used by clients of class 'B'
+#  pragma warning(disable: 4275) // non dll-interface class ... used as base for dll-interface class ...
+#  pragma warning(disable: 4244) // conversion from 'double' to 'float', possible loss of data
+#  pragma warning(disable: 4305) // 'initializing' : truncation from 'double' to 'float'
+#  pragma warning(disable: 4290) // C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+#endif
+
 #endif /* INCLUDED_GRUEL_ATTRIBUTES_H */

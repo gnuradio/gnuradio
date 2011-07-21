@@ -35,7 +35,7 @@
 #define PMT_LOCAL_ALLOCATOR 0		// define to 0 or 1
 namespace pmt {
 
-class pmt_base : boost::noncopyable {
+class GRUEL_API pmt_base : boost::noncopyable {
   mutable boost::detail::atomic_count count_;
 
 protected:
