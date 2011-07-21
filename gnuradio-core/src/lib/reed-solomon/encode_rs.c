@@ -3,7 +3,6 @@
  * May be used under the terms of the GNU General Public License (GPL)
  */
 #include <string.h>
-#include <strings.h>
 
 #ifdef FIXED
 #include "fixed.h"
