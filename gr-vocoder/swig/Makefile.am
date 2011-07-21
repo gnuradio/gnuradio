@@ -57,12 +57,16 @@ vocoder_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 vocoder_swig_swiginclude_headers = \
+	vocoder_alaw_decode_bs.i \
+	vocoder_alaw_encode_sb.i \
 	vocoder_codec2_decode_ps.i \
 	vocoder_codec2_encode_sp.i \
 	vocoder_cvsd_decode_bs.i \
 	vocoder_cvsd_encode_sb.i \
 	vocoder_gsm_fr_encode_sp.i \
-	vocoder_gsm_fr_decode_ps.i
+	vocoder_gsm_fr_decode_ps.i \
+	vocoder_ulaw_decode_bs.i \
+	vocoder_ulaw_encode_sb.i
 
 vocoder_swig_swig_args = \
 	-I$(abs_top_builddir)/gr-vocoder/lib

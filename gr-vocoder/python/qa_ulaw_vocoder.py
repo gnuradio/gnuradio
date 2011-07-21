@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 #
-# Copyright 2001 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,9 +20,20 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+from gnuradio import gr, gr_unittest
+from vocoder_swig import *
 
-noinst_LTLIBRARIES = libccitt.la
-libccitt_la_SOURCES = g711.c g72x.c g721.c g723_24.c g723_40.c g72x.h
+class test_ulaw_vocoder (gr_unittest.TestCase):
 
-EXTRA_DIST += encode.c decode.c
+    def setUp (self):
+        self.tb = gr.top_block()
+        
+    def tearDown (self):
+        self.tb = None
+
+    def test001_module_load (self):
+        enc = ulaw_encode_sb();
+        dec = ulaw_decode_bs();
+
+if __name__ == '__main__':
+    gr_unittest.run(test_ulaw_vocoder, "test_ulaw_vocoder.xml")

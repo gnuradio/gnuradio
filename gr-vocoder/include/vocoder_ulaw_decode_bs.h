@@ -20,25 +20,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+#ifndef INCLUDED_VOCODER_ULAW_DECODE_BS_H
+#define INCLUDED_VOCODER_ULAW_DECODE_BS_H
 
-%include "vocoder_alaw_decode_bs.i"
-%include "vocoder_alaw_encode_sb.i"
-%include "vocoder_codec2_encode_sp.i"
-%include "vocoder_codec2_decode_ps.i"
-%include "vocoder_cvsd_decode_bs.i"
-%include "vocoder_cvsd_encode_sb.i"
-%include "vocoder_gsm_fr_encode_sp.i"
-%include "vocoder_gsm_fr_decode_ps.i"
-%include "vocoder_ulaw_decode_bs.i"
-%include "vocoder_ulaw_encode_sb.i"
+#include <gr_sync_block.h>
 
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-vocoder" "scm_init_gnuradio_gsm_vocoder_module")
-%}
+class vocoder_ulaw_decode_bs;
 
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif
+typedef boost::shared_ptr<vocoder_ulaw_decode_bs> vocoder_ulaw_decode_bs_sptr;
+
+vocoder_ulaw_decode_bs_sptr vocoder_make_ulaw_decode_bs();
+
+/*!
+ * \brief This block performs ulaw audio decoding. 
+ *
+ * \ingroup vocoder_blk
+ */
+
+class vocoder_ulaw_decode_bs : public gr_sync_block
+{
+private:
+  friend vocoder_ulaw_decode_bs_sptr vocoder_make_ulaw_decode_bs();
+
+  vocoder_ulaw_decode_bs();
+
+ public:
+  ~vocoder_ulaw_decode_bs();
+
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
+};
+
+#endif /* INCLUDED_VOCODER_ULAW_DECODE_BS_H */
