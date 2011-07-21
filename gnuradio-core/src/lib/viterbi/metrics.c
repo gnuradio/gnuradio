@@ -42,6 +42,9 @@
 #include <stdlib.h>
 #include <math.h>
 
+//declare erf in case it was missing in math.h and provided for by the build system
+extern double erf(double x);
+
 /* Normal function integrated from -Inf to x. Range: 0-1 */
 #define	normal(x)	(0.5 + 0.5*erf((x)/M_SQRT2))
 
