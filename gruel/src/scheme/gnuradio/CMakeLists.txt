@@ -1,5 +1,4 @@
-#
-# Copyright 2008-2011 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -17,31 +16,11 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
 
-include $(top_srcdir)/Makefile.common
+########################################################################
 
-EXTRA_DIST += inet.h.in
-
-gruelincludedir = $(prefix)/include/gruel
-
-gruelinclude_HEADERS = \
-<<<<<<< HEAD
-	$(BUILT_SOURCES) \
-	api.h \
-	attributes.h \
-	high_res_timer.h \
-	inet.h \
-	msg_accepter.h \
-	msg_accepter_msgq.h \
-	msg_queue.h \
-	msg_passing.h \
-	pmt.h \
-	pmt_pool.h \
-	pmt_serial_tags.h \
-	pmt_sugar.h \
-	realtime.h \
-	sys_pri.h \
-	thread_body_wrapper.h \
-	thread_group.h \
-	thread.h
+INSTALL(FILES
+    pmt-serial-tags.scm
+    pmt-serialize.scm
+    macros-etc.scm
+DESTINATION ${GR_PKG_DATA_DIR} COMPONENT "gruel_swig")

@@ -1,5 +1,4 @@
-#
-# Copyright 2008-2011 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -17,31 +16,17 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
 
-include $(top_srcdir)/Makefile.common
+########################################################################
+# This file included, use CMake directory variables
+########################################################################
 
-EXTRA_DIST += inet.h.in
+LIST(APPEND gnuradio_core_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/bug_work_around_8.cc
+)
 
-gruelincludedir = $(prefix)/include/gruel
-
-gruelinclude_HEADERS = \
-<<<<<<< HEAD
-	$(BUILT_SOURCES) \
-	api.h \
-	attributes.h \
-	high_res_timer.h \
-	inet.h \
-	msg_accepter.h \
-	msg_accepter_msgq.h \
-	msg_queue.h \
-	msg_passing.h \
-	pmt.h \
-	pmt_pool.h \
-	pmt_serial_tags.h \
-	pmt_sugar.h \
-	realtime.h \
-	sys_pri.h \
-	thread_body_wrapper.h \
-	thread_group.h \
-	thread.h
+IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
+    LIST(APPEND gnuradio_core_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/posix_memalign.cc
+    )
+ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")

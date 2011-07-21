@@ -24,7 +24,7 @@ include $(top_srcdir)/Makefile.common
 SUBDIRS = pmt msg
 
 AM_CPPFLAGS = $(DEFINES) $(GRUEL_INCLUDES) $(BOOST_CPPFLAGS) \
-	$(CPPUNIT_INCLUDES) $(WITH_INCLUDES) -Dgruel_EXPORTS
+	$(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 TESTS = test_gruel
 
