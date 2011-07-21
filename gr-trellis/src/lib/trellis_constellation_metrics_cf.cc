@@ -20,9 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// WARNING: this file is machine generated.  Edits will be over written
-
-#ifndef HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
