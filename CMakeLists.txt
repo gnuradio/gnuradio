@@ -160,8 +160,7 @@ ADD_SUBDIRECTORY(grc)
 ADD_SUBDIRECTORY(docs)
 
 ADD_SUBDIRECTORY(gr-audio)
-SET(GR_DIGITAL_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/gr-digital/lib) #TODO move to gr-digital when ported
-SET(GR_DIGITAL_SWIG_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/gr-digital/swig) #TODO move to gr-digital when ported
+ADD_SUBDIRECTORY(gr-digital)
 ADD_SUBDIRECTORY(gr-noaa)
 ADD_SUBDIRECTORY(gr-pager)
 ADD_SUBDIRECTORY(gr-qtgui)
