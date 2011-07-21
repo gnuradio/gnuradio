@@ -166,6 +166,7 @@ ADD_SUBDIRECTORY(gr-pager)
 ADD_SUBDIRECTORY(gr-qtgui)
 ADD_SUBDIRECTORY(gr-trellis)
 ADD_SUBDIRECTORY(gr-uhd)
+ADD_SUBDIRECTORY(gr-vocoder)
 ADD_SUBDIRECTORY(gr-wxgui)
 
 #finalize cpack after subdirs processed
