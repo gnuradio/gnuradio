@@ -25,22 +25,23 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <trellis_api.h>
 #include "fsm.h"
 #include <gr_sync_block.h>
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, int ST);
+TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, int ST);
 
 /*!
  * \brief Convolutional encoder.
  * \ingroup coding_blk
  */
-class @NAME@ : public gr_sync_block
+class TRELLIS_API @NAME@ : public gr_sync_block
 {
 private:
-  friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, int ST);
+  friend TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, int ST);
   fsm d_FSM;
   int d_ST;
   @NAME@ (const fsm &FSM, int ST); 

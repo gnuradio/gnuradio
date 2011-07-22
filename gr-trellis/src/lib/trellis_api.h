@@ -1,6 +1,5 @@
-/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,30 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_TRELLIS_INTERLEAVER_H
-#define INCLUDED_TRELLIS_INTERLEAVER_H
+#ifndef INCLUDED_TRELLIS_API_H
+#define INCLUDED_TRELLIS_API_H
 
-#include <trellis_api.h>
-#include <vector>
+#include <gruel/attributes.h>
 
-/*!
- * \brief  INTERLEAVER class
- */
-class TRELLIS_API interleaver {
-private:
-  int d_K;
-  std::vector<int> d_INTER;
-  std::vector<int> d_DEINTER;
-public:
-  interleaver();
-  interleaver(const interleaver & INTERLEAVER);
-  interleaver(int K, const std::vector<int> & INTER);
-  interleaver(const char *name);
-  interleaver(int K, int seed);
-  int K () const { return d_K; }
-  const std::vector<int> & INTER () const { return d_INTER; }
-  const std::vector<int> & DEINTER () const { return d_DEINTER; }
-  void write_interleaver_txt(std::string filename);
-};
-
+#ifdef gnuradio_trellis_EXPORTS
+#  define TRELLIS_API __GR_ATTR_EXPORT
+#else
+#  define TRELLIS_API __GR_ATTR_IMPORT
 #endif
+
+#endif /* INCLUDED_TRELLIS_API_H */

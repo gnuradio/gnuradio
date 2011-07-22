@@ -23,6 +23,7 @@
 #ifndef INCLUDED_TRELLIS_FSM_H
 #define INCLUDED_TRELLIS_FSM_H
 
+#include <trellis_api.h>
 #include <vector>
 #include <iosfwd>
 
@@ -33,7 +34,7 @@
  * rather than the FSM itself.  It particular the state of the FSM
  * is not stored within an instance of this class.
  */
-class fsm {
+class TRELLIS_API fsm {
 private:
   // Input alphabet cardinality.
   int d_I;

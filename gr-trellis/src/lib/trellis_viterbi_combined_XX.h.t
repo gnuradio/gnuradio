@@ -25,6 +25,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <trellis_api.h>
 #include "fsm.h"
 #include <gr_block.h>
 #include "calc_metric.h"
@@ -33,7 +34,7 @@
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ trellis_make_@BASE_NAME@ (
+TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSM,
     int K,
     int S0,
@@ -46,7 +47,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 /*!
  *  \ingroup coding_blk
  */
-class @NAME@ : public gr_block
+class TRELLIS_API @NAME@ : public gr_block
 {
   fsm d_FSM;
   int d_K;
@@ -57,7 +58,7 @@ class @NAME@ : public gr_block
   trellis_metric_type_t d_TYPE;
   //std::vector<int> d_trace;
 
-  friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (
+  friend TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSM,
     int K,
     int S0,

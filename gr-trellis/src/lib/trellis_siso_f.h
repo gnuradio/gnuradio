@@ -23,6 +23,7 @@
 #ifndef INCLUDED_TRELLIS_SISO_F_H
 #define INCLUDED_TRELLIS_SISO_F_H
 
+#include <trellis_api.h>
 #include "fsm.h"
 #include "siso_type.h"
 #include "core_algorithms.h"
@@ -31,7 +32,7 @@
 class trellis_siso_f;
 typedef boost::shared_ptr<trellis_siso_f> trellis_siso_f_sptr;
 
-trellis_siso_f_sptr trellis_make_siso_f (
+TRELLIS_API trellis_siso_f_sptr trellis_make_siso_f (
     const fsm &FSM, 	// underlying FSM
     int K,		// block size in trellis steps
     int S0,		// initial state (put -1 if not specified)
@@ -45,7 +46,7 @@ trellis_siso_f_sptr trellis_make_siso_f (
 /*!
  *  \ingroup coding_blk
  */
-class trellis_siso_f : public gr_block
+class TRELLIS_API trellis_siso_f : public gr_block
 {
   fsm d_FSM;
   int d_K;
@@ -57,7 +58,7 @@ class trellis_siso_f : public gr_block
   //std::vector<float> d_alpha;
   //std::vector<float> d_beta;
 
-  friend trellis_siso_f_sptr trellis_make_siso_f (
+  friend TRELLIS_API trellis_siso_f_sptr trellis_make_siso_f (
     const fsm &FSM,
     int K,
     int S0,

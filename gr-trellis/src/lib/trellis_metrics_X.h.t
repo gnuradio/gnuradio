@@ -25,26 +25,27 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <trellis_api.h>
 #include <gr_block.h>
 #include "calc_metric.h"
 
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
+TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
 
 /*!
  * \brief Evaluate metrics for use by the Viterbi algorithm.
  * \ingroup coding_blk
  */
-class @NAME@ : public gr_block
+class TRELLIS_API @NAME@ : public gr_block
 {
   int d_O;
   int d_D;
   trellis_metric_type_t d_TYPE;
   std::vector<@I_TYPE@> d_TABLE;
 
-  friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
+  friend TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
   @NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
 
 public:

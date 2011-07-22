@@ -24,22 +24,23 @@
 #ifndef INCLUDED_TRELLIS_PERMUTATION_H
 #define INCLUDED_TRELLIS_PERMUTATION_H
 
+#include <trellis_api.h>
 #include <vector>
 #include <gr_sync_block.h>
 
 class trellis_permutation;
 typedef boost::shared_ptr<trellis_permutation> trellis_permutation_sptr;
 
-trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT);
+TRELLIS_API trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT);
 
 /*!
  * \brief Permutation.
  * \ingroup coding_blk
  */
-class trellis_permutation : public gr_sync_block
+class TRELLIS_API trellis_permutation : public gr_sync_block
 {
 private:
-  friend trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT);
+  friend TRELLIS_API trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT);
   int d_K;
   std::vector<int> d_TABLE;
   int d_SYMS_PER_BLOCK;

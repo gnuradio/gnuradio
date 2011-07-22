@@ -25,6 +25,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
+#include <trellis_api.h>
 #include "fsm.h"
 #include "interleaver.h"
 #include <gr_block.h>
@@ -35,7 +36,7 @@
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ trellis_make_@BASE_NAME@ (
+TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
   const fsm &FSMo, int STo0, int SToK,
   const fsm &FSMi, int STi0, int STiK,
   const interleaver &INTERLEAVER,
@@ -52,7 +53,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 /*!
  *  \ingroup coding_blk
  */
-class @NAME@ : public gr_block
+class TRELLIS_API @NAME@ : public gr_block
 {
   fsm d_FSMo;
   fsm d_FSMi;
@@ -70,7 +71,7 @@ class @NAME@ : public gr_block
   float d_scaling;
   std::vector<float> d_buffer;
 
-  friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (
+  friend TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSMo, int STo0, int SToK,
     const fsm &FSMi, int STi0, int STiK,
     const interleaver &INTERLEAVER,

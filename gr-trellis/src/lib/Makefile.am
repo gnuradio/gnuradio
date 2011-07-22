@@ -78,6 +78,7 @@ EXTRA_DIST += 			\
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
+        trellis_api.h				\
         fsm.h				\
         quicksort_index.h		\
         base.h				\

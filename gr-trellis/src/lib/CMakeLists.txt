@@ -46,6 +46,7 @@ import os, sys
 sys.path.append('${GR_CORE_PYTHONPATH}')
 sys.path.append('${CMAKE_CURRENT_SOURCE_DIR}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
+os.environ['gendir'] = '${CMAKE_CURRENT_BINARY_DIR}'
 os.environ['do_makefile'] = '1'
 os.environ['do_sources'] = '0'
 from generate_all import generate_all
@@ -56,7 +57,7 @@ generate_all()
 MACRO(GEGEN_GEN_EXTRACT outvar ext)
     EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "import os; print ';'.join(
         map(lambda x: os.path.join('${CMAKE_CURRENT_BINARY_DIR}', x.replace('\\\\', '').strip()),
-        filter(lambda f: '${ext}' in f, open('${CMAKE_CURRENT_SOURCE_DIR}/Makefile.gen').readlines()
+        filter(lambda f: '${ext}' in f, open('${CMAKE_CURRENT_BINARY_DIR}/Makefile.gen').readlines()
     )))" OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE ${outvar})
     FILE(TO_CMAKE_PATH "${${outvar}}" ${outvar})
 ENDMACRO(GEGEN_GEN_EXTRACT)
@@ -154,6 +155,7 @@ INSTALL(TARGETS gnuradio-trellis
 ########################################################################
 INSTALL(FILES
     ${generated_trellis_includes}
+    trellis_api.h
     fsm.h
     quicksort_index.h
     base.h
