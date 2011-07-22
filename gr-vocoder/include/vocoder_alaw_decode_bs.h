@@ -23,13 +23,14 @@
 #ifndef INCLUDED_VOCODER_ALAW_DECODE_BS_H
 #define INCLUDED_VOCODER_ALAW_DECODE_BS_H
 
+#include <gr_vocoder_api.h>
 #include <gr_sync_block.h>
 
 class vocoder_alaw_decode_bs;
 
 typedef boost::shared_ptr<vocoder_alaw_decode_bs> vocoder_alaw_decode_bs_sptr;
 
-vocoder_alaw_decode_bs_sptr vocoder_make_alaw_decode_bs();
+GR_VOCODER_API vocoder_alaw_decode_bs_sptr vocoder_make_alaw_decode_bs();
 
 /*!
  * \brief This block performs alaw audio decoding. 
@@ -37,10 +38,10 @@ vocoder_alaw_decode_bs_sptr vocoder_make_alaw_decode_bs();
  * \ingroup vocoder_blk
  */
 
-class vocoder_alaw_decode_bs : public gr_sync_block
+class GR_VOCODER_API vocoder_alaw_decode_bs : public gr_sync_block
 {
 private:
-  friend vocoder_alaw_decode_bs_sptr vocoder_make_alaw_decode_bs();
+  friend GR_VOCODER_API vocoder_alaw_decode_bs_sptr vocoder_make_alaw_decode_bs();
 
   vocoder_alaw_decode_bs();
 

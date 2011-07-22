@@ -23,23 +23,24 @@
 #ifndef INCLUDED_VOCODER_ULAW_ENCODER_SB_H
 #define INCLUDED_VOCODER_ULAW_ENCODER_SB_H
 
+#include <gr_vocoder_api.h>
 #include <gr_sync_block.h>
 
 class vocoder_ulaw_encode_sb;
 
 typedef boost::shared_ptr<vocoder_ulaw_encode_sb> vocoder_ulaw_encode_sb_sptr;
 
-vocoder_ulaw_encode_sb_sptr vocoder_make_ulaw_encode_sb();
+GR_VOCODER_API vocoder_ulaw_encode_sb_sptr vocoder_make_ulaw_encode_sb();
 
 /*!
  * \brief This block performs g.711 ulaw audio encoding. 
  *
  * \ingroup vocoder_blk
  */
-class vocoder_ulaw_encode_sb : public gr_sync_block
+class GR_VOCODER_API vocoder_ulaw_encode_sb : public gr_sync_block
 {
 private:
-  friend vocoder_ulaw_encode_sb_sptr vocoder_make_ulaw_encode_sb();
+  friend GR_VOCODER_API vocoder_ulaw_encode_sb_sptr vocoder_make_ulaw_encode_sb();
 
   vocoder_ulaw_encode_sb();
 

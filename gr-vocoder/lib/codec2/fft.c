@@ -72,18 +72,18 @@ initialize_fft (int n)
 void
 fft (float x[], int n, int isign)
 {
+  int isReverse = 0;
+  int c;
+  kiss_fft_cfg cfg;
   if (cfg_forward == NULL)
     {
       initialize_fft (n);
     }
-  int isReverse = 0;
-  int c;
   for (c = 0; c < n * 2; c += 2)
     {
       fin[c / 2].r = x[c];
       fin[c / 2].i = -x[c + 1];
     }
-  kiss_fft_cfg cfg;
   if (isign == -1)
     {
       cfg = cfg_reverse;

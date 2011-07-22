@@ -23,21 +23,22 @@
 #ifndef INCLUDED_VOCODER_GSM_FR_DECODE_PS_H
 #define INCLUDED_VOCODER_GSM_FR_DECODE_PS_H
 
+#include <gr_vocoder_api.h>
 #include <gr_sync_interpolator.h>
 
 class vocoder_gsm_fr_decode_ps;
 typedef boost::shared_ptr<vocoder_gsm_fr_decode_ps> vocoder_gsm_fr_decode_ps_sptr;
 
-vocoder_gsm_fr_decode_ps_sptr vocoder_make_gsm_fr_decode_ps ();
+GR_VOCODER_API vocoder_gsm_fr_decode_ps_sptr vocoder_make_gsm_fr_decode_ps ();
 
 /*!
  * \brief GSM 06.10 Full Rate Vocoder Decoder
  * \ingroup vocoder_blk
  */
-class vocoder_gsm_fr_decode_ps : public gr_sync_interpolator {
+class GR_VOCODER_API vocoder_gsm_fr_decode_ps : public gr_sync_interpolator {
   struct gsm_state	*d_gsm;
 
-  friend vocoder_gsm_fr_decode_ps_sptr vocoder_make_gsm_fr_decode_ps ();
+  friend GR_VOCODER_API vocoder_gsm_fr_decode_ps_sptr vocoder_make_gsm_fr_decode_ps ();
   vocoder_gsm_fr_decode_ps ();
 
 public:

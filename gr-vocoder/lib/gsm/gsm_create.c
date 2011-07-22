@@ -30,7 +30,6 @@ static char const	ident[] = "$Header$";
 #include "gsm.h"
 #include "private.h"
 #include "proto.h"
-#include <strings.h>
 
 gsm gsm_create P0()
 {

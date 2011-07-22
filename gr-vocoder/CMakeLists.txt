@@ -27,12 +27,9 @@ INCLUDE(GrBoost)
 ########################################################################
 INCLUDE(GrComponent)
 GR_REGISTER_COMPONENT("gr-vocoder" ENABLE_GR_VOCODER
-    UNIX #FIXME until we get MSVC working
     Boost_FOUND
     ENABLE_GR_CORE_
 )
-
-REMOVE_DEFINITIONS(-fvisibility=hidden) #FIXME until we do symbol visibility
 
 GR_SET_GLOBAL(GR_VOCODER_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include

@@ -23,6 +23,7 @@
 #ifndef INCLUDED_VOCODER_CVSD_DECODE_BS_H
 #define INCLUDED_VOCODER_CVSD_DECODE_BS_H
 
+#include <gr_vocoder_api.h>
 #include <gr_sync_interpolator.h>
 
 class vocoder_cvsd_decode_bs;
@@ -44,7 +45,7 @@ typedef boost::shared_ptr<vocoder_cvsd_decode_bs> vocoder_cvsd_decode_bs_sptr;
   * \param neg_accum_max  Minimum integer value allowed for the internal reference.  Default: "-32767" (-2^15 + 1 or MINSHORT+1)
   *
   */
-vocoder_cvsd_decode_bs_sptr vocoder_make_cvsd_decode_bs (short min_step=10,
+GR_VOCODER_API vocoder_cvsd_decode_bs_sptr vocoder_make_cvsd_decode_bs (short min_step=10,
 							 short max_step=1280,
 							 double step_decay=0.9990234375,
 							 double accum_decay= 0.96875,
@@ -105,10 +106,10 @@ vocoder_cvsd_decode_bs_sptr vocoder_make_cvsd_decode_bs (short min_step=10,
  *
  */
 
-class vocoder_cvsd_decode_bs : public gr_sync_interpolator
+class GR_VOCODER_API vocoder_cvsd_decode_bs : public gr_sync_interpolator
 {
 private:
-  friend vocoder_cvsd_decode_bs_sptr vocoder_make_cvsd_decode_bs (short min_step,
+  friend GR_VOCODER_API vocoder_cvsd_decode_bs_sptr vocoder_make_cvsd_decode_bs (short min_step,
 								  short max_step,
 								  double step_decay,
 								  double accum_decay,
