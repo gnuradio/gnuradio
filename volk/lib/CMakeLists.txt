@@ -252,9 +252,9 @@ SET_TARGET_PROPERTIES(volk PROPERTIES SOVERSION ${LIBVER})
 SET_TARGET_PROPERTIES(volk PROPERTIES DEFINE_SYMBOL "volk_EXPORTS")
 
 INSTALL(TARGETS volk
-    LIBRARY DESTINATION lib${LIB_SUFFIX} # .so file
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
-    RUNTIME DESTINATION bin # .dll file
+    LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT "volk_runtime" # .so file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "volk_devel"   # .lib file
+    RUNTIME DESTINATION bin              COMPONENT "volk_runtime" # .dll file
 )
 
 ########################################################################

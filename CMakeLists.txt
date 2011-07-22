@@ -145,11 +145,32 @@ ENDIF()
 ########################################################################
 # Setup volk as a subproject
 ########################################################################
-ADD_SUBDIRECTORY(volk)
+INCLUDE(GrComponent)
+GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
+
 SET(VOLK_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
     ${CMAKE_CURRENT_BINARY_DIR}/volk/include
 )
+
+INCLUDE(GrPackage)
+CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
+
+CPACK_COMPONENT("volk_runtime"
+    GROUP        "Volk"
+    DISPLAY_NAME "Runtime"
+    DESCRIPTION  "Dynamic link libraries"
+)
+
+CPACK_COMPONENT("volk_devel"
+    GROUP        "Volk"
+    DISPLAY_NAME "Development"
+    DESCRIPTION  "C++ headers, package config, import libraries"
+)
+
+IF(ENABLE_VOLK)
+    ADD_SUBDIRECTORY(volk)
+ENDIF(ENABLE_VOLK)
 
 ########################################################################
 # Add subdirectories

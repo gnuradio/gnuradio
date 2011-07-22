@@ -58,6 +58,7 @@ CONFIGURE_FILE(
 INSTALL(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/volk.pc
     DESTINATION lib${LIB_SUFFIX}/pkgconfig
+    COMPONENT "volk_devel"
 )
 
 ########################################################################
@@ -65,7 +66,8 @@ INSTALL(
 ########################################################################
 INSTALL(
     DIRECTORY ${CMAKE_SOURCE_DIR}/include/volk
-    DESTINATION include FILES_MATCHING PATTERN "*.h"
+    DESTINATION include COMPONENT "volk_devel"
+    FILES_MATCHING PATTERN "*.h"
 )
 
 INSTALL(FILES
@@ -73,7 +75,9 @@ INSTALL(FILES
     ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_typedefs.h
-DESTINATION include/volk)
+    DESTINATION include/volk
+    COMPONENT "volk_devel"
+)
 
 ########################################################################
 # Setup the library
