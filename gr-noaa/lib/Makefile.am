@@ -42,6 +42,7 @@ libgnuradio_noaa_la_LIBADD = \
 libgnuradio_noaa_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 grinclude_HEADERS = \
+	noaa_api.h \
 	noaa_hrpt_decoder.h \
 	noaa_hrpt_deframer.h \
 	noaa_hrpt_pll_cf.h

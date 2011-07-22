@@ -57,6 +57,7 @@ INSTALL(TARGETS gnuradio-noaa
 # Install header files
 ########################################################################
 INSTALL(FILES
+    noaa_api.h
     noaa_hrpt_decoder.h
     noaa_hrpt_deframer.h
     noaa_hrpt_pll_cf.h

@@ -62,6 +62,7 @@ INSTALL(TARGETS gnuradio-pager
 # Install header files
 ########################################################################
 INSTALL(FILES
+    pager_api.h
     pager_slicer_fb.h
     pager_flex_sync.h
     pager_flex_deinterleave.h

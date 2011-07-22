@@ -22,22 +22,22 @@
 #ifndef INCLUDED_VOCODER_CODEC2_DECODE_PS_H
 #define INCLUDED_VOCODER_CODEC2_DECODE_PS_H
 
-#include <gr_vocoder_api.h>
+#include <vocoder_api.h>
 #include <gr_sync_interpolator.h>
 
 class vocoder_codec2_decode_ps;
 typedef boost::shared_ptr<vocoder_codec2_decode_ps> vocoder_codec2_decode_ps_sptr;
 
-GR_VOCODER_API vocoder_codec2_decode_ps_sptr vocoder_make_codec2_decode_ps ();
+VOCODER_API vocoder_codec2_decode_ps_sptr vocoder_make_codec2_decode_ps ();
 
 /*!
  * \brief CODEC2 Vocoder Decoder
  * \ingroup vocoder_blk
  */
-class GR_VOCODER_API vocoder_codec2_decode_ps : public gr_sync_interpolator {
+class VOCODER_API vocoder_codec2_decode_ps : public gr_sync_interpolator {
   void *d_codec2;
 
-  friend GR_VOCODER_API vocoder_codec2_decode_ps_sptr vocoder_make_codec2_decode_ps ();
+  friend VOCODER_API vocoder_codec2_decode_ps_sptr vocoder_make_codec2_decode_ps ();
   vocoder_codec2_decode_ps ();
 
 public:

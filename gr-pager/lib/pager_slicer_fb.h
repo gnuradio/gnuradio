@@ -22,21 +22,22 @@
 #ifndef INCLUDED_PAGER_SLICER_FB_H
 #define INCLUDED_PAGER_SLICER_FB_H
 
+#include <pager_api.h>
 #include <gr_sync_block.h>
 
 class pager_slicer_fb;
 typedef boost::shared_ptr<pager_slicer_fb> pager_slicer_fb_sptr;
 
-pager_slicer_fb_sptr pager_make_slicer_fb(float alpha);
+PAGER_API pager_slicer_fb_sptr pager_make_slicer_fb(float alpha);
 
 /*!
  * \brief slicer description
  * \ingroup pager_blk
  */
-class pager_slicer_fb : public gr_sync_block
+class PAGER_API pager_slicer_fb : public gr_sync_block
 {
 private:
-    friend pager_slicer_fb_sptr pager_make_slicer_fb(float alpha);
+    friend PAGER_API pager_slicer_fb_sptr pager_make_slicer_fb(float alpha);
     pager_slicer_fb(float alpha);
 
     unsigned char slice(float sample);

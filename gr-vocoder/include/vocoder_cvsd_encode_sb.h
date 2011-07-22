@@ -22,7 +22,7 @@
 #ifndef INCLUDED_VOCODER_CVSD_ENCODER_SB_H
 #define INCLUDED_VOCODER_CVSD_ENCODER_SB_H
 
-#include <gr_vocoder_api.h>
+#include <vocoder_api.h>
 #include <gr_sync_decimator.h>
 
 class vocoder_cvsd_encode_sb;
@@ -45,7 +45,7 @@ typedef boost::shared_ptr<vocoder_cvsd_encode_sb> vocoder_cvsd_encode_sb_sptr;
   *
   */
 
-GR_VOCODER_API vocoder_cvsd_encode_sb_sptr vocoder_make_cvsd_encode_sb(short min_step=10,
+VOCODER_API vocoder_cvsd_encode_sb_sptr vocoder_make_cvsd_encode_sb(short min_step=10,
 							short max_step=1280,
 							double step_decay=0.9990234375,
 							double accum_decay= 0.96875,
@@ -108,10 +108,10 @@ GR_VOCODER_API vocoder_cvsd_encode_sb_sptr vocoder_make_cvsd_encode_sb(short min
  *
  */
 
-class GR_VOCODER_API vocoder_cvsd_encode_sb : public gr_sync_decimator
+class VOCODER_API vocoder_cvsd_encode_sb : public gr_sync_decimator
 {
 private:
-  friend GR_VOCODER_API vocoder_cvsd_encode_sb_sptr vocoder_make_cvsd_encode_sb(short min_step,
+  friend VOCODER_API vocoder_cvsd_encode_sb_sptr vocoder_make_cvsd_encode_sb(short min_step,
 								 short max_step,
 								 double step_decay,
 								 double accum_decay,

@@ -21,8 +21,6 @@
 INCLUDE(GrMiscUtils) #check n def
 GR_CHECK_HDR_N_DEF(sys/resource.h HAVE_SYS_RESOURCE_H)
 
-ADD_DEFINITIONS(${GR_COMMON_FLAGS_AND_DEFINES})
-
 ########################################################################
 # Setup the include and linker paths
 ########################################################################

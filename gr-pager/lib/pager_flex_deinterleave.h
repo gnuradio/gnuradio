@@ -22,23 +22,24 @@
 #ifndef INCLUDED_PAGER_FLEX_DEINTERLEAVE_H
 #define INCLUDED_PAGER_FLEX_DEINTERLEAVE_H
 
+#include <pager_api.h>
 #include <gr_sync_decimator.h>
 
 class pager_flex_deinterleave;
 typedef boost::shared_ptr<pager_flex_deinterleave> pager_flex_deinterleave_sptr;
 
-pager_flex_deinterleave_sptr pager_make_flex_deinterleave();
+PAGER_API pager_flex_deinterleave_sptr pager_make_flex_deinterleave();
 
 /*!
  * \brief flex deinterleave description
  * \ingroup pager_blk
  */
 
-class pager_flex_deinterleave : public gr_sync_decimator
+class PAGER_API pager_flex_deinterleave : public gr_sync_decimator
 {
 private:
     // Constructors
-    friend pager_flex_deinterleave_sptr pager_make_flex_deinterleave();
+    friend PAGER_API pager_flex_deinterleave_sptr pager_make_flex_deinterleave();
     pager_flex_deinterleave();
 
     // One FLEX block of deinterleaved data

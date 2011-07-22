@@ -22,6 +22,7 @@
 #ifndef INCLUDED_PAGER_FLEX_PARSE_H
 #define INCLUDED_PAGER_FLEX_PARSE_H
 
+#include <pager_api.h>
 #include <gr_sync_block.h>
 #include <gr_msg_queue.h>
 #include <pageri_flex_modes.h>
@@ -30,7 +31,7 @@
 class pager_flex_parse;
 typedef boost::shared_ptr<pager_flex_parse> pager_flex_parse_sptr;
 
-pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq);
+PAGER_API pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq);
 
 #define FIELD_DELIM ((unsigned char)128)
 
@@ -38,11 +39,11 @@ pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq)
  * \brief flex parse description
  * \ingroup pager_blk
  */
-class pager_flex_parse : public gr_sync_block
+class PAGER_API pager_flex_parse : public gr_sync_block
 {
 private:
     // Constructors
-    friend pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq);
+    friend PAGER_API pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq);
     pager_flex_parse(gr_msg_queue_sptr queue, float freq);
 
     std::ostringstream d_payload;

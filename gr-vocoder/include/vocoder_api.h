@@ -19,24 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_DIGITAL_API_H
-#define INCLUDED_GR_DIGITAL_API_H
+#ifndef INCLUDED_VOCODER_API_H
+#define INCLUDED_VOCODER_API_H
 
 #include <gruel/attributes.h>
 
-//FIXME
-//I cannot figure out for the life of me
-//why the HAVE_CONFIG_H is not defined for MSVC.
-//But the only things it needs from config.h is M_PI,
-//so just define it here and give up for now...
-#ifdef _MSC_VER
-#define M_PI 3.141592653589793238462643
-#endif
-
-#ifdef gnuradio_digital_EXPORTS
-#  define GR_DIGITAL_API __GR_ATTR_EXPORT
+#ifdef gnuradio_vocoder_EXPORTS
+#  define VOCODER_API __GR_ATTR_EXPORT
 #else
-#  define GR_DIGITAL_API __GR_ATTR_IMPORT
+#  define VOCODER_API __GR_ATTR_IMPORT
 #endif
 
-#endif /* INCLUDED_GR_DIGITAL_API_H */
+#endif /* INCLUDED_VOCODER_API_H */

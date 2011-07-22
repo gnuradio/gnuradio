@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_CONSTELLATION_DECODER_CB_H
 #define INCLUDED_DIGITAL_CONSTELLATION_DECODER_CB_H
 
-#include <gr_digital_api.h>
+#include <digital_api.h>
 #include <gr_block.h>
 #include <digital_constellation.h>
 #include <vector>
@@ -31,7 +31,7 @@
 class digital_constellation_decoder_cb;
 typedef boost::shared_ptr<digital_constellation_decoder_cb>digital_constellation_decoder_cb_sptr;
 
-GR_DIGITAL_API digital_constellation_decoder_cb_sptr 
+DIGITAL_API digital_constellation_decoder_cb_sptr 
 digital_make_constellation_decoder_cb (digital_constellation_sptr constellation);
 
 /*!
@@ -39,14 +39,14 @@ digital_make_constellation_decoder_cb (digital_constellation_sptr constellation)
  * \ingroup coding_blk
  *
  */
-class GR_DIGITAL_API digital_constellation_decoder_cb : public gr_block
+class DIGITAL_API digital_constellation_decoder_cb : public gr_block
 {
 
  private:
   digital_constellation_sptr d_constellation;
   unsigned int d_dim;
 
-  friend GR_DIGITAL_API digital_constellation_decoder_cb_sptr 
+  friend DIGITAL_API digital_constellation_decoder_cb_sptr 
   digital_make_constellation_decoder_cb (digital_constellation_sptr constellation);
   
   digital_constellation_decoder_cb (digital_constellation_sptr constellation);

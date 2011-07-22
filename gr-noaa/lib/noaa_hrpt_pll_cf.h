@@ -23,17 +23,18 @@
 #ifndef INCLUDED_NOAA_HRPT_PLL_CF_H
 #define INCLUDED_NOAA_HRPT_PLL_CF_H
 
+#include <noaa_api.h>
 #include <gr_sync_block.h>
 
 class noaa_hrpt_pll_cf;
 typedef boost::shared_ptr<noaa_hrpt_pll_cf> noaa_hrpt_pll_cf_sptr;
 
-noaa_hrpt_pll_cf_sptr
+NOAA_API noaa_hrpt_pll_cf_sptr
 noaa_make_hrpt_pll_cf(float alpha, float beta, float max_offset);
 
-class noaa_hrpt_pll_cf : public gr_sync_block
+class NOAA_API noaa_hrpt_pll_cf : public gr_sync_block
 {
-  friend noaa_hrpt_pll_cf_sptr noaa_make_hrpt_pll_cf(float alpha, float beta, float max_offset);
+  friend NOAA_API noaa_hrpt_pll_cf_sptr noaa_make_hrpt_pll_cf(float alpha, float beta, float max_offset);
   noaa_hrpt_pll_cf(float alpha, float beta, float max_offset);
 
   float d_alpha;		// 1st order loop constant

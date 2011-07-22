@@ -23,17 +23,18 @@
 #ifndef INCLUDED_NOAA_HRPT_DEFRAMER_H
 #define INCLUDED_NOAA_HRPT_DEFRAMER_H
 
+#include <noaa_api.h>
 #include <gr_block.h>
 
 class noaa_hrpt_deframer;
 typedef boost::shared_ptr<noaa_hrpt_deframer> noaa_hrpt_deframer_sptr;
 
-noaa_hrpt_deframer_sptr
+NOAA_API noaa_hrpt_deframer_sptr
 noaa_make_hrpt_deframer();
 
-class noaa_hrpt_deframer : public gr_block
+class NOAA_API noaa_hrpt_deframer : public gr_block
 {
-  friend noaa_hrpt_deframer_sptr noaa_make_hrpt_deframer();
+  friend NOAA_API noaa_hrpt_deframer_sptr noaa_make_hrpt_deframer();
   noaa_hrpt_deframer();
 
   unsigned int       d_state;

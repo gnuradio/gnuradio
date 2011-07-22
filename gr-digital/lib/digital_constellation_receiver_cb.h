@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_CONSTELLATION_RECEIVER_CB_H
 #define	INCLUDED_DIGITAL_CONSTELLATION_RECEIVER_CB_H
 
-#include <gr_digital_api.h>
+#include <digital_api.h>
 #include <gruel/attributes.h>
 #include <gr_block.h>
 #include <digital_constellation.h>
@@ -35,7 +35,7 @@ class digital_constellation_receiver_cb;
 typedef boost::shared_ptr<digital_constellation_receiver_cb> digital_constellation_receiver_cb_sptr;
 
 // public constructor
-GR_DIGITAL_API digital_constellation_receiver_cb_sptr 
+DIGITAL_API digital_constellation_receiver_cb_sptr 
 digital_make_constellation_receiver_cb (digital_constellation_sptr constellation,
 					float alpha, float beta,
 					float fmin, float fmax);
@@ -66,7 +66,7 @@ digital_make_constellation_receiver_cb (digital_constellation_sptr constellation
  *
  */
 
-class GR_DIGITAL_API digital_constellation_receiver_cb : public gr_block
+class DIGITAL_API digital_constellation_receiver_cb : public gr_block
 {
  public:
   int general_work (int noutput_items,
@@ -142,7 +142,7 @@ protected:
   //! index to delay line
   unsigned int d_dl_idx;
 
-  friend GR_DIGITAL_API digital_constellation_receiver_cb_sptr
+  friend DIGITAL_API digital_constellation_receiver_cb_sptr
   digital_make_constellation_receiver_cb (digital_constellation_sptr constell,
 					  float alpha, float beta,
 					  float fmin, float fmax);

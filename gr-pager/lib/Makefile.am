@@ -25,6 +25,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
+	pager_api.h \
 	pager_slicer_fb.h \
 	pager_flex_sync.h \
 	pager_flex_deinterleave.h \

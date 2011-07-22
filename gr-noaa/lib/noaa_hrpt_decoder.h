@@ -23,17 +23,18 @@
 #ifndef INCLUDED_NOAA_HRPT_DECODER_H
 #define INCLUDED_NOAA_HRPT_DECODER_H
 
+#include <noaa_api.h>
 #include <gr_sync_block.h>
 
 class noaa_hrpt_decoder;
 typedef boost::shared_ptr<noaa_hrpt_decoder> noaa_hrpt_decoder_sptr;
 
-noaa_hrpt_decoder_sptr
+NOAA_API noaa_hrpt_decoder_sptr
 noaa_make_hrpt_decoder(bool verbose, bool output_files);
 
-class noaa_hrpt_decoder : public gr_sync_block
+class NOAA_API noaa_hrpt_decoder : public gr_sync_block
 {
-  friend noaa_hrpt_decoder_sptr noaa_make_hrpt_decoder(bool verbose, bool output_files);
+  friend NOAA_API noaa_hrpt_decoder_sptr noaa_make_hrpt_decoder(bool verbose, bool output_files);
   noaa_hrpt_decoder(bool verbose, bool output_files);
 
   // Configuration

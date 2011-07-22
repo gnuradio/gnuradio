@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
-	gr_vocoder_api.h \
+	vocoder_api.h \
 	vocoder_alaw_decode_bs.h \
 	vocoder_alaw_encode_sb.h \
 	vocoder_codec2_decode_ps.h \

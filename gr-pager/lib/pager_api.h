@@ -19,15 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_VOCODER_API_H
-#define INCLUDED_GR_VOCODER_API_H
+#ifndef INCLUDED_PAGER_API_H
+#define INCLUDED_PAGER_API_H
 
 #include <gruel/attributes.h>
 
-#ifdef gnuradio_vocoder_EXPORTS
-#  define GR_VOCODER_API __GR_ATTR_EXPORT
+#ifdef gnuradio_pager_EXPORTS
+#  define PAGER_API __GR_ATTR_EXPORT
 #else
-#  define GR_VOCODER_API __GR_ATTR_IMPORT
+#  define PAGER_API __GR_ATTR_IMPORT
 #endif
 
-#endif /* INCLUDED_GR_VOCODER_API_H */
+#endif /* INCLUDED_PAGER_API_H */

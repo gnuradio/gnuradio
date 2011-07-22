@@ -22,24 +22,25 @@
 #ifndef INCLUDED_PAGER_FLEX_SYNC_H
 #define INCLUDED_PAGER_FLEX_SYNC_H
 
+#include <pager_api.h>
 #include <gr_block.h>
 
 class pager_flex_sync;
 typedef boost::shared_ptr<pager_flex_sync> pager_flex_sync_sptr;
 typedef std::vector<gr_int64> gr_int64_vector;
 
-pager_flex_sync_sptr pager_make_flex_sync();
+PAGER_API pager_flex_sync_sptr pager_make_flex_sync();
 
 /*!
  * \brief flex sync description
  * \ingroup pager_blk
  */
 
-class pager_flex_sync : public gr_block
+class PAGER_API pager_flex_sync : public gr_block
 {
 private:
     // Constructors
-    friend pager_flex_sync_sptr pager_make_flex_sync();
+    friend PAGER_API pager_flex_sync_sptr pager_make_flex_sync();
     pager_flex_sync();
    
     // State machine transitions

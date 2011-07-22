@@ -23,13 +23,13 @@
 #ifndef INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H
 #define INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H
 
-#include <gr_vocoder_api.h>
+#include <vocoder_api.h>
 #include <gr_sync_decimator.h>
 
 class vocoder_gsm_fr_encode_sp;
 typedef boost::shared_ptr<vocoder_gsm_fr_encode_sp> vocoder_gsm_fr_encode_sp_sptr;
 
-GR_VOCODER_API vocoder_gsm_fr_encode_sp_sptr vocoder_make_gsm_fr_encode_sp ();
+VOCODER_API vocoder_gsm_fr_encode_sp_sptr vocoder_make_gsm_fr_encode_sp ();
 
 /*!
  * \brief GSM 06.10 Full Rate Vocoder Encoder
@@ -37,10 +37,10 @@ GR_VOCODER_API vocoder_gsm_fr_encode_sp_sptr vocoder_make_gsm_fr_encode_sp ();
  *
  * shorts in; 33 byte packets out
  */
-class GR_VOCODER_API vocoder_gsm_fr_encode_sp : public gr_sync_decimator {
+class VOCODER_API vocoder_gsm_fr_encode_sp : public gr_sync_decimator {
   struct gsm_state	*d_gsm;
 
-  friend GR_VOCODER_API vocoder_gsm_fr_encode_sp_sptr vocoder_make_gsm_fr_encode_sp ();
+  friend VOCODER_API vocoder_gsm_fr_encode_sp_sptr vocoder_make_gsm_fr_encode_sp ();
   vocoder_gsm_fr_encode_sp ();
 
 public:

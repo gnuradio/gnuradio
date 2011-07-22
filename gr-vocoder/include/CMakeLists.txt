@@ -21,7 +21,7 @@
 # Install header files
 ########################################################################
 INSTALL(FILES
-    gr_vocoder_api.h
+    vocoder_api.h
     vocoder_alaw_decode_bs.h
     vocoder_alaw_encode_sb.h
     vocoder_codec2_decode_ps.h
