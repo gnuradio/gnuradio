@@ -33,6 +33,8 @@ grinclude_HEADERS = \
 	vocoder_g721_encode_sb.h \
 	vocoder_g723_24_decode_bs.h \
 	vocoder_g723_24_encode_sb.h \
+	vocoder_g723_40_decode_bs.h \
+	vocoder_g723_40_encode_sb.h \
 	vocoder_gsm_fr_decode_ps.h \
 	vocoder_gsm_fr_encode_sp.h \
 	vocoder_ulaw_decode_bs.h \
