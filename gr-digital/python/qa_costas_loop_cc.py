@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks2, gr_unittest
-import digital_swig
+from gnuradio import gr, gr_unittest
+import digital_swig, psk2
 import random, cmath
 
 class test_digital(gr_unittest.TestCase):
@@ -130,9 +130,9 @@ class test_digital(gr_unittest.TestCase):
         self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
 
         rot = cmath.exp(-cmath.pi/8.0j) # rotate to match Costas rotation
-        const = blks2.psk.make_constellation(order)
+        const = psk2.psk_constellation(order)
         data = [random.randint(0,7) for i in xrange(100)]
-        data = [2*rot*const[d] for d in data]
+        data = [2*rot*const.points()[d] for d in data]
         
         N = 40 # settling time
         expected_result = data[N:]
