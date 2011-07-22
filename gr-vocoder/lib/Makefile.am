@@ -33,8 +33,10 @@ libgnuradio_vocoder_la_SOURCES = \
 	vocoder_alaw_encode_sb.cc \
 	vocoder_codec2_decode_ps.cc \
 	vocoder_codec2_encode_sp.cc \
-	vocoder_cvsd_encode_sb.cc \
 	vocoder_cvsd_decode_bs.cc \
+	vocoder_cvsd_encode_sb.cc \
+	vocoder_g721_decode_bs.cc \
+	vocoder_g721_encode_sb.cc \
 	vocoder_gsm_fr_decode_ps.cc \
 	vocoder_gsm_fr_encode_sp.cc \
 	vocoder_ulaw_decode_bs.cc \
