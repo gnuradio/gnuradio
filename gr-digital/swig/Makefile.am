@@ -64,6 +64,7 @@ digital_swig_swiginclude_headers =		\
 	digital_constellation.i			\
 	digital_constellation_receiver_cb.i 	\
 	digital_constellation_decoder_cb.i	\
+	digital_correlate_access_code_bb.i	\
 	digital_costas_loop_cc.i		\
 	digital_cma_equalizer_cc.i		\
 	digital_lms_dd_equalizer_cc.i		\

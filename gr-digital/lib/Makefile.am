@@ -31,6 +31,7 @@ grinclude_HEADERS = 				\
 	digital_constellation.h			\
 	digital_constellation_receiver_cb.h 	\
 	digital_constellation_decoder_cb.h 	\
+	digital_correlate_access_code_bb.h	\
 	digital_costas_loop_cc.h		\
 	digital_cma_equalizer_cc.h		\
 	digital_lms_dd_equalizer_cc.h		\
@@ -46,6 +47,7 @@ libgnuradio_digital_la_SOURCES = 		\
 	digital_constellation.cc		\
 	digital_constellation_receiver_cb.cc	\
 	digital_constellation_decoder_cb.cc	\
+	digital_correlate_access_code_bb.cc	\
 	digital_costas_loop_cc.cc		\
 	digital_cma_equalizer_cc.cc		\
 	digital_lms_dd_equalizer_cc.cc		\

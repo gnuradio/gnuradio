@@ -100,12 +100,6 @@
 ;;; ./general/gr_copy.h
 (pass-if (true? (gr:copy 1)))
 
-;;; ./general/gr_correlate_access_code_bb.h
-(pass-if (true? (gr:correlate-access-code-bb "foo" 0)))
-(pass-if-throw "confirm throw correlate-access-code-bb" #t
-  (true? (gr:correlate-access-code-bb
-	  "00000000000000000000000000000000000000000000000000000000000000000" 0)))
-
 ;;; ./general/gr_cpfsk_bc.h
 (pass-if (true? (gr:cpfsk-bc 1 1 1)))
 

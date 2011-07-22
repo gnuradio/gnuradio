@@ -23,23 +23,25 @@
 
 %{
 #include "digital_binary_slicer_fb.h"
-#include "digital_constellation.h"
-#include "digital_costas_loop_cc.h"
 #include "digital_cma_equalizer_cc.h"
-#include "digital_lms_dd_equalizer_cc.h"
-#include "digital_kurtotic_equalizer_cc.h"
-#include "digital_constellation_receiver_cb.h"
+#include "digital_constellation.h"
 #include "digital_constellation_decoder_cb.h"
+#include "digital_constellation_receiver_cb.h"
+#include "digital_correlate_access_code_bb.h"
+#include "digital_costas_loop_cc.h"
+#include "digital_kurtotic_equalizer_cc.h"
+#include "digital_lms_dd_equalizer_cc.h"
 %}
 
 %include "digital_binary_slicer_fb.i"
-%include "digital_constellation.i"
-%include "digital_costas_loop_cc.i"
 %include "digital_cma_equalizer_cc.i"
-%include "digital_lms_dd_equalizer_cc.i"
-%include "digital_kurtotic_equalizer_cc.i"
-%include "digital_constellation_receiver_cb.i"
+%include "digital_constellation.i"
 %include "digital_constellation_decoder_cb.i"
+%include "digital_constellation_receiver_cb.i"
+%include "digital_correlate_access_code_bb.i"
+%include "digital_costas_loop_cc.i"
+%include "digital_kurtotic_equalizer_cc.i"
+%include "digital_lms_dd_equalizer_cc.i"
 
 #if SWIGGUILE
 %scheme %{

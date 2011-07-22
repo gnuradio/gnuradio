@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_correlate_access_code_bb.h>
+#include <digital_correlate_access_code_bb.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <gr_count_bits.h>
@@ -34,14 +34,15 @@
 #define VERBOSE 0
 
 
-gr_correlate_access_code_bb_sptr
-gr_make_correlate_access_code_bb (const std::string &access_code, int threshold)
+digital_correlate_access_code_bb_sptr
+digital_make_correlate_access_code_bb (const std::string &access_code, int threshold)
 {
-  return gnuradio::get_initial_sptr(new gr_correlate_access_code_bb (access_code, threshold));
+  return gnuradio::get_initial_sptr(new digital_correlate_access_code_bb
+				    (access_code, threshold));
 }
 
 
-gr_correlate_access_code_bb::gr_correlate_access_code_bb (
+digital_correlate_access_code_bb::digital_correlate_access_code_bb (
   const std::string &access_code, int threshold)
   : gr_sync_block ("correlate_access_code_bb",
 		   gr_make_io_signature (1, 1, sizeof(char)),
@@ -51,17 +52,17 @@ gr_correlate_access_code_bb::gr_correlate_access_code_bb (
 
 {
   if (!set_access_code(access_code)){
-    fprintf(stderr, "gr_correlate_access_code_bb: access_code is > 64 bits\n");
+    fprintf(stderr, "digital_correlate_access_code_bb: access_code is > 64 bits\n");
     throw std::out_of_range ("access_code is > 64 bits");
   }
 }
 
-gr_correlate_access_code_bb::~gr_correlate_access_code_bb ()
+digital_correlate_access_code_bb::~digital_correlate_access_code_bb ()
 {
 }
 
 bool
-gr_correlate_access_code_bb::set_access_code(
+digital_correlate_access_code_bb::set_access_code(
   const std::string &access_code)
 {
   unsigned len = access_code.length();	// # of bytes in string
@@ -84,9 +85,9 @@ gr_correlate_access_code_bb::set_access_code(
 }
 
 int
-gr_correlate_access_code_bb::work (int noutput_items,
-				   gr_vector_const_void_star &input_items,
-				   gr_vector_void_star &output_items)
+digital_correlate_access_code_bb::work (int noutput_items,
+					gr_vector_const_void_star &input_items,
+					gr_vector_void_star &output_items)
 {
   const unsigned char *in = (const unsigned char *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];

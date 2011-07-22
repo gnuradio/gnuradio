@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2010 Free Software Foundation, Inc.
+# Copyright 2006,2007,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
+import digital_swig
 import math
 
 default_access_code = '\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC'
@@ -52,7 +53,7 @@ class test_correlate_access_code(gr_unittest.TestCase):
         src_data = (1, 0, 1, 1, 1, 1, 0, 1, 1) + pad + (0,) * 7
         expected_result = pad + (1, 0, 1, 1, 3, 1, 0, 1, 1, 2) + (0,) * 6
         src = gr.vector_source_b (src_data)
-        op = gr.correlate_access_code_bb("1011", 0)
+        op = digital_swig.correlate_access_code_bb("1011", 0)
         dst = gr.vector_sink_b ()
         self.tb.connect (src, op, dst)
         self.tb.run ()
@@ -69,7 +70,7 @@ class test_correlate_access_code(gr_unittest.TestCase):
         src_data = code + (1, 0, 1, 1) + pad
         expected_result = pad + code + (3, 0, 1, 1)
         src = gr.vector_source_b (src_data)
-        op = gr.correlate_access_code_bb(access_code, 0)
+        op = digital_swig.correlate_access_code_bb(access_code, 0)
         dst = gr.vector_sink_b ()
         self.tb.connect (src, op, dst)
         self.tb.run ()

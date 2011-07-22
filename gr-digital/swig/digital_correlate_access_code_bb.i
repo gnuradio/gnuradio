@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006 Free Software Foundation, Inc.
+ * Copyright 2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,25 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_CORRELATE_ACCESS_CODE_BB_H
-#define INCLUDED_GR_CORRELATE_ACCESS_CODE_BB_H
-
-#include <gr_sync_block.h>
-#include <string>
-
-class gr_correlate_access_code_bb;
-typedef boost::shared_ptr<gr_correlate_access_code_bb> gr_correlate_access_code_bb_sptr;
+GR_SWIG_BLOCK_MAGIC(digital,correlate_access_code_bb);
 
 /*!
  * \param access_code is represented with 1 byte per bit, e.g., "010101010111000100"
  * \param threshold maximum number of bits that may be wrong
  */
-gr_correlate_access_code_bb_sptr 
-gr_make_correlate_access_code_bb (const std::string &access_code, int threshold);
+digital_correlate_access_code_bb_sptr 
+digital_make_correlate_access_code_bb (const std::string &access_code, int threshold) 
+  throw(std::out_of_range);
 
 /*!
  * \brief Examine input for specified access code, one bit at a time.
- * \ingroup sync_blk
+ * \ingroup block
  *
  * input:  stream of bits, 1 bit per input byte (data in LSB)
  * output: stream of bits, 2 bits per output byte (data in LSB, flag in next higher bit)
@@ -49,35 +43,18 @@ gr_make_correlate_access_code_bb (const std::string &access_code, int threshold)
  * flag bit and is 1 if the corresponding data bit is the first data
  * bit following the access code. Otherwise the flag bit is 0.
  */
-class gr_correlate_access_code_bb : public gr_sync_block
+class digital_correlate_access_code_bb : public gr_sync_block
 {
-  friend gr_correlate_access_code_bb_sptr 
-  gr_make_correlate_access_code_bb (const std::string &access_code, int threshold);
- private:
-  unsigned long long d_access_code;	// access code to locate start of packet
-                                        //   access code is left justified in the word
-  unsigned long long d_data_reg;	// used to look for access_code
-  unsigned long long d_flag_reg;	// keep track of decisions
-  unsigned long long d_flag_bit;	// mask containing 1 bit which is location of new flag
-  unsigned long long d_mask;		// masks access_code bits (top N bits are set where
-                                        //   N is the number of bits in the access code)
-  unsigned int	     d_threshold;	// how many bits may be wrong in sync vector
-
+  friend digital_correlate_access_code_bb_sptr 
+  digital_make_correlate_access_code_bb (const std::string &access_code, int threshold);
  protected:
-  gr_correlate_access_code_bb(const std::string &access_code, int threshold);
+  digital_correlate_access_code_bb(const std::string &access_code, int threshold);
 
  public:
-  ~gr_correlate_access_code_bb();
+  ~digital_correlate_access_code_bb();
 
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
-
-  
   /*!
    * \param access_code is represented with 1 byte per bit, e.g., "010101010111000100"
    */
   bool set_access_code (const std::string &access_code);
 };
-
-#endif /* INCLUDED_GR_CORRELATE_ACCESS_CODE_BB_H */

@@ -53,7 +53,6 @@ libgeneral_la_SOURCES = 		\
 	gr_complex_to_xxx.cc		\
 	gr_conjugate_cc.cc		\
 	gr_copy.cc			\
-	gr_correlate_access_code_bb.cc	\
 	gr_count_bits.cc		\
 	gr_cpfsk_bc.cc			\
 	gr_crc32.cc			\
@@ -204,7 +203,6 @@ grinclude_HEADERS = 			\
 	gr_complex_to_xxx.h		\
 	gr_conjugate_cc.h		\
 	gr_copy.h			\
-	gr_correlate_access_code_bb.h	\
 	gr_count_bits.h			\
 	gr_cpfsk_bc.h			\
 	gr_crc32.h			\
@@ -372,7 +370,6 @@ swiginclude_HEADERS =			\
 	gr_complex_to_xxx.i		\
 	gr_conjugate_cc.i		\
 	gr_copy.i			\
-	gr_correlate_access_code_bb.i	\
 	gr_cpfsk_bc.i			\
 	gr_crc32.i			\
 	gr_ctcss_squelch_ff.i		\

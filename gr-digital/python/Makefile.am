@@ -37,7 +37,9 @@ noinst_PYTHON = \
 	qa_constellation.py		\
 	qa_constellation_receiver.py	\
 	qa_constellation_decoder_cb.py	\
-	qa_costas_loop_cc.py
+	qa_correlate_access_code.py	\
+	qa_costas_loop_cc.py		\
+	qa_lms_equalizer.py
 
 digital_PYTHON = \
 	__init__.py	\

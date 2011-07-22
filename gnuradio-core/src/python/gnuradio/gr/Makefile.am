@@ -51,7 +51,6 @@ noinst_PYTHON = 			\
 	qa_classify.py			\
 	qa_complex_to_xxx.py		\
 	qa_copy.py			\
-	qa_correlate_access_code.py	\
 	qa_delay.py			\
 	qa_dc_blocker.py		\
 	qa_diff_encoder.py		\

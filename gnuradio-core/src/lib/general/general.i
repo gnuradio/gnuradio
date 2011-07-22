@@ -105,7 +105,6 @@
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_unpack_k_bits_bb.h>
-#include <gr_correlate_access_code_bb.h>
 #include <gr_diff_phasor_cc.h>
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
@@ -225,7 +224,6 @@
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_unpack_k_bits_bb.i"
-%include "gr_correlate_access_code_bb.i"
 %include "gr_diff_phasor_cc.i"
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"
