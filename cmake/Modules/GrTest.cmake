@@ -66,8 +66,13 @@ FUNCTION(GR_ADD_TEST test_name)
     SET(environs "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}")
 
     #http://www.cmake.org/pipermail/cmake/2009-May/029464.html
+    #Replaced this add test + set environs code with the shell script generation.
+    #Its nicer to be able to manually run the shell script to diagnose problems.
+    #ADD_TEST(${ARGV})
+    #SET_TESTS_PROPERTIES(${test_name} PROPERTIES ENVIRONMENT "${environs}")
 
     IF(UNIX)
+        SET(binpath "${CMAKE_CURRENT_BINARY_DIR}:$PATH")
         #set both LD and DYLD paths to cover multiple UNIX OS library paths
         LIST(APPEND libpath "$LD_LIBRARY_PATH" "$DYLD_LIBRARY_PATH")
         LIST(APPEND pypath "$PYTHONPATH")
@@ -75,10 +80,24 @@ FUNCTION(GR_ADD_TEST test_name)
         #replace list separator with the path separator
         STRING(REPLACE ";" ":" libpath "${libpath}")
         STRING(REPLACE ";" ":" pypath "${pypath}")
-        LIST(APPEND environs "LD_LIBRARY_PATH=${libpath}" "DYLD_LIBRARY_PATH=${libpath}" "PYTHONPATH=${pypath}")
+        LIST(APPEND environs "PATH=${binpath}" "LD_LIBRARY_PATH=${libpath}" "DYLD_LIBRARY_PATH=${libpath}" "PYTHONPATH=${pypath}")
 
-        ADD_TEST(${ARGV})
-        SET_TESTS_PROPERTIES(${test_name} PROPERTIES ENVIRONMENT "${environs}")
+        #generate a bat file that sets the environment and runs the test
+        FIND_PROGRAM(SHELL sh)
+        SET(sh_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.sh)
+        FILE(WRITE ${sh_file} "#!${SHELL}\n")
+        #each line sets an environment variable
+        FOREACH(environ ${environs})
+            FILE(APPEND ${sh_file} "export ${environ}\n")
+        ENDFOREACH(environ)
+        #load the command to run with its arguments
+        FOREACH(arg ${ARGN})
+            FILE(APPEND ${sh_file} "${arg} ")
+        ENDFOREACH(arg)
+        FILE(APPEND ${sh_file} "\n")
+
+        ADD_TEST(${test_name} ${SHELL} ${sh_file})
+
     ENDIF(UNIX)
 
     IF(WIN32)
