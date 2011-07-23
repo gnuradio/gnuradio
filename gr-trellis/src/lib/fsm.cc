@@ -132,7 +132,7 @@ fsm::fsm(int k, int n, const std::vector<int> &G)
     for(int j=0;j<n;j++) {
       int mem = -1;
       if(G[i*n+j]!=0)
-        mem=(int)(log(G[i*n+j])/log(2.0));
+        mem=(int)(log(double(G[i*n+j]))/log(2.0));
       if(mem>max_mem_x[i])
         max_mem_x[i]=mem;
       if(mem>max_mem)
@@ -417,7 +417,7 @@ void fsm::generate_TM()
       done = find_es(s);
       attempts ++;
     }
-    if (done == false and d_S > 1) {
+    if (done == false && d_S > 1) {
       //throw std::runtime_error ("fsm::generate_TM(): FSM appears to be disconnected\n");
       printf("fsm::generate_TM(): FSM appears to be disconnected\n");
       printf("state %d cannot be reached from all other states\n",s);
