@@ -67,6 +67,8 @@ ADD_LIBRARY(gnuradio-core SHARED ${gnuradio_core_sources})
 TARGET_LINK_LIBRARIES(gnuradio-core ${gnuradio_core_libs})
 SET_TARGET_PROPERTIES(gnuradio-core PROPERTIES DEFINE_SYMBOL "gnuradio_core_EXPORTS")
 SET_TARGET_PROPERTIES(gnuradio-core PROPERTIES SOVERSION ${LIBVER})
+#avoid fftw and gsl link in dependent libraries:
+SET_TARGET_PROPERTIES(gnuradio-core PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
 
 INSTALL(TARGETS gnuradio-core
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "core_runtime" # .so/.dylib file
@@ -78,7 +80,7 @@ INSTALL(TARGETS gnuradio-core
 # Setup executables
 ########################################################################
 ADD_EXECUTABLE(gnuradio-config-info gnuradio-config-info.cc)
-TARGET_LINK_LIBRARIES(gnuradio-config-info gnuradio-core)
+TARGET_LINK_LIBRARIES(gnuradio-config-info gnuradio-core ${Boost_LIBRARIES})
 INSTALL(
     TARGETS gnuradio-config-info
     DESTINATION ${GR_RUNTIME_DIR}
@@ -94,6 +96,6 @@ INCLUDE_DIRECTORIES(${CPPUNIT_INCLUDE_DIRS})
 LINK_DIRECTORIES(${CPPUNIT_LIBRARY_DIRS})
 
 ADD_LIBRARY(test-gnuradio-core SHARED ${test_gnuradio_core_sources})
-TARGET_LINK_LIBRARIES(test-gnuradio-core gnuradio-core ${CPPUNIT_LIBRARIES})
+TARGET_LINK_LIBRARIES(test-gnuradio-core gnuradio-core ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES})
 
 ENDIF(ENABLE_TESTING)

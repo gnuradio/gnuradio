@@ -98,9 +98,9 @@ IF(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
 
     INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/osx)
     LIST(APPEND gr_audio_libs
-        -framework AudioUnit
-        -framework CoreAudio
-        -framework AudioToolbox
+        "-framework AudioUnit"
+        "-framework CoreAudio"
+        "-framework AudioToolbox"
     )
     LIST(APPEND gr_audio_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/osx/audio_osx_source.cc

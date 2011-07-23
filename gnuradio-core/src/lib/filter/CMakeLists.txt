@@ -27,6 +27,11 @@ FOREACH(gr_core_filter_asm ${gr_core_filter_asms})
     SET_PROPERTY(SOURCE ${gr_core_filter_asm} PROPERTY LANGUAGE C)
 ENDFOREACH(gr_core_filter_asm)
 
+#uname -p says i386, but we know better when its x86 apple
+IF(APPLE AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "i386")
+    SET(CMAKE_SYSTEM_PROCESSOR "x86_64")
+ENDIF()
+
 ########################################################################
 # Generate the makefile.gen, then extract its sources:
 # This is a round-about way to extract the sources,
