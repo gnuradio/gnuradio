@@ -65,7 +65,7 @@ FOREACH(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gr-digital/python
         ${CMAKE_BINARY_DIR}/gr-digital/swig
     )
-    SET(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-qtgui)
+    SET(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-digital)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
 ENDFOREACH(py_qa_test_file)
 ENDIF(ENABLE_TESTING)

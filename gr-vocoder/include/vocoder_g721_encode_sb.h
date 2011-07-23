@@ -23,13 +23,14 @@
 #ifndef INCLUDED_VOCODER_G721_ENCODE_SB_H
 #define INCLUDED_VOCODER_G721_ENCODE_SB_H
 
+#include <vocoder_api.h>
 #include <gr_sync_block.h>
 
 class vocoder_g721_encode_sb;
 
 typedef boost::shared_ptr<vocoder_g721_encode_sb> vocoder_g721_encode_sb_sptr;
 
-vocoder_g721_encode_sb_sptr vocoder_make_g721_encode_sb();
+VOCODER_API vocoder_g721_encode_sb_sptr vocoder_make_g721_encode_sb();
 
 /*!
  * \brief This block performs g721 audio encoding. 
@@ -37,7 +38,7 @@ vocoder_g721_encode_sb_sptr vocoder_make_g721_encode_sb();
  * \ingroup vocoder_blk
  */
 
-class vocoder_g721_encode_sb : virtual public gr_sync_block
+class VOCODER_API vocoder_g721_encode_sb : virtual public gr_sync_block
 {
 };
 

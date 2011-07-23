@@ -44,7 +44,7 @@ IF(ENABLE_GR_VOCODER)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_TRELLIS_DESCRIPTION "The GNU Radio Vocoder Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_vocoder_DESCRIPTION "The GNU Radio Vocoder Blocks")
 
 CPACK_COMPONENT("vocoder_runtime"
     GROUP        "Vocoder"
@@ -65,6 +65,13 @@ CPACK_COMPONENT("vocoder_python"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
     DEPENDS      "core_python;vocoder_runtime"
+)
+
+CPACK_COMPONENT("vocoder_examples"
+    GROUP        "Vocoder"
+    DISPLAY_NAME "Examples"
+    DESCRIPTION  "Python examples for vocoder"
+    DEPENDS      "vocoder_python"
 )
 
 CPACK_COMPONENT("vocoder_swig"
