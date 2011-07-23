@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Copyright 2011 Free Software Foundation, Inc.
 # 
@@ -19,16 +20,20 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+from gnuradio import gr, gr_unittest
+from vocoder_swig import *
 
-ourdatadir = $(exampledir)/vocoder
+class test_g723_24_vocoder (gr_unittest.TestCase):
 
-dist_ourdata_SCRIPTS = \
-	alaw_audio_loopback.py \
-	codec2_audio_loopback.py \
-	cvsd_audio_loopback.py \
-	g721_audio_loopback.py \
-	g723_24_audio_loopback.py \
-	g723_40_audio_loopback.py \
-	gsm_audio_loopback.py \
-	ulaw_audio_loopback.py
+    def setUp (self):
+        self.tb = gr.top_block()
+        
+    def tearDown (self):
+        self.tb = None
+
+    def test001_module_load (self):
+        enc = g723_24_encode_sb();
+        dec = g723_24_decode_bs();
+
+if __name__ == '__main__':
+    gr_unittest.run(test_g723_24_vocoder, "test_g723_24_vocoder.xml")

@@ -20,31 +20,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+#ifndef INCLUDED_VOCODER_G723_24_ENCODE_SB_H
+#define INCLUDED_VOCODER_G723_24_ENCODE_SB_H
 
-%include "vocoder_alaw_decode_bs.i"
-%include "vocoder_alaw_encode_sb.i"
-%include "vocoder_codec2_decode_ps.i"
-%include "vocoder_codec2_encode_sp.i"
-%include "vocoder_cvsd_decode_bs.i"
-%include "vocoder_cvsd_encode_sb.i"
-%include "vocoder_g721_decode_bs.i"
-%include "vocoder_g721_encode_sb.i"
-%include "vocoder_g723_24_decode_bs.i"
-%include "vocoder_g723_24_encode_sb.i"
-%include "vocoder_g723_40_decode_bs.i"
-%include "vocoder_g723_40_encode_sb.i"
-%include "vocoder_gsm_fr_decode_ps.i"
-%include "vocoder_gsm_fr_encode_sp.i"
-%include "vocoder_ulaw_decode_bs.i"
-%include "vocoder_ulaw_encode_sb.i"
+#include <gr_sync_block.h>
 
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-vocoder" "scm_init_gnuradio_gsm_vocoder_module")
-%}
+class vocoder_g723_24_encode_sb;
 
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif
+typedef boost::shared_ptr<vocoder_g723_24_encode_sb> vocoder_g723_24_encode_sb_sptr;
+
+vocoder_g723_24_encode_sb_sptr vocoder_make_g723_24_encode_sb();
+
+/*!
+ * \brief This block performs g723_24 audio encoding. 
+ *
+ * \ingroup vocoder_blk
+ */
+
+class vocoder_g723_24_encode_sb : virtual public gr_sync_block
+{
+};
+
+#endif /* INCLUDED_VOCODER_G723_24_ENCODE_SB_H */

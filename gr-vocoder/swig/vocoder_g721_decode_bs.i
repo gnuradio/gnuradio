@@ -20,31 +20,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
-
-%include "vocoder_alaw_decode_bs.i"
-%include "vocoder_alaw_encode_sb.i"
-%include "vocoder_codec2_decode_ps.i"
-%include "vocoder_codec2_encode_sp.i"
-%include "vocoder_cvsd_decode_bs.i"
-%include "vocoder_cvsd_encode_sb.i"
-%include "vocoder_g721_decode_bs.i"
-%include "vocoder_g721_encode_sb.i"
-%include "vocoder_g723_24_decode_bs.i"
-%include "vocoder_g723_24_encode_sb.i"
-%include "vocoder_g723_40_decode_bs.i"
-%include "vocoder_g723_40_encode_sb.i"
-%include "vocoder_gsm_fr_decode_ps.i"
-%include "vocoder_gsm_fr_encode_sp.i"
-%include "vocoder_ulaw_decode_bs.i"
-%include "vocoder_ulaw_encode_sb.i"
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-vocoder" "scm_init_gnuradio_gsm_vocoder_module")
+%{
+#include "vocoder_g721_decode_bs.h"
 %}
 
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif
+GR_SWIG_BLOCK_MAGIC(vocoder,g721_decode_bs);
+
+vocoder_g721_decode_bs_sptr vocoder_make_g721_decode_bs();
+
+class vocoder_g721_decode_bs : public gr_sync_block
+{
+};
