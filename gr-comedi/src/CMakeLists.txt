@@ -35,7 +35,6 @@ LINK_DIRECTORIES(${COMEDI_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 LIST(APPEND gr_comedi_sources
-    ${comedii_viterbi_mux_cc}
     comedi_sink_s.cc
     comedi_source_s.cc
     gri_comedi.cc
@@ -56,6 +55,16 @@ INSTALL(TARGETS gnuradio-comedi
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "comedi_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "comedi_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "comedi_runtime" # .dll file
+)
+
+########################################################################
+# Install public header files
+########################################################################
+INSTALL(FILES
+    comedi_sink_s.h
+    comedi_source_s.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    COMPONENT "comedi_devel"
 )
 
 ########################################################################

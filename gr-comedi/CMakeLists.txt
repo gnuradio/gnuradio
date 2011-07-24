@@ -30,7 +30,7 @@ PKG_CHECK_MODULES(COMEDI comedilib)
 # Register component
 ########################################################################
 INCLUDE(GrComponent)
-GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_PAGER
+GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_COMEDI
     COMEDI_FOUND
     LINUX #comedi uses linux specific device noces
     Boost_FOUND
@@ -46,13 +46,13 @@ GR_SET_GLOBAL(GR_COMEDI_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_PAGER)
+IF(ENABLE_GR_COMEDI)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_PAGER_DESCRIPTION "The GNU Radio Comedi Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_COMEDI_DESCRIPTION "The GNU Radio Comedi Blocks")
 
 CPACK_COMPONENT("comedi_runtime"
     GROUP        "Comedi"
@@ -101,4 +101,4 @@ INSTALL(
     COMPONENT "comedi_devel"
 )
 
-ENDIF(ENABLE_GR_PAGER)
+ENDIF(ENABLE_GR_COMEDI)
