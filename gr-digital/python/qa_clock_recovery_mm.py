@@ -24,7 +24,7 @@ from gnuradio import gr, gr_unittest
 import digital_swig, psk2
 import random, cmath
 
-class test_digital(gr_unittest.TestCase):
+class test_clock_recovery_mm(gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -173,4 +173,4 @@ class test_digital(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_digital, "test_digital.xml")
+    gr_unittest.run(test_clock_recovery_mm, "test_clock_recovery_mm.xml")
