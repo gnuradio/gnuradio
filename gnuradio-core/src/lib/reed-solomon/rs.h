@@ -6,16 +6,16 @@
 
 /* General purpose RS codec, 8-bit symbols */
 GR_CORE_API void encode_rs_char(void *rs,unsigned char *data,unsigned char *parity);
-int decode_rs_char(void *rs,unsigned char *data,int *eras_pos,
+GR_CORE_API int decode_rs_char(void *rs,unsigned char *data,int *eras_pos,
 		   int no_eras);
-void *init_rs_char(unsigned int symsize,unsigned int gfpoly,
+GR_CORE_API void *init_rs_char(unsigned int symsize,unsigned int gfpoly,
 		   unsigned int fcr,unsigned int prim,unsigned int nroots);
 GR_CORE_API void free_rs_char(void *rs);
 
 /* General purpose RS codec, integer symbols */
 GR_CORE_API void encode_rs_int(void *rs,int *data,int *parity);
 GR_CORE_API int decode_rs_int(void *rs,int *data,int *eras_pos,int no_eras);
-void *init_rs_int(unsigned int symsize,unsigned int gfpoly,unsigned int fcr,
+GR_CORE_API void *init_rs_int(unsigned int symsize,unsigned int gfpoly,unsigned int fcr,
 		  unsigned int prim,unsigned int nroots);
 GR_CORE_API void free_rs_int(void *rs);
 

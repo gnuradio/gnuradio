@@ -48,7 +48,7 @@ static inline int modnn(struct rs *rs,int x){
 
 GR_CORE_API void ENCODE_RS(void *p,DTYPE *data,DTYPE *parity);
 GR_CORE_API int DECODE_RS(void *p,DTYPE *data,int *eras_pos,int no_eras);
-void *INIT_RS(unsigned int symsize,unsigned int gfpoly,unsigned int fcr,
+GR_CORE_API void *INIT_RS(unsigned int symsize,unsigned int gfpoly,unsigned int fcr,
 		   unsigned int prim,unsigned int nroots);
 GR_CORE_API void FREE_RS(void *p);
 
