@@ -85,7 +85,7 @@ comedi_source_s::comedi_source_s (int sampling_freq,
   comedi_cmd cmd;
   int ret;
 
-  ret = comedi_get_cmd_generic_timed(d_dev,d_subdevice,&cmd,(unsigned int)(1e9/sampling_freq));
+  ret = comedi_get_cmd_generic_timed(d_dev,d_subdevice,&cmd,d_n_chan,(unsigned int)(1e9/sampling_freq));
   if(ret<0)
     bail ("comedi_get_cmd_generic_timed", comedi_errno());
 
