@@ -34,6 +34,7 @@
 #include "digital_crc32.h"
 #include "digital_kurtotic_equalizer_cc.h"
 #include "digital_lms_dd_equalizer_cc.h"
+#include "digital_mpsk_receiver_cc.h"
 %}
 
 %include "digital_binary_slicer_fb.i"
@@ -48,6 +49,7 @@
 %include "digital_crc32.i"
 %include "digital_kurtotic_equalizer_cc.i"
 %include "digital_lms_dd_equalizer_cc.i"
+%include "digital_mpsk_receiver_cc.i"
 
 #if SWIGGUILE
 %scheme %{

@@ -200,9 +200,6 @@
 ;;; ./general/gr_map_bb.h
 (pass-if (true? (gr:map-bb #(1 2))))
 
-;;; ./general/gr_mpsk_receiver_cc.h
-(pass-if (true? (gr:mpsk-receiver-cc 1 1 1 1 1 1 1 1 1 1 1)))
-
 ;;; ./general/gr_nlog10_ff.h
 (pass-if (true? (gr:nlog10-ff 1 1 1)))
 

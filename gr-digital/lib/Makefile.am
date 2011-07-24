@@ -37,7 +37,8 @@ grinclude_HEADERS = 				\
 	digital_crc32.h				\
 	digital_lms_dd_equalizer_cc.h		\
 	digital_kurtotic_equalizer_cc.h 	\
-	digital_metric_type.h
+	digital_metric_type.h			\
+	digital_mpsk_receiver_cc.h
 
 lib_LTLIBRARIES = libgnuradio-digital.la
 
@@ -53,7 +54,8 @@ libgnuradio_digital_la_SOURCES = 		\
 	digital_cma_equalizer_cc.cc		\
 	digital_crc32.cc			\
 	digital_lms_dd_equalizer_cc.cc		\
-	digital_kurtotic_equalizer_cc.cc
+	digital_kurtotic_equalizer_cc.cc	\
+	digital_mpsk_receiver_cc.cc
 
 libgnuradio_digital_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)

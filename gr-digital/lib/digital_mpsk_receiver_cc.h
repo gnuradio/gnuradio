@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_MPSK_RECEIVER_CC_H
-#define	INCLUDED_GR_MPSK_RECEIVER_CC_H
+#ifndef INCLUDED_DIGITAL_MPSK_RECEIVER_CC_H
+#define	INCLUDED_DIGITAL_MPSK_RECEIVER_CC_H
 
 #include <gruel/attributes.h>
 #include <gr_block.h>
@@ -30,16 +30,16 @@
 
 class gri_mmse_fir_interpolator_cc;
 
-class gr_mpsk_receiver_cc;
-typedef boost::shared_ptr<gr_mpsk_receiver_cc> gr_mpsk_receiver_cc_sptr;
+class digital_mpsk_receiver_cc;
+typedef boost::shared_ptr<digital_mpsk_receiver_cc> digital_mpsk_receiver_cc_sptr;
 
 // public constructor
-gr_mpsk_receiver_cc_sptr 
-gr_make_mpsk_receiver_cc (unsigned int M, float theta, 
-			  float alpha, float beta,
-			  float fmin, float fmax,
-			  float mu, float gain_mu, 
-			  float omega, float gain_omega, float omega_rel);
+digital_mpsk_receiver_cc_sptr 
+digital_make_mpsk_receiver_cc (unsigned int M, float theta, 
+			       float alpha, float beta,
+			       float fmin, float fmax,
+			       float mu, float gain_mu, 
+			       float omega, float gain_omega, float omega_rel);
 
 /*!
  * \brief This block takes care of receiving M-PSK modulated signals through phase, frequency, and symbol
@@ -70,10 +70,10 @@ gr_make_mpsk_receiver_cc (unsigned int M, float theta,
  *
  */
 
-class gr_mpsk_receiver_cc : public gr_block
+class digital_mpsk_receiver_cc : public gr_block
 {
  public:
-  ~gr_mpsk_receiver_cc ();
+  ~digital_mpsk_receiver_cc ();
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
@@ -159,11 +159,11 @@ protected:
    * The constructor also chooses which phase detector and decision maker to use in the work loop based on the
    * value of M.
    */
-  gr_mpsk_receiver_cc (unsigned int M, float theta, 
-		       float alpha, float beta,
-		       float fmin, float fmax,
-		       float mu, float gain_mu, 
-		       float omega, float gain_omega, float omega_rel);
+  digital_mpsk_receiver_cc (unsigned int M, float theta, 
+			    float alpha, float beta,
+			    float fmin, float fmax,
+			    float mu, float gain_mu, 
+			    float omega, float gain_omega, float omega_rel);
 
   void make_constellation();
   void mm_sampler(const gr_complex symbol);
@@ -270,7 +270,7 @@ protected:
    *
    * \return index into d_constellation point that is the closest to the recieved sample
  */
-  unsigned int (gr_mpsk_receiver_cc::*d_decision)(gr_complex sample) const; // pointer to decision function
+  unsigned int (digital_mpsk_receiver_cc::*d_decision)(gr_complex sample) const; // pointer to decision function
 
 
   std::vector<gr_complex> d_constellation;
@@ -290,7 +290,7 @@ protected:
    * This is a function pointer that is set in the constructor to point to the proper phase error detector
    * function for the specified constellation order.
  */
-  float (gr_mpsk_receiver_cc::*d_phase_error_detector)(gr_complex sample) const;
+  float (digital_mpsk_receiver_cc::*d_phase_error_detector)(gr_complex sample) const;
 
 
   //! get interpolated value
@@ -305,12 +305,12 @@ protected:
   //! index to delay line
   unsigned int d_dl_idx;
 
-  friend gr_mpsk_receiver_cc_sptr
-  gr_make_mpsk_receiver_cc (unsigned int M, float theta,
-			    float alpha, float beta,
-			    float fmin, float fmax,
-			    float mu, float gain_mu, 
-			    float omega, float gain_omega, float omega_rel);
+  friend digital_mpsk_receiver_cc_sptr
+  digital_make_mpsk_receiver_cc (unsigned int M, float theta,
+				 float alpha, float beta,
+				 float fmin, float fmax,
+				 float mu, float gain_mu, 
+				 float omega, float gain_omega, float omega_rel);
 };
 
 #endif

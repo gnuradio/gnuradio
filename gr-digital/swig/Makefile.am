@@ -69,7 +69,8 @@ digital_swig_swiginclude_headers =		\
 	digital_cma_equalizer_cc.i		\
 	digital_crc32.i				\
 	digital_lms_dd_equalizer_cc.i		\
-	digital_kurtotic_equalizer_cc.i
+	digital_kurtotic_equalizer_cc.i		\
+	digital_mpsk_receiver_cc.i
 
 digital_swig_swig_args = \
 	-I$(abs_top_srcdir)/gr-digital/lib \

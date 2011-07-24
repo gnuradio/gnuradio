@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,21 +20,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,mpsk_receiver_cc);
+GR_SWIG_BLOCK_MAGIC(digital,mpsk_receiver_cc);
 
-gr_mpsk_receiver_cc_sptr gr_make_mpsk_receiver_cc (unsigned int M, float theta,
-						   float alpha, float beta,
-						   float fmin, float fmax,
-						   float mu, float gain_mu, 
-						   float omega, float gain_omega, float omega_rel);
-class gr_mpsk_receiver_cc : public gr_block
+digital_mpsk_receiver_cc_sptr digital_make_mpsk_receiver_cc (unsigned int M, float theta,
+							     float alpha, float beta,
+							     float fmin, float fmax,
+							     float mu, float gain_mu, 
+							     float omega, float gain_omega,
+							     float omega_rel);
+class digital_mpsk_receiver_cc : public gr_block
 {
  private:
-  gr_mpsk_receiver_cc (unsigned int M,float theta,
-				float alpha, float beta,
-				float fmin, float fmax,
-				float mu, float gain_mu, 
-				float omega, float gain_omega, float omega_rel);
+  digital_mpsk_receiver_cc (unsigned int M,float theta,
+			    float alpha, float beta,
+			    float fmin, float fmax,
+			    float mu, float gain_mu, 
+			    float omega, float gain_omega, float omega_rel);
 public:
   float mu() const { return d_mu;}
   float omega() const { return d_omega;}

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006,2007,2010 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2007,2010,2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,7 +26,7 @@
 
 #include <gr_io_signature.h>
 #include <gr_prefs.h>
-#include <gr_mpsk_receiver_cc.h>
+#include <digital_mpsk_receiver_cc.h>
 #include <stdexcept>
 #include <gr_math.h>
 #include <gr_expj.h>
@@ -39,21 +39,21 @@
 
 // Public constructor
 
-gr_mpsk_receiver_cc_sptr 
-gr_make_mpsk_receiver_cc(unsigned int M, float theta,
+digital_mpsk_receiver_cc_sptr 
+digital_make_mpsk_receiver_cc(unsigned int M, float theta,
 			 float alpha, float beta,
 			 float fmin, float fmax,
 			 float mu, float gain_mu, 
 			 float omega, float gain_omega, float omega_rel)
 {
-  return gnuradio::get_initial_sptr(new gr_mpsk_receiver_cc (M, theta, 
+  return gnuradio::get_initial_sptr(new digital_mpsk_receiver_cc (M, theta, 
 							    alpha, beta,
 							    fmin, fmax,
 							    mu, gain_mu, 
 							    omega, gain_omega, omega_rel));
 }
 
-gr_mpsk_receiver_cc::gr_mpsk_receiver_cc (unsigned int M, float theta, 
+digital_mpsk_receiver_cc::digital_mpsk_receiver_cc (unsigned int M, float theta, 
 					  float alpha, float beta,
 					  float fmin, float fmax,
 					  float mu, float gain_mu, 
@@ -90,29 +90,29 @@ gr_mpsk_receiver_cc::gr_mpsk_receiver_cc (unsigned int M, float theta,
   // Select a phase detector and a decision maker for the modulation order
   switch(d_M) {
   case 2:  // optimized algorithms for BPSK
-    d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_bpsk; //bpsk;
-    d_decision = &gr_mpsk_receiver_cc::decision_bpsk;
+    d_phase_error_detector = &digital_mpsk_receiver_cc::phase_error_detector_bpsk; //bpsk;
+    d_decision = &digital_mpsk_receiver_cc::decision_bpsk;
     break;
 
   case 4: // optimized algorithms for QPSK
-    d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_qpsk; //qpsk;
-    d_decision = &gr_mpsk_receiver_cc::decision_qpsk;
+    d_phase_error_detector = &digital_mpsk_receiver_cc::phase_error_detector_qpsk; //qpsk;
+    d_decision = &digital_mpsk_receiver_cc::decision_qpsk;
     break;
 
   default: // generic algorithms for any M (power of 2?) but not pretty
-    d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_generic;
-    d_decision = &gr_mpsk_receiver_cc::decision_generic;
+    d_phase_error_detector = &digital_mpsk_receiver_cc::phase_error_detector_generic;
+    d_decision = &digital_mpsk_receiver_cc::decision_generic;
     break;
   }
 }
 
-gr_mpsk_receiver_cc::~gr_mpsk_receiver_cc ()
+digital_mpsk_receiver_cc::~digital_mpsk_receiver_cc ()
 {
   delete d_interp;
 }
 
 void
-gr_mpsk_receiver_cc::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+digital_mpsk_receiver_cc::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i=0; i < ninputs; i++)
@@ -121,7 +121,7 @@ gr_mpsk_receiver_cc::forecast(int noutput_items, gr_vector_int &ninput_items_req
 
 // FIXME add these back in an test difference in performance
 float
-gr_mpsk_receiver_cc::phase_error_detector_qpsk(gr_complex sample) const
+digital_mpsk_receiver_cc::phase_error_detector_qpsk(gr_complex sample) const
 {
   float phase_error = 0;
   if(fabsf(sample.real()) > fabsf(sample.imag())) {
@@ -141,26 +141,26 @@ gr_mpsk_receiver_cc::phase_error_detector_qpsk(gr_complex sample) const
 }
 
 float
-gr_mpsk_receiver_cc::phase_error_detector_bpsk(gr_complex sample) const
+digital_mpsk_receiver_cc::phase_error_detector_bpsk(gr_complex sample) const
 {
   return -(sample.real()*sample.imag());
 }
 
-float gr_mpsk_receiver_cc::phase_error_detector_generic(gr_complex sample) const
+float digital_mpsk_receiver_cc::phase_error_detector_generic(gr_complex sample) const
 {
   //return gr_fast_atan2f(sample*conj(d_constellation[d_current_const_point]));
   return -arg(sample*conj(d_constellation[d_current_const_point]));
 }
 
 unsigned int
-gr_mpsk_receiver_cc::decision_bpsk(gr_complex sample) const
+digital_mpsk_receiver_cc::decision_bpsk(gr_complex sample) const
 {
   return (gr_branchless_binary_slicer(sample.real()) ^ 1);
   //return gr_binary_slicer(sample.real()) ^ 1;
 }
 
 unsigned int
-gr_mpsk_receiver_cc::decision_qpsk(gr_complex sample) const
+digital_mpsk_receiver_cc::decision_qpsk(gr_complex sample) const
 {
   unsigned int index;
 
@@ -170,7 +170,7 @@ gr_mpsk_receiver_cc::decision_qpsk(gr_complex sample) const
 }
 
 unsigned int
-gr_mpsk_receiver_cc::decision_generic(gr_complex sample) const
+digital_mpsk_receiver_cc::decision_generic(gr_complex sample) const
 {
   unsigned int min_m = 0;
   float min_s = 65535;
@@ -191,7 +191,7 @@ gr_mpsk_receiver_cc::decision_generic(gr_complex sample) const
 
 
 void
-gr_mpsk_receiver_cc::make_constellation()
+digital_mpsk_receiver_cc::make_constellation()
 {
   for(unsigned int m=0; m < d_M; m++) {
     d_constellation.push_back(gr_expj((M_TWOPI/d_M)*m));
@@ -199,7 +199,7 @@ gr_mpsk_receiver_cc::make_constellation()
 }
 
 void
-gr_mpsk_receiver_cc::mm_sampler(const gr_complex symbol)
+digital_mpsk_receiver_cc::mm_sampler(const gr_complex symbol)
 {
   gr_complex sample, nco;
 
@@ -222,7 +222,7 @@ gr_mpsk_receiver_cc::mm_sampler(const gr_complex symbol)
 }
 
 void
-gr_mpsk_receiver_cc::mm_error_tracking(gr_complex sample)
+digital_mpsk_receiver_cc::mm_error_tracking(gr_complex sample)
 {
   gr_complex u, x, y;
   float mm_error = 0;
@@ -259,7 +259,7 @@ gr_mpsk_receiver_cc::mm_error_tracking(gr_complex sample)
 
 
 void
-gr_mpsk_receiver_cc::phase_error_tracking(gr_complex sample)
+digital_mpsk_receiver_cc::phase_error_tracking(gr_complex sample)
 {
   float phase_error = 0;
 
@@ -286,10 +286,10 @@ gr_mpsk_receiver_cc::phase_error_tracking(gr_complex sample)
 }
 
 int
-gr_mpsk_receiver_cc::general_work (int noutput_items,
-				   gr_vector_int &ninput_items,
-				   gr_vector_const_void_star &input_items,
-				   gr_vector_void_star &output_items)
+digital_mpsk_receiver_cc::general_work (int noutput_items,
+					gr_vector_int &ninput_items,
+					gr_vector_const_void_star &input_items,
+					gr_vector_void_star &output_items)
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];

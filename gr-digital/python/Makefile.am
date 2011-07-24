@@ -41,7 +41,8 @@ noinst_PYTHON = \
 	qa_correlate_access_code.py	\
 	qa_costas_loop_cc.py		\
 	qa_crc32.py			\
-	qa_lms_equalizer.py
+	qa_lms_equalizer.py		\
+	qa_mpsk_receiver.py
 
 digital_PYTHON = \
 	__init__.py	\
