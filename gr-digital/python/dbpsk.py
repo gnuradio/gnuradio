@@ -366,5 +366,5 @@ class dbpsk_demod(gr.hier_block2):
 #
 # Add these to the mod/demod registry
 #
-modulation_utils2.add_type_1_mod('dbpsk3', dbpsk_mod)
-modulation_utils2.add_type_1_demod('dbpsk3', dbpsk_demod)
+modulation_utils2.add_type_1_mod('dbpsk', dbpsk_mod)
+modulation_utils2.add_type_1_demod('dbpsk', dbpsk_demod)

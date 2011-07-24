@@ -22,7 +22,7 @@
 import struct
 import numpy
 from gnuradio import gru
-
+import crc
 
 def conv_packed_binary_string_to_1_0_string(s):
     """
@@ -127,7 +127,7 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     (packed_access_code, padded) = conv_1_0_string_to_packed_binary_string(access_code)
     (packed_preamble, ignore) = conv_1_0_string_to_packed_binary_string(preamble)
     
-    payload_with_crc = gru.gen_and_append_crc32(payload)
+    payload_with_crc = crc.gen_and_append_crc32(payload)
     #print "outbound crc =", string_to_hex_list(payload_with_crc[-4:])
 
     L = len(payload_with_crc)

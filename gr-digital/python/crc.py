@@ -19,11 +19,12 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
+from gnuradio import gru
+import digital_swig
 import struct
 
 def gen_and_append_crc32(s):
-    crc = gr.crc32(s)
+    crc = digital_swig.crc32(s)
     return s + struct.pack(">I", gru.hexint(crc) & 0xFFFFFFFF)
 
 def check_crc32(s):
@@ -31,7 +32,7 @@ def check_crc32(s):
         return (False, '')
     msg = s[:-4]
     #print "msg = '%s'" % (msg,)
-    actual = gr.crc32(msg)
+    actual = digital_swig.crc32(msg)
     (expected,) = struct.unpack(">I", s[-4:])
     # print "actual =", hex(actual), "expected =", hex(expected)
     return (actual == expected, msg)

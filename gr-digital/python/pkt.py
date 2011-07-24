@@ -20,8 +20,9 @@
 # 
 
 from math import pi
-from gnuradio import gr, packet_utils
+from gnuradio import gr
 import gnuradio.gr.gr_threading as _threading
+import packet_utils
 
 
 # /////////////////////////////////////////////////////////////////////////////
