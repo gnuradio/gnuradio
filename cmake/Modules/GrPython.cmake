@@ -17,8 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(NOT DEFINED INCLUDED_GR_PYTHON_CMAKE)
-SET(INCLUDED_GR_PYTHON_CMAKE TRUE)
+IF(DEFINED __INCLUDED_GR_PYTHON_CMAKE)
+    RETURN()
+ENDIF()
+SET(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
 ########################################################################
 # Setup the python interpreter:
@@ -165,5 +167,3 @@ FUNCTION(GR_PYTHON_INSTALL)
     GR_UNIQUE_TARGET("pygen" ${python_install_gen_targets})
 
 ENDFUNCTION(GR_PYTHON_INSTALL)
-
-ENDIF(NOT DEFINED INCLUDED_GR_PYTHON_CMAKE)

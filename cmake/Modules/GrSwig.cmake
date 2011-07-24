@@ -17,8 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(NOT DEFINED INCLUDED_GR_SWIG_CMAKE)
-SET(INCLUDED_GR_SWIG_CMAKE TRUE)
+IF(DEFINED __INCLUDED_GR_SWIG_CMAKE)
+    RETURN()
+ENDIF()
+SET(__INCLUDED_GR_SWIG_CMAKE TRUE)
 
 ########################################################################
 # Build a swig target for the common gnuradio use case. Usage:
@@ -86,5 +88,3 @@ MACRO(GR_SWIG_INSTALL)
     ENDFOREACH(name)
 
 ENDMACRO(GR_SWIG_INSTALL)
-
-ENDIF(NOT DEFINED INCLUDED_GR_SWIG_CMAKE)

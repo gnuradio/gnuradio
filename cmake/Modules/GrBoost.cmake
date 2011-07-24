@@ -17,8 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(NOT DEFINED INCLUDED_GR_BOOST_CMAKE)
-SET(INCLUDED_GR_BOOST_CMAKE TRUE)
+IF(DEFINED __INCLUDED_GR_BOOST_CMAKE)
+    RETURN()
+ENDIF()
+SET(__INCLUDED_GR_BOOST_CMAKE TRUE)
 
 ########################################################################
 # Setup Boost and handle some system specific things
@@ -50,5 +52,3 @@ ENDIF(MSVC)
 
 SET(Boost_ADDITIONAL_VERSIONS "1.42.0" "1.42" "1.43.0" "1.43" "1.44.0" "1.44" "1.45.0" "1.45" "1.46.0" "1.46" "1.47.0" "1.47")
 FIND_PACKAGE(Boost "1.35" COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
-
-ENDIF(NOT DEFINED INCLUDED_GR_BOOST_CMAKE)

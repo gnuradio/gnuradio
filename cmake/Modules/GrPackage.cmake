@@ -17,8 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(NOT DEFINED INCLUDED_GR_PACKAGE_CMAKE)
-SET(INCLUDED_GR_PACKAGE_CMAKE TRUE)
+IF(DEFINED __INCLUDED_GR_PACKAGE_CMAKE)
+    RETURN()
+ENDIF()
+SET(__INCLUDED_GR_PACKAGE_CMAKE TRUE)
 
 INCLUDE(GrVersion) #sets version information
 INCLUDE(GrPlatform) #sets platform information
@@ -128,5 +130,3 @@ SET(CPACK_RPM_PACKAGE_REQUIRES "boost-devel") #TODO other packages
 SET(CPACK_NSIS_MODIFY_PATH ON)
 
 SET(HLKM_ENV "\\\"SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Environment\\\"")
-
-ENDIF(NOT DEFINED INCLUDED_GR_PACKAGE_CMAKE)

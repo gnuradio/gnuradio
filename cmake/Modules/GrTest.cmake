@@ -17,8 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(NOT DEFINED INCLUDED_GR_TEST_CMAKE)
-SET(INCLUDED_GR_TEST_CMAKE TRUE)
+IF(DEFINED __INCLUDED_GR_TEST_CMAKE)
+    RETURN()
+ENDIF()
+SET(__INCLUDED_GR_TEST_CMAKE TRUE)
 
 ########################################################################
 # Add a unit test and setup the environment for a unit test.
@@ -126,5 +128,3 @@ FUNCTION(GR_ADD_TEST test_name)
     ENDIF(WIN32)
 
 ENDFUNCTION(GR_ADD_TEST)
-
-ENDIF(NOT DEFINED INCLUDED_GR_TEST_CMAKE)

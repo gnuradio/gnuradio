@@ -17,8 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(NOT DEFINED INCLUDED_GR_VERSION_CMAKE)
-SET(INCLUDED_GR_VERSION_CMAKE TRUE)
+IF(DEFINED __INCLUDED_GR_VERSION_CMAKE)
+    RETURN()
+ENDIF()
+SET(__INCLUDED_GR_VERSION_CMAKE TRUE)
 
 ########################################################################
 # Setup version variables.
@@ -56,5 +58,3 @@ IF(NOT LIBVER)
 ENDIF()
 
 MESSAGE(STATUS "VERSION: ${VERSION}, LIBVER: ${LIBVER}")
-
-ENDIF(NOT DEFINED INCLUDED_GR_VERSION_CMAKE)

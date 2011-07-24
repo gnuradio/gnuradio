@@ -17,8 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(NOT DEFINED INCLUDED_GR_MISC_UTILS_CMAKE)
-SET(INCLUDED_GR_MISC_UTILS_CMAKE TRUE)
+IF(DEFINED __INCLUDED_GR_MISC_UTILS_CMAKE)
+    RETURN()
+ENDIF()
+SET(__INCLUDED_GR_MISC_UTILS_CMAKE TRUE)
 
 ########################################################################
 # Set global variable macro.
@@ -96,5 +98,3 @@ print re.sub('\\W', '_', '${desc} ${reldir} ' + unique)"
     OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
     ADD_CUSTOM_TARGET(${_target} ALL DEPENDS ${ARGN})
 ENDFUNCTION(GR_UNIQUE_TARGET)
-
-ENDIF(NOT DEFINED INCLUDED_GR_MISC_UTILS_CMAKE)

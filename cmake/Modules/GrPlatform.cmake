@@ -17,8 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(NOT DEFINED INCLUDED_GR_PLATFORM_CMAKE)
-SET(INCLUDED_GR_PLATFORM_CMAKE TRUE)
+IF(DEFINED __INCLUDED_GR_PLATFORM_CMAKE)
+    RETURN()
+ENDIF()
+SET(__INCLUDED_GR_PLATFORM_CMAKE TRUE)
 
 ########################################################################
 # Setup additional defines for OS types
@@ -42,5 +44,3 @@ IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
     SET(LIB_SUFFIX 64)
 ENDIF()
 SET(LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
-
-ENDIF(NOT DEFINED INCLUDED_GR_PLATFORM_CMAKE)
