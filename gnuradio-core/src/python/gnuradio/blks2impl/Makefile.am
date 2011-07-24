@@ -34,7 +34,6 @@ grblkspython_PYTHON =		\
 	fm_demod.py		\
 	fm_emph.py		\
 	generic_usrp.py	\
-	cpm.py			\
 	logpwrfft.py		\
 	nbfm_rx.py		\
 	nbfm_tx.py		\
@@ -48,13 +47,8 @@ grblkspython_PYTHON =		\
 	pfb_channelizer.py	\
 	pfb_decimator.py	\
 	pfb_interpolator.py	\
-	pkt.py			\
 	psk.py			\
 	qam.py			\
-	qam8.py			\
-	qam16.py		\
-	qam64.py		\
-	qam256.py		\
 	rational_resampler.py	\
 	standard_squelch.py	\
 	stream_to_vector_decimator.py \

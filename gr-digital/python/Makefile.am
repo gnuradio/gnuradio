@@ -45,16 +45,21 @@ noinst_PYTHON = \
 	qa_mpsk_receiver.py
 
 digital_PYTHON = \
-	__init__.py	\
-	crc.py		\
-	bpsk.py		\
-	dbpsk.py	\
-	dqpsk.py	\
-	d8psk.py	\
+	__init__.py		\
+	bpsk.py			\
+	cpm.py			\
+	crc.py			\
+	d8psk.py		\
+	dbpsk.py		\
+	dqpsk.py		\
 	generic_mod_demod.py	\
-	gmsk.py		\
-	psk.py		\
-	psk2.py		\
-	qam.py		\
+	gmsk.py			\
+	modulation_utils.py	\
+	modulation_utils2.py	\
+	packet_utils.py		\
+	pkt.py			\
+	psk.py			\
+	psk2.py			\
+	qam.py			\
 	qpsk.py
 endif

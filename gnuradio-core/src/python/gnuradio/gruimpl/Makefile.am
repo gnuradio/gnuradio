@@ -25,7 +25,6 @@ grupythondir = $(grpythondir)/gruimpl
 
 grupython_PYTHON = 			\
 	__init__.py			\
-	crc.py				\
 	freqz.py			\
 	gnuplot_freqz.py		\
 	hexint.py			\
