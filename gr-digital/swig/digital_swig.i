@@ -23,6 +23,8 @@
 
 %{
 #include "digital_binary_slicer_fb.h"
+#include "digital_clock_recovery_mm_cc.h"
+#include "digital_clock_recovery_mm_ff.h"
 #include "digital_cma_equalizer_cc.h"
 #include "digital_constellation.h"
 #include "digital_constellation_decoder_cb.h"
@@ -34,6 +36,8 @@
 %}
 
 %include "digital_binary_slicer_fb.i"
+%include "digital_clock_recovery_mm_cc.i"
+%include "digital_clock_recovery_mm_ff.i"
 %include "digital_cma_equalizer_cc.i"
 %include "digital_constellation.i"
 %include "digital_constellation_decoder_cb.i"
