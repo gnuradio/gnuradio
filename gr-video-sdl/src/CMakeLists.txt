@@ -108,7 +108,6 @@ FOREACH(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
         ${CMAKE_BINARY_DIR}/gr-video-sdl/src
-        ${CMAKE_BINARY_DIR}/gr-video-sdl/src/${CMAKE_BUILD_TYPE} #for WIN32 because it only auto-adds the outdir for swig dirs, not src dirs
     )
     SET(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-video-sdl)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})

@@ -50,10 +50,10 @@ FUNCTION(GR_ADD_TEST test_name)
 
         #SWIG generates the python library files into a subdirectory.
         #Therefore, we must append this subdirectory into PYTHONPATH.
-        #Only do this for the python directories ending with "swig".
+        #Only do this for the python directories matching the following:
         FOREACH(pydir ${GR_TEST_PYTHON_DIRS})
             GET_FILENAME_COMPONENT(name ${pydir} NAME)
-            IF(name MATCHES "^(swig|lib)$")
+            IF(name MATCHES "^(swig|lib|src)$")
                 LIST(APPEND GR_TEST_PYTHON_DIRS ${pydir}/${CMAKE_BUILD_TYPE})
             ENDIF()
         ENDFOREACH(pydir)
