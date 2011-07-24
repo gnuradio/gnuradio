@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%rename(update_crc32) gr_update_crc32;
-%rename(crc32) gr_crc32;
+%rename(update_crc32) digital_update_crc32;
+%rename(crc32) digital_crc32;
 
-unsigned int gr_update_crc32(unsigned int crc, const std::string buf);
-unsigned int gr_crc32(const std::string buf);
+unsigned int digital_update_crc32(unsigned int crc, const std::string buf);
+unsigned int digital_crc32(const std::string buf);

@@ -31,6 +31,7 @@
 #include "digital_constellation_receiver_cb.h"
 #include "digital_correlate_access_code_bb.h"
 #include "digital_costas_loop_cc.h"
+#include "digital_crc32.h"
 #include "digital_kurtotic_equalizer_cc.h"
 #include "digital_lms_dd_equalizer_cc.h"
 %}
@@ -44,6 +45,7 @@
 %include "digital_constellation_receiver_cb.i"
 %include "digital_correlate_access_code_bb.i"
 %include "digital_costas_loop_cc.i"
+%include "digital_crc32.i"
 %include "digital_kurtotic_equalizer_cc.i"
 %include "digital_lms_dd_equalizer_cc.i"
 

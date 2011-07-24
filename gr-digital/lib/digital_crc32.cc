@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,13 +27,13 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gr_crc32.h>
+#include <digital_crc32.h>
 
    
 // Automatically generated CRC function
 // polynomial: 0x104C11DB7
 unsigned int
-gr_update_crc32(unsigned int crc, const unsigned char *data, size_t len)
+digital_update_crc32(unsigned int crc, const unsigned char *data, size_t len)
 {
     static const unsigned int table[256] = {
     0x00000000U,0x04C11DB7U,0x09823B6EU,0x0D4326D9U,
@@ -112,19 +112,19 @@ gr_update_crc32(unsigned int crc, const unsigned char *data, size_t len)
 }
 
 unsigned int
-gr_update_crc32(unsigned int crc, const std::string s)
+digital_update_crc32(unsigned int crc, const std::string s)
 {
-  return gr_update_crc32(crc, (const unsigned char *) s.data(), s.size());
+  return digital_update_crc32(crc, (const unsigned char *) s.data(), s.size());
 }
     
 unsigned int
-gr_crc32(const unsigned char *buf, size_t len)
+digital_crc32(const unsigned char *buf, size_t len)
 {
-  return gr_update_crc32(0xffffffff, buf, len) ^ 0xffffffff;
+  return digital_update_crc32(0xffffffff, buf, len) ^ 0xffffffff;
 }
 
 unsigned int
-gr_crc32(const std::string s)
+digital_crc32(const std::string s)
 {
-  return gr_crc32((const unsigned char *) s.data(), s.size());
+  return digital_crc32((const unsigned char *) s.data(), s.size());
 }

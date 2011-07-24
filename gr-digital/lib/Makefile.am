@@ -34,6 +34,7 @@ grinclude_HEADERS = 				\
 	digital_correlate_access_code_bb.h	\
 	digital_costas_loop_cc.h		\
 	digital_cma_equalizer_cc.h		\
+	digital_crc32.h				\
 	digital_lms_dd_equalizer_cc.h		\
 	digital_kurtotic_equalizer_cc.h 	\
 	digital_metric_type.h
@@ -50,6 +51,7 @@ libgnuradio_digital_la_SOURCES = 		\
 	digital_correlate_access_code_bb.cc	\
 	digital_costas_loop_cc.cc		\
 	digital_cma_equalizer_cc.cc		\
+	digital_crc32.cc			\
 	digital_lms_dd_equalizer_cc.cc		\
 	digital_kurtotic_equalizer_cc.cc
 

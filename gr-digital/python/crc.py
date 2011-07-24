@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2007 Free Software Foundation, Inc.
+# Copyright 2005,2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,13 +19,12 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr
-from hexint import *
+from gnuradio import gr, gru
 import struct
 
 def gen_and_append_crc32(s):
     crc = gr.crc32(s)
-    return s + struct.pack(">I", hexint(crc) & 0xFFFFFFFF)
+    return s + struct.pack(">I", gru.hexint(crc) & 0xFFFFFFFF)
 
 def check_crc32(s):
     if len(s) < 4:

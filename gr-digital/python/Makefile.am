@@ -40,18 +40,20 @@ noinst_PYTHON = \
 	qa_constellation_decoder_cb.py	\
 	qa_correlate_access_code.py	\
 	qa_costas_loop_cc.py		\
+	qa_crc32.py			\
 	qa_lms_equalizer.py
 
 digital_PYTHON = \
 	__init__.py	\
-	psk.py		\
+	crc.py		\
+	bpsk.py		\
 	dbpsk.py	\
 	dqpsk.py	\
 	d8psk.py	\
-	psk2.py		\
 	generic_mod_demod.py	\
+	gmsk.py		\
+	psk.py		\
+	psk2.py		\
 	qam.py		\
-	bpsk.py		\
-	qpsk.py		\
-	gmsk.py
+	qpsk.py
 endif

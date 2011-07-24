@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_CRC32_H
-#define INCLUDED_GR_CRC32_H
+#ifndef INCLUDED_DIGITAL_CRC32_H
+#define INCLUDED_DIGITAL_CRC32_H
 
 #include <string>
 #include <gr_types.h>
@@ -36,15 +36,15 @@
  * transmitted in big endian order.
  */
 unsigned int 
-gr_update_crc32(unsigned int crc, const unsigned char *buf, size_t len);
+digital_update_crc32(unsigned int crc, const unsigned char *buf, size_t len);
 
 unsigned int 
-gr_update_crc32(unsigned int crc, const std::string buf);
+digital_update_crc32(unsigned int crc, const std::string buf);
 
 unsigned int 
-gr_crc32(const unsigned char *buf, size_t len);
+digital_crc32(const unsigned char *buf, size_t len);
 
 unsigned int 
-gr_crc32(const std::string buf);
+digital_crc32(const std::string buf);
 
 #endif /* INCLUDED_CRC32_H */
