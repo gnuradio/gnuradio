@@ -21,7 +21,10 @@
 
 include $(top_srcdir)/Makefile.common
 
-noinst_PYTHON = \
+ourdatadir = $(exampledir)/digital
+
+dist_ourdata_SCRIPTS = \
 	transmit_path.py	\
 	receive_path.py
+
 
