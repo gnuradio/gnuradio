@@ -89,6 +89,7 @@ ADD_SUBDIRECTORY(include)
 IF(ENABLE_PYTHON)
     ADD_SUBDIRECTORY(swig)
     ADD_SUBDIRECTORY(python)
+    ADD_SUBDIRECTORY(examples)
 ENDIF(ENABLE_PYTHON)
 
 ########################################################################
