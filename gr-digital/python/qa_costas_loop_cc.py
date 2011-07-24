@@ -24,7 +24,7 @@ from gnuradio import gr, gr_unittest
 import digital_swig, psk2
 import random, cmath
 
-class test_digital(gr_unittest.TestCase):
+class test_costas_loop_cc(gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -34,8 +34,8 @@ class test_digital(gr_unittest.TestCase):
 
     def test01 (self):
         # test basic functionality by setting all gains to 0
-        damp = 0.4
-        natfreq = 0.25
+        damp = 0.0
+        natfreq = 0.0
         order = 2
         self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
 
@@ -153,4 +153,4 @@ class test_digital(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 2)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_digital, "test_digital.xml")
+    gr_unittest.run(test_costas_loop_cc, "test_costas_loop_cc.xml")
