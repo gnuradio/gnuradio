@@ -23,6 +23,7 @@
 #ifndef INCLUDED_VIDEO_SDL_SINK_S_H
 #define INCLUDED_VIDEO_SDL_SINK_S_H
 
+#include <video_sdl_api.h>
 #include <gr_sync_block.h>
 #include <string>
 #include <SDL.h>
@@ -34,7 +35,7 @@
 class video_sdl_sink_s;
 typedef boost::shared_ptr<video_sdl_sink_s> video_sdl_sink_s_sptr;
 
-video_sdl_sink_s_sptr
+VIDEO_SDL_API video_sdl_sink_s_sptr
 video_sdl_make_sink_s (double framerate,int width=640, int height=480,unsigned int format=IMGFMT_YV12,int dst_width=-1,int dst_height=-1);
 
 /*!
@@ -47,8 +48,8 @@ video_sdl_make_sink_s (double framerate,int width=640, int height=480,unsigned i
  * Input samples must be in the range [0,255].
  */
 
-class video_sdl_sink_s : public gr_sync_block {
-  friend video_sdl_sink_s_sptr
+class VIDEO_SDL_API video_sdl_sink_s : public gr_sync_block {
+  friend VIDEO_SDL_API video_sdl_sink_s_sptr
   video_sdl_make_sink_s (double framerate,int width, int height,unsigned int format,int dst_width,int dst_height);
 
   int		d_chunk_size;

@@ -33,6 +33,7 @@ noinst_PYTHON =				\
 	qa_video_sdl.py
 
 grinclude_HEADERS =			\
+	video_sdl_api.h			\
 	video_sdl_sink_uc.h		\
 	video_sdl_sink_s.h
 
