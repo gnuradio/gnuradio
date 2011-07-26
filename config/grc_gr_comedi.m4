@@ -29,7 +29,7 @@ AC_DEFUN([GRC_GR_COMEDI],[
     dnl   no   : otherwise
     if test $passed = yes; then
         dnl Don't do gr-comedi if the 'comedi' library is unavailable.
-        PKG_CHECK_MODULES(COMEDI, comedilib < 0.8,[],
+        PKG_CHECK_MODULES(COMEDI, comedilib >= 0.8,[],
             [passed=no;AC_MSG_RESULT([gr-comedi requires comedilib, not found.])])
     fi
 
