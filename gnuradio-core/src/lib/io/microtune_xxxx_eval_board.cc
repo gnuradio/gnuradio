@@ -20,6 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "microtune_xxxx_eval_board.h"
 #include "microtune_eval_board_defs.h"
 #include "microtune_xxxx.h"
