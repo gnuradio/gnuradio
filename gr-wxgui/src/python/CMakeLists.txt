@@ -54,7 +54,7 @@ GR_PYTHON_INSTALL(
     waterfall_window.py
     slider.py
     stdgui2.py
-    DESTINATION ${GR_PYTHON_DIR}/wxgui
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/wxgui
     COMPONENT "wxgui"
 )
 
@@ -66,7 +66,7 @@ GR_PYTHON_INSTALL(
     forms/__init__.py
     forms/forms.py
     forms/converters.py
-    DESTINATION ${GR_PYTHON_DIR}/wxgui/forms
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/wxgui/forms
     COMPONENT "wxgui"
 )
 
@@ -83,6 +83,6 @@ GR_PYTHON_INSTALL(
     plotter/grid_plotter_base.py
     plotter/plotter_base.py
     plotter/waterfall_plotter.py
-    DESTINATION ${GR_PYTHON_DIR}/wxgui/plotter
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/wxgui/plotter
     COMPONENT "wxgui"
 )
