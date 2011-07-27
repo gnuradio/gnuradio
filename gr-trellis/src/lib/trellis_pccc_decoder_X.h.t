@@ -51,9 +51,9 @@ TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
 class TRELLIS_API @NAME@ : public gr_block
 {
   fsm d_FSM1;
-  fsm d_FSM2;
   int d_ST10;
   int d_ST1K;
+  fsm d_FSM2;
   int d_ST20;
   int d_ST2K;
   interleaver d_INTERLEAVER;
