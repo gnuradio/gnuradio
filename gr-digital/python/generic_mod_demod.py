@@ -26,8 +26,7 @@ Generic modulation and demodulation.
 """
 
 from gnuradio import gr
-from gnuradio.modulation_utils2 import extract_kwargs_from_options_for_class
-#from gnuradio.digital.utils import mod_codes
+from modulation_utils2 import extract_kwargs_from_options_for_class
 from utils import mod_codes
 import digital_swig
 
@@ -106,12 +105,10 @@ class generic_mod(gr.hier_block2):
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._differential = differential
- 
-        if not isinstance(self._samples_per_symbol, int) or self._samples_per_symbol < 2:
-            raise TypeError, ("sbp must be an integer >= 2, is %d" % self._samples_per_symbol)
-        
-	ntaps = 11 * self._samples_per_symbol
 
+        if self._samples_per_symbol < 2:
+            raise TypeError, ("sbp must be >= 2, is %d" % self._samples_per_symbol)
+        
         arity = pow(2,self.bits_per_symbol())
         
         # turn bytes into k-bit vectors
@@ -127,14 +124,15 @@ class generic_mod(gr.hier_block2):
         self.chunks2symbols = gr.chunks_to_symbols_bc(self._constellation.points())
 
         # pulse shaping filter
-	self.rrc_taps = gr.firdes.root_raised_cosine(
-	    self._samples_per_symbol,   # gain (samples_per_symbol since we're
-                                        # interpolating by samples_per_symbol)
-	    self._samples_per_symbol,   # sampling rate
-	    1.0,		        # symbol rate
-	    self._excess_bw,            # excess bandwidth (roll-off factor)
+        nfilts = 32
+        ntaps = nfilts * 11 * int(self._samples_per_symbol)    # make nfilts filters of ntaps each
+        self.rrc_taps = gr.firdes.root_raised_cosine(
+            nfilts,          # gain
+            nfilts,          # sampling rate based on 32 filters in resampler
+            1.0,             # symbol rate
+            self._excess_bw, # excess bandwidth (roll-off factor)
             ntaps)
-	self.rrc_filter = gr.interp_fir_filter_ccf(self._samples_per_symbol,
+        self.rrc_filter = gr.pfb_arb_resampler_ccf(self._samples_per_symbol,
                                                    self.rrc_taps)
 
 	# Connect
@@ -255,8 +253,8 @@ class generic_demod(gr.hier_block2):
         self._timing_max_dev=timing_max_dev
         self._differential = differential
 
-        if not isinstance(self._samples_per_symbol, int) or self._samples_per_symbol < 2:
-            raise TypeError, ("sbp must be an integer >= 2, is %d" % self._samples_per_symbol)
+        if self._samples_per_symbol < 2:
+            raise TypeError, ("sbp must be >= 2, is %d" % self._samples_per_symbol)
 
         arity = pow(2,self.bits_per_symbol())
 
@@ -279,7 +277,6 @@ class generic_demod(gr.hier_block2):
                                                 taps, nfilts, nfilts/2, self._timing_max_dev)
         self.time_recov.set_beta(self._timing_beta)
 
-        #self._phase_beta  = 0.25 * self._phase_alpha * self._phase_alpha
         self._phase_beta  = 0.25 * self._phase_alpha * self._phase_alpha
         fmin = -0.25
         fmax = 0.25

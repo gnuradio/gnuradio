@@ -44,8 +44,11 @@ class my_top_block(gr.top_block):
 
         self.txpath = transmit_path(modulator, options)
 
-        self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
-        
+        if(options.to_file is not None):
+            self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+        else:
+            self.sink = gr.null_sink(gr.sizeof_gr_complex)
+
         self.connect(self.txpath, self.sink)
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -66,7 +69,7 @@ def main():
     expert_grp = parser.add_option_group("Expert")
 
     parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
-                      default='dbpsk',
+                      default='psk',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(mods.keys()),))
 
@@ -77,9 +80,9 @@ def main():
     parser.add_option("","--discontinuous", action="store_true", default=False,
                       help="enable discontinous transmission (bursts of 5 packets)")
     parser.add_option("","--from-file", default=None,
-                      help="use file for packet contents")
+                      help="use intput file for packet contents")
     parser.add_option("","--to-file", default=None,
-                      help="use file sink")
+                      help="Output file for modulated samples")
 
     transmit_path.add_options(parser, expert_grp)
 

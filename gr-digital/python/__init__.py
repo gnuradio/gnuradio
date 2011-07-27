@@ -22,10 +22,9 @@
 # The presence of this file turns this directory into a Python package
 
 from digital_swig import *
-from dbpsk import *
-from dqpsk import *
-from d8psk import *
 from psk2 import *
+from bpsk import *
+from qpsk import *
 from qam import *
 from pkt import *
 from packet_utils import *

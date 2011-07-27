@@ -49,9 +49,6 @@ digital_PYTHON = \
 	bpsk.py			\
 	cpm.py			\
 	crc.py			\
-	d8psk.py		\
-	dbpsk.py		\
-	dqpsk.py		\
 	generic_mod_demod.py	\
 	gmsk.py			\
 	modulation_utils.py	\

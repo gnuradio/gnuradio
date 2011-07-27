@@ -20,8 +20,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, blks2
+from gnuradio import gr, gru
 from gnuradio import eng_notation
+from gnuradio import digital
+
 import copy
 import sys
 
@@ -59,10 +61,10 @@ class receive_path(gr.hier_block2):
         
         # receiver
         self.packet_receiver = \
-            blks2.demod_pkts(self._demod_class(**demod_kwargs),
-                             access_code=None,
-                             callback=self._rx_callback,
-                             threshold=-1)
+            digital.demod_pkts(self._demod_class(**demod_kwargs),
+                               access_code=None,
+                               callback=self._rx_callback,
+                               threshold=-1)
 
         # Carrier Sensing Blocks
         alpha = 0.001
