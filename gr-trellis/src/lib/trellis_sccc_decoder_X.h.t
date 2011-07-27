@@ -50,9 +50,9 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 class @NAME@ : public gr_block
 {
   fsm d_FSMo;
-  fsm d_FSMi;
   int d_STo0;
   int d_SToK;
+  fsm d_FSMi;
   int d_STi0;
   int d_STiK;
   interleaver d_INTERLEAVER;
