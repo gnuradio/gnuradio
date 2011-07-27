@@ -160,25 +160,25 @@ gri_wavheader_parse(FILE *fp,
     return false;
   }
   
-  fread(&file_size, 1, 4, fp);
+  fresult = fread(&file_size, 1, 4, fp);
   
   fresult = fread(str_buf, 1, 8, fp);
   if (fresult != 8 || strncmp(str_buf, "WAVEfmt ", 8) || feof(fp)) {
     return false;
   }
   
-  fread(&fmt_hdr_skip, 1, 4, fp);
+  fresult = fread(&fmt_hdr_skip, 1, 4, fp);
   
-  fread(&compression_type, 1, 2, fp);
+  fresult = fread(&compression_type, 1, 2, fp);
   if (wav_to_host(compression_type) != VALID_COMPRESSION_TYPE) {
     return false;
   }
   
-  fread(&nchans,            1, 2, fp);
-  fread(&sample_rate,       1, 4, fp);
-  fread(&avg_bytes_per_sec, 1, 4, fp);
-  fread(&block_align,       1, 2, fp);
-  fread(&bits_per_sample,   1, 2, fp);
+  fresult = fread(&nchans,            1, 2, fp);
+  fresult = fread(&sample_rate,       1, 4, fp);
+  fresult = fread(&avg_bytes_per_sec, 1, 4, fp);
+  fresult = fread(&block_align,       1, 2, fp);
+  fresult = fread(&bits_per_sample,   1, 2, fp);
   
   if (ferror(fp)) {
     return false;
@@ -204,7 +204,7 @@ gri_wavheader_parse(FILE *fp,
     return false;
   }
 
-  fread(&chunk_size, 1, 4, fp);
+  fresult = fread(&chunk_size, 1, 4, fp);
   if (ferror(fp)) {
     return false;
   }
@@ -226,7 +226,9 @@ short int
 gri_wav_read_sample(FILE *fp, int bytes_per_sample)
 {
   int16_t buf = 0;
-  fread(&buf, bytes_per_sample, 1, fp);
+  size_t fresult;
+
+  fresult = fread(&buf, bytes_per_sample, 1, fp);
   
   return (short) wav_to_host(buf);
 }
