@@ -207,7 +207,7 @@ ELSEIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm")
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_fff_armv7_a.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/dotprod_fff_armv7_a.c
         ${CMAKE_CURRENT_SOURCE_DIR}/dotprod_ccf_armv7_a.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_ccf_armv7_a.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_ccf_armv7_a.cc
     )
     LIST(APPEND test_gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_armv7_a.cc
