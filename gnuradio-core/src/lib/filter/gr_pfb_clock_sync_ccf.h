@@ -124,6 +124,7 @@ class GR_CORE_API gr_pfb_clock_sync_ccf : public gr_block
    * \param init_phase (float) The initial phase to look at, or which filter to start 
    *                           with (default = 0).
    * \param max_rate_deviation (float) Distance from 0 d_rate can get (default = 1.5).
+   * \parma osps (int) The number of output samples per symbol (default=1).
    *
    */
   friend GR_CORE_API gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,

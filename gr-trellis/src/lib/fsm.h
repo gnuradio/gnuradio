@@ -107,7 +107,7 @@ public:
    * \brief Creates an FSMS describing ISI.
    *
    * \param mod_size    modulation size
-   * \param ch_lenth    channel length
+   * \param ch_length   channel length
    *
    */
   fsm(int mod_size, int ch_length);
@@ -126,14 +126,14 @@ public:
   /*!
    * \brief Creates an FSMS describing the joint trellis of two FSMs.
    *
-   * \param fsm1  first FSMS
-   * \param fsm2  second FSMS
+   * \param FSM1  first FSMS
+   * \param FSM2  second FSMS
    */
   fsm(const fsm &FSM1, const fsm &FSM2);
   /*!
    * \brief Creates an FSMS representing n stages through the originial FSM (AKA radix-n FSM).
    *
-   * \param original FSMS
+   * \param FSM      Original FSMs
    * \param n        Number of stages.
    */
   fsm(const fsm &FSM, int n);
