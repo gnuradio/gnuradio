@@ -41,6 +41,18 @@ LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 INCLUDE(GrVersion) #setup version info
 
 ########################################################################
+# Import executables from a native build (for cross compiling)
+# http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
+########################################################################
+IF(IMPORT_EXECUTABLES)
+    INCLUDE(${IMPORT_EXECUTABLES})
+ENDIF(IMPORT_EXECUTABLES)
+
+#set file that the native build will fill with exports
+SET(EXPORT_FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake)
+FILE(WRITE ${EXPORT_FILE}) #blank the file (subdirs will append)
+
+########################################################################
 # Compiler specific setup
 ########################################################################
 IF(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)

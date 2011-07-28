@@ -19,10 +19,14 @@
 
 ########################################################################
 # Create executable to generate other sources
+# http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
 ########################################################################
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-ADD_EXECUTABLE(generate_codebook ${CMAKE_CURRENT_SOURCE_DIR}/generate_codebook.c)
-TARGET_LINK_LIBRARIES(generate_codebook -lm)
+IF(NOT CMAKE_CROSSCOMPILING)
+    INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+    ADD_EXECUTABLE(generate_codebook ${CMAKE_CURRENT_SOURCE_DIR}/generate_codebook.c)
+    TARGET_LINK_LIBRARIES(generate_codebook -lm)
+    EXPORT(TARGETS generate_codebook APPEND FILE ${EXPORT_FILE})
+ENDIF()
 
 ########################################################################
 # Create codebook
