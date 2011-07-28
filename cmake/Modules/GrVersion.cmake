@@ -28,6 +28,12 @@ SET(__INCLUDED_GR_VERSION_CMAKE TRUE)
 # sets VERSION and LIBVER
 ########################################################################
 
+UNSET(VERSION)
+UNSET(LIBVER)
+
+########################################################################
+# Extract the version string from git describe.
+########################################################################
 FIND_PACKAGE(Git)
 IF(GIT_FOUND)
     MESSAGE(STATUS "Extracting version information from git...")
@@ -38,7 +44,12 @@ IF(GIT_FOUND)
     IF(NOT VERSION)
         MESSAGE(WARNING "Tried to extract $VERSION from git describe but failed... using default")
     ENDIF()
+ENDIF(GIT_FOUND)
 
+########################################################################
+# Extract the library version from the version string.
+########################################################################
+IF(VERSION)
     INCLUDE(GrPython)
     EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "import re; print re.match('^v(\\d+\\.\\d+\\.\\d+)', '${VERSION}').groups()[0]"
         OUTPUT_VARIABLE LIBVER OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -46,9 +57,11 @@ IF(GIT_FOUND)
     IF(NOT LIBVER)
         MESSAGE(WARNING "Tried to extract $LIBVER from $VERSION but failed... using default")
     ENDIF()
-ENDIF(GIT_FOUND)
+ENDIF()
 
-#ensure that the version strings are set no matter what
+########################################################################
+# Ensure that the version strings are set no matter what.
+########################################################################
 IF(NOT VERSION)
     SET(VERSION "v3.x.x-unknown")
 ENDIF()
