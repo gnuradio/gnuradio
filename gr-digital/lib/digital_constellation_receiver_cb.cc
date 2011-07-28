@@ -56,8 +56,8 @@ digital_constellation_receiver_cb::digital_constellation_receiver_cb (digital_co
   : gr_block ("constellation_receiver_cb",
 	      gr_make_io_signature (1, 1, sizeof (gr_complex)),
 	      gr_make_io_signaturev (1, 4, iosig)),
-    d_constellation(constellation), 
     d_alpha(alpha), d_beta(beta), d_freq(0), d_max_freq(fmax), d_min_freq(fmin), d_phase(0),
+    d_constellation(constellation), 
     d_current_const_point(0)
 {
   if (d_constellation->dimensionality() != 1)
