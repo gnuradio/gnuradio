@@ -32,23 +32,31 @@ digitaldir = $(grpythondir)/digital
 
 noinst_PYTHON = \
 	qa_digital.py			\
+	qa_binary_slicer_fb.py		\
+	qa_clock_recovery_mm.py		\
+	qa_cma_equalizer.py		\
 	qa_constellation.py		\
 	qa_constellation_receiver.py	\
-	qa_costas_loop_cc.py
+	qa_constellation_decoder_cb.py	\
+	qa_correlate_access_code.py	\
+	qa_costas_loop_cc.py		\
+	qa_crc32.py			\
+	qa_lms_equalizer.py		\
+	qa_mpsk_receiver.py
 
 digital_PYTHON = \
-	__init__.py	\
-	psk.py		\
-	dbpsk.py	\
-	dqpsk.py	\
-	d8psk.py	\
-	psk2.py		\
+	__init__.py		\
+	bpsk.py			\
+	cpm.py			\
+	crc.py			\
 	generic_mod_demod.py	\
-	qam.py		\
-	bpsk.py		\
-	qpsk.py		\
-	ofdm.py		\
-	pkt.py		\
-	modulation_utils2.py
-
+	gmsk.py			\
+	modulation_utils.py	\
+	modulation_utils2.py	\
+	packet_utils.py		\
+	pkt.py			\
+	psk.py			\
+	psk2.py			\
+	qam.py			\
+	qpsk.py
 endif

@@ -22,9 +22,9 @@
 
 import random
 
-from gnuradio import gr, blks2, packet_utils, gr_unittest
+from gnuradio import gr, blks2, gr_unittest
 from utils import mod_codes, alignment
-import digital_swig
+import digital_swig, packet_utils
 from generic_mod_demod import generic_mod, generic_demod
 
 from qa_constellation import tested_constellations, twod_constell

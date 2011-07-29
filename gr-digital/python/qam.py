@@ -26,10 +26,10 @@ QAM modulation and demodulation.
 from math import pi, sqrt, log
 
 from gnuradio import gr
-import modulation_utils2
 from generic_mod_demod import generic_mod, generic_demod
 from utils.gray_code import gray_code
 from utils import mod_codes
+import modulation_utils2
 
 # Default number of points in constellation.
 _def_constellation_points = 16

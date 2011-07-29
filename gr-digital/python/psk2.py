@@ -26,7 +26,6 @@ PSK modulation and demodulation.
 from math import pi, log
 from cmath import exp
 
-from gnuradio import gr
 import digital_swig
 import modulation_utils2
 from utils import mod_codes, gray_code

@@ -58,13 +58,19 @@ digital_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 digital_swig_swiginclude_headers =		\
+	digital_binary_slicer_fb.i		\
+	digital_clock_recovery_mm_cc.i		\
+	digital_clock_recovery_mm_ff.i		\
 	digital_constellation.i			\
 	digital_constellation_receiver_cb.i 	\
 	digital_constellation_decoder_cb.i	\
+	digital_correlate_access_code_bb.i	\
 	digital_costas_loop_cc.i		\
 	digital_cma_equalizer_cc.i		\
+	digital_crc32.i				\
 	digital_lms_dd_equalizer_cc.i		\
-	digital_kurtotic_equalizer_cc.i
+	digital_kurtotic_equalizer_cc.i		\
+	digital_mpsk_receiver_cc.i
 
 digital_swig_swig_args = \
 	-I$(abs_top_srcdir)/gr-digital/lib \

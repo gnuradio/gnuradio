@@ -23,17 +23,10 @@ GR_PYTHON_INSTALL(FILES
     __init__.py
     am_demod.py
     channel_model.py
-    dbpsk.py
-    dbpsk2.py
-    dqpsk.py
-    dqpsk2.py
-    d8psk.py
     filterbank.py
     fm_demod.py
     fm_emph.py
     generic_usrp.py
-    gmsk.py
-    cpm.py
     logpwrfft.py
     nbfm_rx.py
     nbfm_tx.py
@@ -47,13 +40,8 @@ GR_PYTHON_INSTALL(FILES
     pfb_channelizer.py
     pfb_decimator.py
     pfb_interpolator.py
-    pkt.py
     psk.py
     qam.py
-    qam8.py
-    qam16.py
-    qam64.py
-    qam256.py
     rational_resampler.py
     standard_squelch.py
     stream_to_vector_decimator.py

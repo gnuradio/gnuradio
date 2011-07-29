@@ -31,7 +31,6 @@
 #include <gr_fractional_interpolator_ff.h>
 #include <gr_fractional_interpolator_cc.h>
 #include <gr_goertzel_fc.h>
-#include <gr_cma_equalizer_cc.h>
 #include <gr_pfb_channelizer_ccf.h>
 #include <gr_pfb_synthesis_filterbank_ccf.h>
 #include <gr_pfb_decimator_ccf.h>
@@ -53,7 +52,6 @@
 %include "gr_fractional_interpolator_ff.i"
 %include "gr_fractional_interpolator_cc.i"
 %include "gr_goertzel_fc.i"
-%include "gr_cma_equalizer_cc.i"
 %include "gr_pfb_channelizer_ccf.i"
 %include "gr_pfb_synthesis_filterbank_ccf.i"
 %include "gr_pfb_decimator_ccf.i"

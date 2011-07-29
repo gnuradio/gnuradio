@@ -177,22 +177,15 @@ SET(gr_core_general_triple_threats
     gr_agc2_ff
     gr_align_on_samplenumbers_ss
     gr_bin_statistics_f
-    gr_binary_slicer_fb
     gr_bytes_to_syms
     gr_char_to_float
     gr_check_counting_s
     gr_check_lfsr_32k_s
-    gr_clock_recovery_mm_cc
-    gr_clock_recovery_mm_ff
     gr_complex_to_interleaved_short
     gr_complex_to_xxx
     gr_conjugate_cc
-    gr_constellation_decoder_cb
     gr_copy
-    gr_correlate_access_code_bb
-    gr_costas_loop_cc
     gr_cpfsk_bc
-    gr_crc32
     gr_ctcss_squelch_ff
     gr_decode_ccsds_27_fb
     gr_diff_decoder_bb
@@ -226,10 +219,7 @@ SET(gr_core_general_triple_threats
     gr_keep_one_in_n
     gr_kludge_copy
     gr_lfsr_32k_source_s
-    gr_lms_dfe_cc
-    gr_lms_dfe_ff
     gr_map_bb
-    gr_mpsk_receiver_cc
     gr_nlog10_ff
     gr_nop
     gr_null_sink

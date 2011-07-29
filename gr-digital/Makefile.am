@@ -24,7 +24,7 @@ include $(top_srcdir)/Makefile.common
 SUBDIRS = lib
 
 if PYTHON
-SUBDIRS += swig python apps grc
+SUBDIRS += swig python apps grc examples
 endif
 
 pkgconfigdir = $(libdir)/pkgconfig

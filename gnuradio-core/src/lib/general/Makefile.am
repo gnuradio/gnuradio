@@ -44,24 +44,17 @@ libgeneral_la_SOURCES = 		\
 	gr_agc2_ff.cc                	\
 	gr_align_on_samplenumbers_ss.cc	\
 	gr_bin_statistics_f.cc		\
-	gr_binary_slicer_fb.cc		\
 	gr_bytes_to_syms.cc		\
 	gr_char_to_float.cc		\
 	gr_check_counting_s.cc		\
 	gr_check_lfsr_32k_s.cc		\
 	gr_circular_file.cc		\
-	gr_clock_recovery_mm_cc.cc	\
-	gr_clock_recovery_mm_ff.cc	\
 	gr_complex_to_interleaved_short.cc \
 	gr_complex_to_xxx.cc		\
 	gr_conjugate_cc.cc		\
 	gr_copy.cc			\
-	gr_constellation_decoder_cb.cc	\
-	gr_correlate_access_code_bb.cc	\
-	gr_costas_loop_cc.cc		\
 	gr_count_bits.cc		\
 	gr_cpfsk_bc.cc			\
-	gr_crc32.cc			\
 	gr_ctcss_squelch_ff.cc		\
 	gr_decode_ccsds_27_fb.cc	\
 	gr_deinterleave.cc		\
@@ -97,11 +90,8 @@ libgeneral_la_SOURCES = 		\
 	gr_keep_one_in_n.cc		\
 	gr_kludge_copy.cc		\
 	gr_lfsr_32k_source_s.cc		\
-	gr_lms_dfe_cc.cc		\
-	gr_lms_dfe_ff.cc		\
 	gr_map_bb.cc			\
 	gr_misc.cc			\
-	gr_mpsk_receiver_cc.cc		\
 	gr_nlog10_ff.cc			\
 	gr_nop.cc			\
 	gr_null_sink.cc			\
@@ -202,24 +192,17 @@ grinclude_HEADERS = 			\
 	gr_agc2_ff.h                	\
 	gr_align_on_samplenumbers_ss.h	\
 	gr_bin_statistics_f.h		\
-	gr_binary_slicer_fb.h		\
 	gr_bytes_to_syms.h		\
 	gr_char_to_float.h		\
 	gr_check_counting_s.h		\
 	gr_check_lfsr_32k_s.h		\
 	gr_circular_file.h		\
-	gr_clock_recovery_mm_cc.h	\
-	gr_clock_recovery_mm_ff.h	\
 	gr_complex_to_interleaved_short.h \
 	gr_complex_to_xxx.h		\
 	gr_conjugate_cc.h		\
-	gr_constellation_decoder_cb.h	\
 	gr_copy.h			\
-	gr_correlate_access_code_bb.h	\
-	gr_costas_loop_cc.h		\
 	gr_count_bits.h			\
 	gr_cpfsk_bc.h			\
-	gr_crc32.h			\
 	gr_ctcss_squelch_ff.h		\
 	gr_decode_ccsds_27_fb.h		\
 	gr_diff_decoder_bb.h		\
@@ -257,14 +240,11 @@ grinclude_HEADERS = 			\
 	gr_keep_one_in_n.h		\
 	gr_kludge_copy.h		\
 	gr_lfsr_32k_source_s.h		\
-	gr_lms_dfe_cc.h			\
-	gr_lms_dfe_ff.h			\
 	gr_log2_const.h			\
 	gr_map_bb.h			\
 	gr_math.h			\
 	gr_misc.h			\
 	gr_nco.h			\
-	gr_mpsk_receiver_cc.h		\
 	gr_nlog10_ff.h			\
 	gr_nop.h			\
 	gr_null_sink.h			\
@@ -378,22 +358,15 @@ swiginclude_HEADERS =			\
 	gr_agc2_ff.i                 	\
 	gr_align_on_samplenumbers_ss.i	\
 	gr_bin_statistics_f.i		\
-	gr_binary_slicer_fb.i		\
 	gr_bytes_to_syms.i		\
 	gr_char_to_float.i		\
 	gr_check_counting_s.i		\
 	gr_check_lfsr_32k_s.i		\
-	gr_clock_recovery_mm_cc.i	\
-	gr_clock_recovery_mm_ff.i	\
 	gr_complex_to_interleaved_short.i \
 	gr_complex_to_xxx.i		\
 	gr_conjugate_cc.i		\
-	gr_constellation_decoder_cb.i	\
 	gr_copy.i			\
-	gr_correlate_access_code_bb.i	\
-	gr_costas_loop_cc.i		\
 	gr_cpfsk_bc.i			\
-	gr_crc32.i			\
 	gr_ctcss_squelch_ff.i		\
 	gr_decode_ccsds_27_fb.i		\
 	gr_diff_decoder_bb.i		\
@@ -427,10 +400,7 @@ swiginclude_HEADERS =			\
 	gr_keep_one_in_n.i		\
 	gr_kludge_copy.i		\
 	gr_lfsr_32k_source_s.i		\
-	gr_lms_dfe_cc.i			\
-	gr_lms_dfe_ff.i			\
 	gr_map_bb.i			\
-	gr_mpsk_receiver_cc.i		\
 	gr_nlog10_ff.i			\
 	gr_nop.i			\
 	gr_null_sink.i			\

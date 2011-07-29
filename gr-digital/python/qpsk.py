@@ -26,9 +26,10 @@ Demodulation is not included since the generic_mod_demod
 doesn't work for non-differential encodings.
 """
 
-from gnuradio import gr, modulation_utils2
-from gnuradio.digital.generic_mod_demod import generic_mod
-
+from gnuradio import gr
+from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
+import digital_swig
+import modulation_utils2
 
 # Default number of points in constellation.
 _def_constellation_points = 4
@@ -43,7 +44,7 @@ _def_gray_coded = True
 def qpsk_constellation(m=_def_constellation_points): 
     if m != _def_constellation_points:
         raise ValueError("QPSK can only have 4 constellation points.")
-    return gr.constellation_qpsk()
+    return digital_swig.constellation_qpsk()
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QPSK modulator
@@ -65,15 +66,45 @@ class qpsk_mod(generic_mod):
         See generic_mod block for list of parameters.
 	"""
 
-        constellation = gr.constellation_qpsk()
+        constellation_points = _def_constellation_points
+        constellation = digital_swig.constellation_qpsk()
         if constellation_points != 4:
             raise ValueError("QPSK can only have 4 constellation points.")
         if differential or not gray_coded:
             raise ValueError("This QPSK mod/demod works only for gray-coded, non-differential.")
         super(qpsk_mod, self).__init__(constellation, differential, gray_coded, *args, **kwargs)
 
+
+# /////////////////////////////////////////////////////////////////////////////
+#                           QPSK demodulator
+#
+# /////////////////////////////////////////////////////////////////////////////
+
+class qpsk_demod(generic_demod):
+
+    def __init__(self, constellation_points=_def_constellation_points,
+                 *args, **kwargs):
+
+        """
+	Hierarchical block for RRC-filtered QPSK modulation.
+
+	The input is a byte stream (unsigned char) and the
+	output is the complex modulated signal at baseband.
+
+        See generic_demod block for list of parameters.
+        """
+
+        constellation_points = _def_constellation_points
+        constellation = digital_swig.constellation_qpsk()
+        if constellation_points != 4:
+            raise ValueError('Number of constellation points must be 4 for QPSK.')
+        super(qpsk_demod, self).__init__(constellation, *args, **kwargs)
+
+
 #
 # Add these to the mod/demod registry
 #
 modulation_utils2.add_type_1_mod('qpsk', qpsk_mod)
+modulation_utils2.add_type_1_demod('qpsk', qpsk_demod)
 modulation_utils2.add_type_1_constellation('qpsk', qpsk_constellation)
+

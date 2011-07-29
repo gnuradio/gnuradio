@@ -20,8 +20,10 @@
 # 
 
 from math import pi
-from gnuradio import gr, packet_utils
+from gnuradio import gr
 import gnuradio.gr.gr_threading as _threading
+import packet_utils
+import digital_swig
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -34,8 +36,8 @@ class mod_pkts(gr.hier_block2):
 
     Send packets by calling send_pkt
     """
-    def __init__(self, modulator, access_code=None, msgq_limit=2, pad_for_usrp=True, use_whitener_offset=False,
-                 modulate=True):
+    def __init__(self, modulator, access_code=None, msgq_limit=2, pad_for_usrp=True,
+                 use_whitener_offset=False, modulate=True):
         """
 	Hierarchical block for sending packets
 
@@ -154,7 +156,7 @@ class demod_pkts(gr.hier_block2):
             threshold = 12              # FIXME raise exception
 
         self._rcvd_pktq = gr.msg_queue()          # holds packets from the PHY
-        self.correlator = gr.correlate_access_code_bb(access_code, threshold)
+        self.correlator = digital_swig.correlate_access_code_bb(access_code, threshold)
 
         self.framer_sink = gr.framer_sink_1(self._rcvd_pktq)
         if self._demodulator is not None:

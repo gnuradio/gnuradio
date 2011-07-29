@@ -69,7 +69,6 @@
 #include <gr_nlog10_ff.h>
 #include <gr_fake_channel_coder_pp.h>
 #include <gr_throttle.h>
-#include <gr_mpsk_receiver_cc.h>
 #include <gr_stream_mux.h>
 #include <gr_stream_to_streams.h>
 #include <gr_streams_to_stream.h>
@@ -77,13 +76,8 @@
 #include <gr_vector_to_streams.h>
 #include <gr_conjugate_cc.h>
 #include <gr_vco_f.h>
-#include <gr_crc32.h>
 #include <gr_threshold_ff.h>
-#include <gr_clock_recovery_mm_ff.h>
-#include <gr_clock_recovery_mm_cc.h>
 #include <gr_packet_sink.h>
-#include <gr_lms_dfe_cc.h>
-#include <gr_lms_dfe_ff.h>
 #include <gr_dpll_bb.h>
 #include <gr_fmdet_cf.h>
 #include <gr_pll_freqdet_cf.h>
@@ -102,7 +96,6 @@
 #include <gr_ofdm_insert_preamble.h>
 #include <gr_ofdm_sampler.h>
 #include <gr_regenerate_bb.h>
-#include <gr_costas_loop_cc.h>
 #include <gr_pa_2x2_phase_combiner.h>
 #include <gr_kludge_copy.h>
 #include <gr_prefs.h>
@@ -110,10 +103,7 @@
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_unpack_k_bits_bb.h>
-#include <gr_correlate_access_code_bb.h>
 #include <gr_diff_phasor_cc.h>
-#include <gr_constellation_decoder_cb.h>
-#include <gr_binary_slicer_fb.h>
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
 #include <gr_framer_sink_1.h>
@@ -196,7 +186,6 @@
 %include "gr_nlog10_ff.i"
 %include "gr_fake_channel_coder_pp.i"
 %include "gr_throttle.i"
-%include "gr_mpsk_receiver_cc.i"
 %include "gr_stream_mux.i"
 %include "gr_stream_to_streams.i"
 %include "gr_streams_to_stream.i"
@@ -204,13 +193,8 @@
 %include "gr_vector_to_streams.i"
 %include "gr_conjugate_cc.i"
 %include "gr_vco_f.i"
-%include "gr_crc32.i"
 %include "gr_threshold_ff.i"
-%include "gr_clock_recovery_mm_ff.i"
-%include "gr_clock_recovery_mm_cc.i"
 %include "gr_packet_sink.i"
-%include "gr_lms_dfe_cc.i"
-%include "gr_lms_dfe_ff.i"
 %include "gr_dpll_bb.i"
 %include "gr_fmdet_cf.i"
 %include "gr_pll_freqdet_cf.i"
@@ -229,7 +213,6 @@
 %include "gr_ofdm_insert_preamble.i"
 %include "gr_ofdm_sampler.i"
 %include "gr_regenerate_bb.i"
-%include "gr_costas_loop_cc.i"
 %include "gr_pa_2x2_phase_combiner.i"
 %include "gr_kludge_copy.i"
 %include "gr_prefs.i"
@@ -237,10 +220,7 @@
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_unpack_k_bits_bb.i"
-%include "gr_correlate_access_code_bb.i"
 %include "gr_diff_phasor_cc.i"
-%include "gr_constellation_decoder_cb.i"
-%include "gr_binary_slicer_fb.i"
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"
 %include "gr_framer_sink_1.i"

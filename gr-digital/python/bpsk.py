@@ -26,8 +26,10 @@ BPSK modulation and demodulation.
 from math import pi, log
 from cmath import exp
 
-from gnuradio import gr, modulation_utils2
+from gnuradio import gr
 from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
+import digital_swig
+import modulation_utils2
 
 # Default number of points in constellation.
 _def_constellation_points = 2
@@ -41,7 +43,7 @@ _def_differential = True
 def bpsk_constellation(m=_def_constellation_points):
     if m != _def_constellation_points:
         raise ValueError("BPSK can only have 2 constellation points.")
-    return gr.constellation_bpsk()
+    return digital_swig.constellation_bpsk()
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           BPSK modulator
@@ -61,7 +63,8 @@ class bpsk_mod(generic_mod):
         See generic_mod block for list of parameters.
 	"""
 
-        constellation = gr.constellation_bpsk()
+        constellation_points = _def_constellation_points
+        constellation = digital_swig.constellation_bpsk()
         if constellation_points != 2:
             raise ValueError('Number of constellation points must be 2 for BPSK.')
         super(bpsk_mod, self).__init__(constellation, *args, **kwargs)
@@ -85,7 +88,8 @@ class bpsk_demod(generic_demod):
         See generic_demod block for list of parameters.
         """
 
-        constellation = gr.constellation_bpsk()
+        constellation_points = _def_constellation_points
+        constellation = digital_swig.constellation_bpsk()
         if constellation_points != 2:
             raise ValueError('Number of constellation points must be 2 for BPSK.')
         super(bpsk_demod, self).__init__(constellation, *args, **kwargs)

@@ -310,8 +310,9 @@ class d8psk_demod(gr.hier_block2):
         print "Timing alpha gain:   %.2f" % self._timing_alpha
         print "Timing beta gain:    %.2f" % self._timing_beta
         print "Timing max dev:      %.2f" % self._timing_max_dev
-        print "Phase track alpha:   %.2e" % self._phase_alpha
-        print "Phase track beta:    %.2e" % self._phase_beta
+        print "Phase damping fact:  %.2e" % self._phase_damping
+        print "Phase natural freq:  %.2e" % self._phase_natfreq
+
 
     def _setup_logging(self):
         print "Modulation logging turned on."
@@ -343,8 +344,10 @@ class d8psk_demod(gr.hier_block2):
                           help="disable gray coding on modulated bits (PSK)")
         parser.add_option("", "--freq-alpha", type="float", default=_def_freq_alpha,
                           help="set frequency lock loop alpha gain value [default=%default] (PSK)")
-        parser.add_option("", "--phase-alpha", type="float", default=_def_phase_alpha,
-                          help="set phase tracking loop alpha value [default=%default] (PSK)")
+        parser.add_option("", "--phase-natfreq", type="float", default=_def_phase_natfreq,
+                          help="set natural frequency of phase tracking loop [default=%default] (PSK)")
+        parser.add_option("", "--phase-damping", type="float", default=_def_phase_damping,
+                          help="set damping factor of phase tracking loop [default=%default] (PSK)")
         parser.add_option("", "--timing-alpha", type="float", default=_def_timing_alpha,
                           help="set timing symbol sync loop gain alpha value [default=%default] (GMSK/PSK)")
         parser.add_option("", "--timing-beta", type="float", default=_def_timing_beta,

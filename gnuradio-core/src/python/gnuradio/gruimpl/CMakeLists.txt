@@ -21,7 +21,6 @@ INCLUDE(GrPython)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
-    crc.py
     freqz.py
     gnuplot_freqz.py
     hexint.py

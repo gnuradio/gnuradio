@@ -32,13 +32,19 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 LIST(APPEND gr_digital_sources
+    digital_binary_slicer_fb.cc
+    digital_clock_recovery_mm_cc.cc
+    digital_clock_recovery_mm_ff.cc
     digital_constellation.cc
     digital_constellation_receiver_cb.cc
     digital_constellation_decoder_cb.cc
+    digital_correlate_access_code_bb.cc
     digital_costas_loop_cc.cc
     digital_cma_equalizer_cc.cc
+    digital_crc32.cc
     digital_lms_dd_equalizer_cc.cc
     digital_kurtotic_equalizer_cc.cc
+    digital_mpsk_receiver_cc.cc
 )
 
 LIST(APPEND digital_libs
@@ -61,15 +67,20 @@ INSTALL(TARGETS gnuradio-digital
 # Install header files
 ########################################################################
 INSTALL(FILES
-    digital_api.h
+    digital_binary_slicer_fb.h
+    digital_clock_recovery_mm_cc.h
+    digital_clock_recovery_mm_ff.h
     digital_constellation.h
     digital_constellation_receiver_cb.h
     digital_constellation_decoder_cb.h
+    digital_correlate_access_code_bb.h
     digital_costas_loop_cc.h
     digital_cma_equalizer_cc.h
+    digital_crc32.h
     digital_lms_dd_equalizer_cc.h
     digital_kurtotic_equalizer_cc.h
     digital_metric_type.h
+    digital_mpsk_receiver_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "digital_devel"
 )

@@ -40,13 +40,19 @@ GR_SWIG_INSTALL(
 
 INSTALL(
     FILES
+    digital_binary_slicer_fb.i
+    digital_clock_recovery_mm_cc.i
+    digital_clock_recovery_mm_ff.i
     digital_constellation.i
     digital_constellation_receiver_cb.i
     digital_constellation_decoder_cb.i
+    digital_correlate_access_code_bb.i
     digital_costas_loop_cc.i
     digital_cma_equalizer_cc.i
+    digital_crc32.i
     digital_lms_dd_equalizer_cc.i
     digital_kurtotic_equalizer_cc.i
+    digital_mpsk_receiver_cc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "digital_swig"
 )

@@ -313,7 +313,6 @@ ENDIF(ENABLE_PYTHON)
 SET(gr_core_filter_triple_threats
     gr_adaptive_fir_ccc
     gr_adaptive_fir_ccf
-    gr_cma_equalizer_cc
     gr_dc_blocker_cc
     gr_dc_blocker_ff
     gr_fft_filter_ccc

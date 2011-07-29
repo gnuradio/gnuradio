@@ -25,18 +25,19 @@ INCLUDE(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    psk.py
-    dbpsk.py
-    dqpsk.py
-    d8psk.py
-    psk2.py
-    generic_mod_demod.py
-    qam.py
     bpsk.py
-    qpsk.py
-    ofdm.py
-    pkt.py
+    cpm.py
+    crc.py
+    generic_mod_demod.py
+    gmsk.py
+    modulation_utils.py
     modulation_utils2.py
+    packet_utils.py
+    pkt.py
+    psk.py
+    psk2.py
+    qam.py
+    qpsk.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
     COMPONENT "digital_python"
 )
