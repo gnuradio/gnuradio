@@ -95,13 +95,10 @@ class digital_costas_loop_cc : public gr_sync_block
   
   /*! \brief update the system gains from omega and eta
    *
-   *  This function updates the system gains based on the natural
-   *  frequency (omega) and damping factor (eta) of the system.
+   *  This function updates the system gains based on the loop
+   *  bandwidth and damping factor of the system.
    *  These two factors can be set separately through their own
    *  set functions.
-   *
-   *  These equations are summarized nicely in this paper from Berkeley:
-   *  http://www.complextoreal.com/chapters/pll.pdf
    */
   void update_gains();
 
