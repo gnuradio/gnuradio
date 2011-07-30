@@ -35,6 +35,7 @@ grinclude_HEADERS = 				\
 	digital_costas_loop_cc.h		\
 	digital_cma_equalizer_cc.h		\
 	digital_crc32.h				\
+	digital_fll_band_edge_cc.h		\
 	digital_lms_dd_equalizer_cc.h		\
 	digital_kurtotic_equalizer_cc.h 	\
 	digital_metric_type.h			\
@@ -53,6 +54,7 @@ libgnuradio_digital_la_SOURCES = 		\
 	digital_costas_loop_cc.cc		\
 	digital_cma_equalizer_cc.cc		\
 	digital_crc32.cc			\
+	digital_fll_band_edge_cc.cc		\
 	digital_lms_dd_equalizer_cc.cc		\
 	digital_kurtotic_equalizer_cc.cc	\
 	digital_mpsk_receiver_cc.cc
