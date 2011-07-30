@@ -75,18 +75,12 @@ digital_fll_band_edge_cc::digital_fll_band_edge_cc (float samps_per_sym, float r
   }
   d_filter_size = filter_size;
   
-  // Initialize loop bandwidth
-  if(bandwidth < 0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid bandwidth. Must be >= 0.");
-  }
-  d_loop_bw = bandwidth;
-
   // base this on the number of samples per symbol
   d_max_freq =  M_TWOPI * (2.0/samps_per_sym);
   d_min_freq = -M_TWOPI * (2.0/samps_per_sym);
 
   // Set the damping factor for a critically damped system
-  d_damping = sqrt(2.0)/2.0;
+  d_damping = sqrtf(2.0f)/2.0f;
 
   // Set the bandwidth, which will then call update_gains()
   set_loop_bandwidth(bandwidth);
@@ -102,6 +96,12 @@ digital_fll_band_edge_cc::digital_fll_band_edge_cc (float samps_per_sym, float r
 digital_fll_band_edge_cc::~digital_fll_band_edge_cc ()
 {
 }
+
+
+/*******************************************************************
+    SET FUNCTIONS
+*******************************************************************/
+
 
 void
 digital_fll_band_edge_cc::set_loop_bandwidth(float bw) 
@@ -173,47 +173,91 @@ digital_fll_band_edge_cc::set_filter_size(int filter_size)
   design_filter(d_sps, d_rolloff, d_filter_size);
 }
 
+void
+digital_fll_band_edge_cc::set_frequency(float freq)
+{
+  if(freq > d_max_freq)
+    d_freq = d_min_freq;
+  else if(freq < d_min_freq)
+    d_freq = d_max_freq;
+  else
+    d_freq = freq;
+}
+
+void
+digital_fll_band_edge_cc::set_phase(float phase)
+{
+  d_phase = phase;
+  while(d_phase>M_TWOPI)
+    d_phase -= M_TWOPI;
+  while(d_phase<-M_TWOPI)
+    d_phase += M_TWOPI;
+}
+
+
+/*******************************************************************
+    GET FUNCTIONS
+*******************************************************************/
+
+
 float
-digital_fll_band_edge_cc::get_loop_bandwidth()
+digital_fll_band_edge_cc::get_loop_bandwidth() const
 {
   return d_loop_bw;
 }
 
 float
-digital_fll_band_edge_cc::get_damping_factor()
+digital_fll_band_edge_cc::get_damping_factor() const
 {
   return d_damping;
 }
 
 float
-digital_fll_band_edge_cc::get_alpha()
+digital_fll_band_edge_cc::get_alpha() const
 {
   return d_alpha;
 }
 
 float
-digital_fll_band_edge_cc::get_beta()
+digital_fll_band_edge_cc::get_beta() const
 {
   return d_beta;
 }
 
 float
-digital_fll_band_edge_cc::get_samples_per_symbol()
+digital_fll_band_edge_cc::get_samples_per_symbol() const
 {
   return d_sps;
 }
 
 float
-digital_fll_band_edge_cc::get_rolloff()
+digital_fll_band_edge_cc::get_rolloff() const
 {
   return d_rolloff;
 }
 
 int
-digital_fll_band_edge_cc:: get_filter_size()
+digital_fll_band_edge_cc:: get_filter_size() const
 {
   return d_filter_size;
 }
+
+float
+digital_fll_band_edge_cc::get_frequency() const
+{
+  return d_freq;
+}
+
+float
+digital_fll_band_edge_cc::get_phase() const
+{
+  return d_phase;
+}
+
+
+/*******************************************************************
+*******************************************************************/
+
 
 void
 digital_fll_band_edge_cc::update_gains() 

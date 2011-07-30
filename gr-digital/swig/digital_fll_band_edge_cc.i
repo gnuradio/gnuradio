@@ -43,12 +43,18 @@ class digital_fll_band_edge_cc : public gr_sync_block
   void set_samples_per_symbol(float sps);
   void set_rolloff(float rolloff);
   void set_filter_size(int filter_size);
-  float get_loop_bandwidth();
-  float get_damping_factor();
-  float get_alpha();
-  float get_beta();
-  float get_samples_per_symbol();
-  float get_rolloff();
-  int get_filter_size();
+  void set_frequency(float freq);
+  void set_phase(float phase);
+
+  float get_loop_bandwidth() const;
+  float get_damping_factor() const;
+  float get_alpha() const;
+  float get_beta() const;
+  float get_samples_per_symbol() const;
+  float get_rolloff() const;
+  int get_filter_size() const;
+  float get_frequency() const;
+  float get_phase() const;
+
   void print_taps();
 };

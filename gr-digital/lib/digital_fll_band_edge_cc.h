@@ -236,6 +236,30 @@ public:
    */
   void set_filter_size(int filter_size);
 
+  /*!
+   * \brief Set the FLL's frequency.
+   *
+   * Set's the FLL's frequency. While this is normally updated by the
+   * inner loop of the algorithm, it could be useful to manually initialize,
+   * set, or reset this under certain circumstances.
+   *
+   * \param freq    (float) new frequency
+   *
+   */
+  void set_frequency(float freq);
+
+  /*!
+   * \brief Set the FLL's phase.
+   *
+   * Set's the FLL's phase. While this is normally updated by the
+   * inner loop of the algorithm, it could be useful to manually initialize,
+   * set, or reset this under certain circumstances.
+   *
+   * \param phase    (float) new phase
+   *
+   */
+  void set_phase(float phase);
+
   /*******************************************************************
     GET FUNCTIONS
   *******************************************************************/
@@ -243,37 +267,47 @@ public:
   /*!
    * \brief Returns the loop bandwidth
    */
-  float get_loop_bandwidth();
+  float get_loop_bandwidth() const;
 
   /*!
    * \brief Returns the loop damping factor
    */
-  float get_damping_factor();
+  float get_damping_factor() const;
 
   /*!
    * \brief Returns the loop gain alpha
    */
-  float get_alpha();
+  float get_alpha() const;
 
   /*!
    * \brief Returns the loop gain beta
    */
-  float get_beta();
+  float get_beta() const;
 
   /*!
    * \brief Returns the number of sampler per symbol used for the filter
    */
-  float get_samples_per_symbol();
+  float get_samples_per_symbol() const;
 
   /*!
    * \brief Returns the rolloff factor used for the filter
    */
-  float get_rolloff();
+  float get_rolloff() const;
 
   /*!
    * \brief Returns the number of taps of the filter
    */
-  int get_filter_size();
+  int get_filter_size() const;
+
+  /*!
+   * \brief Get the FLL's frequency estimate
+   */
+  float get_frequency() const;
+
+  /*!
+   * \brief Get the FLL's phase estimate
+   */
+  float get_phase() const;
 
   /*!
    * Print the taps to screen.
