@@ -153,6 +153,8 @@ SET(VOLK_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/volk/include
 )
 
+IF(ENABLE_VOLK)
+
 INCLUDE(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
 
@@ -168,8 +170,8 @@ CPACK_COMPONENT("volk_devel"
     DESCRIPTION  "C++ headers, package config, import libraries"
 )
 
-IF(ENABLE_VOLK)
-    ADD_SUBDIRECTORY(volk)
+
+ADD_SUBDIRECTORY(volk)
 ENDIF(ENABLE_VOLK)
 
 ########################################################################
