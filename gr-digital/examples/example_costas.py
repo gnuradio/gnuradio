@@ -17,7 +17,7 @@ except ImportError:
     print "Error: could not import pylab (http://matplotlib.sourceforge.net/)"
     sys.exit(1)
 
-class example_fll(gr.top_block):
+class example_costas(gr.top_block):
     def __init__(self, N, sps, rolloff, ntaps, bw, noise, foffset, toffset, poffset):
         gr.top_block.__init__(self)
 
@@ -30,19 +30,15 @@ class example_fll(gr.top_block):
         self.src = gr.vector_source_c(data.tolist(), False)
         self.rrc = gr.interp_fir_filter_ccf(sps, rrc_taps)
         self.chn = gr.channel_model(noise, foffset, toffset)
-        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw)
+        self.cst = digital.costas_loop_cc(bw, 2)
 
         self.vsnk_src = gr.vector_sink_c()
-        self.vsnk_fll = gr.vector_sink_c()
+        self.vsnk_cst = gr.vector_sink_c()
         self.vsnk_frq = gr.vector_sink_f()
-        self.vsnk_phs = gr.vector_sink_f()
-        self.vsnk_err = gr.vector_sink_f()
 
-        self.connect(self.src, self.rrc, self.chn, self.fll, self.vsnk_fll)
+        self.connect(self.src, self.rrc, self.chn, self.cst, self.vsnk_cst)
         self.connect(self.rrc, self.vsnk_src)
-        self.connect((self.fll,1), self.vsnk_frq)
-        self.connect((self.fll,2), self.vsnk_phs)
-        self.connect((self.fll,3), self.vsnk_err)
+        self.connect((self.cst,1), self.vsnk_frq)
 
 def main():
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
@@ -58,11 +54,11 @@ def main():
                       help="Set the number of taps in the filters [default=%default]")
     parser.add_option("", "--noise", type="eng_float", default=0.0,
                       help="Set the simulation noise voltage [default=%default]")
-    parser.add_option("-f", "--foffset", type="eng_float", default=0.2,
+    parser.add_option("-f", "--foffset", type="eng_float", default=0.0,
                       help="Set the simulation's normalized frequency offset (in Hz) [default=%default]")
     parser.add_option("-t", "--toffset", type="eng_float", default=1.0,
                       help="Set the simulation's timing offset [default=%default]")
-    parser.add_option("-p", "--poffset", type="eng_float", default=0.0,
+    parser.add_option("-p", "--poffset", type="eng_float", default=0.707,
                       help="Set the simulation's phase offset [default=%default]")
     (options, args) = parser.parse_args ()
 
@@ -70,48 +66,42 @@ def main():
     options.nsamples = options.nsamples // options.sps
 
     # Set up the program-under-test
-    put = example_fll(options.nsamples, options.sps, options.rolloff,
-                      options.ntaps, options.bandwidth, options.noise,
-                      options.foffset, options.toffset, options.poffset)
+    put = example_costas(options.nsamples, options.sps, options.rolloff,
+                         options.ntaps, options.bandwidth, options.noise,
+                         options.foffset, options.toffset, options.poffset)
     put.run()
 
     data_src = scipy.array(put.vsnk_src.data())
-    data_err = scipy.array(put.vsnk_err.data())
 
     # Convert the FLL's LO frequency from rads/sec to Hz
     data_frq = scipy.array(put.vsnk_frq.data()) / (2.0*scipy.pi)
 
-    # adjust this to align with the data. There are 2 filters of
-    # ntaps long and the channel introduces another 4 sample delay.
-    data_fll = scipy.array(put.vsnk_fll.data()[2*options.ntaps-4:])
+    # adjust this to align with the data.
+    data_cst = scipy.array(3*[0,]+list(put.vsnk_cst.data()))
     
-    # Plot the FLL's LO frequency
-    f1 = pylab.figure(1, figsize=(12,10))
+    # Plot the Costas loop's LO frequency
+    f1 = pylab.figure(1, figsize=(12,10), facecolor='w')
     s1 = f1.add_subplot(2,2,1)
     s1.plot(data_frq)
-    s1.set_title("FLL LO")
+    s1.set_title("Costas LO")
     s1.set_xlabel("Samples")
     s1.set_ylabel("Frequency (normalized Hz)")
 
-    # Plot the FLL's error
-    s2 = f1.add_subplot(2,2,2)
-    s2.plot(data_err)
-    s2.set_title("FLL Error")
-    s2.set_xlabel("Samples")
-    s2.set_ylabel("FLL Loop error")
-
     # Plot the IQ symbols
-    s3 = f1.add_subplot(2,2,3)
+    s3 = f1.add_subplot(2,2,2)
     s3.plot(data_src.real, data_src.imag, "o")
-    s3.plot(data_fll.real, data_fll.imag, "rx")
+    s3.plot(data_cst.real, data_cst.imag, "rx")
     s3.set_title("IQ")
     s3.set_xlabel("Real part")
     s3.set_ylabel("Imag part")
+    s3.set_xlim([-2, 2])
+    s3.set_ylim([-2, 2])
 
     # Plot the symbols in time
-    s4 = f1.add_subplot(2,2,4)
+    s4 = f1.add_subplot(2,2,3)
+    s4.set_position([0.125, 0.05, 0.775, 0.4])
     s4.plot(data_src.real, "o-")
-    s4.plot(data_fll.real, "rx-")
+    s4.plot(data_cst.real, "rx-")
     s4.set_title("Symbols")
     s4.set_xlabel("Samples")
     s4.set_ylabel("Real Part of Signals")
