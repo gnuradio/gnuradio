@@ -28,7 +28,7 @@
 
 class gr_pfb_clock_sync_ccf;
 typedef boost::shared_ptr<gr_pfb_clock_sync_ccf> gr_pfb_clock_sync_ccf_sptr;
-gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
+gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float loop_bw,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size=32,
 						       float init_phase=0,
@@ -117,7 +117,7 @@ class gr_pfb_clock_sync_ccf : public gr_block
   /*!
    * Build the polyphase filterbank timing synchronizer.
    * \param sps (double) The number of samples per symbol in the incoming signal
-   * \param gain (float) The alpha gain of the control loop; beta = (gain^2)/4 by default.
+   * \param loop_bw (float) The bandwidth of the control loop; set's alpha and beta.
    * \param taps (vector<int>) The filter taps.
    * \param filter_size (uint) The number of filters in the filterbank (default = 32).
    * \param init_phase (float) The initial phase to look at, or which filter to start 
@@ -125,36 +125,40 @@ class gr_pfb_clock_sync_ccf : public gr_block
    * \param max_rate_deviation (float) Distance from 0 d_rate can get (default = 1.5).
    *
    */
-  friend gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
+  friend gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float loop_bw,
 								const std::vector<float> &taps,
 								unsigned int filter_size,
 								float init_phase,
 								float max_rate_deviation,
 								int osps);
 
-  bool			   d_updated;
-  double                   d_sps;
-  double                   d_sample_num;
-  float                    d_alpha;
-  float                    d_beta;
-  int                      d_nfilters;
-  std::vector<gr_fir_ccf*> d_filters;
-  std::vector<gr_fir_ccf*> d_diff_filters;
+  bool			            d_updated;
+  double                            d_sps;
+  double                            d_sample_num;
+  float                             d_loop_bw;
+  float                             d_damping;
+  float                             d_alpha;
+  float                             d_beta;
+
+  int                               d_nfilters;
+  int                               d_taps_per_filter;
+  std::vector<gr_fir_ccf*>          d_filters;
+  std::vector<gr_fir_ccf*>          d_diff_filters;
   std::vector< std::vector<float> > d_taps;
   std::vector< std::vector<float> > d_dtaps;
-  float                    d_k;
-  float                    d_rate;
-  float                    d_rate_i;
-  float                    d_rate_f;
-  float                    d_max_dev;
-  int                      d_filtnum;
-  int                      d_taps_per_filter;
-  int                      d_osps;
+
+  float                             d_k;
+  float                             d_rate;
+  float                             d_rate_i;
+  float                             d_rate_f;
+  float                             d_max_dev;
+  int                               d_filtnum;
+  int                               d_osps;
 
   /*!
    * Build the polyphase filterbank timing synchronizer.
    */
-  gr_pfb_clock_sync_ccf (double sps, float gain,
+  gr_pfb_clock_sync_ccf (double sps, float loop_bw,
 			 const std::vector<float> &taps,
 			 unsigned int filter_size,
 			 float init_phase,
@@ -166,6 +170,15 @@ class gr_pfb_clock_sync_ccf : public gr_block
 
 public:
   ~gr_pfb_clock_sync_ccf ();
+
+  /*! \brief update the system gains from omega and eta
+   *
+   *  This function updates the system gains based on the loop
+   *  bandwidth and damping factor of the system.
+   *  These two factors can be set separately through their own
+   *  set functions.
+   */
+  void update_gains();
   
   /*!
    * Resets the filterbank's filter taps with the new prototype filter
@@ -194,21 +207,68 @@ public:
    */
   void print_diff_taps();
 
-  /*!
-   * Set the gain value alpha for the control loop
-   */  
-  void set_alpha(float alpha)
-  {
-    d_alpha = alpha;
-  }
+
+  /*******************************************************************
+    SET FUNCTIONS
+  *******************************************************************/
+  
 
   /*!
-   * Set the gain value beta for the control loop
-   */  
-  void set_beta(float beta)
-  {
-    d_beta = beta;
-  }
+   * \brief Set the loop bandwidth
+   *
+   * Set the loop filter's bandwidth to \p bw. This should be between 
+   * 2*pi/200 and 2*pi/100  (in rads/samp). It must also be a positive
+   * number.
+   *
+   * When a new damping factor is set, the gains, alpha and beta, of the loop
+   * are recalculated by a call to update_gains().
+   *
+   * \param bw    (float) new bandwidth
+   *
+   */
+  void set_loop_bandwidth(float bw);
+
+  /*!
+   * \brief Set the loop damping factor
+   *
+   * Set the loop filter's damping factor to \p df. The damping factor
+   * should be sqrt(2)/2.0 for critically damped systems.
+   * Set it to anything else only if you know what you are doing. It must
+   * be a number between 0 and 1.
+   *
+   * When a new damping factor is set, the gains, alpha and beta, of the loop
+   * are recalculated by a call to update_gains().
+   *
+   * \param df    (float) new damping factor
+   *
+   */
+  void set_damping_factor(float df);
+
+  /*!
+   * \brief Set the loop gain alpha
+   *
+   * Set's the loop filter's alpha gain parameter.
+   *
+   * This value should really only be set by adjusting the loop bandwidth
+   * and damping factor.
+   *
+   * \param alpha    (float) new alpha gain
+   *
+   */
+  void set_alpha(float alpha);
+
+  /*!
+   * \brief Set the loop gain beta
+   *
+   * Set's the loop filter's beta gain parameter.
+   *
+   * This value should really only be set by adjusting the loop bandwidth
+   * and damping factor.
+   *
+   * \param beta    (float) new beta gain
+   *
+   */
+  void set_beta(float beta);
 
   /*!
    * Set the maximum deviation from 0 d_rate can have
@@ -218,6 +278,33 @@ public:
     d_max_dev = m;
   }
   
+  /*******************************************************************
+    GET FUNCTIONS
+  *******************************************************************/
+
+  /*!
+   * \brief Returns the loop bandwidth
+   */
+  float get_loop_bandwidth() const;
+
+  /*!
+   * \brief Returns the loop damping factor
+   */
+  float get_damping_factor() const;
+
+  /*!
+   * \brief Returns the loop gain alpha
+   */
+  float get_alpha() const;
+
+  /*!
+   * \brief Returns the loop gain beta
+   */
+  float get_beta() const;
+
+  /*******************************************************************
+  *******************************************************************/
+
   bool check_topology(int ninputs, int noutputs);
 
   int general_work (int noutput_items,

@@ -22,7 +22,7 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,pfb_clock_sync_ccf);
 
-gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
+gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float loop_bw,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size=32,
 						       float init_phase=0,
@@ -32,7 +32,7 @@ gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 class gr_pfb_clock_sync_ccf : public gr_block
 {
  private:
-  gr_pfb_clock_sync_ccf (double sps, float gain,
+  gr_pfb_clock_sync_ccf (double sps, float loop_bw,
 			 const std::vector<float> &taps,
 			 unsigned int filter_size,
 			 float init_phase,
@@ -50,7 +50,16 @@ class gr_pfb_clock_sync_ccf : public gr_block
   std::vector<float> diff_channel_taps(int channel);
   void print_taps();
   void print_diff_taps();
+
+  void set_loop_bandwidth(float bw);
+  void set_damping_factor(float df);
   void set_alpha(float alpha);
   void set_beta(float beta);
   void set_max_rate_deviation(float m);
+
+  float get_loop_bandwidth() const;
+  float get_damping_factor() const;
+  float get_alpha() const;
+  float get_beta() const;
+
 };

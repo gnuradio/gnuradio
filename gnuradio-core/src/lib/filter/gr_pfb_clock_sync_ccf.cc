@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2010 Free Software Foundation, Inc.
+ * Copyright 2009-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,14 +33,14 @@
 #include <gr_io_signature.h>
 #include <gr_math.h>
 
-gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
+gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float loop_bw,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size,
 						       float init_phase,
 						       float max_rate_deviation,
 						       int osps)
 {
-  return gnuradio::get_initial_sptr(new gr_pfb_clock_sync_ccf (sps, gain, taps,
+  return gnuradio::get_initial_sptr(new gr_pfb_clock_sync_ccf (sps, loop_bw, taps,
 							       filter_size,
 							       init_phase,
 							       max_rate_deviation,
@@ -49,7 +49,7 @@ gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 
 static int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
 static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
-gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
+gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float loop_bw,
 					      const std::vector<float> &taps,
 					      unsigned int filter_size,
 					      float init_phase,
@@ -65,11 +65,15 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
   d_nfilters = filter_size;
   d_sps = floor(sps);
 
+  // Set the damping factor for a critically damped system
+  d_damping = sqrtf(2.0f)/2.0f;
+  
+  // Set the bandwidth, which will then call update_gains()
+  set_loop_bandwidth(loop_bw);
+  
   // Store the last filter between calls to work
   // The accumulator keeps track of overflow to increment the stride correctly.
   // set it here to the fractional difference based on the initial phaes
-  set_alpha(gain);
-  set_beta(0.25*gain*gain);
   d_k = init_phase;
   d_rate = (sps-floor(sps))*(double)d_nfilters;
   d_rate_i = (int)floor(d_rate);
@@ -106,6 +110,94 @@ gr_pfb_clock_sync_ccf::check_topology(int ninputs, int noutputs)
 {
   return noutputs == 1 || noutputs == 4;
 }
+
+
+
+/*******************************************************************
+    SET FUNCTIONS
+*******************************************************************/
+
+
+void
+gr_pfb_clock_sync_ccf::set_loop_bandwidth(float bw) 
+{
+  if(bw < 0) {
+    throw std::out_of_range ("gr_pfb_clock_sync_cc: invalid bandwidth. Must be >= 0.");
+  }
+  
+  d_loop_bw = bw;
+  update_gains();
+}
+
+void
+gr_pfb_clock_sync_ccf::set_damping_factor(float df) 
+{
+  if(df < 0 || df > 1.0) {
+    throw std::out_of_range ("gr_pfb_clock_sync_cc: invalid damping factor. Must be in [0,1].");
+  }
+  
+  d_damping = df;
+  update_gains();
+}
+
+void
+gr_pfb_clock_sync_ccf::set_alpha(float alpha)
+{
+  if(alpha < 0 || alpha > 1.0) {
+    throw std::out_of_range ("gr_pfb_clock_sync_cc: invalid alpha. Must be in [0,1].");
+  }
+  d_alpha = alpha;
+}
+
+void
+gr_pfb_clock_sync_ccf::set_beta(float beta)
+{
+  if(beta < 0 || beta > 1.0) {
+    throw std::out_of_range ("gr_pfb_clock_sync_cc: invalid beta. Must be in [0,1].");
+  }
+  d_beta = beta;
+}
+
+/*******************************************************************
+    GET FUNCTIONS
+*******************************************************************/
+
+
+float
+gr_pfb_clock_sync_ccf::get_loop_bandwidth() const
+{
+  return d_loop_bw;
+}
+
+float
+gr_pfb_clock_sync_ccf::get_damping_factor() const
+{
+  return d_damping;
+}
+
+float
+gr_pfb_clock_sync_ccf::get_alpha() const
+{
+  return d_alpha;
+}
+
+float
+gr_pfb_clock_sync_ccf::get_beta() const
+{
+  return d_beta;
+}
+
+/*******************************************************************
+*******************************************************************/
+
+void
+gr_pfb_clock_sync_ccf::update_gains()
+{
+  float denom = (1.0 + 2.0*d_damping*d_loop_bw + d_loop_bw*d_loop_bw);
+  d_alpha = (4*d_damping*d_loop_bw) / denom;
+  d_beta = (4*d_loop_bw*d_loop_bw) / denom;
+}
+
 
 void
 gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
@@ -271,13 +363,13 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     }
 
     gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
-    error_r  = out[i].real() * diff.real();
-    error_i  = out[i].imag() * diff.imag();
+    error_r  = tanh(out[i].real()) * diff.real();
+    error_i  = tanh(out[i].imag()) * diff.imag();
     error = (error_i + error_r) / 2.0;       // average error from I&Q channel
 
     // Run the control loop to update the current phase (k) and tracking rate
-    d_k = d_k + d_alpha*error + d_rate_i + d_rate_f;
     d_rate_f = d_rate_f + d_beta*error;
+    d_k = d_k + d_alpha*error + d_rate_i + d_rate_f;
     
     // Keep our rate within a good range
     d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
