@@ -262,9 +262,10 @@ class generic_demod(gr.hier_block2):
         self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
 
         # Frequency correction
-        self.freq_recov = gr.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
-                                              11*int(self._samples_per_symbol),
-                                              self._freq_alpha, self._freq_beta)
+        self.bandwidth = 6.28 / 100.0
+        self.freq_recov = digital_swig.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
+                                                        11*int(self._samples_per_symbol),
+                                                        self.bandwidth)
 
         # symbol timing recovery with RRC data filter
         nfilts = 32
