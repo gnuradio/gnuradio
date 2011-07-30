@@ -131,19 +131,6 @@ ENDIF(ENABLE_PYTHON)
 # Create Pkg Config File
 ########################################################################
 FILE(TO_NATIVE_PATH "\${prefix}/${GR_INCLUDE_DIR}/gnuradio" includedir) #different from other gr modules
-FILE(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_DATA_DIR}/guile/site" guile_load_path) #screw this...
-
-FOREACH(boost_include ${Boost_INCLUDE_DIRS})
-    SET(BOOST_CXXFLAGS "-I${boost_include} ${BOOST_CXXFLAGS}")
-ENDFOREACH(boost_include)
-
-FOREACH(boost_libdir ${Boost_LIBRARY_DIRS})
-    SET(BOOST_LDFLAGS "-L${boost_libdir} ${BOOST_LDFLAGS}")
-ENDFOREACH(boost_libdir)
-
-FOREACH(boost_ldflag ${Boost_LIBRARIES})
-    SET(BOOST_LDFLAGS "${boost_ldflag} ${BOOST_LDFLAGS}")
-ENDFOREACH(boost_ldflag)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-core.pc.in
