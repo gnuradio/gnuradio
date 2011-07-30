@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,19 +23,30 @@
 GR_SWIG_BLOCK_MAGIC(gr,fll_band_edge_cc);
 
 gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
-						   int filter_size, float alpha, float beta);
+						   int filter_size, float bandwidth);
 
 class gr_fll_band_edge_cc : public gr_sync_block
 {
  private:
   gr_fll_band_edge_cc (float samps_per_sym, float rolloff,
-		       int filter_size, float alpha, float beta);
+		       int filter_size, float bandwidth);
 
  public:
   ~gr_fll_band_edge_cc ();
 
-  void set_alpha (float alpha);
-  void set_beta (float beta);
-  void design_filter(float samps_per_sym, float rolloff, int filter_size);
+  void set_loop_bandwidth(float bw);
+  void set_damping_factor(float df);
+  void set_alpha(float alpha);
+  void set_beta(float beta);
+  void set_samples_per_symbol(float sps);
+  void set_rolloff(float rolloff);
+  void set_filter_size(int filter_size);
+  float get_loop_bandwidth();
+  float get_damping_factor();
+  float get_alpha();
+  float get_beta();
+  float get_samples_per_symbol();
+  float get_rolloff();
+  int get_filter_size();
   void print_taps();
 };

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,10 +29,7 @@
 class gr_fll_band_edge_cc;
 typedef boost::shared_ptr<gr_fll_band_edge_cc> gr_fll_band_edge_cc_sptr;
 gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
-						   int filter_size, float alpha, float beta);
-
-class gr_fir_ccc;
-class gri_fft_complex;
+						   int filter_size, float bandwidth);
 
 /*!
  * \class gr_fll_band_edge_cc
@@ -52,6 +49,9 @@ class gri_fft_complex;
  * provides an error signal at the DC term that is directly proportional to the carrier frequency.
  * We then make a second-order loop using the error signal that is the running average of e(t).
  *
+ * In practice, the above equation can be simplified by just comparing the absolute value squared
+ * of the output of both filters: abs(x_l(t))^2 - abs(x_u(t))^2 = norm(x_l(t)) - norm(x_u(t)).
+ *
  * In theory, the band-edge filter is the derivative of the matched filter in frequency, 
  * (H_be(f) = \\frac{H(f)}{df}. In practice, this comes down to a quarter sine wave at the point
  * of the matched filter's rolloff (if it's a raised-cosine, the derivative of a cosine is a sine).
@@ -63,6 +63,10 @@ class gri_fft_complex;
  *
  * Note: We use FIR filters here because the filters have to have a flat phase response over the
  * entire frequency range to allow their comparisons to be valid.
+ *
+ * It is very important that the band edge filters be the derivatives of the pulse shaping filter,
+ * and that they be linear phase. Otherwise, the variance of the error will be very large.
+ *
  */
 
 class gr_fll_band_edge_cc : public gr_sync_block
@@ -73,58 +77,199 @@ class gr_fll_band_edge_cc : public gr_sync_block
    * \param samps_per_sym    (float) Number of samples per symbol of signal
    * \param rolloff          (float) Rolloff factor of signal
    * \param filter_size      (int)   Size (in taps) of the filter
-   * \param alpha            (float) Loop gain 1
-   * \param beta             (float) Loop gain 2
+   * \param bandwdith        (float) Loop bandwidth
    */
   friend gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
-							    int filter_size, float alpha, float beta);
+							    int filter_size, float bandwidth);
 
-  float                   d_alpha;
-  float                   d_beta;
+  float                   d_sps;
+  float                   d_rolloff;
+  int                     d_filter_size;
   float                   d_max_freq;
   float                   d_min_freq;
 
-  gr_fir_ccc*             d_filter_upper;
-  gr_fir_ccc*             d_filter_lower;
+  float                   d_loop_bw;
+  float                   d_damping;
+  float                   d_alpha;
+  float                   d_beta;
+
+  std::vector<gr_complex> d_taps_lower;
+  std::vector<gr_complex> d_taps_upper;
   bool			  d_updated;
-  float                   d_error;
+
   float                   d_freq;
-  float                   d_phase;
+  float                   d_phase; 
 
   /*!
    * Build the FLL
    * \param samps_per_sym (float) number of samples per symbol
    * \param rolloff (float) Rolloff (excess bandwidth) of signal filter
    * \param filter_size (int) number of filter taps to generate
-   * \param alpha (float) Alpha gain in the control loop
-   * \param beta  (float) Beta gain in the control loop
+   * \param bandwidth (float) Loop bandwidth
    */
   gr_fll_band_edge_cc(float samps_per_sym, float rolloff,
-		      int filter_size, float alpha, float beta);
-
-public:
-  ~gr_fll_band_edge_cc ();
+		      int filter_size, float bandwidth);
   
+  /*!
+   * \brief Update the gains, alpha and beta, of the loop filter.
+   */
+  void update_gains();
+
   /*!
    * Design the band-edge filter based on the number of samples per symbol,
    * filter rolloff factor, and the filter size
+   *
    * \param samps_per_sym    (float) Number of samples per symbol of signal
    * \param rolloff          (float) Rolloff factor of signal
    * \param filter_size      (int)   Size (in taps) of the filter
    */
   void design_filter(float samps_per_sym, float rolloff, int filter_size);
 
+public:
+  ~gr_fll_band_edge_cc ();
+
+  /*******************************************************************
+    SET FUNCTIONS
+  *******************************************************************/
+  
   /*!
-   * Set the alpha gainvalue
-   * \param alpha    (float) new gain value
+   * \brief Set the loop bandwidth
+   *
+   * Set the loop filter's bandwidth to \p bw. This should be between 
+   * 2*pi/200 and 2*pi/100  (in rads/samp). It must also be a positive
+   * number.
+   *
+   * When a new damping factor is set, the gains, alpha and beta, of the loop
+   * are recalculated by a call to update_gains().
+   *
+   * \param bw    (float) new bandwidth
+   *
+   */
+  void set_loop_bandwidth(float bw);
+
+  /*!
+   * \brief Set the loop damping factor
+   *
+   * Set the loop filter's damping factor to \p df. The damping factor
+   * should be sqrt(2)/2.0 for critically damped systems.
+   * Set it to anything else only if you know what you are doing. It must
+   * be a number between 0 and 1.
+   *
+   * When a new damping factor is set, the gains, alpha and beta, of the loop
+   * are recalculated by a call to update_gains().
+   *
+   * \param df    (float) new damping factor
+   *
+   */
+  void set_damping_factor(float df);
+
+  /*!
+   * \brief Set the loop gain alpha
+   *
+   * Set's the loop filter's alpha gain parameter.
+   *
+   * This value should really only be set by adjusting the loop bandwidth
+   * and damping factor.
+   *
+   * \param alpha    (float) new alpha gain
+   *
    */
   void set_alpha(float alpha);
 
   /*!
-   * Set the beta gain value
-   * \param beta    (float) new gain value
+   * \brief Set the loop gain beta
+   *
+   * Set's the loop filter's beta gain parameter.
+   *
+   * This value should really only be set by adjusting the loop bandwidth
+   * and damping factor.
+   *
+   * \param beta    (float) new beta gain
+   *
    */
-  void set_beta(float beta) { d_beta = beta; }
+  void set_beta(float beta);
+
+  /*!
+   * \brief Set the number of samples per symbol
+   *
+   * Set's the number of samples per symbol the system should use. This value
+   * is uesd to calculate the filter taps and will force a recalculation.
+   *
+   * \param sps    (float) new samples per symbol
+   *
+   */
+  void set_samples_per_symbol(float sps);
+
+  /*!
+   * \brief Set the rolloff factor of the shaping filter
+   *
+   * This sets the rolloff factor that is used in the pulse shaping filter
+   * and is used to calculate the filter taps. Changing this will force a
+   * recalculation of the filter taps.
+   *
+   * This should be the same value that is used in the transmitter's pulse
+   * shaping filter. It must be between 0 and 1 and is usually between
+   * 0.2 and 0.5 (where 0.22 and 0.35 are commonly used values).
+   *
+   * \param rolloff    (float) new shaping filter rolloff factor [0,1]
+   *
+   */
+  void set_rolloff(float rolloff);
+
+  /*!
+   * \brief Set the number of taps in the filter
+   *
+   * This sets the number of taps in the band-edge filters. Setting this will
+   * force a recalculation of the filter taps.
+   *
+   * This should be about the same number of taps used in the transmitter's
+   * shaping filter and also not very large. A large number of taps will
+   * result in a large delay between input and frequency estimation, and
+   * so will not be as accurate. Between 30 and 70 taps is usual.
+   *
+   * \param filter_size    (float) number of taps in the filters
+   *
+   */
+  void set_filter_size(int filter_size);
+
+  /*******************************************************************
+    GET FUNCTIONS
+  *******************************************************************/
+
+  /*!
+   * \brief Returns the loop bandwidth
+   */
+  float get_loop_bandwidth();
+
+  /*!
+   * \brief Returns the loop damping factor
+   */
+  float get_damping_factor();
+
+  /*!
+   * \brief Returns the loop gain alpha
+   */
+  float get_alpha();
+
+  /*!
+   * \brief Returns the loop gain beta
+   */
+  float get_beta();
+
+  /*!
+   * \brief Returns the number of sampler per symbol used for the filter
+   */
+  float get_samples_per_symbol();
+
+  /*!
+   * \brief Returns the rolloff factor used for the filter
+   */
+  float get_rolloff();
+
+  /*!
+   * \brief Returns the number of taps of the filter
+   */
+  int get_filter_size();
 
   /*!
    * Print the taps to screen.
