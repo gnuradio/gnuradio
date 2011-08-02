@@ -48,7 +48,7 @@ IF(ENABLE_GR_UHD)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_UHD_DESCRIPTION "The GNU Radio UHD Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_UHD_DESCRIPTION "GNU Radio UHD Blocks")
 
 CPACK_COMPONENT("uhd_runtime"
     GROUP        "UHD"

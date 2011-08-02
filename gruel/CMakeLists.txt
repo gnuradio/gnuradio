@@ -49,7 +49,7 @@ IF(ENABLE_GRUEL)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_GRUEL_DESCRIPTION "The GNU Radio Utility Etcetera Library")
+CPACK_SET(CPACK_COMPONENT_GROUP_GRUEL_DESCRIPTION "GNU Radio Utility Etcetera Library")
 
 CPACK_COMPONENT("gruel_runtime"
     GROUP        "Gruel"

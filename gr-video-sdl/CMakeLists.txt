@@ -47,7 +47,7 @@ IF(ENABLE_GR_VIDEO_SDL)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_VIDEO_SDL_DESCRIPTION "The GNU Radio Video SDL Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_VIDEO_SDL_DESCRIPTION "GNU Radio Video SDL Blocks")
 
 CPACK_COMPONENT("video_sdl_runtime"
     GROUP        "Video SDL"

@@ -79,7 +79,7 @@ IF(ENABLE_GR_CORE)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_CORE_DESCRIPTION "The GNU Radio Core Library")
+CPACK_SET(CPACK_COMPONENT_GROUP_CORE_DESCRIPTION "GNU Radio Core Library")
 
 CPACK_COMPONENT("core_runtime"
     GROUP        "Core"

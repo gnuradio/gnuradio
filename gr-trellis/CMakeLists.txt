@@ -46,7 +46,7 @@ IF(ENABLE_GR_TRELLIS)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_TRELLIS_DESCRIPTION "The GNU Radio Trellis Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_TRELLIS_DESCRIPTION "GNU Radio Trellis Blocks")
 
 CPACK_COMPONENT("trellis_docs"
     GROUP        "Trellis"
