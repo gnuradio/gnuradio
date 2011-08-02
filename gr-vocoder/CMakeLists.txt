@@ -44,7 +44,7 @@ IF(ENABLE_GR_VOCODER)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_vocoder_DESCRIPTION "The GNU Radio Vocoder Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_VOCODER_DESCRIPTION "GNU Radio Vocoder Blocks")
 
 CPACK_COMPONENT("vocoder_runtime"
     GROUP        "Vocoder"

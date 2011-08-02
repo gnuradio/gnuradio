@@ -44,7 +44,7 @@ IF(ENABLE_GR_PAGER)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_PAGER_DESCRIPTION "The GNU Radio Pager Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_PAGER_DESCRIPTION "GNU Radio Pager Blocks")
 
 CPACK_COMPONENT("pager_runtime"
     GROUP        "Pager"

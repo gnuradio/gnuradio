@@ -44,7 +44,7 @@ IF(ENABLE_GR_NOAA)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_NOAA_DESCRIPTION "The GNU Radio NOAA Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_NOAA_DESCRIPTION "GNU Radio NOAA Blocks")
 
 CPACK_COMPONENT("noaa_runtime"
     GROUP        "NOAA"

@@ -59,7 +59,7 @@ IF(ENABLE_GR_QTGUI)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_QTGUI_DESCRIPTION "The GNU Radio QtGUI Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_QTGUI_DESCRIPTION "GNU Radio QtGUI Blocks")
 
 CPACK_COMPONENT("qtgui_runtime"
     GROUP        "QtGUI"

@@ -42,7 +42,7 @@ IF(ENABLE_GR_AUDIO)
 # Setup CPack components
 ########################################################################
 INCLUDE(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_AUDIO_DESCRIPTION "The GNU Radio Audio Blocks")
+CPACK_SET(CPACK_COMPONENT_GROUP_AUDIO_DESCRIPTION "GNU Radio Audio Blocks")
 
 CPACK_COMPONENT("audio_runtime"
     GROUP        "Audio"
