@@ -130,8 +130,6 @@ ENDIF(ENABLE_PYTHON)
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-FILE(TO_NATIVE_PATH "\${prefix}/${GR_INCLUDE_DIR}/gnuradio" includedir) #different from other gr modules
-
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-core.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.pc
