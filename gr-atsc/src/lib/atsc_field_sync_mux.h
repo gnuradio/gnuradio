@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_FIELD_SYNC_MUX_H
 #define INCLUDED_ATSC_FIELD_SYNC_MUX_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsc_types.h>
 
 class atsc_field_sync_mux;
 typedef boost::shared_ptr<atsc_field_sync_mux> atsc_field_sync_mux_sptr;
 
-atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
+ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
 
 /*!
  * \brief Insert ATSC Field Syncs as required (atsc_data_segment --> atsc_data_segment)
@@ -36,9 +37,9 @@ atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
  *
  * input: atsc_data_segment; output: atsc_data_segment
  */
-class atsc_field_sync_mux : public gr_sync_block
+class ATSC_API atsc_field_sync_mux : public gr_sync_block
 {
-  friend atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
+  friend ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
 
   atsc_field_sync_mux();
 

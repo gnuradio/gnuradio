@@ -22,6 +22,7 @@
 #ifndef INCLUDED_ATSC_BIT_TIMING_LOOP_H
 #define INCLUDED_ATSC_BIT_TIMING_LOOP_H
 
+#include <atsc_api.h>
 #include <cstdio>
 #include <gr_block.h>
 #include <atsci_diag_output.h>
@@ -31,7 +32,7 @@
 class atsc_bit_timing_loop;
 typedef boost::shared_ptr<atsc_bit_timing_loop> atsc_bit_timing_loop_sptr;
 
-atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
+ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
 
 /*!
  * \brief ATSC BitTimingLoop3
@@ -40,9 +41,9 @@ atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
  * This class accepts a single real input and produces two outputs,
  *  the raw symbol (float) and the tag (atsc_syminfo)
  */
-class atsc_bit_timing_loop : public gr_block
+class ATSC_API atsc_bit_timing_loop : public gr_block
 {
-  friend atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
+  friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
 
   atsc_bit_timing_loop();
 

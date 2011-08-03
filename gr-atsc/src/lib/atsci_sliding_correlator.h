@@ -22,15 +22,17 @@
 #ifndef _ATSC_SLIDING_CORRELATOR_H_
 #define _ATSC_SLIDING_CORRELATOR_H_
 
+#include <atsc_api.h>
 #include <string.h>
 
-extern const unsigned char atsc_pn511[511];
-extern const unsigned char atsc_pn63[63];
+#include <atsci_pnXXX.h>
+//extern const unsigned char atsc_pn511[511];
+//extern const unsigned char atsc_pn63[63];
 
 /*!
  * \brief look for the PN 511 field sync pattern
  */
-class atsci_sliding_correlator {
+class ATSC_API atsci_sliding_correlator {
  public:
 
   atsci_sliding_correlator ();

@@ -22,12 +22,13 @@
 #ifndef INCLUDED_ATSC_DEPAD_H
 #define INCLUDED_ATSC_DEPAD_H
 
+#include <atsc_api.h>
 #include <gr_sync_interpolator.h>
 
 class atsc_depad;
 typedef boost::shared_ptr<atsc_depad> atsc_depad_sptr;
 
-atsc_depad_sptr atsc_make_depad();
+ATSC_API atsc_depad_sptr atsc_make_depad();
 
 /*!
  * \brief depad mpeg ts packets from 256 byte atsc_mpeg_packet to 188 byte char
@@ -35,9 +36,9 @@ atsc_depad_sptr atsc_make_depad();
  *
  * input: atsc_mpeg_packet; output: unsigned char
  */
-class atsc_depad : public gr_sync_interpolator
+class ATSC_API atsc_depad : public gr_sync_interpolator
 {
-  friend atsc_depad_sptr atsc_make_depad();
+  friend ATSC_API atsc_depad_sptr atsc_make_depad();
 
   atsc_depad();
 

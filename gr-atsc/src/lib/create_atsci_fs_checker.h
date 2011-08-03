@@ -23,12 +23,14 @@
 #ifndef _CREATE_ATSC_FS_CHECKER_H_
 #define _CREATE_ATSC_FS_CHECKER_H_
 
+#include <atsc_api.h>
+
 class atsci_fs_checker;
 
 /*!
  * Factory that creates appropriate atsci_fs_checker
  */
-atsci_fs_checker *create_atsci_fs_checker ();
+ATSC_API atsci_fs_checker *create_atsci_fs_checker ();
 
 
 #endif /* _CREATE_ATSC_FS_CHECKER_H_ */

@@ -23,9 +23,10 @@
 #ifndef _ATSC_VSBTX_LP_H_
 #define _ATSC_VSBTX_LP_H_
 
+#include <atsc_api.h>
 #include <gr_fir_builder.h>
 
-class atsc_vsbtx_lp : public gr_fir_builder
+class ATSC_API atsc_vsbtx_lp : public gr_fir_builder
 {
 public:
   virtual std::vector<float> taps (double sampling_freq);

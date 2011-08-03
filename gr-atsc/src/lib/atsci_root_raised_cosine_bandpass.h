@@ -22,9 +22,10 @@
 #ifndef _ATSC_RRC_BANDPASS_H_
 #define _ATSC_RRC_BANDPASS_H_
 
+#include <atsc_api.h>
 #include <atsci_root_raised_cosine.h>
 
-class atsc_root_raised_cosine_bandpass : public atsc_root_raised_cosine
+class ATSC_API atsc_root_raised_cosine_bandpass : public atsc_root_raised_cosine
 {
 public:
   atsc_root_raised_cosine_bandpass (double center_freq) : _center_freq (center_freq) {}

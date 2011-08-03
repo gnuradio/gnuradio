@@ -22,6 +22,7 @@
 #ifndef _ATSC_FS_CHECKER_H_
 #define _ATSC_FS_CHECKER_H_
 
+#include <atsc_api.h>
 #include <atsci_syminfo.h>
 
 /*!
@@ -47,7 +48,7 @@
  * occur every 832 samples assuming everything is working.
  */
 
-class atsci_fs_checker {
+class ATSC_API atsci_fs_checker {
 
 public:
 

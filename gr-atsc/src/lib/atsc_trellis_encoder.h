@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_TRELLIS_ENCODER_H
 #define INCLUDED_ATSC_TRELLIS_ENCODER_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_trellis_encoder.h>
 
 class atsc_trellis_encoder;
 typedef boost::shared_ptr<atsc_trellis_encoder> atsc_trellis_encoder_sptr;
 
-atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
+ATSC_API atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
 
 /*!
  * \brief ATSC 12-way interleaved trellis encoder (atsc_mpeg_packet_rs_encoded --> atsc_data_segment)
@@ -36,9 +37,9 @@ atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_data_segment
  */
-class atsc_trellis_encoder : public gr_sync_block
+class ATSC_API atsc_trellis_encoder : public gr_sync_block
 {
-  friend atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
+  friend ATSC_API atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
 
   atsci_trellis_encoder	d_trellis_encoder;
 

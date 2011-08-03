@@ -20,5 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-extern const unsigned char atsc_pn511[];
-extern const unsigned char atsc_pn63[];
+#include <atsc_api.h>
+
+ATSC_API extern const unsigned char atsc_pn511[];
+ATSC_API extern const unsigned char atsc_pn63[];

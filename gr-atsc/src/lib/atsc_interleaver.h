@@ -22,22 +22,23 @@
 #ifndef INCLUDED_ATSC_INTERLEAVER_H
 #define INCLUDED_ATSC_INTERLEAVER_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_data_interleaver.h>
 
 class atsc_interleaver;
 typedef boost::shared_ptr<atsc_interleaver> atsc_interleaver_sptr;
 
-atsc_interleaver_sptr atsc_make_interleaver();
+ATSC_API atsc_interleaver_sptr atsc_make_interleaver();
 
 /*!  \brief Interleave RS encoded ATSC data ( atsc_mpeg_packet_rs_encoded --> atsc_mpeg_packet_rs_encoded)* 
  *   \ingroup atsc
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_mpeg_packet_rs_encoded
  */
-class atsc_interleaver : public gr_sync_block
+class ATSC_API atsc_interleaver : public gr_sync_block
 {
-  friend atsc_interleaver_sptr atsc_make_interleaver();
+  friend ATSC_API atsc_interleaver_sptr atsc_make_interleaver();
 
   atsci_data_interleaver	d_interleaver;
 

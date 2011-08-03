@@ -23,10 +23,12 @@
 #ifndef _ATSCSINGLEVITERBI_H_
 #define _ATSCSINGLEVITERBI_H_
 
+#include <atsc_api.h>
+
 /*!
  * \brief single channel viterbi decoder
  */
-class atsci_single_viterbi
+class ATSC_API atsci_single_viterbi
 {
   
 public:

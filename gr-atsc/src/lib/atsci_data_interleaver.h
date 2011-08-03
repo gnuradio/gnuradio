@@ -23,13 +23,14 @@
 #ifndef _ATSC_DATA_INTERLEAVER_H_
 #define _ATSC_DATA_INTERLEAVER_H_
 
+#include <atsc_api.h>
 #include <atsc_types.h>
 #include <convolutional_interleaver.h>
 
 /*!
  * \brief atsc convolutional data interleaver
  */
-class atsci_data_interleaver : public convolutional_interleaver<unsigned char> {
+class ATSC_API atsci_data_interleaver : public convolutional_interleaver<unsigned char> {
  public:
   atsci_data_interleaver () : convolutional_interleaver<unsigned char>(true, 52, 4) {}
 
@@ -40,7 +41,7 @@ class atsci_data_interleaver : public convolutional_interleaver<unsigned char> {
 /*!
  * \brief atsc convolutional data deinterleaver
  */
-class atsci_data_deinterleaver : public convolutional_interleaver<unsigned char> {
+class ATSC_API atsci_data_deinterleaver : public convolutional_interleaver<unsigned char> {
  public:
   atsci_data_deinterleaver () :
     convolutional_interleaver<unsigned char>(false, 52, 4), alignment_fifo (156) {}

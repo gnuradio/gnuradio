@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_FS_CHECKER_H
 #define INCLUDED_ATSC_FS_CHECKER_H
 
+#include <atsc_api.h>
 #include <atsci_fs_checker.h>
 #include <gr_sync_block.h>
 
 class atsc_fs_checker;
 typedef boost::shared_ptr<atsc_fs_checker> atsc_fs_checker_sptr;
 
-atsc_fs_checker_sptr atsc_make_fs_checker();
+ATSC_API atsc_fs_checker_sptr atsc_make_fs_checker();
 
 /*!
  * \brief ATSC field sync checker (float,syminfo --> float,syminfo)
@@ -38,7 +39,7 @@ atsc_fs_checker_sptr atsc_make_fs_checker();
  * second output is set of tags, one-for-one with first output.
  */
 
-class atsc_fs_checker : public gr_sync_block
+class ATSC_API atsc_fs_checker : public gr_sync_block
 {
   friend atsc_fs_checker_sptr atsc_make_fs_checker();
 

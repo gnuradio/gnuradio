@@ -22,6 +22,7 @@
 #ifndef _ATSC_BASIC_TRELLIS_ENCODER_H_
 #define _ATSC_BASIC_TRELLIS_ENCODER_H_
 
+#include <atsc_api.h>
 #include <assert.h>
 
 /*!
@@ -36,7 +37,7 @@
  * filter is not supported.
  */
 
-class atsci_basic_trellis_encoder {
+class ATSC_API atsci_basic_trellis_encoder {
 
 private:
   int		    state;		// two bit state;

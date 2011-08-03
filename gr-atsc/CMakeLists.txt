@@ -27,12 +27,9 @@ INCLUDE(GrBoost)
 ########################################################################
 INCLUDE(GrComponent)
 GR_REGISTER_COMPONENT("gr-atsc" ENABLE_GR_ATSC
-    UNIX #FIXME until we get MSVC working with this and Reed-Solomon codec
     Boost_FOUND
     ENABLE_GR_CORE_
 )
-
-REMOVE_DEFINITIONS(-fvisibility=hidden) #FIXME until we do symbol visibility
 
 GR_SET_GLOBAL(GR_ATSC_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib

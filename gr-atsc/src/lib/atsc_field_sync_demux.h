@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_FIELD_SYNC_DEMUX_H
 #define INCLUDED_ATSC_FIELD_SYNC_DEMUX_H
 
+#include <atsc_api.h>
 #include <gr_block.h>
 #include <atsc_types.h>
 
 class atsc_field_sync_demux;
 typedef boost::shared_ptr<atsc_field_sync_demux> atsc_field_sync_demux_sptr;
 
-atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
+ATSC_API atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
 
 /*!
  * \brief ATSC Field Sync Demux
@@ -37,9 +38,9 @@ atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
  * \ingroup atsc
  *
  */
-class atsc_field_sync_demux : public gr_block
+class ATSC_API atsc_field_sync_demux : public gr_block
 {
-  friend atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
+  friend ATSC_API atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
 
   atsc_field_sync_demux();
 

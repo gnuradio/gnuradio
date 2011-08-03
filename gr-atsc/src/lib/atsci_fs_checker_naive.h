@@ -23,12 +23,13 @@
 #ifndef _ATSC_FS_CHECKER_NAIVE_H_
 #define _ATSC_FS_CHECKER_NAIVE_H_
 
+#include <atsc_api.h>
 #include <atsci_fs_checker.h>
 
 /*!
  * \brief Naive concrete implementation of field sync checker
  */
-class atsci_fs_checker_naive : public atsci_fs_checker {
+class ATSC_API atsci_fs_checker_naive : public atsci_fs_checker {
 
  private:
   static const int	SRSIZE = 1024;		// must be power of two

@@ -23,12 +23,14 @@
 #ifndef _CREATE_ATSC_FS_CORRELATOR_H_
 #define _CREATE_ATSC_FS_CORRELATOR_H_
 
+#include <atsc_api.h>
+
 class atsci_fs_correlator;
 
 /*!
  * Factory that creates appropriate atsci_fs_correlator
  */
-atsci_fs_correlator *create_atsci_fs_correlator ();
+ATSC_API atsci_fs_correlator *create_atsci_fs_correlator ();
 
 
 #endif /* _CREATE_ATSC_FS_CORRELATOR_H_ */

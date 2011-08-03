@@ -23,6 +23,7 @@
 #ifndef _ATSC_REED_SOLOMON_H_
 #define _ATSC_REED_SOLOMON_H_
 
+#include <atsc_api.h>
 #include <atsc_types.h>
 
 /*!
@@ -32,7 +33,7 @@
  * See figure D5 on page 55.
  */
 
-class atsci_reed_solomon {
+class ATSC_API atsci_reed_solomon {
 
  public:
   atsci_reed_solomon();
