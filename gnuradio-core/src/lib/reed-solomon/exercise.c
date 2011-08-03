@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 
 #ifdef FIXED
 #include "fixed.h"
@@ -47,11 +46,19 @@ int trials){
 #if !defined(CCSDS) && !defined(FIXED)
   struct rs *rs = (struct rs *)p;
 #endif
+#if MAX_ARRAY
+  DTYPE block[MAX_ARRAY],tblock[MAX_ARRAY];
+  int i;
+  int errors;
+  int errlocs[MAX_ARRAY];
+  int derrlocs[MAX_ARRAY];
+#else
   DTYPE block[NN],tblock[NN];
   int i;
   int errors;
   int errlocs[NN];
   int derrlocs[NROOTS];
+#endif
   int derrors;
   int errval,errloc;
   int erasures;

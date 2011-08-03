@@ -20,10 +20,18 @@
 ########################################################################
 # This file included, use CMake directory variables
 ########################################################################
-IF(NOT MSVC) #FIXME can't build reed-solomon in MSVC.
-#The rs sources use a lot of non-standard code
-#like the array allocation and some c99 functions.
-#In short, will not fix unless someone asks nicely.
+#MSVC workaround: we cant have dynamically sized arrays.
+#So ifdef a max array bounds that is larger than NN and NROOTS
+#Its a bit of a hack, but if you look at the code, its so full of ifdefs,
+#and lacks optimization where it should be pre-allocating these arrays.
+IF(MSVC)
+    SET_SOURCE_FILES_PROPERTIES(
+        ${CMAKE_CURRENT_SOURCE_DIR}/exercise.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/decode_rs.c
+        PROPERTIES COMPILE_DEFINITIONS "MAX_ARRAY=256;"
+    )
+ENDIF(MSVC)
+
 SET(gr_core_rs_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/encode_rs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/decode_rs.c
@@ -52,4 +60,3 @@ ADD_EXECUTABLE(gr_core_rstest
 )
 ADD_TEST(gr-core-reed-solomon-test gr_core_rstest)
 ENDIF(ENABLE_TESTING)
-ENDIF(NOT MSVC)

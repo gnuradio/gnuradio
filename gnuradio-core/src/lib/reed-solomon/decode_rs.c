@@ -31,11 +31,19 @@ DTYPE *data, int *eras_pos, int no_eras){
 #endif
   int deg_lambda, el, deg_omega;
   int i, j, r,k;
+#ifdef MAX_ARRAY
+  DTYPE u,q,tmp,num1,num2,den,discr_r;
+  DTYPE lambda[MAX_ARRAY], s[MAX_ARRAY];	/* Err+Eras Locator poly
+					 * and syndrome poly */
+  DTYPE b[MAX_ARRAY], t[MAX_ARRAY], omega[MAX_ARRAY];
+  DTYPE root[MAX_ARRAY], reg[MAX_ARRAY], loc[MAX_ARRAY];
+#else
   DTYPE u,q,tmp,num1,num2,den,discr_r;
   DTYPE lambda[NROOTS+1], s[NROOTS];	/* Err+Eras Locator poly
 					 * and syndrome poly */
   DTYPE b[NROOTS+1], t[NROOTS+1], omega[NROOTS+1];
   DTYPE root[NROOTS], reg[NROOTS+1], loc[NROOTS];
+#endif
   int syn_error, count;
 
   /* form the syndromes; i.e., evaluate data(x) at roots of g(x) */
