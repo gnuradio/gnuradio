@@ -98,6 +98,9 @@ FUNCTION(GR_ADD_TEST test_name)
         ENDFOREACH(arg)
         FILE(APPEND ${sh_file} "\n")
 
+        #make the shell file executable
+        EXECUTE_PROCESS(COMMAND chmod +x ${sh_file})
+
         ADD_TEST(${test_name} ${SHELL} ${sh_file})
 
     ENDIF(UNIX)

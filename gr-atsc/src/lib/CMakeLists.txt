@@ -131,7 +131,7 @@ LIST(APPEND test_atsci_sources
 )
 
 INCLUDE(GrTest)
-SET(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core)
+SET(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel)
 ADD_EXECUTABLE(test_atsci ${test_atsci_sources} test_atsci.cc)
 TARGET_LINK_LIBRARIES(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)
