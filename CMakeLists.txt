@@ -26,9 +26,7 @@ ENDIF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 # Project setup
 ########################################################################
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-PROJECT(gnuradio)
-ENABLE_LANGUAGE(CXX)
-ENABLE_LANGUAGE(C)
+PROJECT(gnuradio CXX C)
 ENABLE_TESTING()
 
 #select the release build type by default to get optimization flags
