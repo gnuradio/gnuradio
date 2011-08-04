@@ -51,10 +51,6 @@ ENDIF(PYTHON_EXECUTABLE)
 #make the path to the executable appear in the cmake gui
 SET(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
 
-IF(NOT PYTHONINTERP_FOUND)
-    MESSAGE(FATAL_ERROR "Error: Python interpretor required by the build system.")
-ENDIF(NOT PYTHONINTERP_FOUND)
-
 ########################################################################
 # Check for the existence of a python module:
 # - desc a string description of the check
@@ -93,6 +89,19 @@ print sysconfig.get_python_lib(plat_specific=True, prefix='')
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 FILE(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
+
+########################################################################
+# Create an always-built target with a unique name
+# Usage: GR_UNIQUE_TARGET(<description> <dependencies list>)
+########################################################################
+FUNCTION(GR_UNIQUE_TARGET desc)
+    FILE(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
+unique = hashlib.md5('${reldir}${ARGN}').hexdigest()[:5]
+print(re.sub('\\W', '_', '${desc} ${reldir} ' + unique))"
+    OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
+    ADD_CUSTOM_TARGET(${_target} ALL DEPENDS ${ARGN})
+ENDFUNCTION(GR_UNIQUE_TARGET)
 
 ########################################################################
 # Install python sources (also builds and installs byte-compiled python)
@@ -163,7 +172,6 @@ FUNCTION(GR_PYTHON_INSTALL)
 
     ENDIF()
 
-    INCLUDE(GrMiscUtils) #unique target
     GR_UNIQUE_TARGET("pygen" ${python_install_gen_targets})
 
 ENDFUNCTION(GR_PYTHON_INSTALL)
