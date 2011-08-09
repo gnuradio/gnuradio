@@ -223,13 +223,16 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
   // Partition the filter
   for(i = 0; i < d_nfilters; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
-    ourtaps[d_nfilters-1-i] = std::vector<float>(d_taps_per_filter, 0);
+    //ourtaps[d_nfilters-1-i] = std::vector<float>(d_taps_per_filter, 0);
+    ourtaps[i] = std::vector<float>(d_taps_per_filter, 0);
     for(j = 0; j < d_taps_per_filter; j++) {
-      ourtaps[d_nfilters - 1 - i][j] = tmp_taps[i + j*d_nfilters];
+      //ourtaps[d_nfilters - 1 - i][j] = tmp_taps[i + j*d_nfilters];
+      ourtaps[i][j] = tmp_taps[i + j*d_nfilters];
     }
     
     // Build a filter for each channel and add it's taps to it
-    ourfilter[i]->set_taps(ourtaps[d_nfilters-1-i]);
+    //ourfilter[i]->set_taps(ourtaps[d_nfilters-1-i]);
+    ourfilter[i]->set_taps(ourtaps[i]);
   }
 
   // Set the history to ensure enough input items for each filter
@@ -242,58 +245,84 @@ void
 gr_pfb_clock_sync_ccf::create_diff_taps(const std::vector<float> &newtaps,
 					std::vector<float> &difftaps)
 {
-  float maxtap = 1e-20;
-  difftaps.clear();
-  difftaps.push_back(0); //newtaps[0]);
-  for(unsigned int i = 1; i < newtaps.size()-1; i++) {
-    float tap = newtaps[i+1] - newtaps[i-1];
+  std::vector<float> diff_filter(3);
+  diff_filter[0] = -1;
+  diff_filter[1] = 0;
+  diff_filter[2] = 1;
+
+  float pwr = 0;
+  difftaps.push_back(0);
+  for(unsigned int i = 0; i < newtaps.size()-2; i++) {
+    float tap = 0;
+    for(int j = 0; j < 3; j++) {
+      tap += diff_filter[j]*newtaps[i+j];
+      pwr += fabsf(tap);
+    }
     difftaps.push_back(tap);
-    if(tap > maxtap) {
-      maxtap = tap;
-    }
   }
-  difftaps.push_back(0);//-newtaps[newtaps.size()-1]);
+  difftaps.push_back(0);
 
-  // Scale the differential taps; helps scale error term to better update state
-  // FIXME: should this be scaled this way or use the same gain as the taps?
   for(unsigned int i = 0; i < difftaps.size(); i++) {
-    difftaps[i] /= maxtap;
+    difftaps[i] *= pwr;
   }
 }
 
-void
-gr_pfb_clock_sync_ccf::print_taps()
+std::string
+gr_pfb_clock_sync_ccf::get_taps_as_string()
 {
   int i, j;
-  printf("[ ");
+  std::stringstream str;
+  str.precision(4);
+  str.setf(std::ios::scientific);
+
+  str << "[ ";
   for(i = 0; i < d_nfilters; i++) {
-    printf("[%.4e, ", d_taps[i][0]);
+    str << "[" << d_taps[i][0] << ", ";
     for(j = 1; j < d_taps_per_filter-1; j++) {
-      printf("%.4e,", d_taps[i][j]);
+      str << d_taps[i][j] << ", ";
     }
-    printf("%.4e],", d_taps[i][j]);
+    str << d_taps[i][j] << "],";
   }
-  printf(" ]\n");
+  str << " ]" << std::endl;
+  
+  return str.str();
 }
 
-void
-gr_pfb_clock_sync_ccf::print_diff_taps()
+std::string
+gr_pfb_clock_sync_ccf::get_diff_taps_as_string()
 {
   int i, j;
-  printf("[ ");
+  std::stringstream str;
+  str.precision(4);
+  str.setf(std::ios::scientific);
+
+  str << "[ ";
   for(i = 0; i < d_nfilters; i++) {
-    printf("[%.4e, ", d_dtaps[i][0]);
+    str << "[" << d_dtaps[i][0] << ", ";
     for(j = 1; j < d_taps_per_filter-1; j++) {
-      printf("%.4e,", d_dtaps[i][j]);
+      str << d_dtaps[i][j] << ", ";
     }
-    printf("%.4e],", d_dtaps[i][j]);
+    str << d_dtaps[i][j] << "],";
   }
-  printf(" ]\n");
+  str << " ]" << std::endl;
+
+  return str.str();
 }
 
+std::vector< std::vector<float> > 
+gr_pfb_clock_sync_ccf::get_taps()
+{
+  return d_taps;
+}
+
+std::vector< std::vector<float> > 
+gr_pfb_clock_sync_ccf::get_diff_taps()
+{
+  return d_dtaps;
+}
 
 std::vector<float>
-gr_pfb_clock_sync_ccf::channel_taps(int channel)
+gr_pfb_clock_sync_ccf::get_channel_taps(int channel)
 {
   std::vector<float> taps;
   for(int i = 0; i < d_taps_per_filter; i++) {
@@ -303,7 +332,7 @@ gr_pfb_clock_sync_ccf::channel_taps(int channel)
 }
 
 std::vector<float>
-gr_pfb_clock_sync_ccf::diff_channel_taps(int channel)
+gr_pfb_clock_sync_ccf::get_diff_channel_taps(int channel)
 {
   std::vector<float> taps;
   for(int i = 0; i < d_taps_per_filter; i++) {
@@ -322,7 +351,7 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   gr_complex *in = (gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
 
-  float *err = 0, *outrate = 0, *outk = 0;
+  float *err = NULL, *outrate = NULL, *outk = NULL;
   if(output_items.size() == 4) {
     err = (float *) output_items[1];
     outrate = (float*)output_items[2];
@@ -363,8 +392,8 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     }
 
     gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
-    error_r  = tanh(out[i].real()) * diff.real();
-    error_i  = tanh(out[i].imag()) * diff.imag();
+    error_r = out[i].real() * diff.real();
+    error_i = out[i].imag() * diff.imag();
     error = (error_i + error_r) / 2.0;       // average error from I&Q channel
 
     // Run the control loop to update the current phase (k) and tracking rate
@@ -377,7 +406,7 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     if(output_items.size() == 4) {
       // FIXME: don't really know what to do about d_osps>1
       for(int k = 0; k < d_osps; k++) {
-	err[i] = error;
+	err[i] = diff.real();
 	outrate[i] = d_rate_f;
 	outk[i] = d_k;
       }

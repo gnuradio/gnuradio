@@ -188,24 +188,34 @@ public:
 		 std::vector<gr_fir_ccf*> &ourfilter);
 
   /*!
-   * Returns the taps of the matched filter
+   * Returns all of the taps of the matched filter
    */
-  std::vector<float> channel_taps(int channel);
+  std::vector< std::vector<float> > get_taps();
 
   /*!
-   * Returns the taps in the derivative filter
+   * Returns all of the taps of the derivative filter
    */
-  std::vector<float> diff_channel_taps(int channel);
+  std::vector< std::vector<float> > get_diff_taps();
 
   /*!
-   * Print all of the filterbank taps to screen.
+   * Returns the taps of the matched filter for a particular channel
    */
-  void print_taps();
+  std::vector<float> get_channel_taps(int channel);
 
   /*!
-   * Print all of the filterbank taps of the derivative filter to screen.
+   * Returns the taps in the derivative filter for a particular channel
    */
-  void print_diff_taps();
+  std::vector<float> get_diff_channel_taps(int channel);
+
+  /*!
+   * Return the taps as a formatted string for printing
+   */
+  std::string get_taps_as_string();
+
+  /*!
+   * Return the derivative filter taps as a formatted string for printing
+   */
+  std::string get_diff_taps_as_string();
 
 
   /*******************************************************************

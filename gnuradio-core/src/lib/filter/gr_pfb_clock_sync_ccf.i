@@ -46,10 +46,12 @@ class gr_pfb_clock_sync_ccf : public gr_block
 		 std::vector< std::vector<float> > &ourtaps,
 		 std::vector<gr_fir_ccf*> &ourfilter);
 
-  std::vector<float> channel_taps(int channel);
-  std::vector<float> diff_channel_taps(int channel);
-  void print_taps();
-  void print_diff_taps();
+  std::vector< std::vector<float> > get_taps();
+  std::vector< std::vector<float> > get_diff_taps();
+  std::vector<float> get_channel_taps(int channel);
+  std::vector<float> get_diff_channel_taps(int channel);
+  std::string get_taps_as_string();
+  std::string get_diff_taps_as_string();
 
   void set_loop_bandwidth(float bw);
   void set_damping_factor(float df);
