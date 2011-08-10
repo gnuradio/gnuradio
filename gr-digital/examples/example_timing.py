@@ -20,13 +20,14 @@ except ImportError:
 from scipy import fftpack
 
 class example_timing(gr.top_block):
-    def __init__(self, N, sps, rolloff, ntaps, bw, noise, foffset, toffset, poffset):
+    def __init__(self, N, sps, rolloff, ntaps, bw, noise,
+                 foffset, toffset, poffset, mode=0):
         gr.top_block.__init__(self)
 
         rrc_taps = gr.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
-        gain = scipy.pi/100.0
+        gain = 2*scipy.pi/100.0
         nfilts = 32
         rrc_taps_rx = gr.firdes.root_raised_cosine(
             nfilts, sps*nfilts, 1.0, rolloff, ntaps*nfilts)
@@ -38,23 +39,39 @@ class example_timing(gr.top_block):
         self.rrc = gr.interp_fir_filter_ccf(sps, rrc_taps)
         self.chn = gr.channel_model(noise, foffset, toffset)
         self.off = gr.fractional_interpolator_cc(0.20, 1.0)
-        self.clk = gr.pfb_clock_sync_ccf(sps, gain, rrc_taps_rx,
-                                         nfilts, nfilts/2, 3.5)
 
-        self.taps = self.clk.get_taps()
-        self.dtaps = self.clk.get_diff_taps()
+        if mode == 0:
+            self.clk = gr.pfb_clock_sync_ccf(sps, gain, rrc_taps_rx,
+                                             nfilts, nfilts/2, 3.5)
+            self.taps = self.clk.get_taps()
+            self.dtaps = self.clk.get_diff_taps()
+
+            self.vsnk_err = gr.vector_sink_f()
+            self.vsnk_rat = gr.vector_sink_f()
+            self.vsnk_phs = gr.vector_sink_f()
+
+            self.connect((self.clk,1), self.vsnk_err)
+            self.connect((self.clk,2), self.vsnk_rat)
+            self.connect((self.clk,3), self.vsnk_phs)
+            
+        else: # mode == 1
+            mu = 0.5
+            gain_mu = 0.1
+            gain_omega = 0.25*gain_mu*gain_mu
+            omega_rel_lim = 0.02
+            self.clk = digital.clock_recovery_mm_cc(sps, gain_omega,
+                                                    mu, gain_mu,
+                                                    omega_rel_lim)
+
+            self.vsnk_err = gr.vector_sink_f()
+
+            self.connect((self.clk,1), self.vsnk_err)
 
         self.vsnk_src = gr.vector_sink_c()
         self.vsnk_clk = gr.vector_sink_c()
-        self.vsnk_err = gr.vector_sink_f()
-        self.vsnk_rat = gr.vector_sink_f()
-        self.vsnk_phs = gr.vector_sink_f()
 
         self.connect(self.src, self.rrc, self.chn, self.off, self.clk, self.vsnk_clk)
         self.connect(self.off, self.vsnk_src)
-        self.connect((self.clk,1), self.vsnk_err)
-        self.connect((self.clk,2), self.vsnk_rat)
-        self.connect((self.clk,3), self.vsnk_phs)
 
 
 def main():
@@ -77,6 +94,8 @@ def main():
                       help="Set the simulation's timing offset [default=%default]")
     parser.add_option("-p", "--poffset", type="eng_float", default=0.0,
                       help="Set the simulation's phase offset [default=%default]")
+    parser.add_option("-M", "--mode", type="int", default=0,
+                      help="Set the recovery mode (0: polyphase, 1: M&M) [default=%default]")
     (options, args) = parser.parse_args ()
 
     # Adjust N for the interpolation by sps
@@ -85,67 +104,102 @@ def main():
     # Set up the program-under-test
     put = example_timing(options.nsamples, options.sps, options.rolloff,
                          options.ntaps, options.bandwidth, options.noise,
-                         options.foffset, options.toffset, options.poffset)
+                         options.foffset, options.toffset, options.poffset,
+                         options.mode)
     put.run()
 
-    data_src = scipy.array(put.vsnk_src.data()[20:])
-    data_clk = scipy.array(put.vsnk_clk.data()[20:])
+    if options.mode == 0:
+        data_src = scipy.array(put.vsnk_src.data()[20:])
+        data_clk = scipy.array(put.vsnk_clk.data()[20:])
 
-    data_err = scipy.array(put.vsnk_err.data()[20:])
-    data_rat = scipy.array(put.vsnk_rat.data()[20:])
-    data_phs = scipy.array(put.vsnk_phs.data()[20:])
-    
-    # Plot the clock recovery loop's error
-    f1 = pylab.figure(1, figsize=(12,10), facecolor='w')
-    s1 = f1.add_subplot(2,2,1)
-    s1.plot(data_err)
-    #s1.plot(data_rat, 'r')
-    s1.set_title("Clock Recovery Loop Error")
-    s1.set_xlabel("Samples")
-    s1.set_ylabel("Error")
+        data_err = scipy.array(put.vsnk_err.data()[20:])
+        data_rat = scipy.array(put.vsnk_rat.data()[20:])
+        data_phs = scipy.array(put.vsnk_phs.data()[20:])
 
-    # Plot the clock recovery loop's error
-    f1 = pylab.figure(1, figsize=(12,10), facecolor='w')
-    s2 = f1.add_subplot(2,2,2)
-    s2.plot(data_phs)
-    s2.set_title("Clock Recovery Loop Filter Phase")
-    s2.set_xlabel("Samples")
-    s2.set_ylabel("Filter Phase")
+        f1 = pylab.figure(1, figsize=(12,10), facecolor='w')
 
-    # Plot the IQ symbols
-    s3 = f1.add_subplot(2,2,3)
-    s3.plot(data_src.real, data_src.imag, "o")
-    s3.plot(data_clk.real, data_clk.imag, "rx")
-    s3.set_title("IQ")
-    s3.set_xlabel("Real part")
-    s3.set_ylabel("Imag part")
-    s3.set_xlim([-2, 2])
-    s3.set_ylim([-2, 2])
+        # Plot the IQ symbols
+        s1 = f1.add_subplot(2,2,1)
+        s1.plot(data_src.real, data_src.imag, "bo")
+        s1.plot(data_clk.real, data_clk.imag, "ro")
+        s1.set_title("IQ")
+        s1.set_xlabel("Real part")
+        s1.set_ylabel("Imag part")
+        s1.set_xlim([-2, 2])
+        s1.set_ylim([-2, 2])
 
-    # Plot the symbols in time
-    s4 = f1.add_subplot(2,2,4)
-    s4.plot(data_src.real, "o-")
-    s4.plot(data_clk.real, "rx-")
-    s4.set_title("Symbols")
-    s4.set_xlabel("Samples")
-    s4.set_ylabel("Real Part of Signals")
+        # Plot the symbols in time
+        s2 = f1.add_subplot(2,2,2)
+        s2.plot(data_src.real, "bo-")
+        s2.plot(data_clk.real, "ro")
+        s2.set_title("Symbols")
+        s2.set_xlabel("Samples")
+        s2.set_ylabel("Real Part of Signals")
+
+        # Plot the clock recovery loop's error
+        s3 = f1.add_subplot(2,2,3)
+        s3.plot(data_err)
+        s3.set_title("Clock Recovery Loop Error")
+        s3.set_xlabel("Samples")
+        s3.set_ylabel("Error")
+
+        # Plot the clock recovery loop's error
+        s4 = f1.add_subplot(2,2,4)
+        s4.plot(data_phs)
+        s4.set_title("Clock Recovery Loop Filter Phase")
+        s4.set_xlabel("Samples")
+        s4.set_ylabel("Filter Phase")
 
 
-    diff_taps = put.dtaps
-    ntaps = len(diff_taps[0])
-    nfilts = len(diff_taps)
-    t = scipy.arange(0, ntaps*nfilts)
+        diff_taps = put.dtaps
+        ntaps = len(diff_taps[0])
+        nfilts = len(diff_taps)
+        t = scipy.arange(0, ntaps*nfilts)
 
-    f3 = pylab.figure(3, figsize=(12,10), facecolor='w')
-    s31 = f3.add_subplot(2,1,1)
-    s32 = f3.add_subplot(2,1,2)
-    s31.set_title("Differential Filters")
-    s32.set_title("FFT of Differential Filters")
-    
-    for i,d in enumerate(diff_taps):
-        D = 20.0*scipy.log10(abs(fftpack.fftshift(fftpack.fft(d, 10000))))
-        s31.plot(t[i::nfilts].real, d, "-o")
-        s32.plot(D)
+        f3 = pylab.figure(3, figsize=(12,10), facecolor='w')
+        s31 = f3.add_subplot(2,1,1)
+        s32 = f3.add_subplot(2,1,2)
+        s31.set_title("Differential Filters")
+        s32.set_title("FFT of Differential Filters")
+
+        for i,d in enumerate(diff_taps):
+            D = 20.0*scipy.log10(abs(fftpack.fftshift(fftpack.fft(d, 10000))))
+            s31.plot(t[i::nfilts].real, d, "-o")
+            s32.plot(D)
+
+    # If testing the M&M clock recovery loop
+    else:
+        data_src = scipy.array(put.vsnk_src.data()[20:])
+        data_clk = scipy.array(put.vsnk_clk.data()[20:])
+
+        data_err = scipy.array(put.vsnk_err.data()[20:])
+
+        f1 = pylab.figure(1, figsize=(12,10), facecolor='w')
+        
+        # Plot the IQ symbols
+        s1 = f1.add_subplot(2,2,1)
+        s1.plot(data_src.real, data_src.imag, "o")
+        s1.plot(data_clk.real, data_clk.imag, "ro")
+        s1.set_title("IQ")
+        s1.set_xlabel("Real part")
+        s1.set_ylabel("Imag part")
+        s1.set_xlim([-2, 2])
+        s1.set_ylim([-2, 2])
+
+        # Plot the symbols in time
+        s2 = f1.add_subplot(2,2,2)
+        s2.plot(data_src.real, "o-")
+        s2.plot(data_clk.real, "ro")
+        s2.set_title("Symbols")
+        s2.set_xlabel("Samples")
+        s2.set_ylabel("Real Part of Signals")
+
+        # Plot the clock recovery loop's error
+        s3 = f1.add_subplot(2,2,3)
+        s3.plot(data_err)
+        s3.set_title("Clock Recovery Loop Error")
+        s3.set_xlabel("Samples")
+        s3.set_ylabel("Error")
 
     pylab.show()
     
