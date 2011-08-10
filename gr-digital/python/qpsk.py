@@ -51,7 +51,6 @@ def qpsk_constellation(m=_def_constellation_points):
 class qpsk_mod(generic_mod):
 
     def __init__(self, constellation_points=_def_constellation_points,
-                 differential=_def_differential,
                  gray_coded=_def_gray_coded,
                  *args, **kwargs):
 

@@ -248,7 +248,7 @@ class generic_demod(gr.hier_block2):
         self._phase_bw = phase_bw
         self._freq_bw = freq_bw
         self._timing_bw = timing_bw
-        self._timing_max_dev= _def_timing_max_dev,
+        self._timing_max_dev= _def_timing_max_dev
         self._differential = differential
 
         if self._samples_per_symbol < 2:
@@ -271,7 +271,7 @@ class generic_demod(gr.hier_block2):
                                             1.0, self._excess_bw, ntaps)
         self.time_recov = gr.pfb_clock_sync_ccf(self._samples_per_symbol,
                                                 self._timing_bw, taps, 
-                                                nfilts, nfilts/2, self._timing_max_dev)
+                                                nfilts, nfilts//2, self._timing_max_dev)
 
         self._phase_alpha = 0.1
         self._phase_beta  = 0.25 * self._phase_alpha * self._phase_alpha
@@ -367,16 +367,12 @@ class generic_demod(gr.hier_block2):
         # Add options shared with modulator.
         add_common_options(parser)
         # Add options specific to demodulator.
-        parser.add_option("", "--freq-alpha", type="float", default=_def_freq_alpha,
-                          help="set frequency lock loop alpha gain value [default=%default]")
-        parser.add_option("", "--phase-alpha", type="float", default=_def_phase_alpha,
-                          help="set phase tracking loop alpha value [default=%default]")
-        parser.add_option("", "--timing-alpha", type="float", default=_def_timing_alpha,
-                          help="set timing symbol sync loop gain alpha value [default=%default]")
-        parser.add_option("", "--timing-beta", type="float", default=_def_timing_beta,
-                          help="set timing symbol sync loop gain beta value [default=%default]")
-        parser.add_option("", "--timing-max-dev", type="float", default=_def_timing_max_dev,
-                          help="set timing symbol sync loop maximum deviation [default=%default]")
+        parser.add_option("", "--freq-bw", type="float", default=_def_freq_bw,
+                          help="set frequency lock loop lock-in bandwidth [default=%default]")
+        parser.add_option("", "--phase-bw", type="float", default=_def_phase_bw,
+                          help="set phase tracking loop lock-in bandwidth [default=%default]")
+        parser.add_option("", "--timing-bw", type="float", default=_def_timing_bw,
+                          help="set timing symbol sync loop gain lock-in bandwidth [default=%default]")
     add_options=staticmethod(add_options)
     
     def extract_kwargs_from_options(cls, options):
