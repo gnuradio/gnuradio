@@ -67,7 +67,8 @@ class bpsk_mod(generic_mod):
         constellation = digital_swig.constellation_bpsk()
         if constellation_points != 2:
             raise ValueError('Number of constellation points must be 2 for BPSK.')
-        super(bpsk_mod, self).__init__(constellation, *args, **kwargs)
+        super(bpsk_mod, self).__init__(constellation=constellation,
+                                       *args, **kwargs)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           BPSK demodulator
@@ -92,7 +93,8 @@ class bpsk_demod(generic_demod):
         constellation = digital_swig.constellation_bpsk()
         if constellation_points != 2:
             raise ValueError('Number of constellation points must be 2 for BPSK.')
-        super(bpsk_demod, self).__init__(constellation, *args, **kwargs)
+        super(bpsk_demod, self).__init__(constellation=constellation,
+                                         *args, **kwargs)
 
 #
 # Add these to the mod/demod registry

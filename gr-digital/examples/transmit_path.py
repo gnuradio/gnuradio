@@ -50,7 +50,7 @@ class transmit_path(gr.hier_block2):
 
         # Get mod_kwargs
         mod_kwargs = self._modulator_class.extract_kwargs_from_options(options)
-    
+        
         # transmitter
 	modulator = self._modulator_class(**mod_kwargs)
         self.packet_transmitter = \

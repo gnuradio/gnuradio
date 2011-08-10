@@ -23,7 +23,6 @@
 QPSK modulation.
 
 Demodulation is not included since the generic_mod_demod
-doesn't work for non-differential encodings.
 """
 
 from gnuradio import gr
@@ -33,8 +32,7 @@ import modulation_utils2
 
 # Default number of points in constellation.
 _def_constellation_points = 4
-# Whether differential coding is used.
-_def_differential = False
+# Whether gray coding is used.
 _def_gray_coded = True
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -70,9 +68,11 @@ class qpsk_mod(generic_mod):
         constellation = digital_swig.constellation_qpsk()
         if constellation_points != 4:
             raise ValueError("QPSK can only have 4 constellation points.")
-        if differential or not gray_coded:
-            raise ValueError("This QPSK mod/demod works only for gray-coded, non-differential.")
-        super(qpsk_mod, self).__init__(constellation, differential, gray_coded, *args, **kwargs)
+        if not gray_coded:
+            raise ValueError("This QPSK mod/demod works only for gray-coded constellations.")
+        super(qpsk_mod, self).__init__(constellation=constellation,
+                                       gray_coded=gray_coded, 
+                                       *args, **kwargs)
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -98,8 +98,8 @@ class qpsk_demod(generic_demod):
         constellation = digital_swig.constellation_qpsk()
         if constellation_points != 4:
             raise ValueError('Number of constellation points must be 4 for QPSK.')
-        super(qpsk_demod, self).__init__(constellation, *args, **kwargs)
-
+        super(qpsk_demod, self).__init__(constellation=constellation,
+                                         *args, **kwargs)
 
 #
 # Add these to the mod/demod registry
