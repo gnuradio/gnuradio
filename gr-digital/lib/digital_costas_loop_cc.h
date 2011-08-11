@@ -93,7 +93,7 @@ class digital_costas_loop_cc : public gr_sync_block
   digital_costas_loop_cc (float loop_bw, int order
 			  ) throw (std::invalid_argument);
   
-  /*! \brief update the system gains from omega and eta
+  /*! \brief update the system gains from the loop bandwidth and damping factor
    *
    *  This function updates the system gains based on the loop
    *  bandwidth and damping factor of the system.
@@ -249,11 +249,6 @@ public:
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
-
-  /*! \brief returns the current NCO frequency in radians/sample
-   *
-   */
-  float freq() const { return d_freq; }
 };
 
 #endif

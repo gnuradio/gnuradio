@@ -46,7 +46,6 @@ digital_costas_loop_cc::digital_costas_loop_cc (float loop_bw, int order
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature2 (1, 2, sizeof (gr_complex), sizeof(float))),
     d_max_freq(1.0), d_min_freq(-1.0),
-    d_loop_bw(loop_bw),
     d_order(order), d_phase_detector(NULL)
 {
   // Set the damping factor for a critically damped system
