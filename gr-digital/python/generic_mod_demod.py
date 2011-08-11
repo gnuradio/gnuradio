@@ -185,17 +185,17 @@ class generic_mod(gr.hier_block2):
     def _setup_logging(self):
         print "Modulation logging turned on."
         self.connect(self.bytes2chunks,
-                     gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.dat"))
+                     gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.8b"))
         if self._constellation.apply_pre_diff_code():
             self.connect(self.symbol_mapper,
-                         gr.file_sink(gr.sizeof_char, "tx_symbol_mapper.dat"))
+                         gr.file_sink(gr.sizeof_char, "tx_symbol_mapper.8b"))
         if self._differential:
             self.connect(self.diffenc,
-                         gr.file_sink(gr.sizeof_char, "tx_diffenc.dat"))
+                         gr.file_sink(gr.sizeof_char, "tx_diffenc.8b"))
         self.connect(self.chunks2symbols,
-                     gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.dat"))
+                     gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.32fc"))
         self.connect(self.rrc_filter,
-                     gr.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.dat"))
+                     gr.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.32fc"))
               
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -342,7 +342,7 @@ class generic_demod(gr.hier_block2):
         self.connect((self.time_recov, 3),
                      gr.file_sink(gr.sizeof_float, "rx_time_recov_phase.32f"))
         self.connect((self.receiver, 0),
-                     gr.file_sink(gr.sizeof_char, "rx_receiver.8c"))
+                     gr.file_sink(gr.sizeof_char, "rx_receiver.8b"))
         self.connect((self.receiver, 1),
                      gr.file_sink(gr.sizeof_float, "rx_receiver_error.32f"))
         self.connect((self.receiver, 2),
@@ -351,12 +351,12 @@ class generic_demod(gr.hier_block2):
                      gr.file_sink(gr.sizeof_float, "rx_receiver_freq.32f"))
         if self._differential:
             self.connect(self.diffdec,
-                         gr.file_sink(gr.sizeof_char, "rx_diffdec.dat"))        
+                         gr.file_sink(gr.sizeof_char, "rx_diffdec.8b"))
         if self._constellation.apply_pre_diff_code():
             self.connect(self.symbol_mapper,
-                         gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.dat"))        
+                         gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.8b"))
         self.connect(self.unpack,
-                     gr.file_sink(gr.sizeof_char, "rx_unpack.dat"))
+                     gr.file_sink(gr.sizeof_char, "rx_unpack.8b"))
         
     def add_options(parser):
         """
