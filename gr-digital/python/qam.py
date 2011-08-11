@@ -113,7 +113,7 @@ def make_differential_constellation(m, gray_coded):
 
     return const_map
 
-def make_not_differential_constellation(m, gray_coded):
+def make_non_differential_constellation(m, gray_coded):
     side = int(pow(m, 0.5))
     if (not isinstance(m, int) or m < 4 or not is_power_of_four(m)):
         raise ValueError("m must be a power of 4 integer.")
@@ -158,7 +158,7 @@ def qam_constellation(constellation_points=_def_constellation_points,
     if differential:
         points = make_differential_constellation(constellation_points, gray_coded)
     else:
-        points = make_not_differential_constellation(constellation_points, gray_coded)
+        points = make_non_differential_constellation(constellation_points, gray_coded)
     side = int(sqrt(constellation_points))
     width = 2.0/(side-1)
     # No pre-diff code

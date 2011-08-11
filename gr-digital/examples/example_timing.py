@@ -42,7 +42,7 @@ class example_timing(gr.top_block):
 
         if mode == 0:
             self.clk = gr.pfb_clock_sync_ccf(sps, gain, rrc_taps_rx,
-                                             nfilts, nfilts/2, 3.5)
+                                             nfilts, nfilts//2, 3.5)
             self.taps = self.clk.get_taps()
             self.dtaps = self.clk.get_diff_taps()
 

@@ -47,7 +47,7 @@ _def_phase_bw = 2*math.pi/100.0
 # Number of points in constellation
 _def_constellation_points = 16
 # Whether differential coding is used.
-_def_differential = True
+_def_differential = False
 
 def add_common_options(parser):
     """
@@ -55,10 +55,12 @@ def add_common_options(parser):
     """
     parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
                       help="set the number of constellation points (must be a power of 2 (power of 4 for QAM) [default=%default]")
-    parser.add_option("", "--differential", action="store_true", dest="differential", default=True,
-                      help="use differential encoding [default=%default]")
-    parser.add_option("", "--not-differential", action="store_false", dest="differential",
+    parser.add_option("", "--non-differential", action="store_true",
+                      dest="differential", default=False,
                       help="do not use differential encoding [default=%default]")
+    parser.add_option("", "--differential", action="store_false",
+                      dest="differential", 
+                      help="use differential encoding [default=False]")
     parser.add_option("", "--mod-code", type="choice", choices=mod_codes.codes,
                       default=mod_codes.NO_CODE,
                       help="Select modulation code from: %s [default=%%default]"
@@ -270,17 +272,13 @@ class generic_demod(gr.hier_block2):
         taps = gr.firdes.root_raised_cosine(nfilts, nfilts*self._samples_per_symbol,
                                             1.0, self._excess_bw, ntaps)
         self.time_recov = gr.pfb_clock_sync_ccf(self._samples_per_symbol,
-                                                self._timing_bw, taps, 
+                                                self._timing_bw, taps,
                                                 nfilts, nfilts//2, self._timing_max_dev)
 
-        self._phase_alpha = 0.1
-        self._phase_beta  = 0.25 * self._phase_alpha * self._phase_alpha
         fmin = -0.25
         fmax = 0.25
-        
         self.receiver = digital_swig.constellation_receiver_cb(
-            self._constellation,
-            self._phase_alpha, self._phase_beta,
+            self._constellation, self._phase_bw,
             fmin, fmax)
         
         # Do differential decoding based on phase change of symbols
@@ -326,31 +324,31 @@ class generic_demod(gr.hier_block2):
     def _setup_logging(self):
         print "Modulation logging turned on."
         self.connect(self.agc,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_agc.32fc"))
         self.connect((self.freq_recov, 0),
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_freq_recov.dat"))
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_freq_recov.32fc"))
         self.connect((self.freq_recov, 1),
-                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_freq.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_freq.32f"))
         self.connect((self.freq_recov, 2),
-                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_phase.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_phase.32f"))
         self.connect((self.freq_recov, 3),
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_freq_recov_error.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_error.32f"))
         self.connect((self.time_recov, 0),
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_time_recov.dat"))
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_time_recov.32fc"))
         self.connect((self.time_recov, 1),
-                     gr.file_sink(gr.sizeof_float, "rx_time_recov_error.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_time_recov_error.32f"))
         self.connect((self.time_recov, 2),
-                     gr.file_sink(gr.sizeof_float, "rx_time_recov_rate.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_time_recov_rate.32f"))
         self.connect((self.time_recov, 3),
-                     gr.file_sink(gr.sizeof_float, "rx_time_recov_phase.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_time_recov_phase.32f"))
         self.connect((self.receiver, 0),
-                     gr.file_sink(gr.sizeof_char, "rx_receiver.dat"))
+                     gr.file_sink(gr.sizeof_char, "rx_receiver.8c"))
         self.connect((self.receiver, 1),
-                     gr.file_sink(gr.sizeof_float, "rx_receiver_error.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_receiver_error.32f"))
         self.connect((self.receiver, 2),
-                     gr.file_sink(gr.sizeof_float, "rx_receiver_phase.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_receiver_phase.32f"))
         self.connect((self.receiver, 3),
-                     gr.file_sink(gr.sizeof_float, "rx_receiver_freq.dat"))
+                     gr.file_sink(gr.sizeof_float, "rx_receiver_freq.32f"))
         if self._differential:
             self.connect(self.diffdec,
                          gr.file_sink(gr.sizeof_char, "rx_diffdec.dat"))        
