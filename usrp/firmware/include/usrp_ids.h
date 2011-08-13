@@ -59,6 +59,16 @@
 #define USB_PID_FSF_MSA			0x0016	  // Hans de Bok <hdbok@dionaea.demon.nl> Scotty's Modular Spectrum Analyzer
 
 #define USB_PID_FSF_LBNL_UXO            0x0018    // http://recycle.lbl.gov/~ldoolitt/uxo/
+#define USB_PID_FSF_BDALE_10            0x0019    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_11            0x001a    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_12            0x001b    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_13            0x001c    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_14            0x001d    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_15            0x001e    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_16            0x001f    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_17            0x0020    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_18            0x0021    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_19            0x0022    // Bdale Garbee <bdale@gag.com>
 
 
 #define	USB_DID_USRP_0			0x0000	  // unconfigured rev 0 USRP
