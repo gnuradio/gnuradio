@@ -21,6 +21,8 @@
 
 %include "gnuradio.i"
 
+%include <gri_control_loop.i>
+
 %{
 #include "digital_binary_slicer_fb.h"
 #include "digital_clock_recovery_mm_cc.h"

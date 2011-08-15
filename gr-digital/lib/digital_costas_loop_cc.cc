@@ -30,8 +30,6 @@
 #include <gr_sincos.h>
 #include <gr_math.h>
 
-#define M_TWOPI (2*M_PI)
-
 digital_costas_loop_cc_sptr
 digital_make_costas_loop_cc (float loop_bw, int order
 			     ) throw (std::invalid_argument)
@@ -45,15 +43,9 @@ digital_costas_loop_cc::digital_costas_loop_cc (float loop_bw, int order
   : gr_sync_block ("costas_loop_cc",
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature2 (1, 2, sizeof (gr_complex), sizeof(float))),
-    d_max_freq(1.0), d_min_freq(-1.0),
+    gri_control_loop(loop_bw, 1.0, -1.0),
     d_order(order), d_phase_detector(NULL)
 {
-  // Set the damping factor for a critically damped system
-  d_damping = sqrtf(2.0f)/2.0f;
-
-  // Set the bandwidth, which will then call update_gains()
-  set_loop_bandwidth(loop_bw);
-
   // Set up the phase detector to use based on the constellation order
   switch(d_order) {
   case 2:
@@ -72,10 +64,6 @@ digital_costas_loop_cc::digital_costas_loop_cc (float loop_bw, int order
     throw std::invalid_argument("order must be 2, 4, or 8");
     break;
   }
-
-  // Initialize loop values
-  d_freq = 0;
-  d_phase = 0;
 }
 
 float
@@ -119,126 +107,6 @@ digital_costas_loop_cc::phase_detector_2(gr_complex sample) const
   return (sample.real()*sample.imag());
 }
 
-/*******************************************************************
-    SET FUNCTIONS
-*******************************************************************/
-
-void
-digital_costas_loop_cc::set_loop_bandwidth(float bw) 
-{
-  if(bw < 0) {
-    throw std::out_of_range ("digital_costas_loop_cc: invalid bandwidth. Must be >= 0.");
-  }
-  
-  d_loop_bw = bw;
-  update_gains();
-}
-
-void
-digital_costas_loop_cc::set_damping_factor(float df) 
-{
-  if(df < 0 || df > 1.0) {
-    throw std::out_of_range ("digital_costas_loop_cc: invalid damping factor. Must be in [0,1].");
-  }
-  
-  d_damping = df;
-  update_gains();
-}
-
-void
-digital_costas_loop_cc::set_alpha(float alpha)
-{
-  if(alpha < 0 || alpha > 1.0) {
-    throw std::out_of_range ("digital_costas_loop_cc: invalid alpha. Must be in [0,1].");
-  }
-  d_alpha = alpha;
-}
-
-void
-digital_costas_loop_cc::set_beta(float beta)
-{
-  if(beta < 0 || beta > 1.0) {
-    throw std::out_of_range ("digital_costas_loop_cc: invalid beta. Must be in [0,1].");
-  }
-  d_beta = beta;
-}
-
-void
-digital_costas_loop_cc::set_frequency(float freq)
-{
-  if(freq > d_max_freq)
-    d_freq = d_min_freq;
-  else if(freq < d_min_freq)
-    d_freq = d_max_freq;
-  else
-    d_freq = freq;
-}
-
-void
-digital_costas_loop_cc::set_phase(float phase)
-{
-  d_phase = phase;
-  while(d_phase>M_TWOPI)
-    d_phase -= M_TWOPI;
-  while(d_phase<-M_TWOPI)
-    d_phase += M_TWOPI;
-}
-
-   
-/*******************************************************************
-    GET FUNCTIONS
-*******************************************************************/
-
-
-float
-digital_costas_loop_cc::get_loop_bandwidth() const
-{
-  return d_loop_bw;
-}
-
-float
-digital_costas_loop_cc::get_damping_factor() const
-{
-  return d_damping;
-}
-
-float
-digital_costas_loop_cc::get_alpha() const
-{
-  return d_alpha;
-}
-
-float
-digital_costas_loop_cc::get_beta() const
-{
-  return d_beta;
-}
-
-float
-digital_costas_loop_cc::get_frequency() const
-{
-  return d_freq;
-}
-
-float
-digital_costas_loop_cc::get_phase() const
-{
-  return d_phase;
-}
-
-
-/*******************************************************************
-*******************************************************************/
-
-
-void
-digital_costas_loop_cc::update_gains()
-{
-  float denom = (1.0 + 2.0*d_damping*d_loop_bw + d_loop_bw*d_loop_bw);
-  d_alpha = (4*d_damping*d_loop_bw) / denom;
-  d_beta = (4*d_loop_bw*d_loop_bw) / denom;
-}
-
 int
 digital_costas_loop_cc::work (int noutput_items,
 			      gr_vector_const_void_star &input_items,
@@ -262,18 +130,9 @@ digital_costas_loop_cc::work (int noutput_items,
       error = (*this.*d_phase_detector)(optr[i]);
       error = gr_branchless_clip(error, 1.0);
 	
-      d_freq = d_freq + d_beta * error;
-      d_phase = d_phase + d_freq + d_alpha * error;
-
-      while(d_phase>M_TWOPI)
-	d_phase -= M_TWOPI;
-      while(d_phase<-M_TWOPI)
-	d_phase += M_TWOPI;
-
-      if (d_freq > d_max_freq)
-	d_freq = d_min_freq;
-      else if (d_freq < d_min_freq)
-	d_freq = d_max_freq;
+      advance_loop(error);
+      phase_wrap();
+      frequency_limit();
       
       foptr[i] = d_freq;
     } 
@@ -284,20 +143,10 @@ digital_costas_loop_cc::work (int noutput_items,
       
       error = (*this.*d_phase_detector)(optr[i]);
       error = gr_branchless_clip(error, 1.0);
-      
-      d_freq = d_freq + d_beta * error;
-      d_phase = d_phase + d_freq + d_alpha * error;
-      
-      while(d_phase>M_TWOPI)
-	d_phase -= M_TWOPI;
-      while(d_phase<-M_TWOPI)
-	d_phase += M_TWOPI;
-      
-      if (d_freq > d_max_freq)
-	d_freq = d_min_freq;
-      else if (d_freq < d_min_freq)
-	d_freq = d_max_freq;
-      
+
+      advance_loop(error);
+      phase_wrap();
+      frequency_limit();
     }
   }
   return noutput_items;
