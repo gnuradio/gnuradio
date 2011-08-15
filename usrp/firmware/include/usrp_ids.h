@@ -44,21 +44,31 @@
 #define USB_PID_FSF_HPSDR_HA    	0x0007    // High Performance Software Defined Radio (Host Assisted Boot)
 #define USB_PID_FSF_QS1R	    	0x0008    // QS1R HF receiver
 #define USB_PID_FSF_EZDOP	    	0x0009    // ezdop <jcorgan@aeinet.com>
-#define USB_PID_FSF_BDALE_0		0x000a	  // Bdale Garbee <bdale@gag.com>
-#define USB_PID_FSF_BDALE_1		0x000b	  // Bdale Garbee <bdale@gag.com>
-#define USB_PID_FSF_BDALE_2		0x000c	  // Bdale Garbee <bdale@gag.com>
-#define USB_PID_FSF_BDALE_3		0x000d	  // Bdale Garbee <bdale@gag.com>
-#define USB_PID_FSF_BDALE_4		0x000e	  // Bdale Garbee <bdale@gag.com>
-#define USB_PID_FSF_BDALE_5		0x000f	  // Bdale Garbee <bdale@gag.com>
-#define USB_PID_FSF_BDALE_6		0x0010	  // Bdale Garbee <bdale@gag.com>
-#define USB_PID_FSF_BDALE_7		0x0011	  // Bdale Garbee <bdale@gag.com>
-#define USB_PID_FSF_BDALE_8		0x0012	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_Development   0x000a    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_TeleMetrum    0x000b    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_TeleDongle    0x000c    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_TeleTerra     0x000d    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_TeleBT        0x000e    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_TeleLaunch    0x000f    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_TeleLCO       0x0010    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_TeleScience   0x0011    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_TelePyro      0x0012    // Bdale Garbee <bdale@gag.com>
 #define USB_PID_FSF_BDALE_9		0x0013	  // Bdale Garbee <bdale@gag.com>
 #define USB_PID_FSF_HPSDR_HERMES	0x0014	  // HPSDR Hermes
 #define USB_PID_FSF_THINKRF		0x0015	  // Catalin Patulea <catalin.patulea@thinkrf.com>
 #define USB_PID_FSF_MSA			0x0016	  // Hans de Bok <hdbok@dionaea.demon.nl> Scotty's Modular Spectrum Analyzer
 
 #define USB_PID_FSF_LBNL_UXO            0x0018    // http://recycle.lbl.gov/~ldoolitt/uxo/
+#define USB_PID_FSF_BDALE_10            0x0019    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_11            0x001a    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_12            0x001b    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_13            0x001c    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_14            0x001d    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_15            0x001e    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_16            0x001f    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_17            0x0020    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_18            0x0021    // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_19            0x0022    // Bdale Garbee <bdale@gag.com>
 
 
 #define	USB_DID_USRP_0			0x0000	  // unconfigured rev 0 USRP
