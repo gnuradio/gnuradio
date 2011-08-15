@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// WARNING: this file is machine generated.  Edits will be over written
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -35,18 +33,16 @@
 #define M_TWOPI (2*M_PI)
 
 gr_pll_refout_cc_sptr
-gr_make_pll_refout_cc (float alpha, float beta, float max_freq, float min_freq)
+gr_make_pll_refout_cc (float loop_bw, float max_freq, float min_freq)
 {
-  return gnuradio::get_initial_sptr(new gr_pll_refout_cc (alpha, beta, max_freq, min_freq));
+  return gnuradio::get_initial_sptr(new gr_pll_refout_cc (loop_bw, max_freq, min_freq));
 }
 
-gr_pll_refout_cc::gr_pll_refout_cc (float alpha, float beta, float max_freq, float min_freq)
+gr_pll_refout_cc::gr_pll_refout_cc (float loop_bw, float max_freq, float min_freq)
   : gr_sync_block ("pll_refout_cc",
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature (1, 1, sizeof (gr_complex))),
-    d_alpha(alpha), d_beta(beta), 
-    d_max_freq(max_freq), d_min_freq(min_freq),
-    d_phase(0), d_freq((max_freq+min_freq)/2)
+    gri_control_loop(loop_bw, max_freq, min_freq)
 {
 }
 
@@ -84,13 +80,10 @@ gr_pll_refout_cc::work (int noutput_items,
   while (size-- > 0) {
     error = phase_detector(*iptr++,d_phase);
     
-    d_freq = d_freq + d_beta * error;
-    d_phase = mod_2pi(d_phase + d_freq + d_alpha * error);
+    advance_loop(error);
+    phase_wrap();
+    frequency_limit();
     
-    if (d_freq > d_max_freq)
-      d_freq = d_max_freq;
-    else if (d_freq < d_min_freq)
-      d_freq = d_min_freq;
     gr_sincosf(d_phase,&t_imag,&t_real);
     *optr++ = gr_complex(t_real,t_imag);
   }
