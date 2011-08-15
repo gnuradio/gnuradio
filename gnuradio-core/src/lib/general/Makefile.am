@@ -153,6 +153,7 @@ libgeneral_la_SOURCES = 		\
 	gr_wvps_ff.cc			\
 	gri_add_const_ss_generic.cc	\
 	gri_char_to_float.cc		\
+	gri_control_loop.cc		\
 	gri_debugger_hook.cc		\
 	gri_fft.cc			\
 	gri_float_to_char.cc		\
@@ -312,6 +313,7 @@ grinclude_HEADERS = 			\
 	gri_agc2_cc.h			\
 	gri_agc2_ff.h			\
 	gri_char_to_float.h		\
+	gri_control_loop.h		\
 	gri_debugger_hook.h		\
 	gri_fft.h			\
 	gri_float_to_char.h		\
@@ -460,6 +462,7 @@ swiginclude_HEADERS =			\
 	gri_agc_ff.i			\
 	gri_agc2_cc.i			\
 	gri_agc2_ff.i			\
+	gri_control_loop.i		\
 	gr_descrambler_bb.i		\
 	gr_scrambler_bb.i		\
 	gr_probe_mpsk_snr_c.i		\
