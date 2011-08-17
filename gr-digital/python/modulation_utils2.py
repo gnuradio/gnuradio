@@ -80,6 +80,7 @@ def extract_kwargs_from_options(function, excluded_args, options):
     @param options: result of command argument parsing
     @type options: optparse.Values
     """
+    
     # Try this in C++ ;)
     args, varargs, varkw, defaults = inspect.getargspec(function)
     d = {}

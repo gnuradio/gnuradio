@@ -24,7 +24,6 @@
 #define	INCLUDED_DIGITAL_CONSTELLATION_RECEIVER_CB_H
 
 #include <digital_api.h>
-#include <gruel/attributes.h>
 #include <gr_block.h>
 #include <digital_constellation.h>
 #include <gr_complex.h>
@@ -37,8 +36,7 @@ typedef boost::shared_ptr<digital_constellation_receiver_cb> digital_constellati
 // public constructor
 DIGITAL_API digital_constellation_receiver_cb_sptr 
 digital_make_constellation_receiver_cb (digital_constellation_sptr constellation,
-					float alpha, float beta,
-					float fmin, float fmax);
+					float loop_bw, float fmin, float fmax);
 
 /*!
  * \brief This block takes care of receiving generic modulated signals through phase, frequency, and symbol
@@ -75,31 +73,124 @@ class DIGITAL_API digital_constellation_receiver_cb : public gr_block
 		    gr_vector_void_star &output_items);
 
 
-  // Member function related to the phase/frequency tracking portion of the receiver
-  //! (CL) Returns the value for alpha (the phase gain term)
-  float alpha() const { return d_alpha; }
-  
-  //! (CL) Returns the value of beta (the frequency gain term)
-  float beta() const { return d_beta; }
+  /*******************************************************************
+    SET FUNCTIONS
+  *******************************************************************/  
 
-  //! (CL) Returns the current value of the frequency of the NCO in the Costas loop
-  float freq() const { return d_freq; }
+  /*!
+   * \brief Set the loop bandwidth
+   *
+   * Set the loop filter's bandwidth to \p bw. This should be between 
+   * 2*pi/200 and 2*pi/100  (in rads/samp). It must also be a positive
+   * number.
+   *
+   * When a new damping factor is set, the gains, alpha and beta, of the loop
+   * are recalculated by a call to update_gains().
+   *
+   * \param bw    (float) new bandwidth
+   *
+   */
+  void set_loop_bandwidth(float bw);
 
-  //! (CL) Returns the current value of the phase of the NCO in the Costal loop
-  float phase() const { return d_phase; }
+  /*!
+   * \brief Set the loop damping factor
+   *
+   * Set the loop filter's damping factor to \p df. The damping factor
+   * should be sqrt(2)/2.0 for critically damped systems.
+   * Set it to anything else only if you know what you are doing. It must
+   * be a number between 0 and 1.
+   *
+   * When a new damping factor is set, the gains, alpha and beta, of the loop
+   * are recalculated by a call to update_gains().
+   *
+   * \param df    (float) new damping factor
+   *
+   */
+  void set_damping_factor(float df);
 
-  //! (CL) Sets the value for alpha (the phase gain term)
-  void set_alpha(float alpha) { d_alpha = alpha; }
-  
-  //! (CL) Setss the value of beta (the frequency gain term)
-  void set_beta(float beta) { d_beta = beta; }
+  /*!
+   * \brief Set the loop gain alpha
+   *
+   * Set's the loop filter's alpha gain parameter.
+   *
+   * This value should really only be set by adjusting the loop bandwidth
+   * and damping factor.
+   *
+   * \param alpha    (float) new alpha gain
+   *
+   */
+  void set_alpha(float alpha);
 
-  //! (CL) Sets the current value of the frequency of the NCO in the Costas loop
-  void set_freq(float freq) { d_freq = freq; }
+  /*!
+   * \brief Set the loop gain beta
+   *
+   * Set's the loop filter's beta gain parameter.
+   *
+   * This value should really only be set by adjusting the loop bandwidth
+   * and damping factor.
+   *
+   * \param beta    (float) new beta gain
+   *
+   */
+  void set_beta(float beta);
 
-  //! (CL) Setss the current value of the phase of the NCO in the Costal loop
-  void set_phase(float phase) { d_phase = phase; }
+  /*!
+   * \brief Set the phase/freq recovery loop's frequency.
+   *
+   * Set's the phase/freq recovery loop's frequency. While this is normally
+   * updated by the inner loop of the algorithm, it could be useful to
+   * manually initialize, set, or reset this under certain circumstances.
+   *
+   * \param freq    (float) new frequency
+   *
+   */
+  void set_frequency(float freq);
 
+  /*!
+   * \brief Set the phase/freq recovery loop's phase.
+   *
+   * Set's the phase/freq recovery loop's phase. While this is normally
+   * updated by the inner loop of the algorithm, it could be useful to
+   * manually initialize, set, or reset this under certain circumstances.
+   *
+   * \param phase    (float) new phase
+   *
+   */
+  void set_phase(float phase);
+
+  /*******************************************************************
+    GET FUNCTIONS
+  *******************************************************************/
+
+  /*!
+   * \brief Returns the loop bandwidth
+   */
+  float get_loop_bandwidth() const;
+
+  /*!
+   * \brief Returns the loop damping factor
+   */
+  float get_damping_factor() const;
+
+  /*!
+   * \brief Returns the loop gain alpha
+   */
+  float get_alpha() const;
+
+  /*!
+   * \brief Returns the loop gain beta
+   */
+  float get_beta() const;
+
+  /*!
+   * \brief Get the phase/freq recovery loop's frequency estimate
+   */
+  float get_frequency() const;
+
+  /*!
+   * \brief Get the phase/freq loop's phase estimate
+   */
+  float get_phase() const;
 
 protected:
 
@@ -116,8 +207,7 @@ protected:
    * work loop based on the value of M.
    */
   digital_constellation_receiver_cb (digital_constellation_sptr constellation, 
-				     float alpha, float beta,
-				     float fmin, float fmax);
+				     float loop_bw, float fmin, float fmax);
 
   void phase_error_tracking(float phase_error);
 
@@ -125,10 +215,13 @@ protected:
   unsigned int d_M;
 
   // Members related to carrier and phase tracking
-  float d_alpha;
-  float d_beta;
   float d_freq, d_max_freq, d_min_freq;
   float d_phase;
+
+  float d_loop_bw;
+  float d_damping;
+  float d_alpha;
+  float d_beta;
 
   digital_constellation_sptr d_constellation;
   unsigned int d_current_const_point;
@@ -137,15 +230,23 @@ protected:
   static const unsigned int DLLEN = 8;
   
   //! delay line plus some length for overflow protection
-  __GR_ATTR_ALIGNED(8) gr_complex d_dl[2*DLLEN];
+  gr_complex d_dl[2*DLLEN] __attribute__ ((aligned(8)));
   
   //! index to delay line
   unsigned int d_dl_idx;
 
+  /*! \brief update the system gains from the loop bandwidth and damping factor
+   *
+   *  This function updates the system gains based on the loop
+   *  bandwidth and damping factor of the system.
+   *  These two factors can be set separately through their own
+   *  set functions.
+   */
+  void update_gains();
+
   friend DIGITAL_API digital_constellation_receiver_cb_sptr
   digital_make_constellation_receiver_cb (digital_constellation_sptr constell,
-					  float alpha, float beta,
-					  float fmin, float fmax);
+					  float loop_bw, float fmin, float fmax);
 };
 
 #endif

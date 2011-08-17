@@ -23,22 +23,11 @@
 GR_SWIG_BLOCK_MAGIC(digital,costas_loop_cc);
 
 digital_costas_loop_cc_sptr
-digital_make_costas_loop_cc (float damping, float nat_freq,
-			     int order
+digital_make_costas_loop_cc (float loop_bw, int order
 			     ) throw (std::invalid_argument);
 
-
-class digital_costas_loop_cc : public gr_sync_block
+class digital_costas_loop_cc : public gr_sync_block, public gri_control_loop
 {
  private:
-  digital_costas_loop_cc (float damping, float nat_freq,
-			  int order);
-
- public:
-  float alpha();
-  float beta();
-  float freq();   
-
-  void set_natural_freq(float w);
-  void set_damping_factor(float eta);
+  digital_costas_loop_cc (float loop_bw, int order);
 };

@@ -52,7 +52,7 @@ digital_clock_recovery_mm_cc::digital_clock_recovery_mm_cc (float omega, float g
 							    float omega_relative_limit)
   : gr_block ("clock_recovery_mm_cc",
 	      gr_make_io_signature (1, 1, sizeof (gr_complex)),
-	      gr_make_io_signature (1, 2, sizeof (gr_complex))),
+	      gr_make_io_signature2 (1, 2, sizeof (gr_complex), sizeof(float))),
     d_mu (mu), d_omega(omega), d_gain_omega(gain_omega), 
     d_omega_relative_limit(omega_relative_limit), 
     d_gain_mu(gain_mu), d_last_sample(0), d_interp(new gri_mmse_fir_interpolator_cc()),
@@ -121,7 +121,7 @@ digital_clock_recovery_mm_cc::general_work (int noutput_items,
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
-  gr_complex *foptr = (gr_complex *) output_items[1];
+  float *foptr = (float *) output_items[1];
 
   bool write_foptr = output_items.size() >= 2;
   
@@ -153,7 +153,7 @@ digital_clock_recovery_mm_cc::general_work (int noutput_items,
       out[oo++] = d_p_0T;
       
       // limit mm_val
-      mm_val = gr_branchless_clip(mm_val,1.0);
+      mm_val = gr_branchless_clip(mm_val,4.0);
       d_omega = d_omega + d_gain_omega * mm_val;
       d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);   // make sure we don't walk away
 
@@ -162,7 +162,7 @@ digital_clock_recovery_mm_cc::general_work (int noutput_items,
       d_mu -= floor(d_mu);
             
       // write the error signal to the second output
-      foptr[oo-1] = gr_complex(d_mu,0);
+      foptr[oo-1] = mm_val;
       
       if (ii < 0)	// clamp it.  This should only happen with bogus input
 	ii = 0;

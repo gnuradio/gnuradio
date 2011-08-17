@@ -85,16 +85,23 @@ class draw_constellation:
         except MemoryError:
             print "End of File"
         else:
-            self.reals = scipy.array([r.real for r in iq])
-            self.imags = scipy.array([i.imag for i in iq])
+            # retesting length here as newer version of scipy does not throw a MemoryError, just
+            # returns a zero-length array
+            if(len(iq) > 0):
+                self.reals = scipy.array([r.real for r in iq])
+                self.imags = scipy.array([i.imag for i in iq])
+                
+                self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
+                return Tr
+            else:
+                print "End of File"
+                return False
 
-            self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
-            
     def make_plots(self):
         # if specified on the command-line, set file pointer
         self.hfile.seek(self.sizeof_data*self.start, 1)
 
-        self.get_data()
+        r = self.get_data()
         
         # Subplot for real and imaginary parts of signal
         self.sp_iq = self.fig.add_subplot(2,1,1, position=[0.075, 0.2, 0.4, 0.6])
@@ -175,8 +182,9 @@ class draw_constellation:
         self.step_forward()
 
     def step_forward(self):
-        self.get_data()
-        self.update_plots()
+        r = self.get_data()
+        if(r):
+            self.update_plots()
 
     def step_backward(self):
         # Step back in file position
@@ -184,8 +192,9 @@ class draw_constellation:
             self.hfile.seek(-2*self.sizeof_data*self.block_length, 1)
         else:
             self.hfile.seek(-self.hfile.tell(),1)
-        self.get_data()
-        self.update_plots()
+        r = self.get_data()
+        if(r):
+            self.update_plots()
     
         
     def mouse_button_callback(self, event):

@@ -20,26 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,constellation_receiver_cb);
 
-%include "digital_constellation.i"
-
-digital_constellation_receiver_cb_sptr
-digital_make_constellation_receiver_cb (digital_constellation_sptr constellation,
-					float loop_bw, float fmin, float fmax);
-
-class digital_constellation_receiver_cb : public gr_block
+class gri_control_loop
 {
- private:
-  digital_constellation_receiver_cb (digital_contellation_sptr constellation,
-				     float loop_bw, float fmin, float fmax);
-public:
+ public:
+  gri_control_loop(float loop_bw, float max_freq, float min_freq);
+  virtual ~gri_control_loop();
+
+  void update_gains();
+  void advance_loop(float error);
+  void phase_wrap();
+  void frequency_limit();
+
+  /*******************************************************************
+    SET FUNCTIONS
+  *******************************************************************/
+
   void set_loop_bandwidth(float bw);
   void set_damping_factor(float df);
   void set_alpha(float alpha);
   void set_beta(float beta);
   void set_frequency(float freq);
   void set_phase(float phase);
+
+   
+  /*******************************************************************
+    GET FUNCTIONS
+  *******************************************************************/
 
   float get_loop_bandwidth() const;
   float get_damping_factor() const;

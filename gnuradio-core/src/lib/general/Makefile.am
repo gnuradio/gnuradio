@@ -72,7 +72,6 @@ libgeneral_la_SOURCES = 		\
 	gr_fft_vcc_fftw.cc		\
 	gr_fft_vfc.cc			\
 	gr_firdes.cc			\
-	gr_fll_band_edge_cc.cc		\
 	gr_float_to_char.cc		\
 	gr_float_to_complex.cc		\
 	gr_float_to_short.cc		\
@@ -154,6 +153,7 @@ libgeneral_la_SOURCES = 		\
 	gr_wvps_ff.cc			\
 	gri_add_const_ss_generic.cc	\
 	gri_char_to_float.cc		\
+	gri_control_loop.cc		\
 	gri_debugger_hook.cc		\
 	gri_fft.cc			\
 	gri_float_to_char.cc		\
@@ -220,7 +220,6 @@ grinclude_HEADERS = 			\
 	gr_fft_vcc_fftw.h		\
 	gr_fft_vfc.h			\
 	gr_firdes.h			\
-	gr_fll_band_edge_cc.h		\
 	gr_float_to_char.h		\
 	gr_float_to_complex.h		\
 	gr_float_to_short.h		\
@@ -314,6 +313,7 @@ grinclude_HEADERS = 			\
 	gri_agc2_cc.h			\
 	gri_agc2_ff.h			\
 	gri_char_to_float.h		\
+	gri_control_loop.h		\
 	gri_debugger_hook.h		\
 	gri_fft.h			\
 	gri_float_to_char.h		\
@@ -382,7 +382,6 @@ swiginclude_HEADERS =			\
 	gr_fft_vcc.i			\
 	gr_fft_vfc.i			\
 	gr_firdes.i			\
-	gr_fll_band_edge_cc.i		\
 	gr_float_to_char.i		\
 	gr_float_to_complex.i		\
 	gr_float_to_short.i		\
@@ -463,6 +462,7 @@ swiginclude_HEADERS =			\
 	gri_agc_ff.i			\
 	gri_agc2_cc.i			\
 	gri_agc2_ff.i			\
+	gri_control_loop.i		\
 	gr_descrambler_bb.i		\
 	gr_scrambler_bb.i		\
 	gr_probe_mpsk_snr_c.i		\

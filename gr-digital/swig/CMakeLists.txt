@@ -50,6 +50,7 @@ INSTALL(
     digital_costas_loop_cc.i
     digital_cma_equalizer_cc.i
     digital_crc32.i
+    digital_fll_band_edge_cc.i
     digital_lms_dd_equalizer_cc.i
     digital_kurtotic_equalizer_cc.i
     digital_mpsk_receiver_cc.i

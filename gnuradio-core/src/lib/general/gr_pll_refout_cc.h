@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,19 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
-
 #ifndef INCLUDED_GR_PLL_REFOUT_CC_H
 #define INCLUDED_GR_PLL_REFOUT_CC_H
 
 #include <gr_core_api.h>
 #include <gr_sync_block.h>
+#include <gri_control_loop.h>
 
 class gr_pll_refout_cc;
 typedef boost::shared_ptr<gr_pll_refout_cc> gr_pll_refout_cc_sptr;
 
-GR_CORE_API gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta,
-					       float max_freq, float min_freq);
+GR_CORE_API gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float loop_bw,
+					     float max_freq, float min_freq);
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs a carrier
  * \ingroup sync_blk
@@ -48,20 +47,19 @@ GR_CORE_API gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta
  * and beta is the frequency gain (second order, units of radians per sample per radian)
  * \sa gr_pll_freqdet_cf, gr_pll_carriertracking_cc
  */
-class GR_CORE_API gr_pll_refout_cc : public gr_sync_block
+class GR_CORE_API gr_pll_refout_cc : public gr_sync_block, public gri_control_loop
 {
-  friend GR_CORE_API gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta,
-							float max_freq, float min_freq);
+  friend GR_CORE_API gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float loop_bw,
+						      float max_freq, float min_freq);
 
-  float d_alpha,d_beta,d_max_freq,d_min_freq,d_phase,d_freq;
-  gr_pll_refout_cc (float alpha, float beta, float max_freq, float min_freq);
+  gr_pll_refout_cc (float loop_bw, float max_freq, float min_freq);
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
 private:
   float mod_2pi (float in);
-  float phase_detector(gr_complex sample,float ref_phase);
+  float phase_detector(gr_complex sample, float ref_phase);
 };
 
 #endif

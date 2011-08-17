@@ -147,9 +147,6 @@
 (pass-if (true? (gr:fft-vfc 4 #t #(1.0 2.0 3.0 4.0))))
 (pass-if-throw "confirm throw gr:fft-vfc" #t (true? (gr:fft-vfc 4 #f #(1.0 2.0 3.0 4.0))))
 
-;;; ./general/gr_fll_band_edge_cc.h
-(pass-if (true? (gr:fll-band-edge-cc 0 0 0 0 0)))
-
 ;; ;;; ./general/gr_float_to_char.h
 (pass-if (true? (gr:float-to-char)))
 

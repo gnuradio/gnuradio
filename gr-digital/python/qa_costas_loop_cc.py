@@ -34,10 +34,9 @@ class test_costas_loop_cc(gr_unittest.TestCase):
 
     def test01 (self):
         # test basic functionality by setting all gains to 0
-        damp = 0.0
         natfreq = 0.0
         order = 2
-        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+        self.test = digital_swig.costas_loop_cc(natfreq, order)
 
         data = 100*[complex(1,0),]
         self.src = gr.vector_source_c(data, False)
@@ -52,10 +51,9 @@ class test_costas_loop_cc(gr_unittest.TestCase):
 
     def test02 (self):
         # Make sure it doesn't diverge given perfect data
-        damp = 0.4
         natfreq = 0.25
         order = 2
-        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+        self.test = digital_swig.costas_loop_cc(natfreq, order)
 
         data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
         self.src = gr.vector_source_c(data, False)
@@ -71,10 +69,9 @@ class test_costas_loop_cc(gr_unittest.TestCase):
 
     def test03 (self):
         # BPSK Convergence test with static rotation
-        damp = 0.4
         natfreq = 0.25
         order = 2
-        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+        self.test = digital_swig.costas_loop_cc(natfreq, order)
 
         rot = cmath.exp(0.2j) # some small rotation
         data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
@@ -97,10 +94,9 @@ class test_costas_loop_cc(gr_unittest.TestCase):
 
     def test04 (self):
         # QPSK Convergence test with static rotation
-        damp = 0.4
         natfreq = 0.25
         order = 4
-        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+        self.test = digital_swig.costas_loop_cc(natfreq, order)
 
         rot = cmath.exp(0.2j) # some small rotation
         data = [complex(2*random.randint(0,1)-1, 2*random.randint(0,1)-1)
@@ -124,10 +120,9 @@ class test_costas_loop_cc(gr_unittest.TestCase):
 
     def test05 (self):
         # 8PSK Convergence test with static rotation
-        damp = 0.5
-        natfreq = 0.5
+        natfreq = 0.25
         order = 8
-        self.test = digital_swig.costas_loop_cc(damp, natfreq, order)
+        self.test = digital_swig.costas_loop_cc(natfreq, order)
 
         rot = cmath.exp(-cmath.pi/8.0j) # rotate to match Costas rotation
         const = psk2.psk_constellation(order)

@@ -23,6 +23,9 @@ include $(top_srcdir)/Makefile.common
 
 ourdatadir = $(exampledir)/digital
 
+noinst_PYTHON = 		\
+	example_fll.py
+
 dist_ourdata_SCRIPTS = \
 	transmit_path.py	\
 	receive_path.py

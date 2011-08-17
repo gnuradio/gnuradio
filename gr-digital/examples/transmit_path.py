@@ -44,17 +44,17 @@ class transmit_path(gr.hier_block2):
         self._verbose            = options.verbose
         self._tx_amplitude       = options.tx_amplitude    # digital amplitude sent to USRP
         self._bitrate            = options.bitrate         # desired bit rate
-        self._samples_per_symbol = options.samples_per_symbol  # desired samples/baud
 
         self._modulator_class = modulator_class         # the modulator_class we are using
 
         # Get mod_kwargs
         mod_kwargs = self._modulator_class.extract_kwargs_from_options(options)
-    
+        
         # transmitter
-	modulator = self._modulator_class(**mod_kwargs)
+	self.modulator = self._modulator_class(**mod_kwargs)
+        
         self.packet_transmitter = \
-            digital.mod_pkts(modulator,
+            digital.mod_pkts(self.modulator,
                              access_code=None,
                              msgq_limit=4,
                              pad_for_usrp=True)
@@ -87,7 +87,10 @@ class transmit_path(gr.hier_block2):
         return self._bitrate
 
     def samples_per_symbol(self):
-        return self._samples_per_symbol
+        return self.modulator._samples_per_symbol
+
+    def differential(self):
+        return self.modulator._differential
 
     def add_options(normal, expert):
         """
@@ -115,5 +118,5 @@ class transmit_path(gr.hier_block2):
         print "Tx amplitude     %s"    % (self._tx_amplitude)
         print "modulation:      %s"    % (self._modulator_class.__name__)
         print "bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate))
-        print "samples/symbol:  %.4f"    % (self._samples_per_symbol)
-        
+        print "samples/symbol:  %.4f"    % (self.samples_per_symbol())
+        print "Differential:    %s"    % (self.differential())

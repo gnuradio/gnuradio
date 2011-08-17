@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,24 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,constellation_receiver_cb);
+GR_SWIG_BLOCK_MAGIC(digital,fll_band_edge_cc);
 
-%include "digital_constellation.i"
+digital_fll_band_edge_cc_sptr digital_make_fll_band_edge_cc (float samps_per_sym,
+							     float rolloff,
+							     int filter_size,
+							     float bandwidth);
 
-digital_constellation_receiver_cb_sptr
-digital_make_constellation_receiver_cb (digital_constellation_sptr constellation,
-					float loop_bw, float fmin, float fmax);
-
-class digital_constellation_receiver_cb : public gr_block
+class digital_fll_band_edge_cc : public gr_sync_block
 {
  private:
-  digital_constellation_receiver_cb (digital_contellation_sptr constellation,
-				     float loop_bw, float fmin, float fmax);
-public:
+  digital_fll_band_edge_cc (float samps_per_sym, float rolloff,
+			    int filter_size, float bandwidth);
+
+ public:
+  ~digital_fll_band_edge_cc ();
+
   void set_loop_bandwidth(float bw);
   void set_damping_factor(float df);
   void set_alpha(float alpha);
   void set_beta(float beta);
+  void set_samples_per_symbol(float sps);
+  void set_rolloff(float rolloff);
+  void set_filter_size(int filter_size);
   void set_frequency(float freq);
   void set_phase(float phase);
 
@@ -45,6 +50,11 @@ public:
   float get_damping_factor() const;
   float get_alpha() const;
   float get_beta() const;
+  float get_samples_per_symbol() const;
+  float get_rolloff() const;
+  int get_filter_size() const;
   float get_frequency() const;
   float get_phase() const;
+
+  void print_taps();
 };

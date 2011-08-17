@@ -77,6 +77,7 @@ LIST(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss_generic.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_char_to_float.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_char.cc
@@ -131,6 +132,7 @@ INSTALL(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc2_cc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc2_ff.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_char_to_float.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_char.h
@@ -160,6 +162,7 @@ INSTALL(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc_ff.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc2_cc.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc2_ff.i
+    ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
 )
@@ -201,7 +204,6 @@ SET(gr_core_general_triple_threats
     gr_fft_vcc
     gr_fft_vfc
     gr_firdes
-    gr_fll_band_edge_cc
     gr_float_to_char
     gr_float_to_complex
     gr_float_to_short

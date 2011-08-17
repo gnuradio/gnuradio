@@ -21,6 +21,8 @@
 
 %include "gnuradio.i"
 
+%include <gri_control_loop.i>
+
 %{
 #include "digital_binary_slicer_fb.h"
 #include "digital_clock_recovery_mm_cc.h"
@@ -32,6 +34,7 @@
 #include "digital_correlate_access_code_bb.h"
 #include "digital_costas_loop_cc.h"
 #include "digital_crc32.h"
+#include "digital_fll_band_edge_cc.h"
 #include "digital_kurtotic_equalizer_cc.h"
 #include "digital_lms_dd_equalizer_cc.h"
 #include "digital_mpsk_receiver_cc.h"
@@ -47,6 +50,7 @@
 %include "digital_correlate_access_code_bb.i"
 %include "digital_costas_loop_cc.i"
 %include "digital_crc32.i"
+%include "digital_fll_band_edge_cc.i"
 %include "digital_kurtotic_equalizer_cc.i"
 %include "digital_lms_dd_equalizer_cc.i"
 %include "digital_mpsk_receiver_cc.i"

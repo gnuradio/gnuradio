@@ -24,8 +24,8 @@
 #ifndef INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 #define INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 
-#include <digital_api.h>
 #include <gr_sync_block.h>
+#include <gri_control_loop.h>
 #include <stdexcept>
 #include <fstream>
 
@@ -54,13 +54,15 @@
  * \param min_freq the minimum frequency deviation (radians/sample) the loop can handle
  * \param order the loop order, either 2 or 4
  */
+
+#include <digital_api.h>
+
 class digital_costas_loop_cc;
 typedef boost::shared_ptr<digital_costas_loop_cc> digital_costas_loop_cc_sptr;
 
 
 DIGITAL_API digital_costas_loop_cc_sptr 
-digital_make_costas_loop_cc (float damping, float nat_freq,
-			     int order
+digital_make_costas_loop_cc (float loop_bw, int order
 			     ) throw (std::invalid_argument);
 
 
@@ -74,34 +76,17 @@ digital_make_costas_loop_cc (float damping, float nat_freq,
  *
  * \p order must be 2 or 4.
  */
-class DIGITAL_API digital_costas_loop_cc : public gr_sync_block
+class DIGITAL_API digital_costas_loop_cc : public gr_sync_block, public gri_control_loop
 {
   friend DIGITAL_API digital_costas_loop_cc_sptr
-  digital_make_costas_loop_cc (float damping, float nat_freq,
-			       int order
+  digital_make_costas_loop_cc (float loop_bw, int order
 			       ) throw (std::invalid_argument);
 
-  float d_alpha, d_beta, d_max_freq, d_min_freq, d_phase, d_freq;
-  float d_nat_freq, d_damping;
   int d_order;
 
-  digital_costas_loop_cc (float damping, float nat_freq,
-			  int order
+  digital_costas_loop_cc (float loop_bw, int order
 			  ) throw (std::invalid_argument);
   
-  
-  /*! \brief update the system gains from omega and eta
-   *
-   *  This function updates the system gains based on the natural
-   *  frequency (omega) and damping factor (eta) of the system.
-   *  These two factors can be set separately through their own
-   *  set functions.
-   *
-   *  These equations are summarized nicely in this paper from Berkeley:
-   *  http://www.complextoreal.com/chapters/pll.pdf
-   */
-  void update_gains();
-
   /*! \brief the phase detector circuit for 8th-order PSK loops
    *  \param sample complex sample
    *  \return the phase error
@@ -125,27 +110,9 @@ class DIGITAL_API digital_costas_loop_cc : public gr_sync_block
 
 public:
 
-  void set_natural_freq(float w);
-  void set_damping_factor(float eta);
-
-  /*! \brief get the first order gain
-   * 
-   */
-  float alpha() const { return d_alpha; }
-  
-  /*! \brief get the second order gain
-   * 
-   */
-  float beta() const { return d_beta; }
-  
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
-
-  /*! \brief returns the current NCO frequency in radians/sample
-   *
-   */
-  float freq() const { return d_freq; }
 };
 
 #endif

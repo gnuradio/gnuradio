@@ -37,7 +37,7 @@ random.seed(1239)
 # TESTING PARAMETERS
 # The number of symbols to test with.
 # We need this many to let the frequency recovery block converge.
-DATA_LENGTH = 200000
+DATA_LENGTH = 10000
 # Test fails if fraction of output that is correct is less than this.
 REQ_CORRECT = 0.8
 

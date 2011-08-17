@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -42,7 +42,6 @@ class receive_path(gr.hier_block2):
 
         self._verbose            = options.verbose
         self._bitrate            = options.bitrate         # desired bit rate
-        self._samples_per_symbol = options.samples_per_symbol  # desired samples/symbol
 
         self._rx_callback   = rx_callback      # this callback is fired when there's a packet available
         self._demod_class   = demod_class      # the demodulator_class we're using
@@ -50,10 +49,13 @@ class receive_path(gr.hier_block2):
         # Get demod_kwargs
         demod_kwargs = self._demod_class.extract_kwargs_from_options(options)
 
+        # Build the demodulator
+        self.demodulator = self._demod_class(**demod_kwargs)
+        
         # Design filter to get actual channel we want
         sw_decim = 1
         chan_coeffs = gr.firdes.low_pass (1.0,                  # gain
-                                          sw_decim * self._samples_per_symbol, # sampling rate
+                                          sw_decim * self.samples_per_symbol(), # sampling rate
                                           1.0,                  # midpoint of trans. band
                                           0.5,                  # width of trans. band
                                           gr.firdes.WIN_HANN)   # filter type
@@ -61,7 +63,7 @@ class receive_path(gr.hier_block2):
         
         # receiver
         self.packet_receiver = \
-            digital.demod_pkts(self._demod_class(**demod_kwargs),
+            digital.demod_pkts(self.demodulator,
                                access_code=None,
                                callback=self._rx_callback,
                                threshold=-1)
@@ -88,7 +90,10 @@ class receive_path(gr.hier_block2):
         return self._bitrate
 
     def samples_per_symbol(self):
-        return self._samples_per_symbol
+        return self.demodulator._samples_per_symbol
+
+    def differential(self):
+        return self.demodulator._differential
 
     def carrier_sensed(self):
         """
@@ -137,4 +142,5 @@ class receive_path(gr.hier_block2):
         print "\nReceive Path:"
         print "modulation:      %s"    % (self._demod_class.__name__)
         print "bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate))
-        print "samples/symbol:  %.4f"   % (self._samples_per_symbol)
+        print "samples/symbol:  %.4f"    % (self.samples_per_symbol())
+        print "Differential:    %s"    % (self.differential())

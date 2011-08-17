@@ -42,6 +42,7 @@ LIST(APPEND gr_digital_sources
     digital_costas_loop_cc.cc
     digital_cma_equalizer_cc.cc
     digital_crc32.cc
+    digital_fll_band_edge_cc.cc
     digital_lms_dd_equalizer_cc.cc
     digital_kurtotic_equalizer_cc.cc
     digital_mpsk_receiver_cc.cc
@@ -67,6 +68,7 @@ INSTALL(TARGETS gnuradio-digital
 # Install header files
 ########################################################################
 INSTALL(FILES
+    digital_api.h
     digital_binary_slicer_fb.h
     digital_clock_recovery_mm_cc.h
     digital_clock_recovery_mm_ff.h
@@ -77,6 +79,7 @@ INSTALL(FILES
     digital_costas_loop_cc.h
     digital_cma_equalizer_cc.h
     digital_crc32.h
+    digital_fll_band_edge_cc.h
     digital_lms_dd_equalizer_cc.h
     digital_kurtotic_equalizer_cc.h
     digital_metric_type.h
