@@ -22,10 +22,12 @@
 #ifndef _CREATE_ATSC_EQUALIZER_H_
 #define _CREATE_ATSC_EQUALIZER_H_
 
+#include <atsc_api.h>
+
 class atsci_equalizer;
 
-atsci_equalizer *create_atsci_equalizer_nop ();
-atsci_equalizer *create_atsci_equalizer_lms ();
-atsci_equalizer *create_atsci_equalizer_lms2 ();
+ATSC_API atsci_equalizer *create_atsci_equalizer_nop ();
+ATSC_API atsci_equalizer *create_atsci_equalizer_lms ();
+ATSC_API atsci_equalizer *create_atsci_equalizer_lms2 ();
 
 #endif /* _CREATE_ATSC_EQUALIZER_H_ */

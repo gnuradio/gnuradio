@@ -23,6 +23,7 @@
 #ifndef _ATSC_TRELLIS_ENCODER_H_
 #define _ATSC_TRELLIS_ENCODER_H_
 
+#include <atsc_api.h>
 #include <atsci_basic_trellis_encoder.h>
 #include <atsc_types.h>
 
@@ -30,7 +31,7 @@
  * \brief fancy, schmancy 12-way interleaved trellis encoder for ATSC
  */
 
-class atsci_trellis_encoder {
+class ATSC_API atsci_trellis_encoder {
  public:
   static const int	NCODERS = 12;
 

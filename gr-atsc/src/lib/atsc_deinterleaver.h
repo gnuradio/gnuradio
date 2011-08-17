@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_DEINTERLEAVER_H
 #define INCLUDED_ATSC_DEINTERLEAVER_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_data_interleaver.h>
 
 class atsc_deinterleaver;
 typedef boost::shared_ptr<atsc_deinterleaver> atsc_deinterleaver_sptr;
 
-atsc_deinterleaver_sptr atsc_make_deinterleaver();
+ATSC_API atsc_deinterleaver_sptr atsc_make_deinterleaver();
 
 /*!
  * \brief Deinterleave RS encoded ATSC data ( atsc_mpeg_packet_rs_encoded --> atsc_mpeg_packet_rs_encoded)
@@ -36,9 +37,9 @@ atsc_deinterleaver_sptr atsc_make_deinterleaver();
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_mpeg_packet_rs_encoded
  */
-class atsc_deinterleaver : public gr_sync_block
+class ATSC_API atsc_deinterleaver : public gr_sync_block
 {
-  friend atsc_deinterleaver_sptr atsc_make_deinterleaver();
+  friend ATSC_API atsc_deinterleaver_sptr atsc_make_deinterleaver();
 
   atsci_data_deinterleaver	d_deinterleaver;
 

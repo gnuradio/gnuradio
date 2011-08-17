@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_DERANDOMIZER_H
 #define INCLUDED_ATSC_DERANDOMIZER_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_randomizer.h>
 
 class atsc_derandomizer;
 typedef boost::shared_ptr<atsc_derandomizer> atsc_derandomizer_sptr;
 
-atsc_derandomizer_sptr atsc_make_derandomizer();
+ATSC_API atsc_derandomizer_sptr atsc_make_derandomizer();
 
 /*!
  * \brief "dewhiten" incoming mpeg transport stream packets
@@ -36,9 +37,9 @@ atsc_derandomizer_sptr atsc_make_derandomizer();
  *
  * input: atsc_mpeg_packet_no_sync; output: atsc_mpeg_packet; 
  */
-class atsc_derandomizer : public gr_sync_block
+class ATSC_API atsc_derandomizer : public gr_sync_block
 {
-  friend atsc_derandomizer_sptr atsc_make_derandomizer();
+  friend ATSC_API atsc_derandomizer_sptr atsc_make_derandomizer();
 
   atsci_randomizer	d_rand;
 

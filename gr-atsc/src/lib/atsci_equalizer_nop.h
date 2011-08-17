@@ -23,9 +23,10 @@
 #ifndef _ATSC_EQUALIZER_NOP_H_
 #define _ATSC_EQUALIZER_NOP_H_
 
+#include <atsc_api.h>
 #include <atsci_equalizer.h>
 
-class atsci_equalizer_nop : public atsci_equalizer
+class ATSC_API atsci_equalizer_nop : public atsci_equalizer
 {
 private:
   float scale (float input) { return input; }

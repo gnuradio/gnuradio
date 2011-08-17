@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_EQUALIZER_H
 #define INCLUDED_ATSC_EQUALIZER_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_equalizer.h>
 
 class atsc_equalizer;
 typedef boost::shared_ptr<atsc_equalizer> atsc_equalizer_sptr;
 
-atsc_equalizer_sptr atsc_make_equalizer();
+atsc_equalizer_sptr ATSC_API atsc_make_equalizer();
 
 /*!
  * \brief ATSC equalizer (float,syminfo --> float,syminfo)
@@ -37,9 +38,9 @@ atsc_equalizer_sptr atsc_make_equalizer();
  * first inputs are data samples, second inputs are tags.
  * first outputs are equalized data samples, second outputs are tags.
  */
-class atsc_equalizer : public gr_sync_block
+class ATSC_API atsc_equalizer : public gr_sync_block
 {
-  friend atsc_equalizer_sptr atsc_make_equalizer();
+  friend ATSC_API atsc_equalizer_sptr atsc_make_equalizer();
 
   atsc_equalizer();
 

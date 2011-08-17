@@ -23,11 +23,12 @@
 #ifndef _ATSC_EQUALIZER_LMS_H_
 #define _ATSC_EQUALIZER_LMS_H_
 
+#include <atsc_api.h>
 #include <atsci_equalizer.h>
 #include <vector>
 #include <stdio.h>
 
-class atsci_equalizer_lms : public atsci_equalizer
+class ATSC_API atsci_equalizer_lms : public atsci_equalizer
 {
 public:
   atsci_equalizer_lms ();

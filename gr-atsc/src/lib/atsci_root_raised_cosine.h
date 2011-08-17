@@ -22,9 +22,10 @@
 #ifndef _ATSC_RRC_H_
 #define _ATSC_RRC_H_
 
+#include <atsc_api.h>
 #include <gr_fir_builder.h>
 
-class atsc_root_raised_cosine : public gr_fir_builder
+class ATSC_API atsc_root_raised_cosine : public gr_fir_builder
 {
 public:
   virtual std::vector<float> taps (double sampling_freq);

@@ -123,6 +123,7 @@ libgnuradio_atsc_qa_la_LDFLAGS = \
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =				\
+	atsc_api.h					\
 	atsc_consts.h				\
 	atsc_derandomizer.h			\
 	atsc_randomizer.h			\

@@ -22,6 +22,8 @@
 #ifndef _ATSC_FS_CORRELATOR_H_
 #define _ATSC_FS_CORRELATOR_H_
 
+#include <atsc_api.h>
+
 /*!
  * \brief abstract base class for ATSC field sync correlator
  *
@@ -42,7 +44,7 @@
  * occur every 832 samples assuming everything is working.
  */
 
-class atsci_fs_correlator {
+class ATSC_API atsci_fs_correlator {
 
 public:
 

@@ -23,6 +23,7 @@
 #ifndef _ATSC_SLICER_AGC_H_
 #define _ATSC_SLICER_AGC_H_
 
+#include <atsc_api.h>
 #include <math.h>
 #include <gr_single_pole_iir.h>
 
@@ -32,7 +33,7 @@
  * Given perfect data, output values will be +/- {7, 5, 3, 1}
  */
 
-class atsci_slicer_agc {
+class ATSC_API atsci_slicer_agc {
 
  public:
   atsci_slicer_agc () : _gain(1), dc(0.0025) {};

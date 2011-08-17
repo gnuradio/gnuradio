@@ -67,7 +67,7 @@ qa_atsci_single_viterbi::noise ()
 void
 qa_atsci_single_viterbi::t0 ()
 {
-  int 			  blocklen = NN;
+  static const int 			  blocklen = NN;
   unsigned char		  in[blocklen];
   unsigned char		  enc[blocklen];
   unsigned char		  out[blocklen];
@@ -142,7 +142,7 @@ qa_atsci_single_viterbi::t0 ()
 void
 qa_atsci_single_viterbi::t1 ()
 {
-  int 			  blocklen = NN;
+  static const int 			  blocklen = NN;
   unsigned char		  in[blocklen];
   unsigned char		  enc[blocklen];
   unsigned char		  out[blocklen];

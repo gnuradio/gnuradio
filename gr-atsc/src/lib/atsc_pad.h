@@ -22,12 +22,13 @@
 #ifndef INCLUDED_ATSC_PAD_H
 #define INCLUDED_ATSC_PAD_H
 
+#include <atsc_api.h>
 #include <gr_sync_decimator.h>
 
 class atsc_pad;
 typedef boost::shared_ptr<atsc_pad> atsc_pad_sptr;
 
-atsc_pad_sptr atsc_make_pad();
+ATSC_API atsc_pad_sptr atsc_make_pad();
 
 /*!
  * \brief pad mpeg ts packets from 188 byte char to 
@@ -36,9 +37,9 @@ atsc_pad_sptr atsc_make_pad();
  *
  * input: unsigned char; output: atsc_mpeg_packet
  */
-class atsc_pad : public gr_sync_decimator
+class ATSC_API atsc_pad : public gr_sync_decimator
 {
-  friend atsc_pad_sptr atsc_make_pad();
+  friend ATSC_API atsc_pad_sptr atsc_make_pad();
 
   atsc_pad();
 

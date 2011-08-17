@@ -22,6 +22,7 @@
 #ifndef INCLUDED_ATSC_FPLL_H
 #define INCLUDED_ATSC_FPLL_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <gr_nco.h>
 #include <gr_single_pole_iir.h>
@@ -32,7 +33,7 @@
 class atsc_fpll;
 typedef boost::shared_ptr<atsc_fpll> atsc_fpll_sptr;
 
-atsc_fpll_sptr atsc_make_fpll();
+ATSC_API atsc_fpll_sptr atsc_make_fpll();
 
 /*!
  * \brief ATSC FPLL (2nd Version)
@@ -45,9 +46,9 @@ atsc_fpll_sptr atsc_make_fpll();
  * This class accepts a single real input and produces a single real output
  */
 
-class atsc_fpll : public gr_sync_block
+class ATSC_API atsc_fpll : public gr_sync_block
 {
-  friend atsc_fpll_sptr atsc_make_fpll();
+  friend ATSC_API atsc_fpll_sptr atsc_make_fpll();
 
   atsc_fpll();
 

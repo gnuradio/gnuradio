@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_RANDOMIZER_H
 #define INCLUDED_ATSC_RANDOMIZER_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_randomizer.h>
 
 class atsc_randomizer;
 typedef boost::shared_ptr<atsc_randomizer> atsc_randomizer_sptr;
 
-atsc_randomizer_sptr atsc_make_randomizer();
+ATSC_API atsc_randomizer_sptr atsc_make_randomizer();
 
 /*!
  * \brief "Whiten" incoming mpeg transport stream packets
@@ -36,9 +37,9 @@ atsc_randomizer_sptr atsc_make_randomizer();
  *
  * input: atsc_mpeg_packet; output: atsc_mpeg_packet_no_sync
  */
-class atsc_randomizer : public gr_sync_block
+class ATSC_API atsc_randomizer : public gr_sync_block
 {
-  friend atsc_randomizer_sptr atsc_make_randomizer();
+  friend ATSC_API atsc_randomizer_sptr atsc_make_randomizer();
 
   atsci_randomizer	d_rand;
   bool			d_field2;	// user to init plinfo in output

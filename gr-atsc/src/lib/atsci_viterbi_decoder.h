@@ -25,6 +25,7 @@
 
 #define	USE_SIMPLE_SLICER  0
 
+#include <atsc_api.h>
 #include <atsc_types.h>
 #include <interleaver_fifo.h>
 
@@ -40,7 +41,7 @@ typedef atsci_single_viterbi		single_viterbi_t;
  * \brief fancy, schmancy 12-way interleaved viterbi decoder for ATSC
  */
 
-class atsci_viterbi_decoder {
+class ATSC_API atsci_viterbi_decoder {
 public:
   static const int	NCODERS = 12;
 

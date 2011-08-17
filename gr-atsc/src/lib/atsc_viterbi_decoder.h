@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_VITERBI_DECODER_H
 #define INCLUDED_ATSC_VITERBI_DECODER_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_viterbi_decoder.h>
 
 class atsc_viterbi_decoder;
 typedef boost::shared_ptr<atsc_viterbi_decoder> atsc_viterbi_decoder_sptr;
 
-atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
+ATSC_API atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
 
 /*!
  * \brief ATSC 12-way interleaved viterbi decoder (atsc_soft_data_segment --> atsc_mpeg_packet_rs_encoded)
@@ -36,9 +37,9 @@ atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
  *
  * input: atsc_soft_data_segment; output: atsc_mpeg_packet_rs_encoded
  */
-class atsc_viterbi_decoder : public gr_sync_block
+class ATSC_API atsc_viterbi_decoder : public gr_sync_block
 {
-  friend atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
+  friend ATSC_API atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
 
   atsci_viterbi_decoder	d_viterbi_decoder;
 

@@ -23,6 +23,7 @@
 #ifndef _ATSC_RANDOMIZER_H_
 #define _ATSC_RANDOMIZER_H_
 
+#include <atsc_api.h>
 #include <atsc_types.h>
 
 /*! 
@@ -32,7 +33,7 @@
  * See figure D4 on page 54.
  */
 
-class atsci_randomizer {
+class ATSC_API atsci_randomizer {
   friend class qa_atsci_randomizer;
   
  public:

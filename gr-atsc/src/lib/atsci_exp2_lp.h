@@ -23,9 +23,10 @@
 #ifndef _ATSC_EXP2_LP_H_
 #define _ATSC_EXP2_LP_H_
 
+#include <atsc_api.h>
 #include <gr_fir_builder.h>
 
-class atsci_exp2_lp : public gr_fir_builder
+class ATSC_API atsci_exp2_lp : public gr_fir_builder
 {
 public:
   virtual std::vector<float> taps (double sampling_freq);

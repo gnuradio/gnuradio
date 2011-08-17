@@ -1,0 +1,55 @@
+# Copyright 2011 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+
+########################################################################
+# Include swig generation macros
+########################################################################
+FIND_PACKAGE(SWIG)
+FIND_PACKAGE(PythonLibs)
+IF(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
+    RETURN()
+ENDIF()
+INCLUDE(GrSwig)
+
+########################################################################
+# Setup swig generation
+########################################################################
+FOREACH(incdir ${GNURADIO_CORE_INCLUDE_DIRS})
+    LIST(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/swig)
+ENDFOREACH(incdir)
+
+SET(GR_SWIG_LIBRARIES gnuradio-howto)
+
+GR_SWIG_MAKE(howto_swig howto_swig.i)
+
+########################################################################
+# Install the build swig module
+########################################################################
+GR_SWIG_INSTALL(TARGETS howto_swig DESTINATION ${GR_PYTHON_DIR}/howto)
+
+########################################################################
+# Install swig .i files for development
+########################################################################
+INSTALL(
+    FILES
+    howto_swig.i
+    howto_square_ff.i
+    howto_square2_ff.i
+    DESTINATION include/howto/swig
+)

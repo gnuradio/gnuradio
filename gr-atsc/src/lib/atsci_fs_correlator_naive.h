@@ -23,12 +23,13 @@
 #ifndef _ATSC_FS_CORRELATOR_NAIVE_H_
 #define _ATSC_FS_CORRELATOR_NAIVE_H_
 
+#include <atsc_api.h>
 #include <atsci_fs_correlator.h>
 
 /*!
  * \brief Naive concrete implementation of field sync correlator
  */
-class atsci_fs_correlator_naive : public atsci_fs_correlator {
+class ATSC_API atsci_fs_correlator_naive : public atsci_fs_correlator {
 
  private:
   static const int	SRSIZE = 1024;		// must be power of two

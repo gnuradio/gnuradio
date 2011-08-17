@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_RS_DECODER_H
 #define INCLUDED_ATSC_RS_DECODER_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_reed_solomon.h>
 
 class atsc_rs_decoder;
 typedef boost::shared_ptr<atsc_rs_decoder> atsc_rs_decoder_sptr;
 
-atsc_rs_decoder_sptr atsc_make_rs_decoder();
+ATSC_API atsc_rs_decoder_sptr atsc_make_rs_decoder();
 
 /*!
  * \brief Reed-Solomon decoder for ATSC
@@ -36,9 +37,9 @@ atsc_rs_decoder_sptr atsc_make_rs_decoder();
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_mpeg_packet_no_sync
  */
-class atsc_rs_decoder : public gr_sync_block
+class ATSC_API atsc_rs_decoder : public gr_sync_block
 {
-  friend atsc_rs_decoder_sptr atsc_make_rs_decoder();
+  friend ATSC_API atsc_rs_decoder_sptr atsc_make_rs_decoder();
 
   atsci_reed_solomon	d_rs_decoder;
 

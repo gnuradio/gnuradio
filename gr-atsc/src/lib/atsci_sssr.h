@@ -27,6 +27,7 @@
 #ifndef _ATSC_SSSR_H_
 #define _ATSC_SSSR_H_
 
+#include <atsc_api.h>
 #include <atsc_consts.h>
 #include <gri_mmse_fir_interpolator.h>
 #include <gr_single_pole_iir.h>
@@ -43,7 +44,7 @@ namespace sssr {
   // ----------------------------------------------------------------
   //! digital correlator for 1001 and 0110 patterns
 
-  class digital_correlator {
+  class ATSC_API digital_correlator {
     int		d_sr;	// 4 bit shift register
 
   public:
@@ -70,7 +71,7 @@ namespace sssr {
   // ----------------------------------------------------------------
   //! segment sync integrator
 
-  class seg_sync_integrator {
+  class ATSC_API seg_sync_integrator {
     signed char	d_integrator[ATSC_DATA_SEGMENT_LENGTH];
     
   public:
@@ -94,7 +95,7 @@ namespace sssr {
   // ----------------------------------------------------------------
   //! quad filter (used to compute timing error)
 
-  class quad_filter {
+  class ATSC_API quad_filter {
     sample_t	d_delay[4];
 
   public:
@@ -128,7 +129,7 @@ namespace sssr {
  * by Wayne E. Bretl of Zenith, pgs 41-45.
  */
 
-class atsci_sssr {
+class ATSC_API atsci_sssr {
   sssr::digital_correlator	d_correlator;
   sssr::seg_sync_integrator	d_integrator;
   sssr::quad_filter		d_quad_filter;
@@ -193,7 +194,7 @@ public:
  * \brief interpolator control for segment and symbol sync recovery
  */
  
-class atsci_interpolator {
+class ATSC_API atsci_interpolator {
   gri_mmse_fir_interpolator	d_interp;
   gr_single_pole_iir<float,float,float> d_loop;	// ``VCO'' loop filter
   double			d_nominal_ratio_of_rx_clock_to_symbol_freq; // FREQ

@@ -84,17 +84,3 @@ MACRO(GR_INCLUDE_SUBDIRECTORY subdir)
     LIST(REMOVE_AT _cmake_source_dirs 0)
     LIST(REMOVE_AT _cmake_binary_dirs 0)
 ENDMACRO(GR_INCLUDE_SUBDIRECTORY)
-
-########################################################################
-# Create an always-built target with a unique name
-# Usage: GR_UNIQUE_TARGET(<description> <dependencies list>)
-########################################################################
-FUNCTION(GR_UNIQUE_TARGET desc)
-    INCLUDE(GrPython)
-    FILE(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
-unique = hashlib.md5('${reldir}${ARGN}').hexdigest()[:5]
-print re.sub('\\W', '_', '${desc} ${reldir} ' + unique)"
-    OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
-    ADD_CUSTOM_TARGET(${_target} ALL DEPENDS ${ARGN})
-ENDFUNCTION(GR_UNIQUE_TARGET)

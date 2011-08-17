@@ -131,7 +131,7 @@ LIST(APPEND test_atsci_sources
 )
 
 INCLUDE(GrTest)
-SET(GR_TEST_TARGET_DEPS gnuradio-atsc)
+SET(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel)
 ADD_EXECUTABLE(test_atsci ${test_atsci_sources} test_atsci.cc)
 TARGET_LINK_LIBRARIES(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)
@@ -142,6 +142,7 @@ ENDIF(ENABLE_TESTING)
 # Install public header files
 ########################################################################
 INSTALL(FILES
+    atsc_api.h
     atsc_consts.h
     atsc_derandomizer.h
     atsc_randomizer.h

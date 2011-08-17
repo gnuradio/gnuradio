@@ -22,13 +22,14 @@
 #ifndef INCLUDED_ATSC_DS_TO_SOFTDS_H
 #define INCLUDED_ATSC_DS_TO_SOFTDS_H
 
+#include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsc_types.h>
 
 class atsc_ds_to_softds;
 typedef boost::shared_ptr<atsc_ds_to_softds> atsc_ds_to_softds_sptr;
 
-atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
+ATSC_API atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
 
 /*!
  * \brief Debug glue routine (atsc_data_segment --> atsc_soft_data_segment)
@@ -36,9 +37,9 @@ atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
  *
  * input: atsc_data_segment; output: atsc_soft_data_segment
  */
-class atsc_ds_to_softds : public gr_sync_block
+class ATSC_API atsc_ds_to_softds : public gr_sync_block
 {
-  friend atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
+  friend ATSC_API atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
 
   atsc_ds_to_softds();
 

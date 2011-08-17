@@ -23,12 +23,13 @@
 #ifndef _ATSC_EQUALIZER_H_
 #define _ATSC_EQUALIZER_H_
 
+#include <atsc_api.h>
 #include <atsci_syminfo.h>
 
 /*!
  * \brief abstract base class for ATSC equalizer
  */
-class atsci_equalizer {
+class ATSC_API atsci_equalizer {
 
 private:
 
