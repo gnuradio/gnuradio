@@ -31,6 +31,7 @@ BUILT_SOURCES += $(generated_uhd_usrp_blocks)
 
 dist_grcblocks_DATA = \
 	uhd_block_tree.xml \
+	uhd_amsg_source.xml \
 	$(BUILT_SOURCES)
 
 ########################################################################
