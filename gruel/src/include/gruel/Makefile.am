@@ -26,8 +26,6 @@ EXTRA_DIST += inet.h.in
 gruelincludedir = $(prefix)/include/gruel
 
 gruelinclude_HEADERS = \
-<<<<<<< HEAD
-	$(BUILT_SOURCES) \
 	api.h \
 	attributes.h \
 	high_res_timer.h \
