@@ -33,8 +33,7 @@ public:
     uhd_usrp_source_impl(
         const uhd::device_addr_t &device_addr,
         const uhd::io_type_t &io_type,
-        size_t num_channels,
-	gr_msg_queue_sptr async_queue
+        size_t num_channels
     ):
         gr_sync_block(
             "gr uhd usrp source",
@@ -44,8 +43,7 @@ public:
         _type(io_type),
         _nchan(num_channels),
         _stream_now(_nchan == 1),
-        _tmp_buffs(_nchan),
-	_async_queue(async_queue)
+        _tmp_buffs(_nchan)
     {
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
@@ -224,15 +222,6 @@ public:
             return num_samps;
         }
 
-	// Scan queue and post async events
-	while (_dev->get_device()->recv_async_msg(_asyncdata, 0.0)) {
-	  if (_async_queue) {
-	    gr_message_sptr m = gr_make_message(0, 0.0, 0.0, sizeof(_asyncdata));
-	    memcpy(m->msg(), &_asyncdata, sizeof(_asyncdata));
-	    _async_queue->insert_tail(m);
-	  }
-	}
-
         return num_samps;
     }
 
@@ -258,8 +247,6 @@ private:
     bool _stream_now;
     gr_vector_void_star _tmp_buffs;
     uhd::rx_metadata_t _metadata;
-    uhd::async_metadata_t _asyncdata;
-    gr_msg_queue_sptr _async_queue;
 };
 
 
@@ -269,10 +256,9 @@ private:
 boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,
-    size_t num_channels,
-    gr_msg_queue_sptr async_queue
+    size_t num_channels
 ){
     return boost::shared_ptr<uhd_usrp_source>(
-      new uhd_usrp_source_impl(device_addr, io_type, num_channels, async_queue)
+        new uhd_usrp_source_impl(device_addr, io_type, num_channels)
     );
 }

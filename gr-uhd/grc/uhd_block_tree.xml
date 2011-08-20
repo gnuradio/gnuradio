@@ -10,5 +10,6 @@
 		<name>UHD</name>
 		<block>uhd_usrp_source</block>
 		<block>uhd_usrp_sink</block>
+		<block>uhd_amsg_source</block>
 	</cat>
 </cat>
