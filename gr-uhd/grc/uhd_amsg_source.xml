@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<block>
+	<name>UHD: USRP Async Msg Source</name>
+	<key>uhd_amsg_source</key>
+	<import>from gnuradio import uhd</import>
+	<make>uhd.amsg_source(device_addr=$dev_addr, msgq=$(id)_msgq_out)</make>
+	<param>
+		<name>Device Addr</name>
+		<key>dev_addr</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			#if $dev_addr()
+				none
+			#else
+				part
+			#end if
+		</hide>
+	</param>
+        <source>
+                <name>out</name>
+                <type>msg</type>
+        </source>
+</block>
