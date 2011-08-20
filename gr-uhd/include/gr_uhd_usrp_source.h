@@ -24,7 +24,6 @@
 
 #include <gr_uhd_api.h>
 #include <gr_sync_block.h>
-#include <gr_msg_queue.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
 class uhd_usrp_source;
@@ -32,8 +31,7 @@ class uhd_usrp_source;
 GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,
-    size_t num_channels,
-    gr_msg_queue_sptr async_queue = gr_msg_queue_sptr()
+    size_t num_channels
 );
 
 class GR_UHD_API uhd_usrp_source : virtual public gr_sync_block{
