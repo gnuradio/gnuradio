@@ -37,6 +37,7 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 LIST(APPEND gr_uhd_sources
     gr_uhd_usrp_source.cc
     gr_uhd_usrp_sink.cc
+    gr_uhd_amsg_source.cc
 )
 
 LIST(APPEND uhd_libs
