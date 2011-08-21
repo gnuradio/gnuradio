@@ -31,7 +31,8 @@ lib_LTLIBRARIES = libgnuradio-uhd.la
 
 libgnuradio_uhd_la_SOURCES = \
 	gr_uhd_usrp_source.cc \
-	gr_uhd_usrp_sink.cc
+	gr_uhd_usrp_sink.cc \
+	gr_uhd_amsg_source.cc
 
 libgnuradio_uhd_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \

@@ -60,7 +60,7 @@ def _prepare_uhd_swig():
         if attr.endswith('_t'): setattr(uhd_swig, attr[:-2], myobj)
 
     #Cast constructor args (FIXME swig handle overloads?)
-    for attr in ('usrp_source', 'usrp_sink'):
+    for attr in ('usrp_source', 'usrp_sink', 'amsg_source'):
         def constructor_factory(old_constructor):
             def constructor_interceptor(*args, **kwargs):
                 args = list(args)
@@ -77,7 +77,6 @@ def _prepare_uhd_swig():
 
     #Aliases for deprecated constructors
     setattr(uhd_swig, 'single_usrp_source', uhd_swig.usrp_source)
-    setattr(uhd_swig, 'single_usrp_sink', uhd_swig.usrp_sink)
     setattr(uhd_swig, 'multi_usrp_source', uhd_swig.usrp_source)
     setattr(uhd_swig, 'multi_usrp_sink', uhd_swig.usrp_sink)
 
