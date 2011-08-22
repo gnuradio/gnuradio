@@ -43,7 +43,6 @@ public:
         _type(io_type),
         _nchan(num_channels),
         _stream_now(_nchan == 1),
-        _tmp_buffs(_nchan)
     {
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
@@ -245,7 +244,6 @@ private:
     const uhd::io_type_t _type;
     size_t _nchan;
     bool _stream_now;
-    gr_vector_void_star _tmp_buffs;
     uhd::rx_metadata_t _metadata;
 };
 
