@@ -77,6 +77,7 @@ def _prepare_uhd_swig():
 
     #Aliases for deprecated constructors
     setattr(uhd_swig, 'single_usrp_source', uhd_swig.usrp_source)
+    setattr(uhd_swig, 'single_usrp_sink', uhd_swig.usrp_sink)
     setattr(uhd_swig, 'multi_usrp_source', uhd_swig.usrp_source)
     setattr(uhd_swig, 'multi_usrp_sink', uhd_swig.usrp_sink)
 
