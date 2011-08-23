@@ -92,7 +92,7 @@ class draw_constellation:
                 self.imags = scipy.array([i.imag for i in iq])
                 
                 self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
-                return Tr
+                return True
             else:
                 print "End of File"
                 return False
