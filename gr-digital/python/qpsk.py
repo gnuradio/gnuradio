@@ -100,10 +100,79 @@ class qpsk_demod(generic_demod):
         super(qpsk_demod, self).__init__(constellation=constellation,
                                          *args, **kwargs)
 
+
+
+# /////////////////////////////////////////////////////////////////////////////
+#                           DQPSK constellation
+# /////////////////////////////////////////////////////////////////////////////
+
+def dqpsk_constellation(m=_def_constellation_points):
+    if m != _def_constellation_points:
+        raise ValueError("DQPSK can only have 4 constellation points.")
+    return digital_swig.constellation_dqpsk()
+
+# /////////////////////////////////////////////////////////////////////////////
+#                           DQPSK modulator
+# /////////////////////////////////////////////////////////////////////////////
+
+class dqpsk_mod(generic_mod):
+
+    def __init__(self, constellation_points=_def_constellation_points,
+                 gray_coded=_def_gray_coded,
+                 differential=True, *args, **kwargs):
+        """
+	Hierarchical block for RRC-filtered DQPSK modulation.
+
+	The input is a byte stream (unsigned char) and the
+	output is the complex modulated signal at baseband.
+
+        See generic_mod block for list of parameters.
+	"""
+
+        constellation_points = _def_constellation_points
+        constellation = digital_swig.constellation_qpsk()
+        if constellation_points != 4:
+            raise ValueError('Number of constellation points must be 4 for DQPSK.')
+        if not gray_coded:
+            raise ValueError("This DQPSK mod/demod works only for gray-coded constellations.")
+        super(dqpsk_mod, self).__init__(constellation=constellation,
+                                        gray_coded=gray_coded,
+                                        differential=True,
+                                        *args, **kwargs)
+
+# /////////////////////////////////////////////////////////////////////////////
+#                           DQPSK demodulator
+#
+# /////////////////////////////////////////////////////////////////////////////
+
+class dqpsk_demod(generic_demod):
+
+    def __init__(self, constellation_points=_def_constellation_points,
+                 differential=True, *args, **kwargs):
+
+        """
+	Hierarchical block for RRC-filtered DQPSK modulation.
+
+	The input is a byte stream (unsigned char) and the
+	output is the complex modulated signal at baseband.
+
+        See generic_demod block for list of parameters.
+        """
+        constellation_points = _def_constellation_points
+        constellation = digital_swig.constellation_qpsk()
+        if constellation_points != 4:
+            raise ValueError('Number of constellation points must be 4 for DQPSK.')
+        super(dqpsk_demod, self).__init__(constellation=constellation,
+                                          differential=True,
+                                          *args, **kwargs)
+
 #
 # Add these to the mod/demod registry
 #
 modulation_utils2.add_type_1_mod('qpsk', qpsk_mod)
 modulation_utils2.add_type_1_demod('qpsk', qpsk_demod)
 modulation_utils2.add_type_1_constellation('qpsk', qpsk_constellation)
+modulation_utils2.add_type_1_mod('dqpsk', dqpsk_mod)
+modulation_utils2.add_type_1_demod('dqpsk', dqpsk_demod)
+modulation_utils2.add_type_1_constellation('dqpsk', dqpsk_constellation)
 
