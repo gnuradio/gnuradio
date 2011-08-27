@@ -23,7 +23,7 @@ ACLOCAL_AMFLAGS = -I config
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = bootstrap configure config.h.in volk_config.h
+EXTRA_DIST = bootstrap configure config.h.in
 SUBDIRS = config
 if LV_HAVE_ORC
 SUBDIRS += orc
@@ -38,7 +38,6 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = volk.pc
 
 distclean-local:
-	-rm -f config/lv_set_simd_flags.m4
 	-rm -rf autom4te.cache
 	-rm -f config.*
 	-rm -f depcomp
@@ -61,3 +60,6 @@ distclean-local:
 	-rm -f configure
 	-rm -f orc/Makefile.in
 	-rm -f orc/*.c
+	-rm -rf gen/config
+	-rm -rf gen/include
+	-rm -rf gen/lib

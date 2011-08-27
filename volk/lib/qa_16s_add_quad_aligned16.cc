@@ -22,20 +22,20 @@ void qa_16s_add_quad_aligned16::t1() {
   double total;
   const int vlen = 3200;
   const int ITERS = 100000;
-  short input0[vlen] __attribute__ ((aligned (16)));
-  short input1[vlen] __attribute__ ((aligned (16)));
-  short input2[vlen] __attribute__ ((aligned (16)));
-  short input3[vlen] __attribute__ ((aligned (16)));
-  short input4[vlen] __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) short input0[vlen];
+  __VOLK_ATTR_ALIGNED(16) short input1[vlen];
+  __VOLK_ATTR_ALIGNED(16) short input2[vlen];
+  __VOLK_ATTR_ALIGNED(16) short input3[vlen];
+  __VOLK_ATTR_ALIGNED(16) short input4[vlen];
   
-  short output0[vlen] __attribute__ ((aligned (16)));
-  short output1[vlen] __attribute__ ((aligned (16)));
-  short output2[vlen] __attribute__ ((aligned (16)));
-  short output3[vlen] __attribute__ ((aligned (16)));
-  short output01[vlen] __attribute__ ((aligned (16)));
-  short output11[vlen] __attribute__ ((aligned (16)));
-  short output21[vlen] __attribute__ ((aligned (16)));
-  short output31[vlen] __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) short output0[vlen];
+  __VOLK_ATTR_ALIGNED(16) short output1[vlen];
+  __VOLK_ATTR_ALIGNED(16) short output2[vlen];
+  __VOLK_ATTR_ALIGNED(16) short output3[vlen];
+  __VOLK_ATTR_ALIGNED(16) short output01[vlen];
+  __VOLK_ATTR_ALIGNED(16) short output11[vlen];
+  __VOLK_ATTR_ALIGNED(16) short output21[vlen];
+  __VOLK_ATTR_ALIGNED(16) short output31[vlen];
 
   for(int i = 0; i < vlen; ++i) {
     short plus0 = ((short) (rand() - (RAND_MAX/2))) >> 2;

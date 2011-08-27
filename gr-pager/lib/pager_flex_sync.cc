@@ -274,7 +274,7 @@ int pager_flex_sync::general_work(int noutput_items,
 
     while (i < ninputs && j < noutput_items) {
         unsigned char sym = *in++; i++;
-        d_index = ++d_index % d_spb;
+	d_index = (d_index+1) % d_spb;
     
         switch (d_state) {
             case ST_IDLE:

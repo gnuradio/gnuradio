@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-#if LV_HAVE_SSE4_1
+#ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 
   /*!
@@ -67,7 +67,7 @@ static inline void volk_8i_s32f_convert_32f_u_sse4_1(float* outputVector, const 
 }
 #endif /* LV_HAVE_SSE4_1 */
 
-#if LV_HAVE_GENERIC
+#ifdef LV_HAVE_GENERIC
   /*!
     \brief Converts the input 8 bit integer data into floating point data, and divides the each floating point output data point by the scalar value
     \param inputVector The 8 bit input data buffer

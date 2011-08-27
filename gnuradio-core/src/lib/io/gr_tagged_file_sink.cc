@@ -34,6 +34,10 @@
 #include <iostream>
 #include <gr_tag_info.h>
 
+#ifdef HAVE_IO_H
+#include <io.h>
+#endif
+
 #ifdef O_BINARY
 #define	OUR_O_BINARY O_BINARY
 #else

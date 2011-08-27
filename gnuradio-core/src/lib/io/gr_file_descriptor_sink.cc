@@ -34,6 +34,9 @@
 #include <stdexcept>
 #include <stdio.h>
 
+#ifdef HAVE_IO_H
+#include <io.h>
+#endif
 
 gr_file_descriptor_sink::gr_file_descriptor_sink (size_t itemsize, int fd)
   : gr_sync_block ("file_descriptor_sink",

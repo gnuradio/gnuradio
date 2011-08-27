@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = include lib
+SUBDIRS = include lib examples
 
 if PYTHON
 SUBDIRS += grc swig

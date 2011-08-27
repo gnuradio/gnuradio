@@ -21,10 +21,10 @@ void qa_32f_fm_detect_aligned16::t1() {
   double total;
   const int vlen = 3201;
   const int ITERS = 10000;
-  float input0[vlen] __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) float input0[vlen];
   
-  float output0[vlen] __attribute__ ((aligned (16)));
-  float output01[vlen] __attribute__ ((aligned (16)));
+  __VOLK_ATTR_ALIGNED(16) float output0[vlen];
+  __VOLK_ATTR_ALIGNED(16) float output01[vlen];
 
   for(int i = 0; i < vlen; ++i) {   
     input0[i] = ((float) (rand() - (RAND_MAX/2))) / static_cast<float>((RAND_MAX/2));

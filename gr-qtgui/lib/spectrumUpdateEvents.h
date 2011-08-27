@@ -101,7 +101,6 @@ public:
   int which() const;
   const std::vector<double*> getTimeDomainPoints() const;
   uint64_t getNumTimeDomainDataPoints() const;
-  timespec getDataTimestamp() const;
   bool getRepeatDataFlag() const;
 
 protected:

@@ -71,7 +71,7 @@ public:
     d_prev_output = 0;
   }
 
-  o_type prev_output () { return d_prev_output; }
+  o_type prev_output () const { return d_prev_output; }
     
 protected:
   tap_type	d_alpha;
@@ -155,7 +155,7 @@ public:
     d_prev_output = 0;
   }
 
-  gr_complexd prev_output () { return d_prev_output; }
+  gr_complexd prev_output () const { return d_prev_output; }
     
 protected:
   double	d_alpha;

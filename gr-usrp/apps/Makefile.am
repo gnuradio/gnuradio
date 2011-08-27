@@ -52,3 +52,16 @@ usrp_rx_cfile_SOURCES = 	\
 
 usrp_siggen_SOURCES = 	\
     usrp_siggen.cc
+
+if PYTHON
+
+bin_SCRIPTS = \
+    lsusrp \
+    usrp_print_db.py \
+    usrp_rx_cfile.py \
+    usrp_test_counting.py \
+    usrp_test_loopback.py
+
+EXTRA_DIST += $(bin_SCRIPTS)
+
+endif
