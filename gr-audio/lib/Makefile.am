@@ -122,6 +122,11 @@ if GR_AUDIO_OSX_SUPPORT
 AM_CPPFLAGS += \
 	-I$(srcdir)/osx
 
+libgnuradio_audio_la_LDFLAGS += \
+       -framework AudioUnit    \
+       -framework CoreAudio    \
+       -framework AudioToolbox
+
 libgnuradio_audio_la_SOURCES += \
 	osx/audio_osx_source.cc \
 	osx/audio_osx_sink.cc

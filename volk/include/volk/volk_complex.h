@@ -2,7 +2,7 @@
 #define INCLUDE_VOLK_COMPLEX_H
 
 /*!
-  \brief This header file is to prevent issues with having <complex> and <complex.h> variables in the same code as the gcc compiler does not allow that
+  \brief This header file is to prevent issues with having "complex" and "complex.h" variables in the same code as the gcc compiler does not allow that
 */
 #ifdef __cplusplus
 

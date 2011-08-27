@@ -79,7 +79,6 @@ class gr_dc_blocker_ff : public gr_sync_block
    * Build the DC blocker.
    * \param D          (int) the length of the delay line
    * \param long_form  (bool) whether to use long (true, default) or short form
-   * \param channel (unsigned integer) Selects the channel to return [default=0].
    */
   friend gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D, bool long_form);
 

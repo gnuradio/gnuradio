@@ -20,6 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <cppunit/TestAssert.h>
 #include <qa_gri_mmse_fir_interpolator.h>
 #include <gri_mmse_fir_interpolator.h>

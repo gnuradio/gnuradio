@@ -35,6 +35,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef HAVE_IO_H
+#include <io.h>
+#endif
 
 gr_file_descriptor_source::gr_file_descriptor_source (size_t itemsize,
 						      int fd,

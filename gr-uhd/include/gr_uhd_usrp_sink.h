@@ -125,7 +125,6 @@ public:
 
     /*!
      * Get the actual dboard gain setting of named stage.
-     * \param name the name of the gain stage
      * \param chan the channel index 0 to N-1
      * \return the actual gain in dB
      */
