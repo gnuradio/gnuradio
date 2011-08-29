@@ -344,6 +344,7 @@ class digital_constellation_qpsk : public digital_constellation
 /*                                                          */
 /************************************************************/
 
+//! \brief DQPSK-specific constellation and decision maker
 class digital_constellation_dqpsk;
 typedef boost::shared_ptr<digital_constellation_dqpsk> digital_constellation_dqpsk_sptr;
 

@@ -463,12 +463,16 @@ digital_make_constellation_dqpsk()
 
 digital_constellation_dqpsk::digital_constellation_dqpsk ()
 {
+  // This constellation is not gray coded, which allows
+  // us to use differential encodings (through gr_diff_encode and
+  // gr_diff_decode) on the symbols.
   d_constellation.resize(4);
   d_constellation[0] = gr_complex(+SQRT_TWO, +SQRT_TWO);
   d_constellation[1] = gr_complex(-SQRT_TWO, +SQRT_TWO);
   d_constellation[2] = gr_complex(-SQRT_TWO, -SQRT_TWO);
   d_constellation[3] = gr_complex(+SQRT_TWO, -SQRT_TWO);
 
+  // Use this mapping to convert to gray code before diff enc.
   d_pre_diff_code.resize(4);
   d_pre_diff_code[0] = 0x0;
   d_pre_diff_code[1] = 0x1;
@@ -481,10 +485,12 @@ digital_constellation_dqpsk::digital_constellation_dqpsk ()
   calc_arity();
 }
 
-#include <cstdio>
 unsigned int
 digital_constellation_dqpsk::decision_maker(const gr_complex *sample)
 {
+  // Slower deicison maker as we can't slice along one axis.
+  // Maybe there's a better way to do this, still.
+
   bool a = real(*sample) > 0;
   bool b = imag(*sample) > 0;
   if(a) {
