@@ -120,7 +120,7 @@ class generic_mod(gr.hier_block2):
         self.bytes2chunks = \
           gr.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
 
-        if self._constellation.apply_pre_diff_code():
+        if gray_coded == True:
             self.symbol_mapper = gr.map_bb(self._constellation.pre_diff_code())
 
         if differential:
@@ -142,7 +142,7 @@ class generic_mod(gr.hier_block2):
 
 	# Connect
         blocks = [self, self.bytes2chunks]
-        if self._constellation.apply_pre_diff_code():
+        if gray_coded == True:
             blocks.append(self.symbol_mapper)
         if differential:
             blocks.append(self.diffenc)
@@ -211,6 +211,7 @@ class generic_demod(gr.hier_block2):
                  samples_per_symbol=_def_samples_per_symbol,
                  differential=_def_differential,
                  excess_bw=_def_excess_bw,
+                 gray_coded=True,
                  freq_bw=_def_freq_bw,
                  timing_bw=_def_timing_bw,
                  phase_bw=_def_phase_bw,
@@ -228,6 +229,8 @@ class generic_demod(gr.hier_block2):
 	@type samples_per_symbol: float
 	@param excess_bw: Root-raised cosine filter excess bandwidth
 	@type excess_bw: float
+        @param gray_coded: turn gray coding on/off
+        @type gray_coded: bool
         @param freq_bw: loop filter lock-in bandwidth
         @type freq_bw: float
         @param timing_bw: timing recoery loop lock-in bandwidth
@@ -276,30 +279,22 @@ class generic_demod(gr.hier_block2):
                                                 self._timing_bw, taps,
                                                 nfilts, nfilts//2, self._timing_max_dev)
 
-        # Perform phase / fine frequency correction
-        self.phase_recov = digital_swig.costas_loop_cc(self._phase_bw, arity)
-
         fmin = -0.25
         fmax = 0.25
         self.receiver = digital_swig.constellation_receiver_cb(
             self._constellation, self._phase_bw,
             fmin, fmax)
-        
+
         # Do differential decoding based on phase change of symbols
         if differential:
-            #self.diffdec = gr.diff_decoder_bb(arity)
-            self.diffdec = gr.diff_phasor_cc()
+            self.diffdec = gr.diff_decoder_bb(arity)
 
-        if self._constellation.apply_pre_diff_code():
+        if gray_coded:
             self.symbol_mapper = gr.map_bb(
                 mod_codes.invert_code(self._constellation.pre_diff_code()))
 
         # unpack the k bit vector into a stream of bits
         self.unpack = gr.unpack_k_bits_bb(self.bits_per_symbol())
-
-        p = 1*math.pi/4.0
-        c = complex(math.sin(p), math.cos(p))
-        self.rotate = gr.multiply_const_cc(c)
 
         if verbose:
             self._print_verbage()
@@ -308,12 +303,10 @@ class generic_demod(gr.hier_block2):
             self._setup_logging()
         
         # Connect and Initialize base class
-        blocks = [self, self.agc, self.freq_recov, self.time_recov]
+        blocks = [self, self.agc, self.freq_recov,
+                  self.time_recov, self.receiver]
         if differential:
             blocks.append(self.diffdec)
-            blocks.append(self.rotate)
-        blocks.append(self.receiver)
-
         if self._constellation.apply_pre_diff_code():
             blocks.append(self.symbol_mapper)
         blocks += [self.unpack, self]
@@ -363,8 +356,7 @@ class generic_demod(gr.hier_block2):
                      gr.file_sink(gr.sizeof_float, "rx_receiver_freq.32f"))
         if self._differential:
             self.connect(self.diffdec,
-                         gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.8b"))
-                         #gr.file_sink(gr.sizeof_char, "rx_diffdec.8b"))
+                         gr.file_sink(gr.sizeof_char, "rx_diffdec.8b"))
         if self._constellation.apply_pre_diff_code():
             self.connect(self.symbol_mapper,
                          gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.8b"))

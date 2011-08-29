@@ -130,11 +130,9 @@ class dqpsk_mod(generic_mod):
 	"""
 
         constellation_points = _def_constellation_points
-        constellation = digital_swig.constellation_qpsk()
+        constellation = digital_swig.constellation_dqpsk()
         if constellation_points != 4:
             raise ValueError('Number of constellation points must be 4 for DQPSK.')
-        if not gray_coded:
-            raise ValueError("This DQPSK mod/demod works only for gray-coded constellations.")
         super(dqpsk_mod, self).__init__(constellation=constellation,
                                         gray_coded=gray_coded,
                                         differential=True,
@@ -159,7 +157,7 @@ class dqpsk_demod(generic_demod):
         See generic_demod block for list of parameters.
         """
         constellation_points = _def_constellation_points
-        constellation = digital_swig.constellation_qpsk()
+        constellation = digital_swig.constellation_dqpsk()
         if constellation_points != 4:
             raise ValueError('Number of constellation points must be 4 for DQPSK.')
         super(dqpsk_demod, self).__init__(constellation=constellation,
