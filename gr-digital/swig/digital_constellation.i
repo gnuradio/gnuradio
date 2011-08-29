@@ -50,6 +50,7 @@ public:
   unsigned int arity ();
   digital_constellation_sptr base ();
   bool apply_pre_diff_code();
+  void set_pre_diff_code(bool a);
   std::vector<unsigned int> pre_diff_code();
   unsigned int rotational_symmetry();
   unsigned int dimensionality();
@@ -150,6 +151,23 @@ class digital_constellation_qpsk : public digital_constellation
 {
 public:
   digital_constellation_qpsk ();
+};
+
+/*
+  DQPSK Constellation
+*/
+
+class digital_constellation_dqpsk;
+typedef boost::shared_ptr<digital_constellation_dqpsk> digital_constellation_dqpsk_sptr;
+%template(digital_constellation_dqpsk_sptr) boost::shared_ptr<digital_constellation_dqpsk>;
+%rename(constellation_dqpsk) digital_make_constellation_dqpsk;
+digital_constellation_dqpsk_sptr digital_make_constellation_dqpsk();
+%ignore digital_constellation_dqpsk;
+
+class digital_constellation_dqpsk : public digital_constellation
+{
+public:
+  digital_constellation_dqpsk ();
 };
 
 
