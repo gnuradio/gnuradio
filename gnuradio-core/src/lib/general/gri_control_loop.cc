@@ -70,9 +70,9 @@ void
 gri_control_loop::frequency_limit()
 {  
   if (d_freq > d_max_freq)
-    d_freq = d_min_freq;
+    d_freq = d_max_freq;
   else if (d_freq < d_min_freq)
-    d_freq = d_max_freq;  
+    d_freq = d_min_freq;  
 }
 
 /*******************************************************************

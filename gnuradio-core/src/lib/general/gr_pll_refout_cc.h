@@ -42,8 +42,8 @@ gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float loop_bw,
  * aligned to it.
  * 
  * All settings max_freq and min_freq are in terms of radians per sample, 
- * NOT HERTZ.  Alpha is the phase gain (first order, units of radians per radian) 
- * and beta is the frequency gain (second order, units of radians per sample per radian)
+ * NOT HERTZ.  The loop bandwidth determins the lock range and should be set
+ * around pi/200 -- 2pi/100.
  * \sa gr_pll_freqdet_cf, gr_pll_carriertracking_cc
  */
 class gr_pll_refout_cc : public gr_sync_block, public gri_control_loop
