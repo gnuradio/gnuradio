@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,17 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%{
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+GR_SWIG_BLOCK_MAGIC(gr, gmskmod_bc)
 
-#include <gr_channel_model.h>
-#include <gr_cpmmod_bc.h>
-#include <gr_gmskmod_bc.h>
-%}
+gr_gmskmod_bc_sptr
+gr_make_gmskmod_bc(unsigned samples_per_sym=2, double bt=0.3, unsigned L=4);
 
-%include "gr_channel_model.i"
-%include "gr_cpmmod_bc.i"
-%include "gr_gmskmod_bc.i"
+class gr_gmskmod_bc : public gr_hier_block2
+{
+ private:
+  gr_cpmmod_bc(int type, float h, unsigned samples_per_sym, double beta, unsigned L);
+
+ public:
+  std::vector<float> get_taps();
+};
 

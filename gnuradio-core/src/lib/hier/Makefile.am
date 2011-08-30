@@ -1,5 +1,5 @@
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,11 +27,19 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(WITH_INCLUDES)
 noinst_LTLIBRARIES = libhier.la
 
 libhier_la_SOURCES = \
-	gr_channel_model.cc
+	gr_channel_model.cc \
+	gr_gmskmod_bc.cc \
+	gr_cpmmod_bc.cc
 
 grinclude_HEADERS = \
-	gr_channel_model.h
+	gr_channel_model.h \
+	gr_gmskmod_bc.h \
+	gr_cpmmod_bc.h
+
 
 swiginclude_HEADERS = \
 	hier.i \
 	gr_channel_model.i
+	gr_channel_model.i \
+	gr_gmskmod_bc.i \
+	gr_cpmmod_bc.i

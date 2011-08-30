@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,18 +19,31 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#ifndef _QA_GR_CPM_H
+#define _QA_GR_CPM_H
 
-%{
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
-#include <gr_channel_model.h>
-#include <gr_cpmmod_bc.h>
-#include <gr_gmskmod_bc.h>
-%}
+class qa_gr_cpm : public CppUnit::TestCase {
 
-%include "gr_channel_model.i"
-%include "gr_cpmmod_bc.i"
-%include "gr_gmskmod_bc.i"
+  CPPUNIT_TEST_SUITE (qa_gr_cpm);
+  CPPUNIT_TEST (t1);
+  CPPUNIT_TEST (t2);
+  CPPUNIT_TEST (t3);
+  CPPUNIT_TEST (t4);
+  CPPUNIT_TEST (t5);
+  CPPUNIT_TEST_SUITE_END ();
+
+ private:
+  void t1 ();
+  void t2 ();
+  void t3 ();
+  void t4 ();
+  void t5 ();
+
+};
+
+
+#endif /* _QA_GR_CPM_H */
 

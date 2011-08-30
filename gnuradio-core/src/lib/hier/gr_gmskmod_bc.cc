@@ -1,8 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
- * 
- * This file is part of GNU Radio
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,17 +18,24 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%{
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <gr_channel_model.h>
-#include <gr_cpmmod_bc.h>
 #include <gr_gmskmod_bc.h>
-%}
+#include <gr_io_signature.h>
 
-%include "gr_channel_model.i"
-%include "gr_cpmmod_bc.i"
-%include "gr_gmskmod_bc.i"
+
+// Shared pointer constructor
+gr_gmskmod_bc_sptr
+gr_make_gmskmod_bc(unsigned samples_per_sym, double bt, unsigned L)
+{
+  return gnuradio::get_initial_sptr(new gr_gmskmod_bc(samples_per_sym, bt, L));
+}
+
+
+gr_gmskmod_bc::gr_gmskmod_bc(unsigned samples_per_sym, double bt, unsigned L)
+	: gr_cpmmod_bc(gr_cpm::GAUSSIAN, 0.5, samples_per_sym, L, bt)
+{
+}
 
