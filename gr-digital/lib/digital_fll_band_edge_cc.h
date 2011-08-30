@@ -102,8 +102,6 @@ class digital_fll_band_edge_cc : public gr_sync_block, public gri_control_loop
   float                   d_sps;
   float                   d_rolloff;
   int                     d_filter_size;
-  float                   d_max_freq;
-  float                   d_min_freq;
 
   std::vector<gr_complex> d_taps_lower;
   std::vector<gr_complex> d_taps_upper;

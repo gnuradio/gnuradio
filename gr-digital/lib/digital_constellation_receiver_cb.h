@@ -66,7 +66,7 @@ digital_make_constellation_receiver_cb (digital_constellation_sptr constellation
 
 class digital_constellation_receiver_cb : public gr_block, public gri_control_loop
 {
- public:
+public:
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
 		    gr_vector_const_void_star &input_items,
@@ -91,7 +91,7 @@ protected:
 
   void phase_error_tracking(float phase_error);
 
-  private:
+private:
   unsigned int d_M;
 
   digital_constellation_sptr d_constellation;
@@ -105,15 +105,6 @@ protected:
   
   //! index to delay line
   unsigned int d_dl_idx;
-
-  /*! \brief update the system gains from the loop bandwidth and damping factor
-   *
-   *  This function updates the system gains based on the loop
-   *  bandwidth and damping factor of the system.
-   *  These two factors can be set separately through their own
-   *  set functions.
-   */
-  void update_gains();
 
   friend digital_constellation_receiver_cb_sptr
   digital_make_constellation_receiver_cb (digital_constellation_sptr constell,

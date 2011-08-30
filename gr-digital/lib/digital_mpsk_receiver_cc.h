@@ -239,7 +239,7 @@ protected:
    */
   unsigned int decision_qpsk(gr_complex sample) const;
 
-  private:
+private:
   unsigned int d_M;
   float        d_theta;
 
