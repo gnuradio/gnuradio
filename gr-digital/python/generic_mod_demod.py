@@ -54,7 +54,7 @@ def add_common_options(parser):
     Sets options common to both modulator and demodulator.
     """
     parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
-                      help="set the number of constellation points (must be a power of 2 (power of 4 for QAM) [default=%default]")
+                      help="set the number of constellation points (must be a power of 2 for psk, power of 4 for QAM) [default=%default]")
     parser.add_option("", "--non-differential", action="store_true",
                       dest="differential", default=False,
                       help="do not use differential encoding [default=%default]")
@@ -233,7 +233,7 @@ class generic_demod(gr.hier_block2):
         @type gray_coded: bool
         @param freq_bw: loop filter lock-in bandwidth
         @type freq_bw: float
-        @param timing_bw: timing recoery loop lock-in bandwidth
+        @param timing_bw: timing recovery loop lock-in bandwidth
         @type timing_bw: float
         @param phase_bw: phase recovery loop bandwidth
         @type phase_bw: float
