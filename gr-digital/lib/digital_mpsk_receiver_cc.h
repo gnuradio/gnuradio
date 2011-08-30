@@ -24,6 +24,7 @@
 #define	INCLUDED_DIGITAL_MPSK_RECEIVER_CC_H
 
 #include <gruel/attributes.h>
+#include <gri_control_loop.h>
 #include <gr_block.h>
 #include <gr_complex.h>
 #include <fstream>
@@ -36,7 +37,7 @@ typedef boost::shared_ptr<digital_mpsk_receiver_cc> digital_mpsk_receiver_cc_spt
 // public constructor
 digital_mpsk_receiver_cc_sptr 
 digital_make_mpsk_receiver_cc (unsigned int M, float theta, 
-			       float alpha, float beta,
+			       float loop_bw,
 			       float fmin, float fmax,
 			       float mu, float gain_mu, 
 			       float omega, float gain_omega, float omega_rel);
@@ -77,7 +78,7 @@ digital_make_mpsk_receiver_cc (unsigned int M, float theta,
  *
  */
 
-class digital_mpsk_receiver_cc : public gr_block
+class digital_mpsk_receiver_cc : public gr_block, public gri_control_loop
 {
  public:
   ~digital_mpsk_receiver_cc ();
@@ -118,34 +119,6 @@ class digital_mpsk_receiver_cc : public gr_block
   //! (M&M) Sets value for omega gain factor
   void set_gain_omega (float gain_omega) { d_gain_omega = gain_omega; }
 
-
-
-  // Member function related to the phase/frequency tracking portion of the receiver
-  //! (CL) Returns the value for alpha (the phase gain term)
-  float alpha() const { return d_alpha; }
-  
-  //! (CL) Returns the value of beta (the frequency gain term)
-  float beta() const { return d_beta; }
-
-  //! (CL) Returns the current value of the frequency of the NCO in the Costas loop
-  float freq() const { return d_freq; }
-
-  //! (CL) Returns the current value of the phase of the NCO in the Costal loop
-  float phase() const { return d_phase; }
-
-  //! (CL) Sets the value for alpha (the phase gain term)
-  void set_alpha(float alpha) { d_alpha = alpha; }
-  
-  //! (CL) Setss the value of beta (the frequency gain term)
-  void set_beta(float beta) { d_beta = beta; }
-
-  //! (CL) Sets the current value of the frequency of the NCO in the Costas loop
-  void set_freq(float freq) { d_freq = freq; }
-
-  //! (CL) Setss the current value of the phase of the NCO in the Costal loop
-  void set_phase(float phase) { d_phase = phase; }
-
-
 protected:
   
   /*!
@@ -153,8 +126,7 @@ protected:
    *
    * \param M	        modulation order of the M-PSK modulation
    * \param theta	any constant phase rotation from the real axis of the constellation
-   * \param alpha	gain parameter to adjust the phase in the Costas loop (~0.01)
-   * \param beta        gain parameter to adjust the frequency in the Costas loop (~alpha^2/4)	
+   * \param loop_bw	Loop bandwidth to set gains of phase/freq tracking loop
    * \param fmin        minimum normalized frequency value the loop can achieve
    * \param fmax        maximum normalized frequency value the loop can achieve
    * \param mu          initial parameter for the interpolator [0,1]
@@ -167,7 +139,7 @@ protected:
    * value of M.
    */
   digital_mpsk_receiver_cc (unsigned int M, float theta, 
-			    float alpha, float beta,
+			    float loop_bw,
 			    float fmin, float fmax,
 			    float mu, float gain_mu, 
 			    float omega, float gain_omega, float omega_rel);
@@ -271,12 +243,6 @@ protected:
   unsigned int d_M;
   float        d_theta;
 
-  // Members related to carrier and phase tracking
-  float d_alpha;
-  float d_beta;
-  float d_freq, d_max_freq, d_min_freq;
-  float d_phase;
-
   /*!
    * \brief Decision maker function pointer 
    *
@@ -326,7 +292,7 @@ protected:
 
   friend digital_mpsk_receiver_cc_sptr
   digital_make_mpsk_receiver_cc (unsigned int M, float theta,
-				 float alpha, float beta,
+				 float loop_bw,
 				 float fmin, float fmax,
 				 float mu, float gain_mu, 
 				 float omega, float gain_omega, float omega_rel);
