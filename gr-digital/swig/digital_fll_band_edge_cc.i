@@ -27,7 +27,7 @@ digital_fll_band_edge_cc_sptr digital_make_fll_band_edge_cc (float samps_per_sym
 							     int filter_size,
 							     float bandwidth);
 
-class digital_fll_band_edge_cc : public gr_sync_block
+class digital_fll_band_edge_cc : public gr_sync_block, public gri_control_loop
 {
  private:
   digital_fll_band_edge_cc (float samps_per_sym, float rolloff,

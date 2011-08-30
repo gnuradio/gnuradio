@@ -23,16 +23,16 @@
 GR_SWIG_BLOCK_MAGIC(digital,mpsk_receiver_cc);
 
 digital_mpsk_receiver_cc_sptr digital_make_mpsk_receiver_cc (unsigned int M, float theta,
-							     float alpha, float beta,
+							     float loop_bw,
 							     float fmin, float fmax,
 							     float mu, float gain_mu, 
 							     float omega, float gain_omega,
 							     float omega_rel);
-class digital_mpsk_receiver_cc : public gr_block
+class digital_mpsk_receiver_cc : public gr_block, public gri_control_loop
 {
  private:
   digital_mpsk_receiver_cc (unsigned int M,float theta,
-			    float alpha, float beta,
+			    float loop_bw,
 			    float fmin, float fmax,
 			    float mu, float gain_mu, 
 			    float omega, float gain_omega, float omega_rel);
@@ -49,12 +49,4 @@ public:
   }
   void set_gain_mu (float gain_mu) { d_gain_mu = gain_mu; }
   void set_gain_omega (float gain_omega) { d_gain_omega = gain_omega; }
-  float alpha() const { return d_alpha; }
-  float beta() const { return d_beta; }
-  float freq() const { return d_freq; }
-  float phase() const { return d_phase; }
-  void set_alpha(float alpha) { d_alpha = alpha; }
-  void set_beta(float beta) { d_beta = beta; }
-  void set_freq(float freq) { d_freq = freq; }
-  void set_phase(float phase) { d_phase = phase; } 
 };

@@ -36,8 +36,7 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         # Test BPSK sync
         M = 2
         theta = 0
-        alpha = 0.1
-        beta = 0.25*alpha*alpha
+        loop_bw = cmath.pi/100.0
         fmin = -0.5
         fmax = 0.5
         mu = 0.25
@@ -46,7 +45,7 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         gain_omega = 0.001
         omega_rel = 0.001
 
-        self.test = digital_swig.mpsk_receiver_cc(M, theta, alpha, beta,
+        self.test = digital_swig.mpsk_receiver_cc(M, theta, loop_bw,
                                                   fmin, fmax, mu, gain_mu,
                                                   omega, gain_omega,
                                                   omega_rel)
@@ -68,8 +67,8 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         expected_result = expected_result[len_e - Ncmp:]
         dst_data = dst_data[len_d - Ncmp:]
 
-        #print expected_result
-        #print dst_data
+        #for e,d in zip(expected_result, dst_data):
+        #    print e, d
         
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 1)
 
@@ -78,8 +77,7 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         # Test QPSK sync
         M = 4
         theta = 0
-        alpha = 0.1
-        beta = 0.25*alpha*alpha
+        loop_bw = 2*cmath.pi/100.0
         fmin = -0.5
         fmax = 0.5
         mu = 0.25
@@ -88,11 +86,11 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         gain_omega = 0.001
         omega_rel = 0.001
 
-        self.test = digital_swig.mpsk_receiver_cc(M, theta, alpha, beta,
+        self.test = digital_swig.mpsk_receiver_cc(M, theta, loop_bw,
                                                   fmin, fmax, mu, gain_mu,
                                                   omega, gain_omega,
                                                   omega_rel)
-        
+
         data = 1000*[complex( 0.707,  0.707), complex( 0.707,  0.707),
                      complex(-0.707,  0.707), complex(-0.707,  0.707),
                      complex(-0.707, -0.707), complex(-0.707, -0.707),
@@ -103,8 +101,8 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()
         
-        expected_result = 1000*[complex(1.2, 0), complex(0, 1.2),
-                                complex(-1.2, 0), complex(0, -1.2)]
+        expected_result = 1000*[complex(0, -1.0), complex(1.0, 0),
+                                complex(0, 1.0), complex(-1.0, 0)]
         dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
@@ -114,9 +112,9 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         expected_result = expected_result[len_e - Ncmp:]
         dst_data = dst_data[len_d - Ncmp:]
 
-        #print expected_result
-        #print dst_data
-        
+        #for e,d in zip(expected_result, dst_data):
+        #    print e, d
+
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 1)
 
 if __name__ == '__main__':

@@ -41,28 +41,30 @@
 
 digital_mpsk_receiver_cc_sptr 
 digital_make_mpsk_receiver_cc(unsigned int M, float theta,
-			 float alpha, float beta,
+			 float loop_bw,
 			 float fmin, float fmax,
 			 float mu, float gain_mu, 
 			 float omega, float gain_omega, float omega_rel)
 {
   return gnuradio::get_initial_sptr(new digital_mpsk_receiver_cc (M, theta, 
-							    alpha, beta,
-							    fmin, fmax,
-							    mu, gain_mu, 
-							    omega, gain_omega, omega_rel));
+								  loop_bw,
+								  fmin, fmax,
+								  mu, gain_mu, 
+								  omega, gain_omega, 
+								  omega_rel));
 }
 
 digital_mpsk_receiver_cc::digital_mpsk_receiver_cc (unsigned int M, float theta, 
-					  float alpha, float beta,
-					  float fmin, float fmax,
-					  float mu, float gain_mu, 
-					  float omega, float gain_omega, float omega_rel)
+						    float loop_bw,
+						    float fmin, float fmax,
+						    float mu, float gain_mu, 
+						    float omega, float gain_omega,
+						    float omega_rel)
   : gr_block ("mpsk_receiver_cc",
 	      gr_make_io_signature (1, 1, sizeof (gr_complex)),
 	      gr_make_io_signature (1, 1, sizeof (gr_complex))),
+    gri_control_loop(loop_bw, fmax, fmin),  
     d_M(M), d_theta(theta), 
-    d_alpha(alpha), d_beta(beta), d_freq(0), d_max_freq(fmax), d_min_freq(fmin), d_phase(0),
     d_current_const_point(0),
     d_mu(mu), d_gain_mu(gain_mu), d_gain_omega(gain_omega), 
     d_omega_rel(omega_rel), d_max_omega(0), d_min_omega(0),
@@ -265,18 +267,10 @@ digital_mpsk_receiver_cc::phase_error_tracking(gr_complex sample)
 
   // Make phase and frequency corrections based on sampled value
   phase_error = (*this.*d_phase_error_detector)(sample);
-    
-  d_freq += d_beta*phase_error;             // adjust frequency based on error
-  d_phase += d_freq + d_alpha*phase_error;  // adjust phase based on error
-
-  // Make sure we stay within +-2pi
-  while(d_phase > M_TWOPI)
-    d_phase -= M_TWOPI;
-  while(d_phase < -M_TWOPI)
-    d_phase += M_TWOPI;
   
-  // Limit the frequency range
-  d_freq = gr_branchless_clip(d_freq, d_max_freq);
+  advance_loop(phase_error);
+  phase_wrap();
+  frequency_limit();
   
 #if VERBOSE_COSTAS
   printf("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f  constellation: %f+j%f\n",
