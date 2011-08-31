@@ -1,17 +1,26 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Trellis Viterbi Combined
+## SCCC Decoder Combined
 ###################################################
  -->
 
 
 <block>
-	<name>Viterbi Combo</name>
-	<key>trellis_viterbi_combined_xx</key>
+	<name>SCCC Decoder Combo</name>
+	<key>trellis_sccc_decoder_combined_xx</key>
 	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
-	<make>trellis.viterbi_combined_$(type)$(out_type)(trellis.fsm($fsm_args), $block_size, $init_state, $final_state, $dim, $table, $metric_type)</make>
+	<make>trellis.sccc_decoder_combined_$(type)$(out_type)(
+		trellis.fsm($o_fsm_args), $o_init_state, $o_final_state, 
+		trellis.fsm($i_fsm_args), $i_init_state, $i_final_state, 
+		trellis.interleaver($interleaver), 
+		$block_size,
+		$iterations,
+                $siso_type,
+		$dim, $table, $metric_type,
+		$scaling)
+	</make>
         <callback>set_TABLE($table)</callback>
 	<param>
 		<name>Input Type</name>
@@ -28,18 +37,6 @@
 			<key>f</key>
 			<opt>io:float</opt>
 			<opt>table:real_vector</opt>
-		</option>
-		<option>
-			<name>Int</name>
-			<key>i</key>
-			<opt>io:int</opt>
-			<opt>table:int_vector</opt>
-		</option>
-		<option>
-			<name>Short</name>
-			<key>s</key>
-			<opt>io:short</opt>
-			<opt>table:int_vector</opt>
 		</option>
 	</param>
 	<param>
@@ -63,8 +60,42 @@
 		</option>
 	</param>
 	<param>
-		<name>FSM Args</name>
-		<key>fsm_args</key>
+		<name>Outer FSM</name>
+		<key>o_fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Outer Initial State</name>
+		<key>o_init_state</key>
+		<value>-1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Outer Final State</name>
+		<key>o_final_state</key>
+		<value>-1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Inner FSM</name>
+		<key>i_fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Inner Initial State</name>
+		<key>i_init_state</key>
+		<value>-1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Inner Final State</name>
+		<key>i_final_state</key>
+		<value>-1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Interleaver</name>
+		<key>interleaver</key>
 		<type>raw</type>
 	</param>
 	<param>
@@ -73,15 +104,9 @@
 		<type>int</type>
 	</param>
 	<param>
-		<name>Initial State</name>
-		<key>init_state</key>
-		<value>-1</value>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Final State</name>
-		<key>final_state</key>
-		<value>-1</value>
+		<name>Iterations</name>
+		<key>iterations</key>
+		<value>10</value>
 		<type>int</type>
 	</param>
 	<param>
@@ -110,6 +135,25 @@
 			<name>Hard Bit</name>
 			<key>trellis.TRELLIS_HARD_BIT</key>
 		</option>
+	</param>
+	<param>
+		<name>SISO Type</name>
+		<key>siso_type</key>
+		<type>enum</type>
+		<option>
+			<name>Min Sum</name>
+			<key>trellis.TRELLIS_MIN_SUM</key>
+		</option>
+		<option>
+			<name>Sum Product</name>
+			<key>trellis.TRELLIS_SUM_PRODUCT</key>
+		</option>
+	</param>
+	<param>
+		<name>Scaling</name>
+		<key>scaling</key>
+		<value>1.0</value>
+		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>

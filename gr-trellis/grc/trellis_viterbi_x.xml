@@ -7,7 +7,7 @@
 
 
 <block>
-	<name>Trellis Viterbi</name>
+	<name>Viterbi</name>
 	<key>trellis_viterbi_x</key>
 	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>

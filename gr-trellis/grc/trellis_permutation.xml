@@ -11,7 +11,7 @@
 	<key>trellis_permutation</key>
 	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
-	<make>trellis.permutation($block_size, $table, $syms_per_block, $type.size*$vlen)</make>
+	<make>trellis.permutation($interleaver_size, $table, $syms_per_block, $type.size*$vlen)</make>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -43,8 +43,8 @@
 		</option>
 	</param>
 	<param>
-		<name>Block Size</name>
-		<key>block_size</key>
+		<name>Interleaver Size</name>
+		<key>interleaver_size</key>
 		<type>int</type>
 	</param>
 	<param>
@@ -74,4 +74,8 @@
 		<type>$type</type>
 		<vlen>$vlen</vlen>
 	</source>
+        <doc>
+Interleaver size is given in blocks. 
+One Symbol = (in/out type) * (vector length) 
+        </doc>
 </block>

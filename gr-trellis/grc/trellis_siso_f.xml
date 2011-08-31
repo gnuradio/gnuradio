@@ -7,7 +7,7 @@
 
 
 <block>
-	<name>Trellis SISO</name>
+	<name>SISO</name>
 	<key>trellis_siso_f</key>
 	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
