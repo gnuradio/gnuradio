@@ -1,5 +1,5 @@
 #
-# Copyright 2009,2010 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,17 +21,20 @@
 
 include $(top_srcdir)/Makefile.common
 
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(WITH_INCLUDES)
 
-noinst_LTLIBRARIES = libhier.la
+noinst_LTLIBRARIES = libdigital_hier.la
 
-libhier_la_SOURCES = \
-	gr_channel_model.cc
+libdigital_hier_la_SOURCES = \
+	gr_gmskmod_bc.cc \
+	gr_cpmmod_bc.cc
 
 grinclude_HEADERS = \
-	gr_channel_model.h
+	gr_gmskmod_bc.h \
+	gr_cpmmod_bc.h
+
 
 swiginclude_HEADERS = \
-	hier.i \
-	gr_channel_model.i
+	digital_hier.i \
+	gr_gmskmod_bc.i \
+	gr_cpmmod_bc.i

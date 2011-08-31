@@ -29,6 +29,7 @@ AC_DEFUN([GRC_GR_DIGITAL],[
 	gr-digital/apps/Makefile \
 	gr-digital/grc/Makefile \
         gr-digital/lib/Makefile \
+        gr-digital/hier/Makefile \
 	gr-digital/python/Makefile \
 	gr-digital/python/run_tests \
 	gr-digital/python/utils/Makefile \
