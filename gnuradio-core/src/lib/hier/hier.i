@@ -26,11 +26,7 @@
 #endif
 
 #include <gr_channel_model.h>
-#include <gr_cpmmod_bc.h>
-#include <gr_gmskmod_bc.h>
 %}
 
 %include "gr_channel_model.i"
-%include "gr_cpmmod_bc.i"
-%include "gr_gmskmod_bc.i"
 

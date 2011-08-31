@@ -2,6 +2,8 @@
 /*
  * Copyright 2010 Free Software Foundation, Inc.
  * 
+ * This file is part of GNU Radio
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -24,7 +26,6 @@
 
 #include <gr_gmskmod_bc.h>
 #include <gr_io_signature.h>
-
 
 // Shared pointer constructor
 gr_gmskmod_bc_sptr

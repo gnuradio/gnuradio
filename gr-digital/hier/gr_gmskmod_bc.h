@@ -30,8 +30,8 @@ typedef boost::shared_ptr<gr_gmskmod_bc> gr_gmskmod_bc_sptr;
 
 
 gr_gmskmod_bc_sptr
-gr_make_gmskmod_bc(unsigned samples_per_sym=2, double bt=0.3, unsigned L=4);
-
+gr_make_gmskmod_bc(unsigned samples_per_sym=2,
+		   double bt=0.3, unsigned L=4);
 
 /*!
  * \brief GMSK modulator
@@ -40,8 +40,8 @@ gr_make_gmskmod_bc(unsigned samples_per_sym=2, double bt=0.3, unsigned L=4);
  *
  * \param samples_per_sym Samples per symbol.
  * \param bt The 3 dB time-bandwidth product.
- * \param L The length of the phase duration in symbols. The Gaussian pulse is truncated
- *          after L symbols.
+ * \param L The length of the phase duration in symbols. The Gaussian
+ *          pulse is truncated after L symbols.
  *
  * The input of this block are symbols from an M-ary alphabet
  * +/-1, +/-3, ..., +/-(M-1). Usually, M = 2 and therefore, the
@@ -51,8 +51,9 @@ gr_make_gmskmod_bc(unsigned samples_per_sym=2, double bt=0.3, unsigned L=4);
  */
 class gr_gmskmod_bc : public gr_cpmmod_bc
 {
-	friend gr_gmskmod_bc_sptr gr_make_gmskmod_bc(unsigned samples_per_sym, double bt, unsigned L);
-	gr_gmskmod_bc(unsigned samples_per_sym, double bt, unsigned L);
+  friend gr_gmskmod_bc_sptr gr_make_gmskmod_bc(unsigned samples_per_sym,
+					       double bt, unsigned L);
+  gr_gmskmod_bc(unsigned samples_per_sym, double bt, unsigned L);
 };
 
 #endif /* INCLUDED_GR_GMSKMOD_BC_H */

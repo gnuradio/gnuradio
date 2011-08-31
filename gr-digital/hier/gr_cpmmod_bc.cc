@@ -28,34 +28,39 @@
 
 // Shared pointer constructor
 gr_cpmmod_bc_sptr
-gr_make_cpmmod_bc(int type, float h, unsigned samples_per_sym, unsigned L, double beta)
+gr_make_cpmmod_bc(int type, float h,
+		  unsigned samples_per_sym,
+		  unsigned L, double beta)
 {
-  return gnuradio::get_initial_sptr(new gr_cpmmod_bc((gr_cpm::cpm_type)type, h, samples_per_sym, L, beta));
+  return gnuradio::get_initial_sptr(new gr_cpmmod_bc((gr_cpm::cpm_type)type,
+						     h, samples_per_sym,
+						     L, beta));
 }
 
 
-gr_cpmmod_bc::gr_cpmmod_bc(gr_cpm::cpm_type type, float h, unsigned samples_per_sym,
-							unsigned L, double beta)
+gr_cpmmod_bc::gr_cpmmod_bc(gr_cpm::cpm_type type, float h,
+			   unsigned samples_per_sym,
+			   unsigned L, double beta)
   : gr_hier_block2("gr_cpmmod_bc",
 		   gr_make_io_signature(1, 1, sizeof(char)),
 		   gr_make_io_signature2(1, 1, sizeof(gr_complex), sizeof(float))),
-	d_taps(gr_cpm::phase_response(type, samples_per_sym, L, beta)),
-	d_char_to_float(gr_make_char_to_float()),
-	d_pulse_shaper(gr_make_interp_fir_filter_fff(samples_per_sym, d_taps)),
-	d_fm(gr_make_frequency_modulator_fc(M_PI * h))
+    d_taps(gr_cpm::phase_response(type, samples_per_sym, L, beta)),
+    d_char_to_float(gr_make_char_to_float()),
+    d_pulse_shaper(gr_make_interp_fir_filter_fff(samples_per_sym, d_taps)),
+    d_fm(gr_make_frequency_modulator_fc(M_PI * h))
 {
   switch (type) {
-	  case gr_cpm::LRC:
-	  case gr_cpm::LSRC:
-	  case gr_cpm::LREC:
-	  case gr_cpm::TFM:
-	  case gr_cpm::GAUSSIAN:
-		  break;
-
-	  default:
-		  throw std::invalid_argument("invalid CPM type");
+  case gr_cpm::LRC:
+  case gr_cpm::LSRC:
+  case gr_cpm::LREC:
+  case gr_cpm::TFM:
+  case gr_cpm::GAUSSIAN:
+    break;
+    
+  default:
+    throw std::invalid_argument("invalid CPM type");
   }
-
+  
   connect(self(), 0, d_char_to_float, 0);
   connect(d_char_to_float, 0, d_pulse_shaper, 0);
   connect(d_pulse_shaper, 0, d_fm, 0);
