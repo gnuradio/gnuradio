@@ -1,44 +1,24 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-## SCCC Decoder Combined
+## SCCC Decoder 
 ###################################################
  -->
 
 
 <block>
-	<name>SCCC Decoder Combo</name>
-	<key>trellis_sccc_decoder_combined_xx</key>
+	<name>SCCC Decoder</name>
+	<key>trellis_sccc_decoder_x</key>
 	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
-	<make>trellis.sccc_decoder_combined_$(type)$(out_type)(
+	<make>trellis.sccc_decoder_$(out_type)(
 		trellis.fsm($o_fsm_args), $o_init_state, $o_final_state, 
 		trellis.fsm($i_fsm_args), $i_init_state, $i_final_state, 
 		trellis.interleaver($interleaver), 
 		$block_size,
 		$iterations,
-                $siso_type,
-		$dim, $table, $metric_type,
-		$scaling)
+                $siso_type)
 	</make>
-        <callback>set_TABLE($table)</callback>
-	<param>
-		<name>Input Type</name>
-		<key>type</key>
-		<type>enum</type>
-		<option>
-			<name>Complex</name>
-			<key>c</key>
-			<opt>io:complex</opt>
-			<opt>table:complex_vector</opt>
-		</option>
-		<option>
-			<name>Float</name>
-			<key>f</key>
-			<opt>io:float</opt>
-			<opt>table:real_vector</opt>
-		</option>
-	</param>
 	<param>
 		<name>Output Type</name>
 		<key>out_type</key>
@@ -110,33 +90,6 @@
 		<type>int</type>
 	</param>
 	<param>
-		<name>Dimensionality</name>
-		<key>dim</key>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Constellation</name>
-		<key>table</key>
-		<type>$type.table</type>
-	</param>
-	<param>
-		<name>Metric Type</name>
-		<key>metric_type</key>
-		<type>enum</type>
-		<option>
-			<name>Euclidean</name>
-			<key>trellis.TRELLIS_EUCLIDEAN</key>
-		</option>
-		<option>
-			<name>Hard Symbol</name>
-			<key>trellis.TRELLIS_HARD_SYMBOL</key>
-		</option>
-		<option>
-			<name>Hard Bit</name>
-			<key>trellis.TRELLIS_HARD_BIT</key>
-		</option>
-	</param>
-	<param>
 		<name>SISO Type</name>
 		<key>siso_type</key>
 		<type>enum</type>
@@ -149,22 +102,16 @@
 			<key>trellis.TRELLIS_SUM_PRODUCT</key>
 		</option>
 	</param>
-	<param>
-		<name>Scaling</name>
-		<key>scaling</key>
-		<value>1.0</value>
-		<type>real</type>
-	</param>
 	<sink>
 		<name>in</name>
-		<type>$type.io</type>
+		<type>float</type>
 	</sink>
 	<source>
 		<name>out</name>
 		<type>$out_type.io</type>
 	</source>
 	<doc>
-SCCC turbo Decoder combined with metric calculation.
-The fsm arguments are passed directly to the trellis.fsm() constructor.
+SCCC turbo Decoder.
+The fsm and interleaver arguments are passed directly to the trellis.fsm() and trellis.interleaver() constructors.
 	</doc>
 </block>
