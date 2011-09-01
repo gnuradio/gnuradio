@@ -8,15 +8,11 @@
 	<name>PLL Ref Out</name>
 	<key>gr_pll_refout_cc</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.pll_refout_cc($alpha, $beta, $max_freq, $min_freq)</make>
+	<make>gr.pll_refout_cc($w, $max_freq, $min_freq)</make>
+	<callback>set_loop_bandwidth($w)</callback>
 	<param>
-		<name>Alpha</name>
-		<key>alpha</key>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Beta</name>
-		<key>beta</key>
+		<name>Loop Bandwidth</name>
+		<key>w</key>
 		<type>real</type>
 	</param>
 	<param>
