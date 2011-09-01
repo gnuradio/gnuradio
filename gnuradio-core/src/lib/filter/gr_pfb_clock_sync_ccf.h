@@ -154,6 +154,7 @@ class gr_pfb_clock_sync_ccf : public gr_block
   float                             d_max_dev;
   int                               d_filtnum;
   int                               d_osps;
+  float                             d_error;
 
   /*!
    * Build the polyphase filterbank timing synchronizer.
