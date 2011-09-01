@@ -22,26 +22,26 @@
 #include "config.h"
 #endif
 
-#include <gr_cpmmod_bc.h>
+#include <digital_cpmmod_bc.h>
 #include <gr_io_signature.h>
 
 
 // Shared pointer constructor
-gr_cpmmod_bc_sptr
-gr_make_cpmmod_bc(int type, float h,
-		  unsigned samples_per_sym,
-		  unsigned L, double beta)
+digital_cpmmod_bc_sptr
+digital_make_cpmmod_bc(int type, float h,
+		       unsigned samples_per_sym,
+		       unsigned L, double beta)
 {
-  return gnuradio::get_initial_sptr(new gr_cpmmod_bc((gr_cpm::cpm_type)type,
-						     h, samples_per_sym,
-						     L, beta));
+  return gnuradio::get_initial_sptr(new digital_cpmmod_bc((gr_cpm::cpm_type)type,
+							  h, samples_per_sym,
+							  L, beta));
 }
 
 
-gr_cpmmod_bc::gr_cpmmod_bc(gr_cpm::cpm_type type, float h,
-			   unsigned samples_per_sym,
-			   unsigned L, double beta)
-  : gr_hier_block2("gr_cpmmod_bc",
+digital_cpmmod_bc::digital_cpmmod_bc(gr_cpm::cpm_type type, float h,
+				     unsigned samples_per_sym,
+				     unsigned L, double beta)
+  : gr_hier_block2("digital_cpmmod_bc",
 		   gr_make_io_signature(1, 1, sizeof(char)),
 		   gr_make_io_signature2(1, 1, sizeof(gr_complex), sizeof(float))),
     d_taps(gr_cpm::phase_response(type, samples_per_sym, L, beta)),

@@ -20,18 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr, gmskmod_bc)
+GR_SWIG_BLOCK_MAGIC(digital, gmskmod_bc)
 
-gr_gmskmod_bc_sptr
-gr_make_gmskmod_bc(unsigned samples_per_sym=2,
-		   double bt=0.3, unsigned L=4);
+digital_gmskmod_bc_sptr
+digital_make_gmskmod_bc(unsigned samples_per_sym=2,
+			double bt=0.3, unsigned L=4);
 
-class gr_gmskmod_bc : public gr_hier_block2
+class digital_gmskmod_bc : public gr_hier_block2
 {
  private:
-  gr_cpmmod_bc(int type, float h,
-	       unsigned samples_per_sym,
-	       double beta, unsigned L);
+  digital_cpmmod_bc(int type, float h,
+		    unsigned samples_per_sym,
+		    double beta, unsigned L);
 
  public:
   std::vector<float> get_taps();

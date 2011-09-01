@@ -35,6 +35,7 @@ noinst_PYTHON = \
 	qa_binary_slicer_fb.py		\
 	qa_clock_recovery_mm.py		\
 	qa_cma_equalizer.py		\
+	qa_cpm.py			\
 	qa_constellation.py		\
 	qa_constellation_receiver.py	\
 	qa_constellation_decoder_cb.py	\

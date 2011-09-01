@@ -60,6 +60,7 @@ libgnuradio_digital_la_SOURCES = 		\
 	digital_mpsk_receiver_cc.cc
 
 libgnuradio_digital_la_LIBADD =	\
-	$(GNURADIO_CORE_LA)
+	$(GNURADIO_CORE_LA)	\
+	$(abs_top_builddir)/gr-digital/hier/libdigital_hier.la
 
 libgnuradio_digital_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)

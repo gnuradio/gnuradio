@@ -26,15 +26,15 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(WITH_INCLUDES)
 noinst_LTLIBRARIES = libdigital_hier.la
 
 libdigital_hier_la_SOURCES = \
-	gr_gmskmod_bc.cc \
-	gr_cpmmod_bc.cc
+	digital_gmskmod_bc.cc \
+	digital_cpmmod_bc.cc
 
 grinclude_HEADERS = \
-	gr_gmskmod_bc.h \
-	gr_cpmmod_bc.h
+	digital_gmskmod_bc.h \
+	digital_cpmmod_bc.h
 
 
 swiginclude_HEADERS = \
-	digital_hier.i \
-	gr_gmskmod_bc.i \
-	gr_cpmmod_bc.i
+	_digital_hier.i \
+	digital_gmskmod_bc.i \
+	digital_cpmmod_bc.i

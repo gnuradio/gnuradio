@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_CPMMOD_BC_H
-#define INCLUDED_GR_CPMMOD_BC_H
+#ifndef INCLUDED_DIGITAL_CPMMOD_BC_H
+#define INCLUDED_DIGITAL_CPMMOD_BC_H
 
 #include <gr_hier_block2.h>
 #include <gr_char_to_float.h>
@@ -30,14 +30,14 @@
 #include <gr_cpm.h>
 
 
-class gr_cpmmod_bc;
-typedef boost::shared_ptr<gr_cpmmod_bc> gr_cpmmod_bc_sptr;
+class digital_cpmmod_bc;
+typedef boost::shared_ptr<digital_cpmmod_bc> digital_cpmmod_bc_sptr;
 
 
-gr_cpmmod_bc_sptr
-gr_make_cpmmod_bc(int type, float h,
-		  unsigned samples_per_sym,
-		  unsigned L, double beta=0.3);
+digital_cpmmod_bc_sptr
+digital_make_cpmmod_bc(int type, float h,
+		       unsigned samples_per_sym,
+		       unsigned L, double beta=0.3);
 
 /*!
  * \brief Generic CPM modulator
@@ -70,11 +70,11 @@ gr_make_cpmmod_bc(int type, float h,
  * The modulator will silently accept any other inputs, though.
  * The output is the phase-modulated signal.
  */
-class gr_cpmmod_bc : public gr_hier_block2
+class digital_cpmmod_bc : public gr_hier_block2
 {
-  friend gr_cpmmod_bc_sptr gr_make_cpmmod_bc(int type, float h,
-					     unsigned samples_per_sym,
-					     unsigned L, double beta);
+  friend digital_cpmmod_bc_sptr digital_make_cpmmod_bc(int type, float h,
+						       unsigned samples_per_sym,
+						       unsigned L, double beta);
   
   std::vector<float> d_taps;
   gr_char_to_float_sptr d_char_to_float;
@@ -82,14 +82,14 @@ class gr_cpmmod_bc : public gr_hier_block2
   gr_frequency_modulator_fc_sptr d_fm;
   
 protected:
-  gr_cpmmod_bc(gr_cpm::cpm_type type, float h,
-	       unsigned samples_per_sym,
-	       unsigned L, double beta);
+  digital_cpmmod_bc(gr_cpm::cpm_type type, float h,
+		    unsigned samples_per_sym,
+		    unsigned L, double beta);
   
 public:
   //! Return the phase response FIR taps
   std::vector<float> get_taps() { return d_taps; };
 };
 
-#endif /* INCLUDED_GR_CPMMOD_BC_H */
+#endif /* INCLUDED_DIGITAL_CPMMOD_BC_H */
 

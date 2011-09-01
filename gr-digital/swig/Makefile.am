@@ -26,8 +26,7 @@ TESTS =
 EXTRA_DIST += $(nobase_guile_DATA)
 
 AM_CPPFLAGS = \
-	-I$(abs_top_srcdir)/gr-digital/lib \
-	-I$(abs_top_builddir)/gr-digital/lib \
+	$(GR_DIGITAL_INCLUDES) \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
@@ -43,6 +42,7 @@ noinst_GUILE  = digital.test
 ##############################
 # SWIG interface and library
 TOP_SWIG_IFILES = \
+	digital_hier.i \
 	digital_swig.i
 
 # Install so that they end up available as:
@@ -73,9 +73,11 @@ digital_swig_swiginclude_headers =		\
 	digital_kurtotic_equalizer_cc.i		\
 	digital_mpsk_receiver_cc.i
 
+digital_hier_swig_args = \
+	$(GR_DIGITAL_INCLUDES)
+
 digital_swig_swig_args = \
-	-I$(abs_top_srcdir)/gr-digital/lib \
-	-I$(abs_top_builddir)/gr-digital/lib
+	$(GR_DIGITAL_INCLUDES)
 
 if GUILE
 TESTS += run_guile_tests

@@ -20,18 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_GMSKMOD_BC_H
-#define INCLUDED_GR_GMSKMOD_BC_H
+#ifndef INCLUDED_DIGITAL_GMSKMOD_BC_H
+#define INCLUDED_DIGITAL_GMSKMOD_BC_H
 
-#include <gr_cpmmod_bc.h>
+#include <digital_cpmmod_bc.h>
 
-class gr_gmskmod_bc;
-typedef boost::shared_ptr<gr_gmskmod_bc> gr_gmskmod_bc_sptr;
+class digital_gmskmod_bc;
+typedef boost::shared_ptr<digital_gmskmod_bc> digital_gmskmod_bc_sptr;
 
 
-gr_gmskmod_bc_sptr
-gr_make_gmskmod_bc(unsigned samples_per_sym=2,
-		   double bt=0.3, unsigned L=4);
+digital_gmskmod_bc_sptr
+digital_make_gmskmod_bc(unsigned samples_per_sym=2,
+			double bt=0.3, unsigned L=4);
 
 /*!
  * \brief GMSK modulator
@@ -49,12 +49,13 @@ gr_make_gmskmod_bc(unsigned samples_per_sym=2,
  * The modulator will silently accept any other inputs, though.
  * The output is the phase-modulated signal.
  */
-class gr_gmskmod_bc : public gr_cpmmod_bc
+class digital_gmskmod_bc : public digital_cpmmod_bc
 {
-  friend gr_gmskmod_bc_sptr gr_make_gmskmod_bc(unsigned samples_per_sym,
-					       double bt, unsigned L);
-  gr_gmskmod_bc(unsigned samples_per_sym, double bt, unsigned L);
+  friend digital_gmskmod_bc_sptr digital_make_gmskmod_bc(unsigned samples_per_sym,
+							 double bt, unsigned L);
+  digital_gmskmod_bc(unsigned samples_per_sym,
+		     double bt, unsigned L);
 };
 
-#endif /* INCLUDED_GR_GMSKMOD_BC_H */
+#endif /* INCLUDED_DIGITAL_GMSKMOD_BC_H */
 

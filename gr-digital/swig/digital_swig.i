@@ -40,6 +40,7 @@
 #include "digital_mpsk_receiver_cc.h"
 %}
 
+%include "digital_hier.i"
 %include "digital_binary_slicer_fb.i"
 %include "digital_clock_recovery_mm_cc.i"
 %include "digital_clock_recovery_mm_ff.i"

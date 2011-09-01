@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
+import digital_swig
 import numpy
 
 class test_cpm(gr_unittest.TestCase):
@@ -36,7 +37,7 @@ class test_cpm(gr_unittest.TestCase):
         L = 1
         in_bits = (1,) * 20
         src = gr.vector_source_b(in_bits, False)
-        cpm = gr.cpmmod_bc(type, 0.5, sps, L)
+        cpm = digital_swig.cpmmod_bc(type, 0.5, sps, L)
         arg = gr.complex_to_arg()
         sink = gr.vector_sink_f()
 
@@ -67,7 +68,7 @@ class test_cpm(gr_unittest.TestCase):
         bt = 0.3
         in_bits = (1,) * 20
         src = gr.vector_source_b(in_bits, False)
-        gmsk = gr.gmskmod_bc(sps, bt, L)
+        gmsk = digital_swig.gmskmod_bc(sps, bt, L)
         arg = gr.complex_to_arg()
         sink = gr.vector_sink_f()
 
