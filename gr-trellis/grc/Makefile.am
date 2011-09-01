@@ -35,4 +35,5 @@ dist_grcblocks_DATA = \
         trellis_sccc_decoder_x.xml \
         trellis_sccc_decoder_combined_xx.xml \
         trellis_pccc_encoder_xx.xml  \
-        trellis_pccc_decoder_x.xml 
+        trellis_pccc_decoder_x.xml  \
+        trellis_pccc_decoder_combined_xx.xml 

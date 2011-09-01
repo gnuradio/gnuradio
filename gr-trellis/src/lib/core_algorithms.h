@@ -91,11 +91,21 @@ void siso_algorithm_combined(int I, int S, int O,
 );
 
 
+template<class T>
+void sccc_decoder(
+      const fsm &FSMo, int STo0, int SToK,
+      const fsm &FSMi, int STi0, int STiK,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      const float *iprioro, T *data
+);
+ 
+
 template<class Ti, class To>
 void sccc_decoder_combined(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<Ti> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
@@ -103,25 +113,27 @@ void sccc_decoder_combined(
       const Ti *observations, To *data
 );
 
-
-template<class T>
-void sccc_decoder(
-      const fsm &FSMo, int STo0, int SToK,
-      const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
-      float (*p2mymin)(float,float),
-      const float *iprioro, T *data
-);
-
-
 template<class T>
 void pccc_decoder(
       const fsm &FSM1, int ST10, int ST1K,
       const fsm &FSM2, int ST20, int ST2K,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *cprioro, T *data
 );
+
+template<class Ti, class To>
+void pccc_decoder_combined(
+      const fsm &FSM1, int ST10, int ST1K,
+      const fsm &FSM2, int ST20, int ST2K,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<Ti> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      float scaling,
+      const Ti *observations, To *data
+);
+
 
 
 
