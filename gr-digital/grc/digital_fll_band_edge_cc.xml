@@ -8,10 +8,8 @@
 	<name>FLL Band-Edge</name>
 	<key>gr_fll_band_edge_cc</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.fll_band_edge_cc($samps_per_sym, $rolloff, $filter_size, $alpha, $beta)</make>
-	<callback>set_alpha($alpha)</callback>
-	<callback>set_beta($beta)</callback>
-
+	<make>gr.fll_band_edge_cc($samps_per_sym, $rolloff, $filter_size, $w)</make>
+	<callback>set_loop_bandwidth($w)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -41,15 +39,11 @@
 	</param>
 
 	<param>
-		<name>Alpha</name>
-		<key>alpha</key>
+		<name>Loop Bandwidth</name>
+		<key>w</key>
 		<type>real</type>
 	</param>
-	<param>
-		<name>Beta</name>
-		<key>beta</key>
-		<type>real</type>
-	</param>
+
 	<sink>
 		<name>in</name>
 		<type>$type.input</type>

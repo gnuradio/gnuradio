@@ -109,7 +109,6 @@ dist_ourdata_DATA = \
 	gr_file_source.xml \
 	gr_filter_delay_fc.xml \
 	gr_fir_filter_xxx.xml \
-	gr_fll_band_edge_cc.xml \
 	gr_float_to_char.xml \
 	gr_float_to_complex.xml \
 	gr_float_to_short.xml \
@@ -136,7 +135,6 @@ dist_ourdata_DATA = \
 	gr_message_sink.xml \
 	gr_message_source.xml \
 	gr_moving_average_xx.xml \
-	gr_mpsk_receiver_cc.xml \
 	gr_mpsk_sync_cc.xml \
 	gr_multiply_const_vxx.xml \
 	gr_multiply_xx.xml \

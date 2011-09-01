@@ -8,9 +8,8 @@
 	<name>MPSK Receiver</name>
 	<key>gr_mpsk_receiver_cc</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.mpsk_receiver_cc($M, $theta, $alpha, $beta, $fmin, $fmax, $mu, $gain_mu, $omega, $gain_omega, $omega_relative_limit)</make>
-	<callback>set_alpha($alpha)</callback>
-	<callback>set_beta($beta)</callback>
+	<make>gr.mpsk_receiver_cc($M, $theta, $w, $fmin, $fmax, $mu, $gain_mu, $omega, $gain_omega, $omega_relative_limit)</make>
+	<callback>set_loop_bandwidth($w)</callback>
 	<callback>set_mu($mu)</callback>
 	<callback>set_gain_mu($gain_mu)</callback>
 	<callback>set_omega($omega)</callback>
@@ -26,13 +25,8 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Alpha</name>
-		<key>alpha</key>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Beta</name>
-		<key>beta</key>
+		<name>Loop Bandwidth</name>
+		<key>w</key>
 		<type>real</type>
 	</param>
 	<param>
