@@ -60,6 +60,7 @@
 	<param>
 		<name>Outer Initial State</name>
 		<key>o_init_state</key>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<param>
@@ -70,6 +71,7 @@
 	<param>
 		<name>Inner Initial State</name>
 		<key>i_init_state</key>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<param>

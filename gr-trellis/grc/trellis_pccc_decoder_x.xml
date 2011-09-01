@@ -47,7 +47,7 @@
 	<param>
 		<name>Initial State 1</name>
 		<key>o_init_state</key>
-		<value>-1</value>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<param>
@@ -64,7 +64,7 @@
 	<param>
 		<name>Initial State 2</name>
 		<key>i_init_state</key>
-		<value>-1</value>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<param>

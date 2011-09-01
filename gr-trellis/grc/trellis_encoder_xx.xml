@@ -60,6 +60,7 @@
 	<param>
 		<name>Initial State</name>
 		<key>init_state</key>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<sink>
