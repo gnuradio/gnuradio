@@ -53,22 +53,22 @@
 		</option>
 	</param>
 	<param>
-		<name>Outer FSM</name>
+		<name>FSM 1</name>
 		<key>o_fsm_args</key>
 		<type>raw</type>
 	</param>
 	<param>
-		<name>Outer Initial State</name>
+		<name>Initial State 1</name>
 		<key>o_init_state</key>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Inner FSM</name>
+		<name>FSM 2</name>
 		<key>i_fsm_args</key>
 		<type>raw</type>
 	</param>
 	<param>
-		<name>Inner Initial State</name>
+		<name>Initial State 2</name>
 		<key>i_init_state</key>
 		<type>int</type>
 	</param>

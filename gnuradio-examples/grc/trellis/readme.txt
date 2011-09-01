@@ -16,11 +16,17 @@ The combined signal is observed in noise and four different receivers are consid
 You can change the signal to noise ratio P/sigma^2 and the allocation of power to the two users, alpha.
 
 
-Serially Concatenated Convolutionsl Codes
+Serially Concatenated Convolutional Codes
 -----------------------------------------
-An SCCC can be defined by an outer and an inner FSM together with an interleaver 
+An SCCC can be defined by an outer and an inner FSM together with an interleaver
 and a modulation type. You can change the SNR and observe the estimated BER.
+In sccc.grc the decoding and metric calculation are combined; in sccc1.grc they are separate.
 
+Parallel Concatenated Convolutional Codes
+-----------------------------------------
+A PCCC can be defined by two FSMs together with an interleaver
+and a modulation type. You can change the SNR and observe the estimated BER.
+In pccc1.grc the decoding and metric calculation are separate.
 
 
 Enjoy.
