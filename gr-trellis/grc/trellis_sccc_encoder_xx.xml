@@ -1,14 +1,16 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Trellis Encoder
+##SCCC Encoder
 ###################################################
  -->
+
 <block>
-	<name>Trellis Encoder</name>
-	<key>trellis_encoder_xx</key>
+	<name>SCCC Encoder</name>
+	<key>trellis_sccc_encoder_xx</key>
+	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
-	<make>trellis.encoder_$(type)(trellis.fsm($fsm_args), $init_state)</make>
+	<make>trellis.sccc_encoder_$(type)(trellis.fsm($o_fsm_args), $o_init_state, trellis.fsm($i_fsm_args), $i_init_state, trellis.interleaver($interleaver_args), $bl)</make>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -51,13 +53,35 @@
 		</option>
 	</param>
 	<param>
-		<name>FSM Args</name>
-		<key>fsm_args</key>
+		<name>Outer FSM</name>
+		<key>o_fsm_args</key>
 		<type>raw</type>
 	</param>
 	<param>
-		<name>Initial State</name>
-		<key>init_state</key>
+		<name>Outer Initial State</name>
+		<key>o_init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Inner FSM</name>
+		<key>i_fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Inner Initial State</name>
+		<key>i_init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Interleaver</name>
+		<key>interleaver_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Blocklength</name>
+		<key>bl</key>
 		<type>int</type>
 	</param>
 	<sink>
@@ -69,6 +93,6 @@
 		<type>$type.output</type>
 	</source>
 	<doc>
-The fsm arguments are passed directly to the trellis.fsm() constructor.
+The fsm and interleaver arguments are passed directly to the trellis.fsm() and trellis.interleaver() constructors.
 	</doc>
 </block>

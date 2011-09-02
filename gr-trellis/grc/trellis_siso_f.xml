@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Trellis SISO Combined
+##Trellis SISO
 ###################################################
  -->
+
+
 <block>
-	<name>Trellis SISO Combo</name>
-	<key>trellis_siso_combined_f</key>
+	<name>SISO</name>
+	<key>trellis_siso_f</key>
+	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
-	<make>trellis.siso_combined_f(trellis.fsm($fsm_args), $block_size, $init_state, $final_state, $a_post_in, $a_post_out, $siso_type, $dim, $table, $metric_type)</make>
+	<make>trellis.siso_f(trellis.fsm($fsm_args), $block_size, $init_state, $final_state, $a_post_in, $a_post_out, $siso_type)</make>
 	<param>
 		<name>FSM Args</name>
 		<key>fsm_args</key>
@@ -22,7 +25,7 @@
 	<param>
 		<name>Initial State</name>
 		<key>init_state</key>
-		<value>-1</value>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<param>
@@ -70,33 +73,6 @@
 			<key>trellis.TRELLIS_SUM_PRODUCT</key>
 		</option>
 	</param>
-	<param>
-		<name>Dimensionality</name>
-		<key>dim</key>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Constellation</name>
-		<key>table</key>
-		<type>real_vector</type>
-	</param>
-	<param>
-		<name>Metric Type</name>
-		<key>metric_type</key>
-		<type>enum</type>
-		<option>
-			<name>Euclidean</name>
-			<key>trellis.TRELLIS_EUCLIDEAN</key>
-		</option>
-		<option>
-			<name>Hard Symbol</name>
-			<key>trellis.TRELLIS_HARD_SYMBOL</key>
-		</option>
-		<option>
-			<name>Hard Bit</name>
-			<key>trellis.TRELLIS_HARD_BIT</key>
-		</option>
-	</param>
 	<sink>
 		<name>in</name>
 		<type>float</type>
@@ -106,7 +82,7 @@
 		<type>float</type>
 	</source>
 	<doc>
-BCJR Algorithm combined with metric calculation. \
+BCJR Algorithm. \
 The fsm arguments are passed directly to the trellis.fsm() constructor.
 	</doc>
 </block>

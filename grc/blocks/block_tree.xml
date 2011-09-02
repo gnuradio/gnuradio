@@ -236,13 +236,6 @@
 		<name>Error Correction</name>
 		<cat>
 			<name>Trellis</name>
-			<block>trellis_encoder_xx</block>
-			<block>trellis_metrics_x</block>
-			<block>trellis_permutation</block>
-			<block>trellis_siso_combined_f</block>
-			<block>trellis_siso_f</block>
-			<block>trellis_viterbi_combined_xx</block>
-			<block>trellis_viterbi_x</block>
 		</cat>
 
 		<block>gr_encode_ccsds_27_bb</block>

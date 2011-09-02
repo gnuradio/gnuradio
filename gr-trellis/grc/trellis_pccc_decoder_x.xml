@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## PCCC Decoder 
+###################################################
+ -->
+
+
+<block>
+	<name>PCCC Decoder</name>
+	<key>trellis_pccc_decoder_x</key>
+	<category>Error Correction/Trellis</category>
+	<import>from gnuradio import trellis</import>
+	<make>trellis.pccc_decoder_$(out_type)(
+		trellis.fsm($o_fsm_args), $o_init_state, $o_final_state, 
+		trellis.fsm($i_fsm_args), $i_init_state, $i_final_state, 
+		trellis.interleaver($interleaver), 
+		$block_size,
+		$iterations,
+                $siso_type)
+	</make>
+	<param>
+		<name>Output Type</name>
+		<key>out_type</key>
+		<type>enum</type>
+		<option>
+			<name>Int</name>
+			<key>i</key>
+			<opt>io:int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>s</key>
+			<opt>io:short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>b</key>
+			<opt>io:byte</opt>
+		</option>
+	</param>
+	<param>
+		<name>FSM 1</name>
+		<key>o_fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Initial State 1</name>
+		<key>o_init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Final State 1</name>
+		<key>o_final_state</key>
+		<value>-1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>FSM 2</name>
+		<key>i_fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Initial State 2</name>
+		<key>i_init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Final State 2</name>
+		<key>i_final_state</key>
+		<value>-1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Interleaver</name>
+		<key>interleaver</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Block Size</name>
+		<key>block_size</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Iterations</name>
+		<key>iterations</key>
+		<value>10</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>SISO Type</name>
+		<key>siso_type</key>
+		<type>enum</type>
+		<option>
+			<name>Min Sum</name>
+			<key>trellis.TRELLIS_MIN_SUM</key>
+		</option>
+		<option>
+			<name>Sum Product</name>
+			<key>trellis.TRELLIS_SUM_PRODUCT</key>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$out_type.io</type>
+	</source>
+	<doc>
+PCCC turbo Decoder.
+The fsm and interleaver arguments are passed directly to the trellis.fsm() and trellis.interleaver() constructors.
+	</doc>
+</block>

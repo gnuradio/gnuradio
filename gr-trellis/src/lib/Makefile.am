@@ -40,12 +40,12 @@ core_generator = 				\
 	trellis_encoder_XX.cc.t			\
 	trellis_encoder_XX.h.t			\
 	trellis_encoder_XX.i.t			\
-	trellis_sccc_encoder_XX.cc.t			\
-	trellis_sccc_encoder_XX.h.t			\
-	trellis_sccc_encoder_XX.i.t			\
-	trellis_pccc_encoder_XX.cc.t			\
-	trellis_pccc_encoder_XX.h.t			\
-	trellis_pccc_encoder_XX.i.t			\
+	trellis_sccc_encoder_XX.cc.t		\
+	trellis_sccc_encoder_XX.h.t		\
+	trellis_sccc_encoder_XX.i.t		\
+	trellis_pccc_encoder_XX.cc.t		\
+	trellis_pccc_encoder_XX.h.t		\
+	trellis_pccc_encoder_XX.i.t		\
 	trellis_metrics_X.cc.t			\
 	trellis_metrics_X.h.t			\
 	trellis_metrics_X.i.t			\
@@ -53,14 +53,17 @@ core_generator = 				\
 	trellis_viterbi_combined_XX.h.t		\
 	trellis_viterbi_combined_XX.i.t		\
 	trellis_sccc_decoder_combined_XX.cc.t	\
-	trellis_sccc_decoder_combined_XX.h.t		\
-	trellis_sccc_decoder_combined_XX.i.t		\
-	trellis_sccc_decoder_X.cc.t	\
+	trellis_sccc_decoder_combined_XX.h.t	\
+	trellis_sccc_decoder_combined_XX.i.t	\
+	trellis_sccc_decoder_X.cc.t		\
 	trellis_sccc_decoder_X.h.t		\
 	trellis_sccc_decoder_X.i.t		\
-	trellis_pccc_decoder_X.cc.t	\
+	trellis_pccc_decoder_X.cc.t		\
 	trellis_pccc_decoder_X.h.t		\
 	trellis_pccc_decoder_X.i.t		\
+	trellis_pccc_decoder_combined_XX.cc.t	\
+	trellis_pccc_decoder_combined_XX.h.t	\
+	trellis_pccc_decoder_combined_XX.i.t	\
 	trellis_viterbi_X.cc.t			\
 	trellis_viterbi_X.h.t			\
 	trellis_viterbi_X.i.t
