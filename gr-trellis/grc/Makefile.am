@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,19 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = src grc doc
+grcblocksdir = $(grc_blocksdir)
 
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-trellis.pc
+dist_grcblocks_DATA = \
+	trellis_encoder_xx.xml \
+	trellis_siso_combined_f.xml       \
+	trellis_viterbi_x.xml \
+	trellis_metrics_x.xml     \
+	trellis_siso_f.xml \
+	trellis_permutation.xml   \
+	trellis_viterbi_combined_xx.xml \
+        trellis_sccc_encoder_xx.xml \
+        trellis_sccc_decoder_x.xml \
+        trellis_sccc_decoder_combined_xx.xml \
+        trellis_pccc_encoder_xx.xml  \
+        trellis_pccc_decoder_x.xml  \
+        trellis_pccc_decoder_combined_xx.xml 

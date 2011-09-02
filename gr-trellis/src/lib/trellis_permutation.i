@@ -22,7 +22,7 @@
 
 GR_SWIG_BLOCK_MAGIC(trellis,permutation);
 
-trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT);
+trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t BYTES_PER_SYMBOL);
 
 class trellis_permutation : public gr_sync_block
 {
@@ -30,12 +30,12 @@ private:
   int d_K;
   std::vector<int> d_TABLE;
   int d_SYMS_PER_BLOCK;
-  size_t d_NBYTES_INOUT;
-  trellis_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT); 
+  size_t d_BYTES_PER_SYMBOL;
+  trellis_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t BYTES_PER_SYMBOL); 
 
 public:
   int K () const { return d_K; }
   const std::vector<int> & TABLE () const { return d_TABLE; }
   int SYMS_PER_BLOCK () const { return d_SYMS_PER_BLOCK; }
-  size_t NBYTES_INOUT () const { return d_NBYTES_INOUT; }
+  size_t BYTES_PER_SYMBOL () const { return d_BYTES_PER_SYMBOL; }
 };
