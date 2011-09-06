@@ -23,12 +23,29 @@ AC_DEFUN([GRC_GR_DIGITAL],[
     dnl Don't do gr-digital if gnuradio-core skipped
     GRC_CHECK_DEPENDENCY(gr-digital, gnuradio-core)
 
+    if test $passed != with; then
+	dnl how and where to find INCLUDES and LA and such
+        gr_digital_INCLUDES="\
+-I\${abs_top_srcdir}/gr-digital/lib \
+-I\${abs_top_srcdir}/gr-digital/hier \
+-I\${abs_top_srcdir}/gr-digital/swig"
+        gr_digital_LA="\${abs_top_builddir}/gr-digital/lib/libgnuradio-core.la"
+	gr_digital_LIBDIRPATH="\${abs_top_builddir}/gr-digital/lib:\${abs_top_builddir}/gr-digital/lib/.libs"
+	gr_digital_SWIGDIRPATH="\${abs_top_builddir}/gr-digtial/lib/swig:\${abs_top_builddir}/gr-digital/swig/.libs:\${abs_top_srcdir}/gr-digital/swig"
+	gr_digital_PYDIRPATH="\${abs_top_srcdir}/gr-digital/python"
+    fi
+
+    AC_SUBST(gr_digital_I)
+    AC_SUBST(gr_digital_SWIGDIRPATH)
+    AC_SUBST(gr_digital_PYDIRPATH)
+
     AC_CONFIG_FILES([\
         gr-digital/Makefile \
 	gr-digital/gnuradio-digital.pc \
 	gr-digital/apps/Makefile \
 	gr-digital/grc/Makefile \
         gr-digital/lib/Makefile \
+        gr-digital/hier/Makefile \
 	gr-digital/python/Makefile \
 	gr-digital/python/run_tests \
 	gr-digital/python/utils/Makefile \

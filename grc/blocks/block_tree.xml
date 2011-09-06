@@ -121,13 +121,10 @@
 
 		<block>gr_costas_loop_cc</block>
 		<block>gr_mpsk_sync_cc</block>
-		<block>gr_mpsk_receiver_cc</block>
 
 		<block>gr_pll_carriertracking_cc</block>
 		<block>gr_pll_freqdet_cf</block>
 		<block>gr_pll_refout_cc</block>
-
-		<block>gr_fll_band_edge_cc</block>
 
 		<block>gr_correlate_access_code_bb</block>
 		<block>gr_pn_correlator_cc</block>
@@ -197,6 +194,8 @@
 		<block>gr_phase_modulator_fc</block>
 		<block>gr_quadrature_demod_cf</block>
 		<block>gr_cpfsk_bc</block>
+		<block>gr_cpmmod_bc</block>
+		<block>gr_gmskmod_bc</block>
 
 		<block>gr_diff_phasor_cc</block>
 		<block>gr_constellation_decoder_cb</block>

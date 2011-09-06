@@ -34,6 +34,8 @@
 		<block>digital_cma_equalizer_cc</block>
 		<block>digital_lms_dd_equalizer_cc</block>
 		<block>digital_kurtotic_equalizer_cc</block>
+		<block>digital_fll_band_edge_cc</block>
+		<block>digital_mpsk_receiver_cc</block>
 	</cat>
 	<cat>
 		<name>Digital Modulators</name>

@@ -70,10 +70,8 @@ tested_constellation_info = (
       'mod_code': tested_mod_codes, },
      True, None),
     (digital_swig.constellation_bpsk, {}, True, None),
-    # No differential testing for qpsk because it is gray-coded.
-    # This is because soft decision making is simpler if we can assume
-    # gray coding.
     (digital_swig.constellation_qpsk, {}, False, None),
+    (digital_swig.constellation_dqpsk, {}, True, None),
     (digital_swig.constellation_8psk, {}, False, None),
     (twod_constell, {}, True, None),
     (threed_constell, {}, True, None),
@@ -143,8 +141,8 @@ class test_constellation (gr_unittest.TestCase):
 class mod_demod(gr.hier_block2):
     def __init__(self, constellation, differential, rotation):
         if constellation.arity() > 256:
-            # If this becomes limiting some of the blocks should be generalised so that they can work
-            # with shorts and ints as well as chars.
+            # If this becomes limiting some of the blocks should be generalised so
+            # that they can work with shorts and ints as well as chars.
             raise ValueError("Constellation cannot contain more than 256 points.")
 
 	gr.hier_block2.__init__(self, "mod_demod",
@@ -174,7 +172,8 @@ class mod_demod(gr.hier_block2):
         if self.differential:
             self.blocks.append(gr.diff_encoder_bb(arity))
         # Convert to constellation symbols.
-        self.blocks.append(gr.chunks_to_symbols_bc(self.constellation.points(), self.constellation.dimensionality()))
+        self.blocks.append(gr.chunks_to_symbols_bc(self.constellation.points(),
+                                                   self.constellation.dimensionality()))
         # CHANNEL
         # Channel just consists of a rotation to check differential coding.
         if rotation is not None:

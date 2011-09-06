@@ -8,15 +8,11 @@
 	<name>PLL Carrier Tracking</name>
 	<key>gr_pll_carriertracking_cc</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.pll_carriertracking_cc($alpha, $beta, $max_freq, $min_freq)</make>
+	<make>gr.pll_carriertracking_cc($w, $max_freq, $min_freq)</make>
+	<callback>set_loop_bandwidth($w)</callback>
 	<param>
-		<name>Alpha</name>
-		<key>alpha</key>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Beta</name>
-		<key>beta</key>
+		<name>Loop Bandwidth</name>
+		<key>w</key>
 		<type>real</type>
 	</param>
 	<param>

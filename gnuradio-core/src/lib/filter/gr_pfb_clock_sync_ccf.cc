@@ -60,7 +60,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float loop_bw,
 	      gr_make_io_signaturev (1, 4, iosig)),
     d_updated (false), d_nfilters(filter_size),
     d_max_dev(max_rate_deviation),
-    d_osps(osps)
+    d_osps(osps), d_error(0)
 {
   d_nfilters = filter_size;
   d_sps = floor(sps);
@@ -367,50 +367,50 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   int nrequired = ninput_items[0] - d_taps_per_filter - d_osps;
 
   int i = 0, count = 0;
-  float error, error_r, error_i;
+  float error_r, error_i;
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items-d_osps) && (count < nrequired)) {
-    d_filtnum = (int)floor(d_k);
-
-    // Keep the current filter number in [0, d_nfilters]
-    // If we've run beyond the last filter, wrap around and go to next sample
-    // If we've go below 0, wrap around and go to previous sample
-    while(d_filtnum >= d_nfilters) {
-      d_k -= d_nfilters;
-      d_filtnum -= d_nfilters;
-      count += 1;
-    }
-    while(d_filtnum < 0) {
-      d_k += d_nfilters;
-      d_filtnum += d_nfilters;
-      count -= 1;
-    }
-
     for(int k = 0; k < d_osps; k++) {
+      d_filtnum = (int)floor(d_k);
+      
+      // Keep the current filter number in [0, d_nfilters]
+      // If we've run beyond the last filter, wrap around and go to next sample
+      // If we've go below 0, wrap around and go to previous sample
+      while(d_filtnum >= d_nfilters) {
+	d_k -= d_nfilters;
+	d_filtnum -= d_nfilters;
+	count += 1;
+      }
+      while(d_filtnum < 0) {
+	d_k += d_nfilters;
+	d_filtnum += d_nfilters;
+	count -= 1;
+      }
+      
       out[i+k] = d_filters[d_filtnum]->filter(&in[count+k]);
-    }
+      d_k = d_k + d_rate_i + d_rate_f; // update phase
 
-    gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
-    error_r = out[i].real() * diff.real();
-    error_i = out[i].imag() * diff.imag();
-    error = (error_i + error_r) / 2.0;       // average error from I&Q channel
-
-    // Run the control loop to update the current phase (k) and tracking rate
-    d_rate_f = d_rate_f + d_beta*error;
-    d_k = d_k + d_alpha*error + d_rate_i + d_rate_f;
-    
-    // Keep our rate within a good range
-    d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
-
-    if(output_items.size() == 4) {
-      // FIXME: don't really know what to do about d_osps>1
-      for(int k = 0; k < d_osps; k++) {
-	err[i] = diff.real();
+      if(output_items.size() == 4) {
+	err[i] = d_error;
 	outrate[i] = d_rate_f;
 	outk[i] = d_k;
       }
     }
+
+    // Update the phase and rate estimates for this symbol
+    gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
+    error_r = out[i].real() * diff.real();
+    error_i = out[i].imag() * diff.imag();
+    d_error = (error_i + error_r) / 2.0;       // average error from I&Q channel
+    
+    // Run the control loop to update the current phase (k) and
+    // tracking rate estimates based on the error value
+    d_rate_f = d_rate_f + d_beta*d_error;
+    d_k = d_k + d_alpha*d_error; 
+    
+    // Keep our rate within a good range
+    d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
 
     i+=d_osps;
     count += (int)floor(d_sps);

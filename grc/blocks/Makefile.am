@@ -91,6 +91,7 @@ dist_ourdata_DATA = \
 	gr_costas_loop_cc.xml \
 	gr_cpfsk_bc.xml \
 	gr_dc_blocker.xml \
+	gr_cpmmod_bc.xml \
 	gr_decode_ccsds_27_fb.xml \
 	gr_deinterleave.xml \
 	gr_delay.xml \
@@ -108,7 +109,6 @@ dist_ourdata_DATA = \
 	gr_file_source.xml \
 	gr_filter_delay_fc.xml \
 	gr_fir_filter_xxx.xml \
-	gr_fll_band_edge_cc.xml \
 	gr_float_to_char.xml \
 	gr_float_to_complex.xml \
 	gr_float_to_short.xml \
@@ -117,6 +117,7 @@ dist_ourdata_DATA = \
 	gr_freq_xlating_fir_filter_xxx.xml \
 	gr_frequency_modulator_fc.xml \
 	gr_glfsr_source_x.xml \
+	gr_gmskmod_bc.xml \
 	gr_goertzel_fc.xml \
 	gr_head.xml \
 	gr_hilbert_fc.xml \
@@ -134,7 +135,6 @@ dist_ourdata_DATA = \
 	gr_message_sink.xml \
 	gr_message_source.xml \
 	gr_moving_average_xx.xml \
-	gr_mpsk_receiver_cc.xml \
 	gr_mpsk_sync_cc.xml \
 	gr_multiply_const_vxx.xml \
 	gr_multiply_xx.xml \

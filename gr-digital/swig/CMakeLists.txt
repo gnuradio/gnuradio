@@ -30,10 +30,11 @@ SET(GR_SWIG_INCLUDE_DIRS
 
 SET(GR_SWIG_LIBRARIES gnuradio-digital)
 
+GR_SWIG_MAKE(digital_hier digital_hier.i)
 GR_SWIG_MAKE(digital_swig digital_swig.i)
 
 GR_SWIG_INSTALL(
-    TARGETS digital_swig
+    TARGETS digital_hier digital_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
     COMPONENT "digital_python"
 )

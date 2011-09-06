@@ -8,16 +8,10 @@
 	<name>Costas Loop</name>
 	<key>digital_costas_loop_cc</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.costas_loop_cc($eta, $w, $order)</make>
-	<callback>set_damping_factor($eta)</callback>
-	<callback>set_natural_freq($w)</callback>
+	<make>digital.costas_loop_cc($w, $order)</make>
+	<callback>set_loop_bandwidth($w)</callback>
 	<param>
-		<name>Damping Factor</name>
-		<key>eta</key>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Natural Frequency</name>
+		<name>Loop Bandwidth</name>
 		<key>w</key>
 		<type>real</type>
 	</param>

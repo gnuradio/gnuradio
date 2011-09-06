@@ -55,6 +55,7 @@ libgeneral_la_SOURCES = 		\
 	gr_copy.cc			\
 	gr_count_bits.cc		\
 	gr_cpfsk_bc.cc			\
+	gr_cpm.cc			\
 	gr_ctcss_squelch_ff.cc		\
 	gr_decode_ccsds_27_fb.cc	\
 	gr_deinterleave.cc		\
@@ -176,6 +177,7 @@ libgeneral_la_SOURCES = 		\
 libgeneral_qa_la_SOURCES = 		\
 	qa_general.cc			\
 	qa_gr_circular_file.cc		\
+	qa_gr_cpm.cc			\
 	qa_gr_firdes.cc			\
 	qa_gr_fxpt.cc			\
 	qa_gr_fxpt_nco.cc		\
@@ -203,6 +205,7 @@ grinclude_HEADERS = 			\
 	gr_copy.h			\
 	gr_count_bits.h			\
 	gr_cpfsk_bc.h			\
+	gr_cpm.h			\
 	gr_ctcss_squelch_ff.h		\
 	gr_decode_ccsds_27_fb.h		\
 	gr_diff_decoder_bb.h		\
@@ -340,6 +343,7 @@ grinclude_HEADERS = 			\
 noinst_HEADERS = 			\
 	qa_general.h			\
 	qa_gr_circular_file.h		\
+	qa_gr_cpm.h			\
 	qa_gr_firdes.h			\
 	qa_gr_fxpt.h			\
 	qa_gr_fxpt_nco.h		\
@@ -367,6 +371,7 @@ swiginclude_HEADERS =			\
 	gr_conjugate_cc.i		\
 	gr_copy.i			\
 	gr_cpfsk_bc.i			\
+	gr_cpm.i			\
 	gr_ctcss_squelch_ff.i		\
 	gr_decode_ccsds_27_fb.i		\
 	gr_diff_decoder_bb.i		\

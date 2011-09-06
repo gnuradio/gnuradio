@@ -411,6 +411,20 @@ digital_constellation_qpsk::digital_constellation_qpsk ()
   d_constellation[1] = gr_complex(SQRT_TWO, -SQRT_TWO);
   d_constellation[2] = gr_complex(-SQRT_TWO, SQRT_TWO);
   d_constellation[3] = gr_complex(SQRT_TWO, SQRT_TWO);
+  
+  /*
+  d_constellation[0] = gr_complex(SQRT_TWO, SQRT_TWO);
+  d_constellation[1] = gr_complex(-SQRT_TWO, SQRT_TWO);
+  d_constellation[2] = gr_complex(SQRT_TWO, -SQRT_TWO);
+  d_constellation[3] = gr_complex(SQRT_TWO, -SQRT_TWO);
+  */
+
+  d_pre_diff_code.resize(4);
+  d_pre_diff_code[0] = 0x0;
+  d_pre_diff_code[1] = 0x2;
+  d_pre_diff_code[2] = 0x3;
+  d_pre_diff_code[3] = 0x1;
+
   d_rotational_symmetry = 4;
   d_dimensionality = 1;
   calc_arity();
@@ -422,8 +436,80 @@ digital_constellation_qpsk::decision_maker(const gr_complex *sample)
   // Real component determines small bit.
   // Imag component determines big bit.
   return 2*(imag(*sample)>0) + (real(*sample)>0);
+
+  /*
+  bool a = real(*sample) > 0;
+  bool b = imag(*sample) > 0;
+  if(a) {
+    if(b)
+      return 0x0;
+    else
+      return 0x1;
+  }
+  else {
+    if(b)
+      return 0x2;
+    else
+      return 0x3;
+  }
+  */
 }
 
+
+/********************************************************************/
+
+
+digital_constellation_dqpsk_sptr 
+digital_make_constellation_dqpsk()
+{
+  return digital_constellation_dqpsk_sptr(new digital_constellation_dqpsk ());
+}
+
+digital_constellation_dqpsk::digital_constellation_dqpsk ()
+{
+  // This constellation is not gray coded, which allows
+  // us to use differential encodings (through gr_diff_encode and
+  // gr_diff_decode) on the symbols.
+  d_constellation.resize(4);
+  d_constellation[0] = gr_complex(+SQRT_TWO, +SQRT_TWO);
+  d_constellation[1] = gr_complex(-SQRT_TWO, +SQRT_TWO);
+  d_constellation[2] = gr_complex(-SQRT_TWO, -SQRT_TWO);
+  d_constellation[3] = gr_complex(+SQRT_TWO, -SQRT_TWO);
+
+  // Use this mapping to convert to gray code before diff enc.
+  d_pre_diff_code.resize(4);
+  d_pre_diff_code[0] = 0x0;
+  d_pre_diff_code[1] = 0x1;
+  d_pre_diff_code[2] = 0x3;
+  d_pre_diff_code[3] = 0x2;
+  d_apply_pre_diff_code = true;
+
+  d_rotational_symmetry = 4;
+  d_dimensionality = 1;
+  calc_arity();
+}
+
+unsigned int
+digital_constellation_dqpsk::decision_maker(const gr_complex *sample)
+{
+  // Slower deicison maker as we can't slice along one axis.
+  // Maybe there's a better way to do this, still.
+
+  bool a = real(*sample) > 0;
+  bool b = imag(*sample) > 0;
+  if(a) {
+    if(b)
+      return 0x0;
+    else
+      return 0x3;
+  }
+  else {
+    if(b)
+      return 0x1;
+    else
+      return 0x2;
+  }
+}
 
 digital_constellation_8psk_sptr 
 digital_make_constellation_8psk()

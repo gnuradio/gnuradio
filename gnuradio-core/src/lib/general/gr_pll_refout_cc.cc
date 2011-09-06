@@ -30,7 +30,9 @@
 #include <math.h>
 #include <gr_math.h>
 
-#define M_TWOPI (2*M_PI)
+#ifndef M_TWOPI
+#define M_TWOPI (2.0f*M_PI)
+#endif
 
 gr_pll_refout_cc_sptr
 gr_make_pll_refout_cc (float loop_bw, float max_freq, float min_freq)

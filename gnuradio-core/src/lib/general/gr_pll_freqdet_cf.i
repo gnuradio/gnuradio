@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,11 +22,12 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,pll_freqdet_cf)
 
-  gr_pll_freqdet_cf_sptr gr_make_pll_freqdet_cf (float alpha, float beta, 
-						 float max_freq, float min_freq);
+  gr_pll_freqdet_cf_sptr gr_make_pll_freqdet_cf (float loop_bw, 
+						 float max_freq,
+						 float min_freq);
 
-class gr_pll_freqdet_cf : public gr_sync_block
+class gr_pll_freqdet_cf : public gr_sync_block, public gri_control_loop
 {
  private:
-  gr_pll_freqdet_cf (float alpha, float beta, float max_freq, float min_freq);
+  gr_pll_freqdet_cf (float loop_bw, float max_freq, float min_freq);
 };

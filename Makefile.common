@@ -110,6 +110,10 @@ GCELL_SPU_LA = @gcell_spu_LA@
 # libtool aware wrapper for ppu-embedspu
 GCELL_EMBEDSPU_LIBTOOL = @abs_top_srcdir@/gcell/lib/runtime/gcell-embedspu-libtool
 
+# GR-DIGITAL includes and libraries
+GR_DIGITAL_INCLUDES = @gr_digital_INCLUDES@
+GR_DIGITAL_LA = @gr_digital_LA@
+
 # Fix for BSD make not defining $(RM).  We define it now in configure.ac
 # using AM_PATH_PROG, but now here have to add a -f to be like GNU make
 RM=$(RM_PROG) -f

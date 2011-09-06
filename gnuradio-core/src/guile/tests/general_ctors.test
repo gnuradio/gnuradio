@@ -244,13 +244,13 @@
 (pass-if (true? (gr:phase-modulator-fc 0)))
 
 ;;; ./general/gr_pll_carriertracking_cc.h
-(pass-if (true? (gr:pll-carriertracking-cc 0 0 0 0)))
+(pass-if (true? (gr:pll-carriertracking-cc 0 0 0)))
 
 ;;; ./general/gr_pll_freqdet_cf.h
-(pass-if (true? (gr:pll-freqdet-cf 0 0 0 0)))
+(pass-if (true? (gr:pll-freqdet-cf 0 0 0)))
 
 ;;; ./general/gr_pll_refout_cc.h
-(pass-if (true? (gr:pll-refout-cc 0 0 0 0)))
+(pass-if (true? (gr:pll-refout-cc 0 0 0)))
 
 ;;; ./general/gr_pn_correlator_cc.h
 (pass-if (true? (gr:pn-correlator-cc 1 1 1)))

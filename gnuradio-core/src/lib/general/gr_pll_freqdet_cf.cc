@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// WARNING: this file is machine generated.  Edits will be over written
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -31,21 +29,21 @@
 #include <math.h>
 #include <gr_math.h>
 
-#define M_TWOPI (2*M_PI)
+#ifndef M_TWOPI
+#define M_TWOPI (2.0f*M_PI)
+#endif
 
 gr_pll_freqdet_cf_sptr
-gr_make_pll_freqdet_cf (float alpha, float beta, float max_freq, float min_freq)
+gr_make_pll_freqdet_cf (float loop_bw, float max_freq, float min_freq)
 {
-  return gnuradio::get_initial_sptr(new gr_pll_freqdet_cf (alpha, beta, max_freq, min_freq));
+  return gnuradio::get_initial_sptr(new gr_pll_freqdet_cf (loop_bw, max_freq, min_freq));
 }
 
-gr_pll_freqdet_cf::gr_pll_freqdet_cf (float alpha, float beta, float max_freq, float min_freq)
+gr_pll_freqdet_cf::gr_pll_freqdet_cf (float loop_bw, float max_freq, float min_freq)
   : gr_sync_block ("pll_freqdet_cf",
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature (1, 1, sizeof (float))),
-    d_alpha(alpha), d_beta(beta), 
-    d_max_freq(max_freq), d_min_freq(min_freq),
-    d_phase(0), d_freq((max_freq+min_freq)/2)
+    gri_control_loop(loop_bw, max_freq, min_freq)    
 {
 }
 
@@ -70,8 +68,8 @@ gr_pll_freqdet_cf::phase_detector(gr_complex sample,float ref_phase)
 
 int
 gr_pll_freqdet_cf::work (int noutput_items,
-		   gr_vector_const_void_star &input_items,
-		   gr_vector_void_star &output_items)
+			 gr_vector_const_void_star &input_items,
+			 gr_vector_void_star &output_items)
 {
   const gr_complex *iptr = (gr_complex *) input_items[0];
   float *optr = (float *) output_items[0];
@@ -82,13 +80,10 @@ gr_pll_freqdet_cf::work (int noutput_items,
   while (size-- > 0) {
     error = phase_detector(*iptr++,d_phase);
     
-    d_freq = d_freq + d_beta * error;
-    d_phase = mod_2pi(d_phase + d_freq + d_alpha * error);
-    
-    if (d_freq > d_max_freq)
-      d_freq = d_max_freq;
-    else if (d_freq < d_min_freq)
-      d_freq = d_min_freq;
+    advance_loop(error);
+    phase_wrap();
+    frequency_limit();
+
     *optr++ = d_freq;
   }
   return noutput_items;

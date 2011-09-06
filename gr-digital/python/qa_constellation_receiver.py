@@ -29,6 +29,7 @@ from generic_mod_demod import generic_mod, generic_demod
 
 from qa_constellation import tested_constellations, twod_constell
 
+import math
 
 # Set a seed so that if errors turn up they are reproducible.
 # 1234 fails
@@ -47,11 +48,8 @@ FREQUENCY_OFFSET = 0.01
 TIMING_OFFSET = 1.0
 
 # RECEIVER PARAMETERS
-# Increased from normal default of 0.01 to speed things up.
-FREQ_ALPHA = 0.02
-# Decreased from normal default of 0.1 is required for the constellations
-# with smaller point separations.
-PHASE_ALPHA = 0.02
+FREQ_BW = 2*math.pi/100.0
+PHASE_BW = 2*math.pi/100.0
 
 
 class test_constellation_receiver (gr_unittest.TestCase):
@@ -127,8 +125,8 @@ class rec_test_tb (gr.top_block):
         channel = gr.channel_model(NOISE_VOLTAGE, FREQUENCY_OFFSET, TIMING_OFFSET)
         # Receiver Blocks
         demod = generic_demod(constellation, differential=differential,
-                              freq_alpha=FREQ_ALPHA,
-                              phase_alpha=PHASE_ALPHA)
+                              freq_bw=FREQ_BW,
+                              phase_bw=PHASE_BW)
         self.dst = gr.vector_sink_b()
         self.connect(src, packer, mod, channel, demod, self.dst)
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010 Free Software Foundation, Inc.
+ * Copyright 2006,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,22 +30,24 @@
 #include <math.h>
 #include <gr_math.h>
 
-#define M_TWOPI (2*M_PI)
+#ifndef M_TWOPI
+#define M_TWOPI (2.0f*M_PI)
+#endif
 
 gr_pll_carriertracking_cc_sptr
-gr_make_pll_carriertracking_cc (float alpha, float beta, float max_freq, float min_freq)
+gr_make_pll_carriertracking_cc (float loop_bw, float max_freq, float min_freq)
 {
-  return gnuradio::get_initial_sptr(new gr_pll_carriertracking_cc (alpha, beta, max_freq, min_freq));
+  return gnuradio::get_initial_sptr(new gr_pll_carriertracking_cc (loop_bw, max_freq, min_freq));
 }
 
-gr_pll_carriertracking_cc::gr_pll_carriertracking_cc (float alpha, float beta, float max_freq, float min_freq)
+gr_pll_carriertracking_cc::gr_pll_carriertracking_cc (float loop_bw,
+						      float max_freq,
+						      float min_freq)
   : gr_sync_block ("pll_carriertracking_cc",
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature (1, 1, sizeof (gr_complex))),
-    d_alpha(alpha), d_beta(beta), 
-    d_max_freq(max_freq), d_min_freq(min_freq),
-    d_phase(0), d_freq((max_freq+min_freq)/2),
-    d_locksig(0),d_lock_threshold(0),d_squelch_enable(false)
+    gri_control_loop(loop_bw, max_freq, min_freq),
+    d_locksig(0), d_lock_threshold(0), d_squelch_enable(false)
 {
 }
 
@@ -72,7 +74,7 @@ gr_pll_carriertracking_cc::phase_detector(gr_complex sample,float ref_phase)
 bool
 gr_pll_carriertracking_cc::lock_detector(void)
 {
-    return (fabs(d_locksig) > d_lock_threshold);
+    return (fabsf(d_locksig) > d_lock_threshold);
 }
 
 bool
@@ -100,17 +102,16 @@ gr_pll_carriertracking_cc::work (int noutput_items,
   
   for (int i = 0; i < noutput_items; i++){
     error = phase_detector(iptr[i],d_phase);
-    
-    d_freq = d_freq + d_beta * error;
-    d_phase = mod_2pi(d_phase + d_freq + d_alpha * error);
-    
-    if (d_freq > d_max_freq)
-      d_freq = d_max_freq;
-    else if (d_freq < d_min_freq)
-      d_freq = d_min_freq;
-    gr_sincosf(d_phase,&t_imag,&t_real);
-    optr[i] = iptr[i] * gr_complex(t_real,-t_imag);
-    d_locksig = d_locksig * (1.0 - d_alpha) + d_alpha*(iptr[i].real() * t_real + iptr[i].imag() * t_imag);
+
+    advance_loop(error);
+    phase_wrap();
+    frequency_limit();
+
+    gr_sincosf(d_phase, &t_imag, &t_real);
+    optr[i] = iptr[i] * gr_complex(t_real, -t_imag);
+
+    d_locksig = d_locksig * (1.0 - d_alpha) + \
+      d_alpha*(iptr[i].real() * t_real + iptr[i].imag() * t_imag);
     
     if ((d_squelch_enable) && !lock_detector())
       optr[i] = 0;

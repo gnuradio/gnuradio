@@ -55,6 +55,7 @@ digital_fll_band_edge_cc::digital_fll_band_edge_cc (float samps_per_sym, float r
   : gr_sync_block ("fll_band_edge_cc",
 		   gr_make_io_signature (1, 1, sizeof(gr_complex)),
 		   gr_make_io_signaturev (1, 4, iosig)),
+    gri_control_loop(bandwidth, M_TWOPI*(2.0/samps_per_sym), -M_TWOPI*(2.0/samps_per_sym)),
     d_updated (false)
 {
   // Initialize samples per symbol
@@ -75,22 +76,8 @@ digital_fll_band_edge_cc::digital_fll_band_edge_cc (float samps_per_sym, float r
   }
   d_filter_size = filter_size;
   
-  // base this on the number of samples per symbol
-  d_max_freq =  M_TWOPI * (2.0/samps_per_sym);
-  d_min_freq = -M_TWOPI * (2.0/samps_per_sym);
-
-  // Set the damping factor for a critically damped system
-  d_damping = sqrtf(2.0f)/2.0f;
-
-  // Set the bandwidth, which will then call update_gains()
-  set_loop_bandwidth(bandwidth);
-
   // Build the band edge filters
   design_filter(d_sps, d_rolloff, d_filter_size);
-
-  // Initialize loop values
-  d_freq = 0;
-  d_phase = 0;
 }
 
 digital_fll_band_edge_cc::~digital_fll_band_edge_cc ()
@@ -101,47 +88,6 @@ digital_fll_band_edge_cc::~digital_fll_band_edge_cc ()
 /*******************************************************************
     SET FUNCTIONS
 *******************************************************************/
-
-
-void
-digital_fll_band_edge_cc::set_loop_bandwidth(float bw) 
-{
-  if(bw < 0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid bandwidth. Must be >= 0.");
-  }
-  
-  d_loop_bw = bw;
-  update_gains();
-}
-
-void
-digital_fll_band_edge_cc::set_damping_factor(float df) 
-{
-  if(df < 0 || df > 1.0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid damping factor. Must be in [0,1].");
-  }
-  
-  d_damping = df;
-  update_gains();
-}
-
-void
-digital_fll_band_edge_cc::set_alpha(float alpha)
-{
-  if(alpha < 0 || alpha > 1.0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid alpha. Must be in [0,1].");
-  }
-  d_alpha = alpha;
-}
-
-void
-digital_fll_band_edge_cc::set_beta(float beta)
-{
-  if(beta < 0 || beta > 1.0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid beta. Must be in [0,1].");
-  }
-  d_beta = beta;
-}
 
 void
 digital_fll_band_edge_cc::set_samples_per_symbol(float sps)
@@ -173,56 +119,9 @@ digital_fll_band_edge_cc::set_filter_size(int filter_size)
   design_filter(d_sps, d_rolloff, d_filter_size);
 }
 
-void
-digital_fll_band_edge_cc::set_frequency(float freq)
-{
-  if(freq > d_max_freq)
-    d_freq = d_min_freq;
-  else if(freq < d_min_freq)
-    d_freq = d_max_freq;
-  else
-    d_freq = freq;
-}
-
-void
-digital_fll_band_edge_cc::set_phase(float phase)
-{
-  d_phase = phase;
-  while(d_phase>M_TWOPI)
-    d_phase -= M_TWOPI;
-  while(d_phase<-M_TWOPI)
-    d_phase += M_TWOPI;
-}
-
-
 /*******************************************************************
     GET FUNCTIONS
 *******************************************************************/
-
-
-float
-digital_fll_band_edge_cc::get_loop_bandwidth() const
-{
-  return d_loop_bw;
-}
-
-float
-digital_fll_band_edge_cc::get_damping_factor() const
-{
-  return d_damping;
-}
-
-float
-digital_fll_band_edge_cc::get_alpha() const
-{
-  return d_alpha;
-}
-
-float
-digital_fll_band_edge_cc::get_beta() const
-{
-  return d_beta;
-}
 
 float
 digital_fll_band_edge_cc::get_samples_per_symbol() const
@@ -242,30 +141,9 @@ digital_fll_band_edge_cc:: get_filter_size() const
   return d_filter_size;
 }
 
-float
-digital_fll_band_edge_cc::get_frequency() const
-{
-  return d_freq;
-}
-
-float
-digital_fll_band_edge_cc::get_phase() const
-{
-  return d_phase;
-}
-
 
 /*******************************************************************
 *******************************************************************/
-
-
-void
-digital_fll_band_edge_cc::update_gains() 
-{
-  float denom = (1.0 + 2.0*d_damping*d_loop_bw + d_loop_bw*d_loop_bw);
-  d_alpha = (4*d_damping*d_loop_bw) / denom;
-  d_beta = (4*d_loop_bw*d_loop_bw) / denom;
-}
 
 void
 digital_fll_band_edge_cc::design_filter(float samps_per_sym,
@@ -366,18 +244,9 @@ digital_fll_band_edge_cc::work (int noutput_items,
     }
     error = norm(out_lower) - norm(out_upper);
 
-    d_freq = d_freq + d_beta * error;
-    d_phase = d_phase + d_freq + d_alpha * error;
-
-    if(d_phase > M_PI)
-      d_phase -= M_TWOPI;
-    else if(d_phase < -M_PI)
-      d_phase += M_TWOPI;
-
-    if (d_freq > d_max_freq)
-      d_freq = d_max_freq;
-    else if (d_freq < d_min_freq)
-      d_freq = d_min_freq;
+    advance_loop(error);
+    phase_wrap();
+    frequency_limit();
 
     if(output_items.size() == 4) {
       frq[i] = d_freq;

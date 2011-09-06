@@ -54,7 +54,7 @@ def add_common_options(parser):
     Sets options common to both modulator and demodulator.
     """
     parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
-                      help="set the number of constellation points (must be a power of 2 (power of 4 for QAM) [default=%default]")
+                      help="set the number of constellation points (must be a power of 2 for psk, power of 4 for QAM) [default=%default]")
     parser.add_option("", "--non-differential", action="store_true",
                       dest="differential", default=False,
                       help="do not use differential encoding [default=%default]")
@@ -120,7 +120,7 @@ class generic_mod(gr.hier_block2):
         self.bytes2chunks = \
           gr.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
 
-        if self._constellation.apply_pre_diff_code():
+        if gray_coded == True:
             self.symbol_mapper = gr.map_bb(self._constellation.pre_diff_code())
 
         if differential:
@@ -142,7 +142,7 @@ class generic_mod(gr.hier_block2):
 
 	# Connect
         blocks = [self, self.bytes2chunks]
-        if self._constellation.apply_pre_diff_code():
+        if gray_coded == True:
             blocks.append(self.symbol_mapper)
         if differential:
             blocks.append(self.diffenc)
@@ -211,6 +211,7 @@ class generic_demod(gr.hier_block2):
                  samples_per_symbol=_def_samples_per_symbol,
                  differential=_def_differential,
                  excess_bw=_def_excess_bw,
+                 gray_coded=True,
                  freq_bw=_def_freq_bw,
                  timing_bw=_def_timing_bw,
                  phase_bw=_def_phase_bw,
@@ -228,9 +229,11 @@ class generic_demod(gr.hier_block2):
 	@type samples_per_symbol: float
 	@param excess_bw: Root-raised cosine filter excess bandwidth
 	@type excess_bw: float
+        @param gray_coded: turn gray coding on/off
+        @type gray_coded: bool
         @param freq_bw: loop filter lock-in bandwidth
         @type freq_bw: float
-        @param timing_bw: timing recoery loop lock-in bandwidth
+        @param timing_bw: timing recovery loop lock-in bandwidth
         @type timing_bw: float
         @param phase_bw: phase recovery loop bandwidth
         @type phase_bw: float
@@ -265,8 +268,9 @@ class generic_demod(gr.hier_block2):
         self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
 
         # Frequency correction
+        fll_ntaps = 55
         self.freq_recov = digital_swig.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
-                                                        ntaps, self._freq_bw)
+                                                        fll_ntaps, self._freq_bw)
 
         # symbol timing recovery with RRC data filter
         taps = gr.firdes.root_raised_cosine(nfilts, nfilts*self._samples_per_symbol,
@@ -280,12 +284,12 @@ class generic_demod(gr.hier_block2):
         self.receiver = digital_swig.constellation_receiver_cb(
             self._constellation, self._phase_bw,
             fmin, fmax)
-        
+
         # Do differential decoding based on phase change of symbols
         if differential:
             self.diffdec = gr.diff_decoder_bb(arity)
 
-        if self._constellation.apply_pre_diff_code():
+        if gray_coded:
             self.symbol_mapper = gr.map_bb(
                 mod_codes.invert_code(self._constellation.pre_diff_code()))
 
@@ -297,9 +301,10 @@ class generic_demod(gr.hier_block2):
 
         if log:
             self._setup_logging()
-
+        
         # Connect and Initialize base class
-        blocks = [self, self.agc, self.freq_recov, self.time_recov, self.receiver]
+        blocks = [self, self.agc, self.freq_recov,
+                  self.time_recov, self.receiver]
         if differential:
             blocks.append(self.diffdec)
         if self._constellation.apply_pre_diff_code():
