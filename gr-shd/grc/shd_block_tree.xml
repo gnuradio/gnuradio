@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Block Tree for shd blocks.
+###################################################
+ -->
+<cat>
+	<name></name> <!-- Blank for Root Name -->
+	<cat>
+		<name>SHD</name>
+		<block>shd_xmini_source</block>
+		<block>shd_xmini_sink</block>
+	</cat>
+</cat>
