@@ -13,6 +13,12 @@ GENERATED_H = \
 	trellis_metrics_i.h \
 	trellis_metrics_s.h \
 	trellis_pccc_decoder_b.h \
+	trellis_pccc_decoder_combined_cb.h \
+	trellis_pccc_decoder_combined_ci.h \
+	trellis_pccc_decoder_combined_cs.h \
+	trellis_pccc_decoder_combined_fb.h \
+	trellis_pccc_decoder_combined_fi.h \
+	trellis_pccc_decoder_combined_fs.h \
 	trellis_pccc_decoder_i.h \
 	trellis_pccc_decoder_s.h \
 	trellis_pccc_encoder_bb.h \
@@ -64,6 +70,12 @@ GENERATED_I = \
 	trellis_metrics_i.i \
 	trellis_metrics_s.i \
 	trellis_pccc_decoder_b.i \
+	trellis_pccc_decoder_combined_cb.i \
+	trellis_pccc_decoder_combined_ci.i \
+	trellis_pccc_decoder_combined_cs.i \
+	trellis_pccc_decoder_combined_fb.i \
+	trellis_pccc_decoder_combined_fi.i \
+	trellis_pccc_decoder_combined_fs.i \
 	trellis_pccc_decoder_i.i \
 	trellis_pccc_decoder_s.i \
 	trellis_pccc_encoder_bb.i \
@@ -115,6 +127,12 @@ GENERATED_CC = \
 	trellis_metrics_i.cc \
 	trellis_metrics_s.cc \
 	trellis_pccc_decoder_b.cc \
+	trellis_pccc_decoder_combined_cb.cc \
+	trellis_pccc_decoder_combined_ci.cc \
+	trellis_pccc_decoder_combined_cs.cc \
+	trellis_pccc_decoder_combined_fb.cc \
+	trellis_pccc_decoder_combined_fi.cc \
+	trellis_pccc_decoder_combined_fs.cc \
 	trellis_pccc_decoder_i.cc \
 	trellis_pccc_decoder_s.cc \
 	trellis_pccc_encoder_bb.cc \

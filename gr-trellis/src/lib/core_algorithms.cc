@@ -784,7 +784,7 @@ template<class Ti, class To>
 void sccc_decoder_combined(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<Ti> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
@@ -810,7 +810,7 @@ for(int k=0;k<blocklength;k++) {
   iprioro[k*FSMi.O()] *= scaling;
 }
 
-for(int rep=0;rep<repetitions;rep++) {
+for(int rep=0;rep<iterations;rep++) {
   // run inner SISO
   siso_algorithm(FSMi.I(),FSMi.S(),FSMi.O(),
              FSMi.NS(), FSMi.OS(), FSMi.PS(), FSMi.PI(),
@@ -832,7 +832,7 @@ for(int rep=0;rep<repetitions;rep++) {
 
   // run outer SISO
 
-  if(rep<repetitions-1) { // do not produce posti
+  if(rep<iterations-1) { // do not produce posti
     siso_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
              FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
              blocklength,
@@ -897,7 +897,7 @@ template
 void sccc_decoder_combined<float,unsigned char>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
@@ -909,7 +909,7 @@ template
 void sccc_decoder_combined<float,short>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
@@ -921,7 +921,7 @@ template
 void sccc_decoder_combined<float,int>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
@@ -933,7 +933,7 @@ template
 void sccc_decoder_combined<gr_complex,unsigned char>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
@@ -945,7 +945,7 @@ template
 void sccc_decoder_combined<gr_complex,short>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
@@ -957,7 +957,7 @@ template
 void sccc_decoder_combined<gr_complex,int>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
       trellis_metric_type_t METRIC_TYPE,
@@ -973,7 +973,7 @@ template<class T>
 void sccc_decoder(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *iprioro, T *data
 )
@@ -988,7 +988,7 @@ void sccc_decoder(
   std::vector<float> oposti(blocklength*FSMo.I());
   std::vector<float> oposto(blocklength*FSMo.O());
 
-  for(int rep=0;rep<repetitions;rep++) {
+  for(int rep=0;rep<iterations;rep++) {
     // run inner SISO
     siso_algorithm(FSMi.I(),FSMi.S(),FSMi.O(),
              FSMi.NS(), FSMi.OS(), FSMi.PS(), FSMi.PI(),
@@ -1010,7 +1010,7 @@ void sccc_decoder(
 
     // run outer SISO
 
-    if(rep<repetitions-1) { // do not produce posti
+    if(rep<iterations-1) { // do not produce posti
       siso_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
              FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
              blocklength,
@@ -1050,7 +1050,7 @@ void sccc_decoder(
       */
     }
 
-  } // end repetitions
+  } // end iterations
 
   // generate hard decisions
   for(int k=0;k<blocklength;k++) {
@@ -1075,7 +1075,7 @@ template
 void sccc_decoder<unsigned char>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *iprioro, unsigned char *data
 );
@@ -1084,7 +1084,7 @@ template
 void sccc_decoder<short>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *iprioro, short *data
 );
@@ -1093,7 +1093,7 @@ template
 void sccc_decoder<int>(
       const fsm &FSMo, int STo0, int SToK,
       const fsm &FSMi, int STi0, int STiK,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *iprioro, int *data
 );
@@ -1105,7 +1105,7 @@ template<class T>
 void pccc_decoder(
       const fsm &FSM1, int ST10, int ST1K,
       const fsm &FSM2, int ST20, int ST2K,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *cprioro, T *data
 )
@@ -1140,7 +1140,7 @@ void pccc_decoder(
     }
   }
 
-  for(int rep=0;rep<repetitions;rep++) {
+  for(int rep=0;rep<iterations;rep++) {
     // run  SISO 1
     siso_algorithm(FSM1.I(),FSM1.S(),FSM1.O(),
              FSM1.NS(), FSM1.OS(), FSM1.PS(), FSM1.PI(),
@@ -1185,7 +1185,7 @@ void pccc_decoder(
       memcpy(&(priori1[ki*FSM1.I()]),&(posti2[k*FSM2.I()]),FSM1.I()*sizeof(float));
     }
 
-  } // end repetitions
+  } // end iterations
 
   // generate hard decisions
   for(int k=0;k<blocklength;k++) {
@@ -1204,8 +1204,6 @@ void pccc_decoder(
   }
   //std::cout << std::endl;
 
-
-
 }
 
 //----------------
@@ -1214,7 +1212,7 @@ template
 void pccc_decoder<unsigned char>(
       const fsm &FSM1, int ST10, int ST1K,
       const fsm &FSM2, int ST20, int ST2K,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *cprioro, unsigned char *data
 );
@@ -1223,7 +1221,7 @@ template
 void pccc_decoder<short>(
       const fsm &FSM1, int ST10, int ST1K,
       const fsm &FSM2, int ST20, int ST2K,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *cprioro, short *data
 );
@@ -1232,8 +1230,208 @@ template
 void pccc_decoder<int>(
       const fsm &FSM1, int ST10, int ST1K,
       const fsm &FSM2, int ST20, int ST2K,
-      const interleaver &INTERLEAVER, int blocklength, int repetitions,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       const float *cprioro, int *data
 );
 
+
+
+//----------------
+
+
+template<class Ti, class To>
+void pccc_decoder_combined(
+      const fsm &FSM1, int ST10, int ST1K,
+      const fsm &FSM2, int ST20, int ST2K,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<Ti> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      float scaling,
+      const Ti *observations, To *data
+)
+{
+
+  //allocate space for cprioro
+  std::vector<float> cprioro(blocklength*FSM1.O()*FSM2.O(),0.0);
+
+  //allocate space for priori, prioro and posti of FSM1
+  std::vector<float> priori1(blocklength*FSM1.I(),0.0);
+  std::vector<float> prioro1(blocklength*FSM1.O());
+  std::vector<float> posti1(blocklength*FSM1.I());
+
+  //allocate space for priori, prioro and posti of FSM2
+  std::vector<float> priori2(blocklength*FSM2.I(),0.0);
+  std::vector<float> prioro2(blocklength*FSM2.O());
+  std::vector<float> posti2(blocklength*FSM2.I());
+
+  // turn observations to neg-log-priors for cprioiro
+  int O=FSM1.O()*FSM2.O();
+  for(int k=0;k<blocklength;k++) {
+    calc_metric(O, D, TABLE, &(observations[k*D]), &(cprioro[k*O]),METRIC_TYPE);
+    cprioro[k*O] *= scaling;
+  }
+ 
+  //generate prioro1,2 (metrics are not updated per iteration: this is not the best you can do...)
+  for (int k=0;k<blocklength;k++) {
+    //std::cout << k << std::endl;
+    for(int i=0;i<FSM1.O();i++) {
+      float x=cprioro[k*FSM1.O()*FSM2.O()+i*FSM1.O()+0];
+      for(int j=1;j<FSM2.O();j++)
+        x = (*p2mymin)(x,cprioro[k*FSM1.O()*FSM2.O()+i*FSM1.O()+j]);
+      prioro1[k*FSM1.O()+i]=x;
+      //std::cout <<  prioro1[k*FSM1.O()+i] << ", ";
+    }
+    //std::cout << std::endl;
+    for(int i=0;i<FSM2.O();i++) {
+      float x=cprioro[k*FSM1.O()*FSM2.O()+0*FSM1.O()+i];
+      for(int j=1;j<FSM1.O();j++)
+        x = (*p2mymin)(x,cprioro[k*FSM1.O()*FSM2.O()+j*FSM1.O()+i]);
+      prioro2[k*FSM2.O()+i]=x;
+    }
+  }
+
+  for(int rep=0;rep<iterations;rep++) {
+    // run  SISO 1
+    siso_algorithm(FSM1.I(),FSM1.S(),FSM1.O(),
+             FSM1.NS(), FSM1.OS(), FSM1.PS(), FSM1.PI(),
+             blocklength,
+             ST10,ST1K,
+             true, false,
+             p2mymin,
+             &(priori1[0]),  &(prioro1[0]), &(posti1[0])
+    );
+   
+    //for(int k=0;k<blocklength;k++){
+      //for(int i=0;i<FSM1.I();i++)
+        //std::cout << posti1[k*FSM1.I()+i] << ", ";
+      //std::cout << std::endl;
+    //}
+
+    //interleave soft info 1 -> 2
+    for(int k=0;k<blocklength;k++) {
+      int ki = INTERLEAVER.INTER()[k];
+      //for(int i=0;i<FSMi.I();i++) {
+        //oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
+      //}
+      memcpy(&(priori2[k*FSM2.I()]),&(posti1[ki*FSM1.I()]),FSM1.I()*sizeof(float));
+    } 
+
+    // run SISO 2
+    siso_algorithm(FSM2.I(),FSM2.S(),FSM2.O(),
+           FSM2.NS(), FSM2.OS(), FSM2.PS(), FSM2.PI(),
+           blocklength,
+           ST20,ST2K,
+           true, false,
+           p2mymin,
+           &(priori2[0]),  &(prioro2[0]), &(posti2[0])
+    );
+
+    //interleave soft info 2 --> 1
+    for(int k=0;k<blocklength;k++) {
+      int ki = INTERLEAVER.INTER()[k];
+      //for(int i=0;i<FSMi.I();i++) {
+        //ipriori[ki*FSMi.I()+i]=oposto[k*FSMi.I()+i];
+      //}
+      memcpy(&(priori1[ki*FSM1.I()]),&(posti2[k*FSM2.I()]),FSM1.I()*sizeof(float));
+    }
+
+  } // end iterations
+
+  // generate hard decisions
+  for(int k=0;k<blocklength;k++) {
+    for(int i=0;i<FSM1.I();i++)
+      posti1[k*FSM1.I()+i]  = (*p2mymin)(priori1[k*FSM1.I()+i],posti1[k*FSM1.I()+i]);
+    float min=INF;
+    int mini=0;
+    for(int i=0;i<FSM1.I();i++) {
+      if(posti1[k*FSM1.I()+i]<min) {
+        min=posti1[k*FSM1.I()+i];
+        mini=i;
+      }
+    }
+    data[k]=(To)mini;
+    //std::cout << data[k] << ", "<< std::endl;
+  }
+  //std::cout << std::endl;
+
+}
+
+
+template
+void pccc_decoder_combined(
+      const fsm &FSM1, int ST10, int ST1K,
+      const fsm &FSM2, int ST20, int ST2K,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<float> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      float scaling,
+      const float *observations, unsigned char *data
+);
+
+
+template
+void pccc_decoder_combined(
+      const fsm &FSM1, int ST10, int ST1K,
+      const fsm &FSM2, int ST20, int ST2K,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<float> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      float scaling,
+      const float *observations, short *data
+);
+
+
+template
+void pccc_decoder_combined(
+      const fsm &FSM1, int ST10, int ST1K,
+      const fsm &FSM2, int ST20, int ST2K,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<float> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      float scaling,
+      const float *observations, int *data
+);
+
+
+template
+void pccc_decoder_combined(
+      const fsm &FSM1, int ST10, int ST1K,
+      const fsm &FSM2, int ST20, int ST2K,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<gr_complex> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      float scaling,
+      const gr_complex *observations, unsigned char *data
+);
+
+
+template
+void pccc_decoder_combined(
+      const fsm &FSM1, int ST10, int ST1K,
+      const fsm &FSM2, int ST20, int ST2K,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<gr_complex> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      float scaling,
+      const gr_complex *observations, short *data
+);
+
+
+template
+void pccc_decoder_combined(
+      const fsm &FSM1, int ST10, int ST1K,
+      const fsm &FSM2, int ST20, int ST2K,
+      const interleaver &INTERLEAVER, int blocklength, int iterations,
+      float (*p2mymin)(float,float),
+      int D, const std::vector<gr_complex> &TABLE,
+      trellis_metric_type_t METRIC_TYPE,
+      float scaling,
+      const gr_complex *observations, int *data
+);

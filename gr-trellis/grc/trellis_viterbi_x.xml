@@ -4,9 +4,12 @@
 ##Trellis Viterbi
 ###################################################
  -->
+
+
 <block>
-	<name>Trellis Viterbi</name>
+	<name>Viterbi</name>
 	<key>trellis_viterbi_x</key>
+	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.viterbi_$(type)(trellis.fsm($fsm_args), $block_size, $init_state, $final_state)</make>
 	<param>
@@ -42,7 +45,7 @@
 	<param>
 		<name>Initial State</name>
 		<key>init_state</key>
-		<value>-1</value>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<param>

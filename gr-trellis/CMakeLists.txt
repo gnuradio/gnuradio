@@ -33,8 +33,8 @@ GR_REGISTER_COMPONENT("gr-trellis" ENABLE_GR_TRELLIS
 )
 
 GR_SET_GLOBAL(GR_TRELLIS_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lib
     ${CMAKE_CURRENT_BINARY_DIR}/src/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/lib
 )
 
 ########################################################################
@@ -95,6 +95,7 @@ CPACK_COMPONENT("trellis_swig"
 ADD_SUBDIRECTORY(src/lib)
 ADD_SUBDIRECTORY(doc)
 IF(ENABLE_PYTHON)
+    ADD_SUBDIRECTORY(grc)
     ADD_SUBDIRECTORY(src/python)
     ADD_SUBDIRECTORY(src/examples)
 ENDIF(ENABLE_PYTHON)
