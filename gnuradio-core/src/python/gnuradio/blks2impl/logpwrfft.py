@@ -54,13 +54,13 @@ class _logpwrfft_base(gr.hier_block2):
         fft = self._fft_block[0](fft_size, True, fft_window)
         window_power = sum(map(lambda x: x*x, fft_window))
 
-        c2mag = gr.complex_to_mag(fft_size)
+        c2magsq = gr.complex_to_mag_squared(fft_size)
         self._avg = gr.single_pole_iir_filter_ff(1.0, fft_size)
-        self._log = gr.nlog10_ff(20, fft_size,
+        self._log = gr.nlog10_ff(10, fft_size,
                                  -20*math.log10(fft_size)              # Adjust for number of bins
                                  -10*math.log10(window_power/fft_size) # Adjust for windowing loss
-                                 -20*math.log10(ref_scale/2)+3.0)      # Adjust for reference scale
-        self.connect(self, self._sd, fft, c2mag, self._avg, self._log, self)
+                                 -20*math.log10(ref_scale/2))      # Adjust for reference scale
+        self.connect(self, self._sd, fft, c2magsq, self._avg, self._log, self)
 
         self._average = average
         self._avg_alpha = avg_alpha
