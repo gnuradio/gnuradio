@@ -146,6 +146,7 @@
 #include <gr_annotator_alltoall.h>
 #include <gr_annotator_1to1.h>
 #include <gr_burst_tagger.h>
+#include <gr_correlate_access_code_tag_bb.h>
 %}
 
 %include "gr_nop.i"
@@ -272,3 +273,4 @@
 %include "gr_annotator_alltoall.i"
 %include "gr_annotator_1to1.i"
 %include "gr_burst_tagger.i"
+%include "gr_correlate_access_code_tag_bb.i"
