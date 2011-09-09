@@ -183,7 +183,8 @@ gr_tagged_file_sink::work (int noutput_items,
 	  //std::cout << "Found end of burst: "
 	  //	    << idx_stop << ", " << N << std::endl;
 
-	  int count = fwrite (&inbuf[d_itemsize*idx], d_itemsize, idx_stop-idx, d_handle);
+	  int count = fwrite (&inbuf[d_itemsize*idx], d_itemsize,
+			      idx_stop-idx, d_handle);
 	  if (count == 0) {
 	    if(ferror(d_handle)) {
 	      perror("gr_tagged_file_sink: error writing file");
@@ -200,7 +201,8 @@ gr_tagged_file_sink::work (int noutput_items,
 	}
       }
       if(d_state == IN_BURST) {
-	int count = fwrite (&inbuf[idx], d_itemsize, noutput_items-idx, d_handle);
+	int count = fwrite (&inbuf[d_itemsize*idx], d_itemsize,
+			    noutput_items-idx, d_handle);
 	if (count == 0) {
 	  if(ferror(d_handle)) {
 	    perror("gr_tagged_file_sink: error writing file");
