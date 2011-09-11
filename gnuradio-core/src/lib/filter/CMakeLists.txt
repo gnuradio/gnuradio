@@ -27,9 +27,15 @@ FOREACH(gr_core_filter_asm ${gr_core_filter_asms})
     SET_PROPERTY(SOURCE ${gr_core_filter_asm} PROPERTY LANGUAGE C)
 ENDFOREACH(gr_core_filter_asm)
 
-#uname -p says i386, but we know better when its x86 apple
-IF(APPLE AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "i386")
-    SET(CMAKE_SYSTEM_PROCESSOR "x86_64")
+#detect 32 or 64 bit compiler
+IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64)$")
+    include(CheckTypeSize)
+    check_type_size("void*" SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
+    if (${SIZEOF_VOID_P} EQUAL 8)
+        set(CMAKE_SYSTEM_PROCESSOR_x86 64)
+    else()
+        set(CMAKE_SYSTEM_PROCESSOR_x86 32)
+    endif()
 ENDIF()
 
 ########################################################################
@@ -132,7 +138,7 @@ IF(MSVC)
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_generic.cc
     )
 ELSE(MSVC)
-IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64)$")
+IF(CMAKE_SYSTEM_PROCESSOR_x86)
     LIST(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_x86.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_sysconfig_x86.cc
@@ -157,9 +163,9 @@ IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64)$")
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_complex_dotprod_x86.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_ccomplex_dotprod_x86.cc
     )
-ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64)$")
+ENDIF()
 
-IF(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+IF(CMAKE_SYSTEM_PROCESSOR_x86 AND ${CMAKE_SYSTEM_PROCESSOR_x86} EQUAL 64)
     LIST(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/float_dotprod_sse64.S
         ${CMAKE_CURRENT_SOURCE_DIR}/float_dotprod_3dnow64.S
@@ -173,7 +179,7 @@ IF(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
         ${CMAKE_CURRENT_SOURCE_DIR}/fcomplex_dotprod_sse64.S
         ${CMAKE_CURRENT_SOURCE_DIR}/short_dotprod_mmx64.S
     )
-ELSEIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86)$")
+ELSEIF(CMAKE_SYSTEM_PROCESSOR_x86 AND ${CMAKE_SYSTEM_PROCESSOR_x86} EQUAL 32)
     LIST(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/float_dotprod_sse.S
         ${CMAKE_CURRENT_SOURCE_DIR}/float_dotprod_3dnow.S
@@ -212,14 +218,14 @@ ELSEIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm")
     LIST(APPEND test_gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_armv7_a.cc
     )
-ELSE(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+ELSE()
     LIST(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_generic.cc
     )
     LIST(APPEND test_gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_generic.cc
     )
-ENDIF(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+ENDIF()
 ENDIF(MSVC)
 
 ########################################################################
