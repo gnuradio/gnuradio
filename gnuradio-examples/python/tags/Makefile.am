@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007,2009,2011 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,16 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = \
-	apps \
-	digital \
-	digital-bert \
-	mp-sched \
-	multi-antenna \
-	multi_usrp \
-	network \
-	ofdm \
-	pfb \
-	tags \
-	usrp \
-	usrp2
+ourdatadir = $(exampledir)/tags
+
+dist_ourdata_SCRIPTS =		\
+	test_file_tags.py	\
+	uhd_burst_detector.py
+

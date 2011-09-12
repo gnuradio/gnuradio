@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007,2009,2011 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,16 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = \
-	apps \
-	digital \
-	digital-bert \
-	mp-sched \
-	multi-antenna \
-	multi_usrp \
-	network \
-	ofdm \
-	pfb \
-	tags \
-	usrp \
-	usrp2
+SUBDIRS = src
+
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = gnuradio-gsm-fr-vocoder.pc
