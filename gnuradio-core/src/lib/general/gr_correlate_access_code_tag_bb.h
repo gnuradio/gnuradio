@@ -23,6 +23,7 @@
 #ifndef INCLUDED_gr_correlate_access_code_tag_bb_H
 #define INCLUDED_gr_correlate_access_code_tag_bb_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <string>
 
@@ -33,7 +34,7 @@ typedef boost::shared_ptr<gr_correlate_access_code_tag_bb> gr_correlate_access_c
  * \param access_code is represented with 1 byte per bit, e.g., "010101010111000100"
  * \param threshold maximum number of bits that may be wrong
  */
-gr_correlate_access_code_tag_bb_sptr 
+GR_CORE_API gr_correlate_access_code_tag_bb_sptr 
 gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold, const std::string &tag_name);
 
 /*!
@@ -46,9 +47,9 @@ gr_make_correlate_access_code_tag_bb (const std::string &access_code, int thresh
  * This block annotates the input stream with tags. The tags have key name [tag_name],
  * specified in the constructor. Used for searching an input data stream for preambles, etc.
  */
-class gr_correlate_access_code_tag_bb : public gr_sync_block
+class GR_CORE_API gr_correlate_access_code_tag_bb : public gr_sync_block
 {
-  friend gr_correlate_access_code_tag_bb_sptr 
+  friend GR_CORE_API gr_correlate_access_code_tag_bb_sptr 
   gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold, const std::string &tag_name);
  private:
   unsigned long long d_access_code;	// access code to locate start of packet

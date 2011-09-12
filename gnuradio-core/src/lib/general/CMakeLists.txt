@@ -295,6 +295,7 @@ SET(gr_core_general_triple_threats
     gr_annotator_alltoall
     gr_annotator_1to1
     gr_burst_tagger
+    gr_correlate_access_code_tag_bb
 )
 
 FOREACH(file_tt ${gr_core_general_triple_threats})
