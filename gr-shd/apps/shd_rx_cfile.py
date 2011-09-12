@@ -41,52 +41,55 @@ class rx_cfile_block(gr.top_block):
 
         # Create a SHD device source
         if options.output_shorts:
-            self._u = shd.xmini_source(device_addr=options.address,
+            self._src = shd.xmini_source(device_addr=options.address,
                                        io_type=shd.io_type.COMPLEX_INT16,
                                        num_channels=1)
             self._sink = gr.file_sink(gr.sizeof_short*2, filename)
         else:
-            self._u = shd.xmini_source(device_addr=options.address,
+            self._src = shd.xmini_source(device_addr=options.address,
                                        io_type=shd.io_type.COMPLEX_FLOAT32,
                                        num_channels=1)
             self._sink = gr.file_sink(gr.sizeof_gr_complex, filename)
             
         # Set receiver sample rate
-        self._u.set_samp_rate(options.samp_rate)
+        self._src.set_samp_rate(options.samp_rate)
 
         # Set receive daughterboard gain
         if options.gain is None:
-            g = self._u.get_gain_range()
+            g = self._src.get_gain_range()
             options.gain = float(g.start()+g.stop())/2
-	    print "Using mid-point gain of", options.gain, "(", g.start(), "-", g.stop(), ")"
-        self._u.set_gain(options.gain)
+	    print "Using mid-point gain of", \
+                options.gain, "(", g.start(), "-", g.stop(), ")"
+        self._src.set_gain(options.gain)
 
         # Set the antenna
         if(options.antenna):
-            self._u.set_antenna(options.antenna, 0)
+            self._src.set_antenna(options.antenna, 0)
 
         # Set frequency (tune request takes lo_offset)
         if(options.lo_offset is not None):
             treq = shd.tune_request(options.freq, options.lo_offset)
         else:
             treq = shd.tune_request(options.freq)
-        tr = self._u.set_center_freq(treq)
+        tr = self._src.set_center_freq(treq)
         if tr == None:
             sys.stderr.write('Failed to set center frequency\n')
             raise SystemExit, 1
 
         # Create head block if needed and wire it up
         if options.nsamples is None:
-            self.connect(self._u, self._sink)
+            self.connect(self._src, self._sink)
         else:
             if options.output_shorts:
-                self._head = gr.head(gr.sizeof_short*2, int(options.nsamples))
+                self._head = gr.head(gr.sizeof_short*2,
+                                     int(options.nsamples))
             else:
-                self._head = gr.head(gr.sizeof_gr_complex, int(options.nsamples))
+                self._head = gr.head(gr.sizeof_gr_complex,
+                                     int(options.nsamples))
 
-            self.connect(self._u, self._head, self._sink)
+            self.connect(self._src, self._head, self._sink)
 
-        input_rate = self._u.get_samp_rate()
+        input_rate = self._src.get_samp_rate()
         
         if options.verbose:
             print "Address:", options.address
@@ -107,7 +110,7 @@ class rx_cfile_block(gr.top_block):
 def get_options():
     usage="%prog: [options] output_filename"
     parser = OptionParser(option_class=eng_option, usage=usage)
-    parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
+    parser.add_option("-a", "--address", type="string", default="type=xmini",
                       help="Address of SHD device, [default=%default]")
     parser.add_option("-A", "--antenna", type="string", default=None,
                       help="select Rx Antenna where appropriate")

@@ -24,7 +24,8 @@ from gnuradio import gr, gru
 from gnuradio import shd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.wxgui import stdgui2, fftsink2, waterfallsink2, scopesink2, form, slider
+from gnuradio.wxgui import stdgui2, fftsink2, waterfallsink2
+from gnuradio.wxgui import scopesink2, form, slider
 from optparse import OptionParser
 import wx
 import sys
@@ -65,28 +66,27 @@ class app_top_block(stdgui2.std_top_block):
 	self.options = options
         self.show_debug_info = True
         
-        self.u = shd.xmini_source(device_addr=options.address,
+        self.src = shd.xmini_source(device_addr=options.address,
                                   io_type=shd.io_type.COMPLEX_FLOAT32,
                                   num_channels=1)
 
-        self.u.set_samp_rate(options.samp_rate)
-        input_rate = self.u.get_samp_rate()
+        self.src.set_samp_rate(options.samp_rate)
+        input_rate = self.src.get_samp_rate()
 
-        print dir(self.u)
-
-        print "Antenna:     ", self.u.get_antenna()
-        print "Antennas:    ", self.u.get_antennas()
-        print "Dboard:      ", self.u.get_dboard_iface()
-        print "Device:      ", self.u.get_device
-        print "Center Freq: ", self.u.get_center_freq()
-        print "Freq Range:  ", self.u.get_freq_range()
-        print "Gain:        ", self.u.get_gain()
-        print "Gain Names:  ", self.u.get_gain_names()
-        print "Gain Range:  ", self.u.get_gain_range()
+        print "Antenna:     ", self.src.get_antenna()
+        print "Antennas:    ", self.src.get_antennas()
+        print "Dboard:      ", self.src.get_dboard_iface()
+        print "Device:      ", self.src.get_device
+        print "Center Freq: ", self.src.get_center_freq()
+        print "Freq Range:  ", self.src.get_freq_range()
+        print "Gain:        ", self.src.get_gain()
+        print "Gain Names:  ", self.src.get_gain_names()
+        print "Gain Range:  ", self.src.get_gain_range()
         
         if options.waterfall:
             self.scope = \
-              waterfallsink2.waterfall_sink_c (panel, fft_size=1024, sample_rate=input_rate)
+              waterfallsink2.waterfall_sink_c (panel, fft_size=1024,
+                                               sample_rate=input_rate)
             self.frame.SetMinSize((800, 420))
         elif options.oscilloscope:
             self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
@@ -101,7 +101,7 @@ class app_top_block(stdgui2.std_top_block):
 					      avg_alpha=options.avg_alpha)
             self.frame.SetMinSize((800, 420))
 
-        self.connect(self.u, self.scope)
+        self.connect(self.src, self.scope)
 
         self._build_gui(vbox)
 	self._setup_events()
@@ -111,21 +111,21 @@ class app_top_block(stdgui2.std_top_block):
 
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB
-            g = self.u.get_gain_range()
+            g = self.src.get_gain_range()
             options.gain = float(g.start()+g.stop())/2
 
         if options.freq is None:
             # if no freq was specified, use the mid-point
-            r = self.u.get_freq_range()
+            r = self.src.get_freq_range()
             options.freq = float(r.start()+r.stop())/2
             
         self.set_gain(options.gain)
 
         if(options.antenna):
-            self.u.set_antenna(options.antenna, 0)
+            self.src.set_antenna(options.antenna, 0)
 
         if self.show_debug_info:
-            self.myform['samprate'].set_value(self.u.get_samp_rate())
+            self.myform['samprate'].set_value(self.src.get_samp_rate())
             self.myform['fs@gbe'].set_value(input_rate)
             self.myform['baseband'].set_value(0)
             self.myform['ddc'].set_value(0)
@@ -149,16 +149,19 @@ class app_top_block(stdgui2.std_top_block):
         hbox.Add((5,0), 0, 0)
         myform['freq'] = form.float_field(
             parent=self.panel, sizer=hbox, label="Center freq", weight=1,
-            callback=myform.check_input_and_call(_form_set_freq, self._set_status_msg))
+            callback=myform.check_input_and_call(_form_set_freq,
+                                                 self._set_status_msg))
 
         hbox.Add((5,0), 0, 0)
-        g = self.u.get_gain_range()
+        g = self.src.get_gain_range()
 
 	# some configurations don't have gain control
 	if g.stop() > g.start():
-    	    myform['gain'] = form.slider_field(parent=self.panel, sizer=hbox, label="Gain",
+    	    myform['gain'] = form.slider_field(parent=self.panel,
+                                               sizer=hbox, label="Gain",
                                                weight=3,
-                                               min=int(g.start()), max=int(g.stop()),
+                                               min=int(g.start()),
+                                               max=int(g.stop()),
                                                callback=self.set_gain)
 
         hbox.Add((5,0), 0, 0)
@@ -187,7 +190,8 @@ class app_top_block(stdgui2.std_top_block):
         hbox.Add((5,0), 0)
         myform['samprate'] = form.float_field(
             parent=panel, sizer=hbox, label="Sample Rate",
-            callback=myform.check_input_and_call(_form_set_samp_rate, self._set_status_msg))
+            callback=myform.check_input_and_call(_form_set_samp_rate,
+                                                 self._set_status_msg))
 
         hbox.Add((5,0), 1)
         myform['fs@gbe'] = form.static_float_field(
@@ -216,7 +220,7 @@ class app_top_block(stdgui2.std_top_block):
         the result of that operation and our target_frequency to
         determine the value for the digital down converter.
         """
-        r = self.u.set_center_freq(target_freq, 0)
+        r = self.src.set_center_freq(target_freq, 0)
 
         if r:
             self.myform['freq'].set_value(target_freq)     # update displayed value
@@ -232,14 +236,14 @@ class app_top_block(stdgui2.std_top_block):
     def set_gain(self, gain):
 	if self.myform.has_key('gain'):
     	    self.myform['gain'].set_value(gain)     # update displayed value
-        self.u.set_gain(gain, 0)
+        self.src.set_gain(gain, 0)
 
     def set_samp_rate(self, samp_rate):
-        ok = self.u.set_samp_rate(samp_rate)
-        input_rate = self.u.get_samp_rate()
+        ok = self.src.set_samp_rate(samp_rate)
+        input_rate = self.src.get_samp_rate()
         self.scope.set_sample_rate(input_rate)
         if self.show_debug_info:  # update displayed values
-            self.myform['samprate'].set_value(self.u.get_samp_rate())
+            self.myform['samprate'].set_value(self.src.get_samp_rate())
             self.myform['fs@gbe'].set_value(input_rate)
 
         # shd set_samp_rate never fails; always falls back to closest requested.
