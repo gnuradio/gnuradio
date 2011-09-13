@@ -41,8 +41,6 @@ dist_ourdata_SCRIPTS =		\
 	benchmark_tx.py		\
 	benchmark_qt_rx.py	\
 	benchmark_qt_loopback.py\
-	gen_whitener.py		\
 	rx_voice.py		\
-	run_length.py		\
 	tunnel.py		\
 	tx_voice.py
