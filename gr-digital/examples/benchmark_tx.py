@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
-from gnuradio import usrp
+from gnuradio import gr
+from gnuradio import uhd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser

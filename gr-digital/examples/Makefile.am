@@ -33,6 +33,8 @@ dist_ourdata_SCRIPTS = \
 	receive_path.py		\
 	benchmark_tx.py		\
 	benchmark_rx.py		\
+	tx_voice.py		\
+	rx_voice.py		\
 	run_length.py		\
 	gen_whitener.py
 

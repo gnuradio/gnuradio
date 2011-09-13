@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2009 Free Software Foundation, Inc.
+# Copyright 2005,2006,2009,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
-from gnuradio import usrp
+from gnuradio import gr
+from gnuradio import uhd
 from gnuradio import audio
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -29,12 +29,15 @@ from optparse import OptionParser
 
 from gnuradio.vocoder import gsm_full_rate
 
+# From gr-digital
+from gnuradio import digital
+
 import random
 import struct
 import sys
 
 # from current dir
-import usrp_receive_path
+from receive_path import receive_path
 
 #import os
 #print os.getpid()
@@ -47,11 +50,12 @@ class audio_tx(gr.hier_block2):
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
 				
+        sample_rate = 8000
         self.packet_src = gr.message_source(33)
         voice_decoder = gsm_full_rate.decode_ps()
         s2f = gr.short_to_float ()
         sink_scale = gr.multiply_const_ff(1.0/32767.)
-        audio_sink = audio.sink(8000, audio_output_dev)
+        audio_sink = audio.sink(sample_rate, audio_output_dev)
         self.connect(self.packet_src, voice_decoder, s2f, sink_scale, audio_sink)
         
     def msgq(self):
@@ -61,9 +65,18 @@ class audio_tx(gr.hier_block2):
 class my_top_block(gr.top_block):
     def __init__(self, demod_class, rx_callback, options):
         gr.top_block.__init__(self)
-        self.rxpath = usrp_receive_path.usrp_receive_path(demod_class, rx_callback, options)
+        self.rxpath = receive_path(demod_class, rx_callback, options)
         self.audio_tx = audio_tx(options.audio_output)
-	self.connect(self.rxpath)
+
+        if(options.from_file is not None):
+            self.thr = gr.throttle(gr.sizeof_gr_complex, options.bitrate)
+            self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self.connect(self.source, self.thr, self.rxpath)
+        else:
+            self.thr = gr.throttle(gr.sizeof_gr_complex, 1e6)
+            self.source = gr.null_source(gr.sizeof_gr_complex)
+            self.connect(self.source, self.thr, self.rxpath)
+
 	self.connect(self.audio_tx)        
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -89,7 +102,7 @@ def main():
         print "ok = %r  n_rcvd = %4d  n_right = %4d" % (
             ok, n_rcvd, n_right)
 
-    demods = modulation_utils.type_1_demods()
+    demods = digital.modulation_utils2.type_1_demods()
 
     # Create Options Parser:
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
@@ -101,7 +114,9 @@ def main():
                             % (', '.join(demods.keys()),))
     parser.add_option("-O", "--audio-output", type="string", default="",
                       help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
-    usrp_receive_path.add_options(parser, expert_grp)
+    parser.add_option("","--from-file", default=None,
+                      help="input file of samples to demod")
+    receive_path.add_options(parser, expert_grp)
 
     for mod in demods.values():
         mod.add_options(expert_grp)
@@ -113,10 +128,11 @@ def main():
         parser.print_help(sys.stderr)
         sys.exit(1)
 
-    if options.rx_freq is None:
-        sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
-        parser.print_help(sys.stderr)
-        sys.exit(1)
+    if options.from_file is None:
+        if options.rx_freq is None:
+            sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
+            parser.print_help(sys.stderr)
+            sys.exit(1)
 
 
     # build the graph
