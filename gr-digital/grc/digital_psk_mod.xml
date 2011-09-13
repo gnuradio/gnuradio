@@ -51,11 +51,11 @@
     <type>enum</type>
     <option>
       <name>Yes</name>
-      <key>gray</key>
+      <key>"gray"</key>
     </option>
     <option>
       <name>No</name>
-      <key>none</key>
+      <key>"none"</key>
     </option>
   </param>
   <param>
@@ -116,15 +116,10 @@
   </param>
   <sink>
     <name>in</name>
-    <type>complex</type>
+    <type>byte</type>
   </sink>
   <source>
     <name>out</name>
-    <type>byte</type>
-  </source>
-  <source>
-    <name>sync</name>
     <type>complex</type>
-    <optional>1</optional>
   </source>
 </block>
