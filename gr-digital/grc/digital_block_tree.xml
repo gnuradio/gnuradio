@@ -30,11 +30,15 @@
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
 		<name>Digital</name>
-		<block>digital_costas_loop_cc</block>
+		<block>digital_binary_slicer_fb</block>
+		<block>digital_clock_recovery_mm_xx</block>
 		<block>digital_cma_equalizer_cc</block>
-		<block>digital_lms_dd_equalizer_cc</block>
-		<block>digital_kurtotic_equalizer_cc</block>
+		<block>digital_constellation_decoder_cb</block>
+		<block>digital_correlate_access_code_bb</block>
+		<block>digital_costas_loop_cc</block>
 		<block>digital_fll_band_edge_cc</block>
+		<block>digital_kurtotic_equalizer_cc</block>
+		<block>digital_lms_dd_equalizer_cc</block>
 		<block>digital_mpsk_receiver_cc</block>
 	</cat>
 	<cat>

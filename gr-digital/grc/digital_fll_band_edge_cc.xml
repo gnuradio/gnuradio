@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>FLL Band-Edge</name>
-	<key>gr_fll_band_edge_cc</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.fll_band_edge_cc($samps_per_sym, $rolloff, $filter_size, $w)</make>
+	<key>digital_fll_band_edge_cc</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.fll_band_edge_cc($samps_per_sym, $rolloff, $filter_size, $w)</make>
 	<callback>set_loop_bandwidth($w)</callback>
 	<param>
 		<name>Type</name>

@@ -25,15 +25,19 @@ grcblocksdir = $(grc_blocksdir)
 
 dist_grcblocks_DATA = \
 	digital_block_tree.xml			\
+	digital_binary_slicer_fb.xml		\
+	digital_clock_recovery_mm_xx.xml	\
+	digital_constellation_decoder_cb.xml	\
+	digital_correlate_access_code_bb.xml	\
 	digital_costas_loop_cc.xml		\
 	digital_cma_equalizer_cc.xml		\
-	digital_lms_dd_equalizer_cc.xml		\
+	digital_fll_band_edge_cc.xml		\
 	digital_kurtotic_equalizer_cc.xml	\
+	digital_lms_dd_equalizer_cc.xml		\
+	digital_mpsk_receiver_cc.xml		\
 	digital_dxpsk_mod.xml			\
 	digital_dxpsk_demod.xml			\
 	digital_psk_mod.xml			\
 	digital_psk_demod.xml			\
 	digital_qam_mod.xml			\
-	digital_qam_demod.xml			\
-	digital_fll_band_edge_cc.xml		\
-	digital_mpsk_receiver_cc.xml
+	digital_qam_demod.xml
