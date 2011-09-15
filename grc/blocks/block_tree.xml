@@ -110,23 +110,19 @@
 		<block>gr_unpacked_to_packed_xx</block>
 		<block>gr_packed_to_unpacked_xx</block>
 		<block>gr_unpack_k_bits_bb</block>
-		<block>gr_binary_slicer_fb</block>
 		<block>gr_chunks_to_symbols_xx</block>
 		<block>gr_map_bb</block>
 	</cat>
 	<cat>
 		<name>Synchronizers</name>
-		<block>gr_clock_recovery_mm_xx</block>
 		<block>gr_pfb_clock_sync_xxx</block>
 
-		<block>gr_costas_loop_cc</block>
 		<block>gr_mpsk_sync_cc</block>
 
 		<block>gr_pll_carriertracking_cc</block>
 		<block>gr_pll_freqdet_cf</block>
 		<block>gr_pll_refout_cc</block>
 
-		<block>gr_correlate_access_code_bb</block>
 		<block>gr_pn_correlator_cc</block>
 		<block>gr_simple_correlator</block>
 		<block>gr_simple_framer</block>
@@ -178,7 +174,6 @@
 		<block>gr_single_pole_iir_filter_xx</block>
 		<block>gr_hilbert_fc</block>
 		<block>gr_goertzel_fc</block>
-		<block>gr_cma_equalizer_cc</block>
 		<block>gr_rational_resampler_base_xxx</block>
 		<block>blks2_rational_resampler_xxx</block>
 		<block>gr_fractional_interpolator_xx</block>
@@ -198,7 +193,6 @@
 		<block>gr_gmskmod_bc</block>
 
 		<block>gr_diff_phasor_cc</block>
-		<block>gr_constellation_decoder_cb</block>
 
 		<block>gr_diff_encoder_bb</block>
 		<block>gr_diff_decoder_bb</block>
@@ -214,12 +208,6 @@
 		<block>blks2_fm_demod_cf</block>
 		<block>blks2_fm_deemph</block>
 		<block>blks2_fm_preemph</block>
-
-		<block>blks2_dxpsk_mod</block>
-		<block>blks2_dxpsk_demod</block>
-
-		<block>blks2_dxpsk2_mod</block>
-		<block>blks2_dxpsk2_demod</block>
 
 		<block>blks2_gmsk_mod</block>
 		<block>blks2_gmsk_demod</block>

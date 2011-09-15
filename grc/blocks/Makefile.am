@@ -30,10 +30,6 @@ dist_ourdata_DATA = \
 	blks2_analysis_filterbank.xml \
 	blks2_cvsd_encode.xml \
 	blks2_cvsd_decode.xml \
-	blks2_dxpsk_demod.xml \
-	blks2_dxpsk_mod.xml \
-	blks2_dxpsk2_demod.xml \
-	blks2_dxpsk2_mod.xml \
 	blks2_error_rate.xml \
 	blks2_fm_deemph.xml \
 	blks2_fm_demod_cf.xml \
@@ -71,12 +67,9 @@ dist_ourdata_DATA = \
 	gr_and_xx.xml \
 	gr_and_const_xx.xml \
 	gr_argmax_xx.xml \
-	gr_binary_slicer_fb.xml \
 	gr_channel_model.xml \
 	gr_char_to_float.xml \
 	gr_chunks_to_symbols.xml \
-	gr_clock_recovery_mm_xx.xml \
-	gr_cma_equalizer_cc.xml \
 	gr_complex_to_arg.xml \
 	gr_complex_to_float.xml \
 	gr_complex_to_imag.xml \
@@ -85,10 +78,7 @@ dist_ourdata_DATA = \
 	gr_complex_to_mag_squared.xml \
 	gr_complex_to_real.xml \
 	gr_conjugate_cc.xml \
-	gr_constellation_decoder_cb.xml \
 	gr_copy.xml \
-	gr_correlate_access_code_bb.xml \
-	gr_costas_loop_cc.xml \
 	gr_cpfsk_bc.xml \
 	gr_dc_blocker.xml \
 	gr_cpmmod_bc.xml \

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007,2009 Free Software Foundation, Inc.
+# Copyright 2005-2007,2009,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
-from gnuradio import usrp
+from gnuradio import gr
+from gnuradio import uhd
 from gnuradio import audio
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -29,13 +29,16 @@ from optparse import OptionParser
 
 from gnuradio.vocoder import gsm_full_rate
 
+# From gr-digital
+from gnuradio import digital
+
 import random
 import time
 import struct
 import sys
 
 # from current dir
-import usrp_transmit_path
+from transmit_path import transmit_path
 
 #import os
 #print os.getpid()
@@ -64,11 +67,17 @@ class my_top_block(gr.top_block):
 
     def __init__(self, modulator_class, options):
         gr.top_block.__init__(self)
-        self.txpath = usrp_transmit_path.usrp_transmit_path(modulator_class, options)
+        self.txpath = transmit_path(modulator_class, options)
         self.audio_rx = audio_rx(options.audio_input)
-	self.connect(self.txpath)
-	self.connect(self.audio_rx)
 
+        if(options.to_file is not None):
+            self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+        else:
+            self.sink = gr.null_sink(gr.sizeof_gr_complex)
+
+	self.connect(self.audio_rx)
+	self.connect(self.txpath, self.sink)
+            
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -82,7 +91,7 @@ def main():
     def rx_callback(ok, payload):
         print "ok = %r, payload = '%s'" % (ok, payload)
 
-    mods = modulation_utils.type_1_mods()
+    mods = digital.modulation_utils2.type_1_mods()
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
@@ -95,7 +104,9 @@ def main():
                       help="set megabytes to transmit [default=inf]")
     parser.add_option("-I", "--audio-input", type="string", default="",
                       help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
-    usrp_transmit_path.add_options(parser, expert_grp)
+    parser.add_option("","--to-file", default=None,
+                      help="Output file for modulated samples")
+    transmit_path.add_options(parser, expert_grp)
 
     for mod in mods.values():
         mod.add_options(expert_grp)
@@ -107,11 +118,11 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    if options.tx_freq is None:
-        sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
-        parser.print_help(sys.stderr)
-        sys.exit(1)
-
+    if options.to_file is None:
+        if options.tx_freq is None:
+            sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
+            parser.print_help(sys.stderr)
+            sys.exit(1)
 
     # build the graph
     tb = my_top_block(mods[options.modulation], options)

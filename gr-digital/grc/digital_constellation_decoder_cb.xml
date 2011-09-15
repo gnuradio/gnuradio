@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Constellation Decoder
+###################################################
+ -->
+<block>
+	<name>Constellation Decoder</name>
+	<key>digital_constellation_decoder_cb</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.constellation_decoder_cb($constellation)</make>
+	<param>
+		<name>Constellation Object</name>
+		<key>constellation</key>
+		<type>raw</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

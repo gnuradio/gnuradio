@@ -24,10 +24,18 @@ include $(top_srcdir)/Makefile.common
 ourdatadir = $(exampledir)/digital
 
 noinst_PYTHON = 		\
-	example_fll.py
+	example_costas.py	\
+	example_fll.py		\
+	example_timing.py
 
 dist_ourdata_SCRIPTS = \
 	transmit_path.py	\
-	receive_path.py
+	receive_path.py		\
+	benchmark_tx.py		\
+	benchmark_rx.py		\
+	tx_voice.py		\
+	rx_voice.py		\
+	run_length.py		\
+	gen_whitener.py
 
 

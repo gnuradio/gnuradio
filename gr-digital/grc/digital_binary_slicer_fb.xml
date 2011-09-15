@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Binary Slicer</name>
-	<key>gr_binary_slicer_fb</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.binary_slicer_fb()</make>
+	<key>digital_binary_slicer_fb</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.binary_slicer_fb()</make>
 	<sink>
 		<name>in</name>
 		<type>float</type>

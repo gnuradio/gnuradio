@@ -23,7 +23,7 @@
 
 <!--
 ###################################################
-##DPSK2 Mod - 2, 4, 8
+## DPSK Mod - 2, 4, 8
 ###################################################
  -->
 <block>
@@ -33,7 +33,7 @@
 	<make>digital.$(type)_mod(
 	samples_per_symbol=$samples_per_symbol,
 	excess_bw=$excess_bw,
-	gray_code=$gray_code,
+	gray_coded=$gray_coded,
 	verbose=$verbose,
 	log=$log)
 	</make>
@@ -68,7 +68,7 @@
 	</param>
 	<param>
 		<name>Gray Code</name>
-		<key>gray_code</key>
+		<key>gray_coded</key>
 		<value>True</value>
 		<type>bool</type>
 		<option>
