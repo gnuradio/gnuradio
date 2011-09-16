@@ -22,6 +22,12 @@ INCLUDE(GrPython)
 GR_PYTHON_INSTALL(PROGRAMS
     transmit_path.py
     receive_path.py
+    benchmark_tx.py
+    benchmark_rx.py
+    tx_voice.py
+    rx_voice.py
+    run_length.py
+    gen_whitener.py
     DESTINATION ${GR_PKG_DATA_DIR}/examples/digital
     COMPONENT "digital_python"
 )
