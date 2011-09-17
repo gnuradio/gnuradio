@@ -26,10 +26,10 @@ set( GSL_CBLAS_FOUND OFF )
 # Windows, but not for Cygwin and MSys where gsl-config is available
 if( WIN32 AND NOT CYGWIN AND NOT MSYS )
 	# look for headers
-  find_path( GSL_INCLUDE_DIR
+  find_path( GSL_INCLUDE_DIRS
     NAMES gsl/gsl_cdf.h gsl/gsl_randist.h
     )
-  if( GSL_INCLUDE_DIR )
+  if( GSL_INCLUDE_DIRS )
   	# look for gsl library
     find_library( GSL_LIBRARY
       NAMES gsl
@@ -49,13 +49,13 @@ if( WIN32 AND NOT CYGWIN AND NOT MSYS )
     endif( GSL_CBLAS_LIBRARY )
 
     set( GSL_LIBRARIES ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} )
-  endif( GSL_INCLUDE_DIR )
+  endif( GSL_INCLUDE_DIRS )
 
-  #mark_as_advanced(
-  #  GSL_INCLUDE_DIR
-  #  GSL_LIBRARY
-  #  GSL_CBLAS_LIBRARY
-  #)
+  mark_as_advanced(
+    GSL_INCLUDE_DIRS
+    GSL_LIBRARIES
+    GSL_CBLAS_LIBRARIES
+  )
 else( WIN32 AND NOT CYGWIN AND NOT MSYS )
   if( UNIX OR MSYS )
 		find_program( GSL_CONFIG_EXECUTABLE gsl-config
@@ -137,6 +137,9 @@ else( GSL_FOUND )
     message( FATAL_ERROR "FindGSL: Could not find GSL headers or library" )
   endif( GSL_FIND_REQUIRED )
 endif( GSL_FOUND )
+
+#needed for gsl windows port but safe to always define
+LIST(APPEND GSL_DEFINITIONS "-DGSL_DLL")
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GSL DEFAULT_MSG GSL_LIBRARIES GSL_INCLUDE_DIRS)
