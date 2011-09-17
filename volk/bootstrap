@@ -20,7 +20,11 @@
 # Boston, MA 02110-1301, USA.
 rm -fr config.cache autom4te*.cache
 
-python -B gen/volk_register.py
+#alternative to -B that wont break on python 2.5
+PYTHONDONTWRITEBYTECODE=1
+export PYTHONDONTWRITEBYTECODE
+
+python gen/volk_register.py
 mv gen/lib/Makefile.am lib/
 
 aclocal -I config -I gen/config
