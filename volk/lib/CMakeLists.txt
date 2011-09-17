@@ -225,7 +225,8 @@ ENDIF()
 ########################################################################
 # Setup the volk sources list and library
 ########################################################################
-IF(NOT WIN32)
+IF(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
+    #http://gcc.gnu.org/wiki/Visibility
     ADD_DEFINITIONS(-fvisibility=hidden)
 ENDIF()
 
