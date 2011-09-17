@@ -168,10 +168,20 @@ FILE(GLOB xml_files ${CMAKE_SOURCE_DIR}/gen/*.xml)
 FILE(GLOB py_files ${CMAKE_SOURCE_DIR}/gen/*.py)
 FILE(GLOB h_files ${CMAKE_SOURCE_DIR}/include/volk/*.h)
 
+#make sure we can use -B with python (introduced in 2.6)
+EXECUTE_PROCESS(
+    COMMAND ${PYTHON_EXECUTABLE} -B -c ""
+    OUTPUT_QUIET ERROR_QUIET
+    RESULT_VARIABLE PYTHON_HAS_DASH_B_RESULT
+)
+IF(PYTHON_HAS_DASH_B_RESULT EQUAL 0)
+    SET(PYTHON_DASH_B "-B")
+ENDIF()
+
 ADD_CUSTOM_COMMAND(
     OUTPUT ${volk_gen_sources}
     DEPENDS ${xml_files} ${py_files} ${h_files}
-    COMMAND ${PYTHON_EXECUTABLE} -B
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
         ${CMAKE_SOURCE_DIR}/gen/volk_register.py
         ${CMAKE_BINARY_DIR}
 )
