@@ -20,37 +20,56 @@
 ########################################################################
 # This file included, use CMake directory variables
 ########################################################################
-FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
-    "// This file is machine generated.  All edits will be overwritten\n"
-)
 
-MACRO(expand_h_cc_i_sig root sig)
-    STRING(REGEX REPLACE "X+" ${sig} name ${root})
+########################################################################
+# generate the python helper script which calls into the build utils
+########################################################################
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
+#!${PYTHON_EXECUTABLE}
+
+import sys, os, re
+sys.path.append('${GR_CORE_PYTHONPATH}')
+os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
+os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
+
+if __name__ == '__main__':
+    import build_utils
+    root, out = sys.argv[1:3]
+    for sig in sys.argv[3:]:
+        name = re.sub ('X+', sig, root)
+        d = build_utils.standard_dict(name, sig)
+        build_utils.expand_template(d, out)
+
+")
+
+########################################################################
+# generation helper macro to generate various files from template
+########################################################################
+MACRO(expand_h_cc_i root)
+
     FOREACH(ext cc h i)
+        #make a list of all the generated files
+        UNSET(expanded_files_${ext})
+        FOREACH(sig ${ARGN})
+            STRING(REGEX REPLACE "X+" ${sig} name ${root})
+            LIST(APPEND expanded_files_${ext} ${CMAKE_CURRENT_BINARY_DIR}/${name}.${ext})
+        ENDFOREACH(sig)
+
+        #create a command to generate the files
         ADD_CUSTOM_COMMAND(
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${name}.${ext}
+            OUTPUT ${expanded_files_${ext}}
             DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.${ext}.t
-            COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} -c
-\"import os, sys\; sys.path.append('${GR_CORE_PYTHONPATH}')\; os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'\; import build_utils\; build_utils.expand_template(build_utils.standard_dict('${name}', '${sig}'), '${root}.${ext}.t')\"
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+                ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+                ${root} ${root}.${ext}.t ${ARGN}
         )
     ENDFOREACH(ext)
 
     # install rules for the generated cc, h, and i files
-    LIST(APPEND generated_gengen_sources ${CMAKE_CURRENT_BINARY_DIR}/${name}.cc)
-    LIST(APPEND generated_gengen_includes ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
-    LIST(APPEND generated_gengen_swigs ${CMAKE_CURRENT_BINARY_DIR}/${name}.i)
+    LIST(APPEND generated_gengen_sources ${expanded_files_cc})
+    LIST(APPEND generated_gengen_includes ${expanded_files_h})
+    LIST(APPEND generated_gengen_swigs ${expanded_files_i})
 
-    # append entries into the global swig include file
-    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%{#include<${name}.h>%}\n")
-    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%include<${name}.i>\n")
-
-ENDMACRO(expand_h_cc_i_sig)
-
-MACRO(expand_h_cc_i root)
-    FOREACH(sig ${ARGN})
-        expand_h_cc_i_sig(${root} ${sig})
-    ENDFOREACH(sig)
 ENDMACRO(expand_h_cc_i)
 
 ########################################################################
@@ -91,6 +110,25 @@ ADD_CUSTOM_TARGET(gengen_generated ALL DEPENDS
     ${generated_gengen_includes}
     ${generated_gengen_swigs}
 )
+
+########################################################################
+# Create the master gengen swig include files
+########################################################################
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
+    "// This file is machine generated.  All edits will be overwritten\n"
+)
+
+FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%{\n")
+FOREACH(swig_file ${generated_gengen_swigs})
+    GET_FILENAME_COMPONENT(name ${swig_file} NAME)
+    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "    #include<${name}.h>\n")
+ENDFOREACH(swig_file)
+FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%}\n")
+
+FOREACH(swig_file ${generated_gengen_swigs})
+    GET_FILENAME_COMPONENT(name ${swig_file} NAME)
+    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%include<${name}.h>\n")
+ENDFOREACH(swig_file)
 
 ########################################################################
 # Handle the generated sources + a few non-generated ones
