@@ -51,6 +51,18 @@ ENDIF(PYTHON_EXECUTABLE)
 #make the path to the executable appear in the cmake gui
 SET(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
 
+#make sure we can use -B with python (introduced in 2.6)
+IF(PYTHON_EXECUTABLE)
+    EXECUTE_PROCESS(
+        COMMAND ${PYTHON_EXECUTABLE} -B -c ""
+        OUTPUT_QUIET ERROR_QUIET
+        RESULT_VARIABLE PYTHON_HAS_DASH_B_RESULT
+    )
+    IF(PYTHON_HAS_DASH_B_RESULT EQUAL 0)
+        SET(PYTHON_DASH_B "-B")
+    ENDIF()
+ENDIF(PYTHON_EXECUTABLE)
+
 ########################################################################
 # Check for the existence of a python module:
 # - desc a string description of the check
