@@ -32,9 +32,11 @@ typedef boost::shared_ptr<gr_correlate_access_code_tag_bb> gr_correlate_access_c
 /*!
  * \param access_code is represented with 1 byte per bit, e.g., "010101010111000100"
  * \param threshold maximum number of bits that may be wrong
+ * \param tag_name key of the tag inserted into the tag stream
  */
 gr_correlate_access_code_tag_bb_sptr 
-gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold, const std::string &tag_name);
+gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold,
+				      const std::string &tag_name);
 
 /*!
  * \brief Examine input for specified access code, one bit at a time.
@@ -43,13 +45,15 @@ gr_make_correlate_access_code_tag_bb (const std::string &access_code, int thresh
  * input:  stream of bits, 1 bit per input byte (data in LSB)
  * output: unaltered stream of bits (plus tags)
  *
- * This block annotates the input stream with tags. The tags have key name [tag_name],
- * specified in the constructor. Used for searching an input data stream for preambles, etc.
+ * This block annotates the input stream with tags. The tags have key
+ * name [tag_name], specified in the constructor. Used for searching
+ * an input data stream for preambles, etc.
  */
 class gr_correlate_access_code_tag_bb : public gr_sync_block
 {
   friend gr_correlate_access_code_tag_bb_sptr 
-  gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold, const std::string &tag_name);
+  gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold,
+					const std::string &tag_name);
  private:
   unsigned long long d_access_code;	// access code to locate start of packet
                                         //   access code is left justified in the word
@@ -62,7 +66,8 @@ class gr_correlate_access_code_tag_bb : public gr_sync_block
   pmt::pmt_t d_key, d_me; //d_key is the tag name, d_me is the block name + unique ID
 
  protected:
-  gr_correlate_access_code_tag_bb(const std::string &access_code, int threshold, const std::string &tag_name);
+  gr_correlate_access_code_tag_bb(const std::string &access_code, int threshold,
+				  const std::string &tag_name);
 
  public:
   ~gr_correlate_access_code_tag_bb();
