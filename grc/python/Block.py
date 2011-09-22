@@ -108,7 +108,7 @@ class Block(_Block, _GUIBlock):
 				if nports == num_ports: continue
 				#remove excess ports and connections
 				if nports < num_ports:
-					for key in map(str, range(index_first+nports, index_first+num_ports)):
+					for key in reversed(map(str, range(index_first+nports, index_first+num_ports))):
 						remove_port(get_ports, get_port, key)
 					continue
 				#add more ports
