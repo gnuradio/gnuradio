@@ -34,11 +34,11 @@ os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
 if __name__ == '__main__':
     import build_utils
-    root, out = sys.argv[1:3]
+    root, inp = sys.argv[1:3]
     for sig in sys.argv[3:]:
         name = re.sub ('X+', sig, root)
         d = build_utils.standard_dict(name, sig)
-        build_utils.expand_template(d, out)
+        build_utils.expand_template(d, inp)
 
 ")
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
 ########################################################################
 MACRO(expand_h_cc_i root)
 
-    FOREACH(ext cc h i)
+    FOREACH(ext h cc i)
         #make a list of all the generated files
         UNSET(expanded_files_${ext})
         FOREACH(sig ${ARGN})
@@ -65,7 +65,12 @@ MACRO(expand_h_cc_i root)
         )
     ENDFOREACH(ext)
 
-    # install rules for the generated cc, h, and i files
+    #make source files depends on headers to force generation
+    SET_SOURCE_FILES_PROPERTIES(${expanded_files_cc}
+        PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
+    )
+
+    #install rules for the generated cc, h, and i files
     LIST(APPEND generated_gengen_sources ${expanded_files_cc})
     LIST(APPEND generated_gengen_includes ${expanded_files_h})
     LIST(APPEND generated_gengen_swigs ${expanded_files_i})
@@ -105,8 +110,7 @@ expand_h_cc_i(gr_argmax_XX                    fs is ss)
 expand_h_cc_i(gr_max_XX                       ff ii ss)
 expand_h_cc_i(gr_peak_detector_XX             fb ib sb)
 
-ADD_CUSTOM_TARGET(gengen_generated ALL DEPENDS
-    ${generated_gengen_sources}
+ADD_CUSTOM_TARGET(gengen_generated DEPENDS
     ${generated_gengen_includes}
     ${generated_gengen_swigs}
 )
@@ -114,20 +118,22 @@ ADD_CUSTOM_TARGET(gengen_generated ALL DEPENDS
 ########################################################################
 # Create the master gengen swig include files
 ########################################################################
-FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
-    "// This file is machine generated.  All edits will be overwritten\n"
-)
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "
+//
+// This file is machine generated.  All edits will be overwritten
+//
+")
 
 FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%{\n")
 FOREACH(swig_file ${generated_gengen_swigs})
-    GET_FILENAME_COMPONENT(name ${swig_file} NAME)
-    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "    #include<${name}.h>\n")
+    GET_FILENAME_COMPONENT(name ${swig_file} NAME_WE)
+    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "#include<${name}.h>\n")
 ENDFOREACH(swig_file)
 FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%}\n")
 
 FOREACH(swig_file ${generated_gengen_swigs})
     GET_FILENAME_COMPONENT(name ${swig_file} NAME)
-    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%include<${name}.h>\n")
+    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%include<${name}>\n")
 ENDFOREACH(swig_file)
 
 ########################################################################

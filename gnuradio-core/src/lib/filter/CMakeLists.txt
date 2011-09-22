@@ -50,7 +50,7 @@ ENDIF()
 #   - This way the targets would depend only on their sources.
 ########################################################################
 EXECUTE_PROCESS(
-    COMMAND ${PYTHON_EXECUTABLE} -c "
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} -c "
 import os, sys
 sys.path.append('${GR_CORE_PYTHONPATH}')
 sys.path.append('${CMAKE_CURRENT_SOURCE_DIR}')
@@ -114,10 +114,11 @@ ADD_CUSTOM_COMMAND(
         ${generated_filter_includes}
         ${generated_filter_swigs}
     DEPENDS ${generated_filter_deps}
-    COMMAND ${PYTHON_EXECUTABLE} -B -c
-    \"import os, sys\;sys.path.append('${GR_CORE_PYTHONPATH}')\;sys.path.append('${CMAKE_CURRENT_SOURCE_DIR}')\;os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'\;from generate_all import generate_all\;generate_all()\"
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} -c
+    "import os, sys;sys.path.append('${GR_CORE_PYTHONPATH}');sys.path.append('${CMAKE_CURRENT_SOURCE_DIR}');os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}';from generate_all import generate_all;generate_all()"
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "generating filter files"
+    VERBATIM
 )
 
 ADD_CUSTOM_TARGET(filter_generated DEPENDS
