@@ -256,6 +256,8 @@ The center frequency is the overall frequency of the RF chain. \\
 For greater control of how the UHD tunes elements in the RF chain, \\
 pass a tune_request object rather than a simple target frequency.
 Tuning with an LO offset example: uhd.tune_request(freq, lo_off)
+Tuning without DSP: uhd.tune_request(target_freq, dsp_freq=0, \\
+dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
 
 Antenna:
 For subdevices with only one antenna, this may be left blank. \\
@@ -266,6 +268,9 @@ Bandwidth:
 To use the default bandwidth filter setting, this should be zero. \\
 Only certain subdevices have configurable bandwidth filters. \\
 See the daughterboard application notes for possible configurations.
+
+See the UHD manual for more detailed documentation:
+http://code.ettus.com/redmine/ettus/projects/uhd/wiki
 	</doc>
 </block>
 """

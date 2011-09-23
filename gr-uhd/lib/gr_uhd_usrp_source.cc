@@ -25,6 +25,8 @@
 #include <iostream>
 #include <boost/format.hpp>
 
+static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("rx_time");
+
 /***********************************************************************
  * UHD Multi USRP Source Impl
  **********************************************************************/
@@ -43,7 +45,11 @@ public:
         _type(io_type),
         _nchan(num_channels),
         _stream_now(_nchan == 1),
+        _tag_now(false)
     {
+        std::stringstream str;
+        str << name() << unique_id();
+        _id = pmt::pmt_string_to_symbol(str.str());
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
 
@@ -201,7 +207,18 @@ public:
         //handle possible errors conditions
         switch(_metadata.error_code){
         case uhd::rx_metadata_t::ERROR_CODE_NONE:
-            //TODO insert tag for time stamp
+            if (_tag_now){
+                _tag_now = false;
+                //create a timestamp pmt for the first sample
+                const pmt::pmt_t val = pmt::pmt_make_tuple(
+                    pmt::pmt_from_uint64(_metadata.time_spec.get_full_secs()),
+                    pmt::pmt_from_double(_metadata.time_spec.get_frac_secs())
+                );
+                //create a timestamp tag for each channel
+                for (size_t i = 0; i < _nchan; i++){
+                    this->add_item_tag(i, nitems_written(0), TIME_KEY, val, _id);
+                }
+            }
             break;
 
         case uhd::rx_metadata_t::ERROR_CODE_TIMEOUT:
@@ -210,6 +227,7 @@ public:
             return WORK_DONE;
 
         case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
+            _tag_now = true;
             //ignore overflows and try work again
             //TODO insert tag for overflow
             return work(noutput_items, input_items, output_items);
@@ -231,6 +249,7 @@ public:
         stream_cmd.stream_now = _stream_now;
         stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(reasonable_delay);
         _dev->issue_stream_cmd(stream_cmd);
+        _tag_now = true;
         return true;
     }
 
@@ -243,8 +262,9 @@ private:
     uhd::usrp::multi_usrp::sptr _dev;
     const uhd::io_type_t _type;
     size_t _nchan;
-    bool _stream_now;
+    bool _stream_now, _tag_now;
     uhd::rx_metadata_t _metadata;
+    pmt::pmt_t _id;
 };
 
 

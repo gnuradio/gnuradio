@@ -28,6 +28,29 @@
 
 class uhd_usrp_source;
 
+/*!
+ * \brief Make a new USRP source block.
+ *
+ * The USRP source block receives samples and writes to a stream.
+ * The source block also provides API calls for receiver settings.
+ *
+ * Stream tagging:
+ *
+ * The following tag keys will be produced by the work function:
+ *  - pmt::pmt_string_to_symbol("rx_time")
+ *
+ * The timstamp tag value is a pmt tuple of the following:
+ * (uint64 seconds, and double fractional seconds).
+ * A timestamp tag is produced at start() and after overflows.
+ *
+ * See the UHD manual for more detailed documentation:
+ * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+ *
+ * \param device_addr the address to identify the hardware
+ * \param io_type the desired output data type
+ * \param num_channels number of stream from the device
+ * \return a new USRP source block object
+ */
 GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,
