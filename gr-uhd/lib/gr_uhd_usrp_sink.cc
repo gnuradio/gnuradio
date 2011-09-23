@@ -191,7 +191,7 @@ public:
         //collect tags in this work()
         const uint64_t samp0_count = nitems_read(0);
         get_tags_in_range(_tags, 0, samp0_count, samp0_count + ninput_items);
-        if (not _tags.empty()) tag_work(ninput_items);
+        if (not _tags.empty()) this->tag_work(ninput_items);
 
         //send all ninput_items with metadata
         const size_t num_sent = _dev->get_device()->send(
@@ -214,7 +214,7 @@ public:
         //extract absolute sample counts
         const pmt::pmt_t &tag0 = _tags.front();
         const uint64_t tag0_count = gr_tags::get_nitems(tag0);
-        const uint64_t samp0_count = nitems_read(0);
+        const uint64_t samp0_count = this->nitems_read(0);
 
         //only transmit nsamples from 0 to the first tag
         //this ensures that the next work starts on a tag
@@ -229,6 +229,8 @@ public:
         //process all of the tags found with the same count as tag0
         BOOST_FOREACH(const pmt::pmt_t &my_tag, _tags){
             const uint64_t my_tag_count = gr_tags::get_nitems(my_tag);
+            const pmt::pmt_t &key = gr_tags::get_key(my_tag);
+            const pmt::pmt_t &value = gr_tags::get_value(my_tag);
 
             //determine how many samples to send...
             //from zero until the next tag or end of work
@@ -238,23 +240,23 @@ public:
             }
 
             //handle end of burst with a mini end of burst packet
-            else if (pmt::pmt_equal(gr_tags::get_key(my_tag), EOB_KEY)){
-                _metadata.end_of_burst = pmt::pmt_to_bool(my_tag);
+            else if (pmt::pmt_equal(key, EOB_KEY)){
+                _metadata.end_of_burst = pmt::pmt_to_bool(value);
                 ninput_items = 1;
                 return;
             }
 
             //set the start of burst flag in the metadata
-            else if (pmt::pmt_equal(gr_tags::get_key(my_tag), SOB_KEY)){
-                _metadata.start_of_burst = pmt::pmt_to_bool(my_tag);
+            else if (pmt::pmt_equal(key, SOB_KEY)){
+                _metadata.start_of_burst = pmt::pmt_to_bool(value);
             }
 
             //set the time specification in the metadata
-            else if (pmt::pmt_equal(gr_tags::get_key(my_tag), TIME_KEY)){
+            else if (pmt::pmt_equal(key, TIME_KEY)){
                 _metadata.has_time_spec = true;
                 _metadata.time_spec = uhd::time_spec_t(
-                    pmt::pmt_to_uint64(pmt_tuple_ref(my_tag, 0)),
-                    pmt::pmt_to_double(pmt_tuple_ref(my_tag, 1))
+                    pmt::pmt_to_uint64(pmt_tuple_ref(value, 0)),
+                    pmt::pmt_to_double(pmt_tuple_ref(value, 1))
                 );
             }
         }

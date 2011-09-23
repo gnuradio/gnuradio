@@ -34,7 +34,7 @@ class uhd_usrp_source;
  * The USRP source block receives samples and writes to a stream.
  * The source block also provides API calls for receiver settings.
  *
- * Stream tagging:
+ * RX Stream tagging:
  *
  * The following tag keys will be produced by the work function:
  *  - pmt::pmt_string_to_symbol("rx_time")

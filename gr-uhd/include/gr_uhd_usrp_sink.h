@@ -34,7 +34,7 @@ class uhd_usrp_sink;
  * The USRP sink block reads a stream and transmits the samples.
  * The sink block also provides API calls for transmitter settings.
  *
- * Stream tagging:
+ * TX Stream tagging:
  *
  * The following tag keys will be consumed by the work function:
  *  - pmt::pmt_string_to_symbol("tx_sob")
