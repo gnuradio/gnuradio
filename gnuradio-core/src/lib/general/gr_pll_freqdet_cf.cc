@@ -80,6 +80,8 @@ gr_pll_freqdet_cf::work (int noutput_items,
   int	size = noutput_items;
   
   while (size-- > 0) {
+    *optr++ = d_freq;
+
     error = phase_detector(*iptr++,d_phase);
     
     d_freq = d_freq + d_beta * error;
@@ -89,7 +91,6 @@ gr_pll_freqdet_cf::work (int noutput_items,
       d_freq = d_max_freq;
     else if (d_freq < d_min_freq)
       d_freq = d_min_freq;
-    *optr++ = d_freq;
   }
   return noutput_items;
 }
