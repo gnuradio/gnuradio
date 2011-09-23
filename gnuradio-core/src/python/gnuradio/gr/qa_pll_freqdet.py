@@ -31,8 +31,9 @@ class test_pll_freqdet (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test_pll_refout (self):
-        expected_result = (4.33888922882e-08,
+    def test_pll_freqdet (self):
+        expected_result = (0.0,
+                           4.33888922882e-08,
                            0.367369994515,
                            1.08135249597,
                            2.10983253908,
@@ -130,8 +131,7 @@ class test_pll_freqdet (gr_unittest.TestCase):
                            101.93218978,
                            101.824958181,
                            101.72159228,
-                           101.622151366,
-                           101.526623582)
+                           101.622151366)
 
         sampling_freq = 10e3
         freq = sampling_freq / 100
@@ -153,7 +153,7 @@ class test_pll_freqdet (gr_unittest.TestCase):
 
         # convert it from normalized frequency to absolute frequency (Hz)
         dst_data = [i*(sampling_freq/(2*math.pi)) for i in dst_data]
-
+            
         self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 3)
 
 if __name__ == '__main__':
