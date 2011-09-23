@@ -26,9 +26,14 @@ import math
 import sys
 import operator
 import numpy
-import scipy.linalg
 
 from gnuradio import trellis
+
+try:
+    import scipy.linalg
+except ImportError:
+    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.exit(1)
 
 
 

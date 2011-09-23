@@ -13,9 +13,14 @@ from gnuradio.gr import firdes
 from grc_gnuradio import blks2 as grc_blks2
 import math
 import numpy
-import scipy.stats
 import fsm_utils
 from gnuradio import trellis
+
+try:
+	import scipy.stats
+except ImportError:
+	print "Error: Program requires scipy (see: www.scipy.org)."
+	sys.exit(1)
 
 def run_test(seed,blocksize):
         tb = gr.top_block()
@@ -83,7 +88,7 @@ def run_test(seed,blocksize):
 	##################################################
 	# Blocks
 	##################################################
-	random_source_x_0 = gr.vector_source_b(data, False)
+	random_source_x_0 = gr.vector_source_b(data.tolist(), False)
 	gr_chunks_to_symbols_xx_0 = gr.chunks_to_symbols_bf((-1, 1), 1)
 	gr_interp_fir_filter_xxx_0 = gr.interp_fir_filter_fff(Q, p)
 	gr_frequency_modulator_fc_0 = gr.frequency_modulator_fc(2*math.pi*h*(1.0/Q))
@@ -96,9 +101,9 @@ def run_test(seed,blocksize):
         # only works for N=2, do it manually for N>2...
 	gr_fir_filter_xxx_0_0 = gr.fir_filter_ccc(Q, MF[0].conjugate())
 	gr_fir_filter_xxx_0_0_0 = gr.fir_filter_ccc(Q, MF[1].conjugate())
-	gr_streams_to_stream_0 = gr.streams_to_stream(gr.sizeof_gr_complex*1, N)
-	gr_skiphead_0 = gr.skiphead(gr.sizeof_gr_complex*1, N*(1+0))
-	viterbi = trellis.viterbi_combined_cb(f, head+blocksize+tail, 0, -1, N, constellation, trellis.TRELLIS_EUCLIDEAN)
+	gr_streams_to_stream_0 = gr.streams_to_stream(gr.sizeof_gr_complex*1, int(N))
+	gr_skiphead_0 = gr.skiphead(gr.sizeof_gr_complex*1, int(N*(1+0)))
+	viterbi = trellis.viterbi_combined_cb(f, head+blocksize+tail, 0, -1, int(N), constellation, trellis.TRELLIS_EUCLIDEAN)
 
         gr_vector_sink_x_0 = gr.vector_sink_b()
 
