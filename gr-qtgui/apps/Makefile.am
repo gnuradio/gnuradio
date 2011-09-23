@@ -30,8 +30,7 @@ nodist_bin_SCRIPTS =		\
 noinst_PYTHON = 		\
 	qt_digital.py		\
 	qt_digital_window.py    \
-	usrp2_display.py	\
-	usrp_display.py		\
+	uhd_display.py		\
 	qt_digital_window.py	\
 	usrp_display_qtgui.py
 
