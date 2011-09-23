@@ -78,13 +78,13 @@ gr_pll_freqdet_cf::work (int noutput_items,
   int	size = noutput_items;
   
   while (size-- > 0) {
+    *optr++ = d_freq;
+
     error = phase_detector(*iptr++,d_phase);
     
     advance_loop(error);
     phase_wrap();
     frequency_limit();
-
-    *optr++ = d_freq;
   }
   return noutput_items;
 }

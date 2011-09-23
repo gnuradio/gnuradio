@@ -80,14 +80,14 @@ gr_pll_refout_cc::work (int noutput_items,
   int	size = noutput_items;
   
   while (size-- > 0) {
+    gr_sincosf(d_phase,&t_imag,&t_real);
+    *optr++ = gr_complex(t_real,t_imag);
+
     error = phase_detector(*iptr++,d_phase);
     
     advance_loop(error);
     phase_wrap();
     frequency_limit();
-    
-    gr_sincosf(d_phase,&t_imag,&t_real);
-    *optr++ = gr_complex(t_real,t_imag);
   }
   return noutput_items;
 }
