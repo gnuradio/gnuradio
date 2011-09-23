@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2008-2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,22 +22,13 @@
 include $(top_srcdir)/Makefile.common
 
 if PYTHON
+ourdatadir = $(exampledir)/qt-gui
 
-nodist_bin_SCRIPTS =		\
-	qt_digital_window.ui 	\
-	usrp_display_qtgui.ui
-
-noinst_PYTHON = 		\
-	qt_digital.py		\
-	qt_digital_window.py    \
-	usrp2_display.py	\
-	usrp_display.py		\
-	qt_digital_window.py	\
-	usrp_display_qtgui.py
-
-EXTRA_DIST += 			\
-	qt_digital_window.ui 	\
-	usrp_display_qtgui.ui
+dist_ourdata_SCRIPTS =		\
+	pyqt_example_c.py	\
+	pyqt_example_f.py 	\
+	pyqt_time_c.py		\
+	pyqt_time_f.py
 endif
 
 EXTRA_DIST +=
