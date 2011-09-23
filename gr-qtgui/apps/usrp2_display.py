@@ -33,7 +33,7 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Please install gr-qtgui."
+    print "Error: Program requires PyQt4 and gr-qtgui."
     sys.exit(1)
 
 try:
