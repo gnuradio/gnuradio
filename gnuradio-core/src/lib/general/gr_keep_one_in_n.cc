@@ -40,6 +40,12 @@ gr_keep_one_in_n::gr_keep_one_in_n (size_t item_size, int n)
 	      gr_make_io_signature (1, 1, item_size)),
     d_count(n)
 {
+  // To avoid bad behavior with using set_relative_rate in this block with
+  // VERY large values of n, we will keep track of things ourselves. Using
+  // this to turn off automatic tag propagation, which will be handled
+  // locally in general_work().
+  set_tag_propagation_policy(TPP_DONT);
+  
   set_n(n);
 }
 
@@ -52,7 +58,10 @@ gr_keep_one_in_n::set_n(int n)
   d_n = n;
   d_count = n;
 
-  set_relative_rate(1.0 / (float)n);
+  // keep our internal understanding of the relative rate of this block
+  // don't set the relative rate, though, and we will handle our own
+  // tag propagation.
+  d_decim_rate = 1.0/(float)d_n;
 }
 
 int
@@ -78,6 +87,19 @@ gr_keep_one_in_n::general_work (int noutput_items,
     }
     in += item_size;
     ni++;
+  }
+
+  // Because we have set TPP_DONT, we have to propagate the tags here manually.
+  // Adjustment of the tag sample value is done using the float d_decim_rate.
+  std::vector<pmt::pmt_t> tags;
+  std::vector<pmt::pmt_t>::iterator t;
+  get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+ni);
+  for(t = tags.begin(); t != tags.end(); t++) {
+    uint64_t newcount = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*t, 0));
+    add_item_tag(0, newcount * d_decim_rate,
+		 pmt::pmt_tuple_ref(*t, 1),
+		 pmt::pmt_tuple_ref(*t, 2),
+		 pmt::pmt_tuple_ref(*t, 3));
   }
 
   consume_each (ni);
