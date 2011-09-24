@@ -43,6 +43,7 @@ class gr_keep_one_in_n : public gr_block
 
   int	d_n;
   int	d_count;
+  float d_decim_rate;
 
  protected:
   gr_keep_one_in_n (size_t item_size, int n);
