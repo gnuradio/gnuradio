@@ -21,11 +21,14 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = lib
-
 if PYTHON
-SUBDIRS += swig python apps grc examples
+ourdatadir = $(exampledir)/qt-gui
+
+dist_ourdata_SCRIPTS =		\
+	pyqt_example_c.py	\
+	pyqt_example_f.py 	\
+	pyqt_time_c.py		\
+	pyqt_time_f.py
 endif
 
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-qtgui.pc
+EXTRA_DIST +=

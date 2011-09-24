@@ -82,6 +82,9 @@ gr_pll_refout_cc::work (int noutput_items,
   int	size = noutput_items;
   
   while (size-- > 0) {
+    gr_sincosf(d_phase,&t_imag,&t_real);
+    *optr++ = gr_complex(t_real,t_imag);
+
     error = phase_detector(*iptr++,d_phase);
     
     d_freq = d_freq + d_beta * error;
@@ -91,8 +94,6 @@ gr_pll_refout_cc::work (int noutput_items,
       d_freq = d_max_freq;
     else if (d_freq < d_min_freq)
       d_freq = d_min_freq;
-    gr_sincosf(d_phase,&t_imag,&t_real);
-    *optr++ = gr_complex(t_real,t_imag);
   }
   return noutput_items;
 }

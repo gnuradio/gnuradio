@@ -99,6 +99,9 @@ gr_pll_carriertracking_cc::work (int noutput_items,
   float t_imag, t_real;
   
   for (int i = 0; i < noutput_items; i++){
+    gr_sincosf(d_phase,&t_imag,&t_real);
+    optr[i] = iptr[i] * gr_complex(t_real,-t_imag);
+
     error = phase_detector(iptr[i],d_phase);
     
     d_freq = d_freq + d_beta * error;
@@ -108,9 +111,8 @@ gr_pll_carriertracking_cc::work (int noutput_items,
       d_freq = d_max_freq;
     else if (d_freq < d_min_freq)
       d_freq = d_min_freq;
-    gr_sincosf(d_phase,&t_imag,&t_real);
-    optr[i] = iptr[i] * gr_complex(t_real,-t_imag);
-    d_locksig = d_locksig * (1.0 - d_alpha) + d_alpha*(iptr[i].real() * t_real + iptr[i].imag() * t_imag);
+    d_locksig = d_locksig * (1.0 - d_alpha) +
+      d_alpha*(iptr[i].real() * t_real + iptr[i].imag() * t_imag);
     
     if ((d_squelch_enable) && !lock_detector())
       optr[i] = 0;
