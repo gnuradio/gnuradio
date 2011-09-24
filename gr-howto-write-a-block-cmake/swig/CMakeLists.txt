@@ -26,6 +26,7 @@ IF(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
     RETURN()
 ENDIF()
 INCLUDE(GrSwig)
+INCLUDE(GrPython)
 
 ########################################################################
 # Setup swig generation
