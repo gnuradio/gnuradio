@@ -83,6 +83,7 @@ CPACK_COMPONENT("uhd_swig"
 ########################################################################
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
+ADD_SUBDIRECTORY(examples)
 IF(ENABLE_PYTHON)
     ADD_SUBDIRECTORY(swig)
     ADD_SUBDIRECTORY(grc)
