@@ -29,8 +29,9 @@ EXTRA_DIST += \
 	trellis.test
 
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES) \
-	-I$(abs_top_srcdir)/gr-digital/lib -I/home
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
+	$(GR_DIGITAL_INCLUDES) \
+	$(WITH_INCLUDES)
 
 # ----------------------------------------------------------------
 # these scripts generate trellis codes from template files
@@ -162,8 +163,7 @@ BUILT_SOURCES += $(python_built_sources)
 
 # Location of non-standard SWIG interface files
 trellis_swig_args =    \
-	-I$(top_srcdir)/gr-digital/lib \
-	-I$(top_srcdir)/gr-digital/swig
+	$(GR_DIGITAL_INCLUDES)
 
 if GUILE
 TESTS += run_guile_tests
