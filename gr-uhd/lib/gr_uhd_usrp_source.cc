@@ -229,7 +229,6 @@ public:
         case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
             _tag_now = true;
             //ignore overflows and try work again
-            //TODO insert tag for overflow
             return work(noutput_items, input_items, output_items);
 
         default:
