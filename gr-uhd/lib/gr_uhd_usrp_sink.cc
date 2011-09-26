@@ -184,8 +184,8 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        const int ninput_items = noutput_items; //cuz its a sync block
-
+        int ninput_items = noutput_items; //cuz its a sync block
+	
         //send a mid-burst packet with time spec
         _metadata.start_of_burst = false;
         _metadata.end_of_burst = false;
