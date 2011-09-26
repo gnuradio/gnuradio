@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS =  include hier lib
+SUBDIRS =  include lib
 
 if PYTHON
 SUBDIRS += swig python apps grc examples

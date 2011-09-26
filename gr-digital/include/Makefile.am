@@ -37,6 +37,8 @@ grinclude_HEADERS = 				\
 	digital_lms_dd_equalizer_cc.h		\
 	digital_kurtotic_equalizer_cc.h 	\
 	digital_metric_type.h			\
-	digital_mpsk_receiver_cc.h
+	digital_mpsk_receiver_cc.h		\
+	digital_gmskmod_bc.h 			\
+	digital_cpmmod_bc.h
 
 libgnuradio_digital_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)

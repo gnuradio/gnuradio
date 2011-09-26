@@ -40,10 +40,11 @@ libgnuradio_digital_la_SOURCES = 		\
 	digital_fll_band_edge_cc.cc		\
 	digital_lms_dd_equalizer_cc.cc		\
 	digital_kurtotic_equalizer_cc.cc	\
-	digital_mpsk_receiver_cc.cc
+	digital_mpsk_receiver_cc.cc		\
+	digital_gmskmod_bc.cc			\
+	digital_cpmmod_bc.cc
 
 libgnuradio_digital_la_LIBADD =	\
-	$(GNURADIO_CORE_LA)	\
-	$(abs_top_builddir)/gr-digital/hier/libdigital_hier.la
+	$(GNURADIO_CORE_LA)
 
 libgnuradio_digital_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)

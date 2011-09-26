@@ -38,9 +38,10 @@
 #include "digital_kurtotic_equalizer_cc.h"
 #include "digital_lms_dd_equalizer_cc.h"
 #include "digital_mpsk_receiver_cc.h"
+#include "digital_cpmmod_bc.h"
+#include "digital_gmskmod_bc.h"
 %}
 
-%include "digital_hier.i"
 %include "digital_binary_slicer_fb.i"
 %include "digital_clock_recovery_mm_cc.i"
 %include "digital_clock_recovery_mm_ff.i"
@@ -55,6 +56,8 @@
 %include "digital_kurtotic_equalizer_cc.i"
 %include "digital_lms_dd_equalizer_cc.i"
 %include "digital_mpsk_receiver_cc.i"
+%include "digital_cpmmod_bc.i"
+%include "digital_gmskmod_bc.i"
 
 #if SWIGGUILE
 %scheme %{
