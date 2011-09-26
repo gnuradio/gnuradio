@@ -21,7 +21,12 @@
 
 #include <gr_uhd_usrp_sink.h>
 #include <gr_io_signature.h>
+#include <gr_tag_info.h>
 #include <stdexcept>
+
+static const pmt::pmt_t SOB_KEY = pmt::pmt_string_to_symbol("tx_sob");
+static const pmt::pmt_t EOB_KEY = pmt::pmt_string_to_symbol("tx_eob");
+static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("tx_time");
 
 /***********************************************************************
  * UHD Multi USRP Sink Impl
@@ -39,8 +44,7 @@ public:
             gr_make_io_signature(0, 0, 0)
         ),
         _type(io_type),
-        _nchan(num_channels),
-        _has_time_spec(_nchan > 1)
+        _nchan(num_channels)
     {
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
@@ -180,13 +184,20 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
+        const int ninput_items = noutput_items; //cuz its a sync block
+
         //send a mid-burst packet with time spec
         _metadata.start_of_burst = false;
         _metadata.end_of_burst = false;
-        _metadata.has_time_spec = _has_time_spec;
 
-        size_t num_sent = _dev->get_device()->send(
-            input_items, noutput_items, _metadata,
+        //collect tags in this work()
+        const uint64_t samp0_count = nitems_read(0);
+        get_tags_in_range(_tags, 0, samp0_count, samp0_count + ninput_items);
+        if (not _tags.empty()) this->tag_work(ninput_items);
+
+        //send all ninput_items with metadata
+        const size_t num_sent = _dev->get_device()->send(
+            input_items, ninput_items, _metadata,
             _type, uhd::device::SEND_MODE_FULL_BUFF, 1.0
         );
 
@@ -195,12 +206,70 @@ public:
         return num_sent;
     }
 
+/***********************************************************************
+ * Tag Work
+ **********************************************************************/
+    inline void tag_work(int &ninput_items){
+        //the for loop below assumes tags sorted by count low -> high
+        std::sort(_tags.begin(), _tags.end(), gr_tags::nitems_compare);
+
+        //extract absolute sample counts
+        const pmt::pmt_t &tag0 = _tags.front();
+        const uint64_t tag0_count = gr_tags::get_nitems(tag0);
+        const uint64_t samp0_count = this->nitems_read(0);
+
+        //only transmit nsamples from 0 to the first tag
+        //this ensures that the next work starts on a tag
+        if (samp0_count != tag0_count){
+            ninput_items = tag0_count - samp0_count;
+            return;
+        }
+
+        //time will not be set unless a time tag is found
+        _metadata.has_time_spec = false;
+
+        //process all of the tags found with the same count as tag0
+        BOOST_FOREACH(const pmt::pmt_t &my_tag, _tags){
+            const uint64_t my_tag_count = gr_tags::get_nitems(my_tag);
+            const pmt::pmt_t &key = gr_tags::get_key(my_tag);
+            const pmt::pmt_t &value = gr_tags::get_value(my_tag);
+
+            //determine how many samples to send...
+            //from zero until the next tag or end of work
+            if (my_tag_count != tag0_count){
+                ninput_items = my_tag_count - samp0_count;
+                break;
+            }
+
+            //handle end of burst with a mini end of burst packet
+            else if (pmt::pmt_equal(key, EOB_KEY)){
+                _metadata.end_of_burst = pmt::pmt_to_bool(value);
+                ninput_items = 1;
+                return;
+            }
+
+            //set the start of burst flag in the metadata
+            else if (pmt::pmt_equal(key, SOB_KEY)){
+                _metadata.start_of_burst = pmt::pmt_to_bool(value);
+            }
+
+            //set the time specification in the metadata
+            else if (pmt::pmt_equal(key, TIME_KEY)){
+                _metadata.has_time_spec = true;
+                _metadata.time_spec = uhd::time_spec_t(
+                    pmt::pmt_to_uint64(pmt_tuple_ref(value, 0)),
+                    pmt::pmt_to_double(pmt_tuple_ref(value, 1))
+                );
+            }
+        }
+    }
+
     //Send an empty start-of-burst packet to begin streaming.
     //Set at a time in the near future to avoid late packets.
     bool start(void){
         _metadata.start_of_burst = true;
         _metadata.end_of_burst = false;
-        _metadata.has_time_spec = _has_time_spec;
+        _metadata.has_time_spec = _nchan > 1;
         _metadata.time_spec = get_time_now() + uhd::time_spec_t(0.01);
 
         _dev->get_device()->send(
@@ -224,13 +293,15 @@ public:
         return true;
     }
 
-protected:
+private:
     uhd::usrp::multi_usrp::sptr _dev;
     const uhd::io_type_t _type;
     size_t _nchan;
-    bool _has_time_spec;
     uhd::tx_metadata_t _metadata;
     double _sample_rate;
+
+    //stream tags related stuff
+    std::vector<pmt::pmt_t> _tags;
 };
 
 /***********************************************************************
