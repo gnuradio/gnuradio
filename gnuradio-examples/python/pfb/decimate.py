@@ -21,14 +21,21 @@
 # 
 
 from gnuradio import gr, blks2
-import os
-import scipy, pylab
-from scipy import fftpack
-from pylab import mlab
-import time
+import sys, time
 
-#print os.getpid()
-#raw_input()
+try:
+    import scipy
+    from scipy import fftpack
+except ImportError:
+    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.exit(1)
+
+try:
+    import pylab
+    from pylab import mlab
+except ImportError:
+    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.exit(1)
 
 class pfb_top_block(gr.top_block):
     def __init__(self):

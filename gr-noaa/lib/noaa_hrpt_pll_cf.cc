@@ -67,15 +67,16 @@ noaa_hrpt_pll_cf::work(int noutput_items,
 
   for (int i = 0; i < noutput_items; i++) {
 
+    // Generate and mix out carrier
+    float re, im;
+    gr_sincosf(d_phase, &im, &re);
+    out[i] = (in[i]*gr_complex(re, -im)).imag();
+
     // Adjust PLL phase/frequency
     float error = phase_wrap(gr_fast_atan2f(in[i].imag(), in[i].real()) - d_phase);
     d_freq  = gr_branchless_clip(d_freq + error*d_beta, d_max_offset);
     d_phase = phase_wrap(d_phase + error*d_alpha + d_freq);
 
-    // Generate and mix out carrier
-    float re, im;
-    gr_sincosf(d_phase, &im, &re);
-    out[i] = (in[i]*gr_complex(re, -im)).imag();
   }
 
   return noutput_items;
