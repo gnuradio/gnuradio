@@ -63,6 +63,11 @@ LIST(APPEND gnuradio_core_libs
     ${FFTW3F_LIBRARIES}
 )
 
+#need to link with librt on ubuntu 11.10 for shm_*
+IF(LINUX)
+    LIST(APPEND gnuradio_core_libs rt)
+ENDIF()
+
 ADD_LIBRARY(gnuradio-core SHARED ${gnuradio_core_sources})
 TARGET_LINK_LIBRARIES(gnuradio-core ${gnuradio_core_libs})
 SET_TARGET_PROPERTIES(gnuradio-core PROPERTIES DEFINE_SYMBOL "gnuradio_core_EXPORTS")
