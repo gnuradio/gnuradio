@@ -21,7 +21,19 @@
 # 
 
 from gnuradio import gr, blks2
-import scipy, pylab
+import sys 
+
+try:
+    import scipy
+except ImportError:
+    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.exit(1)
+
+try:
+    import pylab
+except ImportError:
+    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.exit(1)
 
 def main():
     N = 1000000

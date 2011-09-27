@@ -30,7 +30,7 @@
 class trellis_permutation;
 typedef boost::shared_ptr<trellis_permutation> trellis_permutation_sptr;
 
-trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT);
+trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t BYTES_PER_SYMBOL);
 
 /*!
  * \brief Permutation.
@@ -39,18 +39,18 @@ trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int>
 class trellis_permutation : public gr_sync_block
 {
 private:
-  friend trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT);
+  friend trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t BYTES_PER_SYMBOL);
   int d_K;
   std::vector<int> d_TABLE;
   int d_SYMS_PER_BLOCK;
-  size_t d_NBYTES_INOUT;
+  size_t d_BYTES_PER_SYMBOL;
   trellis_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES); 
 
 public:
   int K () const { return d_K; }
   const std::vector<int> & TABLE () const { return d_TABLE; }
   int SYMS_PER_BLOCK () const { return d_SYMS_PER_BLOCK; }
-  size_t NBYTES_INOUT () const { return d_NBYTES_INOUT; }
+  size_t BYTES_PER_SYMBOL () const { return d_BYTES_PER_SYMBOL; }
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,

@@ -28,13 +28,9 @@ nodist_bin_SCRIPTS =		\
 	usrp_display_qtgui.ui
 
 noinst_PYTHON = 		\
-	pyqt_example_f.py 	\
-	pyqt_example_c.py	\
-	pyqt_time_c.py		\
 	qt_digital.py		\
 	qt_digital_window.py    \
-	usrp2_display.py	\
-	usrp_display.py		\
+	uhd_display.py		\
 	qt_digital_window.py	\
 	usrp_display_qtgui.py
 

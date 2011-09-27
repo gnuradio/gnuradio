@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+#
+# Copyright 2011 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+-->
+
+<!--
+###################################################
+##CTCSS Squelch
+###################################################
+ -->
+<block>
+	<name>CTCSS Squelch</name>
+	<key>gr_ctcss_squelch_ff</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.ctcss_squelch_ff($rate, $freq, $level, $len, $ramp, $gate)</make>
+	<callback>set_level($level)</callback>
+	<param>
+		<name>Sampling Rate (Hz)</name>
+		<key>rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Tone Frequency</name>
+		<key>freq</key>
+		<value>100.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Level</name>
+		<key>level</key>
+		<value>0.01</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Length</name>
+		<key>len</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Ramp</name>
+		<key>ramp</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Gate</name>
+		<key>gate</key>
+		<value>False</value>
+		<type>bool</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>

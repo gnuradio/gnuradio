@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Trellis SISO Combined
+###################################################
+ -->
+
+
+<block>
+	<name>SISO Combo</name>
+	<key>trellis_siso_combined_f</key>
+	<category>Error Correction/Trellis</category>
+	<import>from gnuradio import trellis</import>
+	<make>trellis.siso_combined_f(trellis.fsm($fsm_args), $block_size, $init_state, $final_state, $a_post_in, $a_post_out, $siso_type, $dim, $table, $metric_type)</make>
+	<param>
+		<name>FSM Args</name>
+		<key>fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Block Size</name>
+		<key>block_size</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Initial State</name>
+		<key>init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Final State</name>
+		<key>final_state</key>
+		<value>-1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>A-posteriori In</name>
+		<key>a_post_in</key>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>A-posteriori Out</name>
+		<key>a_post_out</key>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>SISO Type</name>
+		<key>siso_type</key>
+		<type>enum</type>
+		<option>
+			<name>Min Sum</name>
+			<key>trellis.TRELLIS_MIN_SUM</key>
+		</option>
+		<option>
+			<name>Sum Product</name>
+			<key>trellis.TRELLIS_SUM_PRODUCT</key>
+		</option>
+	</param>
+	<param>
+		<name>Dimensionality</name>
+		<key>dim</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Constellation</name>
+		<key>table</key>
+		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Metric Type</name>
+		<key>metric_type</key>
+		<type>enum</type>
+		<option>
+			<name>Euclidean</name>
+			<key>trellis.TRELLIS_EUCLIDEAN</key>
+		</option>
+		<option>
+			<name>Hard Symbol</name>
+			<key>trellis.TRELLIS_HARD_SYMBOL</key>
+		</option>
+		<option>
+			<name>Hard Bit</name>
+			<key>trellis.TRELLIS_HARD_BIT</key>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+	<doc>
+BCJR Algorithm combined with metric calculation. \
+The fsm arguments are passed directly to the trellis.fsm() constructor.
+	</doc>
+</block>

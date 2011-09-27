@@ -33,7 +33,7 @@ gr_adaptive_fir_ccc::gr_adaptive_fir_ccc(const char *name, int decimation,
 		       gr_make_io_signature (1, 1, sizeof(gr_complex)),
 		       gr_make_io_signature (1, 1, sizeof(gr_complex)),
 		       decimation),
-    d_taps(taps), d_updated(false)
+    d_updated(false), d_taps(taps)
 {
   set_history(d_taps.size());
 }

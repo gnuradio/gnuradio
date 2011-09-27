@@ -77,9 +77,9 @@ noinst_LTLIBRARIES =
             if archflags_dict[arch] != "none":
                 tempstring += "-" + archflags_dict[arch] + " "
                 
-	tempstring += "\nnoinst_LTLIBRARIES += libvolk_" + machine_name + ".la "
+        tempstring += "\nnoinst_LTLIBRARIES += libvolk_" + machine_name + ".la "
         tempstring += "\nlibvolk_la_LIBADD += libvolk_" + machine_name + ".la\n"
-	tempstring += "libvolk_la_CPPFLAGS += -DLV_MACHINE_" + machine_name.swapcase() + " \n"
+        tempstring += "libvolk_la_CPPFLAGS += -DLV_MACHINE_" + machine_name.swapcase() + " \n"
         tempstring += "endif\n"
 
 

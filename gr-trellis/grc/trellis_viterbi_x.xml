@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Trellis Viterbi
+###################################################
+ -->
+
+
+<block>
+	<name>Viterbi</name>
+	<key>trellis_viterbi_x</key>
+	<category>Error Correction/Trellis</category>
+	<import>from gnuradio import trellis</import>
+	<make>trellis.viterbi_$(type)(trellis.fsm($fsm_args), $block_size, $init_state, $final_state)</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Int</name>
+			<key>i</key>
+			<opt>io:int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>s</key>
+			<opt>io:short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>b</key>
+			<opt>io:byte</opt>
+		</option>
+	</param>
+	<param>
+		<name>FSM Args</name>
+		<key>fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Block Size</name>
+		<key>block_size</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Initial State</name>
+		<key>init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Final State</name>
+		<key>final_state</key>
+		<value>-1</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.io</type>
+	</source>
+	<doc>
+Viterbi Decoder. \
+The fsm arguments are passed directly to the trellis.fsm() constructor.
+	</doc>
+</block>

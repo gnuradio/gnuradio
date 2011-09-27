@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##SCCC Encoder
+###################################################
+ -->
+
+<block>
+	<name>SCCC Encoder</name>
+	<key>trellis_sccc_encoder_xx</key>
+	<category>Error Correction/Trellis</category>
+	<import>from gnuradio import trellis</import>
+	<make>trellis.sccc_encoder_$(type)(trellis.fsm($o_fsm_args), $o_init_state, trellis.fsm($i_fsm_args), $i_init_state, trellis.interleaver($interleaver_args), $bl)</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Byte->Byte</name>
+			<key>bb</key>
+			<opt>input:byte</opt>
+			<opt>output:byte</opt>
+		</option>
+		<option>
+			<name>Byte->Short</name>
+			<key>bs</key>
+			<opt>input:byte</opt>
+			<opt>output:short</opt>
+		</option>
+		<option>
+			<name>Byte->Int</name>
+			<key>bi</key>
+			<opt>input:byte</opt>
+			<opt>output:int</opt>
+		</option>
+		<option>
+			<name>Short->Short</name>
+			<key>ss</key>
+			<opt>input:short</opt>
+			<opt>output:short</opt>
+		</option>
+		<option>
+			<name>Short->Int</name>
+			<key>si</key>
+			<opt>input:short</opt>
+			<opt>output:int</opt>
+		</option>
+		<option>
+			<name>Int->Int</name>
+			<key>ii</key>
+			<opt>input:int</opt>
+			<opt>output:int</opt>
+		</option>
+	</param>
+	<param>
+		<name>Outer FSM</name>
+		<key>o_fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Outer Initial State</name>
+		<key>o_init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Inner FSM</name>
+		<key>i_fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Inner Initial State</name>
+		<key>i_init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Interleaver</name>
+		<key>interleaver_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Blocklength</name>
+		<key>bl</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+	<doc>
+The fsm and interleaver arguments are passed directly to the trellis.fsm() and trellis.interleaver() constructors.
+	</doc>
+</block>

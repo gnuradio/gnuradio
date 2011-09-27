@@ -138,6 +138,7 @@
 #include <gr_annotator_1to1.h>
 #include <gr_burst_tagger.h>
 #include <gr_cpm.h>
+#include <gr_correlate_access_code_tag_bb.h>
 %}
 
 %include "gri_control_loop.i"
@@ -256,3 +257,4 @@
 %include "gr_annotator_1to1.i"
 %include "gr_burst_tagger.i"
 %include "gr_cpm.i"
+%include "gr_correlate_access_code_tag_bb.i"

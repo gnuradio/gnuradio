@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Trellis Permutation
+###################################################
+ -->
+
+
+<block>
+	<name>Trellis Permutation</name>
+	<key>trellis_permutation</key>
+	<category>Error Correction/Trellis</category>
+	<import>from gnuradio import trellis</import>
+	<make>trellis.permutation($interleaver_size, $table, $syms_per_block, $type.size*$vlen)</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>Interleaver Size</name>
+		<key>interleaver_size</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Table</name>
+		<key>table</key>
+		<type>int_vector</type>
+	</param>
+	<param>
+		<name>Symbols per Block</name>
+		<key>syms_per_block</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</source>
+        <doc>
+Interleaver size is given in blocks. 
+One Symbol = (in/out type) * (vector length) 
+        </doc>
+</block>

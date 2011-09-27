@@ -25,12 +25,12 @@ SUBDIRS = \
 	apps \
 	digital \
 	digital-bert \
-	digital_voice \
 	mp-sched \
 	multi-antenna \
 	multi_usrp \
 	network \
 	ofdm \
 	pfb \
+	tags \
 	usrp \
 	usrp2

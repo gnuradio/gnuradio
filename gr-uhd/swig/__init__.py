@@ -32,9 +32,13 @@ def _prepare_uhd_swig():
     #Make the python tune request object inherit from float
     #so that it can be passed in GRC as a frequency parameter.
     #The type checking in GRC will accept the tune request.
+    #Also use kwargs to construct individual struct elements.
     class tune_request_t(uhd_swig.tune_request_t, float):
-        def __new__(self, *args): return float.__new__(self)
+        def __new__(self, *args, **kwargs): return float.__new__(self)
         def __float__(self): return self.target_freq
+        def __init__(self, *args, **kwargs):
+            super(tune_request_t, self).__init__(*args)
+            for key, val in kwargs.iteritems(): setattr(self, key, val)
     setattr(uhd_swig, 'tune_request_t', tune_request_t)
 
     #Make the python tune request object inherit from string
@@ -60,7 +64,7 @@ def _prepare_uhd_swig():
         if attr.endswith('_t'): setattr(uhd_swig, attr[:-2], myobj)
 
     #Cast constructor args (FIXME swig handle overloads?)
-    for attr in ('usrp_source', 'usrp_sink'):
+    for attr in ('usrp_source', 'usrp_sink', 'amsg_source'):
         def constructor_factory(old_constructor):
             def constructor_interceptor(*args, **kwargs):
                 args = list(args)

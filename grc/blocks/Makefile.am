@@ -80,6 +80,7 @@ dist_ourdata_DATA = \
 	gr_conjugate_cc.xml \
 	gr_copy.xml \
 	gr_cpfsk_bc.xml \
+	gr_ctcss_squelch_ff.xml \
 	gr_dc_blocker.xml \
 	gr_cpmmod_bc.xml \
 	gr_decode_ccsds_27_fb.xml \
@@ -195,13 +196,6 @@ dist_ourdata_DATA = \
 	parameter.xml \
 	random_source_x.xml \
 	root_raised_cosine_filter.xml \
-	trellis_encoder_xx.xml \
-	trellis_metrics_x.xml \
-	trellis_permutation.xml \
-	trellis_siso_combined_f.xml \
-	trellis_siso_f.xml \
-	trellis_viterbi_combined_xx.xml \
-	trellis_viterbi_x.xml \
 	variable.xml \
 	variable_config.xml \
 	variable_function_probe.xml \

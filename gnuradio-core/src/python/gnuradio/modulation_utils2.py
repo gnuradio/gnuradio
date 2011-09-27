@@ -47,15 +47,6 @@ def type_1_demods():
 def add_type_1_demod(name, demod_class):
     _type_1_demodulators[name] = demod_class
 
-# Also record the constellation making functions of the modulations
-_type_1_constellations = {}
-
-def type_1_constellations():
-    return _type_1_constellations
-
-def add_type_1_constellation(name, constellation):
-    _type_1_constellations[name] = constellation
-
 
 def extract_kwargs_from_options(function, excluded_args, options):
     """
@@ -87,15 +78,4 @@ def extract_kwargs_from_options(function, excluded_args, options):
         if hasattr(options, kw):
             if getattr(options, kw) is not None:
                 d[kw] = getattr(options, kw)
-    return d
-
-def extract_kwargs_from_options_for_class(cls, options):
-    """
-    Given command line options, create dictionary suitable for passing to __init__
-    """
-    d = extract_kwargs_from_options(
-        cls.__init__, ('self',), options)
-    for base in cls.__bases__:
-        if hasattr(base, 'extract_kwargs_from_options'):
-            d.update(base.extract_kwargs_from_options(options))
     return d

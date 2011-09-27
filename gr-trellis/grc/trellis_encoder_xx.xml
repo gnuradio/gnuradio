@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Trellis Encoder
+###################################################
+ -->
+
+<block>
+	<name>Trellis Encoder</name>
+	<key>trellis_encoder_xx</key>
+	<category>Error Correction/Trellis</category>
+	<import>from gnuradio import trellis</import>
+	<make>trellis.encoder_$(type)(trellis.fsm($fsm_args), $init_state)</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Byte->Byte</name>
+			<key>bb</key>
+			<opt>input:byte</opt>
+			<opt>output:byte</opt>
+		</option>
+		<option>
+			<name>Byte->Short</name>
+			<key>bs</key>
+			<opt>input:byte</opt>
+			<opt>output:short</opt>
+		</option>
+		<option>
+			<name>Byte->Int</name>
+			<key>bi</key>
+			<opt>input:byte</opt>
+			<opt>output:int</opt>
+		</option>
+		<option>
+			<name>Short->Short</name>
+			<key>ss</key>
+			<opt>input:short</opt>
+			<opt>output:short</opt>
+		</option>
+		<option>
+			<name>Short->Int</name>
+			<key>si</key>
+			<opt>input:short</opt>
+			<opt>output:int</opt>
+		</option>
+		<option>
+			<name>Int->Int</name>
+			<key>ii</key>
+			<opt>input:int</opt>
+			<opt>output:int</opt>
+		</option>
+	</param>
+	<param>
+		<name>FSM Args</name>
+		<key>fsm_args</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Initial State</name>
+		<key>init_state</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+	<doc>
+The fsm arguments are passed directly to the trellis.fsm() constructor.
+	</doc>
+</block>

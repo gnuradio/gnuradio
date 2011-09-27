@@ -32,7 +32,6 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
    	gnuradio-examples/python/apps/hf_radio/Makefile \
    	gnuradio-examples/python/apps/Makefile \
    	gnuradio-examples/python/digital/Makefile \
-   	gnuradio-examples/python/digital_voice/Makefile \
 	gnuradio-examples/python/digital-bert/Makefile \
    	gnuradio-examples/python/mp-sched/Makefile \
    	gnuradio-examples/python/multi-antenna/Makefile \
@@ -40,6 +39,7 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
    	gnuradio-examples/python/network/Makefile \
    	gnuradio-examples/python/ofdm/Makefile \
    	gnuradio-examples/python/pfb/Makefile \
+   	gnuradio-examples/python/tags/Makefile \
    	gnuradio-examples/python/usrp/Makefile \
 	gnuradio-examples/python/usrp2/Makefile \
 	gnuradio-examples/waveforms/Makefile \
