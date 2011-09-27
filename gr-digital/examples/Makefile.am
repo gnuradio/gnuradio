@@ -31,6 +31,7 @@ noinst_PYTHON = 		\
 dist_ourdata_SCRIPTS = \
 	transmit_path.py	\
 	receive_path.py		\
+	uhd_interface.py	\
 	benchmark_tx.py		\
 	benchmark_rx.py		\
 	tx_voice.py		\

@@ -36,16 +36,15 @@ class transmit_path(gr.hier_block2):
         See below for what options should hold
         '''
 	gr.hier_block2.__init__(self, "transmit_path",
-				gr.io_signature(0, 0, 0),                    # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+				gr.io_signature(0,0,0),
+				gr.io_signature(1,1,gr.sizeof_gr_complex))
         
         options = copy.copy(options)    # make a copy so we can destructively modify
 
-        self._verbose            = options.verbose
-        self._tx_amplitude       = options.tx_amplitude    # digital amplitude sent to USRP
-        self._bitrate            = options.bitrate         # desired bit rate
-
-        self._modulator_class = modulator_class         # the modulator_class we are using
+        self._verbose      = options.verbose
+        self._tx_amplitude = options.tx_amplitude   # digital amplitude sent to USRP
+        self._bitrate      = options.bitrate        # desired bit rate
+        self._modulator_class = modulator_class     # the modulator_class we are using
 
         # Get mod_kwargs
         mod_kwargs = self._modulator_class.extract_kwargs_from_options(options)
@@ -103,7 +102,7 @@ class transmit_path(gr.hier_block2):
                           help="set transmitter digital amplitude: 0 <= AMPL < 1 [default=%default]")
         normal.add_option("-v", "--verbose", action="store_true", default=False)
 
-        expert.add_option("-S", "--samples-per-symbol", type="float", default=None,
+        expert.add_option("-S", "--samples-per-symbol", type="float", default=2,
                           help="set samples/symbol [default=%default]")
         expert.add_option("", "--log", action="store_true", default=False,
                           help="Log all parts of flow graph to file (CAUTION: lots of data)")

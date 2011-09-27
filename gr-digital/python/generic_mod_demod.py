@@ -112,7 +112,7 @@ class generic_mod(gr.hier_block2):
         self._differential = differential
 
         if self._samples_per_symbol < 2:
-            raise TypeError, ("sbp must be >= 2, is %d" % self._samples_per_symbol)
+            raise TypeError, ("sbp must be >= 2, is %f" % self._samples_per_symbol)
         
         arity = pow(2,self.bits_per_symbol())
         

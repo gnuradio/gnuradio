@@ -31,6 +31,7 @@ from gnuradio import digital
 
 # from current dir
 from transmit_path import transmit_path
+from uhd_interface import uhd_transmitter
 
 import random, time, struct, sys
 
@@ -42,12 +43,21 @@ class my_top_block(gr.top_block):
     def __init__(self, modulator, options):
         gr.top_block.__init__(self)
 
-        self.txpath = transmit_path(modulator, options)
-
-        if(options.to_file is not None):
+        if(options.tx_freq is not None):
+            self.sink = uhd_transmitter(options.address, options.bitrate,
+                                        options.samples_per_symbol,
+                                        options.tx_freq, options.tx_gain,
+                                        options.antenna, options.verbose)
+            options.samples_per_symbol = self.sink._sps
+            
+        elif(options.to_file is not None):
             self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
             self.sink = gr.null_sink(gr.sizeof_gr_complex)
+
+        # do this after for any adjustments to the options that may
+        # occur in the sinks (specifically the UHD sink)
+        self.txpath = transmit_path(modulator, options)
 
         self.connect(self.txpath, self.sink)
 
@@ -85,6 +95,7 @@ def main():
                       help="Output file for modulated samples")
 
     transmit_path.add_options(parser, expert_grp)
+    uhd_transmitter.add_options(parser)
 
     for mod in mods.values():
         mod.add_options(expert_grp)
@@ -94,13 +105,7 @@ def main():
     if len(args) != 0:
         parser.print_help()
         sys.exit(1)
-
-    if options.to_file is None:
-        if options.tx_freq is None:
-            sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
-            parser.print_help(sys.stderr)
-            sys.exit(1)
-
+           
     if options.from_file is not None:
         source_file = open(options.from_file, 'r')
 
