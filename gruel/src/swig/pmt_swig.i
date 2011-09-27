@@ -36,6 +36,24 @@
 using namespace pmt;
 %}
 
+////////////////////////////////////////////////////////////////////////
+// Language independent exception handler
+////////////////////////////////////////////////////////////////////////
+%include exception.i
+
+%exception {
+    try {
+        $action
+    }
+    catch(std::exception &e) {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+    catch(...) {
+        SWIG_exception(SWIG_RuntimeError, "Unknown exception");
+    }
+
+}
+
 // Template intrusive_ptr for Swig to avoid dereferencing issues
 class pmt_base;
 //%import <intrusive_ptr.i>
