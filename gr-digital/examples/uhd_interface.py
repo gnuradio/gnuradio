@@ -41,16 +41,18 @@ def add_freq_option(parser):
                           help="set Tx and/or Rx frequency to FREQ [default=%default]",
                           metavar="FREQ")
 
-class uhd_transmitter(gr.hier_block2):
-    def __init__(self, address, bitrate, sps, freq=None, gain=None,
-                 antenna=None, verbose=False):
-        gr.hier_block2.__init__(self, "uhd_transmitter",
-                                gr.io_signature(1,1,gr.sizeof_gr_complex),
-                                gr.io_signature(0,0,0))
-      
-        self.u = uhd.usrp_sink(device_addr=address,
-                               io_type=uhd.io_type.COMPLEX_FLOAT32,
-                               num_channels=1)
+class uhd_interface:
+    def __init__(self, istx, address, bitrate, sps, freq=None,
+                 gain=None, antenna=None):
+        
+        if(istx):
+            self.u = uhd.usrp_sink(device_addr=address,
+                                   io_type=uhd.io_type.COMPLEX_FLOAT32,
+                                   num_channels=1)
+        else:
+            self.u = uhd.usrp_source(device_addr=address,
+                                     io_type=uhd.io_type.COMPLEX_FLOAT32,
+                                     num_channels=1)
 
         self._addr = address
         self._ant  = antenna
@@ -62,11 +64,6 @@ class uhd_transmitter(gr.hier_block2):
         if(antenna):
             self.u.set_antenna(antenna, 0)
         
-        self.connect(self, self.u)
-
-        if(verbose):
-            self._print_verbage()
-
     def set_sample_rate(self, bitrate, req_sps):
         start_sps = req_sps
         while(True):
@@ -86,7 +83,6 @@ class uhd_transmitter(gr.hier_block2):
             print "Requested sps:       %f" % (start_sps)
             print "Given sample rate:   %f" % (actual_samp_rate)
             print "Actual sps for rate: %f" % (actual_sps)
-
 
         if(actual_samp_rate != asked_samp_rate):
             print "\nRequested sample rate: %f" % (asked_samp_rate)
@@ -119,6 +115,26 @@ class uhd_transmitter(gr.hier_block2):
             sys.stderr.write(("\nRequested frequency (%f) out or range [%f, %f]\n") % \
                                  (freq, frange.start(), frange.stop()))
             sys.exit(1)
+
+#-------------------------------------------------------------------#
+#   TRANSMITTER
+#-------------------------------------------------------------------#
+
+class uhd_transmitter(uhd_interface, gr.hier_block2):
+    def __init__(self, address, bitrate, sps, freq=None, gain=None,
+                 antenna=None, verbose=False):
+        gr.hier_block2.__init__(self, "uhd_transmitter",
+                                gr.io_signature(1,1,gr.sizeof_gr_complex),
+                                gr.io_signature(0,0,0))
+
+        # Set up the UHD interface as a transmitter
+        uhd_interface.__init__(self, True, address, bitrate, sps,
+                               freq, gain, antenna)
+
+        self.connect(self, self.u)
+
+        if(verbose):
+            self._print_verbage()
             
     def add_options(parser):
         add_freq_option(parser)
@@ -140,10 +156,60 @@ class uhd_transmitter(gr.hier_block2):
         """
         Prints information about the UHD transmitter
         """
-        print "RATE: ", self._rate
         print "\nUHD Transmitter:"
         print "Address:     %s"    % (self._addr)
         print "Freq:        %sHz"  % (eng_notation.num_to_str(self._freq))
         print "Gain:        %f dB" % (self._gain)
-        print "Samp;e Rate: %ssps" % (eng_notation.num_to_str(self._rate))
+        print "Sample Rate: %ssps" % (eng_notation.num_to_str(self._rate))
         print "Antenna:     %s"    % (self._ant)
+
+
+
+#-------------------------------------------------------------------#
+#   RECEIVER
+#-------------------------------------------------------------------#
+
+
+class uhd_receiver(uhd_interface, gr.hier_block2):
+    def __init__(self, address, bitrate, sps, freq=None, gain=None,
+                 antenna=None, verbose=False):
+        gr.hier_block2.__init__(self, "uhd_receiver",
+                                gr.io_signature(0,0,0),
+                                gr.io_signature(1,1,gr.sizeof_gr_complex))
+      
+        # Set up the UHD interface as a receiver
+        uhd_interface.__init__(self, False, address, bitrate, sps,
+                               freq, gain, antenna)
+
+        self.connect(self.u, self)
+
+        if(verbose):
+            self._print_verbage()
+
+    def add_options(parser):
+        add_freq_option(parser)
+        parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-A", "--antenna", type="string", default=None,
+                          help="select Rx Antenna where appropriate")
+        parser.add_option("", "--rx-freq", type="eng_float", default=None,
+                          help="set receive frequency to FREQ [default=%default]",
+                          metavar="FREQ")
+        parser.add_option("", "--rx-gain", type="eng_float", default=None,
+                          help="set receive gain in dB (default is midpoint)")
+        parser.add_option("-v", "--verbose", action="store_true", default=False)
+
+    # Make a static method to call before instantiation
+    add_options = staticmethod(add_options)
+
+    def _print_verbage(self):
+        """
+        Prints information about the UHD transmitter
+        """
+        print "\nUHD Receiver:"
+        print "Address:     %s"    % (self._addr)
+        print "Freq:        %sHz"  % (eng_notation.num_to_str(self._freq))
+        print "Gain:        %f dB" % (self._gain)
+        print "Sample Rate: %ssps" % (eng_notation.num_to_str(self._rate))
+        print "Antenna:     %s"    % (self._ant)
+
