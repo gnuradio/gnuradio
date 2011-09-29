@@ -42,7 +42,6 @@ noinst_GUILE  = digital.test
 ##############################
 # SWIG interface and library
 TOP_SWIG_IFILES = \
-	digital_hier.i \
 	digital_swig.i
 
 # Install so that they end up available as:
@@ -71,10 +70,9 @@ digital_swig_swiginclude_headers =		\
 	digital_fll_band_edge_cc.i		\
 	digital_lms_dd_equalizer_cc.i		\
 	digital_kurtotic_equalizer_cc.i		\
-	digital_mpsk_receiver_cc.i
-
-digital_hier_swig_args = \
-	$(GR_DIGITAL_INCLUDES)
+	digital_mpsk_receiver_cc.i		\
+	digital_gmskmod_bc.i			\
+	digital_cpmmod_bc.i
 
 digital_swig_swig_args = \
 	$(GR_DIGITAL_INCLUDES)

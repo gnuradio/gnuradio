@@ -32,8 +32,7 @@ GR_REGISTER_COMPONENT("gr-digital" ENABLE_GR_DIGITAL
 )
 
 GR_SET_GLOBAL(GR_DIGITAL_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/hier
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 GR_SET_GLOBAL(GR_DIGITAL_SWIG_INCLUDE_DIRS
@@ -82,7 +81,7 @@ CPACK_COMPONENT("digital_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-GR_INCLUDE_SUBDIRECTORY(hier) #appends to lib sources
+ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(lib)
 IF(ENABLE_PYTHON)
     ADD_SUBDIRECTORY(swig)

@@ -18,26 +18,27 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# This file included, use CMake directory variables
+# Install header files
 ########################################################################
-
-LIST(APPEND gr_digital_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/digital_gmskmod_bc.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/digital_cpmmod_bc.cc
-)
-
 INSTALL(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/digital_gmskmod_bc.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/digital_cpmmod_bc.h
+    digital_api.h
+    digital_binary_slicer_fb.h
+    digital_clock_recovery_mm_cc.h
+    digital_clock_recovery_mm_ff.h
+    digital_constellation.h
+    digital_constellation_receiver_cb.h
+    digital_constellation_decoder_cb.h
+    digital_correlate_access_code_bb.h
+    digital_costas_loop_cc.h
+    digital_cma_equalizer_cc.h
+    digital_crc32.h
+    digital_fll_band_edge_cc.h
+    digital_lms_dd_equalizer_cc.h
+    digital_kurtotic_equalizer_cc.h
+    digital_metric_type.h
+    digital_mpsk_receiver_cc.h
+    digital_gmskmod_bc.h
+    digital_cpmmod_bc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "digital_devel"
-)
-
-INSTALL(
-    FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/_digital_hier.i
-    ${CMAKE_CURRENT_SOURCE_DIR}/digital_gmskmod_bc.i
-    ${CMAKE_CURRENT_SOURCE_DIR}/digital_cpmmod_bc.i
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "digital_swig"
 )

@@ -46,6 +46,8 @@ LIST(APPEND gr_digital_sources
     digital_lms_dd_equalizer_cc.cc
     digital_kurtotic_equalizer_cc.cc
     digital_mpsk_receiver_cc.cc
+    digital_gmskmod_bc.cc
+    digital_cpmmod_bc.cc
 )
 
 LIST(APPEND digital_libs
@@ -62,28 +64,4 @@ INSTALL(TARGETS gnuradio-digital
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "digital_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "digital_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "digital_runtime" # .dll file
-)
-
-########################################################################
-# Install header files
-########################################################################
-INSTALL(FILES
-    digital_api.h
-    digital_binary_slicer_fb.h
-    digital_clock_recovery_mm_cc.h
-    digital_clock_recovery_mm_ff.h
-    digital_constellation.h
-    digital_constellation_receiver_cb.h
-    digital_constellation_decoder_cb.h
-    digital_correlate_access_code_bb.h
-    digital_costas_loop_cc.h
-    digital_cma_equalizer_cc.h
-    digital_crc32.h
-    digital_fll_band_edge_cc.h
-    digital_lms_dd_equalizer_cc.h
-    digital_kurtotic_equalizer_cc.h
-    digital_metric_type.h
-    digital_mpsk_receiver_cc.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "digital_devel"
 )

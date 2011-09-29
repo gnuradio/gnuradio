@@ -26,8 +26,7 @@ AC_DEFUN([GRC_GR_DIGITAL],[
     if test $passed != with; then
 	dnl how and where to find INCLUDES and LA and such
         gr_digital_INCLUDES="\
--I\${abs_top_srcdir}/gr-digital/lib \
--I\${abs_top_srcdir}/gr-digital/hier \
+-I\${abs_top_srcdir}/gr-digital/include \
 -I\${abs_top_srcdir}/gr-digital/swig"
         gr_digital_LA="\${abs_top_builddir}/gr-digital/lib/libgnuradio-core.la"
 	gr_digital_LIBDIRPATH="\${abs_top_builddir}/gr-digital/lib:\${abs_top_builddir}/gr-digital/lib/.libs"
@@ -44,8 +43,8 @@ AC_DEFUN([GRC_GR_DIGITAL],[
 	gr-digital/gnuradio-digital.pc \
 	gr-digital/apps/Makefile \
 	gr-digital/grc/Makefile \
+        gr-digital/include/Makefile \
         gr-digital/lib/Makefile \
-        gr-digital/hier/Makefile \
 	gr-digital/python/Makefile \
 	gr-digital/python/run_tests \
 	gr-digital/python/utils/Makefile \

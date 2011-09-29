@@ -30,7 +30,6 @@ SET(GR_SWIG_INCLUDE_DIRS
 
 SET(GR_SWIG_LIBRARIES gnuradio-digital)
 
-GR_SWIG_MAKE(digital_hier digital_hier.i)
 GR_SWIG_MAKE(digital_swig digital_swig.i)
 
 GR_SWIG_INSTALL(
@@ -55,6 +54,8 @@ INSTALL(
     digital_lms_dd_equalizer_cc.i
     digital_kurtotic_equalizer_cc.i
     digital_mpsk_receiver_cc.i
+    digital_gmskmod_bc.i
+    digital_cpmmod_bc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "digital_swig"
 )

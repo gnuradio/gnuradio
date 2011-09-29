@@ -28,5 +28,6 @@ from qpsk import *
 from qam import *
 from gmsk import *
 from pkt import *
-from packet_utils import *
 from crc import *
+from packet_utils import *
+from modulation_utils2 import *

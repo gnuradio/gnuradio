@@ -21,7 +21,6 @@
 # 
 
 from gnuradio import gr, gru
-from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -31,6 +30,7 @@ from gnuradio import digital
 
 # from current dir
 from receive_path import receive_path
+from uhd_interface import uhd_receiver
 
 import random
 import struct
@@ -44,17 +44,24 @@ class my_top_block(gr.top_block):
     def __init__(self, demodulator, rx_callback, options):
         gr.top_block.__init__(self)
 
+        if(options.tx_freq is not None):
+            self.source = uhd_receiver(options.address, options.bitrate,
+                                       options.samples_per_symbol,
+                                       options.rx_freq, options.rx_gain,
+                                       options.antenna, options.verbose)
+            options.samples_per_symbol = self.source._sps
+
+        elif(options.from_file is not None):
+            self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+        else:
+            self.source = gr.null_source(gr.sizeof_gr_complex)
+
         # Set up receive path
+        # do this after for any adjustments to the options that may
+        # occur in the sinks (specifically the UHD sink)
         self.rxpath = receive_path(demodulator, rx_callback, options) 
 
-        if(options.from_file is not None):
-            self.thr = gr.throttle(gr.sizeof_gr_complex, 1e6)
-            self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
-            self.connect(self.source, self.thr, self.rxpath)
-        else:
-            self.thr = gr.throttle(gr.sizeof_gr_complex, 1e6)
-            self.source = gr.null_source(gr.sizeof_gr_complex)
-            self.connect(self.source, self.thr, self.rxpath)
+        self.connect(self.source, self.rxpath)
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -93,6 +100,7 @@ def main():
                       help="input file of samples to demod")
 
     receive_path.add_options(parser, expert_grp)
+    uhd_receiver.add_options(parser)
 
     for mod in demods.values():
         mod.add_options(expert_grp)

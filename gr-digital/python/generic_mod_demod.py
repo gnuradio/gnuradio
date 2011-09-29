@@ -55,12 +55,12 @@ def add_common_options(parser):
     """
     parser.add_option("-p", "--constellation-points", type="int", default=_def_constellation_points,
                       help="set the number of constellation points (must be a power of 2 for psk, power of 4 for QAM) [default=%default]")
-    parser.add_option("", "--non-differential", action="store_true",
-                      dest="differential", default=False,
-                      help="do not use differential encoding [default=%default]")
-    parser.add_option("", "--differential", action="store_false",
-                      dest="differential", 
-                      help="use differential encoding [default=False]")
+    parser.add_option("", "--non-differential", action="store_false",
+                      dest="differential",
+                      help="do not use differential encoding [default=False]")
+    parser.add_option("", "--differential", action="store_true",
+                      dest="differential", default=True,
+                      help="use differential encoding [default=%default]")
     parser.add_option("", "--mod-code", type="choice", choices=mod_codes.codes,
                       default=mod_codes.NO_CODE,
                       help="Select modulation code from: %s [default=%%default]"
@@ -112,7 +112,7 @@ class generic_mod(gr.hier_block2):
         self._differential = differential
 
         if self._samples_per_symbol < 2:
-            raise TypeError, ("sbp must be >= 2, is %d" % self._samples_per_symbol)
+            raise TypeError, ("sbp must be >= 2, is %f" % self._samples_per_symbol)
         
         arity = pow(2,self.bits_per_symbol())
         
