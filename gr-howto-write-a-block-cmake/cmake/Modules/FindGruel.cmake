@@ -1,11 +1,11 @@
 INCLUDE(FindPkgConfig)
-PKG_CHECK_MODULES(GRUEL gnuradio-core)
-IF(NOT GRUEL_FOUND)
+PKG_CHECK_MODULES(PC_GRUEL gnuradio-core QUIET)
 
 FIND_PATH(
     GRUEL_INCLUDE_DIRS
     NAMES gruel/attributes.h
     HINTS $ENV{GRUEL_DIR}/include
+        ${PC_GRUEL_INCLUDE_DIRS}
     PATHS /usr/local/include
           /usr/include
 )
@@ -14,6 +14,7 @@ FIND_LIBRARY(
     GRUEL_LIBRARIES
     NAMES gruel
     HINTS $ENV{GRUEL_DIR}/lib
+        ${PC_GRUEL_LIBRARIES}
     PATHS /usr/local/lib
           /usr/local/lib64
           /usr/lib
@@ -22,5 +23,4 @@ FIND_LIBRARY(
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GRUEL DEFAULT_MSG GRUEL_LIBRARIES GRUEL_INCLUDE_DIRS)
-
-ENDIF(NOT GRUEL_FOUND)
+MARK_AS_ADVANCED(GRUEL_LIBRARIES GRUEL_INCLUDE_DIRS)

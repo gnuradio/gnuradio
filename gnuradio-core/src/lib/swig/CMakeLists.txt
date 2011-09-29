@@ -42,15 +42,41 @@ SET(GR_SWIG_LIBRARIES gnuradio-core)
 # smaller pieces for the compiler to digest.  prior to this change, on
 # X86_64, g++'s resident set size was 650MB!
 # ----------------------------------------------------------------
+FILE(GLOB GR_SWIG_SOURCE_DEPS
+    "${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/runtime/*.i"
+    "${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/runtime/*.h"
+)
 GR_SWIG_MAKE(gnuradio_core_runtime gnuradio_core_runtime.i)
+UNSET(GR_SWIG_SOURCE_DEPS)
+
+FILE(GLOB GR_SWIG_SOURCE_DEPS
+    "${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/general/*.i"
+    "${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/general/*.h"
+)
 GR_SWIG_MAKE(gnuradio_core_general gnuradio_core_general.i)
+UNSET(GR_SWIG_SOURCE_DEPS)
+
 SET(GR_SWIG_TARGET_DEPS gengen_generated)
 GR_SWIG_MAKE(gnuradio_core_gengen gnuradio_core_gengen.i)
+UNSET(GR_SWIG_TARGET_DEPS)
+
 SET(GR_SWIG_TARGET_DEPS filter_generated)
 GR_SWIG_MAKE(gnuradio_core_filter gnuradio_core_filter.i)
 UNSET(GR_SWIG_TARGET_DEPS)
+
+FILE(GLOB GR_SWIG_SOURCE_DEPS
+    "${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/io/*.i"
+    "${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/io/*.h"
+)
 GR_SWIG_MAKE(gnuradio_core_io gnuradio_core_io.i)
+UNSET(GR_SWIG_SOURCE_DEPS)
+
+FILE(GLOB GR_SWIG_SOURCE_DEPS
+    "${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/hier/*.i"
+    "${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/hier/*.h"
+)
 GR_SWIG_MAKE(gnuradio_core_hier gnuradio_core_hier.i)
+UNSET(GR_SWIG_SOURCE_DEPS)
 
 GR_SWIG_INSTALL(TARGETS
     gnuradio_core_runtime

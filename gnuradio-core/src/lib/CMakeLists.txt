@@ -46,7 +46,7 @@ INCLUDE_DIRECTORIES(${GNURADIO_CORE_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
-ADD_DEFINITIONS(-DGSL_DLL) #needed for gsl windows port but safe to always define
+ADD_DEFINITIONS(${GSL_DEFINITIONS})
 INCLUDE_DIRECTORIES(${GSL_INCLUDE_DIRS})
 LINK_DIRECTORIES(${GSL_LIBRARY_DIRS})
 
@@ -62,6 +62,11 @@ LIST(APPEND gnuradio_core_libs
     ${GSL_LIBRARIES}
     ${FFTW3F_LIBRARIES}
 )
+
+#need to link with librt on ubuntu 11.10 for shm_*
+IF(LINUX)
+    LIST(APPEND gnuradio_core_libs rt)
+ENDIF()
 
 ADD_LIBRARY(gnuradio-core SHARED ${gnuradio_core_sources})
 TARGET_LINK_LIBRARIES(gnuradio-core ${gnuradio_core_libs})

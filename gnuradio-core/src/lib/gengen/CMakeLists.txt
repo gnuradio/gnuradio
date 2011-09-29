@@ -22,146 +22,119 @@
 ########################################################################
 
 ########################################################################
-# Generate the makefile.gen, then extract its sources:
-# This is a round-about way to extract the sources,
-# but it requires minimum changed to the python utils.
-#
-# The recommended way to do this:
-#   - Make a generation macro that registers the sources command.
-#   - List the generation macro with each templated source file.
-#   - Create a python script (very generic) to perform generation.
-#   - This way the targets would depend only on their sources.
+# generate the python helper script which calls into the build utils
 ########################################################################
-EXECUTE_PROCESS(
-    COMMAND ${PYTHON_EXECUTABLE} -c "
-import os, sys
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
+#!${PYTHON_EXECUTABLE}
+
+import sys, os, re
 sys.path.append('${GR_CORE_PYTHONPATH}')
-sys.path.append('${CMAKE_CURRENT_SOURCE_DIR}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
-os.environ['gendir'] = '${CMAKE_CURRENT_BINARY_DIR}'
-os.environ['do_makefile'] = '1'
-os.environ['do_sources'] = '0'
-from generate_all import generate_all
-generate_all()
-    " WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-)
+os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
-MACRO(GEGEN_GEN_EXTRACT outvar ext)
-    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "import os; print ';'.join(
-        map(lambda x: os.path.join('${CMAKE_CURRENT_BINARY_DIR}', x.replace('\\\\', '').strip()),
-        filter(lambda f: '${ext}' in f, open('${CMAKE_CURRENT_BINARY_DIR}/Makefile.gen').readlines()
-    )))" OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE ${outvar})
-    FILE(TO_CMAKE_PATH "${${outvar}}" ${outvar})
-ENDMACRO(GEGEN_GEN_EXTRACT)
+if __name__ == '__main__':
+    import build_utils
+    root, inp = sys.argv[1:3]
+    for sig in sys.argv[3:]:
+        name = re.sub ('X+', sig, root)
+        d = build_utils.standard_dict(name, sig)
+        build_utils.expand_template(d, inp)
 
-GEGEN_GEN_EXTRACT(generated_gengen_sources ".cc")
-GEGEN_GEN_EXTRACT(generated_gengen_includes ".h")
-GEGEN_GEN_EXTRACT(generated_gengen_swigs ".i")
+")
 
-#TODO simplify this list with a triple-threat for loop
-SET(generated_gengen_deps
-    ${CMAKE_CURRENT_SOURCE_DIR}/generate_all.py
-    ${CMAKE_CURRENT_SOURCE_DIR}/generate_common.py
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_const_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_const_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_const_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_const_vXX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_const_vXX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_add_const_vXX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_argmax_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_argmax_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_argmax_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_chunks_to_symbols_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_chunks_to_symbols_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_chunks_to_symbols_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_divide_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_divide_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_divide_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_integrate_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_integrate_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_integrate_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_max_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_max_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_max_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_const_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_const_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_const_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_const_vXX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_const_vXX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_multiply_const_vXX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_mute_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_mute_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_mute_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_noise_source_X.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_noise_source_X.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_noise_source_X.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_packed_to_unpacked_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_packed_to_unpacked_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_packed_to_unpacked_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_peak_detector_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_peak_detector_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_peak_detector_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sample_and_hold_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sample_and_hold_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sample_and_hold_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sig_source_X.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sig_source_X.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sig_source_X.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sub_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sub_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sub_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_unpacked_to_packed_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_unpacked_to_packed_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_unpacked_to_packed_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_vector_source_X.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_vector_source_X.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_vector_source_X.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_vector_sink_X.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_vector_sink_X.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_vector_sink_X.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_xor_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_xor_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_xor_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_and_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_and_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_and_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_and_const_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_and_const_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_and_const_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_or_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_or_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_or_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_not_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_not_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_not_XX.i.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_moving_average_XX.cc.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_moving_average_XX.h.t
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_moving_average_XX.i.t
-)
+########################################################################
+# generation helper macro to generate various files from template
+########################################################################
+MACRO(expand_h_cc_i root)
 
-ADD_CUSTOM_COMMAND(
-    OUTPUT
-        ${generated_gengen_sources}
-        ${generated_gengen_includes}
-        ${generated_gengen_swigs}
-    DEPENDS ${generated_gengen_deps}
-    COMMAND ${PYTHON_EXECUTABLE} -B -c
-    \"import os, sys\;sys.path.append('${GR_CORE_PYTHONPATH}')\;sys.path.append('${CMAKE_CURRENT_SOURCE_DIR}')\;os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'\;from generate_all import generate_all\;generate_all()\"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "generating gengen files"
-)
+    FOREACH(ext h cc i)
+        #make a list of all the generated files
+        UNSET(expanded_files_${ext})
+        FOREACH(sig ${ARGN})
+            STRING(REGEX REPLACE "X+" ${sig} name ${root})
+            LIST(APPEND expanded_files_${ext} ${CMAKE_CURRENT_BINARY_DIR}/${name}.${ext})
+        ENDFOREACH(sig)
+
+        #create a command to generate the files
+        ADD_CUSTOM_COMMAND(
+            OUTPUT ${expanded_files_${ext}}
+            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.${ext}.t
+            COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+                ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+                ${root} ${root}.${ext}.t ${ARGN}
+        )
+    ENDFOREACH(ext)
+
+    #make source files depends on headers to force generation
+    SET_SOURCE_FILES_PROPERTIES(${expanded_files_cc}
+        PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
+    )
+
+    #install rules for the generated cc, h, and i files
+    LIST(APPEND generated_gengen_sources ${expanded_files_cc})
+    LIST(APPEND generated_gengen_includes ${expanded_files_h})
+    LIST(APPEND generated_gengen_swigs ${expanded_files_i})
+
+ENDMACRO(expand_h_cc_i)
+
+########################################################################
+# Invoke macro to generate various sources
+########################################################################
+expand_h_cc_i(gr_vector_source_X   b s i f c)
+expand_h_cc_i(gr_vector_sink_X     b s i f c)
+expand_h_cc_i(gr_noise_source_X      s i f c)
+expand_h_cc_i(gr_sig_source_X        s i f c)
+
+expand_h_cc_i(gr_add_const_XX           ss ii ff cc sf)
+expand_h_cc_i(gr_multiply_const_XX      ss ii ff cc)
+expand_h_cc_i(gr_add_XX                 ss ii ff cc)
+expand_h_cc_i(gr_sub_XX                 ss ii ff cc)
+expand_h_cc_i(gr_multiply_XX            ss ii ff cc)
+expand_h_cc_i(gr_divide_XX              ss ii ff cc)
+expand_h_cc_i(gr_mute_XX                ss ii ff cc)
+expand_h_cc_i(gr_add_const_vXX          ss ii ff cc)
+expand_h_cc_i(gr_multiply_const_vXX     ss ii ff cc)
+expand_h_cc_i(gr_integrate_XX           ss ii ff cc)
+expand_h_cc_i(gr_moving_average_XX      ss ii ff cc)
+
+expand_h_cc_i(gr_chunks_to_symbols_XX         bf bc sf sc if ic)
+expand_h_cc_i(gr_unpacked_to_packed_XX        bb ss ii)
+expand_h_cc_i(gr_packed_to_unpacked_XX        bb ss ii)
+expand_h_cc_i(gr_xor_XX                       bb ss ii)
+expand_h_cc_i(gr_and_XX                       bb ss ii)
+expand_h_cc_i(gr_and_const_XX                 bb ss ii)
+expand_h_cc_i(gr_or_XX                        bb ss ii)
+expand_h_cc_i(gr_not_XX                       bb ss ii)
+expand_h_cc_i(gr_sample_and_hold_XX           bb ss ii ff)
+expand_h_cc_i(gr_argmax_XX                    fs is ss)
+expand_h_cc_i(gr_max_XX                       ff ii ss)
+expand_h_cc_i(gr_peak_detector_XX             fb ib sb)
 
 ADD_CUSTOM_TARGET(gengen_generated DEPENDS
-    ${generated_gengen_sources}
     ${generated_gengen_includes}
     ${generated_gengen_swigs}
 )
+
+########################################################################
+# Create the master gengen swig include files
+########################################################################
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "
+//
+// This file is machine generated.  All edits will be overwritten
+//
+")
+
+FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%{\n")
+FOREACH(swig_file ${generated_gengen_swigs})
+    GET_FILENAME_COMPONENT(name ${swig_file} NAME_WE)
+    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "#include<${name}.h>\n")
+ENDFOREACH(swig_file)
+FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%}\n")
+
+FOREACH(swig_file ${generated_gengen_swigs})
+    GET_FILENAME_COMPONENT(name ${swig_file} NAME)
+    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i "%include<${name}>\n")
+ENDFOREACH(swig_file)
 
 ########################################################################
 # Handle the generated sources + a few non-generated ones

@@ -33,7 +33,6 @@ SET(__INCLUDED_GR_TEST_CMAKE TRUE)
 ########################################################################
 FUNCTION(GR_ADD_TEST test_name)
 
-    IF(WIN32)
         #Ensure that the build exe also appears in the PATH.
         LIST(APPEND GR_TEST_TARGET_DEPS ${ARGN})
 
@@ -50,6 +49,7 @@ FUNCTION(GR_ADD_TEST test_name)
             ENDIF(location)
         ENDFOREACH(target)
 
+    IF(WIN32)
         #SWIG generates the python library files into a subdirectory.
         #Therefore, we must append this subdirectory into PYTHONPATH.
         #Only do this for the python directories matching the following:
@@ -74,15 +74,19 @@ FUNCTION(GR_ADD_TEST test_name)
     #SET_TESTS_PROPERTIES(${test_name} PROPERTIES ENVIRONMENT "${environs}")
 
     IF(UNIX)
+        SET(LD_PATH_VAR "LD_LIBRARY_PATH")
+        IF(APPLE)
+            SET(LD_PATH_VAR "DYLD_LIBRARY_PATH")
+        ENDIF()
+
         SET(binpath "${CMAKE_CURRENT_BINARY_DIR}:$PATH")
-        #set both LD and DYLD paths to cover multiple UNIX OS library paths
-        LIST(APPEND libpath "$LD_LIBRARY_PATH" "$DYLD_LIBRARY_PATH")
+        LIST(APPEND libpath "$${LD_PATH_VAR}")
         LIST(APPEND pypath "$PYTHONPATH")
 
         #replace list separator with the path separator
         STRING(REPLACE ";" ":" libpath "${libpath}")
         STRING(REPLACE ";" ":" pypath "${pypath}")
-        LIST(APPEND environs "PATH=${binpath}" "LD_LIBRARY_PATH=${libpath}" "DYLD_LIBRARY_PATH=${libpath}" "PYTHONPATH=${pypath}")
+        LIST(APPEND environs "PATH=${binpath}" "${LD_PATH_VAR}=${libpath}" "PYTHONPATH=${pypath}")
 
         #generate a bat file that sets the environment and runs the test
         FIND_PROGRAM(SHELL sh)

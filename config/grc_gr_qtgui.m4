@@ -83,6 +83,7 @@ AC_DEFUN([GRC_GR_QTGUI],[
         gr-qtgui/Makefile \
 	gr-qtgui/gnuradio-qtgui.pc \
         gr-qtgui/apps/Makefile \
+        gr-qtgui/examples/Makefile \
         gr-qtgui/grc/Makefile \
         gr-qtgui/lib/Makefile \
         gr-qtgui/python/Makefile \

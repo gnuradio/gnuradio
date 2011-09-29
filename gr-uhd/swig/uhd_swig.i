@@ -55,6 +55,7 @@
 %{
 #include <gr_uhd_usrp_source.h>
 #include <gr_uhd_usrp_sink.h>
+#include <gr_uhd_amsg_source.h>
 %}
 
 ////////////////////////////////////////////////////////////////////////
@@ -113,6 +114,9 @@ GR_SWIG_BLOCK_MAGIC(uhd,usrp_source)
 
 GR_SWIG_BLOCK_MAGIC(uhd,usrp_sink)
 %include <gr_uhd_usrp_sink.h>
+
+GR_SWIG_BLOCK_MAGIC(uhd,amsg_source)
+%include <gr_uhd_amsg_source.h>
 
 ////////////////////////////////////////////////////////////////////////
 // helpful constants

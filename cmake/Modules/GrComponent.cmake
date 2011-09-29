@@ -25,6 +25,13 @@ SET(__INCLUDED_GR_COMPONENT_CMAKE TRUE)
 SET(_gr_enabled_components "" CACHE INTERNAL "" FORCE)
 SET(_gr_disabled_components "" CACHE INTERNAL "" FORCE)
 
+IF(NOT DEFINED ENABLE_DEFAULT)
+    SET(ENABLE_DEFAULT ON)
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "The build system will automatically enable all components.")
+    MESSAGE(STATUS "Use -DENABLE_DEFAULT=OFF to disable components by default.")
+ENDIF()
+
 ########################################################################
 # Register a component into the system
 # - name: canonical component name
@@ -40,7 +47,7 @@ FUNCTION(GR_REGISTER_COMPONENT name var)
     ENDFOREACH(dep)
 
     #setup the dependent option for this component
-    CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ON "${ARGN}" OFF)
+    CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ${ENABLE_DEFAULT} "${ARGN}" OFF)
     SET(${var}_ "${${var}}" CACHE INTERNAL "" FORCE)
 
     #append the component into one of the lists

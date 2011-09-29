@@ -30,9 +30,9 @@ SET_TARGET_PROPERTIES(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EX
 # Install built library files
 ########################################################################
 INSTALL(TARGETS gnuradio-howto
-    LIBRARY DESTINATION ${LIB_SUFFIX}/lib # .so/.dylib file
-    ARCHIVE DESTINATION ${LIB_SUFFIX}/lib # .lib file
-    RUNTIME DESTINATION bin               # .dll file
+    LIBRARY DESTINATION lib${LIB_SUFFIX} # .so/.dylib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
+    RUNTIME DESTINATION bin              # .dll file
 )
 
 ########################################################################

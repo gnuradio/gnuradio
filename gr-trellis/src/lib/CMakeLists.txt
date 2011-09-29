@@ -30,92 +30,96 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 ########################################################################
-# Generate the makefile.gen, then extract its sources:
-# This is a round-about way to extract the sources,
-# but it requires minimum changed to the python utils.
-#
-# The recommended way to do this:
-#   - Make a generation macro that registers the sources command.
-#   - List the generation macro with each templated source file.
-#   - Create a python script (very generic) to perform generation.
-#   - This way the targets would depend only on their sources.
+# generate the python helper script which calls into the build utils
 ########################################################################
-EXECUTE_PROCESS(
-    COMMAND ${PYTHON_EXECUTABLE} -c "
-import os, sys
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
+#!${PYTHON_EXECUTABLE}
+
+import sys, os, re
 sys.path.append('${GR_CORE_PYTHONPATH}')
 sys.path.append('${CMAKE_CURRENT_SOURCE_DIR}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
-os.environ['gendir'] = '${CMAKE_CURRENT_BINARY_DIR}'
-os.environ['do_makefile'] = '1'
-os.environ['do_sources'] = '0'
-from generate_all import generate_all
-generate_all()
-    " WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-)
+os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
-MACRO(GEGEN_GEN_EXTRACT outvar ext)
-    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "import os; print ';'.join(
-        map(lambda x: os.path.join('${CMAKE_CURRENT_BINARY_DIR}', x.replace('\\\\', '').strip()),
-        filter(lambda f: '${ext}' in f, open('${CMAKE_CURRENT_BINARY_DIR}/Makefile.gen').readlines()
-    )))" OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE ${outvar})
-    FILE(TO_CMAKE_PATH "${${outvar}}" ${outvar})
-ENDMACRO(GEGEN_GEN_EXTRACT)
+if __name__ == '__main__':
+    import build_utils, generate_trellis
+    root, inp = sys.argv[1:3]
+    for sig in sys.argv[3:]:
+        name = re.sub ('X+', sig, root)
+        d = generate_trellis.standard_dict(name, sig)
+        build_utils.expand_template(d, inp)
 
-GEGEN_GEN_EXTRACT(generated_trellis_sources ".cc")
-GEGEN_GEN_EXTRACT(generated_trellis_includes ".h")
-GEGEN_GEN_EXTRACT(generated_trellis_swigs ".i")
+")
 
-#TODO simplify this list with a triple-threat for loop
-SET(generated_trellis_deps
-    generate_all.py
-    generate_trellis.py
-    trellis_encoder_XX.cc.t
-    trellis_encoder_XX.h.t
-    trellis_encoder_XX.i.t
-    trellis_sccc_encoder_XX.cc.t
-    trellis_sccc_encoder_XX.h.t
-    trellis_sccc_encoder_XX.i.t
-    trellis_pccc_encoder_XX.cc.t
-    trellis_pccc_encoder_XX.h.t
-    trellis_pccc_encoder_XX.i.t
-    trellis_metrics_X.cc.t
-    trellis_metrics_X.h.t
-    trellis_metrics_X.i.t
-    trellis_viterbi_combined_XX.cc.t
-    trellis_viterbi_combined_XX.h.t
-    trellis_viterbi_combined_XX.i.t
-    trellis_sccc_decoder_combined_XX.cc.t
-    trellis_sccc_decoder_combined_XX.h.t
-    trellis_sccc_decoder_combined_XX.i.t
-    trellis_sccc_decoder_X.cc.t
-    trellis_sccc_decoder_X.h.t
-    trellis_sccc_decoder_X.i.t
-    trellis_pccc_decoder_X.cc.t
-    trellis_pccc_decoder_X.h.t
-    trellis_pccc_decoder_X.i.t
-    trellis_viterbi_X.cc.t
-    trellis_viterbi_X.h.t
-    trellis_viterbi_X.i.t
-)
+########################################################################
+# generation helper macro to generate various files from template
+########################################################################
+MACRO(expand_h_cc_i root)
 
-ADD_CUSTOM_COMMAND(
-    OUTPUT
-        ${generated_trellis_sources}
-        ${generated_trellis_includes}
-        ${generated_trellis_swigs}
-    DEPENDS ${generated_trellis_deps}
-    COMMAND ${PYTHON_EXECUTABLE} -B -c
-    \"import os, sys\;sys.path.append('${GR_CORE_PYTHONPATH}')\;sys.path.append('${CMAKE_CURRENT_SOURCE_DIR}')\;os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'\;from generate_all import generate_all\;generate_all()\"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "generating trellis files"
-)
+    FOREACH(ext h cc i)
+        #make a list of all the generated files
+        UNSET(expanded_files_${ext})
+        FOREACH(sig ${ARGN})
+            STRING(REGEX REPLACE "X+" ${sig} name ${root})
+            LIST(APPEND expanded_files_${ext} ${CMAKE_CURRENT_BINARY_DIR}/${name}.${ext})
+        ENDFOREACH(sig)
 
-ADD_CUSTOM_TARGET(trellis_generated DEPENDS
-    ${generated_trellis_sources}
-    ${generated_trellis_includes}
-    ${generated_trellis_swigs}
-)
+        #create a command to generate the files
+        ADD_CUSTOM_COMMAND(
+            OUTPUT ${expanded_files_${ext}}
+            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.${ext}.t
+            COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+                ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+                ${root} ${root}.${ext}.t ${ARGN}
+        )
+    ENDFOREACH(ext)
+
+    #make source files depends on headers to force generation
+    SET_SOURCE_FILES_PROPERTIES(${expanded_files_cc}
+        PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
+    )
+
+    #install rules for the generated cc, h, and i files
+    LIST(APPEND generated_trellis_sources ${expanded_files_cc})
+    LIST(APPEND generated_trellis_includes ${expanded_files_h})
+    LIST(APPEND generated_trellis_swigs ${expanded_files_i})
+
+ENDMACRO(expand_h_cc_i)
+
+########################################################################
+# Invoke macro to generate various sources
+########################################################################
+expand_h_cc_i(trellis_encoder_XX                 bb bs bi ss si ii)
+expand_h_cc_i(trellis_sccc_encoder_XX            bb bs bi ss si ii)
+expand_h_cc_i(trellis_pccc_encoder_XX            bb bs bi ss si ii)
+expand_h_cc_i(trellis_metrics_X                  s i f c)
+expand_h_cc_i(trellis_viterbi_X                  b s i)
+expand_h_cc_i(trellis_viterbi_combined_XX        sb ss si ib is ii fb fs fi cb cs ci)
+expand_h_cc_i(trellis_sccc_decoder_X             b s i)
+expand_h_cc_i(trellis_sccc_decoder_combined_XX   fb fs fi cb cs ci)
+expand_h_cc_i(trellis_pccc_decoder_X             b s i)
+expand_h_cc_i(trellis_pccc_decoder_combined_XX   fb fs fi cb cs ci)
+
+########################################################################
+# Create the master trellis swig include files
+########################################################################
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "
+//
+// This file is machine generated.  All edits will be overwritten
+//
+")
+
+FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "%{\n")
+FOREACH(swig_file ${generated_trellis_swigs})
+    GET_FILENAME_COMPONENT(name ${swig_file} NAME_WE)
+    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "#include<${name}.h>\n")
+ENDFOREACH(swig_file)
+FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "%}\n")
+
+FOREACH(swig_file ${generated_trellis_swigs})
+    GET_FILENAME_COMPONENT(name ${swig_file} NAME)
+    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "%include<${name}>\n")
+ENDFOREACH(swig_file)
 
 ########################################################################
 # Setup library
@@ -198,9 +202,14 @@ SET(GR_SWIG_INCLUDE_DIRS
 )
 
 SET(GR_SWIG_LIBRARIES gnuradio-trellis)
-
-SET(GR_SWIG_TARGET_DEPS trellis_generated)
-
+FILE(GLOB GR_SWIG_SOURCE_DEPS
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.i"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
+)
+LIST(APPEND GR_SWIG_SOURCE_DEPS
+    ${generated_trellis_swigs}
+    ${generated_trellis_includes}
+)
 GR_SWIG_MAKE(trellis trellis.i)
 
 GR_SWIG_INSTALL(

@@ -1,9 +1,35 @@
 #!/usr/bin/env python
+#
+# Copyright 2011 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 from gnuradio import gr
-from gnuradio import qtgui
-from PyQt4 import QtGui, QtCore
-import sys, sip
+import sys
+
+try:
+    from gnuradio import qtgui
+    from PyQt4 import QtGui, QtCore
+    import sip
+except ImportError:
+    print "Error: Program requires PyQt4 and gr-qtgui."
+    sys.exit(1)
 
 class dialog_box(QtGui.QWidget):
     def __init__(self, display, control):
@@ -106,26 +132,29 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
 
         Rs = 8000
-        f1 = 1000
-        f2 = 2000
+        f1 = 100
+        f2 = 200
 
-        fftsize = 2048
+        npts = 2048
 
         self.qapp = QtGui.QApplication(sys.argv)
         
-        src1 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
-        src2 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
-        src  = gr.add_cc()
-        channel = gr.channel_model(0.001)
-        thr = gr.throttle(gr.sizeof_gr_complex, 100*fftsize)
-        self.snk1 = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                 0, Rs,
-                                 "Complex Signal Example",
-                                 True, True, True, False)
+        src1 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
+        src2 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
+        src  = gr.add_ff()
+        thr = gr.throttle(gr.sizeof_float, 100*npts)
+        noise = gr.noise_source_f(gr.GR_GAUSSIAN, 0.001)
+        add = gr.add_ff()
+        self.snk1 = qtgui.time_sink_f(npts, Rs,
+                                      "Complex Time Example", 3)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
-        self.connect(src,  channel, thr, self.snk1)
+        self.connect(src, thr, (add,0))
+        self.connect(noise, (add,1))
+        self.connect(add, self.snk1)
+        self.connect(src1, (self.snk1, 1))
+        self.connect(src2, (self.snk1, 2))
 
         self.ctrl_win = control_box()
         self.ctrl_win.attach_signal1(src1)
@@ -138,8 +167,18 @@ class my_top_block(gr.top_block):
         # This can now be manipulated as a PyQt4.QtGui.QWidget
         pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
 
-        self.main_box = dialog_box(pyWin, self.ctrl_win)
+        # Example of using signal/slot to set the title of a curve
+        pyWin.connect(pyWin, QtCore.SIGNAL("setTitle(int, QString)"),
+                      pyWin, QtCore.SLOT("setTitle(int, QString)"))
+        pyWin.emit(QtCore.SIGNAL("setTitle(int, QString)"), 0, "sum")
+        self.snk1.set_title(1, "src1")
+        self.snk1.set_title(2, "src2")
 
+        # Can also set the color of a curve
+        #self.snk1.set_color(5, "blue")
+
+        #pyWin.show()
+        self.main_box = dialog_box(pyWin, self.ctrl_win)
         self.main_box.show()
         
 if __name__ == "__main__":

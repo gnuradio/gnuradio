@@ -31,8 +31,13 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Generate viterbi mux source
+# http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
 ########################################################################
-ADD_EXECUTABLE(atsci_viterbi_gen atsci_viterbi_gen.cc)
+IF(NOT CMAKE_CROSSCOMPILING)
+    ADD_EXECUTABLE(atsci_viterbi_gen atsci_viterbi_gen.cc)
+    EXPORT(TARGETS atsci_viterbi_gen APPEND FILE ${EXPORT_FILE})
+ENDIF()
+
 
 SET(atsci_viterbi_mux_cc ${CMAKE_CURRENT_BINARY_DIR}/atsci_viterbi_mux.cc)
 

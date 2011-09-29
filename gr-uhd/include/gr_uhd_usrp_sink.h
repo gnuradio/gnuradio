@@ -28,6 +28,33 @@
 
 class uhd_usrp_sink;
 
+/*!
+ * \brief Make a new USRP sink block.
+ *
+ * The USRP sink block reads a stream and transmits the samples.
+ * The sink block also provides API calls for transmitter settings.
+ *
+ * TX Stream tagging:
+ *
+ * The following tag keys will be consumed by the work function:
+ *  - pmt::pmt_string_to_symbol("tx_sob")
+ *  - pmt::pmt_string_to_symbol("tx_eob")
+ *  - pmt::pmt_string_to_symbol("tx_time")
+ *
+ * The sob and eob (start and end of burst) tag values are pmt booleans.
+ * When present, burst tags should be set to true (pmt::PMT_T).
+ *
+ * The timstamp tag value is a pmt tuple of the following:
+ * (uint64 seconds, and double fractional seconds).
+ *
+ * See the UHD manual for more detailed documentation:
+ * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+ *
+ * \param device_addr the address to identify the hardware
+ * \param io_type the desired input data type
+ * \param num_channels number of stream from the device
+ * \return a new USRP sink block object
+ */
 GR_UHD_API boost::shared_ptr<uhd_usrp_sink> uhd_make_usrp_sink(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,

@@ -101,6 +101,7 @@ IF(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
         "-framework AudioUnit"
         "-framework CoreAudio"
         "-framework AudioToolbox"
+        "-framework Carbon"
     )
     LIST(APPEND gr_audio_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/osx/audio_osx_source.cc

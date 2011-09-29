@@ -145,6 +145,7 @@
 		<block>gr_simple_squelch_cc</block>
 		<block>blks2_standard_squelch</block>
 		<block>gr_pwr_squelch_xx</block>
+		<block>gr_ctcss_squelch_ff</block>
 		<block>gr_threshold_ff</block>
 	</cat>
 	<cat>
@@ -222,13 +223,6 @@
 		<name>Error Correction</name>
 		<cat>
 			<name>Trellis</name>
-			<block>trellis_encoder_xx</block>
-			<block>trellis_metrics_x</block>
-			<block>trellis_permutation</block>
-			<block>trellis_siso_combined_f</block>
-			<block>trellis_siso_f</block>
-			<block>trellis_viterbi_combined_xx</block>
-			<block>trellis_viterbi_x</block>
 		</cat>
 
 		<block>gr_encode_ccsds_27_bb</block>

@@ -1,34 +1,36 @@
 # http://www.cmake.org/pipermail/cmake/2006-October/011446.html
+# Modified to use pkg config and use standard var names
+
 #
 # Find the CppUnit includes and library
 #
 # This module defines
-# CPPUNIT_INCLUDE_DIRS, where to find tiff.h, etc.
+# CPPUNIT_INCLUDE_DIR, where to find tiff.h, etc.
 # CPPUNIT_LIBRARIES, the libraries to link against to use CppUnit.
 # CPPUNIT_FOUND, If false, do not try to use CppUnit.
 
 INCLUDE(FindPkgConfig)
-PKG_CHECK_MODULES(CPPUNIT "cppunit")
-LIST(APPEND CPPUNIT_LIBRARIES ${CMAKE_DL_LIBS})
-IF(NOT CPPUNIT_FOUND)
+PKG_CHECK_MODULES(PC_CPPUNIT "cppunit" QUIET)
 
-FIND_PATH(CPPUNIT_INCLUDE_DIRS cppunit/TestCase.h
-  /usr/local/include
-  /usr/include
+FIND_PATH(CPPUNIT_INCLUDE_DIRS
+    NAMES cppunit/TestCase.h
+    HINTS ${PC_CPPUNIT_INCLUDE_DIRS}
+    PATHS
+    /usr/local/include
+    /usr/include
 )
 
-FIND_LIBRARY(CPPUNIT_LIBRARIES cppunit
-           ${CPPUNIT_INCLUDE_DIRS}/../lib
-           /usr/local/lib
-           /usr/lib)
+FIND_LIBRARY(CPPUNIT_LIBRARIES
+    NAMES cppunit
+    HINTS ${PC_CPPUNIT_LIBRARIES}
+    PATHS
+    ${CPPUNIT_INCLUDE_DIRS}/../lib
+    /usr/local/lib
+    /usr/lib
+)
 
-IF(CPPUNIT_INCLUDE_DIRS)
-  IF(CPPUNIT_LIBRARIES)
-    SET(CPPUNIT_FOUND "YES")
-    SET(CPPUNIT_LIBRARIES ${CPPUNIT_LIBRARIES} ${CMAKE_DL_LIBS})
-  ENDIF(CPPUNIT_LIBRARIES)
-ENDIF(CPPUNIT_INCLUDE_DIRS)
+LIST(APPEND CPPUNIT_LIBRARIES ${CMAKE_DL_LIBS})
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(CPPUNIT DEFAULT_MSG CPPUNIT_LIBRARIES CPPUNIT_INCLUDE_DIRS)
-ENDIF(NOT CPPUNIT_FOUND)
+MARK_AS_ADVANCED(CPPUNIT_LIBRARIES CPPUNIT_INCLUDE_DIRS)

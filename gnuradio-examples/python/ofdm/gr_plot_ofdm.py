@@ -20,13 +20,23 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import scipy, pylab, math
-import struct, sys
-from pylab import *
-from matplotlib.font_manager import fontManager, FontProperties
+import math, struct, sys
 from optparse import OptionParser
-from scipy import fftpack
 from math import log10
+
+try:
+    import scipy
+    from scipy import fftpack
+except ImportError:
+    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.exit(1)
+
+try:
+    from pylab import *
+    from matplotlib.font_manager import fontManager, FontProperties
+except ImportError:
+    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.exit(1)
 
 matplotlib.interactive(True)
 matplotlib.use('TkAgg')

@@ -39,6 +39,7 @@ ADD_CUSTOM_TARGET(uhd_grc_xml_blocks ALL DEPENDS ${xml_blocks})
 
 INSTALL(FILES
     ${xml_blocks}
+    uhd_amsg_source.xml
     uhd_block_tree.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "uhd_python"

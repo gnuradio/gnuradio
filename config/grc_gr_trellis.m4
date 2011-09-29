@@ -28,6 +28,7 @@ AC_DEFUN([GRC_GR_TRELLIS],[
         gr-trellis/Makefile \
 	gr-trellis/gnuradio-trellis.pc \
         gr-trellis/doc/Makefile \
+        gr-trellis/grc/Makefile \
         gr-trellis/src/Makefile \
         gr-trellis/src/lib/Makefile \
         gr-trellis/src/lib/run_guile_tests \

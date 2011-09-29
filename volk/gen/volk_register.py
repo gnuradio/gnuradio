@@ -3,6 +3,7 @@
 import sys
 import os
 import re
+import glob
 import string
 from xml.dom import minidom
 from volk_regexp import *
@@ -48,18 +49,13 @@ outfile_environment_h = open(os.path.join(gendir, "lib/volk_environment_init.h")
 outfile_makefile_am = open(os.path.join(gendir, "lib/Makefile.am"), "w")
 outfile_machines_h = open(os.path.join(gendir, "lib/volk_machines.h"), "w")
 outfile_machines_c = open(os.path.join(gendir, "lib/volk_machines.c"), "w")
-infile = open(os.path.join(srcdir, "include/volk/Makefile.am"), "r")
-
-
-mfile = infile.readlines();
+hdr_files = glob.glob(os.path.join(srcdir, "include/volk/*.h"))
 
 datatypes = [];
 functions = [];
 
-
-
-for line in mfile:
-    subline = re.search(".*_(a|u)\.h.*", line);
+for line in hdr_files:
+    subline = re.search(".*_(a|u)\.h.*", os.path.basename(line))
     if subline:
         subsubline = re.search("(?<=volk_).*", subline.group(0));
         if subsubline:
@@ -71,7 +67,7 @@ for line in mfile:
 
 datatypes = set(datatypes);
 
-for line in mfile:
+for line in hdr_files:
     for dt in datatypes:
         if dt in line:
             subline = re.search("(volk_" + dt +"_.*(a|u).*\.h)", line);
