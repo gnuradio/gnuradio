@@ -22,6 +22,8 @@ IF(DEFINED __INCLUDED_GR_SWIG_CMAKE)
 ENDIF()
 SET(__INCLUDED_GR_SWIG_CMAKE TRUE)
 
+INCLUDE(GrPython)
+
 ########################################################################
 # Build a swig target for the common gnuradio use case. Usage:
 # GR_SWIG_MAKE(target ifile ifile ifile...)
@@ -36,8 +38,18 @@ SET(__INCLUDED_GR_SWIG_CMAKE TRUE)
 MACRO(GR_SWIG_MAKE name)
     SET(ifiles ${ARGN})
 
+    #determine include dependencies for swig file
+    EXECUTE_PROCESS(
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/get_swig_deps.py
+        "${ifiles}" "${GR_SWIG_INCLUDE_DIRS}"
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_VARIABLE SWIG_MODULE_${name}_EXTRA_DEPS
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
+    #append the specified include directories
     INCLUDE_DIRECTORIES(${GR_SWIG_INCLUDE_DIRS})
-    SET(SWIG_MODULE_${name}_EXTRA_DEPS ${GR_SWIG_SOURCE_DEPS})
+    LIST(APPEND SWIG_MODULE_${name}_EXTRA_DEPS ${GR_SWIG_SOURCE_DEPS})
 
     FIND_PACKAGE(PythonLibs)
     INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
@@ -88,3 +100,35 @@ MACRO(GR_SWIG_INSTALL)
     ENDFOREACH(name)
 
 ENDMACRO(GR_SWIG_INSTALL)
+
+########################################################################
+# Generate a python file that can determine swig dependencies
+########################################################################
+FILE(WRITE ${CMAKE_BINARY_DIR}/get_swig_deps.py "
+
+import os, sys, re
+
+include_matcher = re.compile('(#|%)include\\s*(<(.*)>|\"(.*)\")')
+include_dirs = sys.argv[2].split(';')
+
+def get_swig_incs(file_path):
+    for line in open(file_path, 'r').readlines():
+        m = include_matcher.match(line)
+        if not m: continue
+        yield m.groups()[2] or m.groups()[3]
+
+def get_swig_deps(file_path, level):
+    deps = list()
+    for inc_file in get_swig_incs(file_path):
+        for inc_dir in include_dirs:
+            inc_path = os.path.join(inc_dir, inc_file)
+            if not os.path.exists(inc_path): continue
+            deps.append(inc_path)
+            if level > 1: deps.extend(get_swig_deps(inc_path, level-1))
+    return deps
+
+if __name__ == '__main__':
+    ifiles = sys.argv[1].split(';')
+    deps = sum([get_swig_deps(ifile, 3) for ifile in ifiles], [])
+    print(';'.join(set(deps)))
+")

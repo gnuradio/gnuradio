@@ -200,16 +200,7 @@ SET(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GR_DIGITAL_SWIG_INCLUDE_DIRS}
 )
-
 SET(GR_SWIG_LIBRARIES gnuradio-trellis)
-FILE(GLOB GR_SWIG_SOURCE_DEPS
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.i"
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
-)
-LIST(APPEND GR_SWIG_SOURCE_DEPS
-    ${generated_trellis_swigs}
-    ${generated_trellis_includes}
-)
 GR_SWIG_MAKE(trellis trellis.i)
 
 GR_SWIG_INSTALL(
