@@ -187,7 +187,8 @@ gr_pfb_clock_sync_ccf::get_beta() const
   return d_beta;
 }
 
-float get_clock_rate() const
+float
+gr_pfb_clock_sync_ccf::get_clock_rate() const
 {
   return d_rate_f;
 }
