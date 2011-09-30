@@ -97,7 +97,7 @@ def get_options(mods):
                             % (', '.join(mods.keys()),))
     parser.add_option("", "--amplitude", type="eng_float", default=0.2,
                       help="set Tx amplitude (0-1) (default=%default)")
-    parser.add_option("-r", "--rate", type="eng_float", default=250e3,
+    parser.add_option("-r", "--symbol-rate", type="eng_float", default=250e3,
                       help="Select modulation symbol rate (default=%default)")
     parser.add_option("-S", "--samples-per-symbol", type="float", default=2,
                       help="set samples/symbol [default=%default]")
