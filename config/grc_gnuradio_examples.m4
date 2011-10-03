@@ -28,9 +28,6 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
         gnuradio-examples/Makefile \
 	gnuradio-examples/python/Makefile \
 	gnuradio-examples/grc/Makefile \
-	gnuradio-examples/python/apps/hf_explorer/Makefile \
-   	gnuradio-examples/python/apps/hf_radio/Makefile \
-   	gnuradio-examples/python/apps/Makefile \
    	gnuradio-examples/python/digital/Makefile \
 	gnuradio-examples/python/digital-bert/Makefile \
    	gnuradio-examples/python/mp-sched/Makefile \

@@ -22,7 +22,6 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = \
-	apps \
 	digital \
 	digital-bert \
 	mp-sched \
