@@ -13,16 +13,17 @@
 # They were generated using Scilab which I am already familiar with.
 # M. Revnell Jan 06
 
-from gnuradio import gr, gru
-from gnuradio import audio
-from gnuradio import usrp
+from gnuradio import gr
 
-class ssb_demod( gr.hier_block ):
-    def __init__( self, fg, if_rate, af_rate ):
+class ssb_demod( gr.hier_block2 ):
+    def __init__( self, if_rate, af_rate ):
+        gr.hier_block2.__init__(self, "ssb_demod",
+                                gr.io_signature(1,1,gr.sizeof_gr_complex),
+                                gr.io_signature(1,1,gr.sizeof_float))
 
-        self.if_rate  = if_rate
-        self.af_rate  = af_rate
-        self.if_decim = if_rate / af_rate
+        self.if_rate  = int(if_rate)
+        self.af_rate  = int(af_rate)
+        self.if_decim = int(if_rate / af_rate)
         self.sideband = 1
 
         self.xlate_taps = ([complex(v) for v in file('ssb_taps').readlines()])
@@ -51,17 +52,17 @@ class ssb_demod( gr.hier_block ):
         self.mixer  = gr.add_ff()
         self.am_det = gr.complex_to_mag()
                 
-        fg.connect(   self.xlate,       self.split      )
-        fg.connect( ( self.split,0 ), ( self.sum,0    ) )
-        fg.connect( ( self.split,1 ), ( self.sum,1    ) )
-        fg.connect(    self.sum,        self.sb_sel     )
-        fg.connect(    self.xlate,      self.am_det     )
-        fg.connect(    self.sb_sel,   ( self.mixer, 0 ) )
-        fg.connect(    self.am_det,     self.am_sel     )
-        fg.connect(    self.am_sel,   ( self.mixer, 1 ) )
-        fg.connect(    self.mixer,      self.lpf        )
-        
-        gr.hier_block.__init__( self, fg, self.xlate, self.lpf )
+        self.connect(self,             self.xlate)
+        self.connect(self.xlate,       self.split)
+        self.connect((self.split, 0), (self.sum, 0))
+        self.connect((self.split, 1), (self.sum, 1))
+        self.connect(self.sum,         self.sb_sel)
+        self.connect(self.xlate,       self.am_det)
+        self.connect(self.sb_sel,     (self.mixer, 0))
+        self.connect(self.am_det,      self.am_sel)
+        self.connect(self.am_sel,     (self.mixer, 1))
+        self.connect(self.mixer,       self.lpf)
+        self.connect(self.lpf,         self)
 
     def upper_sb( self ):
         self.xlate.set_taps([v.conjugate() for v in self.xlate_taps])    

@@ -5,42 +5,54 @@
 #
 # M. Revnell 2005-Dec
  
-from gnuradio import gr, gru, optfir
-from gnuradio import usrp
-from usrpm import usrp_dbid
-import math
+from gnuradio import gr
+from gnuradio import uhd
 
-# Put special knowlege of usrp here.
+class uhd_input(gr.hier_block2):
+    def __init__( self, address, samp_rate):
+        gr.hier_block2.__init__(self, "uhd_input",
+                                gr.io_signature(0,0,0),
+                                gr.io_signature(1,1,gr.sizeof_gr_complex))
+        
+        self.src = uhd.usrp_source(device_addr=address,
+                                   io_type=uhd.io_type.COMPLEX_FLOAT32,
+                                   num_channels=1)
 
-class input:
-    def __init__( self, decim ):
-        self.freq = -2.5e6
-        self.src = usrp.source_c( )
-        self.subdev = usrp.pick_subdev( self.src,
-                                        (usrp_dbid.BASIC_RX,
-                                         usrp_dbid.TV_RX,
-                                         usrp_dbid.TV_RX_REV_2,
-                                         usrp_dbid.TV_RX_REV_3,
-                                         usrp_dbid.TV_RX_MIMO,
-                                         usrp_dbid.TV_RX_REV_2_MIMO,
-                                         usrp_dbid.TV_RX_REV_3_MIMO))
+        self.src.set_samp_rate(samp_rate)
+        self.usrp_rate = self.src.get_samp_rate()
 
-        print self.subdev
+        self.connect(self.src, self)
 
-        self.subdevice = usrp.selected_subdev( self.src,
-                                               self.subdev )
+    def set_freq(self, target_freq):
+        """
+        Set the center frequency.
 
-        self.mux = usrp.determine_rx_mux_value( self.src,
-                                                self.subdev )
-        self.decim = decim
+        @param target_freq: frequency in Hz
+        @type: bool
+        """
+        r = self.src.set_center_freq(target_freq, 0)
 
-        self.adc_rate = self.src.adc_rate()
-        self.usrp_rate = self.adc_rate / self.decim
-        self.src.set_decim_rate( self.decim )
-        self.src.set_mux( self.mux )
-        usrp.tune( self.src, 0, self.subdevice, self.freq )
-
-    def set_freq( self, x ):
-        r = usrp.tune( self.src, 0, self.subdevice, -x )
         if r:
-            self.freq = -x
+            self.freq = target_freq
+     	    return True
+        else:
+            return False
+
+    def get_freq(self):
+        return self.src.get_center_freq(0)
+
+    def set_gain(self, gain):
+        self.gain = gain
+        self.src.set_gain(gain, 0)
+
+    def add_options(parser):        
+        parser.add_option("-a", "--address", type="string",
+                          default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-A", "--antenna", type="string", default=None,
+                          help="select Rx Antenna where appropriate")
+        parser.add_option("-f", "--freq", type="eng_float", default=None,
+                          help="set frequency to FREQ", metavar="FREQ")
+        parser.add_option("-g", "--gain", type="eng_float", default=None,
+                          help="set gain in dB (default is midpoint)")
+    add_options = staticmethod(add_options)

@@ -24,10 +24,14 @@
 #
 # M. Revnell 2006-Jan
 
-from gnuradio import gr, gru
+from gnuradio import gr
 
-class agc( gr.hier_block ):
-    def __init__( self, fg ):
+class agc( gr.hier_block2 ):
+    def __init__( self ):
+        gr.hier_block2.__init__(self, "agc",
+                                gr.io_signature(1,1,gr.sizeof_float),
+                                gr.io_signature(1,1,gr.sizeof_float))
+
         self.split = gr.multiply_const_ff( 1 )
         self.sqr   = gr.multiply_ff( )
         self.int0  = gr.iir_filter_ffd( [.004, 0], [0, .999] )
@@ -36,13 +40,13 @@ class agc( gr.hier_block ):
         self.log   = gr.nlog10_ff( 10, 1 )
         self.agc   = gr.divide_ff( )
 
-        fg.connect(   self.split,        ( self.agc,   0 ) )
-        fg.connect(   self.split,        ( self.sqr,   0 ) )
-        fg.connect(   self.split,        ( self.sqr,   1 ) )
-        fg.connect(   self.sqr,            self.int0       )
-        fg.connect(   self.int0,           self.log        )
-        fg.connect(   self.log,            self.offs       )
-        fg.connect(   self.offs,           self.gain       )
-        fg.connect(   self.gain,         ( self.agc,   1 ) )
-
-        gr.hier_block.__init__( self, fg, self.split, self.agc )
+        self.connect(self,       self.split)
+        self.connect(self.split, (self.agc, 0))
+        self.connect(self.split, (self.sqr, 0))
+        self.connect(self.split, (self.sqr, 1))
+        self.connect(self.sqr,    self.int0)
+        self.connect(self.int0,   self.log)
+        self.connect(self.log,    self.offs)
+        self.connect(self.offs,   self.gain)
+        self.connect(self.gain,  (self.agc, 1))
+        self.connect(self.agc,    self)

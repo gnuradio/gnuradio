@@ -15,11 +15,11 @@ import time
 
 from gnuradio import gr, gru, eng_notation, optfir
 from gnuradio import audio
-from gnuradio import usrp
-from gnuradio import blks
-from gnuradio.wxgui import fftsink
-from gnuradio.wxgui import waterfallsink
-from gnuradio.wxgui import scopesink
+from gnuradio import uhd
+from gnuradio import blks2
+from gnuradio.wxgui import fftsink2
+from gnuradio.wxgui import waterfallsink2
+from gnuradio.wxgui import scopesink2
 
 from input    import *
 from output   import *
@@ -28,35 +28,36 @@ from ssbagc   import *
 from ui       import *
 from math     import log10
 
-class graph( gr.hier_block ):
-    def __init__( self, fg ):
-        self.graph        = fg
-        self.fe_decim     = 250
-        self.src          = input( self.fe_decim )
-        self.adc_rate     = self.src.adc_rate
-        self.fe_rate      = self.adc_rate / self.fe_decim
+class radio_top_block( gr.top_block ):
+    def __init__( self ):
+        gr.top_block.__init__(self, "radio_top_block")
+
+        self.address      = "addr=192.168.11.2"
+        self.samp_rate    = 256e3
+        self.freq         = -2.5e6
+        self.gain         = 0
+        self.src          = uhd_input( self.address,
+                                       self.samp_rate)
+        self.src.set_freq(self.freq)
+        self.src.set_gain(self.gain)
+
+        self.fe_rate      = self.src.usrp_rate
         self.filter_decim = 1
         self.audio_decim  = 16
         self.demod_rate   = self.fe_rate / self.filter_decim
         self.audio_rate   = self.demod_rate / self.audio_decim
+        self.audio_dev    = "pulse"
 
-        self.demod        = ssb_demod( fg, self.demod_rate, self.audio_rate )
-        self.agc          = agc( fg )
-        #self.agc          = gr.agc_ff()
-        self.out          = output( fg, self.audio_rate )
+        self.demod        = ssb_demod( self.demod_rate, self.audio_rate )
+        self.agc          = agc()
+        self.out          = output( self.audio_rate, self.audio_dev )
 
-        fg.connect( self.src.src,
-                    self.demod,
-                    self.agc,
-                    self.out )
-
-        gr.hier_block.__init__( self, fg, None, None )
+        self.connect( self.src, self.demod, self.agc, self.out )
 
     def tune( self, freq ):
         fe_target = -freq
         self.src.set_freq( fe_target )
-        fe_freq = self.src.src.rx_freq( 0 )
-        demod_cf = fe_target - fe_freq
+        demod_cf = fe_target - self.src.get_freq()
         self.demod.tune( demod_cf )
 
 class radio_frame( ui_frame ):
@@ -88,35 +89,30 @@ class radio_frame( ui_frame ):
         agc_ref = self.block.agc.offs.k()
         self.agc_ref.SetValue( str( agc_ref ) )
         self.agc_ref_s.SetValue( 5 )
-
-        self.fespectrum = fftsink.fft_sink_c(
-            self.block.graph,
+        
+        self.fespectrum = fftsink2.fft_sink_c(
             self.fe_panel,
             fft_size=512,
             sample_rate = block.fe_rate,
-            baseband_freq = 0,
-            average = False,
-            size = ( 680, 140 ) )
+            ref_scale = 1.0,
+            ref_level = 20.0,
+            y_divs = 12,
+            avg_alpha = 0.1)
 
-        self.ifspectrum = fftsink.fft_sink_c(
-            self.block.graph,
+        self.ifspectrum = fftsink2.fft_sink_c(
             self.if_panel,
             fft_size=512,
             sample_rate = block.audio_rate,
-            baseband_freq = 0,
-            average = False,
-            size = ( 680, 140 ) )
+            ref_scale = 1.0,
+            ref_level = 20.0,
+            y_divs = 12,
+            avg_alpha = 0.1)
 
-        em.eventManager.Register( self.fe_mouse,
-                                  wx.EVT_MOTION,
-                                  self.fespectrum.win )
+        self.fespectrum.win.Bind( wx.EVT_MOTION, self.fe_mouse)
+        self.fespectrum.win.Bind( wx.EVT_LEFT_DOWN, self.fe_click)
 
-        em.eventManager.Register( self.fe_click,
-                                  wx.EVT_LEFT_DOWN,
-                                  self.fespectrum.win )
-
-        block.graph.connect( block.src.src, self.fespectrum )
-        block.graph.connect( block.demod.xlate, self.ifspectrum )
+        block.connect( block.src.src, self.fespectrum )
+        block.connect( block.demod.xlate, self.ifspectrum )
 
     def agc_ref_up( self, event ):
         self.agc_ref_s.SetValue( 5 )
@@ -232,7 +228,7 @@ class radio_frame( ui_frame ):
         self.tune( self.freq_disp.GetValue() - 1e6 )
 
     def event_pga( self, event ):
-        self.block.src.src.set_pga( 0, self.pga.GetValue())
+        self.block.src.set_gain(self.pga.GetValue())
         
     def event_vol( self, event ):
         self.block.out.set( self.volume.GetValue()/20.0 )
@@ -267,38 +263,39 @@ class radio_frame( ui_frame ):
 
 class radio( wx.App ):
     def OnInit( self ):
-        self.graph = gr.flow_graph()
-        self.block = graph( self.graph )
-        self.frame = radio_frame( self.block, None, -1, "Title" )
+        self.block = radio_top_block()
+        self.frame = radio_frame( self.block, None, -1, "HF Receiver" )
         self.frame.Show( True )
         self.SetTopWindow( self.frame )
+        self.block.start()
         return True
 
-a=radio( 0 )
-
-l=gr.probe_signal_f()
-#l=gr.probe_avg_mag_sqrd_f(1,.001)
-a.graph.connect(a.block.agc.offs,l )
-#a.graph.connect(a.block.demod,l)
-
-def main_function():
-    global a
-    a.MainLoop()
-
-
 def rssi_function():
-    global a
-    global l
-    while 1:
-        level = l.level()
-        wx.CallAfter( a.frame.setrssi, level )
-        time.sleep( .1 )
+    global radio_obj
+    global sig_probe
 
-thread1 = Thread( target = main_function )
-thread2 = Thread( target = rssi_function )
+    go = True
+    while go:
+        try:
+            level = sig_probe.level()
+            wx.CallAfter( radio_obj.frame.setrssi, level )
+            time.sleep( .1 )
+        except:
+            go = False
 
-thread1.start()
-thread2.start()
+def main():
+    global radio_obj, sig_probe
 
-a.graph.start()
+    radio_obj = radio( 0 )
+    sig_probe = gr.probe_signal_f()
+    radio_obj.block.connect(radio_obj.block.agc.offs, sig_probe)
+
+    thread2 = Thread( target = rssi_function )
+    thread2.start()
+      
+    radio_obj.MainLoop()
+    
+
+if __name__ == "__main__":
+    main()
 
