@@ -177,6 +177,8 @@ class MyFrame(wx.Frame):
         # end wxGlade
 
         parser = OptionParser (option_class=eng_option)
+        parser.add_option("", "--address", type="string", default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
         parser.add_option ("-c", "--ddc-freq", type="eng_float", default=3.9e6,
                            help="set Rx DDC frequency to FREQ", metavar="FREQ")
         parser.add_option ("-s", "--samp-rate", type="eng_float", default=256e3,
@@ -240,7 +242,6 @@ class MyFrame(wx.Frame):
         else: self.PLAY_FROM_USRP = False
 
         if self.PLAY_FROM_USRP:
-            options.address = "addr=192.168.11.2"
             self.src = uhd.usrp_source(device_addr=options.address,
                                        io_type=uhd.io_type.COMPLEX_FLOAT32,
                                        num_channels=1)
