@@ -28,4 +28,4 @@ dist_ourdata_DATA =	\
     hfx_help
 
 dist_ourdata_SCRIPTS = 	\
-    hfx2.py
+    hfx.py

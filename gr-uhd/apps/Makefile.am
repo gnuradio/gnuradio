@@ -24,6 +24,8 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST += \
     $(bin_SCRIPTS)
 
+SUBDIRS = hf_explorer hf_radio
+
 ourpythondir = $(grpythondir)
 
 bin_SCRIPTS = \
