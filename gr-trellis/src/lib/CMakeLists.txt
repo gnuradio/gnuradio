@@ -100,6 +100,11 @@ expand_h_cc_i(trellis_sccc_decoder_combined_XX   fb fs fi cb cs ci)
 expand_h_cc_i(trellis_pccc_decoder_X             b s i)
 expand_h_cc_i(trellis_pccc_decoder_combined_XX   fb fs fi cb cs ci)
 
+ADD_CUSTOM_TARGET(trellis_generated DEPENDS
+    ${generated_trellis_includes}
+    ${generated_trellis_swigs}
+)
+
 ########################################################################
 # Create the master trellis swig include files
 ########################################################################
@@ -195,6 +200,7 @@ IF(ENABLE_PYTHON)
 INCLUDE(GrPython)
 INCLUDE(GrSwig)
 
+SET(GR_SWIG_TARGET_DEPS gengen_generated trellis_generated)
 SET(GR_SWIG_INCLUDE_DIRS
     ${GR_TRELLIS_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
