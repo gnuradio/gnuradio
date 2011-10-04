@@ -26,8 +26,8 @@ AC_DEFUN([GRC_GR_SHD],[
     if test $passed = yes; then
         dnl Don't do gr-shd if the 'shd' package is not installed
         PKG_CHECK_MODULES(
-            [SHD], [shd >= 3.0.0 shd < 4.0.0], [],
-            [passed=no; AC_MSG_RESULT([gr-shd requires libshd 3.x.x])]
+            [SHD], [shd >= 3.1.0 shd < 3.2.0], [],
+            [passed=no; AC_MSG_RESULT([gr-shd requires libshd 3.1.x])]
         )
         SHD_CPPFLAGS="${SHD_CPPFLAGS} -I\${abs_top_srcdir}/gr-shd/include"
         AC_SUBST(SHD_CPPFLAGS)
