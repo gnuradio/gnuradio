@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2007 Free Software Foundation, Inc.
+# Copyright 2005,2007.2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,10 +25,7 @@ import sys
 import wx
 from optparse import OptionParser
 
-from gnuradio import gr, gru, eng_notation
-from gnuradio import usrp
-from gnuradio import audio
-from gnuradio import blks2
+from gnuradio import gr, audio, blks2, uhd
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import stdgui2, fftsink2, scopesink2, slider, form
 from usrpm import usrp_dbid
@@ -51,14 +48,17 @@ class ptt_block(stdgui2.std_top_block):
         self.space_bar_pressed = False
         
         parser = OptionParser (option_class=eng_option)
-        parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Rx side A or B")
-        parser.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Tx side A or B")
+        parser.add_option("-a", "--address", type="string",
+                          default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-A", "--antenna", type="string", default=None,
+                          help="select Rx Antenna where appropriate")
         parser.add_option ("-f", "--freq", type="eng_float", default=442.1e6,
                            help="set Tx and Rx frequency to FREQ", metavar="FREQ")
         parser.add_option ("-g", "--rx-gain", type="eng_float", default=None,
                            help="set rx gain [default=midpoint in dB]")
+        parser.add_option ("", "--tx-gain", type="eng_float", default=None,
+                           help="set tx gain [default=midpoint in dB]")
         parser.add_option("-I", "--audio-input", type="string", default="",
                           help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
         parser.add_option("-O", "--audio-output", type="string", default="",
@@ -73,8 +73,10 @@ class ptt_block(stdgui2.std_top_block):
         if options.freq < 1e6:
             options.freq *= 1e6
             
-        self.txpath = transmit_path(options.tx_subdev_spec, options.audio_input)
-        self.rxpath = receive_path(options.rx_subdev_spec, options.rx_gain, options.audio_output)
+        self.txpath = transmit_path(options.address, options.tx_gain,
+                                    options.audio_input)
+        self.rxpath = receive_path(options.address, options.rx_gain,
+                                   options.audio_output)
 	self.connect(self.txpath)
 	self.connect(self.rxpath)
 
@@ -152,10 +154,10 @@ class ptt_block(stdgui2.std_top_block):
             vbox.Add (rx_fft.win, 1, wx.EXPAND)
 
         if 1 and not(no_gui):
-            rx_fft = fftsink2.fft_sink_c(panel, title="Post s/w DDC",
+            rx_fft = fftsink2.fft_sink_c(panel, title="Post s/w Resampler",
                                          fft_size=512, sample_rate=self.rxpath.quad_rate,
                                          ref_level=80, y_per_div=20)
-            self.connect (self.rxpath.ddc, rx_fft)
+            self.connect (self.rxpath.resamp, rx_fft)
             vbox.Add (rx_fft.win, 1, wx.EXPAND)
 
         if 0 and not(no_gui):
@@ -199,10 +201,12 @@ class ptt_block(stdgui2.std_top_block):
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Squelch",
                                         weight=3, range=self.rxpath.squelch_range(),
                                         callback=self.set_squelch)
+            
+        g = self.rxpath.u.get_gain_range()
         hbox.Add((5,0), 0)
         myform['rx_gain'] = \
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Rx Gain",
-                                        weight=3, range=self.rxpath.subdev.gain_range(),
+                                        weight=3, range=(g.start(), g.stop(), g.step()),
                                         callback=self.set_rx_gain)
         hbox.Add((5,0), 0)
         vbox.Add(hbox, 0, wx.EXPAND)
@@ -269,19 +273,20 @@ class ptt_block(stdgui2.std_top_block):
 # ////////////////////////////////////////////////////////////////////////
 
 class transmit_path(gr.hier_block2):
-    def __init__(self, subdev_spec, audio_input):
+    def __init__(self, address, gain, audio_input):
 	gr.hier_block2.__init__(self, "transmit_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
 				
-        self.u = usrp.sink_c ()
+        self.u = uhd.usrp_sink(device_addr=address,
+                               io_type=uhd.io_type.COMPLEX_FLOAT32,
+                               num_channels=1)
 
-        dac_rate = self.u.dac_rate();
-        self.if_rate = 320e3                               # 320 kS/s
-        self.usrp_interp = int(dac_rate // self.if_rate)
-        self.u.set_interp_rate(self.usrp_interp)
-        self.sw_interp = 10
-        self.audio_rate = self.if_rate // self.sw_interp   #  32 kS/s
+        self.if_rate = 320e3
+        self.audio_rate = 32e3
+
+        self.u.set_samp_rate(self.if_rate)
+        dev_rate = self.u.get_samp_rate()
 
         self.audio_gain = 10
         self.normal_gain = 32000
@@ -289,16 +294,16 @@ class transmit_path(gr.hier_block2):
         self.audio = audio.source(int(self.audio_rate), audio_input)
         self.audio_amp = gr.multiply_const_ff(self.audio_gain)
 
-        lpf = gr.firdes.low_pass (1,                # gain
-                                  self.audio_rate,            # sampling rate
+        lpf = gr.firdes.low_pass (1,                  # gain
+                                  self.audio_rate,    # sampling rate
                                   3800,               # low pass cutoff freq
                                   300,                # width of trans. band
                                   gr.firdes.WIN_HANN) # filter type 
 
-        hpf = gr.firdes.high_pass (1,                # gain
-                                  self.audio_rate,            # sampling rate
-                                  325,               # low pass cutoff freq
-                                  50,                # width of trans. band
+        hpf = gr.firdes.high_pass (1,                 # gain
+                                  self.audio_rate,    # sampling rate
+                                  325,                # low pass cutoff freq
+                                  50,                 # width of trans. band
                                   gr.firdes.WIN_HANN) # filter type 
 
         audio_taps = convolve(array(lpf),array(hpf))
@@ -311,18 +316,21 @@ class transmit_path(gr.hier_block2):
         self.fmtx = blks2.nbfm_tx(self.audio_rate, self.if_rate)
         self.amp = gr.multiply_const_cc (self.normal_gain)
 
-        # determine the daughterboard subdevice we're using
-        if subdev_spec is None:
-            subdev_spec = usrp.pick_tx_subdevice(self.u)
-        self.u.set_mux(usrp.determine_tx_mux_value(self.u, subdev_spec))
-        self.subdev = usrp.selected_subdev(self.u, subdev_spec)
-        print "TX using", self.subdev.name()
+        rrate = dev_rate / self.if_rate
+        self.resamp = blks2.pfb_arb_resampler_ccf(rrate)
 
         self.connect(self.audio, self.audio_amp, self.audio_filt,
-                     (self.add_pl,0), self.fmtx, self.amp, self.u)
+                     (self.add_pl,0), self.fmtx, self.amp,
+                     self.resamp, self.u)
 
-        self.set_gain(self.subdev.gain_range()[1])  # set max Tx gain
+        if gain is None:
+            # if no gain was specified, use the mid-point in dB
+            g = self.u.get_gain_range()
+            gain = float(g.start() + g.stop())/2.0
 
+        self.set_gain(gain)
+
+        self.set_enable(False)
 
     def set_freq(self, target_freq):
         """
@@ -330,26 +338,17 @@ class transmit_path(gr.hier_block2):
 
         @param target_freq: frequency in Hz
         @rypte: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital up converter.  Finally, we feed
-        any residual_freq to the s/w freq translater.
         """
-        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
+        r = self.u.set_center_freq(target_freq)
         if r:
-            # Use residual_freq in s/w freq translator
             return True
-
         return False
 
     def set_gain(self, gain):
         self.gain = gain
-        self.subdev.set_gain(gain)
+        self.u.set_gain(gain)
 
     def set_enable(self, enable):
-        self.subdev.set_enable(enable)            # set H/W Tx enable
         if enable:
             self.amp.set_k (self.normal_gain)
         else:
@@ -362,64 +361,53 @@ class transmit_path(gr.hier_block2):
 # ////////////////////////////////////////////////////////////////////////
 
 class receive_path(gr.hier_block2):
-    def __init__(self, subdev_spec, gain, audio_output):
+    def __init__(self, address, gain, audio_output):
 	gr.hier_block2.__init__(self, "receive_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
 
-        self.u = usrp.source_c ()
-        adc_rate = self.u.adc_rate()
+        self.u = uhd.usrp_source(device_addr=address,
+                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
+                                 num_channels=1)
 
-        self.if_rate = 256e3                         # 256 kS/s
-        usrp_decim = int(adc_rate // self.if_rate)
-        if_decim = 4
-        self.u.set_decim_rate(usrp_decim)
-        self.quad_rate = self.if_rate // if_decim    #  64 kS/s
-        audio_decim = 2
-        audio_rate = self.quad_rate // audio_decim   #  32 kS/s
+        self.if_rate    = 256e3
+        self.quad_rate  = 64e3
+        self.audio_rate = 32e3
 
-        if subdev_spec is None:
-            subdev_spec = usrp.pick_rx_subdevice(self.u)
-        self.subdev = usrp.selected_subdev(self.u, subdev_spec)
-        print "RX using", self.subdev.name()
-
-        self.u.set_mux(usrp.determine_rx_mux_value(self.u, subdev_spec))
+        self.u.set_samp_rate(self.if_rate)
+        dev_rate = self.u.get_samp_rate()
 
         # Create filter to get actual channel we want
-        chan_coeffs = gr.firdes.low_pass (1.0,                # gain
-                                          self.if_rate,       # sampling rate
+        nfilts = 32
+        chan_coeffs = gr.firdes.low_pass (nfilts,             # gain
+                                          nfilts*dev_rate,    # sampling rate
                                           13e3,               # low pass cutoff freq
                                           4e3,                # width of trans. band
                                           gr.firdes.WIN_HANN) # filter type 
 
-        print "len(rx_chan_coeffs) =", len(chan_coeffs)
-
-        # Decimating Channel filter with frequency translation
-        # complex in and out, float taps
-        self.ddc = gr.freq_xlating_fir_filter_ccf(if_decim,       # decimation rate
-                                                  chan_coeffs,    # taps
-                                                  0,              # frequency translation amount
-                                                  self.if_rate)   # input sample rate
+        rrate = self.quad_rate / dev_rate
+        self.resamp = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
 
         # instantiate the guts of the single channel receiver
-        self.fmrx = blks2.nbfm_rx(audio_rate, self.quad_rate)
+        self.fmrx = blks2.nbfm_rx(self.audio_rate, self.quad_rate)
 
         # standard squelch block
-        self.squelch = blks2.standard_squelch(audio_rate)
+        self.squelch = blks2.standard_squelch(self.audio_rate)
 
         # audio gain / mute block
         self._audio_gain = gr.multiply_const_ff(1.0)
 
         # sound card as final sink
-        audio_sink = audio.sink (int(audio_rate), audio_output)
+        audio_sink = audio.sink (int(self.audio_rate), audio_output)
         
         # now wire it all together
-        self.connect (self.u, self.ddc, self.fmrx, self.squelch, self._audio_gain, audio_sink)
+        self.connect (self.u, self.resamp, self.fmrx, self.squelch,
+                      self._audio_gain, audio_sink)
 
         if gain is None:
             # if no gain was specified, use the mid-point in dB
-            g = self.subdev.gain_range()
-            gain = float(g[0]+g[1])/2
+            g = self.u.get_gain_range()
+            gain = float(g.start() + g.stop())/2.0
 
         self.enabled = True
         self.set_gain(gain)
@@ -463,26 +451,15 @@ class receive_path(gr.hier_block2):
 
         @param target_freq: frequency in Hz
         @rypte: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital down converter in the
-        FPGA.  Finally, we feed any residual_freq to the s/w freq
-        translator.
         """
-        r = self.u.tune(0, self.subdev, target_freq)
+        r = self.u.set_center_freq(target_freq)
         if r:
-            # Use residual_freq in s/w freq translater
-            # print "residual_freq =", r.residual_freq
-            self.ddc.set_center_freq(-r.residual_freq)
             return True
-
         return False
 
     def set_gain(self, gain):
         self.gain = gain
-        self.subdev.set_gain(gain)
+        self.u.set_gain(gain)
 
 
 # ////////////////////////////////////////////////////////////////////////

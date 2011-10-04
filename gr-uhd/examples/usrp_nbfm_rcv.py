@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2007 Free Software Foundation, Inc.
+# Copyright 2005,2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,19 +20,14 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, eng_notation, optfir
-from gnuradio import audio
-from gnuradio import usrp
-from gnuradio import blks2
+from gnuradio import gr, audio, blks2, uhd
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui2, fftsink2, form
 from optparse import OptionParser
-from usrpm import usrp_dbid
 import sys
 import math
 import wx
-
 
 #////////////////////////////////////////////////////////////////////////
 #                           Control Stuff
@@ -43,8 +38,11 @@ class my_top_block (stdgui2.std_top_block):
         stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
 
         parser=OptionParser(option_class=eng_option)
-        parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Rx side A or B (default=A)")
+        parser.add_option("-a", "--address", type="string",
+                          default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-A", "--antenna", type="string", default=None,
+                          help="select Rx Antenna where appropriate")
         parser.add_option("-f", "--freq", type="eng_float", default=146.585e6,
                           help="set frequency to FREQ", metavar="FREQ")
         parser.add_option("-g", "--gain", type="eng_float", default=None,
@@ -70,7 +68,8 @@ class my_top_block (stdgui2.std_top_block):
         self.freq = 0
         self.freq_step = 25e3
 
-        self.rxpath = receive_path(options.rx_subdev_spec, options.gain, options.audio_output)
+        self.rxpath = receive_path(options.address, options.antenna,
+                                   options.gain, options.audio_output)
 	self.connect(self.rxpath)
 	
         self._build_gui(vbox, options.no_gui)
@@ -99,34 +98,47 @@ class my_top_block (stdgui2.std_top_block):
 
 
         self.src_fft = None
-        if 1 and not(no_gui):
-            self.src_fft = fftsink2.fft_sink_c(self.panel, title="Data from USRP",
-                                               fft_size=512, sample_rate=self.rxpath.if_rate,
-                                               ref_scale=32768.0, ref_level=0, y_per_div=10, y_divs=12)
+        if 0 and not(no_gui):
+            self.src_fft = fftsink2.fft_sink_c(self.panel,
+                                               title="Data from USRP",
+                                               fft_size=512,
+                                               sample_rate=self.rxpath.if_rate,
+                                               ref_scale=32768.0,
+                                               ref_level=0,
+                                               y_per_div=10,
+                                               y_divs=12)
             self.connect (self.rxpath.u, self.src_fft)
             vbox.Add (self.src_fft.win, 4, wx.EXPAND)
         if 1 and not(no_gui):
-            rx_fft = fftsink2.fft_sink_c(self.panel, title="Post s/w DDC",
-                                         fft_size=512, sample_rate=self.rxpath.quad_rate,
-                                         ref_level=80, y_per_div=20)
-            self.connect (self.rxpath.ddc, rx_fft)
+            rx_fft = fftsink2.fft_sink_c(self.panel,
+                                         title="Post s/w Resampling",
+                                         fft_size=512,
+                                         sample_rate=self.rxpath.quad_rate,
+                                         ref_level=80,
+                                         y_per_div=20)
+            self.connect (self.rxpath.resamp, rx_fft)
             vbox.Add (rx_fft.win, 4, wx.EXPAND)
         
         if 1 and not(no_gui):
-            post_deemph_fft = fftsink2.fft_sink_f(self.panel, title="Post Deemph",
-                                                  fft_size=512, sample_rate=self.rxpath.audio_rate,
-                                                  y_per_div=10, ref_level=-40)
+            post_deemph_fft = fftsink2.fft_sink_f(self.panel,
+                                                  title="Post Deemph",
+                                                  fft_size=512,
+                                                  sample_rate=self.rxpath.audio_rate,
+                                                  y_per_div=10,
+                                                  ref_level=-40)
             self.connect (self.rxpath.fmrx.deemph, post_deemph_fft)
             vbox.Add (post_deemph_fft.win, 4, wx.EXPAND)
 
         if 0:
-            post_filt_fft = fftsink2.fft_sink_f(self.panel, title="Post Filter", 
-                                                fft_size=512, sample_rate=audio_rate,
-                                                y_per_div=10, ref_level=-40)
+            post_filt_fft = fftsink2.fft_sink_f(self.panel,
+                                                title="Post Filter", 
+                                                fft_size=512,
+                                                sample_rate=audio_rate,
+                                                y_per_div=10,
+                                                ref_level=-40)
             self.connect (self.guts.audio_filter, post_filt)
             vbox.Add (fft_win4, 4, wx.EXPAND)
 
-        
         # control area form at bottom
         self.myform = myform = form.form()
 
@@ -134,7 +146,8 @@ class my_top_block (stdgui2.std_top_block):
         hbox.Add((5,0), 0)
         myform['freq'] = form.float_field(
             parent=self.panel, sizer=hbox, label="Freq", weight=1,
-            callback=myform.check_input_and_call(_form_set_freq, self._set_status_msg))
+            callback=myform.check_input_and_call(_form_set_freq,
+                                                 self._set_status_msg))
 
         #hbox.Add((5,0), 0)
         #myform['freq_slider'] = \
@@ -157,10 +170,11 @@ class my_top_block (stdgui2.std_top_block):
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Squelch",
                                         weight=3, range=self.rxpath.squelch_range(),
                                         callback=self.set_squelch)
+        g = self.rxpath.u.get_gain_range()
         hbox.Add((5,0), 0)
         myform['gain'] = \
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Gain",
-                                        weight=3, range=self.rxpath.subdev.gain_range(),
+                                        weight=3, range=(g.start(), g.stop(), g.step()),
                                         callback=self.set_gain)
         hbox.Add((5,0), 0)
         vbox.Add(hbox, 0, wx.EXPAND)
@@ -246,45 +260,31 @@ class my_top_block (stdgui2.std_top_block):
 USE_SIMPLE_SQUELCH = False
 
 class receive_path(gr.hier_block2):
-    def __init__(self, subdev_spec, gain, audio_output):
+    def __init__(self, address, antenna, gain, audio_output):
 	gr.hier_block2.__init__(self, "receive_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
 
-        self.u = usrp.source_c ()
-        adc_rate = self.u.adc_rate()
+        self.u = uhd.usrp_source(device_addr=address,
+                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
+                                 num_channels=1)
 
-        self.if_rate = 256e3                              # 256 kS/s
-        usrp_decim = int(adc_rate // self.if_rate)
-        if_decim = 4
-        self.u.set_decim_rate(usrp_decim)
-        self.quad_rate = self.if_rate // if_decim         #  64 kS/s
-        audio_decim = 2
-        self.audio_rate = self.quad_rate // audio_decim   #  32 kS/s
+        self.if_rate    = 256e3
+        self.quad_rate  = 64e3
+        self.audio_rate = 32e3
 
-
-        if subdev_spec is None:
-            subdev_spec = usrp.pick_rx_subdevice(self.u)
-        self.subdev = usrp.selected_subdev(self.u, subdev_spec)
-        print "Using RX d'board %s" % (self.subdev.side_and_name(),)
-
-        self.u.set_mux(usrp.determine_rx_mux_value(self.u, subdev_spec))
+        self.u.set_samp_rate(self.if_rate)
+        dev_rate = self.u.get_samp_rate()
 
         # Create filter to get actual channel we want
-        chan_coeffs = gr.firdes.low_pass (1.0,                # gain
-                                          self.if_rate,       # sampling rate
-                                          8e3,               # low pass cutoff freq
-                                          2e3,                # width of trans. band
-                                          gr.firdes.WIN_HANN) # filter type 
-
-        print "len(rx_chan_coeffs) =", len(chan_coeffs)
-
-        # Decimating Channel filter with frequency translation
-        # complex in and out, float taps
-        self.ddc = gr.freq_xlating_fir_filter_ccf(if_decim,       # decimation rate
-                                                  chan_coeffs,    # taps
-                                                  0,              # frequency translation amount
-                                                  self.if_rate)   # input sample rate
+        nfilts = 32
+        chan_coeffs = gr.firdes.low_pass (nfilts,              # gain
+                                          nfilts*dev_rate,     # sampling rate
+                                          8e3,                 # low pass cutoff freq
+                                          2e3,                 # width of trans. band
+                                          gr.firdes.WIN_HANN)  # filter type 
+        rrate = self.quad_rate / dev_rate
+        self.resamp = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
 
         if USE_SIMPLE_SQUELCH:
             self.squelch = gr.simple_squelch_cc(20)
@@ -302,23 +302,27 @@ class receive_path(gr.hier_block2):
         
         # now wire it all together
         if USE_SIMPLE_SQUELCH:
-            self.connect (self.u, self.ddc, self.squelch, self.fmrx,
+            self.connect (self.u, self.resamp, self.squelch, self.fmrx,
                           self._audio_gain, audio_sink)
         else:
-            self.connect (self.u, self.ddc, self.fmrx, self.squelch,
+            self.connect (self.u, self.resamp, self.fmrx, self.squelch,
                           self._audio_gain, audio_sink)
 
         if gain is None:
             # if no gain was specified, use the mid-point in dB
-            g = self.subdev.gain_range()
-            gain = float(g[0]+g[1])/2
+            g = self.u.get_gain_range()
+            gain = float(g.start()+g.stop())/2
 
         self.set_gain(gain)
 
         v = self.volume_range()
         self.set_volume((v[0]+v[1])/2)
+
         s = self.squelch_range()
         self.set_squelch((s[0]+s[1])/2)
+
+        if(antenna):
+            self.u.set_antenna(antenna, 0)
 
     def volume_range(self):
         return (-20.0, 0.0, 0.5)
@@ -351,27 +355,16 @@ class receive_path(gr.hier_block2):
 
         @param target_freq: frequency in Hz
         @rypte: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital down converter in the
-        FPGA.  Finally, we feed any residual_freq to the s/w freq
-        translator.
         """
 
-        r = usrp.tune(self.u, 0, self.subdev, target_freq)
+        r = self.u.set_center_freq(target_freq)
         if r:
-            # Use residual_freq in s/w freq translater
-            # print "residual_freq =", r.residual_freq
-            self.ddc.set_center_freq(-r.residual_freq)
             return True
-
         return False
 
     def set_gain(self, gain):
         self.gain = gain
-        self.subdev.set_gain(gain)
+        self.u.set_gain(gain)
 
 
 # ////////////////////////////////////////////////////////////////////////

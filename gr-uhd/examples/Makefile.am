@@ -28,4 +28,6 @@ ourdatadir = $(exampledir)/uhd
 dist_ourdata_SCRIPTS =		\
 	fm_tx4.py		\
 	max_power.py		\
-	usrp_am_mw_rcv.py
+	usrp_am_mw_rcv.py	\
+	usrp_nbfm_ptt.py	\
+	usrp_nbfm_rcv.py
