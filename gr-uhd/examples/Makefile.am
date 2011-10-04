@@ -25,6 +25,7 @@ SUBDIRS = multi-antenna
 
 ourdatadir = $(exampledir)/uhd
 
-dist_ourdata_SCRIPTS =	\
-	fm_tx4.py	\
-	max_power.py
+dist_ourdata_SCRIPTS =		\
+	fm_tx4.py		\
+	max_power.py		\
+	usrp_am_mw_rcv.py

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,9 +20,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, eng_notation, optfir
+from gnuradio import gr, eng_notation, optfir
 from gnuradio import audio
-from gnuradio import usrp
+from gnuradio import uhd
 from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
@@ -33,30 +33,18 @@ import sys
 import math
 import wx
 
-def pick_subdevice(u):
-    """
-    The user didn't specify a subdevice on the command line.
-    Try for one of these, in order: BASIC_RX,TV_RX, BASIC_RX, whatever is on side A.
-
-    @return a subdev_spec
-    """
-    return usrp.pick_subdev(u, (usrp_dbid.BASIC_RX,
-                                usrp_dbid.LF_RX,
-                                usrp_dbid.TV_RX,
-                                usrp_dbid.TV_RX_REV_2,
-				usrp_dbid.TV_RX_REV_3,
-				usrp_dbid.TV_RX_MIMO,
-                                usrp_dbid.TV_RX_REV_2_MIMO,
-				usrp_dbid.TV_RX_REV_3_MIMO))
-
-
 class wfm_rx_block (stdgui2.std_top_block):
-    def __init__(self,frame,panel,vbox,argv):
-        stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
+    def __init__(self, frame, panel, vbox, argv):
+        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         parser=OptionParser(option_class=eng_option)
-        parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Rx side A or B (default=A)")
+        parser.add_option("-a", "--address", type="string",
+                          default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-A", "--antenna", type="string", default=None,
+                          help="select Rx Antenna where appropriate")
+        parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
+                          help="set sample rate (bandwidth) [default=%default]")
         parser.add_option("-f", "--freq", type="eng_float", default=1008.0e3,
                           help="set frequency to FREQ", metavar="FREQ")
         parser.add_option("-I", "--use-if-freq", action="store_true", default=False,
@@ -89,74 +77,68 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         #TODO: add an AGC after the channel filter and before the AM_demod
         
-        self.u = usrp.source_c()                    # usrp is data source
-
-        adc_rate = self.u.adc_rate()                # 64 MS/s
-        usrp_decim = 250
-        self.u.set_decim_rate(usrp_decim)
-        usrp_rate = adc_rate / usrp_decim           # 256 kS/s
+        self.u = uhd.usrp_source(device_addr=options.address,
+                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
+                                 num_channels=1)
+        
+        usrp_rate = 256e3
+        self.u.set_samp_rate(usrp_rate)
+        usrp_rate = self.u.get_samp_rate()
+        
         chanfilt_decim = 4
         demod_rate = usrp_rate / chanfilt_decim     # 64 kHz
         audio_decimation = 2
         audio_rate = demod_rate / audio_decimation  # 32 kHz
+        
+        chan_filt_coeffs = gr.firdes.low_pass_2 (1,           # gain
+                                                 usrp_rate,   # sampling rate
+                                                 8e3,         # passband cutoff
+                                                 4e3,         # transition bw
+                                                 60)          # stopband attenuation
 
-        if options.rx_subdev_spec is None:
-            options.rx_subdev_spec = pick_subdevice(self.u)
-
-        self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
-        self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
-        print "Using RX d'board %s" % (self.subdev.side_and_name(),)
-
-
-        chan_filt_coeffs = optfir.low_pass (1,           # gain
-                                            usrp_rate,   # sampling rate
-                                            8e3,        # passband cutoff
-                                            12e3,       # stopband cutoff
-                                            1.0,         # passband ripple
-                                            60)          # stopband attenuation
         #print len(chan_filt_coeffs)
         self.chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
+
         if self.use_IF:
           # Turn If to baseband and filter.
-          self.chan_filt = gr.freq_xlating_fir_filter_ccf (chanfilt_decim, chan_filt_coeffs, self.IF_freq, usrp_rate)
+          self.chan_filt = gr.freq_xlating_fir_filter_ccf (chanfilt_decim,
+                                                           chan_filt_coeffs,
+                                                           self.IF_freq,
+                                                           usrp_rate)
         else:
           self.chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
         self.am_demod = gr.complex_to_mag()
 
         self.volume_control = gr.multiply_const_ff(self.vol)
 
-        audio_filt_coeffs = optfir.low_pass (1,           # gain
-                                            demod_rate,   # sampling rate
-                                            8e3,        # passband cutoff
-                                            10e3,       # stopband cutoff
-                                            0.1,         # passband ripple
-                                            60)          # stopband attenuation
+        audio_filt_coeffs = gr.firdes.low_pass_2 (1,          # gain
+                                                  demod_rate, # sampling rate
+                                                  8e3,        # passband cutoff
+                                                  2e3,        # transition bw
+                                                  60)         # stopband attenuation
+
         self.audio_filt=gr.fir_filter_fff(audio_decimation,audio_filt_coeffs)
         # sound card as final sink
-        audio_sink = audio.sink (int (audio_rate),
-                                 options.audio_output,
-                                 False)  # ok_to_block
+        self.audio_sink = audio.sink (int (audio_rate),
+                                      options.audio_output,
+                                      False)  # ok_to_block
         
         # now wire it all together
-        self.connect (self.u, self.chan_filt, self.am_demod, self.audio_filt, self.volume_control, audio_sink)
+        self.connect (self.u, self.chan_filt, self.am_demod,
+                      self.audio_filt, self.volume_control,
+                      self.audio_sink)
 
         self._build_gui(vbox, usrp_rate, demod_rate, audio_rate)
 
         if options.gain is None:
-            g = self.subdev.gain_range()
+            g = self.u.get_gain_range()
             if True:
-              # if no gain was specified, use the maximum gain available 
-              # (usefull for Basic_RX which is relatively deaf and the most probable board to be used for AM)
-              # TODO: check db type to decide on default gain.
-              options.gain = float(g[1])
-            else:
-              # if no gain was specified, use the mid-point in dB
-              options.gain = float(g[0]+g[1])/2
-
+              # if no gain was specified, use the mid gain
+              options.gain = (g.start() + g.stop())/2.0
 
         if options.volume is None:
-            g = self.volume_range()
-            options.volume = float(g[0]*3+g[1])/4
+            v = self.volume_range()
+            options.volume = float(v[0]*3+v[1])/4.0
             
         if abs(options.freq) < 1e3:
             options.freq *= 1e3
@@ -168,6 +150,8 @@ class wfm_rx_block (stdgui2.std_top_block):
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
 
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
 
     def _set_status_msg(self, msg, which=0):
         self.frame.GetStatusBar().SetStatusText(msg, which)
@@ -233,9 +217,10 @@ class wfm_rx_block (stdgui2.std_top_block):
                                         callback=self.set_vol)
         hbox.Add((5,0), 1)
 
+        g = self.u.get_gain_range()
         myform['gain'] = \
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Gain",
-                                        weight=3, range=self.subdev.gain_range(),
+                                        weight=3, range=(g.start(), g.stop(), g.step()),
                                         callback=self.set_gain)
         hbox.Add((5,0), 0)
         vbox.Add(hbox, 0, wx.EXPAND)
@@ -297,8 +282,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         the result of that operation and our target_frequency to
         determine the value for the digital down converter.
         """
-        r = usrp.tune(self.u, 0, self.subdev, target_freq  + self.IF_freq)
-        #TODO: check if db is inverting the spectrum or not to decide if we should do + self.IF_freq  or - self.IF_freq
+        r = self.u.set_center_freq(target_freq  + self.IF_freq, 0)
         
         if r:
             self.freq = target_freq
@@ -313,7 +297,7 @@ class wfm_rx_block (stdgui2.std_top_block):
 
     def set_gain(self, gain):
         self.myform['gain'].set_value(gain)     # update displayed value
-        self.subdev.set_gain(gain)
+        self.u.set_gain(gain)
 
     def update_status_bar (self):
         msg = "Volume:%r  Setting:%s" % (self.vol, self.state)
