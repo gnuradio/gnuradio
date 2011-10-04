@@ -51,6 +51,8 @@ AC_DEFUN([GRC_GR_UHD],[
         gr-uhd/apps/Makefile \
         gr-uhd/apps/hf_explorer/Makefile \
         gr-uhd/apps/hf_radio/Makefile \
+	gr-uhd/examples/Makefile \
+	gr-uhd/examples/multi-antenna/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-uhd,[

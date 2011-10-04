@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,8 +33,7 @@ audio_to_file.py
 """
 
 from gnuradio import gr, eng_notation
-from gnuradio import usrp
-from gnuradio import audio
+from gnuradio import uhd
 from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -43,7 +42,6 @@ import math
 import sys
 
 from gnuradio.wxgui import stdgui2, fftsink2
-#from gnuradio import tx_debug_gui
 import wx
 
 
@@ -54,10 +52,17 @@ class pipeline(gr.hier_block2):
     def __init__(self, filename, lo_freq, audio_rate, if_rate):
 
         gr.hier_block2.__init__(self, "pipeline",
-                                gr.io_signature(0, 0, 0),                    # Input signature
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+                                gr.io_signature(0, 0, 0),
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex))
 
-        src = gr.file_source (gr.sizeof_float, filename, True)
+        try:
+            src = gr.file_source (gr.sizeof_float, filename, True)
+        except RuntimeError:
+            sys.stderr.write(("\nError: Could not open file '%s'\n\n" % \
+                                  filename))
+            sys.exit(1)
+            
+        print audio_rate, if_rate
         fmtx = blks2.nbfm_tx (audio_rate, if_rate, max_dev=5e3, tau=75e-6)
         
         # Local oscillator
@@ -78,10 +83,17 @@ class fm_tx_block(stdgui2.std_top_block):
         stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         parser = OptionParser (option_class=eng_option)
-        parser.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Tx side A or B")
+        parser.add_option("-a", "--address", type="string",
+                          default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-A", "--antenna", type="string", default=None,
+                          help="select Rx Antenna where appropriate")
+        parser.add_option("-s", "--samp-rate", type="eng_float", default=400e3,
+                          help="set sample rate (bandwidth) [default=%default]")
         parser.add_option("-f", "--freq", type="eng_float", default=None,
-                           help="set Tx frequency to FREQ [required]", metavar="FREQ")
+                          help="set frequency to FREQ", metavar="FREQ")
+        parser.add_option("-g", "--gain", type="eng_float", default=None,
+                          help="set gain in dB (default is midpoint)")
         parser.add_option("-n", "--nchannels", type="int", default=4,
                            help="number of Tx channels [1,4]")
         #parser.add_option("","--debug", action="store_true", default=False,
@@ -104,57 +116,54 @@ class fm_tx_block(stdgui2.std_top_block):
         # ----------------------------------------------------------------
         # Set up constants and parameters
 
-        self.u = usrp.sink_c ()       # the USRP sink (consumes samples)
+        self.u = uhd.usrp_sink(device_addr=options.address,
+                               io_type=uhd.io_type.COMPLEX_FLOAT32,
+                               num_channels=1)
 
-        self.dac_rate = self.u.dac_rate()                    # 128 MS/s
-        self.usrp_interp = 400
-        self.u.set_interp_rate(self.usrp_interp)
-        self.usrp_rate = self.dac_rate / self.usrp_interp    # 320 kS/s
+        self.usrp_rate = options.samp_rate
+        self.u.set_samp_rate(self.usrp_rate)
+        self.usrp_rate = self.u.get_samp_rate()
+
         self.sw_interp = 10
         self.audio_rate = self.usrp_rate / self.sw_interp    # 32 kS/s
 
-        # determine the daughterboard subdevice we're using
-        if options.tx_subdev_spec is None:
-            options.tx_subdev_spec = usrp.pick_tx_subdevice(self.u)
+        if options.gain is None:
+            # if no gain was specified, use the mid-point in dB
+            g = self.u.get_gain_range()
+            options.gain = float(g.start()+g.stop())/2
 
-        m = usrp.determine_tx_mux_value(self.u, options.tx_subdev_spec)
-        #print "mux = %#04x" % (m,)
-        self.u.set_mux(m)
-        self.subdev = usrp.selected_subdev(self.u, options.tx_subdev_spec)
-        print "Using TX d'board %s" % (self.subdev.side_and_name(),)
+        self.set_gain(options.gain)
+        self.set_freq(options.freq)
 
-        self.subdev.set_gain(self.subdev.gain_range()[1])    # set max Tx gain
-        if not self.set_freq(options.freq):
-            freq_range = self.subdev.freq_range()
-            print "Failed to set frequency to %s.  Daughterboard supports %s to %s" % (
-                eng_notation.num_to_str(options.freq),
-                eng_notation.num_to_str(freq_range[0]),
-                eng_notation.num_to_str(freq_range[1]))
-            raise SystemExit
-        self.subdev.set_enable(True)                         # enable transmitter
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
 
-        sum = gr.add_cc ()
+        self.sum = gr.add_cc ()
 
         # Instantiate N NBFM channels
         step = 25e3
-        offset = (0 * step, 1 * step, -1 * step, 2 * step, -2 * step, 3 * step, -3 * step)
+        offset = (0 * step, 1 * step, -1 * step,
+                  2 * step, -2 * step, 3 * step, -3 * step)
+
         for i in range (options.nchannels):
             t = pipeline("audio-%d.dat" % (i % 4), offset[i],
                          self.audio_rate, self.usrp_rate)
-            self.connect(t, (sum, i))
+            self.connect(t, (self.sum, i))
 
-        gain = gr.multiply_const_cc (4000.0 / options.nchannels)
+        self.gain = gr.multiply_const_cc (1.0 / options.nchannels)
 
         # connect it all
-        self.connect (sum, gain)
-        self.connect (gain, self.u)
+        self.connect (self.sum, self.gain)
+        self.connect (self.gain, self.u)
 
         # plot an FFT to verify we are sending what we want
         if 1:
             post_mod = fftsink2.fft_sink_c(panel, title="Post Modulation",
-                                           fft_size=512, sample_rate=self.usrp_rate,
-                                           y_per_div=20, ref_level=40)
-            self.connect (sum, post_mod)
+                                           fft_size=512,
+                                           sample_rate=self.usrp_rate,
+                                           y_per_div=20,
+                                           ref_level=40)
+            self.connect (self.gain, post_mod)
             vbox.Add (post_mod.win, 1, wx.EXPAND)
             
 
@@ -177,17 +186,16 @@ class fm_tx_block(stdgui2.std_top_block):
         any residual_freq to the s/w freq translater.
         """
 
-        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
+        r = self.u.set_center_freq(target_freq, 0)
         if r:
-            print "r.baseband_freq =", eng_notation.num_to_str(r.baseband_freq)
-            print "r.dxc_freq      =", eng_notation.num_to_str(r.dxc_freq)
-            print "r.residual_freq =", eng_notation.num_to_str(r.residual_freq)
-            print "r.inverted      =", r.inverted
-            
-            # Could use residual_freq in s/w freq translator
+            print "Frequency =", eng_notation.num_to_str(self.u.get_center_freq())
             return True
 
         return False
+
+    def set_gain(self, gain):
+        self.u.set_gain(gain, 0)
+
 
 def main ():
     app = stdgui2.stdapp(fm_tx_block, "Multichannel FM Tx", nstatus=1)
