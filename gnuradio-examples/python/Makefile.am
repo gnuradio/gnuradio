@@ -25,7 +25,6 @@ SUBDIRS = \
 	digital \
 	digital-bert \
 	mp-sched \
-	multi-antenna \
 	multi_usrp \
 	network \
 	ofdm \
