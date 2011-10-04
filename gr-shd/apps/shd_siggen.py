@@ -42,7 +42,7 @@ class shd_siggen(gr.top_block):
         self._src = gr.sig_source_c(options.samp_rate, gr.GR_SIN_WAVE,
                                     200, 1)
 
-        self._snk = shd.xmini_sink(device_addr=options.address,
+        self._snk = shd.smini_sink(device_addr=options.address,
                                    io_type=shd.io_type.COMPLEX_FLOAT32,
                                    num_channels=1)
 

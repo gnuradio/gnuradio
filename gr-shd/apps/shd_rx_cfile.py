@@ -41,12 +41,12 @@ class rx_cfile_block(gr.top_block):
 
         # Create a SHD device source
         if options.output_shorts:
-            self._src = shd.xmini_source(device_addr=options.address,
+            self._src = shd.smini_source(device_addr=options.address,
                                        io_type=shd.io_type.COMPLEX_INT16,
                                        num_channels=1)
             self._sink = gr.file_sink(gr.sizeof_short*2, filename)
         else:
-            self._src = shd.xmini_source(device_addr=options.address,
+            self._src = shd.smini_source(device_addr=options.address,
                                        io_type=shd.io_type.COMPLEX_FLOAT32,
                                        num_channels=1)
             self._sink = gr.file_sink(gr.sizeof_gr_complex, filename)

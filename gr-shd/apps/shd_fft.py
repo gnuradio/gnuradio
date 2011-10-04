@@ -39,7 +39,8 @@ class app_top_block(stdgui2.std_top_block):
         self.panel = panel
         
         parser = OptionParser(option_class=eng_option)
-        parser.add_option("-a", "--address", type="string", default="type=xmini",
+        parser.add_option("-a", "--address", type="string",
+                          default="type=xmini",
                           help="Address of SHD device, [default=%default]")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
@@ -66,23 +67,13 @@ class app_top_block(stdgui2.std_top_block):
 	self.options = options
         self.show_debug_info = True
         
-        self.src = shd.xmini_source(device_addr=options.address,
-                                  io_type=shd.io_type.COMPLEX_FLOAT32,
-                                  num_channels=1)
+        self.src = shd.smini_source(device_addr=options.address,
+                                    io_type=shd.io_type.COMPLEX_FLOAT32,
+                                    num_channels=1)
 
         self.src.set_samp_rate(options.samp_rate)
         input_rate = self.src.get_samp_rate()
 
-        print "Antenna:     ", self.src.get_antenna()
-        print "Antennas:    ", self.src.get_antennas()
-        print "Dboard:      ", self.src.get_dboard_iface()
-        print "Device:      ", self.src.get_device
-        print "Center Freq: ", self.src.get_center_freq()
-        print "Freq Range:  ", self.src.get_freq_range()
-        print "Gain:        ", self.src.get_gain()
-        print "Gain Names:  ", self.src.get_gain_names()
-        print "Gain Range:  ", self.src.get_gain_range()
-        
         if options.waterfall:
             self.scope = \
               waterfallsink2.waterfall_sink_c (panel, fft_size=1024,
@@ -132,6 +123,12 @@ class app_top_block(stdgui2.std_top_block):
 
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
+
+        print "Center Freq: ", self.src.get_center_freq()
+        print "Freq Range:  ", self.src.get_freq_range()
+        print "Gain:        ", self.src.get_gain()
+        print "Gain Names:  ", self.src.get_gain_names()
+        print "Gain Range:  ", self.src.get_gain_range()
 
     def _set_status_msg(self, msg):
         self.frame.GetStatusBar().SetStatusText(msg, 0)
