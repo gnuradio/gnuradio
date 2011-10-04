@@ -74,30 +74,29 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.freq = 0
 
         # build graph
-
-        #TODO: add an AGC after the channel filter and before the AM_demod
-        
         self.u = uhd.usrp_source(device_addr=options.address,
                                  io_type=uhd.io_type.COMPLEX_FLOAT32,
                                  num_channels=1)
-        
-        usrp_rate = 256e3
-        self.u.set_samp_rate(usrp_rate)
-        usrp_rate = self.u.get_samp_rate()
-        
-        chanfilt_decim = 4
-        demod_rate = usrp_rate / chanfilt_decim     # 64 kHz
-        audio_decimation = 2
-        audio_rate = demod_rate / audio_decimation  # 32 kHz
-        
-        chan_filt_coeffs = gr.firdes.low_pass_2 (1,           # gain
-                                                 usrp_rate,   # sampling rate
-                                                 8e3,         # passband cutoff
-                                                 4e3,         # transition bw
-                                                 60)          # stopband attenuation
 
-        #print len(chan_filt_coeffs)
-        self.chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
+        usrp_rate  = 256e3
+        demod_rate = 64e3
+        audio_rate = 32e3
+        chanfilt_decim = int(usrp_rate // demod_rate)
+        audio_decim = int(demod_rate // audio_rate)
+        
+        self.u.set_samp_rate(usrp_rate)
+        dev_rate = self.u.get_samp_rate()
+
+        # Resample signal to exactly self.usrp_rate
+        # FIXME: make one of the follow-on filters an arb resampler
+        rrate = usrp_rate / dev_rate
+        self.resamp = blks2.pfb_arb_resampler_ccf(rrate)
+        
+        chan_filt_coeffs = gr.firdes.low_pass_2 (1,          # gain
+                                                 usrp_rate,  # sampling rate
+                                                 8e3,        # passband cutoff
+                                                 4e3,        # transition bw
+                                                 60)         # stopband attenuation
 
         if self.use_IF:
           # Turn If to baseband and filter.
@@ -107,8 +106,9 @@ class wfm_rx_block (stdgui2.std_top_block):
                                                            usrp_rate)
         else:
           self.chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
-        self.am_demod = gr.complex_to_mag()
 
+        self.agc = gr.agc_cc(0.1, 1, 1, 100000)
+        self.am_demod = gr.complex_to_mag()
         self.volume_control = gr.multiply_const_ff(self.vol)
 
         audio_filt_coeffs = gr.firdes.low_pass_2 (1,          # gain
@@ -116,25 +116,26 @@ class wfm_rx_block (stdgui2.std_top_block):
                                                   8e3,        # passband cutoff
                                                   2e3,        # transition bw
                                                   60)         # stopband attenuation
+        self.audio_filt=gr.fir_filter_fff(audio_decim, audio_filt_coeffs)
 
-        self.audio_filt=gr.fir_filter_fff(audio_decimation,audio_filt_coeffs)
         # sound card as final sink
         self.audio_sink = audio.sink (int (audio_rate),
                                       options.audio_output,
                                       False)  # ok_to_block
         
         # now wire it all together
-        self.connect (self.u, self.chan_filt, self.am_demod,
-                      self.audio_filt, self.volume_control,
-                      self.audio_sink)
+        self.connect (self.u, self.resamp, self.chan_filt, self.agc,
+                      self.am_demod, self.audio_filt, 
+                      self.volume_control, self.audio_sink)
 
         self._build_gui(vbox, usrp_rate, demod_rate, audio_rate)
 
         if options.gain is None:
             g = self.u.get_gain_range()
             if True:
-              # if no gain was specified, use the mid gain
-              options.gain = (g.start() + g.stop())/2.0
+                # if no gain was specified, use the mid gain
+                options.gain = (g.start() + g.stop())/2.0
+                options.gain = g.stop()
 
         if options.volume is None:
             v = self.volume_range()
@@ -163,7 +164,7 @@ class wfm_rx_block (stdgui2.std_top_block):
             return self.set_freq(kv['freq'])
 
 
-        if 1:
+        if 0:
             self.src_fft = fftsink2.fft_sink_c(self.panel, title="Data from USRP",
                                                fft_size=512, sample_rate=usrp_rate,
 					       ref_scale=32768.0, ref_level=0.0, y_divs=12)
@@ -276,11 +277,6 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         @param target_freq: frequency in Hz
         @rypte: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital down converter.
         """
         r = self.u.set_center_freq(target_freq  + self.IF_freq, 0)
         
