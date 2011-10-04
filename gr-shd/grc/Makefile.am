@@ -23,11 +23,11 @@ include $(top_srcdir)/Makefile.common
 
 grcblocksdir = $(grc_blocksdir)
 
-generated_shd_xmini_blocks = \
-	shd_xmini_source.xml \
-	shd_xmini_sink.xml
+generated_shd_smini_blocks = \
+	shd_smini_source.xml \
+	shd_smini_sink.xml
 
-BUILT_SOURCES += $(generated_shd_xmini_blocks)
+BUILT_SOURCES += $(generated_shd_smini_blocks)
 
 dist_grcblocks_DATA = \
 	shd_block_tree.xml \
@@ -36,8 +36,8 @@ dist_grcblocks_DATA = \
 ########################################################################
 # Rules for generating the source and sink xml wrappers
 ########################################################################
-EXTRA_DIST += $(srcdir)/gen_shd_xmini_blocks.py
+EXTRA_DIST += $(srcdir)/gen_shd_smini_blocks.py
 
-$(generated_shd_xmini_blocks): $(srcdir)/gen_shd_xmini_blocks.py
+$(generated_shd_smini_blocks): $(srcdir)/gen_shd_smini_blocks.py
 	@echo "generating $@..."
 	$(PYTHON) $< $@

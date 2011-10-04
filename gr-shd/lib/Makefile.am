@@ -30,8 +30,8 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = libgnuradio-shd.la
 
 libgnuradio_shd_la_SOURCES = \
-	gr_shd_xmini_source.cc \
-	gr_shd_xmini_sink.cc
+	gr_shd_smini_source.cc \
+	gr_shd_smini_sink.cc
 
 libgnuradio_shd_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \

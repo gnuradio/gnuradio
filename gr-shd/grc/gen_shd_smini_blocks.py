@@ -21,10 +21,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 MAIN_TMPL = """\
 <?xml version="1.0"?>
 <block>
-	<name>SHD: XMINI $sourk.title()</name>
-	<key>shd_xmini_$(sourk)</key>
+	<name>SHD: SMINI $sourk.title()</name>
+	<key>shd_smini_$(sourk)</key>
 	<import>from gnuradio import shd</import>
-	<make>shd.xmini_$(sourk)(
+	<make>shd.smini_$(sourk)(
 	device_addr=\$dev_addr,
 	io_type=shd.io_type.\$type.type,
 	num_channels=\$nchan,
@@ -62,12 +62,6 @@ self.\$(id).set_samp_rate(\$samp_rate)
 \#if \$nchan() > $n
 self.\$(id).set_center_freq(\$center_freq$(n), $n)
 self.\$(id).set_gain(\$gain$(n), $n)
-	\#if \$ant$(n)()
-self.\$(id).set_antenna(\$ant$(n), $n)
-	\#end if
-	\#if \$bw$(n)()
-self.\$(id).set_bandwidth(\$bw$(n), $n)
-	\#end if
 \#end if
 #end for
 </make>
@@ -75,8 +69,6 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	#for $n in range($max_nchan)
 	<callback>set_center_freq(\$center_freq$(n), $n)</callback>
 	<callback>set_gain(\$gain$(n), $n)</callback>
-	<callback>set_antenna(\$ant$(n), $n)</callback>
-	<callback>set_bandwidth(\$bw$(n), $n)</callback>
 	#end for
 	<param>
 		<name>$(direction.title())put Type</name>
@@ -214,18 +206,17 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<nports>\$nchan</nports>
 	</$sourk>
 	<doc>
-The SHD XMINI $sourk.title() Block:
+The SHD SMINI $sourk.title() Block:
 
 Device Address:
 The device address is a delimited string used to locate SHD devices on your system. \\
 If left blank, the first SHD device found will be used. \\
 Use the device address to specify a specific device or list of devices.
-XMINI1 Example: serial=12345678
-XMINI2 Example: addr=192.168.10.2
-XMINI2 Example: addr0=192.168.10.2, addr1=192.168.10.3
+SMINI1 Example: serial=12345678
+SMINI2 Example: type=xmini
 
 Num Motherboards:
-Selects the number of XMINI motherboards in this device configuration.
+Selects the number of SMINI motherboards in this device configuration.
 
 Reference Source:
 Where the motherboard should sync its time and clock references.
@@ -243,7 +234,7 @@ Single channel example: :AB
 Dual channel example: :A :B
 
 Num Channels:
-Selects the total number of channels in this multi-XMINI configuration.
+Selects the total number of channels in this multi-SMINI configuration.
 Ex: 4 motherboards with 2 channels per board = 8 channels total
 
 Sample rate:
@@ -257,15 +248,6 @@ For greater control of how the SHD tunes elements in the RF chain, \\
 pass a tune_request object rather than a simple target frequency.
 Tuning with an LO offset example: shd.tune_request(freq, lo_off)
 
-Antenna:
-For subdevices with only one antenna, this may be left blank. \\
-Otherwise, the user should specify one of the possible antenna choices. \\
-See the daughterboard application notes for the possible antenna choices.
-
-Bandwidth:
-To use the default bandwidth filter setting, this should be zero. \\
-Only certain subdevices have configurable bandwidth filters. \\
-See the daughterboard application notes for possible configurations.
 	</doc>
 </block>
 """
@@ -284,36 +266,6 @@ PARAMS_TMPL = """
 		<value>0</value>
 		<type>real</type>
 		<hide>\#if \$nchan() > $n then 'none' else 'all'#</hide>
-	</param>
-	<param>
-		<name>Ch$(n): Antenna</name>
-		<key>ant$(n)</key>
-		<value></value>
-		<type>string</type>
-		<hide>
-			\#if not \$nchan() > $n
-				all
-			\#elif \$ant$(n)()
-				none
-			\#else
-				part
-			\#end if
-		</hide>
-	</param>
-	<param>
-		<name>Ch$(n): Bandwidth (Hz)</name>
-		<key>bw$(n)</key>
-		<value>0</value>
-		<type>real</type>
-		<hide>
-			\#if not \$nchan() > $n
-				all
-			\#elif \$bw$(n)()
-				none
-			\#else
-				part
-			\#end if
-		</hide>
 	</param>
 """
 

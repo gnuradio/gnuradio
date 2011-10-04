@@ -60,7 +60,7 @@ def _prepare_shd_swig():
         if attr.endswith('_t'): setattr(shd_swig, attr[:-2], myobj)
 
     #Cast constructor args (FIXME swig handle overloads?)
-    for attr in ('xmini_source', 'xmini_sink'):
+    for attr in ('smini_source', 'smini_sink'):
         def constructor_factory(old_constructor):
             def constructor_interceptor(*args, **kwargs):
                 args = list(args)
@@ -76,10 +76,10 @@ def _prepare_shd_swig():
         setattr(shd_swig, attr, constructor_factory(getattr(shd_swig, attr)))
 
     #Aliases for deprecated constructors
-    setattr(shd_swig, 'single_xmini_source', shd_swig.xmini_source)
-    setattr(shd_swig, 'single_xmini_sink', shd_swig.xmini_sink)
-    setattr(shd_swig, 'multi_xmini_source', shd_swig.xmini_source)
-    setattr(shd_swig, 'multi_xmini_sink', shd_swig.xmini_sink)
+    setattr(shd_swig, 'single_smini_source', shd_swig.smini_source)
+    setattr(shd_swig, 'single_smini_sink', shd_swig.smini_sink)
+    setattr(shd_swig, 'multi_smini_source', shd_swig.smini_source)
+    setattr(shd_swig, 'multi_smini_sink', shd_swig.smini_sink)
 
 ########################################################################
 # Initialize this module with the contents of shd swig

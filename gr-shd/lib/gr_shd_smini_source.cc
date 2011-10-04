@@ -19,25 +19,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_shd_xmini_source.h>
+#include <gr_shd_smini_source.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <iostream>
 #include <boost/format.hpp>
 
 /*********************************************************************
- * SHD Multi XMINI Source Impl
+ * SHD Multi S-MINI Source Impl
  ********************************************************************/
-class shd_xmini_source_impl : public shd_xmini_source
+class shd_smini_source_impl : public shd_smini_source
 {
 public:
-  shd_xmini_source_impl(
+  shd_smini_source_impl(
         const shd::device_addr_t &device_addr,
         const shd::io_type_t &io_type,
         size_t num_channels
   ):
     gr_sync_block(
-       "gr shd xmini source",
+       "gr shd smini source",
        gr_make_io_signature(0, 0, 0),
        gr_make_io_signature(num_channels, num_channels, io_type.size)
     ),
@@ -286,14 +286,14 @@ private:
 
 
 /*********************************************************************
- * Make SHD Multi XMINI Source
+ * Make SHD Multi SMINI Source
  ********************************************************************/
 
-boost::shared_ptr<shd_xmini_source> shd_make_xmini_source(
+boost::shared_ptr<shd_smini_source> shd_make_smini_source(
     const shd::device_addr_t &device_addr,
     const shd::io_type_t &io_type,
     size_t num_channels)
 {
-  return boost::shared_ptr<shd_xmini_source>(
-        new shd_xmini_source_impl(device_addr, io_type, num_channels));
+  return boost::shared_ptr<shd_smini_source>(
+        new shd_smini_source_impl(device_addr, io_type, num_channels));
 }

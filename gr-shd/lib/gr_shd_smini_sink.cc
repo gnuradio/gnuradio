@@ -19,20 +19,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_shd_xmini_sink.h>
+#include <gr_shd_smini_sink.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 
 /*********************************************************************
- * SHD Multi XMINI Sink Impl
+ * SHD Multi SMINI Sink Impl
  ********************************************************************/
-class shd_xmini_sink_impl : public shd_xmini_sink
+class shd_smini_sink_impl : public shd_smini_sink
 {
 public:
-  shd_xmini_sink_impl(const shd::device_addr_t &device_addr,
+  shd_smini_sink_impl(const shd::device_addr_t &device_addr,
 		      const shd::io_type_t &io_type,
 		      size_t num_channels):
-    gr_sync_block("gr shd xmini sink",
+    gr_sync_block("gr shd smini sink",
 		  gr_make_io_signature(num_channels, num_channels, io_type.size),
 		  gr_make_io_signature(0, 0, 0)),
     _type(io_type),
@@ -263,14 +263,14 @@ protected:
 };
 
 /*********************************************************************
- * Make SHD Multi XMINI Sink
+ * Make SHD Multi SMINI Sink
  ********************************************************************/
 
-boost::shared_ptr<shd_xmini_sink> shd_make_xmini_sink(
+boost::shared_ptr<shd_smini_sink> shd_make_smini_sink(
     const shd::device_addr_t &device_addr,
     const shd::io_type_t &io_type,
     size_t num_channels)
 {
-  return boost::shared_ptr<shd_xmini_sink>(
-        new shd_xmini_sink_impl(device_addr, io_type, num_channels));
+  return boost::shared_ptr<shd_smini_sink>(
+        new shd_smini_sink_impl(device_addr, io_type, num_channels));
 }

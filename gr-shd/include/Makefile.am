@@ -23,5 +23,5 @@ include $(top_srcdir)/Makefile.common
 
 grinclude_HEADERS = \
 	gr_shd_api.h \
-	gr_shd_xmini_source.h \
-	gr_shd_xmini_sink.h
+	gr_shd_smini_source.h \
+	gr_shd_smini_sink.h
