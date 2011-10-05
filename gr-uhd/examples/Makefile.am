@@ -30,4 +30,6 @@ dist_ourdata_SCRIPTS =		\
 	max_power.py		\
 	usrp_am_mw_rcv.py	\
 	usrp_nbfm_ptt.py	\
-	usrp_nbfm_rcv.py
+	usrp_nbfm_rcv.py	\
+	usrp_wfm_rcv.py		\
+	usrp_wfm_rcv_nogui.py
