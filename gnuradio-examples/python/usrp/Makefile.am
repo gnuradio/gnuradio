@@ -27,6 +27,4 @@ dist_ourdata_SCRIPTS = 			\
 	fm_tx_2_daughterboards.py	\
 	test_dft_analysis.py		\
 	test_dft_synth.py		\
-	usrp_benchmark_usb.py		\
-	usrp_spectrum_sense.py		\
-	usrp_test_loop_lfsr.py
+	usrp_spectrum_sense.py
