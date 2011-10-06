@@ -53,7 +53,7 @@ class status_thread(_threading.Thread):
 
 
 class bert_receiver(gr.hier_block2):
-    def __init__(self, sample_rate, symbol_rate,
+    def __init__(self, bitrate,
                  constellation, samples_per_symbol,
                  differential, excess_bw, gray_coded,
                  freq_bw, timing_bw, phase_bw,
@@ -63,13 +63,15 @@ class bert_receiver(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature(0, 0, 0))                    # Output signature
         
-        self._sample_rate = sample_rate
-        self._symbol_rate = symbol_rate
+        self._bitrate = bitrate
 
         self._demod = digital.generic_demod(constellation, samples_per_symbol,
                                             differential, excess_bw, gray_coded,
                                             freq_bw, timing_bw, phase_bw,
                                             verbose, log)
+
+        self._symbol_rate = self._bitrate * self._demod.bits_per_symbol()
+        self._sample_rate = self._symbol_rate * samples_per_symbol
 
         # Add an SNR probe on the demodulated constellation
         self._snr_probe = gr.probe_mpsk_snr_c(10.0/self._symbol_rate)
@@ -111,22 +113,19 @@ class rx_psk_block(gr.top_block):
 	self._demodulator = self._demodulator_class(**demod_kwargs)
 
         if(options.rx_freq is not None):
-            self._source = uhd_receiver(options.address, options.symbol_rate,
+            self._source = uhd_receiver(options.address, options.bitrate,
                                         options.samples_per_symbol,
                                         options.rx_freq, options.rx_gain,
                                         options.antenna, options.verbose)
-            options.samples_per_symbol = self.source._sps
+            options.samples_per_symbol = self._source._sps
 
         elif(options.from_file is not None):
             self._source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
         else:
             self._source = gr.null_source(gr.sizeof_gr_complex)
 
-        sample_rate = options.symbol_rate * options.samples_per_symbol
-
         # Create the BERT receiver
-        self._receiver = bert_receiver(sample_rate,
-                                       options.symbol_rate,
+        self._receiver = bert_receiver(options.bitrate,
                                        self._demodulator._constellation, 
                                        options.samples_per_symbol,
                                        options.differential, 
@@ -167,8 +166,8 @@ def get_options(demods):
                       default='psk',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(demods.keys()),))
-    parser.add_option("-r", "--symbol-rate", type="eng_float", default=250e3,
-                      help="Select modulation symbol rate (default=%default)")
+    parser.add_option("-r", "--bitrate", type="eng_float", default=250e3,
+                      help="Select modulation bit rate (default=%default)")
     parser.add_option("-S", "--samples-per-symbol", type="float", default=2,
                       help="set samples/symbol [default=%default]")
     if not parser.has_option("--verbose"):

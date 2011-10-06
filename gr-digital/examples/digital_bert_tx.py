@@ -71,7 +71,7 @@ class tx_psk_block(gr.top_block):
                                          options.samples_per_symbol,
                                          options.tx_freq, options.tx_gain,
                                          options.antenna, options.verbose)
-            options.samples_per_symbol = self.sink._sps
+            options.samples_per_symbol = self._sink._sps
             
         elif(options.to_file is not None):
             self._sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
@@ -98,8 +98,8 @@ def get_options(mods):
                             % (', '.join(mods.keys()),))
     parser.add_option("", "--amplitude", type="eng_float", default=0.2,
                       help="set Tx amplitude (0-1) (default=%default)")
-    parser.add_option("-r", "--symbol-rate", type="eng_float", default=250e3,
-                      help="Select modulation symbol rate (default=%default)")
+    parser.add_option("-r", "--bitrate", type="eng_float", default=250e3,
+                      help="Select modulation bit rate (default=%default)")
     parser.add_option("-S", "--samples-per-symbol", type="float", default=2,
                       help="set samples/symbol [default=%default]")
     parser.add_option("","--to-file", default=None,
