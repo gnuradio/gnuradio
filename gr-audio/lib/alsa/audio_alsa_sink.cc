@@ -326,7 +326,7 @@ audio_alsa_sink::work_s16 (int noutput_items,
 			   gr_vector_void_star &output_items)
 {
   typedef gr_int16	sample_t;	// the type of samples we're creating
-  static const int NBITS = 16;		// # of bits in a sample
+  static const float scale_factor = std::pow(2.0f, 16-1) - 1;
   
   unsigned int nchan = input_items.size ();
   const float **in = (const float **) &input_items[0];
@@ -343,7 +343,7 @@ audio_alsa_sink::work_s16 (int noutput_items,
     bi = 0;
     for (unsigned int i = 0; i < d_period_size; i++){
       for (unsigned int chan = 0; chan < nchan; chan++){
-	buf[bi++] = (sample_t) (in[chan][i] * (float) ((1L << (NBITS-1)) - 1));
+	buf[bi++] = (sample_t) (in[chan][i] * scale_factor);
       }
     }
 
@@ -368,7 +368,7 @@ audio_alsa_sink::work_s32 (int noutput_items,
 			   gr_vector_void_star &output_items)
 {
   typedef gr_int32	sample_t;	// the type of samples we're creating
-  static const int NBITS = 32;		// # of bits in a sample
+  static const float scale_factor = std::pow(2.0f, 32-1) - 1;
   
   unsigned int nchan = input_items.size ();
   const float **in = (const float **) &input_items[0];
@@ -385,7 +385,7 @@ audio_alsa_sink::work_s32 (int noutput_items,
     bi = 0;
     for (unsigned int i = 0; i < d_period_size; i++){
       for (unsigned int chan = 0; chan < nchan; chan++){
-	buf[bi++] = (sample_t) (in[chan][i] * (float) ((1L << (NBITS-1)) - 1));
+	buf[bi++] = (sample_t) (in[chan][i] * scale_factor);
       }
     }
 
@@ -410,7 +410,7 @@ audio_alsa_sink::work_s16_1x2 (int noutput_items,
 			       gr_vector_void_star &output_items)
 {
   typedef gr_int16	sample_t;	// the type of samples we're creating
-  static const int NBITS = 16;		// # of bits in a sample
+  static const float scale_factor = std::pow(2.0f, 16-1) - 1;
   
   assert (input_items.size () == 1);
   static const unsigned int nchan = 2;
@@ -427,7 +427,7 @@ audio_alsa_sink::work_s16_1x2 (int noutput_items,
     // process one period of data
     bi = 0;
     for (unsigned int i = 0; i < d_period_size; i++){
-      sample_t t = (sample_t) (in[0][i] * (float) ((1L << (NBITS-1)) - 1));
+      sample_t t = (sample_t) (in[0][i] * scale_factor);
       buf[bi++] = t;
       buf[bi++] = t;
     }
@@ -452,7 +452,7 @@ audio_alsa_sink::work_s32_1x2 (int noutput_items,
 			       gr_vector_void_star &output_items)
 {
   typedef gr_int32	sample_t;	// the type of samples we're creating
-  static const int NBITS = 32;		// # of bits in a sample
+  static const float scale_factor = std::pow(2.0f, 32-1) - 1;
   
   assert (input_items.size () == 1);
   static unsigned int nchan = 2;
@@ -469,7 +469,7 @@ audio_alsa_sink::work_s32_1x2 (int noutput_items,
     // process one period of data
     bi = 0;
     for (unsigned int i = 0; i < d_period_size; i++){
-      sample_t t = (sample_t) (in[0][i] * (float) ((1L << (NBITS-1)) - 1));
+      sample_t t = (sample_t) (in[0][i] * scale_factor);
       buf[bi++] = t;
       buf[bi++] = t;
     }
