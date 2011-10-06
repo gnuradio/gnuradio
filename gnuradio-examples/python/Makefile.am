@@ -30,5 +30,4 @@ SUBDIRS = \
 	ofdm \
 	pfb \
 	tags \
-	usrp \
-	usrp2
+	usrp

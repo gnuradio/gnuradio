@@ -37,7 +37,6 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
    	gnuradio-examples/python/pfb/Makefile \
    	gnuradio-examples/python/tags/Makefile \
    	gnuradio-examples/python/usrp/Makefile \
-	gnuradio-examples/python/usrp2/Makefile \
 	gnuradio-examples/waveforms/Makefile \
     ])
 

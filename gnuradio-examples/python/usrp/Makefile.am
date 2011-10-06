@@ -32,8 +32,4 @@ dist_ourdata_SCRIPTS = 			\
 	usrp_test_loop_lfsr.py		\
 	usrp_tv_rcv_nogui.py		\
 	usrp_tv_rcv.py			\
-	usrp_wfm_rcv_fmdet.py		\
-	usrp_wfm_rcv_pll.py		\
-	usrp_wfm_rcv_sca.py		\
-	usrp_wfm_rcv2_nogui.py		\
 	usrp_wxapt_rcv.py
