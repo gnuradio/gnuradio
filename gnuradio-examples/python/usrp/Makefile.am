@@ -29,5 +29,4 @@ dist_ourdata_SCRIPTS = 			\
 	test_dft_synth.py		\
 	usrp_benchmark_usb.py		\
 	usrp_spectrum_sense.py		\
-	usrp_test_loop_lfsr.py		\
-	usrp_wxapt_rcv.py
+	usrp_test_loop_lfsr.py
