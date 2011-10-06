@@ -78,8 +78,8 @@ class gmsk_mod(gr.hier_block2):
         self._samples_per_symbol = samples_per_symbol
         self._bt = bt
 
-        if not isinstance(samples_per_symbol, int) or samples_per_symbol < 2:
-            raise TypeError, ("samples_per_symbol must be an integer >= 2, is %r" % \
+        if samples_per_symbol < 2:
+            raise TypeError, ("samples_per_symbol must  >= 2, is %r" % \
                                   (samples_per_symbol,))
 
 	ntaps = 4 * samples_per_symbol			# up to 3 bits in filter at once
@@ -94,12 +94,12 @@ class gmsk_mod(gr.hier_block2):
 		1,		       # gain
 		samples_per_symbol,    # symbol_rate
 		bt,		       # bandwidth * symbol time
-		ntaps	               # number of taps
+		int(ntaps)             # number of taps
 		)
 
-	self.sqwave = (1,) * samples_per_symbol       # rectangular window
+	self.sqwave = (1,) * int(samples_per_symbol)       # rectangular window
 	self.taps = numpy.convolve(numpy.array(self.gaussian_taps),numpy.array(self.sqwave))
-	self.gaussian_filter = gr.interp_fir_filter_fff(samples_per_symbol, self.taps)
+        self.gaussian_filter = gr.pfb_arb_resampler_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
 	self.fmmod = gr.frequency_modulator_fc(sensitivity)
