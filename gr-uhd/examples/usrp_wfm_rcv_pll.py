@@ -77,7 +77,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         usrp_rate  = 320e3
         demod_rate = 320e3
         audio_rate = 48e3
-        audio_decim = int(demod_rate / audio_rate)
+        audio_decim = 10
 
         self.u.set_samp_rate(usrp_rate)
         dev_rate = self.u.get_samp_rate()
@@ -130,6 +130,14 @@ class wfm_rx_block (stdgui2.std_top_block):
         if options.volume is None:
             g = self.volume_range()
             options.volume = float(g[0]+g[1])/2
+
+        frange = self.u.get_freq_range()
+        if(frange.start() > self.fm_freq_max or frange.stop() <  self.fm_freq_min):
+            sys.stderr.write("Radio does not support required frequency range.\n")
+            sys.exit(1)
+        if(options.freq < self.fm_freq_min or options.freq > self.fm_freq_max):
+            sys.stderr.write("Requested frequency is outside of required frequency range.\n")
+            sys.exit(1)
 
         # set initial values
         self.set_gain(options.gain)

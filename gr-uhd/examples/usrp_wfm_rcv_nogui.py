@@ -100,7 +100,7 @@ class wfm_rx_block (gr.top_block):
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB
             g = self.u.get_gain_range()
-            options.gain = float(g.start()+g.stop())/2
+            options.gain = float(g.start()+g.stop())/2.0
 
         if options.volume is None:
             g = self.volume_range()
