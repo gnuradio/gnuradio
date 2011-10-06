@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,14 +30,10 @@ Side A is 600 Hz tone.
 Side B is 350 + 440 Hz tones.
 """
 
-from gnuradio import gr
+from gnuradio import gr, uhd, blks2
 from gnuradio.eng_notation import num_to_str, str_to_num
-from gnuradio import usrp
-from gnuradio import audio
-from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-from usrpm import usrp_dbid
 import math
 import sys
 
@@ -90,8 +86,17 @@ class my_top_block(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        usage="%prog: [options] side-A-tx-freq side-B-tx-freq"
+        usage="%prog: [options] tx-freq0 tx-freq1"
         parser = OptionParser (option_class=eng_option, usage=usage)
+        parser.add_option("-a", "--address", type="string",
+                          default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-A", "--antenna", type="string", default=None,
+                          help="select Rx Antenna where appropriate")
+        parser.add_option("-s", "--samp-rate", type="eng_float", default=320e3,
+                          help="set sample rate [default=%default]")
+        parser.add_option("-g", "--gain", type="eng_float", default=None,
+                          help="set gain in dB (default is midpoint)")
         (options, args) = parser.parse_args ()
 
         if len(args) != 2:
@@ -104,32 +109,45 @@ class my_top_block(gr.top_block):
         # ----------------------------------------------------------------
         # Set up USRP to transmit on both daughterboards
 
-        self.u = usrp.sink_c(nchan=2)          # say we want two channels
+        d = uhd.device_find(uhd.device_addr(options.address))
+        uhd_type = d[0].get('type')
 
-        self.dac_rate = self.u.dac_rate()                    # 128 MS/s
-        self.usrp_interp = 400
-        self.u.set_interp_rate(self.usrp_interp)
-        self.usrp_rate = self.dac_rate / self.usrp_interp    # 320 kS/s
+        self.u = uhd.usrp_sink(device_addr=options.address,
+                               io_type=uhd.io_type.COMPLEX_FLOAT32,
+                               num_channels=2)
 
-        # we're using both daughterboard slots, thus subdev is a 2-tuple
-        self.subdev = (self.u.db(0, 0), self.u.db(1, 0))
-        print "Using TX d'board %s" % (self.subdev[0].side_and_name(),)
-        print "Using TX d'board %s" % (self.subdev[1].side_and_name(),)
-        
-        # set up the Tx mux so that
-        #  channel 0 goes to Slot A I&Q and channel 1 to Slot B I&Q
-        self.u.set_mux(0xba98)
+        # Set up USRP system based on type
+        if(uhd_type == "usrp"):
+            self.u.set_subdev_spec("A:0 B:0")
+            tr0 = uhd.tune_request(freq0)
+            tr1 = uhd.tune_request(freq1)
 
-        self.subdev[0].set_gain(self.subdev[0].gain_range()[1])    # set max Tx gain
-        self.subdev[1].set_gain(self.subdev[1].gain_range()[1])    # set max Tx gain
+        else:
+            if abs(freq0 - freq1) > 5.5e6:
+                sys.stderr.write("\nError: When not using two separate d'boards, frequencies must bewithin 5.5MHz of each other.\n")
+                raise SystemExit
 
-        self.set_freq(0, freq0)
-        self.set_freq(1, freq1)
-        self.subdev[0].set_enable(True)             # enable transmitter
-        self.subdev[1].set_enable(True)             # enable transmitter
+            self.u.set_subdev_spec("A:0 A:0")
+
+            mid_freq = (freq0 + freq1)/2.0
+            tr0 = uhd.tune_request(freq0, rf_freq=mid_freq,
+                                   rf_freq_policy=uhd.tune_request.POLICY_MANUAL)
+
+            tr1 = uhd.tune_request(freq1, rf_freq=mid_freq,
+                                   rf_freq_policy=uhd.tune_request.POLICY_MANUAL)
+
+        # Use the tune requests to tune each channel
+        self.set_freq(tr0, 0)
+        self.set_freq(tr1, 1)
+
+        self.usrp_rate  = options.samp_rate
+
+        self.u.set_samp_rate(self.usrp_rate)
+        dev_rate = self.u.get_samp_rate()
 
         # ----------------------------------------------------------------
-        # build two signal sources, interleave them, amplify and connect them to usrp
+        # build two signal sources, interleave them, amplify and
+        # connect them to usrp
 
         sig0 = example_signal_0(self.usrp_rate)
         sig1 = example_signal_1(self.usrp_rate)
@@ -138,43 +156,45 @@ class my_top_block(gr.top_block):
         self.connect(sig0, (intl, 0))
         self.connect(sig1, (intl, 1))
 
-        # apply some gain
-        if_gain = 10000
-        ifamp = gr.multiply_const_cc(if_gain)
-        
-        # and wire them up
-        self.connect(intl, ifamp, self.u)
-        
+        # Correct for any difference in requested and actual rates
+        rrate = self.usrp_rate / dev_rate
+        resamp = blks2.pfb_arb_resampler_ccf(rrate)
 
-    def set_freq(self, side, target_freq):
+        # and wire them up
+        self.connect(intl, resamp, self.u)
+
+        if options.gain is None:
+            # if no gain was specified, use the mid-point in dB
+            g = self.u.get_gain_range()
+            options.gain = float(g.start()+g.stop())/2.0
+
+        self.set_gain(options.gain, 0)
+        self.set_gain(options.gain, 1)
+
+    def set_freq(self, target_freq, chan):
         """
         Set the center frequency we're interested in.
 
         @param side: 0 = side A, 1 = side B
         @param target_freq: frequency in Hz
         @rtype: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital up converter.
         """
 
-        print "Tuning side %s to %sHz" % (("A", "B")[side], num_to_str(target_freq))
-        r = self.u.tune(self.subdev[side].which(), self.subdev[side], target_freq)
+        print "Tuning channel %s to %sHz" % \
+            (chan, num_to_str(target_freq))
+
+        r = self.u.set_center_freq(target_freq, chan)
+
         if r:
-            print "  r.baseband_freq =", num_to_str(r.baseband_freq)
-            print "  r.dxc_freq      =", num_to_str(r.dxc_freq)
-            print "  r.residual_freq =", num_to_str(r.residual_freq)
-            print "  r.inverted      =", r.inverted
-            print "  OK"
             return True
 
         else:
-            print "  Failed!"
+            print "  Set Frequency Failed!"
             
         return False
 
+    def set_gain(self, gain, chan):
+        self.u.set_gain(gain, chan)
 
 if __name__ == '__main__':
     try:

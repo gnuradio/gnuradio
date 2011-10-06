@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2007 Free Software Foundation, Inc.
+# Copyright 2005,2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,16 +20,16 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, eng_notation, optfir, window
+from gnuradio import gr, eng_notation, window
 from gnuradio import audio
-from gnuradio import usrp
+from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-from usrpm import usrp_dbid
 import sys
 import math
 import struct
 
+sys.stderr.write("Warning: this is known to have issues on some machines+Python version combinations to seg fault due to the callback in bin_statitics. If you figure out why, we'd love to hear about it!\n")
 
 class tune(gr.feval_dd):
     """
@@ -41,17 +41,20 @@ class tune(gr.feval_dd):
 
     def eval(self, ignore):
         """
-        This method is called from gr.bin_statistics_f when it wants to change
-        the center frequency.  This method tunes the front end to the new center
-        frequency, and returns the new frequency as its result.
+        This method is called from gr.bin_statistics_f when it wants
+        to change the center frequency.  This method tunes the front
+        end to the new center frequency, and returns the new frequency
+        as its result.
         """
+
         try:
-            # We use this try block so that if something goes wrong from here 
-            # down, at least we'll have a prayer of knowing what went wrong.
-            # Without this, you get a very mysterious:
+            # We use this try block so that if something goes wrong
+            # from here down, at least we'll have a prayer of knowing
+            # what went wrong.  Without this, you get a very
+            # mysterious:
             #
-            #   terminate called after throwing an instance of 'Swig::DirectorMethodException'
-            #   Aborted
+            #   terminate called after throwing an instance of
+            #   'Swig::DirectorMethodException' Aborted
             #
             # message on stderr.  Not exactly helpful ;)
 
@@ -68,7 +71,7 @@ class parse_msg(object):
         self.vlen = int(msg.arg2())
         assert(msg.length() == self.vlen * gr.sizeof_float)
 
-        # FIXME consider using Numarray or NumPy vector
+        # FIXME consider using NumPy array
         t = msg.to_string()
         self.raw_data = t
         self.data = struct.unpack('%df' % (self.vlen,), t)
@@ -81,24 +84,25 @@ class my_top_block(gr.top_block):
 
         usage = "usage: %prog [options] min_freq max_freq"
         parser = OptionParser(option_class=eng_option, usage=usage)
-        parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=(0,0),
-                          help="select USRP Rx side A or B (default=A)")
+        parser.add_option("-a", "--address", type="string",
+                          default="addr=192.168.10.2",
+                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-A", "--antenna", type="string", default=None,
+                          help="select Rx Antenna where appropriate")
+        parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
+                          help="set sample rate [default=%default]")
         parser.add_option("-g", "--gain", type="eng_float", default=None,
                           help="set gain in dB (default is midpoint)")
-        parser.add_option("", "--tune-delay", type="eng_float", default=1e-3, metavar="SECS",
+        parser.add_option("", "--tune-delay", type="eng_float",
+                          default=1e-3, metavar="SECS",
                           help="time to delay (in seconds) after changing frequency [default=%default]")
-        parser.add_option("", "--dwell-delay", type="eng_float", default=10e-3, metavar="SECS",
+        parser.add_option("", "--dwell-delay", type="eng_float",
+                          default=10e-3, metavar="SECS",
                           help="time to dwell (in seconds) at a given frequncy [default=%default]")
         parser.add_option("-F", "--fft-size", type="int", default=256,
                           help="specify number of FFT bins [default=%default]")
-        parser.add_option("-d", "--decim", type="intx", default=16,
-                          help="set decimation to DECIM [default=%default]")
         parser.add_option("", "--real-time", action="store_true", default=False,
                           help="Attempt to enable real-time scheduling")
-        parser.add_option("-B", "--fusb-block-size", type="int", default=0,
-                          help="specify fast usb block size [default=%default]")
-        parser.add_option("-N", "--fusb-nblocks", type="int", default=0,
-                          help="specify number of fast usb blocks [default=%default]")
 
         (options, args) = parser.parse_args()
         if len(args) != 2:
@@ -109,10 +113,10 @@ class my_top_block(gr.top_block):
         self.max_freq = eng_notation.str_to_num(args[1])
 
         if self.min_freq > self.max_freq:
-            self.min_freq, self.max_freq = self.max_freq, self.min_freq   # swap them
+            # swap them
+            self.min_freq, self.max_freq = self.max_freq, self.min_freq
 
 	self.fft_size = options.fft_size
-
 
         if not options.real_time:
             realtime = False
@@ -125,36 +129,14 @@ class my_top_block(gr.top_block):
                 realtime = False
                 print "Note: failed to enable realtime scheduling"
 
-        # If the user hasn't set the fusb_* parameters on the command line,
-        # pick some values that will reduce latency.
-
-        if 1:
-            if options.fusb_block_size == 0 and options.fusb_nblocks == 0:
-                if realtime:                        # be more aggressive
-                    options.fusb_block_size = gr.prefs().get_long('fusb', 'rt_block_size', 1024)
-                    options.fusb_nblocks    = gr.prefs().get_long('fusb', 'rt_nblocks', 16)
-                else:
-                    options.fusb_block_size = gr.prefs().get_long('fusb', 'block_size', 4096)
-                    options.fusb_nblocks    = gr.prefs().get_long('fusb', 'nblocks', 16)
-    
-        #print "fusb_block_size =", options.fusb_block_size
-	#print "fusb_nblocks    =", options.fusb_nblocks
-
         # build graph
-        
-        self.u = usrp.source_c(fusb_block_size=options.fusb_block_size,
-                               fusb_nblocks=options.fusb_nblocks)
+        self.u = uhd.usrp_source(device_addr=options.address,
+                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
+                                 num_channels=1)
 
-
-        adc_rate = self.u.adc_rate()                # 64 MS/s
-        usrp_decim = options.decim
-        self.u.set_decim_rate(usrp_decim)
-        usrp_rate = adc_rate / usrp_decim
-
-        self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
-        self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
-        print "Using RX d'board %s" % (self.subdev.side_and_name(),)
-
+        usrp_rate = options.samp_rate
+        self.u.set_samp_rate(usrp_rate)
+        dev_rate = self.u.get_samp_rate()
 
 	s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
 
@@ -186,7 +168,8 @@ class my_top_block(gr.top_block):
         self.msgq = gr.msg_queue(16)
         self._tune_callback = tune(self)        # hang on to this to keep it from being GC'd
         stats = gr.bin_statistics_f(self.fft_size, self.msgq,
-                                    self._tune_callback, tune_delay, dwell_delay)
+                                    self._tune_callback, tune_delay,
+                                    dwell_delay)
 
         # FIXME leave out the log10 until we speed it up
 	#self.connect(self.u, s2v, fft, c2mag, log, stats)
@@ -194,8 +177,8 @@ class my_top_block(gr.top_block):
 
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB
-            g = self.subdev.gain_range()
-            options.gain = float(g[0]+g[1])/2
+            g = self.u.get_gain_range()
+            options.gain = float(g.start()+g.stop())/2.0
 
         self.set_gain(options.gain)
 	print "gain =", options.gain
@@ -209,6 +192,7 @@ class my_top_block(gr.top_block):
 
         if not self.set_freq(target_freq):
             print "Failed to set frequency to", target_freq
+            sys.exit(1)
 
         return target_freq
                           
@@ -219,17 +203,15 @@ class my_top_block(gr.top_block):
 
         @param target_freq: frequency in Hz
         @rypte: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital down converter.
         """
-        return self.u.tune(0, self.subdev, target_freq)
+        r = self.u.set_center_freq(target_freq)
+        if r:
+            return True
 
+        return False
 
     def set_gain(self, gain):
-        self.subdev.set_gain(gain)
+        self.u.set_gain(gain)
 
 
 def main_loop(tb):
@@ -254,7 +236,7 @@ def main_loop(tb):
 if __name__ == '__main__':
     tb = my_top_block()
     try:
-        tb.start()              # start executing flow graph in another thread...
+        tb.start()
         main_loop(tb)
         
     except KeyboardInterrupt:

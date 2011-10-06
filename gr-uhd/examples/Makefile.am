@@ -27,10 +27,12 @@ ourdatadir = $(exampledir)/uhd
 
 dist_ourdata_SCRIPTS =		\
 	fm_tx4.py		\
+	fm_tx_2_daughterboards.py \
 	max_power.py		\
 	usrp_am_mw_rcv.py	\
 	usrp_nbfm_ptt.py	\
 	usrp_nbfm_rcv.py	\
+	usrp_spectrum_sense.py	\
 	usrp_tv_rcv_nogui.py	\
 	usrp_tv_rcv.py		\
 	usrp_wfm_rcv2_nogui.py	\

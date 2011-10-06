@@ -29,5 +29,4 @@ SUBDIRS = \
 	network \
 	ofdm \
 	pfb \
-	tags \
-	usrp
+	tags
