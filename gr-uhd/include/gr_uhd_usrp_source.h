@@ -69,7 +69,7 @@ class uhd_usrp_source;
 GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,
-    size_t num_channels = 1
+    size_t num_channels
 );
 
 /*!

@@ -28,7 +28,7 @@ MAIN_TMPL = """\
 	<make>uhd.usrp_$(sourk)(
 	device_addr=\$dev_addr,
 	stream_args=uhd.stream_args(
-		cpu_format='\$type.type',
+		cpu_format='\$type',
 		otw_format='\$otw.format',
 		args='\$otw.args',
 		channels=range(\$nchan),
@@ -88,63 +88,67 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<key>type</key>
 		<type>enum</type>
 		<option>
-			<name>complex float32</name>
-			<key>complex</key>
-			<opt>type:fc32</opt>
+			<name>Complex float32</name>
+			<key>fc32</key>
+			<opt>type:complex</opt>
 			<opt>vlen:1</opt>
 		</option>
 		<option>
-			<name>complex uint16</name>
-			<key>short</key>
-			<opt>type:sc16</opt>
+			<name>Complex int16</name>
+			<key>sc16</key>
+			<opt>type:short</opt>
 			<opt>vlen:2</opt>
 		</option>
 		<option>
-			<name>real float32</name>
-			<key>float</key>
-			<opt>type:f32</opt>
+			<name>Real float32</name>
+			<key>f32</key>
+			<opt>type:float</opt>
 			<opt>vlen:1</opt>
 		</option>
 		<option>
-			<name>real uint16</name>
-			<key>short</key>
-			<opt>type:s16</opt>
+			<name>Real uint16</name>
+			<key>s16</key>
+			<opt>type:short</opt>
 			<opt>vlen:1</opt>
 		</option>
 	</param>
 	<param>
 		<name>Wire Format</name>
-		<key>otw_format</key>
+		<key>otw</key>
 		<type>enum</type>
 		<option>
-			<name>complex uint16</name>
+			<name>Complex int16</name>
 			<key>sc16</key>
 			<opt>format:sc16</opt>
 			<opt>args:</opt>
 		</option>
 		<option>
-			<name>complex uint8</name>
+			<name>Complex int8</name>
 			<key>sc8</key>
 			<opt>format:sc8</opt>
 			<opt>args:</opt>
 		</option>
 		<option>
-			<name>real uint16</name>
+			<name>Real int16</name>
+			<key>s16</key>
 			<opt>format:s16</opt>
 			<opt>args:</opt>
 		</option>
 		<option>
-			<name>real uint8</name>
+			<name>Real int8</name>
+			<key>s8</key>
 			<opt>format:s8</opt>
 			<opt>args:</opt>
 		</option>
 		<option>
-			<name>magnitude uint16</name>
+			<name>Magnitude int16</name>
+			<key>s16_mag</key>
 			<opt>format:s16</opt>
 			<opt>args:magnitude</opt>
 		</option>
 		<option>
-			<name>magnitude uint8</name>
+			<name>Magnitude int8</name>
+			<key>s8_mag</key>
 			<opt>format:s8</opt>
 			<opt>args:magnitude</opt>
 		</option>
@@ -263,7 +267,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<check>\$nchan >= \$num_mboards</check>
 	<$sourk>
 		<name>$direction</name>
-		<type>\$type</type>
+		<type>\$type.type</type>
 		<vlen>\$type.vlen</vlen>
 		<nports>\$nchan</nports>
 	</$sourk>

@@ -58,10 +58,15 @@ def _prepare_uhd_swig():
     setattr(uhd_swig, 'device_addr_t', device_addr_t)
 
     #make the streamer args take **kwargs on init
-    class streamer_args(uhd_swig.stream_args_t):
+    class stream_args_t(uhd_swig.stream_args_t):
         def __init__(self, *args, **kwargs):
             super(stream_args_t, self).__init__(*args)
-            for key, val in kwargs.iteritems(): setattr(self, key, val)
+            for key, val in kwargs.iteritems():
+                #for some reason, i cant assign a list in the constructor
+                #but what i can do is append the elements individually
+                if key == 'channels':
+                    for v in val: self.channels.append(v)
+                else: setattr(self, key, val)
     setattr(uhd_swig, 'stream_args_t', stream_args_t)
 
     #handle general things on all uhd_swig attributes
@@ -94,13 +99,15 @@ def _prepare_uhd_swig():
                 for index, key, cast in (
                     (0, 'device_addr', device_addr),
                     (1, 'io_type', io_type),
-                    (1, 'stream_args', stream_args),
                 ):
                     try:
                         if len(args) > index: args[index] = cast(args[index])
                         if kwargs.has_key(key): kwargs[key] = cast(kwargs[key])
                     except: pass
-                return old_constructor(*args, **kwargs)
+                #dont pass kwargs, it confuses swig, map into args list:
+                for key in ('device_addr', 'stream_args', 'io_type', 'num_channels'):
+                    if kwargs.has_key(key): args.append(kwargs[key])
+                return old_constructor(*args)
             return constructor_interceptor
         setattr(uhd_swig, attr, constructor_factory(getattr(uhd_swig, attr)))
 
