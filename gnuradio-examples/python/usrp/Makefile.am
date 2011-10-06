@@ -30,6 +30,4 @@ dist_ourdata_SCRIPTS = 			\
 	usrp_benchmark_usb.py		\
 	usrp_spectrum_sense.py		\
 	usrp_test_loop_lfsr.py		\
-	usrp_tv_rcv_nogui.py		\
-	usrp_tv_rcv.py			\
 	usrp_wxapt_rcv.py
