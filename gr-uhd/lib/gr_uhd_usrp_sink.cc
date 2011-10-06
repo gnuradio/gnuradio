@@ -22,10 +22,24 @@
 #include <gr_uhd_usrp_sink.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
+#include <boost/make_shared.hpp>
 
 static const pmt::pmt_t SOB_KEY = pmt::pmt_string_to_symbol("tx_sob");
 static const pmt::pmt_t EOB_KEY = pmt::pmt_string_to_symbol("tx_eob");
 static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("tx_time");
+
+#include <uhd/convert.hpp>
+inline gr_io_signature_sptr args_to_io_sig(const uhd::stream_args_t &args){
+    const size_t nchan = std::max<size_t>(args.channels.size(), 1);
+    #ifdef GR_UHD_USE_STREAM_API
+        const size_t size = uhd::convert::get_bytes_per_item(args.cpu_format);
+    #else
+        size_t size = 0;
+        if (args.cpu_format == "fc32") size = 8;
+        if (args.cpu_format == "sc16") size = 4;
+    #endif
+    return gr_make_io_signature(nchan, nchan, size);
+}
 
 /***********************************************************************
  * UHD Multi USRP Sink Impl
@@ -34,17 +48,18 @@ class uhd_usrp_sink_impl : public uhd_usrp_sink{
 public:
     uhd_usrp_sink_impl(
         const uhd::device_addr_t &device_addr,
-        const uhd::io_type_t &io_type,
-        size_t num_channels
+        const uhd::stream_args_t &stream_args
     ):
         gr_sync_block(
             "gr uhd usrp sink",
-            gr_make_io_signature(num_channels, num_channels, io_type.size),
+            args_to_io_sig(stream_args),
             gr_make_io_signature(0, 0, 0)
         ),
-        _type(io_type),
-        _nchan(num_channels)
+        _stream_args(stream_args),
+        _nchan(stream_args.channels.size())
     {
+        if (stream_args.cpu_format == "fc32") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_FLOAT32);
+        if (stream_args.cpu_format == "sc16") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_INT16);
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
 
@@ -194,11 +209,17 @@ public:
         get_tags_in_range(_tags, 0, samp0_count, samp0_count + ninput_items);
         if (not _tags.empty()) this->tag_work(ninput_items);
 
+        #ifdef GR_UHD_USE_STREAM_API
         //send all ninput_items with metadata
+        const size_t num_sent = _tx_stream->send(
+            input_items, ninput_items, _metadata, 1.0
+        );
+        #else
         const size_t num_sent = _dev->get_device()->send(
             input_items, ninput_items, _metadata,
-            _type, uhd::device::SEND_MODE_FULL_BUFF, 1.0
+            *_type, uhd::device::SEND_MODE_FULL_BUFF, 1.0
         );
+        #endif
 
         //increment the timespec by the number of samples sent
         _metadata.time_spec += uhd::time_spec_t(0, num_sent, _sample_rate);
@@ -266,15 +287,25 @@ public:
     //Send an empty start-of-burst packet to begin streaming.
     //Set at a time in the near future to avoid late packets.
     bool start(void){
+        #ifdef GR_UHD_USE_STREAM_API
+        _tx_stream = _dev->get_tx_stream(_stream_args);
+        #endif
+
         _metadata.start_of_burst = true;
         _metadata.end_of_burst = false;
         _metadata.has_time_spec = _nchan > 1;
         _metadata.time_spec = get_time_now() + uhd::time_spec_t(0.01);
 
+        #ifdef GR_UHD_USE_STREAM_API
+        _tx_stream->send(
+            gr_vector_const_void_star(_nchan), 0, _metadata, 1.0
+        );
+        #else
         _dev->get_device()->send(
             gr_vector_const_void_star(_nchan), 0, _metadata,
-            _type, uhd::device::SEND_MODE_ONE_PACKET, 1.0
+            *_type, uhd::device::SEND_MODE_ONE_PACKET, 1.0
         );
+        #endif
         return true;
     }
 
@@ -285,16 +316,24 @@ public:
         _metadata.end_of_burst = true;
         _metadata.has_time_spec = false;
 
+        #ifdef GR_UHD_USE_STREAM_API
+        _tx_stream->send(gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
+        #else
         _dev->get_device()->send(
             gr_vector_const_void_star(_nchan), 0, _metadata,
-            _type, uhd::device::SEND_MODE_ONE_PACKET, 1.0
+            *_type, uhd::device::SEND_MODE_ONE_PACKET, 1.0
         );
+        #endif
         return true;
     }
 
 private:
     uhd::usrp::multi_usrp::sptr _dev;
-    const uhd::io_type_t _type;
+    const uhd::stream_args_t _stream_args;
+    boost::shared_ptr<uhd::io_type_t> _type;
+    #ifdef GR_UHD_USE_STREAM_API
+    uhd::tx_streamer::sptr _tx_stream;
+    #endif
     size_t _nchan;
     uhd::tx_metadata_t _metadata;
     double _sample_rate;
@@ -311,7 +350,25 @@ boost::shared_ptr<uhd_usrp_sink> uhd_make_usrp_sink(
     const uhd::io_type_t &io_type,
     size_t num_channels
 ){
+    //fill in the streamer args
+    uhd::stream_args_t stream_args;
+    switch(io_type.tid){
+    case uhd::io_type_t::COMPLEX_FLOAT32: stream_args.cpu_format = "fc32"; break;
+    case uhd::io_type_t::COMPLEX_INT16: stream_args.cpu_format = "sc16"; break;
+    default: throw std::runtime_error("only complex float and shorts known to work");
+    }
+    stream_args.otw_format = "sc16"; //only sc16 known to work
+    for (size_t chan = 0; chan < num_channels; chan++)
+        stream_args.channels.push_back(chan); //linear mapping
+
+    return uhd_make_usrp_sink(device_addr, stream_args);
+}
+
+boost::shared_ptr<uhd_usrp_sink> uhd_make_usrp_sink(
+    const uhd::device_addr_t &device_addr,
+    const uhd::stream_args_t &stream_args
+){
     return boost::shared_ptr<uhd_usrp_sink>(
-        new uhd_usrp_sink_impl(device_addr, io_type, num_channels)
+        new uhd_usrp_sink_impl(device_addr, stream_args)
     );
 }

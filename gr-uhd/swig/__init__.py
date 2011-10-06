@@ -57,6 +57,13 @@ def _prepare_uhd_swig():
         def __setitem__(self, key, val): self.set(key, val)
     setattr(uhd_swig, 'device_addr_t', device_addr_t)
 
+    #make the streamer args take **kwargs on init
+    class streamer_args(uhd_swig.stream_args_t):
+        def __init__(self, *args, **kwargs):
+            super(stream_args_t, self).__init__(*args)
+            for key, val in kwargs.iteritems(): setattr(self, key, val)
+    setattr(uhd_swig, 'stream_args_t', stream_args_t)
+
     #handle general things on all uhd_swig attributes
     #Install the __str__ and __repr__ handlers if applicable
     #Create aliases for uhd swig attributes to avoid the "_t"
@@ -87,9 +94,12 @@ def _prepare_uhd_swig():
                 for index, key, cast in (
                     (0, 'device_addr', device_addr),
                     (1, 'io_type', io_type),
+                    (1, 'stream_args', stream_args),
                 ):
-                    if len(args) > index: args[index] = cast(args[index])
-                    if kwargs.has_key(key): kwargs[key] = cast(kwargs[key])
+                    try:
+                        if len(args) > index: args[index] = cast(args[index])
+                        if kwargs.has_key(key): kwargs[key] = cast(kwargs[key])
+                    except: pass
                 return old_constructor(*args, **kwargs)
             return constructor_interceptor
         setattr(uhd_swig, attr, constructor_factory(getattr(uhd_swig, attr)))

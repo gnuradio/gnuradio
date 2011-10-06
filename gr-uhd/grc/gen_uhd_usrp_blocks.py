@@ -27,8 +27,12 @@ MAIN_TMPL = """\
 	<import>from gnuradio import uhd</import>
 	<make>uhd.usrp_$(sourk)(
 	device_addr=\$dev_addr,
-	io_type=uhd.io_type.\$type.type,
-	num_channels=\$nchan,
+	stream_args=uhd.stream_args(
+		cpu_format='\$type.type',
+		otw_format='\$otw.format',
+		args='\$otw.args',
+		channels=range(\$nchan),
+	),
 )
 \#if \$clock_rate()
 self.\$(id).set_clock_rate(\$clock_rate, uhd.ALL_MBOARDS)
@@ -84,16 +88,65 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<key>type</key>
 		<type>enum</type>
 		<option>
-			<name>Complex</name>
+			<name>complex float32</name>
 			<key>complex</key>
-			<opt>type:COMPLEX_FLOAT32</opt>
+			<opt>type:fc32</opt>
 			<opt>vlen:1</opt>
 		</option>
 		<option>
-			<name>Short</name>
+			<name>complex uint16</name>
 			<key>short</key>
-			<opt>type:COMPLEX_INT16</opt>
+			<opt>type:sc16</opt>
 			<opt>vlen:2</opt>
+		</option>
+		<option>
+			<name>real float32</name>
+			<key>float</key>
+			<opt>type:f32</opt>
+			<opt>vlen:1</opt>
+		</option>
+		<option>
+			<name>real uint16</name>
+			<key>short</key>
+			<opt>type:s16</opt>
+			<opt>vlen:1</opt>
+		</option>
+	</param>
+	<param>
+		<name>Wire Format</name>
+		<key>otw_format</key>
+		<type>enum</type>
+		<option>
+			<name>complex uint16</name>
+			<key>sc16</key>
+			<opt>format:sc16</opt>
+			<opt>args:</opt>
+		</option>
+		<option>
+			<name>complex uint8</name>
+			<key>sc8</key>
+			<opt>format:sc8</opt>
+			<opt>args:</opt>
+		</option>
+		<option>
+			<name>real uint16</name>
+			<opt>format:s16</opt>
+			<opt>args:</opt>
+		</option>
+		<option>
+			<name>real uint8</name>
+			<opt>format:s8</opt>
+			<opt>args:</opt>
+		</option>
+		<option>
+			<name>magnitude uint16</name>
+			<opt>format:s16</opt>
+			<opt>args:magnitude</opt>
+		</option>
+		<option>
+			<name>magnitude uint8</name>
+			<opt>format:s8</opt>
+			<opt>args:magnitude</opt>
 		</option>
 	</param>
 	<param>

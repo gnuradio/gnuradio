@@ -26,6 +26,20 @@
 #include <gr_sync_block.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
+#ifndef INCLUDED_UHD_STREAM_HPP
+namespace uhd{
+    struct GR_UHD_API stream_args_t{
+        std::string cpu_format;
+        std::string otw_format;
+        std::string args;
+        std::vector<size_t> channels;
+    };
+}
+#  define INCLUDED_UHD_STREAM_HPP
+#else
+#  define GR_UHD_USE_STREAM_API
+#endif
+
 class uhd_usrp_source;
 
 /*!
@@ -55,7 +69,34 @@ class uhd_usrp_source;
 GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::io_type_t &io_type,
-    size_t num_channels
+    size_t num_channels = 1
+);
+
+/*!
+ * \brief Make a new USRP source block.
+ *
+ * The USRP source block receives samples and writes to a stream.
+ * The source block also provides API calls for receiver settings.
+ *
+ * RX Stream tagging:
+ *
+ * The following tag keys will be produced by the work function:
+ *  - pmt::pmt_string_to_symbol("rx_time")
+ *
+ * The timstamp tag value is a pmt tuple of the following:
+ * (uint64 seconds, and double fractional seconds).
+ * A timestamp tag is produced at start() and after overflows.
+ *
+ * See the UHD manual for more detailed documentation:
+ * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+ *
+ * \param device_addr the address to identify the hardware
+ * \param stream_args the IO format and channel specification
+ * \return a new USRP source block object
+ */
+GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
+    const uhd::device_addr_t &device_addr,
+    const uhd::stream_args_t &stream_args
 );
 
 class GR_UHD_API uhd_usrp_source : virtual public gr_sync_block{
