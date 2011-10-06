@@ -221,7 +221,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         hbox.Add((5,0), 0)
         myform['freq_slider'] = \
             form.quantized_slider_field(parent=self.panel, sizer=hbox, weight=3,
-                                        range=(87.9e6, 108.1e6, 0.1e6),
+                                        range=(self.fm_freq_min, self.fm_freq_max, 0.1e6),
                                         callback=self.set_freq)
         hbox.Add((5,0), 0)
         vbox.Add(hbox, 0, wx.EXPAND)
