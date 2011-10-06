@@ -44,11 +44,12 @@ class bert_transmit(gr.hier_block2):
         # Create BERT data bit stream	
 	self._bits = gr.vector_source_b([1,], True)      # Infinite stream of ones
         self._scrambler = gr.scrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit scrambler
-        self._pack = gr.unpacked_to_packed_bb(8, gr.GR_MSB_FIRST)
 
         self._mod = digital.generic_mod(constellation, samples_per_symbol,
                                         differential, excess_bw, gray_coded,
                                         verbose, log)
+
+        self._pack = gr.unpacked_to_packed_bb(self._mod.bits_per_symbol(), gr.GR_MSB_FIRST)
 
         self.connect(self._bits, self._scrambler, self._pack, self._mod, self)
 

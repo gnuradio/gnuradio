@@ -43,7 +43,7 @@ class status_thread(_threading.Thread):
 
     def run(self):
         while not self.done:
-            print "Freq. Offset: %5.0f Hz  Timing Offset: %5.1f ppm  Estimated SNR: %4.1f dB  BER: %g" % (
+            print "Freq. Offset: {0:5.0f} Hz  Timing Offset: {1:10.1f} ppm  Estimated SNR: {2:4.1f} dB  BER: {3:g}".format(
                 tb.frequency_offset(), tb.timing_offset()*1e6, tb.snr(), tb.ber())
             try:
                 time.sleep(1.0)
