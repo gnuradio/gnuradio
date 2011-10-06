@@ -36,6 +36,7 @@
 #include <gr_pfb_decimator_ccf.h>
 #include <gr_pfb_interpolator_ccf.h>
 #include <gr_pfb_arb_resampler_ccf.h>
+#include <gr_pfb_arb_resampler_fff.h>
 #include <gr_pfb_clock_sync_ccf.h>
 #include <gr_pfb_clock_sync_fff.h>
 #include <gr_dc_blocker_cc.h>
@@ -57,6 +58,7 @@
 %include "gr_pfb_decimator_ccf.i"
 %include "gr_pfb_interpolator_ccf.i"
 %include "gr_pfb_arb_resampler_ccf.i"
+%include "gr_pfb_arb_resampler_fff.i"
 %include "gr_pfb_decimator_ccf.i"
 %include "gr_pfb_interpolator_ccf.i"
 %include "gr_pfb_arb_resampler_ccf.i"

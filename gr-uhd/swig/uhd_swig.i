@@ -26,23 +26,8 @@
 
 #define GR_UHD_API
 
-////////////////////////////////////////////////////////////////////////
-// Language independent exception handler
-////////////////////////////////////////////////////////////////////////
-%include exception.i
-
-%exception {
-    try {
-        $action
-    }
-    catch(std::exception &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-    }
-    catch(...) {
-        SWIG_exception(SWIG_RuntimeError, "Unknown exception");
-    }
-
-}
+//suppress 319. No access specifier given for base class name (ignored).
+#pragma SWIG nowarn=319
 
 ////////////////////////////////////////////////////////////////////////
 // standard includes
@@ -90,8 +75,6 @@
 
 %include <uhd/types/metadata.hpp>
 
-%ignore uhd::device::register_device; //causes compile to choke in MSVC
-%include <uhd/device.hpp>
 %template(device_addr_vector_t) std::vector<uhd::device_addr_t>;
 
 %include <uhd/types/sensors.hpp>
