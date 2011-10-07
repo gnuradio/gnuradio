@@ -74,7 +74,7 @@ class my_top_block(gr.top_block):
 
             audio_rate = self.audio_tx.sample_rate
             usrp_rate = self.source.get_sample_rate()
-            rrate = usrp_rate / audio_rate
+            rrate = audio_rate / usrp_rate
             self.resampler = blks2.pfb_arb_resampler_ccf(rrate)
             
             self.connect(self.source, self.resampler, self.rxpath)
