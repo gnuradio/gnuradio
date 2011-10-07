@@ -22,8 +22,6 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = \
-	digital \
-	digital-bert \
 	mp-sched \
 	multi_usrp \
 	network \

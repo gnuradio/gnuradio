@@ -28,8 +28,6 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
         gnuradio-examples/Makefile \
 	gnuradio-examples/python/Makefile \
 	gnuradio-examples/grc/Makefile \
-   	gnuradio-examples/python/digital/Makefile \
-	gnuradio-examples/python/digital-bert/Makefile \
    	gnuradio-examples/python/mp-sched/Makefile \
    	gnuradio-examples/python/multi_usrp/Makefile \
    	gnuradio-examples/python/network/Makefile \
