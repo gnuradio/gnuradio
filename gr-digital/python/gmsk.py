@@ -78,6 +78,8 @@ class gmsk_mod(gr.hier_block2):
         self._samples_per_symbol = samples_per_symbol
         self._bt = bt
 
+        self._differential = False # make consistant with other modulators
+        
         if samples_per_symbol < 2:
             raise TypeError, ("samples_per_symbol must  >= 2, is %r" % \
                                   (samples_per_symbol,))
@@ -192,6 +194,8 @@ class gmsk_demod(gr.hier_block2):
         self._bt = bt
         self._timing_bw = timing_bw
         self._timing_max_dev= _def_timing_max_dev
+
+        self._differential = False # make consistant with other modulators
         
         if samples_per_symbol < 2:
             raise TypeError, "samples_per_symbol >= 2, is %f" % samples_per_symbol
@@ -234,7 +238,7 @@ class gmsk_demod(gr.hier_block2):
 
     def _print_verbage(self):
         print "bits per symbol:     %d" % self.bits_per_symbol()
-        print "Bandwidth-Time Prod: %f" % self._bw
+        print "Bandwidth-Time Prod: %f" % self._bt
         print "Timing bandwidth:    %.2e" % self._timing_bw
 
 
@@ -253,6 +257,8 @@ class gmsk_demod(gr.hier_block2):
         """
         parser.add_option("", "--timing-bw", type="float", default=_def_timing_bw,
                           help="set timing symbol sync loop gain lock-in bandwidth [default=%default]")
+        parser.add_option("", "--bt", type="float", default=_def_bt,
+                          help="set bandwidth-time product [default=%default] (GMSK)")
     add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(options):
