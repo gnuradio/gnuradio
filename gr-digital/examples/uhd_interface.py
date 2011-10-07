@@ -90,6 +90,9 @@ class uhd_interface:
 
         return (actual_samp_rate, actual_sps)
 
+    def get_sample_rate(self):
+        return self.u.get_samp_rate()
+    
     def set_gain(self, gain=None):
         if gain is None:
             # if no gain was specified, use the mid-point in dB

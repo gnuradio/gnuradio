@@ -20,17 +20,13 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr
-from gnuradio import uhd
-from gnuradio import audio
+from gnuradio import gr, blks2, audio, uhd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-from gnuradio.vocoder import gsm_full_rate
-
-# From gr-digital
 from gnuradio import digital
+from gnuradio import vocoder
 
 import random
 import time
@@ -39,6 +35,7 @@ import sys
 
 # from current dir
 from transmit_path import transmit_path
+from uhd_interface import uhd_transmitter
 
 #import os
 #print os.getpid()
@@ -50,11 +47,11 @@ class audio_rx(gr.hier_block2):
 	gr.hier_block2.__init__(self, "audio_rx",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
-        sample_rate = 8000
+        self.sample_rate = sample_rate = 8000
         src = audio.source(sample_rate, audio_input_dev)
         src_scale = gr.multiply_const_ff(32767)
         f2s = gr.float_to_short()
-        voice_coder = gsm_full_rate.encode_sp()
+        voice_coder = vocoder.gsm_fr_encode_sp()
         self.packets_from_encoder = gr.msg_queue()
         packet_sink = gr.message_sink(33, self.packets_from_encoder, False)
         self.connect(src, src_scale, f2s, voice_coder, packet_sink)
@@ -70,13 +67,27 @@ class my_top_block(gr.top_block):
         self.txpath = transmit_path(modulator_class, options)
         self.audio_rx = audio_rx(options.audio_input)
 
-        if(options.to_file is not None):
+        if(options.tx_freq is not None):
+            self.sink = uhd_transmitter(options.address, options.bitrate,
+                                        options.samples_per_symbol,
+                                        options.tx_freq, options.tx_gain,
+                                        options.antenna, options.verbose)
+            options.samples_per_symbol = self.sink._sps
+            audio_rate = self.audio_rx.sample_rate
+            usrp_rate = self.sink.get_sample_rate()
+            rrate = usrp_rate / audio_rate
+            
+        elif(options.to_file is not None):
             self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            rrate = 1
         else:
             self.sink = gr.null_sink(gr.sizeof_gr_complex)
+            rrate = 1
 
+        self.resampler = blks2.pfb_arb_resampler_ccf(rrate)
+            
 	self.connect(self.audio_rx)
-	self.connect(self.txpath, self.sink)
+	self.connect(self.txpath, self.resampler, self.sink)
             
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -106,7 +117,9 @@ def main():
                       help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
     parser.add_option("","--to-file", default=None,
                       help="Output file for modulated samples")
+
     transmit_path.add_options(parser, expert_grp)
+    uhd_transmitter.add_options(parser)
 
     for mod in mods.values():
         mod.add_options(expert_grp)
