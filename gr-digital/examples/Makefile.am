@@ -37,6 +37,8 @@ dist_ourdata_SCRIPTS = \
 	tx_voice.py		\
 	rx_voice.py		\
 	run_length.py		\
-	gen_whitener.py
-
+	gen_whitener.py		\
+	digital_bert_rx.py	\
+	digital_bert_tx.py	\
+	tunnel.py
 
