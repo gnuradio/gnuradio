@@ -90,6 +90,9 @@ class uhd_interface:
 
         return (actual_samp_rate, actual_sps)
 
+    def get_sample_rate(self):
+        return self.u.get_samp_rate()
+    
     def set_gain(self, gain=None):
         if gain is None:
             # if no gain was specified, use the mid-point in dB
@@ -197,7 +200,8 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
                           metavar="FREQ")
         parser.add_option("", "--rx-gain", type="eng_float", default=None,
                           help="set receive gain in dB (default is midpoint)")
-        parser.add_option("-v", "--verbose", action="store_true", default=False)
+        if not parser.has_option("--verbose"):
+            parser.add_option("-v", "--verbose", action="store_true", default=False)
 
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)

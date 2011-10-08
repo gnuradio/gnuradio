@@ -1,0 +1,5 @@
+/Makefile
+/Makefile.in
+*.dat
+*.32f
+*.32fc

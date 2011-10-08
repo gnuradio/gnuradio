@@ -78,8 +78,10 @@ class gmsk_mod(gr.hier_block2):
         self._samples_per_symbol = samples_per_symbol
         self._bt = bt
 
-        if not isinstance(samples_per_symbol, int) or samples_per_symbol < 2:
-            raise TypeError, ("samples_per_symbol must be an integer >= 2, is %r" % \
+        self._differential = False # make consistant with other modulators
+        
+        if samples_per_symbol < 2:
+            raise TypeError, ("samples_per_symbol must  >= 2, is %r" % \
                                   (samples_per_symbol,))
 
 	ntaps = 4 * samples_per_symbol			# up to 3 bits in filter at once
@@ -94,12 +96,12 @@ class gmsk_mod(gr.hier_block2):
 		1,		       # gain
 		samples_per_symbol,    # symbol_rate
 		bt,		       # bandwidth * symbol time
-		ntaps	               # number of taps
+		int(ntaps)             # number of taps
 		)
 
-	self.sqwave = (1,) * samples_per_symbol       # rectangular window
+	self.sqwave = (1,) * int(samples_per_symbol)       # rectangular window
 	self.taps = numpy.convolve(numpy.array(self.gaussian_taps),numpy.array(self.sqwave))
-	self.gaussian_filter = gr.interp_fir_filter_fff(samples_per_symbol, self.taps)
+        self.gaussian_filter = gr.pfb_arb_resampler_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
 	self.fmmod = gr.frequency_modulator_fc(sensitivity)
@@ -192,6 +194,8 @@ class gmsk_demod(gr.hier_block2):
         self._bt = bt
         self._timing_bw = timing_bw
         self._timing_max_dev= _def_timing_max_dev
+
+        self._differential = False # make consistant with other modulators
         
         if samples_per_symbol < 2:
             raise TypeError, "samples_per_symbol >= 2, is %f" % samples_per_symbol
@@ -234,7 +238,7 @@ class gmsk_demod(gr.hier_block2):
 
     def _print_verbage(self):
         print "bits per symbol:     %d" % self.bits_per_symbol()
-        print "Bandwidth-Time Prod: %f" % self._bw
+        print "Bandwidth-Time Prod: %f" % self._bt
         print "Timing bandwidth:    %.2e" % self._timing_bw
 
 
@@ -253,6 +257,8 @@ class gmsk_demod(gr.hier_block2):
         """
         parser.add_option("", "--timing-bw", type="float", default=_def_timing_bw,
                           help="set timing symbol sync loop gain lock-in bandwidth [default=%default]")
+        parser.add_option("", "--bt", type="float", default=_def_bt,
+                          help="set bandwidth-time product [default=%default] (GMSK)")
     add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(options):

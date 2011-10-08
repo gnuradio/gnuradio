@@ -63,5 +63,5 @@ class gr_pfb_clock_sync_ccf : public gr_block
   float get_damping_factor() const;
   float get_alpha() const;
   float get_beta() const;
-
+  float get_clock_rate() const;
 };

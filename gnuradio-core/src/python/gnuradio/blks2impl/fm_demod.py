@@ -88,7 +88,7 @@ class demod_20k0f3e_cf(fm_demod_cf):
         fm_demod_cf.__init__(self, channel_rate, audio_decim,
                              5000,	# Deviation
                              3000,	# Audio passband frequency
-                             4000)	# Audio stopband frequency
+                             4500)	# Audio stopband frequency
 
 class demod_200kf3e_cf(fm_demod_cf):
     """

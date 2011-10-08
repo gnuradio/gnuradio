@@ -20,15 +20,22 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
+from gnuradio import gr
 from gnuradio import uhd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.wxgui import stdgui2, fftsink2, waterfallsink2, scopesink2, form, slider
 from optparse import OptionParser
-import wx
+
 import sys
 import numpy
+
+try:
+    from gnuradio.wxgui import stdgui2, form, slider
+    from gnuradio.wxgui import fftsink2, waterfallsink2, scopesink2
+    import wx
+except ImportError:
+    sys.stderr.write("Error importing GNU Radio's wxgui. Please make sure gr-wxgui is installed.\n")
+    sys.exit(1)
 
 class app_top_block(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
@@ -38,7 +45,8 @@ class app_top_block(stdgui2.std_top_block):
         self.panel = panel
         
         parser = OptionParser(option_class=eng_option)
-        parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
+        parser.add_option("-a", "--address", type="string",
+                          default="addr=192.168.10.2",
                           help="Address of UHD device, [default=%default]")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
@@ -74,7 +82,8 @@ class app_top_block(stdgui2.std_top_block):
         
         if options.waterfall:
             self.scope = \
-              waterfallsink2.waterfall_sink_c (panel, fft_size=1024, sample_rate=input_rate)
+              waterfallsink2.waterfall_sink_c (panel, fft_size=1024,
+                                               sample_rate=input_rate)
             self.frame.SetMinSize((800, 420))
         elif options.oscilloscope:
             self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
@@ -114,9 +123,8 @@ class app_top_block(stdgui2.std_top_block):
 
         if self.show_debug_info:
             self.myform['samprate'].set_value(self.u.get_samp_rate())
-            self.myform['fs@gbe'].set_value(input_rate)
-            self.myform['baseband'].set_value(0)
-            self.myform['ddc'].set_value(0)
+            self.myform['rffreq'].set_value(0)
+            self.myform['dspfreq'].set_value(0)
 
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
@@ -137,14 +145,16 @@ class app_top_block(stdgui2.std_top_block):
         hbox.Add((5,0), 0, 0)
         myform['freq'] = form.float_field(
             parent=self.panel, sizer=hbox, label="Center freq", weight=1,
-            callback=myform.check_input_and_call(_form_set_freq, self._set_status_msg))
+            callback=myform.check_input_and_call(_form_set_freq,
+                                                 self._set_status_msg))
 
         hbox.Add((5,0), 0, 0)
         g = self.u.get_gain_range()
 
 	# some configurations don't have gain control
 	if g.stop() > g.start():
-    	    myform['gain'] = form.slider_field(parent=self.panel, sizer=hbox, label="Gain",
+    	    myform['gain'] = form.slider_field(parent=self.panel,
+                                               sizer=hbox, label="Gain",
                                                weight=3,
                                                min=int(g.start()), max=int(g.stop()),
                                                callback=self.set_gain)
@@ -175,19 +185,16 @@ class app_top_block(stdgui2.std_top_block):
         hbox.Add((5,0), 0)
         myform['samprate'] = form.float_field(
             parent=panel, sizer=hbox, label="Sample Rate",
-            callback=myform.check_input_and_call(_form_set_samp_rate, self._set_status_msg))
+            callback=myform.check_input_and_call(_form_set_samp_rate,
+                                                 self._set_status_msg))
 
         hbox.Add((5,0), 1)
-        myform['fs@gbe'] = form.static_float_field(
-            parent=panel, sizer=hbox, label="Fs@GbE")
+        myform['rffreq'] = form.static_float_field(
+            parent=panel, sizer=hbox, label="RF Freq.")
 
         hbox.Add((5,0), 1)
-        myform['baseband'] = form.static_float_field(
-            parent=panel, sizer=hbox, label="Analog BB")
-
-        hbox.Add((5,0), 1)
-        myform['ddc'] = form.static_float_field(
-            parent=panel, sizer=hbox, label="DDC")
+        myform['dspfreq'] = form.static_float_field(
+            parent=panel, sizer=hbox, label="DSP Freq.")
 
         hbox.Add((5,0), 0)
         vbox.Add(hbox, 0, wx.EXPAND)
@@ -198,19 +205,13 @@ class app_top_block(stdgui2.std_top_block):
 
         @param target_freq: frequency in Hz
         @rypte: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital down converter.
         """
         r = self.u.set_center_freq(target_freq, 0)
 
         if r:
-            self.myform['freq'].set_value(target_freq)     # update displayed value
-            if self.show_debug_info:
-                self.myform['baseband'].set_value(r.actual_rf_freq)
-                self.myform['ddc'].set_value(r.actual_dsp_freq)
+            self.myform['freq'].set_value(self.u.get_center_freq())
+            self.myform['rffreq'].set_value(r.actual_rf_freq)
+            self.myform['dspfreq'].set_value(r.actual_dsp_freq)
 	    if not self.options.oscilloscope:
 		self.scope.set_baseband_freq(target_freq)
     	    return True
@@ -228,7 +229,6 @@ class app_top_block(stdgui2.std_top_block):
         self.scope.set_sample_rate(input_rate)
         if self.show_debug_info:  # update displayed values
             self.myform['samprate'].set_value(self.u.get_samp_rate())
-            self.myform['fs@gbe'].set_value(input_rate)
 
         # uhd set_samp_rate never fails; always falls back to closest requested.
         return True  

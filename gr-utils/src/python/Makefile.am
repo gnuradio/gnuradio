@@ -49,10 +49,4 @@ bin_SCRIPTS = \
     gr_plot_iq.py \
     gr_plot_short.py \
     gr_plot_qt.py \
-    gr_filter_design.py \
-    usrp_fft.py \
-    usrp_oscope.py \
-    usrp_rx_nogui.py \
-    usrp_siggen.py \
-    usrp_siggen_gui.py \
-    usrp2_fft.py
+    gr_filter_design.py

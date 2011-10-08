@@ -24,9 +24,13 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST += \
     $(bin_SCRIPTS)
 
+SUBDIRS = hf_explorer hf_radio
+
 ourpythondir = $(grpythondir)
 
 bin_SCRIPTS = \
-    uhd_fft.py \
-    uhd_rx_cfile.py
-
+	uhd_fft.py 		\
+	uhd_rx_cfile.py		\
+	uhd_siggen.py		\
+	uhd_siggen_gui.py	\
+	uhd_rx_nogui.py
