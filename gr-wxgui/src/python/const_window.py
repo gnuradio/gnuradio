@@ -36,7 +36,7 @@ import forms
 # Constants
 ##################################################
 SLIDER_STEPS = 200
-ALPHA_MIN_EXP, ALPHA_MAX_EXP = -6, -0.301
+LOOP_BW_MIN_EXP, LOOP_BW_MAX_EXP = -6, 0.0
 GAIN_MU_MIN_EXP, GAIN_MU_MAX_EXP = -6, -0.301
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'const_rate', 5)
 DEFAULT_WIN_SIZE = (500, 400)
@@ -70,19 +70,19 @@ class control_panel(wx.Panel):
 			parent=self, label='Options',
 			bold=True, orient=wx.VERTICAL,
 		)
-		#alpha
+		#loop_bw
 		control_box.AddStretchSpacer()
 		forms.text_box(
-			sizer=control_box, parent=self, label='Alpha',
+			sizer=control_box, parent=self, label='Loop Bandwidth',
 			converter=forms.float_converter(),
-			ps=parent, key=ALPHA_KEY,
+			ps=parent, key=LOOP_BW_KEY,
 		)
 		forms.log_slider(
 			sizer=control_box, parent=self,
-			min_exp=ALPHA_MIN_EXP,
-			max_exp=ALPHA_MAX_EXP,
+			min_exp=LOOP_BW_MIN_EXP,
+			max_exp=LOOP_BW_MAX_EXP,
 			num_steps=SLIDER_STEPS,
-			ps=parent, key=ALPHA_KEY,
+			ps=parent, key=LOOP_BW_KEY,
 		)
 		#gain_mu
 		control_box.AddStretchSpacer()
@@ -127,8 +127,7 @@ class const_window(wx.Panel, pubsub.pubsub):
 		size,
 		title,
 		msg_key,
-		alpha_key,
-		beta_key,
+		loop_bw_key,
 		gain_mu_key,
 		gain_omega_key,
 		omega_key,
@@ -137,8 +136,7 @@ class const_window(wx.Panel, pubsub.pubsub):
 		pubsub.pubsub.__init__(self)
 		#proxy the keys
 		self.proxy(MSG_KEY, controller, msg_key)
-		self.proxy(ALPHA_KEY, controller, alpha_key)
-		self.proxy(BETA_KEY, controller, beta_key)
+		self.proxy(LOOP_BW_KEY, controller, loop_bw_key)
 		self.proxy(GAIN_MU_KEY, controller, gain_mu_key)
 		self.proxy(GAIN_OMEGA_KEY, controller, gain_omega_key)
 		self.proxy(OMEGA_KEY, controller, omega_key)
@@ -164,8 +162,6 @@ class const_window(wx.Panel, pubsub.pubsub):
 		main_box.Add(self.control_panel, 0, wx.EXPAND)
 		self.SetSizerAndFit(main_box)
 		#alpha and gain mu 2nd orders
-		def set_beta(alpha): self[BETA_KEY] = .25*alpha**2
-		self.subscribe(ALPHA_KEY, set_beta)
 		def set_gain_omega(gain_mu): self[GAIN_OMEGA_KEY] = .25*gain_mu**2
 		self.subscribe(GAIN_MU_KEY, set_gain_omega)
 		#register events

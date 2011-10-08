@@ -27,6 +27,12 @@ import common
 from gnuradio import gr, blks2
 from pubsub import pubsub
 from constants import *
+import sys
+try:
+	from gnuradio import digital
+except ImportError:
+	sys.stderr.write("Error: could not import gnuradio.digital, please install gr-digitial.\n")
+	sys.exit(1)
 
 ##################################################
 # Constellation sink block (wrapper for old wxgui)
@@ -47,7 +53,7 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 		#mpsk recv params
 		M=4,
 		theta=0,
-		alpha=0.005,
+		loop_bw=6.28/100.0,
 		fmax=0.06,
 		mu=0.5,
 		gain_mu=0.005,
@@ -68,16 +74,18 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 			vec_rate=frame_rate,
 			vec_len=const_size,
 		)
-		beta = .25*alpha**2 #redundant, will be updated
 		fmin = -fmax
 		gain_omega = .25*gain_mu**2 #redundant, will be updated
 		omega = 1 #set_sample_rate will update this
 		# Costas frequency/phase recovery loop
 		# Critically damped 2nd order PLL
-		self._costas = gr.costas_loop_cc(alpha, beta, fmax, fmin, M)
+		self._costas = digital.costas_loop_cc(loop_bw, M)
 		# Timing recovery loop
 		# Critically damped 2nd order DLL
-		self._retime = gr.clock_recovery_mm_cc(omega, gain_omega, mu, gain_mu, omega_limit)
+		self._retime = digital.clock_recovery_mm_cc(omega,
+							    gain_omega,
+							    mu, gain_mu,
+							    omega_limit)
 		#sync = gr.mpsk_receiver_cc(
 		#	M, #psk order
 		#	theta,
@@ -97,10 +105,8 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 		#controller
 		def setter(p, k, x): p[k] = x
 		self.controller = pubsub()
-		self.controller.subscribe(ALPHA_KEY, self._costas.set_alpha)
-		self.controller.publish(ALPHA_KEY, self._costas.alpha)
-		self.controller.subscribe(BETA_KEY, self._costas.set_beta)
-		self.controller.publish(BETA_KEY, self._costas.beta)
+		self.controller.subscribe(LOOP_BW_KEY, self._costas.set_loop_bandwidth)
+		self.controller.publish(LOOP_BW_KEY, self._costas.get_loop_bandwidth)
 		self.controller.subscribe(GAIN_MU_KEY, self._retime.set_gain_mu)
 		self.controller.publish(GAIN_MU_KEY, self._retime.gain_mu)
 		self.controller.subscribe(OMEGA_KEY, self._retime.set_omega)
@@ -121,8 +127,7 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 			size=size,
 			title=title,
 			msg_key=MSG_KEY,
-			alpha_key=ALPHA_KEY,
-			beta_key=BETA_KEY,
+			loop_bw_key=LOOP_BW_KEY,
 			gain_mu_key=GAIN_MU_KEY,
 			gain_omega_key=GAIN_OMEGA_KEY,
 			omega_key=OMEGA_KEY,
