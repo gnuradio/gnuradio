@@ -24,11 +24,12 @@
 #ifndef INCLUDED_GR_PFB_ARB_RESAMPLER_FFF_H
 #define	INCLUDED_GR_PFB_ARB_RESAMPLER_FFF_H
 
+#include <gr_core_api.h>
 #include <gr_block.h>
 
 class gr_pfb_arb_resampler_fff;
 typedef boost::shared_ptr<gr_pfb_arb_resampler_fff> gr_pfb_arb_resampler_fff_sptr;
-gr_pfb_arb_resampler_fff_sptr gr_make_pfb_arb_resampler_fff (float rate,
+GR_CORE_API gr_pfb_arb_resampler_fff_sptr gr_make_pfb_arb_resampler_fff (float rate,
 							     const std::vector<float> &taps,
 							     unsigned int filter_size=32);
 
@@ -95,7 +96,7 @@ class gr_fir_fff;
  *       Systems", Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
  */
 
-class gr_pfb_arb_resampler_fff : public gr_block
+class GR_CORE_API gr_pfb_arb_resampler_fff : public gr_block
 {
  private:
   /*!
@@ -107,7 +108,7 @@ class gr_pfb_arb_resampler_fff : public gr_block
                                        related to quantization noise introduced during the resampling.
 				       Defaults to 32 filters.
    */
-  friend gr_pfb_arb_resampler_fff_sptr gr_make_pfb_arb_resampler_fff (float rate,
+  friend GR_CORE_API gr_pfb_arb_resampler_fff_sptr gr_make_pfb_arb_resampler_fff (float rate,
 								      const std::vector<float> &taps,
 								      unsigned int filter_size);
 

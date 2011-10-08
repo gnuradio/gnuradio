@@ -337,6 +337,7 @@ SET(gr_core_filter_triple_threats
     gr_pfb_decimator_ccf
     gr_pfb_interpolator_ccf
     gr_pfb_arb_resampler_ccf
+    gr_pfb_arb_resampler_fff
     gr_pfb_clock_sync_ccf
     gr_pfb_clock_sync_fff
 )
