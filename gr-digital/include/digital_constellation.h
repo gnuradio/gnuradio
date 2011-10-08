@@ -86,7 +86,7 @@ public:
   unsigned int dimensionality() {return d_dimensionality;}
 
   unsigned int bits_per_symbol () {
-    return floor(log(d_constellation.size())/d_dimensionality/log(2));
+    return floor(log(1.0*d_constellation.size())/d_dimensionality/log(2.0));
   }
   
   unsigned int arity () {

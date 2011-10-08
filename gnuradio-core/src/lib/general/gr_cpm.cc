@@ -28,6 +28,10 @@
 #include <cfloat>
 #include <gr_cpm.h>
 
+//gives us erf on compilers without it
+#include <boost/math/special_functions/erf.hpp>
+namespace bm = boost::math;
+
 #ifndef M_TWOPI
 #  define M_TWOPI (2*M_PI)
 #endif
@@ -178,8 +182,8 @@ generate_cpm_gaussian_taps(unsigned samples_per_sym, unsigned L, double bt)
 	double alpha = 5.336446256636997 * bt;
 	for (unsigned i = 0; i < samples_per_sym * L; i++) {
 		double k =  i - Ls/2; // Causal to acausal
-		taps_d[i] = (erf(alpha * (k / samples_per_sym + 0.5)) -
-		             erf(alpha * (k / samples_per_sym - 0.5)))
+		taps_d[i] = (bm::erf(alpha * (k / samples_per_sym + 0.5)) -
+		             bm::erf(alpha * (k / samples_per_sym - 0.5)))
 			        * 0.5 / samples_per_sym;
 		taps[i] = (float) taps_d[i];
 	}
