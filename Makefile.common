@@ -63,13 +63,6 @@ grpyexecdir = $(pyexecdir)/gnuradio
 usrppythondir = $(pythondir)/usrpm
 usrppyexecdir = $(pyexecdir)/usrpm
 
-# gcell includes
-gcellincludedir = $(includedir)/gcell
-gcellspuincludedir = $(includedir)/gcell/spu
-
-# Cell spu libs
-libspudir = $(libdir)spu
-
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES = $(DEFINES) $(GNURADIO_INCLUDES) \
@@ -98,17 +91,6 @@ VOLK_LA = @volk_LA@
 # How to link in the USRP library from inside the tree
 USRP_INCLUDES = @usrp_INCLUDES@
 USRP_LA = @usrp_LA@
-
-# How to link the gcell library from inside the tree (the PPU part)
-GCELL_INCLUDES = @gcell_INCLUDES@
-GCELL_LA = @gcell_LA@
-
-# How to link the gcell library from inside the tree (the SPU part)
-GCELL_SPU_INCLUDES = @gcell_spu_INCLUDES@
-GCELL_SPU_LA = @gcell_spu_LA@
-
-# libtool aware wrapper for ppu-embedspu
-GCELL_EMBEDSPU_LIBTOOL = @abs_top_srcdir@/gcell/lib/runtime/gcell-embedspu-libtool
 
 # GR-DIGITAL includes and libraries
 GR_DIGITAL_INCLUDES = @gr_digital_INCLUDES@

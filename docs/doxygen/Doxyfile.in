@@ -587,7 +587,6 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/docs/doxygen/xml-swig \
                          @abs_top_builddir@/docs/doxygen/other/doxypy.py \
                          @abs_top_builddir@/dtools \
-                         @abs_top_srcdir@/gcell/ibm \
                          @abs_top_builddir@/gnuradio-core/src/lib/bug_work_around_6.cc \
                          @abs_top_builddir@/gnuradio-core/src/lib/filter/assembly.h \
                          @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_all.py \

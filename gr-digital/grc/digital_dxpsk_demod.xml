@@ -33,17 +33,14 @@
 	<make>digital.$(type)_demod(
 	samples_per_symbol=$samples_per_symbol,
 	excess_bw=$excess_bw,
-	costas_alpha=$costas_alpha,
-	timing_alpha=$timing_alpha,
-	timing_max_dev=$timing_max_dev,
-	gray_code=$gray_code,
+	phase_bw=$phase_bw,
+	timing_bw=$timing_bw,
+	gray_coded=$gray_coded,
 	verbose=$verbose,
-	log=$log,
-	sync_out=$sync_out,
+	log=$log
 )</make>
-	<callback>clock_recov.set_alpha($costas_alpha)</callback>
-	<callback>clock_recov.set_beta(0.25*$costas_alpha**2)</callback>
-	<callback>time_recov.set_alpha($timing_alpha)</callback>
+	<callback>clock_recov.set_loop_bandwidth($phase_bw)</callback>
+	<callback>time_recov.set_loop_bandwidth($timing_bw)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -70,21 +67,15 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Costas Alpha</name>
-		<key>costas_alpha</key>
-		<value>0.175</value>
+		<name>Phase Loop Bandwidth</name>
+		<key>phase_bw</key>
+		<value>6.28/100.0</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Timing Alpha</name>
-		<key>timing_alpha</key>
-		<value>0.100</value>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Timing Max Dev</name>
-		<key>timing_max_dev</key>
-		<value>1.5</value>
+		<name>Timing Bandwidth</name>
+		<key>timing_bw</key>
+		<value>6.28/100.0</value>
 		<type>real</type>
 	</param>
 	<param>
@@ -95,7 +86,7 @@
 	</param>
 	<param>
 		<name>Gray Code</name>
-		<key>gray_code</key>
+		<key>gray_coded</key>
 		<value>True</value>
 		<type>bool</type>
 		<option>
@@ -158,10 +149,5 @@
 	<source>
 		<name>out</name>
 		<type>byte</type>
-	</source>
-	<source>
-		<name>sync</name>
-		<type>complex</type>
-		<optional>1</optional>
 	</source>
 </block>

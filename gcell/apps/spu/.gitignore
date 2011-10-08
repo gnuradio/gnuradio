@@ -1,8 +1,0 @@
-/Makefile
-/Makefile.in
-/*.a
-/*.la
-/*.lo
-/.deps
-/.libs
-/benchmark_procs
