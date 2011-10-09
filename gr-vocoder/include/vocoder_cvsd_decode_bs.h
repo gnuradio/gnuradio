@@ -34,6 +34,8 @@ typedef boost::shared_ptr<vocoder_cvsd_decode_bs> vocoder_cvsd_decode_bs_sptr;
   * values are modeled after the Bluetooth standard and should not be changed,
   * except by an advanced user
   *
+  * \ingroup vocoder_blk
+  *
   * \param min_step       Minimum step size used to update the internal reference.  Default: "10"
   * \param max_step       Maximum step size used to update the internal reference.  Default: "1280"
   * \param step_decay     Decay factor applied to step size when there is not a run of J output 1s or 0s.  Default: "0.9990234375"  (i.e. 1-1/1024)

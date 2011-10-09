@@ -9,6 +9,8 @@ provide unified documentation for the C++ parts of the system and the
 parts written in Python (mostly hierarchical blocks).  Until this gets
 worked out, please bear with us, or better yet, solve it for us!
 
+More details on packages in GNU Radio:
 \li \ref page_digital
+\li \ref page_vocoder
 
 */
