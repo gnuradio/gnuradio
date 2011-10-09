@@ -27,6 +27,7 @@
 /*! \defgroup misc_blk Miscellaneous Blocks		*/
 /*! \defgroup slicedice_blk Slicing and Dicing Streams  */
 /*! \defgroup vocoder_blk Voice Encoders and Decoders	*/
+/*! \defgroup digital Digital Modulation Blocks		*/
 
 /*! 
  * \defgroup base_blk Base classes for GR Blocks
