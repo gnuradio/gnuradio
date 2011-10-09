@@ -39,6 +39,17 @@ GR_QTGUI_API qtgui_time_sink_c_sptr qtgui_make_time_sink_c(int size, double bw,
 							   int nconnectons=1,
 							   QWidget *parent=NULL);
 
+/*!
+ * \brief A graphical sink to display multiple signals in time.
+ * \ingroup qtgui_blk
+ *
+ * This is a QT-based graphical sink the takes set of a complex
+ * streams and plots them in the time domain. For each signal, both
+ * the signal's I and Q parts are plotted, and they are all plotted
+ * with a different color, and the \a set_title and \a set_color
+ * functions can be used to change the lable and color for a given
+ * input number.
+ */
 class GR_QTGUI_API qtgui_time_sink_c : public gr_sync_block
 {
 private:

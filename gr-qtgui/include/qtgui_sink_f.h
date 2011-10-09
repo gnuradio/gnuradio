@@ -39,8 +39,19 @@ GR_QTGUI_API qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
 				     double fc=0, double bw=1.0,
 				     const std::string &name="Spectrum Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
-				     bool plottime=true, bool plotconst=true,
+				     bool plottime=true, bool plotconst=false,
 				     QWidget *parent=NULL);
+
+/*!
+ * \brief A graphical sink to display freq, spec, and time.
+ * \ingroup qtgui_blk
+ *
+ * This is a QT-based graphical sink the takes a float stream and
+ * plots it. The default action is to plot the signal as a PSD (FFT),
+ * spectrogram (waterfall), and time domain plots. The plots may be
+ * turned off by setting the appropriate boolean value in the
+ * constructor to False.
+ */
 
 class GR_QTGUI_API qtgui_sink_f : public gr_block
 {

@@ -41,6 +41,17 @@ GR_QTGUI_API qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
 				     bool plottime=true, bool plotconst=true,
 				     QWidget *parent=NULL);
 
+/*!
+ * \brief A graphical sink to display freq, spec, time, and const plots.
+ * \ingroup qtgui_blk
+ *
+ * This is a QT-based graphical sink the takes a complex stream and
+ * plots it. The default action is to plot the signal as a PSD (FFT),
+ * spectrogram (waterfall), time domain I&Q, and constellation (I
+ * vs. Q) plots. The plots may be turned off by setting the
+ * appropriate boolean value in the constructor to False.  
+ */
+
 class GR_QTGUI_API qtgui_sink_c : public gr_block
 {
 private:
