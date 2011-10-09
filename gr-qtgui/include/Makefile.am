@@ -19,12 +19,15 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-'''
-This is the gr-qtgui package. This package includes QT-based graphical
-sinks.
-'''
+include $(top_srcdir)/Makefile.common
 
-# The presence of this file turns this directory into a Python package
+# These headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS = 		\
+	gr_qtgui_api.h		\
+	qtgui_time_sink_c.h	\
+	qtgui_time_sink_f.h	\
+	qtgui_sink_c.h		\
+	qtgui_sink_f.h		\
+	qtgui_util.h
 
-from qtgui_swig import *
-import qtgui_swig as qtgui # to preserve the old interface
+libgnuradio_digital_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
