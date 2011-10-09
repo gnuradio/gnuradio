@@ -11,7 +11,7 @@ normally imported as:
 \endcode
 
 See the Doxygen documentation for details about the blocks available
-in this package. The relavent blocks are listed in the \ref
+in this package. The relevant blocks are listed in the \ref
 vocoder_blk group.
 
 A quick listing of the details can be found in Python after importing
