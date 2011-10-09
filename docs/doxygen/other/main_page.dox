@@ -12,5 +12,6 @@ worked out, please bear with us, or better yet, solve it for us!
 More details on packages in GNU Radio:
 \li \ref page_digital
 \li \ref page_vocoder
+\li \ref page_qtgui
 
 */
