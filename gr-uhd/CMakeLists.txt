@@ -20,14 +20,14 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
-FIND_PACKAGE(UHD)
+find_package(UHD)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-uhd" ENABLE_GR_UHD
     Boost_FOUND
     UHD_FOUND
@@ -42,12 +42,12 @@ GR_SET_GLOBAL(GR_UHD_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_UHD)
+if(ENABLE_GR_UHD)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_UHD_DESCRIPTION "GNU Radio UHD Blocks")
 
 CPACK_COMPONENT("uhd_runtime"
@@ -81,27 +81,27 @@ CPACK_COMPONENT("uhd_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(include)
-ADD_SUBDIRECTORY(lib)
-ADD_SUBDIRECTORY(examples)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(swig)
-    ADD_SUBDIRECTORY(grc)
-    ADD_SUBDIRECTORY(apps)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(include)
+add_subdirectory(lib)
+add_subdirectory(examples)
+if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(grc)
+    add_subdirectory(apps)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-uhd.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-uhd.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-uhd.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "uhd_devel"
 )
 
-ENDIF(ENABLE_GR_UHD)
+endif(ENABLE_GR_UHD)

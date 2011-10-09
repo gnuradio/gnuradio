@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INSTALL(FILES
+install(FILES
     digital_block_tree.xml
     digital_binary_slicer_fb.xml
     digital_clock_recovery_mm_xx.xml

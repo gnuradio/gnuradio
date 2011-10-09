@@ -20,15 +20,15 @@
 ########################################################################
 # Setup swig generation
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_PAGER_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-pager)
+set(GR_SWIG_LIBRARIES gnuradio-pager)
 
 GR_SWIG_MAKE(pager_swig pager_swig.i)
 
@@ -38,7 +38,7 @@ GR_SWIG_INSTALL(
     COMPONENT "pager_python"
 )
 
-INSTALL(
+install(
     FILES
     pager_swig.i
     pager_flex_deinterleave.i

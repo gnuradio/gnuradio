@@ -20,7 +20,7 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrPython)
+include(GrPython)
 
 GR_PYTHON_CHECK_MODULE("python >= 2.5"     sys          "sys.version.split()[0] >= '2.5'"           PYTHON_MIN_VER_FOUND)
 GR_PYTHON_CHECK_MODULE("Cheetah >= 2.0.0"  Cheetah      "Cheetah.Version >= '2.0.0'"                CHEETAH_FOUND)
@@ -31,15 +31,15 @@ GR_PYTHON_CHECK_MODULE("numpy"             numpy        True                    
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
-IF(NOT CMAKE_CROSSCOMPILING)
-    SET(grc_python_deps
+include(GrComponent)
+if(NOT CMAKE_CROSSCOMPILING)
+    set(grc_python_deps
         CHEETAH_FOUND
         LXML_FOUND
         PYGTK_FOUND
         NUMPY_FOUND
     )
-ENDIF(NOT CMAKE_CROSSCOMPILING)
+endif(NOT CMAKE_CROSSCOMPILING)
 
 GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
     ENABLE_GR_CORE_
@@ -51,12 +51,12 @@ GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GRC)
+if(ENABLE_GRC)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_COMPONENT("grc"
     DISPLAY_NAME "GNU Radio Companion"
     DESCRIPTION  "Graphical flow graph designer"
@@ -66,15 +66,15 @@ CPACK_COMPONENT("grc"
 ########################################################################
 # Create and install the grc conf file
 ########################################################################
-FILE(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_DOC_DIR} docdir)
-FILE(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
+file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_DOC_DIR} docdir)
+file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
 
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/grc.conf.in
     ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
     DESTINATION ${GR_PKG_CONF_DIR}
     COMPONENT "grc"
@@ -89,14 +89,14 @@ GR_PYTHON_INSTALL(
 ########################################################################
 # Appens NSIS commands to set environment variables
 ########################################################################
-FILE(TO_NATIVE_PATH ${GR_PKG_DOC_DIR} GR_DOC_DIR)
-STRING(REPLACE "\\" "\\\\" GR_DOC_DIR ${GR_DOC_DIR})
+file(TO_NATIVE_PATH ${GR_PKG_DOC_DIR} GR_DOC_DIR)
+string(REPLACE "\\" "\\\\" GR_DOC_DIR ${GR_DOC_DIR})
 
-FILE(TO_NATIVE_PATH ${GRC_BLOCKS_DIR} GRC_BLOCKS_PATH)
-STRING(REPLACE "\\" "\\\\" GRC_BLOCKS_PATH ${GRC_BLOCKS_PATH})
+file(TO_NATIVE_PATH ${GRC_BLOCKS_DIR} GRC_BLOCKS_PATH)
+string(REPLACE "\\" "\\\\" GRC_BLOCKS_PATH ${GRC_BLOCKS_PATH})
 
-FILE(TO_NATIVE_PATH ${GR_PYTHON_DIR} GR_PYTHON_POSTFIX)
-STRING(REPLACE "\\" "\\\\" GR_PYTHON_POSTFIX ${GR_PYTHON_POSTFIX})
+file(TO_NATIVE_PATH ${GR_PYTHON_DIR} GR_PYTHON_POSTFIX)
+string(REPLACE "\\" "\\\\" GR_PYTHON_POSTFIX ${GR_PYTHON_POSTFIX})
 
 CPACK_SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}
     WriteRegStr HKLM ${HLKM_ENV} \\\"GR_DOC_DIR\\\" \\\"$INSTDIR\\\\${GR_DOC_DIR}\\\"
@@ -113,12 +113,12 @@ CPACK_SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "${CPACK_NSIS_EXTRA_UNINSTALL_COMM
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(base)
-ADD_SUBDIRECTORY(blocks)
-ADD_SUBDIRECTORY(freedesktop)
-ADD_SUBDIRECTORY(grc_gnuradio)
-ADD_SUBDIRECTORY(gui)
-ADD_SUBDIRECTORY(python)
-ADD_SUBDIRECTORY(scripts)
+add_subdirectory(base)
+add_subdirectory(blocks)
+add_subdirectory(freedesktop)
+add_subdirectory(grc_gnuradio)
+add_subdirectory(gui)
+add_subdirectory(python)
+add_subdirectory(scripts)
 
-ENDIF(ENABLE_GRC)
+endif(ENABLE_GRC)

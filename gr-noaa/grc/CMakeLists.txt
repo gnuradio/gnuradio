@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INSTALL(FILES
+install(FILES
     noaa_hrpt_decoder.xml
     noaa_hrpt_deframer.xml
     noaa_hrpt_pll_cf.xml

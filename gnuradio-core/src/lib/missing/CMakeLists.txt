@@ -21,12 +21,12 @@
 # This file included, use CMake directory variables
 ########################################################################
 
-LIST(APPEND gnuradio_core_sources
+list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/bug_work_around_8.cc
 )
 
-IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
-    LIST(APPEND gnuradio_core_sources
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
+    list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/posix_memalign.cc
     )
-ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
+endif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")

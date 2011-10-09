@@ -20,14 +20,14 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
-FIND_PACKAGE(SDL)
+find_package(SDL)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-video-sdl" ENABLE_GR_VIDEO_SDL
     SDL_FOUND
     Boost_FOUND
@@ -41,12 +41,12 @@ GR_SET_GLOBAL(GR_VIDEO_SDL_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_VIDEO_SDL)
+if(ENABLE_GR_VIDEO_SDL)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_VIDEO_SDL_DESCRIPTION "GNU Radio Video SDL Blocks")
 
 CPACK_COMPONENT("video_sdl_runtime"
@@ -80,20 +80,20 @@ CPACK_COMPONENT("video_sdl_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(src)
+add_subdirectory(src)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-video-sdl.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "video_sdl_devel"
 )
 
-ENDIF(ENABLE_GR_VIDEO_SDL)
+endif(ENABLE_GR_VIDEO_SDL)

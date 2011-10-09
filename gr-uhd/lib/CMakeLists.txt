@@ -20,38 +20,38 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_UHD_INCLUDE_DIRS}
 )
 
-INCLUDE_DIRECTORIES(${UHD_INCLUDE_DIRS})
-LINK_DIRECTORIES(${UHD_LIBRARY_DIRS})
+include_directories(${UHD_INCLUDE_DIRS})
+link_directories(${UHD_LIBRARY_DIRS})
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gr_uhd_sources
+list(APPEND gr_uhd_sources
     gr_uhd_usrp_source.cc
     gr_uhd_usrp_sink.cc
     gr_uhd_amsg_source.cc
 )
 
-LIST(APPEND uhd_libs
+list(APPEND uhd_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${UHD_LIBRARIES}
 )
 
-ADD_LIBRARY(gnuradio-uhd SHARED ${gr_uhd_sources})
-TARGET_LINK_LIBRARIES(gnuradio-uhd ${uhd_libs})
-SET_TARGET_PROPERTIES(gnuradio-uhd PROPERTIES DEFINE_SYMBOL "gnuradio_uhd_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-uhd PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-uhd SHARED ${gr_uhd_sources})
+target_link_libraries(gnuradio-uhd ${uhd_libs})
+set_target_properties(gnuradio-uhd PROPERTIES DEFINE_SYMBOL "gnuradio_uhd_EXPORTS")
+set_target_properties(gnuradio-uhd PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-uhd
+install(TARGETS gnuradio-uhd
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "uhd_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "uhd_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "uhd_runtime" # .dll file

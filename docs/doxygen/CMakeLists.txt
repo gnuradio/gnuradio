@@ -20,32 +20,32 @@
 ########################################################################
 # Create the doxygen configuration file
 ########################################################################
-FILE(TO_NATIVE_PATH ${CMAKE_SOURCE_DIR} top_srcdir)
-FILE(TO_NATIVE_PATH ${CMAKE_SOURCE_DIR} abs_top_srcdir)
-FILE(TO_NATIVE_PATH ${CMAKE_BINARY_DIR} abs_top_builddir)
+file(TO_NATIVE_PATH ${CMAKE_SOURCE_DIR} top_srcdir)
+file(TO_NATIVE_PATH ${CMAKE_SOURCE_DIR} abs_top_srcdir)
+file(TO_NATIVE_PATH ${CMAKE_BINARY_DIR} abs_top_builddir)
 
-SET(HAVE_DOT ${DOXYGEN_DOT_FOUND})
-SET(enable_html_docs YES)
-SET(enable_latex_docs NO)
-SET(enable_xml_docs YES)
+set(HAVE_DOT ${DOXYGEN_DOT_FOUND})
+set(enable_html_docs YES)
+set(enable_latex_docs NO)
+set(enable_xml_docs YES)
 
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
     ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
 @ONLY)
 
-SET(BUILT_DIRS ${CMAKE_CURRENT_BINARY_DIR}/xml ${CMAKE_CURRENT_BINARY_DIR}/html)
+set(BUILT_DIRS ${CMAKE_CURRENT_BINARY_DIR}/xml ${CMAKE_CURRENT_BINARY_DIR}/html)
 
 ########################################################################
 # Make and install doxygen docs
 ########################################################################
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${BUILT_DIRS}
     COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating documentation with doxygen"
 )
 
-ADD_CUSTOM_TARGET(doxygen_target ALL DEPENDS ${BUILT_DIRS})
+add_custom_target(doxygen_target ALL DEPENDS ${BUILT_DIRS})
 
-INSTALL(DIRECTORY ${BUILT_DIRS} DESTINATION ${GR_PKG_DOC_DIR} COMPONENT "docs")
+install(DIRECTORY ${BUILT_DIRS} DESTINATION ${GR_PKG_DOC_DIR} COMPONENT "docs")

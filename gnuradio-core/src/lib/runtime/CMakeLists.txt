@@ -24,7 +24,7 @@
 ########################################################################
 # Append gnuradio-core library sources
 ########################################################################
-LIST(APPEND gnuradio_core_sources
+list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_basic_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_flowgraph.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_flat_flowgraph.cc
@@ -70,7 +70,7 @@ LIST(APPEND gnuradio_core_sources
 ########################################################################
 # Append gnuradio-core test sources
 ########################################################################
-LIST(APPEND test_gnuradio_core_sources
+list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2_derived.cc
@@ -87,7 +87,7 @@ LIST(APPEND test_gnuradio_core_sources
 ########################################################################
 # Install runtime headers
 ########################################################################
-INSTALL(FILES
+install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_basic_block.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_flowgraph.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_flat_flowgraph.h
@@ -136,8 +136,8 @@ INSTALL(FILES
 ########################################################################
 # Install swig headers
 ########################################################################
-IF(ENABLE_PYTHON)
-INSTALL(FILES
+if(ENABLE_PYTHON)
+install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_basic_block.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_block.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_block_detail.i
@@ -159,4 +159,4 @@ INSTALL(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
 )
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)

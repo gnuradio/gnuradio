@@ -22,13 +22,13 @@
 ########################################################################
 
 #set the C language property on the assembly files so the compiler will pick them up
-FILE(GLOB gr_core_filter_asms ${CMAKE_CURRENT_SOURCE_DIR}/*.S)
-FOREACH(gr_core_filter_asm ${gr_core_filter_asms})
-    SET_PROPERTY(SOURCE ${gr_core_filter_asm} PROPERTY LANGUAGE C)
-ENDFOREACH(gr_core_filter_asm)
+file(GLOB gr_core_filter_asms ${CMAKE_CURRENT_SOURCE_DIR}/*.S)
+foreach(gr_core_filter_asm ${gr_core_filter_asms})
+    set_property(SOURCE ${gr_core_filter_asm} PROPERTY LANGUAGE C)
+endforeach(gr_core_filter_asm)
 
 #detect 32 or 64 bit compiler
-IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64)$")
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64)$")
     include(CheckTypeSize)
     check_type_size("void*" SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
     if (${SIZEOF_VOID_P} EQUAL 8)
@@ -36,7 +36,7 @@ IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64)$")
     else()
         set(CMAKE_SYSTEM_PROCESSOR_x86 32)
     endif()
-ENDIF()
+endif()
 
 ########################################################################
 # Generate the makefile.gen, then extract its sources:
@@ -49,7 +49,7 @@ ENDIF()
 #   - Create a python script (very generic) to perform generation.
 #   - This way the targets would depend only on their sources.
 ########################################################################
-EXECUTE_PROCESS(
+execute_process(
     COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} -c "
 import os, sys
 sys.path.append('${GR_CORE_PYTHONPATH}')
@@ -63,20 +63,20 @@ generate_all()
     " WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-MACRO(FILTER_GEN_EXTRACT outvar ext)
-    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "import os; print ';'.join(
+macro(FILTER_GEN_EXTRACT outvar ext)
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import os; print ';'.join(
         map(lambda x: os.path.join('${CMAKE_CURRENT_BINARY_DIR}', x.replace('\\\\', '').strip()),
         filter(lambda f: '${ext}' in f, open('${CMAKE_CURRENT_BINARY_DIR}/Makefile.gen').readlines()
     )))" OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE ${outvar})
-    FILE(TO_CMAKE_PATH "${${outvar}}" ${outvar})
-ENDMACRO(FILTER_GEN_EXTRACT)
+    file(TO_CMAKE_PATH "${${outvar}}" ${outvar})
+endmacro(FILTER_GEN_EXTRACT)
 
 FILTER_GEN_EXTRACT(generated_filter_sources ".cc")
 FILTER_GEN_EXTRACT(generated_filter_includes ".h")
 FILTER_GEN_EXTRACT(generated_filter_swigs ".i")
 
 #TODO simplify this list with a triple-threat for loop
-SET(generated_filter_deps
+set(generated_filter_deps
     ${CMAKE_CURRENT_SOURCE_DIR}/generate_all.py
     ${CMAKE_CURRENT_SOURCE_DIR}/generate_gr_fir_XXX.py
     ${CMAKE_CURRENT_SOURCE_DIR}/generate_gr_fir_filter_XXX.py
@@ -108,7 +108,7 @@ SET(generated_filter_deps
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fir_filter_with_buffer_XXX.h.t
 )
 
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT
         ${generated_filter_sources}
         ${generated_filter_includes}
@@ -121,7 +121,7 @@ ADD_CUSTOM_COMMAND(
     VERBATIM
 )
 
-ADD_CUSTOM_TARGET(filter_generated DEPENDS
+add_custom_target(filter_generated DEPENDS
     ${generated_filter_sources}
     ${generated_filter_includes}
     ${generated_filter_swigs}
@@ -131,16 +131,16 @@ ADD_CUSTOM_TARGET(filter_generated DEPENDS
 # Add target specific files
 # May VOLK put a rest to all the insanity below.
 ########################################################################
-IF(MSVC)
-    LIST(APPEND gnuradio_core_sources
+if(MSVC)
+    list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_generic.cc
     )
-    LIST(APPEND test_gnuradio_core_sources
+    list(APPEND test_gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_generic.cc
     )
-ELSE(MSVC)
-IF(CMAKE_SYSTEM_PROCESSOR_x86)
-    LIST(APPEND gnuradio_core_sources
+else(MSVC)
+if(CMAKE_SYSTEM_PROCESSOR_x86)
+    list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_x86.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_sysconfig_x86.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_cpu_x86.cc
@@ -158,16 +158,16 @@ IF(CMAKE_SYSTEM_PROCESSOR_x86)
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_ccf_x86.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/sse_debug.c
     )
-    LIST(APPEND test_gnuradio_core_sources
+    list(APPEND test_gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_x86.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_float_dotprod_x86.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_complex_dotprod_x86.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_ccomplex_dotprod_x86.cc
     )
-ENDIF()
+endif()
 
-IF(CMAKE_SYSTEM_PROCESSOR_x86 AND ${CMAKE_SYSTEM_PROCESSOR_x86} EQUAL 64)
-    LIST(APPEND gnuradio_core_sources
+if(CMAKE_SYSTEM_PROCESSOR_x86 AND ${CMAKE_SYSTEM_PROCESSOR_x86} EQUAL 64)
+    list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/float_dotprod_sse64.S
         ${CMAKE_CURRENT_SOURCE_DIR}/float_dotprod_3dnow64.S
         ${CMAKE_CURRENT_SOURCE_DIR}/complex_dotprod_3dnowext64.S
@@ -180,8 +180,8 @@ IF(CMAKE_SYSTEM_PROCESSOR_x86 AND ${CMAKE_SYSTEM_PROCESSOR_x86} EQUAL 64)
         ${CMAKE_CURRENT_SOURCE_DIR}/fcomplex_dotprod_sse64.S
         ${CMAKE_CURRENT_SOURCE_DIR}/short_dotprod_mmx64.S
     )
-ELSEIF(CMAKE_SYSTEM_PROCESSOR_x86 AND ${CMAKE_SYSTEM_PROCESSOR_x86} EQUAL 32)
-    LIST(APPEND gnuradio_core_sources
+elseif(CMAKE_SYSTEM_PROCESSOR_x86 AND ${CMAKE_SYSTEM_PROCESSOR_x86} EQUAL 32)
+    list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/float_dotprod_sse.S
         ${CMAKE_CURRENT_SOURCE_DIR}/float_dotprod_3dnow.S
         ${CMAKE_CURRENT_SOURCE_DIR}/complex_dotprod_3dnowext.S
@@ -194,8 +194,8 @@ ELSEIF(CMAKE_SYSTEM_PROCESSOR_x86 AND ${CMAKE_SYSTEM_PROCESSOR_x86} EQUAL 32)
         ${CMAKE_CURRENT_SOURCE_DIR}/fcomplex_dotprod_sse.S
         ${CMAKE_CURRENT_SOURCE_DIR}/short_dotprod_mmx.S
     )
-ELSEIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
-    LIST(APPEND gnuradio_core_sources
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
+    list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_powerpc.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_sysconfig_powerpc.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_cpu_powerpc.cc
@@ -203,11 +203,11 @@ ELSEIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_altivec.c
         ${CMAKE_CURRENT_SOURCE_DIR}/dotprod_fff_altivec.c
     )
-    LIST(APPEND test_gnuradio_core_sources
+    list(APPEND test_gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_powerpc.cc
     )
-ELSEIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm")
-    LIST(APPEND gnuradio_core_sources
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm")
+    list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_armv7_a.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_sysconfig_armv7_a.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_cpu_armv7_a.cc
@@ -216,23 +216,23 @@ ELSEIF(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm")
         ${CMAKE_CURRENT_SOURCE_DIR}/dotprod_ccf_armv7_a.c
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_ccf_armv7_a.cc
     )
-    LIST(APPEND test_gnuradio_core_sources
+    list(APPEND test_gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_armv7_a.cc
     )
-ELSE()
-    LIST(APPEND gnuradio_core_sources
+else()
+    list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_generic.cc
     )
-    LIST(APPEND test_gnuradio_core_sources
+    list(APPEND test_gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_generic.cc
     )
-ENDIF()
-ENDIF(MSVC)
+endif()
+endif(MSVC)
 
 ########################################################################
 # Append gnuradio-core library sources
 ########################################################################
-LIST(APPEND gnuradio_core_sources
+list(APPEND gnuradio_core_sources
     ${generated_filter_sources}
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft_filter_fff_generic.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft_filter_ccc_generic.cc
@@ -249,7 +249,7 @@ LIST(APPEND gnuradio_core_sources
 ########################################################################
 # Append gnuradio-core test sources
 ########################################################################
-LIST(APPEND test_gnuradio_core_sources
+list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_filter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fir_ccf.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fir_fcc.cc
@@ -270,7 +270,7 @@ LIST(APPEND test_gnuradio_core_sources
 ########################################################################
 # Install runtime headers
 ########################################################################
-INSTALL(FILES
+install(FILES
     ${generated_filter_includes}
     ${CMAKE_CURRENT_SOURCE_DIR}/complex_dotprod_generic.h
     ${CMAKE_CURRENT_SOURCE_DIR}/complex_dotprod_x86.h
@@ -304,20 +304,20 @@ INSTALL(FILES
 ########################################################################
 # Install swig headers
 ########################################################################
-IF(ENABLE_PYTHON)
-INSTALL(FILES
+if(ENABLE_PYTHON)
+install(FILES
     ${generated_filter_swigs}
     ${CMAKE_CURRENT_SOURCE_DIR}/filter.i
     ${CMAKE_CURRENT_BINARY_DIR}/filter_generated.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
 )
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Handle triple-threat files that have cc, h, and i
 ########################################################################
-SET(gr_core_filter_triple_threats
+set(gr_core_filter_triple_threats
     gr_adaptive_fir_ccc
     gr_adaptive_fir_ccf
     gr_dc_blocker_cc
@@ -342,10 +342,10 @@ SET(gr_core_filter_triple_threats
     gr_pfb_clock_sync_fff
 )
 
-FOREACH(file_tt ${gr_core_filter_triple_threats})
-    LIST(APPEND gnuradio_core_sources ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.cc)
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio COMPONENT "core_devel")
-    IF(ENABLE_PYTHON)
-        INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.i DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig COMPONENT "core_swig")
-    ENDIF(ENABLE_PYTHON)
-ENDFOREACH(file_tt ${gr_core_filter_triple_threats})
+foreach(file_tt ${gr_core_filter_triple_threats})
+    list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.cc)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio COMPONENT "core_devel")
+    if(ENABLE_PYTHON)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.i DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig COMPONENT "core_swig")
+    endif(ENABLE_PYTHON)
+endforeach(file_tt ${gr_core_filter_triple_threats})

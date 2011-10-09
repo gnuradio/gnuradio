@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INSTALL(FILES
+install(FILES
     trellis_encoder_xx.xml
     trellis_siso_combined_f.xml
     trellis_viterbi_x.xml

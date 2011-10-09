@@ -17,33 +17,33 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INCLUDE(GrPython)
+include(GrPython)
 
 ########################################################################
 # Generate HTML doc with xmlto
 ########################################################################
-FIND_PROGRAM(XMLTO_EXECUTABLE xmlto)
+find_program(XMLTO_EXECUTABLE xmlto)
 
-IF(XMLTO_EXECUTABLE)
-ADD_CUSTOM_COMMAND(
+if(XMLTO_EXECUTABLE)
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gr-trellis.html
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gr-trellis.xml
     COMMAND ${XMLTO_EXECUTABLE} html-nochunks
         ${CMAKE_CURRENT_SOURCE_DIR}/gr-trellis.xml
 )
-ADD_CUSTOM_TARGET(gr_trellis_html ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gr-trellis.html)
-INSTALL(
+add_custom_target(gr_trellis_html ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gr-trellis.html)
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gr-trellis.html
     DESTINATION ${GR_PKG_DOC_DIR}/html
     COMPONENT "trellis_docs"
 
 )
-ENDIF(XMLTO_EXECUTABLE)
+endif(XMLTO_EXECUTABLE)
 
 ########################################################################
 # Generate xml doc
 ########################################################################
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/test_tcm.py.xml
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/test_tcm.py
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/make_numbered_listing.py
@@ -52,7 +52,7 @@ ADD_CUSTOM_COMMAND(
         ${CMAKE_CURRENT_SOURCE_DIR}/test_tcm.py
 )
 
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/test_viterbi_equalization1.py.xml
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/test_viterbi_equalization1.py
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/make_numbered_listing.py
@@ -61,11 +61,11 @@ ADD_CUSTOM_COMMAND(
         ${CMAKE_CURRENT_SOURCE_DIR}/test_viterbi_equalization1.py
 )
 
-ADD_CUSTOM_TARGET(gr_trellis_xml ALL DEPENDS
+add_custom_target(gr_trellis_xml ALL DEPENDS
     ${CMAKE_CURRENT_BINARY_DIR}/test_tcm.py.xml
     ${CMAKE_CURRENT_BINARY_DIR}/test_viterbi_equalization1.py.xml
 )
-INSTALL(FILES
+install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/test_tcm.py.xml
     ${CMAKE_CURRENT_BINARY_DIR}/test_viterbi_equalization1.py.xml
     DESTINATION ${GR_PKG_DOC_DIR}/xml

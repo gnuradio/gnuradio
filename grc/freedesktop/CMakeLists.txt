@@ -18,9 +18,9 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-SET(grc_freedesktop_path ${GR_PKG_DATA_DIR}/grc/freedesktop)
+set(grc_freedesktop_path ${GR_PKG_DATA_DIR}/grc/freedesktop)
 
-INSTALL(FILES
+install(FILES
     grc-icon-256.png
     grc-icon-128.png
     grc-icon-64.png
@@ -32,16 +32,16 @@ INSTALL(FILES
     COMPONENT "grc"
 )
 
-FIND_PROGRAM(HAVE_XDG_UTILS xdg-desktop-menu)
+find_program(HAVE_XDG_UTILS xdg-desktop-menu)
 
-IF(UNIX AND HAVE_XDG_UTILS)
-    SET(SRCDIR ${CMAKE_INSTALL_PREFIX}/${grc_freedesktop_path})
-    CONFIGURE_FILE(
+if(UNIX AND HAVE_XDG_UTILS)
+    set(SRCDIR ${CMAKE_INSTALL_PREFIX}/${grc_freedesktop_path})
+    configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/grc_setup_freedesktop.in
         ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop
     @ONLY)
-    INSTALL(
+    install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop
         DESTINATION ${GR_PKG_LIBEXEC_DIR} COMPONENT "grc"
     )
-ENDIF(UNIX AND HAVE_XDG_UTILS)
+endif(UNIX AND HAVE_XDG_UTILS)

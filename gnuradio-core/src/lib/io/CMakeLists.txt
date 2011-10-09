@@ -24,7 +24,7 @@
 ########################################################################
 # Append gnuradio-core library sources
 ########################################################################
-LIST(APPEND gnuradio_core_sources
+list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_histo_sink_f.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_oscope_guts.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_oscope_sink_f.cc
@@ -43,7 +43,7 @@ LIST(APPEND gnuradio_core_sources
 ########################################################################
 # Install runtime headers
 ########################################################################
-INSTALL(FILES
+install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_histo_sink_f.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_oscope_guts.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_oscope_sink_f.h
@@ -66,20 +66,20 @@ INSTALL(FILES
 ########################################################################
 # Install swig headers
 ########################################################################
-IF(ENABLE_PYTHON)
-INSTALL(FILES
+if(ENABLE_PYTHON)
+install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/io.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_histo_sink.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_oscope_sink.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
 )
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Handle triple-threat files that have cc, h, and i
 ########################################################################
-SET(gr_core_io_triple_threats
+set(gr_core_io_triple_threats
     gr_file_sink
     gr_file_sink_base
     gr_file_source
@@ -99,10 +99,10 @@ SET(gr_core_io_triple_threats
     gr_tagged_file_sink
 )
 
-FOREACH(file_tt ${gr_core_io_triple_threats})
-    LIST(APPEND gnuradio_core_sources ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.cc)
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio COMPONENT "core_devel")
-    IF(ENABLE_PYTHON)
-        INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.i DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig COMPONENT "core_swig")
-    ENDIF(ENABLE_PYTHON)
-ENDFOREACH(file_tt ${gr_core_io_triple_threats})
+foreach(file_tt ${gr_core_io_triple_threats})
+    list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.cc)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio COMPONENT "core_devel")
+    if(ENABLE_PYTHON)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.i DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig COMPONENT "core_swig")
+    endif(ENABLE_PYTHON)
+endforeach(file_tt ${gr_core_io_triple_threats})

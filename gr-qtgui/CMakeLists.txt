@@ -20,22 +20,22 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
-FIND_PACKAGE(Qt4 4.2.0 COMPONENTS QtCore QtGui)
-INCLUDE(${QT_USE_FILE}) #sets up the environment
+find_package(Qt4 4.2.0 COMPONENTS QtCore QtGui)
+include(${QT_USE_FILE}) #sets up the environment
 
-FIND_PACKAGE(Qwt)
+find_package(Qwt)
 
-FIND_PACKAGE(PythonLibs)
+find_package(PythonLibs)
 
-INCLUDE(GrPython)
+include(GrPython)
 GR_PYTHON_CHECK_MODULE("PyQt4" PyQt4 True PYQT4_FOUND)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
     Boost_FOUND
     QT4_FOUND
@@ -53,12 +53,12 @@ GR_SET_GLOBAL(GR_QTGUI_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_QTGUI)
+if(ENABLE_GR_QTGUI)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_QTGUI_DESCRIPTION "GNU Radio QtGUI Blocks")
 
 CPACK_COMPONENT("qtgui_runtime"
@@ -92,25 +92,25 @@ CPACK_COMPONENT("qtgui_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(lib)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(grc)
-    ADD_SUBDIRECTORY(swig)
-    ADD_SUBDIRECTORY(python)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(lib)
+if(ENABLE_PYTHON)
+    add_subdirectory(grc)
+    add_subdirectory(swig)
+    add_subdirectory(python)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-qtgui.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-qtgui.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-qtgui.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "qtgui_devel"
 )
 
-ENDIF(ENABLE_GR_QTGUI)
+endif(ENABLE_GR_QTGUI)

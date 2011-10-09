@@ -20,16 +20,16 @@
 ########################################################################
 # Setup swig generation
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GR_QTGUI_INCLUDE_DIRS}
     ${QWT_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-qtgui)
+set(GR_SWIG_LIBRARIES gnuradio-qtgui)
 
 GR_SWIG_MAKE(qtgui_swig qtgui_swig.i)
 
@@ -39,7 +39,7 @@ GR_SWIG_INSTALL(
     COMPONENT "qtgui_python"
 )
 
-INSTALL(FILES
+install(FILES
     qtgui_sink_c.i
     qtgui_sink_f.i
     qtgui_time_sink_c.i

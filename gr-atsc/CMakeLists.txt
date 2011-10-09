@@ -20,12 +20,12 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-atsc" ENABLE_GR_ATSC
     Boost_FOUND
     ENABLE_GR_CORE_
@@ -38,12 +38,12 @@ GR_SET_GLOBAL(GR_ATSC_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_ATSC)
+if(ENABLE_GR_ATSC)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_ATSC_DESCRIPTION "GNU Radio ATSC Blocks")
 
 CPACK_COMPONENT("atsc_runtime"
@@ -84,23 +84,23 @@ CPACK_COMPONENT("atsc_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(src/lib)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(src/python)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(src/lib)
+if(ENABLE_PYTHON)
+    add_subdirectory(src/python)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-atsc.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-atsc.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-atsc.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "atsc_devel"
 )
 
-ENDIF(ENABLE_GR_ATSC)
+endif(ENABLE_GR_ATSC)

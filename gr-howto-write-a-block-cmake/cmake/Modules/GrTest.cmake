@@ -17,10 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(DEFINED __INCLUDED_GR_TEST_CMAKE)
-    RETURN()
-ENDIF()
-SET(__INCLUDED_GR_TEST_CMAKE TRUE)
+if(DEFINED __INCLUDED_GR_TEST_CMAKE)
+    return()
+endif()
+set(__INCLUDED_GR_TEST_CMAKE TRUE)
 
 ########################################################################
 # Add a unit test and setup the environment for a unit test.
@@ -31,41 +31,41 @@ SET(__INCLUDED_GR_TEST_CMAKE TRUE)
 # GR_TEST_LIBRARY_DIRS - directories for the library path
 # GR_TEST_PYTHON_DIRS  - directories for the python path
 ########################################################################
-FUNCTION(GR_ADD_TEST test_name)
+function(GR_ADD_TEST test_name)
 
-    IF(WIN32)
+    if(WIN32)
         #Ensure that the build exe also appears in the PATH.
-        LIST(APPEND GR_TEST_TARGET_DEPS ${ARGN})
+        list(APPEND GR_TEST_TARGET_DEPS ${ARGN})
 
         #In the land of windows, all libraries must be in the PATH.
         #Since the dependent libraries are not yet installed,
         #we must manually set them in the PATH to run tests.
         #The following appends the path of a target dependency.
-        FOREACH(target ${GR_TEST_TARGET_DEPS})
-            GET_TARGET_PROPERTY(location ${target} LOCATION)
-            IF(location)
-                GET_FILENAME_COMPONENT(path ${location} PATH)
-                STRING(REGEX REPLACE "\\$\\(.*\\)" ${CMAKE_BUILD_TYPE} path ${path})
-                LIST(APPEND GR_TEST_LIBRARY_DIRS ${path})
-            ENDIF(location)
-        ENDFOREACH(target)
+        foreach(target ${GR_TEST_TARGET_DEPS})
+            get_target_property(location ${target} LOCATION)
+            if(location)
+                get_filename_component(path ${location} PATH)
+                string(REGEX REPLACE "\\$\\(.*\\)" ${CMAKE_BUILD_TYPE} path ${path})
+                list(APPEND GR_TEST_LIBRARY_DIRS ${path})
+            endif(location)
+        endforeach(target)
 
         #SWIG generates the python library files into a subdirectory.
         #Therefore, we must append this subdirectory into PYTHONPATH.
         #Only do this for the python directories matching the following:
-        FOREACH(pydir ${GR_TEST_PYTHON_DIRS})
-            GET_FILENAME_COMPONENT(name ${pydir} NAME)
-            IF(name MATCHES "^(swig|lib|src)$")
-                LIST(APPEND GR_TEST_PYTHON_DIRS ${pydir}/${CMAKE_BUILD_TYPE})
-            ENDIF()
-        ENDFOREACH(pydir)
-    ENDIF(WIN32)
+        foreach(pydir ${GR_TEST_PYTHON_DIRS})
+            get_filename_component(name ${pydir} NAME)
+            if(name MATCHES "^(swig|lib|src)$")
+                list(APPEND GR_TEST_PYTHON_DIRS ${pydir}/${CMAKE_BUILD_TYPE})
+            endif()
+        endforeach(pydir)
+    endif(WIN32)
 
-    FILE(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR} srcdir)
-    FILE(TO_NATIVE_PATH "${GR_TEST_LIBRARY_DIRS}" libpath) #ok to use on dir list?
-    FILE(TO_NATIVE_PATH "${GR_TEST_PYTHON_DIRS}" pypath) #ok to use on dir list?
+    file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR} srcdir)
+    file(TO_NATIVE_PATH "${GR_TEST_LIBRARY_DIRS}" libpath) #ok to use on dir list?
+    file(TO_NATIVE_PATH "${GR_TEST_PYTHON_DIRS}" pypath) #ok to use on dir list?
 
-    SET(environs "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}")
+    set(environs "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}")
 
     #http://www.cmake.org/pipermail/cmake/2009-May/029464.html
     #Replaced this add test + set environs code with the shell script generation.
@@ -73,61 +73,61 @@ FUNCTION(GR_ADD_TEST test_name)
     #ADD_TEST(${ARGV})
     #SET_TESTS_PROPERTIES(${test_name} PROPERTIES ENVIRONMENT "${environs}")
 
-    IF(UNIX)
-        SET(binpath "${CMAKE_CURRENT_BINARY_DIR}:$PATH")
+    if(UNIX)
+        set(binpath "${CMAKE_CURRENT_BINARY_DIR}:$PATH")
         #set both LD and DYLD paths to cover multiple UNIX OS library paths
-        LIST(APPEND libpath "$LD_LIBRARY_PATH" "$DYLD_LIBRARY_PATH")
-        LIST(APPEND pypath "$PYTHONPATH")
+        list(APPEND libpath "$LD_LIBRARY_PATH" "$DYLD_LIBRARY_PATH")
+        list(APPEND pypath "$PYTHONPATH")
 
         #replace list separator with the path separator
-        STRING(REPLACE ";" ":" libpath "${libpath}")
-        STRING(REPLACE ";" ":" pypath "${pypath}")
-        LIST(APPEND environs "PATH=${binpath}" "LD_LIBRARY_PATH=${libpath}" "DYLD_LIBRARY_PATH=${libpath}" "PYTHONPATH=${pypath}")
+        string(REPLACE ";" ":" libpath "${libpath}")
+        string(REPLACE ";" ":" pypath "${pypath}")
+        list(APPEND environs "PATH=${binpath}" "LD_LIBRARY_PATH=${libpath}" "DYLD_LIBRARY_PATH=${libpath}" "PYTHONPATH=${pypath}")
 
         #generate a bat file that sets the environment and runs the test
-        FIND_PROGRAM(SHELL sh)
-        SET(sh_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.sh)
-        FILE(WRITE ${sh_file} "#!${SHELL}\n")
+        find_program(SHELL sh)
+        set(sh_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.sh)
+        file(WRITE ${sh_file} "#!${SHELL}\n")
         #each line sets an environment variable
-        FOREACH(environ ${environs})
-            FILE(APPEND ${sh_file} "export ${environ}\n")
-        ENDFOREACH(environ)
+        foreach(environ ${environs})
+            file(APPEND ${sh_file} "export ${environ}\n")
+        endforeach(environ)
         #load the command to run with its arguments
-        FOREACH(arg ${ARGN})
-            FILE(APPEND ${sh_file} "${arg} ")
-        ENDFOREACH(arg)
-        FILE(APPEND ${sh_file} "\n")
+        foreach(arg ${ARGN})
+            file(APPEND ${sh_file} "${arg} ")
+        endforeach(arg)
+        file(APPEND ${sh_file} "\n")
 
         #make the shell file executable
-        EXECUTE_PROCESS(COMMAND chmod +x ${sh_file})
+        execute_process(COMMAND chmod +x ${sh_file})
 
-        ADD_TEST(${test_name} ${SHELL} ${sh_file})
+        add_test(${test_name} ${SHELL} ${sh_file})
 
-    ENDIF(UNIX)
+    endif(UNIX)
 
-    IF(WIN32)
-        LIST(APPEND libpath ${DLL_PATHS} "%PATH%")
-        LIST(APPEND pypath "%PYTHONPATH%")
+    if(WIN32)
+        list(APPEND libpath ${DLL_PATHS} "%PATH%")
+        list(APPEND pypath "%PYTHONPATH%")
 
         #replace list separator with the path separator (escaped)
-        STRING(REPLACE ";" "\\;" libpath "${libpath}")
-        STRING(REPLACE ";" "\\;" pypath "${pypath}")
-        LIST(APPEND environs "PATH=${libpath}" "PYTHONPATH=${pypath}")
+        string(REPLACE ";" "\\;" libpath "${libpath}")
+        string(REPLACE ";" "\\;" pypath "${pypath}")
+        list(APPEND environs "PATH=${libpath}" "PYTHONPATH=${pypath}")
 
         #generate a bat file that sets the environment and runs the test
-        SET(bat_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.bat)
-        FILE(WRITE ${bat_file} "@echo off\n")
+        set(bat_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.bat)
+        file(WRITE ${bat_file} "@echo off\n")
         #each line sets an environment variable
-        FOREACH(environ ${environs})
-            FILE(APPEND ${bat_file} "SET ${environ}\n")
-        ENDFOREACH(environ)
+        foreach(environ ${environs})
+            file(APPEND ${bat_file} "SET ${environ}\n")
+        endforeach(environ)
         #load the command to run with its arguments
-        FOREACH(arg ${ARGN})
-            FILE(APPEND ${bat_file} "${arg} ")
-        ENDFOREACH(arg)
-        FILE(APPEND ${bat_file} "\n")
+        foreach(arg ${ARGN})
+            file(APPEND ${bat_file} "${arg} ")
+        endforeach(arg)
+        file(APPEND ${bat_file} "\n")
 
-        ADD_TEST(${test_name} ${bat_file})
-    ENDIF(WIN32)
+        add_test(${test_name} ${bat_file})
+    endif(WIN32)
 
-ENDFUNCTION(GR_ADD_TEST)
+endfunction(GR_ADD_TEST)

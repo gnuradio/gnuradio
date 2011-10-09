@@ -20,10 +20,10 @@
 ########################################################################
 # Include python install macros
 ########################################################################
-INCLUDE(GrPython)
-IF(NOT PYTHONINTERP_FOUND)
-    RETURN()
-ENDIF()
+include(GrPython)
+if(NOT PYTHONINTERP_FOUND)
+    return()
+endif()
 
 ########################################################################
 # Install python sources
@@ -37,8 +37,8 @@ GR_PYTHON_INSTALL(
 ########################################################################
 # Handle the unit tests
 ########################################################################
-INCLUDE(GrTest)
+include(GrTest)
 
-SET(GR_TEST_TARGET_DEPS gnuradio-howto)
-SET(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
+set(GR_TEST_TARGET_DEPS gnuradio-howto)
+set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
 GR_ADD_TEST(qa_howto ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_howto.py)

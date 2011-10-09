@@ -20,15 +20,15 @@
 ########################################################################
 # Setup swig generation
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-digital)
+set(GR_SWIG_LIBRARIES gnuradio-digital)
 
 GR_SWIG_MAKE(digital_swig digital_swig.i)
 
@@ -38,7 +38,7 @@ GR_SWIG_INSTALL(
     COMPONENT "digital_python"
 )
 
-INSTALL(
+install(
     FILES
     digital_binary_slicer_fb.i
     digital_clock_recovery_mm_cc.i

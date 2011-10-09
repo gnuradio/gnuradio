@@ -18,44 +18,44 @@
 ########################################################################
 # Project setup
 ########################################################################
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-IF(NOT DEFINED CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE Release)
-ENDIF()
-SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose build type: None Debug Release RelWithDebInfo MinSizeRel")
-PROJECT(volk)
-ENABLE_LANGUAGE(CXX)
-ENABLE_LANGUAGE(C)
-ENABLE_TESTING()
-SET(VERSION 0.1)
-SET(LIBVER 0.0.0)
+cmake_minimum_required(VERSION 2.6)
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose build type: None Debug Release RelWithDebInfo MinSizeRel")
+project(volk)
+enable_language(CXX)
+enable_language(C)
+enable_testing()
+set(VERSION 0.1)
+set(LIBVER 0.0.0)
 
-SET(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}) #allows this to be a sub-project
-SET(CMAKE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}) #allows this to be a sub-project
+set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}) #allows this to be a sub-project
+set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}) #allows this to be a sub-project
 
 ########################################################################
 # Dependencies setup
 ########################################################################
-FIND_PACKAGE(PythonInterp)
-IF(NOT PYTHONINTERP_FOUND)
-    MESSAGE(FATAL_ERROR "Python interpreter required by the build system.")
-ENDIF(NOT PYTHONINTERP_FOUND)
+find_package(PythonInterp)
+if(NOT PYTHONINTERP_FOUND)
+    message(FATAL_ERROR "Python interpreter required by the build system.")
+endif(NOT PYTHONINTERP_FOUND)
 
 ########################################################################
 # Setup the package config file
 ########################################################################
 #set variables found in the pc.in file
-SET(prefix ${CMAKE_INSTALL_PREFIX})
-SET(exec_prefix "\${prefix}")
-SET(libdir "\${exec_prefix}/lib${LIB_SUFFIX}")
-SET(includedir "\${prefix}/include")
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix "\${prefix}")
+set(libdir "\${exec_prefix}/lib${LIB_SUFFIX}")
+set(includedir "\${prefix}/include")
 
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/volk.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/volk.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/volk.pc
     DESTINATION lib${LIB_SUFFIX}/pkgconfig
     COMPONENT "volk_devel"
@@ -64,13 +64,13 @@ INSTALL(
 ########################################################################
 # Install all headers in the include directories
 ########################################################################
-INSTALL(
+install(
     DIRECTORY ${CMAKE_SOURCE_DIR}/include/volk
     DESTINATION include COMPONENT "volk_devel"
     FILES_MATCHING PATTERN "*.h"
 )
 
-INSTALL(FILES
+install(FILES
     ${CMAKE_BINARY_DIR}/include/volk/volk.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
@@ -82,14 +82,14 @@ INSTALL(FILES
 ########################################################################
 # Setup the library
 ########################################################################
-ADD_SUBDIRECTORY(lib)
+add_subdirectory(lib)
 
 ########################################################################
 # And the utility apps
 ########################################################################
-ADD_SUBDIRECTORY(apps)
+add_subdirectory(apps)
 
 ########################################################################
 # Print summary
 ########################################################################
-MESSAGE(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")

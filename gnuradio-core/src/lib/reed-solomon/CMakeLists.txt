@@ -24,15 +24,15 @@
 #So ifdef a max array bounds that is larger than NN and NROOTS
 #Its a bit of a hack, but if you look at the code, its so full of ifdefs,
 #and lacks optimization where it should be pre-allocating these arrays.
-IF(MSVC)
-    SET_SOURCE_FILES_PROPERTIES(
+if(MSVC)
+    set_source_files_properties(
         ${CMAKE_CURRENT_SOURCE_DIR}/exercise.c
         ${CMAKE_CURRENT_SOURCE_DIR}/decode_rs.c
         PROPERTIES COMPILE_DEFINITIONS "MAX_ARRAY=256;"
     )
-ENDIF(MSVC)
+endif(MSVC)
 
-SET(gr_core_rs_sources
+set(gr_core_rs_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/encode_rs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/decode_rs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/init_rs.c
@@ -41,9 +41,9 @@ SET(gr_core_rs_sources
 ########################################################################
 # Setup sources and includes
 ########################################################################
-LIST(APPEND gnuradio_core_sources ${gr_core_rs_sources})
+list(APPEND gnuradio_core_sources ${gr_core_rs_sources})
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/rs.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
@@ -52,11 +52,11 @@ INSTALL(
 ########################################################################
 # Register unit tests
 ########################################################################
-IF(ENABLE_TESTING)
-ADD_EXECUTABLE(gr_core_rstest
+if(ENABLE_TESTING)
+add_executable(gr_core_rstest
     ${gr_core_rs_sources}
     ${CMAKE_CURRENT_SOURCE_DIR}/rstest.c
     ${CMAKE_CURRENT_SOURCE_DIR}/exercise.c
 )
-ADD_TEST(gr-core-reed-solomon-test gr_core_rstest)
-ENDIF(ENABLE_TESTING)
+add_test(gr-core-reed-solomon-test gr_core_rstest)
+endif(ENABLE_TESTING)

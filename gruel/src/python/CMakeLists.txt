@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INCLUDE(GrPython)
+include(GrPython)
 
 ########################################################################
 # Install python files
@@ -37,16 +37,16 @@ GR_PYTHON_INSTALL(
 ########################################################################
 # Setup unit tests
 ########################################################################
-IF(ENABLE_TESTING)
-INCLUDE(GrTest)
-FILE(GLOB py_qa_test_files "qa_*.py")
-FOREACH(py_qa_test_file ${py_qa_test_files})
-    GET_FILENAME_COMPONENT(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    SET(GR_TEST_PYTHON_DIRS
+if(ENABLE_TESTING)
+include(GrTest)
+file(GLOB py_qa_test_files "qa_*.py")
+foreach(py_qa_test_file ${py_qa_test_files})
+    get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
+    set(GR_TEST_PYTHON_DIRS
         ${CMAKE_BINARY_DIR}/gruel/src/python
         ${CMAKE_BINARY_DIR}/gruel/src/swig
     )
-    SET(GR_TEST_TARGET_DEPS gruel gnuradio-core)
+    set(GR_TEST_TARGET_DEPS gruel gnuradio-core)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
-ENDFOREACH(py_qa_test_file)
-ENDIF(ENABLE_TESTING)
+endforeach(py_qa_test_file)
+endif(ENABLE_TESTING)

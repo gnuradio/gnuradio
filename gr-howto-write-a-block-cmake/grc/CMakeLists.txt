@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INSTALL(FILES
+install(FILES
     howto_square_ff.xml
     howto_square2_ff.xml
     DESTINATION share/gnuradio/grc/blocks

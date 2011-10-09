@@ -20,21 +20,21 @@
 ########################################################################
 # This file included, use CMake directory variables
 ########################################################################
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ########################################################################
 # Generate serial tags header file
 ########################################################################
-GET_FILENAME_COMPONENT(SCHEME_DIR
+get_filename_component(SCHEME_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}/../../scheme/gnuradio ABSOLUTE
 )
 
-GET_FILENAME_COMPONENT(PMT_SERIAL_TAGS_H
+get_filename_component(PMT_SERIAL_TAGS_H
     ${CMAKE_CURRENT_BINARY_DIR}/../../include/gruel/pmt_serial_tags.h ABSOLUTE
 )
 
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${PMT_SERIAL_TAGS_H}
     DEPENDS ${SCHEME_DIR}/gen-serial-tags.py
     DEPENDS ${SCHEME_DIR}/pmt-serial-tags.scm
@@ -44,13 +44,13 @@ ADD_CUSTOM_COMMAND(
         ${PMT_SERIAL_TAGS_H}
 )
 
-INSTALL(
+install(
     FILES ${PMT_SERIAL_TAGS_H}
     DESTINATION ${GR_INCLUDE_DIR}/gruel
     COMPONENT "gruel_devel"
 )
 
-INCLUDE(AddFileDependencies)
+include(AddFileDependencies)
 ADD_FILE_DEPENDENCIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc
     ${PMT_SERIAL_TAGS_H}
@@ -59,7 +59,7 @@ ADD_FILE_DEPENDENCIES(
 ########################################################################
 # Generate other pmt stuff
 ########################################################################
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT
         ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv_int.h
         ${CMAKE_CURRENT_BINARY_DIR}/qa_pmt_unv.h
@@ -75,7 +75,7 @@ ADD_CUSTOM_COMMAND(
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-LIST(APPEND gruel_sources
+list(APPEND gruel_sources
     ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/pmt.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/pmt_io.cc
@@ -83,7 +83,7 @@ LIST(APPEND gruel_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc
 )
 
-LIST(APPEND test_gruel_sources
+list(APPEND test_gruel_sources
     ${CMAKE_CURRENT_BINARY_DIR}/qa_pmt_unv.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_pmt_prims.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_pmt.cc

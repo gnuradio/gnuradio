@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INCLUDE(GrPython)
+include(GrPython)
 
 ########################################################################
 # Install some uhd apps
@@ -36,7 +36,7 @@ GR_PYTHON_INSTALL(
 ########################################################################
 # Install hf radio apps
 ########################################################################
-INSTALL(
+install(
     FILES
     hf_radio/hfir.sci
     hf_radio/radio.xml
@@ -68,7 +68,7 @@ GR_PYTHON_INSTALL(
 ########################################################################
 # Install hf explorer
 ########################################################################
-INSTALL(
+install(
     FILES
     hf_explorer/README
     hf_explorer/hfx_help

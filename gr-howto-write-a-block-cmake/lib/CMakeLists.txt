@@ -20,16 +20,16 @@
 ########################################################################
 # Setup library
 ########################################################################
-INCLUDE(GrPlatform) #define LIB_SUFFIX
+include(GrPlatform) #define LIB_SUFFIX
 
-ADD_LIBRARY(gnuradio-howto SHARED howto_square_ff.cc howto_square2_ff.cc)
-TARGET_LINK_LIBRARIES(gnuradio-howto ${Boost_LIBRARIES} ${GRUEL_LIBRARIES} ${GNURADIO_CORE_LIBRARIES})
-SET_TARGET_PROPERTIES(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")
+add_library(gnuradio-howto SHARED howto_square_ff.cc howto_square2_ff.cc)
+target_link_libraries(gnuradio-howto ${Boost_LIBRARIES} ${GRUEL_LIBRARIES} ${GNURADIO_CORE_LIBRARIES})
+set_target_properties(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")
 
 ########################################################################
 # Install built library files
 ########################################################################
-INSTALL(TARGETS gnuradio-howto
+install(TARGETS gnuradio-howto
     LIBRARY DESTINATION lib${LIB_SUFFIX} # .so/.dylib file
     ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     RUNTIME DESTINATION bin              # .dll file
@@ -38,7 +38,7 @@ INSTALL(TARGETS gnuradio-howto
 ########################################################################
 # Install public header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     howto_api.h
     howto_square_ff.h
     howto_square2_ff.h
@@ -48,17 +48,17 @@ INSTALL(FILES
 ########################################################################
 # Build and register unit test
 ########################################################################
-FIND_PACKAGE(Boost COMPONENTS unit_test_framework)
+find_package(Boost COMPONENTS unit_test_framework)
 
-INCLUDE(GrTest)
-SET(GR_TEST_TARGET_DEPS gnuradio-howto)
+include(GrTest)
+set(GR_TEST_TARGET_DEPS gnuradio-howto)
 #turn each test cpp file into an executable with an int main() function
-ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
+add_definitions(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
-ADD_EXECUTABLE(qa_howto_square_ff qa_howto_square_ff.cc)
-TARGET_LINK_LIBRARIES(qa_howto_square_ff gnuradio-howto ${Boost_LIBRARIES})
+add_executable(qa_howto_square_ff qa_howto_square_ff.cc)
+target_link_libraries(qa_howto_square_ff gnuradio-howto ${Boost_LIBRARIES})
 GR_ADD_TEST(qa_howto_square_ff qa_howto_square_ff)
 
-ADD_EXECUTABLE(qa_howto_square2_ff qa_howto_square2_ff.cc)
-TARGET_LINK_LIBRARIES(qa_howto_square2_ff gnuradio-howto ${Boost_LIBRARIES})
+add_executable(qa_howto_square2_ff qa_howto_square2_ff.cc)
+target_link_libraries(qa_howto_square2_ff gnuradio-howto ${Boost_LIBRARIES})
 GR_ADD_TEST(qa_howto_square2_ff qa_howto_square2_ff)

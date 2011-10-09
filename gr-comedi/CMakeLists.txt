@@ -20,16 +20,16 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
-INCLUDE(FindPkgConfig)
+include(FindPkgConfig)
 
 PKG_CHECK_MODULES(COMEDI comedilib)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_COMEDI
     COMEDI_FOUND
     LINUX #comedi uses linux specific device noces
@@ -37,7 +37,7 @@ GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_COMEDI
     ENABLE_GR_CORE_
 )
 
-REMOVE_DEFINITIONS(-fvisibility=hidden) #FIXME until we do symbol visibility
+remove_definitions(-fvisibility=hidden) #FIXME until we do symbol visibility
 
 GR_SET_GLOBAL(GR_COMEDI_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -46,12 +46,12 @@ GR_SET_GLOBAL(GR_COMEDI_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_COMEDI)
+if(ENABLE_GR_COMEDI)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_COMEDI_DESCRIPTION "GNU Radio Comedi Blocks")
 
 CPACK_COMPONENT("comedi_runtime"
@@ -85,20 +85,20 @@ CPACK_COMPONENT("comedi_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(src)
+add_subdirectory(src)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-comedi.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-comedi.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-comedi.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "comedi_devel"
 )
 
-ENDIF(ENABLE_GR_COMEDI)
+endif(ENABLE_GR_COMEDI)

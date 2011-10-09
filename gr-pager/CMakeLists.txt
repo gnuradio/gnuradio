@@ -20,12 +20,12 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-pager" ENABLE_GR_PAGER
     Boost_FOUND
     ENABLE_GR_CORE_
@@ -38,12 +38,12 @@ GR_SET_GLOBAL(GR_PAGER_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_PAGER)
+if(ENABLE_GR_PAGER)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_PAGER_DESCRIPTION "GNU Radio Pager Blocks")
 
 CPACK_COMPONENT("pager_runtime"
@@ -77,26 +77,26 @@ CPACK_COMPONENT("pager_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(lib)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(python)
-    ADD_SUBDIRECTORY(swig)
-    ADD_SUBDIRECTORY(grc)
-    ADD_SUBDIRECTORY(apps)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(lib)
+if(ENABLE_PYTHON)
+    add_subdirectory(python)
+    add_subdirectory(swig)
+    add_subdirectory(grc)
+    add_subdirectory(apps)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-pager.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pager.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pager.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "pager_devel"
 )
 
-ENDIF(ENABLE_GR_PAGER)
+endif(ENABLE_GR_PAGER)

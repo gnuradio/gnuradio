@@ -20,12 +20,12 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-vocoder" ENABLE_GR_VOCODER
     Boost_FOUND
     ENABLE_GR_CORE_
@@ -38,12 +38,12 @@ GR_SET_GLOBAL(GR_VOCODER_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_VOCODER)
+if(ENABLE_GR_VOCODER)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_VOCODER_DESCRIPTION "GNU Radio Vocoder Blocks")
 
 CPACK_COMPONENT("vocoder_runtime"
@@ -84,26 +84,26 @@ CPACK_COMPONENT("vocoder_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(lib)
-ADD_SUBDIRECTORY(include)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(swig)
-    ADD_SUBDIRECTORY(python)
-    ADD_SUBDIRECTORY(examples)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(lib)
+add_subdirectory(include)
+if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(python)
+    add_subdirectory(examples)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-vocoder.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-vocoder.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-vocoder.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "vocoder_devel"
 )
 
-ENDIF(ENABLE_GR_VOCODER)
+endif(ENABLE_GR_VOCODER)

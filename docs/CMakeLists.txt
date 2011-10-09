@@ -20,23 +20,23 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-FIND_PACKAGE(Doxygen)
+find_package(Doxygen)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("doxygen" ENABLE_DOXYGEN DOXYGEN_FOUND)
 
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_DOXYGEN)
+if(ENABLE_DOXYGEN)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_COMPONENT("docs"
     DISPLAY_NAME "Documentation"
     DESCRIPTION  "Doxygen generated documentation"
@@ -45,6 +45,6 @@ CPACK_COMPONENT("docs"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(doxygen)
+add_subdirectory(doxygen)
 
-ENDIF(ENABLE_DOXYGEN)
+endif(ENABLE_DOXYGEN)

@@ -20,36 +20,36 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_VIDEO_SDL_INCLUDE_DIRS}
 )
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
-INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
+include_directories(${SDL_INCLUDE_DIR})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gr_video_sdl_sources
+list(APPEND gr_video_sdl_sources
     video_sdl_sink_uc.cc
     video_sdl_sink_s.cc
 )
 
-LIST(APPEND video_sdl_libs
+list(APPEND video_sdl_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${SDL_LIBRARY}
 )
 
-ADD_LIBRARY(gnuradio-video-sdl SHARED ${gr_video_sdl_sources})
-TARGET_LINK_LIBRARIES(gnuradio-video-sdl ${video_sdl_libs})
-SET_TARGET_PROPERTIES(gnuradio-video-sdl PROPERTIES DEFINE_SYMBOL "gnuradio_video_sdl_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-video-sdl PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-video-sdl SHARED ${gr_video_sdl_sources})
+target_link_libraries(gnuradio-video-sdl ${video_sdl_libs})
+set_target_properties(gnuradio-video-sdl PROPERTIES DEFINE_SYMBOL "gnuradio_video_sdl_EXPORTS")
+set_target_properties(gnuradio-video-sdl PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-video-sdl
+install(TARGETS gnuradio-video-sdl
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "video_sdl_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "video_sdl_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "video_sdl_runtime" # .dll file
@@ -58,7 +58,7 @@ INSTALL(TARGETS gnuradio-video-sdl
 ########################################################################
 # Install public header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     video_sdl_api.h
     video_sdl_sink_uc.h
     video_sdl_sink_s.h
@@ -69,16 +69,16 @@ INSTALL(FILES
 ########################################################################
 # Setup swig generation
 ########################################################################
-IF(ENABLE_PYTHON)
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+if(ENABLE_PYTHON)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_COMEDI_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-video-sdl)
+set(GR_SWIG_LIBRARIES gnuradio-video-sdl)
 
 GR_SWIG_MAKE(video_sdl video_sdl.i)
 
@@ -88,28 +88,28 @@ GR_SWIG_INSTALL(
     COMPONENT "video_sdl_python"
 )
 
-INSTALL(
+install(
     FILES video_sdl.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "video_sdl_swig"
 )
 
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Handle the unit tests
 ########################################################################
-IF(ENABLE_TESTING AND ENABLE_PYTHON)
-INCLUDE(GrTest)
-FILE(GLOB py_qa_test_files "qa_*.py")
-FOREACH(py_qa_test_file ${py_qa_test_files})
-    GET_FILENAME_COMPONENT(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    SET(GR_TEST_PYTHON_DIRS
+if(ENABLE_TESTING AND ENABLE_PYTHON)
+include(GrTest)
+file(GLOB py_qa_test_files "qa_*.py")
+foreach(py_qa_test_file ${py_qa_test_files})
+    get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
+    set(GR_TEST_PYTHON_DIRS
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
         ${CMAKE_BINARY_DIR}/gr-video-sdl/src
     )
-    SET(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-video-sdl)
+    set(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-video-sdl)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
-ENDFOREACH(py_qa_test_file)
-ENDIF(ENABLE_TESTING AND ENABLE_PYTHON)
+endforeach(py_qa_test_file)
+endif(ENABLE_TESTING AND ENABLE_PYTHON)

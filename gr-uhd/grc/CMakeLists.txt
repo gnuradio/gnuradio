@@ -20,24 +20,24 @@
 ########################################################################
 # Rules for generating the source and sink xml wrappers
 ########################################################################
-INCLUDE(GrPython)
+include(GrPython)
 
-MACRO(GEN_BLOCK_XML _generator _xml_block)
-    SET(generator ${CMAKE_CURRENT_SOURCE_DIR}/${_generator})
-    SET(xml_block ${CMAKE_CURRENT_BINARY_DIR}/${_xml_block})
-    LIST(APPEND xml_blocks ${xml_block})
-    ADD_CUSTOM_COMMAND(
+macro(GEN_BLOCK_XML _generator _xml_block)
+    set(generator ${CMAKE_CURRENT_SOURCE_DIR}/${_generator})
+    set(xml_block ${CMAKE_CURRENT_BINARY_DIR}/${_xml_block})
+    list(APPEND xml_blocks ${xml_block})
+    add_custom_command(
         DEPENDS ${generator} OUTPUT ${xml_block}
         COMMAND ${PYTHON_EXECUTABLE} ${generator} ${xml_block}
     )
-ENDMACRO(GEN_BLOCK_XML)
+endmacro(GEN_BLOCK_XML)
 
 GEN_BLOCK_XML(gen_uhd_usrp_blocks.py    uhd_usrp_source.xml)
 GEN_BLOCK_XML(gen_uhd_usrp_blocks.py    uhd_usrp_sink.xml)
 
-ADD_CUSTOM_TARGET(uhd_grc_xml_blocks ALL DEPENDS ${xml_blocks})
+add_custom_target(uhd_grc_xml_blocks ALL DEPENDS ${xml_blocks})
 
-INSTALL(FILES
+install(FILES
     ${xml_blocks}
     uhd_amsg_source.xml
     uhd_block_tree.xml

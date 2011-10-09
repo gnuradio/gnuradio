@@ -20,7 +20,7 @@
 ########################################################################
 # Install header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     digital_api.h
     digital_binary_slicer_fb.h
     digital_clock_recovery_mm_cc.h

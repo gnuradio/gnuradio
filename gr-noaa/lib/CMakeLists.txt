@@ -20,34 +20,34 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_NOAA_INCLUDE_DIRS}
 )
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gr_noaa_sources
+list(APPEND gr_noaa_sources
     noaa_hrpt_decoder.cc
     noaa_hrpt_deframer.cc
     noaa_hrpt_pll_cf.cc
 )
 
-LIST(APPEND noaa_libs
+list(APPEND noaa_libs
     gnuradio-core
     ${Boost_LIBRARIES}
 )
 
-ADD_LIBRARY(gnuradio-noaa SHARED ${gr_noaa_sources})
-TARGET_LINK_LIBRARIES(gnuradio-noaa ${noaa_libs})
-SET_TARGET_PROPERTIES(gnuradio-noaa PROPERTIES DEFINE_SYMBOL "gnuradio_noaa_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-noaa PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-noaa SHARED ${gr_noaa_sources})
+target_link_libraries(gnuradio-noaa ${noaa_libs})
+set_target_properties(gnuradio-noaa PROPERTIES DEFINE_SYMBOL "gnuradio_noaa_EXPORTS")
+set_target_properties(gnuradio-noaa PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-noaa
+install(TARGETS gnuradio-noaa
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "noaa_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "noaa_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "noaa_runtime" # .dll file
@@ -56,7 +56,7 @@ INSTALL(TARGETS gnuradio-noaa
 ########################################################################
 # Install header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     noaa_api.h
     noaa_hrpt_decoder.h
     noaa_hrpt_deframer.h

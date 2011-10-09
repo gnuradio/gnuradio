@@ -20,7 +20,7 @@
 ########################################################################
 # Install header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     vocoder_api.h
     vocoder_alaw_decode_bs.h
     vocoder_alaw_encode_sb.h

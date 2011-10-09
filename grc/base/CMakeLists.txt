@@ -34,7 +34,7 @@ GR_PYTHON_INSTALL(FILES
     COMPONENT "grc"
 )
 
-INSTALL(FILES
+install(FILES
     block_tree.dtd
     flow_graph.dtd
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/base

@@ -20,15 +20,15 @@
 ########################################################################
 # Setup swig generation
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_AUDIO_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-audio)
+set(GR_SWIG_LIBRARIES gnuradio-audio)
 
 GR_SWIG_MAKE(audio_swig audio_swig.i)
 
@@ -38,7 +38,7 @@ GR_SWIG_INSTALL(
     COMPONENT "audio_python"
 )
 
-INSTALL(
+install(
     FILES audio_swig.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "audio_swig"

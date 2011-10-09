@@ -20,7 +20,7 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrPython)
+include(GrPython)
 
 GR_PYTHON_CHECK_MODULE("wx >= 2.8"  wx           "wx.version().split()[0] >= '2.8'"    WX_FOUND)
 GR_PYTHON_CHECK_MODULE("numpy"      numpy        True                                  NUMPY_FOUND)
@@ -28,7 +28,7 @@ GR_PYTHON_CHECK_MODULE("numpy"      numpy        True                           
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-wxgui" ENABLE_WXGUI
     ENABLE_GR_CORE_
     ENABLE_PYTHON_
@@ -39,12 +39,12 @@ GR_REGISTER_COMPONENT("gr-wxgui" ENABLE_WXGUI
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_WXGUI)
+if(ENABLE_WXGUI)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_COMPONENT("wxgui"
     DISPLAY_NAME "WxGUI"
     DESCRIPTION  "Wx GUI plotter widgets and grc wrappers"
@@ -54,12 +54,12 @@ CPACK_COMPONENT("wxgui"
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gr-wxgui.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gr-wxgui.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gr-wxgui.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "wxgui"
@@ -68,7 +68,7 @@ INSTALL(
 ########################################################################
 # Install the conf file
 ########################################################################
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-wxgui.conf
     DESTINATION ${GR_PKG_CONF_DIR}
     COMPONENT "wxgui"
@@ -77,7 +77,7 @@ INSTALL(
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(grc)
-ADD_SUBDIRECTORY(src/python)
+add_subdirectory(grc)
+add_subdirectory(src/python)
 
-ENDIF(ENABLE_WXGUI)
+endif(ENABLE_WXGUI)

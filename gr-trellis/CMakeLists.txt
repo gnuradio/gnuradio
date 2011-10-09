@@ -20,12 +20,12 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-trellis" ENABLE_GR_TRELLIS
     Boost_FOUND
     ENABLE_GR_CORE_
@@ -40,12 +40,12 @@ GR_SET_GLOBAL(GR_TRELLIS_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_TRELLIS)
+if(ENABLE_GR_TRELLIS)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_TRELLIS_DESCRIPTION "GNU Radio Trellis Blocks")
 
 CPACK_COMPONENT("trellis_docs"
@@ -92,26 +92,26 @@ CPACK_COMPONENT("trellis_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(src/lib)
-ADD_SUBDIRECTORY(doc)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(grc)
-    ADD_SUBDIRECTORY(src/python)
-    ADD_SUBDIRECTORY(src/examples)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(src/lib)
+add_subdirectory(doc)
+if(ENABLE_PYTHON)
+    add_subdirectory(grc)
+    add_subdirectory(src/python)
+    add_subdirectory(src/examples)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-trellis.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "trellis_devel"
 )
 
-ENDIF(ENABLE_GR_TRELLIS)
+endif(ENABLE_GR_TRELLIS)

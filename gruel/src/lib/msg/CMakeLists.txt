@@ -21,7 +21,7 @@
 # This file included, use CMake directory variables
 ########################################################################
 
-LIST(APPEND gruel_sources
+list(APPEND gruel_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/msg_accepter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/msg_accepter_msgq.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/msg_queue.cc

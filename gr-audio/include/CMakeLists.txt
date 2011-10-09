@@ -20,7 +20,7 @@
 ########################################################################
 # Install header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     gr_audio_api.h
     gr_audio_source.h
     gr_audio_sink.h

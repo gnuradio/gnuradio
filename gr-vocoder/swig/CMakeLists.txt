@@ -20,15 +20,15 @@
 ########################################################################
 # Setup swig generation
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_VOCODER_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-vocoder)
+set(GR_SWIG_LIBRARIES gnuradio-vocoder)
 
 GR_SWIG_MAKE(vocoder_swig vocoder_swig.i)
 
@@ -38,7 +38,7 @@ GR_SWIG_INSTALL(
     COMPONENT "vocoder_python"
 )
 
-INSTALL(
+install(
     FILES
     vocoder_alaw_decode_bs.i
     vocoder_alaw_encode_sb.i

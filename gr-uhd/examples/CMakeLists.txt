@@ -20,28 +20,28 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_UHD_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-INCLUDE_DIRECTORIES(${UHD_INCLUDE_DIRS})
-LINK_DIRECTORIES(${UHD_LIBRARY_DIRS})
+include_directories(${UHD_INCLUDE_DIRS})
+link_directories(${UHD_LIBRARY_DIRS})
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Build executable
 ########################################################################
-ADD_EXECUTABLE(tags_demo tags_demo.cc)
-TARGET_LINK_LIBRARIES(tags_demo gnuradio-uhd)
+add_executable(tags_demo tags_demo.cc)
+target_link_libraries(tags_demo gnuradio-uhd)
 
 ########################################################################
 # Python examples
 ########################################################################
-IF(ENABLE_PYTHON)
+if(ENABLE_PYTHON)
 GR_PYTHON_INSTALL(
     PROGRAMS
     fm_tx4.py
@@ -72,4 +72,4 @@ GR_PYTHON_INSTALL(
     DESTINATION ${GR_PKG_DATA_DIR}/examples/multi-antenna
     COMPONENT "uhd_python"
 )
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)

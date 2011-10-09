@@ -20,18 +20,18 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_PAGER_INCLUDE_DIRS}
 )
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gr_pager_sources
+list(APPEND gr_pager_sources
     pager_flex_frame.cc
     pager_slicer_fb.cc
     pager_flex_sync.cc
@@ -42,17 +42,17 @@ LIST(APPEND gr_pager_sources
     pageri_util.cc
 )
 
-LIST(APPEND pager_libs
+list(APPEND pager_libs
     gnuradio-core
     ${Boost_LIBRARIES}
 )
 
-ADD_LIBRARY(gnuradio-pager SHARED ${gr_pager_sources})
-TARGET_LINK_LIBRARIES(gnuradio-pager ${pager_libs})
-SET_TARGET_PROPERTIES(gnuradio-pager PROPERTIES DEFINE_SYMBOL "gnuradio_pager_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-pager PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-pager SHARED ${gr_pager_sources})
+target_link_libraries(gnuradio-pager ${pager_libs})
+set_target_properties(gnuradio-pager PROPERTIES DEFINE_SYMBOL "gnuradio_pager_EXPORTS")
+set_target_properties(gnuradio-pager PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-pager
+install(TARGETS gnuradio-pager
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "pager_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "pager_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "pager_runtime" # .dll file
@@ -61,7 +61,7 @@ INSTALL(TARGETS gnuradio-pager
 ########################################################################
 # Install header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     pager_api.h
     pager_slicer_fb.h
     pager_flex_sync.h

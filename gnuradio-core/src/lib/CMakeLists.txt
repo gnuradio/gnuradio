@@ -20,7 +20,7 @@
 ########################################################################
 # Setup compatibility checks and defines
 ########################################################################
-INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
 
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
@@ -35,28 +35,28 @@ GR_INCLUDE_SUBDIRECTORY(reed-solomon)
 GR_INCLUDE_SUBDIRECTORY(io)
 GR_INCLUDE_SUBDIRECTORY(hier)
 
-LIST(APPEND gnuradio_core_sources bug_work_around_6.cc)
-LIST(APPEND test_gnuradio_core_sources bug_work_around_6.cc)
+list(APPEND gnuradio_core_sources bug_work_around_6.cc)
+list(APPEND test_gnuradio_core_sources bug_work_around_6.cc)
 
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(${GNURADIO_CORE_INCLUDE_DIRS})
+include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
-ADD_DEFINITIONS(${GSL_DEFINITIONS})
-INCLUDE_DIRECTORIES(${GSL_INCLUDE_DIRS})
-LINK_DIRECTORIES(${GSL_LIBRARY_DIRS})
+add_definitions(${GSL_DEFINITIONS})
+include_directories(${GSL_INCLUDE_DIRS})
+link_directories(${GSL_LIBRARY_DIRS})
 
-INCLUDE_DIRECTORIES(${FFTW3F_INCLUDE_DIRS})
-LINK_DIRECTORIES(${FFTW3F_LIBRARY_DIRS})
+include_directories(${FFTW3F_INCLUDE_DIRS})
+link_directories(${FFTW3F_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gnuradio_core_libs
+list(APPEND gnuradio_core_libs
     gruel
     ${Boost_LIBRARIES}
     ${GSL_LIBRARIES}
@@ -64,18 +64,18 @@ LIST(APPEND gnuradio_core_libs
 )
 
 #need to link with librt on ubuntu 11.10 for shm_*
-IF(LINUX)
-    LIST(APPEND gnuradio_core_libs rt)
-ENDIF()
+if(LINUX)
+    list(APPEND gnuradio_core_libs rt)
+endif()
 
-ADD_LIBRARY(gnuradio-core SHARED ${gnuradio_core_sources})
-TARGET_LINK_LIBRARIES(gnuradio-core ${gnuradio_core_libs})
-SET_TARGET_PROPERTIES(gnuradio-core PROPERTIES DEFINE_SYMBOL "gnuradio_core_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-core PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-core SHARED ${gnuradio_core_sources})
+target_link_libraries(gnuradio-core ${gnuradio_core_libs})
+set_target_properties(gnuradio-core PROPERTIES DEFINE_SYMBOL "gnuradio_core_EXPORTS")
+set_target_properties(gnuradio-core PROPERTIES SOVERSION ${LIBVER})
 #avoid fftw and gsl link in dependent libraries:
-SET_TARGET_PROPERTIES(gnuradio-core PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
+set_target_properties(gnuradio-core PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
 
-INSTALL(TARGETS gnuradio-core
+install(TARGETS gnuradio-core
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "core_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "core_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "core_runtime" # .dll file
@@ -84,9 +84,9 @@ INSTALL(TARGETS gnuradio-core
 ########################################################################
 # Setup executables
 ########################################################################
-ADD_EXECUTABLE(gnuradio-config-info gnuradio-config-info.cc)
-TARGET_LINK_LIBRARIES(gnuradio-config-info gnuradio-core ${Boost_LIBRARIES})
-INSTALL(
+add_executable(gnuradio-config-info gnuradio-config-info.cc)
+target_link_libraries(gnuradio-config-info gnuradio-core ${Boost_LIBRARIES})
+install(
     TARGETS gnuradio-config-info
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "core_runtime"
@@ -95,12 +95,12 @@ INSTALL(
 ########################################################################
 # Setup tests
 ########################################################################
-IF(ENABLE_TESTING)
+if(ENABLE_TESTING)
 
-INCLUDE_DIRECTORIES(${CPPUNIT_INCLUDE_DIRS})
-LINK_DIRECTORIES(${CPPUNIT_LIBRARY_DIRS})
+include_directories(${CPPUNIT_INCLUDE_DIRS})
+link_directories(${CPPUNIT_LIBRARY_DIRS})
 
-ADD_LIBRARY(test-gnuradio-core SHARED ${test_gnuradio_core_sources})
-TARGET_LINK_LIBRARIES(test-gnuradio-core gnuradio-core ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES})
+add_library(test-gnuradio-core SHARED ${test_gnuradio_core_sources})
+target_link_libraries(test-gnuradio-core gnuradio-core ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES})
 
-ENDIF(ENABLE_TESTING)
+endif(ENABLE_TESTING)

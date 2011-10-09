@@ -20,8 +20,8 @@
 ########################################################################
 # Append all sources in this dir
 ########################################################################
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-LIST(APPEND gr_vocoder_sources
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+list(APPEND gr_vocoder_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/g711.c
     ${CMAKE_CURRENT_SOURCE_DIR}/g72x.c
     ${CMAKE_CURRENT_SOURCE_DIR}/g721.c

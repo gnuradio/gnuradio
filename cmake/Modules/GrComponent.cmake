@@ -17,20 +17,20 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(DEFINED __INCLUDED_GR_COMPONENT_CMAKE)
-    RETURN()
-ENDIF()
-SET(__INCLUDED_GR_COMPONENT_CMAKE TRUE)
+if(DEFINED __INCLUDED_GR_COMPONENT_CMAKE)
+    return()
+endif()
+set(__INCLUDED_GR_COMPONENT_CMAKE TRUE)
 
-SET(_gr_enabled_components "" CACHE INTERNAL "" FORCE)
-SET(_gr_disabled_components "" CACHE INTERNAL "" FORCE)
+set(_gr_enabled_components "" CACHE INTERNAL "" FORCE)
+set(_gr_disabled_components "" CACHE INTERNAL "" FORCE)
 
-IF(NOT DEFINED ENABLE_DEFAULT)
-    SET(ENABLE_DEFAULT ON)
-    MESSAGE(STATUS "")
-    MESSAGE(STATUS "The build system will automatically enable all components.")
-    MESSAGE(STATUS "Use -DENABLE_DEFAULT=OFF to disable components by default.")
-ENDIF()
+if(NOT DEFINED ENABLE_DEFAULT)
+    set(ENABLE_DEFAULT ON)
+    message(STATUS "")
+    message(STATUS "The build system will automatically enable all components.")
+    message(STATUS "Use -DENABLE_DEFAULT=OFF to disable components by default.")
+endif()
 
 ########################################################################
 # Register a component into the system
@@ -38,52 +38,52 @@ ENDIF()
 # - var: variable for enabled status
 # - argn: list of dependencies
 ########################################################################
-FUNCTION(GR_REGISTER_COMPONENT name var)
-    INCLUDE(CMakeDependentOption)
-    MESSAGE(STATUS "")
-    MESSAGE(STATUS "Configuring ${name} support...")
-    FOREACH(dep ${ARGN})
-        MESSAGE(STATUS "  Dependency ${dep} = ${${dep}}")
-    ENDFOREACH(dep)
+function(GR_REGISTER_COMPONENT name var)
+    include(CMakeDependentOption)
+    message(STATUS "")
+    message(STATUS "Configuring ${name} support...")
+    foreach(dep ${ARGN})
+        message(STATUS "  Dependency ${dep} = ${${dep}}")
+    endforeach(dep)
 
     #setup the dependent option for this component
     CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ${ENABLE_DEFAULT} "${ARGN}" OFF)
-    SET(${var}_ "${${var}}" CACHE INTERNAL "" FORCE)
+    set(${var}_ "${${var}}" CACHE INTERNAL "" FORCE)
 
     #append the component into one of the lists
-    IF(${var})
-        MESSAGE(STATUS "  Enabling ${name} support.")
-        LIST(APPEND _gr_enabled_components ${name})
-    ELSE(${var})
-        MESSAGE(STATUS "  Disabling ${name} support.")
-        LIST(APPEND _gr_disabled_components ${name})
-    ENDIF(${var})
-    MESSAGE(STATUS "  Override with -D${var}=ON/OFF")
+    if(${var})
+        message(STATUS "  Enabling ${name} support.")
+        list(APPEND _gr_enabled_components ${name})
+    else(${var})
+        message(STATUS "  Disabling ${name} support.")
+        list(APPEND _gr_disabled_components ${name})
+    endif(${var})
+    message(STATUS "  Override with -D${var}=ON/OFF")
 
     #make components lists into global variables
-    SET(_gr_enabled_components ${_gr_enabled_components} CACHE INTERNAL "" FORCE)
-    SET(_gr_disabled_components ${_gr_disabled_components} CACHE INTERNAL "" FORCE)
-ENDFUNCTION(GR_REGISTER_COMPONENT)
+    set(_gr_enabled_components ${_gr_enabled_components} CACHE INTERNAL "" FORCE)
+    set(_gr_disabled_components ${_gr_disabled_components} CACHE INTERNAL "" FORCE)
+endfunction(GR_REGISTER_COMPONENT)
 
 ########################################################################
 # Print the registered component summary
 ########################################################################
-FUNCTION(GR_PRINT_COMPONENT_SUMMARY)
-    MESSAGE(STATUS "")
-    MESSAGE(STATUS "######################################################")
-    MESSAGE(STATUS "# Gnuradio enabled components                         ")
-    MESSAGE(STATUS "######################################################")
-    FOREACH(comp ${_gr_enabled_components})
-        MESSAGE(STATUS "  * ${comp}")
-    ENDFOREACH(comp)
+function(GR_PRINT_COMPONENT_SUMMARY)
+    message(STATUS "")
+    message(STATUS "######################################################")
+    message(STATUS "# Gnuradio enabled components                         ")
+    message(STATUS "######################################################")
+    foreach(comp ${_gr_enabled_components})
+        message(STATUS "  * ${comp}")
+    endforeach(comp)
 
-    MESSAGE(STATUS "")
-    MESSAGE(STATUS "######################################################")
-    MESSAGE(STATUS "# Gnuradio disabled components                        ")
-    MESSAGE(STATUS "######################################################")
-    FOREACH(comp ${_gr_disabled_components})
-        MESSAGE(STATUS "  * ${comp}")
-    ENDFOREACH(comp)
+    message(STATUS "")
+    message(STATUS "######################################################")
+    message(STATUS "# Gnuradio disabled components                        ")
+    message(STATUS "######################################################")
+    foreach(comp ${_gr_disabled_components})
+        message(STATUS "  * ${comp}")
+    endforeach(comp)
 
-    MESSAGE(STATUS "")
-ENDFUNCTION(GR_PRINT_COMPONENT_SUMMARY)
+    message(STATUS "")
+endfunction(GR_PRINT_COMPONENT_SUMMARY)

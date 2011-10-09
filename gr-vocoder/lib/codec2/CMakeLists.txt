@@ -21,17 +21,17 @@
 # Create executable to generate other sources
 # http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
 ########################################################################
-IF(NOT CMAKE_CROSSCOMPILING)
-    INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-    ADD_EXECUTABLE(generate_codebook ${CMAKE_CURRENT_SOURCE_DIR}/generate_codebook.c)
-    TARGET_LINK_LIBRARIES(generate_codebook -lm)
-    EXPORT(TARGETS generate_codebook APPEND FILE ${EXPORT_FILE})
-ENDIF()
+if(NOT CMAKE_CROSSCOMPILING)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+    add_executable(generate_codebook ${CMAKE_CURRENT_SOURCE_DIR}/generate_codebook.c)
+    target_link_libraries(generate_codebook -lm)
+    export(TARGETS generate_codebook APPEND FILE ${EXPORT_FILE})
+endif()
 
 ########################################################################
 # Create codebook
 ########################################################################
-SET(CODEBOOKS
+set(CODEBOOKS
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp1.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp2.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp3.txt
@@ -44,7 +44,7 @@ SET(CODEBOOKS
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp10.txt
 )
 
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebook.c
     DEPENDS generate_codebook ${CODEBOOKS}
     COMMAND generate_codebook lsp_cb ${CODEBOOKS} > ${CMAKE_CURRENT_BINARY_DIR}/codebook.c
@@ -53,7 +53,7 @@ ADD_CUSTOM_COMMAND(
 ########################################################################
 # Create codebookd
 ########################################################################
-SET(CODEBOOKSD
+set(CODEBOOKSD
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp1.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp2.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp3.txt
@@ -66,7 +66,7 @@ SET(CODEBOOKSD
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp10.txt
 )
 
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookd.c
     DEPENDS generate_codebook ${CODEBOOKSD}
     COMMAND generate_codebook lsp_cbd ${CODEBOOKSD} > ${CMAKE_CURRENT_BINARY_DIR}/codebookd.c
@@ -75,7 +75,7 @@ ADD_CUSTOM_COMMAND(
 ########################################################################
 # Create codebookdvq
 ########################################################################
-SET(CODEBOOKSDVQ
+set(CODEBOOKSDVQ
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp1.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp2.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp3.txt
@@ -83,7 +83,7 @@ SET(CODEBOOKSDVQ
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp5.txt 
 )
 
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c
     DEPENDS generate_codebook ${CODEBOOKSDVQ}
     COMMAND generate_codebook lsp_cbdvq ${CODEBOOKSDVQ} > ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c
@@ -92,7 +92,7 @@ ADD_CUSTOM_COMMAND(
 ########################################################################
 # Append all sources in this dir
 ########################################################################
-LIST(APPEND gr_vocoder_sources
+list(APPEND gr_vocoder_sources
     ${CMAKE_CURRENT_BINARY_DIR}/codebook.c
     ${CMAKE_CURRENT_BINARY_DIR}/codebookd.c
     ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c

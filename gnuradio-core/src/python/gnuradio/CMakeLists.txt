@@ -17,13 +17,13 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INCLUDE(GrPython)
+include(GrPython)
 
-ADD_SUBDIRECTORY(gr)
-ADD_SUBDIRECTORY(gru)
-ADD_SUBDIRECTORY(gruimpl)
-ADD_SUBDIRECTORY(blks2)
-ADD_SUBDIRECTORY(blks2impl)
+add_subdirectory(gr)
+add_subdirectory(gru)
+add_subdirectory(gruimpl)
+add_subdirectory(blks2)
+add_subdirectory(blks2impl)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py

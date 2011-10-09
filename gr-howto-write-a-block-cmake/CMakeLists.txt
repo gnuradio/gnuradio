@@ -21,34 +21,34 @@
 ########################################################################
 # Project setup
 ########################################################################
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-PROJECT(gr-howto-write-a-block CXX)
-ENABLE_TESTING()
+cmake_minimum_required(VERSION 2.6)
+project(gr-howto-write-a-block CXX)
+enable_testing()
 
 #select the release build type by default to get optimization flags
-IF(NOT CMAKE_BUILD_TYPE)
-   SET(CMAKE_BUILD_TYPE "Release")
-   MESSAGE(STATUS "Build type not specified: defaulting to release.")
-ENDIF(NOT CMAKE_BUILD_TYPE)
-SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release")
+   message(STATUS "Build type not specified: defaulting to release.")
+endif(NOT CMAKE_BUILD_TYPE)
+set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 
-LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 ########################################################################
 # Compiler specific setup
 ########################################################################
-IF(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
+if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
     #http://gcc.gnu.org/wiki/Visibility
-    ADD_DEFINITIONS(-fvisibility=hidden)
-ENDIF()
+    add_definitions(-fvisibility=hidden)
+endif()
 
 ########################################################################
 # Find boost
 ########################################################################
-IF(UNIX AND EXISTS "/usr/lib64")
-    LIST(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
-ENDIF(UNIX AND EXISTS "/usr/lib64")
-SET(Boost_ADDITIONAL_VERSIONS
+if(UNIX AND EXISTS "/usr/lib64")
+    list(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
+endif(UNIX AND EXISTS "/usr/lib64")
+set(Boost_ADDITIONAL_VERSIONS
     "1.35.0" "1.35" "1.36.0" "1.36" "1.37.0" "1.37" "1.38.0" "1.38" "1.39.0" "1.39"
     "1.40.0" "1.40" "1.41.0" "1.41" "1.42.0" "1.42" "1.43.0" "1.43" "1.44.0" "1.44"
     "1.45.0" "1.45" "1.46.0" "1.46" "1.47.0" "1.47" "1.48.0" "1.48" "1.49.0" "1.49"
@@ -57,37 +57,37 @@ SET(Boost_ADDITIONAL_VERSIONS
     "1.60.0" "1.60" "1.61.0" "1.61" "1.62.0" "1.62" "1.63.0" "1.63" "1.64.0" "1.64"
     "1.65.0" "1.65" "1.66.0" "1.66" "1.67.0" "1.67" "1.68.0" "1.68" "1.69.0" "1.69"
 )
-FIND_PACKAGE(Boost "1.35")
+find_package(Boost "1.35")
 
-IF(NOT Boost_FOUND)
-    MESSAGE(FATAL_ERROR "Boost required to compile howto")
-ENDIF()
+if(NOT Boost_FOUND)
+    message(FATAL_ERROR "Boost required to compile howto")
+endif()
 
 ########################################################################
 # Find gnuradio build dependencies
 ########################################################################
-FIND_PACKAGE(Gruel)
-FIND_PACKAGE(GnuradioCore)
+find_package(Gruel)
+find_package(GnuradioCore)
 
-IF(NOT GRUEL_FOUND)
-    MESSAGE(FATAL_ERROR "Gruel required to compile howto")
-ENDIF()
+if(NOT GRUEL_FOUND)
+    message(FATAL_ERROR "Gruel required to compile howto")
+endif()
 
-IF(NOT GNURADIO_CORE_FOUND)
-    MESSAGE(FATAL_ERROR "GnuRadio Core required to compile howto")
-ENDIF()
+if(NOT GNURADIO_CORE_FOUND)
+    message(FATAL_ERROR "GnuRadio Core required to compile howto")
+endif()
 
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${CMAKE_SOURCE_DIR}/lib
     ${Boost_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
 )
 
-LINK_DIRECTORIES(
+link_directories(
     ${Boost_LIBRARY_DIRS}
     ${GRUEL_LIBRARY_DIRS}
     ${GNURADIO_CORE_LIBRARY_DIRS}
@@ -96,8 +96,8 @@ LINK_DIRECTORIES(
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(lib)
-ADD_SUBDIRECTORY(swig)
-ADD_SUBDIRECTORY(python)
-ADD_SUBDIRECTORY(grc)
-ADD_SUBDIRECTORY(apps)
+add_subdirectory(lib)
+add_subdirectory(swig)
+add_subdirectory(python)
+add_subdirectory(grc)
+add_subdirectory(apps)

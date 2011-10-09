@@ -18,20 +18,20 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
     ${GSL_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
-SET(GR_SWIG_LIBRARIES gnuradio-core)
+set(GR_SWIG_LIBRARIES gnuradio-core)
 
 ########################################################################
 # Build and install the swig targets
@@ -43,7 +43,7 @@ SET(GR_SWIG_LIBRARIES gnuradio-core)
 # X86_64, g++'s resident set size was 650MB!
 # ----------------------------------------------------------------
 
-SET(GR_SWIG_TARGET_DEPS gengen_generated filter_generated)
+set(GR_SWIG_TARGET_DEPS gengen_generated filter_generated)
 
 GR_SWIG_MAKE(gnuradio_core_runtime gnuradio_core_runtime.i)
 GR_SWIG_MAKE(gnuradio_core_general gnuradio_core_general.i)
@@ -66,7 +66,7 @@ GR_SWIG_INSTALL(TARGETS
 ########################################################################
 # Install various files
 ########################################################################
-INSTALL(FILES
+install(FILES
     gnuradio.i
     gr_swig_block_magic.i
     gr_shared_ptr.i
@@ -86,7 +86,7 @@ GR_PYTHON_INSTALL(
     COMPONENT "core_python"
 )
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio_swig_bug_workaround.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_swig"

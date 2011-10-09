@@ -20,23 +20,23 @@
 ########################################################################
 # This file included, use CMake directory variables
 ########################################################################
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-LIST(APPEND gnuradio_core_sources
+list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_channel_model.cc
 )
 
-INSTALL(FILES
+install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_channel_model.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )
 
-IF(ENABLE_PYTHON)
-    INSTALL(FILES
+if(ENABLE_PYTHON)
+    install(FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/hier.i
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_channel_model.i
         DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
         COMPONENT "core_swig"
     )
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)

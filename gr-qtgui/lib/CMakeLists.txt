@@ -20,7 +20,7 @@
 ########################################################################
 # Setup the QT file generations stuff
 ########################################################################
-SET(qtgui_moc_hdrs
+set(qtgui_moc_hdrs
     spectrumdisplayform.h
     timedisplayform.h
     FrequencyDisplayPlot.h
@@ -33,12 +33,12 @@ QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
 
 #FIXME the sources expect <foo>.ui.h, but the macros generate ui_foo.h
 #avoid changing the sources by generating the header with the include
-SET(spectrum_ui_hdr ${CMAKE_CURRENT_BINARY_DIR}/spectrumdisplayform.ui.h)
-IF(NOT EXISTS ${spectrum_ui_hdr})
-    FILE(WRITE ${spectrum_ui_hdr} "#include <ui_spectrumdisplayform.h>\n")
-ENDIF(NOT EXISTS ${spectrum_ui_hdr})
+set(spectrum_ui_hdr ${CMAKE_CURRENT_BINARY_DIR}/spectrumdisplayform.ui.h)
+if(NOT EXISTS ${spectrum_ui_hdr})
+    file(WRITE ${spectrum_ui_hdr} "#include <ui_spectrumdisplayform.h>\n")
+endif(NOT EXISTS ${spectrum_ui_hdr})
 
-SET(qtgui_srcs
+set(qtgui_srcs
     ${qtgui_moc_srcs}
     ${qtgui_ui_hdrs}
     FrequencyDisplayPlot.cc
@@ -61,37 +61,37 @@ SET(qtgui_srcs
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
-INCLUDE_DIRECTORIES(${QWT_INCLUDE_DIRS})
-LINK_DIRECTORIES(${QWT_LIBRARY_DIRS})
+include_directories(${QWT_INCLUDE_DIRS})
+link_directories(${QWT_LIBRARY_DIRS})
 
-INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
+include_directories(${PYTHON_INCLUDE_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND qtgui_libs
+list(APPEND qtgui_libs
     gnuradio-core
     ${QT_LIBRARIES}
     ${QWT_LIBRARIES}
     ${PYTHON_LIBRARIES}
 )
 
-ADD_DEFINITIONS(-DQWT_DLL) #setup QWT library linkage
-ADD_LIBRARY(gnuradio-qtgui SHARED ${qtgui_srcs})
-TARGET_LINK_LIBRARIES(gnuradio-qtgui ${qtgui_libs})
-SET_TARGET_PROPERTIES(gnuradio-qtgui PROPERTIES DEFINE_SYMBOL "libgnuradio_qtgui_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-qtgui PROPERTIES SOVERSION ${LIBVER})
+add_definitions(-DQWT_DLL) #setup QWT library linkage
+add_library(gnuradio-qtgui SHARED ${qtgui_srcs})
+target_link_libraries(gnuradio-qtgui ${qtgui_libs})
+set_target_properties(gnuradio-qtgui PROPERTIES DEFINE_SYMBOL "libgnuradio_qtgui_EXPORTS")
+set_target_properties(gnuradio-qtgui PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-qtgui
+install(TARGETS gnuradio-qtgui
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "qtgui_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "qtgui_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "qtgui_runtime" # .dll file
@@ -100,7 +100,7 @@ INSTALL(TARGETS gnuradio-qtgui
 ########################################################################
 # Install the header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     FrequencyDisplayPlot.h
     TimeDomainDisplayPlot.h
     WaterfallDisplayPlot.h

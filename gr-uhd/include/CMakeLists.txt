@@ -20,7 +20,7 @@
 ########################################################################
 # Install header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     gr_uhd_api.h
     gr_uhd_usrp_source.h
     gr_uhd_usrp_sink.h

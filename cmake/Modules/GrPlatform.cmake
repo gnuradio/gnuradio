@@ -17,30 +17,30 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(DEFINED __INCLUDED_GR_PLATFORM_CMAKE)
-    RETURN()
-ENDIF()
-SET(__INCLUDED_GR_PLATFORM_CMAKE TRUE)
+if(DEFINED __INCLUDED_GR_PLATFORM_CMAKE)
+    return()
+endif()
+set(__INCLUDED_GR_PLATFORM_CMAKE TRUE)
 
 ########################################################################
 # Setup additional defines for OS types
 ########################################################################
-IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    SET(LINUX TRUE)
-ENDIF()
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LINUX TRUE)
+endif()
 
-IF(LINUX AND EXISTS "/etc/debian_version")
-    SET(DEBIAN TRUE)
-ENDIF()
+if(LINUX AND EXISTS "/etc/debian_version")
+    set(DEBIAN TRUE)
+endif()
 
-IF(LINUX AND EXISTS "/etc/redhat-release")
-    SET(REDHAT TRUE)
-ENDIF()
+if(LINUX AND EXISTS "/etc/redhat-release")
+    set(REDHAT TRUE)
+endif()
 
 ########################################################################
 # when the library suffix should be 64 (applies to redhat linux family)
 ########################################################################
-IF(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
-    SET(LIB_SUFFIX 64)
-ENDIF()
-SET(LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
+if(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
+    set(LIB_SUFFIX 64)
+endif()
+set(LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")

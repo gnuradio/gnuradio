@@ -24,7 +24,7 @@
 ########################################################################
 # Handle the generated sine table
 ########################################################################
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gen_sine_table.py
     COMMAND ${PYTHON_EXECUTABLE}
@@ -32,7 +32,7 @@ ADD_CUSTOM_COMMAND(
         ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
 )
 
-INCLUDE(AddFileDependencies)
+include(AddFileDependencies)
 ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
     ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
 )
@@ -40,33 +40,33 @@ ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
 ########################################################################
 # Handle the generated constants
 ########################################################################
-EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c
+execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
     "import time;print time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime())"
     OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-MESSAGE(STATUS "Loading build date ${BUILD_DATE} into gr_constants...")
+message(STATUS "Loading build date ${BUILD_DATE} into gr_constants...")
 
-MESSAGE(STATUS "Loading version ${VERSION} into gr_constants...")
+message(STATUS "Loading version ${VERSION} into gr_constants...")
 
-FILE(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}"     SYSCONFDIR)
-FILE(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_PKG_CONF_DIR}" GR_PREFSDIR)
+file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}"     SYSCONFDIR)
+file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_PKG_CONF_DIR}" GR_PREFSDIR)
 
 #double escape for windows backslash path separators
-STRING(REPLACE "\\" "\\\\" prefix ${prefix})
-STRING(REPLACE "\\" "\\\\" SYSCONFDIR ${SYSCONFDIR})
-STRING(REPLACE "\\" "\\\\" GR_PREFSDIR ${GR_PREFSDIR})
+string(REPLACE "\\" "\\\\" prefix ${prefix})
+string(REPLACE "\\" "\\\\" SYSCONFDIR ${SYSCONFDIR})
+string(REPLACE "\\" "\\\\" GR_PREFSDIR ${GR_PREFSDIR})
 
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.cc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gr_constants.cc
 @ONLY)
 
-LIST(APPEND gnuradio_core_sources ${CMAKE_CURRENT_BINARY_DIR}/gr_constants.cc)
+list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_BINARY_DIR}/gr_constants.cc)
 
 ########################################################################
 # Append gnuradio-core library sources
 ########################################################################
-LIST(APPEND gnuradio_core_sources
+list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_circular_file.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_count_bits.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fast_atan2f.cc
@@ -93,7 +93,7 @@ LIST(APPEND gnuradio_core_sources
 ########################################################################
 # Append gnuradio-core test sources
 ########################################################################
-LIST(APPEND test_gnuradio_core_sources
+list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_general.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_circular_file.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_cpm.cc
@@ -108,7 +108,7 @@ LIST(APPEND test_gnuradio_core_sources
 ########################################################################
 # Install runtime headers
 ########################################################################
-INSTALL(FILES
+install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_core_api.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_circular_file.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.h
@@ -155,8 +155,8 @@ INSTALL(FILES
 ########################################################################
 # Install swig headers
 ########################################################################
-IF(ENABLE_PYTHON)
-INSTALL(FILES
+if(ENABLE_PYTHON)
+install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/general.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc_cc.i
@@ -167,12 +167,12 @@ INSTALL(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
 )
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Handle triple-threat files that have cc, h, and i
 ########################################################################
-SET(gr_core_general_triple_threats
+set(gr_core_general_triple_threats
     complex_vec_test
     gr_additive_scrambler_bb
     gr_agc_cc
@@ -292,10 +292,10 @@ SET(gr_core_general_triple_threats
     gr_correlate_access_code_tag_bb
 )
 
-FOREACH(file_tt ${gr_core_general_triple_threats})
-    LIST(APPEND gnuradio_core_sources ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.cc)
-    INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio COMPONENT "core_devel")
-    IF(ENABLE_PYTHON)
-        INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.i DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig COMPONENT "core_swig")
-    ENDIF(ENABLE_PYTHON)
-ENDFOREACH(file_tt ${gr_core_general_triple_threats})
+foreach(file_tt ${gr_core_general_triple_threats})
+    list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.cc)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio COMPONENT "core_devel")
+    if(ENABLE_PYTHON)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.i DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig COMPONENT "core_swig")
+    endif(ENABLE_PYTHON)
+endforeach(file_tt ${gr_core_general_triple_threats})

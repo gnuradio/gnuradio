@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INCLUDE(GrPython)
+include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
     audio_copy.py

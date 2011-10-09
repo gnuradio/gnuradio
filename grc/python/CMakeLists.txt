@@ -36,7 +36,7 @@ GR_PYTHON_INSTALL(FILES
     COMPONENT "grc"
 )
 
-INSTALL(FILES
+install(FILES
     block.dtd
     default_flow_graph.grc
     flow_graph.tmpl

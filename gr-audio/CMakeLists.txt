@@ -20,12 +20,12 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-audio" ENABLE_GR_AUDIO
     Boost_FOUND
     ENABLE_GR_CORE_
@@ -36,12 +36,12 @@ GR_SET_GLOBAL(GR_AUDIO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_AUDIO)
+if(ENABLE_GR_AUDIO)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_AUDIO_DESCRIPTION "GNU Radio Audio Blocks")
 
 CPACK_COMPONENT("audio_runtime"
@@ -75,27 +75,27 @@ CPACK_COMPONENT("audio_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(include)
-ADD_SUBDIRECTORY(lib)
-ADD_SUBDIRECTORY(examples/c++)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(swig)
-    ADD_SUBDIRECTORY(grc)
-    ADD_SUBDIRECTORY(examples/python)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(include)
+add_subdirectory(lib)
+add_subdirectory(examples/c++)
+if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(grc)
+    add_subdirectory(examples/python)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-audio.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-audio.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-audio.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "audio_devel"
 )
 
-ENDIF(ENABLE_GR_AUDIO)
+endif(ENABLE_GR_AUDIO)

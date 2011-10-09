@@ -20,15 +20,15 @@
 ########################################################################
 # Generate inet.h header file
 ########################################################################
-INCLUDE(TestBigEndian)
-ENABLE_LANGUAGE(C)
+include(TestBigEndian)
+enable_language(C)
 TEST_BIG_ENDIAN(GR_ARCH_BIGENDIAN)
 
-INCLUDE(CheckIncludeFileCXX)
+include(CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX(byteswap.h GR_HAVE_BYTESWAP)
 CHECK_INCLUDE_FILE_CXX(arpa/inet.h GR_HAVE_ARPA_INET)
 
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/inet.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/inet.h
 @ONLY)
@@ -36,7 +36,7 @@ CONFIGURE_FILE(
 ########################################################################
 # Install the headers
 ########################################################################
-INSTALL(FILES
+install(FILES
     api.h
     attributes.h
     high_res_timer.h

@@ -19,7 +19,7 @@
 
 ########################################################################
 
-INSTALL(FILES
+install(FILES
     pmt-serial-tags.scm
     pmt-serialize.scm
     macros-etc.scm

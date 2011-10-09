@@ -20,20 +20,20 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
-INCLUDE(GrPython) #used for code generation
+include(GrPython) #used for code generation
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gruel" ENABLE_GRUEL
     Boost_FOUND
     PYTHONINTERP_FOUND
 )
 
-INCLUDE(GrMiscUtils)
+include(GrMiscUtils)
 GR_SET_GLOBAL(GRUEL_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/include
@@ -43,12 +43,12 @@ GR_SET_GLOBAL(GRUEL_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GRUEL)
+if(ENABLE_GRUEL)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_GRUEL_DESCRIPTION "GNU Radio Utility Etcetera Library")
 
 CPACK_COMPONENT("gruel_runtime"
@@ -80,26 +80,26 @@ CPACK_COMPONENT("gruel_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(src/include/gruel)
-ADD_SUBDIRECTORY(src/scheme/gnuradio)
-ADD_SUBDIRECTORY(src/lib)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(src/swig)
-    ADD_SUBDIRECTORY(src/python)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(src/include/gruel)
+add_subdirectory(src/scheme/gnuradio)
+add_subdirectory(src/lib)
+if(ENABLE_PYTHON)
+    add_subdirectory(src/swig)
+    add_subdirectory(src/python)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gruel.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gruel.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gruel.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "gruel_devel"
 )
 
-ENDIF(ENABLE_GRUEL)
+endif(ENABLE_GRUEL)

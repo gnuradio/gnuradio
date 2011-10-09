@@ -20,15 +20,15 @@
 ########################################################################
 # Setup swig generation
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_NOAA_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-noaa)
+set(GR_SWIG_LIBRARIES gnuradio-noaa)
 
 GR_SWIG_MAKE(noaa_swig noaa_swig.i)
 
@@ -38,7 +38,7 @@ GR_SWIG_INSTALL(
     COMPONENT "noaa_python"
 )
 
-INSTALL(
+install(
     FILES
     noaa_swig.i
     noaa_hrpt_decoder.i

@@ -20,12 +20,12 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-digital" ENABLE_GR_DIGITAL
     Boost_FOUND
     ENABLE_GR_CORE_
@@ -42,12 +42,12 @@ GR_SET_GLOBAL(GR_DIGITAL_SWIG_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_DIGITAL)
+if(ENABLE_GR_DIGITAL)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_DIGITAL_DESCRIPTION "GNU Radio Digital Blocks")
 
 CPACK_COMPONENT("digital_runtime"
@@ -81,27 +81,27 @@ CPACK_COMPONENT("digital_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(include)
-ADD_SUBDIRECTORY(lib)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(swig)
-    ADD_SUBDIRECTORY(python)
-    ADD_SUBDIRECTORY(grc)
-    ADD_SUBDIRECTORY(examples)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(include)
+add_subdirectory(lib)
+if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(python)
+    add_subdirectory(grc)
+    add_subdirectory(examples)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-digital.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "digital_devel"
 )
 
-ENDIF(ENABLE_GR_DIGITAL)
+endif(ENABLE_GR_DIGITAL)

@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INCLUDE(GrPython)
+include(GrPython)
 
 GR_PYTHON_INSTALL(
     PROGRAMS
@@ -37,13 +37,13 @@ GR_PYTHON_INSTALL(
     COMPONENT "trellis_examples"
 )
 
-INSTALL(
+install(
     FILES README
     DESTINATION ${GR_PKG_DATA_DIR}/examples/trellis
     COMPONENT "trellis_examples"
 )
 
-INSTALL(
+install(
     FILES
     fsm_files/awgn1o2_128.fsm
     fsm_files/awgn1o2_16.fsm

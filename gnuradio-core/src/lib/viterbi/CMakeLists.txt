@@ -21,7 +21,7 @@
 # This file included, use CMake directory variables
 ########################################################################
 
-SET(viterbi_sources
+set(viterbi_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/metrics.c
     ${CMAKE_CURRENT_SOURCE_DIR}/tab.c
     ${CMAKE_CURRENT_SOURCE_DIR}/viterbi.c
@@ -30,25 +30,25 @@ SET(viterbi_sources
 ########################################################################
 # define missing erf function with C linkage (hack for metrics.c)
 ########################################################################
-IF(MSVC)
-FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/boost_math_erf.cc "
+if(MSVC)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/boost_math_erf.cc "
 #include <boost/math/special_functions/erf.hpp>
 extern \"C\" double erf(double x){
     return boost::math::erf(x);
 }
 ")
-LIST(APPEND viterbi_sources ${CMAKE_CURRENT_BINARY_DIR}/boost_math_erf.cc)
-ENDIF(MSVC)
+list(APPEND viterbi_sources ${CMAKE_CURRENT_BINARY_DIR}/boost_math_erf.cc)
+endif(MSVC)
 
 ########################################################################
 # Append gnuradio-core library sources
 ########################################################################
-LIST(APPEND gnuradio_core_sources ${viterbi_sources})
+list(APPEND gnuradio_core_sources ${viterbi_sources})
 
 ########################################################################
 # Install runtime headers
 ########################################################################
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/viterbi.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"

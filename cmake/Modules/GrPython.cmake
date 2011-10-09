@@ -17,10 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(DEFINED __INCLUDED_GR_PYTHON_CMAKE)
-    RETURN()
-ENDIF()
-SET(__INCLUDED_GR_PYTHON_CMAKE TRUE)
+if(DEFINED __INCLUDED_GR_PYTHON_CMAKE)
+    return()
+endif()
+set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
 ########################################################################
 # Setup the python interpreter:
@@ -28,40 +28,40 @@ SET(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 # or finds the interpreter via the built-in cmake module.
 ########################################################################
 #this allows the user to override PYTHON_EXECUTABLE
-IF(PYTHON_EXECUTABLE)
+if(PYTHON_EXECUTABLE)
 
-    SET(PYTHONINTERP_FOUND TRUE)
+    set(PYTHONINTERP_FOUND TRUE)
 
 #otherwise if not set, try to automatically find it
-ELSE(PYTHON_EXECUTABLE)
+else(PYTHON_EXECUTABLE)
 
     #use the built-in find script
-    FIND_PACKAGE(PythonInterp)
+    find_package(PythonInterp)
 
     #and if that fails use the find program routine
-    IF(NOT PYTHONINTERP_FOUND)
-        FIND_PROGRAM(PYTHON_EXECUTABLE NAMES python python2.7 python2.6 python2.5)
-        IF(PYTHON_EXECUTABLE)
-            SET(PYTHONINTERP_FOUND TRUE)
-        ENDIF(PYTHON_EXECUTABLE)
-    ENDIF(NOT PYTHONINTERP_FOUND)
+    if(NOT PYTHONINTERP_FOUND)
+        find_program(PYTHON_EXECUTABLE NAMES python python2.7 python2.6 python2.5)
+        if(PYTHON_EXECUTABLE)
+            set(PYTHONINTERP_FOUND TRUE)
+        endif(PYTHON_EXECUTABLE)
+    endif(NOT PYTHONINTERP_FOUND)
 
-ENDIF(PYTHON_EXECUTABLE)
+endif(PYTHON_EXECUTABLE)
 
 #make the path to the executable appear in the cmake gui
-SET(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
+set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
 
 #make sure we can use -B with python (introduced in 2.6)
-IF(PYTHON_EXECUTABLE)
-    EXECUTE_PROCESS(
+if(PYTHON_EXECUTABLE)
+    execute_process(
         COMMAND ${PYTHON_EXECUTABLE} -B -c ""
         OUTPUT_QUIET ERROR_QUIET
         RESULT_VARIABLE PYTHON_HAS_DASH_B_RESULT
     )
-    IF(PYTHON_HAS_DASH_B_RESULT EQUAL 0)
-        SET(PYTHON_DASH_B "-B")
-    ENDIF()
-ENDIF(PYTHON_EXECUTABLE)
+    if(PYTHON_HAS_DASH_B_RESULT EQUAL 0)
+        set(PYTHON_DASH_B "-B")
+    endif()
+endif(PYTHON_EXECUTABLE)
 
 ########################################################################
 # Check for the existence of a python module:
@@ -70,10 +70,10 @@ ENDIF(PYTHON_EXECUTABLE)
 # - cmd an additional command to run
 # - have the result variable to set
 ########################################################################
-MACRO(GR_PYTHON_CHECK_MODULE desc mod cmd have)
-    MESSAGE(STATUS "")
-    MESSAGE(STATUS "Python checking for ${desc}")
-    EXECUTE_PROCESS(
+macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
+    message(STATUS "")
+    message(STATUS "Python checking for ${desc}")
+    execute_process(
         COMMAND ${PYTHON_EXECUTABLE} -c "
 #########################################
 try: import ${mod}
@@ -83,87 +83,87 @@ except: exit(-1)
 #########################################"
         RESULT_VARIABLE ${have}
     )
-    IF(${have} EQUAL 0)
-        MESSAGE(STATUS "Python checking for ${desc} - found")
-        SET(${have} TRUE)
-    ELSE(${have} EQUAL 0)
-        MESSAGE(STATUS "Python checking for ${desc} - not found")
-        SET(${have} FALSE)
-    ENDIF(${have} EQUAL 0)
-ENDMACRO(GR_PYTHON_CHECK_MODULE)
+    if(${have} EQUAL 0)
+        message(STATUS "Python checking for ${desc} - found")
+        set(${have} TRUE)
+    else(${have} EQUAL 0)
+        message(STATUS "Python checking for ${desc} - not found")
+        set(${have} FALSE)
+    endif(${have} EQUAL 0)
+endmacro(GR_PYTHON_CHECK_MODULE)
 
 ########################################################################
 # Sets the python installation directory GR_PYTHON_DIR
 ########################################################################
-EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "
+execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
 from distutils import sysconfig
 print sysconfig.get_python_lib(plat_specific=True, prefix='')
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-FILE(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
+file(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
 
 ########################################################################
 # Create an always-built target with a unique name
 # Usage: GR_UNIQUE_TARGET(<description> <dependencies list>)
 ########################################################################
-FUNCTION(GR_UNIQUE_TARGET desc)
-    FILE(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
+function(GR_UNIQUE_TARGET desc)
+    file(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
 unique = hashlib.md5('${reldir}${ARGN}').hexdigest()[:5]
 print(re.sub('\\W', '_', '${desc} ${reldir} ' + unique))"
     OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
-    ADD_CUSTOM_TARGET(${_target} ALL DEPENDS ${ARGN})
-ENDFUNCTION(GR_UNIQUE_TARGET)
+    add_custom_target(${_target} ALL DEPENDS ${ARGN})
+endfunction(GR_UNIQUE_TARGET)
 
 ########################################################################
 # Install python sources (also builds and installs byte-compiled python)
 ########################################################################
-FUNCTION(GR_PYTHON_INSTALL)
-    INCLUDE(CMakeParseArgumentsCopy)
+function(GR_PYTHON_INSTALL)
+    include(CMakeParseArgumentsCopy)
     CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION;COMPONENT" "FILES;PROGRAMS" ${ARGN})
 
     ####################################################################
-    IF(GR_PYTHON_INSTALL_FILES)
+    if(GR_PYTHON_INSTALL_FILES)
     ####################################################################
-        INSTALL(${ARGN}) #installs regular python files
+        install(${ARGN}) #installs regular python files
 
-        FOREACH(pyfile ${GR_PYTHON_INSTALL_FILES})
-            GET_FILENAME_COMPONENT(pyfile_name ${pyfile} NAME)
-            GET_FILENAME_COMPONENT(pyfile ${pyfile} ABSOLUTE)
-            STRING(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" pycfile "${pyfile}c")
-            LIST(APPEND python_install_gen_targets ${pycfile})
+        foreach(pyfile ${GR_PYTHON_INSTALL_FILES})
+            get_filename_component(pyfile_name ${pyfile} NAME)
+            get_filename_component(pyfile ${pyfile} ABSOLUTE)
+            string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" pycfile "${pyfile}c")
+            list(APPEND python_install_gen_targets ${pycfile})
 
-            GET_FILENAME_COMPONENT(pycfile_path ${pycfile} PATH)
-            FILE(MAKE_DIRECTORY ${pycfile_path})
+            get_filename_component(pycfile_path ${pycfile} PATH)
+            file(MAKE_DIRECTORY ${pycfile_path})
 
             #create a command to generate the byte-compiled pyc file
-            ADD_CUSTOM_COMMAND(
+            add_custom_command(
                 OUTPUT ${pycfile} DEPENDS ${pyfile}
                 COMMAND ${PYTHON_EXECUTABLE} -c
                 \"import py_compile\; py_compile.compile(file='${pyfile}', cfile='${pycfile}', doraise=True)\"
                 COMMENT "Byte-compiling ${pyfile_name}"
             )
-            INSTALL(FILES ${pycfile}
+            install(FILES ${pycfile}
                 DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
                 COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
             )
-        ENDFOREACH(pyfile)
+        endforeach(pyfile)
 
     ####################################################################
-    ELSEIF(GR_PYTHON_INSTALL_PROGRAMS)
+    elseif(GR_PYTHON_INSTALL_PROGRAMS)
     ####################################################################
-        FILE(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
+        file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
 
-        FOREACH(pyfile ${GR_PYTHON_INSTALL_PROGRAMS})
-            GET_FILENAME_COMPONENT(pyfile_name ${pyfile} NAME)
-            GET_FILENAME_COMPONENT(pyfile ${pyfile} ABSOLUTE)
-            STRING(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" pyexefile "${pyfile}.exe")
-            LIST(APPEND python_install_gen_targets ${pyexefile})
+        foreach(pyfile ${GR_PYTHON_INSTALL_PROGRAMS})
+            get_filename_component(pyfile_name ${pyfile} NAME)
+            get_filename_component(pyfile ${pyfile} ABSOLUTE)
+            string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" pyexefile "${pyfile}.exe")
+            list(APPEND python_install_gen_targets ${pyexefile})
 
-            GET_FILENAME_COMPONENT(pyexefile_path ${pyexefile} PATH)
-            FILE(MAKE_DIRECTORY ${pyexefile_path})
+            get_filename_component(pyexefile_path ${pyexefile} PATH)
+            file(MAKE_DIRECTORY ${pyexefile_path})
 
-            ADD_CUSTOM_COMMAND(
+            add_custom_command(
                 OUTPUT ${pyexefile} DEPENDS ${pyfile}
                 COMMAND ${PYTHON_EXECUTABLE} -c
                 \"open('${pyexefile}', 'w').write('\#!${pyexe_native}\\n'+open('${pyfile}').read())\"
@@ -171,19 +171,19 @@ FUNCTION(GR_PYTHON_INSTALL)
             )
 
             #on windows, python files need an extension to execute
-            GET_FILENAME_COMPONENT(pyfile_ext ${pyfile} EXT)
-            IF(WIN32 AND NOT pyfile_ext)
-                SET(pyfile_name "${pyfile_name}.py")
-            ENDIF()
+            get_filename_component(pyfile_ext ${pyfile} EXT)
+            if(WIN32 AND NOT pyfile_ext)
+                set(pyfile_name "${pyfile_name}.py")
+            endif()
 
-            INSTALL(PROGRAMS ${pyexefile} RENAME ${pyfile_name}
+            install(PROGRAMS ${pyexefile} RENAME ${pyfile_name}
                 DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
                 COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
             )
-        ENDFOREACH(pyfile)
+        endforeach(pyfile)
 
-    ENDIF()
+    endif()
 
     GR_UNIQUE_TARGET("pygen" ${python_install_gen_targets})
 
-ENDFUNCTION(GR_PYTHON_INSTALL)
+endfunction(GR_PYTHON_INSTALL)

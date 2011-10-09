@@ -20,15 +20,15 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
-FIND_PACKAGE(GSL)
+find_package(GSL)
 
-FIND_PACKAGE(FFTW3f)
+find_package(FFTW3f)
 
-INCLUDE(GrPython) #used for code generation
+include(GrPython) #used for code generation
 
-GET_FILENAME_COMPONENT(GR_CORE_PYTHONPATH
+get_filename_component(GR_CORE_PYTHONPATH
     ${CMAKE_CURRENT_SOURCE_DIR}/src/python ABSOLUTE
 )
 GR_SET_GLOBAL(GR_CORE_PYTHONPATH ${GR_CORE_PYTHONPATH})
@@ -36,7 +36,7 @@ GR_SET_GLOBAL(GR_CORE_PYTHONPATH ${GR_CORE_PYTHONPATH})
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gnuradio-core" ENABLE_GR_CORE
     ENABLE_GRUEL_
     Boost_FOUND
@@ -45,7 +45,7 @@ GR_REGISTER_COMPONENT("gnuradio-core" ENABLE_GR_CORE
     PYTHONINTERP_FOUND
 )
 
-INCLUDE(GrMiscUtils)
+include(GrMiscUtils)
 GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
     ${GRUEL_INCLUDE_DIRS} #headers depend on gruel
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/runtime
@@ -73,12 +73,12 @@ GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_CORE)
+if(ENABLE_GR_CORE)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_CORE_DESCRIPTION "GNU Radio Core Library")
 
 CPACK_COMPONENT("core_runtime"
@@ -109,7 +109,7 @@ CPACK_COMPONENT("core_swig"
     DEPENDS      "gruel_swig;core_python;core_devel"
 )
 
-INSTALL(
+install(
     FILES gnuradio-core.conf
     DESTINATION ${GR_PKG_CONF_DIR}
     COMPONENT "core_runtime"
@@ -118,27 +118,27 @@ INSTALL(
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(src/lib)
-IF(ENABLE_TESTING)
-    ADD_SUBDIRECTORY(src/tests)
-ENDIF(ENABLE_TESTING)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(src/lib/swig)
-    ADD_SUBDIRECTORY(src/python/gnuradio)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(src/lib)
+if(ENABLE_TESTING)
+    add_subdirectory(src/tests)
+endif(ENABLE_TESTING)
+if(ENABLE_PYTHON)
+    add_subdirectory(src/lib/swig)
+    add_subdirectory(src/python/gnuradio)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
 ########################################################################
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-core.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.pc
 @ONLY)
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "core_devel"
 )
 
-ENDIF(ENABLE_GR_CORE)
+endif(ENABLE_GR_CORE)

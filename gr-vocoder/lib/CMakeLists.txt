@@ -20,18 +20,18 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_VOCODER_INCLUDE_DIRS}
 )
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gr_vocoder_sources
+list(APPEND gr_vocoder_sources
     vocoder_alaw_decode_bs.cc
     vocoder_alaw_encode_sb.cc
     vocoder_codec2_decode_ps.cc
@@ -57,17 +57,17 @@ GR_INCLUDE_SUBDIRECTORY(codec2)
 GR_INCLUDE_SUBDIRECTORY(g7xx)
 GR_INCLUDE_SUBDIRECTORY(gsm)
 
-LIST(APPEND vocoder_libs
+list(APPEND vocoder_libs
     gnuradio-core
     ${Boost_LIBRARIES}
 )
 
-ADD_LIBRARY(gnuradio-vocoder SHARED ${gr_vocoder_sources})
-TARGET_LINK_LIBRARIES(gnuradio-vocoder ${vocoder_libs})
-SET_TARGET_PROPERTIES(gnuradio-vocoder PROPERTIES DEFINE_SYMBOL "gnuradio_vocoder_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-vocoder PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})
+target_link_libraries(gnuradio-vocoder ${vocoder_libs})
+set_target_properties(gnuradio-vocoder PROPERTIES DEFINE_SYMBOL "gnuradio_vocoder_EXPORTS")
+set_target_properties(gnuradio-vocoder PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-vocoder
+install(TARGETS gnuradio-vocoder
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "vocoder_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "vocoder_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "vocoder_runtime" # .dll file

@@ -20,28 +20,28 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_ATSC_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Generate viterbi mux source
 # http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
 ########################################################################
-IF(NOT CMAKE_CROSSCOMPILING)
-    ADD_EXECUTABLE(atsci_viterbi_gen atsci_viterbi_gen.cc)
-    EXPORT(TARGETS atsci_viterbi_gen APPEND FILE ${EXPORT_FILE})
-ENDIF()
+if(NOT CMAKE_CROSSCOMPILING)
+    add_executable(atsci_viterbi_gen atsci_viterbi_gen.cc)
+    export(TARGETS atsci_viterbi_gen APPEND FILE ${EXPORT_FILE})
+endif()
 
 
-SET(atsci_viterbi_mux_cc ${CMAKE_CURRENT_BINARY_DIR}/atsci_viterbi_mux.cc)
+set(atsci_viterbi_mux_cc ${CMAKE_CURRENT_BINARY_DIR}/atsci_viterbi_mux.cc)
 
-ADD_CUSTOM_COMMAND(
+add_custom_command(
     OUTPUT ${atsci_viterbi_mux_cc}
     DEPENDS atsci_viterbi_gen
     COMMAND atsci_viterbi_gen -o ${atsci_viterbi_mux_cc}
@@ -50,7 +50,7 @@ ADD_CUSTOM_COMMAND(
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gr_atsc_sources
+list(APPEND gr_atsc_sources
     ${atsci_viterbi_mux_cc}
     atsc_derandomizer.cc
     atsc_randomizer.cc
@@ -94,17 +94,17 @@ LIST(APPEND gr_atsc_sources
     plinfo.cc
 )
 
-LIST(APPEND atsc_libs
+list(APPEND atsc_libs
     gnuradio-core
     ${Boost_LIBRARIES}
 )
 
-ADD_LIBRARY(gnuradio-atsc SHARED ${gr_atsc_sources})
-TARGET_LINK_LIBRARIES(gnuradio-atsc ${atsc_libs})
-SET_TARGET_PROPERTIES(gnuradio-atsc PROPERTIES DEFINE_SYMBOL "gnuradio_atsc_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-atsc PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-atsc SHARED ${gr_atsc_sources})
+target_link_libraries(gnuradio-atsc ${atsc_libs})
+set_target_properties(gnuradio-atsc PROPERTIES DEFINE_SYMBOL "gnuradio_atsc_EXPORTS")
+set_target_properties(gnuradio-atsc PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-atsc
+install(TARGETS gnuradio-atsc
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "atsc_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "atsc_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "atsc_runtime" # .dll file
@@ -113,12 +113,12 @@ INSTALL(TARGETS gnuradio-atsc
 ########################################################################
 # Build and register unit test
 ########################################################################
-IF(ENABLE_TESTING)
+if(ENABLE_TESTING)
 
-INCLUDE_DIRECTORIES(${CPPUNIT_INCLUDE_DIRS})
-LINK_DIRECTORIES(${CPPUNIT_LIBRARY_DIRS})
+include_directories(${CPPUNIT_INCLUDE_DIRS})
+link_directories(${CPPUNIT_LIBRARY_DIRS})
 
-LIST(APPEND test_atsci_sources
+list(APPEND test_atsci_sources
     qa_atsci_basic_trellis_encoder.cc
     qa_atsci_data_interleaver.cc
     qa_atsci_equalizer_nop.cc
@@ -135,18 +135,18 @@ LIST(APPEND test_atsci_sources
     qa_interleaver_fifo.cc
 )
 
-INCLUDE(GrTest)
-SET(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel)
-ADD_EXECUTABLE(test_atsci ${test_atsci_sources} test_atsci.cc)
-TARGET_LINK_LIBRARIES(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
+include(GrTest)
+set(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel)
+add_executable(test_atsci ${test_atsci_sources} test_atsci.cc)
+target_link_libraries(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)
 
-ENDIF(ENABLE_TESTING)
+endif(ENABLE_TESTING)
 
 ########################################################################
 # Install public header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     atsc_api.h
     atsc_consts.h
     atsc_derandomizer.h
@@ -207,16 +207,16 @@ INSTALL(FILES
 ########################################################################
 # Setup swig generation
 ########################################################################
-IF(ENABLE_PYTHON)
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+if(ENABLE_PYTHON)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_ATSC_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-atsc)
+set(GR_SWIG_LIBRARIES gnuradio-atsc)
 
 GR_SWIG_MAKE(atsc atsc.i)
 
@@ -226,10 +226,10 @@ GR_SWIG_INSTALL(
     COMPONENT "atsc_python"
 )
 
-INSTALL(
+install(
     FILES atsc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "atsc_swig"
 )
 
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)

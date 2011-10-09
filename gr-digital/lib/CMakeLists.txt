@@ -20,18 +20,18 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
 )
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gr_digital_sources
+list(APPEND gr_digital_sources
     digital_binary_slicer_fb.cc
     digital_clock_recovery_mm_cc.cc
     digital_clock_recovery_mm_ff.cc
@@ -50,17 +50,17 @@ LIST(APPEND gr_digital_sources
     digital_cpmmod_bc.cc
 )
 
-LIST(APPEND digital_libs
+list(APPEND digital_libs
     gnuradio-core
     ${Boost_LIBRARIES}
 )
 
-ADD_LIBRARY(gnuradio-digital SHARED ${gr_digital_sources})
-TARGET_LINK_LIBRARIES(gnuradio-digital ${digital_libs})
-SET_TARGET_PROPERTIES(gnuradio-digital PROPERTIES DEFINE_SYMBOL "gnuradio_digital_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-digital PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-digital SHARED ${gr_digital_sources})
+target_link_libraries(gnuradio-digital ${digital_libs})
+set_target_properties(gnuradio-digital PROPERTIES DEFINE_SYMBOL "gnuradio_digital_EXPORTS")
+set_target_properties(gnuradio-digital PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-digital
+install(TARGETS gnuradio-digital
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "digital_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "digital_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "digital_runtime" # .dll file

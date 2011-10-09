@@ -20,12 +20,12 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-INCLUDE(GrBoost)
+include(GrBoost)
 
 ########################################################################
 # Register component
 ########################################################################
-INCLUDE(GrComponent)
+include(GrComponent)
 GR_REGISTER_COMPONENT("gr-noaa" ENABLE_GR_NOAA
     Boost_FOUND
     ENABLE_GR_CORE_
@@ -38,12 +38,12 @@ GR_SET_GLOBAL(GR_NOAA_INCLUDE_DIRS
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-IF(ENABLE_GR_NOAA)
+if(ENABLE_GR_NOAA)
 
 ########################################################################
 # Setup CPack components
 ########################################################################
-INCLUDE(GrPackage)
+include(GrPackage)
 CPACK_SET(CPACK_COMPONENT_GROUP_NOAA_DESCRIPTION "GNU Radio NOAA Blocks")
 
 CPACK_COMPONENT("noaa_runtime"
@@ -77,11 +77,11 @@ CPACK_COMPONENT("noaa_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-ADD_SUBDIRECTORY(lib)
-IF(ENABLE_PYTHON)
-    ADD_SUBDIRECTORY(swig)
-    ADD_SUBDIRECTORY(grc)
-    ADD_SUBDIRECTORY(apps)
-ENDIF(ENABLE_PYTHON)
+add_subdirectory(lib)
+if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(grc)
+    add_subdirectory(apps)
+endif(ENABLE_PYTHON)
 
-ENDIF(ENABLE_GR_NOAA)
+endif(ENABLE_GR_NOAA)

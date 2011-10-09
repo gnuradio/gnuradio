@@ -17,49 +17,49 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-IF(DEFINED __INCLUDED_GR_PACKAGE_CMAKE)
-    RETURN()
-ENDIF()
-SET(__INCLUDED_GR_PACKAGE_CMAKE TRUE)
+if(DEFINED __INCLUDED_GR_PACKAGE_CMAKE)
+    return()
+endif()
+set(__INCLUDED_GR_PACKAGE_CMAKE TRUE)
 
-INCLUDE(GrVersion) #sets version information
-INCLUDE(GrPlatform) #sets platform information
+include(GrVersion) #sets version information
+include(GrPlatform) #sets platform information
 
 #set the cpack generator based on the platform type
-IF(CPACK_GENERATOR)
+if(CPACK_GENERATOR)
     #already set by user
-ELSEIF(APPLE)
-    SET(CPACK_GENERATOR PackageMaker)
-ELSEIF(WIN32)
-    SET(CPACK_GENERATOR NSIS)
-ELSEIF(DEBIAN)
-    SET(CPACK_GENERATOR DEB)
-ELSEIF(REDHAT)
-    SET(CPACK_GENERATOR RPM)
-ELSE()
-    SET(CPACK_GENERATOR TGZ)
-ENDIF()
+elseif(APPLE)
+    set(CPACK_GENERATOR PackageMaker)
+elseif(WIN32)
+    set(CPACK_GENERATOR NSIS)
+elseif(DEBIAN)
+    set(CPACK_GENERATOR DEB)
+elseif(REDHAT)
+    set(CPACK_GENERATOR RPM)
+else()
+    set(CPACK_GENERATOR TGZ)
+endif()
 
 ########################################################################
 # CPACK_SET - set a global variable and record the variable name
 ########################################################################
-FUNCTION(CPACK_SET var)
-    SET(${var} ${ARGN} CACHE INTERNAL "")
-    LIST(APPEND _cpack_vars ${var})
-    LIST(REMOVE_DUPLICATES _cpack_vars)
-    SET(_cpack_vars ${_cpack_vars} CACHE INTERNAL "")
-ENDFUNCTION(CPACK_SET)
+function(CPACK_SET var)
+    set(${var} ${ARGN} CACHE INTERNAL "")
+    list(APPEND _cpack_vars ${var})
+    list(REMOVE_DUPLICATES _cpack_vars)
+    set(_cpack_vars ${_cpack_vars} CACHE INTERNAL "")
+endfunction(CPACK_SET)
 
 ########################################################################
 # CPACK_FINALIZE - include cpack and the unset all the cpack variables
 ########################################################################
-FUNCTION(CPACK_FINALIZE)
-    INCLUDE(CPack) #finalize the cpack settings configured throughout the build system
-    FOREACH(var ${_cpack_vars})
-        UNSET(${var} CACHE)
-    ENDFOREACH(var)
-    UNSET(_cpack_vars CACHE)
-ENDFUNCTION(CPACK_FINALIZE)
+function(CPACK_FINALIZE)
+    include(CPack) #finalize the cpack settings configured throughout the build system
+    foreach(var ${_cpack_vars})
+        unset(${var} CACHE)
+    endforeach(var)
+    unset(_cpack_vars CACHE)
+endfunction(CPACK_FINALIZE)
 
 ########################################################################
 # CPACK_COMPONENT - convenience function to create a cpack component
@@ -72,40 +72,40 @@ ENDFUNCTION(CPACK_FINALIZE)
 #   [DEPENDS depends]
 # )
 ########################################################################
-FUNCTION(CPACK_COMPONENT name)
-    INCLUDE(CMakeParseArgumentsCopy)
-    SET(_options GROUP DISPLAY_NAME DESCRIPTION DEPENDS)
+function(CPACK_COMPONENT name)
+    include(CMakeParseArgumentsCopy)
+    set(_options GROUP DISPLAY_NAME DESCRIPTION DEPENDS)
     CMAKE_PARSE_ARGUMENTS(CPACK_COMPONENT "" "${_options}" "" ${ARGN})
 
-    STRING(TOUPPER "${name}" name_upper)
-    FOREACH(_option ${_options})
-        IF(CPACK_COMPONENT_${_option})
+    string(TOUPPER "${name}" name_upper)
+    foreach(_option ${_options})
+        if(CPACK_COMPONENT_${_option})
             CPACK_SET(CPACK_COMPONENT_${name_upper}_${_option} "${CPACK_COMPONENT_${_option}}")
-        ENDIF()
-    ENDFOREACH(_option)
+        endif()
+    endforeach(_option)
 
     CPACK_SET(CPACK_COMPONENTS_ALL "${CPACK_COMPONENTS_ALL};${name}")
 
-ENDFUNCTION(CPACK_COMPONENT)
+endfunction(CPACK_COMPONENT)
 
 ########################################################################
 # Setup CPack
 ########################################################################
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GNU Radio")
-SET(CPACK_PACKAGE_VENDOR              "Free Software Foundation, Inc.")
-SET(CPACK_PACKAGE_CONTACT             "Discuss-gnuradio@gnu.org")
-SET(CPACK_PACKAGE_VERSION ${VERSION})
-SET(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/README)
-SET(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README)
-SET(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/README)
-IF(${CPACK_GENERATOR} STREQUAL NSIS)
-    SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
-ENDIF()
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GNU Radio")
+set(CPACK_PACKAGE_VENDOR              "Free Software Foundation, Inc.")
+set(CPACK_PACKAGE_CONTACT             "Discuss-gnuradio@gnu.org")
+set(CPACK_PACKAGE_VERSION ${VERSION})
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/README)
+set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README)
+set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/README)
+if(${CPACK_GENERATOR} STREQUAL NSIS)
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
+endif()
 
 ########################################################################
 # DEB package specific
 ########################################################################
-SET(CPACK_DEBIAN_PACKAGE_DEPENDS
+set(CPACK_DEBIAN_PACKAGE_DEPENDS
     "libboost-all-dev"
     "libfftw3-3"
     "python"
@@ -118,17 +118,17 @@ SET(CPACK_DEBIAN_PACKAGE_DEPENDS
     "python-lxml"
     "python-Cheetah"
 )
-STRING(REPLACE ";" ", " CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_DEBIAN_PACKAGE_DEPENDS}")
-SET(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA ${CMAKE_SOURCE_DIR}/debian/postinst ${CMAKE_SOURCE_DIR}/debian/prerm)
+string(REPLACE ";" ", " CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_DEBIAN_PACKAGE_DEPENDS}")
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA ${CMAKE_SOURCE_DIR}/debian/postinst ${CMAKE_SOURCE_DIR}/debian/prerm)
 
 ########################################################################
 # RPM package specific
 ########################################################################
-SET(CPACK_RPM_PACKAGE_REQUIRES "boost-devel") #TODO other packages
+set(CPACK_RPM_PACKAGE_REQUIRES "boost-devel") #TODO other packages
 
 ########################################################################
 # NSIS package specific
 ########################################################################
-SET(CPACK_NSIS_MODIFY_PATH ON)
+set(CPACK_NSIS_MODIFY_PATH ON)
 
-SET(HLKM_ENV "\\\"SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Environment\\\"")
+set(HLKM_ENV "\\\"SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Environment\\\"")

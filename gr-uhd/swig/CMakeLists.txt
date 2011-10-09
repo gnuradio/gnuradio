@@ -20,17 +20,17 @@
 ########################################################################
 # Setup swig generation
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_FLAGS -DGR_HAVE_UHD) #needed to parse uhd_swig.i
+set(GR_SWIG_FLAGS -DGR_HAVE_UHD) #needed to parse uhd_swig.i
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_UHD_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
-LINK_DIRECTORIES(${UHD_LIBRARY_DIRS})
-SET(GR_SWIG_LIBRARIES gnuradio-uhd ${UHD_LIBRARIES})
+link_directories(${UHD_LIBRARY_DIRS})
+set(GR_SWIG_LIBRARIES gnuradio-uhd ${UHD_LIBRARIES})
 
 GR_SWIG_MAKE(uhd_swig uhd_swig.i)
 
@@ -40,7 +40,7 @@ GR_SWIG_INSTALL(
     COMPONENT "uhd_python"
 )
 
-INSTALL(
+install(
     FILES uhd_swig.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "uhd_swig"

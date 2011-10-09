@@ -20,38 +20,38 @@
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_COMEDI_INCLUDE_DIRS}
 )
 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
-INCLUDE_DIRECTORIES(${COMEDI_INCLUDE_DIRS})
-LINK_DIRECTORIES(${COMEDI_LIBRARY_DIRS})
+include_directories(${COMEDI_INCLUDE_DIRS})
+link_directories(${COMEDI_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-LIST(APPEND gr_comedi_sources
+list(APPEND gr_comedi_sources
     comedi_sink_s.cc
     comedi_source_s.cc
     gri_comedi.cc
 )
 
-LIST(APPEND comedi_libs
+list(APPEND comedi_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${COMEDI_LIBRARIES}
 )
 
-ADD_LIBRARY(gnuradio-comedi SHARED ${gr_comedi_sources})
-TARGET_LINK_LIBRARIES(gnuradio-comedi ${comedi_libs})
-SET_TARGET_PROPERTIES(gnuradio-comedi PROPERTIES DEFINE_SYMBOL "gnuradio_comedi_EXPORTS")
-SET_TARGET_PROPERTIES(gnuradio-comedi PROPERTIES SOVERSION ${LIBVER})
+add_library(gnuradio-comedi SHARED ${gr_comedi_sources})
+target_link_libraries(gnuradio-comedi ${comedi_libs})
+set_target_properties(gnuradio-comedi PROPERTIES DEFINE_SYMBOL "gnuradio_comedi_EXPORTS")
+set_target_properties(gnuradio-comedi PROPERTIES SOVERSION ${LIBVER})
 
-INSTALL(TARGETS gnuradio-comedi
+install(TARGETS gnuradio-comedi
     LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "comedi_runtime" # .so/.dylib file
     ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "comedi_devel" # .lib file
     RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "comedi_runtime" # .dll file
@@ -60,7 +60,7 @@ INSTALL(TARGETS gnuradio-comedi
 ########################################################################
 # Install public header files
 ########################################################################
-INSTALL(FILES
+install(FILES
     comedi_sink_s.h
     comedi_source_s.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
@@ -70,16 +70,16 @@ INSTALL(FILES
 ########################################################################
 # Setup swig generation
 ########################################################################
-IF(ENABLE_PYTHON)
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+if(ENABLE_PYTHON)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS
+set(GR_SWIG_INCLUDE_DIRS
     ${GR_COMEDI_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-SET(GR_SWIG_LIBRARIES gnuradio-comedi)
+set(GR_SWIG_LIBRARIES gnuradio-comedi)
 
 GR_SWIG_MAKE(comedi comedi.i)
 
@@ -89,28 +89,28 @@ GR_SWIG_INSTALL(
     COMPONENT "comedi_python"
 )
 
-INSTALL(
+install(
     FILES comedi.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "comedi_swig"
 )
 
-ENDIF(ENABLE_PYTHON)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Handle the unit tests
 ########################################################################
-IF(ENABLE_TESTING AND ENABLE_PYTHON)
-INCLUDE(GrTest)
-FILE(GLOB py_qa_test_files "qa_*.py")
-FOREACH(py_qa_test_file ${py_qa_test_files})
-    GET_FILENAME_COMPONENT(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    SET(GR_TEST_PYTHON_DIRS
+if(ENABLE_TESTING AND ENABLE_PYTHON)
+include(GrTest)
+file(GLOB py_qa_test_files "qa_*.py")
+foreach(py_qa_test_file ${py_qa_test_files})
+    get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
+    set(GR_TEST_PYTHON_DIRS
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
         ${CMAKE_BINARY_DIR}/gr-comedi/src
     )
-    SET(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-comedi)
+    set(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-comedi)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
-ENDFOREACH(py_qa_test_file)
-ENDIF(ENABLE_TESTING AND ENABLE_PYTHON)
+endforeach(py_qa_test_file)
+endif(ENABLE_TESTING AND ENABLE_PYTHON)

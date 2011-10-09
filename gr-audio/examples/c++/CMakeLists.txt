@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-INCLUDE_DIRECTORIES(${GR_AUDIO_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(${GNURADIO_CORE_INCLUDE_DIRS})
-ADD_EXECUTABLE(dial_tone dial_tone.cc)
-TARGET_LINK_LIBRARIES(dial_tone gnuradio-audio)
+include_directories(${GR_AUDIO_INCLUDE_DIRS})
+include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
+add_executable(dial_tone dial_tone.cc)
+target_link_libraries(dial_tone gnuradio-audio)

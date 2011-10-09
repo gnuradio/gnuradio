@@ -20,11 +20,11 @@
 ########################################################################
 # Setup swig generation
 ########################################################################
-INCLUDE(GrPython)
-INCLUDE(GrSwig)
+include(GrPython)
+include(GrSwig)
 
-SET(GR_SWIG_INCLUDE_DIRS ${GRUEL_INCLUDE_DIRS})
-SET(GR_SWIG_LIBRARIES gruel)
+set(GR_SWIG_INCLUDE_DIRS ${GRUEL_INCLUDE_DIRS})
+set(GR_SWIG_LIBRARIES gruel)
 
 GR_SWIG_MAKE(pmt_swig pmt_swig.i)
 
@@ -34,7 +34,7 @@ GR_SWIG_INSTALL(
     COMPONENT "gruel_python"
 )
 
-INSTALL(
+install(
     FILES gr_intrusive_ptr.i pmt_swig.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "gruel_swig"

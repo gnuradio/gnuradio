@@ -18,13 +18,13 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-FILE(GLOB xml_files "*.xml")
-INSTALL(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "wxgui")
+file(GLOB xml_files "*.xml")
+install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "wxgui")
 
 ########################################################################
 #The wxgui module contains a top_block + wxgui frame.
 ########################################################################
-INCLUDE(GrPython)
+include(GrPython)
 
 GR_PYTHON_INSTALL(
     FILES

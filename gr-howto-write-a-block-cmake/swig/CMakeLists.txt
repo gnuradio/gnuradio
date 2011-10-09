@@ -20,22 +20,22 @@
 ########################################################################
 # Include swig generation macros
 ########################################################################
-FIND_PACKAGE(SWIG)
-FIND_PACKAGE(PythonLibs)
-IF(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
-    RETURN()
-ENDIF()
-INCLUDE(GrSwig)
-INCLUDE(GrPython)
+find_package(SWIG)
+find_package(PythonLibs)
+if(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
+    return()
+endif()
+include(GrSwig)
+include(GrPython)
 
 ########################################################################
 # Setup swig generation
 ########################################################################
-FOREACH(incdir ${GNURADIO_CORE_INCLUDE_DIRS})
-    LIST(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/swig)
-ENDFOREACH(incdir)
+foreach(incdir ${GNURADIO_CORE_INCLUDE_DIRS})
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/swig)
+endforeach(incdir)
 
-SET(GR_SWIG_LIBRARIES gnuradio-howto)
+set(GR_SWIG_LIBRARIES gnuradio-howto)
 
 GR_SWIG_MAKE(howto_swig howto_swig.i)
 
@@ -47,7 +47,7 @@ GR_SWIG_INSTALL(TARGETS howto_swig DESTINATION ${GR_PYTHON_DIR}/howto)
 ########################################################################
 # Install swig .i files for development
 ########################################################################
-INSTALL(
+install(
     FILES
     howto_swig.i
     howto_square_ff.i

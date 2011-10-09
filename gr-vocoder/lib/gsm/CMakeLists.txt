@@ -20,9 +20,9 @@
 ########################################################################
 # Append all sources in this dir
 ########################################################################
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-SET(gsm_sources
+set(gsm_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/add.c
     ${CMAKE_CURRENT_SOURCE_DIR}/code.c
     ${CMAKE_CURRENT_SOURCE_DIR}/debug.c
@@ -43,7 +43,7 @@ SET(gsm_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/table.c
 )
 
-SET_SOURCE_FILES_PROPERTIES(${gsm_sources}
+set_source_files_properties(${gsm_sources}
     PROPERTIES COMPILE_DEFINITION "NeedFunctionPrototypes=1"
 )
-LIST(APPEND gr_vocoder_sources ${gsm_sources})
+list(APPEND gr_vocoder_sources ${gsm_sources})
