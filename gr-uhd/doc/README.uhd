@@ -1,0 +1,14 @@
+This is the GNU Radio UHD package. It is the interface to the UHD
+library to connect to and send and receive data between the Ettus
+Research, LLC product line. To use the UHD blocks, the Python
+namespaces is in gnuradio.uhd, which would be normally imported
+as:
+
+    from gnuradio import uhd
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using: 
+
+    help(uhd)
+

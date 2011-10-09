@@ -13,5 +13,6 @@ More details on packages in GNU Radio:
 \li \ref page_digital
 \li \ref page_vocoder
 \li \ref page_qtgui
+\li \ref page_uhd
 
 */
