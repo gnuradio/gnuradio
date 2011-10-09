@@ -72,6 +72,14 @@ AC_DEFUN([GRC_GR_QTGUI],[
 	QT_MOC_EXEC=`pkg-config --variable=moc_location QtCore`
 	QT_UIC_EXEC=`pkg-config --variable=uic_location QtCore`
 
+        gr_qtgui_INCLUDES="\
+-I\${abs_top_srcdir}/gr-qtgui/include \
+-I\${abs_top_srcdir}/gr-qtgui/swig"
+        gr_qtgui_LA="\${abs_top_builddir}/gr-qtgui/lib/libgnuradio-qtgui.la"
+	gr_qtgui_LIBDIRPATH="\${abs_top_builddir}/gr-qtgui/lib:\${abs_top_builddir}/gr-qtgui/lib/.libs"
+	gr_qtgui_SWIGDIRPATH="\${abs_top_builddir}/gr-digtial/lib/swig:\${abs_top_builddir}/gr-qtgui/swig/.libs:\${abs_top_srcdir}/gr-qtgui/swig"
+	gr_qtgui_PYDIRPATH="\${abs_top_srcdir}/gr-qtgui/python"
+
         AC_SUBST(QMAKE_INCLUDES)
         AC_SUBST(QT_INCLUDES)
 	AC_SUBST(QT_LIBS)
@@ -85,10 +93,12 @@ AC_DEFUN([GRC_GR_QTGUI],[
         gr-qtgui/apps/Makefile \
         gr-qtgui/examples/Makefile \
         gr-qtgui/grc/Makefile \
+	gr-qtgui/include/Makefile \
         gr-qtgui/lib/Makefile \
         gr-qtgui/python/Makefile \
         gr-qtgui/python/run_tests \
         gr-qtgui/swig/Makefile \
+	gr-qtgui/doc/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-qtgui,[
