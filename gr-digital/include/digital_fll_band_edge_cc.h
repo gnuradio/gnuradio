@@ -39,6 +39,7 @@ digital_fll_band_edge_cc_sptr digital_make_fll_band_edge_cc (float samps_per_sym
  * \brief Frequency Lock Loop using band-edge filters
  *
  * \ingroup general
+ * \ingroup digital
  *
  * The frequency lock loop derives a band-edge filter that covers the
  * upper and lower bandwidths of a digitally-modulated signal. The

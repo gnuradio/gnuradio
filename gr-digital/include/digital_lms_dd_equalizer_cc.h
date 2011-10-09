@@ -36,6 +36,7 @@ digital_lms_dd_equalizer_cc_sptr digital_make_lms_dd_equalizer_cc (int num_taps,
 /*!
  * \brief Least-Mean-Square Decision Directed Equalizer (complex in/out)
  * \ingroup eq_blk
+ * \ingroup digital
  *
  * This block implements an LMS-based decision-directed equalizer.
  * It uses a set of weights, w, to correlate against the inputs, u,

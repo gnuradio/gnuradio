@@ -37,6 +37,7 @@ digital_make_gmskmod_bc(unsigned samples_per_sym=2,
  * \brief GMSK modulator
  *
  * \ingroup modulation_blk
+ * \ingroup digital
  *
  * \param samples_per_sym Samples per symbol.
  * \param bt The 3 dB time-bandwidth product.
