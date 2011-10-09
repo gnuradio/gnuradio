@@ -21,11 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS =  include lib doc
+SUBDIRS =
 
-if PYTHON
-SUBDIRS += swig python apps grc examples
-endif
-
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-digital.pc
+dist_gr_doc_DATA =		\
+	README.digital

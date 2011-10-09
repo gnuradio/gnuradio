@@ -1,4 +1,3 @@
-#
 # Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
@@ -18,6 +17,11 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 # 
+
+'''
+This is the gr-digital package. It contains all of the blocks,
+utilities, and examples for doing digital modulation and demodulation.
+'''
 
 # The presence of this file turns this directory into a Python package
 

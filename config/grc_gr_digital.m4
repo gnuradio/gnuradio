@@ -51,6 +51,7 @@ AC_DEFUN([GRC_GR_DIGITAL],[
 	gr-digital/swig/Makefile \
 	gr-digital/swig/run_guile_tests \
 	gr-digital/examples/Makefile \
+	gr-digital/doc/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-digital,[
