@@ -108,6 +108,7 @@ AC_DEFUN([GRC_GR_AUDIO],[
         gr-audio/include/Makefile \
         gr-audio/lib/Makefile \
         gr-audio/swig/Makefile \
+	gr-audio/doc/Makefile \
         gr-audio/gnuradio-audio.pc \
     ])
 

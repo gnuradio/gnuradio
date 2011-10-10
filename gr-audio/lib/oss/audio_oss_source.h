@@ -28,6 +28,7 @@
 
 /*!
  * \brief audio source using OSS
+ * \ingroup audio_blk
  *
  * Output signature is one or two streams of floats.
  * Output samples will be in the range [-1,1].

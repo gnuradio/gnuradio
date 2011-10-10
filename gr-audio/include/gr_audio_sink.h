@@ -25,6 +25,19 @@
 #include <gr_audio_api.h>
 #include <gr_sync_block.h>
 
+/*!
+ * \brief Creates a sink from an audio device.
+ * \ingroup audio_blk
+ *
+ * Creates a sink from an audio device at a specified
+ * sample_rate. The specific audio device to use can be specified as
+ * the device_name parameter. Typical choices are:
+ * \li pulse
+ * \li hw:0,0
+ * \li plughw:0,0
+ * \li surround51
+ * \li /dev/dsp
+ */
 class GR_AUDIO_API audio_sink : virtual public gr_sync_block{
 public:
     typedef boost::shared_ptr<audio_sink> sptr;

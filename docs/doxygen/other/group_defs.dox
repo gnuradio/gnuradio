@@ -30,6 +30,7 @@
 /*! \defgroup digital Digital Modulation Blocks		*/
 /*! \defgroup qtgui_blk QT Graphical Interfaces		*/
 /*! \defgroup uhd_blk UHD Interface  			*/
+/*! \defgroup audio_blk Audio Interface  		*/
 
 /*! 
  * \defgroup base_blk Base classes for GR Blocks

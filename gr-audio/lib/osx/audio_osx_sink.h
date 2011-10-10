@@ -31,6 +31,7 @@
 
 /*!
  * \brief audio sink using OSX
+ * \ingroup audio_blk
  *
  * input signature is one or two streams of floats.
  * Input samples must be in the range [-1,1].

@@ -34,6 +34,7 @@
 
 /*!
  * \brief audio sink using ALSA
+ * \ingroup audio_blk
  *
  * The sink has N input streams of floats, where N depends
  * on the hardware characteristics of the selected device.

@@ -32,6 +32,7 @@ int jack_source_process (jack_nframes_t nframes, void *arg);
 
 /*!
  * \brief audio source using JACK
+ * \ingroup audio_blk
  *
  * The source has one input stream of floats.
  *

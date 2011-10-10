@@ -32,6 +32,7 @@ int jack_sink_process (jack_nframes_t nframes, void *arg);
 
 /*!
  * \brief audio sink using JACK
+ * \ingroup audio_blk
  *
  * The sink has one input stream of floats.
  *

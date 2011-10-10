@@ -37,6 +37,7 @@ typedef boost::shared_ptr<audio_alsa_source> audio_alsa_source_sptr;
 
 /*!
  * \brief audio source using ALSA
+ * \ingroup audio_blk
  *
  * The source has between 1 and N input streams of floats, where N is
  * depends on the hardware characteristics of the selected device.
