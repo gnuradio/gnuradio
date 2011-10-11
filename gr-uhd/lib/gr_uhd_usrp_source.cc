@@ -214,7 +214,7 @@ public:
         //We now receive a single packet with a large timeout.
         if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT){
             num_samps = _rx_stream->recv(
-                output_items, noutput_items, _metadata, 1.0
+                output_items, noutput_items, _metadata, 1.0, true/*one pkt*/
             );
         }
         #else
