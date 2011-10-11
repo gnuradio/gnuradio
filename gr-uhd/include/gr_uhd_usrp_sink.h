@@ -29,8 +29,10 @@
 #ifndef INCLUDED_UHD_STREAM_HPP
 namespace uhd{
     struct GR_UHD_API stream_args_t{
-        stream_args_t(void){}
-        stream_args_t(const std::string &cpu, const std::string &otw="sc16"){
+        stream_args_t(
+            const std::string &cpu = "",
+            const std::string &otw = ""
+        ){
             cpu_format = cpu;
             otw_format = otw;
         }
