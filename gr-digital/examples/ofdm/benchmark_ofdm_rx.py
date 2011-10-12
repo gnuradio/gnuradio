@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010,2011 Free Software Foundation, Inc.
+# Copyright 2006,2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,28 +20,19 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
+from gnuradio import gr, blks2
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-
-# From gr-digital
-from gnuradio import digital
 
 # from current dir
 from receive_path import receive_path
 from uhd_interface import uhd_receiver
 
-import random
-import struct
-import sys
-
-#import os
-#print os.getpid()
-#raw_input('Attach and press enter: ')
+import struct, sys
 
 class my_top_block(gr.top_block):
-    def __init__(self, demodulator, rx_callback, options):
+    def __init__(self, callback, options):
         gr.top_block.__init__(self)
 
         if(options.rx_freq is not None):
@@ -59,74 +50,64 @@ class my_top_block(gr.top_block):
         # Set up receive path
         # do this after for any adjustments to the options that may
         # occur in the sinks (specifically the UHD sink)
-        self.rxpath = receive_path(demodulator, rx_callback, options) 
+        self.rxpath = receive_path(callback, options)
 
         self.connect(self.source, self.rxpath)
-
+        
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
 # /////////////////////////////////////////////////////////////////////////////
 
-global n_rcvd, n_right
-
 def main():
-    global n_rcvd, n_right
 
+    global n_rcvd, n_right
+        
     n_rcvd = 0
     n_right = 0
-    
+
     def rx_callback(ok, payload):
         global n_rcvd, n_right
-        (pktno,) = struct.unpack('!H', payload[0:2])
         n_rcvd += 1
+        (pktno,) = struct.unpack('!H', payload[0:2])
         if ok:
             n_right += 1
+        print "ok: %r \t pktno: %d \t n_rcvd: %d \t n_right: %d" % (ok, pktno, n_rcvd, n_right)
 
-        print "ok = %5s  pktno = %4d  n_rcvd = %4d  n_right = %4d" % (
-            ok, pktno, n_rcvd, n_right)
+        if 0:
+            printlst = list()
+            for x in payload[2:]:
+                t = hex(ord(x)).replace('0x', '')
+                if(len(t) == 1):
+                    t = '0' + t
+                printlst.append(t)
+            printable = ''.join(printlst)
 
-    demods = digital.modulation_utils2.type_1_demods()
+            print printable
+            print "\n"
 
-    # Create Options Parser:
-    parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
+    parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
+    parser.add_option("","--discontinuous", action="store_true", default=False,
+                      help="enable discontinuous")
 
-    parser.add_option("-m", "--modulation", type="choice", choices=demods.keys(), 
-                      default='psk',
-                      help="Select modulation from: %s [default=%%default]"
-                            % (', '.join(demods.keys()),))
-    parser.add_option("","--from-file", default=None,
-                      help="input file of samples to demod")
-
+    my_top_block.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    uhd_receiver.add_options(parser)
-
-    for mod in demods.values():
-        mod.add_options(expert_grp)
+    blks2.ofdm_mod.add_options(parser, expert_grp)
+    blks2.ofdm_demod.add_options(parser, expert_grp)
+    fusb_options.add_options(expert_grp)
 
     (options, args) = parser.parse_args ()
 
-    if len(args) != 0:
-        parser.print_help(sys.stderr)
-        sys.exit(1)
-
-    if options.from_file is None:
-        if options.rx_freq is None:
-            sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
-            parser.print_help(sys.stderr)
-            sys.exit(1)
-
-
     # build the graph
-    tb = my_top_block(demods[options.modulation], rx_callback, options)
+    tb = my_top_block(rx_callback, options)
 
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
-        print "Warning: Failed to enable realtime scheduling."
+        print "Warning: failed to enable realtime scheduling"
 
-    tb.start()        # start flow graph
-    tb.wait()         # wait for it to finish
+    tb.start()                      # start flow graph
+    tb.wait()                       # wait for it to finish
 
 if __name__ == '__main__':
     try:

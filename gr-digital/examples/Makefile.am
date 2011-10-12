@@ -21,24 +21,26 @@
 
 include $(top_srcdir)/Makefile.common
 
-ourdatadir = $(exampledir)/digital
+dig_examples_prefix= $(exampledir)/digital
 
-noinst_PYTHON = 		\
-	example_costas.py	\
-	example_fll.py		\
-	example_timing.py
+basicdatadir = $(dig_examples_prefix)
+dist_basicdata_SCRIPTS =		\
+	example_costas.py		\
+	example_fll.py			\
+	example_timing.py		\
+	run_length.py			\
+	gen_whitener.py
 
-dist_ourdata_SCRIPTS = \
-	transmit_path.py	\
-	receive_path.py		\
-	uhd_interface.py	\
-	benchmark_tx.py		\
-	benchmark_rx.py		\
-	tx_voice.py		\
-	rx_voice.py		\
-	run_length.py		\
-	gen_whitener.py		\
-	digital_bert_rx.py	\
-	digital_bert_tx.py	\
-	tunnel.py
+nbdatadir = $(dig_examples_prefix)/narrowband
+dist_nbdata_SCRIPTS =		\
+	narrowband/transmit_path.py	\
+	narrowband/receive_path.py	\
+	narrowband/uhd_interface.py	\
+	narrowband/benchmark_tx.py	\
+	narrowband/benchmark_rx.py	\
+	narrowband/tx_voice.py		\
+	narrowband/rx_voice.py		\
+	narrowband/digital_bert_rx.py	\
+	narrowband/digital_bert_tx.py	\
+	narrowband/tunnel.py
 

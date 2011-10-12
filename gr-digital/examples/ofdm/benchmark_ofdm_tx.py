@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010,2011 Free Software Foundation, Inc.
+# Copyright 2005,2006,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,26 +20,18 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr
+from gnuradio import gr, blks2
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-
-# From gr-digital
-from gnuradio import digital
+import time, struct, sys
 
 # from current dir
 from transmit_path import transmit_path
 from uhd_interface import uhd_transmitter
 
-import random, time, struct, sys
-
-#import os 
-#print os.getpid()
-#raw_input('Attach and press enter')
-
 class my_top_block(gr.top_block):
-    def __init__(self, modulator, options):
+    def __init__(self, options):
         gr.top_block.__init__(self)
 
         if(options.tx_freq is not None):
@@ -56,10 +48,10 @@ class my_top_block(gr.top_block):
 
         # do this after for any adjustments to the options that may
         # occur in the sinks (specifically the UHD sink)
-        self.txpath = transmit_path(modulator, options)
+        self.txpath = transmit_path(options)
 
         self.connect(self.txpath, self.sink)
-
+        
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
 # /////////////////////////////////////////////////////////////////////////////
@@ -69,54 +61,34 @@ def main():
     def send_pkt(payload='', eof=False):
         return tb.txpath.send_pkt(payload, eof)
 
-    def rx_callback(ok, payload):
-        print "ok = %r, payload = '%s'" % (ok, payload)
-
-    mods = digital.modulation_utils2.type_1_mods()
-
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
-
-    parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
-                      default='psk',
-                      help="Select modulation from: %s [default=%%default]"
-                            % (', '.join(mods.keys()),))
-
-    parser.add_option("-s", "--size", type="eng_float", default=1500,
+    parser.add_option("-s", "--size", type="eng_float", default=400,
                       help="set packet size [default=%default]")
     parser.add_option("-M", "--megabytes", type="eng_float", default=1.0,
                       help="set megabytes to transmit [default=%default]")
     parser.add_option("","--discontinuous", action="store_true", default=False,
-                      help="enable discontinous transmission (bursts of 5 packets)")
+                      help="enable discontinuous mode")
     parser.add_option("","--from-file", default=None,
                       help="use intput file for packet contents")
     parser.add_option("","--to-file", default=None,
                       help="Output file for modulated samples")
 
     transmit_path.add_options(parser, expert_grp)
+    blks2.ofdm_mod.add_options(parser, expert_grp)
     uhd_transmitter.add_options(parser)
-
-    for mod in mods.values():
-        mod.add_options(expert_grp)
 
     (options, args) = parser.parse_args ()
 
-    if len(args) != 0:
-        parser.print_help()
-        sys.exit(1)
-           
-    if options.from_file is not None:
-        source_file = open(options.from_file, 'r')
-
     # build the graph
-    tb = my_top_block(mods[options.modulation], options)
-
+    tb = my_top_block(options)
+    
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
         print "Warning: failed to enable realtime scheduling"
 
     tb.start()                       # start flow graph
-        
+    
     # generate and send packets
     nbytes = int(1e6 * options.megabytes)
     n = 0
@@ -140,7 +112,6 @@ def main():
         pktno += 1
         
     send_pkt(eof=True)
-
     tb.wait()                       # wait for it to finish
 
 if __name__ == '__main__':

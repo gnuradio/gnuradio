@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
+from gnuradio import gr
 from gnuradio import eng_notation
 from gnuradio import digital
 
@@ -96,15 +96,20 @@ class transmit_path(gr.hier_block2):
         Adds transmitter-specific options to the Options Parser
         """
         if not normal.has_option('--bitrate'):
-            normal.add_option("-r", "--bitrate", type="eng_float", default=100e3,
+            normal.add_option("-r", "--bitrate", type="eng_float",
+                              default=100e3,
                               help="specify bitrate [default=%default].")
-        normal.add_option("", "--tx-amplitude", type="eng_float", default=0.250, metavar="AMPL",
+        normal.add_option("", "--tx-amplitude", type="eng_float",
+                          default=0.250, metavar="AMPL",
                           help="set transmitter digital amplitude: 0 <= AMPL < 1 [default=%default]")
-        normal.add_option("-v", "--verbose", action="store_true", default=False)
+        normal.add_option("-v", "--verbose", action="store_true",
+                          default=False)
 
-        expert.add_option("-S", "--samples-per-symbol", type="float", default=2,
+        expert.add_option("-S", "--samples-per-symbol", type="float",
+                          default=2,
                           help="set samples/symbol [default=%default]")
-        expert.add_option("", "--log", action="store_true", default=False,
+        expert.add_option("", "--log", action="store_true",
+                          default=False,
                           help="Log all parts of flow graph to file (CAUTION: lots of data)")
 
     # Make a static method to call before instantiation
@@ -117,5 +122,5 @@ class transmit_path(gr.hier_block2):
         print "Tx amplitude     %s"    % (self._tx_amplitude)
         print "modulation:      %s"    % (self._modulator_class.__name__)
         print "bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate))
-        print "samples/symbol:  %.4f"    % (self.samples_per_symbol())
+        print "samples/symbol:  %.4f"  % (self.samples_per_symbol())
         print "Differential:    %s"    % (self.differential())
