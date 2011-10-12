@@ -25,6 +25,5 @@ SUBDIRS = \
 	mp-sched \
 	multi_usrp \
 	network \
-	ofdm \
 	pfb \
 	tags
