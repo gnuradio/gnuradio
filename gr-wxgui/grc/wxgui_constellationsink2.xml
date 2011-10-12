@@ -18,7 +18,7 @@ constsink_gl.const_sink_c(
 	const_size=$const_size,
 	M=$M,
 	theta=$theta,
-	alpha=$alpha,
+	loop_bw=$loop_bw,
 	fmax=$fmax,
 	mu=$mu,
 	gain_mu=$gain_mu,
@@ -71,9 +71,9 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<type>real</type>
 	</param>
 	<param>
-		<name>Alpha</name>
-		<key>alpha</key>
-		<value>0.005</value>
+		<name>Loop Bandwidth</name>
+		<key>loop_bw</key>
+		<value>6.28/100.0</value>
 		<type>real</type>
 	</param>
 	<param>

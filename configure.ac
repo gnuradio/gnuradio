@@ -351,14 +351,12 @@ AC_ARG_ENABLE(
 build_dirs="config"
 GRC_GRUEL                       dnl must come first
 GRC_VOLK
-GRC_GCELL
 GRC_GNURADIO_CORE
 GRC_GR_DIGITAL
 GRC_USRP
 GRC_USRP2
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_USRP2
-GRC_GR_GCELL			dnl this must come after GRC_GCELL and GRC_GNURADIO_CORE
 GRC_GR_AUDIO
 GRC_GR_VOCODER
 GRC_GR_ATSC

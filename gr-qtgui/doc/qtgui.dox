@@ -1,0 +1,77 @@
+/*! \page page_qtgui QT Graphical User Interface
+
+\section Introduction
+
+This is the gr-qtgui package. It contains various QT-based graphical
+user interface blocks that add graphical sinks to a GNU Radio
+flowgraph. The Python namespaces is in gnuradio.qtgui, which would be normally
+imported as:
+
+\code
+    from gnuradio import qtgui
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package. The relevant blocks are listed in the \ref
+qtgui_blk group.
+
+A quick listing of the details can be found in Python after importing
+by using:
+
+\code
+    help(qtgui)
+\endcode
+
+
+\section Dependencies
+
+The QT GUI blocks require the following dependencies.
+
+\li QtCore (version >= 4.4)
+\li QtGui (version >= 4.4)
+\li QtOpenGL (version >= 4.4)
+\li PyQt4 for Qt4 (version >= 4.4)
+\li Qwt (version >= 5.2)
+\li PyQwt5 for Qt4 (version >= 5.2)
+
+\section Usage
+
+To use the qtgui interface, a bit of boiler-plate lines must be
+included. First, the sink is defined, then it must be exposed from C++
+into Python using the "sip.wrapinstance" command, and finally, the
+"show" method is run on the new Python object. This sets up the QT
+environment to show the widget, but the qApplication must also be
+launched.
+
+In the "main" function of the code, the qApp is retrieved. Then, after
+the GNU Radio top block is started (remember that start() is a
+non-blocking call to launch the main thread of the flowgraph), the
+qapp's "exec_()" function is called. This function is a blocking call
+while the GUI is alive.
+
+\code
+from PyQt4 import Qt
+from gnuradio.qtgui import qtgui
+import sys, sip
+
+class grclass(gr.top_block):
+    ....
+
+    self.snk = qtgui.sink_c(1024,           #fftsize
+    	       		    samp_rate,      #bw
+			    "QT GUI Plot")  #name
+			     
+    self.snk_win = sip.wrapinstance(self.snk.pyqwidget(), Qt.QWidget)
+    self.snk_win.show()
+
+def main():
+    qapp = Qt.QApplication(sys.argv)
+    tb = grclass()
+    tb.start()
+    qapp.exec_()
+    tb.stop()
+
+
+\endcode
+
+*/

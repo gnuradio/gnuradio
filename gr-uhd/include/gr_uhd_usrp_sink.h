@@ -30,6 +30,7 @@ class uhd_usrp_sink;
 
 /*!
  * \brief Make a new USRP sink block.
+ * \ingroup uhd_blk
  *
  * The USRP sink block reads a stream and transmits the samples.
  * The sink block also provides API calls for transmitter settings.

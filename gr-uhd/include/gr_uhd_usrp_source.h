@@ -30,6 +30,7 @@ class uhd_usrp_source;
 
 /*!
  * \brief Make a new USRP source block.
+ * \ingroup uhd_blk
  *
  * The USRP source block receives samples and writes to a stream.
  * The source block also provides API calls for receiver settings.

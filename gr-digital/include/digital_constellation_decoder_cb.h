@@ -37,6 +37,7 @@ digital_make_constellation_decoder_cb (digital_constellation_sptr constellation)
 /*!
  * \brief Constellation Decoder
  * \ingroup coding_blk
+ * \ingroup digital
  *
  */
 class DIGITAL_API digital_constellation_decoder_cb : public gr_block

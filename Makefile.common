@@ -63,13 +63,6 @@ grpyexecdir = $(pyexecdir)/gnuradio
 usrppythondir = $(pythondir)/usrpm
 usrppyexecdir = $(pyexecdir)/usrpm
 
-# gcell includes
-gcellincludedir = $(includedir)/gcell
-gcellspuincludedir = $(includedir)/gcell/spu
-
-# Cell spu libs
-libspudir = $(libdir)spu
-
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES = $(DEFINES) $(GNURADIO_INCLUDES) \
@@ -99,20 +92,13 @@ VOLK_LA = @volk_LA@
 USRP_INCLUDES = @usrp_INCLUDES@
 USRP_LA = @usrp_LA@
 
-# How to link the gcell library from inside the tree (the PPU part)
-GCELL_INCLUDES = @gcell_INCLUDES@
-GCELL_LA = @gcell_LA@
-
-# How to link the gcell library from inside the tree (the SPU part)
-GCELL_SPU_INCLUDES = @gcell_spu_INCLUDES@
-GCELL_SPU_LA = @gcell_spu_LA@
-
-# libtool aware wrapper for ppu-embedspu
-GCELL_EMBEDSPU_LIBTOOL = @abs_top_srcdir@/gcell/lib/runtime/gcell-embedspu-libtool
-
 # GR-DIGITAL includes and libraries
 GR_DIGITAL_INCLUDES = @gr_digital_INCLUDES@
 GR_DIGITAL_LA = @gr_digital_LA@
+
+# GR-QTGUI includes and libraries
+GR_QTGUI_INCLUDES = @gr_qtgui_INCLUDES@
+GR_QTGUI_LA = @gr_qtgui_LA@
 
 # Fix for BSD make not defining $(RM).  We define it now in configure.ac
 # using AM_PATH_PROG, but now here have to add a -f to be like GNU make

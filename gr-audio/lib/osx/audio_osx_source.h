@@ -31,6 +31,7 @@
 
 /*!
  * \brief audio source using OSX
+ * \ingroup audio_blk
  *
  * Input signature is one or two streams of floats.
  * Samples must be in the range [-1,1].

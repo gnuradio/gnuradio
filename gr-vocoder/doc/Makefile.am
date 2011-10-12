@@ -22,3 +22,6 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = 
+
+dist_gr_doc_DATA =		\
+	README.vocoder

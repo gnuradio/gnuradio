@@ -28,6 +28,10 @@
 
 class uhd_amsg_source;
 
+/*!
+ * \brief Make a new USRP asynchronous message-based source block.
+ * \ingroup uhd_blk
+ */
 GR_UHD_API boost::shared_ptr<uhd_amsg_source> uhd_make_amsg_source(
     const uhd::device_addr_t &device_addr,
     gr_msg_queue_sptr msgq

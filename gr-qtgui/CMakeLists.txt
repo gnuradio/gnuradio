@@ -46,6 +46,7 @@ GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
 )
 
 GR_SET_GLOBAL(GR_QTGUI_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_BINARY_DIR}/lib
 )
@@ -92,6 +93,7 @@ CPACK_COMPONENT("qtgui_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(grc)

@@ -31,6 +31,7 @@ AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
 	$(QT_INCLUDES) \
+	$(GR_QTGUI_INCLUDES) \
 	$(WITH_INCLUDES)
 
 ##############################

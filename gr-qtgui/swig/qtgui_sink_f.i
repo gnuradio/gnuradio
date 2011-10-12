@@ -32,7 +32,7 @@ qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
 				     double fc=0, double bw=0.0,
 				     const std::string &name="Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
-				     bool plottime=true, bool plotconst=true,
+				     bool plottime=true, bool plotconst=false,
 				     QWidget *parent=NULL);
 
 class qtgui_sink_f : public gr_block

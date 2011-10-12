@@ -30,8 +30,10 @@
 #include <fstream>
 
 
-/*! \brief A Costas loop carrier recovery module.
+/*! 
+ * \brief A Costas loop carrier recovery module.
  * \ingroup sync_blk
+ * \ingroup digital
  *  
  *  The Costas loop locks to the center frequency of a signal and
  *  downconverts it to baseband. The second (order=2) order loop is
@@ -42,9 +44,9 @@
  *
  *  More details can be found online:
  *
- *  J. Feigin, "Practical Costas loop design: Designing a simple and inexpensive
- *  BPSK Costas loop carrier recovery circuit," RF signal processing, pp. 20-36,
- *  2002.
+ *  J. Feigin, "Practical Costas loop design: Designing a simple and
+ *  inexpensive BPSK Costas loop carrier recovery circuit," RF signal
+ *  processing, pp. 20-36, 2002.
  *
  *  http://rfdesign.com/images/archive/0102Feigin20.pdf
  *  

@@ -34,6 +34,7 @@
 
 /*!
  * \brief audio sink using winmm mmsystem (win32 only)
+ * \ingroup audio_blk
  *
  * input signature is one or two streams of floats.
  * Input samples must be in the range [-1,1].

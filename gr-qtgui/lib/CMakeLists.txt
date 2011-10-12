@@ -63,8 +63,7 @@ set(qtgui_srcs
 ########################################################################
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${GR_QTGUI_INCLUDE_DIRS}
 )
 
 include_directories(${Boost_INCLUDE_DIRS})
@@ -111,10 +110,6 @@ install(FILES
     spectrumdisplayform.h
     SpectrumGUIClass.h
     spectrumUpdateEvents.h
-    qtgui_sink_c.h
-    qtgui_sink_f.h
-    qtgui_util.h
-    gr_qtgui_api.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "qtgui_devel"
 )

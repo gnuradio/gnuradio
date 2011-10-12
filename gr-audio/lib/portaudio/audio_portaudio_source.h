@@ -33,7 +33,8 @@ PaStreamCallback portaudio_source_callback;
 
 
 /*!
- * \ Audio source using PORTAUDIO
+ * \brief Audio source using PORTAUDIO
+ * \ingroup audio_blk
  *
  * Input samples must be in the range [-1,1].
  */

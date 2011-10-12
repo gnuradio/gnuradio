@@ -1,0 +1,23 @@
+/*! \page page_digital Digital Modulation
+
+\section Introduction
+This is the gr-digital package. It contains all of the digital
+modulation blocks, utilities, and examples. To use the digital blocks,
+the Python namespaces is in gnuradio.digital, which would be normally
+imported as:
+
+\code
+    from gnuradio import digital
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package. The relevant blocks are listed in the \ref digital group.
+
+A quick listing of the details can be found in Python after importing
+by using:
+
+\code
+    help(digital)
+\endcode
+
+*/

@@ -19,5 +19,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+'''
+This is the gr-vocoder package. This package includes the various
+vocoder blocks in GNU Radio.
+'''
+
 from vocoder_swig import *
 from cvsd import *

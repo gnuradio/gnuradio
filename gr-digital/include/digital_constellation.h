@@ -39,6 +39,21 @@
 class digital_constellation;
 typedef boost::shared_ptr<digital_constellation> digital_constellation_sptr;
 
+/*!
+ * \brief An abstracted constellation object
+ * \ingroup digital
+ *
+ * The constellation objects hold the necessary information to pass
+ * around constellation information for modulators and
+ * demodulators. These objects contain the mapping between the bits
+ * and the constellation points used to represent them as well as
+ * methods for slicing the symbol space. Various implementations are
+ * possible for efficiency and ease of use.
+ *
+ * Standard constellations (BPSK, QPSK, QAM, etc) can be inherited
+ * from this class and overloaded to perform optimized slicing and
+ * constellation mappings.
+ */
 class DIGITAL_API digital_constellation : public boost::enable_shared_from_this<digital_constellation>
 {
 public:
@@ -86,7 +101,7 @@ public:
   unsigned int dimensionality() {return d_dimensionality;}
 
   unsigned int bits_per_symbol () {
-    return floor(log(1.0*d_constellation.size())/d_dimensionality/log(2.0));
+    return floor(log(double(d_constellation.size()))/d_dimensionality/log(2.0));
   }
   
   unsigned int arity () {
@@ -112,11 +127,8 @@ public:
 };
 
 /************************************************************/
-/* digital_constellation_calcdist                                */
+/* digital_constellation_calcdist                           */
 /*                                                          */
-/* Constellation which calculates the distance to each      */
-/* point in the constellation for decision making.          */
-/* Inefficient for large constellations.                    */
 /************************************************************/
 
 class digital_constellation_calcdist;
@@ -130,6 +142,13 @@ digital_make_constellation_calcdist (std::vector<gr_complex> constellation,
 				     unsigned int dimensionality);
 
 
+/*! \brief Calculate Euclidian distance for any constellation
+ *  \ingroup digital
+ *
+ * Constellation which calculates the distance to each point in the
+ * constellation for decision making. Inefficient for large
+ * constellations.
+ */
 class DIGITAL_API digital_constellation_calcdist : public digital_constellation
 {
  public:
@@ -147,15 +166,19 @@ class DIGITAL_API digital_constellation_calcdist : public digital_constellation
   digital_make_constellation_calcdist (std::vector<gr_complex> constellation);
 };
 
+
 /************************************************************/
-/* digital_constellation_sector                             */
-/*                                                          */
-/* An abstract class.                                       */
-/* Constellation space is divided into sectors.             */
-/* Each sector is associated with the nearest constellation */
-/* point.                                                   */
+/*! digital_constellation_sector                             */
 /************************************************************/
 
+/*!
+ * \brief Sectorized digital constellation
+ * \ingroup digital
+ *
+ * Constellation space is divided into sectors. Each sector is
+ * associated with the nearest constellation point.
+ *
+ */
 class DIGITAL_API digital_constellation_sector : public digital_constellation
 {
  public:
@@ -184,16 +207,22 @@ class DIGITAL_API digital_constellation_sector : public digital_constellation
 
 /************************************************************/
 /* digital_constellation_rect                               */
-/*                                                          */
-/* Only implemented for 1-(complex)dimensional              */
-/* constellation.                                           */
-/* Constellation space is divided into rectangular sectors. */
-/* Each sector is associated with the nearest constellation */
-/* point.                                                   */
-/* Works well for square QAM.                               */
-/* Works for any generic constellation provided sectors are */
-/* not too large.                                           */
 /************************************************************/
+
+/*!
+ * \brief Rectangular digital constellation
+ * \ingroup digital
+ *
+ * Only implemented for 1-(complex)dimensional constellation.
+ *
+ * Constellation space is divided into rectangular sectors. Each
+ * sector is associated with the nearest constellation point.
+ *
+ * Works well for square QAM.
+ *
+ * Works for any generic constellation provided sectors are not too
+ * large.
+ */
 
 class digital_constellation_rect;
 typedef boost::shared_ptr<digital_constellation_rect> digital_constellation_rect_sptr;
@@ -244,14 +273,9 @@ class DIGITAL_API digital_constellation_rect : public digital_constellation_sect
   
 };
 
+
 /************************************************************/
 /* digital_constellation_psk                                */
-/*                                                          */
-/* Constellation space is divided into pie slices sectors.  */
-/* Each slice is associated with the nearest constellation  */
-/* point.                                                   */
-/* Works well for PSK but nothing else.                     */
-/* Assumes that there is a constellation point at 1.        */
 /************************************************************/
 
 class digital_constellation_psk;
@@ -263,6 +287,18 @@ digital_make_constellation_psk (std::vector<gr_complex> constellation,
 				std::vector<unsigned int> pre_diff_code,
 				unsigned int n_sectors);
 
+/*! 
+ * \brief digital_constellation_psk
+ * \ingroup digital
+ *
+ * Constellation space is divided into pie slices sectors.
+ *
+ * Each slice is associated with the nearest constellation point. 
+ *
+ * Works well for PSK but nothing else.  
+ *
+ * Assumes that there is a constellation point at 1.x 
+ */
 class DIGITAL_API digital_constellation_psk : public digital_constellation_sector
 {
  public:
@@ -286,6 +322,7 @@ class DIGITAL_API digital_constellation_psk : public digital_constellation_secto
   
 };
 
+
 /************************************************************/
 /* digital_constellation_bpsk                               */
 /*                                                          */
@@ -300,6 +337,10 @@ typedef boost::shared_ptr<digital_constellation_bpsk> digital_constellation_bpsk
 DIGITAL_API digital_constellation_bpsk_sptr 
 digital_make_constellation_bpsk ();
 
+/*! 
+ * \brief Digital constellation for BPSK 
+ * \ingroup digital
+ */
 class DIGITAL_API digital_constellation_bpsk : public digital_constellation
 {
  public:
@@ -311,6 +352,7 @@ class DIGITAL_API digital_constellation_bpsk : public digital_constellation
   digital_make_constellation_bpsk ();
   
 };
+
 
 /************************************************************/
 /* digital_constellation_qpsk                               */
@@ -326,6 +368,10 @@ typedef boost::shared_ptr<digital_constellation_qpsk> digital_constellation_qpsk
 DIGITAL_API digital_constellation_qpsk_sptr 
 digital_make_constellation_qpsk ();
 
+/*! 
+ * \brief Digital constellation for QPSK
+ * \ingroup digital
+ */
 class DIGITAL_API digital_constellation_qpsk : public digital_constellation
 {
  public:
@@ -338,6 +384,7 @@ class DIGITAL_API digital_constellation_qpsk : public digital_constellation
   
 };
 
+
 /************************************************************/
 /* digital_constellation_dqpsk                              */
 /*                                                          */
@@ -345,7 +392,6 @@ class DIGITAL_API digital_constellation_qpsk : public digital_constellation
 /*                                                          */
 /************************************************************/
 
-//! \brief DQPSK-specific constellation and decision maker
 class digital_constellation_dqpsk;
 typedef boost::shared_ptr<digital_constellation_dqpsk> digital_constellation_dqpsk_sptr;
 
@@ -353,6 +399,10 @@ typedef boost::shared_ptr<digital_constellation_dqpsk> digital_constellation_dqp
 DIGITAL_API digital_constellation_dqpsk_sptr 
 digital_make_constellation_dqpsk ();
 
+/*!
+ * \brief Digital constellation for DQPSK
+ * \ingroup digital
+ */
 class DIGITAL_API digital_constellation_dqpsk : public digital_constellation
 {
  public:
@@ -360,7 +410,7 @@ class DIGITAL_API digital_constellation_dqpsk : public digital_constellation
   digital_constellation_dqpsk ();
   unsigned int decision_maker (const gr_complex *sample);
 
-  friend DIGITAL_API digital_constellation_dqpsk_sptr
+  friend digital_constellation_dqpsk_sptr
   digital_make_constellation_dqpsk ();
   
 };
@@ -380,6 +430,10 @@ typedef boost::shared_ptr<digital_constellation_8psk> digital_constellation_8psk
 DIGITAL_API digital_constellation_8psk_sptr 
 digital_make_constellation_8psk ();
 
+/*! 
+ * \brief Digital constellation for 8PSK
+ * \ingroup digital
+ */
 class DIGITAL_API digital_constellation_8psk : public digital_constellation
 {
  public:

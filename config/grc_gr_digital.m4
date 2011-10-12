@@ -28,7 +28,7 @@ AC_DEFUN([GRC_GR_DIGITAL],[
         gr_digital_INCLUDES="\
 -I\${abs_top_srcdir}/gr-digital/include \
 -I\${abs_top_srcdir}/gr-digital/swig"
-        gr_digital_LA="\${abs_top_builddir}/gr-digital/lib/libgnuradio-core.la"
+        gr_digital_LA="\${abs_top_builddir}/gr-digital/lib/libgnuradio-digital.la"
 	gr_digital_LIBDIRPATH="\${abs_top_builddir}/gr-digital/lib:\${abs_top_builddir}/gr-digital/lib/.libs"
 	gr_digital_SWIGDIRPATH="\${abs_top_builddir}/gr-digtial/lib/swig:\${abs_top_builddir}/gr-digital/swig/.libs:\${abs_top_srcdir}/gr-digital/swig"
 	gr_digital_PYDIRPATH="\${abs_top_srcdir}/gr-digital/python"
@@ -51,6 +51,7 @@ AC_DEFUN([GRC_GR_DIGITAL],[
 	gr-digital/swig/Makefile \
 	gr-digital/swig/run_guile_tests \
 	gr-digital/examples/Makefile \
+	gr-digital/doc/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-digital,[

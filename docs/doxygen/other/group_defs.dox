@@ -27,6 +27,10 @@
 /*! \defgroup misc_blk Miscellaneous Blocks		*/
 /*! \defgroup slicedice_blk Slicing and Dicing Streams  */
 /*! \defgroup vocoder_blk Voice Encoders and Decoders	*/
+/*! \defgroup digital Digital Modulation Blocks		*/
+/*! \defgroup qtgui_blk QT Graphical Interfaces		*/
+/*! \defgroup uhd_blk UHD Interface  			*/
+/*! \defgroup audio_blk Audio Interface  		*/
 
 /*! 
  * \defgroup base_blk Base classes for GR Blocks
@@ -65,13 +69,5 @@
 
 /*! \defgroup usrp USRP					*/
 /*! \defgroup usrp2 USRP2				*/
-
-/*! 
- * \defgroup gcell gcell: Cell Broadband Engine SPE Scheduler & RPC Mechanism
- *
- * For additional information please see the 
- * <a href="http://gnuradio.org/trac/wiki/Gcell">gcell wiki page</a>
- * and <a href="http://comsec.com/papers/gcell-sdrf-2008.pdf">gcell-sdrf-2008.pdf</a>.
- */
 
 /*! \defgroup hardware Misc Hardware Control		*/

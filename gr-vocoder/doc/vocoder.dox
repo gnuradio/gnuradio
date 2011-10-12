@@ -1,0 +1,24 @@
+/*! \page page_vocoder Voice Coders and Decoders (Vocoders)
+
+\section Introduction
+
+This is the gr-vocoder package. It contains all available vocoders in
+GNU Radio. The Python namespaces is in gnuradio.vocoder, which would be
+normally imported as:
+
+\code
+    from gnuradio import vocoder
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package. The relevant blocks are listed in the \ref
+vocoder_blk group.
+
+A quick listing of the details can be found in Python after importing
+by using:
+
+\code
+    help(vocoder)
+\endcode
+
+*/

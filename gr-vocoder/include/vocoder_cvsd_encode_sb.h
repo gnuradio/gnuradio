@@ -30,9 +30,11 @@ class vocoder_cvsd_encode_sb;
 typedef boost::shared_ptr<vocoder_cvsd_encode_sb> vocoder_cvsd_encode_sb_sptr;
 
  /*!
-  * \brief Constructor parameters to initialize the CVSD encoder.  The default
-  * values are modeled after the Bluetooth standard and should not be changed
-  * except by an advanced user
+  * \brief Constructor parameters to initialize the CVSD encoder.  The
+  * default values are modeled after the Bluetooth standard and should
+  * not be changed except by an advanced user
+  *
+  * \ingroup vocoder_blk
   *
   * \param min_step       Minimum step size used to update the internal reference.  Default: "10"
   * \param max_step       Maximum step size used to update the internal reference.  Default: "1280"

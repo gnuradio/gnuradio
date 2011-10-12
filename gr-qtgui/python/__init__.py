@@ -19,6 +19,11 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+'''
+This is the gr-qtgui package. This package includes QT-based graphical
+sinks.
+'''
+
 # The presence of this file turns this directory into a Python package
 
 from qtgui_swig import *

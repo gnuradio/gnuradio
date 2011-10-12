@@ -19,6 +19,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
+'''
+This is the GNU Radio UHD package. It is the interface to the UHD
+library to connect to and send and receive data between the Ettus
+Research, LLC product line.
+'''
+
 ########################################################################
 # Prepare uhd swig module to make it more pythonic
 ########################################################################

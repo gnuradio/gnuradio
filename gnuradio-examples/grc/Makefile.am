@@ -46,15 +46,15 @@ dist_trellisdata_DATA = \
 	trellis/readme.txt \
 	trellis/interference_cancellation.grc
 
-usrpdatadir = $(grc_examples_prefix)/usrp
-dist_usrpdata_DATA = \
-	usrp/usrp2_const_wave.grc \
-	usrp/usrp2_dpsk_mod.grc \
-	usrp/usrp_rx_dpsk.grc \
-	usrp/usrp_tx_dpsk.grc \
-	usrp/usrp2_fft.grc \
-	usrp/usrp_two_tone_loopback.grc \
-	usrp/usrp_wbfm_receive.grc
+uhddatadir = $(grc_examples_prefix)/uhd
+dist_uhddata_DATA = \
+	uhd/uhd_const_wave.grc \
+	uhd/uhd_dpsk_mod.grc \
+	uhd/uhd_rx_dpsk.grc \
+	uhd/uhd_tx_dpsk.grc \
+	uhd/uhd_fft.grc \
+	uhd/uhd_two_tone_loopback.grc \
+	uhd/uhd_wbfm_receive.grc
 
 xmlrpcdatadir = $(grc_examples_prefix)/xmlrpc
 dist_xmlrpcdata_DATA = \

@@ -1,0 +1,35 @@
+/*! \page page_uhd UHD Interface
+
+\section Introduction
+This is the GNU Radio UHD package. It is the interface to the UHD
+library to connect to and send and receive data between the Ettus
+Research, LLC product line. To use the UHD blocks, the Python
+namespaces is in gnuradio.uhd, which would be normally imported
+as:
+
+\code
+    from gnuradio import uhd
+\endcode
+
+The relevant blocks are listed in the \ref uhd_blk group.
+
+A quick listing of the details can be found in Python after importing
+by using:
+
+\code
+    help(uhd)
+\endcode
+
+
+\section External Documentation
+
+Ettus Research keeps the comprehensive documentation to the underlying UHD driver, which can be found:
+
+    http://files.ettus.com/uhd_docs/manual/html/
+
+The UHD Doxygen page is located:
+
+    http://files.ettus.com/uhd_docs/doxygen/html/index.html
+
+
+*/

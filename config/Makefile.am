@@ -46,14 +46,12 @@ m4macros = \
 	cppunit.m4 \
 	grc_build.m4 \
 	grc_docs.m4 \
-	grc_gcell.m4 \
 	grc_gnuradio_core.m4 \
 	grc_gnuradio_examples.m4 \
 	grc_grc.m4 \
 	grc_gr_atsc.m4 \
 	grc_gr_audio.m4 \
 	grc_gr_comedi.m4 \
-	grc_gr_gcell.m4 \
 	grc_gr_noaa.m4 \
 	grc_gr_radio_astronomy.m4 \
 	grc_gr_trellis.m4 \
@@ -70,7 +68,6 @@ m4macros = \
 	grc_usrp2.m4 \
 	gr_doxygen.m4 \
 	gr_fortran.m4 \
-	gr_gcell.m4 \
 	gr_git.m4 \
 	gr_gprof.m4 \
 	gr_lib64.m4 \

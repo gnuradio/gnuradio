@@ -44,6 +44,7 @@ digital_make_cpmmod_bc(int type, float h,
  * \brief Generic CPM modulator
  *
  * \ingroup modulation_blk
+ * \ingroup digital
  *
  * \param type The modulation type. Can be one of LREC, LRC, LSRC, TFM
  *             or GAUSSIAN. See gr_cpm::phase_response() for a

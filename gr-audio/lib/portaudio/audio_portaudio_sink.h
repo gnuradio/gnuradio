@@ -34,7 +34,8 @@ PaStreamCallback portaudio_sink_callback;
 
 
 /*!
- * \ Audio sink using PORTAUDIO
+ * \brief Audio sink using PORTAUDIO
+ * \ingroup audio_blk
  *
  * Input samples must be in the range [-1,1].
  */
