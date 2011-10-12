@@ -24,6 +24,7 @@ import math
 from gnuradio import gr
 import digital_swig
 import ofdm_packet_utils
+from ofdm_receiver import ofdm_receiver
 import gnuradio.gr.gr_threading as _threading
 import psk, qam
 
@@ -206,13 +207,13 @@ class ofdm_demod(gr.hier_block2):
 
         # hard-coded known symbols
         preambles = (ksfreq,)
-        
+
         symbol_length = self._fft_length + self._cp_length
-        self.ofdm_recv = digital_swig.ofdm_receiver(self._fft_length,
-                                                    self._cp_length,
-                                                    self._occupied_tones,
-                                                    self._snr, preambles,
-                                                    options.log)
+        self.ofdm_recv = ofdm_receiver(self._fft_length,
+                                       self._cp_length,
+                                       self._occupied_tones,
+                                       self._snr, preambles,
+                                       options.log)
 
         mods = {"bpsk": 2, "qpsk": 4, "8psk": 8, "qam8": 8, "qam16": 16, "qam64": 64, "qam256": 256}
         arity = mods[self._modulation]
@@ -243,9 +244,12 @@ class ofdm_demod(gr.hier_block2):
         self.connect(self.ofdm_recv.chan_filt, self)
 
         if options.log:
-            self.connect(self.ofdm_demod, gr.file_sink(gr.sizeof_gr_complex*self._occupied_tones, "ofdm_frame_sink_c.dat"))
+            self.connect(self.ofdm_demod,
+                         gr.file_sink(gr.sizeof_gr_complex*self._occupied_tones,
+                                      "ofdm_frame_sink_c.dat"))
         else:
-            self.connect(self.ofdm_demod, gr.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
+            self.connect(self.ofdm_demod,
+                         gr.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
 
         if options.verbose:
             self._print_verbage()
@@ -264,6 +268,8 @@ class ofdm_demod(gr.hier_block2):
                           help="set the number of occupied FFT bins [default=%default]")
         expert.add_option("", "--cp-length", type="intx", default=128,
                           help="set the number of bits in the cyclic prefix [default=%default]")
+        expert.add_option("", "--snr", type="float", default=30.0,
+                          help="SNR estimate [default=%default]")
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)
 

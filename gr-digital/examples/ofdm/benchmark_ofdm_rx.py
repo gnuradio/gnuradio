@@ -25,6 +25,8 @@ from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+from gnuradio import digital
+
 # from current dir
 from receive_path import receive_path
 from uhd_interface import uhd_receiver
@@ -90,14 +92,20 @@ def main():
     expert_grp = parser.add_option_group("Expert")
     parser.add_option("","--discontinuous", action="store_true", default=False,
                       help="enable discontinuous")
+    parser.add_option("","--from-file", default=None,
+                      help="input file of samples to demod")
 
-    my_top_block.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    blks2.ofdm_mod.add_options(parser, expert_grp)
-    blks2.ofdm_demod.add_options(parser, expert_grp)
-    fusb_options.add_options(expert_grp)
+    uhd_receiver.add_options(parser)
+    digital.ofdm_demod.add_options(parser, expert_grp)
 
     (options, args) = parser.parse_args ()
+
+    if options.from_file is None:
+        if options.rx_freq is None:
+            sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
+            parser.print_help(sys.stderr)
+            sys.exit(1)
 
     # build the graph
     tb = my_top_block(rx_callback, options)

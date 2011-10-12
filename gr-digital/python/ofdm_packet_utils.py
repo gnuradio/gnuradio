@@ -22,7 +22,6 @@
 import struct
 import numpy
 from gnuradio import gru
-import digital_swig
 import crc
 
 def conv_packed_binary_string_to_1_0_string(s):
@@ -182,7 +181,7 @@ def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=1):
     else:
         payload_with_crc = whitened_payload_with_crc
 
-    ok, payload = gru.check_crc32(payload_with_crc)
+    ok, payload = crc.check_crc32(payload_with_crc)
 
     if 0:
         print "payload_with_crc =", string_to_hex_list(payload_with_crc)
