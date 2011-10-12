@@ -20,11 +20,13 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks2
+from gnuradio import gr
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import time, struct, sys
+
+from gnuradio import digital
 
 # from current dir
 from transmit_path import transmit_path
@@ -75,7 +77,7 @@ def main():
                       help="Output file for modulated samples")
 
     transmit_path.add_options(parser, expert_grp)
-    blks2.ofdm_mod.add_options(parser, expert_grp)
+    digital.ofdm_mod.add_options(parser, expert_grp)
     uhd_transmitter.add_options(parser)
 
     (options, args) = parser.parse_args ()

@@ -21,12 +21,11 @@
 # 
 
 import math
-from gnuradio import gr, ofdm_packet_utils
+from gnuradio import gr
+import digital_swig
+import ofdm_packet_utils
 import gnuradio.gr.gr_threading as _threading
 import psk, qam
-
-from gnuradio.blks2impl.ofdm_receiver import ofdm_receiver
-
 
 # /////////////////////////////////////////////////////////////////////////////
 #                   mod/demod with packets as i/o
@@ -130,7 +129,9 @@ class ofdm_mod(gr.hier_block2):
             msg = gr.message(1) # tell self._pkt_input we're not sending any more packets
         else:
             # print "original_payload =", string_to_hex_list(payload)
-            pkt = ofdm_packet_utils.make_packet(payload, 1, 1, self._pad_for_usrp, whitening=True)
+            pkt = ofdm_packet_utils.make_packet(payload, 1, 1,
+                                                self._pad_for_usrp,
+                                                whitening=True)
             
             #print "pkt =", string_to_hex_list(pkt)
             msg = gr.message_from_string(pkt)
@@ -207,9 +208,11 @@ class ofdm_demod(gr.hier_block2):
         preambles = (ksfreq,)
         
         symbol_length = self._fft_length + self._cp_length
-        self.ofdm_recv = ofdm_receiver(self._fft_length, self._cp_length,
-                                       self._occupied_tones, self._snr, preambles,
-                                       options.log)
+        self.ofdm_recv = digital_swig.ofdm_receiver(self._fft_length,
+                                                    self._cp_length,
+                                                    self._occupied_tones,
+                                                    self._snr, preambles,
+                                                    options.log)
 
         mods = {"bpsk": 2, "qpsk": 4, "8psk": 8, "qam8": 8, "qam16": 16, "qam64": 64, "qam256": 256}
         arity = mods[self._modulation]

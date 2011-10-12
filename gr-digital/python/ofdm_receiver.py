@@ -23,10 +23,7 @@
 import math
 from numpy import fft
 from gnuradio import gr
-from gnuradio.blks2impl.ofdm_sync_ml import ofdm_sync_ml
-from gnuradio.blks2impl.ofdm_sync_pn import ofdm_sync_pn
-from gnuradio.blks2impl.ofdm_sync_pnac import ofdm_sync_pnac
-from gnuradio.blks2impl.ofdm_sync_fixed import ofdm_sync_fixed
+import digital_swig
 
 class ofdm_receiver(gr.hier_block2):
     """
@@ -85,20 +82,35 @@ class ofdm_receiver(gr.hier_block2):
 
         SYNC = "pn"
         if SYNC == "ml":
-            nco_sensitivity = -1.0/fft_length                             # correct for fine frequency
-            self.ofdm_sync = ofdm_sync_ml(fft_length, cp_length, snr, ks0time, logging)
+            nco_sensitivity = -1.0/fft_length   # correct for fine frequency
+            self.ofdm_sync = digital_swig.ofdm_sync_ml(fft_length,
+                                                       cp_length,
+                                                       snr,
+                                                       ks0time,
+                                                       logging)
         elif SYNC == "pn":
-            nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
-            self.ofdm_sync = ofdm_sync_pn(fft_length, cp_length, logging)
+            nco_sensitivity = -2.0/fft_length   # correct for fine frequency
+            self.ofdm_sync = digital_swig.ofdm_sync_pn(fft_length,
+                                                       cp_length,
+                                                       logging)
         elif SYNC == "pnac":
-            nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
-            self.ofdm_sync = ofdm_sync_pnac(fft_length, cp_length, ks0time, logging)
-        elif SYNC == "fixed":                                             # for testing only; do not user over the air
-            self.chan_filt = gr.multiply_const_cc(1.0)                    # remove filter and filter delay for this
-            nsymbols = 18                                                 # enter the number of symbols per packet
-            freq_offset = 0.0                                             # if you use a frequency offset, enter it here
-            nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
-            self.ofdm_sync = ofdm_sync_fixed(fft_length, cp_length, nsymbols, freq_offset, logging)
+            nco_sensitivity = -2.0/fft_length   # correct for fine frequency
+            self.ofdm_sync = digital_swig.ofdm_sync_pnac(fft_length,
+                                                         cp_length,
+                                                         ks0time,
+                                                         logging)
+        # for testing only; do not user over the air
+        # remove filter and filter delay for this
+        elif SYNC == "fixed":
+            self.chan_filt = gr.multiply_const_cc(1.0) 
+            nsymbols = 18      # enter the number of symbols per packet
+            freq_offset = 0.0  # if you use a frequency offset, enter it here
+            nco_sensitivity = -2.0/fft_length   # correct for fine frequency
+            self.ofdm_sync = digital_swig.ofdm_sync_fixed(fft_length,
+                                                          cp_length,
+                                                          nsymbols,
+                                                          freq_offset,
+                                                          logging)
 
         # Set up blocks
 
@@ -106,7 +118,8 @@ class ofdm_receiver(gr.hier_block2):
         self.sigmix = gr.multiply_cc()
         self.sampler = gr.ofdm_sampler(fft_length, fft_length+cp_length)
         self.fft_demod = gr.fft_vcc(fft_length, True, win, True)
-        self.ofdm_frame_acq = gr.ofdm_frame_acquisition(occupied_tones, fft_length,
+        self.ofdm_frame_acq = gr.ofdm_frame_acquisition(occupied_tones,
+                                                        fft_length,
                                                         cp_length, ks[0])
 
         self.connect(self, self.chan_filt)                            # filter the input channel

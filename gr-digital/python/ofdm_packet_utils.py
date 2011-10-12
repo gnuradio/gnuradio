@@ -22,6 +22,8 @@
 import struct
 import numpy
 from gnuradio import gru
+import digital_swig
+import crc
 
 def conv_packed_binary_string_to_1_0_string(s):
     """
@@ -116,7 +118,7 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     if not whitener_offset >=0 and whitener_offset < 16:
         raise ValueError, "whitener_offset must be between 0 and 15, inclusive (%i)" % (whitener_offset,)
 
-    payload_with_crc = gru.gen_and_append_crc32(payload)
+    payload_with_crc = crc.gen_and_append_crc32(payload)
     #print "outbound crc =", string_to_hex_list(payload_with_crc[-4:])
 
     L = len(payload_with_crc)

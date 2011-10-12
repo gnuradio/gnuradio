@@ -45,9 +45,9 @@ class transmit_path(gr.hier_block2):
         self._verbose      = options.verbose      # turn verbose mode on/off
         self._tx_amplitude = options.tx_amplitude # digital amp sent to radio
 
-        self.ofdm_tx = blks2.ofdm_mod(options,
-                                      msgq_limit=4,
-                                      pad_for_usrp=False)
+        self.ofdm_tx = digital.ofdm_mod(options,
+                                        msgq_limit=4,
+                                        pad_for_usrp=False)
 
         self.amp = gr.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
