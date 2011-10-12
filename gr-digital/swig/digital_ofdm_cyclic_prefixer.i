@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,22 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,ofdm_frame_sink);
+GR_SWIG_BLOCK_MAGIC(digital,ofdm_cyclic_prefixer)
 
-gr_ofdm_frame_sink_sptr 
-gr_make_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
-			const std::vector<unsigned char> &sym_value_out,
-			gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-			float phase_gain=0.25, float freq_gain=0.25*0.25/4);
+digital_ofdm_cyclic_prefixer_sptr 
+digital_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 
-class gr_ofdm_frame_sink : public gr_sync_block
+class digital_ofdm_cyclic_prefixer : public gr_sync_interpolator
 {
  protected:
-  gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
-		     const std::vector<unsigned char> &sym_value_out,
-		     gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-		     float phase_gain, float freq_gain);
+  digital_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 
  public:
-  ~gr_ofdm_frame_sink();
 };

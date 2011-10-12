@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,20 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_OFDM_FRAME_SINK_H
-#define INCLUDED_GR_OFDM_FRAME_SINK_H
+#ifndef INCLUDED_DIGITAL_OFDM_FRAME_SINK_H
+#define INCLUDED_DIGITAL_OFDM_FRAME_SINK_H
 
 #include <gr_sync_block.h>
 #include <gr_msg_queue.h>
 
-class gr_ofdm_frame_sink;
-typedef boost::shared_ptr<gr_ofdm_frame_sink> gr_ofdm_frame_sink_sptr;
+class digital_ofdm_frame_sink;
+typedef boost::shared_ptr<digital_ofdm_frame_sink> digital_ofdm_frame_sink_sptr;
 
-gr_ofdm_frame_sink_sptr 
-gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
-			 const std::vector<unsigned char> &sym_value_out,
-			 gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-			 float phase_gain=0.25, float freq_gain=0.25*0.25/4.0);
+digital_ofdm_frame_sink_sptr 
+digital_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
+			      const std::vector<unsigned char> &sym_value_out,
+			      gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+			      float phase_gain=0.25, float freq_gain=0.25*0.25/4.0);
 
 /*!
  * \brief Takes an OFDM symbol in, demaps it into bits of 0's and 1's, packs
@@ -45,13 +45,13 @@ gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position,
  * we want to be able to pass in a reference to an object to do the demapping and slicing
  * for a given modulation type.
  */
-class gr_ofdm_frame_sink : public gr_sync_block
+class digital_ofdm_frame_sink : public gr_sync_block
 {
-  friend gr_ofdm_frame_sink_sptr 
-  gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
-			   const std::vector<unsigned char> &sym_value_out,
-			   gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-			   float phase_gain, float freq_gain);
+  friend digital_ofdm_frame_sink_sptr 
+  digital_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
+				const std::vector<unsigned char> &sym_value_out,
+				gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+				float phase_gain, float freq_gain);
 
  private:
   enum state_t {STATE_SYNC_SEARCH, STATE_HAVE_SYNC, STATE_HAVE_HEADER};
@@ -93,10 +93,10 @@ class gr_ofdm_frame_sink : public gr_sync_block
   std::vector<int> d_subcarrier_map;
 
  protected:
-  gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
-		     const std::vector<unsigned char> &sym_value_out,
-		     gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-		     float phase_gain, float freq_gain);
+  digital_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
+			  const std::vector<unsigned char> &sym_value_out,
+			  gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+			  float phase_gain, float freq_gain);
 
   void enter_search();
   void enter_have_sync();
@@ -116,7 +116,7 @@ class gr_ofdm_frame_sink : public gr_sync_block
 			 const std::vector<unsigned char> &sym_value_out);
 
  public:
-  ~gr_ofdm_frame_sink();
+  ~digital_ofdm_frame_sink();
 
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,18 +19,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef INCLUDED_GR_OFDM_INSERT_PREAMBLE_H
-#define INCLUDED_GR_OFDM_INSERT_PREAMBLE_H
+#ifndef INCLUDED_DIGITAL_OFDM_INSERT_PREAMBLE_H
+#define INCLUDED_DIGITAL_OFDM_INSERT_PREAMBLE_H
 
 #include <gr_block.h>
 #include <vector>
 
-class gr_ofdm_insert_preamble;
-typedef boost::shared_ptr<gr_ofdm_insert_preamble> gr_ofdm_insert_preamble_sptr;
+class digital_ofdm_insert_preamble;
+typedef boost::shared_ptr<digital_ofdm_insert_preamble> digital_ofdm_insert_preamble_sptr;
 
-gr_ofdm_insert_preamble_sptr
-gr_make_ofdm_insert_preamble(int fft_length,
-			     const std::vector<std::vector<gr_complex> > &preamble);
+digital_ofdm_insert_preamble_sptr
+digital_make_ofdm_insert_preamble(int fft_length,
+				  const std::vector<std::vector<gr_complex> > &preamble);
 
 /*!
  * \brief insert "pre-modulated" preamble symbols before each payload.
@@ -62,15 +62,15 @@ gr_make_ofdm_insert_preamble(int fft_length,
  * \param preamble   vector of symbols that represent the pre-modulated preamble.
  */
 
-class gr_ofdm_insert_preamble : public gr_block
+class digital_ofdm_insert_preamble : public gr_block
 {
-  friend gr_ofdm_insert_preamble_sptr
-  gr_make_ofdm_insert_preamble(int fft_length,
-			       const std::vector<std::vector<gr_complex> > &preamble);
+  friend digital_ofdm_insert_preamble_sptr
+  digital_make_ofdm_insert_preamble(int fft_length,
+				    const std::vector<std::vector<gr_complex> > &preamble);
 
 protected:
-  gr_ofdm_insert_preamble(int fft_length,
-			  const std::vector<std::vector<gr_complex> > &preamble);
+  digital_ofdm_insert_preamble(int fft_length,
+			       const std::vector<std::vector<gr_complex> > &preamble);
 
 private:
   enum state_t {
@@ -93,7 +93,7 @@ private:
   
 
 public:
-  ~gr_ofdm_insert_preamble();
+  ~digital_ofdm_insert_preamble();
 
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
@@ -101,4 +101,4 @@ public:
 		    gr_vector_void_star &output_items);
 };
 
-#endif /* INCLUDED_GR_OFDM_INSERT_PREAMBLE_H */
+#endif /* INCLUDED_DIGITAL_OFDM_INSERT_PREAMBLE_H */

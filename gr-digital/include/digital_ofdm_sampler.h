@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,31 +20,31 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_OFDM_SAMPLER_H
-#define INCLUDED_GR_OFDM_SAMPLER_H
+#ifndef INCLUDED_DIGITAL_OFDM_SAMPLER_H
+#define INCLUDED_DIGITAL_OFDM_SAMPLER_H
 
 #include <gr_sync_block.h>
 
-class gr_ofdm_sampler;
-typedef boost::shared_ptr<gr_ofdm_sampler> gr_ofdm_sampler_sptr;
+class digital_ofdm_sampler;
+typedef boost::shared_ptr<digital_ofdm_sampler> digital_ofdm_sampler_sptr;
 
-gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
-					   unsigned int symbol_length,
-					   unsigned int timeout=1000);
+digital_ofdm_sampler_sptr digital_make_ofdm_sampler (unsigned int fft_length, 
+						     unsigned int symbol_length,
+						     unsigned int timeout=1000);
 
 /*!
  * \brief does the rest of the OFDM stuff
  * \ingroup ofdm_blk
  */
-class gr_ofdm_sampler : public gr_block
+class digital_ofdm_sampler : public gr_block
 {
-  friend gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
-						    unsigned int symbol_length,
-						    unsigned int timeout);
+  friend digital_ofdm_sampler_sptr digital_make_ofdm_sampler (unsigned int fft_length, 
+							      unsigned int symbol_length,
+							      unsigned int timeout);
 
-  gr_ofdm_sampler (unsigned int fft_length, 
-		   unsigned int symbol_length,
-		   unsigned int timeout);
+  digital_ofdm_sampler (unsigned int fft_length, 
+			unsigned int symbol_length,
+			unsigned int timeout);
 
  private:
   enum state_t {STATE_NO_SIG, STATE_PREAMBLE, STATE_FRAME};

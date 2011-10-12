@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005,2006 Free Software Foundation, Inc.
+ * Copyright 2004-2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,17 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_OFDM_CYCLIC_PREFIXER_H
-#define INCLUDED_GR_OFDM_CYCLIC_PREFIXER_H
+#ifndef INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H
+#define INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H
 
 #include <gr_sync_interpolator.h>
 #include <stdio.h>
 
-class gr_ofdm_cyclic_prefixer;
-typedef boost::shared_ptr<gr_ofdm_cyclic_prefixer> gr_ofdm_cyclic_prefixer_sptr;
+class digital_ofdm_cyclic_prefixer;
+typedef boost::shared_ptr<digital_ofdm_cyclic_prefixer> digital_ofdm_cyclic_prefixer_sptr;
 
-gr_ofdm_cyclic_prefixer_sptr 
-gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
+digital_ofdm_cyclic_prefixer_sptr 
+digital_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 
 
 /*!
@@ -38,13 +38,13 @@ gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
  * symbol(vector) and converts vector to a stream output_size long.
  * \ingroup ofdm_blk
  */
-class gr_ofdm_cyclic_prefixer : public gr_sync_interpolator
+class digital_ofdm_cyclic_prefixer : public gr_sync_interpolator
 {
-  friend gr_ofdm_cyclic_prefixer_sptr
-    gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
+  friend digital_ofdm_cyclic_prefixer_sptr
+    digital_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 
  protected:
-  gr_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
+  digital_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 
  public:
   int work (int noutput_items,
@@ -55,4 +55,4 @@ class gr_ofdm_cyclic_prefixer : public gr_sync_interpolator
   size_t d_output_size;
 };
 
-#endif /* INCLUDED_GR_OFDM_CYCLIC_PREFIXER_H */
+#endif /* INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H */

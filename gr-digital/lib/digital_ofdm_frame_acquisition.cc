@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2008,2010 Free Software Foundation, Inc.
+ * Copyright 2006-2008,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_ofdm_frame_acquisition.h>
+#include <digital_ofdm_frame_acquisition.h>
 #include <gr_io_signature.h>
 #include <gr_expj.h>
 #include <gr_math.h>
@@ -34,20 +34,22 @@
 #define M_TWOPI (2*M_PI)
 #define MAX_NUM_SYMBOLS 1000
 
-gr_ofdm_frame_acquisition_sptr
-gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length, 
-				unsigned int cplen,
-				const std::vector<gr_complex> &known_symbol,
-				unsigned int max_fft_shift_len)
+digital_ofdm_frame_acquisition_sptr
+digital_make_ofdm_frame_acquisition (unsigned int occupied_carriers,
+				     unsigned int fft_length, 
+				     unsigned int cplen,
+				     const std::vector<gr_complex> &known_symbol,
+				     unsigned int max_fft_shift_len)
 {
-  return gnuradio::get_initial_sptr(new gr_ofdm_frame_acquisition (occupied_carriers, fft_length, cplen,
+  return gnuradio::get_initial_sptr(new digital_ofdm_frame_acquisition (occupied_carriers, fft_length, cplen,
 									known_symbol, max_fft_shift_len));
 }
 
-gr_ofdm_frame_acquisition::gr_ofdm_frame_acquisition (unsigned occupied_carriers, unsigned int fft_length, 
-						      unsigned int cplen,
-						      const std::vector<gr_complex> &known_symbol,
-						      unsigned int max_fft_shift_len)
+digital_ofdm_frame_acquisition::digital_ofdm_frame_acquisition (unsigned occupied_carriers,
+								unsigned int fft_length, 
+								unsigned int cplen,
+								const std::vector<gr_complex> &known_symbol,
+								unsigned int max_fft_shift_len)
   : gr_block ("ofdm_frame_acquisition",
 	      gr_make_io_signature2 (2, 2, sizeof(gr_complex)*fft_length, sizeof(char)*fft_length),
 	      gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char))),
@@ -78,13 +80,13 @@ gr_ofdm_frame_acquisition::gr_ofdm_frame_acquisition (unsigned occupied_carriers
   }
 }
 
-gr_ofdm_frame_acquisition::~gr_ofdm_frame_acquisition(void)
+digital_ofdm_frame_acquisition::~digital_ofdm_frame_acquisition(void)
 {
   delete [] d_phase_lut;
 }
 
 void
-gr_ofdm_frame_acquisition::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+digital_ofdm_frame_acquisition::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned ninputs = ninput_items_required.size ();
   for (unsigned i = 0; i < ninputs; i++)
@@ -92,7 +94,7 @@ gr_ofdm_frame_acquisition::forecast (int noutput_items, gr_vector_int &ninput_it
 }
 
 gr_complex
-gr_ofdm_frame_acquisition::coarse_freq_comp(int freq_delta, int symbol_count)
+digital_ofdm_frame_acquisition::coarse_freq_comp(int freq_delta, int symbol_count)
 {
   //  return gr_complex(cos(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count),
   //	    sin(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count));
@@ -103,7 +105,7 @@ gr_ofdm_frame_acquisition::coarse_freq_comp(int freq_delta, int symbol_count)
 }
 
 void
-gr_ofdm_frame_acquisition::correlate(const gr_complex *symbol, int zeros_on_left)
+digital_ofdm_frame_acquisition::correlate(const gr_complex *symbol, int zeros_on_left)
 {
   unsigned int i,j;
   
@@ -131,7 +133,7 @@ gr_ofdm_frame_acquisition::correlate(const gr_complex *symbol, int zeros_on_left
 }
 
 void
-gr_ofdm_frame_acquisition::calculate_equalizer(const gr_complex *symbol, int zeros_on_left)
+digital_ofdm_frame_acquisition::calculate_equalizer(const gr_complex *symbol, int zeros_on_left)
 {
   unsigned int i=0;
 
@@ -169,10 +171,10 @@ gr_ofdm_frame_acquisition::calculate_equalizer(const gr_complex *symbol, int zer
 }
 
 int
-gr_ofdm_frame_acquisition::general_work(int noutput_items,
-					gr_vector_int &ninput_items,
-					gr_vector_const_void_star &input_items,
-					gr_vector_void_star &output_items)
+digital_ofdm_frame_acquisition::general_work(int noutput_items,
+					     gr_vector_int &ninput_items,
+					     gr_vector_const_void_star &input_items,
+					     gr_vector_void_star &output_items)
 {
   const gr_complex *symbol = (const gr_complex *)input_items[0];
   const char *signal_in = (const char *)input_items[1];

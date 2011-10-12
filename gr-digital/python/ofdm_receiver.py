@@ -23,6 +23,8 @@
 import math
 from numpy import fft
 from gnuradio import gr
+
+import digital_swig
 from ofdm_sync_pn import ofdm_sync_pn
 from ofdm_sync_fixed import ofdm_sync_fixed
 from ofdm_sync_pnac import ofdm_sync_pnac
@@ -119,11 +121,11 @@ class ofdm_receiver(gr.hier_block2):
 
         self.nco = gr.frequency_modulator_fc(nco_sensitivity)         # generate a signal proportional to frequency error of sync block
         self.sigmix = gr.multiply_cc()
-        self.sampler = gr.ofdm_sampler(fft_length, fft_length+cp_length)
+        self.sampler = digital_swig.ofdm_sampler(fft_length, fft_length+cp_length)
         self.fft_demod = gr.fft_vcc(fft_length, True, win, True)
-        self.ofdm_frame_acq = gr.ofdm_frame_acquisition(occupied_tones,
-                                                        fft_length,
-                                                        cp_length, ks[0])
+        self.ofdm_frame_acq = digital_swig.ofdm_frame_acquisition(occupied_tones,
+                                                                  fft_length,
+                                                                  cp_length, ks[0])
 
         self.connect(self, self.chan_filt)                            # filter the input channel
         self.connect(self.chan_filt, self.ofdm_sync)                  # into the synchronization alg.

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006, 2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,23 +22,23 @@
 
 #include <vector>
 
-GR_SWIG_BLOCK_MAGIC(gr,ofdm_frame_acquisition);
+GR_SWIG_BLOCK_MAGIC(digital,ofdm_frame_acquisition);
 
-gr_ofdm_frame_acquisition_sptr 
-gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, 
-				unsigned int fft_length,
-				unsigned int cplen,
-				const std::vector<gr_complex> &known_symbol, 
-				unsigned int max_fft_shift_len=4);
+digital_ofdm_frame_acquisition_sptr 
+digital_make_ofdm_frame_acquisition (unsigned int occupied_carriers, 
+				     unsigned int fft_length,
+				     unsigned int cplen,
+				     const std::vector<gr_complex> &known_symbol, 
+				     unsigned int max_fft_shift_len=4);
 
-class gr_ofdm_frame_acquisition : public gr_sync_decimator
+class digital_ofdm_frame_acquisition : public gr_sync_decimator
 {
  protected:
-  gr_ofdm_frame_acquisition (unsigned int occupied_carriers,
-			     unsigned int fft_length,
-			     unsigned int cplen,
-			     const std::vector<gr_complex> &known_symbol, 
-			     unsigned int max_fft_shift_len);
+  digital_ofdm_frame_acquisition (unsigned int occupied_carriers,
+				  unsigned int fft_length,
+				  unsigned int cplen,
+				  const std::vector<gr_complex> &known_symbol, 
+				  unsigned int max_fft_shift_len);
 
  public:
   float snr() { return d_snr_est; }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2010 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_ofdm_frame_sink.h>
+#include <digital_ofdm_frame_sink.h>
 #include <gr_io_signature.h>
 #include <gr_expj.h>
 #include <gr_math.h>
@@ -37,7 +37,7 @@
 #define VERBOSE 0
 
 inline void
-gr_ofdm_frame_sink::enter_search()
+digital_ofdm_frame_sink::enter_search()
 {
   if (VERBOSE)
     fprintf(stderr, "@ enter_search\n");
@@ -47,7 +47,7 @@ gr_ofdm_frame_sink::enter_search()
 }
     
 inline void
-gr_ofdm_frame_sink::enter_have_sync()
+digital_ofdm_frame_sink::enter_have_sync()
 {
   if (VERBOSE)
     fprintf(stderr, "@ enter_have_sync\n");
@@ -68,7 +68,7 @@ gr_ofdm_frame_sink::enter_have_sync()
 }
 
 inline void
-gr_ofdm_frame_sink::enter_have_header()
+digital_ofdm_frame_sink::enter_have_header()
 {
   d_state = STATE_HAVE_HEADER;
 
@@ -85,7 +85,7 @@ gr_ofdm_frame_sink::enter_have_header()
 }
 
 
-unsigned char gr_ofdm_frame_sink::slicer(const gr_complex x)
+unsigned char digital_ofdm_frame_sink::slicer(const gr_complex x)
 {
   unsigned int table_size = d_sym_value_out.size();
   unsigned int min_index = 0;
@@ -102,8 +102,8 @@ unsigned char gr_ofdm_frame_sink::slicer(const gr_complex x)
   return d_sym_value_out[min_index];
 }
 
-unsigned int gr_ofdm_frame_sink::demapper(const gr_complex *in,
-					  unsigned char *out)
+unsigned int digital_ofdm_frame_sink::demapper(const gr_complex *in,
+					       unsigned char *out)
 {
   unsigned int i=0, bytes_produced=0;
   gr_complex carrier;
@@ -178,22 +178,22 @@ unsigned int gr_ofdm_frame_sink::demapper(const gr_complex *in,
 }
 
 
-gr_ofdm_frame_sink_sptr
-gr_make_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
-			const std::vector<unsigned char> &sym_value_out,
-			gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
-			float phase_gain, float freq_gain)
+digital_ofdm_frame_sink_sptr
+digital_make_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
+			     const std::vector<unsigned char> &sym_value_out,
+			     gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
+			     float phase_gain, float freq_gain)
 {
-  return gnuradio::get_initial_sptr(new gr_ofdm_frame_sink(sym_position, sym_value_out,
-							target_queue, occupied_carriers,
-							phase_gain, freq_gain));
+  return gnuradio::get_initial_sptr(new digital_ofdm_frame_sink(sym_position, sym_value_out,
+								target_queue, occupied_carriers,
+								phase_gain, freq_gain));
 }
 
 
-gr_ofdm_frame_sink::gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
-				       const std::vector<unsigned char> &sym_value_out,
-				       gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
-				       float phase_gain, float freq_gain)
+digital_ofdm_frame_sink::digital_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
+						 const std::vector<unsigned char> &sym_value_out,
+						 gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
+						 float phase_gain, float freq_gain)
   : gr_sync_block ("ofdm_frame_sink",
 		   gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char)),
 		   gr_make_io_signature (1, 1, sizeof(gr_complex)*occupied_carriers)),
@@ -252,7 +252,7 @@ gr_ofdm_frame_sink::gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_positi
   
   // make sure we stay in the limit currently imposed by the occupied_carriers
   if(d_subcarrier_map.size() > d_occupied_carriers) {
-    throw std::invalid_argument("gr_ofdm_mapper_bcv: subcarriers allocated exceeds size of occupied carriers");
+    throw std::invalid_argument("digital_ofdm_mapper_bcv: subcarriers allocated exceeds size of occupied carriers");
   }
 
   d_bytes_out = new unsigned char[d_occupied_carriers];
@@ -264,14 +264,14 @@ gr_ofdm_frame_sink::gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_positi
   enter_search();
 }
 
-gr_ofdm_frame_sink::~gr_ofdm_frame_sink ()
+digital_ofdm_frame_sink::~digital_ofdm_frame_sink ()
 {
   delete [] d_bytes_out;
 }
 
 bool
-gr_ofdm_frame_sink::set_sym_value_out(const std::vector<gr_complex> &sym_position, 
-				      const std::vector<unsigned char> &sym_value_out)
+digital_ofdm_frame_sink::set_sym_value_out(const std::vector<gr_complex> &sym_position, 
+					   const std::vector<unsigned char> &sym_value_out)
 {
   if (sym_position.size() != sym_value_out.size())
     return false;
@@ -288,9 +288,9 @@ gr_ofdm_frame_sink::set_sym_value_out(const std::vector<gr_complex> &sym_positio
 
 
 int
-gr_ofdm_frame_sink::work (int noutput_items,
-			  gr_vector_const_void_star &input_items,
-			  gr_vector_void_star &output_items)
+digital_ofdm_frame_sink::work (int noutput_items,
+			       gr_vector_const_void_star &input_items,
+			       gr_vector_void_star &output_items)
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
   const char *sig = (const char *) input_items[1];

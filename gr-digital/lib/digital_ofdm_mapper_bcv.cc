@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2008,2010 Free Software Foundation, Inc.
+ * Copyright 2006-2008,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,22 +25,22 @@
 #include "config.h"
 #endif
 
-#include <gr_ofdm_mapper_bcv.h>
+#include <digital_ofdm_mapper_bcv.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <string.h>
 
-gr_ofdm_mapper_bcv_sptr
-gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned int msgq_limit, 
-			 unsigned int occupied_carriers, unsigned int fft_length)
+digital_ofdm_mapper_bcv_sptr
+digital_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned int msgq_limit, 
+			      unsigned int occupied_carriers, unsigned int fft_length)
 {
-  return gnuradio::get_initial_sptr(new gr_ofdm_mapper_bcv (constellation, msgq_limit, 
-							  occupied_carriers, fft_length));
+  return gnuradio::get_initial_sptr(new digital_ofdm_mapper_bcv (constellation, msgq_limit, 
+								 occupied_carriers, fft_length));
 }
 
 // Consumes 1 packet and produces as many OFDM symbols of fft_length to hold the full packet
-gr_ofdm_mapper_bcv::gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned int msgq_limit, 
-					unsigned int occupied_carriers, unsigned int fft_length)
+digital_ofdm_mapper_bcv::digital_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned int msgq_limit, 
+						  unsigned int occupied_carriers, unsigned int fft_length)
   : gr_sync_block ("ofdm_mapper_bcv",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature2 (1, 2, sizeof(gr_complex)*fft_length, sizeof(char))),
@@ -54,7 +54,7 @@ gr_ofdm_mapper_bcv::gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constella
     d_nresid(0)
 {
   if (!(d_occupied_carriers <= d_fft_length))
-    throw std::invalid_argument("gr_ofdm_mapper_bcv: occupied carriers must be <= fft_length");
+    throw std::invalid_argument("digital_ofdm_mapper_bcv: occupied carriers must be <= fft_length");
 
   // this is not the final form of this solution since we still use the occupied_tones concept,
   // which would get us into trouble if the number of carriers we seek is greater than the occupied carriers.
@@ -110,25 +110,25 @@ gr_ofdm_mapper_bcv::gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constella
 
   // make sure we stay in the limit currently imposed by the occupied_carriers
   if(d_subcarrier_map.size() > d_occupied_carriers) {
-    throw std::invalid_argument("gr_ofdm_mapper_bcv: subcarriers allocated exceeds size of occupied carriers");
+    throw std::invalid_argument("digital_ofdm_mapper_bcv: subcarriers allocated exceeds size of occupied carriers");
   }
   
   d_nbits = (unsigned long)ceil(log10(float(d_constellation.size())) / log10(2.0));
 }
 
-gr_ofdm_mapper_bcv::~gr_ofdm_mapper_bcv(void)
+digital_ofdm_mapper_bcv::~digital_ofdm_mapper_bcv(void)
 {
 }
 
-int gr_ofdm_mapper_bcv::randsym()
+int digital_ofdm_mapper_bcv::randsym()
 {
   return (rand() % d_constellation.size());
 }
 
 int
-gr_ofdm_mapper_bcv::work(int noutput_items,
-			  gr_vector_const_void_star &input_items,
-			  gr_vector_void_star &output_items)
+digital_ofdm_mapper_bcv::work(int noutput_items,
+			      gr_vector_const_void_star &input_items,
+			      gr_vector_void_star &output_items)
 {
   gr_complex *out = (gr_complex *)output_items[0];
   

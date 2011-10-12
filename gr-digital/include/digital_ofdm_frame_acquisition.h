@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006, 2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,18 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_OFDM_FRAME_ACQUISITION_H
-#define INCLUDED_GR_OFDM_FRAME_ACQUISITION_H
+#ifndef INCLUDED_DIGITAL_OFDM_FRAME_ACQUISITION_H
+#define INCLUDED_DIGITAL_OFDM_FRAME_ACQUISITION_H
 
 
 #include <gr_block.h>
 #include <vector>
 
-class gr_ofdm_frame_acquisition;
-typedef boost::shared_ptr<gr_ofdm_frame_acquisition> gr_ofdm_frame_acquisition_sptr;
+class digital_ofdm_frame_acquisition;
+typedef boost::shared_ptr<digital_ofdm_frame_acquisition> digital_ofdm_frame_acquisition_sptr;
 
-gr_ofdm_frame_acquisition_sptr 
-gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
+digital_ofdm_frame_acquisition_sptr 
+digital_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
 				unsigned int cplen,
 				const std::vector<gr_complex> &known_symbol, 
 				unsigned int max_fft_shift_len=10);
@@ -54,7 +54,7 @@ gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft
  * distortion caused by the channel.
  */
 
-class gr_ofdm_frame_acquisition : public gr_block
+class digital_ofdm_frame_acquisition : public gr_block
 {
   /*! 
    * \brief Build an OFDM correlator and equalizer.
@@ -65,14 +65,14 @@ class gr_ofdm_frame_acquisition : public gr_block
    *                            start of a frame (usually a BPSK PN sequence)
    * \param max_fft_shift_len   Set's the maximum distance you can look between bins for correlation
    */
-  friend gr_ofdm_frame_acquisition_sptr
-  gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
+  friend digital_ofdm_frame_acquisition_sptr
+  digital_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
 				  unsigned int cplen,
 				  const std::vector<gr_complex> &known_symbol, 
 				  unsigned int max_fft_shift_len);
   
 protected:
-  gr_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
+  digital_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
 			     unsigned int cplen,
 			     const std::vector<gr_complex> &known_symbol, 
 			     unsigned int max_fft_shift_len);
@@ -105,7 +105,7 @@ protected:
    */
   float snr() { return d_snr_est; }
 
-  ~gr_ofdm_frame_acquisition(void);
+  ~digital_ofdm_frame_acquisition(void);
   int general_work(int noutput_items,
 		   gr_vector_int &ninput_items,
 		   gr_vector_const_void_star &input_items,

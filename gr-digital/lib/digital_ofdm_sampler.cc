@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2010 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,22 +24,22 @@
 #include "config.h"
 #endif
 
-#include <gr_ofdm_sampler.h>
+#include <digital_ofdm_sampler.h>
 #include <gr_io_signature.h>
 #include <gr_expj.h>
 #include <cstdio>
 
-gr_ofdm_sampler_sptr
-gr_make_ofdm_sampler (unsigned int fft_length, 
-		      unsigned int symbol_length,
-		      unsigned int timeout)
+digital_ofdm_sampler_sptr
+digital_make_ofdm_sampler (unsigned int fft_length, 
+			   unsigned int symbol_length,
+			   unsigned int timeout)
 {
-  return gnuradio::get_initial_sptr(new gr_ofdm_sampler (fft_length, symbol_length, timeout));
+  return gnuradio::get_initial_sptr(new digital_ofdm_sampler (fft_length, symbol_length, timeout));
 }
 
-gr_ofdm_sampler::gr_ofdm_sampler (unsigned int fft_length, 
-				  unsigned int symbol_length,
-				  unsigned int timeout)
+digital_ofdm_sampler::digital_ofdm_sampler (unsigned int fft_length, 
+					    unsigned int symbol_length,
+					    unsigned int timeout)
   : gr_block ("ofdm_sampler",
 	      gr_make_io_signature2 (2, 2, sizeof (gr_complex), sizeof(char)),
 	      gr_make_io_signature2 (2, 2, sizeof (gr_complex)*fft_length, sizeof(char)*fft_length)),
@@ -49,7 +49,7 @@ gr_ofdm_sampler::gr_ofdm_sampler (unsigned int fft_length,
 }
 
 void
-gr_ofdm_sampler::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+digital_ofdm_sampler::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {
   // FIXME do we need more
   //int nreqd  = (noutput_items-1) * d_symbol_length + d_fft_length;
@@ -61,10 +61,10 @@ gr_ofdm_sampler::forecast (int noutput_items, gr_vector_int &ninput_items_requir
 
 
 int
-gr_ofdm_sampler::general_work (int noutput_items,
-			       gr_vector_int &ninput_items,
-			       gr_vector_const_void_star &input_items,
-			       gr_vector_void_star &output_items)
+digital_ofdm_sampler::general_work (int noutput_items,
+				    gr_vector_int &ninput_items,
+				    gr_vector_const_void_star &input_items,
+				    gr_vector_void_star &output_items)
 {
   const gr_complex *iptr = (const gr_complex *) input_items[0];
   const char *trigger = (const char *) input_items[1];

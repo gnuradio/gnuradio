@@ -94,12 +94,16 @@ class ofdm_mod(gr.hier_block2):
         elif(self._modulation.find("qam") >= 0):
             rotated_const = map(lambda pt: pt * rot, qam.constellation[arity])
         #print rotated_const
-        self._pkt_input = gr.ofdm_mapper_bcv(rotated_const, msgq_limit,
-                                             options.occupied_tones, options.fft_length)
+        self._pkt_input = digital_swig.ofdm_mapper_bcv(rotated_const,
+                                                       msgq_limit,
+                                                       options.occupied_tones,
+                                                       options.fft_length)
         
-        self.preambles = gr.ofdm_insert_preamble(self._fft_length, padded_preambles)
+        self.preambles = digital_swig.ofdm_insert_preamble(self._fft_length,
+                                                           padded_preambles)
         self.ifft = gr.fft_vcc(self._fft_length, False, win, True)
-        self.cp_adder = gr.ofdm_cyclic_prefixer(self._fft_length, symbol_length)
+        self.cp_adder = digital_swig.ofdm_cyclic_prefixer(self._fft_length,
+                                                          symbol_length)
         self.scale = gr.multiply_const_cc(1.0 / math.sqrt(self._fft_length))
         
         self.connect((self._pkt_input, 0), (self.preambles, 0))
@@ -230,10 +234,10 @@ class ofdm_demod(gr.hier_block2):
 
         phgain = 0.25
         frgain = phgain*phgain / 4.0
-        self.ofdm_demod = gr.ofdm_frame_sink(rotated_const, range(arity),
-                                             self._rcvd_pktq,
-                                             self._occupied_tones,
-                                             phgain, frgain)
+        self.ofdm_demod = digital_swig.ofdm_frame_sink(rotated_const, range(arity),
+                                                       self._rcvd_pktq,
+                                                       self._occupied_tones,
+                                                       phgain, frgain)
 
         self.connect(self, self.ofdm_recv)
         self.connect((self.ofdm_recv, 0), (self.ofdm_demod, 0))

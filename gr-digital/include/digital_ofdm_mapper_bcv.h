@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,19 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_OFDM_MAPPER_BCV_H
-#define INCLUDED_GR_OFDM_MAPPER_BCV_H
+#ifndef INCLUDED_DIGITAL_OFDM_MAPPER_BCV_H
+#define INCLUDED_DIGITAL_OFDM_MAPPER_BCV_H
 
 #include <gr_sync_block.h>
 #include <gr_message.h>
 #include <gr_msg_queue.h>
 
-class gr_ofdm_mapper_bcv;
-typedef boost::shared_ptr<gr_ofdm_mapper_bcv> gr_ofdm_mapper_bcv_sptr;
+class digital_ofdm_mapper_bcv;
+typedef boost::shared_ptr<digital_ofdm_mapper_bcv> digital_ofdm_mapper_bcv_sptr;
 
-gr_ofdm_mapper_bcv_sptr 
-gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
-			 unsigned occupied_carriers, unsigned int fft_length);
+digital_ofdm_mapper_bcv_sptr 
+digital_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
+			      unsigned occupied_carriers, unsigned int fft_length);
 
 /*!
  * \brief take a stream of bytes in and map to a vector of complex
@@ -42,14 +42,14 @@ gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned 
  * \ingroup ofdm_blk
  */
 
-class gr_ofdm_mapper_bcv : public gr_sync_block
+class digital_ofdm_mapper_bcv : public gr_sync_block
 {
-  friend gr_ofdm_mapper_bcv_sptr
-  gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
+  friend digital_ofdm_mapper_bcv_sptr
+  digital_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
+				unsigned occupied_carriers, unsigned int fft_length);
+protected:
+  digital_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
 			   unsigned occupied_carriers, unsigned int fft_length);
- protected:
-  gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
-		      unsigned occupied_carriers, unsigned int fft_length);
 
  private:
   std::vector<gr_complex> d_constellation;
@@ -74,7 +74,7 @@ class gr_ofdm_mapper_bcv : public gr_sync_block
   int randsym();
 
  public:
-  ~gr_ofdm_mapper_bcv(void);
+  ~digital_ofdm_mapper_bcv(void);
 
   gr_msg_queue_sptr	msgq() const { return d_msgq; }
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2010 Free Software Foundation, Inc.
+ * Copyright 2007,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,21 +23,21 @@
 #include <config.h>
 #endif
 
-#include <gr_ofdm_insert_preamble.h>
+#include <digital_ofdm_insert_preamble.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <iostream>
 #include <string.h>
 
-gr_ofdm_insert_preamble_sptr
-gr_make_ofdm_insert_preamble(int fft_length,
-			     const std::vector<std::vector<gr_complex> > &preamble)
+digital_ofdm_insert_preamble_sptr
+digital_make_ofdm_insert_preamble(int fft_length,
+				  const std::vector<std::vector<gr_complex> > &preamble)
 {
-  return gnuradio::get_initial_sptr(new gr_ofdm_insert_preamble(fft_length,
-								  preamble));
+  return gnuradio::get_initial_sptr(new digital_ofdm_insert_preamble(fft_length,
+								     preamble));
 }
 
-gr_ofdm_insert_preamble::gr_ofdm_insert_preamble
+digital_ofdm_insert_preamble::digital_ofdm_insert_preamble
        (int fft_length,
 	const std::vector<std::vector<gr_complex> > &preamble)
   : gr_block("ofdm_insert_preamble",
@@ -56,22 +56,22 @@ gr_ofdm_insert_preamble::gr_ofdm_insert_preamble
   // sanity check preamble symbols
   for (size_t i = 0; i < d_preamble.size(); i++){
     if (d_preamble[i].size() != (size_t) d_fft_length)
-      throw std::invalid_argument("gr_ofdm_insert_preamble: invalid length for preamble symbol");
+      throw std::invalid_argument("digital_ofdm_insert_preamble: invalid length for preamble symbol");
   }
 
   enter_idle();
 }
 
 
-gr_ofdm_insert_preamble::~gr_ofdm_insert_preamble()
+digital_ofdm_insert_preamble::~digital_ofdm_insert_preamble()
 {
 }
 
 int
-gr_ofdm_insert_preamble::general_work (int noutput_items,
-				       gr_vector_int &ninput_items_v,
-				       gr_vector_const_void_star &input_items,
-				       gr_vector_void_star &output_items)
+digital_ofdm_insert_preamble::general_work (int noutput_items,
+					    gr_vector_int &ninput_items_v,
+					    gr_vector_const_void_star &input_items,
+					    gr_vector_void_star &output_items)
 {
   int ninput_items = std::min(ninput_items_v[0], ninput_items_v[1]);
   const gr_complex *in_sym = (const gr_complex *) input_items[0];
@@ -149,7 +149,7 @@ gr_ofdm_insert_preamble::general_work (int noutput_items,
       break;
 
     default:
-      std::cerr << "gr_ofdm_insert_preamble: (can't happen) invalid state, resetting\n";
+      std::cerr << "digital_ofdm_insert_preamble: (can't happen) invalid state, resetting\n";
       enter_idle();
     }
   }
@@ -159,7 +159,7 @@ gr_ofdm_insert_preamble::general_work (int noutput_items,
 }
 
 void
-gr_ofdm_insert_preamble::enter_idle()
+digital_ofdm_insert_preamble::enter_idle()
 {
   d_state = ST_IDLE;
   d_nsymbols_output = 0;
@@ -167,7 +167,7 @@ gr_ofdm_insert_preamble::enter_idle()
 }
 
 void
-gr_ofdm_insert_preamble::enter_preamble()
+digital_ofdm_insert_preamble::enter_preamble()
 {
   d_state = ST_PREAMBLE;
   d_nsymbols_output = 0;
@@ -175,13 +175,13 @@ gr_ofdm_insert_preamble::enter_preamble()
 }
 
 void
-gr_ofdm_insert_preamble::enter_first_payload()
+digital_ofdm_insert_preamble::enter_first_payload()
 {
   d_state = ST_FIRST_PAYLOAD;
 }
 
 void
-gr_ofdm_insert_preamble::enter_payload()
+digital_ofdm_insert_preamble::enter_payload()
 {
   d_state = ST_PAYLOAD;
 }

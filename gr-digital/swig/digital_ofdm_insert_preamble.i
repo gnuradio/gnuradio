@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005 Free Software Foundation, Inc.
+ * Copyright 2007,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,22 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+GR_SWIG_BLOCK_MAGIC(digital,ofdm_insert_preamble);
 
-#include <gr_ofdm_demapper_vcb.h>
-#include <gr_io_signature.h>
+digital_ofdm_insert_preamble_sptr
+digital_make_ofdm_insert_preamble(int fft_length,
+				  const std::vector<std::vector<gr_complex> > &preamble);
 
-gr_ofdm_demapper_vcb::~gr_ofdm_demapper_vcb(void)
+
+class digital_ofdm_insert_preamble : public gr_block
 {
-}
-
-gr_ofdm_demapper_vcb::gr_ofdm_demapper_vcb (unsigned bits_per_symbol,unsigned int vlen)
-  : gr_sync_decimator ("ofdm_demapper_vcb",
-		       gr_make_io_signature (1, 1, sizeof(gr_complex)*vlen),
-		       gr_make_io_signature (1, 1, sizeof(unsigned char)),
-		       bits_per_symbol)
-{
-}
-
+ protected:
+  digital_ofdm_insert_preamble(int fft_length,
+			       const std::vector<std::vector<gr_complex> > &preamble);
+};
