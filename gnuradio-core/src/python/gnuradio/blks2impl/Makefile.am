@@ -41,8 +41,6 @@ grblkspython_PYTHON =		\
 	pfb_channelizer.py	\
 	pfb_decimator.py	\
 	pfb_interpolator.py	\
-	psk.py			\
-	qam.py			\
 	rational_resampler.py	\
 	standard_squelch.py	\
 	stream_to_vector_decimator.py \
