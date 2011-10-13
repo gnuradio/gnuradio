@@ -38,7 +38,7 @@ namespace uhd{
         }
         std::string cpu_format;
         std::string otw_format;
-        std::string args;
+        device_addr_t args;
         std::vector<size_t> channels;
     };
 }

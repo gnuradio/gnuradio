@@ -28,9 +28,9 @@ MAIN_TMPL = """\
 	<make>uhd.usrp_$(sourk)(
 	device_addr=\$dev_addr,
 	stream_args=uhd.stream_args(
-		cpu_format='\$type',
-		otw_format='\$otw.format',
-		args='\$otw.args',
+		cpu_format="\$type",
+		otw_format=\$otw,
+		args=\$stream_args,
 		channels=range(\$nchan),
 	),
 )
@@ -111,46 +111,49 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 			<opt>type:short</opt>
 			<opt>vlen:1</opt>
 		</option>
+		<option>
+			<name>VITA word32</name>
+			<key>item32</key>
+			<opt>type:int</opt>
+			<opt>vlen:1</opt>
+		</option>
 	</param>
 	<param>
 		<name>Wire Format</name>
 		<key>otw</key>
-		<type>enum</type>
+		<type>string</type>
 		<option>
 			<name>Complex int16</name>
 			<key>sc16</key>
-			<opt>format:sc16</opt>
-			<opt>args:</opt>
 		</option>
 		<option>
 			<name>Complex int8</name>
 			<key>sc8</key>
-			<opt>format:sc8</opt>
-			<opt>args:</opt>
 		</option>
 		<option>
 			<name>Real int16</name>
 			<key>s16</key>
-			<opt>format:s16</opt>
-			<opt>args:</opt>
 		</option>
 		<option>
 			<name>Real int8</name>
 			<key>s8</key>
-			<opt>format:s8</opt>
-			<opt>args:</opt>
 		</option>
+	</param>
+	<param>
+		<name>Stream args</name>
+		<key>stream_args</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			\#if \$stream_args()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
 		<option>
-			<name>Magnitude int16</name>
-			<key>s16_mag</key>
-			<opt>format:s16</opt>
-			<opt>args:magnitude</opt>
-		</option>
-		<option>
-			<name>Magnitude int8</name>
-			<key>s8_mag</key>
-			<opt>format:s8</opt>
-			<opt>args:magnitude</opt>
+			<name>scaler=1024</name>
+			<key>scaler=1024</key>
 		</option>
 	</param>
 	<param>

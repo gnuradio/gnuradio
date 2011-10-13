@@ -66,6 +66,8 @@ def _prepare_uhd_swig():
                 #but what i can do is append the elements individually
                 if key == 'channels':
                     for v in val: self.channels.append(v)
+                elif key == 'args':
+                    self.args = device_addr_t(val)
                 else: setattr(self, key, val)
     setattr(uhd_swig, 'stream_args_t', stream_args_t)
 
