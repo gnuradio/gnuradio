@@ -64,7 +64,6 @@ digital_PYTHON = \
 	packet_utils.py		\
 	pkt.py			\
 	psk.py			\
-	psk2.py			\
 	qam.py			\
 	qpsk.py
 endif

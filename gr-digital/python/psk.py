@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,76 +19,104 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from math import pi, sqrt, log10
-import math, cmath
+"""
+PSK modulation and demodulation.
+"""
 
-# The following algorithm generates Gray coded constellations for M-PSK for M=[2,4,8]
-def make_gray_constellation(m):
-    # number of bits/symbol (log2(M))
-    k = int(log10(m) / log10(2.0))
+from math import pi, log
+from cmath import exp
 
-    coeff = 1
-    const_map = []
-    bits = [0]*3
-    for i in range(m):
-        # get a vector of the k bits to use in this mapping
-        bits[3-k:3] = [((i&(0x01 << k-j-1)) >> k-j-1) for j in range(k)]
+import digital_swig
+import modulation_utils2
+from utils import mod_codes, gray_code
+from generic_mod_demod import generic_mod, generic_demod
 
-        theta = -(2*bits[0]-1)*(2*pi/m)*(bits[0]+abs(bits[1]-bits[2])+2*bits[1])
-        re = math.cos(theta)
-        im = math.sin(theta)
-        const_map.append(complex(re, im))   # plug it into the constellation
+# Default number of points in constellation.
+_def_constellation_points = 4
+# The default encoding (e.g. gray-code, set-partition)
+_def_mod_code = mod_codes.GRAY_CODE
+
+def create_encodings(mod_code, arity):
+    post_diff_code = None
+    if mod_code not in mod_codes.codes:
+        raise ValueError('That modulation code does not exist.')
+    if mod_code == mod_codes.GRAY_CODE:
+        pre_diff_code = gray_code.gray_code(arity)
+    elif mod_code == mod_codes.SET_PARTITION_CODE:
+        pre_diff_code = set_partition_code.set_partition_code(arity) 
+    elif mod_code == mod_codes.NO_CODE:
+        pre_diff_code = []
+    else:
+        raise ValueError('That modulation code is not implemented for this constellation.')
+    return (pre_diff_code, post_diff_code)
     
-    # return the constellation; by default, it is normalized
-    return const_map
+# /////////////////////////////////////////////////////////////////////////////
+#                           PSK constellation
+# /////////////////////////////////////////////////////////////////////////////
 
-# This makes a constellation that increments around the unit circle
-def make_constellation(m):
-    return [cmath.exp(i * 2 * pi / m * 1j) for i in range(m)]
+def psk_constellation(m=_def_constellation_points, mod_code=_def_mod_code):
+    """
+    Creates a PSK constellation object.
+    """
+    k = log(m) / log(2.0)
+    if (k != int(k)):
+        raise StandardError('Number of constellation points must be a power of two.')
+    points = [exp(2*pi*(0+1j)*i/m) for i in range(0,m)]
+    pre_diff_code, post_diff_code = create_encodings(mod_code, m)
+    if post_diff_code is not None:
+        inverse_post_diff_code = mod_codes.invert_code(post_diff_code)
+        points = [points[x] for x in inverse_post_diff_code]
+    constellation = digital_swig.constellation_psk(points, pre_diff_code, m)
+    return constellation
 
-# Common definition of constellations for Tx and Rx
-constellation = {
-    2 : make_constellation(2),           # BPSK
-    4 : make_constellation(4),           # QPSK
-    8 : make_constellation(8)            # 8PSK
-    }
+# /////////////////////////////////////////////////////////////////////////////
+#                           PSK modulator
+# /////////////////////////////////////////////////////////////////////////////
 
-gray_constellation = {
-    2 : make_gray_constellation(2),           # BPSK
-    4 : make_gray_constellation(4),           # QPSK
-    8 : make_gray_constellation(8)            # 8PSK
-    }
+class psk_mod(generic_mod):
 
-# -----------------------
-# Do Gray code
-# -----------------------
-# binary to gray coding -- constellation does Gray coding
-binary_to_gray = {
-    2 : range(2),
-    4 : [0,1,3,2],
-    8 : [0, 1, 3, 2, 7, 6, 4, 5]
-    }
+    def __init__(self, constellation_points=_def_constellation_points,
+                 mod_code=_def_mod_code,
+                 *args, **kwargs):
 
-# gray to binary
-gray_to_binary = {
-    2 : range(2),
-    4 : [0,1,3,2],
-    8 : [0, 1, 3, 2, 6, 7, 5, 4]
-    }
+        """
+	Hierarchical block for RRC-filtered PSK modulation.
 
-# -----------------------
-# Don't Gray code
-# -----------------------
-# identity mapping
-binary_to_ungray = {
-    2 : range(2),
-    4 : range(4),
-    8 : range(8)
-    }
+	The input is a byte stream (unsigned char) and the
+	output is the complex modulated signal at baseband.
 
-# identity mapping
-ungray_to_binary = {
-    2 : range(2),
-    4 : range(4),
-    8 : range(8)
-    }
+        See generic_mod block for list of parameters.
+	"""
+
+        constellation = psk_constellation(constellation_points, mod_code)
+        super(psk_mod, self).__init__(constellation, *args, **kwargs)
+
+# /////////////////////////////////////////////////////////////////////////////
+#                           PSK demodulator
+#
+# /////////////////////////////////////////////////////////////////////////////
+
+class psk_demod(generic_demod):
+
+    def __init__(self, constellation_points=_def_constellation_points,
+                 mod_code=_def_mod_code,
+                 *args, **kwargs):
+
+        """
+	Hierarchical block for RRC-filtered PSK modulation.
+
+	The input is a byte stream (unsigned char) and the
+	output is the complex modulated signal at baseband.
+
+        See generic_demod block for list of parameters.
+        """
+
+        constellation = psk_constellation(constellation_points, mod_code)
+        super(psk_demod, self).__init__(constellation, *args, **kwargs)
+
+#
+# Add these to the mod/demod registry
+#
+modulation_utils2.add_type_1_mod('psk', psk_mod)
+modulation_utils2.add_type_1_demod('psk', psk_demod)
+modulation_utils2.add_type_1_constellation('psk', psk_constellation)

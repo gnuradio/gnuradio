@@ -30,6 +30,7 @@ from generic_mod_demod import generic_mod, generic_demod
 from utils.gray_code import gray_code
 from utils import mod_codes
 import modulation_utils2
+import digital_swig
 
 # Default number of points in constellation.
 _def_constellation_points = 16
@@ -164,7 +165,8 @@ def qam_constellation(constellation_points=_def_constellation_points,
     # No pre-diff code
     # Should add one so that we can gray-code the quadrant bits too.
     pre_diff_code = []
-    constellation = gr.constellation_rect(points, pre_diff_code, 4, side, side, width, width)
+    constellation = digital_swig.constellation_rect(points, pre_diff_code, 4,
+                                                    side, side, width, width)
     return constellation
 
 # /////////////////////////////////////////////////////////////////////////////

@@ -89,10 +89,13 @@ class ofdm_mod(gr.hier_block2):
         if self._modulation == "qpsk":
             rot = (0.707+0.707j)
             
+        # FIXME: pass the constellation objects instead of just the points
         if(self._modulation.find("psk") >= 0):
-            rotated_const = map(lambda pt: pt * rot, psk.gray_constellation[arity])
+            constel = psk.psk_constellation(arity)
+            rotated_const = map(lambda pt: pt * rot, constel.points())
         elif(self._modulation.find("qam") >= 0):
-            rotated_const = map(lambda pt: pt * rot, qam.constellation[arity])
+            constel = qam.qam_constellation(arity)
+            rotated_const = map(lambda pt: pt * rot, constel.points())
         #print rotated_const
         self._pkt_input = digital_swig.ofdm_mapper_bcv(rotated_const,
                                                        msgq_limit,
@@ -226,10 +229,13 @@ class ofdm_demod(gr.hier_block2):
         if self._modulation == "qpsk":
             rot = (0.707+0.707j)
 
+        # FIXME: pass the constellation objects instead of just the points
         if(self._modulation.find("psk") >= 0):
-            rotated_const = map(lambda pt: pt * rot, psk.gray_constellation[arity])
+            constel = psk.psk_constellation(arity)
+            rotated_const = map(lambda pt: pt * rot, constel.points())
         elif(self._modulation.find("qam") >= 0):
-            rotated_const = map(lambda pt: pt * rot, qam.constellation[arity])
+            constel = qam.qam_constellation(arity)
+            rotated_const = map(lambda pt: pt * rot, constel.points())
         #print rotated_const
 
         phgain = 0.25

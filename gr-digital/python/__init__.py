@@ -26,10 +26,10 @@ utilities, and examples for doing digital modulation and demodulation.
 # The presence of this file turns this directory into a Python package
 
 from digital_swig import *
-from psk2 import *
+from psk import *
+from qam import *
 from bpsk import *
 from qpsk import *
-from qam import *
 from gmsk import *
 from cpm import *
 from pkt import *
