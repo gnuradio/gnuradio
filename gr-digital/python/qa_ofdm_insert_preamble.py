@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010 Free Software Foundation, Inc.
+# Copyright 2007,2010,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 from pprint import pprint
+import digital_swig
 
 class test_ofdm_insert_preamble (gr_unittest.TestCase):
 
@@ -40,7 +41,7 @@ class test_ofdm_insert_preamble (gr_unittest.TestCase):
 
         # print "len(v) = %d" % (len(v))
 
-        op = gr.ofdm_insert_preamble(fft_length, preamble)
+        op = digital_swig.ofdm_insert_preamble(fft_length, preamble)
 
         v2s = gr.vector_to_stream(gr.sizeof_gr_complex, fft_length)
         dst0 = gr.vector_sink_c()
