@@ -178,7 +178,7 @@ def get_options(demods):
 
     uhd_receiver.add_options(parser)
 
-    demods = digital.modulation_utils2.type_1_demods()
+    demods = digital.modulation_utils.type_1_demods()
     for mod in demods.values():
         mod.add_options(parser)
 		      
@@ -191,7 +191,7 @@ def get_options(demods):
 
 
 if __name__ == "__main__":
-    demods = digital.modulation_utils2.type_1_demods()
+    demods = digital.modulation_utils.type_1_demods()
 
     (options, args) = get_options(demods)
 

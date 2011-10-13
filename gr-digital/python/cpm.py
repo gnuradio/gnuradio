@@ -29,7 +29,7 @@ from math import pi
 import numpy
 
 import digital_swig
-import modulation_utils2
+import modulation_utils
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2
@@ -227,7 +227,7 @@ class cpm_mod(gr.hier_block2):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils2.extract_kwargs_from_options(cpm_mod.__init__,
+        return modulation_utils.extract_kwargs_from_options(cpm_mod.__init__,
                                                              ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
@@ -243,5 +243,5 @@ class cpm_mod(gr.hier_block2):
 #
 # Add these to the mod/demod registry
 #
-modulation_utils2.add_type_1_mod('cpm', cpm_mod)
-#modulation_utils2.add_type_1_demod('cpm', cpm_demod)
+modulation_utils.add_type_1_mod('cpm', cpm_mod)
+#modulation_utils.add_type_1_demod('cpm', cpm_demod)

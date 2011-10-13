@@ -53,7 +53,7 @@ digital_PYTHON = \
 	crc.py			\
 	generic_mod_demod.py	\
 	gmsk.py			\
-	modulation_utils2.py	\
+	modulation_utils.py	\
 	ofdm.py			\
 	ofdm_packet_utils.py	\
 	ofdm_receiver.py	\

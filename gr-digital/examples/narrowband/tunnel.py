@@ -189,8 +189,8 @@ class cs_mac(object):
 
 def main():
 
-    mods = digital.modulation_utils2.type_1_mods()
-    demods = digital.modulation_utils2.type_1_demods()
+    mods = digital.modulation_utils.type_1_mods()
+    demods = digital.modulation_utils.type_1_demods()
 
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")

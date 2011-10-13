@@ -34,7 +34,7 @@ from gmsk import *
 from cpm import *
 from pkt import *
 from crc import *
-from modulation_utils2 import *
+from modulation_utils import *
 from ofdm import *
 from ofdm_receiver import *
 from ofdm_sync_fixed import *

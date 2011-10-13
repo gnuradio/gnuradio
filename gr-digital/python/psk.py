@@ -27,7 +27,7 @@ from math import pi, log
 from cmath import exp
 
 import digital_swig
-import modulation_utils2
+import modulation_utils
 from utils import mod_codes, gray_code
 from generic_mod_demod import generic_mod, generic_demod
 
@@ -117,6 +117,6 @@ class psk_demod(generic_demod):
 #
 # Add these to the mod/demod registry
 #
-modulation_utils2.add_type_1_mod('psk', psk_mod)
-modulation_utils2.add_type_1_demod('psk', psk_demod)
-modulation_utils2.add_type_1_constellation('psk', psk_constellation)
+modulation_utils.add_type_1_mod('psk', psk_mod)
+modulation_utils.add_type_1_demod('psk', psk_demod)
+modulation_utils.add_type_1_constellation('psk', psk_constellation)

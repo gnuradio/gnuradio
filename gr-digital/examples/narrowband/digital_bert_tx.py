@@ -122,7 +122,7 @@ def get_options(mods):
     return (options, args)
 
 if __name__ == "__main__":
-    mods = digital.modulation_utils2.type_1_mods()
+    mods = digital.modulation_utils.type_1_mods()
 
     (options, args) = get_options(mods)
     

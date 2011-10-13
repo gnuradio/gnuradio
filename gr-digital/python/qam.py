@@ -29,7 +29,7 @@ from gnuradio import gr
 from generic_mod_demod import generic_mod, generic_demod
 from utils.gray_code import gray_code
 from utils import mod_codes
-import modulation_utils2
+import modulation_utils
 import digital_swig
 
 # Default number of points in constellation.
@@ -224,6 +224,6 @@ class qam_demod(generic_demod):
 #
 # Add these to the mod/demod registry
 #
-modulation_utils2.add_type_1_mod('qam', qam_mod)
-modulation_utils2.add_type_1_demod('qam', qam_demod)
-modulation_utils2.add_type_1_constellation('qam', qam_constellation)
+modulation_utils.add_type_1_mod('qam', qam_mod)
+modulation_utils.add_type_1_demod('qam', qam_demod)
+modulation_utils.add_type_1_constellation('qam', qam_constellation)

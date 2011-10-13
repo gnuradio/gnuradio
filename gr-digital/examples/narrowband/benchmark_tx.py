@@ -71,7 +71,7 @@ def main():
     def send_pkt(payload='', eof=False):
         return tb.txpath.send_pkt(payload, eof)
 
-    mods = digital.modulation_utils2.type_1_mods()
+    mods = digital.modulation_utils.type_1_mods()
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")

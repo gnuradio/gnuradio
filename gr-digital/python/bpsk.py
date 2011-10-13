@@ -29,7 +29,7 @@ from cmath import exp
 from gnuradio import gr
 from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
 import digital_swig
-import modulation_utils2
+import modulation_utils
 
 # Default number of points in constellation.
 _def_constellation_points = 2
@@ -163,9 +163,9 @@ class dbpsk_demod(generic_demod):
 #
 # Add these to the mod/demod registry
 #
-modulation_utils2.add_type_1_mod('bpsk', bpsk_mod)
-modulation_utils2.add_type_1_demod('bpsk', bpsk_demod)
-modulation_utils2.add_type_1_constellation('bpsk', bpsk_constellation)
-modulation_utils2.add_type_1_mod('dbpsk', dbpsk_mod)
-modulation_utils2.add_type_1_demod('dbpsk', dbpsk_demod)
-modulation_utils2.add_type_1_constellation('dbpsk', dbpsk_constellation)
+modulation_utils.add_type_1_mod('bpsk', bpsk_mod)
+modulation_utils.add_type_1_demod('bpsk', bpsk_demod)
+modulation_utils.add_type_1_constellation('bpsk', bpsk_constellation)
+modulation_utils.add_type_1_mod('dbpsk', dbpsk_mod)
+modulation_utils.add_type_1_demod('dbpsk', dbpsk_demod)
+modulation_utils.add_type_1_constellation('dbpsk', dbpsk_constellation)

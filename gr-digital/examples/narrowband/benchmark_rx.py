@@ -87,7 +87,7 @@ def main():
         print "ok = %5s  pktno = %4d  n_rcvd = %4d  n_right = %4d" % (
             ok, pktno, n_rcvd, n_right)
 
-    demods = digital.modulation_utils2.type_1_demods()
+    demods = digital.modulation_utils.type_1_demods()
 
     # Create Options Parser:
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")

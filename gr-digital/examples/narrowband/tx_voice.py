@@ -102,7 +102,7 @@ def main():
     def rx_callback(ok, payload):
         print "ok = %r, payload = '%s'" % (ok, payload)
 
-    mods = digital.modulation_utils2.type_1_mods()
+    mods = digital.modulation_utils.type_1_mods()
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
