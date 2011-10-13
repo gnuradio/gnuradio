@@ -42,6 +42,7 @@ grinclude_HEADERS = 				\
 	digital_ofdm_frame_acquisition.h	\
 	digital_ofdm_frame_sink.h		\
 	digital_ofdm_insert_preamble.h		\
+	digital_ofdm_mapper_bcv.h		\
 	digital_ofdm_sampler.h			\
 	digital_gmskmod_bc.h 			\
 	digital_cpmmod_bc.h

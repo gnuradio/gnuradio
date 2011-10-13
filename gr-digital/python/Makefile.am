@@ -44,7 +44,8 @@ noinst_PYTHON = \
 	qa_crc32.py			\
 	qa_fll_band_edge.py		\
 	qa_lms_equalizer.py		\
-	qa_mpsk_receiver.py
+	qa_mpsk_receiver.py		\
+	qa_ofdm_insert_preamble.py
 
 digital_PYTHON = \
 	__init__.py		\
