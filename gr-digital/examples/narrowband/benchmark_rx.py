@@ -51,8 +51,10 @@ class my_top_block(gr.top_block):
             options.samples_per_symbol = self.source._sps
 
         elif(options.from_file is not None):
+            sys.stderr.write(("Reading samples from '%s'.\n\n" % (options.from_file)))
             self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
         else:
+            sys.stderr.write("No source defined, pulling samples from null source.\n\n")
             self.source = gr.null_source(gr.sizeof_gr_complex)
 
         # Set up receive path

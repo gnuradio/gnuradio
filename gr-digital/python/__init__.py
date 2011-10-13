@@ -31,6 +31,7 @@ from bpsk import *
 from qpsk import *
 from qam import *
 from gmsk import *
+from cpm import *
 from pkt import *
 from crc import *
 from modulation_utils2 import *

@@ -50,8 +50,10 @@ class my_top_block(gr.top_block):
             options.samples_per_symbol = self.sink._sps
             
         elif(options.to_file is not None):
+            sys.stderr.write(("Saving samples to '%s'.\n\n" % (options.to_file)))
             self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
+            sys.stderr.write("No sink defined, dumping samples to null sink.\n\n")
             self.sink = gr.null_sink(gr.sizeof_gr_complex)
 
         # do this after for any adjustments to the options that may

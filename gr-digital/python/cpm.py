@@ -2,7 +2,7 @@
 # CPM modulation and demodulation.  
 #
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,12 +24,12 @@
 
 # See gnuradio-examples/python/digital for examples
 
-from gnuradio import gr
-from gnuradio import modulation_utils
+from gnuradio import gr, blks2
 from math import pi
 import numpy
-from pprint import pprint
-import inspect
+
+import digital_swig
+import modulation_utils2
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2
@@ -97,7 +97,7 @@ class cpm_mod(gr.hier_block2):
         @type debug: bool       
 	"""
 
-	gr.hier_block2.__init__("cpm_mod", 
+	gr.hier_block2.__init__(self, "cpm_mod", 
 				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) #  Output signature
 
@@ -116,14 +116,14 @@ class cpm_mod(gr.hier_block2):
 
         self._generic_taps=numpy.array(generic_taps)
 
-        if not isinstance(samples_per_symbol, int) or samples_per_symbol < 2:
-            raise TypeError, ("samples_per_symbol must be an integer >= 2, is %r" % (samples_per_symbol,))
+        if samples_per_symbol < 2:
+            raise TypeError, ("samples_per_symbol must be >= 2, is %r" % (samples_per_symbol,))
 
         self.nsymbols = 2**bits_per_symbol
-        self.sym_alphabet=numpy.arange(-(self.nsymbols-1),self.nsymbols,2)
+        self.sym_alphabet = numpy.arange(-(self.nsymbols-1),self.nsymbols,2).tolist()
 
 
-	self.ntaps = self._symbols_per_pulse * samples_per_symbol
+	self.ntaps = int(self._symbols_per_pulse * samples_per_symbol)
 	sensitivity = 2 * pi * h_numerator / h_denominator / samples_per_symbol
 
         # Unpack Bytes into bits_per_symbol groups
@@ -153,7 +153,7 @@ class cpm_mod(gr.hier_block2):
         else:
             raise TypeError, ("cpm_type must be an integer in {0,1,2,3}, is %r" % (cpm_type,))
 
-	self.filter = gr.interp_fir_filter_fff(samples_per_symbol, self.taps)
+        self.filter = blks2.pfb_arb_resampler_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
 	self.fmmod = gr.frequency_modulator_fc(sensitivity)
@@ -167,26 +167,26 @@ class cpm_mod(gr.hier_block2):
 	# Connect
 	self.connect(self, self.B2s, self.pam, self.filter, self.fmmod, self)
 
-    #def samples_per_symbol(self):
-        #return self._samples_per_symbol
+    def samples_per_symbol(self):
+        return self._samples_per_symbol
     
-    #def bits_per_symbol(self):  
-        #return self._bits_per_symbol
+    def bits_per_symbol(self):  
+        return self._bits_per_symbol
     
-    #def h_numerator(self):  
-        #return self._h_numerator
+    def h_numerator(self):  
+        return self._h_numerator
 
-    #def h_denominator(self):  
-        #return self._h_denominator
+    def h_denominator(self):  
+        return self._h_denominator
 
-    #def cpm_type(self):  
-        #return self._cpm_type
+    def cpm_type(self):  
+        return self._cpm_type
 
-    #def bt(self):  
-        #return self._bt
+    def bt(self):  
+        return self._bt
 
-    #def symbols_per_pulse(self):  
-        #return self._symbols_per_pulse
+    def symbols_per_pulse(self):  
+        return self._symbols_per_pulse
 
 
     def _print_verbage(self):
@@ -227,8 +227,8 @@ class cpm_mod(gr.hier_block2):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils.extract_kwargs_from_options(cpm_mod.__init__,
-                                                            ('self',), options)
+        return modulation_utils2.extract_kwargs_from_options(cpm_mod.__init__,
+                                                             ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
 
@@ -240,10 +240,8 @@ class cpm_mod(gr.hier_block2):
 # Not yet implemented
 #
 
-
-
 #
 # Add these to the mod/demod registry
 #
-modulation_utils.add_type_1_mod('cpm', cpm_mod)
-#modulation_utils.add_type_1_demod('cpm', cpm_demod)
+modulation_utils2.add_type_1_mod('cpm', cpm_mod)
+#modulation_utils2.add_type_1_demod('cpm', cpm_demod)
