@@ -26,6 +26,8 @@ DOXYGEN_NAME_XPATH = '/doxygen/compounddef/compoundname'
 DOXYGEN_BRIEFDESC_GR_XPATH = '/doxygen/compounddef/briefdescription'
 DOXYGEN_DETAILDESC_GR_XPATH = '/doxygen/compounddef/detaileddescription'
 
+GROUP_KEYS = "gr|usrp2|trellis|noaa|vocoder|digital"
+
 def extract_txt(xml):
 	"""
 	Recursivly pull the text out of an xml tree.
@@ -63,7 +65,8 @@ def _extract(key):
 			#extract descriptions
 			comp_name = extract_txt(xml.xpath(DOXYGEN_NAME_XPATH)[0]).strip()
 			comp_name = '   ---   ' + comp_name + '   ---   '
-			if re.match('(gr|usrp2|trellis|noaa)_.*', key):
+#			if re.match('(gr|usrp2|trellis|noaa)_.*', key):
+			if re.match(('(%s)_.*' % GROUP_KEYS), key):
 				brief_desc = extract_txt(xml.xpath(DOXYGEN_BRIEFDESC_GR_XPATH)[0]).strip()
 				detailed_desc = extract_txt(xml.xpath(DOXYGEN_DETAILDESC_GR_XPATH)[0]).strip()
 			else:

@@ -43,12 +43,15 @@ digital_make_clock_recovery_mm_cc (float omega, float gain_omega,
  * \ingroup sync_blk
  * \ingroup digital
  *
- * This implements the Mueller and Müller (M&M) discrete-time error-tracking synchronizer.
+ * This implements the Mueller and Müller (M&M) discrete-time
+ * error-tracking synchronizer.
+ *
  * The complex version here is based on:
  * Modified Mueller and Muller clock recovery circuit
  * Based:
- *    G. R. Danesfahani, T.G. Jeans, "Optimisation of modified Mueller and Muller 
- *    algorithm,"  Electronics Letters, Vol. 31, no. 13,  22 June 1995, pp. 1032 - 1033.
+ *    G. R. Danesfahani, T.G. Jeans, "Optimisation of modified Mueller
+ *    and Muller algorithm," Electronics Letters, Vol. 31, no. 13, 22
+ *    June 1995, pp. 1032 - 1033.
  */
 class digital_clock_recovery_mm_cc : public gr_block
 {

@@ -27,18 +27,34 @@
 #include <gr_sync_block.h>
 #include <deque>
 
+class moving_averager_f
+{
+public:
+  moving_averager_f(int D);
+  ~moving_averager_f();
+
+  float filter(float x);
+  float delayed_sig() { return d_out; }
+
+private:
+  int d_length;
+  float d_out, d_out_d1, d_out_d2;
+  std::deque<float> d_delay_line;
+};
+
+
 class gr_dc_blocker_ff;
 typedef boost::shared_ptr<gr_dc_blocker_ff> gr_dc_blocker_ff_sptr;
 gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D=32, bool long_form=true);
 
 /*!
  * \class gr_dc_blocker_ff
- * \brief a computationally efficient controllabel DC blocker
+ * \brief a computationally efficient controllable DC blocker
  *
  * \ingroup filter_blk
  * 
  * This block implements a computationally efficient DC blocker that produces
- * a tigher notch filter around DC for a smaller group delay than an
+ * a tighter notch filter around DC for a smaller group delay than an
  * equivalent FIR filter or using a single pole IIR filter (though the IIR
  * filter is computationally cheaper).
  *
@@ -57,21 +73,6 @@ gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D=32, bool long_form=true);
  *    <B><EM>R. Yates, "DC Blocker Algorithms," IEEE Signal Processing Magazine,
  *        Mar. 2008, pp 132-134.</EM></B>
  */
-class moving_averager_f
-{
-public:
-  moving_averager_f(int D);
-  ~moving_averager_f();
-
-  float filter(float x);
-  float delayed_sig() { return d_out; }
-
-private:
-  int d_length;
-  float d_out, d_out_d1, d_out_d2;
-  std::deque<float> d_delay_line;
-};
-
 class gr_dc_blocker_ff : public gr_sync_block
 {
  private:
