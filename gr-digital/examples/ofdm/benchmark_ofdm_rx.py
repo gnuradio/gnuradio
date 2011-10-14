@@ -38,12 +38,10 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
 
         if(options.rx_freq is not None):
-            self.source = uhd_receiver(options.address, options.bitrate,
-                                       options.samples_per_symbol,
+            self.source = uhd_receiver(options.address,
+                                       options.bandwidth,
                                        options.rx_freq, options.rx_gain,
                                        options.antenna, options.verbose)
-            options.samples_per_symbol = self.source._sps
-
         elif(options.from_file is not None):
             self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
         else:

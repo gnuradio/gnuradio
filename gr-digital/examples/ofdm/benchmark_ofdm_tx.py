@@ -37,12 +37,10 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
 
         if(options.tx_freq is not None):
-            self.sink = uhd_transmitter(options.address, options.bitrate,
-                                        options.samples_per_symbol,
+            self.sink = uhd_transmitter(options.address,
+                                        options.bandwidth,
                                         options.tx_freq, options.tx_gain,
                                         options.antenna, options.verbose)
-            options.samples_per_symbol = self.sink._sps
-            
         elif(options.to_file is not None):
             self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:

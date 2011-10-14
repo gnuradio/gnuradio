@@ -42,7 +42,7 @@ def add_freq_option(parser):
                           metavar="FREQ")
 
 class uhd_interface:
-    def __init__(self, istx, address, bitrate, sps, freq=None,
+    def __init__(self, istx, address, bandwidth, freq=None,
                  gain=None, antenna=None):
         
         if(istx):
@@ -59,36 +59,16 @@ class uhd_interface:
         self._gain = self.set_gain(gain)
         self._freq = self.set_freq(freq)
 
-        self._rate, self._sps = self.set_sample_rate(bitrate, sps)
+        self._rate = self.set_sample_rate(bandwidth)
 
         if(antenna):
             self.u.set_antenna(antenna, 0)
         
-    def set_sample_rate(self, bitrate, req_sps):
-        start_sps = req_sps
-        while(True):
-            asked_samp_rate = bitrate * req_sps
-            self.u.set_samp_rate(asked_samp_rate)
-            actual_samp_rate = self.u.get_samp_rate()
-
-            sps = actual_samp_rate/bitrate
-            if(sps < 2):
-                req_sps +=1
-            else:
-                actual_sps = sps
-                break
+    def set_sample_rate(self, bandwidth):
+        self.u.set_samp_rate(bandwidth)
+        actual_bw = self.u.get_samp_rate()
         
-        if(sps != req_sps):
-            print "\nBit Rate:            %f" % (bitrate)
-            print "Requested sps:       %f" % (start_sps)
-            print "Given sample rate:   %f" % (actual_samp_rate)
-            print "Actual sps for rate: %f" % (actual_sps)
-
-        if(actual_samp_rate != asked_samp_rate):
-            print "\nRequested sample rate: %f" % (asked_samp_rate)
-            print "Actual sample rate: %f" % (actual_samp_rate)
-
-        return (actual_samp_rate, actual_sps)
+        return actual_bw
 
     def get_sample_rate(self):
         return self.u.get_samp_rate()
@@ -124,14 +104,14 @@ class uhd_interface:
 #-------------------------------------------------------------------#
 
 class uhd_transmitter(uhd_interface, gr.hier_block2):
-    def __init__(self, address, bitrate, sps, freq=None, gain=None,
+    def __init__(self, address, bandwidth, freq=None, gain=None,
                  antenna=None, verbose=False):
         gr.hier_block2.__init__(self, "uhd_transmitter",
                                 gr.io_signature(1,1,gr.sizeof_gr_complex),
                                 gr.io_signature(0,0,0))
 
         # Set up the UHD interface as a transmitter
-        uhd_interface.__init__(self, True, address, bitrate, sps,
+        uhd_interface.__init__(self, True, address, bandwidth,
                                freq, gain, antenna)
 
         self.connect(self, self.u)
@@ -174,14 +154,14 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
 
 
 class uhd_receiver(uhd_interface, gr.hier_block2):
-    def __init__(self, address, bitrate, sps, freq=None, gain=None,
+    def __init__(self, address, bandwidth, freq=None, gain=None,
                  antenna=None, verbose=False):
         gr.hier_block2.__init__(self, "uhd_receiver",
                                 gr.io_signature(0,0,0),
                                 gr.io_signature(1,1,gr.sizeof_gr_complex))
       
         # Set up the UHD interface as a receiver
-        uhd_interface.__init__(self, False, address, bitrate, sps,
+        uhd_interface.__init__(self, False, address, bandwidth,
                                freq, gain, antenna)
 
         self.connect(self.u, self)
