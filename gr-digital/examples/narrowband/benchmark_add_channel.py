@@ -37,11 +37,9 @@ class my_top_block(gr.top_block):
         phase_offset = options.phase_offset*(math.pi/180.0)
 
         # calculate noise voltage from SNR
-        # FIXME: normalize to signal amplitude
-        power_in_signal = abs(1.0)**2
+        power_in_signal = abs(options.tx_amplitude)**2
         noise_power = power_in_signal/SNR
         noise_voltage = math.sqrt(noise_power)
-        print noise_voltage
 
         self.src = gr.file_source(gr.sizeof_gr_complex, ifile)
         #self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
@@ -74,6 +72,9 @@ def main():
                       help="set phase offset (in degrees) between Tx and Rx [default=%default]")
     parser.add_option("-m", "--use-multipath", action="store_true", default=False,
                       help="Use a multipath channel [default=%default]")
+    parser.add_option("", "--tx-amplitude", type="eng_float",
+                      default=1.0,
+                      help="tell the simulator the signal amplitude [default=%default]")
 
     (options, args) = parser.parse_args ()
 
