@@ -18,12 +18,12 @@
 	</param>
 	<check>$vlen &gt; 0</check>
 	<sink>
-		<name>in</name>
+		<name>re</name>
 		<type>float</type>
 		<vlen>$vlen</vlen>
 	</sink>
 	<sink>
-		<name>in</name>
+		<name>im</name>
 		<type>float</type>
 		<vlen>$vlen</vlen>
 		<optional>1</optional>

@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import Constants
+from .. base.Element import Element
 from .. base.Connection import Connection as _Connection
 from .. gui.Connection import Connection as _GUIConnection
 
@@ -32,11 +34,10 @@ class Connection(_Connection, _GUIConnection):
 	def validate(self):
 		"""
 		Validate the connections.
-		The ports must match in type and vector length.
+		The ports must match in io size.
 		"""
-		_Connection.validate(self) #checks type
-		#check vector length
-		source_vlen = self.get_source().get_vlen()
-		sink_vlen = self.get_sink().get_vlen()
-		if source_vlen != sink_vlen:
-			self.add_error_message('Source vector length "%s" does not match sink vector length "%s".'%(source_vlen, sink_vlen))
+		Element.validate(self)
+		source_size = Constants.TYPE_TO_SIZEOF[self.get_source().get_type()] * self.get_source().get_vlen()
+		sink_size = Constants.TYPE_TO_SIZEOF[self.get_sink().get_type()] * self.get_sink().get_vlen()
+		if source_size != sink_size:
+			self.add_error_message('Source IO size "%s" does not match sink IO size "%s".'%(source_size, sink_size))

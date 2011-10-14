@@ -23,12 +23,12 @@
 		<vlen>$vlen</vlen>
 	</sink>
 	<source>
-		<name>out</name>
+		<name>re</name>
 		<type>float</type>
 		<vlen>$vlen</vlen>
 	</source>
 	<source>
-		<name>out</name>
+		<name>im</name>
 		<type>float</type>
 		<vlen>$vlen</vlen>
 		<optional>1</optional>
