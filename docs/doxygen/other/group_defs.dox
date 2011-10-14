@@ -31,6 +31,7 @@
 /*! \defgroup qtgui_blk QT Graphical Interfaces		*/
 /*! \defgroup uhd_blk UHD Interface  			*/
 /*! \defgroup audio_blk Audio Interface  		*/
+/*! \defgroup pfb_blk Polyphase Filterbank  		*/
 
 /*! 
  * \defgroup base_blk Base classes for GR Blocks

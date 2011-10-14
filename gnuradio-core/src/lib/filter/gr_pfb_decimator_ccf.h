@@ -41,6 +41,7 @@ class gri_fft_complex;
  *        input, gr_complex output and float taps
  *
  * \ingroup filter_blk
+ * \ingroup pfb_blk
  * 
  * This block takes in a signal stream and performs interger down-
  * sampling (decimation) with a polyphase filterbank. The first input

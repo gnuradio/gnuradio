@@ -1,0 +1,82 @@
+/*! \page page_pfb Polyphase Filterbanks
+
+\section Introduction
+
+Polyphase filterbanks (PFB) are a very powerful set of filtering tools
+that can efficiently perform many multi-rate signal processing
+tasks. GNU Radio has a set of polyphase filterbank blocks to be used
+in all sorts of applications. These blocks and their documentation can
+be found in \ref pfb_blk.
+
+\section Usage
+
+See the documentation for the individual blocks for details about what
+they can do and how they should be used. Furthermore, there are
+examples for these blocks in <b>gnuradio-examples/python/pfb</b>.
+
+The main issue when using the PFB blocks is defining the prototype
+filter, which is passed to all of the blocks as a vector of \p
+taps. The taps from the prototype filter which get partitioned among
+the \p N channels of the channelizer.
+
+An example of creating a set of filter taps for a PFB channelizer is
+found on line 49 of <b>gnuradio-examples/python/pfb/channelizer.py</b>
+and reproduced below. Notice that the sample rate is the sample rate
+at the input to the channelizer while the bandwidth and transition
+width are defined for the channel bandwidths. This makes a fairly long
+filter that is then split up between the \p N channels of the PFB.
+
+\code
+    self._fs = 9000          # input sample rate
+    self._M = 9              # Number of channels to channelize
+
+    self._taps = gr.firdes.low_pass_2(1, self._fs, 475.50, 50,
+                                      attenuation_dB=100,
+				      window=gr.firdes.WIN_BLACKMAN_hARRIS)
+\endcode
+
+In this example, the signal into the channelizer is sampled at 9 ksps
+(complex, so 9 kHz of bandwidth). The filter uses 9 channels, so each
+output channel will have a bandwidth and sample rate of 1 kHz. We want
+to pass most of the channel, so we define the channel bandwidth to be
+a low pass filter with a bandwidth of 475.5 Hz and a transition
+bandwidth of 50 Hz, but we have defined this using a sample rate of
+the original 9 kHz. The prototype filter has 819 taps to be divided up
+between the 9 channels, so each channel uses 91 taps. This is probably
+over-kill for a channelizer, and we could reduce the amount of taps
+per channel to a couple of dozen with no ill effects.
+
+The basic rule when defining a set of taps for a PFB block is to think
+about the filter running at the highest rate it will see while the
+bandwidth is defined for the size of the channels. In the channelizer
+case, the highest rate is defined as the rate of the incoming signal,
+but in other PFB blocks, this is not so obvious.
+
+Two very useful blocks to use are the arbitrary resampler and the
+clock synchronizer (for PAM signals). These PFBs are defined with a
+set number of filters based on the fidelity required from them, not
+the rate changes. By default, the \p filter_size is set to 32 for
+these blocks, which is a reasonable default for most tasks. Because
+the PFB uses this number of filters in the filterbank, the maximum
+rate of the bank is defined from this (see the theory of a polyphase
+interpolator for a justification of this). So the prototype filter is
+defined to use a sample rate of \p filter_size times the signal's
+sampling rate.
+
+A helpful wrapper for the arbitrary resampler is found in
+<b>gnuradio-core/src/python/gnuradio/blks2impl/pfb_arb_resampler.py</b>,
+which is exposed in Python as <b>blks2.pfb_arb_resampler_ccf</b> and
+<b>blks2.pfb_arb_resampler_fff</b>. This block is set up so that the
+user only needs to pass it the real number \p rate as the resampling
+rate. With just this information, this hierarchical block
+automatically creates a filter that fully passes the signal bandwidth
+being resampled but does not pass any out-of-band noise. See the code
+for this block for details of how the filter is constructed.
+
+Of course, a user can create his or her own taps and use them in the
+arbitrary resampler for more specific requirements. Some of the UHD
+examples (<b>gr-uhd/examples</b>) use this ability to create a
+received matched filter or channel filter that also resamples the
+signal.
+
+*/
