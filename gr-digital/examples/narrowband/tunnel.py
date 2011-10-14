@@ -35,7 +35,7 @@
 # ////////////////////////////////////////////////////////////////////
 
 
-from gnuradio import gr, digital, uhd
+from gnuradio import gr, digital
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -118,6 +118,14 @@ class my_top_block(gr.top_block):
         """
         return self.rxpath.carrier_sensed()
 
+    def set_freq(self, target_freq):
+        """
+        Set the center frequency we're interested in.
+        """
+
+        self.sink.set_freq(target_freq)
+        self.source.set_freq(target_freq)
+        
 
 # ////////////////////////////////////////////////////////////////////
 #                           Carrier Sense MAC
