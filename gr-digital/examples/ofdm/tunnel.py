@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,22 +33,19 @@
 # /////////////////////////////////////////////////////////////////////////////
 
 
-from gnuradio import gr, gru, blks2
-from gnuradio import usrp
+from gnuradio import gr, digital
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-import random
-import time
-import struct
-import sys
-import os
-
 # from current dir
-from transmit_path import transmit_path
 from receive_path import receive_path
-import fusb_options
+from transmit_path import transmit_path
+from uhd_interface import uhd_transmitter
+from uhd_interface import uhd_receiver
+
+import os, sys
+import random, time, struct
 
 #print os.getpid()
 #raw_input('Attach and press enter')
@@ -86,46 +83,25 @@ def open_tun_interface(tun_device_filename):
 #                             the flow graph
 # /////////////////////////////////////////////////////////////////////////////
 
-class usrp_graph(gr.top_block):
+class my_top_block(gr.top_block):
     def __init__(self, callback, options):
         gr.top_block.__init__(self)
 
-        self._tx_freq            = options.tx_freq         # tranmitter's center frequency
-        self._tx_subdev_spec     = options.tx_subdev_spec  # daughterboard to use
-        self._interp             = options.interp          # interpolating rate for the USRP (prelim)
-        self._rx_freq            = options.rx_freq         # receiver's center frequency
-        self._rx_gain            = options.rx_gain         # receiver's gain
-        self._rx_subdev_spec     = options.rx_subdev_spec  # daughterboard to use
-        self._decim              = options.decim           # Decimating rate for the USRP (prelim)
-        self._fusb_block_size    = options.fusb_block_size # usb info for USRP
-        self._fusb_nblocks       = options.fusb_nblocks    # usb info for USRP
+        self.source = uhd_receiver(options.address,
+                                   options.bandwidth,
+                                   options.rx_freq, options.rx_gain,
+                                   options.antenna, options.verbose)
 
-        if self._tx_freq is None:
-            sys.stderr.write("-f FREQ or --freq FREQ or --tx-freq FREQ must be specified\n")
-            raise SystemExit
-
-        if self._rx_freq is None:
-            sys.stderr.write("-f FREQ or --freq FREQ or --rx-freq FREQ must be specified\n")
-            raise SystemExit
-
-        # Set up USRP sink and source
-        self._setup_usrp_sink()
-        self._setup_usrp_source()
-
-        # Set center frequency of USRP
-        ok = self.set_freq(self._tx_freq)
-        if not ok:
-            print "Failed to set Tx frequency to %s" % (eng_notation.num_to_str(self._tx_freq),)
-            raise ValueError
-
-        # copy the final answers back into options for use by modulator
-        #options.bitrate = self._bitrate
+        self.sink = uhd_transmitter(options.address,
+                                    options.bandwidth,
+                                    options.tx_freq, options.tx_gain,
+                                    options.antenna, options.verbose)
 
         self.txpath = transmit_path(options)
         self.rxpath = receive_path(callback, options)
 
-        self.connect(self.txpath, self.u_snk)
-        self.connect(self.u_src, self.rxpath)
+        self.connect(self.txpath, self.sink)
+        self.connect(self.source, self.rxpath)
 
     def carrier_sensed(self):
         """
@@ -133,132 +109,13 @@ class usrp_graph(gr.top_block):
         """
         return self.rxpath.carrier_sensed()
 
-    def _setup_usrp_sink(self):
-        """
-        Creates a USRP sink, determines the settings for best bitrate,
-        and attaches to the transmitter's subdevice.
-        """
-        self.u_snk = usrp.sink_c(fusb_block_size=self._fusb_block_size,
-                                 fusb_nblocks=self._fusb_nblocks)
-
-        self.u_snk.set_interp_rate(self._interp)
-
-        # determine the daughterboard subdevice we're using
-        if self._tx_subdev_spec is None:
-            self._tx_subdev_spec = usrp.pick_tx_subdevice(self.u_snk)
-        self.u_snk.set_mux(usrp.determine_tx_mux_value(self.u_snk, self._tx_subdev_spec))
-        self.subdev = usrp.selected_subdev(self.u_snk, self._tx_subdev_spec)
-
-        # Set the USRP for maximum transmit gain
-        # (Note that on the RFX cards this is a nop.)
-        self.set_gain(self.subdev.gain_range()[1])
-
-        # enable Auto Transmit/Receive switching
-        self.set_auto_tr(True)
-
-    def _setup_usrp_source(self):
-        self.u_src = usrp.source_c (fusb_block_size=self._fusb_block_size,
-                                fusb_nblocks=self._fusb_nblocks)
-        adc_rate = self.u_src.adc_rate()
-
-        self.u_src.set_decim_rate(self._decim)
-
-        # determine the daughterboard subdevice we're using
-        if self._rx_subdev_spec is None:
-            self._rx_subdev_spec = usrp.pick_rx_subdevice(self.u_src)
-        self.subdev = usrp.selected_subdev(self.u_src, self._rx_subdev_spec)
-
-        self.u_src.set_mux(usrp.determine_rx_mux_value(self.u_src, self._rx_subdev_spec))
-
     def set_freq(self, target_freq):
         """
         Set the center frequency we're interested in.
-
-        @param target_freq: frequency in Hz
-        @rypte: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital up converter.
         """
-        r_snk = self.u_snk.tune(self.subdev.which(), self.subdev, target_freq)
-        r_src = self.u_src.tune(self.subdev.which(), self.subdev, target_freq)
-        if r_snk and r_src:
-            return True
-
-        return False
+        self.u_snk.set_freq(target_freq)
+        self.u_src.set_freq(target_freq)
         
-    def set_gain(self, gain):
-        """
-        Sets the analog gain in the USRP
-        """
-        self.gain = gain
-        self.subdev.set_gain(gain)
-
-    def set_auto_tr(self, enable):
-        """
-        Turns on auto transmit/receive of USRP daughterboard (if exits; else ignored)
-        """
-        return self.subdev.set_auto_tr(enable)
-        
-    def interp(self):
-        return self._interp
-
-    def add_options(normal, expert):
-        """
-        Adds usrp-specific options to the Options Parser
-        """
-        add_freq_option(normal)
-        normal.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Tx side A or B")
-        normal.add_option("-v", "--verbose", action="store_true", default=False)
-
-        expert.add_option("", "--tx-freq", type="eng_float", default=None,
-                          help="set transmit frequency to FREQ [default=%default]", metavar="FREQ")
-        expert.add_option("-i", "--interp", type="intx", default=256,
-                          help="set fpga interpolation rate to INTERP [default=%default]")
-        normal.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Rx side A or B")
-        normal.add_option("", "--rx-gain", type="eng_float", default=None, metavar="GAIN",
-                          help="set receiver gain in dB [default=midpoint].  See also --show-rx-gain-range")
-        normal.add_option("", "--show-rx-gain-range", action="store_true", default=False, 
-                          help="print min and max Rx gain available on selected daughterboard")
-        normal.add_option("-v", "--verbose", action="store_true", default=False)
-
-        expert.add_option("", "--rx-freq", type="eng_float", default=None,
-                          help="set Rx frequency to FREQ [default=%default]", metavar="FREQ")
-        expert.add_option("-d", "--decim", type="intx", default=128,
-                          help="set fpga decimation rate to DECIM [default=%default]")
-        expert.add_option("", "--snr", type="eng_float", default=30,
-                          help="set the SNR of the channel in dB [default=%default]")
-   
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
-
-    def _print_verbage(self):
-        """
-        Prints information about the transmit path
-        """
-        print "Using TX d'board %s"    % (self.subdev.side_and_name(),)
-        print "modulation:      %s"    % (self._modulator_class.__name__)
-        print "interp:          %3d"   % (self._interp)
-        print "Tx Frequency:    %s"    % (eng_notation.num_to_str(self._tx_freq))
-        
-def add_freq_option(parser):
-    """
-    Hackery that has the -f / --freq option set both tx_freq and rx_freq
-    """
-    def freq_callback(option, opt_str, value, parser):
-        parser.values.rx_freq = value
-        parser.values.tx_freq = value
-
-    if not parser.has_option('--freq'):
-        parser.add_option('-f', '--freq', type="eng_float",
-                          action="callback", callback=freq_callback,
-                          help="set Tx and/or Rx frequency to FREQ [default=%default]",
-                          metavar="FREQ")
-
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           Carrier Sense MAC
@@ -342,13 +199,12 @@ def main():
     expert_grp.add_option("","--tun-device-filename", default="/dev/net/tun",
                           help="path to tun device file [default=%default]")
 
-    usrp_graph.add_options(parser, expert_grp)
+    digital.ofdm_mod.add_options(parser, expert_grp)
+    digital.ofdm_demod.add_options(parser, expert_grp)
     transmit_path.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    blks2.ofdm_mod.add_options(parser, expert_grp)
-    blks2.ofdm_demod.add_options(parser, expert_grp)
-
-    fusb_options.add_options(expert_grp)
+    uhd_receiver.add_options(parser)
+    uhd_transmitter.add_options(parser)
 
     (options, args) = parser.parse_args ()
     if len(args) != 0:
@@ -371,41 +227,17 @@ def main():
         realtime = False
         print "Note: failed to enable realtime scheduling"
 
-
-    # If the user hasn't set the fusb_* parameters on the command line,
-    # pick some values that will reduce latency.
-
-    if options.fusb_block_size == 0 and options.fusb_nblocks == 0:
-        if realtime:                        # be more aggressive
-            options.fusb_block_size = gr.prefs().get_long('fusb', 'rt_block_size', 1024)
-            options.fusb_nblocks    = gr.prefs().get_long('fusb', 'rt_nblocks', 16)
-        else:
-            options.fusb_block_size = gr.prefs().get_long('fusb', 'block_size', 4096)
-            options.fusb_nblocks    = gr.prefs().get_long('fusb', 'nblocks', 16)
-    
-    #print "fusb_block_size =", options.fusb_block_size
-    #print "fusb_nblocks    =", options.fusb_nblocks
-
     # instantiate the MAC
     mac = cs_mac(tun_fd, verbose=True)
 
 
     # build the graph (PHY)
-    tb = usrp_graph(mac.phy_rx_callback, options)
+    tb = my_top_block(mac.phy_rx_callback, options)
 
     mac.set_flow_graph(tb)    # give the MAC a handle for the PHY
 
-    #if fg.txpath.bitrate() != fg.rxpath.bitrate():
-    #    print "WARNING: Transmit bitrate = %sb/sec, Receive bitrate = %sb/sec" % (
-    #        eng_notation.num_to_str(fg.txpath.bitrate()),
-    #        eng_notation.num_to_str(fg.rxpath.bitrate()))
-             
     print "modulation:     %s"   % (options.modulation,)
     print "freq:           %s"      % (eng_notation.num_to_str(options.tx_freq))
-    #print "bitrate:        %sb/sec" % (eng_notation.num_to_str(fg.txpath.bitrate()),)
-    #print "samples/symbol: %3d" % (fg.txpath.samples_per_symbol(),)
-    #print "interp:         %3d" % (fg.txpath.interp(),)
-    #print "decim:          %3d" % (fg.rxpath.decim(),)
 
     tb.rxpath.set_carrier_threshold(options.carrier_threshold)
     print "Carrier sense threshold:", options.carrier_threshold, "dB"
