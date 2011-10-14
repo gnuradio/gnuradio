@@ -32,7 +32,7 @@ gr_int_to_float_sptr
 gr_make_int_to_float ();
 
 /*!
- * \brief Convert stream of short to a stream of float
+ * \brief Convert stream of int to a stream of float
  * \ingroup converter_blk
  */
 

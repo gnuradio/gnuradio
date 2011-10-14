@@ -9,7 +9,7 @@
 	<key>gr_dc_blocker</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.dc_blocker_$(type)($length, $long_form)</make>
-	<!-- <callback>set_length($lenght)</callback> -->
+	<!-- <callback>set_length($length)</callback> -->
 	<param>
 		<name>Type</name>
 		<key>type</key>
