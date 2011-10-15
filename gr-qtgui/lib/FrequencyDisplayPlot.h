@@ -39,6 +39,10 @@
 #include <qwt_symbol.h>
 #include <qtgui_util.h>
 
+#if QWT_VERSION >= 0x060000
+#include <qwt_compat.h>
+#endif
+
 class FrequencyDisplayPlot:public QwtPlot{
   Q_OBJECT
 
@@ -75,8 +79,7 @@ public slots:
   void resizeSlot( QSize *e );
   void SetLowerIntensityLevel(const double);
   void SetUpperIntensityLevel(const double);
-
-  void OnPickerPointSelected(const QwtDoublePoint & p);
+  void OnPickerPointSelected(const QPointF & p);
 
 signals:
   void plotPointSelected(const QPointF p);
@@ -107,6 +110,7 @@ private:
   QwtPlotMarker *_markerCF;
 
   QwtDblClickPlotPicker *_picker;
+  
   QwtPlotMagnifier *_magnifier;
   
   double* _dataPoints;

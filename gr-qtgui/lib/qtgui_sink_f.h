@@ -29,7 +29,6 @@
 #include <gr_firdes.h>
 #include <gri_fft.h>
 #include <qapplication.h>
-//#include <qtgui.h>
 #include "SpectrumGUIClass.h"
 
 class qtgui_sink_f;

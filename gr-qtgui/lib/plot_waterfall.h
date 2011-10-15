@@ -3,9 +3,12 @@
 
 #include <qglobal.h>
 #include <waterfallGlobalData.h>
+#include <qwt_plot_rasteritem.h>
 
-#include "qwt_valuelist.h" 
-#include "qwt_plot_rasteritem.h" 
+#if QWT_VERSION >= 0x060000
+#include <qwt_point_3d.h>  // doesn't seem necessary, but is...
+#include <qwt_compat.h>
+#endif
 
 class QwtColorMap;
 
@@ -22,7 +25,8 @@ class QwtColorMap;
 class PlotWaterfall: public QwtPlotRasterItem
 {
 public:
-    explicit PlotWaterfall(WaterfallData* data, const QString &title = QString::null);
+    explicit PlotWaterfall(WaterfallData* data,
+			   const QString &title = QString::null);
     virtual ~PlotWaterfall();
 
     const WaterfallData* data()const;
@@ -30,19 +34,23 @@ public:
     void setColorMap(const QwtColorMap &);
     const QwtColorMap &colorMap() const;
 
+#if QWT_VERSION < 0x060000
     virtual QwtDoubleRect boundingRect() const;
-    virtual QSize rasterHint(const QwtDoubleRect &) const;
+#endif
+    //virtual QSize rasterHint(const QwtDoubleRect &) const;
 
     virtual int rtti() const;
 
     virtual void draw(QPainter *p,
-        const QwtScaleMap &xMap, const QwtScaleMap &yMap,
-        const QRect &rect) const;
+		      const QwtScaleMap &xMap,
+		      const QwtScaleMap &yMap,
+		      const QRectF &rect) const;
 
 protected:
-    virtual QImage renderImage(
-        const QwtScaleMap &xMap, const QwtScaleMap &yMap, 
-        const QwtDoubleRect &rect) const;
+    QImage renderImage(const QwtScaleMap &xMap,
+		       const QwtScaleMap &yMap, 
+		       const QRectF &rect,
+		       const QSize &size=QSize(0,0)) const;
 
 private:
     class PrivateData;

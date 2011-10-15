@@ -39,6 +39,10 @@
 #include <qwt_symbol.h>
 #include <qtgui_util.h>
 
+#if QWT_VERSION >= 0x060000
+#include <qwt_compat.h>
+#endif
+
 class TimeDomainDisplayPlot:public QwtPlot{
   Q_OBJECT
 
@@ -61,7 +65,7 @@ public slots:
   void SetSampleRate(double sr, double units, 
 		     const std::string &strunits);
 
-  void OnPickerPointSelected(const QwtDoublePoint & p);
+  void OnPickerPointSelected(const QPointF & p);
 
 signals:
   void plotPointSelected(const QPointF p);

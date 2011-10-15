@@ -38,6 +38,11 @@
 #include <qwt_symbol.h>
 #include <qtgui_util.h>
 
+#if QWT_VERSION >= 0x060000
+#include <qwt_point_3d.h>  // doesn't seem necessary, but is...
+#include <qwt_compat.h>
+#endif
+
 class ConstellationDisplayPlot : public QwtPlot
 {
   Q_OBJECT
@@ -61,8 +66,7 @@ public:
 
 public slots:
   void resizeSlot( QSize *s );
-
-  void OnPickerPointSelected(const QwtDoublePoint & p);
+  void OnPickerPointSelected(const QPointF & p);
 
 signals:
   void plotPointSelected(const QPointF p);

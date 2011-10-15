@@ -2,68 +2,35 @@
 #include <qpen.h>
 #include <qpainter.h>
 #include "qwt_painter.h"
-#include "qwt_double_interval.h"
 #include "qwt_scale_map.h"
 #include "qwt_color_map.h"
 #include "plot_waterfall.h"
 
-#if QT_VERSION < 0x040000
-typedef Q3ValueVector<QRgb> QwtColorTable;
-#else
-typedef QVector<QRgb> QwtColorTable;
+#if QWT_VERSION < 0x060000
+#include "qwt_double_interval.h"
 #endif
 
+typedef QVector<QRgb> QwtColorTable;
 
 class PlotWaterfallImage: public QImage
 {
     // This class hides some Qt3/Qt4 API differences
 public:
     PlotWaterfallImage(const QSize &size, QwtColorMap::Format format):
-#if QT_VERSION < 0x040000
-        QImage(size, format == QwtColorMap::RGB ? 32 : 8)
-#else
-        QImage(size, format == QwtColorMap::RGB
-	       ? QImage::Format_ARGB32 : QImage::Format_Indexed8 )
-#endif
-	{
-	}
-
-    PlotWaterfallImage(const QImage &other):
-        QImage(other)
-	{
-	}
-
-    void initColorTable(const QImage& other)
-	{
-#if QT_VERSION < 0x040000
-	    const unsigned int numColors = other.numColors();
-
-	    setNumColors(numColors);
-	    for ( unsigned int i = 0; i < numColors; i++ )
-		setColor(i, other.color(i));
-#else
-	    setColorTable(other.colorTable());
-#endif
-	}
-
-#if QT_VERSION < 0x040000
-
-    void setColorTable(const QwtColorTable &colorTable)
-	{
-	    setNumColors(colorTable.size());
-	    for ( unsigned int i = 0; i < colorTable.size(); i++ )
-		setColor(i, colorTable[i]);
-	}
-
-    QwtColorTable colorTable() const
-	{
-	    QwtColorTable table(numColors());
-	    for ( int i = 0; i < numColors(); i++ )
-		table[i] = color(i);
-
-	    return table;
-	}
-#endif
+      QImage(size, format == QwtColorMap::RGB
+	     ? QImage::Format_ARGB32 : QImage::Format_Indexed8 )
+  {
+  }
+  
+  PlotWaterfallImage(const QImage &other):
+    QImage(other)
+  {
+  }
+  
+  void initColorTable(const QImage& other)
+  {
+    setColorTable(other.colorTable());
+  }
 };
 
 class PlotWaterfall::PrivateData
@@ -138,7 +105,11 @@ int PlotWaterfall::rtti() const
 void PlotWaterfall::setColorMap(const QwtColorMap &colorMap)
 {
     delete d_data->colorMap;
+#if QWT_VERSION < 0x060000
     d_data->colorMap = colorMap.copy();
+#else
+    memcpy(&d_data->colorMap, &colorMap, sizeof(colorMap));
+#endif
 
     invalidateCache();
     itemChanged();
@@ -156,10 +127,12 @@ const QwtColorMap &PlotWaterfall::colorMap() const
   \return Bounding rect of the data
   \sa QwtRasterData::boundingRect
 */
+#if QWT_VERSION < 0x060000
 QwtDoubleRect PlotWaterfall::boundingRect() const
 {
-    return d_data->data->boundingRect();
+  return d_data->data->boundingRect();
 }
+#endif  
 
 /*!
   \brief Returns the recommended raster for a given rect.
@@ -170,10 +143,12 @@ QwtDoubleRect PlotWaterfall::boundingRect() const
   \param rect Rect for the raster hint
   \return data().rasterHint(rect)
 */
+#if 0
 QSize PlotWaterfall::rasterHint(const QwtDoubleRect &rect) const
 {
-    return d_data->data->rasterHint(rect);
+  return d_data->data->rasterHint(rect);
 }
+#endif
 
 /*!
   \brief Render an image from the data and color map.
@@ -192,19 +167,21 @@ QSize PlotWaterfall::rasterHint(const QwtDoubleRect &rect) const
   \sa QwtRasterData::intensity(), QwtColorMap::rgb(),
   QwtColorMap::colorIndex()
 */
-QImage PlotWaterfall::renderImage(
-    const QwtScaleMap &xMap, const QwtScaleMap &yMap, 
-    const QwtDoubleRect &area) const
+QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
+				  const QwtScaleMap &yMap, 
+				  const QRectF &area,
+				  const QSize &size) const
 {
     if ( area.isEmpty() )
         return QImage();
 
-    QRect rect = transform(xMap, yMap, area);
+    //QRect rect = transform(xMap, yMap, area);
+    QRect rect = QRect(0,0,0,0);
 
     QwtScaleMap xxMap = xMap;
     QwtScaleMap yyMap = yMap;
 
-    const QSize res = d_data->data->rasterHint(area);
+    const QSize res(0,0); // = d_data->data->rasterHint(area);
     if ( res.isValid() )
     {
         /*
@@ -243,7 +220,11 @@ QImage PlotWaterfall::renderImage(
 
     PlotWaterfallImage image(rect.size(), d_data->colorMap->format());
 
+#if QWT_VERSION < 0x060000
     const QwtDoubleInterval intensityRange = d_data->data->range();
+#else
+    const QwtInterval intensityRange = d_data->data->interval();
+#endif    
     if ( !intensityRange.isValid() )
         return image;
 
@@ -292,13 +273,7 @@ QImage PlotWaterfall::renderImage(
     const bool vInvert = yyMap.p1() < yyMap.p2();
     if ( hInvert || vInvert )
     {
-#ifdef __GNUC__
-#endif
-#if QT_VERSION < 0x040000
-        image = image.mirror(hInvert, vInvert);
-#else
-        image = image.mirrored(hInvert, vInvert);
-#endif
+      image = image.mirrored(hInvert, vInvert);
     }
 
     return image;
@@ -317,8 +292,9 @@ QImage PlotWaterfall::renderImage(
 */
 
 void PlotWaterfall::draw(QPainter *painter,
-			 const QwtScaleMap &xMap, const QwtScaleMap &yMap,
-			 const QRect &canvasRect) const
+			 const QwtScaleMap &xMap,
+			 const QwtScaleMap &yMap,
+			 const QRectF &canvasRect) const
 {
     QwtPlotRasterItem::draw(painter, xMap, yMap, canvasRect);
 }

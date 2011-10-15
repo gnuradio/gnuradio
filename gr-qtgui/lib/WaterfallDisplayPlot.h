@@ -34,6 +34,10 @@
 
 #include <gruel/high_res_timer.h>
 
+#if QWT_VERSION >= 0x060000
+#include <qwt_compat.h>
+#endif
+
 class WaterfallDisplayPlot:public QwtPlot{
   Q_OBJECT
 
@@ -73,7 +77,7 @@ public:
 
 public slots:
   void resizeSlot( QSize *s );
-  void OnPickerPointSelected(const QwtDoublePoint & p);
+  void OnPickerPointSelected(const QPointF & p);
  
 signals:
   void UpdatedLowerIntensityLevel(const double);

@@ -274,7 +274,9 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   // Ctrl+RighButton: zoom out to full size
   
   _zoomer = new WaterfallZoomer(canvas(), 0);
+#if QWT_VERSION < 0x060000
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
+#endif
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
 			   Qt::RightButton, Qt::ControlModifier);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
@@ -286,9 +288,9 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   
   // emit the position of clicks on widget
   _picker = new QwtDblClickPlotPicker(canvas());
-  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
-	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
-  
+  connect(_picker, SIGNAL(selected(const QPointF &)),
+	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+
   // Avoid jumping when labels with more/less digits
   // appear/disappear when scrolling vertically
   
@@ -433,7 +435,11 @@ void
 WaterfallDisplayPlot::SetIntensityRange(const double minIntensity, 
 					     const double maxIntensity)
 {
+#if QWT_VERSION < 0x060000
   _waterfallData->setRange(QwtDoubleInterval(minIntensity, maxIntensity));
+#else
+  _waterfallData->setInterval(Qt::ZAxis, QwtInterval(minIntensity, maxIntensity));
+#endif
 
   emit UpdatedLowerIntensityLevel(minIntensity);
   emit UpdatedUpperIntensityLevel(maxIntensity);
@@ -549,12 +555,20 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
   QwtScaleWidget *rightAxis = axisWidget(QwtPlot::yRight);
   rightAxis->setTitle("Intensity (dB)");
   rightAxis->setColorBarEnabled(true);
+
+#if QWT_VERSION < 0x060000
   rightAxis->setColorMap(d_spectrogram->data()->range(),
 			 d_spectrogram->colorMap());
-
   setAxisScale(QwtPlot::yRight, 
 	       d_spectrogram->data()->range().minValue(),
 	       d_spectrogram->data()->range().maxValue() );
+#else
+  QwtInterval intv = d_spectrogram->data()->interval();
+  QwtColorMap *map = (QwtColorMap*)(&d_spectrogram->colorMap());
+  rightAxis->setColorMap(intv, map);
+  setAxisScale(QwtPlot::yRight, intv.minValue(), intv.maxValue());
+#endif
+
   enableAxis(QwtPlot::yRight);
   
   plotLayout()->setAlignCanvasToScales(true);
@@ -571,10 +585,10 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
 }
 
 void
-WaterfallDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+WaterfallDisplayPlot::OnPickerPointSelected(const QPointF & p)
 {
   QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f %d\n", point.x(), point.y(), _xAxisMultiplier);
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }

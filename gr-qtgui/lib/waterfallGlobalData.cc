@@ -7,10 +7,23 @@ WaterfallData::WaterfallData(const double minimumFrequency,
 			     const double maximumFrequency,
 			     const uint64_t fftPoints,
 			     const unsigned int historyExtent)
+#if QWT_VERSION < 0x060000
   : QwtRasterData(QwtDoubleRect(minimumFrequency /* X START */,  0 /* Y START */, 
 				maximumFrequency - minimumFrequency /* WIDTH */,  
 				static_cast<double>(historyExtent)/* HEIGHT */))
+#else
+  : QwtRasterData()
+#endif
 {
+  _bounding_rect = QRectF(minimumFrequency,
+			  0,
+			  maximumFrequency - minimumFrequency,
+			  static_cast<double>(historyExtent));
+
+#if QWT_VERSION >= 0x060000
+  pixelHint(_bounding_rect);
+#endif
+
   _intensityRange = QwtDoubleInterval(-200.0, 0.0);
   
   _fftPoints = fftPoints;
@@ -35,6 +48,7 @@ void WaterfallData::Reset()
 
 void WaterfallData::Copy(const WaterfallData* rhs)
 {
+#if QWT_VERSION < 0x060000  
   if((_fftPoints != rhs->GetNumFFTPoints()) ||
      (boundingRect() != rhs->boundingRect()) ){
     _fftPoints = rhs->GetNumFFTPoints();
@@ -42,38 +56,74 @@ void WaterfallData::Copy(const WaterfallData* rhs)
     delete[] _spectrumData;
     _spectrumData = new double[_fftPoints * _historyLength];
   }
+#else
+  if(_fftPoints != rhs->GetNumFFTPoints()) {
+    _fftPoints = rhs->GetNumFFTPoints();
+    delete[] _spectrumData;
+    _spectrumData = new double[_fftPoints * _historyLength];
+  }
+#endif
+
   Reset();
   SetSpectrumDataBuffer(rhs->GetSpectrumDataBuffer());
   SetNumLinesToUpdate(rhs->GetNumLinesToUpdate());
+
+#if QWT_VERSION < 0x060000  
   setRange(rhs->range());
+#else
+  setInterval(Qt::ZAxis, rhs->interval());
+#endif  
 }
 
 void WaterfallData::ResizeData(const double startFreq,
 			       const double stopFreq,
 			       const uint64_t fftPoints)
 {
+#if QWT_VERSION < 0x060000  
   if((fftPoints != GetNumFFTPoints()) ||
      (boundingRect().width() != (stopFreq - startFreq)) ||
      (boundingRect().left() != startFreq)){
-
-    setBoundingRect(QwtDoubleRect(startFreq, 0, stopFreq-startFreq, boundingRect().height()));
+    
+    setBoundingRect(QwtDoubleRect(startFreq, 0,
+				  stopFreq-startFreq,
+				  boundingRect().height()));
     _fftPoints = fftPoints;
     delete[] _spectrumData;
     _spectrumData = new double[_fftPoints * _historyLength];
   }
+
+#else
+  
+  if((fftPoints != GetNumFFTPoints()) ||
+     (_bounding_rect.width() != (stopFreq - startFreq)) ||
+     (_bounding_rect.left() != startFreq)){
+    
+    _bounding_rect = QRectF(startFreq, 0,
+			    stopFreq-startFreq,
+			    _bounding_rect.height());
+    pixelHint(_bounding_rect);
+
+    _fftPoints = fftPoints;
+    delete[] _spectrumData;
+    _spectrumData = new double[_fftPoints * _historyLength];
+  }
+#endif
+
    
   Reset();
 }
 
 QwtRasterData *WaterfallData::copy() const
 {
-  WaterfallData* returnData =  new WaterfallData(boundingRect().left(),
-						 boundingRect().right(),
+  WaterfallData* returnData =  new WaterfallData(_bounding_rect.left(),
+						 _bounding_rect.right(),
 						 _fftPoints, _historyLength);
   returnData->Copy(this);
   return returnData;
 }
 
+
+#if QWT_VERSION < 0x060000
 QwtDoubleInterval WaterfallData::range() const
 {
   return _intensityRange;
@@ -84,13 +134,27 @@ void WaterfallData::setRange(const QwtDoubleInterval& newRange)
   _intensityRange = newRange;
 }
 
+#else
+
+QwtInterval WaterfallData::interval() const
+{
+  return _intensityRange;
+}
+
+void WaterfallData::setInterval(Qt::Axis axis, const QwtInterval& newRange)
+{
+  _intensityRange = newRange;
+}
+#endif
+
+
 double WaterfallData::value(double x, double y) const
 {
   double returnValue = 0.0;
 
-  const unsigned int intY = static_cast<unsigned int>((1.0 - (y/boundingRect().height())) * 
-						      static_cast<double>(_historyLength - 1));
-  const unsigned int intX = static_cast<unsigned int>((((x - boundingRect().left()) / boundingRect().width()) * 
+  const unsigned int intY = static_cast<unsigned int>((1.0 - (y/_bounding_rect.height())) * 
+						      static_cast<double>(_historyLength-1));
+  const unsigned int intX = static_cast<unsigned int>((((x - _bounding_rect.left()) / _bounding_rect.width()) * 
 						       static_cast<double>(_fftPoints-1)) + 0.5);
 
   const int location = (intY * _fftPoints) + intX;
