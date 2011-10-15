@@ -103,28 +103,40 @@ expand_h_cc_i(trellis_pccc_decoder_combined_XX   fb fs fi cb cs ci)
 add_custom_target(trellis_generated DEPENDS
     ${generated_trellis_includes}
     ${generated_trellis_swigs}
+    ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i
 )
 
 ########################################################################
 # Create the master trellis swig include files
 ########################################################################
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.py "
+import os, sys
+if __name__ == '__main__':
+    incs = sys.argv[2:]
+    h_incs = '\\n'.join(['#include<%s.h>'%(os.path.splitext(os.path.basename(inc))[0]) for inc in incs])
+    i_incs = '\\n'.join(['%%include<%s>'%(os.path.basename(inc)) for inc in incs])
+    open(sys.argv[1], 'w').write('''
 //
 // This file is machine generated.  All edits will be overwritten
 //
+
+%%{
+%s
+%%}
+
+%s
+
+'''%(h_incs, i_incs))
 ")
 
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "%{\n")
-foreach(swig_file ${generated_trellis_swigs})
-    get_filename_component(name ${swig_file} NAME_WE)
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "#include<${name}.h>\n")
-endforeach(swig_file)
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "%}\n")
-
-foreach(swig_file ${generated_trellis_swigs})
-    get_filename_component(name ${swig_file} NAME)
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i "%include<${name}>\n")
-endforeach(swig_file)
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i
+    DEPENDS ${generated_trellis_swigs}
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+        ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.py
+        ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i
+        ${generated_trellis_swigs}
+)
 
 ########################################################################
 # Setup library
@@ -200,7 +212,7 @@ if(ENABLE_PYTHON)
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_TARGET_DEPS gengen_generated trellis_generated)
+set(GR_SWIG_TARGET_DEPS trellis_generated)
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_TRELLIS_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
