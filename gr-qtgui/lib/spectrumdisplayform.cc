@@ -466,7 +466,8 @@ SpectrumDisplayForm::_AverageHistory(const double* newBuffer)
       if(_historyEntryCount > static_cast<int>(_historyVector->size())){
 	_historyEntryCount = _historyVector->size();
       }
-      _historyEntry = (++_historyEntry)%_historyVector->size();
+      _historyEntry += 1;
+      _historyEntry = _historyEntry % _historyVector->size();
 
       // Total up and then average the values
       double sum;
