@@ -61,7 +61,7 @@ AC_DEFUN([GR_QWT],
     if test "$qwt_incdir" = "" ; then
         dnl check qwt-qt4/qwt.h (as in Ubuntu)
         AC_CHECK_HEADER(
-            [qwt-qt4/qwt_double_interval.h],
+            [qwt-qt4/qwt_math.h],
             [qwt_qt4_qwt_h=yes],
             [qwt_qt4_qwt_h=no]
         )
@@ -71,7 +71,7 @@ AC_DEFUN([GR_QWT],
         else
             dnl check qwt/qwt.h (as in Fedora)
             AC_CHECK_HEADER(
-                [qwt/qwt_double_interval.h],
+                [qwt/qwt_math.h],
 	        [qwt_qwt_h=yes],
                 [qwt_qwt_h=no]
             )
