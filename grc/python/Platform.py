@@ -32,20 +32,7 @@ from Constants import \
 	DEFAULT_FLOW_GRAPH, BLOCKS_DIRS
 import Constants
 
-COLORS = (#title, #color spec
-	('Complex', Constants.COMPLEX_COLOR_SPEC),
-	('Float', Constants.FLOAT_COLOR_SPEC),
-	('Integer', Constants.INT_COLOR_SPEC),
-	('Short', Constants.SHORT_COLOR_SPEC),
-	('Byte', Constants.BYTE_COLOR_SPEC),
-	('Complex Vector', Constants.COMPLEX_VECTOR_COLOR_SPEC),
-	('Float Vector', Constants.FLOAT_VECTOR_COLOR_SPEC),
-	('Integer Vector', Constants.INT_VECTOR_COLOR_SPEC),
-	('Short Vector', Constants.SHORT_VECTOR_COLOR_SPEC),
-	('Byte Vector', Constants.BYTE_VECTOR_COLOR_SPEC),
-	('Wildcard', Constants.WILDCARD_COLOR_SPEC),
-	('Message', Constants.MSG_COLOR_SPEC),
-)
+COLORS = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
 
 class Platform(_Platform, _GUIPlatform):
 

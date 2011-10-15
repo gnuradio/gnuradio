@@ -43,6 +43,7 @@ class gri_fft_complex;
  *        gr_complex input, gr_complex output and float taps
  *
  * \ingroup filter_blk
+ * \ingroup pfb_blk
  */
 
 class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator

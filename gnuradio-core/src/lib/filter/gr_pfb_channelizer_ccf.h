@@ -44,6 +44,7 @@ class gri_fft_complex;
  *        gr_complex input, gr_complex output and float taps
  *
  * \ingroup filter_blk
+ * \ingroup pfb_blk
  *
  * This block takes in complex inputs and channelizes it to <EM>M</EM>
  * channels of equal bandwidth. Each of the resulting channels is
