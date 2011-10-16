@@ -306,11 +306,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   _lastReplot = 0;
 
   _intensityColorMapType = INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR;
-
-  QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::darkCyan, Qt::white);
-  colorMap->addColorStop(0.25, Qt::cyan);
-  colorMap->addColorStop(0.5, Qt::yellow);
-  colorMap->addColorStop(0.75, Qt::red);
+  QwtLinearColorMap *colorMap = new ColorMap_MultiColor();
 
   d_data = new WaterfallData(_startFrequency, _stopFrequency,
 			     _numPoints, 200);
@@ -487,6 +483,8 @@ WaterfallDisplayPlot::SetIntensityRange(const double minIntensity,
 {
   emit UpdatedLowerIntensityLevel(minIntensity);
   emit UpdatedUpperIntensityLevel(maxIntensity);
+
+  d_data->setInterval(Qt::ZAxis, QwtInterval(minIntensity, maxIntensity));
 
   _UpdateIntensityRangeDisplay();
 }
