@@ -230,6 +230,58 @@ private:
   std::string _unitType;
 };
 
+class ColorMap_MultiColor: public QwtLinearColorMap
+{
+public:
+  ColorMap_MultiColor():
+    QwtLinearColorMap(Qt::darkCyan, Qt::white)
+  {
+    addColorStop(0.25, Qt::cyan);
+    addColorStop(0.5, Qt::yellow);
+    addColorStop(0.75, Qt::red);
+  }
+};
+
+class ColorMap_WhiteHot: public QwtLinearColorMap
+{
+public:
+  ColorMap_WhiteHot():
+    QwtLinearColorMap(Qt::black, Qt::white)
+  {
+  }
+};
+
+class ColorMap_BlackHot: public QwtLinearColorMap
+{
+public:
+  ColorMap_BlackHot():
+    QwtLinearColorMap(Qt::white, Qt::black)
+  {
+  }
+};
+
+class ColorMap_Incandescent: public QwtLinearColorMap
+{
+public:
+  ColorMap_Incandescent():
+    QwtLinearColorMap(Qt::black, Qt::white)
+  {
+    addColorStop(0.5, Qt::darkRed);
+  }
+};
+
+class ColorMap_UserDefined: public QwtLinearColorMap
+{
+public:
+  ColorMap_UserDefined(QColor low, QColor high):
+    QwtLinearColorMap(low, high)
+  {
+  }
+};
+
+/*********************************************************************
+MAIN WATERFALL PLOT WIDGET
+*********************************************************************/
 
 WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   : QwtPlot(parent)
@@ -489,39 +541,29 @@ WaterfallDisplayPlot::SetIntensityColorMapType(const int newType,
     switch(newType){
     case INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR:{
       _intensityColorMapType = newType;
-      QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::darkCyan, Qt::white);
-      colorMap->addColorStop(0.25, Qt::cyan);
-      colorMap->addColorStop(0.5, Qt::yellow);
-      colorMap->addColorStop(0.75, Qt::red);
-      d_spectrogram->setColorMap(colorMap);
+      d_spectrogram->setColorMap(new ColorMap_MultiColor());
       break;
     }
     case INTENSITY_COLOR_MAP_TYPE_WHITE_HOT:{
       _intensityColorMapType = newType;
-      QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::black, Qt::white);
-      d_spectrogram->setColorMap(colorMap);
+      d_spectrogram->setColorMap(new ColorMap_WhiteHot());
       break;
     }
     case INTENSITY_COLOR_MAP_TYPE_BLACK_HOT:{
       _intensityColorMapType = newType;
-      QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::white, Qt::black);
-      d_spectrogram->setColorMap(colorMap);
+      d_spectrogram->setColorMap(new ColorMap_BlackHot());
       break;
     }
     case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:{
       _intensityColorMapType = newType;
-      QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::black, Qt::white);
-      colorMap->addColorStop(0.5, Qt::darkRed);
-      d_spectrogram->setColorMap(colorMap);
+      d_spectrogram->setColorMap(new ColorMap_Incandescent());
       break;
     }
     case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:{
       _userDefinedLowIntensityColor = lowColor;
       _userDefinedHighIntensityColor = highColor;
       _intensityColorMapType = newType;
-      QwtLinearColorMap *colorMap = new QwtLinearColorMap(_userDefinedLowIntensityColor,
-							  _userDefinedHighIntensityColor);
-      d_spectrogram->setColorMap(colorMap);
+      d_spectrogram->setColorMap(new ColorMap_UserDefined(lowColor, highColor));
       break;
     }
     default: break;
@@ -558,8 +600,21 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
 	       d_spectrogram->data()->range().maxValue());
 #else
   QwtInterval intv = d_spectrogram->interval(Qt::ZAxis);
-  const QwtColorMap *map = d_spectrogram->colorMap();
-  rightAxis->setColorMap(intv, (QwtColorMap*)map);
+  switch(_intensityColorMapType) {
+  case INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR:
+    rightAxis->setColorMap(intv, new ColorMap_MultiColor()); break;
+  case INTENSITY_COLOR_MAP_TYPE_WHITE_HOT:
+    rightAxis->setColorMap(intv, new ColorMap_WhiteHot()); break;
+  case INTENSITY_COLOR_MAP_TYPE_BLACK_HOT:
+    rightAxis->setColorMap(intv, new ColorMap_BlackHot()); break;
+  case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:
+    rightAxis->setColorMap(intv, new ColorMap_Incandescent()); break;
+  case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:
+    rightAxis->setColorMap(intv, new ColorMap_UserDefined(_userDefinedLowIntensityColor,
+							  _userDefinedHighIntensityColor)); break;
+ default:
+   rightAxis->setColorMap(intv, new ColorMap_MultiColor()); break;
+  }
   setAxisScale(QwtPlot::yRight, intv.minValue(), intv.maxValue());
 #endif
 
@@ -568,8 +623,8 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
   plotLayout()->setAlignCanvasToScales(true);
 
   // Tell the display to redraw everything
-  ////d_spectrogram->invalidateCache();
-  ////d_spectrogram->itemChanged();
+  d_spectrogram->invalidateCache();
+  d_spectrogram->itemChanged();
 
   // Draw again
   replot();
