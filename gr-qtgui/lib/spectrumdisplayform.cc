@@ -36,7 +36,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _frequencyDisplayPlot = new FrequencyDisplayPlot(FrequencyPlotDisplayFrame);
   //_waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(2, TimeDomainDisplayFrame);
-  //_constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
+  _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
   _realFFTDataPoints = new double[_numRealDataPoints];
   _averagedValues = new double[_numRealDataPoints];
@@ -78,7 +78,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   ToggleTabFrequency(false);
   //ToggleTabWaterfall(false);
   ToggleTabTime(false);
-  //ToggleTabConstellation(false);
+  ToggleTabConstellation(false);
 
   _historyEntry = 0;
   _historyEntryCount = 0;
@@ -97,8 +97,8 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   connect(_timeDomainDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
   	  this, SLOT(onTimePlotPointSelected(const QPointF)));
   
-  //connect(_constellationDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
-  //	  this, SLOT(onConstPlotPointSelected(const QPointF)));
+  connect(_constellationDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
+  	  this, SLOT(onConstPlotPointSelected(const QPointF)));
 }
 
 SpectrumDisplayForm::~SpectrumDisplayForm()
@@ -242,7 +242,6 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					  numTimeDomainDataPoints,
 					  d_update_time);
     }
-    /*
     if(tabindex == d_plot_constellation) {
       _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
 					     imagTimeDomainDataPoints, 
@@ -250,6 +249,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					     d_update_time);
     }
 
+    /*
     // Don't update the repeated data for the waterfall
     if(!repeatDataFlag){
       if(tabindex == d_plot_waterfall) {
@@ -284,11 +284,11 @@ SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
   s.setWidth(WaterfallPlotDisplayFrame->width());
   s.setHeight(WaterfallPlotDisplayFrame->height());
   emit _waterfallDisplayPlot->resizeSlot(&s);
+  */
 
   s.setWidth(ConstellationDisplayFrame->width());
   s.setHeight(ConstellationDisplayFrame->height());
   emit _constellationDisplayPlot->resizeSlot(&s);
-  */
 }
 
 void
@@ -337,7 +337,7 @@ SpectrumDisplayForm::UpdateGuiTimer()
   _frequencyDisplayPlot->canvas()->update();
   //_waterfallDisplayPlot->canvas()->update();
   _timeDomainDisplayPlot->canvas()->update();
-  //_constellationDisplayPlot->canvas()->update();
+  _constellationDisplayPlot->canvas()->update();
 }
 
 
@@ -700,7 +700,6 @@ SpectrumDisplayForm::ToggleTabTime(const bool state)
 void
 SpectrumDisplayForm::ToggleTabConstellation(const bool state)
 {
-  /*
   if(state == true) {
     if(d_plot_constellation == -1) {
       SpectrumTypeTab->addTab(ConstellationPage, "Constellation Display");
@@ -711,7 +710,6 @@ SpectrumDisplayForm::ToggleTabConstellation(const bool state)
     SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(ConstellationPage));
     d_plot_constellation = -1;
   }
-  */
 }
 
 
@@ -725,13 +723,13 @@ void
 SpectrumDisplayForm::SetConstellationAxis(double xmin, double xmax,
 						double ymin, double ymax)
 {
-  //_constellationDisplayPlot->set_axis(xmin, xmax, ymin, ymax);
+  _constellationDisplayPlot->set_axis(xmin, xmax, ymin, ymax);
 }
 
 void
 SpectrumDisplayForm::SetConstellationPenSize(int size)
 {
-  //_constellationDisplayPlot->set_pen_size( size );
+  _constellationDisplayPlot->set_pen_size( size );
 }
 
 void

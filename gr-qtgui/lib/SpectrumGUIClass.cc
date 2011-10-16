@@ -106,7 +106,7 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
     _spectrumDisplayForm->ToggleTabFrequency(frequency);
     //_spectrumDisplayForm->ToggleTabWaterfall(waterfall);
     _spectrumDisplayForm->ToggleTabTime(time);
-    //_spectrumDisplayForm->ToggleTabConstellation(constellation);
+    _spectrumDisplayForm->ToggleTabConstellation(constellation);
 
     _windowOpennedFlag = true;
 

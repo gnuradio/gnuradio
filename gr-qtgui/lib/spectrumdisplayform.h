@@ -32,7 +32,7 @@ class SpectrumGUIClass;
 #include <FrequencyDisplayPlot.h>
 //#include <WaterfallDisplayPlot.h>
 #include <TimeDomainDisplayPlot.h>
-//#include <ConstellationDisplayPlot.h>
+#include <ConstellationDisplayPlot.h>
 #include <QValidator>
 #include <QTimer>
 #include <vector>
@@ -114,7 +114,7 @@ private:
   FrequencyDisplayPlot* _frequencyDisplayPlot;
   //WaterfallDisplayPlot* _waterfallDisplayPlot;
   TimeDomainDisplayPlot* _timeDomainDisplayPlot;
-  //ConstellationDisplayPlot* _constellationDisplayPlot;
+  ConstellationDisplayPlot* _constellationDisplayPlot;
   SpectrumGUIClass* _system;
   bool _systemSpecifiedFlag;
   double _centerFrequency;
@@ -130,7 +130,7 @@ private:
   int d_plot_fft;
   //int d_plot_waterfall;
   int d_plot_time;
-  //int d_plot_constellation;
+  int d_plot_constellation;
 
   QTimer *displayTimer;
   double d_update_time;

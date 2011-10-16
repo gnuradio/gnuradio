@@ -217,6 +217,8 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
     memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
     memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
 
+    replot();
+
     _lastReplot = gruel::high_res_timer_now();
   }
 }
