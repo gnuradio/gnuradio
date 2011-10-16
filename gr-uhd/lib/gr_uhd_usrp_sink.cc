@@ -76,6 +76,14 @@ public:
         return _dev->get_tx_rate();
     }
 
+    uhd::meta_range_t get_samp_rates(void){
+        #ifdef UHD_USRP_MULTI_USRP_GET_RATES_API
+        return _dev->get_tx_rates();
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
     uhd::tune_result_t set_center_freq(
         const uhd::tune_request_t tune_request, size_t chan
     ){

@@ -130,6 +130,12 @@ public:
     virtual double get_samp_rate(void) = 0;
 
     /*!
+     * Get the possible sample rates for the usrp device.
+     * \return a range of rates in Sps
+     */
+    virtual uhd::meta_range_t get_samp_rates(void) = 0;
+
+    /*!
      * Tune the usrp device to the desired center frequency.
      * \param tune_request the tune request instructions
      * \param chan the channel index 0 to N-1
