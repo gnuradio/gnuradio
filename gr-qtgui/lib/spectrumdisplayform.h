@@ -31,7 +31,7 @@ class SpectrumGUIClass;
 #include <SpectrumGUIClass.h>
 #include <FrequencyDisplayPlot.h>
 //#include <WaterfallDisplayPlot.h>
-//#include <TimeDomainDisplayPlot.h>
+#include <TimeDomainDisplayPlot.h>
 //#include <ConstellationDisplayPlot.h>
 #include <QValidator>
 #include <QTimer>
@@ -113,7 +113,7 @@ private:
   QIntValidator* _intValidator;
   FrequencyDisplayPlot* _frequencyDisplayPlot;
   //WaterfallDisplayPlot* _waterfallDisplayPlot;
-  //TimeDomainDisplayPlot* _timeDomainDisplayPlot;
+  TimeDomainDisplayPlot* _timeDomainDisplayPlot;
   //ConstellationDisplayPlot* _constellationDisplayPlot;
   SpectrumGUIClass* _system;
   bool _systemSpecifiedFlag;
@@ -129,7 +129,7 @@ private:
   // whether or not to use a particular display
   int d_plot_fft;
   //int d_plot_waterfall;
-  //int d_plot_time;
+  int d_plot_time;
   //int d_plot_constellation;
 
   QTimer *displayTimer;

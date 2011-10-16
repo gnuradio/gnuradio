@@ -272,6 +272,8 @@ void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
     for(int i = 0; i < _nplots; i++) {
       memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
     }
+
+    replot();
   }
 }
 
