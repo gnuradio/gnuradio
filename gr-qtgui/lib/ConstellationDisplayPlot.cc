@@ -135,8 +135,15 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
 
   // emit the position of clicks on widget
   _picker = new QwtDblClickPlotPicker(canvas());
+
+#if QWT_VERSION < 0x060000
+  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
+	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+#else
   connect(_picker, SIGNAL(selected(const QPointF &)),
 	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+#endif
+
   connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool ) ), 
 	  this, SLOT(LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
@@ -229,6 +236,15 @@ ConstellationDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
   plotItem->setVisible(!on);
 }
 
+#if QWT_VERSION < 0x060000
+void
+ConstellationDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  emit plotPointSelected(point);
+}
+#else
 void
 ConstellationDisplayPlot::OnPickerPointSelected(const QPointF & p)
 {
@@ -236,5 +252,6 @@ ConstellationDisplayPlot::OnPickerPointSelected(const QPointF & p)
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
+#endif
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_C */

@@ -54,6 +54,7 @@ libgnuradio_qtgui_la_SOURCES = 	\
 	timedisplayform.cc			\
 	SpectrumGUIClass.cc			\
 	spectrumUpdateEvents.cc			\
+	plot_waterfall.cc			\
 	qtgui_sink_c.cc				\
 	qtgui_sink_f.cc				\
 	qtgui_time_sink_c.cc			\
@@ -73,6 +74,7 @@ grinclude_HEADERS =			\
 	timedisplayform.h		\
 	SpectrumGUIClass.h		\
 	spectrumUpdateEvents.h		\
+	plot_waterfall.h		\
 	gr_qtgui_api.h			\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h			\

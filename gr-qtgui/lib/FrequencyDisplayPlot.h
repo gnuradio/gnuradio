@@ -79,7 +79,12 @@ public slots:
   void resizeSlot( QSize *e );
   void SetLowerIntensityLevel(const double);
   void SetUpperIntensityLevel(const double);
+
+#if QWT_VERSION < 0x060000
+  void OnPickerPointSelected(const QwtDoublePoint & p);
+#else
   void OnPickerPointSelected(const QPointF & p);
+#endif
 
 signals:
   void plotPointSelected(const QPointF p);

@@ -310,17 +310,20 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   d_data = new WaterfallData(_startFrequency, _stopFrequency,
 			     _numPoints, 200);
   
-  d_spectrogram = new QwtPlotSpectrogram("Spectrogram");
-  d_spectrogram->setData(*d_data);
-  d_spectrogram->attach(this);
-  d_spectrogram->setDisplayMode(QwtPlotSpectrogram::ImageMode, true);
-
 #if QWT_VERSION < 0x060000
+  d_spectrogram = new PlotWaterfall(d_data, "Waterfall Display");
+
   ColorMap_MultiColor colorMap;
   d_spectrogram->setColorMap(colorMap);
+
 #else
+  d_spectrogram = new QwtPlotSpectrogram("Spectrogram");
+  d_spectrogram->setData(*d_data);
+  d_spectrogram->setDisplayMode(QwtPlotSpectrogram::ImageMode, true);
   d_spectrogram->setColorMap(new ColorMap_MultiColor());
 #endif
+
+  d_spectrogram->attach(this);
   
   // LeftButton for the zooming
   // MidButton for the panning
@@ -492,13 +495,14 @@ void
 WaterfallDisplayPlot::SetIntensityRange(const double minIntensity, 
 					const double maxIntensity)
 {
-  emit UpdatedLowerIntensityLevel(minIntensity);
-  emit UpdatedUpperIntensityLevel(maxIntensity);
-
 #if QWT_VERSION < 0x060000
+  d_data->setRange(QwtDoubleInterval(minIntensity, maxIntensity));
 #else
   d_data->setInterval(Qt::ZAxis, QwtInterval(minIntensity, maxIntensity));
 #endif
+
+  emit UpdatedLowerIntensityLevel(minIntensity);
+  emit UpdatedUpperIntensityLevel(maxIntensity);
 
   _UpdateIntensityRangeDisplay();
 }
@@ -630,11 +634,11 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
   rightAxis->setColorBarEnabled(true);
 
 #if QWT_VERSION < 0x060000
-  rightAxis->setColorMap(d_data->range(),
+  rightAxis->setColorMap(d_spectrogram->data()->range(),
 			 d_spectrogram->colorMap());
   setAxisScale(QwtPlot::yRight, 
-	       d_data->range().minValue(),
-	       d_data->range().maxValue());
+	       d_spectrogram->data()->range().minValue(),
+	       d_spectrogram->data()->range().maxValue());
 #else
   QwtInterval intv = d_spectrogram->interval(Qt::ZAxis);
   switch(_intensityColorMapType) {
@@ -675,7 +679,7 @@ void
 WaterfallDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
   QPointF point = p;
-  fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }
@@ -684,7 +688,7 @@ void
 WaterfallDisplayPlot::OnPickerPointSelected(const QPointF & p)
 {
   QPointF point = p;
-  fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }

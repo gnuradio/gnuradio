@@ -38,20 +38,27 @@ public:
 #if QWT_VERSION < 0x060000
     virtual QwtDoubleRect boundingRect() const;
 #endif
-    //virtual QSize rasterHint(const QwtDoubleRect &) const;
+
+    virtual QSize rasterHint(const QwtDoubleRect &) const;
 
     virtual int rtti() const;
 
     virtual void draw(QPainter *p,
 		      const QwtScaleMap &xMap,
 		      const QwtScaleMap &yMap,
-		      const QRectF &rect) const;
+		      const QRect &rect) const;
 
 protected:
+#if QWT_VERSION < 0x060000
+    QImage renderImage(const QwtScaleMap &xMap,
+		       const QwtScaleMap &yMap, 
+		       const QwtDoubleRect &rect) const;
+#else
     QImage renderImage(const QwtScaleMap &xMap,
 		       const QwtScaleMap &yMap, 
 		       const QRectF &rect,
 		       const QSize &size=QSize(0,0)) const;
+#endif
 
 private:
     class PrivateData;

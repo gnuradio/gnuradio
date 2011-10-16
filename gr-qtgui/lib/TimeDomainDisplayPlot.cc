@@ -170,8 +170,14 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
   // emit the position of clicks on widget
   _picker = new QwtDblClickPlotPicker(canvas());
+
+#if QWT_VERSION < 0x060000
+  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
+	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+#else
   connect(_picker, SIGNAL(selected(const QPointF &)),
 	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+#endif
 
   // Configure magnify on mouse wheel
   _magnifier = new QwtPlotMagnifier(canvas());
@@ -320,6 +326,15 @@ TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
 }
 
 
+#if QWT_VERSION < 0x060000
+void
+TimeDomainDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  emit plotPointSelected(point);
+}
+#else
 void
 TimeDomainDisplayPlot::OnPickerPointSelected(const QPointF & p)
 {
@@ -327,5 +342,6 @@ TimeDomainDisplayPlot::OnPickerPointSelected(const QPointF & p)
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
+#endif
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

@@ -2,6 +2,7 @@
 #define WATERFALL_GLOBAL_DATA_CPP
 
 #include <waterfallGlobalData.h>
+#include <cstdio>
 
 WaterfallData::WaterfallData(const double minimumFrequency,
 			     const double maximumFrequency,
