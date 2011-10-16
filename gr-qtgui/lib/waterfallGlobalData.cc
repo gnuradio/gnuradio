@@ -12,24 +12,21 @@ WaterfallData::WaterfallData(const double minimumFrequency,
 				maximumFrequency - minimumFrequency /* WIDTH */,  
 				static_cast<double>(historyExtent)/* HEIGHT */))
 #else
-  : QwtRasterData()
+    : QwtRasterData()
 #endif
 {
-  _bounding_rect = QRectF(minimumFrequency,
-			  0,
-			  maximumFrequency - minimumFrequency,
-			  static_cast<double>(historyExtent));
-
-#if QWT_VERSION >= 0x060000
-  pixelHint(_bounding_rect);
-#endif
-
   _intensityRange = QwtDoubleInterval(-200.0, 0.0);
   
   _fftPoints = fftPoints;
   _historyLength = historyExtent;
 
   _spectrumData = new double[_fftPoints * _historyLength];
+
+#if QWT_VERSION >= 0x060000
+  setInterval(Qt::XAxis, QwtInterval(minimumFrequency, maximumFrequency));
+  setInterval(Qt::YAxis, QwtInterval(0, historyExtent));
+  setInterval(Qt::ZAxis, QwtInterval(-200, 0.0));
+#endif
 
   Reset();
 }
@@ -71,7 +68,9 @@ void WaterfallData::Copy(const WaterfallData* rhs)
 #if QWT_VERSION < 0x060000  
   setRange(rhs->range());
 #else
-  setInterval(Qt::ZAxis, rhs->interval());
+  setInterval(Qt::XAxis, rhs->interval(Qt::XAxis));
+  setInterval(Qt::YAxis, rhs->interval(Qt::YAxis));
+  setInterval(Qt::ZAxis, rhs->interval(Qt::ZAxis));
 #endif  
 }
 
@@ -93,31 +92,33 @@ void WaterfallData::ResizeData(const double startFreq,
   }
 
 #else
-  
   if((fftPoints != GetNumFFTPoints()) ||
-     (_bounding_rect.width() != (stopFreq - startFreq)) ||
-     (_bounding_rect.left() != startFreq)){
+     (interval(Qt::XAxis).width() != (stopFreq - startFreq)) ||
+     (interval(Qt::XAxis).minValue() != startFreq)){
     
-    _bounding_rect = QRectF(startFreq, 0,
-			    stopFreq-startFreq,
-			    _bounding_rect.height());
-    pixelHint(_bounding_rect);
+    setInterval(Qt::XAxis, QwtInterval(startFreq, stopFreq));
 
     _fftPoints = fftPoints;
     delete[] _spectrumData;
     _spectrumData = new double[_fftPoints * _historyLength];
   }
 #endif
-
-   
+  
   Reset();
 }
 
 QwtRasterData *WaterfallData::copy() const
 {
-  WaterfallData* returnData =  new WaterfallData(_bounding_rect.left(),
-						 _bounding_rect.right(),
+#if QWT_VERSION < 0x060000  
+  WaterfallData* returnData =  new WaterfallData(boundingRect().left(),
+						 boundingRect().right(),
 						 _fftPoints, _historyLength);
+#else
+  WaterfallData* returnData =  new WaterfallData(interval(Qt::XAxis).minValue(),
+						 interval(Qt::XAxis).maxValue(),
+						 _fftPoints, _historyLength);
+#endif
+
   returnData->Copy(this);
   return returnData;
 }
@@ -134,28 +135,27 @@ void WaterfallData::setRange(const QwtDoubleInterval& newRange)
   _intensityRange = newRange;
 }
 
-#else
-
-QwtInterval WaterfallData::interval() const
-{
-  return _intensityRange;
-}
-
-void WaterfallData::setInterval(Qt::Axis axis, const QwtInterval& newRange)
-{
-  _intensityRange = newRange;
-}
 #endif
 
 
 double WaterfallData::value(double x, double y) const
 {
   double returnValue = 0.0;
-
-  const unsigned int intY = static_cast<unsigned int>((1.0 - (y/_bounding_rect.height())) * 
+  
+#if QWT_VERSION < 0x060000
+  const unsigned int intY = static_cast<unsigned int>((1.0 - (y/boundingRect().height())) * 
 						      static_cast<double>(_historyLength-1));
-  const unsigned int intX = static_cast<unsigned int>((((x - _bounding_rect.left()) / _bounding_rect.width()) * 
+  const unsigned int intX = static_cast<unsigned int>((((x - boundingRect().left()) / boundingRect().width()) * 
 						       static_cast<double>(_fftPoints-1)) + 0.5);
+#else
+  double height = interval(Qt::YAxis).maxValue();
+  double left = interval(Qt::XAxis).minValue();
+  double right = interval(Qt::XAxis).maxValue();
+  double ylen = static_cast<double>(_historyLength-1);
+  double xlen = static_cast<double>(_fftPoints-1);
+  const unsigned int intY = static_cast<unsigned int>((1.0 - y/height) * ylen);
+  const unsigned int intX = static_cast<unsigned int>((((x - left) / (right-left)) * xlen) + 0.5);
+#endif
 
   const int location = (intY * _fftPoints) + intX;
   if((location > -1) && (location < static_cast<int64_t>(_fftPoints * _historyLength))){
@@ -196,7 +196,8 @@ void WaterfallData::addFFTData(const double* fftData,
     }
 
     // add the new buffer
-    memcpy(&_spectrumData[(_historyLength - 1) * _fftPoints], fftData, _fftPoints*sizeof(double));
+    memcpy(&_spectrumData[(_historyLength - 1) * _fftPoints], fftData,
+	   _fftPoints*sizeof(double));
   }
 }
 

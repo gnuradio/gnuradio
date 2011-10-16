@@ -32,6 +32,7 @@ public:
     const WaterfallData* data()const;
 
     void setColorMap(const QwtColorMap &);
+
     const QwtColorMap &colorMap() const;
 
 #if QWT_VERSION < 0x060000

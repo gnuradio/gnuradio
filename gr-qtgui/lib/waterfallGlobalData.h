@@ -25,9 +25,6 @@ public:
 #if QWT_VERSION < 0x060000
   virtual QwtDoubleInterval range() const;
   virtual void setRange(const QwtDoubleInterval&);
-#else
-  virtual QwtInterval interval() const;
-  virtual void setInterval(Qt::Axis axis, const QwtInterval&);
 #endif
 
   virtual double value(double x, double y) const;
@@ -48,8 +45,6 @@ protected:
   uint64_t _fftPoints;
   uint64_t _historyLength;
   int _numLinesToUpdate;
-
-  QRectF _bounding_rect;
 
 #if QWT_VERSION < 0x060000
   QwtDoubleInterval _intensityRange;

@@ -241,8 +241,6 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   resize(parent->width(), parent->height());
   _numPoints = 1024;
 
-  _waterfallData = new WaterfallData(_startFrequency, _stopFrequency, _numPoints, 200);
-
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
   canvas()->setPalette(palette);   
@@ -255,24 +253,26 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 
   _lastReplot = 0;
 
-  d_spectrogram = new PlotWaterfall(_waterfallData, "Waterfall Display");
-
   _intensityColorMapType = INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR;
 
-  QwtLinearColorMap colorMap(Qt::darkCyan, Qt::white);
-  colorMap.addColorStop(0.25, Qt::cyan);
-  colorMap.addColorStop(0.5, Qt::yellow);
-  colorMap.addColorStop(0.75, Qt::red);
+  QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::darkCyan, Qt::white);
+  colorMap->addColorStop(0.25, Qt::cyan);
+  colorMap->addColorStop(0.5, Qt::yellow);
+  colorMap->addColorStop(0.75, Qt::red);
 
-  d_spectrogram->setColorMap(colorMap);
+  d_data = new WaterfallData(_startFrequency, _stopFrequency,
+			     _numPoints, 200);
   
+  d_spectrogram = new QwtPlotSpectrogram("Spectrogram");
+  d_spectrogram->setColorMap(colorMap);
+  d_spectrogram->setData(d_data);
   d_spectrogram->attach(this);
+  d_spectrogram->setDisplayMode(QwtPlotSpectrogram::ImageMode, true);
   
   // LeftButton for the zooming
   // MidButton for the panning
   // RightButton: zoom out by 1
   // Ctrl+RighButton: zoom out to full size
-  
   _zoomer = new WaterfallZoomer(canvas(), 0);
 #if QWT_VERSION < 0x060000
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
@@ -298,7 +298,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   QwtScaleDraw *sd = axisScaleDraw(QwtPlot::yLeft);
   sd->setMinimumExtent( fm.width("100.00") );
   
-  const QColor c(Qt::white);
+  const QColor c(Qt::black);
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
 
@@ -309,15 +309,14 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 
 WaterfallDisplayPlot::~WaterfallDisplayPlot()
 {
-  delete _waterfallData;
   delete d_spectrogram;
 }
 
 void 
 WaterfallDisplayPlot::Reset()
 {
-  _waterfallData->ResizeData(_startFrequency, _stopFrequency, _numPoints);
-  _waterfallData->Reset();
+  d_data->ResizeData(_startFrequency, _stopFrequency, _numPoints);
+  d_data->Reset();
 
   setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
 
@@ -410,9 +409,8 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
     }
 
     if(gruel::high_res_timer_now() - _lastReplot > timePerFFT*gruel::high_res_timer_tps()) {
-      //FIXME: We may want to average the data between these updates to smooth display
-      _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
-      _waterfallData->IncrementNumLinesToUpdate();
+      d_data->addFFTData(dataPoints, numDataPoints, droppedFrames);
+      d_data->IncrementNumLinesToUpdate();
       
       QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
       timeScale->SetSecondsPerLine(timePerFFT);
@@ -423,7 +421,7 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
       
       d_spectrogram->invalidateCache();
       d_spectrogram->itemChanged();
-      
+
       replot();
 
       _lastReplot = gruel::high_res_timer_now();
@@ -433,14 +431,8 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
 
 void
 WaterfallDisplayPlot::SetIntensityRange(const double minIntensity, 
-					     const double maxIntensity)
+					const double maxIntensity)
 {
-#if QWT_VERSION < 0x060000
-  _waterfallData->setRange(QwtDoubleInterval(minIntensity, maxIntensity));
-#else
-  _waterfallData->setInterval(Qt::ZAxis, QwtInterval(minIntensity, maxIntensity));
-#endif
-
   emit UpdatedLowerIntensityLevel(minIntensity);
   emit UpdatedUpperIntensityLevel(maxIntensity);
 
@@ -453,7 +445,8 @@ WaterfallDisplayPlot::replot()
   QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
   timeScale->initiateUpdate();
 
-  WaterfallFreqDisplayScaleDraw* freqScale = (WaterfallFreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
+  WaterfallFreqDisplayScaleDraw* freqScale = \
+    (WaterfallFreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
   freqScale->initiateUpdate();
 
   // Update the time axis display
@@ -496,29 +489,29 @@ WaterfallDisplayPlot::SetIntensityColorMapType(const int newType,
     switch(newType){
     case INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR:{
       _intensityColorMapType = newType;
-      QwtLinearColorMap colorMap(Qt::darkCyan, Qt::white);
-      colorMap.addColorStop(0.25, Qt::cyan);
-      colorMap.addColorStop(0.5, Qt::yellow);
-      colorMap.addColorStop(0.75, Qt::red);
+      QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::darkCyan, Qt::white);
+      colorMap->addColorStop(0.25, Qt::cyan);
+      colorMap->addColorStop(0.5, Qt::yellow);
+      colorMap->addColorStop(0.75, Qt::red);
       d_spectrogram->setColorMap(colorMap);
       break;
     }
     case INTENSITY_COLOR_MAP_TYPE_WHITE_HOT:{
       _intensityColorMapType = newType;
-      QwtLinearColorMap colorMap(Qt::black, Qt::white);
+      QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::black, Qt::white);
       d_spectrogram->setColorMap(colorMap);
       break;
     }
     case INTENSITY_COLOR_MAP_TYPE_BLACK_HOT:{
       _intensityColorMapType = newType;
-      QwtLinearColorMap colorMap(Qt::white, Qt::black);
+      QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::white, Qt::black);
       d_spectrogram->setColorMap(colorMap);
       break;
     }
     case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:{
       _intensityColorMapType = newType;
-      QwtLinearColorMap colorMap(Qt::black, Qt::white);
-      colorMap.addColorStop(0.5, Qt::darkRed);
+      QwtLinearColorMap *colorMap = new QwtLinearColorMap(Qt::black, Qt::white);
+      colorMap->addColorStop(0.5, Qt::darkRed);
       d_spectrogram->setColorMap(colorMap);
       break;
     }
@@ -526,7 +519,8 @@ WaterfallDisplayPlot::SetIntensityColorMapType(const int newType,
       _userDefinedLowIntensityColor = lowColor;
       _userDefinedHighIntensityColor = highColor;
       _intensityColorMapType = newType;
-      QwtLinearColorMap colorMap(_userDefinedLowIntensityColor, _userDefinedHighIntensityColor);
+      QwtLinearColorMap *colorMap = new QwtLinearColorMap(_userDefinedLowIntensityColor,
+							  _userDefinedHighIntensityColor);
       d_spectrogram->setColorMap(colorMap);
       break;
     }
@@ -561,11 +555,11 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
 			 d_spectrogram->colorMap());
   setAxisScale(QwtPlot::yRight, 
 	       d_spectrogram->data()->range().minValue(),
-	       d_spectrogram->data()->range().maxValue() );
+	       d_spectrogram->data()->range().maxValue());
 #else
-  QwtInterval intv = d_spectrogram->data()->interval();
-  QwtColorMap *map = (QwtColorMap*)(&d_spectrogram->colorMap());
-  rightAxis->setColorMap(intv, map);
+  QwtInterval intv = d_spectrogram->interval(Qt::ZAxis);
+  const QwtColorMap *map = d_spectrogram->colorMap();
+  rightAxis->setColorMap(intv, (QwtColorMap*)map);
   setAxisScale(QwtPlot::yRight, intv.minValue(), intv.maxValue());
 #endif
 
@@ -574,8 +568,8 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
   plotLayout()->setAlignCanvasToScales(true);
 
   // Tell the display to redraw everything
-  d_spectrogram->invalidateCache();
-  d_spectrogram->itemChanged();
+  ////d_spectrogram->invalidateCache();
+  ////d_spectrogram->itemChanged();
 
   // Draw again
   replot();
@@ -588,7 +582,7 @@ void
 WaterfallDisplayPlot::OnPickerPointSelected(const QPointF & p)
 {
   QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }

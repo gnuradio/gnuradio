@@ -36,18 +36,18 @@ public:
 class PlotWaterfall::PrivateData
 {
 public:
-    PrivateData()
-	{
-	    data = NULL;
-	    colorMap = new QwtLinearColorMap();
-	}
-    ~PrivateData()
-	{
-	    delete colorMap;
-	}
-
-    WaterfallData *data;
-    QwtColorMap *colorMap;
+  PrivateData()
+  {
+    data = NULL;
+    colorMap = new QwtLinearColorMap();
+  }
+  ~PrivateData()
+  {
+    delete colorMap;
+  }
+  
+  WaterfallData *data;
+  QwtColorMap *colorMap;
 };
 
 /*!
@@ -121,8 +121,9 @@ void PlotWaterfall::setColorMap(const QwtColorMap &colorMap)
 */
 const QwtColorMap &PlotWaterfall::colorMap() const
 {
-    return *d_data->colorMap;
+  return *d_data->colorMap;
 }
+
 /*!
   \return Bounding rect of the data
   \sa QwtRasterData::boundingRect
@@ -223,7 +224,7 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
 #if QWT_VERSION < 0x060000
     const QwtDoubleInterval intensityRange = d_data->data->range();
 #else
-    const QwtInterval intensityRange = d_data->data->interval();
+    const QwtInterval intensityRange = d_data->data->interval(Qt::ZAxis);
 #endif    
     if ( !intensityRange.isValid() )
         return image;

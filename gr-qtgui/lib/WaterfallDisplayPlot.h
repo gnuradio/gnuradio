@@ -26,11 +26,13 @@
 #include <stdint.h>
 #include <cstdio>
 #include <qwt_plot.h>
+#include <qwt_plot_spectrogram.h>
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
 
 #include <qtgui_util.h>
-#include <plot_waterfall.h>
+//#include <plot_waterfall.h>
+#include <waterfallGlobalData.h>
 
 #include <gruel/high_res_timer.h>
 
@@ -93,14 +95,13 @@ private:
   double _stopFrequency;
   int    _xAxisMultiplier;
 
-  PlotWaterfall *d_spectrogram;
-
   QwtPlotPanner* _panner;
   QwtPlotZoomer* _zoomer;
 
   QwtDblClickPlotPicker *_picker;
 
-  WaterfallData* _waterfallData;
+  WaterfallData *d_data;
+  QwtPlotSpectrogram *d_spectrogram;
 
   gruel::high_res_timer_type _lastReplot;
 
