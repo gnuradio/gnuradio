@@ -43,19 +43,12 @@ self.\$(id).set_clock_rate(\$clock_rate, uhd.ALL_MBOARDS)
 \#end if
 #for $m in range($max_mboards)
 ########################################################################
-\#if \$num_mboards() > $m and \$ref_source$(m)() == 'external'
-self.\$(id).set_clock_config(uhd.clock_config.external(), $m)
+\#if \$num_mboards() > $m and \$clock_source$(m)()
+self.\$(id).set_clock_source(\$clock_source$(m), $m)
 \#end if
 ########################################################################
-\#if \$num_mboards() > $m and \$ref_source$(m)() == 'internal'
-self.\$(id).set_clock_config(uhd.clock_config.internal(), $m)
-\#end if
-########################################################################
-\#if \$num_mboards() > $m and \$ref_source$(m)() == 'mimo'
-_config = uhd.clock_config()
-_config.ref_source = uhd.clock_config.REF_MIMO
-_config.pps_source = uhd.clock_config.PPS_MIMO
-self.\$(id).set_clock_config(_config, $m)
+\#if \$num_mboards() > $m and \$time_source$(m)()
+self.\$(id).set_time_source(\$time_source$(m), $m)
 \#end if
 ########################################################################
 \#if \$num_mboards() > $m and \$sd_spec$(m)()
@@ -221,14 +214,14 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	</param>
 	#for $m in range($max_mboards)
 	<param>
-		<name>Mb$(m): Ref Source</name>
-		<key>ref_source$(m)</key>
+		<name>Mb$(m): Clock Source</name>
+		<key>clock_source$(m)</key>
 		<value></value>
-		<type>enum</type>
+		<type>string</type>
 		<hide>
 			\#if not \$num_mboards() > $m
 				all
-			\#elif \$ref_source$(m)()
+			\#elif \$clock_source$(m)()
 				none
 			\#else
 				part
@@ -238,6 +231,26 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<option><name>Internal</name><key>internal</key></option>
 		<option><name>External</name><key>external</key></option>
 		<option><name>MIMO Cable</name><key>mimo</key></option>
+		<option><name>O/B GPSDO</name><key>gpsdo</key></option>
+	</param>
+	<param>
+		<name>Mb$(m): Time Source</name>
+		<key>time_source$(m)</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			\#if not \$num_mboards() > $m
+				all
+			\#elif \$time_source$(m)()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+		<option><name>Default</name><key></key></option>
+		<option><name>External</name><key>external</key></option>
+		<option><name>MIMO Cable</name><key>mimo</key></option>
+		<option><name>O/B GPSDO</name><key>gpsdo</key></option>
 	</param>
 	<param>
 		<name>Mb$(m): Subdev Spec</name>

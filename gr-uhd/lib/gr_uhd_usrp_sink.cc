@@ -162,6 +162,54 @@ public:
         return _dev->set_clock_config(clock_config, mboard);
     }
 
+    void set_time_source(const std::string &source, const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->set_time_source(source, mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    std::string get_time_source(const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->get_time_source(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    std::vector<std::string> get_time_sources(const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->get_time_sources(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    void set_clock_source(const std::string &source, const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->set_clock_source(source, mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    std::string get_clock_source(const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->get_clock_source(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    std::vector<std::string> get_clock_sources(const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->get_clock_sources(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
     double get_clock_rate(size_t mboard){
         return _dev->get_master_clock_rate(mboard);
     }

@@ -291,10 +291,58 @@ public:
 
     /*!
      * Set the clock configuration.
+     * DEPRECATED for set_time/clock_source.
      * \param clock_config the new configuration
      * \param mboard the motherboard index 0 to M-1
      */
     virtual void set_clock_config(const uhd::clock_config_t &clock_config, size_t mboard = 0) = 0;
+
+    /*!
+     * Set the time source for the usrp device.
+     * This sets the method of time synchronization,
+     * typically a pulse per second or an encoded time.
+     * Typical options for source: external, MIMO.
+     * \param source a string representing the time source
+     * \param mboard which motherboard to set the config
+     */
+    virtual void set_time_source(const std::string &source, const size_t mboard = 0) = 0;
+
+    /*!
+     * Get the currently set time source.
+     * \param mboard which motherboard to get the config
+     * \return the string representing the time source
+     */
+    virtual std::string get_time_source(const size_t mboard) = 0;
+
+    /*!
+     * Get a list of possible time sources.
+     * \param mboard which motherboard to get the list
+     * \return a vector of strings for possible settings
+     */
+    virtual std::vector<std::string> get_time_sources(const size_t mboard) = 0;
+
+    /*!
+     * Set the clock source for the usrp device.
+     * This sets the source for a 10 Mhz reference clock.
+     * Typical options for source: internal, external, MIMO.
+     * \param source a string representing the clock source
+     * \param mboard which motherboard to set the config
+     */
+    virtual void set_clock_source(const std::string &source, const size_t mboard = 0) = 0;
+
+    /*!
+     * Get the currently set clock source.
+     * \param mboard which motherboard to get the config
+     * \return the string representing the clock source
+     */
+    virtual std::string get_clock_source(const size_t mboard) = 0;
+
+    /*!
+     * Get a list of possible clock sources.
+     * \param mboard which motherboard to get the list
+     * \return a vector of strings for possible settings
+     */
+    virtual std::vector<std::string> get_clock_sources(const size_t mboard) = 0;
 
     /*!
      * Get the master clock rate.
