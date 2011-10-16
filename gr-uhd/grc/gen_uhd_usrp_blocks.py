@@ -29,8 +29,12 @@ MAIN_TMPL = """\
 	device_addr=\$dev_addr,
 	stream_args=uhd.stream_args(
 		cpu_format="\$type",
+		\#if \$otw()
 		otw_format=\$otw,
+		\#end if
+		\#if \$stream_args()
 		args=\$stream_args,
+		\#end if
 		channels=range(\$nchan),
 	),
 )
@@ -90,38 +94,45 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<option>
 			<name>Complex float32</name>
 			<key>fc32</key>
-			<opt>type:complex</opt>
-			<opt>vlen:1</opt>
+			<opt>type:fc32</opt>
 		</option>
 		<option>
 			<name>Complex int16</name>
 			<key>sc16</key>
-			<opt>type:short</opt>
-			<opt>vlen:2</opt>
+			<opt>type:sc16</opt>
 		</option>
 		<option>
 			<name>Real float32</name>
 			<key>f32</key>
-			<opt>type:float</opt>
-			<opt>vlen:1</opt>
+			<opt>type:f32</opt>
 		</option>
 		<option>
 			<name>Real uint16</name>
 			<key>s16</key>
-			<opt>type:short</opt>
-			<opt>vlen:1</opt>
+			<opt>type:s16</opt>
 		</option>
 		<option>
 			<name>VITA word32</name>
 			<key>item32</key>
-			<opt>type:int</opt>
-			<opt>vlen:1</opt>
+			<opt>type:s32</opt>
 		</option>
 	</param>
 	<param>
 		<name>Wire Format</name>
 		<key>otw</key>
+		<value></value>
 		<type>string</type>
+		<hide>
+			\#if \$otw()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+		<option>
+			<name>Automatic</name>
+			<key></key>
+		</option>
 		<option>
 			<name>Complex int16</name>
 			<key>sc16</key>
@@ -271,7 +282,6 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<$sourk>
 		<name>$direction</name>
 		<type>\$type.type</type>
-		<vlen>\$type.vlen</vlen>
 		<nports>\$nchan</nports>
 	</$sourk>
 	<doc>
