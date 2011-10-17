@@ -305,7 +305,7 @@ dnl $2 is AC_LANG_PROGRAM argument 1
 dnl $3 is AC_LANG_PROGRAM argument 2
 dnl $4 is cv variable name.  E.g., ax_cv_boost_thread
 AC_DEFUN([_AX_BOOST_CHECK_],[
-    _AX_BOOST_WITH($1)
+    _AX_BOOST_WITH([$1])
     if test "$want_boost" = "yes"; then
         AC_REQUIRE([AC_PROG_CC])
         AC_REQUIRE([AC_PROG_CXX])
