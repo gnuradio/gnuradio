@@ -1,4 +1,3 @@
-#
 # Copyright 2001,2004,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
@@ -55,7 +54,8 @@ libgnuradio_core_la_LIBADD  = 		\
 	$(GRUEL_LA)			\
 	$(FFTW3F_LIBS)			\
 	$(GSL_LIBS)			\
-	$(CBLAS_LIBS)			
+	$(CBLAS_LIBS)			\
+	$(BOOST_FILESYSTEM_LIB)
 
 libgnuradio_core_qa_la_LIBADD  = 	\
 	filter/libfilter-qa.la		\

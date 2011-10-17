@@ -25,7 +25,7 @@ dnl ])
 
 AC_DEFUN([GR_CHECK_CREATEFILEMAPPING],[
   AC_MSG_CHECKING([for CreateFileMapping function])
-  AC_COMPILE_IFELSE([
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([
 #include <windows.h>
 int main (int argc, char **argv)
 { 
@@ -41,12 +41,13 @@ int main (int argc, char **argv)
                      seg_name);                 // name of mapping object
     return 0;
 }
-],[HAVE_CREATEFILEMAPPING=yes
-   AC_DEFINE(HAVE_CREATEFILEMAPPING,[1],[Define if you have the CreateFilemapping function(win32).])],
+])],[HAVE_CREATEFILEMAPPING=yes
+     AC_DEFINE([HAVE_CREATEFILEMAPPING],[1],
+	[Define if you have the CreateFilemapping function(win32).])],
   [HAVE_CREATEFILEMAPPING=no])
 
-  AC_MSG_RESULT($HAVE_CREATEFILEMAPPING)
-  AM_CONDITIONAL(HAVE_CREATEFILEMAPPING,     test x$HAVE_CREATEFILEMAPPING = xyes)
+  AC_MSG_RESULT([$HAVE_CREATEFILEMAPPING])
+  AM_CONDITIONAL([HAVE_CREATEFILEMAPPING], [test x$HAVE_CREATEFILEMAPPING = xyes])
 ])
 
 

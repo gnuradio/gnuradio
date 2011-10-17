@@ -70,11 +70,11 @@ grinclude_HEADERS =			\
 	WaterfallDisplayPlot.h		\
 	waterfallGlobalData.h		\
 	ConstellationDisplayPlot.h	\
-	plot_waterfall.h		\
 	spectrumdisplayform.h		\
 	timedisplayform.h		\
 	SpectrumGUIClass.h		\
 	spectrumUpdateEvents.h		\
+	plot_waterfall.h		\
 	gr_qtgui_api.h			\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h			\

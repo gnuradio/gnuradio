@@ -22,17 +22,24 @@
 
 #include <qtgui_util.h>
 
+#if QWT_VERSION < 0x060000
 QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()
     : QwtPickerMachine ()
 {
-
 }
+#else
+QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()
+    : QwtPickerMachine (PointSelection)
+{
+}
+#endif
 
 QwtPickerDblClickPointMachine::~QwtPickerDblClickPointMachine()
 {
 
 }
 
+#if QWT_VERSION < 0x060000
 QwtPickerMachine::CommandList
 QwtPickerDblClickPointMachine::transition(const QwtEventPattern &eventPattern,
 					  const QEvent *e)
@@ -53,10 +60,35 @@ QwtPickerDblClickPointMachine::transition(const QwtEventPattern &eventPattern,
   return cmdList;
 }
 
+#else
+
+QList<QwtPickerMachine::Command>
+QwtPickerDblClickPointMachine::transition(const QwtEventPattern &eventPattern,
+					  const QEvent *e)
+{
+  QList<QwtPickerMachine::Command> cmdList;
+  switch(e->type()) {
+    case QEvent::MouseButtonDblClick:
+      if ( eventPattern.mouseMatch(QwtEventPattern::MouseSelect1,
+				   (const QMouseEvent *)e) ) {
+	cmdList += QwtPickerMachine::Begin;
+	cmdList += QwtPickerMachine::Append;
+	cmdList += QwtPickerMachine::End;
+      }
+      break;
+  default:
+    break;
+  }
+  return cmdList;
+}
+#endif
+
 QwtDblClickPlotPicker::QwtDblClickPlotPicker(QwtPlotCanvas* canvas)
   : QwtPlotPicker(canvas)
 {
+#if QWT_VERSION < 0x060000
   setSelectionFlags(QwtPicker::PointSelection);
+#endif
 }
 
 QwtDblClickPlotPicker::~QwtDblClickPlotPicker()
