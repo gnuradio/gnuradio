@@ -276,7 +276,7 @@ AC_DEFUN([_AX_BOOST_CHECK_LIB_],[
 
 dnl $1 is unit name.  E.g., boost_thread
 AC_DEFUN([_AX_BOOST_WITH],[
-    _AX_BOOST_WITH_($1,m4_bpatsubst($1,_,-))
+    _AX_BOOST_WITH_([$1], [m4_bpatsubst($1,_,-)])
 ])
 
 dnl $1 is unit name.  E.g., boost_thread
@@ -305,7 +305,7 @@ dnl $2 is AC_LANG_PROGRAM argument 1
 dnl $3 is AC_LANG_PROGRAM argument 2
 dnl $4 is cv variable name.  E.g., ax_cv_boost_thread
 AC_DEFUN([_AX_BOOST_CHECK_],[
-    _AX_BOOST_WITH($1)
+    _AX_BOOST_WITH([$1])
     if test "$want_boost" = "yes"; then
         AC_REQUIRE([AC_PROG_CC])
         AC_REQUIRE([AC_PROG_CXX])
@@ -315,9 +315,9 @@ AC_DEFUN([_AX_BOOST_CHECK_],[
         LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
         AC_CACHE_CHECK([whether the boost::m4_substr([$1],6) includes are available], [$4],
 		       [AC_LANG_PUSH([C++])
-                        AC_COMPILE_IFELSE(AC_LANG_PROGRAM([$2],[$3]),[$4]=yes,[$4]=no)
+                        AC_COMPILE_IFELSE([AC_LANG_PROGRAM([$2],[$3])], [[$4]=yes], [[$4]=no])
                         AC_LANG_POP([C++])
-                       ])
+			])
 	if test "$[$4]" = "yes"; then
 	    _AX_BOOST_CHECK_LIB([$1])
 	fi
@@ -330,5 +330,5 @@ dnl $1 is unit name.  E.g., boost_thread
 dnl $2 is AC_LANG_PROGRAM argument 1
 dnl $3 is AC_LANG_PROGRAM argument 2
 AC_DEFUN([_AX_BOOST_CHECK],[
-    _AX_BOOST_CHECK_($1,$2,$3,ax_cv_$1)
+    _AX_BOOST_CHECK_([$1], [$2], [$3], [ax_cv_$1])
 ])
