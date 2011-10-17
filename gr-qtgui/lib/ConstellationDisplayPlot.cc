@@ -68,11 +68,17 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   _imagDataPoints = new double[_numPoints];
 
   // Disable polygon clipping
+#if QWT_VERSION < 0x060000
   QwtPainter::setDeviceClipping(false);
+#else
+  QwtPainter::setPolylineSplitting(false);
+#endif
   
+#if QWT_VERSION < 0x060000
   // We don't need the cache here
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintPacked, false);
+#endif
 
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
@@ -91,13 +97,22 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   _plot_curve->attach(this);
   _plot_curve->setPen(QPen(Qt::blue, _penSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
   _plot_curve->setStyle(QwtPlotCurve::Dots);
+
+#if QWT_VERSION < 0x060000
   _plot_curve->setRawData(_realDataPoints, _imagDataPoints, _numPoints);
+#else
+  _plot_curve->setRawSamples(_realDataPoints, _imagDataPoints, _numPoints);
+#endif
 
   memset(_realDataPoints, 0x0, _numPoints*sizeof(double));
   memset(_imagDataPoints, 0x0, _numPoints*sizeof(double));
 
   _zoomer = new ConstellationDisplayZoomer(canvas());
+
+#if QWT_VERSION < 0x060000
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
+#endif
+
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
 			   Qt::RightButton, Qt::ControlModifier);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
@@ -120,8 +135,14 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
 
   // emit the position of clicks on widget
   _picker = new QwtDblClickPlotPicker(canvas());
+
+#if QWT_VERSION < 0x060000
   connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
-          this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+#else
+  connect(_picker, SIGNAL(selected(const QPointF &)),
+	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+#endif
 
   connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool ) ), 
 	  this, SLOT(LegendEntryChecked(QwtPlotItem *, bool ) ));
@@ -193,11 +214,17 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
       _realDataPoints = new double[_numPoints];
       _imagDataPoints = new double[_numPoints];
       
+#if QWT_VERSION < 0x060000
       _plot_curve->setRawData(_realDataPoints, _imagDataPoints, _numPoints);
+#else
+      _plot_curve->setRawSamples(_realDataPoints, _imagDataPoints, _numPoints);
+#endif      
     }
 
     memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
     memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
+
+    replot();
 
     _lastReplot = gruel::high_res_timer_now();
   }
@@ -209,6 +236,7 @@ ConstellationDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
   plotItem->setVisible(!on);
 }
 
+#if QWT_VERSION < 0x060000
 void
 ConstellationDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
@@ -216,5 +244,14 @@ ConstellationDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
+#else
+void
+ConstellationDisplayPlot::OnPickerPointSelected(const QPointF & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  emit plotPointSelected(point);
+}
+#endif
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_C */

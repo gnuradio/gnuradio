@@ -40,7 +40,7 @@ AC_DEFUN([GR_LIB64],[
 
   AC_MSG_CHECKING([gr_libdir_suffix])
   gr_libdir_suffix=""
-  AC_SUBST(gr_libdir_suffix)
+  AC_SUBST([gr_libdir_suffix])
 
   case "$host_os" in
     linux*) is_linux=yes ;;

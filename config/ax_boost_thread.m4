@@ -46,19 +46,19 @@ AC_DEFUN([AX_BOOST_THREAD],
         LDFLAGS="$LDFLAGS $BOOST_LDFLAGS $PTHREAD_LIBS"
 	CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 
-        AC_CACHE_CHECK(whether the boost::thread includes are available,
-                       ax_cv_boost_thread,
+        AC_CACHE_CHECK([whether the boost::thread includes are available],
+                       [ax_cv_boost_thread],
         [AC_LANG_PUSH([C++])
-             AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
+             AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
                                    [[boost::thread_group thrds;
-                                   return 0;]]),
-                   ax_cv_boost_thread=yes, ax_cv_boost_thread=no)
+                                   return 0;]])],
+                   [ax_cv_boost_thread=yes], [ax_cv_boost_thread=no])
              AC_LANG_POP([C++])
         ])
 
         if test "$ax_cv_boost_thread" = "yes"; then
 	    BOOST_CXXFLAGS="$PTHREAD_CFLAGS"
-            AC_SUBST(BOOST_CXXFLAGS)
+            AC_SUBST([BOOST_CXXFLAGS])
 	    _AX_BOOST_CHECK_LIB([boost_thread])
 	    if test "$link_ok" = "yes" && test -n "$PTHREAD_LIBS"; then
 	        BOOST_THREAD_LIB="$BOOST_THREAD_LIB $PTHREAD_LIBS"

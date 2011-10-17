@@ -133,11 +133,17 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   _xAxisPoints = new double[_numPoints];
 
   // Disable polygon clipping
+#if QWT_VERSION < 0x060000
   QwtPainter::setDeviceClipping(false);
+#else
+  QwtPainter::setPolylineSplitting(false);
+#endif
   
+#if QWT_VERSION < 0x060000
   // We don't need the cache here
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintPacked, false);
+#endif
   
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
@@ -156,18 +162,35 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   _fft_plot_curve = new QwtPlotCurve("Power Spectrum");
   _fft_plot_curve->attach(this);
   _fft_plot_curve->setPen(QPen(Qt::blue));
+
+#if QWT_VERSION < 0x060000
   _fft_plot_curve->setRawData(_xAxisPoints, _dataPoints, _numPoints);
+#else
+  _fft_plot_curve->setRawSamples(_xAxisPoints, _dataPoints, _numPoints);
+#endif
 
   _min_fft_plot_curve = new QwtPlotCurve("Minimum Power");
   _min_fft_plot_curve->attach(this);
   _min_fft_plot_curve->setPen(QPen(Qt::magenta));
+
+#if QWT_VERSION < 0x060000
   _min_fft_plot_curve->setRawData(_xAxisPoints, _minFFTPoints, _numPoints);
+#else
+  _min_fft_plot_curve->setRawSamples(_xAxisPoints, _minFFTPoints, _numPoints);
+#endif
+
   _min_fft_plot_curve->setVisible(false);
 
   _max_fft_plot_curve = new QwtPlotCurve("Maximum Power");
   _max_fft_plot_curve->attach(this);
   _max_fft_plot_curve->setPen(QPen(Qt::darkYellow));
+
+#if QWT_VERSION < 0x060000
   _max_fft_plot_curve->setRawData(_xAxisPoints, _maxFFTPoints, _numPoints);
+#else
+  _max_fft_plot_curve->setRawSamples(_xAxisPoints, _maxFFTPoints, _numPoints);
+#endif
+
   _max_fft_plot_curve->setVisible(false);
 
   _lower_intensity_marker= new QwtPlotMarker();
@@ -197,9 +220,16 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   symbol.setSize(8);
   symbol.setPen(QPen(Qt::yellow));
   symbol.setBrush(QBrush(Qt::yellow));
-  _markerPeakAmplitude->setSymbol(symbol);
-  _markerPeakAmplitude->attach(this);
 
+#if QWT_VERSION < 0x060000
+  _markerPeakAmplitude->setSymbol(symbol);
+#else
+  _markerPeakAmplitude->setSymbol(&symbol);
+#endif
+
+  /// THIS CAUSES A PROBLEM!
+  //_markerPeakAmplitude->attach(this);
+  
   _markerNoiseFloorAmplitude = new QwtPlotMarker();
   _markerNoiseFloorAmplitude->setLineStyle(QwtPlotMarker::HLine);
   _markerNoiseFloorAmplitude->setLinePen(QPen(Qt::darkRed, 0, Qt::DotLine));
@@ -220,15 +250,25 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 
   // emit the position of clicks on widget
   _picker = new QwtDblClickPlotPicker(canvas());
+
+#if QWT_VERSION < 0x060000
   connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+#else
+  connect(_picker, SIGNAL(selected(const QPointF &)),
+	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+#endif
 
   // Configure magnify on mouse wheel
   _magnifier = new QwtPlotMagnifier(canvas());
   _magnifier->setAxisEnabled(QwtPlot::xBottom, false);
 
   _zoomer = new FreqDisplayZoomer(canvas(), 0);
+
+#if QWT_VERSION < 0x060000
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
+#endif
+
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
 			  Qt::RightButton, Qt::ControlModifier);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
@@ -362,7 +402,7 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
 {
   // Only update plot if there is data and if the time interval has elapsed
   if((numDataPoints > 0) && 
-     (gruel::high_res_timer_now() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
+	(gruel::high_res_timer_now() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
     
     if(numDataPoints != _numPoints) {
       _numPoints = numDataPoints;
@@ -375,16 +415,22 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
       _xAxisPoints = new double[_numPoints];
       _minFFTPoints = new double[_numPoints];
       _maxFFTPoints = new double[_numPoints];
-      
+
+#if QWT_VERSION < 0x060000
       _fft_plot_curve->setRawData(_xAxisPoints, _dataPoints, _numPoints);
       _min_fft_plot_curve->setRawData(_xAxisPoints, _minFFTPoints, _numPoints);
       _max_fft_plot_curve->setRawData(_xAxisPoints, _maxFFTPoints, _numPoints);
+#else
+      _fft_plot_curve->setRawSamples(_xAxisPoints, _dataPoints, _numPoints);
+      _min_fft_plot_curve->setRawSamples(_xAxisPoints, _minFFTPoints, _numPoints);
+      _max_fft_plot_curve->setRawSamples(_xAxisPoints, _maxFFTPoints, _numPoints);
+#endif
       
       _resetXAxisPoints();
       ClearMaxData();
       ClearMinData();
     }
-    
+
     memcpy(_dataPoints, dataPoints, numDataPoints*sizeof(double));
     for(int64_t point = 0; point < numDataPoints; point++){
       if(dataPoints[point] < _minFFTPoints[point]){
@@ -400,6 +446,8 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
     _peakAmplitude = peakAmplitude;
 
     SetUpperIntensityLevel(_peakAmplitude);
+
+    replot();
 
     _lastReplot = gruel::high_res_timer_now();
   }
@@ -478,7 +526,7 @@ FrequencyDisplayPlot::SetBGColour (QColor c)
 {
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), c);
-  canvas()->setPalette(palette);  
+  canvas()->setPalette(palette);
 }
 
 void
@@ -490,6 +538,7 @@ FrequencyDisplayPlot::ShowCFMarker (const bool show)
     _markerCF->hide();
 }
 
+#if QWT_VERSION < 0x060000
 void
 FrequencyDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
@@ -498,5 +547,15 @@ FrequencyDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }
+#else
+void
+FrequencyDisplayPlot::OnPickerPointSelected(const QPointF & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f %d\n", point.x(), point.y(), _xAxisMultiplier);
+  point.setX(point.x() * _xAxisMultiplier);
+  emit plotPointSelected(point);
+}
+#endif
 
 #endif /* FREQUENCY_DISPLAY_PLOT_C */
