@@ -103,14 +103,23 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   memset(_xAxisPoints, 0x0, _numPoints*sizeof(double));
 
   _zoomer = new TimeDomainDisplayZoomer(canvas(), 0);
+
+#if QWT_VERSION < 0x060000
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
+#endif
 
   // Disable polygon clipping
+#if QWT_VERSION < 0x060000
   QwtPainter::setDeviceClipping(false);
+#else
+  QwtPainter::setPolylineSplitting(false);
+#endif
   
+#if QWT_VERSION < 0x060000
   // We don't need the cache here
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintPacked, false);
+#endif
 
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
@@ -130,8 +139,6 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 	 << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
 	 << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
 
-  int ncolors = colors.size();
-  
   // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
   for(int i = 0; i < _nplots; i++) {
@@ -141,8 +148,13 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
     _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
     _plot_curve[i]->attach(this);
     _plot_curve[i]->setPen(QPen(colors[i]));
+
+#if QWT_VERSION < 0x060000
     _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
-  }
+#else
+    _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+#endif
+}
 
   _sampleRate = 1;
   _resetXAxisPoints();
@@ -158,8 +170,14 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
   // emit the position of clicks on widget
   _picker = new QwtDblClickPlotPicker(canvas());
+
+#if QWT_VERSION < 0x060000
   connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+#else
+  connect(_picker, SIGNAL(selected(const QPointF &)),
+	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+#endif
 
   // Configure magnify on mouse wheel
   _magnifier = new QwtPlotMagnifier(canvas());
@@ -245,7 +263,12 @@ void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
       for(int i = 0; i < _nplots; i++) {
 	delete[] _dataPoints[i];
 	_dataPoints[i] = new double[_numPoints];
+
+#if QWT_VERSION < 0x060000
 	_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+#else
+	_plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+#endif
       }
       
       setXaxis(0, numDataPoints);
@@ -255,6 +278,8 @@ void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
     for(int i = 0; i < _nplots; i++) {
       memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
     }
+
+    replot();
   }
 }
 
@@ -300,6 +325,8 @@ TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
   }
 }
 
+
+#if QWT_VERSION < 0x060000
 void
 TimeDomainDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
@@ -307,5 +334,14 @@ TimeDomainDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
+#else
+void
+TimeDomainDisplayPlot::OnPickerPointSelected(const QPointF & p)
+{
+  QPointF point = p;
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  emit plotPointSelected(point);
+}
+#endif
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

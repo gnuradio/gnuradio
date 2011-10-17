@@ -79,7 +79,7 @@ class Port(_Port, _GUIPort):
 		self._vlen = n.find('vlen') or ''
 		self._optional = bool(n.find('optional'))
 
-	def get_types(self): return ('complex', 'float', 'int', 'short', 'byte', 'msg', '')
+	def get_types(self): return Constants.TYPE_TO_SIZEOF.keys()
 
 	def validate(self):
 		_Port.validate(self)
@@ -146,22 +146,16 @@ class Port(_Port, _GUIPort):
 		@return a hex color code.
 		"""
 		try:
-			if self.get_vlen() == 1:
-				return {#vlen is 1
-					'complex': Constants.COMPLEX_COLOR_SPEC,
-					'float': Constants.FLOAT_COLOR_SPEC,
-					'int': Constants.INT_COLOR_SPEC,
-					'short': Constants.SHORT_COLOR_SPEC,
-					'byte': Constants.BYTE_COLOR_SPEC,
-					'msg': Constants.MSG_COLOR_SPEC,
-				}[self.get_type()]
-			return {#vlen is non 1
-				'complex': Constants.COMPLEX_VECTOR_COLOR_SPEC,
-				'float': Constants.FLOAT_VECTOR_COLOR_SPEC,
-				'int': Constants.INT_VECTOR_COLOR_SPEC,
-				'short': Constants.SHORT_VECTOR_COLOR_SPEC,
-				'byte': Constants.BYTE_VECTOR_COLOR_SPEC,
-			}[self.get_type()]
+			color = Constants.TYPE_TO_COLOR[self.get_type()]
+			if self.get_vlen() == 1: return color
+			color_val = int(color[1:], 16)
+			r = (color_val >> 16) & 0xff
+			g = (color_val >> 8) & 0xff
+			b = (color_val >> 0) & 0xff
+			r = max(r-50, 0)
+			g = max(g-50, 0)
+			b = max(b-50, 0)
+			return '#%.2x%.2x%.2x'%(r, g, b)
 		except: return _Port.get_color(self)
 
 	def copy(self, new_key=None):

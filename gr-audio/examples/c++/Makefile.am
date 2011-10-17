@@ -35,4 +35,6 @@ GR_AUDIO_LA=$(top_builddir)/gr-audio/lib/libgnuradio-audio.la
 noinst_PROGRAMS = dial_tone
 
 dial_tone_SOURCES = dial_tone.cc
-dial_tone_LDADD = $(GNURADIO_CORE_LA) $(GR_AUDIO_LA)
+dial_tone_LDADD = \
+	$(GNURADIO_CORE_LA) $(GR_AUDIO_LA) \
+	$(BOOST_FILESYSTEM_LIB)

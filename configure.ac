@@ -55,7 +55,6 @@ LF_CONFIGURE_CC
 LF_CONFIGURE_CXX
 GR_LIB64		dnl check for lib64 suffix after choosing compilers
 
-
 dnl The three macros above are known to override CFLAGS if the user
 dnl didn't specify them.  Though I'm sure somebody thought this was
 dnl a good idea, it makes it hard to use other than -g -O2 when compiling
@@ -67,7 +66,7 @@ if test "$user_set_cflags" != yes; then
   autoconf_default_CFLAGS="$CFLAGS"
   CFLAGS=""
 fi
-AC_SUBST(autoconf_default_CFLAGS)
+AC_SUBST([autoconf_default_CFLAGS])
 
 
 dnl The three macros above are known to override CXXFLAGS if the user

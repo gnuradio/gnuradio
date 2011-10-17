@@ -43,6 +43,7 @@ class gr_fir_ccf;
  * \brief Timing synchronizer using polyphase filterbanks
  *
  * \ingroup filter_blk
+ * \ingroup pfb_blk
  * 
  * This block performs timing synchronization for PAM signals by
  * minimizing the derivative of the filtered signal, which in turn

@@ -75,22 +75,28 @@ class Block(_Block, _GUIBlock):
 		"""
 		_Block.rewrite(self)
 
+		def rectify(ports):
+			#restore integer contiguity after insertion
+			#rectify the port names with the index
+			for i, port in enumerate(ports):
+				port._key = str(i)
+				port._name = port._n['name']
+				if len(ports) > 1: port._name += str(i)
+
 		def insert_port(get_ports, get_port, key):
 			prev_port = get_port(str(int(key)-1))
 			get_ports().insert(
 				get_ports().index(prev_port)+1,
 				prev_port.copy(new_key=key),
 			)
-			#restore integer contiguity after insertion
-			for i, port in enumerate(get_ports()): port._key = str(i)
+			rectify(get_ports())
 
 		def remove_port(get_ports, get_port, key):
 			port = get_port(key)
 			for connection in port.get_connections():
 				self.get_parent().remove_element(connection)
 			get_ports().remove(port)
-			#restore integer contiguity after insertion
-			for i, port in enumerate(get_ports()): port._key = str(i)
+			rectify(get_ports())
 
 		#adjust nports
 		for get_ports, get_port in (

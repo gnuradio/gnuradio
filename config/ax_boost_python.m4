@@ -65,14 +65,14 @@ ac_cv_boost_python,
  if test x$PYTHON_INCLUDE_DIR != x; then
    CPPFLAGS=-I$PYTHON_INCLUDE_DIR $CPPFLAGS
  fi
- AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[
+ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
  #include <boost/python/module.hpp>
  using namespace boost::python;
  BOOST_PYTHON_MODULE(test) { throw "Boost::Python test."; }]],
-               [[return 0;]]),
-               ac_cv_boost_python=yes, ac_cv_boost_python=no)
+               [[return 0;]])],
+               [ac_cv_boost_python=yes, ac_cv_boost_python=no)
  AC_LANG_RESTORE
- CPPFLAGS=$CPPFLAGS_SAVE
+ CPPFLAGS=$CPPFLAGS_SAVE]
 ])
 if test "$ac_cv_boost_python" = "yes"; then
   AC_LANG_PUSH([C++])
