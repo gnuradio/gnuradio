@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2008-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,7 +35,6 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _intValidator->setBottom(0);
   _frequencyDisplayPlot = new FrequencyDisplayPlot(FrequencyPlotDisplayFrame);
   _waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
-
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(2, TimeDomainDisplayFrame);
   _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
@@ -62,9 +61,9 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _noiseFloorAmplitude = -HUGE_VAL;
 
   connect(_waterfallDisplayPlot, SIGNAL(UpdatedLowerIntensityLevel(const double)), 
-	  _frequencyDisplayPlot, SLOT(SetLowerIntensityLevel(const double)));
+  	  _frequencyDisplayPlot, SLOT(SetLowerIntensityLevel(const double)));
   connect(_waterfallDisplayPlot, SIGNAL(UpdatedUpperIntensityLevel(const double)), 
-	  _frequencyDisplayPlot, SLOT(SetUpperIntensityLevel(const double)));
+   	  _frequencyDisplayPlot, SLOT(SetUpperIntensityLevel(const double)));
   
   _frequencyDisplayPlot->SetLowerIntensityLevel(-200);
   _frequencyDisplayPlot->SetUpperIntensityLevel(-200);
@@ -90,16 +89,16 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
 
   // Connect double click signals up
   connect(_frequencyDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
-	  this, SLOT(onFFTPlotPointSelected(const QPointF)));
+  	  this, SLOT(onFFTPlotPointSelected(const QPointF)));
   
   connect(_waterfallDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
-	  this, SLOT(onWFallPlotPointSelected(const QPointF)));
+  	  this, SLOT(onWFallPlotPointSelected(const QPointF)));
   
   connect(_timeDomainDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
-	  this, SLOT(onTimePlotPointSelected(const QPointF)));
+  	  this, SLOT(onTimePlotPointSelected(const QPointF)));
   
   connect(_constellationDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
-	  this, SLOT(onConstPlotPointSelected(const QPointF)));
+  	  this, SLOT(onConstPlotPointSelected(const QPointF)));
 }
 
 SpectrumDisplayForm::~SpectrumDisplayForm()
@@ -242,7 +241,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
       _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints, 
 					  numTimeDomainDataPoints,
 					  d_update_time);
-   }
+    }
     if(tabindex == d_plot_constellation) {
       _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
 					     imagTimeDomainDataPoints, 
@@ -258,7 +257,6 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					   spectrumUpdateEvent->getDroppedFFTFrames());
       }
     }
-
     
     // Tell the system the GUI has been updated
     if(_systemSpecifiedFlag){
@@ -296,7 +294,6 @@ SpectrumDisplayForm::customEvent( QEvent * e)
     if(_systemSpecifiedFlag){
       WindowComboBox->setCurrentIndex(_system->GetWindowType());
       FFTSizeComboBox->setCurrentIndex(_system->GetFFTSizeIndex());
-      //FFTSizeComboBox->setCurrentIndex(1);
     }
 
     waterfallMinimumIntensityChangedCB(WaterfallMinimumIntensityWheel->value());
@@ -466,7 +463,8 @@ SpectrumDisplayForm::_AverageHistory(const double* newBuffer)
       if(_historyEntryCount > static_cast<int>(_historyVector->size())){
 	_historyEntryCount = _historyVector->size();
       }
-      _historyEntry = (++_historyEntry)%_historyVector->size();
+      _historyEntry += 1;
+      _historyEntry = _historyEntry % _historyVector->size();
 
       // Total up and then average the values
       double sum;

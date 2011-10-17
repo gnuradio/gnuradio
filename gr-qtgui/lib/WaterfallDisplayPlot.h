@@ -26,13 +26,19 @@
 #include <stdint.h>
 #include <cstdio>
 #include <qwt_plot.h>
+#include <qwt_plot_spectrogram.h>
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
-
 #include <qtgui_util.h>
-#include <plot_waterfall.h>
+#include <waterfallGlobalData.h>
 
 #include <gruel/high_res_timer.h>
+
+#if QWT_VERSION < 0x060000
+#include <plot_waterfall.h>
+#else
+#include <qwt_compat.h>
+#endif
 
 class WaterfallDisplayPlot:public QwtPlot{
   Q_OBJECT
@@ -73,7 +79,12 @@ public:
 
 public slots:
   void resizeSlot( QSize *s );
+
+#if QWT_VERSION < 0x060000
   void OnPickerPointSelected(const QwtDoublePoint & p);
+#else
+  void OnPickerPointSelected(const QPointF & p);
+#endif
  
 signals:
   void UpdatedLowerIntensityLevel(const double);
@@ -89,14 +100,18 @@ private:
   double _stopFrequency;
   int    _xAxisMultiplier;
 
-  PlotWaterfall *d_spectrogram;
-
   QwtPlotPanner* _panner;
   QwtPlotZoomer* _zoomer;
 
   QwtDblClickPlotPicker *_picker;
 
-  WaterfallData* _waterfallData;
+  WaterfallData *d_data;
+
+#if QWT_VERSION < 0x060000
+  PlotWaterfall *d_spectrogram;
+#else
+  QwtPlotSpectrogram *d_spectrogram;
+#endif
 
   gruel::high_res_timer_type _lastReplot;
 
