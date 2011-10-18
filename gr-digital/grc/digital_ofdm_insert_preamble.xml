@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+ Copyright 2011 Free Software Foundation, Inc.
+ 
+ This file is part of GNU Radio
+ 
+ GNU Radio is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3, or (at your option)
+ any later version.
+ 
+ GNU Radio is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with GNU Radio; see the file COPYING.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street,
+ Boston, MA 02110-1301, USA.
+-->
+
+<!--
+###################################################
+##OFDM Insert Preamble
+###################################################
+ -->
+<block>
+	<name>OFDM Insert Preamble</name>
+	<key>digital_ofdm_insert_preamble</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.ofdm_insert_preamble($fft_length, $preamble)</make>
+	<param>
+		<name>FFT Length</name>
+		<key>fft_length</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Preamble</name>
+		<key>preamble</key>
+		<type>raw</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+		<vlen>$fft_length</vlen>
+	</sink>
+	<sink>
+		<name>flag</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<vlen>$fft_length</vlen>
+	</source>
+</block>

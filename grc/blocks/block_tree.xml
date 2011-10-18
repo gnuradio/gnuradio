@@ -215,9 +215,6 @@
 
 		<block>blks2_qamx_mod</block>
 		<block>blks2_qamx_demod</block>
-
-		<block>blks2_ofdm_mod</block>
-		<block>blks2_ofdm_demod</block>
 	</cat>
 	<cat>
 		<name>Error Correction</name>

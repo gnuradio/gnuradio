@@ -50,4 +50,14 @@
 		<block>digital_qam_mod</block>
 		<block>digital_qam_demod</block>
 	</cat>
+	<cat>
+                <name>OFDM</name>
+		<block>digital_ofdm_mod</block>
+		<block>digital_ofdm_demod</block>
+		<block>digital_ofdm_cyclic_prefixer</block>
+		<block>digital_ofdm_frame_acquisition</block>
+		<block>digital_ofdm_insert_preamble</block>
+		<block>digital_ofdm_sampler</block>
+		<block>digital_ofdm_sync_pn</block>
+	</cat>
 </cat>

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+ Copyright 2011 Free Software Foundation, Inc.
+ 
+ This file is part of GNU Radio
+ 
+ GNU Radio is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3, or (at your option)
+ any later version.
+ 
+ GNU Radio is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with GNU Radio; see the file COPYING.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street,
+ Boston, MA 02110-1301, USA.
+-->
+
+<!--
+###################################################
+##OFDM Frame Acquisition
+###################################################
+ -->
+<block>
+	<name>OFDM Frame Acquisition</name>
+	<key>digital_ofdm_frame_acquisition</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.ofdm_frame_acquisition($occupied_carriers, $fft_length, $cplen, $known_symbol, $max_fft_shift_len)</make>
+	<param>
+		<name>Occupied Carriers</name>
+		<key>occupied_carriers</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>FFT Length</name>
+		<key>fft_length</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>CP Length</name>
+		<key>cplen</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Preamble</name>
+		<key>known_symbol</key>
+		<type>complex_vector</type>
+	</param>
+	<param>
+		<name>Max FFT Shift</name>
+		<key>max_fft_shift_len</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+		<vlen>$fft_length</vlen>
+	</sink>
+	<sink>
+		<name>flag</name>
+		<type>byte</type>
+		<vlen>$fft_length</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<vlen>$occupied_carriers</vlen>
+	</source>
+	<source>
+		<name>flag</name>
+		<type>byte</type>
+	</source>
+</block>

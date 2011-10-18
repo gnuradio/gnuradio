@@ -39,8 +39,6 @@ dist_ourdata_DATA = \
 	blks2_logpwrfft_x.xml \
 	blks2_nbfm_rx.xml \
 	blks2_nbfm_tx.xml \
-	blks2_ofdm_demod.xml \
-	blks2_ofdm_mod.xml \
 	blks2_packet_decoder.xml \
 	blks2_packet_encoder.xml \
 	blks2_pfb_arb_resampler.xml \
