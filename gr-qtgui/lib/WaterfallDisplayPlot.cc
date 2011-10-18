@@ -318,7 +318,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 
 #else
   d_spectrogram = new QwtPlotSpectrogram("Spectrogram");
-  d_spectrogram->setData(*d_data);
+  d_spectrogram->setData(d_data);
   d_spectrogram->setDisplayMode(QwtPlotSpectrogram::ImageMode, true);
   d_spectrogram->setColorMap(new ColorMap_MultiColor());
 #endif
