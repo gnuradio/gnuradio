@@ -37,9 +37,8 @@ public:
 
 #if QWT_VERSION < 0x060000
     virtual QwtDoubleRect boundingRect() const;
-#endif
-
     virtual QSize rasterHint(const QwtDoubleRect &) const;
+#endif
 
     virtual int rtti() const;
 
