@@ -180,12 +180,17 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
     if ( area.isEmpty() )
         return QImage();
 
+#if QWT_VERSION < 0x060000
     QRect rect = transform(xMap, yMap, area);
+    const QSize res = d_data->data->rasterHint(area);
+#else
+    QRect rect(0,0,0,0);
+    const QSize res(0,0);
+#endif
 
     QwtScaleMap xxMap = xMap;
     QwtScaleMap yyMap = yMap;
 
-    const QSize res = d_data->data->rasterHint(area);
     if ( res.isValid() )
     {
         /*
