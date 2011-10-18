@@ -108,7 +108,7 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 	<param>
 		<name>Ref Level (dB)</name>
 		<key>ref_level</key>
-		<value>50</value>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>
@@ -126,7 +126,7 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 	<param>
 		<name>Refresh Rate</name>
 		<key>fft_rate</key>
-		<value>30</value>
+		<value>15</value>
 		<type>int</type>
 	</param>
 	<param>
