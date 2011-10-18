@@ -28,7 +28,7 @@ from utils import mod_codes
 import digital_swig
 
 # import from local folder
-import psk2
+import psk
 import qam
 
 tested_mod_codes = (mod_codes.NO_CODE, mod_codes.GRAY_CODE)
@@ -65,7 +65,7 @@ def threed_constell():
     return digital_swig.constellation_calcdist(points, [], rot_sym, dim)
 
 tested_constellation_info = (
-    (psk2.psk_constellation,
+    (psk.psk_constellation,
      {'m': (2, 4, 8, 16, 32, 64),
       'mod_code': tested_mod_codes, },
      True, None),

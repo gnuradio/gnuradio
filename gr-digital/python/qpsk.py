@@ -28,7 +28,7 @@ Demodulation is not included since the generic_mod_demod
 from gnuradio import gr
 from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
 import digital_swig
-import modulation_utils2
+import modulation_utils
 
 # Default number of points in constellation.
 _def_constellation_points = 4
@@ -167,10 +167,10 @@ class dqpsk_demod(generic_demod):
 #
 # Add these to the mod/demod registry
 #
-modulation_utils2.add_type_1_mod('qpsk', qpsk_mod)
-modulation_utils2.add_type_1_demod('qpsk', qpsk_demod)
-modulation_utils2.add_type_1_constellation('qpsk', qpsk_constellation)
-modulation_utils2.add_type_1_mod('dqpsk', dqpsk_mod)
-modulation_utils2.add_type_1_demod('dqpsk', dqpsk_demod)
-modulation_utils2.add_type_1_constellation('dqpsk', dqpsk_constellation)
+modulation_utils.add_type_1_mod('qpsk', qpsk_mod)
+modulation_utils.add_type_1_demod('qpsk', qpsk_demod)
+modulation_utils.add_type_1_constellation('qpsk', qpsk_constellation)
+modulation_utils.add_type_1_mod('dqpsk', dqpsk_mod)
+modulation_utils.add_type_1_demod('dqpsk', dqpsk_demod)
+modulation_utils.add_type_1_constellation('dqpsk', dqpsk_constellation)
 

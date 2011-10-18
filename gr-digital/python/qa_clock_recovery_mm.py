@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig, psk2
+import digital_swig
 import random, cmath
 
 class test_clock_recovery_mm(gr_unittest.TestCase):

@@ -26,7 +26,7 @@
 
 from gnuradio import gr
 import digital_swig
-import modulation_utils2
+import modulation_utils
 
 from math import pi
 import numpy
@@ -151,7 +151,7 @@ class gmsk_mod(gr.hier_block2):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils2.extract_kwargs_from_options(gmsk_mod.__init__,
+        return modulation_utils.extract_kwargs_from_options(gmsk_mod.__init__,
                                                             ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
@@ -265,12 +265,12 @@ class gmsk_demod(gr.hier_block2):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils2.extract_kwargs_from_options(gmsk_demod.__init__,
+        return modulation_utils.extract_kwargs_from_options(gmsk_demod.__init__,
                                                              ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
 #
 # Add these to the mod/demod registry
 #
-modulation_utils2.add_type_1_mod('gmsk', gmsk_mod)
-modulation_utils2.add_type_1_demod('gmsk', gmsk_demod)
+modulation_utils.add_type_1_mod('gmsk', gmsk_mod)
+modulation_utils.add_type_1_demod('gmsk', gmsk_demod)

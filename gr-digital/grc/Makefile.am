@@ -40,4 +40,11 @@ dist_grcblocks_DATA = \
 	digital_psk_mod.xml			\
 	digital_psk_demod.xml			\
 	digital_qam_mod.xml			\
-	digital_qam_demod.xml
+	digital_qam_demod.xml			\
+	digital_ofdm_mod.xml			\
+	digital_ofdm_demod.xml			\
+	digital_ofdm_cyclic_prefixer.xml	\
+	digital_ofdm_frame_acquisition.xml	\
+	digital_ofdm_insert_preamble.xml	\
+	digital_ofdm_sampler.xml		\
+	digital_ofdm_sync_pn.xml

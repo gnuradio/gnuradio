@@ -228,14 +228,6 @@ set(gr_core_general_triple_threats
     gr_nop
     gr_null_sink
     gr_null_source
-    gr_ofdm_frame_acquisition
-    gr_ofdm_cyclic_prefixer
-    gr_ofdm_demapper_vcb
-    gr_ofdm_mapper_bcv
-    gr_ofdm_frame_sink
-    #gr_ofdm_frame_sink2 #cannot build yet...
-    gr_ofdm_insert_preamble
-    gr_ofdm_sampler
     gr_pa_2x2_phase_combiner
     gr_packet_sink
     gr_peak_detector2_fb

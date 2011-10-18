@@ -30,11 +30,17 @@ GR_PYTHON_INSTALL(
     crc.py
     generic_mod_demod.py
     gmsk.py
-    modulation_utils2.py
+    modulation_utils.py
+    ofdm.py
+    ofdm_packet_utils.py
+    ofdm_receiver.py
+    ofdm_sync_fixed.py
+    ofdm_sync_ml.py
+    ofdm_sync_pnac.py
+    ofdm_sync_pn.py
     packet_utils.py
     pkt.py
     psk.py
-    psk2.py
     qam.py
     qpsk.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
@@ -66,6 +72,6 @@ foreach(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gr-digital/swig
     )
     set(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-digital)
-    GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)

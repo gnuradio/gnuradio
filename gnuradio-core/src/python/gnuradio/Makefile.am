@@ -28,8 +28,6 @@ grpython_PYTHON = 			\
 	__init__.py			\
 	eng_notation.py			\
 	eng_option.py			\
-	modulation_utils2.py		\
-	ofdm_packet_utils.py		\
 	gr_unittest.py			\
 	gr_xmlrunner.py			\
 	optfir.py			\

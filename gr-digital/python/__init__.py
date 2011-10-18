@@ -26,12 +26,21 @@ utilities, and examples for doing digital modulation and demodulation.
 # The presence of this file turns this directory into a Python package
 
 from digital_swig import *
-from psk2 import *
+from psk import *
+from qam import *
 from bpsk import *
 from qpsk import *
-from qam import *
 from gmsk import *
+from cpm import *
 from pkt import *
 from crc import *
-from packet_utils import *
-from modulation_utils2 import *
+from modulation_utils import *
+from ofdm import *
+from ofdm_receiver import *
+from ofdm_sync_fixed import *
+from ofdm_sync_ml import *
+from ofdm_sync_pnac import *
+from ofdm_sync_pn import *
+
+import packet_utils
+import ofdm_packet_utils

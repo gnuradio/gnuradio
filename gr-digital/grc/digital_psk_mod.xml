@@ -30,7 +30,7 @@
   <name>PSK Mod</name>
   <key>digital_psk_mod</key>
   <import>from gnuradio import digital</import>
-  <make>digital.psk2.psk_mod(
+  <make>digital.psk.psk_mod(
   constellation_points=$constellation_points,
   mod_code=$mod_code,
   differential=$differential,

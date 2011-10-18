@@ -89,13 +89,6 @@
 #include <gr_probe_avg_mag_sqrd_cf.h>
 #include <gr_probe_avg_mag_sqrd_f.h>
 #include <gr_probe_signal_f.h>
-#include <gr_ofdm_frame_acquisition.h>
-#include <gr_ofdm_cyclic_prefixer.h>
-#include <gr_ofdm_mapper_bcv.h>
-#include <gr_ofdm_frame_sink.h>
-  //#include <gr_ofdm_frame_sink2.h>
-#include <gr_ofdm_insert_preamble.h>
-#include <gr_ofdm_sampler.h>
 #include <gr_regenerate_bb.h>
 #include <gr_pa_2x2_phase_combiner.h>
 #include <gr_kludge_copy.h>
@@ -208,13 +201,6 @@
 %include "gr_probe_avg_mag_sqrd_cf.i"
 %include "gr_probe_avg_mag_sqrd_f.i"
 %include "gr_probe_signal_f.i"
-%include "gr_ofdm_frame_acquisition.i"
-%include "gr_ofdm_cyclic_prefixer.i"
-%include "gr_ofdm_mapper_bcv.i"
-%include "gr_ofdm_frame_sink.i"
- //%include "gr_ofdm_frame_sink2.i"
-%include "gr_ofdm_insert_preamble.i"
-%include "gr_ofdm_sampler.i"
 %include "gr_regenerate_bb.i"
 %include "gr_pa_2x2_phase_combiner.i"
 %include "gr_kludge_copy.i"

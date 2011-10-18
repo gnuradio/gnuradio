@@ -39,6 +39,12 @@ grinclude_HEADERS = 				\
 	digital_kurtotic_equalizer_cc.h 	\
 	digital_metric_type.h			\
 	digital_mpsk_receiver_cc.h		\
+	digital_ofdm_cyclic_prefixer.h		\
+	digital_ofdm_frame_acquisition.h	\
+	digital_ofdm_frame_sink.h		\
+	digital_ofdm_insert_preamble.h		\
+	digital_ofdm_mapper_bcv.h		\
+	digital_ofdm_sampler.h			\
 	digital_gmskmod_bc.h 			\
 	digital_cpmmod_bc.h
 

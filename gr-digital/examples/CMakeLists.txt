@@ -20,18 +20,26 @@
 include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
-    transmit_path.py
-    receive_path.py
-    uhd_interface.py
-    benchmark_tx.py
-    benchmark_rx.py
-    tx_voice.py
-    rx_voice.py
+    example_costas.py
+    example_fll.py
+    example_timing.py
     run_length.py
     gen_whitener.py
-    digital_bert_rx.py
-    digital_bert_tx.py
-    tunnel.py
     DESTINATION ${GR_PKG_DATA_DIR}/examples/digital
+    COMPONENT "digital_python"
+)
+
+GR_PYTHON_INSTALL(PROGRAMS
+    narrowband/transmit_path.py
+    narrowband/receive_path.py
+    narrowband/uhd_interface.py
+    narrowband/benchmark_tx.py
+    narrowband/benchmark_rx.py
+    narrowband/tx_voice.py
+    narrowband/rx_voice.py
+    narrowband/digital_bert_rx.py
+    narrowband/digital_bert_tx.py
+    narrowband/tunnel.py
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/digital/narrowband
     COMPONENT "digital_python"
 )

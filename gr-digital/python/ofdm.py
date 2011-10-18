@@ -21,31 +21,12 @@
 # 
 
 import math
-from gnuradio import gr, ofdm_packet_utils, modulation_utils2
+from gnuradio import gr
+import digital_swig
+import ofdm_packet_utils
+from ofdm_receiver import ofdm_receiver
 import gnuradio.gr.gr_threading as _threading
 import psk, qam
-
-from gnuradio.blks2impl.ofdm_receiver import ofdm_receiver
-
-def _add_common_options(normal, expert):
-    """
-    Adds OFDM-specific options to the Options Parser that are common
-    both to the modulator and demodulator.
-    """
-    mods_list = ", ".join(modulation_utils2.type_1_constellations().keys())
-    print dir(modulation_utils2)
-    print "MODS LIST: ", mods_list
-    print modulation_utils2.type_1_mods()
-    normal.add_option("-m", "--modulation", type="string", default="psk",
-                      help="set modulation type (" + mods_list + ") [default=%default]")
-    normal.add_option("-c", "--constellation-points", type="int", default=2,
-                      help="set number of constellation points [default=%default]")
-    expert.add_option("", "--fft-length", type="intx", default=512,
-                      help="set the number of FFT bins [default=%default]")
-    expert.add_option("", "--occupied-tones", type="intx", default=200,
-                      help="set the number of occupied FFT bins [default=%default]")
-    expert.add_option("", "--cp-length", type="intx", default=128,
-                      help="set the number of bits in the cyclic prefix [default=%default]")
 
 # /////////////////////////////////////////////////////////////////////////////
 #                   mod/demod with packets as i/o
@@ -81,9 +62,6 @@ class ofdm_mod(gr.hier_block2):
         self._occupied_tones = options.occupied_tones
         self._cp_length = options.cp_length
 
-        print (options)
-        arity = options.constellation_points
-
         win = [] #[1 for i in range(self._fft_length)]
 
         # Use freq domain to get doubled-up known symbol for correlation in time domain
@@ -104,15 +82,31 @@ class ofdm_mod(gr.hier_block2):
             
         symbol_length = options.fft_length + options.cp_length
         
-        print modulation_utils2.type_1_constellations
-        const = modulation_utils2.type_1_constellations()[self._modulation](arity).points()
-
-        self._pkt_input = gr.ofdm_mapper_bcv(const, msgq_limit,
-                                             options.occupied_tones, options.fft_length)
+        mods = {"bpsk": 2, "qpsk": 4, "8psk": 8, "qam8": 8, "qam16": 16, "qam64": 64, "qam256": 256}
+        arity = mods[self._modulation]
         
-        self.preambles = gr.ofdm_insert_preamble(self._fft_length, padded_preambles)
+        rot = 1
+        if self._modulation == "qpsk":
+            rot = (0.707+0.707j)
+            
+        # FIXME: pass the constellation objects instead of just the points
+        if(self._modulation.find("psk") >= 0):
+            constel = psk.psk_constellation(arity)
+            rotated_const = map(lambda pt: pt * rot, constel.points())
+        elif(self._modulation.find("qam") >= 0):
+            constel = qam.qam_constellation(arity)
+            rotated_const = map(lambda pt: pt * rot, constel.points())
+        #print rotated_const
+        self._pkt_input = digital_swig.ofdm_mapper_bcv(rotated_const,
+                                                       msgq_limit,
+                                                       options.occupied_tones,
+                                                       options.fft_length)
+        
+        self.preambles = digital_swig.ofdm_insert_preamble(self._fft_length,
+                                                           padded_preambles)
         self.ifft = gr.fft_vcc(self._fft_length, False, win, True)
-        self.cp_adder = gr.ofdm_cyclic_prefixer(self._fft_length, symbol_length)
+        self.cp_adder = digital_swig.ofdm_cyclic_prefixer(self._fft_length,
+                                                          symbol_length)
         self.scale = gr.multiply_const_cc(1.0 / math.sqrt(self._fft_length))
         
         self.connect((self._pkt_input, 0), (self.preambles, 0))
@@ -143,7 +137,9 @@ class ofdm_mod(gr.hier_block2):
             msg = gr.message(1) # tell self._pkt_input we're not sending any more packets
         else:
             # print "original_payload =", string_to_hex_list(payload)
-            pkt = ofdm_packet_utils.make_packet(payload, 1, 1, self._pad_for_usrp, whitening=True)
+            pkt = ofdm_packet_utils.make_packet(payload, 1, 1,
+                                                self._pad_for_usrp,
+                                                whitening=True)
             
             #print "pkt =", string_to_hex_list(pkt)
             msg = gr.message_from_string(pkt)
@@ -153,10 +149,14 @@ class ofdm_mod(gr.hier_block2):
         """
         Adds OFDM-specific options to the Options Parser
         """
-        _add_common_options(normal, expert)
-        for mod in modulation_utils2.type_1_mods().values():
-            mod.add_options(expert)
-
+        normal.add_option("-m", "--modulation", type="string", default="bpsk",
+                          help="set modulation type (bpsk, qpsk, 8psk, qam{16,64}) [default=%default]")
+        expert.add_option("", "--fft-length", type="intx", default=512,
+                          help="set the number of FFT bins [default=%default]")
+        expert.add_option("", "--occupied-tones", type="intx", default=200,
+                          help="set the number of occupied FFT bins [default=%default]")
+        expert.add_option("", "--cp-length", type="intx", default=128,
+                          help="set the number of bits in the cyclic prefix [default=%default]")
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)
 
@@ -205,9 +205,6 @@ class ofdm_demod(gr.hier_block2):
         self._cp_length = options.cp_length
         self._snr = options.snr
 
-        arity = options.constellation_points
-        print("con points is %s" % options.constellation_points)
-        
         # Use freq domain to get doubled-up known symbol for correlation in time domain
         zeros_on_left = int(math.ceil((self._fft_length - self._occupied_tones)/2.0))
         ksfreq = known_symbols_4512_3[0:self._occupied_tones]
@@ -217,20 +214,36 @@ class ofdm_demod(gr.hier_block2):
 
         # hard-coded known symbols
         preambles = (ksfreq,)
-        
+
         symbol_length = self._fft_length + self._cp_length
-        self.ofdm_recv = ofdm_receiver(self._fft_length, self._cp_length,
-                                       self._occupied_tones, self._snr, preambles,
+        self.ofdm_recv = ofdm_receiver(self._fft_length,
+                                       self._cp_length,
+                                       self._occupied_tones,
+                                       self._snr, preambles,
                                        options.log)
 
-        constell = modulation_utils2.type_1_constellations()[self._modulation](arity)
+        mods = {"bpsk": 2, "qpsk": 4, "8psk": 8, "qam8": 8, "qam16": 16, "qam64": 64, "qam256": 256}
+        arity = mods[self._modulation]
+        
+        rot = 1
+        if self._modulation == "qpsk":
+            rot = (0.707+0.707j)
+
+        # FIXME: pass the constellation objects instead of just the points
+        if(self._modulation.find("psk") >= 0):
+            constel = psk.psk_constellation(arity)
+            rotated_const = map(lambda pt: pt * rot, constel.points())
+        elif(self._modulation.find("qam") >= 0):
+            constel = qam.qam_constellation(arity)
+            rotated_const = map(lambda pt: pt * rot, constel.points())
+        #print rotated_const
 
         phgain = 0.25
         frgain = phgain*phgain / 4.0
-        self.ofdm_demod = gr.ofdm_frame_sink2(constell.base(),
-                                             self._rcvd_pktq,
-                                             self._occupied_tones,
-                                             phgain, frgain)
+        self.ofdm_demod = digital_swig.ofdm_frame_sink(rotated_const, range(arity),
+                                                       self._rcvd_pktq,
+                                                       self._occupied_tones,
+                                                       phgain, frgain)
 
         self.connect(self, self.ofdm_recv)
         self.connect((self.ofdm_recv, 0), (self.ofdm_demod, 0))
@@ -241,9 +254,12 @@ class ofdm_demod(gr.hier_block2):
         self.connect(self.ofdm_recv.chan_filt, self)
 
         if options.log:
-            self.connect(self.ofdm_demod, gr.file_sink(gr.sizeof_gr_complex*self._occupied_tones, "ofdm_frame_sink_c.dat"))
+            self.connect(self.ofdm_demod,
+                         gr.file_sink(gr.sizeof_gr_complex*self._occupied_tones,
+                                      "ofdm_frame_sink_c.dat"))
         else:
-            self.connect(self.ofdm_demod, gr.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
+            self.connect(self.ofdm_demod,
+                         gr.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
 
         if options.verbose:
             self._print_verbage()
@@ -254,9 +270,16 @@ class ofdm_demod(gr.hier_block2):
         """
         Adds OFDM-specific options to the Options Parser
         """
-        _add_common_options(normal, expert)
-        for mod in modulation_utils2.type_1_mods().values():
-            mod.add_options(expert)
+        normal.add_option("-m", "--modulation", type="string", default="bpsk",
+                          help="set modulation type (bpsk or qpsk) [default=%default]")
+        expert.add_option("", "--fft-length", type="intx", default=512,
+                          help="set the number of FFT bins [default=%default]")
+        expert.add_option("", "--occupied-tones", type="intx", default=200,
+                          help="set the number of occupied FFT bins [default=%default]")
+        expert.add_option("", "--cp-length", type="intx", default=128,
+                          help="set the number of bits in the cyclic prefix [default=%default]")
+        expert.add_option("", "--snr", type="float", default=30.0,
+                          help="SNR estimate [default=%default]")
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)
 

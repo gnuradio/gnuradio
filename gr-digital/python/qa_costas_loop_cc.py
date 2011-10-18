@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig, psk2
+import digital_swig, psk
 import random, cmath
 
 class test_costas_loop_cc(gr_unittest.TestCase):
@@ -125,7 +125,7 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         self.test = digital_swig.costas_loop_cc(natfreq, order)
 
         rot = cmath.exp(-cmath.pi/8.0j) # rotate to match Costas rotation
-        const = psk2.psk_constellation(order)
+        const = psk.psk_constellation(order)
         data = [random.randint(0,7) for i in xrange(100)]
         data = [2*rot*const.points()[d] for d in data]
         

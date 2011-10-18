@@ -44,7 +44,8 @@ noinst_PYTHON = \
 	qa_crc32.py			\
 	qa_fll_band_edge.py		\
 	qa_lms_equalizer.py		\
-	qa_mpsk_receiver.py
+	qa_mpsk_receiver.py		\
+	qa_ofdm_insert_preamble.py
 
 digital_PYTHON = \
 	__init__.py		\
@@ -53,11 +54,17 @@ digital_PYTHON = \
 	crc.py			\
 	generic_mod_demod.py	\
 	gmsk.py			\
-	modulation_utils2.py	\
+	modulation_utils.py	\
+	ofdm.py			\
+	ofdm_packet_utils.py	\
+	ofdm_receiver.py	\
+	ofdm_sync_fixed.py	\
+	ofdm_sync_ml.py		\
+	ofdm_sync_pnac.py	\
+	ofdm_sync_pn.py		\
 	packet_utils.py		\
 	pkt.py			\
 	psk.py			\
-	psk2.py			\
 	qam.py			\
 	qpsk.py
 endif

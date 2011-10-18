@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!--
+ Copyright 2011 Free Software Foundation, Inc.
+ 
+ This file is part of GNU Radio
+ 
+ GNU Radio is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3, or (at your option)
+ any later version.
+ 
+ GNU Radio is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with GNU Radio; see the file COPYING.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street,
+ Boston, MA 02110-1301, USA.
+-->
+
+<!--
+###################################################
+##OFDM Mod
+###################################################
+ -->
+<block>
+	<name>OFDM Mod</name>
+	<key>digital_ofdm_mod</key>
+	<import>from grc_gnuradio import blks2 as grc_blks2</import>
+	<import>from gnuradio import digital</import>
+	<make>grc_blks2.packet_mod_$(type.fcn)(digital.ofdm_mod(
+		options=grc_blks2.options(
+			modulation="$modulation",
+			fft_length=$fft_length,
+			occupied_tones=$occupied_tones,
+			cp_length=$cp_length,
+			pad_for_usrp=$pad_for_usrp,
+			log=None,
+			verbose=None,
+		),
+	),
+	payload_length=$payload_length,
+)</make>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<value>float</value>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:i</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:b</opt>
+		</option>
+	</param>
+	<param>
+		<name>Modulation</name>
+		<key>modulation</key>
+		<type>enum</type>
+		<option>
+			<name>BPSK</name>
+			<key>bpsk</key>
+		</option>
+		<option>
+			<name>QPSK</name>
+			<key>qpsk</key>
+		</option>
+		<option>
+			<name>8PSK</name>
+			<key>8psk</key>
+		</option>
+		<option>
+			<name>QAM8</name>
+			<key>qam8</key>
+		</option>
+		<option>
+			<name>QAM16</name>
+			<key>qam16</key>
+		</option>
+		<option>
+			<name>QAM64</name>
+			<key>qam64</key>
+		</option>
+		<option>
+			<name>QAM256</name>
+			<key>qam256</key>
+		</option>
+	</param>
+	<param>
+		<name>FFT Length</name>
+		<key>fft_length</key>
+		<value>512</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Occupied Tones</name>
+		<key>occupied_tones</key>
+		<value>200</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Cyclic Prefix Length</name>
+		<key>cp_length</key>
+		<value>128</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Pad for USRP</name>
+		<key>pad_for_usrp</key>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Payload Length</name>
+		<key>payload_length</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+	<doc>Payload Length: 0 for automatic.</doc>
+</block>
