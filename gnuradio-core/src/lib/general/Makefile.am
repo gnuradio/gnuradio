@@ -156,6 +156,7 @@ libgeneral_la_SOURCES = 		\
         gr_test.cc                      \
 	gr_threshold_ff.cc		\
 	gr_throttle.cc			\
+	gr_transcendental.cc		\
 	gr_uchar_to_float.cc		\
 	gr_vco_f.cc			\
 	gr_vector_to_stream.cc		\
@@ -322,6 +323,7 @@ grinclude_HEADERS = 			\
         gr_test.h			\
 	gr_threshold_ff.h		\
 	gr_throttle.h			\
+	gr_transcendental.h		\
 	gr_uchar_to_float.h		\
 	gr_vco.h			\
 	gr_vco_f.h			\
@@ -484,6 +486,7 @@ swiginclude_HEADERS =			\
         gr_test.i			\
 	gr_threshold_ff.i		\
 	gr_throttle.i			\
+	gr_transcendental.i		\
 	gr_uchar_to_float.i		\
 	gr_vco_f.i			\
 	gr_vector_to_stream.i		\
