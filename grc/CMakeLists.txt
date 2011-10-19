@@ -89,6 +89,8 @@ GR_PYTHON_INSTALL(
 ########################################################################
 # Appens NSIS commands to set environment variables
 ########################################################################
+if(WIN32)
+
 file(TO_NATIVE_PATH ${GR_PKG_DOC_DIR} GR_DOC_DIR)
 string(REPLACE "\\" "\\\\" GR_DOC_DIR ${GR_DOC_DIR})
 
@@ -109,6 +111,8 @@ CPACK_SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "${CPACK_NSIS_EXTRA_UNINSTALL_COMM
     DeleteRegValue HKLM ${HLKM_ENV} \\\"GRC_BLOCKS_PATH\\\"
     DeleteRegValue HKLM \\\"SOFTWARE\\\\Python\\\\PythonCore\\\\2.7\\\\PythonPath\\\" \\\"gnuradio\\\"
 ")
+
+endif(WIN32)
 
 ########################################################################
 # Add subdirectories
