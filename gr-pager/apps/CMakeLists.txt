@@ -17,6 +17,13 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-#FIXME
-#not bothering to install because the apps require gr-usrp
-#which we are choosing not to support in the cmake build system
+include(GrPython)
+
+GR_PYTHON_INSTALL(
+    PROGRAMS
+    usrp_flex.py
+    usrp_flex_all.py
+    usrp_flex_band.py
+    DESTINATION ${GR_RUNTIME_DIR}
+    COMPONENT "pager_python"
+)

@@ -64,12 +64,4 @@ GR_PYTHON_INSTALL(
     COMPONENT "uhd_python"
 )
 
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    multi-antenna/multi_fft.py
-    multi-antenna/multi_file.py
-    multi-antenna/multi_scope.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/multi-antenna
-    COMPONENT "uhd_python"
-)
 endif(ENABLE_PYTHON)
