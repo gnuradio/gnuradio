@@ -42,19 +42,19 @@ def add_freq_option(parser):
                           metavar="FREQ")
 
 class uhd_interface:
-    def __init__(self, istx, address, bandwidth, freq=None,
+    def __init__(self, istx, args, bandwidth, freq=None,
                  gain=None, antenna=None):
         
         if(istx):
-            self.u = uhd.usrp_sink(device_addr=address,
+            self.u = uhd.usrp_sink(device_addr=args,
                                    io_type=uhd.io_type.COMPLEX_FLOAT32,
                                    num_channels=1)
         else:
-            self.u = uhd.usrp_source(device_addr=address,
+            self.u = uhd.usrp_source(device_addr=args,
                                      io_type=uhd.io_type.COMPLEX_FLOAT32,
                                      num_channels=1)
 
-        self._addr = address
+        self._args = args
         self._ant  = antenna
         self._gain = self.set_gain(gain)
         self._freq = self.set_freq(freq)
@@ -104,14 +104,14 @@ class uhd_interface:
 #-------------------------------------------------------------------#
 
 class uhd_transmitter(uhd_interface, gr.hier_block2):
-    def __init__(self, address, bandwidth, freq=None, gain=None,
+    def __init__(self, args, bandwidth, freq=None, gain=None,
                  antenna=None, verbose=False):
         gr.hier_block2.__init__(self, "uhd_transmitter",
                                 gr.io_signature(1,1,gr.sizeof_gr_complex),
                                 gr.io_signature(0,0,0))
 
         # Set up the UHD interface as a transmitter
-        uhd_interface.__init__(self, True, address, bandwidth,
+        uhd_interface.__init__(self, True, args, bandwidth,
                                freq, gain, antenna)
 
         self.connect(self, self.u)
@@ -121,8 +121,8 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
             
     def add_options(parser):
         add_freq_option(parser)
-        parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
-                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-a", "--args", type="string", default="",
+                          help="UHD device address args [default=%default]")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("", "--tx-freq", type="eng_float", default=None,
@@ -140,7 +140,7 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
         Prints information about the UHD transmitter
         """
         print "\nUHD Transmitter:"
-        print "Address:     %s"    % (self._addr)
+        print "UHD Args:    %s"    % (self._args)
         print "Freq:        %sHz"  % (eng_notation.num_to_str(self._freq))
         print "Gain:        %f dB" % (self._gain)
         print "Sample Rate: %ssps" % (eng_notation.num_to_str(self._rate))
@@ -154,14 +154,14 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
 
 
 class uhd_receiver(uhd_interface, gr.hier_block2):
-    def __init__(self, address, bandwidth, freq=None, gain=None,
+    def __init__(self, args, bandwidth, freq=None, gain=None,
                  antenna=None, verbose=False):
         gr.hier_block2.__init__(self, "uhd_receiver",
                                 gr.io_signature(0,0,0),
                                 gr.io_signature(1,1,gr.sizeof_gr_complex))
       
         # Set up the UHD interface as a receiver
-        uhd_interface.__init__(self, False, address, bandwidth,
+        uhd_interface.__init__(self, False, args, bandwidth,
                                freq, gain, antenna)
 
         self.connect(self.u, self)
@@ -171,8 +171,8 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
 
     def add_options(parser):
         add_freq_option(parser)
-        parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
-                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-a", "--args", type="string", default="",
+                          help="UHD device address args [default=%default]")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("", "--rx-freq", type="eng_float", default=None,
@@ -191,7 +191,7 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
         Prints information about the UHD transmitter
         """
         print "\nUHD Receiver:"
-        print "Address:     %s"    % (self._addr)
+        print "UHD Args:    %s"    % (self._args)
         print "Freq:        %sHz"  % (eng_notation.num_to_str(self._freq))
         print "Gain:        %f dB" % (self._gain)
         print "Sample Rate: %ssps" % (eng_notation.num_to_str(self._rate))
