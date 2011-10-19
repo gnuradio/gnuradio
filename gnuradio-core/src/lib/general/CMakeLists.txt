@@ -267,6 +267,7 @@ set(gr_core_general_triple_threats
     gr_test
     gr_threshold_ff
     gr_throttle
+    gr_transcendental
     gr_uchar_to_float
     gr_vco_f
     gr_vector_to_stream

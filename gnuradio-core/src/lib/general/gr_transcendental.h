@@ -22,6 +22,7 @@
 #ifndef INCLUDED_GR_TRANSCENDENTAL_H
 #define INCLUDED_GR_TRANSCENDENTAL_H
 
+#include <gr_core_api.h>
 #include <gr_sync_block.h>
 #include <string>
 
@@ -35,12 +36,12 @@
  *
  * output[i] = trans_fcn(input[i])
  */
-class gr_transcendental : virtual public gr_sync_block{
+class GR_CORE_API gr_transcendental : virtual public gr_sync_block{
 public:
     typedef boost::shared_ptr<gr_transcendental> sptr;
 };
 
-gr_transcendental::sptr gr_make_transcendental(
+GR_CORE_API gr_transcendental::sptr gr_make_transcendental(
     const std::string &name,
     const std::string &type = "float"
 );
