@@ -1,7 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=USRP Probe
-Exec=usrp_probe
-Categories=Development;
-Icon=gnuradio-grc
