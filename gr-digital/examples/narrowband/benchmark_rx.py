@@ -44,7 +44,11 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
 
         if(options.rx_freq is not None):
-            self.source = uhd_receiver(options.args, options.bitrate,
+            # Work-around to get the modulation's bits_per_symbol
+            args = demodulator.extract_kwargs_from_options(options)
+            symbol_rate = options.bitrate / demodulator(**args).bits_per_symbol()
+
+            self.source = uhd_receiver(options.args, symbol_rate,
                                        options.samples_per_symbol,
                                        options.rx_freq, options.rx_gain,
                                        options.antenna, options.verbose)

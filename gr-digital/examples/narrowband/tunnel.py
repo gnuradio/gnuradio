@@ -92,12 +92,16 @@ class my_top_block(gr.top_block):
 
         gr.top_block.__init__(self)
 
-        self.source = uhd_receiver(options.address, options.bitrate,
+        # Get the modulation's bits_per_symbol
+        args = mod_class.extract_kwargs_from_options(options)
+        symbol_rate = options.bitrate / mod_class(**args).bits_per_symbol()
+
+        self.source = uhd_receiver(options.args, symbol_rate,
                                    options.samples_per_symbol,
                                    options.rx_freq, options.rx_gain,
                                    options.antenna, options.verbose)
 
-        self.sink = uhd_transmitter(options.address, options.bitrate,
+        self.sink = uhd_transmitter(options.args, symbol_rate,
                                     options.samples_per_symbol,
                                     options.tx_freq, options.tx_gain,
                                     options.antenna, options.verbose)
