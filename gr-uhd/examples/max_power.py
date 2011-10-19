@@ -42,7 +42,7 @@ class build_block(gr.top_block):
     def __init__(self, args, tx_enable, rx_enable):
         gr.top_block.__init__(self)
 
-        d = uhd.device_find(uhd.device_addr(args))
+        d = uhd.find_devices(uhd.device_addr(args))
         uhd_type = d[0].get('type')
 
         print "\nFound '%s' at args '%s'" % \

@@ -108,7 +108,7 @@ class my_top_block(gr.top_block):
         # ----------------------------------------------------------------
         # Set up USRP to transmit on both daughterboards
 
-        d = uhd.device_find(uhd.device_addr(options.args))
+        d = uhd.find_devices(uhd.device_addr(options.args))
         uhd_type = d[0].get('type')
 
         self.u = uhd.usrp_sink(device_addr=options.args,
