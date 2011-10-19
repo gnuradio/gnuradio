@@ -410,7 +410,7 @@ class DIGITAL_API digital_constellation_dqpsk : public digital_constellation
   digital_constellation_dqpsk ();
   unsigned int decision_maker (const gr_complex *sample);
 
-  friend digital_constellation_dqpsk_sptr
+  friend DIGITAL_API digital_constellation_dqpsk_sptr
   digital_make_constellation_dqpsk ();
   
 };
