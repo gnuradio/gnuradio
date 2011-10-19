@@ -43,8 +43,8 @@
 	<param>
 		<name>Logging</name>
 		<key>logging</key>
-		<type>bool</type>
 		<value>False</value>
+		<type>bool</type>
 	</param>
 	<sink>
 		<name>in</name>

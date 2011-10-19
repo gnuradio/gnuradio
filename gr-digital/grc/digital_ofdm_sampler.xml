@@ -43,8 +43,8 @@
 	<param>
 		<name>Timeout</name>
 		<key>timeout</key>
-		<type>int</type>
 		<value>1000</value>
+		<type>int</type>
 	</param>
 	<sink>
 		<name>in</name>
