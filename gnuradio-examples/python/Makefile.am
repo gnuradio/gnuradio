@@ -23,7 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = \
 	mp-sched \
-	multi_usrp \
 	network \
 	pfb \
 	tags
