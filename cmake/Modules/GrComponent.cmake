@@ -46,9 +46,22 @@ function(GR_REGISTER_COMPONENT name var)
         message(STATUS "  Dependency ${dep} = ${${dep}}")
     endforeach(dep)
 
+    #if the user set the var to force, we note this
+    if("${${var}}" STREQUAL "FORCE")
+        set(${var} ON)
+        set(var_force TRUE)
+    else()
+        set(var_force FALSE)
+    endif()
+
     #setup the dependent option for this component
     CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ${ENABLE_DEFAULT} "${ARGN}" OFF)
     set(${var}_ "${${var}}" CACHE INTERNAL "" FORCE)
+
+    #force was specified, but the dependencies were not met
+    if(NOT ${var} AND var_force)
+        message(FATAL_ERROR "user force-enabled ${name} but configuration checked failed")
+    endif()
 
     #append the component into one of the lists
     if(${var})
