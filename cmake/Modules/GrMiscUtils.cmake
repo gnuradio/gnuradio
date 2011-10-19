@@ -84,3 +84,16 @@ macro(GR_INCLUDE_SUBDIRECTORY subdir)
     list(REMOVE_AT _cmake_source_dirs 0)
     list(REMOVE_AT _cmake_binary_dirs 0)
 endmacro(GR_INCLUDE_SUBDIRECTORY)
+
+########################################################################
+# Check if a compiler flag works and conditionally set a compile define.
+#  - flag the compiler flag to check for
+#  - have the variable to set with result
+########################################################################
+INCLUDE(CheckCXXCompilerFlag)
+MACRO(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
+    CHECK_CXX_COMPILER_FLAG(${flag} ${have})
+    IF(${have})
+        ADD_DEFINITIONS(${flag})
+    ENDIF(${have})
+ENDMACRO(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)

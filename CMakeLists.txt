@@ -55,13 +55,15 @@ file(WRITE ${EXPORT_FILE}) #blank the file (subdirs will append)
 ########################################################################
 # Compiler specific setup
 ########################################################################
+include(GrMiscUtils) #compiler flag check
+
 if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
     #http://gcc.gnu.org/wiki/Visibility
-    add_definitions(-fvisibility=hidden)
+    GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-fvisibility=hidden HAVE_VISIBILITY_HIDDEN)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions(-Wsign-compare)
+    GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-Wsign-compare HAVE_SIGN_COMPARE)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
