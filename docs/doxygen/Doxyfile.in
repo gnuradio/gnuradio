@@ -635,8 +635,6 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gr-pager/src/pager_swig.py \
                          @abs_top_builddir@/gr-qtgui \
                          @abs_top_builddir@/gr-radar-mono/src/python/usrp_radar_mono.py \
-                         @abs_top_builddir@/gr-radio-astronomy/src/lib/ra.py \
-                         @abs_top_builddir@/gr-radio-astronomy/src/python \
                          @abs_top_builddir@/gr-sounder/src/python/usrp_sounder.py \
                          @abs_top_builddir@/gr-trellis/doc \
                          @abs_top_builddir@/gr-trellis/src/lib/generate_all.py \

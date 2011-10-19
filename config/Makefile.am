@@ -53,7 +53,6 @@ m4macros = \
 	grc_gr_audio.m4 \
 	grc_gr_comedi.m4 \
 	grc_gr_noaa.m4 \
-	grc_gr_radio_astronomy.m4 \
 	grc_gr_trellis.m4 \
 	grc_gr_usrp.m4 \
 	grc_gr_video_sdl.m4 \
