@@ -52,7 +52,6 @@ AC_DEFUN([GRC_GR_UHD],[
         gr-uhd/apps/hf_explorer/Makefile \
         gr-uhd/apps/hf_radio/Makefile \
 	gr-uhd/examples/Makefile \
-	gr-uhd/examples/multi-antenna/Makefile \
 	gr-uhd/doc/Makefile \
     ])
 
