@@ -105,7 +105,7 @@ GR_SWIG_BLOCK_MAGIC(uhd,amsg_source)
 // device discovery (no need to %include device.hpp)
 ////////////////////////////////////////////////////////////////////////
 %{
-static uhd::device_addrs_t find_devices_raw(const uhd::device_addr_t &dev_addr){
+static uhd::device_addrs_t find_devices_raw(const uhd::device_addr_t &dev_addr = uhd::device_addr_t()){
     return uhd::device::find(dev_addr);
 }
 %}
