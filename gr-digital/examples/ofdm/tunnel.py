@@ -87,12 +87,12 @@ class my_top_block(gr.top_block):
     def __init__(self, callback, options):
         gr.top_block.__init__(self)
 
-        self.source = uhd_receiver(options.address,
+        self.source = uhd_receiver(options.args,
                                    options.bandwidth,
                                    options.rx_freq, options.rx_gain,
                                    options.antenna, options.verbose)
 
-        self.sink = uhd_transmitter(options.address,
+        self.sink = uhd_transmitter(options.args,
                                     options.bandwidth,
                                     options.tx_freq, options.tx_gain,
                                     options.antenna, options.verbose)

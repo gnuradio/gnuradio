@@ -123,11 +123,10 @@ class wfm_rcv_fmdet(gr.hier_block2):
 	    self.rds_signal_generator = gr.multiply_cc();
 	    self_rds_signal_processor = gr.null_sink(gr.sizeof_gr_complex);
 
-            alpha = 5 * 0.25 * math.pi / (audio_rate)
-            beta = alpha * alpha / 4.0
+            loop_bw = 2*math.pi/100.0
             max_freq = -2.0*math.pi*18990/audio_rate;
             min_freq = -2.0*math.pi*19010/audio_rate;          
-            self.stereo_carrier_pll_recovery = gr.pll_refout_cc(alpha,beta,
+            self.stereo_carrier_pll_recovery = gr.pll_refout_cc(loop_bw,
                                                                 max_freq,
                                                                 min_freq);
 

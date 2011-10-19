@@ -9,19 +9,14 @@
 ##################################################
 * probe: also non-float outputs
 * log slider gui control
-* generic usrp (when its ready)
 * packet mod: whitening offset
 * wx min window size in options block
 * gr_adaptive_fir_ccf
 * ofdm  
   * gr_ofdm_bpsk_demapper
-  * gr_ofdm_cyclic_prefixer
   * gr_ofdm_demapper_vcb
-  * gr_ofdm_frame_acquisition
   * gr_ofdm_frame_sink
-  * gr_ofdm_insert_preamble
   * gr_ofdm_mapper_bcv
-  * gr_ofdm_sampler
 * size params for the graphical sinks
 * callbacks for set average on fft, waterfall, number sinks
 * add units to params: Sps, Hz, dB...

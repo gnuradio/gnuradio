@@ -1,13 +1,13 @@
 Decoding ATSC using 19.2MSps rate over 5 processes
 --------------------------------------------------
 
-1) Verify signal, adjust antenna and find best gain setting using usrp_fft.py,
-station frequency from the fcc video database, and decimation of 10.
+1) Verify signal, adjust antenna and find best gain setting using uhd_fft.py,
+station frequency from the fcc video database, and sample rate to 6.4e6.
 
 2) Capture data - adjust gain (-g) frequency (-f) and which side
 the tvrx is on to fit your local setup:
 
-usrp_rx_cfile.py -s -R B -d 10 -g 65 -f 503e6 atsc_data_6-4m_complex 
+uhd_rx_cfile.py -s --samp-rate=6.4e6 -g 65 -f 503e6 atsc_data_6-4m_complex 
 
 You probably still need fast disks to take the data, like a raid-0 set of
 striped sata drives. Make sure there are no or very few Ou overruns. Saving

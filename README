@@ -61,8 +61,8 @@ How to Build GNU Radio:
       On systems using pkgsrc (e.g. NetBSD and Dragonfly), build
       meta-packages/gnuradio, which will build a previous release and
       force installation of the dependencies.  Then pkg_delete the
-      gnuradio and usrp packages, which will leave the dependencies.
-      (This should also work on OSX.)
+      gnuradio package, which will leave the dependencies.  (This
+      should also work on OSX.)
 
       See the wiki at http://gnuradio.org/trac/wiki for details.
 
@@ -192,11 +192,7 @@ As of repository version 4045, gnuradio requires version 1.3.31 or newer.
 
 (9) SDCC: Small Device C Compiler.  http://sdcc.sourceforge.net/
 
-Use version 2.4.0 or later.
-
-This includes a C compiler and linker for the 8051.  It's required to
-build the firmware for the USRP.  If you don't have a USRP, don't
-worry about it.
+--> Not required as of v3.5
 
 
 (10) Guile 1.6 or 1.8 

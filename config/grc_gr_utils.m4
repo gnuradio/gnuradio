@@ -20,9 +20,8 @@
 AC_DEFUN([GRC_GR_UTILS],[
     GRC_ENABLE(gr-utils)
 
-    dnl Don't do gr-utils if gnuradio-core, usrp, or gr-wxgui skipped
+    dnl Don't do gr-utils if gnuradio-core or gr-wxgui skipped
     GRC_CHECK_DEPENDENCY(gr-utils, gnuradio-core)
-    GRC_CHECK_DEPENDENCY(gr-utils, usrp)
     GRC_CHECK_DEPENDENCY(gr-utils, gr-wxgui)
 
     AC_CONFIG_FILES([ \

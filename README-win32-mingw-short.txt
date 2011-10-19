@@ -86,7 +86,7 @@ make
 make install
 
 Now you have a working gnuradio-core
-Now you can go on building and installing gr-audio-windows and windows usrp and wxgui
+Now you can go on building and installing gr-audio-windows and windows and wxgui
 remember that all gnuradio and python dlls need to be on your path to use gnuradio
 The gnuradio dlls are installed at
 /c/Python24/Lib/site-packages:/c/Python24/Lib/site-packages/gnuradio:/c/Python24/Lib/site-packages/gnuradio/gr

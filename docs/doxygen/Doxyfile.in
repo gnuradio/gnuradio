@@ -625,49 +625,19 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gr-audio-alsa/src/audio-alsa.py \
                          @abs_top_builddir@/gr-audio-oss/src/audio_oss.py \
                          @abs_top_builddir@/gr-audio-osx/src/test_audio_loop.py \
-                         @abs_top_builddir@/gr-cvsd-vocoder/src/lib/cvsd_vocoder.py \
-                         @abs_top_builddir@/gr-cvsd-vocoder/src/python/encdec.py \
                          @abs_top_builddir@/gr-gsm-fr-vocoder/src/lib/gsm \
                          @abs_top_builddir@/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.py \
                          @abs_top_builddir@/gr-gsm-fr-vocoder/src/python/encdec.py \
                          @abs_top_builddir@/gr-howto-write-a-block \
-                         @abs_top_builddir@/gr-msdd6000/src/msdd.py \
                          @abs_top_builddir@/gr-pager/src/pager_swig.py \
                          @abs_top_builddir@/gr-qtgui \
-                         @abs_top_builddir@/gr-radar-mono/src/python/usrp_radar_mono.py \
-                         @abs_top_builddir@/gr-radio-astronomy/src/lib/ra.py \
-                         @abs_top_builddir@/gr-radio-astronomy/src/python \
-                         @abs_top_builddir@/gr-sounder/src/python/usrp_sounder.py \
                          @abs_top_builddir@/gr-trellis/doc \
                          @abs_top_builddir@/gr-trellis/src/lib/generate_all.py \
                          @abs_top_builddir@/gr-trellis/src/lib/generate_trellis.py \
                          @abs_top_builddir@/gr-trellis/src/lib/trellis.py \
-                         @abs_top_builddir@/gr-usrp/src/usrp1.py \
-                         @abs_top_builddir@/gr-usrp2/src/usrp2.py \
                          @abs_top_builddir@/gr-video-sdl/src/video_sdl.py \
                          @abs_top_builddir@/gr-wxgui/src/python \
-                         @abs_top_builddir@/grc \
-                         @abs_top_builddir@/usrp/doc \
-                         @abs_top_builddir@/usrp/firmware \
-                         @abs_top_builddir@/usrp/fpga \
-                         @abs_top_builddir@/usrp/host/apps \
-                         @abs_top_builddir@/usrp/host/apps-inband \
-                         @abs_top_builddir@/usrp/host/lib/inband \
-                         @abs_top_builddir@/usrp/host/lib/legacy/ad9862.h \
-                         @abs_top_builddir@/usrp/host/lib/legacy/check_data.py \
-                         @abs_top_builddir@/usrp/host/lib/legacy/circular_buffer.h \
-                         @abs_top_builddir@/usrp/host/lib/legacy/circular_linked_list.h \
-                         @abs_top_builddir@/usrp/host/lib/legacy/db_wbx.h \
-                         @abs_top_builddir@/usrp/host/lib/legacy/db_wbx.cc \
-                         @abs_top_builddir@/usrp/host/lib/legacy/dump_data.py \
-                         @abs_top_builddir@/usrp/host/lib/legacy/gen_usrp_dbid.py \
-                         @abs_top_builddir@/usrp/host/lib/legacy/usrp_dbid.py \
-                         @abs_top_builddir@/usrp/host/misc \
-                         @abs_top_builddir@/usrp/host/swig \
-                         @abs_top_builddir@/usrp2/firmware \
-                         @abs_top_srcdir@/usrp2/firmware \
-                         @abs_top_builddir@/usrp2/fpga \
-                         @abs_top_srcdir@/usrp2/fpga
+                         @abs_top_builddir@/grc
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
@@ -700,7 +670,6 @@ EXCLUDE_PATTERNS       = */.deps/* \
 
 EXCLUDE_SYMBOLS        = ad9862 \
                          numpy \
-                         usrpm \
                          *swig* \
                          *Swig* \
                          *my_top_block* \

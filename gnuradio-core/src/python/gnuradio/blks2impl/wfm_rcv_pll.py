@@ -47,11 +47,9 @@ class wfm_rcv_pll(gr.hier_block2):
         # if they need to.  E.g., to plot its output.
         #
         # input: complex; output: float
-        alpha = 0.25*bandwidth * math.pi / demod_rate
-        beta = alpha * alpha / 4.0
+        loop_bw = 2*math.pi/100.0
         max_freq = 2.0*math.pi*90e3/demod_rate
-            
-        self.fm_demod = gr.pll_freqdet_cf (alpha,beta,max_freq,-max_freq)
+        self.fm_demod = gr.pll_freqdet_cf (loop_bw, max_freq,-max_freq)
 
         # input: float; output: float
         self.deemph_Left  = fm_deemph (audio_rate)
@@ -125,12 +123,11 @@ class wfm_rcv_pll(gr.hier_block2):
 
 
 
-            alpha = 5 * 0.25 * math.pi / (audio_rate)
-            beta = alpha * alpha / 4.0
+            loop_bw = 2*math.pi/100.0
             max_freq = -2.0*math.pi*18990/audio_rate;
             min_freq = -2.0*math.pi*19010/audio_rate;
             
-            self.stereo_carrier_pll_recovery = gr.pll_refout_cc(alpha,beta,max_freq,min_freq);
+            self.stereo_carrier_pll_recovery = gr.pll_refout_cc(loop_bw, max_freq, min_freq);
             #self.stereo_carrier_pll_recovery.squelch_enable(False) #pll_refout does not have squelch yet, so disabled for now 
             
 

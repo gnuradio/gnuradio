@@ -7,8 +7,5 @@ The blk2s module wraps many blocks in blks2 and gives them streaming outputs.
 Will be phased-out by new message passing implementations.
 Other blks2 blocks will hopefully make their way into blks2impl.
 
-The usrp module contains the simple and dual usrp wrappers.
-Will be phased-out by generic usrp and/or new usrp api.
-
 The wxgui module contains a top_block + wxgui frame.
 Will be phased-out by gui.py in wxgui and a new top block template.
