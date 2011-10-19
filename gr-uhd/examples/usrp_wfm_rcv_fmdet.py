@@ -28,18 +28,13 @@ from optparse import OptionParser
 import sys
 import wx
 
-import os
-print os.getpid()
-raw_input()
-
 class wfm_rx_block (stdgui2.std_top_block):
     def __init__(self,frame,panel,vbox,argv):
         stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
 
         parser=OptionParser(option_class=eng_option)
-        parser.add_option("-a", "--address", type="string",
-                          default="addr=192.168.10.2",
-                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-a", "--args", type="string", default="",
+                          help="UHD device address args [default=%default]")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-f", "--freq", type="eng_float", default=100.1e6,
@@ -74,7 +69,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.fm_freq_max = options.freq_max
 
         # build graph
-        self.u = uhd.usrp_source(device_addr=options.address,
+        self.u = uhd.usrp_source(device_addr=options.args,
                                  io_type=uhd.io_type.COMPLEX_FLOAT32,
                                  num_channels=1)
 

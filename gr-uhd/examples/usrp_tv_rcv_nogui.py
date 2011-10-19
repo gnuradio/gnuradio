@@ -59,9 +59,8 @@ class my_top_block(gr.top_block):
             "Make sure your input capture file containes interleaved " + \
             "shorts not complex floats")
         parser = OptionParser(option_class=eng_option, usage=usage)
-        parser.add_option("-a", "--address", type="string",
-                          default="addr=192.168.10.2",
-                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-a", "--args", type="string", default="",
+                          help="UHD device address args [default=%default]")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
@@ -130,7 +129,7 @@ class my_top_block(gr.top_block):
             raise SystemExit, 1
 
           # build the graph
-          self.u = uhd.usrp_source(device_addr=options.address,
+          self.u = uhd.usrp_source(device_addr=options.args,
                                    io_type=uhd.io_type.COMPLEX_FLOAT32,
                                    num_channels=1)
 

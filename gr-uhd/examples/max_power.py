@@ -39,14 +39,14 @@ n2s = eng_notation.num_to_str
 MAX_RATE = 1000e6
 
 class build_block(gr.top_block):
-    def __init__(self, address, tx_enable, rx_enable):
+    def __init__(self, args, tx_enable, rx_enable):
         gr.top_block.__init__(self)
 
-        d = uhd.device_find(uhd.device_addr(address))
+        d = uhd.device_find(uhd.device_addr(args))
         uhd_type = d[0].get('type')
 
-        print "\nFound '%s' at address '%s'" % \
-            (uhd_type, address)
+        print "\nFound '%s' at args '%s'" % \
+            (uhd_type, args)
 
         # Test the type of USRP; if it's a USRP (v1), it has
         # 2 channels; otherwise, it has 1 channel
@@ -59,7 +59,7 @@ class build_block(gr.top_block):
         
         if tx_enable:
             print "\nTRANSMIT CHAIN"
-            self.u_tx = uhd.usrp_sink(device_addr=address,
+            self.u_tx = uhd.usrp_sink(device_addr=args,
                                       io_type=uhd.io_type.COMPLEX_FLOAT32,
                                       num_channels=tx_nchan)
             self.u_tx.set_samp_rate(MAX_RATE)
@@ -92,7 +92,7 @@ class build_block(gr.top_block):
 
         if rx_enable:
             print "\nRECEIVE CHAIN"
-            self.u_rx = uhd.usrp_source(device_addr=address,
+            self.u_rx = uhd.usrp_source(device_addr=args,
                                         io_type=uhd.io_type.COMPLEX_FLOAT32,
                                         num_channels=rx_nchan)
             self.rx_dst0 = gr.null_sink (gr.sizeof_gr_complex)
@@ -123,16 +123,15 @@ class build_block(gr.top_block):
 
 def main ():
     parser = OptionParser (option_class=eng_option)
-    parser.add_option("-a", "--address", type="string",
-                      default="addr=192.168.10.2",
-                      help="Address of UHD device, [default=%default]")
+    parser.add_option("-a", "--args", type="string", default="",
+                      help="UHD device address args [default=%default]")
     parser.add_option("-t", action="store_true", dest="tx_enable",
                       default=False, help="enable Tx path")
     parser.add_option("-r", action="store_true", dest="rx_enable",
                       default=False, help="enable Rx path")
     (options, args) = parser.parse_args ()
 
-    tb = build_block (options.address, options.tx_enable, options.rx_enable)
+    tb = build_block (options.args, options.tx_enable, options.rx_enable)
 
     tb.start ()
     raw_input ('Press Enter to quit: ')

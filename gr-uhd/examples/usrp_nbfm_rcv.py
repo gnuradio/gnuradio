@@ -38,9 +38,8 @@ class my_top_block (stdgui2.std_top_block):
         stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
 
         parser=OptionParser(option_class=eng_option)
-        parser.add_option("-a", "--address", type="string",
-                          default="addr=192.168.10.2",
-                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-a", "--args", type="string", default="",
+                          help="UHD device address args [default=%default]")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-f", "--freq", type="eng_float", default=146.585e6,
@@ -68,7 +67,7 @@ class my_top_block (stdgui2.std_top_block):
         self.freq = 0
         self.freq_step = 25e3
 
-        self.rxpath = receive_path(options.address, options.antenna,
+        self.rxpath = receive_path(options.args, options.antenna,
                                    options.gain, options.audio_output)
 	self.connect(self.rxpath)
 	
@@ -260,12 +259,12 @@ class my_top_block (stdgui2.std_top_block):
 USE_SIMPLE_SQUELCH = False
 
 class receive_path(gr.hier_block2):
-    def __init__(self, address, antenna, gain, audio_output):
+    def __init__(self, args, antenna, gain, audio_output):
 	gr.hier_block2.__init__(self, "receive_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
 
-        self.u = uhd.usrp_source(device_addr=address,
+        self.u = uhd.usrp_source(device_addr=args,
                                  io_type=uhd.io_type.COMPLEX_FLOAT32,
                                  num_channels=1)
 

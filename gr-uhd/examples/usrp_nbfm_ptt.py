@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2007.2011 Free Software Foundation, Inc.
+# Copyright 2005,2007,2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -48,9 +48,8 @@ class ptt_block(stdgui2.std_top_block):
         self.space_bar_pressed = False
         
         parser = OptionParser (option_class=eng_option)
-        parser.add_option("-a", "--address", type="string",
-                          default="addr=192.168.10.2",
-                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-a", "--args", type="string", default="",
+                          help="UHD device address args [default=%default]")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option ("-f", "--freq", type="eng_float", default=442.1e6,
@@ -73,9 +72,9 @@ class ptt_block(stdgui2.std_top_block):
         if options.freq < 1e6:
             options.freq *= 1e6
             
-        self.txpath = transmit_path(options.address, options.tx_gain,
+        self.txpath = transmit_path(options.args, options.tx_gain,
                                     options.audio_input)
-        self.rxpath = receive_path(options.address, options.rx_gain,
+        self.rxpath = receive_path(options.args, options.rx_gain,
                                    options.audio_output)
 	self.connect(self.txpath)
 	self.connect(self.rxpath)
@@ -273,12 +272,12 @@ class ptt_block(stdgui2.std_top_block):
 # ////////////////////////////////////////////////////////////////////////
 
 class transmit_path(gr.hier_block2):
-    def __init__(self, address, gain, audio_input):
+    def __init__(self, args, gain, audio_input):
 	gr.hier_block2.__init__(self, "transmit_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
 				
-        self.u = uhd.usrp_sink(device_addr=address,
+        self.u = uhd.usrp_sink(device_addr=args,
                                io_type=uhd.io_type.COMPLEX_FLOAT32,
                                num_channels=1)
 
@@ -361,12 +360,12 @@ class transmit_path(gr.hier_block2):
 # ////////////////////////////////////////////////////////////////////////
 
 class receive_path(gr.hier_block2):
-    def __init__(self, address, gain, audio_output):
+    def __init__(self, args, gain, audio_output):
 	gr.hier_block2.__init__(self, "receive_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
 
-        self.u = uhd.usrp_source(device_addr=address,
+        self.u = uhd.usrp_source(device_addr=args,
                                  io_type=uhd.io_type.COMPLEX_FLOAT32,
                                  num_channels=1)
 
