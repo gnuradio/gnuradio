@@ -69,6 +69,15 @@ def _prepare_uhd_swig():
         if hasattr(myobj, 'to_real'):      myobj.__float__    = lambda o: o.to_real()
         if attr.endswith('_t'): setattr(uhd_swig, attr[:-2], myobj)
 
+    #make a new find devices that casts everything with the pythonized device_addr_t which has __str__
+    def find_devices(*args, **kwargs):
+        def to_pythonized_dev_addr(dev_addr):
+            new_dev_addr = uhd_swig.device_addr_t()
+            for key in dev_addr.keys(): new_dev_addr[key] = dev_addr.get(key)
+            return new_dev_addr
+        return map(to_pythonized_dev_addr, uhd_swig.find_devices_raw(*args, **kwargs))
+    setattr(uhd_swig, 'find_devices', find_devices)
+
     #Cast constructor args (FIXME swig handle overloads?)
     for attr in ('usrp_source', 'usrp_sink', 'amsg_source'):
         def constructor_factory(old_constructor):
