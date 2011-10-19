@@ -38,7 +38,7 @@ GR_SET_GLOBAL(GR_CORE_PYTHONPATH ${GR_CORE_PYTHONPATH})
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gnuradio-core" ENABLE_GR_CORE
-    ENABLE_GRUEL_
+    ENABLE_GRUEL
     Boost_FOUND
     GSL_FOUND
     FFTW3F_FOUND
