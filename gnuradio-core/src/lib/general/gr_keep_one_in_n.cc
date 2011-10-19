@@ -91,15 +91,13 @@ gr_keep_one_in_n::general_work (int noutput_items,
 
   // Because we have set TPP_DONT, we have to propagate the tags here manually.
   // Adjustment of the tag sample value is done using the float d_decim_rate.
-  std::vector<pmt::pmt_t> tags;
-  std::vector<pmt::pmt_t>::iterator t;
+  std::vector<gr_tag_t> tags;
+  std::vector<gr_tag_t>::iterator t;
   get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+ni);
   for(t = tags.begin(); t != tags.end(); t++) {
-    uint64_t newcount = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*t, 0));
-    add_item_tag(0, newcount * d_decim_rate,
-		 pmt::pmt_tuple_ref(*t, 1),
-		 pmt::pmt_tuple_ref(*t, 2),
-		 pmt::pmt_tuple_ref(*t, 3));
+    gr_tag_t new_tag = *t;
+    new_tag.offset *= d_decim_rate;
+    add_item_tag(0, new_tag);
   }
 
   consume_each (ni);

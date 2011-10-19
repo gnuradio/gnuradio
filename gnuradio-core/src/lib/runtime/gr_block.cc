@@ -144,16 +144,13 @@ gr_block::nitems_written(unsigned int which_output)
 
 void
 gr_block::add_item_tag(unsigned int which_output,
-		       uint64_t offset,
-		       const pmt::pmt_t &key,
-		       const pmt::pmt_t &value,
-		       const pmt::pmt_t &srcid)
+		       const gr_tag_t &tag)
 {
-  d_detail->add_item_tag(which_output, offset, key, value, srcid);
+  d_detail->add_item_tag(which_output, tag);
 }
 
 void
-gr_block::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+gr_block::get_tags_in_range(std::vector<gr_tag_t> &v,
 			    unsigned int which_output,
 			    uint64_t start, uint64_t end)
 {
@@ -161,7 +158,7 @@ gr_block::get_tags_in_range(std::vector<pmt::pmt_t> &v,
 }
   
 void
-gr_block::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+gr_block::get_tags_in_range(std::vector<gr_tag_t> &v,
 			    unsigned int which_output,
 			    uint64_t start, uint64_t end,
 			    const pmt::pmt_t &key)

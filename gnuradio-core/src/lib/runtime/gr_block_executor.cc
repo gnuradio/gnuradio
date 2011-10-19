@@ -91,7 +91,7 @@ min_available_space (gr_block_detail *d, int output_multiple)
 static bool
 propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
 	       const std::vector<uint64_t> &start_nitems_read, double rrate,
-	       std::vector<pmt::pmt_t> &rtags)
+	       std::vector<gr_tag_t> &rtags)
 {
   // Move tags downstream
   // if a sink, we don't need to move downstream
@@ -109,7 +109,7 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
       d->get_tags_in_range(rtags, i, start_nitems_read[i],
 			   d->nitems_read(i));
 
-      std::vector<pmt::pmt_t>::iterator t;
+      std::vector<gr_tag_t>::iterator t;
       if(rrate == 1.0) {
 	for(t = rtags.begin(); t != rtags.end(); t++) {
 	  for(int o = 0; o < d->noutputs(); o++)
@@ -118,14 +118,10 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
       }
       else {
 	for(t = rtags.begin(); t != rtags.end(); t++) {
-	  uint64_t newcount = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*t, 0));
-	  pmt::pmt_t newtup = pmt::mp(pmt::pmt_from_uint64(newcount * rrate),
-				      pmt::pmt_tuple_ref(*t, 1),
-				      pmt::pmt_tuple_ref(*t, 2),
-				      pmt::pmt_tuple_ref(*t, 3));
-	  
+	  gr_tag_t new_tag = *t;
+	  new_tag.offset *= rrate;
 	  for(int o = 0; o < d->noutputs(); o++)
-	    d->output(o)->add_item_tag(newtup);
+	    d->output(o)->add_item_tag(new_tag);
 	}
       }
     }
@@ -139,14 +135,11 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
 	d->get_tags_in_range(rtags, i, start_nitems_read[i],
 			     d->nitems_read(i));
 
-	std::vector<pmt::pmt_t>::iterator t;
+	std::vector<gr_tag_t>::iterator t;
 	for(t = rtags.begin(); t != rtags.end(); t++) {
-	  uint64_t newcount = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*t, 0));
-	  pmt::pmt_t newtup = pmt::mp(pmt::pmt_from_uint64(newcount * rrate),
-				      pmt::pmt_tuple_ref(*t, 1),
-				      pmt::pmt_tuple_ref(*t, 2),
-				      pmt::pmt_tuple_ref(*t, 3));
-	  d->output(i)->add_item_tag(newtup);
+	  gr_tag_t new_tag = *t;
+	  new_tag.offset *= rrate;
+	  d->output(i)->add_item_tag(new_tag);
 	}
       }
     }

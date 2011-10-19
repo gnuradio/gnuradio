@@ -27,7 +27,7 @@
 #include <gr_runtime_types.h>
 #include <boost/weak_ptr.hpp>
 #include <gruel/thread.h>
-#include <gruel/pmt.h>
+#include <gr_tags.h>
 #include <deque>
 
 class gr_vmcircbuf;
@@ -97,9 +97,9 @@ class GR_CORE_API gr_buffer {
   /*!
    * \brief  Adds a new tag to the buffer.
    * 
-   * \param tag        a PMT tuple containing the new tag
+   * \param tag        the new tag
    */
-  void add_item_tag(const pmt::pmt_t &tag);
+  void add_item_tag(const gr_tag_t &tag);
 
   /*!
    * \brief  Removes all tags before \p max_time from buffer
@@ -108,8 +108,8 @@ class GR_CORE_API gr_buffer {
    */
   void prune_tags(uint64_t max_time);
 
-  std::deque<pmt::pmt_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
-  std::deque<pmt::pmt_t>::iterator get_tags_end() { return d_item_tags.end(); }
+  std::deque<gr_tag_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
+  std::deque<gr_tag_t>::iterator get_tags_end() { return d_item_tags.end(); }
 
   // -------------------------------------------------------------------------
 
@@ -136,7 +136,7 @@ class GR_CORE_API gr_buffer {
   unsigned int				d_write_index;	// in items [0,d_bufsize)
   uint64_t                              d_abs_write_offset; // num items written since the start
   bool					d_done;
-  std::deque<pmt::pmt_t>                d_item_tags;
+  std::deque<gr_tag_t>                  d_item_tags;
   uint64_t                              d_last_min_items_read;
   
   unsigned
@@ -268,7 +268,7 @@ class GR_CORE_API gr_buffer_reader {
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+  void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 uint64_t abs_start,
 			 uint64_t abs_end);
 

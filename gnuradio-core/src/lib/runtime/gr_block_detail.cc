@@ -150,27 +150,19 @@ gr_block_detail::nitems_written(unsigned int which_output)
 }
 
 void
-gr_block_detail::add_item_tag(unsigned int which_output,
-			      uint64_t abs_offset,
-			      const pmt_t &key,
-			      const pmt_t &value,
-			      const pmt_t &srcid)
+gr_block_detail::add_item_tag(unsigned int which_output, const gr_tag_t &tag)
 {
-  if(!pmt_is_symbol(key)) {
-    throw pmt_wrong_type("gr_block_detail::add_item_tag key", key);
+  if(!pmt_is_symbol(tag.key)) {
+    throw pmt_wrong_type("gr_block_detail::add_item_tag key", tag.key);
   }
   else {
-    // build tag tuple
-    pmt_t nitem = pmt_from_uint64(abs_offset);
-    pmt_t tuple = pmt_make_tuple(nitem, srcid, key, value);
-
     // Add tag to gr_buffer's deque tags
-    d_output[which_output]->add_item_tag(tuple);
+    d_output[which_output]->add_item_tag(tag);
   }
 }
 
 void
-gr_block_detail::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
 				   unsigned int which_input,
 				   uint64_t abs_start,
 				   uint64_t abs_end)
@@ -180,13 +172,13 @@ gr_block_detail::get_tags_in_range(std::vector<pmt::pmt_t> &v,
 }
 
 void
-gr_block_detail::get_tags_in_range(std::vector<pmt_t> &v,
+gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
 				   unsigned int which_input,
 				   uint64_t abs_start,
 				   uint64_t abs_end,
 				   const pmt_t &key)
 {
-  std::vector<pmt_t> found_items;
+  std::vector<gr_tag_t> found_items;
   
   v.resize(0);
 
@@ -195,9 +187,9 @@ gr_block_detail::get_tags_in_range(std::vector<pmt_t> &v,
 
   // Filter further by key name
   pmt_t itemkey;
-  std::vector<pmt_t>::iterator itr;
+  std::vector<gr_tag_t>::iterator itr;
   for(itr = found_items.begin(); itr != found_items.end(); itr++) {
-    itemkey = pmt_tuple_ref(*itr, 2);
+    itemkey = (*itr).key;
     if(pmt_eqv(key, itemkey)) {
       v.push_back(*itr);
     }

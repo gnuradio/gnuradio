@@ -55,7 +55,7 @@ class GR_CORE_API gr_annotator_alltoall : public gr_sync_block
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
   
-  std::vector<pmt::pmt_t> data() const
+  std::vector<gr_tag_t> data() const
   {
     return d_stored_tags;
   }
@@ -67,7 +67,7 @@ protected:
   size_t d_itemsize;
   uint64_t d_when;
   uint64_t d_tag_counter;
-  std::vector<pmt::pmt_t> d_stored_tags;
+  std::vector<gr_tag_t> d_stored_tags;
 
   friend GR_CORE_API gr_annotator_alltoall_sptr
   gr_make_annotator_alltoall (int when, size_t sizeof_stream_item);

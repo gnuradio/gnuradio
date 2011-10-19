@@ -21,7 +21,6 @@
 
 #include <gr_sync_block.h>
 #include <gr_io_signature.h>
-#include <gr_tag_info.h>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <iostream>
@@ -47,13 +46,13 @@ public:
     ){
         //grab all "rx time" tags in this work call
         const uint64_t samp0_count = this->nitems_read(0);
-        std::vector<pmt::pmt_t> rx_time_tags;
+        std::vector<gr_tag_t> rx_time_tags;
         get_tags_in_range(rx_time_tags, 0, samp0_count, samp0_count + ninput_items, pmt::pmt_string_to_symbol("rx_time"));
 
         //print all tags
-        BOOST_FOREACH(const pmt::pmt_t &rx_time_tag, rx_time_tags){
-            const uint64_t count = gr_tags::get_nitems(rx_time_tag);
-            const pmt::pmt_t &value = gr_tags::get_value(rx_time_tag);
+        BOOST_FOREACH(const gr_tag_t &rx_time_tag, rx_time_tags){
+            const uint64_t count = rx_time_tag.offset;
+            const pmt::pmt_t &value = rx_time_tag.value;
 
             std::cout << boost::format("Full seconds %u, Frac seconds %f")
                 % pmt::pmt_to_uint64(pmt_tuple_ref(value, 0))

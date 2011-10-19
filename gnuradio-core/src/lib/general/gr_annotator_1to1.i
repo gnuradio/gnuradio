@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,15 +22,4 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,annotator_1to1);
 
-gr_annotator_1to1_sptr gr_make_annotator_1to1 (int when,
-					       size_t sizeof_stream_item);
-
-class gr_annotator_1to1 : public gr_sync_block
-{
-public:
-  std::vector<pmt::pmt_t> data() const;
-  
-private:
-  gr_annotator_1to1 (int when, size_t sizeof_stream_item);
-};
-
+%include <gr_annotator_1to1.h>

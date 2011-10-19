@@ -103,9 +103,9 @@ qa_block_tags::t1 ()
 
   tb->run();
 
-  std::vector<pmt::pmt_t> tags0 = ann0->data();
-  std::vector<pmt::pmt_t> tags3 = ann3->data();
-  std::vector<pmt::pmt_t> tags4 = ann4->data();
+  std::vector<gr_tag_t> tags0 = ann0->data();
+  std::vector<gr_tag_t> tags3 = ann3->data();
+  std::vector<gr_tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -187,11 +187,11 @@ qa_block_tags::t2 ()
 
   tb->run();
 
-  std::vector<pmt::pmt_t> tags0 = ann0->data();
-  std::vector<pmt::pmt_t> tags1 = ann1->data();
-  std::vector<pmt::pmt_t> tags2 = ann2->data();
-  std::vector<pmt::pmt_t> tags3 = ann4->data();
-  std::vector<pmt::pmt_t> tags4 = ann4->data();
+  std::vector<gr_tag_t> tags0 = ann0->data();
+  std::vector<gr_tag_t> tags1 = ann1->data();
+  std::vector<gr_tag_t> tags2 = ann2->data();
+  std::vector<gr_tag_t> tags3 = ann4->data();
+  std::vector<gr_tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -287,9 +287,9 @@ qa_block_tags::t3 ()
   tb->run();
 
   
-  std::vector<pmt::pmt_t> tags0 = ann0->data();
-  std::vector<pmt::pmt_t> tags3 = ann3->data();
-  std::vector<pmt::pmt_t> tags4 = ann4->data();
+  std::vector<gr_tag_t> tags0 = ann0->data();
+  std::vector<gr_tag_t> tags3 = ann3->data();
+  std::vector<gr_tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -394,9 +394,9 @@ qa_block_tags::t5 ()
 
   tb->run();
 
-  std::vector<pmt::pmt_t> tags0 = ann0->data();
-  std::vector<pmt::pmt_t> tags1 = ann1->data();
-  std::vector<pmt::pmt_t> tags2 = ann2->data();
+  std::vector<gr_tag_t> tags0 = ann0->data();
+  std::vector<gr_tag_t> tags1 = ann1->data();
+  std::vector<gr_tag_t> tags2 = ann2->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);

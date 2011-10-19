@@ -70,10 +70,10 @@ gr_annotator_alltoall::work (int noutput_items,
     abs_N = nitems_read(i);
     end_N = abs_N + (uint64_t)(noutput_items);
 
-    std::vector<pmt::pmt_t> all_tags;
+    std::vector<gr_tag_t> all_tags;
     get_tags_in_range(all_tags, i, abs_N, end_N);
 
-    std::vector<pmt::pmt_t>::iterator itr;
+    std::vector<gr_tag_t>::iterator itr;
     for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
       d_stored_tags.push_back(*itr);
     }

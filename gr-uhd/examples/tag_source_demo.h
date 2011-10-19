@@ -21,7 +21,6 @@
 
 #include <gr_sync_block.h>
 #include <gr_io_signature.h>
-#include <gr_tag_info.h>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <iostream>

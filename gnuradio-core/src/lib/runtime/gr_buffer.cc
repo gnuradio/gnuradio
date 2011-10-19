@@ -227,7 +227,7 @@ gr_buffer::drop_reader (gr_buffer_reader *reader)
 }
 
 void
-gr_buffer::add_item_tag(const pmt::pmt_t &tag)
+gr_buffer::add_item_tag(const gr_tag_t &tag)
 {
   gruel::scoped_lock guard(*mutex());
   d_item_tags.push_back(tag);
@@ -245,7 +245,7 @@ gr_buffer::prune_tags(uint64_t max_time)
      buffer's mutex al la the scoped_lock line below.
   */
   //gruel::scoped_lock guard(*mutex());
-  std::deque<pmt::pmt_t>::iterator itr = d_item_tags.begin();
+  std::deque<gr_tag_t>::iterator itr = d_item_tags.begin();
 
   uint64_t item_time;
 
@@ -255,7 +255,7 @@ gr_buffer::prune_tags(uint64_t max_time)
   // to find more. Mostly, we wil be erasing from the front and
   // therefore lose little time this way.
   while(itr != d_item_tags.end()) {
-    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+    item_time = (*itr).offset;
     if(item_time < max_time) {
       d_item_tags.erase(itr);
       itr = d_item_tags.begin();
@@ -307,18 +307,18 @@ gr_buffer_reader::update_read_pointer (int nitems)
 }
 
 void
-gr_buffer_reader::get_tags_in_range(std::vector<pmt::pmt_t> &v,
+gr_buffer_reader::get_tags_in_range(std::vector<gr_tag_t> &v,
 				    uint64_t abs_start,
 				    uint64_t abs_end)
 {
   gruel::scoped_lock guard(*mutex());
 
   v.resize(0);
-  std::deque<pmt::pmt_t>::iterator itr = d_buffer->get_tags_begin();
+  std::deque<gr_tag_t>::iterator itr = d_buffer->get_tags_begin();
   
   uint64_t item_time;
   while(itr != d_buffer->get_tags_end()) {
-    item_time = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(*itr, 0));
+    item_time = (*itr).offset;
 
     if((item_time >= abs_start) && (item_time < abs_end)) {
       v.push_back(*itr);

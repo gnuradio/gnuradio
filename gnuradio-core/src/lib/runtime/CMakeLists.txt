@@ -64,7 +64,6 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_vmcircbuf_createfilemapping.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_vmcircbuf_sysv_shm.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_select_handler.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_tag_info.cc
 )
 
 ########################################################################
@@ -128,7 +127,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_types.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_unittests.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_vmcircbuf.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_tag_info.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_tags.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )

@@ -26,7 +26,7 @@
 #include <gr_core_api.h>
 #include <gr_runtime_types.h>
 #include <gr_tpb_detail.h>
-#include <gr_tag_info.h>
+#include <gr_tags.h>
 #include <stdexcept>
 
 /*!
@@ -105,17 +105,9 @@ class GR_CORE_API gr_block_detail {
    * which appends the tag onto its deque.
    *
    * \param which_output  an integer of which output stream to attach the tag
-   * \param abs_offset   a uint64 number of the absolute item number
-   *                     assicated with the tag. Can get from nitems_written.
-   * \param key          the tag key as a PMT symbol
-   * \param value        any PMT holding any value for the given key
-   * \param srcid        a PMT source ID specifier
+   * \param tag the tag object to add
    */
-  void add_item_tag(unsigned int which_output,
-		    uint64_t abs_offset,
-		    const pmt::pmt_t &key,
-		    const pmt::pmt_t &value,
-		    const pmt::pmt_t &srcid);
+  void add_item_tag(unsigned int which_output, const gr_tag_t &tag);
 
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range.
@@ -131,7 +123,7 @@ class GR_CORE_API gr_block_detail {
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+  void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 unsigned int which_input,
 			 uint64_t abs_start,
 			 uint64_t abs_end);
@@ -153,7 +145,7 @@ class GR_CORE_API gr_block_detail {
    * \param abs_end      a uint64 count of the end of the range of interest
    * \param key          a PMT symbol to select only tags of this key
    */
-  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+  void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 unsigned int which_input,
 			 uint64_t abs_start,
 			 uint64_t abs_end,

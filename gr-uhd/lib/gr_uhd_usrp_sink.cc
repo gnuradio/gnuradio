@@ -21,7 +21,6 @@
 
 #include <gr_uhd_usrp_sink.h>
 #include <gr_io_signature.h>
-#include <gr_tag_info.h>
 #include <stdexcept>
 
 static const pmt::pmt_t SOB_KEY = pmt::pmt_string_to_symbol("tx_sob");
@@ -185,7 +184,7 @@ public:
         gr_vector_void_star &output_items
     ){
         int ninput_items = noutput_items; //cuz its a sync block
-	
+
         //send a mid-burst packet with time spec
         _metadata.start_of_burst = false;
         _metadata.end_of_burst = false;
@@ -211,11 +210,11 @@ public:
  **********************************************************************/
     inline void tag_work(int &ninput_items){
         //the for loop below assumes tags sorted by count low -> high
-        std::sort(_tags.begin(), _tags.end(), gr_tags::nitems_compare);
+        std::sort(_tags.begin(), _tags.end(), gr_tag_t::offset_compare);
 
         //extract absolute sample counts
-        const pmt::pmt_t &tag0 = _tags.front();
-        const uint64_t tag0_count = gr_tags::get_nitems(tag0);
+        const gr_tag_t &tag0 = _tags.front();
+        const uint64_t tag0_count = tag0.offset;
         const uint64_t samp0_count = this->nitems_read(0);
 
         //only transmit nsamples from 0 to the first tag
@@ -229,10 +228,10 @@ public:
         _metadata.has_time_spec = false;
 
         //process all of the tags found with the same count as tag0
-        BOOST_FOREACH(const pmt::pmt_t &my_tag, _tags){
-            const uint64_t my_tag_count = gr_tags::get_nitems(my_tag);
-            const pmt::pmt_t &key = gr_tags::get_key(my_tag);
-            const pmt::pmt_t &value = gr_tags::get_value(my_tag);
+        BOOST_FOREACH(const gr_tag_t &my_tag, _tags){
+            const uint64_t my_tag_count = my_tag.offset;
+            const pmt::pmt_t &key = my_tag.key;
+            const pmt::pmt_t &value = my_tag.value;
 
             //determine how many samples to send...
             //from zero until the next tag or end of work
@@ -301,7 +300,7 @@ private:
     double _sample_rate;
 
     //stream tags related stuff
-    std::vector<pmt::pmt_t> _tags;
+    std::vector<gr_tag_t> _tags;
 };
 
 /***********************************************************************

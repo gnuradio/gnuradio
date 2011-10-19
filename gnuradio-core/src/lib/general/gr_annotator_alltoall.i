@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010-2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,15 +22,4 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,annotator_alltoall);
 
-gr_annotator_alltoall_sptr gr_make_annotator_alltoall (int when,
-						       size_t sizeof_stream_item);
-
-class gr_annotator_alltoall : public gr_sync_block
-{
-public:
-  std::vector<pmt::pmt_t> data() const;
-  
-private:
-  gr_annotator_alltoall (int when, size_t sizeof_stream_item);
-};
-
+%include <gr_annotator_alltoall.h>

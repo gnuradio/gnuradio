@@ -25,6 +25,7 @@
 
 #include <gr_core_api.h>
 #include <gr_basic_block.h>
+#include <gr_tags.h>
 
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
@@ -255,11 +256,27 @@ class GR_CORE_API gr_block : public gr_basic_block {
    * \param value        any PMT holding any value for the given key
    * \param srcid        optional source ID specifier; defaults to PMT_F
    */
-  void add_item_tag(unsigned int which_output,
+  inline void add_item_tag(unsigned int which_output,
 		    uint64_t abs_offset,
 		    const pmt::pmt_t &key,
 		    const pmt::pmt_t &value,
-		    const pmt::pmt_t &srcid=pmt::PMT_F);
+		    const pmt::pmt_t &srcid=pmt::PMT_F)
+    {
+        gr_tag_t tag;
+        tag.offset = abs_offset;
+        tag.key = key;
+        tag.value = value;
+        tag.srcid = srcid;
+        this->add_item_tag(which_output, tag);
+    }
+
+ /*!
+   * \brief  Adds a new tag onto the given output buffer.
+   *
+   * \param which_output an integer of which output stream to attach the tag
+   * \param tag the tag object to add
+   */
+  void add_item_tag(unsigned int which_output, const gr_tag_t &tag);
 
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range.
@@ -274,7 +291,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    */
-  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+  void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 unsigned int which_input,
 			 uint64_t abs_start,
 			 uint64_t abs_end);
@@ -294,7 +311,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
    * \param abs_end      a uint64 count of the end of the range of interest
    * \param key          a PMT symbol key to filter only tags of this key
    */
-  void get_tags_in_range(std::vector<pmt::pmt_t> &v,
+  void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 unsigned int which_input,
 			 uint64_t abs_start,
 			 uint64_t abs_end,

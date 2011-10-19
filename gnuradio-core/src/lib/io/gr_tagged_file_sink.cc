@@ -32,7 +32,6 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include <iostream>
-#include <gr_tag_info.h>
 
 #ifdef HAVE_IO_H
 #include <io.h>
@@ -85,21 +84,21 @@ gr_tagged_file_sink::work (int noutput_items,
   pmt::pmt_t bkey = pmt::pmt_string_to_symbol("burst");
   //pmt::pmt_t tkey = pmt::pmt_string_to_symbol("time"); // use gr_tags::key_time
 
-  std::vector<pmt::pmt_t> all_tags;
+  std::vector<gr_tag_t> all_tags;
   get_tags_in_range(all_tags, 0, start_N, end_N);
 
-  std::sort(all_tags.begin(), all_tags.end(), gr_tags::nitems_compare);
+  std::sort(all_tags.begin(), all_tags.end(), gr_tag_t::offset_compare);
 
-  std::vector<pmt::pmt_t>::iterator vitr = all_tags.begin();
+  std::vector<gr_tag_t>::iterator vitr = all_tags.begin();
 
   int idx = 0, idx_stop = 0;
   while(idx < noutput_items) {
     if(d_state == NOT_IN_BURST) {
       while(vitr != all_tags.end()) {
-	if((pmt::pmt_eqv(gr_tags::get_key(*vitr), bkey)) &&
-	   pmt::pmt_is_true(gr_tags::get_value(*vitr))) {
+	if((pmt::pmt_eqv((*vitr).key, bkey)) &&
+	   pmt::pmt_is_true((*vitr).value)) {
 
-	  uint64_t N = gr_tags::get_nitems(*vitr);
+	  uint64_t N = (*vitr).offset;
 	  idx = (int)(N - start_N);
 
 	  //std::cout << std::endl << "Found start of burst: "
@@ -107,17 +106,17 @@ gr_tagged_file_sink::work (int noutput_items,
 
 	  // Find time burst occurred by getting latest time tag and extrapolating
 	  // to new time based on sample rate of this block.
-	  std::vector<pmt::pmt_t> time_tags;
+	  std::vector<gr_tag_t> time_tags;
 	  //get_tags_in_range(time_tags, 0, d_last_N, N, gr_tags::key_time);
 	  get_tags_in_range(time_tags, 0, d_last_N, N,
 			    pmt::pmt_string_to_symbol("time"));
 	  if(time_tags.size() > 0) {
-	    pmt::pmt_t tag = time_tags[time_tags.size()-1];
+	    const gr_tag_t tag = time_tags[time_tags.size()-1];
 	    
-	    uint64_t time_nitems = gr_tags::get_nitems(tag);
+	    uint64_t time_nitems = tag.offset;
 
 	    // Get time based on last time tag from USRP
-	    pmt::pmt_t time = gr_tags::get_value(tag);
+	    pmt::pmt_t time = tag.value;
 	    int tsecs = pmt::pmt_to_long(pmt::pmt_tuple_ref(time, 0));
 	    double tfrac = pmt::pmt_to_double(pmt::pmt_tuple_ref(time, 1));
 
@@ -175,9 +174,9 @@ gr_tagged_file_sink::work (int noutput_items,
     }
     else {  // In burst
       while(vitr != all_tags.end()) {
-	if((pmt::pmt_eqv(gr_tags::get_key(*vitr), bkey)) &&
-	   pmt::pmt_is_false(gr_tags::get_value(*vitr))) {
-	  uint64_t N = gr_tags::get_nitems(*vitr);
+	if((pmt::pmt_eqv((*vitr).key, bkey)) &&
+	   pmt::pmt_is_false((*vitr).value)) {
+	  uint64_t N = (*vitr).offset;
 	  idx_stop = (int)N - start_N;
 
 	  //std::cout << "Found end of burst: "
