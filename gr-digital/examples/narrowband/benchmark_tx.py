@@ -43,7 +43,7 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
 
         if(options.tx_freq is not None):
-            self.sink = uhd_transmitter(options.address, options.bitrate,
+            self.sink = uhd_transmitter(options.args, options.bitrate,
                                         options.samples_per_symbol,
                                         options.tx_freq, options.tx_gain,
                                         options.antenna, options.verbose)

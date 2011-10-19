@@ -67,7 +67,7 @@ class tx_psk_block(gr.top_block):
 	self._modulator = self._modulator_class(**mod_kwargs)
 
         if(options.tx_freq is not None):
-            self._sink = uhd_transmitter(options.address, options.bitrate,
+            self._sink = uhd_transmitter(options.args, options.bitrate,
                                          options.samples_per_symbol,
                                          options.tx_freq, options.tx_gain,
                                          options.antenna, options.verbose)
