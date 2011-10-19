@@ -50,7 +50,5 @@ GR_SWIG_INSTALL(TARGETS howto_swig DESTINATION ${GR_PYTHON_DIR}/howto)
 install(
     FILES
     howto_swig.i
-    howto_square_ff.i
-    howto_square2_ff.i
     DESTINATION include/howto/swig
 )

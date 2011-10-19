@@ -81,7 +81,7 @@ endif()
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${CMAKE_SOURCE_DIR}/lib
+    ${CMAKE_SOURCE_DIR}/include
     ${Boost_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
@@ -96,6 +96,7 @@ link_directories(
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(swig)
 add_subdirectory(python)

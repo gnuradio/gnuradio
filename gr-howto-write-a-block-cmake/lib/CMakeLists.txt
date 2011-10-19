@@ -36,16 +36,6 @@ install(TARGETS gnuradio-howto
 )
 
 ########################################################################
-# Install public header files
-########################################################################
-install(FILES
-    howto_api.h
-    howto_square_ff.h
-    howto_square2_ff.h
-    DESTINATION include/howto
-)
-
-########################################################################
 # Build and register unit test
 ########################################################################
 find_package(Boost COMPONENTS unit_test_framework)
