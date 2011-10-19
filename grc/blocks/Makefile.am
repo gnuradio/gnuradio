@@ -171,6 +171,7 @@ dist_ourdata_DATA = \
 	gr_sub_xx.xml \
 	gr_threshold_ff.xml \
 	gr_throttle.xml \
+	gr_transcendental.xml \
 	gr_uchar_to_float.xml \
 	gr_udp_sink.xml \
 	gr_udp_source.xml \

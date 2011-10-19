@@ -80,7 +80,7 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 	<param>
 		<name>Reference Level</name>
 		<key>ref_level</key>
-		<value>50</value>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>

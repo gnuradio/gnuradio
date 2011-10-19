@@ -70,6 +70,7 @@
 #include <gr_nlog10_ff.h>
 #include <gr_fake_channel_coder_pp.h>
 #include <gr_throttle.h>
+#include <gr_transcendental.h>
 #include <gr_stream_mux.h>
 #include <gr_stream_to_streams.h>
 #include <gr_streams_to_stream.h>
@@ -182,6 +183,7 @@
 %include "gr_nlog10_ff.i"
 %include "gr_fake_channel_coder_pp.i"
 %include "gr_throttle.i"
+%include "gr_transcendental.i"
 %include "gr_stream_mux.i"
 %include "gr_stream_to_streams.i"
 %include "gr_streams_to_stream.i"
