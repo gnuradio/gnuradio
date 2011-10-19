@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = multi-antenna
+SUBDIRS = 
 
 ourdatadir = $(exampledir)/uhd
 
