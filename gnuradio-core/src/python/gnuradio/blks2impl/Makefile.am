@@ -33,7 +33,6 @@ grblkspython_PYTHON =		\
 	filterbank.py		\
 	fm_demod.py		\
 	fm_emph.py		\
-	generic_usrp.py	\
 	logpwrfft.py		\
 	nbfm_rx.py		\
 	nbfm_tx.py		\

@@ -31,6 +31,5 @@ grpython_PYTHON = 			\
 	gr_unittest.py			\
 	gr_xmlrunner.py			\
 	optfir.py			\
-	usrp_options.py		\
 	window.py
 endif

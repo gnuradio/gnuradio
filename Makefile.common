@@ -56,13 +56,6 @@ guiledir = $(prefix)/share/guile/site
 grpythondir = $(pythondir)/gnuradio
 grpyexecdir = $(pyexecdir)/gnuradio
 
-# Install the non-gnuradio usrp stuff in the appropriate subdirectory
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/usrpm
-
-usrppythondir = $(pythondir)/usrpm
-usrppyexecdir = $(pyexecdir)/usrpm
-
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES = $(DEFINES) $(GNURADIO_INCLUDES) \
@@ -87,10 +80,6 @@ GRUEL_LA = @gruel_LA@
 # How to link in the VOLK library from inside the tree
 VOLK_INCLUDES = @volk_INCLUDES@
 VOLK_LA = @volk_LA@
-
-# How to link in the USRP library from inside the tree
-USRP_INCLUDES = @usrp_INCLUDES@
-USRP_LA = @usrp_LA@
 
 # GR-DIGITAL includes and libraries
 GR_DIGITAL_INCLUDES = @gr_digital_INCLUDES@

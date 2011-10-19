@@ -54,7 +54,6 @@ m4macros = \
 	grc_gr_comedi.m4 \
 	grc_gr_noaa.m4 \
 	grc_gr_trellis.m4 \
-	grc_gr_usrp.m4 \
 	grc_gr_video_sdl.m4 \
 	grc_gr_vocoder.m4 \
 	grc_gr_wxgui.m4 \
@@ -62,9 +61,6 @@ m4macros = \
 	gr_check_createfilemapping.m4 \
 	gr_check_mc4020.m4 \
 	gr_check_shm_open.m4 \
-	gr_check_usrp.m4 \
-	grc_usrp.m4 \
-	grc_usrp2.m4 \
 	gr_doxygen.m4 \
 	gr_fortran.m4 \
 	gr_git.m4 \
@@ -90,9 +86,6 @@ m4macros = \
 	mkstemp.m4 \
 	onceonly.m4 \
 	pkg.m4 \
-	sdl.m4 \
-	usrp_fusb_tech.m4 \
-	usrp_libusb.m4 \
-	usrp_sdcc.m4
+	sdl.m4
 
 EXTRA_DIST += $(m4macros)

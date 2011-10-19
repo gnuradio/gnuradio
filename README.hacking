@@ -92,8 +92,6 @@ These are the current package prefixes:
     atsc_	Code related to the Advanced Television
 	       	Standards Committee HDTV implementation
 
-    usrp_	Universal Software Radio Peripheral
-
     qa_		Quality Assurance.  Test code.
 
 
@@ -219,32 +217,6 @@ Python optparse syntax.  In general, the default value should be coded
 into the help string using the "... [default=%default]" syntax.
 
 ** Mandatory options by gr_block
-
-*** USRP source
-
-Any program using a USRP source (usrp.source_*) shall include:
-
-  add_option("", "--which-usrp", type="intx", default=0,
-	     help="select which USRP to use [default=%default]")
-
-  add_option("-R", "--rx-subdev-spec", type="subdev", default=(0, 0),
-             help="select USRP Rx side A or B [default=A]")
-
-You are free to change the default if it makes sense in your application.
-
-
-*** USRP sink
-
-Any program using a USRP sink (usrp.sink_*) shall include:
-
-  add_option("", "--which-usrp", type="intx", default=0,
-	     help="select which USRP to use [default=%default]")
-
-  add_option("-T", "--tx-subdev-spec", type="subdev", default=(0, 0),
-             help="select USRP Tx side A or B [default=A]")
-
-You are free to change the default if it makes sense in your application.
-
 
 *** Audio source
 

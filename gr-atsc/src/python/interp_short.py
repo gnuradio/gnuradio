@@ -22,8 +22,7 @@
 # This module starts the atsc processing chain taking the captured
 # off-air signal created with:
 #
-#  usrp_rx_cfile.py -R <side with tuner, a or b>
-#                   -d 10     set decimation to get signal at 6.4e6 rate
+#  uhd_rx_cfile.py  --samp-rate=6.4e6
 #                   -f <center of tv signal channel freq>
 #                   -g <appropriate gain for best signal / noise>
 #                   -s output shorts

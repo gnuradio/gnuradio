@@ -46,7 +46,6 @@ m4macros = \
 	gr_check_createfilemapping.m4 \
 	gr_check_mc4020.m4 \
 	gr_check_shm_open.m4 \
-	gr_check_usrp.m4 \
 	gr_doxygen.m4 \
 	gr_fortran.m4 \
 	gr_git.m4 \
@@ -72,10 +71,7 @@ m4macros = \
 	lf_x11.m4 \
 	mkstemp.m4 \
 	onceonly.m4 \
-	pkg.m4 \
-	usrp_fusb_tech.m4 \
-	usrp_libusb.m4 \
-	usrp_sdcc.m4
+	pkg.m4
 
 
 # Don't install m4 macros anymore
