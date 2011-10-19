@@ -147,14 +147,16 @@ class Port(_Port, _GUIPort):
 		"""
 		try:
 			color = Constants.TYPE_TO_COLOR[self.get_type()]
-			if self.get_vlen() == 1: return color
+			vlen = self.get_vlen()
+			if vlen == 1: return color
 			color_val = int(color[1:], 16)
 			r = (color_val >> 16) & 0xff
 			g = (color_val >> 8) & 0xff
 			b = (color_val >> 0) & 0xff
-			r = max(r-50, 0)
-			g = max(g-50, 0)
-			b = max(b-50, 0)
+			dark = (0, 0, 30, 50, 70)[min(4, vlen)]
+			r = max(r-dark, 0)
+			g = max(g-dark, 0)
+			b = max(b-dark, 0)
 			return '#%.2x%.2x%.2x'%(r, g, b)
 		except: return _Port.get_color(self)
 
