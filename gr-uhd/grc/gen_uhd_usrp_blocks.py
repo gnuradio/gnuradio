@@ -23,6 +23,7 @@ MAIN_TMPL = """\
 <block>
 	<name>UHD: USRP $sourk.title()</name>
 	<key>uhd_usrp_$(sourk)</key>
+	<throttle>1</throttle>
 	<import>from gnuradio import uhd</import>
 	<make>uhd.usrp_$(sourk)(
 	device_addr=\$dev_addr,

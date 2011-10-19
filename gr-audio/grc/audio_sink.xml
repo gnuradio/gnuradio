@@ -8,6 +8,7 @@
 	<name>Audio Sink</name>
 	<key>audio_sink</key>
 	<category>Sinks</category>
+	<throttle>1</throttle>
 	<import>from gnuradio import audio</import>
 	<make>audio.sink($samp_rate, $device_name, $ok_to_block)</make>
 	<param>

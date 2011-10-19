@@ -46,6 +46,7 @@ class Block(_Block, _GUIBlock):
 		self._var_make = n.find('var_make')
 		self._checks = n.findall('check')
 		self._callbacks = n.findall('callback')
+		self._throttle = n.find('throttle') or ''
 		#build the block
 		_Block.__init__(
 			self,
@@ -53,6 +54,8 @@ class Block(_Block, _GUIBlock):
 			n=n,
 		)
 		_GUIBlock.__init__(self)
+
+	def throttle(self): return bool(self._throttle)
 
 	def validate(self):
 		"""
