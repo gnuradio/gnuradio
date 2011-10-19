@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##transcendental functions
+###################################################
+ -->
+<block>
+	<name>Transcendental</name>
+	<key>gr_transcendental</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.transcendental($name, "$type")</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex_double</key>
+			<opt>type:complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>type:float</opt>
+		</option>
+	</param>
+	<param>
+		<name>Function Name</name>
+		<key>name</key>
+		<value>cos</value>
+		<type>string</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.type</type>
+	</source>
+</block>
