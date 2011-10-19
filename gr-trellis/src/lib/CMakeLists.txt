@@ -103,7 +103,6 @@ expand_h_cc_i(trellis_pccc_decoder_combined_XX   fb fs fi cb cs ci)
 add_custom_target(trellis_generated DEPENDS
     ${generated_trellis_includes}
     ${generated_trellis_swigs}
-    ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i
 )
 
 ########################################################################
@@ -212,7 +211,8 @@ if(ENABLE_PYTHON)
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_TARGET_DEPS trellis_generated)
+set(GR_SWIG_SOURCE_DEPS ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i)
+set(GR_SWIG_TARGET_DEPS trellis_generated trellis_generated_index)
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_TRELLIS_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}

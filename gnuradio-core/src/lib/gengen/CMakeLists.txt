@@ -113,7 +113,6 @@ expand_h_cc_i(gr_peak_detector_XX             fb ib sb)
 add_custom_target(gengen_generated DEPENDS
     ${generated_gengen_includes}
     ${generated_gengen_swigs}
-    ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
 )
 
 ########################################################################
@@ -146,6 +145,10 @@ add_custom_command(
         ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.py
         ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
         ${generated_gengen_swigs}
+)
+
+add_custom_target(gengen_generated_index DEPENDS
+    ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
 )
 
 ########################################################################
