@@ -30,8 +30,8 @@ GR_PYTHON_CHECK_MODULE("numpy"      numpy        True                           
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-wxgui" ENABLE_WXGUI
-    ENABLE_GR_CORE_
-    ENABLE_PYTHON_
+    ENABLE_GR_CORE
+    ENABLE_PYTHON
     NUMPY_FOUND
     WX_FOUND
 )

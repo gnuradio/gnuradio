@@ -54,9 +54,21 @@ function(GR_REGISTER_COMPONENT name var)
         set(var_force FALSE)
     endif()
 
+    #rewrite the dependency list so that deps that are also components use the cached version
+    unset(comp_deps)
+    foreach(dep ${ARGN})
+        list(FIND _gr_enabled_components ${dep} dep_enb_index)
+        list(FIND _gr_disabled_components ${dep} dep_dis_index)
+        if (${dep_enb_index} EQUAL -1 AND ${dep_dis_index} EQUAL -1)
+            list(APPEND comp_deps ${dep})
+        else()
+            list(APPEND comp_deps ${dep}_cached) #is a component, use cached version
+        endif()
+    endforeach(dep)
+
     #setup the dependent option for this component
-    CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ${ENABLE_DEFAULT} "${ARGN}" OFF)
-    set(${var}_ "${${var}}" CACHE INTERNAL "" FORCE)
+    CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ${ENABLE_DEFAULT} "${comp_deps}" OFF)
+    set(${var}_cached "${${var}}" CACHE INTERNAL "" FORCE)
 
     #force was specified, but the dependencies were not met
     if(NOT ${var} AND var_force)

@@ -28,7 +28,7 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-pager" ENABLE_GR_PAGER
     Boost_FOUND
-    ENABLE_GR_CORE_
+    ENABLE_GR_CORE
 )
 
 GR_SET_GLOBAL(GR_PAGER_INCLUDE_DIRS

@@ -28,7 +28,7 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-atsc" ENABLE_GR_ATSC
     Boost_FOUND
-    ENABLE_GR_CORE_
+    ENABLE_GR_CORE
 )
 
 GR_SET_GLOBAL(GR_ATSC_INCLUDE_DIRS

@@ -28,7 +28,7 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-audio" ENABLE_GR_AUDIO
     Boost_FOUND
-    ENABLE_GR_CORE_
+    ENABLE_GR_CORE
 )
 
 GR_SET_GLOBAL(GR_AUDIO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)

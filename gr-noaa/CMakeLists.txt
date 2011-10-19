@@ -28,7 +28,7 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-noaa" ENABLE_GR_NOAA
     Boost_FOUND
-    ENABLE_GR_CORE_
+    ENABLE_GR_CORE
 )
 
 GR_SET_GLOBAL(GR_NOAA_INCLUDE_DIRS

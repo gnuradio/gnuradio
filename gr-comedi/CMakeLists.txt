@@ -34,7 +34,7 @@ GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_COMEDI
     COMEDI_FOUND
     LINUX #comedi uses linux specific device noces
     Boost_FOUND
-    ENABLE_GR_CORE_
+    ENABLE_GR_CORE
 )
 
 remove_definitions(-fvisibility=hidden) #FIXME until we do symbol visibility
