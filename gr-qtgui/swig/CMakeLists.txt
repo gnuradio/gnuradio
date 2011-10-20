@@ -40,6 +40,7 @@ GR_SWIG_INSTALL(
 )
 
 install(FILES
+    qtgui_swig.i
     qtgui_sink_c.i
     qtgui_sink_f.i
     qtgui_time_sink_c.i

@@ -40,6 +40,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES
+    vocoder_swig.i
     vocoder_alaw_decode_bs.i
     vocoder_alaw_encode_sb.i
     vocoder_codec2_decode_ps.i
