@@ -83,6 +83,7 @@ CPACK_COMPONENT("digital_swig"
 ########################################################################
 add_subdirectory(include)
 add_subdirectory(lib)
+add_subdirectory(doc)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python)

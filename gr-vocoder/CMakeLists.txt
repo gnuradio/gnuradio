@@ -86,6 +86,7 @@ CPACK_COMPONENT("vocoder_swig"
 ########################################################################
 add_subdirectory(lib)
 add_subdirectory(include)
+add_subdirectory(doc)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python)
