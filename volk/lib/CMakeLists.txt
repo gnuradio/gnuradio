@@ -231,10 +231,10 @@ if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
 endif()
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_BINARY_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 list(APPEND volk_sources
