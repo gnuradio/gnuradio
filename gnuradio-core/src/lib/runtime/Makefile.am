@@ -68,7 +68,7 @@ libruntime_la_SOURCES = 			\
 	gr_vmcircbuf_mmap_tmpfile.cc		\
 	gr_vmcircbuf_createfilemapping.cc	\
 	gr_vmcircbuf_sysv_shm.cc		\
-	gr_select_handler.cc			\
+	gr_select_handler.cc
 
 libruntime_qa_la_SOURCES = 			\
 	qa_gr_block.cc				\
