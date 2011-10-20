@@ -46,13 +46,15 @@ BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 
 CORE_TYPES = ( #name, key, sizeof, color
-	('Complex Float 64', 'fc64', 16, '#72f313'),
+	('Complex Float 64', 'fc64', 16, '#CC8C69'),
 	('Complex Float 32', 'fc32', 8, '#3399FF'),
-	('Complex Integer 32', 'sc32', 8, '#00b789'),
-	('Complex Integer 16', 'sc16', 4, '#f37913'),
-	('Complex Integer 8', 'sc8', 2, '#ff0e7f'),
-	('Float 64', 'f64', 8, '#86a8fa'),
+	('Complex Integer 64', 'sc64', 16, '#66CC00'),
+	('Complex Integer 32', 'sc32', 8, '#33cc66'),
+	('Complex Integer 16', 'sc16', 4, '#cccc00'),
+	('Complex Integer 8', 'sc8', 2, '#cc00cc'),
+	('Float 64', 'f64', 8, '#66CCCC'),
 	('Float 32', 'f32', 4, '#FF8C69'),
+	('Integer 64', 's64', 8, '#99FF33'),
 	('Integer 32', 's32', 4, '#00FF99'),
 	('Integer 16', 's16', 2, '#FFFF66'),
 	('Integer 8', 's8', 1, '#FF66FF'),
