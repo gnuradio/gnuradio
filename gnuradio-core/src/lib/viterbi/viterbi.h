@@ -26,7 +26,7 @@
 
 #include <gr_core_api.h>
 
-struct GR_CORE_API viterbi_state {
+struct viterbi_state {
   unsigned long path;	/* Decoded path to this state */
   long metric;		/* Cumulative metric to this state */
 };

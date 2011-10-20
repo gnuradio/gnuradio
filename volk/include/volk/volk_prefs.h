@@ -5,7 +5,7 @@
 
 __VOLK_DECL_BEGIN
 
-struct VOLK_API volk_arch_pref {
+struct volk_arch_pref {
     char name[128];
     char arch[32];
 };
