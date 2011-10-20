@@ -5,7 +5,7 @@
 #include <string.h>
 
 unsigned int get_index(const char *indices[], unsigned int n_archs, const char *arch_name) {
-    int i;
+    unsigned int i;
     for(i=0; i<n_archs; i++) {
         if(!strncmp(indices[i], arch_name, 20)) {
             return i;
@@ -17,10 +17,10 @@ unsigned int get_index(const char *indices[], unsigned int n_archs, const char *
 }
 
 unsigned int volk_rank_archs(const char *indices[], const int* arch_defs, unsigned int n_archs, const char* name, unsigned int arch) {
-  int i;
+  unsigned int i;
   unsigned int best_val = 0;
   static struct volk_arch_pref *volk_arch_prefs;
-  static int n_arch_prefs = 0;
+  static unsigned int n_arch_prefs = 0;
   static int prefs_loaded = 0;
   if(!prefs_loaded) {
       n_arch_prefs = load_preferences(&volk_arch_prefs);

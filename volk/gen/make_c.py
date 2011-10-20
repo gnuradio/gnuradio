@@ -52,7 +52,7 @@ struct volk_machine *get_machine(void) {
     if(machine != NULL) return machine;
     else {
         unsigned int max_score = 0;
-        int i;
+        unsigned int i;
         for(i=0; i<n_volk_machines; i++) {
             if(!(volk_machines[i]->caps & (~volk_get_lvarch()))) {
                 if(volk_machines[i]->caps > max_score) {

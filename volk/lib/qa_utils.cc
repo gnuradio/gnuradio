@@ -35,7 +35,7 @@ void load_random_data(void *data, volk_type_t type, unsigned int n) {
     } else {
         float int_max = float(uint64_t(2) << (type.size*8));
         if(type.is_signed) int_max /= 2.0;
-        for(int i=0; i<n; i++) {
+        for(unsigned int i=0; i<n; i++) {
             float scaled_rand = (((float) (rand() - (RAND_MAX/2))) / static_cast<float>((RAND_MAX/2))) * int_max;
             //man i really don't know how to do this in a more clever way, you have to cast down at some point
             switch(type.size) {
@@ -91,7 +91,7 @@ volk_type_t volk_type_from_string(std::string name) {
     }
     
     //get the data size
-    int last_size_pos = name.find_last_of("0123456789");
+    size_t last_size_pos = name.find_last_of("0123456789");
     if(last_size_pos < 0) throw std::string("no size spec in type ").append(name);
     //will throw if malformed
     int size = boost::lexical_cast<int>(name.substr(0, last_size_pos+1));
@@ -99,7 +99,7 @@ volk_type_t volk_type_from_string(std::string name) {
     assert(((size % 8) == 0) && (size <= 64) && (size != 0));
     type.size = size/8; //in bytes
     
-    for(int i=last_size_pos+1; i < name.size(); i++) {
+    for(size_t i=last_size_pos+1; i < name.size(); i++) {
         switch (name[i]) {
         case 'f':
             type.is_float = true;
@@ -202,7 +202,7 @@ template <class t>
 bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
     bool fail = false;
     int print_max_errs = 10;
-    for(int i=0; i<vlen; i++) {
+    for(unsigned int i=0; i<vlen; i++) {
         if(((t *)(in1))[i] < 1e-30) continue; //this is a hack: below around here we'll start to get roundoff errors due to limited precision
         if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/(((t *)in1)[i]) > tol) {
             fail=true;
@@ -219,7 +219,7 @@ template <class t>
 bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
     bool fail = false;
     int print_max_errs = 10;
-    for(int i=0; i<vlen; i++) {
+    for(unsigned int i=0; i<vlen; i++) {
         if(abs(int(((t *)(in1))[i]) - int(((t *)(in2))[i])) > tol) {
             fail=true;
             if(print_max_errs-- > 0) {
@@ -270,7 +270,7 @@ bool run_volk_tests(struct volk_func_desc desc,
     
     //pull the input scalars into their own vector
     std::vector<volk_type_t> inputsc;
-    for(int i=0; i<inputsig.size(); i++) {
+    for(size_t i=0; i<inputsig.size(); i++) {
         if(inputsig[i].is_scalar) {
             inputsc.push_back(inputsig[i]);
             inputsig.erase(inputsig.begin() + i);
@@ -284,18 +284,18 @@ bool run_volk_tests(struct volk_func_desc desc,
         if(!sig.is_scalar) //we don't make buffers for scalars
           inbuffs.push_back(mem_pool.get_new(vlen*sig.size*(sig.is_complex ? 2 : 1)));
     }
-    for(int i=0; i<inbuffs.size(); i++) {
+    for(size_t i=0; i<inbuffs.size(); i++) {
         load_random_data(inbuffs[i], inputsig[i], vlen);
     }
     
     //ok let's make a vector of vector of void buffers, which holds the input/output vectors for each arch
     std::vector<std::vector<void *> > test_data;
-    for(int i=0; i<arch_list.size(); i++) {
+    for(size_t i=0; i<arch_list.size(); i++) {
         std::vector<void *> arch_buffs;
-        for(int j=0; j<outputsig.size(); j++) {
+        for(size_t j=0; j<outputsig.size(); j++) {
             arch_buffs.push_back(mem_pool.get_new(vlen*outputsig[j].size*(outputsig[j].is_complex ? 2 : 1)));
         }
-        for(int j=0; j<inputsig.size(); j++) {
+        for(size_t j=0; j<inputsig.size(); j++) {
             arch_buffs.push_back(inbuffs[j]);
         }
         test_data.push_back(arch_buffs);
@@ -308,7 +308,7 @@ bool run_volk_tests(struct volk_func_desc desc,
     //now run the test
     clock_t start, end;
     std::vector<double> profile_times;
-    for(int i = 0; i < arch_list.size(); i++) {
+    for(size_t i = 0; i < arch_list.size(); i++) {
         start = clock();
 
         switch(both_sigs.size()) {
@@ -350,8 +350,8 @@ bool run_volk_tests(struct volk_func_desc desc,
     
     //and now compare each output to the generic output
     //first we have to know which output is the generic one, they aren't in order...
-    int generic_offset=0;
-    for(int i=0; i<arch_list.size(); i++) 
+    size_t generic_offset=0;
+    for(size_t i=0; i<arch_list.size(); i++) 
         if(arch_list[i] == "generic") generic_offset=i;
 
     //now compare
@@ -360,10 +360,10 @@ bool run_volk_tests(struct volk_func_desc desc,
     bool fail = false;
     bool fail_global = false;
     std::vector<bool> arch_results;
-    for(int i=0; i<arch_list.size(); i++) {
+    for(size_t i=0; i<arch_list.size(); i++) {
         fail = false;
         if(i != generic_offset) {
-            for(int j=0; j<both_sigs.size(); j++) {
+            for(size_t j=0; j<both_sigs.size(); j++) {
                 if(both_sigs[j].is_float) {
                     if(both_sigs[j].size == 8) {
                         fail = fcompare((double *) test_data[generic_offset][j], (double *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
@@ -417,7 +417,7 @@ bool run_volk_tests(struct volk_func_desc desc,
         
     double best_time = std::numeric_limits<double>::max();
     std::string best_arch = "generic";
-    for(int i=0; i < arch_list.size(); i++) {
+    for(size_t i=0; i < arch_list.size(); i++) {
         if((profile_times[i] < best_time) && arch_results[i]) {
             best_time = profile_times[i];
             best_arch = arch_list[i];

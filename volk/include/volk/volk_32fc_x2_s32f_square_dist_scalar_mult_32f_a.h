@@ -109,7 +109,7 @@ static inline void volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a_sse3(float* t
 static inline void volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a_generic(float* target, lv_32fc_t* src0, lv_32fc_t* points, float scalar, unsigned int num_bytes) {
   lv_32fc_t diff;
   float sq_dist;
-  int i = 0; 
+  unsigned int i = 0; 
   
   for(; i < num_bytes >> 3; ++i) {
     diff = src0[0] - points[i];

@@ -22,7 +22,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const
   
   float sum0[2] = {0,0};
   float sum1[2] = {0,0};
-  int i = 0;
+  unsigned int i = 0;
 
   
   for(i = 0; i < n_2_ccomplex_blocks; ++i) {

@@ -194,7 +194,7 @@ static inline void volk_32fc_index_max_16u_a_generic(unsigned int* target, lv_32
   float max = 0.0;
   unsigned int index = 0;
   
-  int i = 0; 
+  unsigned int i = 0; 
   
   for(; i < num_bytes >> 3; ++i) {
 

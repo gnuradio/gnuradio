@@ -113,7 +113,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_a_generic(float* target, float* s
   
 
 
-  int i = 0; 
+  unsigned int i = 0; 
   
   for(; i < num_bytes >> 2; ++i) {
     fst = src0[i];

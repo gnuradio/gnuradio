@@ -129,7 +129,7 @@ static inline void volk_32f_index_max_16u_a_generic(unsigned int* target, const 
     float max = src0[0];
     unsigned int index = 0;
     
-    int i = 1; 
+    unsigned int i = 1; 
     
     for(; i < num_points; ++i) {
       
