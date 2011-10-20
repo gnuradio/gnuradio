@@ -181,6 +181,7 @@ libgeneral_qa_la_SOURCES = 		\
 	qa_gri_lfsr.cc
 
 grinclude_HEADERS = 			\
+	gr_core_api.h			\
 	complex_vec_test.h		\
 	gr_additive_scrambler_bb.h	\
 	gr_agc_cc.h                 	\
