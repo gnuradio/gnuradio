@@ -25,6 +25,7 @@ set(__INCLUDED_GR_VERSION_CMAKE TRUE)
 ########################################################################
 # Extract variables from version.sh
 ########################################################################
+include(GrPython)
 message(STATUS "Extracting version information from version.sh...")
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "print open('${CMAKE_SOURCE_DIR}/version.sh').read().replace('=', ';').replace('\\n', ';')"
     OUTPUT_VARIABLE VERSION_INFO OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -43,16 +44,16 @@ set(MAINT_VERSION ${VERSION_INFO_MAINT_VERSION})
 ########################################################################
 find_package(Git)
 
-unset(GIT_DESCRIBE)
-
-if(GIT_FOUND)
+if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
     message(STATUS "Extracting version information from git describe...")
     execute_process(
         COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8
         OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
-endif(GIT_FOUND)
+else()
+    set(GIT_DESCRIBE "v${MAJOR_VERSION}.${API_COMPAT}.x-xxx-xunknown")
+endif()
 
 ########################################################################
 # Parse the git describe string (currently unused)
@@ -64,7 +65,7 @@ unset(GIT_COMMIT)
 if(GIT_DESCRIBE)
     execute_process(
         COMMAND ${PYTHON_EXECUTABLE} -c
-        "import re; print ';'.join(re.match('^v(.*)-(.*)-g(.*)$', '${GIT_DESCRIBE}').groups())"
+        "import re; print ';'.join(re.match('^v(.*)-(.*)-\\w(.*)$', '${GIT_DESCRIBE}').groups())"
         OUTPUT_VARIABLE GIT_DESCRIBES OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     list(GET GIT_DESCRIBES 0 GIT_TAG)
@@ -94,9 +95,10 @@ else()
     # VERSION: 3.3.1{.x}
     # DOCVER:  3.3.1{.x}
     # LIBVER:  3.3.1{.x}
-    set(VERSION "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}")
-    if("${MAINT_VERSION}" NOT STREQUAL "0")
-        set(VERSION "${VERSION}.${MAINT_VERSION}")
+    if("${MAINT_VERSION}" STREQUAL "0")
+        set(VERSION "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}")
+    else()
+        set(VERSION "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}.${MAINT_VERSION}")
     endif()
     set(DOCVER "${VERSION}")
     set(LIBVER "${VERSION}")
