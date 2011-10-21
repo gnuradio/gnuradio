@@ -153,6 +153,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_block.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_decimator.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_interpolator.i
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_tags.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_top_block.i
     ${CMAKE_CURRENT_SOURCE_DIR}/runtime.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig

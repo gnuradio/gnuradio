@@ -160,5 +160,6 @@ swiginclude_HEADERS =			\
 	gr_sync_block.i			\
 	gr_sync_decimator.i		\
 	gr_sync_interpolator.i		\
+	gr_tags.i				\
 	gr_top_block.i			\
 	runtime.i
