@@ -51,7 +51,8 @@ class my_top_block(gr.top_block):
             self.source = uhd_receiver(options.args, symbol_rate,
                                        options.samples_per_symbol,
                                        options.rx_freq, options.rx_gain,
-                                       options.antenna, options.verbose)
+                                       options.spec, options.antenna,
+                                       options.verbose)
             options.samples_per_symbol = self.source._sps
 
         elif(options.from_file is not None):

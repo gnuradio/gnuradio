@@ -43,7 +43,7 @@ def add_freq_option(parser):
 
 class uhd_interface:
     def __init__(self, istx, args, bandwidth, freq=None,
-                 gain=None, antenna=None):
+                 gain=None, spec=None, antenna=None):
         
         if(istx):
             self.u = uhd.usrp_sink(device_addr=args,
@@ -56,11 +56,17 @@ class uhd_interface:
 
         self._args = args
         self._ant  = antenna
+        self._spec = spec
         self._gain = self.set_gain(gain)
         self._freq = self.set_freq(freq)
 
         self._rate = self.set_sample_rate(bandwidth)
 
+        # Set the subdevice spec
+        if(spec):
+            self.u.set_subdev_spec(spec, 0)
+
+        # Set the antenna
         if(antenna):
             self.u.set_antenna(antenna, 0)
         
@@ -105,14 +111,14 @@ class uhd_interface:
 
 class uhd_transmitter(uhd_interface, gr.hier_block2):
     def __init__(self, args, bandwidth, freq=None, gain=None,
-                 antenna=None, verbose=False):
+                 spec=None, antenna=None, verbose=False):
         gr.hier_block2.__init__(self, "uhd_transmitter",
                                 gr.io_signature(1,1,gr.sizeof_gr_complex),
                                 gr.io_signature(0,0,0))
 
         # Set up the UHD interface as a transmitter
         uhd_interface.__init__(self, True, args, bandwidth,
-                               freq, gain, antenna)
+                               freq, gain, spec, antenna)
 
         self.connect(self, self.u)
 
@@ -123,6 +129,8 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
         add_freq_option(parser)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")
+        parser.add_option("", "--spec", type="string", default=None,
+                          help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("", "--tx-freq", type="eng_float", default=None,
@@ -145,6 +153,7 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
         print "Gain:        %f dB" % (self._gain)
         print "Sample Rate: %ssps" % (eng_notation.num_to_str(self._rate))
         print "Antenna:     %s"    % (self._ant)
+        print "Subdev Sec:  %s"    % (self._spec)
 
 
 
@@ -155,14 +164,14 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
 
 class uhd_receiver(uhd_interface, gr.hier_block2):
     def __init__(self, args, bandwidth, freq=None, gain=None,
-                 antenna=None, verbose=False):
+                 spec=None, antenna=None, verbose=False):
         gr.hier_block2.__init__(self, "uhd_receiver",
                                 gr.io_signature(0,0,0),
                                 gr.io_signature(1,1,gr.sizeof_gr_complex))
       
         # Set up the UHD interface as a receiver
         uhd_interface.__init__(self, False, args, bandwidth,
-                               freq, gain, antenna)
+                               freq, gain, spec, antenna)
 
         self.connect(self.u, self)
 
@@ -173,6 +182,8 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
         add_freq_option(parser)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")
+        parser.add_option("", "--spec", type="string", default=None,
+                          help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("", "--rx-freq", type="eng_float", default=None,
@@ -196,4 +207,5 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
         print "Gain:        %f dB" % (self._gain)
         print "Sample Rate: %ssps" % (eng_notation.num_to_str(self._rate))
         print "Antenna:     %s"    % (self._ant)
+        print "Subdev Sec:  %s"    % (self._spec)
 

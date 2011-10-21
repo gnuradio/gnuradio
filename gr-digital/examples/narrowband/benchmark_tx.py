@@ -50,7 +50,8 @@ class my_top_block(gr.top_block):
             self.sink = uhd_transmitter(options.args, symbol_rate,
                                         options.samples_per_symbol,
                                         options.tx_freq, options.tx_gain,
-                                        options.antenna, options.verbose)
+                                        options.spec, options.antenna,
+                                        options.verbose)
             options.samples_per_symbol = self.sink._sps
             
         elif(options.to_file is not None):

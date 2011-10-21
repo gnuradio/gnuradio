@@ -40,7 +40,8 @@ class my_top_block(gr.top_block):
             self.sink = uhd_transmitter(options.args,
                                         options.bandwidth,
                                         options.tx_freq, options.tx_gain,
-                                        options.antenna, options.verbose)
+                                        options.spec, options.antenna,
+                                        options.verbose)
         elif(options.to_file is not None):
             self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
