@@ -32,4 +32,70 @@ The UHD Doxygen page is located:
     http://files.ettus.com/uhd_docs/doxygen/html/index.html
 
 
+\section Typical Setup
+
+A typical option parser setup for a UHD device looks like
+
+\code
+    parser = OptionParser(option_class=eng_option)
+    parser.add_option("-a", "--args", type="string", default="",
+                      help="UHD device address args , [default=%default]")
+    parser.add_option("", "--spec", type="string", default=None,
+                      help="Subdevice of UHD device where appropriate")
+    parser.add_option("-A", "--antenna", type="string", default=None,
+                      help="select Rx Antenna where appropriate")
+    parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
+                      help="set sample rate (bandwidth) [default=%default]")
+    parser.add_option("-f", "--freq", type="eng_float", default=None,
+                      help="set frequency to FREQ", metavar="FREQ")
+    parser.add_option("-g", "--gain", type="eng_float", default=None,
+                      help="set gain in dB (default is midpoint)")
+\endcode
+
+To use these options to create a UHD source object:
+
+\code
+    self.u = uhd.usrp_source(device_addr=options.args,
+                             io_type=uhd.io_type.COMPLEX_FLOAT32,
+                             num_channels=1)
+
+    self.u.set_samp_rate(options.samp_rate)
+
+    # if no gain was specified, use the mid-point in dB
+    if options.gain is None:
+        g = self.u.get_gain_range()
+        options.gain = float(g.start()+g.stop())/2
+    self.u.set_gain(options.gain, 0)
+    
+    # Set the center frequency
+    self.u.set_center_freq(options.freq, 0)
+
+    # Set the subdevice spec
+    if(options.spec):
+        self.u.set_subdev_spec(options.spec, 0)
+
+     # Set the antenna
+     if(options.antenna):
+        self.u.set_antenna(options.antenna, 0)
+\endcode
+
+Frequently, your application may need a sample rate that is not
+supported by the UHD device. If you have extra CPU power to spare, you
+can easily set the sample rate you want, then ask the device what the
+actual sample rate set was. Then, you can easily create an arbitrary
+resampler to take care of the difference.
+
+\code
+    self.u.set_samp_rate(options.samp_rate)
+
+    desired_rate = options.samp_rate
+    actual_rate = self.u.get_samp_rate()
+    resample = desired_rate / actual_rate
+
+    # Use the blks2 version and pass only the resample factor.
+    # This block builds a half-band filter for you
+
+    self.resampler = blks2.pfb_arb_resampler_ccf(resample)
+\endcode
+
 */
