@@ -66,5 +66,4 @@
 %include <gr_sync_block.i>
 %include <gr_sync_decimator.i>
 %include <gr_sync_interpolator.i>
-%include <gr_tags.i>
 %include <gr_top_block.i>
