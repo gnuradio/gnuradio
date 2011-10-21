@@ -45,9 +45,10 @@ class app_top_block(stdgui2.std_top_block):
         self.panel = panel
         
         parser = OptionParser(option_class=eng_option)
-        parser.add_option("-a", "--address", type="string",
-                          default="addr=192.168.10.2",
-                          help="Address of UHD device, [default=%default]")
+        parser.add_option("-a", "--args", type="string", default="",
+                          help="UHD device address args , [default=%default]")
+        parser.add_option("", "--spec", type="string", default=None,
+	                  help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
@@ -73,7 +74,7 @@ class app_top_block(stdgui2.std_top_block):
 	self.options = options
         self.show_debug_info = True
         
-        self.u = uhd.usrp_source(device_addr=options.address,
+        self.u = uhd.usrp_source(device_addr=options.args,
                                  io_type=uhd.io_type.COMPLEX_FLOAT32,
                                  num_channels=1)
 
@@ -118,6 +119,11 @@ class app_top_block(stdgui2.std_top_block):
             
         self.set_gain(options.gain)
 
+        # Set the subdevice spec
+        if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
         if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
 

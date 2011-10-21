@@ -41,12 +41,12 @@ class rx_cfile_block(gr.top_block):
 
         # Create a UHD device source
         if options.output_shorts:
-            self._u = uhd.usrp_source(device_addr=options.address,
+            self._u = uhd.usrp_source(device_addr=options.args,
                                      io_type=uhd.io_type.COMPLEX_INT16,
                                      num_channels=1)
             self._sink = gr.file_sink(gr.sizeof_short*2, filename)
         else:
-            self._u = uhd.usrp_source(device_addr=options.address,
+            self._u = uhd.usrp_source(device_addr=options.args,
                                      io_type=uhd.io_type.COMPLEX_FLOAT32,
                                      num_channels=1)
             self._sink = gr.file_sink(gr.sizeof_gr_complex, filename)
@@ -60,6 +60,10 @@ class rx_cfile_block(gr.top_block):
             options.gain = float(g.start()+g.stop())/2
 	    print "Using mid-point gain of", options.gain, "(", g.start(), "-", g.stop(), ")"
         self._u.set_gain(options.gain)
+
+        # Set the subdevice spec
+        if(options.spec):
+            self._u.set_subdev_spec(options.spec, 0)
 
         # Set the antenna
         if(options.antenna):
@@ -89,7 +93,7 @@ class rx_cfile_block(gr.top_block):
         input_rate = self._u.get_samp_rate()
         
         if options.verbose:
-            print "Address:", options.address
+            print "Args: ", options.args
             print "Rx gain:", options.gain
             print "Rx baseband frequency:", n2s(tr.actual_rf_freq)
             print "Rx DDC frequency:", n2s(tr.actual_dsp_freq)
@@ -107,8 +111,10 @@ class rx_cfile_block(gr.top_block):
 def get_options():
     usage="%prog: [options] output_filename"
     parser = OptionParser(option_class=eng_option, usage=usage)
-    parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
-                      help="Address of UHD device, [default=%default]")
+    parser.add_option("-a", "--args", type="string", default="",
+                      help="UHD device address args , [default=%default]")
+    parser.add_option("", "--spec", type="string", default=None,
+                      help="Subdevice of UHD device where appropriate")
     parser.add_option("-A", "--antenna", type="string", default=None,
                       help="select Rx Antenna where appropriate")
     parser.add_option("", "--samp-rate", type="eng_float", default=1e6,

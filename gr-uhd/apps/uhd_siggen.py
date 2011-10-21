@@ -92,12 +92,18 @@ class top_block(gr.top_block, pubsub):
         self[TYPE_KEY] = options.type #set type last
 
     def _setup_usrpx(self, options):
-        self._u = uhd.usrp_sink(device_addr=options.address,
+        self._u = uhd.usrp_sink(device_addr=options.args,
                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
                                 num_channels=1)
         self._u.set_samp_rate(options.samp_rate)
+
+        # Set the subdevice spec
+        if(options.spec):
+            self._u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
         if(options.antenna):
-            self._u.set_antenna(options.antenna)
+            self._u.set_antenna(options.antenna, 0)
 
         self.publish(DESC_KEY, lambda: str(self._u))
         self.publish(FREQ_RANGE_KEY, self._u.get_freq_range)
@@ -280,9 +286,10 @@ def get_options():
     usage="%prog: [options]"
 
     parser = OptionParser(option_class=eng_option, usage=usage)
-    parser.add_option("-a", "--address", type="string",
-                      default="addr=192.168.10.2",
-                      help="Address of UHD device, [default=%default]")
+    parser.add_option("-a", "--args", type="string", default="",
+                      help="UHD device address args , [default=%default]")
+    parser.add_option("", "--spec", type="string", default=None,
+                      help="Subdevice of UHD device where appropriate")
     parser.add_option("-A", "--antenna", type="string", default=None,
                       help="select Rx Antenna where appropriate")
     parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,

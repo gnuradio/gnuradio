@@ -83,12 +83,12 @@ class uhd_src(gr.hier_block2):
     Calibration value is the offset from the tuned frequency to 
     the actual frequency.       
     """
-    def __init__(self, address, samp_rate, gain=None, calibration=0.0):
+    def __init__(self, args, spec, antenna, samp_rate, gain=None, calibration=0.0):
 	gr.hier_block2.__init__(self, "uhd_src",
 				gr.io_signature(0, 0, 0),                    # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
-        self._src = uhd.usrp_source(device_addr=address,
+        self._src = uhd.usrp_source(device_addr=args,
                                     io_type=uhd.io_type.COMPLEX_FLOAT32,
                                     num_channels=1)
 
@@ -106,7 +106,15 @@ class uhd_src(gr.hier_block2):
 	    gain = (g.start()+g.stop())/2.0
             print "Using gain: ", gain
         self._src.set_gain(gain)
+
+        # Set the subdevice spec
+        if(spec):
+            self._src.set_subdev_spec(spec, 0)
             
+        # Set the antenna
+        if(antenna):
+            self._src.set_antenna(antenna, 0)
+        
         self._cal = calibration
 	self.connect(self._src, self._resamp, self)
 
@@ -124,7 +132,9 @@ class app_top_block(gr.top_block):
 	(dev_rate, channel_rate, audio_rate,
 	 channel_pass, channel_stop, demod) = demod_params[options.modulation]
 
-        DEV = uhd_src(options.address,          # UHD device address
+        DEV = uhd_src(options.args,             # UHD device address
+                      options.spec,             # device subdev spec
+                      options.antenna,          # device antenna
                       dev_rate,         	# device sample rate
                       options.gain, 	    	# Receiver gain
                       options.calibration)      # Frequency offset
@@ -185,9 +195,10 @@ class app_top_block(gr.top_block):
 	
 def main():
     parser = OptionParser(option_class=eng_option)
-    parser.add_option("-a", "--address", type="string",
-                      default="addr=192.168.10.2",
-                      help="Address of UHD device, [default=%default]")
+    parser.add_option("-a", "--args", type="string", default="",
+                      help="UHD device address args , [default=%default]")
+    parser.add_option("", "--spec", type="string", default=None,
+                      help="Subdevice of UHD device where appropriate")
     parser.add_option("-A", "--antenna", type="string", default=None,
                       help="select Rx Antenna where appropriate [default=%default]")
     parser.add_option("-f", "--frequency", type="eng_float",
