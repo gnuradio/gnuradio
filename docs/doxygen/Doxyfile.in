@@ -1276,7 +1276,7 @@ SEARCH_INCLUDES        = YES
 # contain include files that are not input files but should be processed by 
 # the preprocessor.
 
-INCLUDE_PATH           = @top_builddir@/gruel/src/lib/pmt/
+INCLUDE_PATH           = @abs_top_builddir@/gruel/src/lib/pmt/
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard 
 # patterns (like *.h and *.hpp) to filter out the header-files in the 
