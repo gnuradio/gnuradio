@@ -22,22 +22,26 @@
 Welcome to GNU Radio!
 
 
-Please see http://gnuradio.org/trac for the wiki, bug tracking,
-and source code viewer.  If you've got questions about GNU Radio, please
-subscribe to the discuss-gnuradio mailing list and post your questions
-there.  http://gnuradio.org/trac/wiki/MailingLists
+Please see http://gnuradio.org for the wiki, bug tracking,
+and source code viewer.  
+
+If you've got questions about GNU Radio, please subscribe to the
+discuss-gnuradio mailing list and post your questions there.
+http://gnuradio.org/redmine/projects/gnuradio/wiki/MailingLists
+
 There is also a "Build Guide" in the wiki that contains OS specific
-recommendations.  See http://gnuradio.org/trac/wiki/BuildGuide
+recommendations:
+http://gnuradio.org/redmine/projects/gnuradio/wiki/BuildGuide
 
 
-The bleeding edge code can be found in our subversion repository at
-http://gnuradio.org/svn.  To checkout the latest, use this
-command:
+The bleeding edge code can be found in our git repository at
+http://gnuradio.org/git/gnuradio.git/. To checkout the latest, use
+this command:
 
-  $ svn co http://gnuradio.org/svn/gnuradio/trunk gnuradio
+  $ git clone git://gnuradio.org/gnuradio
 
-For information about subversion, please see:
-  http://subversion.tigris.org/
+For information about using Git, please see:
+http://gnuradio.org/redmine/projects/gnuradio/wiki/DevelopingWithGit
 
 
 How to Build GNU Radio:
@@ -64,15 +68,18 @@ How to Build GNU Radio:
       gnuradio package, which will leave the dependencies.  (This
       should also work on OSX.)
 
-      See the wiki at http://gnuradio.org/trac/wiki for details.
+      See the wiki at http://gnuradio.org for details.
 
 
-  (2) do the "usual dance"
+  (2) Building from cmake:
 
-      $ ./bootstrap        # not reqd when building from the tarball
-      $ ./configure
-      $ make && make check
-      $ sudo make install
+      $ mkdir $(builddir)
+      $ cd $(builddir)
+      $ cmake [OPTIONS] $(srcdir)
+      $ make
+      $ make test
+      $ sudo make instal
+
 
 
 That's it!
@@ -153,7 +160,8 @@ floating point version which we use.  You should also use either the
 --enable-3dnow or --enable-sse options if you're on an Athlon or Pentium
 respectively.
 
-[FIXME: GNU/Linux packages of single-precision fftw are typically called ??]
+GNU/Linux packages of single-precision fftw are typically called
+fftw3f.
 
 In systems using pkgsrc, install math/fftwf, which provides the
 single-precision libraries.

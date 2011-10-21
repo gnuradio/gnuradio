@@ -1,0 +1,135 @@
+/*! \page page_build Build Instructions and Information
+
+\section dependencies Dependencies
+
+The list of GNU Radio dependencies and the minimum required versions,
+if any, to build the various GNU Radio components.
+
+Most of these components do not need to be individually compiled or
+installed. Instead, rely on your operating system's package manager or
+binary installation process (the <b>apt-get</b> system in Debian and
+Ubuntu, <b>yum</b> in RedHat and Fedora, etc.). GNU Radio tries to keep an
+up-to-date build guide for the majority of the supported operating
+systems on gnuradio.org
+(http://gnuradio.org/redmine/projects/gnuradio/wiki/BuildGuide).
+
+Not all dependencies are required for all components, and not all
+components are required for a given installation. The list of required
+components is determined by what the user requires from GNU Radio. If,
+for example, you do not use any Comedi-based hardware, do not worry
+about building gr-comedi.
+
+\subsection dep_global Global Dependencies
+\li git                      http://code.google.com/p/msysgit
+\li cmake                    http://www.cmake.org/cmake/resources/software.html
+\li boost       (>= 1.35)    http://www.boostpro.com/download
+\li cppunit     (>= 1.9.14)  http://gaiacrtn.free.fr/cppunit/index.html
+\li fftw3f      (>= 3.0)     http://www.fftw.org/install/windows.html
+\li gsl	        (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
+
+\subsection dep_python Python Wrappers
+\li python      (>= 2.5)     http://www.python.org/download/
+\li swig        (>= 1.3.31)  http://www.swig.org/download.html
+\li numpy       (>= 1.1.0)   http://sourceforge.net/projects/numpy/files/NumPy/
+
+\subsection dep_docs docs: Building the documentation
+\li doxygen     (>= 1.5)     http://www.stack.nl/~dimitri/doxygen/download.html
+
+\subsection dep_grc grc: The GNU Radio Companion
+\li Cheetah     (>= 2.0)     http://www.cheetahtemplate.org/
+\li pygtk       (>= 2.10)    http://www.pygtk.org/downloads.html
+
+\subsection dep_gr_qtgui gr-qtgui: The QT-based Graphical User Interface
+\li qt	        (>= 4.4)     http://qt.nokia.com/downloads/
+\li qwt         (>= 5.2)     http://sourceforge.net/projects/qwt/
+\li pyqt        (>= 4.4)     http://www.riverbankcomputing.co.uk/software/pyqt/download
+\li pyqwt       (>= 5.2)     http://pyqwt.sourceforge.net/download.html
+
+\subsection dep_gr_wxgui gr-wxgui: The WX-based Graphical User Interface
+\li wxpython    (>= 2.8)     http://www.wxpython.org/
+\li python-lxml (>= 1.3.6)   http://lxml.de/
+
+\subsection dep_gr_audio gr-audio: Audio Subsystems (system/OS dependent)
+\li audio-alsa  (>= 0.9)     http://www.alsa-project.org
+\li audio-jack  (>= 0.8)     http://jackaudio.org/
+\li portaduio   (>= 19)      http://www.portaudio.com/
+\li audio-oss   (>= 1.0)     http://www.opensound.com/oss.html
+\li audio-osx
+\li audio-windows
+
+\subsection dep_uhd uhd: The Ettus USRP Hardware Driver Interface
+\li uhd         (>= 3.0.0)   http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+
+\subsection dep_shd shd: The Symplex Hardware Driver Interface
+\li shd         (>= 3.0.0)   
+
+\subsection dep_gr_video_sdl gr-video-sdl: PAL and NTSC display
+\li SDL	        (>= 1.2.0)   http://www.libsdl.org/download-1.2.php
+
+\subsection dep_gr_comedi gr-comedi: Comedi hardware interface
+\li comedilib   (>= 0.8)     http://www.comedi.org/
+
+
+
+\section build_gr_cmake Building GNU Radio
+
+GNU Radio is built using the Cmake build system
+(http://www.cmake.org/). The standard build method is as follows:
+
+\code
+$ mkdir $(builddir)
+$ cd $(builddir)
+$ cmake [OPTIONS] $(srcdir)
+$ make
+$ make test
+$ sudo make install
+\endcode
+
+The \$(builddir) is the directory in which the code is built. This
+<b>cannot</b> be the same path as where the source code resides. Often,
+\$(builddir) is \$(srcdir)/build.
+
+Options can be used to specify where to find various library or
+include file dependencies that are not automatically being found
+(-DCMAKE_PREFIX_PATH) or set the prefix
+(-DCMAKE_INSTALL_PREFIX=(dir)).
+
+Components can also be enabled and disabled through the options. For a
+component named *gr-comp*, the option to disable would look like:
+-DENABLE_GR_COMP=off. The "off" could also be "false" or "no", and
+cmake is not case sensitive about these options. Similarly, "true",
+"on", or "yes" will turn this component on. All components are enabled
+by default.
+
+
+\subsection build_gr_cmake_e100 Building for the E100
+
+To build GNU Radio on the Ettus Research E100 embedded platforms,
+Cmake has to know that the processors uses the NEON extensions. Use
+the
+
+\code
+cmake -DCMAKE_CXX_FLAGS:STRING="-mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -g" \
+      -DCMAKE_C_FLAGS:STRING="-mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -g" \
+       <gr_source_dir>
+\endcode
+
+
+\section build_old_autotools Building Using Old Autotools Method
+
+As of version 3.5, we have moved to using Cmake as the default,
+preferred build system. If for some reason, Cmake fails on your
+system, GNU Radio still includes the old autotools build process as a
+parallel build method. To build:
+
+\code
+$ cd $(srcdir)
+$ ./bootstrap   // only if not building from a tarball
+$ cd $(builddir)
+$ $(srcdir)/configure [options]
+$ make [-jN]
+$ make check
+$ sudo make install
+\endcode
+
+*/

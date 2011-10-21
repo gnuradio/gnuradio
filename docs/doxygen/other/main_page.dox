@@ -1,14 +1,36 @@
 /*! \mainpage
 
+\image html gnuradio-logo.png
+
 Welcome to GNU Radio!
 
-For a list of all GNU Radio C++ blocks, please see <a href="modules.html">C++ Blocks</a>.
+For details about GNU Radio and using it, please see the <a
+href="http://gnuradio.org" target="_blank"><b>main project page</b></a>.
+
+Other information about the project and discussion about GNU Radio,
+software radio, and communication theory in general can be found at
+the <a href="http://gnuradio.squarespace.com" target="_blank"><b>GNU Radio blog</b></a>.
+
+
+\section build Building GNU Radio
+
+See the \ref page_build page for details about the project's
+dependencies and build process.
+
+
+\section blocks GNU Radio Blocks
+
+GNU Radio uses discrete signal processing blocks that are connected
+together to perform your signal processing application. This manual
+contain a list of all GNU Radio <a href="modules.html"><b>C++ Blocks</b></a>.
 
 Please note that at this time, we haven't found an acceptable way to
 provide unified documentation for the C++ parts of the system and the
 parts written in Python (mostly hierarchical blocks).  Until this gets
 worked out, please bear with us, or better yet, solve it for us!
 
+
+\section toc Manual Contents
 More details on packages in GNU Radio:
 \li \ref page_audio
 \li \ref page_digital
