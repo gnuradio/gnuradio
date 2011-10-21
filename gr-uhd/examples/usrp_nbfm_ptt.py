@@ -50,6 +50,8 @@ class ptt_block(stdgui2.std_top_block):
         parser = OptionParser (option_class=eng_option)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")
+        parser.add_option("", "--spec", type="string", default=None,
+	                  help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option ("-f", "--freq", type="eng_float", default=442.1e6,
@@ -72,9 +74,11 @@ class ptt_block(stdgui2.std_top_block):
         if options.freq < 1e6:
             options.freq *= 1e6
             
-        self.txpath = transmit_path(options.args, options.tx_gain,
+        self.txpath = transmit_path(options.args, options.spec,
+                                    options.antenna, options.tx_gain,
                                     options.audio_input)
-        self.rxpath = receive_path(options.args, options.rx_gain,
+        self.rxpath = receive_path(options.args, options.spec,
+                                   options.antenna, options.rx_gain,
                                    options.audio_output)
 	self.connect(self.txpath)
 	self.connect(self.rxpath)
@@ -272,7 +276,7 @@ class ptt_block(stdgui2.std_top_block):
 # ////////////////////////////////////////////////////////////////////////
 
 class transmit_path(gr.hier_block2):
-    def __init__(self, args, gain, audio_input):
+    def __init__(self, args, spec, antenna, gain, audio_input):
 	gr.hier_block2.__init__(self, "transmit_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
@@ -330,6 +334,14 @@ class transmit_path(gr.hier_block2):
         self.set_gain(gain)
 
         self.set_enable(False)
+
+        # Set the subdevice spec
+        if(spec):
+            self.u.set_subdev_spec(spec, 0)
+
+        # Set the antenna
+        if(antenna):
+            self.u.set_antenna(antenna, 0)
 
     def set_freq(self, target_freq):
         """
@@ -415,7 +427,14 @@ class receive_path(gr.hier_block2):
         s = self.squelch_range()
         self.set_squelch((s[0]+s[1])/2)
         
-        
+        # Set the subdevice spec
+        if(spec):
+            self.u.set_subdev_spec(spec, 0)
+
+        # Set the antenna
+        if(antenna):
+            self.u.set_antenna(antenna, 0)
+
     def volume_range(self):
         return (-20.0, 0.0, 0.5)
 

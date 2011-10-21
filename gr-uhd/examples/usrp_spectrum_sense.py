@@ -86,6 +86,8 @@ class my_top_block(gr.top_block):
         parser = OptionParser(option_class=eng_option, usage=usage)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device device address args [default=%default]")
+        parser.add_option("", "--spec", type="string", default=None,
+	                  help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
@@ -182,6 +184,13 @@ class my_top_block(gr.top_block):
         self.set_gain(options.gain)
 	print "gain =", options.gain
 
+        # Set the subdevice spec
+        if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
 
     def set_next_freq(self):
         target_freq = self.next_freq

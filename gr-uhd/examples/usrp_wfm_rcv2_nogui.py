@@ -35,6 +35,8 @@ class wfm_rx_block (gr.top_block):
         parser=OptionParser(option_class=eng_option)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")
+        parser.add_option("", "--spec", type="string", default="A:0 A:0",
+	                  help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("", "--f1", type="eng_float", default=100.7e6,
@@ -73,7 +75,7 @@ class wfm_rx_block (gr.top_block):
                                  num_channels=2)
 
         # Set front end channel mapping
-        self.u.set_subdev_spec("A:0 A:0")
+        self.u.set_subdev_spec(options.spec)
 
         usrp_rate  = 320e3
         demod_rate = 320e3
@@ -133,6 +135,10 @@ class wfm_rx_block (gr.top_block):
            
            # Set gain for each channel
            self.set_gain(options.gain, n)
+
+           # Set the antenna
+           if(options.antenna):
+               self.u.set_antenna(options.antenna, n)
 
     def set_vol (self, vol):
         self.vol = vol

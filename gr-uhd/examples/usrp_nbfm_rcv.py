@@ -40,6 +40,8 @@ class my_top_block (stdgui2.std_top_block):
         parser=OptionParser(option_class=eng_option)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")
+        parser.add_option("", "--spec", type="string", default=None,
+	                  help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-f", "--freq", type="eng_float", default=146.585e6,
@@ -67,7 +69,7 @@ class my_top_block (stdgui2.std_top_block):
         self.freq = 0
         self.freq_step = 25e3
 
-        self.rxpath = receive_path(options.args, options.antenna,
+        self.rxpath = receive_path(options.args, options.spec, options.antenna,
                                    options.gain, options.audio_output)
 	self.connect(self.rxpath)
 	
@@ -259,7 +261,7 @@ class my_top_block (stdgui2.std_top_block):
 USE_SIMPLE_SQUELCH = False
 
 class receive_path(gr.hier_block2):
-    def __init__(self, args, antenna, gain, audio_output):
+    def __init__(self, args, spec, antenna, gain, audio_output):
 	gr.hier_block2.__init__(self, "receive_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
@@ -320,6 +322,11 @@ class receive_path(gr.hier_block2):
         s = self.squelch_range()
         self.set_squelch((s[0]+s[1])/2)
 
+        # Set the subdevice spec
+        if(spec):
+            self.u.set_subdev_spec(spec, 0)
+
+        # Set the antenna
         if(antenna):
             self.u.set_antenna(antenna, 0)
 

@@ -40,6 +40,8 @@ class wfm_rx_block (stdgui2.std_top_block):
         parser=OptionParser(option_class=eng_option)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")
+        parser.add_option("", "--spec", type="string", default=None,
+	                  help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
@@ -150,6 +152,11 @@ class wfm_rx_block (stdgui2.std_top_block):
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
 
+        # Set the subdevice spec
+        if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
         if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
 
