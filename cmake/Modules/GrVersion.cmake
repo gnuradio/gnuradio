@@ -23,51 +23,83 @@ endif()
 set(__INCLUDED_GR_VERSION_CMAKE TRUE)
 
 ########################################################################
-# Setup version variables.
-# Parse the output of git describe
-# sets VERSION and LIBVER
+# Extract variables from version.sh
 ########################################################################
+include(GrPython)
+message(STATUS "Extracting version information from version.sh...")
+execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "print open('${CMAKE_SOURCE_DIR}/version.sh').read().replace('=', ';').replace('\\n', ';')"
+    OUTPUT_VARIABLE VERSION_INFO OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+include(CMakeParseArgumentsCopy)
+CMAKE_PARSE_ARGUMENTS(VERSION_INFO "" "MAJOR_VERSION;API_COMPAT;MINOR_VERSION;MAINT_VERSION" "" ${VERSION_INFO})
 
-unset(VERSION)
-unset(LIBVER)
+#eventually, replace version.sh and fill in the variables below
+set(MAJOR_VERSION ${VERSION_INFO_MAJOR_VERSION})
+set(API_COMPAT    ${VERSION_INFO_API_COMPAT})
+set(MINOR_VERSION ${VERSION_INFO_MINOR_VERSION})
+set(MAINT_VERSION ${VERSION_INFO_MAINT_VERSION})
 
 ########################################################################
 # Extract the version string from git describe.
 ########################################################################
 find_package(Git)
-if(GIT_FOUND)
-    message(STATUS "Extracting version information from git...")
-    execute_process(COMMAND ${GIT_EXECUTABLE} describe
-        OUTPUT_VARIABLE VERSION OUTPUT_STRIP_TRAILING_WHITESPACE
+
+if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
+    message(STATUS "Extracting version information from git describe...")
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8
+        OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
-    if(NOT VERSION)
-        message(WARNING "Tried to extract $VERSION from git describe but failed... using default")
-    endif()
-endif(GIT_FOUND)
+else()
+    set(GIT_DESCRIBE "v${MAJOR_VERSION}.${API_COMPAT}.x-xxx-xunknown")
+endif()
 
 ########################################################################
-# Extract the library version from the version string.
+# Parse the git describe string (currently unused)
 ########################################################################
-if(VERSION)
-    include(GrPython)
-    execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import re; print re.match('^v(\\d+\\.\\d+\\.\\d+)', '${VERSION}').groups()[0]"
-        OUTPUT_VARIABLE LIBVER OUTPUT_STRIP_TRAILING_WHITESPACE
+unset(GIT_TAG)
+unset(GIT_SEQNO)
+unset(GIT_COMMIT)
+
+if(GIT_DESCRIBE)
+    execute_process(
+        COMMAND ${PYTHON_EXECUTABLE} -c
+        "import re; print ';'.join(re.match('^v(.*)-(.*)-\\w(.*)$', '${GIT_DESCRIBE}').groups())"
+        OUTPUT_VARIABLE GIT_DESCRIBES OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    if(NOT LIBVER)
-        message(WARNING "Tried to extract $LIBVER from $VERSION but failed... using default")
+    list(GET GIT_DESCRIBES 0 GIT_TAG)
+    list(GET GIT_DESCRIBES 1 GIT_SEQNO)
+    list(GET GIT_DESCRIBES 2 GIT_COMMIT)
+endif(GIT_DESCRIBE)
+
+########################################################################
+# Use the logic below to set the version constants
+########################################################################
+if("${MINOR_VERSION}" STREQUAL "git")
+    # VERSION: 3.3git-xxx-gxxxxxxxx
+    # DOCVER:  3.3git
+    # LIBVER:  3.3git
+    set(VERSION "${GIT_DESCRIBE}")
+    set(DOCVER  "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
+    set(LIBVER  "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
+elseif("${MAINT_VERSION}" STREQUAL "git")
+    # VERSION: 3.3.1git-xxx-gxxxxxxxx
+    # DOCVER:  3.3.1git
+    # LIBVER:  3.3.1git
+    set(VERSION "${GIT_DESCRIBE}")
+    set(DOCVER  "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
+    set(LIBVER  "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
+else()
+    # This is a numbered release.
+    # VERSION: 3.3.1{.x}
+    # DOCVER:  3.3.1{.x}
+    # LIBVER:  3.3.1{.x}
+    if("${MAINT_VERSION}" STREQUAL "0")
+        set(VERSION "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}")
+    else()
+        set(VERSION "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}.${MAINT_VERSION}")
     endif()
+    set(DOCVER "${VERSION}")
+    set(LIBVER "${VERSION}")
 endif()
-
-########################################################################
-# Ensure that the version strings are set no matter what.
-########################################################################
-if(NOT VERSION)
-    set(VERSION "v3.x.x-unknown")
-endif()
-
-if(NOT LIBVER)
-    set(LIBVER "3.x.x")
-endif()
-
-message(STATUS "VERSION: ${VERSION}, LIBVER: ${LIBVER}")

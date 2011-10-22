@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#define GR_CORE_API
+
 %{
 #include <gr_runtime_types.h>
 #include <gr_io_signature.h>

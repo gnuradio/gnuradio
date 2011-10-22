@@ -18,45 +18,36 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup swig generation
+# Install python files and apps
 ########################################################################
 include(GrPython)
-include(GrSwig)
 
-set(GR_SWIG_INCLUDE_DIRS
-    ${GR_VOCODER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-)
-
-set(GR_SWIG_LIBRARIES gnuradio-vocoder)
-
-GR_SWIG_MAKE(vocoder_swig vocoder_swig.i)
-
-GR_SWIG_INSTALL(
-    TARGETS vocoder_swig
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_python"
-)
-
-install(
+GR_PYTHON_INSTALL(
     FILES
-    vocoder_swig.i
-    vocoder_alaw_decode_bs.i
-    vocoder_alaw_encode_sb.i
-    vocoder_codec2_decode_ps.i
-    vocoder_codec2_encode_sp.i
-    vocoder_cvsd_decode_bs.i
-    vocoder_cvsd_encode_sb.i
-    vocoder_g721_decode_bs.i
-    vocoder_g721_encode_sb.i
-    vocoder_g723_24_decode_bs.i
-    vocoder_g723_24_encode_sb.i
-    vocoder_g723_40_decode_bs.i
-    vocoder_g723_40_encode_sb.i
-    vocoder_gsm_fr_encode_sp.i
-    vocoder_gsm_fr_decode_ps.i
-    vocoder_ulaw_decode_bs.i
-    vocoder_ulaw_encode_sb.i
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "vocoder_swig"
+    plot_data.py
+    pyqt_plot.py
+    pyqt_filter.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio
+    COMPONENT "utils"
+)
+
+GR_PYTHON_INSTALL(
+    PROGRAMS
+    create-gnuradio-out-of-tree-project
+    gr_plot_char.py
+    gr_plot_const.py
+    gr_plot_fft.py
+    gr_plot_fft_c.py
+    gr_plot_fft_f.py
+    gr_plot_psd.py
+    gr_plot_psd_c.py
+    gr_plot_psd_f.py
+    gr_plot_float.py
+    gr_plot_int.py
+    gr_plot_iq.py
+    gr_plot_short.py
+    gr_plot_qt.py
+    gr_filter_design.py
+    DESTINATION ${GR_RUNTIME_DIR}
+    COMPONENT "utils"
 )

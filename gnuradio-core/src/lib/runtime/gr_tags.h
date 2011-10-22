@@ -25,24 +25,19 @@
 #include <gr_core_api.h>
 #include <gruel/pmt.h>
 
-//dummy namespace so the line below makes swig happy
-namespace pmt{}
-//stupid using namespace because pmt::pmt_t confuses swig
-using namespace pmt;
-
 struct GR_CORE_API gr_tag_t{
 
     //! the item \p tag occurred at (as a uint64_t)
     uint64_t offset;
 
     //! the key of \p tag (as a PMT symbol)
-    pmt_t key;
+    pmt::pmt_t key;
 
     //! the value of \p tag (as a PMT)
-    pmt_t value;
+    pmt::pmt_t value;
 
     //! the source ID of \p tag (as a PMT)
-    pmt_t srcid;
+    pmt::pmt_t srcid;
 
     //! Comparison function to test which tag, \p x or \p y, came first in time
     static inline bool offset_compare(

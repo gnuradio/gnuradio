@@ -25,8 +25,8 @@ def make_makefile_am(dom, machines, archflags_dict):
 include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) \
-	-I$(top_srcdir)/include \
 	-I$(top_gendir)/include \
+	-I$(top_srcdir)/include \
 	-Dvolk_EXPORTS \
 	-fvisibility=hidden \
 	$(WITH_INCLUDES)

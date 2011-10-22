@@ -105,9 +105,9 @@ install(FILES
     WaterfallDisplayPlot.h
     waterfallGlobalData.h
     ConstellationDisplayPlot.h
-    highResTimeFunctions.h
     plot_waterfall.h
     spectrumdisplayform.h
+    timedisplayform.h
     SpectrumGUIClass.h
     spectrumUpdateEvents.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio

@@ -40,6 +40,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES
+    digital_swig.i
     digital_binary_slicer_fb.i
     digital_clock_recovery_mm_cc.i
     digital_clock_recovery_mm_ff.i

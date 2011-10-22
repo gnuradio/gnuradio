@@ -20,7 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%module pmt
 %include "std_string.i"
 %include "stdint.i"
 %{
@@ -33,7 +32,6 @@
 #include <iosfwd>
 #include <stdexcept>
 #include <gruel/pmt.h>
-using namespace pmt;
 %}
 
 ////////////////////////////////////////////////////////////////////////
@@ -55,10 +53,14 @@ using namespace pmt;
 }
 
 // Template intrusive_ptr for Swig to avoid dereferencing issues
-class pmt_base;
+namespace pmt{
+    class pmt_base;
+}
 //%import <intrusive_ptr.i>
 %import <gr_intrusive_ptr.i>
-%template(swig_int_ptr) boost::intrusive_ptr<pmt_base>;
+%template(swig_int_ptr) boost::intrusive_ptr<pmt::pmt_base>;
+
+namespace pmt{
 
 typedef boost::intrusive_ptr<pmt_base> pmt_t;
 
@@ -777,3 +779,5 @@ std::string pmt_serialize_str(pmt_t obj);
  * \brief Provide a simple string generating interface to pmt's deserialize function
  */
 pmt_t pmt_deserialize_str(std::string str);
+
+} //namespace pmt
