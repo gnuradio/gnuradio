@@ -20,5 +20,4 @@
 install(
     FILES README.qtgui
     DESTINATION ${GR_PKG_DOC_DIR}
-    COMPONENT "docs"
 )
