@@ -187,6 +187,16 @@ add_subdirectory(volk)
 endif(ENABLE_VOLK)
 
 ########################################################################
+# Distribute the README file
+########################################################################
+install(
+    FILES README README.hacking
+    DESTINATION ${GR_PKG_DOC_DIR}
+    COMPONENT "docs"
+)
+
+
+########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(gruel)
