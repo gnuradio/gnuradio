@@ -29,11 +29,17 @@ GR_PYTHON_CHECK_MODULE("numpy"      numpy        True                           
 # Register component
 ########################################################################
 include(GrComponent)
+if(NOT CMAKE_CROSSCOMPILING)
+    set(wxgui_python_deps
+        NUMPY_FOUND
+        WX_FOUND
+    )
+endif(NOT CMAKE_CROSSCOMPILING)
+
 GR_REGISTER_COMPONENT("gr-wxgui" ENABLE_GR_WXGUI
     ENABLE_GR_CORE
     ENABLE_PYTHON
-    NUMPY_FOUND
-    WX_FOUND
+    ${wxgui_python_deps}
 )
 
 ########################################################################
