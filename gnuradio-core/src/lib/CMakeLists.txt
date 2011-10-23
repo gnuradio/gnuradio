@@ -70,16 +70,9 @@ endif()
 
 add_library(gnuradio-core SHARED ${gnuradio_core_sources})
 target_link_libraries(gnuradio-core ${gnuradio_core_libs})
-set_target_properties(gnuradio-core PROPERTIES DEFINE_SYMBOL "gnuradio_core_EXPORTS")
-set_target_properties(gnuradio-core PROPERTIES SOVERSION ${LIBVER})
+GR_LIBRARY_FOO(gnuradio-core RUNTIME_COMPONENT "core_runtime" DEVEL_COMPONENT "core_devel")
 #avoid fftw and gsl link in dependent libraries:
 set_target_properties(gnuradio-core PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
-
-install(TARGETS gnuradio-core
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "core_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "core_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "core_runtime" # .dll file
-)
 
 ########################################################################
 # Setup executables

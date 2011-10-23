@@ -48,14 +48,7 @@ list(APPEND comedi_libs
 
 add_library(gnuradio-comedi SHARED ${gr_comedi_sources})
 target_link_libraries(gnuradio-comedi ${comedi_libs})
-set_target_properties(gnuradio-comedi PROPERTIES DEFINE_SYMBOL "gnuradio_comedi_EXPORTS")
-set_target_properties(gnuradio-comedi PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-comedi
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "comedi_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "comedi_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "comedi_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-comedi RUNTIME_COMPONENT "comedi_runtime" DEVEL_COMPONENT "comedi_devel")
 
 ########################################################################
 # Install public header files

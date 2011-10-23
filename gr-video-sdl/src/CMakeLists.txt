@@ -46,14 +46,7 @@ list(APPEND video_sdl_libs
 
 add_library(gnuradio-video-sdl SHARED ${gr_video_sdl_sources})
 target_link_libraries(gnuradio-video-sdl ${video_sdl_libs})
-set_target_properties(gnuradio-video-sdl PROPERTIES DEFINE_SYMBOL "gnuradio_video_sdl_EXPORTS")
-set_target_properties(gnuradio-video-sdl PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-video-sdl
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "video_sdl_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "video_sdl_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "video_sdl_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-video-sdl RUNTIME_COMPONENT "video_sdl_runtime" DEVEL_COMPONENT "video_sdl_devel")
 
 ########################################################################
 # Install public header files

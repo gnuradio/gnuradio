@@ -64,11 +64,4 @@ list(APPEND vocoder_libs
 
 add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})
 target_link_libraries(gnuradio-vocoder ${vocoder_libs})
-set_target_properties(gnuradio-vocoder PROPERTIES DEFINE_SYMBOL "gnuradio_vocoder_EXPORTS")
-set_target_properties(gnuradio-vocoder PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-vocoder
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "vocoder_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "vocoder_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "vocoder_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-vocoder RUNTIME_COMPONENT "vocoder_runtime" DEVEL_COMPONENT "vocoder_devel")

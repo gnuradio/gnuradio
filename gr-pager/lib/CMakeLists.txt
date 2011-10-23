@@ -49,14 +49,7 @@ list(APPEND pager_libs
 
 add_library(gnuradio-pager SHARED ${gr_pager_sources})
 target_link_libraries(gnuradio-pager ${pager_libs})
-set_target_properties(gnuradio-pager PROPERTIES DEFINE_SYMBOL "gnuradio_pager_EXPORTS")
-set_target_properties(gnuradio-pager PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-pager
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "pager_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "pager_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "pager_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-pager RUNTIME_COMPONENT "pager_runtime" DEVEL_COMPONENT "pager_devel")
 
 ########################################################################
 # Install header files

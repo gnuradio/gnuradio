@@ -87,14 +87,7 @@ list(APPEND qtgui_libs
 add_definitions(-DQWT_DLL) #setup QWT library linkage
 add_library(gnuradio-qtgui SHARED ${qtgui_srcs})
 target_link_libraries(gnuradio-qtgui ${qtgui_libs})
-set_target_properties(gnuradio-qtgui PROPERTIES DEFINE_SYMBOL "libgnuradio_qtgui_EXPORTS")
-set_target_properties(gnuradio-qtgui PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-qtgui
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "qtgui_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "qtgui_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "qtgui_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-qtgui RUNTIME_COMPONENT "qtgui_runtime" DEVEL_COMPONENT "qtgui_devel")
 
 ########################################################################
 # Install the header files

@@ -48,11 +48,4 @@ list(APPEND uhd_libs
 
 add_library(gnuradio-uhd SHARED ${gr_uhd_sources})
 target_link_libraries(gnuradio-uhd ${uhd_libs})
-set_target_properties(gnuradio-uhd PROPERTIES DEFINE_SYMBOL "gnuradio_uhd_EXPORTS")
-set_target_properties(gnuradio-uhd PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-uhd
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "uhd_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "uhd_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "uhd_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-uhd RUNTIME_COMPONENT "uhd_runtime" DEVEL_COMPONENT "uhd_devel")

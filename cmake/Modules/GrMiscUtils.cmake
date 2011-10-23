@@ -90,10 +90,66 @@ endmacro(GR_INCLUDE_SUBDIRECTORY)
 #  - flag the compiler flag to check for
 #  - have the variable to set with result
 ########################################################################
-INCLUDE(CheckCXXCompilerFlag)
-MACRO(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
+macro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
+    include(CheckCXXCompilerFlag)
     CHECK_CXX_COMPILER_FLAG(${flag} ${have})
-    IF(${have})
-        ADD_DEFINITIONS(${flag})
-    ENDIF(${have})
-ENDMACRO(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
+    if(${have})
+        add_definitions(${flag})
+    endif(${have})
+endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
+
+########################################################################
+# Do standard things to the library target
+# - set target properties
+# - make install rules
+# Also handle gnuradio custom naming conventions w/ fubar mode.
+########################################################################
+function(GR_LIBRARY_FOO target)
+    #parse the arguments for component names
+    include(CMakeParseArgumentsCopy)
+    CMAKE_PARSE_ARGUMENTS(GR_LIBRARY "" "RUNTIME_COMPONENT;DEVEL_COMPONENT" "" ${ARGN})
+
+    #set additional target properties
+    set_target_properties(${target} PROPERTIES SOVERSION ${LIBVER})
+
+    #install the generated files like so...
+    install(TARGETS ${target}
+        LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT} # .so/.dylib file
+        ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_DEVEL_COMPONENT}   # .lib file
+        RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT} # .dll file
+    )
+
+    #fubar mode enabled automatically on linux
+    if(NOT DEFINED LIBRARY_FUBAR)
+        set(LIBRARY_FUBAR ${LINUX})
+    endif()
+
+    #special fubar mode to enable alternative naming conventions
+    if(LIBRARY_FUBAR)
+
+        #create .la file before changing props
+        include(CMakeMacroLibtoolFile)
+        CREATE_LIBTOOL_FILE(${target} /${GR_LIBRARY_DIR})
+
+        #give the library a special name with ultra-zero soverion
+        set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
+        set(target_name lib${target}-${LIBVER}.so.0.0.0)
+
+        #custom command to generate symlinks
+        add_custom_command(
+            TARGET ${target}
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${target_name} ${CMAKE_CURRENT_BINARY_DIR}/lib${target}.so
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${target_name} ${CMAKE_CURRENT_BINARY_DIR}/lib${target}-${LIBVER}.so.0
+        )
+
+        #and install the extra symlinks
+        install(
+            FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/lib${target}.so
+            ${CMAKE_CURRENT_BINARY_DIR}/lib${target}-${LIBVER}.so.0
+            DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT}
+        )
+
+    endif(LIBRARY_FUBAR)
+endfunction(GR_LIBRARY_FOO)
