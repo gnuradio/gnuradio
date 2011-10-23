@@ -60,6 +60,7 @@ noinst_PYTHON = 			\
 	qa_fft.py			\
 	qa_fft_filter.py		\
 	qa_filter_delay_fc.py		\
+	qa_float_to_int.py		\
 	qa_fractional_interpolator.py   \
 	qa_frequency_modulator.py	\
 	qa_fsk_stuff.py			\

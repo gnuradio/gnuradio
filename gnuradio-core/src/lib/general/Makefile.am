@@ -75,6 +75,7 @@ libgeneral_la_SOURCES = 		\
 	gr_firdes.cc			\
 	gr_float_to_char.cc		\
 	gr_float_to_complex.cc		\
+	gr_float_to_int.cc		\
 	gr_float_to_short.cc		\
 	gr_float_to_uchar.cc		\
 	gr_fmdet_cf.cc			\
@@ -152,10 +153,12 @@ libgeneral_la_SOURCES = 		\
 	gri_debugger_hook.cc		\
 	gri_fft.cc			\
 	gri_float_to_char.cc		\
+	gri_float_to_int.cc		\
 	gri_float_to_short.cc		\
 	gri_float_to_uchar.cc		\
 	gri_glfsr.cc			\
 	gri_interleaved_short_to_complex.cc \
+	gri_int_to_float.cc		\
 	gri_short_to_float.cc		\
 	gri_uchar_to_float.cc		\
 	malloc16.c			\
@@ -221,6 +224,7 @@ grinclude_HEADERS = 			\
 	gr_firdes.h			\
 	gr_float_to_char.h		\
 	gr_float_to_complex.h		\
+	gr_float_to_int.h		\
 	gr_float_to_short.h		\
 	gr_float_to_uchar.h		\
 	gr_fmdet_cf.h			\
@@ -310,11 +314,13 @@ grinclude_HEADERS = 			\
 	gri_debugger_hook.h		\
 	gri_fft.h			\
 	gri_float_to_char.h		\
+	gri_float_to_int.h		\
 	gri_float_to_short.h		\
 	gri_float_to_uchar.h		\
 	gri_lfsr.h			\
 	gri_glfsr.h			\
 	gri_interleaved_short_to_complex.h \
+	gri_int_to_float.h		\
 	gri_lfsr_15_1_0.h		\
 	gri_lfsr_32k.h			\
 	gri_short_to_float.h		\
@@ -380,6 +386,7 @@ swiginclude_HEADERS =			\
 	gr_firdes.i			\
 	gr_float_to_char.i		\
 	gr_float_to_complex.i		\
+	gr_float_to_int.i		\
 	gr_float_to_short.i		\
 	gr_float_to_uchar.i		\
 	gr_fmdet_cf.i			\

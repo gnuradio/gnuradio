@@ -81,10 +81,12 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_char.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_int.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_glfsr.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/gri_int_to_float.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_short_to_float.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_uchar_to_float.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.c
@@ -137,6 +139,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_char.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_int.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr.h
@@ -144,6 +147,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gri_int_to_float.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_short_to_float.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_uchar_to_float.h
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.h
@@ -208,6 +212,7 @@ set(gr_core_general_triple_threats
     gr_firdes
     gr_float_to_char
     gr_float_to_complex
+    gr_float_to_int
     gr_float_to_short
     gr_float_to_uchar
     gr_fmdet_cf

@@ -24,32 +24,32 @@
 #include "config.h"
 #endif
 
-#include <gr_int_to_float.h>
+#include <gr_float_to_int.h>
 #include <gr_io_signature.h>
-#include <gri_int_to_float.h>
+#include <gri_float_to_int.h>
 
-gr_int_to_float_sptr
-gr_make_int_to_float ()
+gr_float_to_int_sptr
+gr_make_float_to_int ()
 {
-  return gnuradio::get_initial_sptr(new gr_int_to_float ());
+  return gnuradio::get_initial_sptr(new gr_float_to_int ());
 }
 
-gr_int_to_float::gr_int_to_float ()
-  : gr_sync_block ("gr_int_to_float",
-		   gr_make_io_signature (1, 1, sizeof (int32_t)),
-		   gr_make_io_signature (1, 1, sizeof (float)))
+gr_float_to_int::gr_float_to_int ()
+  : gr_sync_block ("gr_float_to_int",
+		   gr_make_io_signature (1, 1, sizeof (float)),
+		   gr_make_io_signature (1, 1, sizeof (int)))
 {
 }
 
 int
-gr_int_to_float::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
+gr_float_to_int::work (int noutput_items,
+			 gr_vector_const_void_star &input_items,
+			 gr_vector_void_star &output_items)
 {
-  const int32_t *in = (const int32_t *) input_items[0];
-  float *out = (float *) output_items[0];
+  const float *in = (const float *) input_items[0];
+  int *out = (int *) output_items[0];
 
-  gri_int_to_float(in, out, noutput_items);
+  gri_float_to_int (in, out, noutput_items);
   
   return noutput_items;
 }

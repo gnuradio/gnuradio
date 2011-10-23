@@ -44,16 +44,16 @@ set(MAINT_VERSION ${VERSION_INFO_MAINT_VERSION})
 ########################################################################
 find_package(Git)
 
-if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
-    message(STATUS "Extracting version information from git describe...")
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8
-        OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
-else()
-    set(GIT_DESCRIBE "v${MAJOR_VERSION}.${API_COMPAT}.x-xxx-xunknown")
-endif()
+#if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
+#    message(STATUS "Extracting version information from git describe...")
+#    execute_process(
+#        COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8
+#        OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
+#        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+#    )
+#else()
+#    set(GIT_DESCRIBE "v${MAJOR_VERSION}.${API_COMPAT}.x-xxx-xunknown")
+#endif()
 
 ########################################################################
 # Parse the git describe string (currently unused)

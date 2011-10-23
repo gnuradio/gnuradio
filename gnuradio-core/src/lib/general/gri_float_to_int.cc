@@ -21,38 +21,26 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
-#include <gr_int_to_float.h>
-#include <gr_io_signature.h>
-#include <gri_int_to_float.h>
+#define _ISOC9X_SOURCE
+#include <gri_float_to_int.h>
+#include <math.h>
 
-gr_int_to_float_sptr
-gr_make_int_to_float ()
+static const int MIN_INT = -2147483648; // -2^31
+static const int MAX_INT =  2147483647; // (2^31)-1
+
+
+void 
+gri_float_to_int (const float *in, int *out, int nsamples)
 {
-  return gnuradio::get_initial_sptr(new gr_int_to_float ());
+  for (int i = 0; i < nsamples; i++){
+    long int r = (long int) rint (in[i]);
+    if (r < MIN_INT)
+      r = MIN_INT;
+    else if (r > MAX_INT)
+      r = MAX_INT;
+    out[i] = r;
+  }
 }
-
-gr_int_to_float::gr_int_to_float ()
-  : gr_sync_block ("gr_int_to_float",
-		   gr_make_io_signature (1, 1, sizeof (int32_t)),
-		   gr_make_io_signature (1, 1, sizeof (float)))
-{
-}
-
-int
-gr_int_to_float::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
-{
-  const int32_t *in = (const int32_t *) input_items[0];
-  float *out = (float *) output_items[0];
-
-  gri_int_to_float(in, out, noutput_items);
-  
-  return noutput_items;
-}
-
-
-

@@ -21,38 +21,17 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
-#include <gr_int_to_float.h>
-#include <gr_io_signature.h>
+#define _ISOC9X_SOURCE
 #include <gri_int_to_float.h>
+#include <math.h>
 
-gr_int_to_float_sptr
-gr_make_int_to_float ()
+void 
+gri_int_to_float (const int *in, float *out, int nsamples)
 {
-  return gnuradio::get_initial_sptr(new gr_int_to_float ());
+  for (int i = 0; i < nsamples; i++){
+    out[i] = static_cast<float>(in[i]);
+  }
 }
-
-gr_int_to_float::gr_int_to_float ()
-  : gr_sync_block ("gr_int_to_float",
-		   gr_make_io_signature (1, 1, sizeof (int32_t)),
-		   gr_make_io_signature (1, 1, sizeof (float)))
-{
-}
-
-int
-gr_int_to_float::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
-{
-  const int32_t *in = (const int32_t *) input_items[0];
-  float *out = (float *) output_items[0];
-
-  gri_int_to_float(in, out, noutput_items);
-  
-  return noutput_items;
-}
-
-
-
