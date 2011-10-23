@@ -44,6 +44,22 @@ class test_float_to_int (gr_unittest.TestCase):
 
         self.assertEqual(expected_result, result_data)
 
+    def test_002(self):
+
+        src_data = ( 2147483647,  2147483648,  2200000000,
+                    -2147483648, -2147483649, -2200000000)
+        expected_result = [2147483647, 2147483647, 2147483647,
+                           -2147483648, -2147483648, -2147483648]
+        src = gr.vector_source_f(src_data)
+        op = gr.float_to_int()
+        dst = gr.vector_sink_i()
+
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = list(dst.data())
+
+        self.assertEqual(expected_result, result_data)
+
 if __name__ == '__main__':
     gr_unittest.run(test_float_to_int, "test_float_to_int.xml")
 
