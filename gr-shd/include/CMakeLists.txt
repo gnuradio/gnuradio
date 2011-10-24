@@ -1,4 +1,3 @@
-#
 # Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
@@ -17,17 +16,14 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
 
-include $(top_srcdir)/Makefile.common
-
-EXTRA_DIST += \
-    $(bin_SCRIPTS)
-
-ourpythondir = $(grpythondir)
-
-bin_SCRIPTS = \
-    shd_fft.py \
-    shd_rx_cfile.py \
-    shd_siggen.py
-
+########################################################################
+# Install header files
+########################################################################
+install(FILES
+    gr_shd_api.h
+    gr_shd_smini_source.h
+    gr_shd_smini_sink.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    COMPONENT "shd_devel"
+)
