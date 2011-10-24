@@ -28,15 +28,15 @@
 #include <gri_float_to_int.h>
 #include <math.h>
 
-static const int MIN_INT = -2147483648; // -2^31
-static const int MAX_INT =  2147483647; // (2^31)-1
+static const long int MAX_INT =  2147483647; // (2^31)-1
+static const long int MIN_INT = -2147483648; // -2^31
 
 
 void 
 gri_float_to_int (const float *in, int *out, int nsamples)
 {
   for (int i = 0; i < nsamples; i++){
-    long int r = (long int) rint (in[i]);
+    long int r = static_cast<long int>(rint(in[i]));
     if (r < MIN_INT)
       r = MIN_INT;
     else if (r > MAX_INT)
