@@ -24,7 +24,7 @@
 
 #include <gruel/attributes.h>
 
-#ifdef libgnuradio_qtgui_EXPORTS
+#ifdef gnuradio_qtgui_EXPORTS
 #  define GR_QTGUI_API __GR_ATTR_EXPORT
 #else
 #  define GR_QTGUI_API __GR_ATTR_IMPORT
