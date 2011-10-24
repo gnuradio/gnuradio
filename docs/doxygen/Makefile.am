@@ -34,6 +34,8 @@ docs: prep html/index.html
 html/index.html:
 	@DOXYGEN@
 
+EXTRA_DIST = images/gnuradio-logo.png
+
 prep:
 	$(MKDIR_P) html
 	$(MKDIR_P) xml
