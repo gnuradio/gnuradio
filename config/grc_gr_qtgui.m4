@@ -51,8 +51,6 @@ AC_DEFUN([GRC_GR_QTGUI],[
 	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtCore >= 4.4.])])
         PKG_CHECK_MODULES(QTGUI, QtGui >= 4.4, [],
 	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtGui >= 4..])])
-        PKG_CHECK_MODULES(QTOPENGL, QtOpenGL >= 4.4, [],
-	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtOpenGL >- 4.4.])])
 	
         dnl Fetch QWT variables
         GR_QWT([], [passed=no])
@@ -60,7 +58,7 @@ AC_DEFUN([GRC_GR_QTGUI],[
 	dnl Export the include dirs and libraries (note: QTOPENGL_LIBS includes links
 	dnl to QtCore and QtGui libraries)
 	QT_INCLUDES="$QWT_CFLAGS $QTCORE_CFLAGS $QTGUI_CFLAGS"
-	QT_LIBS="$QWT_LIBS $QTOPENGL_LIBS"
+	QT_LIBS="$QWT_LIBS"
 
         dnl Build an includes variable specifically for running qmake by extracting
         dnl all includes from the QWT, without the -I;
