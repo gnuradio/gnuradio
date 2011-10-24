@@ -56,24 +56,6 @@ find_package(Git)
 #endif()
 
 ########################################################################
-# Parse the git describe string (currently unused)
-########################################################################
-unset(GIT_TAG)
-unset(GIT_SEQNO)
-unset(GIT_COMMIT)
-
-if(GIT_DESCRIBE)
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -c
-        "import re; print ';'.join(re.match('^v(.*)-(.*)-\\w(.*)$', '${GIT_DESCRIBE}').groups())"
-        OUTPUT_VARIABLE GIT_DESCRIBES OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    list(GET GIT_DESCRIBES 0 GIT_TAG)
-    list(GET GIT_DESCRIBES 1 GIT_SEQNO)
-    list(GET GIT_DESCRIBES 2 GIT_COMMIT)
-endif(GIT_DESCRIBE)
-
-########################################################################
 # Use the logic below to set the version constants
 ########################################################################
 if("${MINOR_VERSION}" STREQUAL "git")

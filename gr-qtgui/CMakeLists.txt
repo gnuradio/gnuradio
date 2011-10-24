@@ -36,13 +36,20 @@ GR_PYTHON_CHECK_MODULE("PyQt4" PyQt4 True PYQT4_FOUND)
 # Register component
 ########################################################################
 include(GrComponent)
+if(NOT CMAKE_CROSSCOMPILING)
+    set(qt_gui_python_deps
+        PYQT4_FOUND
+        #we could check for pyqwt, but its not strictly required
+    )
+endif(NOT CMAKE_CROSSCOMPILING)
+
 GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
     Boost_FOUND
     QT4_FOUND
     QWT_FOUND
     ENABLE_GR_CORE
     PYTHONLIBS_FOUND
-    PYQT4_FOUND
+    ${qt_gui_python_deps}
 )
 
 GR_SET_GLOBAL(GR_QTGUI_INCLUDE_DIRS

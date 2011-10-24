@@ -34,6 +34,7 @@ GR_PYTHON_CHECK_MODULE("numpy"             numpy        True                    
 include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(grc_python_deps
+        PYTHON_MIN_VER_FOUND
         CHEETAH_FOUND
         LXML_FOUND
         PYGTK_FOUND
@@ -44,7 +45,6 @@ endif(NOT CMAKE_CROSSCOMPILING)
 GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
     ENABLE_GR_CORE
     ENABLE_PYTHON
-    PYTHON_MIN_VER_FOUND
     ${grc_python_deps}
 )
 
