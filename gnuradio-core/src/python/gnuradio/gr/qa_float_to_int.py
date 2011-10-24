@@ -48,8 +48,8 @@ class test_float_to_int (gr_unittest.TestCase):
 
         src_data = ( 2147483647,  2147483648,  2200000000,
                     -2147483648, -2147483649, -2200000000)
-        expected_result = [2147483647, 2147483647, 2147483647,
-                           -2147483648, -2147483648, -2147483648]
+        expected_result = [ 2147483647,  2147483647,  2147483647,
+                           -2147483647, -2147483647, -2147483647]
         src = gr.vector_source_f(src_data)
         op = gr.float_to_int()
         dst = gr.vector_sink_i()

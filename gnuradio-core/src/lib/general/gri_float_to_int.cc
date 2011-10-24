@@ -27,20 +27,21 @@
 #define _ISOC9X_SOURCE
 #include <gri_float_to_int.h>
 #include <math.h>
+#include <stdint.h>
 
-static const long int MAX_INT =  2147483647; // (2^31)-1
-static const long int MIN_INT = -2147483648; // -2^31
+static const int64_t MAX_INT =  2147483647; //  (2^31)-1
+static const int64_t MIN_INT = -2147483647; // -(2^31)-1
 
 
 void 
 gri_float_to_int (const float *in, int *out, int nsamples)
 {
   for (int i = 0; i < nsamples; i++){
-    long int r = static_cast<long int>(rint(in[i]));
+    int64_t r = static_cast<int64_t>(rint(in[i]));
     if (r < MIN_INT)
       r = MIN_INT;
     else if (r > MAX_INT)
       r = MAX_INT;
-    out[i] = r;
+    out[i] = static_cast<int>(r);
   }
 }
