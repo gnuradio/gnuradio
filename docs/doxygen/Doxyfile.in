@@ -637,7 +637,8 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gr-trellis/src/lib/trellis.py \
                          @abs_top_builddir@/gr-video-sdl/src/video_sdl.py \
                          @abs_top_builddir@/gr-wxgui/src/python \
-                         @abs_top_builddir@/grc
+                         @abs_top_builddir@/grc \
+			 @abs_top_srcdir@/gr-qtgui/lib
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
