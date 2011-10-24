@@ -161,14 +161,7 @@ list(APPEND trellis_libs
 
 add_library(gnuradio-trellis SHARED ${gr_trellis_sources})
 target_link_libraries(gnuradio-trellis ${trellis_libs})
-set_target_properties(gnuradio-trellis PROPERTIES DEFINE_SYMBOL "gnuradio_trellis_EXPORTS")
-set_target_properties(gnuradio-trellis PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-trellis
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "trellis_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "trellis_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "trellis_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-trellis RUNTIME_COMPONENT "trellis_runtime" DEVEL_COMPONENT "trellis_devel")
 
 ########################################################################
 # Handle the generated sources + a few non-generated ones

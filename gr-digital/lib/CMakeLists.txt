@@ -63,11 +63,4 @@ list(APPEND digital_libs
 
 add_library(gnuradio-digital SHARED ${gr_digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
-set_target_properties(gnuradio-digital PROPERTIES DEFINE_SYMBOL "gnuradio_digital_EXPORTS")
-set_target_properties(gnuradio-digital PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-digital
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "digital_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "digital_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "digital_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")

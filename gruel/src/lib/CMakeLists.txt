@@ -82,14 +82,7 @@ list(APPEND gruel_sources
 
 add_library(gruel SHARED ${gruel_sources})
 target_link_libraries(gruel ${Boost_LIBRARIES})
-set_target_properties(gruel PROPERTIES DEFINE_SYMBOL "gruel_EXPORTS")
-set_target_properties(gruel PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gruel
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "gruel_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "gruel_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "gruel_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gruel RUNTIME_COMPONENT "gruel_runtime" DEVEL_COMPONENT "gruel_devel")
 
 ########################################################################
 # Setup tests

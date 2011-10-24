@@ -101,14 +101,7 @@ list(APPEND atsc_libs
 
 add_library(gnuradio-atsc SHARED ${gr_atsc_sources})
 target_link_libraries(gnuradio-atsc ${atsc_libs})
-set_target_properties(gnuradio-atsc PROPERTIES DEFINE_SYMBOL "gnuradio_atsc_EXPORTS")
-set_target_properties(gnuradio-atsc PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-atsc
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "atsc_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "atsc_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "atsc_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-atsc RUNTIME_COMPONENT "atsc_runtime" DEVEL_COMPONENT "atsc_devel")
 
 ########################################################################
 # Build and register unit test

@@ -148,13 +148,6 @@ endif(WIN32)
 ########################################################################
 add_library(gnuradio-audio SHARED ${gr_audio_sources})
 target_link_libraries(gnuradio-audio ${gr_audio_libs})
-set_target_properties(gnuradio-audio PROPERTIES DEFINE_SYMBOL "gnuradio_audio_EXPORTS")
-set_target_properties(gnuradio-audio PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-audio
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "audio_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "audio_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "audio_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-audio RUNTIME_COMPONENT "audio_runtime" DEVEL_COMPONENT "audio_devel")
 
 install(FILES ${gr_audio_confs} DESTINATION ${GR_PKG_CONF_DIR} COMPONENT "audio_runtime")

@@ -44,14 +44,7 @@ list(APPEND noaa_libs
 
 add_library(gnuradio-noaa SHARED ${gr_noaa_sources})
 target_link_libraries(gnuradio-noaa ${noaa_libs})
-set_target_properties(gnuradio-noaa PROPERTIES DEFINE_SYMBOL "gnuradio_noaa_EXPORTS")
-set_target_properties(gnuradio-noaa PROPERTIES SOVERSION ${LIBVER})
-
-install(TARGETS gnuradio-noaa
-    LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT "noaa_runtime" # .so/.dylib file
-    ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT "noaa_devel" # .lib file
-    RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT "noaa_runtime" # .dll file
-)
+GR_LIBRARY_FOO(gnuradio-noaa RUNTIME_COMPONENT "noaa_runtime" DEVEL_COMPONENT "noaa_devel")
 
 ########################################################################
 # Install header files
