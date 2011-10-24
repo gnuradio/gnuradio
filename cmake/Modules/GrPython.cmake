@@ -149,6 +149,10 @@ function(GR_PYTHON_INSTALL)
             )
         endforeach(pyfile)
 
+	# Creates .pyo files
+	install(CODE "MESSAGE(\"-- Optimizing: ${CMAKE_INSTALL_PREFIX}/${GR_PYTHON_INSTALL_DESTINATION}\")")
+	install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} -O -m compileall -q ${CMAKE_INSTALL_PREFIX}/${GR_PYTHON_INSTALL_DESTINATION})")
+	
     ####################################################################
     elseif(GR_PYTHON_INSTALL_PROGRAMS)
     ####################################################################
