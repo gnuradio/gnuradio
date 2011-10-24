@@ -118,7 +118,7 @@ class GR_UHD_API uhd_usrp_sink : virtual public gr_sync_block{
 public:
 
     /*!
-     * Set the subdevice specification.
+     * Set the frontend specification.
      * \param spec the subdev spec markup string
      * \param mboard the motherboard index 0 to M-1
      */
@@ -253,26 +253,53 @@ public:
     virtual std::vector<std::string> get_antennas(size_t chan = 0) = 0;
 
     /*!
-     * Set the subdevice bandpass filter.
+     * Set the bandpass filter on the RF frontend.
      * \param chan the channel index 0 to N-1
      * \param bandwidth the filter bandwidth in Hz
      */
     virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
     /*!
-     * Get a daughterboard sensor value.
+     * Set a constant DC offset value.
+     * The value is complex to control both I and Q.
+     * \param offset the dc offset (1.0 is full-scale)
+     * \param chan the channel index 0 to N-1
+     */
+    virtual void set_dc_offset(const std::complex<double> &offset, size_t chan = 0) = 0;
+
+    /*!
+     * Set the RX frontend IQ imbalance correction.
+     * Use this to adjust the magnitude and phase of I and Q.
+     *
+     * \param correction the complex correction (1.0 is full-scale)
+     * \param chan the channel index 0 to N-1
+     */
+    virtual void set_iq_balance(const std::complex<double> &correction, size_t chan = 0) = 0;
+
+    /*!
+     * Get an RF frontend sensor value.
      * \param name the name of the sensor
      * \param chan the channel index 0 to N-1
      * \return a sensor value object
      */
-    virtual uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan = 0) = 0;
+    virtual uhd::sensor_value_t get_sensor(const std::string &name, size_t chan = 0) = 0;
 
     /*!
-     * Get a list of possible daughterboard sensor names.
+     * Get a list of possible RF frontend sensor names.
      * \param chan the channel index 0 to N-1
      * \return a vector of sensor names
      */
-    virtual std::vector<std::string> get_dboard_sensor_names(size_t chan = 0) = 0;
+    virtual std::vector<std::string> get_sensor_names(size_t chan = 0) = 0;
+
+    //! DEPRECATED use get_sensor
+    uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan = 0){
+        return this->get_sensor(name, chan);
+    }
+
+    //! DEPRECATED use get_sensor_names
+    std::vector<std::string> get_dboard_sensor_names(size_t chan = 0){
+        return this->get_sensor_names(chan);
+    }
 
     /*!
      * Get a motherboard sensor value.

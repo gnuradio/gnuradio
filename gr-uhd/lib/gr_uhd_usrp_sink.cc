@@ -142,11 +142,27 @@ public:
         return _dev->set_tx_bandwidth(bandwidth, chan);
     }
 
-    uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan){
+    void set_dc_offset(const std::complex<double> &offset, size_t chan){
+        #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
+        return _dev->set_tx_dc_offset(offset, chan);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    void set_iq_balance(const std::complex<double> &correction, size_t chan){
+        #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
+        return _dev->set_tx_iq_balance(correction, chan);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    uhd::sensor_value_t get_sensor(const std::string &name, size_t chan){
         return _dev->get_tx_sensor(name, chan);
     }
 
-    std::vector<std::string> get_dboard_sensor_names(size_t chan){
+    std::vector<std::string> get_sensor_names(size_t chan){
         return _dev->get_tx_sensor_names(chan);
     }
 
