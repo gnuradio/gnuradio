@@ -21,10 +21,13 @@ typedef ptrdiff_t ssize_t;
 ////////////////////////////////////////////////////////////////////////
 // rint functions
 ////////////////////////////////////////////////////////////////////////
+#include <math.h>
 static inline long lrint(double x){return (long)(x > 0.0 ? x + 0.5 : x - 0.5);}
 static inline long lrintf(float x){return (long)(x > 0.0f ? x + 0.5f : x - 0.5f);}
-static inline double rint(double x){return (double)lrint(x);}
-static inline float rintf(float x){return (float)lrintf(x);}
+static inline long long llrint(double x){return (long long)(x > 0.0 ? x + 0.5 : x - 0.5);}
+static inline long long llrintf(float x){return (long long)(x > 0.0f ? x + 0.5f : x - 0.5f);}
+static inline double rint(double x){return (x > 0.0)? floor(x + 0.5) : ceil(x - 0.5);}
+static inline float rintf(float x){return (x > 0.0f)? floorf(x + 0.5f) : ceilf(x - 0.5f);}
 
 ////////////////////////////////////////////////////////////////////////
 // math constants
