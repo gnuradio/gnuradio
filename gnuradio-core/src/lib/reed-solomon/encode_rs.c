@@ -20,7 +20,7 @@ DTYPE *data, DTYPE *bb){
 #ifndef FIXED
   struct rs *rs = (struct rs *)p;
 #endif
-  int i, j;
+  unsigned int i, j;
   DTYPE feedback;
 
   memset(bb,0,NROOTS*sizeof(DTYPE));

@@ -48,13 +48,13 @@ int trials){
 #endif
 #if MAX_ARRAY
   DTYPE block[MAX_ARRAY],tblock[MAX_ARRAY];
-  int i;
+  unsigned int i;
   int errors;
   int errlocs[MAX_ARRAY];
   int derrlocs[MAX_ARRAY];
 #else
   DTYPE block[NN],tblock[NN];
-  int i;
+  unsigned int i;
   int errors;
   int errlocs[NN];
   int derrlocs[NROOTS];
@@ -66,7 +66,7 @@ int trials){
 
   while(trials-- != 0){
     /* Test up to the error correction capacity of the code */
-    for(errors=0;errors <= NROOTS/2;errors++){
+    for(errors=0;(unsigned int)errors <= NROOTS/2;errors++){
 
       /* Load block with random data and encode */
       for(i=0;i<NN-NROOTS;i++)
@@ -83,7 +83,7 @@ int trials){
       memset(errlocs,0,sizeof(errlocs));
       memset(derrlocs,0,sizeof(derrlocs));
       erasures=0;
-      for(i=0;i<errors;i++){
+      for(i=0;i<(unsigned int)errors;i++){
 	do {
 	  errval = random() & NN;
 	} while(errval == 0); /* Error value must be nonzero */
@@ -113,7 +113,7 @@ int trials){
 	printf(" decoder says %d errors, true number is %d\n",derrors,errors);
 	decoder_errors++;
       }
-      for(i=0;i<derrors;i++){
+      for(i=0;i<(unsigned int)derrors;i++){
 	if(errlocs[derrlocs[i]] == 0){
 	  PRINTPARM
 	  printf(" decoder indicates error in location %d without error\n",i);

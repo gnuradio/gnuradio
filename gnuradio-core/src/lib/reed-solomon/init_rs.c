@@ -34,16 +34,17 @@ void FREE_RS(void *p){
 void *INIT_RS(unsigned int symsize,unsigned int gfpoly,unsigned fcr,unsigned prim,
 		unsigned int nroots){
   struct rs *rs;
-  int i, j, sr,root,iprim;
+  int sr,root,iprim;
+  unsigned int i, j;
 
   if(symsize > 8*sizeof(DTYPE))
     return NULL; /* Need version with ints rather than chars */
 
-  if(fcr >= (1<<symsize))
+  if(fcr >= (1u<<symsize))
     return NULL;
-  if(prim == 0 || prim >= (1<<symsize))
+  if(prim == 0 || prim >= (1u<<symsize))
     return NULL;
-  if(nroots >= (1<<symsize))
+  if(nroots >= (1u<<symsize))
     return NULL; /* Can't have more roots than symbol values! */
 
   rs = (struct rs *)calloc(1,sizeof(struct rs));

@@ -21,7 +21,7 @@ struct rs {
   unsigned char iprim;      /* prim-th root of 1, index form */
 };
 
-static inline int modnn(struct rs *rs,int x){
+static inline unsigned int modnn(struct rs *rs, unsigned int x){
   while (x >= rs->nn) {
     x -= rs->nn;
     x = (x >> rs->mm) + (x & rs->nn);

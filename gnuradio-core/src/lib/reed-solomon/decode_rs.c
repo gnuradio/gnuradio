@@ -30,7 +30,7 @@ DTYPE *data, int *eras_pos, int no_eras){
   struct rs *rs = (struct rs *)p;
 #endif
   int deg_lambda, el, deg_omega;
-  int i, j, r,k;
+  int i, j, r, k;
 #ifdef MAX_ARRAY
   DTYPE u,q,tmp,num1,num2,den,discr_r;
   DTYPE lambda[MAX_ARRAY], s[MAX_ARRAY];	/* Err+Eras Locator poly
@@ -47,11 +47,11 @@ DTYPE *data, int *eras_pos, int no_eras){
   int syn_error, count;
 
   /* form the syndromes; i.e., evaluate data(x) at roots of g(x) */
-  for(i=0;i<NROOTS;i++)
+  for(i=0;(unsigned int)i<NROOTS;i++)
     s[i] = data[0];
 
-  for(j=1;j<NN;j++){
-    for(i=0;i<NROOTS;i++){
+  for(j=1;(unsigned int)j<NN;j++){
+    for(i=0;(unsigned int)i<NROOTS;i++){
       if(s[i] == 0){
 	s[i] = data[j];
       } else {
@@ -62,7 +62,7 @@ DTYPE *data, int *eras_pos, int no_eras){
 
   /* Convert syndromes to index form, checking for nonzero condition */
   syn_error = 0;
-  for(i=0;i<NROOTS;i++){
+  for(i=0;(unsigned int)i<NROOTS;i++){
     syn_error |= s[i];
     s[i] = INDEX_OF[s[i]];
   }
@@ -125,7 +125,7 @@ DTYPE *data, int *eras_pos, int no_eras){
 #endif
 #endif
   }
-  for(i=0;i<NROOTS+1;i++)
+  for(i=0;(unsigned int)i<NROOTS+1;i++)
     b[i] = INDEX_OF[lambda[i]];
   
   /*
@@ -134,7 +134,7 @@ DTYPE *data, int *eras_pos, int no_eras){
    */
   r = no_eras;
   el = no_eras;
-  while (++r <= NROOTS) {	/* r is the step number */
+  while ((unsigned int)(++r) <= NROOTS) {	/* r is the step number */
     /* Compute discrepancy at the r-th step in poly-form */
     discr_r = 0;
     for (i = 0; i < r; i++){
@@ -150,7 +150,7 @@ DTYPE *data, int *eras_pos, int no_eras){
     } else {
       /* 7 lines below: T(x) <-- lambda(x) - discr_r*x*b(x) */
       t[0] = lambda[0];
-      for (i = 0 ; i < NROOTS; i++) {
+      for (i = 0 ; (unsigned int)i < NROOTS; i++) {
 	if(b[i] != A0)
 	  t[i+1] = lambda[i+1] ^ ALPHA_TO[MODNN(discr_r + b[i])];
 	else
@@ -162,7 +162,7 @@ DTYPE *data, int *eras_pos, int no_eras){
 	 * 2 lines below: B(x) <-- inv(discr_r) *
 	 * lambda(x)
 	 */
-	for (i = 0; i <= NROOTS; i++)
+	for (i = 0; (unsigned int)i <= NROOTS; i++)
 	  b[i] = (lambda[i] == 0) ? A0 : MODNN(INDEX_OF[lambda[i]] - discr_r + NN);
       } else {
 	/* 2 lines below: B(x) <-- x*B(x) */
@@ -175,7 +175,7 @@ DTYPE *data, int *eras_pos, int no_eras){
 
   /* Convert lambda to index form and compute deg(lambda(x)) */
   deg_lambda = 0;
-  for(i=0;i<NROOTS+1;i++){
+  for(i=0;(unsigned int)i<NROOTS+1;i++){
     lambda[i] = INDEX_OF[lambda[i]];
     if(lambda[i] != A0)
       deg_lambda = i;
@@ -183,7 +183,7 @@ DTYPE *data, int *eras_pos, int no_eras){
   /* Find roots of the error+erasure locator polynomial by Chien search */
   memcpy(&reg[1],&lambda[1],NROOTS*sizeof(reg[0]));
   count = 0;		/* Number of roots of lambda(x) */
-  for (i = 1,k=IPRIM-1; i <= NN; i++,k = MODNN(k+IPRIM)) {
+  for (i = 1,k=IPRIM-1; (unsigned int)i <= NN; i++,k = MODNN(k+IPRIM)) {
     q = 1; /* lambda[0] is always 0 */
     for (j = deg_lambda; j > 0; j--){
       if (reg[j] != A0) {
@@ -218,7 +218,7 @@ DTYPE *data, int *eras_pos, int no_eras){
    * x**NROOTS). in index form. Also find deg(omega).
    */
   deg_omega = 0;
-  for (i = 0; i < NROOTS;i++){
+  for (i = 0; (unsigned int)i < NROOTS;i++){
     tmp = 0;
     j = (deg_lambda < i) ? deg_lambda : i;
     for(;j >= 0; j--){
@@ -245,7 +245,7 @@ DTYPE *data, int *eras_pos, int no_eras){
     den = 0;
     
     /* lambda[i+1] for i even is the formal derivative lambda_pr of lambda[i] */
-    for (i = min(deg_lambda,NROOTS-1) & ~1; i >= 0; i -=2) {
+    for (i = (int)min((unsigned int)deg_lambda,NROOTS-1) & ~1; i >= 0; i -=2) {
       if(lambda[i+1] != A0)
 	den ^= ALPHA_TO[MODNN(lambda[i+1] + i * root[j])];
     }
