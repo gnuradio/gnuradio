@@ -112,7 +112,6 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS
     "python-numpy"
     "libqt4-core"
     "libqwt5-qt4"
-    "libqwtplot3d-qt4-0"
     "python-qt4"
     "python-gtk2"
     "python-lxml"
