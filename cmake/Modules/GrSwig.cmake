@@ -83,6 +83,7 @@ endmacro(GR_SWIG_MAKE)
 ########################################################################
 macro(GR_SWIG_INSTALL)
 
+  include(CMakeMacroLibtoolFile)
     include(CMakeParseArgumentsCopy)
     CMAKE_PARSE_ARGUMENTS(GR_SWIG_INSTALL "" "DESTINATION;COMPONENT" "TARGETS" ${ARGN})
 
@@ -97,6 +98,9 @@ macro(GR_SWIG_INSTALL)
             DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
             COMPONENT ${GR_SWIG_INSTALL_COMPONENT}
         )
+
+        CREATE_LIBTOOL_FILE(${SWIG_MODULE_${name}_REAL_NAME} /${GR_SWIG_INSTALL_DESTINATION})
+
     endforeach(name)
 
 endmacro(GR_SWIG_INSTALL)
