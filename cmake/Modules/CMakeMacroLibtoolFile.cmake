@@ -6,6 +6,11 @@
 #ADD_LIBRARY(foo SHARED kfoo1.cpp kfoo2.cpp)
 #CREATE_LIBTOOL_FILE(foo /lib/kde3)
 
+if(DEFINED __INCLUDED_CREATE_LIBTOOL_FILE)
+    return()
+endif()
+set(__INCLUDED_CREATE_LIBTOOL_FILE TRUE)
+
  MACRO(GET_TARGET_PROPERTY_WITH_DEFAULT _variable _target _property _default_value)
    GET_TARGET_PROPERTY (${_variable} ${_target} ${_property})
    IF (${_variable} MATCHES NOTFOUND)

@@ -68,6 +68,7 @@ function(GR_REGISTER_COMPONENT name var)
 
     #setup the dependent option for this component
     CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ${ENABLE_DEFAULT} "${comp_deps}" OFF)
+    set(${var} "${${var}}" PARENT_SCOPE)
     set(${var}_cached "${${var}}" CACHE INTERNAL "" FORCE)
 
     #force was specified, but the dependencies were not met

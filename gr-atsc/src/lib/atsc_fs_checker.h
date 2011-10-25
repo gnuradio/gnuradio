@@ -41,7 +41,7 @@ ATSC_API atsc_fs_checker_sptr atsc_make_fs_checker();
 
 class ATSC_API atsc_fs_checker : public gr_sync_block
 {
-  friend atsc_fs_checker_sptr atsc_make_fs_checker();
+  friend ATSC_API atsc_fs_checker_sptr atsc_make_fs_checker();
 
   atsc_fs_checker();
 
