@@ -49,6 +49,22 @@ AC_DEFUN([PYTHON_DEVEL],[
 		    if  (echo $pyexecdir | grep -q lib64); then
 			    pythondir="$pyexecdir"
 		    fi
+	    else
+		# Let Python tell us where the install directory is;
+		# i.e., don't trust AM_PATH_PYTHON
+		python_cmd='
+import distutils.sysconfig
+import os
+path = distutils.sysconfig.get_python_lib()
+pypath = distutils.sysconfig.get_config_var("exec_prefix")
+path = path.split(pypath)[[1]]
+if os.sep == "\\":
+  path = path.replace("\\", "/")
+print path
+'
+		pyexecdir=$prefix`$PYTHON -c "$python_cmd"`
+		pythondir=$pyexecdir
+		
 	    fi
 
 	    # Check for Python include path
