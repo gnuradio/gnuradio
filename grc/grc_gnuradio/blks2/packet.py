@@ -18,7 +18,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, packet_utils
+from gnuradio import gr
+from gnuradio.digital import packet_utils
 import gnuradio.gr.gr_threading as _threading
 
 ##payload length in bytes
