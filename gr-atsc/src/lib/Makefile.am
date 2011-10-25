@@ -175,7 +175,9 @@ grinclude_HEADERS =				\
 	create_atsci_fs_checker.h		\
 	create_atsci_fs_correlator.h		\
 	fpll_btloop_coupling.h			\
-	interleaver_fifo.h			\
+	interleaver_fifo.h
+
+noinst_HEADERS = 				\
 	qa_atsci.h				\
 	qa_atsci_basic_trellis_encoder.h	\
 	qa_atsci_data_interleaver.h		\
