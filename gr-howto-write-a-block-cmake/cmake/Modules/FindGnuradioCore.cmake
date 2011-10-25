@@ -5,7 +5,7 @@ FIND_PATH(
     GNURADIO_CORE_INCLUDE_DIRS
     NAMES gr_random.h
     HINTS $ENV{GNURADIO_CORE_DIR}/include/gnuradio
-        ${PC_GNURADIO_CORE_INCLUDE_DIRS}
+        ${PC_GNURADIO_CORE_INCLUDE_DIR}
     PATHS /usr/local/include/gnuradio
           /usr/include/gnuradio
 )
@@ -14,7 +14,7 @@ FIND_LIBRARY(
     GNURADIO_CORE_LIBRARIES
     NAMES gnuradio-core
     HINTS $ENV{GNURADIO_CORE_DIR}/lib
-        ${PC_GNURADIO_CORE_LIBRARIES}
+        ${PC_GNURADIO_CORE_LIBDIR}
     PATHS /usr/local/lib
           /usr/local/lib64
           /usr/lib

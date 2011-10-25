@@ -5,7 +5,7 @@ FIND_PATH(
     GRUEL_INCLUDE_DIRS
     NAMES gruel/attributes.h
     HINTS $ENV{GRUEL_DIR}/include
-        ${PC_GRUEL_INCLUDE_DIRS}
+        ${PC_GRUEL_INCLUDE_DIR}
     PATHS /usr/local/include
           /usr/include
 )
@@ -14,7 +14,7 @@ FIND_LIBRARY(
     GRUEL_LIBRARIES
     NAMES gruel
     HINTS $ENV{GRUEL_DIR}/lib
-        ${PC_GRUEL_LIBRARIES}
+        ${PC_GRUEL_LIBDIR}
     PATHS /usr/local/lib
           /usr/local/lib64
           /usr/lib

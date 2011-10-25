@@ -9,7 +9,7 @@ FIND_PATH(
     UHD_INCLUDE_DIRS
     NAMES uhd/config.hpp
     HINTS $ENV{UHD_DIR}/include
-        ${PC_UHD_INCLUDE_DIRS}
+        ${PC_UHD_INCLUDEDIR}
     PATHS /usr/local/include
           /usr/include
 )
@@ -18,7 +18,7 @@ FIND_LIBRARY(
     UHD_LIBRARIES
     NAMES uhd
     HINTS $ENV{UHD_DIR}/lib
-        ${PC_UHD_LIBRARIES}
+        ${PC_UHD_LIBDIR}
     PATHS /usr/local/lib
           /usr/lib
 )

@@ -10,7 +10,7 @@ FIND_PATH(
     FFTW3F_INCLUDE_DIRS
     NAMES fftw3.h
     HINTS $ENV{FFTW3_DIR}/include
-        ${PC_FFTW3F_INCLUDE_DIRS}
+        ${PC_FFTW3F_INCLUDE_DIR}
     PATHS /usr/local/include
           /usr/include
 )
@@ -19,7 +19,7 @@ FIND_LIBRARY(
     FFTW3F_LIBRARIES
     NAMES fftw3f libfftw3f
     HINTS $ENV{FFTW3_DIR}/lib
-        ${PC_FFTW3F_LIBRARIES}
+        ${PC_FFTW3F_LIBDIR}
     PATHS /usr/local/lib
           /usr/lib
 )
