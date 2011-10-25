@@ -1,5 +1,4 @@
-#
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -17,21 +16,20 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
 
-include $(top_srcdir)/Makefile.common
+include(GrPython)
 
-ourdatadir = $(exampledir)/pfb
+GR_PYTHON_INSTALL(PROGRAMS
+  plot_flops.py
+  run_synthetic.py
+  synthetic.py
+  wfm_rcv_pll_to_wav.py
+  DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
+  COMPONENT "gnuradio_examples"
+)
 
-dist_ourdata_SCRIPTS =		\
-	channelize.py		\
-	chirp_channelize.py	\
-	decimate.py		\
-	interpolate.py		\
-	fmtest.py		\
-	resampler.py		\
-	synth_filter.py		\
-	synth_to_chan.py
-
-dist_ourdata_DATA =		\
-	resampler_demo.grc
+install(
+    FILES README
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
+    COMPONENT "gnuadio-examples"
+)

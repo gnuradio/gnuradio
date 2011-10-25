@@ -44,7 +44,11 @@ dist_simpledata_DATA = \
 trellisdatadir = $(grc_examples_prefix)/trellis
 dist_trellisdata_DATA = \
 	trellis/readme.txt \
-	trellis/interference_cancellation.grc
+	trellis/interference_cancellation.grc \
+	trellis/pccc.grc \
+	trellis/pccc1.grc \
+	trellis/sccc.grc \
+	trellis/sccc1.grc
 
 uhddatadir = $(grc_examples_prefix)/uhd
 dist_uhddata_DATA = \

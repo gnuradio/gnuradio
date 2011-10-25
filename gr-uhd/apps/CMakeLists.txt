@@ -47,7 +47,7 @@ install(
 )
 
 GR_PYTHON_INSTALL(
-    FILES
+    PROGRAMS
     hf_radio/input.py
     hf_radio/output.py
     hf_radio/ssbagc.py
