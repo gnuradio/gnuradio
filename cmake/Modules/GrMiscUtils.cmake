@@ -102,7 +102,7 @@ endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 # Do standard things to the library target
 # - set target properties
 # - make install rules
-# Also handle gnuradio custom naming conventions w/ fubar mode.
+# Also handle gnuradio custom naming conventions w/ extras mode.
 ########################################################################
 function(GR_LIBRARY_FOO target)
     #parse the arguments for component names
@@ -119,19 +119,19 @@ function(GR_LIBRARY_FOO target)
         RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT} # .dll file
     )
 
-    #fubar mode enabled automatically on linux
-    if(NOT DEFINED LIBRARY_FUBAR)
-        set(LIBRARY_FUBAR ${LINUX})
+    #extras mode enabled automatically on linux
+    if(NOT DEFINED LIBRARY_EXTRAS)
+        set(LIBRARY_EXTRAS ${LINUX})
     endif()
 
-    #special fubar mode to enable alternative naming conventions
-    if(LIBRARY_FUBAR)
+    #special extras mode to enable alternative naming conventions
+    if(LIBRARY_EXTRAS)
 
         #create .la file before changing props
         include(CMakeMacroLibtoolFile)
         CREATE_LIBTOOL_FILE(${target} /${GR_LIBRARY_DIR})
 
-        #give the library a special name with ultra-zero soverion
+        #give the library a special name with ultra-zero soversion
         set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
         set(target_name lib${target}-${LIBVER}.so.0.0.0)
 
@@ -151,5 +151,5 @@ function(GR_LIBRARY_FOO target)
             DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT}
         )
 
-    endif(LIBRARY_FUBAR)
+    endif(LIBRARY_EXTRAS)
 endfunction(GR_LIBRARY_FOO)
