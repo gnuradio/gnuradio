@@ -8,7 +8,7 @@
 ##################################################
 
 from gnuradio import gr
-from gnuradio import trellis
+from gnuradio import trellis, digital
 from gnuradio.gr import firdes
 from grc_gnuradio import blks2 as grc_blks2
 import math
@@ -103,7 +103,8 @@ def run_test(seed,blocksize):
 	gr_fir_filter_xxx_0_0_0 = gr.fir_filter_ccc(Q, MF[1].conjugate())
 	gr_streams_to_stream_0 = gr.streams_to_stream(gr.sizeof_gr_complex*1, int(N))
 	gr_skiphead_0 = gr.skiphead(gr.sizeof_gr_complex*1, int(N*(1+0)))
-	viterbi = trellis.viterbi_combined_cb(f, head+blocksize+tail, 0, -1, int(N), constellation, trellis.TRELLIS_EUCLIDEAN)
+	viterbi = trellis.viterbi_combined_cb(f, head+blocksize+tail, 0, -1, int(N),
+					      constellation, digital.TRELLIS_EUCLIDEAN)
 
         gr_vector_sink_x_0 = gr.vector_sink_b()
 

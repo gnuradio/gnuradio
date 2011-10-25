@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis
+from gnuradio import trellis, digital
 from gnuradio import eng_notation
 import math
 import sys
@@ -20,7 +20,7 @@ def make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,typ
     # generate all blocks
     for it in range(IT):
       inter.append( trellis.permutation(interleaver.K(),interleaver.INTER(),fi.I(),gr.sizeof_float) )
-      siso_in.append( trellis.siso_combined_f(fi,K,0,-1,True,False,type,dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) )
+      siso_in.append( trellis.siso_combined_f(fi,K,0,-1,True,False,type,dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) )
       deinter.append( trellis.permutation(interleaver.K(),interleaver.DEINTER(),fi.I(),gr.sizeof_float) )
       if it < IT-1:
         siso_out.append( trellis.siso_f(fo,K,0,-1,False,True,type) )

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis
+from gnuradio import trellis, digital
 from gnuradio import eng_notation
 import math
 import sys
@@ -26,10 +26,10 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX
-    metrics_in = trellis.metrics_f(fi.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner Viterbi
+    metrics_in = trellis.metrics_f(fi.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner Viterbi
     va_in = trellis.viterbi_s(fi,K,0,-1) # Put -1 if the Initial/Final states are not set.
     deinter = trellis.permutation(interleaver.K(),interleaver.DEINTER(),1,gr.sizeof_short)
-    metrics_out = trellis.metrics_s(fo.O(),1,[0,1,2,3],trellis.TRELLIS_HARD_SYMBOL) # data preprocessing to generate metrics for outer Viterbi (hard decisions)
+    metrics_out = trellis.metrics_s(fo.O(),1,[0,1,2,3],digital.TRELLIS_HARD_SYMBOL) # data preprocessing to generate metrics for outer Viterbi (hard decisions)
     va_out = trellis.viterbi_s(fo,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis
+from gnuradio import trellis, digital
 from gnuradio import eng_notation
 import math
 import sys
@@ -9,7 +9,7 @@ import fsm_utils
 
 
 def make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
-    metrics_in = trellis.metrics_f(fi.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
+    metrics_in = trellis.metrics_f(fi.O(),dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
     scale = gr.multiply_const_ff(1.0/N0)
     gnd = gr.vector_source_f([0],True);
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis
+from gnuradio import trellis, digital
 from gnuradio import eng_notation
 import math
 import sys
@@ -31,9 +31,9 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     
     # RX
     skip = gr.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
-    #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
+    #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
     #va = trellis.viterbi_s(f,K+L,-1,0) # Put -1 if the Initial/Final states are not set.
-    va = trellis.viterbi_combined_fs(f,K+L,0,0,dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # using viterbi_combined_fs instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
+    va = trellis.viterbi_combined_fs(f,K+L,0,0,dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # using viterbi_combined_fs instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
     dst = gr.vector_sink_s()
 
     tb.connect (src,mod)

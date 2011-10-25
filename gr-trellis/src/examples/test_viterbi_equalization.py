@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis
+from gnuradio import trellis, digital
 from gnuradio import eng_notation
 import math
 import sys
@@ -23,7 +23,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,tot_constellation,N0,seed):
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
     
     # RX
-    metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
+    metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
     va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s(); 
