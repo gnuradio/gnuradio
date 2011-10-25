@@ -141,7 +141,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
 #else
   connect(_picker, SIGNAL(selected(const QPointF &)),
-	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
 #endif
 
   connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool ) ), 
@@ -236,7 +236,6 @@ ConstellationDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
   plotItem->setVisible(!on);
 }
 
-#if QWT_VERSION < 0x060000
 void
 ConstellationDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
@@ -244,14 +243,13 @@ ConstellationDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
-#else
+
 void
-ConstellationDisplayPlot::OnPickerPointSelected(const QPointF & p)
+ConstellationDisplayPlot::OnPickerPointSelected6(const QPointF & p)
 {
   QPointF point = p;
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
-#endif
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_C */

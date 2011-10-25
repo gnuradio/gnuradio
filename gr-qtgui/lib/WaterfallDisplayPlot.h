@@ -80,11 +80,11 @@ public:
 public slots:
   void resizeSlot( QSize *s );
 
-#if QWT_VERSION < 0x060000
+  // Because of the preprocessing of slots in QT, these are no
+  // easily separated by the version check. Make one for each
+  // version until it's worked out.
   void OnPickerPointSelected(const QwtDoublePoint & p);
-#else
-  void OnPickerPointSelected(const QPointF & p);
-#endif
+  void OnPickerPointSelected6(const QPointF & p);
  
 signals:
   void UpdatedLowerIntensityLevel(const double);

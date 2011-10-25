@@ -176,7 +176,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
 #else
   connect(_picker, SIGNAL(selected(const QPointF &)),
-	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
 #endif
 
   // Configure magnify on mouse wheel
@@ -326,7 +326,6 @@ TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
 }
 
 
-#if QWT_VERSION < 0x060000
 void
 TimeDomainDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
@@ -334,14 +333,13 @@ TimeDomainDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
-#else
+
 void
-TimeDomainDisplayPlot::OnPickerPointSelected(const QPointF & p)
+TimeDomainDisplayPlot::OnPickerPointSelected6(const QPointF & p)
 {
   QPointF point = p;
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
-#endif
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

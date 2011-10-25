@@ -349,7 +349,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
 #else
   connect(_picker, SIGNAL(selected(const QPointF &)),
-	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
 #endif
 
   // Avoid jumping when labels with more/less digits
@@ -674,7 +674,6 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
   _lastReplot = gruel::high_res_timer_now();
 }
 
-#if QWT_VERSION < 0x060000
 void
 WaterfallDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
@@ -683,15 +682,14 @@ WaterfallDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }
-#else
+
 void
-WaterfallDisplayPlot::OnPickerPointSelected(const QPointF & p)
+WaterfallDisplayPlot::OnPickerPointSelected6(const QPointF & p)
 {
   QPointF point = p;
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }
-#endif
 
 #endif /* WATERFALL_DISPLAY_PLOT_C */

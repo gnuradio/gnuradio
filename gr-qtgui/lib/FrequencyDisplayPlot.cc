@@ -256,7 +256,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
 #else
   connect(_picker, SIGNAL(selected(const QPointF &)),
-	  this, SLOT(OnPickerPointSelected(const QPointF &)));
+	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
 #endif
 
   // Configure magnify on mouse wheel
@@ -538,7 +538,7 @@ FrequencyDisplayPlot::ShowCFMarker (const bool show)
     _markerCF->hide();
 }
 
-#if QWT_VERSION < 0x060000
+
 void
 FrequencyDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
@@ -547,15 +547,14 @@ FrequencyDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }
-#else
+
 void
-FrequencyDisplayPlot::OnPickerPointSelected(const QPointF & p)
+FrequencyDisplayPlot::OnPickerPointSelected6(const QPointF & p)
 {
   QPointF point = p;
   //fprintf(stderr,"OnPickerPointSelected %f %f %d\n", point.x(), point.y(), _xAxisMultiplier);
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }
-#endif
 
 #endif /* FREQUENCY_DISPLAY_PLOT_C */
