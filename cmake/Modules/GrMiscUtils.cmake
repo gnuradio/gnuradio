@@ -128,8 +128,11 @@ function(GR_LIBRARY_FOO target)
     if(LIBRARY_EXTRAS)
 
         #create .la file before changing props
-        include(CMakeMacroLibtoolFile)
-        CREATE_LIBTOOL_FILE(${target} /${GR_LIBRARY_DIR})
+        find_program(LIBTOOL libtool)
+        if(LIBTOOL)
+            include(CMakeMacroLibtoolFile)
+            CREATE_LIBTOOL_FILE(${target} /${GR_LIBRARY_DIR})
+        endif(LIBTOOL)
 
         #give the library a special name with ultra-zero soversion
         set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
