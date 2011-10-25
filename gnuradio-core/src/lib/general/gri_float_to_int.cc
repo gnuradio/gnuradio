@@ -37,7 +37,7 @@ void
 gri_float_to_int (const float *in, int *out, int nsamples)
 {
   for (int i = 0; i < nsamples; i++){
-    int64_t r = static_cast<int64_t>(rint(in[i]));
+    int64_t r = llrintf(in[i]);
     if (r < MIN_INT)
       r = MIN_INT;
     else if (r > MAX_INT)
