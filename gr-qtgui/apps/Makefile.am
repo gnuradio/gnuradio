@@ -23,10 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 if PYTHON
 
-nodist_bin_SCRIPTS =		\
-	qt_digital_window.ui 	\
-	usrp_display_qtgui.ui
-
 noinst_PYTHON = 		\
 	qt_digital.py		\
 	qt_digital_window.py    \
