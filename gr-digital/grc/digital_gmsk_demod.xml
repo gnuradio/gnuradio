@@ -6,7 +6,7 @@
  -->
 <block>
 	<name>GMSK Demod</name>
-	<key>digtial_gmsk_demod</key>
+	<key>digital_gmsk_demod</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.gmsk_demod(
 	samples_per_symbol=$samples_per_symbol,

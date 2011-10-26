@@ -31,7 +31,11 @@ dist_grcblocks_DATA = \
 	digital_correlate_access_code_bb.xml	\
 	digital_costas_loop_cc.xml		\
 	digital_cma_equalizer_cc.xml		\
+	digital_cpmmod_bc.xml			\
 	digital_fll_band_edge_cc.xml		\
+	digital_gmsk_demod.xml			\
+	digital_gmsk_mod.xml			\
+	digital_gmskmod_bc.xml			\
 	digital_kurtotic_equalizer_cc.xml	\
 	digital_lms_dd_equalizer_cc.xml		\
 	digital_mpsk_receiver_cc.xml		\
