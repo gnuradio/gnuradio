@@ -18,7 +18,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, digital
 from gnuradio.digital import packet_utils
 import gnuradio.gr.gr_threading as _threading
 
@@ -157,7 +157,7 @@ class packet_decoder(gr.hier_block2):
 		self._threshold = threshold
 		#blocks
 		msgq = gr.msg_queue(DEFAULT_MSGQ_LIMIT) #holds packets from the PHY
-		correlator = gr.correlate_access_code_bb(self._access_code, self._threshold)
+		correlator = digital.correlate_access_code_bb(self._access_code, self._threshold)
 		framer_sink = gr.framer_sink_1(msgq)
 		#initialize hier2
 		gr.hier_block2.__init__(
