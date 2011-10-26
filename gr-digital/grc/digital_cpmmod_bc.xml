@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Continuous Phase Modulation</name>
-	<key>gr_cpmmod_bc</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.cpmmod_bc($type, $mod_index, $samples_per_symbol, $L, $beta)</make>
+	<key>digital_cpmmod_bc</key>
+	<import>from gnuradio import gr, digital</import>
+	<make>digital.cpmmod_bc($type, $mod_index, $samples_per_symbol, $L, $beta)</make>
 	<param>
 		<name>CPM Type</name>
 		<key>type</key>

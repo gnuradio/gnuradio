@@ -190,8 +190,6 @@
 		<block>gr_phase_modulator_fc</block>
 		<block>gr_quadrature_demod_cf</block>
 		<block>gr_cpfsk_bc</block>
-		<block>gr_cpmmod_bc</block>
-		<block>gr_gmskmod_bc</block>
 
 		<block>gr_diff_phasor_cc</block>
 
@@ -209,12 +207,6 @@
 		<block>blks2_fm_demod_cf</block>
 		<block>blks2_fm_deemph</block>
 		<block>blks2_fm_preemph</block>
-
-		<block>blks2_gmsk_mod</block>
-		<block>blks2_gmsk_demod</block>
-
-		<block>blks2_qamx_mod</block>
-		<block>blks2_qamx_demod</block>
 	</cat>
 	<cat>
 		<name>Error Correction</name>

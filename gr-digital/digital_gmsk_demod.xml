@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>GMSK Demod</name>
-	<key>blks2_gmsk_demod</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.gmsk_demod(
+	<key>digtial_gmsk_demod</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.gmsk_demod(
 	samples_per_symbol=$samples_per_symbol,
 	gain_mu=$gain_mu,
 	mu=$mu,

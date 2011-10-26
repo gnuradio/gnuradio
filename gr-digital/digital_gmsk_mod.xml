@@ -1,41 +1,19 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##QAM Mod - 8, 16, 64, 256
+##GMSK Mod
 ###################################################
  -->
 <block>
-	<name>QAM Mod</name>
-	<key>blks2_qamx_mod</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.$(type)_mod(
+	<name>GMSK Mod</name>
+	<key>digital_gmsk_mod</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.gmsk_mod(
 	samples_per_symbol=$samples_per_symbol,
-	excess_bw=$excess_bw,
-	gray_code=$gray_code,
+	bt=$bt,
 	verbose=$verbose,
 	log=$log,
 )</make>
-	<param>
-		<name>Type</name>
-		<key>type</key>
-		<type>enum</type>
-		<option>
-			<name>QAM8</name>
-			<key>qam8</key>
-		</option>
-		<option>
-			<name>QAM16</name>
-			<key>qam16</key>
-		</option>
-		<option>
-			<name>QAM64</name>
-			<key>qam64</key>
-		</option>
-		<option>
-			<name>QAM256</name>
-			<key>qam256</key>
-		</option>
-	</param>
 	<param>
 		<name>Samples/Symbol</name>
 		<key>samples_per_symbol</key>
@@ -43,24 +21,10 @@
 		<type>int</type>
 	</param>
 	<param>
-		<name>Excess BW</name>
-		<key>excess_bw</key>
+		<name>BT</name>
+		<key>bt</key>
 		<value>0.35</value>
 		<type>real</type>
-	</param>
-	<param>
-		<name>Gray Code</name>
-		<key>gray_code</key>
-		<value>True</value>
-		<type>enum</type>
-		<option>
-			<name>Yes</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>No</name>
-			<key>False</key>
-		</option>
 	</param>
 	<param>
 		<name>Verbose</name>

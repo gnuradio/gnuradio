@@ -49,6 +49,10 @@
 		<block>digital_psk_demod</block>
 		<block>digital_qam_mod</block>
 		<block>digital_qam_demod</block>
+		<block>digital_gmskmod_bc</block>
+		<block>digital_cpmmod_bc</block>
+		<block>digital_gmsk_mod</block>
+		<block>digital_gmsk_demod</block>
 	</cat>
 	<cat>
                 <name>OFDM</name>

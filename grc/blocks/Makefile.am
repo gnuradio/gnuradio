@@ -34,8 +34,6 @@ dist_ourdata_DATA = \
 	blks2_fm_deemph.xml \
 	blks2_fm_demod_cf.xml \
 	blks2_fm_preemph.xml \
-	blks2_gmsk_demod.xml \
-	blks2_gmsk_mod.xml \
 	blks2_logpwrfft_x.xml \
 	blks2_nbfm_rx.xml \
 	blks2_nbfm_tx.xml \
@@ -43,8 +41,6 @@ dist_ourdata_DATA = \
 	blks2_packet_encoder.xml \
 	blks2_pfb_arb_resampler.xml \
 	blks2_pfb_channelizer.xml \
-	blks2_qamx_demod.xml \
-	blks2_qamx_mod.xml \
 	blks2_rational_resampler_xxx.xml \
 	blks2_selector.xml \
 	blks2_standard_squelch.xml \
@@ -80,7 +76,6 @@ dist_ourdata_DATA = \
 	gr_cpfsk_bc.xml \
 	gr_ctcss_squelch_ff.xml \
 	gr_dc_blocker.xml \
-	gr_cpmmod_bc.xml \
 	gr_decode_ccsds_27_fb.xml \
 	gr_deinterleave.xml \
 	gr_delay.xml \
@@ -106,7 +101,6 @@ dist_ourdata_DATA = \
 	gr_freq_xlating_fir_filter_xxx.xml \
 	gr_frequency_modulator_fc.xml \
 	gr_glfsr_source_x.xml \
-	gr_gmskmod_bc.xml \
 	gr_goertzel_fc.xml \
 	gr_head.xml \
 	gr_hilbert_fc.xml \
