@@ -32,14 +32,13 @@
   <import>from gnuradio import digital</import>
   <make>digital.qam.qam_demod(
   constellation_points=$constellation_points,
-  mod_code=$mod_code,
   differential=$differential,
   samples_per_symbol=$samples_per_symbol,
   excess_bw=$excess_bw,
-  freq_alpha=$freq_alpha,
-  timing_alpha=$timing_alpha,
-  timing_max_dev=$timing_max_dev,
-  phase_alpha=$phase_alpha,
+  freq_bw=$freq_bw,
+  timing_bw=$timing_bw,
+  phase_bw=$phase_bw,
+  gray_coded=$gray_coded,
   verbose=$verbose,
   log=$log,
   )</make>
@@ -48,19 +47,6 @@
     <key>constellation_points</key>
     <value>16</value>
     <type>int</type>
-  </param>
-  <param>
-    <name>Gray Code</name>
-    <key>mod_code</key>
-    <type>enum</type>
-    <option>
-      <name>Yes</name>
-      <key>gray</key>
-    </option>
-    <option>
-      <name>No</name>
-      <key>none</key>
-    </option>
   </param>
   <param>
     <name>Differential Encoding</name>
@@ -89,28 +75,35 @@
     <type>real</type>
   </param>
   <param>
-    <name>Frequency Alpha</name>
-    <key>freq_alpha</key>
-    <value>0.01</value>
+    <name>Frequency BW</name>
+    <key>freq_bw</key>
+    <value>6.28/100.0</value>
     <type>real</type>
   </param>
   <param>
-    <name>Timing Alpha</name>
-    <key>timing_alpha</key>
-    <value>0.100</value>
+    <name>Timing BW</name>
+    <key>timing_bw</key>
+    <value>6.28/100.0</value>
     <type>real</type>
   </param>
   <param>
-    <name>Timing Max Dev</name>
-    <key>timing_max_dev</key>
-    <value>1.5</value>
+    <name>Phase BW</name>
+    <key>phase_bw</key>
+    <value>6.28/100.0</value>
     <type>real</type>
   </param>
   <param>
-    <name>Phase Alpha</name>
-    <key>phase_alpha</key>
-    <value>0.1</value>
-    <type>real</type>
+    <name>Gray Code</name>
+    <key>gray_coded</key>
+    <type>enum</type>
+    <option>
+      <name>Yes</name>
+      <key>"gray"</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>"none"</key>
+    </option>
   </param>
   <param>
     <name>Verbose</name>
@@ -149,10 +142,5 @@
   <source>
     <name>out</name>
     <type>byte</type>
-  </source>
-  <source>
-    <name>sync</name>
-    <type>complex</type>
-    <optional>1</optional>
   </source>
 </block>
