@@ -27,17 +27,13 @@ dist_bin_SCRIPTS = \
 	hrpt_decode.py \
 	hrpt_demod.py \
 	file_rx_hrpt.py \
-	file_rx_lrit.py \
 	usrp_rx_hrpt.py \
-	usrp_rx_hrpt_nogui.py \
-	usrp_rx_lrit.py
+	usrp_rx_hrpt_nogui.py
 
 EXTRA_DIST += \
 	hrpt_decode.grc \
 	hrpt_demod.grc \
 	file_rx_hrpt.grc \
-	file_rx_lrit.grc \
 	usrp_rx_hrpt.grc \
-	usrp_rx_hrpt_nogui.grc \
-	usrp_rx_lrit.grc
+	usrp_rx_hrpt_nogui.grc
 endif

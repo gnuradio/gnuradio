@@ -24,10 +24,8 @@ GR_PYTHON_INSTALL(
     hrpt_decode.py
     hrpt_demod.py
     file_rx_hrpt.py
-    file_rx_lrit.py
     usrp_rx_hrpt.py
     usrp_rx_hrpt_nogui.py
-    usrp_rx_lrit.py
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "noaa_python"
 )
