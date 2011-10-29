@@ -10,8 +10,10 @@
 	<import>from gnuradio import digital</import>
 	<make>digital.gmsk_demod(
 	samples_per_symbol=$samples_per_symbol,
-	bt=$bt,
-	timing_bw=$bw,
+	gain_mu=$gain_mu,
+	mu=$mu,
+	omega_relative_limit=$omega_relative_limit,
+	freq_error=$freq_error,
 	verbose=$verbose,
 	log=$log,
 )</make>
@@ -22,15 +24,27 @@
 		<type>int</type>
 	</param>
 	<param>
-		<name>BW-Time Product</name>
-		<key>bt</key>
-		<value>0.35</value>
+		<name>Gain Mu</name>
+		<key>gain_mu</key>
+		<value>0.175</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Timing Loop BW</name>
-		<key>bw</key>
-		<value>6.28/100.0</value>
+		<name>Mu</name>
+		<key>mu</key>
+		<value>0.5</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Omega Relative Limit</name>
+		<key>omega_relative_limit</key>
+		<value>0.005</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Freq Error</name>
+		<key>freq_error</key>
+		<value>0.0</value>
 		<type>real</type>
 	</param>
 	<param>

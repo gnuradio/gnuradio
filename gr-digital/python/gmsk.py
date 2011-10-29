@@ -25,9 +25,8 @@
 # See gnuradio-examples/python/digital for examples
 
 from gnuradio import gr
-import digital_swig
 import modulation_utils
-
+import digital_swig as digital
 from math import pi
 import numpy
 from pprint import pprint
@@ -39,9 +38,15 @@ _def_bt = 0.35
 _def_verbose = False
 _def_log = False
 
-# Symbol timing recovery 
-_def_timing_bw = 2*pi/100.0
-_def_timing_max_dev = 1.5
+_def_gain_mu = None
+_def_mu = 0.5
+_def_freq_error = 0.0
+_def_omega_relative_limit = 0.005
+
+
+# FIXME: Figure out how to make GMSK work with pfb_arb_resampler_fff for both
+# transmit and receive so we don't require integer samples per symbol.
+
 
 # /////////////////////////////////////////////////////////////////////////////
 #                              GMSK modulator
@@ -75,14 +80,13 @@ class gmsk_mod(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
+        samples_per_symbol = int(samples_per_symbol)
         self._samples_per_symbol = samples_per_symbol
         self._bt = bt
+        self._differential = False
 
-        self._differential = False # make consistant with other modulators
-        
-        if samples_per_symbol < 2:
-            raise TypeError, ("samples_per_symbol must  >= 2, is %r" % \
-                                  (samples_per_symbol,))
+        if not isinstance(samples_per_symbol, int) or samples_per_symbol < 2:
+            raise TypeError, ("samples_per_symbol must be an integer >= 2, is %r" % (samples_per_symbol,))
 
 	ntaps = 4 * samples_per_symbol			# up to 3 bits in filter at once
 	sensitivity = (pi / 2) / samples_per_symbol	# phase change per bit = pi / 2
@@ -96,12 +100,12 @@ class gmsk_mod(gr.hier_block2):
 		1,		       # gain
 		samples_per_symbol,    # symbol_rate
 		bt,		       # bandwidth * symbol time
-		int(ntaps)             # number of taps
+		ntaps	               # number of taps
 		)
 
-	self.sqwave = (1,) * int(samples_per_symbol)       # rectangular window
+	self.sqwave = (1,) * samples_per_symbol       # rectangular window
 	self.taps = numpy.convolve(numpy.array(self.gaussian_taps),numpy.array(self.sqwave))
-        self.gaussian_filter = gr.pfb_arb_resampler_fff(samples_per_symbol, self.taps)
+	self.gaussian_filter = gr.interp_fir_filter_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
 	self.fmmod = gr.frequency_modulator_fc(sensitivity)
@@ -131,11 +135,11 @@ class gmsk_mod(gr.hier_block2):
     def _setup_logging(self):
         print "Modulation logging turned on."
         self.connect(self.nrz,
-                     gr.file_sink(gr.sizeof_float, "tx_gmsk_nrz.32f"))
+                     gr.file_sink(gr.sizeof_float, "nrz.dat"))
         self.connect(self.gaussian_filter,
-                     gr.file_sink(gr.sizeof_float, "tx_gmsk_gaussian_filter.32f"))
+                     gr.file_sink(gr.sizeof_float, "gaussian_filter.dat"))
         self.connect(self.fmmod,
-                     gr.file_sink(gr.sizeof_gr_complex, "tx_gmsk_fmmod.32fc"))
+                     gr.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
 
 
     def add_options(parser):
@@ -165,8 +169,10 @@ class gmsk_demod(gr.hier_block2):
 
     def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
-                 bt=_def_bt,
-                 timing_bw=_def_timing_bw,
+                 gain_mu=_def_gain_mu,
+                 mu=_def_mu,
+                 omega_relative_limit=_def_omega_relative_limit,
+                 freq_error=_def_freq_error,
                  verbose=_def_verbose,
                  log=_def_log):
         """
@@ -178,12 +184,21 @@ class gmsk_demod(gr.hier_block2):
 
 	@param samples_per_symbol: samples per baud
 	@type samples_per_symbol: integer
-        @param timing_bw: timing recovery loop lock-in bandwidth
-        @type timing_bw: float
         @param verbose: Print information about modulator?
         @type verbose: bool
         @param log: Print modualtion data to files?
         @type log: bool 
+
+        Clock recovery parameters.  These all have reasonble defaults.
+        
+        @param gain_mu: controls rate of mu adjustment
+        @type gain_mu: float
+        @param mu: fractional delay [0.0, 1.0]
+        @type mu: float
+        @param omega_relative_limit: sets max variation in omega
+        @type omega_relative_limit: float, typically 0.000200 (200 ppm)
+        @param freq_error: bit rate error as a fraction
+        @param float
 	"""
 
 	gr.hier_block2.__init__(self, "gmsk_demod",
@@ -191,14 +206,21 @@ class gmsk_demod(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
 
         self._samples_per_symbol = samples_per_symbol
-        self._bt = bt
-        self._timing_bw = timing_bw
-        self._timing_max_dev= _def_timing_max_dev
-
-        self._differential = False # make consistant with other modulators
+        self._gain_mu = gain_mu
+        self._mu = mu
+        self._omega_relative_limit = omega_relative_limit
+        self._freq_error = freq_error
+        self._differential = False
         
         if samples_per_symbol < 2:
             raise TypeError, "samples_per_symbol >= 2, is %f" % samples_per_symbol
+
+        self._omega = samples_per_symbol*(1+self._freq_error)
+
+        if not self._gain_mu:
+            self._gain_mu = 0.175
+            
+	self._gain_omega = .25 * self._gain_mu * self._gain_mu        # critically damped
 
 	# Demodulate FM
 	sensitivity = (pi / 2) / samples_per_symbol
@@ -206,18 +228,12 @@ class gmsk_demod(gr.hier_block2):
 
 	# the clock recovery block tracks the symbol clock and resamples as needed.
 	# the output of the block is a stream of soft symbols (float)
-        nfilts = 32
-        ntaps = 11 * int(self._samples_per_symbol*nfilts) 
-	taps = gr.firdes.gaussian(nfilts,
-                                  nfilts*self._samples_per_symbol,
-                                  self._bt, ntaps)
-        self.clock_recovery = \
-            gr.pfb_clock_sync_fff(self._samples_per_symbol,
-                                  self._timing_bw, taps,
-                                  nfilts, nfilts//2, self._timing_max_dev)
-            
+	self.clock_recovery = digital.clock_recovery_mm_ff(self._omega, self._gain_omega,
+                                                           self._mu, self._gain_mu,
+                                                           self._omega_relative_limit)
+
         # slice the floats at 0, outputting 1 bit (the LSB of the output byte) per sample
-        self.slicer = digital_swig.binary_slicer_fb()
+        self.slicer = digital.binary_slicer_fb()
 
         if verbose:
             self._print_verbage()
@@ -237,28 +253,35 @@ class gmsk_demod(gr.hier_block2):
 
 
     def _print_verbage(self):
-        print "bits per symbol:     %d" % self.bits_per_symbol()
-        print "Bandwidth-Time Prod: %f" % self._bt
-        print "Timing bandwidth:    %.2e" % self._timing_bw
+        print "bits per symbol = %d" % self.bits_per_symbol()
+        print "M&M clock recovery omega = %f" % self._omega
+        print "M&M clock recovery gain mu = %f" % self._gain_mu
+        print "M&M clock recovery mu = %f" % self._mu
+        print "M&M clock recovery omega rel. limit = %f" % self._omega_relative_limit
+        print "frequency error = %f" % self._freq_error
 
 
     def _setup_logging(self):
         print "Demodulation logging turned on."
         self.connect(self.fmdemod,
-                    gr.file_sink(gr.sizeof_float, "rx_gmsk_fmdemod.32f"))
+                    gr.file_sink(gr.sizeof_float, "fmdemod.dat"))
         self.connect(self.clock_recovery,
-                    gr.file_sink(gr.sizeof_float, "rx_gmsk_clock_recovery.32f"))
+                    gr.file_sink(gr.sizeof_float, "clock_recovery.dat"))
         self.connect(self.slicer,
-                    gr.file_sink(gr.sizeof_char, "rx_gmsk_slicer.8b"))
+                    gr.file_sink(gr.sizeof_char, "slicer.dat"))
 
     def add_options(parser):
         """
         Adds GMSK demodulation-specific options to the standard parser
         """
-        parser.add_option("", "--timing-bw", type="float", default=_def_timing_bw,
-                          help="set timing symbol sync loop gain lock-in bandwidth [default=%default]")
-        parser.add_option("", "--bt", type="float", default=_def_bt,
-                          help="set bandwidth-time product [default=%default] (GMSK)")
+        parser.add_option("", "--gain-mu", type="float", default=_def_gain_mu,
+                          help="M&M clock recovery gain mu [default=%default] (GMSK/PSK)")
+        parser.add_option("", "--mu", type="float", default=_def_mu,
+                          help="M&M clock recovery mu [default=%default] (GMSK/PSK)")
+        parser.add_option("", "--omega-relative-limit", type="float", default=_def_omega_relative_limit,
+                          help="M&M clock recovery omega relative limit [default=%default] (GMSK/PSK)")
+        parser.add_option("", "--freq-error", type="float", default=_def_freq_error,
+                          help="M&M clock recovery frequency error [default=%default] (GMSK)")
     add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(options):
@@ -266,8 +289,9 @@ class gmsk_demod(gr.hier_block2):
         Given command line options, create dictionary suitable for passing to __init__
         """
         return modulation_utils.extract_kwargs_from_options(gmsk_demod.__init__,
-                                                             ('self',), options)
+                                                            ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
+
 
 #
 # Add these to the mod/demod registry
