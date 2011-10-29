@@ -244,6 +244,7 @@ class Param(_Param, _GUIParam):
 			try:
 				e = self.get_parent().get_parent().evaluate(v)
 				if isinstance(e, str): return e
+				raise Exception #want to stringify
 			except:
 				self._stringify_flag = True
 				return v
