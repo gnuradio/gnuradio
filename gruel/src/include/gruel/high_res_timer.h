@@ -58,7 +58,7 @@ namespace gruel {
     inline gruel::high_res_timer_type gruel::high_res_timer_now(void){
         timespec ts;
         clock_gettime(CLOCK_MONOTONIC, &ts);
-        return high_res_timer_type(ts.tv_sec*1000000000UL) + ts.tv_nsec;
+        return ts.tv_sec*high_res_timer_tps() + ts.tv_nsec;
     }
 
     inline gruel::high_res_timer_type gruel::high_res_timer_tps(void){
