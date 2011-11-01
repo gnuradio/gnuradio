@@ -98,11 +98,10 @@ macro(GR_SWIG_INSTALL)
             COMPONENT ${GR_SWIG_INSTALL_COMPONENT}
         )
 
-        find_program(LIBTOOL libtool)
-        if(LIBTOOL)
-            include(CMakeMacroLibtoolFile)
-            CREATE_LIBTOOL_FILE(${SWIG_MODULE_${name}_REAL_NAME} /${GR_SWIG_INSTALL_DESTINATION})
-        endif(LIBTOOL)
+        GR_LIBTOOL(
+            TARGET ${SWIG_MODULE_${name}_REAL_NAME}
+            DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
+        )
 
     endforeach(name)
 

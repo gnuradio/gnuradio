@@ -99,6 +99,30 @@ macro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
 endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 
 ########################################################################
+# Generates the .la libtool file
+# This appears to generate libtool files that cannot be used by auto*.
+# Usage GR_LIBTOOL(TARGET [target] DESTINATION [dest])
+# Notice: there is not COMPONENT option, these will not get distributed.
+########################################################################
+function(GR_LIBTOOL)
+    if(NOT DEFINED GENERATE_LIBTOOL)
+        set(GENERATE_LIBTOOL OFF) #disabled by default
+    endif()
+
+    if(GENERATE_LIBTOOL)
+        include(CMakeParseArgumentsCopy)
+        CMAKE_PARSE_ARGUMENTS(GR_LIBTOOL "" "TARGET;DESTINATION" "" ${ARGN})
+
+        find_program(LIBTOOL libtool)
+        if(LIBTOOL)
+            include(CMakeMacroLibtoolFile)
+            CREATE_LIBTOOL_FILE(${GR_LIBTOOL_TARGET} /${GR_LIBTOOL_DESTINATION})
+        endif(LIBTOOL)
+    endif(GENERATE_LIBTOOL)
+
+endfunction(GR_LIBTOOL)
+
+########################################################################
 # Do standard things to the library target
 # - set target properties
 # - make install rules
@@ -128,11 +152,7 @@ function(GR_LIBRARY_FOO target)
     if(LIBRARY_EXTRAS)
 
         #create .la file before changing props
-        find_program(LIBTOOL libtool)
-        if(LIBTOOL)
-            include(CMakeMacroLibtoolFile)
-            CREATE_LIBTOOL_FILE(${target} /${GR_LIBRARY_DIR})
-        endif(LIBTOOL)
+        GR_LIBTOOL(TARGET ${target} DESTINATION ${GR_LIBRARY_DIR})
 
         #give the library a special name with ultra-zero soversion
         set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
