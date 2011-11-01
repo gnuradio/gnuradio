@@ -124,7 +124,7 @@ qtgui_sink_c::initialize()
 				 d_plottime, d_plotconst);
 
   // initialize update time to 10 times a second
-  set_update_time(0.1);
+  set_update_time(0.5);
 
   d_last_update = gruel::high_res_timer_now();
   d_update_active = false;
@@ -191,8 +191,8 @@ qtgui_sink_c::set_frequency_axis(double min, double max)
 void
 qtgui_sink_c::set_update_time(double t)
 {
-  d_update_time = t;
-  d_main_gui->SetUpdateTime(d_update_time);
+  d_update_time = t * gruel::high_res_timer_tps();
+  d_main_gui->SetUpdateTime(t);
 }
 
 void

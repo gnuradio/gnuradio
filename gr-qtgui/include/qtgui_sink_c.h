@@ -90,7 +90,7 @@ private:
 
   bool d_plotfreq, d_plotwaterfall, d_plottime, d_plotconst;
   
-  double d_update_time;
+  gruel::high_res_timer_type d_update_time;
 
   QWidget *d_parent;
   SpectrumGUIClass *d_main_gui;
