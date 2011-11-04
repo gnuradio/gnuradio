@@ -95,16 +95,6 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 			<opt>type:sc16</opt>
 		</option>
 		<option>
-			<name>Real float32</name>
-			<key>f32</key>
-			<opt>type:f32</opt>
-		</option>
-		<option>
-			<name>Real uint16</name>
-			<key>s16</key>
-			<opt>type:s16</opt>
-		</option>
-		<option>
 			<name>VITA word32</name>
 			<key>item32</key>
 			<opt>type:s32</opt>
@@ -134,14 +124,6 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 			<name>Complex int8</name>
 			<key>sc8</key>
 		</option>
-		<option>
-			<name>Real int16</name>
-			<key>s16</key>
-		</option>
-		<option>
-			<name>Real int8</name>
-			<key>s8</key>
-		</option>
 	</param>
 	<param>
 		<name>Stream args</name>
@@ -156,8 +138,8 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 			\#end if
 		</hide>
 		<option>
-			<name>scaler=1024</name>
-			<key>scaler=1024</key>
+			<name>scalar=1024</name>
+			<key>scalar=1024</key>
 		</option>
 	</param>
 	<param>
@@ -307,6 +289,19 @@ Use the device address to specify a specific device or list of devices.
 USRP1 Example: serial=12345678
 USRP2 Example: addr=192.168.10.2
 USRP2 Example: addr0=192.168.10.2, addr1=192.168.10.3
+
+$(direction.title()) Type:
+This parameter controls the data type of the stream in gnuradio.
+
+Wire Format:
+This parameter controls the form of the data over the bus/network. \
+Complex bytes may be used to trade off precision for bandwidth. \
+Not all formats are supported on all devices.
+
+Stream Args:
+Optional arguments to be passed in the UHD streamer object. \
+Streamer args is a list of key/value pairs; usage is determined by the implementation.
+Ex: the scalar key affects the scaling between 16 and 8 bit integers in sc8 wire format.
 
 Num Motherboards:
 Selects the number of USRP motherboards in this device configuration.
