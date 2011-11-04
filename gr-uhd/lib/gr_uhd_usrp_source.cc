@@ -252,8 +252,27 @@ public:
         return true;
     }
 
+    void flush(void){
+        const size_t nbytes = 4096;
+        gr_vector_void_star outputs;
+        std::vector<std::vector<char> > buffs(_nchan, std::vector<char>(nbytes));
+        for (size_t i = 0; i < _nchan; i++){
+            outputs.push_back(&buffs[i].front());
+        }
+        while (true){
+            const size_t num_samps = _dev->get_device()->recv(
+                outputs, nbytes/_type.size, _metadata,
+                _type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
+            );
+            if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT) break;
+        }
+    }
+
     bool stop(void){
         _dev->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
+
+        this->flush();
+
         return true;
     }
 
