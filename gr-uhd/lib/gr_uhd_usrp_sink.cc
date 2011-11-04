@@ -56,7 +56,7 @@ public:
             gr_make_io_signature(0, 0, 0)
         ),
         _stream_args(stream_args),
-        _nchan(stream_args.channels.size())
+        _nchan(std::max<size_t>(1, stream_args.channels.size()))
     {
         if (stream_args.cpu_format == "fc32") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_FLOAT32);
         if (stream_args.cpu_format == "sc16") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_INT16);
@@ -252,6 +252,22 @@ public:
 
     void set_time_unknown_pps(const uhd::time_spec_t &time_spec){
         return _dev->set_time_unknown_pps(time_spec);
+    }
+
+    void set_command_time(const uhd::time_spec_t &time_spec, size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_COMMAND_TIME_API
+        return _dev->set_command_time(time_spec, mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    void clear_command_time(size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_COMMAND_TIME_API
+        return _dev->clear_command_time(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
     }
 
     uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan){

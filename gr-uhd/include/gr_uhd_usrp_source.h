@@ -426,6 +426,25 @@ public:
     virtual void set_time_unknown_pps(const uhd::time_spec_t &time_spec) = 0;
 
     /*!
+     * Set the time at which the control commands will take effect.
+     *
+     * A timed command will back-pressure all subsequent timed commands,
+     * assuming that the subsequent commands occur within the time-window.
+     * If the time spec is late, the command will be activated upon arrival.
+     *
+     * \param time_spec the time at which the next command will activate
+     * \param mboard which motherboard to set the config
+     */
+    virtual void set_command_time(const uhd::time_spec_t &time_spec, size_t mboard = 0) = 0;
+
+    /*!
+     * Clear the command time so future commands are sent ASAP.
+     *
+     * \param mboard which motherboard to set the config
+     */
+    virtual void clear_command_time(size_t mboard = 0) = 0;
+
+    /*!
      * Get access to the underlying uhd dboard iface object.
      * \return the dboard_iface object
      */

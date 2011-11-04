@@ -56,7 +56,7 @@ public:
             args_to_io_sig(stream_args)
         ),
         _stream_args(stream_args),
-        _nchan(stream_args.channels.size()),
+        _nchan(std::max<size_t>(1, stream_args.channels.size())),
         _stream_now(_nchan == 1),
         _tag_now(false)
     {
@@ -266,6 +266,22 @@ public:
         return _dev->set_time_unknown_pps(time_spec);
     }
 
+    void set_command_time(const uhd::time_spec_t &time_spec, size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_COMMAND_TIME_API
+        return _dev->set_command_time(time_spec, mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    void clear_command_time(size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_COMMAND_TIME_API
+        return _dev->clear_command_time(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
     uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan){
         return _dev->get_rx_dboard_iface(chan);
     }
@@ -370,10 +386,17 @@ public:
             outputs.push_back(&buffs[i].front());
         }
         while (true){
-            const size_t num_samps = _dev->get_device()->recv(
-                outputs, nbytes/_type.size, _metadata,
-                _type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
+            #ifdef GR_UHD_USE_STREAM_API
+            const size_t bpi = uhd::convert::get_bytes_per_item(_stream_args.cpu_format);
+            const size_t num_samps = _rx_stream->recv(
+                outputs, nbytes/bpi, _metadata, 0.0
             );
+            #else
+            const size_t num_samps = _dev->get_device()->recv(
+                outputs, nbytes/_type->size, _metadata,
+                *_type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
+            );
+            #endif
             if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT) break;
         }
     }
