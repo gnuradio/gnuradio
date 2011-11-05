@@ -47,9 +47,17 @@ macro(GR_SWIG_MAKE name)
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
+    #create a dummy target that depend on other targets
+    set(tag_file ${CMAKE_CURRENT_BINARY_DIR}/${name}.tag)
+    add_custom_command(
+        OUTPUT ${tag_file}
+        DEPENDS ${GR_SWIG_TARGET_DEPS}
+        COMMAND ${CMAKE_COMMAND} -E touch ${tag_file}
+    )
+
     #append the specified include directories
     include_directories(${GR_SWIG_INCLUDE_DIRS})
-    list(APPEND SWIG_MODULE_${name}_EXTRA_DEPS ${GR_SWIG_SOURCE_DEPS})
+    list(APPEND SWIG_MODULE_${name}_EXTRA_DEPS ${GR_SWIG_SOURCE_DEPS} ${tag_file})
 
     find_package(PythonLibs)
     include_directories(${PYTHON_INCLUDE_DIRS})
@@ -67,9 +75,6 @@ macro(GR_SWIG_MAKE name)
     include(UseSWIG)
     SWIG_ADD_MODULE(${name} python ${ifiles})
     SWIG_LINK_LIBRARIES(${name} ${PYTHON_LIBRARIES} ${GR_SWIG_LIBRARIES})
-    if(GR_SWIG_TARGET_DEPS)
-        add_dependencies(${SWIG_MODULE_${name}_REAL_NAME} ${GR_SWIG_TARGET_DEPS})
-    endif(GR_SWIG_TARGET_DEPS)
 
 endmacro(GR_SWIG_MAKE)
 

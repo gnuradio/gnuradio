@@ -118,37 +118,28 @@ add_custom_target(gengen_generated DEPENDS
 ########################################################################
 # Create the master gengen swig include files
 ########################################################################
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.py "
-import os, sys
-if __name__ == '__main__':
-    incs = sys.argv[2:]
-    h_incs = '\\n'.join(['#include<%s.h>'%(os.path.splitext(os.path.basename(inc))[0]) for inc in incs])
-    i_incs = '\\n'.join(['%%include<%s>'%(os.path.basename(inc)) for inc in incs])
-    open(sys.argv[1], 'w').write('''
+set(generated_index ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i.in)
+file(WRITE ${generated_index} "
 //
 // This file is machine generated.  All edits will be overwritten
 //
-
-%%{
-%s
-%%}
-
-%s
-
-'''%(h_incs, i_incs))
 ")
 
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
-    DEPENDS ${generated_gengen_swigs}
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
-        ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.py
-        ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
-        ${generated_gengen_swigs}
-)
+file(APPEND ${generated_index} "%{\n")
+foreach(swig_file ${generated_gengen_swigs})
+    get_filename_component(name ${swig_file} NAME_WE)
+    file(APPEND ${generated_index} "#include<${name}.h>\n")
+endforeach(swig_file)
+file(APPEND ${generated_index} "%}\n")
 
-add_custom_target(gengen_generated_index DEPENDS
-    ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
+foreach(swig_file ${generated_gengen_swigs})
+    get_filename_component(name ${swig_file} NAME)
+    file(APPEND ${generated_index} "%include<${name}>\n")
+endforeach(swig_file)
+
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${generated_index} ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i
 )
 
 ########################################################################
