@@ -16,6 +16,18 @@
 #
 
 ########################################################################
+# Setup the compiler name
+########################################################################
+set(COMPILER_NAME ${CMAKE_C_COMPILER_ID})
+if(MSVC) #its not set otherwise
+    set(COMPILER_NAME MSVC)
+endif()
+
+if(NOT DEFINED COMPILER_NAME)
+    message(FATAL_ERROR "COMPILER_NAME undefined. Volk build may not support this compiler.")
+endif()
+
+########################################################################
 # Parse the arches xml file:
 #  Test each arch to see if the compiler supports the flag.
 #  If the test passes append the arch to the available list.
@@ -33,9 +45,9 @@ execute_process(
 
 foreach(thing ${compiler_lines})
     string(REGEX REPLACE "," ";" thing_list ${thing})
-    list(FIND thing_list ${CMAKE_C_COMPILER_ID} check_val)
+    list(FIND thing_list ${COMPILER_NAME} check_val)
     if(NOT ("${check_val}" STREQUAL "-1"))
-        string(REGEX REPLACE "${CMAKE_C_COMPILER_ID}," ";" filter_string ${thing})
+        string(REGEX REPLACE "${COMPILER_NAME}," ";" filter_string ${thing})
     endif()
 endforeach()
 
@@ -50,7 +62,7 @@ execute_process(
 
 foreach(thing ${compiler_prefixes})
     string(REGEX REPLACE "," ";" thing_list ${thing})
-    list(FIND thing_list ${CMAKE_C_COMPILER_ID} check_val)
+    list(FIND thing_list ${COMPILER_NAME} check_val)
     if(NOT ("${check_val}" STREQUAL "-1"))
         list(GET thing_list "1" prefix)
     endif()
@@ -98,20 +110,7 @@ macro(compiler_filter name flag)
     set(${name}_flag "${prefix}${filtered_flag}")
 endmacro()
 
-#This macro sets the ${arch}_flag variable,
-#filters through specialized compiler remappings
-#MACRO(set_arch_flag name flag)
-#    compiler_filter(${name} ${flag})
-#    IF(MSVC AND ${flag} STREQUAL "mmmx")
-#        SET(${name}_flag "/arch:SSE") #no /arch:MMX
-#    ELSEIF(MSVC AND ${flag} STREQUAL "msse")
-#        SET(${name}_flag "/arch:SSE")
-#    ELSEIF(MSVC AND ${flag} STREQUAL "sse2")
-#        SET(${name}_flag "/arch:SSE2")
-#    ELSE()
-#        SET(${name}_flag -${flag})
-#    ENDIF()
-#ENDMACRO(set_arch_flag)
+
 
 
 
@@ -122,7 +121,7 @@ macro(handle_arch name flag overrule overrule_val)
     #handle overrule
     if("${${overrule}}" STREQUAL "${overrule_val}")
         set(have_${name} FALSE)
-        message("${name} overruled")
+        message(STATUS "${name} overruled")
     #handle special case for none flag
     elseif(${flag} STREQUAL "none")
         set(have_${name} TRUE)
@@ -304,7 +303,7 @@ set_source_files_properties(
     ${CMAKE_CURRENT_BINARY_DIR}/volk_machines.c
 PROPERTIES COMPILE_DEFINITIONS "${machine_defs}")
 
-if("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
+if(MSVC)
     #add compatibility includes for stdint types
     include_directories(${CMAKE_SOURCE_DIR}/msvc)
     #compile the sources as C++ due to the lack of complex.h under MSVC

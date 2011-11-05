@@ -30,7 +30,11 @@ HEADER_TEMPL = """\
 
 struct VOLK_CPU volk_cpu;
 
-#if defined(__i386__) || (__x86_64__)
+#if defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)
+#  define VOLK_CPU_x86
+#endif
+
+#if defined(VOLK_CPU_x86)
 
 //implement get cpuid for gcc compilers using a copy of cpuid.h
 #if defined(__GNUC__)
@@ -40,32 +44,32 @@ struct VOLK_CPU volk_cpu;
 //implement get cpuid for MSVC compilers using __cpuid intrinsic
 #elif defined(_MSC_VER)
 #include <intrin.h>
-#define cpuid(op, r) __cpuid(r, op)
+#define cpuid_x86(op, r) __cpuid(r, op)
 
 #else
 #error "A get cpuid for volk is not available on this compiler..."
 #endif
 
 static inline unsigned int cpuid_eax(unsigned int op) {
-    unsigned int regs[4];
+    int regs[4];
     cpuid_x86 (op, regs);
     return regs[0];
 }
 
 static inline unsigned int cpuid_ebx(unsigned int op) {
-    unsigned int regs[4];
+    int regs[4];
     cpuid_x86 (op, regs);
     return regs[1];
 }
 
 static inline unsigned int cpuid_ecx(unsigned int op) {
-    unsigned int regs[4];
+    int regs[4];
     cpuid_x86 (op, regs);
     return regs[2];
 }
 
 static inline unsigned int cpuid_edx(unsigned int op) {
-    unsigned int regs[4];
+    int regs[4];
     cpuid_x86 (op, regs);
     return regs[3];
 }
@@ -103,7 +107,7 @@ def make_cpuid_c(dom) :
             if no_test:
                 tempstring = tempstring + """\
 int i_can_has_%s () {
-#if defined(__i386__) || (__x86_64__)
+#if defined(VOLK_CPU_x86)
     return 1;
 #else
     return 0;
@@ -115,7 +119,7 @@ int i_can_has_%s () {
             elif op == "1":
                 tempstring = tempstring + """\
 int i_can_has_%s () {
-#if defined(__i386__) || (__x86_64__)
+#if defined(VOLK_CPU_x86)
     unsigned int e%sx = cpuid_e%sx (%s);
     return ((e%sx >> %s) & 1) == %s;
 #else
@@ -128,7 +132,7 @@ int i_can_has_%s () {
             elif op == "0x80000001":
                 tempstring = tempstring + """\
 int i_can_has_%s () {
-#if defined(__i386__) || (__x86_64__)
+#if defined(VOLK_CPU_x86)
     unsigned int extended_fct_count = cpuid_eax(0x80000000);
     if (extended_fct_count < 0x80000001)
         return %s^1;
