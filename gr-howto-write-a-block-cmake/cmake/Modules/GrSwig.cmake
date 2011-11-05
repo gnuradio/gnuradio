@@ -47,9 +47,19 @@ macro(GR_SWIG_MAKE name)
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
+    #Create a dummy custom command that depends on other targets
+    include(GrMiscUtils)
+    GR_GEN_TARGET_DEPS(_${name}_swig_tag tag_deps ${GR_SWIG_TARGET_DEPS})
+    set(tag_file ${CMAKE_CURRENT_BINARY_DIR}/${name}.tag)
+    add_custom_command(
+        OUTPUT ${tag_file}
+        DEPENDS ${GR_SWIG_SOURCE_DEPS} ${tag_deps}
+        COMMAND ${CMAKE_COMMAND} -E touch ${tag_file}
+    )
+
     #append the specified include directories
     include_directories(${GR_SWIG_INCLUDE_DIRS})
-    list(APPEND SWIG_MODULE_${name}_EXTRA_DEPS ${GR_SWIG_SOURCE_DEPS})
+    list(APPEND SWIG_MODULE_${name}_EXTRA_DEPS ${tag_file})
 
     find_package(PythonLibs)
     include_directories(${PYTHON_INCLUDE_DIRS})
@@ -67,9 +77,6 @@ macro(GR_SWIG_MAKE name)
     include(UseSWIG)
     SWIG_ADD_MODULE(${name} python ${ifiles})
     SWIG_LINK_LIBRARIES(${name} ${PYTHON_LIBRARIES} ${GR_SWIG_LIBRARIES})
-    if(GR_SWIG_TARGET_DEPS)
-        add_dependencies(${SWIG_MODULE_${name}_REAL_NAME} ${GR_SWIG_TARGET_DEPS})
-    endif(GR_SWIG_TARGET_DEPS)
 
 endmacro(GR_SWIG_MAKE)
 
@@ -97,6 +104,12 @@ macro(GR_SWIG_INSTALL)
             DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
             COMPONENT ${GR_SWIG_INSTALL_COMPONENT}
         )
+
+        GR_LIBTOOL(
+            TARGET ${SWIG_MODULE_${name}_REAL_NAME}
+            DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
+        )
+
     endforeach(name)
 
 endmacro(GR_SWIG_INSTALL)

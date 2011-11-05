@@ -49,7 +49,7 @@ macro(GR_SWIG_MAKE name)
 
     #Create a dummy custom command that depends on other targets
     include(GrMiscUtils)
-    GR_GEN_TARGET_DEPS(${name} tag_deps ${GR_SWIG_TARGET_DEPS})
+    GR_GEN_TARGET_DEPS(_${name}_swig_tag tag_deps ${GR_SWIG_TARGET_DEPS})
     set(tag_file ${CMAKE_CURRENT_BINARY_DIR}/${name}.tag)
     add_custom_command(
         OUTPUT ${tag_file}
