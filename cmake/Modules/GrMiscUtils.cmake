@@ -176,3 +176,22 @@ function(GR_LIBRARY_FOO target)
 
     endif(LIBRARY_EXTRAS)
 endfunction(GR_LIBRARY_FOO)
+
+########################################################################
+# Create a dummy custom command that depends on other targets.
+# Usage:
+#   GR_GEN_TARGET_DEPS(unique_name target_deps <target1> <target2> ...)
+#   ADD_CUSTOM_COMMAND(<the usual args> ${target_deps})
+#
+# Custom command cant depend on targets, but can depend on executables,
+# and executables can depend on targets. So this is the process:
+########################################################################
+function(GR_GEN_TARGET_DEPS name var)
+    set(_dummy_target _${name}_dummy_target)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${_dummy_target}.cpp "int main(void){return 0;}\n")
+    add_executable(${_dummy_target} ${CMAKE_CURRENT_BINARY_DIR}/${_dummy_target}.cpp)
+    if(ARGN)
+        add_dependencies(${_dummy_target} ${ARGN})
+    endif(ARGN)
+    set(${var} "DEPENDS;${_dummy_target};COMMAND;${_dummy_target}" PARENT_SCOPE)
+endfunction(GR_GEN_TARGET_DEPS)
