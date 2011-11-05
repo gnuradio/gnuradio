@@ -32,14 +32,14 @@ set(LIBVER 0.0.0)
 
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}) #allows this to be a sub-project
 set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}) #allows this to be a sub-project
-
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake) #location for custom "Modules"
 ########################################################################
 # Dependencies setup
 ########################################################################
-find_package(PythonInterp)
-if(NOT PYTHONINTERP_FOUND)
-    message(FATAL_ERROR "Python interpreter required by the build system.")
-endif(NOT PYTHONINTERP_FOUND)
+find_package(PythonInterp REQUIRED PYTHON_EXECUTABLE)
+find_package(Boost COMPONENTS unit_test_framework)
+find_package(ORC)
+
 
 ########################################################################
 # Setup the package config file

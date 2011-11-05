@@ -20,71 +20,137 @@
 #  Test each arch to see if the compiler supports the flag.
 #  If the test passes append the arch to the available list.
 ########################################################################
-#extract the arch lines from the xml file using crazy python
+#extract the compiler lines from the xml file using abusive python
+
+
+
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} -c
-    "from xml.dom import minidom; print ';'.join(map(lambda a: '%s %s'%(a.attributes['name'].value,a.getElementsByTagName('flag')[0].firstChild.data),minidom.parse('${CMAKE_SOURCE_DIR}/gen/archs.xml').getElementsByTagName('arch')))"
+    "from xml.dom import minidom; print ';'.join(map(lambda b: ','.join([','.join([b.attributes['name'].value,item.attributes['name'].value,item.firstChild.data]) for item in b.getElementsByTagName('remap')]), minidom.parse('${CMAKE_SOURCE_DIR}/gen/compilers.xml').getElementsByTagName('compiler')))"
+
+    OUTPUT_VARIABLE compiler_lines OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+foreach(thing ${compiler_lines})
+    string(REGEX REPLACE "," ";" thing_list ${thing})
+    list(FIND thing_list ${CMAKE_C_COMPILER_ID} check_val)
+    if(NOT ("${check_val}" STREQUAL "-1"))
+        string(REGEX REPLACE "${CMAKE_C_COMPILER_ID}," ";" filter_string ${thing})
+    endif()
+endforeach()
+
+
+#extract compiler prefixes from the xml file using abusive python
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} -c
+    "from xml.dom import minidom; print ';'.join(map(lambda b: ','.join([','.join([b.attributes['name'].value,item.firstChild.data]) for item in b.getElementsByTagName('prefix')]), minidom.parse('${CMAKE_SOURCE_DIR}/gen/compilers.xml').getElementsByTagName('compiler')))"
+
+    OUTPUT_VARIABLE compiler_prefixes OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+foreach(thing ${compiler_prefixes})
+    string(REGEX REPLACE "," ";" thing_list ${thing})
+    list(FIND thing_list ${CMAKE_C_COMPILER_ID} check_val)
+    if(NOT ("${check_val}" STREQUAL "-1"))
+        list(GET thing_list "1" prefix)
+    endif()
+endforeach()
+
+
+
+
+#extract the arch lines from the xml file using abusive python
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} -c
+    "from xml.dom import minidom; print ';'.join(map(lambda a: '%s %s %s %s'%(a.attributes['name'].value,a.getElementsByTagName('flag')[0].firstChild.data,a.getElementsByTagName('overrule')[0].firstChild.data,a.getElementsByTagName('overrule_val')[0].firstChild.data) if (len(a.getElementsByTagName('overrule'))) else '%s %s %s %s'%(a.attributes['name'].value,a.getElementsByTagName('flag')[0].firstChild.data,'no_overrule', 'no_overrule_val'), minidom.parse('${CMAKE_SOURCE_DIR}/gen/archs.xml').getElementsByTagName('arch')))"
+
     OUTPUT_VARIABLE arch_lines OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-#get any mutually exclusive archs so we can exclude them
-#this is really for compilers which can do both 32- and 64-bit compilations.
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c
-    "from xml.dom import minidom; print ';'.join(map(lambda a: '%s %s'%(a.parentNode.attributes['name'].value,a.firstChild.data),minidom.parse('${CMAKE_SOURCE_DIR}/gen/archs.xml').getElementsByTagName('mutex')))"
-    OUTPUT_VARIABLE mutex_lines OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+
+
+
+#set the various overrule values (see archs.xml)
+#a lot of this is translating between automake and cmake
+if(NOT "${CROSSCOMPILE_MULTILIB}" STREQUAL "true")
+    set(MD_SUBCPU ${CMAKE_HOST_SYSTEM_PROCESSOR})
+endif()
+if(NOT "${ORC_FOUND}" STREQUAL "TRUE")
+    set(LV_HAVE_ORC "no")
+endif()
+
+
+
+
+
+
+macro(compiler_filter name flag)
+    set(filtered_flag ${flag})
+    foreach(thing ${filter_string})
+        string(REGEX REPLACE "," ";" flagmap ${thing})
+        list(GET flagmap "0" key)
+        list(GET flagmap "1" val)
+        string(REGEX MATCH "^${key}$" found ${flag})
+        if("${found}" STREQUAL "${key}")
+            string(REGEX REPLACE "^${key}$" "${val}" filtered_flag ${flag})
+        endif()
+    endforeach()
+    set(${name}_flag "${prefix}${filtered_flag}")
+endmacro()
 
 #This macro sets the ${arch}_flag variable,
-#and handles special cases for MSVC arch flags.
-macro(set_arch_flag name flag)
-    if(MSVC AND ${name} STREQUAL "mmx")
-        set(${name}_flag "/arch:SSE") #no /arch:MMX
-    elseif(MSVC AND ${name} STREQUAL "sse")
-        set(${name}_flag "/arch:SSE")
-    elseif(MSVC AND ${name} STREQUAL "sse2")
-        set(${name}_flag "/arch:SSE2")
-    else()
-        set(${name}_flag -${flag})
-    endif()
-endmacro(set_arch_flag)
+#filters through specialized compiler remappings
+#MACRO(set_arch_flag name flag)
+#    compiler_filter(${name} ${flag})
+#    IF(MSVC AND ${flag} STREQUAL "mmmx")
+#        SET(${name}_flag "/arch:SSE") #no /arch:MMX
+#    ELSEIF(MSVC AND ${flag} STREQUAL "msse")
+#        SET(${name}_flag "/arch:SSE")
+#    ELSEIF(MSVC AND ${flag} STREQUAL "sse2")
+#        SET(${name}_flag "/arch:SSE2")
+#    ELSE()
+#        SET(${name}_flag -${flag})
+#    ENDIF()
+#ENDMACRO(set_arch_flag)
 
-macro(handle_arch name flag)
 
+
+
+
+macro(handle_arch name flag overrule overrule_val)
+
+    #handle overrule
+    if("${${overrule}}" STREQUAL "${overrule_val}")
+        set(have_${name} FALSE)
+        message("${name} overruled")
     #handle special case for none flag
-    if(${flag} STREQUAL "none")
+    elseif(${flag} STREQUAL "none")
         set(have_${name} TRUE)
-
-    #otherwise test the flag against the compiler
+    #otherwise test the flag(s) against the compiler
     else()
         include(CheckCXXCompilerFlag)
-        set_arch_flag(${name} ${flag})
-        CHECK_CXX_COMPILER_FLAG(${${name}_flag} have_${name})
+        string(REGEX REPLACE "," ";" flag_list ${flag})
+        set(have_${name} 1)
+        foreach(thing ${flag_list})
+            compiler_filter(${name} ${thing})
+            CHECK_CXX_COMPILER_FLAG(${${name}_flag} have_${thing})
+            if(NOT (${have_${name}} AND ("${have_${thing}}" STREQUAL "1")))
+                set(have_${name} 0)
+            endif()
+        endforeach()
     endif()
 
     if(have_${name})
         list(APPEND available_arches ${name})
     endif()
-endmacro(handle_arch)
 
-macro(remove_mutex name mutex)
-    if(have_${name})
-        unset(have_${mutex})
-    endif()
-    list(REMOVE_ITEM available_arches ${mutex})
-endmacro(remove_mutex)
+endmacro(handle_arch)
 
 #create a list of available arches
 foreach(arch_line ${arch_lines})
     separate_arguments(args UNIX_COMMAND "${arch_line}")
     handle_arch(${args})
 endforeach(arch_line)
-
-#strip out mutex archs
-foreach(mutex_line ${mutex_lines})
-    separate_arguments(args UNIX_COMMAND "${mutex_line}")
-    remove_mutex(${args})
-endforeach(mutex_line)
 
 message(STATUS "Available arches: ${available_arches}")
 
@@ -114,10 +180,12 @@ macro(handle_machine1 name)
         set(machine_flags "${machine_flags} ${${arch}_flag}")
     endforeach(arch)
 
+    string(REGEX REPLACE "^[ \t]+" "" machine_flags "${machine_flags}")
+
     if(is_match)
         #this is a match, append the source and set its flags
         set(machine_source ${CMAKE_CURRENT_BINARY_DIR}/volk_machine_${name}.c)
-        set_source_files_properties(${machine_source} PROPERTIES COMPILE_FLAGS ${machine_flags})
+        set_source_files_properties(${machine_source} PROPERTIES COMPILE_FLAGS "${machine_flags}")
         list(APPEND machine_sources ${machine_source})
         list(APPEND machine_defs ${machine_def})
         list(APPEND available_machines ${name})
@@ -168,20 +236,10 @@ file(GLOB xml_files ${CMAKE_SOURCE_DIR}/gen/*.xml)
 file(GLOB py_files ${CMAKE_SOURCE_DIR}/gen/*.py)
 file(GLOB h_files ${CMAKE_SOURCE_DIR}/include/volk/*.h)
 
-#make sure we can use -B with python (introduced in 2.6)
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -B -c ""
-    OUTPUT_QUIET ERROR_QUIET
-    RESULT_VARIABLE PYTHON_HAS_DASH_B_RESULT
-)
-if(PYTHON_HAS_DASH_B_RESULT EQUAL 0)
-    set(PYTHON_DASH_B "-B")
-endif()
-
 add_custom_command(
     OUTPUT ${volk_gen_sources}
     DEPENDS ${xml_files} ${py_files} ${h_files}
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    COMMAND ${PYTHON_EXECUTABLE} -B
         ${CMAKE_SOURCE_DIR}/gen/volk_register.py
         ${CMAKE_BINARY_DIR}
 )
@@ -189,14 +247,12 @@ add_custom_command(
 ########################################################################
 # Handle orc support
 ########################################################################
-find_package(PkgConfig)
-if(PKG_CONFIG_FOUND)
-PKG_CHECK_MODULES(ORC "orc-0.4 > 0.4.11")
-endif(PKG_CONFIG_FOUND)
 
-find_program(ORCC_EXECUTABLE orcc)
 
-if(ORC_FOUND AND ORCC_EXECUTABLE)
+
+
+
+if(ORC_FOUND)
     #setup orc library usage
     include_directories(${ORC_INCLUDE_DIRS})
     link_directories(${ORC_LIBRARY_DIRS})
@@ -225,16 +281,15 @@ endif()
 ########################################################################
 # Setup the volk sources list and library
 ########################################################################
-if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
-    #http://gcc.gnu.org/wiki/Visibility
+if(NOT WIN32)
     add_definitions(-fvisibility=hidden)
 endif()
 
 include_directories(
-    ${CMAKE_BINARY_DIR}/include
     ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 list(APPEND volk_sources
@@ -249,16 +304,18 @@ set_source_files_properties(
     ${CMAKE_CURRENT_BINARY_DIR}/volk_machines.c
 PROPERTIES COMPILE_DEFINITIONS "${machine_defs}")
 
-if(MSVC)
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
     #add compatibility includes for stdint types
     include_directories(${CMAKE_SOURCE_DIR}/msvc)
     #compile the sources as C++ due to the lack of complex.h under MSVC
     set_source_files_properties(${volk_sources} PROPERTIES LANGUAGE CXX)
-endif(MSVC)
+endif()
 
 #create the volk runtime library
 add_library(volk SHARED ${volk_sources})
-target_link_libraries(volk ${ORC_LIBRARIES})
+if(ORC_FOUND)
+    target_link_libraries(volk ${ORC_LIBRARIES})
+endif(ORC_FOUND)
 set_target_properties(volk PROPERTIES SOVERSION ${LIBVER})
 set_target_properties(volk PROPERTIES DEFINE_SYMBOL "volk_EXPORTS")
 
@@ -271,23 +328,24 @@ install(TARGETS volk
 ########################################################################
 # Build the QA test application
 ########################################################################
-find_package(Boost COMPONENTS unit_test_framework)
+
 
 if(Boost_FOUND)
 
-set_source_files_properties(
-    ${CMAKE_CURRENT_SOURCE_DIR}/testqa.cc PROPERTIES
-    COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK;BOOST_TEST_MAIN"
-)
+    set_source_files_properties(
+        ${CMAKE_CURRENT_SOURCE_DIR}/testqa.cc PROPERTIES
+        COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK;BOOST_TEST_MAIN"
+    )
 
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
+    include_directories(${Boost_INCLUDE_DIRS})
+    link_directories(${Boost_LIBRARY_DIRS})
 
-add_executable(test_all
-    ${CMAKE_CURRENT_SOURCE_DIR}/testqa.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_utils.cc
-)
-target_link_libraries(test_all volk ${Boost_LIBRARIES})
-#ADD_TEST(qa_volk_test_all test_all)
+    add_executable(test_all
+        ${CMAKE_CURRENT_SOURCE_DIR}/testqa.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/qa_utils.cc
+    )
+    target_link_libraries(test_all volk ${Boost_LIBRARIES})
+    add_test(qa_volk_test_all test_all)
 
-endif()
+endif(Boost_FOUND)
+
