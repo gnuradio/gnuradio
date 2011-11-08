@@ -8,31 +8,16 @@
 <block>
 	<name>Add</name>
 	<key>gr_add_xx</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.add_v$(type.fcn)($vlen)</make>
+	<import>from gnuradio import basic</import>
+	<make>basic.add(basic.$type.enum, $vlen)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
 		<type>enum</type>
 		<option>
-			<name>Complex</name>
-			<key>complex</key>
-			<opt>fcn:cc</opt>
-		</option>
-		<option>
-			<name>Float</name>
-			<key>float</key>
-			<opt>fcn:ff</opt>
-		</option>
-		<option>
-			<name>Int</name>
-			<key>int</key>
-			<opt>fcn:ii</opt>
-		</option>
-		<option>
-			<name>Short</name>
-			<key>short</key>
-			<opt>fcn:ss</opt>
+			<name>FC32</name>
+			<key>fc32</key>
+			<opt>enum:ADD_FC32</opt>
 		</option>
 	</param>
 	<param>

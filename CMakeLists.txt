@@ -205,6 +205,7 @@ add_subdirectory(grc)
 
 add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
+add_subdirectory(gr-basic)
 add_subdirectory(gr-comedi)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-noaa)
