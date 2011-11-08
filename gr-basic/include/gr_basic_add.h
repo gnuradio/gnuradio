@@ -28,7 +28,6 @@ enum add_type{
     ADD_FC32,
     ADD_SC16,
     ADD_F32,
-    ADD_S32,
     ADD_S16,
 };
 

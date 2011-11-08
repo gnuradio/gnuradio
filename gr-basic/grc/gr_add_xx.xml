@@ -19,6 +19,21 @@
 			<key>fc32</key>
 			<opt>enum:ADD_FC32</opt>
 		</option>
+		<option>
+			<name>F32</name>
+			<key>f32</key>
+			<opt>enum:ADD_F32</opt>
+		</option>
+		<option>
+			<name>SC16</name>
+			<key>sc16</key>
+			<opt>enum:ADD_SC16</opt>
+		</option>
+		<option>
+			<name>S16</name>
+			<key>s16</key>
+			<opt>enum:ADD_S16</opt>
+		</option>
 	</param>
 	<param>
 		<name>Num Inputs</name>

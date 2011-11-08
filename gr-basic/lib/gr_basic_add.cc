@@ -26,23 +26,20 @@
 #include <volk/volk.h>
 
 /***********************************************************************
- * Adder implementation with complex float 32
+ * Adder implementation with float32
  **********************************************************************/
-class gr_basic_add_fc32 : public basic_add{
+class gr_basic_add_f32 : public basic_add{
 public:
-    typedef std::complex<float> my_type;
-
-    gr_basic_add_fc32(const size_t vlen):
+    gr_basic_add_f32(const size_t vlen):
         gr_sync_block(
-            "add fc32",
-            gr_make_io_signature (1, -1, sizeof(my_type)*vlen),
-            gr_make_io_signature (1, 1, sizeof(my_type)*vlen)
+            "add f32",
+            gr_make_io_signature (1, -1, sizeof(float)*vlen),
+            gr_make_io_signature (1, 1, sizeof(float)*vlen)
         ),
         _vlen(vlen)
     {
-        int alignment_multiple = volk_get_alignment() / (sizeof(my_type)*vlen);
-        if(alignment_multiple < 1) alignment_multiple = 1;
-        set_output_multiple(alignment_multiple);
+        const int alignment_multiple = volk_get_alignment() / (sizeof(float)*vlen);
+        set_output_multiple(std::max(1, alignment_multiple));
     }
 
     int work(
@@ -51,18 +48,53 @@ public:
         gr_vector_void_star &output_items
     ){
         const size_t n_nums = noutput_items * _vlen;
-        my_type *out = reinterpret_cast<my_type *>(output_items[0]);
-        const my_type *in0 = reinterpret_cast<const my_type *>(input_items[0]);
+        float *out = reinterpret_cast<float *>(output_items[0]);
+        const float *in0 = reinterpret_cast<const float *>(input_items[0]);
 
         for (size_t n = 1; n < input_items.size(); n++){
-            const my_type *in = reinterpret_cast<const my_type *>(input_items[n]);
+            const float *in = reinterpret_cast<const float *>(input_items[n]);
+            volk_32f_x2_add_32f_a(out, in0, in, n_nums);
+            in0 = out; //for next input, we do output += input
+        }
+
+        return noutput_items;
+    }
+
+private:
+    const size_t _vlen;
+};
+
+/***********************************************************************
+ * Adder implementation with int16
+ **********************************************************************/
+class gr_basic_add_s16 : public basic_add{
+public:
+    gr_basic_add_s16(const size_t vlen):
+        gr_sync_block(
+            "add s16",
+            gr_make_io_signature (1, -1, sizeof(uint16_t)*vlen),
+            gr_make_io_signature (1, 1, sizeof(uint16_t)*vlen)
+        ),
+        _vlen(vlen)
+    {
+        //TODO set output multiple to volk alignment
+    }
+
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        const size_t n_nums = noutput_items * _vlen;
+        uint16_t *out = reinterpret_cast<uint16_t *>(output_items[0]);
+        const uint16_t *in0 = reinterpret_cast<const uint16_t *>(input_items[0]);
+
+        for (size_t n = 1; n < input_items.size(); n++){
+            const uint16_t *in = reinterpret_cast<const uint16_t *>(input_items[n]);
             //TODO - this is where you call into volk
-            volk_32f_x2_add_32f_a((float *)out, (float *)in0, (float *)in, n_nums*2);
-            /*
             for (size_t i = 0; i < n_nums; i++){
                 out[i] = in0[i] + in[i];
             }
-            */
             in0 = out; //for next input, we do output += input
         }
 
@@ -80,7 +112,10 @@ boost::shared_ptr<basic_add> basic_make_add(
     add_type type, const size_t vlen
 ){
     switch(type){
-    case ADD_FC32: return boost::shared_ptr<basic_add>(new gr_basic_add_fc32(vlen));
+    case ADD_FC32: return boost::shared_ptr<basic_add>(new gr_basic_add_f32(2*vlen));
+    case ADD_F32: return boost::shared_ptr<basic_add>(new gr_basic_add_f32(vlen));
+    case ADD_SC16: return boost::shared_ptr<basic_add>(new gr_basic_add_s16(2*vlen));
+    case ADD_S16: return boost::shared_ptr<basic_add>(new gr_basic_add_s16(vlen));
     default: throw std::invalid_argument("basic_make_add got unknown add type");
     }
 }
