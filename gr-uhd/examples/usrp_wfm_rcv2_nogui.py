@@ -70,9 +70,8 @@ class wfm_rx_block (gr.top_block):
         self.fm_freq_max = options.freq_max
 
         # build graph
-        self.u = uhd.usrp_source(device_addr=options.args,
-                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                 num_channels=2)
+        stream_args = uhd.stream_args('fc32', channels=range(2))
+        self.u = uhd.usrp_source(device_addr=options.args, stream_args=stream_args)
 
         # Set front end channel mapping
         self.u.set_subdev_spec(options.spec)

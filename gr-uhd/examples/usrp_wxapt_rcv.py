@@ -69,9 +69,7 @@ class wxapt_rx_block (stdgui2.std_top_block):
         self.freq_max = options.freq_max
 
         # build graph
-        self.u = uhd.usrp_source(device_addr=options.args,
-                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                 num_channels=1)
+        self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
         usrp_rate  = 320e3
         demod_rate = 320e3

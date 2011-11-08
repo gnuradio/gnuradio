@@ -117,9 +117,7 @@ class fm_tx_block(stdgui2.std_top_block):
         # ----------------------------------------------------------------
         # Set up constants and parameters
 
-        self.u = uhd.usrp_sink(device_addr=options.args,
-                               io_type=uhd.io_type.COMPLEX_FLOAT32,
-                               num_channels=1)
+        self.u = uhd.usrp_sink(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
         self.usrp_rate = options.samp_rate
         self.u.set_samp_rate(self.usrp_rate)

@@ -39,9 +39,7 @@ class app_top_block(gr.top_block):
 
         else:
             # Set up USRP source
-            self.u = uhd.usrp_source(device_addr=options.address,
-                                     io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                     num_channels=1)
+            self.u = uhd.usrp_source(device_addr=options.address, stream_args=uhd.stream_args('fc32'))
 
             # Tune daughterboard
             r = self.u.set_center_freq(options.freq+options.calibration, 0)

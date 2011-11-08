@@ -46,13 +46,9 @@ class uhd_interface:
                  gain=None, spec=None, antenna=None):
         
         if(istx):
-            self.u = uhd.usrp_sink(device_addr=args,
-                                   io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                   num_channels=1)
+            self.u = uhd.usrp_sink(device_addr=args, stream_args=uhd.stream_args('fc32'))
         else:
-            self.u = uhd.usrp_source(device_addr=args,
-                                     io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                     num_channels=1)
+            self.u = uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
         self._args = args
         self._ant  = antenna
