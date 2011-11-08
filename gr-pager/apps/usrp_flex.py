@@ -35,9 +35,7 @@ class app_top_block(gr.top_block):
 			
 	if options.from_file is None:
             # Set up USRP source
-            self.u = uhd.usrp_source(device_addr=options.address,
-                                     io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                     num_channels=1)
+            self.u = uhd.usrp_source(device_addr=options.address, stream_args=uhd.stream_args('fc32'))
 
             # Grab 250 KHz of spectrum
             # (A UHD facility to get sample rate range and granularity would be useful)

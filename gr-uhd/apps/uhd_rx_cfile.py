@@ -41,14 +41,10 @@ class rx_cfile_block(gr.top_block):
 
         # Create a UHD device source
         if options.output_shorts:
-            self._u = uhd.usrp_source(device_addr=options.args,
-                                     io_type=uhd.io_type.COMPLEX_INT16,
-                                     num_channels=1)
+            self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('sc16'))
             self._sink = gr.file_sink(gr.sizeof_short*2, filename)
         else:
-            self._u = uhd.usrp_source(device_addr=options.args,
-                                     io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                     num_channels=1)
+            self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
             self._sink = gr.file_sink(gr.sizeof_gr_complex, filename)
 
         # Set receiver sample rate

@@ -59,9 +59,8 @@ class build_block(gr.top_block):
         
         if tx_enable:
             print "\nTRANSMIT CHAIN"
-            self.u_tx = uhd.usrp_sink(device_addr=args,
-                                      io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                      num_channels=tx_nchan)
+            stream_args = uhd.stream_args('fc32', channels=range(tx_nchan))
+            self.u_tx = uhd.usrp_sink(device_addr=args, stream_args=stream_args)
             self.u_tx.set_samp_rate(MAX_RATE)
 
             self.tx_src0 = gr.sig_source_c(self.u_tx.get_samp_rate(),

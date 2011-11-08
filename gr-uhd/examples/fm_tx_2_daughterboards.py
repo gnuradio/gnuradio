@@ -113,9 +113,8 @@ class my_top_block(gr.top_block):
         d = uhd.find_devices(uhd.device_addr(options.args))
         uhd_type = d[0].get('type')
 
-        self.u = uhd.usrp_sink(device_addr=options.args,
-                               io_type=uhd.io_type.COMPLEX_FLOAT32,
-                               num_channels=2)
+        stream_args = uhd.stream_args('fc32', channels=range(2))
+        self.u = uhd.usrp_sink(device_addr=options.args, stream_args=stream_args)
 
         # Set up USRP system based on type
         if(uhd_type == "usrp"):

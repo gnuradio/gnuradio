@@ -42,9 +42,7 @@ class uhd_burst_detector(gr.top_block):
         
         self.uhd_src = uhd.single_usrp_source(
             device_addr=self.uhd_addr,
-            io_type=uhd.io_type_t.COMPLEX_FLOAT32,
-            num_channels=1,
-            )
+            stream_args=uhd.stream_args('fc32'))
         
         self.uhd_src.set_samp_rate(self.samp_rate)
         self.uhd_src.set_center_freq(self.freq, 0)

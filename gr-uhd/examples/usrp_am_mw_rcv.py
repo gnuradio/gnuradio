@@ -75,9 +75,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.freq = 0
 
         # build graph
-        self.u = uhd.usrp_source(device_addr=options.args,
-                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                 num_channels=1)
+        self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
         usrp_rate  = 256e3
         demod_rate = 64e3

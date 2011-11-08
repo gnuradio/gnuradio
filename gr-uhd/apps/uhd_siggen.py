@@ -92,9 +92,7 @@ class top_block(gr.top_block, pubsub):
         self[TYPE_KEY] = options.type #set type last
 
     def _setup_usrpx(self, options):
-        self._u = uhd.usrp_sink(device_addr=options.args,
-                                io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                num_channels=1)
+        self._u = uhd.usrp_sink(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
         self._u.set_samp_rate(options.samp_rate)
 
         # Set the subdevice spec

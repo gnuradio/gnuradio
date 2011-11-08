@@ -74,9 +74,7 @@ class app_top_block(stdgui2.std_top_block):
 	self.options = options
         self.show_debug_info = True
         
-        self.u = uhd.usrp_source(device_addr=options.args,
-                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                 num_channels=1)
+        self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
         # Set the subdevice spec
         if(options.spec):

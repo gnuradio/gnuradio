@@ -171,9 +171,7 @@ class my_top_block(gr.top_block):
         
         self.qapp = QtGui.QApplication(sys.argv)
 
-        self.u = uhd.usrp_source(device_addr=options.address,
-                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                 num_channels=1)
+        self.u = uhd.usrp_source(device_addr=options.address, stream_args=uhd.stream_args('fc32'))
         self.set_bandwidth(options.samp_rate)
 
         if options.gain is None:
