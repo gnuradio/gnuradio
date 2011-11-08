@@ -23,6 +23,7 @@
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <complex>
+#include <volk/volk.h>
 
 /***********************************************************************
  * Adder implementation with complex float 32
@@ -39,7 +40,9 @@ public:
         ),
         _vlen(vlen)
     {
-        //TODO this is where you set output multiple for volk
+        int alignment_multiple = volk_get_alignment() / (sizeof(my_type)*vlen);
+        if(alignment_multiple < 1) alignment_multiple = 1;
+        set_output_multiple(alignment_multiple);
     }
 
     int work(
@@ -54,11 +57,16 @@ public:
         for (size_t n = 1; n < input_items.size(); n++){
             const my_type *in = reinterpret_cast<const my_type *>(input_items[n]);
             //TODO - this is where you call into volk
+            volk_32f_x2_add_32f_a((float *)out, (float *)in0, (float *)in, n_nums*2);
+            /*
             for (size_t i = 0; i < n_nums; i++){
                 out[i] = in0[i] + in[i];
             }
+            */
             in0 = out; //for next input, we do output += input
         }
+
+        return noutput_items;
     }
 
 private:

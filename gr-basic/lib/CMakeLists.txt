@@ -26,6 +26,7 @@ include_directories(
 )
 
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${VOLK_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
@@ -38,6 +39,7 @@ list(APPEND gr_basic_sources
 list(APPEND basic_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    volk
 )
 
 add_library(gnuradio-basic SHARED ${gr_basic_sources})
