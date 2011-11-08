@@ -149,7 +149,7 @@ class top_block(gr.top_block, pubsub):
     def set_gain(self, gain):
         if gain is None:
             g = self[GAIN_RANGE_KEY]
-            gain = float(g[0]+g[1])/2
+            gain = float(g.start()+g.stop())/2
             if self._verbose:
                 print "Using auto-calculated mid-point TX gain"
             self[GAIN_KEY] = gain
@@ -162,7 +162,7 @@ class top_block(gr.top_block, pubsub):
 
         if target_freq is None:
             f = self[FREQ_RANGE_KEY]
-            target_freq = float(f[0]+f[1])/2.0
+            target_freq = float(f.start()+f.stop())/2.0
             if self._verbose:
                 print "Using auto-calculated mid-point frequency"
             self[TX_FREQ_KEY] = target_freq
