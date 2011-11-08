@@ -147,7 +147,7 @@ endmacro(handle_arch)
 
 #create a list of available arches
 foreach(arch_line ${arch_lines})
-    separate_arguments(args UNIX_COMMAND "${arch_line}")
+    string(REPLACE " " ";" args "${arch_line}")
     handle_arch(${args})
 endforeach(arch_line)
 
@@ -205,7 +205,7 @@ endmacro(handle_machine)
 
 #setup the available machines
 foreach(machine_line ${machine_lines})
-    separate_arguments(args UNIX_COMMAND "${machine_line}")
+    string(REPLACE " " ";" args "${machine_line}")
     handle_machine(${args})
 endforeach(machine_line)
 
