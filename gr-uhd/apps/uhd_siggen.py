@@ -101,6 +101,10 @@ class top_block(gr.top_block, pubsub):
         if(options.spec):
             self._u.set_subdev_spec(options.spec, 0)
 
+        # Set the gain on the usrp from options
+        if(options.gain):
+            self._u.set_gain(options.gain)
+
         # Set the antenna
         if(options.antenna):
             self._u.set_antenna(options.antenna, 0)
