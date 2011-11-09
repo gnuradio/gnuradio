@@ -73,6 +73,7 @@ include_directories(${QWT_INCLUDE_DIRS})
 link_directories(${QWT_LIBRARY_DIRS})
 
 include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(${PYTHON_INCLUDE_PATH}) #deprecated for dirs (cmake 2.6)
 
 ########################################################################
 # Setup library
