@@ -46,12 +46,12 @@ public:
     gr_basic_multiply_const_fc32(void):
         gr_sync_block(
             "multiply const fc32",
-            gr_make_io_signature (1, 1, sizeof(std::complex<float>)),
-            gr_make_io_signature (1, 1, sizeof(std::complex<float>))
+            gr_make_io_signature (1, 1, sizeof(type)),
+            gr_make_io_signature (1, 1, sizeof(type))
         )
     {
         _val.resize(1);
-        const int alignment_multiple = volk_get_alignment() / (sizeof(std::complex<float>));
+        const int alignment_multiple = volk_get_alignment() / (sizeof(type));
         set_output_multiple(std::max(1, alignment_multiple));
     }
 
@@ -64,6 +64,50 @@ public:
         type *out = reinterpret_cast<type *>(output_items[0]);
         const type *in = reinterpret_cast<const type *>(input_items[0]);
         volk_32fc_s32fc_multiply_32fc_a(out, in, scalar, noutput_items);
+        return noutput_items;
+    }
+
+    void _set_value(const std::vector<std::complex<double> > &val){
+        if (val.size() != _val.size()){
+            throw std::invalid_argument("set_value called with the wrong length");
+        }
+        for (size_t i = 0; i < val.size(); i++){
+            conv(val[i], _val[i]);
+        }
+    }
+
+protected:
+    std::vector<type> _val;
+};
+
+/***********************************************************************
+ * FC32 multiply const implementation
+ **********************************************************************/
+class gr_basic_multiply_const_f32 : public gr_basic_multiply_const{
+public:
+    typedef float type;
+
+    gr_basic_multiply_const_f32(void):
+        gr_sync_block(
+            "multiply const f32",
+            gr_make_io_signature (1, 1, sizeof(type)),
+            gr_make_io_signature (1, 1, sizeof(type))
+        )
+    {
+        _val.resize(1);
+        const int alignment_multiple = volk_get_alignment() / sizeof(type);
+        set_output_multiple(std::max(1, alignment_multiple));
+    }
+
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        const type scalar = _val[0];
+        type *out = reinterpret_cast<type *>(output_items[0]);
+        const type *in = reinterpret_cast<const type *>(input_items[0]);
+        volk_32f_s32f_multiply_32f_a(out, in, scalar, noutput_items);
         return noutput_items;
     }
 
@@ -141,6 +185,7 @@ protected:
 gr_basic_multiply_const::sptr gr_basic_multiply_const::make(op_type type, const size_t vlen){
 
     if (type == OP_FC32 && vlen == 1) return sptr(new gr_basic_multiply_const_fc32());
+    if (type == OP_F32 && vlen == 1) return sptr(new gr_basic_multiply_const_f32());
 
     switch(type){
     case OP_FC64: return sptr(new gr_basic_multiply_const_generic<std::complex<double> >(vlen));
