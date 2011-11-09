@@ -102,6 +102,7 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_8i_convert_16i_u, 0, 0, 204600, 2000, &results);
     VOLK_PROFILE(volk_8i_s32f_convert_32f_a, 1e-4, 100, 204600, 2000, &results);
     VOLK_PROFILE(volk_8i_s32f_convert_32f_u, 1e-4, 100, 204600, 2000, &results);
+    VOLK_PROFILE(volk_32fc_s32fc_multiply_32fc_a, 1e-4, 0, 204600, 1000, &results);
 
     char path[256];
     get_config_path(path);
