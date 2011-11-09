@@ -9,7 +9,7 @@
 	<name>Divide</name>
 	<key>basic_divide</key>
 	<import>from gnuradio import basic</import>
-	<make>basic.divide(basic.DIVIDE_$($type().upper()), $vlen)</make>
+	<make>basic.divide(basic.OP_$($type().upper()), $vlen)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>

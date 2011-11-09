@@ -23,25 +23,7 @@
 
 #include <gr_basic_api.h>
 #include <gr_sync_block.h>
-
-//TODO may support non-homogeneous IO types,
-//MULTIPLY_S8_S16 (int8 input, int16 output)
-//so this will easily fit into the framework.
-
-enum multiply_type{
-    MULTIPLY_FC64,
-    MULTIPLY_F64,
-    MULTIPLY_FC32,
-    MULTIPLY_F32,
-    MULTIPLY_SC64,
-    MULTIPLY_S64,
-    MULTIPLY_SC32,
-    MULTIPLY_S32,
-    MULTIPLY_SC16,
-    MULTIPLY_S16,
-    MULTIPLY_SC8,
-    MULTIPLY_S8,
-};
+#include <gr_basic_op_types.h>
 
 class GR_BASIC_API basic_multiply : virtual public gr_sync_block{
 public:
@@ -49,7 +31,7 @@ public:
 };
 
 GR_BASIC_API basic_multiply::sptr basic_make_multiply(
-    multiply_type type, const size_t vlen = 1
+    op_type type, const size_t vlen = 1
 );
 
 #endif /* INCLUDED_GR_BASIC_MULTIPLY_H */

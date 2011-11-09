@@ -9,7 +9,7 @@
 	<name>Subtract</name>
 	<key>basic_subtract</key>
 	<import>from gnuradio import basic</import>
-	<make>basic.subtract(basic.SUBTRACT_$($type().upper()), $vlen)</make>
+	<make>basic.subtract(basic.OP_$($type().upper()), $vlen)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>

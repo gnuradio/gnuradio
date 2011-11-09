@@ -109,26 +109,26 @@ private:
  * Adder factory function
  **********************************************************************/
 basic_add::sptr basic_make_add(
-    add_type type, const size_t vlen
+    op_type type, const size_t vlen
 ){
     switch(type){
-    case ADD_FC64: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<double>(2*vlen));
-    case ADD_F64: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<double>(vlen));
+    case OP_FC64: return basic_add::sptr(new gr_basic_add_generic<double>(2*vlen));
+    case OP_F64: return basic_add::sptr(new gr_basic_add_generic<double>(vlen));
 
-    case ADD_FC32: return boost::shared_ptr<basic_add>(new gr_basic_add_f32(2*vlen));
-    case ADD_F32: return boost::shared_ptr<basic_add>(new gr_basic_add_f32(vlen));
+    case OP_FC32: return basic_add::sptr(new gr_basic_add_f32(2*vlen));
+    case OP_F32: return basic_add::sptr(new gr_basic_add_f32(vlen));
 
-    case ADD_SC64: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int64_t>(2*vlen));
-    case ADD_S64: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int64_t>(vlen));
+    case OP_SC64: return basic_add::sptr(new gr_basic_add_generic<int64_t>(2*vlen));
+    case OP_S64: return basic_add::sptr(new gr_basic_add_generic<int64_t>(vlen));
 
-    case ADD_SC32: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int32_t>(2*vlen));
-    case ADD_S32: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int32_t>(vlen));
+    case OP_SC32: return basic_add::sptr(new gr_basic_add_generic<int32_t>(2*vlen));
+    case OP_S32: return basic_add::sptr(new gr_basic_add_generic<int32_t>(vlen));
 
-    case ADD_SC16: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int16_t>(2*vlen));
-    case ADD_S16: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int16_t>(vlen));
+    case OP_SC16: return basic_add::sptr(new gr_basic_add_generic<int16_t>(2*vlen));
+    case OP_S16: return basic_add::sptr(new gr_basic_add_generic<int16_t>(vlen));
 
-    case ADD_SC8: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int8_t>(2*vlen));
-    case ADD_S8: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int8_t>(vlen));
+    case OP_SC8: return basic_add::sptr(new gr_basic_add_generic<int8_t>(2*vlen));
+    case OP_S8: return basic_add::sptr(new gr_basic_add_generic<int8_t>(vlen));
 
     default: throw std::invalid_argument("basic_make_add got unknown add type");
     }

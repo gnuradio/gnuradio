@@ -31,8 +31,10 @@
     <cat>
         <name>Basic</name>
         <block>basic_add</block>
+        <block>basic_add_const</block>
         <block>basic_subtract</block>
         <block>basic_multiply</block>
+        <block>basic_multiply_const</block>
         <block>basic_divide</block>
     </cat>
 </cat>

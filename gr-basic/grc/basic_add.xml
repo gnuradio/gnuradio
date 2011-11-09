@@ -9,7 +9,7 @@
 	<name>Add</name>
 	<key>basic_add</key>
 	<import>from gnuradio import basic</import>
-	<make>basic.add(basic.ADD_$($type().upper()), $vlen)</make>
+	<make>basic.add(basic.OP_$($type().upper()), $vlen)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>

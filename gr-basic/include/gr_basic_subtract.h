@@ -23,21 +23,7 @@
 
 #include <gr_basic_api.h>
 #include <gr_sync_block.h>
-
-enum subtract_type{
-    SUBTRACT_FC64,
-    SUBTRACT_F64,
-    SUBTRACT_FC32,
-    SUBTRACT_F32,
-    SUBTRACT_SC64,
-    SUBTRACT_S64,
-    SUBTRACT_SC32,
-    SUBTRACT_S32,
-    SUBTRACT_SC16,
-    SUBTRACT_S16,
-    SUBTRACT_SC8,
-    SUBTRACT_S8,
-};
+#include <gr_basic_op_types.h>
 
 class GR_BASIC_API basic_subtract : virtual public gr_sync_block{
 public:
@@ -45,7 +31,7 @@ public:
 };
 
 GR_BASIC_API basic_subtract::sptr basic_make_subtract(
-    subtract_type type, const size_t vlen = 1
+    op_type type, const size_t vlen = 1
 );
 
 #endif /* INCLUDED_GR_BASIC_SUBTRACT_H */

@@ -9,7 +9,7 @@
 	<name>Multiply</name>
 	<key>basic_multiply</key>
 	<import>from gnuradio import basic</import>
-	<make>basic.multiply(basic.MULTIPLY_$($type().upper()), $vlen)</make>
+	<make>basic.multiply(basic.OP_$($type().upper()), $vlen)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>

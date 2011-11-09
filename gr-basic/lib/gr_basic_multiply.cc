@@ -148,26 +148,26 @@ private:
  * Adder factory function
  **********************************************************************/
 basic_multiply::sptr basic_make_multiply(
-    multiply_type type, const size_t vlen
+    op_type type, const size_t vlen
 ){
     switch(type){
-    case MULTIPLY_FC64: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<std::complex<double> >(vlen));
-    case MULTIPLY_F64: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<double>(vlen));
+    case OP_FC64: return basic_multiply::sptr(new gr_basic_multiply_generic<std::complex<double> >(vlen));
+    case OP_F64: return basic_multiply::sptr(new gr_basic_multiply_generic<double>(vlen));
 
-    case MULTIPLY_FC32: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_fc32(vlen));
-    case MULTIPLY_F32: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_f32(vlen));
+    case OP_FC32: return basic_multiply::sptr(new gr_basic_multiply_fc32(vlen));
+    case OP_F32: return basic_multiply::sptr(new gr_basic_multiply_f32(vlen));
 
-    case MULTIPLY_SC64: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<std::complex<int64_t> >(vlen));
-    case MULTIPLY_S64: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<int64_t>(vlen));
+    case OP_SC64: return basic_multiply::sptr(new gr_basic_multiply_generic<std::complex<int64_t> >(vlen));
+    case OP_S64: return basic_multiply::sptr(new gr_basic_multiply_generic<int64_t>(vlen));
 
-    case MULTIPLY_SC32: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<std::complex<int32_t> >(vlen));
-    case MULTIPLY_S32: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<int32_t>(vlen));
+    case OP_SC32: return basic_multiply::sptr(new gr_basic_multiply_generic<std::complex<int32_t> >(vlen));
+    case OP_S32: return basic_multiply::sptr(new gr_basic_multiply_generic<int32_t>(vlen));
 
-    case MULTIPLY_SC16: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<std::complex<int16_t> >(vlen));
-    case MULTIPLY_S16: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<int16_t>(vlen));
+    case OP_SC16: return basic_multiply::sptr(new gr_basic_multiply_generic<std::complex<int16_t> >(vlen));
+    case OP_S16: return basic_multiply::sptr(new gr_basic_multiply_generic<int16_t>(vlen));
 
-    case MULTIPLY_SC8: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<std::complex<int8_t> >(vlen));
-    case MULTIPLY_S8: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<int8_t>(vlen));
+    case OP_SC8: return basic_multiply::sptr(new gr_basic_multiply_generic<std::complex<int8_t> >(vlen));
+    case OP_S8: return basic_multiply::sptr(new gr_basic_multiply_generic<int8_t>(vlen));
 
     default: throw std::invalid_argument("basic_make_multiply got unknown multiply type");
     }

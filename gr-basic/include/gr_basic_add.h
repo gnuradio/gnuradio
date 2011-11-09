@@ -23,21 +23,7 @@
 
 #include <gr_basic_api.h>
 #include <gr_sync_block.h>
-
-enum add_type{
-    ADD_FC64,
-    ADD_F64,
-    ADD_FC32,
-    ADD_F32,
-    ADD_SC64,
-    ADD_S64,
-    ADD_SC32,
-    ADD_S32,
-    ADD_SC16,
-    ADD_S16,
-    ADD_SC8,
-    ADD_S8,
-};
+#include <gr_basic_op_types.h>
 
 class GR_BASIC_API basic_add : virtual public gr_sync_block{
 public:
@@ -45,7 +31,7 @@ public:
 };
 
 GR_BASIC_API basic_add::sptr basic_make_add(
-    add_type type, const size_t vlen = 1
+    op_type type, const size_t vlen = 1
 );
 
 #endif /* INCLUDED_GR_BASIC_ADD_H */

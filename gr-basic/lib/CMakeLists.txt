@@ -34,8 +34,10 @@ link_directories(${Boost_LIBRARY_DIRS})
 ########################################################################
 list(APPEND gr_basic_sources
     gr_basic_add.cc
+    gr_basic_add_const.cc
     gr_basic_divide.cc
     gr_basic_multiply.cc
+    gr_basic_multiply_const.cc
     gr_basic_subtract.cc
 )
 

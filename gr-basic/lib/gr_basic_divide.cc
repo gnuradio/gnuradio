@@ -70,26 +70,26 @@ private:
  * Adder factory function
  **********************************************************************/
 basic_divide::sptr basic_make_divide(
-    divide_type type, const size_t vlen
+    op_type type, const size_t vlen
 ){
     switch(type){
-    case DIVIDE_FC64: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<std::complex<double> >(vlen));
-    case DIVIDE_F64: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<double>(vlen));
+    case OP_FC64: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<double> >(vlen));
+    case OP_F64: return basic_divide::sptr(new gr_basic_divide_generic<double>(vlen));
 
-    case DIVIDE_FC32: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<std::complex<float> >(vlen));
-    case DIVIDE_F32: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<float>(vlen));
+    case OP_FC32: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<float> >(vlen));
+    case OP_F32: return basic_divide::sptr(new gr_basic_divide_generic<float>(vlen));
 
-    case DIVIDE_SC64: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<std::complex<int64_t> >(vlen));
-    case DIVIDE_S64: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<int64_t>(vlen));
+    case OP_SC64: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<int64_t> >(vlen));
+    case OP_S64: return basic_divide::sptr(new gr_basic_divide_generic<int64_t>(vlen));
 
-    case DIVIDE_SC32: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<std::complex<int32_t> >(vlen));
-    case DIVIDE_S32: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<int32_t>(vlen));
+    case OP_SC32: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<int32_t> >(vlen));
+    case OP_S32: return basic_divide::sptr(new gr_basic_divide_generic<int32_t>(vlen));
 
-    case DIVIDE_SC16: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<std::complex<int16_t> >(vlen));
-    case DIVIDE_S16: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<int16_t>(vlen));
+    case OP_SC16: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<int16_t> >(vlen));
+    case OP_S16: return basic_divide::sptr(new gr_basic_divide_generic<int16_t>(vlen));
 
-    case DIVIDE_SC8: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<std::complex<int8_t> >(vlen));
-    case DIVIDE_S8: return boost::shared_ptr<basic_divide>(new gr_basic_divide_generic<int8_t>(vlen));
+    case OP_SC8: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<int8_t> >(vlen));
+    case OP_S8: return basic_divide::sptr(new gr_basic_divide_generic<int8_t>(vlen));
 
     default: throw std::invalid_argument("basic_make_divide got unknown divide type");
     }
