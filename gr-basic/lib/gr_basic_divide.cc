@@ -54,9 +54,9 @@ public:
         for (size_t n = 1; n < input_items.size(); n++){
             const type *in = reinterpret_cast<const type *>(input_items[n]);
             for (size_t i = 0; i < n_nums; i++){
-                out[i] = in0[i] * in[i];
+                out[i] = in0[i] / in[i];
             }
-            in0 = out; //for next input, we do output *= input
+            in0 = out; //for next input, we do output /= input
         }
 
         return noutput_items;
