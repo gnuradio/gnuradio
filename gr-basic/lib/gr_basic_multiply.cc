@@ -26,6 +26,84 @@
 #include <volk/volk.h>
 
 /***********************************************************************
+ * Multiplier implementation with complex float32 - calls volk
+ **********************************************************************/
+class gr_basic_multiply_fc32 : public basic_multiply{
+public:
+    gr_basic_multiply_fc32(const size_t vlen):
+        gr_sync_block(
+            "multiply fc32",
+            gr_make_io_signature (1, -1, sizeof(std::complex<float>)*vlen),
+            gr_make_io_signature (1, 1, sizeof(std::complex<float>)*vlen)
+        ),
+        _vlen(vlen)
+    {
+        const int alignment_multiple = volk_get_alignment() / (sizeof(std::complex<float>)*vlen);
+        set_output_multiple(std::max(1, alignment_multiple));
+    }
+
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        const size_t n_nums = noutput_items * _vlen;
+        std::complex<float> *out = reinterpret_cast<std::complex<float> *>(output_items[0]);
+        const std::complex<float> *in0 = reinterpret_cast<const std::complex<float> *>(input_items[0]);
+
+        for (size_t n = 1; n < input_items.size(); n++){
+            const std::complex<float> *in = reinterpret_cast<const std::complex<float> *>(input_items[n]);
+            volk_32fc_x2_multiply_32fc_a(out, in0, in, n_nums);
+            in0 = out; //for next input, we do output += input
+        }
+
+        return noutput_items;
+    }
+
+private:
+    const size_t _vlen;
+};
+
+/***********************************************************************
+ * Multiplier implementation with float32 - calls volk
+ **********************************************************************/
+class gr_basic_multiply_f32 : public basic_multiply{
+public:
+    gr_basic_multiply_f32(const size_t vlen):
+        gr_sync_block(
+            "multiply f32",
+            gr_make_io_signature (1, -1, sizeof(float)*vlen),
+            gr_make_io_signature (1, 1, sizeof(float)*vlen)
+        ),
+        _vlen(vlen)
+    {
+        const int alignment_multiple = volk_get_alignment() / (sizeof(float)*vlen);
+        set_output_multiple(std::max(1, alignment_multiple));
+    }
+
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        const size_t n_nums = noutput_items * _vlen;
+        float *out = reinterpret_cast<float *>(output_items[0]);
+        const float *in0 = reinterpret_cast<const float *>(input_items[0]);
+
+        for (size_t n = 1; n < input_items.size(); n++){
+            const float *in = reinterpret_cast<const float *>(input_items[n]);
+            volk_32f_x2_multiply_32f_a(out, in0, in, n_nums);
+            in0 = out; //for next input, we do output += input
+        }
+
+        return noutput_items;
+    }
+
+private:
+    const size_t _vlen;
+};
+
+/***********************************************************************
  * Generic multiplyer implementation
  **********************************************************************/
 template <typename type>
@@ -76,8 +154,8 @@ basic_multiply::sptr basic_make_multiply(
     case MULTIPLY_FC64: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<std::complex<double> >(vlen));
     case MULTIPLY_F64: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<double>(vlen));
 
-    case MULTIPLY_FC32: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<std::complex<float> >(vlen));
-    case MULTIPLY_F32: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<float>(vlen));
+    case MULTIPLY_FC32: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_fc32(vlen));
+    case MULTIPLY_F32: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_f32(vlen));
 
     case MULTIPLY_SC64: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<std::complex<int64_t> >(vlen));
     case MULTIPLY_S64: return boost::shared_ptr<basic_multiply>(new gr_basic_multiply_generic<int64_t>(vlen));
