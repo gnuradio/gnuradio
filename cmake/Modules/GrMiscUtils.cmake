@@ -201,5 +201,10 @@ function(GR_GEN_TARGET_DEPS name var)
     if(ARGN)
         add_dependencies(${name} ${ARGN})
     endif(ARGN)
-    set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
+
+    if(CMAKE_CROSSCOMPILING)
+        set(${var} "DEPENDS;${name}" PARENT_SCOPE) #cant call command when cross
+    else()
+        set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
+    endif()
 endfunction(GR_GEN_TARGET_DEPS)

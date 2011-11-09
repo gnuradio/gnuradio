@@ -164,6 +164,7 @@ function(GR_LIBRARY_FOO target)
             POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E create_symlink ${target_name} ${CMAKE_CURRENT_BINARY_DIR}/lib${target}.so
             COMMAND ${CMAKE_COMMAND} -E create_symlink ${target_name} ${CMAKE_CURRENT_BINARY_DIR}/lib${target}-${LIBVER}.so.0
+            COMMAND ${CMAKE_COMMAND} -E touch ${target_name} #so the symlinks point to something valid so cmake 2.6 will install
         )
 
         #and install the extra symlinks
@@ -200,5 +201,10 @@ function(GR_GEN_TARGET_DEPS name var)
     if(ARGN)
         add_dependencies(${name} ${ARGN})
     endif(ARGN)
-    set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
+
+    if(CMAKE_CROSSCOMPILING)
+        set(${var} "DEPENDS;${name}" PARENT_SCOPE) #cant call command when cross
+    else()
+        set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
+    endif()
 endfunction(GR_GEN_TARGET_DEPS)
