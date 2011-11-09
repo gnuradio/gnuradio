@@ -37,6 +37,50 @@ template <typename type> void conv(const std::complex<double> &in, type &out){
 }
 
 /***********************************************************************
+ * FC32 multiply const implementation
+ **********************************************************************/
+class gr_basic_multiply_const_fc32 : public gr_basic_multiply_const{
+public:
+    typedef std::complex<float> type;
+
+    gr_basic_multiply_const_fc32(void):
+        gr_sync_block(
+            "multiply const fc32",
+            gr_make_io_signature (1, 1, sizeof(std::complex<float>)),
+            gr_make_io_signature (1, 1, sizeof(std::complex<float>))
+        )
+    {
+        _val.resize(1);
+        const int alignment_multiple = volk_get_alignment() / (sizeof(std::complex<float>));
+        set_output_multiple(std::max(1, alignment_multiple));
+    }
+
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        const type scalar = _val[0];
+        type *out = reinterpret_cast<type *>(output_items[0]);
+        const type *in = reinterpret_cast<const type *>(input_items[0]);
+        volk_32fc_s32fc_multiply_32fc_a(out, in, scalar, noutput_items);
+        return noutput_items;
+    }
+
+    void _set_value(const std::vector<std::complex<double> > &val){
+        if (val.size() != _val.size()){
+            throw std::invalid_argument("set_value called with the wrong length");
+        }
+        for (size_t i = 0; i < val.size(); i++){
+            conv(val[i], _val[i]);
+        }
+    }
+
+protected:
+    std::vector<type> _val;
+};
+
+/***********************************************************************
  * Generic multiply const implementation
  **********************************************************************/
 template <typename type>
@@ -47,10 +91,9 @@ public:
             "multiply const generic",
             gr_make_io_signature (1, 1, sizeof(type)*vlen),
             gr_make_io_signature (1, 1, sizeof(type)*vlen)
-        ),
-        _vlen(vlen)
+        )
     {
-        _val.resize(_vlen);
+        _val.resize(vlen);
     }
 
     int work(
@@ -58,12 +101,12 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        const size_t n_nums = noutput_items * _vlen;
+        const size_t n_nums = noutput_items * _val.size();
         type *out = reinterpret_cast<type *>(output_items[0]);
         const type *in = reinterpret_cast<const type *>(input_items[0]);
 
         //simple vec len 1 for the fast
-        if (_vlen == 1){
+        if (_val.size() == 1){
             const type val = _val[0];
             for (size_t i = 0; i < n_nums; i++){
                 out[i] = in[i] * val;
@@ -80,7 +123,7 @@ public:
     }
 
     void _set_value(const std::vector<std::complex<double> > &val){
-        if (val.size() != _vlen){
+        if (val.size() != _val.size()){
             throw std::invalid_argument("set_value called with the wrong length");
         }
         for (size_t i = 0; i < val.size(); i++){
@@ -88,8 +131,7 @@ public:
         }
     }
 
-private:
-    const size_t _vlen;
+protected:
     std::vector<type> _val;
 };
 
@@ -97,6 +139,9 @@ private:
  * Adder factory function
  **********************************************************************/
 gr_basic_multiply_const::sptr gr_basic_multiply_const::make(op_type type, const size_t vlen){
+
+    if (type == OP_FC32 && vlen == 1) return sptr(new gr_basic_multiply_const_fc32());
+
     switch(type){
     case OP_FC64: return sptr(new gr_basic_multiply_const_generic<std::complex<double> >(vlen));
     case OP_F64: return sptr(new gr_basic_multiply_const_generic<double>(vlen));

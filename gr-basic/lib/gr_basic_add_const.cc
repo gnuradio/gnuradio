@@ -47,10 +47,9 @@ public:
             "add const generic",
             gr_make_io_signature (1, 1, sizeof(type)*vlen),
             gr_make_io_signature (1, 1, sizeof(type)*vlen)
-        ),
-        _vlen(vlen)
+        )
     {
-        _val.resize(_vlen);
+        _val.resize(vlen);
     }
 
     int work(
@@ -58,12 +57,12 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        const size_t n_nums = noutput_items * _vlen;
+        const size_t n_nums = noutput_items * _val.size();
         type *out = reinterpret_cast<type *>(output_items[0]);
         const type *in = reinterpret_cast<const type *>(input_items[0]);
 
         //simple vec len 1 for the fast
-        if (_vlen == 1){
+        if (_val.size() == 1){
             const type val = _val[0];
             for (size_t i = 0; i < n_nums; i++){
                 out[i] = in[i] + val;
@@ -80,7 +79,7 @@ public:
     }
 
     void _set_value(const std::vector<std::complex<double> > &val){
-        if (val.size() != _vlen){
+        if (val.size() != _val.size()){
             throw std::invalid_argument("set_value called with the wrong length");
         }
         for (size_t i = 0; i < val.size(); i++){
@@ -89,7 +88,6 @@ public:
     }
 
 private:
-    const size_t _vlen;
     std::vector<type> _val;
 };
 
