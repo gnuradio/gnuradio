@@ -4,6 +4,7 @@
 
 //VOLK_RUN_TESTS(volk_16i_x5_add_quad_16i_x4_a, 1e-4, 2046, 10000);
 //VOLK_RUN_TESTS(volk_16i_branch_4_state_8_a, 1e-4, 2046, 10000);
+VOLK_RUN_TESTS(volk_32f_s32f_multiply_32f_a, 1e-4, 0, 204600, 10000);
 VOLK_RUN_TESTS(volk_32fc_s32fc_multiply_32fc_a, 1e-4, 0, 20460, 10000);
 VOLK_RUN_TESTS(volk_16ic_s32f_deinterleave_real_32f_a, 1e-5, 32768.0, 204600, 10000);
 VOLK_RUN_TESTS(volk_16ic_deinterleave_real_8i_a, 0, 0, 20460, 10000);
