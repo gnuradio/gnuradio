@@ -26,25 +26,29 @@
 #include <gr_basic_op_types.h>
 #include <complex>
 
-class GR_BASIC_API basic_add_const : virtual public gr_sync_block{
+class GR_BASIC_API gr_basic_add_const : virtual public gr_sync_block{
 public:
-    typedef boost::shared_ptr<basic_add_const> sptr;
+    typedef boost::shared_ptr<gr_basic_add_const> sptr;
 
-    /*!
-     * Set the value to be added.
-     * This is a double vector to cover all possible types.
-     */
-    virtual void set_value(const std::vector<double> &val) = 0;
+    static sptr make(op_type type, const size_t vlen = 1);
 
-    //! Convenience operator to set when vlen == 1
-    void set_value(const double val){
-        return this->set_value(std::vector<double>(1, val));
+    //! Set the value from any vector type
+    template <typename type> void set_value(const std::vector<type> &val){
+        std::vector<std::complex<double> > new_val;
+        for (size_t i = 0; i < val.size(); i++){
+            new_val.push_back(std::complex<double>(val[i]));
+        }
+        return this->_set_value(new_val);
     }
 
-};
+    //! Set the value when vlen == 1
+    template <typename type> void set_value(const type &val){
+        return this->set_value(std::vector<type>(1, val));
+    }
 
-GR_BASIC_API basic_add_const::sptr basic_make_add_const(
-    op_type type, const size_t vlen = 1
-);
+private:
+    virtual void _set_value(const std::vector<std::complex<double> > &val) = 0;
+
+};
 
 #endif /* INCLUDED_GR_BASIC_ADD_CONST_H */

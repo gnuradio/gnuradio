@@ -29,7 +29,7 @@
  * Generic subtracter implementation
  **********************************************************************/
 template <typename type>
-class gr_basic_subtract_generic : public basic_subtract{
+class gr_basic_subtract_generic : public gr_basic_subtract{
 public:
     gr_basic_subtract_generic(const size_t vlen):
         gr_sync_block(
@@ -69,27 +69,25 @@ private:
 /***********************************************************************
  * Adder factory function
  **********************************************************************/
-basic_subtract::sptr basic_make_subtract(
-    op_type type, const size_t vlen
-){
+gr_basic_subtract::sptr gr_basic_subtract::make(op_type type, const size_t vlen){
     switch(type){
-    case OP_FC64: return basic_subtract::sptr(new gr_basic_subtract_generic<double>(2*vlen));
-    case OP_F64: return basic_subtract::sptr(new gr_basic_subtract_generic<double>(vlen));
+    case OP_FC64: return sptr(new gr_basic_subtract_generic<double>(2*vlen));
+    case OP_F64: return sptr(new gr_basic_subtract_generic<double>(vlen));
 
-    case OP_FC32: return basic_subtract::sptr(new gr_basic_subtract_generic<float>(2*vlen));
-    case OP_F32: return basic_subtract::sptr(new gr_basic_subtract_generic<float>(vlen));
+    case OP_FC32: return sptr(new gr_basic_subtract_generic<float>(2*vlen));
+    case OP_F32: return sptr(new gr_basic_subtract_generic<float>(vlen));
 
-    case OP_SC64: return basic_subtract::sptr(new gr_basic_subtract_generic<int64_t>(2*vlen));
-    case OP_S64: return basic_subtract::sptr(new gr_basic_subtract_generic<int64_t>(vlen));
+    case OP_SC64: return sptr(new gr_basic_subtract_generic<int64_t>(2*vlen));
+    case OP_S64: return sptr(new gr_basic_subtract_generic<int64_t>(vlen));
 
-    case OP_SC32: return basic_subtract::sptr(new gr_basic_subtract_generic<int32_t>(2*vlen));
-    case OP_S32: return basic_subtract::sptr(new gr_basic_subtract_generic<int32_t>(vlen));
+    case OP_SC32: return sptr(new gr_basic_subtract_generic<int32_t>(2*vlen));
+    case OP_S32: return sptr(new gr_basic_subtract_generic<int32_t>(vlen));
 
-    case OP_SC16: return basic_subtract::sptr(new gr_basic_subtract_generic<int16_t>(2*vlen));
-    case OP_S16: return basic_subtract::sptr(new gr_basic_subtract_generic<int16_t>(vlen));
+    case OP_SC16: return sptr(new gr_basic_subtract_generic<int16_t>(2*vlen));
+    case OP_S16: return sptr(new gr_basic_subtract_generic<int16_t>(vlen));
 
-    case OP_SC8: return basic_subtract::sptr(new gr_basic_subtract_generic<int8_t>(2*vlen));
-    case OP_S8: return basic_subtract::sptr(new gr_basic_subtract_generic<int8_t>(vlen));
+    case OP_SC8: return sptr(new gr_basic_subtract_generic<int8_t>(2*vlen));
+    case OP_S8: return sptr(new gr_basic_subtract_generic<int8_t>(vlen));
 
     default: throw std::invalid_argument("basic_make_subtract got unknown subtract type");
     }

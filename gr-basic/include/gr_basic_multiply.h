@@ -25,13 +25,11 @@
 #include <gr_sync_block.h>
 #include <gr_basic_op_types.h>
 
-class GR_BASIC_API basic_multiply : virtual public gr_sync_block{
+class GR_BASIC_API gr_basic_multiply : virtual public gr_sync_block{
 public:
-    typedef boost::shared_ptr<basic_multiply> sptr;
-};
+    typedef boost::shared_ptr<gr_basic_multiply> sptr;
 
-GR_BASIC_API basic_multiply::sptr basic_make_multiply(
-    op_type type, const size_t vlen = 1
-);
+    static sptr make(op_type type, const size_t vlen = 1);
+};
 
 #endif /* INCLUDED_GR_BASIC_MULTIPLY_H */

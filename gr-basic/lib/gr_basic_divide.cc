@@ -29,7 +29,7 @@
  * Generic divideer implementation
  **********************************************************************/
 template <typename type>
-class gr_basic_divide_generic : public basic_divide{
+class gr_basic_divide_generic : public gr_basic_divide{
 public:
     gr_basic_divide_generic(const size_t vlen):
         gr_sync_block(
@@ -69,27 +69,25 @@ private:
 /***********************************************************************
  * Adder factory function
  **********************************************************************/
-basic_divide::sptr basic_make_divide(
-    op_type type, const size_t vlen
-){
+gr_basic_divide::sptr gr_basic_divide::make(op_type type, const size_t vlen){
     switch(type){
-    case OP_FC64: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<double> >(vlen));
-    case OP_F64: return basic_divide::sptr(new gr_basic_divide_generic<double>(vlen));
+    case OP_FC64: return sptr(new gr_basic_divide_generic<std::complex<double> >(vlen));
+    case OP_F64: return sptr(new gr_basic_divide_generic<double>(vlen));
 
-    case OP_FC32: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<float> >(vlen));
-    case OP_F32: return basic_divide::sptr(new gr_basic_divide_generic<float>(vlen));
+    case OP_FC32: return sptr(new gr_basic_divide_generic<std::complex<float> >(vlen));
+    case OP_F32: return sptr(new gr_basic_divide_generic<float>(vlen));
 
-    case OP_SC64: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<int64_t> >(vlen));
-    case OP_S64: return basic_divide::sptr(new gr_basic_divide_generic<int64_t>(vlen));
+    case OP_SC64: return sptr(new gr_basic_divide_generic<std::complex<int64_t> >(vlen));
+    case OP_S64: return sptr(new gr_basic_divide_generic<int64_t>(vlen));
 
-    case OP_SC32: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<int32_t> >(vlen));
-    case OP_S32: return basic_divide::sptr(new gr_basic_divide_generic<int32_t>(vlen));
+    case OP_SC32: return sptr(new gr_basic_divide_generic<std::complex<int32_t> >(vlen));
+    case OP_S32: return sptr(new gr_basic_divide_generic<int32_t>(vlen));
 
-    case OP_SC16: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<int16_t> >(vlen));
-    case OP_S16: return basic_divide::sptr(new gr_basic_divide_generic<int16_t>(vlen));
+    case OP_SC16: return sptr(new gr_basic_divide_generic<std::complex<int16_t> >(vlen));
+    case OP_S16: return sptr(new gr_basic_divide_generic<int16_t>(vlen));
 
-    case OP_SC8: return basic_divide::sptr(new gr_basic_divide_generic<std::complex<int8_t> >(vlen));
-    case OP_S8: return basic_divide::sptr(new gr_basic_divide_generic<int8_t>(vlen));
+    case OP_SC8: return sptr(new gr_basic_divide_generic<std::complex<int8_t> >(vlen));
+    case OP_S8: return sptr(new gr_basic_divide_generic<int8_t>(vlen));
 
     default: throw std::invalid_argument("basic_make_divide got unknown divide type");
     }

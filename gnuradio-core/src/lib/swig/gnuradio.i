@@ -96,6 +96,7 @@ namespace std {
   %template()	  vector<int>;
   %template()	  vector<float>;
   %template()	  vector<double>;
+  %template()	  vector<std::complex<double> >;
   // %template()	  std::complex<float>;
 
   %template() 	  vector< std::complex<float> >;

@@ -26,10 +26,21 @@
 #include <volk/volk.h>
 
 /***********************************************************************
+ * Helper routines for conversion
+ **********************************************************************/
+template <typename type> void conv(const std::complex<double> &in, std::complex<type> &out){
+    out = std::complex<type>(in);
+}
+
+template <typename type> void conv(const std::complex<double> &in, type &out){
+    out = type(in.real());
+}
+
+/***********************************************************************
  * Generic add const implementation
  **********************************************************************/
 template <typename type>
-class gr_basic_add_const_generic : public basic_add_const{
+class gr_basic_add_const_generic : public gr_basic_add_const{
 public:
     gr_basic_add_const_generic(const size_t vlen):
         gr_sync_block(
@@ -39,7 +50,7 @@ public:
         ),
         _vlen(vlen)
     {
-        //NOP
+        _val.resize(_vlen);
     }
 
     int work(
@@ -68,10 +79,12 @@ public:
         return noutput_items;
     }
 
-    void set_value(const std::vector<double> &val){
-        _val.resize(val.size());
+    void _set_value(const std::vector<std::complex<double> > &val){
+        if (val.size() != _vlen){
+            throw std::invalid_argument("set_value called with the wrong length");
+        }
         for (size_t i = 0; i < val.size(); i++){
-            _val[i] = type(val[i]);
+            conv(val[i], _val[i]);
         }
     }
 
@@ -83,27 +96,25 @@ private:
 /***********************************************************************
  * Adder factory function
  **********************************************************************/
-basic_add_const::sptr basic_make_add_const(
-    op_type type, const size_t vlen
-){
+gr_basic_add_const::sptr gr_basic_add_const::make(op_type type, const size_t vlen){
     switch(type){
-    case OP_FC64: return basic_add_const::sptr(new gr_basic_add_const_generic<double>(2*vlen));
-    case OP_F64: return basic_add_const::sptr(new gr_basic_add_const_generic<double>(vlen));
+    case OP_FC64: return sptr(new gr_basic_add_const_generic<std::complex<double> >(vlen));
+    case OP_F64: return sptr(new gr_basic_add_const_generic<double>(vlen));
 
-    case OP_FC32: return basic_add_const::sptr(new gr_basic_add_const_generic<float>(2*vlen));
-    case OP_F32: return basic_add_const::sptr(new gr_basic_add_const_generic<float>(vlen));
+    case OP_FC32: return sptr(new gr_basic_add_const_generic<std::complex<float> >(vlen));
+    case OP_F32: return sptr(new gr_basic_add_const_generic<float>(vlen));
 
-    case OP_SC64: return basic_add_const::sptr(new gr_basic_add_const_generic<int64_t>(2*vlen));
-    case OP_S64: return basic_add_const::sptr(new gr_basic_add_const_generic<int64_t>(vlen));
+    case OP_SC64: return sptr(new gr_basic_add_const_generic<std::complex<int64_t> >(vlen));
+    case OP_S64: return sptr(new gr_basic_add_const_generic<int64_t>(vlen));
 
-    case OP_SC32: return basic_add_const::sptr(new gr_basic_add_const_generic<int32_t>(2*vlen));
-    case OP_S32: return basic_add_const::sptr(new gr_basic_add_const_generic<int32_t>(vlen));
+    case OP_SC32: return sptr(new gr_basic_add_const_generic<std::complex<int32_t> >(vlen));
+    case OP_S32: return sptr(new gr_basic_add_const_generic<int32_t>(vlen));
 
-    case OP_SC16: return basic_add_const::sptr(new gr_basic_add_const_generic<int16_t>(2*vlen));
-    case OP_S16: return basic_add_const::sptr(new gr_basic_add_const_generic<int16_t>(vlen));
+    case OP_SC16: return sptr(new gr_basic_add_const_generic<std::complex<int16_t> >(vlen));
+    case OP_S16: return sptr(new gr_basic_add_const_generic<int16_t>(vlen));
 
-    case OP_SC8: return basic_add_const::sptr(new gr_basic_add_const_generic<int8_t>(2*vlen));
-    case OP_S8: return basic_add_const::sptr(new gr_basic_add_const_generic<int8_t>(vlen));
+    case OP_SC8: return sptr(new gr_basic_add_const_generic<std::complex<int8_t> >(vlen));
+    case OP_S8: return sptr(new gr_basic_add_const_generic<int8_t>(vlen));
 
     default: throw std::invalid_argument("basic_make_add got unknown add type");
     }

@@ -20,6 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
+//----------------------------------------------------------------------
+//-- GR_SWIG_BLOCK_MAGIC2
+//----------------------------------------------------------------------
+%define GR_SWIG_BLOCK_MAGIC2(PKG, BASE_NAME)
+_GR_SWIG_BLOCK_MAGIC2_HELPER(PKG, BASE_NAME, PKG ## _ ## BASE_NAME)
+%enddef
+
+#ifdef SWIGPYTHON
+%define _GR_SWIG_BLOCK_MAGIC2_HELPER(PKG, BASE_NAME, FULL_NAME)
+%template(FULL_NAME ## _sptr) boost::shared_ptr<FULL_NAME>;
+%pythoncode %{
+FULL_NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
+BASE_NAME = FULL_NAME.make
+%}
+%enddef
+#endif
+
+//ignore base classes commonly inherited by gr blocks
+%ignore gr_sync_block;
+%ignore gr_sync_decimator;
+%ignore gr_sync_interpolator;
+%ignore gr_hier_block2;
+
+//----------------------------------------------------------------------
+//-- GR_SWIG_BLOCK_MAGIC
+//----------------------------------------------------------------------
 %define GR_SWIG_BLOCK_MAGIC(PKG, BASE_NAME)
 _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, BASE_NAME, PKG ## _ ## BASE_NAME)
 %enddef

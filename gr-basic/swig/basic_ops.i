@@ -31,28 +31,30 @@
 #include <gr_basic_subtract.h>
 %}
 
+%include <gr_basic_add.h>
+%include <gr_basic_add_const.h>
+%include <gr_basic_divide.h>
+%include <gr_basic_multiply.h>
+%include <gr_basic_multiply_const.h>
+%include <gr_basic_subtract.h>
+
 ////////////////////////////////////////////////////////////////////////
 // import types
 ////////////////////////////////////////////////////////////////////////
 %include <gr_basic_op_types.h>
 
 ////////////////////////////////////////////////////////////////////////
+// template foo
+////////////////////////////////////////////////////////////////////////
+%template(set_value) gr_basic_add_const::set_value<std::complex<double> >;
+%template(set_value) gr_basic_multiply_const::set_value<std::complex<double> >;
+
+////////////////////////////////////////////////////////////////////////
 // block magic
 ////////////////////////////////////////////////////////////////////////
-GR_SWIG_BLOCK_MAGIC(basic,add)
-%include <gr_basic_add.h>
-
-GR_SWIG_BLOCK_MAGIC(basic,add_const)
-%include <gr_basic_add_const.h>
-
-GR_SWIG_BLOCK_MAGIC(basic,divide)
-%include <gr_basic_divide.h>
-
-GR_SWIG_BLOCK_MAGIC(basic,multiply)
-%include <gr_basic_multiply.h>
-
-GR_SWIG_BLOCK_MAGIC(basic,multiply_const)
-%include <gr_basic_multiply_const.h>
-
-GR_SWIG_BLOCK_MAGIC(basic,subtract)
-%include <gr_basic_subtract.h>
+GR_SWIG_BLOCK_MAGIC2(gr_basic,add)
+GR_SWIG_BLOCK_MAGIC2(gr_basic,add_const)
+GR_SWIG_BLOCK_MAGIC2(gr_basic,divide)
+GR_SWIG_BLOCK_MAGIC2(gr_basic,multiply)
+GR_SWIG_BLOCK_MAGIC2(gr_basic,multiply_const)
+GR_SWIG_BLOCK_MAGIC2(gr_basic,subtract)
