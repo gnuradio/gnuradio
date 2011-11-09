@@ -18,15 +18,34 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#ifndef INCLUDED_GR_BASIC_SUBTRACT_H
+#define INCLUDED_GR_BASIC_SUBTRACT_H
 
-#define GR_BASIC_API
+#include <gr_basic_api.h>
+#include <gr_sync_block.h>
 
-////////////////////////////////////////////////////////////////////////
-// standard includes
-////////////////////////////////////////////////////////////////////////
-%include <gnuradio.i>
+enum subtract_type{
+    SUBTRACT_FC64,
+    SUBTRACT_F64,
+    SUBTRACT_FC32,
+    SUBTRACT_F32,
+    SUBTRACT_SC64,
+    SUBTRACT_S64,
+    SUBTRACT_SC32,
+    SUBTRACT_S32,
+    SUBTRACT_SC16,
+    SUBTRACT_S16,
+    SUBTRACT_SC8,
+    SUBTRACT_S8,
+};
 
-////////////////////////////////////////////////////////////////////////
-// block includes
-////////////////////////////////////////////////////////////////////////
-%include <basic_ops.i>
+class GR_BASIC_API basic_subtract : virtual public gr_sync_block{
+public:
+    typedef boost::shared_ptr<basic_subtract> sptr;
+};
+
+GR_BASIC_API basic_subtract::sptr basic_make_subtract(
+    subtract_type type, const size_t vlen = 1
+);
+
+#endif /* INCLUDED_GR_BASIC_SUBTRACT_H */

@@ -26,7 +26,7 @@
 #include <volk/volk.h>
 
 /***********************************************************************
- * Adder implementation with float32
+ * Adder implementation with float32 - calls volk
  **********************************************************************/
 class gr_basic_add_f32 : public basic_add{
 public:
@@ -65,19 +65,20 @@ private:
 };
 
 /***********************************************************************
- * Adder implementation with int16
+ * Generic adder implementation
  **********************************************************************/
-class gr_basic_add_s16 : public basic_add{
+template <typename type>
+class gr_basic_add_generic : public basic_add{
 public:
-    gr_basic_add_s16(const size_t vlen):
+    gr_basic_add_generic(const size_t vlen):
         gr_sync_block(
-            "add s16",
-            gr_make_io_signature (1, -1, sizeof(uint16_t)*vlen),
-            gr_make_io_signature (1, 1, sizeof(uint16_t)*vlen)
+            "add generic",
+            gr_make_io_signature (1, -1, sizeof(type)*vlen),
+            gr_make_io_signature (1, 1, sizeof(type)*vlen)
         ),
         _vlen(vlen)
     {
-        //TODO set output multiple to volk alignment
+        //NOP
     }
 
     int work(
@@ -86,12 +87,11 @@ public:
         gr_vector_void_star &output_items
     ){
         const size_t n_nums = noutput_items * _vlen;
-        uint16_t *out = reinterpret_cast<uint16_t *>(output_items[0]);
-        const uint16_t *in0 = reinterpret_cast<const uint16_t *>(input_items[0]);
+        type *out = reinterpret_cast<type *>(output_items[0]);
+        const type *in0 = reinterpret_cast<const type *>(input_items[0]);
 
         for (size_t n = 1; n < input_items.size(); n++){
-            const uint16_t *in = reinterpret_cast<const uint16_t *>(input_items[n]);
-            //TODO - this is where you call into volk
+            const type *in = reinterpret_cast<const type *>(input_items[n]);
             for (size_t i = 0; i < n_nums; i++){
                 out[i] = in0[i] + in[i];
             }
@@ -108,14 +108,28 @@ private:
 /***********************************************************************
  * Adder factory function
  **********************************************************************/
-boost::shared_ptr<basic_add> basic_make_add(
+basic_add::sptr basic_make_add(
     add_type type, const size_t vlen
 ){
     switch(type){
+    case ADD_FC64: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<double>(2*vlen));
+    case ADD_F64: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<double>(vlen));
+
     case ADD_FC32: return boost::shared_ptr<basic_add>(new gr_basic_add_f32(2*vlen));
     case ADD_F32: return boost::shared_ptr<basic_add>(new gr_basic_add_f32(vlen));
-    case ADD_SC16: return boost::shared_ptr<basic_add>(new gr_basic_add_s16(2*vlen));
-    case ADD_S16: return boost::shared_ptr<basic_add>(new gr_basic_add_s16(vlen));
+
+    case ADD_SC64: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int64_t>(2*vlen));
+    case ADD_S64: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int64_t>(vlen));
+
+    case ADD_SC32: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int32_t>(2*vlen));
+    case ADD_S32: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int32_t>(vlen));
+
+    case ADD_SC16: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int16_t>(2*vlen));
+    case ADD_S16: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int16_t>(vlen));
+
+    case ADD_SC8: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int8_t>(2*vlen));
+    case ADD_S8: return boost::shared_ptr<basic_add>(new gr_basic_add_generic<int8_t>(vlen));
+
     default: throw std::invalid_argument("basic_make_add got unknown add type");
     }
 }

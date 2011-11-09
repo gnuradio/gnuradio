@@ -41,7 +41,7 @@ GR_SWIG_INSTALL(
 install(
     FILES
     basic_swig.i
-    basic_add.i
+    basic_ops.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "basic_swig"
 )

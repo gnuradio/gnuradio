@@ -18,15 +18,38 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#ifndef INCLUDED_GR_BASIC_MULTIPLY_H
+#define INCLUDED_GR_BASIC_MULTIPLY_H
 
-#define GR_BASIC_API
+#include <gr_basic_api.h>
+#include <gr_sync_block.h>
 
-////////////////////////////////////////////////////////////////////////
-// standard includes
-////////////////////////////////////////////////////////////////////////
-%include <gnuradio.i>
+//TODO may support non-homogeneous IO types,
+//MULTIPLY_S8_S16 (int8 input, int16 output)
+//so this will easily fit into the framework.
 
-////////////////////////////////////////////////////////////////////////
-// block includes
-////////////////////////////////////////////////////////////////////////
-%include <basic_ops.i>
+enum multiply_type{
+    MULTIPLY_FC64,
+    MULTIPLY_F64,
+    MULTIPLY_FC32,
+    MULTIPLY_F32,
+    MULTIPLY_SC64,
+    MULTIPLY_S64,
+    MULTIPLY_SC32,
+    MULTIPLY_S32,
+    MULTIPLY_SC16,
+    MULTIPLY_S16,
+    MULTIPLY_SC8,
+    MULTIPLY_S8,
+};
+
+class GR_BASIC_API basic_multiply : virtual public gr_sync_block{
+public:
+    typedef boost::shared_ptr<basic_multiply> sptr;
+};
+
+GR_BASIC_API basic_multiply::sptr basic_make_multiply(
+    multiply_type type, const size_t vlen = 1
+);
+
+#endif /* INCLUDED_GR_BASIC_MULTIPLY_H */

@@ -23,6 +23,9 @@
 install(FILES
     gr_basic_api.h
     gr_basic_add.h
+    gr_basic_divide.h
+    gr_basic_multiply.h
+    gr_basic_subtract.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "basic_devel"
 )

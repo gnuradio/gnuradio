@@ -24,6 +24,9 @@
 ////////////////////////////////////////////////////////////////////////
 %{
 #include <gr_basic_add.h>
+#include <gr_basic_divide.h>
+#include <gr_basic_multiply.h>
+#include <gr_basic_subtract.h>
 %}
 
 ////////////////////////////////////////////////////////////////////////
@@ -31,3 +34,12 @@
 ////////////////////////////////////////////////////////////////////////
 GR_SWIG_BLOCK_MAGIC(basic,add)
 %include <gr_basic_add.h>
+
+GR_SWIG_BLOCK_MAGIC(basic,divide)
+%include <gr_basic_divide.h>
+
+GR_SWIG_BLOCK_MAGIC(basic,multiply)
+%include <gr_basic_multiply.h>
+
+GR_SWIG_BLOCK_MAGIC(basic,subtract)
+%include <gr_basic_subtract.h>

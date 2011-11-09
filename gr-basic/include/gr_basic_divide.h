@@ -18,15 +18,38 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#ifndef INCLUDED_GR_BASIC_DIVIDE_H
+#define INCLUDED_GR_BASIC_DIVIDE_H
 
-#define GR_BASIC_API
+#include <gr_basic_api.h>
+#include <gr_sync_block.h>
 
-////////////////////////////////////////////////////////////////////////
-// standard includes
-////////////////////////////////////////////////////////////////////////
-%include <gnuradio.i>
+//TODO may support non-homogeneous IO types,
+//DIVIDE_S16_S8 (int16 input, int8 output)
+//so this will easily fit into the framework.
 
-////////////////////////////////////////////////////////////////////////
-// block includes
-////////////////////////////////////////////////////////////////////////
-%include <basic_ops.i>
+enum divide_type{
+    DIVIDE_FC64,
+    DIVIDE_F64,
+    DIVIDE_FC32,
+    DIVIDE_F32,
+    DIVIDE_SC64,
+    DIVIDE_S64,
+    DIVIDE_SC32,
+    DIVIDE_S32,
+    DIVIDE_SC16,
+    DIVIDE_S16,
+    DIVIDE_SC8,
+    DIVIDE_S8,
+};
+
+class GR_BASIC_API basic_divide : virtual public gr_sync_block{
+public:
+    typedef boost::shared_ptr<basic_divide> sptr;
+};
+
+GR_BASIC_API basic_divide::sptr basic_make_divide(
+    divide_type type, const size_t vlen = 1
+);
+
+#endif /* INCLUDED_GR_BASIC_DIVIDE_H */

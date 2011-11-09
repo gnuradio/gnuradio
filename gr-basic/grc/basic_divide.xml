@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Divide Block:
+##	all types, 1 output, 2 to inf inputs
+###################################################
+ -->
+<block>
+	<name>Divide</name>
+	<key>basic_divide</key>
+	<import>from gnuradio import basic</import>
+	<make>basic.divide(basic.DIVIDE_$($type().upper()), $vlen)</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<value>fc32</value>
+		<type>enum</type>
+		<option><name>FC64</name><key>fc64</key></option>
+		<option><name>F64</name><key>f64</key></option>
+		<option><name>FC32</name><key>fc32</key></option>
+		<option><name>F32</name><key>f32</key></option>
+		<option><name>SC64</name><key>sc64</key></option>
+		<option><name>S64</name><key>s64</key></option>
+		<option><name>SC32</name><key>sc32</key></option>
+		<option><name>S32</name><key>s32</key></option>
+		<option><name>SC16</name><key>sc16</key></option>
+		<option><name>S16</name><key>s16</key></option>
+		<option><name>SC8</name><key>sc8</key></option>
+		<option><name>S8</name><key>s8</key></option>
+	</param>
+	<param>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$num_inputs &gt; 1</check>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+		<nports>$num_inputs</nports>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

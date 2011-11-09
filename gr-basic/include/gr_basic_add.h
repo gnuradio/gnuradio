@@ -25,17 +25,26 @@
 #include <gr_sync_block.h>
 
 enum add_type{
+    ADD_FC64,
+    ADD_F64,
     ADD_FC32,
-    ADD_SC16,
     ADD_F32,
+    ADD_SC64,
+    ADD_S64,
+    ADD_SC32,
+    ADD_S32,
+    ADD_SC16,
     ADD_S16,
+    ADD_SC8,
+    ADD_S8,
 };
 
 class GR_BASIC_API basic_add : virtual public gr_sync_block{
 public:
+    typedef boost::shared_ptr<basic_add> sptr;
 };
 
-GR_BASIC_API boost::shared_ptr<basic_add> basic_make_add(
+GR_BASIC_API basic_add::sptr basic_make_add(
     add_type type, const size_t vlen = 1
 );
 
