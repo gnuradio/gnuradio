@@ -206,7 +206,7 @@ gr_basic_multiply_const::sptr gr_basic_multiply_const::make(op_type type, const 
     case OP_SC8: return sptr(new gr_basic_multiply_const_generic<std::complex<int8_t> >(vlen));
     case OP_S8: return sptr(new gr_basic_multiply_const_generic<int8_t>(vlen));
 
-    default: throw std::invalid_argument("basic_make_multiply got unknown multiply type");
+    default: throw std::invalid_argument("make multiply const got unknown type");
     }
 }
 

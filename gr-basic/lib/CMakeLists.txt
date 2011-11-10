@@ -38,6 +38,7 @@ list(APPEND gr_basic_sources
     gr_basic_divide.cc
     gr_basic_multiply.cc
     gr_basic_multiply_const.cc
+    gr_basic_sig_source.cc
     gr_basic_subtract.cc
 )
 

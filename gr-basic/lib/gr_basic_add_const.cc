@@ -114,6 +114,6 @@ gr_basic_add_const::sptr gr_basic_add_const::make(op_type type, const size_t vle
     case OP_SC8: return sptr(new gr_basic_add_const_generic<std::complex<int8_t> >(vlen));
     case OP_S8: return sptr(new gr_basic_add_const_generic<int8_t>(vlen));
 
-    default: throw std::invalid_argument("basic_make_add got unknown add type");
+    default: throw std::invalid_argument("make add const got unknown type");
     }
 }

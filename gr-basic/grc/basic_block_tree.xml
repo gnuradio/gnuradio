@@ -30,6 +30,7 @@
     <name></name> <!-- Blank for Root Name -->
     <cat>
         <name>Basic</name>
+        <block>basic_sig_source</block>
         <block>basic_add</block>
         <block>basic_add_const</block>
         <block>basic_subtract</block>

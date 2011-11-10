@@ -89,6 +89,6 @@ gr_basic_subtract::sptr gr_basic_subtract::make(op_type type, const size_t vlen)
     case OP_SC8: return sptr(new gr_basic_subtract_generic<int8_t>(2*vlen));
     case OP_S8: return sptr(new gr_basic_subtract_generic<int8_t>(vlen));
 
-    default: throw std::invalid_argument("basic_make_subtract got unknown subtract type");
+    default: throw std::invalid_argument("make subtract got unknown type");
     }
 }

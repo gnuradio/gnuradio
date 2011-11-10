@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Signal source block
+###################################################
+ -->
+<block>
+    <name>Signal Source</name>
+    <key>basic_sig_source</key>
+    <import>from gnuradio import basic</import>
+    <make>basic.sig_source(basic.OP_$($type().upper()))
+self.$(id).set_waveform($wave)
+self.$(id).set_offset($off)
+self.$(id).set_scaler($scaler)
+self.$(id).set_frequency($freq)</make>
+    <callback>set_waveform($wave)</callback>
+    <callback>set_offset($off)</callback>
+    <callback>set_scaleritude($scaler)</callback>
+    <callback>set_frequency($freq)</callback>
+    <param>
+        <name>Output Type</name>
+        <key>type</key>
+        <value>fc32</value>
+        <type>enum</type>
+        <option><name>FC64</name><key>fc64</key></option>
+        <option><name>F64</name><key>f64</key></option>
+        <option><name>FC32</name><key>fc32</key></option>
+        <option><name>F32</name><key>f32</key></option>
+        <option><name>SC64</name><key>sc64</key></option>
+        <option><name>S64</name><key>s64</key></option>
+        <option><name>SC32</name><key>sc32</key></option>
+        <option><name>S32</name><key>s32</key></option>
+        <option><name>SC16</name><key>sc16</key></option>
+        <option><name>S16</name><key>s16</key></option>
+        <option><name>SC8</name><key>sc8</key></option>
+        <option><name>S8</name><key>s8</key></option>
+    </param>
+    <param>
+        <name>Waveform</name>
+        <key>wave</key>
+        <value>COSINE</value>
+        <type>string</type>
+        <option><name>Constant</name><key>CONST</key></option>
+        <option><name>Cosine</name><key>COSINE</key></option>
+        <option><name>Ramp</name><key>RAMP</key></option>
+        <option><name>Square</name><key>SQUARE</key></option>
+    </param>
+    <param>
+        <name>Offset</name>
+        <key>off</key>
+        <value>0</value>
+        <type>complex</type>
+    </param>
+    <param>
+        <name>Scaler</name>
+        <key>scaler</key>
+        <value>1.0</value>
+        <type>complex</type>
+    </param>
+    <param>
+        <name>Frequency (frac)</name>
+        <key>freq</key>
+        <value>0.1</value>
+        <type>real</type>
+    </param>
+    <source>
+        <name>out</name>
+        <type>$type</type>
+    </source>
+</block>

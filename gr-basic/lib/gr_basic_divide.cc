@@ -89,6 +89,6 @@ gr_basic_divide::sptr gr_basic_divide::make(op_type type, const size_t vlen){
     case OP_SC8: return sptr(new gr_basic_divide_generic<std::complex<int8_t> >(vlen));
     case OP_S8: return sptr(new gr_basic_divide_generic<int8_t>(vlen));
 
-    default: throw std::invalid_argument("basic_make_divide got unknown divide type");
+    default: throw std::invalid_argument("make divide got unknown type");
     }
 }
