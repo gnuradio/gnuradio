@@ -66,8 +66,7 @@ public:
     ){
         type *out = reinterpret_cast<type *>(output_items[0]);
         for (size_t i = 0; i < size_t(noutput_items); i++){
-            _index %= _table.size();
-            out[i] = _table[_index];
+            out[i] = _table[_index % wave_table_size];
             _index += _step;
         }
         return noutput_items;
