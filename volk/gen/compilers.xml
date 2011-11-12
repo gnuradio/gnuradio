@@ -1,0 +1,18 @@
+<!-- compilers remap gcc-specific information from archs.xml to specific compiler cases-->
+<grammar>
+
+<compiler name="MSVC">
+  <remap name="mmmx">arch:SSE</remap>
+  <remap name="msse">arch:SSE</remap>
+  <remap name="msse2">arch:SSE2</remap>
+  <prefix>/</prefix>
+</compiler>
+
+<compiler name="GNU">
+  <prefix>-</prefix>
+</compiler>
+
+
+
+
+</grammar>

@@ -74,9 +74,11 @@ class app_top_block(stdgui2.std_top_block):
 	self.options = options
         self.show_debug_info = True
         
-        self.u = uhd.usrp_source(device_addr=options.args,
-                                 io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                 num_channels=1)
+        self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
+
+        # Set the subdevice spec
+        if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
 
         self.u.set_samp_rate(options.samp_rate)
         input_rate = self.u.get_samp_rate()
@@ -118,10 +120,6 @@ class app_top_block(stdgui2.std_top_block):
             options.freq = float(r.start()+r.stop())/2
             
         self.set_gain(options.gain)
-
-        # Set the subdevice spec
-        if(options.spec):
-            self.u.set_subdev_spec(options.spec, 0)
 
         # Set the antenna
         if(options.antenna):

@@ -281,9 +281,7 @@ class transmit_path(gr.hier_block2):
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
 				
-        self.u = uhd.usrp_sink(device_addr=args,
-                               io_type=uhd.io_type.COMPLEX_FLOAT32,
-                               num_channels=1)
+        self.u = uhd.usrp_sink(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
         self.if_rate = 320e3
         self.audio_rate = 32e3

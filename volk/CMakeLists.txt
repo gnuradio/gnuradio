@@ -32,14 +32,32 @@ set(LIBVER 0.0.0)
 
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}) #allows this to be a sub-project
 set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}) #allows this to be a sub-project
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake) #location for custom "Modules"
+
+########################################################################
+# Environment setup
+########################################################################
+IF(NOT DEFINED BOOST_ROOT)
+    SET(BOOST_ROOT "")
+ENDIF()
+SET(BOOST_ROOT ${BOOST_ROOT} CACHE STRING "Modify search path for Boost components")
+
+#after caching user-defined value, make sure to add the install prefix
+SET(BOOST_ROOT ${BOOST_ROOT}:${CMAKE_INSTALL_PREFIX})
+
+IF(NOT DEFINED CROSSCOMPILE_MULTILIB)
+    SET(CROSSCOMPILE_MULTILIB "")
+ENDIF()
+SET(CROSSCOMPILE_MULTILIB ${CROSSCOMPILE_MULTILIB} CACHE STRING "Define \"true\" if you have and want to use multiple C development libs installed for cross compile")
+
 
 ########################################################################
 # Dependencies setup
 ########################################################################
-find_package(PythonInterp)
-if(NOT PYTHONINTERP_FOUND)
-    message(FATAL_ERROR "Python interpreter required by the build system.")
-endif(NOT PYTHONINTERP_FOUND)
+find_package(PythonInterp REQUIRED PYTHON_EXECUTABLE)
+find_package(Boost COMPONENTS unit_test_framework)
+find_package(ORC)
+
 
 ########################################################################
 # Setup the package config file

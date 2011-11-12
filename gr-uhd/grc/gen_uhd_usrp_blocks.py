@@ -27,27 +27,28 @@ MAIN_TMPL = """\
 	<import>from gnuradio import uhd</import>
 	<make>uhd.usrp_$(sourk)(
 	device_addr=\$dev_addr,
-	io_type=uhd.io_type.\$type.type,
-	num_channels=\$nchan,
+	stream_args=uhd.stream_args(
+		cpu_format="\$type",
+		\#if \$otw()
+		otw_format=\$otw,
+		\#end if
+		\#if \$stream_args()
+		args=\$stream_args,
+		\#end if
+		channels=range(\$nchan),
+	),
 )
 \#if \$clock_rate()
 self.\$(id).set_clock_rate(\$clock_rate, uhd.ALL_MBOARDS)
 \#end if
 #for $m in range($max_mboards)
 ########################################################################
-\#if \$num_mboards() > $m and \$ref_source$(m)() == 'external'
-self.\$(id).set_clock_config(uhd.clock_config.external(), $m)
+\#if \$num_mboards() > $m and \$clock_source$(m)()
+self.\$(id).set_clock_source(\$clock_source$(m), $m)
 \#end if
 ########################################################################
-\#if \$num_mboards() > $m and \$ref_source$(m)() == 'internal'
-self.\$(id).set_clock_config(uhd.clock_config.internal(), $m)
-\#end if
-########################################################################
-\#if \$num_mboards() > $m and \$ref_source$(m)() == 'mimo'
-_config = uhd.clock_config()
-_config.ref_source = uhd.clock_config.REF_MIMO
-_config.pps_source = uhd.clock_config.PPS_MIMO
-self.\$(id).set_clock_config(_config, $m)
+\#if \$num_mboards() > $m and \$time_source$(m)()
+self.\$(id).set_time_source(\$time_source$(m), $m)
 \#end if
 ########################################################################
 \#if \$num_mboards() > $m and \$sd_spec$(m)()
@@ -84,16 +85,61 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<key>type</key>
 		<type>enum</type>
 		<option>
-			<name>Complex</name>
-			<key>complex</key>
-			<opt>type:COMPLEX_FLOAT32</opt>
-			<opt>vlen:1</opt>
+			<name>Complex float32</name>
+			<key>fc32</key>
+			<opt>type:fc32</opt>
 		</option>
 		<option>
-			<name>Short</name>
-			<key>short</key>
-			<opt>type:COMPLEX_INT16</opt>
-			<opt>vlen:2</opt>
+			<name>Complex int16</name>
+			<key>sc16</key>
+			<opt>type:sc16</opt>
+		</option>
+		<option>
+			<name>VITA word32</name>
+			<key>item32</key>
+			<opt>type:s32</opt>
+		</option>
+	</param>
+	<param>
+		<name>Wire Format</name>
+		<key>otw</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			\#if \$otw()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+		<option>
+			<name>Automatic</name>
+			<key></key>
+		</option>
+		<option>
+			<name>Complex int16</name>
+			<key>sc16</key>
+		</option>
+		<option>
+			<name>Complex int8</name>
+			<key>sc8</key>
+		</option>
+	</param>
+	<param>
+		<name>Stream args</name>
+		<key>stream_args</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			\#if \$stream_args()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+		<option>
+			<name>scalar=1024</name>
+			<key>scalar=1024</key>
 		</option>
 	</param>
 	<param>
@@ -150,14 +196,14 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	</param>
 	#for $m in range($max_mboards)
 	<param>
-		<name>Mb$(m): Ref Source</name>
-		<key>ref_source$(m)</key>
+		<name>Mb$(m): Clock Source</name>
+		<key>clock_source$(m)</key>
 		<value></value>
-		<type>enum</type>
+		<type>string</type>
 		<hide>
 			\#if not \$num_mboards() > $m
 				all
-			\#elif \$ref_source$(m)()
+			\#elif \$clock_source$(m)()
 				none
 			\#else
 				part
@@ -167,6 +213,26 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		<option><name>Internal</name><key>internal</key></option>
 		<option><name>External</name><key>external</key></option>
 		<option><name>MIMO Cable</name><key>mimo</key></option>
+		<option><name>O/B GPSDO</name><key>gpsdo</key></option>
+	</param>
+	<param>
+		<name>Mb$(m): Time Source</name>
+		<key>time_source$(m)</key>
+		<value></value>
+		<type>string</type>
+		<hide>
+			\#if not \$num_mboards() > $m
+				all
+			\#elif \$time_source$(m)()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+		<option><name>Default</name><key></key></option>
+		<option><name>External</name><key>external</key></option>
+		<option><name>MIMO Cable</name><key>mimo</key></option>
+		<option><name>O/B GPSDO</name><key>gpsdo</key></option>
 	</param>
 	<param>
 		<name>Mb$(m): Subdev Spec</name>
@@ -210,8 +276,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<check>\$nchan >= \$num_mboards</check>
 	<$sourk>
 		<name>$direction</name>
-		<type>\$type</type>
-		<vlen>\$type.vlen</vlen>
+		<type>\$type.type</type>
 		<nports>\$nchan</nports>
 	</$sourk>
 	<doc>
@@ -224,6 +289,19 @@ Use the device address to specify a specific device or list of devices.
 USRP1 Example: serial=12345678
 USRP2 Example: addr=192.168.10.2
 USRP2 Example: addr0=192.168.10.2, addr1=192.168.10.3
+
+$(direction.title()) Type:
+This parameter controls the data type of the stream in gnuradio.
+
+Wire Format:
+This parameter controls the form of the data over the bus/network. \
+Complex bytes may be used to trade off precision for bandwidth. \
+Not all formats are supported on all devices.
+
+Stream Args:
+Optional arguments to be passed in the UHD streamer object. \
+Streamer args is a list of key/value pairs; usage is determined by the implementation.
+Ex: the scalar key affects the scaling between 16 and 8 bit integers in sc8 wire format.
 
 Num Motherboards:
 Selects the number of USRP motherboards in this device configuration.

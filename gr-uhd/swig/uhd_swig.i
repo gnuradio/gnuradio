@@ -48,6 +48,8 @@
 ////////////////////////////////////////////////////////////////////////
 %template(string_vector_t) std::vector<std::string>;
 
+%template(size_vector_t) std::vector<size_t>;
+
 %include <uhd/config.hpp>
 
 %include <uhd/utils/pimpl.hpp>

@@ -80,7 +80,7 @@ int main(int argc, char *argv[]){
     //-- make the usrp source test blocks
     //------------------------------------------------------------------
     boost::shared_ptr<uhd_usrp_source> usrp_source = uhd_make_usrp_source(
-        device_addr, uhd::io_type_t::COMPLEX_FLOAT32, 1
+        device_addr, uhd::stream_args_t("fc32")
     );
     usrp_source->set_samp_rate(samp_rate);
     usrp_source->set_center_freq(center_freq);
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
     //-- make the usrp sink test blocks
     //------------------------------------------------------------------
     boost::shared_ptr<uhd_usrp_sink> usrp_sink = uhd_make_usrp_sink(
-        device_addr, uhd::io_type_t::COMPLEX_FLOAT32, 1
+        device_addr, uhd::stream_args_t("fc32")
     );
     usrp_sink->set_samp_rate(samp_rate);
     usrp_sink->set_center_freq(center_freq);

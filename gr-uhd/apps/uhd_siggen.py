@@ -92,14 +92,16 @@ class top_block(gr.top_block, pubsub):
         self[TYPE_KEY] = options.type #set type last
 
     def _setup_usrpx(self, options):
-        self._u = uhd.usrp_sink(device_addr=options.args,
-                                io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                num_channels=1)
+        self._u = uhd.usrp_sink(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
         self._u.set_samp_rate(options.samp_rate)
 
         # Set the subdevice spec
         if(options.spec):
             self._u.set_subdev_spec(options.spec, 0)
+
+        # Set the gain on the usrp from options
+        if(options.gain):
+            self._u.set_gain(options.gain)
 
         # Set the antenna
         if(options.antenna):
@@ -145,7 +147,7 @@ class top_block(gr.top_block, pubsub):
     def set_gain(self, gain):
         if gain is None:
             g = self[GAIN_RANGE_KEY]
-            gain = float(g[0]+g[1])/2
+            gain = float(g.start()+g.stop())/2
             if self._verbose:
                 print "Using auto-calculated mid-point TX gain"
             self[GAIN_KEY] = gain
@@ -158,7 +160,7 @@ class top_block(gr.top_block, pubsub):
 
         if target_freq is None:
             f = self[FREQ_RANGE_KEY]
-            target_freq = float(f[0]+f[1])/2.0
+            target_freq = float(f.start()+f.stop())/2.0
             if self._verbose:
                 print "Using auto-calculated mid-point frequency"
             self[TX_FREQ_KEY] = target_freq

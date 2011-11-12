@@ -131,9 +131,7 @@ class tv_rx_block (stdgui2.std_top_block):
           self.gain=0.0
 
         else: # use a UHD device
-          self.u = uhd.usrp_source(device_addr=options.args,
-                                   io_type=uhd.io_type.COMPLEX_FLOAT32,
-                                   num_channels=1)
+          self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
           self.u.set_samp_rate(usrp_rate)
           dev_rate = self.u.get_samp_rate()

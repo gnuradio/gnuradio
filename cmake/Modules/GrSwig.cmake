@@ -38,10 +38,18 @@ include(GrPython)
 macro(GR_SWIG_MAKE name)
     set(ifiles ${ARGN})
 
+    #append additional include directories
+    find_package(PythonLibs)
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${PYTHON_INCLUDE_PATH}) #deprecated name (now dirs)
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
+
     #determine include dependencies for swig file
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/get_swig_deps.py
-        "${ifiles}" "${GR_SWIG_INCLUDE_DIRS}"
+        COMMAND ${PYTHON_EXECUTABLE}
+            ${CMAKE_BINARY_DIR}/get_swig_deps.py
+            "${ifiles}" "${GR_SWIG_INCLUDE_DIRS}"
         OUTPUT_STRIP_TRAILING_WHITESPACE
         OUTPUT_VARIABLE SWIG_MODULE_${name}_EXTRA_DEPS
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -60,9 +68,6 @@ macro(GR_SWIG_MAKE name)
     #append the specified include directories
     include_directories(${GR_SWIG_INCLUDE_DIRS})
     list(APPEND SWIG_MODULE_${name}_EXTRA_DEPS ${tag_file})
-
-    find_package(PythonLibs)
-    include_directories(${PYTHON_INCLUDE_DIRS})
 
     #setup the swig flags with flags and include directories
     set(CMAKE_SWIG_FLAGS -fvirtual -modern -keyword -w511 -module ${name} ${GR_SWIG_FLAGS})

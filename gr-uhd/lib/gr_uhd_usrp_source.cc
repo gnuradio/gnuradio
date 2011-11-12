@@ -24,8 +24,22 @@
 #include <stdexcept>
 #include <iostream>
 #include <boost/format.hpp>
+#include <boost/make_shared.hpp>
 
 static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("rx_time");
+
+#include <uhd/convert.hpp>
+inline gr_io_signature_sptr args_to_io_sig(const uhd::stream_args_t &args){
+    const size_t nchan = std::max<size_t>(args.channels.size(), 1);
+    #ifdef GR_UHD_USE_STREAM_API
+        const size_t size = uhd::convert::get_bytes_per_item(args.cpu_format);
+    #else
+        size_t size = 0;
+        if (args.cpu_format == "fc32") size = 8;
+        if (args.cpu_format == "sc16") size = 4;
+    #endif
+    return gr_make_io_signature(nchan, nchan, size);
+}
 
 /***********************************************************************
  * UHD Multi USRP Source Impl
@@ -34,19 +48,20 @@ class uhd_usrp_source_impl : public uhd_usrp_source{
 public:
     uhd_usrp_source_impl(
         const uhd::device_addr_t &device_addr,
-        const uhd::io_type_t &io_type,
-        size_t num_channels
+        const uhd::stream_args_t &stream_args
     ):
         gr_sync_block(
             "gr uhd usrp source",
             gr_make_io_signature(0, 0, 0),
-            gr_make_io_signature(num_channels, num_channels, io_type.size)
+            args_to_io_sig(stream_args)
         ),
-        _type(io_type),
-        _nchan(num_channels),
+        _stream_args(stream_args),
+        _nchan(std::max<size_t>(1, stream_args.channels.size())),
         _stream_now(_nchan == 1),
         _tag_now(false)
     {
+        if (stream_args.cpu_format == "fc32") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_FLOAT32);
+        if (stream_args.cpu_format == "sc16") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_INT16);
         std::stringstream str;
         str << name() << unique_id();
         _id = pmt::pmt_string_to_symbol(str.str());
@@ -63,6 +78,14 @@ public:
 
     double get_samp_rate(void){
         return _dev->get_rx_rate();
+    }
+
+    uhd::meta_range_t get_samp_rates(void){
+        #ifdef UHD_USRP_MULTI_USRP_GET_RATES_API
+        return _dev->get_rx_rates();
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
     }
 
     uhd::tune_result_t set_center_freq(
@@ -123,11 +146,35 @@ public:
         return _dev->set_rx_bandwidth(bandwidth, chan);
     }
 
-    uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan){
+    void set_dc_offset(const bool enable, size_t chan){
+        #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
+        return _dev->set_rx_dc_offset(enable, chan);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    void set_dc_offset(const std::complex<double> &offset, size_t chan){
+        #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
+        return _dev->set_rx_dc_offset(offset, chan);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    void set_iq_balance(const std::complex<double> &correction, size_t chan){
+        #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
+        return _dev->set_rx_iq_balance(correction, chan);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    uhd::sensor_value_t get_sensor(const std::string &name, size_t chan){
         return _dev->get_rx_sensor(name, chan);
     }
 
-    std::vector<std::string> get_dboard_sensor_names(size_t chan){
+    std::vector<std::string> get_sensor_names(size_t chan){
         return _dev->get_rx_sensor_names(chan);
     }
 
@@ -141,6 +188,54 @@ public:
 
     void set_clock_config(const uhd::clock_config_t &clock_config, size_t mboard){
         return _dev->set_clock_config(clock_config, mboard);
+    }
+
+    void set_time_source(const std::string &source, const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->set_time_source(source, mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    std::string get_time_source(const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->get_time_source(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    std::vector<std::string> get_time_sources(const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->get_time_sources(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    void set_clock_source(const std::string &source, const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->set_clock_source(source, mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    std::string get_clock_source(const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->get_clock_source(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    std::vector<std::string> get_clock_sources(const size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
+        return _dev->get_clock_sources(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
     }
 
     double get_clock_rate(size_t mboard){
@@ -171,6 +266,22 @@ public:
         return _dev->set_time_unknown_pps(time_spec);
     }
 
+    void set_command_time(const uhd::time_spec_t &time_spec, size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_COMMAND_TIME_API
+        return _dev->set_command_time(time_spec, mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+    void clear_command_time(size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_COMMAND_TIME_API
+        return _dev->clear_command_time(mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
     uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan){
         return _dev->get_rx_dboard_iface(chan);
     }
@@ -187,22 +298,33 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
+        #ifdef GR_UHD_USE_STREAM_API
         //In order to allow for low-latency:
         //We receive all available packets without timeout.
         //This call can timeout under regular operation...
-        size_t num_samps = _dev->get_device()->recv(
-            output_items, noutput_items, _metadata,
-            _type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
+        size_t num_samps = _rx_stream->recv(
+            output_items, noutput_items, _metadata, 0.0
         );
 
         //If receive resulted in a timeout condition:
         //We now receive a single packet with a large timeout.
         if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT){
-            num_samps = _dev->get_device()->recv(
-                output_items, noutput_items, _metadata,
-                _type, uhd::device::RECV_MODE_ONE_PACKET, 1.0
+            num_samps = _rx_stream->recv(
+                output_items, noutput_items, _metadata, 1.0, true/*one pkt*/
             );
         }
+        #else
+        size_t num_samps = _dev->get_device()->recv(
+            output_items, noutput_items, _metadata,
+            *_type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
+        );
+        if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT){
+            num_samps = _dev->get_device()->recv(
+                output_items, noutput_items, _metadata,
+                *_type, uhd::device::RECV_MODE_ONE_PACKET, 1.0
+            );
+        }
+        #endif
 
         //handle possible errors conditions
         switch(_metadata.error_code){
@@ -242,6 +364,10 @@ public:
     }
 
     bool start(void){
+        #ifdef GR_UHD_USE_STREAM_API
+        _rx_stream = _dev->get_rx_stream(_stream_args);
+        _samps_per_packet = _rx_stream->get_max_num_samps();
+        #endif
         //setup a stream command that starts streaming slightly in the future
         static const double reasonable_delay = 0.1; //order of magnitude over RTT
         uhd::stream_cmd_t stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
@@ -260,10 +386,17 @@ public:
             outputs.push_back(&buffs[i].front());
         }
         while (true){
-            const size_t num_samps = _dev->get_device()->recv(
-                outputs, nbytes/_type.size, _metadata,
-                _type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
+            #ifdef GR_UHD_USE_STREAM_API
+            const size_t bpi = uhd::convert::get_bytes_per_item(_stream_args.cpu_format);
+            const size_t num_samps = _rx_stream->recv(
+                outputs, nbytes/bpi, _metadata, 0.0
             );
+            #else
+            const size_t num_samps = _dev->get_device()->recv(
+                outputs, nbytes/_type->size, _metadata,
+                *_type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
+            );
+            #endif
             if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT) break;
         }
     }
@@ -278,7 +411,12 @@ public:
 
 private:
     uhd::usrp::multi_usrp::sptr _dev;
-    const uhd::io_type_t _type;
+    const uhd::stream_args_t _stream_args;
+    boost::shared_ptr<uhd::io_type_t> _type;
+    #ifdef GR_UHD_USE_STREAM_API
+    uhd::rx_streamer::sptr _rx_stream;
+    size_t _samps_per_packet;
+    #endif
     size_t _nchan;
     bool _stream_now, _tag_now;
     uhd::rx_metadata_t _metadata;
@@ -294,7 +432,25 @@ boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::io_type_t &io_type,
     size_t num_channels
 ){
+    //fill in the streamer args
+    uhd::stream_args_t stream_args;
+    switch(io_type.tid){
+    case uhd::io_type_t::COMPLEX_FLOAT32: stream_args.cpu_format = "fc32"; break;
+    case uhd::io_type_t::COMPLEX_INT16: stream_args.cpu_format = "sc16"; break;
+    default: throw std::runtime_error("only complex float and shorts known to work");
+    }
+    stream_args.otw_format = "sc16"; //only sc16 known to work
+    for (size_t chan = 0; chan < num_channels; chan++)
+        stream_args.channels.push_back(chan); //linear mapping
+
+    return uhd_make_usrp_source(device_addr, stream_args);
+}
+
+boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
+    const uhd::device_addr_t &device_addr,
+    const uhd::stream_args_t &stream_args
+){
     return boost::shared_ptr<uhd_usrp_source>(
-        new uhd_usrp_source_impl(device_addr, io_type, num_channels)
+        new uhd_usrp_source_impl(device_addr, stream_args)
     );
 }

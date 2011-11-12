@@ -26,6 +26,27 @@
 #include <gr_sync_block.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
+#ifndef INCLUDED_UHD_STREAM_HPP
+namespace uhd{
+    struct GR_UHD_API stream_args_t{
+        stream_args_t(
+            const std::string &cpu = "",
+            const std::string &otw = ""
+        ){
+            cpu_format = cpu;
+            otw_format = otw;
+        }
+        std::string cpu_format;
+        std::string otw_format;
+        device_addr_t args;
+        std::vector<size_t> channels;
+    };
+}
+#  define INCLUDED_UHD_STREAM_HPP
+#else
+#  define GR_UHD_USE_STREAM_API
+#endif
+
 class uhd_usrp_sink;
 
 /*!
@@ -62,11 +83,42 @@ GR_UHD_API boost::shared_ptr<uhd_usrp_sink> uhd_make_usrp_sink(
     size_t num_channels
 );
 
+/*!
+ * \brief Make a new USRP sink block.
+ *
+ * The USRP sink block reads a stream and transmits the samples.
+ * The sink block also provides API calls for transmitter settings.
+ *
+ * TX Stream tagging:
+ *
+ * The following tag keys will be consumed by the work function:
+ *  - pmt::pmt_string_to_symbol("tx_sob")
+ *  - pmt::pmt_string_to_symbol("tx_eob")
+ *  - pmt::pmt_string_to_symbol("tx_time")
+ *
+ * The sob and eob (start and end of burst) tag values are pmt booleans.
+ * When present, burst tags should be set to true (pmt::PMT_T).
+ *
+ * The timstamp tag value is a pmt tuple of the following:
+ * (uint64 seconds, and double fractional seconds).
+ *
+ * See the UHD manual for more detailed documentation:
+ * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+ *
+ * \param device_addr the address to identify the hardware
+ * \param stream_args the IO format and channel specification
+ * \return a new USRP sink block object
+ */
+GR_UHD_API boost::shared_ptr<uhd_usrp_sink> uhd_make_usrp_sink(
+    const uhd::device_addr_t &device_addr,
+    const uhd::stream_args_t &stream_args
+);
+
 class GR_UHD_API uhd_usrp_sink : virtual public gr_sync_block{
 public:
 
     /*!
-     * Set the subdevice specification.
+     * Set the frontend specification.
      * \param spec the subdev spec markup string
      * \param mboard the motherboard index 0 to M-1
      */
@@ -84,6 +136,12 @@ public:
      * \return the actual rate in Sps
      */
     virtual double get_samp_rate(void) = 0;
+
+    /*!
+     * Get the possible sample rates for the usrp device.
+     * \return a range of rates in Sps
+     */
+    virtual uhd::meta_range_t get_samp_rates(void) = 0;
 
     /*!
      * Tune the usrp device to the desired center frequency.
@@ -195,26 +253,53 @@ public:
     virtual std::vector<std::string> get_antennas(size_t chan = 0) = 0;
 
     /*!
-     * Set the subdevice bandpass filter.
+     * Set the bandpass filter on the RF frontend.
      * \param chan the channel index 0 to N-1
      * \param bandwidth the filter bandwidth in Hz
      */
     virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
     /*!
-     * Get a daughterboard sensor value.
+     * Set a constant DC offset value.
+     * The value is complex to control both I and Q.
+     * \param offset the dc offset (1.0 is full-scale)
+     * \param chan the channel index 0 to N-1
+     */
+    virtual void set_dc_offset(const std::complex<double> &offset, size_t chan = 0) = 0;
+
+    /*!
+     * Set the RX frontend IQ imbalance correction.
+     * Use this to adjust the magnitude and phase of I and Q.
+     *
+     * \param correction the complex correction (1.0 is full-scale)
+     * \param chan the channel index 0 to N-1
+     */
+    virtual void set_iq_balance(const std::complex<double> &correction, size_t chan = 0) = 0;
+
+    /*!
+     * Get an RF frontend sensor value.
      * \param name the name of the sensor
      * \param chan the channel index 0 to N-1
      * \return a sensor value object
      */
-    virtual uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan = 0) = 0;
+    virtual uhd::sensor_value_t get_sensor(const std::string &name, size_t chan = 0) = 0;
 
     /*!
-     * Get a list of possible daughterboard sensor names.
+     * Get a list of possible RF frontend sensor names.
      * \param chan the channel index 0 to N-1
      * \return a vector of sensor names
      */
-    virtual std::vector<std::string> get_dboard_sensor_names(size_t chan = 0) = 0;
+    virtual std::vector<std::string> get_sensor_names(size_t chan = 0) = 0;
+
+    //! DEPRECATED use get_sensor
+    uhd::sensor_value_t get_dboard_sensor(const std::string &name, size_t chan = 0){
+        return this->get_sensor(name, chan);
+    }
+
+    //! DEPRECATED use get_sensor_names
+    std::vector<std::string> get_dboard_sensor_names(size_t chan = 0){
+        return this->get_sensor_names(chan);
+    }
 
     /*!
      * Get a motherboard sensor value.
@@ -233,10 +318,58 @@ public:
 
     /*!
      * Set the clock configuration.
+     * DEPRECATED for set_time/clock_source.
      * \param clock_config the new configuration
      * \param mboard the motherboard index 0 to M-1
      */
     virtual void set_clock_config(const uhd::clock_config_t &clock_config, size_t mboard = 0) = 0;
+
+    /*!
+     * Set the time source for the usrp device.
+     * This sets the method of time synchronization,
+     * typically a pulse per second or an encoded time.
+     * Typical options for source: external, MIMO.
+     * \param source a string representing the time source
+     * \param mboard which motherboard to set the config
+     */
+    virtual void set_time_source(const std::string &source, const size_t mboard = 0) = 0;
+
+    /*!
+     * Get the currently set time source.
+     * \param mboard which motherboard to get the config
+     * \return the string representing the time source
+     */
+    virtual std::string get_time_source(const size_t mboard) = 0;
+
+    /*!
+     * Get a list of possible time sources.
+     * \param mboard which motherboard to get the list
+     * \return a vector of strings for possible settings
+     */
+    virtual std::vector<std::string> get_time_sources(const size_t mboard) = 0;
+
+    /*!
+     * Set the clock source for the usrp device.
+     * This sets the source for a 10 Mhz reference clock.
+     * Typical options for source: internal, external, MIMO.
+     * \param source a string representing the clock source
+     * \param mboard which motherboard to set the config
+     */
+    virtual void set_clock_source(const std::string &source, const size_t mboard = 0) = 0;
+
+    /*!
+     * Get the currently set clock source.
+     * \param mboard which motherboard to get the config
+     * \return the string representing the clock source
+     */
+    virtual std::string get_clock_source(const size_t mboard) = 0;
+
+    /*!
+     * Get a list of possible clock sources.
+     * \param mboard which motherboard to get the list
+     * \return a vector of strings for possible settings
+     */
+    virtual std::vector<std::string> get_clock_sources(const size_t mboard) = 0;
 
     /*!
      * Get the master clock rate.
@@ -284,6 +417,25 @@ public:
      * \param time_spec the new time
      */
     virtual void set_time_unknown_pps(const uhd::time_spec_t &time_spec) = 0;
+
+    /*!
+     * Set the time at which the control commands will take effect.
+     *
+     * A timed command will back-pressure all subsequent timed commands,
+     * assuming that the subsequent commands occur within the time-window.
+     * If the time spec is late, the command will be activated upon arrival.
+     *
+     * \param time_spec the time at which the next command will activate
+     * \param mboard which motherboard to set the config
+     */
+    virtual void set_command_time(const uhd::time_spec_t &time_spec, size_t mboard = 0) = 0;
+
+    /*!
+     * Clear the command time so future commands are sent ASAP.
+     *
+     * \param mboard which motherboard to set the config
+     */
+    virtual void clear_command_time(size_t mboard = 0) = 0;
 
     /*!
      * Get access to the underlying uhd dboard iface object.
