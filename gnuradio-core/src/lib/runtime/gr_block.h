@@ -74,6 +74,14 @@ class GR_CORE_API gr_block : public gr_basic_block {
   virtual ~gr_block ();
 
   /*!
+   * Enable/disable inplace processing on this block.
+   * This does not guarantee that input memory is output memory.
+   * That is an important decision for the scheduler to make.
+   */
+  bool inplace () const { return d_inplace; }
+  void  set_inplace (bool inplace) { d_inplace = inplace; }
+
+  /*!
    * Assume block computes y_i = f(x_i, x_i-1, x_i-2, x_i-3...)
    * History is the number of x_i's that are examined to produce one y_i.
    * This comes in handy for FIR filters, where we use history to
@@ -233,6 +241,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   int                   d_output_multiple;
   double                d_relative_rate;	// approx output_rate / input_rate
   gr_block_detail_sptr	d_detail;		// implementation details
+  bool                  d_inplace;
   unsigned              d_history;
   bool                  d_fixed_rate;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream

@@ -28,10 +28,12 @@
 #include <gr_block_detail.h>
 #include <gr_io_signature.h>
 #include <gr_buffer.h>
+#include <boost/format.hpp>
 #include <iostream>
 #include <map>
 
 #define GR_FLAT_FLOWGRAPH_DEBUG 0
+#define GR_FLAT_FLOWGRAPH_INPLACE_DEBUG 1
 
 // 32Kbyte buffer size between blocks
 #define GR_FIXED_BUFFER_SIZE (32*(1L<<10))
@@ -64,6 +66,10 @@ gr_flat_flowgraph::setup_connections()
   // Connect inputs to outputs for each block
   for(gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++)
     connect_block_inputs(*p);
+
+  // Buffer re-use for in-place blocks
+  for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++)
+    simplify_inplace(*p);
 }
 
 gr_block_detail_sptr
@@ -149,6 +155,67 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
 
     detail->set_input(dst_port, gr_buffer_add_reader(src_buffer, grblock->history()-1, grblock));
   }
+}
+
+static bool is_inplace(gr_basic_block_sptr block){
+    return cast_to_block_sptr(block)->inplace() and cast_to_block_sptr(block)->fixed_rate();
+}
+
+void gr_flat_flowgraph::simplify_inplace(gr_basic_block_sptr block){
+
+    if (not is_inplace(block)) return;
+    typedef std::multimap<int, gr_endpoint> mastermap_type;
+    mastermap_type upstream_masters;
+
+    //get a map of io sizes to upstream masters
+    for (size_t i = 0; i < calc_used_ports(block, true).size(); i++){
+        const int in_size = block->input_signature()->sizeof_stream_item(i);
+        const gr_endpoint master_ep = get_inplace_master(calc_upstream_edge(block, i).src());
+        if (master_ep.block().get() != NULL) upstream_masters.insert(std::make_pair(in_size, master_ep));
+    }
+
+    //replace downstream buffers with upstream buffers
+    for (size_t i = 0; i < calc_used_ports(block, false).size(); i++){
+
+        //search for a itemsize match in the map
+        const int out_size = block->output_signature()->sizeof_stream_item(i);
+        mastermap_type::iterator it = upstream_masters.find(out_size);
+        if (it == upstream_masters.end()) continue;
+
+        //extract the endpoint and erase it from map
+        const gr_endpoint master_ep = (*it).second;
+        upstream_masters.erase(it);
+
+        //in-place the buffer by replacing its guts
+        gr_buffer_sptr master = cast_to_block_sptr(master_ep.block())->detail()->output(master_ep.port());
+        cast_to_block_sptr(block)->detail()->output(i)->replace(master);
+        if (GR_FLAT_FLOWGRAPH_INPLACE_DEBUG) std::cout <<
+            boost::format("replaced %s out[%d] with %s out[%d]")
+            % block % i % master_ep.block() % master_ep.port()
+        << std::endl;
+    }
+}
+
+gr_endpoint gr_flat_flowgraph::get_inplace_master(gr_endpoint src){
+
+    //this endpoint must have only one destination, return null
+    if (calc_downstream_blocks(src.block(), src.port()).size() != 1) return gr_endpoint();
+
+    //if this block is not in-place, end here, otherwise search upstream
+    if (!is_inplace(src.block())) return src;
+
+    const size_t out_size = src.block()->output_signature()->sizeof_stream_item(src.port());
+    for (size_t i = 0; i < calc_used_ports(src.block(), true).size(); i++){
+        if (out_size != size_t(src.block()->input_signature()->sizeof_stream_item(i))) continue;
+
+        //when io size matches, look upstream for an inplace master
+        gr_endpoint master_ep = get_inplace_master(calc_upstream_edge(src.block(), i).src());
+        if (master_ep.block().get() == NULL) continue;
+        return master_ep;
+    }
+
+    //didn't find anything upstream, use this endpoint
+    return src;
 }
 
 void

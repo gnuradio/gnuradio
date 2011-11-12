@@ -88,6 +88,7 @@ gr_buffer::gr_buffer (int nitems, size_t sizeof_item, gr_block_sptr link)
     throw std::bad_alloc ();
 
   s_buffer_count++;
+  d_writers.push_back(d_link);
 }
 
 gr_buffer_sptr 
@@ -146,6 +147,14 @@ gr_buffer::allocate_buffer (int nitems, size_t sizeof_item)
   return true;
 }
 
+void gr_buffer::replace(gr_buffer_sptr master){
+    d_bufsize = master->d_bufsize;
+    d_base = master->d_base;
+    for (size_t i = 0; i < d_readers.size(); i++){
+        master->d_inplace_readers.push_back(d_readers[i]);
+    }
+    d_writers.push_back(master->link());
+}
 
 int
 gr_buffer::space_available ()
@@ -162,6 +171,13 @@ gr_buffer::space_available ()
     for (size_t i = 1; i < d_readers.size (); i++) {
       most_data = std::max (most_data, d_readers[i]->items_available ());
       min_items_read = std::min(min_items_read, d_readers[i]->nitems_read());
+    }
+
+    //and same process but compare this buffer's write index with downstream in-place readers index
+    for (size_t i = 0; i < d_inplace_readers.size(); i++){
+        gruel::scoped_lock guard(*d_inplace_readers[i]->mutex());
+        const int items_available = this->index_sub (d_write_index, d_inplace_readers[i]->d_read_index);
+        most_data = std::max(most_data, items_available);
     }
 
     if(min_items_read != d_last_min_items_read) {

@@ -56,6 +56,12 @@ class GR_CORE_API gr_buffer {
   virtual ~gr_buffer ();
 
   /*!
+   * Replace the memory and size in this block.
+   * Used for in-place operator blocks.
+   */
+  void replace(gr_buffer_sptr master);
+
+  /*!
    * \brief return number of items worth of space available for writing
    */
   int space_available ();
@@ -85,6 +91,16 @@ class GR_CORE_API gr_buffer {
    * \brief Return the block that writes to this buffer.
    */
   gr_block_sptr link() { return gr_block_sptr(d_link); }
+
+  typedef std::vector<boost::weak_ptr<gr_block> > writers_type;
+
+  /*!
+   * \brief Return a list of blocks that write to this resource
+   * This routine was added by the inplace work to tbp could
+   * notify all upstream parties after a read has occurred.
+   * Basically this will return this->link() + the in-place master.
+   */
+  const writers_type &writers(void) const { return d_writers; }
 
   size_t nreaders() const { return d_readers.size(); }
   gr_buffer_reader* reader(size_t index) { return d_readers[index]; }
@@ -126,7 +142,9 @@ class GR_CORE_API gr_buffer {
   gr_vmcircbuf			       *d_vmcircbuf;
   size_t	 			d_sizeof_item;	// in bytes
   std::vector<gr_buffer_reader *>	d_readers;
+  std::vector<gr_buffer_reader *>	d_inplace_readers; //readers that share this buffer resource
   boost::weak_ptr<gr_block>		d_link;		// block that writes to this buffer
+  writers_type				d_writers; // blocks that write to this buffer
 
   //
   // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags 
