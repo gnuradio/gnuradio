@@ -630,7 +630,7 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gr-gsm-fr-vocoder/src/python/encdec.py \
                          @abs_top_builddir@/gr-howto-write-a-block \
                          @abs_top_builddir@/gr-pager/src/pager_swig.py \
-                         @abs_top_builddir@/gr-qtgui \
+                         @abs_top_builddir@/gr-qtgui/lib \
                          @abs_top_builddir@/gr-trellis/doc \
                          @abs_top_builddir@/gr-trellis/src/lib/generate_all.py \
                          @abs_top_builddir@/gr-trellis/src/lib/generate_trellis.py \
