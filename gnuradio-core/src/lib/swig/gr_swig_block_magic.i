@@ -37,12 +37,6 @@ BASE_NAME = FULL_NAME.make
 %enddef
 #endif
 
-//ignore base classes commonly inherited by gr blocks
-%ignore gr_sync_block;
-%ignore gr_sync_decimator;
-%ignore gr_sync_interpolator;
-%ignore gr_hier_block2;
-
 //----------------------------------------------------------------------
 //-- GR_SWIG_BLOCK_MAGIC
 //----------------------------------------------------------------------

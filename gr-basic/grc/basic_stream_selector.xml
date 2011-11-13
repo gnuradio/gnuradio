@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Basic stream selector/stream multi-mux
+###################################################
+ -->
+<block>
+    <name>Stream Selector</name>
+    <key>basic_stream_selector</key>
+    <import>from gnuradio import gr</import>
+    <import>from gnuradio import basic</import>
+    <make>basic.stream_selector(
+    gr.io_signature($num_inputs, $num_inputs, $item_size),
+    gr.io_signature($num_outputs, $num_outputs, $item_size),
+)
+self.$(id).set_paths($paths)
+</make>
+    <callback>self.$(id).set_paths($paths)</callback>
+    <param>
+        <name>Item Size</name>
+        <key>item_size</key>
+        <value>1</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Num Inputs</name>
+        <key>num_inputs</key>
+        <value>2</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Num Outputs</name>
+        <key>num_outputs</key>
+        <value>2</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Paths</name>
+        <key>paths</key>
+        <value>0, 1</value>
+        <type>int_vector</type>
+    </param>
+    <check>len($paths) == $num_inputs</check>
+    <sink>
+        <name>in</name>
+        <type>byte</type>
+        <vlen>$item_size</vlen>
+        <nports>$num_inputs</nports>
+    </sink>
+    <source>
+        <name>out</name>
+        <type>byte</type>
+        <vlen>$item_size</vlen>
+        <nports>$num_outputs</nports>
+    </source>
+</block>
