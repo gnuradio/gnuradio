@@ -19,18 +19,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define GR_FILTER_API
+#ifndef INCLUDED_GR_FILTER_TYPES_H
+#define INCLUDED_GR_FILTER_TYPES_H
 
-%ignore gr_sync_block;
-%ignore gr_sync_decimator;
+enum filter_type{
+    FILTER_FC32_IO_FC32_TAPS,
+    FILTER_F32_IO_F32_TAPS,
+};
 
-////////////////////////////////////////////////////////////////////////
-// standard includes
-////////////////////////////////////////////////////////////////////////
-%include <gnuradio.i>
-
-////////////////////////////////////////////////////////////////////////
-// block includes
-////////////////////////////////////////////////////////////////////////
-%include <gr_filter_types.h>
-%include <filter_fir.i>
+#endif /* INCLUDED_GR_FILTER_TYPES_H */

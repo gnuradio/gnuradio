@@ -21,6 +21,11 @@ self.$(id).set_taps($taps)</make>
             <key>FILTER_FC32_IO_FC32_TAPS</key>
             <opt>input:fc32</opt><opt>output:fc32</opt>
         </option>
+        <option>
+            <name>F32 IO, F32 Taps</name>
+            <key>FILTER_F32_IO_F32_TAPS</key>
+            <opt>input:f32</opt><opt>output:f32</opt>
+        </option>
     </param>
     <param>
         <name>Decimation</name>

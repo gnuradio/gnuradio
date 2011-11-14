@@ -24,13 +24,8 @@
 
 #include <gr_filter_api.h>
 #include <gr_sync_decimator.h>
+#include <gr_filter_types.h>
 #include <complex>
-
-//TODO move this to common include
-enum filter_type{
-    FILTER_FC32_IO_FC32_TAPS,
-    FILTER_F32_IO_F32_TAPS,
-};
 
 class GR_FILTER_API gr_filter_decim_fir : virtual public gr_sync_decimator{
 public:

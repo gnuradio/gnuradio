@@ -22,6 +22,7 @@
 ########################################################################
 install(FILES
     gr_filter_api.h
+    gr_filter_types.h
     gr_filter_decim_fir.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "filter_devel"

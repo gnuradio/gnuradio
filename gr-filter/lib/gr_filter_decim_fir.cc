@@ -30,7 +30,6 @@
 #include <stdexcept>
 #include <volk/volk.h>
 #include <iostream>
-#include <boost/shared_array.hpp>
 
 /***********************************************************************
  * FIR filter FC32 implementation
@@ -47,8 +46,7 @@ public:
             decim
         )
     {
-        const int alignment_multiple = volk_get_alignment() / sizeof(type);
-        set_output_multiple(std::max(16, alignment_multiple));
+        //NOP
     }
 
     int work(
@@ -57,46 +55,94 @@ public:
         gr_vector_void_star &output_items
     ){
         gruel::scoped_lock lock(_taps_mutex);
+        const size_t num_taps = this->history();
         type *out = reinterpret_cast<type *>(output_items[0]);
         const type *in = reinterpret_cast<const type *>(input_items[0]);
-        const size_t num_bytes = this->history() * sizeof(type);
+        const type *taps = reinterpret_cast<const type *>(&_taps.front());
 
         for (size_t i = 0; i < size_t(noutput_items); i++){
-            volk_32fc_x2_conjugate_dot_prod_32fc_a(out, in, _taps, num_bytes);
-            out++;
+            volk_32fc_x2_dot_prod_32fc_u(out+i, in, taps, num_taps);
             in += this->decimation();
         }
 
         return noutput_items;
     }
 
-    void set_taps(const std::vector<std::complex<double> > &taps_){
+    void set_taps(const std::vector<std::complex<double> > &taps){
         gruel::scoped_lock lock(_taps_mutex);
 
         //copy the new taps in and update history
-        std::vector<type> taps(taps_.size());
+        _taps.resize(taps.size());
         for (size_t i = 0; i < taps.size(); i++){
-            taps[i] = type(taps_[i]);
+            _taps[i] = type(taps[i]);
         }
-        if (taps.size() % 2 == 1){ //pad to 2x multiple because volk
-            taps.push_back(0.0);
+        while (_taps.size() % (volk_get_alignment() / sizeof(type)) != 0){
+            _taps.push_back(0.0);
         }
-        std::reverse(taps.begin(), taps.end());
-        this->set_history(taps.size());
-
-        //copy taps in aligned memory
-        //TODO the blob work can easily allocate managed aligned memory (so use that when its merged)
-        const size_t num_bytes = this->history() * sizeof(type);
-        const size_t align_pad = volk_get_alignment() - 1;
-        _taps_mem = boost::shared_array<char>(new char[num_bytes + align_pad]);
-        _taps = reinterpret_cast<type *>(size_t(_taps_mem.get() + align_pad) & ~align_pad);
-        std::memcpy(_taps, &taps.front(), num_bytes);
+        std::reverse(_taps.begin(), _taps.end());
+        this->set_history(_taps.size());
     }
 
 private:
     gruel::mutex _taps_mutex;
-    boost::shared_array<char> _taps_mem;
-    type *_taps;
+    std::vector<type> _taps;
+};
+
+/***********************************************************************
+ * FIR filter F32 implementation
+ **********************************************************************/
+class gr_filter_decim_fir_f32 : public gr_filter_decim_fir{
+public:
+    typedef float type;
+
+    gr_filter_decim_fir_f32(const size_t decim):
+        gr_sync_decimator(
+            "FIR filter F32",
+            gr_make_io_signature (1, 1, sizeof(type)),
+            gr_make_io_signature (1, 1, sizeof(type)),
+            decim
+        )
+    {
+        //NOP
+    }
+
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        gruel::scoped_lock lock(_taps_mutex);
+        const size_t num_taps = this->history();
+        type *out = reinterpret_cast<type *>(output_items[0]);
+        const type *in = reinterpret_cast<const type *>(input_items[0]);
+        const type *taps = reinterpret_cast<const type *>(&_taps.front());
+
+        for (size_t i = 0; i < size_t(noutput_items); i++){
+            volk_32f_x2_dot_prod_32f_u(out+i, in, taps, num_taps);
+            in += this->decimation();
+        }
+
+        return noutput_items;
+    }
+
+    void set_taps(const std::vector<std::complex<double> > &taps){
+        gruel::scoped_lock lock(_taps_mutex);
+
+        //copy the new taps in and update history
+        _taps.resize(taps.size());
+        for (size_t i = 0; i < taps.size(); i++){
+            _taps[i] = type(taps[i].real());
+        }
+        while (_taps.size() % (volk_get_alignment() / sizeof(type)) != 0){
+            _taps.push_back(0.0);
+        }
+        std::reverse(_taps.begin(), _taps.end());
+        this->set_history(_taps.size());
+    }
+
+private:
+    gruel::mutex _taps_mutex;
+    std::vector<type> _taps;
 };
 
 /***********************************************************************
@@ -105,7 +151,7 @@ private:
 gr_filter_decim_fir::sptr gr_filter_decim_fir::make(filter_type type, const size_t decim){
     switch(type){
     case FILTER_FC32_IO_FC32_TAPS: return sptr(new gr_filter_decim_fir_fc32(decim));
-    case FILTER_F32_IO_F32_TAPS://TODO
+    case FILTER_F32_IO_F32_TAPS:   return sptr(new gr_filter_decim_fir_f32(decim));
     default: throw std::invalid_argument("make FIR filter got unknown type");
     }
 }
