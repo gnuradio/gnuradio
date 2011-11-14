@@ -73,13 +73,22 @@ class GR_CORE_API gr_block : public gr_basic_block {
 
   virtual ~gr_block ();
 
+  //! Can this input port have in-place buffering?
+  bool can_inplace(const size_t port) const;
+
   /*!
-   * Enable/disable inplace processing on this block.
-   * This does not guarantee that input memory is output memory.
-   * That is an important decision for the scheduler to make.
+   * Enable/disable in-place buffering on this input port.
+   * When enabled, this port's input buffer can be shared
+   * with an output buffer when certain conditions are met:
+   *
+   * - The upstream buffer only writes to this port
+   * - This block is a fixed, 1:1 rate sync block
+   * - An output port exists that matches in IO size
+   *
+   * \param enb true to enable in-place buffering
+   * \param port the index of an input port
    */
-  bool inplace () const { return d_inplace; }
-  void  set_inplace (bool inplace) { d_inplace = inplace; }
+  void set_inplace(const bool enb, const size_t port = 0);
 
   /*!
    * Assume block computes y_i = f(x_i, x_i-1, x_i-2, x_i-3...)
@@ -241,7 +250,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   int                   d_output_multiple;
   double                d_relative_rate;	// approx output_rate / input_rate
   gr_block_detail_sptr	d_detail;		// implementation details
-  bool                  d_inplace;
+  std::vector<bool>     d_inplace;
   unsigned              d_history;
   bool                  d_fixed_rate;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream

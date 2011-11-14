@@ -157,18 +157,14 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
   }
 }
 
-static bool is_inplace(gr_basic_block_sptr block){
-    return cast_to_block_sptr(block)->inplace() and cast_to_block_sptr(block)->fixed_rate();
-}
-
 void gr_flat_flowgraph::simplify_inplace(gr_basic_block_sptr block){
 
-    if (not is_inplace(block)) return;
     typedef std::multimap<int, gr_endpoint> mastermap_type;
     mastermap_type upstream_masters;
 
     //get a map of io sizes to upstream masters
     for (size_t i = 0; i < calc_used_ports(block, true).size(); i++){
+        if (!cast_to_block_sptr(block)->can_inplace(i)) continue;
         const int in_size = block->input_signature()->sizeof_stream_item(i);
         const gr_endpoint master_ep = get_inplace_master(calc_upstream_edge(block, i).src());
         if (master_ep.block().get() != NULL) upstream_masters.insert(std::make_pair(in_size, master_ep));
@@ -202,7 +198,7 @@ gr_endpoint gr_flat_flowgraph::get_inplace_master(gr_endpoint src){
     if (calc_downstream_blocks(src.block(), src.port()).size() != 1) return gr_endpoint();
 
     //if this block is not in-place, end here, otherwise search upstream
-    if (!is_inplace(src.block())) return src;
+    if (!cast_to_block_sptr(src.block())->can_inplace(src.port())) return src;
 
     const size_t out_size = src.block()->output_signature()->sizeof_stream_item(src.port());
     for (size_t i = 0; i < calc_used_ports(src.block(), true).size(); i++){
