@@ -91,4 +91,6 @@ union bit128{
   #endif
 };
 
+#define bit128_p(x) ((union bit128 *)(x))
+
 #endif /*INCLUDED_LIBVOLK_COMMON_H*/

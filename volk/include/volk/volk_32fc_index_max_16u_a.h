@@ -87,8 +87,8 @@ static inline void volk_32fc_index_max_16u_a_sse3(unsigned int* target, lv_32fc_
 
     xmm2 = _mm_load_ps((float*)src0);
     
-    xmm1 = _mm_movelh_ps((__m128)xmm8, (__m128)xmm8);
-    xmm8 = (__m128i)xmm1;
+    xmm1 = _mm_movelh_ps(bit128_p(&xmm8)->float_vec, bit128_p(&xmm8)->float_vec);
+    xmm8 = bit128_p(&xmm1)->int_vec;
 
     xmm2 = _mm_mul_ps(xmm2, xmm2);
 
