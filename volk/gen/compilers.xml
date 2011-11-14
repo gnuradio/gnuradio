@@ -2,9 +2,21 @@
 <grammar>
 
 <compiler name="MSVC">
+  <!-- remap the following flags to SSE -->
   <remap name="mmmx">arch:SSE</remap>
   <remap name="msse">arch:SSE</remap>
+
+  <!-- remap the following flags to SSE2 -->
   <remap name="msse2">arch:SSE2</remap>
+
+  <!-- remap the following flags to AVX -->
+  <remap name="msse3">arch:AVX</remap>
+  <remap name="mssse3">arch:AVX</remap>
+  <remap name="msse4.1">arch:AVX</remap>
+  <remap name="msse4.2">arch:AVX</remap>
+  <remap name="mpopcnt">arch:AVX</remap>
+  <remap name="mavx">arch:AVX</remap>
+
   <prefix>/</prefix>
 </compiler>
 

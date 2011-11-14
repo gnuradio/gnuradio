@@ -15,9 +15,9 @@
 -->
 
 <!--
-Create an SSE2 only machine (without 64/32 inline assembly support).
+Create an SSE2 and AVX only machine (without 64/32 inline assembly support).
 This machine is intended to support the MSVC compiler on x86/amd64.
-The MSVC compiler has intrinsic support for SSE and SSE2,
+The MSVC compiler has intrinsic support for SSE, SSE2, AVX
 however it does not support the gcc style inline assembly.
 -->
 
@@ -55,6 +55,10 @@ however it does not support the gcc style inline assembly.
 
 <machine name="avx">
 <archs>generic 32|64 mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 popcount avx</archs>
+</machine>
+
+<machine name="avx_only">
+<archs>generic mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 popcount avx</archs>
 </machine>
 
 <machine name="altivec">
