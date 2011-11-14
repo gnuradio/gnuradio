@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Decimating FIR Filter
+###################################################
+ -->
+<block>
+    <name>Decimating FIR Filter</name>
+    <key>filter_decim_fir</key>
+    <import>from gnuradio import filter</import>
+    <import>from gnuradio.gr import firdes</import>
+    <make>filter.decim_fir(filter.$type, $decim)
+self.$(id).set_taps($taps)</make>
+    <callback>set_taps($taps)</callback>
+    <param>
+        <name>Type</name>
+        <key>type</key>
+        <type>enum</type>
+        <option>
+            <name>FC32 IO, FC32 Taps</name>
+            <key>FILTER_FC32_IO_FC32_TAPS</key>
+            <opt>input:fc32</opt><opt>output:fc32</opt>
+        </option>
+    </param>
+    <param>
+        <name>Decimation</name>
+        <key>decim</key>
+        <value>1</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Taps</name>
+        <key>taps</key>
+        <type>complex_vector</type>
+    </param>
+    <sink>
+        <name>in</name>
+        <type>$type.input</type>
+    </sink>
+    <source>
+        <name>out</name>
+        <type>$type.output</type>
+    </source>
+</block>

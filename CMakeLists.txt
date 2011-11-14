@@ -63,7 +63,8 @@ if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-Wsign-compare HAVE_SIGN_COMPARE)
+    GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-Wsign-compare HAVE_WARN_SIGN_COMPARE)
+    GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-Wall HAVE_WARN_ALL)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
@@ -197,15 +198,17 @@ install(
 
 
 ########################################################################
-# Add subdirectories
+# Add subdirectories (in order of deps)
 ########################################################################
 add_subdirectory(gruel)
 add_subdirectory(gnuradio-core)
 add_subdirectory(grc)
 
+add_subdirectory(gr-basic)
+add_subdirectory(gr-filter)
+
 add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
-add_subdirectory(gr-basic)
 add_subdirectory(gr-comedi)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-noaa)
