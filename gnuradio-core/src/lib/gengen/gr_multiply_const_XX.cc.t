@@ -41,6 +41,7 @@ gr_make_@BASE_NAME@ (@O_TYPE@ k)
 		   gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),
     d_k (k)
 {
+    this->set_inplace(true);
 }
 
 int

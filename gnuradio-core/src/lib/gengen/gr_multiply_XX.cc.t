@@ -41,6 +41,8 @@ gr_make_@BASE_NAME@ (size_t vlen)
 		   gr_make_io_signature (1,  1, sizeof (@O_TYPE@)*vlen)),
   d_vlen (vlen)
 {
+    //due to implementation, only port0 can be inplaced
+    this->set_inplace(true, 0);
 }
 
 int
