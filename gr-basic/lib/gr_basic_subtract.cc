@@ -39,7 +39,9 @@ public:
         ),
         _vlen(vlen)
     {
-        //NOP
+        //due to implementation, only first 2 ports can be inplaced
+        this->set_inplace(true, 0);
+        this->set_inplace(true, 1);
     }
 
     int work(

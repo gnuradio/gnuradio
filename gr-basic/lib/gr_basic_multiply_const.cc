@@ -53,6 +53,7 @@ public:
         _val.resize(1);
         const int alignment_multiple = volk_get_alignment() / (sizeof(type));
         set_output_multiple(std::max(1, alignment_multiple));
+        this->set_inplace(true);
     }
 
     int work(
@@ -97,6 +98,7 @@ public:
         _val.resize(1);
         const int alignment_multiple = volk_get_alignment() / sizeof(type);
         set_output_multiple(std::max(1, alignment_multiple));
+        this->set_inplace(true);
     }
 
     int work(
@@ -138,6 +140,7 @@ public:
         )
     {
         _val.resize(vlen);
+        this->set_inplace(true);
     }
 
     int work(

@@ -50,6 +50,7 @@ public:
         )
     {
         _val.resize(vlen);
+        this->set_inplace(true);
     }
 
     int work(
