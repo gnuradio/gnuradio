@@ -34,6 +34,7 @@ gr_block::gr_block (const std::string &name,
 		    gr_io_signature_sptr output_signature)
   : gr_basic_block(name, input_signature, output_signature),
     d_output_multiple (1),
+    d_output_alignment (1),
     d_relative_rate (1.0),
     d_history(1),
     d_fixed_rate(false),
@@ -86,6 +87,15 @@ gr_block::set_output_multiple (int multiple)
     throw std::invalid_argument ("gr_block::set_output_multiple");
 
   d_output_multiple = multiple;
+}
+
+void
+gr_block::set_output_alignment (int alignment)
+{
+  if (alignment < 1)
+    throw std::invalid_argument ("gr_block::set_output_alignment");
+
+  d_output_alignment = alignment;
 }
 
 void

@@ -366,6 +366,19 @@ gr_block_executor::run_one_iteration()
     for (int i = 0; i < d->ninputs(); i++)
       d_start_nitems_read[i] = d->nitems_read(i);
 
+    // constrain the noutput_items to meet alignment requirements
+    if (m->output_alignment() > 1){
+        const int alignment_extra = m->nitems_written(0) % m->output_alignment();
+        //written non-multiple? this logic will re-align to multiple
+        if (alignment_extra != 0){
+            noutput_items = std::min(noutput_items, m->output_alignment() - alignment_extra);
+        }
+        //aligned? keep submitting multiples until we cant
+        else if (noutput_items > m->output_alignment()){
+            noutput_items -= noutput_items % m->output_alignment();
+        }
+    }
+
     // Do the actual work of the block
     int n = m->general_work (noutput_items, d_ninput_items,
 			     d_input_items, d_output_items);

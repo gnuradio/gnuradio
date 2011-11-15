@@ -171,6 +171,18 @@ class GR_CORE_API gr_block : public gr_basic_block {
   int  output_multiple () const { return d_output_multiple; }
 
   /*!
+   * \brief Constrain the output alignment passed to work
+   *
+   * genral_work is called with noutput_items multiple of alignment.
+   * When this cannot be satisfied, genral_work will be called
+   * with sub-alignment noutput_items until alignment is regained.
+   *
+   * \param alignment a alignment multiple in number of items
+   */
+  void set_output_alignment (int alignment);
+  int  output_alignment () const { return d_output_alignment; }
+
+  /*!
    * \brief Tell the scheduler \p how_many_items of input stream \p which_input were consumed.
    */
   void consume (int which_input, int how_many_items);
@@ -248,6 +260,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
  private:
 
   int                   d_output_multiple;
+  int                   d_output_alignment;
   double                d_relative_rate;	// approx output_rate / input_rate
   gr_block_detail_sptr	d_detail;		// implementation details
   std::vector<bool>     d_inplace;
