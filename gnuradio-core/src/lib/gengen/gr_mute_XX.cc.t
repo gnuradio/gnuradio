@@ -43,6 +43,7 @@ gr_make_@BASE_NAME@ (bool mute)
 		   gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),
     d_mute (mute)
 {
+    this->set_inplace(true);
 }
 
 int

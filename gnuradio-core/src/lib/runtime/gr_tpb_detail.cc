@@ -44,7 +44,10 @@ gr_tpb_detail::notify_upstream(gr_block_detail *d)
 
   for (size_t i = 0; i < d->d_input.size(); i++){
     // Can you say, "pointer chasing?"
-    d->d_input[i]->buffer()->link()->detail()->d_tpb.set_output_changed();
+    const gr_buffer::writers_type &writers = d->d_input[i]->buffer()->writers();
+    for (size_t j = 0; j < writers.size(); j++){
+        writers[j].lock()->detail()->d_tpb.set_output_changed();
+    }
   }
 }
 

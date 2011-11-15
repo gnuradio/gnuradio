@@ -63,6 +63,8 @@ private:
   gr_block_detail_sptr allocate_block_detail(gr_basic_block_sptr block);
   gr_buffer_sptr allocate_buffer(gr_basic_block_sptr block, int port);
   void connect_block_inputs(gr_basic_block_sptr block);
+  void simplify_inplace(gr_basic_block_sptr block);
+  gr_endpoint get_inplace_master(gr_endpoint);
 };
 
 #endif /* INCLUDED_GR_FLAT_FLOWGRAPH_H */

@@ -41,6 +41,7 @@ gr_make_@BASE_NAME@ (const std::vector<@I_TYPE@> &k)
 		   gr_make_io_signature (1, 1, sizeof(@O_TYPE@)*k.size()))
 {
   d_k = k;
+  this->set_inplace(true);
 }
 
 int

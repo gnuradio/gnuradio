@@ -37,7 +37,7 @@ public:
             gr_make_io_signature(1, 1, itemsize)),
         d_itemsize(itemsize)
     {
-        /* NOP */
+        this->set_inplace(true);
     }
 
     void set_sample_rate(double rate){
@@ -68,7 +68,8 @@ public:
         //copy all samples output[i] <= input[i]
         const char *in = (const char *) input_items[0];
         char *out = (char *) output_items[0];
-        std::memcpy(out, in, noutput_items * d_itemsize);
+        //only memcpy when the scheduler doesnt simplify to in-place
+        if (in != out) std::memcpy(out, in, noutput_items * d_itemsize);
         d_total_samples += noutput_items;
         return noutput_items;
     }
