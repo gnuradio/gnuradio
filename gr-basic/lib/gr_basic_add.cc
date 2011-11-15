@@ -38,8 +38,7 @@ public:
         ),
         _vlen(vlen)
     {
-        const int alignment_multiple = volk_get_alignment() / (sizeof(float)*vlen);
-        set_output_multiple(std::max(1, alignment_multiple));
+        set_output_alignment(volk_get_alignment() / (sizeof(float)));
         //due to implementation, only first 2 ports can be inplaced
         this->set_inplace(true, 0);
         this->set_inplace(true, 1);

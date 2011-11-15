@@ -51,8 +51,7 @@ public:
         )
     {
         _val.resize(1);
-        const int alignment_multiple = volk_get_alignment() / (sizeof(type));
-        set_output_multiple(std::max(1, alignment_multiple));
+        set_output_alignment(volk_get_alignment() / (sizeof(type)));
         this->set_inplace(true);
     }
 
@@ -96,8 +95,7 @@ public:
         )
     {
         _val.resize(1);
-        const int alignment_multiple = volk_get_alignment() / sizeof(type);
-        set_output_multiple(std::max(1, alignment_multiple));
+        set_output_alignment(volk_get_alignment() / (sizeof(type)));
         this->set_inplace(true);
     }
 
