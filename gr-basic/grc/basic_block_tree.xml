@@ -32,6 +32,7 @@
         <name>Basic</name>
         <block>basic_sig_source</block>
         <block>basic_stream_selector</block>
+        <block>basic_delay</block>
         <block>basic_add</block>
         <block>basic_add_const</block>
         <block>basic_subtract</block>

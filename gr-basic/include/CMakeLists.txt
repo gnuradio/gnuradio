@@ -24,6 +24,7 @@ install(FILES
     gr_basic_api.h
     gr_basic_add.h
     gr_basic_add_const.h
+    gr_basic_delay.h
     gr_basic_divide.h
     gr_basic_multiply.h
     gr_basic_multiply_const.h

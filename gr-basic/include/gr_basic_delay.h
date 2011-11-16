@@ -18,22 +18,24 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#ifndef INCLUDED_GR_BASIC_DELAY_H
+#define INCLUDED_GR_BASIC_DELAY_H
 
-#define GR_BASIC_API
+#include <gr_basic_api.h>
+#include <gr_block.h>
 
-%ignore gr_block;
-%ignore gr_sync_block;
-%ignore gr_hier_block2;
+/*!
+ * This block delays a stream by a selectable number of items.
+ */
+class GR_BASIC_API gr_basic_delay : virtual public gr_block{
+public:
+    typedef boost::shared_ptr<gr_basic_delay> sptr;
 
-////////////////////////////////////////////////////////////////////////
-// standard includes
-////////////////////////////////////////////////////////////////////////
-%include <gnuradio.i>
+    //! Make a new delay block
+    static sptr make(const size_t itemsize);
 
-////////////////////////////////////////////////////////////////////////
-// block includes
-////////////////////////////////////////////////////////////////////////
-%include <basic_ops.i>
-%include <basic_delay.i>
-%include <basic_sig_source.i>
-%include <basic_stream_selector.i>
+    //! Change the number of items worth of delay
+    virtual void set_delay(const int nitems) = 0;
+};
+
+#endif /* INCLUDED_GR_BASIC_DELAY_H */

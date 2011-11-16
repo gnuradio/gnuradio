@@ -19,21 +19,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define GR_BASIC_API
-
-%ignore gr_block;
-%ignore gr_sync_block;
-%ignore gr_hier_block2;
-
 ////////////////////////////////////////////////////////////////////////
-// standard includes
+// block headers
 ////////////////////////////////////////////////////////////////////////
-%include <gnuradio.i>
+%{
+#include <gr_basic_delay.h>
+%}
+
+%include <gr_basic_delay.h>
 
 ////////////////////////////////////////////////////////////////////////
-// block includes
+// block magic
 ////////////////////////////////////////////////////////////////////////
-%include <basic_ops.i>
-%include <basic_delay.i>
-%include <basic_sig_source.i>
-%include <basic_stream_selector.i>
+GR_SWIG_BLOCK_MAGIC2(gr_basic,delay)

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Basic delay block
+###################################################
+ -->
+<block>
+    <name>Delay</name>
+    <key>basic_delay</key>
+    <import>from gnuradio import basic</import>
+    <make>basic.delay($item_size)
+self.$(id).set_delay($delay)
+</make>
+    <callback>self.$(id).set_delay($delay)</callback>
+    <param>
+        <name>Item Size</name>
+        <key>item_size</key>
+        <value>1</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Delay</name>
+        <key>delay</key>
+        <value>0</value>
+        <type>int</type>
+    </param>
+    <sink>
+        <name>in</name>
+        <type>byte</type>
+        <vlen>$item_size</vlen>
+    </sink>
+    <source>
+        <name>out</name>
+        <type>byte</type>
+        <vlen>$item_size</vlen>
+    </source>
+</block>
