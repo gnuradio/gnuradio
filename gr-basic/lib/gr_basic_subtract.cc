@@ -69,7 +69,7 @@ private:
 };
 
 /***********************************************************************
- * Adder factory function
+ * factory function
  **********************************************************************/
 gr_basic_subtract::sptr gr_basic_subtract::make(op_type type, const size_t vlen){
     switch(type){

@@ -45,6 +45,11 @@ public:
     //! Set the frequency, this is a fractional number between -1 and 1
     virtual void set_frequency(const double) = 0;
 
+    //! Convenience call to set frequency with sample rate
+    void set_frequency(const double samp_rate, const double wave_freq){
+        return this->set_frequency(wave_freq/samp_rate);
+    }
+
 };
 
 #endif /* INCLUDED_GR_BASIC_SIG_SOURCE_H */

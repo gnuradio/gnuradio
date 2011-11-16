@@ -181,7 +181,7 @@ protected:
 };
 
 /***********************************************************************
- * Adder factory function
+ * factory function
  **********************************************************************/
 gr_basic_multiply_const::sptr gr_basic_multiply_const::make(op_type type, const size_t vlen){
 

@@ -19,10 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
-#define LV_HAVE_GENERIC
-#include <volk/volk_32fc_x2_dot_prod_32fc_a.h>
-
 #include <gr_filter_decim_fir.h>
 #include <gr_io_signature.h>
 #include <gruel/thread.h>
@@ -75,9 +71,6 @@ public:
         _taps.resize(taps.size());
         for (size_t i = 0; i < taps.size(); i++){
             _taps[i] = type(taps[i]);
-        }
-        while (_taps.size() % (volk_get_alignment() / sizeof(type)) != 0){
-            _taps.push_back(0.0);
         }
         std::reverse(_taps.begin(), _taps.end());
         this->set_history(_taps.size());
@@ -132,9 +125,6 @@ public:
         _taps.resize(taps.size());
         for (size_t i = 0; i < taps.size(); i++){
             _taps[i] = type(taps[i].real());
-        }
-        while (_taps.size() % (volk_get_alignment() / sizeof(type)) != 0){
-            _taps.push_back(0.0);
         }
         std::reverse(_taps.begin(), _taps.end());
         this->set_history(_taps.size());

@@ -56,8 +56,7 @@ public:
 
         //consume but not produce (drops samples)
         if (delta < 0){
-            const int num_consume = std::min(ninput_items[0], -delta);
-            consume_each(num_consume);
+            consume_each(std::min(ninput_items[0], -delta));
             return 0;
         }
 

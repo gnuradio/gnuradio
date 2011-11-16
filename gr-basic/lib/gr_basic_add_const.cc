@@ -93,7 +93,7 @@ private:
 };
 
 /***********************************************************************
- * Adder factory function
+ * factory function
  **********************************************************************/
 gr_basic_add_const::sptr gr_basic_add_const::make(op_type type, const size_t vlen){
     switch(type){
