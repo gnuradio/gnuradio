@@ -17,63 +17,31 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import DOCS_DIR
-from lxml import etree
-import os
 import re
-
-DOXYGEN_NAME_XPATH = '/doxygen/compounddef/compoundname'
-DOXYGEN_BRIEFDESC_GR_XPATH = '/doxygen/compounddef/briefdescription'
-DOXYGEN_DETAILDESC_GR_XPATH = '/doxygen/compounddef/detaileddescription'
-
-GROUP_KEYS = "gr|trellis|noaa|vocoder|digital"
-
-def extract_txt(xml):
-	"""
-	Recursivly pull the text out of an xml tree.
-	@param xml the xml tree
-	@return a string
-	"""
-	text = (xml.text or '').replace('\n', '')
-	tail = (xml.tail or '').replace('\n', '')
-	if xml.tag == 'para': tail += '\n\n'
-	if xml.tag == 'linebreak': text += '\n'
-	if xml.tag == 'parametername': text += ': '
-	return text + ''.join(
-		map(lambda x: extract_txt(x), xml)
-	) + tail
 
 def _extract(key):
 	"""
-	Extract the documentation from the doxygen generated xml files.
-	If multiple files match, combine the docs.
+	Extract the documentation from the python __doc__ strings.
+	If multiple modules match, combine the docs.
 	@param key the block key
 	@return a string with documentation
 	"""
-	docs_dir = os.path.join(DOCS_DIR, 'xml')
-	if not os.path.exists(docs_dir): return ''
 	#extract matches
-	pattern = key.replace('_', '_*').replace('x', '\w')
-	class_file_matcher = re.compile('^class%s\..*$'%pattern) #xml or xml.gz
-	matches = filter(lambda f: class_file_matcher.match(f), os.listdir(docs_dir))
+	try:
+		module_name, constructor_name = key.split('_', 1)
+		module = __import__('gnuradio.'+module_name)
+		module = getattr(module, module_name)
+	except: return ''
+	pattern = constructor_name.replace('_', '_*').replace('x', '\w')
+	pattern_matcher = re.compile('^%s\w*$'%pattern)
+	matches = filter(lambda x: pattern_matcher.match(x), dir(module))
 	#combine all matches
 	doc_strs = list()
 	for match in matches:
 		try:
-			xml_file = os.path.join(docs_dir, match)
-			xml = etree.parse(xml_file)
-			#extract descriptions
-			comp_name = extract_txt(xml.xpath(DOXYGEN_NAME_XPATH)[0]).strip()
-			comp_name = '   ---   ' + comp_name + '   ---   '
-			if re.match(('(%s)_.*' % GROUP_KEYS), key):
-				brief_desc = extract_txt(xml.xpath(DOXYGEN_BRIEFDESC_GR_XPATH)[0]).strip()
-				detailed_desc = extract_txt(xml.xpath(DOXYGEN_DETAILDESC_GR_XPATH)[0]).strip()
-			else:
-				brief_desc = ''
-				detailed_desc = ''
-			#combine
-			doc_strs.append('\n\n'.join([comp_name, brief_desc, detailed_desc]).strip())
-		except IndexError: pass #bad format
+			title = '   ---   ' + match + '   ---   '
+			doc_strs.append('\n\n'.join([title, getattr(module, match).__doc__]).strip())
+		except: pass
 	return '\n\n'.join(doc_strs)
 
 _docs_cache = dict()

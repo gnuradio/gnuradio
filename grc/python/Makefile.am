@@ -25,7 +25,6 @@ ourpythondir = $(pkgpythondir)/grc/python
 ourpython_PYTHON = \
 	convert_hier.py \
 	expr_utils.py \
-	extract_category.py \
 	extract_docs.py \
 	Block.py \
 	Connection.py \

@@ -3,6 +3,5 @@
 # ~/.gnuradio/config.conf
 
 [grc]
-doc_dir = @docdir@
 global_blocks_path = @blocksdir@
 local_blocks_path =
