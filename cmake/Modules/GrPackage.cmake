@@ -141,11 +141,11 @@ endif()
 # DEB package specific
 ########################################################################
 foreach(filename preinst postinst prerm postrm)
-    list(APPEND CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA ${CMAKE_BINARY_DIR}/debian/${filename})
-    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/debian)
+    list(APPEND CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA ${CMAKE_BINARY_DIR}/Packaging/${filename})
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Packaging)
     configure_file(
-        ${CMAKE_SOURCE_DIR}/cmake/debian/${filename}.in
-        ${CMAKE_BINARY_DIR}/debian/${filename}
+        ${CMAKE_SOURCE_DIR}/cmake/Packaging/${filename}.in
+        ${CMAKE_BINARY_DIR}/Packaging/${filename}
     @ONLY)
 endforeach(filename)
 
@@ -154,11 +154,11 @@ endforeach(filename)
 ########################################################################
 foreach(filename post_install post_uninstall pre_install pre_uninstall)
     string(TOUPPER ${filename} filename_upper)
-    list(APPEND CPACK_RPM_${filename_upper}_SCRIPT_FILE ${CMAKE_BINARY_DIR}/redhat/${filename})
-    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/redhat)
+    list(APPEND CPACK_RPM_${filename_upper}_SCRIPT_FILE ${CMAKE_BINARY_DIR}/Packaging/${filename})
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Packaging)
     configure_file(
-        ${CMAKE_SOURCE_DIR}/cmake/redhat/${filename}.in
-        ${CMAKE_BINARY_DIR}/redhat/${filename}
+        ${CMAKE_SOURCE_DIR}/cmake/Packaging/${filename}.in
+        ${CMAKE_BINARY_DIR}/Packaging/${filename}
     @ONLY)
 endforeach(filename)
 
