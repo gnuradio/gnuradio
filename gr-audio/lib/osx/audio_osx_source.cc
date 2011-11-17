@@ -300,7 +300,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 
 // get the max number of input (& thus output) channels supported by
 // this device
-  d_n_max_channels = asbd_client.mChannelsPerFrame;
+  d_n_max_channels = asbd_device.mChannelsPerFrame;
 
 // create the output io signature;
 // no input siganture to set (source is hardware)
@@ -318,6 +318,31 @@ audio_osx_source::audio_osx_source (int sample_rate,
 
   d_deviceSampleRate = asbd_device.mSampleRate;
   d_n_deviceChannels = asbd_device.mChannelsPerFrame;
+
+  asbd_client.mChannelsPerFrame = d_n_deviceChannels;
+  asbd_client.mSampleRate = asbd_device.mSampleRate;
+  asbd_client.mFormatID = kAudioFormatLinearPCM;
+  asbd_client.mFormatFlags = (kAudioFormatFlagIsFloat |
+			      kAudioFormatFlagIsPacked |
+			      kAudioFormatFlagIsNonInterleaved);
+  if ((asbd_client.mFormatID == kAudioFormatLinearPCM) &&
+      (d_n_deviceChannels == 1)) {
+      asbd_client.mFormatFlags &= ~kLinearPCMFormatFlagIsNonInterleaved;
+  }
+  asbd_client.mBitsPerChannel = 32;
+  asbd_client.mBytesPerFrame = asbd_client.mBitsPerChannel / 8;
+  asbd_client.mFramesPerPacket = 1;
+  asbd_client.mBytesPerPacket = asbd_client.mBytesPerFrame;
+
+  propertySize = sizeof(AudioStreamBasicDescription);
+  err = AudioUnitSetProperty (d_InputAU,
+			      kAudioUnitProperty_StreamFormat,
+			      kAudioUnitScope_Output,
+			      1,
+			      &asbd_client,
+			      propertySize);
+  CheckErrorAndThrow (err, "AudioUnitSetProperty Device Ouput Stream Format",
+		      "audio_osx_source::audio_osx_source");
 
 // create an ASBD for the user's wants
 
@@ -914,17 +939,41 @@ audio_osx_source::SetDefaultInputDeviceAsCurrent
 ()
 {
 // set the default input device
-  AudioDeviceID deviceID;
+  AudioDeviceID deviceID = 0;
   UInt32 dataSize = sizeof (AudioDeviceID);
-  AudioHardwareGetProperty (kAudioHardwarePropertyDefaultInputDevice,
-			    &dataSize,
-			    &deviceID);
-  OSStatus err = AudioUnitSetProperty (d_InputAU,
-				       kAudioOutputUnitProperty_CurrentDevice,
-				       kAudioUnitScope_Global,
-				       0,
-				       &deviceID,
-				       sizeof (AudioDeviceID));
+  OSStatus err = noErr;
+
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  AudioObjectPropertyAddress theAddress =
+    { kAudioHardwarePropertyDefaultInputDevice,
+      kAudioObjectPropertyScopeGlobal,
+      kAudioObjectPropertyElementMaster };
+
+  err = AudioObjectGetPropertyData
+    (kAudioObjectSystemObject,
+     &theAddress,
+     0,
+     NULL,
+     &dataSize,
+     &deviceID);
+#else
+  err = AudioHardwareGetProperty
+    (kAudioHardwarePropertyDefaultInputDevice,
+     &dataSize,
+     &deviceID);
+#endif
+
+  CheckErrorAndThrow (err, "Get Audio Unit Property for Current Device",
+		      "audio_osx_source::SetDefaultInputDeviceAsCurrent");
+
+  err = AudioUnitSetProperty
+    (d_InputAU,
+     kAudioOutputUnitProperty_CurrentDevice,
+     kAudioUnitScope_Global,
+     0,
+     &deviceID,
+     sizeof (AudioDeviceID));
+
   CheckErrorAndThrow (err, "AudioUnitSetProperty Current Device",
 		      "audio_osx_source::SetDefaultInputDeviceAsCurrent");
 }
