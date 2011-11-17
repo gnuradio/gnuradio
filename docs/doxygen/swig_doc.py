@@ -241,12 +241,12 @@ if __name__ == "__main__":
 
     # gnuradio.gr.msq_queue.insert_tail and delete_head create errors unless docstrings are defined!
     # This is presumably a bug in SWIG.
-    msg_q = di.get_member(u'gr_msg_queue', DoxyClass)
-    insert_tail = msg_q.get_member(u'insert_tail', DoxyFunction)
-    delete_head = msg_q.get_member(u'delete_head', DoxyFunction)
+    #msg_q = di.get_member(u'gr_msg_queue', DoxyClass)
+    #insert_tail = msg_q.get_member(u'insert_tail', DoxyFunction)
+    #delete_head = msg_q.get_member(u'delete_head', DoxyFunction)
     output = []
-    output.append(make_func_entry(insert_tail, name='gr_py_msg_queue__insert_tail'))
-    output.append(make_func_entry(delete_head, name='gr_py_msg_queue__delete_head'))
+    #output.append(make_func_entry(insert_tail, name='gr_py_msg_queue__insert_tail'))
+    #output.append(make_func_entry(delete_head, name='gr_py_msg_queue__delete_head'))
     custom_output = "\n\n".join(output)
 
     # Generate the docstrings interface file.

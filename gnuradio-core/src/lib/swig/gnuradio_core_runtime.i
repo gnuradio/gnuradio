@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+%include "runtime_swig_doc.i"
+
 #ifndef SWIGIMPORTED
 %module(directors="1") gnuradio_core_runtime
 #endif
