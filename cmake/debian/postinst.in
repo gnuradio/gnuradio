@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ "$1" = "configure" ]; then
+    @CMAKE_INSTALL_PREFIX@/libexec/gnuradio/grc_setup_freedesktop install
+    ldconfig
+fi
