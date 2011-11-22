@@ -26,6 +26,9 @@ def get_color(color_code): return _COLORMAP.alloc_color(color_code, True, True)
 
 HIGHLIGHT_COLOR = get_color('#00FFFF')
 BORDER_COLOR = get_color('black')
+#param entry boxes
+PARAM_ENTRY_TEXT_COLOR = get_color('black')
+ENTRYENUM_CUSTOM_COLOR = get_color('#EEEEEE')
 #flow graph color constants
 FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFF9FF')
 #block color constants
