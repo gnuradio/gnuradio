@@ -21,14 +21,14 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = other xml-swig doxyxml
+SUBDIRS = other xml-swig
 
 dist_gr_doc_DATA =			\
 	$(top_srcdir)/README		\
 	$(top_srcdir)/README.hacking	\
 	README.doxyxml
 
-EXTRA_DIST = swig_doc.py
+EXTRA_DIST = doxyxml swig_doc.py
 
 all-local: prep @generate_docs@
 doc: docs            # alias

@@ -31,6 +31,15 @@ AM_CPPFLAGS = \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
 
+TOP_SWIG_DOC_IFILES = \
+	digital_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 if GUILE
 nobase_guile_DATA = \
 	gnuradio/digital.scm

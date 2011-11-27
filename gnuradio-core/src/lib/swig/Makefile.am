@@ -40,6 +40,20 @@ TOP_SWIG_IFILES =		\
 	gnuradio_core_io.i	\
 	gnuradio_core_hier.i
 
+TOP_SWIG_DOC_IFILES = \
+	filter_swig_doc.i	\
+	general_swig_doc.i	\
+	gengen_swig_doc.i	\
+	hier_swig_doc.i		\
+	io_swig_doc.i		\
+	runtime_swig_doc.i
+
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
 
 # SWIG headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS =			\
