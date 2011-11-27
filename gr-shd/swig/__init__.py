@@ -19,6 +19,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+'''
+GNU Radio package for the Symplex Hardware Driver.
+'''
+
 ########################################################################
 # Prepare shd swig module to make it more pythonic
 ########################################################################
