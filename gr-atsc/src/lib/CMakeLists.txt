@@ -209,6 +209,10 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
+# add Doxygen docs to python
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/atsc_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${GR_ATSC_INCLUDE_DIRS})
+
 set(GR_SWIG_LIBRARIES gnuradio-atsc)
 
 GR_SWIG_MAKE(atsc atsc.i)
