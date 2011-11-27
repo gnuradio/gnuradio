@@ -21,6 +21,10 @@
 
 # The presence of this file turns this directory into a Python package
 
+'''
+The GNU Radio NOAA package.
+'''
+
 # Add SWIG generated code to this namespace
 from noaa_swig import *
 

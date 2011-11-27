@@ -22,6 +22,9 @@
 
 %include "gnuradio.i"
 
+//load generated python docstrings
+%include "noaa_swig_doc.i"
+
 %{
 #include <noaa_hrpt_decoder.h>
 #include <noaa_hrpt_deframer.h>
