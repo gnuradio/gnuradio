@@ -22,6 +22,9 @@
 
 %include "gnuradio.i"
 
+//load generated python docstrings
+%include "qtgui_swig_doc.i"
+
 %{
 #include "qtgui_sink_c.h"
 #include "qtgui_sink_f.h"

@@ -29,6 +29,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${QWT_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${GR_QTGUI_INCLUDE_DIRS})
+
 set(GR_SWIG_LIBRARIES gnuradio-qtgui)
 
 GR_SWIG_MAKE(qtgui_swig qtgui_swig.i)
