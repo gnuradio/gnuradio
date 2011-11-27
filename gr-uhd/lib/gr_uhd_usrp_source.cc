@@ -388,11 +388,11 @@ public:
         while (true){
             #ifdef GR_UHD_USE_STREAM_API
             const size_t bpi = uhd::convert::get_bytes_per_item(_stream_args.cpu_format);
-            const size_t num_samps = _rx_stream->recv(
+            _rx_stream->recv(
                 outputs, nbytes/bpi, _metadata, 0.0
             );
             #else
-            const size_t num_samps = _dev->get_device()->recv(
+            _dev->get_device()->recv(
                 outputs, nbytes/_type->size, _metadata,
                 *_type, uhd::device::RECV_MODE_FULL_BUFF, 0.0
             );

@@ -122,7 +122,7 @@ private:
     const double _samp_rate;
     const uint64_t _samps_per_burst;
     const double _cycle_duration;
-    bool _do_new_burst;
     uint64_t _samps_left_in_burst;
+    bool _do_new_burst;
 
 };
