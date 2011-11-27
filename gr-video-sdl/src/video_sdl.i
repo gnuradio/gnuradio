@@ -22,6 +22,9 @@
 
 %include "gnuradio.i"				// the common stuff
 
+//load generated python docstrings
+%include "video_sdl_swig_doc.i"
+
 %{
 #include "video_sdl_sink_uc.h"
 #include "video_sdl_sink_s.h"

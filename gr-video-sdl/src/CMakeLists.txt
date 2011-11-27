@@ -71,6 +71,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/video_sdl_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${GR_VIDEO_SDL_INCLUDE_DIRS})
+
 set(GR_SWIG_LIBRARIES gnuradio-video-sdl)
 
 GR_SWIG_MAKE(video_sdl video_sdl.i)
