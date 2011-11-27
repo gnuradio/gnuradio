@@ -22,6 +22,9 @@
 
 %include "gnuradio.i"				// the common stuff
 
+//load generated python docstrings
+%include "comedi_swig_doc.i"
+
 %{
 #include "comedi_sink_s.h"
 #include "comedi_source_s.h"
