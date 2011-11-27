@@ -28,6 +28,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/audio_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${GR_AUDIO_INCLUDE_DIRS})
+
 set(GR_SWIG_LIBRARIES gnuradio-audio)
 
 GR_SWIG_MAKE(audio_swig audio_swig.i)

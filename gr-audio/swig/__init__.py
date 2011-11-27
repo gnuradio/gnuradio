@@ -19,4 +19,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
+'''
+This is the gr-audio package. This package is used to connect to audio
+sources (mic-in) and sinks (speaker-out) ports on a computer. The
+underlying hardware driver is system and OS dependent and this module
+should automatically discover the correct one to use.
+'''
+
 from audio_swig import *
