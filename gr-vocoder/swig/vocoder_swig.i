@@ -22,6 +22,9 @@
 
 %include "gnuradio.i"
 
+//load generated python docstrings
+%include "vocoder_swig_doc.i"
+
 %include "vocoder_alaw_decode_bs.i"
 %include "vocoder_alaw_encode_sb.i"
 %include "vocoder_codec2_decode_ps.i"
