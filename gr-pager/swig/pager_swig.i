@@ -21,6 +21,9 @@
 
 %include "gnuradio.i"
 
+//load generated python docstrings
+%include "pager_swig_doc.i"
+
 %{
 #include "pager_flex_frame.h"
 #include "pager_slicer_fb.h"

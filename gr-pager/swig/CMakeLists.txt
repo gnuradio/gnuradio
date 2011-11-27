@@ -28,6 +28,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${GR_PAGER_INCLUDE_DIRS})
+
 set(GR_SWIG_LIBRARIES gnuradio-pager)
 
 GR_SWIG_MAKE(pager_swig pager_swig.i)
