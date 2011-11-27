@@ -22,6 +22,9 @@
 
 %include "gnuradio.i"			// the common stuff
 
+//load generated python docstrings
+%include "trellis_swig_doc.i"
+
 %{
 #include "fsm.h"
 #include "interleaver.h"
