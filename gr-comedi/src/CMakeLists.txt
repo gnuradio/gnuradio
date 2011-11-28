@@ -87,6 +87,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES comedi.i
+    ${CMAKE_CURRENT_BINARY_DIR}/comedi_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "comedi_swig"
 )

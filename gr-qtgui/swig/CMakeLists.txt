@@ -48,6 +48,7 @@ install(FILES
     qtgui_sink_f.i
     qtgui_time_sink_c.i
     qtgui_time_sink_f.i
+    ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "qtgui_swig"
 )

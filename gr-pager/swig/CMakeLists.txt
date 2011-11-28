@@ -49,6 +49,7 @@ install(
     pager_flex_parse.i
     pager_flex_sync.i
     pager_slicer_fb.i
+    ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "pager_swig"
 )

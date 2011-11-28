@@ -60,6 +60,7 @@ install(
     vocoder_gsm_fr_decode_ps.i
     vocoder_ulaw_decode_bs.i
     vocoder_ulaw_encode_sb.i
+    ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "vocoder_swig"
 )

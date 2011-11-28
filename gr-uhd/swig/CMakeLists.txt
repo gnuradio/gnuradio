@@ -46,6 +46,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES uhd_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/uhd_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "uhd_swig"
 )

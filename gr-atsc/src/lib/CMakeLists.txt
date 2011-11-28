@@ -225,6 +225,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES atsc.i
+    ${CMAKE_CURRENT_BINARY_DIR}/atsc_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "atsc_swig"
 )

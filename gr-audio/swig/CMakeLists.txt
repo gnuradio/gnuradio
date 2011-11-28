@@ -43,6 +43,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES audio_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/audio_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "audio_swig"
 )

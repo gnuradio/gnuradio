@@ -47,6 +47,7 @@ install(
     noaa_hrpt_decoder.i
     noaa_hrpt_deframer.i
     noaa_hrpt_pll_cf.i
+    ${CMAKE_CURRENT_BINARY_DIR}/noaa_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "noaa_swig"
 )

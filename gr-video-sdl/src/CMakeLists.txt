@@ -86,6 +86,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES video_sdl.i
+    ${CMAKE_CURRENT_BINARY_DIR}/video_sdl_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "video_sdl_swig"
 )
