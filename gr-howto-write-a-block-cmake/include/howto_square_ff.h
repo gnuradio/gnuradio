@@ -63,6 +63,9 @@ private:
 
   friend HOWTO_API howto_square_ff_sptr howto_make_square_ff ();
 
+  /*!
+   * \brief square a stream of floats.
+   */
   howto_square_ff ();  	// private constructor
 
  public:

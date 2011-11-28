@@ -64,6 +64,23 @@ if(NOT Boost_FOUND)
 endif()
 
 ########################################################################
+# Install directories
+########################################################################
+include(GrPlatform) #define LIB_SUFFIX
+set(GR_RUNTIME_DIR      bin)
+set(GR_LIBRARY_DIR      lib${LIB_SUFFIX})
+set(GR_INCLUDE_DIR      include)
+set(GR_DATA_DIR         share)
+set(GR_PKG_DATA_DIR     ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME})
+set(GR_DOC_DIR          ${GR_DATA_DIR}/doc)
+set(GR_PKG_DOC_DIR      ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME})
+set(GR_CONF_DIR         etc)
+set(GR_PKG_CONF_DIR     ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d)
+set(GR_LIBEXEC_DIR      libexec)
+set(GR_PKG_LIBEXEC_DIR  ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME})
+set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
+
+########################################################################
 # Find gnuradio build dependencies
 ########################################################################
 find_package(Gruel)
@@ -93,6 +110,10 @@ link_directories(
     ${GNURADIO_CORE_LIBRARY_DIRS}
 )
 
+# Set component parameters
+set(GR_HOWTO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "" FORCE)
+set(GR_HOWTO_SWIG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/swig CACHE INTERNAL "" FORCE)
+
 ########################################################################
 # Add subdirectories
 ########################################################################
@@ -102,3 +123,4 @@ add_subdirectory(swig)
 add_subdirectory(python)
 add_subdirectory(grc)
 add_subdirectory(apps)
+add_subdirectory(docs)
