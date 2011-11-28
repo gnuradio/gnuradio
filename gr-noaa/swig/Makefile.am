@@ -45,6 +45,15 @@ AM_CPPFLAGS = \
 TOP_SWIG_IFILES = \
 	noaa_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	noaa_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.noaa
 # This ends up at:

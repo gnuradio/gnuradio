@@ -124,6 +124,15 @@ trellis.py trellis.scm:	trellis_generated.i
 TOP_SWIG_IFILES = 			\
 	trellis.i
 
+TOP_SWIG_DOC_IFILES = \
+	trellis_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.trellis
 # This ends up at:

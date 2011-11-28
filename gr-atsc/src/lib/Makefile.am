@@ -225,6 +225,15 @@ CLEANFILES += atsci_viterbi_mux.cc atsci_viterbi_gen$(EXEEXT)
 TOP_SWIG_IFILES = 		\
 	atsc.i
 
+TOP_SWIG_DOC_IFILES = \
+	atsc_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio
 # This ends up at:

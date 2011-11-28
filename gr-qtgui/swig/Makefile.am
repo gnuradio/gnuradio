@@ -39,6 +39,15 @@ AM_CPPFLAGS = \
 TOP_SWIG_IFILES = \
 	qtgui_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	qtgui_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.qtgui
 # This ends up at:

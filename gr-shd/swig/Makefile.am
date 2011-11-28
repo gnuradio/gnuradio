@@ -48,6 +48,15 @@ endif
 TOP_SWIG_IFILES = \
 	shd_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	shd_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.shd
 # This ends up at:

@@ -56,6 +56,15 @@ libgnuradio_video_sdl_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 TOP_SWIG_IFILES =			\
 	video_sdl.i
 
+TOP_SWIG_DOC_IFILES = \
+	video_sdl_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.video_sdl
 # This ends up at:

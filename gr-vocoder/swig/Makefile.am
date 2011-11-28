@@ -44,6 +44,15 @@ noinst_GUILE  = vocoder.test
 TOP_SWIG_IFILES = \
 	vocoder_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	vocoder_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.vocoder
 # This ends up at:

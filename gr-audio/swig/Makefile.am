@@ -36,6 +36,15 @@ AM_CPPFLAGS = \
 TOP_SWIG_IFILES = \
 	audio_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	audio_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.audio
 # This ends up at:

@@ -44,6 +44,15 @@ noinst_GUILE  = pager.test
 TOP_SWIG_IFILES = \
 	pager_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	pager_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.pager
 # This ends up at:

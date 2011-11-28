@@ -59,6 +59,15 @@ libgnuradio_comedi_la_LDFLAGS =	$(NO_UNDEFINED) $(LTVERSIONFLAGS)
 TOP_SWIG_IFILES =		\
 	comedi.i
 
+TOP_SWIG_DOC_IFILES = \
+	comedi_swig_doc.i
+
+BUILT_SOURCES = \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(BUILT_SOURCES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.comedi
 # This ends up at:
