@@ -34,10 +34,10 @@ AM_CPPFLAGS = \
 TOP_SWIG_DOC_IFILES = \
 	digital_swig_doc.i
 
-BUILT_SOURCES = \
+BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
-$(BUILT_SOURCES):
+$(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
 
 if GUILE

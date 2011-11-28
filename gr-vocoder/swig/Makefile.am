@@ -47,10 +47,10 @@ TOP_SWIG_IFILES = \
 TOP_SWIG_DOC_IFILES = \
 	vocoder_swig_doc.i
 
-BUILT_SOURCES = \
+BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
-$(BUILT_SOURCES):
+$(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
 
 # Install so that they end up available as:
