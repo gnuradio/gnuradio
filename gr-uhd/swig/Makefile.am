@@ -57,6 +57,9 @@ BUILT_SOURCES += \
 $(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
 
+install-data-local:
+	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
+
 # Install so that they end up available as:
 #   import gnuradio.uhd
 # This ends up at:

@@ -49,11 +49,14 @@ TOP_SWIG_DOC_IFILES = \
 	runtime_swig_doc.i
 
 
-BUILT_SOURCES = \
+BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
-$(BUILT_SOURCES):
+$(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
+
+install-data-local:
+	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
 
 # SWIG headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS =			\

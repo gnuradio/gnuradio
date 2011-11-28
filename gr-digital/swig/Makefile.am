@@ -40,6 +40,9 @@ BUILT_SOURCES += \
 $(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
 
+install-data-local:
+	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
+
 if GUILE
 nobase_guile_DATA = \
 	gnuradio/digital.scm
