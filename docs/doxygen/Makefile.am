@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = other xml-swig
+SUBDIRS = other
 
 dist_gr_doc_DATA =			\
 	$(top_srcdir)/README		\
