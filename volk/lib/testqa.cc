@@ -18,7 +18,7 @@ VOLK_RUN_TESTS(volk_16i_s32f_convert_32f_u, 1e-4, 32768.0, 20460, 10000);
 VOLK_RUN_TESTS(volk_16i_convert_8i_a, 0, 0, 20460, 10000);
 VOLK_RUN_TESTS(volk_16i_convert_8i_u, 0, 0, 20460, 10000);
 //VOLK_RUN_TESTS(volk_16i_max_star_16i_a, 0, 0, 20460, 10000);
-VOLK_RUN_TESTS(volk_16i_max_star_horizontal_16i_a, 0, 0, 20460, 10000);
+//VOLK_RUN_TESTS(volk_16i_max_star_horizontal_16i_a, 0, 0, 20460, 10000);
 //VOLK_RUN_TESTS(volk_16i_permute_and_scalar_add_a, 1e-4, 0, 2046, 1000);
 //VOLK_RUN_TESTS(volk_16i_x4_quad_max_star_16i_a, 1e-4, 0, 2046, 1000);
 VOLK_RUN_TESTS(volk_16u_byteswap_a, 0, 0, 20460, 10000);
