@@ -24,7 +24,7 @@ include(GrPython)
 include(GrSwig)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_BINARY_DIR}/../include)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_DIGITAL_INCLUDE_DIRS}
