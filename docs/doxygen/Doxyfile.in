@@ -471,7 +471,7 @@ SHOW_FILES             = YES
 # Namespaces page.  This will remove the Namespaces entry from the Quick Index
 # and from the Folder Tree View (if specified). The default is YES.
 
-SHOW_NAMESPACES        = NO
+SHOW_NAMESPACES        = YES
 
 # The FILE_VERSION_FILTER tag can be used to specify a program or script that 
 # doxygen should invoke to get the current version for each file (typically from 
@@ -628,6 +628,7 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.py \
                          @abs_top_builddir@/gr-gsm-fr-vocoder/src/python/encdec.py \
                          @abs_top_builddir@/gr-howto-write-a-block \
+                         @abs_top_builddir@/gr-howto-write-a-block-cmake \
                          @abs_top_builddir@/gr-pager/src/pager_swig.py \
                          @abs_top_builddir@/gr-qtgui \
                          @abs_top_builddir@/gr-trellis/doc \
@@ -639,7 +640,8 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/grc \
 			 @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
-			 @abs_top_srcdir@/gr-qtgui/lib
+			 @abs_top_srcdir@/gr-qtgui/lib \
+                         @abs_top_srcdir@/gr-howto-write-a-block-cmake
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
