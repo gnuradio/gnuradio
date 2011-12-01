@@ -12,9 +12,9 @@
   \param scalar the scalar value
   \param num_points The number of values in aVector and bVector to be multiplied together and stored into cVector
 */
-static inline void volk_32f_s32f_multiply_32f_a_generic(float* cVector, float* aVector, const float scalar, unsigned int num_points){
+static inline void volk_32f_s32f_multiply_32f_a_generic(float* cVector, const float* aVector, const float scalar, unsigned int num_points){
   unsigned int number = 0;
-  float* inputPtr = aVector;
+  const float* inputPtr = aVector;
   float* outputPtr = cVector;
   for(number = 0; number < num_points; number++){
     *outputPtr = (*inputPtr) * scalar;
@@ -32,8 +32,8 @@ static inline void volk_32f_s32f_multiply_32f_a_generic(float* cVector, float* a
   \param scalar the scalar value
   \param num_points The number of values in aVector and bVector to be multiplied together and stored into cVector
 */
-extern void volk_32f_s32f_multiply_32f_a_orc_impl(float* dst, float* src, const float scalar, unsigned int num_points);
-static inline void volk_32f_s32f_multiply_32f_a_orc(float* cVector, float* aVector, const float scalar, unsigned int num_points){
+extern void volk_32f_s32f_multiply_32f_a_orc_impl(float* dst, const float* src, const float scalar, unsigned int num_points);
+static inline void volk_32f_s32f_multiply_32f_a_orc(float* cVector, const float* aVector, const float scalar, unsigned int num_points){
     volk_32f_s32f_multiply_32f_a_orc_impl(cVector, aVector, scalar, num_points);
 }
 #endif /* LV_HAVE_GENERIC */
