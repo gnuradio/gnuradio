@@ -35,6 +35,18 @@ AM_CPPFLAGS = \
 TOP_SWIG_IFILES = \
 	pmt_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	pmt_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
+install-data-local:
+	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
+
 # Install so that they end up available as:
 #   import gruel.pmt
 # This ends up at:
