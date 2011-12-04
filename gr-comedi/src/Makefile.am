@@ -65,11 +65,11 @@ TOP_SWIG_DOC_IFILES = \
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
 $(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
-
-install-data-local:
-	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
 
 # Install so that they end up available as:
 #   import gnuradio.comedi
@@ -81,6 +81,10 @@ comedi_pythondir_category =	\
 # additional libraries for linking with the SWIG-generated library
 comedi_la_swig_libadd =		\
 	libgnuradio-comedi.la
+
+# additional SWIG files to be installed
+comedi_swig_swiginclude_headers = \
+	$(TOP_SWIG_DOC_IFILES)
 
 if PYTHON
 TESTS += run_tests

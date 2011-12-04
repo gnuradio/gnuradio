@@ -52,17 +52,18 @@ TOP_SWIG_DOC_IFILES = \
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
 $(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
-
-install-data-local:
-	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
 
 # SWIG headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS =			\
 	gnuradio.i			\
 	gr_swig_block_magic.i		\
-	gr_shared_ptr.i                
+	gr_shared_ptr.i                	\
+	$(TOP_SWIG_DOC_IFILES)
 
 # SWIG headers that get installed in ${prefix}/include/gnuradio/swig/...
 nobase_swiginclude_HEADERS = \

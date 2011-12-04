@@ -130,11 +130,11 @@ TOP_SWIG_DOC_IFILES = \
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
 $(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
-
-install-data-local:
-	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
 
 # Install so that they end up available as:
 #   import gnuradio.trellis
@@ -156,7 +156,8 @@ trellis_swiginclude_headers = 		\
 	trellis_siso_f.i		\
 	trellis_siso_combined_f.i	\
 	trellis_constellation_metrics_cf.i \
-	trellis_generated.i
+	trellis_generated.i		\
+	$(TOP_SWIG_DOC_IFILES)
 
 # Do creation and inclusion of other Makefiles last
 

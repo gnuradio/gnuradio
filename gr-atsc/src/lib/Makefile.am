@@ -231,11 +231,11 @@ TOP_SWIG_DOC_IFILES = \
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
 $(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
-
-install-data-local:
-	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
 
 # Install so that they end up available as:
 #   import gnuradio
@@ -248,4 +248,6 @@ atsc_pythondir_category =	\
 atsc_la_swig_libadd =		\
 	libgnuradio-atsc.la
 
-
+# additional SWIG files to be installed
+atsc_swig_swiginclude_headers =  \
+	$(TOP_SWIG_DOC_IFILES)

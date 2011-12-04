@@ -50,11 +50,11 @@ TOP_SWIG_DOC_IFILES = \
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
 $(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
-
-install-data-local:
-	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
 
 # Install so that they end up available as:
 #   import gnuradio.pager
@@ -69,11 +69,12 @@ pager_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 pager_swig_swiginclude_headers = \
-	pager_flex_deinterleave.i \
-	pager_flex_frame.i \
-	pager_flex_parse.i \
-	pager_flex_sync.i \
-	pager_slicer_fb.i
+	pager_flex_deinterleave.i 	\
+	pager_flex_frame.i 		\
+	pager_flex_parse.i 		\
+	pager_flex_sync.i 		\
+	pager_slicer_fb.i		\
+	$(TOP_SWIG_DOC_IFILES)
 
 if GUILE
 TESTS += run_guile_tests

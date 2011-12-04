@@ -45,11 +45,11 @@ TOP_SWIG_DOC_IFILES = \
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
 
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
 $(TOP_SWIG_DOC_IFILES):
 	`echo "" > $@`
-
-install-data-local:
-	cp -p $(TOP_SWIG_DOC_IFILES) $(swigincludedir)
 
 # Install so that they end up available as:
 #   import gnuradio.qtgui
@@ -67,4 +67,5 @@ qtgui_swig_swiginclude_headers = 	\
 	qtgui_sink_c.i			\
 	qtgui_sink_f.i			\
 	qtgui_time_sink_c.i		\
-	qtgui_time_sink_f.i
+	qtgui_time_sink_f.i		\
+	$(TOP_SWIG_DOC_IFILES)
