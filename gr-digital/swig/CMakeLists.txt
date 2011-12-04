@@ -23,6 +23,9 @@
 include(GrPython)
 include(GrSwig)
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
@@ -41,6 +44,7 @@ GR_SWIG_INSTALL(
 install(
     FILES
     digital_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i
     digital_binary_slicer_fb.i
     digital_clock_recovery_mm_cc.i
     digital_clock_recovery_mm_ff.i

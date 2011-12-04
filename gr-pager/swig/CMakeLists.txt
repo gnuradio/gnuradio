@@ -28,6 +28,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+
 set(GR_SWIG_LIBRARIES gnuradio-pager)
 
 GR_SWIG_MAKE(pager_swig pager_swig.i)
@@ -46,6 +49,7 @@ install(
     pager_flex_parse.i
     pager_flex_sync.i
     pager_slicer_fb.i
+    ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "pager_swig"
 )

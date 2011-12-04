@@ -29,6 +29,10 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GR_UHD_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
+
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/uhd_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
 link_directories(${UHD_LIBRARY_DIRS})
 set(GR_SWIG_LIBRARIES gnuradio-uhd ${UHD_LIBRARIES})
 
@@ -42,6 +46,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES uhd_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/uhd_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "uhd_swig"
 )

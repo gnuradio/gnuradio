@@ -185,6 +185,7 @@ if(ENABLE_PYTHON)
         trellis_siso_combined_f.i
         trellis_constellation_metrics_cf.i
         ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i
+	${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i
         DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
         COMPONENT "trellis_swig"
     )
@@ -204,6 +205,10 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GR_DIGITAL_SWIG_INCLUDE_DIRS}
 )
+
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+
 set(GR_SWIG_LIBRARIES gnuradio-trellis)
 GR_SWIG_MAKE(trellis trellis.i)
 

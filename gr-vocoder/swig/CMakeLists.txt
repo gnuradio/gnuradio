@@ -28,6 +28,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
 set(GR_SWIG_LIBRARIES gnuradio-vocoder)
 
 GR_SWIG_MAKE(vocoder_swig vocoder_swig.i)
@@ -57,6 +60,7 @@ install(
     vocoder_gsm_fr_decode_ps.i
     vocoder_ulaw_decode_bs.i
     vocoder_ulaw_encode_sb.i
+    ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "vocoder_swig"
 )

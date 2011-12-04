@@ -28,6 +28,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/noaa_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+
 set(GR_SWIG_LIBRARIES gnuradio-noaa)
 
 GR_SWIG_MAKE(noaa_swig noaa_swig.i)
@@ -44,6 +47,7 @@ install(
     noaa_hrpt_decoder.i
     noaa_hrpt_deframer.i
     noaa_hrpt_pll_cf.i
+    ${CMAKE_CURRENT_BINARY_DIR}/noaa_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "noaa_swig"
 )

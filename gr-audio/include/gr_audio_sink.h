@@ -28,7 +28,13 @@
 /*!
  * \brief Creates a sink from an audio device.
  * \ingroup audio_blk
- *
+ */
+class GR_AUDIO_API audio_sink : virtual public gr_sync_block{
+public:
+    typedef boost::shared_ptr<audio_sink> sptr;
+};
+
+/*!
  * Creates a sink from an audio device at a specified
  * sample_rate. The specific audio device to use can be specified as
  * the device_name parameter. Typical choices are:
@@ -37,12 +43,11 @@
  * \li plughw:0,0
  * \li surround51
  * \li /dev/dsp
+ *
+ * \xmlonly
+ *    - pulse, hw:0,0, plughw:0,0, surround51, /dev/dsp
+ * \endxmlonly
  */
-class GR_AUDIO_API audio_sink : virtual public gr_sync_block{
-public:
-    typedef boost::shared_ptr<audio_sink> sptr;
-};
-
 GR_AUDIO_API audio_sink::sptr audio_make_sink(
     int sampling_rate,
     const std::string device_name = "",

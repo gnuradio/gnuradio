@@ -36,6 +36,8 @@ foreach(incdir ${GNURADIO_CORE_INCLUDE_DIRS})
 endforeach(incdir)
 
 set(GR_SWIG_LIBRARIES gnuradio-howto)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/howto_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 GR_SWIG_MAKE(howto_swig howto_swig.i)
 
@@ -50,5 +52,6 @@ GR_SWIG_INSTALL(TARGETS howto_swig DESTINATION ${GR_PYTHON_DIR}/howto)
 install(
     FILES
     howto_swig.i
-    DESTINATION include/howto/swig
+    ${CMAKE_CURRENT_BINARY_DIR}/howto_swig_doc.i
+    DESTINATION $(GR_INCLUDE_DIR)/howto/swig
 )

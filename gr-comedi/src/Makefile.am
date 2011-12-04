@@ -59,6 +59,18 @@ libgnuradio_comedi_la_LDFLAGS =	$(NO_UNDEFINED) $(LTVERSIONFLAGS)
 TOP_SWIG_IFILES =		\
 	comedi.i
 
+TOP_SWIG_DOC_IFILES = \
+	comedi_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.comedi
 # This ends up at:
@@ -69,6 +81,10 @@ comedi_pythondir_category =	\
 # additional libraries for linking with the SWIG-generated library
 comedi_la_swig_libadd =		\
 	libgnuradio-comedi.la
+
+# additional SWIG files to be installed
+comedi_swig_swiginclude_headers = \
+	$(TOP_SWIG_DOC_IFILES)
 
 if PYTHON
 TESTS += run_tests

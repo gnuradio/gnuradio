@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# 1st parameter is absolute path to component source directory
+# 2nd parameter is absolute path to component build directory
+# 3rd parameter is path to Python QA directory
+
+# Note: calling master run_tests.sh in gnuradio core is not strictly
+# correct, as it will result in a partially bogus PYTHONPATH, but it
+# does make the correct paths in the second half so all is well.
+
+@PYTHON@ @srcdir@/__init__.py
+
+# @top_builddir@/run_tests.sh \
+#    @abs_top_srcdir@/gnuradio-core \
+#    @abs_top_builddir@/gnuradio-core \
+#    @srcdir@

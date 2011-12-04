@@ -42,9 +42,11 @@ LTVERSIONFLAGS = -version-info 0:0:0 -release $(LIBVER)
 
 # includes
 grincludedir = $(includedir)/gnuradio
+gruelincludedir = $(includedir)/gruel
 
 # swig includes
 swigincludedir = $(grincludedir)/swig
+gruelswigincludedir = $(gruelincludedir)/swig
 
 # Guile scheme code ends up under here:
 guiledir = $(prefix)/share/guile/site

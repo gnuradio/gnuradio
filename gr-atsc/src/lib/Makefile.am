@@ -225,6 +225,18 @@ CLEANFILES += atsci_viterbi_mux.cc atsci_viterbi_gen$(EXEEXT)
 TOP_SWIG_IFILES = 		\
 	atsc.i
 
+TOP_SWIG_DOC_IFILES = \
+	atsc_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio
 # This ends up at:
@@ -236,4 +248,6 @@ atsc_pythondir_category =	\
 atsc_la_swig_libadd =		\
 	libgnuradio-atsc.la
 
-
+# additional SWIG files to be installed
+atsc_swig_swiginclude_headers =  \
+	$(TOP_SWIG_DOC_IFILES)

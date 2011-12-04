@@ -25,7 +25,6 @@ AC_DEFUN([GRC_DOCS],[
         docs/doxygen/Doxyfile \
         docs/doxygen/Makefile \
         docs/doxygen/other/Makefile \
-        docs/doxygen/xml-swig/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(docs)

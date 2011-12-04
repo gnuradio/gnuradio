@@ -56,6 +56,18 @@ libgnuradio_video_sdl_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 TOP_SWIG_IFILES =			\
 	video_sdl.i
 
+TOP_SWIG_DOC_IFILES = \
+	video_sdl_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.video_sdl
 # This ends up at:
@@ -66,6 +78,9 @@ video_sdl_pythondir_category =		\
 # additional libraries for linking with the SWIG-generated library
 video_sdl_la_swig_libadd =		\
 	libgnuradio-video-sdl.la
+
+video_sdl_swiginclude_headers =		\
+	$(TOP_SWIG_DOC_IFILES)
 
 if PYTHON
 TESTS += run_tests

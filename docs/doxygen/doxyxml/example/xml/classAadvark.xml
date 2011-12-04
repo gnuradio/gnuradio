@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.6.3">
+  <compounddef id="classAadvark" kind="class" prot="public">
+    <compoundname>Aadvark</compoundname>
+    <includes refid="aadvark_8h" local="no">aadvark.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classAadvark_1ab79eb58d7bb9d5ddfa5d6f783836cab9" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Aadvark::aadvarkness</definition>
+        <argsstring></argsstring>
+        <name>aadvarkness</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.h" line="18" bodyfile="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classAadvark_1abd061aa5f998002e72080a34f512a059" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Aadvark::print</definition>
+        <argsstring>()</argsstring>
+        <name>print</name>
+        <briefdescription>
+<para>Outputs the vital aadvark statistics. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.h" line="13" bodyfile="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.cc" bodystart="4" bodyend="6"/>
+      </memberdef>
+      <memberdef kind="function" id="classAadvark_1adf1a4b97a641411a74a04ab312484462" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Aadvark::Aadvark</definition>
+        <argsstring>(int aaness)</argsstring>
+        <name>Aadvark</name>
+        <param>
+          <type>int</type>
+          <declname>aaness</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>aaness</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The aadvarkness of an aadvark is a measure of how aadvarky it is. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.h" line="15" bodyfile="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.cc" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classAadvark_1affd2ada0a85807efcbe26615a848f53e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int Aadvark::get_aadvarkness</definition>
+        <argsstring>()</argsstring>
+        <name>get_aadvarkness</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.h" line="16" bodyfile="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.cc" bodystart="17" bodyend="19"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Models the mammal <ref refid="classAadvark" kindref="compound">Aadvark</ref>. </para>    </briefdescription>
+    <detaileddescription>
+<para>Sadly the model is incomplete and cannot capture all aspects of an aadvark yet.</para><para>This line is uninformative and is only to test line breaks in the comments. </para>    </detaileddescription>
+    <location file="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.h" line="10" bodyfile="/home/ben/gnuradio/gnuradio-core/src/python/gnuradio/utils/doxyxml/example/aadvark.h" bodystart="10" bodyend="19"/>
+    <listofallmembers>
+      <member refid="classAadvark_1adf1a4b97a641411a74a04ab312484462" prot="public" virt="non-virtual"><scope>Aadvark</scope><name>Aadvark</name></member>
+      <member refid="classAadvark_1ab79eb58d7bb9d5ddfa5d6f783836cab9" prot="private" virt="non-virtual"><scope>Aadvark</scope><name>aadvarkness</name></member>
+      <member refid="classAadvark_1affd2ada0a85807efcbe26615a848f53e" prot="public" virt="non-virtual"><scope>Aadvark</scope><name>get_aadvarkness</name></member>
+      <member refid="classAadvark_1abd061aa5f998002e72080a34f512a059" prot="public" virt="non-virtual"><scope>Aadvark</scope><name>print</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

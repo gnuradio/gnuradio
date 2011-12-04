@@ -45,23 +45,23 @@ set(GR_SWIG_LIBRARIES gnuradio-core)
 
 set(GR_SWIG_TARGET_DEPS gengen_generated filter_generated)
 
-GR_SWIG_MAKE(gnuradio_core_runtime gnuradio_core_runtime.i)
-GR_SWIG_MAKE(gnuradio_core_general gnuradio_core_general.i)
-GR_SWIG_MAKE(gnuradio_core_gengen gnuradio_core_gengen.i)
-GR_SWIG_MAKE(gnuradio_core_filter gnuradio_core_filter.i)
-GR_SWIG_MAKE(gnuradio_core_io gnuradio_core_io.i)
-GR_SWIG_MAKE(gnuradio_core_hier gnuradio_core_hier.i)
-
-GR_SWIG_INSTALL(TARGETS
-    gnuradio_core_runtime
-    gnuradio_core_general
-    gnuradio_core_gengen
-    gnuradio_core_filter
-    gnuradio_core_io
-    gnuradio_core_hier
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
-    COMPONENT "core_python"
-)
+foreach(what runtime general gengen filter io hier)
+    SET(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${what}_swig_doc.i)
+    SET(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../${what} ${CMAKE_CURRENT_BINARY_DIR}/../${what})
+    GR_SWIG_MAKE(gnuradio_core_${what} gnuradio_core_${what}.i)
+    GR_SWIG_INSTALL(
+        TARGETS gnuradio_core_${what}
+        DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
+        COMPONENT "core_python"
+    )
+    install(
+        FILES
+        gnuradio_core_${what}.i
+        ${CMAKE_CURRENT_BINARY_DIR}/${what}_swig_doc.i
+        DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
+        COMPONENT "core_swig"
+    )
+endforeach(what)
 
 ########################################################################
 # Install various files
@@ -70,12 +70,6 @@ install(FILES
     gnuradio.i
     gr_swig_block_magic.i
     gr_shared_ptr.i
-    gnuradio_core_runtime.i
-    gnuradio_core_general.i
-    gnuradio_core_gengen.i
-    gnuradio_core_filter.i
-    gnuradio_core_io.i
-    gnuradio_core_hier.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
 )

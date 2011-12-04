@@ -22,6 +22,9 @@
 
 %include "gnuradio.i"				// the common stuff
 
+//load generated python docstrings
+%include "atsc_swig_doc.i"
+
 %{
 #include <atsc_randomizer.h>
 #include <atsc_derandomizer.h>

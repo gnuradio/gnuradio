@@ -60,7 +60,6 @@ GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/reed-solomon
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/viterbi
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/io
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/g72x
     ${CMAKE_CURRENT_BINARY_DIR}/src/lib/swig
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/swig
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/hier

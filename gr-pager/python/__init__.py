@@ -21,6 +21,10 @@
 
 # The presence of this file turns this directory into a Python package
 
+'''
+The GNU Radio pager application.
+'''
+
 from pager_swig import *
 from flex_demod import flex_demod
 from pager_utils import *

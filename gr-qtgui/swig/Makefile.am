@@ -39,6 +39,18 @@ AM_CPPFLAGS = \
 TOP_SWIG_IFILES = \
 	qtgui_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	qtgui_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.qtgui
 # This ends up at:
@@ -55,4 +67,5 @@ qtgui_swig_swiginclude_headers = 	\
 	qtgui_sink_c.i			\
 	qtgui_sink_f.i			\
 	qtgui_time_sink_c.i		\
-	qtgui_time_sink_f.i
+	qtgui_time_sink_f.i		\
+	$(TOP_SWIG_DOC_IFILES)

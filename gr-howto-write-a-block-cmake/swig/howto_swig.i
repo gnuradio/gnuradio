@@ -4,6 +4,10 @@
 
 %include "gnuradio.i"			// the common stuff
 
+//load generated python docstrings
+%include "howto_swig_doc.i"
+
+
 %{
 #include "howto_square_ff.h"
 #include "howto_square2_ff.h"

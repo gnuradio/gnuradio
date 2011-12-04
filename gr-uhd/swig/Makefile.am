@@ -48,6 +48,18 @@ endif
 TOP_SWIG_IFILES = \
 	uhd_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	uhd_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.uhd
 # This ends up at:
@@ -64,7 +76,8 @@ uhd_swig_python = \
 	__init__.py
 
 # additional SWIG files to be installed
-uhd_swig_swiginclude_headers =
+uhd_swig_swiginclude_headers =	\
+	$(TOP_SWIG_DOC_IFILES)
 
 uhd_swig_swig_args = $(UHD_CPPFLAGS)
 

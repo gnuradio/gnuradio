@@ -44,7 +44,6 @@ BUILT_SOURCES += grc.conf
 grc.conf: $(srcdir)/grc.conf.in Makefile
 	sed \
 		-e 's|@blocksdir[@]|$(grc_blocksdir)|g' \
-		-e 's|@docdir[@]|$(gr_docdir)|g' \
 	$< > $@
 
 endif

@@ -19,6 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+%include "general_swig_doc.i"
+
 #define GR_CORE_API
 
 #ifndef SWIGIMPORTED

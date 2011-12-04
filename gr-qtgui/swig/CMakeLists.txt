@@ -29,6 +29,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${QWT_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
 set(GR_SWIG_LIBRARIES gnuradio-qtgui)
 
 GR_SWIG_MAKE(qtgui_swig qtgui_swig.i)
@@ -45,6 +48,7 @@ install(FILES
     qtgui_sink_f.i
     qtgui_time_sink_c.i
     qtgui_time_sink_f.i
+    ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "qtgui_swig"
 )

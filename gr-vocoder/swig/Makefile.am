@@ -44,6 +44,18 @@ noinst_GUILE  = vocoder.test
 TOP_SWIG_IFILES = \
 	vocoder_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	vocoder_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.vocoder
 # This ends up at:
@@ -56,23 +68,24 @@ vocoder_swig_la_swig_libadd = \
 	$(abs_top_builddir)/gr-vocoder/lib/libgnuradio-vocoder.la
 
 # additional SWIG files to be installed
-vocoder_swig_swiginclude_headers = \
-	vocoder_alaw_decode_bs.i \
-	vocoder_alaw_encode_sb.i \
-	vocoder_codec2_decode_ps.i \
-	vocoder_codec2_encode_sp.i \
-	vocoder_cvsd_decode_bs.i \
-	vocoder_cvsd_encode_sb.i \
-	vocoder_g721_decode_bs.i \
-	vocoder_g721_encode_sb.i \
-	vocoder_g723_24_decode_bs.i \
-	vocoder_g723_24_encode_sb.i \
-	vocoder_g723_40_decode_bs.i \
-	vocoder_g723_40_encode_sb.i \
-	vocoder_gsm_fr_encode_sp.i \
-	vocoder_gsm_fr_decode_ps.i \
-	vocoder_ulaw_decode_bs.i \
-	vocoder_ulaw_encode_sb.i
+vocoder_swig_swiginclude_headers = 	\
+	vocoder_alaw_decode_bs.i 	\
+	vocoder_alaw_encode_sb.i 	\
+	vocoder_codec2_decode_ps.i 	\
+	vocoder_codec2_encode_sp.i 	\
+	vocoder_cvsd_decode_bs.i 	\
+	vocoder_cvsd_encode_sb.i 	\
+	vocoder_g721_decode_bs.i 	\
+	vocoder_g721_encode_sb.i 	\
+	vocoder_g723_24_decode_bs.i 	\
+	vocoder_g723_24_encode_sb.i 	\
+	vocoder_g723_40_decode_bs.i 	\
+	vocoder_g723_40_encode_sb.i 	\
+	vocoder_gsm_fr_encode_sp.i 	\
+	vocoder_gsm_fr_decode_ps.i 	\
+	vocoder_ulaw_decode_bs.i 	\
+	vocoder_ulaw_encode_sb.i	\
+	$(TOP_SWIG_DOC_IFILE)
 
 vocoder_swig_swig_args = \
 	-I$(abs_top_builddir)/gr-vocoder/lib

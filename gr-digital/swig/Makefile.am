@@ -31,6 +31,18 @@ AM_CPPFLAGS = \
 	$(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
 
+TOP_SWIG_DOC_IFILES = \
+	digital_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 if GUILE
 nobase_guile_DATA = \
 	gnuradio/digital.scm
@@ -78,7 +90,8 @@ digital_swig_swiginclude_headers =		\
 	digital_ofdm_mapper_bcv.i		\
 	digital_ofdm_sampler.i			\
 	digital_gmskmod_bc.i			\
-	digital_cpmmod_bc.i
+	digital_cpmmod_bc.i			\
+	$(TOP_SWIG_DOC_IFILES)
 
 digital_swig_swig_args = \
 	$(GR_DIGITAL_INCLUDES)

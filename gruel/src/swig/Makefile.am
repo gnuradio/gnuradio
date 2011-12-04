@@ -33,7 +33,20 @@ AM_CPPFLAGS = \
 ##############################
 # SWIG interface and library
 TOP_SWIG_IFILES = \
+	pmt_swig_doc.i \
 	pmt_swig.i
+
+TOP_SWIG_DOC_IFILES = \
+	pmt_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
 
 # Install so that they end up available as:
 #   import gruel.pmt
@@ -48,5 +61,6 @@ pmt_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 pmt_swig_swiginclude_headers =  \
-	gr_intrusive_ptr.i
+	gr_intrusive_ptr.i \
+	$(TOP_SWIG_DOC_IFILES)
 

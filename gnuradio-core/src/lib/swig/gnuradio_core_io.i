@@ -19,6 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+%include "io_swig_doc.i"
+
 #ifndef SWIGIMPORTED
 %module(directors="1") gnuradio_core_io
 #endif

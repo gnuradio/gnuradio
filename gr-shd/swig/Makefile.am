@@ -48,6 +48,18 @@ endif
 TOP_SWIG_IFILES = \
 	shd_swig.i
 
+TOP_SWIG_DOC_IFILES = \
+	shd_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.shd
 # This ends up at:
@@ -64,7 +76,8 @@ shd_swig_python = \
 	__init__.py
 
 # additional SWIG files to be installed
-shd_swig_swiginclude_headers =
+shd_swig_swiginclude_headers =	\
+	$(TOP_SWIG_DOC_IFILES)
 
 shd_swig_swig_args = $(SHD_CPPFLAGS)
 

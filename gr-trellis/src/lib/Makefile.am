@@ -124,6 +124,18 @@ trellis.py trellis.scm:	trellis_generated.i
 TOP_SWIG_IFILES = 			\
 	trellis.i
 
+TOP_SWIG_DOC_IFILES = \
+	trellis_swig_doc.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
+
 # Install so that they end up available as:
 #   import gnuradio.trellis
 # This ends up at:
@@ -144,7 +156,8 @@ trellis_swiginclude_headers = 		\
 	trellis_siso_f.i		\
 	trellis_siso_combined_f.i	\
 	trellis_constellation_metrics_cf.i \
-	trellis_generated.i
+	trellis_generated.i		\
+	$(TOP_SWIG_DOC_IFILES)
 
 # Do creation and inclusion of other Makefiles last
 

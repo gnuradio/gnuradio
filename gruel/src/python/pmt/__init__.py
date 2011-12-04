@@ -21,5 +21,9 @@
 
 # The presence of this file turns this directory into a Python package
 
+'''
+The GNU Radio Utility Etcetera Library's Polymorphic Types for Python.
+'''
+
 from pmt_swig import *
 

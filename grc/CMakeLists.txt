@@ -66,7 +66,6 @@ CPACK_COMPONENT("grc"
 ########################################################################
 # Create and install the grc conf file
 ########################################################################
-file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_DOC_DIR} docdir)
 file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
 
 configure_file(
@@ -101,13 +100,11 @@ file(TO_NATIVE_PATH ${GR_PYTHON_DIR} GR_PYTHON_POSTFIX)
 string(REPLACE "\\" "\\\\" GR_PYTHON_POSTFIX ${GR_PYTHON_POSTFIX})
 
 CPACK_SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}
-    WriteRegStr HKLM ${HLKM_ENV} \\\"GR_DOC_DIR\\\" \\\"$INSTDIR\\\\${GR_DOC_DIR}\\\"
     WriteRegStr HKLM ${HLKM_ENV} \\\"GRC_BLOCKS_PATH\\\" \\\"$INSTDIR\\\\${GRC_BLOCKS_PATH}\\\"
     WriteRegStr HKLM \\\"SOFTWARE\\\\Python\\\\PythonCore\\\\2.7\\\\PythonPath\\\" \\\"gnuradio\\\" \\\"$INSTDIR\\\\${GR_PYTHON_POSTFIX}\\\"
 ")
 
 CPACK_SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "${CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS}
-    DeleteRegValue HKLM ${HLKM_ENV} \\\"GR_DOC_DIR\\\"
     DeleteRegValue HKLM ${HLKM_ENV} \\\"GRC_BLOCKS_PATH\\\"
     DeleteRegValue HKLM \\\"SOFTWARE\\\\Python\\\\PythonCore\\\\2.7\\\\PythonPath\\\" \\\"gnuradio\\\"
 ")

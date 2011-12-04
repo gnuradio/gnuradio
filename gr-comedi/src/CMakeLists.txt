@@ -72,6 +72,9 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/comedi_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+
 set(GR_SWIG_LIBRARIES gnuradio-comedi)
 
 GR_SWIG_MAKE(comedi comedi.i)
@@ -84,6 +87,7 @@ GR_SWIG_INSTALL(
 
 install(
     FILES comedi.i
+    ${CMAKE_CURRENT_BINARY_DIR}/comedi_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "comedi_swig"
 )

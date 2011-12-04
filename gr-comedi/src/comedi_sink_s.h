@@ -31,7 +31,7 @@ class comedi_sink_s;
 typedef boost::shared_ptr<comedi_sink_s> comedi_sink_s_sptr;
 
 /*!
- * \brief make an COMEDI sink.
+ * \brief make a COMEDI sink.
  *
  * \param sampling_freq	sampling rate in Hz
  * \param dev COMEDI device name, e.g., "/dev/comedi0"

@@ -21,6 +21,9 @@
 
 %include "gnuradio.i"
 
+//load generated python docstrings
+%include "digital_swig_doc.i"
+
 %include <gri_control_loop.i>
 
 %{
