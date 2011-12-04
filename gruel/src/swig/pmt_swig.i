@@ -55,14 +55,6 @@
 
 }
 
-/*!
- * \brief this is a test function.
- *
- * this is only a test.
- */
-bool test_pmt_is_symbol(void);
-
-
 // Template intrusive_ptr for Swig to avoid dereferencing issues
 namespace pmt{
     class pmt_base;

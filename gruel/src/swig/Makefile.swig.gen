@@ -50,7 +50,7 @@ pmt_swig_scmdir = $(guiledir)
 
 ## SWIG headers are always installed into the same directory.
 
-pmt_swig_swigincludedir = $(swigincludedir)
+pmt_swig_swigincludedir = $(gruelswigincludedir)
 
 ## This is a template file for a "generated" Makefile addition (in
 ## this case, "Makefile.swig.gen").  By including the top-level
