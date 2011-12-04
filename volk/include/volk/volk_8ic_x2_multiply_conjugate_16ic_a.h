@@ -26,8 +26,8 @@ static inline void volk_8ic_x2_multiply_conjugate_16ic_a_sse4_1(lv_16sc_t* cVect
     
   for(;number < quarterPoints; number++){
     // Convert into 8 bit values into 16 bit values
-    x = _mm_cvtepi8_epi16(_mm_movpi64_epi64(*(__m64*)a));
-    y = _mm_cvtepi8_epi16(_mm_movpi64_epi64(*(__m64*)b));
+    x = _mm_cvtepi8_epi16(_mm_loadl_epi64((__m128i*)a));
+    y = _mm_cvtepi8_epi16(_mm_loadl_epi64((__m128i*)b));
       
     // Calculate the ar*cr - ai*(-ci) portions
     realz = _mm_madd_epi16(x,y);

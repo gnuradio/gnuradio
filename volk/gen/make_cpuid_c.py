@@ -39,7 +39,7 @@ struct VOLK_CPU volk_cpu;
 //implement get cpuid for gcc compilers using a copy of cpuid.h
 #if defined(__GNUC__)
 #include <gcc_x86_cpuid.h>
-#define cpuid_x86(op, r) __get_cpuid(op, r+0, r+1, r+2, r+3)
+#define cpuid_x86(op, r) __get_cpuid(op, (unsigned int *)r+0, (unsigned int *)r+1, (unsigned int *)r+2, (unsigned int *)r+3)
 
 //implement get cpuid for MSVC compilers using __cpuid intrinsic
 #elif defined(_MSC_VER)

@@ -63,10 +63,14 @@ class app_top_block(stdgui2.std_top_block):
                           help="Enable oscilloscope display")
 	parser.add_option("", "--avg-alpha", type="eng_float", default=1e-1,
 			  help="Set fftsink averaging factor, default=[%default]")
+	parser.add_option ("", "--averaging", action="store_true", default=False,
+                           help="Enable fftsink averaging, default=[%default]")
 	parser.add_option("", "--ref-scale", type="eng_float", default=1.0,
 			  help="Set dBFS=0dB input value, default=[%default]")
         parser.add_option("--fft-size", type="int", default=1024,
                           help="Set number of FFT bins [default=%default]")
+        parser.add_option("--fft-rate", type="int", default=30,
+                          help="Set FFT update rate, [default=%default]")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
@@ -74,7 +78,8 @@ class app_top_block(stdgui2.std_top_block):
 	self.options = options
         self.show_debug_info = True
         
-        self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
+        self.u = uhd.usrp_source(device_addr=options.args,
+                                 stream_args=uhd.stream_args('fc32'))
 
         # Set the subdevice spec
         if(options.spec):
@@ -98,7 +103,9 @@ class app_top_block(stdgui2.std_top_block):
 					      ref_scale=options.ref_scale,
                                               ref_level=20.0,
                                               y_divs = 12,
-					      avg_alpha=options.avg_alpha)
+                                              average=options.averaging,
+					      avg_alpha=options.avg_alpha,
+                                              fft_rate=options.fft_rate)
             self.frame.SetMinSize((800, 420))
 
         self.connect(self.u, self.scope)

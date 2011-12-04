@@ -1,2 +1,0 @@
-#!/bin/bash
-/usr/libexec/gnuradio/grc_setup_freedesktop install

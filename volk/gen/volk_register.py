@@ -4,7 +4,6 @@ import sys
 import os
 import re
 import glob
-import string
 from xml.dom import minidom
 from volk_regexp import *
 from make_cpuid_c import make_cpuid_c
@@ -101,7 +100,7 @@ for filearch in filearchs:
 
 archs_or = "("
 for arch in archs:
-    archs_or = archs_or + string.upper(arch) + "|";
+    archs_or = archs_or + arch.upper() + "|";
 archs_or = archs_or[0:len(archs_or)-1];
 archs_or = archs_or + ")";
 

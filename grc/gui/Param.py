@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+Copyright 2007-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ from Element import Element
 import pygtk
 pygtk.require('2.0')
 import gtk
+import Colors
 
 class InputParam(gtk.HBox):
 	"""The base class for an input parameter inside the input parameters dialog."""
@@ -82,7 +83,9 @@ class EntryParam(InputParam):
 		self._input.connect('changed', self._handle_changed)
 		self.pack_start(self._input, True)
 	def get_text(self): return self._input.get_text()
-	def set_color(self, color): self._input.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+	def set_color(self, color):
+		self._input.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+		self._input.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 	def set_tooltip_text(self, text): self._input.set_tooltip_text(text)
 
 class EnumParam(InputParam):
@@ -122,8 +125,10 @@ class EnumEntryParam(InputParam):
 	def set_color(self, color):
 		if self._input.get_active() == -1: #custom entry, use color
 			self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-		else: #from enum, make white background
-			self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse('#ffffff'))
+			self._input.get_child().modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+		else: #from enum, make pale background
+			self._input.get_child().modify_base(gtk.STATE_NORMAL, Colors.ENTRYENUM_CUSTOM_COLOR)
+			self._input.get_child().modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 
 PARAM_MARKUP_TMPL="""\
 #set $foreground = $param.is_valid() and 'black' or 'red'

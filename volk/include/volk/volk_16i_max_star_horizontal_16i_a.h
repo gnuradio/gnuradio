@@ -1,6 +1,7 @@
 #ifndef INCLUDED_volk_16i_max_star_horizontal_16i_a_H
 #define INCLUDED_volk_16i_max_star_horizontal_16i_a_H
 
+#include <volk/volk_common.h>
 
 #include<inttypes.h>
 #include<stdio.h>	
@@ -21,7 +22,7 @@ static inline  void volk_16i_max_star_horizontal_16i_a_ssse3(int16_t* target, in
 
   
   
-  volatile __m128i xmm0, xmm1, xmm2, xmm3, xmm4; 
+  __m128i xmm0, xmm1, xmm2, xmm3, xmm4;
   __m128i  xmm5, xmm6, xmm7, xmm8;
   
   xmm4 = _mm_load_si128((__m128i*)shufmask0);
@@ -92,8 +93,7 @@ static inline  void volk_16i_max_star_horizontal_16i_a_ssse3(int16_t* target, in
     
     xmm0 = _mm_shuffle_epi8(xmm0, xmm3);
     
-
-    _mm_storel_pd((double*)p_target, (__m128d)xmm0);
+    _mm_storel_pd((double*)p_target, bit128_p(&xmm0)->double_vec);
     
     p_target = (__m128i*)((int8_t*)p_target + 8);
 

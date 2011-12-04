@@ -96,9 +96,9 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result
 
     in1 = _mm_loadu_ps( (float*) (input+offset) );
     in2 = _mm_loadu_ps( (float*) (taps+offset) );
-    Rv = in1*in2;
+    Rv = _mm_mul_ps(in1, in2);
     fehg = _mm_shuffle_ps(in2, in2, _MM_SHUFFLE(2,3,0,1));
-    Iv = in1*fehg;
+    Iv = _mm_mul_ps(in1, fehg);
     Rs = _mm_hadd_ps( _mm_hadd_ps(Rv, zv) ,zv);
     Ivm = _mm_xor_ps( negMask.vec, Iv );
     Is = _mm_hadd_ps( _mm_hadd_ps(Ivm, zv) ,zv);
@@ -119,9 +119,9 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result
 
     in1 = _mm_loadu_ps( (float*) (input+offset) );
     in2 = _mm_loadu_ps( (float*) (taps+offset) );
-    Rv = _mm_and_ps(in1*in2, halfMask.vec);
+    Rv = _mm_and_ps(_mm_mul_ps(in1, in2), halfMask.vec);
     fehg = _mm_shuffle_ps(in2, in2, _MM_SHUFFLE(2,3,0,1));
-    Iv = _mm_and_ps(in1*fehg, halfMask.vec);
+    Iv = _mm_and_ps(_mm_mul_ps(in1, fehg), halfMask.vec);
     Rs = _mm_hadd_ps(_mm_hadd_ps(Rv, zv),zv);
     Ivm = _mm_xor_ps( negMask.vec, Iv );
     Is = _mm_hadd_ps(_mm_hadd_ps(Ivm, zv),zv);

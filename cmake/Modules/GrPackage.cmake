@@ -54,6 +54,15 @@ endfunction(CPACK_SET)
 # CPACK_FINALIZE - include cpack and the unset all the cpack variables
 ########################################################################
 function(CPACK_FINALIZE)
+
+    #set the package depends for monolithic package
+    foreach(comp ${CPACK_COMPONENTS_ALL})
+        string(TOUPPER "PACKAGE_DEPENDS_${comp}" package_depends_var)
+        list(APPEND PACKAGE_DEPENDS_ALL ${${package_depends_var}})
+    endforeach(comp)
+    string(REPLACE ";" ", " CPACK_DEBIAN_PACKAGE_DEPENDS "${PACKAGE_DEPENDS_ALL}")
+    string(REPLACE ";" ", " CPACK_RPM_PACKAGE_REQUIRES "${PACKAGE_DEPENDS_ALL}")
+
     include(CPack) #finalize the cpack settings configured throughout the build system
     foreach(var ${_cpack_vars})
         unset(${var} CACHE)
@@ -91,13 +100,39 @@ endfunction(CPACK_COMPONENT)
 ########################################################################
 # Setup CPack
 ########################################################################
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GNU Radio")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GNU Radio - The GNU Software Radio")
 set(CPACK_PACKAGE_VENDOR              "Free Software Foundation, Inc.")
-set(CPACK_PACKAGE_CONTACT             "Discuss-gnuradio@gnu.org")
+set(CPACK_PACKAGE_CONTACT             "Discuss GNURadio <discuss-gnuradio@gnu.org>")
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/README)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README)
 set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/README)
+
+find_program(LSB_RELEASE_EXECUTABLE lsb_release)
+
+if((DEBIAN OR REDHAT) AND LSB_RELEASE_EXECUTABLE)
+
+    #extract system information by executing the commands
+    execute_process(
+        COMMAND ${LSB_RELEASE_EXECUTABLE} --short --id
+        OUTPUT_VARIABLE LSB_ID OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    execute_process(
+        COMMAND ${LSB_RELEASE_EXECUTABLE} --short --release
+        OUTPUT_VARIABLE LSB_RELEASE OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    #set a more sensible package name for this system
+    SET(CPACK_PACKAGE_FILE_NAME "gnuradio-${CPACK_PACKAGE_VERSION}-${LSB_ID}-${LSB_RELEASE}-${CMAKE_SYSTEM_PROCESSOR}")
+
+    #now try to include the component based dependencies
+    set(package_deps_file "${CMAKE_SOURCE_DIR}/cmake/Packaging/${LSB_ID}-${LSB_RELEASE}.cmake")
+    if (EXISTS ${package_deps_file})
+        include(${package_deps_file})
+    endif()
+
+endif()
+
 if(${CPACK_GENERATOR} STREQUAL NSIS)
     set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
 endif()
@@ -105,25 +140,27 @@ endif()
 ########################################################################
 # DEB package specific
 ########################################################################
-set(CPACK_DEBIAN_PACKAGE_DEPENDS
-    "libboost-all-dev"
-    "libfftw3-3"
-    "python"
-    "python-numpy"
-    "libqt4-core"
-    "libqwt5-qt4"
-    "python-qt4"
-    "python-gtk2"
-    "python-lxml"
-    "python-Cheetah"
-)
-string(REPLACE ";" ", " CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_DEBIAN_PACKAGE_DEPENDS}")
-set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA ${CMAKE_SOURCE_DIR}/debian/postinst ${CMAKE_SOURCE_DIR}/debian/prerm)
+foreach(filename preinst postinst prerm postrm)
+    list(APPEND CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA ${CMAKE_BINARY_DIR}/Packaging/${filename})
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Packaging)
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/cmake/Packaging/${filename}.in
+        ${CMAKE_BINARY_DIR}/Packaging/${filename}
+    @ONLY)
+endforeach(filename)
 
 ########################################################################
 # RPM package specific
 ########################################################################
-set(CPACK_RPM_PACKAGE_REQUIRES "boost-devel") #TODO other packages
+foreach(filename post_install post_uninstall pre_install pre_uninstall)
+    string(TOUPPER ${filename} filename_upper)
+    list(APPEND CPACK_RPM_${filename_upper}_SCRIPT_FILE ${CMAKE_BINARY_DIR}/Packaging/${filename})
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Packaging)
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/cmake/Packaging/${filename}.in
+        ${CMAKE_BINARY_DIR}/Packaging/${filename}
+    @ONLY)
+endforeach(filename)
 
 ########################################################################
 # NSIS package specific
