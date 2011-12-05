@@ -53,7 +53,9 @@ volkinclude_HEADERS = \
 	volk_16u_byteswap_a.h \
 	volk_32f_accumulator_s32f_a.h \
 	volk_32f_x2_add_32f_a.h \
+	volk_32f_s32f_multiply_32f_a.h \
 	volk_32fc_32f_multiply_32fc_a.h \
+	volk_32fc_s32fc_multiply_32fc_a.h \
 	volk_32fc_s32f_power_32fc_a.h \
 	volk_32f_s32f_calc_spectral_noise_floor_32f_a.h \
 	volk_32fc_s32f_atan2_32f_a.h \
@@ -65,6 +67,7 @@ volkinclude_HEADERS = \
 	volk_32fc_deinterleave_real_32f_a.h \
 	volk_32fc_deinterleave_real_64f_a.h \
 	volk_32fc_x2_dot_prod_32fc_a.h \
+	volk_32fc_x2_dot_prod_32fc_u.h \
 	volk_32fc_index_max_16u_a.h \
 	volk_32fc_s32f_magnitude_16i_a.h \
 	volk_32fc_magnitude_32f_a.h \
