@@ -57,6 +57,7 @@ libgnuradio_comedi_la_LDFLAGS =	$(NO_UNDEFINED) $(LTVERSIONFLAGS)
 # SWIG interfaces and libraries
 
 TOP_SWIG_IFILES =		\
+	$(TOP_SWIG_DOC_IFILES) 	\
 	comedi.i
 
 TOP_SWIG_DOC_IFILES = \

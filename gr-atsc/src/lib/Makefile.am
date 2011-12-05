@@ -223,6 +223,7 @@ CLEANFILES += atsci_viterbi_mux.cc atsci_viterbi_gen$(EXEEXT)
 # ------------------------------------------------------------------------
 
 TOP_SWIG_IFILES = 		\
+	$(TOP_SWIG_DOC_IFILES) 	\
 	atsc.i
 
 TOP_SWIG_DOC_IFILES = \

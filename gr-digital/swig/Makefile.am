@@ -54,6 +54,7 @@ noinst_GUILE  = digital.test
 ##############################
 # SWIG interface and library
 TOP_SWIG_IFILES = \
+	$(TOP_SWIG_DOC_IFILES) 	\
 	digital_swig.i
 
 # Install so that they end up available as:

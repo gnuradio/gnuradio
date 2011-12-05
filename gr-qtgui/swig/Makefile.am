@@ -37,6 +37,7 @@ AM_CPPFLAGS = \
 ##############################
 # SWIG interface and library
 TOP_SWIG_IFILES = \
+	$(TOP_SWIG_DOC_IFILES) 	\
 	qtgui_swig.i
 
 TOP_SWIG_DOC_IFILES = \

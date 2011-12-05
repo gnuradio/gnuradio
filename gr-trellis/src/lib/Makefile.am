@@ -122,6 +122,7 @@ trellis.py trellis.scm:	trellis_generated.i
 # SWIG interface and library
 
 TOP_SWIG_IFILES = 			\
+	$(TOP_SWIG_DOC_IFILES) 	\
 	trellis.i
 
 TOP_SWIG_DOC_IFILES = \

@@ -33,6 +33,7 @@ AM_CPPFLAGS = -I$(srcdir) $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 # ----------------------------------------------------------------
 
 TOP_SWIG_IFILES =		\
+	$(TOP_SWIG_DOC_IFILES) 	\
 	gnuradio_core_runtime.i	\
 	gnuradio_core_general.i	\
 	gnuradio_core_gengen.i	\
@@ -47,7 +48,6 @@ TOP_SWIG_DOC_IFILES = \
 	hier_swig_doc.i		\
 	io_swig_doc.i		\
 	runtime_swig_doc.i
-
 
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)

@@ -43,6 +43,7 @@ AM_CPPFLAGS = \
 # TESTS = run_tests
 
 TOP_SWIG_IFILES = \
+	$(TOP_SWIG_DOC_IFILES) 	\
 	noaa_swig.i
 
 TOP_SWIG_DOC_IFILES = \
