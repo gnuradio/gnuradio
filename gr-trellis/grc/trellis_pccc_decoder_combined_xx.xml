@@ -10,7 +10,7 @@
 	<name>PCCC Decoder Combo</name>
 	<key>trellis_pccc_decoder_combined_xx</key>
 	<category>Error Correction/Trellis</category>
-	<import>from gnuradio import trellis</import>
+	<import>from gnuradio import trellis, digital</import>
 	<make>trellis.pccc_decoder_combined_$(type)$(out_type)(
 		trellis.fsm($o_fsm_args), $o_init_state, $o_final_state, 
 		trellis.fsm($i_fsm_args), $i_init_state, $i_final_state, 
@@ -125,15 +125,15 @@
 		<type>enum</type>
 		<option>
 			<name>Euclidean</name>
-			<key>trellis.TRELLIS_EUCLIDEAN</key>
+			<key>digital.TRELLIS_EUCLIDEAN</key>
 		</option>
 		<option>
 			<name>Hard Symbol</name>
-			<key>trellis.TRELLIS_HARD_SYMBOL</key>
+			<key>digital.TRELLIS_HARD_SYMBOL</key>
 		</option>
 		<option>
 			<name>Hard Bit</name>
-			<key>trellis.TRELLIS_HARD_BIT</key>
+			<key>digital.TRELLIS_HARD_BIT</key>
 		</option>
 	</param>
 	<param>

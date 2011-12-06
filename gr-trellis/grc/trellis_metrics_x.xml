@@ -10,7 +10,7 @@
 	<name>Trellis Metrics</name>
 	<key>trellis_metrics_x</key>
 	<category>Error Correction/Trellis</category>
-	<import>from gnuradio import trellis</import>
+	<import>from gnuradio import trellis, digital</import>
 	<make>trellis.metrics_$(type)($card, $dim, $table, $metric_type)</make>
 	<callback>set_TABLE($table)</callback>
 	<param>
@@ -63,15 +63,15 @@
 		<type>enum</type>
 		<option>
 			<name>Euclidean</name>
-			<key>trellis.TRELLIS_EUCLIDEAN</key>
+			<key>digital.TRELLIS_EUCLIDEAN</key>
 		</option>
 		<option>
 			<name>Hard Symbol</name>
-			<key>trellis.TRELLIS_HARD_SYMBOL</key>
+			<key>digital.TRELLIS_HARD_SYMBOL</key>
 		</option>
 		<option>
 			<name>Hard Bit</name>
-			<key>trellis.TRELLIS_HARD_BIT</key>
+			<key>digital.TRELLIS_HARD_BIT</key>
 		</option>
 	</param>
 	<sink>

@@ -10,7 +10,7 @@
 	<name>Viterbi Combo</name>
 	<key>trellis_viterbi_combined_xx</key>
 	<category>Error Correction/Trellis</category>
-	<import>from gnuradio import trellis</import>
+	<import>from gnuradio import trellis, digital</import>
 	<make>trellis.viterbi_combined_$(type)$(out_type)(trellis.fsm($fsm_args), $block_size, $init_state, $final_state, $dim, $table, $metric_type)</make>
         <callback>set_TABLE($table)</callback>
 	<param>
@@ -100,15 +100,15 @@
 		<type>enum</type>
 		<option>
 			<name>Euclidean</name>
-			<key>trellis.TRELLIS_EUCLIDEAN</key>
+			<key>digital.TRELLIS_EUCLIDEAN</key>
 		</option>
 		<option>
 			<name>Hard Symbol</name>
-			<key>trellis.TRELLIS_HARD_SYMBOL</key>
+			<key>digital.TRELLIS_HARD_SYMBOL</key>
 		</option>
 		<option>
 			<name>Hard Bit</name>
-			<key>trellis.TRELLIS_HARD_BIT</key>
+			<key>digital.TRELLIS_HARD_BIT</key>
 		</option>
 	</param>
 	<sink>
