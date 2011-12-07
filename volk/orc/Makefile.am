@@ -45,8 +45,9 @@ volk_32fc_s32f_magnitude_16i_a_orc_impl.orc \
 volk_16ic_magnitude_16i_a_orc_impl.orc \
 volk_16ic_deinterleave_16i_x2_a_orc_impl.orc \
 volk_16i_s32f_deinterleave_32f_x2_a_orc_impl.orc \
-volk_16ic_deinterleave_real_8i_a_orc_impl.orc
-
+volk_16ic_deinterleave_real_8i_a_orc_impl.orc	\
+volk_32fc_s32fc_multiply_32fc_a_orc_impl.orc	\
+volk_32f_s32f_multiply_32f_a_orc_impl.orc
 
 
 
