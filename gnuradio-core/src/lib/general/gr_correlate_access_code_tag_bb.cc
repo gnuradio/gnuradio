@@ -46,8 +46,8 @@ gr_correlate_access_code_tag_bb::gr_correlate_access_code_tag_bb (
   : gr_sync_block ("correlate_access_code_tag_bb",
 		   gr_make_io_signature (1, 1, sizeof(char)),
 		   gr_make_io_signature (1, 1, sizeof(char))),
-    d_data_reg(0), d_mask(0), d_len(0),
-    d_threshold(threshold)
+    d_data_reg(0), d_mask(0),
+    d_threshold(threshold), d_len(0)
 
 {
   if (!set_access_code(access_code)){
