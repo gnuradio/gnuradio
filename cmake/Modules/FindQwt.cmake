@@ -3,7 +3,7 @@
 # QWT_LIBRARIES libraries to link against
 # QWT_FOUND If false, do not try to use Qwt
 
-find_path ( QWT_INCLUDE_DIRS qwt_plot.h /usr/include/qwt-qt4 /usr/include/qwt )
+find_path ( QWT_INCLUDE_DIRS qwt_plot.h /usr/include/qwt-qt4 /usr/include/qwt /opt/local/include/qwt )
 	  
 find_library ( QWT_LIBRARIES NAMES qwt-qt4 qwt)
 
