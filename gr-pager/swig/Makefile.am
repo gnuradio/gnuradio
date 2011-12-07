@@ -41,12 +41,13 @@ noinst_GUILE  = pager.test
 
 ##############################
 # SWIG interface and library
-TOP_SWIG_IFILES = \
-	$(TOP_SWIG_DOC_IFILES) 	\
-	pager_swig.i
 
 TOP_SWIG_DOC_IFILES = \
 	pager_swig_doc.i
+
+TOP_SWIG_IFILES = \
+	$(TOP_SWIG_DOC_IFILES) 	\
+	pager_swig.i
 
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)

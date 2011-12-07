@@ -53,12 +53,12 @@ libgnuradio_video_sdl_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 #################################
 # SWIG interfaces and libraries
 
+TOP_SWIG_DOC_IFILES = \
+	video_sdl_swig_doc.i
+
 TOP_SWIG_IFILES =			\
 	$(TOP_SWIG_DOC_IFILES) 	\
 	video_sdl.i
-
-TOP_SWIG_DOC_IFILES = \
-	video_sdl_swig_doc.i
 
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)

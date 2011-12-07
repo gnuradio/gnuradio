@@ -45,12 +45,12 @@ endif
 # ----------------------------------------------------------------
 # The SWIG library
 
+TOP_SWIG_DOC_IFILES = \
+	shd_swig_doc.i
+
 TOP_SWIG_IFILES = \
 	$(TOP_SWIG_DOC_IFILES) 	\
 	shd_swig.i
-
-TOP_SWIG_DOC_IFILES = \
-	shd_swig_doc.i
 
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)

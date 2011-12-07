@@ -222,12 +222,12 @@ CLEANFILES += atsci_viterbi_mux.cc atsci_viterbi_gen$(EXEEXT)
 #  It builds the atsc modules which we'll load into python or guile
 # ------------------------------------------------------------------------
 
+TOP_SWIG_DOC_IFILES = \
+	atsc_swig_doc.i
+
 TOP_SWIG_IFILES = 		\
 	$(TOP_SWIG_DOC_IFILES) 	\
 	atsc.i
-
-TOP_SWIG_DOC_IFILES = \
-	atsc_swig_doc.i
 
 BUILT_SOURCES += \
 	$(TOP_SWIG_DOC_IFILES)
