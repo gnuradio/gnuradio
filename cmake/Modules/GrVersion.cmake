@@ -47,7 +47,7 @@ find_package(Git)
 if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
     message(STATUS "Extracting version information from git describe...")
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8
+        COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8 --long
         OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
