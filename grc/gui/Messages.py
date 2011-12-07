@@ -62,7 +62,7 @@ def send_end_load():
 
 def send_fail_load(error):
 	send('Error: %s\n'%error)
-	send('>>> Failue\n')
+	send('>>> Failure\n')
 	traceback.print_exc()
 
 ################# functions for generating flow graphs	########################################
@@ -71,7 +71,7 @@ def send_start_gen(file_path):
 
 def send_fail_gen(error):
 	send('Generate Error: %s\n'%error)
-	send('>>> Failue\n')
+	send('>>> Failure\n')
 	traceback.print_exc()
 
 ################# functions for executing flow graphs	########################################
