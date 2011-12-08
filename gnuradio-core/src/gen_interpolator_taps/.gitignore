@@ -1,7 +1,0 @@
-/Makefile
-/Makefile.in
-/.deps
-/.libs
-/*.la
-/*.lo
-/gen_interpolator_taps
