@@ -199,7 +199,7 @@ class gr_firdes {
 	     double beta = 6.76);		// used only with Kaiser
 
   /*!
-   * \brief use "window method" to design a band-reject FIR filter
+   * \brief use "window method" to design a band-pass FIR filter
    *
    * \p gain:			overall gain of filter (typically 1.0)
    * \p sampling_freq:		sampling freq (Hz)
