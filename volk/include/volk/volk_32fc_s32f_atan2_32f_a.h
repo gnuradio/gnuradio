@@ -24,10 +24,10 @@ static inline void volk_32fc_s32f_atan2_32f_a_sse4_1(float* outputVector,  const
   float* outPtr = outputVector;
 
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_points / 4;    
   const float invNormalizeFactor = 1.0 / normalizeFactor;
 
 #ifdef LV_HAVE_LIB_SIMDMATH
+  const unsigned int quarterPoints = num_points / 4;    
   __m128 testVector = _mm_set_ps1(2*M_PI);
   __m128 correctVector = _mm_set_ps1(M_PI);
   __m128 vNormalizeFactor = _mm_set_ps1(invNormalizeFactor);
@@ -86,10 +86,10 @@ static inline void volk_32fc_s32f_atan2_32f_a_sse(float* outputVector,  const lv
   float* outPtr = outputVector;
 
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_points / 4;    
   const float invNormalizeFactor = 1.0 / normalizeFactor;
 
 #ifdef LV_HAVE_LIB_SIMDMATH
+  const unsigned int quarterPoints = num_points / 4;    
   __m128 testVector = _mm_set_ps1(2*M_PI);
   __m128 correctVector = _mm_set_ps1(M_PI);
   __m128 vNormalizeFactor = _mm_set_ps1(invNormalizeFactor);

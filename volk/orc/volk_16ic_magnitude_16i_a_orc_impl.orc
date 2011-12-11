@@ -17,7 +17,7 @@ x2 divf iqf, iqf, scalar
 x2 mulf prodiqf, iqf, iqf
 splitql qf, if, prodiqf
 addf sumf, if, qf
-sqrtf rootf, sumf
+sqrt, sqrtf rootf, sumf
 mulf rootf, rootf, scalar
 convfl rootl, rootf
 convlw dst, rootl

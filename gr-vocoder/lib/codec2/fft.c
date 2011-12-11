@@ -72,7 +72,7 @@ initialize_fft (int n)
 void
 fft (float x[], int n, int isign)
 {
-  int isReverse = 0;
+  //int isReverse = 0; // never used
   int c;
   kiss_fft_cfg cfg;
   if (cfg_forward == NULL)
