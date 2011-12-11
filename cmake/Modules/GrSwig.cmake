@@ -83,9 +83,9 @@ function(GR_SWIG_MAKE_DOCS output_file)
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/doxygen
         )
 
-    else(DOXYGEN_FOUND)
+    else(ENABLE_DOXYGEN)
         file(WRITE ${output_file} "\n") #no doxygen -> empty file
-    endif(DOXYGEN_FOUND)
+    endif(ENABLE_DOXYGEN)
 endfunction(GR_SWIG_MAKE_DOCS)
 
 ########################################################################
