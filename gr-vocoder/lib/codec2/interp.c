@@ -436,7 +436,8 @@ void interpolate_lsp(
   float *ak_interp  /* interpolated aks for this frame                */
 		     )
 {
-    int   l,i;
+    //int   l,i;
+    int   i;
     float lsps[LPC_ORD],e;
     float snr;
 
