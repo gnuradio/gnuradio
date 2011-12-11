@@ -10,4 +10,4 @@
 x2 mulf prodiqf, src, src
 splitql qf, if, prodiqf
 addf sumf, if, qf
-sqrtf dst, sumf
+sqrt, sqrtf dst, sumf
