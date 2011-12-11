@@ -21,12 +21,12 @@
 */
 static inline void volk_32f_s32f_power_32f_a_sse4_1(float* cVector, const float* aVector, const float power, unsigned int num_points){
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_points / 4;
   
   float* cPtr = cVector;
   const float* aPtr = aVector;
 
 #ifdef LV_HAVE_LIB_SIMDMATH
+  const unsigned int quarterPoints = num_points / 4;
   __m128 vPower = _mm_set_ps1(power);
   __m128 zeroValue = _mm_setzero_ps();
   __m128 signMask;
@@ -78,12 +78,12 @@ static inline void volk_32f_s32f_power_32f_a_sse4_1(float* cVector, const float*
 */
 static inline void volk_32f_s32f_power_32f_a_sse(float* cVector, const float* aVector, const float power, unsigned int num_points){
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_points / 4;
   
   float* cPtr = cVector;
   const float* aPtr = aVector;
 
 #ifdef LV_HAVE_LIB_SIMDMATH
+  const unsigned int quarterPoints = num_points / 4;
   __m128 vPower = _mm_set_ps1(power);
   __m128 zeroValue = _mm_setzero_ps();
   __m128 signMask;

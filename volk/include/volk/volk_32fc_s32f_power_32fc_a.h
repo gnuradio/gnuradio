@@ -28,12 +28,12 @@ static inline lv_32fc_t __volk_s32fc_s32f_power_s32fc_a(const lv_32fc_t exp, con
 */
 static inline void volk_32fc_s32f_power_32fc_a_sse(lv_32fc_t* cVector, const lv_32fc_t* aVector, const float power, unsigned int num_points){
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_points / 4;
   
   lv_32fc_t* cPtr = cVector;
   const lv_32fc_t* aPtr = aVector;
 
 #ifdef LV_HAVE_LIB_SIMDMATH
+  const unsigned int quarterPoints = num_points / 4;
   __m128 vPower = _mm_set_ps1(power);
   
   __m128 cplxValue1, cplxValue2, magnitude, phase, iValue, qValue;
