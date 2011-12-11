@@ -108,8 +108,8 @@ EOF
 AC_DEFUN([LF_SET_WARNINGS],[
   dnl Warnings for the two main compilers
   dnl add -Wextra when you're got time to fix a bunch of them ;-)
-  cc_warning_flags="-Wall -Werror-implicit-function-declaration"
-  cxx_warning_flags="-Wall -Woverloaded-virtual"
+  cc_warning_flags="-Wall -Werror-implicit-function-declaration -Wno-uninitialized"
+  cxx_warning_flags="-Wall -Woverloaded-virtual -Wno-uninitialized"
   if test -n "${CC}"
   then
     LF_CHECK_CC_FLAG($cc_warning_flags)
