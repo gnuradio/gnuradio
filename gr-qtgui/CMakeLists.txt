@@ -23,7 +23,6 @@
 include(GrBoost)
 
 find_package(Qt4 4.2.0 COMPONENTS QtCore QtGui)
-include(${QT_USE_FILE}) #sets up the environment
 
 find_package(Qwt)
 
@@ -62,6 +61,8 @@ GR_SET_GLOBAL(GR_QTGUI_INCLUDE_DIRS
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_QTGUI)
+
+include(${QT_USE_FILE}) #sets up the environment
 
 ########################################################################
 # Setup CPack components

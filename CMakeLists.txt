@@ -201,6 +201,7 @@ install(
 ########################################################################
 # Add subdirectories (in order of deps)
 ########################################################################
+add_subdirectory(docs)
 add_subdirectory(gruel)
 add_subdirectory(gnuradio-core)
 add_subdirectory(grc)
@@ -221,7 +222,6 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-wxgui)
 add_subdirectory(gnuradio-examples/grc)
 add_subdirectory(gnuradio-examples/python)
-add_subdirectory(docs)
 
 #finalize cpack after subdirs processed
 include(GrPackage)
