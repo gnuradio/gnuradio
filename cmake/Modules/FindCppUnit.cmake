@@ -10,7 +10,7 @@
 # CPPUNIT_FOUND, If false, do not try to use CppUnit.
 
 INCLUDE(FindPkgConfig)
-PKG_CHECK_MODULES(PC_CPPUNIT "cppunit" QUIET)
+PKG_CHECK_MODULES(PC_CPPUNIT QUIET "cppunit")
 
 FIND_PATH(CPPUNIT_INCLUDE_DIRS
     NAMES cppunit/TestCase.h
