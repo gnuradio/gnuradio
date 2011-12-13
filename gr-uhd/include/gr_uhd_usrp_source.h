@@ -455,6 +455,15 @@ public:
      * \return the multi usrp device object
      */
     virtual uhd::usrp::multi_usrp::sptr get_device(void) = 0;
+
+    /*!
+     * Convenience function for finite data acquisition.
+     * This is not to be used with the scheduler; rather,
+     * one can request samples from the USRP in python.
+     * //TODO multi-channel
+     * //TODO assumes fc32
+     */
+    virtual std::vector<std::complex<float> > finite_acquisition(const size_t nsamps) = 0;
 };
 
 #endif /* INCLUDED_GR_UHD_USRP_SOURCE_H */

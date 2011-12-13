@@ -409,6 +409,25 @@ public:
         return true;
     }
 
+    std::vector<std::complex<float> > finite_acquisition(const size_t nsamps){
+        #ifdef GR_UHD_USE_STREAM_API
+        uhd::stream_cmd_t cmd(uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE);
+        cmd.num_samps = nsamps;
+        cmd.stream_now = true;
+        _dev->issue_stream_cmd(cmd);
+
+        std::vector<std::complex<float> > samps(nsamps);
+        const size_t actual_num_samps = _rx_stream->recv(
+            &samps.front(), nsamps, _metadata, 0.1
+        );
+        samps.resize(actual_num_samps);
+
+        return samps;
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
 private:
     uhd::usrp::multi_usrp::sptr _dev;
     const uhd::stream_args_t _stream_args;
