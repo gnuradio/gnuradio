@@ -318,13 +318,14 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
 
   if (is_input) {
     if (port < 0 || port >= (signed)d_inputs.size()) {
-      msg << "resolve_port: input " << port << " is out of range";
+      msg << "resolve_port: hierarchical block '" << d_owner->name()
+          << "': input " << port << " is out of range";
       throw std::runtime_error(msg.str());
     }
 
     if (d_inputs[port].empty()) {
-      msg << "hierarchical block '" << d_owner->name() << "' input " << port
-	  << " is not connected internally";
+      msg << "resolve_port: hierarchical block '" << d_owner->name()
+          << "': input " << port << " is not connected internally";
       throw std::runtime_error(msg.str());
     }
 
@@ -337,13 +338,14 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
   }
   else {
     if (port < 0 || port >= (signed)d_outputs.size()) {
-      msg << "resolve_port: output " << port << " is out of range";
+      msg << "resolve_port: hierarchical block '" << d_owner->name()
+          << "': output " << port << " is out of range";
       throw std::runtime_error(msg.str());
     }
 
     if (d_outputs[port] == gr_endpoint()) {
-      msg << "hierarchical block '" << d_owner->name() << "' output " << port
-	  << " is not connected internally";
+      msg << "resolve_port: hierarchical block '" << d_owner->name()
+          << "': output " << port << " is not connected internally";
       throw std::runtime_error(msg.str());
     }
 
@@ -351,7 +353,8 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
   }
 
   if (result.empty()) {
-    msg << "unable to resolve " 
+    msg << "resolve_port: hierarchical block '" << d_owner->name()
+        << "': unable to resolve "
 	<< (is_input ? "input port " : "output port ")
         << port;
     throw std::runtime_error(msg.str());
