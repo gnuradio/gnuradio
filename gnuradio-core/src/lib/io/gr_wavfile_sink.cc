@@ -184,6 +184,7 @@ gr_wavfile_sink::work (int noutput_items,
   
   int nwritten;
   
+  gruel::scoped_lock guard(d_mutex);     // hold mutex for duration of this block
   do_update();	// update: d_fp is reqd
   if (!d_fp)	// drop output on the floor
     return noutput_items;
@@ -254,7 +255,6 @@ gr_wavfile_sink::do_update()
     return;
   }
   
-  gruel::scoped_lock guard(d_mutex);     // hold mutex for duration of this block
   if (d_fp) {
     close_wav();
   }
