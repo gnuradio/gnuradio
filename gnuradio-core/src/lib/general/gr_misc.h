@@ -26,7 +26,7 @@
 #include <gr_core_api.h>
 #include <gr_types.h>
 
-unsigned int 
+GR_CORE_API unsigned int 
 gr_rounduppow2(unsigned int n);
 
 // FIXME should be template
