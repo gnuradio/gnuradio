@@ -133,6 +133,14 @@ class tv_rx_block (stdgui2.std_top_block):
         else: # use a UHD device
           self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
+          # Set the subdevice spec
+          if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+            
+          # Set the antenna
+          if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
+
           self.u.set_samp_rate(usrp_rate)
           dev_rate = self.u.get_samp_rate()
 
@@ -142,14 +150,6 @@ class tv_rx_block (stdgui2.std_top_block):
             options.gain = float(g.start()+g.stop())/2.0
 
           self.src=self.u
-
-          # Set the subdevice spec
-          if(options.spec):
-            self.u.set_subdev_spec(options.spec, 0)
-            
-          # Set the antenna
-          if(options.antenna):
-            self.u.set_antenna(options.antenna, 0)
 
         self.gain = options.gain        
 

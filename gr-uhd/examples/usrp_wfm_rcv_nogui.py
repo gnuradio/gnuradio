@@ -65,6 +65,14 @@ class wfm_rx_block (gr.top_block):
         # build graph
         self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
+        # Set the subdevice spec
+        if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
+
         usrp_rate  = 320e3
         demod_rate = 320e3
         audio_rate = 32e3
@@ -118,14 +126,6 @@ class wfm_rx_block (gr.top_block):
         self.set_vol(options.volume)
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
-
-        # Set the subdevice spec
-        if(options.spec):
-            self.u.set_subdev_spec(options.spec, 0)
-
-        # Set the antenna
-        if(options.antenna):
-            self.u.set_antenna(options.antenna, 0)
 
     def set_vol (self, vol):
         g = self.volume_range()
