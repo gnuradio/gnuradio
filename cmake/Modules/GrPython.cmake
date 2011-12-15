@@ -77,7 +77,9 @@ macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
         COMMAND ${PYTHON_EXECUTABLE} -c "
 #########################################
 try: import ${mod}
-except: exit(-1)
+except:
+    try: ${mod}
+    except: exit(-1)
 try: assert ${cmd}
 except: exit(-1)
 #########################################"
