@@ -90,6 +90,14 @@ class uhd_src(gr.hier_block2):
 
         self._src = uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
+        # Set the subdevice spec
+        if(spec):
+            self._src.set_subdev_spec(spec, 0)
+            
+        # Set the antenna
+        if(antenna):
+            self._src.set_antenna(antenna, 0)
+        
         self._src.set_samp_rate(samp_rate)
 	dev_rate = self._src.get_samp_rate()
         self._samp_rate = samp_rate
@@ -99,20 +107,12 @@ class uhd_src(gr.hier_block2):
         self._resamp = blks2.pfb_arb_resampler_ccf(self._rrate)
         
 	# If no gain specified, set to midrange
+        gain_range = self._src.get_gain_range()
 	if gain is None:
-	    g = self._src.get_gain_range()
-	    gain = (g.start()+g.stop())/2.0
+	    gain = (gain_range.start()+gain_range.stop())/2.0
             print "Using gain: ", gain
         self._src.set_gain(gain)
 
-        # Set the subdevice spec
-        if(spec):
-            self._src.set_subdev_spec(spec, 0)
-            
-        # Set the antenna
-        if(antenna):
-            self._src.set_antenna(antenna, 0)
-        
         self._cal = calibration
 	self.connect(self._src, self._resamp, self)
 
@@ -205,12 +205,12 @@ def main():
     parser.add_option("-c",   "--calibration", type="eng_float",
                       default=0.0, metavar="Hz",
                       help="set frequency offset to Hz [default=%default]")
-    parser.add_option("-g", "--gain", type="int",
+    parser.add_option("-g", "--gain", type="eng_float",
                       metavar="dB", default=None,
                       help="set RF gain [default is midpoint]")
     parser.add_option("-m", "--modulation", type="choice", choices=('AM','FM','WFM'),
                       metavar="TYPE", default=None,
-                      help="set modulation type (AM,FM) [default=%default]")
+                      help="set modulation type (AM,FM,WFM) [default=%default]")
     parser.add_option("-o", "--output-rate", type="eng_float",
                       default=32000, metavar="RATE",
                       help="set audio output rate to RATE [default=%default]")

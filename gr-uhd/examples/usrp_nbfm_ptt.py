@@ -282,6 +282,14 @@ class transmit_path(gr.hier_block2):
 				
         self.u = uhd.usrp_sink(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
+        # Set the subdevice spec
+        if(spec):
+            self.u.set_subdev_spec(spec, 0)
+
+        # Set the antenna
+        if(antenna):
+            self.u.set_antenna(antenna, 0)
+
         self.if_rate = 320e3
         self.audio_rate = 32e3
 
@@ -331,14 +339,6 @@ class transmit_path(gr.hier_block2):
         self.set_gain(gain)
 
         self.set_enable(False)
-
-        # Set the subdevice spec
-        if(spec):
-            self.u.set_subdev_spec(spec, 0)
-
-        # Set the antenna
-        if(antenna):
-            self.u.set_antenna(antenna, 0)
 
     def set_freq(self, target_freq):
         """

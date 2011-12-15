@@ -50,14 +50,6 @@ class uhd_interface:
         else:
             self.u = uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
-        self._args = args
-        self._ant  = antenna
-        self._spec = spec
-        self._gain = self.set_gain(gain)
-        self._freq = self.set_freq(freq)
-
-        self._rate, self._sps = self.set_sample_rate(sym_rate, sps)
-
         # Set the subdevice spec
         if(spec):
             self.u.set_subdev_spec(spec, 0)
@@ -66,6 +58,14 @@ class uhd_interface:
         if(antenna):
             self.u.set_antenna(antenna, 0)
         
+        self._args = args
+        self._ant  = antenna
+        self._spec = spec
+        self._gain = self.set_gain(gain)
+        self._freq = self.set_freq(freq)
+
+        self._rate, self._sps = self.set_sample_rate(sym_rate, sps)
+
     def set_sample_rate(self, sym_rate, req_sps):
         start_sps = req_sps
         while(True):
