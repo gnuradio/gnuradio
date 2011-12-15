@@ -172,6 +172,10 @@ class my_top_block(gr.top_block):
         self.qapp = QtGui.QApplication(sys.argv)
 
         self.u = uhd.usrp_source(device_addr=options.address, stream_args=uhd.stream_args('fc32'))
+
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
+
         self.set_bandwidth(options.samp_rate)
 
         if options.gain is None:
@@ -185,9 +189,6 @@ class my_top_block(gr.top_block):
             r = self.u.get_freq_range()
             options.freq = float(r.start()+r.stop())/2
         self.set_frequency(options.freq)
-
-        if(options.antenna):
-            self.u.set_antenna(options.antenna, 0)
 
         self._fftsize = options.fft_size
 

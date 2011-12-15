@@ -37,7 +37,6 @@ from gnuradio import uhd
 from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-from usrpm import usrp_dbid
 import math
 import sys
 
@@ -119,6 +118,14 @@ class fm_tx_block(stdgui2.std_top_block):
 
         self.u = uhd.usrp_sink(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
+        # Set the subdevice spec
+        if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
+
         self.usrp_rate = options.samp_rate
         self.u.set_samp_rate(self.usrp_rate)
         self.usrp_rate = self.u.get_samp_rate()
@@ -133,14 +140,6 @@ class fm_tx_block(stdgui2.std_top_block):
 
         self.set_gain(options.gain)
         self.set_freq(options.freq)
-
-        # Set the subdevice spec
-        if(options.spec):
-            self.u.set_subdev_spec(options.spec, 0)
-
-        # Set the antenna
-        if(options.antenna):
-            self.u.set_antenna(options.antenna, 0)
 
         self.sum = gr.add_cc ()
 

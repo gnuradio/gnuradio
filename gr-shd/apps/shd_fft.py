@@ -71,6 +71,9 @@ class app_top_block(stdgui2.std_top_block):
                                     io_type=shd.io_type.COMPLEX_FLOAT32,
                                     num_channels=1)
 
+        if(options.antenna):
+            self.src.set_antenna(options.antenna, 0)
+
         self.src.set_samp_rate(options.samp_rate)
         input_rate = self.src.get_samp_rate()
 
@@ -111,9 +114,6 @@ class app_top_block(stdgui2.std_top_block):
             options.freq = float(r.start()+r.stop())/2
             
         self.set_gain(options.gain)
-
-        if(options.antenna):
-            self.src.set_antenna(options.antenna, 0)
 
         if self.show_debug_info:
             self.myform['samprate'].set_value(self.src.get_samp_rate())

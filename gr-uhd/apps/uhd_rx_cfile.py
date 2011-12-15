@@ -47,6 +47,14 @@ class rx_cfile_block(gr.top_block):
             self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
             self._sink = gr.file_sink(gr.sizeof_gr_complex, filename)
 
+        # Set the subdevice spec
+        if(options.spec):
+            self._u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
+        if(options.antenna):
+            self._u.set_antenna(options.antenna, 0)
+
         # Set receiver sample rate
         self._u.set_samp_rate(options.samp_rate)
 
@@ -56,14 +64,6 @@ class rx_cfile_block(gr.top_block):
             options.gain = float(g.start()+g.stop())/2
 	    print "Using mid-point gain of", options.gain, "(", g.start(), "-", g.stop(), ")"
         self._u.set_gain(options.gain)
-
-        # Set the subdevice spec
-        if(options.spec):
-            self._u.set_subdev_spec(options.spec, 0)
-
-        # Set the antenna
-        if(options.antenna):
-            self._u.set_antenna(options.antenna, 0)
 
         # Set frequency (tune request takes lo_offset)
         if(options.lo_offset is not None):

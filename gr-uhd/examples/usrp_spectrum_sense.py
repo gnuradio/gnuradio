@@ -133,6 +133,14 @@ class my_top_block(gr.top_block):
         # build graph
         self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
+        # Set the subdevice spec
+        if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
+
         usrp_rate = options.samp_rate
         self.u.set_samp_rate(usrp_rate)
         dev_rate = self.u.get_samp_rate()
@@ -181,14 +189,6 @@ class my_top_block(gr.top_block):
 
         self.set_gain(options.gain)
 	print "gain =", options.gain
-
-        # Set the subdevice spec
-        if(options.spec):
-            self.u.set_subdev_spec(options.spec, 0)
-
-        # Set the antenna
-        if(options.antenna):
-            self.u.set_antenna(options.antenna, 0)
 
     def set_next_freq(self):
         target_freq = self.next_freq

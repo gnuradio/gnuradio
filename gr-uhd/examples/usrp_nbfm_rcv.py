@@ -268,6 +268,14 @@ class receive_path(gr.hier_block2):
 
         self.u = uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
+        # Set the subdevice spec
+        if(spec):
+            self.u.set_subdev_spec(spec, 0)
+
+        # Set the antenna
+        if(antenna):
+            self.u.set_antenna(antenna, 0)
+
         self.if_rate    = 256e3
         self.quad_rate  = 64e3
         self.audio_rate = 32e3
@@ -319,14 +327,6 @@ class receive_path(gr.hier_block2):
 
         s = self.squelch_range()
         self.set_squelch((s[0]+s[1])/2)
-
-        # Set the subdevice spec
-        if(spec):
-            self.u.set_subdev_spec(spec, 0)
-
-        # Set the antenna
-        if(antenna):
-            self.u.set_antenna(antenna, 0)
 
     def volume_range(self):
         return (-20.0, 0.0, 0.5)

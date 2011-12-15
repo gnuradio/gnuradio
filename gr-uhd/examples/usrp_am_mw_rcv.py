@@ -28,7 +28,6 @@ from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui2, fftsink2, form
 from optparse import OptionParser
-from usrpm import usrp_dbid
 import sys
 import math
 import wx
@@ -76,6 +75,14 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         # build graph
         self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
+
+        # Set the subdevice spec
+        if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+
+        # Set the antenna
+        if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
 
         usrp_rate  = 256e3
         demod_rate = 64e3
@@ -149,14 +156,6 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.set_vol(options.volume)
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
-
-        # Set the subdevice spec
-        if(options.spec):
-            self.u.set_subdev_spec(options.spec, 0)
-
-        # Set the antenna
-        if(options.antenna):
-            self.u.set_antenna(options.antenna, 0)
 
     def _set_status_msg(self, msg, which=0):
         self.frame.GetStatusBar().SetStatusText(msg, which)

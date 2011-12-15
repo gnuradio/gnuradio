@@ -133,6 +133,14 @@ class my_top_block(gr.top_block):
           # build the graph
           self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
 
+          # Set the subdevice spec
+          if(options.spec):
+            self.u.set_subdev_spec(options.spec, 0)
+
+          # Set the antenna
+          if(options.antenna):
+            self.u.set_antenna(options.antenna, 0)
+          
           self.u.set_samp_rate(input_rate)
           dev_rate = self.u.get_samp_rate()
 
@@ -148,14 +156,6 @@ class my_top_block(gr.top_block):
           if not r:
               sys.stderr.write('Failed to set frequency\n')
               raise SystemExit, 1
-          
-          # Set the subdevice spec
-          if(options.spec):
-            self.u.set_subdev_spec(options.spec, 0)
-
-          # Set the antenna
-          if(options.antenna):
-            self.u.set_antenna(options.antenna, 0)
           
 
         self.agc = gr.agc_cc(1e-7,1.0,1.0) #1e-7
