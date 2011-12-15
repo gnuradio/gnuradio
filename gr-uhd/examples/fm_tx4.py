@@ -37,7 +37,6 @@ from gnuradio import uhd
 from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-from usrpm import usrp_dbid
 import math
 import sys
 

@@ -28,7 +28,6 @@ from optparse import OptionParser
 from gnuradio import gr, audio, blks2, uhd
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import stdgui2, fftsink2, scopesink2, slider, form
-from usrpm import usrp_dbid
 
 from numpy import convolve, array
 

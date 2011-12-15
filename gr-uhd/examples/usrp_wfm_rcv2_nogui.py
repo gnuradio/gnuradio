@@ -23,7 +23,6 @@
 from gnuradio import gr, optfir, audio, blks2, uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-from usrpm import usrp_dbid
 import sys
 import math
 
