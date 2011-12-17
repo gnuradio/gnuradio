@@ -39,12 +39,15 @@ class rx_cfile_block(gr.top_block):
     def __init__(self, options, filename):
         gr.top_block.__init__(self)
 
+        scalar="scalar="+str(options.scalar)
         # Create a UHD device source
         if options.output_shorts:
-            self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('sc16'))
+            self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('sc16',
+                                      options.wire_format, args=scalar))
             self._sink = gr.file_sink(gr.sizeof_short*2, filename)
         else:
-            self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
+            self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32',
+                                      options.wire_format, args=scalar))
             self._sink = gr.file_sink(gr.sizeof_gr_complex, filename)
 
         # Set the subdevice spec
@@ -127,6 +130,10 @@ def get_options():
                       help="verbose output")
     parser.add_option("", "--lo-offset", type="eng_float", default=None,
                       help="set daughterboard LO offset to OFFSET [default=hw default]")
+    parser.add_option("", "--wire-format", type="string", default="sc16",
+                      help="set wire format from USRP [default=%default")
+    parser.add_option("", "--scalar", type="int", default=1024,
+                      help="set scalar multiplier value for sc8 wire format [default=%default]")
 
     (options, args) = parser.parse_args ()
     if len(args) != 1:
