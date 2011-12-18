@@ -24,7 +24,7 @@ from gnuradio import gr, gr_unittest
 import digital_swig
 import math, random
 
-class test_constellation_decoder (gr_unittest.TestCase):
+class test_binary_slicer_fb (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -51,5 +51,5 @@ class test_constellation_decoder (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_constellation_decoder, "test_constellation_decoder.xml")
+    gr_unittest.run(test_binary_slicer_fb, "test_binary_slicer_fb.xml")
 
