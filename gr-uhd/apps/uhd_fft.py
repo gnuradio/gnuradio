@@ -48,7 +48,7 @@ class app_top_block(stdgui2.std_top_block):
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args , [default=%default]")
         parser.add_option("", "--spec", type="string", default=None,
-	                  help="Subdevice of UHD device where appropriate")
+                          help="Subdevice of UHD device where appropriate")
         parser.add_option("-A", "--antenna", type="string", default=None,
                           help="select Rx Antenna where appropriate")
         parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
@@ -61,25 +61,31 @@ class app_top_block(stdgui2.std_top_block):
                           help="Enable waterfall display")
         parser.add_option("-S", "--oscilloscope", action="store_true", default=False,
                           help="Enable oscilloscope display")
-	parser.add_option("", "--avg-alpha", type="eng_float", default=1e-1,
-			  help="Set fftsink averaging factor, default=[%default]")
-	parser.add_option ("", "--averaging", action="store_true", default=False,
+        parser.add_option("", "--avg-alpha", type="eng_float", default=1e-1,
+                          help="Set fftsink averaging factor, default=[%default]")
+        parser.add_option ("", "--averaging", action="store_true", default=False,
                            help="Enable fftsink averaging, default=[%default]")
-	parser.add_option("", "--ref-scale", type="eng_float", default=1.0,
-			  help="Set dBFS=0dB input value, default=[%default]")
-        parser.add_option("--fft-size", type="int", default=1024,
+        parser.add_option("", "--ref-scale", type="eng_float", default=1.0,
+                          help="Set dBFS=0dB input value, default=[%default]")
+        parser.add_option("", "--fft-size", type="int", default=1024,
                           help="Set number of FFT bins [default=%default]")
-        parser.add_option("--fft-rate", type="int", default=30,
+        parser.add_option("", "--fft-rate", type="int", default=30,
                           help="Set FFT update rate, [default=%default]")
+        parser.add_option("", "--wire-format", type="string", default="sc16",
+                          help="Set wire format from USRP [default=%default]")
+        parser.add_option("", "--scalar", type="int", default=1024,
+                          help="Set scalar multiplier value sc8 wire format [default=%default]")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
-	self.options = options
+        self.options = options
         self.show_debug_info = True
         
+        scalar="scalar="+str(options.scalar)
         self.u = uhd.usrp_source(device_addr=options.args,
-                                 stream_args=uhd.stream_args('fc32'))
+                                 stream_args=uhd.stream_args(cpu_format='fc32',
+                                 otw_format=options.wire_format, args=scalar))
 
         # Set the subdevice spec
         if(options.spec):
@@ -104,20 +110,20 @@ class app_top_block(stdgui2.std_top_block):
             self.scope = fftsink2.fft_sink_c (panel,
                                               fft_size=options.fft_size,
                                               sample_rate=input_rate, 
-					      ref_scale=options.ref_scale,
+                          ref_scale=options.ref_scale,
                                               ref_level=20.0,
                                               y_divs = 12,
                                               average=options.averaging,
-					      avg_alpha=options.avg_alpha,
+                          avg_alpha=options.avg_alpha,
                                               fft_rate=options.fft_rate)
             self.frame.SetMinSize((800, 420))
 
         self.connect(self.u, self.scope)
 
         self._build_gui(vbox)
-	self._setup_events()
+        self._setup_events()
 
-	
+    
         # set initial values
 
         if options.gain is None:
@@ -162,18 +168,18 @@ class app_top_block(stdgui2.std_top_block):
         hbox.Add((5,0), 0, 0)
         g = self.u.get_gain_range()
 
-	# some configurations don't have gain control
-	if g.stop() > g.start():
-    	    myform['gain'] = form.slider_field(parent=self.panel,
-                                               sizer=hbox, label="Gain",
-                                               weight=3,
-                                               min=int(g.start()), max=int(g.stop()),
-                                               callback=self.set_gain)
+        # some configurations don't have gain control
+        if g.stop() > g.start():
+            myform['gain'] = form.slider_field(parent=self.panel,
+                                                   sizer=hbox, label="Gain",
+                                                   weight=3,
+                                                   min=int(g.start()), max=int(g.stop()),
+                                                   callback=self.set_gain)
 
-        hbox.Add((5,0), 0, 0)
-        vbox.Add(hbox, 0, wx.EXPAND)
+            hbox.Add((5,0), 0, 0)
+            vbox.Add(hbox, 0, wx.EXPAND)
 
-        self._build_subpanel(vbox)
+            self._build_subpanel(vbox)
 
     def _build_subpanel(self, vbox_arg):
         # build a secondary information panel (sometimes hidden)
@@ -223,15 +229,15 @@ class app_top_block(stdgui2.std_top_block):
             self.myform['freq'].set_value(self.u.get_center_freq())
             self.myform['rffreq'].set_value(r.actual_rf_freq)
             self.myform['dspfreq'].set_value(r.actual_dsp_freq)
-	    if not self.options.oscilloscope:
-		self.scope.set_baseband_freq(target_freq)
-    	    return True
+            if not self.options.oscilloscope:
+                self.scope.set_baseband_freq(target_freq)
+            return True
 
         return False
 
     def set_gain(self, gain):
-	if self.myform.has_key('gain'):
-    	    self.myform['gain'].set_value(gain)     # update displayed value
+        if self.myform.has_key('gain'):
+            self.myform['gain'].set_value(gain)     # update displayed value
         self.u.set_gain(gain, 0)
 
     def set_samp_rate(self, samp_rate):
@@ -245,31 +251,32 @@ class app_top_block(stdgui2.std_top_block):
         return True  
 
     def _setup_events(self):
-	if not self.options.waterfall and not self.options.oscilloscope:
-	    self.scope.win.Bind(wx.EVT_LEFT_DCLICK, self.evt_left_dclick)
-	    
+        if not self.options.waterfall and not self.options.oscilloscope:
+            self.scope.win.Bind(wx.EVT_LEFT_DCLICK, self.evt_left_dclick)
+        
     def evt_left_dclick(self, event):
-	(ux, uy) = self.scope.win.GetXY(event)
-	if event.CmdDown():
-	    # Re-center on maximum power
-	    points = self.scope.win._points
-	    if self.scope.win.peak_hold:
-		if self.scope.win.peak_vals is not None:
-		    ind = numpy.argmax(self.scope.win.peak_vals)
-		else:
-		    ind = int(points.shape()[0]/2)
-	    else:
-        	ind = numpy.argmax(points[:,1])
+        (ux, uy) = self.scope.win.GetXY(event)
+        if event.CmdDown():
+            # Re-center on maximum power
+            points = self.scope.win._points
+            if self.scope.win.peak_hold:
+                if self.scope.win.peak_vals is not None:
+                    ind = numpy.argmax(self.scope.win.peak_vals)
+                else:
+                    ind = int(points.shape()[0]/2)
+            else:
+                ind = numpy.argmax(points[:,1])
+                
             (freq, pwr) = points[ind]
-	    target_freq = freq/self.scope.win._scale_factor
-	    print ind, freq, pwr
+            target_freq = freq/self.scope.win._scale_factor
+            print ind, freq, pwr
             self.set_freq(target_freq)            
-	else:
-	    # Re-center on clicked frequency
-	    target_freq = ux/self.scope.win._scale_factor
-	    self.set_freq(target_freq)
-	    
-	
+        else:
+            # Re-center on clicked frequency
+            target_freq = ux/self.scope.win._scale_factor
+            self.set_freq(target_freq)
+        
+    
 def main ():
     app = stdgui2.stdapp(app_top_block, "UHD FFT", nstatus=1)
     app.MainLoop()
