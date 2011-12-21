@@ -28,9 +28,14 @@ from optparse import OptionParser
 import sys
 import math
 import struct
+import threading
 
-sys.stderr.write("Warning: this is known to have issues on some machines+Python version combinations to seg fault due to the callback in bin_statitics. If you figure out why, we'd love to hear about it!\n")
+sys.stderr.write("Warning: this may have issues on some machines+Python version combinations to seg fault due to the callback in bin_statitics.\n\n")
 
+class ThreadClass(threading.Thread):
+    def run(self):
+        return
+    
 class tune(gr.feval_dd):
     """
     This class allows C++ code to callback into python.
@@ -131,7 +136,8 @@ class my_top_block(gr.top_block):
                 print "Note: failed to enable realtime scheduling"
 
         # build graph
-        self.u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32'))
+        self.u = uhd.usrp_source(device_addr=options.args,
+                                 stream_args=uhd.stream_args('fc32'))
 
         # Set the subdevice spec
         if(options.spec):
@@ -240,6 +246,9 @@ def main_loop(tb):
 
     
 if __name__ == '__main__':
+    t = ThreadClass()
+    t.start()
+
     tb = my_top_block()
     try:
         tb.start()
