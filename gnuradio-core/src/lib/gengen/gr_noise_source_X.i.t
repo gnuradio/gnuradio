@@ -34,4 +34,7 @@ class @NAME@ : public gr_block {
  public:
   void set_type (gr_noise_type_t type) { d_type = type; }
   void set_amplitude (float ampl) { d_ampl = ampl; }
+
+  gr_noise_type_t type () const { return d_type; }
+  float amplitude () const { return d_ampl; }
 };
