@@ -46,6 +46,7 @@ list(APPEND gr_digital_sources
     digital_lms_dd_equalizer_cc.cc
     digital_kurtotic_equalizer_cc.cc
     digital_mpsk_receiver_cc.cc
+    digital_mpsk_snr_est_cc.cc
     digital_ofdm_cyclic_prefixer.cc
     digital_ofdm_frame_acquisition.cc
     digital_ofdm_frame_sink.cc

@@ -59,6 +59,7 @@ install(
     digital_lms_dd_equalizer_cc.i
     digital_kurtotic_equalizer_cc.i
     digital_mpsk_receiver_cc.i
+    digital_mpsk_snr_est_cc.i
     digital_ofdm_cyclic_prefixer.i
     digital_ofdm_frame_acquisition.i
     digital_ofdm_frame_sink.i

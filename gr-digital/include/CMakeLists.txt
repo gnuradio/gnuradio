@@ -37,6 +37,7 @@ install(FILES
     digital_kurtotic_equalizer_cc.h
     digital_metric_type.h
     digital_mpsk_receiver_cc.h
+    digital_mpsk_snr_est_cc.h
     digital_ofdm_cyclic_prefixer.h
     digital_ofdm_frame_acquisition.h
     digital_ofdm_frame_sink.h
