@@ -82,7 +82,7 @@ class test_mpsk_snr_est (gr_unittest.TestCase):
     def test_mpsk_snr_est_svn (self):
 	expected_result = [10.90, 6.00, 4.76, 4.97, 5.49]
 
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SVN, 0.001)
+        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SVR, 0.001)
 
         actual_result = self.mpsk_snr_est_setup(op)
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
