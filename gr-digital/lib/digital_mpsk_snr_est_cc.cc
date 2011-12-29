@@ -63,7 +63,12 @@ digital_mpsk_snr_est_cc::work(int noutput_items,
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
 {
-  return d_snr_est->update(noutput_items, input_items, output_items);
+  // This is a pass-through block; copy input to output
+  memcpy(output_items[0], input_items[0],
+	 noutput_items * sizeof(gr_complex));
+
+  // Update the SNR estimate registers from the current inputs
+  return d_snr_est->update(noutput_items, input_items);
 }
 
 double

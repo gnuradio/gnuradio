@@ -25,6 +25,13 @@
 #include <digital_api.h>
 #include <gr_sync_block.h>
 
+enum snr_est_type_t {
+  SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
+  SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
+  SNR_EST_M2M4,         // 2nd & 4th moment est (>= 1 dB)
+  SNR_EST_SVN           // SVN-based est (>= 0dB)
+};
+
 /*!
  * Parent class for SNR Estimators
  */
@@ -45,8 +52,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est
 
   //! Update the current registers
   virtual int update(int noutput_items,
-		     gr_vector_const_void_star &input_items,
-		     gr_vector_void_star &output_items);
+		     gr_vector_const_void_star &input_items);
 
   //! Use the register values to compute a new estimate
   virtual double snr();
@@ -64,8 +70,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_simple :
   ~digital_impl_mpsk_snr_est_simple() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items,
-	     gr_vector_void_star &output_items);
+	     gr_vector_const_void_star &input_items);
   double snr();
 };
 
@@ -81,8 +86,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_skew :
   ~digital_impl_mpsk_snr_est_skew() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items,
-	     gr_vector_void_star &output_items);
+	     gr_vector_const_void_star &input_items);
   double snr();
 };
 
@@ -98,8 +102,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_m2m4 :
   ~digital_impl_mpsk_snr_est_m2m4() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items,
-	     gr_vector_void_star &output_items);
+	     gr_vector_const_void_star &input_items);
   double snr();
 };
 
@@ -115,8 +118,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_svn :
   ~digital_impl_mpsk_snr_est_svn() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items,
-	     gr_vector_void_star &output_items);
+	     gr_vector_const_void_star &input_items);
   double snr();
 };
 

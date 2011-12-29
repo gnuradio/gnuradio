@@ -50,8 +50,7 @@ digital_impl_mpsk_snr_est::alpha() const
 
 int
 digital_impl_mpsk_snr_est::update(int noutput_items,
-		     gr_vector_const_void_star &input_items,
-		     gr_vector_void_star &output_items)
+			  gr_vector_const_void_star &input_items)
 {
   throw std::runtime_error("digital_impl_mpsk_snr_est: Unimplemented");
 }
@@ -77,8 +76,7 @@ digital_impl_mpsk_snr_est_simple::digital_impl_mpsk_snr_est_simple(
 int
 digital_impl_mpsk_snr_est_simple::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items,
-		 gr_vector_void_star &output_items)
+		 gr_vector_const_void_star &input_items)
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
 
@@ -117,8 +115,7 @@ digital_impl_mpsk_snr_est_skew::digital_impl_mpsk_snr_est_skew(
 int
 digital_impl_mpsk_snr_est_skew::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items,
-		 gr_vector_void_star &output_items)
+		 gr_vector_const_void_star &input_items)
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
 
@@ -164,8 +161,7 @@ digital_impl_mpsk_snr_est_m2m4::digital_impl_mpsk_snr_est_m2m4(
 int
 digital_impl_mpsk_snr_est_m2m4::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items,
-		 gr_vector_void_star &output_items)
+		 gr_vector_const_void_star &input_items)
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
 
@@ -202,8 +198,7 @@ digital_impl_mpsk_snr_est_svn::digital_impl_mpsk_snr_est_svn(
 int
 digital_impl_mpsk_snr_est_svn::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items,
-		 gr_vector_void_star &output_items)
+		 gr_vector_const_void_star &input_items)
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
 
