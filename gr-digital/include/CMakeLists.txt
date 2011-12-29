@@ -45,6 +45,7 @@ install(FILES
     digital_ofdm_insert_preamble.h
     digital_ofdm_mapper_bcv.h
     digital_ofdm_sampler.h
+    digital_probe_mpsk_snr_est_c.h
     digital_gmskmod_bc.h
     digital_cpmmod_bc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio

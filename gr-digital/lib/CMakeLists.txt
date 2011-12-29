@@ -54,6 +54,7 @@ list(APPEND gr_digital_sources
     digital_ofdm_insert_preamble.cc
     digital_ofdm_mapper_bcv.cc
     digital_ofdm_sampler.cc
+    digital_probe_mpsk_snr_est_c.cc
     digital_gmskmod_bc.cc
     digital_cpmmod_bc.cc
 )

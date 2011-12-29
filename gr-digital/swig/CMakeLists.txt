@@ -66,6 +66,7 @@ install(
     digital_ofdm_insert_preamble.i
     digital_ofdm_mapper_bcv.i
     digital_ofdm_sampler.i
+    digital_probe_mpsk_snr_est_c.i
     digital_gmskmod_bc.i
     digital_cpmmod_bc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
