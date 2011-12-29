@@ -32,6 +32,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND gr_digital_sources
+    digital_impl_mpsk_snr_est.cc
     digital_binary_slicer_fb.cc
     digital_clock_recovery_mm_cc.cc
     digital_clock_recovery_mm_ff.cc

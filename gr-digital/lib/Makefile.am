@@ -27,6 +27,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 lib_LTLIBRARIES = libgnuradio-digital.la
 
 libgnuradio_digital_la_SOURCES = 		\
+	digital_impl_mpsk_snr_est.cc		\
 	digital_binary_slicer_fb.cc		\
 	digital_clock_recovery_mm_cc.cc		\
 	digital_clock_recovery_mm_ff.cc		\

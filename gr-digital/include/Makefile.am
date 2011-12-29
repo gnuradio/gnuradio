@@ -24,6 +24,7 @@ include $(top_srcdir)/Makefile.common
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = 				\
 	digital_api.h		\
+	digital_impl_mpsk_snr_est.h		\
 	digital_binary_slicer_fb.h		\
 	digital_clock_recovery_mm_cc.h		\
 	digital_clock_recovery_mm_ff.h		\

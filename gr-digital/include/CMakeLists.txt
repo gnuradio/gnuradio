@@ -22,6 +22,7 @@
 ########################################################################
 install(FILES
     digital_api.h
+    digital_impl_mpsk_snr_est.h
     digital_binary_slicer_fb.h
     digital_clock_recovery_mm_cc.h
     digital_clock_recovery_mm_ff.h
