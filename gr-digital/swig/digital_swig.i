@@ -28,7 +28,7 @@ enum snr_est_type_t {
   SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
   SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
   SNR_EST_M2M4,	        // 2nd & 4th moment est (>= 1 dB)
-  SNR_EST_SVN           // SVN-based est (>= 0dB)
+  SNR_EST_SVR           // SVR-based est (>= 0dB)
 };
 
 %include <gri_control_loop.i>

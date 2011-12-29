@@ -67,7 +67,7 @@ digital_mpsk_snr_est_cc::work(int noutput_items,
   memcpy(output_items[0], input_items[0],
 	 noutput_items * sizeof(gr_complex));
 
-  // Update the SNR estimate registers from the current inputs
+  // Update the SNR estimate registers from the current 
   return d_snr_est->update(noutput_items, input_items);
 }
 
@@ -110,8 +110,8 @@ digital_mpsk_snr_est_cc::set_type(snr_est_type_t t)
   case(SNR_EST_M2M4):
     d_snr_est = new digital_impl_mpsk_snr_est_m2m4(d_alpha);
     break;
-  case(SNR_EST_SVN):
-    d_snr_est = new digital_impl_mpsk_snr_est_svn(d_alpha);
+  case(SNR_EST_SVR):
+    d_snr_est = new digital_impl_mpsk_snr_est_svr(d_alpha);
     break;
   default:
     throw std::invalid_argument("digital_mpsk_snr_est_cc: unknown type specified.\n");

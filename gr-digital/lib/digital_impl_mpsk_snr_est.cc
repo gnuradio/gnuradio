@@ -187,7 +187,51 @@ digital_impl_mpsk_snr_est_m2m4::snr()
 /********************************************************************/
 
 
-digital_impl_mpsk_snr_est_svn::digital_impl_mpsk_snr_est_svn(
+digital_impl_snr_est_m2m4::digital_impl_snr_est_m2m4(
+		   double alpha, double ka, double kw) :
+  digital_impl_mpsk_snr_est(alpha)
+{
+  d_y1 = 0;
+  d_y2 = 0;
+  d_ka = ka;
+  d_kw = kw;
+}
+
+int
+digital_impl_snr_est_m2m4::update(
+		 int noutput_items,
+		 gr_vector_const_void_star &input_items)
+{
+  const gr_complex *in = (const gr_complex *) input_items[0];
+
+  for (int i = 0; i < noutput_items; i++) {
+    double y1 = abs(in[i])*abs(in[i]);
+    d_y1 = d_alpha*y1 + d_beta*d_y1;
+
+    double y2 = abs(in[i])*abs(in[i])*abs(in[i])*abs(in[i]);
+    d_y2 = d_alpha*y2 + d_beta*d_y2;
+  }
+  return noutput_items;
+}
+
+double
+digital_impl_snr_est_m2m4::snr()
+{
+  double M2 = d_y1;
+  double M4 = d_y2;
+  double s = M2*(d_kw - 2) + 
+    sqrt((4.0-d_ka*d_kw)*M2*M2 + M4*(d_ka+d_kw-4.0)) /
+    (d_ka + d_kw - 4.0);
+  double n = M2 - s;
+  
+  return 10.0*log10(s / n);
+}
+
+
+/********************************************************************/
+
+
+digital_impl_mpsk_snr_est_svr::digital_impl_mpsk_snr_est_svr(
 		   double alpha) :
   digital_impl_mpsk_snr_est(alpha)
 {
@@ -196,7 +240,7 @@ digital_impl_mpsk_snr_est_svn::digital_impl_mpsk_snr_est_svn(
 }
 
 int
-digital_impl_mpsk_snr_est_svn::update(
+digital_impl_mpsk_snr_est_svr::update(
 		 int noutput_items,
 		 gr_vector_const_void_star &input_items)
 {
@@ -215,7 +259,7 @@ digital_impl_mpsk_snr_est_svn::update(
 }
 
 double
-digital_impl_mpsk_snr_est_svn::snr()
+digital_impl_mpsk_snr_est_svr::snr()
 {
   double x = d_y1 / (d_y2 - d_y1);
   return 10.0*log10(2.*((x-1) + sqrt(x*(x-1))));

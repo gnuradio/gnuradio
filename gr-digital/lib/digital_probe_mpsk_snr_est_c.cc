@@ -106,8 +106,8 @@ digital_probe_mpsk_snr_est_c::set_type(snr_est_type_t t)
   case(SNR_EST_M2M4):
     d_snr_est = new digital_impl_mpsk_snr_est_m2m4(d_alpha);
     break;
-  case(SNR_EST_SVN):
-    d_snr_est = new digital_impl_mpsk_snr_est_svn(d_alpha);
+  case(SNR_EST_SVR):
+    d_snr_est = new digital_impl_mpsk_snr_est_svr(d_alpha);
     break;
   default:
     throw std::invalid_argument("digital_probe_mpsk_snr_est_c: unknown type specified.\n");

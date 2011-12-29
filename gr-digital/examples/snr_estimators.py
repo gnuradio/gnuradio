@@ -68,7 +68,7 @@ def snr_est_m2m4(signal):
     snr_rat = 2*scipy.sqrt(2*M2*M2 - M4) / (M2 - scipy.sqrt(2*M2*M2 - M4))
     return 10.0*scipy.log10(snr_rat), snr_rat
 
-def snr_est_svn(signal):
+def snr_est_svr(signal):
     N = len(signal)
     ssum = 0
     msum = 0
@@ -87,11 +87,11 @@ def main():
     gr_estimators = {"simple": digital.SNR_EST_SIMPLE,
                      "skew": digital.SNR_EST_SKEW,
                      "m2m4": digital.SNR_EST_M2M4,
-                     "svn": digital.SNR_EST_SVN}
+                     "svr": digital.SNR_EST_SVR}
     py_estimators = {"simple": snr_est_simple,
                      "skew": snr_est_skew,
                      "m2m4": snr_est_m2m4,
-                     "svn": snr_est_svn}
+                     "svr": snr_est_svr}
     
     
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
