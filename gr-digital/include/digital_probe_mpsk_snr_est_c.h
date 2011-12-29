@@ -32,8 +32,19 @@ typedef boost::shared_ptr<digital_probe_mpsk_snr_est_c> digital_probe_mpsk_snr_e
 DIGITAL_API digital_probe_mpsk_snr_est_c_sptr
 digital_make_probe_mpsk_snr_est_c(snr_est_type_t type, double alpha);
 
-/*!
- * Provides various methods to compute SNR.
+//! \brief A probe for computing SNR of a signal.
+/*! \ingroup snr_blk
+ *
+ *  This is a probe block (a sink) that can be used to monitor and
+ *  retrieve estimations of the signal SNR. This probe is designed for
+ *  use with M-PSK signals especially. The type of estimator is
+ *  specified as the \p type parameter in the constructor. The
+ *  estimators tend to trade off performance for accuracy, although
+ *  experimentation should be done to figure out the right approach
+ *  for a given implementation. Further, the current set of estimators
+ *  are designed and proven theoretically under AWGN conditions; some
+ *  amount of error should be assumed and/or estimated for real
+ *  channel conditions.
  */
 class DIGITAL_API digital_probe_mpsk_snr_est_c : public gr_sync_block
 {
@@ -42,11 +53,19 @@ class DIGITAL_API digital_probe_mpsk_snr_est_c : public gr_sync_block
   double d_alpha;
   digital_impl_mpsk_snr_est *d_snr_est;
 
-  // Factory function returning shared pointer of this class
+  /*! Factory function returning shared pointer of this class
+   *
+   *  Parameters:
+   *
+   *  \li \p type: the type of estimator to use \ref ref_snr_est_types
+   *  "snr_est_type_t" for details about the available types.
+   *  \li \p alpha: the update rate of internal running average
+   *  calculations.
+   */
   friend DIGITAL_API digital_probe_mpsk_snr_est_c_sptr
     digital_make_probe_mpsk_snr_est_c(snr_est_type_t type, double alpha);
   
-  // Private constructor
+  //! Private constructor
   digital_probe_mpsk_snr_est_c(snr_est_type_t type, double alpha);
 
 public:

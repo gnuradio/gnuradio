@@ -30,10 +30,24 @@ class digital_mpsk_snr_est_cc;
 typedef boost::shared_ptr<digital_mpsk_snr_est_cc> digital_mpsk_snr_est_cc_sptr;
 
 DIGITAL_API digital_mpsk_snr_est_cc_sptr
-digital_make_mpsk_snr_est_cc(snr_est_type_t type, double alpha);
+digital_make_mpsk_snr_est_cc(snr_est_type_t type,
+			     double alpha=0.001);
 
-/*!
- * Provides various methods to compute SNR.
+//! \brief A block for computing SNR of a signal.
+/*! \ingroup snr_blk
+ *
+ *  This block can be used to monitor and retrieve estimations of the
+ *  signal SNR. It is designed to work in a flowgraph and passes all
+ *  incoming data along to its output.
+ *
+ *  The block is designed for use with M-PSK signals especially. The
+ *  type of estimator is specified as the \p type parameter in the
+ *  constructor. The estimators tend to trade off performance for
+ *  accuracy, although experimentation should be done to figure out
+ *  the right approach for a given implementation. Further, the
+ *  current set of estimators are designed and proven theoretically
+ *  under AWGN conditions; some amount of error should be assumed
+ *  and/or estimated for real channel conditions.
  */
 class DIGITAL_API digital_mpsk_snr_est_cc : public gr_sync_block
 {
@@ -42,7 +56,15 @@ class DIGITAL_API digital_mpsk_snr_est_cc : public gr_sync_block
   double d_alpha;
   digital_impl_mpsk_snr_est *d_snr_est;
 
-  // Factory function returning shared pointer of this class
+  /*! Factory function returning shared pointer of this class
+   *
+   *  Parameters:
+   *
+   *  \li \p type: the type of estimator to use \ref ref_snr_est_types
+   *  "snr_est_type_t" for details about the available types.
+   *  \li \p alpha: the update rate of internal running average
+   *  calculations.
+   */
   friend DIGITAL_API digital_mpsk_snr_est_cc_sptr
     digital_make_mpsk_snr_est_cc(snr_est_type_t type, double alpha);
   

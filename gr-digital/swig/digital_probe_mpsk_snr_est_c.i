@@ -24,7 +24,7 @@ GR_SWIG_BLOCK_MAGIC(digital,probe_mpsk_snr_est_c);
 
 digital_probe_mpsk_snr_est_c_sptr
 digital_make_probe_mpsk_snr_est_c(snr_est_type_t type,
-				  double alpha);
+				  double alpha=0.001);
 
 class digital_probe_mpsk_snr_est_c : public gr_sync_block
 {
