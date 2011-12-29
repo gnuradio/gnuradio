@@ -24,6 +24,7 @@
 
 #include <digital_api.h>
 #include <gr_sync_block.h>
+#include <digital_impl_mpsk_snr_est.h>
 
 class digital_mpsk_snr_est_cc;
 typedef boost::shared_ptr<digital_mpsk_snr_est_cc> digital_mpsk_snr_est_cc_sptr;
@@ -45,14 +46,8 @@ class DIGITAL_API digital_mpsk_snr_est_cc : public gr_sync_block
 {
  private:
   snr_est_type_t d_type;
-  double d_y1, d_y2, d_y3, d_y4;
-  double d_alpha, d_beta;
-
-  // Function pointers to the type of estimator used.
-  int (digital_mpsk_snr_est_cc::*d_estimator)(int noutput_items,
-		 gr_vector_const_void_star &input_items,
-		 gr_vector_void_star &output_items);
-  double (digital_mpsk_snr_est_cc::*d_calculator)();
+  double d_alpha;
+  digital_impl_mpsk_snr_est *d_snr_est;
 
   // Factory function returning shared pointer of this class
   friend DIGITAL_API digital_mpsk_snr_est_cc_sptr
@@ -61,26 +56,6 @@ class DIGITAL_API digital_mpsk_snr_est_cc : public gr_sync_block
   // Private constructor
   digital_mpsk_snr_est_cc(snr_est_type_t type, double alpha);
 
-  int est_simple(int noutput_items,
-		 gr_vector_const_void_star &input_items,
-		 gr_vector_void_star &output_items);
-  double est_simple_snr();
-
-  int est_skew(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-  double est_skew_snr();
-
-  int est_m2m4(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-  double est_m2m4_snr();
-
-  int est_svn(int noutput_items,
-	      gr_vector_const_void_star &input_items,
-	      gr_vector_void_star &output_items);
-  double est_svn_snr();
-  
 public:
 
   ~digital_mpsk_snr_est_cc();
