@@ -25,6 +25,7 @@ GR_PYTHON_INSTALL(PROGRAMS
     example_timing.py
     run_length.py
     gen_whitener.py
+    snr_estimators.py
     DESTINATION ${GR_PKG_DATA_DIR}/examples/digital
     COMPONENT "digital_python"
 )
