@@ -72,10 +72,18 @@ function(GR_SWIG_MAKE_DOCS output_file)
             COMMENT "Generating doxygen xml for ${name} docs"
         )
 
+        #call sync if we can to flush the doxygen writes to file before python reads
+        find_program(SYNC_EXECUTABLE sync)
+        unset(sync_command)
+        if(SYNC_EXECUTABLE)
+            set(sync_command COMMAND ${SYNC_EXECUTABLE})
+        endif()
+
         #call the swig_doc script on the xml files
         add_custom_command(
             OUTPUT ${output_file}
             DEPENDS ${input_files} ${OUTPUT_DIRECTORY}/xml/index.xml
+            ${sync_command}
             COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
                 ${CMAKE_SOURCE_DIR}/docs/doxygen/swig_doc.py
                 ${OUTPUT_DIRECTORY}/xml
