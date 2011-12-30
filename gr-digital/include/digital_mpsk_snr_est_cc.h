@@ -31,6 +31,7 @@ typedef boost::shared_ptr<digital_mpsk_snr_est_cc> digital_mpsk_snr_est_cc_sptr;
 
 DIGITAL_API digital_mpsk_snr_est_cc_sptr
 digital_make_mpsk_snr_est_cc(snr_est_type_t type,
+			     int tag_nsamples=10000,
 			     double alpha=0.001);
 
 //! \brief A block for computing SNR of a signal.
@@ -53,8 +54,12 @@ class DIGITAL_API digital_mpsk_snr_est_cc : public gr_sync_block
 {
  private:
   snr_est_type_t d_type;
+  int d_nsamples, d_count;
   double d_alpha;
   digital_impl_mpsk_snr_est *d_snr_est;
+
+  //d_key is the tag name, 'snr', d_me is the block name + unique ID
+  pmt::pmt_t d_key, d_me; 
 
   /*! Factory function returning shared pointer of this class
    *
@@ -62,14 +67,20 @@ class DIGITAL_API digital_mpsk_snr_est_cc : public gr_sync_block
    *
    *  \li \p type: the type of estimator to use \ref ref_snr_est_types
    *  "snr_est_type_t" for details about the available types.
+   *  \li \p tag_nsamples: after this many samples, a tag containing
+   *  the SNR (key='snr') will be sent
    *  \li \p alpha: the update rate of internal running average
    *  calculations.
    */
   friend DIGITAL_API digital_mpsk_snr_est_cc_sptr
-    digital_make_mpsk_snr_est_cc(snr_est_type_t type, double alpha);
+    digital_make_mpsk_snr_est_cc(snr_est_type_t type,
+				 int tag_nsamples,
+				 double alpha);
   
   // Private constructor
-  digital_mpsk_snr_est_cc(snr_est_type_t type, double alpha);
+  digital_mpsk_snr_est_cc(snr_est_type_t type,
+			  int tag_nsamples,
+			  double alpha);
 
 public:
 
@@ -85,11 +96,17 @@ public:
   //! Return the type of estimator in use
   snr_est_type_t type() const;
 
+  //! Return how many samples between SNR tags
+  int tag_nsample() const;
+
   //! Get the running-average coefficient
   double alpha() const;
 
   //! Set type of estimator to use
   void set_type(snr_est_type_t t);
+
+  //! Set the number of samples between SNR tags
+  void set_tag_nsample(int n);
 
   //! Set the running-average coefficient
   void set_alpha(double alpha);

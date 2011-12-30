@@ -30,12 +30,15 @@
 
 digital_mpsk_snr_est_cc_sptr
 digital_make_mpsk_snr_est_cc(snr_est_type_t type,
+			     int tag_nsamples,
 			     double alpha)
 {
-  return gnuradio::get_initial_sptr(new digital_mpsk_snr_est_cc(type, alpha));
+  return gnuradio::get_initial_sptr(new digital_mpsk_snr_est_cc(
+					type, tag_nsamples, alpha));
 }
 
 digital_mpsk_snr_est_cc::digital_mpsk_snr_est_cc(snr_est_type_t type,
+						 int tag_nsamples,
 						 double alpha)
   : gr_sync_block ("mpsk_snr_est_cc",
 		   gr_make_io_signature(1, 1, sizeof(gr_complex)),
@@ -44,12 +47,19 @@ digital_mpsk_snr_est_cc::digital_mpsk_snr_est_cc(snr_est_type_t type,
   d_snr_est = NULL;
 
   d_type = type;
+  d_nsamples = tag_nsamples;
+  d_count = 0;
   set_alpha(alpha);
 
   set_type(type);
 
   // at least 1 estimator has to look back
   set_history(2);
+
+  std::stringstream str;
+  str << name() << unique_id();
+  d_me = pmt::pmt_string_to_symbol(str.str());
+  d_key = pmt::pmt_string_to_symbol("snr");
 }
 
 digital_mpsk_snr_est_cc::~digital_mpsk_snr_est_cc()
@@ -67,8 +77,36 @@ digital_mpsk_snr_est_cc::work(int noutput_items,
   memcpy(output_items[0], input_items[0],
 	 noutput_items * sizeof(gr_complex));
 
-  // Update the SNR estimate registers from the current 
-  return d_snr_est->update(noutput_items, input_items);
+  const gr_complex *in = (const gr_complex*)input_items[0];
+  
+  // Update, calculate, and issue an SNR tag every d_nsamples
+  int index = 0, x = 0;
+  int64_t nwritten = nitems_written(0);
+  while(index + (d_nsamples-d_count) <= noutput_items) {
+    x = d_nsamples - d_count;
+    nwritten += x;
+        
+    // Update the SNR estimate registers from the current input
+    d_snr_est->update(x, &in[index]);
+
+    // Issue a tag with the SNR data
+    pmt::pmt_t pmt_snr = pmt::pmt_from_double(d_snr_est->snr());
+    add_item_tag(0,            // stream ID
+		 nwritten,     // tag's sample number
+		 d_key,        // snr key
+		 pmt_snr,      // SNR
+		 d_me);        // block src id
+
+    index += x;
+    d_count = 0;
+  }
+  
+  // Keep track of remaining items and update estimators
+  x = noutput_items - index;
+  d_count += x;
+  d_snr_est->update(x, &in[index]);
+  
+  return noutput_items;
 }
 
 double
@@ -84,6 +122,12 @@ snr_est_type_t
 digital_mpsk_snr_est_cc::type() const
 {
   return d_type;
+}
+
+int
+digital_mpsk_snr_est_cc::tag_nsample() const
+{
+  return d_nsamples;
 }
 
 double
@@ -119,9 +163,24 @@ digital_mpsk_snr_est_cc::set_type(snr_est_type_t t)
 }
 
 void
+digital_mpsk_snr_est_cc::set_tag_nsample(int n)
+{
+  if(n > 0) {
+    d_nsamples = n;
+    d_count = 0;    // reset state
+  }
+  else
+    throw std::invalid_argument("digital_mpsk_snr_est_cc: tag_nsamples can't be <= 0\n");
+}
+
+void
 digital_mpsk_snr_est_cc::set_alpha(double alpha)
 {
-  d_alpha = alpha;
-  if(d_snr_est)
-    d_snr_est->set_alpha(d_alpha);
+  if((alpha >= 0) && (alpha <= 1.0)) {
+    d_alpha = alpha;
+    if(d_snr_est)
+      d_snr_est->set_alpha(d_alpha);
+  }
+  else
+    throw std::invalid_argument("digital_mpsk_snr_est_cc: alpha must be in [0,1]\n");
 }

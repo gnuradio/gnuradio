@@ -24,12 +24,14 @@ GR_SWIG_BLOCK_MAGIC(digital,mpsk_snr_est_cc);
 
 digital_mpsk_snr_est_cc_sptr
 digital_make_mpsk_snr_est_cc(snr_est_type_t type,
+			     int tag_nsamples=10000,
 			     double alpha=0.001);
 
 class digital_mpsk_snr_est_cc : public gr_sync_block
 {
 private:
   void digital_mpsk_snr_est_cc(snr_est_type_t type,
+			       int tag_nsamples,
 			       double alpha);
 
 public:
