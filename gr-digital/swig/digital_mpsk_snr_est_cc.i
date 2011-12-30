@@ -37,7 +37,9 @@ private:
 public:
   double snr();
   snr_est_type_t type() const;
+  int tag_nsample() const;
   double alpha() const;
   void set_type(snr_est_type_t t);
+  void set_tag_nsample(int n);
   void set_alpha(double alpha);
 };
