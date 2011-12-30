@@ -106,8 +106,9 @@ class test_mpsk_snr_est (gr_unittest.TestCase):
             
             src = gr.vector_source_c (src_data)
 
+            N = 10000
             alpha = 0.001
-            op = digital.probe_mpsk_snr_est_c (digital.SNR_EST_M2M4, alpha)
+            op = digital.probe_mpsk_snr_est_c (digital.SNR_EST_M2M4, N, alpha)
 
             tb = gr.top_block ()
             tb.connect (src, op)

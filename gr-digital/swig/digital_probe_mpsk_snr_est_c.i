@@ -24,18 +24,22 @@ GR_SWIG_BLOCK_MAGIC(digital,probe_mpsk_snr_est_c);
 
 digital_probe_mpsk_snr_est_c_sptr
 digital_make_probe_mpsk_snr_est_c(snr_est_type_t type,
+				  int msg_nsamples=10000,
 				  double alpha=0.001);
 
 class digital_probe_mpsk_snr_est_c : public gr_sync_block
 {
 private:
   void digital_probe_mpsk_snr_est_c(snr_est_type_t type,
+				    int msg_nsamples,
 				    double alpha);
 
 public:
   double snr();
   snr_est_type_t type() const;
+  int msg_nsample() const;
   double alpha() const;
   void set_type(snr_est_type_t t);
+  void set_msg_nsample(int n);
   void set_alpha(double alpha);
 };

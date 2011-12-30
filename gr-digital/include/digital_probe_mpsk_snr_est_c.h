@@ -30,7 +30,9 @@ class digital_probe_mpsk_snr_est_c;
 typedef boost::shared_ptr<digital_probe_mpsk_snr_est_c> digital_probe_mpsk_snr_est_c_sptr;
 
 DIGITAL_API digital_probe_mpsk_snr_est_c_sptr
-digital_make_probe_mpsk_snr_est_c(snr_est_type_t type, double alpha);
+digital_make_probe_mpsk_snr_est_c(snr_est_type_t type,
+				  int msg_nsamples=10000,
+				  double alpha=0.001);
 
 //! \brief A probe for computing SNR of a signal.
 /*! \ingroup snr_blk
@@ -50,23 +52,33 @@ class DIGITAL_API digital_probe_mpsk_snr_est_c : public gr_sync_block
 {
  private:
   snr_est_type_t d_type;
+  int d_nsamples, d_count;
   double d_alpha;
   digital_impl_mpsk_snr_est *d_snr_est;
+
+  //d_key is the message name, 'snr'
+  pmt::pmt_t d_key;
 
   /*! Factory function returning shared pointer of this class
    *
    *  Parameters:
    *
-   *  \li \p type: the type of estimator to use \ref ref_snr_est_types
+   *  \param type: the type of estimator to use \ref ref_snr_est_types
    *  "snr_est_type_t" for details about the available types.
-   *  \li \p alpha: the update rate of internal running average
+   *  \param msg_nsamples: [not implemented yet] after this many
+   *  samples, a message containing the SNR (key='snr') will be sent
+   *  \param alpha: the update rate of internal running average
    *  calculations.
    */
   friend DIGITAL_API digital_probe_mpsk_snr_est_c_sptr
-    digital_make_probe_mpsk_snr_est_c(snr_est_type_t type, double alpha);
+    digital_make_probe_mpsk_snr_est_c(snr_est_type_t type, 
+				      int msg_nsamples,
+				      double alpha);
   
   //! Private constructor
-  digital_probe_mpsk_snr_est_c(snr_est_type_t type, double alpha);
+  digital_probe_mpsk_snr_est_c(snr_est_type_t type,
+			       int msg_nsamples,
+			       double alpha);
 
 public:
 
@@ -82,11 +94,17 @@ public:
   //! Return the type of estimator in use
   snr_est_type_t type() const;
 
+  //! Return how many samples between SNR messages
+  int msg_nsample() const;
+
   //! Get the running-average coefficient
   double alpha() const;
 
   //! Set type of estimator to use
   void set_type(snr_est_type_t t);
+
+  //! Set the number of samples between SNR messages
+  void set_msg_nsample(int n);
 
   //! Set the running-average coefficient
   void set_alpha(double alpha);

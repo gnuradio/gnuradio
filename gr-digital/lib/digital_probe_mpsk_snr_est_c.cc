@@ -30,14 +30,17 @@
 
 digital_probe_mpsk_snr_est_c_sptr
 digital_make_probe_mpsk_snr_est_c(snr_est_type_t type,
+				  int msg_nsamples,
 				  double alpha)
 {
   return gnuradio::get_initial_sptr(
-	    new digital_probe_mpsk_snr_est_c(type, alpha));
+	    new digital_probe_mpsk_snr_est_c(type, msg_nsamples, alpha));
 }
 
 digital_probe_mpsk_snr_est_c::digital_probe_mpsk_snr_est_c(
-		   snr_est_type_t type, double alpha)
+					   snr_est_type_t type,
+					   int msg_nsamples,
+					   double alpha)
   : gr_sync_block ("probe_mpsk_snr_est_c",
 		   gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		   gr_make_io_signature(0, 0, 0))
@@ -45,12 +48,16 @@ digital_probe_mpsk_snr_est_c::digital_probe_mpsk_snr_est_c(
   d_snr_est = NULL;
 
   d_type = type;
+  d_nsamples = msg_nsamples;
+  d_count = 0;
   set_alpha(alpha);
 
   set_type(type);
 
   // at least 1 estimator has to look back
   set_history(2);
+
+  d_key = pmt::pmt_string_to_symbol("snr");
 }
 
 digital_probe_mpsk_snr_est_c::~digital_probe_mpsk_snr_est_c()
@@ -81,6 +88,12 @@ snr_est_type_t
 digital_probe_mpsk_snr_est_c::type() const
 {
   return d_type;
+}
+
+int
+digital_probe_mpsk_snr_est_c::msg_nsample() const
+{
+  return d_nsamples;
 }
 
 double
@@ -116,9 +129,24 @@ digital_probe_mpsk_snr_est_c::set_type(snr_est_type_t t)
 }
 
 void
+digital_probe_mpsk_snr_est_c::set_msg_nsample(int n)
+{
+  if(n > 0) {
+    d_nsamples = n;
+    d_count = 0;    // reset state
+  }
+  else
+    throw std::invalid_argument("digital_probe_mpsk_snr_est_c: msg_nsamples can't be <= 0\n");
+}
+
+void
 digital_probe_mpsk_snr_est_c::set_alpha(double alpha)
 {
-  d_alpha = alpha;
-  if(d_snr_est)
-    d_snr_est->set_alpha(d_alpha);
+  if((alpha >= 0) && (alpha <= 1.0)) {
+    d_alpha = alpha;
+    if(d_snr_est)
+      d_snr_est->set_alpha(d_alpha);
+  }
+  else
+    throw std::invalid_argument("digital_probe_mpsk_snr_est_c: alpha must be in [0,1]\n");    
 }
