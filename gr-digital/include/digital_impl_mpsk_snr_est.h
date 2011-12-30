@@ -72,7 +72,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est
 
   //! Update the current registers
   virtual int update(int noutput_items,
-		     gr_vector_const_void_star &input_items);
+		     const gr_complex *in);
 
   //! Use the register values to compute a new estimate
   virtual double snr();
@@ -104,7 +104,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_simple :
   ~digital_impl_mpsk_snr_est_simple() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items);
+	     const gr_complex *in);
   double snr();
 };
 
@@ -136,7 +136,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_skew :
   ~digital_impl_mpsk_snr_est_skew() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items);
+	     const gr_complex *in);
   double snr();
 };
 
@@ -174,7 +174,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_m2m4 :
   ~digital_impl_mpsk_snr_est_m2m4() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items);
+	     const gr_complex *in);
   double snr();
 };
 
@@ -229,7 +229,7 @@ class DIGITAL_API digital_impl_snr_est_m2m4 :
   ~digital_impl_snr_est_m2m4() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items);
+	     const gr_complex *in);
   double snr();
 };
 
@@ -272,7 +272,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_svr :
   ~digital_impl_mpsk_snr_est_svr() {}
 
   int update(int noutput_items,
-	     gr_vector_const_void_star &input_items);
+	     const gr_complex *in);
   double snr();
 };
 

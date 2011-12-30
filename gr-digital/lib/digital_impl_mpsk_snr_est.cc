@@ -50,7 +50,7 @@ digital_impl_mpsk_snr_est::alpha() const
 
 int
 digital_impl_mpsk_snr_est::update(int noutput_items,
-			  gr_vector_const_void_star &input_items)
+			  const gr_complex *in)
 {
   throw std::runtime_error("digital_impl_mpsk_snr_est: Unimplemented");
 }
@@ -76,10 +76,8 @@ digital_impl_mpsk_snr_est_simple::digital_impl_mpsk_snr_est_simple(
 int
 digital_impl_mpsk_snr_est_simple::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items)
+		 const gr_complex *in)
 {
-  const gr_complex *in = (const gr_complex *) input_items[0];
-
   for (int i = 0; i < noutput_items; i++){
     double y1 = abs(in[i]);
     d_y1 = d_alpha*y1 + d_beta*d_y1;
@@ -115,10 +113,8 @@ digital_impl_mpsk_snr_est_skew::digital_impl_mpsk_snr_est_skew(
 int
 digital_impl_mpsk_snr_est_skew::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items)
+		 const gr_complex *in)
 {
-  const gr_complex *in = (const gr_complex *) input_items[0];
-
   for (int i = 0; i < noutput_items; i++){
     double y1 = abs(in[i]);
     d_y1 = d_alpha*y1 + d_beta*d_y1;
@@ -161,10 +157,8 @@ digital_impl_mpsk_snr_est_m2m4::digital_impl_mpsk_snr_est_m2m4(
 int
 digital_impl_mpsk_snr_est_m2m4::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items)
+		 const gr_complex *in)
 {
-  const gr_complex *in = (const gr_complex *) input_items[0];
-
   for (int i = 0; i < noutput_items; i++){
     double y1 = abs(in[i])*abs(in[i]);
     d_y1 = d_alpha*y1 + d_beta*d_y1;
@@ -200,10 +194,8 @@ digital_impl_snr_est_m2m4::digital_impl_snr_est_m2m4(
 int
 digital_impl_snr_est_m2m4::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items)
+		 const gr_complex *in)
 {
-  const gr_complex *in = (const gr_complex *) input_items[0];
-
   for (int i = 0; i < noutput_items; i++) {
     double y1 = abs(in[i])*abs(in[i]);
     d_y1 = d_alpha*y1 + d_beta*d_y1;
@@ -242,10 +234,8 @@ digital_impl_mpsk_snr_est_svr::digital_impl_mpsk_snr_est_svr(
 int
 digital_impl_mpsk_snr_est_svr::update(
 		 int noutput_items,
-		 gr_vector_const_void_star &input_items)
+		 const gr_complex *in)
 {
-  const gr_complex *in = (const gr_complex *) input_items[0];
-
   for (int i = 0; i < noutput_items; i++){
     double x = abs(in[i]);
       double x1 = abs(in[i-1]);
