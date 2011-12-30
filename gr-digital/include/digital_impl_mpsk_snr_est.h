@@ -58,7 +58,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est
   /*! Constructor
    *
    *  Parameters:
-   *  \li \p alpha: the update rate of internal running average
+   *  \param alpha: the update rate of internal running average
    *  calculations.
    */
   digital_impl_mpsk_snr_est(double alpha);
@@ -97,7 +97,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_simple :
   /*! Constructor
    *
    *  Parameters:
-   *  \li \p alpha: the update rate of internal running average
+   *  \param alpha: the update rate of internal running average
    *  calculations.
    */
   digital_impl_mpsk_snr_est_simple(double alpha);
@@ -129,7 +129,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_skew :
   /*! Constructor
    *
    *  Parameters:
-   *  \li \p alpha: the update rate of internal running average
+   *  \param alpha: the update rate of internal running average
    *  calculations.
    */
   digital_impl_mpsk_snr_est_skew(double alpha);
@@ -167,7 +167,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_m2m4 :
   /*! Constructor
    *
    *  Parameters:
-   *  \li \p alpha: the update rate of internal running average
+   *  \param alpha: the update rate of internal running average
    *  calculations.
    */
   digital_impl_mpsk_snr_est_m2m4(double alpha);
@@ -220,10 +220,10 @@ class DIGITAL_API digital_impl_snr_est_m2m4 :
   /*! Constructor
    *
    *  Parameters:
-   *  \li \p alpha: the update rate of internal running average
+   *  \param alpha: the update rate of internal running average
    *  calculations.
-   *  \li \p ka: estimate of the signal kurtosis (1 for PSK)
-   *  \li \p kw: estimate of the channel noise kurtosis (2 for AWGN)
+   *  \param ka: estimate of the signal kurtosis (1 for PSK)
+   *  \param kw: estimate of the channel noise kurtosis (2 for AWGN)
    */
   digital_impl_snr_est_m2m4(double alpha, double ka, double kw);
   ~digital_impl_snr_est_m2m4() {}
@@ -265,7 +265,7 @@ class DIGITAL_API digital_impl_mpsk_snr_est_svr :
   /*! Constructor
    *
    *  Parameters:
-   *  \li \p alpha: the update rate of internal running average
+   *  \param alpha: the update rate of internal running average
    *  calculations.
    */
   digital_impl_mpsk_snr_est_svr(double alpha);

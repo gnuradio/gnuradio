@@ -65,11 +65,11 @@ class DIGITAL_API digital_mpsk_snr_est_cc : public gr_sync_block
    *
    *  Parameters:
    *
-   *  \li \p type: the type of estimator to use \ref ref_snr_est_types
+   *  \param type: the type of estimator to use \ref ref_snr_est_types
    *  "snr_est_type_t" for details about the available types.
-   *  \li \p tag_nsamples: after this many samples, a tag containing
+   *  \param tag_nsamples: after this many samples, a tag containing
    *  the SNR (key='snr') will be sent
-   *  \li \p alpha: the update rate of internal running average
+   *  \param alpha: the update rate of internal running average
    *  calculations.
    */
   friend DIGITAL_API digital_mpsk_snr_est_cc_sptr
