@@ -273,6 +273,30 @@ class test_fft_filter(gr_unittest.TestCase):
 
             self.assert_fft_float_ok2(expected_result, result_data)
 
+    def test_fff_get0(self):
+        random.seed(0)
+        for i in xrange(25):
+            ntaps = int(random.uniform(2, 100))
+            taps = make_random_float_tuple(ntaps)
+
+            op = gr.fft_filter_fff(1, taps)
+            result_data = op.taps()
+            print result_data
+
+            self.assertEqual(taps, result_data)
+
+    def test_ccc_get0(self):
+        random.seed(0)
+        for i in xrange(25):
+            ntaps = int(random.uniform(2, 100))
+            taps = make_random_complex_tuple(ntaps)
+
+            op = gr.fft_filter_ccc(1, taps)
+            result_data = op.taps()
+            print result_data
+
+            self.assertComplexTuplesAlmostEqual(taps, result_data, 4)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_fft_filter, "test_fft_filter.xml")

@@ -59,12 +59,14 @@ install(
     digital_lms_dd_equalizer_cc.i
     digital_kurtotic_equalizer_cc.i
     digital_mpsk_receiver_cc.i
+    digital_mpsk_snr_est_cc.i
     digital_ofdm_cyclic_prefixer.i
     digital_ofdm_frame_acquisition.i
     digital_ofdm_frame_sink.i
     digital_ofdm_insert_preamble.i
     digital_ofdm_mapper_bcv.i
     digital_ofdm_sampler.i
+    digital_probe_mpsk_snr_est_c.i
     digital_gmskmod_bc.i
     digital_cpmmod_bc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig

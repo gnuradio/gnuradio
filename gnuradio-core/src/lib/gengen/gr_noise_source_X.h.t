@@ -55,6 +55,9 @@ class GR_CORE_API @NAME@ : public gr_sync_block {
   void set_type (gr_noise_type_t type) { d_type = type; }
   void set_amplitude (float ampl) { d_ampl = ampl; }
 
+  gr_noise_type_t type () const { return d_type; }
+  float amplitude () const { return d_ampl; }
+
   virtual int work (int noutput_items,
 			 gr_vector_const_void_star &input_items,
 			 gr_vector_void_star &output_items);

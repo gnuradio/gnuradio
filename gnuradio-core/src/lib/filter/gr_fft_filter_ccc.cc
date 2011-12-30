@@ -62,6 +62,7 @@ gr_fft_filter_ccc::gr_fft_filter_ccc (int decimation, const std::vector<gr_compl
 #else
   d_filter = new gri_fft_filter_ccc_sse(decimation, taps);
 #endif
+  d_new_taps = taps;
   d_nsamples = d_filter->set_taps(taps);
   set_output_multiple(d_nsamples);
 }
@@ -76,6 +77,12 @@ gr_fft_filter_ccc::set_taps (const std::vector<gr_complex> &taps)
 {
   d_new_taps = taps;
   d_updated = true;
+}
+
+std::vector<gr_complex>
+gr_fft_filter_ccc::taps () const
+{
+  return d_new_taps;
 }
 
 int
