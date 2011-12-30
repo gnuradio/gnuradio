@@ -24,12 +24,14 @@
 //load generated python docstrings
 %include "digital_swig_doc.i"
 
+#if SWIGPYTHON
 enum snr_est_type_t {
   SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
   SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
   SNR_EST_M2M4,	        // 2nd & 4th moment est (>= 1 dB)
   SNR_EST_SVR           // SVR-based est (>= 0dB)
 };
+#endif
 
 %include <gri_control_loop.i>
 
@@ -86,6 +88,14 @@ enum snr_est_type_t {
 %include "digital_gmskmod_bc.i"
 
 #if SWIGGUILE
+
+enum snr_est_type_t {
+  SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
+  SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
+  SNR_EST_M2M4,	        // 2nd & 4th moment est (>= 1 dB)
+  SNR_EST_SVR           // SVR-based est (>= 0dB)
+};
+
 %scheme %{
 (load-extension-global "libguile-gnuradio-digital_swig" "scm_init_gnuradio_digital_swig_module")
 %}
