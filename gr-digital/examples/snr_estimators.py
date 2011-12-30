@@ -118,8 +118,8 @@ def main():
     snr_python = list()
     snr_gr = list()
     
-    gain =0.5
-    alpha = 0.004
+    # when to issue an SNR tag; can be ignored in this example.
+    ntag = 10000
 
     n_cpx = xx + 1j*xy
 
@@ -133,10 +133,10 @@ def main():
     for snr in SNR_dB:
         SNR = 10.0**(snr/10.0)
         scale = scipy.sqrt(SNR)
-        yy = gain*(bits + n_cpx/scale)
+        yy = bits + n_cpx/scale
         print "SNR: ", snr
 
-        Sknown = scipy.mean((yy/gain)**2)
+        Sknown = scipy.mean(yy**2)
         Nknown = scipy.var(n_cpx/scale)/2
         snr0 = Sknown/Nknown
         snr0dB = 10.0*scipy.log10(snr0)
@@ -146,7 +146,7 @@ def main():
         snr_python.append(snrdB)
 
         gr_src = gr.vector_source_c(bits.tolist(), False)
-        gr_snr = digital.mpsk_snr_est_cc(gr_est, 0.001)
+        gr_snr = digital.mpsk_snr_est_cc(gr_est, ntag, 0.001)
         gr_chn = gr.channel_model(1.0/scale)
         gr_snk = gr.null_sink(gr.sizeof_gr_complex)
         tb = gr.top_block()

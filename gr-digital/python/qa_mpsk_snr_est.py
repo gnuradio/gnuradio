@@ -60,7 +60,9 @@ class test_mpsk_snr_est (gr_unittest.TestCase):
     def test_mpsk_snr_est_simple (self):
 	expected_result = [11.48, 5.91, 3.30, 2.08, 1.46]
 
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SIMPLE, 0.001)
+        N = 10000
+        alpha = 0.001
+        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SIMPLE, N, alpha)
 
         actual_result = self.mpsk_snr_est_setup(op)
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
@@ -68,21 +70,29 @@ class test_mpsk_snr_est (gr_unittest.TestCase):
     def test_mpsk_snr_est_skew (self):
 	expected_result = [11.48, 5.91, 3.30, 2.08, 1.46]
 
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SKEW, 0.001)
+        N = 10000
+        alpha = 0.001
+        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SKEW, N, alpha)
+
         actual_result = self.mpsk_snr_est_setup(op)
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
 
     def test_mpsk_snr_est_m2m4 (self):
 	expected_result = [11.02, 6.20, 4.98, 5.16, 5.66]
 
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_M2M4, 0.001)
+        N = 10000
+        alpha = 0.001
+        op = digital.mpsk_snr_est_cc (digital.SNR_EST_M2M4, N, alpha)
+
         actual_result = self.mpsk_snr_est_setup(op)
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
 
     def test_mpsk_snr_est_svn (self):
 	expected_result = [10.90, 6.00, 4.76, 4.97, 5.49]
 
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SVR, 0.001)
+        N = 10000
+        alpha = 0.001
+        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SVR, N, alpha)
 
         actual_result = self.mpsk_snr_est_setup(op)
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
@@ -95,7 +105,9 @@ class test_mpsk_snr_est (gr_unittest.TestCase):
             src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
             
             src = gr.vector_source_c (src_data)
-            op = digital.probe_mpsk_snr_est_c (digital.SNR_EST_M2M4, 0.001)
+
+            alpha = 0.001
+            op = digital.probe_mpsk_snr_est_c (digital.SNR_EST_M2M4, alpha)
 
             tb = gr.top_block ()
             tb.connect (src, op)
