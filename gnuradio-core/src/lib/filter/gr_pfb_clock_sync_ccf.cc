@@ -244,6 +244,9 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
   // Set the history to ensure enough input items for each filter
   set_history (d_taps_per_filter + d_sps);
 
+  // Make sure there is enough output space for d_osps outputs/input.
+  set_output_multiple(d_osps);
+
   d_updated = true;
 }
 
@@ -376,7 +379,7 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   float error_r, error_i;
 
   // produce output as long as we can and there are enough input samples
-  while((i < noutput_items-d_osps) && (count < nrequired)) {
+  while((i < noutput_items) && (count < nrequired)) {
     for(int k = 0; k < d_osps; k++) {
       d_filtnum = (int)floor(d_k);
       
