@@ -197,7 +197,8 @@ class GR_CORE_API gr_pfb_clock_sync_ccf : public gr_block
   int                               d_filtnum;
   int                               d_osps;
   float                             d_error;
-
+  int                               d_out_idx;
+  
   /*!
    * Build the polyphase filterbank timing synchronizer.
    */
