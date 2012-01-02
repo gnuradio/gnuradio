@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <boost/asio.hpp>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif

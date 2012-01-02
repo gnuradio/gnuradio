@@ -85,7 +85,17 @@ execute_process(
 #set the various overrule values (see archs.xml)
 #a lot of this is translating between automake and cmake
 if(NOT "${CROSSCOMPILE_MULTILIB}" STREQUAL "true")
-    set(MD_SUBCPU ${CMAKE_HOST_SYSTEM_PROCESSOR})
+    set(MD_SUBCPU ${CMAKE_SYSTEM_PROCESSOR})
+    #detect 32 or 64 bit compiler
+    if(MD_SUBCPU MATCHES "^(i.86|x86|x86_64|amd64)$")
+        include(CheckTypeSize)
+        check_type_size("void*" SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
+        if (${SIZEOF_VOID_P} EQUAL 8)
+            set(MD_SUBCPU x86_64)
+        else()
+            set(MD_SUBCPU x86)
+        endif()
+    endif()
 endif()
 if(NOT "${ORC_FOUND}" STREQUAL "TRUE")
     set(LV_HAVE_ORC "no")
