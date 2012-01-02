@@ -33,25 +33,27 @@
 class tpb_container
 {
   gr_block_sptr	d_block;
+  int d_max_noutput_items;
   
 public:
-  tpb_container(gr_block_sptr block) : d_block(block) {}
+  tpb_container(gr_block_sptr block, int max_noutput_items)
+    : d_block(block), d_max_noutput_items(max_noutput_items) {}
 
   void operator()()
   {
-    gr_tpb_thread_body	body(d_block);
+    gr_tpb_thread_body	body(d_block, d_max_noutput_items);
   }
 };
 
 
 gr_scheduler_sptr
-gr_scheduler_tpb::make(gr_flat_flowgraph_sptr ffg)
+gr_scheduler_tpb::make(gr_flat_flowgraph_sptr ffg, int max_noutput_items)
 {
-  return gr_scheduler_sptr(new gr_scheduler_tpb(ffg));
+  return gr_scheduler_sptr(new gr_scheduler_tpb(ffg, max_noutput_items));
 }
 
-gr_scheduler_tpb::gr_scheduler_tpb(gr_flat_flowgraph_sptr ffg)
-  : gr_scheduler(ffg)
+gr_scheduler_tpb::gr_scheduler_tpb(gr_flat_flowgraph_sptr ffg, int max_noutput_items)
+  : gr_scheduler(ffg, max_noutput_items)
 {
   // Get a topologically sorted vector of all the blocks in use.
   // Being topologically sorted probably isn't going to matter, but
@@ -73,7 +75,8 @@ gr_scheduler_tpb::gr_scheduler_tpb(gr_flat_flowgraph_sptr ffg)
     std::stringstream name;
     name << "thread-per-block[" << i << "]: " << blocks[i];
     d_threads.create_thread(
-      gruel::thread_body_wrapper<tpb_container>(tpb_container(blocks[i]), name.str()));
+	    gruel::thread_body_wrapper<tpb_container>(tpb_container(blocks[i], max_noutput_items),
+						      name.str()));
   }
 }
 

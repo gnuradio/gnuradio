@@ -39,7 +39,8 @@
 #define GR_TOP_BLOCK_IMPL_DEBUG 0
 
 
-typedef gr_scheduler_sptr (*scheduler_maker)(gr_flat_flowgraph_sptr ffg);
+typedef gr_scheduler_sptr (*scheduler_maker)(gr_flat_flowgraph_sptr ffg,
+					     int max_noutput_items);
 
 static struct scheduler_table {
   const char 	       *name;
@@ -50,7 +51,7 @@ static struct scheduler_table {
 };
 
 static gr_scheduler_sptr
-make_scheduler(gr_flat_flowgraph_sptr ffg)
+make_scheduler(gr_flat_flowgraph_sptr ffg, int max_noutput_items)
 {
   static scheduler_maker  factory = 0;
 
@@ -72,7 +73,7 @@ make_scheduler(gr_flat_flowgraph_sptr ffg)
       }
     }
   }
-  return factory(ffg);
+  return factory(ffg, max_noutput_items);
 }
 
 
@@ -88,9 +89,11 @@ gr_top_block_impl::~gr_top_block_impl()
 }
 
 void
-gr_top_block_impl::start()
+gr_top_block_impl::start(int max_noutput_items)
 {
   gruel::scoped_lock	l(d_mutex);
+
+  d_max_noutput_items = max_noutput_items;
 
   if (d_state != IDLE)
     throw std::runtime_error("top_block::start: top block already running or wait() not called after previous stop()");
@@ -105,7 +108,7 @@ gr_top_block_impl::start()
   d_ffg->validate();
   d_ffg->setup_connections();
 
-  d_scheduler = make_scheduler(d_ffg);
+  d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
   d_state = RUNNING;
 }
 
@@ -168,7 +171,7 @@ gr_top_block_impl::restart()
   d_ffg = new_ffg;
 
   // Create a new scheduler to execute it
-  d_scheduler = make_scheduler(d_ffg);
+  d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
   d_state = RUNNING;
 }
 
@@ -177,4 +180,16 @@ gr_top_block_impl::dump()
 {
   if (d_ffg)
     d_ffg->dump();
+}
+
+int
+gr_top_block_impl::max_noutput_items()
+{
+  return d_max_noutput_items;
+}
+  
+void
+gr_top_block_impl::set_max_noutput_items(int nmax)
+{
+  d_max_noutput_items = nmax;
 }

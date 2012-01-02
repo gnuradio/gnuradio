@@ -54,9 +54,9 @@ gr_top_block::~gr_top_block()
 }
 
 void 
-gr_top_block::start()
+gr_top_block::start(int max_noutput_items)
 {
-  d_impl->start();
+  d_impl->start(max_noutput_items);
 }
 
 void 
@@ -94,6 +94,18 @@ void
 gr_top_block::dump()
 {
   d_impl->dump();
+}
+
+int
+gr_top_block::max_noutput_items()
+{
+  return d_impl->max_noutput_items();
+}
+
+void
+gr_top_block::set_max_noutput_items(int nmax)
+{
+  d_impl->set_max_noutput_items(nmax);
 }
 
 gr_top_block_sptr

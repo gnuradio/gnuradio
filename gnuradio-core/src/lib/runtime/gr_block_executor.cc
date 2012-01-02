@@ -155,8 +155,8 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
   return true;
 }
 
-gr_block_executor::gr_block_executor (gr_block_sptr block)
-  : d_block(block), d_log(0)
+gr_block_executor::gr_block_executor (gr_block_sptr block, int max_noutput_items)
+  : d_block(block), d_log(0), d_max_noutput_items(max_noutput_items)
 {
   if (ENABLE_LOGGING){
     std::string name = str(boost::format("sst-%03d.log") % which_scheduler++);
@@ -203,6 +203,7 @@ gr_block_executor::run_one_iteration()
 
     // determine the minimum available output space
     noutput_items = min_available_space (d, m->output_multiple ());
+    noutput_items = std::min(noutput_items, d_max_noutput_items);
     LOG(*d_log << " source\n  noutput_items = " << noutput_items << std::endl);
     if (noutput_items == -1)		// we're done
       goto were_done;
@@ -247,6 +248,7 @@ gr_block_executor::run_one_iteration()
     // take a swag at how much output we can sink
     noutput_items = (int) (max_items_avail * m->relative_rate ());
     noutput_items = round_down (noutput_items, m->output_multiple ());
+    noutput_items = std::min(noutput_items, d_max_noutput_items);
     LOG(*d_log << "  max_items_avail = " << max_items_avail << std::endl);
     LOG(*d_log << "  noutput_items = " << noutput_items << std::endl);
 
@@ -308,6 +310,7 @@ gr_block_executor::run_one_iteration()
       if (reqd_noutput_items > 0 && reqd_noutput_items <= noutput_items)
 	noutput_items = reqd_noutput_items;
     }
+    noutput_items = std::min(noutput_items, d_max_noutput_items);
 
     // ask the block how much input they need to produce noutput_items
     m->forecast (noutput_items, d_ninput_items_required);

@@ -61,8 +61,13 @@ public:
    * execute the flow graph.  Returns to the caller once the threads
    * are created.  Calling start() on a top_block that is already
    * started IS an error.
+   *
+   * \param max_noutput_items the maximum number of output items
+   * allowed for any block in the flowgraph; the noutput_items can
+   * always be less than this, but this will cap it as a maximum. Use
+   * this to adjust the maximum latency a flowgraph can exhibit.
    */
-  void start();
+  void start(int max_noutput_items=100000);
   
   /*!
    * Stop the running flowgraph.  Notifies each thread created by the
@@ -106,6 +111,12 @@ public:
    * Displays flattened flowgraph edges and block connectivity
    */
   void dump();
+
+  //! Get the number of max noutput_items in the flowgraph
+  int max_noutput_items();
+  
+  //! Set the maximum number of noutput_items in the flowgraph
+  void set_max_noutput_items(int nmax);
 
   gr_top_block_sptr to_top_block(); // Needed for Python/Guile type coercion
 };

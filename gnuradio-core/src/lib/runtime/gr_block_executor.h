@@ -51,9 +51,10 @@ protected:
   gr_vector_void_star		d_output_items;
   std::vector<uint64_t>         d_start_nitems_read; //stores where tag counts are before work
   std::vector<gr_tag_t>       d_returned_tags;
+  int                           d_max_noutput_items;
 
  public:
-  gr_block_executor(gr_block_sptr block);
+  gr_block_executor(gr_block_sptr block, int max_noutput_items=100000);
   ~gr_block_executor ();
 
   enum state {

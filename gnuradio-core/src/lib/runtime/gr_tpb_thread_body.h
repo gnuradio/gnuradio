@@ -38,7 +38,7 @@ class GR_CORE_API gr_tpb_thread_body {
   gr_block_executor	d_exec;
 
 public:
-  gr_tpb_thread_body(gr_block_sptr block);
+  gr_tpb_thread_body(gr_block_sptr block, int max_noutput_items=100000);
   ~gr_tpb_thread_body();
 };
 

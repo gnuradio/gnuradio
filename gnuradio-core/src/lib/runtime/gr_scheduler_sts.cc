@@ -43,13 +43,13 @@ public:
 
 
 gr_scheduler_sptr
-gr_scheduler_sts::make(gr_flat_flowgraph_sptr ffg)
+gr_scheduler_sts::make(gr_flat_flowgraph_sptr ffg, int max_noutput_items)
 {
-  return gr_scheduler_sptr(new gr_scheduler_sts(ffg));
+  return gr_scheduler_sptr(new gr_scheduler_sts(ffg, max_noutput_items));
 }
 
-gr_scheduler_sts::gr_scheduler_sts(gr_flat_flowgraph_sptr ffg)
-  : gr_scheduler(ffg)
+gr_scheduler_sts::gr_scheduler_sts(gr_flat_flowgraph_sptr ffg, int max_noutput_items)
+  : gr_scheduler(ffg, max_noutput_items)
 {
   // Split the flattened flow graph into discrete partitions, each
   // of which is topologically sorted.
