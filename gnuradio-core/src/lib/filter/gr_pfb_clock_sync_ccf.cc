@@ -60,7 +60,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float loop_bw,
 	      gr_make_io_signaturev (1, 4, iosig)),
     d_updated (false), d_nfilters(filter_size),
     d_max_dev(max_rate_deviation),
-    d_osps(osps), d_error(0)
+    d_osps(osps), d_error(0), d_out_idx(0)
 {
   d_nfilters = filter_size;
   d_sps = floor(sps);
@@ -376,8 +376,8 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   float error_r, error_i;
 
   // produce output as long as we can and there are enough input samples
-  while((i < noutput_items-d_osps) && (count < nrequired)) {
-    for(int k = 0; k < d_osps; k++) {
+  while((i < noutput_items) && (count < nrequired)) {
+    while(d_out_idx < d_osps) {
       d_filtnum = (int)floor(d_k);
       
       // Keep the current filter number in [0, d_nfilters]
@@ -394,15 +394,26 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 	count -= 1;
       }
       
-      out[i+k] = d_filters[d_filtnum]->filter(&in[count+k]);
+      out[i+d_out_idx] = d_filters[d_filtnum]->filter(&in[count+d_out_idx]);
       d_k = d_k + d_rate_i + d_rate_f; // update phase
-
+      d_out_idx++;
+      
       if(output_items.size() == 4) {
 	err[i] = d_error;
 	outrate[i] = d_rate_f;
 	outk[i] = d_k;
       }
+
+      // We've run out of output items we can create; return now.
+      if(i+d_out_idx >= noutput_items) {
+	consume_each(count);
+	return i;
+      }
     }
+
+    // reset here; if we didn't complete a full osps samples last time,
+    // the early return would take care of it.
+    d_out_idx = 0;
 
     // Update the phase and rate estimates for this symbol
     gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
@@ -421,7 +432,7 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     i+=d_osps;
     count += (int)floor(d_sps);
   }
-  consume_each(count);
 
+  consume_each(count);
   return i;
 }
