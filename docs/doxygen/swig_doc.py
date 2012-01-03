@@ -27,7 +27,7 @@ python docstrings.
 
 """
 
-import sys
+import sys, time
 
 try:
     from doxyxml import DoxyIndex, DoxyClass, DoxyFriend, DoxyFunction, DoxyFile, base
@@ -193,7 +193,25 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
         output.append(custom_output)
 
     # Create docstrings for the blocks.
-    blocks = di.in_category(Block)
+    tries = 0
+    while(1):
+        try:
+            blocks = di.in_category(Block)
+        except:
+            if(tries < 3):
+                # May not be built just yet; sleep and try again
+                sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
+                        swigdocfilename))
+                time.sleep(1)
+                tries += 1
+            else:
+                # if we've given it three tries, give up and raise an error
+                sys.stderr.write("XML parsing error with file {0}. giving up.\n".format(
+                        swigdocfilename))
+                raise
+        else:
+            break
+
     make_funcs = set([])
     for block in blocks:
         try:
