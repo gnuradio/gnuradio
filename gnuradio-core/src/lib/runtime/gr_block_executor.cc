@@ -182,6 +182,7 @@ gr_block_executor::run_one_iteration()
 {
   int			noutput_items;
   int			max_items_avail;
+  int                   max_noutput_items = d_max_noutput_items;
 
   gr_block		*m = d_block.get();
   gr_block_detail	*d = m->detail().get();
@@ -309,8 +310,11 @@ gr_block_executor::run_one_iteration()
       reqd_noutput_items = round_up(reqd_noutput_items, m->output_multiple());
       if (reqd_noutput_items > 0 && reqd_noutput_items <= noutput_items)
 	noutput_items = reqd_noutput_items;
+
+      // if we need this many outputs, overrule the max_noutput_items setting
+      max_noutput_items = std::max(m->output_multiple(), max_noutput_items);
     }
-    noutput_items = std::min(noutput_items, d_max_noutput_items);
+    noutput_items = std::min(noutput_items, max_noutput_items);
 
     // ask the block how much input they need to produce noutput_items
     m->forecast (noutput_items, d_ninput_items_required);
