@@ -39,10 +39,10 @@ protected:
    * The scheduler will continue running until all blocks until they
    * report that they are done or the stop method is called.
    */
-  gr_scheduler_tpb(gr_flat_flowgraph_sptr ffg);
+  gr_scheduler_tpb(gr_flat_flowgraph_sptr ffg, int max_noutput_items);
 
 public:
-  static gr_scheduler_sptr make(gr_flat_flowgraph_sptr ffg);
+  static gr_scheduler_sptr make(gr_flat_flowgraph_sptr ffg, int max_noutput_items=100000);
 
   ~gr_scheduler_tpb();
 

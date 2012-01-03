@@ -244,6 +244,9 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
   // Set the history to ensure enough input items for each filter
   set_history (d_taps_per_filter + d_sps);
 
+  // Make sure there is enough output space for d_osps outputs/input.
+  set_output_multiple(d_osps);
+
   d_updated = true;
 }
 
