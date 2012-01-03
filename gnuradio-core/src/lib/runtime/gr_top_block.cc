@@ -72,9 +72,9 @@ gr_top_block::wait()
 }
 
 void 
-gr_top_block::run()
+gr_top_block::run(int max_noutput_items)
 {
-  start();
+  start(max_noutput_items);
   wait();
 }
 

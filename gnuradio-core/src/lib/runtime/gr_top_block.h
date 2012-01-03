@@ -53,8 +53,12 @@ public:
    *
    * Calls start() then wait().  Used to run a flowgraph that will stop
    * on its own, or when another thread will call stop().
+   *
+   * \param max_noutput_items the maximum number of output items
+   * allowed for any block in the flowgraph. This passes through to
+   * the start function; see that function for more details.
    */
-  void run();
+  void run(int max_noutput_items=100000);
 
   /*!
    * Start the contained flowgraph.  Creates one or more threads to
