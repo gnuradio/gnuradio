@@ -40,13 +40,16 @@ private:
 public:
   ~gr_top_block();
 
-  void start() throw (std::runtime_error);
+  void start(int max_noutput_items=100000) throw (std::runtime_error);
   void stop();
   //void wait();
   //void run() throw (std::runtime_error);
   void lock();
   void unlock() throw (std::runtime_error);
   void dump();
+
+  int max_noutput_items();
+  void set_max_noutput_items(int nmax);
 
   gr_top_block_sptr to_top_block(); // Needed for Python/Guile type coercion
 };
