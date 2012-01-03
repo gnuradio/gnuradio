@@ -66,29 +66,12 @@ function(GR_SWIG_MAKE_DOCS output_file)
 
         #call doxygen on the Doxyfile + input headers
         add_custom_command(
-            OUTPUT ${OUTPUT_DIRECTORY}/tmp/xml/index.xml
-	           ${OUTPUT_DIRECTORY}/tmp/xml/combine.xslt 
+            OUTPUT ${OUTPUT_DIRECTORY}/xml/index.xml
+	           ${OUTPUT_DIRECTORY}/xml/combine.xslt 
             DEPENDS ${input_files} ${GR_SWIG_DOCS_SOURCE_DEPS} ${tag_deps}
             COMMAND ${DOXYGEN_EXECUTABLE} ${OUTPUT_DIRECTORY}/Doxyfile
             COMMENT "Generating doxygen xml for ${name} docs"
         )
-
-        # Steps to make sure the Doxygen run is finished before we allow the dependency to be met that
-	# reads the outputs of this stage.
-	set(stamp-file "${OUTPUT_DIRECTORY}/xml/${name}.stamp")
-        add_custom_command(
-            OUTPUT ${stamp-file} ${OUTPUT_DIRECTORY}/xml/index.xml
-            DEPENDS ${OUTPUT_DIRECTORY}/tmp/xml/index.xml ${OUTPUT_DIRECTORY}/tmp/xml/combine.xslt 
-	    COMMAND "${CMAKE_COMMAND}" -E make_directory "${OUTPUT_DIRECTORY}/xml"
-	    COMMAND "${CMAKE_COMMAND}" -E copy "${OUTPUT_DIRECTORY}/tmp/xml/index.xml" "${OUTPUT_DIRECTORY}/"
-	    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${OUTPUT_DIRECTORY}/tmp/xml/" "${OUTPUT_DIRECTORY}/xml/"
-	    COMMAND "${CMAKE_COMMAND}" -E copy "${OUTPUT_DIRECTORY}/index.xml" "${OUTPUT_DIRECTORY}/xml/"
-            COMMAND "${CMAKE_COMMAND}" -E touch "${stamp-file}"
-	    COMMENT "Waiting for doxygen to finish"
-        )
-        set_source_files_properties(${OUTPUT_DIRECTORY}/xml/index.xml PROPERTIES GENERATED TRUE)
-        set_source_files_properties(${OUTPUT_DIRECTORY}/xml/combine.xslt PROPERTIES GENERATED TRUE)
-        set_source_files_properties(${stamp-file} PROPERTIES GENERATED TRUE)
 
         #call the swig_doc script on the xml files
         add_custom_command(
