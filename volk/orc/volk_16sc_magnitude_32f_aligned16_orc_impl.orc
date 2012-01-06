@@ -22,4 +22,4 @@ divf imagf, imagf, scalar
 mulf realf, realf, realf
 mulf imagf, imagf, imagf
 addf sumf, realf, imagf
-sqrt, sqrtf dst, sumf
+sqrtf dst, sumf

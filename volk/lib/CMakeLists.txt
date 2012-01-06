@@ -277,7 +277,7 @@ if(ORC_FOUND)
 
         #create a rule to generate the source and add to the list of sources
         add_custom_command(
-            COMMAND ${ORCC_EXECUTABLE} --implementation -o ${orcc_gen} ${orc_file}
+            COMMAND ${ORCC_EXECUTABLE} --include math.h --implementation -o ${orcc_gen} ${orc_file}
             DEPENDS ${orc_file} OUTPUT ${orcc_gen}
         )
         list(APPEND volk_sources ${orcc_gen})
