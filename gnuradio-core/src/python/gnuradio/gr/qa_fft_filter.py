@@ -281,7 +281,7 @@ class test_fft_filter(gr_unittest.TestCase):
 
             op = gr.fft_filter_fff(1, taps)
             result_data = op.taps()
-            print result_data
+            #print result_data
 
             self.assertEqual(taps, result_data)
 
@@ -293,7 +293,7 @@ class test_fft_filter(gr_unittest.TestCase):
 
             op = gr.fft_filter_ccc(1, taps)
             result_data = op.taps()
-            print result_data
+            #print result_data
 
             self.assertComplexTuplesAlmostEqual(taps, result_data, 4)
 
