@@ -30,7 +30,8 @@ gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat = false, int v
 
 class @NAME@ : public gr_sync_block {
  public:
-  void rewind() {d_offset=0;}
+  void rewind();
+  void set_data(const std::vector<@TYPE@> &data);
  private:
   @NAME@ (const std::vector<@TYPE@> &data, int vlen);
 };

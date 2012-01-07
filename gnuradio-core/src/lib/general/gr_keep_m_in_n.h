@@ -1,61 +1,62 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
- *
+ * Copyright 2004 Free Software Foundation, Inc.
+ * 
  * This file is part of GNU Radio
- *
+ * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- *
+ * 
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef INCLUDED_GR_KEEP_M_IN_N_H
+#define INCLUDED_GR_KEEP_M_IN_N_H
 
 #include <gr_core_api.h>
 #include <gr_sync_block.h>
 
-class GR_CORE_API @NAME@;
-typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
+class gr_keep_m_in_n;
+typedef boost::shared_ptr<gr_keep_m_in_n> gr_keep_m_in_n_sptr;
+
+GR_CORE_API gr_keep_m_in_n_sptr 
+gr_make_keep_m_in_n (size_t item_size, int m, int n, int offset);
+
 
 /*!
- * \brief source of @TYPE@'s that gets its data from a vector
- * \ingroup source_blk
+ * \brief decimate a stream, keeping one item out of every n.
+ * \ingroup slicedice_blk
  */
+class GR_CORE_API gr_keep_m_in_n : public gr_sync_block
+{
+  friend GR_CORE_API gr_keep_m_in_n_sptr
+  gr_make_keep_m_in_n (size_t item_size, int m, int n, int offset);
 
-class @NAME@ : public gr_sync_block {
-  friend GR_CORE_API @NAME@_sptr
-  gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat, int vlen);
+  int	d_n;
+  int	d_m;
+  int	d_count;
+  int   d_offset;
 
-  std::vector<@TYPE@>	d_data;
-  bool			d_repeat;
-  unsigned int		d_offset;
-  int			d_vlen;
-
-  @NAME@ (const std::vector<@TYPE@> &data, bool repeat, int vlen);
+ protected:
+  gr_keep_m_in_n (size_t item_size, int m, int n, int offset);
 
  public:
-  void rewind() {d_offset=0;}
-  virtual int work (int noutput_items,
+  int work (int noutput_items,
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);
-  void set_data(const std::vector<@TYPE@> &data){ d_data = data; rewind(); }
+
+    void set_offset(int offset);
+
 };
 
-GR_CORE_API @NAME@_sptr
-gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat = false, int vlen = 1);
-
-#endif
+#endif /* INCLUDED_GR_KEEP_M_IN_N_H */
