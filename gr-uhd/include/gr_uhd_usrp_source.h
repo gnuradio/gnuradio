@@ -457,6 +457,15 @@ public:
     virtual uhd::usrp::multi_usrp::sptr get_device(void) = 0;
 
     /*!
+     * Perform write on the user configuration register bus.  These only exist if
+     * the user has implemented custom setting registers in the device FPGA.
+     * \param addr 8-bit register address
+     * \param data 32-bit register value
+     * \param mboard which motherboard to set the user register
+     */
+    virtual void set_user_register(const uint8_t addr, const uint32_t data, size_t mboard = 0) = 0;
+
+    /*!
      * Convenience function for finite data acquisition.
      * This is not to be used with the scheduler; rather,
      * one can request samples from the USRP in python.

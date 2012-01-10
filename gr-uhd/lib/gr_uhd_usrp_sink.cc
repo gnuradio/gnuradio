@@ -278,6 +278,11 @@ public:
         return _dev;
     }
 
+    void set_user_register(const uint8_t addr, const uint32_t data, size_t mboard){
+      _dev->set_user_register(addr, data, mboard);
+    }
+
+
 /***********************************************************************
  * Work
  **********************************************************************/
