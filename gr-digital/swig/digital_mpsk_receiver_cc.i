@@ -37,16 +37,21 @@ class digital_mpsk_receiver_cc : public gr_block, public gri_control_loop
 			    float mu, float gain_mu, 
 			    float omega, float gain_omega, float omega_rel);
 public:
+  float modulation_order() const { return d_M; }
   float mu() const { return d_mu;}
   float omega() const { return d_omega;}
   float gain_mu() const { return d_gain_mu;}
   float gain_omega() const { return d_gain_omega;}
+  float gain_omega_rel() const {return d_omega_rel; }
+  void set_modulation_order(unsigned int M);
   void set_mu (float mu) { d_mu = mu; }
   void set_omega (float omega) { 
     d_omega = omega;
     d_min_omega = omega*(1.0 - d_omega_rel);
     d_max_omega = omega*(1.0 + d_omega_rel);
   }
+  void set_theta(float theta) { d_theta = theta; }
   void set_gain_mu (float gain_mu) { d_gain_mu = gain_mu; }
   void set_gain_omega (float gain_omega) { d_gain_omega = gain_omega; }
+  void set_gain_omega_rel(float omega_rel);
 };

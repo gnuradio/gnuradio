@@ -91,23 +91,37 @@ class DIGITAL_API digital_mpsk_receiver_cc : public gr_block, public gri_control
 		    gr_vector_void_star &output_items);
 
 
-  // Member functions related to the symbol tracking portion of the receiver
-  //! (M&M) Returns current value of mu
-  float mu() const { return d_mu;}
+  //! Returns the modulation order (M) currently set
+  float modulation_order() const { return d_M; }
 
-  //! (M&M) Returns current value of omega
-  float omega() const { return d_omega;}
+  //! Returns current value of theta
+  float theta() const { return d_theta; }
 
-  //! (M&M) Returns mu gain factor
-  float gain_mu() const { return d_gain_mu;}
+  //! Returns current value of mu
+  float mu() const { return d_mu; }
 
-  //! (M&M) Returns omega gain factor
-  float gain_omega() const { return d_gain_omega;}
+  //! Returns current value of omega
+  float omega() const { return d_omega; }
 
-  //! (M&M) Sets value of mu
+  //! Returns mu gain factor
+  float gain_mu() const { return d_gain_mu; }
+
+  //! Returns omega gain factor
+  float gain_omega() const { return d_gain_omega; }
+
+  //! Returns the relative omega limit
+  float gain_omega_rel() const {return d_omega_rel; }
+
+  //! Sets the modulation order (M) currently
+  void set_modulation_order(unsigned int M);
+
+  //! Sets value of theta
+  void set_theta(float theta) { d_theta = theta; }
+
+  //! Sets value of mu
   void set_mu (float mu) { d_mu = mu; }
   
-  //! (M&M) Sets value of omega and its min and max values 
+  //! Sets value of omega and its min and max values 
   void set_omega (float omega) { 
     d_omega = omega;
     d_min_omega = omega*(1.0 - d_omega_rel);
@@ -115,12 +129,15 @@ class DIGITAL_API digital_mpsk_receiver_cc : public gr_block, public gri_control
     d_omega_mid = 0.5*(d_min_omega+d_max_omega);
   }
 
-  //! (M&M) Sets value for mu gain factor
+  //! Sets value for mu gain factor
   void set_gain_mu (float gain_mu) { d_gain_mu = gain_mu; }
 
-  //! (M&M) Sets value for omega gain factor
+  //! Sets value for omega gain factor
   void set_gain_omega (float gain_omega) { d_gain_omega = gain_omega; }
 
+  //! Sets the relative omega limit and resets omega min/max values
+  void set_gain_omega_rel(float omega_rel);
+  
 protected:
   
   /*!
