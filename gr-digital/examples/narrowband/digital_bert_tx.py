@@ -67,9 +67,11 @@ class tx_psk_block(gr.top_block):
 	self._modulator = self._modulator_class(**mod_kwargs)
 
         if(options.tx_freq is not None):
-            self._sink = uhd_transmitter(options.args, options.bitrate,
+            symbol_rate = options.bitrate / self._modulator.bits_per_symbol()
+            self._sink = uhd_transmitter(options.args, symbol_rate,
                                          options.samples_per_symbol,
                                          options.tx_freq, options.tx_gain,
+                                         options.spec,
                                          options.antenna, options.verbose)
             options.samples_per_symbol = self._sink._sps
             
@@ -87,7 +89,8 @@ class tx_psk_block(gr.top_block):
                                           verbose=options.verbose,
                                           log=options.log)
 
-	self.connect(self._transmitter, self._sink)
+        self.amp = gr.multiply_const_cc(options.amplitude)
+	self.connect(self._transmitter, self.amp, self._sink)
 
 
 def get_options(mods):
