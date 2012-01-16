@@ -104,6 +104,7 @@
 		<block>blks2_stream_to_vector_decimator</block>
 
 		<block>gr_stream_mux</block>
+		<block>gr_burst_tagger</block>
 	</cat>
 	<cat>
 		<name>Misc Conversions</name>

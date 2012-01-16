@@ -40,14 +40,21 @@ class GR_CORE_API gr_burst_tagger : public gr_sync_block
 {
   size_t		d_itemsize;
   bool                  d_state;
-  pmt::pmt_t            d_key;
+  pmt::pmt_t            d_true_key;
+  pmt::pmt_t            d_true_value;
+  
+  pmt::pmt_t            d_false_key;
+  pmt::pmt_t            d_false_value;
+  
   pmt::pmt_t            d_id;
-
+  
   friend GR_CORE_API gr_burst_tagger_sptr gr_make_burst_tagger(size_t itemsize);
   gr_burst_tagger(size_t itemsize);
 
  public:
   ~gr_burst_tagger();
+  void set_true_tag (const std::string &key, bool value);
+  void set_false_tag (const std::string &key, bool value);
 
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,

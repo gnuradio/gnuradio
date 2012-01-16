@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Burst tagger:
+##	all types, 1 output, 2 input: stream & trigger (short)
+###################################################
+ -->
+<block>
+	<name>Burst Tagger</name>
+	<key>gr_burst_tagger</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.burst_tagger($type.size)
+self.$(id).set_true_tag($true_key,$true_value)
+self.$(id).set_false_tag($false_key,$false_value)
+	</make>
+	<callback>set_true_tag($true_key,$true_value)</callback>
+	<callback>set_false_tag($false_key,$false_value)</callback>
+	<param>
+	<name>Stream Type</name>
+	<key>type</key>
+	<type>enum</type>
+	<option>
+		<name>Complex</name>
+		<key>complex</key>
+		<opt>size:gr.sizeof_gr_complex</opt>
+	</option>
+	<option>
+		<name>Float</name>
+		<key>float</key>
+		<opt>size:gr.sizeof_float</opt>
+	</option>
+	<option>
+		<name>Int</name>
+		<key>int</key>
+		<opt>size:gr.sizeof_int</opt>
+	</option>
+	<option>
+		<name>Short</name>
+		<key>short</key>
+		<opt>size:gr.sizeof_short</opt>
+	</option>
+	<option>
+		<name>Byte</name>
+		<key>byte</key>
+		<opt>size:gr.sizeof_char</opt>
+	</option>
+    </param>
+	<param>
+		<name>True KeyID</name>
+		<key>true_key</key>
+		<value>burst</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>True Value</name>
+		<key>true_value</key>
+		<value>True</value>
+		<type>bool</type>
+	</param>
+	<param>
+		<name>False KeyID</name>
+		<key>false_key</key>
+		<value>burst</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>False Value</name>
+		<key>false_value</key>
+		<value>False</value>
+		<type>bool</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>1</vlen>
+	</sink>
+	<sink>
+		<name>trigger</name>
+		<type>short</type>
+		<vlen>1</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>1</vlen>
+	</source>
+</block>
