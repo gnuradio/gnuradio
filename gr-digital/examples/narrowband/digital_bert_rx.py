@@ -113,9 +113,11 @@ class rx_psk_block(gr.top_block):
 	self._demodulator = self._demodulator_class(**demod_kwargs)
 
         if(options.rx_freq is not None):
+            symbol_rate = options.bitrate / self._demodulator.bits_per_symbol()
             self._source = uhd_receiver(options.args, options.bitrate,
                                         options.samples_per_symbol,
                                         options.rx_freq, options.rx_gain,
+                                        options.spec,
                                         options.antenna, options.verbose)
             options.samples_per_symbol = self._source._sps
 
