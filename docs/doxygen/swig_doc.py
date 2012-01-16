@@ -274,7 +274,7 @@ if __name__ == "__main__":
     while(1):
         try:
             make_swig_interface_file(di, swigdocfilename, custom_output=custom_output)
-        except base.Base.NoSuchMember:
+        except:
             if(tries < 3):
                 # May not be built just yet; sleep and try again
                 sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
