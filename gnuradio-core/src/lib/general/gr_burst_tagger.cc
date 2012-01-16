@@ -43,8 +43,37 @@ gr_burst_tagger::gr_burst_tagger(size_t itemsize)
   std::stringstream str;
   str << name() << unique_id();
 
-  d_key = pmt::pmt_string_to_symbol("burst");
+  d_true_key = pmt::pmt_string_to_symbol("burst");
+  d_true_value = pmt::PMT_T;
+  
+  d_false_key = pmt::pmt_string_to_symbol("burst");
+  d_false_value = pmt::PMT_F;
+  
   d_id  = pmt::pmt_string_to_symbol(str.str());
+}
+
+void
+gr_burst_tagger::set_true_tag (const std::string &key, bool value)
+{
+  d_true_key = pmt::pmt_string_to_symbol(key);
+  if(value == true) {
+    d_true_value = pmt::PMT_T;
+  }
+  else {
+    d_true_value = pmt::PMT_F;
+  }
+}
+
+void
+gr_burst_tagger::set_false_tag (const std::string &key, bool value)
+{
+  d_false_key = pmt::pmt_string_to_symbol(key);
+  if(value == true) {
+    d_false_value = pmt::PMT_T;
+  }
+  else {
+    d_false_value = pmt::PMT_F;
+  }
 }
 
 gr_burst_tagger::~gr_burst_tagger()
@@ -66,18 +95,15 @@ gr_burst_tagger::work(int noutput_items,
     if(trigger[i] > 0) {
       if(d_state == false) {
 	d_state = true;
-	pmt::pmt_t value = pmt::PMT_T;
-	add_item_tag(0, nitems_written(0)+i, d_key, value, d_id);
+	add_item_tag(0, nitems_written(0)+i, d_true_key, d_true_value, d_id);
       }
     }
     else {
       if(d_state == true) {
 	d_state = false;
-	pmt::pmt_t value = pmt::PMT_F;
-	add_item_tag(0, nitems_written(0)+i, d_key, value, d_id);
+	add_item_tag(0, nitems_written(0)+i, d_false_key, d_false_value, d_id);
       }
     }
   }
-
   return noutput_items;
 }

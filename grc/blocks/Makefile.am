@@ -162,6 +162,7 @@ dist_ourdata_DATA = \
 	gr_stream_to_vector.xml \
 	gr_streams_to_stream.xml \
 	gr_streams_to_vector.xml \
+	gr_burst_tagger.xml \
 	gr_sub_xx.xml \
 	gr_threshold_ff.xml \
 	gr_throttle.xml \
