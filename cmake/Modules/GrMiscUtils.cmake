@@ -155,7 +155,7 @@ function(GR_LIBRARY_FOO target)
         GR_LIBTOOL(TARGET ${target} DESTINATION ${GR_LIBRARY_DIR})
 
         #give the library a special name with ultra-zero soversion
-        set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
+        set_target_properties(${target} PROPERTIES OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
         set(target_name lib${target}-${LIBVER}.so.0.0.0)
 
         #custom command to generate symlinks
