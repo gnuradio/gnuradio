@@ -27,3 +27,5 @@ if PYTHON
 SUBDIRS += swig python apps
 endif
 
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = gnuradio-noaa.pc

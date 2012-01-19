@@ -84,4 +84,18 @@ if(ENABLE_PYTHON)
     add_subdirectory(apps)
 endif(ENABLE_PYTHON)
 
+########################################################################
+# Create Pkg Config File
+########################################################################
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-noaa.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-noaa.pc
+@ONLY)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-noaa.pc
+    DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
+    COMPONENT "noaa_devel"
+)
+
 endif(ENABLE_GR_NOAA)
