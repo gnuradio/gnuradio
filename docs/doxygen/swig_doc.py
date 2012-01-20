@@ -27,7 +27,7 @@ python docstrings.
 
 """
 
-import sys
+import sys, time
 
 try:
     from doxyxml import DoxyIndex, DoxyClass, DoxyFriend, DoxyFunction, DoxyFile, base
@@ -193,15 +193,49 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
         output.append(custom_output)
 
     # Create docstrings for the blocks.
-    blocks = di.in_category(Block)
+    tries = 0
+    while(1):
+        try:
+            blocks = di.in_category(Block)
+        except:
+            if(tries < 3):
+                # May not be built just yet; sleep and try again
+                sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
+                        swigdocfilename))
+                time.sleep(1)
+                tries += 1
+            else:
+                # if we've given it three tries, give up and raise an error
+                sys.stderr.write("XML parsing error with file {0}. giving up.\n".format(
+                        swigdocfilename))
+                raise
+        else:
+            break
+
     make_funcs = set([])
     for block in blocks:
-        try:
-            make_func = di.get_member(make_name(block.name()), DoxyFunction)
-            make_funcs.add(make_func.name())
-            output.append(make_block_entry(di, block))
-        except block.ParsingError:
-            print('Parsing error for block %s' % block.name())
+        tries = 0
+        while(1):
+            try:
+                make_func = di.get_member(make_name(block.name()), DoxyFunction)
+                make_funcs.add(make_func.name())
+                output.append(make_block_entry(di, block))
+            except block.ParsingError:
+                sys.stderr.write('Parsing error for block {0}'.format(block.name()))
+            except:
+                if(tries < 3):
+                    # May not be built just yet; sleep and try again
+                    sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
+                            swigdocfilename))
+                    time.sleep(1)
+                    tries += 1
+                else:
+                    # if we've given it three tries, give up and raise an error
+                    sys.stderr.write("XML parsing error with file {0}. giving up.\n".format(
+                            swigdocfilename))
+                    raise
+            else:
+                break
 
     # Create docstrings for functions
     # Don't include the make functions since they have already been dealt with.
@@ -210,7 +244,7 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
         try:
             output.append(make_func_entry(f))
         except f.ParsingError:
-            print('Parsing error for function %s' % f.name())
+            sys.stderr.write('Parsing error for function {0}'.format(f.name()))
 
     # Create docstrings for classes
     block_names = [block.name() for block in blocks]
@@ -219,7 +253,7 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
         try:
             output.append(make_class_entry(k))
         except k.ParsingError:
-            print('Parsing error for class %s' % k.name())
+            sys.stderr.write('Parsing error for class {0}'.format(k.name()))
 
     # Docstrings are not created for anything that is not a function or a class.
     # If this excludes anything important please add it here.
@@ -250,4 +284,24 @@ if __name__ == "__main__":
     custom_output = "\n\n".join(output)
 
     # Generate the docstrings interface file.
-    make_swig_interface_file(di, swigdocfilename, custom_output=custom_output)
+    # If parsing error on NoSuchMember, try again by rereading everything.
+    # Give up after 3 tries.
+    tries = 0
+    while(1):
+        try:
+            make_swig_interface_file(di, swigdocfilename, custom_output=custom_output)
+        except:
+            if(tries < 3):
+                # May not be built just yet; sleep and try again
+                sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
+                        swigdocfilename))
+                time.sleep(1)
+                tries += 1
+            else:
+                # if we've given it three tries, give up and raise an error
+                sys.stderr.write("XML parsing error with file {0}. giving up.\n".format(
+                        swigdocfilename))
+                raise
+        else:
+            break
+        
