@@ -214,12 +214,28 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
 
     make_funcs = set([])
     for block in blocks:
-        try:
-            make_func = di.get_member(make_name(block.name()), DoxyFunction)
-            make_funcs.add(make_func.name())
-            output.append(make_block_entry(di, block))
-        except block.ParsingError:
-            sys.stderr.write('Parsing error for block {0}'.format(block.name()))
+        tries = 0
+        while(1):
+            try:
+                make_func = di.get_member(make_name(block.name()), DoxyFunction)
+                make_funcs.add(make_func.name())
+                output.append(make_block_entry(di, block))
+            except block.ParsingError:
+                sys.stderr.write('Parsing error for block {0}'.format(block.name()))
+            except:
+                if(tries < 3):
+                    # May not be built just yet; sleep and try again
+                    sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
+                            swigdocfilename))
+                    time.sleep(1)
+                    tries += 1
+                else:
+                    # if we've given it three tries, give up and raise an error
+                    sys.stderr.write("XML parsing error with file {0}. giving up.\n".format(
+                            swigdocfilename))
+                    raise
+            else:
+                break
 
     # Create docstrings for functions
     # Don't include the make functions since they have already been dealt with.
