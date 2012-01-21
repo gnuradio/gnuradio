@@ -33,6 +33,7 @@ AC_DEFUN([GRC_GR_NOAA],[
 	gr-noaa/oct/Makefile \
 	gr-noaa/python/Makefile \
 	gr-noaa/swig/Makefile \
+	gr-noaa/gnuradio-noaa.pc \
 	gr-noaa/swig/run_guile_tests \
     ])
 
