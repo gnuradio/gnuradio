@@ -36,7 +36,7 @@
 #include <stdio.h>
 
 // must be defined to either 0 or 1
-#define ENABLE_LOGGING 1
+#define ENABLE_LOGGING 0
 
 #if (ENABLE_LOGGING)
 #define LOG(x) do { x; } while(0)
