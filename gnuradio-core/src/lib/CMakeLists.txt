@@ -68,6 +68,9 @@ if(LINUX)
     list(APPEND gnuradio_core_libs rt)
 endif()
 
+# Link against libvolk
+list(APPEND gnuradio_core_libs volk)
+
 add_library(gnuradio-core SHARED ${gnuradio_core_sources})
 target_link_libraries(gnuradio-core ${gnuradio_core_libs})
 GR_LIBRARY_FOO(gnuradio-core RUNTIME_COMPONENT "core_runtime" DEVEL_COMPONENT "core_devel")
