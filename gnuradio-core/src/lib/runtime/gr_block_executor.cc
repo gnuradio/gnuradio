@@ -36,7 +36,7 @@
 #include <stdio.h>
 
 // must be defined to either 0 or 1
-#define ENABLE_LOGGING 0
+#define ENABLE_LOGGING 1
 
 #if (ENABLE_LOGGING)
 #define LOG(x) do { x; } while(0)
@@ -183,6 +183,7 @@ gr_block_executor::run_one_iteration()
   int			noutput_items;
   int			max_items_avail;
   int                   max_noutput_items = d_max_noutput_items;
+  int                   new_alignment;
 
   gr_block		*m = d_block.get();
   gr_block_detail	*d = m->detail().get();
@@ -284,7 +285,7 @@ gr_block_executor::run_one_iteration()
     }
 
     // determine the minimum available output space
-    noutput_items = min_available_space (d, m->output_multiple ());
+    noutput_items = min_available_space (d, m->output_multiple ()) - m->output_multiple();
     if (ENABLE_LOGGING){
       *d_log << " regular ";
       if (m->relative_rate() >= 1.0)
@@ -307,7 +308,11 @@ gr_block_executor::run_one_iteration()
       // try to work it forward starting with max_items_avail.
       // We want to try to consume all the input we've got.
       int reqd_noutput_items = m->fixed_rate_ninput_to_noutput(max_items_avail);
-      reqd_noutput_items = round_up(reqd_noutput_items, m->output_multiple());
+      
+      // only test this if we specifically set the output_multiple
+      if(m->output_multiple_set())
+	reqd_noutput_items = round_up(reqd_noutput_items, m->output_multiple());
+
       if (reqd_noutput_items > 0 && reqd_noutput_items <= noutput_items)
 	noutput_items = reqd_noutput_items;
 
@@ -315,6 +320,30 @@ gr_block_executor::run_one_iteration()
       max_noutput_items = std::max(m->output_multiple(), max_noutput_items);
     }
     noutput_items = std::min(noutput_items, max_noutput_items);
+
+    // Check if we're still unaligned; only use up items until we're
+    // aligned again. Otherwise, make sure we set the alignment
+    // requirement.
+    if(m->is_unaligned()) {
+      if(noutput_items >= m->unaligned()) {
+	noutput_items = round_up(noutput_items, m->alignment()) \
+	  - (m->alignment() - m->unaligned());
+	new_alignment = 0;
+      }
+      else {
+	new_alignment = m->unaligned() - noutput_items;
+      }
+    }
+    else if(noutput_items < m->alignment()) {
+      //m->set_unaligned(m->alignment());
+      new_alignment = m->alignment() - noutput_items;
+      m->set_unaligned(new_alignment);
+      m->set_is_unaligned(true);
+    }
+    else {
+      noutput_items = round_down(noutput_items, m->alignment());
+      m->set_is_unaligned(false);
+    }
 
     // ask the block how much input they need to produce noutput_items
     m->forecast (noutput_items, d_ninput_items_required);
@@ -378,6 +407,12 @@ gr_block_executor::run_one_iteration()
 			     d_input_items, d_output_items);
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
+
+    // Adjust number of unaligned items left to process
+    if(m->is_unaligned()) {
+      m->set_unaligned(new_alignment);
+      m->set_is_unaligned(m->unaligned() != 0);
+    }
 
     if(!propagate_tags(m->tag_propagation_policy(), d,
 		       d_start_nitems_read, m->relative_rate(),
