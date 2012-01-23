@@ -36,7 +36,7 @@
 #include <stdio.h>
 
 // must be defined to either 0 or 1
-#define ENABLE_LOGGING 0
+#define ENABLE_LOGGING 1
 
 #if (ENABLE_LOGGING)
 #define LOG(x) do { x; } while(0)
@@ -82,6 +82,11 @@ min_available_space (gr_block_detail *d, int output_multiple)
 	return -1;
       }
       return 0;
+    }
+    else if (n > output_multiple) {
+      // adjust this or we often ask for too many, 
+      // causing a re-calc for fewer items.
+      n = n-output_multiple;
     }
     min_space = std::min (min_space, n);
   }
@@ -285,7 +290,7 @@ gr_block_executor::run_one_iteration()
     }
 
     // determine the minimum available output space
-    noutput_items = min_available_space (d, m->output_multiple ()) - m->output_multiple();
+    noutput_items = min_available_space (d, m->output_multiple ());
     if (ENABLE_LOGGING){
       *d_log << " regular ";
       if (m->relative_rate() >= 1.0)
@@ -321,10 +326,14 @@ gr_block_executor::run_one_iteration()
     }
     noutput_items = std::min(noutput_items, max_noutput_items);
 
-    // Check if we're still unaligned; only use up items until we're
+    // Check if we're still unaligned; use up items until we're
     // aligned again. Otherwise, make sure we set the alignment
     // requirement.
     if(m->is_unaligned()) {
+      // When unaligned, don't just set noutput_items to the remaining
+      // samples to meet alignment; this causes too much overhead in
+      // requiring a premature call back here. Set the maximum amount
+      // of samples to handle unalignment and get us back aligned.
       if(noutput_items >= m->unaligned()) {
 	noutput_items = round_up(noutput_items, m->alignment()) \
 	  - (m->alignment() - m->unaligned());
@@ -335,12 +344,14 @@ gr_block_executor::run_one_iteration()
       }
     }
     else if(noutput_items < m->alignment()) {
-      //m->set_unaligned(m->alignment());
+      // if we don't have enough for an aligned call, keep track of
+      // misalignment, set unaligned flag, and proceed.
       new_alignment = m->alignment() - noutput_items;
       m->set_unaligned(new_alignment);
       m->set_is_unaligned(true);
     }
     else {
+      // enough to round down to the nearest alignment and process.
       noutput_items = round_down(noutput_items, m->alignment());
       m->set_is_unaligned(false);
     }
