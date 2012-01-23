@@ -42,6 +42,7 @@ list(APPEND test_gnuradio_core_sources bug_work_around_6.cc)
 # Setup the include and linker paths
 ########################################################################
 include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
+include_directories(${VOLK_INCLUDE_DIRS})
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
