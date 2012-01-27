@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,7 +26,7 @@ outputs single precision complex float values or complex short values
 (interleaved 16 bit signed short integers).
 """
 
-from gnuradio import gr, eng_notation
+from gnuradio import gr, gru, eng_notation
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -106,6 +106,17 @@ class rx_cfile_block(gr.top_block):
             else:
                 print "Writing 32-bit complex floats"
             print "Output filename:", filename
+
+        # Direct asynchronous notifications to callback function
+        if options.show_async_msg:
+            self.async_msgq = gr.msg_queue(0)
+            self.async_src = uhd.amsg_source("", self.async_msgq)
+            self.async_rcv = gru.msgq_runner(self.async_msgq, self.async_callback)
+
+    def async_callback(self, msg):
+        md = self.async_src.msg_to_async_metadata_t(msg)
+        print "Channel: %i Time: %f Event: %i" % (md.channel, md.time_spec.get_real_secs(), md.event_code)
+
         
 def get_options():
     usage="%prog: [options] output_filename"
@@ -134,6 +145,8 @@ def get_options():
                       help="set wire format from USRP [default=%default")
     parser.add_option("", "--scalar", type="int", default=1024,
                       help="set scalar multiplier value for sc8 wire format [default=%default]")
+    parser.add_option("", "--show-async-msg", action="store_true", default=False,
+                      help="Show asynchronous message notifications from UHD [default=%default]")
 
     (options, args) = parser.parse_args ()
     if len(args) != 1:

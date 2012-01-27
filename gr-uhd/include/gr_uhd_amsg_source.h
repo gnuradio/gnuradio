@@ -38,6 +38,13 @@ GR_UHD_API boost::shared_ptr<uhd_amsg_source> uhd_make_amsg_source(
 );
 
 class GR_UHD_API uhd_amsg_source{
+public:
+    /*!
+     * Convert a raw asynchronous message to an asynchronous metatdata object.
+     * \return The asynchronous metadata object.
+     */
+    static uhd::async_metadata_t msg_to_async_metadata_t(const gr_message_sptr msg);
+
 };
 
 #endif /* INCLUDED_GR_UHD_AMSG_SOURCE_H */
