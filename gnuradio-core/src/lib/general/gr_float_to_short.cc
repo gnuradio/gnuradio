@@ -29,8 +29,6 @@
 #include <gri_float_to_short.h>
 #include <volk/volk.h>
 
-#include <iostream>
-
 gr_float_to_short_sptr
 gr_make_float_to_short ()
 {
@@ -55,20 +53,17 @@ gr_float_to_short::work (int noutput_items,
   const float *in = (const float *) input_items[0];
   short *out = (short *) output_items[0];
 
-#if 0
+#if 1
+  float d_scale = 1.0;
+  //volk_32f_s32f_convert_16i_u(out, in, d_scale, noutput_items);
   if(is_unaligned()) {
-    float d_scale = 1.0;
-    //gri_float_to_short (in, out, noutput_items);
     volk_32f_s32f_convert_16i_u(out, in, d_scale, noutput_items);
   }
   else {
-    float d_scale = 1.0;
     volk_32f_s32f_convert_16i_a(out, in, d_scale, noutput_items);
   }
 #else
-  float d_scale = 1.0;
-  volk_32f_s32f_convert_16i_u(out, in, d_scale, noutput_items);
-  //gri_float_to_short (in, out, noutput_items);
+  gri_float_to_short (in, out, noutput_items);
 #endif
 
   return noutput_items;

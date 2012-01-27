@@ -27,6 +27,7 @@
 #include <gr_float_to_int.h>
 #include <gr_io_signature.h>
 #include <gri_float_to_int.h>
+#include <volk/volk.h>
 
 gr_float_to_int_sptr
 gr_make_float_to_int ()
@@ -39,6 +40,9 @@ gr_float_to_int::gr_float_to_int ()
 		   gr_make_io_signature (1, 1, sizeof (float)),
 		   gr_make_io_signature (1, 1, sizeof (int)))
 {
+ const int alignment_multiple =
+   volk_get_alignment() / sizeof(int);
+ set_alignment(alignment_multiple);
 }
 
 int
@@ -46,10 +50,22 @@ gr_float_to_int::work (int noutput_items,
 			 gr_vector_const_void_star &input_items,
 			 gr_vector_void_star &output_items)
 {
+#if 1
+  float d_scale = 1.0;
+  const float *in = (const float *) input_items[0];
+  int32_t *out = (int32_t *) output_items[0];
+
+  if(is_unaligned()) {
+    volk_32f_s32f_convert_32i_u(out, in, d_scale, noutput_items);
+  }
+  else {
+    volk_32f_s32f_convert_32i_a(out, in, d_scale, noutput_items);
+  }
+#else
   const float *in = (const float *) input_items[0];
   int *out = (int *) output_items[0];
-
   gri_float_to_int (in, out, noutput_items);
+#endif
   
   return noutput_items;
 }
