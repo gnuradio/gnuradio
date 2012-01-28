@@ -26,7 +26,6 @@
 
 #include <gr_float_to_int.h>
 #include <gr_io_signature.h>
-#include <gri_float_to_int.h>
 #include <volk/volk.h>
 
 gr_float_to_int_sptr

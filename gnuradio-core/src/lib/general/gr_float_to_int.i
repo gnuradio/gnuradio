@@ -30,5 +30,4 @@ class gr_float_to_int : public gr_sync_block
 public:
   float scale() const;
   void set_scale(float scale);
-  gr_float_to_int (size_t vlen, float scale);
 };
