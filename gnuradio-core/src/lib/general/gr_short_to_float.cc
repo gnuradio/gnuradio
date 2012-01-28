@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,18 +27,35 @@
 #include <gr_short_to_float.h>
 #include <gr_io_signature.h>
 #include <gri_short_to_float.h>
+#include <volk/volk.h>
 
 gr_short_to_float_sptr
-gr_make_short_to_float ()
+gr_make_short_to_float (size_t vlen, float scale)
 {
-  return gnuradio::get_initial_sptr(new gr_short_to_float ());
+  return gnuradio::get_initial_sptr(new gr_short_to_float (vlen, scale));
 }
 
-gr_short_to_float::gr_short_to_float ()
+gr_short_to_float::gr_short_to_float (size_t vlen, float scale)
   : gr_sync_block ("gr_short_to_float",
-		   gr_make_io_signature (1, 1, sizeof (short)),
-		   gr_make_io_signature (1, 1, sizeof (float)))
+		   gr_make_io_signature (1, 1, sizeof (short)*vlen),
+		   gr_make_io_signature (1, 1, sizeof (float)*vlen)),
+    d_vlen(vlen), d_scale(scale)
 {
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(alignment_multiple);
+}
+
+float 
+gr_short_to_float::scale() const
+{
+  return d_scale;
+}
+
+void
+gr_short_to_float::set_scale(float scale)
+{
+  d_scale = scale;
 }
 
 int
@@ -49,7 +66,17 @@ gr_short_to_float::work (int noutput_items,
   const short *in = (const short *) input_items[0];
   float *out = (float *) output_items[0];
 
-  gri_short_to_float (in, out, noutput_items);
+#if 0
+  if(is_unaligned()) {
+    volk_16i_s32f_convert_32f_u(out, in, d_scale, d_vlen*noutput_items);
+  }
+  else {
+    float d_scale = 1.0;
+    volk_16i_s32f_convert_32f_a(out, in, d_scale, d_vlen*noutput_items);
+  }
+#else
+  gri_short_to_float (in, out, d_vlen*noutput_items);
+#endif
   
   return noutput_items;
 }
