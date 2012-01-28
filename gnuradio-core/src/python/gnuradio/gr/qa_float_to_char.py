@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -54,6 +54,24 @@ class test_float_to_char (gr_unittest.TestCase):
         dst = gr.vector_sink_b()
 
         self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = list(dst.data())
+
+        self.assertEqual(expected_result, result_data)
+
+    def test_003(self):
+        
+        scale = 2
+        vlen = 3
+        src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3)
+        expected_result = [0, 2, 4, 6, 8, 11, 254, 252, 250]
+        src = gr.vector_source_f(src_data)
+        s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
+        op = gr.float_to_char(vlen, scale)
+        v2s = gr.vector_to_stream(gr.sizeof_char, vlen)
+        dst = gr.vector_sink_b()
+
+        self.tb.connect(src, s2v, op, v2s, dst)
         self.tb.run()
         result_data = list(dst.data())
 

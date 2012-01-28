@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,8 +21,9 @@
 # 
 
 from gnuradio import gr, gr_unittest
+import ctypes
 
-class test_float_to_int (gr_unittest.TestCase):
+class test_short_to_float (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -32,14 +33,13 @@ class test_float_to_int (gr_unittest.TestCase):
 
     def test_001(self):
 
-        src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3, -4.4, -5.5)
-        
-        ### Volk results
-        expected_result = [0, 1, 2, 3, 4, 6, -1, -2, -3, -4, -5]
+        src_data = (0, 1, 2, 3, 4, 5, -1, -2, -3, -4, -5)
+        expected_result = [ 0.0,  1.0,  2.0,  3.0,  4.0, 5.0,
+                           -1.0, -2.0, -3.0, -4.0, -5.0]
 
-        src = gr.vector_source_f(src_data)
-        op = gr.float_to_int()
-        dst = gr.vector_sink_i()
+        src = gr.vector_source_s(src_data)
+        op = gr.short_to_float()
+        dst = gr.vector_sink_f()
 
         self.tb.connect(src, op, dst)
         self.tb.run()
@@ -49,32 +49,15 @@ class test_float_to_int (gr_unittest.TestCase):
 
     def test_002(self):
 
-        src_data = (  2146400000,   2147483647,
-                     -2146400000,  -2147483648 )
-        expected_result = [  2146400000,   2146400000,
-                            -2146400000,  -2147483648 ]
-        src = gr.vector_source_f(src_data)
-        op = gr.float_to_int()
-        dst = gr.vector_sink_i()
-
-        self.tb.connect(src, op, dst)
-        self.tb.run()
-        result_data = list(dst.data())
-
-        self.assertEqual(expected_result, result_data)
-
-
-    def test_003(self):
-        
-        scale = 2
         vlen = 3
-        src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3)
-        expected_result = [0, 2, 4, 7, 9, 11, -2, -4, -6,]
-        src = gr.vector_source_f(src_data)
-        s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
-        op = gr.float_to_int(vlen, scale)
-        v2s = gr.vector_to_stream(gr.sizeof_int, vlen)
-        dst = gr.vector_sink_i()
+        src_data = (0, 1, 2, 3, 4, 5, -1, -2, -3)
+        expected_result = [0.0, 1.0, 2.0, 3.0, 4.0,
+                           5.0, -1.0, -2.0, -3.0]
+        src = gr.vector_source_s(src_data)
+        s2v = gr.stream_to_vector(gr.sizeof_short, vlen)
+        op = gr.short_to_float(vlen)
+        v2s = gr.vector_to_stream(gr.sizeof_float, vlen)
+        dst = gr.vector_sink_f()
 
         self.tb.connect(src, s2v, op, v2s, dst)
         self.tb.run()
@@ -83,5 +66,5 @@ class test_float_to_int (gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_float_to_int, "test_float_to_int.xml")
+    gr_unittest.run(test_short_to_float, "test_short_to_float.xml")
 
