@@ -26,7 +26,6 @@
 
 #include <gr_short_to_float.h>
 #include <gr_io_signature.h>
-#include <gri_short_to_float.h>
 #include <volk/volk.h>
 
 gr_short_to_float_sptr
@@ -66,17 +65,12 @@ gr_short_to_float::work (int noutput_items,
   const short *in = (const short *) input_items[0];
   float *out = (float *) output_items[0];
 
-#if 0
   if(is_unaligned()) {
     volk_16i_s32f_convert_32f_u(out, in, d_scale, d_vlen*noutput_items);
   }
   else {
-    float d_scale = 1.0;
     volk_16i_s32f_convert_32f_a(out, in, d_scale, d_vlen*noutput_items);
   }
-#else
-  gri_short_to_float (in, out, d_vlen*noutput_items);
-#endif
   
   return noutput_items;
 }
