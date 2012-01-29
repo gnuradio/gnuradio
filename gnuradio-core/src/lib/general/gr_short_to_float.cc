@@ -71,7 +71,6 @@ gr_short_to_float::work (int noutput_items,
   else {
     volk_16i_s32f_convert_32f_a(out, in, d_scale, d_vlen*noutput_items);
   }
-  
   return noutput_items;
 }
 

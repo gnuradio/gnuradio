@@ -44,6 +44,26 @@ class test_int_to_float (gr_unittest.TestCase):
         
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
+    def test_002(self):
+
+        vlen = 3
+        src_data = ( 65000, 65001, 65002, 65003, 65004, 65005,
+                    -65001, -65002, -65003)
+        expected_result = [ 65000.0,  65001.0,  65002.0, 
+                            65003.0,  65004.0,  65005.0,
+                           -65001.0, -65002.0, -65003.0]
+        src = gr.vector_source_i(src_data)
+        s2v = gr.stream_to_vector(gr.sizeof_int, vlen)
+        op = gr.int_to_float(vlen)
+        v2s = gr.vector_to_stream(gr.sizeof_float, vlen)
+        dst = gr.vector_sink_f()
+
+        self.tb.connect(src, s2v, op, v2s, dst)
+        self.tb.run()
+        result_data = list(dst.data())
+
+        self.assertEqual(expected_result, result_data)
+
 if __name__ == '__main__':
     gr_unittest.run(test_int_to_float, "test_int_to_float.xml")
 

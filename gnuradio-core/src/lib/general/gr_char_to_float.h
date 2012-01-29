@@ -30,7 +30,7 @@ class gr_char_to_float;
 typedef boost::shared_ptr<gr_char_to_float> gr_char_to_float_sptr;
 
 GR_CORE_API gr_char_to_float_sptr
-gr_make_char_to_float ();
+gr_make_char_to_float (size_t vlen=1, float scale=1);
 
 /*!
  * \brief Convert stream of chars to a stream of float
@@ -39,10 +39,18 @@ gr_make_char_to_float ();
 
 class GR_CORE_API gr_char_to_float : public gr_sync_block
 {
-  friend GR_CORE_API gr_char_to_float_sptr gr_make_char_to_float ();
-  gr_char_to_float ();
+ private:
+  friend GR_CORE_API gr_char_to_float_sptr
+    gr_make_char_to_float (size_t vlen, float scale);
+  gr_char_to_float (size_t vlen, float scale);
+
+  size_t d_vlen;
+  float d_scale;
 
  public:
+  float scale() const;
+  void set_scale(float scale);
+
   virtual int work (int noutput_items,
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);

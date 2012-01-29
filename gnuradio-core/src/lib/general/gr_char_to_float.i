@@ -22,9 +22,12 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,char_to_float)
 
-gr_char_to_float_sptr gr_make_char_to_float ();
+gr_char_to_float_sptr
+gr_make_char_to_float (size_t vlen=1, float scale=1);
 
 class gr_char_to_float : public gr_sync_block
 {
-  gr_char_to_float ();
+public:
+  float scale() const;
+  void set_scale(float scale);
 };

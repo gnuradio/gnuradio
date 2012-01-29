@@ -22,7 +22,8 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,short_to_char)
 
-gr_short_to_char_sptr gr_make_short_to_char (size_t vlen=1);
+gr_short_to_char_sptr
+gr_make_short_to_char (size_t vlen=1);
 
 class gr_short_to_char : public gr_sync_block
 {
