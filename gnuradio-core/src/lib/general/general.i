@@ -44,8 +44,10 @@
 #include <gr_float_to_char.h>
 #include <gr_float_to_uchar.h>
 #include <gr_short_to_float.h>
+#include <gr_short_to_char.h>
 #include <gr_int_to_float.h>
 #include <gr_char_to_float.h>
+#include <gr_char_to_short.h>
 #include <gr_uchar_to_float.h>
 #include <gr_frequency_modulator_fc.h>
 #include <gr_phase_modulator_fc.h>
@@ -104,6 +106,7 @@
 #include <gr_diff_decoder_bb.h>
 #include <gr_framer_sink_1.h>
 #include <gr_map_bb.h>
+#include <gr_multiply_cc.h>
 #include <gr_feval.h>
 #include <gr_pwr_squelch_cc.h>
 #include <gr_pwr_squelch_ff.h>
@@ -158,8 +161,10 @@
 %include "gr_float_to_char.i"
 %include "gr_float_to_uchar.i"
 %include "gr_short_to_float.i"
+%include "gr_short_to_char.i"
 %include "gr_int_to_float.i"
 %include "gr_char_to_float.i"
+%include "gr_char_to_short.i"
 %include "gr_uchar_to_float.i"
 %include "gr_frequency_modulator_fc.i"
 %include "gr_phase_modulator_fc.i"
@@ -218,6 +223,7 @@
 %include "gr_diff_decoder_bb.i"
 %include "gr_framer_sink_1.i"
 %include "gr_map_bb.i"
+%include "gr_multiply_cc.i"
 %include "gr_feval.i"
 %include "gr_pwr_squelch_cc.i"
 %include "gr_pwr_squelch_ff.i"

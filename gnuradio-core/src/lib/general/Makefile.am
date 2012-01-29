@@ -46,6 +46,7 @@ libgeneral_la_SOURCES = 		\
 	gr_bin_statistics_f.cc		\
 	gr_bytes_to_syms.cc		\
 	gr_char_to_float.cc		\
+	gr_char_to_short.cc		\
 	gr_check_counting_s.cc		\
 	gr_check_lfsr_32k_s.cc		\
 	gr_circular_file.cc		\
@@ -123,6 +124,7 @@ libgeneral_la_SOURCES = 		\
 	gr_rms_cf.cc			\
 	gr_rms_ff.cc			\
 	gr_short_to_float.cc		\
+	gr_short_to_int.cc		\
 	gr_int_to_float.cc		\
 	gr_simple_correlator.cc		\
 	gr_simple_framer.cc		\
