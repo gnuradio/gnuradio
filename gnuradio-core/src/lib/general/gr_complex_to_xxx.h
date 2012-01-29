@@ -109,10 +109,11 @@ class GR_CORE_API gr_complex_to_imag : public gr_sync_block
  */
 class GR_CORE_API gr_complex_to_mag : public gr_sync_block
 {
-  friend GR_CORE_API gr_complex_to_mag_sptr gr_make_complex_to_mag (unsigned int vlen);
+  friend GR_CORE_API gr_complex_to_mag_sptr
+    gr_make_complex_to_mag (unsigned int vlen);
   gr_complex_to_mag (unsigned int vlen);
 
-  unsigned int	d_vlen;
+  unsigned int d_vlen;
 
  public:
   virtual int work (int noutput_items,

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,6 +27,7 @@
 #include <gr_complex_to_xxx.h>
 #include <gr_io_signature.h>
 #include <gr_math.h>
+#include <volk/volk.h>
 
 // ----------------------------------------------------------------
 
@@ -152,6 +153,9 @@ gr_complex_to_mag::gr_complex_to_mag (unsigned int vlen)
 		   gr_make_io_signature (1, 1, sizeof (float) * vlen)),
     d_vlen(vlen)
 {
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(alignment_multiple);
 }
 
 int
@@ -163,9 +167,9 @@ gr_complex_to_mag::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
-  for (int i = 0; i < noi; i++){
-    out[i] = std::abs (in[i]);
-  }
+  // turned out to be faster than aligned/unaligned switching
+  volk_32fc_magnitude_32f_u(out, in, noi);
+
   return noutput_items;
 }
 
@@ -183,6 +187,9 @@ gr_complex_to_mag_squared::gr_complex_to_mag_squared (unsigned int vlen)
 		   gr_make_io_signature (1, 1, sizeof (float) * vlen)),
     d_vlen(vlen)
 {
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(alignment_multiple);
 }
 
 int
@@ -194,11 +201,13 @@ gr_complex_to_mag_squared::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
-  for (int i = 0; i < noi; i++){
-    const float __x = in[i].real();
-    const float __y = in[i].imag();
-    out[i] = __x * __x + __y * __y;
+  if(unaligned()) {
+    volk_32fc_magnitude_squared_32f_u(out, in, noi);
   }
+  else {
+    volk_32fc_magnitude_squared_32f_a(out, in, noi);
+  }
+
   return noutput_items;
 }
 
