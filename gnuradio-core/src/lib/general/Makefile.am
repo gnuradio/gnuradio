@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2006,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2006-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -197,6 +197,7 @@ grinclude_HEADERS = 			\
 	gr_bin_statistics_f.h		\
 	gr_bytes_to_syms.h		\
 	gr_char_to_float.h		\
+	gr_char_to_short.h		\
 	gr_check_counting_s.h		\
 	gr_check_lfsr_32k_s.h		\
 	gr_circular_file.h		\
@@ -278,6 +279,7 @@ grinclude_HEADERS = 			\
 	gr_reverse.h			\
 	gr_rms_cf.h			\
 	gr_rms_ff.h			\
+	gr_short_to_char.h		\
 	gr_short_to_float.h		\
 	gr_int_to_float.h		\
 	gr_simple_correlator.h		\
@@ -325,7 +327,7 @@ grinclude_HEADERS = 			\
 	gri_int_to_float.h		\
 	gri_lfsr_15_1_0.h		\
 	gri_lfsr_32k.h			\
-	gri_short_to_float.h		\
+	gri_short_to_char.h		\
 	gri_uchar_to_float.h		\
 	malloc16.h			\
 	random.h			\
@@ -363,6 +365,7 @@ swiginclude_HEADERS =			\
 	gr_bin_statistics_f.i		\
 	gr_bytes_to_syms.i		\
 	gr_char_to_float.i		\
+	gr_char_to_short.i		\
 	gr_check_counting_s.i		\
 	gr_check_lfsr_32k_s.i		\
 	gr_complex_to_interleaved_short.i \
@@ -432,6 +435,7 @@ swiginclude_HEADERS =			\
 	gr_rms_cf.i			\
 	gr_rms_ff.i			\
 	gr_repeat.i			\
+	gr_short_to_char.i		\
 	gr_short_to_float.i		\
 	gr_simple_correlator.i		\
 	gr_simple_framer.i		\
