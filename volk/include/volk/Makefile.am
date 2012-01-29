@@ -71,6 +71,9 @@ volkinclude_HEADERS = \
 	volk_32fc_index_max_16u_a.h \
 	volk_32fc_s32f_magnitude_16i_a.h \
 	volk_32fc_magnitude_32f_a.h \
+	volk_32fc_magnitude_32f_u.h \
+	volk_32fc_magnitude_squared_32f_a.h \
+	volk_32fc_magnitude_squared_32f_u.h \
 	volk_32fc_x2_multiply_32fc_a.h \
 	volk_32f_s32f_convert_16i_a.h \
 	volk_32f_s32f_convert_16i_u.h \
