@@ -39,6 +39,7 @@ gr_make_char_to_short (size_t vlen=1);
 
 class GR_CORE_API gr_char_to_short : public gr_sync_block
 {
+ private:
   friend GR_CORE_API gr_char_to_short_sptr
     gr_make_char_to_short (size_t vlen);
   gr_char_to_short (size_t vlen);
