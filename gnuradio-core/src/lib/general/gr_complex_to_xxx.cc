@@ -43,6 +43,9 @@ gr_complex_to_float::gr_complex_to_float (unsigned int vlen)
 		   gr_make_io_signature (1, 2, sizeof (float) * vlen)),
     d_vlen(vlen)
 {
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(alignment_multiple);
 }
 
 int
@@ -57,7 +60,6 @@ gr_complex_to_float::work (int noutput_items,
 
   switch (output_items.size ()){
   case 1:
-#if 1
     if(is_unaligned()) {
       for (int i = 0; i < noi; i++){
 	out0[i] = in[i].real ();
@@ -66,15 +68,9 @@ gr_complex_to_float::work (int noutput_items,
     else {
       volk_32fc_deinterleave_real_32f_a(out0, in, noi);
     }
-#else
-    for (int i = 0; i < noi; i++){
-      out0[i] = in[i].real ();
-    }
-#endif
     break;
 
   case 2:
-#if 1
     out1 = (float *) output_items[1];
     if(is_unaligned()) {
       for (int i = 0; i < noi; i++){
@@ -85,13 +81,6 @@ gr_complex_to_float::work (int noutput_items,
     else {
       volk_32fc_deinterleave_32f_x2_a(out0, out1, in, noi);
     }
-#else
-    out1 = (float *) output_items[1];
-    for (int i = 0; i < noi; i++){
-      out0[i] = in[i].real ();
-      out1[i] = in[i].imag ();
-    }
-#endif
     break;
 
   default:
@@ -115,6 +104,9 @@ gr_complex_to_real::gr_complex_to_real (unsigned int vlen)
 		   gr_make_io_signature (1, 1, sizeof (float) * vlen)),
     d_vlen(vlen)
 {
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(alignment_multiple);
 }
 
 int
@@ -126,7 +118,6 @@ gr_complex_to_real::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
-#if 1
   if(is_unaligned()) {
     for (int i = 0; i < noi; i++){
       out[i] = in[i].real ();
@@ -135,11 +126,6 @@ gr_complex_to_real::work (int noutput_items,
   else {
     volk_32fc_deinterleave_real_32f_a(out, in, noi);
   }
-#else
-  for (int i = 0; i < noi; i++){
-    out0[i] = in[i].real ();
-  }
-#endif
   
   return noutput_items;
 }
@@ -158,6 +144,9 @@ gr_complex_to_imag::gr_complex_to_imag (unsigned int vlen)
 		   gr_make_io_signature (1, 1, sizeof (float) * vlen)),
     d_vlen(vlen)
 {
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(alignment_multiple);
 }
 
 int
@@ -169,7 +158,6 @@ gr_complex_to_imag::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
-#if 1
   if(is_unaligned()) {
     for (int i = 0; i < noi; i++){
       out[i] = in[i].imag ();
@@ -178,11 +166,7 @@ gr_complex_to_imag::work (int noutput_items,
   else {
     volk_32fc_deinterleave_imag_32f_a(out, in, noi);
   }
-#else
-  for (int i = 0; i < noi; i++){
-    out[i] = in[i].imag ();
-  }
-#endif
+
   return noutput_items;
 }
 
@@ -248,7 +232,7 @@ gr_complex_to_mag_squared::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
-  if(unaligned()) {
+  if(is_unaligned()) {
     volk_32fc_magnitude_squared_32f_u(out, in, noi);
   }
   else {
@@ -272,6 +256,9 @@ gr_complex_to_arg::gr_complex_to_arg (unsigned int vlen)
 		   gr_make_io_signature (1, 1, sizeof (float) * vlen)),
     d_vlen(vlen)
 {
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(alignment_multiple);
 }
 
 int
@@ -283,20 +270,11 @@ gr_complex_to_arg::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
-#if 1
-  if(is_unaligned()) {
-    for (int i = 0; i < noi; i++){
-      out[i] = gr_fast_atan2f(in[i]);
-    }
-  }
-  else {
-    volk_32fc_s32f_atan2_32f_a(out, in, 1, noi);
-  }
-#else
+  // The fast_atan2f is faster than Volk
   for (int i = 0; i < noi; i++){
     //    out[i] = std::arg (in[i]);
     out[i] = gr_fast_atan2f(in[i]);
   }
-#endif
+
   return noutput_items;
 }
