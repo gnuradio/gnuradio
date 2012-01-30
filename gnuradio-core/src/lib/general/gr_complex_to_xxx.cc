@@ -57,17 +57,41 @@ gr_complex_to_float::work (int noutput_items,
 
   switch (output_items.size ()){
   case 1:
+#if 1
+    if(is_unaligned()) {
+      for (int i = 0; i < noi; i++){
+	out0[i] = in[i].real ();
+      }
+    }
+    else {
+      volk_32fc_deinterleave_real_32f_a(out0, in, noi);
+    }
+#else
     for (int i = 0; i < noi; i++){
       out0[i] = in[i].real ();
     }
+#endif
     break;
 
   case 2:
+#if 1
+    out1 = (float *) output_items[1];
+    if(is_unaligned()) {
+      for (int i = 0; i < noi; i++){
+	out0[i] = in[i].real ();
+	out1[i] = in[i].imag ();
+      }
+    }
+    else {
+      volk_32fc_deinterleave_32f_x2_a(out0, out1, in, noi);
+    }
+#else
     out1 = (float *) output_items[1];
     for (int i = 0; i < noi; i++){
       out0[i] = in[i].real ();
       out1[i] = in[i].imag ();
     }
+#endif
     break;
 
   default:
@@ -102,9 +126,21 @@ gr_complex_to_real::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
-  for (int i = 0; i < noi; i++){
-    out[i] = in[i].real ();
+#if 1
+  if(is_unaligned()) {
+    for (int i = 0; i < noi; i++){
+      out[i] = in[i].real ();
+    }
   }
+  else {
+    volk_32fc_deinterleave_real_32f_a(out, in, noi);
+  }
+#else
+  for (int i = 0; i < noi; i++){
+    out0[i] = in[i].real ();
+  }
+#endif
+  
   return noutput_items;
 }
 
@@ -133,9 +169,20 @@ gr_complex_to_imag::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
+#if 1
+  if(is_unaligned()) {
+    for (int i = 0; i < noi; i++){
+      out[i] = in[i].imag ();
+    }
+  }
+  else {
+    volk_32fc_deinterleave_imag_32f_a(out, in, noi);
+  }
+#else
   for (int i = 0; i < noi; i++){
     out[i] = in[i].imag ();
   }
+#endif
   return noutput_items;
 }
 
@@ -236,9 +283,20 @@ gr_complex_to_arg::work (int noutput_items,
   float *out = (float *) output_items[0];
   int noi = noutput_items * d_vlen;
 
+#if 1
+  if(is_unaligned()) {
+    for (int i = 0; i < noi; i++){
+      out[i] = gr_fast_atan2f(in[i]);
+    }
+  }
+  else {
+    volk_32fc_s32f_atan2_32f_a(out, in, 1, noi);
+  }
+#else
   for (int i = 0; i < noi; i++){
     //    out[i] = std::arg (in[i]);
     out[i] = gr_fast_atan2f(in[i]);
   }
+#endif
   return noutput_items;
 }
