@@ -26,6 +26,7 @@
 
 #include <gri_fft_filter_fff_generic.h>
 #include <gri_fft.h>
+#include <volk/volk.h>
 #include <assert.h>
 #include <stdexcept>
 #include <cstdio>
@@ -124,9 +125,7 @@ gri_fft_filter_fff_generic::filter (int nitems, const float *input, float *outpu
     gr_complex *b = &d_xformed_taps[0];
     gr_complex *c = d_invfft->get_inbuf();
 
-    for (j = 0; j < d_fftsize/2+1; j++) {	// filter in the freq domain
-      c[j] = a[j] * b[j];
-    }      
+    volk_32fc_x2_multiply_32fc_a(c, a, b, d_fftsize/2+1);
    
     d_invfft->execute();	// compute inv xform
 
