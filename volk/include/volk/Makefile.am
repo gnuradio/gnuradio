@@ -65,6 +65,7 @@ volkinclude_HEADERS = \
 	volk_32fc_deinterleave_64f_x2_a.h \
 	volk_32fc_s32f_deinterleave_real_16i_a.h \
 	volk_32fc_deinterleave_real_32f_a.h \
+	volk_32fc_deinterleave_imag_32f_a.h \
 	volk_32fc_deinterleave_real_64f_a.h \
 	volk_32fc_x2_dot_prod_32fc_a.h \
 	volk_32fc_x2_dot_prod_32fc_u.h \
