@@ -169,17 +169,24 @@ class app_top_block(stdgui2.std_top_block):
         g = self.u.get_gain_range()
 
         # some configurations don't have gain control
-        if g.stop() > g.start():
-            myform['gain'] = form.slider_field(parent=self.panel,
-                                                   sizer=hbox, label="Gain",
-                                                   weight=3,
-                                                   min=int(g.start()), max=int(g.stop()),
-                                                   callback=self.set_gain)
+        if g.stop() <= g.start():
+            glow = 0.0
+            ghigh = 1.0
+            
+        else:
+            glow = g.start()
+            ghigh = g.stop()
+            
+        myform['gain'] = form.slider_field(parent=self.panel,
+                                               sizer=hbox, label="Gain",
+                                               weight=3,
+                                               min=int(glow), max=int(ghigh),
+                                               callback=self.set_gain)
 
-            hbox.Add((5,0), 0, 0)
-            vbox.Add(hbox, 0, wx.EXPAND)
+        hbox.Add((5,0), 0, 0)
+        vbox.Add(hbox, 0, wx.EXPAND)
 
-            self._build_subpanel(vbox)
+        self._build_subpanel(vbox)
 
     def _build_subpanel(self, vbox_arg):
         # build a secondary information panel (sometimes hidden)
