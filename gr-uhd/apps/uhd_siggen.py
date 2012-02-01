@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2009,2011 Free Software Foundation, Inc.
+# Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -38,7 +38,7 @@ TYPE_KEY = 'type'
 
 def setter(ps, key, val): ps[key] = val
 
-from gnuradio import gr, uhd, eng_notation
+from gnuradio import gr, gru, uhd, eng_notation
 from gnuradio.gr.pubsub import pubsub
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -113,6 +113,16 @@ class top_block(gr.top_block, pubsub):
         self.publish(GAIN_KEY, self._u.get_gain)
         if self._verbose:
             print str(self._u)
+
+        # Direct asynchronous notifications to callback function
+        if options.show_async_msg:
+            self.async_msgq = gr.msg_queue(0)
+            self.async_src = uhd.amsg_source("", self.async_msgq)
+            self.async_rcv = gru.msgq_runner(self.async_msgq, self.async_callback)
+
+    def async_callback(self, msg):
+        md = self.async_src.msg_to_async_metadata_t(msg)
+        print "Channel: %i Time: %f Event: %i" % (md.channel, md.time_spec.get_real_secs(), md.event_code)
 
     def _set_tx_amplitude(self, ampl):
         """
@@ -325,6 +335,8 @@ def get_options():
                       metavar="AMPL")
     parser.add_option("-v", "--verbose", action="store_true", default=False,
                       help="Use verbose console output [default=%default]")
+    parser.add_option("", "--show-async-msg", action="store_true", default=False,
+                      help="Show asynchronous message notifications from UHD [default=%default]")
 
     (options, args) = parser.parse_args()
 

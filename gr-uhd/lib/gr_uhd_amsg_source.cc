@@ -75,6 +75,11 @@ protected:
     bool _running;
 };
 
+uhd::async_metadata_t uhd_amsg_source::msg_to_async_metadata_t(const gr_message_sptr msg)
+{
+    return *(uhd::async_metadata_t *)msg->msg();
+}
+
 /***********************************************************************
  * Make UHD Asynchronous Message Source
  **********************************************************************/
