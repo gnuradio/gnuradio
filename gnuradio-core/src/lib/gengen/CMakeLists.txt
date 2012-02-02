@@ -86,7 +86,7 @@ expand_h_cc_i(gr_noise_source_X      s i f c)
 expand_h_cc_i(gr_sig_source_X        s i f c)
 
 expand_h_cc_i(gr_add_const_XX           ss ii ff cc sf)
-expand_h_cc_i(gr_multiply_const_XX      ss ii ff)
+expand_h_cc_i(gr_multiply_const_XX      ss ii)
 expand_h_cc_i(gr_add_XX                 ss ii ff cc)
 expand_h_cc_i(gr_sub_XX                 ss ii ff cc)
 expand_h_cc_i(gr_multiply_XX            ss ii ff)

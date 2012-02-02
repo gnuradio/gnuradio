@@ -24,53 +24,53 @@
 #include "config.h"
 #endif
 
-#include <gr_multiply_const_cc.h>
+#include <gr_multiply_const_ff.h>
 #include <gr_io_signature.h>
 #include <volk/volk.h>
 
-gr_multiply_const_cc_sptr
-gr_make_multiply_const_cc (gr_complex k, size_t vlen)
+gr_multiply_const_ff_sptr
+gr_make_multiply_const_ff (float k, size_t vlen)
 {
-  return gnuradio::get_initial_sptr(new gr_multiply_const_cc (k, vlen));
+  return gnuradio::get_initial_sptr(new gr_multiply_const_ff (k, vlen));
 }
 
-gr_multiply_const_cc::gr_multiply_const_cc (gr_complex k, size_t vlen)
-  : gr_sync_block ("gr_multiply_const_cc",
-		   gr_make_io_signature (1, 1, sizeof (gr_complex)*vlen),
-		   gr_make_io_signature (1, 1, sizeof (gr_complex)*vlen)),
+gr_multiply_const_ff::gr_multiply_const_ff (float k, size_t vlen)
+  : gr_sync_block ("gr_multiply_const_ff",
+		   gr_make_io_signature (1, 1, sizeof (float)*vlen),
+		   gr_make_io_signature (1, 1, sizeof (float)*vlen)),
     d_k(k), d_vlen(vlen)
 {
  const int alignment_multiple =
-   volk_get_alignment() / sizeof(gr_complex);
+   volk_get_alignment() / sizeof(float);
  set_alignment(alignment_multiple);
 }
 
-gr_complex
-gr_multiply_const_cc::k() const
+float
+gr_multiply_const_ff::k() const
 {
   return d_k;
 }
 
 void
-gr_multiply_const_cc::set_k(gr_complex k)
+gr_multiply_const_ff::set_k(float k)
 {
   d_k = k;
 }
 
 int
-gr_multiply_const_cc::work (int noutput_items,
+gr_multiply_const_ff::work (int noutput_items,
 			    gr_vector_const_void_star &input_items,
 			    gr_vector_void_star &output_items)
 {
-  const gr_complex *in = (const gr_complex *) input_items[0];
-  gr_complex *out = (gr_complex *) output_items[0];
+  const float *in = (const float *) input_items[0];
+  float *out = (float *) output_items[0];
   int noi = d_vlen*noutput_items;
 
   if(is_unaligned()) {
-    volk_32fc_s32fc_multiply_32fc_u(out, in, d_k, noi);
+    volk_32f_s32f_multiply_32f_u(out, in, d_k, noi);
   }
   else {
-    volk_32fc_s32fc_multiply_32fc_a(out, in, d_k, noi);
+    volk_32f_s32f_multiply_32f_a(out, in, d_k, noi);
   }
 
   return noutput_items;

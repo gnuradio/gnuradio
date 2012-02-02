@@ -232,6 +232,7 @@ set(gr_core_general_triple_threats
     gr_map_bb
     gr_multiply_cc
     gr_multiply_const_cc
+    gr_multiply_const_ff
     gr_nlog10_ff
     gr_nop
     gr_null_sink

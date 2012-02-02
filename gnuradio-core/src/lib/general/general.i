@@ -108,6 +108,7 @@
 #include <gr_map_bb.h>
 #include <gr_multiply_cc.h>
 #include <gr_multiply_const_cc.h>
+#include <gr_multiply_const_ff.h>
 #include <gr_feval.h>
 #include <gr_pwr_squelch_cc.h>
 #include <gr_pwr_squelch_ff.h>
@@ -226,6 +227,7 @@
 %include "gr_map_bb.i"
 %include "gr_multiply_cc.i"
 %include "gr_multiply_const_cc.i"
+%include "gr_multiply_const_ff.i"
 %include "gr_feval.i"
 %include "gr_pwr_squelch_cc.i"
 %include "gr_pwr_squelch_ff.i"

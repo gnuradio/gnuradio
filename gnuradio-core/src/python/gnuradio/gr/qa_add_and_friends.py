@@ -78,6 +78,12 @@ class test_add_and_friends (gr_unittest.TestCase):
         op = gr.multiply_const_ii (5)
         self.help_ii ((src_data,), expected_result, op)
 
+    def test_mult_const_ff (self):
+        src_data = (-1, 0, 1, 2, 3)
+        expected_result = (-5, 0, 5, 10, 15)
+        op = gr.multiply_const_cc (5)
+        self.help_cc ((src_data,), expected_result, op)
+
     def test_mult_const_cc (self):
         src_data = (-1-1j, 0+0j, 1+1j, 2+2j, 3+3j)
         expected_result = (-5-5j, 0+0j, 5+5j, 10+10j, 15+15j)
