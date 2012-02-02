@@ -83,11 +83,6 @@ min_available_space (gr_block_detail *d, int output_multiple)
       }
       return 0;
     }
-    else if (n > output_multiple) {
-      // adjust this or we often ask for too many, 
-      // causing a re-calc for fewer items.
-      n = n-output_multiple;
-    }
     min_space = std::min (min_space, n);
   }
   return min_space;
@@ -316,7 +311,7 @@ gr_block_executor::run_one_iteration()
       
       // only test this if we specifically set the output_multiple
       if(m->output_multiple_set())
-	reqd_noutput_items = round_up(reqd_noutput_items, m->output_multiple());
+	reqd_noutput_items = round_down(reqd_noutput_items, m->output_multiple());
 
       if (reqd_noutput_items > 0 && reqd_noutput_items <= noutput_items)
 	noutput_items = reqd_noutput_items;
@@ -329,31 +324,33 @@ gr_block_executor::run_one_iteration()
     // Check if we're still unaligned; use up items until we're
     // aligned again. Otherwise, make sure we set the alignment
     // requirement.
-    if(m->is_unaligned()) {
-      // When unaligned, don't just set noutput_items to the remaining
-      // samples to meet alignment; this causes too much overhead in
-      // requiring a premature call back here. Set the maximum amount
-      // of samples to handle unalignment and get us back aligned.
-      if(noutput_items >= m->unaligned()) {
-	noutput_items = round_up(noutput_items, m->alignment()) \
-	  - (m->alignment() - m->unaligned());
-	new_alignment = 0;
+    if(!m->output_multiple_set()) {
+      if(m->is_unaligned()) {
+	// When unaligned, don't just set noutput_items to the remaining
+	// samples to meet alignment; this causes too much overhead in
+	// requiring a premature call back here. Set the maximum amount
+	// of samples to handle unalignment and get us back aligned.
+	if(noutput_items >= m->unaligned()) {
+	  noutput_items = round_up(noutput_items, m->alignment())	\
+	    - (m->alignment() - m->unaligned());
+	  new_alignment = 0;
+	}
+	else {
+	  new_alignment = m->unaligned() - noutput_items;
+	}
+      }
+      else if(noutput_items < m->alignment()) {
+	// if we don't have enough for an aligned call, keep track of
+	// misalignment, set unaligned flag, and proceed.
+	new_alignment = m->alignment() - noutput_items;
+	m->set_unaligned(new_alignment);
+	m->set_is_unaligned(true);
       }
       else {
-	new_alignment = m->unaligned() - noutput_items;
+	// enough to round down to the nearest alignment and process.
+	noutput_items = round_down(noutput_items, m->alignment());
+	m->set_is_unaligned(false);
       }
-    }
-    else if(noutput_items < m->alignment()) {
-      // if we don't have enough for an aligned call, keep track of
-      // misalignment, set unaligned flag, and proceed.
-      new_alignment = m->alignment() - noutput_items;
-      m->set_unaligned(new_alignment);
-      m->set_is_unaligned(true);
-    }
-    else {
-      // enough to round down to the nearest alignment and process.
-      noutput_items = round_down(noutput_items, m->alignment());
-      m->set_is_unaligned(false);
     }
 
     // ask the block how much input they need to produce noutput_items
