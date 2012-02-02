@@ -202,12 +202,6 @@
 /gr_max_ss.cc
 /gr_max_ss.h
 /gr_max_ss.i
-/gr_multiply_cc.cc
-/gr_multiply_cc.h
-/gr_multiply_cc.i
-/gr_multiply_const_cc.cc
-/gr_multiply_const_cc.h
-/gr_multiply_const_cc.i
 /gr_multiply_const_ff.cc
 /gr_multiply_const_ff.h
 /gr_multiply_const_ff.i
