@@ -23,7 +23,6 @@ static inline void volk_32fc_x2_multiply_32fc_a_sse3(lv_32fc_t* cVector, const l
     lv_32fc_t* c = cVector;
     const lv_32fc_t* a = aVector;
     const lv_32fc_t* b = bVector;
-
     for(;number < halfPoints; number++){
       
       x = _mm_load_ps((float*)a); // Load the ar + ai, br + bi as ar,ai,br,bi
