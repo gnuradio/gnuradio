@@ -56,6 +56,7 @@ volkinclude_HEADERS = \
 	volk_32f_s32f_multiply_32f_a.h \
 	volk_32fc_32f_multiply_32fc_a.h \
 	volk_32fc_s32fc_multiply_32fc_a.h \
+	volk_32fc_s32fc_multiply_32fc_u.h \
 	volk_32fc_s32f_power_32fc_a.h \
 	volk_32f_s32f_calc_spectral_noise_floor_32f_a.h \
 	volk_32fc_s32f_atan2_32f_a.h \
@@ -76,6 +77,7 @@ volkinclude_HEADERS = \
 	volk_32fc_magnitude_squared_32f_a.h \
 	volk_32fc_magnitude_squared_32f_u.h \
 	volk_32fc_x2_multiply_32fc_a.h \
+	volk_32fc_x2_multiply_32fc_u.h \
 	volk_32f_s32f_convert_16i_a.h \
 	volk_32f_s32f_convert_16i_u.h \
 	volk_32f_s32f_convert_32i_a.h \
