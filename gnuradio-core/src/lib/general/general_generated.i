@@ -29,8 +29,6 @@
 #include <gr_divide_ff.h>
 #include <gr_divide_ii.h>
 #include <gr_divide_ss.h>
-#include <gr_multiply_cc.h>
-#include <gr_multiply_const_cc.h>
 #include <gr_multiply_const_ff.h>
 #include <gr_multiply_const_ii.h>
 #include <gr_multiply_const_ss.h>
@@ -106,8 +104,6 @@
 %include <gr_divide_ff.i>
 %include <gr_divide_ii.i>
 %include <gr_divide_ss.i>
-%include <gr_multiply_cc.i>
-%include <gr_multiply_const_cc.i>
 %include <gr_multiply_const_ff.i>
 %include <gr_multiply_const_ii.i>
 %include <gr_multiply_const_ss.i>

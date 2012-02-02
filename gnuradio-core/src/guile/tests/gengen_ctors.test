@@ -161,12 +161,6 @@
 ;;; ./gengen/gr_moving_average_ss.h
 (pass-if (true? (gr:moving-average-ss 1 0 4096)))
 
-;;; ./gengen/gr_multiply_cc.h
-(pass-if (true? (gr:multiply-cc 1)))
-
-;;; ./gengen/gr_multiply_const_cc.h
-(pass-if (true? (gr:multiply-const-cc 1)))
-
 ;;; ./gengen/gr_multiply_const_ff.h
 (pass-if (true? (gr:multiply-const-ff 1)))
 
