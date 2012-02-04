@@ -112,6 +112,14 @@ class test_add_and_friends (gr_unittest.TestCase):
         self.help_ii ((src1_data, src2_data),
                       expected_result, op)
 
+    def test_mult_ff (self):
+        src1_data = (1,  2, 3, 4, 5)
+        src2_data = (8, -3, 4, 8, 2)
+        expected_result = (8, -6, 12, 32, 10)
+        op = gr.multiply_ff ()
+        self.help_ff ((src1_data, src2_data),
+                      expected_result, op)
+
     def test_mult_cc (self):
         src1_data = (1+1j,  2+2j, 3+3j, 4+4j, 5+5j)
         src2_data = (8, -3, 4, 8, 2)

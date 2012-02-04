@@ -35,7 +35,6 @@
 #include <gr_multiply_const_vff.h>
 #include <gr_multiply_const_vii.h>
 #include <gr_multiply_const_vss.h>
-#include <gr_multiply_ff.h>
 #include <gr_multiply_ii.h>
 #include <gr_multiply_ss.h>
 #include <gr_multiply_vcc.h>
@@ -103,14 +102,12 @@
 %include <gr_divide_ff.i>
 %include <gr_divide_ii.i>
 %include <gr_divide_ss.i>
-%include <gr_multiply_const_ff.i>
 %include <gr_multiply_const_ii.i>
 %include <gr_multiply_const_ss.i>
 %include <gr_multiply_const_vcc.i>
 %include <gr_multiply_const_vff.i>
 %include <gr_multiply_const_vii.i>
 %include <gr_multiply_const_vss.i>
-%include <gr_multiply_ff.i>
 %include <gr_multiply_ii.i>
 %include <gr_multiply_ss.i>
 %include <gr_multiply_vcc.i>
