@@ -183,7 +183,8 @@ gr_block_executor::run_one_iteration()
   int			noutput_items;
   int			max_items_avail;
   int                   max_noutput_items = d_max_noutput_items;
-  int                   new_alignment;
+  int                   new_alignment=0;
+  int                   alignment_state=-1;
 
   gr_block		*m = d_block.get();
   gr_block_detail	*d = m->detail().get();
@@ -338,6 +339,7 @@ gr_block_executor::run_one_iteration()
 	else {
 	  new_alignment = m->unaligned() - noutput_items;
 	}
+	alignment_state = 0;
       }
       else if(noutput_items < m->alignment()) {
 	// if we don't have enough for an aligned call, keep track of
@@ -345,11 +347,13 @@ gr_block_executor::run_one_iteration()
 	new_alignment = m->alignment() - noutput_items;
 	m->set_unaligned(new_alignment);
 	m->set_is_unaligned(true);
+	alignment_state = 1;
       }
       else {
 	// enough to round down to the nearest alignment and process.
 	noutput_items = round_down(noutput_items, m->alignment());
 	m->set_is_unaligned(false);
+	alignment_state = 2;
       }
     }
 
@@ -391,6 +395,12 @@ gr_block_executor::run_one_iteration()
 	goto were_done;
       }
 
+      // If we were made unaligned in this round but return here without
+      // processing; reset the unalignment claim before next entry.
+      if(alignment_state == 1) {
+	m->set_unaligned(0);
+	m->set_is_unaligned(false);
+      }
       return BLKD_IN;
     }
 
