@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32f_x2_max_32f_a, 1e-4, 0, 204600, 2000, &results);
     VOLK_PROFILE(volk_32f_x2_min_32f_a, 1e-4, 0, 204600, 2000, &results);
     VOLK_PROFILE(volk_32f_x2_multiply_32f_a, 1e-4, 0, 204600, 10000, &results);
+    VOLK_PROFILE(volk_32f_x2_multiply_32f_u, 1e-4, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_s32f_normalize_a, 1e-4, 100, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_s32f_power_32f_a, 1e-4, 4, 204600, 100, &results);
     VOLK_PROFILE(volk_32f_sqrt_32f_a, 1e-4, 0, 204600, 100, &results);

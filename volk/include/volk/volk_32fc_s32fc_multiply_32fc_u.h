@@ -8,13 +8,13 @@
 
 #ifdef LV_HAVE_SSE3
 #include <pmmintrin.h>
-  /*!
+/*!
   \brief Multiplies the input vector by a scalar and stores the results in the third vector
-    \param cVector The vector where the results will be stored
-    \param aVector The vector to be multiplied
-    \param scalar The complex scalar to multiply aVector
-    \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
-  */
+  \param cVector The vector where the results will be stored
+  \param aVector The vector to be multiplied
+  \param scalar The complex scalar to multiply aVector
+  \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
+*/
 static inline void volk_32fc_s32fc_multiply_32fc_u_sse3(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t scalar, unsigned int num_points){
   unsigned int number = 0;
     const unsigned int halfPoints = num_points / 2;
@@ -52,13 +52,13 @@ static inline void volk_32fc_s32fc_multiply_32fc_u_sse3(lv_32fc_t* cVector, cons
 #endif /* LV_HAVE_SSE */
 
 #ifdef LV_HAVE_GENERIC
-  /*!
+/*!
   \brief Multiplies the input vector by a scalar and stores the results in the third vector
-    \param cVector The vector where the results will be stored
-    \param aVector The vector to be multiplied
-    \param scalar The complex scalar to multiply aVector
-    \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
-  */
+  \param cVector The vector where the results will be stored
+  \param aVector The vector to be multiplied
+  \param scalar The complex scalar to multiply aVector
+  \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
+*/
 static inline void volk_32fc_s32fc_multiply_32fc_u_generic(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t scalar, unsigned int num_points){
     lv_32fc_t* cPtr = cVector;
     const lv_32fc_t* aPtr = aVector;
