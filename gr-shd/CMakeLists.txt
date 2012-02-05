@@ -22,7 +22,7 @@
 ########################################################################
 include(GrBoost)
 
-PKG_CHECK_MODULES(PC_SHD shd QUIET)
+PKG_CHECK_MODULES(PC_SHD shd)
 FIND_PATH(
     SHD_INCLUDE_DIRS
     NAMES shd/config.hpp
