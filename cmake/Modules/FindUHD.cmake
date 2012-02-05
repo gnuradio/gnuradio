@@ -3,7 +3,7 @@
 ########################################################################
 
 INCLUDE(FindPkgConfig)
-PKG_CHECK_MODULES(PC_UHD QUIET uhd)
+PKG_CHECK_MODULES(PC_UHD uhd)
 
 FIND_PATH(
     UHD_INCLUDE_DIRS
