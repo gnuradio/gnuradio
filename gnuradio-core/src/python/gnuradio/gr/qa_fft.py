@@ -152,6 +152,60 @@ class test_fft(gr_unittest.TestCase):
         #self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
         self.assert_fft_ok2(expected_result, result_data)
 
+    def test_003(self):
+        # Same test as above, only use 2 threads
+
+	tb = gr.top_block()
+        fft_size = 32
+
+        tmp_data = ((4377+4516j),
+                    (-1706.1268310546875+1638.4256591796875j),
+                    (-915.2083740234375+660.69427490234375j),
+                    (-660.370361328125+381.59600830078125j),
+                    (-499.96044921875+238.41630554199219j),
+                    (-462.26748657226562+152.88948059082031j),
+                    (-377.98440551757812+77.5928955078125j),
+                    (-346.85821533203125+47.152004241943359j),
+                    (-295+20j),
+                    (-286.33609008789062-22.257017135620117j),
+                    (-271.52999877929688-33.081821441650391j),
+                    (-224.6358642578125-67.019538879394531j),
+                    (-244.24473571777344-91.524826049804688j),
+                    (-203.09068298339844-108.54627227783203j),
+                    (-198.45195007324219-115.90768432617188j),
+                    (-182.97744750976562-128.12318420410156j),
+                    (-167-180j),
+                    (-130.33688354492188-173.83778381347656j),
+                    (-141.19784545898438-190.28807067871094j),
+                    (-111.09677124023438-214.48896789550781j),
+                    (-70.039543151855469-242.41630554199219j),
+                    (-68.960540771484375-228.30015563964844j),
+                    (-53.049201965332031-291.47097778320312j),
+                    (-28.695289611816406-317.64553833007812j),
+                    (57-300j),
+                    (45.301143646240234-335.69509887695312j),
+                    (91.936195373535156-373.32437133789062j),
+                    (172.09465026855469-439.275146484375j),
+                    (242.24473571777344-504.47515869140625j),
+                    (387.81732177734375-666.6788330078125j),
+                    (689.48553466796875-918.2142333984375j),
+                    (1646.539306640625-1694.1956787109375j))
+
+        src_data = tuple([x/fft_size for x in tmp_data])
+
+        expected_result = tuple([complex(primes[2*i], primes[2*i+1]) for i in range(fft_size)])
+
+        nthreads = 2
+
+        src = gr.vector_source_c(src_data)
+        s2v = gr.stream_to_vector(gr.sizeof_gr_complex, fft_size)
+        fft = gr.fft_vcc(fft_size, False, [], False, nthreads)
+        v2s = gr.vector_to_stream(gr.sizeof_gr_complex, fft_size)
+        dst = gr.vector_sink_c()
+        tb.connect(src, s2v, fft, v2s, dst)
+        tb.run()
+        result_data = dst.data()
+        self.assert_fft_ok2(expected_result, result_data)
 
 if __name__ == '__main__':
     gr_unittest.run(test_fft, "test_fft.xml")

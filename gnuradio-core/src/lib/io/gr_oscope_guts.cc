@@ -31,7 +31,7 @@
 #include <math.h>
 #include <assert.h>
 
-static const int OUTPUT_RECORD_SIZE = 16384;  // Must be power of 2
+static const int OUTPUT_RECORD_SIZE = 8192;  // Must be power of 2
 static inline int
 wrap_bi (int buffer_index)                // wrap buffer index
 {
@@ -144,6 +144,7 @@ gr_oscope_guts::process_sample (const float *channel_data)
 		}
 		d_buffer[i][0] = channel_data[i];
 	  }
+	  d_trigger_off = 0;
 	  write_output_records();
   }
 }

@@ -110,6 +110,23 @@ class test_fft_filter(gr_unittest.TestCase):
         
 
     def test_ccc_002(self):
+        # Test nthreads
+	tb = gr.top_block()
+        src_data = (0,1,2,3,4,5,6,7)
+        taps = (2,)
+        nthreads = 2
+        expected_result = tuple([2 * complex(x) for x in (0,1,2,3,4,5,6,7)])
+        src = gr.vector_source_c(src_data)
+        op = gr.fft_filter_ccc(1, taps, nthreads)
+        dst = gr.vector_sink_c()
+        tb.connect(src, op, dst)
+        tb.run()
+        result_data = dst.data()
+        #print 'expected:', expected_result
+        #print 'results: ', result_data
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
+        
+    def test_ccc_003(self):
 	tb = gr.top_block()
         src_data = (0,1,2,3,4,5,6,7)
         taps = (2,)
@@ -124,6 +141,7 @@ class test_fft_filter(gr_unittest.TestCase):
         #print 'results: ', result_data
         self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
         
+
     def test_ccc_004(self):
         random.seed(0)
         for i in xrange(25):
@@ -158,6 +176,30 @@ class test_fft_filter(gr_unittest.TestCase):
 
             src = gr.vector_source_c(src_data)
             op = gr.fft_filter_ccc(dec, taps)
+            dst = gr.vector_sink_c()
+            tb = gr.top_block()
+	    tb.connect(src, op, dst)
+            tb.run()
+            del tb
+	    result_data = dst.data()
+
+            self.assert_fft_ok2(expected_result, result_data)
+
+    def test_ccc_006(self):
+        # Test decimating with nthreads=2
+        random.seed(0)
+        nthreads = 2
+        for i in xrange(25):
+            # sys.stderr.write("\n>>> Loop = %d\n" % (i,))
+            dec = i + 1
+            src_len = 4*1024
+            src_data = make_random_complex_tuple(src_len)
+            ntaps = int(random.uniform(2, 100))
+            taps = make_random_complex_tuple(ntaps)
+            expected_result = reference_filter_ccc(dec, taps, src_data)
+
+            src = gr.vector_source_c(src_data)
+            op = gr.fft_filter_ccc(dec, taps, nthreads)
             dst = gr.vector_sink_c()
             tb = gr.top_block()
 	    tb.connect(src, op, dst)
@@ -202,7 +244,22 @@ class test_fft_filter(gr_unittest.TestCase):
         #print 'results: ', result_data
         self.assertFloatTuplesAlmostEqual (expected_result, result_data, 5)
         
-    def xtest_fff_003(self):
+    def test_fff_003(self):
+        # Test 02 with nthreads
+        tb = gr.top_block()
+        src_data = (0,1,2,3,4,5,6,7)
+        taps = (2,)
+        nthreads = 2
+        expected_result = tuple([2 * float(x) for x in (0,1,2,3,4,5,6,7)])
+        src = gr.vector_source_f(src_data)
+        op = gr.fft_filter_fff(1, taps, nthreads)
+        dst = gr.vector_sink_f()
+        tb.connect(src, op, dst)
+        tb.run()
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data, 5)
+        
+    def xtest_fff_004(self):
         random.seed(0)
         for i in xrange(25):
             sys.stderr.write("\n>>> Loop = %d\n" % (i,))
@@ -232,7 +289,7 @@ class test_fft_filter(gr_unittest.TestCase):
                     actual.write(`x` + '\n')
                 raise
 
-    def xtest_fff_004(self):
+    def xtest_fff_005(self):
         random.seed(0)
         for i in xrange(25):
             sys.stderr.write("\n>>> Loop = %d\n" % (i,))
@@ -252,7 +309,7 @@ class test_fft_filter(gr_unittest.TestCase):
 
             self.assert_fft_float_ok2(expected_result, result_data, abs_eps=2.0)
 
-    def xtest_fff_005(self):
+    def xtest_fff_006(self):
         random.seed(0)
         for i in xrange(25):
             sys.stderr.write("\n>>> Loop = %d\n" % (i,))
@@ -265,6 +322,29 @@ class test_fft_filter(gr_unittest.TestCase):
 
             src = gr.vector_source_f(src_data)
             op = gr.fft_filter_fff(dec, taps)
+            dst = gr.vector_sink_f()
+    	    tb = gr.top_block()
+            tb.connect(src, op, dst)
+            tb.run()
+            result_data = dst.data()
+
+            self.assert_fft_float_ok2(expected_result, result_data)
+
+    def xtest_fff_007(self):
+        # test decimation with nthreads
+        random.seed(0)
+        nthreads = 2
+        for i in xrange(25):
+            sys.stderr.write("\n>>> Loop = %d\n" % (i,))
+            dec = i + 1
+            src_len = 4*1024
+            src_data = make_random_float_tuple(src_len)
+            ntaps = int(random.uniform(2, 100))
+            taps = make_random_float_tuple(ntaps)
+            expected_result = reference_filter_fff(dec, taps, src_data)
+
+            src = gr.vector_source_f(src_data)
+            op = gr.fft_filter_fff(dec, taps, nthreads)
             dst = gr.vector_sink_f()
     	    tb = gr.top_block()
             tb.connect(src, op, dst)

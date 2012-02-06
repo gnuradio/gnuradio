@@ -27,7 +27,9 @@
 
 class gr_fft_filter_ccc;
 typedef boost::shared_ptr<gr_fft_filter_ccc> gr_fft_filter_ccc_sptr;
-GR_CORE_API gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
+GR_CORE_API gr_fft_filter_ccc_sptr
+gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps,
+			int nthreads=1);
 
 //class gri_fft_filter_ccc_sse;
 class gri_fft_filter_ccc_generic;
@@ -39,7 +41,9 @@ class gri_fft_filter_ccc_generic;
 class GR_CORE_API gr_fft_filter_ccc : public gr_sync_decimator
 {
  private:
-  friend GR_CORE_API gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
+  friend GR_CORE_API gr_fft_filter_ccc_sptr
+    gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps,
+			    int nthreads);
 
   int			   d_nsamples;
   bool			   d_updated;
@@ -55,14 +59,26 @@ class GR_CORE_API gr_fft_filter_ccc : public gr_sync_decimator
    *
    * \param decimation	>= 1
    * \param taps        complex filter taps
+   * \param nthreads    number of threads for the FFT to use
    */
-  gr_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
+  gr_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps,
+		     int nthreads=1);
 
  public:
   ~gr_fft_filter_ccc ();
 
   void set_taps (const std::vector<gr_complex> &taps);
   std::vector<gr_complex> taps () const;
+
+  /*!
+   * \brief Set number of threads to use.
+   */
+  void set_nthreads(int n);
+
+  /*!
+   * \brief Get number of threads being used.
+   */
+  int nthreads() const;
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
