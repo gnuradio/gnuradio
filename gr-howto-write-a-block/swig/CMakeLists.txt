@@ -53,5 +53,5 @@ install(
     FILES
     howto_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/howto_swig_doc.i
-    DESTINATION $(GR_INCLUDE_DIR)/howto/swig
+    DESTINATION ${GR_INCLUDE_DIR}/howto/swig
 )
