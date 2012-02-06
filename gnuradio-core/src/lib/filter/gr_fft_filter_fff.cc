@@ -35,13 +35,17 @@
 #include <iostream>
 #include <string.h>
 
-gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps)
+gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation,
+					       const std::vector<float> &taps,
+					       int nthreads)
 {
-  return gnuradio::get_initial_sptr(new gr_fft_filter_fff (decimation, taps));
+  return gnuradio::get_initial_sptr(new gr_fft_filter_fff (decimation, taps, nthreads));
 }
 
 
-gr_fft_filter_fff::gr_fft_filter_fff (int decimation, const std::vector<float> &taps)
+gr_fft_filter_fff::gr_fft_filter_fff (int decimation,
+				      const std::vector<float> &taps,
+				      int nthreads)
   : gr_sync_decimator ("fft_filter_fff",
 		       gr_make_io_signature (1, 1, sizeof (float)),
 		       gr_make_io_signature (1, 1, sizeof (float)),
@@ -51,7 +55,7 @@ gr_fft_filter_fff::gr_fft_filter_fff (int decimation, const std::vector<float> &
   set_history(1);
   
 #if 1 // don't enable the sse version until handling it is worked out
-    d_filter = new gri_fft_filter_fff_generic(decimation, taps);
+  d_filter = new gri_fft_filter_fff_generic(decimation, taps, nthreads);
 #else
     d_filter = new gri_fft_filter_fff_sse(decimation, taps);
 #endif
@@ -76,6 +80,22 @@ std::vector<float>
 gr_fft_filter_fff::taps () const
 {
   return d_new_taps;
+}
+
+void
+gr_fft_filter_fff::set_nthreads(int n)
+{
+  if(d_filter)
+    d_filter->set_nthreads(n);
+}
+
+int
+gr_fft_filter_fff::nthreads() const
+{
+  if(d_filter)
+    return d_filter->nthreads();
+  else
+    return 0;
 }
 
 int

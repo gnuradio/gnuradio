@@ -27,7 +27,9 @@
 
 class gr_fft_filter_fff;
 typedef boost::shared_ptr<gr_fft_filter_fff> gr_fft_filter_fff_sptr;
-GR_CORE_API gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps);
+GR_CORE_API gr_fft_filter_fff_sptr
+gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps,
+			int nthreads=1);
 
 class gri_fft_filter_fff_generic;
 //class gri_fft_filter_fff_sse;
@@ -39,7 +41,9 @@ class gri_fft_filter_fff_generic;
 class GR_CORE_API gr_fft_filter_fff : public gr_sync_decimator
 {
  private:
-  friend GR_CORE_API gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps);
+  friend GR_CORE_API gr_fft_filter_fff_sptr
+    gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps,
+			    int nthreads);
 
   int			   d_nsamples;
   bool			   d_updated;
@@ -55,14 +59,26 @@ class GR_CORE_API gr_fft_filter_fff : public gr_sync_decimator
    *
    * \param decimation	>= 1
    * \param taps        float filter taps
+   * \param nthreads    number of threads for the FFT to use
    */
-  gr_fft_filter_fff (int decimation, const std::vector<float> &taps);
-  
+  gr_fft_filter_fff (int decimation, const std::vector<float> &taps,
+		     int nthreads=1);
+
  public:
   ~gr_fft_filter_fff ();
 
   void set_taps (const std::vector<float> &taps);
   std::vector<float> taps () const;
+
+  /*!
+   * \brief Set number of threads to use.
+   */
+  void set_nthreads(int n);
+
+  /*!
+   * \brief Get number of threads being used.
+   */
+  int nthreads() const;
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
