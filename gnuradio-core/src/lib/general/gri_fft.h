@@ -70,6 +70,16 @@ public:
   int outbuf_length () const { return d_fft_size; }
 
   /*!
+   *  Set the number of threads to use for caclulation.
+   */
+  void set_nthreads(int n);
+
+  /*!
+   *  Get the number of threads being used by FFTW
+   */
+  int nthreads() const { return d_nthreads; }
+
+  /*!
    * compute FFT.  The input comes from inbuf, the output is placed in outbuf.
    */
   void execute ();
@@ -102,6 +112,16 @@ public:
   int outbuf_length () const { return d_fft_size / 2 + 1; }
 
   /*!
+   *  Set the number of threads to use for caclulation.
+   */
+  void set_nthreads(int n);
+
+  /*!
+   *  Get the number of threads being used by FFTW
+   */
+  int nthreads() const { return d_nthreads; }
+
+  /*!
    * compute FFT.  The input comes from inbuf, the output is placed in outbuf.
    */
   void execute ();
@@ -132,6 +152,16 @@ public:
 
   int inbuf_length ()  const { return d_fft_size / 2 + 1; }
   int outbuf_length () const { return d_fft_size; }
+
+  /*!
+   *  Set the number of threads to use for caclulation.
+   */
+  void set_nthreads(int n);
+
+  /*!
+   *  Get the number of threads being used by FFTW
+   */
+  int nthreads() const { return d_nthreads; }
 
   /*!
    * compute FFT.  The input comes from inbuf, the output is placed in outbuf.

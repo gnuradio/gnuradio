@@ -158,6 +158,18 @@ gri_fft_complex::~gri_fft_complex ()
   fftwf_free (d_outbuf);
 }
 
+void 
+gri_fft_complex::set_nthreads(int n)
+{
+  if (n <= 0)
+    throw std::out_of_range ("gri_fftw: invalid number of threads");
+  d_nthreads = n;
+
+#ifdef FFTW3F_THREADS
+  fftwf_plan_with_nthreads(d_nthreads);
+#endif
+}
+
 void
 gri_fft_complex::execute ()
 {
@@ -213,6 +225,18 @@ gri_fft_real_fwd::~gri_fft_real_fwd ()
   fftwf_free (d_outbuf);
 }
 
+void 
+gri_fft_real_fwd::set_nthreads(int n)
+{
+  if (n <= 0)
+    throw std::out_of_range ("gri_fftw: invalid number of threads");
+  d_nthreads = n;
+
+#ifdef FFTW3F_THREADS
+  fftwf_plan_with_nthreads(d_nthreads);
+#endif
+}
+
 void
 gri_fft_real_fwd::execute ()
 {
@@ -266,6 +290,18 @@ gri_fft_real_rev::~gri_fft_real_rev ()
   fftwf_destroy_plan ((fftwf_plan) d_plan);
   fftwf_free (d_inbuf);
   fftwf_free (d_outbuf);
+}
+
+void 
+gri_fft_real_rev::set_nthreads(int n)
+{
+  if (n <= 0)
+    throw std::out_of_range ("gri_fftw: invalid number of threads");
+  d_nthreads = n;
+
+#ifdef FFTW3F_THREADS
+  fftwf_plan_with_nthreads(d_nthreads);
+#endif
 }
 
 void
