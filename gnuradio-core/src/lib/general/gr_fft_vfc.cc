@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -40,12 +40,17 @@
 
 
 gr_fft_vfc_sptr
-gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float> &window)
+gr_make_fft_vfc (int fft_size, bool forward,
+		 const std::vector<float> &window,
+		 int nthreads)
 {
-  return gnuradio::get_initial_sptr(new gr_fft_vfc (fft_size, forward, window));
+  return gnuradio::get_initial_sptr(new gr_fft_vfc (fft_size, forward,
+						    window, nthreads));
 }
 
-gr_fft_vfc::gr_fft_vfc (int fft_size, bool forward, const std::vector<float> &window)
+gr_fft_vfc::gr_fft_vfc (int fft_size, bool forward,
+			const std::vector<float> &window,
+			int nthreads)
   : gr_sync_block ("fft_vfc",
 		   gr_make_io_signature (1, 1, fft_size * sizeof (float)),
 		   gr_make_io_signature (1, 1, fft_size * sizeof (gr_complex))),
@@ -56,7 +61,7 @@ gr_fft_vfc::gr_fft_vfc (int fft_size, bool forward, const std::vector<float> &wi
     throw std::invalid_argument ("fft_vfc: forward must == true");
   }
 
-  d_fft = new gri_fft_complex (d_fft_size, forward);
+  d_fft = new gri_fft_complex (d_fft_size, forward, nthreads);
 
   set_window(window);
 }
@@ -64,6 +69,18 @@ gr_fft_vfc::gr_fft_vfc (int fft_size, bool forward, const std::vector<float> &wi
 gr_fft_vfc::~gr_fft_vfc ()
 {
   delete d_fft;
+}
+
+void
+gr_fft_vfc::set_nthreads(int n)
+{
+  d_fft->set_nthreads(n);
+}
+
+int
+gr_fft_vfc::nthreads() const
+{
+  return d_fft->nthreads();
 }
 
 int
