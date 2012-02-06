@@ -53,6 +53,7 @@ volkinclude_HEADERS = \
 	volk_16u_byteswap_a.h \
 	volk_32f_accumulator_s32f_a.h \
 	volk_32f_x2_add_32f_a.h \
+	volk_32f_x2_add_32f_u.h \
 	volk_32f_s32f_multiply_32f_a.h \
 	volk_32f_s32f_multiply_32f_u.h \
 	volk_32fc_32f_multiply_32fc_a.h \

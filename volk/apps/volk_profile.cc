@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_16u_byteswap_a, 0, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_accumulator_s32f_a, 1e-4, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_x2_add_32f_a, 1e-4, 0, 204600, 10000, &results);
+    VOLK_PROFILE(volk_32f_x2_add_32f_u, 1e-4, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32fc_32f_multiply_32fc_a, 1e-4, 0, 204600, 1000, &results);
     VOLK_PROFILE(volk_32fc_s32f_power_32fc_a, 1e-4, 0, 204600, 50, &results);
     VOLK_PROFILE(volk_32f_s32f_calc_spectral_noise_floor_32f_a, 1e-4, 20.0, 204600, 1000, &results);
