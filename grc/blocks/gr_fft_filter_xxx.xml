@@ -9,8 +9,9 @@
 	<key>gr_fft_filter_xxx</key>
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio.gr import firdes</import>
-	<make>gr.fft_filter_$(type)($decim, $taps)</make>
+	<make>gr.fft_filter_$(type)($decim, $taps, $nthreads)</make>
 	<callback>set_taps($taps)</callback>
+	<callback>set_nthreads($nthreads)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -40,6 +41,12 @@
 		<name>Taps</name>
 		<key>taps</key>
 		<type>$type.taps</type>
+	</param>
+	<param>
+		<name>Num. Threads</name>
+		<key>nthreads</key>
+		<value>1</value>
+		<type>int</type>
 	</param>
 	<sink>
 		<name>in</name>
