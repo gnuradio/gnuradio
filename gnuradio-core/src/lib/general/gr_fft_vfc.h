@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,7 +32,9 @@ class gr_fft_vfc;
 typedef boost::shared_ptr<gr_fft_vfc> gr_fft_vfc_sptr;
 
 GR_CORE_API gr_fft_vfc_sptr
-gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float> &window);
+gr_make_fft_vfc (int fft_size, bool forward,
+		 const std::vector<float> &window,
+		 int nthreads=1);
 
 /*!
  * \brief Compute forward FFT.  float vector in / complex vector out.
@@ -42,16 +44,23 @@ gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float> &window);
 class GR_CORE_API gr_fft_vfc : public gr_sync_block
 {
   friend GR_CORE_API gr_fft_vfc_sptr
-  gr_make_fft_vfc (int fft_size, bool forward, const std::vector<float>  &window);
+  gr_make_fft_vfc (int fft_size, bool forward,
+		   const std::vector<float>  &window,
+		   int nthreads);
 
   unsigned int  d_fft_size;
   std::vector<float> d_window;
   gri_fft_complex *d_fft;
 
-  gr_fft_vfc (int fft_size, bool forward, const std::vector<float>  &window);
+  gr_fft_vfc (int fft_size, bool forward,
+	      const std::vector<float>  &window,
+	      int nthreads=1);
 
  public:
   ~gr_fft_vfc ();
+
+  void set_nthreads(int n);
+  int nthreads() const;
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
