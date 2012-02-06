@@ -63,6 +63,11 @@ list(APPEND gnuradio_core_libs
     ${FFTW3F_LIBRARIES}
 )
 
+if(FFTW3F_THREADS_LIBRARIES)
+	list(APPEND gnuradio_core_libs ${FFTW3F_THREADS_LIBRARIES} )
+	add_definitions("-DFFTW3F_THREADS")
+endif()
+
 #need to link with librt on ubuntu 11.10 for shm_*
 if(LINUX)
     list(APPEND gnuradio_core_libs rt)

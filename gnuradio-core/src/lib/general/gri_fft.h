@@ -49,12 +49,13 @@ public:
  */
 class GR_CORE_API gri_fft_complex {
   int	      d_fft_size;
+  int         d_nthreads;
   gr_complex *d_inbuf;
   gr_complex *d_outbuf;
   void	     *d_plan;
   
 public:
-  gri_fft_complex (int fft_size, bool forward = true);
+  gri_fft_complex (int fft_size, bool forward = true, int nthreads=1);
   virtual ~gri_fft_complex ();
 
   /*
@@ -80,12 +81,13 @@ public:
  */
 class GR_CORE_API gri_fft_real_fwd {
   int	      d_fft_size;
+  int         d_nthreads;
   float	     *d_inbuf;
   gr_complex *d_outbuf;
   void	     *d_plan;
   
 public:
-  gri_fft_real_fwd (int fft_size);
+  gri_fft_real_fwd (int fft_size, int nthreads=1);
   virtual ~gri_fft_real_fwd ();
 
   /*
@@ -111,12 +113,13 @@ public:
  */
 class GR_CORE_API gri_fft_real_rev {
   int	      d_fft_size;
+  int         d_nthreads;
   gr_complex *d_inbuf;
   float	     *d_outbuf;
   void	     *d_plan;
   
 public:
-  gri_fft_real_rev (int fft_size);
+  gri_fft_real_rev (int fft_size, int nthreads=1);
   virtual ~gri_fft_real_rev ();
 
   /*
