@@ -37,6 +37,7 @@ EXTRA_DIST += \
 
 libgeneral_la_SOURCES = 		\
 	complex_vec_test.cc		\
+	gr_add_ff.cc			\
 	gr_additive_scrambler_bb.cc	\
 	gr_agc_cc.cc                	\
 	gr_agc_ff.cc                	\
@@ -192,6 +193,7 @@ libgeneral_qa_la_SOURCES = 		\
 grinclude_HEADERS = 			\
 	gr_core_api.h			\
 	complex_vec_test.h		\
+	gr_add.h			\
 	gr_additive_scrambler_bb.h	\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
@@ -364,6 +366,7 @@ noinst_HEADERS = 			\
 swiginclude_HEADERS =			\
 	complex_vec_test.i		\
 	general.i			\
+	gr_add.i			\
 	gr_additive_scrambler_bb.i	\
 	gr_agc_cc.i                 	\
 	gr_agc_ff.i                 	\

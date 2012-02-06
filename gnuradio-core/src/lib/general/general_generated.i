@@ -12,7 +12,6 @@
 #include <gr_add_const_vff.h>
 #include <gr_add_const_vii.h>
 #include <gr_add_const_vss.h>
-#include <gr_add_ff.h>
 #include <gr_add_ii.h>
 #include <gr_add_ss.h>
 #include <gr_add_vcc.h>
@@ -85,7 +84,6 @@
 %include <gr_add_const_vff.i>
 %include <gr_add_const_vii.i>
 %include <gr_add_const_vss.i>
-%include <gr_add_ff.i>
 %include <gr_add_ii.i>
 %include <gr_add_ss.i>
 %include <gr_add_vcc.i>

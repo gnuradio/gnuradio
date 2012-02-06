@@ -178,6 +178,7 @@ endif(ENABLE_PYTHON)
 ########################################################################
 set(gr_core_general_triple_threats
     complex_vec_test
+    gr_add_ff
     gr_additive_scrambler_bb
     gr_agc_cc
     gr_agc_ff
