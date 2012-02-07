@@ -24,15 +24,14 @@ static inline void volk_32fc_x2_multiply_conjugate_32fc_a_sse3(lv_32fc_t* cVecto
     const lv_32fc_t* a = aVector;
     const lv_32fc_t* b = bVector;
 
-    __m128 conjugator = _mm_setr_ps(1, -1, 1, -1);
+    __m128 conjugator = _mm_setr_ps(0, -0.f, 0, -0.f);
 
     for(;number < halfPoints; number++){
       
       x = _mm_load_ps((float*)a); // Load the ar + ai, br + bi as ar,ai,br,bi
       y = _mm_load_ps((float*)b); // Load the cr + ci, dr + di as cr,ci,dr,di
 
-      // FIXME: replace with xor for a faster implementation
-      y = _mm_mul_ps(y, conjugator); // conjugate y
+      y = _mm_xor_ps(y, conjugator); // conjugate y
       
       yl = _mm_moveldup_ps(y); // Load yl with cr,cr,dr,dr
       yh = _mm_movehdup_ps(y); // Load yh with ci,ci,di,di

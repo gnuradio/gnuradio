@@ -24,7 +24,7 @@ static inline void volk_32fc_x2_multiply_conjugate_32fc_u_sse3(lv_32fc_t* cVecto
     const lv_32fc_t* a = aVector;
     const lv_32fc_t* b = bVector;
 
-    __m128 conjugator = _mm_set_ps(0, 0x80000000, 0, 0x80000000);
+    __m128 conjugator = _mm_setr_ps(0, -0.f, 0, -0.f);
 
     for(;number < halfPoints; number++){
       
