@@ -43,18 +43,22 @@ gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
  *
  * 
  * The input and output satisfy a difference equation of the form
- \f{html}{
+ \htmlonly
+ \f{
  y[n] - \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
  \f}
+ \endhtmlonly
 
  \xmlonly
  y[n] - \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
  \endxmlonly
 
  * with the corresponding rational system function
- \f{html}{
+ \htmlonly
+ \f{
  H(z) = \ frac{\sum_{k=0}^{M} b_k z^{-k}}{1 - \sum_{k=1}^{N} a_k z^{-k}}
  \f}
+ \endhtmlonly
 
  \xmlonly
  H(z) = \ frac{\sum_{k=0}^{M} b_k z^{-k}}{1 - \sum_{k=1}^{N} a_k z^{-k}}
