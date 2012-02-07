@@ -72,7 +72,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_sse4_1(float* stddev, float
     newMean /= num_points;
     returnValue /= num_points;
     returnValue -= (newMean * newMean);
-    returnValue = sqrt(returnValue);
+    returnValue = sqrtf(returnValue);
   }
   *stddev = returnValue;
   *mean = newMean;
@@ -128,7 +128,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_sse(float* stddev, float* m
     newMean /= num_points;
     returnValue /= num_points;
     returnValue -= (newMean * newMean);
-    returnValue = sqrt(returnValue);
+    returnValue = sqrtf(returnValue);
   }
   *stddev = returnValue;
   *mean = newMean;
@@ -157,7 +157,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_generic(float* stddev, floa
     newMean /= num_points;
     returnValue /= num_points;
     returnValue -= (newMean * newMean);
-    returnValue = sqrt(returnValue);
+    returnValue = sqrtf(returnValue);
   }
   *stddev = returnValue;
   *mean = newMean;

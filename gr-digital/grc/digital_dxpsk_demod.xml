@@ -33,6 +33,7 @@
 	<make>digital.$(type)_demod(
 	samples_per_symbol=$samples_per_symbol,
 	excess_bw=$excess_bw,
+	freq_bw=$freq_bw,
 	phase_bw=$phase_bw,
 	timing_bw=$timing_bw,
 	gray_coded=$gray_coded,
@@ -64,6 +65,12 @@
 		<name>Excess BW</name>
 		<key>excess_bw</key>
 		<value>0.35</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>FLL Bandwidth</name>
+		<key>freq_bw</key>
+		<value>6.28/100.0</value>
 		<type>real</type>
 	</param>
 	<param>

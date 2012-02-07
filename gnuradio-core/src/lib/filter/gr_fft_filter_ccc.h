@@ -62,6 +62,7 @@ class GR_CORE_API gr_fft_filter_ccc : public gr_sync_decimator
   ~gr_fft_filter_ccc ();
 
   void set_taps (const std::vector<gr_complex> &taps);
+  std::vector<gr_complex> taps () const;
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,

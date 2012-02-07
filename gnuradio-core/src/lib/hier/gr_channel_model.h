@@ -71,4 +71,9 @@ class GR_CORE_API gr_channel_model : public gr_hier_block2
   void set_frequency_offset(double frequency_offset);
   void set_taps(const std::vector<gr_complex> &taps);
   void set_timing_offset(double epsilon);
+
+  double noise_voltage() const;
+  double frequency_offset() const;
+  std::vector<gr_complex> taps() const;
+  double timing_offset() const;
 };

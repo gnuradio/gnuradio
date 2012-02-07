@@ -357,10 +357,8 @@ digital_constellation_psk::get_sector (const gr_complex *sample)
   float phase = arg(*sample);
   float width = M_TWOPI / n_sectors;
   int sector = floor(phase/width + 0.5);
-  unsigned int u_sector;
   if (sector < 0)
     sector += n_sectors;
-  u_sector = sector;
   return sector;
 }
   

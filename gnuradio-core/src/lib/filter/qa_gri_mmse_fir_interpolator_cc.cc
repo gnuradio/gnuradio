@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <cmath>
 #include <stdexcept>
+#include <unistd.h>
 
 #define	NELEM(x) (sizeof (x) / sizeof (x[0]))
 

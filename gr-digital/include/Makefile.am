@@ -24,6 +24,7 @@ include $(top_srcdir)/Makefile.common
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = 				\
 	digital_api.h		\
+	digital_impl_mpsk_snr_est.h		\
 	digital_binary_slicer_fb.h		\
 	digital_clock_recovery_mm_cc.h		\
 	digital_clock_recovery_mm_ff.h		\
@@ -39,12 +40,14 @@ grinclude_HEADERS = 				\
 	digital_kurtotic_equalizer_cc.h 	\
 	digital_metric_type.h			\
 	digital_mpsk_receiver_cc.h		\
+	digital_mpsk_snr_est_cc.h		\
 	digital_ofdm_cyclic_prefixer.h		\
 	digital_ofdm_frame_acquisition.h	\
 	digital_ofdm_frame_sink.h		\
 	digital_ofdm_insert_preamble.h		\
 	digital_ofdm_mapper_bcv.h		\
 	digital_ofdm_sampler.h			\
+	digital_probe_mpsk_snr_est_c.h		\
 	digital_gmskmod_bc.h 			\
 	digital_cpmmod_bc.h
 

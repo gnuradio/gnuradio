@@ -46,6 +46,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         foffset = 0.2 / (2.0*math.pi)
 
         # Create a set of 1's and -1's, pulse shape and interpolate to sps
+        random.seed(0)
         data = [2.0*random.randint(0, 2) - 1.0 for i in xrange(200)]
         self.src = gr.vector_source_c(data, False)
         self.rrc = gr.interp_fir_filter_ccf(sps, rrc_taps)

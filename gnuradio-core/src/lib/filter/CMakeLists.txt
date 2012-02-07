@@ -28,7 +28,7 @@ foreach(gr_core_filter_asm ${gr_core_filter_asms})
 endforeach(gr_core_filter_asm)
 
 #detect 32 or 64 bit compiler
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64)$")
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i.86|x86|x86_64|amd64)$")
     include(CheckTypeSize)
     check_type_size("void*" SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
     if (${SIZEOF_VOID_P} EQUAL 8)

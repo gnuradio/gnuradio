@@ -67,8 +67,17 @@ gr_fft_vcc_fftw::work (int noutput_items,
     
     if (d_window.size()){
       gr_complex *dst = d_fft->get_inbuf();
-      for (unsigned int i = 0; i < d_fft_size; i++)		// apply window
-	dst[i] = in[i] * d_window[i];
+      if(!d_forward && d_shift){
+        int offset = (!d_forward && d_shift)?(d_fft_size/2):0;
+        int fft_m_offset = d_fft_size - offset;
+        for (unsigned int i = 0; i < offset; i++)		// apply window
+            dst[i+fft_m_offset] = in[i] * d_window[i];
+        for (unsigned int i = offset; i < d_fft_size; i++)		// apply window
+            dst[i-offset] = in[i] * d_window[i];
+      } else {
+        for (unsigned int i = 0; i < d_fft_size; i++)		// apply window
+          dst[i] = in[i] * d_window[i];
+      }
     }
     else {
       if(!d_forward && d_shift) {  // apply an ifft shift on the data

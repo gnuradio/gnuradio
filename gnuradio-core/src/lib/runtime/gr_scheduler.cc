@@ -24,7 +24,7 @@
 #endif
 #include <gr_scheduler.h>
 
-gr_scheduler::gr_scheduler(gr_flat_flowgraph_sptr ffg)
+gr_scheduler::gr_scheduler(gr_flat_flowgraph_sptr ffg, int max_noutput_items)
 {
 }
 

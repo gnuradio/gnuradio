@@ -124,10 +124,20 @@ add_custom_target(uninstall
 ########################################################################
 find_package(PythonLibs)
 find_package(SWIG)
+
+if(SWIG_FOUND)
+    message(STATUS "Minimum SWIG version required is 1.3.31")
+    set(SWIG_VERSION_CHECK FALSE)
+    if("${SWIG_VERSION}" VERSION_GREATER "1.3.30")
+        set(SWIG_VERSION_CHECK TRUE)
+    endif()
+endif(SWIG_FOUND)
+
 include(GrComponent)
 GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
     SWIG_FOUND
+    SWIG_VERSION_CHECK
 )
 
 find_package(CppUnit)

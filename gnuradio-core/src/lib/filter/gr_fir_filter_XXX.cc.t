@@ -63,6 +63,12 @@ void
   d_updated = true;
 }
 
+std::vector<@TAP_TYPE@>
+@NAME@::taps () const
+{
+  return d_new_taps;
+}
+
 int
 @NAME@::work (int noutput_items,
 		   gr_vector_const_void_star &input_items,

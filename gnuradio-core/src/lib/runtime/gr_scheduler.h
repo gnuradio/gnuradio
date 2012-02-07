@@ -47,7 +47,7 @@ public:
    * The scheduler will continue running until all blocks until they
    * report that they are done or the stop method is called.
    */
-  gr_scheduler(gr_flat_flowgraph_sptr ffg);
+  gr_scheduler(gr_flat_flowgraph_sptr ffg, int max_noutput_items);
 
   virtual ~gr_scheduler();
 

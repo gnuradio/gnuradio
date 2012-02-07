@@ -34,6 +34,18 @@ class test_noise_source(gr_unittest.TestCase):
         # Just confirm that we can instantiate a noise source
         op = gr.noise_source_f(gr.GR_GAUSSIAN, 10, 10)
 
+    def test_002(self):
+        # Test get methods
+        set_type = gr.GR_GAUSSIAN
+        set_ampl = 10
+        op = gr.noise_source_f(set_type, set_ampl, 10)
+        get_type = op.type()
+        get_ampl = op.amplitude()
+
+        self.assertEqual(get_type, set_type)
+        self.assertEqual(get_ampl, set_ampl)
+        
+
 if __name__ == '__main__':
     gr_unittest.run(test_noise_source, "test_noise_source.xml")
         

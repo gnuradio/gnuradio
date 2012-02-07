@@ -45,6 +45,7 @@ noinst_PYTHON = \
 	qa_fll_band_edge.py		\
 	qa_lms_equalizer.py		\
 	qa_mpsk_receiver.py		\
+	qa_mpsk_snr_est.py		\
 	qa_ofdm_insert_preamble.py
 
 digital_PYTHON = \

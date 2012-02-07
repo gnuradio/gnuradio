@@ -60,7 +60,7 @@ static inline void volk_32f_s32f_stddev_32f_a_sse4_1(float* stddev, const float*
     }
     returnValue /= num_points;
     returnValue -= (mean * mean);
-    returnValue = sqrt(returnValue);
+    returnValue = sqrtf(returnValue);
   }
   *stddev = returnValue;
 }
@@ -106,7 +106,7 @@ static inline void volk_32f_s32f_stddev_32f_a_sse(float* stddev, const float* in
     }
     returnValue /= num_points;
     returnValue -= (mean * mean);
-    returnValue = sqrt(returnValue);
+    returnValue = sqrtf(returnValue);
   }
   *stddev = returnValue;
 }
@@ -133,7 +133,7 @@ static inline void volk_32f_s32f_stddev_32f_a_generic(float* stddev, const float
 
     returnValue /= num_points;
     returnValue -= (mean * mean);
-    returnValue = sqrt(returnValue);
+    returnValue = sqrtf(returnValue);
   }
   *stddev = returnValue;
 }

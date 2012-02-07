@@ -27,23 +27,27 @@ from gnuradio import gr
 
 
 class stdapp (wx.App):
-    def __init__ (self, top_block_maker, title="GNU Radio", nstatus=2):
+    def __init__ (self, top_block_maker, title="GNU Radio", nstatus=2,
+                  max_noutput_items=None):
         self.top_block_maker = top_block_maker
         self.title = title
         self._nstatus = nstatus
+        self._max_noutput_items = max_noutput_items
         # All our initialization must come before calling wx.App.__init__.
         # OnInit is called from somewhere in the guts of __init__.
         wx.App.__init__ (self, redirect=False)
 
     def OnInit (self):
-        frame = stdframe (self.top_block_maker, self.title, self._nstatus)
+        frame = stdframe (self.top_block_maker, self.title, self._nstatus,
+                          self._max_noutput_items)
         frame.Show (True)
         self.SetTopWindow (frame)
         return True
 
 
 class stdframe (wx.Frame):
-    def __init__ (self, top_block_maker, title="GNU Radio", nstatus=2):
+    def __init__ (self, top_block_maker, title="GNU Radio", nstatus=2,
+                  max_nouts=None):
         # print "stdframe.__init__"
         wx.Frame.__init__(self, None, -1, title)
 
@@ -57,7 +61,7 @@ class stdframe (wx.Frame):
         self.SetMenuBar (mainmenu)
 
         self.Bind (wx.EVT_CLOSE, self.OnCloseWindow)
-        self.panel = stdpanel (self, self, top_block_maker)
+        self.panel = stdpanel (self, self, top_block_maker, max_nouts)
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.panel, 1, wx.EXPAND)
         self.SetSizer(vbox)
@@ -72,7 +76,8 @@ class stdframe (wx.Frame):
         return self.panel.top_block
     
 class stdpanel (wx.Panel):
-    def __init__ (self, parent, frame, top_block_maker):
+    def __init__ (self, parent, frame, top_block_maker,
+                  max_nouts=None):
         # print "stdpanel.__init__"
         wx.Panel.__init__ (self, parent, -1)
         self.frame = frame
@@ -83,7 +88,10 @@ class stdpanel (wx.Panel):
         self.SetAutoLayout (True)
         vbox.Fit (self)
 
-        self.top_block.start ()
+        if(max_nouts is not None):
+            self.top_block.start (max_nouts)
+        else:
+            self.top_block.start ()            
 
 class std_top_block (gr.top_block):
     def __init__ (self, parent, panel, vbox, argv):

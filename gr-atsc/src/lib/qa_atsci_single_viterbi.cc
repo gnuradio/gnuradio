@@ -238,7 +238,7 @@ qa_atsci_single_viterbi::t1 ()
         if (differs) {
 	  const int ERRTOL = 12;		/* Or relate to delay? */
 	  int shouldfix = 1;
-	  int lasti = -ERRTOL;
+	  //int lasti = -ERRTOL;
 
 	  printf (  "  Inserted errors:        ");
 	  for (int erri = 0; erri < NN; erri++) {
@@ -246,7 +246,7 @@ qa_atsci_single_viterbi::t1 ()
 	      printf (" %d", erri);
 	      // if (erri < lasti+ERRTOL)
 	      //   shouldfix = 0;
-	      lasti = erri;
+	      //lasti = erri;
 	    }
 	  }
 	  printf ("\n  Erroneous result dibits:");

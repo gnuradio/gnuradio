@@ -32,6 +32,7 @@
 /*! \defgroup uhd_blk UHD Interface  			*/
 /*! \defgroup audio_blk Audio Interface  		*/
 /*! \defgroup pfb_blk Polyphase Filterbank  		*/
+/*! \defgroup snr_blk SNR estimators			*/
 
 /*! 
  * \defgroup base_blk Base classes for GR Blocks

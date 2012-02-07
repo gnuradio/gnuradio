@@ -59,6 +59,7 @@ class GR_CORE_API @NAME@ : public gr_sync_decimator
   ~@NAME@ ();
 
   void set_taps (const std::vector<@TAP_TYPE@> &taps);
+  std::vector<@TAP_TYPE@> taps () const;
 
   int work (int noutput_items,
 		 gr_vector_const_void_star &input_items,

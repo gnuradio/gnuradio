@@ -28,8 +28,8 @@
 
 using namespace pmt;
 
-gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
-  : d_exec(block)
+gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_items)
+  : d_exec(block, max_noutput_items)
 {
   // std::cerr << "gr_tpb_thread_body: " << block << std::endl;
 

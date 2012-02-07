@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Copyright 2009 Free Software Foundation, Inc.
+Copyright 2009-2012 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -25,7 +25,16 @@ import gtk
 try: from gnuradio import gr
 except ImportError, e:
 	d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE, message_format="""
-Cannot import gnuradio. Are your PYTHONPATH and LD_LIBRARY_PATH set correctly?""")
+Cannot import gnuradio.
+
+Is the python path environment variable set correctly?
+	All OS: PYTHONPATH
+
+Is the library path environment variable set correctly?
+	Linux: LD_LIBRARY_PATH
+	Windows: PATH
+	MacOSX: DYLD_LIBRARY_PATH
+""")
 	d.set_title(str(e))
 	d.run()
 	exit(-1)

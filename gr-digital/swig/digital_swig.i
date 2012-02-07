@@ -24,6 +24,15 @@
 //load generated python docstrings
 %include "digital_swig_doc.i"
 
+#if SWIGPYTHON
+enum snr_est_type_t {
+  SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
+  SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
+  SNR_EST_M2M4,	        // 2nd & 4th moment est (>= 1 dB)
+  SNR_EST_SVR           // SVR-based est (>= 0dB)
+};
+#endif
+
 %include <gri_control_loop.i>
 
 %{
@@ -41,12 +50,14 @@
 #include "digital_kurtotic_equalizer_cc.h"
 #include "digital_lms_dd_equalizer_cc.h"
 #include "digital_mpsk_receiver_cc.h"
+#include "digital_mpsk_snr_est_cc.h"
 #include "digital_ofdm_cyclic_prefixer.h"
 #include "digital_ofdm_frame_acquisition.h"
 #include "digital_ofdm_frame_sink.h"
 #include "digital_ofdm_insert_preamble.h"
 #include "digital_ofdm_mapper_bcv.h"
 #include "digital_ofdm_sampler.h"
+#include "digital_probe_mpsk_snr_est_c.h"
 #include "digital_cpmmod_bc.h"
 #include "digital_gmskmod_bc.h"
 %}
@@ -65,16 +76,26 @@
 %include "digital_kurtotic_equalizer_cc.i"
 %include "digital_lms_dd_equalizer_cc.i"
 %include "digital_mpsk_receiver_cc.i"
+%include "digital_mpsk_snr_est_cc.i"
 %include "digital_ofdm_cyclic_prefixer.i"
 %include "digital_ofdm_frame_acquisition.i"
 %include "digital_ofdm_frame_sink.i"
 %include "digital_ofdm_insert_preamble.i"
 %include "digital_ofdm_mapper_bcv.i"
 %include "digital_ofdm_sampler.i"
+%include "digital_probe_mpsk_snr_est_c.i"
 %include "digital_cpmmod_bc.i"
 %include "digital_gmskmod_bc.i"
 
 #if SWIGGUILE
+
+enum snr_est_type_t {
+  SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
+  SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
+  SNR_EST_M2M4,	        // 2nd & 4th moment est (>= 1 dB)
+  SNR_EST_SVR           // SVR-based est (>= 0dB)
+};
+
 %scheme %{
 (load-extension-global "libguile-gnuradio-digital_swig" "scm_init_gnuradio_digital_swig_module")
 %}

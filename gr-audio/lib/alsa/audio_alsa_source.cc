@@ -348,12 +348,11 @@ audio_alsa_source::work_s16_2x1 (int noutput_items,
   typedef gr_int16	sample_t;	// the type of samples we're creating
   static const float scale_factor = 1.0 / std::pow(2.0f, 16-1);
   
-  unsigned int nchan = output_items.size ();
   float **out = (float **) &output_items[0];
   sample_t *buf = (sample_t *) d_buffer;
   int bi;
 
-  assert (nchan == 1);
+  assert (output_items.size () == 1);
 
   unsigned int sizeof_frame = d_hw_nchan * sizeof (sample_t);
   assert (d_buffer_size_bytes == d_period_size * sizeof_frame);
@@ -425,12 +424,11 @@ audio_alsa_source::work_s32_2x1 (int noutput_items,
   typedef gr_int32	sample_t;	// the type of samples we're creating
   static const float scale_factor = 1.0 / std::pow(2.0f, 32-1);
   
-  unsigned int nchan = output_items.size ();
   float **out = (float **) &output_items[0];
   sample_t *buf = (sample_t *) d_buffer;
   int bi;
 
-  assert (nchan == 1);
+  assert (output_items.size () == 1);
 
   unsigned int sizeof_frame = d_hw_nchan * sizeof (sample_t);
   assert (d_buffer_size_bytes == d_period_size * sizeof_frame);

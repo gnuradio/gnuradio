@@ -55,7 +55,7 @@ gr_fft_filter_fff::gr_fft_filter_fff (int decimation, const std::vector<float> &
 #else
     d_filter = new gri_fft_filter_fff_sse(decimation, taps);
 #endif
-
+  d_new_taps = taps;
   d_nsamples = d_filter->set_taps(taps);
   set_output_multiple(d_nsamples);
 }
@@ -70,6 +70,12 @@ gr_fft_filter_fff::set_taps (const std::vector<float> &taps)
 {
   d_new_taps = taps;
   d_updated = true;
+}
+
+std::vector<float>
+gr_fft_filter_fff::taps () const
+{
+  return d_new_taps;
 }
 
 int

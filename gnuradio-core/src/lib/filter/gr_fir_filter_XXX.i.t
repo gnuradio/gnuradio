@@ -38,4 +38,5 @@ class @NAME@ : public gr_sync_decimator
   ~@NAME@ ();
 
   void set_taps (const std::vector<@TAP_TYPE@> &taps);
+  std::vector<@TAP_TYPE@> taps () const;
 };

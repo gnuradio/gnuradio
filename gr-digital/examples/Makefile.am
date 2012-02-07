@@ -29,7 +29,8 @@ dist_basicdata_SCRIPTS =		\
 	example_fll.py			\
 	example_timing.py		\
 	run_length.py			\
-	gen_whitener.py
+	gen_whitener.py			\
+	snr_estimators.py
 
 nbdatadir = $(dig_examples_prefix)/narrowband
 dist_nbdata_SCRIPTS =		\

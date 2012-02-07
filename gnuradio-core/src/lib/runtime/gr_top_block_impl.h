@@ -42,7 +42,7 @@ public:
   ~gr_top_block_impl();
 
   // Create and start scheduler threads
-  void start();
+  void start(int max_noutput_items=100000);
 
   // Signal scheduler threads to stop
   void stop();
@@ -58,6 +58,12 @@ public:
 
   // Dump the flowgraph to stdout
   void dump();
+
+  // Get the number of max noutput_items in the flowgraph
+  int max_noutput_items();
+  
+  // Set the maximum number of noutput_items in the flowgraph
+  void set_max_noutput_items(int nmax);
   
 protected:
     
@@ -70,6 +76,7 @@ protected:
   gruel::mutex                   d_mutex;	// protects d_state and d_lock_count
   tb_state			 d_state;
   int                            d_lock_count;
+  int                            d_max_noutput_items;
   
 private:
   void restart();

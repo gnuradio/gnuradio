@@ -99,3 +99,28 @@ gr_channel_model::set_timing_offset(double epsilon)
 {
   d_timing_offset->set_interp_ratio(epsilon);
 }
+
+
+double
+gr_channel_model::noise_voltage() const
+{
+  return d_noise->amplitude();
+}
+
+double
+gr_channel_model::frequency_offset() const
+{
+  return d_freq_offset->frequency();
+}
+
+std::vector<gr_complex>
+gr_channel_model::taps() const
+{
+  return d_multipath->taps();
+}
+
+double
+gr_channel_model::timing_offset() const
+{
+  return d_timing_offset->interp_ratio();
+}
