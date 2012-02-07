@@ -99,6 +99,7 @@ libgeneral_la_SOURCES = 		\
 	gr_multiply_ff.cc		\
 	gr_multiply_const_cc.cc		\
 	gr_multiply_const_ff.cc		\
+	gr_multiply_conjugate_cc.cc	\
 	gr_nlog10_ff.cc			\
 	gr_nop.cc			\
 	gr_null_sink.cc			\
@@ -259,6 +260,7 @@ grinclude_HEADERS = 			\
 	gr_multiply_ff.h		\
 	gr_multiply_const_cc.h		\
 	gr_multiply_const_ff.h		\
+	gr_multiply_conjugate_cc.h	\
 	gr_nco.h			\
 	gr_nlog10_ff.h			\
 	gr_nop.h			\
@@ -423,6 +425,7 @@ swiginclude_HEADERS =			\
 	gr_multiply_ff.i		\
 	gr_multiply_const_cc.i		\
 	gr_multiply_const_ff.i		\
+	gr_multiply_conjugate_cc.i	\
 	gr_nlog10_ff.i			\
 	gr_nop.i			\
 	gr_null_sink.i			\

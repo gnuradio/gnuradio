@@ -24,43 +24,46 @@
 #include "config.h"
 #endif
 
-#include <gr_add_ff.h>
+#include <gr_multiply_conjugate_cc.h>
 #include <gr_io_signature.h>
 #include <volk/volk.h>
 
-gr_add_ff_sptr
-gr_make_add_ff(size_t vlen)
+gr_multiply_conjugate_cc_sptr
+gr_make_multiply_conjugate_cc (size_t vlen)
 {
-  return gnuradio::get_initial_sptr(new gr_add_ff(vlen));
+  return gnuradio::get_initial_sptr(new gr_multiply_conjugate_cc (vlen));
 }
 
-gr_add_ff::gr_add_ff (size_t vlen)
-  : gr_sync_block("add_ff",
-		  gr_make_io_signature (1, -1, sizeof(float)*vlen),
-		  gr_make_io_signature (1,  1, sizeof(float)*vlen)),
-    d_vlen (vlen)
+gr_multiply_conjugate_cc::gr_multiply_conjugate_cc (size_t vlen)
+  : gr_sync_block ("gr_multiply_conjugate_cc",
+		   gr_make_io_signature (2, 2, sizeof (gr_complex)*vlen),
+		   gr_make_io_signature (1, 1, sizeof (gr_complex)*vlen)),
+    d_vlen(vlen)
 {
-  const int alignment_multiple = 
-    volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+ const int alignment_multiple =
+   volk_get_alignment() / sizeof(gr_complex);
+ set_alignment(alignment_multiple);
 }
 
 int
-gr_add_ff::work(int noutput_items,
-		gr_vector_const_void_star &input_items,
-		gr_vector_void_star &output_items)
+gr_multiply_conjugate_cc::work (int noutput_items,
+				gr_vector_const_void_star &input_items,
+				gr_vector_void_star &output_items)
 {
-  float *out = (float *) output_items[0];
+  gr_complex *in0 = (gr_complex *) input_items[0];
+  gr_complex *in1 = (gr_complex *) input_items[1];
+  gr_complex *out = (gr_complex *) output_items[0];
   int noi = d_vlen*noutput_items;
 
-  memcpy(out, input_items[0], noi*sizeof(float));
   if(is_unaligned()) {
-    for(size_t i = 1; i < input_items.size(); i++)
-      volk_32f_x2_add_32f_u(out, out, (const float*)input_items[i], noi);
+    volk_32fc_x2_multiply_conjugate_32fc_u(out, in0, in1, noi);
   }
   else {
-    for(size_t i = 1; i < input_items.size(); i++)
-      volk_32f_x2_add_32f_a(out, out, (const float*)input_items[i], noi);
+    volk_32fc_x2_multiply_conjugate_32fc_a(out, in0, in1, noi);
   }
+
   return noutput_items;
 }
+
+
+

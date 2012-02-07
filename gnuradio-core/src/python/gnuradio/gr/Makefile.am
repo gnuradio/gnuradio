@@ -79,6 +79,7 @@ noinst_PYTHON = 			\
 	qa_kludged_imports.py		\
 	qa_max.py			\
 	qa_message.py			\
+	qa_multiply_conjugate.py	\
 	qa_mute.py			\
 	qa_nlog10.py			\
 	qa_noise.py			\

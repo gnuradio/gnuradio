@@ -110,6 +110,7 @@
 #include <gr_multiply_ff.h>
 #include <gr_multiply_const_cc.h>
 #include <gr_multiply_const_ff.h>
+#include <gr_multiply_conjugate_cc.h>
 #include <gr_feval.h>
 #include <gr_pwr_squelch_cc.h>
 #include <gr_pwr_squelch_ff.h>
@@ -231,6 +232,7 @@
 %include "gr_multiply_ff.i"
 %include "gr_multiply_const_cc.i"
 %include "gr_multiply_const_ff.i"
+%include "gr_multiply_conjugate_cc.i"
 %include "gr_feval.i"
 %include "gr_pwr_squelch_cc.i"
 %include "gr_pwr_squelch_ff.i"
