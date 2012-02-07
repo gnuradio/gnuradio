@@ -91,6 +91,8 @@ VOLK_RUN_TESTS(volk_8i_s32f_convert_32f_a, 1e-4, 100, 20460, 1);
 VOLK_RUN_TESTS(volk_8i_s32f_convert_32f_u, 1e-4, 100, 20460, 1);
 VOLK_RUN_TESTS(volk_32fc_x2_multiply_32fc_a, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32fc_x2_multiply_32fc_u, 1e-4, 0, 20460, 1);
+VOLK_RUN_TESTS(volk_32fc_x2_multiply_conjugate_32fc_a, 1e-4, 0, 20460, 1);
+VOLK_RUN_TESTS(volk_32fc_x2_multiply_conjugate_32fc_u, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_x2_multiply_32f_a, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_x2_multiply_32f_u, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32fc_s32fc_multiply_32fc_a, 1e-4, 0, 20460, 1);

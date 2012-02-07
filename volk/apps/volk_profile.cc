@@ -56,6 +56,8 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32fc_magnitude_squared_32f_u, 1e-4, 0, 204600, 1000, &results);
     VOLK_PROFILE(volk_32fc_x2_multiply_32fc_a, 1e-4, 0, 204600, 1000, &results);
     VOLK_PROFILE(volk_32fc_x2_multiply_32fc_u, 1e-4, 0, 204600, 1000, &results);
+    VOLK_PROFILE(volk_32fc_x2_multiply_conjugate_32fc_a, 1e-4, 0, 204600, 1000, &results);
+    VOLK_PROFILE(volk_32fc_x2_multiply_conjugate_32fc_u, 1e-4, 0, 204600, 1000, &results);
     VOLK_PROFILE(volk_32f_s32f_convert_16i_a, 1, 32768, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_s32f_convert_16i_u, 1, 32768, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_s32f_convert_32i_a, 1, 2<<31, 204600, 10000, &results);
