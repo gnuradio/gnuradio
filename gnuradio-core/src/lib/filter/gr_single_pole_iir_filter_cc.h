@@ -40,18 +40,22 @@ gr_make_single_pole_iir_filter_cc (double alpha, unsigned int vlen=1);
  * \ingroup filter_blk
  *
  * The input and output satisfy a difference equation of the form
- \f{html}{
+ \htmlonly
+ \f{
  y[n] - (1-alpha) y[n-1] = alpha x[n]
  \f}
+ \endhtmlonly
 
  \xmlonly
  y[n] - (1-alpha) y[n-1] = alpha x[n]
  \endxmlonly
 
  * with the corresponding rational system function
- \f{html}{
+ \htmlonly
+ \f{
  H(z) = \frac{alpha}{1 - (1-alpha) z^{-1}}
  \f}
+ \endhtmlonly
 
  \xmlonly
  H(z) = \ frac{alpha}{1 - (1-alpha) z^{-1}}
