@@ -50,6 +50,7 @@ noinst_PYTHON = 			\
 	qa_bin_statistics.py		\
 	qa_classify.py			\
 	qa_complex_to_xxx.py		\
+	qa_conjugate.py			\
 	qa_copy.py			\
 	qa_delay.py			\
 	qa_dc_blocker.py		\

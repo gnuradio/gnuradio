@@ -28,6 +28,7 @@
 
 #include <gr_conjugate_cc.h>
 #include <gr_io_signature.h>
+#include <volk/volk.h>
 
 gr_conjugate_cc_sptr
 gr_make_conjugate_cc ()
@@ -40,6 +41,9 @@ gr_conjugate_cc::gr_conjugate_cc ()
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)))
 {
+  const int alignment_multiple = 
+    volk_get_alignment() / sizeof(gr_complex);
+  set_alignment(alignment_multiple);
 }
 
 int
@@ -50,26 +54,11 @@ gr_conjugate_cc::work (int noutput_items,
   gr_complex *iptr = (gr_complex *) input_items[0];
   gr_complex *optr = (gr_complex *) output_items[0];
 
-  int	size = noutput_items;
-
-  while (size >= 8){
-    optr[0] = conj(iptr[0]);
-    optr[1] = conj(iptr[1]);
-    optr[2] = conj(iptr[2]);
-    optr[3] = conj(iptr[3]);
-    optr[4] = conj(iptr[4]);
-    optr[5] = conj(iptr[5]);
-    optr[6] = conj(iptr[6]);
-    optr[7] = conj(iptr[7]);
-    size -= 8;
-    optr += 8;
-    iptr += 8;
+  if(is_unaligned()) {
+    volk_32fc_conjugate_32fc_u(optr, iptr, noutput_items);
   }
-
-  while (size-- > 0) {
-    *optr = conj(*iptr);
-    iptr++;
-    optr++;
+  else {
+    volk_32fc_conjugate_32fc_a(optr, iptr, noutput_items);
   }
 
   return noutput_items;
