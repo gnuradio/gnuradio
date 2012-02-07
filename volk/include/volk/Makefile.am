@@ -134,4 +134,7 @@ volkinclude_HEADERS = \
 	volk_8i_convert_16i_a.h \
 	volk_8i_convert_16i_u.h \
 	volk_8i_s32f_convert_32f_a.h \
-	volk_8i_s32f_convert_32f_u.h 
+	volk_8i_s32f_convert_32f_u.h \
+	volk_32fc_conjugate_32fc_a.h \
+	volk_32fc_conjugate_32fc_u.h
+
