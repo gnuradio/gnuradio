@@ -100,8 +100,8 @@ def main():
           implementation. The results are stored to an SQLite database \
           that can then be read by volk_plot.py to plot the differences.'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('label', type=str,
-                        default=None,
+    parser.add_argument('-L', '--label', type=str,
+                        required=True, default=None,
                         help='Label of database table [default: %(default)s]')
     parser.add_argument('-D', '--database', type=str,
                         default="volk_results.db",
@@ -112,9 +112,10 @@ def main():
     parser.add_argument('-I', '--iterations', type=int,
                         default=20,
                         help='Number of iterations [default: %(default)s]')
-    parser.add_argument('--test', type=int,
+    parser.add_argument('--tests', type=int, nargs='*',
                         choices=xrange(len(avail_tests)),
-                        help='Test to run')
+                        help='A list of tests to run; can be a single test or a \
+                              space-separated list.')
     parser.add_argument('--list', action='store_true',
                         help='List the available tests')
     parser.add_argument('--all', action='store_true',

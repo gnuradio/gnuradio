@@ -138,8 +138,8 @@ def main():
           implementation. The results are stored to an SQLite database \
           that can then be read by volk_plot.py to plot the differences.'
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('label', type=str,
-                        default=None,
+    parser.add_argument('-L', '--label', type=str,
+                        required=True, default=None,
                         help='Label of database table [default: %(default)s]')
     parser.add_argument('-D', '--database', type=str,
                         default="volk_results.db",
@@ -150,9 +150,10 @@ def main():
     parser.add_argument('-I', '--iterations', type=int,
                         default=20,
                         help='Number of iterations [default: %(default)s]')
-    parser.add_argument('--test', type=int,
+    parser.add_argument('--tests', type=int, nargs='*',
                         choices=xrange(len(avail_tests)),
-                        help='Test to run')
+                        help='A list of tests to run; can be a single test or a \
+                              space-separated list.')
     parser.add_argument('--list', action='store_true',
                         help='List the available tests')
     parser.add_argument('--all', action='store_true',
@@ -171,16 +172,15 @@ def main():
     conn = create_connection(args.database)
     new_table(conn, label)
 
-    if not args.all:
-        func = avail_tests[args.test]
-        res = run_tests(func, N, iters)
+    if args.all:
+        tests = xrange(len(avail_tests))
+    else:
+        tests = args.tests
+
+    for test in tests:
+        res = run_tests(avail_tests[test], N, iters)
         if res is not None:
             replace_results(conn, label, N, iters, res)
-    else:
-        for f in avail_tests:
-            res = run_tests(f, N, iters)
-            if res is not None:
-                replace_results(conn, label, N, iters, res)
             
 if __name__ == "__main__":
     try:
