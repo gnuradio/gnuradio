@@ -98,6 +98,8 @@ def make_entry(obj, name=None, templ="{description}", description=None):
     """
     if name is None:
         name=obj.name()
+    if "operator " in name:
+        return ''
     if description is None:
         description = combine_descriptions(obj)
     docstring = templ.format(description=description)
