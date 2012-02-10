@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys
+import sys, math
 import argparse
 from volk_test_funcs import *
 
@@ -16,8 +16,15 @@ def main():
         'Run one of the volk tests first (e.g, volk_math.py)'
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('-D', '--database', type=str,
-                        default="volk_results.db",
+                        default='volk_results.db',
                         help='Database file to read data from [default: %(default)s]')
+    parser.add_argument('-E', '--errorbars',
+                        action='store_true', default=False,
+                        help='Show error bars (1 standard dev.)')
+    parser.add_argument('-P', '--plot', type=str,
+                        choices=['mean', 'min', 'max'],
+                        default='mean',
+                        help='Set the type of plot to produce [default: %(default)s]')
     args = parser.parse_args()
     
     # Set up global plotting properties
@@ -35,42 +42,81 @@ def main():
     # width of bars depends on number of comparisons
     wdth = 0.80/M
 
+    # Colors to distinguish each table in the bar graph
+    # More than 5 tables will wrap around to the start.
     colors = ['b', 'r', 'g', 'm', 'k']
 
     # Set up figure for plotting
     f0 = plt.figure(0, facecolor='w', figsize=(14,10))
     s0 = f0.add_subplot(1,1,1)
 
+    # Create a register of names that exist in all tables
+    tmp_regs = []
+    for table in tables:
+        # Get results from the next table
+        res = get_results(conn, table[0])
+
+        tmp_regs.append(list())
+        for r in res:
+            try:
+                tmp_regs[-1].index(r['kernel'])
+            except ValueError:
+                tmp_regs[-1].append(r['kernel'])
+
+    # Get only those names that are common in all tables            
+    name_reg = tmp_regs[0]
+    for t in tmp_regs[1:]:
+        name_reg = list(set(name_reg) & set(t))
+    name_reg.sort()
+
+    # Pull the data out for each table into a dictionary
+    # we can ref the table by it's name and the data associated
+    # with a given kernel in name_reg by it's name.
+    # This ensures there is no sorting issue with the data in the
+    # dictionary, so the kernels are plotted against each other.
+    table_data = dict()
     for i,table in enumerate(tables):
         # Get results from the next table
         res = get_results(conn, table[0])
-    
-        xlabels = []
-        averages = []
-        variances = []
-        maxes = []
-        mins = []
-        for r in res:
-            xlabels.append(r['kernel'])
-            averages.append(r['avg'])
-            variances.append(r['var'])
-            maxes.append(r['max'])
-            mins.append(r['min'])
 
+        data = dict()
+        for r in res:
+            data[r['kernel']] = r
+
+        table_data[table[0]] = data
+
+    # Plot the results
+    x0 = xrange(len(name_reg))
+    for i,t in enumerate(table_data):
         # makes x values for this data set placement
-        x0 = xrange(len(res))
         x1 = [x + i*wdth for x in x0]
 
-        s0.bar(x1, averages, width=wdth,
-               #yerr=variances,
-               color=colors[i%M], label=table[0],
-               edgecolor='k', linewidth=2)
+        ydata = []
+        stds = []
+        for name in name_reg:
+            stds.append(math.sqrt(table_data[t][name]['var']))
+            if(args.plot == 'max'):
+                ydata.append(table_data[t][name]['max'])
+            elif(args.plot == 'min'):
+                ydata.append(table_data[t][name]['min'])
+            if(args.plot == 'mean'):
+                ydata.append(table_data[t][name]['avg'])
+
+        if(args.errorbars is False):
+            stds = None
+
+        s0.bar(x1, ydata, width=wdth,
+               yerr=stds,
+               color=colors[i%M], label=t,
+               edgecolor='k', linewidth=2,
+               error_kw={"ecolor": 'k', "capsize":5,
+                         "linewidth":2})
 
     s0.legend()
     s0.set_ylabel("Processing time (sec) [{0:G} items]".format(res[0]['nitems']),
                   fontsize=22, fontweight='bold')
     s0.set_xticks(x0)
-    s0.set_xticklabels(xlabels)
+    s0.set_xticklabels(name_reg)
     for label in s0.xaxis.get_ticklabels():
         label.set_rotation(45)
         label.set_fontsize(16)

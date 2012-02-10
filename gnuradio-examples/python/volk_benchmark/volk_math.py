@@ -48,38 +48,41 @@ def conjugate_cc(N):
 
 ######################################################################
 
-def multiply_conjugate_cc_volk(N):
-    op = gr.multiply_conjugate_cc()
-    tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 2, 1)
-    return tb
+def multiply_conjugate_cc(N):
+    try:
+        op = gr.multiply_conjugate_cc()
+        tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 2, 1)
+        return tb
 
-def multiply_conjugate_cc_nonvolk(N):
-    class s(gr.hier_block2):
-        def __init__(self):
-            gr.hier_block2.__init__(self, "s",
-                                    gr.io_signature(2, 2, gr.sizeof_gr_complex),
-                                    gr.io_signature(1, 1, gr.sizeof_gr_complex))
-            conj = gr.conjugate_cc()
-            mult = gr.multiply_cc()
-            self.connect((self,0), (mult,0))
-            self.connect((self,1), conj, (mult,1))
-            self.connect(mult, self)
+    except AttributeError:
+        class s(gr.hier_block2):
+            def __init__(self):
+                gr.hier_block2.__init__(self, "s",
+                                        gr.io_signature(2, 2, gr.sizeof_gr_complex),
+                                        gr.io_signature(1, 1, gr.sizeof_gr_complex))
+                conj = gr.conjugate_cc()
+                mult = gr.multiply_cc()
+                self.connect((self,0), (mult,0))
+                self.connect((self,1), conj, (mult,1))
+                self.connect(mult, self)
 
-    op = s()
-    tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 2, 1)
-    return tb
+        op = s()
+        tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 2, 1)
+        return tb
 
-#multiply_conjugate_cc = multiply_conjugate_cc_volk
-multiply_conjugate_cc = multiply_conjugate_cc_nonvolk
 
 ######################################################################
 
 def run_tests(func, N, iters):
     print("Running Test: {0}".format(func.__name__))
-    tb = func(N)
-    t = timeit(tb, iters)
-    res = format_results(func.__name__, t)
-    return res
+    try:
+        tb = func(N)
+        t = timeit(tb, iters)
+        res = format_results(func.__name__, t)
+        return res
+    except AttributeError:
+        print "\tCould not run test. Skipping."
+        return None
 
 def main():
     avail_tests = [multiply_const_cc,
@@ -133,11 +136,13 @@ def main():
     if not args.all:
         func = avail_tests[args.test]
         res = run_tests(func, N, iters)
-        replace_results(conn, label, N, iters, res)
+        if res is not None:
+            replace_results(conn, label, N, iters, res)
     else:
         for f in avail_tests:
             res = run_tests(f, N, iters)
-            replace_results(conn, label, N, iters, res)
+            if res is not None:
+                replace_results(conn, label, N, iters, res)
             
 if __name__ == "__main__":
     try:

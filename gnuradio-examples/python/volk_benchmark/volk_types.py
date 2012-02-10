@@ -106,10 +106,14 @@ def complex_to_arg(N):
 
 def run_tests(func, N, iters):
     print("Running Test: {0}".format(func.__name__))
-    tb = func(N)
-    t = timeit(tb, iters)
-    res = format_results(func.__name__, t)
-    return res
+    try:
+        tb = func(N)
+        t = timeit(tb, iters)
+        res = format_results(func.__name__, t)
+        return res
+    except AttributeError:
+        print "\tCould not run test. Skipping."
+        return None
 
 def main():
     avail_tests = [float_to_char,
@@ -170,11 +174,13 @@ def main():
     if not args.all:
         func = avail_tests[args.test]
         res = run_tests(func, N, iters)
-        replace_results(conn, label, N, iters, res)
+        if res is not None:
+            replace_results(conn, label, N, iters, res)
     else:
         for f in avail_tests:
             res = run_tests(f, N, iters)
-            replace_results(conn, label, N, iters, res)
+            if res is not None:
+                replace_results(conn, label, N, iters, res)
             
 if __name__ == "__main__":
     try:
