@@ -33,9 +33,7 @@ class test_float_to_int (gr_unittest.TestCase):
     def test_001(self):
 
         src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3, -4.4, -5.5)
-        
-        ### Volk results
-        expected_result = [0, 1, 2, 3, 4, 6, -1, -2, -3, -4, -5]
+        expected_result = [0, 1, 2, 3, 4, 6, -1, -2, -3, -4, -6]
 
         src = gr.vector_source_f(src_data)
         op = gr.float_to_int()
@@ -49,10 +47,10 @@ class test_float_to_int (gr_unittest.TestCase):
 
     def test_002(self):
 
-        src_data = (  2146400000,   2147483647,
-                     -2146400000,  -2147483648 )
-        expected_result = [  2146400000,   2146400000,
-                            -2146400000,  -2147483648 ]
+        src_data = ( 2147483647,  2147483648,  2200000000,
+                    -2147483648, -2147483649, -2200000000)
+        expected_result = [ 2147483647,  2147483647,  2147483647,
+                           -2147483647, -2147483647, -2147483647]
         src = gr.vector_source_f(src_data)
         op = gr.float_to_int()
         dst = gr.vector_sink_i()
@@ -69,7 +67,7 @@ class test_float_to_int (gr_unittest.TestCase):
         scale = 2
         vlen = 3
         src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3)
-        expected_result = [0, 2, 4, 7, 9, 11, -2, -4, -6,]
+        expected_result = [0, 2, 4, 7, 9, 11, -2, -4, -7,]
         src = gr.vector_source_f(src_data)
         s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
         op = gr.float_to_int(vlen, scale)

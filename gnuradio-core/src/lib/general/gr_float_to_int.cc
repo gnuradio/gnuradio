@@ -26,6 +26,7 @@
 
 #include <gr_float_to_int.h>
 #include <gr_io_signature.h>
+#include <gri_float_to_int.h>
 #include <volk/volk.h>
 
 gr_float_to_int_sptr
@@ -56,12 +57,17 @@ gr_float_to_int::set_scale(float scale)
 {
   d_scale = scale;
 }
-
 int
 gr_float_to_int::work (int noutput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items)
 {
+  // Disable the Volk for now. There is a problem for large 32-bit ints that
+  // are not properly represented by the precisions of a single float, which
+  // can cause wrapping from large, positive numbers to negative.
+  // In gri_float_to_int, the value is first promoted to a 64-bit
+  // value, clipped, then converted to a float.
+#if 0
   const float *in = (const float *) input_items[0];
   int32_t *out = (int32_t *) output_items[0];
 
@@ -71,9 +77,13 @@ gr_float_to_int::work (int noutput_items,
   else {
     volk_32f_s32f_convert_32i_a(out, in, d_scale, d_vlen*noutput_items);
   }
+#else
+  const float *in = (const float *) input_items[0];
+  int *out = (int *) output_items[0];
+
+  gri_float_to_int (in, out, d_scale, d_vlen*noutput_items);
+
+#endif
   
   return noutput_items;
 }
-
-
-
