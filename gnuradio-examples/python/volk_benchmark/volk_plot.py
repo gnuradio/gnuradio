@@ -25,11 +25,15 @@ def main():
                         choices=['mean', 'min', 'max'],
                         default='mean',
                         help='Set the type of plot to produce [default: %(default)s]')
+    parser.add_argument('-%', '--percent', type=str,
+                        default=None, metavar="table",
+                        help='Show percent difference to the given type [default: %(default)s]')
     args = parser.parse_args()
     
     # Set up global plotting properties
     matplotlib.rcParams['figure.subplot.bottom'] = 0.2
     matplotlib.rcParams['figure.subplot.top'] = 0.95
+    matplotlib.rcParams['figure.subplot.right'] = 0.98
     matplotlib.rcParams['ytick.labelsize'] = 16
     matplotlib.rcParams['xtick.labelsize'] = 16
     matplotlib.rcParams['legend.fontsize'] = 18
@@ -38,9 +42,6 @@ def main():
     conn = create_connection(args.database)
     tables = list_tables(conn)
     M = len(tables)
-
-    # width of bars depends on number of comparisons
-    wdth = 0.80/M
 
     # Colors to distinguish each table in the bar graph
     # More than 5 tables will wrap around to the start.
@@ -85,12 +86,23 @@ def main():
 
         table_data[table[0]] = data
 
+    if args.percent is not None:
+        for i,t in enumerate(table_data):
+            if args.percent == t:
+                norm_data = []
+                for name in name_reg:
+                    if(args.plot == 'max'):
+                        norm_data.append(table_data[t][name]['max'])
+                    elif(args.plot == 'min'):
+                        norm_data.append(table_data[t][name]['min'])
+                    elif(args.plot == 'mean'):
+                        norm_data.append(table_data[t][name]['avg'])
+        
+
     # Plot the results
     x0 = xrange(len(name_reg))
-    for i,t in enumerate(table_data):
-        # makes x values for this data set placement
-        x1 = [x + i*wdth for x in x0]
-
+    i = 0
+    for t in (table_data):
         ydata = []
         stds = []
         for name in name_reg:
@@ -99,24 +111,52 @@ def main():
                 ydata.append(table_data[t][name]['max'])
             elif(args.plot == 'min'):
                 ydata.append(table_data[t][name]['min'])
-            if(args.plot == 'mean'):
+            elif(args.plot == 'mean'):
                 ydata.append(table_data[t][name]['avg'])
 
-        if(args.errorbars is False):
-            s0.bar(x1, ydata, width=wdth,
-                   color=colors[i%M], label=t,
-                   edgecolor='k', linewidth=2)
+        if args.percent is not None:
+            ydata = [-100*(y-n)/y for y,n in zip(ydata,norm_data)]
+            if(args.percent != t):
+                # makes x values for this data set placement
+                # width of bars depends on number of comparisons
+                wdth = 0.80/(M-1)
+                x1 = [x + i*wdth for x in x0]
+                i += 1
+
+                s0.bar(x1, ydata, width=wdth,
+                       color=colors[(i-1)%M], label=t,
+                       edgecolor='k', linewidth=2)
+
         else:
-            s0.bar(x1, ydata, width=wdth,
-                   yerr=stds,
-                   color=colors[i%M], label=t,
-                   edgecolor='k', linewidth=2,
-                   error_kw={"ecolor": 'k', "capsize":5,
-                             "linewidth":2})
+            # makes x values for this data set placement
+            # width of bars depends on number of comparisons
+            wdth = 0.80/M
+            x1 = [x + i*wdth for x in x0]
+            i += 1
+
+            if(args.errorbars is False):
+                s0.bar(x1, ydata, width=wdth,
+                       color=colors[(i-1)%M], label=t,
+                       edgecolor='k', linewidth=2)
+            else:
+                s0.bar(x1, ydata, width=wdth,
+                       yerr=stds,
+                       color=colors[i%M], label=t,
+                       edgecolor='k', linewidth=2,
+                       error_kw={"ecolor": 'k', "capsize":5,
+                                 "linewidth":2})
+
+    nitems = res[0]['nitems']
+    if args.percent is None:
+        s0.set_ylabel("Processing time (sec) [{0:G} items]".format(nitems),
+                      fontsize=22, fontweight='bold',
+                      horizontalalignment='center')
+    else:
+        s0.set_ylabel("% Improvement over {0} [{1:G} items]".format(
+                args.percent, nitems),
+                      fontsize=22, fontweight='bold')
 
     s0.legend()
-    s0.set_ylabel("Processing time (sec) [{0:G} items]".format(res[0]['nitems']),
-                  fontsize=22, fontweight='bold')
     s0.set_xticks(x0)
     s0.set_xticklabels(name_reg)
     for label in s0.xaxis.get_ticklabels():
