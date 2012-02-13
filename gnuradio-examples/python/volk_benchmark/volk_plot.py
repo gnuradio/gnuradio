@@ -103,14 +103,16 @@ def main():
                 ydata.append(table_data[t][name]['avg'])
 
         if(args.errorbars is False):
-            stds = None
-
-        s0.bar(x1, ydata, width=wdth,
-               yerr=stds,
-               color=colors[i%M], label=t,
-               edgecolor='k', linewidth=2,
-               error_kw={"ecolor": 'k', "capsize":5,
-                         "linewidth":2})
+            s0.bar(x1, ydata, width=wdth,
+                   color=colors[i%M], label=t,
+                   edgecolor='k', linewidth=2)
+        else:
+            s0.bar(x1, ydata, width=wdth,
+                   yerr=stds,
+                   color=colors[i%M], label=t,
+                   edgecolor='k', linewidth=2,
+                   error_kw={"ecolor": 'k', "capsize":5,
+                             "linewidth":2})
 
     s0.legend()
     s0.set_ylabel("Processing time (sec) [{0:G} items]".format(res[0]['nitems']),
