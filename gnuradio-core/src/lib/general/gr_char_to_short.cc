@@ -41,7 +41,7 @@ gr_char_to_short::gr_char_to_short (size_t vlen)
     d_vlen(vlen)
 {
   const int alignment_multiple =
-    volk_get_alignment() / sizeof(short);
+    volk_get_alignment() / sizeof(char);
   set_alignment(alignment_multiple);
 }
 
