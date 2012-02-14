@@ -58,18 +58,10 @@
  */
 
 /*!
- * \defgroup radar Radar
- * Radar Applications...
- */
-
-/*!
  * \defgroup pager Pager 
  * Pager Applications
  */
 
 /*! @} */
-
-/*! \defgroup usrp USRP					*/
-/*! \defgroup usrp2 USRP2				*/
 
 /*! \defgroup hardware Misc Hardware Control		*/
