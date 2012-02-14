@@ -31,24 +31,36 @@
 #include <math.h>
 #include <assert.h>
 
-static const int OUTPUT_RECORD_SIZE = 2048;        // must be power of 2
+/*
+ * Bad performance if it's large, and flaky triggering if it's too small
+ */
+static const int OUTPUT_RECORD_SIZE = 1024;  // Must be power of 2
+
+/*
+ * For (slow-updated) STRIPCHART triggering, we make the record size larger, since we
+ *   potentially want to be able to "see" hours of data.  This works as long as the
+ *   update rates to a STRIPCHART are low, which they generally are--that's rather what
+ *   a stripchart is all about!
+ */
+static const int SCHART_MULT = 8;
+
 
 static inline int
-wrap_bi (int buffer_index)                // wrap buffer index
+wrap_bi (int buffer_index, int mx)                // wrap buffer index
 {
-  return buffer_index & (OUTPUT_RECORD_SIZE - 1);
+  return buffer_index & (mx - 1);
 }
 
 static inline int
-incr_bi (int buffer_index)                // increment buffer index
+incr_bi (int buffer_index, int mx)                // increment buffer index
 {
-  return wrap_bi (buffer_index + 1);
+  return wrap_bi (buffer_index + 1, mx);
 }
 
 static inline int
-decr_bi (int buffer_index)                // decrement buffer index
+decr_bi (int buffer_index, int mx)                // decrement buffer index
 {
-  return wrap_bi (buffer_index - 1);
+  return wrap_bi (buffer_index - 1, mx);
 }
 
 gr_oscope_guts::gr_oscope_guts (double sample_rate, gr_msg_queue_sptr msgq)
@@ -74,8 +86,8 @@ gr_oscope_guts::gr_oscope_guts (double sample_rate, gr_msg_queue_sptr msgq)
     d_buffer[i] = 0;
 
   for (int i = 0; i < MAX_CHANNELS; i++){
-    d_buffer[i] = new float [OUTPUT_RECORD_SIZE];
-    for (int j = 0; j < OUTPUT_RECORD_SIZE; j++)
+    d_buffer[i] = new float [OUTPUT_RECORD_SIZE*SCHART_MULT];
+    for (int j = 0; j < OUTPUT_RECORD_SIZE*SCHART_MULT; j++)
       d_buffer[i][j] = 0.0;
   }
 
@@ -133,18 +145,19 @@ gr_oscope_guts::process_sample (const float *channel_data)
 		assert (0);
 	  }
 
-	  d_obi = incr_bi (d_obi);
+	  d_obi = incr_bi (d_obi, OUTPUT_RECORD_SIZE);
   }
   else
   {
 	  for (int i = 0; i < d_nchannels; i++)
 	  {
-	    for (int j = OUTPUT_RECORD_SIZE-1; j >= 0; j--)
+	    for (int j = (OUTPUT_RECORD_SIZE*SCHART_MULT)-1; j > 0; j--)
 	    {
 			d_buffer[i][j] = d_buffer[i][j-1];
 		}
 		d_buffer[i][0] = channel_data[i];
 	  }
+	  d_trigger_off = 0;
 	  write_output_records();
   }
 }
@@ -183,7 +196,10 @@ gr_oscope_guts::enter_post_trigger ()
 bool
 gr_oscope_guts::found_trigger ()
 {
-  float prev_sample = d_buffer[d_trigger_channel][decr_bi(d_obi)];
+	int mx = d_trigger_mode == gr_TRIG_MODE_STRIPCHART ? OUTPUT_RECORD_SIZE*SCHART_MULT :
+		OUTPUT_RECORD_SIZE;
+		
+  float prev_sample = d_buffer[d_trigger_channel][decr_bi(d_obi, mx)];
   float new_sample = d_buffer[d_trigger_channel][d_obi];
 
   switch (d_trigger_mode){
@@ -224,6 +240,11 @@ gr_oscope_guts::found_trigger ()
 void
 gr_oscope_guts::write_output_records ()
 {
+	int mx;
+	
+	mx = d_trigger_mode == gr_TRIG_MODE_STRIPCHART ? 
+		OUTPUT_RECORD_SIZE*SCHART_MULT : OUTPUT_RECORD_SIZE;
+		
   // if the output queue if full, drop the data like its hot.
   if (d_msgq->full_p())
     return;
@@ -231,17 +252,17 @@ gr_oscope_guts::write_output_records ()
   gr_message_sptr msg = 
     gr_make_message(0,                                         // msg type
             d_nchannels,                                       // arg1 for other side
-            OUTPUT_RECORD_SIZE,                                // arg2 for other side
-            ((d_nchannels * OUTPUT_RECORD_SIZE) + 1) * sizeof(float)); // sizeof payload
+            mx,                                // arg2 for other side
+            ((d_nchannels * mx) + 1) * sizeof(float)); // sizeof payload
 
   float *out = (float *)msg->msg();        // get pointer to raw message buffer
 
   for (int ch = 0; ch < d_nchannels; ch++){
     // note that d_obi + 1 points at the oldest sample in the buffer
-    for (int i = 0; i < OUTPUT_RECORD_SIZE; i++){
-      out[i] = d_buffer[ch][wrap_bi(d_obi + 1 + i)];
+    for (int i = 0; i < mx; i++){
+      out[i] = d_buffer[ch][wrap_bi(d_obi + 1 + i, mx)];
     }
-    out += OUTPUT_RECORD_SIZE;
+    out += mx;
   }
   //Set the last sample as the trigger offset:
   //  The non gl scope sink will not look at this last sample.
@@ -405,5 +426,12 @@ gr_oscope_guts::get_trigger_level () const
 int
 gr_oscope_guts::get_samples_per_output_record () const
 {
-  return OUTPUT_RECORD_SIZE;
+	int mx;
+	
+	mx = OUTPUT_RECORD_SIZE;
+	if (d_trigger_mode == gr_TRIG_MODE_STRIPCHART)
+	{
+		mx = OUTPUT_RECORD_SIZE*SCHART_MULT;
+	}
+  return mx;
 }

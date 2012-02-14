@@ -31,21 +31,38 @@
 #include <string.h>
 
 gr_fft_vcc_sptr
-gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift)
+gr_make_fft_vcc_fftw (int fft_size, bool forward,
+		      const std::vector<float> &window,
+		      bool shift, int nthreads)
 {
-  return gnuradio::get_initial_sptr(new gr_fft_vcc_fftw (fft_size, forward, window, shift));
+  return gnuradio::get_initial_sptr(new gr_fft_vcc_fftw
+				    (fft_size, forward, window,
+				     shift, nthreads));
 }
 
 gr_fft_vcc_fftw::gr_fft_vcc_fftw (int fft_size, bool forward,
-				  const std::vector<float> &window, bool shift)
+				  const std::vector<float> &window,
+				  bool shift, int nthreads)
   : gr_fft_vcc("fft_vcc_fftw", fft_size, forward, window, shift)
 {
-  d_fft = new gri_fft_complex (d_fft_size, forward);
+  d_fft = new gri_fft_complex (d_fft_size, forward, nthreads);
 }
 
 gr_fft_vcc_fftw::~gr_fft_vcc_fftw ()
 {
   delete d_fft;
+}
+
+void
+gr_fft_vcc_fftw::set_nthreads(int n)
+{
+  d_fft->set_nthreads(n);
+}
+
+int
+gr_fft_vcc_fftw::nthreads() const
+{
+  return d_fft->nthreads();
 }
 
 int
@@ -67,8 +84,17 @@ gr_fft_vcc_fftw::work (int noutput_items,
     
     if (d_window.size()){
       gr_complex *dst = d_fft->get_inbuf();
-      for (unsigned int i = 0; i < d_fft_size; i++)		// apply window
-	dst[i] = in[i] * d_window[i];
+      if(!d_forward && d_shift){
+        unsigned int offset = (!d_forward && d_shift)?(d_fft_size/2):0;
+        int fft_m_offset = d_fft_size - offset;
+        for (int i = 0; i < offset; i++)		// apply window
+            dst[i+fft_m_offset] = in[i] * d_window[i];
+        for (unsigned int i = offset; i < d_fft_size; i++)		// apply window
+            dst[i-offset] = in[i] * d_window[i];
+      } else {
+        for (unsigned int i = 0; i < d_fft_size; i++)		// apply window
+          dst[i] = in[i] * d_window[i];
+      }
     }
     else {
       if(!d_forward && d_shift) {  // apply an ifft shift on the data

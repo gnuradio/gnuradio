@@ -1,11 +1,11 @@
 INCLUDE(FindPkgConfig)
-PKG_CHECK_MODULES(PC_GNURADIO_CORE QUIET gnuradio-core)
+PKG_CHECK_MODULES(PC_GNURADIO_CORE gnuradio-core)
 
 FIND_PATH(
     GNURADIO_CORE_INCLUDE_DIRS
     NAMES gr_random.h
     HINTS $ENV{GNURADIO_CORE_DIR}/include/gnuradio
-        ${PC_GNURADIO_CORE_INCLUDE_DIR}
+        ${PC_GNURADIO_CORE_INCLUDEDIR}
     PATHS /usr/local/include/gnuradio
           /usr/include/gnuradio
 )

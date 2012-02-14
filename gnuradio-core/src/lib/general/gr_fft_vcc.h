@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2008,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,9 @@ class gr_fft_vcc;
 typedef boost::shared_ptr<gr_fft_vcc> gr_fft_vcc_sptr;
 
 GR_CORE_API gr_fft_vcc_sptr
-gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift=false);
+gr_make_fft_vcc (int fft_size, bool forward,
+		 const std::vector<float> &window,
+		 bool shift=false, int nthreads=1);
 
 /*!
  * \brief Compute forward or reverse FFT.  complex vector in / complex vector out.
@@ -42,7 +44,9 @@ class GR_CORE_API gr_fft_vcc : public gr_sync_block
 {
 protected:
   friend GR_CORE_API gr_fft_vcc_sptr
-  gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift);
+  gr_make_fft_vcc (int fft_size, bool forward,
+		   const std::vector<float> &window,
+		   bool shift);
 
   unsigned int	       d_fft_size;
   std::vector<float>   d_window;
@@ -54,6 +58,9 @@ protected:
 
  public:
   ~gr_fft_vcc ();
+
+  virtual void set_nthreads(int n);
+  virtual int nthreads() const;
 
   bool set_window(const std::vector<float> &window);
 };

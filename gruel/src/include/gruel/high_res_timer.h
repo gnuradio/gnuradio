@@ -46,7 +46,7 @@ namespace gruel {
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
     #define GRUEL_HRT_USE_MACH_ABSOLUTE_TIME
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
-    #define GRUEL_HRT_USE_MACH_ABSOLUTE_TIME
+    #define GRUEL_HRT_USE_CLOCK_GETTIME
 #else
     #define GRUEL_HRT_USE_MICROSEC_CLOCK
 #endif

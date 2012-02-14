@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr
+from gnuradio import gr, gru
 from gnuradio import uhd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -75,6 +75,8 @@ class app_top_block(stdgui2.std_top_block):
                           help="Set wire format from USRP [default=%default]")
         parser.add_option("", "--scalar", type="int", default=1024,
                           help="Set scalar multiplier value sc8 wire format [default=%default]")
+        parser.add_option("", "--show-async-msg", action="store_true", default=False,
+                          help="Show asynchronous message notifications from UHD [default=%default]")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
@@ -146,6 +148,16 @@ class app_top_block(stdgui2.std_top_block):
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
 
+        # Direct asynchronous notifications to callback function
+        if self.options.show_async_msg:
+            self.async_msgq = gr.msg_queue(0)
+            self.async_src = uhd.amsg_source("", self.async_msgq)
+            self.async_rcv = gru.msgq_runner(self.async_msgq, self.async_callback)
+
+    def async_callback(self, msg):
+        md = self.async_src.msg_to_async_metadata_t(msg)
+        print "Channel: %i Time: %f Event: %i" % (md.channel, md.time_spec.get_real_secs(), md.event_code)
+
     def _set_status_msg(self, msg):
         self.frame.GetStatusBar().SetStatusText(msg, 0)
 
@@ -169,17 +181,24 @@ class app_top_block(stdgui2.std_top_block):
         g = self.u.get_gain_range()
 
         # some configurations don't have gain control
-        if g.stop() > g.start():
-            myform['gain'] = form.slider_field(parent=self.panel,
-                                                   sizer=hbox, label="Gain",
-                                                   weight=3,
-                                                   min=int(g.start()), max=int(g.stop()),
-                                                   callback=self.set_gain)
+        if g.stop() <= g.start():
+            glow = 0.0
+            ghigh = 1.0
+            
+        else:
+            glow = g.start()
+            ghigh = g.stop()
+            
+        myform['gain'] = form.slider_field(parent=self.panel,
+                                               sizer=hbox, label="Gain",
+                                               weight=3,
+                                               min=int(glow), max=int(ghigh),
+                                               callback=self.set_gain)
 
-            hbox.Add((5,0), 0, 0)
-            vbox.Add(hbox, 0, wx.EXPAND)
+        hbox.Add((5,0), 0, 0)
+        vbox.Add(hbox, 0, wx.EXPAND)
 
-            self._build_subpanel(vbox)
+        self._build_subpanel(vbox)
 
     def _build_subpanel(self, vbox_arg):
         # build a secondary information panel (sometimes hidden)

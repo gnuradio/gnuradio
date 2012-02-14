@@ -24,17 +24,23 @@ GR_SWIG_BLOCK_MAGIC(gr,fft_filter_ccc)
 
 gr_fft_filter_ccc_sptr 
 gr_make_fft_filter_ccc (int decimation,
-			const std::vector<gr_complex> &taps
+			const std::vector<gr_complex> &taps,
+			int nthreads=1
 			) throw (std::invalid_argument);
 
 class gr_fft_filter_ccc : public gr_sync_decimator
 {
  private:
-  gr_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
+  gr_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps,
+		     int nthreads=1);
 
  public:
   ~gr_fft_filter_ccc ();
 
   void set_taps (const std::vector<gr_complex> &taps);
   std::vector<gr_complex> taps () const;
+
+  void set_nthreads(int n);
+  int nthreads() const;
+
 };

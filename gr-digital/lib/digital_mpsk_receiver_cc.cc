@@ -85,7 +85,18 @@ digital_mpsk_receiver_cc::digital_mpsk_receiver_cc (unsigned int M, float theta,
   // zero double length delay line.
   for (unsigned int i = 0; i < 2 * DLLEN; i++)
     d_dl[i] = gr_complex(0.0,0.0);
+  
+  set_modulation_order(d_M);
+}
 
+digital_mpsk_receiver_cc::~digital_mpsk_receiver_cc ()
+{
+  delete d_interp;
+}
+
+void
+digital_mpsk_receiver_cc::set_modulation_order(unsigned int M)
+{
   // build the constellation vector from M
   make_constellation();
   
@@ -108,9 +119,11 @@ digital_mpsk_receiver_cc::digital_mpsk_receiver_cc (unsigned int M, float theta,
   }
 }
 
-digital_mpsk_receiver_cc::~digital_mpsk_receiver_cc ()
+void
+digital_mpsk_receiver_cc::set_gain_omega_rel(float omega_rel)
 {
-  delete d_interp;
+  d_omega_rel = omega_rel;
+  set_omega(d_omega);
 }
 
 void

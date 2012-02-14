@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2008,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,9 +32,12 @@
 #include <string.h>
 
 gr_fft_vcc_sptr
-gr_make_fft_vcc (int fft_size, bool forward,const std::vector<float> &window, bool shift)
+gr_make_fft_vcc (int fft_size, bool forward,
+		 const std::vector<float> &window,
+		 bool shift, int nthreads)
 {
-  return gr_make_fft_vcc_fftw(fft_size, forward, window, shift);
+  return gr_make_fft_vcc_fftw(fft_size, forward,
+			      window, shift, nthreads);
 }
 
 gr_fft_vcc::gr_fft_vcc (const std::string &name,
@@ -61,4 +64,17 @@ gr_fft_vcc::set_window(const std::vector<float> &window)
   }
   else 
     return false;
+}
+
+void
+gr_fft_vcc::set_nthreads(int n)
+{
+  throw std::runtime_error("gr_fft_vcc::set_nthreads not implemented.");
+}
+
+int
+gr_fft_vcc::nthreads() const
+{
+  throw std::runtime_error("gr_fft_vcc::nthreads not implemented.");
+  return 0;
 }

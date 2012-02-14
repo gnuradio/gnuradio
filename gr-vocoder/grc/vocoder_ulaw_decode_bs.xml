@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Ulaw audio decoder
+###################################################
+ -->
+<block>
+	<name>Ulaw Audio Decoder</name>
+	<key>vocoder_ulaw_decode_bs</key>
+	<import>from gnuradio import vocoder</import>
+	<make>vocoder.ulaw_decode_bs()</make>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>short</type>
+	</source>
+</block>

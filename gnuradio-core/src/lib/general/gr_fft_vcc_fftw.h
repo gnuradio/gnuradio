@@ -29,7 +29,9 @@
 class gri_fft_complex;
 
 GR_CORE_API gr_fft_vcc_sptr
-gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift=false);
+gr_make_fft_vcc_fftw (int fft_size, bool forward,
+		      const std::vector<float> &window,
+		      bool shift=false, int nthreads=1);
 
 /*!
  * \brief Compute forward or reverse FFT.  complex vector in / complex vector out.
@@ -40,14 +42,21 @@ gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &wind
 class GR_CORE_API gr_fft_vcc_fftw : public gr_fft_vcc
 {
   friend GR_CORE_API gr_fft_vcc_sptr
-  gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift);
+  gr_make_fft_vcc_fftw (int fft_size, bool forward,
+			const std::vector<float> &window,
+			bool shift, int nthreads);
 
   gri_fft_complex *d_fft;
 
-  gr_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift);
+  gr_fft_vcc_fftw (int fft_size, bool forward,
+		   const std::vector<float> &window,
+		   bool shift, int nthreads=1);
 
  public:
   ~gr_fft_vcc_fftw ();
+
+  void set_nthreads(int n);
+  int nthreads() const;
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,

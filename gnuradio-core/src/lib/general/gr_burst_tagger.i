@@ -28,4 +28,8 @@ class gr_burst_tagger : public gr_sync_block
 {
  private:
   gr_burst_tagger(size_t itemsize);
+  
+ public:
+  void set_true_tag(const std::string &key, bool value);
+  void set_false_tag(const std::string &key, bool value);
 };

@@ -33,8 +33,9 @@
 #include <cstring>
 
 gri_fft_filter_fff_generic::gri_fft_filter_fff_generic (int decimation, 
-							const std::vector<float> &taps)
-  : d_fftsize(-1), d_decimation(decimation), d_fwdfft(0), d_invfft(0)
+							const std::vector<float> &taps,
+							int nthreads)
+  : d_fftsize(-1), d_decimation(decimation), d_fwdfft(0), d_invfft(0), d_nthreads(nthreads)
 {
   set_taps(taps);
 }
@@ -103,6 +104,22 @@ gri_fft_filter_fff_generic::compute_sizes(int ntaps)
     d_invfft = new gri_fft_real_rev(d_fftsize);
     d_xformed_taps.resize(d_fftsize/2+1);
   }
+}
+
+void
+gri_fft_filter_fff_generic::set_nthreads(int n)
+{
+  d_nthreads = n;
+  if(d_fwdfft)
+    d_fwdfft->set_nthreads(n);
+  if(d_invfft)
+    d_invfft->set_nthreads(n);
+}
+
+int
+gri_fft_filter_fff_generic::nthreads() const
+{
+  return d_nthreads;
 }
 
 int

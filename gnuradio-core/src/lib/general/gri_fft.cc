@@ -78,6 +78,22 @@ gri_fftw_import_wisdom ()
 }
 
 static void
+gri_fftw_config_threading (int nthreads)
+{
+  static int fftw_threads_inited = 0;
+  
+#ifdef FFTW3F_THREADS
+  if (fftw_threads_inited == 0)
+  {
+	  fftw_threads_inited = 1;
+	  fftwf_init_threads();
+  }
+  
+  fftwf_plan_with_nthreads(nthreads);
+#endif
+}
+
+static void
 gri_fftw_export_wisdom ()
 {
   const char *filename = wisdom_filename ();
@@ -94,7 +110,7 @@ gri_fftw_export_wisdom ()
 
 // ----------------------------------------------------------------
 
-gri_fft_complex::gri_fft_complex (int fft_size, bool forward)
+gri_fft_complex::gri_fft_complex (int fft_size, bool forward, int nthreads)
 {
   // Hold global mutex during plan construction and destruction.
   gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
@@ -115,7 +131,10 @@ gri_fft_complex::gri_fft_complex (int fft_size, bool forward)
     throw std::runtime_error ("fftwf_malloc");
   }
 
+  d_nthreads = nthreads;
+  gri_fftw_config_threading (nthreads);
   gri_fftw_import_wisdom ();	// load prior wisdom from disk
+
   d_plan = fftwf_plan_dft_1d (fft_size,
 			      reinterpret_cast<fftwf_complex *>(d_inbuf), 
 			      reinterpret_cast<fftwf_complex *>(d_outbuf),
@@ -139,6 +158,18 @@ gri_fft_complex::~gri_fft_complex ()
   fftwf_free (d_outbuf);
 }
 
+void 
+gri_fft_complex::set_nthreads(int n)
+{
+  if (n <= 0)
+    throw std::out_of_range ("gri_fftw: invalid number of threads");
+  d_nthreads = n;
+
+#ifdef FFTW3F_THREADS
+  fftwf_plan_with_nthreads(d_nthreads);
+#endif
+}
+
 void
 gri_fft_complex::execute ()
 {
@@ -147,7 +178,7 @@ gri_fft_complex::execute ()
 
 // ----------------------------------------------------------------
 
-gri_fft_real_fwd::gri_fft_real_fwd (int fft_size)
+gri_fft_real_fwd::gri_fft_real_fwd (int fft_size, int nthreads)
 {
   // Hold global mutex during plan construction and destruction.
   gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
@@ -168,7 +199,10 @@ gri_fft_real_fwd::gri_fft_real_fwd (int fft_size)
     throw std::runtime_error ("fftwf_malloc");
   }
 
+  d_nthreads = nthreads;
+  gri_fftw_config_threading (nthreads);
   gri_fftw_import_wisdom ();	// load prior wisdom from disk
+  
   d_plan = fftwf_plan_dft_r2c_1d (fft_size,
 				  d_inbuf,
 				  reinterpret_cast<fftwf_complex *>(d_outbuf),
@@ -191,6 +225,18 @@ gri_fft_real_fwd::~gri_fft_real_fwd ()
   fftwf_free (d_outbuf);
 }
 
+void 
+gri_fft_real_fwd::set_nthreads(int n)
+{
+  if (n <= 0)
+    throw std::out_of_range ("gri_fftw: invalid number of threads");
+  d_nthreads = n;
+
+#ifdef FFTW3F_THREADS
+  fftwf_plan_with_nthreads(d_nthreads);
+#endif
+}
+
 void
 gri_fft_real_fwd::execute ()
 {
@@ -199,7 +245,7 @@ gri_fft_real_fwd::execute ()
 
 // ----------------------------------------------------------------
 
-gri_fft_real_rev::gri_fft_real_rev (int fft_size)
+gri_fft_real_rev::gri_fft_real_rev (int fft_size, int nthreads)
 {
   // Hold global mutex during plan construction and destruction.
   gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
@@ -220,11 +266,13 @@ gri_fft_real_rev::gri_fft_real_rev (int fft_size)
     throw std::runtime_error ("fftwf_malloc");
   }
 
+  d_nthreads = nthreads;
+  gri_fftw_config_threading (nthreads);
+  gri_fftw_import_wisdom ();	// load prior wisdom from disk
+  
   // FIXME If there's ever a chance that the planning functions
   // will be called in multiple threads, we've got to ensure single
   // threaded access.  They are not thread-safe.
-  
-  gri_fftw_import_wisdom ();	// load prior wisdom from disk
   d_plan = fftwf_plan_dft_c2r_1d (fft_size,
 				  reinterpret_cast<fftwf_complex *>(d_inbuf),
 				  d_outbuf,
@@ -242,6 +290,18 @@ gri_fft_real_rev::~gri_fft_real_rev ()
   fftwf_destroy_plan ((fftwf_plan) d_plan);
   fftwf_free (d_inbuf);
   fftwf_free (d_outbuf);
+}
+
+void 
+gri_fft_real_rev::set_nthreads(int n)
+{
+  if (n <= 0)
+    throw std::out_of_range ("gri_fftw: invalid number of threads");
+  d_nthreads = n;
+
+#ifdef FFTW3F_THREADS
+  fftwf_plan_with_nthreads(d_nthreads);
+#endif
 }
 
 void

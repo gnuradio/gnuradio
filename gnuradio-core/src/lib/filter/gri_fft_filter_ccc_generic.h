@@ -42,6 +42,7 @@ class GR_CORE_API gri_fft_filter_ccc_generic
   int                      d_decimation;
   gri_fft_complex	  *d_fwdfft;		// forward "plan"
   gri_fft_complex	  *d_invfft;		// inverse "plan"
+  int                      d_nthreads;          // number of FFTW threads to use
   std::vector<gr_complex>  d_tail;		// state carried between blocks for overlap-add
   std::vector<gr_complex>  d_xformed_taps;	// Fourier xformed taps
   std::vector<gr_complex>  d_new_taps;
@@ -57,8 +58,10 @@ class GR_CORE_API gri_fft_filter_ccc_generic
    * in other blocks for complex vectors (such as gr_fft_filter_ccc).
    * \param decimation The decimation rate of the filter (int)
    * \param taps       The filter taps (complex)
+   * \param nthreads   The number of threads for the FFT to use (int)
    */
-  gri_fft_filter_ccc_generic (int decimation, const std::vector<gr_complex> &taps);
+  gri_fft_filter_ccc_generic (int decimation, const std::vector<gr_complex> &taps,
+			      int nthreads=1);
   ~gri_fft_filter_ccc_generic ();
 
   /*!
@@ -68,6 +71,16 @@ class GR_CORE_API gri_fft_filter_ccc_generic
    * \param taps       The filter taps (complex)
    */
   int set_taps (const std::vector<gr_complex> &taps);
+
+  /*!
+   * \brief Set number of threads to use.
+   */
+  void set_nthreads(int n);
+
+  /*!
+   * \brief Get number of threads being used.
+   */
+  int nthreads() const;
   
   /*!
    * \brief Perform the filter operation
