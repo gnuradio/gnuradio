@@ -97,12 +97,6 @@ def complex_to_mag_squared(N):
 
 ######################################################################
 
-def complex_to_arg(N):
-    op = gr.complex_to_arg()
-    tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 1)
-    return tb
-
-######################################################################
 
 def run_tests(func, N, iters):
     print("Running Test: {0}".format(func.__name__))
@@ -128,8 +122,7 @@ def main():
                    complex_to_real,
                    complex_to_imag,
                    complex_to_mag,
-                   complex_to_mag_squared,
-                   complex_to_arg]
+                   complex_to_mag_squared]
 
     desc='Time an operation to compare with other implementations. \
           This program runs a simple GNU Radio flowgraph to test a \
