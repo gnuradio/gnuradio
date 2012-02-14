@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## CODEC2 audio decoder
+###################################################
+ -->
+<block>
+	<name>CODEC2 Audio Decoder</name>
+	<key>vocoder_codec2_decode_ps</key>
+	<import>from gnuradio import vocoder</import>
+	<make>vocoder.codec2_decode_ps()</make>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>short</type>
+	</source>
+</block>

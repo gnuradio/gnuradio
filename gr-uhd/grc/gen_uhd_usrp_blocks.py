@@ -411,10 +411,10 @@ max_num_channels = max_num_mboards*4
 if __name__ == '__main__':
 	import sys
 	for file in sys.argv[1:]:
-		if 'source' in file:
+		if file.endswith ('source.xml'):
 			sourk = 'source'
 			direction = 'out'
-		elif 'sink' in file:
+		elif file.endswith ('sink.xml'):
 			sourk = 'sink'
 			direction = 'in'
 		else: raise Exception, 'is %s a source or sink?'%file
