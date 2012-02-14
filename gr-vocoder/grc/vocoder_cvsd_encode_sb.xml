@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## CVSD audio encoder
+###################################################
+ -->
+<block>
+	<name>CVSD Audio Encoder (Raw Bit-Level)</name>
+	<key>vocoder_cvsd_encode_sb</key>
+	<import>from gnuradio import vocoder</import>
+	<make>vocoder.cvsd_encode_sb()</make>
+	<sink>
+		<name>in</name>
+		<type>short</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>
+
+
