@@ -66,7 +66,7 @@ others = (
     ('gr_peak_detector_XX',         ('fb','ib','sb')),
     ('gr_multiply_XX',              ('ss','ii')),
     ('gr_multiply_const_XX',        ('ss','ii')),
-    ('gr_add_XX',                   ('ss','cc'))
+    ('gr_add_XX',                   ('ss','cc','ii'))
     )
 
 
