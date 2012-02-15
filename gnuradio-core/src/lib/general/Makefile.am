@@ -129,8 +129,8 @@ libgeneral_la_SOURCES = 		\
 	gr_reverse.cc			\
 	gr_rms_cf.cc			\
 	gr_rms_ff.cc			\
+	gr_short_to_char.cc		\
 	gr_short_to_float.cc		\
-	gr_short_to_int.cc		\
 	gr_int_to_float.cc		\
 	gr_simple_correlator.cc		\
 	gr_simple_framer.cc		\
@@ -194,8 +194,8 @@ libgeneral_qa_la_SOURCES = 		\
 grinclude_HEADERS = 			\
 	gr_core_api.h			\
 	complex_vec_test.h		\
-	gr_add.h			\
 	gr_additive_scrambler_bb.h	\
+	gr_add_ff.h			\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
 	gr_agc2_cc.h                	\
@@ -339,7 +339,7 @@ grinclude_HEADERS = 			\
 	gri_int_to_float.h		\
 	gri_lfsr_15_1_0.h		\
 	gri_lfsr_32k.h			\
-	gri_short_to_char.h		\
+	gri_short_to_float.h		\
 	gri_uchar_to_float.h		\
 	malloc16.h			\
 	random.h			\
@@ -368,8 +368,8 @@ noinst_HEADERS = 			\
 swiginclude_HEADERS =			\
 	complex_vec_test.i		\
 	general.i			\
-	gr_add.i			\
 	gr_additive_scrambler_bb.i	\
+	gr_add_ff.i			\
 	gr_agc_cc.i                 	\
 	gr_agc_ff.i                 	\
 	gr_agc2_cc.i                 	\
