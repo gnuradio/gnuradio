@@ -319,7 +319,6 @@ audio_osx_source::audio_osx_source (int sample_rate,
   d_deviceSampleRate = asbd_device.mSampleRate;
   d_n_deviceChannels = asbd_device.mChannelsPerFrame;
 
-  asbd_client.mChannelsPerFrame = d_n_deviceChannels;
   asbd_client.mSampleRate = asbd_device.mSampleRate;
   asbd_client.mFormatID = kAudioFormatLinearPCM;
   asbd_client.mFormatFlags = (kAudioFormatFlagIsFloat |
@@ -329,9 +328,10 @@ audio_osx_source::audio_osx_source (int sample_rate,
       (d_n_deviceChannels == 1)) {
       asbd_client.mFormatFlags &= ~kLinearPCMFormatFlagIsNonInterleaved;
   }
-  asbd_client.mBitsPerChannel = 32;
-  asbd_client.mBytesPerFrame = asbd_client.mBitsPerChannel / 8;
+  asbd_client.mBytesPerFrame = sizeof (float);
   asbd_client.mFramesPerPacket = 1;
+  asbd_client.mBitsPerChannel = asbd_client.mBytesPerFrame * 8;
+  asbd_client.mChannelsPerFrame = d_n_deviceChannels;
   asbd_client.mBytesPerPacket = asbd_client.mBytesPerFrame;
 
   propertySize = sizeof(AudioStreamBasicDescription);
@@ -352,11 +352,11 @@ audio_osx_source::audio_osx_source (int sample_rate,
 			    GR_PCM_ENDIANNESS |
 			    kLinearPCMFormatFlagIsPacked |
 			    kAudioFormatFlagIsNonInterleaved);
-  asbd_user.mBytesPerPacket = 4;
+  asbd_user.mBytesPerPacket = sizeof (float);
   asbd_user.mFramesPerPacket = 1;
-  asbd_user.mBytesPerFrame = 4;
-  asbd_user.mChannelsPerFrame = d_n_max_channels;
-  asbd_user.mBitsPerChannel = 32;
+  asbd_user.mBytesPerFrame = asbd_user.mBytesPerPacket;
+  asbd_user.mChannelsPerFrame = d_n_deviceChannels;
+  asbd_user.mBitsPerChannel = asbd_user.mBytesPerPacket * 8;
 
   if (d_deviceSampleRate == d_outputSampleRate) {
 // no need to do conversion if asbd_client matches user wants
