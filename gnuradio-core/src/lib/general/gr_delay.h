@@ -24,7 +24,8 @@
 #define INCLUDED_GR_DELAY_H
 
 #include <gr_core_api.h>
-#include <gr_sync_block.h>
+#include <gr_block.h>
+#include <gruel/thread.h>
 
 class gr_delay;
 typedef boost::shared_ptr<gr_delay> gr_delay_sptr;
@@ -35,21 +36,26 @@ GR_CORE_API gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
  * \brief delay the input by a certain number of samples
  * \ingroup misc_blk
  */
-class GR_CORE_API gr_delay : public gr_sync_block
+class GR_CORE_API gr_delay : public gr_block
 {
   friend GR_CORE_API gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
 
   gr_delay (size_t itemsize, int delay);
 
+  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+
   size_t d_itemsize;
+  int d_delta;
+  gruel::mutex d_mutex_delay;
 
  public:
   int delay () const { return history()-1; }
-  void set_delay (int delay) { set_history(delay+1); }
+  void set_delay (int delay);
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  int general_work (int noutput_items,
+		    gr_vector_int &ninput_items,
+		    gr_vector_const_void_star &input_items,
+		    gr_vector_void_star &output_items);
 };
 
 #endif
