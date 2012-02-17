@@ -24,7 +24,7 @@ GR_SWIG_BLOCK_MAGIC(gr,delay)
 
   gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
 
-class gr_delay : public gr_sync_block
+class gr_delay : public gr_block
 {
  private:
   gr_delay (size_t itemsize, int delay);
