@@ -63,7 +63,7 @@ gr_delay::set_delay (int d)
     gruel::scoped_lock l(d_mutex_delay);
     int old = delay();
     set_history(d+1);
-    d_delta = delay() - old;
+    d_delta += delay() - old;
   }
 }
 
