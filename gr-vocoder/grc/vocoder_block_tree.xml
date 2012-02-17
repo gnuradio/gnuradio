@@ -30,7 +30,6 @@
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
 		<name>Vocoders</name>
-		<block>vocoder_binary_slicer_fb</block>
 		<block>vocoder_alaw_decode_bs</block>
 		<block>vocoder_alaw_encode_sb</block>
 		<block>vocoder_codec2_decode_ps</block>
