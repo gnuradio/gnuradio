@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,4 +21,25 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = 
+grcblocksdir = $(grc_blocksdir)
+
+dist_grcblocks_DATA = \
+	vocoder_alaw_decode_bs.xml \
+	vocoder_alaw_encode_sb.xml \
+	vocoder_block_tree.xml \
+	vocoder_codec2_decode_ps.xml \
+	vocoder_codec2_encode_sp.xml \
+	vocoder_cvsd_decode_bs.xml \
+	vocoder_cvsd_decode.xml \
+	vocoder_cvsd_encode_sb.xml \
+	vocoder_cvsd_encode.xml \
+	vocoder_g721_decode_bs.xml \
+	vocoder_g721_encode_sb.xml \
+	vocoder_g723_24_decode_bs.xml \
+	vocoder_g723_24_encode_sb.xml \
+	vocoder_g723_40_decode_bs.xml \
+	vocoder_g723_40_encode_sb.xml \
+	vocoder_gsm_fr_decode_ps.xml \
+	vocoder_gsm_fr_encode_sp.xml \
+	vocoder_ulaw_decode_bs.xml \
+	vocoder_ulaw_encode_sb.xml
