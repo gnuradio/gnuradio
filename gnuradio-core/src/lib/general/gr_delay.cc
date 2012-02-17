@@ -55,11 +55,16 @@ gr_delay::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 
 void
 gr_delay::set_delay (int d)
-{ 
-  gruel::scoped_lock l(d_mutex_delay);
-  int old = delay();
-  set_history(d+1);
-  d_delta = delay() - old;
+{
+  // only set a new delta if there is a change in the delay; this
+  // protects from quickly-repeated calls to this function that would
+  // end with d_delta=0.
+  if(d != delay()) {
+    gruel::scoped_lock l(d_mutex_delay);
+    int old = delay();
+    set_history(d+1);
+    d_delta = delay() - old;
+  }
 }
 
 int
