@@ -50,7 +50,7 @@ class test_delay (gr_unittest.TestCase):
         delta_t = 10
         tb = self.tb
         src_data = [float(x) for x in range(0, 100)]
-        expected_result = tuple(delta_t*[0.0] + src_data[0:-delta_t])
+        expected_result = tuple(delta_t*[0.0] + src_data)
 
         src = gr.vector_source_f(src_data)
         op = gr.delay(gr.sizeof_float, delta_t)
