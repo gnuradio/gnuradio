@@ -35,4 +35,5 @@ class gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
   ~gr_pfb_synthesis_filterbank_ccf ();
 
   void set_taps (const std::vector<float> &taps);
+  void print_taps();
 };

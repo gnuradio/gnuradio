@@ -65,7 +65,7 @@ class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
   gri_fft_complex         *d_fft;
   std::vector< gri_fir_filter_with_buffer_ccf*> d_filters;
   std::vector< std::vector<float> > d_taps;
-
+  int d_state;
 
   /*!
    * Build the polyphase synthesis filterbank.
@@ -86,6 +86,7 @@ public:
                     populate the filterbank.
    */
   void set_taps (const std::vector<float> &taps);
+  void set_taps2(const std::vector<float> &taps);
 
   /*!
    * Print all of the filterbank taps to screen.

@@ -44,21 +44,24 @@ gr_pfb_synthesis_filterbank_ccf::gr_pfb_synthesis_filterbank_ccf
 			  gr_make_io_signature (1, numchans, sizeof(gr_complex)),
 			  gr_make_io_signature (1, 1, sizeof(gr_complex)),
 			  numchans),
-    d_updated (false), d_numchans(numchans)
+    d_updated (false), d_numchans(numchans), d_state(0)
 {
-  d_filters = std::vector<gri_fir_filter_with_buffer_ccf*>(d_numchans);
+  d_filters = std::vector<gri_fir_filter_with_buffer_ccf*>(2*d_numchans);
 
   // Create an FIR filter for each channel and zero out the taps
-  std::vector<float> vtaps(0, d_numchans);
-  for(unsigned int i = 0; i < d_numchans; i++) {
+  std::vector<float> vtaps(0, 2*d_numchans);
+  for(unsigned int i = 0; i < 2*d_numchans; i++) {
     d_filters[i] = new gri_fir_filter_with_buffer_ccf(vtaps);
   }
 
   // Now, actually set the filters' taps
-  set_taps(taps);
+  set_taps2(taps);
 
   // Create the IFFT to handle the input channel rotations
-  d_fft = new gri_fft_complex (d_numchans, true);
+  d_fft = new gri_fft_complex (2*d_numchans, false);
+  memset(d_fft->get_inbuf(), 0, 2*d_numchans*sizeof(gr_complex));
+
+  set_output_multiple(d_numchans);
 }
 
 gr_pfb_synthesis_filterbank_ccf::~gr_pfb_synthesis_filterbank_ccf ()
@@ -106,10 +109,62 @@ gr_pfb_synthesis_filterbank_ccf::set_taps (const std::vector<float> &taps)
 }
 
 void
+gr_pfb_synthesis_filterbank_ccf::set_taps2 (const std::vector<float> &taps)
+{
+  unsigned int i,j;
+  int state = 0;
+
+  unsigned int ntaps = taps.size();
+  d_taps_per_filter = (unsigned int)ceil((double)ntaps/(double)d_numchans);
+
+  // Create d_numchan vectors to store each channel's taps
+  d_taps.resize(2*d_numchans);
+
+  // Make a vector of the taps plus fill it out with 0's to fill
+  // each polyphase filter with exactly d_taps_per_filter
+  std::vector<float> tmp_taps;
+  tmp_taps = taps;
+  while((float)(tmp_taps.size()) < d_numchans*d_taps_per_filter) {
+    tmp_taps.push_back(0.0);
+  }
+ 
+  // Partition the filter
+  for(i = 0; i < d_numchans; i++) {
+    // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
+    d_taps[i] = std::vector<float>(d_taps_per_filter, 0);
+    d_taps[d_numchans+i] = std::vector<float>(d_taps_per_filter, 0);
+    state = 0;
+    for(j = 0; j < d_taps_per_filter; j++) {
+      // add taps to channels in reverse order
+      // Zero out every other tap
+      if(state == 0) {
+	d_taps[i][j] = tmp_taps[i + j*d_numchans];  
+	d_taps[d_numchans + i][j] = 0;
+	state = 1;
+      }
+      else {
+	d_taps[i][j] = 0;
+	d_taps[d_numchans + i][j] = tmp_taps[i + j*d_numchans];
+	state = 0;
+      }
+    }
+    
+    // Build a filter for each channel and add it's taps to it
+    d_filters[i]->set_taps(d_taps[i]);
+    d_filters[d_numchans + i]->set_taps(d_taps[d_numchans + i]);
+  }
+
+  // Set the history to ensure enough input items for each filter
+  set_history (d_taps_per_filter+1);
+
+  d_updated = true;
+}
+
+void
 gr_pfb_synthesis_filterbank_ccf::print_taps()
 {
   unsigned int i, j;
-  for(i = 0; i < d_numchans; i++) {
+  for(i = 0; i < 2*d_numchans; i++) {
     printf("filter[%d]: [", i);
     for(j = 0; j < d_taps_per_filter; j++) {
       printf(" %.4e", d_taps[i][j]);
@@ -126,9 +181,6 @@ gr_pfb_synthesis_filterbank_ccf::work (int noutput_items,
 {
   gr_complex *in = (gr_complex*) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
-  int numsigs = input_items.size();
-  int ndiff   = d_numchans - numsigs;
-  unsigned int nhalf = (unsigned int)ceil((float)numsigs/2.0f);
 
   if (d_updated) {
     d_updated = false;
@@ -137,30 +189,22 @@ gr_pfb_synthesis_filterbank_ccf::work (int noutput_items,
 
   unsigned int n, i;
   for(n = 0; n < noutput_items/d_numchans; n++) {
-    // fill up the populated channels based on the 
-    // number of real input streams
-    for(i = 0; i < nhalf; i++) {
+    for(i = 0; i < d_numchans; i++) {
       in = (gr_complex*)input_items[i];
-      d_fft->get_inbuf()[i] = (in+i)[n];
+      d_fft->get_inbuf()[i] = in[n];
     }
-
-    // Make the ndiff channels around N/2 0
-    for(; i < nhalf+ndiff; i++) {
-      d_fft->get_inbuf()[i] = gr_complex(0,0);
-    }
-
-    // Finish off channels with data
-    for(; i < d_numchans; i++) {
-      in = (gr_complex*)input_items[i-ndiff];
-      d_fft->get_inbuf()[i] = (in+i)[n];
-    }
-
+    
     // spin through IFFT
     d_fft->execute();
 
+    // Output is sum of two filters, but the input buffer to the filters must be circularly
+    // shifted by numchans every time through, done by using d_state to determine which IFFT
+    // buffer position to pull from.
     for(i = 0; i < d_numchans; i++) {
-      out[d_numchans-i-1] = d_filters[d_numchans-i-1]->filter(d_fft->get_outbuf()[i]);
+      out[i]  = d_filters[i]->filter(d_fft->get_outbuf()[d_state*d_numchans+i]);
+      out[i] += d_filters[d_numchans+i]->filter(d_fft->get_outbuf()[(d_state^1)*d_numchans+i]);
     }
+    d_state ^= 1;
     
     out += d_numchans;
   }
