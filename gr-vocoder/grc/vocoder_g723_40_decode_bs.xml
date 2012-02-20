@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-## g273_40 audio decoder
+## g723_40 audio decoder
 ###################################################
  -->
 <block>
-	<name>g273_40 Audio Decoder</name>
-	<key>vocoder_g273_40_decode_bs</key>
+	<name>g723_40 Audio Decoder</name>
+	<key>vocoder_g723_40_decode_bs</key>
 	<import>from gnuradio import vocoder</import>
-	<make>vocoder.g273_40_decode_bs()</make>
+	<make>vocoder.g723_40_decode_bs()</make>
 	<sink>
 		<name>in</name>
 		<type>byte</type>
