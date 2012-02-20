@@ -73,8 +73,8 @@ class app_top_block(stdgui2.std_top_block):
                           help="Set FFT update rate, [default=%default]")
         parser.add_option("", "--wire-format", type="string", default="sc16",
                           help="Set wire format from USRP [default=%default]")
-        parser.add_option("", "--scalar", type="int", default=1024,
-                          help="Set scalar multiplier value sc8 wire format [default=%default]")
+        parser.add_option("", "--stream-args", type="string", default="",
+                          help="Set additional stream args [default=%default]")
         parser.add_option("", "--show-async-msg", action="store_true", default=False,
                           help="Show asynchronous message notifications from UHD [default=%default]")
         (options, args) = parser.parse_args()
@@ -84,10 +84,9 @@ class app_top_block(stdgui2.std_top_block):
         self.options = options
         self.show_debug_info = True
         
-        scalar="scalar="+str(options.scalar)
         self.u = uhd.usrp_source(device_addr=options.args,
                                  stream_args=uhd.stream_args(cpu_format='fc32',
-                                 otw_format=options.wire_format, args=scalar))
+                                 otw_format=options.wire_format, args=options.stream_args))
 
         # Set the subdevice spec
         if(options.spec):
