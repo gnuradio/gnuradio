@@ -34,9 +34,9 @@ static inline void volk_32fc_s32fc_multiply_32fc_a_generic(lv_32fc_t* cVector, c
     \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
   */
 extern void volk_32fc_s32fc_multiply_32fc_a_orc_impl(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t scalar, unsigned int num_points);
-static inline void volk_32fc_s32fc_multiply_32fc_a_orc(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t scalar, unsigned int num_points){
-    volk_32fc_s32fc_multiply_32fc_a_orc_impl(cVector, aVector, scalar, num_points);
-}
+//static inline void volk_32fc_s32fc_multiply_32fc_a_orc(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t scalar, unsigned int num_points){
+//    volk_32fc_s32fc_multiply_32fc_a_orc_impl(cVector, aVector, scalar, num_points);
+//}
 #endif /* LV_HAVE_ORC */
 
 
