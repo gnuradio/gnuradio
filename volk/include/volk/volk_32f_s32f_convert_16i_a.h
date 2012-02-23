@@ -4,6 +4,7 @@
 #include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <math.h>
 
 #ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
@@ -57,7 +58,7 @@ static inline void volk_32f_s32f_convert_16i_a_sse2(int16_t* outputVector, const
       r = max_val;
     else if(r < min_val)
       r = min_val;
-    outputVector[number] = (int16_t)(r);
+    outputVector[number] = (int16_t)rintf(r);
   }
 }
 #endif /* LV_HAVE_SSE2 */
@@ -98,10 +99,10 @@ static inline void volk_32f_s32f_convert_16i_a_sse(int16_t* outputVector, const 
     ret = _mm_max_ps(_mm_min_ps(_mm_mul_ps(ret, vScalar), vmax_val), vmin_val);
 
     _mm_store_ps(outputFloatBuffer, ret);
-    *outputVectorPtr++ = (int16_t)(outputFloatBuffer[0]);
-    *outputVectorPtr++ = (int16_t)(outputFloatBuffer[1]);
-    *outputVectorPtr++ = (int16_t)(outputFloatBuffer[2]);
-    *outputVectorPtr++ = (int16_t)(outputFloatBuffer[3]);
+    *outputVectorPtr++ = (int16_t)rintf(outputFloatBuffer[0]);
+    *outputVectorPtr++ = (int16_t)rintf(outputFloatBuffer[1]);
+    *outputVectorPtr++ = (int16_t)rintf(outputFloatBuffer[2]);
+    *outputVectorPtr++ = (int16_t)rintf(outputFloatBuffer[3]);
   }
 
   number = quarterPoints * 4;    
@@ -111,7 +112,7 @@ static inline void volk_32f_s32f_convert_16i_a_sse(int16_t* outputVector, const 
       r = max_val;
     else if(r < min_val)
       r = min_val;
-    outputVector[number] = (int16_t)(r);
+    outputVector[number] = (int16_t)rintf(r);
   }
 }
 #endif /* LV_HAVE_SSE */
@@ -138,7 +139,7 @@ static inline void volk_32f_s32f_convert_16i_a_generic(int16_t* outputVector, co
       r = min_val;
     else if(r > max_val)
       r = max_val;
-    *outputVectorPtr++ = (int16_t)(r);
+    *outputVectorPtr++ = (int16_t)rintf(r);
   }
 }
 #endif /* LV_HAVE_GENERIC */

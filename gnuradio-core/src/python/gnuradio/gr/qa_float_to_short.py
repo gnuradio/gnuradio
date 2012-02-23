@@ -34,10 +34,7 @@ class test_float_to_short (gr_unittest.TestCase):
     def test_001(self):
 
         src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3, -4.4, -5.5)
-        expected_result = [int(round(s)) for s in src_data]
-
-        ### Volk results
-        expected_result = [0, 1, 2, 3, 4, 6, -1, -2, -3, -4, -5]
+        expected_result = [0, 1, 2, 3, 4, 6, -1, -2, -3, -4, -6]
 
         src = gr.vector_source_f(src_data)
         op = gr.float_to_short()
@@ -71,7 +68,7 @@ class test_float_to_short (gr_unittest.TestCase):
         scale = 2
         vlen = 3
         src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3)
-        expected_result = [0, 2, 4, 7, 9, 11, -2, -4, -6]
+        expected_result = [0, 2, 4, 7, 9, 11, -2, -4, -7]
         src = gr.vector_source_f(src_data)
         s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
         op = gr.float_to_short(vlen, scale)
