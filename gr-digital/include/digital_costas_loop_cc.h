@@ -50,11 +50,8 @@
  *
  *  http://rfdesign.com/images/archive/0102Feigin20.pdf
  *  
- * \param alpha the loop gain used for phase adjustment
- * \param beta the loop gain for frequency adjustments
- * \param max_freq the maximum frequency deviation (radians/sample) the loop can handle
- * \param min_freq the minimum frequency deviation (radians/sample) the loop can handle
- * \param order the loop order, either 2 or 4
+ * \param loop_bw  internal 2nd order loop bandwidth (~ 2pi/100)
+ * \param order the loop order, either 2, 4, or 8
  */
 
 #include <digital_api.h>
@@ -76,7 +73,7 @@ digital_make_costas_loop_cc (float loop_bw, int order
  *    stream 1 is the baseband I and Q;
  *    stream 2 is the normalized frequency of the loop
  *
- * \p order must be 2 or 4.
+ * \p order must be 2, 4, or 8.
  */
 class DIGITAL_API digital_costas_loop_cc : public gr_sync_block, public gri_control_loop
 {

@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>GSM full-rate Audio Encoder</name>
-	<key>vocoder_gsm_fr_encode_sb</key>
+	<key>vocoder_gsm_fr_encode_sp</key>
 	<import>from gnuradio import vocoder</import>
-	<make>vocoder.gsm_fr_encode_sb()</make>
+	<make>vocoder.gsm_fr_encode_sp()</make>
 	<sink>
 		<name>in</name>
 		<type>short</type>
