@@ -28,6 +28,7 @@ dist_grcblocks_DATA = \
 	digital_binary_slicer_fb.xml		\
 	digital_clock_recovery_mm_xx.xml	\
 	digital_constellation_decoder_cb.xml	\
+	digital_constellation_receiver_cb.xml	\
 	digital_correlate_access_code_bb.xml	\
 	digital_costas_loop_cc.xml		\
 	digital_cma_equalizer_cc.xml		\
