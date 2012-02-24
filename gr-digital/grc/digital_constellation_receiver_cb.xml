@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Constellation Receiver
+###################################################
+ -->
+<block>
+	<name>Constellation Receiver</name>
+	<key>digital_constellation_receiver_cb</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.constellation_receiver_cb($constellation, $loop_bw, $fmin, $fmax)</make>
+	<param>
+		<name>Constellation Object</name>
+		<key>constellation</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Loop Bandwidth</name>
+		<key>loop_bw</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Minimum Freq Deviation</name>
+		<key>fmin</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Maximum Freq Deviation</name>
+		<key>fmax</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>
