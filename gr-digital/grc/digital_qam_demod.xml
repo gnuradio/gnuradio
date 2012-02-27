@@ -94,7 +94,7 @@
   </param>
   <param>
     <name>Gray Code</name>
-    <key>gray_coded</key>
+    <key>mod_code</key>
     <type>enum</type>
     <option>
       <name>Yes</name>
