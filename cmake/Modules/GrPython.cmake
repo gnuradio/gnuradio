@@ -183,6 +183,10 @@ function(GR_PYTHON_INSTALL)
     ####################################################################
         file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
 
+        if (CMAKE_CROSSCOMPILING)
+           set(pyexe_native /usr/bin/env python)
+        endif()
+
         foreach(pyfile ${GR_PYTHON_INSTALL_PROGRAMS})
             get_filename_component(pyfile_name ${pyfile} NAME)
             get_filename_component(pyfile ${pyfile} ABSOLUTE)
