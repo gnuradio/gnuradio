@@ -27,11 +27,12 @@
 #include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 #include <gri_fir_filter_with_buffer_ccf.h>
+#include <gruel/thread.h>
 
 class gr_pfb_synthesis_filterbank_ccf;
 typedef boost::shared_ptr<gr_pfb_synthesis_filterbank_ccf> gr_pfb_synthesis_filterbank_ccf_sptr;
 GR_CORE_API gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
-    (unsigned int numchans, const std::vector<float> &taps);
+    (unsigned int numchans, const std::vector<float> &taps, bool twox=false);
 
 class gri_fft_complex;
 
@@ -55,9 +56,10 @@ class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
                      channels <EM>M</EM>
    * \param taps    (vector/list of floats) The prototype filter to
                     populate the filterbank.
+   * \param twox    (bool) use 2x oversampling or not (default is no)
    */
   friend GR_CORE_API gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
-      (unsigned int numchans, const std::vector<float> &taps);
+    (unsigned int numchans, const std::vector<float> &taps, bool twox);
 
   bool			   d_updated;
   unsigned int             d_numchans;
@@ -65,7 +67,20 @@ class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
   gri_fft_complex         *d_fft;
   std::vector< gri_fir_filter_with_buffer_ccf*> d_filters;
   std::vector< std::vector<float> > d_taps;
-  int d_state;
+  int              d_state;
+  std::vector<int> d_channel_map;
+  unsigned int     d_twox;
+  gruel::mutex     d_mutex; // mutex to protect set/work access
+
+  /*!
+   * \brief Tap setting algorithm for critically sampled channels
+   */
+  void set_taps1(const std::vector<float> &taps);
+
+  /*!
+   * \brief Tap setting algorithm for 2x over-sampled channels
+   */
+  void set_taps2(const std::vector<float> &taps);
 
   /*!
    * Build the polyphase synthesis filterbank.
@@ -73,9 +88,11 @@ class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
                      channels <EM>M</EM>
    * \param taps    (vector/list of floats) The prototype filter
                     to populate the filterbank.
+   * \param twox    (bool) use 2x oversampling or not (default is no)
    */
   gr_pfb_synthesis_filterbank_ccf (unsigned int numchans, 
-				   const std::vector<float> &taps);
+				   const std::vector<float> &taps,
+				   bool twox);
   
 public:
   ~gr_pfb_synthesis_filterbank_ccf ();
@@ -86,12 +103,41 @@ public:
                     populate the filterbank.
    */
   void set_taps (const std::vector<float> &taps);
-  void set_taps2(const std::vector<float> &taps);
 
   /*!
    * Print all of the filterbank taps to screen.
    */
   void print_taps();
+
+  /*!
+   * Return a vector<vector<>> of the filterbank taps
+   */
+  std::vector<std::vector<float> > taps() const;
+
+  /*!
+   * Set the channel map. Channels are numbers as:
+   *     N/2+1 | ... | N-1 | 0 | 1 |  2 | ... | N/2
+   *    <------------------- 0 -------------------->
+   *                        freq 
+   *
+   * So input stream 0 goes to channel 0, etc. Setting a new channel
+   * map allows the user to specify where in frequency he/she wants
+   * the input stream to go. This is especially useful to avoid
+   * putting signals into the channels on the edge of the spectrum
+   * which can either wrap around (in the case of odd number of
+   * channels) and be affected by filter rolloff in the transmitter.
+   *
+   * The map must be at least the number of streams being sent to the
+   * block. Less and the algorithm will not have enough data to
+   * properly setup the buffers. Any more channels specified will be
+   * ignored.
+   */
+  void set_channel_map(const std::vector<int> &map);
+
+  /*!
+   * Gets the current channel map.
+   */
+  std::vector<int> channel_map() const;
   
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
