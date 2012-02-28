@@ -31,7 +31,8 @@ dist_ourdata_SCRIPTS =		\
 	fmtest.py		\
 	resampler.py		\
 	synth_filter.py		\
-	synth_to_chan.py
+	synth_to_chan.py	\
+	reconstruction.py
 
 dist_ourdata_DATA =		\
 	resampler_demo.grc

@@ -29,6 +29,7 @@ GR_PYTHON_INSTALL(PROGRAMS
   resampler.py
   synth_filter.py
   synth_to_chan.py
+  reconstruction.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/pfb
   COMPONENT "gnuradio_examples"
 )
