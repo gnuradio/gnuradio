@@ -202,12 +202,13 @@ public:
    * map over M-1 will be ignored. If the size of the map is less than
    * M the behavior is unknown (we don't wish to check every entry
    * into the work function).
-   
+   *
    * This means that if the channelizer is splitting the signal up
    * into N channels but only M channels are specified in the map
-   * (where M < N), then M output streams must be connected and the
-   * map can only contain numbers from 0 to M-1. By default, the map
-   * is [0...M-1] with M = N.
+   * (where M <= N), then M output streams must be connected and the
+   * map and the channel numbers used must be less than N-1. Output
+   * channel number can be reused, too. By default, the map is
+   * [0...M-1] with M = N.
    */
   void set_channel_map(const std::vector<int> &map);
 
