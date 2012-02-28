@@ -26,6 +26,7 @@
 
 #include <gr_core_api.h>
 #include <gr_block.h>
+#include <gruel/thread.h>
 
 class gr_pfb_channelizer_ccf;
 typedef boost::shared_ptr<gr_pfb_channelizer_ccf> gr_pfb_channelizer_ccf_sptr;
@@ -146,6 +147,8 @@ class GR_CORE_API gr_pfb_channelizer_ccf : public gr_block
   int                     *d_idxlut;
   int                      d_rate_ratio;
   int                      d_output_multiple;
+  std::vector<int>         d_channel_map;
+  gruel::mutex             d_mutex; // mutex to protect set/work access
 
   /*!
    * Build the polyphase filterbank decimator.
@@ -170,6 +173,48 @@ public:
    * Print all of the filterbank taps to screen.
    */
   void print_taps();
+
+  /*!
+   * Return a vector<vector<>> of the filterbank taps
+   */
+  std::vector<std::vector<float> > taps() const;
+
+  /*!
+   * Set the channel map. Channels are numbers as:
+   *
+   *     N/2+1 | ... | N-1 | 0 | 1 |  2 | ... | N/2
+   *    <------------------- 0 -------------------->
+   *                        freq 
+   *
+   * So output stream 0 comes from channel 0, etc. Setting a new
+   * channel map allows the user to specify which channel in frequency
+   * he/she wants to got to which output stream.
+   *
+   * The map should have the same number of elements as the number of
+   * output connections from the block. The minimum value of the map
+   * is 0 (for the 0th channel) and the maximum number is N-1 where N
+   * is the number of channels.
+   *
+   * We specify M as the number of output connections made where M <=
+   * N, so only M out of N channels are driven to an output
+   * stream. The number of items in the channel map should be at least
+   * M long. If there are more channels specified, any value in the
+   * map over M-1 will be ignored. If the size of the map is less than
+   * M the behavior is unknown (we don't wish to check every entry
+   * into the work function).
+   
+   * This means that if the channelizer is splitting the signal up
+   * into N channels but only M channels are specified in the map
+   * (where M < N), then M output streams must be connected and the
+   * map can only contain numbers from 0 to M-1. By default, the map
+   * is [0...M-1] with M = N.
+   */
+  void set_channel_map(const std::vector<int> &map);
+
+  /*!
+   * Gets the current channel map.
+   */
+  std::vector<int> channel_map() const;
   
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,

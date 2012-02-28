@@ -37,4 +37,9 @@ class gr_pfb_channelizer_ccf : public gr_block
   ~gr_pfb_channelizer_ccf ();
 
   void set_taps (const std::vector<float> &taps);
+  void print_taps();
+  std::vector<std::vector<float> > taps() const;
+
+  void set_channel_map(const std::vector<int> &map);
+  std::vector<int> channel_map() const;
 };
