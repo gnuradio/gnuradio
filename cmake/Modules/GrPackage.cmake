@@ -123,7 +123,7 @@ if((DEBIAN OR REDHAT) AND LSB_RELEASE_EXECUTABLE)
     )
 
     #set a more sensible package name for this system
-    SET(CPACK_PACKAGE_FILE_NAME "gnuradio-${CPACK_PACKAGE_VERSION}-${LSB_ID}-${LSB_RELEASE}-${CMAKE_SYSTEM_PROCESSOR}")
+    SET(CPACK_PACKAGE_FILE_NAME "gnuradio_${CPACK_PACKAGE_VERSION}_${LSB_ID}-${LSB_RELEASE}-${CMAKE_SYSTEM_PROCESSOR}")
 
     #now try to include the component based dependencies
     set(package_deps_file "${CMAKE_SOURCE_DIR}/cmake/Packaging/${LSB_ID}-${LSB_RELEASE}.cmake")
