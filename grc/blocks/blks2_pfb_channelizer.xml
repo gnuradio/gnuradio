@@ -18,6 +18,8 @@
 	<!-- Set taps not implemented yet 
            <callback>set_taps($taps)</callback>
          -->
+        <callback>set_channel_map(ch_$map)</callback>
+	
 	<param>
 		<name>Channels</name>
 		<key>nchans</key>
@@ -40,6 +42,11 @@
 		<key>atten</key>
 		<value>100</value>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Channel Map</name>
+		<key>ch_map</key>
+		<type>int_vector</type>
 	</param>
 	<sink>
 		<name>in</name>
