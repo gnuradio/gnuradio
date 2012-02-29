@@ -68,7 +68,7 @@ class pfb_top_block(gr.top_block):
         self.head = gr.head(gr.sizeof_gr_complex, self._N)
 
         # Construct the channelizer filter
-        self.pfb = blks2.pfb_channelizer_ccf(self._M, self._taps)
+        self.pfb = blks2.pfb_channelizer_ccf(self._M, self._taps, 1)
 
         # Construct a vector sink for the input signal to the channelizer
         self.snk_i = gr.vector_sink_c()
@@ -77,6 +77,9 @@ class pfb_top_block(gr.top_block):
         self.connect(self.add, self.head, self.pfb)
         self.connect(self.add, self.snk_i)
 
+        # Use this to play with the channel mapping
+        #self.pfb.set_channel_map([5,6,7,8,0,1,2,3,4])
+        
         # Create a vector sink for each of M output channels of the filter and connect it
         self.snks = list()
         for i in xrange(self._M):

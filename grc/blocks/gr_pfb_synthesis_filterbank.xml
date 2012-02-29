@@ -10,9 +10,10 @@
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio.gr import firdes</import>
 	<make>gr.pfb_synthesis_filterbank_ccf(
-	  $numchans, $taps)
+	  $numchans, $taps, $twox)
 	</make>
         <callback>set_taps($taps)</callback>
+        <callback>set_channel_map($ch_map)</callback>
 
 	<param>
 		<name>Channels</name>
@@ -30,6 +31,17 @@
 		<name>Taps</name>
 		<key>taps</key>
 		<type>real_vector</type>
+	</param>
+	<param>
+		<name>2x Sample Rate</name>
+		<key>twox</key>
+		<value>False</value>
+		<type>bool</type>
+	</param>
+	<param>
+		<name>Channel Map</name>
+		<key>ch_map</key>
+		<type>int_vector</type>
 	</param>
 	<sink>
 		<name>in</name>

@@ -34,7 +34,7 @@ class pfb_channelizer_ccf(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(numchans, numchans, gr.sizeof_gr_complex)) # Output signature
 
-        self._numchans = numchans
+        self._nchans = numchans
         self._oversample_rate = oversample_rate
 
         if taps is not None:
@@ -47,7 +47,7 @@ class pfb_channelizer_ccf(gr.hier_block2):
             made = False
             while not made:
                 try:
-                    self._taps = optfir.low_pass(1, self._numchans, bw, bw+tb, ripple, atten)
+                    self._taps = optfir.low_pass(1, self._nchans, bw, bw+tb, ripple, atten)
                     made = True
                 except RuntimeError:
                     ripple += 0.01
@@ -58,22 +58,16 @@ class pfb_channelizer_ccf(gr.hier_block2):
                     if(ripple >= 1.0):
                         raise RuntimeError("optfir could not generate an appropriate filter.")
 
-        self.s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, self._numchans)
-        self.pfb = gr.pfb_channelizer_ccf(self._numchans, self._taps,
+        self.s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, self._nchans)
+        self.pfb = gr.pfb_channelizer_ccf(self._nchans, self._taps,
                                           self._oversample_rate)
-        self.v2s = gr.vector_to_streams(gr.sizeof_gr_complex, self._numchans)
-
         self.connect(self, self.s2ss)
 
-        for i in xrange(self._numchans):
+        for i in xrange(self._nchans):
             self.connect((self.s2ss,i), (self.pfb,i))
+            self.connect((self.pfb,i), (self,i))
 
-        # Get independent streams from the filterbank and send them out
-        self.connect(self.pfb, self.v2s)
-
-        for i in xrange(self._numchans):
-            self.connect((self.v2s,i), (self,i))
-
-        
+    def set_channel_map(self, newmap):
+        self.pfb.set_channel_map(newmap)
         
         

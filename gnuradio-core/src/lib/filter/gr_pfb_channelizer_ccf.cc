@@ -46,7 +46,7 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
 						float oversample_rate)
   : gr_block ("pfb_channelizer_ccf",
 	      gr_make_io_signature (numchans, numchans, sizeof(gr_complex)),
-	      gr_make_io_signature (1, 1, numchans*sizeof(gr_complex))),
+	      gr_make_io_signature (1, numchans, sizeof(gr_complex))),
     d_updated (false), d_numchans(numchans), d_oversample_rate(oversample_rate)
 {
   // The over sampling rate must be rationally related to the number of channels
@@ -62,11 +62,13 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
   set_relative_rate(1.0/intp);
 
   d_filters = std::vector<gr_fir_ccf*>(d_numchans);
+  d_channel_map.resize(d_numchans);
 
   // Create an FIR filter for each channel and zero out the taps
   std::vector<float> vtaps(0, d_numchans);
   for(unsigned int i = 0; i < d_numchans; i++) {
     d_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
+    d_channel_map[i] = i;
   }
 
   // Now, actually set the filters' taps
@@ -104,6 +106,7 @@ gr_pfb_channelizer_ccf::~gr_pfb_channelizer_ccf ()
 void
 gr_pfb_channelizer_ccf::set_taps (const std::vector<float> &taps)
 {
+  gruel::scoped_lock guard(d_mutex);
   unsigned int i,j;
 
   unsigned int ntaps = taps.size();
@@ -151,6 +154,31 @@ gr_pfb_channelizer_ccf::print_taps()
   }
 }
 
+std::vector< std::vector<float> >
+gr_pfb_channelizer_ccf::taps() const
+{
+  return d_taps;
+}
+
+void
+gr_pfb_channelizer_ccf::set_channel_map(const std::vector<int> &map)
+{
+  gruel::scoped_lock guard(d_mutex);
+
+  unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
+  unsigned int min = (unsigned int)*std::min_element(map.begin(), map.end());
+  if((max >= d_numchans) || (min < 0)) {
+    throw std::invalid_argument("gr_pfb_channelizer_ccf::set_channel_map: map range out of bounds.\n");
+  }
+  d_channel_map = map;
+}
+
+std::vector<int>
+gr_pfb_channelizer_ccf::channel_map() const
+{
+  return d_channel_map;
+}
+
 
 int
 gr_pfb_channelizer_ccf::general_work (int noutput_items,
@@ -158,6 +186,8 @@ gr_pfb_channelizer_ccf::general_work (int noutput_items,
 				      gr_vector_const_void_star &input_items,
 				      gr_vector_void_star &output_items)
 {
+  gruel::scoped_lock guard(d_mutex);
+
   gr_complex *in = (gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
 
@@ -166,7 +196,9 @@ gr_pfb_channelizer_ccf::general_work (int noutput_items,
     return 0;		     // history requirements may have changed.
   }
 
-  int n=1, i=-1, j=0, last;
+  size_t noutputs = output_items.size();
+
+  int n=1, i=-1, j=0, oo=0, last;
   int toconsume = (int)rintf(noutput_items/d_oversample_rate);
   while(n <= toconsume) {
     j = 0;
@@ -191,8 +223,13 @@ gr_pfb_channelizer_ccf::general_work (int noutput_items,
 
     // despin through FFT
     d_fft->execute();
-    memcpy(out, d_fft->get_outbuf(), d_numchans*sizeof(gr_complex));
-    out += d_numchans;
+
+    // Send to output channels
+    for(unsigned int nn = 0; nn < noutputs; nn++) {
+      out = (gr_complex*)output_items[nn];
+      out[oo] = d_fft->get_outbuf()[d_channel_map[nn]];
+    }
+    oo++;
   }
 
   consume_each(toconsume);

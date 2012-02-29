@@ -23,16 +23,22 @@
 GR_SWIG_BLOCK_MAGIC(gr,pfb_synthesis_filterbank_ccf);
 
 gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
-    (unsigned int numchans, const std::vector<float> &taps);
+    (unsigned int numchans, const std::vector<float> &taps, bool twox=false);
 
 class gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
 {
  private:
   gr_pfb_synthesis_filterbank_ccf (unsigned int numchans,
-				   const std::vector<float> &taps);
+				   const std::vector<float> &taps,
+				   bool twox=false);
 
  public:
   ~gr_pfb_synthesis_filterbank_ccf ();
 
   void set_taps (const std::vector<float> &taps);
+  void print_taps();
+  std::vector< std::vector<float> > taps() const;
+
+  void set_channel_map(const std::vector<int> &map);
+  std::vector<int> channel_map() const;
 };
