@@ -84,6 +84,8 @@ expand_h_cc_i(gr_vector_source_X   b s i f c)
 expand_h_cc_i(gr_vector_sink_X     b s i f c)
 expand_h_cc_i(gr_noise_source_X      s i f c)
 expand_h_cc_i(gr_sig_source_X        s i f c)
+expand_h_cc_i(gr_probe_signal_X    b s i f c)
+expand_h_cc_i(gr_probe_signal_vX    b s i f c)
 
 expand_h_cc_i(gr_add_const_XX           ss ii ff cc sf)
 expand_h_cc_i(gr_multiply_const_XX      ss ii ff cc)
