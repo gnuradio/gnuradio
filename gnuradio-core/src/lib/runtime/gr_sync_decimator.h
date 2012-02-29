@@ -38,7 +38,7 @@ class GR_CORE_API gr_sync_decimator : public gr_sync_block
   unsigned	d_decimation;
 
  protected:
-
+  gr_sync_decimator (void){} //allows pure virtual interface sub-classes
   gr_sync_decimator (const std::string &name,
 		     gr_io_signature_sptr input_signature,
 		     gr_io_signature_sptr output_signature,
