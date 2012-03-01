@@ -14,11 +14,12 @@
 	  $taps,
 	  $osr,
 	  $atten)
+self.$(id).set_channel_map($ch_map)
 	</make>
 	<!-- Set taps not implemented yet 
            <callback>set_taps($taps)</callback>
          -->
-        <callback>set_channel_map(ch_$map)</callback>
+        <callback>set_channel_map($ch_map)</callback>
 	
 	<param>
 		<name>Channels</name>
@@ -46,6 +47,7 @@
 	<param>
 		<name>Channel Map</name>
 		<key>ch_map</key>
+		<value>[]</value>
 		<type>int_vector</type>
 	</param>
 	<sink>

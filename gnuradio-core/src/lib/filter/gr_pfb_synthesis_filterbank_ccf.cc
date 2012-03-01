@@ -203,15 +203,17 @@ gr_pfb_synthesis_filterbank_ccf::set_channel_map(const std::vector<int> &map)
 {
   gruel::scoped_lock guard(d_mutex);
 
-  unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
-  unsigned int min = (unsigned int)*std::min_element(map.begin(), map.end());
-  if((max >= d_twox*d_numchans) || (min < 0)) {
-    throw std::invalid_argument("gr_pfb_synthesis_filterbank_ccf::set_channel_map: map range out of bounds.\n");
-  }
-  d_channel_map = map;
+  if(map.size() > 0) {
+    unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
+    unsigned int min = (unsigned int)*std::min_element(map.begin(), map.end());
+    if((max >= d_twox*d_numchans) || (min < 0)) {
+      throw std::invalid_argument("gr_pfb_synthesis_filterbank_ccf::set_channel_map: map range out of bounds.\n");
+    }
+    d_channel_map = map;
 
-  // Zero out fft buffer so that unused channels are always 0
-  memset(d_fft->get_inbuf(), 0,d_twox*d_numchans*sizeof(gr_complex));
+    // Zero out fft buffer so that unused channels are always 0
+    memset(d_fft->get_inbuf(), 0,d_twox*d_numchans*sizeof(gr_complex));
+  }
 }
 
 std::vector<int>

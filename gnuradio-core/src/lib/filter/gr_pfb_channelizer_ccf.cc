@@ -165,12 +165,14 @@ gr_pfb_channelizer_ccf::set_channel_map(const std::vector<int> &map)
 {
   gruel::scoped_lock guard(d_mutex);
 
-  unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
-  unsigned int min = (unsigned int)*std::min_element(map.begin(), map.end());
-  if((max >= d_numchans) || (min < 0)) {
-    throw std::invalid_argument("gr_pfb_channelizer_ccf::set_channel_map: map range out of bounds.\n");
+  if(map.size() > 0) {
+    unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
+    unsigned int min = (unsigned int)*std::min_element(map.begin(), map.end());
+    if((max >= d_numchans) || (min < 0)) {
+      throw std::invalid_argument("gr_pfb_channelizer_ccf::set_channel_map: map range out of bounds.\n");
+    }
+    d_channel_map = map;
   }
-  d_channel_map = map;
 }
 
 std::vector<int>

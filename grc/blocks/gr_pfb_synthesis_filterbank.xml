@@ -11,6 +11,7 @@
 	<import>from gnuradio.gr import firdes</import>
 	<make>gr.pfb_synthesis_filterbank_ccf(
 	  $numchans, $taps, $twox)
+self.$(id).set_channel_map($ch_map)
 	</make>
         <callback>set_taps($taps)</callback>
         <callback>set_channel_map($ch_map)</callback>
@@ -41,6 +42,7 @@
 	<param>
 		<name>Channel Map</name>
 		<key>ch_map</key>
+		<value>[]</value>
 		<type>int_vector</type>
 	</param>
 	<sink>
