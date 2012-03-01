@@ -79,4 +79,18 @@ examples (<b>gr-uhd/examples</b>) use this ability to create a
 received matched filter or channel filter that also resamples the
 signal.
 
+\section Examples
+
+The following is an example of the using the channelizer. It creates
+the appropriate filter to channelizer 9 channels out of an original
+signal that is 9000 Hz wide, so each output channel is now 1000
+Hz. The code then plots the PSD of the original signal to see the
+signals in the origina spectrum and then makes 9 plots for each of the
+channels.
+
+NOTE: you need the Scipy and Matplotlib Python modules installed to
+run this example.
+
+\include gnuradio-examples/python/pfb/channelize.py
+
 */
