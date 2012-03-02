@@ -39,7 +39,7 @@ def main():
     
     # Put the pieces back together again
     syn_taps = [nchans*t for t in proto_taps]
-    synthesizer = gr.pfb_synthesis_filterbank_ccf(nchans, syn_taps, True)
+    synthesizer = gr.pfb_synthesizer_ccf(nchans, syn_taps, True)
     src_snk = gr.vector_sink_c()
     snk = gr.vector_sink_c()
 

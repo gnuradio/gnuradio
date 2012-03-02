@@ -50,7 +50,7 @@ def main():
     taps = gr.firdes.low_pass_2(len(freqs), fs, fs/float(nchans)/2, 100, 100)
     print "Num. Taps = %d (taps per filter = %d)" % (len(taps), 
                                                      len(taps)/nchans)
-    filtbank = gr.pfb_synthesis_filterbank_ccf(nchans, taps)
+    filtbank = gr.pfb_synthesizer_ccf(nchans, taps)
 
     head = gr.head(gr.sizeof_gr_complex, N)
     snk = gr.vector_sink_c()

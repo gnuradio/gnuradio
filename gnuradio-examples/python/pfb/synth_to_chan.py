@@ -56,7 +56,7 @@ def main():
     chtaps = gr.firdes.low_pass_2(len(freqs), fs, fs/float(nchans)/2, 100, 100)
     print "Channelizer Num. Taps = %d (taps per filter = %d)" % (len(chtaps), 
                                                                  len(chtaps)/nchans)
-    filtbank = gr.pfb_synthesis_filterbank_ccf(nchans, syntaps)
+    filtbank = gr.pfb_synthesizer_ccf(nchans, syntaps)
     channelizer = blks2.pfb_channelizer_ccf(nchans, chtaps)
 
     noise_level = 0.01
