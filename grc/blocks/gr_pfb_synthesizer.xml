@@ -5,11 +5,11 @@
 ###################################################
  -->
 <block>
-	<name>Polyphase Synthesis Filterbank</name>
-	<key>gr_pfb_synthesis_filterbank_ccf</key>
+	<name>Polyphase Synthesizer</name>
+	<key>gr_pfb_synthesizer_ccf</key>
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio.gr import firdes</import>
-	<make>gr.pfb_synthesis_filterbank_ccf(
+	<make>gr.pfb_synthesizer_ccf(
 	  $numchans, $taps, $twox)
 self.$(id).set_channel_map($ch_map)
 	</make>
