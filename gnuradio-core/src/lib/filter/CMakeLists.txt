@@ -333,7 +333,7 @@ set(gr_core_filter_triple_threats
     gr_single_pole_iir_filter_ff
     gr_single_pole_iir_filter_cc
     gr_pfb_channelizer_ccf
-    gr_pfb_synthesis_filterbank_ccf
+    gr_pfb_synthesizer_ccf
     gr_pfb_decimator_ccf
     gr_pfb_interpolator_ccf
     gr_pfb_arb_resampler_ccf

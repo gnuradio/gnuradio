@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,23 +24,23 @@
 #include "config.h"
 #endif
 
-#include <gr_pfb_synthesis_filterbank_ccf.h>
+#include <gr_pfb_synthesizer_ccf.h>
 #include <gri_fft.h>
 #include <gr_io_signature.h>
 #include <cstdio>
 #include <cstring>
 
-gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
+gr_pfb_synthesizer_ccf_sptr gr_make_pfb_synthesizer_ccf 
     (unsigned int numchans, const std::vector<float> &taps, bool twox)
 {
-  return gr_pfb_synthesis_filterbank_ccf_sptr 
-    (new gr_pfb_synthesis_filterbank_ccf (numchans, taps, twox));
+  return gr_pfb_synthesizer_ccf_sptr 
+    (new gr_pfb_synthesizer_ccf (numchans, taps, twox));
 }
 
 
-gr_pfb_synthesis_filterbank_ccf::gr_pfb_synthesis_filterbank_ccf
+gr_pfb_synthesizer_ccf::gr_pfb_synthesizer_ccf
     (unsigned int numchans, const std::vector<float> &taps, bool twox)
-  : gr_sync_interpolator ("pfb_synthesis_filterbank_ccf",
+  : gr_sync_interpolator ("pfb_synthesizer_ccf",
 			  gr_make_io_signature (1, numchans, sizeof(gr_complex)),
 			  gr_make_io_signature (1, 1, sizeof(gr_complex)),
 			  numchans),
@@ -49,7 +49,7 @@ gr_pfb_synthesis_filterbank_ccf::gr_pfb_synthesis_filterbank_ccf
   // set up 2x multiplier; if twox==True, set to 2, otherwise to 1
   d_twox = (twox ? 2 : 1);
   if(d_numchans % d_twox != 0) {
-    throw std::invalid_argument("gr_pfb_synthesis_filterbank_ccf: number of channels must be even for 2x oversampling.\n");
+    throw std::invalid_argument("gr_pfb_synthesizer_ccf: number of channels must be even for 2x oversampling.\n");
   }
 
   d_filters = std::vector<gri_fir_filter_with_buffer_ccf*>(d_twox*d_numchans);
@@ -72,7 +72,7 @@ gr_pfb_synthesis_filterbank_ccf::gr_pfb_synthesis_filterbank_ccf
   set_output_multiple(d_numchans);
 }
 
-gr_pfb_synthesis_filterbank_ccf::~gr_pfb_synthesis_filterbank_ccf ()
+gr_pfb_synthesizer_ccf::~gr_pfb_synthesizer_ccf ()
 {
   for(unsigned int i = 0; i < d_twox*d_numchans; i++) {
     delete d_filters[i];
@@ -80,7 +80,7 @@ gr_pfb_synthesis_filterbank_ccf::~gr_pfb_synthesis_filterbank_ccf ()
 }
 
 void
-gr_pfb_synthesis_filterbank_ccf::set_taps(const std::vector<float> &taps)
+gr_pfb_synthesizer_ccf::set_taps(const std::vector<float> &taps)
 {
   gruel::scoped_lock guard(d_mutex);
   if(d_twox == 1)
@@ -90,7 +90,7 @@ gr_pfb_synthesis_filterbank_ccf::set_taps(const std::vector<float> &taps)
 }
 
 void
-gr_pfb_synthesis_filterbank_ccf::set_taps1(const std::vector<float> &taps)
+gr_pfb_synthesizer_ccf::set_taps1(const std::vector<float> &taps)
 {
   unsigned int i,j;
 
@@ -127,7 +127,7 @@ gr_pfb_synthesis_filterbank_ccf::set_taps1(const std::vector<float> &taps)
 }
 
 void
-gr_pfb_synthesis_filterbank_ccf::set_taps2 (const std::vector<float> &taps)
+gr_pfb_synthesizer_ccf::set_taps2 (const std::vector<float> &taps)
 {
   unsigned int i,j;
   int state = 0;
@@ -179,7 +179,7 @@ gr_pfb_synthesis_filterbank_ccf::set_taps2 (const std::vector<float> &taps)
 }
 
 void
-gr_pfb_synthesis_filterbank_ccf::print_taps()
+gr_pfb_synthesizer_ccf::print_taps()
 {
   unsigned int i, j;
   for(i = 0; i < d_twox*d_numchans; i++) {
@@ -193,13 +193,13 @@ gr_pfb_synthesis_filterbank_ccf::print_taps()
 
 
 std::vector< std::vector<float> >
-gr_pfb_synthesis_filterbank_ccf::taps() const
+gr_pfb_synthesizer_ccf::taps() const
 {
   return d_taps;
 }
 
 void
-gr_pfb_synthesis_filterbank_ccf::set_channel_map(const std::vector<int> &map)
+gr_pfb_synthesizer_ccf::set_channel_map(const std::vector<int> &map)
 {
   gruel::scoped_lock guard(d_mutex);
 
@@ -207,7 +207,7 @@ gr_pfb_synthesis_filterbank_ccf::set_channel_map(const std::vector<int> &map)
     unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
     unsigned int min = (unsigned int)*std::min_element(map.begin(), map.end());
     if((max >= d_twox*d_numchans) || (min < 0)) {
-      throw std::invalid_argument("gr_pfb_synthesis_filterbank_ccf::set_channel_map: map range out of bounds.\n");
+      throw std::invalid_argument("gr_pfb_synthesizer_ccf::set_channel_map: map range out of bounds.\n");
     }
     d_channel_map = map;
 
@@ -217,15 +217,15 @@ gr_pfb_synthesis_filterbank_ccf::set_channel_map(const std::vector<int> &map)
 }
 
 std::vector<int>
-gr_pfb_synthesis_filterbank_ccf::channel_map() const
+gr_pfb_synthesizer_ccf::channel_map() const
 {
   return d_channel_map;
 }
 
 int
-gr_pfb_synthesis_filterbank_ccf::work (int noutput_items,
-				       gr_vector_const_void_star &input_items,
-				       gr_vector_void_star &output_items)
+gr_pfb_synthesizer_ccf::work (int noutput_items,
+			      gr_vector_const_void_star &input_items,
+			      gr_vector_void_star &output_items)
 {
   gruel::scoped_lock guard(d_mutex);
 

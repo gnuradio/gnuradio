@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,20 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,pfb_synthesis_filterbank_ccf);
+GR_SWIG_BLOCK_MAGIC(gr,pfb_synthesizer_ccf);
 
-gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
+gr_pfb_synthesizer_ccf_sptr gr_make_pfb_synthesizer_ccf 
     (unsigned int numchans, const std::vector<float> &taps, bool twox=false);
 
-class gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
+class gr_pfb_synthesizer_ccf : public gr_sync_interpolator
 {
  private:
-  gr_pfb_synthesis_filterbank_ccf (unsigned int numchans,
-				   const std::vector<float> &taps,
-				   bool twox=false);
-
+  gr_pfb_synthesizer_ccf (unsigned int numchans,
+			  const std::vector<float> &taps,
+			  bool twox=false);
+  
  public:
-  ~gr_pfb_synthesis_filterbank_ccf ();
+  ~gr_pfb_synthesizer_ccf ();
 
   void set_taps (const std::vector<float> &taps);
   void print_taps();

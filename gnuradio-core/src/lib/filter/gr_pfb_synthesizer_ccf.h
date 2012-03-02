@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,24 +21,24 @@
  */
 
 
-#ifndef INCLUDED_GR_PFB_SYNTHESIS_FILTERBANK_CCF_H
-#define	INCLUDED_GR_PFB_SYNTHESIS_FILTERBANK_CCF_H
+#ifndef INCLUDED_GR_PFB_SYNTHESIZER_CCF_H
+#define	INCLUDED_GR_PFB_SYNTHESIZER_CCF_H
 
 #include <gr_core_api.h>
 #include <gr_sync_interpolator.h>
 #include <gri_fir_filter_with_buffer_ccf.h>
 #include <gruel/thread.h>
 
-class gr_pfb_synthesis_filterbank_ccf;
-typedef boost::shared_ptr<gr_pfb_synthesis_filterbank_ccf> gr_pfb_synthesis_filterbank_ccf_sptr;
-GR_CORE_API gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
+class gr_pfb_synthesizer_ccf;
+typedef boost::shared_ptr<gr_pfb_synthesizer_ccf> gr_pfb_synthesizer_ccf_sptr;
+GR_CORE_API gr_pfb_synthesizer_ccf_sptr gr_make_pfb_synthesizer_ccf 
     (unsigned int numchans, const std::vector<float> &taps, bool twox=false);
 
 class gri_fft_complex;
 
 
 /*!
- * \class gr_pfb_synthesis_filterbank_ccf
+ * \class gr_pfb_synthesizer_ccf
  *
  * \brief Polyphase synthesis filterbank with 
  *        gr_complex input, gr_complex output and float taps
@@ -47,7 +47,7 @@ class gri_fft_complex;
  * \ingroup pfb_blk
  */
 
-class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
+class GR_CORE_API gr_pfb_synthesizer_ccf : public gr_sync_interpolator
 {
  private:
   /*!
@@ -58,7 +58,7 @@ class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
                     populate the filterbank.
    * \param twox    (bool) use 2x oversampling or not (default is no)
    */
-  friend GR_CORE_API gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf 
+  friend GR_CORE_API gr_pfb_synthesizer_ccf_sptr gr_make_pfb_synthesizer_ccf 
     (unsigned int numchans, const std::vector<float> &taps, bool twox);
 
   bool			   d_updated;
@@ -90,12 +90,12 @@ class GR_CORE_API gr_pfb_synthesis_filterbank_ccf : public gr_sync_interpolator
                     to populate the filterbank.
    * \param twox    (bool) use 2x oversampling or not (default is no)
    */
-  gr_pfb_synthesis_filterbank_ccf (unsigned int numchans, 
-				   const std::vector<float> &taps,
-				   bool twox);
+  gr_pfb_synthesizer_ccf (unsigned int numchans, 
+			  const std::vector<float> &taps,
+			  bool twox);
   
 public:
-  ~gr_pfb_synthesis_filterbank_ccf ();
+  ~gr_pfb_synthesizer_ccf ();
   
   /*!
    * Resets the filterbank's filter taps with the new prototype filter
