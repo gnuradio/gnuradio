@@ -12,7 +12,6 @@ GENERATED_H = \
 	gr_add_const_vff.h \
 	gr_add_const_vii.h \
 	gr_add_const_vss.h \
-	gr_add_ff.h \
 	gr_add_ii.h \
 	gr_add_ss.h \
 	gr_and_bb.h \
@@ -45,16 +44,12 @@ GENERATED_H = \
 	gr_moving_average_ff.h \
 	gr_moving_average_ii.h \
 	gr_moving_average_ss.h \
-	gr_multiply_cc.h \
-	gr_multiply_const_cc.h \
-	gr_multiply_const_ff.h \
 	gr_multiply_const_ii.h \
 	gr_multiply_const_ss.h \
 	gr_multiply_const_vcc.h \
 	gr_multiply_const_vff.h \
 	gr_multiply_const_vii.h \
 	gr_multiply_const_vss.h \
-	gr_multiply_ff.h \
 	gr_multiply_ii.h \
 	gr_multiply_ss.h \
 	gr_mute_cc.h \
@@ -117,7 +112,6 @@ GENERATED_I = \
 	gr_add_const_vff.i \
 	gr_add_const_vii.i \
 	gr_add_const_vss.i \
-	gr_add_ff.i \
 	gr_add_ii.i \
 	gr_add_ss.i \
 	gr_and_bb.i \
@@ -150,16 +144,12 @@ GENERATED_I = \
 	gr_moving_average_ff.i \
 	gr_moving_average_ii.i \
 	gr_moving_average_ss.i \
-	gr_multiply_cc.i \
-	gr_multiply_const_cc.i \
-	gr_multiply_const_ff.i \
 	gr_multiply_const_ii.i \
 	gr_multiply_const_ss.i \
 	gr_multiply_const_vcc.i \
 	gr_multiply_const_vff.i \
 	gr_multiply_const_vii.i \
 	gr_multiply_const_vss.i \
-	gr_multiply_ff.i \
 	gr_multiply_ii.i \
 	gr_multiply_ss.i \
 	gr_mute_cc.i \
@@ -222,7 +212,6 @@ GENERATED_CC = \
 	gr_add_const_vff.cc \
 	gr_add_const_vii.cc \
 	gr_add_const_vss.cc \
-	gr_add_ff.cc \
 	gr_add_ii.cc \
 	gr_add_ss.cc \
 	gr_and_bb.cc \
@@ -255,16 +244,12 @@ GENERATED_CC = \
 	gr_moving_average_ff.cc \
 	gr_moving_average_ii.cc \
 	gr_moving_average_ss.cc \
-	gr_multiply_cc.cc \
-	gr_multiply_const_cc.cc \
-	gr_multiply_const_ff.cc \
 	gr_multiply_const_ii.cc \
 	gr_multiply_const_ss.cc \
 	gr_multiply_const_vcc.cc \
 	gr_multiply_const_vff.cc \
 	gr_multiply_const_vii.cc \
 	gr_multiply_const_vss.cc \
-	gr_multiply_ff.cc \
 	gr_multiply_ii.cc \
 	gr_multiply_ss.cc \
 	gr_mute_cc.cc \

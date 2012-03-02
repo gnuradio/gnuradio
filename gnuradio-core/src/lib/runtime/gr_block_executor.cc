@@ -183,6 +183,8 @@ gr_block_executor::run_one_iteration()
   int			noutput_items;
   int			max_items_avail;
   int                   max_noutput_items = d_max_noutput_items;
+  int                   new_alignment=0;
+  int                   alignment_state=-1;
 
   gr_block		*m = d_block.get();
   gr_block_detail	*d = m->detail().get();
@@ -307,7 +309,11 @@ gr_block_executor::run_one_iteration()
       // try to work it forward starting with max_items_avail.
       // We want to try to consume all the input we've got.
       int reqd_noutput_items = m->fixed_rate_ninput_to_noutput(max_items_avail);
-      reqd_noutput_items = round_up(reqd_noutput_items, m->output_multiple());
+      
+      // only test this if we specifically set the output_multiple
+      if(m->output_multiple_set())
+	reqd_noutput_items = round_down(reqd_noutput_items, m->output_multiple());
+
       if (reqd_noutput_items > 0 && reqd_noutput_items <= noutput_items)
 	noutput_items = reqd_noutput_items;
 
@@ -315,6 +321,41 @@ gr_block_executor::run_one_iteration()
       max_noutput_items = std::max(m->output_multiple(), max_noutput_items);
     }
     noutput_items = std::min(noutput_items, max_noutput_items);
+
+    // Check if we're still unaligned; use up items until we're
+    // aligned again. Otherwise, make sure we set the alignment
+    // requirement.
+    if(!m->output_multiple_set()) {
+      if(m->is_unaligned()) {
+	// When unaligned, don't just set noutput_items to the remaining
+	// samples to meet alignment; this causes too much overhead in
+	// requiring a premature call back here. Set the maximum amount
+	// of samples to handle unalignment and get us back aligned.
+	if(noutput_items >= m->unaligned()) {
+	  noutput_items = round_up(noutput_items, m->alignment())	\
+	    - (m->alignment() - m->unaligned());
+	  new_alignment = 0;
+	}
+	else {
+	  new_alignment = m->unaligned() - noutput_items;
+	}
+	alignment_state = 0;
+      }
+      else if(noutput_items < m->alignment()) {
+	// if we don't have enough for an aligned call, keep track of
+	// misalignment, set unaligned flag, and proceed.
+	new_alignment = m->alignment() - noutput_items;
+	m->set_unaligned(new_alignment);
+	m->set_is_unaligned(true);
+	alignment_state = 1;
+      }
+      else {
+	// enough to round down to the nearest alignment and process.
+	noutput_items = round_down(noutput_items, m->alignment());
+	m->set_is_unaligned(false);
+	alignment_state = 2;
+      }
+    }
 
     // ask the block how much input they need to produce noutput_items
     m->forecast (noutput_items, d_ninput_items_required);
@@ -354,6 +395,12 @@ gr_block_executor::run_one_iteration()
 	goto were_done;
       }
 
+      // If we were made unaligned in this round but return here without
+      // processing; reset the unalignment claim before next entry.
+      if(alignment_state == 1) {
+	m->set_unaligned(0);
+	m->set_is_unaligned(false);
+      }
       return BLKD_IN;
     }
 
@@ -378,6 +425,12 @@ gr_block_executor::run_one_iteration()
 			     d_input_items, d_output_items);
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
+
+    // Adjust number of unaligned items left to process
+    if(m->is_unaligned()) {
+      m->set_unaligned(new_alignment);
+      m->set_is_unaligned(m->unaligned() != 0);
+    }
 
     if(!propagate_tags(m->tag_propagation_policy(), d,
 		       d_start_nitems_read, m->relative_rate(),

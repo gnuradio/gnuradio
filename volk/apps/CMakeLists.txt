@@ -42,4 +42,11 @@ add_executable(volk_profile
 
 target_link_libraries(volk_profile volk ${Boost_LIBRARIES})
 
+install(
+    PROGRAMS
+    ${CMAKE_BINARY_DIR}/apps/volk_profile
+    DESTINATION ${GR_RUNTIME_DIR}
+    COMPONENT "volk"
+)
+
 endif(Boost_FOUND AND UNIX)

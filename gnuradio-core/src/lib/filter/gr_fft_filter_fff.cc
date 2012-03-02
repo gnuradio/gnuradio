@@ -26,7 +26,6 @@
 
 #include <gr_fft_filter_fff.h>
 #include <gri_fft_filter_fff_generic.h>
-//#include <gri_fft_filter_fff_sse.h>
 #include <gr_io_signature.h>
 #include <assert.h>
 #include <stdexcept>
@@ -59,6 +58,7 @@ gr_fft_filter_fff::gr_fft_filter_fff (int decimation,
 #else
     d_filter = new gri_fft_filter_fff_sse(decimation, taps);
 #endif
+
   d_new_taps = taps;
   d_nsamples = d_filter->set_taps(taps);
   set_output_multiple(d_nsamples);

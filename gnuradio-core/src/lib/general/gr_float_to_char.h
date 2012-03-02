@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@ class gr_float_to_char;
 typedef boost::shared_ptr<gr_float_to_char> gr_float_to_char_sptr;
 
 GR_CORE_API gr_float_to_char_sptr
-gr_make_float_to_char ();
+gr_make_float_to_char (size_t vlen=1, float scale=1);
 
 /*!
  * \brief Convert stream of float to a stream of char
@@ -39,10 +39,18 @@ gr_make_float_to_char ();
 
 class GR_CORE_API gr_float_to_char : public gr_sync_block
 {
-  friend GR_CORE_API gr_float_to_char_sptr gr_make_float_to_char ();
-  gr_float_to_char ();
+ private:
+  friend GR_CORE_API gr_float_to_char_sptr gr_make_float_to_char 
+    (size_t vlen, float scale);
+  gr_float_to_char (size_t vlen, float scale);
+
+  size_t d_vlen;
+  float d_scale;
 
  public:
+  float scale() const;
+  void set_scale(float scale);
+
   virtual int work (int noutput_items,
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,9 +22,12 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,short_to_float)
 
-gr_short_to_float_sptr gr_make_short_to_float ();
+gr_short_to_float_sptr
+gr_make_short_to_float (size_t vlen=1, float scale=1);
 
 class gr_short_to_float : public gr_sync_block
 {
-  gr_short_to_float ();
+public:
+  float scale() const;
+  void set_scale(float scale);
 };

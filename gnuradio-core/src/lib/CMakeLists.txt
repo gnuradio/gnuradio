@@ -42,6 +42,7 @@ list(APPEND test_gnuradio_core_sources bug_work_around_6.cc)
 # Setup the include and linker paths
 ########################################################################
 include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
+include_directories(${VOLK_INCLUDE_DIRS})
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
@@ -72,6 +73,9 @@ endif()
 if(LINUX)
     list(APPEND gnuradio_core_libs rt)
 endif()
+
+# Link against libvolk
+list(APPEND gnuradio_core_libs volk)
 
 add_library(gnuradio-core SHARED ${gnuradio_core_sources})
 target_link_libraries(gnuradio-core ${gnuradio_core_libs})

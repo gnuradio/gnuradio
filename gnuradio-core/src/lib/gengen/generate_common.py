@@ -41,10 +41,7 @@ reg_signatures = ['ss', 'ii', 'ff', 'cc']
 
 reg_roots = [
     'gr_add_const_XX',
-    'gr_multiply_const_XX',
-    'gr_add_XX',
     'gr_sub_XX',
-    'gr_multiply_XX',
     'gr_divide_XX',
     'gr_mute_XX',
     'gr_add_const_vXX',
@@ -66,7 +63,10 @@ others = (
     ('gr_sample_and_hold_XX',       ('bb','ss','ii','ff')),
     ('gr_argmax_XX',                ('fs','is','ss')),
     ('gr_max_XX',                   ('ff','ii','ss')),
-    ('gr_peak_detector_XX',         ('fb','ib','sb'))
+    ('gr_peak_detector_XX',         ('fb','ib','sb')),
+    ('gr_multiply_XX',              ('ss','ii')),
+    ('gr_multiply_const_XX',        ('ss','ii')),
+    ('gr_add_XX',                   ('ss','cc','ii'))
     )
 
 

@@ -38,4 +38,14 @@ More details on packages in GNU Radio:
 \li \ref page_uhd
 \li \ref page_vocoder
 \li \ref page_pfb
+
+\section volk_main Using Volk in GNU Radio
+
+The \ref volk_guide page provides an overview of how to incorporate
+and use Volk in GNU Radio blocks.
+
+Many blocks have already been converted to use Volk in their calls, so
+they can also serve as examples. See the gr_complex_to_xxx.h file for
+examples of various blocks that make use of Volk.
+
 */
