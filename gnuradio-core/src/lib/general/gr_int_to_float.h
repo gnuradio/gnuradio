@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@ class gr_int_to_float;
 typedef boost::shared_ptr<gr_int_to_float> gr_int_to_float_sptr;
 
 GR_CORE_API gr_int_to_float_sptr
-gr_make_int_to_float ();
+gr_make_int_to_float (size_t vlen=1, float scale=1);
 
 /*!
  * \brief Convert stream of int to a stream of float
@@ -39,10 +39,18 @@ gr_make_int_to_float ();
 
 class GR_CORE_API gr_int_to_float : public gr_sync_block
 {
-  friend GR_CORE_API gr_int_to_float_sptr gr_make_int_to_float ();
-  gr_int_to_float ();
+ private:
+  friend GR_CORE_API gr_int_to_float_sptr
+    gr_make_int_to_float (size_t vlen, float scale);
+  gr_int_to_float (size_t vlen, float scale);
+
+  size_t d_vlen;
+  float d_scale;  
 
  public:
+  float scale() const;
+  void set_scale(float scale);
+
   virtual int work (int noutput_items,
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);

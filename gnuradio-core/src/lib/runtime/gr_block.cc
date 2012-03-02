@@ -34,6 +34,9 @@ gr_block::gr_block (const std::string &name,
 		    gr_io_signature_sptr output_signature)
   : gr_basic_block(name, input_signature, output_signature),
     d_output_multiple (1),
+    d_output_multiple_set(false),
+    d_unaligned(0),
+    d_is_unaligned(false),
     d_relative_rate (1.0),
     d_history(1),
     d_fixed_rate(false),
@@ -75,7 +78,34 @@ gr_block::set_output_multiple (int multiple)
   if (multiple < 1)
     throw std::invalid_argument ("gr_block::set_output_multiple");
 
+  d_output_multiple_set = true;
   d_output_multiple = multiple;
+}
+
+void
+gr_block::set_alignment (int multiple)
+{
+  if (multiple < 1)
+    throw std::invalid_argument ("gr_block::set_alignment_multiple");
+
+  d_output_multiple = multiple;
+}
+
+void
+gr_block::set_unaligned (int na)
+{
+  // unaligned value must be less than 0 and it doesn't make sense
+  // that it's larger than the alignment value.
+  if ((na < 0) || (na > d_output_multiple))
+    throw std::invalid_argument ("gr_block::set_unaligned");
+
+  d_unaligned = na;
+}
+
+void 
+gr_block::set_is_unaligned (bool u)
+{
+  d_is_unaligned = u;
 }
 
 void

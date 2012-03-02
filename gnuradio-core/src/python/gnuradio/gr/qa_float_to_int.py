@@ -33,7 +33,8 @@ class test_float_to_int (gr_unittest.TestCase):
     def test_001(self):
 
         src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3, -4.4, -5.5)
-        expected_result = [int(round(s)) for s in src_data]
+        expected_result = [0, 1, 2, 3, 4, 6, -1, -2, -3, -4, -6]
+
         src = gr.vector_source_f(src_data)
         op = gr.float_to_int()
         dst = gr.vector_sink_i()
@@ -55,6 +56,25 @@ class test_float_to_int (gr_unittest.TestCase):
         dst = gr.vector_sink_i()
 
         self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = list(dst.data())
+
+        self.assertEqual(expected_result, result_data)
+
+
+    def test_003(self):
+        
+        scale = 2
+        vlen = 3
+        src_data = (0.0, 1.1, 2.2, 3.3, 4.4, 5.5, -1.1, -2.2, -3.3)
+        expected_result = [0, 2, 4, 7, 9, 11, -2, -4, -7,]
+        src = gr.vector_source_f(src_data)
+        s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
+        op = gr.float_to_int(vlen, scale)
+        v2s = gr.vector_to_stream(gr.sizeof_int, vlen)
+        dst = gr.vector_sink_i()
+
+        self.tb.connect(src, s2v, op, v2s, dst)
         self.tb.run()
         result_data = list(dst.data())
 

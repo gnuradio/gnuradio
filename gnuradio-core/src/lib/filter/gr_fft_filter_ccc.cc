@@ -30,7 +30,6 @@
 #endif
 
 #include <gr_fft_filter_ccc.h>
-//#include <gri_fft_filter_ccc_sse.h>
 #include <gri_fft_filter_ccc_generic.h>
 #include <gr_io_signature.h>
 #include <gri_fft.h>
@@ -61,11 +60,13 @@ gr_fft_filter_ccc::gr_fft_filter_ccc (int decimation,
     d_updated(false)
 {
   set_history(1);
+
 #if 1 // don't enable the sse version until handling it is worked out
   d_filter = new gri_fft_filter_ccc_generic(decimation, taps, nthreads);
 #else
   d_filter = new gri_fft_filter_ccc_sse(decimation, taps);
 #endif
+
   d_new_taps = taps;
   d_nsamples = d_filter->set_taps(taps);
   set_output_multiple(d_nsamples);

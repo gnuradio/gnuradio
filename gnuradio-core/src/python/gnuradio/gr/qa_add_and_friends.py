@@ -78,6 +78,24 @@ class test_add_and_friends (gr_unittest.TestCase):
         op = gr.multiply_const_ii (5)
         self.help_ii ((src_data,), expected_result, op)
 
+    def test_mult_const_ff (self):
+        src_data = (-1, 0, 1, 2, 3)
+        expected_result = (-5, 0, 5, 10, 15)
+        op = gr.multiply_const_cc (5)
+        self.help_cc ((src_data,), expected_result, op)
+
+    def test_mult_const_cc (self):
+        src_data = (-1-1j, 0+0j, 1+1j, 2+2j, 3+3j)
+        expected_result = (-5-5j, 0+0j, 5+5j, 10+10j, 15+15j)
+        op = gr.multiply_const_cc (5)
+        self.help_cc ((src_data,), expected_result, op)
+
+    def test_mult_const_cc2 (self):
+        src_data = (-1-1j, 0+0j, 1+1j, 2+2j, 3+3j)
+        expected_result = (-3-7j, 0+0j, 3+7j, 6+14j, 9+21j)
+        op = gr.multiply_const_cc (5+2j)
+        self.help_cc ((src_data,), expected_result, op)
+
     def test_add_ii (self):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
@@ -92,6 +110,22 @@ class test_add_and_friends (gr_unittest.TestCase):
         expected_result = (8, -6, 12, 32, 10)
         op = gr.multiply_ii ()
         self.help_ii ((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_mult_ff (self):
+        src1_data = (1,  2, 3, 4, 5)
+        src2_data = (8, -3, 4, 8, 2)
+        expected_result = (8, -6, 12, 32, 10)
+        op = gr.multiply_ff ()
+        self.help_ff ((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_mult_cc (self):
+        src1_data = (1+1j,  2+2j, 3+3j, 4+4j, 5+5j)
+        src2_data = (8, -3, 4, 8, 2)
+        expected_result = (8+8j, -6-6j, 12+12j, 32+32j, 10+10j)
+        op = gr.multiply_cc ()
+        self.help_cc ((src1_data, src2_data),
                       expected_result, op)
 
     def test_sub_ii_1 (self):

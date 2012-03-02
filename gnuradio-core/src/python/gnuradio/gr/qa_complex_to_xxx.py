@@ -134,7 +134,7 @@ class test_complex_ops (gr_unittest.TestCase):
         self.tb.run ()
         actual_result = dst.data ()
 
-        self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 5)
+        self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 3)
 
 
 if __name__ == '__main__':

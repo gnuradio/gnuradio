@@ -50,6 +50,7 @@ noinst_PYTHON = 			\
 	qa_bin_statistics.py		\
 	qa_classify.py			\
 	qa_complex_to_xxx.py		\
+	qa_conjugate.py			\
 	qa_copy.py			\
 	qa_delay.py			\
 	qa_dc_blocker.py		\
@@ -60,7 +61,9 @@ noinst_PYTHON = 			\
 	qa_fft.py			\
 	qa_fft_filter.py		\
 	qa_filter_delay_fc.py		\
+	qa_float_to_char.py		\
 	qa_float_to_int.py		\
+	qa_float_to_short.py		\
 	qa_fractional_interpolator.py   \
 	qa_frequency_modulator.py	\
 	qa_fsk_stuff.py			\
@@ -77,6 +80,7 @@ noinst_PYTHON = 			\
 	qa_kludged_imports.py		\
 	qa_max.py			\
 	qa_message.py			\
+	qa_multiply_conjugate.py	\
 	qa_mute.py			\
 	qa_nlog10.py			\
 	qa_noise.py			\

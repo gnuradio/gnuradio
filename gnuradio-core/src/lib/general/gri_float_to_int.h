@@ -28,6 +28,6 @@
 /*!
  * convert array of floats to int with rounding and saturation.
  */
-GR_CORE_API void gri_float_to_int (const float *in, int *out, int nsamples);
+GR_CORE_API void gri_float_to_int (const float *in, int *out, float scale, int nsamples);
 
 #endif /* INCLUDED_GRI_FLOAT_TO_INT_H */

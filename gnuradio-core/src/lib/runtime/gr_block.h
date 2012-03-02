@@ -152,7 +152,32 @@ class GR_CORE_API gr_block : public gr_basic_block {
    */
   void set_output_multiple (int multiple);
   int  output_multiple () const { return d_output_multiple; }
+  bool  output_multiple_set () const { return d_output_multiple_set; }
 
+  /*!
+   * \brief Constrains buffers to work on a set item alignment (for SIMD)
+   *
+   * set_alignment_multiple causes the scheduler to ensure that the noutput_items
+   * argument passed to forecast and general_work will be an integer multiple
+   * of \param multiple  The default value is 1.
+   *
+   * This control is similar to the output_multiple setting, except
+   * that if the number of items passed to the block is less than the
+   * output_multiple, this value is ignored and the block can produce
+   * like normal. The d_unaligned value is set to the number of items
+   * the block is off by. In the next call to general_work, the
+   * noutput_items is set to d_unaligned or less until
+   * d_unaligned==0. The buffers are now aligned again and the aligned
+   * calls can be performed again.
+   */
+  void set_alignment (int multiple);
+  int  alignment () const { return d_output_multiple; }
+
+  void set_unaligned (int na);
+  int unaligned () const { return d_unaligned; }
+  void set_is_unaligned (bool u);
+  bool is_unaligned () const { return d_is_unaligned; }
+  
   /*!
    * \brief Tell the scheduler \p how_many_items of input stream \p which_input were consumed.
    */
@@ -231,6 +256,9 @@ class GR_CORE_API gr_block : public gr_basic_block {
  private:
 
   int                   d_output_multiple;
+  bool                  d_output_multiple_set;
+  int                   d_unaligned;
+  bool                  d_is_unaligned;
   double                d_relative_rate;	// approx output_rate / input_rate
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;

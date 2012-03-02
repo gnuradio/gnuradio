@@ -124,9 +124,6 @@
 /gr_add_const_vss.cc
 /gr_add_const_vss.h
 /gr_add_const_vss.i
-/gr_add_ff.cc
-/gr_add_ff.h
-/gr_add_ff.i
 /gr_add_ii.cc
 /gr_add_ii.h
 /gr_add_ii.i
@@ -202,15 +199,6 @@
 /gr_max_ss.cc
 /gr_max_ss.h
 /gr_max_ss.i
-/gr_multiply_cc.cc
-/gr_multiply_cc.h
-/gr_multiply_cc.i
-/gr_multiply_const_cc.cc
-/gr_multiply_const_cc.h
-/gr_multiply_const_cc.i
-/gr_multiply_const_ff.cc
-/gr_multiply_const_ff.h
-/gr_multiply_const_ff.i
 /gr_multiply_const_ii.cc
 /gr_multiply_const_ii.h
 /gr_multiply_const_ii.i
@@ -229,9 +217,6 @@
 /gr_multiply_const_vss.cc
 /gr_multiply_const_vss.h
 /gr_multiply_const_vss.i
-/gr_multiply_ff.cc
-/gr_multiply_ff.h
-/gr_multiply_ff.i
 /gr_multiply_ii.cc
 /gr_multiply_ii.h
 /gr_multiply_ii.i
