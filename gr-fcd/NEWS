@@ -1,0 +1,32 @@
+Alexandru Csete (22):
+      Bump version number.
+      Small typo fix.
+      Implemented FCD_CMD_APP_SET_FREQ_HZ in FCD API and switched to use that one in gr-fcd API.
+      In python ww only need set_freq with float parameter.
+      Fix DC and IQ correction methods.
+      Add frequency and LNA gain controls to FFT application.
+      Remove debug output.
+      Correct order of parameters for IQ balance.
+      Fix parameter names in doxygen doc.
+      No need for iostream.
+      NOAA APT receiver example (not tested).
+      Include NFM GRC example in distribution.
+      Merge branch 'master' of github.com:csete/gr-fcd
+      Default value for DC offset is 0.0
+      Set RF gain from slider value.
+      Fix noinst_HEADERS.
+      Merge pull request #1 from jrcutler/master
+      Require GNU Radio 3.5
+      Merge pull request #3 from jrcutler/master
+      Check for GR version 3.5 or later.
+      Rename hidwin.cpp to hidwin.c to stay consistent with upstream codebase.
+      Update to hidapi 0.7.0
+
+Justin R. Cutler (3):
+      Moved initial set_freq() call after initializing settings.
+      Adding throttle tag to GRC block to prevent grc warnings.
+      Implemented an implicit re-tune upon modification of the frequency correction value (via a shadow variable for last requested frequency). Fixes #2.
+
+Michael Zappe (1):
+      Improved build on OSX and Windows.
+
