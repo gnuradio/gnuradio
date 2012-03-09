@@ -1,6 +1,6 @@
-#!/bin/sh
-
-# Copyright 2001,2005,2008 Free Software Foundation, Inc.
+#!/usr/bin/env python
+#
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,21 +18,22 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+# 
 
+from gnuradio import gr, gr_unittest
+import fcd_swig
 
-rm -fr config.cache autom4te*.cache
+class test_fcd(gr_unittest.TestCase):
 
-echo "aclocal -I config"
-aclocal -I config
+    def setUp (self):
+        self.tb = gr.top_block()
 
-echo "autoconf"
-autoconf
+    def tearDown (self):
+        self.tb = None
 
-echo "autoheader"
-autoheader
-
-echo "libtoolize --automake -c -f"
-libtoolize --automake -c -f
-
-echo "automake --add-missing -c -f -Wno-portability"
-automake --add-missing -c -f -Wno-portability
+    def test_000_nop (self):
+        """Just see if we can import the module..."""
+        pass
+    
+if __name__ == '__main__':
+    gr_unittest.run(test_fcd, "test_fcd.xml")

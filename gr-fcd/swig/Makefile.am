@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,28 +22,59 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.swig
 
+TESTS =
+EXTRA_DIST += $(nobase_guile_DATA)
 
-AM_CPPFLAGS += -I$(top_srcdir)/lib 
+noinst_GUILE = fcd.test
 
-###################################
-# SWIG interfaces and libraries
+if GUILE
+nobase_guile_DATA = gnuradio/fcd_swig.scm
+endif
+
+
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/gr-fcd/lib \
+	-I$(top_srcdir)/gr-audio/include \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(PYTHON_CPPFLAGS) \
+	$(WITH_INCLUDES)
+
+# ----------------------------------------------------------------
+# The SWIG library
+# TESTS = run_tests
+
+TOP_SWIG_DOC_IFILES = \
+	fcd_swig_doc.i
 
 TOP_SWIG_IFILES = \
-    fcd_swig.i
+	$(TOP_SWIG_DOC_IFILES) 	\
+	fcd_swig.i
+
+BUILT_SOURCES += \
+	$(TOP_SWIG_DOC_IFILES)
+
+EXTRA_DIST += \
+	$(TOP_SWIG_DOC_IFILES)
+
+$(TOP_SWIG_DOC_IFILES):
+	`echo "" > $@`
 
 # Install so that they end up available as:
-#   import fcd
+#   import gnuradio.fcd
 # This ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/$(modname)
-fcd_swig_pythondir_category = $(modname)
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/fcd
+fcd_swig_pythondir_category = \
+	gnuradio/fcd
 
 # additional libraries for linking with the SWIG-generated library
 fcd_swig_la_swig_libadd = \
-	$(top_builddir)/lib/libgnuradio-fcd.la
+	$(top_builddir)/gr-fcd/lib/libgnuradio-fcd.la
 
 # additional SWIG files to be installed
-fcd_swiginclude_headers = \
-	fcd_source_c.i
+fcd_swig_swiginclude_headers =	\
+	fcd_source_c.i 	\
+	$(TOP_SWIG_DOC_IFILES)
 
-
-EXTRA_DIST = $(fcd_swiginclude_headers)
+if GUILE
+TESTS += run_guile_tests
+endif

@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,21 +19,20 @@
 
 include $(top_srcdir)/Makefile.common
 
-# For compiling within the build tree
-#AM_CPPFLAGS = \
-#	-I$(top_srcdir)/lib/ \
-#	$(AM_CPPFLAGS) \
-#	$(STD_DEFINES_AND_INCLUDES) \
-#	$(WITH_INCLUDES)
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/gr-fcd/lib/ \
+	-I$(top_srcdir)/gr-audio/include \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_INCLUDES)
 
-GR_FCD_LA=$(top_builddir)/lib/libgnuradio-fcd.la
+GR_FCD_LA=$(top_builddir)/gr-fcd/lib/libgnuradio-fcd.la
+GNURADIO_AUDIO_LA=$(top_builddir)/gr-audio/lib/libgnuradio-audio.la
 
-# For compiling outside the tree, these will get fished out by pkgconfig
 LDADD = \
 	$(GR_FCD_LA) \
 	$(GNURADIO_CORE_LA) \
-    $(GNURADIO_AUDIO_LA) \
-    $(BOOST_PROGRAM_OPTIONS_LIB)
+	$(GNURADIO_AUDIO_LA) \
+	$(BOOST_PROGRAM_OPTIONS_LIB)
 
 bin_PROGRAMS = \
 	fcd_nfm_rx
@@ -41,11 +40,7 @@ bin_PROGRAMS = \
 fcd_nfm_rx_SOURCES = \
 	fcd_nfm_rx.cc
 
-
 if PYTHON
-# FIXME
-#dist_bin_SCRIPTS = \
-#    fcd_nfm_rx.py
 
 EXTRA_DIST = \
     fcd_fft_wx.grc \

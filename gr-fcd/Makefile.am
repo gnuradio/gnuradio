@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2008,2009 Free Software Foundation, Inc.
+# Copyright 2012 Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,18 +24,11 @@ ACLOCAL_AMFLAGS = -I config
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
-	bootstrap \
-	configure \
-	config.h.in \
-	Makefile.swig \
-	Makefile.swig.gen.t \
-	version.sh \
+	AUTHORS \
 	README \
 	README.hacking
 
-SUBDIRS = config lib swig python grc apps doc
+SUBDIRS = lib swig python grc apps #doc
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gnuradio-fcd.pc
-
-DISTCLEANFILES += gnuradio-fcd*.tar.gz

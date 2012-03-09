@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009,2010,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,42 +21,39 @@
 
 include $(top_srcdir)/Makefile.common
 
-# ----------------------------------------------------------------
-# Funcube Dongle C++ library: libgnuradio-fcd.so
-# ----------------------------------------------------------------
+AM_CPPFLAGS = \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_INCLUDES) \
+	$(USB_CPPFLAGS) \
+	-I$(top_srcdir)/gr-audio/include
 
-# C/C++ headers get installed in ${prefix}/include/$(modname)
-modinclude_HEADERS = \
-    fcd_source_c.h
-    
-noinst_HEADERS = \
-    fcd.h \
-    fcdhidcmd.h \
-    hidapi.h
+lib_LTLIBRARIES = \
+	libgnuradio-fcd.la
 
-lib_LTLIBRARIES = libgnuradio-fcd.la
-
-## FIXME: only linux; mac and win use other hidapi source
 libgnuradio_fcd_la_SOURCES = \
-    fcd_source_c.cc \
-    fcd.c
+	fcd_source_c.cc \
+	fcd.c
 
-if MACOSX
+if FCD_MACOSX
     libgnuradio_fcd_la_SOURCES += hidmac.c
-else
-if WINDOWS
+else if FCD_WINDOWS
     libgnuradio_fcd_la_SOURCES += hidwin.c
 else
     libgnuradio_fcd_la_SOURCES += hid-libusb.c
 endif
-endif
+
+noinst_HEADERS = \
+	fcd.h \
+	fcdhidcmd.h \
+	hidapi.h
 
 libgnuradio_fcd_la_LIBADD = \
-    $(GNURADIO_CORE_LA) \
-    $(GNURADIO_AUDIO_LA)
+	$(GNURADIO_CORE_LA) \
+	$(top_builddir)/gr-audio/lib/libgnuradio-audio.la \
+	$(GNURADIO_AUDIO_LA) \
+	$(USB_LIBS)
 
 libgnuradio_fcd_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
-# ----------------------------------------------------------------
-# No dedicated QA code for FCD source. Use the apps for testing
-# ----------------------------------------------------------------
+grinclude_HEADERS = \
+	fcd_source_c.h

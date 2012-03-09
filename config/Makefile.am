@@ -52,6 +52,7 @@ m4macros = \
 	grc_gr_atsc.m4 \
 	grc_gr_audio.m4 \
 	grc_gr_comedi.m4 \
+	grc_gr_fcd.m4 \
 	grc_gr_noaa.m4 \
 	grc_gr_trellis.m4 \
 	grc_gr_video_sdl.m4 \

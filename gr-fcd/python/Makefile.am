@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,5 +21,14 @@
 
 include $(top_srcdir)/Makefile.common
 
-modpython_PYTHON = \
-    __init__.py
+fcddir = $(grpythondir)/fcd
+
+TESTS = run_tests
+
+noinst_PYTHON = \
+	qa_fcd.py
+
+fcd_PYTHON = \
+	__init__.py
+
+EXTRA_DIST += run_tests.in
