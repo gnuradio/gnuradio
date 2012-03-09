@@ -22,10 +22,8 @@ static inline void volk_32f_s32f_convert_32i_u_sse2(int32_t* outputVector, const
   const float* inputVectorPtr = (const float*)inputVector;
   int32_t* outputVectorPtr = outputVector;
 
-  //float min_val = -2147483647;
-  //float max_val = 2147483647;
-  float min_val = -2146400000;
-  float max_val = 2146400000;
+  float min_val = -2147483647;
+  float max_val = 2147483647;
   float r;
 
   __m128 vScalar = _mm_set_ps1(scalar);
