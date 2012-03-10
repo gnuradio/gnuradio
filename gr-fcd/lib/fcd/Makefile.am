@@ -21,24 +21,20 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = hid fcd
-
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(WITH_INCLUDES) \
-	-I$(top_srcdir)/gr-audio/include \
-	-I$(top_srcdir)/gr-fcd/lib/fcd
+	$(USB_CPPFLAGS) \
+	-I$(top_srcdir)/gr-fcd/lib/hid
 
-lib_LTLIBRARIES = libgnuradio-fcd.la
+noinst_LTLIBRARIES = libfcd.la
 
-libgnuradio_fcd_la_SOURCES = fcd_source_c.cc
+libfcd_la_SOURCES = fcd.c
 
-libgnuradio_fcd_la_LIBADD = \
-	$(GNURADIO_CORE_LA) \
-	$(top_builddir)/gr-fcd/lib/fcd/libfcd.la \
-	$(top_builddir)/gr-audio/lib/libgnuradio-audio.la
+noinst_HEADERS = \
+	fcd.h \
+	fcdhidcmd.h
 
+libfcd_la_LIBADD = \
+	$(top_builddir)/gr-fcd/lib/hid/libhid.la
 
-libgnuradio_fcd_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
-
-grinclude_HEADERS = fcd_source_c.h
