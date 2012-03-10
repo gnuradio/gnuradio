@@ -187,3 +187,20 @@ class digital_constellation_8psk : public digital_constellation
 public:
   digital_constellation_8psk ();
 };
+
+/*
+  We want print(constellation) in python to produce nice useful output so
+  we include code at the end of the generated python file that overrides
+  the SWIG-generated __repr__ method.
+ */
+%pythoncode %{
+
+digital_constellation_calcdist_sptr.__repr__ = lambda self: '<constellation calcdist (m=%s)>' % str(len(self.points()))
+digital_constellation_rect_sptr.__repr__ = lambda self: '<constellation rect (m=%s)>' % str(len(self.points()))
+digital_constellation_psk_sptr.__repr__ = lambda self: '<constellation psk (m=%s)>' % str(len(self.points()))
+digital_constellation_bpsk_sptr.__repr__ = lambda self: '<constellation bpsk>'
+digital_constellation_qpsk_sptr.__repr__ = lambda self: '<constellation qpsk>'
+digital_constellation_dqpsk_sptr.__repr__ = lambda self: '<constellation dqpsk>'
+digital_constellation_8psk_sptr.__repr__ = lambda self: '<constellation 8psk>'
+  
+%}
