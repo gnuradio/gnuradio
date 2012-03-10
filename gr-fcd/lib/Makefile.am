@@ -27,6 +27,7 @@ AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(WITH_INCLUDES) \
 	-I$(top_srcdir)/gr-audio/include \
+	-I$(top_srcdir)/gr-fcd/include/fcd \
 	-I$(top_srcdir)/gr-fcd/lib/fcd
 
 lib_LTLIBRARIES = libgnuradio-fcd.la
@@ -41,4 +42,3 @@ libgnuradio_fcd_la_LIBADD = \
 
 libgnuradio_fcd_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
-grinclude_HEADERS = fcd_source_c.h

@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,16 +19,6 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-ACLOCAL_AMFLAGS = -I config
-
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-	AUTHORS \
-	README \
-	README.hacking
-
-SUBDIRS = lib swig python grc examples doc
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gnuradio-fcd.pc
+grinclude_HEADERS = fcd_source_c.h

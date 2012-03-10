@@ -33,7 +33,7 @@ endif
 
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/gr-fcd/lib \
+	-I$(top_srcdir)/gr-fcd/include/fcd \
 	-I$(top_srcdir)/gr-audio/include \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \

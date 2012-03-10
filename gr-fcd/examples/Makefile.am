@@ -1,7 +1,5 @@
 #
-# Copyright 2012 Software Foundation, Inc.
-# 
-# This file is part of GNU Radio
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,16 +17,33 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-ACLOCAL_AMFLAGS = -I config
-
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-	AUTHORS \
-	README \
-	README.hacking
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/gr-fcd/include/fcd \
+	-I$(top_srcdir)/gr-audio/include \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_INCLUDES)
 
-SUBDIRS = lib swig python grc examples doc
+GR_FCD_LA=$(top_builddir)/gr-fcd/lib/libgnuradio-fcd.la
+GNURADIO_AUDIO_LA=$(top_builddir)/gr-audio/lib/libgnuradio-audio.la
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gnuradio-fcd.pc
+ourdatadir = $(exampledir)/fcd
+
+ourdata_PROGRAMS = \
+	fcd_nfm_rx
+
+fcd_nfm_rx_SOURCES = \
+	fcd_nfm_rx.cc
+
+fcd_nfm_rx_LDADD = \
+	$(GR_FCD_LA) \
+	$(GNURADIO_CORE_LA) \
+	$(GNURADIO_AUDIO_LA) \
+	$(BOOST_PROGRAM_OPTIONS_LIB)
+
+dist_ourdata_SCRIPTS = \
+    fcd_fft_wx.grc \
+    fcd_apt_rx.grc \
+    fcd_nfm_rx.grc
+

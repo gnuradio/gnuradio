@@ -55,6 +55,8 @@ AC_DEFUN([GRC_GR_FCD],[
     AC_CONFIG_FILES([ \
         gr-fcd/Makefile \
     	gr-fcd/gnuradio-fcd.pc \
+	gr-fcd/include/Makefile \
+	gr-fcd/include/fcd/Makefile \
 	gr-fcd/lib/Makefile \
 	gr-fcd/lib/hid/Makefile \
 	gr-fcd/lib/fcd/Makefile \
@@ -63,7 +65,7 @@ AC_DEFUN([GRC_GR_FCD],[
     	gr-fcd/python/Makefile \
 	gr-fcd/python/run_tests \
     	gr-fcd/grc/Makefile \
-    	gr-fcd/apps/Makefile \
+    	gr-fcd/examples/Makefile \
 	gr-fcd/doc/Makefile \
     ])
 
