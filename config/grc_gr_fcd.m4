@@ -62,6 +62,7 @@ AC_DEFUN([GRC_GR_FCD],[
 	gr-fcd/python/run_tests \
     	gr-fcd/grc/Makefile \
     	gr-fcd/apps/Makefile \
+	gr-fcd/doc/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-fcd,[

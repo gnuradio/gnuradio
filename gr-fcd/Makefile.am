@@ -28,7 +28,7 @@ EXTRA_DIST = \
 	README \
 	README.hacking
 
-SUBDIRS = lib swig python grc apps #doc
+SUBDIRS = lib swig python grc apps doc
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gnuradio-fcd.pc
