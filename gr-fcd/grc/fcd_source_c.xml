@@ -4,7 +4,7 @@
     <key>fcd_source_c</key>
     <category>Sources</category>
     <throttle>1</throttle>
-    <import>import fcd</import>
+    <import>from gnuradio import fcd</import>
     <make>fcd.source_c($device_name)
 #if $lna() != 20.0
 self.$(id).set_lna_gain($lna)
