@@ -12,9 +12,6 @@ fcd_source_c_sptr fcd_make_source_c (const std::string device_name = "");
 class fcd_source_c : public gr_hier_block2
 {
 public:
-  fcd_source_c (const std::string device_name = "");
-  ~fcd_source_c();
-  
   void set_freq(float freq);
   void set_freq_khz(int freq);
   void set_lna_gain(float gain);

@@ -21,6 +21,7 @@
 # Install header files
 ########################################################################
 install(FILES
+    fcd_api.h
     fcd_source_c.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "fcd_devel"

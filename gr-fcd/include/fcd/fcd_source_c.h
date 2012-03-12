@@ -21,6 +21,7 @@
 #ifndef INCLUDED_FCD_SOURCE_C_H
 #define INCLUDED_FCD_SOURCE_C_H
 
+#include <fcd_api.h>
 #include <gr_hier_block2.h>
 #include <gr_audio_source.h>
 
@@ -37,7 +38,7 @@ typedef boost::shared_ptr<fcd_source_c> fcd_source_c_sptr;
  * of raw pointers, fcd_source_c's constructor is private.
  * fcd_make_source_c is the public interface for creating new instances.
  */
-fcd_source_c_sptr fcd_make_source_c(const std::string device_name = "");
+FCD_API fcd_source_c_sptr fcd_make_source_c(const std::string device_name = "");
 
 /*! \brief Funcube Dongle source block.
  * 
@@ -49,11 +50,10 @@ fcd_source_c_sptr fcd_make_source_c(const std::string device_name = "");
  * interface to work properly. As of early 2011, FCDs still come with firmware
  * 18b. You can use qthid 2.2 (not 3) to upgrade the firmware: http://qthid.sf.net
  */
-class fcd_source_c : public gr_hier_block2
+class FCD_API fcd_source_c : public gr_hier_block2
 {
 
 public:
-    fcd_source_c(const std::string device_name = ""); // FIXME: should be private
     ~fcd_source_c();
     
     /*! \brief Set frequency with Hz resolution.
@@ -127,6 +127,9 @@ public:
     void set_iq_corr(double _gain, double _phase);
 
 private:
+    fcd_source_c(const std::string device_name = "");
+    friend FCD_API fcd_source_c_sptr
+      fcd_make_source_c(const std::string device_name);
 
     audio_source::sptr fcd;  /*!< The audio input source */
     int d_freq_corr;         /*!< The frequency correction in ppm */
