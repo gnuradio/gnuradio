@@ -33,24 +33,3 @@ const float gr_fxpt::s_sine_table[1 << NBITS][2] = {
 const float gr_fxpt::PI = 3.14159265358979323846;
 const float gr_fxpt::TWO_TO_THE_31 = 2147483648.0;
 
-#if 0
-/*
- * Compute sine using table lookup with linear interpolation.
- * Each table entry contains slope and intercept.
- */
-float
-gr_fxpt::sin (gr_int32 x)
-{
-  gr_uint32 ux = x;
-  int index = ux >> (WORDBITS - NBITS);
-  return s_sine_table[index][0] * (ux >> 1) + s_sine_table[index][1];
-}
-
-float
-gr_fxpt::cos (gr_int32 x)
-{
-  gr_uint32 ux = x + 0x40000000;
-  int index = ux >> (WORDBITS - NBITS);
-  return s_sine_table[index][0] * (ux >> 1) + s_sine_table[index][1];
-}
-#endif
