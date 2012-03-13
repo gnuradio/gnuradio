@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2010 Free Software Foundation, Inc.
+ * Copyright 2005, 2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,41 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-#include <gr_probe_signal_f.h>
-#include <gr_io_signature.h>
+GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@);
 
-gr_probe_signal_f_sptr
-gr_make_probe_signal_f()
+@NAME@_sptr
+gr_make_@BASE_NAME@ ();
+
+class @NAME@ : public gr_sync_block
 {
-  return gnuradio::get_initial_sptr(new gr_probe_signal_f());
-}
-
-gr_probe_signal_f::gr_probe_signal_f ()
-  : gr_sync_block ("probe_signal_f",
-		   gr_make_io_signature(1, 1, sizeof(float)),
-		   gr_make_io_signature(0, 0, 0)),
-    d_level(0)
-{
-}
-
-gr_probe_signal_f::~gr_probe_signal_f()
-{
-}
-
-
-int
-gr_probe_signal_f::work(int noutput_items,
-			gr_vector_const_void_star &input_items,
-			gr_vector_void_star &output_items)
-{
-  const float *in = (const float *) input_items[0];
-
-  if (noutput_items > 0)
-    d_level = in[noutput_items-1];
-
-  return noutput_items;
-}
-
+public:
+  @TYPE@ level ();
+};

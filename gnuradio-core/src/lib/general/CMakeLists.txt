@@ -252,7 +252,6 @@ set(gr_core_general_triple_threats
     gr_probe_avg_mag_sqrd_c
     gr_probe_avg_mag_sqrd_cf
     gr_probe_avg_mag_sqrd_f
-    gr_probe_signal_f
     gr_pwr_squelch_cc
     gr_pwr_squelch_ff
     gr_quadrature_demod_cf

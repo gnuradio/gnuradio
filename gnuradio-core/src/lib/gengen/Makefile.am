@@ -77,6 +77,12 @@ core_generator = 			\
 	gr_peak_detector_XX.cc.t	\
 	gr_peak_detector_XX.h.t		\
 	gr_peak_detector_XX.i.t		\
+	gr_probe_signal_X.cc.t		\
+	gr_probe_signal_X.h.t		\
+	gr_probe_signal_X.i.t		\
+	gr_probe_signal_vX.cc.t		\
+	gr_probe_signal_vX.h.t		\
+	gr_probe_signal_vX.i.t		\
 	gr_sample_and_hold_XX.cc.t	\
 	gr_sample_and_hold_XX.h.t	\
 	gr_sample_and_hold_XX.i.t	\

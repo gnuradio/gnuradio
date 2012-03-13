@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005, 2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,13 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,probe_signal_f);
+GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@);
 
-gr_probe_signal_f_sptr
-gr_make_probe_signal_f ();
+@NAME@_sptr
+gr_make_@BASE_NAME@ (size_t size);
 
-class gr_probe_signal_f : public gr_sync_block
+class @NAME@ : public gr_sync_block
 {
 public:
-  float level () const { return d_level; }
+  std::vector<@TYPE@> level ();
 };

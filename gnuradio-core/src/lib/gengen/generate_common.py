@@ -33,7 +33,9 @@ ss_roots = [
     'gr_vector_source_X',
     'gr_vector_sink_X',
     'gr_noise_source_X',
-    'gr_sig_source_X'
+    'gr_sig_source_X',
+    'gr_probe_signal_X',
+    'gr_probe_signal_vX'
     ]
 
 # regular blocks
@@ -83,6 +85,8 @@ def generate ():
     expand_h_cc_i ('gr_add_const_XX', 'sf')     # for MC4020
     expand_h_cc_i ('gr_vector_sink_X', 'b')
     expand_h_cc_i ('gr_vector_source_X', 'b')
+    expand_h_cc_i ('gr_probe_signal_X', 'b')
+    expand_h_cc_i ('gr_probe_signal_vX', 'b')
     for r in ss_roots:
         for s in ss_signatures:
             expand_h_cc_i (r, s)
