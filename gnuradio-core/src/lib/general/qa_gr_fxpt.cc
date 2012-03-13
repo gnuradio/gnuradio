@@ -91,4 +91,14 @@ qa_gr_fxpt::t2 ()
 void
 qa_gr_fxpt::t3 ()
 {
+std::cout << "In fixed sincos test" << std::endl;
+  for (float p = -M_PI; p < M_PI; p += 2 * M_PI / 3600){
+    float expected_sin = sin (p);
+    float expected_cos = cos (p);
+    float actual_sin;
+    float actual_cos;
+    gr_fxpt::sincos (gr_fxpt::float_to_fixed (p), &actual_sin, &actual_cos);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL (expected_sin, actual_sin, SIN_COS_TOLERANCE);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL (expected_cos, actual_cos, SIN_COS_TOLERANCE);
+  }
 }

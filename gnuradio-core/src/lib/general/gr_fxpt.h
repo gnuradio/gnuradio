@@ -79,6 +79,22 @@ public:
     return s_sine_table[index][0] * (ux >> 1) + s_sine_table[index][1];
   }
 
+  /*
+   * \brief Given a fixedpoint angle x, return float cos(x) and sin (x)
+   */
+  static void sincos(gr_int32 x, float *s, float *c)
+  {
+    gr_uint32 ux = x;
+    int sin_index = ux >> (WORDBITS - NBITS);
+    *s = s_sine_table[sin_index][0] * (ux >> 1) + s_sine_table[sin_index][1];
+
+    ux = x + 0x40000000;
+    int cos_index = ux >> (WORDBITS - NBITS);
+    *c = s_sine_table[cos_index][0] * (ux >> 1) + s_sine_table[cos_index][1];
+
+    return;
+  }
+
 };
 
 #endif /* INCLUDED_GR_FXPT_H */
