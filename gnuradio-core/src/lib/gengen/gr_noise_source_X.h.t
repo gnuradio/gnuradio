@@ -34,22 +34,38 @@
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
+/*! \brief Make a noise source
+ * \param type  the random distribution to use (see gr_noise_type.h)
+ * \param ampl  a scaling factor for the output
+ * \param seed seed for random generators. Note that for uniform and
+ * Gaussian distributions, this should be a negative number.
+ */
 GR_CORE_API @NAME@_sptr 
-gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 3021);
+gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 0);
 
 /*!
- * \brief random number source
+ * \brief Random number source
  * \ingroup source_blk
+ *
+ * \details
+ * Generate random values from different distributions. 
+ * Currently, only Gaussian and uniform are enabled.
+ *
+ * \param type  the random distribution to use (see gr_noise_type.h)
+ * \param ampl  a scaling factor for the output
+ * \param seed seed for random generators. Note that for uniform and
+ * Gaussian distributions, this should be a negative number.
  */
 class GR_CORE_API @NAME@ : public gr_sync_block {
   friend GR_CORE_API @NAME@_sptr 
+
   gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed);
 
   gr_noise_type_t	d_type;
   float			d_ampl;
   gr_random		d_rng;
 
-  @NAME@ (gr_noise_type_t type, float ampl, long seed = 3021);
+  @NAME@ (gr_noise_type_t type, float ampl, long seed = 0);
 
  public:
   void set_type (gr_noise_type_t type) { d_type = type; }

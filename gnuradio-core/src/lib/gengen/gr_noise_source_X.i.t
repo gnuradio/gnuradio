@@ -25,11 +25,11 @@
 GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@);
 
 @NAME@_sptr 
-gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 3021);
+gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 0);
 
 class @NAME@ : public gr_block {
  private:
-  @NAME@ (gr_noise_type_t type, float ampl, long seed = 3021);
+  @NAME@ (gr_noise_type_t type, float ampl, long seed = 0);
 
  public:
   void set_type (gr_noise_type_t type) { d_type = type; }
