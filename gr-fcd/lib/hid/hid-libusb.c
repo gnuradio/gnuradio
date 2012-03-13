@@ -308,7 +308,7 @@ static int is_language_supported(libusb_device_handle *dev, uint16_t lang)
 static wchar_t *get_usb_string(libusb_device_handle *dev, uint8_t idx)
 {
 	char buf[512];
-	int len;
+	unsigned int len;
 	wchar_t *str = NULL;
 	wchar_t wbuf[256];
 

@@ -207,7 +207,7 @@ extern "C" {
 			contain the Report number if the device uses numbered reports.
 
 			@ingroup API
-			@param device A device handle returned from hid_open().
+			@param dev A device handle returned from hid_open().
 			@param data A buffer to put the read data into.
 			@param length The number of bytes to read. For devices with
 				multiple reports, make sure to read an extra byte for

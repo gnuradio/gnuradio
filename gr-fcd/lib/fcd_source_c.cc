@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <gr_audio_source.h>
 #include <gr_float_to_complex.h>
+#include <gruel/attributes.h>
 
 //#include <iostream>
 //using namespace std;
@@ -78,7 +79,7 @@ fcd_source_c::~fcd_source_c ()
 // Set frequency with Hz resolution
 void fcd_source_c::set_freq(int freq)
 {
-    FCD_MODE_ENUM fme;
+    FCD_MODE_ENUM __GR_ATTR_UNUSED fme;
     double f = (double)freq;
     
     /* valid range 50 MHz - 2.0 GHz */
@@ -96,7 +97,7 @@ void fcd_source_c::set_freq(int freq)
 // Set frequency with Hz resolution (type float)
 void fcd_source_c::set_freq(float freq)
 {
-    FCD_MODE_ENUM fme;
+    FCD_MODE_ENUM __GR_ATTR_UNUSED fme;
     double f = (double)freq;
     
     /* valid range 50 MHz - 2.0 GHz */
@@ -115,7 +116,7 @@ void fcd_source_c::set_freq(float freq)
 // Set frequency with kHz resolution.
 void fcd_source_c::set_freq_khz(int freq)
 {
-    FCD_MODE_ENUM fme;
+    FCD_MODE_ENUM __GR_ATTR_UNUSED fme;
     double f = freq*1000.0;
 
     /* valid range 50 MHz - 2.0 GHz */
@@ -134,7 +135,7 @@ void fcd_source_c::set_freq_khz(int freq)
 // Set LNA gain
 void fcd_source_c::set_lna_gain(float gain)
 {
-    FCD_MODE_ENUM fme;
+    FCD_MODE_ENUM __GR_ATTR_UNUSED fme;
     unsigned char g;
     
     /* convert to nearest discrete value */
