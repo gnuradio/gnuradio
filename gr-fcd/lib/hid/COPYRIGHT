@@ -1,0 +1,25 @@
+For convenience, GNU Radio includes the contents of this directory
+in its distribution, but they are not considered part of GNU Radio.
+
+These files are licensed and redistributed using the terms of the
+GPLv3.
+-------------------------------------------------------------------
+HIDAPI - Multi-Platform library for
+communication with HID devices.
+
+Alan Ott
+Signal 11 Software
+
+8/22/2009
+
+Copyright 2009, All Rights Reserved.
+
+At the discretion of the user of this library,
+this software may be licensed under the terms of the
+GNU Public License v3, a BSD-Style license, or the
+original HIDAPI license as outlined in the LICENSE.txt,
+LICENSE-gpl3.txt, LICENSE-bsd.txt, and LICENSE-orig.txt
+files located at the root of the source distribution.
+These files may also be found in the public source
+code repository located at:
+        http://github.com/signal11/hidapi .
