@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005, 2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,40 +19,40 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_GR_PROBE_SIGNAL_F_H
-#define INCLUDED_GR_PROBE_SIGNAL_F_H
+#ifndef @GUARD_NAME@
+#define @GUARD_NAME@
 
 #include <gr_core_api.h>
 #include <gr_sync_block.h>
 
-class gr_probe_signal_f;
-typedef boost::shared_ptr<gr_probe_signal_f> gr_probe_signal_f_sptr;
+class @NAME@;
+typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
-GR_CORE_API gr_probe_signal_f_sptr
-gr_make_probe_signal_f ();
+GR_CORE_API @NAME@_sptr
+gr_make_@BASE_NAME@ ();
 
 /*!
  * \brief Sink that allows a sample to be grabbed from Python.
  * \ingroup sink_blk
  */
-class GR_CORE_API gr_probe_signal_f : public gr_sync_block
+class GR_CORE_API @NAME@ : public gr_sync_block
 {
-  float	d_level;
+  @TYPE@ d_level;
 
-  friend GR_CORE_API gr_probe_signal_f_sptr
-  gr_make_probe_signal_f();
+  friend GR_CORE_API @NAME@_sptr
+  gr_make_@BASE_NAME@();
 
-  gr_probe_signal_f();
+  @NAME@();
 
 public:
-  ~gr_probe_signal_f();
+  ~@NAME@();
 
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,
 	   gr_vector_void_star &output_items);
 
-  float level() const { return d_level; }
+  @TYPE@ level() const { return d_level; }
 
 };
 
-#endif /* INCLUDED_GR_PROBE_SIGNAL_F_H */
+#endif /* @GUARD_NAME@ */

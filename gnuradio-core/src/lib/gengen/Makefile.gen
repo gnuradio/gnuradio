@@ -72,6 +72,16 @@ GENERATED_H = \
 	gr_peak_detector_fb.h \
 	gr_peak_detector_ib.h \
 	gr_peak_detector_sb.h \
+	gr_probe_signal_b.h \
+	gr_probe_signal_s.h \
+	gr_probe_signal_i.h \
+	gr_probe_signal_f.h \
+	gr_probe_signal_c.h \
+	gr_probe_signal_vb.h \
+	gr_probe_signal_vs.h \
+	gr_probe_signal_vi.h \
+	gr_probe_signal_vf.h \
+	gr_probe_signal_vc.h \
 	gr_sample_and_hold_bb.h \
 	gr_sample_and_hold_ff.h \
 	gr_sample_and_hold_ii.h \
@@ -172,6 +182,16 @@ GENERATED_I = \
 	gr_peak_detector_fb.i \
 	gr_peak_detector_ib.i \
 	gr_peak_detector_sb.i \
+	gr_probe_signal_b.i \
+	gr_probe_signal_s.i \
+	gr_probe_signal_i.i \
+	gr_probe_signal_f.i \
+	gr_probe_signal_c.i \
+	gr_probe_signal_vb.i \
+	gr_probe_signal_vs.i \
+	gr_probe_signal_vi.i \
+	gr_probe_signal_vf.i \
+	gr_probe_signal_vc.i \
 	gr_sample_and_hold_bb.i \
 	gr_sample_and_hold_ff.i \
 	gr_sample_and_hold_ii.i \
@@ -272,6 +292,16 @@ GENERATED_CC = \
 	gr_peak_detector_fb.cc \
 	gr_peak_detector_ib.cc \
 	gr_peak_detector_sb.cc \
+	gr_probe_signal_b.cc \
+	gr_probe_signal_s.cc \
+	gr_probe_signal_i.cc \
+	gr_probe_signal_f.cc \
+	gr_probe_signal_c.cc \
+	gr_probe_signal_vb.cc \
+	gr_probe_signal_vs.cc \
+	gr_probe_signal_vi.cc \
+	gr_probe_signal_vf.cc \
+	gr_probe_signal_vc.cc \
 	gr_sample_and_hold_bb.cc \
 	gr_sample_and_hold_ff.cc \
 	gr_sample_and_hold_ii.cc \

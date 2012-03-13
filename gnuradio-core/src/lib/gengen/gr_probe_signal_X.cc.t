@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2005,2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,21 +20,40 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+#include <@NAME@.h>
+#include <gr_io_signature.h>
 
-GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@);
+@NAME@_sptr
+gr_make_@BASE_NAME@()
+{
+  return gnuradio::get_initial_sptr(new @NAME@());
+}
 
-@NAME@_sptr 
-gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 0);
+@NAME@::@NAME@ ()
+: gr_sync_block ("@BASE_NAME@",
+		   gr_make_io_signature(1, 1, sizeof(@TYPE@)),
+		   gr_make_io_signature(0, 0, 0)),
+    d_level(0)
+{
+}
 
-class @NAME@ : public gr_block {
- private:
-  @NAME@ (gr_noise_type_t type, float ampl, long seed = 0);
+@NAME@::~@NAME@()
+{
+}
 
- public:
-  void set_type (gr_noise_type_t type) { d_type = type; }
-  void set_amplitude (float ampl) { d_ampl = ampl; }
 
-  gr_noise_type_t type () const { return d_type; }
-  float amplitude () const { return d_ampl; }
-};
+int
+@NAME@::work(int noutput_items,
+			gr_vector_const_void_star &input_items,
+			gr_vector_void_star &output_items)
+{
+  const @TYPE@ *in = (const @TYPE@ *) input_items[0];
+
+  if (noutput_items > 0)
+    d_level = in[noutput_items-1];
+
+  return noutput_items;
+}
