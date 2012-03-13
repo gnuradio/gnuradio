@@ -47,7 +47,7 @@
 	<param>
 		<name>Seed</name>
 		<key>seed</key>
-		<value>42</value>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<sink>
