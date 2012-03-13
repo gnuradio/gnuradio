@@ -27,7 +27,7 @@ set(hid_sources)
 
 if(WIN32)
   list(APPEND hid_sources ${CMAKE_CURRENT_SOURCE_DIR}/hidwin.c)
-elseif(MACOSX)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   list(APPEND hid_sources ${CMAKE_CURRENT_SOURCE_DIR}/hidmac.c)
 else()
   list(APPEND hid_sources ${CMAKE_CURRENT_SOURCE_DIR}/hid-libusb.c)

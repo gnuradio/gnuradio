@@ -48,7 +48,10 @@ list(APPEND fcd_libs
     ${Boost_LIBRARIES}
 )
 
-if(NOT WIN32 AND NOT MACOSX)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  FIND_LIBRARY(IOKIT_LIBRARY IOKit)
+  list(APPEND fcd_libs ${IOKIT_LIBRARY})
+elseif (NOT WIN32)
   list(APPEND fcd_libs
     ${LIBUSB_LIBRARIES}
   )
