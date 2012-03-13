@@ -86,6 +86,7 @@ noinst_PYTHON = 			\
 	qa_pll_freqdet.py		\
 	qa_pll_refout.py		\
 	qa_pn_correlator_cc.py		\
+	qa_probe_signal.py		\
 	qa_rational_resampler.py	\
 	qa_sig_source.py		\
 	qa_single_pole_iir.py		\

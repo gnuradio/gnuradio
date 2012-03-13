@@ -110,7 +110,6 @@ libgeneral_la_SOURCES = 		\
 	gr_probe_avg_mag_sqrd_c.cc	\
 	gr_probe_avg_mag_sqrd_cf.cc	\
 	gr_probe_avg_mag_sqrd_f.cc	\
-	gr_probe_signal_f.cc		\
 	gr_pwr_squelch_cc.cc		\
 	gr_pwr_squelch_ff.cc		\
 	gr_quadrature_demod_cf.cc	\
@@ -264,7 +263,6 @@ grinclude_HEADERS = 			\
 	gr_probe_avg_mag_sqrd_c.h	\
 	gr_probe_avg_mag_sqrd_cf.h	\
 	gr_probe_avg_mag_sqrd_f.h	\
-	gr_probe_signal_f.h		\
 	gr_pwr_squelch_cc.h		\
 	gr_pwr_squelch_ff.h		\
 	gr_quadrature_demod_cf.h	\
@@ -420,7 +418,6 @@ swiginclude_HEADERS =			\
 	gr_probe_avg_mag_sqrd_c.i	\
 	gr_probe_avg_mag_sqrd_cf.i	\
 	gr_probe_avg_mag_sqrd_f.i	\
-	gr_probe_signal_f.i		\
 	gr_pwr_squelch_cc.i		\
 	gr_pwr_squelch_ff.i		\
 	gr_quadrature_demod_cf.i	\
