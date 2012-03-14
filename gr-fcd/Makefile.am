@@ -24,11 +24,9 @@ ACLOCAL_AMFLAGS = -I config
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
-	AUTHORS \
-	README \
-	README.hacking
+	AUTHORS
 
-SUBDIRS = lib swig python grc examples doc
+SUBDIRS = lib include swig python grc examples doc
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gnuradio-fcd.pc

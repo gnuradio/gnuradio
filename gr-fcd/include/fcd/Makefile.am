@@ -21,4 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-grinclude_HEADERS = fcd_source_c.h
+grinclude_HEADERS = 	\
+	fcd_api.h	\
+	fcd_source_c.h
