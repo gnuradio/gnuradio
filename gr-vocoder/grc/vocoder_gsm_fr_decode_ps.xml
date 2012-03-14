@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## GSM full-rate audio decoder
+###################################################
+ -->
+<block>
+	<name>GSM full-rate Audio Decoder</name>
+	<key>vocoder_gsm_fr_decode_ps</key>
+	<import>from gnuradio import vocoder</import>
+	<make>vocoder.gsm_fr_decode_ps()</make>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>short</type>
+	</source>
+</block>

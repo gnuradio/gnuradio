@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2011 Free Software Foundation, Inc.
+# Copyright 2006,2007,2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -190,6 +190,17 @@ class app_top_block(gr.top_block):
         AUDIO = audio.sink(int(options.output_rate),
                            options.audio_output)
 	self.connect(tail, AUDIO)
+
+        # Direct asynchronous notifications to callback function
+        if self.options.show_async_msg:
+            self.async_msgq = gr.msg_queue(0)
+            self.async_src = uhd.amsg_source("", self.async_msgq)
+            self.async_rcv = gru.msgq_runner(self.async_msgq, self.async_callback)
+
+    def async_callback(self, msg):
+        md = self.async_src.msg_to_async_metadata_t(msg)
+        print "Channel: %i Time: %f Event: %i" % (md.channel, md.time_spec.get_real_secs(), md.event_code)
+
 	
 def main():
     parser = OptionParser(option_class=eng_option)
@@ -222,6 +233,8 @@ def main():
 		      help="set CTCSS squelch to FREQ [default=%default]")
     parser.add_option("-O", "--audio-output", type="string", default="",
                       help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
+    parser.add_option("", "--show-async-msg", action="store_true", default=False,
+                      help="Show asynchronous message notifications from UHD [default=%default]")
     (options, args) = parser.parse_args()
 
     if options.frequency is None:

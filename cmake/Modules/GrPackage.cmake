@@ -103,7 +103,7 @@ endfunction(CPACK_COMPONENT)
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GNU Radio - The GNU Software Radio")
 set(CPACK_PACKAGE_VENDOR              "Free Software Foundation, Inc.")
 set(CPACK_PACKAGE_CONTACT             "Discuss GNURadio <discuss-gnuradio@gnu.org>")
-set(CPACK_PACKAGE_VERSION ${VERSION})
+string(REPLACE "v" "" CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/README)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README)
 set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/README)
@@ -123,7 +123,7 @@ if((DEBIAN OR REDHAT) AND LSB_RELEASE_EXECUTABLE)
     )
 
     #set a more sensible package name for this system
-    SET(CPACK_PACKAGE_FILE_NAME "gnuradio-${CPACK_PACKAGE_VERSION}-${LSB_ID}-${LSB_RELEASE}-${CMAKE_SYSTEM_PROCESSOR}")
+    SET(CPACK_PACKAGE_FILE_NAME "gnuradio_${CPACK_PACKAGE_VERSION}_${LSB_ID}-${LSB_RELEASE}-${CMAKE_SYSTEM_PROCESSOR}")
 
     #now try to include the component based dependencies
     set(package_deps_file "${CMAKE_SOURCE_DIR}/cmake/Packaging/${LSB_ID}-${LSB_RELEASE}.cmake")
@@ -134,6 +134,7 @@ if((DEBIAN OR REDHAT) AND LSB_RELEASE_EXECUTABLE)
 endif()
 
 if(${CPACK_GENERATOR} STREQUAL NSIS)
+    set(CPACK_PACKAGE_FILE_NAME "gnuradio_${CPACK_PACKAGE_VERSION}_win32")
     set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
 endif()
 

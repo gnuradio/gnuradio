@@ -10,10 +10,11 @@
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio import window</import>
 	<make>#if $type() == "complex"
-gr.fft_vcc($fft_size, $forward, $window, $shift)
+gr.fft_vcc($fft_size, $forward, $window, $shift, $nthreads)
 #else
-gr.fft_vfc($fft_size, $forward, $window)
+gr.fft_vfc($fft_size, $forward, $window, $nthreads)
 #end if</make>
+	<callback>set_nthreads($nthreads)</callback>
 	<param>
 		<name>Input Type</name>
 		<key>type</key>
@@ -67,6 +68,12 @@ gr.fft_vfc($fft_size, $forward, $window)
 			<name>No</name>
 			<key>False</key>
 		</option>
+	</param>
+	<param>
+		<name>Num. Threads</name>
+		<key>nthreads</key>
+		<value>1</value>
+		<type>int</type>
 	</param>
 	<sink>
 		<name>in</name>

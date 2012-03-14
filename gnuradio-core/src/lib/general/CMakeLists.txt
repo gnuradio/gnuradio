@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -178,6 +178,7 @@ endif(ENABLE_PYTHON)
 ########################################################################
 set(gr_core_general_triple_threats
     complex_vec_test
+    gr_add_ff
     gr_additive_scrambler_bb
     gr_agc_cc
     gr_agc_ff
@@ -187,6 +188,7 @@ set(gr_core_general_triple_threats
     gr_bin_statistics_f
     gr_bytes_to_syms
     gr_char_to_float
+    gr_char_to_short
     gr_check_counting_s
     gr_check_lfsr_32k_s
     gr_complex_to_interleaved_short
@@ -229,6 +231,11 @@ set(gr_core_general_triple_threats
     gr_kludge_copy
     gr_lfsr_32k_source_s
     gr_map_bb
+    gr_multiply_cc
+    gr_multiply_ff
+    gr_multiply_const_cc
+    gr_multiply_const_ff
+    gr_multiply_conjugate_cc
     gr_nlog10_ff
     gr_nop
     gr_null_sink
@@ -256,6 +263,7 @@ set(gr_core_general_triple_threats
     gr_rms_ff
     gr_repeat
     gr_short_to_float
+    gr_short_to_char
     gr_simple_correlator
     gr_simple_framer
     gr_simple_squelch_cc

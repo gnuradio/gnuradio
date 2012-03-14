@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ulaw audio encoder
+###################################################
+ -->
+<block>
+	<name>ulaw Audio Encoder</name>
+	<key>vocoder_ulaw_encode_sb</key>
+	<import>from gnuradio import vocoder</import>
+	<make>vocoder.ulaw_encode_sb()</make>
+	<sink>
+		<name>in</name>
+		<type>short</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>
+
+

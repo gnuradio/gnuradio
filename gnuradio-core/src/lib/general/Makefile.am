@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2006,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2006-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -37,6 +37,7 @@ EXTRA_DIST += \
 
 libgeneral_la_SOURCES = 		\
 	complex_vec_test.cc		\
+	gr_add_ff.cc			\
 	gr_additive_scrambler_bb.cc	\
 	gr_agc_cc.cc                	\
 	gr_agc_ff.cc                	\
@@ -46,6 +47,7 @@ libgeneral_la_SOURCES = 		\
 	gr_bin_statistics_f.cc		\
 	gr_bytes_to_syms.cc		\
 	gr_char_to_float.cc		\
+	gr_char_to_short.cc		\
 	gr_check_counting_s.cc		\
 	gr_check_lfsr_32k_s.cc		\
 	gr_circular_file.cc		\
@@ -93,6 +95,11 @@ libgeneral_la_SOURCES = 		\
 	gr_lfsr_32k_source_s.cc		\
 	gr_map_bb.cc			\
 	gr_misc.cc			\
+	gr_multiply_cc.cc		\
+	gr_multiply_ff.cc		\
+	gr_multiply_const_cc.cc		\
+	gr_multiply_const_ff.cc		\
+	gr_multiply_conjugate_cc.cc	\
 	gr_nlog10_ff.cc			\
 	gr_nop.cc			\
 	gr_null_sink.cc			\
@@ -122,6 +129,7 @@ libgeneral_la_SOURCES = 		\
 	gr_reverse.cc			\
 	gr_rms_cf.cc			\
 	gr_rms_ff.cc			\
+	gr_short_to_char.cc		\
 	gr_short_to_float.cc		\
 	gr_int_to_float.cc		\
 	gr_simple_correlator.cc		\
@@ -187,6 +195,7 @@ grinclude_HEADERS = 			\
 	gr_core_api.h			\
 	complex_vec_test.h		\
 	gr_additive_scrambler_bb.h	\
+	gr_add_ff.h			\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
 	gr_agc2_cc.h                	\
@@ -195,6 +204,7 @@ grinclude_HEADERS = 			\
 	gr_bin_statistics_f.h		\
 	gr_bytes_to_syms.h		\
 	gr_char_to_float.h		\
+	gr_char_to_short.h		\
 	gr_check_counting_s.h		\
 	gr_check_lfsr_32k_s.h		\
 	gr_circular_file.h		\
@@ -246,6 +256,11 @@ grinclude_HEADERS = 			\
 	gr_map_bb.h			\
 	gr_math.h			\
 	gr_misc.h			\
+	gr_multiply_cc.h		\
+	gr_multiply_ff.h		\
+	gr_multiply_const_cc.h		\
+	gr_multiply_const_ff.h		\
+	gr_multiply_conjugate_cc.h	\
 	gr_nco.h			\
 	gr_nlog10_ff.h			\
 	gr_nop.h			\
@@ -276,6 +291,7 @@ grinclude_HEADERS = 			\
 	gr_reverse.h			\
 	gr_rms_cf.h			\
 	gr_rms_ff.h			\
+	gr_short_to_char.h		\
 	gr_short_to_float.h		\
 	gr_int_to_float.h		\
 	gr_simple_correlator.h		\
@@ -353,6 +369,7 @@ swiginclude_HEADERS =			\
 	complex_vec_test.i		\
 	general.i			\
 	gr_additive_scrambler_bb.i	\
+	gr_add_ff.i			\
 	gr_agc_cc.i                 	\
 	gr_agc_ff.i                 	\
 	gr_agc2_cc.i                 	\
@@ -361,6 +378,7 @@ swiginclude_HEADERS =			\
 	gr_bin_statistics_f.i		\
 	gr_bytes_to_syms.i		\
 	gr_char_to_float.i		\
+	gr_char_to_short.i		\
 	gr_check_counting_s.i		\
 	gr_check_lfsr_32k_s.i		\
 	gr_complex_to_interleaved_short.i \
@@ -403,6 +421,11 @@ swiginclude_HEADERS =			\
 	gr_kludge_copy.i		\
 	gr_lfsr_32k_source_s.i		\
 	gr_map_bb.i			\
+	gr_multiply_cc.i		\
+	gr_multiply_ff.i		\
+	gr_multiply_const_cc.i		\
+	gr_multiply_const_ff.i		\
+	gr_multiply_conjugate_cc.i	\
 	gr_nlog10_ff.i			\
 	gr_nop.i			\
 	gr_null_sink.i			\
@@ -430,6 +453,7 @@ swiginclude_HEADERS =			\
 	gr_rms_cf.i			\
 	gr_rms_ff.i			\
 	gr_repeat.i			\
+	gr_short_to_char.i		\
 	gr_short_to_float.i		\
 	gr_simple_correlator.i		\
 	gr_simple_framer.i		\

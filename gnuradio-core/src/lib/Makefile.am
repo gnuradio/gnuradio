@@ -51,6 +51,7 @@ libgnuradio_core_la_LIBADD  = 		\
 	runtime/libruntime.la		\
 	hier/libhier.la			\
 	$(GRUEL_LA)			\
+	$(VOLK_LA)			\
 	$(FFTW3F_LIBS)			\
 	$(GSL_LIBS)			\
 	$(CBLAS_LIBS)			\

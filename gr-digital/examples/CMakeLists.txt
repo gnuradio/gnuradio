@@ -44,3 +44,17 @@ GR_PYTHON_INSTALL(PROGRAMS
     DESTINATION ${GR_PKG_DATA_DIR}/examples/digital/narrowband
     COMPONENT "digital_python"
 )
+
+GR_PYTHON_INSTALL(PROGRAMS
+    ofdm/benchmark_add_channel.py
+    ofdm/benchmark_rx.py
+    ofdm/benchmark_tx.py
+    ofdm/gr_plot_ofdm.py
+    ofdm/ofdm_mod_demod_test.py
+    ofdm/receive_path.py
+    ofdm/transmit_path.py
+    ofdm/tunnel.py
+    ofdm/uhd_interface.py
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/digital/ofdm
+    COMPONENT "digital_python"
+)

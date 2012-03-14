@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>CVSD Encoder</name>
-	<key>blks2_cvsd_encode</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.cvsd_encode($resample,$bw)</make>
+	<key>vocoder_cvsd_encode_fb</key>
+	<import>from gnuradio import vocoder</import>
+	<make>vocoder.cvsd_encode_fb($resample,$bw)</make>
 	<param>
 	  <name>Resample</name>
 	  <key>resample</key>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## g721 audio encoder
+###################################################
+ -->
+<block>
+	<name>g721 Audio Encoder</name>
+	<key>vocoder_g721_encode_sb</key>
+	<import>from gnuradio import vocoder</import>
+	<make>vocoder.g721_encode_sb()</make>
+	<sink>
+		<name>in</name>
+		<type>short</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>
+
+

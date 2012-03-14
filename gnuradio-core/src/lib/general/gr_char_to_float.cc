@@ -26,30 +26,47 @@
 
 #include <gr_char_to_float.h>
 #include <gr_io_signature.h>
-#include <gri_char_to_float.h>
+#include <volk/volk.h>
 
 gr_char_to_float_sptr
-gr_make_char_to_float ()
+gr_make_char_to_float (size_t vlen, float scale)
 {
-  return gnuradio::get_initial_sptr(new gr_char_to_float ());
+  return gnuradio::get_initial_sptr(new gr_char_to_float (vlen, scale));
 }
 
-gr_char_to_float::gr_char_to_float ()
+gr_char_to_float::gr_char_to_float (size_t vlen, float scale)
   : gr_sync_block ("gr_char_to_float",
-		   gr_make_io_signature (1, 1, sizeof (char)),
-		   gr_make_io_signature (1, 1, sizeof (float)))
+		   gr_make_io_signature (1, 1, sizeof (char)*vlen),
+		   gr_make_io_signature (1, 1, sizeof (float)*vlen)),
+    d_vlen(vlen), d_scale(scale)    
 {
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(alignment_multiple);
+}
+
+float 
+gr_char_to_float::scale() const
+{
+  return d_scale;
+}
+
+void
+gr_char_to_float::set_scale(float scale)
+{
+  d_scale = scale;
 }
 
 int
 gr_char_to_float::work (int noutput_items,
-			 gr_vector_const_void_star &input_items,
-			 gr_vector_void_star &output_items)
+			gr_vector_const_void_star &input_items,
+			gr_vector_void_star &output_items)
 {
-  const char *in = (const char *) input_items[0];
+  const int8_t *in = (const int8_t *) input_items[0];
   float *out = (float *) output_items[0];
 
-  gri_char_to_float (in, out, noutput_items);
-  
+  // Note: the unaligned benchmarked much faster than the aligned
+  volk_8i_s32f_convert_32f_u(out, in, d_scale, d_vlen*noutput_items);
+
   return noutput_items;
 }

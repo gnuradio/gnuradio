@@ -28,8 +28,6 @@ dist_ourdata_DATA = \
 	band_reject_filter.xml \
 	blks2_am_demod_cf.xml \
 	blks2_analysis_filterbank.xml \
-	blks2_cvsd_encode.xml \
-	blks2_cvsd_decode.xml \
 	blks2_error_rate.xml \
 	blks2_fm_deemph.xml \
 	blks2_fm_demod_cf.xml \
@@ -162,6 +160,7 @@ dist_ourdata_DATA = \
 	gr_stream_to_vector.xml \
 	gr_streams_to_stream.xml \
 	gr_streams_to_vector.xml \
+	gr_burst_tagger.xml \
 	gr_sub_xx.xml \
 	gr_threshold_ff.xml \
 	gr_throttle.xml \

@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -41,7 +41,7 @@ if(UNIX AND HAVE_XDG_UTILS)
         ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop
     @ONLY)
     install(
-        FILES ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop
+        PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop
         DESTINATION ${GR_PKG_LIBEXEC_DIR} COMPONENT "grc"
     )
 endif(UNIX AND HAVE_XDG_UTILS)

@@ -26,14 +26,16 @@
 
 #include <gri_fft_filter_fff_generic.h>
 #include <gri_fft.h>
+#include <volk/volk.h>
 #include <assert.h>
 #include <stdexcept>
 #include <cstdio>
 #include <cstring>
 
 gri_fft_filter_fff_generic::gri_fft_filter_fff_generic (int decimation, 
-							const std::vector<float> &taps)
-  : d_fftsize(-1), d_decimation(decimation), d_fwdfft(0), d_invfft(0)
+							const std::vector<float> &taps,
+							int nthreads)
+  : d_fftsize(-1), d_decimation(decimation), d_fwdfft(0), d_invfft(0), d_nthreads(nthreads)
 {
   set_taps(taps);
 }
@@ -104,6 +106,22 @@ gri_fft_filter_fff_generic::compute_sizes(int ntaps)
   }
 }
 
+void
+gri_fft_filter_fff_generic::set_nthreads(int n)
+{
+  d_nthreads = n;
+  if(d_fwdfft)
+    d_fwdfft->set_nthreads(n);
+  if(d_invfft)
+    d_invfft->set_nthreads(n);
+}
+
+int
+gri_fft_filter_fff_generic::nthreads() const
+{
+  return d_nthreads;
+}
+
 int
 gri_fft_filter_fff_generic::filter (int nitems, const float *input, float *output)
 {
@@ -124,9 +142,7 @@ gri_fft_filter_fff_generic::filter (int nitems, const float *input, float *outpu
     gr_complex *b = &d_xformed_taps[0];
     gr_complex *c = d_invfft->get_inbuf();
 
-    for (j = 0; j < d_fftsize/2+1; j++) {	// filter in the freq domain
-      c[j] = a[j] * b[j];
-    }      
+    volk_32fc_x2_multiply_32fc_a(c, a, b, d_fftsize/2+1);
    
     d_invfft->execute();	// compute inv xform
 

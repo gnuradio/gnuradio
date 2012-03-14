@@ -39,16 +39,26 @@ gr_make_single_pole_iir_filter_ff (double alpha, unsigned int vlen=1);
  * \ingroup filter_blk
  *
  * The input and output satisfy a difference equation of the form
-
- \f[
+ \htmlonly
+ \f{
  y[n] - (1-alpha) y[n-1] = alpha x[n]
- \f]
+ \f}
+ \endhtmlonly
+
+ \xmlonly
+ y[n] - (1-alpha) y[n-1] = alpha x[n]
+ \endxmlonly
 
  * with the corresponding rational system function
-
- \f[
+ \htmlonly
+ \f{
  H(z) = \frac{alpha}{1 - (1-alpha) z^{-1}}
- \f]
+ \f}
+ \endhtmlonly
+
+ \xmlonly
+H(z) = \ frac{alpha}{1 - (1-alpha) z^{-1}}
+ \endxmlonly
 
  * Note that some texts define the system function with a + in the denominator.
  * If you're using that convention, you'll need to negate the feedback tap.
