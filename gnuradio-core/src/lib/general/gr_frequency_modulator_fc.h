@@ -39,8 +39,8 @@ GR_CORE_API gr_frequency_modulator_fc_sptr gr_make_frequency_modulator_fc (doubl
  */
 class GR_CORE_API gr_frequency_modulator_fc : public gr_sync_block
 {
-  double	d_sensitivity;
-  double	d_phase;
+  float	d_sensitivity;
+  float	d_phase;
 
   friend GR_CORE_API gr_frequency_modulator_fc_sptr
   gr_make_frequency_modulator_fc (double sensitivity);
