@@ -254,13 +254,18 @@ add_custom_command(
 )
 
 ########################################################################
+# Set local include directories first
+########################################################################
+include_directories(
+    ${CMAKE_BINARY_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+########################################################################
 # Handle orc support
 ########################################################################
-
-
-
-
-
 if(ORC_FOUND)
     #setup orc library usage
     include_directories(${ORC_INCLUDE_DIRS})
@@ -293,13 +298,6 @@ endif()
 if(NOT WIN32)
     add_definitions(-fvisibility=hidden)
 endif()
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_BINARY_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
 
 list(APPEND volk_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/volk_prefs.c
