@@ -47,6 +47,24 @@ static int my_fftw_read_char(void *f) { return fgetc((FILE *) f); }
 #include <boost/filesystem/path.hpp>
 namespace fs = boost::filesystem;
 
+gr_complex *
+gri_fft_malloc_complex(int size)
+{
+  return (gr_complex*)fftwf_malloc(sizeof(gr_complex)*size);
+}
+
+float *
+gri_fft_malloc_float(int size)
+{
+  return (float*)fftwf_malloc(sizeof(float)*size);
+}
+
+void
+gri_fft_free(void *b)
+{
+  fftwf_free(b);
+}
+
 boost::mutex &
 gri_fft_planner::mutex()
 {

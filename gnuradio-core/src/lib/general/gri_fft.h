@@ -30,6 +30,19 @@
 #include <gr_complex.h>
 #include <boost/thread.hpp>
 
+/*! \brief Helper function for allocating complex fft buffers
+ */
+gr_complex* gri_fft_malloc_complex(int size);
+
+/*! \brief Helper function for allocating float fft buffers
+ */
+float* gri_fft_malloc_float(int size);
+
+/*! \brief Helper function for freeing fft buffers
+ */
+void gri_fft_free(void *b);
+
+
 /*!
  * \brief Export reference to planner mutex for those apps that
  * want to use FFTW w/o using the gri_fftw* classes.
