@@ -44,6 +44,7 @@ gri_fft_filter_fff_generic::~gri_fft_filter_fff_generic ()
 {
   delete d_fwdfft;
   delete d_invfft;
+  gri_fft_free(d_xformed_taps);
 }
 
 /*
@@ -102,7 +103,7 @@ gri_fft_filter_fff_generic::compute_sizes(int ntaps)
     delete d_invfft;
     d_fwdfft = new gri_fft_real_fwd(d_fftsize);
     d_invfft = new gri_fft_real_rev(d_fftsize);
-    d_xformed_taps.resize(d_fftsize/2+1);
+    d_xformed_taps = gri_fft_malloc_complex(d_fftsize/2+1);
   }
 }
 
@@ -139,7 +140,7 @@ gri_fft_filter_fff_generic::filter (int nitems, const float *input, float *outpu
     d_fwdfft->execute();	// compute fwd xform
 
     gr_complex *a = d_fwdfft->get_outbuf();
-    gr_complex *b = &d_xformed_taps[0];
+    gr_complex *b = d_xformed_taps;
     gr_complex *c = d_invfft->get_inbuf();
 
     volk_32fc_x2_multiply_32fc_a(c, a, b, d_fftsize/2+1);

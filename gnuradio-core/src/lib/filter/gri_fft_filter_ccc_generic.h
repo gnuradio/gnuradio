@@ -44,8 +44,8 @@ class GR_CORE_API gri_fft_filter_ccc_generic
   gri_fft_complex	  *d_invfft;		// inverse "plan"
   int                      d_nthreads;          // number of FFTW threads to use
   std::vector<gr_complex>  d_tail;		// state carried between blocks for overlap-add
-  std::vector<gr_complex>  d_xformed_taps;	// Fourier xformed taps
   std::vector<gr_complex>  d_new_taps;
+  gr_complex              *d_xformed_taps;	// Fourier xformed taps
 
   void compute_sizes(int ntaps);
   int tailsize() const { return d_ntaps - 1; }
