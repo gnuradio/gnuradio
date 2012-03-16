@@ -38,6 +38,10 @@ class gr_fir_fff;
  * Although mu, the fractional delay, is specified as a float, it is actually
  * quantized.  0.0 <= mu <= 1.0.  That is, mu is quantized in the interpolate 
  * method to 32nd's of a sample.
+ *
+ * For more information, in the GNU Radio source code, see:
+ * \li gnuradio-core/src/gen_interpolator_taps/README
+ * \li gnuradio-core/src/gen_interpolator_taps/praxis.txt
  */
 
 class GR_CORE_API gri_mmse_fir_interpolator {
