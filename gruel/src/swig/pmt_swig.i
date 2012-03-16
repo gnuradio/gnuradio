@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,26 +34,13 @@
 #include <gruel/pmt.h>
 %}
 
+%include "gruel_common.i"
 //load generated python docstrings
 %include "pmt_swig_doc.i"
 
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler
 ////////////////////////////////////////////////////////////////////////
-%include exception.i
-
-%exception {
-    try {
-        $action
-    }
-    catch(std::exception &e) {
-        SWIG_exception(SWIG_RuntimeError, e.what());
-    }
-    catch(...) {
-        SWIG_exception(SWIG_RuntimeError, "Unknown exception");
-    }
-
-}
 
 // Template intrusive_ptr for Swig to avoid dereferencing issues
 namespace pmt{
