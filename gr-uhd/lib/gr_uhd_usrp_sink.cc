@@ -278,6 +278,15 @@ public:
         return _dev;
     }
 
+    void set_user_register(const uint8_t addr, const uint32_t data, size_t mboard){
+        #ifdef UHD_USRP_MULTI_USRP_USER_REGS_API
+        _dev->set_user_register(addr, data, mboard);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
+
 /***********************************************************************
  * Work
  **********************************************************************/
