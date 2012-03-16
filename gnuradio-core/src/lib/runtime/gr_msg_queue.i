@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2005,2009,2010,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -85,16 +85,16 @@ public:
 %inline %{
   gr_message_sptr gr_py_msg_queue__delete_head(gr_msg_queue_sptr q) {
     gr_message_sptr msg;
-    Py_BEGIN_ALLOW_THREADS;		// release global interpreter lock
-    msg = q->delete_head();		// possibly blocking call
-    Py_END_ALLOW_THREADS;		// acquire global interpreter lock
+    GR_PYTHON_BLOCKING_CODE(
+        msg = q->delete_head();
+    )
     return msg;
   }
 
   void gr_py_msg_queue__insert_tail(gr_msg_queue_sptr q, gr_message_sptr msg) {
-    Py_BEGIN_ALLOW_THREADS;		// release global interpreter lock
-    q->insert_tail(msg);		// possibly blocking call
-    Py_END_ALLOW_THREADS;		// acquire global interpreter lock
+    GR_PYTHON_BLOCKING_CODE(
+        q->insert_tail(msg);
+    )
   }
 %}
 

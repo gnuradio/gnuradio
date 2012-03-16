@@ -61,6 +61,7 @@ pmt_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 pmt_swig_swiginclude_headers =  \
+	gruel_common.i \
 	gr_intrusive_ptr.i \
 	$(TOP_SWIG_DOC_IFILES)
 
