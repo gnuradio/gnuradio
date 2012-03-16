@@ -196,7 +196,10 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const 
 #if LV_HAVE_SSE && LV_HAVE_32
 
 static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
-  
+
+  volk_32fc_x2_dot_prod_32fc_a_generic(result, input, taps, num_bytes);
+
+#if 0
   asm volatile 
     (
      "	#pushl	%%ebp\n\t"
@@ -307,12 +310,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const 
   }
   
   return;
-  
-  
-  
-
-  
-  
+#endif  
 }
 
 #endif /*LV_HAVE_SSE*/  
