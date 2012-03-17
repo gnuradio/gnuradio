@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010, 2011 Free Software Foundation, Inc.
+ * Copyright 2010,2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -188,6 +188,7 @@ public:
   digital_constellation_8psk ();
 };
 
+#if SWIGPYTHON
 /*
   We want print(constellation) in python to produce nice useful output so
   we include code at the end of the generated python file that overrides
@@ -204,3 +205,4 @@ digital_constellation_dqpsk_sptr.__repr__ = lambda self: '<constellation dqpsk>'
 digital_constellation_8psk_sptr.__repr__ = lambda self: '<constellation 8psk>'
   
 %}
+#endif
