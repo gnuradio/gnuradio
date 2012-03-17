@@ -29,6 +29,7 @@ AC_DEFUN([GRC_GRUEL],[
 	dnl how and where to find INCLUDES and LA and such
 	gruel_INCLUDES="\
 -I\${abs_top_srcdir}/gruel/src/include \
+-I\${abs_top_srcdir}/gruel/src/swig \
 -I\${abs_top_builddir}/gruel/src/include"
         gruel_LA="\${abs_top_builddir}/gruel/src/lib/libgruel.la"
 	gruel_LIBDIRPATH="\${abs_top_builddir}/gruel/src/lib:\${abs_top_builddir}/gruel/src/lib/.libs"
