@@ -55,6 +55,7 @@ private:
   gr_hier_block2_detail *d_detail;
     
 protected: 
+  gr_hier_block2 (void){} //allows pure virtual interface sub-classes
   gr_hier_block2(const std::string &name,
 		 gr_io_signature_sptr input_signature,
 		 gr_io_signature_sptr output_signature);
