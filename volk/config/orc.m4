@@ -5,7 +5,7 @@ dnl ORC_CHECK([REQUIRED_VERSION])
 
 AC_DEFUN([ORC_CHECK],
 [
-  ORC_REQ=ifelse([$1], , "0.4.10", [$1])
+  ORC_REQ=ifelse([$1], , "0.4.12", [$1])
   
   if test "x$enable_orc" != "xno" ; then
     PKG_CHECK_MODULES(ORC, orc-0.4 >= $ORC_REQ, [
