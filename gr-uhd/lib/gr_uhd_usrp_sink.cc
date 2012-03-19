@@ -56,7 +56,9 @@ public:
             gr_make_io_signature(0, 0, 0)
         ),
         _stream_args(stream_args),
-        _nchan(std::max<size_t>(1, stream_args.channels.size()))
+        _nchan(std::max<size_t>(1, stream_args.channels.size())),
+        _stream_now(_nchan == 1),
+        _start_time_set(false)
     {
         if (stream_args.cpu_format == "fc32") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_FLOAT32);
         if (stream_args.cpu_format == "sc16") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_INT16);
@@ -372,6 +374,12 @@ public:
         }
     }
 
+    void set_start_time(const uhd::time_spec_t &time){
+        _start_time = time;
+        _start_time_set = true;
+        _stream_now = false;
+    }
+
     //Send an empty start-of-burst packet to begin streaming.
     //Set at a time in the near future to avoid late packets.
     bool start(void){
@@ -381,8 +389,14 @@ public:
 
         _metadata.start_of_burst = true;
         _metadata.end_of_burst = false;
-        _metadata.has_time_spec = _nchan > 1;
-        _metadata.time_spec = get_time_now() + uhd::time_spec_t(0.01);
+        _metadata.has_time_spec = not _stream_now;
+        if (_start_time_set){
+            _start_time_set = false; //cleared for next run
+            _metadata.time_spec = _start_time;
+        }
+        else{
+            _metadata.time_spec = get_time_now() + uhd::time_spec_t(0.01);
+        }
 
         #ifdef GR_UHD_USE_STREAM_API
         _tx_stream->send(
@@ -423,8 +437,12 @@ private:
     uhd::tx_streamer::sptr _tx_stream;
     #endif
     size_t _nchan;
+    bool _stream_now;
     uhd::tx_metadata_t _metadata;
     double _sample_rate;
+
+    uhd::time_spec_t _start_time;
+    bool _start_time_set;
 
     //stream tags related stuff
     std::vector<gr_tag_t> _tags;

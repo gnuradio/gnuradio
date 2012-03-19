@@ -58,7 +58,8 @@ public:
         _stream_args(stream_args),
         _nchan(std::max<size_t>(1, stream_args.channels.size())),
         _stream_now(_nchan == 1),
-        _tag_now(false)
+        _tag_now(false),
+        _start_time_set(false)
     {
         if (stream_args.cpu_format == "fc32") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_FLOAT32);
         if (stream_args.cpu_format == "sc16") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_INT16);
@@ -363,6 +364,12 @@ public:
         return num_samps;
     }
 
+    void set_start_time(const uhd::time_spec_t &time){
+        _start_time = time;
+        _start_time_set = true;
+        _stream_now = false;
+    }
+
     bool start(void){
         #ifdef GR_UHD_USE_STREAM_API
         _rx_stream = _dev->get_rx_stream(_stream_args);
@@ -372,7 +379,13 @@ public:
         static const double reasonable_delay = 0.1; //order of magnitude over RTT
         uhd::stream_cmd_t stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
         stream_cmd.stream_now = _stream_now;
-        stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(reasonable_delay);
+        if (_start_time_set){
+            _start_time_set = false; //cleared for next run
+            stream_cmd.time_spec = _start_time;
+        }
+        else{
+            stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(reasonable_delay);
+        }
         _dev->issue_stream_cmd(stream_cmd);
         _tag_now = true;
         return true;
@@ -468,6 +481,9 @@ private:
     bool _stream_now, _tag_now;
     uhd::rx_metadata_t _metadata;
     pmt::pmt_t _id;
+
+    uhd::time_spec_t _start_time;
+    bool _start_time_set;
 };
 
 
