@@ -26,7 +26,7 @@
 #include <gr_types.h>
 
 /*!
- * \brief fixed point sine and cosine and friend GR_CORE_APIs.
+ * \brief fixed point sine and cosine and friends.
  * \ingroup misc
  *
  *   fixed pt	radians
@@ -48,6 +48,10 @@ public:
   static gr_int32
   float_to_fixed (float x)
   {
+    // Fold x into -PI to PI.
+    int d = (int)floor(x/2/PI+0.5);
+    x -= d*2*PI;
+    // And convert to an integer.
     return (gr_int32) ((float) x * TWO_TO_THE_31 / PI);
   }
 
