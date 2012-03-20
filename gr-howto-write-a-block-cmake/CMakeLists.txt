@@ -22,7 +22,7 @@
 # Project setup
 ########################################################################
 cmake_minimum_required(VERSION 2.6)
-project(gr-howto-write-a-block CXX)
+project(gr-howto-write-a-block CXX C)
 enable_testing()
 
 #select the release build type by default to get optimization flags
