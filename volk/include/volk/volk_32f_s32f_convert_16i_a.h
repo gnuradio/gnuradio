@@ -1,10 +1,6 @@
 #ifndef INCLUDED_volk_32f_s32f_convert_16i_a_H
 #define INCLUDED_volk_32f_s32f_convert_16i_a_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <volk/volk_common.h>
 #include <inttypes.h>
 #include <stdio.h>
