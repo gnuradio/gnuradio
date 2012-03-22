@@ -24,7 +24,7 @@
 
 #include <gruel/attributes.h>
 
-#ifdef gnuradio_pager_EXPORTS
+#ifdef gnuradio_fcd_EXPORTS
 #  define FCD_API __GR_ATTR_EXPORT
 #else
 #  define FCD_API __GR_ATTR_IMPORT

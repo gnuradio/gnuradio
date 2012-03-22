@@ -24,8 +24,8 @@ include_directories(${GR_AUDIO_INCLUDE_DIRS})
 add_executable(fcd_nfm_rx fcd_nfm_rx.cc)
 target_link_libraries(fcd_nfm_rx gnuradio-fcd)
 
-INSTALL(PROGRAMS
-    ${CMAKE_CURRENT_BINARY_DIR}/fcd_nfm_rx
+INSTALL(TARGETS
+    fcd_nfm_rx
     DESTINATION ${GR_PKG_DATA_DIR}/examples/fcd
     COMPONENT "fcd_examples"
 )

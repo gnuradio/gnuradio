@@ -25,6 +25,7 @@ AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(WITH_INCLUDES) \
 	$(USB_CPPFLAGS) \
+	-I$(top_srcdir)/gr-fcd/include/fcd \
 	-I$(top_srcdir)/gr-fcd/lib/hid
 
 noinst_LTLIBRARIES = libfcd.la

@@ -21,7 +21,7 @@
 # Setup dependencies
 ########################################################################
 include(GrBoost)
-if(NOT WIN32 AND NOT MACOSX)
+if(NOT WIN32 AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   include(FindUSB)
 endif()
 
@@ -29,12 +29,22 @@ endif()
 # Register component
 ########################################################################
 include(GrComponent)
-GR_REGISTER_COMPONENT("gr-fcd" ENABLE_GR_FCD
-    Boost_FOUND
-    ENABLE_GR_CORE
-    ENABLE_GR_AUDIO
-    LIBUSB_FOUND
-)
+
+# FIXME make better conditionalization
+if (LINUX)
+    GR_REGISTER_COMPONENT("gr-fcd" ENABLE_GR_FCD
+        Boost_FOUND
+        ENABLE_GR_CORE
+        ENABLE_GR_AUDIO
+        LIBUSB_FOUND
+    )
+else()
+    GR_REGISTER_COMPONENT("gr-fcd" ENABLE_GR_FCD
+        Boost_FOUND
+        ENABLE_GR_CORE
+        ENABLE_GR_AUDIO
+    )
+endif()  
 
 GR_SET_GLOBAL(GR_FCD_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/lib

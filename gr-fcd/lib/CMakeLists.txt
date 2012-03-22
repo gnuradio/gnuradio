@@ -48,6 +48,10 @@ list(APPEND fcd_libs
     ${Boost_LIBRARIES}
 )
 
+if (WIN32)
+	list(APPEND fcd_libs setupapi)
+endif()
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   FIND_LIBRARY(IOKIT_LIBRARY IOKit)
   list(APPEND fcd_libs ${IOKIT_LIBRARY})

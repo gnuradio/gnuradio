@@ -23,6 +23,7 @@
 #ifndef FCD_H
 #define FCD_H 1
 
+#include <fcd_api.h>
 
 #ifdef FCD
 #define EXTERN
@@ -32,16 +33,7 @@
 #define ASSIGN(x)
 #endif
 
-#ifdef _WIN32
-#define FCD_API_EXPORT __declspec(dllexport)
-#define FCD_API_CALL  _stdcall
-#else
-#define FCD_API_EXPORT
-#define FCD_API_CALL
-#endif
-
 #include <inttypes.h>
-
 
 /** \brief FCD mode enumeration. */
 typedef enum {
@@ -61,23 +53,23 @@ extern "C" {
 #endif
 
 /* Application functions */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetMode(void);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetFwVerStr(char *str);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetCaps(FCD_CAPS_STRUCT *fcd_caps);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetCapsStr(char *caps_str);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppReset(void);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetFreqkHz(int nFreq);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetFreq(int nFreq);
+EXTERN FCD_API FCD_MODE_ENUM fcdGetMode(void);
+EXTERN FCD_API FCD_MODE_ENUM fcdGetFwVerStr(char *str);
+EXTERN FCD_API FCD_MODE_ENUM fcdGetCaps(FCD_CAPS_STRUCT *fcd_caps);
+EXTERN FCD_API FCD_MODE_ENUM fcdGetCapsStr(char *caps_str);
+EXTERN FCD_API FCD_MODE_ENUM fcdAppReset(void);
+EXTERN FCD_API FCD_MODE_ENUM fcdAppSetFreqkHz(int nFreq);
+EXTERN FCD_API FCD_MODE_ENUM fcdAppSetFreq(int nFreq);
 
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppGetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len);
+EXTERN FCD_API FCD_MODE_ENUM fcdAppSetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len);
+EXTERN FCD_API FCD_MODE_ENUM fcdAppGetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len);
 
 
 /* Bootloader functions */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlReset(void);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlErase(void);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlWriteFirmware(char *pc, int64_t n64Size);
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlVerifyFirmware(char *pc, int64_t n64Size);
+EXTERN FCD_API FCD_MODE_ENUM fcdBlReset(void);
+EXTERN FCD_API FCD_MODE_ENUM fcdBlErase(void);
+EXTERN FCD_API FCD_MODE_ENUM fcdBlWriteFirmware(char *pc, int64_t n64Size);
+EXTERN FCD_API FCD_MODE_ENUM fcdBlVerifyFirmware(char *pc, int64_t n64Size);
 
 
 #ifdef __cplusplus

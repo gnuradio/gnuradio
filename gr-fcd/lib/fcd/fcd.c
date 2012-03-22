@@ -96,7 +96,7 @@ static void fcdClose(hid_device *phd)
   * \return The current FCD mode.
   * \sa FCD_MODE_ENUM
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetMode(void)
+EXTERN FCD_MODE_ENUM fcdGetMode(void)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -147,7 +147,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetMode(void)
   * \return The current FCD mode.
   * \sa FCD_MODE_ENUM
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetFwVerStr(char *str)
+EXTERN FCD_MODE_ENUM fcdGetFwVerStr(char *str)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -211,7 +211,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetFwVerStr(char *str)
   *
   * Ref: http://uk.groups.yahoo.com/group/FCDevelopment/message/303
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetCaps(FCD_CAPS_STRUCT *fcd_caps)
+EXTERN FCD_MODE_ENUM fcdGetCaps(FCD_CAPS_STRUCT *fcd_caps)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -285,7 +285,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetCaps(FCD_CAPS_STRUCT *fcd
   *
   * Ref: http://uk.groups.yahoo.com/group/FCDevelopment/message/303
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetCapsStr(char *caps_str)
+EXTERN FCD_MODE_ENUM fcdGetCapsStr(char *caps_str)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -342,7 +342,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdGetCapsStr(char *caps_str)
   * This function is used to switch the FCD into bootloader mode in which
   * various firmware operations can be performed.
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppReset(void)
+EXTERN FCD_MODE_ENUM fcdAppReset(void)
 {
     hid_device *phd=NULL;
     //unsigned char aucBufIn[65];
@@ -401,7 +401,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppReset(void)
   *
   * \sa fcdAppSetFreq
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetFreqkHz(int nFreq)
+EXTERN FCD_MODE_ENUM fcdAppSetFreqkHz(int nFreq)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -448,7 +448,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetFreqkHz(int nFreq)
   *
   * \sa fcdAppSetFreq
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetFreq(int nFreq)
+EXTERN FCD_MODE_ENUM fcdAppSetFreq(int nFreq)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -494,7 +494,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetFreq(int nFreq)
   * This function is used to switch the FCD from bootloader mode
   * into application mode.
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlReset(void)
+EXTERN FCD_MODE_ENUM fcdBlReset(void)
 {
     hid_device *phd=NULL;
 //    unsigned char aucBufIn[65];
@@ -552,7 +552,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlReset(void)
   *
   * \sa fcdBlWriteFirmware
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlErase(void)
+EXTERN FCD_MODE_ENUM fcdBlErase(void)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -596,7 +596,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlErase(void)
   *
   * \sa fcdBlErase
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlWriteFirmware(char *pc, int64_t n64Size)
+EXTERN FCD_MODE_ENUM fcdBlWriteFirmware(char *pc, int64_t n64Size)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -695,7 +695,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlWriteFirmware(char *pc, in
   * image pointed to by pc. The function return FCD_MODE_BL if the verification is OK and
   * FCD_MODE_APP otherwise.
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlVerifyFirmware(char *pc, int64_t n64Size)
+EXTERN FCD_MODE_ENUM fcdBlVerifyFirmware(char *pc, int64_t n64Size)
 {
     hid_device *phd=NULL;
     unsigned char aucBufIn[65];
@@ -810,7 +810,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdBlVerifyFirmware(char *pc, i
   * - FCD_MODE_BL : Reply from FCD was not as expected.
   * - FCD_MODE_NONE : No FCD was found
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len)
+EXTERN FCD_MODE_ENUM fcdAppSetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len)
 {
     hid_device *phd=NULL;
     unsigned char aucBufOut[65];
@@ -866,7 +866,7 @@ EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppSetParam(uint8_t u8Cmd, u
   * - FCD_MODE_BL : Reply from FCD was not as expected.
   * - FCD_MODE_NONE : No FCD was found
   */
-EXTERN FCD_API_EXPORT FCD_API_CALL FCD_MODE_ENUM fcdAppGetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len)
+EXTERN FCD_MODE_ENUM fcdAppGetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len)
 {
     hid_device *phd=NULL;
     unsigned char aucBufOut[65];
