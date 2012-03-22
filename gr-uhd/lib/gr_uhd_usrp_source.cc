@@ -25,6 +25,7 @@
 #include <iostream>
 #include <boost/format.hpp>
 #include <boost/make_shared.hpp>
+#include "gr_uhd_common.h"
 
 static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("rx_time");
 
@@ -513,6 +514,7 @@ boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::stream_args_t &stream_args
 ){
+    gr_uhd_check_abi();
     return boost::shared_ptr<uhd_usrp_source>(
         new uhd_usrp_source_impl(device_addr, stream_args)
     );
