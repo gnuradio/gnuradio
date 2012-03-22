@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -63,7 +63,7 @@ endforeach(test_not_run_src)
 # Set the test environment so the build libs will be found under MSVC.
 ########################################################################
 include(GrTest)
-set(GR_TEST_TARGET_DEPS gruel gnuradio-core test-gnuradio-core)
+set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core test-gnuradio-core)
 add_executable(gr_core_test_all test_all.cc)
 target_link_libraries(gr_core_test_all test-gnuradio-core)
 GR_ADD_TEST(gr-core-test-all gr_core_test_all)

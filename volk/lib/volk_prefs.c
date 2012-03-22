@@ -9,7 +9,14 @@
 
 void get_config_path(char *path) {
     const char *suffix = "/.volk/volk_config";
-    strcpy(path, getenv("HOME"));
+    char *home = NULL;
+    if (home == NULL) home = getenv("HOME");
+    if (home == NULL) home = getenv("APPDATA");
+    if (home == NULL){
+        path = NULL;
+        return;
+    }
+    strcpy(path, home);
     strcat(path, suffix);
 }
 
@@ -22,6 +29,7 @@ int load_preferences(struct volk_arch_pref **prefs) {
     
     //get the config path
     get_config_path(path);
+    if (path == NULL) return n_arch_prefs; //no prefs found
     config_file = fopen(path, "r");
     if(!config_file) return n_arch_prefs; //no prefs found
 

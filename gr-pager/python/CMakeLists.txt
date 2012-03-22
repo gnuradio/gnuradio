@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -43,7 +43,7 @@ foreach(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gr-pager/python
         ${CMAKE_BINARY_DIR}/gr-pager/swig
     )
-    set(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-pager)
+    set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core gnuradio-pager)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
