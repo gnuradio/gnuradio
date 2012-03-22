@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011-212 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -129,7 +129,7 @@ list(APPEND test_atsci_sources
 )
 
 include(GrTest)
-set(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel)
+set(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel volk)
 add_executable(test_atsci ${test_atsci_sources} test_atsci.cc)
 target_link_libraries(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)
