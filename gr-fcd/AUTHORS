@@ -1,0 +1,9 @@
+This component was originally authored by:
+
+Alexandryu Csete <oz9aec@gmail.com>
+
+For convenience, it also includes the hidapi by signal11:
+http://www.signal11.us/oss/hidapi/
+
+as well as the FCD API code from Qthid by Howard Long,
+Alexandru Csete and Mario Lorenz: http://qthid.sf.net/

@@ -367,6 +367,7 @@ GRC_GNURADIO_EXAMPLES		dnl must come after all GRC_GR_*
 GRC_GRC
 GRC_GR_UHD
 GRC_GR_SHD
+GRC_GR_FCD
 GRC_DOCS			dnl must be last
 
 # Each component is now either to be built, was skipped, will be

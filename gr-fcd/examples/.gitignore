@@ -1,0 +1,6 @@
+/Makefile
+/Makefile.in
+/.deps/*
+/.libs/*
+/fcd_nfm_rx
+/fcd_nfm_rx.o
