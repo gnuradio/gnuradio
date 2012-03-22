@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# 1st parameter is absolute path to component source directory
+# 2nd parameter is absolute path to component build directory
+# 3rd parameter is path to Python QA directory
+
+@top_builddir@/run_tests.sh \
+    @abs_top_srcdir@/gr-fcd \
+    @abs_top_builddir@/gr-fcd \
+    @srcdir@
