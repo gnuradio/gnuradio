@@ -459,7 +459,7 @@ public:
 
         //receive samples until timeout
         const size_t actual_num_samps = _rx_stream->recv(
-            buffs, nsamps, _metadata, 0.1
+            buffs, nsamps, _metadata, 1.0
         );
 
         //resize the resulting sample buffers
