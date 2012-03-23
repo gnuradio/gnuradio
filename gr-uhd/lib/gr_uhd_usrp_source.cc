@@ -437,6 +437,9 @@ public:
             this->stop();
         }
 
+        //flush so there is no queued-up data
+        this->flush();
+
         //create a multi-dimensional container to hold an array of sample buffers
         std::vector<std::vector<std::complex<float> > > samps(_nchan, std::vector<std::complex<float> >(nsamps));
 
