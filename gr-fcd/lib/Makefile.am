@@ -32,7 +32,9 @@ AM_CPPFLAGS = \
 
 lib_LTLIBRARIES = libgnuradio-fcd.la
 
-libgnuradio_fcd_la_SOURCES = fcd_source_c.cc
+libgnuradio_fcd_la_SOURCES = fcd_source_c_impl.cc
+
+noinst_HEADERS = fcd_source_c_impl.h
 
 libgnuradio_fcd_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \

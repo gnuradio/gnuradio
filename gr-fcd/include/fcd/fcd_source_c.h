@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011-2012 Free Software Foundation, Inc.
  * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,13 +23,10 @@
 
 #include <fcd_api.h>
 #include <gr_hier_block2.h>
-#include <gr_audio_source.h>
 
 class fcd_source_c;
 
-
 typedef boost::shared_ptr<fcd_source_c> fcd_source_c_sptr;
-
 
 /*!
  * \brief Return a shared_ptr to a new instance of fcd_source_c.
@@ -50,12 +47,9 @@ FCD_API fcd_source_c_sptr fcd_make_source_c(const std::string device_name = "");
  * interface to work properly. As of early 2011, FCDs still come with firmware
  * 18b. You can use qthid 2.2 (not 3) to upgrade the firmware: http://qthid.sf.net
  */
-class FCD_API fcd_source_c : public gr_hier_block2
+class FCD_API fcd_source_c : virtual public gr_hier_block2
 {
-
 public:
-    ~fcd_source_c();
-    
     /*! \brief Set frequency with Hz resolution.
      *  \param freq The frequency in Hz
      * 
@@ -64,7 +58,7 @@ public:
      * 
      * \see set_freq_khz()
      */
-    void set_freq(int freq);
+    virtual void set_freq(int freq) = 0;
 
     /*! \brief Set frequency with Hz resolution.
      *  \param freq The frequency in Hz
@@ -74,7 +68,7 @@ public:
      * 
      * \see set_freq_khz()
      */
-    void set_freq(float freq);
+    virtual void set_freq(float freq) = 0;
     
     /*! \brief Set frequency with kHz resolution.
      *  \param freq The frequency in kHz
@@ -84,7 +78,7 @@ public:
      * 
      * \see set_freq()
      */
-    void set_freq_khz(int freq);
+    virtual void set_freq_khz(int freq) = 0;
     
     /*! \brief Set LNA gain.
      *  \param gain The new gain in dB.
@@ -97,7 +91,7 @@ public:
      * By default the FCD is set to 20 dB and this is a good value for most
      * cases. In noisy areas you may try to reduce the gain.
      */
-    void set_lna_gain(float gain);
+    virtual void set_lna_gain(float gain) = 0;
 
     /*! \brief Set new frequency correction.
      *  \param ppm The new frequency correction in parts per million
@@ -107,7 +101,7 @@ public:
      * 
      * Ref: http://www.funcubedongle.com/?p=617
      */
-    void set_freq_corr(int ppm);
+    virtual void set_freq_corr(int ppm) = 0;
     
     /*! \brief Set DC offset correction.
      *  \param _dci DC correction for I component (-1.0 to 1.0)
@@ -115,7 +109,7 @@ public:
      * 
      * Set DC offset correction in the device. Default is 0.0.
      */
-    void set_dc_corr(double _dci, double _dcq);
+    virtual void set_dc_corr(double _dci, double _dcq) = 0;
     
     /*! \brief Set IQ phase and gain balance.
      *  \param _gain The gain correction (-1.0 to 1.0)
@@ -124,16 +118,7 @@ public:
      * Set IQ phase and gain balance in the device. The default values
      * are 0.0 for phase and 1.0 for gain.
      */
-    void set_iq_corr(double _gain, double _phase);
-
-private:
-    fcd_source_c(const std::string device_name = "");
-    friend FCD_API fcd_source_c_sptr
-      fcd_make_source_c(const std::string device_name);
-
-    audio_source::sptr fcd;  /*!< The audio input source */
-    int d_freq_corr;         /*!< The frequency correction in ppm */
-    int d_freq_req;          /*!< The latest requested frequency in Hz */
+    virtual void set_iq_corr(double _gain, double _phase) = 0;
 };
 
 #endif /* INCLUDED_FCD_SOURCE_C_H */
