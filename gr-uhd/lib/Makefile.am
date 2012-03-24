@@ -1,5 +1,5 @@
 #
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,6 +25,7 @@ AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \
 	$(WITH_INCLUDES) \
 	$(UHD_CPPFLAGS) \
+	-I$(srcdir) \
 	-Dgnuradio_uhd_EXPORTS
 
 lib_LTLIBRARIES = libgnuradio-uhd.la
@@ -40,4 +41,4 @@ libgnuradio_uhd_la_LIBADD = \
 
 libgnuradio_uhd_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
-noinst_HEADERS =
+noinst_HEADERS = gr_uhd_common.h

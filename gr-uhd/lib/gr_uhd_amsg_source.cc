@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,6 +22,7 @@
 #include <gr_uhd_amsg_source.h>
 #include <boost/bind.hpp>
 #include <gruel/thread.h>
+#include "gr_uhd_common.h"
 
 /***********************************************************************
  * UHD Asynchronous Message Source Impl
@@ -87,6 +88,7 @@ boost::shared_ptr<uhd_amsg_source> uhd_make_amsg_source(
     const uhd::device_addr_t &device_addr,
     gr_msg_queue_sptr msgq
 ){
+    gr_uhd_check_abi();
     return boost::shared_ptr<uhd_amsg_source>(
         new uhd_amsg_source_impl(device_addr, msgq)
     );

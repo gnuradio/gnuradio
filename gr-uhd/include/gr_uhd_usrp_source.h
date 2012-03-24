@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 Free Software Foundation, Inc.
+ * Copyright 2010-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -108,6 +108,19 @@ GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
 
 class GR_UHD_API uhd_usrp_source : virtual public gr_sync_block{
 public:
+
+    /*!
+     * Set the start time for incoming samples.
+     * To control when samples are received,
+     * set this value before starting the flow graph.
+     * The value is cleared after each run.
+     * When not specified, the start time will be:
+     *  - Immediately for the one channel case
+     *  - in the near future for multi-channel
+     *
+     * \param time the absolute time for reception to begin
+     */
+    virtual void set_start_time(const uhd::time_spec_t &time) = 0;
 
     /*!
      * Set the frontend specification.
@@ -469,10 +482,22 @@ public:
      * Convenience function for finite data acquisition.
      * This is not to be used with the scheduler; rather,
      * one can request samples from the USRP in python.
-     * //TODO multi-channel
      * //TODO assumes fc32
+     * \param nsamps the number of samples
+     * \return a vector of complex float samples
      */
     virtual std::vector<std::complex<float> > finite_acquisition(const size_t nsamps) = 0;
+
+    /*!
+     * Convenience function for finite data acquisition.
+     * This is the multi-channel version of finite_acquisition;
+     * This is not to be used with the scheduler; rather,
+     * one can request samples from the USRP in python.
+     * //TODO assumes fc32
+     * \param nsamps the number of samples per channel
+     * \return a vector of buffers, where each buffer represents a channel
+     */
+    virtual std::vector<std::vector<std::complex<float> > > finite_acquisition_v(const size_t nsamps) = 0;
 };
 
 #endif /* INCLUDED_GR_UHD_USRP_SOURCE_H */
