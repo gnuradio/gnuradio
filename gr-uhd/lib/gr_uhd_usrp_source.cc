@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 Free Software Foundation, Inc.
+ * Copyright 2010-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,6 +25,7 @@
 #include <iostream>
 #include <boost/format.hpp>
 #include <boost/make_shared.hpp>
+#include "gr_uhd_common.h"
 
 static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("rx_time");
 
@@ -58,7 +59,8 @@ public:
         _stream_args(stream_args),
         _nchan(std::max<size_t>(1, stream_args.channels.size())),
         _stream_now(_nchan == 1),
-        _tag_now(false)
+        _tag_now(false),
+        _start_time_set(false)
     {
         if (stream_args.cpu_format == "fc32") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_FLOAT32);
         if (stream_args.cpu_format == "sc16") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_INT16);
@@ -371,6 +373,12 @@ public:
         return num_samps;
     }
 
+    void set_start_time(const uhd::time_spec_t &time){
+        _start_time = time;
+        _start_time_set = true;
+        _stream_now = false;
+    }
+
     bool start(void){
         #ifdef GR_UHD_USE_STREAM_API
         _rx_stream = _dev->get_rx_stream(_stream_args);
@@ -380,7 +388,13 @@ public:
         static const double reasonable_delay = 0.1; //order of magnitude over RTT
         uhd::stream_cmd_t stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
         stream_cmd.stream_now = _stream_now;
-        stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(reasonable_delay);
+        if (_start_time_set){
+            _start_time_set = false; //cleared for next run
+            stream_cmd.time_spec = _start_time;
+        }
+        else{
+            stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(reasonable_delay);
+        }
         _dev->issue_stream_cmd(stream_cmd);
         _tag_now = true;
         return true;
@@ -418,17 +432,48 @@ public:
     }
 
     std::vector<std::complex<float> > finite_acquisition(const size_t nsamps){
+        if (_nchan != 1) throw std::runtime_error("finite_acquisition: usrp source has multiple channels, call finite_acquisition_v");
+        return finite_acquisition_v(nsamps).front();
+    }
+
+    std::vector<std::vector<std::complex<float> > > finite_acquisition_v(const size_t nsamps){
         #ifdef GR_UHD_USE_STREAM_API
+
+        //kludgy way to ensure rx streamer exsists
+        if (!_rx_stream){
+            this->start();
+            this->stop();
+        }
+
+        //flush so there is no queued-up data
+        this->flush();
+
+        //create a multi-dimensional container to hold an array of sample buffers
+        std::vector<std::vector<std::complex<float> > > samps(_nchan, std::vector<std::complex<float> >(nsamps));
+
+        //load the void* vector of buffer pointers
+        std::vector<void *> buffs(_nchan);
+        for (size_t i = 0; i < _nchan; i++){
+            buffs[i] = &samps[i].front();
+        }
+
+        //tell the device to stream a finite amount
         uhd::stream_cmd_t cmd(uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE);
         cmd.num_samps = nsamps;
-        cmd.stream_now = true;
+        cmd.stream_now = _stream_now;
+        static const double reasonable_delay = 0.1; //order of magnitude over RTT
+        cmd.time_spec = get_time_now() + uhd::time_spec_t(reasonable_delay);
         _dev->issue_stream_cmd(cmd);
 
-        std::vector<std::complex<float> > samps(nsamps);
+        //receive samples until timeout
         const size_t actual_num_samps = _rx_stream->recv(
-            &samps.front(), nsamps, _metadata, 0.1
+            buffs, nsamps, _metadata, 1.0
         );
-        samps.resize(actual_num_samps);
+
+        //resize the resulting sample buffers
+        for (size_t i = 0; i < _nchan; i++){
+            samps[i].resize(actual_num_samps);
+        }
 
         return samps;
         #else
@@ -448,6 +493,9 @@ private:
     bool _stream_now, _tag_now;
     uhd::rx_metadata_t _metadata;
     pmt::pmt_t _id;
+
+    uhd::time_spec_t _start_time;
+    bool _start_time_set;
 };
 
 
@@ -477,6 +525,7 @@ boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
     const uhd::device_addr_t &device_addr,
     const uhd::stream_args_t &stream_args
 ){
+    gr_uhd_check_abi();
     return boost::shared_ptr<uhd_usrp_source>(
         new uhd_usrp_source_impl(device_addr, stream_args)
     );
