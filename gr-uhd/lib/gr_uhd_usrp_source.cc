@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 Free Software Foundation, Inc.
+ * Copyright 2010-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -146,7 +146,7 @@ public:
         return _dev->set_rx_bandwidth(bandwidth, chan);
     }
 
-    void set_dc_offset(const bool enable, size_t chan){
+    void set_auto_dc_offset(const bool enable, size_t chan){
         #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
         return _dev->set_rx_dc_offset(enable, chan);
         #else

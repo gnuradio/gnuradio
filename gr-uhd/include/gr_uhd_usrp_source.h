@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 Free Software Foundation, Inc.
+ * Copyright 2010-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -263,7 +263,7 @@ public:
      * \param enb true to enable automatic DC offset correction
      * \param chan the channel index 0 to N-1
      */
-    virtual void set_dc_offset(const bool enb, size_t chan = 0) = 0;
+    virtual void set_auto_dc_offset(const bool enb, size_t chan = 0) = 0;
 
     /*!
      * Set a constant DC offset value.
