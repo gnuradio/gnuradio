@@ -1,0 +1,23 @@
+For convenience, GNU Radio includes the contents of this directory
+in its distribution, but they are not considered part of GNU Radio.
+
+These files are licensed and redistributed using the terms of the
+GPLv3.
+-------------------------------------------------------------------
+Copyright (C) 2010  Howard Long, G6LVB
+CopyRight (C) 2011  Alexandru Csete, OZ9AEC
+                    Mario Lorenz, DL5MLO
+
+Qthid is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Qthid is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Qthid.  If not, see <http://www.gnu.org/licenses/>.
+

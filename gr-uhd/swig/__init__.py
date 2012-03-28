@@ -55,6 +55,10 @@ def _prepare_uhd_swig():
         def __new__(self, *args): return str.__new__(self)
         def __getitem__(self, key): return self.get(key)
         def __setitem__(self, key, val): self.set(key, val)
+        def __init__(self, *args, **kwargs):
+            super(device_addr_t, self).__init__(*args)
+            if args and isinstance(args[0], device_addr_t):
+                for key in args[0].keys(): self[key] = args[0][key]
     setattr(uhd_swig, 'device_addr_t', device_addr_t)
 
     #make the streamer args take **kwargs on init

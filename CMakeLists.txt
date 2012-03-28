@@ -19,7 +19,7 @@
 
 ########################################################################
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    message(FATAL_ERROR "Prevented in-tree built. This is bad practice.")
+    message(FATAL_ERROR "Prevented in-tree build. This is bad practice.")
 endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 
 ########################################################################
@@ -229,6 +229,7 @@ add_subdirectory(gr-shd)
 add_subdirectory(gr-utils)
 add_subdirectory(gr-video-sdl)
 add_subdirectory(gr-vocoder)
+add_subdirectory(gr-fcd)
 add_subdirectory(gr-wxgui)
 add_subdirectory(gnuradio-examples/grc)
 add_subdirectory(gnuradio-examples/python)

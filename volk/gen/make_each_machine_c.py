@@ -65,6 +65,10 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist, ali
 #include "volk_machines.h"
 #include <volk/volk_config_fixed.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 """
     for func in functions:
         tempstring += "#include <volk/" + func + ".h>\n"
