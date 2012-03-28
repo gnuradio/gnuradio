@@ -45,17 +45,25 @@ class receive_path(gr.hier_block2):
         self._rx_callback = rx_callback  # this callback is fired when a packet arrives
         self._demod_class = demod_class  # the demodulator_class we're using
 
+        self._chbw_factor = options.chbw_factor # channel filter bandwidth factor
+
         # Get demod_kwargs
         demod_kwargs = self._demod_class.extract_kwargs_from_options(options)
 
         # Build the demodulator
         self.demodulator = self._demod_class(**demod_kwargs)
+
+        # Make sure the channel BW factor is between 1 and sps/2
+        # or the filter won't work.
+        if(self._chbw_factor < 1.0 or self._chbw_factor > self.samples_per_symbol()/2):
+            sys.stderr.write("Channel bandwidth factor ({0}) must be within the range [1.0, {1}].\n".format(self._chbw_factor, self.samples_per_symbol()/2))
+            sys.exit(1)
         
         # Design filter to get actual channel we want
         sw_decim = 1
         chan_coeffs = gr.firdes.low_pass (1.0,                  # gain
                                           sw_decim * self.samples_per_symbol(), # sampling rate
-                                          1.0,                  # midpoint of trans. band
+                                          self._chbw_factor,    # midpoint of trans. band
                                           0.5,                  # width of trans. band
                                           gr.firdes.WIN_HANN)   # filter type
         self.channel_filter = gr.fft_filter_ccc(sw_decim, chan_coeffs)
@@ -129,6 +137,8 @@ class receive_path(gr.hier_block2):
                           help="set samples/symbol [default=%default]")
         expert.add_option("", "--log", action="store_true", default=False,
                           help="Log all parts of flow graph to files (CAUTION: lots of data)")
+        expert.add_option("", "--chbw-factor", type="float", default=1.0,
+                          help="Channel bandwidth = chbw_factor x signal bandwidth [defaut=%default]")
 
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)

@@ -21,7 +21,7 @@ def multiply_const_ff(N):
 ######################################################################
 
 def multiply_cc(N):
-    op = gr.multiply_cc()
+    op = gr.multiply_cc(1)
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 2, 1)
     return tb
 
@@ -134,16 +134,15 @@ def main():
     conn = create_connection(args.database)
     new_table(conn, label)
 
-    if not args.all:
-        func = avail_tests[args.test]
-        res = run_tests(func, N, iters)
+    if args.all:
+        tests = xrange(len(avail_tests))
+    else:
+        tests = args.tests
+
+    for test in tests:
+        res = run_tests(avail_tests[test], N, iters)
         if res is not None:
             replace_results(conn, label, N, iters, res)
-    else:
-        for f in avail_tests:
-            res = run_tests(f, N, iters)
-            if res is not None:
-                replace_results(conn, label, N, iters, res)
             
 if __name__ == "__main__":
     try:

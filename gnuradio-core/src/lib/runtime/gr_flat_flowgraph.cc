@@ -28,6 +28,7 @@
 #include <gr_block_detail.h>
 #include <gr_io_signature.h>
 #include <gr_buffer.h>
+#include <volk/volk.h>
 #include <iostream>
 #include <map>
 
@@ -243,6 +244,28 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
       if (GR_FLAT_FLOWGRAPH_DEBUG)
 	std::cout << "new block" << std::endl;
       connect_block_inputs(block);
+
+      const int alignment = volk_get_alignment();
+      for(int i = 0; i < block->detail()->ninputs(); i++) {
+	void *r = (void*)block->detail()->input(i)->read_pointer();
+	unsigned long int ri = (unsigned long int)r % alignment;
+	if(ri != 0) {
+	  size_t itemsize = block->detail()->input(i)->get_sizeof_item();
+	  block->detail()->input(i)->update_read_pointer(ri/itemsize);
+	  block->set_unaligned(0);
+	  block->set_is_unaligned(false);
+	}
+      }
+      for(int i = 0; i < block->detail()->noutputs(); i++) {
+	void *w = (void*)block->detail()->output(i)->write_pointer();
+	unsigned long int wi = (unsigned long int)w % alignment;
+	if(wi != 0) {
+	  size_t itemsize = block->detail()->output(i)->get_sizeof_item();
+	  block->detail()->output(i)->update_write_pointer(wi/itemsize);
+	  block->set_unaligned(0);
+	  block->set_is_unaligned(false);
+	}
+      }
     }
 
     // Now deal with the fact that the block details might have changed numbers of 
