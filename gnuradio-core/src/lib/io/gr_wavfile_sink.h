@@ -44,10 +44,10 @@ gr_make_wavfile_sink (const char *filename,
 		      int bits_per_sample = 16);
 
 /*!
- * \brief Read stream from a Microsoft PCM (.wav) file, output floats
+ * \brief Write stream to a Microsoft PCM (.wav) file.
  *
- * Values are within [-1;1].
- * Check gr_make_wavfile_source() for extra info.
+ * Values must be floats within [-1;1].
+ * Check gr_make_wavfile_sink() for extra info.
  *
  * \ingroup sink_blk
  */
