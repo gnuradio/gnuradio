@@ -93,6 +93,7 @@ class GR_CORE_API gr_buffer {
 
   uint64_t nitems_written() { return d_abs_write_offset; }
 
+  size_t get_sizeof_item() { return d_sizeof_item; }
 
   /*!
    * \brief  Adds a new tag to the buffer.
@@ -248,6 +249,8 @@ class GR_CORE_API gr_buffer_reader {
 
 
   uint64_t nitems_read() { return d_abs_read_offset; }
+
+  size_t get_sizeof_item() { return d_buffer->get_sizeof_item(); }
 
   /*!
    * \brief Return the block that reads via this reader.
