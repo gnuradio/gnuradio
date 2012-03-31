@@ -35,6 +35,9 @@ gr_make_float_to_short (size_t vlen=1, float scale=1);
 /*!
  * \brief Convert stream of float to a stream of short
  * \ingroup converter_blk
+ *
+ * \param vlen vector length of data streams.
+ * \param scale a scalar multiplier to change the output signal scale.
  */
 
 class GR_CORE_API gr_float_to_short : public gr_sync_block
@@ -47,7 +50,14 @@ class GR_CORE_API gr_float_to_short : public gr_sync_block
   float d_scale;
 
  public:
+  /*!
+   * Get the scalar multiplier value.
+   */
   float scale() const;
+
+  /*!
+   * Set the scalar multiplier value.
+   */
   void set_scale(float scale);
 
   virtual int work (int noutput_items,

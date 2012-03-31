@@ -61,6 +61,7 @@ dist_ourdata_DATA = \
 	gr_argmax_xx.xml \
 	gr_channel_model.xml \
 	gr_char_to_float.xml \
+	gr_char_to_short.xml \
 	gr_chunks_to_symbols.xml \
 	gr_complex_to_arg.xml \
 	gr_complex_to_float.xml \
@@ -93,6 +94,7 @@ dist_ourdata_DATA = \
 	gr_fir_filter_xxx.xml \
 	gr_float_to_char.xml \
 	gr_float_to_complex.xml \
+	gr_float_to_int.xml \
 	gr_float_to_short.xml \
 	gr_float_to_uchar.xml \
 	gr_fractional_interpolator_xx.xml \
@@ -149,6 +151,7 @@ dist_ourdata_DATA = \
 	gr_sample_and_hold_xx.xml \
 	gr_scrambler_bb.xml \
 	gr_short_to_float.xml \
+	gr_short_to_char.xml \
 	gr_sig_source_x.xml \
 	gr_simple_correlator.xml \
 	gr_simple_framer.xml \

@@ -73,13 +73,16 @@
 		<block>gr_complex_to_float</block>
 		<block>gr_float_to_complex</block>
 
+		<block>gr_float_to_int</block>
 		<block>gr_float_to_short</block>
 		<block>gr_short_to_float</block>
+		<block>gr_short_to_char</block>
 
 		<block>gr_int_to_float</block>
 
 		<block>gr_float_to_char</block>
 		<block>gr_char_to_float</block>
+		<block>gr_char_to_short</block>
 
 		<block>gr_float_to_uchar</block>
 		<block>gr_uchar_to_float</block>

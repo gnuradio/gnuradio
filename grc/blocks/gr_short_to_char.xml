@@ -1,30 +1,23 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Float to Char:
+##Short to char:
 ###################################################
  -->
 <block>
-	<name>Float To Char</name>
-	<key>gr_float_to_char</key>
+	<name>Short To Char</name>
+	<key>gr_short_to_char</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.float_to_char($vlen, $scale)</make>
-	<callback>set_scale($scale)</callback>
+	<make>gr.short_to_char($vlen)</make>
 	<param>
 		<name>Vec Length</name>
 		<key>vlen</key>
 		<value>1</value>
 		<type>int</type>
 	</param>
-	<param>
-		<name>Scale</name>
-		<key>scale</key>
-		<value>1</value>
-		<type>real</type>
-	</param>
 	<sink>
 		<name>in</name>
-		<type>float</type>
+		<type>short</type>
 		<vlen>$vlen</vlen>
 	</sink>
 	<source>
