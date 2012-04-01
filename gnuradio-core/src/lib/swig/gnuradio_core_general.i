@@ -52,13 +52,3 @@
   }
 
 %}
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-gnuradio_core_general" "scm_init_gnuradio_gnuradio_core_general_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif

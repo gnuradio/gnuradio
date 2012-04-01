@@ -51,7 +51,7 @@ public:
   int max_noutput_items();
   void set_max_noutput_items(int nmax);
 
-  gr_top_block_sptr to_top_block(); // Needed for Python/Guile type coercion
+  gr_top_block_sptr to_top_block(); // Needed for Python type coercion
 };
 
 #ifdef SWIGPYTHON
@@ -70,37 +70,6 @@ void top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error)
     r->wait();
     Py_END_ALLOW_THREADS;		// acquire global interpreter lock
 }
-%}
-
-#endif
-
-#ifdef SWIGGUILE
-
-%{
-  struct tb_arg_holder {
-    gr_top_block_sptr	tb;
-  };
-
-  static void *
-  tb_wait_shim(void *arg)
-  {
-    tb_arg_holder *a = (tb_arg_holder *)arg;
-    a->tb->wait();
-    return 0;
-  }
-
-%}
-
-%inline %{
-
-  static void
-  top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error)
-  {
-    tb_arg_holder a;
-    a.tb = r;
-    scm_without_guile(tb_wait_shim, (void *) &a);
-  }
-
 %}
 
 #endif
