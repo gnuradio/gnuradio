@@ -88,10 +88,20 @@ public:
      * 2.5 dB steps, you can can call this method with any float value
      * and it will be rounded to the nearest valid value.
      * 
-     * By default the FCD is set to 20 dB and this is a good value for most
-     * cases. In noisy areas you may try to reduce the gain.
+     * By default the LNA gain is set to 20 dB and this is a good value for
+     * most cases. In noisy areas you may try to reduce the gain.
      */
     virtual void set_lna_gain(float gain) = 0;
+
+    /*! \brief Set mixer gain.
+     *  \param gain The new gain in dB.
+     *
+     * Set the mixer gain in the FCD. Valid values are +4 and +12 dB.
+     *
+     * By default the mixer gain is set to +12 dB and this is a good value for
+     * most cases. In noisy areas you may try to reduce the gain.
+     */
+    virtual void set_mixer_gain(float gain) = 0;
 
     /*! \brief Set new frequency correction.
      *  \param ppm The new frequency correction in parts per million
