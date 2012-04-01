@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,12 +18,16 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-GR_SWIG_BLOCK_MAGIC(gr,wvps_ff);
 
-gr_wvps_ff_sptr gr_make_wvps_ff(int ilen);
+GR_SWIG_BLOCK_MAGIC(wavelet,squash_ff);
 
-class gr_wvps_ff : public gr_sync_block
+wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
+					      const std::vector<float> &ogrid);
+
+class wavelet_squash_ff : public gr_sync_block
 {
 private:
-  gr_wvps_ff(int ilen);
+  wavelet_squash_ff(const std::vector<float> &igrid,
+		    const std::vector<float> &ogrid);
+
 };

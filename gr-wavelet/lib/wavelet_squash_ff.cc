@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2010 Free Software Foundation, Inc.
+ * Copyright 2008,2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,21 +25,21 @@
 #endif
 
 #include <stdexcept>
-#include <gr_squash_ff.h>
+#include <wavelet_squash_ff.h>
 #include <gr_io_signature.h>
 
 // expect input vector of igrid.size y-values,
 // produce output vector of ogrid.size y-values
 
-gr_squash_ff_sptr
-gr_make_squash_ff(const std::vector<float> &igrid,
-		  const std::vector<float> &ogrid)
+wavelet_squash_ff_sptr
+wavelet_make_squash_ff(const std::vector<float> &igrid,
+		       const std::vector<float> &ogrid)
 {
-  return gnuradio::get_initial_sptr(new gr_squash_ff(igrid, ogrid));
+  return gnuradio::get_initial_sptr(new wavelet_squash_ff(igrid, ogrid));
 }
 
-gr_squash_ff::gr_squash_ff(const std::vector<float> &igrid,
-			   const std::vector<float> &ogrid)
+wavelet_squash_ff::wavelet_squash_ff(const std::vector<float> &igrid,
+				     const std::vector<float> &ogrid)
   : gr_sync_block("squash_ff",
 		  gr_make_io_signature(1, 1, sizeof(float) * igrid.size()),
 		  gr_make_io_signature(1, 1, sizeof(float) * ogrid.size()))
@@ -58,7 +58,7 @@ gr_squash_ff::gr_squash_ff(const std::vector<float> &igrid,
   d_spline = gsl_spline_alloc(gsl_interp_cspline, d_inum);	// FIXME check w/ Frank
 }
 
-gr_squash_ff::~gr_squash_ff()
+wavelet_squash_ff::~wavelet_squash_ff()
 {
   free((char *) d_igrid);
   free((char *) d_iwork);
@@ -68,9 +68,9 @@ gr_squash_ff::~gr_squash_ff()
 }
 
 int
-gr_squash_ff::work(int noutput_items,
-		    gr_vector_const_void_star &input_items,
-		    gr_vector_void_star &output_items)
+wavelet_squash_ff::work(int noutput_items,
+			gr_vector_const_void_star &input_items,
+			gr_vector_void_star &output_items)
 {
   const float *in  = (const float *) input_items[0];
   float       *out = (float *) output_items[0];

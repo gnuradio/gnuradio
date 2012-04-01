@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2008,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,30 +19,30 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_GR_WAVELET_FF_H
-#define INCLUDED_GR_WAVELET_FF_H
+#ifndef INCLUDED_WAVELET_WAVELET_FF_H
+#define INCLUDED_WAVELET_WAVELET_FF_H
 
-#include <gr_core_api.h>
+#include <wavelet_api.h>
 #include <iostream>
 #include <gr_sync_block.h>
 
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_wavelet.h>
 
-class gr_wavelet_ff;
-typedef boost::shared_ptr<gr_wavelet_ff> gr_wavelet_ff_sptr;
+class wavelet_wavelet_ff;
+typedef boost::shared_ptr<wavelet_wavelet_ff> wavelet_wavelet_ff_sptr;
 
-GR_CORE_API gr_wavelet_ff_sptr
-gr_make_wavelet_ff(int size = 1024,
-		   int order = 20,
-		   bool forward = true);
+WAVELET_API wavelet_wavelet_ff_sptr
+wavelet_make_wavelet_ff(int size = 1024,
+			int order = 20,
+			bool forward = true);
 
 /*!
  * \brief compute wavelet transform using gsl routines
  * \ingroup wavelet_blk
  */
 
-class GR_CORE_API gr_wavelet_ff : public gr_sync_block
+class WAVELET_API wavelet_wavelet_ff : public gr_sync_block
 {
   int                    d_size;
   int                    d_order;
@@ -51,21 +51,21 @@ class GR_CORE_API gr_wavelet_ff : public gr_sync_block
   gsl_wavelet_workspace *d_workspace;
   double                *d_temp;
 
-  friend GR_CORE_API gr_wavelet_ff_sptr
-    gr_make_wavelet_ff(int size,
-		       int order,
-		       bool forward);
+  friend WAVELET_API wavelet_wavelet_ff_sptr
+    wavelet_make_wavelet_ff(int size,
+			    int order,
+			    bool forward);
 
-  gr_wavelet_ff(int size,
-		int order,
-		bool forward);
+  wavelet_wavelet_ff(int size,
+		     int order,
+		     bool forward);
 
 public:
-  ~gr_wavelet_ff();
+  ~wavelet_wavelet_ff();
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
 };
 
-#endif /* INCLUDED_GR_WAVELET_FF_H */
+#endif /* INCLUDED_WAVELET_WAVELET_FF_H */

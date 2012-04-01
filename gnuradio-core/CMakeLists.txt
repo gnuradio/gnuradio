@@ -22,8 +22,6 @@
 ########################################################################
 include(GrBoost)
 
-find_package(GSL)
-
 find_package(FFTW3f)
 
 include(GrPython) #used for code generation
@@ -41,7 +39,6 @@ GR_REGISTER_COMPONENT("gnuradio-core" ENABLE_GR_CORE
     ENABLE_GRUEL
     ENABLE_VOLK
     Boost_FOUND
-    GSL_FOUND
     FFTW3F_FOUND
     PYTHONINTERP_FOUND
 )

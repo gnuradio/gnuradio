@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef   	INCLUDED_GR_SQUASH_FF_H_
-# define   	INCLUDED_GR_SQUASH_FF_H_
+#ifndef   	INCLUDED_WAVELET_SQUASH_FF_H_
+# define   	INCLUDED_WAVELET_SQUASH_FF_H_
 
-#include <gr_core_api.h>
+#include <wavelet_api.h>
 #include <gr_sync_block.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_interp.h>
@@ -34,16 +34,16 @@
  * \ingroup misc
  */
 
-class gr_squash_ff;
-typedef boost::shared_ptr<gr_squash_ff> gr_squash_ff_sptr;
+class wavelet_squash_ff;
+typedef boost::shared_ptr<wavelet_squash_ff> wavelet_squash_ff_sptr;
 
-GR_CORE_API gr_squash_ff_sptr gr_make_squash_ff(const std::vector<float> &igrid,
-				    const std::vector<float> &ogrid);
+WAVELET_API wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
+							  const std::vector<float> &ogrid);
 
-class GR_CORE_API gr_squash_ff : public gr_sync_block
+class WAVELET_API wavelet_squash_ff : public gr_sync_block
 {
-  friend GR_CORE_API gr_squash_ff_sptr gr_make_squash_ff(const std::vector<float> &igrid,
-					     const std::vector<float> &ogrid);
+  friend WAVELET_API wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
+								   const std::vector<float> &ogrid);
   
   size_t  d_inum;
   size_t  d_onum;
@@ -54,11 +54,11 @@ class GR_CORE_API gr_squash_ff : public gr_sync_block
   gsl_interp_accel *d_accel;
   gsl_spline       *d_spline;
   
-  gr_squash_ff(const std::vector<float> &igrid,
-	       const std::vector<float> &ogrid);
+  wavelet_squash_ff(const std::vector<float> &igrid,
+		    const std::vector<float> &ogrid);
 
  public:
-  ~gr_squash_ff();
+  ~wavelet_squash_ff();
 
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,

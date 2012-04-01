@@ -18,14 +18,12 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+GR_SWIG_BLOCK_MAGIC(wavelet,wvps_ff);
 
-GR_SWIG_BLOCK_MAGIC(gr,wavelet_ff);
+wavelet_wvps_ff_sptr wavelet_make_wvps_ff(int ilen);
 
-gr_wavelet_ff_sptr gr_make_wavelet_ff(int size, int order, bool forward);
-
-class gr_wavelet_ff : public gr_sync_block
+class wavelet_wvps_ff : public gr_sync_block
 {
 private:
-  gr_wavelet_ff(int size, int order, bool forward);
+  wavelet_wvps_ff(int ilen);
 };
-

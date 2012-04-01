@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_wvps_ff.h>
+#include <wavelet_wvps_ff.h>
 #include <gr_io_signature.h>
 #include <string.h>
 
@@ -36,13 +36,13 @@ ceil_log2(int k)
   return m;
 }
 
-gr_wvps_ff_sptr
-gr_make_wvps_ff(int ilen)
+wavelet_wvps_ff_sptr
+wavelet_make_wvps_ff(int ilen)
 {
-  return gnuradio::get_initial_sptr(new gr_wvps_ff(ilen));
+  return gnuradio::get_initial_sptr(new wavelet_wvps_ff(ilen));
 }
 
-gr_wvps_ff::gr_wvps_ff(int ilen)
+wavelet_wvps_ff::wavelet_wvps_ff(int ilen)
   : gr_sync_block("wvps_ff",
 		  gr_make_io_signature(1, 1, sizeof(float) * ilen),
 		  gr_make_io_signature(1, 1, sizeof(float) * ceil_log2(ilen))),
@@ -53,9 +53,9 @@ gr_wvps_ff::gr_wvps_ff(int ilen)
 // input vector assumed to be output from gsl wavelet computation
 
 int
-gr_wvps_ff::work(int noutput_items,
-		 gr_vector_const_void_star &input_items,
-		 gr_vector_void_star &output_items)
+wavelet_wvps_ff::work(int noutput_items,
+		      gr_vector_const_void_star &input_items,
+		      gr_vector_void_star &output_items)
 {
   const float *in  = (const float *) input_items[0];
   float       *out = (float *) output_items[0];

@@ -25,7 +25,7 @@ from gnuradio import gr, gr_unittest
 import copy
 #import pygsl.wavelet as wavelet # FIXME: pygsl not checked for in config
 import math
-
+import wavelet_swig
 
 def sqr(x):
     return x*x
@@ -106,7 +106,7 @@ class test_classify(gr_unittest.TestCase):
         src_data = (0.0, 1.0, 0.0, 1.0, 0.0)
 
         src = gr.vector_source_f(src_data, False, len(src_grid))
-        sq = gr.squash_ff(src_grid, trg_grid)
+        sq = wavelet_swig.squash_ff(src_grid, trg_grid)
         dst = gr.vector_sink_f(len(trg_grid))
         self.tb.connect(src, sq)
         self.tb.connect(sq, dst)
@@ -132,7 +132,7 @@ class test_classify(gr_unittest.TestCase):
 #        d = w.transform_inverse(c, ws)
 #
 #        src = gr.vector_source_f(b, False, n)
-#        wv = gr.wavelet_ff(n, o, True)
+#        wv = wavelet_swig.wavelet_ff(n, o, True)
 #
 #        dst = gr.vector_sink_f(n)
 #        self.tb.connect(src, wv)
@@ -161,7 +161,7 @@ class test_classify(gr_unittest.TestCase):
             k += 01<<e
 
         src = gr.vector_source_f(src_data, False, len(src_data))
-        kon = gr.wvps_ff(len(src_data))
+        kon = wavelet_swig.wvps_ff(len(src_data))
         dst = gr.vector_sink_f(int(math.ceil(math.log(len(src_data), 2))))
 
         self.tb.connect(src, kon)

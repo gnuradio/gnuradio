@@ -267,7 +267,6 @@ set(gr_core_general_triple_threats
     gr_simple_framer
     gr_simple_squelch_cc
     gr_skiphead
-    gr_squash_ff
     gr_squelch_base_cc
     gr_squelch_base_ff
     gr_stream_mux
@@ -285,8 +284,6 @@ set(gr_core_general_triple_threats
     gr_vector_to_stream
     gr_vector_to_streams
     gr_unpack_k_bits_bb
-    gr_wavelet_ff
-    gr_wvps_ff
     gr_descrambler_bb
     gr_scrambler_bb
     gr_probe_mpsk_snr_c

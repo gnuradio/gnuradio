@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,39 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_WVPS_FF_H
-#define INCLUDED_GR_WVPS_FF_H
+%include "gnuradio.i"
 
-#include <gr_core_api.h>
-#include <gr_sync_decimator.h>
+//load generated python docstrings
+%include "wavelet_swig_doc.i"
 
-class gr_wvps_ff;
-typedef boost::shared_ptr<gr_wvps_ff> gr_wvps_ff_sptr;
+%{
+#include "wavelet_squash_ff.h"
+#include "wavelet_wavelet_ff.h"
+#include "wavelet_wvps_ff.h"
+%}
 
-GR_CORE_API gr_wvps_ff_sptr 
-gr_make_wvps_ff(int ilen);
-
-
-/*!
- * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
- * \ingroup wavelet_blk
- */
-class GR_CORE_API gr_wvps_ff : public gr_sync_block
-{
-  friend GR_CORE_API gr_wvps_ff_sptr
-  gr_make_wvps_ff(int ilen);
-
-  int d_ilen;
-  int d_olen;
-
- protected:
-  gr_wvps_ff(int ilen);
-
- public:
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
-
-};
-
-#endif /* INCLUDED_GR_WVPS_FF_H */
+%include "wavelet_squash_ff.i"
+%include "wavelet_wavelet_ff.i"
+%include "wavelet_wvps_ff.i"

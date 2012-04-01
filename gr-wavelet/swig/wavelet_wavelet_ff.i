@@ -19,16 +19,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,squash_ff);
+GR_SWIG_BLOCK_MAGIC(wavelet,wavelet_ff);
 
-gr_squash_ff_sptr gr_make_squash_ff(const std::vector<float> &igrid,
-				    const std::vector<float> &ogrid);
+wavelet_wavelet_ff_sptr wavelet_make_wavelet_ff(int size, int order, bool forward);
 
-class gr_squash_ff : public gr_sync_block
+class wavelet_wavelet_ff : public gr_sync_block
 {
 private:
-  gr_squash_ff(const std::vector<float> &igrid,
-	       const std::vector<float> &ogrid);
-
+  wavelet_wavelet_ff(int size, int order, bool forward);
 };
 
