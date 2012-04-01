@@ -21,12 +21,12 @@
 # 
 
 from optparse import OptionParser
-import gr_plot_psd
+from gnuradio.plot_psd_base import plot_psd_base
 
-# This is a wrapper program for gr_plot_psd specifically for complex data
+# This is a wrapper program for plot_psd_base specifically for complex data
 
 def main():
-    parser = gr_plot_psd.setup_options()
+    parser = plot_psd_base.setup_options()
     parser.remove_option("--data-type")
 
     (options, args) = parser.parse_args ()
@@ -35,7 +35,7 @@ def main():
         raise SystemExit, 1
     filename = args[0]
 
-    dc = gr_plot_psd.gr_plot_psd("complex64", filename, options)
+    dc = plot_psd_base("complex64", filename, options)
 
 if __name__ == "__main__":
     try:

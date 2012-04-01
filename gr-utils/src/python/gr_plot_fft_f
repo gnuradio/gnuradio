@@ -20,10 +20,12 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import gr_plot_fft
+from gnuradio.plot_fft_base import plot_fft_base
+
+# This is a wrapper program for plot_fft_base specifically for float data
 
 def main():
-    parser = gr_plot_fft.setup_options()
+    parser = plot_fft_base.setup_options()
     parser.remove_option("--data-type")
     
     (options, args) = parser.parse_args ()
@@ -32,7 +34,7 @@ def main():
         raise SystemExit, 1
     filename = args[0]
 
-    dc = gr_plot_fft.gr_plot_fft("complex64", filename, options)
+    dc = plot_fft_base("float32", filename, options)
 
 if __name__ == "__main__":
     try:
