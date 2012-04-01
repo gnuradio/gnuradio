@@ -20,49 +20,26 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef   	INCLUDED_WAVELET_SQUASH_FF_H_
-# define   	INCLUDED_WAVELET_SQUASH_FF_H_
+#ifndef	INCLUDED_WAVELET_SQUASH_FF_H
+#define	INCLUDED_WAVELET_SQUASH_FF_H
 
 #include <wavelet_api.h>
 #include <gr_sync_block.h>
-#include <gsl/gsl_errno.h>
-#include <gsl/gsl_interp.h>
-#include <gsl/gsl_spline.h>
+
 /*!
  * \brief implements cheap resampling of spectrum directly from
  * spectral points, using gsl interpolation
  * \ingroup misc
  */
-
 class wavelet_squash_ff;
 typedef boost::shared_ptr<wavelet_squash_ff> wavelet_squash_ff_sptr;
 
 WAVELET_API wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
 							  const std::vector<float> &ogrid);
 
-class WAVELET_API wavelet_squash_ff : public gr_sync_block
+class WAVELET_API wavelet_squash_ff : virtual public gr_sync_block
 {
-  friend WAVELET_API wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
-								   const std::vector<float> &ogrid);
-  
-  size_t  d_inum;
-  size_t  d_onum;
-  double *d_igrid;
-  double *d_iwork;
-  double *d_ogrid;
-
-  gsl_interp_accel *d_accel;
-  gsl_spline       *d_spline;
-  
-  wavelet_squash_ff(const std::vector<float> &igrid,
-		    const std::vector<float> &ogrid);
-
- public:
-  ~wavelet_squash_ff();
-
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
+  // No public API methods visible
 };
 
 #endif

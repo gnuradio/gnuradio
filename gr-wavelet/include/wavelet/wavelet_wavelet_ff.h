@@ -23,11 +23,7 @@
 #define INCLUDED_WAVELET_WAVELET_FF_H
 
 #include <wavelet_api.h>
-#include <iostream>
 #include <gr_sync_block.h>
-
-#include <gsl/gsl_errno.h>
-#include <gsl/gsl_wavelet.h>
 
 class wavelet_wavelet_ff;
 typedef boost::shared_ptr<wavelet_wavelet_ff> wavelet_wavelet_ff_sptr;
@@ -42,30 +38,9 @@ wavelet_make_wavelet_ff(int size = 1024,
  * \ingroup wavelet_blk
  */
 
-class WAVELET_API wavelet_wavelet_ff : public gr_sync_block
+class WAVELET_API wavelet_wavelet_ff : virtual public gr_sync_block
 {
-  int                    d_size;
-  int                    d_order;
-  bool			 d_forward;
-  gsl_wavelet           *d_wavelet;
-  gsl_wavelet_workspace *d_workspace;
-  double                *d_temp;
-
-  friend WAVELET_API wavelet_wavelet_ff_sptr
-    wavelet_make_wavelet_ff(int size,
-			    int order,
-			    bool forward);
-
-  wavelet_wavelet_ff(int size,
-		     int order,
-		     bool forward);
-
-public:
-  ~wavelet_wavelet_ff();
-
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  // No public API methods visible
 };
 
 #endif /* INCLUDED_WAVELET_WAVELET_FF_H */

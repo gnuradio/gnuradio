@@ -20,25 +20,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_WAVELET_WVPS_FF_H
-#define INCLUDED_WAVELET_WVPS_FF_H
+#ifndef INCLUDED_WAVELET_WVPS_FF_IMPL_H
+#define INCLUDED_WAVELET_WVPS_FF_IMPL_H
 
-#include <wavelet_api.h>
-#include <gr_sync_decimator.h>
+#include <wavelet_wvps_ff.h>
 
-class wavelet_wvps_ff;
-typedef boost::shared_ptr<wavelet_wvps_ff> wavelet_wvps_ff_sptr;
-
-WAVELET_API wavelet_wvps_ff_sptr 
-wavelet_make_wvps_ff(int ilen);
-
-/*!
- * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
- * \ingroup wavelet_blk
- */
-class WAVELET_API wavelet_wvps_ff : virtual public gr_sync_block
+class WAVELET_API wavelet_wvps_ff_impl : public wavelet_wvps_ff
 {
-  // No public API methods visible
+  int d_ilen;
+  int d_olen;
+
+  friend WAVELET_API wavelet_wvps_ff_sptr
+  wavelet_make_wvps_ff(int ilen);
+
+  wavelet_wvps_ff_impl(int ilen);
+
+ public:
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };
 
-#endif /* INCLUDED_WAVELET_WVPS_FF_H */
+#endif /* INCLUDED_WAVELET_WVPS_FF_IMPL_H */

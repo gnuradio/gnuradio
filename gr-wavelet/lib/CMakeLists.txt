@@ -23,6 +23,7 @@
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_WAVELET_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -36,9 +37,9 @@ link_directories(${Boost_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND gr_wavelet_sources
-    wavelet_squash_ff.cc
-    wavelet_wavelet_ff.cc
-    wavelet_wvps_ff.cc
+    wavelet_squash_ff_impl.cc
+    wavelet_wavelet_ff_impl.cc
+    wavelet_wvps_ff_impl.cc
 )
 
 list(APPEND wavelet_libs

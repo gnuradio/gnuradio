@@ -19,26 +19,37 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#ifndef INCLUDED_WAVELET_WAVELET_FF_IMPL_H
+#define INCLUDED_WAVELET_WAVELET_FF_IMPL_H
 
-#ifndef INCLUDED_WAVELET_WVPS_FF_H
-#define INCLUDED_WAVELET_WVPS_FF_H
+#include <wavelet_wavelet_ff.h>
+#include <gsl/gsl_errno.h>
+#include <gsl/gsl_wavelet.h>
 
-#include <wavelet_api.h>
-#include <gr_sync_decimator.h>
-
-class wavelet_wvps_ff;
-typedef boost::shared_ptr<wavelet_wvps_ff> wavelet_wvps_ff_sptr;
-
-WAVELET_API wavelet_wvps_ff_sptr 
-wavelet_make_wvps_ff(int ilen);
-
-/*!
- * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
- * \ingroup wavelet_blk
- */
-class WAVELET_API wavelet_wvps_ff : virtual public gr_sync_block
+class WAVELET_API wavelet_wavelet_ff_impl : public wavelet_wavelet_ff
 {
-  // No public API methods visible
+  int                    d_size;
+  int                    d_order;
+  bool			 d_forward;
+  gsl_wavelet           *d_wavelet;
+  gsl_wavelet_workspace *d_workspace;
+  double                *d_temp;
+
+  friend WAVELET_API wavelet_wavelet_ff_sptr
+    wavelet_make_wavelet_ff(int size,
+			    int order,
+			    bool forward);
+
+  wavelet_wavelet_ff_impl(int size,
+			  int order,
+			  bool forward);
+
+public:
+  ~wavelet_wavelet_ff_impl();
+
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };
 
-#endif /* INCLUDED_WAVELET_WVPS_FF_H */
+#endif /* INCLUDED_WAVELET_WAVELET_FF_IMPL_H */

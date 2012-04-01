@@ -25,7 +25,7 @@
 #endif
 
 #include <stdexcept>
-#include <wavelet_wavelet_ff.h>
+#include <wavelet_wavelet_ff_impl.h>
 #include <gr_io_signature.h>
 
 #include <stdio.h>
@@ -38,10 +38,10 @@ wavelet_make_wavelet_ff(int size,
 			int order,
 			bool forward)
 {
-  return gnuradio::get_initial_sptr(new wavelet_wavelet_ff(size, order, forward));
+  return gnuradio::get_initial_sptr(new wavelet_wavelet_ff_impl(size, order, forward));
 }
 
-wavelet_wavelet_ff::wavelet_wavelet_ff(int size, int order, bool forward)
+wavelet_wavelet_ff_impl::wavelet_wavelet_ff_impl(int size, int order, bool forward)
   : gr_sync_block("wavelet_ff",
 		  gr_make_io_signature(1, 1, size * sizeof(float)),
 		  gr_make_io_signature(1, 1, size * sizeof(float))),
@@ -60,7 +60,7 @@ wavelet_wavelet_ff::wavelet_wavelet_ff(int size, int order, bool forward)
     throw std::runtime_error("can't allocate wavelet double conversion temp");
 }
 
-wavelet_wavelet_ff::~wavelet_wavelet_ff()
+wavelet_wavelet_ff_impl::~wavelet_wavelet_ff_impl()
 {
   gsl_wavelet_free(d_wavelet);
   gsl_wavelet_workspace_free(d_workspace);
@@ -68,9 +68,9 @@ wavelet_wavelet_ff::~wavelet_wavelet_ff()
 }
 
 int
-wavelet_wavelet_ff::work(int noutput_items,
-			 gr_vector_const_void_star &input_items,
-			 gr_vector_void_star &output_items)
+wavelet_wavelet_ff_impl::work(int noutput_items,
+			      gr_vector_const_void_star &input_items,
+			      gr_vector_void_star &output_items)
 {
   const float *in  = (const float *) input_items[0];
   float       *out = (float *) output_items[0];

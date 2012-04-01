@@ -25,7 +25,7 @@
 #endif
 
 #include <stdexcept>
-#include <wavelet_squash_ff.h>
+#include <wavelet_squash_ff_impl.h>
 #include <gr_io_signature.h>
 
 // expect input vector of igrid.size y-values,
@@ -35,11 +35,11 @@ wavelet_squash_ff_sptr
 wavelet_make_squash_ff(const std::vector<float> &igrid,
 		       const std::vector<float> &ogrid)
 {
-  return gnuradio::get_initial_sptr(new wavelet_squash_ff(igrid, ogrid));
+  return gnuradio::get_initial_sptr(new wavelet_squash_ff_impl(igrid, ogrid));
 }
 
-wavelet_squash_ff::wavelet_squash_ff(const std::vector<float> &igrid,
-				     const std::vector<float> &ogrid)
+wavelet_squash_ff_impl::wavelet_squash_ff_impl(const std::vector<float> &igrid,
+					       const std::vector<float> &ogrid)
   : gr_sync_block("squash_ff",
 		  gr_make_io_signature(1, 1, sizeof(float) * igrid.size()),
 		  gr_make_io_signature(1, 1, sizeof(float) * ogrid.size()))
@@ -58,7 +58,7 @@ wavelet_squash_ff::wavelet_squash_ff(const std::vector<float> &igrid,
   d_spline = gsl_spline_alloc(gsl_interp_cspline, d_inum);	// FIXME check w/ Frank
 }
 
-wavelet_squash_ff::~wavelet_squash_ff()
+wavelet_squash_ff_impl::~wavelet_squash_ff_impl()
 {
   free((char *) d_igrid);
   free((char *) d_iwork);
@@ -68,9 +68,9 @@ wavelet_squash_ff::~wavelet_squash_ff()
 }
 
 int
-wavelet_squash_ff::work(int noutput_items,
-			gr_vector_const_void_star &input_items,
-			gr_vector_void_star &output_items)
+wavelet_squash_ff_impl::work(int noutput_items,
+			     gr_vector_const_void_star &input_items,
+			     gr_vector_void_star &output_items)
 {
   const float *in  = (const float *) input_items[0];
   float       *out = (float *) output_items[0];
