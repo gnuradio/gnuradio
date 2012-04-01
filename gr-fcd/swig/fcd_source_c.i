@@ -15,6 +15,7 @@ public:
   void set_freq(float freq);
   void set_freq_khz(int freq);
   void set_lna_gain(float gain);
+  void set_mixer_gain(float gain);
   void set_freq_corr(int ppm);
   void set_dc_corr(double dci, double dcq);
   void set_iq_corr(double gain, double phase);

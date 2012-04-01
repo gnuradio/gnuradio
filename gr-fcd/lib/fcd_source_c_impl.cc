@@ -173,6 +173,22 @@ void fcd_source_c_impl::set_lna_gain(float gain)
   /* TODO: check fme */
 }
 
+// Set mixer gain
+void fcd_source_c_impl::set_mixer_gain(float gain)
+{
+    FCD_MODE_ENUM fme;
+    unsigned char g;
+
+    if ( gain > 4.0 ) {
+        g = TMGE_P12_0DB;
+    } else {
+        g = TMGE_P4_0DB;
+    }
+
+    fme = fcdAppSetParam(FCD_CMD_APP_SET_MIXER_GAIN, &g, 1);
+    /* TODO: check fme */
+}
+
 // Set new frequency correction
 void fcd_source_c_impl::set_freq_corr(int ppm)
 {
