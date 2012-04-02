@@ -26,9 +26,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 ########################################################################
 # Generate serial tags header file
 ########################################################################
-get_filename_component(SCHEME_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../scheme/gnuradio ABSOLUTE
-)
 
 get_filename_component(PMT_SERIAL_TAGS_H
     ${CMAKE_CURRENT_BINARY_DIR}/../../include/gruel/pmt_serial_tags.h ABSOLUTE
@@ -36,11 +33,11 @@ get_filename_component(PMT_SERIAL_TAGS_H
 
 add_custom_command(
     OUTPUT ${PMT_SERIAL_TAGS_H}
-    DEPENDS ${SCHEME_DIR}/gen-serial-tags.py
-    DEPENDS ${SCHEME_DIR}/pmt-serial-tags.scm
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gen-serial-tags.py
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/pmt-serial-tags.scm
     COMMAND ${PYTHON_EXECUTABLE}
-        ${SCHEME_DIR}/gen-serial-tags.py
-        ${SCHEME_DIR}/pmt-serial-tags.scm
+        ${CMAKE_CURRENT_SOURCE_DIR}/gen-serial-tags.py
+        ${CMAKE_CURRENT_SOURCE_DIR}/pmt-serial-tags.scm
         ${PMT_SERIAL_TAGS_H}
 )
 

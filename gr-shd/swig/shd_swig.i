@@ -125,14 +125,4 @@ static const size_t ALL_MBOARDS = shd::xmini::multi_xmini::ALL_MBOARDS;
 %}
 static const size_t ALL_MBOARDS;
 
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-shd_swig" "scm_init_gnuradio_shd_swig_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif  /* SWIGGUILE */
-
 #endif  /* GR_HAVE_SHD */

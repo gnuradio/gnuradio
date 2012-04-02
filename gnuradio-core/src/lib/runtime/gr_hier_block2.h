@@ -150,7 +150,7 @@ public:
   // ignored by the user.
   gr_flat_flowgraph_sptr flatten() const;
 
-  gr_hier_block2_sptr to_hier_block2(); // Needed for Python/Guile type coercion
+  gr_hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
 };
 
 inline gr_hier_block2_sptr cast_to_hier_block2_sptr(gr_basic_block_sptr block) {

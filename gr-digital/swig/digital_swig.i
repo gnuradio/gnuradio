@@ -86,21 +86,3 @@ enum snr_est_type_t {
 %include "digital_probe_mpsk_snr_est_c.i"
 %include "digital_cpmmod_bc.i"
 %include "digital_gmskmod_bc.i"
-
-#if SWIGGUILE
-
-enum snr_est_type_t {
-  SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
-  SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
-  SNR_EST_M2M4,	        // 2nd & 4th moment est (>= 1 dB)
-  SNR_EST_SVR           // SVR-based est (>= 0dB)
-};
-
-%scheme %{
-(load-extension-global "libguile-gnuradio-digital_swig" "scm_init_gnuradio_digital_swig_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif

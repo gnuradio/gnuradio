@@ -122,7 +122,7 @@ public:
   //! Set the maximum number of noutput_items in the flowgraph
   void set_max_noutput_items(int nmax);
 
-  gr_top_block_sptr to_top_block(); // Needed for Python/Guile type coercion
+  gr_top_block_sptr to_top_block(); // Needed for Python type coercion
 };
 
 inline gr_top_block_sptr cast_to_top_block_sptr(gr_basic_block_sptr block) {
