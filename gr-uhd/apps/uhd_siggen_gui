@@ -24,7 +24,7 @@ import wx
 from gnuradio import gr
 from gnuradio.gr.pubsub import pubsub
 from gnuradio.wxgui import gui, forms
-import uhd_siggen
+from gnuradio import uhd_siggen_base as uhd_siggen
 import sys, math
 
 class app_gui(pubsub):

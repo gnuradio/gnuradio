@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr
-from gnuradio import uhd_siggen
+from gnuradio import uhd_siggen_base as uhd_siggen
 import sys
 
 def main():
