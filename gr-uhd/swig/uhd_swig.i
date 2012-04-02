@@ -125,6 +125,14 @@ static const size_t ALL_MBOARDS = uhd::usrp::multi_usrp::ALL_MBOARDS;
 %}
 static const size_t ALL_MBOARDS;
 
+%{
+#include <uhd/version.hpp>
+std::string get_version_string(void){
+    return uhd::get_version_string();
+}
+%}
+std::string get_version_string(void);
+
 #if SWIGGUILE
 %scheme %{
 (load-extension-global "libguile-gnuradio-uhd_swig" "scm_init_gnuradio_uhd_swig_module")
