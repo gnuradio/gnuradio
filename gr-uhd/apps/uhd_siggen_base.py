@@ -344,7 +344,7 @@ def get_options():
 
 # If this script is executed, the following runs. If it is imported,
 # the below does not run.
-def main():
+def test_main():
     if gr.enable_realtime_scheduling() != gr.RT_OK:
         print "Note: failed to enable realtime scheduling, continuing"
     
@@ -368,4 +368,4 @@ def main():
 # Whats odd is that grc works fine with tb in the __main__,
 # perhaps its because the try/except clauses around tb.
 if __name__ == "__main__":
-    main()
+    test_main()
