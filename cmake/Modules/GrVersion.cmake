@@ -22,17 +22,6 @@ if(DEFINED __INCLUDED_GR_VERSION_CMAKE)
 endif()
 set(__INCLUDED_GR_VERSION_CMAKE TRUE)
 
-########################################################################
-# Extract variables from version.sh
-########################################################################
-include(GrPython)
-message(STATUS "Extracting version information from version.sh...")
-execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "print open('${CMAKE_SOURCE_DIR}/version.sh').read().replace('=', ';').replace('\\n', ';')"
-    OUTPUT_VARIABLE VERSION_INFO OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-include(CMakeParseArgumentsCopy)
-CMAKE_PARSE_ARGUMENTS(VERSION_INFO "" "MAJOR_VERSION;API_COMPAT;MINOR_VERSION;MAINT_VERSION" "" ${VERSION_INFO})
-
 #eventually, replace version.sh and fill in the variables below
 set(MAJOR_VERSION ${VERSION_INFO_MAJOR_VERSION})
 set(API_COMPAT    ${VERSION_INFO_API_COMPAT})
