@@ -122,7 +122,13 @@ public:
      */
     virtual void set_start_time(const uhd::time_spec_t &time) = 0;
 
-    virtual std::vector<std::string> list_property_tree(const std::string &path) = 0;
+    /*!
+     * Returns identifying information about this USRP's configuration.
+     * Returns motherboard ID and serial.
+     * Returns daughterboard TX/RX ID, subdev name, and serial.
+     * \param mboard the motherboard index 0 to M-1
+     * \param chan channel index 0 to N-1
+     */
     virtual uhd::dict<std::string, std::string> get_usrp_info(size_t mboard = 0, size_t chan = 0) = 0;
 
     /*!
