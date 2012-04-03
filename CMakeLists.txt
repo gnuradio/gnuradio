@@ -236,7 +236,6 @@ add_subdirectory(gr-video-sdl)
 add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wxgui)
-add_subdirectory(gnuradio-examples)
 
 #finalize cpack after subdirs processed
 include(GrPackage)

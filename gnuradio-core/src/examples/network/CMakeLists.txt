@@ -17,34 +17,14 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-# DEMOD
-install(
-    FILES
-    demod/digital_freq_lock.grc
-    demod/mpsk_demod.grc
-    demod/pam_sync.grc
-    demod/pam_timing.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/demod
-    COMPONENT "gnuadio-examples"
+GR_PYTHON_INSTALL(PROGRAMS
+  audio_sink.py
+  audio_source.py
+  dial_tone_sink.py
+  dial_tone_source.py
+  vector_sink.py
+  vector_source.py
+  DESTINATION ${GR_PKG_DATA_DIR}/examples/network
+  COMPONENT "core_python"
 )
 
-# SIMPLE
-install(
-    FILES
-    simple/ber_simulation.grc
-    simple/dpsk_loopback.grc
-    simple/variable_config.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/simple
-    COMPONENT "gnuadio-examples"
-)
-
-# XMLRPC
-install(
-    FILES
-    xmlrpc/readme.txt
-    xmlrpc/xmlrpc_client.grc
-    xmlrpc/xmlrpc_client_script.py
-    xmlrpc/xmlrpc_server.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/xmlrpc
-    COMPONENT "gnuadio-examples"
-)

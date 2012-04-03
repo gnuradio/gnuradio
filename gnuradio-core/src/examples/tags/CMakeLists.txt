@@ -17,7 +17,12 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-add_subdirectory(mp-sched)
-add_subdirectory(network)
-add_subdirectory(pfb)
-add_subdirectory(tags)
+include(GrPython)
+
+GR_PYTHON_INSTALL(PROGRAMS
+  test_file_tags.py
+  uhd_burst_detector.py
+  DESTINATION ${GR_PKG_DATA_DIR}/examples/tags
+  COMPONENT "core_python"
+)
+

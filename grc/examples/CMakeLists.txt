@@ -17,14 +17,21 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-GR_PYTHON_INSTALL(PROGRAMS
-  audio_sink.py
-  audio_source.py
-  dial_tone_sink.py
-  dial_tone_source.py
-  vector_sink.py
-  vector_source.py
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/network
-  COMPONENT "gnuradio_examples"
+# SIMPLE
+install(
+    FILES
+    simple/variable_config.grc
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/grc/simple
+    COMPONENT "grc"
 )
 
+# XMLRPC
+install(
+    FILES
+    xmlrpc/readme.txt
+    xmlrpc/xmlrpc_client.grc
+    xmlrpc/xmlrpc_client_script.py
+    xmlrpc/xmlrpc_server.grc
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/grc/xmlrpc
+    COMPONENT "grc"
+)

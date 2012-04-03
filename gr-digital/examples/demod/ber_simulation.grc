@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu Mar 19 11:08:59 2009</timestamp>
+  <timestamp>Tue Apr  3 18:11:51 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -34,6 +34,14 @@
     <param>
       <key>category</key>
       <value>Custom</value>
+    </param>
+    <param>
+      <key>run_options</key>
+      <value>prompt</value>
+    </param>
+    <param>
+      <key>run</key>
+      <value>True</value>
     </param>
     <param>
       <key>realtime_scheduling</key>
@@ -84,41 +92,6 @@
     </param>
   </block>
   <block>
-    <key>gr_chunks_to_symbols_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_chunks_to_symbols_xx</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>in_type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>out_type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>symbol_table</key>
-      <value>const</value>
-    </param>
-    <param>
-      <key>dimension</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(360, 237)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>wxgui_numbersink2</key>
     <param>
       <key>id</key>
@@ -143,10 +116,6 @@
     <param>
       <key>samp_rate</key>
       <value>samp_rate</value>
-    </param>
-    <param>
-      <key>base_value</key>
-      <value>0.0</value>
     </param>
     <param>
       <key>min_value</key>
@@ -189,8 +158,16 @@
       <value>False</value>
     </param>
     <param>
+      <key>win_size</key>
+      <value></value>
+    </param>
+    <param>
       <key>grid_pos</key>
       <value>1, 0, 1, 1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -226,149 +203,6 @@
     <param>
       <key>_coordinate</key>
       <value>(397, 27)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blks2_error_rate</key>
-    <param>
-      <key>id</key>
-      <value>blks2_error_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>'BER'</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value>1000000</value>
-    </param>
-    <param>
-      <key>bits_per_symbol</key>
-      <value>int(math.log(len(const))/math.log(2))</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(670, 41)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_constellation_decoder_cb</key>
-    <param>
-      <key>id</key>
-      <value>gr_constellation_decoder_cb</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>sym_position</key>
-      <value>const</value>
-    </param>
-    <param>
-      <key>sym_value_out</key>
-      <value>range(len(const))</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(708, 224)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>random_source_x</key>
-    <param>
-      <key>id</key>
-      <value>random_source_x</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>len(const)</value>
-    </param>
-    <param>
-      <key>num_samps</key>
-      <value>1000000</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(15, 244)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>noise</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>.25</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(18, 386)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>const</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1+1j, 1-1j, -1-1j, -1+1j</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(16, 461)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -422,6 +256,81 @@
     </param>
   </block>
   <block>
+    <key>wxgui_scopesink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_scopesink2_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>"Constellation: "+str(const)</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>v_offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>win_size</key>
+      <value></value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>2, 0, 1, 1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>trig_mode</key>
+      <value>gr.gr_TRIG_MODE_AUTO</value>
+    </param>
+    <param>
+      <key>y_axis_label</key>
+      <value>Counts</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(828, 368)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>gr_add_xx</key>
     <param>
       <key>id</key>
@@ -453,10 +362,79 @@
     </param>
   </block>
   <block>
-    <key>wxgui_scopesink2</key>
+    <key>digital_constellation_decoder_cb</key>
     <param>
       <key>id</key>
-      <value>wxgui_scopesink2_0</value>
+      <value>digital_constellation_decoder_cb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>constellation</key>
+      <value>const.base()</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(693, 205)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>const</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>digital.qpsk_constellation()</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(16, 461)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>const_points</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>const.points()</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(17, 532)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>random_source_x</key>
+    <param>
+      <key>id</key>
+      <value>random_source_x</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -464,43 +442,152 @@
     </param>
     <param>
       <key>type</key>
-      <value>complex</value>
+      <value>byte</value>
     </param>
     <param>
-      <key>title</key>
-      <value>"Constellation: "+str(const)</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>v_scale</key>
+      <key>min</key>
       <value>0</value>
     </param>
     <param>
-      <key>t_scale</key>
-      <value>0</value>
+      <key>max</key>
+      <value>len(const_points)</value>
     </param>
     <param>
-      <key>ac_couple</key>
+      <key>num_samps</key>
+      <value>1000000</value>
+    </param>
+    <param>
+      <key>repeat</key>
       <value>False</value>
     </param>
     <param>
-      <key>xy_mode</key>
+      <key>_coordinate</key>
+      <value>(15, 244)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_chunks_to_symbols_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_chunks_to_symbols_xx</value>
+    </param>
+    <param>
+      <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>num_inputs</key>
+      <key>in_type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>symbol_table</key>
+      <value>const_points</value>
+    </param>
+    <param>
+      <key>dimension</key>
       <value>1</value>
     </param>
     <param>
-      <key>grid_pos</key>
-      <value>2, 0, 1, 1</value>
+      <key>num_ports</key>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(828, 368)</value>
+      <value>(367, 260)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blks2_error_rate</key>
+    <param>
+      <key>id</key>
+      <value>blks2_error_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>'BER'</value>
+    </param>
+    <param>
+      <key>win_size</key>
+      <value>1000000</value>
+    </param>
+    <param>
+      <key>bits_per_symbol</key>
+      <value>int(math.log(len(const_points))/math.log(2))</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(670, 41)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>noise</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>AWGN Noise</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.10</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(268, 481)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -516,18 +603,6 @@
   <connection>
     <source_block_id>gr_throttle</source_block_id>
     <sink_block_id>blks2_error_rate</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_constellation_decoder_cb</source_block_id>
-    <sink_block_id>blks2_error_rate</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_add_xx</source_block_id>
-    <sink_block_id>gr_constellation_decoder_cb</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -558,6 +633,18 @@
   <connection>
     <source_block_id>gr_add_xx</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_constellation_decoder_cb_0</source_block_id>
+    <sink_block_id>blks2_error_rate</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_add_xx</source_block_id>
+    <sink_block_id>digital_constellation_decoder_cb_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -25,11 +25,11 @@ GR_PYTHON_INSTALL(PROGRAMS
   synthetic.py
   wfm_rcv_pll_to_wav.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
-  COMPONENT "gnuradio_examples"
+  COMPONENT "core_python"
 )
 
 install(
     FILES README
     DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
-    COMPONENT "gnuadio_examples"
+    COMPONENT "core_python"
 )

@@ -17,20 +17,8 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include(GrPython)
-
-GR_PYTHON_INSTALL(PROGRAMS
-  channelize.py
-  chirp_channelize.py
-  decimate.py
-  fmtest.py
-  interpolate.py
-  resampler_demo.grc
-  resampler.py
-  synth_filter.py
-  synth_to_chan.py
-  reconstruction.py
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/pfb
-  COMPONENT "gnuradio_examples"
-)
-
+add_subdirectory(mp-sched)
+add_subdirectory(network)
+add_subdirectory(pfb)
+add_subdirectory(tags)
+add_subdirectory(volk_benchmark)

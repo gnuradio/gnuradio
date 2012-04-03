@@ -20,9 +20,17 @@
 include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
-  test_file_tags.py
-  uhd_burst_detector.py
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/tags
-  COMPONENT "gnuradio_examples"
+  channelize.py
+  chirp_channelize.py
+  decimate.py
+  fmtest.py
+  interpolate.py
+  resampler_demo.grc
+  resampler.py
+  synth_filter.py
+  synth_to_chan.py
+  reconstruction.py
+  DESTINATION ${GR_PKG_DATA_DIR}/examples/pfb
+  COMPONENT "core_python"
 )
 

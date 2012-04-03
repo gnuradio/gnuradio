@@ -19,6 +19,7 @@
 
 include(GrPython)
 
+# Base stuff
 GR_PYTHON_INSTALL(PROGRAMS
     example_costas.py
     example_fll.py
@@ -30,6 +31,7 @@ GR_PYTHON_INSTALL(PROGRAMS
     COMPONENT "digital_python"
 )
 
+# Narrowband
 GR_PYTHON_INSTALL(PROGRAMS
     narrowband/transmit_path.py
     narrowband/receive_path.py
@@ -45,6 +47,7 @@ GR_PYTHON_INSTALL(PROGRAMS
     COMPONENT "digital_python"
 )
 
+# OFDM
 GR_PYTHON_INSTALL(PROGRAMS
     ofdm/benchmark_add_channel.py
     ofdm/benchmark_rx.py
@@ -56,5 +59,18 @@ GR_PYTHON_INSTALL(PROGRAMS
     ofdm/tunnel.py
     ofdm/uhd_interface.py
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/ofdm
+    COMPONENT "digital_python"
+)
+
+# DEMOD
+install(
+    FILES
+    demod/digital_freq_lock.grc
+    demod/mpsk_demod.grc
+    demod/pam_sync.grc
+    demod/pam_timing.grc
+    demod/ber_simulation.grc
+    demod/dpsk_loopback.grc   
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
     COMPONENT "digital_python"
 )
