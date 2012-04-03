@@ -21,11 +21,11 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(
     PROGRAMS
-    hrpt_decode.py
-    hrpt_demod.py
-    file_rx_hrpt.py
-    usrp_rx_hrpt.py
-    usrp_rx_hrpt_nogui.py
-    DESTINATION ${GR_RUNTIME_DIR}
+    hrpt_decode.grc
+    hrpt_demod.grc
+    file_rx_hrpt.grc
+    usrp_rx_hrpt.grc
+    usrp_rx_hrpt_nogui.grc
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/noaa
     COMPONENT "noaa_python"
 )
