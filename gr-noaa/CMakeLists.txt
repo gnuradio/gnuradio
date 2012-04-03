@@ -81,7 +81,7 @@ add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(grc)
-    add_subdirectory(apps)
+    add_subdirectory(examples)
 endif(ENABLE_PYTHON)
 
 ########################################################################
