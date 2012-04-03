@@ -31,5 +31,5 @@ GR_PYTHON_INSTALL(PROGRAMS
 install(
     FILES README
     DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
-    COMPONENT "gnuadio-examples"
+    COMPONENT "gnuadio_examples"
 )
