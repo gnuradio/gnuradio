@@ -231,8 +231,11 @@ add_subdirectory(gr-video-sdl)
 add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wxgui)
-add_subdirectory(gnuradio-examples/grc)
-add_subdirectory(gnuradio-examples/python)
+
+if(ENABLE_PYTHON)
+  add_subdirectory(gnuradio-examples/grc)
+  add_subdirectory(gnuradio-examples/python)
+endif(ENABLE_PYTHON)
 
 #finalize cpack after subdirs processed
 include(GrPackage)
