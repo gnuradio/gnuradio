@@ -66,6 +66,14 @@ public:
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
 
+    std::vector<std::string> list_property_tree(const std::string &path){
+        return _dev->list_property_tree(path);
+    }
+
+    uhd::dict<std::string, std::string> get_usrp_info(size_t mboard, size_t chan){
+        return _dev->get_usrp_info(mboard, chan);
+    }
+
     void set_subdev_spec(const std::string &spec, size_t mboard){
         return _dev->set_tx_subdev_spec(spec, mboard);
     }

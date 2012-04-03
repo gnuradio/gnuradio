@@ -130,6 +130,9 @@ public:
      */
     virtual void set_start_time(const uhd::time_spec_t &time) = 0;
 
+    virtual std::vector<std::string> list_property_tree(const std::string &path) = 0;
+    virtual uhd::dict<std::string, std::string> get_usrp_info(size_t mboard = 0, size_t chan = 0) = 0;
+
     /*!
      * Set the frontend specification.
      * \param spec the subdev spec markup string
