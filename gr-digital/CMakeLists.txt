@@ -39,6 +39,8 @@ GR_SET_GLOBAL(GR_DIGITAL_SWIG_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/swig
 )
 
+SET(GR_PKG_DIGITAL_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/digital)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################

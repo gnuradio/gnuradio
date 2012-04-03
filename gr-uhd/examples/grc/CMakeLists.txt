@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,15 +17,15 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include(GrPython)
-
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    hrpt_decode.py
-    hrpt_demod.py
-    file_rx_hrpt.py
-    usrp_rx_hrpt.py
-    usrp_rx_hrpt_nogui.py
-    DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "noaa_python"
+install(
+    FILES
+    uhd_const_wave.grc
+    uhd_dpsk_mod.grc
+    uhd_fft.grc
+    uhd_rx_dpsk.grc
+    uhd_two_tone_loopback.grc
+    uhd_tx_dpsk.grc
+    uhd_wbfm_receive.grc
+    DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
+    COMPONENT "uhd_python"
 )

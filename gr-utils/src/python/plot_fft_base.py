@@ -35,7 +35,7 @@ except ImportError:
 
 from optparse import OptionParser
 
-class gr_plot_fft:
+class plot_fft_base:
     def __init__(self, datatype, filename, options):
         self.hfile = open(filename, "r")
         self.block_length = options.block
@@ -96,7 +96,7 @@ class gr_plot_fft:
 
     def dofft(self, iq):
         N = len(iq)
-        iq_fft = fftpack.fftshift(scipy.fft(iq))       # fft and shift axis
+        iq_fft = scipy.fftpack.fftshift(scipy.fft(iq))       # fft and shift axis
         iq_fft = 20*scipy.log10(abs((iq_fft+1e-15)/N)) # convert to decibels, adjust power
         # adding 1e-15 (-300 dB) to protect against value errors if an item in iq_fft is 0
         return iq_fft
@@ -206,37 +206,38 @@ class gr_plot_fft:
             self.hfile.seek(-self.hfile.tell(),1)
         self.get_data()
         self.update_plots()
-        
+
+    @staticmethod
+    def setup_options():
+        usage="%prog: [options] input_filename"
+        description = "Takes a GNU Radio complex binary file and displays the I&Q data versus time as well as the frequency domain (FFT) plot. The y-axis values are plotted assuming volts as the amplitude of the I&Q streams and converted into dBm in the frequency domain (the 1/N power adjustment out of the FFT is performed internally). The script plots a certain block of data at a time, specified on the command line as -B or --block. This value defaults to 1000. The start position in the file can be set by specifying -s or --start and defaults to 0 (the start of the file). By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time and frequency axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
+
+        parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
+        parser.add_option("-d", "--data-type", type="string", default="complex64",
+                          help="Specify the data type (complex64, float32, (u)int32, (u)int16, (u)int8) [default=%default]")
+        parser.add_option("-B", "--block", type="int", default=1000,
+                          help="Specify the block size [default=%default]")
+        parser.add_option("-s", "--start", type="int", default=0,
+                          help="Specify where to start in the file [default=%default]")
+        parser.add_option("-R", "--sample-rate", type="float", default=1.0,
+                          help="Set the sampler rate of the data [default=%default]")
+        return parser
+
 def find(item_in, list_search):
     try:
 	return list_search.index(item_in) != None
     except ValueError:
 	return False
 
-def setup_options():
-    usage="%prog: [options] input_filename"
-    description = "Takes a GNU Radio complex binary file and displays the I&Q data versus time as well as the frequency domain (FFT) plot. The y-axis values are plotted assuming volts as the amplitude of the I&Q streams and converted into dBm in the frequency domain (the 1/N power adjustment out of the FFT is performed internally). The script plots a certain block of data at a time, specified on the command line as -B or --block. This value defaults to 1000. The start position in the file can be set by specifying -s or --start and defaults to 0 (the start of the file). By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time and frequency axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
-
-    parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
-    parser.add_option("-d", "--data-type", type="string", default="complex64",
-                      help="Specify the data type (complex64, float32, (u)int32, (u)int16, (u)int8) [default=%default]")
-    parser.add_option("-B", "--block", type="int", default=1000,
-                      help="Specify the block size [default=%default]")
-    parser.add_option("-s", "--start", type="int", default=0,
-                      help="Specify where to start in the file [default=%default]")
-    parser.add_option("-R", "--sample-rate", type="float", default=1.0,
-                      help="Set the sampler rate of the data [default=%default]")
-    return parser
-
 def main():
-    parser = setup_options()
+    parser = plot_fft_base.setup_options()
     (options, args) = parser.parse_args ()
     if len(args) != 1:
         parser.print_help()
         raise SystemExit, 1
     filename = args[0]
 
-    dc = gr_plot_fft(options.data_type, filename, options)
+    dc = plot_fft_base(options.data_type, filename, options)
 
 if __name__ == "__main__":
     try:

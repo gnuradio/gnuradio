@@ -38,30 +38,8 @@ link_directories(${Boost_LIBRARY_DIRS})
 add_executable(tags_demo tags_demo.cc)
 target_link_libraries(tags_demo gnuradio-uhd)
 
-########################################################################
-# Python examples
-########################################################################
-if(ENABLE_PYTHON)
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    fm_tx4.py
-    fm_tx_2_daughterboards.py
-    max_power.py
-    usrp_am_mw_rcv.py
-    usrp_nbfm_ptt.py
-    usrp_nbfm_rcv.py
-    usrp_spectrum_sense.py
-    usrp_tv_rcv_nogui.py
-    usrp_tv_rcv.py
-    usrp_wfm_rcv2_nogui.py
-    usrp_wfm_rcv_fmdet.py
-    usrp_wfm_rcv_nogui.py
-    usrp_wfm_rcv_pll.py
-    usrp_wfm_rcv.py
-    usrp_wfm_rcv_sca.py
-    usrp_wxapt_rcv.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/uhd
-    COMPONENT "uhd_python"
+INSTALL(TARGETS
+    tags_demo
+    DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
+    COMPONENT "uhd_examples"
 )
-
-endif(ENABLE_PYTHON)

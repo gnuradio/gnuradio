@@ -17,15 +17,6 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-# AUDIO
-install(
-    FILES
-    audio/cvsd_sweep.grc
-    audio/dial_tone.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/grc/audio
-    COMPONENT "gnuadio-examples"
-)
-
 # DEMOD
 install(
     FILES
@@ -33,7 +24,7 @@ install(
     demod/mpsk_demod.grc
     demod/pam_sync.grc
     demod/pam_timing.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/grc/demod
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/demod
     COMPONENT "gnuadio-examples"
 )
 
@@ -43,34 +34,7 @@ install(
     simple/ber_simulation.grc
     simple/dpsk_loopback.grc
     simple/variable_config.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/grc/simple
-    COMPONENT "gnuadio-examples"
-)
-
-# TRELLIS
-install(
-    FILES
-    trellis/interference_cancellation.grc
-    trellis/pccc1.grc
-    trellis/pccc.grc
-    trellis/sccc1.grc
-    trellis/sccc.grc
-    trellis/readme.txt
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/grc/trellis
-    COMPONENT "gnuadio-examples"
-)
-
-# UHD
-install(
-    FILES
-    uhd/uhd_const_wave.grc
-    uhd/uhd_dpsk_mod.grc
-    uhd/uhd_fft.grc
-    uhd/uhd_rx_dpsk.grc
-    uhd/uhd_two_tone_loopback.grc
-    uhd/uhd_tx_dpsk.grc
-    uhd/uhd_wbfm_receive.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/grc/uhd
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/simple
     COMPONENT "gnuadio-examples"
 )
 
@@ -81,6 +45,6 @@ install(
     xmlrpc/xmlrpc_client.grc
     xmlrpc/xmlrpc_client_script.py
     xmlrpc/xmlrpc_server.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/grc/xmlrpc
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/xmlrpc
     COMPONENT "gnuadio-examples"
 )

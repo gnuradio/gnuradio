@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-#
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,27 +16,15 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
 
-import gr_plot_fft
-
-def main():
-    parser = gr_plot_fft.setup_options()
-    parser.remove_option("--data-type")
-    
-    (options, args) = parser.parse_args ()
-    if len(args) != 1:
-        parser.print_help()
-        raise SystemExit, 1
-    filename = args[0]
-
-    dc = gr_plot_fft.gr_plot_fft("complex64", filename, options)
-
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        pass
-    
-
-
+install(
+    FILES
+    interference_cancellation.grc
+    pccc1.grc
+    pccc.grc
+    sccc1.grc
+    sccc.grc
+    readme.txt
+    DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}
+    COMPONENT "trellis-examples"
+)

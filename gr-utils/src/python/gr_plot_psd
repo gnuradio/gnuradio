@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,25 +20,23 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import gr_plot_fft
+from gnuradio.plot_psd_base import plot_psd_base
+
+# This is a wrapper program for plot_psd_base. It handles any data
+# type and defaults to complex64.
 
 def main():
-    parser = gr_plot_fft.setup_options()
-    parser.remove_option("--data-type")
-    
+    parser = plot_psd_base.setup_options()
     (options, args) = parser.parse_args ()
     if len(args) != 1:
         parser.print_help()
         raise SystemExit, 1
     filename = args[0]
 
-    dc = gr_plot_fft.gr_plot_fft("float32", filename, options)
+    dc = plot_psd_base(options.data_type, filename, options)
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         pass
-    
-
-

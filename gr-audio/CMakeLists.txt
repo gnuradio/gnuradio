@@ -33,6 +33,8 @@ GR_REGISTER_COMPONENT("gr-audio" ENABLE_GR_AUDIO
 
 GR_SET_GLOBAL(GR_AUDIO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+SET(GR_PKG_AUDIO_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/audio)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -65,6 +67,13 @@ CPACK_COMPONENT("audio_python"
     DEPENDS      "core_python;audio_runtime"
 )
 
+CPACK_COMPONENT("audio_examples"
+    GROUP        "Audio"
+    DISPLAY_NAME "Examples"
+    DESCRIPTION  "Example programs"
+    DEPENDS      "audio_runtime"
+)
+
 CPACK_COMPONENT("audio_swig"
     GROUP        "Audio"
     DISPLAY_NAME "SWIG"
@@ -77,12 +86,13 @@ CPACK_COMPONENT("audio_swig"
 ########################################################################
 add_subdirectory(include)
 add_subdirectory(lib)
-add_subdirectory(examples/c++)
 add_subdirectory(doc)
+add_subdirectory(examples/c++)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(grc)
     add_subdirectory(examples/python)
+    add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
 
 ########################################################################

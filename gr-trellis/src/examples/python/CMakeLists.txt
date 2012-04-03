@@ -33,7 +33,7 @@ GR_PYTHON_INSTALL(
     test_turbo_equalization.py
     test_turbo_equalization1.py
     test_turbo_equalization2.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/trellis
+    DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}
     COMPONENT "trellis_examples"
 )
 
@@ -59,6 +59,6 @@ install(
     fsm_files/rep3.fsm
     fsm_files/rep5.fsm
     fsm_files/simple.fsm
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/trellis/fsm_files
+    DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files
     COMPONENT "trellis_examples"
 )

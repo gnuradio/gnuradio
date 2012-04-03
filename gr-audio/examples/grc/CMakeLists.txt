@@ -17,25 +17,11 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include_directories(${GR_FCD_INCLUDE_DIRS})
-include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
-include_directories(${GR_AUDIO_INCLUDE_DIRS})
-
-add_executable(fcd_nfm_rx fcd_nfm_rx.cc)
-target_link_libraries(fcd_nfm_rx gnuradio-fcd)
-
-INSTALL(TARGETS
-    fcd_nfm_rx
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/fcd
-    COMPONENT "fcd_examples"
+install(
+    FILES
+    cvsd_sweep.grc
+    dial_tone.grc
+    DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
+    COMPONENT "audio_python"
 )
 
-if(ENABLE_PYTHON)
-  INSTALL(FILES
-    fcd_apt_rx.grc
-    fcd_fft_wx.grc
-    fcd_nfm_rx.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/fcd
-    COMPONENT "fcd_examples"
-  )
-endif()
