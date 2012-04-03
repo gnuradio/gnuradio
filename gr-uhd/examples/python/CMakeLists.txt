@@ -19,19 +19,24 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(PROGRAMS
-    audio_copy.py
-    audio_fft.py
-    audio_play.py
-    audio_to_file.py
-    dial_tone.py
-    dial_tone_daemon.py
-    dial_tone_wav.py
-    mono_tone.py
-    multi_tone.py
-    noise.py
-    spectrum_inversion.py
-    test_resampler.py
-    DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
-    COMPONENT "audio_python"
+GR_PYTHON_INSTALL(
+    PROGRAMS
+    fm_tx4.py
+    fm_tx_2_daughterboards.py
+    max_power.py
+    usrp_am_mw_rcv.py
+    usrp_nbfm_ptt.py
+    usrp_nbfm_rcv.py
+    usrp_spectrum_sense.py
+    usrp_tv_rcv_nogui.py
+    usrp_tv_rcv.py
+    usrp_wfm_rcv2_nogui.py
+    usrp_wfm_rcv_fmdet.py
+    usrp_wfm_rcv_nogui.py
+    usrp_wfm_rcv_pll.py
+    usrp_wfm_rcv.py
+    usrp_wfm_rcv_sca.py
+    usrp_wxapt_rcv.py
+    DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
+    COMPONENT "uhd_python"
 )

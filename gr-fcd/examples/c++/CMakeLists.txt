@@ -26,16 +26,6 @@ target_link_libraries(fcd_nfm_rx gnuradio-fcd)
 
 INSTALL(TARGETS
     fcd_nfm_rx
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/fcd
+    DESTINATION ${GR_PKG_FCD_EXAMPLES_DIR}
     COMPONENT "fcd_examples"
 )
-
-if(ENABLE_PYTHON)
-  INSTALL(FILES
-    fcd_apt_rx.grc
-    fcd_fft_wx.grc
-    fcd_nfm_rx.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/fcd
-    COMPONENT "fcd_examples"
-  )
-endif()

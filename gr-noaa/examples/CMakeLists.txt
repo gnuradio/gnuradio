@@ -17,15 +17,13 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include(GrPython)
-
-GR_PYTHON_INSTALL(
-    PROGRAMS
+INSTALL(
+    FILES
     hrpt_decode.grc
     hrpt_demod.grc
     file_rx_hrpt.grc
     usrp_rx_hrpt.grc
     usrp_rx_hrpt_nogui.grc
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/noaa
+    DESTINATION ${GR_PKG_NOAA_EXAMPLES_DIR}
     COMPONENT "noaa_python"
 )

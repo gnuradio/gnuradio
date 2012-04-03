@@ -26,7 +26,7 @@ GR_PYTHON_INSTALL(PROGRAMS
     run_length.py
     gen_whitener.py
     snr_estimators.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/digital
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}
     COMPONENT "digital_python"
 )
 
@@ -41,7 +41,7 @@ GR_PYTHON_INSTALL(PROGRAMS
     narrowband/digital_bert_rx.py
     narrowband/digital_bert_tx.py
     narrowband/tunnel.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/digital/narrowband
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/narrowband
     COMPONENT "digital_python"
 )
 
@@ -55,6 +55,6 @@ GR_PYTHON_INSTALL(PROGRAMS
     ofdm/transmit_path.py
     ofdm/tunnel.py
     ofdm/uhd_interface.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/digital/ofdm
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/ofdm
     COMPONENT "digital_python"
 )

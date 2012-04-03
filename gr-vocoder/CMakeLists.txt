@@ -35,6 +35,8 @@ GR_SET_GLOBAL(GR_VOCODER_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+SET(GR_PKG_VOCODER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/vocoder)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################

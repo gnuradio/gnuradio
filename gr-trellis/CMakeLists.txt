@@ -37,6 +37,8 @@ GR_SET_GLOBAL(GR_TRELLIS_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib
 )
 
+SET(GR_PKG_TRELLIS_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/trellis)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -97,7 +99,8 @@ add_subdirectory(doc)
 if(ENABLE_PYTHON)
     add_subdirectory(grc)
     add_subdirectory(src/python)
-    add_subdirectory(src/examples)
+    add_subdirectory(src/examples/python)
+    add_subdirectory(src/examples/grc)
 endif(ENABLE_PYTHON)
 
 ########################################################################

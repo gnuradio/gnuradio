@@ -35,6 +35,8 @@ GR_SET_GLOBAL(GR_NOAA_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
 
+SET(GR_PKG_NOAA_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/noaa)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################

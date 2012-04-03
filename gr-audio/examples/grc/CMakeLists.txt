@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,21 +17,11 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include(GrPython)
-
-GR_PYTHON_INSTALL(PROGRAMS
-    audio_copy.py
-    audio_fft.py
-    audio_play.py
-    audio_to_file.py
-    dial_tone.py
-    dial_tone_daemon.py
-    dial_tone_wav.py
-    mono_tone.py
-    multi_tone.py
-    noise.py
-    spectrum_inversion.py
-    test_resampler.py
+install(
+    FILES
+    cvsd_sweep.grc
+    dial_tone.grc
     DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
     COMPONENT "audio_python"
 )
+
