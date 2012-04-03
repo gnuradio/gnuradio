@@ -25,7 +25,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     uhd_siggen_base.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd
     COMPONENT "uhd_python"
 )
 
