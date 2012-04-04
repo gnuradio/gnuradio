@@ -66,6 +66,14 @@ public:
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
 
+    uhd::dict<std::string, std::string> get_usrp_info(size_t mboard, size_t chan){
+        #ifdef UHD_USRP_MULTI_USRP_GET_USRP_INFO_API
+        return _dev->get_usrp_info(mboard, chan);
+        #else
+        throw std::runtime_error("not implemented in this version");
+        #endif
+    }
+
     void set_subdev_spec(const std::string &spec, size_t mboard){
         return _dev->set_tx_subdev_spec(spec, mboard);
     }
