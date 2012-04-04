@@ -47,7 +47,7 @@ static const int MIN_OUT = 1; /*!< Minimum number of output streams. */
 static const int MAX_OUT = 1; /*!< Maximum number of output streams. */
 
 fcd_source_c_impl::fcd_source_c_impl(const std::string device_name) 
-  : gr_hier_block2 ("fcd_source_c_impl",
+  : gr_hier_block2 ("fcd_source_c",
 		    gr_make_io_signature (MIN_IN, MAX_IN, sizeof (gr_complex)),
 		    gr_make_io_signature (MIN_OUT, MAX_OUT, sizeof (gr_complex))),
     d_freq_corr(-120),

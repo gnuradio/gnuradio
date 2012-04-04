@@ -32,7 +32,7 @@ AC_DEFUN([GRC_GR_FCD],[
        AC_SUBST(USB_CPPFLAGS)
        AC_SUBST(USB_LIBS)
 
-       FCD_CPPFLAGS="${FCD_CPPFLAGS} -I\${abs_top_srcdir}/gr-fcd/include"
+       FCD_CPPFLAGS="${FCD_CPPFLAGS} -I\${abs_top_srcdir}/gr-fcd/include/fcd"
        AC_SUBST(FCD_CPPFLAGS)
 
        case "$target" in
