@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#define WAVELET_API
+
 %include "gnuradio.i"
 
 //load generated python docstrings
@@ -31,6 +33,16 @@
 #include "wavelet_wvps_ff.h"
 %}
 
-%include "wavelet_squash_ff.i"
-%include "wavelet_wavelet_ff.i"
-%include "wavelet_wvps_ff.i"
+%include "wavelet_squash_ff.h"
+%include "wavelet_wavelet_ff.h"
+%include "wavelet_wvps_ff.h"
+
+GR_SWIG_BLOCK_MAGIC(wavelet,squash_ff);
+wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
+					      const std::vector<float> &ogrid);
+
+GR_SWIG_BLOCK_MAGIC(wavelet,wavelet_ff);
+wavelet_wavelet_ff_sptr wavelet_make_wavelet_ff(int size, int order, bool forward);
+
+GR_SWIG_BLOCK_MAGIC(wavelet,wvps_ff);
+wavelet_wvps_ff_sptr wavelet_make_wvps_ff(int ilen);
