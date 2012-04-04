@@ -124,7 +124,7 @@ public:
 
     /*!
      * Returns identifying information about this USRP's configuration.
-     * Returns motherboard ID and serial.
+     * Returns motherboard ID, name, and serial.
      * Returns daughterboard TX/RX ID, subdev name, and serial.
      * \param mboard the motherboard index 0 to M-1
      * \param chan channel index 0 to N-1
