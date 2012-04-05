@@ -137,7 +137,7 @@ public:
      * \param chan channel index 0 to N-1
      * \return TX info
      */
-    virtual uhd::dict<std::string, std::string> get_usrp_tx_info(size_t chan = 0) = 0;
+    virtual uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
 
     /*!
      * Set the frontend specification.

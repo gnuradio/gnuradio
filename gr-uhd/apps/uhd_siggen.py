@@ -109,7 +109,7 @@ class top_block(gr.top_block, pubsub):
 
         # Setup USRP Configuration value
         try:
-            usrp_info = self._u.get_usrp_tx_info()
+            usrp_info = self._u.get_usrp_info()
             usrp_mb = usrp_info.get("mboard_id").split(" ")[0]
             usrp_mbs = usrp_info.get("mboard_serial")
             usrp_db = usrp_info.get("tx_id").split(" ")[0]
