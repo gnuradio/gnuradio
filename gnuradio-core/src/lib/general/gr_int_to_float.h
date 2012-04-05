@@ -35,6 +35,9 @@ gr_make_int_to_float (size_t vlen=1, float scale=1);
 /*!
  * \brief Convert stream of int to a stream of float
  * \ingroup converter_blk
+ *
+ * \param vlen vector length of data streams.
+ * \param scale a scalar divider to change the output signal scale.
  */
 
 class GR_CORE_API gr_int_to_float : public gr_sync_block
@@ -48,7 +51,14 @@ class GR_CORE_API gr_int_to_float : public gr_sync_block
   float d_scale;  
 
  public:
+  /*!
+   * Get the scalar divider value.
+   */
   float scale() const;
+
+  /*!
+   * Set the scalar divider value.
+   */
   void set_scale(float scale);
 
   virtual int work (int noutput_items,
