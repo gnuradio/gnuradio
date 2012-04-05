@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##MPSK SNR Estimator
+###################################################
+ -->
+<block>
+	<name>MPSK SNR Estimator Probe</name>
+	<key>digital_probe_mpsk_snr_est_c</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.probe_mpsk_snr_est_c($type, $msg_nsamples, $alpha)</make>
+	<callback>set_type($type)</callback>
+	<callback>set_msg_nsample($msg_nsamples)</callback>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Simple</name>
+			<key>0</key>
+		</option>
+		<option>
+			<name>Skewness</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>2nd and 4th Moment</name>
+			<key>2</key>
+		</option>
+		<option>
+			<name>SVR</name>
+			<key>3</key>
+		</option>
+	</param>
+	<param>
+		<name>Samples between SNR messages</name>
+		<key>msg_nsamples</key>
+		<value>10000</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Filter Alpha</name>
+		<key>alpha</key>
+		<value>0.001</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+</block>
