@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##MPSK SNR Estimator
+###################################################
+ -->
+<block>
+	<name>MPSK SNR Estimator</name>
+	<key>digital_mpsk_snr_est_cc</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.mpsk_snr_est_cc($type, $tag_nsamples, $alpha)</make>
+	<callback>set_type($type)</callback>
+	<callback>set_tag_nsamples($tag_nsamples)</callback>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Simple</name>
+			<key>0</key>
+		</option>
+		<option>
+			<name>Skewness</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>2nd and 4th Moment</name>
+			<key>2</key>
+		</option>
+		<option>
+			<name>SVR</name>
+			<key>3</key>
+		</option>
+	</param>
+	<param>
+		<name>Samples between tags</name>
+		<key>tag_nsamples</key>
+		<value>10000</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Filter Alpha</name>
+		<key>alpha</key>
+		<value>0.001</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

@@ -40,6 +40,8 @@ dist_grcblocks_DATA = \
 	digital_kurtotic_equalizer_cc.xml	\
 	digital_lms_dd_equalizer_cc.xml		\
 	digital_mpsk_receiver_cc.xml		\
+	digital_mpsk_snr_est_cc.xml		\
+	digital_probe_mpsk_snr_est_c.xml	\
 	digital_dxpsk_mod.xml			\
 	digital_dxpsk_demod.xml			\
 	digital_psk_mod.xml			\
