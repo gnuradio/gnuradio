@@ -19,6 +19,7 @@
 
 include(GrPython)
 
+# Base stuff
 GR_PYTHON_INSTALL(PROGRAMS
     example_costas.py
     example_fll.py
@@ -26,10 +27,11 @@ GR_PYTHON_INSTALL(PROGRAMS
     run_length.py
     gen_whitener.py
     snr_estimators.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/digital
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}
     COMPONENT "digital_python"
 )
 
+# Narrowband
 GR_PYTHON_INSTALL(PROGRAMS
     narrowband/transmit_path.py
     narrowband/receive_path.py
@@ -41,10 +43,11 @@ GR_PYTHON_INSTALL(PROGRAMS
     narrowband/digital_bert_rx.py
     narrowband/digital_bert_tx.py
     narrowband/tunnel.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/digital/narrowband
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/narrowband
     COMPONENT "digital_python"
 )
 
+# OFDM
 GR_PYTHON_INSTALL(PROGRAMS
     ofdm/benchmark_add_channel.py
     ofdm/benchmark_rx.py
@@ -55,6 +58,19 @@ GR_PYTHON_INSTALL(PROGRAMS
     ofdm/transmit_path.py
     ofdm/tunnel.py
     ofdm/uhd_interface.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/digital/ofdm
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/ofdm
+    COMPONENT "digital_python"
+)
+
+# DEMOD
+install(
+    FILES
+    demod/digital_freq_lock.grc
+    demod/mpsk_demod.grc
+    demod/pam_sync.grc
+    demod/pam_timing.grc
+    demod/ber_simulation.grc
+    demod/dpsk_loopback.grc   
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
     COMPONENT "digital_python"
 )

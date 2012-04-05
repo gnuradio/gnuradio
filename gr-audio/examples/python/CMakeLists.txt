@@ -32,6 +32,6 @@ GR_PYTHON_INSTALL(PROGRAMS
     noise.py
     spectrum_inversion.py
     test_resampler.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/audio
+    DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
     COMPONENT "audio_python"
 )

@@ -123,6 +123,7 @@ endif(ENABLE_TESTING)
 if(ENABLE_PYTHON)
     add_subdirectory(src/lib/swig)
     add_subdirectory(src/python/gnuradio)
+    add_subdirectory(src/examples)
 endif(ENABLE_PYTHON)
 
 ########################################################################

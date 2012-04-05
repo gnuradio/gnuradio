@@ -237,8 +237,6 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
-add_subdirectory(gnuradio-examples/grc)
-add_subdirectory(gnuradio-examples/python)
 
 #finalize cpack after subdirs processed
 include(GrPackage)

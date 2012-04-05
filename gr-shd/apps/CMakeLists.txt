@@ -24,9 +24,9 @@ include(GrPython)
 ########################################################################
 GR_PYTHON_INSTALL(
     PROGRAMS
-    shd_fft.py
-    shd_rx_cfile.py
-    shd_siggen.py
+    shd_fft
+    shd_rx_cfile
+    shd_siggen
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "shd_python"
 )

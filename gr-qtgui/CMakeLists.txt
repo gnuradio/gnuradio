@@ -57,6 +57,8 @@ GR_SET_GLOBAL(GR_QTGUI_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/lib
 )
 
+SET(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################

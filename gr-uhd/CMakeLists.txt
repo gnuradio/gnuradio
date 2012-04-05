@@ -39,6 +39,8 @@ GR_SET_GLOBAL(GR_UHD_INCLUDE_DIRS
     ${UHD_INCLUDE_DIRS}
 )
 
+SET(GR_PKG_UHD_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/uhd)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -71,6 +73,13 @@ CPACK_COMPONENT("uhd_python"
     DEPENDS      "core_python;uhd_runtime"
 )
 
+CPACK_COMPONENT("uhd_examples"
+    GROUP        "UHD"
+    DISPLAY_NAME "Examples"
+    DESCRIPTION  "Example programs"
+    DEPENDS      "uhd_runtime"
+)
+
 CPACK_COMPONENT("uhd_swig"
     GROUP        "UHD"
     DISPLAY_NAME "SWIG"
@@ -83,12 +92,14 @@ CPACK_COMPONENT("uhd_swig"
 ########################################################################
 add_subdirectory(include)
 add_subdirectory(lib)
-add_subdirectory(examples)
 add_subdirectory(doc)
+add_subdirectory(examples/c++)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(grc)
     add_subdirectory(apps)
+    add_subdirectory(examples/python)
+    add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
 
 ########################################################################

@@ -51,6 +51,8 @@ GR_SET_GLOBAL(GR_FCD_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fcd
 )
 
+SET(GR_PKG_FCD_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/fcd)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -83,6 +85,13 @@ CPACK_COMPONENT("fcd_python"
     DEPENDS      "core_python;fcd_runtime"
 )
 
+CPACK_COMPONENT("fcd_examples"
+    GROUP        "FCD"
+    DISPLAY_NAME "Examples"
+    DESCRIPTION  "Example programs"
+    DEPENDS      "fcd_runtime"
+)
+
 CPACK_COMPONENT("fcd_swig"
     GROUP        "FCD"
     DISPLAY_NAME "SWIG"
@@ -99,8 +108,9 @@ if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python)
     add_subdirectory(grc)
+    add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
-add_subdirectory(examples)
+add_subdirectory(examples/c++)
 add_subdirectory(doc)
 
 ########################################################################

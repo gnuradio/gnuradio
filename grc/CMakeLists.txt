@@ -121,5 +121,6 @@ add_subdirectory(grc_gnuradio)
 add_subdirectory(gui)
 add_subdirectory(python)
 add_subdirectory(scripts)
+add_subdirectory(examples)
 
 endif(ENABLE_GRC)
