@@ -31,6 +31,7 @@ import numpy
 
 try:
     from gnuradio.wxgui import stdgui2, form, slider
+    from gnuradio.wxgui import forms
     from gnuradio.wxgui import fftsink2, waterfallsink2, scopesink2
     import wx
 except ImportError:
@@ -194,6 +195,26 @@ class app_top_block(stdgui2.std_top_block):
                                                min=int(glow), max=int(ghigh),
                                                callback=self.set_gain)
 
+        try:
+            usrp_config_val = "%s (%s), %s (%s, %s, %s)" % (self.u.get_usrp_rx_info().get("mboard_id").split(" ")[0], self.u.get_usrp_rx_info().get("mboard_serial"),
+                self.u.get_usrp_rx_info().get("rx_id").split(" ")[0].split(",")[0], self.u.get_usrp_rx_info().get("rx_serial"), self.u.get_subdev_spec(), self.u.get_antenna())
+        except:
+            usrp_config_val = "Not implemented in this version."
+
+        uhd_box = forms.static_box_sizer(parent=self.panel,
+                                         label="UHD (%s)" % (uhd.get_version_string()),
+                                         orient=wx.HORIZONTAL,
+                                         bold=True)
+        usrp_config_form = forms.static_text(
+            parent=self.panel,
+            sizer=uhd_box,
+            value=usrp_config_val,
+            label="USRP",
+            converter=forms.str_converter(),
+        )
+        vbox.Add(uhd_box, 0, wx.EXPAND)
+        vbox.AddSpacer(5)
+
         hbox.Add((5,0), 0, 0)
         vbox.Add(hbox, 0, wx.EXPAND)
 
@@ -231,8 +252,10 @@ class app_top_block(stdgui2.std_top_block):
         myform['dspfreq'] = form.static_float_field(
             parent=panel, sizer=hbox, label="DSP Freq.")
 
-        hbox.Add((5,0), 0)
+        vbox.AddSpacer(5)
+
         vbox.Add(hbox, 0, wx.EXPAND)
+        vbox.AddSpacer(5)
         
     def set_freq(self, target_freq):
         """
@@ -247,6 +270,7 @@ class app_top_block(stdgui2.std_top_block):
             self.myform['freq'].set_value(self.u.get_center_freq())
             self.myform['rffreq'].set_value(r.actual_rf_freq)
             self.myform['dspfreq'].set_value(r.actual_dsp_freq)
+
             if not self.options.oscilloscope:
                 self.scope.set_baseband_freq(target_freq)
             return True

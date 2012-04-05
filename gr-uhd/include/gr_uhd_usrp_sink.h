@@ -133,11 +133,11 @@ public:
     /*!
      * Returns identifying information about this USRP's configuration.
      * Returns motherboard ID, name, and serial.
-     * Returns daughterboard TX/RX ID, subdev name, and serial.
-     * \param mboard the motherboard index 0 to M-1
+     * Returns daughterboard TX ID, subdev name, and serial.
      * \param chan channel index 0 to N-1
+     * \return TX info
      */
-    virtual uhd::dict<std::string, std::string> get_usrp_info(size_t mboard = 0, size_t chan = 0) = 0;
+    virtual uhd::dict<std::string, std::string> get_usrp_tx_info(size_t chan = 0) = 0;
 
     /*!
      * Set the frontend specification.
@@ -145,6 +145,14 @@ public:
      * \param mboard the motherboard index 0 to M-1
      */
     virtual void set_subdev_spec(const std::string &spec, size_t mboard = 0) = 0;
+
+
+     /*!
+     * Get the TX frontend specification.
+     * \param mboard the motherboard index 0 to M-1
+     * \return the frontend specification in use
+     */
+    virtual std::string get_subdev_spec (size_t mboard = 0) = 0;
 
     /*!
      * Set the sample rate for the usrp device.

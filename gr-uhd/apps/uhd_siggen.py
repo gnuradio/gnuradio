@@ -107,12 +107,32 @@ class top_block(gr.top_block, pubsub):
         if(options.antenna):
             self._u.set_antenna(options.antenna, 0)
 
-        self.publish(DESC_KEY, lambda: str(self._u))
+        # Setup USRP Configuration value
+        try:
+            usrp_info = self._u.get_usrp_tx_info()
+            usrp_mb = usrp_info.get("mboard_id").split(" ")[0]
+            usrp_mbs = usrp_info.get("mboard_serial")
+            usrp_db = usrp_info.get("tx_id").split(" ")[0]
+            usrp_dbs = usrp_info.get("tx_serial")
+            usrp_sd = self._u.get_subdev_spec()
+            usrp_ant = self._u.get_antenna()
+            
+            desc_key_str = "Motherboard: %s [%s]\n" % (usrp_mb, usrp_mbs)
+            desc_key_str += "Daughterboard: %s [%s]\n" % (usrp_db, usrp_dbs)
+            desc_key_str += "Subdev: %s\n" % usrp_sd
+            desc_key_str += "Antenna: %s" % usrp_ant
+        except:
+            desc_key_str = "USRP configuration output not implemented in this version"
+
+        self.publish(DESC_KEY, lambda: desc_key_str)
         self.publish(FREQ_RANGE_KEY, self._u.get_freq_range)
         self.publish(GAIN_RANGE_KEY, self._u.get_gain_range)
         self.publish(GAIN_KEY, self._u.get_gain)
-        if self._verbose:
-            print str(self._u)
+
+        print "UHD Signal Generator"
+        print "Version: %s" % uhd.get_version_string()
+        print "\nUsing USRP configuration:"
+        print desc_key_str + "\n"
 
         # Direct asynchronous notifications to callback function
         if options.show_async_msg:
