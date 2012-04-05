@@ -66,7 +66,7 @@ public:
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
 
-    uhd::dict<std::string, std::string> get_usrp_tx_info(size_t chan){
+    uhd::dict<std::string, std::string> get_usrp_info(size_t chan){
         #ifdef UHD_USRP_MULTI_USRP_GET_USRP_INFO_API
         return _dev->get_usrp_tx_info(chan);
         #else

@@ -196,15 +196,24 @@ class app_top_block(stdgui2.std_top_block):
                                                callback=self.set_gain)
 
         try:
-            usrp_config_val = "%s (%s), %s (%s, %s, %s)" % (self.u.get_usrp_rx_info().get("mboard_id").split(" ")[0], self.u.get_usrp_rx_info().get("mboard_serial"),
-                self.u.get_usrp_rx_info().get("rx_id").split(" ")[0].split(",")[0], self.u.get_usrp_rx_info().get("rx_serial"), self.u.get_subdev_spec(), self.u.get_antenna())
+            mboard_id = self.u.get_usrp_info().get("mboard_id").split(" ")[0]
+            mboard_serial = self.u.get_usrp_info().get("mboard_serial")
+            if mboard_serial == "":
+                mboard_serial = "no serial"
+            dboard_id = self.u.get_usrp_info().get("rx_id").split(" ")[0].split(",")[0]
+            dboard_serial = self.u.get_usrp_info().get("rx_serial")
+            if dboard_serial == "":
+                dboard_serial = "no serial"
+            subdev = self.u.get_subdev_spec()
+            antenna = self.u.get_antenna()
+
+            usrp_config_val = "%s (%s), %s (%s, %s, %s)" % (mboard_id, mboard_serial, dboard_id, dboard_serial, subdev, antenna)
         except:
             usrp_config_val = "Not implemented in this version."
 
         uhd_box = forms.static_box_sizer(parent=self.panel,
                                          label="UHD (%s)" % (uhd.get_version_string()),
-                                         orient=wx.HORIZONTAL,
-                                         bold=True)
+                                         orient=wx.HORIZONTAL)
         usrp_config_form = forms.static_text(
             parent=self.panel,
             sizer=uhd_box,
