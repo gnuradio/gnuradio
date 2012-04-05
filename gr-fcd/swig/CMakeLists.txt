@@ -23,6 +23,8 @@
 include(GrPython)
 include(GrSwig)
 
+#set(GR_SWIG_FLAGS -DGR_HAVE_FCD) #needed to parse fcd_swig.i
+
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_FCD_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
@@ -45,7 +47,6 @@ GR_SWIG_INSTALL(
 install(
     FILES
     fcd_swig.i
-    fcd_source_c.i
     ${CMAKE_CURRENT_BINARY_DIR}/fcd_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "fcd_swig"

@@ -9,6 +9,9 @@
 #if $lna() != 20.0
 self.$(id).set_lna_gain($lna)
 #end if
+#if $mixer() != +12.0
+self.$(id).set_mixer_gain($mixer)
+#end if
 #if $ppm() != 115
 self.$(id).set_freq_corr($ppm)
 #end if
@@ -22,6 +25,7 @@ self.$(id).set_freq($freq)
     </make>
     <callback>set_freq($freq)</callback>
     <callback>set_lna_gain($lna)</callback>
+    <callback>set_mixer_gain($mixer)</callback>
     <callback>set_freq_corr($ppm)</callback>
     <callback>set_dc_corr($dci,$dcq)</callback>
     <callback>set_iq_corr($iq_gain,$iq_phase)</callback>
@@ -42,6 +46,12 @@ self.$(id).set_freq($freq)
         <name>LNA Gain (dB)</name>
         <key>lna</key>
         <value>20.0</value>
+        <type>real</type>
+    </param>
+    <param>
+        <name>Mixer Gain (dB)</name>
+        <key>mixer</key>
+        <value>+12</value>
         <type>real</type>
     </param>
     <param>
@@ -94,7 +104,10 @@ To find the device name on Linux type:
 
 The LNA gain is a set of discrete values between -5 to 30 dB with 2.5 dB step, but you can \
 use any float value and it will be rounded to the nearest valid value.
-   
+
+The Mixer gain can be set either to +4 or +12 dB, but you can use any float value \
+and it will be rounded to the nearest valid value.
+
 The FCD block can autmatically apply frequency correction:
   - For FCD v1.0 you can leave at -120 ppm
   - For FCD v1.1 with serial number 810 or greater use -12 ppm

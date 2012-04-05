@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 Free Software Foundation, Inc.
+ * Copyright 2010-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -131,11 +131,28 @@ public:
     virtual void set_start_time(const uhd::time_spec_t &time) = 0;
 
     /*!
+     * Returns identifying information about this USRP's configuration.
+     * Returns motherboard ID, name, and serial.
+     * Returns daughterboard TX ID, subdev name, and serial.
+     * \param chan channel index 0 to N-1
+     * \return TX info
+     */
+    virtual uhd::dict<std::string, std::string> get_usrp_tx_info(size_t chan = 0) = 0;
+
+    /*!
      * Set the frontend specification.
      * \param spec the subdev spec markup string
      * \param mboard the motherboard index 0 to M-1
      */
     virtual void set_subdev_spec(const std::string &spec, size_t mboard = 0) = 0;
+
+
+     /*!
+     * Get the TX frontend specification.
+     * \param mboard the motherboard index 0 to M-1
+     * \return the frontend specification in use
+     */
+    virtual std::string get_subdev_spec (size_t mboard = 0) = 0;
 
     /*!
      * Set the sample rate for the usrp device.

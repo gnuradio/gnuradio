@@ -32,6 +32,7 @@
 #include <stdint.h>
 #include <iosfwd>
 #include <stdexcept>
+#include <boost/function.hpp>
 
 namespace gruel {
   class msg_accepter;
@@ -804,6 +805,24 @@ GRUEL_API std::string pmt_serialize_str(pmt_t obj);
  * \brief Provide a simple string generating interface to pmt's deserialize function
  */
 GRUEL_API pmt_t pmt_deserialize_str(std::string str);
+
+/*
+ * ------------------------------------------------------------------------
+ *		      advanced
+ * ------------------------------------------------------------------------
+ */
+
+#define GRUEL_PMT_HAVE_PMT_SET_DELETER
+
+/*!
+ * Set a deleter function to be called when the PMT dereferences.
+ * User beware! This function is for extremely advanced use.
+ * Use boost bind to bind extra parameters into the deleter function.
+ * Set an empty function type to reset the PMT to the default deleter.
+ * \param obj the pmt object in which to set the deleter function
+ * \param deleter a function that gets an opaque PMT pointer type
+ */
+GRUEL_API void pmt_set_deleter(pmt_t obj, boost::function<void(pmt_base *)> &deleter);
 
 } /* namespace pmt */
 

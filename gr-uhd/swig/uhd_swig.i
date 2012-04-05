@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2011 Free Software Foundation, Inc.
+ * Copyright 2010-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -124,6 +124,14 @@ static uhd::device_addrs_t find_devices_raw(const uhd::device_addr_t &dev_addr =
 static const size_t ALL_MBOARDS = uhd::usrp::multi_usrp::ALL_MBOARDS;
 %}
 static const size_t ALL_MBOARDS;
+
+%{
+#include <uhd/version.hpp>
+std::string get_version_string(void){
+    return uhd::get_version_string();
+}
+%}
+std::string get_version_string(void);
 
 #if SWIGGUILE
 %scheme %{

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2011 Free Software Foundation, Inc.
+# Copyright 2009,2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 # 
 
 import wx
-from gnuradio import gr
+from gnuradio import gr, uhd
 from gnuradio.gr.pubsub import pubsub
 from gnuradio.wxgui import gui, forms
 import uhd_siggen
@@ -269,7 +269,7 @@ class app_gui(pubsub):
         # UHD status
         ##################################################
         u2_hbox = forms.static_box_sizer(parent=self.panel,
-                                         label="UHD Status",
+                                         label="UHD (%s)" % (uhd.get_version_string()),
                                          orient=wx.HORIZONTAL,
                                          bold=True)
         self.vbox.Add(u2_hbox, 0, wx.EXPAND)

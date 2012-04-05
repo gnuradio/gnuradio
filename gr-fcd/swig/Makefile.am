@@ -43,6 +43,8 @@ AM_CPPFLAGS = \
 # The SWIG library
 # TESTS = run_tests
 
+fcd_swig_swig_args = $(FCD_CPPFLAGS)
+
 TOP_SWIG_DOC_IFILES = \
 	fcd_swig_doc.i
 
@@ -72,7 +74,6 @@ fcd_swig_la_swig_libadd = \
 
 # additional SWIG files to be installed
 fcd_swig_swiginclude_headers =	\
-	fcd_source_c.i 	\
 	$(TOP_SWIG_DOC_IFILES)
 
 if GUILE
