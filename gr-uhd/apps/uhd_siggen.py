@@ -110,17 +110,21 @@ class top_block(gr.top_block, pubsub):
         # Setup USRP Configuration value
         try:
             usrp_info = self._u.get_usrp_info()
-            usrp_mb = usrp_info.get("mboard_id").split(" ")[0]
-            usrp_mbs = usrp_info.get("mboard_serial")
-            usrp_db = usrp_info.get("tx_id").split(" ")[0]
-            usrp_dbs = usrp_info.get("tx_serial")
-            usrp_sd = self._u.get_subdev_spec()
-            usrp_ant = self._u.get_antenna()
+            mboard_id = usrp_info.get("mboard_id").split(" ")[0]
+            mboard_serial = usrp_info.get("mboard_serial")
+            if mboard_serial == "":
+                mboard_serial = "no serial"
+            dboard_id = usrp_info.get("tx_id").split(" ")[0].split(",")[0]
+            dboard_serial = usrp_info.get("tx_serial")
+            if dboard_serial == "":
+                dboard_serial = "no serial"
+            subdev = self._u.get_subdev_spec()
+            antenna = self._u.get_antenna()
             
-            desc_key_str = "Motherboard: %s [%s]\n" % (usrp_mb, usrp_mbs)
-            desc_key_str += "Daughterboard: %s [%s]\n" % (usrp_db, usrp_dbs)
-            desc_key_str += "Subdev: %s\n" % usrp_sd
-            desc_key_str += "Antenna: %s" % usrp_ant
+            desc_key_str = "Motherboard: %s [%s]\n" % (mboard_id, mboard_serial)
+            desc_key_str += "Daughterboard: %s [%s]\n" % (dboard_id, dboard_serial)
+            desc_key_str += "Subdev: %s\n" % subdev
+            desc_key_str += "Antenna: %s" % antenna
         except:
             desc_key_str = "USRP configuration output not implemented in this version"
 
