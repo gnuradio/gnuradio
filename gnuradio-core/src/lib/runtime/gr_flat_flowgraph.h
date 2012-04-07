@@ -63,6 +63,15 @@ private:
   gr_block_detail_sptr allocate_block_detail(gr_basic_block_sptr block);
   gr_buffer_sptr allocate_buffer(gr_basic_block_sptr block, int port);
   void connect_block_inputs(gr_basic_block_sptr block);
+
+  /* When reusing a flowgraph's blocks, this call makes sure all of the 
+   * buffer's are aligned at the machine's alignment boundary and tells
+   * the blocks that they are aligned.
+   *
+   * Called from both setup_connections and merge_connections for
+   * start and restarts.
+   */
+  void setup_buffer_alignment(gr_block_sptr block);
 };
 
 #endif /* INCLUDED_GR_FLAT_FLOWGRAPH_H */
