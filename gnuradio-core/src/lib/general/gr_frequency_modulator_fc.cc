@@ -55,9 +55,9 @@ gr_frequency_modulator_fc::work (int noutput_items,
   for (int i = 0; i < noutput_items; i++){
     d_phase = d_phase + d_sensitivity * in[i];
 
-    if (d_phase > (float)(M_PI))
+    while (d_phase > (float)(M_PI))
       d_phase -= (float)(2.0 * M_PI);
-    else if (d_phase < (float)(-M_PI))
+    while (d_phase < (float)(-M_PI))
       d_phase += (float)(2.0 * M_PI);
 
     float oi, oq;
