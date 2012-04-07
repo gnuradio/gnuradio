@@ -66,8 +66,9 @@ gr_flat_flowgraph::setup_connections()
   for(gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
     connect_block_inputs(*p);
 
-    gr_block_sptr block = cast_to_block_sptr(*p);   
-    setup_buffer_alignment(block);
+    gr_block_sptr block = cast_to_block_sptr(*p);
+    block->set_unaligned(0);
+    block->set_is_unaligned(false);
   }
 
 }
