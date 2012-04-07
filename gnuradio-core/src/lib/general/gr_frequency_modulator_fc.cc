@@ -26,7 +26,7 @@
 
 #include <gr_frequency_modulator_fc.h>
 #include <gr_io_signature.h>
-#include <gr_sincos.h>
+#include <gr_fxpt.h>
 #include <math.h>
 #include <boost/math/special_functions/trunc.hpp>
 
@@ -54,17 +54,17 @@ gr_frequency_modulator_fc::work (int noutput_items,
 
   for (int i = 0; i < noutput_items; i++){
     d_phase = d_phase + d_sensitivity * in[i];
+
+    while (d_phase > (float)(M_PI))
+      d_phase -= (float)(2.0 * M_PI);
+    while (d_phase < (float)(-M_PI))
+      d_phase += (float)(2.0 * M_PI);
+
     float oi, oq;
-    gr_sincosf (d_phase, &oq, &oi);
+
+    gr_int32 angle = gr_fxpt::float_to_fixed (d_phase);
+    gr_fxpt::sincos (angle, &oq, &oi);
     out[i] = gr_complex (oi, oq);
-  }
-
-  // Limit the phase accumulator to [-16*pi,16*pi]
-  // to avoid loss of precision in the addition above.
-
-  if (fabs (d_phase) > 16 * M_PI){
-    double ii = boost::math::trunc (d_phase / (2 * M_PI));
-    d_phase = d_phase - (ii * 2 * M_PI);
   }
 
   return noutput_items;
