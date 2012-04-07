@@ -111,6 +111,8 @@ fsm::fsm(const char *name)
       }
     }
   }
+
+  fclose(fsmfile);
  
   generate_PS_PI();
   generate_TM();
