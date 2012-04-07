@@ -48,7 +48,7 @@ class test_frequency_modulator (gr_unittest.TestCase):
         self.tb.connect (op, dst)
         self.tb.run ()
         result_data = dst.data ()
-        self.assertComplexTuplesAlmostEqual (expected_result, result_data)
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
 
 
 if __name__ == '__main__':
