@@ -40,6 +40,6 @@ GR_SWIG_INSTALL(
 install(
     FILES gr_intrusive_ptr.i pmt_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/pmt_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
+    DESTINATION ${GR_INCLUDE_DIR}/gruel/swig
     COMPONENT "gruel_swig"
 )
