@@ -133,14 +133,4 @@ std::string get_version_string(void){
 %}
 std::string get_version_string(void);
 
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-uhd_swig" "scm_init_gnuradio_uhd_swig_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif  /* SWIGGUILE */
-
 #endif  /* GR_HAVE_UHD */

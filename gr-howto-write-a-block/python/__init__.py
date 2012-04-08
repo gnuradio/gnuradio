@@ -18,6 +18,11 @@
 
 # The presence of this file turns this directory into a Python package
 
+'''
+This is the GNU Radio HOWTO module. Place your Python package
+description here (python/__init__.py).
+'''
+
 # ----------------------------------------------------------------
 # Temporary workaround for ticket:181 (swig+python problem)
 import sys

@@ -30,13 +30,3 @@
 %include "gnuradio.i"				// the common stuff
 
 %include "gengen.i"
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-gnuradio_core_gengen" "scm_init_gnuradio_gnuradio_core_gengen_module")
-%}
-
-%goops %{
-  (use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif

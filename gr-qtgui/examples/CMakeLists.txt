@@ -24,6 +24,6 @@ GR_PYTHON_INSTALL(PROGRAMS
   pyqt_example_f.py
   pyqt_time_c.py
   pyqt_time_f.py
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/qt-gui
-  COMPONENT "gnuradio_examples"
+  DESTINATION ${GR_PKG_QTGUI_EXAMPLES_DIR}
+  COMPONENT "qtgui_python"
 )

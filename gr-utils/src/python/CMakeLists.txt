@@ -25,6 +25,8 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     plot_data.py
+    plot_fft_base.py
+    plot_psd_base.py
     pyqt_plot.py
     pyqt_filter.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio
@@ -34,20 +36,20 @@ GR_PYTHON_INSTALL(
 GR_PYTHON_INSTALL(
     PROGRAMS
     create-gnuradio-out-of-tree-project
-    gr_plot_char.py
-    gr_plot_const.py
-    gr_plot_fft.py
-    gr_plot_fft_c.py
-    gr_plot_fft_f.py
-    gr_plot_psd.py
-    gr_plot_psd_c.py
-    gr_plot_psd_f.py
-    gr_plot_float.py
-    gr_plot_int.py
-    gr_plot_iq.py
-    gr_plot_short.py
-    gr_plot_qt.py
-    gr_filter_design.py
+    gr_plot_char
+    gr_plot_const
+    gr_plot_fft
+    gr_plot_fft_c
+    gr_plot_fft_f
+    gr_plot_psd
+    gr_plot_psd_c
+    gr_plot_psd_f
+    gr_plot_float
+    gr_plot_int
+    gr_plot_iq
+    gr_plot_short
+    gr_plot_qt
+    gr_filter_design
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "utils"
 )

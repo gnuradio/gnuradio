@@ -1,35 +1,48 @@
-Until boost 1.35 (or later) ships with the distributions, you'll need
-to download and build it yourself.  It's not hard, and it can
-peacefully coexist with earlier versions of boost.
+Most distributions have the required version of Boost (1.35) ready for
+installation using their standard package installation tools (apt-get,
+yum, etc.).
+
+If running a distribution that requires boost 1.35 (or later) be built
+from scratch, these instructions explain how to do so, and in a way
+that allows it to peacefully coexist with earlier versions of boost.
 
 Download the latest version of boost from boost.sourceforge.net.
-(boost_1_36_0.tar.bz2 was the latest when this was written)
+(boost_1_49_0.tar.bz2 was the latest when this was written). Different
+Boost versions often have different installations. If these
+instructions don't work, check the website www.boost.org for more
+help.
 
 unpack it somewhere
 cd into the resulting directory
 
-$ cd boost_1_36_0
+$ cd boost_1_49_0
 
-# Pick a prefix to install it into.  I used /opt/boost_1_36_0
+# Pick a prefix to install it into.  I used /opt/boost_1_49_0
 
-$ BOOST_PREFIX=/opt/boost_1_36_0
+$ BOOST_PREFIX=/opt/boost_1_49_0
 
-$ ./configure --prefix=$BOOST_PREFIX --with-libraries=thread,date_time,program_options
-$ make
-$ make install
+$ ./bootstrap.sh
+$ sudo ./b2 --prefix=$BOOST_PREFIX --with-thread --with-date_time --with-program_options --with-filesystem --with-system --layout=versioned threading=multi variant=release install
 
 # Done!  That was easy!
 
-----------------------------------------------------------------
+Note that you don't have to specify each library, which will then
+build all Boost libraries and projects. By specifying only those
+required will just save compilation time.
 
-Now, tell gnuradio where to find it:
 
-$ export LD_LIBRARY_PATH=$BOOST_PREFIX/lib
+----------------------------------------------------------------------
 
-$ cd <path-to-top-of-gnuradio-tree>
-$ ./bootstrap
-$ ./configure --with-boost=$BOOST_PREFIX  # plus whatever config args you usually use
 
-$ make && make check
+Installing GNU Radio with new Boost libraries.
+
+Tell cmake to look for the Boost libraries and header files in the new location with the folloing command:
+
+$ cd <build directory>
+$ cmake -DBOOST_ROOT=$BOOST_PREFIX -DBoost_INCLUDE_DIR=$BOOST_PREFIX/include/boost-1_49/ -DBoost_LIBRARY_DIRS=$BOOST_PREFIX/lib  <path to gnuradio source tree>
+$ make
+$ make test
 $ sudo make install
+
+See README for more installation details.
 

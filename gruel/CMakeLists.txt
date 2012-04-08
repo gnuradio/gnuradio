@@ -81,7 +81,6 @@ CPACK_COMPONENT("gruel_swig"
 # Add subdirectories
 ########################################################################
 add_subdirectory(src/include/gruel)
-add_subdirectory(src/scheme/gnuradio)
 add_subdirectory(src/lib)
 if(ENABLE_PYTHON)
     add_subdirectory(src/swig)

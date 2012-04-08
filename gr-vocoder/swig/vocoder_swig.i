@@ -41,13 +41,3 @@
 %include "vocoder_gsm_fr_encode_sp.i"
 %include "vocoder_ulaw_decode_bs.i"
 %include "vocoder_ulaw_encode_sb.i"
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-vocoder" "scm_init_gnuradio_gsm_vocoder_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif

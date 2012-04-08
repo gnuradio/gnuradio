@@ -2,11 +2,10 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@/gnuradio
-guile_load_path=@prefix@/share/guile/site
 
 Name: gnuradio-core
 Description: GNU Software Radio toolkit
-Requires: gruel fftw3f gsl
+Requires: gruel fftw3f
 Version: @LIBVER@
 Libs.private: @BOOST_LDFLAGS@ @BOOST_THREAD_LIB@ @BOOST_DATE_TIME_LIB@
 Libs: -L${libdir} -lgnuradio-core

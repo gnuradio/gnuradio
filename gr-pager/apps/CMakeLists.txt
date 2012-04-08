@@ -21,9 +21,9 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(
     PROGRAMS
-    usrp_flex.py
-    usrp_flex_all.py
-    usrp_flex_band.py
+    usrp_flex
+    usrp_flex_all
+    usrp_flex_band
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "pager_python"
 )

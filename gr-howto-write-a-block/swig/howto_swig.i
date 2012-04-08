@@ -1,21 +1,20 @@
 /* -*- c++ -*- */
 
+#define HOWTO_API
+
 %include "gnuradio.i"			// the common stuff
+
+//load generated python docstrings
+%include "howto_swig_doc.i"
+
 
 %{
 #include "howto_square_ff.h"
 #include "howto_square2_ff.h"
 %}
 
-%include "howto_square_ff.i"
-%include "howto_square2_ff.i"
+GR_SWIG_BLOCK_MAGIC(howto,square_ff);
+%include "howto_square_ff.h"
 
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-howto_swig" "scm_init_gnuradio_howto_swig_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif
+GR_SWIG_BLOCK_MAGIC(howto,square2_ff);
+%include "howto_square2_ff.h"

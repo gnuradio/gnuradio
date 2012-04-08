@@ -21,3 +21,9 @@ include_directories(${GR_AUDIO_INCLUDE_DIRS})
 include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
 add_executable(dial_tone dial_tone.cc)
 target_link_libraries(dial_tone gnuradio-audio)
+
+INSTALL(TARGETS
+    dial_tone
+    DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
+    COMPONENT "audio_examples"
+)

@@ -38,13 +38,3 @@
 
 GR_SWIG_BLOCK_MAGIC(fcd,source_c);
 fcd_source_c_sptr fcd_make_source_c (const std::string device_name = "");
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-fcd_swig" "scm_init_gnuradio_fcd_swig_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif

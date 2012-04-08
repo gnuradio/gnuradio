@@ -56,13 +56,3 @@
  //%pythoncode %{
  //  from gnuradio.gr import TRELLIS_EUCLIDEAN, TRELLIS_HARD_SYMBOL, TRELLIS_HARD_BIT
  //  %}
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-trellis" "scm_init_gnuradio_trellis_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif

@@ -86,6 +86,13 @@ private:
   short convert_to_short(float sample);
 
   /*!
+   * \brief If any file changes have occurred, update now. This is called
+   * internally by work() and thus doesn't usually need to be called by
+   * hand.
+   */
+  void do_update();
+  
+  /*!
    * \brief Writes information to the WAV header which is not available
    * a-priori (chunk size etc.) and closes the file. Not thread-safe and
    * assumes d_fp is a valid file pointer, should thus only be called by
@@ -107,13 +114,6 @@ public:
    */
   void close();
 
-  /*!
-   * \brief If any file changes have occurred, update now. This is called
-   * internally by work() and thus doesn't usually need to be called by
-   * hand.
-   */
-  void do_update();
-  
   /*!
    * \brief Set the sample rate. This will not affect the WAV file
    * currently opened. Any following open() calls will use this new

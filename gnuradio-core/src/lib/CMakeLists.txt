@@ -47,10 +47,6 @@ include_directories(${VOLK_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
-add_definitions(${GSL_DEFINITIONS})
-include_directories(${GSL_INCLUDE_DIRS})
-link_directories(${GSL_LIBRARY_DIRS})
-
 include_directories(${FFTW3F_INCLUDE_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
@@ -60,7 +56,6 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 list(APPEND gnuradio_core_libs
     gruel
     ${Boost_LIBRARIES}
-    ${GSL_LIBRARIES}
     ${FFTW3F_LIBRARIES}
 )
 
@@ -80,7 +75,6 @@ list(APPEND gnuradio_core_libs volk)
 add_library(gnuradio-core SHARED ${gnuradio_core_sources})
 target_link_libraries(gnuradio-core ${gnuradio_core_libs})
 GR_LIBRARY_FOO(gnuradio-core RUNTIME_COMPONENT "core_runtime" DEVEL_COMPONENT "core_devel")
-#avoid fftw and gsl link in dependent libraries:
 set_target_properties(gnuradio-core PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
 
 ########################################################################

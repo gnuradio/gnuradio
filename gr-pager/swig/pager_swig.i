@@ -37,13 +37,3 @@
 %include "pager_flex_sync.i"
 %include "pager_flex_deinterleave.i"
 %include "pager_flex_parse.i"
-
-#if SWIGGUILE
-%scheme %{
-(load-extension-global "libguile-gnuradio-pager_swig" "scm_init_gnuradio_pager_swig_module")
-%}
-
-%goops %{
-(use-modules (gnuradio gnuradio_core_runtime))
-%}
-#endif

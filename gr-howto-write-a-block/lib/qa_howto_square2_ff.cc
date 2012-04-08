@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,17 +19,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <qa_howto_square2_ff.h>
-#include <cppunit/TestAssert.h>
+#include <boost/test/unit_test.hpp>
 
-void
-qa_howto_square2_ff::t1()
-{
-  // Insert CPPUNIT tests/asserts here
+BOOST_AUTO_TEST_CASE(qa_howto_square2_ff_t1){
+    BOOST_CHECK_EQUAL(2 + 2, 4);
+    // TODO BOOST_* test macros here
 }
 
-void
-qa_howto_square2_ff::t2()
-{
-  // Insert CPPUNIT tests/asserts here
+BOOST_AUTO_TEST_CASE(qa_howto_square2_ff_t2){
+    BOOST_CHECK_EQUAL(2 + 2, 4);
+    // TODO BOOST_* test macros here
 }

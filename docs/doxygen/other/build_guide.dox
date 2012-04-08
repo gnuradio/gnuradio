@@ -21,7 +21,7 @@ about building gr-comedi.
 
 \subsection dep_global Global Dependencies
 \li git                      http://code.google.com/p/msysgit
-\li cmake                    http://www.cmake.org/cmake/resources/software.html
+\li cmake       (>= 2.6)     http://www.cmake.org/cmake/resources/software.html
 \li boost       (>= 1.35)    http://www.boostpro.com/download
 \li cppunit     (>= 1.9.14)  http://gaiacrtn.free.fr/cppunit/index.html
 \li fftw3f      (>= 3.0)     http://www.fftw.org/install/windows.html
@@ -89,6 +89,8 @@ The \$(builddir) is the directory in which the code is built. This
 <b>cannot</b> be the same path as where the source code resides. Often,
 \$(builddir) is \$(srcdir)/build.
 
+\subsection Cmake Options
+
 Options can be used to specify where to find various library or
 include file dependencies that are not automatically being found
 (-DCMAKE_PREFIX_PATH) or set the prefix
@@ -100,6 +102,37 @@ component named *gr-comp*, the option to disable would look like:
 cmake is not case sensitive about these options. Similarly, "true",
 "on", or "yes" will turn this component on. All components are enabled
 by default.
+
+An example is -DENABLE_PYTHON=False turns off building any Python or
+Swigging components. The result will be the GNU Radio libraries and
+C++ programs/applications/examples. No Python or GRC files will be
+built or installed.
+
+The -DENABLE_DEFAULT=False can be used to disable all
+components. Individual components can then be selectively turned back
+on. For example, just buidling the Volk and Gruel libraries can be
+done with this:
+
+\code
+cmake -DENABLE_DEFAULT=Off -DENABLE_VOLK=True -DENABLE_GRUEL=True <srcdir>
+\endcode
+
+
+The build type allows you to specify the build as a debug or release
+version. Each type sets different flags for different purposes. To set
+the build type, use:
+
+\code
+-DCMAKE_BUILD_TYPE="Release"|"Debug"
+\endcode
+
+If not specified, the "Release" mode is the defaulted to.
+
+"Release" mode sets the '-O3' optimization flag.
+
+"Debug" mode sets '-g -O2' flags to export debug symbols and reduce
+the optimization to make the libraries easier to debug and step
+through.
 
 
 \subsection build_gr_cmake_e100 Building for the E100
