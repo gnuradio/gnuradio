@@ -109,6 +109,7 @@ m4_define([GR_STANDALONE],
   AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 
   PKG_CHECK_MODULES(GNURADIO_CORE, gnuradio-core >= 3)
+  PKG_CHECK_MODULES(GRUEL, gruel >= 3)
   LIBS="$LIBS $GNURADIO_CORE_LIBS"
 
   gnuradio_core_GUILE_LOAD_PATH="`pkg-config --variable=guile_load_path gnuradio-core`"
