@@ -1,5 +1,5 @@
 """
-Copyright 2008-2011 Free Software Foundation, Inc.
+Copyright 2008-2012 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ import Constants
 def _get_source_from_virtual_sink_port(vsp):
 	"""
 	Resolve the source port that is connected to the given virtual sink port.
-	Use the get source from virtual source to recursively resolve subsequent ports. 
+	Use the get source from virtual source to recursively resolve subsequent ports.
 	"""
 	try: return _get_source_from_virtual_source_port(
 		vsp.get_enabled_connections()[0].get_source())
@@ -49,6 +49,35 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
 		), traversed + [vsp],
 	)
 	except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp
+
+def _get_sink_from_virtual_source_port(vsp):
+	"""
+	Resolve the sink port that is connected to the given virtual source port.
+	Use the get sink from virtual sink to recursively resolve subsequent ports.
+	"""
+	try: return _get_sink_from_virtual_sink_port(
+		vsp.get_enabled_connections()[0].get_sink())	# Could have many connections, but use first
+	except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp
+
+def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
+	"""
+	Recursively resolve sink ports over the virtual connections.
+	Keep track of traversed sinks to avoid recursive loops.
+	"""
+	if not vsp.get_parent().is_virtual_sink(): return vsp
+	if vsp in traversed: raise Exception, 'Loop found when resolving virtual sink %s'%vsp
+	try: return _get_sink_from_virtual_sink_port(
+		_get_sink_from_virtual_source_port(
+			filter(#get all virtual source with a matching stream id
+				lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
+				filter(#get all enabled blocks that are also virtual sinks
+					lambda b: b.is_virtual_source(),
+					vsp.get_parent().get_parent().get_enabled_blocks(),
+				),
+			)[0].get_sources()[0]
+		), traversed + [vsp],
+	)
+	except: raise Exception, 'Could not resolve source for virtual sink port %s'%vsp
 
 class Port(_Port, _GUIPort):
 
@@ -81,6 +110,8 @@ class Port(_Port, _GUIPort):
 
 	def get_types(self): return Constants.TYPE_TO_SIZEOF.keys()
 
+	def is_type_empty(self): return not self._n['type']
+
 	def validate(self):
 		_Port.validate(self)
 		if not self.get_enabled_connections() and not self.get_optional():
@@ -99,18 +130,30 @@ class Port(_Port, _GUIPort):
 		Handle the port cloning for virtual blocks.
 		"""
 		_Port.rewrite(self)
-		if self.get_parent().is_virtual_sink() or self.get_parent().is_virtual_source():
+		if self.is_type_empty():
 			try: #clone type and vlen
-				source = self.resolve_virtual_source()
+				source = self.resolve_empty_type()
 				self._type = str(source.get_type())
 				self._vlen = str(source.get_vlen())
 			except: #reset type and vlen
 				self._type = ''
 				self._vlen = ''
 
-	def resolve_virtual_source(self):
-		if self.get_parent().is_virtual_sink(): return _get_source_from_virtual_sink_port(self)
-		if self.get_parent().is_virtual_source(): return _get_source_from_virtual_source_port(self)
+	def resolve_empty_type(self):
+		if self.is_sink():
+			try:
+				src = _get_source_from_virtual_sink_port(self)
+				if not src.is_type_empty(): return src
+			except: pass
+			sink = _get_sink_from_virtual_sink_port(self)
+			if not sink.is_type_empty(): return sink
+		if self.is_source():
+			try:
+				src = _get_source_from_virtual_source_port(self)
+				if not src.is_type_empty(): return src
+			except: pass
+			sink = _get_sink_from_virtual_source_port(self)
+			if not sink.is_type_empty(): return sink
 
 	def get_vlen(self):
 		"""
