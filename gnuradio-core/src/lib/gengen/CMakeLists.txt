@@ -20,6 +20,7 @@
 ########################################################################
 # This file included, use CMake directory variables
 ########################################################################
+include(GrPython)
 
 ########################################################################
 # generate the python helper script which calls into the build utils
