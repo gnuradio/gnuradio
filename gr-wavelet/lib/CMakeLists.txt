@@ -33,6 +33,9 @@ link_directories(${WAVELET_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${GSL_INCLUDE_DIRS})
+link_directories(${GSL_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
