@@ -43,6 +43,7 @@ class GR_CORE_API gr_firdes {
     WIN_RECTANGULAR = 3,
     WIN_KAISER = 4,     // max attenuation a function of beta, google it
     WIN_BLACKMAN_hARRIS = 5,
+    WIN_BLACKMAN_HARRIS = 5, // alias for capitalization consistency
   };
 
 
