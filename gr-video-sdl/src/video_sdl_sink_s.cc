@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,21 +50,21 @@ video_sdl_sink_s::video_sdl_sink_s (double framerate,int width, int height,unsig
     d_height (height),
     d_dst_width(dst_width),
     d_dst_height(dst_height),
-    d_format(format), 
+    d_format(format),
     d_current_line(0),
     d_screen(NULL),
     d_image(NULL),
     d_avg_delay(0.0),
     d_wanted_ticks(0)
 {
-  if(framerate<=0.0) 
+  if(framerate<=0.0)
     d_wanted_frametime_ms=0;//Go as fast as possible
   else
     d_wanted_frametime_ms=(int)(1000.0/framerate);
   if(dst_width<0) d_dst_width=d_width;
   if(dst_height<0) d_dst_height=d_height;
   if(0==format) d_format=IMGFMT_YV12;
-  
+
   atexit(SDL_Quit);//check if this is the way to do this
   if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
     std::cerr << "video_sdl_sink_s: Couldn't initialize SDL:" << SDL_GetError() << " \n SDL_Init(SDL_INIT_VIDEO) failed\n";
@@ -104,9 +104,9 @@ video_sdl_sink_s::video_sdl_sink_s (double framerate,int width, int height,unsig
     std::cerr << "SDL: Couldn't lock YUV overlay: \n"<< SDL_GetError() <<"\n";
     throw std::runtime_error ("video_sdl_sink_s");
   }
-  memset(d_image->pixels[0], 128, d_image->pitches[0]*d_height);  
-  memset(d_image->pixels[1], 128, d_image->pitches[1]*d_height/2);  
-  memset(d_image->pixels[2], 128, d_image->pitches[2]*d_height/2);  
+  memset(d_image->pixels[0], 128, d_image->pitches[0]*d_height);
+  memset(d_image->pixels[1], 128, d_image->pitches[1]*d_height/2);
+  memset(d_image->pixels[2], 128, d_image->pitches[2]*d_height/2);
   SDL_UnlockYUVOverlay( d_image );
 }
 
@@ -241,7 +241,7 @@ video_sdl_sink_s::work (int noutput_items,
 
   if ( SDL_LockYUVOverlay( d_image ) ) {
     return 0;
-  } 
+  }
   switch (input_items.size ()){
   case 3:		// first channel=Y, second channel is  U , third channel is V
     src_pixels_0 = (short *) input_items[0];
@@ -253,7 +253,7 @@ video_sdl_sink_s::work (int noutput_items,
       noutput_items_produced+=copy_plane_to_surface (0,d_chunk_size, src_pixels_0);
       src_pixels_0 += d_chunk_size;
       src_pixels_1 += d_chunk_size;
-      src_pixels_2 += d_chunk_size;      
+      src_pixels_2 += d_chunk_size;
     }
     break;
   case 2:
@@ -266,7 +266,7 @@ video_sdl_sink_s::work (int noutput_items,
         copy_plane_to_surface (12,d_chunk_size/2, src_pixels_1);
         noutput_items_produced+=copy_plane_to_surface (0,d_chunk_size, src_pixels_0);
         src_pixels_0 += d_chunk_size;
-        src_pixels_1 += d_chunk_size;     
+        src_pixels_1 += d_chunk_size;
       }
     } else
     {
@@ -277,7 +277,7 @@ video_sdl_sink_s::work (int noutput_items,
         copy_plane_to_surface (1222,d_chunk_size/2, src_pixels_1);
         noutput_items_produced+=copy_plane_to_surface (0,d_chunk_size, src_pixels_0);
         src_pixels_0 += d_chunk_size;
-        src_pixels_1 += d_chunk_size;     
+        src_pixels_1 += d_chunk_size;
       }
     }
     break;

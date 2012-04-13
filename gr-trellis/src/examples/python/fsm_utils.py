@@ -72,7 +72,7 @@ def base2dec(s,base):
 # to channel inputs corresponding to a channel 'channel' and a modulation
 # 'mod'. Optional normalization of channel to unit energy.
 # This table is used by the 'metrics' block to translate
-# channel outputs to metrics for use with the Viterbi algorithm. 
+# channel outputs to metrics for use with the Viterbi algorithm.
 # Limitations: currently supports only one-dimensional modulations.
 ######################################################################
 def make_isi_lookup(mod,channel,normalize):
@@ -102,7 +102,7 @@ def make_isi_lookup(mod,channel,normalize):
 
 ######################################################################
 # Automatically generate the signals appropriate for CPM
-# decomposition. 
+# decomposition.
 # This decomposition is based on the paper by B. Rimoldi
 # "A decomposition approach to CPM", IEEE Trans. Info Theory, March 1988
 # See also my own notes at http://www.eecs.umich.edu/~anastas/docs/cpm.pdf
@@ -118,7 +118,7 @@ def make_cpm_signals(K,P,M,L,q,frac):
     for m in range(L):
        qq=qq + q[m*Q:m*Q+Q]
     w=math.pi*h*(M-1)*t-2*math.pi*h*(M-1)*qq+math.pi*h*(L-1)*(M-1)
-    
+
     X=(M**L)*P
     PSI=numpy.empty((X,Q))
     for x in range(X):
@@ -133,9 +133,9 @@ def make_cpm_signals(K,P,M,L,q,frac):
     PSI = numpy.transpose(PSI)
     SS=numpy.exp(1j*PSI) # contains all signals as columns
     #print SS
-   
 
-    # Now we need to orthogonalize the signals 
+
+    # Now we need to orthogonalize the signals
     F = scipy.linalg.orth(SS) # find an orthonormal basis for SS
     #print numpy.dot(numpy.transpose(F.conjugate()),F) # check for orthonormality
     S = numpy.dot(numpy.transpose(F.conjugate()),SS)
@@ -162,11 +162,11 @@ def make_cpm_signals(K,P,M,L,q,frac):
     #print Ff
     Sf = S[Esi[0:v0+1]]
     #print Sf
-    
+
 
     return (f0,SS,S,F,Sf,Ff,N)
     #return f0
-    
+
 
 
 

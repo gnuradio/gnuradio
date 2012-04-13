@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2007,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -37,10 +37,10 @@ public:
   ~gr_hier_block2_detail();
 
   void connect(gr_basic_block_sptr block);
-  void connect(gr_basic_block_sptr src, int src_port, 
+  void connect(gr_basic_block_sptr src, int src_port,
 	       gr_basic_block_sptr dst, int dst_port);
   void disconnect(gr_basic_block_sptr block);
-  void disconnect(gr_basic_block_sptr, int src_port, 
+  void disconnect(gr_basic_block_sptr, int src_port,
 		  gr_basic_block_sptr, int dst_port);
   void disconnect_all();
   void lock();
@@ -48,7 +48,7 @@ public:
   void flatten_aux(gr_flat_flowgraph_sptr sfg) const;
 
 private:
-  
+
   // Private implementation data
   gr_hier_block2 *d_owner;
   gr_hier_block2_detail *d_parent_detail;
@@ -56,7 +56,7 @@ private:
   std::vector<gr_endpoint_vector_t> d_inputs; // Multiple internal endpoints per external input
   gr_endpoint_vector_t d_outputs;             // Single internal endpoint per external output
   gr_basic_block_vector_t d_blocks;
-  
+
   void connect_input(int my_port, int port, gr_basic_block_sptr block);
   void connect_output(int my_port, int port, gr_basic_block_sptr block);
   void disconnect_input(int my_port, int port, gr_basic_block_sptr block);

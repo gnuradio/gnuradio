@@ -115,7 +115,7 @@ class point_label_thread(threading.Thread, mutex):
 	def run(self):
 		last_ts = time.time()
 		last_coor = coor = None
-		try: 
+		try:
 			while True:
 				time.sleep(1.0/30.0)
 				self.lock()

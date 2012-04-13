@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,20 +50,20 @@ class GR_CORE_API gr_check_counting_s : public gr_sync_block
   unsigned int    d_history;    // bitmask of decisions
   unsigned short  d_current_count;
   unsigned int    d_current_count_32bit;
-  
+
   long      d_total_errors;
   long      d_total_shorts;
   bool      d_do_32bit;
 
   gr_check_counting_s (bool do_32bit);
-  
+
   void enter_SEARCHING ();
   void enter_LOCKED ();
 
   void right (){
     d_history = (d_history << 1) | 0x1;
   }
-  
+
   void wrong (){
     d_history = (d_history << 1) | 0x0;
     d_total_errors++;
@@ -74,7 +74,7 @@ class GR_CORE_API gr_check_counting_s : public gr_sync_block
 
   void log_error (unsigned short expected, unsigned short actual);
   void log_error_32bit (unsigned int expected, unsigned int actual);
-  
+
   int check_32bit (int noutput_items, unsigned short * in);
   int check_16bit (int noutput_items, unsigned short * in);
 

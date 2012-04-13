@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002,2006 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -65,7 +65,7 @@ atsci_trellis_encoder::reset ()
     enc[i].reset ();
 }
 
-void 
+void
 atsci_trellis_encoder::encode (atsc_data_segment out[NCODERS],
 			      const atsc_mpeg_packet_rs_encoded in[NCODERS])
 {
@@ -85,7 +85,7 @@ atsci_trellis_encoder::encode (atsc_data_segment out[NCODERS],
   }
 
   memset (out_copy, 0, sizeof (out_copy));	// FIXME, sanity check
-  
+
   // do the deed...
   encode_helper (out_copy, in_copy);
 
@@ -108,7 +108,7 @@ atsci_trellis_encoder::encode (atsc_data_segment out[NCODERS],
  * the correct answer.  Maybe someday, when we've run out of better
  * things to do, rework to avoid the copying in encode.
  */
-void 
+void
 atsci_trellis_encoder::encode_helper (unsigned char output[OUTPUT_SIZE],
 				     const unsigned char input[INPUT_SIZE])
 {
@@ -123,7 +123,7 @@ atsci_trellis_encoder::encode_helper (unsigned char output[OUTPUT_SIZE],
   unsigned char symbol;
   int skip_encoder_bump;
 
-  /* FIXME, we may want special processing here 
+  /* FIXME, we may want special processing here
      for a flag byte to keep track of which part of the field we're in? */
 
   encoder = NCODERS - ENCODER_SEG_BUMP;
@@ -136,7 +136,7 @@ atsci_trellis_encoder::encode_helper (unsigned char output[OUTPUT_SIZE],
        chunk += NCODERS) {
     /* Load a new chunk of bytes into the Trellis encoder buffers.
        They get loaded in an order that depends on where we are in the
-       segment sync progress (sigh). 
+       segment sync progress (sigh).
        GRR!  When the chunk reload happens at the same time as the
        segment boundary, we should bump the encoder NOW for the reload,
        rather than LATER during the bitshift transition!!! */
@@ -144,7 +144,7 @@ atsci_trellis_encoder::encode_helper (unsigned char output[OUTPUT_SIZE],
       encoder = (encoder + ENCODER_SEG_BUMP) % NCODERS;
       skip_encoder_bump = 1;
     }
-      
+
     for (i = 0; i < NCODERS; i++) {
       /* for debug */ trellis_wherefrom[encoder] = chunk+i;
       trellis_buffer[encoder] =             input [chunk+i];
@@ -193,7 +193,7 @@ atsci_trellis_encoder::encode_helper (unsigned char output[OUTPUT_SIZE],
       } /* Encoders */
     } /* Bit shifts */
   } /* Chunks */
-  
+
   /* Check up on ourselves */
 #if 0
   assertIntsEqual (0, (INPUT_SIZE * DIBITS_PER_BYTE) % NCODERS, "not %");

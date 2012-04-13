@@ -4,8 +4,8 @@
   AUTHOR......: David Rowe
   DATE CREATED: 20/8/2010
 
-  Codec2 simulation.  Combines encoder and decoder and allows switching in 
-  out various algorithms and quantisation steps. 
+  Codec2 simulation.  Combines encoder and decoder and allows switching in
+  out various algorithms and quantisation steps.
 
 \*---------------------------------------------------------------------------*/
 
@@ -45,13 +45,13 @@
 #include "interp.h"
 
 /*---------------------------------------------------------------------------*\
-                                                                             
- switch_present()                                                            
-                                                                             
- Searches the command line arguments for a "switch".  If the switch is       
- found, returns the command line argument where it ws found, else returns    
- NULL.                                                                       
-                                                                             
+
+ switch_present()
+
+ Searches the command line arguments for a "switch".  If the switch is
+ found, returns the command line argument where it ws found, else returns
+ NULL.
+
 \*---------------------------------------------------------------------------*/
 
 int switch_present(sw,argc,argv)
@@ -71,9 +71,9 @@ register char *argv[];  /* array of command line arguments in string form */
 void synth_one_frame(short buf[], MODEL *model, float Sn_[], float Pn[]);
 
 /*---------------------------------------------------------------------------*\
-                                                                          
-				MAIN                                        
-                                                                         
+
+				MAIN
+
 \*---------------------------------------------------------------------------*/
 
 int main(int argc, char *argv[])
@@ -103,10 +103,10 @@ int main(int argc, char *argv[])
   int lsp, lspd, lspdvq, lsp_quantiser;
   float ak[LPC_MAX];
   COMP  Sw_[FFT_ENC];
-  COMP  Ew[FFT_ENC]; 
- 
+  COMP  Ew[FFT_ENC];
+
   int dump;
-  
+
   int phase0;
   float ex_phase[MAX_AMP+1];
 
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
   float AresdB_prev[MAX_AMP];
 
   for(i=0; i<MAX_AMP; i++)
-      AresdB_prev[i] = 0.0; 
+      AresdB_prev[i] = 0.0;
 
   for(i=0; i<M; i++)
       Sn[i] = 1.0;
@@ -201,12 +201,12 @@ int main(int argc, char *argv[])
       if ((order < 4) || (order > 20)) {
         fprintf(stderr, "Error in lpc order: %d\n", order);
         exit(1);
-      }	  
+      }
   }
 
   dump = switch_present("--dump",argc,argv);
 #ifdef DUMP
-  if (dump) 
+  if (dump)
       dump_on(argv[dump+1]);
 #endif
 
@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
 	//Sn[i+M-N] = hpf((float)buf[i], hpf_states);
 	Sn[i+M-N] = (float)buf[i];
     }
- 
+
     /* Estimate pitch */
 
     nlp(nlp_states,Sn,N,M,P_MIN,P_MAX,&pitch,Sw,&prev_Wo);
@@ -272,10 +272,10 @@ int main(int argc, char *argv[])
 
     /* estimate model parameters */
 
-    dft_speech(Sw, Sn, w); 
+    dft_speech(Sw, Sn, w);
     two_stage_pitch_refinement(&model, Sw);
     estimate_amplitudes(&model, Sw, W);
-#ifdef DUMP 
+#ifdef DUMP
     dump_Sn(Sn); dump_Sw(Sw); dump_model(&model);
 #endif
 
@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
     if (phase0) {
 	float Wn[M];		        /* windowed speech samples */
 	float Rk[LPC_MAX+1];	        /* autocorrelation coeffs  */
-  	
+
 #ifdef DUMP
 	dump_phase(&model.phi[0], model.L);
 #endif
@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
 #ifdef DUMP
 	dump_ak(ak, LPC_ORD);
 #endif
-	
+
 	/* determine voicing */
 
 	snr = est_voicing_mbe(&model, Sw, W, Sw_, Ew, prev_Wo);
@@ -313,7 +313,7 @@ int main(int argc, char *argv[])
 
 	for(i=0; i<MAX_AMP; i++)
 	    model.phi[i] = 0;
-	
+
 	if (hand_voicing) {
 	    fscanf(fvoicing,"%d\n",&model.voiced);
 	}
@@ -350,7 +350,7 @@ int main(int argc, char *argv[])
 	e = decode_energy(encode_energy(e));
 	model.Wo = decode_Wo(encode_Wo(model.Wo));
 
-	aks_to_M2(ak, order, &model, e, &snr, 1); 
+	aks_to_M2(ak, order, &model, e, &snr, 1);
 	apply_lpc_correction(&model);
 	sum_snr += snr;
 #ifdef DUMP
@@ -371,7 +371,7 @@ int main(int argc, char *argv[])
 
     /* option decimation to 20ms rate, which enables interpolation
        routine to synthesise in between frame */
-  
+
     if (decimate) {
 	if (!phase0) {
 	    printf("needs --phase0 to resample phase for interpolated Wo\n");
@@ -395,17 +395,17 @@ int main(int argc, char *argv[])
 			    prev_lsps, prev_e, lsps, e, ak_interp);
 	    apply_lpc_correction(&interp_model);
 	    #endif
-	    
+
 	    if (phase0)
 		phase_synth_zero_order(&interp_model, ak_interp, ex_phase,
-				       order);	
+				       order);
 	    if (postfilt)
 		postfilter(&interp_model, &bg_est);
 	    synth_one_frame(buf, &interp_model, Sn_, Pn);
 	    if (fout != NULL) fwrite(buf,sizeof(short),N,fout);
 
 	    if (phase0)
-		phase_synth_zero_order(&model, ak, ex_phase, order);	
+		phase_synth_zero_order(&model, ak, ex_phase, order);
 	    if (postfilt)
 		postfilter(&model, &bg_est);
 	    synth_one_frame(buf, &model, Sn_, Pn);
@@ -422,7 +422,7 @@ int main(int argc, char *argv[])
     }
     else {
 	if (phase0)
-	    phase_synth_zero_order(&model, ak, ex_phase, order);	
+	    phase_synth_zero_order(&model, ak, ex_phase, order);
 	if (postfilt)
 	    postfilter(&model, &bg_est);
 	synth_one_frame(buf, &model, Sn_, Pn);

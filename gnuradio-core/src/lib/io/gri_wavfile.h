@@ -91,7 +91,7 @@ gri_wav_write_sample(FILE *fp, short int sample, int bytes_per_sample);
  *
  * Note: The stream position is changed during this function. If anything
  * needs to be written to the WAV file after calling this function (which
- * shouldn't happen), you  need to fseek() to the end of the file (or 
+ * shouldn't happen), you  need to fseek() to the end of the file (or
  * whereever).
  *
  * \p fp File pointer to an open WAV file with a blank header

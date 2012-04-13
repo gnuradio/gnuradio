@@ -33,7 +33,7 @@ pmt_@TAG@vector::ref(size_t k) const
   return d_v[k];
 }
 
-void 
+void
 pmt_@TAG@vector::set(size_t k, @TYPE@ x)
 {
   if (k >= length())

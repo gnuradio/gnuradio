@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2006,2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 """
 Generate code for uniform numeric vectors
@@ -46,19 +46,19 @@ header = """\
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -118,7 +118,7 @@ def do_substitution (d, input, out_file):
         key = match_obj.group (1)
         # print key
         return d[key]
-    
+
     out = re.sub (r"@([a-zA-Z0-9_]+)@", repl, input)
     out_file.write (out)
 
@@ -164,7 +164,7 @@ class qa_pmt_unv : public CppUnit::TestCase {
   CPPUNIT_TEST_SUITE_END();
 
  private:
-''')     
+''')
     for tag, typ in unv_types:
         output.write('  void test_%svector();\n' % (tag,))
     output.write('};\n')
@@ -178,7 +178,7 @@ def generate_qa_cc():
     for tag, typ in unv_types:
         d = { 'TAG' : tag, 'TYPE' : typ }
         do_substitution(d, template, output)
-    
+
 
 def main():
     generate_h()

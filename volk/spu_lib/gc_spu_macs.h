@@ -1,19 +1,19 @@
 /* -*- asm -*- */
 /*
  * Copyright 2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -279,7 +279,7 @@ name:
 	iluh	_gc_t0, 4*(s)*0x0101 + 0x0001;	\
 	iohl	_gc_t0, 4*(s)*0x0101 + 0x0203;	\
 	shufb	rt, ra, ra, _gc_t0;
-	
+
 // replicate double from slot s [0,1]
 #define	VSPLTD(rt, ra, s) \
 	/* sp is always 16-byte aligned */ \
@@ -301,13 +301,13 @@ name:
 
 #define MIN_SELB(rt, ra, rb, rc)	selb	rt, ra, rb, rc;
 #define MAX_SELB(rt, ra, rb, rc)	selb	rt, rb, ra, rc;
-	
+
 	// words
 
 #define MIN(rt, ra, rb) \
 	cgt	_gc_t0, ra, rb; \
 	MIN_SELB(rt, ra, rb, _gc_t0)
-	
+
 #define	MAX(rt, ra, rb) \
 	cgt	_gc_t0, ra, rb; \
 	MAX_SELB(rt, ra, rb, _gc_t0)
@@ -315,17 +315,17 @@ name:
 #define UMIN(rt, ra, rb) \
 	clgt	_gc_t0, ra, rb; \
 	MIN_SELB(rt, ra, rb, _gc_t0)
-	
+
 #define	UMAX(rt, ra, rb) \
 	clgt	_gc_t0, ra, rb; \
 	MAX_SELB(rt, ra, rb, _gc_t0)
 
 	// bytes
-	
+
 #define MINB(rt, ra, rb) \
 	cgtb	_gc_t0, ra, rb; \
 	MIN_SELB(rt, ra, rb, _gc_t0)
-	
+
 #define	MAXB(rt, ra, rb) \
 	cgtb	_gc_t0, ra, rb; \
 	MAX_SELB(rt, ra, rb, _gc_t0)
@@ -333,17 +333,17 @@ name:
 #define UMINB(rt, ra, rb) \
 	clgtb	_gc_t0, ra, rb; \
 	MIN_SELB(rt, ra, rb, _gc_t0)
-	
+
 #define	UMAXB(rt, ra, rb) \
 	clgtb	_gc_t0, ra, rb; \
 	MAX_SELB(rt, ra, rb, _gc_t0)
 
 	// halfwords
-	
+
 #define MINH(rt, ra, rb) \
 	cgth	_gc_t0, ra, rb; \
 	MIN_SELB(rt, ra, rb, _gc_t0)
-	
+
 #define	MAXH(rt, ra, rb) \
 	cgth	_gc_t0, ra, rb; \
 	MAX_SELB(rt, ra, rb, _gc_t0)
@@ -351,17 +351,17 @@ name:
 #define UMINH(rt, ra, rb) \
 	clgth	_gc_t0, ra, rb; \
 	MIN_SELB(rt, ra, rb, _gc_t0)
-	
+
 #define	UMAXH(rt, ra, rb) \
 	clgth	_gc_t0, ra, rb; \
 	MAX_SELB(rt, ra, rb, _gc_t0)
 
 	// floats
-	
+
 #define FMIN(rt, ra, rb) \
 	fcgt	_gc_t0, ra, rb; \
 	MIN_SELB(rt, ra, rb, _gc_t0)
-	
+
 #define	FMAX(rt, ra, rb) \
 	fcgt	_gc_t0, ra, rb; \
 	MAX_SELB(rt, ra, rb, _gc_t0)
@@ -370,7 +370,7 @@ name:
 #define FMINMAG(rt, ra, rb) \
 	fcmgt	_gc_t0, ra, rb; \
 	MIN_SELB(rt, ra, rb, _gc_t0)
-	
+
 // Ignoring the sign, select the values with the maximum magnitude
 #define	FMAXMAG(rt, ra, rb) \
 	fcmgt	_gc_t0, ra, rb; \

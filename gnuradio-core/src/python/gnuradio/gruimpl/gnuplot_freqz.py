@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 __all__ = ['gnuplot_freqz']
 
@@ -40,14 +40,14 @@ def gnuplot_freqz (hw, Fs=None, logfreq=False):
 
     Returns a handle to the gnuplot graph. When the handle is reclaimed
     the graph is torn down."""
-    
+
     data_file = tempfile.NamedTemporaryFile ()
     cmd_file = os.popen ('gnuplot', 'w')
 
     h, w = hw
     ampl = 20 * numpy.log10 (numpy.absolute (h) + 1e-9)
     phase = map (lambda x: math.atan2 (x.imag, x.real), h)
-    
+
     if Fs:
         w *= (Fs/(2*math.pi))
 
@@ -63,7 +63,7 @@ def gnuplot_freqz (hw, Fs=None, logfreq=False):
         cmd_file.write ("unset logscale x\n")
     cmd_file.write ("plot '%s' using 1:2 with lines\n" % (data_file.name,))
     cmd_file.flush ()
-    
+
     return (cmd_file, data_file)
 
 

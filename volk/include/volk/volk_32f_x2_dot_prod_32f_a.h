@@ -18,7 +18,7 @@ static inline void volk_32f_x2_dot_prod_32f_a_generic(float * result, const floa
   for(number = 0; number < num_points; number++){
     dotProduct += ((*aPtr++) * (*bPtr++));
   }
-  
+
   *result = dotProduct;
 }
 
@@ -29,7 +29,7 @@ static inline void volk_32f_x2_dot_prod_32f_a_generic(float * result, const floa
 
 
 static inline void volk_32f_x2_dot_prod_32f_a_sse( float* result, const  float* input, const  float* taps, unsigned int num_points) {
-  
+
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
 
@@ -42,11 +42,11 @@ static inline void volk_32f_x2_dot_prod_32f_a_sse( float* result, const  float* 
   __m128 dotProdVal = _mm_setzero_ps();
 
   for(;number < quarterPoints; number++){
-      
-    aVal = _mm_load_ps(aPtr); 
+
+    aVal = _mm_load_ps(aPtr);
     bVal = _mm_load_ps(bPtr);
-      
-    cVal = _mm_mul_ps(aVal, bVal); 
+
+    cVal = _mm_mul_ps(aVal, bVal);
 
     dotProdVal = _mm_add_ps(cVal, dotProdVal);
 
@@ -69,10 +69,10 @@ static inline void volk_32f_x2_dot_prod_32f_a_sse( float* result, const  float* 
   }
 
   *result = dotProduct;
-  
+
 }
 
-#endif /*LV_HAVE_SSE*/  
+#endif /*LV_HAVE_SSE*/
 
 #ifdef LV_HAVE_SSE3
 
@@ -91,11 +91,11 @@ static inline void volk_32f_x2_dot_prod_32f_a_sse3(float * result, const float *
   __m128 dotProdVal = _mm_setzero_ps();
 
   for(;number < quarterPoints; number++){
-      
-    aVal = _mm_load_ps(aPtr); 
+
+    aVal = _mm_load_ps(aPtr);
     bVal = _mm_load_ps(bPtr);
-      
-    cVal = _mm_mul_ps(aVal, bVal); 
+
+    cVal = _mm_mul_ps(aVal, bVal);
 
     dotProdVal = _mm_hadd_ps(dotProdVal, cVal);
 
@@ -117,7 +117,7 @@ static inline void volk_32f_x2_dot_prod_32f_a_sse3(float * result, const float *
   }
 
   *result = dotProduct;
-}  
+}
 
 #endif /*LV_HAVE_SSE3*/
 
@@ -140,7 +140,7 @@ static inline void volk_32f_x2_dot_prod_32f_a_sse4_1(float * result, const float
 
   __m128 dotProdVal = _mm_setzero_ps();
 
-  for(;number < sixteenthPoints; number++){      
+  for(;number < sixteenthPoints; number++){
 
     aVal1 = _mm_load_ps(aPtr); aPtr += 4;
     aVal2 = _mm_load_ps(aPtr); aPtr += 4;
@@ -151,7 +151,7 @@ static inline void volk_32f_x2_dot_prod_32f_a_sse4_1(float * result, const float
     bVal2 = _mm_load_ps(bPtr); bPtr += 4;
     bVal3 = _mm_load_ps(bPtr); bPtr += 4;
     bVal4 = _mm_load_ps(bPtr); bPtr += 4;
-    
+
     cVal1 = _mm_dp_ps(aVal1, bVal1, 0xF1);
     cVal2 = _mm_dp_ps(aVal2, bVal2, 0xF2);
     cVal3 = _mm_dp_ps(aVal3, bVal3, 0xF4);
@@ -178,7 +178,7 @@ static inline void volk_32f_x2_dot_prod_32f_a_sse4_1(float * result, const float
   }
 
   *result = dotProduct;
-}  
+}
 
 #endif /*LV_HAVE_SSE4_1*/
 

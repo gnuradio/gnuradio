@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,9 +50,9 @@ public:
   TimeDomainDisplayPlot(int nplots, QWidget*);
   virtual ~TimeDomainDisplayPlot();
 
-  void PlotNewData(const std::vector<double*> dataPoints, 
+  void PlotNewData(const std::vector<double*> dataPoints,
 		   const int64_t numDataPoints, const double timeInterval);
-    
+
   virtual void replot();
 
 public slots:
@@ -62,7 +62,7 @@ public slots:
   void setColor(int which, QString color);
 
   void resizeSlot( QSize *s );
-  void SetSampleRate(double sr, double units, 
+  void SetSampleRate(double sr, double units,
 		     const std::string &strunits);
 
   // Because of the preprocessing of slots in QT, these are no
@@ -87,10 +87,10 @@ private:
 
   QwtPlotPanner* _panner;
   QwtPlotZoomer* _zoomer;
-  
+
   QwtDblClickPlotPicker *_picker;
   QwtPlotMagnifier *_magnifier;
-  
+
   std::vector<double*> _dataPoints;
   double* _xAxisPoints;
 

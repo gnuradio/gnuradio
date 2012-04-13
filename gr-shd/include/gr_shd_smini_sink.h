@@ -1,18 +1,18 @@
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -34,30 +34,30 @@ GR_SHD_API boost::shared_ptr<shd_smini_sink> shd_make_smini_sink(
     size_t num_channels
 );
 
-class GR_SHD_API shd_smini_sink : virtual public gr_sync_block 
+class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
 {
  public:
-  
+
   /*!
    * Set the subdevice specification.
    * \param spec the subdev spec markup string
    * \param mboard the motherboard index 0 to M-1
    */
   virtual void set_subdev_spec(const std::string &spec, size_t mboard = 0) = 0;
-  
+
   /*!
    * Set the sample rate for the smini device.
    * \param rate a new rate in Sps
    */
   virtual void set_samp_rate(double rate) = 0;
-  
+
   /*!
    * Get the sample rate for the smini device.
    * This is the actual sample rate and may differ from the rate set.
    * \return the actual rate in Sps
    */
   virtual double get_samp_rate(void) = 0;
-  
+
   /*!
    * Tune the smini device to the desired center frequency.
    * \param tune_request the tune request instructions
@@ -86,14 +86,14 @@ class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
    * \return the frequency in Hz
    */
   virtual double get_center_freq(size_t chan = 0) = 0;
-  
+
   /*!
    * Get the tunable frequency range.
    * \param chan the channel index 0 to N-1
    * \return the frequency range in Hz
    */
   virtual shd::freq_range_t get_freq_range(size_t chan = 0) = 0;
-  
+
   /*!
    * Set the gain for the dboard.
    * \param gain the gain in dB
@@ -116,7 +116,7 @@ class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
    * \return the actual gain in dB
    */
   virtual double get_gain(size_t chan = 0) = 0;
-  
+
   /*!
    * Get the actual dboard gain setting of named stage.
    * \param name the name of the gain stage
@@ -132,7 +132,7 @@ class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
    * \return the actual gain in dB
    */
   virtual std::vector<std::string> get_gain_names(size_t chan = 0) = 0;
-  
+
   /*!
    * Get the settable gain range.
    * \param chan the channel index 0 to N-1
@@ -148,7 +148,7 @@ class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
    */
   virtual shd::gain_range_t get_gain_range(const std::string &name,
 					   size_t chan = 0) = 0;
-  
+
   /*!
    * Set the antenna to use.
    * \param ant the antenna string
@@ -156,21 +156,21 @@ class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
    */
   virtual void set_antenna(const std::string &ant,
 			   size_t chan = 0) = 0;
-  
+
   /*!
    * Get the antenna in use.
    * \param chan the channel index 0 to N-1
    * \return the antenna string
    */
   virtual std::string get_antenna(size_t chan = 0) = 0;
-  
+
   /*!
    * Get a list of possible antennas.
    * \param chan the channel index 0 to N-1
    * \return a vector of antenna strings
    */
   virtual std::vector<std::string> get_antennas(size_t chan = 0) = 0;
-  
+
   /*!
    * Set the subdevice bandpass filter.
    * \param chan the channel index 0 to N-1
@@ -186,14 +186,14 @@ class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
    */
   virtual shd::sensor_value_t get_dboard_sensor(const std::string &name,
 						size_t chan = 0) = 0;
-  
+
   /*!
    * Get a list of possible daughterboard sensor names.
    * \param chan the channel index 0 to N-1
    * \return a vector of sensor names
    */
   virtual std::vector<std::string> get_dboard_sensor_names(size_t chan = 0) = 0;
-  
+
   /*!
    * Get a motherboard sensor value.
    * \param name the name of the sensor
@@ -224,28 +224,28 @@ class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
    * \return the clock rate in Hz
    */
   virtual double get_clock_rate(size_t mboard = 0) = 0;
-  
+
   /*!
    * Set the master clock rate.
    * \param rate the new rate in Hz
    * \param mboard the motherboard index 0 to M-1
    */
   virtual void set_clock_rate(double rate, size_t mboard = 0) = 0;
-  
+
   /*!
    * Get the current time registers.
    * \param mboard the motherboard index 0 to M-1
    * \return the current smini time
    */
   virtual shd::time_spec_t get_time_now(size_t mboard = 0) = 0;
-  
+
   /*!
    * Get the time when the last pps pulse occured.
    * \param mboard the motherboard index 0 to M-1
    * \return the current smini time
    */
   virtual shd::time_spec_t get_time_last_pps(size_t mboard = 0) = 0;
-  
+
   /*!
    * Sets the time registers immediately.
    * \param time_spec the new time
@@ -259,19 +259,19 @@ class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
    * \param time_spec the new time
    */
   virtual void set_time_next_pps(const shd::time_spec_t &time_spec) = 0;
-  
+
   /*!
    * Sync the time registers with an unknown pps edge.
    * \param time_spec the new time
    */
   virtual void set_time_unknown_pps(const shd::time_spec_t &time_spec) = 0;
-  
+
   /*!
    * Get access to the underlying shd dboard iface object.
    * \return the dboard_iface object
    */
   virtual shd::xmini::dboard_iface::sptr get_dboard_iface(size_t chan = 0) = 0;
-  
+
   /*!
    * Get access to the underlying shd device object.
    * \return the multi smini device object

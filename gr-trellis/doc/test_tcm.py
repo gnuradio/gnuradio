@@ -27,17 +27,17 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     metrics = trellis.metrics_f(f.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
     va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s(); 
+    dst = gr.check_lfsr_32k_s();
 
     tb.connect (src,src_head,s2fsmi,enc,mod)
     tb.connect (mod,(add,0))
     tb.connect (noise,(add,1))
     tb.connect (add,metrics)
     tb.connect (metrics,va,fsmi2s,dst)
-    
+
     tb.run()
-    
-    # A bit of cheating: run the program once and print the 
+
+    # A bit of cheating: run the program once and print the
     # final encoder state.
     # Then put it as the last argument in the viterbi block
     #print "final state = " , enc.ST()
@@ -65,7 +65,7 @@ def main(args):
     K=Kb/bitspersymbol # packet size in trellis steps
     modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
-    constellation = modulation[1] 
+    constellation = modulation[1]
     if len(constellation)/dimensionality != f.O():
         sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
         sys.exit (1)
@@ -75,7 +75,7 @@ def main(args):
         Es = Es + constellation[i]**2
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # noise variance
-    
+
     tot_s=0
     terr_s=0
     for i in range(rep):

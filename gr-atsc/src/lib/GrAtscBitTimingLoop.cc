@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -46,7 +46,7 @@ GrAtscBitTimingLoop::GrAtscBitTimingLoop ()
 {
   d_timing_rate = DEFAULT_TIMING_RATE;
   loop.set_taps (DEFAULT_LOOP_TAP);
-  
+
   history = 1500;  	// spare input samples in case we need them.
 
 #ifdef _BT_DIAG_OUTPUT_
@@ -55,7 +55,7 @@ GrAtscBitTimingLoop::GrAtscBitTimingLoop ()
     perror ("loop.out");
     exit (1);
   }
-    
+
   fp_ps = fopen ("ps.out", "w");
   if (fp_ps == 0){
     perror ("ps.out");
@@ -79,13 +79,13 @@ GrAtscBitTimingLoop::forecast(VrSampleRange output,
     inputs[i].size=output.size*decimation + history-1;
   }
   return 0;
-}  
+}
 
 inline double
 GrAtscBitTimingLoop::filter_error (double e)
 {
   static const double limit = 50 * FPLL_BTLOOP_COUPLING_CONST;
-  
+
   // first limit
 
   if (e > limit)
@@ -96,7 +96,7 @@ GrAtscBitTimingLoop::filter_error (double e)
   return loop.filter (e);
 }
 
-int 
+int
 GrAtscBitTimingLoop::work (VrSampleRange output, void *ao[],
 			   VrSampleRange inputs[], void *ai[])
 {
@@ -107,8 +107,8 @@ GrAtscBitTimingLoop::work (VrSampleRange output, void *ao[],
   // This is required because of our slightly variable decimation factor
   sync (output.index);
 
-  
-  // We are tasked with producing output.size output samples.  
+
+  // We are tasked with producing output.size output samples.
   // We will consume approximately 2 * output.size input samples.
 
 
@@ -158,7 +158,7 @@ GrAtscBitTimingLoop::work (VrSampleRange output, void *ao[],
     if (!debug_no_update){
       mu += filtered_timing_error * d_timing_rate;
     }
-    
+
 #ifdef _BT_DIAG_OUTPUT_
     float	iodata[8];
     iodata[0] = left;

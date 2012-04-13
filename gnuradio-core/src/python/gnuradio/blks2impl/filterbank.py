@@ -1,23 +1,23 @@
 #
 # Copyright 2005,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import sys
 from gnuradio import gr, gru
@@ -53,11 +53,11 @@ class synthesis_filterbank(gr.hier_block2):
         sample rate * nchannels.
 
         Output stream to frequency mapping:
-        
+
           channel zero is at zero frequency.
 
           if mpoints is odd:
-            
+
             Channels with increasing positive frequencies come from
             channels 1 through (N-1)/2.
 
@@ -106,7 +106,7 @@ class synthesis_filterbank(gr.hier_block2):
 
         for i in range(mpoints):
             self.connect((self, i), (self.ss2v, i))
-            
+
         self.connect(self.ss2v, self.ifft, self.v2ss)
 
         # build mpoints fir filters...
@@ -116,7 +116,7 @@ class synthesis_filterbank(gr.hier_block2):
             self.connect(f, (self.ss2s, i))
 
 	self.connect(self.ss2s, self)
-	
+
 class analysis_filterbank(gr.hier_block2):
     """
     Uniformly modulated polyphase DFT filter bank: analysis
@@ -137,7 +137,7 @@ class analysis_filterbank(gr.hier_block2):
         gr.hier_block2.__init__(self, "analysis_filterbank",
                                 gr.io_signature(1, 1, item_size),             # Input signature
                                 gr.io_signature(mpoints, mpoints, item_size)) # Output signature
-        
+
         if taps is None:
             taps = _generate_synthesis_taps(mpoints)
 
@@ -145,12 +145,12 @@ class analysis_filterbank(gr.hier_block2):
         r = len(taps) % mpoints
         if r != 0:
             taps = taps + (mpoints - r) * (0,)
-        
+
         # split in mpoints separate set of taps
         sub_taps = _split_taps(taps, mpoints)
 
-        # print >> sys.stderr, "mpoints =", mpoints, "len(sub_taps) =", len(sub_taps) 
-        
+        # print >> sys.stderr, "mpoints =", mpoints, "len(sub_taps) =", len(sub_taps)
+
         self.s2ss = gr.stream_to_streams(item_size, mpoints)
         # filters here
         self.ss2v = gr.streams_to_vector(item_size, mpoints)
@@ -158,12 +158,12 @@ class analysis_filterbank(gr.hier_block2):
         self.v2ss = gr.vector_to_streams(item_size, mpoints)
 
         self.connect(self, self.s2ss)
-        
+
         # build mpoints fir filters...
         for i in range(mpoints):
             f = gr.fft_filter_ccc(1, sub_taps[mpoints-i-1])
             self.connect((self.s2ss, i), f)
             self.connect(f, (self.ss2v, i))
             self.connect((self.v2ss, i), (self, i))
-            
+
         self.connect(self.ss2v, self.fft, self.v2ss)

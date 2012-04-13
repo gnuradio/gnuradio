@@ -1,18 +1,18 @@
 /*
  * Copyright 2006 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -56,17 +56,17 @@ private:
     int d_capcode;	                  // Current page destination address
     bool d_laddr;	                  // Current page has long address
     float d_freq;			  // Channel frequency
-    
+
     void parse_data();	      		  // Handle a frame's worth of data
-    void parse_capcode(gr_int32 aw1, gr_int32 aw2);     
+    void parse_capcode(gr_int32 aw1, gr_int32 aw2);
     void parse_alphanumeric(int mw1, int mw2, int j);
     void parse_numeric(int mw1, int mw2, int j);
     void parse_tone_only();
     void parse_unknown(int mw1, int mw2);
-    
+
 public:
     int work(int noutput_items,
-        gr_vector_const_void_star &input_items, 
+        gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items);
 };
 

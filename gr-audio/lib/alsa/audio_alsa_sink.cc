@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -51,7 +51,7 @@ static snd_pcm_format_t acceptable_formats[] = {
 #define NELEMS(x) (sizeof(x)/sizeof(x[0]))
 
 
-static std::string 
+static std::string
 default_device_name ()
 {
   return gr_prefs::singleton()->get_string("audio_alsa", "default_output_device", "hw:0,0");
@@ -131,7 +131,7 @@ audio_alsa_sink::audio_alsa_sink (int sampling_rate,
   }
   set_input_signature (gr_make_io_signature (min_chan, max_chan,
 					     sizeof (float)));
-  
+
   // fill in portions of the d_hw_params that we know now...
 
   // Specify the access methods we implement
@@ -156,14 +156,14 @@ audio_alsa_sink::audio_alsa_sink (int sampling_rate,
 					"audio_alsa_sink",
 					CHATTY_DEBUG))
     throw std::runtime_error ("audio_alsa_sink");
-  
+
 
   // sampling rate
   unsigned int orig_sampling_rate = d_sampling_rate;
   if ((error = snd_pcm_hw_params_set_rate_near (d_pcm_handle, d_hw_params,
 						&d_sampling_rate, 0)) < 0)
     bail ("failed to set rate near", error);
-  
+
   if (orig_sampling_rate != d_sampling_rate){
     fprintf (stderr, "audio_alsa_sink[%s]: unable to support sampling rate %d\n",
 	     snd_pcm_name (d_pcm_handle), orig_sampling_rate);
@@ -204,7 +204,7 @@ audio_alsa_sink::audio_alsa_sink (int sampling_rate,
 					     &d_period_size, &dir);
   if (error < 0)
     bail ("get_period_size failed", error);
-  
+
   set_output_multiple (d_period_size);
 }
 
@@ -226,11 +226,11 @@ audio_alsa_sink::check_topology (int ninputs, int noutputs)
     return true;  // If stream is running, don't change any parameters
   else if(state == SND_PCM_STATE_XRUN )
     snd_pcm_prepare ( d_pcm_handle ); // Prepare stream on underrun, and we can set parameters;
-  
+
   bool special_case = nchan == 1 && d_special_case_mono_to_stereo;
   if (special_case)
     nchan = 2;
-  
+
   err = snd_pcm_hw_params_set_channels (d_pcm_handle, d_hw_params, nchan);
 
   if (err < 0){
@@ -249,7 +249,7 @@ audio_alsa_sink::check_topology (int ninputs, int noutputs)
   err = snd_pcm_sw_params_current (d_pcm_handle, d_sw_params);
   if (err < 0)
     bail ("snd_pcm_sw_params_current", err);
-  
+
   // Tell the PCM device to wait to start until we've filled
   // it's buffers half way full.  This helps avoid audio underruns.
 
@@ -327,7 +327,7 @@ audio_alsa_sink::work_s16 (int noutput_items,
 {
   typedef gr_int16	sample_t;	// the type of samples we're creating
   static const float scale_factor = std::pow(2.0f, 16-1) - 1;
-  
+
   unsigned int nchan = input_items.size ();
   const float **in = (const float **) &input_items[0];
   sample_t *buf = (sample_t *) d_buffer;
@@ -351,7 +351,7 @@ audio_alsa_sink::work_s16 (int noutput_items,
     for (unsigned int chan = 0; chan < nchan; chan++)
       in[chan] += d_period_size;
 
-    if (!write_buffer (buf, d_period_size, sizeof_frame))  
+    if (!write_buffer (buf, d_period_size, sizeof_frame))
       return -1;	// No fixing this problem.  Say we're done.
   }
 
@@ -369,7 +369,7 @@ audio_alsa_sink::work_s32 (int noutput_items,
 {
   typedef gr_int32	sample_t;	// the type of samples we're creating
   static const float scale_factor = std::pow(2.0f, 32-1) - 1;
-  
+
   unsigned int nchan = input_items.size ();
   const float **in = (const float **) &input_items[0];
   sample_t *buf = (sample_t *) d_buffer;
@@ -393,7 +393,7 @@ audio_alsa_sink::work_s32 (int noutput_items,
     for (unsigned int chan = 0; chan < nchan; chan++)
       in[chan] += d_period_size;
 
-    if (!write_buffer (buf, d_period_size, sizeof_frame))  
+    if (!write_buffer (buf, d_period_size, sizeof_frame))
       return -1;	// No fixing this problem.  Say we're done.
   }
 
@@ -411,7 +411,7 @@ audio_alsa_sink::work_s16_1x2 (int noutput_items,
 {
   typedef gr_int16	sample_t;	// the type of samples we're creating
   static const float scale_factor = std::pow(2.0f, 16-1) - 1;
-  
+
   assert (input_items.size () == 1);
   static const unsigned int nchan = 2;
   const float **in = (const float **) &input_items[0];
@@ -435,7 +435,7 @@ audio_alsa_sink::work_s16_1x2 (int noutput_items,
     // update src pointers
     in[0] += d_period_size;
 
-    if (!write_buffer (buf, d_period_size, sizeof_frame))  
+    if (!write_buffer (buf, d_period_size, sizeof_frame))
       return -1;	// No fixing this problem.  Say we're done.
   }
 
@@ -453,7 +453,7 @@ audio_alsa_sink::work_s32_1x2 (int noutput_items,
 {
   typedef gr_int32	sample_t;	// the type of samples we're creating
   static const float scale_factor = std::pow(2.0f, 32-1) - 1;
-  
+
   assert (input_items.size () == 1);
   static unsigned int nchan = 2;
   const float **in = (const float **) &input_items[0];
@@ -477,7 +477,7 @@ audio_alsa_sink::work_s32_1x2 (int noutput_items,
     // update src pointers
     in[0] += d_period_size;
 
-    if (!write_buffer (buf, d_period_size, sizeof_frame))  
+    if (!write_buffer (buf, d_period_size, sizeof_frame))
       return -1;	// No fixing this problem.  Say we're done.
   }
 
@@ -496,7 +496,7 @@ audio_alsa_sink::write_buffer (const void *vbuffer,
     {
       if (d_ok_to_block == true)
 	continue;		// try again
-      
+
       break;
     }
 

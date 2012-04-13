@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -29,8 +29,8 @@
 #include <gr_fir_util.h>
 
 // public constructor
-gr_filter_delay_fc_sptr 
-gr_make_filter_delay_fc (const std::vector<float> &taps) 
+gr_filter_delay_fc_sptr
+gr_make_filter_delay_fc (const std::vector<float> &taps)
 {
   return gnuradio::get_initial_sptr(new gr_filter_delay_fc (taps));
 }
@@ -62,7 +62,7 @@ gr_filter_delay_fc::work (int noutput_items,
   switch (input_items.size ()){
   case 1:
     for (int i = 0; i < noutput_items; i++)
-      out[i] = gr_complex (in0[i + d_delay], 
+      out[i] = gr_complex (in0[i + d_delay],
 			   d_fir->filter (&in0[i]));
     break;
 

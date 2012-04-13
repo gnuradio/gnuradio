@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,12 +50,12 @@ class ATSC_API atsci_trellis_encoder {
   void encode (atsc_data_segment out[NCODERS],
 	       const atsc_mpeg_packet_rs_encoded in[NCODERS]);
 
-  
+
  protected:
   static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;	// 207
   static const int INPUT_SIZE = (SEGMENT_SIZE * 12);
   static const int OUTPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
-  
+
   void encode_helper (unsigned char out[OUTPUT_SIZE],
 		      const unsigned char in[INPUT_SIZE]);
 

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2001 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -26,16 +26,16 @@
 #include <atsc_api.h>
 #include <atsc_types.h>
 
-/*! 
+/*!
  * \brief ATSC data "whitener"
  *
- * The data randomizer described in ATSC standard A/53B.  
+ * The data randomizer described in ATSC standard A/53B.
  * See figure D4 on page 54.
  */
 
 class ATSC_API atsci_randomizer {
   friend class qa_atsci_randomizer;
-  
+
  public:
   atsci_randomizer();
 
@@ -60,12 +60,12 @@ class ATSC_API atsci_randomizer {
   static unsigned char slow_output_map (int st);
 
   static unsigned char fast_output_map (int st){
-    return s_output_map[(st & 0xb23c) >> 2]; // Magic const with 8 bits set improves cache 
+    return s_output_map[(st & 0xb23c) >> 2]; // Magic const with 8 bits set improves cache
                                              // utilization.  The bits correspond to the taps
-					     // used in output calculation.  Others may be 
+					     // used in output calculation.  Others may be
 					     // safely ignored.
   }
-    
+
   //! return current output value
   unsigned char output (){
     return fast_output_map (d_state);

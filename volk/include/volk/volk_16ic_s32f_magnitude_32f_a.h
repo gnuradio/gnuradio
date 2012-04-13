@@ -18,7 +18,7 @@
 static inline void volk_16ic_s32f_magnitude_32f_a_sse3(float* magnitudeVector, const lv_16sc_t* complexVector, const float scalar, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
-  
+
   const int16_t* complexVectorPtr = (const int16_t*)complexVector;
   float* magnitudeVectorPtr = magnitudeVector;
 
@@ -34,7 +34,7 @@ static inline void volk_16ic_s32f_magnitude_32f_a_sse3(float* magnitudeVector, c
     inputFloatBuffer[1] = (float)(complexVectorPtr[1]);
     inputFloatBuffer[2] = (float)(complexVectorPtr[2]);
     inputFloatBuffer[3] = (float)(complexVectorPtr[3]);
-      
+
     inputFloatBuffer[4] = (float)(complexVectorPtr[4]);
     inputFloatBuffer[5] = (float)(complexVectorPtr[5]);
     inputFloatBuffer[6] = (float)(complexVectorPtr[6]);
@@ -56,7 +56,7 @@ static inline void volk_16ic_s32f_magnitude_32f_a_sse3(float* magnitudeVector, c
     result = _mm_sqrt_ps(result); // Square root the values
 
     _mm_store_ps(magnitudeVectorPtr, result);
-      
+
     magnitudeVectorPtr += 4;
   }
 
@@ -99,7 +99,7 @@ static inline void volk_16ic_s32f_magnitude_32f_a_sse(float* magnitudeVector, co
     inputFloatBuffer[1] = (float)(complexVectorPtr[1]);
     inputFloatBuffer[2] = (float)(complexVectorPtr[2]);
     inputFloatBuffer[3] = (float)(complexVectorPtr[3]);
-      
+
     inputFloatBuffer[4] = (float)(complexVectorPtr[4]);
     inputFloatBuffer[5] = (float)(complexVectorPtr[5]);
     inputFloatBuffer[6] = (float)(complexVectorPtr[6]);
@@ -107,7 +107,7 @@ static inline void volk_16ic_s32f_magnitude_32f_a_sse(float* magnitudeVector, co
 
     cplxValue1 = _mm_load_ps(&inputFloatBuffer[0]);
     cplxValue2 = _mm_load_ps(&inputFloatBuffer[4]);
-    
+
     re = _mm_shuffle_ps(cplxValue1, cplxValue2, 0x88);
     im = _mm_shuffle_ps(cplxValue1, cplxValue2, 0xdd);
 
@@ -124,7 +124,7 @@ static inline void volk_16ic_s32f_magnitude_32f_a_sse(float* magnitudeVector, co
     result = _mm_sqrt_ps(result); // Square root the values
 
     _mm_store_ps(magnitudeVectorPtr, result);
-      
+
     magnitudeVectorPtr += 4;
   }
 
@@ -138,7 +138,7 @@ static inline void volk_16ic_s32f_magnitude_32f_a_sse(float* magnitudeVector, co
   }
 }
 
- 
+
 #endif /* LV_HAVE_SSE */
 
 #ifdef LV_HAVE_GENERIC

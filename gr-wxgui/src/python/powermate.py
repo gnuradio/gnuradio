@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 """
 Handler for Griffin PowerMate, Contour ShuttlePro & ShuttleXpress USB knobs
@@ -184,7 +184,7 @@ class powermate(threading.Thread):
         self.setDaemon (1)
         self.keep_running = True
         self.start ()
-        
+
     def __del__(self):
         self.keep_running = False
         if self.handle >= 0:
@@ -227,7 +227,7 @@ class powermate(threading.Thread):
         except exceptions.OSError:
             return False
 
-    
+
     def set_event_receiver(self, obj):
         self.event_receiver = obj
 
@@ -239,7 +239,7 @@ class powermate(threading.Thread):
         """
         if self.id != ID_POWERMATE:
             return False
-        
+
         static_brightness &= 0xff;
         if pulse_speed < 0:
             pulse_speed = 0
@@ -269,14 +269,14 @@ class powermate(threading.Thread):
 
             raw_input_event = struct.unpack(input_event_struct,s)
             sec, usec, type, code, val = self.mapper(raw_input_event)
-            
+
             if self.event_receiver is None:
                 continue
-            
+
             if type == IET_SYN:    # ignore
                 pass
             elif type == IET_MSC:  # ignore (seems to be PowerMate reporting led brightness)
-                pass                     
+                pass
             elif type == IET_REL and code == IEC_REL_DIAL:
                 #print "Dial: %d" % (val,)
                 wx.PostEvent(self.event_receiver, PMRotateEvent(val))
@@ -346,13 +346,13 @@ class _contour_remapper(object):
 
         if type == IET_KEY:
             # remap keys so that all 3 gadgets have buttons 0 to 4 in common
-            return (sec, usec, type, 
+            return (sec, usec, type,
                     (IEC_BTN_5, IEC_BTN_6, IEC_BTN_7, IEC_BTN_8,
                      IEC_BTN_0, IEC_BTN_1, IEC_BTN_2, IEC_BTN_3, IEC_BTN_4,
                      IEC_BTN_9,  IEC_BTN_10,
                      IEC_BTN_11, IEC_BTN_12,
                      IEC_BTN_13, IEC_BTN_14)[code - IEC_BTN_0], val)
-            
+
         return event
 
 # ------------------------------------------------------------------------
@@ -374,9 +374,9 @@ class PMButtonEvent(wx.PyEvent):
         self.button = button
         self.value = value
 
-    def Clone (self): 
+    def Clone (self):
         self.__class__(self.GetId())
-        
+
 
 class PMRotateEvent(wx.PyEvent):
     def __init__(self, delta):
@@ -384,7 +384,7 @@ class PMRotateEvent(wx.PyEvent):
         self.SetEventType (grEVT_POWERMATE_ROTATE)
         self.delta = delta
 
-    def Clone (self): 
+    def Clone (self):
         self.__class__(self.GetId())
 
 
@@ -394,9 +394,9 @@ class PMShuttleEvent(wx.PyEvent):
         self.SetEventType (grEVT_POWERMATE_SHUTTLE)
         self.position = position
 
-    def Clone (self): 
+    def Clone (self):
         self.__class__(self.GetId())
-        
+
 # ------------------------------------------------------------------------
 #  Example usage
 # ------------------------------------------------------------------------
@@ -411,14 +411,14 @@ if __name__ == '__main__':
             EVT_POWERMATE_SHUTTLE(self, self.on_shuttle)
             self.brightness = 128
             self.pulse_speed = 0
-            
+
             try:
                 self.pm = powermate(self)
             except:
                 sys.stderr.write("Unable to find PowerMate or Contour Shuttle\n")
                 sys.exit(1)
 
-            self.pm.set_led_state(self.brightness, self.pulse_speed) 
+            self.pm.set_led_state(self.brightness, self.pulse_speed)
 
 
         def on_button(self, evt):
@@ -431,11 +431,11 @@ if __name__ == '__main__':
                 new = max(0, min(255, self.brightness + evt.delta))
                 if new != self.brightness:
                     self.brightness = new
-                    self.pm.set_led_state(self.brightness, self.pulse_speed) 
-        
+                    self.pm.set_led_state(self.brightness, self.pulse_speed)
+
         def on_shuttle(self, evt):
             print "Shuttle %d" % (evt.position,)
-        
+
     class App(wx.App):
         def OnInit(self):
             title='PowerMate Demo'

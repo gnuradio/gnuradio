@@ -80,7 +80,7 @@ set(CODEBOOKSDVQ
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp2.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp3.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp4.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp5.txt 
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp5.txt
 )
 
 add_custom_command(

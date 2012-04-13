@@ -46,7 +46,7 @@ private:
   // next_state = d_NS[current_state * d_I + input_symbol]
   std::vector<int> d_NS;
   // OS means Output Symbol.
-  // output_symbol = d_OS[current_state * d_I + input_symbol]          
+  // output_symbol = d_OS[current_state * d_I + input_symbol]
   std::vector<int> d_OS;
   // PS means Previous State.
   std::vector< std::vector<int> > d_PS;
@@ -83,7 +83,7 @@ public:
    * \param NS          A mapping from (current state, input symbol) to next state.
    *                    next_state = NS[current_state * I + input_symbol]
    * \param OS          A mapping from (current state, input symbol) to output symbol.
-   *                    output_symbol = OS[current_state * I + input_symbol]          
+   *                    output_symbol = OS[current_state * I + input_symbol]
    *
    */
   fsm(int I, int S, int O, const std::vector<int> &NS, const std::vector<int> &OS);
@@ -152,7 +152,7 @@ public:
    * \param filename         filename
    * \param number_stages    ????
    *
-   */  
+   */
   void write_trellis_svg(std::string filename ,int number_stages);
   /*!
    * \brief Write the FSMS to a file.

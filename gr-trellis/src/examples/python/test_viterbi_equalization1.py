@@ -28,7 +28,7 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     isi = gr.fir_filter_fff(1,channel)
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
-    
+
     # RX
     skip = gr.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
     #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
@@ -45,7 +45,7 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
 
     tb.run()
 
-    data = dst.data() 
+    data = dst.data()
     ntotal = len(data) - L
     nright=0
     for i in range(ntotal):
@@ -53,7 +53,7 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
             nright=nright+1
         #else:
             #print "Error in ", i
-    
+
     return (ntotal,ntotal-nright)
 
 

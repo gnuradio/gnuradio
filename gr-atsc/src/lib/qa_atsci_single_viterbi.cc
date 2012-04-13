@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -40,7 +40,7 @@ static const int NN          =  200;
 static const int MAXDIBIT    = 3;
 
 void
-qa_atsci_single_viterbi::encode_block (unsigned char *out, unsigned char *in, 
+qa_atsci_single_viterbi::encode_block (unsigned char *out, unsigned char *in,
 				      unsigned int n)
 {
   for (unsigned int i = 0; i < n; i++) {
@@ -50,7 +50,7 @@ qa_atsci_single_viterbi::encode_block (unsigned char *out, unsigned char *in,
 
 
 void
-qa_atsci_single_viterbi::decode_block (unsigned char *out, unsigned char *in, 
+qa_atsci_single_viterbi::decode_block (unsigned char *out, unsigned char *in,
 				      unsigned int n, float noise_factor)
 {
   for (unsigned int i = 0; i < n; i++) {
@@ -76,9 +76,9 @@ qa_atsci_single_viterbi::t0 ()
   int			  i;
 
   // printf ("  Delay is %d.\n", delay);
-  
+
   srandom (27);		// reproducable sequence of "random" values
-  
+
   for (int nt = 0; nt < NTRIALS; nt++){
 
     // load block with random data and encode
@@ -154,9 +154,9 @@ qa_atsci_single_viterbi::t1 ()
   int			  i;
 
   // printf ("  Delay is %d.\n", delay);
-  
+
   srandom (1);		// reproducable sequence of "random" values
-  
+
   for (int nt = 0; nt < NTRIALS; nt++){
 
     // test up to the error correction capacity of the code
@@ -180,7 +180,7 @@ qa_atsci_single_viterbi::t1 ()
       //  If we munge any or all of the three bits of the symbol,
       //  our decoder frequently gets the wrong data even with a single
       //  error.
-      //  
+      //
       //  Let's see what it can do with just the two low-order bits.
       //
       // ALSO:  Don't let any error be within 12 spots of another
@@ -198,7 +198,7 @@ qa_atsci_single_viterbi::t1 ()
 	// Don't insert errors in the first delay slot, since we
 	// don't have valid history to correct them.  Also, don't
 	// insert burst errors (adjacent errors), or errors within 2,
-	// since we can't reliably correct them.  Also we must not choose 
+	// since we can't reliably correct them.  Also we must not choose
 	// the same location twice when inserting an error.
 
 	do {

@@ -92,7 +92,7 @@ DTYPE *data, int *eras_pos, int no_eras){
 #if DEBUG >= 1
     /* Test code that verifies the erasure locator polynomial just constructed
        Needed only for decoder debugging. */
-    
+
     /* find roots of the erasure location polynomial */
     for(i=1;i<=no_eras;i++)
       reg[i] = INDEX_OF[lambda[i]];
@@ -127,7 +127,7 @@ DTYPE *data, int *eras_pos, int no_eras){
   }
   for(i=0;(unsigned int)i<NROOTS+1;i++)
     b[i] = INDEX_OF[lambda[i]];
-  
+
   /*
    * Begin Berlekamp-Massey algorithm to determine error+erasure
    * locator polynomial
@@ -230,7 +230,7 @@ DTYPE *data, int *eras_pos, int no_eras){
     omega[i] = INDEX_OF[tmp];
   }
   omega[NROOTS] = A0;
-  
+
   /*
    * Compute error values in poly-form. num1 = omega(inv(X(l))), num2 =
    * inv(X(l))**(FCR-1) and den = lambda_pr(inv(X(l))) all in poly-form
@@ -243,7 +243,7 @@ DTYPE *data, int *eras_pos, int no_eras){
     }
     num2 = ALPHA_TO[MODNN(root[j] * (FCR - 1) + NN)];
     den = 0;
-    
+
     /* lambda[i+1] for i even is the formal derivative lambda_pr of lambda[i] */
     for (i = (int)min((unsigned int)deg_lambda,NROOTS-1) & ~1; i >= 0; i -=2) {
       if(lambda[i+1] != A0)

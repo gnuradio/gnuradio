@@ -43,17 +43,17 @@ def make_set_simd(dom, machines) :
     tempstring = tempstring + "  indLV_ARCH=no\n";
     tempstring = tempstring + "  AC_ARG_WITH(lv_arch,\n";
     tempstring = tempstring + "    AC_HELP_STRING([--with-lv_arch=ARCH],[set volk hardware speedups as space separated string with elements from the following list(";
-    
+
     for domarch in dom:
         arch = str(domarch.attributes["name"].value);
         tempstring = tempstring + arch + ", "
     tempstring = tempstring[0:len(tempstring) - 2];
-        
+
     tempstring = tempstring + ")]),\n";
     tempstring = tempstring + "      [cf_with_lv_arch=\"$withval\"],\n";
     tempstring = tempstring + "      [cf_with_lv_arch=\"\"])\n";
     if str(domarch.attributes["type"].value) == "all":
-        arch = str(domarch.attributes["name"].value);    
+        arch = str(domarch.attributes["name"].value);
         tempstring = tempstring + "  AC_DEFINE(LV_MAKE_" + arch.swapcase() + ", 1, [always set "+ arch + "!])\n";
     tempstring = tempstring + "  ADDONS=\"\"\n";
     tempstring = tempstring + "  BUILT_ARCHS=\"\"\n";
@@ -67,7 +67,7 @@ def make_set_simd(dom, machines) :
     tempstring = tempstring[0:-1] + "\"\n";
     tempstring = tempstring + "    OVERRULE_FLAG=\"yes\"\n";
     tempstring = tempstring + "  fi\n";
-    
+
     tempstring = tempstring +'\ndnl init LV_MAKE_XXX and then try to add archs\n';
     for domarch in dom:
         if str(domarch.attributes["type"].value) != "all":
@@ -118,9 +118,9 @@ def make_set_simd(dom, machines) :
             tempstring = tempstring + "  if  test -n \"" + overrule + "\" && test \"$" + overrule + "\" == \"" + overrule_val + "\" && test \"$OVERRULE_FLAG\" == \"yes\" && test \"$indLV_ARCH\" == \"yes\"; then\n"
             tempstring = tempstring + "    indLV_ARCH=no\n"
             tempstring = tempstring + "  fi\n"
-            
-            tempstring = tempstring + "  if test \"$indCC\" == \"yes\" && test \"$indCXX\" == \"yes\" && test \"$indLV_ARCH\" == \"yes\"; then\n"        
-            
+
+            tempstring = tempstring + "  if test \"$indCC\" == \"yes\" && test \"$indCXX\" == \"yes\" && test \"$indLV_ARCH\" == \"yes\"; then\n"
+
             #tempstring = tempstring + "    ADDONS=\"${ADDONS} -" + flag + "\"\n";
             tempstring = tempstring + "    BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"\n";
             tempstring = tempstring + "    LV_MAKE_" + arch.swapcase() + "=yes\n";
@@ -138,17 +138,17 @@ def make_set_simd(dom, machines) :
             tempstring = tempstring + "  if  test -n \"" + overrule + "\" && test \"$" + overrule + "\" == \"" + overrule_val + "\" && test \"$OVERRULE_FLAG\" == \"yes\" && test \"$indLV_ARCH\" == \"yes\"; then\n"
             tempstring = tempstring + "    indLV_ARCH=no\n"
             tempstring = tempstring + "  fi\n"
-            tempstring = tempstring + "  if test \"$indLV_ARCH\" == \"yes\"; then\n"        
+            tempstring = tempstring + "  if test \"$indLV_ARCH\" == \"yes\"; then\n"
             tempstring = tempstring + "    LV_MAKE_" + arch.swapcase() + "=yes\n";
             tempstring = tempstring + "    BUILT_ARCHS=\"${BUILT_ARCHS} " + arch + "\"\n";
             tempstring = tempstring + "  fi\n"
             tempstring = tempstring + "  indLV_ARCH=no\n"
-            
+
 
     for domarch in dom:
         arch = str(domarch.attributes["name"].value);
         tempstring = tempstring + "  AM_CONDITIONAL(LV_MAKE_" + arch.swapcase() + ", test \"$LV_MAKE_" + arch.swapcase() + "\" == \"yes\")\n";
-    
+
     tempstring += "\n"
     #now we can define the machines we're compiling
     for machine_name in machines:
@@ -156,11 +156,11 @@ def make_set_simd(dom, machines) :
         marchlist = machines[machine_name]
         for march in marchlist:
             tempstring += "test \"$LV_MAKE_" + march.swapcase() + "\" == \"yes\" && "
-            
+
         tempstring += "test true)\n" #just so we don't have to detect the last one in the group, i know
     tempstring = tempstring + "  LV_CXXFLAGS=\"${LV_CXXFLAGS} ${ADDONS}\"\n"
     tempstring = tempstring + "])\n"
-   
+
     return tempstring;
 
-        
+

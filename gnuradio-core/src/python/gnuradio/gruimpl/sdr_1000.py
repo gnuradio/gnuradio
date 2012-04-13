@@ -1,23 +1,23 @@
 #
 # Copyright 2003,2004 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr
 
@@ -33,7 +33,7 @@ class sdr_1000 (gr.sdr_1000_base):
         self.write_latch (2, data, 0xff)
         self.write_latch (3, 0x40, 0x40)
         self.write_latch (3, 0x00, 0x40)
-    
+
     def set_freq(self, freq):
         self.set_band (freq)
         ftw = freq / 200e6;
@@ -56,23 +56,23 @@ class sdr_1000 (gr.sdr_1000_base):
             band = 4
         else:
             band = 5
-        
+
         self.write_latch (1, 1 << band, 0x3f)
 
     def set_bit (self, reg, bit, state):
         val = 0x00
         if state: val = 1<<bit
         self.write_latch (reg, val, 1<<bit)
-        
+
     def set_tx (self, on = 1):
         self.set_bit(1, 6, on)
 
     def set_rx (self):
         self.set_bit(1, 6, 0)
-    
+
     def set_gain (self, high):
         self.set_bit(0, 7, high)
-      
+
     def set_mute (self, mute = 1):
         self.set_bit(1, 7, mute)
 

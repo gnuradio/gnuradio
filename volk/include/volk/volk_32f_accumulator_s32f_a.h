@@ -20,13 +20,13 @@ static inline void volk_32f_accumulator_s32f_a_sse(float* result, const float* i
 
   const float* aPtr = inputBuffer;
   __VOLK_ATTR_ALIGNED(16) float tempBuffer[4];
-  
+
   __m128 accumulator = _mm_setzero_ps();
   __m128 aVal = _mm_setzero_ps();
 
   for(;number < quarterPoints; number++){
     aVal = _mm_load_ps(aPtr);
-    accumulator = _mm_add_ps(accumulator, aVal); 
+    accumulator = _mm_add_ps(accumulator, aVal);
     aPtr += 4;
   }
   _mm_store_ps(tempBuffer,accumulator); // Store the results back into the C container
@@ -34,7 +34,7 @@ static inline void volk_32f_accumulator_s32f_a_sse(float* result, const float* i
   returnValue += tempBuffer[1];
   returnValue += tempBuffer[2];
   returnValue += tempBuffer[3];
-  
+
   number = quarterPoints * 4;
   for(;number < num_points; number++){
     returnValue += (*aPtr++);

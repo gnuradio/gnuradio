@@ -56,7 +56,7 @@
 #                                  |
 #                                  V
 #                                (dst)
-#                                                       
+#
 #----------------------------------------------------------------------
 #
 # Versions 2.2.1 adds loop antenna automatic tuner
@@ -65,7 +65,7 @@
 # added more comments.
 #
 # 2.4.1 updates usrp interface to support auto subdev
-# 
+#
 # 2.8.1 changed saved file format from 8-byte complex to
 # 4-byte short for obvious storage space savings.
 
@@ -93,7 +93,7 @@ ID_BUTTON_3 = wx.NewId()	# AM
 ID_BUTTON_4 = wx.NewId()	# CW
 ID_BUTTON_5 = wx.NewId()	# Powermate controls: Upper audio freq cutoff
 ID_BUTTON_6 = wx.NewId()	#  "                  Lower audio freq cutoff
-ID_BUTTON_7 = wx.NewId()	#  "                  Frequency 
+ID_BUTTON_7 = wx.NewId()	#  "                  Frequency
 ID_BUTTON_8 = wx.NewId()	#  "                  Volume
 ID_BUTTON_9 = wx.NewId()	#  "                  Time
 ID_BUTTON_10 = wx.NewId()	# Time Seek Forwards
@@ -105,7 +105,7 @@ ID_TEXT_1 = wx.NewId()		# Band Center, USRP ddc Freq
 ID_SPIN_1 = wx.NewId()		# Frequency display and control
 ID_SLIDER_1 = wx.NewId()	# Upper audio freq cutoff
 ID_SLIDER_2 = wx.NewId()	# Lower audio freq cutoff
-ID_SLIDER_3 = wx.NewId()	# Frequency 
+ID_SLIDER_3 = wx.NewId()	# Frequency
 ID_SLIDER_4 = wx.NewId()	# Volume
 ID_SLIDER_5 = wx.NewId()	# Programmable Gain Amp, PGA, RF gain
 ID_SLIDER_6 = wx.NewId()	# AM Sync carrier level
@@ -118,7 +118,7 @@ class MyFrame(wx.Frame):
         # begin wxGlade: MyFrame.__init__
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
-        
+
         # Menu Bar
         self.frame_1_menubar = wx.MenuBar()
         self.SetMenuBar(self.frame_1_menubar)
@@ -215,7 +215,7 @@ class MyFrame(wx.Frame):
         self.f_slider_scale = 10000
         self.spin_ctrl_1.SetRange(self.f_lo,self.f_hi)
         self.text_ctrl_1.SetValue(str(int(self.usrp_center)))
-        self.slider_5.SetValue(0) 
+        self.slider_5.SetValue(0)
 	self.AM_mode = False
 
         self.slider_3.SetValue((self.frequency-self.f_slider_offset)/self.f_slider_scale)
@@ -265,7 +265,7 @@ class MyFrame(wx.Frame):
            self.tb.connect((s2ss,1),s2f2)
            self.tb.connect(s2f1,(src_f2c,0))
            self.tb.connect(s2f2,(src_f2c,1))
-           
+
         # save radio data to a file
         if SAVE_RADIO_TO_FILE:
            radio_file = gr.file_sink(gr.sizeof_short, options.radio_file)
@@ -295,7 +295,7 @@ class MyFrame(wx.Frame):
                                        sample_rate=self.af_sample_rate,
                                        average=True, size=(640,240))
 
-	# AM Sync carrier 
+	# AM Sync carrier
 	if AM_SYNC_DISPLAY:
 	   self.fft2 = fftsink.fft_sink_c(self.tb, self.panel_9,
                                           y_per_div=20, fft_size=512,
@@ -698,10 +698,10 @@ class MyFrame(wx.Frame):
 	if self.AM_mode:
 	   fRel = ( event.GetX() - 330. ) / 14.266666 - 7.5
 	else:
-	   fRel = ( event.GetX() - 330. ) / 14.266666 
+	   fRel = ( event.GetX() - 330. ) / 14.266666
         self.fft.win.SetToolTip(wx.ToolTip(eng_notation.num_to_str(self.frequency + (fRel*1e3))))
 
-    # Mouse clicked on fft display - change frequency 
+    # Mouse clicked on fft display - change frequency
     def Click(self,event):
         fRel = ( event.GetX() - 330. ) / 14.266666
 	if self.AM_mode == False:
@@ -752,7 +752,7 @@ class MyFrame(wx.Frame):
             dev.write_aux_dac(uhd.dboard_iface.UNIT_RX,
                               uhd.dboard_iface.AUX_DAC_C,
                               float(self.slider_7.GetValue()))
-            
+
     # Timer events - check for web commands
     def OnUpdate(self):
       cmds = os.listdir("/var/www/cgi-bin/commands/")

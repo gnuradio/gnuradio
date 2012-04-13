@@ -1,4 +1,4 @@
-// This file was borrowed from the SWIG project to allow use to 
+// This file was borrowed from the SWIG project to allow use to
 // wrap PMTs that use intrusive pointers. This is only necessary
 // to support backwards compatability with older distributions of
 // Linux that do not natively support a new enough version of SWIG.
@@ -10,7 +10,7 @@
 // #define SWIG_SHARED_PTR_NAMESPACE std
 // #define SWIG_SHARED_PTR_SUBNAMESPACE tr1
 // #define SWIG_INTRUSIVE_PTR_NAMESPACE boost
-// #define SWIG_INTRUSIVE_PTR_SUBNAMESPACE 
+// #define SWIG_INTRUSIVE_PTR_SUBNAMESPACE
 
 #if !defined(SWIG_INTRUSIVE_PTR_NAMESPACE)
 # define SWIG_INTRUSIVE_PTR_NAMESPACE boost
@@ -36,7 +36,7 @@ namespace SWIG_INTRUSIVE_PTR_NAMESPACE {
 %fragment("SWIG_intrusive_deleter", "header") {
 template<class T> struct SWIG_intrusive_deleter {
     void operator()(T *p) {
-        if (p) 
+        if (p)
           intrusive_ptr_release(p);
     }
 };

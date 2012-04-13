@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                                                             
+
   FILE........: quantise.h
-  AUTHOR......: David Rowe                                                          
-  DATE CREATED: 31/5/92                                                       
-                                                                             
-  Quantisation functions for the sinusoidal coder.  
-                                                                             
+  AUTHOR......: David Rowe
+  DATE CREATED: 31/5/92
+
+  Quantisation functions for the sinusoidal coder.
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -36,7 +36,7 @@
 void quantise_init();
 float lpc_model_amplitudes(float Sn[], float w[], MODEL *model, int order,
 			   int lsp,float ak[]);
-void aks_to_M2(float ak[], int order, MODEL *model, float E, float *snr, 
+void aks_to_M2(float ak[], int order, MODEL *model, float E, float *snr,
 	       int dump);
 
 int   encode_Wo(float Wo);
@@ -45,15 +45,15 @@ float decode_Wo(int index);
 void encode_lsps(int indexes[], float lsp[], int order);
 void decode_lsps(float lsp[], int indexes[], int order);
 void lspd_quantise(float lsp[], float lsp_[], int order);
-void lspdvq_quantise(float lsp[], float lsp_[], int order); 
+void lspdvq_quantise(float lsp[], float lsp_[], int order);
 
 int encode_energy(float e);
 float decode_energy(int index);
 
-void encode_amplitudes(int    lsp_indexes[], 
+void encode_amplitudes(int    lsp_indexes[],
 		       int   *energy_index,
-		       MODEL *model, 
-		       float  Sn[], 
+		       MODEL *model,
+		       float  Sn[],
 		       float  w[]);
 
 float decode_amplitudes(MODEL *model,
@@ -71,7 +71,7 @@ int lsp_bits(int i);
 void apply_lpc_correction(MODEL *model);
 float speech_to_uq_lsps(float lsp[],
 			float ak[],
-		        float Sn[], 
+		        float Sn[],
 		        float w[],
 		        int   order
 			);

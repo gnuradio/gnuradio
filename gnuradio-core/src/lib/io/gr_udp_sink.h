@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -31,14 +31,14 @@ class gr_udp_sink;
 typedef boost::shared_ptr<gr_udp_sink> gr_udp_sink_sptr;
 
 GR_CORE_API gr_udp_sink_sptr
-gr_make_udp_sink (size_t itemsize, 
+gr_make_udp_sink (size_t itemsize,
 		  const char *host, unsigned short port,
 		  int payload_size=1472, bool eof=true);
 
 /*!
  * \brief Write stream to an UDP socket.
  * \ingroup sink_blk
- * 
+ *
  * \param itemsize     The size (in bytes) of the item datatype
  * \param host         The name or IP address of the receiving host; use
  *                     NULL or None for no connection
@@ -50,7 +50,7 @@ gr_make_udp_sink (size_t itemsize,
 
 class GR_CORE_API gr_udp_sink : public gr_sync_block
 {
-  friend GR_CORE_API gr_udp_sink_sptr gr_make_udp_sink (size_t itemsize, 
+  friend GR_CORE_API gr_udp_sink_sptr gr_make_udp_sink (size_t itemsize,
 					    const char *host,
 					    unsigned short port,
 					    int payload_size, bool eof);
@@ -66,16 +66,16 @@ class GR_CORE_API gr_udp_sink : public gr_sync_block
  protected:
   /*!
    * \brief UDP Sink Constructor
-   * 
+   *
    * \param itemsize     The size (in bytes) of the item datatype
    * \param host         The name or IP address of the receiving host; use
    *                     NULL or None for no connection
    * \param port         Destination port to connect to on receiving host
-   * \param payload_size UDP payload size by default set to 
+   * \param payload_size UDP payload size by default set to
    *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
    * \param eof          Send zero-length packet on disconnect
    */
-  gr_udp_sink (size_t itemsize, 
+  gr_udp_sink (size_t itemsize,
 	       const char *host, unsigned short port,
 	       int payload_size, bool eof);
 

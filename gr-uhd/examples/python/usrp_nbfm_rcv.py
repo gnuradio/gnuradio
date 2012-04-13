@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, audio, blks2, uhd
 from gnuradio.eng_option import eng_option
@@ -58,13 +58,13 @@ class my_top_block (stdgui2.std_top_block):
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
-        
+
         if options.freq < 1e6:
             options.freq *= 1e6
-            
+
         self.frame = frame
         self.panel = panel
-        
+
         self.state = "FREQ"
         self.freq = 0
         self.freq_step = 25e3
@@ -72,7 +72,7 @@ class my_top_block (stdgui2.std_top_block):
         self.rxpath = receive_path(options.args, options.spec, options.antenna,
                                    options.gain, options.audio_output)
 	self.connect(self.rxpath)
-	
+
         self._build_gui(vbox, options.no_gui)
 
         # set initial values
@@ -119,7 +119,7 @@ class my_top_block (stdgui2.std_top_block):
                                          y_per_div=20)
             self.connect (self.rxpath.resamp, rx_fft)
             vbox.Add (rx_fft.win, 4, wx.EXPAND)
-        
+
         if 1 and not(no_gui):
             post_deemph_fft = fftsink2.fft_sink_f(self.panel,
                                                   title="Post Deemph",
@@ -132,7 +132,7 @@ class my_top_block (stdgui2.std_top_block):
 
         if 0:
             post_filt_fft = fftsink2.fft_sink_f(self.panel,
-                                                title="Post Filter", 
+                                                title="Post Filter",
                                                 fft_size=512,
                                                 sample_rate=audio_rate,
                                                 y_per_div=10,
@@ -206,7 +206,7 @@ class my_top_block (stdgui2.std_top_block):
             elif self.rot <=-3:
                 self.set_volume(self.rxpath.volume - step)
                 self.rot += 3
-            
+
     def on_button (self, event):
         if event.value == 0:        # button up
             return
@@ -216,7 +216,7 @@ class my_top_block (stdgui2.std_top_block):
         else:
             self.state = "FREQ"
         self.update_status_bar ()
-        
+
 
     def set_squelch(self, threshold_in_db):
         self.rxpath.set_squelch(threshold_in_db)
@@ -226,7 +226,7 @@ class my_top_block (stdgui2.std_top_block):
         self.rxpath.set_volume(vol)
         self.myform['volume'].set_value(self.rxpath.volume)
         self.update_status_bar ()
-                                        
+
     def set_freq(self, target_freq):
         r = self.rxpath.set_freq(target_freq)
         if r:
@@ -252,7 +252,7 @@ class my_top_block (stdgui2.std_top_block):
 
     def volume_range(self):
         return (-20.0, 0.0, 0.5)
-        
+
 
 #////////////////////////////////////////////////////////////////////////
 #                           Receive Path
@@ -289,7 +289,7 @@ class receive_path(gr.hier_block2):
                                           nfilts*dev_rate,     # sampling rate
                                           8e3,                 # low pass cutoff freq
                                           2e3,                 # width of trans. band
-                                          gr.firdes.WIN_HANN)  # filter type 
+                                          gr.firdes.WIN_HANN)  # filter type
         rrate = self.quad_rate / dev_rate
         self.resamp = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
 
@@ -306,7 +306,7 @@ class receive_path(gr.hier_block2):
 
         # sound card as final sink
         audio_sink = audio.sink (int(self.audio_rate), audio_output)
-        
+
         # now wire it all together
         if USE_SIMPLE_SQUELCH:
             self.connect (self.u, self.resamp, self.squelch, self.fmrx,
@@ -338,12 +338,12 @@ class receive_path(gr.hier_block2):
 
     def _update_audio_gain(self):
         self._audio_gain.set_k(10**(self.volume/10))
-        
+
     def squelch_range(self):
         r = self.squelch.squelch_range()
         #print "squelch_range: ", r
         return r
-    
+
     def set_squelch(self, threshold):
         #print "SQL =", threshold
         self.squelch.set_threshold(threshold)

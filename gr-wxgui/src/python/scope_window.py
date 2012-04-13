@@ -120,7 +120,7 @@ class control_panel(wx.Panel):
 			parent.subscribe(USE_PERSISTENCE_KEY, widget.ShowItems)
                         #allways show initially, so room is reserved for them
 			widget.ShowItems(True) # (parent[USE_PERSISTENCE_KEY])
-		
+
                 parent.subscribe(USE_PERSISTENCE_KEY, self._update_layout)
 
 		##################################################
@@ -406,7 +406,7 @@ class control_panel(wx.Panel):
           # Just ignore the key value we get
           # we only need to now that the visability or size of something has changed
           self.parent.Layout()
-          #self.parent.Fit()  
+          #self.parent.Fit()
 
 ##################################################
 # Scope window with plotter and control panel
@@ -477,12 +477,12 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self[TRIGGER_LEVEL_KEY] = 0
 		self[TRIGGER_CHANNEL_KEY] = 0
 		self[TRIGGER_MODE_KEY] = trig_mode
-		
+
 		self[TRIGGER_SLOPE_KEY] = gr.gr_TRIG_SLOPE_POS
 		self[T_FRAC_OFF_KEY] = 0.5
 		self[USE_PERSISTENCE_KEY] = use_persistence
 		self[PERSIST_ALPHA_KEY] = persist_alpha
-		
+
 		if self[TRIGGER_MODE_KEY] == gr.gr_TRIG_MODE_STRIPCHART:
 			self[T_FRAC_OFF_KEY] = 0.0
 

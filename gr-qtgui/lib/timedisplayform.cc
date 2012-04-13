@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -67,7 +67,7 @@ TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
 {
   const std::vector<double*> timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
-  
+
   _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints,
 				      numTimeDomainDataPoints,
 				      d_update_time);
@@ -112,7 +112,7 @@ TimeDisplayForm::onTimePlotPointSelected(const QPointF p)
 
 void
 TimeDisplayForm::setFrequencyRange(const double newCenterFrequency,
-				   const double newStartFrequency, 
+				   const double newStartFrequency,
 				   const double newStopFrequency)
 {
   double fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
@@ -123,7 +123,7 @@ TimeDisplayForm::setFrequencyRange(const double newCenterFrequency,
     double units3  = std::max(floor(units10 / 3.0), 0.0);
     double units = pow(10, (units10-fmod(units10, 3.0)));
     int iunit = static_cast<int>(units3);
-    
+
     _startFrequency = newStartFrequency;
     _stopFrequency = newStopFrequency;
 

@@ -77,7 +77,7 @@ make_scheduler(gr_flat_flowgraph_sptr ffg, int max_noutput_items)
 }
 
 
-gr_top_block_impl::gr_top_block_impl(gr_top_block *owner) 
+gr_top_block_impl::gr_top_block_impl(gr_top_block *owner)
   : d_owner(owner), d_ffg(),
     d_state(IDLE), d_lock_count(0)
 {
@@ -112,7 +112,7 @@ gr_top_block_impl::start(int max_noutput_items)
   d_state = RUNNING;
 }
 
-void 
+void
 gr_top_block_impl::stop()
 {
   if (d_scheduler)
@@ -165,7 +165,7 @@ gr_top_block_impl::restart()
   wait();
 
   // Create new simple flow graph
-  gr_flat_flowgraph_sptr new_ffg = d_owner->flatten();        
+  gr_flat_flowgraph_sptr new_ffg = d_owner->flatten();
   new_ffg->validate();		       // check consistency, sanity, etc
   new_ffg->merge_connections(d_ffg);   // reuse buffers, etc
   d_ffg = new_ffg;
@@ -187,7 +187,7 @@ gr_top_block_impl::max_noutput_items()
 {
   return d_max_noutput_items;
 }
-  
+
 void
 gr_top_block_impl::set_max_noutput_items(int nmax)
 {

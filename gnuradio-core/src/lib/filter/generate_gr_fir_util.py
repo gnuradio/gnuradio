@@ -1,24 +1,24 @@
 #!/bin/env python
 #
 # Copyright 2003,2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from generate_utils import *
 
@@ -34,11 +34,11 @@ struct GR_CORE_API gr_fir_%s_info {
 def make_create (out, sig):
     out.write ('''  static gr_fir_%s *create_gr_fir_%s (const std::vector<%s> &taps);
 ''' % (sig, sig, tap_type (sig)))
-    
+
 def make_info (out, sig):
     out.write ('''  static void get_gr_fir_%s_info (std::vector<gr_fir_%s_info> *info);
 ''' % (sig, sig))
-    
+
 
 # ----------------------------------------------------------------
 
@@ -70,7 +70,7 @@ def make_gr_fir_util_h ():
  *
  * The trailing suffix has the form _IOT where I codes the input type,
  * O codes the output type, and T codes the tap type.
- * I,O,T are elements of the set 's' (short), 'f' (float), 'c' (gr_complex), 
+ * I,O,T are elements of the set 's' (short), 'f' (float), 'c' (gr_complex),
  * 'i' (short)
  */
 
@@ -78,7 +78,7 @@ def make_gr_fir_util_h ():
 #include <gr_types.h>
 
 ''')
-   
+
     for sig in fir_signatures:
        out.write ('class gr_fir_%s;\n' % sig);
 
@@ -93,7 +93,7 @@ struct GR_CORE_API gr_fir_util {
   // create a fast version of gr_fir_XXX.
 
 ''')
-    
+
     for sig in fir_signatures:
         make_create (out, sig)
 
@@ -142,7 +142,7 @@ gr_fir_util::get_gr_fir_%s_info (std::vector<gr_fir_%s_info> *info)
 }
 ''' % (sig, sig, sig))
 
-    
+
 def make_gr_fir_util_cc ():
     out = open_and_log_name ('gr_fir_util.cc', 'w')
     if not out:
@@ -172,12 +172,12 @@ def make_gr_fir_util_cc ():
 // --- info gatherers ---
 
 ''')
-    
+
     for sig in fir_signatures:
         make_info_cc (out, sig)
 
-    out.close ()    
-    
+    out.close ()
+
 
 # ----------------------------------------------------------------
 
@@ -187,4 +187,4 @@ def generate ():
 
 if __name__ == '__main__':
     generate ()
-    
+

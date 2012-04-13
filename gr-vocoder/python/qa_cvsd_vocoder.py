@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2010,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 from vocoder_swig import *
@@ -28,7 +28,7 @@ class test_cvsd_vocoder (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block()
-        
+
     def tearDown (self):
         self.tb = None
 
@@ -98,26 +98,26 @@ class test_cvsd_vocoder (gr_unittest.TestCase):
         src = gr.sig_source_f(sample_rate, gr.GR_SIN_WAVE, 200, 1, 0)
         head = gr.head(gr.sizeof_float, 100)
         src_scale = gr.multiply_const_ff(scale_factor)
-        
+
         interp = blks2.rational_resampler_fff(8, 1)
         f2s = gr.float_to_short ()
-        
+
         enc = cvsd_vocoder.encode_sb()
         dec = cvsd_vocoder.decode_bs()
-        
+
         s2f = gr.short_to_float ()
         decim = blks2.rational_resampler_fff(1, 8)
-        
+
         sink_scale = gr.multiply_const_ff(1.0/scale_factor)
         sink = gr.vector_sink_f()
-        
+
         self.tb.connect(src, src_scale, interp, f2s, enc)
         self.tb.connect(enc, dec, s2f, decim, sink_scale, head, sink)
         self.tb.run()
 	print sink.data()
-	
+
         self.assertFloatTuplesAlmostEqual (expected_data, sink.data(), 5)
     """
-    
+
 if __name__ == '__main__':
     gr_unittest.run(test_cvsd_vocoder, "test_cvsd_vocoder.xml")

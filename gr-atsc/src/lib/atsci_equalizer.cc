@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -53,7 +53,7 @@ atsci_equalizer::reset ()
   d_offset_from_last_field_sync = 0;
   d_current_field = 0;
 }
-
+
 /*
  * Errrr.... Define to 1 if compiler handles tail recursion without pushing
  * unnecessary stack frames, else define to 0 for lame compilers.
@@ -71,7 +71,7 @@ atsci_equalizer::reset ()
  * Today's strategy: get it working.
  */
 
-void 
+void
 atsci_equalizer::filter (const float         *input_samples,
 			const atsc::syminfo *input_tags,
 			float               *output_samples,
@@ -138,15 +138,15 @@ atsci_equalizer::filter (const float         *input_samples,
     else {	// we're lost... no field sync where we expected it
 
       cerr << "!!! atsci_equalizer: expected field sync, didn't find one\n";
-	
+
       d_locked_p = false;
-      d_offset_from_last_field_sync = 0;	
+      d_offset_from_last_field_sync = 0;
 
       if (WINNING_COMPILER)
 	filter (input_samples, input_tags, output_samples, nsamples);
       else
 	goto lame_compiler_kludge;
-      
+
       return;
     }
 
@@ -206,7 +206,7 @@ atsci_equalizer::filter (const float         *input_samples,
     int n = min (4 - seg_offset, nsamples);
 
     filter_data_seg_sync (input_samples, output_samples, n, seg_offset);
-    
+
     d_offset_from_last_field_sync += n;
     nsamples -= n;
 
@@ -227,7 +227,7 @@ atsci_equalizer::filter (const float         *input_samples,
   // otherwise... we're in the normal zone
 
   int n = min (ATSC_DATA_SEGMENT_LENGTH - seg_offset, nsamples);
-  
+
   filter_normal (input_samples, output_samples, n);
 
   d_offset_from_last_field_sync += n;
@@ -235,7 +235,7 @@ atsci_equalizer::filter (const float         *input_samples,
 
   if (nsamples <= 0)
     return;
-  
+
   if (WINNING_COMPILER)
     filter (&input_samples[n], &input_tags[n],
 	    &output_samples[n], nsamples);

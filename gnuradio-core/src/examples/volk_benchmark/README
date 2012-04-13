@@ -221,7 +221,7 @@ variables to point to the v3.5.1 installation:
 And when we run the test, we use the same command line, but the GNU
 Radio libraries and Python files used come from v3.5.1. We also change
 the label to indicate the different version to store.
-    
+
     ./volk_math.py -D volk_results_math.db --all -L v3_5_1
 
 We now have a database populated with three tables for the three

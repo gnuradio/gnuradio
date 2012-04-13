@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,7 +50,7 @@ GR_QTGUI_API qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
  * plots it. The default action is to plot the signal as a PSD (FFT),
  * spectrogram (waterfall), time domain I&Q, and constellation (I
  * vs. Q) plots. The plots may be turned off by setting the
- * appropriate boolean value in the constructor to False.  
+ * appropriate boolean value in the constructor to False.
  */
 
 class GR_QTGUI_API qtgui_sink_c : public gr_block
@@ -63,7 +63,7 @@ private:
 					      bool plottime, bool plotconst,
 					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
-		double fc, double bw, 
+		double fc, double bw,
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
 		bool plottime, bool plotconst,
@@ -81,7 +81,7 @@ private:
   std::string d_name;
   gruel::high_res_timer_type  d_last_update;
   bool d_update_active;
-  
+
   bool d_shift;
   gri_fft_complex *d_fft;
 
@@ -89,7 +89,7 @@ private:
   gr_complex *d_residbuf;
 
   bool d_plotfreq, d_plotwaterfall, d_plottime, d_plotconst;
-  
+
   gruel::high_res_timer_type d_update_time;
 
   QWidget *d_parent;
@@ -99,7 +99,7 @@ private:
   void buildwindow();
   void fftresize();
   void fft(const gr_complex *data_in, int size);
-  
+
 public:
   ~qtgui_sink_c();
   void exec_();

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -78,7 +78,7 @@ void qa_gr_hier_block2_derived::test_1()
   gr_block_sptr         head(gr_make_head(sizeof(int), 1000));
   gr_derived_block_sptr blk(gr_make_derived_block());
   gr_block_sptr         dst(gr_make_null_sink(sizeof(int)));
-  
+
   tb->connect(src,  0, head, 0);
   tb->connect(head, 0, blk,  0);
   tb->connect(blk,  0, dst,  0);

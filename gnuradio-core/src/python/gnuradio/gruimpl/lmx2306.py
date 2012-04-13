@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2004 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 '''Control National LMX2306 based frequency synthesizer'''
 
@@ -78,7 +78,7 @@ class lmx2306 (object):
         self._set_fosc (fosc)
         self._set_step (step_size)
 
-        
+
     def program (self, r, a, b):
         if self.verbose:
             print "lmx2306: r = %d  a = %d  b = %d" % (r, a, b)
@@ -102,10 +102,10 @@ class lmx2306 (object):
         return actual
 
     # ----------------------------------------------------------------
-    
+
     def _set_fosc (self, ref_oscillator_freq):
         self.fosc = ref_oscillator_freq
-        
+
     def _set_step (self, step_size):
         r = int (self.fosc / step_size)
         if r * step_size != self.fosc:
@@ -114,7 +114,7 @@ class lmx2306 (object):
             raise ValueError, "r is out of range"
         self.r = r
         self.step_size = step_size
-        
+
     def _compute_ab (self, divisor):
         b = divisor / 8
         a = divisor - (b * 8)
@@ -174,7 +174,7 @@ if __name__ == '__main__':
             eng_notation.num_to_str (options.fosc),
             eng_notation.num_to_str (options.step_size),
             eng_notation.num_to_str (options.freq))
-    
+
     lmx = lmx2306 (options.fosc, options.step_size)
     lmx.verbose = options.verbose
 

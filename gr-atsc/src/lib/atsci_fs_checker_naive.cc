@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -85,7 +85,7 @@ atsci_fs_checker_naive::filter (float input_sample, atsc::syminfo input_tag,
   atsc::syminfo	proto_tag = d_tag_sr[d_index];	// oldest tag in the queue
 
   if (proto_tag.symbol_num == 0){		// check for field sync pattern
-    
+
     d_segment_num = (d_segment_num + 1) & atsc::SI_SEGMENT_NUM_MASK;  // increment
 
     // check for a hit on the PN 511 pattern
@@ -119,7 +119,7 @@ atsci_fs_checker_naive::filter (float input_sample, atsc::syminfo input_tag,
     }
   }
 
-  proto_tag.segment_num = d_segment_num;	// fill in segment number and field number	
+  proto_tag.segment_num = d_segment_num;	// fill in segment number and field number
   proto_tag.field_num = d_field_num;
 
   // return oldest sample

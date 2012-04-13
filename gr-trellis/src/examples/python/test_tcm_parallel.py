@@ -43,11 +43,11 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
         tb.connect (add[i],(metrics,i))
         tb.connect ((metrics,i),(va,i),(p2s,i))
     tb.connect (p2s,fsmi2s,dst)
-    
+
 
     tb.run()
-    
-    # A bit of cheating: run the program once and print the 
+
+    # A bit of cheating: run the program once and print the
     # final encoder state.
     # Then put it as the last argument in the viterbi block
     #print "final state = " , enc.ST()
@@ -55,7 +55,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
     ntotal = dst.ntotal ()
     nright = dst.nright ()
     runlength = dst.runlength ()
-    
+
     return (ntotal,ntotal-nright)
 
 

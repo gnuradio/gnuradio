@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -135,7 +135,7 @@ static bool
 check_mapping (gr_vmcircbuf *c, int counter, int size, const char *msg, bool verbose)
 {
   bool ok = true;
-  
+
   if (verbose)
     fprintf (stderr, "... %s", msg);
 
@@ -246,7 +246,7 @@ gr_vmcircbuf_sysconfig::test_factory (gr_vmcircbuf_factory *f, int verbose)
 {
   // Install local signal handlers for SIGSEGV and SIGBUS.
   // If something goes wrong, these signals may be invoked.
-  
+
 #ifdef SIGSEGV
   gr_local_sighandler sigsegv (SIGSEGV, gr_local_sighandler::throw_signal);
 #endif
@@ -285,7 +285,7 @@ bool
 gr_vmcircbuf_sysconfig::test_all_factories (int verbose)
 {
   bool ok = false;
-  
+
   std::vector<gr_vmcircbuf_factory *> all = all_factories ();
 
   for (unsigned int i = 0; i < all.size (); i++)

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -32,7 +32,7 @@
 #include <gr_expj.h>
 #include <cstdio>
 
-gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim, 
+gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim,
 						     const std::vector<float> &taps,
 						     unsigned int channel)
 {
@@ -40,7 +40,7 @@ gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim,
 }
 
 
-gr_pfb_decimator_ccf::gr_pfb_decimator_ccf (unsigned int decim, 
+gr_pfb_decimator_ccf::gr_pfb_decimator_ccf (unsigned int decim,
 					    const std::vector<float> &taps,
 					    unsigned int channel)
   : gr_sync_block ("pfb_decimator_ccf",
@@ -92,7 +92,7 @@ gr_pfb_decimator_ccf::set_taps (const std::vector<float> &taps)
   while((float)(tmp_taps.size()) < d_rate*d_taps_per_filter) {
     tmp_taps.push_back(0.0);
   }
-  
+
   // Partition the filter
   for(i = 0; i < d_rate; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
@@ -100,7 +100,7 @@ gr_pfb_decimator_ccf::set_taps (const std::vector<float> &taps)
     for(j = 0; j < d_taps_per_filter; j++) {
       d_taps[i][j] = tmp_taps[i + j*d_rate];  // add taps to channels in reverse order
     }
-    
+
     // Build a filter for each channel and add it's taps to it
     d_filters[i]->set_taps(d_taps[i]);
   }
@@ -150,7 +150,7 @@ gr_pfb_decimator_ccf::work (int noutput_items,
       // Filter current input stream from bottom filter to top
       // The rotate them by expj(j*k*2pi/M) where M is the number of filters
       // (the decimation rate) and k is the channel number to extract
-      
+
       // This is the real math that goes on; we abuse the FFT to do this quickly
       // for decimation rates > N where N is a small number (~5):
       //       out[i] += d_filters[j]->filter(&in[i])*gr_expj(j*d_chan*2*M_PI/d_rate);
@@ -168,8 +168,8 @@ gr_pfb_decimator_ccf::work (int noutput_items,
     // Select only the desired channel out
     out[i] = d_fft->get_outbuf()[d_chan];
 #endif
-    
+
   }
-  
+
   return noutput_items;
 }

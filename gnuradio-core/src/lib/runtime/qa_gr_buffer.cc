@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -65,7 +65,7 @@ t0_body ()
     sa = buf->space_available ();
     CPPUNIT_ASSERT_EQUAL (last_sa, sa);
     last_sa = sa;
-    
+
     int *p = (int *) buf->write_pointer ();
     CPPUNIT_ASSERT (p != 0);
 
@@ -80,7 +80,7 @@ t0_body ()
 // test single writer, single reader
 //
 
-static void 
+static void
 t1_body ()
  {
   int	nitems = 4000 / sizeof (int);
@@ -89,7 +89,7 @@ t1_body ()
 
   gr_buffer_sptr buf(gr_make_buffer(nitems, sizeof (int), gr_block_sptr()));
   gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 0, gr_block_sptr()));
-  
+
 
   int sa;
 
@@ -106,7 +106,7 @@ t1_body ()
   }
   buf->update_write_pointer (sa/3);
 
-  
+
   // write the next 1/3 (1/2 of what's left)
 
   sa = buf->space_available ();
@@ -125,7 +125,7 @@ t1_body ()
 
   int ia = r1->items_available ();
   CPPUNIT_ASSERT_EQUAL (write_counter, ia);
-  
+
   int *rp = (int *) r1->read_pointer ();
   CPPUNIT_ASSERT (rp != 0);
 
@@ -159,7 +159,7 @@ t2_body ()
 {
   // 64K is the largest granularity we've seen so far (MS windows file mapping).
   // This allows a bit of "white box testing"
-  
+
   int	nitems = (64 * (1L << 10)) / sizeof (int);	// 64K worth of ints
 
   gr_buffer_sptr buf(gr_make_buffer (nitems, sizeof (int), gr_block_sptr()));
@@ -170,7 +170,7 @@ t2_body ()
   int	n;
   int	*wp = 0;
   int	*rp = 0;
-  
+
   // Write 3/4 of buffer
 
   n = (int) (buf->space_available () * 0.75);
@@ -203,7 +203,7 @@ t2_body ()
   for (int i = 0; i < n; i++)
     *wp++ = write_counter++;
   buf->update_write_pointer (n);
-  
+
   // now read it all
 
   m = r1->items_available ();

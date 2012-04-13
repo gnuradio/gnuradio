@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2004,2005,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gru, audio
 from gnuradio import eng_notation
@@ -34,7 +34,7 @@ class app_top_block(stdgui2.std_top_block):
 
         self.frame = frame
         self.panel = panel
-        
+
         parser = OptionParser(option_class=eng_option)
         parser.add_option("-W", "--waterfall", action="store_true", default=False,
                           help="Enable waterfall display")
@@ -45,15 +45,15 @@ class app_top_block(stdgui2.std_top_block):
         parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
                           help="set sample rate to RATE (48000)")
 
-        (options, args) = parser.parse_args()   
+        (options, args) = parser.parse_args()
 	sample_rate = int(options.sample_rate)
-        
+
 	if len(args) != 0:
             parser.print_help()
             sys.exit(1)
 
         self.show_debug_info = True
-        
+
         # build the graph
         if options.waterfall:
             self.scope = \
@@ -79,9 +79,9 @@ class app_top_block(stdgui2.std_top_block):
 
         def _form_set_freq(kv):
             return self.set_freq(kv['freq'])
-            
+
         vbox.Add(self.scope.win, 10, wx.EXPAND)
-        
+
 	#self._build_subpanel(vbox)
 
     def _build_subpanel(self, vbox_arg):
@@ -89,7 +89,7 @@ class app_top_block(stdgui2.std_top_block):
 
         # FIXME figure out how to have this be a subpanel that is always
         # created, but has its visibility controlled by foo.Show(True/False)
-        
+
         def _form_set_decim(kv):
             return self.set_decim(kv['decim'])
 
@@ -129,7 +129,7 @@ class app_top_block(stdgui2.std_top_block):
         hbox.Add((5,0), 0)
         vbox.Add(hbox, 0, wx.EXPAND)
 
-        
+
 def main ():
     app = stdgui2.stdapp(app_top_block, "Audio FFT", nstatus=1)
     app.MainLoop()

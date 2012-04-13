@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -57,7 +57,7 @@ gr_vmcircbuf_mmap_shm_open::gr_vmcircbuf_mmap_shm_open (int size)
   int		shm_fd = -1;
   char	 	seg_name[1024];
   static bool	portable_format = true;
-  
+
   // open a new named shared memory segment
 
   while (1){
@@ -65,7 +65,7 @@ gr_vmcircbuf_mmap_shm_open::gr_vmcircbuf_mmap_shm_open (int size)
 
       // This is the POSIX recommended "portable format".
       // Of course the "portable format" doesn't work on some systems...
-      
+
       snprintf (seg_name, sizeof (seg_name),
 		"/gnuradio-%d-%d", getpid (), s_seg_counter);
     }
@@ -73,7 +73,7 @@ gr_vmcircbuf_mmap_shm_open::gr_vmcircbuf_mmap_shm_open (int size)
 
       // Where the "portable format" doesn't work, we try building
       // a full filesystem pathname pointing into a suitable temporary directory.
-      
+
       snprintf (seg_name, sizeof (seg_name),
 		"%s/gnuradio-%d-%d", gr_tmp_path (), getpid (), s_seg_counter);
     }
@@ -149,7 +149,7 @@ gr_vmcircbuf_mmap_shm_open::gr_vmcircbuf_mmap_shm_open (int size)
 
   close (shm_fd);	// fd no longer needed.  The mapping is retained.
 
-  if (shm_unlink (seg_name) == -1){	// unlink the seg_name.  
+  if (shm_unlink (seg_name) == -1){	// unlink the seg_name.
     perror ("gr_vmcircbuf_mmap_shm_open: shm_unlink");
     throw std::runtime_error ("gr_vmcircbuf_mmap_shm_open");
   }
@@ -163,7 +163,7 @@ gr_vmcircbuf_mmap_shm_open::gr_vmcircbuf_mmap_shm_open (int size)
 
 gr_vmcircbuf_mmap_shm_open::~gr_vmcircbuf_mmap_shm_open ()
 {
-#if defined(HAVE_MMAP)  
+#if defined(HAVE_MMAP)
   if (munmap (d_base, 2 * d_size) == -1){
     perror ("gr_vmcircbuf_mmap_shm_open: munmap (2)");
   }

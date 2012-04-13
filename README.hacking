@@ -1,24 +1,24 @@
 # -*- Outline -*-
 #
 # Copyright 2004,2007,2008,2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 Random notes on coding conventions, some explanations about why things
 aren't done differently, etc, etc,
@@ -103,7 +103,7 @@ The big win is when you're staring at a block of code it's obvious
 which of the things being assigned to persist outside of the block.
 This also keeps you from having to be creative with parameter names
 for methods and constructors.  You just use the same name as the
-instance variable, without the d_. 
+instance variable, without the d_.
 
 class gr_wonderfulness {
   std::string	d_name;
@@ -147,7 +147,7 @@ See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
 * Unit tests
 
 Build unit tests for everything non-trivial and run them after every
-change.  Check out Extreme Programming: 
+change.  Check out Extreme Programming:
 http://c2.com/cgi/wiki?ExtremeProgrammingRoadmap
 
 Unit tests should also be written for all examples.  This should kill
@@ -177,7 +177,7 @@ We use the standard unittest package for unit testing of Python code.
 
 * Subversion line ending styles
 
-All text files in the tree should have the subversion property 
+All text files in the tree should have the subversion property
 'svn:eol-style' set to 'native', with the following exceptions:
 
 config/*.m4
@@ -192,7 +192,7 @@ enable-auto-props=yes
 
 [auto-props]
 *.c = svn:eol-style=native
-*.cc = svn:eol-style=native  
+*.cc = svn:eol-style=native
 *.i = svn:eol-style=native
 *.h = svn:eol-style=native
 *.am = svn:eol-style=native
@@ -303,7 +303,7 @@ To specify a rate use:
 
   add_option("-r", "--sample-rate", type="eng_float", default=<your-default-here>,
              help="specify sample-rate [default=%default]")
-  
+
 
 If your application has a verbose option, use:
 
@@ -311,7 +311,7 @@ If your application has a verbose option, use:
 	     help="verbose output")
 
 
-If your application allows the user to specify the "fast USB" options, use: 
+If your application allows the user to specify the "fast USB" options, use:
 
   add_option("", "--fusb-block-size", type="intx", default=0,
              help="specify fast usb block size [default=%default]")

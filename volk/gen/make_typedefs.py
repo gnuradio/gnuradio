@@ -15,7 +15,7 @@ def make_typedefs(funclist, retlist, my_argtypelist) :
 
     tempstring = tempstring + '\n';
 
-    for i in range(len(funclist)): 
+    for i in range(len(funclist)):
         tempstring = tempstring + "typedef " + retlist[i] +" (*" + replace_volk.sub("p", funclist[i]) + ")(" + my_argtypelist[i] + ");\n";
 
     tempstring = tempstring + "#endif /*INCLUDED_VOLK_TYPEDEFS*/\n";

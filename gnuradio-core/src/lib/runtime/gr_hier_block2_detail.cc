@@ -1,18 +1,18 @@
 /*
  * Copyright 2006,2007,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -31,7 +31,7 @@
 #define GR_HIER_BLOCK2_DETAIL_DEBUG 0
 
 gr_hier_block2_detail::gr_hier_block2_detail(gr_hier_block2 *owner) :
-  d_owner(owner), 
+  d_owner(owner),
   d_parent_detail(0),
   d_fg(gr_make_flowgraph())
 {
@@ -83,16 +83,16 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr block)
       std::cout << "connect: block is hierarchical, setting parent to " << this << std::endl;
     hblock->d_detail->d_parent_detail = this;
   }
-		
+
   d_blocks.push_back(block);
 }
 
-void 
-gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port, 
+void
+gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
                                gr_basic_block_sptr dst, int dst_port)
 {
   std::stringstream msg;
-  
+
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
     std::cout << "connecting: " << gr_endpoint(src, src_port)
               << " -> " << gr_endpoint(dst, dst_port) << std::endl;
@@ -108,7 +108,7 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
       std::cout << "connect: src is hierarchical, setting parent to " << this << std::endl;
     src_block->d_detail->d_parent_detail = this;
   }
-		
+
   if (dst_block && dst.get() != d_owner) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << "connect: dst is hierarchical, setting parent to " << this << std::endl;
@@ -150,14 +150,14 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr block)
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
     if (*p == block) {
       d_blocks.erase(p);
-      
+
       gr_hier_block2_sptr hblock(cast_to_hier_block2_sptr(block));
       if (block && block.get() != d_owner) {
 	if (GR_HIER_BLOCK2_DETAIL_DEBUG)
 	  std::cout << "disconnect: block is hierarchical, clearing parent" << std::endl;
 	hblock->d_detail->d_parent_detail = 0;
       }
-    
+
       return;
     }
   }
@@ -170,7 +170,7 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr block)
       edges.push_back(*p);
 
       if (GR_HIER_BLOCK2_DETAIL_DEBUG)
-	std::cout << "disconnect: block found in edge " << (*p) << std::endl;  
+	std::cout << "disconnect: block found in edge " << (*p) << std::endl;
     }
   }
 
@@ -186,8 +186,8 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr block)
   }
 }
 
-void 
-gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port, 
+void
+gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port,
                                   gr_basic_block_sptr dst, int dst_port)
 {
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
@@ -205,7 +205,7 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port,
       std::cout << "disconnect: src is hierarchical, clearing parent" << std::endl;
     src_block->d_detail->d_parent_detail = 0;
   }
-		
+
   if (dst_block && dst.get() != d_owner) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << "disconnect: dst is hierarchical, clearing parent" << std::endl;
@@ -240,7 +240,7 @@ gr_hier_block2_detail::connect_input(int my_port, int port, gr_basic_block_sptr 
     msg << "external input port " << my_port << " already wired to " << endp;
     throw std::invalid_argument(msg.str());
   }
-  
+
   endps.push_back(endp);
 }
 
@@ -281,7 +281,7 @@ gr_hier_block2_detail::disconnect_input(int my_port, int port, gr_basic_block_sp
     msg << "external input port " << my_port << " not connected to " << endp;
     throw std::invalid_argument(msg.str());
   }
-  
+
   endps.erase(p);
 }
 
@@ -296,7 +296,7 @@ gr_hier_block2_detail::disconnect_output(int my_port, int port, gr_basic_block_s
   }
 
   if (d_outputs[my_port].block() != block) {
-    msg << "block " << block << " not assigned to output " 
+    msg << "block " << block << " not assigned to output "
 	<< my_port << ", can't disconnect";
     throw std::invalid_argument(msg.str());
   }
@@ -390,7 +390,7 @@ gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) 
   gr_hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(endp.block()));
   if (hier_block2) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "Resolving endpoint " << endp << " as an " 
+      std::cout << "Resolving endpoint " << endp << " as an "
 		<< (is_input ? "input" : "output")
 		<< ", recursing" << std::endl;
     return hier_block2->d_detail->resolve_port(endp.port(), is_input);
@@ -428,7 +428,7 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
     }
   }
 
-  // Construct unique list of blocks used either in edges, inputs, 
+  // Construct unique list of blocks used either in edges, inputs,
   // outputs, or by themselves.  I still hate STL.
   gr_basic_block_vector_t blocks; // unique list of used blocks
   gr_basic_block_vector_t tmp = d_fg->calc_used_blocks();
@@ -446,7 +446,7 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
 	  << " is not connected internally";
       throw std::runtime_error(msg.str());
     }
-    
+
     for (unsigned int j = 0; j < d_inputs[i].size(); j++)
       tmp.push_back(d_inputs[i][j].block());
   }

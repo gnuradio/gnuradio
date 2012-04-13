@@ -41,10 +41,10 @@ float sample_log_amp(MODEL *model, float w);
 
 /*---------------------------------------------------------------------------*\
 
-  FUNCTION....: interp()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/10 
-        
+  FUNCTION....: interp()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/10
+
   Given two frames decribed by model parameters 20ms apart, determines
   the model parameters of the 10ms frame between them.  Assumes
   voicing is available for middle (interpolated) frame.  Outputs are
@@ -58,7 +58,7 @@ float sample_log_amp(MODEL *model, float w);
   When this function is used (--dec mode) bg noise appears to be
   amplitude modulated, and gets louder.  The interp_lsp() function
   below seems to do a better job.
-  
+
 \*---------------------------------------------------------------------------*/
 
 void interpolate(
@@ -97,13 +97,13 @@ void interpolate(
 /*---------------------------------------------------------------------------*\
 
   FUNCTION....: sample_log_amp()
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/10 
-        
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/10
+
   Samples the amplitude envelope at an arbitrary frequency w.  Uses
   linear interpolation in the log domain to sample between harmonic
   amplitudes.
-  
+
 \*---------------------------------------------------------------------------*/
 
 float sample_log_amp(MODEL *model, float w)
@@ -125,9 +125,9 @@ float sample_log_amp(MODEL *model, float w)
 	log_amp = (1.0-f)*log10(model->A[model->L] + 1E-6);
     }
     else {
-	log_amp = (1.0-f)*log10(model->A[m] + 1E-6) + 
+	log_amp = (1.0-f)*log10(model->A[m] + 1E-6) +
                   f*log10(model->A[m+1] + 1E-6);
-	//printf("m=%d A[m] %f A[m+1] %f x %f %f %f\n", m, model->A[m], 
+	//printf("m=%d A[m] %f A[m+1] %f x %f %f %f\n", m, model->A[m],
 	//       model->A[m+1], pow(10.0, log_amp),
 	//       (1-f), f);
     }
@@ -138,13 +138,13 @@ float sample_log_amp(MODEL *model, float w)
 /*---------------------------------------------------------------------------*\
 
   FUNCTION....: sample_log_amp_quad()
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 9 March 2011 
-        
+  AUTHOR......: David Rowe
+  DATE CREATED: 9 March 2011
+
   Samples the amplitude envelope at an arbitrary frequency w.  Uses
   quadratic interpolation in the log domain to sample between harmonic
   amplitudes.
-  
+
   y(x) = ax*x + bx + c
 
   We assume three points are x=-1, x=0, x=1, which we map to m-1,m,m+1
@@ -172,7 +172,7 @@ float sample_log_amp_quad(MODEL *model, float w)
 
     log_amp = a*x*x + b*x + c;
     //printf("m=%d A[m-1] %f A[m] %f A[m+1] %f w %f x %f log_amp %f\n", m,
-    //	   model->A[m-1], 
+    //	   model->A[m-1],
     //	   model->A[m], model->A[m+1], w, x, pow(10.0, log_amp));
     return log_amp;
 }
@@ -180,14 +180,14 @@ float sample_log_amp_quad(MODEL *model, float w)
 /*---------------------------------------------------------------------------*\
 
   FUNCTION....: sample_log_amp_quad_nl()
-  AUTHOR......: David Rowe			      
+  AUTHOR......: David Rowe
   DATE CREATED: 10 March 2011
-        
+
   Samples the amplitude envelope at an arbitrary frequency w.  Uses
   quadratic interpolation in the log domain to sample between harmonic
   amplitudes.  This version can handle non-linear steps along a freq
   axis defined by arbitrary steps.
-  
+
   y(x) = ax*x + bx + c
 
   We assume three points are (x_1,y_1), (0,y0) and (x1,y1).
@@ -215,9 +215,9 @@ float sample_log_amp_quad_nl(
     for (i=0; i<np; i++)
 	if (fabs(w[i] - w_sample) < best_dist) {
 	    best_dist = fabs(w[i] - w_sample);
-	    m = i; 
+	    m = i;
 	}
-    
+
     /* stay one point away from edge of array */
 
     if (m < 1) m = 1;
@@ -234,13 +234,13 @@ float sample_log_amp_quad_nl(
     a = (y_1*x1 - y1*x_1 + c*x_1 - c*x1)/(x_1*x_1*x1 - x1*x1*x_1);
     b = (y1 -a*x1*x1 - c)/x1;
     x = w_sample - w[m];
-    
+
     //printf("%f   %f  %f\n", w[0], w[1], w[2]);
     //printf("%f %f  %f %f  %f %f\n", x_1, y_1, 0.0, y0, x1, y1);
     log_amp = a*x*x + b*x + c;
     //printf("a %f  b %f  c %f\n", a, b, c);
     //printf("m=%d A[m-1] %f A[m] %f A[m+1] %f w_sample %f w[m] %f x %f log_amp %f\n", m,
-    //	   A[m-1], 
+    //	   A[m-1],
     //	   A[m], A[m+1], w_sample, w[m], x, log_amp);
     //exit(0);
     return log_amp;
@@ -254,20 +254,20 @@ float fres[] = {100,   200,  300,  400,  500,  600,  700,  800,  900, 1000,
 /*---------------------------------------------------------------------------*\
 
   FUNCTION....: resample_amp_nl()
-  AUTHOR......: David Rowe			      
+  AUTHOR......: David Rowe
   DATE CREATED: 7 March 2011
-        
-  Converts the current model with L {Am} samples spaced Wo apart to 
+
+  Converts the current model with L {Am} samples spaced Wo apart to
   RES_POINTS samples spaced Wo/RES_POINTS apart.  Then subtracts
   from the previous frames samples to get the delta.
 
 \*---------------------------------------------------------------------------*/
 
-void resample_amp_fixed(MODEL *model, 
+void resample_amp_fixed(MODEL *model,
 			float w[], float A[],
 			float wres[], float Ares[],
-			float AresdB_prev[], 
-			float AresdB[], 
+			float AresdB_prev[],
+			float AresdB[],
 			float deltat[])
 {
     int   i;
@@ -280,7 +280,7 @@ void resample_amp_fixed(MODEL *model,
     for(i=0; i<RES_POINTS; i++) {
 	wres[i] = fres[i]*PI/4000.0;
     }
-    
+
     for(i=0; i<RES_POINTS; i++) {
 	Ares[i] = pow(10.0,sample_log_amp_quad_nl(w, A, model->L, wres[i]));
     }
@@ -297,13 +297,13 @@ void resample_amp_fixed(MODEL *model,
 /*---------------------------------------------------------------------------*\
 
   FUNCTION....: resample_amp_nl()
-  AUTHOR......: David Rowe			      
+  AUTHOR......: David Rowe
   DATE CREATED: 7 March 2011
-        
+
   Converts the current model with L {Am} samples spaced Wo apart to M
   samples spaced Wo/M apart.  Then converts back to L {Am} samples.
   used to prototype constant rate Amplitude encoding ideas.
-  
+
   Returns the SNR in dB.
 
 \*---------------------------------------------------------------------------*/
@@ -346,7 +346,7 @@ float resample_amp_nl(MODEL *model, int m, float AresdB_prev[])
 #endif
 
     signal = noise = 0.0;
-    
+
     for(i=1; i<model->L; i++) {
 	new_A = pow(10.0,sample_log_amp_quad_nl(wres, Ares, RES_POINTS, model->Wo*i));
 	signal += pow(model->A[i], 2.0);
@@ -364,13 +364,13 @@ float resample_amp_nl(MODEL *model, int m, float AresdB_prev[])
 /*---------------------------------------------------------------------------*\
 
   FUNCTION....: resample_amp()
-  AUTHOR......: David Rowe			      
+  AUTHOR......: David Rowe
   DATE CREATED: 10 March 2011
-        
+
   Converts the current model with L {Am} samples spaced Wo apart to M
   samples with a non-linear spacing.  Then converts back to L {Am}
   samples.  used to prototype constant rate Amplitude encoding ideas.
-  
+
   Returns the SNR in dB.
 
 \*---------------------------------------------------------------------------*/
@@ -394,7 +394,7 @@ float resample_amp(MODEL *model, int m)
     //dump_resample(&model_m);
 
     signal = noise = 0.0;
-    
+
     for(i=1; i<model->L/4; i++) {
 	new_A = pow(10,sample_log_amp_quad(&model_m, i*model->Wo));
 	signal += pow(model->A[i], 2.0);
@@ -411,10 +411,10 @@ float resample_amp(MODEL *model, int m)
 
 /*---------------------------------------------------------------------------*\
 
-  FUNCTION....: interp_lsp()	     
-  AUTHOR......: David Rowe			      
+  FUNCTION....: interp_lsp()
+  AUTHOR......: David Rowe
   DATE CREATED: 10 Nov 2010
-        
+
   Given two frames decribed by model parameters 20ms apart, determines
   the model parameters of the 10ms frame between them.  Assumes
   voicing is available for middle (interpolated) frame.  Outputs are
@@ -422,7 +422,7 @@ float resample_amp(MODEL *model, int m)
 
   This version uses interpolation of LSPs, seems to do a better job
   with bg noise.
-  
+
 \*---------------------------------------------------------------------------*/
 
 void interpolate_lsp(
@@ -469,5 +469,5 @@ void interpolate_lsp(
     /* convert back to amplitudes */
 
     lsp_to_lpc(lsps, ak_interp, LPC_ORD);
-    aks_to_M2(ak_interp, LPC_ORD, interp, e, &snr, 0); 
+    aks_to_M2(ak_interp, LPC_ORD, interp, e, &snr, 0);
 }

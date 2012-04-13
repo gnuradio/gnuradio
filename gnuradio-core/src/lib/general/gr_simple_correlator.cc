@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -70,11 +70,11 @@ gr_simple_correlator::~gr_simple_correlator ()
 {
 #ifdef DEBUG_SIMPLE_CORRELATOR
   fclose(d_debug_fp);
-#endif  
+#endif
   delete [] d_bitbuf;
   delete [] d_pktbuf;
 }
-   
+
 
 void
 gr_simple_correlator::enter_looking ()
@@ -141,7 +141,7 @@ gr_simple_correlator::update_avg(float x)
   d_accum += x;
   d_avbi = (d_avbi + 1) & (AVG_PERIOD-1);
 }
-  
+
 
 int
 gr_simple_correlator::general_work (int noutput_items,
@@ -152,7 +152,7 @@ gr_simple_correlator::general_work (int noutput_items,
   const float *in = (const float *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
 
-  
+
   int n = 0;
   int nin = ninput_items[0];
   int decision;
@@ -181,7 +181,7 @@ gr_simple_correlator::general_work (int noutput_items,
 	debug_data.sampled = 1.0;
 #endif
 	decision = slice (in[n]);
-	
+
 	d_bitbuf[d_bbi] = decision;
 	d_bbi++;
 	if (d_bbi >= d_bblen){
@@ -219,7 +219,7 @@ gr_simple_correlator::general_work (int noutput_items,
     default:
       assert (0);
     }
-      
+
 #ifdef DEBUG_SIMPLE_CORRELATOR
     fwrite(&debug_data, sizeof (debug_data), 1, d_debug_fp);
 #endif

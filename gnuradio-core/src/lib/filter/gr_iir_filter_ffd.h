@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,7 +30,7 @@
 
 class gr_iir_filter_ffd;
 typedef boost::shared_ptr<gr_iir_filter_ffd> gr_iir_filter_ffd_sptr;
-GR_CORE_API gr_iir_filter_ffd_sptr 
+GR_CORE_API gr_iir_filter_ffd_sptr
 gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
 			const std::vector<double> &fbtaps) throw (std::invalid_argument);
 
@@ -41,7 +41,7 @@ gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
  * This filter uses the Direct Form I implementation, where
  * \p fftaps contains the feed-forward taps, and \p fbtaps the feedback ones.
  *
- * 
+ *
  * The input and output satisfy a difference equation of the form
  \htmlonly
  \f{
@@ -70,7 +70,7 @@ gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
 class GR_CORE_API gr_iir_filter_ffd : public gr_sync_block
 {
  private:
-  friend GR_CORE_API gr_iir_filter_ffd_sptr 
+  friend GR_CORE_API gr_iir_filter_ffd_sptr
   gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
 			  const std::vector<double> &fbtaps) throw (std::invalid_argument);
 

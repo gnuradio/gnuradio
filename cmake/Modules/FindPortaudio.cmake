@@ -48,7 +48,7 @@ else (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
         /opt/local/include
         /sw/include
     )
-   
+
     find_library(PORTAUDIO_LIBRARY
       NAMES
         portaudio
@@ -58,7 +58,7 @@ else (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
         /opt/local/lib
         /sw/lib
     )
-   
+
     find_path(PORTAUDIO_LIBRARY_DIR
       NAMES
         portaudio
@@ -68,26 +68,26 @@ else (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
         /opt/local/lib
         /sw/lib
     )
-   
+
     set(PORTAUDIO_INCLUDE_DIRS
       ${PORTAUDIO_INCLUDE_DIR}
     )
     set(PORTAUDIO_LIBRARIES
       ${PORTAUDIO_LIBRARY}
     )
-   
+
     set(PORTAUDIO_LIBRARY_DIRS
       ${PORTAUDIO_LIBRARY_DIR}
     )
-   
+
     set(PORTAUDIO_VERSION
       18
     )
-   
+
     if (PORTAUDIO_INCLUDE_DIRS AND PORTAUDIO_LIBRARIES)
        set(PORTAUDIO_FOUND TRUE)
     endif (PORTAUDIO_INCLUDE_DIRS AND PORTAUDIO_LIBRARIES)
-   
+
     if (PORTAUDIO_FOUND)
       if (NOT Portaudio_FIND_QUIETLY)
         message(STATUS "Found Portaudio: ${PORTAUDIO_LIBRARIES}")

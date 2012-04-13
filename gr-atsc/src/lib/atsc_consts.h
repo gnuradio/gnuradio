@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -28,7 +28,7 @@ static const double ATSC_DATA_SEGMENT_RATE = ATSC_SYMBOL_RATE / 832;	// ~12.935 
 
 
 static const int ATSC_MPEG_DATA_LENGTH 		= 187;
-static const int ATSC_MPEG_PKT_LENGTH		= 188;	// sync + data 
+static const int ATSC_MPEG_PKT_LENGTH		= 188;	// sync + data
 static const int ATSC_MPEG_RS_ENCODED_LENGTH 	= 207;
 static const int ATSC_DATA_SEGMENT_LENGTH	= 832;	// includes 4 sync symbols at beginning
 static const int ATSC_DSEGS_PER_FIELD		= 312;	// regular data segs / field

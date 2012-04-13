@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -52,7 +52,7 @@ bin_map (int bit)
 
 static void
 init_field_sync_common (float *p, int mask)
-			
+
 {
   int  i = 0;
 
@@ -69,7 +69,7 @@ init_field_sync_common (float *p, int mask)
 
   for (int j = 0; j < 63; j++)		// PN63, toggled on field 2
     p[i++] = bin_map(atsc_pn63[j] ^ mask);
-  
+
   for (int j = 0; j < 63; j++)		// PN63
     p[i++] = bin_map(atsc_pn63[j]);
 
@@ -191,9 +191,9 @@ qa_atsci_fs_correlator::util (int which_field, int nerrs1, int nerrs2)
   float	input[ISIZE];
 
   fsc->reset ();	// known starting conditions
-  
+
   // build input
-  
+
   for (i = 0; i < PAD; i++)
     input[i] = uniform () * 7;
 
@@ -205,7 +205,7 @@ qa_atsci_fs_correlator::util (int which_field, int nerrs1, int nerrs2)
     input[i] = uniform () * 7;
 
   // run the input and check
-  
+
   for (i = 0; i < ISIZE; i++){
     fsc->filter (input[i], &output_sample, &output_tag);
     if (i == delay + PAD){	// should be field sync

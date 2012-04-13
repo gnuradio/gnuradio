@@ -134,11 +134,11 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
   gr_block_sptr grblock = cast_to_block_sptr(block);
   if (!grblock)
     throw std::runtime_error("connect_block_inputs found non-gr_block");
-  
+
   // Get its detail and edges that feed into it
   gr_block_detail_sptr detail = grblock->detail();
   gr_edge_vector_t in_edges = calc_upstream_edges(block);
-  
+
   // For each edge that feeds into it
   for (gr_edge_viter_t e = in_edges.begin(); e != in_edges.end(); e++) {
     // Set the buffer reader on the destination port to the output
@@ -150,7 +150,7 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
     if (!src_grblock)
       throw std::runtime_error("connect_block_inputs found non-gr_block");
     gr_buffer_sptr src_buffer = src_grblock->detail()->output(src_port);
-    
+
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "Setting input " << dst_port << " from edge " << (*e) << std::endl;
 
@@ -166,7 +166,7 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
   // already have one.
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
     gr_block_sptr block = cast_to_block_sptr(*p);
-    
+
     if (!block->detail()) {
       if (GR_FLAT_FLOWGRAPH_DEBUG)
         std::cout << "merge: allocating new detail for block " << (*p) << std::endl;
@@ -182,7 +182,7 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
   for (gr_edge_viter_t old_edge = old_ffg->d_edges.begin(); old_edge != old_ffg->d_edges.end(); old_edge++) {
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "merge: testing old edge " << (*old_edge) << "...";
-      
+
     gr_edge_viter_t new_edge;
     for (new_edge = d_edges.begin(); new_edge != d_edges.end(); new_edge++)
       if (new_edge->src() == old_edge->src() &&
@@ -201,7 +201,7 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
       if (GR_FLAT_FLOWGRAPH_DEBUG)
 	std::cout << "found in new edge list" << std::endl;
     }
-  }  
+  }
 
   // Now connect inputs to outputs, reusing old buffer readers if they exist
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
@@ -209,13 +209,13 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
 
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "merge: merging " << (*p) << "...";
-    
+
     if (old_ffg->has_block_p(*p)) {
       // Block exists in old flow graph
       if (GR_FLAT_FLOWGRAPH_DEBUG)
 	std::cout << "used in old flow graph" << std::endl;
       gr_block_detail_sptr detail = block->detail();
-	
+
       // Iterate through the inputs and see what needs to be done
       int ninputs = calc_used_ports(block, true).size(); // Might be different now
       for (int i = 0; i < ninputs; i++) {
@@ -228,9 +228,9 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
 	gr_block_detail_sptr src_detail = src_block->detail();
 	gr_buffer_sptr src_buffer = src_detail->output(edge.src().port());
 	gr_buffer_reader_sptr old_reader;
-	if (i < detail->ninputs()) // Don't exceed what the original detail has 
+	if (i < detail->ninputs()) // Don't exceed what the original detail has
 	  old_reader = detail->input(i);
-	
+
 	// If there's a match, use it
 	if (old_reader && (src_buffer == old_reader->buffer())) {
 	  if (GR_FLAT_FLOWGRAPH_DEBUG)
@@ -255,9 +255,9 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
       setup_buffer_alignment(block);
     }
 
-    // Now deal with the fact that the block details might have changed numbers of 
+    // Now deal with the fact that the block details might have changed numbers of
     // inputs and outputs vs. in the old flowgraph.
-  }  
+  }
 }
 
 void
@@ -298,7 +298,7 @@ void gr_flat_flowgraph::dump()
     std::cout << " block: " << (*p) << std::endl;
     gr_block_detail_sptr detail = cast_to_block_sptr(*p)->detail();
     std::cout << "  detail @" << detail << ":" << std::endl;
-     
+
     int ni = detail->ninputs();
     int no = detail->noutputs();
     for (int i = 0; i < no; i++) {

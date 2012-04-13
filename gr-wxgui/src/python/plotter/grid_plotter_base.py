@@ -78,7 +78,7 @@ class grid_plotter_base(plotter_base):
 	def set_point_label_coordinate(self, coor):
 		"""
 		Set the point label coordinate.
-		@param coor the coordinate x, y tuple or None 
+		@param coor the coordinate x, y tuple or None
 		"""
 		self.lock()
 		self._point_label_coordinate = coor

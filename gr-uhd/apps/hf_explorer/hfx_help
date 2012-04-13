@@ -10,7 +10,7 @@
 		Default is 3.9e6 80 meter ham band.
 		Example:
 
-		hfx.py -c 9500k 
+		hfx.py -c 9500k
 
 		starts up in the 31 meter band.
 
@@ -49,15 +49,15 @@
 		usrp hardware needed. Tune about the 800kHz wide band.
 		When playing a recorded file, time controls
 		fast-forward and rewind are available.
-		
+
 	-d	Decimation. Sets sample rate and bandwidth.
 		This is the factor that the usrp sample rate, 64e6,
 		is divided by. Default is 250 for 256kHz bandwidth
-		which is enough to record a ham band without 
+		which is enough to record a ham band without
 		eating up disk space too fast. The 64e6 sample
 		rate limits the upper practical frequency to 32MHz.
 		The Basic RX transformer limits the lower frequency
-		to about 200kHz. 
+		to about 200kHz.
 
 
  Powermate Knob:
@@ -145,12 +145,12 @@
 	amp I like is a Minicircuits ZHL-32A 29db amp but they are
 	expensive and hard to find. Also it may help to use some filters
 	to keep strong local signals from the ADC, or limit rf input
-	to the band of interest, etc.  
+	to the band of interest, etc.
 	Resonant outdoor antennas, like a dipole, in a low-noise (away
 	from consumer electronics) environment are nice.  Long random wires
 	with a tuner work. I like a small indoor tuned loop made from 10ft
 	of 1/4" copper tube, a 365pf tuning cap and a pickup loop connected
-	to rg-58. 
+	to rg-58.
 
 
  Web Control:
@@ -167,7 +167,7 @@
 
  IF Output:
 
-	There is a provision for outputting un-demodulated complex 
+	There is a provision for outputting un-demodulated complex
 	through the audio out in stereo for use with Digital Radio
 	Mondial (DRM) or using a seperate demodulation program like
 	SDRadio (by I2PHD).

@@ -1,23 +1,23 @@
 #
 # Copyright 2006,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, optfir
 from gnuradio.blks2impl.fm_emph import fm_deemph
@@ -25,10 +25,10 @@ from math import pi
 
 class fm_demod_cf(gr.hier_block2):
     """
-    Generalized FM demodulation block with deemphasis and audio 
+    Generalized FM demodulation block with deemphasis and audio
     filtering.
 
-    This block demodulates a band-limited, complex down-converted FM 
+    This block demodulates a band-limited, complex down-converted FM
     channel into the the original baseband signal, optionally applying
     deemphasis. Low pass filtering is done on the resultant signal. It
     produces an output float strem in the range of [-1.0, +1.0].
@@ -39,7 +39,7 @@ class fm_demod_cf(gr.hier_block2):
     @type deviation: float
     @param audio_decim: input to output decimation rate
     @type audio_decim: integer
-    @param audio_pass: audio low pass filter passband frequency 
+    @param audio_pass: audio low pass filter passband frequency
     @type audio_pass: float
     @param audio_stop: audio low pass filter stop frequency
     @type audio_stop: float
@@ -47,13 +47,13 @@ class fm_demod_cf(gr.hier_block2):
     @type gain: float
     @param tau: deemphasis time constant (default = 75e-6), specify 'None'
        to prevent deemphasis
-    """ 
-    def __init__(self, channel_rate, audio_decim, deviation, 
+    """
+    def __init__(self, channel_rate, audio_decim, deviation,
                  audio_pass, audio_stop, gain=1.0, tau=75e-6):
 	gr.hier_block2.__init__(self, "fm_demod_cf",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
-				
+
 	k = channel_rate/(2*pi*deviation)
 	QUAD = gr.quadrature_demod_cf(k)
 
@@ -75,15 +75,15 @@ class demod_20k0f3e_cf(fm_demod_cf):
     """
     NBFM demodulation block, 20 KHz channels
 
-    This block demodulates a complex, downconverted, narrowband FM 
+    This block demodulates a complex, downconverted, narrowband FM
     channel conforming to 20K0F3E emission standards, outputting
     floats in the range [-1.0, +1.0].
-    
+
     @param sample_rate:  incoming sample rate of the FM baseband
     @type sample_rate: integer
     @param audio_decim: input to output decimation rate
     @type audio_decim: integer
-    """ 
+    """
     def __init__(self, channel_rate, audio_decim):
         fm_demod_cf.__init__(self, channel_rate, audio_decim,
                              5000,	# Deviation
@@ -93,9 +93,9 @@ class demod_20k0f3e_cf(fm_demod_cf):
 class demod_200kf3e_cf(fm_demod_cf):
     """
     WFM demodulation block, mono.
-    
-    This block demodulates a complex, downconverted, wideband FM 
-    channel conforming to 200KF3E emission standards, outputting 
+
+    This block demodulates a complex, downconverted, wideband FM
+    channel conforming to 200KF3E emission standards, outputting
     floats in the range [-1.0, +1.0].
 
     @param sample_rate:  incoming sample rate of the FM baseband
@@ -103,7 +103,7 @@ class demod_200kf3e_cf(fm_demod_cf):
     @param audio_decim: input to output decimation rate
     @type audio_decim: integer
     """
-    def __init__(self, channel_rate, audio_decim): 
+    def __init__(self, channel_rate, audio_decim):
 	fm_demod_cf.__init__(self, channel_rate, audio_decim,
 			     75000,	# Deviation
 			     15000,	# Audio passband

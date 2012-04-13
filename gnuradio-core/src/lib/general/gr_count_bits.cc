@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -27,7 +27,7 @@
  */
 
 // return number of set bits in the low  8 bits of x
-unsigned int 
+unsigned int
 gr_count_bits8 (unsigned int x)
 {
   int	count = 0;
@@ -40,7 +40,7 @@ gr_count_bits8 (unsigned int x)
 }
 
 // return number of set bits in the low 16 bits of x
-unsigned int 
+unsigned int
 gr_count_bits16 (unsigned int x)
 {
   int	count = 0;
@@ -57,7 +57,7 @@ gr_count_bits16 (unsigned int x)
 #if 0	// slow and obvious
 
 // return number of set bits in the low 32 bits of x
-unsigned int 
+unsigned int
 gr_count_bits32 (unsigned int x)
 {
   int	count = 0;
@@ -83,7 +83,7 @@ gr_count_bits32 (unsigned int x)
 }
 
 #endif
- 
+
 
 // return number of set bits in the low 64 bits of x
 unsigned int

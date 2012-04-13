@@ -2,24 +2,24 @@
 # -*- python -*-
 #
 # Copyright 2003,2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from generate_utils import *
 
@@ -53,7 +53,7 @@ def make_gr_fir_sysconfig_generic_h ():
 class gr_fir_sysconfig_generic : public gr_fir_sysconfig {
 public:
 ''')
-    
+
     for sig in fir_signatures:
       out.write (('  virtual gr_fir_%s *create_gr_fir_%s (const std::vector<%s> &taps);\n' %
         (sig, sig, tap_type (sig))))
@@ -72,7 +72,7 @@ public:
 #endif /* _GR_FIR_SYSCONFIG_GENERIC_H_ */
 ''')
     out.close ()
-    
+
 
 # ----------------------------------------------------------------
 
@@ -84,7 +84,7 @@ make_gr_fir_%s (const std::vector<%s> &taps)
   return new gr_fir_%s_generic (taps);
 }
 ''' % (sig, sig, tap_type (sig), sig))
-  
+
 
 def make_creator (sig, out):
     out.write ('''
@@ -94,7 +94,7 @@ gr_fir_sysconfig_generic::create_gr_fir_%s (const std::vector<%s> &taps)
   return make_gr_fir_%s (taps);
 }
 ''' % (sig, sig, tap_type (sig), sig))
-    
+
 
 def make_info (sig, out):
     out.write ('''
@@ -107,7 +107,7 @@ gr_fir_sysconfig_generic::get_gr_fir_%s_info (std::vector<gr_fir_%s_info> *info)
 }
 ''' % (sig, sig, sig))
 
-    
+
 # ----------------------------------------------------------------
 
 def make_gr_fir_sysconfig_generic_cc ():
@@ -131,7 +131,7 @@ def make_gr_fir_sysconfig_generic_cc ():
 #include <gr_fir_sysconfig_generic.h>
 
 ''')
-    
+
     for sig in fir_signatures:
         out.write ('#include <gr_fir_%s_generic.h>\n' % (sig))
 

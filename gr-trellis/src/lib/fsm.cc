@@ -64,7 +64,7 @@ fsm::fsm(int I, int S, int O, const std::vector<int> &NS, const std::vector<int>
   d_O=O;
   d_NS=NS;
   d_OS=OS;
- 
+
   generate_PS_PI();
   generate_TM();
 }
@@ -79,11 +79,11 @@ fsm::fsm(int I, int S, int O, const std::vector<int> &NS, const std::vector<int>
 //# output symbol matrix (S lines, each with I integers separated by spaces)
 //# optional comments
 //######################################################################
-fsm::fsm(const char *name) 
+fsm::fsm(const char *name)
 {
   FILE *fsmfile;
 
-  if((fsmfile=fopen(name,"r"))==NULL) 
+  if((fsmfile=fopen(name,"r"))==NULL)
     throw std::runtime_error ("fsm::fsm(const char *name): file open error\n");
     //printf("file open error in fsm()\n");
 
@@ -91,7 +91,7 @@ fsm::fsm(const char *name)
     if(ferror(fsmfile) != 0)
       throw std::runtime_error ("fsm::fsm(const char *name): file read error\n");
   }
-  
+
   d_NS.resize(d_I*d_S);
   d_OS.resize(d_I*d_S);
 
@@ -113,7 +113,7 @@ fsm::fsm(const char *name)
   }
 
   fclose(fsmfile);
- 
+
   generate_PS_PI();
   generate_TM();
 }
@@ -141,7 +141,7 @@ fsm::fsm(int k, int n, const std::vector<int> &G)
         max_mem=mem;
     }
   }
-  
+
 //printf("max_mem_x\n");
 //for(int j=0;j<max_mem_x.size();j++) printf("%d ",max_mem_x[j]); printf("\n");
 
@@ -155,7 +155,7 @@ fsm::fsm(int k, int n, const std::vector<int> &G)
   d_I=1<<k;
   d_S=1<<sum_max_mem;
   d_O=1<<n;
- 
+
   // binary representation of the G matrix
   std::vector<std::vector<int> > Gb(k*n);
   for(int j=0;j<k*n;j++) {
@@ -165,9 +165,9 @@ fsm::fsm(int k, int n, const std::vector<int> &G)
 //for(int m=0;m<Gb[j].size();m++) printf("%d ",Gb[j][m]); printf("\n");
   }
 
-  // alphabet size of each shift register 
+  // alphabet size of each shift register
   std::vector<int> bases_x(k);
-  for(int j=0;j<k ;j++) 
+  for(int j=0;j<k ;j++)
     bases_x[j] = 1 << max_mem_x[j];
 //printf("bases_x\n");
 //for(int j=0;j<max_mem_x.size();j++) printf("%d ",max_mem_x[j]); printf("\n");
@@ -229,7 +229,7 @@ fsm::fsm(int k, int n, const std::vector<int> &G)
 
 
 //######################################################################
-//# Automatically generate an FSM specification describing the 
+//# Automatically generate an FSM specification describing the
 //# ISI for a channel
 //# of length ch_length and a modulation of size mod_size
 //######################################################################
@@ -243,13 +243,13 @@ fsm::fsm(int mod_size, int ch_length)
   d_OS.resize(d_I*d_S);
 
   for(int s=0;s<d_S;s++) {
-    for(int i=0;i<d_I;i++) { 
+    for(int i=0;i<d_I;i++) {
       int t=i*d_S+s;
       d_NS[s*d_I+i] = t/d_I;
       d_OS[s*d_I+i] = t;
     }
   }
- 
+
   generate_PS_PI();
   generate_TM();
 }
@@ -258,8 +258,8 @@ fsm::fsm(int mod_size, int ch_length)
 
 
 //######################################################################
-//# Automatically generate an FSM specification describing the 
-//# the trellis for a CPM with h=K/P (relatively prime), 
+//# Automatically generate an FSM specification describing the
+//# the trellis for a CPM with h=K/P (relatively prime),
 //# alphabet size M, and frequency pulse duration L symbols
 //#
 //# This FSM is based on the paper by B. Rimoldi
@@ -303,7 +303,7 @@ fsm::fsm(int P, int M, int L)
 
 
 //######################################################################
-//# Automatically generate an FSM specification describing the 
+//# Automatically generate an FSM specification describing the
 //# the joint trellis of fsm1 and fsm2
 //######################################################################
 fsm::fsm(const fsm &FSM1, const fsm &FSM2)
@@ -433,7 +433,7 @@ bool fsm::find_es(int es)
 {
   bool done = true;
   for(int s=0;s<d_S;s++) {
-    if(d_TMl[s*d_S+es] < d_S) 
+    if(d_TMl[s*d_S+es] < d_S)
       continue;
     int minl=d_S;
     int mini=-1;
@@ -477,7 +477,7 @@ void fsm::write_trellis_svg( std::string filename ,int number_stages)
     for( int stage_num = 0;stage_num < number_stages;stage_num ++){
     // draw states
       for ( int state_num = 0;state_num < d_S ; state_num ++ ) {
-        trellis_fname << "<circle cx = \"" << stage_num * STAGE_STATE_OFFSETS + TRELLIS_X_OFFSET << 
+        trellis_fname << "<circle cx = \"" << stage_num * STAGE_STATE_OFFSETS + TRELLIS_X_OFFSET <<
         "\" cy = \"" << state_num * STAGE_STATE_OFFSETS + TRELLIS_Y_OFFSET << "\" r = \"1\"/>" << std::endl;
       //draw branches
         if(stage_num != number_stages-1){
@@ -495,7 +495,7 @@ void fsm::write_trellis_svg( std::string filename ,int number_stages)
   // label the stages
   trellis_fname << "<g font-size = \"4\" font= \"times\" fill = \"black\">" << std::endl;
   for( int stage_num = 0;stage_num < number_stages ;stage_num ++){
-    trellis_fname << "<text x = \"" << stage_num * STAGE_STATE_OFFSETS + STAGE_LABEL_X_OFFSET << 
+    trellis_fname << "<text x = \"" << stage_num * STAGE_STATE_OFFSETS + STAGE_LABEL_X_OFFSET <<
       "\" y = \""  << STAGE_LABEL_Y_OFFSET  << "\" >" << std::endl;
     trellis_fname << stage_num <<  std::endl;
     trellis_fname << "</text>" << std::endl;
@@ -505,7 +505,7 @@ void fsm::write_trellis_svg( std::string filename ,int number_stages)
   // label the states
   trellis_fname << "<g font-size = \"4\" font= \"times\" fill = \"black\">" << std::endl;
   for( int state_num = 0;state_num < d_S ; state_num ++){
-    trellis_fname << "<text y = \"" << state_num * STAGE_STATE_OFFSETS + STATE_LABEL_Y_OFFSET << 
+    trellis_fname << "<text y = \"" << state_num * STAGE_STATE_OFFSETS + STATE_LABEL_Y_OFFSET <<
       "\" x = \""  << STATE_LABEL_X_OFFSET  << "\" >" << std::endl;
     trellis_fname << state_num <<  std::endl;
     trellis_fname << "</text>" << std::endl;

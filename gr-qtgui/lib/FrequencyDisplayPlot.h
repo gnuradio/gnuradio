@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,9 +50,9 @@ public:
   FrequencyDisplayPlot(QWidget*);
   virtual ~FrequencyDisplayPlot();
 
-  void SetFrequencyRange(const double, const double, 
+  void SetFrequencyRange(const double, const double,
 			 const double, const bool,
-			 const double units=1000.0, 
+			 const double units=1000.0,
 			 const std::string &strunits = "kHz");
   double GetStartFrequency()const;
   double GetStopFrequency()const;
@@ -60,13 +60,13 @@ public:
   void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
 		   const double noiseFloorAmplitude, const double peakFrequency,
 		   const double peakAmplitude, const double timeInterval);
-  
+
   void ClearMaxData();
   void ClearMinData();
-  
+
   void SetMaxFFTVisible(const bool);
   void SetMinFFTVisible(const bool);
-				   
+
   virtual void replot();
 
   void set_yaxis(double min, double max);
@@ -94,12 +94,12 @@ protected:
 private:
 
   void _resetXAxisPoints();
-  
+
   double _startFrequency;
   double _stopFrequency;
   double _maxYAxis;
   double _minYAxis;
-  
+
   QwtPlotCurve* _fft_plot_curve;
   QwtPlotCurve* _min_fft_plot_curve;
   QwtPlotCurve* _max_fft_plot_curve;
@@ -115,9 +115,9 @@ private:
   QwtPlotMarker *_markerCF;
 
   QwtDblClickPlotPicker *_picker;
-  
+
   QwtPlotMagnifier *_magnifier;
-  
+
   double* _dataPoints;
   double* _xAxisPoints;
   int     _xAxisMultiplier;

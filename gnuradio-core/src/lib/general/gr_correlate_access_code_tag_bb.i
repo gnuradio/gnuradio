@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -26,8 +26,8 @@ GR_SWIG_BLOCK_MAGIC(gr,correlate_access_code_tag_bb);
  * \param access_code is represented with 1 byte per bit, e.g., "010101010111000100"
  * \param threshold maximum number of bits that may be wrong
  */
-gr_correlate_access_code_tag_bb_sptr 
-gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold, const std::string &tag_name) 
+gr_correlate_access_code_tag_bb_sptr
+gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold, const std::string &tag_name)
   throw(std::out_of_range);
 
 /*!
@@ -45,7 +45,7 @@ gr_make_correlate_access_code_tag_bb (const std::string &access_code, int thresh
  */
 class gr_correlate_access_code_tag_bb : public gr_sync_block
 {
-  friend gr_correlate_access_code_tag_bb_sptr 
+  friend gr_correlate_access_code_tag_bb_sptr
   gr_make_correlate_access_code_tag_bb (const std::string &access_code, int threshold, const std::string &tag_name);
  protected:
   gr_correlate_access_code_tag_bb(const std::string &access_code, int threshold, const std::string &tag_name);

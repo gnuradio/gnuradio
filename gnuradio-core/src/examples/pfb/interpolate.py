@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, blks2
 import sys, time
@@ -46,13 +46,13 @@ class pfb_top_block(gr.top_block):
         self._interp = 5        # Interpolation rate for PFB interpolator
         self._ainterp = 5.5       # Resampling rate for the PFB arbitrary resampler
 
-        # Frequencies of the signals we construct 
+        # Frequencies of the signals we construct
         freq1 = 100
         freq2 = 200
 
         # Create a set of taps for the PFB interpolator
         # This is based on the post-interpolation sample rate
-        self._taps = gr.firdes.low_pass_2(self._interp, self._interp*self._fs, freq2+50, 50, 
+        self._taps = gr.firdes.low_pass_2(self._interp, self._interp*self._fs, freq2+50, 50,
                                           attenuation_dB=120, window=gr.firdes.WIN_BLACKMAN_hARRIS)
 
         # Create a set of taps for the PFB arbitrary resampler
@@ -61,7 +61,7 @@ class pfb_top_block(gr.top_block):
         # The taps in this filter are based on a sampling rate of the filter size since it acts
         # internally as an interpolator.
         flt_size = 32
-        self._taps2 = gr.firdes.low_pass_2(flt_size, flt_size*self._fs, freq2+50, 150, 
+        self._taps2 = gr.firdes.low_pass_2(flt_size, flt_size*self._fs, freq2+50, 150,
                                            attenuation_dB=120, window=gr.firdes.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
@@ -74,7 +74,7 @@ class pfb_top_block(gr.top_block):
         self.signal1 = gr.sig_source_c(self._fs, gr.GR_SIN_WAVE, freq1, 0.5)
         self.signal2 = gr.sig_source_c(self._fs, gr.GR_SIN_WAVE, freq2, 0.5)
         self.signal = gr.add_cc()
-        
+
         self.head = gr.head(gr.sizeof_gr_complex, self._N)
 
         # Construct the PFB interpolator filter
@@ -86,7 +86,7 @@ class pfb_top_block(gr.top_block):
 
         #self.pfb_ar.pfb.print_taps()
         #self.pfb.pfb.print_taps()
-        
+
         # Connect the blocks
         self.connect(self.signal1, self.head, (self.signal,0))
         self.connect(self.signal2, (self.signal,1))
@@ -99,7 +99,7 @@ class pfb_top_block(gr.top_block):
         self.snk2 = gr.vector_sink_c()
         self.connect(self.pfb, self.snk1)
         self.connect(self.pfb_ar, self.snk2)
-                             
+
 
 def main():
     tb = pfb_top_block()
@@ -114,7 +114,7 @@ def main():
         fig1 = pylab.figure(1, figsize=(12,10), facecolor="w")
         fig2 = pylab.figure(2, figsize=(12,10), facecolor="w")
         fig3 = pylab.figure(3, figsize=(12,10), facecolor="w")
-        
+
         Ns = 10000
         Ne = 10000
 
@@ -133,8 +133,8 @@ def main():
         X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
         f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
-        sp1_f.set_xlim([min(f_in), max(f_in)+1]) 
-        sp1_f.set_ylim([-200.0, 50.0]) 
+        sp1_f.set_xlim([min(f_in), max(f_in)+1])
+        sp1_f.set_ylim([-200.0, 50.0])
 
 
         sp1_f.set_title("Input Signal", weight="bold")
@@ -143,7 +143,7 @@ def main():
 
         Ts = 1.0/fs
         Tmax = len(d)*Ts
-        
+
         t_in = scipy.arange(0, Tmax, Ts)
         x_in = scipy.array(d)
         sp1_t = fig1.add_subplot(2, 1, 2)
@@ -167,8 +167,8 @@ def main():
         X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
         f_o = scipy.arange(-fs_int/2.0, fs_int/2.0, fs_int/float(X_o.size))
         p2_f = sp2_f.plot(f_o, X_o, "b")
-        sp2_f.set_xlim([min(f_o), max(f_o)+1]) 
-        sp2_f.set_ylim([-200.0, 50.0]) 
+        sp2_f.set_xlim([min(f_o), max(f_o)+1])
+        sp2_f.set_ylim([-200.0, 50.0])
 
         sp2_f.set_title("Output Signal from PFB Interpolator", weight="bold")
         sp2_f.set_xlabel("Frequency (Hz)")
@@ -200,8 +200,8 @@ def main():
         X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
         f_o = scipy.arange(-fs_aint/2.0, fs_aint/2.0, fs_aint/float(X_o.size))
         p3_f = sp3_f.plot(f_o, X_o, "b")
-        sp3_f.set_xlim([min(f_o), max(f_o)+1]) 
-        sp3_f.set_ylim([-200.0, 50.0]) 
+        sp3_f.set_xlim([min(f_o), max(f_o)+1])
+        sp3_f.set_ylim([-200.0, 50.0])
 
         sp3_f.set_title("Output Signal from PFB Arbitrary Resampler", weight="bold")
         sp3_f.set_xlabel("Frequency (Hz)")
@@ -217,7 +217,7 @@ def main():
         p3_f = sp3_f.plot(t_o, x_o1.real, "m-o")
         #p3_f = sp3_f.plot(t_o, x_o2.imag, "r-o")
         sp3_f.set_ylim([-2.5, 2.5])
-        
+
         sp3_f.set_title("Output Signal from PFB Arbitrary Resampler", weight="bold")
         sp3_f.set_xlabel("Time (s)")
         sp3_f.set_ylabel("Amplitude")
@@ -230,4 +230,4 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-    
+

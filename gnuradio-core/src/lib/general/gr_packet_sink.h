@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,7 +30,7 @@
 class gr_packet_sink;
 typedef boost::shared_ptr<gr_packet_sink> gr_packet_sink_sptr;
 
-GR_CORE_API gr_packet_sink_sptr 
+GR_CORE_API gr_packet_sink_sptr
 gr_make_packet_sink (const std::vector<unsigned char>& sync_vector,
 		     gr_msg_queue_sptr target_queue,
 		     int threshold = -1	                // -1 -> use default
@@ -41,7 +41,7 @@ gr_make_packet_sink (const std::vector<unsigned char>& sync_vector,
  */
 class GR_CORE_API gr_packet_sink : public gr_sync_block
 {
-  friend GR_CORE_API gr_packet_sink_sptr 
+  friend GR_CORE_API gr_packet_sink_sptr
   gr_make_packet_sink (const std::vector<unsigned char>& sync_vector,
 		       gr_msg_queue_sptr target_queue,
 		       int threshold);
@@ -70,14 +70,14 @@ class GR_CORE_API gr_packet_sink : public gr_sync_block
   int		     d_packetlen_cnt;		// how many so far
 
  protected:
-  gr_packet_sink(const std::vector<unsigned char>& sync_vector, 
+  gr_packet_sink(const std::vector<unsigned char>& sync_vector,
 		 gr_msg_queue_sptr target_queue,
 		 int threshold);
 
   void enter_search();
   void enter_have_sync();
   void enter_have_header(int payload_len);
-  
+
   int slice(float x) { return x > 0 ? 1 : 0; }
 
   bool header_ok()

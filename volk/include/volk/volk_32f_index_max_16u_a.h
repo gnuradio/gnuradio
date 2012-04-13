@@ -52,7 +52,7 @@ static inline void volk_32f_index_max_16u_a_sse4_1(unsigned int* target, const f
     }
 
     number = quarterPoints * 4;
-    for(;number < num_points; number++){      
+    for(;number < num_points; number++){
       if(src0[number] > max){
 	index = number;
 	max = src0[number];
@@ -111,7 +111,7 @@ static inline void volk_32f_index_max_16u_a_sse(unsigned int* target, const floa
     }
 
     number = quarterPoints * 4;
-    for(;number < num_points; number++){      
+    for(;number < num_points; number++){
       if(src0[number] > max){
 	index = number;
 	max = src0[number];
@@ -128,11 +128,11 @@ static inline void volk_32f_index_max_16u_a_generic(unsigned int* target, const 
   if(num_points > 0){
     float max = src0[0];
     unsigned int index = 0;
-    
-    unsigned int i = 1; 
-    
+
+    unsigned int i = 1;
+
     for(; i < num_points; ++i) {
-      
+
       if(src0[i] > max){
 	index = i;
 	max = src0[i];

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -55,7 +55,7 @@ gr_fmdet_cf::gr_fmdet_cf (float samplerate, float freq_low, float freq_high, flo
 
   float delta;
   std::vector<float> taps(15);
-  
+
   d_freqhi = freq_high;
   d_freqlo = freq_low;
   delta = (d_freqhi - d_freqlo);
@@ -63,7 +63,7 @@ gr_fmdet_cf::gr_fmdet_cf (float samplerate, float freq_low, float freq_high, flo
   d_bias = 0.5*scl*(d_freqhi+d_freqlo)/delta;
   for (int i=0;i<15;i++) taps[i] = h[i];
   //  d_filter = gr_fir_util::create_gr_fir_ccf(taps);
-  
+
 }
 
 int
@@ -94,7 +94,7 @@ gr_fmdet_cf::work (int noutput_items,
     S2=S1;
     S1=S0;
 
-    
+
     *optr++ = d_freq-d_bias;
   }
   d_S1=S1;

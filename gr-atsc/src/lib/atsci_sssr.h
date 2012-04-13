@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -48,7 +48,7 @@ namespace sssr {
     int		d_sr;	// 4 bit shift register
 
   public:
-    
+
     // Constructor
     digital_correlator () { reset (); }
 
@@ -73,7 +73,7 @@ namespace sssr {
 
   class ATSC_API seg_sync_integrator {
     signed char	d_integrator[ATSC_DATA_SEGMENT_LENGTH];
-    
+
   public:
 
     // Constructor
@@ -83,7 +83,7 @@ namespace sssr {
 
     //! called on channel change
     void reset ();
-    
+
     //! update current tap with weight and return integrated correlation value
     int update (int weight, int index);
 
@@ -91,7 +91,7 @@ namespace sssr {
     int find_max (int *value);
 
   };
-  
+
   // ----------------------------------------------------------------
   //! quad filter (used to compute timing error)
 
@@ -140,7 +140,7 @@ class ATSC_API atsci_sssr {
   bool				d_seg_locked;
   FILE			       *d_debug_fp;
 
-  
+
   bool incr_counter () {
     d_counter++;
     if (d_counter >= ATSC_DATA_SEGMENT_LENGTH){
@@ -149,7 +149,7 @@ class ATSC_API atsci_sssr {
     }
     return false;
   }
-    
+
   void incr_symbol_index () {
     d_symbol_index++;
     if (d_symbol_index >= ATSC_DATA_SEGMENT_LENGTH)
@@ -175,9 +175,9 @@ public:
    * track of where the segment sync's occur.  \p timing_adjust is
    * returned to indicate how the interpolator timing needs to be
    * adjusted to track the transmitter's symbol timing.  If \p seg_locked
-   * is true, then \p symbol_index is the index of this sample in 
-   * the current segment.  The symbols are numbered from 0 to 831, where 
-   * symbols 0, 1, 2 and 3 correspond to the data segment sync pattern, 
+   * is true, then \p symbol_index is the index of this sample in
+   * the current segment.  The symbols are numbered from 0 to 831, where
+   * symbols 0, 1, 2 and 3 correspond to the data segment sync pattern,
    * nominally +5, -5, -5, +5.
    */
 
@@ -193,7 +193,7 @@ public:
 /*!
  * \brief interpolator control for segment and symbol sync recovery
  */
- 
+
 class ATSC_API atsci_interpolator {
   gri_mmse_fir_interpolator	d_interp;
   gr_single_pole_iir<float,float,float> d_loop;	// ``VCO'' loop filter
@@ -235,7 +235,7 @@ public:
   double mu ()   const { return d_mu; }
   double w ()    const { return d_w;  }
   int	 incr () const { return d_incr; }
-  
+
 };
 
 #endif /* _ATSC_SSSR_H_ */

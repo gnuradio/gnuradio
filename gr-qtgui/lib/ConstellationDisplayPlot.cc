@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -40,14 +40,14 @@ public:
   virtual ~ConstellationDisplayZoomer(){
 
   }
-  
+
   virtual void updateTrackerText(){
     updateDisplay();
   }
 
 protected:
   using QwtPlotZoomer::trackerText;
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const 
+  virtual QwtText trackerText( const QwtDoublePoint& p ) const
   {
     QwtText t(QString("(%1, %2)").arg(p.x(), 0, 'f', 4).
 	      arg(p.y(), 0, 'f', 4));
@@ -73,7 +73,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
 #else
   QwtPainter::setPolylineSplitting(false);
 #endif
-  
+
 #if QWT_VERSION < 0x060000
   // We don't need the cache here
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
@@ -82,7 +82,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
 
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
-  canvas()->setPalette(palette);  
+  canvas()->setPalette(palette);
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   set_xaxis(-2.0, 2.0);
@@ -144,7 +144,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
 	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
 #endif
 
-  connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool ) ), 
+  connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool ) ),
 	  this, SLOT(LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
@@ -157,7 +157,7 @@ ConstellationDisplayPlot::~ConstellationDisplayPlot()
   // _zoomer and _panner deleted when parent deleted
 }
 
-void 
+void
 ConstellationDisplayPlot::set_pen_size(int size)
 {
   if(size > 0 && size < 30){
@@ -203,7 +203,7 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
 					   const int64_t numDataPoints,
 					   const double timeInterval)
 {
-  if((numDataPoints > 0) && 
+  if((numDataPoints > 0) &&
      (gruel::high_res_timer_now() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
 
     if(numDataPoints != _numPoints){
@@ -213,12 +213,12 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
       delete[] _imagDataPoints;
       _realDataPoints = new double[_numPoints];
       _imagDataPoints = new double[_numPoints];
-      
+
 #if QWT_VERSION < 0x060000
       _plot_curve->setRawData(_realDataPoints, _imagDataPoints, _numPoints);
 #else
       _plot_curve->setRawSamples(_realDataPoints, _imagDataPoints, _numPoints);
-#endif      
+#endif
     }
 
     memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));

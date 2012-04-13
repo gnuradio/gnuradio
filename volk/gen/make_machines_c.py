@@ -33,7 +33,7 @@ struct volk_machine *volk_machines[] = {
         tempstring += "&volk_machine_" + machine
         tempstring += ","
         tempstring += "\n#endif\n"
-    
+
     tempstring += r"""
 };
 unsigned int n_volk_machines = sizeof(volk_machines)/sizeof(*volk_machines);

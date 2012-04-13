@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002,2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -47,7 +47,7 @@ sipp (bool digcorr_output)
     return -1;			// no correlation
 }
 
-/* 
+/*
  * ----------------------------------------------------------------
  * Segment Sync Integrator...
  */
@@ -61,7 +61,7 @@ sssr::seg_sync_integrator::reset ()
   for (int i = 0; i < ATSC_DATA_SEGMENT_LENGTH; i++)
     d_integrator[i] = SSI_MIN;
 }
-  
+
 int
 sssr::seg_sync_integrator::update (int weight, int index)
 {
@@ -78,7 +78,7 @@ sssr::seg_sync_integrator::find_max (int *v)
 {
   int	best_value = d_integrator[0];
   int	best_index = 0;
-  
+
   for (int i = 1; i < ATSC_DATA_SEGMENT_LENGTH; i++)
     if (d_integrator[i] > best_value){
       best_value = d_integrator[i];
@@ -101,7 +101,7 @@ atsci_sssr::atsci_sssr ()
   : d_debug_fp(0)
 {
   reset ();
-  
+
   if (_SSSR_DIAG_OUTPUT_){
     const char *file = "sssr.ssout";
     if ((d_debug_fp = fopen (file, "wb")) == 0){
@@ -126,7 +126,7 @@ atsci_sssr::reset ()
 
   for (int i = 0; i < ATSC_DATA_SEGMENT_LENGTH; i++)
     d_quad_output[i] = 0;
-  
+
   d_timing_adjust = 0;
   d_counter = 0;
   d_symbol_index = 0;
@@ -189,7 +189,7 @@ atsci_sssr::update (sssr::sample_t sample_in,	 // input
 
 static const double	LOOP_FILTER_TAP = 0.00025;	// 0.0005 works
 static const double	ADJUSTMENT_GAIN = 1.0e-5 / (10 * ATSC_DATA_SEGMENT_LENGTH);
-  
+
 atsci_interpolator::atsci_interpolator (double nominal_ratio_of_rx_clock_to_symbol_freq)
   : d_debug_fp(0)
 {
@@ -239,10 +239,10 @@ atsci_interpolator::update (
     return false;
 
   // FIXME Confirm that this is right.  I think it is.  It was (1-d_mu)
-  *output_sample = d_interp.interpolate (&input_samples[*index], d_mu);  
+  *output_sample = d_interp.interpolate (&input_samples[*index], d_mu);
 
   double filter_out = 0;
-  
+
 #if 0
 
   filter_out = d_loop.filter (timing_adjustment);
@@ -262,9 +262,9 @@ atsci_interpolator::update (
 
   d_mu = d_mu + alpha * x;	// conceptually "phase"
   d_w  = d_w  + beta * x;	// conceptually "frequency"
-  
+
 #endif
-  
+
   double s = d_mu + d_w;
   double float_incr = floor (s);
   d_mu = s - float_incr;

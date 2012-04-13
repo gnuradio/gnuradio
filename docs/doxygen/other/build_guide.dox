@@ -61,7 +61,7 @@ about building gr-comedi.
 \li uhd         (>= 3.0.0)   http://code.ettus.com/redmine/ettus/projects/uhd/wiki
 
 \subsection dep_shd shd: The Symplex Hardware Driver Interface
-\li shd         (>= 3.0.0)   
+\li shd         (>= 3.0.0)
 
 \subsection dep_gr_video_sdl gr-video-sdl: PAL and NTSC display
 \li SDL	        (>= 1.2.0)   http://www.libsdl.org/download-1.2.php

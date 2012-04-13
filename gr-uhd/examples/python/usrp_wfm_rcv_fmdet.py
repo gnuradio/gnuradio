@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, optfir, audio, blks2, uhd
 from gnuradio.eng_option import eng_option
@@ -59,10 +59,10 @@ class wfm_rx_block (stdgui2.std_top_block):
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
-        
+
         self.frame = frame
         self.panel = panel
-        
+
         self.vol = 0
         self.state = "FREQ"
         self.freq = 0
@@ -112,7 +112,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.audio_sink = audio.sink (int (audio_rate),
                                       options.audio_output,
                                       False)   # ok_to_block
-        
+
         # now wire it all together
         self.connect (self.u, self.chan_filt, self.guts)
         self.connect((self.guts, 0), self.lchan_filt,
@@ -206,7 +206,7 @@ class wfm_rx_block (stdgui2.std_top_block):
 
 
         if 0:
-            LmR_fft = fftsink2.fft_sink_f(self.panel, title="LmR", 
+            LmR_fft = fftsink2.fft_sink_f(self.panel, title="LmR",
                                           fft_size=512, sample_rate=audio_rate,
                                           y_per_div=10, ref_level=-20)
             self.connect (self.guts.LmR_real,LmR_fft)
@@ -216,7 +216,7 @@ class wfm_rx_block (stdgui2.std_top_block):
             self.scope = scopesink2.scope_sink_f(self.panel, sample_rate=demod_rate)
             self.connect (self.guts.fm_demod,self.scope)
             vbox.Add (self.scope.win,4,wx.EXPAND)
-        
+
         # control area form at bottom
         self.myform = myform = form.form()
 
@@ -243,7 +243,7 @@ class wfm_rx_block (stdgui2.std_top_block):
                                         callback=self.set_vol)
         hbox.Add((5,0), 1)
 
-        g = self.u.get_gain_range()        
+        g = self.u.get_gain_range()
         myform['gain'] = \
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Gain",
                                         weight=3, range=(g.start(), g.stop(), g.step()),
@@ -283,7 +283,7 @@ class wfm_rx_block (stdgui2.std_top_block):
             elif self.rot <=-3:
                 self.set_vol(self.vol - step)
                 self.rot += 3
-            
+
     def on_button (self, event):
         if event.value == 0:        # button up
             return
@@ -293,7 +293,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         else:
             self.state = "FREQ"
         self.update_status_bar ()
-        
+
 
     def set_vol (self, vol):
         g = self.volume_range()
@@ -308,7 +308,7 @@ class wfm_rx_block (stdgui2.std_top_block):
           self.guts.stereo_carrier_pll_recovery.set_lock_threshold(squelch_threshold);
         except:
           print "FYI: This implementation of the stereo_carrier_pll_recovery has no squelch implementation yet"
-                                        
+
 
     def set_freq(self, target_freq):
         """
@@ -317,7 +317,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         @param target_freq: frequency in Hz
         @rypte: bool
         """
-        
+
         r = self.u.set_center_freq(target_freq)
 
         if r:
@@ -330,7 +330,7 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         self._set_status_msg("Failed", 0)
         return False
-        
+
     def set_gain(self, gain):
         self.myform['gain'].set_value(gain)     # update displayed value
         self.u.set_gain(gain)
@@ -342,7 +342,7 @@ class wfm_rx_block (stdgui2.std_top_block):
 
     def volume_range(self):
         return (-20.0, 0.0, 0.5)
-        
+
 
 if __name__ == '__main__':
     app = stdgui2.stdapp (wfm_rx_block, "USRP WFM RX")

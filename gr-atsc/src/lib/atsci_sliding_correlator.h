@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -39,13 +39,13 @@ class ATSC_API atsci_sliding_correlator {
   ~atsci_sliding_correlator (){};
 
   //! input hard decision bit, return correlation (0,511)
-  // Result is the number of wrong bits.  
+  // Result is the number of wrong bits.
   // E.g., 0 -> perfect match; 511 -> all bits are wrong
 
   int input_bit (int bit);
 
   //! input sample, return correlation (0,511)
-  // Result is the number of wrong bits.  
+  // Result is the number of wrong bits.
   // E.g., 0 -> perfect match; 511 -> all bits are wrong
 
   int input_int (int sample){
@@ -53,7 +53,7 @@ class ATSC_API atsci_sliding_correlator {
   }
 
   //! input sample, return correlation (0,511)
-  // Result is the number of wrong bits.  
+  // Result is the number of wrong bits.
   // E.g., 0 -> perfect match; 511 -> all bits are wrong
 
   int input_float (float sample){
@@ -61,7 +61,7 @@ class ATSC_API atsci_sliding_correlator {
   }
 
   void reset () { input.reset (); }
-  
+
  private:
 
   typedef unsigned long	srblock;

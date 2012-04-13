@@ -18,4 +18,4 @@ def make_config_fixed(dom) :
     return tempstring;
 
 
-    
+

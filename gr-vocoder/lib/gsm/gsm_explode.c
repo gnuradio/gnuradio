@@ -228,7 +228,7 @@ int gsm_explode P3((s, c, target), gsm s, gsm_byte * c, gsm_signal * target)
 #define	xmc	(target + 46 - 26)
 			xmc[26] = sr & 0x7;  sr >>= 3;
 			xmc[27] = sr & 0x7;  sr >>= 3;
-			sr |= (uword)*c++ << 1;	
+			sr |= (uword)*c++ << 1;
 			xmc[28] = sr & 0x7;  sr >>= 3;
 			xmc[29] = sr & 0x7;  sr >>= 3;
 			xmc[30] = sr & 0x7;  sr >>= 3;
@@ -245,7 +245,7 @@ int gsm_explode P3((s, c, target), gsm s, gsm_byte * c, gsm_signal * target)
 			xmc[38] = sr & 0x7;  sr >>= 3;
 			sr = *c++;
 			Nc[3] = sr & 0x7f;  sr >>= 7;
-			sr |= (uword)*c++ << 1;		
+			sr |= (uword)*c++ << 1;
 			bc[3] = sr & 0x3;  sr >>= 2;
 			Mc[3] = sr & 0x3;  sr >>= 2;
 			sr |= (uword)*c++ << 5;
@@ -273,7 +273,7 @@ int gsm_explode P3((s, c, target), gsm s, gsm_byte * c, gsm_signal * target)
 			xmc[51] = sr & 0x7;  sr >>= 3;
 		}
 	}
-	else 
+	else
 #endif
 	{
 	/* GSM_MAGIC  = (*c >> 4) & 0xF; */

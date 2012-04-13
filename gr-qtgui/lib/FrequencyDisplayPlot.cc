@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -63,7 +63,7 @@ public:
   {
   }
 
-  virtual ~FreqDisplayScaleDraw() 
+  virtual ~FreqDisplayScaleDraw()
   {
   }
 
@@ -90,7 +90,7 @@ public:
   virtual ~FreqDisplayZoomer(){
 
   }
-  
+
   virtual void updateTrackerText(){
     updateDisplay();
   }
@@ -119,11 +119,11 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 {
   _startFrequency = 0;
   _stopFrequency = 4000;
-  
+
   _lastReplot = 0;
 
   resize(parent->width(), parent->height());
-  
+
   _useCenterFrequencyFlag = false;
 
   _numPoints = 1024;
@@ -138,16 +138,16 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 #else
   QwtPainter::setPolylineSplitting(false);
 #endif
-  
+
 #if QWT_VERSION < 0x060000
   // We don't need the cache here
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintPacked, false);
 #endif
-  
+
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
-  canvas()->setPalette(palette);  
+  canvas()->setPalette(palette);
 
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
   setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
@@ -229,7 +229,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 
   /// THIS CAUSES A PROBLEM!
   //_markerPeakAmplitude->attach(this);
-  
+
   _markerNoiseFloorAmplitude = new QwtPlotMarker();
   _markerNoiseFloorAmplitude->setLineStyle(QwtPlotMarker::HLine);
   _markerNoiseFloorAmplitude->setLinePen(QPen(Qt::darkRed, 0, Qt::DotLine));
@@ -344,7 +344,7 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
   if(stopFreq > startFreq) {
     _startFrequency = startFreq;
     _stopFrequency = stopFreq;
-    
+
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
       double display_units = ceil(log10(units)/2.0);
       setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
@@ -352,7 +352,7 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
 
       if(reset)
 	_resetXAxisPoints();
-      
+
       ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
       ((FreqDisplayZoomer*)_zoomer)->SetUnitType(strunits);
     }
@@ -376,7 +376,7 @@ void
 FrequencyDisplayPlot::replot()
 {
   _markerNoiseFloorAmplitude->setYValue(_noiseFloorAmplitude);
-  
+
   // Make sure to take into account the start frequency
   if(_useCenterFrequencyFlag){
     _markerPeakAmplitude->setXValue((_peakFrequency/1000.0) + _startFrequency);
@@ -385,10 +385,10 @@ FrequencyDisplayPlot::replot()
     _markerPeakAmplitude->setXValue(_peakFrequency + _startFrequency);
   }
   _markerPeakAmplitude->setYValue(_peakAmplitude);
-  
+
   QwtPlot::replot();
 }
- 
+
 void
 FrequencyDisplayPlot::resizeSlot( QSize *s )
 {
@@ -401,12 +401,12 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
 				  const double peakAmplitude, const double timeInterval)
 {
   // Only update plot if there is data and if the time interval has elapsed
-  if((numDataPoints > 0) && 
+  if((numDataPoints > 0) &&
 	(gruel::high_res_timer_now() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
-    
+
     if(numDataPoints != _numPoints) {
       _numPoints = numDataPoints;
-      
+
       delete[] _dataPoints;
       delete[] _minFFTPoints;
       delete[] _maxFFTPoints;
@@ -425,7 +425,7 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
       _min_fft_plot_curve->setRawSamples(_xAxisPoints, _minFFTPoints, _numPoints);
       _max_fft_plot_curve->setRawSamples(_xAxisPoints, _maxFFTPoints, _numPoints);
 #endif
-      
+
       _resetXAxisPoints();
       ClearMaxData();
       ClearMinData();
@@ -521,7 +521,7 @@ FrequencyDisplayPlot::SetTraceColour (QColor c)
   _fft_plot_curve->setPen(QPen(c));
 }
 
-void 
+void
 FrequencyDisplayPlot::SetBGColour (QColor c)
 {
   QPalette palette;

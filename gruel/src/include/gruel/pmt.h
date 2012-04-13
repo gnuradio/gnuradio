@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -52,7 +52,7 @@ namespace pmt {
  * \brief base class of all pmt types
  */
 class pmt_base;
- 
+
 /*!
  * \brief typedef for shared pointer (transparent reference counting).
  * See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
@@ -109,7 +109,7 @@ GRUEL_API bool pmt_is_false(pmt_t obj);
 //! Return \#f is val is false, else return \#t.
 GRUEL_API pmt_t pmt_from_bool(bool val);
 
-//! Return true if val is PMT_T, return false when val is PMT_F, 
+//! Return true if val is PMT_T, return false when val is PMT_F,
 // else raise wrong_type exception.
 GRUEL_API bool pmt_to_bool(pmt_t val);
 
@@ -384,7 +384,7 @@ GRUEL_API size_t pmt_blob_length(pmt_t blob);
  */
 
 //! true if \p x is any kind of uniform numeric vector
-GRUEL_API bool pmt_is_uniform_vector(pmt_t x);  
+GRUEL_API bool pmt_is_uniform_vector(pmt_t x);
 
 GRUEL_API bool pmt_is_u8vector(pmt_t x);
 GRUEL_API bool pmt_is_s8vector(pmt_t x);
@@ -584,7 +584,7 @@ GRUEL_API bool pmt_eqv(const pmt_t& x, const pmt_t& y);
 
 /*!
  * pmt_equal recursively compares the contents of pairs and vectors,
- * applying pmt_eqv on other objects such as numbers and symbols.  
+ * applying pmt_eqv on other objects such as numbers and symbols.
  * pmt_equal may fail to terminate if its arguments are circular data
  * structures.
  */

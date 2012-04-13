@@ -29,7 +29,7 @@ The forms follow a layered model:
   * translation layer
     * translates the between the external and internal layers
     * handles parsing errors between layers
-  * external layer 
+  * external layer
     * provided external access to the user
     * set_value, get_value, and optional callback
     * set and get through optional pubsub and key
@@ -511,9 +511,9 @@ from gnuradio.wxgui import gui
 
 class app_gui (object):
     def __init__(self, frame, panel, vbox, top_block, options, args):
-        
+
         def callback(v): print v
-       
+
         radio_buttons(
             sizer=vbox,
             parent=panel,
@@ -525,7 +525,7 @@ class app_gui (object):
             callback=callback,
             #major_dimension = 2,
         )
-        
+
         radio_buttons(
             sizer=vbox,
             parent=panel,
@@ -537,7 +537,7 @@ class app_gui (object):
             callback=callback,
             #major_dimension = 2,
         )
-        
+
         radio_buttons(
             sizer=vbox,
             parent=panel,
@@ -548,7 +548,7 @@ class app_gui (object):
             callback=callback,
             #major_dimension = 2,
         )
-        
+
         button(
             sizer=vbox,
             parent=panel,
@@ -559,8 +559,8 @@ class app_gui (object):
             callback=callback,
             #width=100,
         )
-        
-        
+
+
         drop_down(
             sizer=vbox,
             parent=panel,
@@ -584,7 +584,7 @@ class app_gui (object):
             callback=callback,
             width=200,
         )
-        
+
         static_text(
             sizer=vbox,
             parent=panel,
@@ -593,7 +593,7 @@ class app_gui (object):
             width=-1,
             bold=True,
         )
-        
+
         slider(
             sizer=vbox,
             parent=panel,
@@ -601,7 +601,7 @@ class app_gui (object):
             label='slider',
             callback=callback,
         )
-        
+
         log_slider(
             sizer=vbox,
             parent=panel,
@@ -609,7 +609,7 @@ class app_gui (object):
             label='slider',
             callback=callback,
         )
-        
+
         slider(
             sizer=vbox,
             parent=panel,
@@ -619,7 +619,7 @@ class app_gui (object):
             style=wx.SL_VERTICAL,
             length=30,
         )
-               
+
         toggle_button(
             sizer=vbox,
             parent=panel,
@@ -627,7 +627,7 @@ class app_gui (object):
             label='toggle it',
             callback=callback,
         )
-        
+
         single_button(
             sizer=vbox,
             parent=panel,

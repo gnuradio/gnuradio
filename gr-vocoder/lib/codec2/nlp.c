@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                                 
-  FILE........: nlp.c                                                   
-  AUTHOR......: David Rowe                                      
-  DATE CREATED: 23/3/93                                    
-                                                         
-  Non Linear Pitch (NLP) estimation functions.			  
-                                                               
+
+  FILE........: nlp.c
+  AUTHOR......: David Rowe
+  DATE CREATED: 23/3/93
+
+  Non Linear Pitch (NLP) estimation functions.
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -35,9 +35,9 @@
 #include <stdlib.h>
 
 /*---------------------------------------------------------------------------*\
-                                                                             
- 				DEFINES                                       
-                                                                             
+
+ 				DEFINES
+
 \*---------------------------------------------------------------------------*/
 
 #define PMAX_M      600		/* maximum NLP analysis window size     */
@@ -52,9 +52,9 @@
 #define NLP_NTAP 48	        /* Decimation LPF order */
 
 /*---------------------------------------------------------------------------*\
-                                                                            
- 				GLOBALS                                       
-                                                                             
+
+ 				GLOBALS
+
 \*---------------------------------------------------------------------------*/
 
 /* 48 tap 600Hz low pass FIR filter coefficients */
@@ -117,14 +117,14 @@ typedef struct {
 } NLP;
 
 float post_process_mbe(COMP Fw[], int pmin, int pmax, float gmax);
-float post_process_sub_multiples(COMP Fw[], 
+float post_process_sub_multiples(COMP Fw[],
 				 int pmin, int pmax, float gmax, int gmax_bin,
 				 float *prev_Wo);
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-  nlp_create()                                                                  
-                                                                             
+
+  nlp_create()
+
   Initialisation function for NLP pitch estimator.
 
 \*---------------------------------------------------------------------------*/
@@ -149,9 +149,9 @@ void *nlp_create()
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                             
+
   nlp_destory()
-                                                                             
+
   Initialisation function for NLP pitch estimator.
 
 \*---------------------------------------------------------------------------*/
@@ -163,9 +163,9 @@ void nlp_destroy(void *nlp_state)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-  nlp()                                                                  
-                                                                             
+
+  nlp()
+
   Determines the pitch in samples using the Non Linear Pitch (NLP)
   algorithm [1]. Returns the fundamental in Hz.  Note that the actual
   pitch estimate is for the centre of the M sample Sn[] vector, not
@@ -189,11 +189,11 @@ void nlp_destroy(void *nlp_state)
   References:
 
     [1] http://www.itr.unisa.edu.au/~steven/thesis/dgr.pdf Chapter 4
-                                                              
+
 \*---------------------------------------------------------------------------*/
 
 float nlp(
-  void *nlp_state, 
+  void *nlp_state,
   float  Sn[],			/* input speech vector */
   int    n,			/* frames shift (no. new samples in Sn[]) */
   int    m,			/* analysis window size */
@@ -271,7 +271,7 @@ float nlp(
 	}
     }
 
-    best_f0 = post_process_sub_multiples(Fw, pmin, pmax, gmax, gmax_bin, 
+    best_f0 = post_process_sub_multiples(Fw, pmin, pmax, gmax, gmax_bin,
 					 prev_Wo);
 
     /* Shift samples in buffer to make room for new samples */
@@ -282,13 +282,13 @@ float nlp(
     /* return pitch and F0 estimate */
 
     *pitch = (float)SAMPLE_RATE/best_f0;
-    return(best_f0);  
+    return(best_f0);
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-  post_process_sub_multiples() 
-                                                                           
+
+  post_process_sub_multiples()
+
   Given the global maximma of Fw[] we search interger submultiples for
   local maxima.  If local maxima exist and they are above an
   experimentally derived threshold (OK a magic number I pulled out of
@@ -306,7 +306,7 @@ float nlp(
 
 \*---------------------------------------------------------------------------*/
 
-float post_process_sub_multiples(COMP Fw[], 
+float post_process_sub_multiples(COMP Fw[],
 				 int pmin, int pmax, float gmax, int gmax_bin,
 				 float *prev_Wo)
 {
@@ -361,4 +361,4 @@ float post_process_sub_multiples(COMP Fw[],
 
     return best_f0;
 }
-  
+

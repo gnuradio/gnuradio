@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -128,11 +128,11 @@ private:
   //! \brief Rounding function specific to CVSD
   //! \return the input value rounded to the nearest integer
   int cvsd_round(double input);
-  
+
   //! \brief A power function specific to CVSD data formats
   //! \return (radix)^power, where radix and power are short integers
   unsigned int cvsd_pow (short radix, short power);
- 
+
   //! \brief Sums number of 1's in the input
   //! \return the number of 1s in the four bytes of an input unsigned integer
   unsigned char cvsd_bitwise_sum (unsigned int input);

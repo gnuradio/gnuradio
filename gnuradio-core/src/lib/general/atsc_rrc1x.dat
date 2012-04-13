@@ -3,10 +3,10 @@
  * FILTER TYPE:ROOT RAISED COSINE            12H
  * PASSBAND RIPPLE IN -dB            -.0500
  * STOPBAND RIPPLE IN -dB          -50.0000
- * SYMBOL RATE                  .538112E+07 HERTZ              
- * ROLLOF FACTOR                .115200    
- * SAMPLING FREQUENCY           .107622E+08 HERTZ              
- * SAMPLING FREQUENCY           .107622E+08 HERTZ              
+ * SYMBOL RATE                  .538112E+07 HERTZ
+ * ROLLOF FACTOR                .115200
+ * SAMPLING FREQUENCY           .107622E+08 HERTZ
+ * SAMPLING FREQUENCY           .107622E+08 HERTZ
  */
    .1821269281208515e-02,
   -.9323525242507458e-02,

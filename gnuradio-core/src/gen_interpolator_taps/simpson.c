@@ -18,7 +18,7 @@
  * NOR THREAD SAFE!
  */
 
-double 
+double
 trapzd (double (*func)(double),
 	double a, double b,
 	int    n)

@@ -30,7 +30,7 @@ class gr_annotator_alltoall;
 typedef boost::shared_ptr<gr_annotator_alltoall> gr_annotator_alltoall_sptr;
 
 // public constructor
-GR_CORE_API gr_annotator_alltoall_sptr 
+GR_CORE_API gr_annotator_alltoall_sptr
 gr_make_annotator_alltoall (int when, size_t sizeof_stream_item);
 
 /*!
@@ -54,7 +54,7 @@ class GR_CORE_API gr_annotator_alltoall : public gr_sync_block
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
-  
+
   std::vector<gr_tag_t> data() const
   {
     return d_stored_tags;

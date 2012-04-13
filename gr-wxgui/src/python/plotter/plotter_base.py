@@ -101,7 +101,7 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		self.Bind(wx.EVT_ERASE_BACKGROUND, lambda e: None)
 
         def set_use_persistence(self,enable):
-                self.use_persistence=enable 
+                self.use_persistence=enable
                 self.clear_accum=True
 
         def set_persist_alpha(self,analog_alpha):

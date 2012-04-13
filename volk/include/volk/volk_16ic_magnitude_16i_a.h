@@ -17,7 +17,7 @@
 static inline void volk_16ic_magnitude_16i_a_sse3(int16_t* magnitudeVector, const lv_16sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int quarterPoints = num_points / 4;
-   
+
   const int16_t* complexVectorPtr = (const int16_t*)complexVector;
   int16_t* magnitudeVectorPtr = magnitudeVector;
 
@@ -35,7 +35,7 @@ static inline void volk_16ic_magnitude_16i_a_sse3(int16_t* magnitudeVector, cons
     inputFloatBuffer[1] = (float)(complexVectorPtr[1]);
     inputFloatBuffer[2] = (float)(complexVectorPtr[2]);
     inputFloatBuffer[3] = (float)(complexVectorPtr[3]);
-      
+
     inputFloatBuffer[4] = (float)(complexVectorPtr[4]);
     inputFloatBuffer[5] = (float)(complexVectorPtr[5]);
     inputFloatBuffer[6] = (float)(complexVectorPtr[6]);
@@ -106,7 +106,7 @@ static inline void volk_16ic_magnitude_16i_a_sse(int16_t* magnitudeVector, const
     inputFloatBuffer[1] = (float)(complexVectorPtr[1]);
     inputFloatBuffer[2] = (float)(complexVectorPtr[2]);
     inputFloatBuffer[3] = (float)(complexVectorPtr[3]);
-      
+
     cplxValue1 = _mm_load_ps(inputFloatBuffer);
     complexVectorPtr += 4;
 

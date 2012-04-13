@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -107,7 +107,7 @@ gr_fft_vfc::work (int noutput_items,
     else {
       gr_complex *dst = d_fft->get_inbuf();
       for (unsigned int i = 0; i < d_fft_size; i++)		// float to complex conversion
-	dst[i] = in[i];				       
+	dst[i] = in[i];
     }
 
     // compute the fft
@@ -123,13 +123,13 @@ gr_fft_vfc::work (int noutput_items,
   return noutput_items;
 }
 
-bool 
+bool
 gr_fft_vfc::set_window(const std::vector<float> &window)
 {
   if(window.size()==0 || window.size()==d_fft_size) {
     d_window=window;
     return true;
   }
-  else 
+  else
     return false;
 }

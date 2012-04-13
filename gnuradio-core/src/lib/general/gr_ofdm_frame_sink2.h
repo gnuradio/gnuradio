@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -31,7 +31,7 @@
 class gr_ofdm_frame_sink2;
 typedef boost::shared_ptr<gr_ofdm_frame_sink2> gr_ofdm_frame_sink2_sptr;
 
-GR_CORE_API gr_ofdm_frame_sink2_sptr 
+GR_CORE_API gr_ofdm_frame_sink2_sptr
 gr_make_ofdm_frame_sink2 (gr_constellation_sptr constell,
 			 gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
 			 float phase_gain=0.25, float freq_gain=0.25*0.25/4.0);
@@ -48,8 +48,8 @@ gr_make_ofdm_frame_sink2 (gr_constellation_sptr constell,
  */
 class GR_CORE_API gr_ofdm_frame_sink2 : public gr_sync_block
 {
-  friend GR_CORE_API gr_ofdm_frame_sink2_sptr 
-  gr_make_ofdm_frame_sink2 (gr_constellation_sptr constell, 
+  friend GR_CORE_API gr_ofdm_frame_sink2_sptr
+  gr_make_ofdm_frame_sink2 (gr_constellation_sptr constell,
 			   gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
 			   float phase_gain, float freq_gain);
 
@@ -64,7 +64,7 @@ class GR_CORE_API gr_ofdm_frame_sink2 : public gr_sync_block
   unsigned int       d_header;			// header bits
   int		     d_headerbytelen_cnt;	// how many so far
 
-  unsigned char      *d_bytes_out;              // hold the current bytes produced by the demapper    
+  unsigned char      *d_bytes_out;              // hold the current bytes produced by the demapper
 
   unsigned int       d_occupied_carriers;
   unsigned int       d_byte_offset;
@@ -99,13 +99,13 @@ class GR_CORE_API gr_ofdm_frame_sink2 : public gr_sync_block
   void enter_search();
   void enter_have_sync();
   void enter_have_header();
-  
+
   bool header_ok()
   {
     // confirm that two copies of header info are identical
     return ((d_header >> 16) ^ (d_header & 0xffff)) == 0;
   }
-  
+
   unsigned char slicer(const gr_complex x);
   unsigned int demapper(const gr_complex *in,
 			unsigned char *out);

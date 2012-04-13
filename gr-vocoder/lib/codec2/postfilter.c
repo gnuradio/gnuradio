@@ -1,13 +1,13 @@
 /*---------------------------------------------------------------------------*\
-                                                                             
+
   FILE........: postfilter.c
-  AUTHOR......: David Rowe                                                          
+  AUTHOR......: David Rowe
   DATE CREATED: 13/09/09
-                                                                             
+
   Postfilter to improve sound quality for speech with high levels of
   background noise.  Unlike mixed-excitation models requires no bits
   to be transmitted to handle background noise.
-                                                                             
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -71,7 +71,7 @@
 
   This idea is rather experimental.  Some potential problems that may
   happen:
- 
+
   1/ If someone says "aaaaaaaahhhhhhhhh" will background estimator track
      up to speech level?  This would be a bad thing.
 
@@ -88,13 +88,13 @@
 
   5/ Not sure what happens during long periods of voiced speech
      e.g. "sshhhhhhh"
-  
+
 \*---------------------------------------------------------------------------*/
 
 void postfilter(
   MODEL *model,
   float *bg_est
-)	
+)
 {
   int   m, uv;
   float e;

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -127,7 +127,7 @@ std::ostream& operator<<(std::ostream &os, pmt_t obj)
   return os;
 }
 
-std::string 
+std::string
 pmt_write_string(pmt_t obj)
 {
   std::ostringstream s;
@@ -150,7 +150,7 @@ pmt_serialize(pmt_t obj, std::ostream &sink)
 /*!
  * \brief Create obj from portable byte-serial representation
  */
-pmt_t 
+pmt_t
 pmt_deserialize(std::istream &source)
 {
   throw pmt_notimplemented("notimplemented: pmt_deserialize", PMT_NIL);
@@ -159,7 +159,7 @@ pmt_deserialize(std::istream &source)
 } /* namespace pmt */
 
 
-void 
+void
 pmt::pmt_print(pmt_t v)
 {
   std::cout << pmt_write_string(v) << std::endl;

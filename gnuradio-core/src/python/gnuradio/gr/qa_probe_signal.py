@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2012 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import time
 
@@ -33,7 +33,7 @@ class test_probe_signal (gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        
+
         value = 12.3
         repeats = 100
         src_data = [value] * repeats
@@ -52,7 +52,7 @@ class test_probe_signal (gr_unittest.TestCase):
         repeats = 10
         value = [0.5+i for i in range(0, vector_length)]
         src_data = value * repeats
-        
+
         src = gr.vector_source_f(src_data)
         s2v = gr.stream_to_vector(gr.sizeof_float, vector_length)
         dst = gr.probe_signal_vf(vector_length)

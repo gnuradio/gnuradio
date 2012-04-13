@@ -10,40 +10,40 @@
 
 
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
-  
+
   float * res = (float*) result;
   float * in = (float*) input;
   float * tp = (float*) taps;
   unsigned int n_2_ccomplex_blocks = num_bytes >> 4;
   unsigned int isodd = (num_bytes >> 3) &1;
-  
-  
-  
+
+
+
   float sum0[2] = {0,0};
   float sum1[2] = {0,0};
   unsigned int i = 0;
 
-  
+
   for(i = 0; i < n_2_ccomplex_blocks; ++i) {
-    
+
 
     sum0[0] += in[0] * tp[0] + in[1] * tp[1];
     sum0[1] += (-in[0] * tp[1]) + in[1] * tp[0];
     sum1[0] += in[2] * tp[2] + in[3] * tp[3];
     sum1[1] += (-in[2] * tp[3]) + in[3] * tp[2];
-    
-    
+
+
     in += 4;
     tp += 4;
 
   }
- 
-  
+
+
   res[0] = sum0[0] + sum1[0];
   res[1] = sum0[1] + sum1[1];
-  
-  
-  
+
+
+
   for(i = 0; i < isodd; ++i) {
 
 
@@ -64,13 +64,13 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_generic(lv_32fc_t* res
 
 
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_sse(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
-  
+
   __VOLK_ATTR_ALIGNED(16) static const uint32_t conjugator[4]= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
-  
 
 
 
-  asm volatile 
+
+  asm volatile
     (
      "#  ccomplex_conjugate_dotprod_generic (float* result, const float *input,\n\t"
      "#                         const float *taps, unsigned num_bytes)\n\t"
@@ -187,32 +187,32 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_sse(lv_32fc_t* result,
      :[rsi] "r" (input), [rdx] "r" (taps), "c" (num_bytes), [rdi] "r" (result), [conjugator] "r" (conjugator)
      :"rax", "r8", "r9", "r10"
      );
-  
-  
+
+
   int getem = num_bytes % 16;
-  
-  
+
+
   for(; getem > 0; getem -= 8) {
-  
-    
+
+
     *result += (input[(num_bytes >> 3) - 1] * lv_conj(taps[(num_bytes >> 3) - 1]));
-  
+
   }
 
   return;
-}  
+}
 #endif
 
 #if LV_HAVE_SSE && LV_HAVE_32
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
-  
+
   __VOLK_ATTR_ALIGNED(16) static const uint32_t conjugator[4]= {0x00000000, 0x80000000, 0x00000000, 0x80000000};
 
   int bound = num_bytes >> 4;
   int leftovers = num_bytes % 16;
 
-  
-  asm volatile 
+
+  asm volatile
     (
      "	#pushl	%%ebp\n\t"
      "	#movl	%%esp, %%ebp\n\t"
@@ -226,7 +226,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_sse_32(lv_32fc_t* resu
      "	movaps	0(%[edx]), %%xmm2\n\t"
      "  movl    %[ecx], (%[out])\n\t"
      "	shrl	$5, %[ecx]		# ecx = n_2_ccomplex_blocks / 2\n\t"
-     
+
      "  xorps   %%xmm1, %%xmm2\n\t"
      "	jmp	.%=L1_test\n\t"
      "	# 4 taps / loop\n\t"
@@ -317,28 +317,28 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_a_sse_32(lv_32fc_t* resu
      : [eax] "r" (input), [edx] "r" (taps), [ecx] "r" (num_bytes), [out] "r" (result), [conjugator] "r" (conjugator)
      );
 
-  
-  
-  
-  printf("%d, %d\n", leftovers, bound);
-  
-  for(; leftovers > 0; leftovers -= 8) {
-    
-    
-    *result += (input[(bound << 1)] * lv_conj(taps[(bound << 1)]));
-    
-  }
-  
-  return;
-  
-  
-  
 
-  
-  
+
+
+  printf("%d, %d\n", leftovers, bound);
+
+  for(; leftovers > 0; leftovers -= 8) {
+
+
+    *result += (input[(bound << 1)] * lv_conj(taps[(bound << 1)]));
+
+  }
+
+  return;
+
+
+
+
+
+
 }
 
-#endif /*LV_HAVE_SSE*/  
+#endif /*LV_HAVE_SSE*/
 
 
 

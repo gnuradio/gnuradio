@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -61,7 +61,7 @@ gr_fake_channel_encoder_pp::work (int noutput_items,
   const unsigned char *in = (const unsigned char *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
   int	npad = d_output_vlen - d_input_vlen;
-  
+
   for (int i = 0; i < noutput_items; i++){
     memcpy(out, in, d_input_vlen);
     memset(out + d_input_vlen, PAD_VAL, npad);
@@ -102,7 +102,7 @@ gr_fake_channel_decoder_pp::work (int noutput_items,
 {
   const unsigned char *in = (const unsigned char *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
-  
+
   for (int i = 0; i < noutput_items; i++){
     memcpy(out, in, d_output_vlen);
     in += d_input_vlen;

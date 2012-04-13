@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2006,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -27,9 +27,9 @@
 #include <gr_ctcss_squelch_ff.h>
 
 static float ctcss_tones[] = {
-   67.0,  71.9,  74.4,  77.0,  79.7,  82.5,  85.4,  88.5,  91.5,  94.8, 
+   67.0,  71.9,  74.4,  77.0,  79.7,  82.5,  85.4,  88.5,  91.5,  94.8,
    97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8, 123.0, 127.3, 131.8,
-  136.5, 141.3, 146.2, 151.4, 156.7, 162.2, 167.9, 173.8, 179.9, 186.2, 
+  136.5, 141.3, 146.2, 151.4, 156.7, 162.2, 167.9, 173.8, 179.9, 186.2,
   192.8, 203.5, 210.7, 218.1, 225.7, 233.6, 241.8, 250.3
 };
 
@@ -50,7 +50,7 @@ int gr_ctcss_squelch_ff::find_tone(float freq)
   return -1;
 }
 
-gr_ctcss_squelch_ff::gr_ctcss_squelch_ff(int rate, float freq, float level, int len, int ramp, bool gate) : 
+gr_ctcss_squelch_ff::gr_ctcss_squelch_ff(int rate, float freq, float level, int len, int ramp, bool gate) :
     gr_squelch_base_ff("ctcss_squelch_ff", ramp, gate)
 {
   d_freq = freq;
@@ -71,7 +71,7 @@ gr_ctcss_squelch_ff::gr_ctcss_squelch_ff(int rate, float freq, float level, int 
     f_l = freq*0.98;
   else
     f_l = ctcss_tones[i-1];
-    
+
   if (i == -1 || i == max_tone_index)
     f_r = freq*1.02;
   else
@@ -105,7 +105,7 @@ void gr_ctcss_squelch_ff::update_state(const float &in)
       d_out_l = abs(d_goertzel_l.output());
       d_out_c = abs(d_goertzel_c.output());
       d_out_r = abs(d_goertzel_r.output());
-  
+
       //printf("d_out_l=%f d_out_c=%f d_out_r=%f\n", d_out_l, d_out_c, d_out_r);
       d_mute = (d_out_c < d_level || d_out_c < d_out_l || d_out_c < d_out_r);
   }

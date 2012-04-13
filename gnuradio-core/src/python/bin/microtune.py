@@ -36,7 +36,7 @@ def main ():
 
         actual = front_end.set_RF_freq (options.freq)
         print "microtune: actual freq = %s" %  (eng_notation.num_to_str (actual),)
-        
+
 
 if __name__ == '__main__':
     main ()

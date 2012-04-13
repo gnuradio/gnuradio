@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2007 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -44,11 +44,11 @@ public:
   int port() const { return d_port; }
 
   bool operator==(const gr_endpoint &other) const;
-};    
+};
 
 inline bool gr_endpoint::operator==(const gr_endpoint &other) const
 {
-  return (d_basic_block == other.d_basic_block && 
+  return (d_basic_block == other.d_basic_block &&
 	  d_port == other.d_port);
 }
 
@@ -134,7 +134,7 @@ protected:
   gr_edge_vector_t d_edges;
 
   gr_flowgraph();
-  std::vector<int> calc_used_ports(gr_basic_block_sptr block, bool check_inputs); 
+  std::vector<int> calc_used_ports(gr_basic_block_sptr block, bool check_inputs);
   gr_basic_block_vector_t calc_downstream_blocks(gr_basic_block_sptr block, int port);
   gr_edge_vector_t calc_upstream_edges(gr_basic_block_sptr block);
   bool has_block_p(gr_basic_block_sptr block);

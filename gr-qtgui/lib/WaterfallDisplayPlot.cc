@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -113,16 +113,16 @@ public:
     _zeroTime = 0;
     _secondsPerLine = 1.0;
   }
-  
+
   virtual ~TimeScaleData()
-  {    
+  {
   }
 
   virtual gruel::high_res_timer_type GetZeroTime() const
   {
     return _zeroTime;
   }
-  
+
   virtual void SetZeroTime(const gruel::high_res_timer_type newTime)
   {
     _zeroTime = newTime - gruel::high_res_timer_epoch();
@@ -138,13 +138,13 @@ public:
     return _secondsPerLine;
   }
 
-  
+
 protected:
   gruel::high_res_timer_type _zeroTime;
   double _secondsPerLine;
-  
+
 private:
-  
+
 };
 
 static QString
@@ -164,11 +164,11 @@ class QwtTimeScaleDraw: public QwtScaleDraw, public TimeScaleData
 {
 public:
   QwtTimeScaleDraw():QwtScaleDraw(),TimeScaleData()
-  {    
+  {
   }
 
   virtual ~QwtTimeScaleDraw()
-  {    
+  {
   }
 
   virtual QwtText label(double value) const
@@ -183,19 +183,19 @@ public:
     // updates is to prevent the display from being updated too often...
     invalidateCache();
   }
-  
+
 protected:
 
 private:
 
 };
 
-class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, 
+class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData,
 		       public FreqOffsetAndPrecisionClass
 {
 public:
   WaterfallZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision)
-    : QwtPlotZoomer(canvas), TimeScaleData(), 
+    : QwtPlotZoomer(canvas), TimeScaleData(),
       FreqOffsetAndPrecisionClass(freqPrecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
@@ -204,7 +204,7 @@ public:
   virtual ~WaterfallZoomer()
   {
   }
-  
+
   virtual void updateTrackerText()
   {
     updateDisplay();
@@ -217,7 +217,7 @@ public:
 
 protected:
   using QwtPlotZoomer::trackerText;
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const 
+  virtual QwtText trackerText( const QwtDoublePoint& p ) const
   {
     double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (p.y() * GetSecondsPerLine());
     QwtText t(QString("%1 %2, %3").
@@ -289,13 +289,13 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   _zoomer = NULL;
   _startFrequency = 0;
   _stopFrequency = 4000;
-  
+
   resize(parent->width(), parent->height());
   _numPoints = 1024;
 
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
-  canvas()->setPalette(palette);   
+  canvas()->setPalette(palette);
 
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
   setAxisScaleDraw(QwtPlot::xBottom, new WaterfallFreqDisplayScaleDraw(0));
@@ -309,7 +309,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 
   d_data = new WaterfallData(_startFrequency, _stopFrequency,
 			     _numPoints, 200);
-  
+
 #if QWT_VERSION < 0x060000
   d_spectrogram = new PlotWaterfall(d_data, "Waterfall Display");
 
@@ -324,7 +324,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 #endif
 
   d_spectrogram->attach(this);
-  
+
   // LeftButton for the zooming
   // MidButton for the panning
   // RightButton: zoom out by 1
@@ -337,11 +337,11 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 			   Qt::RightButton, Qt::ControlModifier);
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
 			   Qt::RightButton);
-  
+
   _panner = new QwtPlotPanner(canvas());
   _panner->setAxisEnabled(QwtPlot::yRight, false);
   _panner->setMouseButton(Qt::MidButton);
-  
+
   // emit the position of clicks on widget
   _picker = new QwtDblClickPlotPicker(canvas());
 #if QWT_VERSION < 0x060000
@@ -354,11 +354,11 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 
   // Avoid jumping when labels with more/less digits
   // appear/disappear when scrolling vertically
-  
+
   const QFontMetrics fm(axisWidget(QwtPlot::yLeft)->font());
   QwtScaleDraw *sd = axisScaleDraw(QwtPlot::yLeft);
   sd->setMinimumExtent( fm.width("100.00") );
-  
+
   const QColor c(Qt::black);
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
@@ -374,7 +374,7 @@ WaterfallDisplayPlot::~WaterfallDisplayPlot()
   delete d_spectrogram;
 }
 
-void 
+void
 WaterfallDisplayPlot::Reset()
 {
   d_data->ResizeData(_startFrequency, _stopFrequency, _numPoints);
@@ -418,7 +418,7 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
   if(stopFreq > startFreq) {
     _startFrequency = startFreq;
     _stopFrequency = stopFreq;
- 
+
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
       double display_units = ceil(log10(units)/2.0);
       setAxisScaleDraw(QwtPlot::xBottom, new WaterfallFreqDisplayScaleDraw(display_units));
@@ -448,7 +448,7 @@ WaterfallDisplayPlot::GetStopFrequency() const
 }
 
 void
-WaterfallDisplayPlot::PlotNewData(const double* dataPoints, 
+WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
 				  const int64_t numDataPoints,
 				  const double timePerFFT,
 				  const gruel::high_res_timer_type timestamp,
@@ -457,30 +457,30 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
   if(numDataPoints > 0){
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
-      
+
       Reset();
-      
+
       d_spectrogram->invalidateCache();
       d_spectrogram->itemChanged();
-      
+
       if(isVisible()){
 	replot();
       }
-      
+
       _lastReplot = gruel::high_res_timer_now();
     }
 
     if(gruel::high_res_timer_now() - _lastReplot > timePerFFT*gruel::high_res_timer_tps()) {
       d_data->addFFTData(dataPoints, numDataPoints, droppedFrames);
       d_data->IncrementNumLinesToUpdate();
-      
+
       QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
       timeScale->SetSecondsPerLine(timePerFFT);
       timeScale->SetZeroTime(timestamp);
-      
+
       ((WaterfallZoomer*)_zoomer)->SetSecondsPerLine(timePerFFT);
       ((WaterfallZoomer*)_zoomer)->SetZeroTime(timestamp);
-      
+
       d_spectrogram->invalidateCache();
       d_spectrogram->itemChanged();
 
@@ -492,7 +492,7 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
 }
 
 void
-WaterfallDisplayPlot::SetIntensityRange(const double minIntensity, 
+WaterfallDisplayPlot::SetIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
 #if QWT_VERSION < 0x060000
@@ -547,11 +547,11 @@ WaterfallDisplayPlot::GetIntensityColorMapType() const
 }
 
 void
-WaterfallDisplayPlot::SetIntensityColorMapType(const int newType, 
-					       const QColor lowColor, 
+WaterfallDisplayPlot::SetIntensityColorMapType(const int newType,
+					       const QColor lowColor,
 					       const QColor highColor)
 {
-  if((_intensityColorMapType != newType) || 
+  if((_intensityColorMapType != newType) ||
      ((newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
       (lowColor.isValid() && highColor.isValid()))){
     switch(newType){
@@ -609,7 +609,7 @@ WaterfallDisplayPlot::SetIntensityColorMapType(const int newType,
     }
     default: break;
     }
-    
+
     _UpdateIntensityRangeDisplay();
   }
 }
@@ -636,7 +636,7 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
 #if QWT_VERSION < 0x060000
   rightAxis->setColorMap(d_spectrogram->data()->range(),
 			 d_spectrogram->colorMap());
-  setAxisScale(QwtPlot::yRight, 
+  setAxisScale(QwtPlot::yRight,
 	       d_spectrogram->data()->range().minValue(),
 	       d_spectrogram->data()->range().maxValue());
 #else
@@ -660,7 +660,7 @@ WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
 #endif
 
   enableAxis(QwtPlot::yRight);
-  
+
   plotLayout()->setAlignCanvasToScales(true);
 
   // Tell the display to redraw everything

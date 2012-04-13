@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2008,2010,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 try:
     import scipy
@@ -60,7 +60,7 @@ class plot_psd_base:
         self.fig = figure(1, figsize=(16, 12), facecolor='w')
         rcParams['xtick.labelsize'] = self.axis_font_size
         rcParams['ytick.labelsize'] = self.axis_font_size
-        
+
         self.text_file     = figtext(0.10, 0.95, ("File: %s" % filename),
                                      weight="heavy", size=self.text_size)
         self.text_file_pos = figtext(0.10, 0.92, "File Position: ",
@@ -85,7 +85,7 @@ class plot_psd_base:
         connect('draw_event', self.zoom)
         connect('key_press_event', self.click)
         show()
-        
+
     def get_data(self):
         self.position = self.hfile.tell()/self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % self.position)
@@ -101,13 +101,13 @@ class plot_psd_base:
                 tstep = 1.0 / self.sample_rate
                 #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
                 self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
-                
+
                 self.iq_psd, self.freq = self.dopsd(self.iq)
                 return True
             else:
                 print "End of File"
                 return False
-          
+
     def dopsd(self, iq):
         ''' Need to do this here and plot later so we can do the fftshift '''
         overlap = self.psdfftsize/4
@@ -125,7 +125,7 @@ class plot_psd_base:
         iqdims = [[0.075, 0.2, 0.4, 0.6], [0.075, 0.55, 0.4, 0.3]]
         psddims = [[0.575, 0.2, 0.4, 0.6], [0.575, 0.55, 0.4, 0.3]]
         specdims = [0.2, 0.125, 0.6, 0.3]
-        
+
         # Subplot for real and imaginary parts of signal
         self.sp_iq = self.fig.add_subplot(2,2,1, position=iqdims[self.dospec])
         self.sp_iq.set_title(("I&Q"), fontsize=self.title_font_size, fontweight="bold")
@@ -139,7 +139,7 @@ class plot_psd_base:
         self.sp_psd.set_ylabel("Power Spectrum (dBm)", fontsize=self.label_font_size, fontweight="bold")
 
         r = self.get_data()
-        
+
         self.plot_iq  = self.sp_iq.plot([], 'bo-') # make plot for reals
         self.plot_iq += self.sp_iq.plot([], 'ro-') # make plot for imags
         self.draw_time(self.time, self.iq)         # draw the plot
@@ -156,7 +156,7 @@ class plot_psd_base:
             self.sp_spec.set_ylabel("Frequency (Hz)", fontsize=self.label_font_size, fontweight="bold")
 
             self.draw_spec(self.time, self.iq)
-        
+
         draw()
 
     def draw_time(self, t, iq):
@@ -189,9 +189,9 @@ class plot_psd_base:
             self.draw_spec(self.time, self.iq)
 
         self.xlim = scipy.array(self.sp_iq.get_xlim()) # so zoom doesn't get called
-        
+
         draw()
-        
+
     def zoom(self, event):
         newxlim = scipy.array(self.sp_iq.get_xlim())
         curxlim = scipy.array(self.xlim)
@@ -205,7 +205,7 @@ class plot_psd_base:
             time = scipy.array(self.time[xmin : xmax])
 
             iq_psd, freq = self.dopsd(iq)
-            
+
             self.draw_psd(freq, iq_psd)
             self.xlim = scipy.array(self.sp_iq.get_xlim())
 
@@ -217,7 +217,7 @@ class plot_psd_base:
 
         if(find(event.key, forward_valid_keys)):
             self.step_forward()
-            
+
         elif(find(event.key, backward_valid_keys)):
             self.step_backward()
 
@@ -241,7 +241,7 @@ class plot_psd_base:
         r = self.get_data()
         if(r):
             self.update_plots()
-        
+
     @staticmethod
     def setup_options():
         usage="%prog: [options] input_filename"
@@ -287,6 +287,6 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-    
+
 
 

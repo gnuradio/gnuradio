@@ -23,12 +23,12 @@ static inline void volk_32f_x2_add_32f_u_sse(float* cVector, const float* aVecto
 
     __m128 aVal, bVal, cVal;
     for(;number < quarterPoints; number++){
-      
-      aVal = _mm_loadu_ps(aPtr); 
+
+      aVal = _mm_loadu_ps(aPtr);
       bVal = _mm_loadu_ps(bPtr);
-      
-      cVal = _mm_add_ps(aVal, bVal); 
-      
+
+      cVal = _mm_add_ps(aVal, bVal);
+
       _mm_storeu_ps(cPtr,cVal); // Store the results back into the C container
 
       aPtr += 4;

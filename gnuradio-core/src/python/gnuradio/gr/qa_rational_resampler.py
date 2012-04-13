@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2006,2007,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blks2
@@ -71,7 +71,7 @@ def reference_interp_dec_filter(src_data, interp, decim, taps):
     result_data = dst.data()
     tb = None
     return result_data
-    
+
 
 class test_rational_resampler (gr_unittest.TestCase):
 
@@ -80,11 +80,11 @@ class test_rational_resampler (gr_unittest.TestCase):
 
     def tearDown(self):
 	pass
-	
+
     #
     # test the gr.rational_resampler_base primitives...
     #
-    
+
     def test_000_1_to_1(self):
         taps = (-4, 5)
         src_data = (234,  -4,  23,  -56,  45,    98,  -23,  -7)
@@ -100,7 +100,7 @@ class test_rational_resampler (gr_unittest.TestCase):
         tb.run()
         result_data = dst.data()
         self.assertEqual(expected_result, result_data)
-        
+
     def test_001_interp(self):
         taps = [1, 10, 100, 1000, 10000]
         src_data = (0, 2, 3, 5, 7, 11, 13, 17)
@@ -118,7 +118,7 @@ class test_rational_resampler (gr_unittest.TestCase):
         result_data = dst.data()
         self.assertEqual(expected_result, result_data)
 
-    def test_002_interp(self):          
+    def test_002_interp(self):
         taps = random_floats(31)
         #src_data = random_floats(10000)  # FIXME the 10k case fails!
         src_data = random_floats(1000)
@@ -295,4 +295,4 @@ if __name__ == '__main__':
     pass
     # FIXME: Disabled, see ticket:210
     # gr_unittest.run(test_rational_resampler, "test_rational_resampler.xml")
-        
+

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -57,7 +57,7 @@ qa_block_tags::t0 ()
   gr_block_sptr src (gr_make_null_source(sizeof(int)));
   gr_block_sptr head (gr_make_head(sizeof(int), N));
   gr_block_sptr snk (gr_make_null_sink(sizeof(int)));
-  
+
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, snk, 0);
 
@@ -89,7 +89,7 @@ qa_block_tags::t1 ()
   gr_annotator_alltoall_sptr ann4 (gr_make_annotator_alltoall(10000, sizeof(int)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
-  
+
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
 
@@ -140,7 +140,7 @@ qa_block_tags::t1 ()
   expected_tags4[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
 
   std::cout << std::endl << "qa_block_tags::t1" << std::endl;
-  
+
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
@@ -171,7 +171,7 @@ qa_block_tags::t2 ()
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk2 (gr_make_null_sink(sizeof(int)));
-  
+
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
 
@@ -271,7 +271,7 @@ qa_block_tags::t3 ()
   gr_annotator_1to1_sptr ann4 (gr_make_annotator_1to1(10000, sizeof(int)));
   gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
   gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
-  
+
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
   tb->connect(head, 0, ann0, 1);
@@ -286,7 +286,7 @@ qa_block_tags::t3 ()
 
   tb->run();
 
-  
+
   std::vector<gr_tag_t> tags0 = ann0->data();
   std::vector<gr_tag_t> tags3 = ann3->data();
   std::vector<gr_tag_t> tags4 = ann4->data();
@@ -324,7 +324,7 @@ qa_block_tags::t3 ()
   expected_tags4[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
 
   std::cout << std::endl << "qa_block_tags::t3" << std::endl;
-  
+
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;

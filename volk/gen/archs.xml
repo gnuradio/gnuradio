@@ -19,7 +19,7 @@
   <flag>m32</flag>
   <overrule>MD_SUBCPU</overrule>
   <overrule_val>x86_64</overrule_val>
-</arch> 
+</arch>
 
 <arch name="64" type="x86">
   <op>0x80000001</op>

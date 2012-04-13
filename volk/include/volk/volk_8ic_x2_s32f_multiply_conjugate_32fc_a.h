@@ -80,7 +80,7 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a_sse4_1(lv_32fc_t* 
     float bImag = (float)*b8Ptr++;
     lv_32fc_t bVal = lv_cmake( bReal, -bImag );
     lv_32fc_t temp = aVal * bVal;
-    
+
     *cFloatPtr++ = lv_creal(temp) / scalar;
     *cFloatPtr++ = lv_cimag(temp) / scalar;
   }
@@ -109,7 +109,7 @@ static inline void volk_8ic_x2_s32f_multiply_conjugate_32fc_a_generic(lv_32fc_t*
     float bImag = (float)*b8Ptr++;
     lv_32fc_t bVal = lv_cmake( bReal, -bImag );
     lv_32fc_t temp = aVal * bVal;
-    
+
     *cPtr++ = (lv_creal(temp) * invScalar);
     *cPtr++ = (lv_cimag(temp) * invScalar);
   }

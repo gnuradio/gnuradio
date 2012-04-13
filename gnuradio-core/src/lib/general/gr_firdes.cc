@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002,2007,2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -84,10 +84,10 @@ gr_firdes::low_pass_2(double gain,
       taps[n + M] =  sin (n * fwT0) / (n * M_PI) * w[n + M];
     }
   }
-  
+
   // find the factor to normalize the gain, fmax.
   // For low-pass, gain @ zero freq = 1.0
-  
+
   double fmax = taps[0 + M];
   for (int n = 1; n <= M; n++)
     fmax += 2 * taps[n + M];
@@ -131,10 +131,10 @@ gr_firdes::low_pass (double gain,
       taps[n + M] =  sin (n * fwT0) / (n * M_PI) * w[n + M];
     }
   }
-  
+
   // find the factor to normalize the gain, fmax.
   // For low-pass, gain @ zero freq = 1.0
-  
+
   double fmax = taps[0 + M];
   for (int n = 1; n <= M; n++)
     fmax += 2 * taps[n + M];
@@ -280,10 +280,10 @@ gr_firdes::band_pass_2 (double gain,
       taps[n + M] =  (sin (n * fwT1) - sin (n * fwT0)) / (n * M_PI) * w[n + M];
     }
   }
-  
+
   // find the factor to normalize the gain, fmax.
   // For band-pass, gain @ center freq = 1.0
-  
+
   double fmax = taps[0 + M];
   for (int n = 1; n <= M; n++)
     fmax += 2 * taps[n + M] * cos (n * (fwT0 + fwT1) * 0.5);
@@ -329,10 +329,10 @@ gr_firdes::band_pass (double gain,
       taps[n + M] =  (sin (n * fwT1) - sin (n * fwT0)) / (n * M_PI) * w[n + M];
     }
   }
-  
+
   // find the factor to normalize the gain, fmax.
   // For band-pass, gain @ center freq = 1.0
-  
+
   double fmax = taps[0 + M];
   for (int n = 1; n <= M; n++)
     fmax += 2 * taps[n + M] * cos (n * (fwT0 + fwT1) * 0.5);
@@ -385,7 +385,7 @@ gr_firdes::complex_band_pass_2 (double gain,
       *optr++ = gr_complex(*iptr * cos(phase),*iptr * sin(phase));
       iptr++, phase += freq;
   }
-  
+
   return taps;
 }
 
@@ -425,7 +425,7 @@ gr_firdes::complex_band_pass (double gain,
       *optr++ = gr_complex(*iptr * cos(phase),*iptr * sin(phase));
       iptr++, phase += freq;
   }
-  
+
   return taps;
 }
 
@@ -466,10 +466,10 @@ gr_firdes::band_reject_2 (double gain,
       taps[n + M] =  (sin (n * fwT0) - sin (n * fwT1)) / (n * M_PI) * w[n + M];
     }
   }
-  
+
   // find the factor to normalize the gain, fmax.
   // For band-reject, gain @ zero freq = 1.0
-  
+
   double fmax = taps[0 + M];
   for (int n = 1; n <= M; n++)
     fmax += 2 * taps[n + M];
@@ -514,10 +514,10 @@ gr_firdes::band_reject (double gain,
       taps[n + M] =  (sin (n * fwT0) - sin (n * fwT1)) / (n * M_PI) * w[n + M];
     }
   }
-  
+
   // find the factor to normalize the gain, fmax.
   // For band-reject, gain @ zero freq = 1.0
-  
+
   double fmax = taps[0 + M];
   for (int n = 1; n <= M; n++)
     fmax += 2 * taps[n + M];
@@ -536,7 +536,7 @@ gr_firdes::band_reject (double gain,
 
 vector<float>
 gr_firdes::hilbert (unsigned int ntaps,
-		    win_type windowtype, 
+		    win_type windowtype,
 		    double beta)
 {
   if(!(ntaps & 1))
@@ -745,7 +745,7 @@ gr_firdes::window (win_type type, int ntaps, double beta)
 
   case WIN_BLACKMAN_hARRIS:
     for (int n = -ntaps/2; n < ntaps/2; n++)
-      taps[n+ntaps/2] = 0.35875 + 0.48829*cos((2*M_PI * n) / (float)M) + 
+      taps[n+ntaps/2] = 0.35875 + 0.48829*cos((2*M_PI * n) / (float)M) +
 	0.14128*cos((4*M_PI * n) / (float)M) + 0.01168*cos((6*M_PI * n) / (float)M);
     break;
 
@@ -790,7 +790,7 @@ gr_firdes::sanity_check_1f (double sampling_freq,
 
   if (fa <= 0.0 || fa > sampling_freq / 2)
     throw std::out_of_range ("gr_firdes check failed: 0 < fa <= sampling_freq / 2");
-  
+
   if (transition_width <= 0)
     throw std::out_of_range ("gr_dirdes check failed: transition_width > 0");
 }
@@ -806,13 +806,13 @@ gr_firdes::sanity_check_2f (double sampling_freq,
 
   if (fa <= 0.0 || fa > sampling_freq / 2)
     throw std::out_of_range ("gr_firdes check failed: 0 < fa <= sampling_freq / 2");
-  
+
   if (fb <= 0.0 || fb > sampling_freq / 2)
     throw std::out_of_range ("gr_firdes check failed: 0 < fb <= sampling_freq / 2");
-  
+
   if (fa > fb)
     throw std::out_of_range ("gr_firdes check failed: fa <= fb");
-  
+
   if (transition_width <= 0)
     throw std::out_of_range ("gr_firdes check failed: transition_width > 0");
 }
@@ -828,13 +828,13 @@ gr_firdes::sanity_check_2f_c (double sampling_freq,
 
   if (fa < -sampling_freq / 2 || fa > sampling_freq / 2)
     throw std::out_of_range ("gr_firdes check failed: 0 < fa <= sampling_freq / 2");
-  
+
   if (fb < -sampling_freq / 2  || fb > sampling_freq / 2)
     throw std::out_of_range ("gr_firdes check failed: 0 < fb <= sampling_freq / 2");
-  
+
   if (fa > fb)
     throw std::out_of_range ("gr_firdes check failed: fa <= fb");
-  
+
   if (transition_width <= 0)
     throw std::out_of_range ("gr_firdes check failed: transition_width > 0");
 }

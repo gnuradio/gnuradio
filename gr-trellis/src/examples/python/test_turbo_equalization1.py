@@ -67,17 +67,17 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
     isi = gr.fir_filter_fff(1,channel)
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
-    
+
     # RX
-    (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM) 
-    dst = gr.vector_sink_s(); 
-    
+    (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM)
+    dst = gr.vector_sink_s();
+
     tb.connect (src,enc_out,inter,mod)
     tb.connect (mod,isi,(add,0))
     tb.connect (noise,(add,1))
     tb.connect (add,head)
     tb.connect (tail,dst)
-    
+
     tb.run()
 
     data = dst.data()
@@ -88,7 +88,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
             nright=nright+1
         #else:
             #print "Error in ", i
- 
+
     return (ntotal,ntotal-nright)
 
 

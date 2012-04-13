@@ -12,7 +12,7 @@ def make_environment_init_h() :
     tempstring = tempstring + "__VOLK_DECL_END\n";
     tempstring = tempstring + "#endif\n"
     return tempstring;
-            
 
 
-    
+
+

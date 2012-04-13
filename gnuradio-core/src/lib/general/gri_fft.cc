@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2008,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -81,7 +81,7 @@ wisdom_filename ()
   return path.string().c_str();
 }
 
-static void 
+static void
 gri_fftw_import_wisdom ()
 {
   const char *filename = wisdom_filename ();
@@ -99,14 +99,14 @@ static void
 gri_fftw_config_threading (int nthreads)
 {
   static int fftw_threads_inited = 0;
-  
+
 #ifdef FFTW3F_THREADS
   if (fftw_threads_inited == 0)
   {
 	  fftw_threads_inited = 1;
 	  fftwf_init_threads();
   }
-  
+
   fftwf_plan_with_nthreads(nthreads);
 #endif
 }
@@ -134,15 +134,15 @@ gri_fft_complex::gri_fft_complex (int fft_size, bool forward, int nthreads)
   gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
 
   assert (sizeof (fftwf_complex) == sizeof (gr_complex));
-  
+
   if (fft_size <= 0)
     throw std::out_of_range ("gri_fftw: invalid fft_size");
-  
+
   d_fft_size = fft_size;
   d_inbuf = (gr_complex *) fftwf_malloc (sizeof (gr_complex) * inbuf_length ());
   if (d_inbuf == 0)
     throw std::runtime_error ("fftwf_malloc");
-  
+
   d_outbuf = (gr_complex *) fftwf_malloc (sizeof (gr_complex) * outbuf_length ());
   if (d_outbuf == 0){
     fftwf_free (d_inbuf);
@@ -154,7 +154,7 @@ gri_fft_complex::gri_fft_complex (int fft_size, bool forward, int nthreads)
   gri_fftw_import_wisdom ();	// load prior wisdom from disk
 
   d_plan = fftwf_plan_dft_1d (fft_size,
-			      reinterpret_cast<fftwf_complex *>(d_inbuf), 
+			      reinterpret_cast<fftwf_complex *>(d_inbuf),
 			      reinterpret_cast<fftwf_complex *>(d_outbuf),
 			      forward ? FFTW_FORWARD : FFTW_BACKWARD,
 			      FFTW_MEASURE);
@@ -176,7 +176,7 @@ gri_fft_complex::~gri_fft_complex ()
   fftwf_free (d_outbuf);
 }
 
-void 
+void
 gri_fft_complex::set_nthreads(int n)
 {
   if (n <= 0)
@@ -202,15 +202,15 @@ gri_fft_real_fwd::gri_fft_real_fwd (int fft_size, int nthreads)
   gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
 
   assert (sizeof (fftwf_complex) == sizeof (gr_complex));
-  
+
   if (fft_size <= 0)
     throw std::out_of_range ("gri_fftw: invalid fft_size");
-  
+
   d_fft_size = fft_size;
   d_inbuf = (float *) fftwf_malloc (sizeof (float) * inbuf_length ());
   if (d_inbuf == 0)
     throw std::runtime_error ("fftwf_malloc");
-  
+
   d_outbuf = (gr_complex *) fftwf_malloc (sizeof (gr_complex) * outbuf_length ());
   if (d_outbuf == 0){
     fftwf_free (d_inbuf);
@@ -220,7 +220,7 @@ gri_fft_real_fwd::gri_fft_real_fwd (int fft_size, int nthreads)
   d_nthreads = nthreads;
   gri_fftw_config_threading (nthreads);
   gri_fftw_import_wisdom ();	// load prior wisdom from disk
-  
+
   d_plan = fftwf_plan_dft_r2c_1d (fft_size,
 				  d_inbuf,
 				  reinterpret_cast<fftwf_complex *>(d_outbuf),
@@ -243,7 +243,7 @@ gri_fft_real_fwd::~gri_fft_real_fwd ()
   fftwf_free (d_outbuf);
 }
 
-void 
+void
 gri_fft_real_fwd::set_nthreads(int n)
 {
   if (n <= 0)
@@ -269,15 +269,15 @@ gri_fft_real_rev::gri_fft_real_rev (int fft_size, int nthreads)
   gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
 
   assert (sizeof (fftwf_complex) == sizeof (gr_complex));
-  
+
   if (fft_size <= 0)
     throw std::out_of_range ("gri_fftw: invalid fft_size");
-  
+
   d_fft_size = fft_size;
   d_inbuf = (gr_complex *) fftwf_malloc (sizeof (gr_complex) * inbuf_length ());
   if (d_inbuf == 0)
     throw std::runtime_error ("fftwf_malloc");
-  
+
   d_outbuf = (float *) fftwf_malloc (sizeof (float) * outbuf_length ());
   if (d_outbuf == 0){
     fftwf_free (d_inbuf);
@@ -287,7 +287,7 @@ gri_fft_real_rev::gri_fft_real_rev (int fft_size, int nthreads)
   d_nthreads = nthreads;
   gri_fftw_config_threading (nthreads);
   gri_fftw_import_wisdom ();	// load prior wisdom from disk
-  
+
   // FIXME If there's ever a chance that the planning functions
   // will be called in multiple threads, we've got to ensure single
   // threaded access.  They are not thread-safe.
@@ -310,7 +310,7 @@ gri_fft_real_rev::~gri_fft_real_rev ()
   fftwf_free (d_outbuf);
 }
 
-void 
+void
 gri_fft_real_rev::set_nthreads(int n)
 {
   if (n <= 0)

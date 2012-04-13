@@ -18,7 +18,7 @@ static inline void volk_8ic_s32f_deinterleave_real_32f_a_sse4_1(float* iBuffer, 
   float* iBufferPtr = iBuffer;
 
   unsigned int number = 0;
-  const unsigned int eighthPoints = num_points / 8;    
+  const unsigned int eighthPoints = num_points / 8;
   __m128 iFloatValue;
 
   const float iScalar= 1.0 / scalar;
@@ -57,7 +57,7 @@ static inline void volk_8ic_s32f_deinterleave_real_32f_a_sse4_1(float* iBuffer, 
     *iBufferPtr++ = (float)(*complexVectorPtr++) * iScalar;
     complexVectorPtr++;
   }
-    
+
 }
 #endif /* LV_HAVE_SSE4_1 */
 
@@ -75,7 +75,7 @@ static inline void volk_8ic_s32f_deinterleave_real_32f_a_sse(float* iBuffer, con
   float* iBufferPtr = iBuffer;
 
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_points / 4;    
+  const unsigned int quarterPoints = num_points / 4;
   __m128 iValue;
 
   const float iScalar= 1.0 / scalar;
@@ -88,7 +88,7 @@ static inline void volk_8ic_s32f_deinterleave_real_32f_a_sse(float* iBuffer, con
     floatBuffer[0] = (float)(*complexVectorPtr); complexVectorPtr += 2;
     floatBuffer[1] = (float)(*complexVectorPtr); complexVectorPtr += 2;
     floatBuffer[2] = (float)(*complexVectorPtr); complexVectorPtr += 2;
-    floatBuffer[3] = (float)(*complexVectorPtr); complexVectorPtr += 2; 
+    floatBuffer[3] = (float)(*complexVectorPtr); complexVectorPtr += 2;
 
     iValue = _mm_load_ps(floatBuffer);
 
@@ -104,7 +104,7 @@ static inline void volk_8ic_s32f_deinterleave_real_32f_a_sse(float* iBuffer, con
     *iBufferPtr++ = (float)(*complexVectorPtr++) * iScalar;
     complexVectorPtr++;
   }
-    
+
 }
 #endif /* LV_HAVE_SSE */
 

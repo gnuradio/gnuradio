@@ -30,7 +30,7 @@ class gr_annotator_1to1;
 typedef boost::shared_ptr<gr_annotator_1to1> gr_annotator_1to1_sptr;
 
 // public constructor
-GR_CORE_API gr_annotator_1to1_sptr 
+GR_CORE_API gr_annotator_1to1_sptr
 gr_make_annotator_1to1 (int when, size_t sizeof_stream_item);
 
 /*!

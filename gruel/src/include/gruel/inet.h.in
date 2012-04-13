@@ -47,7 +47,7 @@ static inline uint64_t htonll(uint64_t x){ return bswap_64(x);}
 static inline uint64_t ntohll(uint64_t x){ return bswap_64(x);}
 
 #endif /* GR_ARCH_BIGENDIAN */
-#endif /* missing htonll or ntohll */ 
+#endif /* missing htonll or ntohll */
 
 #if @GR_HAVE_ARPA_INET@  /* GR_HAVE_ARPA_INET */
 #include <arpa/inet.h>

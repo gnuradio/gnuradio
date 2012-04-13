@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2003,2004,2005,2007,2008 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gru, window
 from gnuradio.wxgui import stdgui2
@@ -26,7 +26,7 @@ import wx
 import gnuradio.wxgui.plot as plot
 import numpy
 import os
-import math    
+import math
 
 default_fftsink_size = (640,240)
 default_fft_rate = gr.prefs().get_long('wxgui', 'fft_rate', 15)
@@ -70,7 +70,7 @@ class waterfall_sink_base(object):
 
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
-        
+
 class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
     def __init__(self, parent, baseband_freq=0,
                  y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
@@ -85,11 +85,11 @@ class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title)
-                               
+
         self.s2p = gr.serial_to_parallel(gr.sizeof_float, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_float * self.fft_size,
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
-        
+
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = gr.fft_vfc(self.fft_size, True, mywindow)
         self.c2mag = gr.complex_to_mag(self.fft_size)
@@ -105,7 +105,7 @@ class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
 class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
     def __init__(self, parent, baseband_freq=0,
                  y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
-                 fft_rate=default_fft_rate, average=False, avg_alpha=None, 
+                 fft_rate=default_fft_rate, average=False, avg_alpha=None,
                  title='', size=default_fftsink_size, **kwargs):
 
         gr.hier_block2.__init__(self, "waterfall_sink_f",
@@ -120,7 +120,7 @@ class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
         self.s2p = gr.serial_to_parallel(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
-        
+
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = gr.fft_vcc(self.fft_size, True, mywindow)
         self.c2mag = gr.complex_to_mag(self.fft_size)
@@ -145,9 +145,9 @@ class DataEvent(wx.PyEvent):
         self.SetEventType (myDATA_EVENT)
         self.data = data
 
-    def Clone (self): 
+    def Clone (self):
         self.__class__ (self.GetId())
-    
+
 class input_watcher (gru.msgq_runner):
     def __init__ (self, msgq, fft_size, event_receiver, **kwds):
         self.fft_size = fft_size
@@ -181,7 +181,7 @@ class waterfall_window (wx.Panel):
         self.bm = wx.EmptyBitmap(self.fftsink.fft_size, 300, -1)
 
         self.scale_factor = 5.0           # FIXME should autoscale, or set this
-        
+
         dc1 = wx.MemoryDC()
         dc1.SelectObject(self.bm)
         dc1.Clear()
@@ -191,9 +191,9 @@ class waterfall_window (wx.Panel):
         wx.EVT_PAINT( self, self.OnPaint )
         wx.EVT_CLOSE (self, self.on_close_window)
         EVT_DATA_EVENT (self, self.set_data)
-        
+
         self.build_popup_menu()
-        
+
         wx.EVT_CLOSE (self, self.on_close_window)
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
 
@@ -213,14 +213,14 @@ class waterfall_window (wx.Panel):
         r.extend(range(0,255,4))
         r.extend(self.const_list(255,64))
         r.extend(range(255,128,-4))
-        
+
         g = []
         g.extend(self.const_list(0,32))
         g.extend(range(0,255,4))
         g.extend(self.const_list(255,64))
         g.extend(range(255,0,-4))
         g.extend(self.const_list(0,32))
-        
+
         b = range(128,255,4)
         b.extend(self.const_list(255,64))
         b.extend(range(255,0,-4))
@@ -234,7 +234,7 @@ class waterfall_window (wx.Panel):
             colour = wx.Colour(r[i], g[i], b[i])
             pens.append( wx.Pen(colour, 2, wx.SOLID))
         return pens
-        
+
     def OnPaint(self, event):
         dc = wx.PaintDC(self)
         self.DoDrawing(dc)
@@ -243,7 +243,7 @@ class waterfall_window (wx.Panel):
         if dc is None:
             dc = wx.ClientDC(self)
         dc.DrawBitmap(self.bm, 0, 0, False )
-    
+
 
     def const_list(self,const,len):
         a = [const]
@@ -285,18 +285,18 @@ class waterfall_window (wx.Panel):
                value = int(dB[x_pos] * scale_factor)
                value = min(255, max(0, value))
                dc1.SetPen(self.pens[value])
-               dc1.DrawRectangle(x_pos*p_width, 0, p_width, 2) 
+               dc1.DrawRectangle(x_pos*p_width, 0, p_width, 2)
         else:                               # complex fft
            for x_pos in range(0, d_max):    # positive freqs
                value = int(dB[x_pos] * scale_factor)
                value = min(255, max(0, value))
                dc1.SetPen(self.pens[value])
-               dc1.DrawRectangle(x_pos*p_width + d_max, 0, p_width, 2) 
+               dc1.DrawRectangle(x_pos*p_width + d_max, 0, p_width, 2)
            for x_pos in range(0 , d_max):   # negative freqs
                value = int(dB[x_pos+d_max] * scale_factor)
                value = min(255, max(0, value))
                dc1.SetPen(self.pens[value])
-               dc1.DrawRectangle(x_pos*p_width, 0, p_width, 2) 
+               dc1.DrawRectangle(x_pos*p_width, 0, p_width, 2)
 
 	del dc1
         self.DoDrawing (None)

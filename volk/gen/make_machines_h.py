@@ -41,15 +41,15 @@ struct volk_machine {
         tempstring += "    const int %s_arch_defs[%d];\n"%(function, len(archs))
         tempstring += "    const %s %s_archs[%d];\n"%(replace_volk.sub("p", function), function, len(archs))
         tempstring += "    const int %s_n_archs;\n"%function
-    
+
     tempstring += r"""};
-    
+
 """
     for machine in machines:
         tempstring += """#if LV_MACHINE_""" + machine.swapcase() + "\n"
         tempstring += "extern struct volk_machine volk_machine_" + machine + ";\n"
         tempstring += """#endif\n"""
-    
+
     tempstring += r"""
 
 __VOLK_DECL_END

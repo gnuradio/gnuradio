@@ -1,7 +1,7 @@
 /*!
  * \defgroup block GNU Radio C++ Signal Processing Blocks
  * \brief All C++ blocks that can be used in GR graphs are listed here or in
- * the subcategories below.  
+ * the subcategories below.
  *
  * Sorry, at this time the Python hierarchical blocks are not included
  * in this index.
@@ -34,7 +34,7 @@
 /*! \defgroup pfb_blk Polyphase Filterbank  		*/
 /*! \defgroup snr_blk SNR estimators			*/
 
-/*! 
+/*!
  * \defgroup base_blk Base classes for GR Blocks
  * \brief All C++ blocks are derived from these base classes
  */
@@ -58,7 +58,7 @@
  */
 
 /*!
- * \defgroup pager Pager 
+ * \defgroup pager Pager
  * Pager Applications
  */
 

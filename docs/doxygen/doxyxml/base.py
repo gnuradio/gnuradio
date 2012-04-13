@@ -1,23 +1,23 @@
 #
 # Copyright 2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 """
 A base class is created.
 
@@ -144,7 +144,7 @@ class Base(object):
             self._in_category[cat] = [mem for mem in self._members
                                       if cat.includes(mem)]
         return self._in_category[cat]
-        
+
     def get_member(self, name, cat=None):
         self.confirm_no_error()
         # Check if it's in a namespace or class.
@@ -173,7 +173,7 @@ class Base(object):
     def members(self):
         self.confirm_no_error()
         return self._members
-    
+
     def process_memberdefs(self):
         mdtss = []
         for sec in self._retrieved_data.compounddef.sectiondef:
@@ -188,7 +188,7 @@ class Base(object):
             if pair not in uniques:
                 uniques.add(pair)
                 self._members.append(converted)
-        
+
     def retrieve_data(self):
         filename = os.path.join(self._xml_path, self.refid + '.xml')
         try:
@@ -197,7 +197,7 @@ class Base(object):
             print('Error in xml in file %s' % filename)
             self._error = True
             self._retrieved_data = None
-            
+
     def check_parsed(self):
         if not self._parsed:
             self._parse()

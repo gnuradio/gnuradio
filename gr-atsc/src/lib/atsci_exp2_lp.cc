@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -35,8 +35,8 @@ using std::endl;
  * FILTER TYPE:LOW PASS                       1H
  * PASSBAND RIPPLE IN -dB            -.0100
  * STOPBAND RIPPLE IN -dB          -66.0000
- * PASSBAND CUTOFF FREQUENCY    5.69000     HERTZ              
- * STOPBAND CUTOFF FREQUENCY    6.12000     HERTZ              
+ * PASSBAND CUTOFF FREQUENCY    5.69000     HERTZ
+ * STOPBAND CUTOFF FREQUENCY    6.12000     HERTZ
  * SAMPLING FREQUENCY           21.5200     HERTZ
  */
 static const float atsci_exp2_lp2x[] = {
@@ -48,8 +48,8 @@ static const float atsci_exp2_lp2x[] = {
  * FILTER TYPE:LOW PASS                       1H
  * PASSBAND RIPPLE IN -dB            -.0100
  * STOPBAND RIPPLE IN -dB          -66.0000
- * PASSBAND CUTOFF FREQUENCY    5.69000     HERTZ              
- * STOPBAND CUTOFF FREQUENCY    6.12000     HERTZ              
+ * PASSBAND CUTOFF FREQUENCY    5.69000     HERTZ
+ * STOPBAND CUTOFF FREQUENCY    6.12000     HERTZ
  * SAMPLING FREQUENCY           20.0000     HERTZ
  */
 static const float atsci_exp2_lp20[] = {
@@ -61,7 +61,7 @@ static const float atsci_exp2_lp20[] = {
 
 // is A within 5% of TARGET?
 
-static bool 
+static bool
 close_enough_p (double a, double target)
 {
   double delta = fabs (target * 0.05);	//  5 percent
@@ -69,7 +69,7 @@ close_enough_p (double a, double target)
   return fabs (target - a) <= delta;
 }
 
-vector<float> 
+vector<float>
 atsci_exp2_lp::taps (double sampling_freq)
 {
   if (close_enough_p (sampling_freq, 20e6)){

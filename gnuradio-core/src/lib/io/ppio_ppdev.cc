@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2001,2003,2004,2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -94,7 +94,7 @@ ppio_ppdev::~ppio_ppdev ()
 }
 
 
-void 
+void
 ppio_ppdev::write_data (unsigned char v)
 {
   if (ioctl (d_fd, PPWDATA, &v) != 0){
@@ -115,7 +115,7 @@ ppio_ppdev::read_data ()
   return v;
 }
 
-void 
+void
 ppio_ppdev::write_control (unsigned char v)
 {
   unsigned char ctrl = v ^ CP_ACTIVE_LOW_BITS;
@@ -198,7 +198,7 @@ ppio_ppdev::~ppio_ppdev ()
 }
 
 
-void 
+void
 ppio_ppdev::write_data (unsigned char v)
 {
   if (ioctl (d_fd, PPISDATA, &v) != 0){
@@ -219,7 +219,7 @@ ppio_ppdev::read_data ()
   return v;
 }
 
-void 
+void
 ppio_ppdev::write_control (unsigned char v)
 {
   unsigned char ctrl = v ^ CP_ACTIVE_LOW_BITS;
@@ -274,7 +274,7 @@ ppio_ppdev::~ppio_ppdev ()
 {
 }
 
-void 
+void
 ppio_ppdev::write_data (unsigned char v)
 {
 }
@@ -285,7 +285,7 @@ ppio_ppdev::read_data ()
   return 0;
 }
 
-void 
+void
 ppio_ppdev::write_control (unsigned char v)
 {
 }

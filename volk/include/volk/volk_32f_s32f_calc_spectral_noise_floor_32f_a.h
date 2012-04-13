@@ -23,7 +23,7 @@ static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a_sse(float* nois
 
   const float* dataPointsPtr = realDataPoints;
   __VOLK_ATTR_ALIGNED(16) float avgPointsVector[4];
-    
+
   __m128 dataPointsVal;
   __m128 avgPointsVal = _mm_setzero_ps();
   // Calculate the sum (for mean) for all points
@@ -73,11 +73,11 @@ static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a_sse(float* nois
 
     // Mask off the items that exceed the mean amplitude and add the avg Points that do not exceed the mean amplitude
     avgPointsVal = _mm_add_ps(avgPointsVal, _mm_and_ps(compareMask, dataPointsVal));
-      
+
     // Count the number of bins which do not exceed the mean amplitude
     vValidBinCount = _mm_add_ps(vValidBinCount, _mm_and_ps(compareMask, vOnesVector));
   }
-    
+
   // Calculate the mean from the remaining data points
   _mm_store_ps(avgPointsVector, avgPointsVal);
 
@@ -104,7 +104,7 @@ static inline void volk_32f_s32f_calc_spectral_noise_floor_32f_a_sse(float* nois
       validBinCount += 1.0;
     }
   }
-    
+
   float localNoiseFloorAmplitude = 0;
   if(validBinCount > 0.0){
     localNoiseFloorAmplitude = sumMean / validBinCount;

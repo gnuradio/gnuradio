@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, blks2
 from gnuradio import audio
@@ -27,7 +27,7 @@ from gnuradio import vocoder
 def build_graph():
     sample_rate = 8000
     scale_factor = 32000
-    
+
     tb = gr.top_block()
     src = audio.source(sample_rate, "plughw:0,0")
     src_scale = gr.multiply_const_ff(scale_factor)
@@ -57,7 +57,7 @@ def build_graph():
         tb.conect(s2f, gr.file_sink(gr.sizeof_float, "s2f.dat"))
         tb.conect(decim, gr.file_sink(gr.sizeof_float, "decim.dat"))
         tb.conect(sink_scale, gr.file_sink(gr.sizeof_float, "sink_scale.dat"))
-        
+
     return tb
 
 if __name__ == '__main__':

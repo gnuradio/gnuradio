@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                                                             
+
   FILE........: sine.h
-  AUTHOR......: David Rowe                                                          
+  AUTHOR......: David Rowe
   DATE CREATED: 1/11/94
-                                                                             
+
   Header file for sinusoidal analysis and synthesis functions.
-                                                                             
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -36,7 +36,7 @@ float hpf(float x, float states[]);
 void dft_speech(COMP Sw[], float Sn[], float w[]);
 void two_stage_pitch_refinement(MODEL *model, COMP Sw[]);
 void estimate_amplitudes(MODEL *model, COMP Sw[], COMP W[]);
-float est_voicing_mbe(MODEL *model, COMP Sw[], COMP W[], COMP Sw_[],COMP Ew[], 
+float est_voicing_mbe(MODEL *model, COMP Sw[], COMP W[], COMP Sw_[],COMP Ew[],
 		      float prev_Wo);
 void make_synthesis_window(float Pn[]);
 void synthesise(float Sn_[], MODEL *model, float Pn[], int shift);

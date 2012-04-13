@@ -2,8 +2,8 @@
 
 cd $1
 files=`ls`
-for file in $files 
-do 
+for file in $files
+do
     sed 's/libvector/volk/g' < $file > tempfile
     sed 's/LIBVECTOR/VOLK/g' < tempfile > $file
 done

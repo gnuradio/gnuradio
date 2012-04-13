@@ -25,11 +25,11 @@ static inline void volk_32fc_conjugate_32fc_a_sse3(lv_32fc_t* cVector, const lv_
     __m128 conjugator = _mm_setr_ps(0, -0.f, 0, -0.f);
 
     for(;number < halfPoints; number++){
-      
+
       x = _mm_load_ps((float*)a); // Load the complex data as ar,ai,br,bi
 
       x = _mm_xor_ps(x, conjugator); // conjugate register
-    
+
       _mm_store_ps((float*)c,x); // Store the results back into the C container
 
       a += 2;

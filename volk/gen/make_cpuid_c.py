@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from xml.dom import minidom
 
@@ -79,7 +79,7 @@ static inline unsigned int cpuid_edx(unsigned int op) {
 
 def make_cpuid_c(dom) :
     tempstring = HEADER_TEMPL;
-    
+
     for domarch in dom:
         if str(domarch.attributes["type"].value) == "x86":
             if "no_test" in domarch.attributes.keys():
@@ -103,7 +103,7 @@ def make_cpuid_c(dom) :
             val = domarch.getElementsByTagName("val");
             if val:
                 val = str(val[0].firstChild.data);
-            
+
             if no_test:
                 tempstring = tempstring + """\
 int i_can_has_%s () {
@@ -113,9 +113,9 @@ int i_can_has_%s () {
     return 0;
 #endif
 }
-                
+
 """ % (arch)
-                
+
             elif op == "1":
                 tempstring = tempstring + """\
 int i_can_has_%s () {
@@ -144,7 +144,7 @@ int i_can_has_%s () {
 }
 
 """ % (arch, val, reg, op, shift, val)
-        
+
         elif str(domarch.attributes["type"].value) == "powerpc":
             arch = str(domarch.attributes["name"].value);
             tempstring = tempstring + """\
@@ -178,7 +178,7 @@ int i_can_has_%s () {
     unsigned int found_neon = 0;
     auxvec_f = fopen("/proc/self/auxv", "rb");
     if(!auxvec_f) return 0;
-    
+
     //so auxv is basically 32b of ID and 32b of value
     //so it goes like this
     while(!found_neon && auxvec_f) {
@@ -186,7 +186,7 @@ int i_can_has_%s () {
       if((auxvec[0] == AT_HWCAP) && (auxvec[1] & HWCAP_NEON))
         found_neon = 1;
     }
-    
+
     fclose(auxvec_f);
     return found_neon;
 
@@ -196,7 +196,7 @@ int i_can_has_%s () {
 }
 
 """ % (arch)
-        
+
         elif str(domarch.attributes["type"].value) == "all":
             arch = str(domarch.attributes["name"].value);
             tempstring = tempstring + """\
@@ -213,7 +213,7 @@ int i_can_has_%s () {
 }
 
 """ % (arch)
-    
+
     tempstring = tempstring + "void volk_cpu_init() {\n";
     for domarch in dom:
         arch = str(domarch.attributes["name"].value);
@@ -231,9 +231,9 @@ int i_can_has_%s () {
 
     return tempstring;
 
-    
-            
-        
 
-                
-                
+
+
+
+
+

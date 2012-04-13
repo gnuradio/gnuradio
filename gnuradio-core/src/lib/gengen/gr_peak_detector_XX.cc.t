@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -35,18 +35,18 @@ gr_make_@BASE_NAME@ (float threshold_factor_rise,
 		     float threshold_factor_fall,
 		     int look_ahead, float alpha)
 {
-  return gnuradio::get_initial_sptr (new @NAME@ (threshold_factor_rise, 
+  return gnuradio::get_initial_sptr (new @NAME@ (threshold_factor_rise,
 				  threshold_factor_fall,
 				  look_ahead, alpha));
 }
 
-@NAME@::@NAME@ (float threshold_factor_rise, 
+@NAME@::@NAME@ (float threshold_factor_rise,
 		float threshold_factor_fall,
 		int look_ahead, float alpha)
   : gr_sync_block ("@BASE_NAME@",
 		   gr_make_io_signature (1, 1, sizeof (@I_TYPE@)),
 		   gr_make_io_signature (1, 1, sizeof (char))),
-    d_threshold_factor_rise(threshold_factor_rise), 
+    d_threshold_factor_rise(threshold_factor_rise),
     d_threshold_factor_fall(threshold_factor_fall),
     d_look_ahead(look_ahead), d_avg_alpha(alpha), d_avg(0), d_found(0)
 {
@@ -94,7 +94,7 @@ int
 	optr[peak_ind] = 1;
 	state = 0;
 	peak_val = -(@I_TYPE@)INFINITY;
-	//printf("Leaving  State 1: Peak: %f  Peak Ind: %d   i: %d  noutput_items: %d\n", 
+	//printf("Leaving  State 1: Peak: %f  Peak Ind: %d   i: %d  noutput_items: %d\n",
 	//peak_val, peak_ind, i, noutput_items);
       }
     }

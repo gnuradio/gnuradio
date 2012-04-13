@@ -48,7 +48,7 @@ struct volk_machine *get_machine(void) {
     extern struct volk_machine *volk_machines[];
     extern unsigned int n_volk_machines;
     static struct volk_machine *machine = NULL;
-    
+
     if(machine != NULL) return machine;
     else {
         unsigned int max_score = 0;
@@ -71,7 +71,7 @@ unsigned int volk_get_alignment(void) {
 }
 
 """
-    
+
     for i in range(len(functions)):
         tempstring += "void get_" + functions[i] + replace_arch.sub("", arched_arglist[i]) + "\n"
         tempstring += "    %s = get_machine()->%s_archs[volk_rank_archs(get_machine()->%s_indices, get_machine()->%s_arch_defs, get_machine()->%s_n_archs, get_machine()->%s_name, volk_get_lvarch())];\n" % (functions[i], functions[i], functions[i], functions[i], functions[i], functions[i])

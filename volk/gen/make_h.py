@@ -35,4 +35,4 @@ VOLK_API unsigned int volk_get_alignment(void);
     tempstring = tempstring + "#endif /*INCLUDED_VOLK_RUNTIME*/\n";
 
     return tempstring;
-    
+

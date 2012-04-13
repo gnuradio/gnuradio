@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, blks2
 import sys, time
@@ -44,7 +44,7 @@ class pfb_top_block(gr.top_block):
         self._N = 10000000      # number of samples to use
         self._fs = 10000        # initial sampling rate
         self._decim = 20        # Decimation rate
-        
+
         # Generate the prototype filter taps for the decimators with a 200 Hz bandwidth
         self._taps = gr.firdes.low_pass_2(1, self._fs, 200, 150,
                                           attenuation_dB=120, window=gr.firdes.WIN_BLACKMAN_hARRIS)
@@ -54,7 +54,7 @@ class pfb_top_block(gr.top_block):
         print "Number of taps:     ", len(self._taps)
         print "Number of filters:  ", self._decim
         print "Taps per channel:   ", tpc
-        
+
         # Build the input signal source
         # We create a list of freqs, and a sine wave is generated and added to the source
         # for each one of these frequencies.
@@ -66,7 +66,7 @@ class pfb_top_block(gr.top_block):
             self.connect(self.signals[i], (self.add,i))
 
         self.head = gr.head(gr.sizeof_gr_complex, self._N)
-        
+
         # Construct a PFB decimator filter
         self.pfb = blks2.pfb_decimator_ccf(self._decim, self._taps, 0)
 
@@ -82,12 +82,12 @@ class pfb_top_block(gr.top_block):
         # Create the sink for the decimated siganl
         self.snk = gr.vector_sink_c()
         self.connect(self.pfb, self.snk)
-                             
+
 
 def main():
     tb = pfb_top_block()
 
-    tstart = time.time()    
+    tstart = time.time()
     tb.run()
     tend = time.time()
     print "Run time: %f" % (tend - tstart)
@@ -95,7 +95,7 @@ def main():
     if 1:
         fig1 = pylab.figure(1, figsize=(16,9))
         fig2 = pylab.figure(2, figsize=(16,9))
-        
+
         Ns = 10000
         Ne = 10000
 
@@ -114,13 +114,13 @@ def main():
         X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
         f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
-        sp1_f.set_xlim([min(f_in), max(f_in)+1]) 
-        sp1_f.set_ylim([-200.0, 50.0]) 
+        sp1_f.set_xlim([min(f_in), max(f_in)+1])
+        sp1_f.set_ylim([-200.0, 50.0])
 
         sp1_f.set_title("Input Signal", weight="bold")
         sp1_f.set_xlabel("Frequency (Hz)")
         sp1_f.set_ylabel("Power (dBW)")
-        
+
         Ts = 1.0/fs
         Tmax = len(d)*Ts
 
@@ -134,7 +134,7 @@ def main():
         sp1_t.set_xlabel("Time (s)")
         sp1_t.set_ylabel("Amplitude")
 
-        
+
         # Plot the output of the decimator
         fs_o = tb._fs / tb._decim
 
@@ -146,13 +146,13 @@ def main():
         X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
         f_o = scipy.arange(-fs_o/2.0, fs_o/2.0, fs_o/float(X_o.size))
         p2_f = sp2_f.plot(f_o, X_o, "b")
-        sp2_f.set_xlim([min(f_o), max(f_o)+1]) 
-        sp2_f.set_ylim([-200.0, 50.0]) 
+        sp2_f.set_xlim([min(f_o), max(f_o)+1])
+        sp2_f.set_ylim([-200.0, 50.0])
 
         sp2_f.set_title("PFB Decimated Signal", weight="bold")
         sp2_f.set_xlabel("Frequency (Hz)")
         sp2_f.set_ylabel("Power (dBW)")
-        
+
 
         Ts_o = 1.0/fs_o
         Tmax_o = len(d)*Ts_o
@@ -175,4 +175,4 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-    
+

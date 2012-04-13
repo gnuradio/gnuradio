@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -54,7 +54,7 @@ init_field_sync_common (unsigned char *p, int mask,
 
   for (int j = 0; j < 63; j++)		// PN63, toggled on field 2
     p[i++] = bin_map[atsc_pn63[j] ^ mask];
-  
+
   for (int j = 0; j < 63; j++)		// PN63
     p[i++] = bin_map[atsc_pn63[j]];
 
@@ -124,7 +124,7 @@ save_last_symbols (unsigned char saved_symbols[N_SAVED_SYMBOLS],
 }
 
 
-inline static bool 
+inline static bool
 last_regular_seg_p (const plinfo &pli)
 {
   return pli.regular_seg_p () && (pli.segno () == ATSC_DSEGS_PER_FIELD - 1);
@@ -138,7 +138,7 @@ GrAtscFieldSyncMux::GrAtscFieldSyncMux ()
   // 1 + number of extra input elements at which we look.  This is
   // used by the superclass's forecast routine to get us the correct
   // range on our inputs.
-  history = 1;	
+  history = 1;
 
   // any other init here.
 }
@@ -160,7 +160,7 @@ GrAtscFieldSyncMux::pre_initialize ()
  * exactly 1:1 with our input.
  */
 
-int 
+int
 GrAtscFieldSyncMux::forecast (VrSampleRange output, VrSampleRange inputs[])
 {
   for(unsigned int i = 0; i < numberInputs; i++) {
@@ -175,7 +175,7 @@ GrAtscFieldSyncMux::forecast (VrSampleRange output, VrSampleRange inputs[])
  * multiple streams of input and output, but we almost always
  * use a single input and output stream.
  */
-int 
+int
 GrAtscFieldSyncMux::work (VrSampleRange output, void *ao[],
 			  VrSampleRange inputs[], void *ai[])
 {
@@ -204,7 +204,7 @@ GrAtscFieldSyncMux::work (VrSampleRange output, void *ao[],
   for (unsigned int outdex = 0; outdex < output.size; outdex++){
 
     assert (in[index].pli.regular_seg_p ());
-    
+
     if (!in[index].pli.first_regular_seg_p ()){
       out[outdex] = in[index];			// just copy in to out
 
@@ -242,5 +242,5 @@ GrAtscFieldSyncMux::work (VrSampleRange output, void *ao[],
   // Note that for all intents and purposes, it is an error to
   // produce less than you are asked for.
 
-  return output.size;	
+  return output.size;
 }

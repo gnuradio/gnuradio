@@ -204,7 +204,7 @@ class waterfall_plotter(grid_plotter_base):
 		Create the texture to fit the fft_size X num_lines.
 		@param flag the set/unset or update flag
 		"""
-		if flag is not None: 
+		if flag is not None:
 			self._resize_texture_flag = flag
 			return
 		if not self._resize_texture_flag: return

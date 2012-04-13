@@ -12,9 +12,9 @@
 	<category>Error Correction/Trellis</category>
 	<import>from gnuradio import trellis, digital</import>
 	<make>trellis.sccc_decoder_combined_$(type)$(out_type)(
-		trellis.fsm($o_fsm_args), $o_init_state, $o_final_state, 
-		trellis.fsm($i_fsm_args), $i_init_state, $i_final_state, 
-		trellis.interleaver($interleaver), 
+		trellis.fsm($o_fsm_args), $o_init_state, $o_final_state,
+		trellis.fsm($i_fsm_args), $i_init_state, $i_final_state,
+		trellis.interleaver($interleaver),
 		$block_size,
 		$iterations,
                 $siso_type,

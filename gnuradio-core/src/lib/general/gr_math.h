@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2005,2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -54,9 +54,9 @@ gr_is_power_of_2(long x)
  */
 GR_CORE_API float gr_fast_atan2f(float y, float x);
 
-static inline float gr_fast_atan2f(gr_complex z) 
-{ 
-  return gr_fast_atan2f(z.imag(), z.real()); 
+static inline float gr_fast_atan2f(gr_complex z)
+{
+  return gr_fast_atan2f(z.imag(), z.real());
 }
 
 /* This bounds x by +/- clip without a branch */
@@ -96,7 +96,7 @@ static inline unsigned int gr_quad_45deg_slicer(float r, float i)
     ret = 1;
   else if((r < 0) && (i < 0))
     ret = 2;
-  else 
+  else
     ret = 3;
   return ret;
 }

@@ -1,23 +1,23 @@
 #
 # Copyright 2005,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gru
 
@@ -91,7 +91,7 @@ class _rational_resampler_base(gr.hier_block2):
         d = gru.gcd(interpolation, decimation)
         interpolation = interpolation // d
         decimation = decimation // d
-        
+
         if taps is None:
             taps = design_filter(interpolation, decimation, fractional_bw)
 
@@ -118,7 +118,7 @@ class rational_resampler_ccf(_rational_resampler_base):
         Rational resampling polyphase FIR filter with
         complex input, complex output and float taps.
         """
-        _rational_resampler_base.__init__(self, gr.rational_resampler_base_ccf, 
+        _rational_resampler_base.__init__(self, gr.rational_resampler_base_ccf,
                                           interpolation, decimation, taps, fractional_bw)
 
 class rational_resampler_ccc(_rational_resampler_base):
@@ -127,5 +127,5 @@ class rational_resampler_ccc(_rational_resampler_base):
         Rational resampling polyphase FIR filter with
         complex input, complex output and complex taps.
         """
-        _rational_resampler_base.__init__(self, gr.rational_resampler_base_ccc, 
+        _rational_resampler_base.__init__(self, gr.rational_resampler_base_ccc,
                                           interpolation, decimation, taps, fractional_bw)

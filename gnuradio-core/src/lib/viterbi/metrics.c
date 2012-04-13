@@ -1,26 +1,26 @@
 /*
  * Copyright 1995 Phil Karn, KA9Q
  * Copyright 2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
 
-/* 
+/*
  * Generate metric tables for a soft-decision convolutional decoder
  * assuming gaussian noise on a PSK channel.
  *
@@ -48,7 +48,7 @@ extern double erf(double x);
 /* Normal function integrated from -Inf to x. Range: 0-1 */
 #define	normal(x)	(0.5 + 0.5*erf((x)/M_SQRT2))
 
-/* Logarithm base 2 */ 
+/* Logarithm base 2 */
 #define gr_log2(x) (log(x)*M_LOG2E)
 
 /* Generate log-likelihood metrics for 8-bit soft quantized channel
@@ -65,33 +65,33 @@ gen_met(int mettab[2][256],	/* Metric table, [sent sym][rx symbol] */
   int s,bit;
   double metrics[2][256];
   double p0,p1;
-  
+
   /* Es/N0 as power ratio */
   esn0 = pow(10.,esn0/10);
-  
+
   noise = 0.5/esn0;	/* only half the noise for BPSK */
   noise = sqrt(noise);	/* noise/signal Voltage ratio */
-  
+
   /* Zero is a special value, since this sample includes all
    * lower samples that were clipped to this value, i.e., it
-   * takes the whole lower tail of the curve 
+   * takes the whole lower tail of the curve
    */
   p1 = normal(((0-OFFSET+0.5)/amp - 1)/noise);	/* P(s|1) */
-  
+
   /* Prob of this value occurring for a 0-bit */	/* P(s|0) */
   p0 = normal(((0-OFFSET+0.5)/amp + 1)/noise);
   metrics[0][0] = gr_log2(2*p0/(p1+p0)) - bias;
   metrics[1][0] = gr_log2(2*p1/(p1+p0)) - bias;
-  
+
   for(s=1;s<255;s++){
     /* P(s|1), prob of receiving s given 1 transmitted */
     p1 = normal(((s-OFFSET+0.5)/amp - 1)/noise) -
       normal(((s-OFFSET-0.5)/amp - 1)/noise);
-    
+
     /* P(s|0), prob of receiving s given 0 transmitted */
     p0 = normal(((s-OFFSET+0.5)/amp + 1)/noise) -
       normal(((s-OFFSET-0.5)/amp + 1)/noise);
-    
+
 #ifdef notdef
     printf("P(%d|1) = %lg, P(%d|0) = %lg\n",s,p1,s,p0);
 #endif
@@ -103,7 +103,7 @@ gen_met(int mettab[2][256],	/* Metric table, [sent sym][rx symbol] */
   p1 = 1 - normal(((255-OFFSET-0.5)/amp - 1)/noise);
   /* P(s|0) */
   p0 = 1 - normal(((255-OFFSET-0.5)/amp + 1)/noise);
-  
+
   metrics[0][255] = gr_log2(2*p0/(p1+p0)) - bias;
   metrics[1][255] = gr_log2(2*p1/(p1+p0)) - bias;
 #ifdef	notdef

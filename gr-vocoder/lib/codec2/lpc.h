@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                                                           
-  FILE........: lpc.h                                                            
-  AUTHOR......: David Rowe                                                      
-  DATE CREATED: 24/8/09                                                   
-                                                                          
-  Linear Prediction functions written in C.                                
-                                                                          
+
+  FILE........: lpc.h
+  AUTHOR......: David Rowe
+  DATE CREATED: 24/8/09
+
+  Linear Prediction functions written in C.
+
 \*---------------------------------------------------------------------------*/
 
 /*

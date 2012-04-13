@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -115,7 +115,7 @@ gr_pfb_clock_sync_fff::set_taps (const std::vector<float> &newtaps,
 
   // Create d_numchan vectors to store each channel's taps
   ourtaps.resize(d_nfilters);
-  
+
   // Make a vector of the taps plus fill it out with 0's to fill
   // each polyphase filter with exactly d_taps_per_filter
   std::vector<float> tmp_taps;
@@ -123,7 +123,7 @@ gr_pfb_clock_sync_fff::set_taps (const std::vector<float> &newtaps,
   while((float)(tmp_taps.size()) < d_nfilters*d_taps_per_filter) {
     tmp_taps.push_back(0.0);
   }
-  
+
   // Partition the filter
   for(i = 0; i < d_nfilters; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
@@ -131,7 +131,7 @@ gr_pfb_clock_sync_fff::set_taps (const std::vector<float> &newtaps,
     for(j = 0; j < d_taps_per_filter; j++) {
       ourtaps[d_nfilters - 1 - i][j] = tmp_taps[i + j*d_nfilters];
     }
-    
+
     // Build a filter for each channel and add it's taps to it
     ourfilter[i]->set_taps(ourtaps[d_nfilters-1-i]);
   }
@@ -232,7 +232,7 @@ gr_pfb_clock_sync_fff::general_work (int noutput_items,
     outrate = (float*)output_items[2];
     outk = (float*)output_items[3];
   }
-  
+
   if (d_updated) {
     d_updated = false;
     return 0;		     // history requirements may have changed.
@@ -269,7 +269,7 @@ gr_pfb_clock_sync_fff::general_work (int noutput_items,
     // Run the control loop to update the current phase (k) and tracking rate
     d_k = d_k + d_alpha*error + d_rate_i + d_rate_f;
     d_rate_f = d_rate_f + d_beta*error;
-    
+
     // Keep our rate within a good range
     d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
 

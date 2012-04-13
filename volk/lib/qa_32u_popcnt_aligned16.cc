@@ -16,8 +16,8 @@ void qa_32u_popcnt_aligned16::t1() {
 #else
 
 void qa_32u_popcnt_aligned16::t1() {
-  
-  
+
+
   volk_runtime_init();
 
   volk_environment_init();
@@ -26,7 +26,7 @@ void qa_32u_popcnt_aligned16::t1() {
 
   const int ITERS = 10000000;
   __VOLK_ATTR_ALIGNED(16) uint32_t input0;
-  
+
   __VOLK_ATTR_ALIGNED(16) uint32_t output0;
   __VOLK_ATTR_ALIGNED(16) uint32_t output01;
 
@@ -55,7 +55,7 @@ void qa_32u_popcnt_aligned16::t1() {
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("sse4.2_time: %f\n", total);
 
-  
+
   CPPUNIT_ASSERT_EQUAL(output0, output01);
 }
 

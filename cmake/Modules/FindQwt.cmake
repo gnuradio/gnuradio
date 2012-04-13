@@ -23,7 +23,7 @@ find_library (QWT_LIBRARIES
 	/sw/lib
 )
 
-# handle the QUIETLY and REQUIRED arguments and set QWT_FOUND to TRUE if 
+# handle the QUIETLY and REQUIRED arguments and set QWT_FOUND to TRUE if
 # all listed variables are TRUE
 include ( FindPackageHandleStandardArgs )
 find_package_handle_standard_args( Qwt DEFAULT_MSG QWT_LIBRARIES QWT_INCLUDE_DIRS )

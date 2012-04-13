@@ -23,15 +23,15 @@ static inline void volk_8ic_x2_multiply_conjugate_16ic_a_sse4_1(lv_16sc_t* cVect
   const lv_8sc_t* a = aVector;
   const lv_8sc_t* b = bVector;
   __m128i conjugateSign = _mm_set_epi16(-1, 1, -1, 1, -1, 1, -1, 1);
-    
+
   for(;number < quarterPoints; number++){
     // Convert into 8 bit values into 16 bit values
     x = _mm_cvtepi8_epi16(_mm_loadl_epi64((__m128i*)a));
     y = _mm_cvtepi8_epi16(_mm_loadl_epi64((__m128i*)b));
-      
+
     // Calculate the ar*cr - ai*(-ci) portions
     realz = _mm_madd_epi16(x,y);
-      
+
     // Calculate the complex conjugate of the cr + ci j values
     y = _mm_sign_epi16(y, conjugateSign);
 
@@ -47,7 +47,7 @@ static inline void volk_8ic_x2_multiply_conjugate_16ic_a_sse4_1(lv_16sc_t* cVect
     b += 4;
     c += 4;
   }
-    
+
   number = quarterPoints * 4;
   int16_t* c16Ptr = (int16_t*)&cVector[number];
   int8_t* a8Ptr = (int8_t*)&aVector[number];

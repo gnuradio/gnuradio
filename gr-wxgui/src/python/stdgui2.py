@@ -1,23 +1,23 @@
 #
 # Copyright 2004 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 '''A simple wx gui for GNU Radio applications'''
 
@@ -74,7 +74,7 @@ class stdframe (wx.Frame):
 
     def top_block (self):
         return self.panel.top_block
-    
+
 class stdpanel (wx.Panel):
     def __init__ (self, parent, frame, top_block_maker,
                   max_nouts=None):
@@ -91,7 +91,7 @@ class stdpanel (wx.Panel):
         if(max_nouts is not None):
             self.top_block.start (max_nouts)
         else:
-            self.top_block.start ()            
+            self.top_block.start ()
 
 class std_top_block (gr.top_block):
     def __init__ (self, parent, panel, vbox, argv):

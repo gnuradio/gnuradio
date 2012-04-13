@@ -20,7 +20,7 @@ static inline void volk_32f_x2_interleave_32fc_a_sse(lv_32fc_t* complexVector, c
   const float* qBufferPtr = qBuffer;
 
   const uint64_t quarterPoints = num_points / 4;
-    
+
   __m128 iValue, qValue, cplxValue;
   for(;number < quarterPoints; number++){
     iValue = _mm_load_ps(iBufferPtr);

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -72,11 +72,11 @@ gri_control_loop::phase_wrap()
 
 void
 gri_control_loop::frequency_limit()
-{  
+{
   if (d_freq > d_max_freq)
     d_freq = d_max_freq;
   else if (d_freq < d_min_freq)
-    d_freq = d_min_freq;  
+    d_freq = d_min_freq;
 }
 
 /*******************************************************************
@@ -89,18 +89,18 @@ gri_control_loop::set_loop_bandwidth(float bw)
   if(bw < 0) {
     throw std::out_of_range ("gri_control_loop: invalid bandwidth. Must be >= 0.");
   }
-  
+
   d_loop_bw = bw;
   update_gains();
 }
 
 void
-gri_control_loop::set_damping_factor(float df) 
+gri_control_loop::set_damping_factor(float df)
 {
   if(df < 0 || df > 1.0) {
     throw std::out_of_range ("gri_control_loop: invalid damping factor. Must be in [0,1].");
   }
-  
+
   d_damping = df;
   update_gains();
 }
@@ -144,7 +144,7 @@ gri_control_loop::set_phase(float phase)
     d_phase += M_TWOPI;
 }
 
-   
+
 /*******************************************************************
     GET FUNCTIONS
 *******************************************************************/

@@ -96,11 +96,11 @@ class GR_CORE_API gr_block_detail {
   // Return the number of items written on output stream which_output
   uint64_t nitems_written(unsigned int which_output);
 
-  
+
   /*!
    * \brief  Adds a new tag to the given output stream.
-   * 
-   * This takes the input parameters and builds a PMT tuple 
+   *
+   * This takes the input parameters and builds a PMT tuple
    * from it. It then calls gr_buffer::add_item_tag(pmt::pmt_t t),
    * which appends the tag onto its deque.
    *
@@ -112,7 +112,7 @@ class GR_CORE_API gr_block_detail {
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range.
    *
-   * Pass-through function to gr_buffer_reader to get a vector of tags 
+   * Pass-through function to gr_buffer_reader to get a vector of tags
    * in given range. Range of counts is from start to end-1.
    *
    * Tags are tuples of:
@@ -127,7 +127,7 @@ class GR_CORE_API gr_block_detail {
 			 unsigned int which_input,
 			 uint64_t abs_start,
 			 uint64_t abs_end);
-  
+
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range
    * with a given key.

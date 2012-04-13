@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2004,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 
@@ -38,7 +38,7 @@ class test_message (gr_unittest.TestCase):
 
     def tearDown (self):
         self.msgq = None
-        
+
     def leak_check (self, fct):
         begin = all_counts ()
         fct ()
@@ -61,7 +61,7 @@ class test_message (gr_unittest.TestCase):
 
     def test_200 (self):
         self.leak_check (self.body_200)
-        
+
     def body_200 (self):
         self.msgq.insert_tail (gr.message (0))
         self.assertEquals (1, self.msgq.count())
@@ -75,7 +75,7 @@ class test_message (gr_unittest.TestCase):
 
     def test_201 (self):
         self.leak_check (self.body_201)
-        
+
     def body_201 (self):
         self.msgq.insert_tail (gr.message (0))
         self.assertEquals (1, self.msgq.count())
@@ -84,7 +84,7 @@ class test_message (gr_unittest.TestCase):
 
     def test_202 (self):
         self.leak_check (self.body_202)
-        
+
     def body_202 (self):
         # global msg
         msg = gr.message (666)
@@ -111,7 +111,7 @@ class test_message (gr_unittest.TestCase):
         src.msgq().insert_tail(gr.message(1))                  # send EOF
         tb.run()
         self.assertEquals(tuple(map(ord, '0123456789')), dst.data())
-        
+
     def test_302(self):
         # Use itemsize, msgq constructor
         msgq = gr.msg_queue()

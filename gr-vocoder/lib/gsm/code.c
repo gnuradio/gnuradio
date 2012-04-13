@@ -21,8 +21,8 @@
 #include	"proto.h"
 #include <string.h>
 
-/* 
- *  4.2 FIXED POINT IMPLEMENTATION OF THE RPE-LTP CODER 
+/*
+ *  4.2 FIXED POINT IMPLEMENTATION OF THE RPE-LTP CODER
  */
 
 void Gsm_Coder P8((S,s,LARc,Nc,bc,Mc,xmaxc,xMc),
@@ -35,7 +35,7 @@ void Gsm_Coder P8((S,s,LARc,Nc,bc,Mc,xmaxc,xMc),
  * The RPE-LTD coder works on a frame by frame basis.  The length of
  * the frame is equal to 160 samples.  Some computations are done
  * once per frame to produce at the output of the coder the
- * LARc[1..8] parameters which are the coded LAR coefficients and 
+ * LARc[1..8] parameters which are the coded LAR coefficients and
  * also to realize the inverse filtering operation for the entire
  * frame (160 samples of signal d[0..159]).  These parts produce at
  * the output of the coder:

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,13 +50,13 @@ gr_stream_mux::gr_stream_mux (size_t itemsize, const std::vector<int> &lengths)
     increment_stream();
   }
   d_residual = d_lengths[d_stream];
-}    
+}
 
 gr_stream_mux::~gr_stream_mux(void)
 {
 }
 
-void 
+void
 gr_stream_mux::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned ninputs = ninput_items_required.size ();
@@ -69,7 +69,7 @@ void gr_stream_mux::increment_stream()
   do {
     d_stream = (d_stream+1) % d_lengths.size();
   } while(d_lengths[d_stream] == 0);
-  
+
   d_residual = d_lengths[d_stream];
 }
 
@@ -96,11 +96,11 @@ gr_stream_mux::general_work(int noutput_items,
 				ninput_items[d_stream] - input_index[d_stream]));
       if(VERBOSE) {
 	printf("mux: r=%d\n", r);
-	printf("\tnoutput_items - out_index: %d\n", 
+	printf("\tnoutput_items - out_index: %d\n",
 	       noutput_items - out_index);
-	printf("\td_residual: %d\n", 
+	printf("\td_residual: %d\n",
 	       d_residual);
-	printf("\tninput_items[d_stream] - input_index[d_stream]: %d\n", 
+	printf("\tninput_items[d_stream] - input_index[d_stream]: %d\n",
 	       ninput_items[d_stream] - input_index[d_stream]);
       }
 
@@ -109,14 +109,14 @@ gr_stream_mux::general_work(int noutput_items,
       }
 
       in = (const char *) input_items[d_stream] + input_index[d_stream]*d_itemsize;
-      
+
       memcpy(&out[out_index*d_itemsize], in, r*d_itemsize);
       out_index += r;
       input_index[d_stream] += r;
       d_residual -= r;
 
       consume(d_stream, r);
-      
+
       if(d_residual == 0) {
 	increment_stream();
       }

@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2004,2006,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 import atsc                    # qa code needs to run without being installed
@@ -44,7 +44,7 @@ class memoize(object):
 """
 Make a fake transport stream that's big enough for our purposes.
 We generate 8 full fields.  This is relatively expensive.  It
-takes about 2 seconds to execute.  
+takes about 2 seconds to execute.
 """
 make_transport_stream = \
     memoize(lambda : tuple(make_fake_transport_stream_packet(8 * atsc.ATSC_DSEGS_PER_FIELD)))
@@ -75,11 +75,11 @@ class vector_source_ts(gr.hier_block2):
     def __init__(self, ts):
         """
         Pad tranport stream packets to 256 bytes and reformat appropriately.
-        
+
         @param ts: MPEG transport stream.
         @type  ts: sequence of ints in [0,255]; len(ts) % 188 == 0
         """
-				
+
         src = gr.vector_source_b(pad_transport_stream(ts))
         s2v = gr.stream_to_vector(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
 
@@ -163,7 +163,7 @@ class qa_atsc(gr_unittest.TestCase):
     def test_loopback_002(self):
         """
         Loopback randomizer/rs_encoder/interleaver to
-	deinterleaver/rs_decoder/derandomizer 
+	deinterleaver/rs_decoder/derandomizer
         """
         src_data = make_transport_stream()
 	interleaver_delay = 52
@@ -188,7 +188,7 @@ class qa_atsc(gr_unittest.TestCase):
         """
         Loopback randomizer/rs_encoder/interleaver/trellis_encoder
 	via ds_to_softds to
-	viterbi_decoder/deinterleaver/rs_decoder/derandomizer 
+	viterbi_decoder/deinterleaver/rs_decoder/derandomizer
         """
         src_data = make_transport_stream()
 	interleaver_delay = 52
@@ -211,7 +211,7 @@ class qa_atsc(gr_unittest.TestCase):
         result_data = dst.data ()[((interleaver_delay+viterbi_delay)*atsc.ATSC_MPEG_PKT_LENGTH):len(dst.data())]
         self.assertEqual (expected_result, result_data)
 
-        
+
 if __name__ == '__main__':
     gr_unittest.main()
 

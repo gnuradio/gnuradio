@@ -1,23 +1,23 @@
 #
 # Copyright 2008 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 import os, sys, signal
 
 # Turn application into a background daemon process.
@@ -62,7 +62,7 @@ def daemonize(pidfile=None, logfile=None):
     if pid == 0:	# First child of first fork()
 	# Become session leader of new session
 	os.setsid()
-	
+
 	# fork() into background again
 	try:
 	    pid = os.fork()
@@ -74,14 +74,14 @@ def daemonize(pidfile=None, logfile=None):
 
     else:		# Second child of first fork()
 	os._exit(0)
-	
+
     os.umask(0111)
 
     # Write pid
     pid = os.getpid()
     if pidfile is not None:
 	open(pidfile, 'w').write('%d\n'%pid)
-	
+
     # Redirect streams
     if logfile is not None:
 	lf = open(logfile, 'a+')

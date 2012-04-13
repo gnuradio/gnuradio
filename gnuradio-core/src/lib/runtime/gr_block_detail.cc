@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -87,7 +87,7 @@ gr_block_detail::set_done (bool done)
     d_input[i]->set_done (done);
 }
 
-void 
+void
 gr_block_detail::consume (int which_input, int how_many_items)
 {
   if (how_many_items > 0) {
@@ -134,7 +134,7 @@ gr_block_detail::_post(pmt_t msg)
 }
 
 uint64_t
-gr_block_detail::nitems_read(unsigned int which_input) 
+gr_block_detail::nitems_read(unsigned int which_input)
 {
   if(which_input >= d_ninputs)
     throw std::invalid_argument ("gr_block_detail::n_input_items");
@@ -142,7 +142,7 @@ gr_block_detail::nitems_read(unsigned int which_input)
 }
 
 uint64_t
-gr_block_detail::nitems_written(unsigned int which_output) 
+gr_block_detail::nitems_written(unsigned int which_output)
 {
   if(which_output >= d_noutputs)
     throw std::invalid_argument ("gr_block_detail::n_output_items");
@@ -179,7 +179,7 @@ gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
 				   const pmt_t &key)
 {
   std::vector<gr_tag_t> found_items;
-  
+
   v.resize(0);
 
   // get from gr_buffer_reader's deque of tags

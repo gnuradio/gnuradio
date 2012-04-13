@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                                 
-  FILE........: fft.c                                                  
-  AUTHOR......: Bruce Robertson                                      
-  DATE CREATED: 20/11/2010                            
-                                                         
-  Bridging function to the kiss_fft package.      
-                                                               
+
+  FILE........: fft.c
+  AUTHOR......: Bruce Robertson
+  DATE CREATED: 20/11/2010
+
+  Bridging function to the kiss_fft package.
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -29,9 +29,9 @@
 #include "kiss_fft.h"
 
 /*---------------------------------------------------------------------------*\
-                                                                            
-                                GLOBALS                                       
-                                                                             
+
+                                GLOBALS
+
 \*---------------------------------------------------------------------------*/
 
 kiss_fft_cpx *fin;
@@ -40,10 +40,10 @@ kiss_fft_cfg cfg_forward;
 kiss_fft_cfg cfg_reverse;
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-  initialize_fft(int n)                                                                  
-                                                                             
-  Initialisation function for kiss_fft. This assumes that all calls to fft() 
+
+  initialize_fft(int n)
+
+  Initialisation function for kiss_fft. This assumes that all calls to fft()
   use the same datatypes and are one arrays of the same size.
 
 \*---------------------------------------------------------------------------*/
@@ -62,8 +62,8 @@ initialize_fft (int n)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-  fft(float x[], int n, int isign)                                                
+
+  fft(float x[], int n, int isign)
   Function that calls kiss_fft with the signature of four1 from NRC.
 
 \*---------------------------------------------------------------------------*/

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -90,7 +90,7 @@ gr_buffer::gr_buffer (int nitems, size_t sizeof_item, gr_block_sptr link)
   s_buffer_count++;
 }
 
-gr_buffer_sptr 
+gr_buffer_sptr
 gr_make_buffer (int nitems, size_t sizeof_item, gr_block_sptr link)
 {
   return gr_buffer_sptr (new gr_buffer (nitems, sizeof_item, link));
@@ -111,7 +111,7 @@ bool
 gr_buffer::allocate_buffer (int nitems, size_t sizeof_item)
 {
   int	orig_nitems = nitems;
-  
+
   // Any buffersize we come up with must be a multiple of min_nitems.
 
   int granularity = gr_vmcircbuf_sysconfig::granularity ();
@@ -240,7 +240,7 @@ gr_buffer::prune_tags(uint64_t max_time)
      d_item_tags. In practice, this function is only called at
      runtime by min_available_space in gr_block_executor.cc,
      which locks the mutex itself.
-     
+
      If this function is used elsewhere, remember to lock the
      buffer's mutex al la the scoped_lock line below.
   */
@@ -285,7 +285,7 @@ gr_buffer_reader::~gr_buffer_reader ()
   d_buffer->drop_reader(this);
   s_buffer_reader_count--;
 }
-   
+
 int
 gr_buffer_reader::items_available () const
 {
@@ -315,7 +315,7 @@ gr_buffer_reader::get_tags_in_range(std::vector<gr_tag_t> &v,
 
   v.resize(0);
   std::deque<gr_tag_t>::iterator itr = d_buffer->get_tags_begin();
-  
+
   uint64_t item_time;
   while(itr != d_buffer->get_tags_end()) {
     item_time = (*itr).offset;

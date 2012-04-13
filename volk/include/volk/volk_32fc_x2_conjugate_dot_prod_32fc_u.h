@@ -9,39 +9,39 @@
 
 
 static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
-  
+
   float * res = (float*) result;
   float * in = (float*) input;
   float * tp = (float*) taps;
   unsigned int n_2_ccomplex_blocks = num_bytes >> 4;
   unsigned int isodd = (num_bytes >> 3) &1;
-  
-  
-  
+
+
+
   float sum0[2] = {0,0};
   float sum1[2] = {0,0};
   unsigned int i = 0;
 
-  
+
   for(i = 0; i < n_2_ccomplex_blocks; ++i) {
-    
+
     sum0[0] += in[0] * tp[0] + in[1] * tp[1];
     sum0[1] += (-in[0] * tp[1]) + in[1] * tp[0];
     sum1[0] += in[2] * tp[2] + in[3] * tp[3];
     sum1[1] += (-in[2] * tp[3]) + in[3] * tp[2];
-    
-    
+
+
     in += 4;
     tp += 4;
 
   }
- 
-  
+
+
   res[0] = sum0[0] + sum1[0];
   res[1] = sum0[1] + sum1[1];
-  
-  
-  
+
+
+
   for(i = 0; i < isodd; ++i) {
 
 
@@ -73,7 +73,7 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result
     uint32_t intRep[4];
     __m128 vec;
     } halfMask;
- 
+
   union NegMask {
     int intRep[4];
     __m128 vec;
@@ -85,13 +85,13 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result
 
   __m128 in1, in2, Rv, fehg, Iv, Rs, Ivm, Is;
   __m128 zv = {0,0,0,0};
-  
+
   halfMask.intRep[0] = halfMask.intRep[1] = 0xFFFFFFFF;
   halfMask.intRep[2] = halfMask.intRep[3] = 0x00000000;
 
   negMask.intRep[0] = negMask.intRep[2] = 0x80000000;
   negMask.intRep[1] = negMask.intRep[3] = 0;
-  
+
   // main loop
   while(num_bytes >= 4*sizeof(float)){
 

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -43,7 +43,7 @@ gr_check_lfsr_32k_s::gr_check_lfsr_32k_s ()
     d_runlength (0), d_index(0)
 {
   gri_lfsr_32k	lfsr;
-  
+
   for (int i = 0; i < BUFSIZE; i++)
     d_buffer[i] = lfsr.next_short ();
 
@@ -60,21 +60,21 @@ gr_check_lfsr_32k_s::work (int noutput_items,
   for (int i = 0; i < noutput_items; i++){
     unsigned short	x = in[i];
     unsigned short 	expected;
-    
+
     switch (d_state){
 
     case MATCH0:
       if (x == d_buffer[0])
 	enter_MATCH1 ();
       break;
-      
+
     case MATCH1:
       if (x == d_buffer[1])
 	enter_MATCH2 ();
       else
 	enter_MATCH0 ();
       break;
-      
+
     case MATCH2:
       if (x == d_buffer[2])
 	enter_LOCKED ();
@@ -163,7 +163,7 @@ void
 gr_check_lfsr_32k_s::log_error (unsigned short expected, unsigned short actual)
 {
   if (0)
-    fprintf (stdout, 
+    fprintf (stdout,
      "gr_check_lfsr_32k: expected %5d (0x%04x) got %5d (0x%04x) offset %8ld (0x%08lx)\n",
 	     expected, expected, actual, actual, d_ntotal, d_ntotal);
 }

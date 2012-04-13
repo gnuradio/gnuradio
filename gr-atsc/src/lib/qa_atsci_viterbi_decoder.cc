@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -75,7 +75,7 @@ qa_atsci_viterbi_decoder::t0 ()
   atsc_mpeg_packet_rs_encoded	decoder_out[NCODERS];
   atsc_mpeg_packet_rs_encoded	decoder_out_pad[NCODERS];
 
-  
+
   memset (encoder_in,      0, sizeof (encoder_in));
   memset (encoder_out,     0, sizeof (encoder_out));
   memset (decoder_out_pad, 0, sizeof (decoder_out_pad));
@@ -88,7 +88,7 @@ qa_atsci_viterbi_decoder::t0 ()
       encoder_in[i].data[j] = t;
     }
   }
-  
+
   fflush (stdout);
   printf ("@@@ ENCODER INPUT @@@\n");
   for (int i = 0; i < NCODERS; i++){
@@ -113,7 +113,7 @@ qa_atsci_viterbi_decoder::t0 ()
   viterbi.reset ();
 
   // this has only the previous (non-existant) output
-  viterbi.decode (decoder_out_pad, decoder_in);	
+  viterbi.decode (decoder_out_pad, decoder_in);
 
   // now we'll see the real output
   pad_decoder_input (decoder_in_pad);
@@ -166,7 +166,7 @@ qa_atsci_viterbi_decoder::t1 ()
   viterbi.reset ();
 
   // this has only the previous (non-existant) output
-  viterbi.decode (decoder_out_pad, decoder_in);	
+  viterbi.decode (decoder_out_pad, decoder_in);
 
   // now we'll see the real output
   pad_decoder_input (decoder_in_pad);

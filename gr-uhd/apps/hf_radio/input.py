@@ -1,22 +1,22 @@
 # Copyright 2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 # Basic USRP setup and control.
 # It's only ever been tried with a basic rx daughter card.
@@ -24,7 +24,7 @@
 # Imagine that the gnuradio boilerplate is here.
 #
 # M. Revnell 2005-Dec
- 
+
 from gnuradio import gr
 from gnuradio import uhd
 
@@ -33,7 +33,7 @@ class uhd_input(gr.hier_block2):
         gr.hier_block2.__init__(self, "uhd_input",
                                 gr.io_signature(0,0,0),
                                 gr.io_signature(1,1,gr.sizeof_gr_complex))
-        
+
         self.src = uhd.usrp_source(device_addr=address,
                                    io_type=uhd.io_type.COMPLEX_FLOAT32,
                                    num_channels=1)
@@ -65,7 +65,7 @@ class uhd_input(gr.hier_block2):
         self.gain = gain
         self.src.set_gain(gain, 0)
 
-    def add_options(parser):        
+    def add_options(parser):
         parser.add_option("-a", "--address", type="string",
                           default="addr=192.168.10.2",
                           help="Address of UHD device, [default=%default]")

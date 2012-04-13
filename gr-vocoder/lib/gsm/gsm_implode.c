@@ -316,7 +316,7 @@ void gsm_implode P3((s, source, c), gsm s, gsm_signal * source, gsm_byte * c)
 #define	xmc	(source + 46 - 26)
 			xmc[26] = sr & 0x7;  sr >>= 3;
 			xmc[27] = sr & 0x7;  sr >>= 3;
-			sr |= (uword)*c++ << 1;	
+			sr |= (uword)*c++ << 1;
 			xmc[28] = sr & 0x7;  sr >>= 3;
 			xmc[29] = sr & 0x7;  sr >>= 3;
 			xmc[30] = sr & 0x7;  sr >>= 3;
@@ -333,7 +333,7 @@ void gsm_implode P3((s, source, c), gsm s, gsm_signal * source, gsm_byte * c)
 			xmc[38] = sr & 0x7;  sr >>= 3;
 			sr = *c++;
 			Nc[3] = sr & 0x7f;  sr >>= 7;
-			sr |= (uword)*c++ << 1;		
+			sr |= (uword)*c++ << 1;
 			bc[3] = sr & 0x3;  sr >>= 2;
 			Mc[3] = sr & 0x3;  sr >>= 2;
 			sr |= (uword)*c++ << 5;
@@ -361,7 +361,7 @@ void gsm_implode P3((s, source, c), gsm s, gsm_signal * source, gsm_byte * c)
 		}
 	}
 	else
-#endif 
+#endif
 	{
 
 	*c++ =   ((GSM_MAGIC & 0xF) << 4)		/* 1 */

@@ -26,10 +26,10 @@ usrp_flex.py - Receives and displays pages from a single paging channel. To
 
     Example, to receive from 931.95M (a common nationwide channel) with DBSRX in
     side A of USRP:
-    
+
     $ usrp_flex.py -f 931.95M -g 32 -R A
 
-      
+
 usrp_flex_band.py - Receives and displays pages from a 1 MHz paging band (40 pager
 		    channels.) To work from recorded data, record from USRP with
 		    decimation 64 at center frequency.
@@ -48,8 +48,8 @@ Usage: usrp_flex_band.py [options]
 
     Example, to receive from the lower third of the pager band with DBSRX in side B
     of USRP:
-    
-    $ usrp_flex_band.py -f 929.5M -g 32 -R B																			    
+
+    $ usrp_flex_band.py -f 929.5M -g 32 -R B
 
 usrp_flex_all.py - Receives and displays pages from entire pager band (3 MHz,
                    120 pager channels.)  This does not work in real time due
@@ -69,11 +69,11 @@ usrp_flex_all.py - Receives and displays pages from entire pager band (3 MHz,
           -v, --verbose                       display debug output
 
     Example, to receive all pager channels with DBSRX in side A:
-    
+
     $ usrp_flex_all.py -R A
 
 The demodulator is relatively sensitive to frequency offset and can capture a signal
-within 3k of the actual signal.  
+within 3k of the actual signal.
 
 All three scripts take a 'calibration' parameter, which specifies the frequency offset
 of the daughterboard.  This causes the USRP to be tuned to the given center frequency

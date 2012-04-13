@@ -1,27 +1,27 @@
 #!/usr/bin/env python
 #
 # Copyright 2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, blks2
-import sys 
+import sys
 
 try:
     import scipy
@@ -48,7 +48,7 @@ def main():
         sigs.append(s)
 
     taps = gr.firdes.low_pass_2(len(freqs), fs, fs/float(nchans)/2, 100, 100)
-    print "Num. Taps = %d (taps per filter = %d)" % (len(taps), 
+    print "Num. Taps = %d (taps per filter = %d)" % (len(taps),
                                                      len(taps)/nchans)
     filtbank = gr.pfb_synthesizer_ccf(nchans, taps)
 
@@ -60,14 +60,14 @@ def main():
 
     for i,si in enumerate(sigs):
         tb.connect(si, (filtbank, i))
-    
+
     tb.run()
 
     if 1:
         f1 = pylab.figure(1)
         s1 = f1.add_subplot(1,1,1)
         s1.plot(snk.data()[1000:])
-        
+
         fftlen = 2048
         f2 = pylab.figure(2)
         s2 = f2.add_subplot(1,1,1)

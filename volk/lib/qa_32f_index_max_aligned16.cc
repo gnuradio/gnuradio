@@ -34,12 +34,12 @@ void qa_32f_index_max_aligned16::t1(){
 
 
 void qa_32f_index_max_aligned16::t1(){
- 
+
   const int vlen = VEC_LEN;
 
-  
+
   volk_runtime_init();
-  
+
   volk_environment_init();
   int ret;
 
@@ -47,8 +47,8 @@ void qa_32f_index_max_aligned16::t1(){
   unsigned int* target_sse;
   unsigned int* target_generic;
   float* src0 ;
-  
-  
+
+
   unsigned int i_target_sse4_1;
   target_sse4_1 = &i_target_sse4_1;
   unsigned int i_target_sse;
@@ -57,20 +57,20 @@ void qa_32f_index_max_aligned16::t1(){
   target_generic = &i_target_generic;
 
   ret = posix_memalign((void**)&src0, 16, vlen *sizeof(float));
-  
+
   random_floats((float*)src0, vlen);
-  
+
   printf("32f_index_max_aligned16\n");
 
   clock_t start, end;
   double total;
-  
-  
+
+
   start = clock();
   for(int k = 0; k < NUM_ITERS; ++k) {
     volk_32f_index_max_aligned16_manual(target_generic, src0, vlen, "generic");
   }
-  end = clock();  
+  end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic time: %f\n", total);
 
@@ -78,25 +78,25 @@ void qa_32f_index_max_aligned16::t1(){
   for(int k = 0; k < NUM_ITERS; ++k) {
     volk_32f_index_max_aligned16_manual(target_sse, src0, vlen, "sse2");
   }
-  
-  end = clock();  
+
+  end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("sse time: %f\n", total);
-  
+
   start = clock();
   for(int k = 0; k < NUM_ITERS; ++k) {
     get_volk_runtime()->volk_32f_index_max_aligned16(target_sse4_1, src0, vlen);
   }
-  
-  end = clock();  
+
+  end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("sse4.1 time: %f\n", total);
-  
-  
+
+
   printf("generic: %u, sse: %u, sse4.1: %u\n", target_generic[0], target_sse[0], target_sse4_1[0]);
   CPPUNIT_ASSERT_EQUAL(target_generic[0], target_sse[0]);
   CPPUNIT_ASSERT_EQUAL(target_generic[0], target_sse4_1[0]);
-  
+
   free(src0);
 }
 

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -53,7 +53,7 @@ GR_CORE_API gr_dc_blocker_ff_sptr gr_make_dc_blocker_ff (int D=32, bool long_for
  * \brief a computationally efficient controllable DC blocker
  *
  * \ingroup filter_blk
- * 
+ *
  * This block implements a computationally efficient DC blocker that produces
  * a tighter notch filter around DC for a smaller group delay than an
  * equivalent FIR filter or using a single pole IIR filter (though the IIR
@@ -103,7 +103,7 @@ public:
   int get_group_delay();
 
   //int set_length(int D);
-  
+
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);

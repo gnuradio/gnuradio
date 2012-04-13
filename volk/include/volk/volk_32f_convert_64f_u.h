@@ -16,7 +16,7 @@ static inline void volk_32f_convert_64f_u_sse2(double* outputVector, const float
   unsigned int number = 0;
 
   const unsigned int quarterPoints = num_points / 4;
-    
+
   const float* inputVectorPtr = (const float*)inputVector;
   double* outputVectorPtr = outputVector;
   __m128d ret;
@@ -24,7 +24,7 @@ static inline void volk_32f_convert_64f_u_sse2(double* outputVector, const float
 
   for(;number < quarterPoints; number++){
     inputVal = _mm_loadu_ps(inputVectorPtr); inputVectorPtr += 4;
- 
+
     ret = _mm_cvtps_pd(inputVal);
 
     _mm_storeu_pd(outputVectorPtr, ret);
@@ -38,7 +38,7 @@ static inline void volk_32f_convert_64f_u_sse2(double* outputVector, const float
     outputVectorPtr += 2;
   }
 
-  number = quarterPoints * 4;    
+  number = quarterPoints * 4;
   for(; number < num_points; number++){
     outputVector[number] = (double)(inputVector[number]);
   }

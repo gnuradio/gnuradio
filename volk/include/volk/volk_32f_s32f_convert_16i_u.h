@@ -19,7 +19,7 @@ static inline void volk_32f_s32f_convert_16i_u_sse2(int16_t* outputVector, const
   unsigned int number = 0;
 
   const unsigned int eighthPoints = num_points / 8;
-    
+
   const float* inputVectorPtr = (const float*)inputVector;
   int16_t* outputVectorPtr = outputVector;
 
@@ -51,7 +51,7 @@ static inline void volk_32f_s32f_convert_16i_u_sse2(int16_t* outputVector, const
     outputVectorPtr += 8;
   }
 
-  number = eighthPoints * 8;    
+  number = eighthPoints * 8;
   for(; number < num_points; number++){
     r = inputVector[number] * scalar;
     if(r > max_val)
@@ -77,7 +77,7 @@ static inline void volk_32f_s32f_convert_16i_u_sse(int16_t* outputVector, const 
   unsigned int number = 0;
 
   const unsigned int quarterPoints = num_points / 4;
-    
+
   const float* inputVectorPtr = (const float*)inputVector;
   int16_t* outputVectorPtr = outputVector;
 
@@ -106,7 +106,7 @@ static inline void volk_32f_s32f_convert_16i_u_sse(int16_t* outputVector, const 
     *outputVectorPtr++ = (int16_t)rintf(outputFloatBuffer[3]);
   }
 
-  number = quarterPoints * 4;    
+  number = quarterPoints * 4;
   for(; number < num_points; number++){
     r = inputVector[number] * scalar;
     if(r > max_val)

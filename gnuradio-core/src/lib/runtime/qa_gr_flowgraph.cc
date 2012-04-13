@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -223,7 +223,7 @@ void qa_gr_flowgraph::t16_partition()
 
   gr_block_sptr nop31 = gr_make_nop(sizeof(int));
   gr_block_sptr nop32 = gr_make_nop(sizeof(int));
-  
+
   // Build disjoint graph #1
   fg->connect(nop11, 0, nop12, 0);
   fg->connect(nop12, 0, nop13, 0);

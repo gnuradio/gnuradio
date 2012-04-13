@@ -1,7 +1,7 @@
 ;; Estimate the total work (ntaps * sampling rate) for two cascaded
 ;; decimating low pass filters.
 ;;
-;; The basic assumption is that the number of taps required in any 
+;; The basic assumption is that the number of taps required in any
 ;; section is inversely proportional to the normalized transition width
 ;; for that section.
 ;;
@@ -65,4 +65,3 @@
 (define (extract-nth n lst)
   lst)
 
-  

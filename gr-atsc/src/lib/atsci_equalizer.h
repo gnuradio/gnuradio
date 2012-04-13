@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -53,7 +53,7 @@ public:
   // CREATORS
   atsci_equalizer ();
   virtual ~atsci_equalizer ();
-  
+
   // MANIPULATORS
 
   /*!
@@ -62,7 +62,7 @@ public:
    * Note, subclasses must invoke the superclass's method too!
    */
   virtual void reset ();
-  
+
   /*!
    * \brief produce \p nsamples of output from given inputs and tags
    *
@@ -71,11 +71,11 @@ public:
    * to handle each sub-segment of the input data.
    *
    * \p input_samples must have (nsamples + ntaps() - 1) valid entries.
-   * input_samples[0] .. input_samples[nsamples - 1 + ntaps() - 1] are 
+   * input_samples[0] .. input_samples[nsamples - 1 + ntaps() - 1] are
    * referenced to compute the output values.
    *
    * \p input_tags must have nsamples valid entries.
-   * input_tags[0] .. input_tags[nsamples - 1] are referenced to 
+   * input_tags[0] .. input_tags[nsamples - 1] are referenced to
    * compute the output values.
    */
   virtual void filter (const float 	   *input_samples,
@@ -94,10 +94,10 @@ public:
   virtual int ntaps () const = 0;
 
   /*!
-   * \brief how many taps are "in the future".  
+   * \brief how many taps are "in the future".
    *
    * This allows us to handle what the ATSC folks call "pre-ghosts".
-   * What it really does is allow the caller to jack with the offset 
+   * What it really does is allow the caller to jack with the offset
    * between the tags and the data so that everything magically works out.
    *
    * npretaps () must return a value between 0 and ntaps() - 1.
@@ -107,7 +107,7 @@ public:
    * like 15% - 20% of ntaps ().
    */
   virtual int npretaps () const = 0;
-  
+
 
 protected:
 
@@ -139,14 +139,14 @@ protected:
 				     float *output_samples,
 				     int   nsamples,
 				     int   offset) = 0;
-  
+
   /*!
    * Input range is known to consist of only a field sync segment or a
    * portion of a field sync segment.  \p nsamples will be in [1,832].
    * \p offset will be in [0,831].  \p offset is the offset of the input
    * from the beginning of the data segment sync pattern.  We consider the
    * 4 symbols of the immediately preceding data segment sync to be the
-   * first symbols of the field sync segment.  \p which_field is in [0,1] 
+   * first symbols of the field sync segment.  \p which_field is in [0,1]
    * and specifies which field (duh).
    *
    * \p input_samples has (nsamples + ntaps() - 1) valid entries.

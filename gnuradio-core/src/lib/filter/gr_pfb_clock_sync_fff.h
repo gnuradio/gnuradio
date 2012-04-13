@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -44,7 +44,7 @@ class gr_fir_fff;
  *
  * \ingroup filter_blk
  * \ingroup pfb_blk
- * 
+ *
  * This block performs timing synchronization for PAM signals by
  * minimizing the derivative of the filtered signal, which in turn
  * maximizes the SNR and minimizes ISI.
@@ -160,7 +160,7 @@ class GR_CORE_API gr_pfb_clock_sync_fff : public gr_block
    * \param gain (float) The alpha gain of the control loop; beta = (gain^2)/4 by default.
    * \param taps (vector<int>) The filter taps.
    * \param filter_size (uint) The number of filters in the filterbank (default = 32).
-   * \param init_phase (float) The initial phase to look at, or which filter to start 
+   * \param init_phase (float) The initial phase to look at, or which filter to start
    *                           with (default = 0).
    * \param max_rate_deviation (float) Distance from 0 d_rate can get (default = 1.5).
    *
@@ -197,13 +197,13 @@ class GR_CORE_API gr_pfb_clock_sync_fff : public gr_block
 			 unsigned int filter_size,
 			 float init_phase,
 			 float max_rate_deviation);
-  
+
   void create_diff_taps(const std::vector<float> &newtaps,
 			std::vector<float> &difftaps);
 
 public:
   ~gr_pfb_clock_sync_fff ();
-  
+
   /*!
    * Resets the filterbank's filter taps with the new prototype filter
    */
@@ -233,7 +233,7 @@ public:
 
   /*!
    * Set the gain value alpha for the control loop
-   */  
+   */
   void set_alpha(float alpha)
   {
     d_alpha = alpha;
@@ -241,7 +241,7 @@ public:
 
   /*!
    * Set the gain value beta for the control loop
-   */  
+   */
   void set_beta(float beta)
   {
     d_beta = beta;
@@ -249,7 +249,7 @@ public:
 
   /*!
    * Set the maximum deviation from 0 d_rate can have
-   */  
+   */
   void set_max_rate_deviation(float m)
   {
     d_max_dev = m;

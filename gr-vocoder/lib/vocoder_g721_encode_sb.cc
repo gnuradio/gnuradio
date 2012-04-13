@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -66,7 +66,7 @@ vocoder_g721_encode_sb_impl::~vocoder_g721_encode_sb_impl()
 {
 }
 
-int 
+int
 vocoder_g721_encode_sb_impl::work(int noutput_items,
 				  gr_vector_const_void_star &input_items,
 				  gr_vector_void_star &output_items)
@@ -76,6 +76,6 @@ vocoder_g721_encode_sb_impl::work(int noutput_items,
 
   for(int i = 0; i < noutput_items; i++)
     out[i] = g721_encoder(in[i], AUDIO_ENCODING_LINEAR, &d_state);
-  
+
   return noutput_items;
 }

@@ -25,7 +25,7 @@
 // This isn't as computationally efficient as using the hilbert transformer
 // and compensating delay but fascinating none the less.
 //
-// This program is for the scilab language a very powerful free math 
+// This program is for the scilab language a very powerful free math
 // package similar to Matlab with infinitely better price/performace.
 //
 // compute the prototype lowpass fir

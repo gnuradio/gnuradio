@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -37,7 +37,7 @@ GrAtscBitTimingLoop3::GrAtscBitTimingLoop3 (double ratio_of_rx_clock_to_symbol_f
 
 {
   assert (ratio_of_rx_clock_to_symbol_freq >= 1.8);	// sanity check
-  
+
   history = 1500;  	// spare input samples in case we need them.
 }
 
@@ -51,17 +51,17 @@ int
 GrAtscBitTimingLoop3::forecast(VrSampleRange output,
 			       VrSampleRange inputs[]) {
   assert (numberInputs == 1);
-  
+
   /* dec:1 ratio with history */
   inputs[0].index = d_next_input;
   inputs[0].size =
     ((unsigned long) (output.size * d_rx_clock_to_symbol_freq) + history - 1);
 
   return 0;
-}  
+}
 
 
-int 
+int
 GrAtscBitTimingLoop3::work (VrSampleRange output, void *ao[],
 			    VrSampleRange inputs[], void *ai[])
 {
@@ -73,7 +73,7 @@ GrAtscBitTimingLoop3::work (VrSampleRange output, void *ao[],
   // This is required because of our slightly variable decimation factor
   sync (output.index);
 
-  // We are tasked with producing output.size output samples.  
+  // We are tasked with producing output.size output samples.
   // We will consume approximately 2 * output.size input samples.
 
   int		si = 0;		// source index
@@ -93,7 +93,7 @@ GrAtscBitTimingLoop3::work (VrSampleRange output, void *ao[],
       fprintf (stderr, "GrAtscBitTimingLoop3: ran short on data...\n");
       break;
     }
-      
+
     d_sssr.update (interp_sample, &seg_locked, &symbol_index, &timing_adjustment);
     out_sample[k] = interp_sample;
     tag.valid = seg_locked;

@@ -32,7 +32,7 @@ static inline unsigned int modnn(struct rs *rs, unsigned int x){
 
 #define MM (rs->mm)
 #define NN (rs->nn)
-#define ALPHA_TO (rs->alpha_to) 
+#define ALPHA_TO (rs->alpha_to)
 #define INDEX_OF (rs->index_of)
 #define GENPOLY (rs->genpoly)
 #define NROOTS (rs->nroots)

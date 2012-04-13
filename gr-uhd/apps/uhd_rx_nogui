@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2006,2007,2011,2012 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gru, uhd, optfir, audio, blks2
 from gnuradio import eng_notation
@@ -27,8 +27,8 @@ from optparse import OptionParser
 import sys
 
 """
-This example application demonstrates receiving and demodulating 
-different types of signals using the USRP. 
+This example application demonstrates receiving and demodulating
+different types of signals using the USRP.
 
 A receive chain is built up of the following signal processing
 blocks:
@@ -77,11 +77,11 @@ demod_params = {
 class uhd_src(gr.hier_block2):
     """
     Create a UHD source object supplying complex floats.
-    
+
     Selects user supplied subdevice or chooses first available one.
 
-    Calibration value is the offset from the tuned frequency to 
-    the actual frequency.       
+    Calibration value is the offset from the tuned frequency to
+    the actual frequency.
     """
     def __init__(self, args, spec, antenna, samp_rate, gain=None, calibration=0.0):
 	gr.hier_block2.__init__(self, "uhd_src",
@@ -93,19 +93,19 @@ class uhd_src(gr.hier_block2):
         # Set the subdevice spec
         if(spec):
             self._src.set_subdev_spec(spec, 0)
-            
+
         # Set the antenna
         if(antenna):
             self._src.set_antenna(antenna, 0)
-        
+
         self._src.set_samp_rate(samp_rate)
 	dev_rate = self._src.get_samp_rate()
         self._samp_rate = samp_rate
-        
+
         # Resampler to get to exactly samp_rate no matter what dev_rate is
         self._rrate = samp_rate / dev_rate
         self._resamp = blks2.pfb_arb_resampler_ccf(self._rrate)
-        
+
 	# If no gain specified, set to midrange
         gain_range = self._src.get_gain_range()
 	if gain is None:
@@ -121,7 +121,7 @@ class uhd_src(gr.hier_block2):
 
     def rate(self):
         return self._samp_rate
-        
+
 class app_top_block(gr.top_block):
     def __init__(self, options):
 	gr.top_block.__init__(self)
@@ -160,7 +160,7 @@ class app_top_block(gr.top_block):
 				  False)		 # Zero, not gate output
 
 	AGC = gr.agc_cc(1.0/channel_rate,  # Time constant
-			1.0,     	   # Reference power 
+			1.0,     	   # Reference power
 			1.0,               # Initial gain
 			1.0)		   # Maximum gain
 
@@ -184,7 +184,7 @@ class app_top_block(gr.top_block):
 	    out_decim = int(out_lcm // options.output_rate)
 	    RSAMP = blks2.rational_resampler_fff(out_interp, out_decim)
 	    self.connect(tail, RSAMP)
-	    tail = RSAMP 
+	    tail = RSAMP
 
 	# Send to audio output device
         AUDIO = audio.sink(int(options.output_rate),
@@ -201,7 +201,7 @@ class app_top_block(gr.top_block):
         md = self.async_src.msg_to_async_metadata_t(msg)
         print "Channel: %i Time: %f Event: %i" % (md.channel, md.time_spec.get_real_secs(), md.event_code)
 
-	
+
 def main():
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-a", "--args", type="string", default="",
@@ -244,7 +244,7 @@ def main():
     if options.modulation is None:
         sys.stderr.write("Must supply a modulation type (AM, FM, WFM).\n")
         sys.exit(1)
-        
+
     tb = app_top_block(options)
     try:
         tb.run()

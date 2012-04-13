@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -100,7 +100,7 @@ ref_dotprod (const i_type input[], const tap_type taps[], int ntaps)
 //
 
 static void
-test_random_io (fir_maker_t maker)  
+test_random_io (fir_maker_t maker)
 {
   const int	MAX_TAPS	= 9;
   const int	OUTPUT_LEN	= 17;
@@ -143,7 +143,7 @@ test_random_io (fir_maker_t maker)
       // our reference implementation is using 80 bit floating point
       // arithmetic, while the SSE version is using 32 bit float point
       // arithmetic.
-      
+
       for (int o = 0; o < ol; o++){
 	CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected_output[o],
 				       actual_output[o],
@@ -159,7 +159,7 @@ static void
 for_each (void (*f)(fir_maker_t))
 {
   std::vector<gr_fir_scc_info>		info;
-  gr_fir_util::get_gr_fir_scc_info (&info);	// get all known scc implementations 
+  gr_fir_util::get_gr_fir_scc_info (&info);	// get all known scc implementations
 
   for (std::vector<gr_fir_scc_info>::iterator p = info.begin ();
        p != info.end ();

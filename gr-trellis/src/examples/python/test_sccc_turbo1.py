@@ -27,7 +27,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     dec = trellis.sccc_decoder_combined_fs(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM,dimensionality,constellation,digital.TRELLIS_EUCLIDEAN,1.0)
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
-    
+
     #tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
     tb.connect (src,src_head,s2fsmi,enc,mod)
     tb.connect (mod,(add,0))
@@ -37,9 +37,9 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     tb.connect (add,dec,fsmi2s,dst)
 
     tb.run()
- 
+
     #print enc_out.ST(), enc_in.ST()
-    
+
     ntotal = dst.ntotal ()
     nright = dst.nright ()
     runlength = dst.runlength ()
@@ -70,7 +70,7 @@ def main(args):
     interleaver=trellis.interleaver(K,666) # construct a random interleaver
     modulation = fsm_utils.psk8 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
-    constellation = modulation[1] 
+    constellation = modulation[1]
     if len(constellation)/dimensionality != fi.O():
         sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
         sys.exit (1)
@@ -80,7 +80,7 @@ def main(args):
         Es = Es + constellation[i]**2
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # calculate noise variance
-    
+
     tot_s=0 # total number of transmitted shorts
     terr_s=0 # total number of shorts in error
     terr_p=0 # total number of packets in error

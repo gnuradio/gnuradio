@@ -17,7 +17,7 @@ rate, i.e. a frame rate of 50 Hz) into 260 bits; for compatibility
 with typical UNIX applications, our implementation turns frames of 160
 16-bit linear samples into 33-byte frames (1650 Bytes/s).
 The quality of the algorithm is good enough for reliable speaker
-recognition; even music often survives transcoding in recognizable 
+recognition; even music often survives transcoding in recognizable
 form (given the bandwidth limitations of 8 kHz sampling rate).
 
 The interfaces offered are a front end modelled after compress(1), and

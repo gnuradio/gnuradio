@@ -23,11 +23,11 @@ static inline void volk_32fc_32f_multiply_32fc_a_sse(lv_32fc_t* cVector, const l
 
     __m128 aVal1, aVal2, bVal, bVal1, bVal2, cVal;
     for(;number < quarterPoints; number++){
-      
+
       aVal1 = _mm_load_ps((const float*)aPtr);
       aPtr += 2;
- 
-      aVal2 = _mm_load_ps((const float*)aPtr); 
+
+      aVal2 = _mm_load_ps((const float*)aPtr);
       aPtr += 2;
 
       bVal = _mm_load_ps(bPtr);
@@ -36,13 +36,13 @@ static inline void volk_32fc_32f_multiply_32fc_a_sse(lv_32fc_t* cVector, const l
       bVal1 = _mm_shuffle_ps(bVal, bVal, _MM_SHUFFLE(1,1,0,0));
       bVal2 = _mm_shuffle_ps(bVal, bVal, _MM_SHUFFLE(3,3,2,2));
 
-      cVal = _mm_mul_ps(aVal1, bVal1); 
-      
+      cVal = _mm_mul_ps(aVal1, bVal1);
+
       _mm_store_ps((float*)cPtr,cVal); // Store the results back into the C container
       cPtr += 2;
 
-      cVal = _mm_mul_ps(aVal2, bVal2); 
-      
+      cVal = _mm_mul_ps(aVal2, bVal2);
+
       _mm_store_ps((float*)cPtr,cVal); // Store the results back into the C container
 
       cPtr += 2;
@@ -69,7 +69,7 @@ static inline void volk_32fc_32f_multiply_32fc_a_generic(lv_32fc_t* cVector, con
   const lv_32fc_t* aPtr = aVector;
   const float* bPtr=  bVector;
   unsigned int number = 0;
-  
+
   for(number = 0; number < num_points; number++){
     *cPtr++ = (*aPtr++) * (*bPtr++);
   }

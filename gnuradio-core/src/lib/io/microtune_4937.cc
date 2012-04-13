@@ -1,19 +1,19 @@
 /* -*- c++-*- */
 /*
  * Copyright 2001,2003 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -99,7 +99,7 @@ microtune_4937::set_RF_freq (double target_freq, double *p_actual_freq)
   unsigned char buf[4];
 
   double target_f_osc = target_freq + first_IF;
-  
+
   double f_ref = 4e6 / d_reference_divider;
 
   // f_osc = f_ref * 8 * divisor
@@ -129,7 +129,7 @@ microtune_4937::set_RF_freq (double target_freq, double *p_actual_freq)
 /*!
  * \returns true iff PLL is locked
  */
-bool 
+bool
 microtune_4937::pll_locked_p ()
 {
   // FIXME

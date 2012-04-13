@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -229,13 +229,13 @@ hash_string(const std::string &s)
   return h;
 }
 
-bool 
+bool
 pmt_is_symbol(const pmt_t& obj)
 {
   return obj->is_symbol();
 }
 
-pmt_t 
+pmt_t
 pmt_string_to_symbol(const std::string &name)
 {
   unsigned hash = hash_string(name) % SYMBOL_HASH_TABLE_SIZE;
@@ -350,7 +350,7 @@ pmt_to_uint64(pmt_t x)
 
 pmt_real::pmt_real(double value) : d_value(value) {}
 
-bool 
+bool
 pmt_is_real(pmt_t x)
 {
   return x->is_real();
@@ -379,7 +379,7 @@ pmt_to_double(pmt_t x)
 
 pmt_complex::pmt_complex(std::complex<double> value) : d_value(value) {}
 
-bool 
+bool
 pmt_is_complex(pmt_t x)
 {
   return x->is_complex();
@@ -435,7 +435,7 @@ pmt_car(const pmt_t& pair)
   pmt_pair* p = dynamic_cast<pmt_pair*>(pair.get());
   if ( p )
     return p->car();
-  
+
   throw pmt_wrong_type("pmt_car", pair);
 }
 
@@ -445,7 +445,7 @@ pmt_cdr(const pmt_t& pair)
   pmt_pair* p = dynamic_cast<pmt_pair*>(pair.get());
   if ( p )
     return p->cdr();
-  
+
   throw pmt_wrong_type("pmt_cdr", pair);
 }
 
@@ -766,7 +766,7 @@ pmt_uniform_vector_writable_elements(pmt_t vector, size_t &len)
  * This is an a-list implementation.
  *
  * When we need better performance for large dictionaries, consider implementing
- * persistent Red-Black trees as described in "Purely Functional Data Structures", 
+ * persistent Red-Black trees as described in "Purely Functional Data Structures",
  * Chris Okasaki, 1998, section 3.3.
  */
 
@@ -802,7 +802,7 @@ pmt_dict_delete(const pmt_t &dict, const pmt_t &key)
 
   if (pmt_eqv(pmt_caar(dict), key))
     return pmt_cdr(dict);
-  
+
   return pmt_cons(pmt_car(dict), pmt_dict_delete(pmt_cdr(dict), key));
 }
 
@@ -887,7 +887,7 @@ pmt_any_set(pmt_t obj, const boost::any &any)
 //               msg_accepter -- built from "any"
 ////////////////////////////////////////////////////////////////////////////
 
-bool 
+bool
 pmt_is_msg_accepter(const pmt_t &obj)
 {
   if (!pmt_is_any(obj))
@@ -1222,7 +1222,7 @@ pmt_nthcdr(size_t n, pmt_t list)
 {
   if (!(pmt_is_pair(list) || pmt_is_null(list)))
     throw pmt_wrong_type("pmt_nthcdr", list);
-    
+
   while (n > 0){
     if (pmt_is_pair(list)){
       list = pmt_cdr(list);
@@ -1359,7 +1359,7 @@ pmt_cadddr(pmt_t pair)
 {
   return pmt_car(pmt_cdr(pmt_cdr(pmt_cdr(pair))));
 }
-  
+
 bool
 pmt_is_eof_object(pmt_t obj)
 {

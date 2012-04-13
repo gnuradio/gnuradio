@@ -1,23 +1,23 @@
 #
 # Copyright 2010,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 """
 Creates the swig_doc.i SWIG interface file.
 Execute using: python swig_doc.py xml_path outputfilename
@@ -82,13 +82,13 @@ def combine_descriptions(obj):
     if dd:
         description.append(dd)
     return utoascii('\n\n'.join(description)).strip()
-    
+
 
 entry_templ = '%feature("docstring") {name} "{docstring}"'
 def make_entry(obj, name=None, templ="{description}", description=None):
     """
     Create a docstring entry for a swig interface file.
-    
+
     obj - a doxyxml object from which documentation will be extracted.
     name - the name of the C object (defaults to obj.name())
     templ - an optional template for the docstring containing only one
@@ -182,11 +182,11 @@ def make_block_entry(di, block):
 
 
 def make_swig_interface_file(di, swigdocfilename, custom_output=None):
-    
+
     output = ["""
 /*
  * This file was automatically generated using swig_doc.py.
- * 
+ *
  * Any changes to it will be lost next time it is regenerated.
  */
 """]
@@ -306,4 +306,4 @@ if __name__ == "__main__":
                 raise
         else:
             break
-        
+

@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import wx
 from gnuradio import eng_notation
@@ -32,7 +32,7 @@ def button_with_callback(parent, label, callback):
     btn = wx.Button(parent, new_id, label)
     wx.EVT_BUTTON(parent, new_id, lambda evt: callback())
     return btn
-    
+
 
 # ----------------------------------------------------------------
 #                        Format converters
@@ -128,7 +128,7 @@ class field(object):
             sizer.Add(label_widget, 0, wx.EXPAND)
             sizer.Add(widget, weight, wx.EXPAND)
             return widget
-    
+
     def _error_msg(self):
         prefix = ''
         if self.label:
@@ -223,7 +223,7 @@ class quantized_slider_field(field):
         self.max = range[1]
         self.step_size = float(range[2])
         nsteps = int((self.max-self.min)/self.step_size)
-        
+
         new_id = wx.NewId()
         w = wx.Slider(parent, new_id, 0, 0, nsteps,
                       size=wx.Size(250, -1), style=wx.SL_HORIZONTAL)
@@ -272,7 +272,7 @@ class radiobox_field(field):
             style=wx.RA_SPECIFY_ROWS | wx.RA_HORIZONTAL
         else:
             style=wx.RA_SPECIFY_COLS | wx.RA_HORIZONTAL
-            
+
         w = wx.RadioBox(parent, new_id, label=label, style=style, majorDimension=major_dimension,
                         choices=choices)
         self.f = self._pair_with_label(w, parent=parent, sizer=sizer, label=None, weight=weight)
@@ -301,7 +301,7 @@ class form(dict):
         """
         vals = [f.get_value_with_check() for f in self.values()]
         return [t[1] for t in vals if t[1] is not None]
-        
+
     def get_key_vals(self):
         d = {}
         for (key, f) in self.items():
@@ -310,7 +310,7 @@ class form(dict):
 
 
     def _nop(*args): pass
-    
+
     def check_input_and_call(self, callback, status_handler=_nop):
         """
         Return a function that checks the form for errors, and then if it's OK,
@@ -352,7 +352,7 @@ class demo_app_flow_graph (stdgui2.std_top_block):
             return True
 
         self.form = form()
-        
+
         self.form['static1'] = \
             static_text_field(parent=panel, sizer=vbox,
                               label="Static Text",
@@ -382,7 +382,7 @@ class demo_app_flow_graph (stdgui2.std_top_block):
     def _set_status_msg(self, msg):
         self.frame.GetStatusBar().SetStatusText(msg, 0)
 
-            
+
 def main ():
     app = stdgui2.stdapp(demo_app_flow_graph, "wxgui form demo", nstatus=1)
     app.MainLoop ()

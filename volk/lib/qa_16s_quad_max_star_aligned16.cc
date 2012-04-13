@@ -16,7 +16,7 @@ void qa_16s_quad_max_star_aligned16::t1() {
 
 void qa_16s_quad_max_star_aligned16::t1() {
   const int vlen = 34;
-  
+
   __VOLK_ATTR_ALIGNED(16) short input0[vlen];
   __VOLK_ATTR_ALIGNED(16) short input1[vlen];
   __VOLK_ATTR_ALIGNED(16) short input2[vlen];
@@ -50,9 +50,9 @@ void qa_16s_quad_max_star_aligned16::t1() {
   for(int i = 0; i < vlen; ++i) {
     printf("generic... %d, sse2... %d, inputs: %d, %d, %d, %d\n", output0[i], output1[i], input0[i], input1[i], input2[i], input3[i]);
   }
-  
+
   for(int i = 0; i < vlen; ++i) {
-    
+
     CPPUNIT_ASSERT_EQUAL(output0[i], output1[i]);
   }
 }

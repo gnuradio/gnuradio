@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -38,12 +38,12 @@ class gr_fir_fff;
 /*!
  * \class gr_pfb_arb_resampler_fff
  *
- * \brief Polyphase filterbank arbitrary resampler with 
+ * \brief Polyphase filterbank arbitrary resampler with
  *        float input, float output and float taps
  *
  * \ingroup filter_blk
  * \ingroup pfb_blk
- * 
+ *
  * This block takes in a signal stream and performs arbitrary
  * resampling. The resampling rate can be any real
  * number <EM>r</EM>. The resampling is done by constructing
@@ -87,13 +87,13 @@ class gr_fir_fff;
  * first input is the gain of the filter, which we specify here as the
  * interpolation rate (<EM>32</EM>).
  *
- *      <B><EM>self._taps = gr.firdes.low_pass_2(32, 32*fs, BW, TB, 
+ *      <B><EM>self._taps = gr.firdes.low_pass_2(32, 32*fs, BW, TB,
  *           attenuation_dB=ATT, window=gr.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
  *
- * The theory behind this block can be found in Chapter 7.5 of 
+ * The theory behind this block can be found in Chapter 7.5 of
  * the following book.
  *
- *    <B><EM>f. harris, "Multirate Signal Processing for Communication 
+ *    <B><EM>f. harris, "Multirate Signal Processing for Communication
  *       Systems", Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
  */
 
@@ -135,7 +135,7 @@ class GR_CORE_API gr_pfb_arb_resampler_fff : public gr_block
                                        related to quantization noise introduced during the resampling.
 				       Defaults to 32 filters.
    */
-  gr_pfb_arb_resampler_fff (float rate, 
+  gr_pfb_arb_resampler_fff (float rate,
 			    const std::vector<float> &taps,
 			    unsigned int filter_size);
 
@@ -144,7 +144,7 @@ class GR_CORE_API gr_pfb_arb_resampler_fff : public gr_block
 
   /*!
    * Resets the filterbank's filter taps with the new prototype filter
-   * \param newtaps    (vector of floats) The prototype filter to populate the filterbank. 
+   * \param newtaps    (vector of floats) The prototype filter to populate the filterbank.
    *                   The taps should be generated at the interpolated sampling rate.
    * \param ourtaps    (vector of floats) Reference to our internal member of holding the taps.
    * \param ourfilter  (vector of filters) Reference to our internal filter to set the taps for.
@@ -153,7 +153,7 @@ class GR_CORE_API gr_pfb_arb_resampler_fff : public gr_block
 		    std::vector< std::vector<float> > &ourtaps,
 		    std::vector<gr_fir_fff*> &ourfilter);
 
-  
+
 public:
   ~gr_pfb_arb_resampler_fff ();
 
@@ -163,7 +163,7 @@ public:
    * Print all of the filterbank taps to screen.
    */
   void print_taps();
-  void set_rate (float rate) { 
+  void set_rate (float rate) {
     d_dec_rate = (unsigned int)floor(d_int_rate/rate);
     d_flt_rate = (d_int_rate/rate) - d_dec_rate;
     set_relative_rate(rate);

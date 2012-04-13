@@ -26,7 +26,7 @@ int load_preferences(struct volk_arch_pref **prefs) {
     char path[512], line[512], function[128], arch[32];
     int n_arch_prefs = 0;
     struct volk_arch_pref *t_pref;
-    
+
     //get the config path
     get_config_path(path);
     if (path == NULL) return n_arch_prefs; //no prefs found

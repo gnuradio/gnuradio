@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,13 +50,13 @@ GrAtscFieldSyncDemux::forecast (VrSampleRange output,
   /* dec:1 ratio with history */
 
   assert (numberInputs == 2);
-  
+
   for (unsigned int i = 0; i < numberInputs; i++) {
     inputs[i].index = d_next_input;
     inputs[i].size = output.size * decimation + history - 1;
   }
   return 0;
-}  
+}
 
 inline static bool
 tag_is_seg_sync_or_field_sync (atsc::syminfo tag)
@@ -103,12 +103,12 @@ GrAtscFieldSyncDemux::work (VrSampleRange output, void *ao[],
 	  str = "FIELD-2";
 	else
 	  str = "SEGMENT";
-	
+
 	cerr << "GrAtscFieldSyncDemux: synced (" << str << ") at "
 	     << inputs[0].index + ii
 	     << " [delta = " << inputs[0].index + ii - d_lost_index
 	     << "]\n";
-	
+
 	d_next_input += ii;	// update for forecast
 	return 0;		// no work completed so far
       }
@@ -117,7 +117,7 @@ GrAtscFieldSyncDemux::work (VrSampleRange output, void *ao[],
     d_next_input += ii;		// update for forecast
     return 0;			// no work completed so far
   }
-    
+
   // We are in sync.  Produce output...
 
   unsigned int	k = 0;		// output index
@@ -135,7 +135,7 @@ GrAtscFieldSyncDemux::work (VrSampleRange output, void *ao[],
       // lost sync...
       // cerr << "GrAtscFieldSyncDemux: lost sync at "
       //    << inputs[0].index + ii << endl;
-      
+
       d_next_input += ii;	// update for forecast
       return k;			// return amount of work completed so far
     }
@@ -146,7 +146,7 @@ GrAtscFieldSyncDemux::work (VrSampleRange output, void *ao[],
       ii += ATSC_DATA_SEGMENT_LENGTH;	// skip over field sync
       continue;
     }
-    
+
     if (atsc::tag_is_start_field_sync_2 (input_tags[ii])){
       d_in_field2 = true;
       d_segment_number = 0;

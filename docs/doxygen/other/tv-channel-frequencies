@@ -1,13 +1,13 @@
 # These are the center frequencies in MHz for North American broadcast
 # TV channels.  Each channel is 6 MHz wide, hence the bottom edge of the
 # channel is 3 MHz below the value in this table.
-# 
+#
 # For NTSC (Analog) TV, the picture carrier is 1.25 MHz up from the
 # bottom edge.  NTSC has the FM audio at bottom + 5.75 and the spike is easily
 # visible.
-# 
+#
 # For ATSC, the pilot tone is 0.31 MHz up from the bottom.
-# 
+#
 #
   2	 57.00
   3	 63.00

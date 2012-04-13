@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,7 +30,7 @@
 
 class gr_pfb_channelizer_ccf;
 typedef boost::shared_ptr<gr_pfb_channelizer_ccf> gr_pfb_channelizer_ccf_sptr;
-GR_CORE_API gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans, 
+GR_CORE_API gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 							 const std::vector<float> &taps,
 							 float oversample_rate=1);
 
@@ -41,7 +41,7 @@ class gri_fft_complex;
 /*!
  * \class gr_pfb_channelizer_ccf
  *
- * \brief Polyphase filterbank channelizer with 
+ * \brief Polyphase filterbank channelizer with
  *        gr_complex input, gr_complex output and float taps
  *
  * \ingroup filter_blk
@@ -82,33 +82,33 @@ class gri_fft_complex;
  * The filter's taps should be based on the input sampling rate.
  *
  * For example, using the GNU Radio's firdes utility to building
- * filters, we build a low-pass filter with a sampling rate of 
+ * filters, we build a low-pass filter with a sampling rate of
  * <EM>fs</EM>, a 3-dB bandwidth of <EM>BW</EM> and a transition
  * bandwidth of <EM>TB</EM>. We can also specify the out-of-band
  * attenuation to use, <EM>ATT</EM>, and the filter window
  * function (a Blackman-harris window in this case). The first input
  *  is the gain of the filter, which we specify here as unity.
  *
- *      <B><EM>self._taps = gr.firdes.low_pass_2(1, fs, BW, TB, 
+ *      <B><EM>self._taps = gr.firdes.low_pass_2(1, fs, BW, TB,
  *           attenuation_dB=ATT, window=gr.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
  *
- * The filter output can also be overs ampled. The over sampling rate 
- * is the ratio of the the actual output sampling rate to the normal 
- * output sampling rate. It must be rationally related to the number 
+ * The filter output can also be overs ampled. The over sampling rate
+ * is the ratio of the the actual output sampling rate to the normal
+ * output sampling rate. It must be rationally related to the number
  * of channels as N/i for i in [1,N], which gives an outputsample rate
  * of [fs/N, fs] where fs is the input sample rate and N is the number
  * of channels.
  *
- * For example, for 6 channels with fs = 6000 Hz, the normal rate is 
- * 6000/6 = 1000 Hz. Allowable oversampling rates are 6/6, 6/5, 6/4, 
+ * For example, for 6 channels with fs = 6000 Hz, the normal rate is
+ * 6000/6 = 1000 Hz. Allowable oversampling rates are 6/6, 6/5, 6/4,
  * 6/3, 6/2, and 6/1 where the output sample rate of a 6/1 oversample
  * ratio is 6000 Hz, or 6 times the normal 1000 Hz. A rate of 6/5 = 1.2,
  * so the output rate would be 1200 Hz.
  *
- * The theory behind this block can be found in Chapter 6 of 
+ * The theory behind this block can be found in Chapter 6 of
  * the following book.
  *
- *    <B><EM>f. harris, "Multirate Signal Processing for Communication 
+ *    <B><EM>f. harris, "Multirate Signal Processing for Communication
  *       Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
  *
  */
@@ -123,10 +123,10 @@ class GR_CORE_API gr_pfb_channelizer_ccf : public gr_block
    * \param oversample_rate (float)   The over sampling rate is the ratio of the the actual
    *                                  output sampling rate to the normal output sampling rate.
    *                                   It must be rationally related to the number of channels
-   *				      as N/i for i in [1,N], which gives an outputsample rate 
+   *				      as N/i for i in [1,N], which gives an outputsample rate
    *				      of [fs/N, fs] where fs is the input sample rate and N is
    *				      the number of channels.
-   *				      
+   *
    *				      For example, for 6 channels with fs = 6000 Hz, the normal
    *				      rate is 6000/6 = 1000 Hz. Allowable oversampling rates
    *				      are 6/6, 6/5, 6/4, 6/3, 6/2, and 6/1 where the output
@@ -156,13 +156,13 @@ class GR_CORE_API gr_pfb_channelizer_ccf : public gr_block
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
    * \param oversample_rate (float)   The output over sampling rate.
    */
-  gr_pfb_channelizer_ccf (unsigned int numchans, 
+  gr_pfb_channelizer_ccf (unsigned int numchans,
 			  const std::vector<float> &taps,
 			  float oversample_rate);
 
 public:
   ~gr_pfb_channelizer_ccf ();
-  
+
   /*!
    * Resets the filterbank's filter taps with the new prototype filter
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
@@ -184,7 +184,7 @@ public:
    *
    *     N/2+1 | ... | N-1 | 0 | 1 |  2 | ... | N/2
    *    <------------------- 0 -------------------->
-   *                        freq 
+   *                        freq
    *
    * So output stream 0 comes from channel 0, etc. Setting a new
    * channel map allows the user to specify which channel in frequency
@@ -216,7 +216,7 @@ public:
    * Gets the current channel map.
    */
   std::vector<int> channel_map() const;
-  
+
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
 		    gr_vector_const_void_star &input_items,

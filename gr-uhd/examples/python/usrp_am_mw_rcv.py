@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, eng_notation, optfir
 from gnuradio import audio
@@ -60,15 +60,15 @@ class wfm_rx_block (stdgui2.std_top_block):
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
-        
+
         self.frame = frame
         self.panel = panel
         self.use_IF=options.use_if_freq
         if self.use_IF:
-          self.IF_freq=64000.0 
+          self.IF_freq=64000.0
         else:
           self.IF_freq=0.0
-        
+
         self.vol = 0
         self.state = "FREQ"
         self.freq = 0
@@ -89,7 +89,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         audio_rate = 32e3
         chanfilt_decim = int(usrp_rate // demod_rate)
         audio_decim = int(demod_rate // audio_rate)
-        
+
         self.u.set_samp_rate(usrp_rate)
         dev_rate = self.u.get_samp_rate()
 
@@ -97,7 +97,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         # FIXME: make one of the follow-on filters an arb resampler
         rrate = usrp_rate / dev_rate
         self.resamp = blks2.pfb_arb_resampler_ccf(rrate)
-        
+
         chan_filt_coeffs = gr.firdes.low_pass_2 (1,          # gain
                                                  usrp_rate,  # sampling rate
                                                  8e3,        # passband cutoff
@@ -128,10 +128,10 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.audio_sink = audio.sink (int (audio_rate),
                                       options.audio_output,
                                       False)  # ok_to_block
-        
+
         # now wire it all together
         self.connect (self.u, self.resamp, self.chan_filt, self.agc,
-                      self.am_demod, self.audio_filt, 
+                      self.am_demod, self.audio_filt,
                       self.volume_control, self.audio_sink)
 
         self._build_gui(vbox, usrp_rate, demod_rate, audio_rate)
@@ -146,7 +146,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         if options.volume is None:
             v = self.volume_range()
             options.volume = float(v[0]*3+v[1])/4.0
-            
+
         if abs(options.freq) < 1e3:
             options.freq *= 1e3
 
@@ -181,7 +181,7 @@ class wfm_rx_block (stdgui2.std_top_block):
             vbox.Add (self.post_filt_fft.win, 4, wx.EXPAND)
 
         if 0:
-            post_demod_fft = fftsink2.fft_sink_f(self.panel, title="Post Demod", 
+            post_demod_fft = fftsink2.fft_sink_f(self.panel, title="Post Demod",
                                                 fft_size=1024, sample_rate=demod_rate,
                                                 y_per_div=10, ref_level=0)
             self.connect (self.am_demod, post_demod_fft)
@@ -194,7 +194,7 @@ class wfm_rx_block (stdgui2.std_top_block):
             self.connect (self.audio_filt, audio_fft)
             vbox.Add (audio_fft.win, 4, wx.EXPAND)
 
-        
+
         # control area form at bottom
         self.myform = myform = form.form()
 
@@ -255,7 +255,7 @@ class wfm_rx_block (stdgui2.std_top_block):
             elif self.rot <=-3:
                 self.set_vol(self.vol - step)
                 self.rot += 3
-            
+
     def on_button (self, event):
         if event.value == 0:        # button up
             return
@@ -265,7 +265,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         else:
             self.state = "FREQ"
         self.update_status_bar ()
-        
+
 
     def set_vol (self, vol):
         g = self.volume_range()
@@ -273,7 +273,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.volume_control.set_k(10**(self.vol/10))
         self.myform['volume'].set_value(self.vol)
         self.update_status_bar ()
-                                        
+
     def set_freq(self, target_freq):
         """
         Set the center frequency we're interested in.
@@ -282,7 +282,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         @rypte: bool
         """
         r = self.u.set_center_freq(target_freq  + self.IF_freq, 0)
-        
+
         if r:
             self.freq = target_freq
             self.myform['freq'].set_value(target_freq)         # update displayed value
@@ -305,10 +305,10 @@ class wfm_rx_block (stdgui2.std_top_block):
           self.src_fft.set_baseband_freq(self.freq)
         except:
           None
-          
+
     def volume_range(self):
         return (-40.0, 0.0, 0.5)
-        
+
 
 if __name__ == '__main__':
     app = stdgui2.stdapp (wfm_rx_block, "USRP Broadcast AM MW RX")

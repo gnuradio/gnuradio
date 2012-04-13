@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 """
 Transmit N simultaneous narrow band FM signals.
@@ -60,10 +60,10 @@ class pipeline(gr.hier_block2):
             sys.stderr.write(("\nError: Could not open file '%s'\n\n" % \
                                   filename))
             sys.exit(1)
-            
+
         print audio_rate, if_rate
         fmtx = blks2.nbfm_tx (audio_rate, if_rate, max_dev=5e3, tau=75e-6)
-        
+
         # Local oscillator
         lo = gr.sig_source_c (if_rate,        # sample rate
                               gr.GR_SIN_WAVE, # waveform type
@@ -71,7 +71,7 @@ class pipeline(gr.hier_block2):
                               1.0,            # amplitude
                               0)              # DC Offset
         mixer = gr.multiply_cc ()
-    
+
         self.connect (src, fmtx, (mixer, 0))
         self.connect (lo, (mixer, 1))
         self.connect (mixer, self)
@@ -107,7 +107,7 @@ class fm_tx_block(stdgui2.std_top_block):
         if options.nchannels < 1 or options.nchannels > MAX_CHANNELS:
             sys.stderr.write ("fm_tx4: nchannels out of range.  Must be in [1,%d]\n" % MAX_CHANNELS)
             sys.exit(1)
-        
+
         if options.freq is None:
             sys.stderr.write("fm_tx4: must specify frequency with -f FREQ\n")
             parser.print_help()
@@ -168,7 +168,7 @@ class fm_tx_block(stdgui2.std_top_block):
                                            ref_level=40)
             self.connect (self.gain, post_mod)
             vbox.Add (post_mod.win, 1, wx.EXPAND)
-            
+
 
         #if options.debug:
         #    self.debugger = tx_debug_gui.tx_debug_gui(self.subdev)

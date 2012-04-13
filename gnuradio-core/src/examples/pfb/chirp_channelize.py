@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, blks2
 import sys, time
@@ -46,7 +46,7 @@ class pfb_top_block(gr.top_block):
         self._M = 9              # Number of channels to channelize
 
         # Create a set of taps for the PFB channelizer
-        self._taps = gr.firdes.low_pass_2(1, self._fs, 500, 20, 
+        self._taps = gr.firdes.low_pass_2(1, self._fs, 500, 20,
                                           attenuation_dB=10, window=gr.firdes.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
@@ -62,7 +62,7 @@ class pfb_top_block(gr.top_block):
             amp = 100
             data = scipy.arange(0, amp, amp/float(self._N))
             self.vco_input = gr.vector_source_f(data, False)
-            
+
         # Build a VCO controlled by either the sinusoid or single chirp tone
         # Then convert this to a complex signal
         self.vco = gr.vco_f(self._fs, 225, 1)
@@ -86,11 +86,11 @@ class pfb_top_block(gr.top_block):
         for i in xrange(self._M):
             self.snks.append(gr.vector_sink_c())
             self.connect((self.pfb, i), self.snks[i])
-                             
+
 
 def main():
     tstart = time.time()
-    
+
     tb = pfb_top_block()
     tb.run()
 
@@ -102,7 +102,7 @@ def main():
         fig1 = pylab.figure(2, figsize=(16,9), facecolor="w")
         fig2 = pylab.figure(3, figsize=(16,9), facecolor="w")
         fig3 = pylab.figure(4, figsize=(16,9), facecolor="w")
-        
+
         Ns = 650
         Ne = 20000
 
@@ -120,8 +120,8 @@ def main():
         X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
         f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
         pin_f = spin_f.plot(f_in, X_in, "b")
-        spin_f.set_xlim([min(f_in), max(f_in)+1]) 
-        spin_f.set_ylim([-200.0, 50.0]) 
+        spin_f.set_xlim([min(f_in), max(f_in)+1])
+        spin_f.set_ylim([-200.0, 50.0])
 
         spin_f.set_title("Input Signal", weight="bold")
         spin_f.set_xlabel("Frequency (Hz)")
@@ -130,7 +130,7 @@ def main():
 
         Ts = 1.0/fs
         Tmax = len(d)*Ts
-        
+
         t_in = scipy.arange(0, Tmax, Ts)
         x_in = scipy.array(d)
         spin_t = fig_in.add_subplot(2, 1, 2)
@@ -163,8 +163,8 @@ def main():
             X_o = 10.0*scipy.log10(abs(X))
             f_o = freq
             p2_f = sp1_f.plot(f_o, X_o, "b")
-            sp1_f.set_xlim([min(f_o), max(f_o)+1]) 
-            sp1_f.set_ylim([-200.0, 50.0]) 
+            sp1_f.set_xlim([min(f_o), max(f_o)+1])
+            sp1_f.set_ylim([-200.0, 50.0])
 
             sp1_f.set_title(("Channel %d" % i), weight="bold")
             sp1_f.set_xlabel("Frequency (Hz)")
@@ -175,8 +175,8 @@ def main():
             sp2_o = fig2.add_subplot(Nrows, Ncols, 1+i)
             p2_o = sp2_o.plot(t_o, x_o.real, "b")
             p2_o = sp2_o.plot(t_o, x_o.imag, "r")
-            sp2_o.set_xlim([min(t_o), max(t_o)+1]) 
-            sp2_o.set_ylim([-2, 2]) 
+            sp2_o.set_xlim([min(t_o), max(t_o)+1])
+            sp2_o.set_ylim([-2, 2])
 
             sp2_o.set_title(("Channel %d" % i), weight="bold")
             sp2_o.set_xlabel("Time (s)")
@@ -185,12 +185,12 @@ def main():
 
             sp3 = fig3.add_subplot(1,1,1)
             p3 = sp3.plot(t_o, x_o.real)
-            sp3.set_xlim([min(t_o), max(t_o)+1]) 
-            sp3.set_ylim([-2, 2]) 
+            sp3.set_xlim([min(t_o), max(t_o)+1])
+            sp3.set_ylim([-2, 2])
 
         sp3.set_title("All Channels")
         sp3.set_xlabel("Time (s)")
-        sp3.set_ylabel("Amplitude") 
+        sp3.set_ylabel("Amplitude")
 
         pylab.show()
 
@@ -200,4 +200,4 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-    
+

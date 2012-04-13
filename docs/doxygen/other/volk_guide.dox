@@ -24,7 +24,7 @@ multiplication of a vector of floating point numbers (each item in the
 vector is multiplied by the same value). This kernel has the following
 proto-kernels that are defined for 'generic,' 'avx,' 'sse,' and 'orc.'
 
-\code 
+\code
     void volk_32f_s32f_multiply_32f_a_generic
     void volk_32f_s32f_multiply_32f_a_sse
     void volk_32f_s32f_multiply_32f_a_avx

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -54,7 +54,7 @@ SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
 
   _windowType = 5;
 
-  _lastGUIUpdateTime = 0;  
+  _lastGUIUpdateTime = 0;
 
   _windowOpennedFlag = false;
   _fftBuffersCreatedFlag = false;
@@ -92,16 +92,16 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
       _realTimeDomainPoints = new double[_dataPoints];
       _imagTimeDomainPoints = new double[_dataPoints];
       _fftBuffersCreatedFlag = true;
-      
-      
+
+
       memset(_fftPoints, 0x0, _dataPoints*sizeof(std::complex<float>));
       memset(_realTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
       memset(_imagTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
     }
-    
+
     // Called from the Event Thread
     _spectrumDisplayForm = new SpectrumDisplayForm(parent);
-    
+
     // Toggle Windows on/off
     _spectrumDisplayForm->ToggleTabFrequency(frequency);
     _spectrumDisplayForm->ToggleTabWaterfall(waterfall);
@@ -140,8 +140,8 @@ SpectrumGUIClass::Reset()
 {
   if(GetWindowOpenFlag()) {
     qApp->postEvent(_spectrumDisplayForm,
-		    new SpectrumFrequencyRangeEvent(_centerFrequency, 
-						    _startFrequency, 
+		    new SpectrumFrequencyRangeEvent(_centerFrequency,
+						    _startFrequency,
 						    _stopFrequency));
     qApp->postEvent(_spectrumDisplayForm, new SpectrumWindowResetEvent());
   }
@@ -304,7 +304,7 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
 					    lastOfMultipleFFTUpdateFlag,
 					    currentTime,
 					    _droppedEntriesCount));
-    
+
     // Only reset the dropped entries counter if this is not
     // repeat data since repeat data is dropped by the display systems
     if(!repeatDataFlag){

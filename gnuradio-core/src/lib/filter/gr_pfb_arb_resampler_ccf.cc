@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,7 +30,7 @@
 #include <gr_io_signature.h>
 #include <cstdio>
 
-gr_pfb_arb_resampler_ccf_sptr gr_make_pfb_arb_resampler_ccf (float rate, 
+gr_pfb_arb_resampler_ccf_sptr gr_make_pfb_arb_resampler_ccf (float rate,
 							     const std::vector<float> &taps,
 							     unsigned int filter_size)
 {
@@ -39,7 +39,7 @@ gr_pfb_arb_resampler_ccf_sptr gr_make_pfb_arb_resampler_ccf (float rate,
 }
 
 
-gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate, 
+gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
 						    const std::vector<float> &taps,
 						    unsigned int filter_size)
   : gr_block ("pfb_arb_resampler_ccf",
@@ -64,7 +64,7 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
   d_last_filter = 0;
 
   d_start_index = 0;
-  
+
   d_filters = std::vector<gr_fir_ccf*>(d_int_rate);
   d_diff_filters = std::vector<gr_fir_ccf*>(d_int_rate);
 
@@ -99,7 +99,7 @@ gr_pfb_arb_resampler_ccf::create_taps (const std::vector<float> &newtaps,
 
   // Create d_numchan vectors to store each channel's taps
   ourtaps.resize(d_int_rate);
-  
+
   // Make a vector of the taps plus fill it out with 0's to fill
   // each polyphase filter with exactly d_taps_per_filter
   std::vector<float> tmp_taps;
@@ -107,7 +107,7 @@ gr_pfb_arb_resampler_ccf::create_taps (const std::vector<float> &newtaps,
   while((float)(tmp_taps.size()) < d_int_rate*d_taps_per_filter) {
     tmp_taps.push_back(0.0);
   }
-  
+
   // Partition the filter
   for(unsigned int i = 0; i < d_int_rate; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
@@ -115,7 +115,7 @@ gr_pfb_arb_resampler_ccf::create_taps (const std::vector<float> &newtaps,
     for(unsigned int j = 0; j < d_taps_per_filter; j++) {
       ourtaps[d_int_rate - 1 - i][j] = tmp_taps[i + j*d_int_rate];
     }
-    
+
     // Build a filter for each channel and add it's taps to it
     ourfilter[i]->set_taps(ourtaps[d_int_rate-1-i]);
   }

@@ -39,7 +39,7 @@ else (JACK_LIBRARIES AND JACK_INCLUDE_DIRS)
       /opt/local/include
       /sw/include
   )
-  
+
   find_library(JACK_LIBRARY
     NAMES
       jack

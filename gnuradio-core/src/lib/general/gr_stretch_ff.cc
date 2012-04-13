@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -48,7 +48,7 @@ gr_stretch_ff::work(int noutput_items,
 {
   const float *in  = (const float *) input_items[0];
   float       *out = (float *) output_items[0];
-  
+
   for (int count = 0; count < noutput_items; count++) {
     float vmax = in[0] - d_lo;
 
@@ -57,7 +57,7 @@ gr_stretch_ff::work(int noutput_items,
       if (vtmp > vmax)
 	vmax = vtmp;
     }
-    
+
     if (vmax != 0.0)
       for (unsigned int i = 0; i < d_vlen; i++)
 	out[i] = d_lo * (1.0 - (in[i] - d_lo) / vmax);
@@ -68,7 +68,7 @@ gr_stretch_ff::work(int noutput_items,
     in  += d_vlen;
     out += d_vlen;
   }
-  
+
   return noutput_items;
 }
 

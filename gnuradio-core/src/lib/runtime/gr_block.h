@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2007,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -31,11 +31,11 @@
  * \brief The abstract base class for all 'terminal' processing blocks.
  * \ingroup base_blk
  *
- * A signal processing flow is constructed by creating a tree of 
+ * A signal processing flow is constructed by creating a tree of
  * hierarchical blocks, which at any level may also contain terminal nodes
  * that actually implement signal processing functions. This is the base
  * class for all such leaf nodes.
- 
+
  * Blocks have a set of input streams and output streams.  The
  * input_signature and output_signature define the number of input
  * streams and output streams respectively, and the type of the data
@@ -58,7 +58,7 @@
 class GR_CORE_API gr_block : public gr_basic_block {
 
  public:
-  
+
   //! Magic return values from general_work
   enum {
     WORK_CALLED_PRODUCE = -2,
@@ -82,7 +82,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
    */
   unsigned history () const { return d_history; }
   void  set_history (unsigned history) { d_history = history; }
-  
+
   /*!
    * \brief Return true if this block has a fixed input to output rate.
    *
@@ -177,7 +177,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   int unaligned () const { return d_unaligned; }
   void set_is_unaligned (bool u);
   bool is_unaligned () const { return d_is_unaligned; }
-  
+
   /*!
    * \brief Tell the scheduler \p how_many_items of input stream \p which_input were consumed.
    */
@@ -264,7 +264,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   unsigned              d_history;
   bool                  d_fixed_rate;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
-    
+
  protected:
   gr_block (void){} //allows pure virtual interface sub-classes
   gr_block (const std::string &name,
@@ -273,10 +273,10 @@ class GR_CORE_API gr_block : public gr_basic_block {
 
   void set_fixed_rate(bool fixed_rate){ d_fixed_rate = fixed_rate; }
 
-  
+
   /*!
    * \brief  Adds a new tag onto the given output buffer.
-   * 
+   *
    * \param which_output an integer of which output stream to attach the tag
    * \param abs_offset   a uint64 number of the absolute item number
    *                     assicated with the tag. Can get from nitems_written.
@@ -323,7 +323,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
 			 unsigned int which_input,
 			 uint64_t abs_start,
 			 uint64_t abs_end);
-  
+
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range
    * with a given key.

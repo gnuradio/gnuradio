@@ -125,7 +125,7 @@ def main():
     if(args.list):
         print "Available Tests to Run:"
         print "\n".join(["\t{0}: {1}".format(i,f.__name__) for i,f in enumerate(avail_tests)])
-        sys.exit(0)      
+        sys.exit(0)
 
     N = int(args.nitems)
     iters = args.iterations
@@ -143,7 +143,7 @@ def main():
         res = run_tests(avail_tests[test], N, iters)
         if res is not None:
             replace_results(conn, label, N, iters, res)
-            
+
 if __name__ == "__main__":
     try:
         main()

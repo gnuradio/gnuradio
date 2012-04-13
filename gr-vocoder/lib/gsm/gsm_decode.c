@@ -206,7 +206,7 @@ int gsm_decode P3((s, c, target), gsm s, gsm_byte * c, gsm_signal * target)
 			xmaxc[2] = sr & 0x3f;  sr >>= 6;
 			xmc[26] = sr & 0x7;  sr >>= 3;
 			xmc[27] = sr & 0x7;  sr >>= 3;
-			sr |= (uword)*c++ << 1;	
+			sr |= (uword)*c++ << 1;
 			xmc[28] = sr & 0x7;  sr >>= 3;
 			xmc[29] = sr & 0x7;  sr >>= 3;
 			xmc[30] = sr & 0x7;  sr >>= 3;
@@ -223,7 +223,7 @@ int gsm_decode P3((s, c, target), gsm s, gsm_byte * c, gsm_signal * target)
 			xmc[38] = sr & 0x7;  sr >>= 3;
 			sr = *c++;
 			Nc[3] = sr & 0x7f;  sr >>= 7;
-			sr |= (uword)*c++ << 1;		
+			sr |= (uword)*c++ << 1;
 			bc[3] = sr & 0x3;  sr >>= 2;
 			Mc[3] = sr & 0x3;  sr >>= 2;
 			sr |= (uword)*c++ << 5;

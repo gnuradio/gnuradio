@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -40,7 +40,7 @@
  * \ingroup block
  * Pay attention on how you connect this block.
  * It expects a minimum of 2 usrp_source_s with nchan number of channels and FPGA_MODE_COUNTING_32BIT enabled.
- * This means that the first complex_short channel on every input is an interleaved 32 bit counter. 
+ * This means that the first complex_short channel on every input is an interleaved 32 bit counter.
  * The samples are aligned by dropping samples untill the samplenumbers match.
  */
 class gr_align_on_samplenumbers_ss;
@@ -72,7 +72,7 @@ class GR_CORE_API gr_align_on_samplenumbers_ss : public gr_block
         int ninput_items_used;
       };
   std::vector<align_state>   d_state;
-    
+
   friend GR_CORE_API gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss (int nchan,int align_interval);
   gr_align_on_samplenumbers_ss (int nchan,int align_interval);
 

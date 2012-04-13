@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2008,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -147,7 +147,7 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
       std::cerr << "Error: gr_block_executor: propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs" << std::endl;
       return false;
     }
-    
+
     break;
   default:
     return true;
@@ -241,10 +241,10 @@ gr_block_executor::run_one_iteration()
 
       LOG(*d_log << "  d_ninput_items[" << i << "] = " << d_ninput_items[i] << std::endl);
       LOG(*d_log << "  d_input_done[" << i << "] = " << d_input_done[i] << std::endl);
-      
+
       if (d_ninput_items[i] < m->output_multiple() && d_input_done[i])
 	goto were_done;
-	
+
       max_items_avail = std::max (max_items_avail, d_ninput_items[i]);
     }
 
@@ -309,7 +309,7 @@ gr_block_executor::run_one_iteration()
       // try to work it forward starting with max_items_avail.
       // We want to try to consume all the input we've got.
       int reqd_noutput_items = m->fixed_rate_ninput_to_noutput(max_items_avail);
-      
+
       // only test this if we specifically set the output_multiple
       if(m->output_multiple_set())
 	reqd_noutput_items = round_down(reqd_noutput_items, m->output_multiple());
@@ -442,7 +442,7 @@ gr_block_executor::run_one_iteration()
 
     if (n != gr_block::WORK_CALLED_PRODUCE)
       d->produce_each (n);	// advance write pointers
-    
+
     if (d->d_produce_or > 0)	// block produced something
       return READY;
 
@@ -461,7 +461,7 @@ gr_block_executor::run_one_iteration()
     return READY_NO_OUTPUT;
   }
   assert (0);
-    
+
  were_done:
   LOG(*d_log << "  were_done\n");
   d->set_done (true);

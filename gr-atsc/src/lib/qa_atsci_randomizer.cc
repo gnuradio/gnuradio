@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -93,7 +93,7 @@ qa_atsci_randomizer::t3_reset ()
   }
 
   randomizer.reset ();	// reset LFSR
-  
+
   // and now should repeat expected values
 
   for (unsigned int i = 0; i < NELEMENTS (expected_initial_values); i++){
@@ -110,7 +110,7 @@ qa_atsci_randomizer::t4_high_level ()
   atsc_mpeg_packet		in[N];
   atsc_mpeg_packet_no_sync	middle[N];
   atsc_mpeg_packet		out[N];
-  
+
   memset (in, 0, sizeof (in));
   memset (middle, 0, sizeof (middle));
   memset (out, 0, sizeof (out));

@@ -3,7 +3,7 @@
 
    This file is free software; you can redistribute it and/or modify it under
    the terms of the GNU General Public License as published by the Free
-   Software Foundation; either version 2 of the License, or (at your option) 
+   Software Foundation; either version 2 of the License, or (at your option)
    any later version.
 
    This file is distributed in the hope that it will be useful, but WITHOUT
@@ -16,13 +16,13 @@
    Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA
    02110-1301, USA.  */
 
-/* As a special exception, if you include this header file into source files 
-   compiled by GCC, this header file does not by itself cause  the resulting 
-   executable to be covered by the GNU General Public License.  This exception 
-   does not however invalidate any other reasons why the executable file might be 
-   covered by the GNU General Public License.  */ 
+/* As a special exception, if you include this header file into source files
+   compiled by GCC, this header file does not by itself cause  the resulting
+   executable to be covered by the GNU General Public License.  This exception
+   does not however invalidate any other reasons why the executable file might be
+   covered by the GNU General Public License.  */
 
-/* Single token vector data types for the PowerPC SIMD/Vector Multi-media 
+/* Single token vector data types for the PowerPC SIMD/Vector Multi-media
    eXtension */
 
 #ifndef INCLUDED_GR_VEC_TYPES_H

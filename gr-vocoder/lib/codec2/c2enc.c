@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	printf("usage: %s InputRawspeechFile OutputBitFile\n", argv[0]);
 	exit(1);
     }
- 
+
     if (strcmp(argv[1], "-")  == 0) fin = stdin;
     else if ( (fin = fopen(argv[1],"rb")) == NULL ) {
 	fprintf(stderr, "Error opening input bit file: %s: %s.\n",

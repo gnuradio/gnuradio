@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -29,7 +29,7 @@
 #include <iostream>
 #include <string.h>
 
-trellis_permutation_sptr 
+trellis_permutation_sptr
 trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t BYTES_PER_SYMBOL)
 {
   return gnuradio::get_initial_sptr(new trellis_permutation (K,TABLE,SYMS_PER_BLOCK,BYTES_PER_SYMBOL));
@@ -50,7 +50,7 @@ trellis_permutation::trellis_permutation (int K, const std::vector<int> &TABLE, 
 
 
 
-int 
+int
 trellis_permutation::work (int noutput_items,
 			gr_vector_const_void_star &input_items,
 			gr_vector_void_star &output_items)
@@ -67,13 +67,13 @@ trellis_permutation::work (int noutput_items,
     for (int i = 0; i < noutput_items/d_SYMS_PER_BLOCK; i++){
       // Index i refers to blocks.
       // Begining of packet (in blocks)
-      int i0 = d_K*(i/d_K); 
+      int i0 = d_K*(i/d_K);
       // position of block within packet (in blocks)
       int j0 = i%d_K;
       // new position of block within packet (in blocks)
       int k0 = d_TABLE[j0];
-      memcpy(&(out[i*d_SYMS_PER_BLOCK*d_BYTES_PER_SYMBOL]), 
-             &(in[(i0+k0)*d_SYMS_PER_BLOCK*d_BYTES_PER_SYMBOL]), 
+      memcpy(&(out[i*d_SYMS_PER_BLOCK*d_BYTES_PER_SYMBOL]),
+             &(in[(i0+k0)*d_SYMS_PER_BLOCK*d_BYTES_PER_SYMBOL]),
              d_BYTES_PER_SYMBOL*d_SYMS_PER_BLOCK);
     }
     // end per stream processing

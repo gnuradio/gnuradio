@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011-2012 Free Software Foundation, Inc.
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -46,7 +46,7 @@ static const int MAX_IN = 0;  /*!< Maximum number of input streams. */
 static const int MIN_OUT = 1; /*!< Minimum number of output streams. */
 static const int MAX_OUT = 1; /*!< Maximum number of output streams. */
 
-fcd_source_c_impl::fcd_source_c_impl(const std::string device_name) 
+fcd_source_c_impl::fcd_source_c_impl(const std::string device_name)
   : gr_hier_block2 ("fcd_source_c",
 		    gr_make_io_signature (MIN_IN, MAX_IN, sizeof (gr_complex)),
 		    gr_make_io_signature (MIN_OUT, MAX_OUT, sizeof (gr_complex))),
@@ -54,13 +54,13 @@ fcd_source_c_impl::fcd_source_c_impl(const std::string device_name)
     d_freq_req(0)
 {
   gr_float_to_complex_sptr f2c;
-  
+
   /* Audio source; sample rate fixed at 96kHz */
   fcd = audio_make_source(96000, device_name, true);
-  
+
   /* block to convert stereo audio to a complex stream */
   f2c = gr_make_float_to_complex(1);
-  
+
   connect(fcd, 0, f2c, 0);
   connect(fcd, 1, f2c, 1);
   connect(f2c, 0, self(), 0);
@@ -71,15 +71,15 @@ void fcd_source_c_impl::set_freq(int freq)
 {
   FCD_MODE_ENUM __GR_ATTR_UNUSED fme;
   double f = (double)freq;
-  
+
   /* valid range 50 MHz - 2.0 GHz */
   if ((freq < 50000000) || (freq > 2000000000)) {
     return;
   }
-  
+
   d_freq_req = freq;
   f *= 1.0 + d_freq_corr/1000000.0;
-  
+
   fme = fcdAppSetFreq((int)f);
   /* TODO: check fme */
 }
@@ -89,34 +89,34 @@ void fcd_source_c_impl::set_freq(float freq)
 {
   FCD_MODE_ENUM __GR_ATTR_UNUSED fme;
   double f = (double)freq;
-  
+
   /* valid range 50 MHz - 2.0 GHz */
   if ((freq < 50.0e6) || (freq > 2.0e9)) {
     return;
   }
-  
+
   d_freq_req = (int)freq;
   f *= 1.0 + d_freq_corr/1000000.0;
-  
+
   fme = fcdAppSetFreq((int)f);
   /* TODO: check fme */
 }
 
-    
+
 // Set frequency with kHz resolution.
 void fcd_source_c_impl::set_freq_khz(int freq)
 {
   FCD_MODE_ENUM __GR_ATTR_UNUSED fme;
   double f = freq*1000.0;
-  
+
   /* valid range 50 MHz - 2.0 GHz */
   if ((freq < 50000) || (freq > 2000000)) {
     return;
   }
-  
+
   d_freq_req = freq*1000;
   f *= 1.0 + d_freq_corr/1000000.0;
-  
+
   fme = fcdAppSetFreqkHz((int)(f/1000.0));
   /* TODO: check fme */
 }
@@ -127,7 +127,7 @@ void fcd_source_c_impl::set_lna_gain(float gain)
 {
   FCD_MODE_ENUM __GR_ATTR_UNUSED fme;
   unsigned char g;
-  
+
   /* convert to nearest discrete value */
   if (gain > 27.5) {
     g = 14;              // 30.0 dB
@@ -168,7 +168,7 @@ void fcd_source_c_impl::set_lna_gain(float gain)
   else {
     g = 0;               // -5.0 dB
   }
-  
+
   fme = fcdAppSetParam(FCD_CMD_APP_SET_LNA_GAIN, &g, 1);
   /* TODO: check fme */
 }
@@ -207,13 +207,13 @@ void fcd_source_c_impl::set_dc_corr(double _dci, double _dcq)
       signed short dcq;
     };
   } dcinfo;
-  
+
   if ((_dci < -1.0) || (_dci > 1.0) || (_dcq < -1.0) || (_dcq > 1.0))
     return;
-  
+
   dcinfo.dci = static_cast<signed short>(_dci*32768.0);
   dcinfo.dcq = static_cast<signed short>(_dcq*32768.0);
-  
+
   fcdAppSetParam(FCD_CMD_APP_SET_DC_CORR, dcinfo.auc, 4);
 }
 
@@ -227,12 +227,12 @@ void fcd_source_c_impl::set_iq_corr(double _gain, double _phase)
       signed short gain;
     };
   } iqinfo;
-  
+
   if ((_gain < -1.0) || (_gain > 1.0) || (_phase < -1.0) || (_phase > 1.0))
     return;
-  
+
   iqinfo.phase = static_cast<signed short>(_phase*32768.0);
   iqinfo.gain = static_cast<signed short>(_gain*32768.0);
-  
+
   fcdAppSetParam(FCD_CMD_APP_SET_IQ_CORR, iqinfo.auc, 4);
 }

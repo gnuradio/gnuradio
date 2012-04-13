@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -52,7 +52,7 @@ atsc_field_sync_demux::atsc_field_sync_demux()
 		  gr_make_io_signature(2, 2, sizeof(float)),
 		  gr_make_io_signature(1, 1, sizeof(atsc_soft_data_segment))),
 		  d_locked(false), d_in_field2(true), d_segment_number(0),
-		  d_next_input(0), d_lost_index(0), d_inputs0_index(0), 
+		  d_next_input(0), d_lost_index(0), d_inputs0_index(0),
                   d_inputs0_size(0), d_consume(0)
 {
   reset();

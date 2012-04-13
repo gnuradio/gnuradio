@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002,2006 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -71,7 +71,7 @@ static const int bit2[8] = {0, 99, 2, 98, 4, 97, 6, 96};
 /* Detailed Debugging */
 int debug_dec = 0;
 
-/* 
+/*
  * Build indirect data structures to say which symbols go into which
  * encoder, and then where the resulting dibits from the encoders go.
  */
@@ -116,7 +116,7 @@ build_decode_structures (char *fileout)
        chunk += ENCODERS) {
     /* Associate data bytes with the Trellis encoders.
        They get loaded or stored in an order that depends on where we are in the
-       segment sync progress (sigh). 
+       segment sync progress (sigh).
        GRR!  When the chunk reload happens at the same time as the
        segment boundary, we should bump the encoder NOW for the reload,
        rather than LATER during the bitshift transition!!! */
@@ -124,7 +124,7 @@ build_decode_structures (char *fileout)
       encoder = (encoder + ENCODER_SEG_BUMP) % ENCODERS;
       skip_encoder_bump = 1;
     }
-      
+
     /* Remember where the data bytes are going to go, once we've
        accumulated them from the 12 interleaved decoders */
     for (i = 0; i < ENCODERS; i++) {
@@ -175,7 +175,7 @@ build_decode_structures (char *fileout)
         encoder++; if (encoder >= ENCODERS) encoder = 0;
       } /* Encoders */
     } /* Bit shifts */
-      
+
 #if 0
     /* Now dump out the chunk of 12 data bytes that the twelve decoders have
        accumulated. */
@@ -190,7 +190,7 @@ build_decode_structures (char *fileout)
     } /* Dumping encoder bytes */
 #endif
   } /* Chunks */
-  
+
   /* Now print the resulting data structures in C++ */
 
   if (!freopen(fileout, "w", stdout))
@@ -215,7 +215,7 @@ build_decode_structures (char *fileout)
   printf ("};\n\n");
 
   enco_which_max = enco_dibits[0] - enco_which_dibits[0];
-  for (i = 0; i < ENCODERS; i++) 
+  for (i = 0; i < ENCODERS; i++)
     if (enco_which_max != enco_dibits[i] - enco_which_dibits[i]) {
       cerr << "Encoder " << i << " has different max_dibits " <<
 	enco_dibits[i] - enco_which_dibits[i] << " than " << enco_which_max;
@@ -248,7 +248,7 @@ build_decode_structures (char *fileout)
 
 int
 usage()
-{ 
+{
   cerr << "atsc_viterbi_gen: Usage:\n";
   cerr << "  ./atsc_viterbi_gen -o atsc_viterbi_mux.cc\n";
   cerr << "That's all, folks!\n";
@@ -257,7 +257,7 @@ usage()
 
 
 int
-main(int argc, char **argv) 
+main(int argc, char **argv)
 {
   if (argc != 3) return usage();
   if (argv[1][0] != '-'

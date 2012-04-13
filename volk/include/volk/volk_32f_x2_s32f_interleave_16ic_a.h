@@ -23,7 +23,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a_sse2(lv_16sc_t* complexVec
     __m128 vScalar = _mm_set_ps1(scalar);
 
     const unsigned int quarterPoints = num_points / 4;
-    
+
     __m128 iValue, qValue, cplxValue1, cplxValue2;
     __m128i intValue1, intValue2;
 
@@ -59,7 +59,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a_sse2(lv_16sc_t* complexVec
       *complexVectorPtr++ = (int16_t)(*iBufferPtr++ * scalar);
       *complexVectorPtr++ = (int16_t)(*qBufferPtr++ * scalar);
     }
-    
+
 }
 #endif /* LV_HAVE_SSE2 */
 
@@ -81,7 +81,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a_sse(lv_16sc_t* complexVect
     __m128 vScalar = _mm_set_ps1(scalar);
 
     const unsigned int quarterPoints = num_points / 4;
-    
+
     __m128 iValue, qValue, cplxValue;
 
     int16_t* complexVectorPtr = (int16_t*)complexVector;
@@ -106,9 +106,9 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a_sse(lv_16sc_t* complexVect
       // Interleaves the upper two values in the i and q variables into one buffer
       cplxValue = _mm_unpackhi_ps(iValue, qValue);
       cplxValue = _mm_mul_ps(cplxValue, vScalar);
- 
+
       _mm_store_ps(floatBuffer, cplxValue);
-      
+
       *complexVectorPtr++ = (int16_t)(floatBuffer[0]);
       *complexVectorPtr++ = (int16_t)(floatBuffer[1]);
       *complexVectorPtr++ = (int16_t)(floatBuffer[2]);
@@ -124,7 +124,7 @@ static inline void volk_32f_x2_s32f_interleave_16ic_a_sse(lv_16sc_t* complexVect
       *complexVectorPtr++ = (int16_t)(*iBufferPtr++ * scalar);
       *complexVectorPtr++ = (int16_t)(*qBufferPtr++ * scalar);
     }
-    
+
 }
 #endif /* LV_HAVE_SSE */
 

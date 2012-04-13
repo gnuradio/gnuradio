@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import math
 import sys
@@ -45,7 +45,7 @@ class ptt_block(stdgui2.std_top_block):
 
         self.frame = frame
         self.space_bar_pressed = False
-        
+
         parser = OptionParser (option_class=eng_option)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")
@@ -72,7 +72,7 @@ class ptt_block(stdgui2.std_top_block):
 
         if options.freq < 1e6:
             options.freq *= 1e6
-            
+
         self.txpath = transmit_path(options.args, options.spec,
                                     options.antenna, options.tx_gain,
                                     options.audio_input)
@@ -103,7 +103,7 @@ class ptt_block(stdgui2.std_top_block):
     def set_rx_gain(self, gain):
         self.myform['rx_gain'].set_value(gain)            # update displayed value
         self.rxpath.set_gain(gain)
-        
+
     def set_tx_gain(self, gain):
         self.txpath.set_gain(gain)
 
@@ -129,9 +129,9 @@ class ptt_block(stdgui2.std_top_block):
 
         def _form_set_freq(kv):
             return self.set_freq(kv['freq'])
-            
+
         self.panel = panel
-        
+
         # FIXME This REALLY needs to be replaced with a hand-crafted button
         # that sends both button down and button up events
         hbox = wx.BoxSizer(wx.HORIZONTAL)
@@ -203,7 +203,7 @@ class ptt_block(stdgui2.std_top_block):
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Squelch",
                                         weight=3, range=self.rxpath.squelch_range(),
                                         callback=self.set_squelch)
-            
+
         g = self.rxpath.u.get_gain_range()
         hbox.Add((5,0), 0)
         myform['rx_gain'] = \
@@ -221,7 +221,7 @@ class ptt_block(stdgui2.std_top_block):
 
         # FIXME figure out how to have this be a subpanel that is always
         # created, but has its visibility controlled by foo.Show(True/False)
-        
+
         #if not(self.show_debug_info):
         #    return
 
@@ -268,7 +268,7 @@ class ptt_block(stdgui2.std_top_block):
         # if we lose the keyboard focus, turn off the transmitter
         self.space_bar_pressed = False
         self.set_transmit(False)
-        
+
 
 # ////////////////////////////////////////////////////////////////////////
 #                           Transmit Path
@@ -279,7 +279,7 @@ class transmit_path(gr.hier_block2):
 	gr.hier_block2.__init__(self, "transmit_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
-				
+
         self.u = uhd.usrp_sink(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
         # Set the subdevice spec
@@ -306,13 +306,13 @@ class transmit_path(gr.hier_block2):
                                   self.audio_rate,    # sampling rate
                                   3800,               # low pass cutoff freq
                                   300,                # width of trans. band
-                                  gr.firdes.WIN_HANN) # filter type 
+                                  gr.firdes.WIN_HANN) # filter type
 
         hpf = gr.firdes.high_pass (1,                 # gain
                                   self.audio_rate,    # sampling rate
                                   325,                # low pass cutoff freq
                                   50,                 # width of trans. band
-                                  gr.firdes.WIN_HANN) # filter type 
+                                  gr.firdes.WIN_HANN) # filter type
 
         audio_taps = convolve(array(lpf),array(hpf))
         self.audio_filt = gr.fir_filter_fff(1,audio_taps)
@@ -391,7 +391,7 @@ class receive_path(gr.hier_block2):
                                           nfilts*dev_rate,    # sampling rate
                                           13e3,               # low pass cutoff freq
                                           4e3,                # width of trans. band
-                                          gr.firdes.WIN_HANN) # filter type 
+                                          gr.firdes.WIN_HANN) # filter type
 
         rrate = self.quad_rate / dev_rate
         self.resamp = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
@@ -407,7 +407,7 @@ class receive_path(gr.hier_block2):
 
         # sound card as final sink
         audio_sink = audio.sink (int(self.audio_rate), audio_output)
-        
+
         # now wire it all together
         self.connect (self.u, self.resamp, self.fmrx, self.squelch,
                       self._audio_gain, audio_sink)
@@ -423,7 +423,7 @@ class receive_path(gr.hier_block2):
         self.set_volume((v[0]+v[1])/2)
         s = self.squelch_range()
         self.set_squelch((s[0]+s[1])/2)
-        
+
         # Set the subdevice spec
         if(spec):
             self.u.set_subdev_spec(spec, 0)
@@ -452,14 +452,14 @@ class receive_path(gr.hier_block2):
 
     def squelch_range(self):
         return self.squelch.squelch_range()
-    
+
     def set_squelch(self, threshold):
         print "SQL =", threshold
         self.squelch.set_threshold(threshold)
 
     def threshold(self):
         return self.squelch.threshold()
-    
+
     def set_freq(self, target_freq):
         """
         Set the center frequency we're interested in.

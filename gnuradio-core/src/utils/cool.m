@@ -16,7 +16,7 @@
 
 %% -*- texinfo -*-
 %% @deftypefn {Function File} {} cool (@var{n})
-%% Create color colormap. 
+%% Create color colormap.
 %% (cyan to magenta)
 %% The argument @var{n} should be a scalar.  If it
 %% is omitted, the length of the current colormap or 64 is assumed.
@@ -38,7 +38,7 @@ function map = cool (number)
   end
 
   if (number == 1)
-    map = [0, 1, 1];  
+    map = [0, 1, 1];
   elseif (number > 1)
     r = (0:number - 1)' ./ (number - 1);
     g = 1 - r;

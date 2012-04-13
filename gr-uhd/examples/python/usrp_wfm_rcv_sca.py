@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 #
 # Copyright 2006,2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -109,7 +109,7 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
         # Set the antenna
         if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
-            
+
         usrp_rate  = 320e3
         demod_rate = 320e3
         audio_rate = 32e3
@@ -218,7 +218,7 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
         self.set_sca_freq(67000)  # A common SCA Frequency
-            
+
     def _set_status_msg(self, msg, which=0):
         self.frame.GetStatusBar().SetStatusText(msg, which)
 
@@ -300,7 +300,7 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
                                         callback=self.set_vol)
         hbox.Add((5,0), 1)
 
-        g = self.u.get_gain_range()        
+        g = self.u.get_gain_range()
         myform['gain'] = \
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Gain",
                                         weight=3, range=(g.start(), g.stop(), g.step()),

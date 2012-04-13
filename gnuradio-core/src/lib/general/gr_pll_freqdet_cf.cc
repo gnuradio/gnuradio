@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -43,7 +43,7 @@ gr_pll_freqdet_cf::gr_pll_freqdet_cf (float loop_bw, float max_freq, float min_f
   : gr_sync_block ("pll_freqdet_cf",
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature (1, 1, sizeof (float))),
-    gri_control_loop(loop_bw, max_freq, min_freq)    
+    gri_control_loop(loop_bw, max_freq, min_freq)
 {
 }
 
@@ -76,12 +76,12 @@ gr_pll_freqdet_cf::work (int noutput_items,
 
   float error;
   int	size = noutput_items;
-  
+
   while (size-- > 0) {
     *optr++ = d_freq;
 
     error = phase_detector(*iptr++,d_phase);
-    
+
     advance_loop(error);
     phase_wrap();
     frequency_limit();

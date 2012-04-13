@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2010,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,10 +30,10 @@
 #include <cstdio>
 #include <cstring>
 
-gr_pfb_synthesizer_ccf_sptr gr_make_pfb_synthesizer_ccf 
+gr_pfb_synthesizer_ccf_sptr gr_make_pfb_synthesizer_ccf
     (unsigned int numchans, const std::vector<float> &taps, bool twox)
 {
-  return gr_pfb_synthesizer_ccf_sptr 
+  return gr_pfb_synthesizer_ccf_sptr
     (new gr_pfb_synthesizer_ccf (numchans, taps, twox));
 }
 
@@ -107,7 +107,7 @@ gr_pfb_synthesizer_ccf::set_taps1(const std::vector<float> &taps)
   while((float)(tmp_taps.size()) < d_numchans*d_taps_per_filter) {
     tmp_taps.push_back(0.0);
   }
- 
+
   // Partition the filter
   for(i = 0; i < d_numchans; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
@@ -115,7 +115,7 @@ gr_pfb_synthesizer_ccf::set_taps1(const std::vector<float> &taps)
     for(j = 0; j < d_taps_per_filter; j++) {
       d_taps[i][j] = tmp_taps[i + j*d_numchans];  // add taps to channels in reverse order
     }
-    
+
     // Build a filter for each channel and add it's taps to it
     d_filters[i]->set_taps(d_taps[i]);
   }
@@ -145,7 +145,7 @@ gr_pfb_synthesizer_ccf::set_taps2 (const std::vector<float> &taps)
   while((float)(tmp_taps.size()) < d_numchans*d_taps_per_filter) {
     tmp_taps.push_back(0.0);
   }
- 
+
   // Partition the filter
   for(i = 0; i < d_numchans; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
@@ -156,7 +156,7 @@ gr_pfb_synthesizer_ccf::set_taps2 (const std::vector<float> &taps)
       // add taps to channels in reverse order
       // Zero out every other tap
       if(state == 0) {
-	d_taps[i][j] = tmp_taps[i + j*d_numchans];  
+	d_taps[i][j] = tmp_taps[i + j*d_numchans];
 	d_taps[d_numchans + i][j] = 0;
 	state = 1;
       }
@@ -166,7 +166,7 @@ gr_pfb_synthesizer_ccf::set_taps2 (const std::vector<float> &taps)
 	state = 0;
       }
     }
-    
+
     // Build a filter for each channel and add it's taps to it
     d_filters[i]->set_taps(d_taps[i]);
     d_filters[d_numchans + i]->set_taps(d_taps[d_numchans + i]);
@@ -247,17 +247,17 @@ gr_pfb_synthesizer_ccf::work (int noutput_items,
 	in = (gr_complex*)input_items[i];
 	d_fft->get_inbuf()[d_channel_map[i]] = in[n];
       }
-      
+
       // spin through IFFT
       d_fft->execute();
-      
+
       for(i = 0; i < d_numchans; i++) {
 	out[i]  = d_filters[i]->filter(d_fft->get_outbuf()[i]);
       }
       out += d_numchans;
     }
   }
-  
+
   // Algorithm for oversampling by 2x
   else {
     for(n = 0; n < noutput_items/d_numchans; n++) {
@@ -265,10 +265,10 @@ gr_pfb_synthesizer_ccf::work (int noutput_items,
 	in = (gr_complex*)input_items[i];
 	d_fft->get_inbuf()[d_channel_map[i]] = in[n];
       }
-      
+
       // spin through IFFT
       d_fft->execute();
-      
+
       // Output is sum of two filters, but the input buffer to the filters must be circularly
       // shifted by numchans every time through, done by using d_state to determine which IFFT
       // buffer position to pull from.
@@ -277,7 +277,7 @@ gr_pfb_synthesizer_ccf::work (int noutput_items,
 	out[i] += d_filters[d_numchans+i]->filter(d_fft->get_outbuf()[(d_state^1)*d_numchans+i]);
       }
       d_state ^= 1;
-      
+
       out += d_numchans;
     }
   }

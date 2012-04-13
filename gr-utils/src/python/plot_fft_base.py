@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2008,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 try:
     import scipy
@@ -54,7 +54,7 @@ class plot_fft_base:
         self.fig = figure(1, figsize=(16, 12), facecolor='w')
         rcParams['xtick.labelsize'] = self.axis_font_size
         rcParams['ytick.labelsize'] = self.axis_font_size
-        
+
         self.text_file     = figtext(0.10, 0.94, ("File: %s" % filename), weight="heavy", size=self.text_size)
         self.text_file_pos = figtext(0.10, 0.88, "File Position: ", weight="heavy", size=self.text_size)
         self.text_block    = figtext(0.35, 0.88, ("Block Size: %d" % self.block_length),
@@ -77,7 +77,7 @@ class plot_fft_base:
         connect('draw_event', self.zoom)
         connect('key_press_event', self.click)
         show()
-        
+
     def get_data(self):
         self.position = self.hfile.tell()/self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % (self.position))
@@ -87,7 +87,7 @@ class plot_fft_base:
             print "End of File"
         else:
             self.iq_fft = self.dofft(self.iq)
-            
+
             tstep = 1.0 / self.sample_rate
             #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
             self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
@@ -107,7 +107,7 @@ class plot_fft_base:
         Fn = 0.5 * sample_rate
         freq = scipy.array([-Fn + i*Fs for i in xrange(N)])
         return freq
-        
+
     def make_plots(self):
         # if specified on the command-line, set file pointer
         self.hfile.seek(self.sizeof_data*self.start, 1)
@@ -125,7 +125,7 @@ class plot_fft_base:
         self.sp_fft.set_ylabel("Power Spectrum (dBm)", fontsize=self.label_font_size, fontweight="bold")
 
         self.get_data()
-        
+
         self.plot_iq  = self.sp_iq.plot([], 'bo-') # make plot for reals
         self.plot_iq += self.sp_iq.plot([], 'ro-') # make plot for imags
         self.draw_time()                           # draw the plot
@@ -155,7 +155,7 @@ class plot_fft_base:
 
         self.xlim = self.sp_iq.get_xlim()
         draw()
-        
+
     def zoom(self, event):
         newxlim = scipy.array(self.sp_iq.get_xlim())
         curxlim = scipy.array(self.xlim)
@@ -168,10 +168,10 @@ class plot_fft_base:
 
             iq = self.iq[xmin : xmax]
             time = self.time[xmin : xmax]
-            
+
             iq_fft = self.dofft(iq)
             freq = self.calc_freq(time, self.sample_rate)
-            
+
             self.plot_fft[0].set_data(freq, iq_fft)
             self.sp_fft.axis([freq.min(), freq.max(),
                               iq_fft.min()-10, iq_fft.max()+10])
@@ -184,7 +184,7 @@ class plot_fft_base:
 
         if(find(event.key, forward_valid_keys)):
             self.step_forward()
-            
+
         elif(find(event.key, backward_valid_keys)):
             self.step_backward()
 
@@ -244,6 +244,6 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-    
+
 
 

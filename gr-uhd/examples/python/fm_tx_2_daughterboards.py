@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 """
 Transmit 2 signals, one out each daughterboard.
@@ -52,7 +52,7 @@ class example_signal_0(gr.hier_block2):
                                600,            # frequency
                                1.0,            # amplitude
                                0)              # DC Offset
-    
+
         self.connect(src, self)
 
 
@@ -179,7 +179,7 @@ class my_top_block(gr.top_block):
         if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
             self.u.set_antenna(options.antenna, 1)
-       
+
     def set_freq(self, target_freq, chan):
         """
         Set the center frequency we're interested in.
@@ -199,7 +199,7 @@ class my_top_block(gr.top_block):
 
         else:
             print "  Set Frequency Failed!"
-            
+
         return False
 
     def set_gain(self, gain, chan):

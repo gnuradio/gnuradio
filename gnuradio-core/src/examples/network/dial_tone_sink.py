@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2006,2007,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, audio
 from gnuradio.eng_option import eng_option
@@ -31,7 +31,7 @@ class dial_tone_sink(gr.top_block):
                             eof=eof, wait=wait)
         sink = audio.sink(sample_rate)
         self.connect(udp, sink)
-        
+
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option)
     parser.add_option("", "--host", type="string", default="0.0.0.0",
@@ -55,11 +55,11 @@ if __name__ == '__main__':
     top_block = dial_tone_sink(options.host, options.port,
                                options.packet_size, options.sample_rate,
                                not options.no_eof, not options.no_wait)
-    
-    try:    
+
+    try:
         # Run forever
         top_block.run()
     except KeyboardInterrupt:
         # Ctrl-C exits
         pass
-    
+

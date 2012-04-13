@@ -14,7 +14,7 @@
 	$taps,
 	$size,
 )</make>
-	<!-- Set taps not implemented yet 
+	<!-- Set taps not implemented yet
            <callback>set_taps($taps)</callback>
          -->
 	<callback>set_rate($rate)</callback>

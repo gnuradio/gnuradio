@@ -71,7 +71,7 @@ static inline void volk_16ic_deinterleave_16i_x2_a_sse2(int16_t* iBuffer, int16_
   __m128i highMask = _mm_set_epi32(0xFFFFFFFF, 0xFFFFFFFF, 0x0, 0x0);
 
   unsigned int eighthPoints = num_points / 8;
- 
+
   for(number = 0; number < eighthPoints; number++){
     complexVal1 = _mm_load_si128((__m128i*)complexVectorPtr);  complexVectorPtr += 8;
     complexVal2 = _mm_load_si128((__m128i*)complexVectorPtr);  complexVectorPtr += 8;

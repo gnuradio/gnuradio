@@ -1,17 +1,17 @@
 # Copyright 2010-2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
@@ -67,7 +67,7 @@ function(GR_SWIG_MAKE_DOCS output_file)
         #call doxygen on the Doxyfile + input headers
         add_custom_command(
             OUTPUT ${OUTPUT_DIRECTORY}/xml/index.xml
-	           ${OUTPUT_DIRECTORY}/xml/combine.xslt 
+	           ${OUTPUT_DIRECTORY}/xml/combine.xslt
             DEPENDS ${input_files} ${GR_SWIG_DOCS_SOURCE_DEPS} ${tag_deps}
             COMMAND ${DOXYGEN_EXECUTABLE} ${OUTPUT_DIRECTORY}/Doxyfile
             COMMENT "Generating doxygen xml for ${name} docs"
@@ -75,7 +75,7 @@ function(GR_SWIG_MAKE_DOCS output_file)
 
         #call the swig_doc script on the xml files
         add_custom_command(
-            OUTPUT ${output_file} 
+            OUTPUT ${output_file}
             DEPENDS ${input_files} ${stamp-file} ${OUTPUT_DIRECTORY}/xml/index.xml
             COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
                 ${CMAKE_SOURCE_DIR}/docs/doxygen/swig_doc.py

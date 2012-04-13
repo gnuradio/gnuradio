@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio.
  *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -134,7 +134,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 #else
   ComponentDescription InputDesc;
 #endif
-  
+
 
   InputDesc.componentType = kAudioUnitType_Output;
   InputDesc.componentSubType = kAudioUnitSubType_HALOutput;
@@ -147,7 +147,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 #else
   Component comp = FindNextComponent (NULL, &InputDesc);
 #endif
-  
+
   if (comp == NULL) {
 #ifndef GR_USE_OLD_AUDIO_UNIT
     std::cerr << "AudioComponentFindNext Error" << std::endl;
@@ -166,11 +166,11 @@ audio_osx_source::audio_osx_source (int sample_rate,
   CheckErrorAndThrow (err, "OpenAComponent",
 		      "audio_osx_source::audio_osx_source");
 #endif
-  
+
 
   UInt32 enableIO;
 
-// must enable the AUHAL for input and disable output 
+// must enable the AUHAL for input and disable output
 // before setting the AUHAL's current device
 
 // Enable input on the AUHAL
@@ -392,7 +392,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 //   UInt32 ACPrimeMethod = kConverterPrimeMethod_None;
     UInt32 ACPrimeMethod = kConverterPrimeMethod_Pre;
     propertySize = sizeof (ACPrimeMethod);
-    err = AudioConverterSetProperty (d_AudioConverter, 
+    err = AudioConverterSetProperty (d_AudioConverter,
 				     kAudioConverterPrimeMethod,
 				     propertySize,
 				     &ACPrimeMethod);
@@ -400,12 +400,12 @@ audio_osx_source::audio_osx_source (int sample_rate,
 			"audio_osx_source::audio_osx_source");
 
 // Get the size of the I/O buffer(s) to allow for pre-allocated buffers
-      
+
 // lead frame info (trail frame info is ignored)
 
     AudioConverterPrimeInfo ACPrimeInfo = {0, 0};
     propertySize = sizeof (ACPrimeInfo);
-    err = AudioConverterGetProperty (d_AudioConverter, 
+    err = AudioConverterGetProperty (d_AudioConverter,
 				     kAudioConverterPrimeInfo,
 				     &propertySize,
 				     &ACPrimeInfo);
@@ -981,7 +981,7 @@ audio_osx_source::SetDefaultInputDeviceAsCurrent
 #if _OSX_DO_LISTENERS_
 OSStatus
 audio_osx_source::HardwareListener
-(AudioHardwarePropertyID inPropertyID, 
+(AudioHardwarePropertyID inPropertyID,
  void *inClientData)
 {
   OSStatus err = noErr;
@@ -1012,7 +1012,7 @@ audio_osx_source::UnitListener
 {
   OSStatus err = noErr;
   audio_osx_source* This = static_cast<audio_osx_source*>(inRefCon);
-  AudioStreamBasicDescription asbd;			
+  AudioStreamBasicDescription asbd;
 
   std::cerr << "a_o_s::UnitListener" << std::endl;
 

@@ -59,7 +59,7 @@ def make_each_machine_c(machine_name, archs, functions, fcountlist, taglist, ali
 """
     for arch in archs:
         tempstring += "#define LV_HAVE_" + arch.swapcase() + " 1\n"
-    
+
     tempstring += """
 #include <volk/volk_common.h>
 #include "volk_machines.h"

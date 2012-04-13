@@ -1,23 +1,23 @@
 #
 # Copyright 2005,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import math
 from gnuradio import gr, optfir
@@ -45,7 +45,7 @@ class wfm_tx(gr.hier_block2):
 	gr.hier_block2.__init__(self, "wfm_tx",
 				gr.io_signature(1, 1, gr.sizeof_float),      # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
-        
+
         # FIXME audio_rate and quad_rate ought to be exact rationals
         audio_rate = int(audio_rate)
         quad_rate = int(quad_rate)
@@ -53,9 +53,9 @@ class wfm_tx(gr.hier_block2):
         if quad_rate % audio_rate != 0:
             raise ValueError, "quad_rate is not an integer multiple of audio_rate"
 
-        
+
         do_interp = audio_rate != quad_rate
-        
+
         if do_interp:
             interp_factor = quad_rate / audio_rate
             interp_taps = optfir.low_pass (interp_factor,   # gain
@@ -69,7 +69,7 @@ class wfm_tx(gr.hier_block2):
             self.interpolator = gr.interp_fir_filter_fff (interp_factor, interp_taps)
 
         self.preemph = fm_preemph (quad_rate, tau=tau)
-        
+
         k = 2 * math.pi * max_dev / quad_rate
         self.modulator = gr.frequency_modulator_fc (k)
 

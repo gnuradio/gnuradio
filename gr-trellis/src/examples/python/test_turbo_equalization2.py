@@ -65,17 +65,17 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
     isi = gr.fir_filter_fff(1,channel)
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
-    
+
     # RX
-    (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM) 
-    dst = gr.vector_sink_s(); 
-    
+    (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM)
+    dst = gr.vector_sink_s();
+
     tb.connect (src,enc_out,inter,mod)
     tb.connect (mod,isi,(add,0))
     tb.connect (noise,(add,1))
     tb.connect (add,head)
     tb.connect (tail,dst)
-    
+
     tb.run()
 
     data = dst.data()
@@ -86,7 +86,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
             nright=nright+1
         #else:
             #print "Error in ", i
- 
+
     return (ntotal,ntotal-nright)
 
 
@@ -117,7 +117,7 @@ def main(args):
     tot_channel = fsm_utils.make_isi_lookup(modulation,channel,True) # generate the lookup table (normalize energy to 1)
     dimensionality = tot_channel[0]
     N0=pow(10.0,-esn0_db/10.0); # noise variance
-    tot_constellation =[0]*len(tot_channel[1])  
+    tot_constellation =[0]*len(tot_channel[1])
     for i in range(len(tot_channel[1])):
       tot_constellation[i] = tot_channel[1][i] * math.sqrt(1.0/N0)
     if len(tot_constellation)/dimensionality != fi.O():

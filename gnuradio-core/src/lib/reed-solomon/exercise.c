@@ -71,7 +71,7 @@ int trials){
       /* Load block with random data and encode */
       for(i=0;i<NN-NROOTS;i++)
 	block[i] = random() & NN;
-      
+
 #if defined(CCSDS) || defined(FIXED)
       ENCODE_RS(&block[0],&block[NN-NROOTS]);
 #else

@@ -95,7 +95,7 @@ class TimeUpdateEvent: public QEvent
 public:
   TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
 		  const uint64_t numTimeDomainDataPoints);
-  
+
   ~TimeUpdateEvent();
 
   int which() const;

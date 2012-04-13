@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include "proto.h"
 
-void gsm_debug_words P4( (name, from, to, ptr), 
+void gsm_debug_words P4( (name, from, to, ptr),
 	char 	      * name,
 	int		from,
 	int		to,

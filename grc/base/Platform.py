@@ -87,7 +87,7 @@ class Platform(_Element):
 				else:
 					self._blocks[key] = block
 					self._blocks_n[key] = n
-			except ParseXML.XMLSyntaxError, e: 
+			except ParseXML.XMLSyntaxError, e:
 				try: #try to add the xml file as a block tree
 					ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)
 					self._block_tree_files.append(xml_file)

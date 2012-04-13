@@ -1,23 +1,23 @@
 #
 # Copyright 2006,2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import gnuradio_core as gsp
 _prefs_base = gsp.gr_prefs
@@ -31,7 +31,7 @@ import sys
 
 def _user_prefs_filename():
     return os.path.expanduser('~/.gnuradio/config.conf')
-        
+
 def _sys_prefs_dirname():
     return gsp.prefsdir()
 
@@ -44,7 +44,7 @@ def _bool(x):
     if isinstance(x, (float, int)):
         return bool(x)
     raise TypeError, x
-        
+
 
 class _prefs(_prefs_base):
     """
@@ -98,7 +98,7 @@ class _prefs(_prefs_base):
             return self.cp.getint(section, option)
         except:
             return default_val
-        
+
     def get_double(self, section, option, default_val):
         try:
             return self.cp.getfloat(section, option)
@@ -115,7 +115,7 @@ _prefs_db = _prefs()
 # (make check uses this to avoid interactions.)
 if os.getenv("GR_DONT_LOAD_PREFS", None) is None:
     _prefs_db._read_files()
-    
+
 
 _prefs_base.set_singleton(_prefs_db)    # tell C++ what instance to use
 

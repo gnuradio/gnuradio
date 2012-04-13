@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -147,11 +147,11 @@ qtgui_time_sink_c::work (int noutput_items,
     unsigned int datasize = noutput_items - i;
     unsigned int resid = d_size-d_index;
     idx = 0;
-    
+
     // If we have enough input for one full plot, do it
     if(datasize >= resid) {
       d_current_time = gruel::high_res_timer_now();
-      
+
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n+=2) {
 	in = (const gr_complex*)input_items[idx++];
@@ -159,15 +159,15 @@ qtgui_time_sink_c::work (int noutput_items,
 	  d_residbufs[n][d_index+k] = in[j+k].real();
 	  d_residbufs[n+1][d_index+k] = in[j+k].imag();
 	}
-      }	
+      }
 
       // Update the plot if its time
       if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	d_last_time = d_current_time;
 	d_qApplication->postEvent(d_main_gui,
-				  new TimeUpdateEvent(d_residbufs, d_size));	
+				  new TimeUpdateEvent(d_residbufs, d_size));
       }
-      
+
       d_index = 0;
       j += resid;
     }
@@ -184,7 +184,7 @@ qtgui_time_sink_c::work (int noutput_items,
       }
       d_index += datasize;
       j += datasize;
-    }   
+    }
   }
 
   return noutput_items;

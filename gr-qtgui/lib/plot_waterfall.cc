@@ -21,12 +21,12 @@ public:
 	     ? QImage::Format_ARGB32 : QImage::Format_Indexed8 )
   {
   }
-  
+
   PlotWaterfallImage(const QImage &other):
     QImage(other)
   {
   }
-  
+
   void initColorTable(const QImage& other)
   {
     setColorTable(other.colorTable());
@@ -45,7 +45,7 @@ public:
   {
     delete colorMap;
   }
-  
+
   WaterfallData *data;
   QwtColorMap *colorMap;
 };
@@ -56,7 +56,7 @@ public:
   - QwtPlotItem::Legend:    false
 
   The z value is initialized by 8.0.
-   
+
   \param title Title
 
   \sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
@@ -131,7 +131,7 @@ QwtDoubleRect PlotWaterfall::boundingRect() const
 {
   return d_data->data->boundingRect();
 }
-#endif  
+#endif
 
 /*!
   \brief Returns the recommended raster for a given rect.
@@ -152,7 +152,7 @@ QSize PlotWaterfall::rasterHint(const QwtDoubleRect &rect) const
 /*!
   \brief Render an image from the data and color map.
 
-  The area is translated into a rect of the paint device. 
+  The area is translated into a rect of the paint device.
   For each pixel of this rect the intensity is mapped
   into a color.
 
@@ -160,7 +160,7 @@ QSize PlotWaterfall::rasterHint(const QwtDoubleRect &rect) const
   \param yMap Y-Scale Map
   \param area Area that should be rendered in scale coordinates.
 
-  \return A QImage::Format_Indexed8 or QImage::Format_ARGB32 depending 
+  \return A QImage::Format_Indexed8 or QImage::Format_ARGB32 depending
   on the color map.
 
   \sa QwtRasterData::intensity(), QwtColorMap::rgb(),
@@ -168,11 +168,11 @@ QSize PlotWaterfall::rasterHint(const QwtDoubleRect &rect) const
 */
 #if QWT_VERSION < 0x060000
 QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
-				  const QwtScaleMap &yMap, 
+				  const QwtScaleMap &yMap,
 				  const QwtDoubleRect &area) const
 #else
 QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
-				  const QwtScaleMap &yMap, 
+				  const QwtScaleMap &yMap,
 				  const QRectF &area,
 				  const QSize &size) const
 #endif
@@ -224,7 +224,7 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
         xxMap.setPaintInterval(px1, px2);
         xxMap.setScaleInterval(sx1, sx2);
         yyMap.setPaintInterval(py1, py2);
-        yyMap.setScaleInterval(sy1, sy2); 
+        yyMap.setScaleInterval(sy1, sy2);
     }
 
     PlotWaterfallImage image(rect.size(), d_data->colorMap->format());
@@ -233,7 +233,7 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
     const QwtDoubleInterval intensityRange = d_data->data->range();
 #else
     const QwtInterval intensityRange = d_data->data->interval(Qt::ZAxis);
-#endif    
+#endif
     if ( !intensityRange.isValid() )
         return image;
 
@@ -294,9 +294,9 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
   \param painter Painter
   \param xMap Maps x-values into pixel coordinates.
   \param yMap Maps y-values into pixel coordinates.
-  \param canvasRect Contents rect of the canvas in painter coordinates 
+  \param canvasRect Contents rect of the canvas in painter coordinates
 
-  \sa setDisplayMode, renderImage, 
+  \sa setDisplayMode, renderImage,
   QwtPlotRasterItem::draw, drawContourLines
 */
 

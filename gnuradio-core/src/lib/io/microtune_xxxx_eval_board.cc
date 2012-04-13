@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2001,2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -49,7 +49,7 @@ microtune_xxxx_eval_board::~microtune_xxxx_eval_board ()
 
 
 //! is the eval board present?
-bool 
+bool
 microtune_xxxx_eval_board::board_present_p ()
 {
   bool result = true;
@@ -73,7 +73,7 @@ microtune_xxxx_eval_board::board_present_p ()
  * We're using a MAX518 8-bit 5V dual dac for setting the AGC's
  * ----------------------------------------------------------------
  */
-void 
+void
 microtune_xxxx_eval_board::write_dac (int which, int value)
 {
   unsigned char	cmd[2];
@@ -82,7 +82,7 @@ microtune_xxxx_eval_board::write_dac (int which, int value)
   d_i2c->write (AGC_DAC_I2C_ADDR, cmd, sizeof (cmd));
 }
 
-void 
+void
 microtune_xxxx_eval_board::write_both_dacs (int value0, int value1)
 {
   unsigned char	cmd[4];
@@ -111,7 +111,7 @@ microtune_xxxx_eval_board::set_RF_AGC_voltage (float volts)
   write_dac (0, scale_volts (volts));
 }
 
-void 
+void
 microtune_xxxx_eval_board::set_IF_AGC_voltage (float volts)
 {
   write_dac (1, scale_volts (volts));
@@ -124,7 +124,7 @@ microtune_xxxx_eval_board::set_RF_freq (double freq, double *actual_freq)
 {
   return d_tuner->set_RF_freq (freq, actual_freq);
 }
-  
+
 double
 microtune_xxxx_eval_board::set_RF_freq (double freq)
 {

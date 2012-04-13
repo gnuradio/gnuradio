@@ -62,7 +62,7 @@ for line in hdr_files:
             subdtype = re.search("[0-9]+[A-z]+", dtype);
             if subdtype:
                 datatypes.append(subdtype.group(0));
-                
+
 
 datatypes = set(datatypes);
 
@@ -71,7 +71,7 @@ for line in hdr_files:
         if dt in line:
             subline = re.search("(volk_" + dt +"_.*(a|u).*\.h)", line);
             if subline:
-                
+
                 subsubline = re.search(".+(?=\.h)", subline.group(0));
                 functions.append(subsubline.group(0));
 
@@ -80,13 +80,13 @@ afile = minidom.parse(os.path.join(srcdir, "gen/archs.xml"))
 filearchs = afile.getElementsByTagName("arch");
 for filearch in filearchs:
     archs.append(str(filearch.attributes["name"].value));
-                 
+
 for arch in archs:
     a_var = re.search("^\$", arch);
     if a_var:
         archs.remove(arch);
-        
-#strip out mutex archs        
+
+#strip out mutex archs
 
 archflags_dict = {}
 for filearch in filearchs:
@@ -177,22 +177,22 @@ for func in functions:
                 tag = re.search("\w+", tag.group(0));
                 if tag:
                     tags.append(tag.group(0));
-               
-    
+
+
         if begun_name == 0:
             retline = re.search(".+(?=" + func + ")", line);
             if retline:
                 ret = retline.group(0);
-                
-                
-                
-        
+
+
+
+
             subline = re.search(func + ".*", line);
             if subline:
                 subsubline = re.search("\(.*?\)", subline.group(0));
                 if subsubline:
                     args = subsubline.group(0);
-                    
+
                 else:
                     begun_name = 1;
                     subsubline = re.search("\(.*", subline.group(0));
@@ -214,25 +214,25 @@ for func in functions:
                 if subline:
                     args = subline.group(0);
                     begun_name = 0;
-                else: 
+                else:
                     subline = re.search("\(.*", line);
                     if subline:
                         args = subline.group(0);
                         begun_paren = 1;
-    
+
     replace = re.compile("static ");
     ret = replace.sub("", ret);
     replace = re.compile("inline ");
     ret = replace.sub("", ret);
     replace = re.compile("\)");
     arched_args = replace.sub(", const char* arch) {", args);
-    
+
     remove = re.compile('\)|\(|{');
     rargs = remove.sub("", args);
     sargs = rargs.split(',');
-    
-    
-    
+
+
+
     margs = [];
     atypes = [];
     for arg in sargs:
@@ -241,7 +241,7 @@ for func in functions:
         replace = re.compile(" " + temp[-1]);
         atypes.append(replace.sub("", arg));
 
-    
+
     my_args = ""
     arg_types = ""
     for arg in range(0, len(margs) - 1):
@@ -255,7 +255,7 @@ for func in functions:
     this_type = leading_space_remove.sub("", atypes[-1]);
     arg_types = arg_types + this_type;
     my_argtypelist.append(arg_types);
-    
+
     if(ret[-1] != ' '):
         ret = ret + ' ';
 
@@ -263,7 +263,7 @@ for func in functions:
     my_arglist.append(my_args) #!!!!!!!!!!!!!!!!!
     retlist.append(ret);
     fcountlist.append(fcount);
-    taglist.append(tags);               
+    taglist.append(tags);
 
 
 outfile_cpu_h.write(make_cpuid_h(filearchs));

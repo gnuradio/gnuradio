@@ -82,7 +82,7 @@ def run_test(seed,blocksize):
             data[i]=0
         for i in range(tail+1):
             data[-i]=0
-      
+
 
 
 	##################################################
@@ -125,7 +125,7 @@ def run_test(seed,blocksize):
 	tb.connect((gr_streams_to_stream_0, 0), (gr_skiphead_0, 0))
 	tb.connect((gr_skiphead_0, 0), (viterbi, 0))
 	tb.connect((viterbi, 0), (gr_vector_sink_x_0, 0))
-        
+
 
         tb.run()
         dataest = gr_vector_sink_x_0.data()

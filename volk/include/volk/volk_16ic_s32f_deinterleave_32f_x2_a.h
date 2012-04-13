@@ -20,7 +20,7 @@ static inline void volk_16ic_s32f_deinterleave_32f_x2_a_sse(float* iBuffer, floa
     float* qBufferPtr = qBuffer;
 
     uint64_t number = 0;
-    const uint64_t quarterPoints = num_points / 4;    
+    const uint64_t quarterPoints = num_points / 4;
     __m128 cplxValue1, cplxValue2, iValue, qValue;
 
     __m128 invScalar = _mm_set_ps1(1.0/scalar);
@@ -29,12 +29,12 @@ static inline void volk_16ic_s32f_deinterleave_32f_x2_a_sse(float* iBuffer, floa
     __VOLK_ATTR_ALIGNED(16) float floatBuffer[8];
 
     for(;number < quarterPoints; number++){
-      
+
       floatBuffer[0] = (float)(complexVectorPtr[0]);
       floatBuffer[1] = (float)(complexVectorPtr[1]);
       floatBuffer[2] = (float)(complexVectorPtr[2]);
       floatBuffer[3] = (float)(complexVectorPtr[3]);
-      
+
       floatBuffer[4] = (float)(complexVectorPtr[4]);
       floatBuffer[5] = (float)(complexVectorPtr[5]);
       floatBuffer[6] = (float)(complexVectorPtr[6]);

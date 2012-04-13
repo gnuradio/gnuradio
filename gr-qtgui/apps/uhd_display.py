@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2009,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr
 from gnuradio import uhd
@@ -92,14 +92,14 @@ class main_window(QtGui.QMainWindow):
         else:
             self.fg.start()
             self.gui.pauseButton.setText("Pause")
-      
+
 
     # Functions to set the values in the GUI
     def set_frequency(self, freq):
         self.freq = freq
         sfreq = eng_notation.num_to_str(self.freq)
         self.gui.frequencyEdit.setText(QtCore.QString("%1").arg(sfreq))
-        
+
     def set_gain(self, gain):
         self.gain = gain
         self.gui.gainEdit.setText(QtCore.QString("%1").arg(self.gain))
@@ -117,7 +117,7 @@ class main_window(QtGui.QMainWindow):
     # Functions called when signals are triggered in the GUI
     def frequencyEditText(self):
         try:
-            freq = eng_notation.str_to_num(self.gui.frequencyEdit.text().toAscii()) 
+            freq = eng_notation.str_to_num(self.gui.frequencyEdit.text().toAscii())
             self.fg.set_frequency(freq)
             self.freq = freq
         except RuntimeError:
@@ -130,7 +130,7 @@ class main_window(QtGui.QMainWindow):
             self.gain = gain
         except ValueError:
             pass
-                
+
     def bandwidthEditText(self):
         try:
             bw = eng_notation.str_to_num(self.gui.bandwidthEdit.text().toAscii())
@@ -138,7 +138,7 @@ class main_window(QtGui.QMainWindow):
             self.bw = bw
         except ValueError:
             pass
-        
+
     def amplifierEditText(self):
         try:
             amp = float(self.gui.amplifierEdit.text())
@@ -155,20 +155,20 @@ class main_window(QtGui.QMainWindow):
     def dcGainEditText(self):
         gain = float(self.gui.dcGainEdit.text())
         self.fg.set_dc_gain(gain)
-        
+
     def dcCancelClicked(self, state):
         self.dcGainEditText()
         self.fg.cancel_dc(state)
-        
 
-        
+
+
 class my_top_block(gr.top_block):
     def __init__(self, options):
         gr.top_block.__init__(self)
 
         self.options = options
         self.show_debug_info = True
-        
+
         self.qapp = QtGui.QApplication(sys.argv)
 
         self.u = uhd.usrp_source(device_addr=options.address, stream_args=uhd.stream_args('fc32'))
@@ -267,7 +267,7 @@ class my_top_block(gr.top_block):
 
     def set_dc_gain(self, gain):
         self.dc.set_taps(gain)
-        
+
     def cancel_dc(self, state):
         self.lock()
 
@@ -300,7 +300,7 @@ def main ():
     parser.add_option("--fft-size", type="int", default=2048,
                       help="Set number of FFT bins [default=%default]")
     (options, args) = parser.parse_args()
-    
+
     if len(args) != 0:
         parser.print_help()
         sys.exit(1)
@@ -314,4 +314,4 @@ if __name__ == '__main__':
         main ()
     except KeyboardInterrupt:
         pass
-    
+
