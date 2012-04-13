@@ -11,7 +11,7 @@
 class SpectrumUpdateEvent:public QEvent{
 
 public:
-  SpectrumUpdateEvent(const std::complex<float>* fftPoints,
+  SpectrumUpdateEvent(const float* fftPoints,
 		      const uint64_t numFFTDataPoints,
 		      const double* realTimeDomainPoints,
 		      const double* imagTimeDomainPoints,
@@ -24,7 +24,7 @@ public:
 
   ~SpectrumUpdateEvent();
 
-  const std::complex<float>* getFFTPoints() const;
+  const float* getFFTPoints() const;
   const double* getRealTimeDomainPoints() const;
   const double* getImagTimeDomainPoints() const;
   uint64_t getNumFFTDataPoints() const;
@@ -38,7 +38,7 @@ public:
 protected:
 
 private:
-  std::complex<float>* _fftPoints;
+  float* _fftPoints;
   double* _realDataTimeDomainPoints;
   double* _imagDataTimeDomainPoints;
   uint64_t _numFFTDataPoints;

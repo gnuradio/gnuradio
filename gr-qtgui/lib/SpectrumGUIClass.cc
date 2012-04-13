@@ -88,13 +88,13 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
   if(!_windowOpennedFlag){
 
     if(!_fftBuffersCreatedFlag){
-      _fftPoints = new std::complex<float>[_dataPoints];
+      _fftPoints = new float[_dataPoints];
       _realTimeDomainPoints = new double[_dataPoints];
       _imagTimeDomainPoints = new double[_dataPoints];
       _fftBuffersCreatedFlag = true;
       
       
-      memset(_fftPoints, 0x0, _dataPoints*sizeof(std::complex<float>));
+      memset(_fftPoints, 0x0, _dataPoints*sizeof(float));
       memset(_realTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
       memset(_imagTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
     }
@@ -223,7 +223,7 @@ SpectrumGUIClass::GetCenterFrequency()
 
 void
 SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
-			       const std::complex<float>* fftBuffer,
+			       const float* fftBuffer,
 			       const uint64_t inputBufferSize,
 			       const float* realTimeDomainData,
 			       const uint64_t realTimeDomainDataSize,
@@ -242,7 +242,7 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
 
   if(updateDisplayFlag){
     if((fftBuffer != NULL) && (bufferSize > 0)){
-      memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(std::complex<float>));
+      memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(float));
     }
 
     // Can't do a memcpy since ths is going from float to double data type
@@ -252,8 +252,8 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
       double* realTimeDomainPointsPtr = _realTimeDomainPoints;
       timeDomainBufferSize = realTimeDomainDataSize;
 
-      memset( _imagTimeDomainPoints, 0x0, realTimeDomainDataSize*sizeof(double));
-      for( uint64_t number = 0; number < realTimeDomainDataSize; number++){
+      memset(_imagTimeDomainPoints, 0x0, realTimeDomainDataSize*sizeof(double));
+      for(uint64_t number = 0; number < realTimeDomainDataSize; number++){
 	*realTimeDomainPointsPtr++ = *realTimeDomainDataPtr++;
       }
     }
@@ -266,7 +266,7 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
       double* imagTimeDomainPointsPtr = _imagTimeDomainPoints;
 
       timeDomainBufferSize = complexTimeDomainDataSize;
-      for( uint64_t number = 0; number < complexTimeDomainDataSize; number++){
+      for(uint64_t number = 0; number < complexTimeDomainDataSize; number++){
 	*realTimeDomainPointsPtr++ = *complexTimeDomainDataPtr++;
 	*imagTimeDomainPointsPtr++ = *complexTimeDomainDataPtr++;
       }

@@ -87,6 +87,7 @@ private:
 
   int d_index;
   gr_complex *d_residbuf;
+  float *d_magbuf;
 
   bool d_plotfreq, d_plotwaterfall, d_plottime, d_plotconst;
   
@@ -98,7 +99,7 @@ private:
   void windowreset();
   void buildwindow();
   void fftresize();
-  void fft(const gr_complex *data_in, int size);
+  void fft(float *data_out, const gr_complex *data_in, int size);
   
 public:
   ~qtgui_sink_c();

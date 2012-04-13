@@ -29,6 +29,7 @@
 #include <string.h>
 
 #include <QTimer>
+#include <volk/volk.h>
 
 qtgui_sink_c_sptr
 qtgui_make_sink_c (int fftsize, int wintype,
@@ -71,6 +72,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 
   d_index = 0;
   d_residbuf = new gr_complex[d_fftsize];
+  d_magbuf = new float[d_fftsize];
 
   buildwindow();
 
@@ -81,6 +83,7 @@ qtgui_sink_c::~qtgui_sink_c()
 {
   delete d_main_gui;
   delete [] d_residbuf;
+  delete [] d_magbuf;
   delete d_fft;
 }
 
@@ -196,19 +199,17 @@ qtgui_sink_c::set_update_time(double t)
 }
 
 void
-qtgui_sink_c::fft(const gr_complex *data_in, int size)
+qtgui_sink_c::fft(float *data_out, const gr_complex *data_in, int size)
 {
   if (d_window.size()) {
-    gr_complex *dst = d_fft->get_inbuf();
-    int i;
-    for (i = 0; i < size; i++)		// apply window
-      dst[i] = data_in[i] * d_window[i];
+    volk_32fc_32f_multiply_32fc_a(d_fft->get_inbuf(), data_in, &d_window.front(), size);
   }
   else {
     memcpy (d_fft->get_inbuf(), data_in, sizeof(gr_complex)*size);
   }
 
   d_fft->execute ();     // compute the fft
+  volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(), size, 1.0, size);
 }
 
 void 
@@ -240,6 +241,9 @@ qtgui_sink_c::fftresize()
     // Resize residbuf and replace data
     delete [] d_residbuf;
     d_residbuf = new gr_complex[newfftsize];
+
+    delete [] d_magbuf;
+    d_magbuf = new float[newfftsize];
 
     // Set new fft size and reset buffer index 
     // (throws away any currently held data, but who cares?) 
@@ -290,9 +294,9 @@ qtgui_sink_c::general_work (int noutput_items,
       d_index = 0;
 
       j += resid;
-      fft(d_residbuf, d_fftsize);
+      fft(d_magbuf, d_residbuf, d_fftsize);
       
-      d_main_gui->UpdateWindow(true, d_fft->get_outbuf(), d_fftsize,
+      d_main_gui->UpdateWindow(true, d_magbuf, d_fftsize,
 			       NULL, 0, (float*)d_residbuf, d_fftsize,
 			       currentTime, true);
       d_update_active = false;

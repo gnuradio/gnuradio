@@ -141,7 +141,7 @@ void
 SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdateEvent)
 {
   //_lastSpectrumEvent = (SpectrumUpdateEvent)(*spectrumUpdateEvent);
-  const std::complex<float>* complexDataPoints = spectrumUpdateEvent->getFFTPoints();
+  const float* fftMagDataPoints = spectrumUpdateEvent->getFFTPoints();
   const uint64_t numFFTDataPoints = spectrumUpdateEvent->getNumFFTDataPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
   const gruel::high_res_timer_type dataTimestamp = spectrumUpdateEvent->getDataTimestamp();
@@ -159,7 +159,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
 
   // Calculate the Magnitude of the complex point
-  const std::complex<float>* complexDataPointsPtr = complexDataPoints+numFFTDataPoints/2;
+  const float* fftMagDataPointsPtr = fftMagDataPoints+numFFTDataPoints/2;
   double* realFFTDataPointsPtr = _realFFTDataPoints;
 
   double sumMean = 0.0;
@@ -169,10 +169,10 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     static_cast<double>(numFFTDataPoints);
 
   // Run this twice to perform the fftshift operation on the data here as well
-  std::complex<float> scaleFactor = std::complex<float>((float)numFFTDataPoints);
+  float scaleFactor = (float)numFFTDataPoints;
   for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    std::complex<float> pt = (*complexDataPointsPtr) / scaleFactor;
-    *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
+    float pt = (*fftMagDataPointsPtr);// / scaleFactor;
+    *realFFTDataPointsPtr = pt;//10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
 
     if(*realFFTDataPointsPtr > localPeakAmplitude) {
       localPeakFrequency = static_cast<float>(point) * fftBinSize;
@@ -180,16 +180,16 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     }
     sumMean += *realFFTDataPointsPtr;
     
-    complexDataPointsPtr++;
+    fftMagDataPointsPtr++;
     realFFTDataPointsPtr++;
   }
   
   // This loop takes the first half of the input data and puts it in the 
   // second half of the plotted data
-  complexDataPointsPtr = complexDataPoints;
+  fftMagDataPointsPtr = fftMagDataPoints;
   for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    std::complex<float> pt = (*complexDataPointsPtr) / scaleFactor;
-    *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
+    float pt = (*fftMagDataPointsPtr);// / scaleFactor;
+    *realFFTDataPointsPtr = pt;//10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
 
     if(*realFFTDataPointsPtr > localPeakAmplitude) {
       localPeakFrequency = static_cast<float>(point) * fftBinSize;
@@ -197,7 +197,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     }
     sumMean += *realFFTDataPointsPtr;
 
-    complexDataPointsPtr++;
+    fftMagDataPointsPtr++;
     realFFTDataPointsPtr++;
   }
 

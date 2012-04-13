@@ -71,6 +71,7 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
 
   d_index = 0;
   d_residbuf = new float[d_fftsize];
+  d_magbuf = new float[d_fftsize];
 
   buildwindow();
 
@@ -81,6 +82,7 @@ qtgui_sink_f::~qtgui_sink_f()
 {
   delete d_main_gui;
   delete [] d_residbuf;
+  delete [] d_magbuf;
   delete d_fft;
 }
 
@@ -188,7 +190,7 @@ qtgui_sink_f::set_update_time(double t)
 }
 
 void
-qtgui_sink_f::fft(const float *data_in, int size)
+qtgui_sink_f::fft(float *data_out, const float *data_in, int size)
 {
   if (d_window.size()) {
     gr_complex *dst = d_fft->get_inbuf();
@@ -202,6 +204,10 @@ qtgui_sink_f::fft(const float *data_in, int size)
   }
   
   d_fft->execute ();     // compute the fft
+  gr_complex *fftout = d_fft->get_outbuf();
+  for(int i=0; i<size; i++) {
+      data_out[i] = 10.0*log10((fftout[i].real() * fftout[i].real() + fftout[i].imag()*fftout[i].imag()) + 1e-20);
+  }
 }
 
 void 
@@ -233,6 +239,9 @@ qtgui_sink_f::fftresize()
     // Resize residbuf and replace data
     delete [] d_residbuf;
     d_residbuf = new float[newfftsize];
+
+    delete [] d_magbuf;
+    d_magbuf = new float[newfftsize];
 
     // Set new fft size and reset buffer index 
     // (throws away any currently held data, but who cares?) 
@@ -275,9 +284,9 @@ qtgui_sink_f::general_work (int noutput_items,
       d_index = 0;
 
       j += resid;
-      fft(d_residbuf, d_fftsize);
+      fft(d_magbuf, d_residbuf, d_fftsize);
       
-      d_main_gui->UpdateWindow(true, d_fft->get_outbuf(), d_fftsize,
+      d_main_gui->UpdateWindow(true, d_magbuf, d_fftsize,
 			       (float*)d_residbuf, d_fftsize, NULL, 0,
 			       currentTime, true);
     }

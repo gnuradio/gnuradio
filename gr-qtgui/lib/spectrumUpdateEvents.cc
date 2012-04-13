@@ -3,7 +3,7 @@
 
 #include <spectrumUpdateEvents.h>
 
-SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
+SpectrumUpdateEvent::SpectrumUpdateEvent(const float* fftPoints,
 					 const uint64_t numFFTDataPoints,
 					 const double* realTimeDomainPoints,
 					 const double* imagTimeDomainPoints,
@@ -29,9 +29,9 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
     _numTimeDomainDataPoints = numTimeDomainDataPoints;
   }
 
-  _fftPoints = new std::complex<float>[_numFFTDataPoints];
-  _fftPoints[0] = std::complex<float>(0,0);
-  memcpy(_fftPoints, fftPoints, numFFTDataPoints*sizeof(std::complex<float>));
+  _fftPoints = new float[_numFFTDataPoints];
+  _fftPoints[0] = 0;
+  memcpy(_fftPoints, fftPoints, numFFTDataPoints*sizeof(float));
 
   _realDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
   memset(_realDataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(double));
@@ -60,7 +60,7 @@ SpectrumUpdateEvent::~SpectrumUpdateEvent()
   delete[] _imagDataTimeDomainPoints;
 }
 
-const std::complex<float>*
+const float*
 SpectrumUpdateEvent::getFFTPoints() const
 {
   return _fftPoints;
@@ -179,7 +179,6 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 
 
 /***************************************************************************/
-#include <iostream>
 TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
 				 const uint64_t numTimeDomainDataPoints)
   : QEvent(QEvent::Type(10005))
