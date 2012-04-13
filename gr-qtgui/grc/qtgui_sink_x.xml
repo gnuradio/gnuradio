@@ -24,8 +24,18 @@ qtgui.$(type.fcn)(
 	$plottime, \#plottime
 	$plotconst, \#plotconst
 )
+self.$(id).set_update_time(1.0/$rate)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
-$(gui_hint()($win))</make>
+$(gui_hint()($win))
+
+#if $freqchangevar() is not None
+def $(id)_callback(p, num):
+	if num == 1 or num == 2: self.set_$(freqchangevar)(p.x())
+	
+Qt.QObject.connect(self._$(id)_win, Qt.SIGNAL("plotPointSelected(QPointF, int)"), $(id)_callback )
+#end if
+
+</make>
 	<callback>set_frequency_range($fc, $bw)</callback>
 	<param>
 		<name>Type</name>
@@ -91,6 +101,12 @@ $(gui_hint()($win))</make>
 		<type>real</type>
 	</param>
 	<param>
+		<name>Update Rate</name>
+		<key>rate</key>
+		<value>10</value>
+		<type>real</type>
+	</param>
+	<param>
 		<name>Plot Frequency</name>
 		<key>plotfreq</key>
 		<value>True</value>
@@ -131,6 +147,13 @@ $(gui_hint()($win))</make>
 		<key>gui_hint</key>
 		<value></value>
 		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Clicked freq variable</name>
+		<key>freqchangevar</key>
+		<value>None</value>
+		<type>raw</type>
 		<hide>part</hide>
 	</param>
 	<sink>

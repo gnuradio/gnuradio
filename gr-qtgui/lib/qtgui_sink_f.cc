@@ -175,7 +175,7 @@ qtgui_sink_f::set_constellation_pen_size(int size)
 
 
 void
-qtgui_sink_f::set_frequency_axis(double min, double max)
+qtgui_sink_f::set_fft_power_db(double min, double max)
 {
   d_main_gui->SetFrequencyAxis(min, max);
 }
