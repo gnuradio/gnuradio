@@ -52,7 +52,7 @@ int
 {
   const @TYPE@ *in = (const @TYPE@ *) input_items[0];
 
-  for (int i=0; i<d_size; i++)
+  for (size_t i=0; i<d_size; i++)
 	d_level[i] = in[(noutput_items-1)*d_size+i];
 
   return noutput_items;
