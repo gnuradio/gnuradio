@@ -158,7 +158,6 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   // REMEMBER: The dataTimestamp is NOT valid when the repeat data flag is true...
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
 
-  // Calculate the Magnitude of the complex point
   const float* fftMagDataPointsPtr = fftMagDataPoints+numFFTDataPoints/2;
   double* realFFTDataPointsPtr = _realFFTDataPoints;
 
@@ -169,11 +168,9 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     static_cast<double>(numFFTDataPoints);
 
   // Run this twice to perform the fftshift operation on the data here as well
-  float scaleFactor = (float)numFFTDataPoints;
   for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    float pt = (*fftMagDataPointsPtr);// / scaleFactor;
-    *realFFTDataPointsPtr = pt;//10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
-
+    float pt = (*fftMagDataPointsPtr);
+    *realFFTDataPointsPtr = pt;
     if(*realFFTDataPointsPtr > localPeakAmplitude) {
       localPeakFrequency = static_cast<float>(point) * fftBinSize;
       localPeakAmplitude = *realFFTDataPointsPtr;
@@ -188,9 +185,8 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   // second half of the plotted data
   fftMagDataPointsPtr = fftMagDataPoints;
   for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    float pt = (*fftMagDataPointsPtr);// / scaleFactor;
-    *realFFTDataPointsPtr = pt;//10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
-
+    float pt = (*fftMagDataPointsPtr);
+    *realFFTDataPointsPtr = pt;
     if(*realFFTDataPointsPtr > localPeakAmplitude) {
       localPeakFrequency = static_cast<float>(point) * fftBinSize;
       localPeakAmplitude = *realFFTDataPointsPtr;
