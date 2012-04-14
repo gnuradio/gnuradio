@@ -298,20 +298,20 @@ SpectrumDisplayForm::customEvent( QEvent * e)
     // Clear any previous display
     Reset();
   }
-  else if(e->type() == 10005){
+  else if(e->type() == SpectrumUpdateEventType){
     SpectrumUpdateEvent* spectrumUpdateEvent = (SpectrumUpdateEvent*)e;
     newFrequencyData(spectrumUpdateEvent);
   }
-  else if(e->type() == 10008){
+  else if(e->type() == SpectrumWindowCaptionEventType){
     setWindowTitle(((SpectrumWindowCaptionEvent*)e)->getLabel());
   }
-  else if(e->type() == 10009){
+  else if(e->type() == SpectrumWindowResetEventType){
     Reset();
     if(_systemSpecifiedFlag){
       _system->ResetPendingGUIUpdateEvents();
     }
   }
-  else if(e->type() == 10010){
+  else if(e->type() == SpectrumFrequencyRangeEventType){
     _startFrequency = ((SpectrumFrequencyRangeEvent*)e)->GetStartFrequency();
     _stopFrequency = ((SpectrumFrequencyRangeEvent*)e)->GetStopFrequency();
     _centerFrequency  = ((SpectrumFrequencyRangeEvent*)e)->GetCenterFrequency();

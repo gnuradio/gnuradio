@@ -13,7 +13,7 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const float* fftPoints,
 					 const bool lastOfMultipleUpdateFlag,
 					 const gruel::high_res_timer_type generatedTimestamp,
 					 const int droppedFFTFrames)
-  : QEvent(QEvent::Type(10005))
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
 {
   if(numFFTDataPoints < 1) {
     _numFFTDataPoints = 1;
@@ -121,7 +121,7 @@ SpectrumUpdateEvent::getDroppedFFTFrames() const
 }
 
 SpectrumWindowCaptionEvent::SpectrumWindowCaptionEvent(const QString& newLbl)
-  : QEvent(QEvent::Type(10008))
+  : QEvent(QEvent::Type(SpectrumWindowCaptionEventType))
 {
   _labelString = newLbl;
 }
@@ -137,7 +137,7 @@ SpectrumWindowCaptionEvent::getLabel()
 }
 
 SpectrumWindowResetEvent::SpectrumWindowResetEvent()
-  : QEvent(QEvent::Type(10009))
+  : QEvent(QEvent::Type(SpectrumWindowResetEventType))
 {
 }
 
@@ -148,7 +148,7 @@ SpectrumWindowResetEvent::~SpectrumWindowResetEvent()
 SpectrumFrequencyRangeEvent::SpectrumFrequencyRangeEvent(const double centerFreq, 
 							 const double startFreq,
 							 const double stopFreq)
-  : QEvent(QEvent::Type(10010))
+  : QEvent(QEvent::Type(SpectrumFrequencyRangeEventType))
 {
   _centerFrequency = centerFreq;
   _startFrequency = startFreq;
@@ -181,7 +181,7 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 /***************************************************************************/
 TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
 				 const uint64_t numTimeDomainDataPoints)
-  : QEvent(QEvent::Type(10005))
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
 {
   if(numTimeDomainDataPoints < 1) {
     _numTimeDomainDataPoints = 1;

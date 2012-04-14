@@ -83,11 +83,11 @@ TimeDisplayForm::resizeEvent( QResizeEvent *e )
 void
 TimeDisplayForm::customEvent( QEvent * e)
 {
-  if(e->type() == 10005) {
+  if(e->type() == TimeUpdateEvent::Type()) {
     TimeUpdateEvent* timeUpdateEvent = (TimeUpdateEvent*)e;
     newData(timeUpdateEvent);
   }
-  //else if(e->type() == 10008){
+  //else if(e->type() == SpectrumWindowCaptionEventType){
   //setWindowTitle(((SpectrumWindowCaptionEvent*)e)->getLabel());
   //}
   //else if(e->type() == 10009){
