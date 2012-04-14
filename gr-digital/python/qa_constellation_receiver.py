@@ -33,7 +33,8 @@ import math
 
 # Set a seed so that if errors turn up they are reproducible.
 # 1234 fails
-random.seed(1239)
+SEED = 1239
+random.seed(SEED)
 
 # TESTING PARAMETERS
 # The number of symbols to test with.
@@ -57,7 +58,6 @@ class test_constellation_receiver (gr_unittest.TestCase):
     # We ignore the first half of the output data since often it takes
     # a while for the receiver to lock on.
     ignore_fraction = 0.8
-    seed = 1234
     max_data_length = DATA_LENGTH * 6
     max_num_samples = 1000
     
@@ -76,7 +76,7 @@ class test_constellation_receiver (gr_unittest.TestCase):
         # Generates some random indices to use for comparing input and
         # output data (a full comparison is too slow in python).
         self.indices = alignment.random_sample(
-            self.max_data_length, self.max_num_samples, self.seed)
+            self.max_data_length, self.max_num_samples, SEED)
 
         for constellation, differential in tested_constellations():
             # The constellation_receiver doesn't work for constellations
