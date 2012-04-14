@@ -20,26 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef	INCLUDED_WAVELET_SQUASH_FF_H
-#define	INCLUDED_WAVELET_SQUASH_FF_H
+#ifndef INCLUDED_WAVELET_WVPS_FF_H
+#define INCLUDED_WAVELET_WVPS_FF_H
 
-#include <wavelet_api.h>
-#include <gr_sync_block.h>
+#include <wavelet/api.h>
+#include <gr_sync_decimator.h>
 
-/*!
- * \brief implements cheap resampling of spectrum directly from
- * spectral points, using gsl interpolation
- * \ingroup misc
- */
-class wavelet_squash_ff;
-typedef boost::shared_ptr<wavelet_squash_ff> wavelet_squash_ff_sptr;
+class wavelet_wvps_ff;
 
-WAVELET_API wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
-							  const std::vector<float> &ogrid);
+namespace gr { 
+  namespace wavelet {
 
-class WAVELET_API wavelet_squash_ff : virtual public gr_sync_block
-{
-  // No public API methods visible
-};
+    class WAVELET_API wvps_ff : virtual public gr_sync_block
+    {
+    public:
 
-#endif
+      // gr::wavelet::wvps_ff::sptr
+      typedef boost::shared_ptr<wvps_ff> sptr;
+
+      /*!
+       * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
+       * \ingroup wavelet_blk
+       */
+      static WAVELET_API sptr make(int ilen);
+    };
+
+  } /* namespace wavelet */
+} /* namespace gr */
+
+#endif /* INCLUDED_WAVELET_WVPS_FF_H */

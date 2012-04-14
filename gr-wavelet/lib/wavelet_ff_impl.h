@@ -22,34 +22,35 @@
 #ifndef INCLUDED_WAVELET_WAVELET_FF_IMPL_H
 #define INCLUDED_WAVELET_WAVELET_FF_IMPL_H
 
-#include <wavelet_wavelet_ff.h>
+#include <wavelet/wavelet_ff.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_wavelet.h>
 
-class WAVELET_API wavelet_wavelet_ff_impl : public wavelet_wavelet_ff
-{
-  int                    d_size;
-  int                    d_order;
-  bool			 d_forward;
-  gsl_wavelet           *d_wavelet;
-  gsl_wavelet_workspace *d_workspace;
-  double                *d_temp;
+namespace gr {
+  namespace wavelet {
 
-  friend WAVELET_API wavelet_wavelet_ff_sptr
-    wavelet_make_wavelet_ff(int size,
-			    int order,
-			    bool forward);
+    class WAVELET_API wavelet_ff_impl : public wavelet_ff
+    {
+      int                    d_size;
+      int                    d_order;
+      bool		     d_forward;
+      gsl_wavelet           *d_wavelet;
+      gsl_wavelet_workspace *d_workspace;
+      double                *d_temp;
 
-  wavelet_wavelet_ff_impl(int size,
-			  int order,
-			  bool forward);
+    public:
+      wavelet_ff_impl(int size,
+		      int order,
+		      bool forward);
 
-public:
-  ~wavelet_wavelet_ff_impl();
+      ~wavelet_ff_impl();
 
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
-};
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace wavelet */
+} /* namespace gr */
 
 #endif /* INCLUDED_WAVELET_WAVELET_FF_IMPL_H */

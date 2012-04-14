@@ -37,7 +37,7 @@ GR_REGISTER_COMPONENT("gr-wavelet" ENABLE_GR_WAVELET
 
 GR_SET_GLOBAL(GR_WAVELET_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/wavelet
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 ########################################################################

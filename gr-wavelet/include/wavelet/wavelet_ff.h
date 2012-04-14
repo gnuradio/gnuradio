@@ -20,25 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_WAVELET_WVPS_FF_IMPL_H
-#define INCLUDED_WAVELET_WVPS_FF_IMPL_H
+#ifndef INCLUDED_WAVELET_WAVELET_FF_H
+#define INCLUDED_WAVELET_WAVELET_FF_H
 
-#include <wavelet_wvps_ff.h>
+#include <wavelet/api.h>
+#include <gr_sync_block.h>
 
-class WAVELET_API wavelet_wvps_ff_impl : public wavelet_wvps_ff
-{
-  int d_ilen;
-  int d_olen;
+namespace gr { 
+  namespace wavelet {
 
-  friend WAVELET_API wavelet_wvps_ff_sptr
-  wavelet_make_wvps_ff(int ilen);
+    class WAVELET_API wavelet_ff : virtual public gr_sync_block
+    {
+    public:
 
-  wavelet_wvps_ff_impl(int ilen);
+      // gr::wavelet::wavelet_ff:sptr
+      typedef boost::shared_ptr<wavelet_ff> sptr;
 
- public:
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
-};
+      /*!
+       * \brief compute wavelet transform using gsl routines
+       * \ingroup wavelet_blk
+       */
+      static WAVELET_API sptr make(int size = 1024,
+				   int order = 20,
+				   bool forward = true);
+    };
 
-#endif /* INCLUDED_WAVELET_WVPS_FF_IMPL_H */
+  } /* namespace wavelet */
+} /* namespace gr */
+
+#endif /* INCLUDED_WAVELET_WAVELET_FF_H */

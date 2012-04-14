@@ -40,9 +40,9 @@ link_directories(${GSL_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND gr_wavelet_sources
-    wavelet_squash_ff_impl.cc
-    wavelet_wavelet_ff_impl.cc
-    wavelet_wvps_ff_impl.cc
+    squash_ff_impl.cc
+    wavelet_ff_impl.cc
+    wvps_ff_impl.cc
 )
 
 list(APPEND wavelet_libs

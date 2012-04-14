@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,11 +21,11 @@
 # Install header files
 ########################################################################
 install(FILES
-    wavelet_api.h
-    wavelet_squash_ff.h
-    wavelet_wavelet_ff.h
-    wavelet_wvps_ff.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    api.h
+    squash_ff.h
+    wavelet_ff.h
+    wvps_ff.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/wavelet
     COMPONENT "wavelet_devel"
 )
 

@@ -19,28 +19,29 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_WAVELET_WAVELET_FF_H
-#define INCLUDED_WAVELET_WAVELET_FF_H
 
-#include <wavelet_api.h>
-#include <gr_sync_block.h>
+#ifndef INCLUDED_WAVELET_WVPS_FF_IMPL_H
+#define INCLUDED_WAVELET_WVPS_FF_IMPL_H
 
-class wavelet_wavelet_ff;
-typedef boost::shared_ptr<wavelet_wavelet_ff> wavelet_wavelet_ff_sptr;
+#include <wavelet/wvps_ff.h>
 
-WAVELET_API wavelet_wavelet_ff_sptr
-wavelet_make_wavelet_ff(int size = 1024,
-			int order = 20,
-			bool forward = true);
+namespace gr {
+  namespace wavelet {
 
-/*!
- * \brief compute wavelet transform using gsl routines
- * \ingroup wavelet_blk
- */
+    class WAVELET_API wvps_ff_impl : public wvps_ff
+    {
+      int d_ilen;
+      int d_olen;
 
-class WAVELET_API wavelet_wavelet_ff : virtual public gr_sync_block
-{
-  // No public API methods visible
-};
+    public:
+      wvps_ff_impl(int ilen);
 
-#endif /* INCLUDED_WAVELET_WAVELET_FF_H */
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace wavelet */
+}/* namespace gr */
+
+#endif /* INCLUDED_WAVELET_WVPS_FF_IMPL_H */
