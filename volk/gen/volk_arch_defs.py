@@ -15,10 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os
-import copy
-
 archs = list()
+arch_dict = dict()
 
 class arch_class:
     def __init__(self, **kwargs):
@@ -45,6 +43,7 @@ class arch_class:
 def register_arch(**kwargs):
     arch = arch_class(**kwargs)
     archs.append(arch)
+    arch_dict[arch.name] = arch
     if arch.alignment > 1:
         kwargs['name'] += '_u'
         kwargs['alignment'] = 1
@@ -55,6 +54,7 @@ def register_arch(**kwargs):
 ########################################################################
 #TODO skip the XML and put it here
 from xml.dom import minidom
+import os
 gendir = os.path.dirname(__file__)
 archs_xml = minidom.parse(os.path.join(gendir, 'archs.xml')).getElementsByTagName('arch')
 for arch_xml in archs_xml:
@@ -68,3 +68,6 @@ for arch_xml in archs_xml:
             kwargs[name] = val
         except: pass
     register_arch(**kwargs)
+
+if __name__ == '__main__':
+    print archs
