@@ -23,16 +23,17 @@
 This module contains functions for aligning sequences.
 
 >>> import random
->>> random.seed(1234)
->>> ran_seq = [random.randint(0,1) for i in range(0, 100)]
+>>> rndm = random.Random()
+>>> rndm.seed(1234)
+>>> ran_seq = [rndm.randint(0,1) for i in range(0, 100)]
 >>> offset_seq = [0] * 20 + ran_seq
 >>> correct, overlap, offset = align_sequences(ran_seq, offset_seq)
 >>> print(correct, overlap, offset)
 (1.0, 100, -20)
 >>> offset_err_seq = []
 >>> for bit in offset_seq:
-...     if random.randint(0,4) == 4:
-...         offset_err_seq.append(random.randint(0,1))
+...     if rndm.randint(0,4) == 4:
+...         offset_err_seq.append(rndm.randint(0,1))
 ...     else:
 ...         offset_err_seq.append(bit)
 >>> correct, overlap, offset = align_sequences(ran_seq, offset_err_seq)
@@ -78,7 +79,8 @@ def random_sample(size, num_samples=def_num_samples, seed=None):
     Returns a set of random integers between 0 and (size-1).
     The set contains no more than num_samples integers.
     """
-    random.seed(seed)
+    rndm = random.Random()
+    rndm.seed(seed)
     if num_samples > size:
         indices = set(range(0, size))
     else:
@@ -86,7 +88,7 @@ def random_sample(size, num_samples=def_num_samples, seed=None):
             num_samples = num_samples/2
         indices = set([])
         while len(indices) < num_samples:
-            index = random.randint(0, size-1)
+            index = rndm.randint(0, size-1)
             indices.add(index)
     indices = list(indices)
     indices.sort()
