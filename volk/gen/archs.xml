@@ -148,6 +148,8 @@
   <reg>c</reg>
   <shift>28</shift>
   <flag>mavx</flag>
+  <check>xgetbv</check>
+  <checkval>7</checkval>
   <alignment>32</alignment>
 </arch>
 

@@ -176,3 +176,15 @@ __get_cpuid (unsigned int __level,
   __cpuid (__level, *__eax, *__ebx, *__ecx, *__edx);
   return 1;
 }
+
+/* Return Intel AVX extended CPU capabilities register.
+ * This function will bomb on non-AVX-capable machines, so
+ * check for AVX capability before executing.
+ */
+static __inline unsigned int
+xgetbv(void)
+{
+    unsigned int index, __eax, __edx;
+    __asm__ ("xgetbv" : "=a"(__eax), "=d"(__edx) : "c" (index));
+    return __eax;
+}

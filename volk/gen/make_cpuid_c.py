@@ -90,20 +90,26 @@ def make_cpuid_c(dom) :
                     no_test = False;
             else:
                 no_test = False;
-            arch = str(domarch.attributes["name"].value);
-            op = domarch.getElementsByTagName("op");
+            arch = str(domarch.attributes["name"].value)
+            op = domarch.getElementsByTagName("op")
             if op:
-                op = str(op[0].firstChild.data);
-            reg = domarch.getElementsByTagName("reg");
+                op = str(op[0].firstChild.data)
+            reg = domarch.getElementsByTagName("reg")
             if reg:
-                reg = str(reg[0].firstChild.data);
-            shift = domarch.getElementsByTagName("shift");
+                reg = str(reg[0].firstChild.data)
+            shift = domarch.getElementsByTagName("shift")
             if shift:
-                shift = str(shift[0].firstChild.data);
-            val = domarch.getElementsByTagName("val");
+                shift = str(shift[0].firstChild.data)
+            val = domarch.getElementsByTagName("val")
             if val:
-                val = str(val[0].firstChild.data);
-            
+                val = str(val[0].firstChild.data)
+            check = domarch.getElementsByTagName("check")
+            if check:
+                check = str(check[0].firstChild.data)
+            checkval = domarch.getElementsByTagName("checkval")
+            if checkval:
+                checkval = str(checkval[0].firstChild.data)
+
             if no_test:
                 tempstring = tempstring + """\
 int i_can_has_%s () {
@@ -121,13 +127,23 @@ int i_can_has_%s () {
 int i_can_has_%s () {
 #if defined(VOLK_CPU_x86)
     unsigned int e%sx = cpuid_e%sx (%s);
-    return ((e%sx >> %s) & 1) == %s;
+    int hwcap = (((e%sx >> %s) & 1) == %s);
+""" % (arch, reg, reg, op, reg, shift, val)
+
+                if check and checkval:
+                    tempstring += """\
+    if (hwcap == 0) return 0;
+    hwcap &= (%s() == %s);
+""" % (check, checkval)
+
+                tempstring += """\
+    return hwcap;
 #else
     return 0;
 #endif
 }
 
-""" % (arch, reg, reg, op, reg, shift, val)
+"""
 
             elif op == "0x80000001":
                 tempstring = tempstring + """\
