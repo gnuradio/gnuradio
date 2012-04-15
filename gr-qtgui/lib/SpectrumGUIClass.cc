@@ -76,6 +76,7 @@ SpectrumGUIClass::~SpectrumGUIClass()
     delete[] _realTimeDomainPoints;
     delete[] _imagTimeDomainPoints;
   }
+  printf("SpectrumGUIClass destructor");
 }
 
 void

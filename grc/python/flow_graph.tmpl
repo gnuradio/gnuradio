@@ -77,6 +77,9 @@ class $(class_name)(gr.top_block, Qt.QWidget):
 		self.top_grid_layout = Qt.QGridLayout()
 		self.top_layout.addLayout(self.top_grid_layout)
 
+		self.settings = Qt.QSettings("GNU Radio", "$class_name")
+		self.restoreGeometry(self.settings.value("geometry").toByteArray())
+
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
@@ -189,6 +192,16 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 		self.connect($make_port_sig($source), $make_port_sig($sink))
 	#end if
 #end for
+
+########################################################
+# QT sink close method reimplementation
+########################################################
+#if $generate_options == 'qt_gui'
+	def closeEvent(self, event):
+		self.settings = Qt.QSettings("GNU Radio", "$class_name")
+		self.settings.setValue("geometry", self.saveGeometry())
+		event.accept()
+#end if
 
 ########################################################
 ##Create Callbacks

@@ -177,13 +177,13 @@
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
+             <verstretch>1</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>617</width>
-             <height>400</height>
+             <width>320</width>
+             <height>200</height>
             </size>
            </property>
            <property name="sizeIncrement">
@@ -283,7 +283,7 @@
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>200</width>
+               <width>100</width>
                <height>20</height>
               </size>
              </property>
@@ -320,7 +320,7 @@
         <widget class="QwtWheel" name="WaterfallMaximumIntensityWheel">
          <property name="minimumSize">
           <size>
-           <width>200</width>
+           <width>50</width>
            <height>0</height>
           </size>
          </property>
@@ -364,8 +364,8 @@
         <widget class="QFrame" name="WaterfallPlotDisplayFrame">
          <property name="minimumSize">
           <size>
-           <width>617</width>
-           <height>338</height>
+           <width>320</width>
+           <height>200</height>
           </size>
          </property>
          <property name="frameShape">
@@ -380,7 +380,7 @@
         <widget class="QwtWheel" name="WaterfallMinimumIntensityWheel">
          <property name="minimumSize">
           <size>
-           <width>200</width>
+           <width>50</width>
            <height>0</height>
           </size>
          </property>
@@ -476,8 +476,8 @@
         <widget class="QFrame" name="TimeDomainDisplayFrame">
          <property name="minimumSize">
           <size>
-           <width>617</width>
-           <height>404</height>
+           <width>320</width>
+           <height>200</height>
           </size>
          </property>
          <property name="frameShape">
@@ -499,8 +499,8 @@
         <widget class="QFrame" name="ConstellationDisplayFrame">
          <property name="minimumSize">
           <size>
-           <width>617</width>
-           <height>406</height>
+           <width>320</width>
+           <height>200</height>
           </size>
          </property>
          <property name="frameShape">

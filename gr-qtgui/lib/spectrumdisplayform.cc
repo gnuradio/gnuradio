@@ -119,6 +119,7 @@ SpectrumDisplayForm::~SpectrumDisplayForm()
 
   displayTimer->stop();
   delete displayTimer;
+  printf("SpectrumDisplayForm destructor\n");
 }
 
 void
@@ -531,7 +532,7 @@ SpectrumDisplayForm::closeEvent( QCloseEvent *e )
 
   qApp->processEvents();
 
-  QWidget::closeEvent(e);
+  QWidget::closeEvent(e); //equivalent to e->accept()
 }
 
 
