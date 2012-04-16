@@ -38,15 +38,8 @@ namespace pmt {
 class GRUEL_API pmt_base : boost::noncopyable {
   mutable boost::detail::atomic_count count_;
 
-public:
-  static void default_deleter(pmt_base *p){
-    delete p;
-  }
-
-  boost::function<void(pmt_base *)> deleter_;
-
 protected:
-  pmt_base() : count_(0), deleter_(&pmt::pmt_base::default_deleter) {};
+  pmt_base() : count_(0) {};
   virtual ~pmt_base();
 
 public:

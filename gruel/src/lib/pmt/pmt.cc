@@ -58,13 +58,7 @@ pmt_base::operator delete(void *p, size_t size)
 #endif
 
 void intrusive_ptr_add_ref(pmt_base* p) { ++(p->count_); }
-void intrusive_ptr_release(pmt_base* p) {
-    if (--(p->count_) == 0 ){
-      //make a copy of deleter before we delete its container, p
-      boost::function<void(pmt_base *)> deleter = p->deleter_;
-      deleter(p);
-    }
-}
+void intrusive_ptr_release(pmt_base* p) { if (--(p->count_) == 0 ) delete p; }
 
 pmt_base::~pmt_base()
 {
@@ -1387,18 +1381,6 @@ pmt_dump_sizeof()
   printf("sizeof(pmt_pair)           = %3zd\n", sizeof(pmt_pair));
   printf("sizeof(pmt_vector)         = %3zd\n", sizeof(pmt_vector));
   printf("sizeof(pmt_uniform_vector) = %3zd\n", sizeof(pmt_uniform_vector));
-}
-
-/*
- * ------------------------------------------------------------------------
- *		      advanced
- * ------------------------------------------------------------------------
- */
-
-void
-pmt_set_deleter(pmt_t obj, boost::function<void(pmt_base *)> &deleter)
-{
-  obj->deleter_ = (deleter)? deleter : &pmt_base::default_deleter;
 }
 
 } /* namespace pmt */
