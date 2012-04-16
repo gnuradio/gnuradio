@@ -73,6 +73,13 @@ static inline unsigned int cpuid_edx(unsigned int op) {
     cpuid_x86 (op, regs);
     return regs[3];
 }
+
+static inline unsigned int xgetbv(void) {
+    //check to make sure that xgetbv is enabled in OS
+    int xgetbv_enabled = cpuid_ecx(1) >> 27 & 0x01;
+    if(xgetbv_enabled == 0) return 0;
+    return __xgetbv();
+}
 #endif
 
 """

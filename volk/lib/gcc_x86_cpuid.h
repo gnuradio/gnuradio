@@ -182,7 +182,7 @@ __get_cpuid (unsigned int __level,
  * check for AVX capability before executing.
  */
 static __inline unsigned int
-xgetbv(void)
+__xgetbv(void)
 {
     unsigned int index, __eax, __edx;
     __asm__ ("xgetbv" : "=a"(__eax), "=d"(__edx) : "c" (index));
