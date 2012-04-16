@@ -91,7 +91,27 @@ class rx_cfile_block(gr.top_block):
         input_rate = self._u.get_samp_rate()
 
         if options.verbose:
-            print "Args: ", options.args
+            try:
+                info = self._u.get_usrp_info()
+
+                mboard_id = info.get("mboard_id").split(" ")[0]
+                if info.get("mboard_serial") == "":
+                    mboard_serial = "no serial"
+                else:
+                    mboard_serial = info.get("mboard_serial")
+                
+                rx_id = info.get("rx_id").split(" ")[0]
+                if info.get("rx_serial") == "":
+                    rx_serial = "no serial"
+                else:
+                    rx_serial = info.get("rx_serial")
+                rx_antenna = info.get("rx_antenna")
+                rx_subdev_spec = info.get("rx_subdev_spec")
+
+                print "Motherboard: %s (%s)" % (mboard_id, mboard_serial)
+                print "Daughterboard: %s (%s, %s, %s)" % (rx_id, rx_serial, rx_antenna, rx_subdev_spec)
+            except:
+                print "Args: ", options.args
             print "Rx gain:", options.gain
             print "Rx baseband frequency:", n2s(tr.actual_rf_freq)
             print "Rx DDC frequency:", n2s(tr.actual_dsp_freq)
