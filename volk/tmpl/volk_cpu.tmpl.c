@@ -164,8 +164,8 @@ static int i_can_has_$arch.name (void) {
     #else if $arch.op == 0x80000001
 #if defined(VOLK_CPU_x86)
     #set $op = hex($arch.op)
-    unsigned int extended_fct_count = cpuid_eax($op);
-    if (extended_fct_count < $op)
+    unsigned int extended_fct_count = cpuid_eax(0x80000000);
+    if (extended_fct_count < 0x80000001)
         return $(arch.val)^1;
     unsigned int extended_features = cpuid_e$(arch.reg)x ($op);
     return ((extended_features >> $arch.shift) & 1) == $arch.val;
