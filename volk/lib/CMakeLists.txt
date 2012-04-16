@@ -29,6 +29,12 @@ if(HAVE_INTRIN_H)
     add_definitions(-DHAVE_INTRIN_H)
 endif()
 
+CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
+if(HAVE_DLFCN_H)
+    add_definitions(-DHAVE_DLFCN_H)
+    list(APPEND volk_libraries ${CMAKE_DL_LIBS})
+endif()
+
 ########################################################################
 # Setup the compiler name
 ########################################################################
@@ -76,10 +82,10 @@ endforeach(line)
 # since ORC always passes flag detection
 ########################################################################
 if(ORC_FOUND)
-    message(STATUS "Overruled arch not orc")
+    message(STATUS "Overruled arch !ORC")
     list(REMOVE_ITEM available_archs norc)
 else()
-    message(STATUS "Overruled arch orc")
+    message(STATUS "Overruled arch ORC")
     list(REMOVE_ITEM available_archs orc)
 endif()
 
@@ -132,6 +138,7 @@ endforeach(machine_name)
 ########################################################################
 # Create rules to run the volk generator
 ########################################################################
+
 #dependencies are all python, xml, and header implementation files
 file(GLOB xml_files ${CMAKE_SOURCE_DIR}/gen/*.xml)
 file(GLOB py_files ${CMAKE_SOURCE_DIR}/gen/*.py)
@@ -182,7 +189,7 @@ if(ORC_FOUND)
     #setup orc library usage
     include_directories(${ORC_INCLUDE_DIRS})
     link_directories(${ORC_LIBRARY_DIRS})
-    add_definitions(-DLV_HAVE_ORC)
+    list(APPEND volk_libraries ${ORC_LIBRARIES})
 
     #setup orc functions
     file(GLOB orc_files ${CMAKE_SOURCE_DIR}/orc/*.orc)
@@ -232,9 +239,7 @@ endif()
 
 #create the volk runtime library
 add_library(volk SHARED ${volk_sources})
-if(ORC_FOUND)
-    target_link_libraries(volk ${ORC_LIBRARIES})
-endif(ORC_FOUND)
+target_link_libraries(volk ${volk_libraries})
 set_target_properties(volk PROPERTIES SOVERSION ${LIBVER})
 set_target_properties(volk PROPERTIES DEFINE_SYMBOL "volk_EXPORTS")
 

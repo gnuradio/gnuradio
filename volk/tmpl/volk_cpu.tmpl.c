@@ -21,6 +21,7 @@
 
 #include <volk/volk_cpu.h>
 #include <volk/volk_config_fixed.h>
+#include <stdlib.h>
 
 struct VOLK_CPU volk_cpu;
 

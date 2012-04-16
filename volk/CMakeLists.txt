@@ -54,10 +54,20 @@ SET(CROSSCOMPILE_MULTILIB ${CROSSCOMPILE_MULTILIB} CACHE STRING "Define \"true\"
 ########################################################################
 # Dependencies setup
 ########################################################################
-find_package(PythonInterp REQUIRED PYTHON_EXECUTABLE)
+include(GrPython) #sets PYTHON_EXECUTABLE and PYTHON_DASH_B
+GR_PYTHON_CHECK_MODULE("python >= 2.5"     sys          "sys.version.split()[0] >= '2.5'"           PYTHON_MIN_VER_FOUND)
+GR_PYTHON_CHECK_MODULE("Cheetah >= 2.0.0"  Cheetah      "Cheetah.Version >= '2.0.0'"                CHEETAH_FOUND)
+
+if(NOT PYTHON_MIN_VER_FOUND)
+    message(FATAL_ERROR "Python 2.5 or greater required to build VOLK")
+endif()
+
+if(NOT CHEETAH_FOUND)
+    message(FATAL_ERROR "Cheetah templates required to build VOLK")
+endif()
+
 find_package(Boost COMPONENTS unit_test_framework)
 find_package(ORC)
-
 
 ########################################################################
 # Setup the package config file
