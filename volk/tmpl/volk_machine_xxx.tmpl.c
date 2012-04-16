@@ -20,7 +20,7 @@
  */
 
 #set $this_machine = $machine_dict[$which]
-#set $arch_names = map(lambda a: a.name, $this_machine.archs)
+#set $arch_names = $this_machine.arch_names
 
 #for $arch in $this_machine.archs
 #define LV_HAVE_$(arch.name.upper()) 1

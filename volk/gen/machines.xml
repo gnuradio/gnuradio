@@ -10,27 +10,17 @@
 </machine>
 
 <machine name="sse">
-<archs>generic 32|64 mmx sse</archs>
+<archs>generic 32|64| mmx sse</archs>
 </machine>
--->
-
-<!--
-Create an SSE2 and AVX only machine (without 64/32 inline assembly support).
-This machine is intended to support the MSVC compiler on x86/amd64.
-The MSVC compiler has intrinsic support for SSE, SSE2, AVX
-however it does not support the gcc style inline assembly.
 -->
 
 <machine name="neon">
 <archs>generic neon</archs>
 </machine>
 
-<machine name="sse2_only">
-<archs>generic mmx sse sse2</archs>
-</machine>
-
+<!-- trailing | bar means generate without either for MSVC -->
 <machine name="sse2">
-<archs>generic 32|64 mmx sse sse2</archs>
+<archs>generic 32|64| mmx sse sse2</archs>
 </machine>
 
 <machine name="sse3">
@@ -53,8 +43,9 @@ however it does not support the gcc style inline assembly.
 <archs>generic 32|64 mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 popcount</archs>
 </machine>
 
+<!-- trailing | bar means generate without either for MSVC -->
 <machine name="avx">
-<archs>generic 32|64 mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 popcount avx</archs>
+<archs>generic 32|64| mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 popcount avx</archs>
 </machine>
 
 <machine name="avx_only">

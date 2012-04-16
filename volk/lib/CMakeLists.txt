@@ -16,6 +16,20 @@
 #
 
 ########################################################################
+# header file detection
+########################################################################
+include(CheckIncludeFile)
+CHECK_INCLUDE_FILE(cpuid.h HAVE_CPUID_H)
+if(HAVE_CPUID_H)
+    add_definitions(-DHAVE_CPUID_H)
+endif()
+
+CHECK_INCLUDE_FILE(intrin.h HAVE_INTRIN_H)
+if(HAVE_INTRIN_H)
+    add_definitions(-DHAVE_INTRIN_H)
+endif()
+
+########################################################################
 # Setup the compiler name
 ########################################################################
 set(COMPILER_NAME ${CMAKE_C_COMPILER_ID})
@@ -28,198 +42,80 @@ if(NOT DEFINED COMPILER_NAME)
 endif()
 
 ########################################################################
-# Parse the arches xml file:
-#  Test each arch to see if the compiler supports the flag.
-#  If the test passes append the arch to the available list.
+# determine passing architectures based on compile flag tests
 ########################################################################
-#extract the compiler lines from the xml file using abusive python
-
-
-
 execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c
-    "from xml.dom import minidom; print ';'.join(map(lambda b: ','.join([','.join([b.attributes['name'].value,item.attributes['name'].value,item.firstChild.data]) for item in b.getElementsByTagName('remap')]), minidom.parse('${CMAKE_SOURCE_DIR}/gen/compilers.xml').getElementsByTagName('compiler')))"
-
-    OUTPUT_VARIABLE compiler_lines OUTPUT_STRIP_TRAILING_WHITESPACE
+    COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
+    --mode "arch_flags" --compiler "${COMPILER_NAME}"
+    OUTPUT_VARIABLE arch_flag_lines OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-foreach(thing ${compiler_lines})
-    string(REGEX REPLACE "," ";" thing_list ${thing})
-    list(FIND thing_list ${COMPILER_NAME} check_val)
-    if(NOT ("${check_val}" STREQUAL "-1"))
-        string(REGEX REPLACE "${COMPILER_NAME}," ";" filter_string ${thing})
-    endif()
-endforeach()
-
-
-#extract compiler prefixes from the xml file using abusive python
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c
-    "from xml.dom import minidom; print ';'.join(map(lambda b: ','.join([','.join([b.attributes['name'].value,item.firstChild.data]) for item in b.getElementsByTagName('prefix')]), minidom.parse('${CMAKE_SOURCE_DIR}/gen/compilers.xml').getElementsByTagName('compiler')))"
-
-    OUTPUT_VARIABLE compiler_prefixes OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-foreach(thing ${compiler_prefixes})
-    string(REGEX REPLACE "," ";" thing_list ${thing})
-    list(FIND thing_list ${COMPILER_NAME} check_val)
-    if(NOT ("${check_val}" STREQUAL "-1"))
-        list(GET thing_list "1" prefix)
-    endif()
-endforeach()
-
-
-
-
-#extract the arch lines from the xml file using abusive python
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c
-    "from xml.dom import minidom; print ';'.join(map(lambda a: '%s %s %s %s'%(a.attributes['name'].value,a.getElementsByTagName('flag')[0].firstChild.data,a.getElementsByTagName('overrule')[0].firstChild.data,a.getElementsByTagName('overrule_val')[0].firstChild.data) if (len(a.getElementsByTagName('overrule'))) else '%s %s %s %s'%(a.attributes['name'].value,a.getElementsByTagName('flag')[0].firstChild.data,'no_overrule', 'no_overrule_val'), minidom.parse('${CMAKE_SOURCE_DIR}/gen/archs.xml').getElementsByTagName('arch')))"
-
-    OUTPUT_VARIABLE arch_lines OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-
-
-
-#set the various overrule values (see archs.xml)
-#a lot of this is translating between automake and cmake
-if(NOT "${CROSSCOMPILE_MULTILIB}" STREQUAL "true")
-    set(MD_SUBCPU ${CMAKE_SYSTEM_PROCESSOR})
-    #detect 32 or 64 bit compiler
-    if(MD_SUBCPU MATCHES "^(i.86|x86|x86_64|amd64)$")
-        include(CheckTypeSize)
-        check_type_size("void*" SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
-        if (${SIZEOF_VOID_P} EQUAL 8)
-            set(MD_SUBCPU x86_64)
-        else()
-            set(MD_SUBCPU x86)
-        endif()
-    endif()
-endif()
-if(NOT "${ORC_FOUND}" STREQUAL "TRUE")
-    set(LV_HAVE_ORC "no")
-endif()
-
-
-
-
-
-
-macro(compiler_filter name flag)
-    set(filtered_flag ${flag})
-    foreach(thing ${filter_string})
-        string(REGEX REPLACE "," ";" flagmap ${thing})
-        list(GET flagmap "0" key)
-        list(GET flagmap "1" val)
-        string(REGEX MATCH "^${key}$" found ${flag})
-        if("${found}" STREQUAL "${key}")
-            string(REGEX REPLACE "^${key}$" "${val}" filtered_flag ${flag})
-        endif()
-    endforeach()
-    set(${name}_flag "${prefix}${filtered_flag}")
-endmacro()
-
-
-
-
-
-
-
-macro(handle_arch name flag overrule overrule_val)
-
-    #handle overrule
-    if("${${overrule}}" STREQUAL "${overrule_val}")
-        set(have_${name} FALSE)
-        message(STATUS "${name} overruled")
-    #handle special case for none flag
-    elseif(${flag} STREQUAL "none")
-        set(have_${name} TRUE)
-    #otherwise test the flag(s) against the compiler
-    else()
+macro(check_arch arch_name)
+    set(flags ${ARGN})
+    set(have_${arch_name} TRUE)
+    foreach(flag ${flags})
         include(CheckCXXCompilerFlag)
-        string(REGEX REPLACE "," ";" flag_list ${flag})
-        set(have_${name} 1)
-        foreach(thing ${flag_list})
-            compiler_filter(${name} ${thing})
-            CHECK_CXX_COMPILER_FLAG(${${name}_flag} have_${thing})
-            if(NOT (${have_${name}} AND ("${have_${thing}}" STREQUAL "1")))
-                set(have_${name} 0)
-            endif()
-        endforeach()
+        set(have_flag have_${flag})
+        CHECK_CXX_COMPILER_FLAG(${flag} ${have_flag})
+        if (NOT ${have_flag})
+            set(have_${arch_name} FALSE)
+        endif()
+    endforeach(flag)
+    if (have_${arch_name})
+        list(APPEND available_archs ${arch_name})
     endif()
+endmacro(check_arch)
 
-    if(have_${name})
-        list(APPEND available_arches ${name})
-    endif()
-
-endmacro(handle_arch)
-
-#create a list of available arches
-foreach(arch_line ${arch_lines})
-    string(REPLACE " " ";" args "${arch_line}")
-    handle_arch(${args})
-endforeach(arch_line)
-
-message(STATUS "Available arches: ${available_arches}")
+foreach(line ${arch_flag_lines})
+    string(REGEX REPLACE "," ";" arch_flags ${line})
+    check_arch(${arch_flags})
+endforeach(line)
 
 ########################################################################
-# Parse the machines xml file:
-#  Test each machine to see if its arch dependencies are supported.
-#  Build a list of supported machines and the machine definitions.
+# implement overruling in the non-multilib case
+# this makes things work when both -m32 and -m64 pass
 ########################################################################
-#extract the machine lines from the xml file using crazy python
+if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(i.86|x86|x86_64|amd64)$")
+    message(STATUS "x86* CPU detected")
+    set(CPU_IS_x86 TRUE)
+endif()
+
+if(NOT CROSSCOMPILE_MULTILIB AND CPU_IS_x86)
+    include(CheckTypeSize)
+    check_type_size("void*[8]" SIZEOF_CPU BUILTIN_TYPES_ONLY)
+    message(STATUS "CPU width ${SIZEOF_CPU} bits")
+    if (${SIZEOF_CPU} EQUAL 64)
+        message(STATUS "Overruled arch 32")
+        list(REMOVE_ITEM available_archs 32)
+    endif()
+    if (${SIZEOF_CPU} EQUAL 32)
+        message(STATUS "Overruled arch 64")
+        list(REMOVE_ITEM available_archs 64)
+    endif()
+endif()
+
+message(STATUS "Available architectures: ${available_archs}")
+
+########################################################################
+# determine available machines given the available architectures
+########################################################################
 execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c
-    "from xml.dom import minidom; print ';'.join(map(lambda a: '%s %s'%(a.attributes['name'].value,a.getElementsByTagName('archs')[0].firstChild.data),minidom.parse('${CMAKE_SOURCE_DIR}/gen/machines.xml').getElementsByTagName('machine')))"
-    OUTPUT_VARIABLE machine_lines OUTPUT_STRIP_TRAILING_WHITESPACE
+    COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
+    --mode "machines" --archs "${available_archs}"
+    OUTPUT_VARIABLE available_machines OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-
-macro(handle_machine1 name)
-    unset(machine_flags)
-    string(TOUPPER LV_MACHINE_${name} machine_def)
-
-    #check if all the arches are supported
-    foreach(arch ${ARGN})
-        set(is_match ${have_${arch}})
-        if(NOT is_match)
-            set(is_match FALSE)
-            break()
-        endif(NOT is_match)
-        set(machine_flags "${machine_flags} ${${arch}_flag}")
-    endforeach(arch)
-
-    string(REGEX REPLACE "^[ \t]+" "" machine_flags "${machine_flags}")
-
-    if(is_match)
-        #this is a match, append the source and set its flags
-        set(machine_source ${CMAKE_CURRENT_BINARY_DIR}/volk_machine_${name}.c)
-        set_source_files_properties(${machine_source} PROPERTIES COMPILE_FLAGS "${machine_flags}")
-        list(APPEND machine_sources ${machine_source})
-        list(APPEND machine_defs ${machine_def})
-        list(APPEND available_machines ${name})
-    endif()
-endmacro(handle_machine1)
-
-macro(handle_machine name)
-    set(arches ${ARGN})
-    list(FIND arches "32|64" index)
-    if(${index} EQUAL -1)
-        handle_machine1(${name} ${arches})
-    else()
-        list(REMOVE_ITEM arches "32|64")
-        handle_machine1(${name}_32 32 ${arches})
-        handle_machine1(${name}_64 64 ${arches})
-    endif()
-endmacro(handle_machine)
-
-#setup the available machines
-foreach(machine_line ${machine_lines})
-    string(REPLACE " " ";" args "${machine_line}")
-    handle_machine(${args})
-endforeach(machine_line)
 
 message(STATUS "Available machines: ${available_machines}")
+
+foreach(machine_name ${available_machines})
+    execute_process(
+        COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
+        --mode "machine_flags" --machine "${machine_name}" --compiler "${COMPILER_NAME}"
+        OUTPUT_VARIABLE ${machine_name}_flags OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    string(TOUPPER LV_MACHINE_${machine_name} machine_def)
+    list(APPEND machine_defs ${machine_def})
+endforeach(machine_name)
 
 ########################################################################
 # Create rules to run the volk generator
@@ -238,6 +134,8 @@ macro(gen_template tmpl output)
     )
 endmacro(gen_template)
 
+make_directory(${CMAKE_BINARY_DIR}/include/volk)
+
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk.tmpl.h              ${CMAKE_BINARY_DIR}/include/volk/volk.h)
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk.tmpl.c              ${CMAKE_BINARY_DIR}/lib/volk.c)
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_typedefs.tmpl.h     ${CMAKE_BINARY_DIR}/include/volk/volk_typedefs.h)
@@ -247,13 +145,13 @@ gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_config_fixed.tmpl.h ${CMAKE_BINARY_DI
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.h     ${CMAKE_BINARY_DIR}/lib/volk_machines.h)
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.c     ${CMAKE_BINARY_DIR}/lib/volk_machines.c)
 
-foreach(name ${available_machines})
-    gen_template(
-        ${CMAKE_SOURCE_DIR}/tmpl/volk_machine_xxx.tmpl.c
-        ${CMAKE_CURRENT_BINARY_DIR}/volk_machine_${name}.c
-        ${name}
-    )
-endforeach(name)
+foreach(machine_name ${available_machines})
+    set(machine_source ${CMAKE_CURRENT_BINARY_DIR}/volk_machine_${machine_name}.c)
+    gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machine_xxx.tmpl.c ${machine_source} ${machine_name})
+    if(${machine_name}_flags)
+        set_source_files_properties(${machine_source} PROPERTIES COMPILE_FLAGS "${${machine_name}_flags}")
+    endif()
+endforeach(machine_name)
 
 ########################################################################
 # Set local include directories first

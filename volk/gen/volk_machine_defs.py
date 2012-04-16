@@ -24,10 +24,12 @@ class machine_class:
     def __init__(self, name, archs):
         self.name = name
         self.archs = list()
+        self.arch_names = list()
         for arch_name in archs:
             if not arch_name: continue
             arch = arch_dict[arch_name]
             self.archs.append(arch)
+            self.arch_names.append(arch_name)
             arch_name += '_u'
             if arch.alignment > 1 and arch_dict.has_key(arch_name):
                 arch = arch_dict[arch_name]
@@ -40,7 +42,10 @@ def register_machine(name, archs):
     for i, arch_name in enumerate(archs):
         if '|' in arch_name: #handle special arch names with the '|'
             for arch_sub in arch_name.split('|'):
-                register_machine(name+'_'+arch_sub, archs[:i] + [arch_sub] + archs[i+1:])
+                if arch_sub:
+                    register_machine(name+'_'+arch_sub, archs[:i] + [arch_sub] + archs[i+1:])
+                else:
+                    register_machine(name, archs[:i] + archs[i+1:])
             return
     machine = machine_class(name=name, archs=archs)
     machines.append(machine)

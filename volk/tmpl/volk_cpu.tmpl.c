@@ -25,23 +25,27 @@
 struct VOLK_CPU volk_cpu;
 
 #if defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)
-#  define VOLK_CPU_x86
+    #define VOLK_CPU_x86
 #endif
 
 #if defined(VOLK_CPU_x86)
 
-//implement get cpuid for gcc compilers using a copy of cpuid.h
+//implement get cpuid for gcc compilers using a system or local copy of cpuid.h
 #if defined(__GNUC__)
-#include <gcc_x86_cpuid.h>
-#define cpuid_x86(op, r) __get_cpuid(op, (unsigned int *)r+0, (unsigned int *)r+1, (unsigned int *)r+2, (unsigned int *)r+3)
+    #if defined(HAVE_CPUID_H)
+        #include <cpuid.h>
+    #else
+        #include "gcc_x86_cpuid.h"
+    #endif
+    #define cpuid_x86(op, r) __get_cpuid(op, (unsigned int *)r+0, (unsigned int *)r+1, (unsigned int *)r+2, (unsigned int *)r+3)
 
 //implement get cpuid for MSVC compilers using __cpuid intrinsic
-#elif defined(_MSC_VER)
-#include <intrin.h>
-#define cpuid_x86(op, r) __cpuid(r, op)
+#elif defined(_MSC_VER) && defined(HAVE_INTRIN_H)
+    #include <intrin.h>
+    #define cpuid_x86(op, r) __cpuid(r, op)
 
 #else
-#error "A get cpuid for volk is not available on this compiler..."
+    #error "A get cpuid for volk is not available on this compiler..."
 #endif
 
 static inline unsigned int cpuid_eax(unsigned int op) {
@@ -69,15 +73,16 @@ static inline unsigned int cpuid_edx(unsigned int op) {
 }
 #endif
 
+//neon detection is linux specific
 #if defined(__arm__) && defined(__linux__)
-#include <asm/hwcap.h>
-#include <linux/auxvec.h>
-#include <stdio.h>
-#define LOOK_FOR_NEON
+    #include <asm/hwcap.h>
+    #include <linux/auxvec.h>
+    #include <stdio.h>
+    #define VOLK_CPU_ARM
 #endif
 
 static int has_neon(void){
-#if defined(LOOK_FOR_NEON)
+#if defined(VOLK_CPU_ARM)
     FILE *auxvec_f;
     unsigned long auxvec[2];
     unsigned int found_neon = 0;
@@ -94,7 +99,6 @@ static int has_neon(void){
 
     fclose(auxvec_f);
     return found_neon;
-
 #else
     return 0;
 #endif

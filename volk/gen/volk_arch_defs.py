@@ -40,6 +40,9 @@ class arch_class:
             except: setattr(self, key, failval)
         assert(self.name)
         assert(self.type)
+        if self.flag == 'none': self.flag = None
+        self.flags = list()
+        if self.flag: self.flags = map(str.strip, self.flag.split(','))
 
     def __repr__(self): return self.name
 
