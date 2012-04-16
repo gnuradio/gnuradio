@@ -29,6 +29,7 @@
 #include <string.h>
 
 #include <QTimer>
+#include <volk/volk.h>
 
 qtgui_sink_f_sptr
 qtgui_make_sink_f (int fftsize, int wintype,
@@ -204,10 +205,7 @@ qtgui_sink_f::fft(float *data_out, const float *data_in, int size)
   }
   
   d_fft->execute ();     // compute the fft
-  gr_complex *fftout = d_fft->get_outbuf();
-  for(int i=0; i<size; i++) {
-      data_out[i] = 10.0*log10((fftout[i].real() * fftout[i].real() + fftout[i].imag()*fftout[i].imag()) + 1e-20);
-  }
+  volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(), size, 1.0, size);
 }
 
 void 
