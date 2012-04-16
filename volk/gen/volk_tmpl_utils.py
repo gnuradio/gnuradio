@@ -34,7 +34,7 @@ def __escape_pre_processor(code):
         m = re.match('^(\s*)#(\s*)(\w+)(.*)$', line)
         if m:
             p0, p1, fcn, stuff = m.groups()
-            conly = fcn in ('include', 'define', 'ifdef', 'ifndef', 'endif', 'elif')
+            conly = fcn in ('include', 'define', 'ifdef', 'ifndef', 'endif', 'elif', 'pragma')
             both = fcn in ('if', 'else')
             istmpl = '$' in stuff
             if 'defined' in stuff: istmpl = False

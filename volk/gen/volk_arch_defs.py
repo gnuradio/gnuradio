@@ -35,6 +35,7 @@ class arch_class:
             ('environment', str, None),
             ('include', str, None),
             ('alignment', int, 1),
+            ('check', str, None),
         ):
             try: setattr(self, key, cast(kwargs[key]))
             except: setattr(self, key, failval)

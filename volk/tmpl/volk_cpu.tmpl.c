@@ -40,10 +40,27 @@ struct VOLK_CPU volk_cpu;
     #endif
     #define cpuid_x86(op, r) __get_cpuid(op, (unsigned int *)r+0, (unsigned int *)r+1, (unsigned int *)r+2, (unsigned int *)r+3)
 
+    /* Return Intel AVX extended CPU capabilities register.
+     * This function will bomb on non-AVX-capable machines, so
+     * check for AVX capability before executing.
+     */
+    static inline unsigned int __xgetbv(void)
+    {
+        unsigned int index, __eax, __edx;
+        __asm__ ("xgetbv" : "=a"(__eax), "=d"(__edx) : "c" (index));
+        return __eax;
+    }
+
 //implement get cpuid for MSVC compilers using __cpuid intrinsic
 #elif defined(_MSC_VER) && defined(HAVE_INTRIN_H)
     #include <intrin.h>
     #define cpuid_x86(op, r) __cpuid(r, op)
+
+    #if defined(_XCR_XFEATURE_ENABLED_MASK)
+    #define __xgetbv() _xgetbv(_XCR_XFEATURE_ENABLED_MASK)
+    #else
+    #define __xgetbv() 0
+    #endif
 
 #else
     #error "A get cpuid for volk is not available on this compiler..."
@@ -72,6 +89,14 @@ static inline unsigned int cpuid_edx(unsigned int op) {
     cpuid_x86 (op, regs);
     return regs[3];
 }
+
+static inline unsigned int xgetbv(void) {
+    //check to make sure that xgetbv is enabled in OS
+    int xgetbv_enabled = cpuid_ecx(1) >> 27 & 0x01;
+    if (xgetbv_enabled == 0) return 0;
+    return __xgetbv() & 0x6;
+}
+
 #endif
 
 //neon detection is linux specific
@@ -114,7 +139,7 @@ static int has_ppc(void){
 }
 
 #for $arch in $archs
-static int i_can_has_$arch.name () {
+static int i_can_has_$arch.name (void) {
 ########################################################################
     #if $arch.type == "x86" and $arch.no_test
 #if defined(VOLK_CPU_x86)
@@ -127,7 +152,11 @@ static int i_can_has_$arch.name () {
 #if defined(VOLK_CPU_x86)
     #set $op = hex($arch.op)
     unsigned int e$(arch.reg)x = cpuid_e$(arch.reg)x ($op);
-    return ((e$(arch.reg)x >> $arch.shift) & 1) == $arch.val;
+    unsigned int hwcap = ((e$(arch.reg)x >> $arch.shift) & 1) == $arch.val;
+    #if $arch.check
+    if ($(arch.check)() == 0) return 0;
+    #end if
+    return hwcap;
 #else
     return 0;
 #endif
