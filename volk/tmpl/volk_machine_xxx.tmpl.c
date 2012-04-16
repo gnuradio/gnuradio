@@ -58,22 +58,6 @@ $(' | '.join(['(1 << LV_%s)'%a.name.upper() for a in $archs]))#slurp
 {$(', '.join(['%s_%s'%($name, a) for a in $tags]))}#slurp
 #end def
 
-#ifdef LV_HAVE_ORC
-struct volk_machine volk_machine_$(this_machine.name) = {
-    $make_arch_have_list($this_machine.archs) | (1 << LV_ORC),
-    "$this_machine.name",
-    $this_machine.alignment,
-    #for $kern in $kernels
-        #set $taglist, $tagdeps = $kern.get_tags($arch_names + ["orc"])
-    "$kern.name",
-    $make_tag_str_list($taglist),
-    $make_tag_have_list($tagdeps),
-    $make_tag_kern_list($kern.name, $taglist),
-    $(len($taglist)),
-    #end for
-};
-
-#else
 struct volk_machine volk_machine_$(this_machine.name) = {
     $make_arch_have_list($this_machine.archs),
     "$this_machine.name",
@@ -87,5 +71,3 @@ struct volk_machine volk_machine_$(this_machine.name) = {
     $(len($taglist)),
     #end for
 };
-
-#endif

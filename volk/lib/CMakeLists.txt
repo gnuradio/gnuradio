@@ -72,6 +72,18 @@ foreach(line ${arch_flag_lines})
 endforeach(line)
 
 ########################################################################
+# implement overruling in the ORC case,
+# since ORC always passes flag detection
+########################################################################
+if(ORC_FOUND)
+    message(STATUS "Overruled arch not orc")
+    list(REMOVE_ITEM available_archs norc)
+else()
+    message(STATUS "Overruled arch orc")
+    list(REMOVE_ITEM available_archs orc)
+endif()
+
+########################################################################
 # implement overruling in the non-multilib case
 # this makes things work when both -m32 and -m64 pass
 ########################################################################

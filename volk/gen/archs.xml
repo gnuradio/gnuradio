@@ -89,7 +89,13 @@
 </arch>
 
 <arch name="orc" type="all">
-  <flag>lorc-0.4</flag>
+  <flag>none</flag>
+  <overrule>LV_HAVE_ORC</overrule>
+  <overrule_val>no</overrule_val>
+</arch>
+
+<arch name="norc" type="all">
+  <flag>none</flag>
   <overrule>LV_HAVE_ORC</overrule>
   <overrule_val>no</overrule_val>
 </arch>
