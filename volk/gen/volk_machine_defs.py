@@ -32,6 +32,7 @@ class machine_class:
             if arch.alignment > 1 and arch_dict.has_key(arch_name):
                 arch = arch_dict[arch_name]
                 self.archs.append(arch)
+        self.alignment = max(map(lambda a: a.alignment, self.archs))
 
     def __repr__(self): return self.name
 
@@ -39,7 +40,7 @@ def register_machine(name, archs):
     for i, arch_name in enumerate(archs):
         if '|' in arch_name: #handle special arch names with the '|'
             for arch_sub in arch_name.split('|'):
-                register_machine(name, archs[:i] + [arch_sub] + archs[i+1:])
+                register_machine(name+'_'+arch_sub, archs[:i] + [arch_sub] + archs[i+1:])
             return
     machine = machine_class(name=name, archs=archs)
     machines.append(machine)

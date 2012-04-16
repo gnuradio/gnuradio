@@ -19,14 +19,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOLK_TYPEDEFS
-#define INCLUDED_VOLK_TYPEDEFS
+#ifndef INCLUDED_VOLK_RUNTIME
+#define INCLUDED_VOLK_RUNTIME
 
-#include <inttypes.h>
+#include <volk/volk_typedefs.h>
+#include <volk/volk_config_fixed.h>
+#include <volk/volk_common.h>
 #include <volk/volk_complex.h>
 
+__VOLK_DECL_BEGIN
+
+struct volk_func_desc {
+    const char **indices;
+    const int *arch_defs;
+    const int n_archs;
+};
+
+VOLK_API unsigned int volk_get_alignment(void);
+
 #for $kern in $kernels
-typedef $kern.rettype (*$(kern.pname))($kern.arglist);
+extern VOLK_API $kern.pname $kern.name;
+extern VOLK_API void $(kern.name)_manual($kern.arglist_namedefs, const char* arch);
+extern VOLK_API struct volk_func_desc $(kern.name)_get_func_desc(void);
 #end for
 
-#endif /*INCLUDED_VOLK_TYPEDEFS*/
+__VOLK_DECL_END
+
+#endif /*INCLUDED_VOLK_RUNTIME*/

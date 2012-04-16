@@ -154,8 +154,7 @@ for func in functions:
     ret = replace.sub("", ret);
     replace = re.compile("inline ");
     ret = replace.sub("", ret);
-    replace = re.compile("\)");
-    arched_args = replace.sub(", const char* arch) {", args);
+    arched_args = args[args.find('(')+1:args.find(')')]
 
     remove = re.compile('\)|\(|{');
     rargs = remove.sub("", args);
@@ -198,8 +197,13 @@ for func in functions:
 class kernel_class:
     def __init__(self, index):
         self.name = functions[index]
+        self.pname = self.name.replace('volk_', 'p_')
         self.rettype = retlist[index]
-        self.arglist = my_argtypelist[index]
+        self.arglist_defs = my_argtypelist[index]
+        self.arglist_namedefs = arched_arglist[index]
+        self.arglist_names = my_arglist[index]
+        self.tagdeps = fcountlist[index]
+        self.taglist = taglist[index]
 
     def __repr__(self):
         return self.name

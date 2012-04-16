@@ -37,6 +37,7 @@ def __escape_pre_processor(code):
             conly = fcn in ('include', 'define', 'ifdef', 'ifndef', 'endif', 'elif')
             both = fcn in ('if', 'else')
             istmpl = '$' in stuff
+            if 'defined' in stuff: istmpl = False
             if conly or (both and not istmpl):
                 line = '%s\\#%s%s%s'%(p0, p1, fcn, stuff)
         out.append(line)
@@ -45,7 +46,9 @@ def __escape_pre_processor(code):
 def __parse_tmpl(_tmpl, **kwargs):
     defs = {
         'archs': volk_arch_defs.archs,
+        'arch_dict': volk_arch_defs.arch_dict,
         'machines': volk_machine_defs.machines,
+        'machine_dict': volk_machine_defs.machine_dict,
         'kernels': volk_kernel_defs.kernels,
     }
     defs.update(kwargs)
@@ -58,4 +61,9 @@ def __parse_tmpl(_tmpl, **kwargs):
     return str(Template.Template(_tmpl, defs))
 
 if __name__ == '__main__':
-    print __parse_tmpl(open(sys.argv[1]).read())
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    which = sys.argv[3]
+    output = __parse_tmpl(open(input_file).read(), which=which)
+    if output_file: open(output_file, 'w').write(output)
+    else: print output

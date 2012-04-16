@@ -19,14 +19,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOLK_TYPEDEFS
-#define INCLUDED_VOLK_TYPEDEFS
+#include <volk/volk_common.h>
+#include <volk/volk_typedefs.h>
+#include "volk_machines.h"
 
-#include <inttypes.h>
-#include <volk/volk_complex.h>
-
-#for $kern in $kernels
-typedef $kern.rettype (*$(kern.pname))($kern.arglist);
+struct volk_machine *volk_machines[] = {
+#for $machine in $machines
+#ifdef LV_MACHINE_$(machine.name.upper())
+&volk_machine_$(machine.name),
+#endif
 #end for
+};
 
-#endif /*INCLUDED_VOLK_TYPEDEFS*/
+unsigned int n_volk_machines = sizeof(volk_machines)/sizeof(*volk_machines);

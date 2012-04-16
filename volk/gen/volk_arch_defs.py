@@ -18,6 +18,9 @@
 archs = list()
 arch_dict = dict()
 
+#TODO enable this when we are ready
+create_unaligned_archs = False
+
 class arch_class:
     def __init__(self, **kwargs):
         for key, cast, failval in (
@@ -44,7 +47,7 @@ def register_arch(**kwargs):
     arch = arch_class(**kwargs)
     archs.append(arch)
     arch_dict[arch.name] = arch
-    if arch.alignment > 1:
+    if arch.alignment > 1 and create_unaligned_archs:
         kwargs['name'] += '_u'
         kwargs['alignment'] = 1
         register_arch(**kwargs)
