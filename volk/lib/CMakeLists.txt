@@ -61,7 +61,11 @@ macro(check_arch arch_name)
     set(have_${arch_name} TRUE)
     foreach(flag ${flags})
         include(CheckCXXCompilerFlag)
-        set(have_flag have_${flag})
+        set(have_flag have${flag})
+        execute_process( #make the have_flag have nice alphanum chars (just for looks/not necessary)
+            COMMAND ${PYTHON_EXECUTABLE} -c "import re; print(re.sub('\\W', '_', '${have_flag}'))"
+            OUTPUT_VARIABLE have_flag OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
         CHECK_CXX_COMPILER_FLAG(${flag} ${have_flag})
         if (NOT ${have_flag})
             set(have_${arch_name} FALSE)
@@ -232,7 +236,8 @@ PROPERTIES COMPILE_DEFINITIONS "${machine_defs}")
 
 if(MSVC)
     #add compatibility includes for stdint types
-    include_directories(${CMAKE_SOURCE_DIR}/msvc)
+    include_directories(${CMAKE_SOURCE_DIR}/cmake/msvc)
+    add_definitions(-DHAVE_CONFIG_H)
     #compile the sources as C++ due to the lack of complex.h under MSVC
     set_source_files_properties(${volk_sources} PROPERTIES LANGUAGE CXX)
 endif()
