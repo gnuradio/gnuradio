@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011-2012 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -224,34 +224,36 @@ message(STATUS "Available machines: ${available_machines}")
 ########################################################################
 # Create rules to run the volk generator
 ########################################################################
-#list of the generated sources
-set(volk_gen_sources
-    ${CMAKE_BINARY_DIR}/include/volk/volk.h
-    ${CMAKE_BINARY_DIR}/lib/volk.c
-    ${CMAKE_BINARY_DIR}/lib/volk_init.h
-    ${CMAKE_BINARY_DIR}/include/volk/volk_typedefs.h
-    ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
-    ${CMAKE_BINARY_DIR}/lib/volk_cpu.c
-    ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
-    ${CMAKE_BINARY_DIR}/lib/volk_environment_init.c
-    ${CMAKE_BINARY_DIR}/lib/volk_environment_init.h
-    ${CMAKE_BINARY_DIR}/lib/volk_machines.h
-    ${CMAKE_BINARY_DIR}/lib/volk_machines.c
-    ${machine_sources}
-)
-
 #dependencies are all python, xml, and header implementation files
 file(GLOB xml_files ${CMAKE_SOURCE_DIR}/gen/*.xml)
 file(GLOB py_files ${CMAKE_SOURCE_DIR}/gen/*.py)
 file(GLOB h_files ${CMAKE_SOURCE_DIR}/include/volk/*.h)
 
-add_custom_command(
-    OUTPUT ${volk_gen_sources}
-    DEPENDS ${xml_files} ${py_files} ${h_files}
-    COMMAND ${PYTHON_EXECUTABLE} -B
-        ${CMAKE_SOURCE_DIR}/gen/volk_register.py
-        ${CMAKE_BINARY_DIR}
-)
+macro(gen_template tmpl output)
+    list(APPEND volk_gen_sources ${output})
+    add_custom_command(
+        OUTPUT ${output}
+        DEPENDS ${xml_files} ${py_files} ${h_files} ${tmpl}
+        COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_tmpl_utils.py ${tmpl} ${output} ${ARGN}
+    )
+endmacro(gen_template)
+
+gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk.tmpl.h              ${CMAKE_BINARY_DIR}/include/volk/volk.h)
+gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk.tmpl.c              ${CMAKE_BINARY_DIR}/lib/volk.c)
+gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_typedefs.tmpl.h     ${CMAKE_BINARY_DIR}/include/volk/volk_typedefs.h)
+gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_cpu.tmpl.h          ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h)
+gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_cpu.tmpl.c          ${CMAKE_BINARY_DIR}/lib/volk_cpu.c)
+gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_config_fixed.tmpl.h ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h)
+gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.h     ${CMAKE_BINARY_DIR}/lib/volk_machines.h)
+gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.c     ${CMAKE_BINARY_DIR}/lib/volk_machines.c)
+
+foreach(name ${available_machines})
+    gen_template(
+        ${CMAKE_SOURCE_DIR}/tmpl/volk_machine_xxx.tmpl.c
+        ${CMAKE_CURRENT_BINARY_DIR}/volk_machine_${name}.c
+        ${name}
+    )
+endforeach(name)
 
 ########################################################################
 # Set local include directories first

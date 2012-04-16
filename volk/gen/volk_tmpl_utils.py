@@ -63,7 +63,8 @@ def __parse_tmpl(_tmpl, **kwargs):
 if __name__ == '__main__':
     input_file = sys.argv[1]
     output_file = sys.argv[2]
-    which = sys.argv[3]
+    try: which = sys.argv[3]
+    except: which = ''
     output = __parse_tmpl(open(input_file).read(), which=which)
     if output_file: open(output_file, 'w').write(output)
     else: print output

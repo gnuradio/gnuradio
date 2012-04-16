@@ -56,7 +56,7 @@ unsigned int volk_get_alignment(void) {
 
 #for $kern in $kernels
 
-void get_$(kern.name)($kern.arglist_defs) {
+void get_$(kern.name)($kern.arglist_namedefs) {
     $kern.name = get_machine()->$(kern.name)_archs[volk_rank_archs(
         get_machine()->$(kern.name)_indices,
         get_machine()->$(kern.name)_arch_defs,
@@ -69,7 +69,7 @@ void get_$(kern.name)($kern.arglist_defs) {
 
 $kern.pname $kern.name = &get_$(kern.name);
 
-void $(kern.name)_manual($kern.arglist_defs, const char* arch) {
+void $(kern.name)_manual($kern.arglist_namedefs, const char* arch) {
     const size_t index = get_index(
         get_machine()->$(kern.name)_indices,
         get_machine()->$(kern.name)_n_archs,
@@ -80,7 +80,7 @@ void $(kern.name)_manual($kern.arglist_defs, const char* arch) {
     );
 }
 
-struct volk_func_desc volk_32f_x2_add_32f_a_get_func_desc(void) {
+struct volk_func_desc $(kern.name)_get_func_desc(void) {
     struct volk_func_desc desc = {
         get_machine()->$(kern.name)_indices,
         get_machine()->$(kern.name)_arch_defs,

@@ -29,7 +29,7 @@ class arch_class:
             ('no_test', bool, False),
             ('val', int, None),
             ('op', eval, None),
-            ('reg', int, None),
+            ('reg', str, None),
             ('shift', int, None),
             ('flag', str, None),
             ('environment', str, None),

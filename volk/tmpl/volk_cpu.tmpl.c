@@ -77,7 +77,7 @@ static inline unsigned int cpuid_edx(unsigned int op) {
 #endif
 
 static int has_neon(void){
-#ifdef LOOK_FOR_NEON
+#if defined(LOOK_FOR_NEON)
     FILE *auxvec_f;
     unsigned long auxvec[2];
     unsigned int found_neon = 0;
@@ -97,6 +97,7 @@ static int has_neon(void){
 
 #else
     return 0;
+#endif
 }
 
 static int has_ppc(void){

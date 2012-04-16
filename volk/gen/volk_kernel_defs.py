@@ -202,8 +202,18 @@ class kernel_class:
         self.arglist_defs = my_argtypelist[index]
         self.arglist_namedefs = arched_arglist[index]
         self.arglist_names = my_arglist[index]
-        self.tagdeps = fcountlist[index]
-        self.taglist = taglist[index]
+        self._tagdeps = fcountlist[index]
+        self._taglist = taglist[index]
+
+    def get_tags(self, archs):
+        def is_in(x): return x.lower() in archs
+        taglist = list()
+        tagdeps = list()
+        for i in range(len(self._tagdeps)):
+            if all(map(is_in, self._tagdeps[i])):
+                taglist.append(self._taglist[i])
+                tagdeps.append(self._tagdeps[i])
+        return taglist, tagdeps
 
     def __repr__(self):
         return self.name

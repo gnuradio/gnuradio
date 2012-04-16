@@ -26,7 +26,7 @@
 #include <volk/volk_complex.h>
 
 #for $kern in $kernels
-typedef $kern.rettype (*$(kern.pname))($kern.arglist);
+typedef $kern.rettype (*$(kern.pname))($kern.arglist_defs);
 #end for
 
 #endif /*INCLUDED_VOLK_TYPEDEFS*/
