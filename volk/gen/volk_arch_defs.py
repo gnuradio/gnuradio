@@ -33,7 +33,15 @@ class arch_class:
             except: setattr(self, key, failval)
         self.checks = checks
         assert(self.name)
-        self.flags = flags
+        self._flags = flags
+
+    def is_supported(self, compiler):
+        if not self._flags.keys(): return True
+        return compiler in self._flags.keys()
+
+    def get_flags(self, compiler):
+        try: return self._flags[compiler]
+        except KeyError: return list()
 
     def __repr__(self): return self.name
 
@@ -64,17 +72,18 @@ for arch_xml in archs_xml:
             val = arch_xml.getElementsByTagName(name)[0].firstChild.data
             kwargs[name] = val
         except: pass
-    checks = []
+    checks = list()
     for check_xml in arch_xml.getElementsByTagName("check"):
         name = check_xml.attributes["name"].value
         params = list()
         for param_xml in check_xml.getElementsByTagName("param"):
             params.append(param_xml.firstChild.data)
         checks.append([name, params])
-    flags = []
+    flags = dict()
     for flag_xml in arch_xml.getElementsByTagName("flag"):
-        flags.append(flag_xml.firstChild.data)
-    
+        name = flag_xml.attributes["compiler"].value
+        if not flags.has_key(name): flags[name] = list()
+        flags[name].append(flag_xml.firstChild.data)
     register_arch(flags=flags, checks=checks, **kwargs)
 
 if __name__ == '__main__':

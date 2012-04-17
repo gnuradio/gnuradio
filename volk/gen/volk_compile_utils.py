@@ -19,21 +19,11 @@ import optparse
 import volk_arch_defs
 import volk_machine_defs
 
-def format_flag(flag, compiler):
-    if compiler == 'msvc' and flag in ('mmmx', 'msse'):
-        return '/arch:SSE'
-    if compiler == 'msvc' and flag in ('msse2',):
-        return '/arch:SSE2'
-    if compiler == 'msvc' and flag in ('msse3', 'mssse3', 'msse4.1', 'msse4.2', 'mpopcnt', 'mavx'):
-        return '/arch:AVX'
-    #otherwise its a gcc compiler
-    return '-' + flag
-
 def do_arch_flags_list(compiler):
     output = list()
     for arch in volk_arch_defs.archs:
-        fields = [arch.name]
-        fields += list(map(lambda f: format_flag(f, compiler), arch.flags))
+        if not arch.is_supported(compiler): continue
+        fields = [arch.name] + arch.get_flags(compiler)
         output.append(','.join(fields))
     print ';'.join(output)
 
@@ -49,8 +39,7 @@ def do_machine_flags_list(compiler, machine_name):
     output = list()
     machine = volk_machine_defs.machine_dict[machine_name]
     for arch in machine.archs:
-        for flag in arch.flags:
-            output.append(format_flag(flag, compiler))
+        output.extend(arch.get_flags(compiler))
     print ' '.join(output)
 
 def main():

@@ -43,6 +43,8 @@ if(MSVC) #its not set otherwise
     set(COMPILER_NAME MSVC)
 endif()
 
+message(STATUS "Compiler name: ${COMPILER_NAME}")
+
 if(NOT DEFINED COMPILER_NAME)
     message(FATAL_ERROR "COMPILER_NAME undefined. Volk build may not support this compiler.")
 endif()
