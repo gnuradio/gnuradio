@@ -22,28 +22,18 @@ arch_dict = dict()
 create_unaligned_archs = False
 
 class arch_class:
-    def __init__(self, **kwargs):
+    def __init__(self, flags, checks, **kwargs):
         for key, cast, failval in (
             ('name', str, None),
-            ('type', str, None),
-            ('no_test', bool, False),
-            ('val', int, None),
-            ('op', eval, None),
-            ('reg', str, None),
-            ('shift', int, None),
-            ('flag', str, None),
             ('environment', str, None),
             ('include', str, None),
-            ('alignment', int, 1),
-            ('check', str, None),
+            ('alignment', int, 1)
         ):
             try: setattr(self, key, cast(kwargs[key]))
             except: setattr(self, key, failval)
+        self.checks = checks
         assert(self.name)
-        assert(self.type)
-        if self.flag == 'none': self.flag = None
-        self.flags = list()
-        if self.flag: self.flags = map(str.strip, self.flag.split(','))
+        self.flags = flags
 
     def __repr__(self): return self.name
 
@@ -74,7 +64,18 @@ for arch_xml in archs_xml:
             val = arch_xml.getElementsByTagName(name)[0].firstChild.data
             kwargs[name] = val
         except: pass
-    register_arch(**kwargs)
+    checks = []
+    for check_xml in arch_xml.getElementsByTagName("check"):
+        name = check_xml.attributes["name"].value
+        params = list()
+        for param_xml in check_xml.getElementsByTagName("param"):
+            params.append(param_xml.firstChild.data)
+        checks.append([name, params])
+    flags = []
+    for flag_xml in arch_xml.getElementsByTagName("flag"):
+        flags.append(flag_xml.firstChild.data)
+    
+    register_arch(flags=flags, checks=checks, **kwargs)
 
 if __name__ == '__main__':
     print archs

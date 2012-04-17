@@ -64,40 +64,39 @@ struct VOLK_CPU volk_cpu;
 
 #else
     #error "A get cpuid for volk is not available on this compiler..."
+#endif //defined(__GNUC__)
+
+#endif //defined(VOLK_CPU_x86)
+
+static inline unsigned int cpuid_x86_bit(unsigned int reg, unsigned int op, unsigned int bit) {
+#if defined(VOLK_CPU_x86)
+    unsigned int regs[4];
+    cpuid_x86(op, regs);
+    return regs[reg] >> bit & 0x01;
+#else
+    return 0;
 #endif
-
-static inline unsigned int cpuid_eax(unsigned int op) {
-    int regs[4];
-    cpuid_x86 (op, regs);
-    return regs[0];
 }
 
-static inline unsigned int cpuid_ebx(unsigned int op) {
-    int regs[4];
-    cpuid_x86 (op, regs);
-    return regs[1];
+static inline unsigned int check_extended_cpuid(unsigned int val) {
+#if defined(VOLK_CPU_x86)
+    unsigned int regs[4];
+    cpuid_x86(0x80000000, regs);
+    return regs[0] >= val;
+#else
+    return 0;
+#endif
 }
 
-static inline unsigned int cpuid_ecx(unsigned int op) {
-    int regs[4];
-    cpuid_x86 (op, regs);
-    return regs[2];
-}
-
-static inline unsigned int cpuid_edx(unsigned int op) {
-    int regs[4];
-    cpuid_x86 (op, regs);
-    return regs[3];
-}
-
-static inline unsigned int xgetbv(void) {
+static inline unsigned int get_avx_enabled(void) {
+#if defined(VOLK_CPU_x86)
     //check to make sure that xgetbv is enabled in OS
-    int xgetbv_enabled = cpuid_ecx(1) >> 27 & 0x01;
-    if (xgetbv_enabled == 0) return 0;
+    if(!cpuid_x86_bit(2, 1, 27)) return 0;
     return __xgetbv() & 0x6;
-}
-
+#else
+    return 0;
 #endif
+}
 
 //neon detection is linux specific
 #if defined(__arm__) && defined(__linux__)
@@ -140,51 +139,10 @@ static int has_ppc(void){
 
 #for $arch in $archs
 static int i_can_has_$arch.name (void) {
-########################################################################
-    #if $arch.type == "x86" and $arch.no_test
-#if defined(VOLK_CPU_x86)
+    #for $check, $params in $arch.checks
+    if ($(check)($(', '.join($params))) == 0) return 0;
+    #end for
     return 1;
-#else
-    return 0;
-#endif
-########################################################################
-    #else if $arch.op == 1
-#if defined(VOLK_CPU_x86)
-    #set $op = hex($arch.op)
-    unsigned int e$(arch.reg)x = cpuid_e$(arch.reg)x ($op);
-    unsigned int hwcap = ((e$(arch.reg)x >> $arch.shift) & 1) == $arch.val;
-    #if $arch.check
-    if ($(arch.check)() == 0) return 0;
-    #end if
-    return hwcap;
-#else
-    return 0;
-#endif
-########################################################################
-    #else if $arch.op == 0x80000001
-#if defined(VOLK_CPU_x86)
-    #set $op = hex($arch.op)
-    unsigned int extended_fct_count = cpuid_eax(0x80000000);
-    if (extended_fct_count < 0x80000001)
-        return $(arch.val)^1;
-    unsigned int extended_features = cpuid_e$(arch.reg)x ($op);
-    return ((extended_features >> $arch.shift) & 1) == $arch.val;
-#else
-    return 0;
-#endif
-########################################################################
-    #else if $arch.type == "powerpc"
-    return has_ppc();
-########################################################################
-    #else if $arch.type == "arm"
-    return has_neon();
-########################################################################
-    #else if $arch.type == "all"
-    return 1;
-########################################################################
-    #else ##$
-    return 0;
-    #end if
 }
 
 #end for

@@ -1,161 +1,168 @@
 <!-- archs appear in order of significance for blind, de-facto version ordering -->
 <grammar>
 
-<arch name="generic" type="all"> <!-- name and type are both required-->
-  <flag>none</flag>  <!-- flag is the only required field-->
+<arch name="generic"> <!-- name is required-->
 </arch>
 
-<arch name="altivec" type="powerpc">
+<arch name="altivec">
   <flag>maltivec</flag>
   <alignment>16</alignment>
+  <check name="has_ppc"></check>
 </arch>
 
-<arch name="neon" type="arm">
-  <flag>mfpu=neon,mfloat-abi=softfp,funsafe-math-optimizations</flag>
+<arch name="neon">
+  <flag>mfpu=neon</flag>
+  <flag>mfloat-abi=softfp</flag>
+  <flag>funsafe-math-optimizations</flag>
   <alignment>16</alignment>
+  <check name="has_neon"></check>
 </arch>
 
-<arch name="32" type="x86" no_test="true" >
+<arch name="32">
   <flag>m32</flag>
-  <overrule>MD_SUBCPU</overrule>
-  <overrule_val>x86_64</overrule_val>
 </arch>
 
-<arch name="64" type="x86">
-  <op>0x80000001</op>
-  <reg>d</reg>
-  <shift>29</shift>
+<arch name="64">
+  <check name="check_extended_cpuid">
+      <param>0x80000001</param>
+  </check>
+  <check name="cpuid_x86_bit">  <!-- checks to see if a bit is set -->
+      <param>3</param>          <!-- eax, ebx, ecx, [edx] -->
+      <param>0x80000001</param> <!-- cpuid operation -->
+      <param>29</param>         <!-- bit shift -->
+  </check>
   <flag>m64</flag>
-  <val>1</val>
-  <overrule>MD_SUBCPU</overrule>
-  <overrule_val>x86</overrule_val>
 </arch>
 
-<arch name="3dnow" type="x86">
-  <op>0x80000001</op>
-  <reg>d</reg>
-  <shift>31</shift>
+<arch name="3dnow">
+  <check name="cpuid_x86_bit">
+      <param>3</param>
+      <param>0x80000001</param>
+      <param>31</param>
+  </check>
   <flag>m3dnow</flag>
-  <val>1</val>
   <alignment>8</alignment>
 </arch>
 
-<arch name="abm" type="x86">
-  <val>1</val>
-  <op>0x80000001</op>
-  <reg>d</reg>
-  <shift>5</shift>
+<arch name="abm">
+  <check name="cpuid_x86_bit">
+      <param>3</param>
+      <param>0x80000001</param>
+      <param>5</param>
+  </check>
   <flag>msse4.2</flag>
   <alignment>16</alignment>
 </arch>
 
-<arch name="popcount" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>c</reg>
-  <shift>23</shift>
+<arch name="popcount">
+  <check name="cpuid_x86_bit">
+      <param>2</param>
+      <param>0x00000001</param>
+      <param>23</param>
+  </check>
   <flag>mpopcnt</flag>
 </arch>
 
-<arch name="mmx" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>d</reg>
-  <shift>23</shift>
+<arch name="mmx">
+  <check name="cpuid_x86_bit">
+      <param>3</param>
+      <param>0x00000001</param>
+      <param>23</param>
+  </check>
   <flag>mmmx</flag>
   <alignment>8</alignment>
 </arch>
 
-
-<arch name="sse" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>d</reg>
-  <shift>25</shift>
+<arch name="sse">
+  <check name="cpuid_x86_bit">
+      <param>3</param>
+      <param>0x00000001</param>
+      <param>25</param>
+  </check>
   <flag>msse</flag>
   <environment>_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);</environment>
   <include>xmmintrin.h</include>
   <alignment>16</alignment>
 </arch>
 
-
-<arch name="sse2" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>d</reg>
-  <shift>26</shift>
+<arch name="sse2">
+  <check name="cpuid_x86_bit">
+      <param>3</param>
+      <param>0x00000001</param>
+      <param>26</param>
+  </check>
   <flag>msse2</flag>
   <alignment>16</alignment>
 </arch>
 
-<arch name="orc" type="all">
-  <flag>none</flag>
-  <overrule>LV_HAVE_ORC</overrule>
-  <overrule_val>no</overrule_val>
+<arch name="orc">
 </arch>
 
-<arch name="norc" type="all">
-  <flag>none</flag>
-  <overrule>LV_HAVE_ORC</overrule>
-  <overrule_val>no</overrule_val>
+<!-- it's here for overrule stuff. -->
+<arch name="norc">
 </arch>
 
-<arch name="sse3" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>c</reg>
-  <shift>0</shift>
+<arch name="sse3">
+  <check name="cpuid_x86_bit">
+      <param>2</param>
+      <param>0x00000001</param>
+      <param>0</param>
+  </check>
   <flag>msse3</flag>
   <environment>_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);</environment>
   <include>pmmintrin.h</include>
   <alignment>16</alignment>
 </arch>
 
-<arch name="ssse3" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>c</reg>
-  <shift>9</shift>
+<arch name="ssse3">
+  <check name="cpuid_x86_bit">
+      <param>2</param>
+      <param>0x00000001</param>
+      <param>9</param>
+  </check>
   <flag>mssse3</flag>
   <alignment>16</alignment>
 </arch>
 
-<arch name="sse4_a" type="x86">
-  <val>1</val>
-  <op>0x80000001</op>
-  <reg>c</reg>
-  <shift>6</shift>
+<arch name="sse4_a">
+  <check name="cpuid_x86_bit">
+      <param>2</param>
+      <param>0x80000001</param>
+      <param>6</param>
+  </check>
   <flag>msse4a</flag>
   <alignment>16</alignment>
 </arch>
 
-
-<arch name="sse4_1" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>c</reg>
-  <shift>19</shift>
+<arch name="sse4_1">
+  <check name="cpuid_x86_bit">
+      <param>2</param>
+      <param>0x00000001</param>
+      <param>19</param>
+  </check>
   <flag>msse4.1</flag>
   <alignment>16</alignment>
 </arch>
 
-<arch name="sse4_2" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>c</reg>
-  <shift>20</shift>
+<arch name="sse4_2">
+  <check name="cpuid_x86_bit">
+      <param>2</param>
+      <param>0x00000001</param>
+      <param>20</param>
+  </check>
   <flag>msse4.2</flag>
   <alignment>16</alignment>
 </arch>
 
-<arch name="avx" type="x86">
-  <val>1</val>
-  <op>1</op>
-  <reg>c</reg>
-  <shift>28</shift>
+<arch name="avx">
+  <check name="cpuid_x86_bit">
+      <param>2</param>
+      <param>0x00000001</param>
+      <param>28</param>
+  </check>
+  <!-- check to see that the OS has enabled AVX -->
+  <check name="get_avx_enabled"></check>
   <flag>mavx</flag>
-  <check>xgetbv</check>
-  <checkval>7</checkval>
   <alignment>32</alignment>
 </arch>
 
