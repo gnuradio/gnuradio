@@ -54,7 +54,7 @@ struct VOLK_CPU volk_cpu;
 //implement get cpuid for MSVC compilers using __cpuid intrinsic
 #elif defined(_MSC_VER) && defined(HAVE_INTRIN_H)
     #include <intrin.h>
-    #define cpuid_x86(op, r) __cpuid(r, op)
+    #define cpuid_x86(op, r) __cpuid(((int*)r), op)
 
     #if defined(_XCR_XFEATURE_ENABLED_MASK)
     #define __xgetbv() _xgetbv(_XCR_XFEATURE_ENABLED_MASK)
