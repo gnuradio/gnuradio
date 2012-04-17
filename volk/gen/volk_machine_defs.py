@@ -69,7 +69,7 @@ for machine_xml in machines_xml:
             val = machine_xml.getElementsByTagName(name)[0].firstChild.data
             kwargs[name] = val
         except: pass
-    kwargs['archs'] = kwargs['archs'].split() + ['orc|norc']
+    kwargs['archs'] = kwargs['archs'].split()
     register_machine(**kwargs)
 
 if __name__ == '__main__':

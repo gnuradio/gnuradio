@@ -87,10 +87,7 @@ endforeach(line)
 # implement overruling in the ORC case,
 # since ORC always passes flag detection
 ########################################################################
-if(ORC_FOUND)
-    message(STATUS "Overruled arch !ORC")
-    list(REMOVE_ITEM available_archs norc)
-else()
+if(NOT ORC_FOUND)
     message(STATUS "Overruled arch ORC")
     list(REMOVE_ITEM available_archs orc)
 endif()
@@ -118,6 +115,9 @@ if(NOT CROSSCOMPILE_MULTILIB AND CPU_IS_x86)
     endif()
 endif()
 
+########################################################################
+# done overrules! print the result
+########################################################################
 message(STATUS "Available architectures: ${available_archs}")
 
 ########################################################################
@@ -129,17 +129,22 @@ execute_process(
     OUTPUT_VARIABLE available_machines OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-message(STATUS "Available machines: ${available_machines}")
-
+########################################################################
+# implement machine overruling in the ORC case,
+# dont generate not-orc machines if ORC is available
+########################################################################
 foreach(machine_name ${available_machines})
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
-        --mode "machine_flags" --machine "${machine_name}" --compiler "${COMPILER_NAME}"
-        OUTPUT_VARIABLE ${machine_name}_flags OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    string(TOUPPER LV_MACHINE_${machine_name} machine_def)
-    list(APPEND machine_defs ${machine_def})
+    string(REPLACE "_orc" "" machine_name_no_orc ${machine_name})
+    if (${machine_name} STREQUAL ${machine_name_no_orc})
+    else()
+        list(REMOVE_ITEM available_machines ${machine_name_no_orc})
+    endif()
 endforeach(machine_name)
+
+########################################################################
+# done overrules! print the result
+########################################################################
+message(STATUS "Available machines: ${available_machines}")
 
 ########################################################################
 # Create rules to run the volk generator
@@ -171,11 +176,23 @@ gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.h     ${CMAKE_BINARY_DI
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.c     ${CMAKE_BINARY_DIR}/lib/volk_machines.c)
 
 foreach(machine_name ${available_machines})
+    #generate machine source
     set(machine_source ${CMAKE_CURRENT_BINARY_DIR}/volk_machine_${machine_name}.c)
     gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machine_xxx.tmpl.c ${machine_source} ${machine_name})
+
+    #determine machine flags
+    execute_process(
+        COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
+        --mode "machine_flags" --machine "${machine_name}" --compiler "${COMPILER_NAME}"
+        OUTPUT_VARIABLE ${machine_name}_flags OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
     if(${machine_name}_flags)
         set_source_files_properties(${machine_source} PROPERTIES COMPILE_FLAGS "${${machine_name}_flags}")
     endif()
+
+    #add to available machine defs
+    string(TOUPPER LV_MACHINE_${machine_name} machine_def)
+    list(APPEND machine_defs ${machine_def})
 endforeach(machine_name)
 
 ########################################################################
