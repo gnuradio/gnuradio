@@ -43,7 +43,7 @@ add_executable(volk_profile
 target_link_libraries(volk_profile volk ${Boost_LIBRARIES})
 
 install(
-    PROGRAMS volk_profile
+    TARGETS volk_profile
     DESTINATION bin
     COMPONENT "volk"
 )
