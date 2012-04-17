@@ -80,7 +80,11 @@ public:
 
 protected:
   using QwtPlotZoomer::trackerText;
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const 
+#if QWT_VERSION < 0x060000
+  virtual QwtText trackerText( const QwtDoublePoint& p ) const
+#else
+  virtual QwtText trackerText( const QPoint& p ) const
+#endif
   {
     QwtText t(QString("%1 %2, %3 V").arg(p.x(), 0, 'f', GetTimePrecision()).
 	      arg(_unitType.c_str()).

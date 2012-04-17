@@ -25,6 +25,7 @@
 
 #include <qwt_color_map.h>
 #include <qwt_scale_draw.h>
+#include <gruel/high_res_timer.h>
 
 class FreqOffsetAndPrecisionClass
 {
@@ -108,6 +109,33 @@ private:
   
 };
 
+/***********************************************************************
+ * Text scale widget to provide X (freq) axis text
+ **********************************************************************/
+class FreqDisplayScaleDraw: public QwtScaleDraw, FreqOffsetAndPrecisionClass
+{
+public:
+  FreqDisplayScaleDraw(const unsigned int precision)
+    : QwtScaleDraw(), FreqOffsetAndPrecisionClass(precision)
+  {
+  }
+
+  virtual QwtText label(double value) const
+  {
+    return QString("%1").arg(value, 0, 'f', GetFrequencyPrecision());
+  }
+
+  virtual void initiateUpdate(void)
+  {
+      invalidateCache();
+  }
+
+protected:
+
+private:
+
+};
+
 class ColorMap_MultiColor: public QwtLinearColorMap
 {
 public:
@@ -155,25 +183,6 @@ public:
     QwtLinearColorMap(low, high)
   {
   }
-};
-
-class FreqDisplayScaleDraw: public QwtScaleDraw, FreqOffsetAndPrecisionClass
-{
-public:
-  FreqDisplayScaleDraw(const unsigned int precision)
-    : QwtScaleDraw(), FreqOffsetAndPrecisionClass(precision)
-  {
-  }
-
-  virtual QwtText label(double value) const
-  {
-    return QString("%1").arg(value, 0, 'f', GetFrequencyPrecision());
-  }
-
-protected:
-
-private:
-
 };
 
 #endif //QTGUI_TYPES_H

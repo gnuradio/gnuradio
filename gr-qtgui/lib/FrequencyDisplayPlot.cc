@@ -27,20 +27,21 @@
 
 #include "qtgui_types.h"
 
+/***********************************************************************
+ * Widget to provide mouse pointer coordinate text
+ **********************************************************************/
 class FreqDisplayZoomer: public QwtPlotZoomer, public FreqOffsetAndPrecisionClass
 {
 public:
   FreqDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision)
-    : QwtPlotZoomer(canvas),FreqOffsetAndPrecisionClass(freqPrecision)
+    : QwtPlotZoomer(canvas),
+      FreqOffsetAndPrecisionClass(freqPrecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
-
-  virtual ~FreqDisplayZoomer(){
-
-  }
   
-  virtual void updateTrackerText(){
+  virtual void updateTrackerText()
+  {
     updateDisplay();
   }
 
@@ -51,11 +52,12 @@ public:
 
 protected:
   using QwtPlotZoomer::trackerText;
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const
+  virtual QwtText trackerText(QPoint const &p) const
   {
-    QwtText t(QString("%1 %2, %3 dB").
-	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
-	      arg(_unitType.c_str()).arg(p.y(), 0, 'f', 2));
+    QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+    QwtText t(QString("%1 %2, %3 dB")
+              .arg(dp.x(), 0, 'f', GetFrequencyPrecision())
+	          .arg(_unitType.c_str()).arg(dp.y(), 0, 'f', 2));
     return t;
   }
 
@@ -63,6 +65,9 @@ private:
   std::string _unitType;
 };
 
+/***********************************************************************
+ * Main frequency display plotter widget
+ **********************************************************************/
 FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   : QwtPlot(parent)
 {

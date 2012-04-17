@@ -37,6 +37,11 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 namespace pt = boost::posix_time;
 
+#include <QDebug>
+
+/***********************************************************************
+ * Create a time label HH:MM:SS.SSS from an input time
+ **********************************************************************/
 static QString
 make_time_label(double secs)
 {
@@ -50,6 +55,9 @@ make_time_label(double secs)
   return QString("").sprintf("%s.%03ld", time_str.c_str(), long(std::fmod(secs*1000, 1000)));
 }
 
+/***********************************************************************
+ * Text scale widget to provide X (freq) axis text
+ **********************************************************************/
 class QwtTimeScaleDraw: public QwtScaleDraw, public TimeScaleData
 {
 public:
@@ -80,6 +88,9 @@ private:
 
 };
 
+/***********************************************************************
+ * Widget to provide mouse pointer coordinate text
+ **********************************************************************/
 class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, 
 		       public FreqOffsetAndPrecisionClass
 {
@@ -107,12 +118,13 @@ public:
 
 protected:
   using QwtPlotZoomer::trackerText;
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const 
+  virtual QwtText trackerText( QPoint const &p ) const
   {
-    double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (p.y() * GetSecondsPerLine());
-    QwtText t(QString("%1 %2, %3").
- 	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
-	      arg(_unitType.c_str()).arg(make_time_label(secs)));
+    QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+    double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (dp.y() * GetSecondsPerLine());
+    QwtText t(QString("%1 %2, %3")
+ 	          .arg(dp.x(), 0, 'f', GetFrequencyPrecision())
+	          .arg(_unitType.c_str()).arg(make_time_label(secs)));
     return t;
   }
 
@@ -121,9 +133,8 @@ private:
 };
 
 /*********************************************************************
-MAIN WATERFALL PLOT WIDGET
+* Main waterfall plot widget
 *********************************************************************/
-
 WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   : QwtPlot(parent)
 {
@@ -303,7 +314,7 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
       d_spectrogram->itemChanged();
       
       if(isVisible()){
-	replot();
+        replot();
       }
       
       _lastReplot = gruel::high_res_timer_now();
@@ -354,7 +365,7 @@ WaterfallDisplayPlot::replot()
 
   FreqDisplayScaleDraw* freqScale = \
     (FreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
-  //freqScale->initiateUpdate();
+  freqScale->initiateUpdate();
 
   // Update the time axis display
   if(axisWidget(QwtPlot::yLeft) != NULL){
