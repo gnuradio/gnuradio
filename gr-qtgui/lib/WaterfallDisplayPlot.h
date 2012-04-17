@@ -103,7 +103,7 @@ private:
   QwtPlotPanner* _panner;
   QwtPlotZoomer* _zoomer;
 
-  QwtDblClickPlotPicker *_picker;
+  QwtPlotPicker *_picker;
 
   WaterfallData *d_data;
 

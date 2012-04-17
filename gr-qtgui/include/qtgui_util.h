@@ -28,7 +28,6 @@
 #include <qwt_plot_picker.h>
 #include <qwt_picker_machine.h>
 
-
 class GR_QTGUI_API QwtDblClickPlotPicker: public QwtPlotPicker
 {
 public:

@@ -24,10 +24,10 @@
 #define WATERFALL_DISPLAY_PLOT_C
 
 #include <WaterfallDisplayPlot.h>
+#include "qtgui_types.h"
 
 #include <qwt_color_map.h>
 #include <qwt_scale_widget.h>
-#include <qwt_scale_draw.h>
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
 #include <qwt_plot_layout.h>
@@ -36,116 +36,6 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 namespace pt = boost::posix_time;
-
-class FreqOffsetAndPrecisionClass
-{
-public:
-  FreqOffsetAndPrecisionClass(const int freqPrecision)
-  {
-    _frequencyPrecision = freqPrecision;
-    _centerFrequency = 0;
-  }
-
-  virtual ~FreqOffsetAndPrecisionClass()
-  {
-  }
-
-  virtual unsigned int GetFrequencyPrecision() const
-  {
-    return _frequencyPrecision;
-  }
-
-  virtual void SetFrequencyPrecision(const unsigned int newPrecision)
-  {
-    _frequencyPrecision = newPrecision;
-  }
-
-  virtual double GetCenterFrequency() const
-  {
-    return _centerFrequency;
-  }
-
-  virtual void SetCenterFrequency(const double newFreq)
-  {
-    _centerFrequency = newFreq;
-  }
-
-protected:
-  unsigned int _frequencyPrecision;
-  double _centerFrequency;
-
-private:
-
-};
-
-class WaterfallFreqDisplayScaleDraw: public QwtScaleDraw, public FreqOffsetAndPrecisionClass{
-public:
-  WaterfallFreqDisplayScaleDraw(const unsigned int precision)
-    : QwtScaleDraw(), FreqOffsetAndPrecisionClass(precision)
-  {
-  }
-
-  virtual ~WaterfallFreqDisplayScaleDraw()
-  {
-  }
-
-  QwtText label(double value) const
-  {
-    return QString("%1").arg(value, 0, 'f', GetFrequencyPrecision());
-  }
-
-  virtual void initiateUpdate()
-  {
-    invalidateCache();
-  }
-
-protected:
-
-private:
-
-};
-
-class TimeScaleData
-{
-public:
-  TimeScaleData()
-  {
-    _zeroTime = 0;
-    _secondsPerLine = 1.0;
-  }
-  
-  virtual ~TimeScaleData()
-  {    
-  }
-
-  virtual gruel::high_res_timer_type GetZeroTime() const
-  {
-    return _zeroTime;
-  }
-  
-  virtual void SetZeroTime(const gruel::high_res_timer_type newTime)
-  {
-    _zeroTime = newTime - gruel::high_res_timer_epoch();
-  }
-
-  virtual void SetSecondsPerLine(const double newTime)
-  {
-    _secondsPerLine = newTime;
-  }
-
-  virtual double GetSecondsPerLine() const
-  {
-    return _secondsPerLine;
-  }
-
-  
-protected:
-  gruel::high_res_timer_type _zeroTime;
-  double _secondsPerLine;
-  
-private:
-  
-};
 
 static QString
 make_time_label(double secs)
@@ -230,55 +120,6 @@ private:
   std::string _unitType;
 };
 
-class ColorMap_MultiColor: public QwtLinearColorMap
-{
-public:
-  ColorMap_MultiColor():
-    QwtLinearColorMap(Qt::darkCyan, Qt::white)
-  {
-    addColorStop(0.25, Qt::cyan);
-    addColorStop(0.5, Qt::yellow);
-    addColorStop(0.75, Qt::red);
-  }
-};
-
-class ColorMap_WhiteHot: public QwtLinearColorMap
-{
-public:
-  ColorMap_WhiteHot():
-    QwtLinearColorMap(Qt::black, Qt::white)
-  {
-  }
-};
-
-class ColorMap_BlackHot: public QwtLinearColorMap
-{
-public:
-  ColorMap_BlackHot():
-    QwtLinearColorMap(Qt::white, Qt::black)
-  {
-  }
-};
-
-class ColorMap_Incandescent: public QwtLinearColorMap
-{
-public:
-  ColorMap_Incandescent():
-    QwtLinearColorMap(Qt::black, Qt::white)
-  {
-    addColorStop(0.5, Qt::darkRed);
-  }
-};
-
-class ColorMap_UserDefined: public QwtLinearColorMap
-{
-public:
-  ColorMap_UserDefined(QColor low, QColor high):
-    QwtLinearColorMap(low, high)
-  {
-  }
-};
-
 /*********************************************************************
 MAIN WATERFALL PLOT WIDGET
 *********************************************************************/
@@ -298,7 +139,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   canvas()->setPalette(palette);   
 
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
-  setAxisScaleDraw(QwtPlot::xBottom, new WaterfallFreqDisplayScaleDraw(0));
+  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
 
   setAxisTitle(QwtPlot::yLeft, "Time");
   setAxisScaleDraw(QwtPlot::yLeft, new QwtTimeScaleDraw());
@@ -309,7 +150,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 
   d_data = new WaterfallData(_startFrequency, _stopFrequency,
 			     _numPoints, 200);
-  
+
 #if QWT_VERSION < 0x060000
   d_spectrogram = new PlotWaterfall(d_data, "Waterfall Display");
 
@@ -324,7 +165,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 #endif
 
   d_spectrogram->attach(this);
-  
+
   // LeftButton for the zooming
   // MidButton for the panning
   // RightButton: zoom out by 1
@@ -419,7 +260,7 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
  
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
       double display_units = ceil(log10(units)/2.0);
-      setAxisScaleDraw(QwtPlot::xBottom, new WaterfallFreqDisplayScaleDraw(display_units));
+      setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
       setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
 
       if(reset) {
@@ -511,9 +352,9 @@ WaterfallDisplayPlot::replot()
   QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
   timeScale->initiateUpdate();
 
-  WaterfallFreqDisplayScaleDraw* freqScale = \
-    (WaterfallFreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
-  freqScale->initiateUpdate();
+  FreqDisplayScaleDraw* freqScale = \
+    (FreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
+  //freqScale->initiateUpdate();
 
   // Update the time axis display
   if(axisWidget(QwtPlot::yLeft) != NULL){
@@ -676,7 +517,7 @@ void
 WaterfallDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
   QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }
@@ -685,7 +526,7 @@ void
 WaterfallDisplayPlot::OnPickerPointSelected6(const QPointF & p)
 {
   QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }

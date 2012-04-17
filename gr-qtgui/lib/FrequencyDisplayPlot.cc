@@ -25,64 +25,13 @@
 
 #include <FrequencyDisplayPlot.h>
 
-#include <qwt_scale_draw.h>
+#include "qtgui_types.h"
 
-class FreqPrecisionClass
-{
-public:
-  FreqPrecisionClass(const int freqPrecision)
-  {
-    _frequencyPrecision = freqPrecision;
-  }
-
-  virtual ~FreqPrecisionClass()
-  {
-  }
-
-  virtual unsigned int GetFrequencyPrecision() const
-  {
-    return _frequencyPrecision;
-  }
-
-  virtual void SetFrequencyPrecision(const unsigned int newPrecision)
-  {
-    _frequencyPrecision = newPrecision;
-  }
-protected:
-  unsigned int _frequencyPrecision;
-
-private:
-
-};
-
-class FreqDisplayScaleDraw: public QwtScaleDraw, public FreqPrecisionClass
-{
-public:
-  FreqDisplayScaleDraw(const unsigned int precision)
-    : QwtScaleDraw(), FreqPrecisionClass(precision)
-  {
-  }
-
-  virtual ~FreqDisplayScaleDraw() 
-  {
-  }
-
-  virtual QwtText label(double value) const
-  {
-    return QString("%1").arg(value, 0, 'f', GetFrequencyPrecision());
-  }
-
-protected:
-
-private:
-
-};
-
-class FreqDisplayZoomer: public QwtPlotZoomer, public FreqPrecisionClass
+class FreqDisplayZoomer: public QwtPlotZoomer, public FreqOffsetAndPrecisionClass
 {
 public:
   FreqDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision)
-    : QwtPlotZoomer(canvas),FreqPrecisionClass(freqPrecision)
+    : QwtPlotZoomer(canvas),FreqOffsetAndPrecisionClass(freqPrecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
