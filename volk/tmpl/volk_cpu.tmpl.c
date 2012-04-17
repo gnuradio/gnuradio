@@ -90,8 +90,6 @@ static inline unsigned int check_extended_cpuid(unsigned int val) {
 
 static inline unsigned int get_avx_enabled(void) {
 #if defined(VOLK_CPU_x86)
-    //check to make sure that xgetbv is enabled in OS
-    if(!cpuid_x86_bit(2, 1, 27)) return 0;
     return __xgetbv() & 0x6;
 #else
     return 0;

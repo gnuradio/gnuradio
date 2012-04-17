@@ -160,6 +160,12 @@
       <param>0x00000001</param>
       <param>28</param>
   </check>
+  <!-- check to make sure that xgetbv is enabled in OS -->
+  <check name="cpuid_x86_bit">
+      <param>2</param>
+      <param>0x00000001</param>
+      <param>27</param>
+  </check>
   <!-- check to see that the OS has enabled AVX -->
   <check name="get_avx_enabled"></check>
   <flag>mavx</flag>
