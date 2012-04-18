@@ -84,6 +84,19 @@ foreach(line ${arch_flag_lines})
 endforeach(line)
 
 ########################################################################
+# eliminate AVX on GCC < 4.6.0
+# even though it accepts -mavx, as won't assemble xgetbv, which we need
+########################################################################
+if(COMPILER_NAME MATCHES "GNU")
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+        OUTPUT_VARIABLE GCC_VERSION)
+    if(GCC_VERSION VERSION_LESS "4.6")
+        message(STATUS "GCC too old for AVX support, overruling AVX")
+        list(REMOVE_ITEM available_archs avx)
+    endif()
+endif()
+
+########################################################################
 # implement overruling in the ORC case,
 # since ORC always passes flag detection
 ########################################################################
