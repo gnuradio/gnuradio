@@ -44,12 +44,16 @@ struct VOLK_CPU volk_cpu;
      * This function will bomb on non-AVX-capable machines, so
      * check for AVX capability before executing.
      */
-    static inline unsigned int __xgetbv(void)
-    {
-        unsigned int index, __eax, __edx;
-        __asm__ ("xgetbv" : "=a"(__eax), "=d"(__edx) : "c" (index));
-        return __eax;
+    #if defined(__GNUC_PREREQ) && __GNUC_PREREQ(4, 4)
+    static inline unsigned long long _xgetbv(unsigned int index){
+        unsigned int eax, edx;
+        __asm__ __volatile__("xgetbv" : "=a"(eax), "=d"(edx) : "c"(index));
+        return ((unsigned long long)edx << 32) | eax;
     }
+    #define __xgetbv() _xgetbv(0)
+    #else
+    #define __xgetbv() 0
+    #endif
 
 //implement get cpuid for MSVC compilers using __cpuid intrinsic
 #elif defined(_MSC_VER) && defined(HAVE_INTRIN_H)
