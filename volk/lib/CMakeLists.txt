@@ -50,6 +50,14 @@ if(NOT DEFINED COMPILER_NAME)
 endif()
 
 ########################################################################
+# detect x86 flavor of CPU
+########################################################################
+if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(i.86|x86|x86_64|amd64)$")
+    message(STATUS "x86* CPU detected")
+    set(CPU_IS_x86 TRUE)
+endif()
+
+########################################################################
 # determine passing architectures based on compile flag tests
 ########################################################################
 execute_process(
@@ -84,14 +92,14 @@ foreach(line ${arch_flag_lines})
 endforeach(line)
 
 ########################################################################
-# eliminate AVX on GCC < 4.6.0
+# eliminate AVX on GCC < 4.4
 # even though it accepts -mavx, as won't assemble xgetbv, which we need
 ########################################################################
-if(COMPILER_NAME MATCHES "GNU")
+if(CPU_IS_x86 AND COMPILER_NAME MATCHES "GNU")
     execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-        OUTPUT_VARIABLE GCC_VERSION)
-    if(GCC_VERSION VERSION_LESS "4.6")
-        message(STATUS "GCC too old for AVX support, overruling AVX")
+        OUTPUT_VARIABLE GCC_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(GCC_VERSION VERSION_LESS "4.4")
+        message(STATUS "GCC missing xgetbv, Overruled arch AVX")
         list(REMOVE_ITEM available_archs avx)
     endif()
 endif()
@@ -101,7 +109,7 @@ endif()
 # since ORC always passes flag detection
 ########################################################################
 if(NOT ORC_FOUND)
-    message(STATUS "Overruled arch ORC")
+    message(STATUS "ORC support not found, Overruled arch ORC")
     list(REMOVE_ITEM available_archs orc)
 endif()
 
@@ -109,21 +117,15 @@ endif()
 # implement overruling in the non-multilib case
 # this makes things work when both -m32 and -m64 pass
 ########################################################################
-if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(i.86|x86|x86_64|amd64)$")
-    message(STATUS "x86* CPU detected")
-    set(CPU_IS_x86 TRUE)
-endif()
-
 if(NOT CROSSCOMPILE_MULTILIB AND CPU_IS_x86)
     include(CheckTypeSize)
     check_type_size("void*[8]" SIZEOF_CPU BUILTIN_TYPES_ONLY)
-    message(STATUS "CPU width ${SIZEOF_CPU} bits")
     if (${SIZEOF_CPU} EQUAL 64)
-        message(STATUS "Overruled arch 32")
+        message(STATUS "CPU width is ${SIZEOF_CPU} bits, Overruled arch 32")
         list(REMOVE_ITEM available_archs 32)
     endif()
     if (${SIZEOF_CPU} EQUAL 32)
-        message(STATUS "Overruled arch 64")
+        message(STATUS "CPU width is ${SIZEOF_CPU} bits, Overruled arch 64")
         list(REMOVE_ITEM available_archs 64)
     endif()
 endif()
