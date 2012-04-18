@@ -41,10 +41,31 @@ struct VOLK_CPU volk_cpu;
 #include <gcc_x86_cpuid.h>
 #define cpuid_x86(op, r) __get_cpuid(op, (unsigned int *)r+0, (unsigned int *)r+1, (unsigned int *)r+2, (unsigned int *)r+3)
 
+    /* Return Intel AVX extended CPU capabilities register.
+     * This function will bomb on non-AVX-capable machines, so
+     * check for AVX capability before executing.
+     */
+    #if defined(__GNUC_PREREQ) && __GNUC_PREREQ(4, 4)
+    static inline unsigned long long _xgetbv(unsigned int index){
+        unsigned int eax, edx;
+        __asm__ __volatile__("xgetbv" : "=a"(eax), "=d"(edx) : "c"(index));
+        return ((unsigned long long)edx << 32) | eax;
+    }
+    #define __xgetbv() _xgetbv(0)
+    #else
+    #define __xgetbv() 0
+    #endif
+
 //implement get cpuid for MSVC compilers using __cpuid intrinsic
 #elif defined(_MSC_VER)
 #include <intrin.h>
 #define cpuid_x86(op, r) __cpuid(r, op)
+
+    #if defined(_XCR_XFEATURE_ENABLED_MASK)
+    #define __xgetbv() _xgetbv(_XCR_XFEATURE_ENABLED_MASK)
+    #else
+    #define __xgetbv() 0
+    #endif
 
 #else
 #error "A get cpuid for volk is not available on this compiler..."
