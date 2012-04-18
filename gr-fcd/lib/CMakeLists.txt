@@ -63,5 +63,5 @@ endif()
 
 
 add_library(gnuradio-fcd SHARED ${gr_fcd_sources})
-target_link_libraries(gnuradio-fcd ${fcd_libs})
+target_link_libraries(gnuradio-fcd ${fcd_libs} rt)
 GR_LIBRARY_FOO(gnuradio-fcd RUNTIME_COMPONENT "fcd_runtime" DEVEL_COMPONENT "fcd_devel")
