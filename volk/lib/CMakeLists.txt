@@ -29,6 +29,11 @@ if(HAVE_INTRIN_H)
     add_definitions(-DHAVE_INTRIN_H)
 endif()
 
+CHECK_INCLUDE_FILE(fenv.h HAVE_FENV_H)
+if(HAVE_FENV_H)
+    add_definitions(-DHAVE_FENV_H)
+endif()
+
 CHECK_INCLUDE_FILE(dlfcn.h HAVE_DLFCN_H)
 if(HAVE_DLFCN_H)
     add_definitions(-DHAVE_DLFCN_H)

@@ -149,10 +149,29 @@ static int i_can_has_$arch.name (void) {
 
 #end for
 
+#if defined(HAVE_FENV_H)
+    #include <fenv.h>
+    static inline void set_float_rounding(void){
+        fesetround(FE_TONEAREST);
+    }
+#elif defined(_MSC_VER)
+    #include <float.h>
+    static inline void set_float_rounding(void){
+        unsigned int cwrd;
+        _controlfp_s(&cwrd, 0, 0);
+        _controlfp_s(&cwrd, _RC_NEAR, _MCW_RC);
+    }
+#else
+    static inline void set_float_rounding(void){
+        //do nothing
+    }
+#endif
+
 void volk_cpu_init() {
     #for $arch in $archs
     volk_cpu.has_$arch.name = &i_can_has_$arch.name;
     #end for
+    set_float_rounding();
 }
 
 unsigned int volk_get_lvarch() {
