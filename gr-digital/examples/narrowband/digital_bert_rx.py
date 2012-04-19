@@ -70,7 +70,7 @@ class bert_receiver(gr.hier_block2):
                                             freq_bw, timing_bw, phase_bw,
                                             verbose, log)
 
-        self._symbol_rate = self._bitrate * self._demod.bits_per_symbol()
+        self._symbol_rate = self._bitrate / self._demod.bits_per_symbol()
         self._sample_rate = self._symbol_rate * samples_per_symbol
 
         # Add an SNR probe on the demodulated constellation
