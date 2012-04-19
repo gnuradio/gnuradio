@@ -56,7 +56,7 @@ make_time_label(double secs)
 }
 
 /***********************************************************************
- * Text scale widget to provide X (freq) axis text
+ * Text scale widget to provide Y (time) axis text
  **********************************************************************/
 class QwtTimeScaleDraw: public QwtScaleDraw, public TimeScaleData
 {
@@ -71,8 +71,8 @@ public:
 
   virtual QwtText label(double value) const
   {
-    double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (value * GetSecondsPerLine());
-    return QwtText(make_time_label(secs));
+    double secs = double(value * GetSecondsPerLine());
+    return QwtText(QString("").sprintf("%.1f", secs));
   }
 
   virtual void initiateUpdate()
@@ -121,10 +121,11 @@ protected:
   virtual QwtText trackerText( QPoint const &p ) const
   {
     QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-    double secs = GetZeroTime()/double(gruel::high_res_timer_tps()) - (dp.y() * GetSecondsPerLine());
-    QwtText t(QString("%1 %2, %3")
+    double secs = double(dp.y() * GetSecondsPerLine());
+    QwtText t(QString("%1 %2, %3 s")
  	          .arg(dp.x(), 0, 'f', GetFrequencyPrecision())
-	          .arg(_unitType.c_str()).arg(make_time_label(secs)));
+	          .arg(_unitType.c_str())
+              .arg(secs, 0, 'f', 2));
     return t;
   }
 
@@ -152,7 +153,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
   setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
 
-  setAxisTitle(QwtPlot::yLeft, "Time");
+  setAxisTitle(QwtPlot::yLeft, "Time (s)");
   setAxisScaleDraw(QwtPlot::yLeft, new QwtTimeScaleDraw());
 
   _lastReplot = 0;
