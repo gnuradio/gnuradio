@@ -119,7 +119,6 @@ SpectrumDisplayForm::~SpectrumDisplayForm()
 
   displayTimer->stop();
   delete displayTimer;
-  printf("SpectrumDisplayForm destructor\n");
 }
 
 void

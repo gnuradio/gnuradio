@@ -44,13 +44,12 @@ public:
   ~QwtPickerDblClickPointMachine();
   
 #if QWT_VERSION < 0x060000
-  virtual CommandList transition( const QwtEventPattern &eventPattern,
-				  const QEvent *e);
+  virtual CommandList
 #else
-  virtual QList<QwtPickerMachine::Command> 
-    transition( const QwtEventPattern &eventPattern,
-		const QEvent *e);
+  virtual QList<QwtPickerMachine::Command>
 #endif
+    transition( const QwtEventPattern &eventPattern,
+				  const QEvent *e);
 };
 
 #endif /* INCLUDED_QTGUI_UTIL_H */

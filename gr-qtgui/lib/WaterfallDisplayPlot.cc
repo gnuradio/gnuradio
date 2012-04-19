@@ -200,6 +200,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
 #else
+  _picker->setStateMachine(new QwtPickerDblClickPointMachine());
   connect(_picker, SIGNAL(selected(const QPointF &)),
 	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
 #endif
@@ -528,7 +529,7 @@ void
 WaterfallDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 {
   QPointF point = p;
-  fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }
@@ -537,7 +538,7 @@ void
 WaterfallDisplayPlot::OnPickerPointSelected6(const QPointF & p)
 {
   QPointF point = p;
-  fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
   point.setX(point.x() * _xAxisMultiplier);
   emit plotPointSelected(point);
 }

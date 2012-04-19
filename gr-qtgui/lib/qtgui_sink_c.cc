@@ -85,7 +85,6 @@ qtgui_sink_c::~qtgui_sink_c()
   delete [] d_residbuf;
   delete [] d_magbuf;
   delete d_fft;
-  printf("qtgui_sink_c destructor");
 }
 
 void

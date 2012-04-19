@@ -21,6 +21,7 @@
  */
 
 #include <qtgui_util.h>
+#include <QDebug>
 
 QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()
 #if QWT_VERSION < 0x060000

@@ -80,15 +80,12 @@ public:
 
 protected:
   using QwtPlotZoomer::trackerText;
-#if QWT_VERSION < 0x060000
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const
-#else
   virtual QwtText trackerText( const QPoint& p ) const
-#endif
   {
-    QwtText t(QString("%1 %2, %3 V").arg(p.x(), 0, 'f', GetTimePrecision()).
+    QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+    QwtText t(QString("%1 %2, %3 V").arg(dp.x(), 0, 'f', GetTimePrecision()).
 	      arg(_unitType.c_str()).
-	      arg(p.y(), 0, 'f', 4));
+	      arg(dp.y(), 0, 'f', 4));
 
     return t;
   }
@@ -179,6 +176,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
 #else
+  _picker->setStateMachine(new QwtPickerDblClickPointMachine());
   connect(_picker, SIGNAL(selected(const QPointF &)),
 	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
 #endif

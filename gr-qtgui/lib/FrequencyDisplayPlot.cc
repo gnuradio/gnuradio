@@ -209,6 +209,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
 	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
 #else
+  _picker->setStateMachine(new QwtPickerDblClickPointMachine());
   connect(_picker, SIGNAL(selected(const QPointF &)),
 	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
 #endif
