@@ -28,7 +28,7 @@ Generic modulation and demodulation.
 from gnuradio import gr
 from modulation_utils import extract_kwargs_from_options_for_class
 from utils import mod_codes
-import digital_swig
+import digital_swig as digital
 import math
 
 # default values (used in __init__ and add_options)
@@ -121,10 +121,10 @@ class generic_mod(gr.hier_block2):
           gr.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
 
         if gray_coded == True:
-            self.symbol_mapper = gr.map_bb(self._constellation.pre_diff_code())
+            self.symbol_mapper = digital.map_bb(self._constellation.pre_diff_code())
 
         if differential:
-            self.diffenc = gr.diff_encoder_bb(arity)
+            self.diffenc = digital.diff_encoder_bb(arity)
 
         self.chunks2symbols = gr.chunks_to_symbols_bc(self._constellation.points())
 
@@ -269,28 +269,28 @@ class generic_demod(gr.hier_block2):
 
         # Frequency correction
         fll_ntaps = 55
-        self.freq_recov = digital_swig.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
-                                                        fll_ntaps, self._freq_bw)
+        self.freq_recov = digital.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
+                                                   fll_ntaps, self._freq_bw)
 
         # symbol timing recovery with RRC data filter
         taps = gr.firdes.root_raised_cosine(nfilts, nfilts*self._samples_per_symbol,
                                             1.0, self._excess_bw, ntaps)
-        self.time_recov = gr.pfb_clock_sync_ccf(self._samples_per_symbol,
-                                                self._timing_bw, taps,
-                                                nfilts, nfilts//2, self._timing_max_dev)
+        self.time_recov = digital.pfb_clock_sync_ccf(self._samples_per_symbol,
+                                                     self._timing_bw, taps,
+                                                     nfilts, nfilts//2, self._timing_max_dev)
 
         fmin = -0.25
         fmax = 0.25
-        self.receiver = digital_swig.constellation_receiver_cb(
+        self.receiver = digital.constellation_receiver_cb(
             self._constellation, self._phase_bw,
             fmin, fmax)
 
         # Do differential decoding based on phase change of symbols
         if differential:
-            self.diffdec = gr.diff_decoder_bb(arity)
+            self.diffdec = digital.diff_decoder_bb(arity)
 
         if gray_coded:
-            self.symbol_mapper = gr.map_bb(
+            self.symbol_mapper = digital.map_bb(
                 mod_codes.invert_code(self._constellation.pre_diff_code()))
 
         # unpack the k bit vector into a stream of bits
