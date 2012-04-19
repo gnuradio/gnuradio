@@ -49,11 +49,9 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   MinHoldCheckBox_toggled( false );
   MaxHoldCheckBox_toggled( false );
   
-  WaterfallMaximumIntensityWheel->setRange(-200, 0);
-  WaterfallMaximumIntensityWheel->setTickCnt(50);
-  WaterfallMinimumIntensityWheel->setRange(-200, 0);
-  WaterfallMinimumIntensityWheel->setTickCnt(50);
-  WaterfallMinimumIntensityWheel->setValue(-200);
+  WaterfallMaximumIntensitySlider->setRange(-200, 0);
+  WaterfallMinimumIntensitySlider->setRange(-200, 0);
+  WaterfallMinimumIntensitySlider->setValue(-200);
   
   _peakFrequency = 0;
   _peakAmplitude = -HUGE_VAL;
@@ -292,8 +290,8 @@ SpectrumDisplayForm::customEvent( QEvent * e)
       FFTSizeComboBox->setCurrentIndex(_system->GetFFTSizeIndex());
     }
 
-    waterfallMinimumIntensityChangedCB(WaterfallMinimumIntensityWheel->value());
-    waterfallMaximumIntensityChangedCB(WaterfallMaximumIntensityWheel->value());
+    waterfallMinimumIntensityChangedCB(WaterfallMinimumIntensitySlider->value());
+    waterfallMaximumIntensityChangedCB(WaterfallMaximumIntensitySlider->value());
 
     // Clear any previous display
     Reset();
@@ -554,30 +552,30 @@ SpectrumDisplayForm::UseRFFrequenciesCB( bool useRFFlag )
 void
 SpectrumDisplayForm::waterfallMaximumIntensityChangedCB( double newValue )
 {
-  if(newValue > WaterfallMinimumIntensityWheel->value()){
+  if(newValue > WaterfallMinimumIntensitySlider->value()){
     WaterfallMaximumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
   }
   else{
-    WaterfallMaximumIntensityWheel->setValue(WaterfallMinimumIntensityWheel->value());
+    WaterfallMinimumIntensitySlider->setValue(newValue - 2);
   }
 
-  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensityWheel->value(),
-					   WaterfallMaximumIntensityWheel->value());
+  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensitySlider->value(),
+					   WaterfallMaximumIntensitySlider->value());
 }
 
 
 void
 SpectrumDisplayForm::waterfallMinimumIntensityChangedCB( double newValue )
 {
-  if(newValue < WaterfallMaximumIntensityWheel->value()){
+  if(newValue < WaterfallMaximumIntensitySlider->value()){
     WaterfallMinimumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
   }
   else{
-    WaterfallMinimumIntensityWheel->setValue(WaterfallMaximumIntensityWheel->value());
+    WaterfallMaximumIntensitySlider->setValue(newValue + 2);
   }
 
-  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensityWheel->value(),
-					   WaterfallMaximumIntensityWheel->value());
+  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensitySlider->value(),
+					   WaterfallMaximumIntensitySlider->value());
 }
 
 void
@@ -593,15 +591,15 @@ void
 SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
 {
   double minimumIntensity = _noiseFloorAmplitude - 5;
-  if(minimumIntensity < WaterfallMinimumIntensityWheel->minValue()){
-    minimumIntensity = WaterfallMinimumIntensityWheel->minValue();
+  if(minimumIntensity < WaterfallMinimumIntensitySlider->minValue()){
+    minimumIntensity = WaterfallMinimumIntensitySlider->minValue();
   }
-  WaterfallMinimumIntensityWheel->setValue(minimumIntensity);
+  WaterfallMinimumIntensitySlider->setValue(minimumIntensity);
   double maximumIntensity = _peakAmplitude + 10;
-  if(maximumIntensity > WaterfallMaximumIntensityWheel->maxValue()){
-    maximumIntensity = WaterfallMaximumIntensityWheel->maxValue();
+  if(maximumIntensity > WaterfallMaximumIntensitySlider->maxValue()){
+    maximumIntensity = WaterfallMaximumIntensitySlider->maxValue();
   }
-  WaterfallMaximumIntensityWheel->setValue(maximumIntensity);
+  WaterfallMaximumIntensitySlider->setValue(maximumIntensity);
   waterfallMaximumIntensityChangedCB(maximumIntensity);
 }
 
