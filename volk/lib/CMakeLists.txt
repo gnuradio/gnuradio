@@ -66,7 +66,8 @@ endif()
 # determine passing architectures based on compile flag tests
 ########################################################################
 execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
     --mode "arch_flags" --compiler "${COMPILER_NAME}"
     OUTPUT_VARIABLE arch_flag_lines OUTPUT_STRIP_TRAILING_WHITESPACE
 )
@@ -96,6 +97,11 @@ foreach(line ${arch_flag_lines})
     check_arch(${arch_flags})
 endforeach(line)
 
+macro(OVERRULE_ARCH arch reason)
+    message(STATUS "${reason}, Overruled arch ${arch}")
+    list(REMOVE_ITEM available_archs ${arch})
+endmacro(OVERRULE_ARCH)
+
 ########################################################################
 # eliminate AVX on GCC < 4.4
 # even though it accepts -mavx, as won't assemble xgetbv, which we need
@@ -104,8 +110,7 @@ if(CPU_IS_x86 AND COMPILER_NAME MATCHES "GNU")
     execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
         OUTPUT_VARIABLE GCC_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(GCC_VERSION VERSION_LESS "4.4")
-        message(STATUS "GCC missing xgetbv, Overruled arch AVX")
-        list(REMOVE_ITEM available_archs avx)
+        OVERRULE_ARCH(avx "GCC missing xgetbv")
     endif()
 endif()
 
@@ -114,8 +119,7 @@ endif()
 # since ORC always passes flag detection
 ########################################################################
 if(NOT ORC_FOUND)
-    message(STATUS "ORC support not found, Overruled arch ORC")
-    list(REMOVE_ITEM available_archs orc)
+    OVERRULE_ARCH(orc "ORC support not found")
 endif()
 
 ########################################################################
@@ -126,12 +130,10 @@ if(NOT CROSSCOMPILE_MULTILIB AND CPU_IS_x86)
     include(CheckTypeSize)
     check_type_size("void*[8]" SIZEOF_CPU BUILTIN_TYPES_ONLY)
     if (${SIZEOF_CPU} EQUAL 64)
-        message(STATUS "CPU width is ${SIZEOF_CPU} bits, Overruled arch 32")
-        list(REMOVE_ITEM available_archs 32)
+        OVERRULE_ARCH(32 "CPU width is 64 bits")
     endif()
     if (${SIZEOF_CPU} EQUAL 32)
-        message(STATUS "CPU width is ${SIZEOF_CPU} bits, Overruled arch 64")
-        list(REMOVE_ITEM available_archs 64)
+        OVERRULE_ARCH(64 "CPU width is 32 bits")
     endif()
 endif()
 
@@ -144,22 +146,28 @@ message(STATUS "Available architectures: ${available_archs}")
 # determine available machines given the available architectures
 ########################################################################
 execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
     --mode "machines" --archs "${available_archs}"
     OUTPUT_VARIABLE available_machines OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 ########################################################################
-# implement machine overruling in the ORC case,
-# dont generate not-orc machines if ORC is available
+# Implement machine overruling for redundant machines:
+# A machine is redundant when expansion rules occur,
+# and the arch superset passes configuration checks.
+# When this occurs, eliminate the redundant machines
+# to avoid unnecessary compilation of subset machines.
 ########################################################################
-foreach(machine_name ${available_machines})
-    string(REPLACE "_orc" "" machine_name_no_orc ${machine_name})
-    if (${machine_name} STREQUAL ${machine_name_no_orc})
-    else()
-        list(REMOVE_ITEM available_machines ${machine_name_no_orc})
-    endif()
-endforeach(machine_name)
+foreach(arch orc 64 32)
+    foreach(machine_name ${available_machines})
+        string(REPLACE "_${arch}" "" machine_name_no_arch ${machine_name})
+        if (${machine_name} STREQUAL ${machine_name_no_arch})
+        else()
+            list(REMOVE_ITEM available_machines ${machine_name_no_arch})
+        endif()
+    endforeach(machine_name)
+endforeach(arch)
 
 ########################################################################
 # done overrules! print the result
@@ -180,7 +188,9 @@ macro(gen_template tmpl output)
     add_custom_command(
         OUTPUT ${output}
         DEPENDS ${xml_files} ${py_files} ${h_files} ${tmpl}
-        COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_tmpl_utils.py ${tmpl} ${output} ${ARGN}
+        COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+        ${CMAKE_SOURCE_DIR}/gen/volk_tmpl_utils.py
+        --input ${tmpl} --output ${output} ${ARGN}
     )
 endmacro(gen_template)
 
@@ -202,7 +212,8 @@ foreach(machine_name ${available_machines})
 
     #determine machine flags
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
+        COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+        ${CMAKE_SOURCE_DIR}/gen/volk_compile_utils.py
         --mode "machine_flags" --machine "${machine_name}" --compiler "${COMPILER_NAME}"
         OUTPUT_VARIABLE ${machine_name}_flags OUTPUT_STRIP_TRAILING_WHITESPACE
     )

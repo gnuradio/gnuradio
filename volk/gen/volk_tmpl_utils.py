@@ -23,6 +23,7 @@
 import os
 import re
 import sys
+import optparse
 import volk_arch_defs
 import volk_machine_defs
 import volk_kernel_defs
@@ -60,11 +61,14 @@ def __parse_tmpl(_tmpl, **kwargs):
 """ + _tmpl
     return str(Template.Template(_tmpl, defs))
 
-if __name__ == '__main__':
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
-    try: which = sys.argv[3]
-    except: which = ''
-    output = __parse_tmpl(open(input_file).read(), which=which)
-    if output_file: open(output_file, 'w').write(output)
+def main():
+    parser = optparse.OptionParser()
+    parser.add_option('--input', type='string')
+    parser.add_option('--output', type='string')
+    (opts, args) = parser.parse_args()
+
+    output = __parse_tmpl(open(opts.input).read(), args=args)
+    if opts.output: open(opts.output, 'w').write(output)
     else: print output
+
+if __name__ == '__main__': main()

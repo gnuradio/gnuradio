@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#set $this_machine = $machine_dict[$which]
+#set $this_machine = $machine_dict[$args[0]]
 #set $arch_names = $this_machine.arch_names
 
 #for $arch in $this_machine.archs

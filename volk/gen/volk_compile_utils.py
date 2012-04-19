@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Copyright 2012 Free Software Foundation, Inc.
 #
@@ -44,10 +45,10 @@ def do_machine_flags_list(compiler, machine_name):
 
 def main():
     parser = optparse.OptionParser()
-    parser.add_option('--mode', type='string', default='')
-    parser.add_option('--compiler', type='string', default='')
-    parser.add_option('--archs', type='string', default='')
-    parser.add_option('--machine', type='string', default='')
+    parser.add_option('--mode', type='string')
+    parser.add_option('--compiler', type='string')
+    parser.add_option('--archs', type='string')
+    parser.add_option('--machine', type='string')
     (opts, args) = parser.parse_args()
 
     if opts.mode == 'arch_flags': return do_arch_flags_list(opts.compiler.lower())
