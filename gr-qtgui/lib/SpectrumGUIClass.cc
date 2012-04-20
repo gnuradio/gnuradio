@@ -27,6 +27,7 @@
 //Added by qt3to4:
 #include <QEvent>
 #include <QCustomEvent>
+#include <volk/volk.h>
 
 const long SpectrumGUIClass::MAX_FFT_SIZE = 32768;
 const long SpectrumGUIClass::MIN_FFT_SIZE = 256;
@@ -245,6 +246,8 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
       memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(float));
     }
 
+    //ALL OF THIS SHIT SHOULD BE COMBINED WITH THE FFTSHIFT
+    //USE VOLK_32FC_DEINTERLEAVE_64F_X2_A TO GET REAL/IMAG FROM COMPLEX32
     // Can't do a memcpy since ths is going from float to double data type
     if((realTimeDomainData != NULL) && (realTimeDomainDataSize > 0)){
       const float* realTimeDomainDataPtr = realTimeDomainData;
@@ -258,18 +261,11 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
       }
     }
 
-    // Can't do a memcpy since ths is going from float to double data type
     if((complexTimeDomainData != NULL) && (complexTimeDomainDataSize > 0)){
-      const float* complexTimeDomainDataPtr = complexTimeDomainData;
-
-      double* realTimeDomainPointsPtr = _realTimeDomainPoints;
-      double* imagTimeDomainPointsPtr = _imagTimeDomainPoints;
-
-      timeDomainBufferSize = complexTimeDomainDataSize;
-      for(uint64_t number = 0; number < complexTimeDomainDataSize; number++){
-	*realTimeDomainPointsPtr++ = *complexTimeDomainDataPtr++;
-	*imagTimeDomainPointsPtr++ = *complexTimeDomainDataPtr++;
-      }
+      volk_32fc_deinterleave_64f_x2_a(_realTimeDomainPoints,
+                                      _imagTimeDomainPoints,
+				      (const lv_32fc_t *)complexTimeDomainData,
+				      complexTimeDomainDataSize);
     }
   }
 
