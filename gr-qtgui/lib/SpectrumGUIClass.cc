@@ -266,6 +266,7 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
                                       _imagTimeDomainPoints,
 				      (const lv_32fc_t *)complexTimeDomainData,
 				      complexTimeDomainDataSize);
+      timeDomainBufferSize = complexTimeDomainDataSize;
     }
   }
 
