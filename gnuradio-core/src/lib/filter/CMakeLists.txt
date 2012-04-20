@@ -195,6 +195,9 @@ elseif(CMAKE_SYSTEM_PROCESSOR_x86 AND "${CMAKE_SYSTEM_PROCESSOR_x86}" STREQUAL "
         ${CMAKE_CURRENT_SOURCE_DIR}/short_dotprod_mmx.S
     )
 elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
+    if(CMAKE_COMPILER_IS_GNUCXX)
+        add_definitions(-maltivec)
+    endif()
     list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_powerpc.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_sysconfig_powerpc.cc
