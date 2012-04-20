@@ -135,6 +135,52 @@ SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem,
   }
 }
 
+/***********************************************************************
+ * This is kind of gross because we're combining three operations:
+ * Conversion from float to double (which is what the plotter wants)
+ * Finding the peak and mean
+ * Doing the "FFT shift" to put 0Hz at the center of the plot
+ * I feel like this might want to be part of the sink block
+ **********************************************************************/
+static void fftshift_and_sum(double *outFFT, const float *inFFT, uint64_t num_points, double &sum_mean, double &peak_ampl, int &peak_bin) {
+  const float* inptr = inFFT+num_points/2;
+  double* outptr = outFFT;
+
+  sum_mean = 0;
+  peak_ampl = -HUGE_VAL;
+  peak_bin = 0;
+
+  // Run this twice to perform the fftshift operation on the data here as well
+  for(uint64_t point = 0; point < num_points/2; point++){
+    float pt = (*inptr);
+    *outptr = pt;
+    if(*outptr > peak_ampl) {
+      peak_bin = point;
+      peak_ampl = *outptr;
+    }
+    sum_mean += *outptr;
+    
+    inptr++;
+    outptr++;
+  }
+  
+  // This loop takes the first half of the input data and puts it in the 
+  // second half of the plotted data
+  inptr = inFFT;
+  for(uint64_t point = 0; point < num_points/2; point++){
+    float pt = (*inptr);
+    *outptr = pt;
+    if(*outptr > peak_ampl) {
+      peak_bin = point;
+      peak_ampl = *outptr;
+    }
+    sum_mean += *outptr;
+
+    inptr++;
+    outptr++;
+  }
+}
+
 void
 SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdateEvent)
 {
@@ -156,64 +202,34 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   // REMEMBER: The dataTimestamp is NOT valid when the repeat data flag is true...
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
 
-  const float* fftMagDataPointsPtr = fftMagDataPoints+numFFTDataPoints/2;
-  double* realFFTDataPointsPtr = _realFFTDataPoints;
-
-  double sumMean = 0.0;
-  double localPeakAmplitude = -HUGE_VAL;
-  double localPeakFrequency = 0.0;
   const double fftBinSize = (_stopFrequency-_startFrequency) /
     static_cast<double>(numFFTDataPoints);
 
-  // Run this twice to perform the fftshift operation on the data here as well
-  for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    float pt = (*fftMagDataPointsPtr);
-    *realFFTDataPointsPtr = pt;
-    if(*realFFTDataPointsPtr > localPeakAmplitude) {
-      localPeakFrequency = static_cast<float>(point) * fftBinSize;
-      localPeakAmplitude = *realFFTDataPointsPtr;
-    }
-    sumMean += *realFFTDataPointsPtr;
-    
-    fftMagDataPointsPtr++;
-    realFFTDataPointsPtr++;
-  }
-  
-  // This loop takes the first half of the input data and puts it in the 
-  // second half of the plotted data
-  fftMagDataPointsPtr = fftMagDataPoints;
-  for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    float pt = (*fftMagDataPointsPtr);
-    *realFFTDataPointsPtr = pt;
-    if(*realFFTDataPointsPtr > localPeakAmplitude) {
-      localPeakFrequency = static_cast<float>(point) * fftBinSize;
-      localPeakAmplitude = *realFFTDataPointsPtr;
-    }
-    sumMean += *realFFTDataPointsPtr;
-
-    fftMagDataPointsPtr++;
-    realFFTDataPointsPtr++;
-  }
+  //this does the fftshift, conversion to double, and calculation of sum, peak amplitude, peak freq.
+  double sum_mean, peak_ampl;
+  int peak_bin;
+  fftshift_and_sum(_realFFTDataPoints, fftMagDataPoints, numFFTDataPoints, sum_mean, peak_ampl, peak_bin);
+  double peak_freq = peak_bin * fftBinSize;
 
   // Don't update the averaging history if this is repeated data
   if(!repeatDataFlag){
     _AverageHistory(_realFFTDataPoints);
 
     // Only use the local info if we are not repeating data
-    _peakAmplitude = localPeakAmplitude;
-    _peakFrequency = localPeakFrequency;
+    _peakAmplitude = peak_ampl;
+    _peakFrequency = peak_freq;
 
     // calculate the spectral mean
     // +20 because for the comparison below we only want to throw out bins
     // that are significantly higher (and would, thus, affect the mean more)
-    const double meanAmplitude = (sumMean / numFFTDataPoints) + 20.0;
+    const double meanAmplitude = (sum_mean / numFFTDataPoints) + 20.0;
 
     // now throw out any bins higher than the mean
-    sumMean = 0.0;
+    sum_mean = 0.0;
     uint64_t newNumDataPoints = numFFTDataPoints;
     for(uint64_t number = 0; number < numFFTDataPoints; number++){
       if (_realFFTDataPoints[number] <= meanAmplitude)
-        sumMean += _realFFTDataPoints[number];
+        sum_mean += _realFFTDataPoints[number];
       else
         newNumDataPoints--;
     }
@@ -221,7 +237,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     if (newNumDataPoints == 0)             // in the odd case that all
       _noiseFloorAmplitude = meanAmplitude; // amplitudes are equal!
     else
-      _noiseFloorAmplitude = sumMean / newNumDataPoints;
+      _noiseFloorAmplitude = sum_mean / newNumDataPoints;
   }
 
   if(lastOfMultipleUpdatesFlag){
