@@ -20,6 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// Disable warning about base class types
+#pragma SWIG nowarn=401
+
 ////////////////////////////////////////////////////////////////////////
 // gnuradio.i
 // SWIG interface definition
