@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -40,3 +40,11 @@ FULL_NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), 
 %}
 %enddef
 #endif
+
+%define GR_SWIG_BLOCK_MAGIC2(PKG, BASE_NAME)
+%template(BASE_NAME ## _sptr) boost::shared_ptr<gr:: ## PKG ## :: ## BASE_NAME>;
+%pythoncode %{
+BASE_NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id())
+BASE_NAME = BASE_NAME.make;
+%}
+%enddef
