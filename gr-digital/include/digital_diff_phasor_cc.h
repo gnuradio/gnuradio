@@ -27,8 +27,13 @@
 #include <gr_sync_block.h>
 
 /*!
- * \brief Please fix my documentation!
- * \ingroup misc
+ * \brief Differential decoding based on phase change.
+ * \ingroup coding_blk
+ *
+ * Uses the phase difference between two symbols to determine the
+ * output symbol:
+ *
+ *     out[i] = in[i] * conj(in[i-1]);
  */
 class digital_diff_phasor_cc;
 typedef boost::shared_ptr<digital_diff_phasor_cc> digital_diff_phasor_cc_sptr;

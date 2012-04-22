@@ -36,10 +36,19 @@ digital_make_pn_correlator_cc(int degree, int mask=0, int seed=1);
  * \brief PN code sequential search correlator
  *
  * \ingroup sync_blk
- * Receives complex baseband signal, outputs complex correlation against
- * reference PN code, one sample per PN code period
+ *
+ * Receives complex baseband signal, outputs complex correlation
+ * against reference PN code, one sample per PN code period. The PN
+ * sequence is generated using a GLFSR.
+ *
+ * \param degree Degree of shift register must be in [1, 32]. If mask
+ *               is 0, the degree determines a default mask (see
+ *               digital_impl_glfsr.cc for the mapping).
+ * \param repeat Set to repeat sequence.
+ * \param mask   Allows a user-defined bit mask for indexes of the shift
+ *               register to feed back.
+ * \param seed   Initial setting for values in shift register.
  */
-
 class DIGITAL_API digital_pn_correlator_cc : public gr_sync_decimator
 {
   friend DIGITAL_API digital_pn_correlator_cc_sptr

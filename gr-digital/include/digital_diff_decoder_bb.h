@@ -36,7 +36,8 @@ digital_make_diff_decoder_bb(unsigned int modulus);
  * \brief y[0] = (x[0] - x[-1]) % M
  * \ingroup coding_blk
  *
- * Differential decoder
+ * Uses current and previous symbols and the alphabet modulus to
+ * perform differential decoding.
  */
 class DIGITAL_API digital_diff_decoder_bb : public gr_sync_block
 {

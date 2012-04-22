@@ -34,6 +34,14 @@ digital_make_map_bb(const std::vector<int> &map);
 /*!
  * \brief output[i] = map[input[i]]
  * \ingroup coding_blk
+ *
+ * This block maps an incoming signal to the value in the map.
+ * The block expects that the incoming signal has a maximum
+ * value of len(map)-1.
+ *
+ * -> output[i] = map[input[i]]
+ *
+ * \param map a vector of integers.
  */
 
 class DIGITAL_API digital_map_bb : public gr_sync_block
