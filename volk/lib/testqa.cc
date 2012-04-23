@@ -55,7 +55,7 @@ VOLK_RUN_TESTS(volk_32f_x2_dot_prod_32f_a, 1e-4, 0, 204600, 1);
 VOLK_RUN_TESTS(volk_32f_x2_dot_prod_32f_u, 1e-4, 0, 204600, 1);
 //VOLK_RUN_TESTS(volk_32f_s32f_32f_fm_detect_32f_a, 1e-4, 2046, 10000);
 VOLK_RUN_TESTS(volk_32f_index_max_16u_a, 3, 0, 20460, 1);
-VOLK_RUN_TESTS(volk_32f_x2_s32f_interleave_16ic_a, 1, 32768, 20460, 1);
+VOLK_RUN_TESTS(volk_32f_x2_s32f_interleave_16ic_a, 1, 32767, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_x2_interleave_32fc_a, 0, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_x2_max_32f_a, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_x2_min_32f_a, 1e-4, 0, 20460, 1);
