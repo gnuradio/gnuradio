@@ -46,7 +46,7 @@ class test_dc_blocker(gr_unittest.TestCase):
 
         # only test samples around 2D-2
         result_data = dst.data()[60:65]
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data)
 
     def test_002(self):
         ''' Test impulse response - short form, cc '''
@@ -64,7 +64,7 @@ class test_dc_blocker(gr_unittest.TestCase):
 
         # only test samples around D-1
         result_data = dst.data()[29:34]
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data)
 
 
     def test_003(self):
