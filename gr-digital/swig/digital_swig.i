@@ -35,6 +35,9 @@ enum snr_est_type_t {
 
 %include <gri_control_loop.i>
 
+// Bring in generated blocks
+%include "digital_generated.i"
+
 %{
 #include "digital_additive_scrambler_bb.h"
 #include "digital_binary_slicer_fb.h"

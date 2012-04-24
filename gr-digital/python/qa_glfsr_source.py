@@ -45,7 +45,7 @@ class test_glfsr_source(gr_unittest.TestCase):
     def test_002_correlation_b(self):
         for degree in range(1,11):                # Higher degrees take too long to correlate
             src = digital.glfsr_source_b(degree, False)
-            b2f = gr.chunks_to_symbols_bf((-1.0,1.0), 1)
+            b2f = digital.chunks_to_symbols_bf((-1.0,1.0), 1)
             dst = gr.vector_sink_f()
 	    del self.tb # Discard existing top block
 	    self.tb = gr.top_block()

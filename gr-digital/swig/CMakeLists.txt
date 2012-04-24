@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,23 +18,107 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup swig generation
+# generate helper scripts to expand templated files
 ########################################################################
 include(GrPython)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
+#!${PYTHON_EXECUTABLE}
+
+import sys, os, re
+sys.path.append('${GR_CORE_PYTHONPATH}')
+os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
+os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
+
+if __name__ == '__main__':
+    import build_utils
+    root, inp = sys.argv[1:3]
+    for sig in sys.argv[3:]:
+        name = re.sub ('X+', sig, root)
+        d = build_utils.standard_dict(name, sig, 'digital')
+        build_utils.expand_template(d, inp)
+
+")
+
+macro(expand_i root)
+  # make a list of the .i generated files
+  unset(expanded_files_i)
+  foreach(sig ${ARGN})
+    string(REGEX REPLACE "X+" ${sig} name ${root})
+    list(APPEND expanded_files_i ${CMAKE_CURRENT_BINARY_DIR}/${name}.i)
+  endforeach(sig)
+
+  #create a command to generate the .i files
+  add_custom_command(
+    OUTPUT ${expanded_files_i}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.i.t
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+    ${root} ${root}.i.t ${ARGN}
+    )
+
+  # Lists of generated i files
+  list(APPEND generated_swigs ${expanded_files_i})
+endmacro(expand_i)
+
+
+########################################################################
+# Invoke macro to generate various sources
+########################################################################
+expand_i(digital_chunks_to_symbols_XX         bf bc sf sc if ic)
+
+add_custom_target(digital_generated_swigs DEPENDS
+    ${generated_swigs}
+)
+
+########################################################################
+# Setup swig generation
+########################################################################
 include(GrSwig)
 
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+########################################################################
+# Create the master gengen swig include files
+########################################################################
+set(generated_index ${CMAKE_CURRENT_BINARY_DIR}/digital_generated.i.in)
+file(WRITE ${generated_index} "
+//
+// This file is machine generated.  All edits will be overwritten
+//
+")
+
+file(APPEND ${generated_index} "%include \"gnuradio.i\"\n\n")
+file(APPEND ${generated_index} "%{\n")
+
+foreach(swig_file ${generated_swigs})
+    get_filename_component(name ${swig_file} NAME_WE)
+    file(APPEND ${generated_index} "#include<${name}.h>\n")
+endforeach(swig_file)
+file(APPEND ${generated_index} "%}\n")
+
+foreach(swig_file ${generated_swigs})
+    get_filename_component(name ${swig_file} NAME)
+    file(APPEND ${generated_index} "%include<${name}>\n")
+endforeach(swig_file)
+
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${generated_index} ${CMAKE_CURRENT_BINARY_DIR}/digital_generated.i
+)
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/../include
 )
 
+# Setup swig docs to depend on includes and pull in from build directory
 set(GR_SWIG_LIBRARIES gnuradio-digital)
-
+set(GR_SWIG_TARGET_DEPS digital_generated_includes)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
+set(GR_SWIG_DOC_DIRS
+  ${CMAKE_CURRENT_SOURCE_DIR}/../include
+  ${CMAKE_CURRENT_BINARY_DIR}/../include)
 GR_SWIG_MAKE(digital_swig digital_swig.i)
-
 GR_SWIG_INSTALL(
     TARGETS digital_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
@@ -45,6 +129,8 @@ install(
     FILES
     digital_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i
+    ${CMAKE_CURRENT_BINARY_DIR}/digital_generated.i
+    ${generated_swigs}
     digital_additive_scrambler_bb.i
     digital_binary_slicer_fb.i
     digital_bytes_to_syms.i
