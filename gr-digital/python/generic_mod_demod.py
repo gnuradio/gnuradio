@@ -126,7 +126,7 @@ class generic_mod(gr.hier_block2):
         if differential:
             self.diffenc = digital.diff_encoder_bb(arity)
 
-        self.chunks2symbols = gr.chunks_to_symbols_bc(self._constellation.points())
+        self.chunks2symbols = digital.chunks_to_symbols_bc(self._constellation.points())
 
         # pulse shaping filter
         nfilts = 32
