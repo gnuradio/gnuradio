@@ -125,7 +125,7 @@ public:
     /*!
      * Returns identifying information about this USRP's configuration.
      * Returns motherboard ID, name, and serial.
-     * Returns daughterboard RX ID, subdev name, and serial.
+     * Returns daughterboard RX ID, subdev name and spec, serial, and antenna.
      * \param chan channel index 0 to N-1
      * \return RX info
      */
