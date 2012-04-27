@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Goertzel
+###################################################
+ -->
+<block>
+	<name>Goertzel</name>
+	<key>goertzel_fc</key>
+	<import>from gnuradio import fft</import>
+	<make>fft.goertzel_fc($rate, $len, $freq)</make>
+        <callback>set_freq($freq)</callback>
+        <callback>set_rate($rate)</callback>
+	<param>
+		<name>Rate</name>
+		<key>rate</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Length</name>
+		<key>len</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Frequency</name>
+		<key>freq</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

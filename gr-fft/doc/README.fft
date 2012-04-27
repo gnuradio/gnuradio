@@ -1,0 +1,13 @@
+This is the gr-fft package. It contains signal processing blocks to
+perform FFTs and FFT-related functionality.
+
+The Python namespace is in gnuradio.fft, which would be normally
+imported as:
+
+    from gnuradio import fft
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(fft)
