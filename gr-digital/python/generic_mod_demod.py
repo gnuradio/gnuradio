@@ -76,8 +76,8 @@ def add_common_options(parser):
 class generic_mod(gr.hier_block2):
 
     def __init__(self, constellation,
-                 samples_per_symbol=_def_samples_per_symbol,
                  differential=_def_differential,
+                 samples_per_symbol=_def_samples_per_symbol,
                  pre_diff_code=True,
                  excess_bw=_def_excess_bw,
                  verbose=_def_verbose,
@@ -212,8 +212,8 @@ class generic_mod(gr.hier_block2):
 class generic_demod(gr.hier_block2):
 
     def __init__(self, constellation,
-                 samples_per_symbol=_def_samples_per_symbol,
                  differential=_def_differential,
+                 samples_per_symbol=_def_samples_per_symbol,
                  pre_diff_code=True,
                  excess_bw=_def_excess_bw,
                  freq_bw=_def_freq_bw,
