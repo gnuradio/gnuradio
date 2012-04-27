@@ -170,7 +170,7 @@ class test_block_gateway(gr_unittest.TestCase):
         tb.connect((src1, 0), (adder, 1))
         tb.connect(adder, sink)
         tb.run()
-        self.assertItemsEqual(sink.data(), (1, 5, 9, 13, 17))
+        self.assertEqual(sink.data(), (1, 5, 9, 13, 17))
 
     def test_add_fc32(self):
         tb = gr.top_block()
@@ -182,7 +182,7 @@ class test_block_gateway(gr_unittest.TestCase):
         tb.connect((src1, 0), (adder, 1))
         tb.connect(adder, sink)
         tb.run()
-        self.assertItemsEqual(sink.data(), (1, 5j, 9, 13j, 17))
+        self.assertEqual(sink.data(), (1, 5j, 9, 13j, 17))
 
     def test_convolve(self):
         tb = gr.top_block()
@@ -191,7 +191,7 @@ class test_block_gateway(gr_unittest.TestCase):
         sink = gr.vector_sink_f()
         tb.connect(src, cv, sink)
         tb.run()
-        self.assertItemsEqual(sink.data(), (1, 2, 3, 4, 5, 6, 7, 8))
+        self.assertEqual(sink.data(), (1, 2, 3, 4, 5, 6, 7, 8))
 
     def test_decim2x(self):
         tb = gr.top_block()
@@ -200,7 +200,7 @@ class test_block_gateway(gr_unittest.TestCase):
         sink = gr.vector_sink_f()
         tb.connect(src, d2x, sink)
         tb.run()
-        self.assertItemsEqual(sink.data(), (1, 3, 5, 7))
+        self.assertEqual(sink.data(), (1, 3, 5, 7))
 
     def test_interp2x(self):
         tb = gr.top_block()
@@ -209,7 +209,7 @@ class test_block_gateway(gr_unittest.TestCase):
         sink = gr.vector_sink_f()
         tb.connect(src, i2x, sink)
         tb.run()
-        self.assertItemsEqual(sink.data(), (1, 1, 3, 3, 5, 5, 7, 7, 9, 9))
+        self.assertEqual(sink.data(), (1, 1, 3, 3, 5, 5, 7, 7, 9, 9))
 
     def test_tags(self):
         src = tag_source()
@@ -228,7 +228,7 @@ class test_block_gateway(gr_unittest.TestCase):
         sink = gr.vector_sink_f()
         tb.connect(src, convert, v2s, sink)
         tb.run()
-        self.assertItemsEqual(sink.data(), (1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+        self.assertEqual(sink.data(), (1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
 
 if __name__ == '__main__':
     gr_unittest.run(test_block_gateway, "test_block_gateway.xml")
