@@ -24,7 +24,7 @@
 #define INCLUDED_FFT_FFT_VFC_FFTW_IMPL_H
 
 #include <fft/fft_vfc.h>
-#include <fft/fft_impl_fft.h>
+#include <fft/fft.h>
 
 namespace gr {
   namespace fft {
@@ -32,7 +32,7 @@ namespace gr {
     class FFT_API fft_vfc_fftw : public fft_vfc
     {
     private:
-      fft_impl_fft_complex *d_fft;
+      fft_complex          *d_fft;
       unsigned int          d_fft_size;
       std::vector<float>    d_window;
       bool                  d_forward;

@@ -22,11 +22,11 @@
 ########################################################################
 install(FILES
     api.h
+    fft.h
     fft_vcc.h
     fft_vfc.h
+    goertzel.h
     goertzel_fc.h
-    fft_impl_fft.h
-    fft_impl_goertzel.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fft
     COMPONENT "fft_devel"
 )

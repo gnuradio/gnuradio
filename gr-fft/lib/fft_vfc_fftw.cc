@@ -49,7 +49,7 @@ namespace gr {
 		      gr_make_io_signature(1, 1, fft_size * sizeof(gr_complex))),
 	d_fft_size(fft_size), d_forward(forward)
     {
-      d_fft = new fft_impl_fft_complex(d_fft_size, forward, nthreads);
+      d_fft = new fft_complex(d_fft_size, forward, nthreads);
     }
 
     fft_vfc_fftw::~fft_vfc_fftw()

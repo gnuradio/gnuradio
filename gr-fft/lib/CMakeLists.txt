@@ -40,11 +40,11 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND fft_sources
+  fft.cc
   fft_vcc_fftw.cc
   fft_vfc_fftw.cc
   goertzel_fc_impl.cc
-  fft_impl_fft.cc
-  fft_impl_goertzel.cc
+  goertzel.cc
 )
 
 list(APPEND fft_libs

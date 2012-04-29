@@ -24,7 +24,7 @@
 #define INCLUDED_FFT_GOERTZEL_FC_IMPL_H
 
 #include <fft/goertzel_fc.h>
-#include <fft/fft_impl_goertzel.h>
+#include <fft/goertzel.h>
 
 namespace gr {
   namespace fft {
@@ -32,10 +32,10 @@ namespace gr {
     class FFT_API goertzel_fc_impl : public goertzel_fc
     {
     private:
-      fft_impl_goertzel d_goertzel;
-      int               d_len;
-      float	        d_freq;
-      int               d_rate;
+      goertzel d_goertzel;
+      int      d_len;
+      float    d_freq;
+      int      d_rate;
 
     public:
       goertzel_fc_impl(int rate, int len, float freq);
