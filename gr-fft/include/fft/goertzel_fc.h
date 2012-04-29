@@ -42,22 +42,16 @@ namespace gr {
        */
       static FFT_API sptr make(int rate, int len, float freq);
 
-      virtual void set_freq (float freq)
-      { throw std::runtime_error("goertzel_fc::set_freq not implemented.\n"); }
-	
-      virtual void set_rate (int rate)
-      { throw std::runtime_error("goertzel_fc::set_rate not implemented.\n"); }
+      virtual void set_freq (float freq) = 0;
 
-      float freq()
-      { throw std::runtime_error("goertzel_fc::freq not implemented.\n"); }
+      virtual void set_rate (int rate) = 0;
+
+      virtual float freq() = 0;
 	
-      int rate()
-      { throw std::runtime_error("goertzel_fc::rate not implemented.\n"); }
-	
+      virtual int rate() = 0;
     };
 
   } /* namespace fft */
 } /* namespace gr */
 
 #endif /* INCLUDED_FFT_GOERTZEL_FC_H */
-

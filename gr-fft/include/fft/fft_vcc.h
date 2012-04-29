@@ -44,14 +44,11 @@ namespace gr {
 			       const std::vector<float> &window,
 			       bool shift=false, int nthreads=1);
       
-      virtual void set_nthreads(int n)
-      { throw std::runtime_error("fft_vcc::set_nthreads not implemented.\n"); }
+      virtual void set_nthreads(int n) = 0;
 
-      virtual int nthreads() const
-      { throw std::runtime_error("fft_vcc::nthreads not implemented.\n"); }
+      virtual int nthreads() const = 0;
 
-      virtual bool set_window(const std::vector<float> &window)
-      { throw std::runtime_error("fft_vcc::set_window not implemented.\n"); }
+      virtual bool set_window(const std::vector<float> &window) = 0;
     };
 
   } /* namespace fft */
