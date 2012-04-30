@@ -228,6 +228,7 @@ add_subdirectory(gruel)
 add_subdirectory(gnuradio-core)
 add_subdirectory(grc)
 
+add_subdirectory(gr-fft)
 add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)
