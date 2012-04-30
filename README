@@ -46,21 +46,16 @@ http://gnuradio.org/redmine/projects/gnuradio/wiki/DevelopingWithGit
 
 How to Build GNU Radio:
 
-  (1) Ensure that you've satisfied the external dependencies listed
-      below.  The word "system" is used to mean "operating system
-      and/or distribution", and means a full operating system,
-      including kernel, user-space utilties, and a packaging system
-      for additional software.  On Linux, this means what
-      "distribution" means.
+For more complete instructions, see the "Building GNU Radio" page in
+the GNU Radio manual (can be built or found online at
+http://gnuradio.org/doc/doxygen/page_build.html).
 
-      The following GNU/Linux distributions are known to come with all
-      required dependencies pre-packaged: Ubuntu >8.10, SuSE 10.0 (the
-      pay version, not the free download), Fedora Core >9.  Other
-      distribution may work too.  We know these three are easy.  The
-      required packages may be contained on your installation CD/DVD,
-      or may be loaded over the net.  The specifics vary depending on
-      your GNU/Linux distribution.
+See these steps fow a quick build guide.
 
+  (1) Ensure that you've satisfied the external dependencies. These
+      dependencies are listed in the manual's build page and are not
+      presented here to reduce duplication errors.
+  
       On systems using pkgsrc (e.g. NetBSD and Dragonfly), build
       meta-packages/gnuradio, which will build a previous release and
       force installation of the dependencies.  Then pkg_delete the
@@ -105,145 +100,18 @@ with '-O3', which is the default.
 
 -------------------------------------------------------------------------------
 
-			  External dependencies
+			  NOTES
 
 -------------------------------------------------------------------------------
-
-Prerequisites: Before trying to build these from source, please try
-your system's installation tool (apt-get, pkg_install, YaST, yum,
-urpmi, etc.) first.  Most recent systems have these packages
-available.
-
-You'll need to do a bit of sleuthing to figure out what your OS and
-packaging system calls these.  If your system uses the convention of
-splitting files needed to run programs compiled with foo and files
-needed to do the compilation into packages named foo and foo-devel,
-install both packages.  (Most GNU/Linux systems are like this, but
-pkgsrc is not and instead uses -devel to indicate a package of a
-not-yet-released or unstable version.)
-
-For those using pkgsrc, see gnuradio-pkg_chk.conf.  Those not using
-pkgsrc may also find the list useful.
-
-(0) GNU make
-
-It used to be required to have a "reasonable make", meaning GNU make,
-BSD make, or perhaps Solaris make.  It is now required to use GNU
-make.  Version 3.81 should certainly work; the intent is not to
-require the bleeding edge.
-
-Note that the examples below are written with "make".  They probably
-should say "gmake", as GNU make is installed as gmake when it is not
-the native make.
-
-(1) cmake 2.6 or later		http://www.cmake.org/cmake/resources/software.html
-
-(2)  pkgconfig 0.15.0 or later  http://www.freedesktop.org/Software/pkgconfig
-
-From the web site:
-
-pkgconfig is a system for managing library compile/link flags that
-works with automake and autoconf. It replaces the ubiquitous *-config
-scripts you may have seen with a single tool.
-
-
-(3)  FFTW 3.0 or later	      http://www.fftw.org
-
-IMPORTANT!!!  When building FFTW, you MUST use the --enable-single and
---enable-shared configure options.  This builds the single precision
-floating point version which we use.  You should also use either the
---enable-3dnow or --enable-sse options if you're on an Athlon or Pentium
-respectively.
-
-GNU/Linux packages of single-precision fftw are typically called
-fftw3f.
-
-In systems using pkgsrc, install math/fftwf, which provides the
-single-precision libraries.
-
-
-(4) Python 2.5 or later	      http://www.python.org
-
-Python 2.5 or later is now required.  If your system splits
-python into a bunch of separate packages including python-devel or
-libpython you'll most likely need those too.
-
-
-(5) Numpy python library   http://numeric.scipy.org
-
-Provides a high performance array type for Python.
-http://numpy.scipy.org
-http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=175103
-
-
-(6) The Boost C++ Libraries (1.35 or later)  http://www.boost.org
-
-We use Smart Pointers, the thread library and a bunch of other boost stuff.
-If your system doesn't have boost 1.35 or later, see README.building-boost
-for additional info.  (Note: Mac OSX systems require 1.37 or later.)
-
-
-(7) cppunit 1.9.14 or later.	http://cppunit.sourceforge.net
-
-Unit testing framework for C++.
-
-
-(8) Simple Wrapper Interface Generator.  http://www.swig.org
-
-As of repository version 4045, gnuradio requires version 1.3.31 or newer.
-
-
-(9) GNU Scientific Library (gsl) 1.10 or later
-
-The GNU Radio core library uses some routines from here.
-
-
-Optional, but nice to have:
-
-(10) wxPython.  Python binding for the wxWidgets GUI framework.  Use
-version 2.8 or later.  Again, almost all systems have this
-available.
-
-As a last resort, build it from source (not recommended!)
-http://www.wxpython.org
-
-(11) xmlto version ? or later.   http://cyberelk.net/tim/xmlto/index.html
-
-Wrapper for XML conversion tools to ease e.g. making html from docbook.
-
-(12) Python Cheetah extensions 2.0.0 or later
-(13) Python lxml wrappers 2.0.0 or later
-(14) Python gtk wrappers 2.10.0 or later
-
-The GNU Radio Companion application requires these additional Python libraries
-to be installed.
-
-The gr-qtgui requires these packages:
-
-(15) Qt 4.4 or later
-(16) Qwt 5.2 or later
-(17) PyQt 4.4 or later
-(18) PyQwt 5.2 or later
-
-It is also useful to have Python's Scipy and Matplot lib packages to
-run some of the example.
-
-----------------------------------------------------------------
-
-If you have doxygen installed, the build process creates
-documentation for the class hierarchy etc.  Point your browser at
-gnuradio/gnuradio-core/doc/html/index.html
-
 
 To run the examples you may need to set PYTHONPATH.  Note that the
 prefix and python version number in the path needs to match your
 installed version of python.
 
-  $ export PYTHONPATH=/usr/local/lib/python2.5/site-packages
+  $ export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
 
 You may want to add this to your shell init file (~/.bash_profile if
 you use bash).
-
 
 
 Another handy trick if for example your fftw includes and libs are

@@ -19,7 +19,7 @@ self.$(id).set_freq_corr($ppm)
 self.$(id).set_dc_corr($dci,$dcq)
 #end if
 #if ($iq_phase() != 0.0) or ($iq_gain() != 1.0)
-self.$(id).set_iq_corr($iq_phase,$iq_gain)
+self.$(id).set_iq_corr($iq_gain,$iq_phase)
 #end if
 self.$(id).set_freq($freq)
     </make>
