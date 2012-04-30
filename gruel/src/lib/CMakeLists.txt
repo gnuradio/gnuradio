@@ -81,7 +81,7 @@ list(APPEND gruel_sources
 )
 
 add_library(gruel SHARED ${gruel_sources})
-target_link_libraries(gruel ${Boost_LIBRARIES})
+target_link_libraries(gruel ${Boost_LIBRARIES} -lpthread)
 GR_LIBRARY_FOO(gruel RUNTIME_COMPONENT "gruel_runtime" DEVEL_COMPONENT "gruel_devel")
 
 ########################################################################
