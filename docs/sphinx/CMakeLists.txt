@@ -19,25 +19,17 @@
 
 include(GrPython)
 
-# You can set these variables from the command line.
-set(SPHINXOPTS)
-set(SPHINXBUILD sphinx-build)
-set(PAPER)
-set(BUILDDIR ${CMAKE_CURRENT_BINARY_DIR}/build)
-set(SRCDIR   ${CMAKE_CURRENT_SOURCE_DIR}/source)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/conf.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/conf.py
+@ONLY)
 
-# Internal variables.
-set(PAPEROPT_a4 -D latex_paper_size=a4)
-set(PAPEROPT_letter -D latex_paper_size=letter)
-set(ALLSPHINXOPTS -d ${BUILDDIR}/doctrees ${PAPEROPT_${PAPER}} ${SPHINXOPTS} ${SRCDIR})
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/run_sphinx_build.sh.in
+    ${CMAKE_BINARY_DIR}/run_sphinx_build.sh
+@ONLY)
 
-# Set up environmental variables to pass to sphinx
-set(LDPATH LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR})
-set(PYPATH PYTHONPATH=${CMAKE_INSTALL_PREFIX}/${GR_PYTHON_DIR})
-message(STATUS "ENVIRONS: ${LDPATH} ${PYPATH}")
-
-add_custom_target(sphinx
-  COMMAND  ${LDPATH} ${PYPATH} ${SPHINX_EXECUTABLE} -b html ${ALLSPHINXOPTS} ${BUILDDIR}/html
-  COMMENT "Building Sphinx Documents from installed system."
- )
-
+if(UNIX)
+  #make the shell file executable
+  execute_process(COMMAND chmod +x ${CMAKE_BINARY_DIR}/run_sphinx_build.sh)
+endif(UNIX)
