@@ -48,6 +48,7 @@ namespace gr {
 			  gr_make_io_signature (1, 1, sizeof(float)),
 			  decimation)
     {
+      d_taps = NULL;
       set_taps(taps);
       d_updated = false;
       set_history(d_ntaps+1);
@@ -55,11 +56,21 @@ namespace gr {
 
     fir_filter_fff_impl::~fir_filter_fff_impl()
     {
+      if(d_taps != NULL) {
+	fft::free(d_taps);
+	d_taps = NULL;
+      }
     }
 
     void
     fir_filter_fff_impl::set_taps(const std::vector<float> &taps)
     {
+      // Free the taps if already allocated
+      if(d_taps != NULL) {
+	fft::free(d_taps);
+	d_taps = NULL;
+      }
+
       d_ntaps = (int)taps.size();
       d_taps = fft::malloc_float(d_ntaps);
       for(int i = 0; i < d_ntaps; i++) {
@@ -95,11 +106,13 @@ namespace gr {
 	for(int i = 0; i < noutput_items; i++) {
 	  volk_32f_x2_dot_prod_32f_u(&out[i], &in[i], d_taps, d_ntaps);
 	}
-
-	//d_fir->filterN(out, in, noutput_items);
       }
       else {
-	//d_fir->filterNdec(out, in, noutput_items, decimation());
+	int j = 0;
+	for(int i = 0; i < noutput_items; i++) {
+	  volk_32f_x2_dot_prod_32f_u(&out[i], &in[j], d_taps, d_ntaps);
+	  j += decimation();
+	}
       }
       
       return noutput_items;
