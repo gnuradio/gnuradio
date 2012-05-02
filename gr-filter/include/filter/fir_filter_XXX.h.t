@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2008,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,38 +20,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FFT_FFT_VCC_H
-#define INCLUDED_FFT_FFT_VCC_H
+/* @WARNING@ */
 
-#include <fft/api.h>
-#include <gr_sync_block.h>
+#ifndef @GUARD_NAME@
+#define	@GUARD_NAME@
+
+#include <filter/api.h>
+#include <gr_sync_decimator.h>
 
 namespace gr {
-  namespace fft {
+  namespace filter {
 
-    class FFT_API fft_vcc : virtual public gr_sync_block
+    class FILTER_API @BASE_NAME@ : virtual public gr_sync_decimator
     {
     public:
 
-      // gr::fft::fft_vcc::sptr
-      typedef boost::shared_ptr<fft_vcc> sptr;
+      // gr::filter::@BASE_NAME@::sptr
+      typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
       /*!
-       * \brief Compute forward or reverse FFT. complex vector in / complex vector out.
-       * \ingroup dft_blk
+       * \brief FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
+       * \ingroup filter_blk
        */
-      static FFT_API sptr make(int fft_size, bool forward,
-			       const std::vector<float> &window,
-			       bool shift=false, int nthreads=1);
-      
-      virtual void set_nthreads(int n) = 0;
+      static FILTER_API sptr make(int decimation,
+				  const std::vector<@TAP_TYPE@> &taps);
 
-      virtual int nthreads() const = 0;
-
-      virtual bool set_window(const std::vector<float> &window) = 0;
+      virtual void set_taps (const std::vector<@TAP_TYPE@> &taps) = 0;
+      virtual std::vector<@TAP_TYPE@> taps () const = 0;
     };
 
-  } /* namespace fft */
+  } /* namespace filter */
 } /* namespace gr */
 
-#endif /* INCLUDED_FFT_FFT_VCC_H */
+#endif /* @GUARD_NAME@ */

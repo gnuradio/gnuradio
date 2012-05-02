@@ -32,7 +32,7 @@ os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
 if __name__ == '__main__':
     import build_utils
-   root, inp = sys.argv[1:3]
+    root, inp = sys.argv[1:3]
     for sig in sys.argv[3:]:
         name = re.sub ('X+', sig, root)
         d = build_utils.standard_dict2(name, sig, 'filter')
@@ -64,19 +64,20 @@ endmacro(expand_h)
 ########################################################################
 # Invoke macro to generate various sources
 #######################################################################
-#expand_h(fir_filter_XXX fff ccc ccf fcc fsf scc)
+expand_h(fir_filter_XXX fff ccf ccc)
 
-#add_custom_target(filter_generated_includes DEPENDS
-#    ${generated_includes}
-#)
+add_custom_target(filter_generated_includes DEPENDS
+    ${generated_includes}
+)
 
 ########################################################################
 # Install header files
 ########################################################################
 install(FILES
     api.h
-    fir_filter_fff.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fft
+    fir_filter.h
+    ${generated_includes}
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
     COMPONENT "fft_devel"
 )
 

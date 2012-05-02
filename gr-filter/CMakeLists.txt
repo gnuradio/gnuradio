@@ -35,9 +35,11 @@ GR_REGISTER_COMPONENT("gr-filter" ENABLE_GR_FILTER
     ENABLE_GR_FFT
 )
 
-GR_SET_GLOBAL(FILTER_INCLUDE_DIRS
+GR_SET_GLOBAL(GR_FILTER_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/lib
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 ########################################################################

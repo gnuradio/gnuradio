@@ -41,6 +41,28 @@ class test_filter(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_data, result_data, 5)
 
+    def test_fir_filter_ccf_001(self):
+        src_data = [1+1j, 2+2j, 3+3j, 4+4j]
+        expected_data = [0+0j, 0.5+0.5j, 1.5+1.5j, 2.5+2.5j]
+        src = gr.vector_source_c(src_data)
+        op  = filter.fir_filter_ccf(1, [0.5, 0.5])
+        dst = gr.vector_sink_c()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertComplexTuplesAlmostEqual(expected_data, result_data, 5)
+
+    def test_fir_filter_ccc_001(self):
+        src_data = [1+1j, 2+2j, 3+3j, 4+4j]
+        expected_data = [0+0j, -0.5+1.5j, -1.5+4.5j, -2.5+7.5j]
+        src = gr.vector_source_c(src_data)
+        op  = filter.fir_filter_ccc(1, [0.5+1j, 0.5+1j])
+        dst = gr.vector_sink_c()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertComplexTuplesAlmostEqual(expected_data, result_data, 5)
+
 if __name__ == '__main__':
     gr_unittest.run(test_filter, "test_filter.xml")
 

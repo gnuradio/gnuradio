@@ -20,34 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef FILTER_FIR_FILTER_FFF_H
-#define	FILTER_FIR_FILTER_FFF_H
+/* @WARNING@ */
+
+#ifndef @GUARD_NAME@
+#define	@GUARD_NAME@
 
 #include <filter/api.h>
-#include <gr_sync_decimator.h>
+#include <filter/fir_filter.h>
+#include <filter/@BASE_NAME@.h>
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API fir_filter_fff : virtual public gr_sync_decimator
+    class FILTER_API @IMPL_NAME@ : public @BASE_NAME@
     {
+    private:
+      impl::@BASE_NAME@ *d_fir;
+      bool d_updated;
+
     public:
+      @IMPL_NAME@(int decimation, const std::vector<@TAP_TYPE@> &taps);
 
-      // gr::filter::fir_filter_fff::sptr
-      typedef boost::shared_ptr<fir_filter_fff> sptr;
+      ~@IMPL_NAME@();
 
-      /*!
-       * \brief FIR filter with float input, float output, and float taps
-       * \ingroup filter_blk
-       */
-      static FILTER_API sptr make(int decimation,
-				  const std::vector<float> &taps);
-
-      virtual void set_taps (const std::vector<float> &taps) = 0;
-      virtual std::vector<float> taps () const = 0;
+      void set_taps(const std::vector<@TAP_TYPE@> &taps);
+      std::vector<@TAP_TYPE@> taps() const;
+      
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
 
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* FILTER_FIR_FILTER_FFF_H */
+#endif /* @GUARD_NAME@ */
