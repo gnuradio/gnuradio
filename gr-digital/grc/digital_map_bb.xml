@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Map
+###################################################
+ -->
+<block>
+	<name>Map</name>
+	<key>digital_map_bb</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.map_bb($map)</make>
+	<param>
+		<name>Map</name>
+		<key>map</key>
+		<type>int_vector</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>
