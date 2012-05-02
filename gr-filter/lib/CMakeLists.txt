@@ -109,6 +109,7 @@ list(APPEND filter_sources
   fft_filter.cc
   ${generated_sources}
   fft_filter_ccc_impl.cc
+  fft_filter_fff_impl.cc
 )
 
 list(APPEND filter_libs

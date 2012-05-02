@@ -216,7 +216,7 @@ class test_fft_filter(gr_unittest.TestCase):
         taps = (1,)
         expected_result = tuple([float(x) for x in (0,1,2,3,4,5,6,7)])
         src = gr.vector_source_f(src_data)
-        op = gr.fft_filter_fff(1, taps)
+        op = filter.fft_filter_fff(1, taps)
         dst = gr.vector_sink_f()
         tb.connect(src, op, dst)
         tb.run()
@@ -232,7 +232,7 @@ class test_fft_filter(gr_unittest.TestCase):
         taps = (2,)
         expected_result = tuple([2 * float(x) for x in (0,1,2,3,4,5,6,7)])
         src = gr.vector_source_f(src_data)
-        op = gr.fft_filter_fff(1, taps)
+        op = filter.fft_filter_fff(1, taps)
         dst = gr.vector_sink_f()
         tb.connect(src, op, dst)
         tb.run()
@@ -249,7 +249,7 @@ class test_fft_filter(gr_unittest.TestCase):
         nthreads = 2
         expected_result = tuple([2 * float(x) for x in (0,1,2,3,4,5,6,7)])
         src = gr.vector_source_f(src_data)
-        op = gr.fft_filter_fff(1, taps, nthreads)
+        op = filter.fft_filter_fff(1, taps, nthreads)
         dst = gr.vector_sink_f()
         tb.connect(src, op, dst)
         tb.run()
@@ -267,7 +267,7 @@ class test_fft_filter(gr_unittest.TestCase):
             expected_result = reference_filter_fff(1, taps, src_data)
 
             src = gr.vector_source_f(src_data)
-            op = gr.fft_filter_fff(1, taps)
+            op = filter.fft_filter_fff(1, taps)
             dst = gr.vector_sink_f()
     	    tb = gr.top_block()
             tb.connect(src, op, dst)
@@ -297,7 +297,7 @@ class test_fft_filter(gr_unittest.TestCase):
             expected_result = reference_filter_fff(1, taps, src_data)
 
             src = gr.vector_source_f(src_data)
-            op = gr.fft_filter_fff(1, taps)
+            op = filter.fft_filter_fff(1, taps)
             dst = gr.vector_sink_f()
     	    tb = gr.top_block()
             tb.connect(src, op, dst)
@@ -318,7 +318,7 @@ class test_fft_filter(gr_unittest.TestCase):
             expected_result = reference_filter_fff(dec, taps, src_data)
 
             src = gr.vector_source_f(src_data)
-            op = gr.fft_filter_fff(dec, taps)
+            op = filter.fft_filter_fff(dec, taps)
             dst = gr.vector_sink_f()
     	    tb = gr.top_block()
             tb.connect(src, op, dst)
@@ -341,7 +341,7 @@ class test_fft_filter(gr_unittest.TestCase):
             expected_result = reference_filter_fff(dec, taps, src_data)
 
             src = gr.vector_source_f(src_data)
-            op = gr.fft_filter_fff(dec, taps, nthreads)
+            op = filter.fft_filter_fff(dec, taps, nthreads)
             dst = gr.vector_sink_f()
     	    tb = gr.top_block()
             tb.connect(src, op, dst)
@@ -356,7 +356,7 @@ class test_fft_filter(gr_unittest.TestCase):
             ntaps = int(random.uniform(2, 100))
             taps = make_random_float_tuple(ntaps)
 
-            op = gr.fft_filter_fff(1, taps)
+            op = filter.fft_filter_fff(1, taps)
             result_data = op.taps()
             #print result_data
 
@@ -368,7 +368,7 @@ class test_fft_filter(gr_unittest.TestCase):
             ntaps = int(random.uniform(2, 100))
             taps = make_random_complex_tuple(ntaps)
 
-            op = gr.fft_filter_ccc(1, taps)
+            op = filter.fft_filter_ccc(1, taps)
             result_data = op.taps()
             #print result_data
 

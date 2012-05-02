@@ -39,8 +39,8 @@ namespace gr {
 
     public:
       fft_filter_ccc_impl(int decimation,
-			     const std::vector<gr_complex> &taps,
-			     int nthreads=1);
+			  const std::vector<gr_complex> &taps,
+			  int nthreads=1);
       
       ~fft_filter_ccc_impl();
 
@@ -50,9 +50,9 @@ namespace gr {
       void set_nthreads(int n);
       int nthreads() const;
       
-      int work (int noutput_items,
-		gr_vector_const_void_star &input_items,
-		gr_vector_void_star &output_items);
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
 
   } /* namespace filter */

@@ -32,7 +32,7 @@ namespace gr {
     class FILTER_API fft_filter_ccc : virtual public gr_sync_decimator
     {
     public:
-      // gr::filter::fft_filter::sptr
+      // gr::filter::fft_filter_ccc::sptr
       typedef boost::shared_ptr<fft_filter_ccc> sptr;
 
       /*!

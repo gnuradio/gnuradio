@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,70 +19,43 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_GR_FFT_FILTER_FFF_H
-#define INCLUDED_GR_FFT_FILTER_FFF_H
+#ifndef INCLUDED_FILTER_FFT_FILTER_FFF_IMPL_H
+#define INCLUDED_FILTER_FFT_FILTER_FFF_IMPL_H
 
-#include <gr_core_api.h>
-#include <gr_sync_decimator.h>
+#include <filter/api.h>
+#include <filter/fft_filter.h>
+#include <filter/fft_filter_fff.h>
 
-class gr_fft_filter_fff;
-typedef boost::shared_ptr<gr_fft_filter_fff> gr_fft_filter_fff_sptr;
-GR_CORE_API gr_fft_filter_fff_sptr
-gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps,
-			int nthreads=1);
+namespace gr {
+  namespace filter {
 
-class gri_fft_filter_fff_generic;
-//class gri_fft_filter_fff_sse;
+    class FILTER_API fft_filter_fff_impl : public fft_filter_fff
+    {
+    private:
+      int d_nsamples;
+      bool d_updated;
+      kernel::fft_filter_fff *d_filter;
+      std::vector<float> d_new_taps;
 
-/*!
- * \brief Fast FFT filter with float input, float output and float taps
- * \ingroup filter_blk
- */
-class GR_CORE_API gr_fft_filter_fff : public gr_sync_decimator
-{
- private:
-  friend GR_CORE_API gr_fft_filter_fff_sptr
-    gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps,
-			    int nthreads);
+    public:
+      fft_filter_fff_impl(int decimation,
+			  const std::vector<float> &taps,
+			  int nthreads=1);
 
-  int			   d_nsamples;
-  bool			   d_updated;
-#if 1 // don't enable the sse version until handling it is worked out
-  gri_fft_filter_fff_generic  *d_filter;
-#else
-  gri_fft_filter_fff_sse  *d_filter;
-#endif
-  std::vector<float>	   d_new_taps;
+      ~fft_filter_fff_impl();
 
-  /*!
-   * Construct a FFT filter with the given taps
-   *
-   * \param decimation	>= 1
-   * \param taps        float filter taps
-   * \param nthreads    number of threads for the FFT to use
-   */
-  gr_fft_filter_fff (int decimation, const std::vector<float> &taps,
-		     int nthreads=1);
+      void set_taps(const std::vector<float> &taps);
+      std::vector<float> taps() const;
 
- public:
-  ~gr_fft_filter_fff ();
+      void set_nthreads(int n);
+      int nthreads() const;
+      
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
 
-  void set_taps (const std::vector<float> &taps);
-  std::vector<float> taps () const;
+  } /* namespace filter */
+} /* namespace gr */
 
-  /*!
-   * \brief Set number of threads to use.
-   */
-  void set_nthreads(int n);
-
-  /*!
-   * \brief Get number of threads being used.
-   */
-  int nthreads() const;
-
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
-};
-
-#endif /* INCLUDED_GR_FFT_FILTER_FFF_H */
+#endif /* INCLUDED_FILTER_FFT_FILTER_FFF_IMPL_H */

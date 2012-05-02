@@ -110,7 +110,7 @@ namespace gr {
 	gr_complex  *d_taps;
       };
 
-    } /* namespace impl */
+    } /* namespace kernel */
   } /* namespace filter */
 } /* namespace gr */
 

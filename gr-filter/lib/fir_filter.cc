@@ -263,6 +263,6 @@ namespace gr {
 	}
       }
       
-    } /* namespace impl */
+    } /* namespace kernel */
   } /* namespace filter */
 } /* namespace gr */
