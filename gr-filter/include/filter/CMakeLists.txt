@@ -76,7 +76,9 @@ add_custom_target(filter_generated_includes DEPENDS
 install(FILES
     api.h
     fir_filter.h
+    fft_filter.h
     ${generated_includes}
+    fft_filter_ccc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
     COMPONENT "fft_devel"
 )

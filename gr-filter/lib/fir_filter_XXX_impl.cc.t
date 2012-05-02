@@ -26,8 +26,6 @@
 
 #include "@IMPL_NAME@.h"
 #include <gr_io_signature.h>
-#include <volk/volk.h>
-#include <fft/fft.h>
 
 namespace gr {
   namespace filter {
@@ -46,9 +44,9 @@ namespace gr {
 			  gr_make_io_signature(1, 1, sizeof(@O_TYPE@)),
 			  decimation)
     {
-      d_fir = new impl::@BASE_NAME@(decimation, taps);
+      d_fir = new kernel::@BASE_NAME@(decimation, taps);
       d_updated = false;
-      set_history(d_fir->ntaps()+1);
+      set_history(d_fir->ntaps());
     }
 
     @IMPL_NAME@::~@IMPL_NAME@()
@@ -78,7 +76,7 @@ namespace gr {
       @O_TYPE@ *out = (@O_TYPE@*)output_items[0];
       
       if (d_updated) {
-	set_history(d_fir->ntaps()+1);
+	set_history(d_fir->ntaps());
 	d_updated = false;
 	return 0;	     // history requirements may have changed.
       }

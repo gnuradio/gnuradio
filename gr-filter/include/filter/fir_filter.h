@@ -20,13 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef INCLUDED_FILTER_FIR_FILTER_H
+#define INCLUDED_FILTER_FIR_FILTER_H
+
 #include <filter/api.h>
 #include <vector>
 #include <gr_complex.h>
 
 namespace gr {
   namespace filter {
-    namespace impl {
+    namespace kernel {
     
       class FILTER_API fir_filter_fff
       {
@@ -110,3 +113,5 @@ namespace gr {
     } /* namespace impl */
   } /* namespace filter */
 } /* namespace gr */
+
+#endif /* INCLUDED_FILTER_FIR_FILTER_H */

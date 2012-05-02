@@ -26,7 +26,7 @@
 
 namespace gr {
   namespace filter {
-    namespace impl {
+    namespace kernel {
     
       fir_filter_fff::fir_filter_fff(int decimation,
 				     const std::vector<float> &taps)
@@ -55,7 +55,7 @@ namespace gr {
 	d_ntaps = (int)taps.size();
 	d_taps = fft::malloc_float(d_ntaps);
 	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[i] = taps[i];
+	  d_taps[d_ntaps-i-1] = taps[i];
 	}
       }
       
@@ -64,7 +64,7 @@ namespace gr {
       {
 	std::vector<float> t;
 	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[i]);
+	  t.push_back(d_taps[d_ntaps-i-1]);
 	return t;
       }
 
@@ -134,7 +134,7 @@ namespace gr {
 	d_ntaps = (int)taps.size();
 	d_taps = fft::malloc_complex(d_ntaps);
 	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[i] = gr_complex(taps[i],0);
+	  d_taps[d_ntaps-i-1] = gr_complex(taps[i],0);
 	}
       }
       
@@ -143,7 +143,7 @@ namespace gr {
       {
 	std::vector<float> t;
 	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[i].real());
+	  t.push_back(d_taps[d_ntaps-i-1].real());
 	return t;
       }
 
@@ -213,7 +213,7 @@ namespace gr {
 	d_ntaps = (int)taps.size();
 	d_taps = fft::malloc_complex(d_ntaps);
 	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[i] = taps[i];
+	  d_taps[d_ntaps-i-1] = taps[i];
 	}
       }
       
@@ -222,7 +222,7 @@ namespace gr {
       {
 	std::vector<gr_complex> t;
 	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[i]);
+	  t.push_back(d_taps[d_ntaps-i-1]);
 	return t;
       }
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2005,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,39 +19,43 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-
-/* @WARNING@ */
-
-#ifndef @GUARD_NAME@
-#define	@GUARD_NAME@
+#ifndef INCLUDED_FILTER_FFT_FILTER_CCC_IMPL_H
+#define INCLUDED_FILTER_FFT_FILTER_CCC_IMPL_H
 
 #include <filter/api.h>
-#include <filter/fir_filter.h>
-#include <filter/@BASE_NAME@.h>
+#include <filter/fft_filter.h>
+#include <filter/fft_filter_ccc.h>
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API @IMPL_NAME@ : public @BASE_NAME@
+    class FILTER_API fft_filter_ccc_impl : public fft_filter_ccc
     {
     private:
-      kernel::@BASE_NAME@ *d_fir;
+      int d_nsamples;
       bool d_updated;
+      kernel::fft_filter_ccc *d_filter;
+      std::vector<gr_complex> d_new_taps;
 
     public:
-      @IMPL_NAME@(int decimation, const std::vector<@TAP_TYPE@> &taps);
-
-      ~@IMPL_NAME@();
-
-      void set_taps(const std::vector<@TAP_TYPE@> &taps);
-      std::vector<@TAP_TYPE@> taps() const;
+      fft_filter_ccc_impl(int decimation,
+			     const std::vector<gr_complex> &taps,
+			     int nthreads=1);
       
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      ~fft_filter_ccc_impl();
+
+      void set_taps(const std::vector<gr_complex> &taps);
+      std::vector<gr_complex> taps() const;
+
+      void set_nthreads(int n);
+      int nthreads() const;
+      
+      int work (int noutput_items,
+		gr_vector_const_void_star &input_items,
+		gr_vector_void_star &output_items);
     };
 
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* INCLUDED_FILTER_FFT_FILTER_CCC_IMPL_H */

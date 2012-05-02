@@ -17,7 +17,7 @@ except ImportError:
     print "Error: could not import pylab (http://matplotlib.sourceforge.net/)"
     sys.exit(1)
 
-class example_fir_filter_fff(gr.top_block):
+class example_fir_filter_ccc(gr.top_block):
     def __init__(self, N, fs, bw, tw, atten, D):
         gr.top_block.__init__(self)
 
@@ -30,15 +30,16 @@ class example_fir_filter_fff(gr.top_block):
         taps = gr.firdes.low_pass_2(1, self._fs, self._bw, self._tw, self._at)
         print "Num. Taps: ", len(taps)
 
-        self.src  = gr.noise_source_f(gr.GR_GAUSSIAN, 1)
-        self.head = gr.head(gr.sizeof_float, self._nsamps)
+        self.src  = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.head = gr.head(gr.sizeof_gr_complex, self._nsamps)
 
-        self.filt0 = filter.fir_filter_fff(self._decim, taps)
-        self.filt1 = gr.fir_filter_fff(self._decim, taps)
+        self.filt0 = filter.fir_filter_ccc(self._decim, taps)
+        self.filt1 = gr.fir_filter_ccc(self._decim, taps)
+        #self.filt1 = filter.fft_filter_ccc(self._decim, taps)
 
-        self.vsnk_src = gr.vector_sink_f()
-        self.vsnk_out = gr.vector_sink_f()
-        self.vsnk_gr = gr.vector_sink_f()
+        self.vsnk_src = gr.vector_sink_c()
+        self.vsnk_out = gr.vector_sink_c()
+        self.vsnk_gr = gr.vector_sink_c()
 
         self.connect(self.src, self.head, self.vsnk_src)
         self.connect(self.head, self.filt0, self.vsnk_out)
@@ -60,7 +61,7 @@ def main():
                       help="Decmation factor [default=%default]")
     (options, args) = parser.parse_args ()
 
-    put = example_fir_filter_fff(options.nsamples,
+    put = example_fir_filter_ccc(options.nsamples,
                                  options.samplerate,
                                  options.bandwidth,
                                  options.transition,

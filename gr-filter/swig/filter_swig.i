@@ -31,12 +31,15 @@
 #include "filter/fir_filter_fff.h"
 #include "filter/fir_filter_ccf.h"
 #include "filter/fir_filter_ccc.h"
+#include "filter/fft_filter_ccc.h"
 %}
 
 %include "filter/fir_filter_fff.h"
 %include "filter/fir_filter_ccf.h"
 %include "filter/fir_filter_ccc.h"
+%include "filter/fft_filter_ccc.h"
 
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccc);
+GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_ccc);
