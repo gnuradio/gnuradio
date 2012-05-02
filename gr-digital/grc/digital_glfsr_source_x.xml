@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##GLFSR Source
+###################################################
+ -->
+<block>
+	<name>GLFSR Source</name>
+	<key>digital_glfsr_source_x</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.glfsr_source_$(type.fcn)($degree, $repeat, $mask, $seed)</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:b</opt>
+		</option>
+	</param>
+	<param>
+		<name>Degree</name>
+		<key>degree</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Repeat</name>
+		<key>repeat</key>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Mask</name>
+		<key>mask</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Seed</name>
+		<key>seed</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

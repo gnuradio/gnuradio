@@ -176,11 +176,11 @@ def is_complex (code3):
         return '0'
 
 
-def standard_dict (name, code3):
+def standard_dict (name, code3, package='gr'):
     d = {}
     d['NAME'] = name
     d['GUARD_NAME'] = 'INCLUDED_%s_H' % name.upper ()
-    d['BASE_NAME'] = re.sub ('^gr_', '', name)
+    d['BASE_NAME'] = re.sub ('^' + package + '_', '', name)
     d['SPTR_NAME'] = '%s_sptr' % name
     d['WARNING'] = 'WARNING: this file is machine generated.  Edits will be over written'
     d['COPYRIGHT'] = copyright

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Framer Sink 1
+###################################################
+ -->
+<block>
+	<name>Framer Sink 1</name>
+	<key>digital_framer_sink_1</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.framer_sink_1($target_queue)</make>
+	<param>
+		<name>Target Message Queue</name>
+		<key>target_queue</key>
+		<type>raw</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+</block>
