@@ -19,6 +19,7 @@
 
 install(FILES
     filter_block_tree.xml
+    fft_filter_xxx.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "filter_python"
 )

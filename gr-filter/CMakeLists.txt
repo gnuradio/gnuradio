@@ -42,6 +42,8 @@ GR_SET_GLOBAL(GR_FILTER_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
+SET(GR_PKG_FILTER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/filter)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -91,7 +93,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(python)
     add_subdirectory(grc)
 endif(ENABLE_PYTHON)
-#add_subdirectory(examples)
+add_subdirectory(examples)
 add_subdirectory(doc)
 
 ########################################################################

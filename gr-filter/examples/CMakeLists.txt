@@ -22,6 +22,8 @@ include(GrPython)
 # Base stuff
 GR_PYTHON_INSTALL(PROGRAMS
     fir_filter_fff.py
-    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}
+    fir_filter_ccc.py
+    fft_filter_ccc.py
+    DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
     COMPONENT "filter_python"
 )

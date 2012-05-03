@@ -30,5 +30,6 @@
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
 		<name>Filters</name>
+		<block>fft_filter_xxx</block>
 	</cat>
 </cat>
