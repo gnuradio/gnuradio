@@ -78,7 +78,7 @@ class bert_receiver(gr.hier_block2):
         self.connect(self._demod.time_recov, self._snr_probe)
         
         # Descramble BERT sequence.  A channel error will create 3 incorrect bits
-        self._descrambler = gr.descrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit descrambler
+        self._descrambler = digital.descrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit descrambler
 
         # Measure BER by the density of 0s in the stream
         self._ber = gr.probe_density_b(1.0/self._symbol_rate)
