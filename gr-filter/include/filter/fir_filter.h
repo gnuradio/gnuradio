@@ -54,6 +54,7 @@ namespace gr {
       private:
 	unsigned int d_ntaps;
 	float *d_taps;
+	float *d_aligned_taps[4];
       };
 
       /**************************************************************/

@@ -57,6 +57,12 @@ namespace gr {
 	for(unsigned int i = 0; i < d_ntaps; i++) {
 	  d_taps[d_ntaps-i-1] = taps[i];
 	}
+
+	for(int i = 0; i < 4; i++) {
+	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+3);
+	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+3));
+	  memcpy(&d_aligned_taps[i][i], d_taps, sizeof(float)*(d_ntaps));
+	}
       }
       
       std::vector<float>
@@ -78,6 +84,9 @@ namespace gr {
       fir_filter_fff::filter(const float input[])
       {
 	float output;
+
+	//const float *ar = (float*)((unsigned long)input & ~15);
+
 	volk_32f_x2_dot_prod_32f_u(&output, input, d_taps, d_ntaps);
 	return output;
       }
