@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Differential Decoder
+###################################################
+ -->
+<block>
+	<name>Differential Decoder</name>
+	<key>digital_diff_decoder_bb</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.diff_decoder_bb($modulus)</make>
+	<param>
+		<name>Modulus</name>
+		<key>modulus</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>
