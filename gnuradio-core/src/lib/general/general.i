@@ -129,7 +129,6 @@
 #include <gr_rail_ff.h>
 #include <gr_stretch_ff.h>
 #include <gr_copy.h>
-#include <gr_additive_scrambler_bb.h>
 #include <complex_vec_test.h>
 #include <gr_annotator_alltoall.h>
 #include <gr_annotator_1to1.h>
@@ -246,7 +245,6 @@
 %include "gr_rail_ff.i"
 %include "gr_stretch_ff.i"
 %include "gr_copy.i"
-%include "gr_additive_scrambler_bb.i"
 %include "complex_vec_test.i"
 %include "gr_annotator_alltoall.i"
 %include "gr_annotator_1to1.i"

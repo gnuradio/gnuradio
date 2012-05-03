@@ -225,7 +225,6 @@
 		<name>Line Coding</name>
 		<block>gr_scrambler_bb</block>
 		<block>gr_descrambler_bb</block>
-		<block>gr_additive_scrambler_bb</block>
 	</cat>
 	<cat>
 		<name>Probes</name>
