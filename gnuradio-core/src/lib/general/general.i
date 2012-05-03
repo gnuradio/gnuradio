@@ -51,7 +51,6 @@
 #include <gr_uchar_to_float.h>
 #include <gr_frequency_modulator_fc.h>
 #include <gr_phase_modulator_fc.h>
-#include <gr_bytes_to_syms.h>
 #include <gr_simple_correlator.h>
 #include <gr_simple_framer.h>
 #include <gr_align_on_samplenumbers_ss.h>
@@ -167,7 +166,6 @@
 %include "gr_uchar_to_float.i"
 %include "gr_frequency_modulator_fc.i"
 %include "gr_phase_modulator_fc.i"
-%include "gr_bytes_to_syms.i"
 %include "gr_simple_correlator.i"
 %include "gr_simple_framer.i"
 %include "gr_align_on_samplenumbers_ss.i"
