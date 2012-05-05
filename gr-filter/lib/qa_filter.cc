@@ -1,4 +1,3 @@
-/* -*- c++ -*- */
 /*
  * Copyright 2012 Free Software Foundation, Inc.
  *
@@ -20,31 +19,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define FILTER_API
+/*
+ * This class gathers together all the test cases for the gr-filter
+ * directory into a single test suite.  As you create new test cases,
+ * add them here.
+ */
 
-%include "gnuradio.i"
+#include <qa_filter.h>
+#include <qa_firdes.h>
 
-//load generated python docstrings
-%include "gr_filter_swig_doc.i"
+CppUnit::TestSuite *
+qa_gr_filter::suite ()
+{
+  CppUnit::TestSuite *s = new CppUnit::TestSuite ("gr-filter");
 
-%{
-#include "filter/firdes.h"
-#include "filter/fir_filter_fff.h"
-#include "filter/fir_filter_ccf.h"
-#include "filter/fir_filter_ccc.h"
-#include "filter/fft_filter_ccc.h"
-#include "filter/fft_filter_fff.h"
-%}
+  s->addTest(gr::filter::qa_firdes::suite ());
 
-%include "filter/firdes.h"
-%include "filter/fir_filter_fff.h"
-%include "filter/fir_filter_ccf.h"
-%include "filter/fir_filter_ccc.h"
-%include "filter/fft_filter_ccc.h"
-%include "filter/fft_filter_fff.h"
-
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fff);
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccf);
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccc);
-GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_ccc);
-GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_fff);
+  return s;
+}

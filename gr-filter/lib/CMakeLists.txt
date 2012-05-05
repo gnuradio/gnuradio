@@ -107,6 +107,7 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 list(APPEND filter_sources
   fir_filter.cc
   fft_filter.cc
+  firdes_impl.cc
   ${generated_sources}
   fft_filter_ccc_impl.cc
   fft_filter_fff_impl.cc
@@ -124,3 +125,24 @@ add_library(gnuradio-filter SHARED ${filter_sources})
 target_link_libraries(gnuradio-filter ${filter_libs})
 GR_LIBRARY_FOO(gnuradio-filter RUNTIME_COMPONENT "filter_runtime" DEVEL_COMPONENT "filter_devel")
 add_dependencies(gnuradio-filter gnuradio-fft filter_generated_includes filter_generated_swigs)
+
+
+########################################################################
+# QA C++ Code for gr-filter
+########################################################################
+list(APPEND test_gr_filter_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_filter.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_filter.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_firdes.cc
+)
+
+add_executable(test-gr-filter ${test_gr_filter_sources})
+target_link_libraries(
+  test-gr-filter
+  gnuradio-core
+  gnuradio-filter 
+  ${CPPUNIT_LIBRARIES}
+  ${Boost_LIBRARIES}
+)
+
+GR_ADD_TEST(test_gr_filter)

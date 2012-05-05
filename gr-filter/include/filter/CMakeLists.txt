@@ -75,6 +75,7 @@ add_custom_target(filter_generated_includes DEPENDS
 ########################################################################
 install(FILES
     api.h
+    firdes.h
     fir_filter.h
     fft_filter.h
     ${generated_includes}

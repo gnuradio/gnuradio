@@ -20,31 +20,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define FILTER_API
+#include <cppunit/TextTestRunner.h>
+#include <cppunit/XmlOutputter.h>
 
-%include "gnuradio.i"
+#include <gr_unittests.h>
+#include <qa_filter.h>
 
-//load generated python docstrings
-%include "gr_filter_swig_doc.i"
+int
+main (int argc, char **argv)
+{
+  CppUnit::TextTestRunner runner;
+  std::ofstream xmlfile(get_unittest_path("gr_filter.xml").c_str());
+  CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
-%{
-#include "filter/firdes.h"
-#include "filter/fir_filter_fff.h"
-#include "filter/fir_filter_ccf.h"
-#include "filter/fir_filter_ccc.h"
-#include "filter/fft_filter_ccc.h"
-#include "filter/fft_filter_fff.h"
-%}
+  runner.addTest(qa_gr_filter::suite());
+  runner.setOutputter(xmlout);
 
-%include "filter/firdes.h"
-%include "filter/fir_filter_fff.h"
-%include "filter/fir_filter_ccf.h"
-%include "filter/fir_filter_ccc.h"
-%include "filter/fft_filter_ccc.h"
-%include "filter/fft_filter_fff.h"
+  bool was_successful = runner.run("", false);
 
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fff);
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccf);
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccc);
-GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_ccc);
-GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_fff);
+  return was_successful ? 0 : 1;
+}

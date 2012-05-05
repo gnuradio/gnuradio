@@ -20,31 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define FILTER_API
+#ifndef _QA_GR_FILTER_H_
+#define _QA_GR_FILTER_H_
 
-%include "gnuradio.i"
+#include <gruel/attributes.h>
+#include <cppunit/TestSuite.h>
 
-//load generated python docstrings
-%include "gr_filter_swig_doc.i"
+//! collect all the tests for the gr-filter directory
 
-%{
-#include "filter/firdes.h"
-#include "filter/fir_filter_fff.h"
-#include "filter/fir_filter_ccf.h"
-#include "filter/fir_filter_ccc.h"
-#include "filter/fft_filter_ccc.h"
-#include "filter/fft_filter_fff.h"
-%}
+class __GR_ATTR_EXPORT qa_gr_filter {
+ public:
+  //! return suite of tests for all of gr-filter directory
+  static CppUnit::TestSuite *suite ();
+};
 
-%include "filter/firdes.h"
-%include "filter/fir_filter_fff.h"
-%include "filter/fir_filter_ccf.h"
-%include "filter/fir_filter_ccc.h"
-%include "filter/fft_filter_ccc.h"
-%include "filter/fft_filter_fff.h"
 
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fff);
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccf);
-GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccc);
-GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_ccc);
-GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_fff);
+#endif /* _QA_GR_FILTER_H_ */
