@@ -30,7 +30,6 @@
 #include <math.h>
 #include <assert.h>
 #include <stdexcept>
-#include <gr_firdes.h>
 
 namespace gr {
   namespace filter {

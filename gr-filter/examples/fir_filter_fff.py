@@ -27,7 +27,7 @@ class example_fir_filter_fff(gr.top_block):
         self._tw = tw
         self._at = atten
         self._decim = D
-        taps = gr.firdes.low_pass_2(1, self._fs, self._bw, self._tw, self._at)
+        taps = filter.firdes.low_pass_2(1, self._fs, self._bw, self._tw, self._at)
         print "Num. Taps: ", len(taps)
 
         self.src  = gr.noise_source_f(gr.GR_GAUSSIAN, 1)

@@ -28,9 +28,9 @@ class example_fft_filter_ccc(gr.top_block):
         self._tw = tw
         self._at = atten
         self._decim = D
-        taps = gr.firdes.complex_band_pass_2(1, self._fs,
-                                             self._bw0, self._bw1,
-                                             self._tw, self._at)
+        taps = filter.firdes.complex_band_pass_2(1, self._fs,
+                                                 self._bw0, self._bw1,
+                                                 self._tw, self._at)
         print "Num. Taps: ", len(taps)
 
         self.src  = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
