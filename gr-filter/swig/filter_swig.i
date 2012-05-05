@@ -29,6 +29,7 @@
 
 %{
 #include "filter/firdes.h"
+#include "filter/pm_remez.h"
 #include "filter/fir_filter_fff.h"
 #include "filter/fir_filter_ccf.h"
 #include "filter/fir_filter_ccc.h"
@@ -37,6 +38,7 @@
 %}
 
 %include "filter/firdes.h"
+%include "filter/pm_remez.h"
 %include "filter/fir_filter_fff.h"
 %include "filter/fir_filter_ccf.h"
 %include "filter/fir_filter_ccc.h"

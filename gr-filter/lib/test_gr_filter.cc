@@ -25,6 +25,7 @@
 
 #include <gr_unittests.h>
 #include <qa_filter.h>
+#include <iostream>
 
 int
 main (int argc, char **argv)

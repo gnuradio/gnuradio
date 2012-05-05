@@ -107,7 +107,8 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 list(APPEND filter_sources
   fir_filter.cc
   fft_filter.cc
-  firdes_impl.cc
+  firdes.cc
+  pm_remez.cc
   ${generated_sources}
   fft_filter_ccc_impl.cc
   fft_filter_fff_impl.cc
