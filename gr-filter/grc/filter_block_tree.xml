@@ -31,5 +31,6 @@
 	<cat>
 		<name>Filters</name>
 		<block>fft_filter_xxx</block>
+		<block>hilbert_fc</block>
 	</cat>
 </cat>
