@@ -146,4 +146,4 @@ target_link_libraries(
   ${Boost_LIBRARIES}
 )
 
-GR_ADD_TEST(test_gr_filter)
+GR_ADD_TEST(test_gr_filter test-gr-filter)
