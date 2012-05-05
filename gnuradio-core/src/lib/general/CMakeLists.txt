@@ -84,7 +84,6 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_int.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_glfsr.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_int_to_float.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_short_to_float.cc
@@ -104,7 +103,6 @@ list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_nco.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_vco.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_math.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gri_lfsr.cc
 )
 
 ########################################################################
@@ -143,7 +141,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_glfsr.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h
@@ -218,8 +215,6 @@ set(gr_core_general_triple_threats
     gr_fmdet_cf
     gr_frequency_modulator_fc
     gr_framer_sink_1
-    gr_glfsr_source_b
-    gr_glfsr_source_f
     gr_head
     gr_int_to_float
     gr_interleave
@@ -245,7 +240,6 @@ set(gr_core_general_triple_threats
     gr_pll_carriertracking_cc
     gr_pll_freqdet_cf
     gr_pll_refout_cc
-    gr_pn_correlator_cc
     gr_prefs
     gr_probe_avg_mag_sqrd_c
     gr_probe_avg_mag_sqrd_cf
