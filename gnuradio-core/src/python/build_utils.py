@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2009 Free Software Foundation, Inc.
+# Copyright 2004,2009,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -179,7 +179,9 @@ def is_complex (code3):
 def standard_dict (name, code3, package='gr'):
     d = {}
     d['NAME'] = name
-    d['GUARD_NAME'] = 'INCLUDED_%s_H' % name.upper ()
+    d['NAME_IMPL'] = name+'_impl'
+    d['GUARD_NAME'] = 'INCLUDED_%s_%s_H' % (package.upper(), name.upper())
+    d['GUARD_NAME_IMPL'] = 'INCLUDED_%s_%s_IMPL_H' % (package.upper(), name.upper())
     d['BASE_NAME'] = re.sub ('^' + package + '_', '', name)
     d['SPTR_NAME'] = '%s_sptr' % name
     d['WARNING'] = 'WARNING: this file is machine generated.  Edits will be over written'

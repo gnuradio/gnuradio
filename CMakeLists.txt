@@ -245,6 +245,7 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
+add_subdirectory(gr-blocks)
 
 #finalize cpack after subdirs processed
 include(GrPackage)
