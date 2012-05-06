@@ -32,6 +32,7 @@
 #include "filter/pm_remez.h"
 #include "filter/dc_blocker_cc.h"
 #include "filter/dc_blocker_ff.h"
+#include "filter/filter_delay_fc.h"
 #include "filter/fir_filter_fff.h"
 #include "filter/fir_filter_ccf.h"
 #include "filter/fir_filter_ccc.h"
@@ -44,6 +45,7 @@
 %include "filter/pm_remez.h"
 %include "filter/dc_blocker_cc.h"
 %include "filter/dc_blocker_ff.h"
+%include "filter/filter_delay_fc.h"
 %include "filter/fir_filter_fff.h"
 %include "filter/fir_filter_ccf.h"
 %include "filter/fir_filter_ccc.h"
@@ -53,6 +55,7 @@
 
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_ff);
+GR_SWIG_BLOCK_MAGIC2(filter, filter_delay_fc);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccc);

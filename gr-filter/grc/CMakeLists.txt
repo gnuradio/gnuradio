@@ -21,6 +21,7 @@ install(FILES
     filter_block_tree.xml
     dc_blocker_xx.xml
     fft_filter_xxx.xml
+    filter_delay_fc.xml
     hilbert_fc.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "filter_python"
