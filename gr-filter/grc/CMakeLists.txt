@@ -19,6 +19,7 @@
 
 install(FILES
     filter_block_tree.xml
+    dc_blocker_xx.xml
     fft_filter_xxx.xml
     hilbert_fc.xml
     DESTINATION ${GRC_BLOCKS_DIR}

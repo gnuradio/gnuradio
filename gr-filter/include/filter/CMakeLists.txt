@@ -80,7 +80,10 @@ install(FILES
     fir_filter.h
     fft_filter.h
     ${generated_includes}
+    dc_blocker_cc.h
+    dc_blocker_ff.h
     fft_filter_ccc.h
+    fft_filter_fff.h
     hilbert_fc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
     COMPONENT "fft_devel"

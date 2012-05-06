@@ -110,6 +110,8 @@ list(APPEND filter_sources
   firdes.cc
   pm_remez.cc
   ${generated_sources}
+  dc_blocker_cc_impl.cc
+  dc_blocker_ff_impl.cc
   fft_filter_ccc_impl.cc
   fft_filter_fff_impl.cc
   hilbert_fc_impl.cc

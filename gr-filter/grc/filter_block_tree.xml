@@ -30,6 +30,7 @@
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
 		<name>Filters</name>
+		<block>dc_blocker_xx</block>
 		<block>fft_filter_xxx</block>
 		<block>hilbert_fc</block>
 	</cat>
