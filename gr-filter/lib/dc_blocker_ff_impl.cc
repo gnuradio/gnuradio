@@ -61,10 +61,10 @@ namespace gr {
       return gnuradio::get_initial_sptr(new dc_blocker_ff_impl(D, long_form));
     }
 
-    dc_blocker_ff_impl::dc_blocker_ff_impl (int D, bool long_form)
-      : gr_sync_block ("dc_blocker_ff",
-		       gr_make_io_signature (1, 1, sizeof(float)),
-		       gr_make_io_signature (1, 1, sizeof(float))),
+    dc_blocker_ff_impl::dc_blocker_ff_impl(int D, bool long_form)
+      : gr_sync_block("dc_blocker_ff",
+		      gr_make_io_signature (1, 1, sizeof(float)),
+		      gr_make_io_signature (1, 1, sizeof(float))),
 	d_length(D), d_long_form(long_form)
     {
       if(d_long_form) {
@@ -95,7 +95,7 @@ namespace gr {
     }
 
     int
-    dc_blocker_ff_impl::get_group_delay()
+    dc_blocker_ff_impl::group_delay()
     {
       if(d_long_form)
 	return (2*d_length-2);

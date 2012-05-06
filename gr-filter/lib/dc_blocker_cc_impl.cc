@@ -64,9 +64,9 @@ namespace gr {
 
 
     dc_blocker_cc_impl::dc_blocker_cc_impl(int D, bool long_form)
-      : gr_sync_block ("dc_blocker_cc",
-		       gr_make_io_signature (1, 1, sizeof(gr_complex)),
-		       gr_make_io_signature (1, 1, sizeof(gr_complex))),
+      : gr_sync_block("dc_blocker_cc",
+		      gr_make_io_signature (1, 1, sizeof(gr_complex)),
+		      gr_make_io_signature (1, 1, sizeof(gr_complex))),
 	d_length(D), d_long_form(long_form)
     {
       if(d_long_form) {
@@ -97,7 +97,7 @@ namespace gr {
     }
 
     int
-    dc_blocker_cc_impl::get_group_delay()
+    dc_blocker_cc_impl::group_delay()
     {
       if(d_long_form)
 	return (2*d_length-2);

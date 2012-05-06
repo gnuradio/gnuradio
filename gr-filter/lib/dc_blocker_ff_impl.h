@@ -61,7 +61,7 @@ namespace gr {
 
       ~dc_blocker_ff_impl();
 
-      int get_group_delay();
+      int group_delay();
       
       //int set_length(int D);
       

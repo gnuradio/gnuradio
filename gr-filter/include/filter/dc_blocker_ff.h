@@ -25,7 +25,6 @@
 
 #include <filter/api.h>
 #include <gr_sync_block.h>
-#include <deque>
 
 namespace gr {
   namespace filter {
@@ -38,7 +37,7 @@ namespace gr {
       typedef boost::shared_ptr<dc_blocker_ff> sptr;
 
       /*!
-       * \class gr_dc_blocker_ff
+       * \class dc_blocker_ff
        * \brief a computationally efficient controllable DC blocker
        *
        * \ingroup filter_blk
@@ -67,6 +66,8 @@ namespace gr {
        * \param long_form  (bool) whether to use long (true, default) or short form
        */
       static FILTER_API sptr make(int D, bool long_form=true);
+
+      virtual int group_delay() = 0;
     };
 
   } /* namespace filter */
