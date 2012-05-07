@@ -78,6 +78,7 @@ install(FILES
     firdes.h
     pm_remez.h
     fir_filter.h
+    fir_filter_with_buffer.h
     fft_filter.h
     ${generated_includes}
     dc_blocker_cc.h

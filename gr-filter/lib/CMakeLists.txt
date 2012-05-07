@@ -106,6 +106,7 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 ########################################################################
 list(APPEND filter_sources
   fir_filter.cc
+  fir_filter_with_buffer.cc
   fft_filter.cc
   firdes.cc
   pm_remez.cc
