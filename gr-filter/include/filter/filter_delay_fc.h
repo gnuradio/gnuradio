@@ -33,7 +33,7 @@ namespace gr {
     {
     public:
 
-      // gr::foo::filter_delay_fc::sptr
+      // gr::filter::filter_delay_fc::sptr
       typedef boost::shared_ptr<filter_delay_fc> sptr;
 
       /*!
