@@ -76,10 +76,11 @@ add_custom_target(filter_generated_includes DEPENDS
 install(FILES
     api.h
     firdes.h
-    pm_remez.h
     fir_filter.h
     fir_filter_with_buffer.h
     fft_filter.h
+    pm_remez.h
+    polyphase_filterbank.h
     ${generated_includes}
     dc_blocker_cc.h
     dc_blocker_ff.h

@@ -110,6 +110,7 @@ list(APPEND filter_sources
   fft_filter.cc
   firdes.cc
   pm_remez.cc
+  polyphase_filterbank.cc
   ${generated_sources}
   dc_blocker_cc_impl.cc
   dc_blocker_ff_impl.cc

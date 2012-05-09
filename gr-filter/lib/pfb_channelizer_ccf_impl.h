@@ -24,30 +24,26 @@
 #define	INCLUDED_FILTER_PFB_CHANNELIZER_CCF_IMPL_H
 
 #include <filter/pfb_channelizer_ccf.h>
+#include <filter/polyphase_filterbank.h>
 #include <filter/fir_filter.h>
 #include <fft/fft.h>
 
 namespace gr {
   namespace filter {
     
-    class FILTER_API pfb_channelizer_ccf_impl : public pfb_channelizer_ccf
+    class FILTER_API pfb_channelizer_ccf_impl : public pfb_channelizer_ccf, kernel::polyphase_filterbank
     {
     private:
-      bool		       d_updated;
-      unsigned int             d_numchans;
-      float                    d_oversample_rate;
-      std::vector<kernel::fir_filter_ccf*> d_filters;
-      std::vector< std::vector<float> > d_taps;
-      unsigned int             d_taps_per_filter;
-      fft::fft_complex        *d_fft;
-      int                     *d_idxlut;
-      int                      d_rate_ratio;
-      int                      d_output_multiple;
-      std::vector<int>         d_channel_map;
-      gruel::mutex             d_mutex; // mutex to protect set/work access
+      bool	       d_updated;
+      float            d_oversample_rate;
+      int             *d_idxlut;
+      int              d_rate_ratio;
+      int              d_output_multiple;
+      std::vector<int> d_channel_map;
+      gruel::mutex     d_mutex; // mutex to protect set/work access
 
     public:
-      pfb_channelizer_ccf_impl(unsigned int numchans,
+      pfb_channelizer_ccf_impl(unsigned int nfilts,
 			       const std::vector<float> &taps,
 			       float oversample_rate);
 

@@ -26,26 +26,26 @@
 
 #include "pfb_channelizer_ccf_impl.h"
 #include <gr_io_signature.h>
-#include <cstdio>
 
 namespace gr {
   namespace filter {
     
-    pfb_channelizer_ccf::sptr pfb_channelizer_ccf::make(unsigned int numchans,
+    pfb_channelizer_ccf::sptr pfb_channelizer_ccf::make(unsigned int nfilts,
 							const std::vector<float> &taps,
 							float oversample_rate)
     {
-      return gnuradio::get_initial_sptr(new pfb_channelizer_ccf_impl(numchans, taps,
+      return gnuradio::get_initial_sptr(new pfb_channelizer_ccf_impl(nfilts, taps,
 								     oversample_rate));
     }
 
-    pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int numchans,
+    pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,
 						       const std::vector<float> &taps,
 						       float oversample_rate)
       : gr_block("pfb_channelizer_ccf",
-		 gr_make_io_signature(numchans, numchans, sizeof(gr_complex)),
-		 gr_make_io_signature(1, numchans, sizeof(gr_complex))),
-	d_updated(false), d_numchans(numchans), d_oversample_rate(oversample_rate)
+		 gr_make_io_signature(nfilts, nfilts, sizeof(gr_complex)),
+		 gr_make_io_signature(1, nfilts, sizeof(gr_complex))),
+	polyphase_filterbank(nfilts, taps),
+	d_updated(false), d_oversample_rate(oversample_rate)
     {
       // The over sampling rate must be rationally related to the number of channels
       // in that it must be N/i for i in [1,N], which gives an outputsample rate
@@ -53,110 +53,62 @@ namespace gr {
       // This tests the specified input sample rate to see if it conforms to this
       // requirement within a few significant figures.
       double intp = 0;
-      double fltp = modf(numchans / oversample_rate, &intp);
+      double fltp = modf(nfilts / oversample_rate, &intp);
       if(fltp != 0.0)
 	throw std::invalid_argument("pfb_channelizer: oversample rate must be N/i for i in [1, N]");
 
       set_relative_rate(1.0/intp);
 
-      d_filters = std::vector<kernel::fir_filter_ccf*>(d_numchans);
-      d_channel_map.resize(d_numchans);
-
-      // Create an FIR filter for each channel and zero out the taps
-      std::vector<float> vtaps(0, d_numchans);
-      for(unsigned int i = 0; i < d_numchans; i++) {
-	d_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
+      // Default channel map
+      d_channel_map.resize(d_nfilts);
+      for(unsigned int i = 0; i < d_nfilts; i++) {
 	d_channel_map[i] = i;
       }
-
-      // Now, actually set the filters' taps
-      set_taps(taps);
-
-      // Create the FFT to handle the output de-spinning of the channels
-      d_fft = new fft::fft_complex(d_numchans, false);
 
       // Although the filters change, we use this look up table
       // to set the index of the FFT input buffer, which equivalently
       // performs the FFT shift operation on every other turn.
-      d_rate_ratio = (int)rintf(d_numchans / d_oversample_rate);
-      d_idxlut = new int[d_numchans];
-      for(unsigned int i = 0; i < d_numchans; i++) {
-	d_idxlut[i] = d_numchans - ((i + d_rate_ratio) % d_numchans) - 1;
+      d_rate_ratio = (int)rintf(d_nfilts / d_oversample_rate);
+      d_idxlut = new int[d_nfilts];
+      for(unsigned int i = 0; i < d_nfilts; i++) {
+	d_idxlut[i] = d_nfilts - ((i + d_rate_ratio) % d_nfilts) - 1;
       }
 
       // Calculate the number of filtering rounds to do to evenly
       // align the input vectors with the output channels
       d_output_multiple = 1;
-      while((d_output_multiple * d_rate_ratio) % d_numchans != 0)
+      while((d_output_multiple * d_rate_ratio) % d_nfilts != 0)
 	d_output_multiple++;
       set_output_multiple(d_output_multiple);
+
+      set_history (d_taps_per_filter+1);
     }
 
     pfb_channelizer_ccf_impl::~pfb_channelizer_ccf_impl()
     {
       delete [] d_idxlut;
-      delete d_fft;
-
-      for(unsigned int i = 0; i < d_numchans; i++) {
-	delete d_filters[i];
-      }
     }
 
     void
-    pfb_channelizer_ccf_impl::set_taps (const std::vector<float> &taps)
+    pfb_channelizer_ccf_impl::set_taps(const std::vector<float> &taps)
     {
       gruel::scoped_lock guard(d_mutex);
-      unsigned int i,j;
 
-      unsigned int ntaps = taps.size();
-      d_taps_per_filter = (unsigned int)ceil((double)ntaps/(double)d_numchans);
-
-      // Create d_numchan vectors to store each channel's taps
-      d_taps.resize(d_numchans);
-
-      // Make a vector of the taps plus fill it out with 0's to fill
-      // each polyphase filter with exactly d_taps_per_filter
-      std::vector<float> tmp_taps;
-      tmp_taps = taps;
-      while((float)(tmp_taps.size()) < d_numchans*d_taps_per_filter) {
-	tmp_taps.push_back(0.0);
-      }
-
-      // Partition the filter
-      for(i = 0; i < d_numchans; i++) {
-	// Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
-	d_taps[i] = std::vector<float>(d_taps_per_filter, 0);
-	for(j = 0; j < d_taps_per_filter; j++) {
-	  d_taps[i][j] = tmp_taps[i + j*d_numchans];  // add taps to channels in reverse order
-	}
-
-	// Build a filter for each channel and add it's taps to it
-	d_filters[i]->set_taps(d_taps[i]);
-      }
-
-      // Set the history to ensure enough input items for each filter
+      polyphase_filterbank::set_taps(taps);
       set_history (d_taps_per_filter+1);
-
       d_updated = true;
     }
 
     void
     pfb_channelizer_ccf_impl::print_taps()
     {
-      unsigned int i, j;
-      for(i = 0; i < d_numchans; i++) {
-	printf("filter[%d]: [", i);
-	for(j = 0; j < d_taps_per_filter; j++) {
-	  printf(" %.4e", d_taps[i][j]);
-	}
-	printf("]\n\n");
-      }
+      polyphase_filterbank::print_taps();
     }
 
-    std::vector< std::vector<float> >
+    std::vector<std::vector<float> >
     pfb_channelizer_ccf_impl::taps() const
     {
-      return d_taps;
+      return polyphase_filterbank::taps();
     }
 
     void
@@ -167,7 +119,7 @@ namespace gr {
       if(map.size() > 0) {
 	unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
 	unsigned int min = (unsigned int)*std::min_element(map.begin(), map.end());
-	if((max >= d_numchans) || (min < 0)) {
+	if((max >= d_nfilts) || (min < 0)) {
 	  throw std::invalid_argument("pfb_channelizer_ccf_impl::set_channel_map: map range out of bounds.\n");
 	}
 	d_channel_map = map;
@@ -202,7 +154,7 @@ namespace gr {
       int toconsume = (int)rintf(noutput_items/d_oversample_rate);
       while(n <= toconsume) {
 	j = 0;
-	i = (i + d_rate_ratio) % d_numchans;
+	i = (i + d_rate_ratio) % d_nfilts;
 	last = i;
 	while(i >= 0) {
 	  in = (gr_complex*)input_items[j];
@@ -211,7 +163,7 @@ namespace gr {
 	  i--;
 	}
 
-	i = d_numchans-1;
+	i = d_nfilts-1;
 	while(i > last) {
 	  in = (gr_complex*)input_items[j];
 	  d_fft->get_inbuf()[d_idxlut[j]] = d_filters[i]->filter(&in[n-1]);
@@ -219,7 +171,7 @@ namespace gr {
 	  i--;
 	}
 
-	n += (i+d_rate_ratio) >= (int)d_numchans;
+	n += (i+d_rate_ratio) >= (int)d_nfilts;
 
 	// despin through FFT
 	d_fft->execute();
