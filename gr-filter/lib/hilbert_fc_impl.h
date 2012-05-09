@@ -25,7 +25,6 @@
 
 #include <filter/hilbert_fc.h>
 #include <filter/fir_filter.h>
-#include <gr_io_signature.h>
 #include <gr_types.h>
 
 namespace gr {

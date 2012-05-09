@@ -87,6 +87,7 @@ install(FILES
     fft_filter_ccc.h
     fft_filter_fff.h
     hilbert_fc.h
+    pfb_channelizer_ccf.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
     COMPONENT "fft_devel"
 )

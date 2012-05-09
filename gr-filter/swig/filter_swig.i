@@ -39,6 +39,7 @@
 #include "filter/fft_filter_ccc.h"
 #include "filter/fft_filter_fff.h"
 #include "filter/hilbert_fc.h"
+#include "filter/pfb_channelizer_ccf.h"
 %}
 
 %include "filter/firdes.h"
@@ -52,6 +53,7 @@
 %include "filter/fft_filter_ccc.h"
 %include "filter/fft_filter_fff.h"
 %include "filter/hilbert_fc.h"
+%include "filter/pfb_channelizer_ccf.h"
 
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_ff);
@@ -62,3 +64,4 @@ GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccc);
 GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_ccc);
 GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, hilbert_fc);
+GR_SWIG_BLOCK_MAGIC2(filter, pfb_channelizer_ccf);

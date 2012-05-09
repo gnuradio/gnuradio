@@ -117,6 +117,7 @@ list(APPEND filter_sources
   fft_filter_ccc_impl.cc
   fft_filter_fff_impl.cc
   hilbert_fc_impl.cc
+  pfb_channelizer_ccf_impl.cc
 )
 
 list(APPEND filter_libs

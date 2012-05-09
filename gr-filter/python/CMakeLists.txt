@@ -23,6 +23,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
+    pfb.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
     COMPONENT "filter_python"
 )

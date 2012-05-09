@@ -34,5 +34,6 @@
 		<block>fft_filter_xxx</block>
 		<block>filter_delay_fc</block>
 		<block>hilbert_fc</block>
+		<block>pfb_channelizer_ccf</block>
 	</cat>
 </cat>
