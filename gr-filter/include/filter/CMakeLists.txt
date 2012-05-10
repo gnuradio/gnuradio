@@ -75,6 +75,7 @@ add_custom_target(filter_generated_includes DEPENDS
 ########################################################################
 install(FILES
     api.h
+    adaptive_fir.h
     firdes.h
     fir_filter.h
     fir_filter_with_buffer.h
@@ -82,6 +83,7 @@ install(FILES
     pm_remez.h
     polyphase_filterbank.h
     ${generated_includes}
+    adaptive_fir_ccc.h
     dc_blocker_cc.h
     dc_blocker_ff.h
     filter_delay_fc.h
