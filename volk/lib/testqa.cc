@@ -101,3 +101,4 @@ VOLK_RUN_TESTS(volk_32fc_s32fc_multiply_32fc_a, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32fc_s32fc_multiply_32fc_u, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_s32f_multiply_32f_a, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_s32f_multiply_32f_u, 1e-4, 0, 20460, 1);
+VOLK_RUN_TESTS(volk_32fc_s32fc_rotatorpuppet_32fc_a, 1e-2, (lv_32fc_t)lv_cmake(0.953939201, 0.3), 20460, 1);

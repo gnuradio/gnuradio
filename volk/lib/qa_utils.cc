@@ -15,6 +15,7 @@
 #include <volk/volk_common.h>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits.hpp>
+#include <stdio.h>
 
 float uniform() {
   return 2.0 * ((float) rand() / RAND_MAX - 0.5);	// uniformly (-1, 1)
@@ -168,6 +169,7 @@ static void get_signatures_from_name(std::vector<volk_type_t> &inputsig,
     }
     //we don't need an output signature (some fn's operate on the input data, "in place"), but we do need at least one input!
     assert(inputsig.size() != 0);
+    
 }
 
 inline void run_cast_test1(volk_fn_1arg func, std::vector<void *> &buffs, unsigned int vlen, unsigned int iter, std::string arch) {
@@ -261,7 +263,8 @@ bool run_volk_tests(struct volk_func_desc desc,
                     lv_32fc_t scalar,
                     int vlen,
                     int iter,
-                    std::vector<std::string> *best_arch_vector = 0
+                    std::vector<std::string> *best_arch_vector = 0,
+                    std::string puppet_master_name = "NULL"
                    ) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
 
@@ -279,16 +282,16 @@ bool run_volk_tests(struct volk_func_desc desc,
     //now we have to get a function signature by parsing the name
     std::vector<volk_type_t> inputsig, outputsig;
     get_signatures_from_name(inputsig, outputsig, name);
-
+    
     //pull the input scalars into their own vector
     std::vector<volk_type_t> inputsc;
     for(size_t i=0; i<inputsig.size(); i++) {
         if(inputsig[i].is_scalar) {
             inputsc.push_back(inputsig[i]);
             inputsig.erase(inputsig.begin() + i);
+            i -= 1;
         }
     }
-
     //for(int i=0; i<inputsig.size(); i++) std::cout << "Input: " << inputsig[i].str << std::endl;
     //for(int i=0; i<outputsig.size(); i++) std::cout << "Output: " << outputsig[i].str << std::endl;
     std::vector<void *> inbuffs;
@@ -450,7 +453,12 @@ bool run_volk_tests(struct volk_func_desc desc,
 
     std::cout << "Best arch: " << best_arch << std::endl;
     if(best_arch_vector) {
-        best_arch_vector->push_back(name + std::string(" ") + best_arch);
+        if(puppet_master_name != "NULL") {
+            best_arch_vector->push_back(name + std::string(" ") + best_arch);
+        }
+        else {
+            best_arch_vector->push_back(puppet_master_name + std::string(" ") + best_arch);
+        }
     }
 
     return fail_global;
