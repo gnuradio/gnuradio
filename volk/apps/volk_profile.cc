@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
 
     //VOLK_PROFILE(volk_16i_x5_add_quad_16i_x4_a, 1e-4, 2046, 10000, &results);
     //VOLK_PROFILE(volk_16i_branch_4_state_8_a, 1e-4, 2046, 10000, &results);
+    VOLK_PUPPET_PROFILE(volk_32fc_s32fc_rotatorpuppet_32fc_a, volk_32fc_s32fc_x2_rotator_32fc_a, 1e-2, (lv_32fc_t)lv_cmake(.95393, .3), 20460, 10000, &results);
     VOLK_PROFILE(volk_16ic_s32f_deinterleave_real_32f_a, 1e-5, 32768.0, 204600, 10000, &results);
     VOLK_PROFILE(volk_16ic_deinterleave_real_8i_a, 0, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_16ic_deinterleave_16i_x2_a, 0, 0, 204600, 10000, &results);
