@@ -4,6 +4,7 @@
 
 #include <volk/volk_complex.h>
 #include <stdio.h>
+#include <stdlib.h>
 #define ROTATOR_RELOAD 512
 
 
@@ -21,9 +22,9 @@
 
 static inline void volk_32fc_s32fc_x2_rotator_32fc_a_generic(lv_32fc_t* outVector, const lv_32fc_t* inVector, const lv_32fc_t phase_inc, lv_32fc_t* phase, unsigned int num_points){    
     *phase = lv_cmake(1.0, 0.0);
-    int i = 0; 
+    unsigned int i = 0; 
     int j = 0;    
-    for(i = 0; i < (int)(num_points/ROTATOR_RELOAD); ++i) {
+    for(i = 0; i < (unsigned int)(num_points/ROTATOR_RELOAD); ++i) {
         for(j = 0; j < ROTATOR_RELOAD; ++j) {
             *outVector++ = *inVector++ * (*phase);
             (*phase) *= phase_inc;
@@ -49,7 +50,7 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_sse4_1(lv_32fc_t* outVector
     lv_32fc_t incr = 1;
     lv_32fc_t phase_Ptr[2] = {(*phase), (*phase)};
     
-    int i, j = 0;
+    unsigned int i, j = 0;
 
     for(i = 0; i < 2; ++i) {
         phase_Ptr[i] *= incr;
@@ -61,7 +62,7 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_sse4_1(lv_32fc_t* outVector
     printf("%f, %f\n", lv_creal(phase_Ptr[2]), lv_cimag(phase_Ptr[2]));
     printf("%f, %f\n", lv_creal(phase_Ptr[3]), lv_cimag(phase_Ptr[3]));
     printf("incr: %f, %f\n", lv_creal(incr), lv_cimag(incr));*/
-    __m128 aVal, phase_Val, inc_Val, cVal, yl, yh, tmp1, tmp2, z, ylp, yhp, tmp1p, tmp2p;
+    __m128 aVal, phase_Val, inc_Val, yl, yh, tmp1, tmp2, z, ylp, yhp, tmp1p, tmp2p;
     
     phase_Val = _mm_loadu_ps((float*)phase_Ptr);
     inc_Val = _mm_set_ps(lv_cimag(incr), lv_creal(incr),lv_cimag(incr), lv_creal(incr));
@@ -69,7 +70,7 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_sse4_1(lv_32fc_t* outVector
     const unsigned int halfPoints = num_points / 2;
 
     
-    for(i = 0; i < (int)(halfPoints/ROTATOR_RELOAD); i++) {
+    for(i = 0; i < (unsigned int)(halfPoints/ROTATOR_RELOAD); i++) {
         for(j = 0; j < ROTATOR_RELOAD; ++j) {
             
             aVal = _mm_load_ps((float*)aPtr);
@@ -161,7 +162,7 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_avx(lv_32fc_t* outVector, c
     lv_32fc_t incr = 1;
     lv_32fc_t phase_Ptr[4] = {(*phase), (*phase), (*phase), (*phase)};
     
-    int i, j = 0;
+    unsigned int i, j = 0;
 
     for(i = 0; i < 4; ++i) {
         phase_Ptr[i] *= incr;
@@ -173,7 +174,7 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_avx(lv_32fc_t* outVector, c
     printf("%f, %f\n", lv_creal(phase_Ptr[2]), lv_cimag(phase_Ptr[2]));
     printf("%f, %f\n", lv_creal(phase_Ptr[3]), lv_cimag(phase_Ptr[3]));
     printf("incr: %f, %f\n", lv_creal(incr), lv_cimag(incr));*/
-    __m256 aVal, phase_Val, inc_Val, cVal, yl, yh, tmp1, tmp2, z, ylp, yhp, tmp1p, tmp2p, negated, zeros;
+    __m256 aVal, phase_Val, inc_Val, yl, yh, tmp1, tmp2, z, ylp, yhp, tmp1p, tmp2p, negated, zeros;
     
     phase_Val = _mm256_loadu_ps((float*)phase_Ptr);
     inc_Val = _mm256_set_ps(lv_cimag(incr), lv_creal(incr),lv_cimag(incr), lv_creal(incr),lv_cimag(incr), lv_creal(incr),lv_cimag(incr), lv_creal(incr));
@@ -182,7 +183,7 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_avx(lv_32fc_t* outVector, c
     const unsigned int fourthPoints = num_points / 4;
 
     
-    for(i = 0; i < (int)(fourthPoints/ROTATOR_RELOAD); i++) {
+    for(i = 0; i < (unsigned int)(fourthPoints/ROTATOR_RELOAD); i++) {
         for(j = 0; j < ROTATOR_RELOAD; ++j) {
             
             aVal = _mm256_load_ps((float*)aPtr);
