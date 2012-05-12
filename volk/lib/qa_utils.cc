@@ -453,7 +453,7 @@ bool run_volk_tests(struct volk_func_desc desc,
 
     std::cout << "Best arch: " << best_arch << std::endl;
     if(best_arch_vector) {
-        if(puppet_master_name != "NULL") {
+        if(puppet_master_name == "NULL") {
             best_arch_vector->push_back(name + std::string(" ") + best_arch);
         }
         else {
