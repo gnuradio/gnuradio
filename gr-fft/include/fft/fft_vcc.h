@@ -40,7 +40,7 @@ namespace gr {
        * \brief Compute forward or reverse FFT. complex vector in / complex vector out.
        * \ingroup dft_blk
        */
-      static FFT_API sptr make(int fft_size, bool forward,
+      static sptr make(int fft_size, bool forward,
 			       const std::vector<float> &window,
 			       bool shift=false, int nthreads=1);
       
