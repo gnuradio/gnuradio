@@ -152,7 +152,7 @@ class gr_fir_ccf;
  * have 2 samps/sym.
  */
 
-class GR_CORE_API digital_pfb_clock_sync_ccf : public gr_block
+class DIGITAL_API digital_pfb_clock_sync_ccf : public gr_block
 {
  private:
   /*!
