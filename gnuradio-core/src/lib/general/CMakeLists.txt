@@ -281,6 +281,7 @@ set(gr_core_general_triple_threats
     gr_transcendental
     gr_uchar_to_float
     gr_vco_f
+    gr_vector_map
     gr_vector_to_stream
     gr_vector_to_streams
     gr_unpack_k_bits_bb
