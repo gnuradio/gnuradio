@@ -1,0 +1,38 @@
+INTRODUCTION
+The Sphinx documentation system uses the fully installed Python tree
+to build a set of documents (generally in HTML). In GNU Radio, the
+documentation system is done through Doxygen in the public header
+(/include/foo.h) files. Doxygen first builds its documentation files,
+then the swig_docs program uses Doxygen's XML output and smashed the
+documentation from each header file into the SWIG'd Python
+block. Basically, using a single documentation markup, Doxygen, we
+expose the documentation strings in both the Doxygen-built manual and
+within the Python blocks themselves.
+
+Sphinx takes this process one step farther by reading the docstrings
+of all Python blocks and creating its own manual. This has two
+benefits. First, the Sphinx documentation looks nice and is formatted
+in such a way that Python users of GNU Radio can easy see the module
+structure and hierarchy. It also allows not only takes the Doxygen
+documentation from C++, but it also allows us to take any Python files
+and include their documentation. 
+
+The end result is two manuals: one for Python and one for C++ users
+without having to duplicate comments, markup, or documentation.
+
+
+BUILDING THE SPHINX MANUAL
+Building the Sphinx docs takes some manual intervention as it
+requires GNU Radio to already be installed. So first follow the steps
+to build and install GNU Radio.
+
+In the build directory, a helper file is created called
+run_sphinx_build.sh. This is a Linux shell script that runs the
+sphinx-build command with all of the normal settings and important
+directories preloaded. For non Linux systems, it should be easy to
+pull out the executable and options to run it by hand.
+
+The run_sphinx_build.sh outputs the manual into
+$builddir/docs/sphinx/sphinx_out. Open up the index.html file in a
+browser to view it.
+
