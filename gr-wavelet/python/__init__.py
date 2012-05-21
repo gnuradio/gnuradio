@@ -20,8 +20,7 @@
 #
 
 '''
-This is the gr-wavelet package. This package provides GNU Radio
-processing blocks for wavelet transforms.
+Processing blocks for wavelet transforms.
 '''
 
 from wavelet_swig import *
