@@ -1,23 +1,23 @@
 #
 # Copyright 2010,2011 Free Software Foundation, Inc.
-#
+# 
 # This file is part of GNU Radio
-#
+# 
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-#
+# 
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#
+# 
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
+# 
 """
 Creates the swig_doc.i SWIG interface file.
 Execute using: python swig_doc.py xml_path outputfilename
@@ -29,11 +29,7 @@ python docstrings.
 
 import sys, time
 
-try:
-    from doxyxml import DoxyIndex, DoxyClass, DoxyFriend, DoxyFunction, DoxyFile, base
-except ImportError:
-    from gnuradio.doxyxml import DoxyIndex, DoxyClass, DoxyFriend, DoxyFunction, DoxyFile, base
-
+from doxyxml import DoxyIndex, DoxyClass, DoxyFriend, DoxyFunction, DoxyFile, base
 
 def py_name(name):
     bits = name.split('_')
@@ -56,7 +52,9 @@ class Block(object):
         # Check for a parsing error.
         if item.error():
             return False
-        return item.has_member(make_name(item.name()), DoxyFriend)
+        friendname = make_name(item.name())
+        is_a_block = item.has_member(friendname, DoxyFriend)
+        return is_a_block
 
 
 def utoascii(text):
@@ -82,13 +80,19 @@ def combine_descriptions(obj):
     if dd:
         description.append(dd)
     return utoascii('\n\n'.join(description)).strip()
-
+    
+def format_params(parameteritems):
+    output = ['Args:']
+    template = '    {0} : {1}'
+    for pi in parameteritems:
+        output.append(template.format(pi.name, pi.description))
+    return '\n'.join(output)
 
 entry_templ = '%feature("docstring") {name} "{docstring}"'
-def make_entry(obj, name=None, templ="{description}", description=None):
+def make_entry(obj, name=None, templ="{description}", description=None, params=[]):
     """
     Create a docstring entry for a swig interface file.
-
+    
     obj - a doxyxml object from which documentation will be extracted.
     name - the name of the C object (defaults to obj.name())
     templ - an optional template for the docstring containing only one
@@ -102,6 +106,9 @@ def make_entry(obj, name=None, templ="{description}", description=None):
         return ''
     if description is None:
         description = combine_descriptions(obj)
+    if params:
+        description += '\n\n'
+        description += utoascii(format_params(params))
     docstring = templ.format(description=description)
     if not docstring:
         return ''
@@ -121,16 +128,17 @@ def make_func_entry(func, name=None, description=None, params=None):
             used as the description instead of extracting it from func.
     params - a parameter list that overrides using func.params.
     """
-    if params is None:
-        params = func.params
-    params = [prm.declname for prm in params]
-    if params:
-        sig = "Params: (%s)" % ", ".join(params)
-    else:
-        sig = "Params: (NONE)"
-    templ = "{description}\n\n" + sig
-    return make_entry(func, name=name, templ=utoascii(templ),
-                      description=description)
+    #if params is None:
+    #    params = func.params
+    #params = [prm.declname for prm in params]
+    #if params:
+    #    sig = "Params: (%s)" % ", ".join(params)
+    #else:
+    #    sig = "Params: (NONE)"
+    #templ = "{description}\n\n" + sig
+    #return make_entry(func, name=name, templ=utoascii(templ),
+    #                  description=description)
+    return make_entry(func, name=name, description=description, params=params)
 
 
 def make_class_entry(klass, description=None):
@@ -138,7 +146,7 @@ def make_class_entry(klass, description=None):
     Create a class docstring for a swig interface file.
     """
     output = []
-    output.append(make_entry(klass, description=description))
+    output.append(make_entry(klass, description=description, params=klass.params))
     for func in klass.in_category(DoxyFunction):
         name = klass.name() + '::' + func.name()
         output.append(make_func_entry(func, name=name))
@@ -177,16 +185,33 @@ def make_block_entry(di, block):
     output.append(make_class_entry(block, description=super_description))
     creator = block.get_member(block.name(), DoxyFunction)
     output.append(make_func_entry(make_func, description=super_description,
-                                  params=creator.params))
+                                  params=block.params))
     return "\n\n".join(output)
 
+def wait_if_necessary(tries, swigdocfilename, item=None):
+    if item is not None:
+        extra = ', item {0}'.format(item.name())
+    else:
+        extra = ''
+    if(tries < 3):
+        # May not be built just yet; sleep and try again
+        sys.stderr.write("XML parsing problem with file {0}{1}, retrying.\n".format(
+                swigdocfilename, extra))
+        time.sleep(1)
+        tries += 1
+        return tries, True
+    else:
+        # if we've given it three tries, give up and raise an error
+        sys.stderr.write("XML parsing error with file {0}{1}. giving up.\n".format(
+                swigdocfilename, extra))
+        return tries, False
 
-def make_swig_interface_file(di, swigdocfilename, custom_output=None):
-
+def make_swig_interface_file(di, swigdocfilename, custom_output=None, tries=0):
+    
     output = ["""
 /*
  * This file was automatically generated using swig_doc.py.
- *
+ * 
  * Any changes to it will be lost next time it is regenerated.
  */
 """]
@@ -195,46 +220,29 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
         output.append(custom_output)
 
     # Create docstrings for the blocks.
-    tries = 0
     while(1):
         try:
             blocks = di.in_category(Block)
         except:
-            if(tries < 3):
-                # May not be built just yet; sleep and try again
-                sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
-                        swigdocfilename))
-                time.sleep(1)
-                tries += 1
-            else:
-                # if we've given it three tries, give up and raise an error
-                sys.stderr.write("XML parsing error with file {0}. giving up.\n".format(
-                        swigdocfilename))
+            tries, try_again = wait_if_necessary(tries, swigdocfilename)
+            if not try_again:
                 raise
         else:
             break
-
     make_funcs = set([])
     for block in blocks:
-        tries = 0
         while(1):
             try:
                 make_func = di.get_member(make_name(block.name()), DoxyFunction)
-                make_funcs.add(make_func.name())
-                output.append(make_block_entry(di, block))
+                # Don't want to risk writing to output twice.
+                if make_func.name() not in make_funcs:
+                    make_funcs.add(make_func.name())
+                    output.append(make_block_entry(di, block))
             except block.ParsingError:
-                sys.stderr.write('Parsing error for block {0}'.format(block.name()))
+                sys.stderr.write('Parsing error for block {0}\n'.format(block.name()))
             except:
-                if(tries < 3):
-                    # May not be built just yet; sleep and try again
-                    sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
-                            swigdocfilename))
-                    time.sleep(1)
-                    tries += 1
-                else:
-                    # if we've given it three tries, give up and raise an error
-                    sys.stderr.write("XML parsing error with file {0}. giving up.\n".format(
-                            swigdocfilename))
+                tries, try_again = wait_if_necessary(tries, swigdocfilename, block)
+                if not try_again:
                     raise
             else:
                 break
@@ -246,7 +254,7 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
         try:
             output.append(make_func_entry(f))
         except f.ParsingError:
-            sys.stderr.write('Parsing error for function {0}'.format(f.name()))
+            sys.stderr.write('Parsing error for function {0}\n'.format(f.name()))
 
     # Create docstrings for classes
     block_names = [block.name() for block in blocks]
@@ -255,7 +263,7 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
         try:
             output.append(make_class_entry(k))
         except k.ParsingError:
-            sys.stderr.write('Parsing error for class {0}'.format(k.name()))
+            sys.stderr.write('Parsing error for class {0}\n'.format(k.name()))
 
     # Docstrings are not created for anything that is not a function or a class.
     # If this excludes anything important please add it here.
@@ -291,19 +299,11 @@ if __name__ == "__main__":
     tries = 0
     while(1):
         try:
-            make_swig_interface_file(di, swigdocfilename, custom_output=custom_output)
+            make_swig_interface_file(di, swigdocfilename, custom_output=custom_output, tries=tries)
         except:
-            if(tries < 3):
-                # May not be built just yet; sleep and try again
-                sys.stderr.write("XML parsing problem with file {0}, retrying.\n".format(
-                        swigdocfilename))
-                time.sleep(1)
-                tries += 1
-            else:
-                # if we've given it three tries, give up and raise an error
-                sys.stderr.write("XML parsing error with file {0}. giving up.\n".format(
-                        swigdocfilename))
+            tries, try_again = wait_if_necessary(tries, swigdocfilename)
+            if not try_again:
                 raise
         else:
             break
-
+        
