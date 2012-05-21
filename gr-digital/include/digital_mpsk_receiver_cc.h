@@ -65,10 +65,10 @@ digital_make_mpsk_receiver_cc (unsigned int M, float theta,
  *
  * The symbol synchronization is done using a modified Mueller and
  * Muller circuit from the paper:
- * 
- *    G. R. Danesfahani, T.G. Jeans, "Optimisation of modified Mueller
- *    and Muller algorithm," Electronics Letters, Vol. 31, no. 13, 22
- *    June 1995, pp. 1032 - 1033.
+ *
+ * "G. R. Danesfahani, T. G. Jeans, "Optimisation of modified Mueller
+ * and Muller algorithm," Electronics Letters, Vol. 31, no. 13, 22
+ * June 1995, pp. 1032 - 1033."
  *
  * This circuit interpolates the downconverted sample (using the NCO
  * developed by the Costas loop) every mu samples, then it finds the

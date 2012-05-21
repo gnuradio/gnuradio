@@ -1,0 +1,32 @@
+gnuradio.gr: Type Conversions
+=============================
+
+.. autoblock:: gnuradio.gr.bytes_to_syms
+.. autoblock:: gnuradio.gr.char_to_float
+.. autoblock:: gnuradio.gr.complex_to_interleaved_short
+.. autoblock:: gnuradio.gr.complex_to_float
+.. autoblock:: gnuradio.gr.complex_to_real
+.. autoblock:: gnuradio.gr.complex_to_imag
+.. autoblock:: gnuradio.gr.complex_to_mag
+.. autoblock:: gnuradio.gr.complex_to_mag_squared
+.. autoblock:: gnuradio.gr.complex_to_arg
+.. autoblock:: gnuradio.gr.float_to_char
+.. autoblock:: gnuradio.gr.float_to_complex
+.. autoblock:: gnuradio.gr.float_to_short
+.. autoblock:: gnuradio.gr.float_to_uchar
+.. autoblock:: gnuradio.gr.interleaved_short_to_complex
+.. autoblock:: gnuradio.gr.short_to_float
+.. autoblock:: gnuradio.gr.uchar_to_float
+.. autoblock:: gnuradio.gr.unpack_k_bits_bb
+.. autoblock:: gnuradio.gr.chunks_to_symbols_bc
+.. autoblock:: gnuradio.gr.chunks_to_symbols_bf
+.. autoblock:: gnuradio.gr.chunks_to_symbols_ic
+.. autoblock:: gnuradio.gr.chunks_to_symbols_if
+.. autoblock:: gnuradio.gr.chunks_to_symbols_sc
+.. autoblock:: gnuradio.gr.chunks_to_symbols_sf
+.. autoblock:: gnuradio.gr.packed_to_unpacked_bb
+.. autoblock:: gnuradio.gr.packed_to_unpacked_ii
+.. autoblock:: gnuradio.gr.packed_to_unpacked_ss
+.. autoblock:: gnuradio.gr.unpacked_to_packed_bb
+.. autoblock:: gnuradio.gr.unpacked_to_packed_ii
+.. autoblock:: gnuradio.gr.unpacked_to_packed_ss

@@ -39,9 +39,9 @@ digital_make_kurtotic_equalizer_cc(int num_taps, float mu);
  * \ingroup eq_blk
  * \ingroup digital
  *
- * Y. Guo, J. Zhao, Y. Sun, "Sign kurtosis maximization based blind
+ * "Y. Guo, J. Zhao, Y. Sun, "Sign kurtosis maximization based blind
  * equalization algorithm," IEEE Conf. on Control, Automation,
- * Robotics and Vision, Vol. 3, Dec. 2004, pp. 2052 - 2057.
+ * Robotics and Vision, Vol. 3, Dec. 2004, pp. 2052 - 2057."
  */
 class DIGITAL_API digital_kurtotic_equalizer_cc : public gr_adaptive_fir_ccc
 {
