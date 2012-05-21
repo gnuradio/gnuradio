@@ -56,6 +56,7 @@ class channel_plotter(grid_plotter_base):
 		self._channels = dict()
 		#init channel plotter
 		self.register_init(self._init_channel_plotter)
+		self.callback = None
 
 	def _init_channel_plotter(self):
 		"""
@@ -149,6 +150,13 @@ class channel_plotter(grid_plotter_base):
 			y_value = (samples[x_index_high] - samples[x_index_low])*scale + samples[x_index_low]
 			label_str += '\n%s: %s'%(channel, common.eng_format(y_value, self.y_units))
 		return label_str
+
+	def _call_callback (self, x_val, y_val):
+		if self.callback != None:
+			self.callback(x_val, y_val)
+
+	def set_callback (self, callback):
+		self.callback = callback
 
 	def _draw_legend(self):
 		"""
