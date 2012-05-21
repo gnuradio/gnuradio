@@ -21,12 +21,14 @@
 # Setup dependencies
 ########################################################################
 find_package(Doxygen)
+find_package(Sphinx)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("doxygen" ENABLE_DOXYGEN DOXYGEN_FOUND)
+GR_REGISTER_COMPONENT("sphinx"  ENABLE_SPHINX  SPHINX_FOUND)
 
 ########################################################################
 # Begin conditional configuration
@@ -48,3 +50,25 @@ CPACK_COMPONENT("docs"
 add_subdirectory(doxygen)
 
 endif(ENABLE_DOXYGEN)
+
+
+########################################################################
+# Begin conditional configuration
+########################################################################
+if(ENABLE_SPHINX)
+
+########################################################################
+# Setup CPack components
+########################################################################
+include(GrPackage)
+CPACK_COMPONENT("docs"
+    DISPLAY_NAME "Documentation"
+    DESCRIPTION  "Sphinx generated documentation"
+)
+
+########################################################################
+# Add subdirectories
+########################################################################
+add_subdirectory(sphinx)
+
+endif(ENABLE_SPHINX)

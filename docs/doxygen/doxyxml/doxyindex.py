@@ -1,23 +1,23 @@
 #
 # Copyright 2010 Free Software Foundation, Inc.
-#
+# 
 # This file is part of GNU Radio
-#
+# 
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-#
+# 
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#
+# 
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
+# 
 """
 Classes providing more user-friendly interfaces to the doxygen xml
 docs than the generated classes provide.
@@ -40,7 +40,7 @@ class DoxyIndex(Base):
         if self._parsed:
             return
         super(DoxyIndex, self)._parse()
-        self._root = index.parse(os.path.join(self._xml_path, 'index.xml'))
+        self._root = index.parse(os.path.join(self._xml_path, 'index.xml'))      
         for mem in self._root.compound:
             converted = self.convert_mem(mem)
             # For files we want the contents to be accessible directly
@@ -78,14 +78,14 @@ class DoxyCompMem(Base):
         bd = description(getattr(parse_data, 'briefdescription', None))
         dd = description(getattr(parse_data, 'detaileddescription', None))
         self._data['brief_description'] = bd
-        self._data['detailed_description'] = dd
+        self._data['detailed_description'] = dd        
 
 class DoxyCompound(DoxyCompMem):
     pass
 
 class DoxyMember(DoxyCompMem):
     pass
-
+    
 
 class DoxyFunction(DoxyMember):
 
@@ -111,7 +111,7 @@ Base.mem_classes.append(DoxyFunction)
 
 
 class DoxyParam(DoxyMember):
-
+    
     __module__ = "gnuradio.utils.doxyxml"
 
     def _parse(self):
@@ -125,12 +125,33 @@ class DoxyParam(DoxyMember):
     detailed_description = property(lambda self: self.data()['detailed_description'])
     declname = property(lambda self: self.data()['declname'])
 
-class DoxyClass(DoxyCompound):
+class DoxyParameterItem(DoxyMember):
+    """A different representation of a parameter in Doxygen."""
 
+    def _parse(self):
+        if self._parsed:
+            return
+        super(DoxyParameterItem, self)._parse()
+        names = []
+        for nl in self._parse_data.parameternamelist:
+            for pn in nl.parametername:
+                names.append(description(pn))
+        # Just take first name
+        self._data['name'] = names[0]
+        # Get description
+        pd = description(self._parse_data.get_parameterdescription())
+        self._data['description'] = pd
+
+    description = property(lambda self: self.data()['description'])
+    name = property(lambda self: self.data()['name'])
+
+
+class DoxyClass(DoxyCompound):
+    
     __module__ = "gnuradio.utils.doxyxml"
 
     kind = 'class'
-
+    
     def _parse(self):
         if self._parsed:
             return
@@ -139,22 +160,40 @@ class DoxyClass(DoxyCompound):
         if self._error:
             return
         self.set_descriptions(self._retrieved_data.compounddef)
+        self.set_parameters(self._retrieved_data.compounddef)
         # Sectiondef.kind tells about whether private or public.
         # We just ignore this for now.
         self.process_memberdefs()
 
+    def set_parameters(self, data):
+        vs = [ddc.value for ddc in data.detaileddescription.content_]
+        pls = []
+        for v in vs:
+            if hasattr(v, 'parameterlist'):
+                pls += v.parameterlist
+        pis = []
+        for pl in pls:
+            pis += pl.parameteritem
+        dpis = []
+        for pi in pis:
+            dpi = DoxyParameterItem(pi)
+            dpi._parse()
+            dpis.append(dpi)
+        self._data['params'] = dpis
+        
     brief_description = property(lambda self: self.data()['brief_description'])
     detailed_description = property(lambda self: self.data()['detailed_description'])
+    params = property(lambda self: self.data()['params'])
 
 Base.mem_classes.append(DoxyClass)
-
+        
 
 class DoxyFile(DoxyCompound):
-
+    
     __module__ = "gnuradio.utils.doxyxml"
 
     kind = 'file'
-
+    
     def _parse(self):
         if self._parsed:
             return
@@ -164,7 +203,7 @@ class DoxyFile(DoxyCompound):
         if self._error:
             return
         self.process_memberdefs()
-
+        
     brief_description = property(lambda self: self.data()['brief_description'])
     detailed_description = property(lambda self: self.data()['detailed_description'])
 
@@ -172,16 +211,16 @@ Base.mem_classes.append(DoxyFile)
 
 
 class DoxyNamespace(DoxyCompound):
-
+    
     __module__ = "gnuradio.utils.doxyxml"
 
     kind = 'namespace'
-
+    
 Base.mem_classes.append(DoxyNamespace)
 
 
 class DoxyGroup(DoxyCompound):
-
+    
     __module__ = "gnuradio.utils.doxyxml"
 
     kind = 'group'
@@ -209,7 +248,7 @@ class DoxyGroup(DoxyCompound):
         self.process_memberdefs()
 
     title = property(lambda self: self.data()['title'])
-
+        
 
 Base.mem_classes.append(DoxyGroup)
 
@@ -224,7 +263,7 @@ Base.mem_classes.append(DoxyFriend)
 
 
 class DoxyOther(Base):
-
+    
     __module__ = "gnuradio.utils.doxyxml"
 
     kinds = set(['variable', 'struct', 'union', 'define', 'typedef', 'enum', 'dir', 'page'])
@@ -232,6 +271,6 @@ class DoxyOther(Base):
     @classmethod
     def can_parse(cls, obj):
         return obj.kind in cls.kinds
-
+    
 Base.mem_classes.append(DoxyOther)
 

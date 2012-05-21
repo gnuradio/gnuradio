@@ -1,0 +1,46 @@
+gnuradio.gr: Filters
+====================
+
+.. autoblock:: gnuradio.gr.fft_filter_ccc
+.. autoblock:: gnuradio.gr.fft_filter_fff
+.. autoblock:: gnuradio.gr.filter_delay_fc
+.. autoblock:: gnuradio.gr.fir_filter_ccc
+.. autoblock:: gnuradio.gr.fir_filter_ccf
+.. autoblock:: gnuradio.gr.fir_filter_fcc
+.. autoblock:: gnuradio.gr.fir_filter_fff
+.. autoblock:: gnuradio.gr.fir_filter_fsf
+.. autoblock:: gnuradio.gr.fir_filter_scc
+.. autoblock:: gnuradio.gr.fractional_interpolator_cc
+.. autoblock:: gnuradio.gr.fractional_interpolator_ff
+.. autoblock:: gnuradio.gr.freq_xlating_fir_filter_ccc
+.. autoblock:: gnuradio.gr.freq_xlating_fir_filter_ccf
+.. autoblock:: gnuradio.gr.freq_xlating_fir_filter_fcc
+.. autoblock:: gnuradio.gr.freq_xlating_fir_filter_fcf
+.. autoblock:: gnuradio.gr.freq_xlating_fir_filter_scc
+.. autoblock:: gnuradio.gr.freq_xlating_fir_filter_scf
+.. autoblock:: gnuradio.gr.hilbert_fc
+.. autoblock:: gnuradio.gr.iir_filter_ffd
+.. autoblock:: gnuradio.gr.interp_fir_filter_ccc
+.. autoblock:: gnuradio.gr.interp_fir_filter_ccf
+.. autoblock:: gnuradio.gr.interp_fir_filter_fcc
+.. autoblock:: gnuradio.gr.interp_fir_filter_fff
+.. autoblock:: gnuradio.gr.interp_fir_filter_fsf
+.. autoblock:: gnuradio.gr.interp_fir_filter_scc
+.. autoblock:: gnuradio.gr.rational_resampler_base_ccc
+.. autoblock:: gnuradio.gr.rational_resampler_base_ccf
+.. autoblock:: gnuradio.gr.rational_resampler_base_fcc
+.. autoblock:: gnuradio.gr.rational_resampler_base_fff
+.. autoblock:: gnuradio.gr.rational_resampler_base_fsf
+.. autoblock:: gnuradio.gr.rational_resampler_base_scc
+.. autoblock:: gnuradio.gr.single_pole_iir_filter_cc
+.. autoblock:: gnuradio.gr.single_pole_iir_filter_ff
+.. autoblock:: gnuradio.gr.moving_average_cc
+.. autoblock:: gnuradio.gr.moving_average_ff
+.. autoblock:: gnuradio.gr.moving_average_ii
+.. autoblock:: gnuradio.gr.moving_average_ss
+.. autoblock:: gnuradio.gr.pfb_arb_resampler_ccf
+.. autoblock:: gnuradio.gr.pfb_channelizer_ccf
+.. autoblock:: gnuradio.gr.pfb_clock_sync_ccf
+.. autoblock:: gnuradio.gr.pfb_clock_sync_fff
+.. autoblock:: gnuradio.gr.pfb_decimator_ccf
+.. autoblock:: gnuradio.gr.pfb_interpolator_ccf
