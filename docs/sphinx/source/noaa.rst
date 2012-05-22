@@ -3,6 +3,6 @@ gnuradio.noaa
 
 .. automodule:: gnuradio.noaa
 
-.. autoblock:: gnuradio.noaa.hrpt_decoder
-.. autoblock:: gnuradio.noaa.hrpt_deframer
-.. autoblock:: gnuradio.noaa.hrpt_pll_cf
+.. autooldblock:: gnuradio.noaa.hrpt_decoder
+.. autooldblock:: gnuradio.noaa.hrpt_deframer
+.. autooldblock:: gnuradio.noaa.hrpt_pll_cf

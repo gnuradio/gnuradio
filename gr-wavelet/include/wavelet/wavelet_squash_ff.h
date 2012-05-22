@@ -26,16 +26,17 @@
 #include <wavelet_api.h>
 #include <gr_sync_block.h>
 
-/*!
- * \brief implements cheap resampling of spectrum directly from
- * spectral points, using gsl interpolation
- * \ingroup misc
- */
 class wavelet_squash_ff;
 typedef boost::shared_ptr<wavelet_squash_ff> wavelet_squash_ff_sptr;
 
 WAVELET_API wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
 							  const std::vector<float> &ogrid);
+
+/*!
+ * \brief implements cheap resampling of spectrum directly from
+ * spectral points, using gsl interpolation
+ * \ingroup misc
+ */
 
 class WAVELET_API wavelet_squash_ff : virtual public gr_sync_block
 {
