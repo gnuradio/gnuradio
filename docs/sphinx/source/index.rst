@@ -15,6 +15,7 @@ Core Framework
    gnuradio.audio
    gnuradio.trellis
    gnuradio.wavelet
+   gnuradio.fft
    gnuradio.window
    gnuradio.optfir
    gnuradio.gr_unittest
@@ -32,6 +33,7 @@ Core Framework
    gnuradio.optfir <optfir/index>
    gnuradio.trellis <trellis/index>
    gnuradio.wavelet <wavelet>
+   gnuradio.fft <fft>
    gnuradio.window <window/index>
    gnuradio.qtgui <qtgui/index>
    gnuradio.wxgui <wxgui/index>

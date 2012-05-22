@@ -1,9 +1,9 @@
 gnuradio.gr: Synchronization
 ============================
 
-.. autoblock:: gnuradio.gr.pll_carriertracking_cc
-.. autoblock:: gnuradio.gr.pll_freqdet_cf
-.. autoblock:: gnuradio.gr.pll_refout_cc
-.. autoblock:: gnuradio.gr.pn_correlator_cc
-.. autoblock:: gnuradio.gr.simple_correlator
-.. autoblock:: gnuradio.gr.simple_framer
+.. autooldblock:: gnuradio.gr.pll_carriertracking_cc
+.. autooldblock:: gnuradio.gr.pll_freqdet_cf
+.. autooldblock:: gnuradio.gr.pll_refout_cc
+.. autooldblock:: gnuradio.gr.pn_correlator_cc
+.. autooldblock:: gnuradio.gr.simple_correlator
+.. autooldblock:: gnuradio.gr.simple_framer

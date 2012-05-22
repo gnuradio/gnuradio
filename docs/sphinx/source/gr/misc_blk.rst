@@ -1,12 +1,12 @@
 gnuradio.gr: Miscellaneous Blocks
 =================================
 
-.. autoblock:: gnuradio.gr.copy
-.. autoblock:: gnuradio.gr.delay
-.. autoblock:: gnuradio.gr.kludge_copy
-.. autoblock:: gnuradio.gr.nop
-.. autoblock:: gnuradio.gr.pa_2x2_phase_combiner
-.. autoblock:: gnuradio.gr.repeat
-.. autoblock:: gnuradio.gr.threshold_ff
-.. autoblock:: gnuradio.gr.throttle
-.. autoblock:: gnuradio.gr.channel_model
+.. autooldblock:: gnuradio.gr.copy
+.. autooldblock:: gnuradio.gr.delay
+.. autooldblock:: gnuradio.gr.kludge_copy
+.. autooldblock:: gnuradio.gr.nop
+.. autooldblock:: gnuradio.gr.pa_2x2_phase_combiner
+.. autooldblock:: gnuradio.gr.repeat
+.. autooldblock:: gnuradio.gr.threshold_ff
+.. autooldblock:: gnuradio.gr.throttle
+.. autooldblock:: gnuradio.gr.channel_model
