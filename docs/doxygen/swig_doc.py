@@ -29,7 +29,8 @@ python docstrings.
 
 import sys, time
 
-from doxyxml import DoxyIndex, DoxyClass, DoxyFriend, DoxyFunction, DoxyFile, base
+from doxyxml import DoxyIndex, DoxyClass, DoxyFriend, DoxyFunction, DoxyFile
+from doxyxml import DoxyOther, base
 
 def py_name(name):
     bits = name.split('_')
@@ -54,8 +55,27 @@ class Block(object):
             return False
         friendname = make_name(item.name())
         is_a_block = item.has_member(friendname, DoxyFriend)
+        # But now sometimes the make function isn't a friend so check again.
+        if not is_a_block:
+            is_a_block = di.has_member(friendname, DoxyFunction)
         return is_a_block
 
+class Block2(object):
+    """
+    Checks if doxyxml produced objects correspond to a new style
+    gnuradio block.
+    """
+    
+    @classmethod
+    def includes(cls, item):
+        if not isinstance(item, DoxyClass):
+            return False
+        # Check for a parsing error.
+        if item.error():
+            return False
+        is_a_block2 = item.has_member('make', DoxyFunction) and item.has_member('sptr', DoxyOther)
+        return is_a_block2
+        
 
 def utoascii(text):
     """
@@ -141,15 +161,18 @@ def make_func_entry(func, name=None, description=None, params=None):
     return make_entry(func, name=name, description=description, params=params)
 
 
-def make_class_entry(klass, description=None):
+def make_class_entry(klass, description=None, ignored_methods=[], params=None):
     """
     Create a class docstring for a swig interface file.
     """
+    if params is None:
+        params = klass.params
     output = []
-    output.append(make_entry(klass, description=description, params=klass.params))
+    output.append(make_entry(klass, description=description, params=params))
     for func in klass.in_category(DoxyFunction):
-        name = klass.name() + '::' + func.name()
-        output.append(make_func_entry(func, name=name))
+        if func.name() not in ignored_methods:
+            name = klass.name() + '::' + func.name()
+            output.append(make_func_entry(func, name=name))
     return "\n\n".join(output)
 
 
@@ -183,9 +206,30 @@ def make_block_entry(di, block):
     # the make function.
     output = []
     output.append(make_class_entry(block, description=super_description))
-    creator = block.get_member(block.name(), DoxyFunction)
     output.append(make_func_entry(make_func, description=super_description,
                                   params=block.params))
+    return "\n\n".join(output)
+
+def make_block2_entry(di, block):
+    """
+    Create class and function docstrings of a new style gnuradio block for a
+    swig interface file.
+    """
+    descriptions = []
+    # For new style blocks all the relevant documentation should be
+    # associated with the 'make' method.
+    make_func = block.get_member('make', DoxyFunction)
+    description = combine_descriptions(make_func)
+    # Associate the combined description with the class and
+    # the make function.
+    output = []
+    #output.append(make_class_entry(
+    #        block, description=description,
+    #        ignored_methods=['make'], params=make_func.params))
+    makename = block.name() + '::make'
+    output.append(make_func_entry(
+            make_func, name=makename, description=description,
+            params=make_func.params))
     return "\n\n".join(output)
 
 def wait_if_necessary(tries, swigdocfilename, item=None):
@@ -223,6 +267,7 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None, tries=0):
     while(1):
         try:
             blocks = di.in_category(Block)
+            blocks2 = di.in_category(Block2)
         except:
             tries, try_again = wait_if_necessary(tries, swigdocfilename)
             if not try_again:
@@ -246,10 +291,28 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None, tries=0):
                     raise
             else:
                 break
+    for block in blocks2:
+        while(1):
+            try:
+                make_func = block.get_member('make', DoxyFunction)
+                make_func_name = block.name() +'::make'
+                # Don't want to risk writing to output twice.
+                if make_func_name not in make_funcs:
+                    make_funcs.add(make_func_name)
+                    output.append(make_block2_entry(di, block))
+            except block.ParsingError:
+                sys.stderr.write('Parsing error for block {0}\n'.format(block.name()))
+            except:
+                tries, try_again = wait_if_necessary(tries, swigdocfilename, block)
+                if not try_again:
+                    raise
+            else:
+                break        
 
     # Create docstrings for functions
     # Don't include the make functions since they have already been dealt with.
-    funcs = [f for f in di.in_category(DoxyFunction) if f.name() not in make_funcs]
+    funcs = [f for f in di.in_category(DoxyFunction) 
+             if f.name() not in make_funcs and not f.name().startswith('std::')]
     for f in funcs:
         try:
             output.append(make_func_entry(f))
@@ -258,7 +321,9 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None, tries=0):
 
     # Create docstrings for classes
     block_names = [block.name() for block in blocks]
-    klasses = [k for k in di.in_category(DoxyClass) if k.name() not in block_names]
+    block_names += [block.name() for block in blocks2]
+    klasses = [k for k in di.in_category(DoxyClass)
+               if k.name() not in block_names and not k.name().startswith('std::')]
     for k in klasses:
         try:
             output.append(make_class_entry(k))
