@@ -35,6 +35,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 include_directories(${GSL_INCLUDE_DIRS})
 link_directories(${GSL_LIBRARY_DIRS})
+add_definitions(${GSL_DEFINITIONS})
 
 ########################################################################
 # Setup library
