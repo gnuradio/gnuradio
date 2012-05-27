@@ -32,7 +32,7 @@ std::vector<int>
 get_in_sizeofs(size_t item_size, std::vector<size_t> in_vlens)
 {
   std::vector<int> in_sizeofs;
-  for(unsigned int i; i < in_vlens.size(); i++) {
+  for(unsigned int i = 0; i < in_vlens.size(); i++) {
     in_sizeofs.push_back(in_vlens[i]*item_size);
   }
   return in_sizeofs;
@@ -43,7 +43,7 @@ get_out_sizeofs(size_t item_size,
 		std::vector< std::vector< std::vector<size_t> > > mapping)
 {
   std::vector<int> out_sizeofs;
-  for(unsigned int i; i < mapping.size(); i++) {
+  for(unsigned int i = 0; i < mapping.size(); i++) {
     out_sizeofs.push_back(mapping[i].size()*item_size);
   }
   return out_sizeofs;
