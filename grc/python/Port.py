@@ -139,6 +139,10 @@ class Port(_Port, _GUIPort):
 				self._type = ''
 				self._vlen = ''
 
+	def resolve_virtual_source(self):
+		if self.get_parent().is_virtual_sink(): return _get_source_from_virtual_sink_port(self)
+		if self.get_parent().is_virtual_source(): return _get_source_from_virtual_source_port(self)
+
 	def resolve_empty_type(self):
 		if self.is_sink():
 			try:

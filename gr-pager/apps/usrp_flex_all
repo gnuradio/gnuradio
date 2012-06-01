@@ -98,9 +98,9 @@ class app_top_block(gr.top_block):
         mid_chan = int(self.nchan/2)
         for i in range(self.nchan):
 	    if i < mid_chan:
-		freq = 930.5e6+i*25e3
+		freq = options.freq+i*25e3
 	    else:
-		freq = 930.5e6-(self.nchan-i)*25e3
+		freq = options.freq-(self.nchan-i)*25e3
 
 	    if (freq < 929.0e6 or freq > 932.0e6):
                 self.connect((self.bank, i), gr.null_sink(gr.sizeof_gr_complex))
