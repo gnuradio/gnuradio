@@ -55,10 +55,11 @@ represents the top-most structure of the flowgraph. The top blocks
 provide the overall control and hold methods such as 'start,' 'stop,'
 and 'wait.'
 
-The general construction of a GNU Radio application is to create a top
-block, instantiate the blocks, connect the blocks together, and then
-start the top block. The following program shows how this is done. A
-single source and sink are used with a FIR filter between them.
+The general construction of a GNU Radio application is to create a
+gr_top_block, instantiate the blocks, connect the blocks together, and
+then start the gr_top_block. The following program shows how this is
+done. A single source and sink are used with a FIR filter between
+them.
 
 \code
     from gnuradio import gr, filter
@@ -84,7 +85,7 @@ single source and sink are used with a FIR filter between them.
 
 The 'tb.start()' starts the data flowing through the flowgraph while
 the 'tb.wait()' is the equivalent of a thread's 'join' operation and
-blocks until the top block is done.
+blocks until the gr_top_block is done.
 
 An alternative to using the 'start' and 'wait' methods, a 'run' method is
 also provided for convenience that is a blocking start call;
@@ -109,7 +110,7 @@ into the scheduler to retrieve more data. The downside to this is that
 it can lead to large latency while a block is processing a large chunk
 of data.
 
-To combat this problem, the top block can be passed a limit on the
+To combat this problem, the gr_top_block can be passed a limit on the
 number of output items a block will ever receive. A block may get less
 than this number, but never more, and so it serves as an upper limit
 to the latency any block will exhibit. By limiting the number of items
@@ -117,7 +118,7 @@ per call to a block, though, we increase the overhead of the
 scheduler, and so reduce the overall efficiency of the application.
 
 To set the maximum number of output items, we pass a value into the
-'start' or 'run' method of the top block:
+'start' or 'run' method of the gr_top_block:
 
 \code
      tb.start(1000)
@@ -136,6 +137,129 @@ the FIR filter, which can receive up to 2000 items.
 \code
      tb.flt.set_max_noutput_items(2000)
      tb.run(1000)
+\endcode
+
+
+\section reconfigure Reconfiguring Flowgraphs
+
+It is possible to reconfigure the flowgraph at runtime. The
+reconfiguration is meant for changes in the flowgraph structure, not
+individual parameter settings of the blocks. For example, changing the
+constant in a gr_add_const_cc block can be done while the flowgraph is
+running using the 'set_k(k)' method.
+
+Reconfiguration is done by locking the flowgraph, which stops it from
+running and processing data, performing the reconfiguration, and then
+restarting the graph by unlocking it.
+
+The following example code shows a graph that first adds two
+gr_noise_source_c blocks and then replaces the gr_add_cc block with a
+gr_sub_cc block to then subtract the sources.
+
+\code
+from gnuradio import gr
+import time
+
+class mytb(gr.top_block):
+    def __init__(self):
+        gr.top_block.__init__(self)
+
+        self.src0 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src1 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.add  = gr.add_cc()
+        self.sub  = gr.sub_cc()
+        self.head = gr.head(gr.sizeof_gr_complex, 1000000)
+        self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
+
+        self.connect(self.src0, (self.add,0))
+        self.connect(self.src1, (self.add,1))
+        self.connect(self.add, self.head)
+        self.connect(self.head, self.snk)
+
+def main():
+    tb = mytb()
+    tb.start()
+    time.sleep(0.01)
+
+    # Stop flowgraph and disconnect the add block
+    tb.lock()
+    tb.disconnect(tb.add, tb.head)
+    tb.disconnect(tb.src0, (tb.add,0))
+    tb.disconnect(tb.src1, (tb.add,1))
+
+    # Connect the sub block and restart
+    tb.connect(tb.sub, tb.head)
+    tb.connect(tb.src0, (tb.sub,0))
+    tb.connect(tb.src1, (tb.sub,1))
+    tb.unlock()
+
+    tb.wait()
+
+if __name__ == "__main__":
+    main()
+\endcode
+
+During reconfiguration, the maximum noutput_items value can be changed
+either globally using the 'set_max_noutput_items(m)' on the gr_top_block
+object or locally using the 'set_max_noutput_items(m)' on any given
+block object.
+
+A block also has a 'unset_max_noutput_items()' method that unsets the
+local max noutput_items value so that block reverts back to using the
+global value.
+
+The following example expands the previous example but sets and resets
+the max noutput_items both locally and globally.
+
+\code
+from gnuradio import gr
+import time
+
+class mytb(gr.top_block):
+    def __init__(self):
+        gr.top_block.__init__(self)
+
+        self.src0 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src1 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.add  = gr.add_cc()
+        self.sub  = gr.sub_cc()
+        self.head = gr.head(gr.sizeof_gr_complex, 1000000)
+        self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
+
+        self.connect(self.src0, (self.add,0))
+        self.connect(self.src1, (self.add,1))
+        self.connect(self.add, self.head)
+        self.connect(self.head, self.snk)
+
+def main():
+    # Start the gr_top_block after setting some max noutput_items.
+    tb = mytb()
+    tb.src1.set_max_noutput_items(2000)
+    tb.start(100)
+    time.sleep(0.01)
+    
+    # Stop flowgraph and disconnect the add block
+    tb.lock()
+
+    tb.disconnect(tb.add, tb.head)
+    tb.disconnect(tb.src0, (tb.add,0))
+    tb.disconnect(tb.src1, (tb.add,1))
+
+    # Connect the sub block
+    tb.connect(tb.sub, tb.head)
+    tb.connect(tb.src0, (tb.sub,0))
+    tb.connect(tb.src1, (tb.sub,1))
+
+    # Set new max_noutput_items for the gr_top_block
+    # and unset the local value for src1
+    tb.set_max_noutput_items(1000)
+    tb.src1.unset_max_noutput_items()
+    tb.unlock()
+
+    tb.wait()
+
+if __name__ == "__main__":
+    main()
 \endcode
 
 
