@@ -102,7 +102,6 @@
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
 #include <gr_framer_sink_1.h>
-#include <gr_map_bb.h>
 #include <gr_multiply_cc.h>
 #include <gr_multiply_ff.h>
 #include <gr_multiply_const_cc.h>
@@ -213,7 +212,6 @@
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"
 %include "gr_framer_sink_1.i"
-%include "gr_map_bb.i"
 %include "gr_multiply_cc.i"
 %include "gr_multiply_ff.i"
 %include "gr_multiply_const_cc.i"

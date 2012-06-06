@@ -223,7 +223,6 @@ set(gr_core_general_triple_threats
     gr_keep_one_in_n
     gr_kludge_copy
     gr_lfsr_32k_source_s
-    gr_map_bb
     gr_multiply_cc
     gr_multiply_ff
     gr_multiply_const_cc
