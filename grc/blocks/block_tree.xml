@@ -225,7 +225,6 @@
 	<cat>
 		<name>Probes</name>
 		<block>gr_probe_avg_mag_sqrd_x</block>
-		<block>gr_probe_density_b</block>
 		<block>gr_probe_signal_f</block>
 	</cat>
 	<cat>

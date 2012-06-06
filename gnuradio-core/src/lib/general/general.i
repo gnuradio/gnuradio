@@ -119,7 +119,6 @@
 #include <gr_encode_ccsds_27_bb.h>
 #include <gr_decode_ccsds_27_fb.h>
 #include <gr_scrambler_bb.h>
-#include <gr_probe_density_b.h>
 #include <gr_rail_ff.h>
 #include <gr_stretch_ff.h>
 #include <gr_copy.h>
@@ -229,7 +228,6 @@
 %include "gr_encode_ccsds_27_bb.i"
 %include "gr_decode_ccsds_27_fb.i"
 %include "gr_scrambler_bb.i"
-%include "gr_probe_density_b.i"
 %include "gr_rail_ff.i"
 %include "gr_stretch_ff.i"
 %include "gr_copy.i"

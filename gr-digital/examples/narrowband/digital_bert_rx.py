@@ -81,7 +81,7 @@ class bert_receiver(gr.hier_block2):
         self._descrambler = digital.descrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit descrambler
 
         # Measure BER by the density of 0s in the stream
-        self._ber = gr.probe_density_b(1.0/self._symbol_rate)
+        self._ber = digital.probe_density_b(1.0/self._symbol_rate)
         
         self.connect(self, self._demod, self._descrambler, self._ber)
 
