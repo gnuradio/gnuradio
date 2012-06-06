@@ -100,7 +100,6 @@ expand_h_cc_i(gr_multiply_const_vXX     ss ii ff cc)
 expand_h_cc_i(gr_integrate_XX           ss ii ff cc)
 expand_h_cc_i(gr_moving_average_XX      ss ii ff cc)
 
-expand_h_cc_i(gr_chunks_to_symbols_XX         bf bc sf sc if ic)
 expand_h_cc_i(gr_unpacked_to_packed_XX        bb ss ii)
 expand_h_cc_i(gr_packed_to_unpacked_XX        bb ss ii)
 expand_h_cc_i(gr_xor_XX                       bb ss ii)

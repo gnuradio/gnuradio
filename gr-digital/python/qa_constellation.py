@@ -172,8 +172,8 @@ class mod_demod(gr.hier_block2):
         if self.differential:
             self.blocks.append(gr.diff_encoder_bb(arity))
         # Convert to constellation symbols.
-        self.blocks.append(gr.chunks_to_symbols_bc(self.constellation.points(),
-                                                   self.constellation.dimensionality()))
+        self.blocks.append(digital_swig.chunks_to_symbols_bc(self.constellation.points(),
+                                                             self.constellation.dimensionality()))
         # CHANNEL
         # Channel just consists of a rotation to check differential coding.
         if rotation is not None:

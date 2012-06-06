@@ -61,7 +61,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
     src = gr.vector_source_s(packet,False)
     enc_out = trellis.encoder_ss(fo,0) # initial state = 0
     inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)
-    mod = gr.chunks_to_symbols_sf(modulation[1],modulation[0])
+    mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
 
     # CHANNEL
     isi = gr.fir_filter_fff(1,channel)

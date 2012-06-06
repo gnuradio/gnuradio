@@ -17,7 +17,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
     enc = trellis.sccc_encoder_ss(fo,0,fi,0,interleaver,K)
-    mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
+    mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
     add = gr.add_ff()

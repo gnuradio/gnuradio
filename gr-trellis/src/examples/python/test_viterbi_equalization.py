@@ -16,7 +16,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,tot_constellation,N0,seed):
     s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
     enc = trellis.encoder_ss(f,0) # initial state = 0
     # essentially here we implement the combination of modulation and channel as a memoryless modulation (the memory induced by the channel is hidden in the FSM)
-    mod = gr.chunks_to_symbols_sf(tot_constellation,dimensionality)
+    mod = digital.chunks_to_symbols_sf(tot_constellation,dimensionality)
 
     # CHANNEL
     add = gr.add_ff()

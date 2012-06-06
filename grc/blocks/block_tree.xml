@@ -113,7 +113,6 @@
 		<block>gr_unpacked_to_packed_xx</block>
 		<block>gr_packed_to_unpacked_xx</block>
 		<block>gr_unpack_k_bits_bb</block>
-		<block>gr_chunks_to_symbols_xx</block>
 	</cat>
 	<cat>
 		<name>Synchronizers</name>
