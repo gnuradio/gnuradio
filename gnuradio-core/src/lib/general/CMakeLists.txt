@@ -275,7 +275,6 @@ set(gr_core_general_triple_threats
     gr_vector_to_stream
     gr_vector_to_streams
     gr_unpack_k_bits_bb
-    gr_scrambler_bb
     gr_annotator_alltoall
     gr_annotator_1to1
     gr_burst_tagger

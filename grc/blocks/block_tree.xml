@@ -219,10 +219,6 @@
 		<block>gr_decode_ccsds_27_fb</block>
 	</cat>
 	<cat>
-		<name>Line Coding</name>
-		<block>gr_scrambler_bb</block>
-	</cat>
-	<cat>
 		<name>Probes</name>
 		<block>gr_probe_avg_mag_sqrd_x</block>
 		<block>gr_probe_signal_f</block>
