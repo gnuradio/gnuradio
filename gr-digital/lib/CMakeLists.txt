@@ -31,6 +31,15 @@ link_directories(${Boost_LIBRARY_DIRS})
 ########################################################################
 # Setup library
 ########################################################################
+
+if(ENABLE_GR_LOG)
+    include_directories(${LOG4CXX_INCLUDE_DIRS})
+    link_directories(${LOG4CXX_LIBRARIES})
+    list(APPEND digital_libs ${LOG4CXX_LIBRARIES} )
+else(ENABLE_GR_LOG)
+    add_definitions(-DDISABLE_GR_LOG)
+endif(ENABLE_GR_LOG)
+
 list(APPEND gr_digital_sources
     digital_impl_mpsk_snr_est.cc
     digital_binary_slicer_fb.cc
