@@ -193,9 +193,6 @@
 
 		<block>gr_diff_phasor_cc</block>
 
-		<block>gr_diff_encoder_bb</block>
-		<block>gr_diff_decoder_bb</block>
-
 		<block>blks2_wfm_tx</block>
 		<block>blks2_wfm_rcv</block>
 		<block>blks2_wfm_rcv_pll</block>

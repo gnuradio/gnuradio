@@ -170,7 +170,7 @@ class mod_demod(gr.hier_block2):
             self.blocks.append(digital_swig.map_bb(self.constellation.pre_diff_code()))
         # Differential encoding.
         if self.differential:
-            self.blocks.append(gr.diff_encoder_bb(arity))
+            self.blocks.append(digital_swig.diff_encoder_bb(arity))
         # Convert to constellation symbols.
         self.blocks.append(digital_swig.chunks_to_symbols_bc(self.constellation.points(),
                                                              self.constellation.dimensionality()))
@@ -184,7 +184,7 @@ class mod_demod(gr.hier_block2):
         self.blocks.append(digital_swig.constellation_decoder_cb(self.constellation.base()))
         # Differential decoding.
         if self.differential:
-            self.blocks.append(gr.diff_decoder_bb(arity))
+            self.blocks.append(digital_swig.diff_decoder_bb(arity))
         # Decode any pre-differential coding.
         if self.constellation.apply_pre_diff_code():
             self.blocks.append(digital_swig.map_bb(
