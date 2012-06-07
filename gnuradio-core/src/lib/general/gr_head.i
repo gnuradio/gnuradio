@@ -28,5 +28,6 @@ class gr_head : public gr_block {
   gr_head();
 public:
   void reset();
+  void set_length(int nitems);
 };
 

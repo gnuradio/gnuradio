@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Vector Source
+###################################################
+ -->
+<block>
+	<name>Vector Insert</name>
+	<key>gr_vector_insert_x</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.vector_insert_$(type.fcn)($vector, $period, $offset)</make>
+	<param>
+		<name>Output Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:b</opt>
+			<opt>vec_type:int_vector</opt>
+		</option>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+			<opt>vec_type:complex_vector</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+			<opt>vec_type:real_vector</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:i</opt>
+			<opt>vec_type:int_vector</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+			<opt>vec_type:int_vector</opt>
+		</option>
+	</param>
+	<param>
+		<name>Vector</name>
+		<key>vector</key>
+		<value>0, 0, 0</value>
+		<type>$type.vec_type</type>
+	</param>
+	<param>
+		<name>Periodicity</name>
+		<key>period</key>
+		<value>100</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Offset</name>
+		<key>offset</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+
+    <doc>
+        Periodicity, the length of the periodicity at which the vector should be inserted at the output.
+        (i.e. one vector for every N output items)
+
+        Offset sepcifies where in the cycle period we should begin at.
+    </doc>
+</block>

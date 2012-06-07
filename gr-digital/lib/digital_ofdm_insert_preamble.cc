@@ -41,7 +41,7 @@ digital_ofdm_insert_preamble::digital_ofdm_insert_preamble
        (int fft_length,
 	const std::vector<std::vector<gr_complex> > &preamble)
   : gr_block("ofdm_insert_preamble",
-	     gr_make_io_signature2(2, 2,
+	     gr_make_io_signature2(1, 2,
 				   sizeof(gr_complex)*fft_length,
 				   sizeof(char)),
 	     gr_make_io_signature2(1, 2,
@@ -67,15 +67,21 @@ digital_ofdm_insert_preamble::~digital_ofdm_insert_preamble()
 {
 }
 
+void digital_ofdm_insert_preamble::forecast (int noutput_items, gr_vector_int &ninput_items_required){
+	ninput_items_required[0] = noutput_items;
+}
+
 int
 digital_ofdm_insert_preamble::general_work (int noutput_items,
 					    gr_vector_int &ninput_items_v,
 					    gr_vector_const_void_star &input_items,
 					    gr_vector_void_star &output_items)
 {
-  int ninput_items = std::min(ninput_items_v[0], ninput_items_v[1]);
+  int ninput_items = ninput_items_v.size()==2?std::min(ninput_items_v[0], ninput_items_v[1]):ninput_items_v[0];
   const gr_complex *in_sym = (const gr_complex *) input_items[0];
-  const unsigned char *in_flag = (const unsigned char *) input_items[1];
+  const unsigned char *in_flag = 0;
+  if (input_items.size() == 2)  
+    in_flag = (const unsigned char *) input_items[1];
 
   gr_complex *out_sym = (gr_complex *) output_items[0];
   unsigned char *out_flag = 0;
@@ -97,14 +103,14 @@ digital_ofdm_insert_preamble::general_work (int noutput_items,
   while (no < noutput_items && ni < ninput_items){
     switch(d_state){
     case ST_IDLE:
-      if (in_flag[ni] & 0x1)	// this is first symbol of new payload
+      if (in_flag && in_flag[ni] & 0x1)	// this is first symbol of new payload
 	enter_preamble();
       else
 	ni++;			// eat one input symbol
       break;
       
     case ST_PREAMBLE:
-      assert(in_flag[ni] & 0x1);
+      assert(!in_flag || in_flag[ni] & 0x1);
       if (d_nsymbols_output >= (int) d_preamble.size()){
 	// we've output all the preamble
 	enter_first_payload();
@@ -133,7 +139,7 @@ digital_ofdm_insert_preamble::general_work (int noutput_items,
       break;
       
     case ST_PAYLOAD:
-      if (in_flag[ni] & 0x1){	// this is first symbol of a new payload
+      if (in_flag && in_flag[ni] & 0x1){	// this is first symbol of a new payload
 	enter_preamble();
 	break;
       }
