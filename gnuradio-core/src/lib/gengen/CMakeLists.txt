@@ -82,6 +82,7 @@ endmacro(expand_h_cc_i)
 # Invoke macro to generate various sources
 ########################################################################
 expand_h_cc_i(gr_vector_source_X   b s i f c)
+expand_h_cc_i(gr_vector_insert_X   b)
 expand_h_cc_i(gr_vector_sink_X     b s i f c)
 expand_h_cc_i(gr_noise_source_X      s i f c)
 expand_h_cc_i(gr_sig_source_X        s i f c)

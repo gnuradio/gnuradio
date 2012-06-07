@@ -61,6 +61,7 @@
 
 		<block>gr_fft_vxx</block>
 		<block>blks2_logpwrfft_x</block>
+		<block>gr_vector_insert_x</block>
 	</cat>
 	<cat>
 		<name>Type Conversions</name>
@@ -114,6 +115,7 @@
 		<block>gr_unpacked_to_packed_xx</block>
 		<block>gr_packed_to_unpacked_xx</block>
 		<block>gr_unpack_k_bits_bb</block>
+		<block>gr_pack_k_bits_bb</block>
 		<block>gr_chunks_to_symbols_xx</block>
 		<block>gr_map_bb</block>
 	</cat>
@@ -183,6 +185,7 @@
 		<block>blks2_rational_resampler_xxx</block>
 		<block>gr_fractional_interpolator_xx</block>
 		<block>gr_keep_one_in_n</block>
+		<block>gr_keep_m_in_n</block>
 		<block>gr_moving_average_xx</block>
 		<block>gr_iqcomp_cc</block>
 		<block>gr_dc_blocker</block>
