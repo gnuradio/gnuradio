@@ -3,6 +3,7 @@
 
 <arch name="generic" type="all"> <!-- name and type are both required-->
   <flag>none</flag>  <!-- flag is the only required field-->
+  <alignment>1</alignment>
 </arch>
 
 <arch name="altivec" type="powerpc">
