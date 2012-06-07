@@ -22,7 +22,7 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,keep_m_in_n)
 
-gr_keep_m_in_n_sptr 
+gr_keep_m_in_n_sptr
 gr_make_keep_m_in_n (size_t itemsize, int m, int n, int offset);
 
 class gr_keep_m_in_n : public gr_sync_block

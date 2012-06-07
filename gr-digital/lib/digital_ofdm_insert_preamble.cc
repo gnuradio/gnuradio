@@ -54,8 +54,8 @@ digital_ofdm_insert_preamble::digital_ofdm_insert_preamble
     d_pending_flag(0)
 {
   // sanity check preamble symbols
-  for (size_t i = 0; i < d_preamble.size(); i++){
-    if (d_preamble[i].size() != (size_t) d_fft_length)
+  for(size_t i = 0; i < d_preamble.size(); i++) {
+    if(d_preamble[i].size() != (size_t) d_fft_length)
       throw std::invalid_argument("digital_ofdm_insert_preamble: invalid length for preamble symbol");
   }
 
@@ -67,20 +67,21 @@ digital_ofdm_insert_preamble::~digital_ofdm_insert_preamble()
 {
 }
 
-void digital_ofdm_insert_preamble::forecast (int noutput_items, gr_vector_int &ninput_items_required){
-	ninput_items_required[0] = noutput_items;
+void digital_ofdm_insert_preamble::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+{
+  ninput_items_required[0] = noutput_items;
 }
 
 int
-digital_ofdm_insert_preamble::general_work (int noutput_items,
-					    gr_vector_int &ninput_items_v,
-					    gr_vector_const_void_star &input_items,
-					    gr_vector_void_star &output_items)
+digital_ofdm_insert_preamble::general_work(int noutput_items,
+					   gr_vector_int &ninput_items_v,
+					   gr_vector_const_void_star &input_items,
+					   gr_vector_void_star &output_items)
 {
   int ninput_items = ninput_items_v.size()==2?std::min(ninput_items_v[0], ninput_items_v[1]):ninput_items_v[0];
   const gr_complex *in_sym = (const gr_complex *) input_items[0];
   const unsigned char *in_flag = 0;
-  if (input_items.size() == 2)  
+  if (input_items.size() == 2)
     in_flag = (const unsigned char *) input_items[1];
 
   gr_complex *out_sym = (gr_complex *) output_items[0];

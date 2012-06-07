@@ -37,25 +37,25 @@ typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
  */
 
 class @NAME@ : public gr_block {
-  friend GR_CORE_API @NAME@_sptr 
-  gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, int periodicity, int offset);
+  friend GR_CORE_API @NAME@_sptr
+  gr_make_@BASE_NAME@(const std::vector<@TYPE@> &data, int periodicity, int offset);
 
   std::vector<@TYPE@>	d_data;
   int		d_offset;
   int       d_periodicity;
 
-  @NAME@ (const std::vector<@TYPE@> &data, int periodicity, int offset);
+  @NAME@(const std::vector<@TYPE@> &data, int periodicity, int offset);
 
  public:
   void rewind() {d_offset=0;}
-  virtual int general_work (int noutput_items,
-            gr_vector_int &ninput_items,
-		    gr_vector_const_void_star &input_items,
-		    gr_vector_void_star &output_items);
+  virtual int general_work(int noutput_items,
+			   gr_vector_int &ninput_items,
+			   gr_vector_const_void_star &input_items,
+			   gr_vector_void_star &output_items);
   void set_data(const std::vector<@TYPE@> &data){ d_data = data; rewind(); }
 };
 
 GR_CORE_API @NAME@_sptr
-gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, int periodicity, int offset=0);
+gr_make_@BASE_NAME@(const std::vector<@TYPE@> &data, int periodicity, int offset=0);
 
 #endif

@@ -29,41 +29,41 @@
 #include <stdexcept>
 #include <iostream>
 
-gr_pack_k_bits_bb_sptr gr_make_pack_k_bits_bb (unsigned k)
+gr_pack_k_bits_bb_sptr gr_make_pack_k_bits_bb(unsigned k)
 {
-  return gnuradio::get_initial_sptr(new gr_pack_k_bits_bb (k));
+  return gnuradio::get_initial_sptr(new gr_pack_k_bits_bb(k));
 }
 
 
 gr_pack_k_bits_bb::gr_pack_k_bits_bb (unsigned k)
-  : gr_sync_decimator ("pack_k_bits_bb",
-			  gr_make_io_signature (1, 1, sizeof (unsigned char)),
-			  gr_make_io_signature (1, 1, sizeof (unsigned char)),
-			  k),
+  : gr_sync_decimator("pack_k_bits_bb",
+		      gr_make_io_signature (1, 1, sizeof(unsigned char)),
+		      gr_make_io_signature (1, 1, sizeof(unsigned char)),
+		      k),
     d_k (k)
 {
   if (d_k == 0)
-    throw std::out_of_range ("interpolation must be > 0");
+    throw std::out_of_range("interpolation must be > 0");
 }
 
-gr_pack_k_bits_bb::~gr_pack_k_bits_bb ()
+gr_pack_k_bits_bb::~gr_pack_k_bits_bb()
 {
 }
 
 int
-gr_pack_k_bits_bb::work (int noutput_items,
-			   gr_vector_const_void_star &input_items,
-			   gr_vector_void_star &output_items)
+gr_pack_k_bits_bb::work(int noutput_items,
+			gr_vector_const_void_star &input_items,
+			gr_vector_void_star &output_items)
 {
-  const unsigned char *in = (const unsigned char *) input_items[0];
-  unsigned char *out = (unsigned char *) output_items[0];
+  const unsigned char *in = (const unsigned char *)input_items[0];
+  unsigned char *out = (unsigned char *)output_items[0];
 
-  for (int i = 0; i < noutput_items; i++){
+  for(int i = 0; i < noutput_items; i++) {
     out[i] = 0x00;
-    for (unsigned int j = 0; j < d_k; j++){
-        out[i] |=  (0x01 & in[i*d_k+j])<<j;
+    for(unsigned int j = 0; j < d_k; j++) {
+      out[i] |=  (0x01 & in[i*d_k+j])<<j;
     }
   }
-  
+
   return noutput_items;
 }

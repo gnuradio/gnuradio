@@ -29,7 +29,7 @@
 class gr_keep_m_in_n;
 typedef boost::shared_ptr<gr_keep_m_in_n> gr_keep_m_in_n_sptr;
 
-GR_CORE_API gr_keep_m_in_n_sptr 
+GR_CORE_API gr_keep_m_in_n_sptr
 gr_make_keep_m_in_n (size_t item_size, int m, int n, int offset);
 
 

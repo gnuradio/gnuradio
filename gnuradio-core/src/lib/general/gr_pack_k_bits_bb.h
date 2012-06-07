@@ -33,7 +33,7 @@ GR_CORE_API gr_pack_k_bits_bb_sptr gr_make_pack_k_bits_bb (unsigned k);
 class gr_pack_k_bits_bb;
 
 /*!
- * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB.
+ * \brief Converts a stream of bytes with 1 bit in the LSB to a byte with  k relevent bits.
  * \ingroup converter_blk
  */
 class GR_CORE_API gr_pack_k_bits_bb : public gr_sync_decimator
