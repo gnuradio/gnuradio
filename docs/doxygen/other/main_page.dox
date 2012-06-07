@@ -48,4 +48,89 @@ Many blocks have already been converted to use Volk in their calls, so
 they can also serve as examples. See the gr_complex_to_xxx.h file for
 examples of various blocks that make use of Volk.
 
+
+\section logging Logging
+
+GNU Radio has a logging interface to enable various levels of logging
+information to be printed to the console or a file. The logger derives
+from log4cxx (http://logging.apache.org/log4cxx) which is readily
+available in most Linux distributions. This is an optional dependency
+and GNU Radio will work without it.
+
+When configuring GNU Radio, the -DENABLE_GR_LOG option to cmake will
+allow the user to toggle use of the logger on and off and will turn
+off if log4cxx is not available.
+
+Logging is useful for blocks to print out certain amounts of data at
+different levels. These levels are:
+
+    TRACE < DEBUG < INFO < WARN < ERROR < FATAL
+
+The order here determines the level of output. When using the Debug
+level, for instance, all Debug and higher messages are logged and
+Trace is ignored.
+
+\subsection use_logging Using the Logging Features
+
+In a GNU Radio block, you use the logging features by calling macros
+that are defined in gr_log.h, which must be included for use.
+
+The logger must be properly configured, which is easiest by defining a
+configuration file. The log4cxx website will provide more information
+on how configuration works and looks. Mostly, a default configuration
+script provided with GNU Radio can be used. After installation, the
+default configuration script is located at:
+
+    $prefix/share/gnuradio/gr_log_default.xml
+
+In a class, we must first configure the logger and then get access to it:
+
+\code
+  GR_CONFIG_LOGGER("prefix/share/gnuradio/gr_log_default.xml");
+  GR_LOG_GETLOGGER(LOG, name);
+\endcode
+
+The default config file has two names that can be used (as std::string
+types): "gr_log" and "gr_log_debug". The first one will print
+all levels of logging informaiton while the second one will only print
+Debug and above.
+
+The "LOG" name for the logger is now a LoggerPtr object and can be
+named anything.
+
+For a given block, it is recommended that a new name be specified for
+individual control over the logger as loggers are globally held in a
+LoggerManager. Since log4cxx is hierarchical, a new name is created by
+appending a string to an existing logger. So a general logger used in
+the digital_costas_loop_cc.cc class, for instance, could look
+something like "gr_log.costas_loop". This will inherit all properties
+of the parent logger, "gr_log".
+
+After calling "GR_LOG_GETLOGGER", the LoggerPtr that was specified,
+"LOG" in the example above, is used to set the properties. For
+instance, the level for any logger can be easily modified using the
+setLogger(level) method, such as:
+
+\code
+  LOG->setLevel(log4cxx::Level::getAll());
+\endcode
+
+In this case, the "getAll()" method sets the logger's level to log
+everything. Other methods are "getDebug()", "getInfo()", and so on for
+the different levels of logging.
+
+The various logging macros are defined in gr_log.h. Here are some
+simple exmaples of using them:
+
+\code
+  GR_LOG_TRACE(LOG, "TRACE message");
+  GR_LOG_DEBUG(LOG, "DEBUG message");
+  GR_LOG_INFO(LOG, "INFO message");
+  GR_LOG_WARN(LOG, "WARNING message");
+  GR_LOG_ERROR(LOG, "ERROR message");
+  GR_FATAL(LOG, "FATAL message");
+  GR_ERRORIF(LOG, a>b, "CONDITIONAL ERROR message");
+  GR_ASSERT(LOG, a>b, "ASSERT error message");
+\endcode
+
 */
