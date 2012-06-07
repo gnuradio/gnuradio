@@ -33,6 +33,12 @@ link_directories(${Boost_LIBRARY_DIRS})
 include_directories(${CPPUNIT_INCLUDE_DIRS})
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
+# Only use if log4cxx is installed
+if(LOG4CXX_FOUND)
+  include_directories(${LOG4CXX_INCLUDE_DIRS})
+  link_directories(${LOG4CXX_LIBRARY_DIRS})
+endif(LOG4CXX_FOUND)
+
 ########################################################################
 # Build benchmarks and non-registered tests
 ########################################################################

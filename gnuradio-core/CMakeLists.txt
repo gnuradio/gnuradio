@@ -23,6 +23,7 @@
 include(GrBoost)
 
 find_package(FFTW3f)
+find_package(Log4cxx)
 
 include(GrPython) #used for code generation
 
@@ -41,6 +42,11 @@ GR_REGISTER_COMPONENT("gnuradio-core" ENABLE_GR_CORE
     Boost_FOUND
     FFTW3F_FOUND
     PYTHONINTERP_FOUND
+)
+
+# Making a new component so people can easily turn the log featue on/off
+GR_REGISTER_COMPONENT("gr-log" ENABLE_GR_LOG
+    LOG4CXX_FOUND
 )
 
 include(GrMiscUtils)
