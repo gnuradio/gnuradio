@@ -24,8 +24,6 @@
 #include <stdexcept>
 #include <iostream>
 #include <boost/format.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/condition_variable.hpp>
 #include <boost/make_shared.hpp>
 #include "gr_uhd_common.h"
 
@@ -62,8 +60,7 @@ public:
         _nchan(std::max<size_t>(1, stream_args.channels.size())),
         _stream_now(_nchan == 1),
         _tag_now(false),
-        _start_time_set(false),
-        _is_streaming(false)
+        _start_time_set(false)
     {
         if (stream_args.cpu_format == "fc32") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_FLOAT32);
         if (stream_args.cpu_format == "sc16") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_INT16);
@@ -323,13 +320,6 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        boost::mutex::scoped_lock lock(_mutex);
-
-        while (!_is_streaming)
-        {
-            _cond.wait(lock);
-        }
-
         #ifdef GR_UHD_USE_STREAM_API
         //In order to allow for low-latency:
         //We receive all available packets without timeout.
@@ -402,9 +392,6 @@ public:
     }
 
     bool start(void){
-        boost::mutex::scoped_lock lock(_mutex);
-        _is_streaming = true;
-
         #ifdef GR_UHD_USE_STREAM_API
         _rx_stream = _dev->get_rx_stream(_stream_args);
         _samps_per_packet = _rx_stream->get_max_num_samps();
@@ -449,9 +436,6 @@ public:
     }
 
     bool stop(void){
-        boost::mutex::scoped_lock lock(_mutex);
-        _is_streaming = false;
-
         _dev->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
 
         this->flush();
@@ -524,10 +508,6 @@ private:
 
     uhd::time_spec_t _start_time;
     bool _start_time_set;
-
-    bool _is_streaming;
-    boost::condition_variable _cond;
-    boost::mutex _mutex;
 };
 
 
