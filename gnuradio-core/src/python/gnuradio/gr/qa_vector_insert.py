@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
