@@ -37,6 +37,7 @@
 #include <gr_stream_to_vector.h>
 #include <gr_vector_to_stream.h>
 #include <gr_keep_one_in_n.h>
+#include <gr_keep_m_in_n.h>
 #include <gr_fft_vcc.h>
 #include <gr_fft_vfc.h>
 #include <gr_float_to_int.h>
@@ -100,6 +101,7 @@
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_unpack_k_bits_bb.h>
+#include <gr_pack_k_bits_bb.h>
 #include <gr_diff_phasor_cc.h>
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
@@ -155,6 +157,7 @@
 %include "gr_stream_to_vector.i"
 %include "gr_vector_to_stream.i"
 %include "gr_keep_one_in_n.i"
+%include "gr_keep_m_in_n.i"
 %include "gr_fft_vcc.i"
 %include "gr_fft_vfc.i"
 %include "gr_float_to_int.i"
@@ -218,6 +221,7 @@
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_unpack_k_bits_bb.i"
+%include "gr_pack_k_bits_bb.i"
 %include "gr_diff_phasor_cc.i"
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"
