@@ -191,8 +191,6 @@
 		<block>gr_quadrature_demod_cf</block>
 		<block>gr_cpfsk_bc</block>
 
-		<block>gr_diff_phasor_cc</block>
-
 		<block>blks2_wfm_tx</block>
 		<block>blks2_wfm_rcv</block>
 		<block>blks2_wfm_rcv_pll</block>

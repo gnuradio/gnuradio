@@ -98,7 +98,6 @@
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_unpack_k_bits_bb.h>
-#include <gr_diff_phasor_cc.h>
 #include <gr_framer_sink_1.h>
 #include <gr_multiply_cc.h>
 #include <gr_multiply_ff.h>
@@ -204,7 +203,6 @@
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_unpack_k_bits_bb.i"
-%include "gr_diff_phasor_cc.i"
 %include "gr_framer_sink_1.i"
 %include "gr_multiply_cc.i"
 %include "gr_multiply_ff.i"

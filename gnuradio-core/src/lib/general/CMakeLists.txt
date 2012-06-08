@@ -194,7 +194,6 @@ set(gr_core_general_triple_threats
     gr_cpm
     gr_ctcss_squelch_ff
     gr_decode_ccsds_27_fb
-    gr_diff_phasor_cc
     gr_dpll_bb
     gr_deinterleave
     gr_delay
