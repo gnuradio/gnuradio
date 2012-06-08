@@ -125,7 +125,6 @@
 		<block>gr_pll_refout_cc</block>
 
 		<block>gr_simple_correlator</block>
-		<block>gr_simple_framer</block>
 
 		<block>blks2_packet_decoder</block>
 		<block>blks2_packet_encoder</block>

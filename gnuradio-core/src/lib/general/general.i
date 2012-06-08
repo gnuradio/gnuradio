@@ -52,7 +52,6 @@
 #include <gr_frequency_modulator_fc.h>
 #include <gr_phase_modulator_fc.h>
 #include <gr_simple_correlator.h>
-#include <gr_simple_framer.h>
 #include <gr_align_on_samplenumbers_ss.h>
 #include <gr_complex_to_xxx.h>
 #include <gr_complex_to_interleaved_short.h>
@@ -154,7 +153,6 @@
 %include "gr_frequency_modulator_fc.i"
 %include "gr_phase_modulator_fc.i"
 %include "gr_simple_correlator.i"
-%include "gr_simple_framer.i"
 %include "gr_align_on_samplenumbers_ss.i"
 %include "gr_complex_to_xxx.i"
 %include "gr_complex_to_interleaved_short.i"

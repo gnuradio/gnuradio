@@ -250,7 +250,6 @@ set(gr_core_general_triple_threats
     gr_short_to_float
     gr_short_to_char
     gr_simple_correlator
-    gr_simple_framer
     gr_simple_squelch_cc
     gr_skiphead
     gr_squelch_base_cc
