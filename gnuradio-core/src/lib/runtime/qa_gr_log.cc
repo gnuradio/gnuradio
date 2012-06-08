@@ -35,7 +35,7 @@
 void
 qa_gr_log::t1()
 {
-#ifndef DISABLE_GR_LOG
+#ifdef ENABLE_GR_LOG
   // This doesn't really test anything, more just
   // making sure nothing's gone horribly wrong.
   GR_LOG_GETLOGGER(LOG,"errLoggerRoot");

@@ -31,6 +31,9 @@ link_directories(${SHD_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
@@ -43,6 +46,7 @@ list(APPEND shd_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${SHD_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-shd SHARED ${gr_shd_sources})

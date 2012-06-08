@@ -37,29 +37,7 @@
 *
 */
 
-//If DISABLE_GR_LOG set then clear all logging macros
-#ifdef DISABLE_GR_LOG
-
-#define GR_CONFIG_LOGGER(config)
-#define GR_LOG_GETLOGGER(logger, name) 
-#define GR_TRACE(name, msg)
-#define GR_DEBUG(name, msg)
-#define GR_INFO(name, msg)
-#define GR_WARN(name, msg) 
-#define GR_ERROR(name, msg) 
-#define GR_FATAL(name, msg) 
-#define GR_ERRORIF(name, cond, msg)
-#define GR_ASSERT(name, cond, msg)
-#define GR_LOG_TRACE(logger, msg)
-#define GR_LOG_DEBUG(logger, msg)
-#define GR_LOG_INFO(logger, msg) 
-#define GR_LOG_WARN(logger, msg) 
-#define GR_LOG_ERROR(logger, msg) 
-#define GR_LOG_FATAL(logger, msg) 
-#define GR_LOG_ERRORIF(logger, cond, msg)
-#define GR_LOG_ASSERT(logger, cond, msg)
-
-#else
+#ifdef ENABLE_GR_LOG
 
 #include <stdio.h>
 #include <string>
@@ -262,5 +240,28 @@ class gr_log
   void log_assert(LoggerPtr logger,bool cond,std::string msg){GR_LOG_ASSERT(logger,cond,msg);};
 };
 
-#endif /* DISABLE_GR_LOG */
+
+//If ENABLE_GR_LOG not set then clear all logging macros
+#else
+
+#define GR_CONFIG_LOGGER(config)
+#define GR_LOG_GETLOGGER(logger, name) 
+#define GR_TRACE(name, msg)
+#define GR_DEBUG(name, msg)
+#define GR_INFO(name, msg)
+#define GR_WARN(name, msg) 
+#define GR_ERROR(name, msg) 
+#define GR_FATAL(name, msg) 
+#define GR_ERRORIF(name, cond, msg)
+#define GR_ASSERT(name, cond, msg)
+#define GR_LOG_TRACE(logger, msg)
+#define GR_LOG_DEBUG(logger, msg)
+#define GR_LOG_INFO(logger, msg) 
+#define GR_LOG_WARN(logger, msg) 
+#define GR_LOG_ERROR(logger, msg) 
+#define GR_LOG_FATAL(logger, msg) 
+#define GR_LOG_ERRORIF(logger, cond, msg)
+#define GR_LOG_ASSERT(logger, cond, msg)
+
+#endif /* ENABLE_GR_LOG */
 #endif /* INCLUDED_GR_LOG_H */

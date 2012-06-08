@@ -40,7 +40,7 @@
 //-----------------------------------
 
 
-#ifndef DISABLE_GR_LOG
+#ifdef ENABLE_GR_LOG
 
 %{
 // The .h files
@@ -82,4 +82,4 @@ public:
   void log_assert(LoggerPtr logger,bool cond,std::string msg);
 };
 
-#endif
+#endif /* ENABLE_GR_LOG */

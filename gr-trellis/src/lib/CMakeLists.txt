@@ -31,6 +31,9 @@ include_directories(
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # generate the python helper script which calls into the build utils
 ########################################################################
@@ -149,6 +152,7 @@ list(APPEND gr_trellis_sources
 list(APPEND trellis_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-trellis SHARED ${gr_trellis_sources})

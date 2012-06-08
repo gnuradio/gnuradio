@@ -50,26 +50,25 @@ link_directories(${Boost_LIBRARY_DIRS})
 include_directories(${FFTW3F_INCLUDE_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
 
 # Only use if log4cxx is installed
-# Define DISABLE_GR_LOG so .h and .cc files can turn actual
+# Define ENABLE_GR_LOG so .h and .cc files can turn actual
 # logging and insert dummy functions.
-if(LOG4CXX_FOUND)
-    include_directories(${LOG4CXX_INCLUDE_DIRS})
-    link_directories(${LOG4CXX_LIBRARIES})
-    list(APPEND gnuradio_core_libs ${LOG4CXX_LIBRARIES} )
-else(LOG4CXX_FOUND)
-    add_definitions(-DDISABLE_GR_LOG)
-endif(LOG4CXX_FOUND)
+#if(LOG4CXX_FOUND)
+#    add_definitions(-DENABLE_GR_LOG)
+#endif(LOG4CXX_FOUND)
 
 list(APPEND gnuradio_core_libs
     gruel
     ${Boost_LIBRARIES}
     ${FFTW3F_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 if(FFTW3F_THREADS_LIBRARIES)

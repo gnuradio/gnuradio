@@ -210,6 +210,9 @@ endif(ENABLE_VOLK)
 
 GR_VMCIRCBUF()
 
+# Handle gr_log enable/disable
+GR_LOGGING()
+
 ########################################################################
 # Distribute the README file
 ########################################################################

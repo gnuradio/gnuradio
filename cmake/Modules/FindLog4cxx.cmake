@@ -1,7 +1,7 @@
 #   CMake module to find LOG4CXX library
 
 INCLUDE(FindPkgConfig)
-PKG_CHECK_MODULES(PC_LOG4CXX log4cxx)
+PKG_CHECK_MODULES(PC_LOG4CXX liblog4cxx)
 
 FIND_PATH(
     LOG4CXX_INCLUDE_DIRS

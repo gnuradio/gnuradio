@@ -24,24 +24,28 @@ include(GrSwig)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 set(GR_SWIG_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
     ${GSL_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
-set(GR_SWIG_LIBRARIES gnuradio-core)
+set(GR_SWIG_LIBRARIES
+    gnuradio-core
+    ${LOG4CXX_LIBRARIES}
+)
 
 # Only use if log4cxx is installed
-# Define DISABLE_GR_LOG for the .i file to ignore it.
-if(LOG4CXX_FOUND)
-    link_directories(${LOG4CXX_LIBRARY_DIRS})
-    list(APPEND GR_SWIG_LIBRARIES log4cxx)
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${LOG4CXX_INCLUDE_DIRS})
-else(LOG4CXX_FOUND)
-    add_definitions(-DDISABLE_GR_LOG)
-endif(LOG4CXX_FOUND)
+# Define ENABLE_GR_LOG for the .i file to ignore it.
+#if(ENABLE_GR_LOG)
+#    add_definitions(-DENABLE_GR_LOG)
+#    SET(GR_SWIG_FLAGS "-DENABLE_GR_LOG")
+#endif(ENABLE_GR_LOG)
 
 ########################################################################
 # Build and install the swig targets
@@ -56,7 +60,6 @@ endif(LOG4CXX_FOUND)
 set(GR_SWIG_TARGET_DEPS gengen_generated filter_generated)
 
 foreach(what runtime general gengen filter io hier)
-    SET(GR_SWIG_FLAGS "-DDISABLE_GR_LOG")
     SET(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${what}_swig_doc.i)
     SET(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../${what} ${CMAKE_CURRENT_BINARY_DIR}/../${what})
     GR_SWIG_MAKE(gnuradio_core_${what} gnuradio_core_${what}.i)
