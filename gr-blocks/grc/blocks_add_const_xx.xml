@@ -7,7 +7,7 @@
  -->
 <block>
 	<name>Add Const</name>
-	<key>gr_add_const_vxx</key>
+	<key>blocks_add_const_xx</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.add_const_v$(type.fcn)($const)</make>
 	<callback>set_k($const)</callback>
