@@ -41,8 +41,8 @@ if __name__ == '__main__':
 
 macro(expand_cc_h_impl root)
   #make a list of all the generated files
-  unset(expanded_files_cc)
-  unset(expanded_files_h)
+  unset(expanded_files_cc_impl)
+  unset(expanded_files_h_impl)
   foreach(sig ${ARGN})
     string(REGEX REPLACE "X+" ${sig} name ${root})
     list(APPEND expanded_files_cc_impl ${CMAKE_CURRENT_BINARY_DIR}/${name}_impl.cc)
@@ -85,7 +85,8 @@ endmacro(expand_cc_h_impl)
 ########################################################################
 # Invoke macro to generate various sources
 ########################################################################
-expand_cc_h_impl(add_XX  ss ii cc)
+expand_cc_h_impl(add_XX       ss ii cc)
+expand_cc_h_impl(add_const_XX ss ii ff cc)
 
 ########################################################################
 # Setup the include and linker paths

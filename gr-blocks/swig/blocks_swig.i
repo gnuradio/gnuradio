@@ -32,14 +32,26 @@
 #include "blocks/add_ss.h"
 #include "blocks/add_ii.h"
 #include "blocks/add_cc.h"
+#include "blocks/add_const_ff.h"
+#include "blocks/add_const_ss.h"
+#include "blocks/add_const_ii.h"
+#include "blocks/add_const_cc.h"
 %}
 
 %include "blocks/add_ff.h"
 %include "blocks/add_ss.h"
 %include "blocks/add_ii.h"
 %include "blocks/add_cc.h"
+%include "blocks/add_const_ff.h"
+%include "blocks/add_const_ss.h"
+%include "blocks/add_const_ii.h"
+%include "blocks/add_const_cc.h"
 
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_cc);

@@ -31,5 +31,6 @@
 	<cat>
 		<name>Math Operations</name>
 		<block>blocks_add_xx</block>
+		<block>blocks_add_const_xx</block>
 	</cat>
 </cat>

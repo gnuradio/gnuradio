@@ -64,7 +64,8 @@ endmacro(expand_h)
 ########################################################################
 # Invoke macro to generate various sources
 ########################################################################
-expand_h(add_XX  ss ii cc)
+expand_h(add_XX       ss ii cc)
+expand_h(add_const_XX ss ii ff cc)
 
 add_custom_target(blocks_generated_includes DEPENDS
     ${generated_includes}

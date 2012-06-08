@@ -99,19 +99,18 @@ class test_add_and_friends(gr_unittest.TestCase):
         op = blocks_swig.add_cc()
         self.help_cc((src1_data, src2_data), expected_result, op)
 
-    """
     def test_add_const_ii(self):
         src_data = (1, 2, 3, 4, 5)
         expected_result = (6, 7, 8, 9, 10)
-        op = gr.add_const_ii(5)
+        op = blocks_swig.add_const_ii(5)
         self.help_ii((src_data,), expected_result, op)
 
     def test_add_const_cc(self):
         src_data = (1, 2, 3, 4, 5)
         expected_result = (1+5j, 2+5j, 3+5j, 4+5j, 5+5j)
-        op = gr.add_const_cc(5j)
+        op = blocks_swig.add_const_cc(5j)
         self.help_cc((src_data,), expected_result, op)
-
+    """
     def test_mult_const_ii(self):
         src_data = (-1, 0, 1, 2, 3)
         expected_result = (-5, 0, 5, 10, 15)
