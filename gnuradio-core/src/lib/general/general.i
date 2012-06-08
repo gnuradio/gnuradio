@@ -81,7 +81,6 @@
 #include <gr_conjugate_cc.h>
 #include <gr_vco_f.h>
 #include <gr_threshold_ff.h>
-#include <gr_packet_sink.h>
 #include <gr_dpll_bb.h>
 #include <gr_fmdet_cf.h>
 #include <gr_pll_freqdet_cf.h>
@@ -184,7 +183,6 @@
 %include "gr_conjugate_cc.i"
 %include "gr_vco_f.i"
 %include "gr_threshold_ff.i"
-%include "gr_packet_sink.i"
 %include "gr_dpll_bb.i"
 %include "gr_fmdet_cf.i"
 %include "gr_pll_freqdet_cf.i"

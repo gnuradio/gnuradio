@@ -229,7 +229,6 @@ set(gr_core_general_triple_threats
     gr_null_sink
     gr_null_source
     gr_pa_2x2_phase_combiner
-    gr_packet_sink
     gr_peak_detector2_fb
     gr_phase_modulator_fc
     gr_pll_carriertracking_cc
