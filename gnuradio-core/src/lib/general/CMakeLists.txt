@@ -211,7 +211,6 @@ set(gr_core_general_triple_threats
     gr_float_to_uchar
     gr_fmdet_cf
     gr_frequency_modulator_fc
-    gr_framer_sink_1
     gr_head
     gr_int_to_float
     gr_interleave

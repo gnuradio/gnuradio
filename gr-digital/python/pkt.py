@@ -143,7 +143,7 @@ class demod_pkts(gr.hier_block2):
         self._rcvd_pktq = gr.msg_queue()          # holds packets from the PHY
         self.correlator = digital_swig.correlate_access_code_bb(access_code, threshold)
 
-        self.framer_sink = gr.framer_sink_1(self._rcvd_pktq)
+        self.framer_sink = digital.framer_sink_1(self._rcvd_pktq)
         self.connect(self, self._demodulator, self.correlator, self.framer_sink)
         
         self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
