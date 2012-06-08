@@ -7,8 +7,8 @@
 <block>
 	<name>Simple Framer</name>
 	<key>digital_simple_framer</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.simple_framer($payload_bytesize)</make>
+	<import>from gnuradio import digital</import>
+	<make>digital.simple_framer($payload_bytesize)</make>
 	<param>
 		<name>Payload Byte Size</name>
 		<key>payload_bytesize</key>

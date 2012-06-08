@@ -39,12 +39,12 @@ DIGITAL_API digital_bytes_to_syms_sptr digital_make_bytes_to_syms();
  * This block is deprecated.
  *
  * The combination of gr_packed_to_unpacked_bb followed by
- * gr_chunks_to_symbols_bf or gr_chunks_to_symbols_bc handles the
+ * digital_chunks_to_symbols_bf or digital_chunks_to_symbols_bc handles the
  * general case of mapping from a stream of bytes into arbitrary float
  * or complex symbols.
  *
  * \sa gr_packed_to_unpacked_bb, gr_unpacked_to_packed_bb,
- * \sa gr_chunks_to_symbols_bf, gr_chunks_to_symbols_bc.
+ * \sa digital_chunks_to_symbols_bf, digital_chunks_to_symbols_bc.
  */
 class DIGITAL_API digital_bytes_to_syms : public gr_sync_interpolator
 {

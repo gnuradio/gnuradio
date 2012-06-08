@@ -43,7 +43,7 @@ digital_make_@BASE_NAME@ (const std::vector<@O_TYPE@> &symbol_table, const int D
  * out[n D + k] = symbol_table[in[n] D + k], k=0,1,...,D-1
  *
  * The combination of gr_packed_to_unpacked_XX followed by
- * gr_chunks_to_symbols_XY handles the general case of mapping
+ * digital_chunks_to_symbols_XY handles the general case of mapping
  * from a stream of bytes or shorts into arbitrary float
  * or complex symbols.
  *

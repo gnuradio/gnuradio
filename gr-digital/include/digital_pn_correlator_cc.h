@@ -25,7 +25,7 @@
 
 #include <digital_api.h>
 #include <gr_sync_decimator.h>
-#include <gri_glfsr.h>
+#include <digital_impl_glfsr.h>
 
 class digital_pn_correlator_cc;
 typedef boost::shared_ptr<digital_pn_correlator_cc> digital_pn_correlator_cc_sptr;
@@ -56,7 +56,7 @@ class DIGITAL_API digital_pn_correlator_cc : public gr_sync_decimator
 
   int        d_len;
   float      d_pn;
-  gri_glfsr *d_reference;
+  digital_impl_glfsr *d_reference;
 
  protected:
   digital_pn_correlator_cc(int degree, int mask, int seed);

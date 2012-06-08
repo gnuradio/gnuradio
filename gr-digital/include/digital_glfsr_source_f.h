@@ -26,7 +26,7 @@
 #include <digital_api.h>
 #include <gr_sync_block.h>
 
-class gri_glfsr;
+class digital_impl_glfsr;
 
 class digital_glfsr_source_f;
 typedef boost::shared_ptr<digital_glfsr_source_f> digital_glfsr_source_f_sptr;
@@ -54,7 +54,7 @@ class DIGITAL_API digital_glfsr_source_f : public gr_sync_block
     digital_make_glfsr_source_f(int degree, bool repeat,
 				int mask, int seed);
 
-  gri_glfsr *d_glfsr;
+  digital_impl_glfsr *d_glfsr;
 
   bool d_repeat;
   unsigned int d_index;

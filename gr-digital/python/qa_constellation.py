@@ -167,13 +167,13 @@ class mod_demod(gr.hier_block2):
         # Apply any pre-differential coding
         # Gray-coding is done here if we're also using differential coding.
         if self.constellation.apply_pre_diff_code():
-            self.blocks.append(gr.map_bb(self.constellation.pre_diff_code()))
+            self.blocks.append(digital_swig.map_bb(self.constellation.pre_diff_code()))
         # Differential encoding.
         if self.differential:
-            self.blocks.append(gr.diff_encoder_bb(arity))
+            self.blocks.append(digital_swig.diff_encoder_bb(arity))
         # Convert to constellation symbols.
-        self.blocks.append(gr.chunks_to_symbols_bc(self.constellation.points(),
-                                                   self.constellation.dimensionality()))
+        self.blocks.append(digital_swig.chunks_to_symbols_bc(self.constellation.points(),
+                                                             self.constellation.dimensionality()))
         # CHANNEL
         # Channel just consists of a rotation to check differential coding.
         if rotation is not None:
@@ -184,10 +184,10 @@ class mod_demod(gr.hier_block2):
         self.blocks.append(digital_swig.constellation_decoder_cb(self.constellation.base()))
         # Differential decoding.
         if self.differential:
-            self.blocks.append(gr.diff_decoder_bb(arity))
+            self.blocks.append(digital_swig.diff_decoder_bb(arity))
         # Decode any pre-differential coding.
         if self.constellation.apply_pre_diff_code():
-            self.blocks.append(gr.map_bb(
+            self.blocks.append(digital_swig.map_bb(
                 mod_codes.invert_code(self.constellation.pre_diff_code())))
         # unpack the k bit vector into a stream of bits            
         self.blocks.append(gr.unpack_k_bits_bb(

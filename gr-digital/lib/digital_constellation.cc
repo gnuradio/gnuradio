@@ -466,8 +466,8 @@ digital_make_constellation_dqpsk()
 digital_constellation_dqpsk::digital_constellation_dqpsk ()
 {
   // This constellation is not gray coded, which allows
-  // us to use differential encodings (through gr_diff_encode and
-  // gr_diff_decode) on the symbols.
+  // us to use differential encodings (through digital_diff_encode and
+  // digital_diff_decode) on the symbols.
   d_constellation.resize(4);
   d_constellation[0] = gr_complex(+SQRT_TWO, +SQRT_TWO);
   d_constellation[1] = gr_complex(-SQRT_TWO, +SQRT_TWO);

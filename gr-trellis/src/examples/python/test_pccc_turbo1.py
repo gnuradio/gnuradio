@@ -20,7 +20,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     #src = gr.vector_source_s([0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],False)
     enc = trellis.pccc_encoder_ss(fo,0,fi,0,interleaver,K)
     code = gr.vector_sink_s()
-    mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
+    mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
     add = gr.add_ff()

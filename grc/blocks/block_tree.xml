@@ -13,7 +13,6 @@
 		<block>gr_noise_source_x</block>
 		<block>gr_vector_source_x</block>
 		<block>random_source_x</block>
-		<block>gr_glfsr_source_x</block>
 		<block>gr_null_source</block>
 		<block>gr_file_source</block>
 		<block>blks2_tcp_source</block>
@@ -116,8 +115,6 @@
 		<block>gr_packed_to_unpacked_xx</block>
 		<block>gr_unpack_k_bits_bb</block>
 		<block>gr_pack_k_bits_bb</block>
-		<block>gr_chunks_to_symbols_xx</block>
-		<block>gr_map_bb</block>
 	</cat>
 	<cat>
 		<name>Synchronizers</name>
@@ -129,9 +126,7 @@
 		<block>gr_pll_freqdet_cf</block>
 		<block>gr_pll_refout_cc</block>
 
-		<block>gr_pn_correlator_cc</block>
 		<block>gr_simple_correlator</block>
-		<block>gr_simple_framer</block>
 
 		<block>blks2_packet_decoder</block>
 		<block>blks2_packet_encoder</block>
@@ -198,11 +193,6 @@
 		<block>gr_quadrature_demod_cf</block>
 		<block>gr_cpfsk_bc</block>
 
-		<block>gr_diff_phasor_cc</block>
-
-		<block>gr_diff_encoder_bb</block>
-		<block>gr_diff_decoder_bb</block>
-
 		<block>blks2_wfm_tx</block>
 		<block>blks2_wfm_rcv</block>
 		<block>blks2_wfm_rcv_pll</block>
@@ -225,15 +215,8 @@
 		<block>gr_decode_ccsds_27_fb</block>
 	</cat>
 	<cat>
-		<name>Line Coding</name>
-		<block>gr_scrambler_bb</block>
-		<block>gr_descrambler_bb</block>
-		<block>gr_additive_scrambler_bb</block>
-	</cat>
-	<cat>
 		<name>Probes</name>
 		<block>gr_probe_avg_mag_sqrd_x</block>
-		<block>gr_probe_density_b</block>
 		<block>gr_probe_signal_f</block>
 	</cat>
 	<cat>

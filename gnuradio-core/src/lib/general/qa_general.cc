@@ -33,7 +33,6 @@
 #include <qa_gr_fxpt_nco.h>
 #include <qa_gr_fxpt_vco.h>
 #include <qa_gr_math.h>
-#include <qa_gri_lfsr.h>
 
 CppUnit::TestSuite *
 qa_general::suite ()
@@ -47,7 +46,6 @@ qa_general::suite ()
   s->addTest (qa_gr_fxpt_nco::suite ());
   s->addTest (qa_gr_fxpt_vco::suite ());
   s->addTest (qa_gr_math::suite ());
-  s->addTest (qa_gri_lfsr::suite ());
 
   return s;
 }
