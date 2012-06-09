@@ -12,7 +12,7 @@ self.$(id).set_lna_gain($lna)
 #if $mixer() != +12.0
 self.$(id).set_mixer_gain($mixer)
 #end if
-#if $ppm() != 115
+#if $ppm() != -120
 self.$(id).set_freq_corr($ppm)
 #end if
 #if ($dci() != 0.0) or ($dcq() != 0.0)
