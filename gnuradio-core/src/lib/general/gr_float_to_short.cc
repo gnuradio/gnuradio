@@ -42,7 +42,7 @@ gr_float_to_short::gr_float_to_short (size_t vlen, float scale)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(short);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 float

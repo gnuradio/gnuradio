@@ -43,7 +43,7 @@ gr_conjugate_cc::gr_conjugate_cc ()
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(gr_complex);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int

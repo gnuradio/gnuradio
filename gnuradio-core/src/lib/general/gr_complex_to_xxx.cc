@@ -45,7 +45,7 @@ gr_complex_to_float::gr_complex_to_float (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -106,7 +106,7 @@ gr_complex_to_real::gr_complex_to_real (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -146,7 +146,7 @@ gr_complex_to_imag::gr_complex_to_imag (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -186,7 +186,7 @@ gr_complex_to_mag::gr_complex_to_mag (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -220,7 +220,7 @@ gr_complex_to_mag_squared::gr_complex_to_mag_squared (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -258,7 +258,7 @@ gr_complex_to_arg::gr_complex_to_arg (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
