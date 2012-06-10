@@ -41,6 +41,19 @@ class test_filter(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_data, result_data, 5)
 
+    def test_fir_filter_fff_002(self):
+        src_data = 10*[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        expected_data = [0.0,] + 4*[3.5, 7.5, 1.5, 5.5, 4.5,] + [3.5, 7.5, 1.5, 5.5]
+        src = gr.vector_source_f(src_data)
+        op  = filter.fir_filter_fff(4, [0.5, 0.5])
+        dst = gr.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        print result_data
+        print expected_data
+        self.assertFloatTuplesAlmostEqual(expected_data, result_data, 5)
+
     def test_fir_filter_ccf_001(self):
         src_data = [1+1j, 2+2j, 3+3j, 4+4j]
         expected_data = [0.5+0.5j, 1.5+1.5j, 2.5+2.5j, 3.5+3.5j]

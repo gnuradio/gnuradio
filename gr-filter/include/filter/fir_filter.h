@@ -41,8 +41,8 @@ namespace gr {
 	void set_taps(const std::vector<float> &taps);
 	std::vector<float> taps() const;
 	unsigned int ntaps() const;
-
-	float filter(const float input[]);
+	
+	inline float filter(const float input[]);
 	void  filterN(float output[],
 		      const float input[],
 		      unsigned long n);
@@ -53,8 +53,10 @@ namespace gr {
 
       private:
 	unsigned int d_ntaps;
-	float *d_taps;
-	float *d_aligned_taps[4];
+	float  *d_taps;
+	float **d_aligned_taps;
+	int     d_offset;
+	float  *d_output;
       };
 
       /**************************************************************/
@@ -100,7 +102,7 @@ namespace gr {
 	gr_complex filter(const gr_complex input[]);
 	void filterN(gr_complex output[],
 		     const gr_complex input[],
-		     unsigned long n);
+		     unsigned long n)
 	void filterNdec(gr_complex output[],
 			const gr_complex input[],
 			unsigned long n,

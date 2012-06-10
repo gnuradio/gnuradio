@@ -26,6 +26,7 @@
 
 #include "@IMPL_NAME@.h"
 #include <gr_io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace filter {
@@ -47,6 +48,10 @@ namespace gr {
       d_fir = new kernel::@BASE_NAME@(decimation, taps);
       d_updated = false;
       set_history(d_fir->ntaps());
+
+      const int alignment_multiple =
+	volk_get_alignment() / sizeof(float);
+      set_alignment(std::max(1, alignment_multiple));
     }
 
     @IMPL_NAME@::~@IMPL_NAME@()
@@ -85,7 +90,8 @@ namespace gr {
 	d_fir->filterN(out, in, noutput_items);
       }
       else {
-	d_fir->filterNdec(out, in, noutput_items, decimation());
+	d_fir->filterNdec(out, in, noutput_items,
+			  decimation());
       }
       
       return noutput_items;

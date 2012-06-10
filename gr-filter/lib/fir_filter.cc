@@ -23,6 +23,7 @@
 #include <filter/fir_filter.h>
 #include <fft/fft.h>
 #include <volk/volk.h>
+#include <cstdio>
 
 namespace gr {
   namespace filter {
@@ -33,15 +34,29 @@ namespace gr {
       {
 	d_taps = NULL;
 	set_taps(taps);
+	d_offset = 0;
+
+	// Make sure the output sample is always aligned, too.
+	d_output = fft::malloc_float(1);
       }
       
       fir_filter_fff::~fir_filter_fff()
       {
+	// Free taps
 	if(d_taps != NULL) {
 	  fft::free(d_taps);
 	  d_taps = NULL;
 	}
-    }
+
+	// Free all aligned taps
+	for(int i = 0; i < 4; i++) {
+	  fft::free(d_aligned_taps[i]);
+	}
+	fft::free(d_aligned_taps);
+
+	// Free output sample
+	fft::free(d_output);
+      }
       
       void
       fir_filter_fff::set_taps(const std::vector<float> &taps)
@@ -50,6 +65,11 @@ namespace gr {
 	if(d_taps != NULL) {
 	  fft::free(d_taps);
 	  d_taps = NULL;
+
+	  for(int i = 0; i < 4; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
 	}
 	
 	d_ntaps = (int)taps.size();
@@ -58,6 +78,8 @@ namespace gr {
 	  d_taps[d_ntaps-i-1] = taps[i];
 	}
 
+	// Make a set of taps at all possible arch alignments
+	d_aligned_taps = (float**)malloc(4*sizeof(float**));
 	for(int i = 0; i < 4; i++) {
 	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+3);
 	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+3));
@@ -83,12 +105,9 @@ namespace gr {
       float
       fir_filter_fff::filter(const float input[])
       {
-	float output;
-
-	//const float *ar = (float*)((unsigned long)input & ~15);
-
-	volk_32f_x2_dot_prod_32f_u(&output, input, d_taps, d_ntaps);
-	return output;
+	volk_32f_x2_dot_prod_32f_a(d_output, input,
+				   d_aligned_taps[d_offset], d_ntaps+3);
+	return *d_output;
       }
       
       void
@@ -96,8 +115,16 @@ namespace gr {
 			      const float input[],
 			      unsigned long n)
       {
-	for(unsigned long i = 0; i < n; i++)
-	  output[i] = filter(&input[i]);
+	unsigned long ar = ((unsigned long) input);
+	int off = (ar - (ar & ~15))/4;
+
+	int j = -off;
+	d_offset = off;
+	for(unsigned long i = 0; i < n; i++) {
+	  output[i] = filter(&input[j]);
+	  d_offset= (d_offset+1) & 0x03;
+	  j += (d_offset == 0 ? 4 : 0);
+	}
       }
       
       
@@ -108,8 +135,8 @@ namespace gr {
 				 unsigned int decimate)
       {
 	unsigned long j = 0;
-	for(unsigned long i = 0; i < n; i++){
-	  output[i] = filter(&input[j]);
+	for(unsigned long i = 0; i < n; i++) {
+	  filterN(&output[i], &input[j], 1);
 	  j += decimate;
 	}
       }
