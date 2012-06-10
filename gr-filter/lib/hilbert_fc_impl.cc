@@ -27,6 +27,7 @@
 #include "hilbert_fc_impl.h"
 #include <filter/firdes.h>
 #include <gr_io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace filter {
@@ -44,6 +45,10 @@ namespace gr {
     {
       d_hilb = new kernel::fir_filter_fff(1, firdes::hilbert(d_ntaps));
       set_history (d_ntaps);
+
+      const int alignment_multiple =
+	volk_get_alignment() / sizeof(float);
+      set_alignment(std::max(1, alignment_multiple));
     }
 
     hilbert_fc_impl::~hilbert_fc_impl()
@@ -58,10 +63,13 @@ namespace gr {
     {
       float *in = (float *)input_items[0];
       gr_complex *out = (gr_complex *)output_items[0];
+      float h_out;
       
-      for(int i = 0; i < noutput_items; i++)
-	out[i] = gr_complex (in[i + d_ntaps/2],
-			     d_hilb->filter (&in[i]));
+      for(int i = 0; i < noutput_items; i++) {
+	d_hilb->filterN(&h_out, &in[i], 1);
+	out[i] = gr_complex(in[i + d_ntaps/2],
+			    h_out);
+      }
       
       return noutput_items;
     }
