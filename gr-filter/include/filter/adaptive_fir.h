@@ -33,11 +33,8 @@ namespace gr {
 
       class FILTER_API adaptive_fir_ccc
       {
-      private:
-	bool         d_updated;
-	int          d_decim;
-
       protected:
+	int          d_decim;
 	unsigned int d_ntaps;
 	gr_complex   d_error;
 	gr_complex  *d_taps;
@@ -54,6 +51,38 @@ namespace gr {
 
 	void set_taps(const std::vector<gr_complex> &taps);
 	std::vector<gr_complex> taps() const;
+
+	int decimation() const;
+	unsigned int ntaps() const;
+
+	gr_complex filter(gr_complex *input);
+	void filterN(gr_complex *out, gr_complex *in, int nitems);
+      };
+      
+
+      /**************************************************************/
+
+
+      class FILTER_API adaptive_fir_ccf
+      {
+      protected:
+	int          d_decim;
+	unsigned int d_ntaps;
+	float        d_error;
+	gr_complex  *d_taps;
+
+	// Override to calculate error signal per output
+	virtual float error(const gr_complex &out) = 0;
+
+	// Override to calculate new weight from old, corresponding input
+	virtual void update_tap(gr_complex &tap, const gr_complex &in) = 0;
+
+      public:
+	adaptive_fir_ccf(int decimation,
+			 const std::vector<float> &taps);
+
+	void set_taps(const std::vector<float> &taps);
+	std::vector<float> taps() const;
 
 	int decimation() const;
 	unsigned int ntaps() const;

@@ -104,6 +104,82 @@ namespace gr {
 	}
       }
 
+
+      /**************************************************************/
+
+
+      adaptive_fir_ccf::adaptive_fir_ccf(int decimation,
+					 const std::vector<float> &taps)
+      {
+	d_taps = NULL;
+	d_decim = decimation;
+	set_taps(taps);
+      }
+
+      void
+      adaptive_fir_ccf::set_taps(const std::vector<float> &taps)
+      {
+	// Free the taps if already allocated
+	if(d_taps != NULL) {
+	  fft::free(d_taps);
+	  d_taps = NULL;
+	}
+	
+	d_ntaps = (int)taps.size();
+	d_taps = fft::malloc_complex(d_ntaps);
+	for(unsigned int i = 0; i < d_ntaps; i++) {
+	  d_taps[d_ntaps-i-1] = taps[i];
+	}
+      }
+
+      std::vector<float>
+      adaptive_fir_ccf::taps() const
+      {
+	std::vector<float> t;
+	for(unsigned int i = 0; i < d_ntaps; i++)
+	  t.push_back(d_taps[d_ntaps-i-1].real());
+	return t;
+      }
+
+      int
+      adaptive_fir_ccf::decimation() const
+      {
+	return d_decim;
+      }
+
+      unsigned int
+      adaptive_fir_ccf::ntaps() const
+      {
+	return d_ntaps;
+      }
+
+      gr_complex
+      adaptive_fir_ccf::filter(gr_complex *input)
+      {
+	gr_complex output;
+	volk_32fc_x2_dot_prod_32fc_u(&output, input, d_taps, d_ntaps);
+	return output;
+      }
+
+      void
+      adaptive_fir_ccf::filterN(gr_complex *out, gr_complex *in,
+				int nitems)
+      {
+	int j = 0;
+	unsigned int k;
+	for(int i = 0; i < nitems; i++) {
+	  out[i] = filter(&in[j]);
+
+	  // Adjust taps
+	  d_error = error(out[i]);
+	  for(k = 0; k < d_ntaps; k++) {
+	    update_tap(d_taps[d_ntaps-k-1], in[j+k]);
+	  }
+
+	  j += decimation();
+	}
+      }
+
     } /* namespace kernel */
   } /* namespace filter */
 } /* namespace gr */

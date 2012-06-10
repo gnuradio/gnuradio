@@ -84,6 +84,7 @@ install(FILES
     polyphase_filterbank.h
     ${generated_includes}
     adaptive_fir_ccc.h
+    adaptive_fir_ccf.h
     dc_blocker_cc.h
     dc_blocker_ff.h
     filter_delay_fc.h

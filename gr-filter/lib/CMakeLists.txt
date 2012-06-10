@@ -114,6 +114,7 @@ list(APPEND filter_sources
   polyphase_filterbank.cc
   ${generated_sources}
   adaptive_fir_ccc_impl.cc
+  adaptive_fir_ccf_impl.cc
   dc_blocker_cc_impl.cc
   dc_blocker_ff_impl.cc
   filter_delay_fc_impl.cc
