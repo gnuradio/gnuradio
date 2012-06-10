@@ -40,9 +40,9 @@ gr_multiply_const_cc::gr_multiply_const_cc (gr_complex k, size_t vlen)
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)*vlen)),
     d_k(k), d_vlen(vlen)
 {
- const int alignment_multiple =
-   volk_get_alignment() / sizeof(gr_complex);
- set_alignment(alignment_multiple);
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(gr_complex);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 gr_complex
