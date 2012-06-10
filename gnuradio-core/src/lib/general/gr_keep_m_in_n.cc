@@ -44,20 +44,27 @@ gr_make_keep_m_in_n (size_t item_size, int m, int n, int offset)
 * we take m items out of each n
 */
 gr_keep_m_in_n::gr_keep_m_in_n (size_t item_size, int m, int n, int offset)
-  : gr_sync_block ("keep_m_in_n",
-	      gr_make_io_signature (1, 1, n*item_size),
-	      gr_make_io_signature (1, 1, m*item_size)),
+  : gr_block ("keep_m_in_n",
+	      gr_make_io_signature (1, 1, item_size),
+	      gr_make_io_signature (1, 1, item_size)),
     d_n(n),
     d_m(m),
-    d_offset( offset )
+    d_offset( offset ),
+    d_itemsize( item_size )
 {
     // sanity checking
     assert(d_m > 0);
     assert(d_n > 0);
     assert(d_m <= d_n);
     assert(d_offset <= (d_n-d_m));
+
+    set_output_multiple(m);
 }
 
+
+void gr_keep_m_in_n::forecast (int noutput_items, gr_vector_int &ninput_items_required){
+    ninput_items_required[0] = d_n*(noutput_items/d_m);
+}
 
 void gr_keep_m_in_n::set_offset(int offset){
     d_offset = offset;
@@ -65,21 +72,24 @@ void gr_keep_m_in_n::set_offset(int offset){
 
 
 int
-gr_keep_m_in_n::work (int noutput_items,
+gr_keep_m_in_n::general_work (int noutput_items,
+                gr_vector_int &ninput_items,
 				gr_vector_const_void_star &input_items,
 				gr_vector_void_star &output_items)
 {
   uint8_t* out = (uint8_t*) output_items[0];
   const uint8_t* in = (const uint8_t*) input_items[0];
   
-  int in_item( input_signature()->sizeof_stream_item(0) );
-  int out_item( output_signature()->sizeof_stream_item(0) );
-  int single_size = in_item/d_n;
-
   // iterate over data blocks of size {n, input : m, output}
-  for(int i=0; i<noutput_items; i++){
-    memcpy( &out[out_item*i], &in[in_item*i + single_size*d_offset], out_item);
+  int blks = std::min( noutput_items/d_m, ninput_items[0]/d_n );
+  for(int i=0; i<blks; i++){
+    // set up copy pointers
+    const uint8_t* iptr = &in[(i*d_n + d_offset)*d_itemsize];
+    uint8_t* optr = &out[i*d_m*d_itemsize];
+    // perform copy
+    memcpy( optr, iptr, d_m*d_itemsize );
     } 
- 
-  return noutput_items;
+
+  consume_each(d_n);
+  return d_m;
 }

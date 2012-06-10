@@ -61,7 +61,7 @@ gr_pack_k_bits_bb::work (int noutput_items,
   for (int i = 0; i < noutput_items; i++){
     out[i] = 0x00;
     for (unsigned int j = 0; j < d_k; j++){
-        out[i] |=  (0x01 & in[i*d_k+j])<<j;
+        out[i] |=  (0x01 & in[i*d_k+j])<<(d_k-j-1);
     }
   }
   
