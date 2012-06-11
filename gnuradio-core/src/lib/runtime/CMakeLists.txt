@@ -165,11 +165,3 @@ install(FILES
 )
     
 endif(ENABLE_PYTHON)
-
-if(ENABLE_GR_LOG)
-install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.xml
-    DESTINATION ${GR_PKG_DATA_DIR}
-    COMPONENT "core_runtime"
-)
-endif(ENABLE_GR_LOG)

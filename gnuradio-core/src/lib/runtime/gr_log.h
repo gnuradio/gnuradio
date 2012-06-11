@@ -46,6 +46,7 @@
 
 #include <log4cxx/logger.h>
 #include <log4cxx/logmanager.h>
+#include <log4cxx/basicconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
 #include <log4cxx/propertyconfigurator.h>
 
@@ -135,16 +136,7 @@ using namespace log4cxx::helpers;
 
 
 // Load configuration file
-void
-logger_load_config(std::string config_filename)
-{
-  if(config_filename.find(".xml") != std::string::npos) {
-    DOMConfigurator::configure(config_filename);
-  }
-  else {
-    PropertyConfigurator::configure(config_filename);
-  }
-}
+void logger_load_config(const std::string &config_filename="");
 
 /*!
  * \brief instantiate (configure) logger.
@@ -179,15 +171,8 @@ class gr_log
 
   static LoggerPtr getLogger(std::string name)
   {
-    if(LogManager::exists(name)) {
-      LoggerPtr logger = Logger::getLogger(name);
-      return logger;
-    }
-    else {
-      LoggerPtr logger = Logger::getLogger(name);
-      logger->setLevel(log4cxx::Level::getOff());
-      return logger;
-    }
+    LoggerPtr logger = Logger::getLogger(name);
+    return logger;
   };
 
   // Wrappers for logging macros

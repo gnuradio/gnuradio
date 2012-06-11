@@ -39,3 +39,16 @@
 
 #include <gr_log.h>
 
+void
+logger_load_config(const std::string &config_filename)
+{
+  if(config_filename.size() == 0) {
+    BasicConfigurator::configure();
+  }
+  else if(config_filename.find(".xml") != std::string::npos) {
+    DOMConfigurator::configure(config_filename);
+  }
+  else {
+    PropertyConfigurator::configure(config_filename);
+  }
+}

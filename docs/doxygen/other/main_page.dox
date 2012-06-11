@@ -86,7 +86,7 @@ default configuration script is located at:
 In a class, we must first configure the logger and then get access to it:
 
 \code
-  GR_CONFIG_LOGGER("prefix/share/gnuradio/gr_log_default.xml");
+  GR_CONFIG_LOGGER("prefix/etc/gnuradio/conf.d/gr_log_default.xml");
   GR_LOG_GETLOGGER(LOG, name);
 \endcode
 

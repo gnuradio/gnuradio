@@ -5,3 +5,10 @@
 [DEFAULT]
 
 verbose = False
+
+
+[LOG]
+
+log_config = @CMAKE_INSTALL_PREFIX@/etc/gnuradio/gr_log_default.xml
+log_level = all
+debug_level = DEBUG
