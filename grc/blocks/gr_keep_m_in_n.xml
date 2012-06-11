@@ -10,6 +10,8 @@
 	<import>from gnuradio import gr</import>
 	<make>gr.keep_m_in_n($type.size, $m, $n, $offset)</make>
     <callback>set_offset($offset)</callback>
+    <callback>set_m($m)</callback>
+    <callback>set_n($n)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -64,11 +66,11 @@
 	<sink>
 		<name>in</name>
 		<type>$type</type>
-		<vlen>$n</vlen>
+		<vlen>1</vlen>
 	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>
-		<vlen>$m</vlen>
+		<vlen>1</vlen>
 	</source>
 </block>
