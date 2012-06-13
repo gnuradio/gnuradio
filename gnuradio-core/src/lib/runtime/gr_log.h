@@ -74,6 +74,13 @@ using namespace log4cxx::helpers;
 #define GR_LOG_GETLOGGER(logger, name) \
   LoggerPtr logger = gr_log::getLogger(name);
 
+#define GR_LOG_SET_LEVEL(logger, level) \
+  logger_set_level(logger, level);
+
+#define GR_SET_LEVEL(name, level) \
+  LoggerPtr logger = Logger::getLogger(name); \
+  logger_set_level(logger, level);
+
 /* Logger name referenced macros */
 #define GR_TRACE(name, msg) { \
   LoggerPtr logger = Logger::getLogger(name); \
@@ -135,8 +142,56 @@ using namespace log4cxx::helpers;
   assert(cond);}
 
 
-// Load configuration file
+/*!
+ * \brief Load logger's configuration file.
+ *
+ * Initialize the GNU Radio logger by loading the configuration file
+ * \p config_filename.
+ *
+ * \param config_filename The configuration file. Set to "" for the
+ *        basic logger that outputs to the console.
+ */
 void logger_load_config(const std::string &config_filename="");
+
+/*!
+ * \brief Set the logger's output level.
+ *
+ * Sets the level of the logger. This takes a string that is
+ * translated to the standard levels and can be (case insensitive):
+ *
+ * \li off
+ * \li all
+ * \li trace
+ * \li debug
+ * \li info
+ * \li warn
+ * \li error
+ * \li fatal
+ *
+ * \param logger the logger to set the level of.
+ * \param level  string to set the level to.
+ */
+void logger_set_level(LoggerPtr logger, const std::string &level);
+
+/*!
+ * \brief Set the logger's output level.
+ *
+ * Sets the level of the logger. This takes the actual Log4cxx::Level
+ * data type, which can be:
+ *
+ * \li Log4cxx::Level::getOff()
+ * \li Log4cxx::Level::getAll()
+ * \li Log4cxx::Level::getTrace()
+ * \li Log4cxx::Level::getDebug()
+ * \li Log4cxx::Level::getInfo()
+ * \li Log4cxx::Level::getWarn()
+ * \li Log4cxx::Level::getError()
+ * \li Log4cxx::Level::getFatal()
+ *
+ * \param logger the logger to set the level of.
+ * \param level  new logger level of type Log4cxx::Level
+ */
+void logger_set_level(LoggerPtr logger, log4cxx::LevelPtr level);
 
 /*!
  * \brief instantiate (configure) logger.
@@ -175,6 +230,9 @@ class gr_log
     return logger;
   };
 
+  /*! \brief inline function, wrapper to set the logger level */
+  void set_level(std::string name,std::string level){GR_SET_LEVEL(name,level);}
+  
   // Wrappers for logging macros
   /*! \brief inline function, wrapper for LOG4CXX_TRACE for TRACE message */
   void trace(std::string name,std::string msg){GR_TRACE(name,msg);};
@@ -199,6 +257,10 @@ class gr_log
 
   /*! \brief inline function, wrapper for LOG4CXX_ASSERT for conditional ERROR message */
   void gr_assert(std::string name,bool cond,std::string msg){GR_ASSERT(name,cond,msg);};
+
+
+  /*! \brief inline function, wrapper to set the logger level */
+  void set_log_level(LoggerPtr logger,std::string level){GR_LOG_SET_LEVEL(logger,level);}
 
   /*! \brief inline function, wrapper for LOG4CXX_TRACE for TRACE message */
   void log_trace(LoggerPtr logger,std::string msg){GR_LOG_TRACE(logger,msg);};
@@ -231,6 +293,7 @@ class gr_log
 
 #define GR_CONFIG_LOGGER(config)
 #define GR_LOG_GETLOGGER(logger, name) 
+#define GR_LOG_SET_LEVEL(logger, level)
 #define GR_TRACE(name, msg)
 #define GR_DEBUG(name, msg)
 #define GR_INFO(name, msg)

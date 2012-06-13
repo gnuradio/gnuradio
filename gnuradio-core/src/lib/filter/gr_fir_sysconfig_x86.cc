@@ -178,8 +178,10 @@ gr_fir_sysconfig_x86::create_gr_fir_ccf (const std::vector<float> &taps)
   static bool first = true;
 
   std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
+  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
   GR_CONFIG_LOGGER(log_file);
   GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
+  GR_LOG_SET_LEVEL(LOG, log_level);
 
   if (gr_cpu::has_3dnow ()){
     if (first){
@@ -210,8 +212,10 @@ gr_fir_sysconfig_x86::create_gr_fir_fcc (const std::vector<gr_complex> &taps)
   static bool first = true;
 
   std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
+  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
   GR_CONFIG_LOGGER(log_file);
   GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
+  GR_LOG_SET_LEVEL(LOG, log_level);
 
   if (gr_cpu::has_3dnow ()){
     if (first){
@@ -242,8 +246,10 @@ gr_fir_sysconfig_x86::create_gr_fir_ccc (const std::vector<gr_complex> &taps)
   static bool first = true;
 
   std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
+  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
   GR_CONFIG_LOGGER(log_file);
   GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
+  GR_LOG_SET_LEVEL(LOG, log_level);
 
   if (gr_cpu::has_3dnowext ()){
     if (first) {
@@ -282,8 +288,10 @@ gr_fir_sysconfig_x86::create_gr_fir_fff (const std::vector<float> &taps)
   static bool first = true;
 
   std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
+  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
   GR_CONFIG_LOGGER(log_file);
   GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
+  GR_LOG_SET_LEVEL(LOG, log_level);
 
   if (gr_cpu::has_3dnow ()){
     if (first) {
@@ -314,8 +322,10 @@ gr_fir_sysconfig_x86::create_gr_fir_fsf (const std::vector<float> &taps)
   static bool first = true;
 
   std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
+  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
   GR_CONFIG_LOGGER(log_file);
   GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
+  GR_LOG_SET_LEVEL(LOG, log_level);
 
   if (gr_cpu::has_3dnow ()){
     if (first) {
@@ -349,8 +359,10 @@ gr_fir_sysconfig_x86::create_gr_fir_sss (const std::vector<short> &taps)
   static bool first = true;
 
   std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
+  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
   GR_CONFIG_LOGGER(log_file);
   GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
+  GR_LOG_SET_LEVEL(LOG, log_level);
 
   if (gr_cpu::has_sse2 ()){
     if(first) {
@@ -379,8 +391,10 @@ gr_fir_sysconfig_x86::create_gr_fir_scc (const std::vector<gr_complex> &taps)
   static bool first = true;
 
   std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
+  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
   GR_CONFIG_LOGGER(log_file);
   GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
+  GR_LOG_SET_LEVEL(LOG, log_level);
 
   if (gr_cpu::has_3dnowext ()){
     if (first){

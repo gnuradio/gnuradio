@@ -81,19 +81,44 @@ on how configuration works and looks. Mostly, a default configuration
 script provided with GNU Radio can be used. After installation, the
 default configuration script is located at:
 
-    $prefix/share/gnuradio/gr_log_default.xml
+    $prefix/etc/gnuradio/gr_log_default.xml
 
-In a class, we must first configure the logger and then get access to it:
+However, we use the global GNU Radio configuration file to tell the
+system where this file is located. In the [LOG] section of the
+configuration file, the location of the logger's XML file can be
+specified. The default configuration file is found in:
+
+    $prefix/etc/gnuradio/conf.d/gnuradio-core.conf
+
+A local "~/.gnuradio/config.conf" file can be used to override any
+parameter in the global file.
+
+For the following examples, we will assume that our local
+"~/.gnuradio/config.conf" looks like this:
 
 \code
-  GR_CONFIG_LOGGER("prefix/etc/gnuradio/conf.d/gr_log_default.xml");
-  GR_LOG_GETLOGGER(LOG, name);
+[LOG]
+log_file = /opt/gr/etc/gnuadio/gr_log_default.xml
+log_level = All
+\endcode
+
+The startup and configuration process proceeds as follows.
+
+\code
+  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
+  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
+  GR_CONFIG_LOGGER(log_file);
+  GR_LOG_GETLOGGER(LOG, <name>);
+  GR_LOG_SET_LEVEL(LOG, log_level);
 \endcode
 
 The default config file has two names that can be used (as std::string
 types): "gr_log" and "gr_log_debug". The first one will print
 all levels of logging informaiton while the second one will only print
 Debug and above.
+
+Names of loggers are global, so "gr_log" as a name will be the same
+logger no matter where it is picked from.
 
 The "LOG" name for the logger is now a LoggerPtr object and can be
 named anything.
@@ -107,17 +132,19 @@ something like "gr_log.costas_loop". This will inherit all properties
 of the parent logger, "gr_log".
 
 After calling "GR_LOG_GETLOGGER", the LoggerPtr that was specified,
-"LOG" in the example above, is used to set the properties. For
-instance, the level for any logger can be easily modified using the
-setLogger(level) method, such as:
+"LOG" in the example above, is used to set the properties. The main
+setting we are generally interested in is the level of the
+logger. This will determine if this logger gets outputted or not. In
+this case, we are actually getting the gr_log level from the GNU Radio
+configuration file, stored in log_level. The macro GR_LOG_SET_LEVEL
+can take either a string or a log4cxx::LevelPtr object. The log_level
+variable in this case holds a string read in from the config file, and
+it's case insensitive. I can be "off", "all", "trace", "debug",
+"info", "warn", "error", or "fatal" to match with the levels above.
 
-\code
-  LOG->setLevel(log4cxx::Level::getAll());
-\endcode
-
-In this case, the "getAll()" method sets the logger's level to log
-everything. Other methods are "getDebug()", "getInfo()", and so on for
-the different levels of logging.
+In our example here, all logging information is displayed because the
+config file specifies "All". We can then easily turn off all reporting
+by setting this value to "Off".
 
 The various logging macros are defined in gr_log.h. Here are some
 simple exmaples of using them:

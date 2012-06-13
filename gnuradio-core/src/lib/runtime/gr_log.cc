@@ -38,6 +38,9 @@
 #endif
 
 #include <gr_log.h>
+#include <stdexcept>
+#include <algorithm>
+
 
 void
 logger_load_config(const std::string &config_filename)
@@ -51,4 +54,36 @@ logger_load_config(const std::string &config_filename)
   else {
     PropertyConfigurator::configure(config_filename);
   }
+}
+
+void
+logger_set_level(LoggerPtr logger, const std::string &level)
+{
+  std::string nocase = level;
+  std::transform(level.begin(), level.end(), nocase.begin(), ::tolower);
+  
+  if(nocase == "off")
+    logger_set_level(logger, log4cxx::Level::getOff());
+  else if(nocase == "all")
+    logger_set_level(logger, log4cxx::Level::getAll());
+  else if(nocase == "trace")
+    logger_set_level(logger, log4cxx::Level::getTrace());
+  else if(nocase == "debug")
+    logger_set_level(logger, log4cxx::Level::getDebug());
+  else if(nocase == "info")
+    logger_set_level(logger, log4cxx::Level::getInfo());
+  else if(nocase == "warn")
+    logger_set_level(logger, log4cxx::Level::getWarn());
+  else if(nocase == "error")
+    logger_set_level(logger, log4cxx::Level::getError());
+  else if(nocase == "fatal")
+    logger_set_level(logger, log4cxx::Level::getFatal());
+  else
+    throw std::runtime_error("logger_set_level: Bad level type.\n");
+}
+
+void
+logger_set_level(LoggerPtr logger, log4cxx::LevelPtr level)
+{
+  logger->setLevel(level);
 }
