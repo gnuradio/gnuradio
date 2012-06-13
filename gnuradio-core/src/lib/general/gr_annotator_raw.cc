@@ -29,50 +29,59 @@
 #include <string.h>
 #include <iostream>
 #include <iomanip>
+#include <stdexcept>
+
+using namespace pmt;
 
 gr_annotator_raw_sptr
-gr_make_annotator_raw ( size_t sizeof_stream_item)
+gr_make_annotator_raw(size_t sizeof_stream_item)
 {
-  return gnuradio::get_initial_sptr (new gr_annotator_raw
-				     (sizeof_stream_item));
+  return gnuradio::get_initial_sptr(new gr_annotator_raw
+				    (sizeof_stream_item));
 }
 
-gr_annotator_raw::gr_annotator_raw (size_t sizeof_stream_item)
-  : gr_sync_block ("annotator_raw",
-		   gr_make_io_signature (1, 1, sizeof_stream_item),
-		   gr_make_io_signature (1, 1, sizeof_stream_item)),
+gr_annotator_raw::gr_annotator_raw(size_t sizeof_stream_item)
+  : gr_sync_block("annotator_raw",
+		  gr_make_io_signature(1, 1, sizeof_stream_item),
+		  gr_make_io_signature(1, 1, sizeof_stream_item)),
     d_itemsize(sizeof_stream_item)
 {
   set_tag_propagation_policy(TPP_ONE_TO_ONE);
   set_relative_rate(1.0);
 }
 
+void gr_annotator_raw::add_tag(uint64_t offset, pmt_t key, pmt_t val)
+{
+  gruel::scoped_lock l(d_mutex);
 
-void gr_annotator_raw::add_tag( uint64_t offset, pmt_t key, pmt_t val ){
-    gr_tag_t tag;
-    tag.srcid = pmt::pmt_intern(d_name);
-    tag.key = key;
-    tag.value = val;
-    tag.offset = offset;
+  gr_tag_t tag;
+  tag.srcid = pmt::pmt_intern(d_name);
+  tag.key = key;
+  tag.value = val;
+  tag.offset = offset;
 
-    // add our new tag
-    d_queued_tags.push_back( tag );
-    // make sure our tags are in offset order
-    std::sort(d_queued_tags.begin(), d_queued_tags.end(), gr_tag_t::offset_compare);
-    // make sure we are not adding an item in the past!
-    assert(tag->offset >= nitems_read(0));
+  // add our new tag
+  d_queued_tags.push_back(tag);
+  // make sure our tags are in offset order
+  std::sort(d_queued_tags.begin(), d_queued_tags.end(),
+	    gr_tag_t::offset_compare);
+  // make sure we are not adding an item in the past!
+  if(tag.offset >= nitems_read(0)) {
+    throw std::runtime_error("gr_annotator_raw::add_tag: item added too far in the past\n.");
+  }
 }
 
-
-gr_annotator_raw::~gr_annotator_raw ()
+gr_annotator_raw::~gr_annotator_raw()
 {
 }
 
 int
-gr_annotator_raw::work (int noutput_items,
-			 gr_vector_const_void_star &input_items,
-			 gr_vector_void_star &output_items)
+gr_annotator_raw::work(int noutput_items,
+		       gr_vector_const_void_star &input_items,
+		       gr_vector_void_star &output_items)
 {
+  gruel::scoped_lock l(d_mutex);
+
   const char *in = (const char*)input_items[0];
   char *out = (char*)output_items[0];
 
@@ -81,12 +90,13 @@ gr_annotator_raw::work (int noutput_items,
    
   // locate queued tags that fall in this range and insert them when appropriate
   std::vector<gr_tag_t>::iterator i = d_queued_tags.begin();
-  while( i != d_queued_tags.end() ){
-    if( (*i).offset >= start_N && (*i).offset < end_N){
-        add_item_tag(0, (*i).offset,(*i).key, (*i).value, (*i).srcid);
-        i = d_queued_tags.erase(i);
-    } else {
-        break;
+  while( i != d_queued_tags.end() ) {
+    if( (*i).offset >= start_N && (*i).offset < end_N) {
+      add_item_tag(0, (*i).offset,(*i).key, (*i).value, (*i).srcid);
+      i = d_queued_tags.erase(i);
+    } 
+    else {
+      break;
     }
   }
 
