@@ -42,10 +42,9 @@ set(GR_SWIG_LIBRARIES
 
 # Only use if log4cxx is installed
 # Define ENABLE_GR_LOG for the .i file to ignore it.
-#if(ENABLE_GR_LOG)
-#    add_definitions(-DENABLE_GR_LOG)
-#    SET(GR_SWIG_FLAGS "-DENABLE_GR_LOG")
-#endif(ENABLE_GR_LOG)
+if(ENABLE_GR_LOG)
+     SET(GR_SWIG_FLAGS "-DENABLE_GR_LOG")
+endif(ENABLE_GR_LOG)
 
 ########################################################################
 # Build and install the swig targets

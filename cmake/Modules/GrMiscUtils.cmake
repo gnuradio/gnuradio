@@ -254,6 +254,8 @@ function(GR_LOGGING)
 
   message(STATUS "ENABLE_GR_LOG set to ${ENABLE_GR_LOG}.")
 
+  SET(ENABLE_GR_LOG ${ENABLE_GR_LOG} CACHE INTERNAL "" FORCE)
+  
   if(ENABLE_GR_LOG)
     add_definitions( -DENABLE_GR_LOG )
   else(ENABLE_GR_LOG)

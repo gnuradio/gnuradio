@@ -18,6 +18,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
 /*******************************************************************************
 *
 * Copyright 2011 JHU APL
@@ -39,7 +40,6 @@
 
 //-----------------------------------
 
-
 #ifdef ENABLE_GR_LOG
 
 %{
@@ -57,12 +57,14 @@ public:
 void logger_load_config(const std::string &config_filename);
 void logger_set_level(LoggerPtr logger, const std::string &level);
 
+%rename(log) gr_log;
+
 class gr_log
 {
 private:
   
 public:
-//   gr_log(std::string config_filename);
+  //gr_log(std::string config_filename);
   gr_log(std::string config_filename,int watchPeriodSec);
   void set_level(std::string name,std::string level);
   void trace(std::string name,std::string msg);

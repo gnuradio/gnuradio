@@ -41,6 +41,7 @@
 #include <stdexcept>
 #include <algorithm>
 
+#ifdef ENABLE_GR_LOG
 
 void
 logger_load_config(const std::string &config_filename)
@@ -87,3 +88,5 @@ logger_set_level(LoggerPtr logger, log4cxx::LevelPtr level)
 {
   logger->setLevel(level);
 }
+
+#endif /* ENABLE_GR_LOG */

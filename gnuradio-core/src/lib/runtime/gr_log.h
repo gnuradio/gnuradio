@@ -39,6 +39,7 @@
 
 #ifdef ENABLE_GR_LOG
 
+#include <gr_core_api.h>
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
@@ -151,7 +152,7 @@ using namespace log4cxx::helpers;
  * \param config_filename The configuration file. Set to "" for the
  *        basic logger that outputs to the console.
  */
-void logger_load_config(const std::string &config_filename="");
+GR_CORE_API void logger_load_config(const std::string &config_filename="");
 
 /*!
  * \brief Set the logger's output level.
@@ -171,7 +172,7 @@ void logger_load_config(const std::string &config_filename="");
  * \param logger the logger to set the level of.
  * \param level  string to set the level to.
  */
-void logger_set_level(LoggerPtr logger, const std::string &level);
+GR_CORE_API void logger_set_level(LoggerPtr logger, const std::string &level);
 
 /*!
  * \brief Set the logger's output level.
@@ -179,14 +180,14 @@ void logger_set_level(LoggerPtr logger, const std::string &level);
  * Sets the level of the logger. This takes the actual Log4cxx::Level
  * data type, which can be:
  *
- * \li Log4cxx::Level::getOff()
- * \li Log4cxx::Level::getAll()
- * \li Log4cxx::Level::getTrace()
- * \li Log4cxx::Level::getDebug()
- * \li Log4cxx::Level::getInfo()
- * \li Log4cxx::Level::getWarn()
- * \li Log4cxx::Level::getError()
- * \li Log4cxx::Level::getFatal()
+ * \li log4cxx::Level::getOff()
+ * \li log4cxx::Level::getAll()
+ * \li log4cxx::Level::getTrace()
+ * \li log4cxx::Level::getDebug()
+ * \li log4cxx::Level::getInfo()
+ * \li log4cxx::Level::getWarn()
+ * \li log4cxx::Level::getError()
+ * \li log4cxx::Level::getFatal()
  *
  * \param logger the logger to set the level of.
  * \param level  new logger level of type Log4cxx::Level
