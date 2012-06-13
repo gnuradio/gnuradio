@@ -55,7 +55,6 @@ namespace gr {
 	unsigned int d_ntaps;
 	float  *d_taps;
 	float **d_aligned_taps;
-	int     d_offset;
 	float  *d_output;
       };
 

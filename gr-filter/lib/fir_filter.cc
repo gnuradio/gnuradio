@@ -35,7 +35,6 @@ namespace gr {
       {
 	d_taps = NULL;
 	set_taps(taps);
-	d_offset = 0;
 
 	// Make sure the output sample is always aligned, too.
 	d_output = fft::malloc_float(1);
@@ -103,50 +102,15 @@ namespace gr {
 	return d_ntaps;
       }
 
-      /*      
       float
       fir_filter_fff::filter(const float input[])
       {
-	volk_32f_x2_dot_prod_32f_a(d_output, input,
-				   d_aligned_taps[d_offset],
-				   (d_ntaps + d_offset - 1) / 4 + 1);
-	//*d_output = float_dotprod_sse(input, d_aligned_taps[d_offset],
-	//			      (d_ntaps + d_offset - 1) / 4 + 1);
-	return *d_output;
-      }
-      
-      void
-      fir_filter_fff::filterN(float output[],
-			      const float input[],
-			      unsigned long n)
-      {
-	unsigned long ar = ((unsigned long) input);
-	int off = (ar - (ar & ~15))/4;
-
-	int j = -off;
-	d_offset = off;
-	for(unsigned long i = 0; i < n; i++) {
-	  output[i] = filter(&input[j]);
-	  d_offset= (d_offset+1) & 0x03;
-	  j += (d_offset == 0 ? 4 : 0);
-	}
-      }
-      */
-
-      float
-      fir_filter_fff::filter(const float input[])
-      {
-	//unsigned long ar = ((unsigned long) input);
-	//int off = (ar - (ar & ~15))/4;
-
 	const float *ar = (float *)((unsigned long) input & ~15);
 	unsigned al = input - ar;
 
 	volk_32f_x2_dot_prod_32f_a(d_output, ar,
 				   d_aligned_taps[al],
 				   (d_ntaps + al - 1) / 4 + 1);
-	//*d_output = float_dotprod_sse(input, d_aligned_taps[d_offset],
-	//			      (d_ntaps + d_offset - 1) / 4 + 1);
 	return *d_output;
       }
       
