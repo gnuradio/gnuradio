@@ -24,6 +24,7 @@
 #include <fft/fft.h>
 #include <volk/volk.h>
 #include <cstdio>
+#include <float_dotprod_x86.h>
 
 namespace gr {
   namespace filter {
@@ -101,12 +102,16 @@ namespace gr {
       {
 	return d_ntaps;
       }
-      
+
+      /*      
       float
       fir_filter_fff::filter(const float input[])
       {
 	volk_32f_x2_dot_prod_32f_a(d_output, input,
-				   d_aligned_taps[d_offset], d_ntaps+3);
+				   d_aligned_taps[d_offset],
+				   (d_ntaps + d_offset - 1) / 4 + 1);
+	//*d_output = float_dotprod_sse(input, d_aligned_taps[d_offset],
+	//			      (d_ntaps + d_offset - 1) / 4 + 1);
 	return *d_output;
       }
       
@@ -126,7 +131,34 @@ namespace gr {
 	  j += (d_offset == 0 ? 4 : 0);
 	}
       }
+      */
+
+      float
+      fir_filter_fff::filter(const float input[])
+      {
+	//unsigned long ar = ((unsigned long) input);
+	//int off = (ar - (ar & ~15))/4;
+
+	const float *ar = (float *)((unsigned long) input & ~15);
+	unsigned al = input - ar;
+
+	volk_32f_x2_dot_prod_32f_a(d_output, ar,
+				   d_aligned_taps[al],
+				   (d_ntaps + al - 1) / 4 + 1);
+	//*d_output = float_dotprod_sse(input, d_aligned_taps[d_offset],
+	//			      (d_ntaps + d_offset - 1) / 4 + 1);
+	return *d_output;
+      }
       
+      void
+      fir_filter_fff::filterN(float output[],
+			      const float input[],
+			      unsigned long n)
+      {
+	for(unsigned long i = 0; i < n; i++) {
+	  output[i] = filter(&input[i]);
+	}
+      }
       
       void
       fir_filter_fff::filterNdec(float output[],
@@ -136,7 +168,7 @@ namespace gr {
       {
 	unsigned long j = 0;
 	for(unsigned long i = 0; i < n; i++) {
-	  filterN(&output[i], &input[j], 1);
+	  output[i] = filter(&input[j]);
 	  j += decimate;
 	}
       }

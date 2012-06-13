@@ -102,7 +102,7 @@ namespace gr {
 	gr_complex filter(const gr_complex input[]);
 	void filterN(gr_complex output[],
 		     const gr_complex input[],
-		     unsigned long n)
+		     unsigned long n);
 	void filterNdec(gr_complex output[],
 			const gr_complex input[],
 			unsigned long n,
