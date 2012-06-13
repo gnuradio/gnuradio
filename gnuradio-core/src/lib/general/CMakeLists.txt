@@ -292,6 +292,7 @@ set(gr_core_general_triple_threats
     gr_probe_density_b
     gr_annotator_alltoall
     gr_annotator_1to1
+    gr_annotator_raw
     gr_burst_tagger
     gr_correlate_access_code_tag_bb
 )
