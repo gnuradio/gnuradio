@@ -274,6 +274,7 @@ set(gr_core_general_triple_threats
     gr_pack_k_bits_bb
     gr_annotator_alltoall
     gr_annotator_1to1
+    gr_annotator_raw
     gr_burst_tagger
 )
 

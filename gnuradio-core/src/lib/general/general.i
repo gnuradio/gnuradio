@@ -120,6 +120,7 @@
 #include <complex_vec_test.h>
 #include <gr_annotator_alltoall.h>
 #include <gr_annotator_1to1.h>
+#include <gr_annotator_raw.h>
 #include <gr_burst_tagger.h>
 #include <gr_cpm.h>
 #include <gr_vector_map.h>
@@ -224,6 +225,7 @@
 %include "complex_vec_test.i"
 %include "gr_annotator_alltoall.i"
 %include "gr_annotator_1to1.i"
+%include "gr_annotator_raw.i"
 %include "gr_burst_tagger.i"
 %include "gr_cpm.i"
 %include "gr_vector_map.i"
