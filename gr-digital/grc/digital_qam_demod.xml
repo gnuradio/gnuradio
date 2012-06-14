@@ -38,7 +38,7 @@
   freq_bw=$freq_bw,
   timing_bw=$timing_bw,
   phase_bw=$phase_bw,
-  gray_coded=$gray_coded,
+  mod_code=$mod_code,
   verbose=$verbose,
   log=$log,
   )</make>
