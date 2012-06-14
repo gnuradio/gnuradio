@@ -8,17 +8,14 @@
 #ifdef LV_HAVE_GENERIC
 
 
-static inline void volk_32f_x2_dot_prod_32f_u_generic(float * result, const float * input, const float * taps, unsigned int num_4x_points) {
+static inline void volk_32f_x2_dot_prod_32f_u_generic(float * result, const float * input, const float * taps, unsigned int num_points) {
 
   float dotProduct = 0;
   const float* aPtr = input;
   const float* bPtr=  taps;
   unsigned int number = 0;
 
-  for(number = 0; number < num_4x_points; number++){
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
+  for(number = 0; number < num_points; number++){
     dotProduct += ((*aPtr++) * (*bPtr++));
   }
 
@@ -31,10 +28,10 @@ static inline void volk_32f_x2_dot_prod_32f_u_generic(float * result, const floa
 #ifdef LV_HAVE_SSE
 
 
-static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* input, const  float* taps, unsigned int num_4x_points) {
+static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* input, const  float* taps, unsigned int num_points) {
 
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_4x_points / 4;
+  const unsigned int sixteenthPoints = num_points / 16;
 
   float dotProduct = 0;
   const float* aPtr = input;
@@ -49,7 +46,7 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* 
   __m128 dotProdVal2 = _mm_setzero_ps();
   __m128 dotProdVal3 = _mm_setzero_ps();
 
-  for(;number < quarterPoints; number++){
+  for(;number < sixteenthPoints; number++){
 
     a0Val = _mm_load_ps(aPtr);
     a1Val = _mm_load_ps(aPtr+4);
@@ -87,8 +84,8 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* 
   dotProduct += dotProductVector[2];
   dotProduct += dotProductVector[3];
 
-  number = quarterPoints*4;
-  for(;number < num_4x_points; number++){
+  number = sixteenthPoints*16;
+  for(;number < num_points; number++){
     dotProduct += ((*aPtr++) * (*bPtr++));
     dotProduct += ((*aPtr++) * (*bPtr++));
     dotProduct += ((*aPtr++) * (*bPtr++));
@@ -105,9 +102,9 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* 
 
 #include <pmmintrin.h>
 
-static inline void volk_32f_x2_dot_prod_32f_u_sse3(float * result, const float * input, const float * taps, unsigned int num_4x_points) {
+static inline void volk_32f_x2_dot_prod_32f_u_sse3(float * result, const float * input, const float * taps, unsigned int num_points) {
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_4x_points / 4;
+  const unsigned int sixteenthPoints = num_points / 16;
 
   float dotProduct = 0;
   const float* aPtr = input;
@@ -122,7 +119,7 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse3(float * result, const float *
   __m128 dotProdVal2 = _mm_setzero_ps();
   __m128 dotProdVal3 = _mm_setzero_ps();
 
-  for(;number < quarterPoints; number++){
+  for(;number < sixteenthPoints; number++){
 
     a0Val = _mm_load_ps(aPtr);
     a1Val = _mm_load_ps(aPtr+4);
@@ -159,11 +156,8 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse3(float * result, const float *
   dotProduct += dotProductVector[2];
   dotProduct += dotProductVector[3];
 
-  number = quarterPoints*4;
-  for(;number < num_4x_points; number++){
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
+  number = sixteenthPoints*16;
+  for(;number < num_points; number++){
     dotProduct += ((*aPtr++) * (*bPtr++));
   }
 
@@ -176,9 +170,9 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse3(float * result, const float *
 
 #include <smmintrin.h>
 
-static inline void volk_32f_x2_dot_prod_32f_u_sse4_1(float * result, const float * input, const float* taps, unsigned int num_4x_points) {
+static inline void volk_32f_x2_dot_prod_32f_u_sse4_1(float * result, const float * input, const float* taps, unsigned int num_points) {
   unsigned int number = 0;
-  const unsigned int sixteenthPoints = num_4x_points / 4;
+  const unsigned int sixteenthPoints = num_points / 16;
 
   float dotProduct = 0;
   const float* aPtr = input;
@@ -223,11 +217,8 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse4_1(float * result, const float
   dotProduct += dotProductVector[2];
   dotProduct += dotProductVector[3];
 
-  number = sixteenthPoints * 4;
-  for(;number < num_4x_points; number++){
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
+  number = sixteenthPoints * 16;
+  for(;number < num_points; number++){
     dotProduct += ((*aPtr++) * (*bPtr++));
   }
 
@@ -235,5 +226,66 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse4_1(float * result, const float
 }
 
 #endif /*LV_HAVE_SSE4_1*/
+
+#ifdef LV_HAVE_AVX
+
+static inline void volk_32f_x2_dot_prod_32f_u_avx( float* result, const  float* input, const  float* taps, unsigned int num_points) {
+
+  unsigned int number = 0;
+  const unsigned int sixteenthPoints = num_points / 16;
+
+  float dotProduct = 0;
+  const float* aPtr = input;
+  const float* bPtr = taps;
+
+  __m256 a0Val, a1Val;
+  __m256 b0Val, b1Val;
+  __m256 c0Val, c1Val;
+
+  __m256 dotProdVal0 = _mm256_setzero_ps();
+  __m256 dotProdVal1 = _mm256_setzero_ps();
+
+  for(;number < sixteenthPoints; number++){
+
+    a0Val = _mm256_loadu_ps(aPtr);
+    a1Val = _mm256_loadu_ps(aPtr+8);
+    b0Val = _mm256_loadu_ps(bPtr);
+    b1Val = _mm256_loadu_ps(bPtr+8);
+
+    c0Val = _mm256_mul_ps(a0Val, b0Val);
+    c1Val = _mm256_mul_ps(a1Val, b1Val);
+
+    dotProdVal0 = _mm256_add_ps(c0Val, dotProdVal0);
+    dotProdVal1 = _mm256_add_ps(c1Val, dotProdVal1);
+
+    aPtr += 16;
+    bPtr += 16;
+  }
+
+  dotProdVal0 = _mm256_add_ps(dotProdVal0, dotProdVal1);
+
+  __VOLK_ATTR_ALIGNED(32) float dotProductVector[8];
+
+  _mm256_storeu_ps(dotProductVector,dotProdVal0); // Store the results back into the dot product vector
+
+  dotProduct = dotProductVector[0];
+  dotProduct += dotProductVector[1];
+  dotProduct += dotProductVector[2];
+  dotProduct += dotProductVector[3];
+  dotProduct += dotProductVector[4];
+  dotProduct += dotProductVector[5];
+  dotProduct += dotProductVector[6];
+  dotProduct += dotProductVector[7];
+
+  number = sixteenthPoints*16;
+  for(;number < num_points; number++){
+    dotProduct += ((*aPtr++) * (*bPtr++));
+  }
+
+  *result = dotProduct;
+
+}
+
+#endif /*LV_HAVE_AVX*/
 
 #endif /*INCLUDED_volk_32f_x2_dot_prod_32f_u_H*/
