@@ -145,8 +145,14 @@ namespace gr {
       fir_filter_ccf::fir_filter_ccf(int decimation,
 				     const std::vector<float> &taps)
       {
+	d_align = volk_get_alignment();
+	d_naligned = d_align / sizeof(gr_complex);
+
 	d_taps = NULL;
 	set_taps(taps);
+
+	// Make sure the output sample is always aligned, too.
+	d_output = fft::malloc_complex(1);
       }
       
       fir_filter_ccf::~fir_filter_ccf()
@@ -167,9 +173,17 @@ namespace gr {
 	}
 	
 	d_ntaps = (int)taps.size();
-	d_taps = fft::malloc_complex(d_ntaps);
+	d_taps = fft::malloc_float(d_ntaps);
 	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[d_ntaps-i-1] = gr_complex(taps[i],0);
+	  d_taps[d_ntaps-i-1] = taps[i];
+	}
+
+	// Make a set of taps at all possible arch alignments
+	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
+	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
+	  memcpy(&d_aligned_taps[i][i], d_taps, sizeof(float)*(d_ntaps));
 	}
       }
       
@@ -178,7 +192,7 @@ namespace gr {
       {
 	std::vector<float> t;
 	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[d_ntaps-i-1].real());
+	  t.push_back(d_taps[d_ntaps-i-1]);
 	return t;
       }
 
@@ -191,9 +205,13 @@ namespace gr {
       gr_complex
       fir_filter_ccf::filter(const gr_complex input[])
       {
-	gr_complex output;
-	volk_32fc_x2_dot_prod_32fc_u(&output, input, d_taps, d_ntaps);
-	return output;
+	const gr_complex *ar = (gr_complex *)((unsigned long) input & ~(d_align-1));
+	unsigned al = input - ar;
+
+	volk_32fc_32f_dot_prod_32fc_a(d_output, ar,
+				      d_aligned_taps[al],
+				      (d_ntaps+al));
+	return *d_output;
       }
       
       void

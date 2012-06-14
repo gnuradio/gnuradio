@@ -40,7 +40,7 @@ namespace gr {
 
 
     @IMPL_NAME@::@IMPL_NAME@(int decimation, const std::vector<@TAP_TYPE@> &taps)
-      : gr_sync_decimator("fir_filter_fff",
+      : gr_sync_decimator("@BASE_NAME@",
 			  gr_make_io_signature(1, 1, sizeof(@I_TYPE@)),
 			  gr_make_io_signature(1, 1, sizeof(@O_TYPE@)),
 			  decimation)

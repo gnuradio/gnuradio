@@ -84,7 +84,7 @@ namespace gr {
 
       private:
 	unsigned int d_ntaps;
-	gr_complex  *d_taps;
+	float       *d_taps;
 	float      **d_aligned_taps;
 	gr_complex  *d_output;
 	int          d_align;
