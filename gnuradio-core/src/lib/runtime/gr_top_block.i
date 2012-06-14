@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include <gr_top_block.i>
-
 class gr_top_block;
 typedef boost::shared_ptr<gr_top_block> gr_top_block_sptr;
 %template(gr_top_block_sptr) boost::shared_ptr<gr_top_block>;
