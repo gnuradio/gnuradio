@@ -87,6 +87,7 @@ endmacro(expand_cc_h_impl)
 ########################################################################
 expand_cc_h_impl(add_XX       ss ii cc)
 expand_cc_h_impl(add_const_XX ss ii ff cc)
+expand_cc_h_impl(multiply_XX  ss ii)
 
 ########################################################################
 # Setup the include and linker paths
@@ -112,6 +113,8 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND gr_blocks_sources
     ${generated_sources}
     add_ff_impl.cc
+    multiply_cc_impl.cc
+    multiply_ff_impl.cc
 )
 
 list(APPEND blocks_libs

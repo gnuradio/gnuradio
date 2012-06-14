@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,31 +20,28 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_ADD_FF_H
-#define INCLUDED_BLOCKS_ADD_FF_H
+// @WARNING@
 
-#include <blocks/api.h>
-#include <gr_sync_block.h>
+#ifndef @GUARD_NAME_IMPL@
+#define @GUARD_NAME_IMPL@
+
+#include <blocks/@NAME@.h>
 
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API add_ff : virtual public gr_sync_block
+    class BLOCKS_API @NAME_IMPL@ : public @NAME@
     {
+      size_t d_vlen;
+
     public:
+      @NAME_IMPL@(size_t vlen);
 
-      // gr::blocks::add_ff::sptr
-      typedef boost::shared_ptr<add_ff> sptr;
-
-      /*!
-       * \brief Add streams of float values
-       * \param vlen Vector length
-       * \ingroup math_blk
-       */
-      static sptr make(size_t vlen=1);
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
-
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_BLOCKS_ADD_FF_H */
+#endif /* @GUARD_NAME_IMPL@ */

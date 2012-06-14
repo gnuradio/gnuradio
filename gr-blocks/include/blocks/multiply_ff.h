@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_ADD_FF_H
-#define INCLUDED_BLOCKS_ADD_FF_H
+#ifndef INCLUDED_GR_MULTIPLY_FF_H
+#define INCLUDED_GR_MULTIPLY_FF_H
 
 #include <blocks/api.h>
 #include <gr_sync_block.h>
@@ -29,15 +29,15 @@
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API add_ff : virtual public gr_sync_block
+    class BLOCKS_API multiply_ff : virtual public gr_sync_block
     {
     public:
 
-      // gr::blocks::add_ff::sptr
-      typedef boost::shared_ptr<add_ff> sptr;
+      // gr::blocks::multiply_ff::sptr
+      typedef boost::shared_ptr<multiply_ff> sptr;
 
       /*!
-       * \brief Add streams of float values
+       * \brief Multiply streams of float values
        * \param vlen Vector length
        * \ingroup math_blk
        */
@@ -47,4 +47,4 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_BLOCKS_ADD_FF_H */
+#endif /* INCLUDED_BLOCKS_MULTIPLY_FF_H */

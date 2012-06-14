@@ -134,12 +134,12 @@ class test_add_and_friends(gr_unittest.TestCase):
         expected_result = (-3-7j, 0+0j, 3+7j, 6+14j, 9+21j)
         op = gr.multiply_const_cc(5+2j)
         self.help_cc((src_data,), expected_result, op)
-
+     """
     def test_mult_ii(self):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (8, -6, 12, 32, 10)
-        op = gr.multiply_ii()
+        op = blocks_swig.multiply_ii()
         self.help_ii((src1_data, src2_data),
                       expected_result, op)
 
@@ -147,7 +147,7 @@ class test_add_and_friends(gr_unittest.TestCase):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (8, -6, 12, 32, 10)
-        op = gr.multiply_ff()
+        op = blocks_swig.multiply_ff()
         self.help_ff((src1_data, src2_data),
                       expected_result, op)
 
@@ -155,10 +155,10 @@ class test_add_and_friends(gr_unittest.TestCase):
         src1_data = (1+1j,  2+2j, 3+3j, 4+4j, 5+5j)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (8+8j, -6-6j, 12+12j, 32+32j, 10+10j)
-        op = gr.multiply_cc()
+        op = blocks_swig.multiply_cc()
         self.help_cc((src1_data, src2_data),
                       expected_result, op)
-
+    """
     def test_sub_ii_1(self):
         src1_data = (1,  2, 3, 4, 5)
         expected_result = (-1, -2, -3, -4, -5)
