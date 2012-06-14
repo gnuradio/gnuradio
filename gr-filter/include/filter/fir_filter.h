@@ -56,6 +56,8 @@ namespace gr {
 	float  *d_taps;
 	float **d_aligned_taps;
 	float  *d_output;
+	int     d_align;
+	int     d_naligned;
       };
 
       /**************************************************************/

@@ -33,6 +33,9 @@ namespace gr {
       fir_filter_fff::fir_filter_fff(int decimation,
 				     const std::vector<float> &taps)
       {
+	d_align = volk_get_alignment();
+	d_naligned = d_align / sizeof(float);
+
 	d_taps = NULL;
 	set_taps(taps);
 
@@ -49,7 +52,7 @@ namespace gr {
 	}
 
 	// Free all aligned taps
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < d_naligned; i++) {
 	  fft::free(d_aligned_taps[i]);
 	}
 	fft::free(d_aligned_taps);
@@ -66,7 +69,7 @@ namespace gr {
 	  fft::free(d_taps);
 	  d_taps = NULL;
 
-	  for(int i = 0; i < 4; i++) {
+	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
 	  fft::free(d_aligned_taps);
@@ -79,10 +82,10 @@ namespace gr {
 	}
 
 	// Make a set of taps at all possible arch alignments
-	d_aligned_taps = (float**)malloc(4*sizeof(float**));
-	for(int i = 0; i < 4; i++) {
-	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+3);
-	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+3));
+	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
+	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
 	  memcpy(&d_aligned_taps[i][i], d_taps, sizeof(float)*(d_ntaps));
 	}
       }
@@ -105,12 +108,12 @@ namespace gr {
       float
       fir_filter_fff::filter(const float input[])
       {
-	const float *ar = (float *)((unsigned long) input & ~15);
+	const float *ar = (float *)((unsigned long) input & ~(d_align-1));
 	unsigned al = input - ar;
 
 	volk_32f_x2_dot_prod_32f_a(d_output, ar,
 				   d_aligned_taps[al],
-				   (d_ntaps + al - 1) / 4 + 1);
+				   d_ntaps+al);
 	return *d_output;
       }
       
