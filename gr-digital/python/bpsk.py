@@ -44,7 +44,7 @@ def bpsk_constellation():
 
 class bpsk_mod(generic_mod):
 
-    def __init__(self, differential=False, *args, **kwargs):
+    def __init__(self, mod_code=None, differential=False, *args, **kwargs):
 
         """
 	Hierarchical block for RRC-filtered BPSK modulation.
@@ -53,6 +53,9 @@ class bpsk_mod(generic_mod):
 	output is the complex modulated signal at baseband.
 
         See generic_mod block for list of parameters.
+
+        'mod_code' argument is not used.
+        It exists purely to simplify generation of the block in grc.
 	"""
 
         constellation = digital_swig.constellation_bpsk()
@@ -66,7 +69,7 @@ class bpsk_mod(generic_mod):
 
 class bpsk_demod(generic_demod):
 
-    def __init__(self, differential=False, *args, **kwargs):
+    def __init__(self, mod_code=None, differential=False, *args, **kwargs):
 
         """
 	Hierarchical block for RRC-filtered BPSK modulation.
@@ -75,6 +78,9 @@ class bpsk_demod(generic_demod):
 	output is the complex modulated signal at baseband.
 
         See generic_demod block for list of parameters.
+
+        'mod_code' argument is not used.
+        It exists purely to simplify generation of the block in grc.
         """
 
         constellation = digital_swig.constellation_bpsk()
@@ -96,7 +102,7 @@ def dbpsk_constellation():
 
 class dbpsk_mod(bpsk_mod):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, mod_code=None, *args, **kwargs):
 
         """
 	Hierarchical block for RRC-filtered DBPSK modulation.
@@ -105,6 +111,9 @@ class dbpsk_mod(bpsk_mod):
 	output is the complex modulated signal at baseband.
 
         See generic_mod block for list of parameters.
+
+        'mod_code' argument is not used.
+        It exists purely to simplify generation of the block in grc.
 	"""
 
         super(dbpsk_mod, self).__init__(differential=True,
@@ -117,7 +126,7 @@ class dbpsk_mod(bpsk_mod):
 
 class dbpsk_demod(bpsk_demod):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, mod_code=None, *args, **kwargs):
 
         """
 	Hierarchical block for RRC-filtered DBPSK modulation.
@@ -126,6 +135,9 @@ class dbpsk_demod(bpsk_demod):
 	output is the complex modulated signal at baseband.
 
         See generic_demod block for list of parameters.
+
+        'mod_code' argument is not used.
+        It exists purely to simplify generation of the block in grc.
         """
 
         super(dbpsk_demod, self).__init__(differential=True,
