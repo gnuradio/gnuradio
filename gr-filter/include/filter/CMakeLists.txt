@@ -81,6 +81,7 @@ install(FILES
     fft_filter.h
     pm_remez.h
     polyphase_filterbank.h
+    single_pole_iir.h
     ${generated_includes}
     adaptive_fir_ccc.h
     adaptive_fir_ccf.h
@@ -91,6 +92,8 @@ install(FILES
     fft_filter_fff.h
     hilbert_fc.h
     pfb_channelizer_ccf.h
+    single_pole_iir_filter_cc.h
+    single_pole_iir_filter_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
     COMPONENT "fft_devel"
 )

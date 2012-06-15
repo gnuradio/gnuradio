@@ -25,6 +25,7 @@ install(FILES
     filter_delay_fc.xml
     hilbert_fc.xml
     pfb_channelizer.xml
+    single_pole_iir_filter_xx.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "filter_python"
 )
