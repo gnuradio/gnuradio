@@ -43,6 +43,7 @@
 #include "filter/fft_filter_ccc.h"
 #include "filter/fft_filter_fff.h"
 #include "filter/hilbert_fc.h"
+#include "filter/iir_filter_ffd.h"
 #include "filter/pfb_channelizer_ccf.h"
 #include "filter/single_pole_iir_filter_cc.h"
 #include "filter/single_pole_iir_filter_ff.h"
@@ -63,6 +64,7 @@
 %include "filter/fft_filter_ccc.h"
 %include "filter/fft_filter_fff.h"
 %include "filter/hilbert_fc.h"
+%include "filter/iir_filter_ffd.h"
 %include "filter/pfb_channelizer_ccf.h"
 %include "filter/single_pole_iir_filter_cc.h"
 %include "filter/single_pole_iir_filter_ff.h"
@@ -80,6 +82,7 @@ GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fsf);
 GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_ccc);
 GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, hilbert_fc);
+GR_SWIG_BLOCK_MAGIC2(filter, iir_filter_ffd);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_channelizer_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, single_pole_iir_filter_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, single_pole_iir_filter_ff);

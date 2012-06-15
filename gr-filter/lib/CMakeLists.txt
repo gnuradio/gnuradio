@@ -120,6 +120,7 @@ list(APPEND filter_sources
   fft_filter_ccc_impl.cc
   fft_filter_fff_impl.cc
   hilbert_fc_impl.cc
+  iir_filter_ffd_impl.cc
   pfb_channelizer_ccf_impl.cc
   single_pole_iir_filter_cc_impl.cc
   single_pole_iir_filter_ff_impl.cc

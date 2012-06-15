@@ -24,6 +24,7 @@ install(FILES
     fir_filter_xxx.xml
     filter_delay_fc.xml
     hilbert_fc.xml
+    iir_filter_ffd.xml
     pfb_channelizer.xml
     single_pole_iir_filter_xx.xml
     DESTINATION ${GRC_BLOCKS_DIR}

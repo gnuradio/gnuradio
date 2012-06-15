@@ -79,6 +79,7 @@ install(FILES
     fir_filter.h
     fir_filter_with_buffer.h
     fft_filter.h
+    iir_filter.h
     interpolator_taps.h
     pm_remez.h
     polyphase_filterbank.h
@@ -92,6 +93,7 @@ install(FILES
     fft_filter_ccc.h
     fft_filter_fff.h
     hilbert_fc.h
+    iir_filter_ffd.h
     pfb_channelizer_ccf.h
     single_pole_iir_filter_cc.h
     single_pole_iir_filter_ff.h

@@ -35,6 +35,7 @@
 		<block>fir_filter_xxx</block>
 		<block>filter_delay_fc</block>
 		<block>hilbert_fc</block>
+		<block>iir_filter_ffd</block>
 		<block>pfb_channelizer_ccf</block>
 		<block>single_pole_iir_filter_xx</block>
 	</cat>
