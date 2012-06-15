@@ -64,7 +64,7 @@ endmacro(expand_h)
 ########################################################################
 # Invoke macro to generate various sources
 #######################################################################
-expand_h(fir_filter_XXX fff ccf ccc)
+expand_h(fir_filter_XXX fff ccf ccc scc fsf)
 
 add_custom_target(filter_generated_includes DEPENDS
     ${generated_includes}

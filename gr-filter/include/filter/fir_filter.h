@@ -122,6 +122,68 @@ namespace gr {
 	int          d_naligned;
       };
 
+      /**************************************************************/
+      
+      class FILTER_API fir_filter_scc
+      {
+      public:
+	fir_filter_scc(int decimation,
+		       const std::vector<gr_complex> &taps);
+	~fir_filter_scc();
+
+	void set_taps(const std::vector<gr_complex> &taps);
+	std::vector<gr_complex> taps() const;
+	unsigned int ntaps() const;
+
+	gr_complex filter(const short input[]);
+	void filterN(gr_complex output[],
+		     const short input[],
+		     unsigned long n);
+	void filterNdec(gr_complex output[],
+			const short input[],
+			unsigned long n,
+			unsigned int decimate);
+
+      private:
+	unsigned int d_ntaps;
+	gr_complex  *d_taps;
+	gr_complex **d_aligned_taps;
+	gr_complex  *d_output;
+	int          d_align;
+	int          d_naligned;
+      };
+
+      /**************************************************************/
+      
+      class FILTER_API fir_filter_fsf
+      {
+      public:
+	fir_filter_fsf(int decimation,
+		       const std::vector<float> &taps);
+	~fir_filter_fsf();
+
+	void set_taps(const std::vector<float> &taps);
+	std::vector<float> taps() const;
+	unsigned int ntaps() const;
+
+	short filter(const float input[]);
+	void filterN(short output[],
+		     const float input[],
+		     unsigned long n);
+	void filterNdec(short output[],
+			const float input[],
+			unsigned long n,
+			unsigned int decimate);
+
+      private:
+	unsigned int d_ntaps;
+	float       *d_taps;
+	float      **d_aligned_taps;
+	short       *d_output;
+	int          d_align;
+	int          d_naligned;
+      };
+
     } /* namespace kernel */
   } /* namespace filter */
 } /* namespace gr */
