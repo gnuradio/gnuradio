@@ -59,7 +59,7 @@ namespace gr {
     }
 
     void
-    polyphase_filterbank::set_taps (const std::vector<float> &taps)
+    polyphase_filterbank::set_taps(const std::vector<float> &taps)
     {
       unsigned int i,j;
 

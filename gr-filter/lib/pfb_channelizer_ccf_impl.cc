@@ -81,7 +81,7 @@ namespace gr {
 	d_output_multiple++;
       set_output_multiple(d_output_multiple);
 
-      set_history (d_taps_per_filter+1);
+      set_history(d_taps_per_filter+1);
     }
 
     pfb_channelizer_ccf_impl::~pfb_channelizer_ccf_impl()
@@ -95,7 +95,7 @@ namespace gr {
       gruel::scoped_lock guard(d_mutex);
 
       polyphase_filterbank::set_taps(taps);
-      set_history (d_taps_per_filter+1);
+      set_history(d_taps_per_filter+1);
       d_updated = true;
     }
 
@@ -143,7 +143,7 @@ namespace gr {
       gr_complex *in = (gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
       
-      if (d_updated) {
+      if(d_updated) {
 	d_updated = false;
 	return 0;		     // history requirements may have changed.
       }
