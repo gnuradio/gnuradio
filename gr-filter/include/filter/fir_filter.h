@@ -51,13 +51,13 @@ namespace gr {
 			 unsigned long n,
 			 unsigned int decimate);
 
-      private:
-	unsigned int d_ntaps;
-	float  *d_taps;
-	float **d_aligned_taps;
-	float  *d_output;
-	int     d_align;
-	int     d_naligned;
+      protected:
+	std::vector<float> d_taps;
+	unsigned int  d_ntaps;
+	float       **d_aligned_taps;
+	float        *d_output;
+	int           d_align;
+	int           d_naligned;
       };
 
       /**************************************************************/
@@ -82,9 +82,9 @@ namespace gr {
 			unsigned long n,
 			unsigned int decimate);
 
-      private:
+      protected:
+	std::vector<float> d_taps;
 	unsigned int d_ntaps;
-	float       *d_taps;
 	float      **d_aligned_taps;
 	gr_complex  *d_output;
 	int          d_align;
@@ -113,9 +113,9 @@ namespace gr {
 			unsigned long n,
 			unsigned int decimate);
 
-      private:
+      protected:
+	std::vector<gr_complex> d_taps;
 	unsigned int d_ntaps;
-	gr_complex  *d_taps;
 	gr_complex **d_aligned_taps;
 	gr_complex  *d_output;
 	int          d_align;
@@ -144,9 +144,9 @@ namespace gr {
 			unsigned long n,
 			unsigned int decimate);
 
-      private:
+      protected:
+	std::vector<gr_complex> d_taps;
 	unsigned int d_ntaps;
-	gr_complex  *d_taps;
 	gr_complex **d_aligned_taps;
 	gr_complex  *d_output;
 	int          d_align;
@@ -175,9 +175,9 @@ namespace gr {
 			unsigned long n,
 			unsigned int decimate);
 
-      private:
+      protected:
+	std::vector<float> d_taps;
 	unsigned int d_ntaps;
-	float       *d_taps;
 	float      **d_aligned_taps;
 	short       *d_output;
 	int          d_align;

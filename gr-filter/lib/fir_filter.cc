@@ -36,7 +36,7 @@ namespace gr {
 	d_align = volk_get_alignment();
 	d_naligned = d_align / sizeof(float);
 
-	d_taps = NULL;
+	d_aligned_taps = NULL;
 	set_taps(taps);
 
 	// Make sure the output sample is always aligned, too.
@@ -45,17 +45,14 @@ namespace gr {
       
       fir_filter_fff::~fir_filter_fff()
       {
-	// Free taps
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
-	}
-
 	// Free all aligned taps
-	for(int i = 0; i < d_naligned; i++) {
-	  fft::free(d_aligned_taps[i]);
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
-	fft::free(d_aligned_taps);
 
 	// Free output sample
 	fft::free(d_output);
@@ -65,37 +62,33 @@ namespace gr {
       fir_filter_fff::set_taps(const std::vector<float> &taps)
       {
 	// Free the taps if already allocated
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
-
+	if(d_aligned_taps!= NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
 	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
 	
 	d_ntaps = (int)taps.size();
-	d_taps = fft::malloc_float(d_ntaps);
-	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[d_ntaps-i-1] = taps[i];
-	}
+	d_taps = taps;
+	std::reverse(d_taps.begin(), d_taps.end());
 
 	// Make a set of taps at all possible arch alignments
 	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
 	for(int i = 0; i < d_naligned; i++) {
 	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
 	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
-	  memcpy(&d_aligned_taps[i][i], d_taps, sizeof(float)*(d_ntaps));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
       
       std::vector<float>
       fir_filter_fff::taps() const
       {
-	std::vector<float> t;
-	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[d_ntaps-i-1]);
+	std::vector<float> t = d_taps;
+	std::reverse(t.begin(), t.end());
 	return t;
       }
 
@@ -148,7 +141,7 @@ namespace gr {
 	d_align = volk_get_alignment();
 	d_naligned = d_align / sizeof(gr_complex);
 
-	d_taps = NULL;
+	d_aligned_taps = NULL;
 	set_taps(taps);
 
 	// Make sure the output sample is always aligned, too.
@@ -157,42 +150,50 @@ namespace gr {
       
       fir_filter_ccf::~fir_filter_ccf()
       {
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
+	// Free all aligned taps
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
-    }
+
+	// Free output sample
+	fft::free(d_output);
+      }
       
       void
       fir_filter_ccf::set_taps(const std::vector<float> &taps)
       {
 	// Free the taps if already allocated
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
 	
 	d_ntaps = (int)taps.size();
-	d_taps = fft::malloc_float(d_ntaps);
-	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[d_ntaps-i-1] = taps[i];
-	}
+	d_taps = taps;
+	std::reverse(d_taps.begin(), d_taps.end());
 
 	// Make a set of taps at all possible arch alignments
 	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
 	for(int i = 0; i < d_naligned; i++) {
 	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
 	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
-	  memcpy(&d_aligned_taps[i][i], d_taps, sizeof(float)*(d_ntaps));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
       
       std::vector<float>
       fir_filter_ccf::taps() const
       {
-	std::vector<float> t;
-	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[d_ntaps-i-1]);
+	std::vector<float> t = d_taps;
+	std::reverse(t.begin(), t.end());
 	return t;
       }
 
@@ -245,7 +246,7 @@ namespace gr {
 	d_align = volk_get_alignment();
 	d_naligned = d_align / sizeof(gr_complex);
 
-	d_taps = NULL;
+	d_aligned_taps = NULL;
 	set_taps(taps);
 
 	// Make sure the output sample is always aligned, too.
@@ -254,57 +255,50 @@ namespace gr {
       
       fir_filter_ccc::~fir_filter_ccc()
       {
-	// Free taps
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
-	}
-
 	// Free all aligned taps
-	for(int i = 0; i < d_naligned; i++) {
-	  fft::free(d_aligned_taps[i]);
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
-	fft::free(d_aligned_taps);
 
 	// Free output sample
 	fft::free(d_output);
-    }
+      }
       
       void
       fir_filter_ccc::set_taps(const std::vector<gr_complex> &taps)
       {
 	// Free the taps if already allocated
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
-
+	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
 	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
 	
 	d_ntaps = (int)taps.size();
-	d_taps = fft::malloc_complex(d_ntaps);
-	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[d_ntaps-i-1] = taps[i];
-	}
+	d_taps = taps;
+	std::reverse(d_taps.begin(), d_taps.end());
 
 	// Make a set of taps at all possible arch alignments
 	d_aligned_taps = (gr_complex**)malloc(d_naligned*sizeof(gr_complex**));
 	for(int i = 0; i < d_naligned; i++) {
 	  d_aligned_taps[i] = fft::malloc_complex(d_ntaps+d_naligned-1);
 	  memset(d_aligned_taps[i], 0, sizeof(gr_complex)*(d_ntaps+d_naligned-1));
-	  memcpy(&d_aligned_taps[i][i], d_taps, sizeof(gr_complex)*(d_ntaps));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
       
       std::vector<gr_complex>
       fir_filter_ccc::taps() const
       {
-	std::vector<gr_complex> t;
-	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[d_ntaps-i-1]);
+	std::vector<gr_complex> t = d_taps;
+	std::reverse(t.begin(), t.end());
 	return t;
       }
 
@@ -357,7 +351,7 @@ namespace gr {
 	d_align = volk_get_alignment();
 	d_naligned = d_align / sizeof(short);
 
-	d_taps = NULL;
+	d_aligned_taps = NULL;
 	set_taps(taps);
 
 	// Make sure the output sample is always aligned, too.
@@ -366,58 +360,50 @@ namespace gr {
       
       fir_filter_scc::~fir_filter_scc()
       {
-	// Free taps
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
-	}
-
 	// Free all aligned taps
-	for(int i = 0; i < d_naligned; i++) {
-	  fft::free(d_aligned_taps[i]);
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
-	fft::free(d_aligned_taps);
 
 	// Free output sample
 	fft::free(d_output);
-    }
+      }
       
       void
       fir_filter_scc::set_taps(const std::vector<gr_complex> &taps)
       {
 	// Free the taps if already allocated
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
-
+	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
 	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
 	
 	d_ntaps = (int)taps.size();
-	d_taps = fft::malloc_complex(d_ntaps);
-	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[d_ntaps-i-1] = taps[i];
-	}
+	d_taps = taps;
+	std::reverse(d_taps.begin(), d_taps.end());
 
 	// Make a set of taps at all possible arch alignments
 	d_aligned_taps = (gr_complex**)malloc(d_naligned*sizeof(gr_complex**));
 	for(int i = 0; i < d_naligned; i++) {
 	  d_aligned_taps[i] = fft::malloc_complex(d_ntaps+d_naligned-1);
 	  memset(d_aligned_taps[i], 0, sizeof(gr_complex)*(d_ntaps+d_naligned-1));
-	  memcpy(&d_aligned_taps[i][i], d_taps, sizeof(gr_complex)*(d_ntaps));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
-
       }
       
       std::vector<gr_complex>
       fir_filter_scc::taps() const
       {
-	std::vector<gr_complex> t;
-	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[d_ntaps-i-1]);
+	std::vector<gr_complex> t = d_taps;
+	std::reverse(t.begin(), t.end());
 	return t;
       }
 
@@ -471,7 +457,7 @@ namespace gr {
 	d_align = volk_get_alignment();
 	d_naligned = d_align / sizeof(float);
 
-	d_taps = NULL;
+	d_aligned_taps = NULL;
 	set_taps(taps);
 
 	// Make sure the output sample is always aligned, too.
@@ -480,57 +466,50 @@ namespace gr {
       
       fir_filter_fsf::~fir_filter_fsf()
       {
-	// Free taps
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
+      	// Free all aligned taps
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
-
-	// Free all aligned taps
-	for(int i = 0; i < d_naligned; i++) {
-	  fft::free(d_aligned_taps[i]);
-	}
-	fft::free(d_aligned_taps);
 
 	// Free output sample
 	fft::free(d_output);
-    }
+      }
       
       void
       fir_filter_fsf::set_taps(const std::vector<float> &taps)
       {
 	// Free the taps if already allocated
-	if(d_taps != NULL) {
-	  fft::free(d_taps);
-	  d_taps = NULL;
-
+	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
 	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
 	}
 	
 	d_ntaps = (int)taps.size();
-	d_taps = fft::malloc_float(d_ntaps);
-	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_taps[d_ntaps-i-1] = taps[i];
-	}
+	d_taps = taps;
+	std::reverse(d_taps.begin(), d_taps.end());
 
 	// Make a set of taps at all possible arch alignments
 	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
 	for(int i = 0; i < d_naligned; i++) {
 	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
 	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
-	  memcpy(&d_aligned_taps[i][i], d_taps, sizeof(float)*(d_ntaps));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
       
       std::vector<float>
       fir_filter_fsf::taps() const
       {
-	std::vector<float> t;
-	for(unsigned int i = 0; i < d_ntaps; i++)
-	  t.push_back(d_taps[d_ntaps-i-1]);
+	std::vector<float> t = d_taps;
+	std::reverse(t.begin(), t.end());
 	return t;
       }
 
@@ -549,12 +528,6 @@ namespace gr {
 	volk_32f_x2_dot_prod_16i_a(d_output, ar,
 				   d_aligned_taps[al],
 				   (d_ntaps+al));
-
-	//float out = 0;
-	//for(unsigned int i = 0; i < d_ntaps; i++) {
-	//  out += d_taps[i] * input[i];
-	//}
-	//*d_output = (short)out;
 
 	return *d_output;
       }
