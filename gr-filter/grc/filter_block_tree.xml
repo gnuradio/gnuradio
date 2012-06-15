@@ -32,6 +32,7 @@
 		<name>Filters</name>
 		<block>dc_blocker_xx</block>
 		<block>fft_filter_xxx</block>
+		<block>fir_filter_xxx</block>
 		<block>filter_delay_fc</block>
 		<block>hilbert_fc</block>
 		<block>pfb_channelizer_ccf</block>

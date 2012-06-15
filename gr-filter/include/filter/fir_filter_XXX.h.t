@@ -31,6 +31,30 @@
 namespace gr {
   namespace filter {
 
+    /*!
+     * \brief FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
+     * \ingroup filter_blk
+     *
+     * The fir_filter_XXX blocks create finite impulse response
+     * (FIR) filters that perform the convolution in the time
+     * domain:
+     *
+     * \code
+     *   out = 0
+     *   for i in ntaps:
+     *      out += input[n-i] * taps[i]
+     * \endcode
+     *
+     * The taps are a C++ vector (or Python list) of values of the
+     * type specified by the third letter in the block's suffix. For
+     * this block, the value is of type @TAP_TYPE@. Taps can be
+     * created using the firdes or optfir tools.
+     *
+     * These versions of the filter can also act as down-samplers
+     * (or decimators) by specifying an integer value for \p
+     * decimation.
+     *
+     */
     class FILTER_API @BASE_NAME@ : virtual public gr_sync_decimator
     {
     public:
@@ -41,6 +65,9 @@ namespace gr {
       /*!
        * \brief FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
        * \ingroup filter_blk
+       *
+       * \param decimation set the integer decimation rate
+       * \param taps a vector/list of taps of type @TAP_TYPE@
        */
       static FILTER_API sptr make(int decimation,
 				  const std::vector<@TAP_TYPE@> &taps);

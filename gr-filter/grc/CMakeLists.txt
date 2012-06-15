@@ -21,6 +21,7 @@ install(FILES
     filter_block_tree.xml
     dc_blocker_xx.xml
     fft_filter_xxx.xml
+    fir_filter_xxx.xml
     filter_delay_fc.xml
     hilbert_fc.xml
     pfb_channelizer.xml
