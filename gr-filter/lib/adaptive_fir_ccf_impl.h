@@ -24,17 +24,19 @@
 #define	INCLUDED_FILTER_ADAPTIVE_FIR_CCF_IMPL_H
 
 #include <filter/adaptive_fir_ccf.h>
+#include <filter/fir_filter.h>
 #include <gr_types.h>
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API adaptive_fir_ccf_impl : public adaptive_fir_ccf, public kernel::adaptive_fir_ccf
+    class FILTER_API adaptive_fir_ccf_impl : public adaptive_fir_ccf, public kernel::fir_filter_ccf
     {
     private:
       std::vector<float> d_new_taps;
       bool d_updated;
       
+    protected:
       // Override to calculate error signal per output
       float error(const gr_complex &out);
 
@@ -43,6 +45,7 @@ namespace gr {
 
     public:
       void set_taps(const std::vector<float> &taps);
+      std::vector<float> taps();
 
       adaptive_fir_ccf_impl(const char *name, int decimation,
 			    const std::vector<float> &taps);

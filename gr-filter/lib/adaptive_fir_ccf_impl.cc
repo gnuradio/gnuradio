@@ -43,7 +43,7 @@ namespace gr {
 			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 			  decimation),
-	kernel::adaptive_fir_ccf(decimation, taps),
+	kernel::fir_filter_ccf(decimation, taps),
 	d_updated(false)
     {
       set_history(d_ntaps);
@@ -56,6 +56,12 @@ namespace gr {
       d_updated = true;
     }
 
+    std::vector<float>
+    adaptive_fir_ccf_impl::taps()
+    {
+      return kernel::fir_filter_ccf::taps();
+    }   
+    
     float
     adaptive_fir_ccf_impl::error(const gr_complex &out)
     {
@@ -77,7 +83,7 @@ namespace gr {
       gr_complex *out = (gr_complex *)output_items[0];
 
       if (d_updated) {
-	kernel::adaptive_fir_ccf::set_taps(d_new_taps);
+	kernel::fir_filter_ccf::set_taps(d_new_taps);
 	set_history(d_ntaps);
 	d_updated = false;
 	return 0;		     // history requirements may have changed.
@@ -85,7 +91,13 @@ namespace gr {
 
       // Call base class filtering function that uses
       // overloaded error and update_tap functions.
-      filterN(out, in, noutput_items);
+      if (decimation() == 1) {
+	filterN(out, in, noutput_items);
+      }
+      else {
+	filterNdec(out, in, noutput_items,
+		   decimation());
+      }
 
       return noutput_items;
     }

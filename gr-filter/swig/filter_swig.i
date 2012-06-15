@@ -30,6 +30,8 @@
 %{
 #include "filter/firdes.h"
 #include "filter/pm_remez.h"
+#include "filter/adaptive_fir_ccc.h"
+#include "filter/adaptive_fir_ccf.h"
 #include "filter/dc_blocker_cc.h"
 #include "filter/dc_blocker_ff.h"
 #include "filter/filter_delay_fc.h"
@@ -46,6 +48,8 @@
 
 %include "filter/firdes.h"
 %include "filter/pm_remez.h"
+%include "filter/adaptive_fir_ccc.h"
+%include "filter/adaptive_fir_ccf.h"
 %include "filter/dc_blocker_cc.h"
 %include "filter/dc_blocker_ff.h"
 %include "filter/filter_delay_fc.h"
@@ -59,6 +63,8 @@
 %include "filter/hilbert_fc.h"
 %include "filter/pfb_channelizer_ccf.h"
 
+GR_SWIG_BLOCK_MAGIC2(filter, adaptive_fir_ccc);
+GR_SWIG_BLOCK_MAGIC2(filter, adaptive_fir_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_ff);
 GR_SWIG_BLOCK_MAGIC2(filter, filter_delay_fc);

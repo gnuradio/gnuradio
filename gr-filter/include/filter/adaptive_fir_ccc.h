@@ -24,8 +24,8 @@
 #define	INCLUDED_FILTER_ADAPTIVE_FIR_CCC_H
 
 #include <filter/api.h>
-#include <filter/adaptive_fir.h>
 #include <gr_sync_decimator.h>
+#include <filter/fir_filter.h>
 
 namespace gr {
   namespace filter {
@@ -43,8 +43,8 @@ namespace gr {
       static FILTER_API sptr make(const char *name, int decimation,
 				  const std::vector<gr_complex> &taps);
 
-      void set_taps(const std::vector<gr_complex> &taps);
-      std::vector<gr_complex> taps();
+      virtual void set_taps(const std::vector<gr_complex> &taps) = 0;
+      virtual std::vector<gr_complex> taps() const = 0;
     };
 
   } /* namespace filter */

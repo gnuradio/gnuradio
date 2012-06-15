@@ -105,7 +105,6 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND filter_sources
-  adaptive_fir.cc
   fir_filter.cc
   fir_filter_with_buffer.cc
   fft_filter.cc
