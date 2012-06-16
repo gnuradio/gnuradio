@@ -110,7 +110,7 @@ CPACK_COMPONENT("core_swig"
 
 install(
     FILES gnuradio-core.conf
-    DESTINATION ${GR_PKG_CONF_DIR}
+    DESTINATION ${GR_PREFSDIR}
     COMPONENT "core_runtime"
 )
 
