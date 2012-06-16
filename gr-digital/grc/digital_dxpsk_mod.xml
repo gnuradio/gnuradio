@@ -63,17 +63,18 @@
 		<type>real</type>
 	</param>
 	<param>
-	  <name>Gray Code</name>
-	  <key>mod_code</key>
-	  <type>enum</type>
-	  <option>
-		<name>Yes</name>
-		<key>"gray"</key>
-	  </option>
-	  <option>
-		<name>No</name>
-		<key>"none"</key>
-	  </option>
+		<name>Gray Code</name>
+		<key>mod_code</key>
+		<value>"gray"</value>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>"gray"</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>"none"</key>
+		</option>
 	</param>
 	<param>
 		<name>Verbose</name>

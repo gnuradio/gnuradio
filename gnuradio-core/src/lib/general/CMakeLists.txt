@@ -48,9 +48,6 @@ message(STATUS "Loading build date ${BUILD_DATE} into gr_constants...")
 
 message(STATUS "Loading version ${VERSION} into gr_constants...")
 
-file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}"     SYSCONFDIR)
-file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_PKG_CONF_DIR}" GR_PREFSDIR)
-
 #double escape for windows backslash path separators
 string(REPLACE "\\" "\\\\" prefix ${prefix})
 string(REPLACE "\\" "\\\\" SYSCONFDIR ${SYSCONFDIR})
