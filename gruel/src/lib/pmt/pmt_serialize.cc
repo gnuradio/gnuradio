@@ -79,7 +79,6 @@ serialize_untagged_f64(double i, std::streambuf &sb)
 }
 
 
-#if 0
 // always writes big-endian
 static bool
 serialize_untagged_u64(uint64_t i, std::streambuf &sb)
@@ -93,7 +92,6 @@ serialize_untagged_u64(uint64_t i, std::streambuf &sb)
   sb.sputc((i >>  8) & 0xff);
   return sb.sputc((i >> 0) & 0xff) != std::streambuf::traits_type::eof();
 }
-#endif
 
 // ----------------------------------------------------------------
 // input primitives
@@ -152,7 +150,6 @@ deserialize_untagged_u32(uint32_t *ip, std::streambuf &sb)
   return t != std::streambuf::traits_type::eof();
 }
 
-#if 0
 // always reads big-endian
 static bool
 deserialize_untagged_u64(uint64_t *ip, std::streambuf &sb)
@@ -181,7 +178,6 @@ deserialize_untagged_u64(uint64_t *ip, std::streambuf &sb)
   *ip = i;
   return t != std::streambuf::traits_type::eof();
 }
-#endif
 
 static bool
 deserialize_untagged_f64(double *ip, std::streambuf &sb)
@@ -260,7 +256,13 @@ pmt_serialize(pmt_t obj, std::streambuf &sb)
   }
 
   if (pmt_is_number(obj)){
-
+    
+    if (pmt_is_uint64(obj)){
+        uint64_t i = pmt_to_uint64(obj);
+        ok = serialize_untagged_u8(PST_UINT64, sb);
+        ok &= serialize_untagged_u64(i, sb);
+        return ok;
+        } else 
     if (pmt_is_integer(obj)){
       long i = pmt_to_long(obj);
       if (sizeof(long) > 4){
@@ -315,7 +317,7 @@ pmt_deserialize(std::streambuf &sb)
   //uint8_t	u8;
   uint16_t	u16;
   uint32_t	u32;
-  //uint32_t	u64;
+  uint64_t	u64;
   double	f64;
   static char   tmpbuf[1024];
 
@@ -346,6 +348,11 @@ pmt_deserialize(std::streambuf &sb)
     if (!deserialize_untagged_u32(&u32, sb))
       goto error;
     return pmt_from_long((int32_t) u32);
+
+  case PST_UINT64:
+    if(!deserialize_untagged_u64(&u64, sb))
+        goto error;
+    return pmt_from_uint64(u64);
 
   case PST_PAIR:
     return parse_pair(sb);
