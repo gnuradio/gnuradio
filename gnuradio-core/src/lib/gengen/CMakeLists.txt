@@ -89,7 +89,7 @@ expand_h_cc_i(gr_sig_source_X        s i f c)
 expand_h_cc_i(gr_probe_signal_X    b s i f c)
 expand_h_cc_i(gr_probe_signal_vX    b s i f c)
 
-expand_h_cc_i(gr_add_const_XX           ss ii ff cc sf)
+expand_h_cc_i(gr_add_const_XX           bb ss ii ff cc sf)
 expand_h_cc_i(gr_multiply_const_XX      ss ii)
 expand_h_cc_i(gr_add_XX                 ss ii cc)
 expand_h_cc_i(gr_sub_XX                 ss ii ff cc)
