@@ -85,9 +85,12 @@ endmacro(expand_cc_h_impl)
 ########################################################################
 # Invoke macro to generate various sources
 ########################################################################
-expand_cc_h_impl(add_XX       ss ii cc)
-expand_cc_h_impl(add_const_XX ss ii ff cc)
-expand_cc_h_impl(multiply_XX  ss ii)
+expand_cc_h_impl(add_XX             ss ii cc)
+expand_cc_h_impl(add_const_XX       ss ii ff cc)
+expand_cc_h_impl(add_const_vXX      ss ii ff cc)
+expand_cc_h_impl(multiply_XX        ss ii)
+expand_cc_h_impl(multiply_const_XX  ss ii)
+expand_cc_h_impl(multiply_const_vXX ss ii ff cc)
 
 ########################################################################
 # Setup the include and linker paths
@@ -115,6 +118,8 @@ list(APPEND gr_blocks_sources
     add_ff_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
+    multiply_const_cc_impl.cc
+    multiply_const_ff_impl.cc
 )
 
 list(APPEND blocks_libs

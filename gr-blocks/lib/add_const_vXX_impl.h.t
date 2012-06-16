@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,44 +22,30 @@
 
 // @WARNING@
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef @GUARD_NAME_IMPL@
+#define @GUARD_NAME_IMPL@
 
-#include <blocks/api.h>
-#include <gr_sync_block.h>
+#include <blocks/@NAME@.h>
 
 namespace gr {
   namespace blocks {
 
-    /*!
-     * \brief output = input + constant
-     * \ingroup math_blk
-     */
-    class BLOCKS_API @NAME@ : virtual public gr_sync_block
+    class BLOCKS_API @NAME_IMPL@ : public @NAME@
     {
-    public:
-      
-      // gr::blocks::@NAME@::sptr
-      typedef boost::shared_ptr<@NAME@> sptr;
-      
-      /*!
-       * \brief Create an instance of @NAME@
-       * \param k additive constant
-       */
-      static sptr make(@O_TYPE@ k);
-      
-      /*!
-       * \brief Return additive constant
-       */
-      virtual @O_TYPE@ k() const = 0;
+      std::vector<@O_TYPE@> d_k;
 
-      /*!
-       * \brief Set additive constant
-       */
-      virtual void set_k(@O_TYPE@ k) = 0;
+    public:
+      @NAME_IMPL@(std::vector<@O_TYPE@> k);
+
+      std::vector<@O_TYPE@> k() const { return d_k; }
+      void set_k(std::vector<@O_TYPE@> k) { d_k = k; }
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
 
-  }
-}
+  } /* namespace blocks */
+} /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* @GUARD_NAME_IMPL@ */

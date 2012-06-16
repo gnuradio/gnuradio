@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2010,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,11 +32,12 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = input + constant
+     * \brief output = input + constant vector
      * \ingroup math_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {
+
     public:
       
       // gr::blocks::@NAME@::sptr
@@ -44,22 +45,22 @@ namespace gr {
       
       /*!
        * \brief Create an instance of @NAME@
-       * \param k additive constant
+       * \param k additive constant vector
        */
-      static sptr make(@O_TYPE@ k);
+      static sptr make(std::vector<@O_TYPE@> k);
       
       /*!
-       * \brief Return additive constant
+       * \brief Return additive constant vector
        */
-      virtual @O_TYPE@ k() const = 0;
+      virtual std::vector<@O_TYPE@> k() const = 0;
 
       /*!
-       * \brief Set additive constant
+       * \brief Set additive constant vector
        */
-      virtual void set_k(@O_TYPE@ k) = 0;
+      virtual void set_k(std::vector<@O_TYPE@> k) = 0;
     };
 
-  }
-}
+  } /* namespace blocks */
+} /* namespace gr */
 
 #endif /* @GUARD_NAME@ */

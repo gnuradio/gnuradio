@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Add Const Block:
+##Multiply Const Block:
 ##	all types, 1 output, 1 input & const
 ###################################################
  -->
 <block>
-	<name>Add Const</name>
-	<key>blocks_add_const_xx</key>
+	<name>Multiply Const</name>
+	<key>blocks_multiply_const_vxx</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.add_const_v$(type.fcn)($const)</make>
+	<make>blocks.multiply_const_v$(type.fcn)($const)</make>
 	<callback>set_k($const)</callback>
 	<param>
 		<name>IO Type</name>

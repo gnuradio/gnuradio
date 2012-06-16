@@ -32,11 +32,12 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = input + constant
+     * \brief output = input * constant
      * \ingroup math_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {
+
     public:
       
       // gr::blocks::@NAME@::sptr
@@ -44,22 +45,22 @@ namespace gr {
       
       /*!
        * \brief Create an instance of @NAME@
-       * \param k additive constant
+       * \param k multiplicative constant
        */
       static sptr make(@O_TYPE@ k);
       
       /*!
-       * \brief Return additive constant
+       * \brief Return multiplicative constant
        */
       virtual @O_TYPE@ k() const = 0;
 
       /*!
-       * \brief Set additive constant
+       * \brief Set multiplicative constant
        */
       virtual void set_k(@O_TYPE@ k) = 0;
     };
 
-  }
-}
+  } /* namespace blocks */
+} /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* @GUARD_NAME */

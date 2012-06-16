@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,8 +22,8 @@
 
 // @WARNING@
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef INCLUDED_MULTIPLY_CONST_CC_H
+#define INCLUDED_MULTIPLY_CONST_CC_H
 
 #include <blocks/api.h>
 #include <gr_sync_block.h>
@@ -32,34 +32,35 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = input + constant
+     * \brief output = input * complex constant
      * \ingroup math_blk
      */
-    class BLOCKS_API @NAME@ : virtual public gr_sync_block
+    class BLOCKS_API multiply_const_cc : virtual public gr_sync_block
     {
+
     public:
       
-      // gr::blocks::@NAME@::sptr
-      typedef boost::shared_ptr<@NAME@> sptr;
+      // gr::blocks::multiply_const_cc::sptr
+      typedef boost::shared_ptr<multiply_const_cc> sptr;
       
       /*!
-       * \brief Create an instance of @NAME@
-       * \param k additive constant
+       * \brief Create an instance of multiply_const_cc
+       * \param k complex multiplicative constant
        */
-      static sptr make(@O_TYPE@ k);
+      static sptr make(gr_complex k, size_t vlen=1);
       
       /*!
-       * \brief Return additive constant
+       * \brief Return complex multiplicative constant
        */
-      virtual @O_TYPE@ k() const = 0;
+      virtual gr_complex k() const = 0;
 
       /*!
-       * \brief Set additive constant
+       * \brief Set complex multiplicative constant
        */
-      virtual void set_k(@O_TYPE@ k) = 0;
+      virtual void set_k(gr_complex k) = 0;
     };
 
-  }
-}
+  } /* namespace blocks */
+} /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* INCLUDED_MULTIPLY_CONST_CC_H */

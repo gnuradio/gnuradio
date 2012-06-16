@@ -36,10 +36,22 @@
 #include "blocks/add_const_ss.h"
 #include "blocks/add_const_ii.h"
 #include "blocks/add_const_cc.h"
+#include "blocks/add_const_vff.h"
+#include "blocks/add_const_vss.h"
+#include "blocks/add_const_vii.h"
+#include "blocks/add_const_vcc.h"
 #include "blocks/multiply_ss.h"
 #include "blocks/multiply_ii.h"
 #include "blocks/multiply_ff.h"
 #include "blocks/multiply_cc.h"
+#include "blocks/multiply_const_ss.h"
+#include "blocks/multiply_const_ii.h"
+#include "blocks/multiply_const_ff.h"
+#include "blocks/multiply_const_cc.h"
+#include "blocks/multiply_const_vss.h"
+#include "blocks/multiply_const_vii.h"
+#include "blocks/multiply_const_vff.h"
+#include "blocks/multiply_const_vcc.h"
 %}
 
 %include "blocks/add_ff.h"
@@ -50,10 +62,22 @@
 %include "blocks/add_const_ss.h"
 %include "blocks/add_const_ii.h"
 %include "blocks/add_const_cc.h"
+%include "blocks/add_const_vff.h"
+%include "blocks/add_const_vss.h"
+%include "blocks/add_const_vii.h"
+%include "blocks/add_const_vcc.h"
 %include "blocks/multiply_ss.h"
 %include "blocks/multiply_ii.h"
 %include "blocks/multiply_ff.h"
 %include "blocks/multiply_cc.h"
+%include "blocks/multiply_const_ss.h"
+%include "blocks/multiply_const_ii.h"
+%include "blocks/multiply_const_ff.h"
+%include "blocks/multiply_const_cc.h"
+%include "blocks/multiply_const_vss.h"
+%include "blocks/multiply_const_vii.h"
+%include "blocks/multiply_const_vff.h"
+%include "blocks/multiply_const_vcc.h"
 
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ss);
@@ -63,7 +87,19 @@ GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vff);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vss);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vii);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vcc);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vss);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vii);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vff);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vcc);

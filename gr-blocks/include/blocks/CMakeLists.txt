@@ -64,9 +64,12 @@ endmacro(expand_h)
 ########################################################################
 # Invoke macro to generate various sources
 ########################################################################
-expand_h(add_XX       ss ii cc)
-expand_h(add_const_XX ss ii ff cc)
-expand_h(multiply_XX  ss ii)
+expand_h(add_XX             ss ii cc)
+expand_h(add_const_XX       ss ii ff cc)
+expand_h(add_const_vXX      ss ii ff cc)
+expand_h(multiply_XX        ss ii)
+expand_h(multiply_const_XX  ss ii)
+expand_h(multiply_const_vXX ss ii ff cc)
 
 add_custom_target(blocks_generated_includes DEPENDS
     ${generated_includes}
@@ -81,6 +84,8 @@ install(FILES
     add_ff.h
     multiply_cc.h
     multiply_ff.h
+    multiply_const_cc.h
+    multiply_const_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"
 )
