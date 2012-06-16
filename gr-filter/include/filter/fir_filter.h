@@ -93,6 +93,37 @@ namespace gr {
 
       /**************************************************************/
       
+      class FILTER_API fir_filter_fcc
+      {
+      public:
+	fir_filter_fcc(int decimation,
+		       const std::vector<gr_complex> &taps);
+	~fir_filter_fcc();
+
+	void set_taps(const std::vector<gr_complex> &taps);
+	std::vector<gr_complex> taps() const;
+	unsigned int ntaps() const;
+
+	gr_complex filter(const float input[]);
+	void filterN(gr_complex output[],
+		     const float input[],
+		     unsigned long n);
+	void filterNdec(gr_complex output[],
+			const float input[],
+			unsigned long n,
+			unsigned int decimate);
+
+      protected:
+	std::vector<gr_complex> d_taps;
+	unsigned int d_ntaps;
+	gr_complex **d_aligned_taps;
+	gr_complex  *d_output;
+	int          d_align;
+	int          d_naligned;
+      };
+
+      /**************************************************************/
+      
       class FILTER_API fir_filter_ccc
       {
       public:

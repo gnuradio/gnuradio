@@ -238,6 +238,114 @@ namespace gr {
 	}
       }
       
+
+      /**************************************************************/
+
+
+      fir_filter_fcc::fir_filter_fcc(int decimation,
+				     const std::vector<gr_complex> &taps)
+      {
+	d_align = volk_get_alignment();
+	d_naligned = d_align / sizeof(float);
+
+	d_aligned_taps = NULL;
+	set_taps(taps);
+
+	// Make sure the output sample is always aligned, too.
+	d_output = fft::malloc_complex(1);
+      }
+      
+      fir_filter_fcc::~fir_filter_fcc()
+      {
+	// Free all aligned taps
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
+	}
+
+	// Free output sample
+	fft::free(d_output);
+      }
+      
+      void
+      fir_filter_fcc::set_taps(const std::vector<gr_complex> &taps)
+      {
+	// Free the taps if already allocated
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
+	}
+	
+	d_ntaps = (int)taps.size();
+	d_taps = taps;
+	std::reverse(d_taps.begin(), d_taps.end());
+
+	// Make a set of taps at all possible arch alignments
+	d_aligned_taps = (gr_complex**)malloc(d_naligned*sizeof(gr_complex**));
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i] = fft::malloc_complex(d_ntaps+d_naligned-1);
+	  memset(d_aligned_taps[i], 0, sizeof(gr_complex)*(d_ntaps+d_naligned-1));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
+	}
+      }
+      
+      std::vector<gr_complex>
+      fir_filter_fcc::taps() const
+      {
+	std::vector<gr_complex> t = d_taps;
+	std::reverse(t.begin(), t.end());
+	return t;
+      }
+
+      unsigned int
+      fir_filter_fcc::ntaps() const
+      {
+	return d_ntaps;
+      }
+      
+      gr_complex
+      fir_filter_fcc::filter(const float input[])
+      {
+	const float *ar = (float *)((unsigned long) input & ~(d_align-1));
+	unsigned al = input - ar;
+
+	volk_32fc_32f_dot_prod_32fc_a(d_output,
+				      d_aligned_taps[al],
+				      ar,
+				      (d_ntaps+al));
+	return *d_output;
+      }
+      
+      void
+      fir_filter_fcc::filterN(gr_complex output[],
+			      const float input[],
+			      unsigned long n)
+      {
+	for(unsigned long i = 0; i < n; i++)
+	  output[i] = filter(&input[i]);
+      }
+      
+      
+      void
+      fir_filter_fcc::filterNdec(gr_complex output[],
+				 const float input[],
+				 unsigned long n,
+				 unsigned int decimate)
+      {
+	unsigned long j = 0;
+	for(unsigned long i = 0; i < n; i++){
+	  output[i] = filter(&input[j]);
+	  j += decimate;
+	}
+      }
+      
       /**************************************************************/
 
       fir_filter_ccc::fir_filter_ccc(int decimation,

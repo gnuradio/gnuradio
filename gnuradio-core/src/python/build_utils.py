@@ -214,6 +214,8 @@ def standard_impl_dict2 (name, code3, package):
     d['GUARD_NAME'] = 'INCLUDED_%s_%s_H' % (package.upper(), name.upper())
     d['WARNING'] = 'WARNING: this file is machine generated. Edits will be overwritten'
     d['COPYRIGHT'] = copyright
+    d['FIR_TYPE'] = "fir_filter_" + code3
+    d['CFIR_TYPE'] = "fir_filter_" + code3[0:2] + 'c'
     d['TYPE'] = i_type (code3)
     d['I_TYPE'] = i_type (code3)
     d['O_TYPE'] = o_type (code3)

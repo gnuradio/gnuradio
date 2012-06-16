@@ -81,6 +81,7 @@ endmacro(expand_cc)
 # Invoke macro to generate various sources
 ########################################################################
 expand_cc(fir_filter_XXX_impl         fff ccf ccc scc fsf)
+expand_cc(freq_xlating_fir_filter_XXX_impl ccc ccf fcc fcf scc scf)
 
 
 ########################################################################

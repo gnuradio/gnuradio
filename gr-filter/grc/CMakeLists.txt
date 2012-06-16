@@ -23,6 +23,7 @@ install(FILES
     fft_filter_xxx.xml
     fir_filter_xxx.xml
     filter_delay_fc.xml
+    freq_xlating_fir_filter_xxx.xml
     hilbert_fc.xml
     iir_filter_ffd.xml
     pfb_channelizer.xml
