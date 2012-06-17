@@ -82,6 +82,8 @@ install(FILES
     fft_filter.h
     iir_filter.h
     interpolator_taps.h
+    mmse_fir_interpolator_cc.h
+    mmse_fir_interpolator_ff.h
     pm_remez.h
     polyphase_filterbank.h
     single_pole_iir.h

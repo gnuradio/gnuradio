@@ -42,7 +42,7 @@ namespace gr {
 	std::vector<float> taps() const;
 	unsigned int ntaps() const;
 	
-	inline float filter(const float input[]);
+	float filter(const float input[]);
 	void  filterN(float output[],
 		      const float input[],
 		      unsigned long n);

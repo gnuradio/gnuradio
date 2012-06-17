@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2002,2007,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,25 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-filter
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#ifndef _QA_MMSE_FIR_INTERPOLATOR_CC_H_
+#define _QA_MMSE_FIR_INTERPOLATOR_CC_H_
 
-#include <qa_filter.h>
-#include <qa_firdes.h>
-#include <qa_mmse_fir_interpolator_cc.h>
-#include <qa_mmse_fir_interpolator_ff.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
-CppUnit::TestSuite *
-qa_gr_filter::suite ()
-{
-  CppUnit::TestSuite *s = new CppUnit::TestSuite ("gr-filter");
+namespace gr {
+  namespace filter {
+    
+    class qa_mmse_fir_interpolator_cc : public CppUnit::TestCase 
+    {
+      CPPUNIT_TEST_SUITE(qa_mmse_fir_interpolator_cc);
+      CPPUNIT_TEST(t1);
+      // CPPUNIT_TEST(t2);
+      CPPUNIT_TEST_SUITE_END();
 
-  s->addTest(gr::filter::qa_firdes::suite());
-  s->addTest(gr::filter::qa_mmse_fir_interpolator_cc::suite());
-  s->addTest(gr::filter::qa_mmse_fir_interpolator_ff::suite());
+    private:
+      void t1();
+      void t2();
+      void t2_body();
+    };
 
-  return s;
-}
+  } /* namespace filter */
+} /* namespace gr */
+
+#endif /* _QA_MMSE_FIR_INTERPOLATOR_CC_H_ */

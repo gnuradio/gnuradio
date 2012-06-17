@@ -110,6 +110,8 @@ list(APPEND filter_sources
   fir_filter_with_buffer.cc
   fft_filter.cc
   firdes.cc
+  mmse_fir_interpolator_cc.cc
+  mmse_fir_interpolator_ff.cc
   pm_remez.cc
   polyphase_filterbank.cc
   ${generated_sources}
@@ -148,6 +150,8 @@ list(APPEND test_gr_filter_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_filter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_filter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_firdes.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_cc.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_ff.cc
 )
 
 add_executable(test-gr-filter ${test_gr_filter_sources})
