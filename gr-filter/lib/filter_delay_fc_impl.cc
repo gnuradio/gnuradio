@@ -78,7 +78,6 @@ namespace gr {
       float *in0 = (float *)input_items[0];
       float *in1 = (float *)input_items[1];
       gr_complex *out = (gr_complex *)output_items[0];
-      float d_out;
 
       if(d_update) {
 	d_fir->set_taps(d_taps);
@@ -90,17 +89,15 @@ namespace gr {
       switch(input_items.size ()) {
       case 1:
 	for(int i = 0; i < noutput_items; i++) {
-	  d_fir->filterN(&d_out, &in0[i], 1);
 	  out[i] = gr_complex(in0[i + d_delay],
-			      d_out);
+			      d_fir->filter(&in0[i]));
 	}
 	break;
 	
       case 2:
 	for(int j = 0; j < noutput_items; j++) {
-	  d_fir->filterN(&d_out, &in1[j], 1);
 	  out[j] = gr_complex(in0[j + d_delay],
-			      d_out);
+			      d_fir->filter(&in1[j]));
 	}
 	break;
 	

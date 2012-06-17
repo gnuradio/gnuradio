@@ -63,12 +63,10 @@ namespace gr {
     {
       float *in = (float *)input_items[0];
       gr_complex *out = (gr_complex *)output_items[0];
-      float h_out;
       
       for(int i = 0; i < noutput_items; i++) {
-	d_hilb->filterN(&h_out, &in[i], 1);
 	out[i] = gr_complex(in[i + d_ntaps/2],
-			    h_out);
+			    d_hilb->filter(&in[i]));
       }
       
       return noutput_items;
