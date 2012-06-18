@@ -166,65 +166,47 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
     def test_multiply_const_ss(self):
         src_data = (-1, 0, 1, 2, 3)
         expected_result = (-5, 0, 5, 10, 15)
-        op = gr.multiply_const_ss(5)
+        op = blocks_swig.multiply_const_ss(5)
         self.help_ss((src_data,), expected_result, op)
 
     def test_multiply_const_ii(self):
         src_data = (-1, 0, 1, 2, 3)
         expected_result = (-5, 0, 5, 10, 15)
-        op = gr.multiply_const_ii(5)
+        op = blocks_swig.multiply_const_ii(5)
         self.help_ii((src_data,), expected_result, op)
 
     def test_multiply_const_ff(self):
         src_data = (-1, 0, 1, 2, 3)
         expected_result = (-5, 0, 5, 10, 15)
-        op = gr.multiply_const_ff(5)
+        op = blocks_swig.multiply_const_ff(5)
         self.help_ff((src_data,), expected_result, op)
 
     def test_multiply_const_cc(self):
         src_data = (-1-1j, 0+0j, 1+1j, 2+2j, 3+3j)
         expected_result = (-5-5j, 0+0j, 5+5j, 10+10j, 15+15j)
-        op = gr.multiply_const_cc(5)
+        op = blocks_swig.multiply_const_cc(5)
         self.help_cc((src_data,), expected_result, op)
 
     def test_multiply_const_cc2(self):
         src_data = (-1-1j, 0+0j, 1+1j, 2+2j, 3+3j)
         expected_result = (-3-7j, 0+0j, 3+7j, 6+14j, 9+21j)
-        op = gr.multiply_const_cc(5+2j)
+        op = blocks_swig.multiply_const_cc(5+2j)
         self.help_cc((src_data,), expected_result, op)
 
-
-    """
-    def test_sub_ii_1(self):
-        src1_data = (1,  2, 3, 4, 5)
-        expected_result = (-1, -2, -3, -4, -5)
-        op = gr.sub_ii()
-        self.help_ii((src1_data,),
-                      expected_result, op)
-
-    def test_sub_ii_2(self):
+    def test_sub_ii(self):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (-7, 5, -1, -4, 3)
-        op = gr.sub_ii()
+        op = blocks_swig.sub_ii()
         self.help_ii((src1_data, src2_data),
                       expected_result, op)
 
-    def test_div_ff_1(self):
-        src1_data       = (1,  2,  4,    -8)
-        expected_result = (1, 0.5, 0.25, -.125)
-        op = gr.divide_ff()
-        self.help_ff((src1_data,),
-                      expected_result, op)
-
-    def test_div_ff_2(self):
+    def test_div_ff(self):
         src1_data       = ( 5,  9, -15, 1024)
         src2_data       = (10,  3,  -5,   64)
         expected_result = (0.5, 3,   3,   16)
-        op = gr.divide_ff()
-        self.help_ff((src1_data, src2_data),
-                      expected_result, op)
-    """
+        op = blocks_swig.divide_ff()
+        self.help_ff((src1_data, src2_data), expected_result, op)
 
 if __name__ == '__main__':
     gr_unittest.run(test_add_mult_div_sub, "test_add_mult_div_sub.xml")

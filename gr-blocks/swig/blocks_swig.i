@@ -40,6 +40,10 @@
 #include "blocks/add_const_vss.h"
 #include "blocks/add_const_vii.h"
 #include "blocks/add_const_vcc.h"
+#include "blocks/divide_ff.h"
+#include "blocks/divide_ss.h"
+#include "blocks/divide_ii.h"
+#include "blocks/divide_cc.h"
 #include "blocks/multiply_ss.h"
 #include "blocks/multiply_ii.h"
 #include "blocks/multiply_ff.h"
@@ -52,6 +56,10 @@
 #include "blocks/multiply_const_vii.h"
 #include "blocks/multiply_const_vff.h"
 #include "blocks/multiply_const_vcc.h"
+#include "blocks/sub_ff.h"
+#include "blocks/sub_ss.h"
+#include "blocks/sub_ii.h"
+#include "blocks/sub_cc.h"
 %}
 
 %include "blocks/add_ff.h"
@@ -66,6 +74,10 @@
 %include "blocks/add_const_vss.h"
 %include "blocks/add_const_vii.h"
 %include "blocks/add_const_vcc.h"
+%include "blocks/divide_ff.h"
+%include "blocks/divide_ss.h"
+%include "blocks/divide_ii.h"
+%include "blocks/divide_cc.h"
 %include "blocks/multiply_ss.h"
 %include "blocks/multiply_ii.h"
 %include "blocks/multiply_ff.h"
@@ -78,6 +90,10 @@
 %include "blocks/multiply_const_vii.h"
 %include "blocks/multiply_const_vff.h"
 %include "blocks/multiply_const_vcc.h"
+%include "blocks/sub_ff.h"
+%include "blocks/sub_ss.h"
+%include "blocks/sub_ii.h"
+%include "blocks/sub_cc.h"
 
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ss);
@@ -91,6 +107,10 @@ GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vss);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vii);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vcc);
+GR_SWIG_BLOCK_MAGIC2(blocks, divide_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, divide_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, divide_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ff);
@@ -103,3 +123,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vff);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vcc);
+GR_SWIG_BLOCK_MAGIC2(blocks, sub_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
