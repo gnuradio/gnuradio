@@ -24,7 +24,6 @@
 #include <fft/fft.h>
 #include <volk/volk.h>
 #include <cstdio>
-#include <float_dotprod_x86.h>
 
 namespace gr {
   namespace filter {

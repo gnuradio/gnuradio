@@ -28,6 +28,7 @@
 #include <fft/fft.h>
 #include <volk/volk.h>
 #include <algorithm>
+#include <cstdio>
 
 namespace gr {
   namespace filter {
@@ -54,8 +55,13 @@ namespace gr {
 	}
 	
 	// Free aligned taps
-	fft::free(d_aligned_taps);
-	d_aligned_taps = NULL;
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
+	}
 
 	// Free output sample
 	fft::free(d_output);
@@ -71,20 +77,27 @@ namespace gr {
 
 	// Free the taps if already allocated
 	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
 	  fft::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-
-	d_buffer = fft::malloc_float(d_ntaps);
 
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
 
+	d_buffer = fft::malloc_float(2*d_ntaps);
+	memset(d_buffer, 0, 2*d_ntaps*sizeof(float));
+
 	// Allocate aligned taps
-	d_aligned_taps = fft::malloc_float(d_ntaps);
-	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_aligned_taps[i] = d_taps[i];
+	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
+	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
 
 	d_idx = 0;
@@ -108,9 +121,12 @@ namespace gr {
 	if(d_idx >= ntaps())
 	  d_idx = 0;
 
-	volk_32f_x2_dot_prod_32f_a(d_output, d_buffer,
-				   d_aligned_taps,
-				   ntaps());
+	const float *ar = (float*)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	unsigned al = (&d_buffer[d_idx]) - ar;
+
+	volk_32f_x2_dot_prod_32f_a(d_output, ar,
+				   d_aligned_taps[al],
+				   ntaps()+al);
 	return *d_output;
       }
 
@@ -128,9 +144,12 @@ namespace gr {
 	    d_idx = 0;
 	}
 
-	volk_32f_x2_dot_prod_32f_a(d_output, d_buffer,
-				   d_aligned_taps,
-				   ntaps());
+	const float *ar = (float*)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	unsigned al = (&d_buffer[d_idx]) - ar;
+
+	volk_32f_x2_dot_prod_32f_a(d_output, ar,
+				   d_aligned_taps[al],
+				   ntaps()+al);
 	return *d_output;
       }
 
@@ -182,8 +201,13 @@ namespace gr {
 	}
 	
 	// Free aligned taps
-	fft::free(d_aligned_taps);
-	d_aligned_taps = NULL;
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
+	}
 
 	// Free output sample
 	fft::free(d_output);
@@ -199,20 +223,27 @@ namespace gr {
 
 	// Free the taps if already allocated
 	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
 	  fft::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-
-	d_buffer = fft::malloc_complex(d_ntaps);
 
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
 
+	d_buffer = fft::malloc_complex(2*d_ntaps);
+	memset(d_buffer, 0, 2*d_ntaps*sizeof(gr_complex));
+
 	// Allocate aligned taps
-	d_aligned_taps = fft::malloc_complex(d_ntaps);
-	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_aligned_taps[i] = d_taps[i];
+	d_aligned_taps = (gr_complex**)malloc(d_naligned*sizeof(gr_complex**));
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i] = fft::malloc_complex(d_ntaps+d_naligned-1);
+	  memset(d_aligned_taps[i], 0, sizeof(gr_complex)*(d_ntaps+d_naligned-1));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
 
 	d_idx = 0;
@@ -236,9 +267,12 @@ namespace gr {
 	if(d_idx >= ntaps())
 	  d_idx = 0;
 
-	volk_32fc_x2_dot_prod_32fc_a(d_output, d_buffer,
-				     d_aligned_taps,
-				     ntaps());
+	const gr_complex *ar = (gr_complex *)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	unsigned al = (&d_buffer[d_idx]) - ar;
+
+	volk_32fc_x2_dot_prod_32fc_a(d_output, ar,
+				     d_aligned_taps[al],
+				     (ntaps()+al)*sizeof(gr_complex));
 	return *d_output;
       }
 
@@ -256,9 +290,12 @@ namespace gr {
 	    d_idx = 0;
 	}
 
-	volk_32fc_x2_dot_prod_32fc_a(d_output, d_buffer,
-				     d_aligned_taps,
-				     ntaps());
+	const gr_complex *ar = (gr_complex *)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	unsigned al = (&d_buffer[d_idx]) - ar;
+
+	volk_32fc_x2_dot_prod_32fc_a(d_output, ar,
+				     d_aligned_taps[al],
+				     (ntaps()+al)*sizeof(gr_complex));
 	return *d_output;
       }
 
@@ -310,8 +347,13 @@ namespace gr {
 	}
 	
 	// Free aligned taps
-	fft::free(d_aligned_taps);
-	d_aligned_taps = NULL;
+	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
+	  fft::free(d_aligned_taps);
+	  d_aligned_taps = NULL;
+	}
 
 	// Free output sample
 	fft::free(d_output);
@@ -327,20 +369,27 @@ namespace gr {
 
 	// Free the taps if already allocated
 	if(d_aligned_taps != NULL) {
+	  for(int i = 0; i < d_naligned; i++) {
+	    fft::free(d_aligned_taps[i]);
+	  }
 	  fft::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-
-	d_buffer = fft::malloc_complex(d_ntaps);
 
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
 
+	d_buffer = fft::malloc_complex(2*d_ntaps);
+	memset(d_buffer, 0, 2*d_ntaps*sizeof(gr_complex));
+
 	// Allocate aligned taps
-	d_aligned_taps = fft::malloc_float(d_ntaps);
-	for(unsigned int i = 0; i < d_ntaps; i++) {
-	  d_aligned_taps[i] = d_taps[i];
+	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
+	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
+	  for(unsigned int j = 0; j < d_ntaps; j++)
+	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
 
 	d_idx = 0;
@@ -364,9 +413,12 @@ namespace gr {
 	if(d_idx >= ntaps())
 	  d_idx = 0;
 
-	volk_32fc_32f_dot_prod_32fc_a(d_output, d_buffer,
-				      d_aligned_taps,
-				      ntaps());
+	const gr_complex *ar = (gr_complex *)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	unsigned al = (&d_buffer[d_idx]) - ar;
+
+	volk_32fc_32f_dot_prod_32fc_a(d_output, ar,
+				      d_aligned_taps[al],
+				      ntaps()+al);
 	return *d_output;
       }
 
@@ -384,9 +436,12 @@ namespace gr {
 	    d_idx = 0;
 	}
 
-	volk_32fc_32f_dot_prod_32fc_a(d_output, d_buffer,
-				      d_aligned_taps,
-				      ntaps());
+	const gr_complex *ar = (gr_complex *)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	unsigned al = (&d_buffer[d_idx]) - ar;
+
+	volk_32fc_32f_dot_prod_32fc_a(d_output, ar,
+				      d_aligned_taps[al],
+				      ntaps()+al);
 	return *d_output;
       }
 

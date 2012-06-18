@@ -150,6 +150,7 @@ list(APPEND test_gr_filter_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_filter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_filter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_firdes.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fir_filter_with_buffer.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_cc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_ff.cc
 )

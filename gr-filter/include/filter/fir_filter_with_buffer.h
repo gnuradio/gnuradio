@@ -42,7 +42,7 @@ namespace gr {
 	unsigned int  d_ntaps;
 	float        *d_buffer;
 	unsigned int  d_idx;
-	float        *d_aligned_taps;
+	float       **d_aligned_taps;
 	float        *d_output;
 	int           d_align;
 	int           d_naligned;
@@ -138,7 +138,7 @@ namespace gr {
 	unsigned int  d_ntaps;
 	gr_complex   *d_buffer;
 	unsigned int  d_idx;
-	gr_complex   *d_aligned_taps;
+	gr_complex  **d_aligned_taps;
 	gr_complex   *d_output;
 	int           d_align;
 	int           d_naligned;
@@ -234,7 +234,7 @@ namespace gr {
 	unsigned int  d_ntaps;
 	gr_complex   *d_buffer;
 	unsigned int  d_idx;
-	float        *d_aligned_taps;
+	float       **d_aligned_taps;
 	gr_complex   *d_output;
 	int           d_align;
 	int           d_naligned;
