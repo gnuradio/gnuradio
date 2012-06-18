@@ -40,6 +40,7 @@
 		<block>iir_filter_ffd</block>
 		<block>interp_fir_filter_xxx</block>
 		<block>pfb_channelizer_ccf</block>
+		<block>pfb_decimator_ccf</block>
 		<block>single_pole_iir_filter_xx</block>
 	</cat>
 </cat>

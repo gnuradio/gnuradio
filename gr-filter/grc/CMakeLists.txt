@@ -29,6 +29,7 @@ install(FILES
     iir_filter_ffd.xml
     interp_fir_filter_xxx.xml
     pfb_channelizer.xml
+    pfb_decimator.xml
     single_pole_iir_filter_xx.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "filter_python"

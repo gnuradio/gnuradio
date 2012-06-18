@@ -60,6 +60,7 @@
 #include "filter/interp_fir_filter_fsf.h"
 #include "filter/interp_fir_filter_scc.h"
 #include "filter/pfb_channelizer_ccf.h"
+#include "filter/pfb_decimator_ccf.h"
 #include "filter/single_pole_iir_filter_cc.h"
 #include "filter/single_pole_iir_filter_ff.h"
 %}
@@ -96,6 +97,7 @@
 %include "filter/interp_fir_filter_fsf.h"
 %include "filter/interp_fir_filter_scc.h"
 %include "filter/pfb_channelizer_ccf.h"
+%include "filter/pfb_decimator_ccf.h"
 %include "filter/single_pole_iir_filter_cc.h"
 %include "filter/single_pole_iir_filter_ff.h"
 
@@ -129,5 +131,6 @@ GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_fsf);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_scc);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_channelizer_ccf);
+GR_SWIG_BLOCK_MAGIC2(filter, pfb_decimator_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, single_pole_iir_filter_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, single_pole_iir_filter_ff);

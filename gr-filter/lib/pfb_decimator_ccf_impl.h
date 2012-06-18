@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FILTER_PFB_CHANNELIZER_CCF_IMPL_H
-#define	INCLUDED_FILTER_PFB_CHANNELIZER_CCF_IMPL_H
 
-#include <filter/pfb_channelizer_ccf.h>
+#ifndef INCLUDED_PFB_DECIMATOR_CCF_IMPL_H
+#define	INCLUDED_PFB_DECIMATOR_CCF_IMPL_H
+
+#include <filter/pfb_decimator_ccf.h>
 #include <filter/polyphase_filterbank.h>
 #include <filter/fir_filter.h>
 #include <fft/fft.h>
@@ -32,38 +33,33 @@
 namespace gr {
   namespace filter {
     
-    class FILTER_API pfb_channelizer_ccf_impl : public pfb_channelizer_ccf, kernel::polyphase_filterbank
+    class FILTER_API pfb_decimator_ccf_impl : public pfb_decimator_ccf, kernel::polyphase_filterbank
     {
     private:
-      bool	       d_updated;
-      float            d_oversample_rate;
-      int             *d_idxlut;
-      int              d_rate_ratio;
-      int              d_output_multiple;
-      std::vector<int> d_channel_map;
-      gruel::mutex     d_mutex; // mutex to protect set/work access
-
+      bool         d_updated;
+      unsigned int d_rate;
+      unsigned int d_chan;
+      gr_complex  *d_rotator;
+      gruel::mutex d_mutex; // mutex to protect set/work access
+    
     public:
-      pfb_channelizer_ccf_impl(unsigned int nfilts,
-			       const std::vector<float> &taps,
-			       float oversample_rate);
+      pfb_decimator_ccf_impl(unsigned int decim,
+			     const std::vector<float> &taps,
+			     unsigned int channel);
 
-      ~pfb_channelizer_ccf_impl();
+      ~pfb_decimator_ccf_impl();
 
       void set_taps(const std::vector<float> &taps);
       void print_taps();
       std::vector<std::vector<float> > taps() const;
+      //void set_channel(unsigned int channel);
 
-      void set_channel_map(const std::vector<int> &map);
-      std::vector<int> channel_map() const;
-
-      int general_work(int noutput_items,
-		       gr_vector_int &ninput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items);
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
 
   } /* namespace filter */
 } /* namespace gr */
 
-#endif
+#endif /* INCLUDED_PFB_DECIMATOR_CCF_IMPL_H */

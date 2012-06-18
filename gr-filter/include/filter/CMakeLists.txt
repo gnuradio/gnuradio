@@ -101,6 +101,7 @@ install(FILES
     hilbert_fc.h
     iir_filter_ffd.h
     pfb_channelizer_ccf.h
+    pfb_decimator_ccf.h
     single_pole_iir_filter_cc.h
     single_pole_iir_filter_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter

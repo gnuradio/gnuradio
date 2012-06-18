@@ -26,13 +26,12 @@
 
 #include <filter/api.h>
 #include <gr_block.h>
-#include <gruel/thread.h>
 
 namespace gr {
   namespace filter {
 
     /*!
-     * \class gr_pfb_channelizer_ccf
+     * \class pfb_channelizer_ccf
      *
      * \brief Polyphase filterbank channelizer with
      *        gr_complex input, gr_complex output and float taps
