@@ -95,6 +95,8 @@ install(FILES
     filter_delay_fc.h
     fft_filter_ccc.h
     fft_filter_fff.h
+    fractional_interpolator_cc.h
+    fractional_interpolator_ff.h
     hilbert_fc.h
     iir_filter_ffd.h
     pfb_channelizer_ccf.h

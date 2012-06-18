@@ -1,4 +1,6 @@
-# Copyright 2012 Free Software Foundation, Inc.
+#!/usr/bin/env python
+#
+# Copyright 2007,2010,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -16,19 +18,22 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+#
 
-install(FILES
-    filter_block_tree.xml
-    dc_blocker_xx.xml
-    fft_filter_xxx.xml
-    fir_filter_xxx.xml
-    filter_delay_fc.xml
-    fractional_interpolator_xx.xml
-    freq_xlating_fir_filter_xxx.xml
-    hilbert_fc.xml
-    iir_filter_ffd.xml
-    pfb_channelizer.xml
-    single_pole_iir_filter_xx.xml
-    DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "filter_python"
-)
+from gnuradio import gr, gr_unittest
+import filter_swig as filter
+
+class test_fractional_resampler(gr_unittest.TestCase):
+
+    def setUp(self):
+        self.tb = gr.top_block()
+
+    def tearDown(self):
+        self.tb = None
+
+    def test_000_make(self):
+        op = gr.fractional_interpolator_ff(0.0, 1.0)
+        op2 = gr.fractional_interpolator_cc(0.0, 1.0)
+
+if __name__ == '__main__':
+    gr_unittest.run(test_fractional_resampler, "test_fractional_resampler.xml")

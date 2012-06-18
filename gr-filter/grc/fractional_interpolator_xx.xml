@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Fractional Interpolator
+###################################################
+ -->
+<block>
+	<name>Fractional Interpolator</name>
+	<key>fractional_interpolator_xx</key>
+	<import>from gnuradio import filter</import>
+	<make>filter.fractional_interpolator_$(type.fcn)($phase_shift, $interp_ratio)</make>
+	<callback>set_interp_ratio($interp_ratio)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+	</param>
+	<param>
+		<name>Phase Shift</name>
+		<key>phase_shift</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Interpolation Ratio</name>
+		<key>interp_ratio</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

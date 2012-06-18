@@ -122,6 +122,8 @@ list(APPEND filter_sources
   filter_delay_fc_impl.cc
   fft_filter_ccc_impl.cc
   fft_filter_fff_impl.cc
+  fractional_interpolator_cc_impl.cc
+  fractional_interpolator_ff_impl.cc
   hilbert_fc_impl.cc
   iir_filter_ffd_impl.cc
   pfb_channelizer_ccf_impl.cc

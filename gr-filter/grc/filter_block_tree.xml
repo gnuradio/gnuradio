@@ -34,6 +34,7 @@
 		<block>fft_filter_xxx</block>
 		<block>fir_filter_xxx</block>
 		<block>filter_delay_fc</block>
+		<block>fractional_interpolator_xx</block>
 		<block>freq_xlating_fir_filter_xxx</block>
 		<block>hilbert_fc</block>
 		<block>iir_filter_ffd</block>
