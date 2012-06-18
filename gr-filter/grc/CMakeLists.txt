@@ -27,6 +27,7 @@ install(FILES
     freq_xlating_fir_filter_xxx.xml
     hilbert_fc.xml
     iir_filter_ffd.xml
+    interp_fir_filter_xxx.xml
     pfb_channelizer.xml
     single_pole_iir_filter_xx.xml
     DESTINATION ${GRC_BLOCKS_DIR}

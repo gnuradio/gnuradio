@@ -26,13 +26,13 @@
 #define	@GUARD_NAME@
 
 #include <filter/api.h>
-#include <gr_sync_decimator.h>
+#include <gr_sync_interpolator.h>
 
 namespace gr {
   namespace filter {
 
     /*!
-     * \brief FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
+     * \brief Interpolating FIR filter with @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
      * \ingroup filter_blk
      *
      * The fir_filter_XXX blocks create finite impulse response
@@ -50,26 +50,25 @@ namespace gr {
      * this block, the value is of type @TAP_TYPE@. Taps can be
      * created using the firdes or optfir tools.
      *
-     * These versions of the filter can also act as down-samplers
-     * (or decimators) by specifying an integer value for \p
-     * decimation.
+     * These versions of the filter can also act as up-samplers
+     * (or interpolators) by specifying an integer value for \p
+     * interpolation.
      *
      */
-    class FILTER_API @BASE_NAME@ : virtual public gr_sync_decimator
+    class FILTER_API @BASE_NAME@ : virtual public gr_sync_interpolator
     {
     public:
-
       // gr::filter::@BASE_NAME@::sptr
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
       /*!
-       * \brief FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
+       * \brief Interpolating FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
        * \ingroup filter_blk
        *
-       * \param decimation set the integer decimation rate
+       * \param interpolation set the integer interpolation rate
        * \param taps a vector/list of taps of type @TAP_TYPE@
        */
-      static FILTER_API sptr make(int decimation,
+      static FILTER_API sptr make(unsigned interpolation,
 				  const std::vector<@TAP_TYPE@> &taps);
 
       virtual void set_taps(const std::vector<@TAP_TYPE@> &taps) = 0;
