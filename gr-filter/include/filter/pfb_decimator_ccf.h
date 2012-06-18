@@ -26,7 +26,6 @@
 
 #include <filter/api.h>
 #include <gr_sync_block.h>
-#include <gruel/thread.h>
 
 namespace gr {
   namespace filter {

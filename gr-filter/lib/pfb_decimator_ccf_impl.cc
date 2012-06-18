@@ -31,12 +31,12 @@ namespace gr {
   namespace filter {
     
     pfb_decimator_ccf::sptr
-    pfb_decimator_ccf::make(unsigned int nfilts,
+    pfb_decimator_ccf::make(unsigned int decim,
 			    const std::vector<float> &taps,
 			    unsigned int channel)
     {
       return gnuradio::get_initial_sptr
-	(new pfb_decimator_ccf_impl(nfilts, taps, channel));
+	(new pfb_decimator_ccf_impl(decim, taps, channel));
     }
 
 

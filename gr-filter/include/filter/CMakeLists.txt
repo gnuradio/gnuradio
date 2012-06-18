@@ -64,7 +64,7 @@ endmacro(expand_h)
 ########################################################################
 # Invoke macro to generate various sources
 #######################################################################
-expand_h(fir_filter_XXX fff          ccc ccf fcc fff fsf scc)
+expand_h(fir_filter_XXX              ccc ccf fcc fff fsf scc)
 expand_h(freq_xlating_fir_filter_XXX ccc ccf fcc fcf scf scc)
 expand_h(interp_fir_filter_XXX       ccc ccf fcc fff fsf scc)
 
@@ -102,9 +102,10 @@ install(FILES
     iir_filter_ffd.h
     pfb_channelizer_ccf.h
     pfb_decimator_ccf.h
+    pfb_interpolator_ccf.h
     single_pole_iir_filter_cc.h
     single_pole_iir_filter_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
-    COMPONENT "fft_devel"
+    COMPONENT "filter_devel"
 )
 
