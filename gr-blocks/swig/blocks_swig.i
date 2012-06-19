@@ -40,6 +40,7 @@
 #include "blocks/add_const_vss.h"
 #include "blocks/add_const_vii.h"
 #include "blocks/add_const_vcc.h"
+#include "blocks/char_to_float.h"
 #include "blocks/divide_ff.h"
 #include "blocks/divide_ss.h"
 #include "blocks/divide_ii.h"
@@ -74,6 +75,7 @@
 %include "blocks/add_const_vss.h"
 %include "blocks/add_const_vii.h"
 %include "blocks/add_const_vcc.h"
+%include "blocks/char_to_float.h"
 %include "blocks/divide_ff.h"
 %include "blocks/divide_ss.h"
 %include "blocks/divide_ii.h"
@@ -107,6 +109,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vss);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vii);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vcc);
+GR_SWIG_BLOCK_MAGIC2(blocks, char_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);

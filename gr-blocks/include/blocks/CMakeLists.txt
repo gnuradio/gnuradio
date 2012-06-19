@@ -84,6 +84,7 @@ install(FILES
     ${generated_includes}
     api.h
     add_ff.h
+    char_to_float.h
     multiply_cc.h
     multiply_ff.h
     multiply_const_cc.h

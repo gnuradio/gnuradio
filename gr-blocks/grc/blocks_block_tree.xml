@@ -37,4 +37,9 @@
 		<block>blocks_multiply_const_vxx</block>
 		<block>blocks_sub_xx</block>
 	</cat>
+	<cat>
+	        <name>Type Conversions</name>
+		<block>blocks_char_to_float</block>
+	</cat>
+	
 </cat>
