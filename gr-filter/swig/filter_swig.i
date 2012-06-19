@@ -59,6 +59,8 @@
 #include "filter/interp_fir_filter_fff.h"
 #include "filter/interp_fir_filter_fsf.h"
 #include "filter/interp_fir_filter_scc.h"
+#include "filter/pfb_arb_resampler_ccf.h"
+#include "filter/pfb_arb_resampler_fff.h"
 #include "filter/pfb_channelizer_ccf.h"
 #include "filter/pfb_decimator_ccf.h"
 #include "filter/pfb_interpolator_ccf.h"
@@ -97,6 +99,8 @@
 %include "filter/interp_fir_filter_fff.h"
 %include "filter/interp_fir_filter_fsf.h"
 %include "filter/interp_fir_filter_scc.h"
+%include "filter/pfb_arb_resampler_ccf.h"
+%include "filter/pfb_arb_resampler_fff.h"
 %include "filter/pfb_channelizer_ccf.h"
 %include "filter/pfb_decimator_ccf.h"
 %include "filter/pfb_interpolator_ccf.h"
@@ -132,6 +136,8 @@ GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_fcc);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_fsf);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_scc);
+GR_SWIG_BLOCK_MAGIC2(filter, pfb_arb_resampler_ccf);
+GR_SWIG_BLOCK_MAGIC2(filter, pfb_arb_resampler_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_channelizer_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_decimator_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_interpolator_ccf);

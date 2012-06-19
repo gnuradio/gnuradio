@@ -9,7 +9,7 @@
 	<key>pfb_decimator_ccf</key>
 	<import>from gnuradio import filter</import>
 	<import>from gnuradio.filter import firdes</import>
-	<make>filter.pfb.decimator_ccf(
+	<make>filter.pfb_decimator_ccf(
 	  $decim,
 	  $taps,
 	  $channel)

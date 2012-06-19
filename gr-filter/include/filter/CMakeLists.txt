@@ -100,6 +100,8 @@ install(FILES
     fractional_interpolator_ff.h
     hilbert_fc.h
     iir_filter_ffd.h
+    pfb_arb_resampler_ccf.h
+    pfb_arb_resampler_fff.h
     pfb_channelizer_ccf.h
     pfb_decimator_ccf.h
     pfb_interpolator_ccf.h

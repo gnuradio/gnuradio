@@ -128,4 +128,4 @@ namespace gr {
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* INCLUDED_FILTER_PFB_DECIMATOR_CCF_H */
+#endif /* INCLUDED_PFB_DECIMATOR_CCF_H */

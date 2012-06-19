@@ -28,6 +28,7 @@ install(FILES
     hilbert_fc.xml
     iir_filter_ffd.xml
     interp_fir_filter_xxx.xml
+    pfb_arb_resampler.xml
     pfb_channelizer.xml
     pfb_decimator.xml
     pfb_interpolator.xml
