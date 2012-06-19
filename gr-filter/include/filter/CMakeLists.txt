@@ -67,6 +67,7 @@ endmacro(expand_h)
 expand_h(fir_filter_XXX              ccc ccf fcc fff fsf scc)
 expand_h(freq_xlating_fir_filter_XXX ccc ccf fcc fcf scf scc)
 expand_h(interp_fir_filter_XXX       ccc ccf fcc fff fsf scc)
+expand_h(rational_resampler_base_XXX ccc ccf fcc fff fsf scc)
 
 add_custom_target(filter_generated_includes DEPENDS
     ${generated_includes}

@@ -32,6 +32,7 @@ install(FILES
     pfb_channelizer.xml
     pfb_decimator.xml
     pfb_interpolator.xml
+    rational_resampler_base_xxx.xml
     single_pole_iir_filter_xx.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "filter_python"

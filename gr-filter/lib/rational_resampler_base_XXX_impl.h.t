@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2005,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,20 +34,36 @@ namespace gr {
     class FILTER_API @IMPL_NAME@ : public @BASE_NAME@
     {
     private:
-      kernel::@BASE_NAME@ *d_fir;
+      unsigned d_history;
+      unsigned d_interpolation;
+      unsigned d_decimation;
+      unsigned d_ctr;
+      std::vector<@TAP_TYPE@> d_new_taps;
+      std::vector<kernel::@FIR_TYPE@ *> d_firs;
       bool d_updated;
 
+      void install_taps(const std::vector<@TAP_TYPE@> &taps);
+
     public:
-      @IMPL_NAME@(int decimation, const std::vector<@TAP_TYPE@> &taps);
+      @IMPL_NAME@(unsigned interpolation, unsigned decimation,
+		  const std::vector<@TAP_TYPE@> &taps);
 
       ~@IMPL_NAME@();
 
+      unsigned history() const { return d_history; }
+      void set_history(unsigned history) { d_history = history; }
+
+      unsigned interpolation() const { return d_interpolation; }
+      unsigned decimation() const { return d_decimation; }
+
       void set_taps(const std::vector<@TAP_TYPE@> &taps);
       std::vector<@TAP_TYPE@> taps() const;
-      
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+      int  general_work(int noutput_items,
+			gr_vector_int &ninput_items,
+			gr_vector_const_void_star &input_items,
+			gr_vector_void_star &output_items);
     };
 
   } /* namespace filter */

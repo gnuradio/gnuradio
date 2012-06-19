@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2005,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,29 +25,34 @@
 #ifndef @GUARD_NAME@
 #define	@GUARD_NAME@
 
-#include <filter/fir_filter.h>
-#include <filter/@BASE_NAME@.h>
+#include <filter/api.h>
+#include <gr_block.h>
+
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API @IMPL_NAME@ : public @BASE_NAME@
+    /*!
+     * \brief Rational Resampling Polyphase FIR filter with @I_TYPE@
+     * input, @O_TYPE@ output and @TAP_TYPE@ taps.
+     *
+     *\ingroup filter_blk
+     */
+    class FILTER_API @NAME@ : virtual public gr_block
     {
-    private:
-      kernel::@BASE_NAME@ *d_fir;
-      bool d_updated;
-
     public:
-      @IMPL_NAME@(int decimation, const std::vector<@TAP_TYPE@> &taps);
+      // gr::filter::@BASE_NAME@::sptr
+      typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
-      ~@IMPL_NAME@();
+      static FILTER_API sptr make(unsigned interpolation,
+				  unsigned decimation,
+				  const std::vector<@TAP_TYPE@> &taps);
 
-      void set_taps(const std::vector<@TAP_TYPE@> &taps);
-      std::vector<@TAP_TYPE@> taps() const;
-      
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      virtual unsigned interpolation() const = 0;
+      virtual unsigned decimation() const = 0;
+
+      virtual void set_taps(const std::vector<@TAP_TYPE@> &taps) = 0;
+      virtual std::vector<@TAP_TYPE@> taps() const = 0;
     };
 
   } /* namespace filter */
