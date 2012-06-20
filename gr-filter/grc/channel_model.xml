@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Channel Model
+###################################################
+ -->
+<block>
+	<name>Channel Model</name>
+	<key>channel_model</key>
+	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>filter.channel_model(
+	noise_voltage=$noise_voltage,
+	frequency_offset=$freq_offset,
+	epsilon=$epsilon,
+	taps=$taps,
+	noise_seed=$seed,
+)</make>
+	<callback>set_noise_voltage($noise_voltage)</callback>
+	<callback>set_frequency_offset($freq_offset)</callback>
+	<callback>set_taps($taps)</callback>
+	<callback>set_timing_offset($epsilon)</callback>
+	<param>
+		<name>Noise Voltage</name>
+		<key>noise_voltage</key>
+		<value>0.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Frequency Offset</name>
+		<key>freq_offset</key>
+		<value>0.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Epsilon</name>
+		<key>epsilon</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<value>1.0 + 1.0j</value>
+		<type>complex_vector</type>
+	</param>
+	<param>
+		<name>Seed</name>
+		<key>seed</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

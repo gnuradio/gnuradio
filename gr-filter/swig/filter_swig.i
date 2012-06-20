@@ -73,6 +73,7 @@
 #include "filter/rational_resampler_base_scc.h"
 #include "filter/single_pole_iir_filter_cc.h"
 #include "filter/single_pole_iir_filter_ff.h"
+#include "filter/channel_model.h"
 %}
 
 %include "filter/firdes.h"
@@ -120,6 +121,7 @@
 %include "filter/rational_resampler_base_scc.h"
 %include "filter/single_pole_iir_filter_cc.h"
 %include "filter/single_pole_iir_filter_ff.h"
+%include "filter/channel_model.h"
 
 GR_SWIG_BLOCK_MAGIC2(filter, adaptive_fir_ccc);
 GR_SWIG_BLOCK_MAGIC2(filter, adaptive_fir_ccf);
@@ -164,3 +166,4 @@ GR_SWIG_BLOCK_MAGIC2(filter, rational_resampler_base_fsf);
 GR_SWIG_BLOCK_MAGIC2(filter, rational_resampler_base_scc);
 GR_SWIG_BLOCK_MAGIC2(filter, single_pole_iir_filter_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, single_pole_iir_filter_ff);
+GR_SWIG_BLOCK_MAGIC2(filter, channel_model);

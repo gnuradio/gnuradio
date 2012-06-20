@@ -46,5 +46,6 @@
 		<block>pfb_synthesizer_ccf</block>
 		<block>rational_resampler_base_xxx</block>
 		<block>single_pole_iir_filter_xx</block>
+		<block>channel_model</block>
 	</cat>
 </cat>

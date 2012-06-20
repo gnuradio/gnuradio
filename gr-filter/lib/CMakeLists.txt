@@ -136,6 +136,7 @@ list(APPEND filter_sources
   pfb_synthesizer_ccf_impl.cc
   single_pole_iir_filter_cc_impl.cc
   single_pole_iir_filter_ff_impl.cc
+  channel_model_impl.cc
 )
 
 list(APPEND filter_libs
