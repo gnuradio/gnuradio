@@ -38,9 +38,9 @@ class test_pfb_interpolator(gr_unittest.TestCase):
         fs = 1000        # baseband sampling rate
         ifs = M*fs       # input samp rate to decimator
 
-        taps = gr.firdes.low_pass_2(M, ifs, fs/2, fs/10,
-                                    attenuation_dB=80,
-                                    window=gr.firdes.WIN_BLACKMAN_hARRIS)
+        taps = filter.firdes.low_pass_2(M, ifs, fs/2, fs/10,
+                                        attenuation_dB=80,
+                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         freq = 100
         signal = gr.sig_source_c(fs, gr.GR_COS_WAVE, freq, 1)

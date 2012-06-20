@@ -34,16 +34,12 @@ class example_fir_filter_ccc(gr.top_block):
         self.head = gr.head(gr.sizeof_gr_complex, self._nsamps)
 
         self.filt0 = filter.fir_filter_ccc(self._decim, taps)
-        self.filt1 = gr.fir_filter_ccc(self._decim, taps)
-        #self.filt1 = filter.fft_filter_ccc(self._decim, taps)
 
         self.vsnk_src = gr.vector_sink_c()
         self.vsnk_out = gr.vector_sink_c()
-        self.vsnk_gr = gr.vector_sink_c()
 
         self.connect(self.src, self.head, self.vsnk_src)
         self.connect(self.head, self.filt0, self.vsnk_out)
-        self.connect(self.head, self.filt1, self.vsnk_gr)
 
 def main():
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
@@ -71,7 +67,6 @@ def main():
 
     data_src = scipy.array(put.vsnk_src.data())
     data_snk = scipy.array(put.vsnk_out.data())
-    data_gr = scipy.array(put.vsnk_gr.data())
 
     # Plot the signals PSDs
     nfft = 1024
@@ -81,15 +76,11 @@ def main():
            Fs=options.samplerate)
     s1.psd(data_snk, NFFT=nfft, noverlap=nfft/4,
            Fs=options.samplerate)
-    s1.psd(data_gr, NFFT=nfft, noverlap=nfft/4,
-           Fs=options.samplerate)
-
 
     f2 = pylab.figure(2, figsize=(12,10))
     s2 = f2.add_subplot(1,1,1)
     s2.plot(data_src)
     s2.plot(data_snk.real, 'g')
-    s2.plot(data_gr.real, 'r--')
 
     pylab.show()
     

@@ -85,8 +85,8 @@ namespace gr {
      * gain of the filter, which we specify here as the interpolation
      * rate (<EM>32</EM>).
      *
-     *   <B><EM>self._taps = gr.firdes.low_pass_2(32, 32*fs, BW, TB,
-     *      attenuation_dB=ATT, window=gr.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
+     *   <B><EM>self._taps = filter.firdes.low_pass_2(32, 32*fs, BW, TB,
+     *      attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
      *
      * The theory behind this block can be found in Chapter 7.5 of the
      * following book.

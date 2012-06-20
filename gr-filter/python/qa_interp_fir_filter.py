@@ -46,7 +46,7 @@ class test_interp_fir_filter(gr_unittest.TestCase):
         expected_result = tuple([float(x) for x in xr])
 
         src = gr.vector_source_f(src_data)
-        op = gr.interp_fir_filter_fff(interpolation, taps)
+        op = filter.interp_fir_filter_fff(interpolation, taps)
         dst = gr.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)

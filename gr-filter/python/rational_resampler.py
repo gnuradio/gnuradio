@@ -44,14 +44,12 @@ def design_filter(interpolation, decimation, fractional_bw):
     trans_width = 0.5 - fractional_bw
     mid_transition_band = 0.5 - trans_width/2
 
-    taps = gr.firdes.low_pass(interpolation,                     # gain
-                              1,                                 # Fs
-                              mid_transition_band/interpolation, # trans mid point
-                              trans_width/interpolation,         # transition width
-                              gr.firdes.WIN_KAISER,
-                              beta                               # beta
-                              )
-
+    taps = filter.firdes.low_pass(interpolation,                     # gain
+                                  1,                                 # Fs
+                                  mid_transition_band/interpolation, # trans mid point
+                                  trans_width/interpolation,         # transition width
+                                  filter.firdes.WIN_KAISER,
+                                  beta)                              # beta
     return taps
 
 
@@ -109,7 +107,7 @@ class rational_resampler_fff(_rational_resampler_base):
         Rational resampling polyphase FIR filter with
         float input, float output and float taps.
         """
-        _rational_resampler_base.__init__(self, gr.rational_resampler_base_fff,
+        _rational_resampler_base.__init__(self, filter.rational_resampler_base_fff,
 				          interpolation, decimation, taps, fractional_bw)
 
 class rational_resampler_ccf(_rational_resampler_base):
@@ -118,7 +116,7 @@ class rational_resampler_ccf(_rational_resampler_base):
         Rational resampling polyphase FIR filter with
         complex input, complex output and float taps.
         """
-        _rational_resampler_base.__init__(self, gr.rational_resampler_base_ccf,
+        _rational_resampler_base.__init__(self, filter.rational_resampler_base_ccf,
                                           interpolation, decimation, taps, fractional_bw)
 
 class rational_resampler_ccc(_rational_resampler_base):
@@ -127,5 +125,5 @@ class rational_resampler_ccc(_rational_resampler_base):
         Rational resampling polyphase FIR filter with
         complex input, complex output and complex taps.
         """
-        _rational_resampler_base.__init__(self, gr.rational_resampler_base_ccc,
+        _rational_resampler_base.__init__(self, filter.rational_resampler_base_ccc,
                                           interpolation, decimation, taps, fractional_bw)

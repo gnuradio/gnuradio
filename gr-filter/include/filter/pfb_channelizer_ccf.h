@@ -81,8 +81,8 @@ namespace gr {
      * function (a Blackman-harris window in this case). The first input
      *  is the gain of the filter, which we specify here as unity.
      *
-     *      <B><EM>self._taps = gr.firdes.low_pass_2(1, fs, BW, TB,
-     *           attenuation_dB=ATT, window=gr.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
+     *      <B><EM>self._taps = filter.firdes.low_pass_2(1, fs, BW, TB,
+     *           attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
      *
      * The filter output can also be overs ampled. The over sampling rate
      * is the ratio of the the actual output sampling rate to the normal

@@ -159,7 +159,7 @@ class test_pm_remez(gr_unittest.TestCase):
         desired_ampls = (gain, 0)
         (n, fo, ao, w) = remezord([freq1, freq2], desired_ampls,
                                   [passband_dev, stopband_dev], Fs)
-        new_taps = gr.remez(n + 2, fo, ao, w, "bandpass")
+        new_taps = filter.pm_remez(n + 2, fo, ao, w, "bandpass")
 
         known_taps = (-0.0008370135734511828, -0.0006622211673134374,
                        0.0008501079576365787, 0.003059609130249229,

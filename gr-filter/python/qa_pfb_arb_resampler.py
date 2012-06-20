@@ -38,9 +38,9 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         rrate = 1.123    # resampling rate
 
         nfilts = 32
-        taps = gr.firdes.low_pass_2(nfilts, nfilts*fs, fs/2, fs/10,
-                                    attenuation_dB=80,
-                                    window=gr.firdes.WIN_BLACKMAN_hARRIS)
+        taps = filter.firdes.low_pass_2(nfilts, nfilts*fs, fs/2, fs/10,
+                                        attenuation_dB=80,
+                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         freq = 100
         signal = gr.sig_source_f(fs, gr.GR_SIN_WAVE, freq, 1)
@@ -67,9 +67,9 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         rrate = 1.123    # resampling rate
 
         nfilts = 32
-        taps = gr.firdes.low_pass_2(nfilts, nfilts*fs, fs/2, fs/10,
-                                    attenuation_dB=80,
-                                    window=gr.firdes.WIN_BLACKMAN_hARRIS)
+        taps = filter.firdes.low_pass_2(nfilts, nfilts*fs, fs/2, fs/10,
+                                        attenuation_dB=80,
+                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         freq = 100
         signal = gr.sig_source_c(fs, gr.GR_SIN_WAVE, freq, 1)

@@ -39,9 +39,9 @@ class test_pfb_decimator(gr_unittest.TestCase):
         ifs = M*fs       # input samp rate to decimator
         channel = 0      # Extract channel 0
 
-        taps = gr.firdes.low_pass_2(1, ifs, fs/2, fs/10,
-                                    attenuation_dB=80,
-                                    window=gr.firdes.WIN_BLACKMAN_hARRIS)
+        taps = filter.firdes.low_pass_2(1, ifs, fs/2, fs/10,
+                                        attenuation_dB=80,
+                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
         add = gr.add_cc()
@@ -84,9 +84,9 @@ class test_pfb_decimator(gr_unittest.TestCase):
         ifs = M*fs       # input samp rate to decimator
         channel = 1      # Extract channel 0
 
-        taps = gr.firdes.low_pass_2(1, ifs, fs/2, fs/10,
+        taps = filter.firdes.low_pass_2(1, ifs, fs/2, fs/10,
                                     attenuation_dB=80,
-                                    window=gr.firdes.WIN_BLACKMAN_hARRIS)
+                                    window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
         add = gr.add_cc()

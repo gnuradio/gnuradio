@@ -32,8 +32,8 @@ class test_fractional_resampler(gr_unittest.TestCase):
         self.tb = None
 
     def test_000_make(self):
-        op = gr.fractional_interpolator_ff(0.0, 1.0)
-        op2 = gr.fractional_interpolator_cc(0.0, 1.0)
+        op = filter.fractional_interpolator_ff(0.0, 1.0)
+        op2 = filter.fractional_interpolator_cc(0.0, 1.0)
 
 if __name__ == '__main__':
     gr_unittest.run(test_fractional_resampler, "test_fractional_resampler.xml")

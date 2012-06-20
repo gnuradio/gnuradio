@@ -38,9 +38,9 @@ class test_pfb_synthesizer(gr_unittest.TestCase):
         fs = 1000        # baseband sampling rate
         ofs = M*fs       # input samp rate to decimator
 
-        taps = gr.firdes.low_pass_2(M, ofs, fs/2, fs/10,
-                                    attenuation_dB=80,
-                                    window=gr.firdes.WIN_BLACKMAN_hARRIS)
+        taps = filter.firdes.low_pass_2(M, ofs, fs/2, fs/10,
+                                        attenuation_dB=80,
+                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
         freqs = [0, 100, 200, -200, -100]

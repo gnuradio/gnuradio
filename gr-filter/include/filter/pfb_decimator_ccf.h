@@ -71,8 +71,8 @@ namespace gr {
      * input is the gain of the filter, which we specify here as
      * unity.
      *
-     *   <B><EM>self._taps = gr.firdes.low_pass_2(1, fs, BW, TB,
-     *      attenuation_dB=ATT, window=gr.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
+     *   <B><EM>self._taps = filter.firdes.low_pass_2(1, fs, BW, TB,
+     *      attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
      *
      * The PFB decimator code takes the taps generated above and
      * builds a set of filters. The set contains <EM>decim</EM> number

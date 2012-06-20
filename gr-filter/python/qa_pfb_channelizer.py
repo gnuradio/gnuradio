@@ -38,9 +38,9 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         fs = 1000        # baseband sampling rate
         ifs = M*fs       # input samp rate to channelizer
 
-        taps = gr.firdes.low_pass_2(1, ifs, 500, 50,
-                                    attenuation_dB=80,
-                                    window=gr.firdes.WIN_BLACKMAN_hARRIS)
+        taps = filter.firdes.low_pass_2(1, ifs, 500, 50,
+                                        attenuation_dB=80,
+                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
         add = gr.add_cc()
