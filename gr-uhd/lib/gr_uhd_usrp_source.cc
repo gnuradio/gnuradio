@@ -24,6 +24,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <boost/format.hpp>
+#include <boost/thread/thread.hpp>
 #include <boost/make_shared.hpp>
 #include "gr_uhd_common.h"
 
@@ -330,9 +331,10 @@ public:
 
         //If receive resulted in a timeout condition:
         //We now receive a single packet with a large timeout.
-        if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT){
+        while (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT){
+            if (boost::this_thread::interruption_requested()) return WORK_DONE;
             num_samps = _rx_stream->recv(
-                output_items, noutput_items, _metadata, 1.0, true/*one pkt*/
+                output_items, noutput_items, _metadata, 0.1, true/*one pkt*/
             );
         }
         #else
