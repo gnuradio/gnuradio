@@ -125,7 +125,7 @@ class generic_mod(gr.hier_block2):
           gr.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
 
         if self.pre_diff_code:
-            self.symbol_mapper = gr.map_bb(self._constellation.pre_diff_code())
+            self.symbol_mapper = digital.map_bb(self._constellation.pre_diff_code())
 
         if differential:
             self.diffenc = digital.diff_encoder_bb(arity)
@@ -299,7 +299,7 @@ class generic_demod(gr.hier_block2):
             self.diffdec = digital.diff_decoder_bb(arity)
 
         if self.pre_diff_code:
-            self.symbol_mapper = gr.map_bb(
+            self.symbol_mapper = digital.map_bb(
                 mod_codes.invert_code(self._constellation.pre_diff_code()))
 
         # unpack the k bit vector into a stream of bits
