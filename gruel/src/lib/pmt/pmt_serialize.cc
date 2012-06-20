@@ -213,6 +213,25 @@ deserialize_untagged_f64(double *ip, std::streambuf &sb)
   return t != std::streambuf::traits_type::eof();
 }
 
+static bool
+deserialize_tuple(pmt_t *tuple, std::streambuf &sb)
+{
+    uint32_t nitems;
+    bool ok = deserialize_untagged_u32(&nitems, sb);
+    pmt_t list(PMT_NIL);
+    for(uint32_t i=0; i<nitems; i++){   
+        pmt_t item = pmt_deserialize( sb );
+        pmt_print(item);
+        if(pmt_eq(list, PMT_NIL)){
+            list = pmt_list1(item);
+        } else {
+            list = pmt_list_add(list, item);
+        }
+    }
+    (*tuple) = pmt_to_tuple(list);
+    return ok;
+}
+
 
 /*
  * Write portable byte-serial representation of \p obj to \p sb
@@ -300,6 +319,16 @@ pmt_serialize(pmt_t obj, std::streambuf &sb)
   if (pmt_is_dict(obj))
     throw pmt_notimplemented("pmt_serialize (dict)", obj);
 
+  if (pmt_is_tuple(obj)){
+    size_t tuple_len = pmt::pmt_length(obj);
+    ok = serialize_untagged_u8(PST_TUPLE, sb);
+    ok &= serialize_untagged_u32(tuple_len, sb);
+    for(size_t i=0; i<tuple_len; i++){
+        ok &= pmt_serialize(pmt_tuple_ref(obj, i), sb);
+    }
+    return ok;
+  }
+  //throw pmt_notimplemented("pmt_serialize (tuple)", obj);
 
   throw pmt_notimplemented("pmt_serialize (?)", obj);
 }
@@ -368,6 +397,15 @@ pmt_deserialize(std::streambuf &sb)
     if(!deserialize_untagged_f64(&r, sb) && !deserialize_untagged_f64(&i, sb))
       goto error;
     return pmt_make_rectangular( r,i );
+    }
+    
+  case PST_TUPLE:
+    {
+    pmt_t tuple;
+    if(!deserialize_tuple(&tuple, sb)){
+      goto error;
+    }
+    return tuple;
     }
 
   case PST_VECTOR:
