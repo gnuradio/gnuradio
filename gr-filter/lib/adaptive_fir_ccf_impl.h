@@ -41,7 +41,7 @@ namespace gr {
       float error(const gr_complex &out);
 
       // Override to calculate new weight from old, corresponding input
-      void update_tap(gr_complex &tap, const gr_complex &in);
+      void update_tap(float &tap, const gr_complex &in);
 
     public:
       void set_taps(const std::vector<float> &taps);

@@ -69,7 +69,7 @@ namespace gr {
     }
 
     void
-    adaptive_fir_ccf_impl::update_tap(gr_complex &tap, const gr_complex &in)
+    adaptive_fir_ccf_impl::update_tap(float &tap, const gr_complex &in)
     {
       tap = tap;
     }
