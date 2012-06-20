@@ -29,6 +29,7 @@
 #include <volk/volk.h>
 #include <algorithm>
 #include <cstdio>
+#include <cstring>
 
 namespace gr {
   namespace filter {
