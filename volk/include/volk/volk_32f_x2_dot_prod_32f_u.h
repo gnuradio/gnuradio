@@ -229,6 +229,8 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse4_1(float * result, const float
 
 #ifdef LV_HAVE_AVX
 
+#include <immintrin.h>
+
 static inline void volk_32f_x2_dot_prod_32f_u_avx( float* result, const  float* input, const  float* taps, unsigned int num_points) {
 
   unsigned int number = 0;
