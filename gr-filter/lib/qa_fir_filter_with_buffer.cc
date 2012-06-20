@@ -31,7 +31,7 @@
 #include <cppunit/TestAssert.h>
 #include <cmath>
 #include <random.h>
-
+#include <cstring>
 
 namespace gr {
   namespace filter {

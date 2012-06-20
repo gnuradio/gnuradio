@@ -27,6 +27,7 @@
 #include <filter/fft_filter.h>
 #include <volk/volk.h>
 #include <iostream>
+#include <cstring>
 
 namespace gr {
   namespace filter {
