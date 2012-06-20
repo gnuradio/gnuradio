@@ -38,8 +38,9 @@ namespace gr {
 
     /*!
      * \brief FIR filter combined with frequency translation with
-     * @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps \ingroup
-     * filter_blk
+     * @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
+     *
+     * \ingroup filter_blk
      *
      * This class efficiently combines a frequency translation
      * (typically "down conversion") with a FIR filter (typically
@@ -60,7 +61,6 @@ namespace gr {
        * \brief FIR filter with @I_TYPE@ input, @O_TYPE@ output, and
        * @TAP_TYPE@ taps that also frequency translates a signal from
        * \p center_freq.
-       * \ingroup filter_blk
        *
        * Construct a FIR filter with the given taps and a composite
        * frequency translation that shifts center_freq down to zero

@@ -39,6 +39,12 @@ namespace gr {
       // gr::filter::fractional_interpolator_cc::sptr
       typedef boost::shared_ptr<fractional_interpolator_cc> sptr;
 
+      /*!
+       * \brief Build the interpolating MMSE filter (complex input, complex output)
+       *
+       * \param phase_shift The phase shift of the output signal to the input
+       * \param interp_ratio The interpolation ratio = input_rate / output_rate.
+       */
       static FILTER_API sptr make(float phase_shift,
 				  float interp_ratio);
 

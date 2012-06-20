@@ -33,6 +33,16 @@ namespace gr {
     /*!
      * \brief channel simulator
      * \ingroup misc_blk
+     *
+     * This block implements a basic channel model simulator that can
+     * be used to help evaluate, design, and test various signals,
+     * waveforms, and algorithms. This model allows the user to set
+     * the voltage of an AWGN noise source, a (normalized) frequency
+     * offset, a sample timing offset, and a noise seed to randomize
+     * the AWGN noise source.
+     *
+     * Multipath can be approximated in this model by using a FIR
+     * filter representation of a multipath delay profile..
      */
     class FILTER_API channel_model : virtual public gr_hier_block2
     {
@@ -40,11 +50,25 @@ namespace gr {
       // gr::filter::channel_model::sptr
       typedef boost::shared_ptr<channel_model> sptr;
 
-      static FILTER_API sptr make(double noise_voltage,
-				  double frequency_offset,
-				  double epsilon,
-				  const std::vector<gr_complex> &taps,
-				  double noise_seed=0);
+      /*! \brief Build the channel simulator.
+       *
+       * \param noise_voltage The AWGN noise level as a voltage (to be
+       *                      calculated externally to meet, say, a
+       *                      desired SNR).
+       * \param frequency_offset The normalized frequency offset. 0 is
+       *                         no offset; 0.25 would be, for a digital
+       *                         modem, one quarter of the symbol rate.
+       * \param epsilon The sample timing offset to emulate the
+       *                different rates between the sample clocks of
+       *                the transmitter and receiver. 1.0 is no difference.
+       * \param taps Taps of a FIR filter to emulate a multipath delay profile.
+       * \param noise_seed A random number generator seed for the noise source.
+       */
+      static FILTER_API sptr make(double noise_voltage=0.0,
+				  double frequency_offset=0.0,
+				  double epsilon=1.0,
+				  const std::vector<gr_complex> &taps=std::vector<gr_complex>(1,1),
+				  double noise_seed=3021);
 
       virtual void set_noise_voltage(double noise_voltage) = 0;
       virtual void set_frequency_offset(double frequency_offset) = 0;
