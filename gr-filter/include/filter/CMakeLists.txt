@@ -106,6 +106,7 @@ install(FILES
     pfb_channelizer_ccf.h
     pfb_decimator_ccf.h
     pfb_interpolator_ccf.h
+    pfb_synthesizer_ccf.h
     single_pole_iir_filter_cc.h
     single_pole_iir_filter_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter

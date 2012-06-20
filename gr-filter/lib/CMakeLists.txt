@@ -133,6 +133,7 @@ list(APPEND filter_sources
   pfb_channelizer_ccf_impl.cc
   pfb_decimator_ccf_impl.cc
   pfb_interpolator_ccf_impl.cc
+  pfb_synthesizer_ccf_impl.cc
   single_pole_iir_filter_cc_impl.cc
   single_pole_iir_filter_ff_impl.cc
 )

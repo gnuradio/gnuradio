@@ -43,6 +43,7 @@
 		<block>pfb_channelizer_ccf</block>
 		<block>pfb_decimator_ccf</block>
 		<block>pfb_interpolator_ccf</block>
+		<block>pfb_synthesizer_ccf</block>
 		<block>rational_resampler_base_xxx</block>
 		<block>single_pole_iir_filter_xx</block>
 	</cat>

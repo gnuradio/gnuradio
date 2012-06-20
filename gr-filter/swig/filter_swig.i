@@ -64,6 +64,7 @@
 #include "filter/pfb_channelizer_ccf.h"
 #include "filter/pfb_decimator_ccf.h"
 #include "filter/pfb_interpolator_ccf.h"
+#include "filter/pfb_synthesizer_ccf.h"
 #include "filter/rational_resampler_base_ccc.h"
 #include "filter/rational_resampler_base_ccf.h"
 #include "filter/rational_resampler_base_fcc.h"
@@ -110,6 +111,7 @@
 %include "filter/pfb_channelizer_ccf.h"
 %include "filter/pfb_decimator_ccf.h"
 %include "filter/pfb_interpolator_ccf.h"
+%include "filter/pfb_synthesizer_ccf.h"
 %include "filter/rational_resampler_base_ccc.h"
 %include "filter/rational_resampler_base_ccf.h"
 %include "filter/rational_resampler_base_fcc.h"
@@ -153,6 +155,7 @@ GR_SWIG_BLOCK_MAGIC2(filter, pfb_arb_resampler_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_channelizer_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_decimator_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_interpolator_ccf);
+GR_SWIG_BLOCK_MAGIC2(filter, pfb_synthesizer_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, rational_resampler_base_ccc);
 GR_SWIG_BLOCK_MAGIC2(filter, rational_resampler_base_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, rational_resampler_base_fcc);
