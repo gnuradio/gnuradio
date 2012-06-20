@@ -21,11 +21,19 @@ include(GrPython)
 
 # Base stuff
 GR_PYTHON_INSTALL(PROGRAMS
-    fir_filter_fff.py
-    fir_filter_ccc.py
-    fft_filter_ccc.py
     channelize.py
     chirp_channelize.py
+    decimate.py
+    fft_filter_ccc.py
+    fir_filter_ccc.py
+    fir_filter_fff.py
+    fmtest.py
+    interpolate.py
+    reconstruction.py
+    resampler.py
+    resampler_demo.grc
+    synth_filter.py
+    synth_to_chan.py
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
     COMPONENT "filter_python"
 )
