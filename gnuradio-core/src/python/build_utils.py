@@ -184,8 +184,40 @@ def standard_dict (name, code3, package='gr'):
     d['GUARD_NAME_IMPL'] = 'INCLUDED_%s_%s_IMPL_H' % (package.upper(), name.upper())
     d['BASE_NAME'] = re.sub ('^' + package + '_', '', name)
     d['SPTR_NAME'] = '%s_sptr' % name
-    d['WARNING'] = 'WARNING: this file is machine generated.  Edits will be over written'
+    d['WARNING'] = 'WARNING: this file is machine generated. Edits will be overwritten'
     d['COPYRIGHT'] = copyright
+    d['TYPE'] = i_type (code3)
+    d['I_TYPE'] = i_type (code3)
+    d['O_TYPE'] = o_type (code3)
+    d['TAP_TYPE'] = tap_type (code3)
+    d['IS_COMPLEX'] = is_complex (code3)
+    return d
+
+
+def standard_dict2 (name, code3, package):
+    d = {}
+    d['NAME'] = name
+    d['BASE_NAME'] = name
+    d['GUARD_NAME'] = 'INCLUDED_%s_%s_H' % (package.upper(), name.upper())
+    d['WARNING'] = 'WARNING: this file is machine generated. Edits will be overwritten'
+    d['COPYRIGHT'] = copyright
+    d['TYPE'] = i_type (code3)
+    d['I_TYPE'] = i_type (code3)
+    d['O_TYPE'] = o_type (code3)
+    d['TAP_TYPE'] = tap_type (code3)
+    d['IS_COMPLEX'] = is_complex (code3)
+    return d
+
+def standard_impl_dict2 (name, code3, package):
+    d = {}
+    d['NAME'] = name
+    d['IMPL_NAME'] = name
+    d['BASE_NAME'] = name.rstrip("_impl")
+    d['GUARD_NAME'] = 'INCLUDED_%s_%s_H' % (package.upper(), name.upper())
+    d['WARNING'] = 'WARNING: this file is machine generated. Edits will be overwritten'
+    d['COPYRIGHT'] = copyright
+    d['FIR_TYPE'] = "fir_filter_" + code3
+    d['CFIR_TYPE'] = "fir_filter_" + code3[0:2] + 'c'
     d['TYPE'] = i_type (code3)
     d['I_TYPE'] = i_type (code3)
     d['O_TYPE'] = o_type (code3)

@@ -21,19 +21,16 @@
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GR_FFT_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
+    ${FFTW3F_INCLUDE_DIRS}
 )
 
-include_directories(${FFT_INCLUDE_DIRS})
 link_directories(${FFT_LIBRARY_DIRS})
-
-include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
-
-include_directories(${FFTW3F_INCLUDE_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
 ########################################################################
