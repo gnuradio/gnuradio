@@ -221,7 +221,6 @@ deserialize_tuple(pmt_t *tuple, std::streambuf &sb)
     pmt_t list(PMT_NIL);
     for(uint32_t i=0; i<nitems; i++){   
         pmt_t item = pmt_deserialize( sb );
-        pmt_print(item);
         if(pmt_eq(list, PMT_NIL)){
             list = pmt_list1(item);
         } else {
