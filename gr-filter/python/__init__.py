@@ -25,4 +25,6 @@ processing blocks for FILTER and related functions.
 '''
 
 from filter_swig import *
+from rational_resampler import *
 import pfb
+import optfir
