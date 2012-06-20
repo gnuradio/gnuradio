@@ -29,6 +29,8 @@
 #include "gr_uhd_common.h"
 
 static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("rx_time");
+static const pmt::pmt_t RATE_KEY = pmt::pmt_string_to_symbol("rx_rate");
+static const pmt::pmt_t FREQ_KEY = pmt::pmt_string_to_symbol("rx_freq");
 
 #include <uhd/convert.hpp>
 inline gr_io_signature_sptr args_to_io_sig(const uhd::stream_args_t &args){
@@ -89,6 +91,8 @@ public:
 
     void set_samp_rate(double rate){
         _dev->set_rx_rate(rate);
+        _samp_rate = this->get_samp_rate();
+        _tag_now = true;
     }
 
     double get_samp_rate(void){
@@ -106,7 +110,10 @@ public:
     uhd::tune_result_t set_center_freq(
         const uhd::tune_request_t tune_request, size_t chan
     ){
-        return _dev->set_rx_freq(tune_request, chan);
+        const uhd::tune_result_t res = _dev->set_rx_freq(tune_request, chan);
+        _center_freq = this->get_center_freq(chan);
+        _tag_now = true;
+        return res;
     }
 
     double get_center_freq(size_t chan){
@@ -360,9 +367,11 @@ public:
                     pmt::pmt_from_uint64(_metadata.time_spec.get_full_secs()),
                     pmt::pmt_from_double(_metadata.time_spec.get_frac_secs())
                 );
-                //create a timestamp tag for each channel
+                //create a tag set for each channel
                 for (size_t i = 0; i < _nchan; i++){
                     this->add_item_tag(i, nitems_written(0), TIME_KEY, val, _id);
+                    this->add_item_tag(i, nitems_written(0), RATE_KEY, pmt::pmt_from_double(_samp_rate), _id);
+                    this->add_item_tag(i, nitems_written(0), FREQ_KEY, pmt::pmt_from_double(_center_freq), _id);
                 }
             }
             break;
@@ -510,6 +519,10 @@ private:
 
     uhd::time_spec_t _start_time;
     bool _start_time_set;
+
+    //tag shadows
+    double _samp_rate;
+    double _center_freq;
 };
 
 
