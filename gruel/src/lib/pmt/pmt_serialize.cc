@@ -24,7 +24,6 @@
 #endif
 #include <vector>
 #include <gruel/pmt.h>
-#include <iostream>
 #include "pmt_int.h"
 #include "gruel/pmt_serial_tags.h"
 
@@ -217,13 +216,10 @@ deserialize_untagged_f64(double *ip, std::streambuf &sb)
 static bool
 deserialize_tuple(pmt_t *tuple, std::streambuf &sb)
 {
-    std::cout << "deserialize_tuple\n";
     uint32_t nitems;
     bool ok = deserialize_untagged_u32(&nitems, sb);
     pmt_t list(PMT_NIL);
-    std::cout << "nitems: " << nitems << "\n";
     for(uint32_t i=0; i<nitems; i++){   
-        std::cout << "deserialize_tuple :: recursive call to pmt_deserialize\n";
         pmt_t item = pmt_deserialize( sb );
         pmt_print(item);
         if(pmt_eq(list, PMT_NIL)){
@@ -325,7 +321,7 @@ pmt_serialize(pmt_t obj, std::streambuf &sb)
 
   if (pmt_is_tuple(obj)){
     size_t tuple_len = pmt::pmt_length(obj);
-    ok = serialize_untagged_u8(PST_COMPLEX, sb);
+    ok = serialize_untagged_u8(PST_TUPLE, sb);
     ok &= serialize_untagged_u32(tuple_len, sb);
     for(size_t i=0; i<tuple_len; i++){
         ok &= pmt_serialize(pmt_tuple_ref(obj, i), sb);
@@ -406,8 +402,9 @@ pmt_deserialize(std::streambuf &sb)
   case PST_TUPLE:
     {
     pmt_t tuple;
-    if(!deserialize_tuple(&tuple, sb));
+    if(!deserialize_tuple(&tuple, sb)){
       goto error;
+    }
     return tuple;
     }
 
