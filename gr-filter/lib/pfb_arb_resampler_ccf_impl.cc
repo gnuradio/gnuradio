@@ -78,10 +78,8 @@ namespace gr {
       }
 
       // Now, actually set the filters' taps
-      std::vector<float> dtaps;
-      create_diff_taps(taps, dtaps);
-      create_taps(taps, d_taps, d_filters);
-      create_taps(dtaps, d_dtaps, d_diff_filters);
+      set_taps(taps);
+      d_updated = false;
     }
 
     pfb_arb_resampler_ccf_impl::~pfb_arb_resampler_ccf_impl()
@@ -122,11 +120,6 @@ namespace gr {
 	// Build a filter for each channel and add it's taps to it
 	ourfilter[i]->set_taps(ourtaps[d_int_rate-1-i]);
       }
-
-      // Set the history to ensure enough input items for each filter
-      set_history (d_taps_per_filter + 1);
-
-      d_updated = true;
     }
 
     void
@@ -148,6 +141,13 @@ namespace gr {
     pfb_arb_resampler_ccf_impl::set_taps(const std::vector<float> &taps)
     {
       gruel::scoped_lock guard(d_mutex);
+
+      std::vector<float> dtaps;
+      create_diff_taps(taps, dtaps);
+      create_taps(taps, d_taps, d_filters);
+      create_taps(dtaps, d_dtaps, d_diff_filters);
+      set_history(d_taps_per_filter + 1);
+      d_updated = true;
     }
  
     std::vector<std::vector<float> >
@@ -172,9 +172,30 @@ namespace gr {
     void
     pfb_arb_resampler_ccf_impl::set_rate(float rate)
     {
+      gruel::scoped_lock guard(d_mutex);
+
       d_dec_rate = (unsigned int)floor(d_int_rate/rate);
       d_flt_rate = (d_int_rate/rate) - d_dec_rate;
       set_relative_rate(rate);
+    }
+
+    void
+    pfb_arb_resampler_ccf_impl::set_phase(float ph)
+    {
+      gruel::scoped_lock guard(d_mutex);
+      if((ph < 0) || (ph >= 2.0*M_PI)) {
+	throw std::runtime_error("pfb_arb_resampler_ccf: set_phase value out of bounds [0, 2pi).\n");
+      }
+      
+      float ph_diff = 2.0*M_PI / (float)d_filters.size();
+      d_last_filter = static_cast<int>(ph / ph_diff);
+    }
+
+    float
+    pfb_arb_resampler_ccf_impl::phase() const
+    {
+      float ph_diff = 2.0*M_PI / static_cast<float>(d_filters.size());
+      return d_last_filter * ph_diff;
     }
 
     int
@@ -183,6 +204,8 @@ namespace gr {
 					     gr_vector_const_void_star &input_items,
 					     gr_vector_void_star &output_items)
     {
+      gruel::scoped_lock guard(d_mutex);
+
       gr_complex *in = (gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];
 
