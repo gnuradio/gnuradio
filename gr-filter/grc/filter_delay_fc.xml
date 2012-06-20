@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Filter Delay
+###################################################
+ -->
+<block>
+	<name>Filter Delay</name>
+	<key>filter_delay_fc</key>
+	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>filter.filter_delay_fc($taps)</make>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>real_vector</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+		<optional>1</optional>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>
