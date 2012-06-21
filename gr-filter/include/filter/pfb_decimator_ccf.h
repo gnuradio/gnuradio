@@ -102,7 +102,7 @@ namespace gr {
        * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
        * \param channel (unsigned integer) Selects the channel to return [default=0].
        */
-      static FILTER_API sptr make(unsigned int decim,
+      static sptr make(unsigned int decim,
 				  const std::vector<float> &taps,
 				  unsigned int channel);
 

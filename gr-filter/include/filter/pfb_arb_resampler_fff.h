@@ -110,7 +110,7 @@ namespace gr {
        *                                   related to quantization noise introduced during the resampling.
        *			           Defaults to 32 filters.
        */
-      static FILTER_API sptr make(float rate,
+      static sptr make(float rate,
 				  const std::vector<float> &taps,
 				  unsigned int filter_size=32);
 

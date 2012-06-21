@@ -139,7 +139,7 @@ namespace gr {
        *				oversample ratio is 6000 Hz,
        *				or 6 times the normal 1000 Hz.
        */
-      static FILTER_API sptr make(unsigned int numchans,
+      static sptr make(unsigned int numchans,
 				  const std::vector<float> &taps,
 				  float oversample_rate);
 
