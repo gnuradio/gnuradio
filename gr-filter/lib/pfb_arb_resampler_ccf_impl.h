@@ -74,6 +74,9 @@ namespace gr {
       void print_taps();
       void set_rate(float rate);
 
+      void set_phase(float ph);
+      float phase() const;
+
       int general_work(int noutput_items,
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,

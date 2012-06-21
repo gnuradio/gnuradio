@@ -172,9 +172,30 @@ namespace gr {
     void
     pfb_arb_resampler_fff_impl::set_rate(float rate)
     {
+      gruel::scoped_lock guard(d_mutex);
+
       d_dec_rate = (unsigned int)floor(d_int_rate/rate);
       d_flt_rate = (d_int_rate/rate) - d_dec_rate;
       set_relative_rate(rate);
+    }
+
+    void
+    pfb_arb_resampler_fff_impl::set_phase(float ph)
+    {
+      gruel::scoped_lock guard(d_mutex);
+      if((ph < 0) || (ph >= 2.0*M_PI)) {
+	throw std::runtime_error("pfb_arb_resampler_ccf: set_phase value out of bounds [0, 2pi).\n");
+      }
+      
+      float ph_diff = 2.0*M_PI / (float)d_filters.size();
+      d_last_filter = static_cast<int>(ph / ph_diff);
+    }
+
+    float
+    pfb_arb_resampler_fff_impl::phase() const
+    {
+      float ph_diff = 2.0*M_PI / static_cast<float>(d_filters.size());
+      return d_last_filter * ph_diff;
     }
 
     int
