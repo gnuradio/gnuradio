@@ -67,7 +67,7 @@ namespace gr {
       // gr::filter::single_pole_iir_filter_cc::sptr
       typedef boost::shared_ptr<single_pole_iir_filter_cc> sptr;
 
-      static FILTER_API sptr make(double alpha, unsigned int vlen=1);
+      static sptr make(double alpha, unsigned int vlen=1);
 
       virtual void set_taps(double alpha) = 0;
     };

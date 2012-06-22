@@ -65,7 +65,7 @@ namespace gr {
        * \param D          (int) the length of the delay line
        * \param long_form  (bool) whether to use long (true, default) or short form
        */
-      static FILTER_API sptr make(int D, bool long_form=true);
+      static sptr make(int D, bool long_form=true);
 
       virtual int group_delay() = 0;
     };

@@ -44,7 +44,7 @@ namespace gr {
        * imaginary output is hilbert filtered (90 degree phase shift)
        * version of input.
        */
-      static FILTER_API sptr make(unsigned int ntaps);
+      static sptr make(unsigned int ntaps);
     };
 
   } /* namespace filter */

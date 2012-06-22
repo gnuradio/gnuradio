@@ -64,7 +64,7 @@ namespace gr {
        * \param taps Taps of a FIR filter to emulate a multipath delay profile.
        * \param noise_seed A random number generator seed for the noise source.
        */
-      static FILTER_API sptr make(double noise_voltage=0.0,
+      static sptr make(double noise_voltage=0.0,
 				  double frequency_offset=0.0,
 				  double epsilon=1.0,
 				  const std::vector<gr_complex> &taps=std::vector<gr_complex>(1,1),

@@ -56,7 +56,7 @@ namespace gr {
        * taps needs to be calculated before initializing this block.
        *
        */
-      static FILTER_API sptr make(const std::vector<float> &taps);
+      static sptr make(const std::vector<float> &taps);
     };
 
   } /* namespace filter */

@@ -68,7 +68,7 @@ namespace gr {
        * \param decimation (interger) decimation rate of the filter
        * \param taps (real) filter taps
        */
-      static FILTER_API sptr make(const char *name, int decimation,
+      static sptr make(const char *name, int decimation,
 				  const std::vector<float> &taps);
 
       virtual void set_taps(const std::vector<float> &taps) = 0;
