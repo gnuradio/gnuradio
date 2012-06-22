@@ -141,6 +141,7 @@
 #include <gr_correlate_access_code_tag_bb.h>
 #include <gr_add_ff.h>
 #include <gr_vector_map.h>
+#include <gr_tag_debug.h>
 %}
 
 %include "gri_control_loop.i"
@@ -262,3 +263,4 @@
 %include "gr_correlate_access_code_tag_bb.i"
 %include "gr_add_ff.i"
 %include "gr_vector_map.i"
+%include "gr_tag_debug.i"
