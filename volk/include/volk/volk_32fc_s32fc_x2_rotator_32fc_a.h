@@ -174,12 +174,10 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_avx(lv_32fc_t* outVector, c
     printf("%f, %f\n", lv_creal(phase_Ptr[2]), lv_cimag(phase_Ptr[2]));
     printf("%f, %f\n", lv_creal(phase_Ptr[3]), lv_cimag(phase_Ptr[3]));
     printf("incr: %f, %f\n", lv_creal(incr), lv_cimag(incr));*/
-    __m256 aVal, phase_Val, inc_Val, yl, yh, tmp1, tmp2, z, ylp, yhp, tmp1p, tmp2p, negated, zeros;
+    __m256 aVal, phase_Val, inc_Val, yl, yh, tmp1, tmp2, z, ylp, yhp, tmp1p, tmp2p;
     
     phase_Val = _mm256_loadu_ps((float*)phase_Ptr);
     inc_Val = _mm256_set_ps(lv_cimag(incr), lv_creal(incr),lv_cimag(incr), lv_creal(incr),lv_cimag(incr), lv_creal(incr),lv_cimag(incr), lv_creal(incr));
-    zeros = _mm256_set1_ps(0.0);
-    negated = _mm256_set1_ps(-1.0);
     const unsigned int fourthPoints = num_points / 4;
 
     
