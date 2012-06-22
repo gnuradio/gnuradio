@@ -98,6 +98,7 @@ include_directories(
     ${GR_FFT_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${FFTW3F_INCLUDE_DIRS}
+    ${CPPUNIT_INCLUDE_DIRS}
 )
 
 link_directories(${FFT_LIBRARY_DIRS})
