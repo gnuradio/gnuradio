@@ -110,7 +110,7 @@ namespace gr {
        *                                   related to quantization noise introduced during the resampling.
        *                                   Defaults to 32 filters.
        */
-      static FILTER_API sptr make(float rate,
+      static sptr make(float rate,
 				  const std::vector<float> &taps,
 				  unsigned int filter_size=32);
       /*!
@@ -129,7 +129,20 @@ namespace gr {
        */
       virtual void print_taps() = 0;
 
+      /*!
+       * Sets the resampling rate of the block.
+       */
       virtual void set_rate (float rate) = 0;
+
+      /*!
+       * Sets the current phase offset in radians (0 to 2pi).
+       */
+      virtual void set_phase(float ph) = 0;
+
+      /*!
+       * Gets the current phase of the resampler in radians (2 to 2pi).
+       */
+      virtual float phase() const = 0;
     };
 
   } /* namespace filter */

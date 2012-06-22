@@ -69,7 +69,7 @@ namespace gr {
       // gr::filter::iir_filter_ffd::sptr
       typedef boost::shared_ptr<iir_filter_ffd> sptr;
 
-      static FILTER_API sptr make(const std::vector<double> &fftaps,
+      static sptr make(const std::vector<double> &fftaps,
 				  const std::vector<double> &fbtaps);
 
       virtual void set_taps(const std::vector<double> &fftaps,

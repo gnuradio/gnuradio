@@ -28,14 +28,14 @@ import random
 def make_random_complex_tuple(L):
     result = []
     for x in range(L):
-        result.append(complex(random.uniform(-1000,1000),
-                              random.uniform(-1000,1000)))
+        result.append(complex(2*random.random()-1,
+                              2*random.random()-1))
     return tuple(result)
 
 def make_random_float_tuple(L):
     result = []
     for x in range(L):
-        result.append(float(int(random.uniform(-1000,1000))))
+        result.append(float(int(2*random.random()-1)))
     return tuple(result)
 
 

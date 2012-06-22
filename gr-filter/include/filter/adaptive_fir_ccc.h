@@ -72,7 +72,7 @@ namespace gr {
        * \param decimation (interger) decimation rate of the filter
        * \param taps (complex) filter taps
        */
-      static FILTER_API sptr make(const char *name, int decimation,
+      static sptr make(const char *name, int decimation,
 				  const std::vector<gr_complex> &taps);
 
       virtual void set_taps(const std::vector<gr_complex> &taps) = 0;

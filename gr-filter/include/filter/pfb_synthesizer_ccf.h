@@ -54,7 +54,7 @@ namespace gr {
        *                populate the filterbank.
        * \param twox    (bool) use 2x oversampling or not (default is no)
        */
-      static FILTER_API sptr make(unsigned int numchans,
+      static sptr make(unsigned int numchans,
 				  const std::vector<float> &taps,
 				  bool twox=false);
 

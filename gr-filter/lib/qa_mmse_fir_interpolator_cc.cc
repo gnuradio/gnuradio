@@ -30,6 +30,7 @@
 #include <cstdio>
 #include <cmath>
 #include <stdexcept>
+#include <stdint.h>
 
 namespace gr {
   namespace filter {

@@ -62,7 +62,7 @@ namespace gr {
        * \param taps        complex filter taps
        * \param nthreads    number of threads for the FFT to use
        */
-      static FILTER_API sptr make(int decimation,
+      static sptr make(int decimation,
 				  const std::vector<gr_complex> &taps,
 				  int nthreads=1);
 
