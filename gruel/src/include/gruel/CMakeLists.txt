@@ -24,7 +24,6 @@ install(FILES
     api.h
     attributes.h
     high_res_timer.h
-    ${CMAKE_CURRENT_BINARY_DIR}/inet.h
     msg_accepter.h
     msg_accepter_msgq.h
     msg_queue.h
