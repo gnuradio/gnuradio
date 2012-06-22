@@ -44,7 +44,7 @@ namespace gr {
       // gr::filter::@BASE_NAME@::sptr
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
-      static FILTER_API sptr make(unsigned interpolation,
+      static sptr make(unsigned interpolation,
 				  unsigned decimation,
 				  const std::vector<@TAP_TYPE@> &taps);
 

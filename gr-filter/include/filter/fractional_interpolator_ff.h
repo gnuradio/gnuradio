@@ -45,7 +45,7 @@ namespace gr {
        * \param phase_shift The phase shift of the output signal to the input
        * \param interp_ratio The interpolation ratio = input_rate / output_rate.
        */
-      static FILTER_API sptr make(float phase_shift,
+      static sptr make(float phase_shift,
 				  float interp_ratio);
 
       virtual float mu() const = 0;

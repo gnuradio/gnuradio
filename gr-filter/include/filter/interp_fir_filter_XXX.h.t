@@ -68,7 +68,7 @@ namespace gr {
        * \param interpolation set the integer interpolation rate
        * \param taps a vector/list of taps of type @TAP_TYPE@
        */
-      static FILTER_API sptr make(unsigned interpolation,
+      static sptr make(unsigned interpolation,
 				  const std::vector<@TAP_TYPE@> &taps);
 
       virtual void set_taps(const std::vector<@TAP_TYPE@> &taps) = 0;
