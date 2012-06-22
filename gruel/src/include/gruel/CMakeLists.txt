@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -16,23 +16,6 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-
-########################################################################
-# Generate inet.h header file
-########################################################################
-include(TestBigEndian)
-enable_language(C)
-TEST_BIG_ENDIAN(GR_ARCH_BIGENDIAN)
-
-include(CheckIncludeFileCXX)
-CHECK_INCLUDE_FILE_CXX(byteswap.h GR_HAVE_BYTESWAP)
-CHECK_INCLUDE_FILE_CXX(arpa/inet.h GR_HAVE_ARPA_INET)
-CHECK_INCLUDE_FILE_CXX(netinet/in.h GR_HAVE_NETINET_IN)
-
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/inet.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/inet.h
-@ONLY)
 
 ########################################################################
 # Install the headers

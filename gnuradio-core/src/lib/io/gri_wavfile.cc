@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,7 +27,7 @@
 #include <gri_wavfile.h>
 #include <cstring>
 #include <stdint.h>
-#include <gruel/inet.h>
+#include <boost/asio.hpp>
 
 # define VALID_COMPRESSION_TYPE 0x0001
 
@@ -36,12 +36,12 @@
 // Basically, this is the opposite of htonx() and ntohx()
 #ifdef WORDS_BIGENDIAN
 
-static inline uint32_t host_to_wav(uint32_t x) { return bswap_32(x); }
-static inline uint16_t host_to_wav(uint16_t x) { return bswap_16(x); }
-static inline int16_t  host_to_wav(int16_t x)  { return bswap_16(x); }
-static inline uint32_t wav_to_host(uint32_t x) { return bswap_32(x); }
-static inline uint16_t wav_to_host(uint16_t x) { return bswap_16(x); }
-static inline int16_t  wav_to_host(int16_t x)  { return bswap_16(x); }
+static inline uint32_t host_to_wav(uint32_t x) { return htonl(x); }
+static inline uint16_t host_to_wav(uint16_t x) { return htons(x); }
+static inline int16_t  host_to_wav(int16_t x)  { return htons(x); }
+static inline uint32_t wav_to_host(uint32_t x) { return ntohl(x); }
+static inline uint16_t wav_to_host(uint16_t x) { return ntohs(x); }
+static inline int16_t  wav_to_host(int16_t x)  { return ntohs(x); }
 
 #else
 
