@@ -40,6 +40,7 @@
 	<cat>
 	        <name>Type Conversions</name>
 		<block>blocks_char_to_float</block>
+		<block>blocks_char_to_short</block>
 	</cat>
 	
 </cat>
