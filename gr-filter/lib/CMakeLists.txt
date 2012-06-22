@@ -142,9 +142,9 @@ list(APPEND filter_sources
 list(APPEND filter_libs
     gnuradio-core
     gnuradio-fft
+    volk
     ${Boost_LIBRARIES}
     ${FFTW3F_LIBRARIES}
-    ${VOLK_LIBRARIES}
 )
 
 add_library(gnuradio-filter SHARED ${filter_sources})

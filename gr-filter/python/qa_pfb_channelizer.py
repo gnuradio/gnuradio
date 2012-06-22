@@ -94,11 +94,11 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         dst3_data = snks[3].data()
         dst4_data = snks[4].data()
 
-        self.assertComplexTuplesAlmostEqual(expected0_data[-Ntest:], dst0_data[-Ntest:], 4)
-        self.assertComplexTuplesAlmostEqual(expected1_data[-Ntest:], dst1_data[-Ntest:], 4)
-        self.assertComplexTuplesAlmostEqual(expected2_data[-Ntest:], dst2_data[-Ntest:], 4)
-        self.assertComplexTuplesAlmostEqual(expected3_data[-Ntest:], dst3_data[-Ntest:], 4)
-        self.assertComplexTuplesAlmostEqual(expected4_data[-Ntest:], dst4_data[-Ntest:], 4)
+        self.assertComplexTuplesAlmostEqual(expected0_data[-Ntest:], dst0_data[-Ntest:], 3)
+        self.assertComplexTuplesAlmostEqual(expected1_data[-Ntest:], dst1_data[-Ntest:], 3)
+        self.assertComplexTuplesAlmostEqual(expected2_data[-Ntest:], dst2_data[-Ntest:], 3)
+        self.assertComplexTuplesAlmostEqual(expected3_data[-Ntest:], dst3_data[-Ntest:], 3)
+        self.assertComplexTuplesAlmostEqual(expected4_data[-Ntest:], dst4_data[-Ntest:], 3)
 
 if __name__ == '__main__':
     gr_unittest.run(test_pfb_channelizer, "test_pfb_channelizer.xml")
