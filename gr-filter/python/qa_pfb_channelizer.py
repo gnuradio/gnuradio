@@ -70,10 +70,10 @@ class test_pfb_channelizer(gr_unittest.TestCase):
 
         # Adjusted phase rotations for data
         p0 = 0
-        p1 = 1.6335486
-        p2 = -3.01609
-        p3 = 3.01609
-        p4 = -1.6335486
+        p1 =  math.pi*0.51998885
+        p2 = -math.pi*0.96002233
+        p3 =  math.pi*0.96002233
+        p4 = -math.pi*0.51998885
 
         # Create known data as complex sinusoids at the different baseband freqs
         # the different channel numbering is due to channelizer output order.

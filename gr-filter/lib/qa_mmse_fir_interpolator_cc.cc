@@ -27,6 +27,7 @@
 #include <cppunit/TestAssert.h>
 #include <qa_mmse_fir_interpolator_cc.h>
 #include <filter/mmse_fir_interpolator_cc.h>
+#include <fft/fft.h>
 #include <cstdio>
 #include <cmath>
 #include <stdexcept>
@@ -35,8 +36,6 @@
 namespace gr {
   namespace filter {
     
-#define	NELEM(x) (sizeof(x) / sizeof(x[0]))
-
     static float
     test_fcn_sin(double index)
     {
@@ -62,9 +61,9 @@ namespace gr {
     qa_mmse_fir_interpolator_cc::t1()
     {
       static const unsigned N = 100;
-      __GR_ATTR_ALIGNED(8) gr_complex input[N + 10];
+      gr_complex *input = fft::malloc_complex(N + 10);
 
-      for(unsigned i = 0; i < NELEM(input); i++)
+      for(unsigned i = 0; i < N+10; i++)
 	input[i] = test_fcn((double) i);
 
       mmse_fir_interpolator_cc intr;
@@ -79,6 +78,7 @@ namespace gr {
 	  // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
 	}
       }
+      fft::free(input);
     }
 
     /*

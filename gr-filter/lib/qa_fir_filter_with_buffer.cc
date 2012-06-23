@@ -39,8 +39,6 @@ namespace gr {
 #define MAX_DATA        (16383)
 #define	ERR_DELTA	(1e-5)
 
-#define	NELEM(x) (sizeof(x) / sizeof(x[0]))
-
     static float
     uniform() 
     {
@@ -58,8 +56,8 @@ namespace gr {
     random_complex(gr_complex *buf, unsigned n)
     {
       for(unsigned i = 0; i < n; i++) {
-	float re = rint(uniform () * MAX_DATA);
-	float im = rint(uniform () * MAX_DATA);
+	float re = rint(uniform() * MAX_DATA);
+	float im = rint(uniform() * MAX_DATA);
 	buf[i] = gr_complex(re, im);
       }
     }
@@ -148,7 +146,7 @@ namespace gr {
 	      new kernel::fir_filter_with_buffer_fff(f1_taps);
 
 	    // zero the output, then do the filtering
-	    memset(actual_output, 0, sizeof(actual_output));
+	    memset(actual_output, 0, OUTPUT_LEN*sizeof(o_type));
 	    f1->filterNdec(actual_output, input, ol/decimate, decimate);
 
 	    // check results
@@ -263,7 +261,7 @@ namespace gr {
 	      new kernel::fir_filter_with_buffer_ccc(f1_taps);
 
 	    // zero the output, then do the filtering
-	    memset(actual_output, 0, sizeof(actual_output));
+	    memset(actual_output, 0, OUTPUT_LEN*sizeof(o_type));
 	    f1->filterNdec(actual_output, input, ol/decimate, decimate);
 
 	    // check results
