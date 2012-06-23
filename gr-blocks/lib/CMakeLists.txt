@@ -120,6 +120,7 @@ list(APPEND gr_blocks_sources
     add_ff_impl.cc
     char_to_float_impl.cc
     char_to_short_impl.cc
+    complex_to_interleaved_short_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
     multiply_const_cc_impl.cc
