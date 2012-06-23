@@ -87,6 +87,7 @@ install(FILES
     char_to_float.h
     char_to_short.h
     complex_to_interleaved_short.h
+    complex_to_float.h
     multiply_cc.h
     multiply_ff.h
     multiply_const_cc.h
