@@ -45,5 +45,6 @@
 		<block>blocks_complex_to_float</block>
 		<block>blocks_complex_to_imag</block>
 		<block>blocks_complex_to_real</block>
+		<block>blocks_complex_to_mag</block>
 	</cat>
 </cat>

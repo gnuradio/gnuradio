@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import blocks_swig
+import math
 
 class test_type_conversions(gr_unittest.TestCase):
 
@@ -115,6 +116,16 @@ class test_type_conversions(gr_unittest.TestCase):
         self.tb.connect(src, op, dst)
         self.tb.run()
         self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
+
+    def test_complex_to_mag(self):
+        src_data = (1+2j, 3-4j, 5+6j, 7-8j, -9+10j)
+        expected_data = (math.sqrt(5), math.sqrt(25), math.sqrt(61), math.sqrt(113), math.sqrt(181))
+        src = gr.vector_source_c(src_data)
+        op = blocks_swig.complex_to_mag()
+        dst = gr.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(expected_data, dst.data(), 5)
 
 
 if __name__ == '__main__':

@@ -90,6 +90,7 @@ install(FILES
     complex_to_float.h
     complex_to_imag.h
     complex_to_real.h
+    complex_to_mag.h
     multiply_cc.h
     multiply_ff.h
     multiply_const_cc.h

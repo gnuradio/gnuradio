@@ -46,6 +46,7 @@
 #include "blocks/complex_to_float.h"
 #include "blocks/complex_to_real.h"
 #include "blocks/complex_to_imag.h"
+#include "blocks/complex_to_mag.h"
 #include "blocks/divide_ff.h"
 #include "blocks/divide_ss.h"
 #include "blocks/divide_ii.h"
@@ -86,6 +87,7 @@
 %include "blocks/complex_to_float.h"
 %include "blocks/complex_to_real.h"
 %include "blocks/complex_to_imag.h"
+%include "blocks/complex_to_mag.h"
 %include "blocks/divide_ff.h"
 %include "blocks/divide_ss.h"
 %include "blocks/divide_ii.h"
@@ -125,6 +127,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_interleaved_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_real);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_imag);
+GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_mag);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);
