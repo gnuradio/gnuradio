@@ -27,14 +27,13 @@
 #include <cppunit/TestAssert.h>
 #include <qa_mmse_fir_interpolator_ff.h>
 #include <filter/mmse_fir_interpolator_ff.h>
+#include <fft/fft.h>
 #include <cstdio>
 #include <cmath>
 
 namespace gr {
   namespace filter {
     
-#define	NELEM(x) (sizeof(x) / sizeof(x[0]))
-
     static float
     test_fcn(double index)
     {
@@ -45,10 +44,12 @@ namespace gr {
     void
     qa_mmse_fir_interpolator_ff::t1()
     {
+      // use aligned malloc and make sure that everything in this
+      // buffer is properly initialized.
       static const unsigned N = 100;
-      float input[N + 10];
+      float *input = fft::malloc_float(N + 10);
 
-      for(unsigned i = 0; i < NELEM(input); i++)
+      for(unsigned i = 0; i < N+10; i++)
 	input[i] = test_fcn((double) i);
 
       mmse_fir_interpolator_ff intr;
@@ -63,6 +64,7 @@ namespace gr {
 	  // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
 	}
       }
+      fft::free(input);
     }
 
   } /* namespace filter */

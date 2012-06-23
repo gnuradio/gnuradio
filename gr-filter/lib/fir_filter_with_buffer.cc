@@ -40,7 +40,7 @@ namespace gr {
 	d_align = volk_get_alignment();
 	d_naligned = d_align / sizeof(float);
 
-	d_buffer = NULL;
+	d_buffer_ptr = NULL;
 	d_aligned_taps = NULL;
 	set_taps(taps);
 
@@ -50,9 +50,9 @@ namespace gr {
 
       fir_filter_with_buffer_fff::~fir_filter_with_buffer_fff()
       {
-	if(d_buffer != NULL) {
-	  fft::free(d_buffer);
-	  d_buffer = NULL;
+	if(d_buffer_ptr != NULL) {
+	  fft::free(d_buffer_ptr);
+	  d_buffer_ptr = NULL;
 	}
 	
 	// Free aligned taps
@@ -71,9 +71,9 @@ namespace gr {
       void
       fir_filter_with_buffer_fff::set_taps(const std::vector<float> &taps)
       {
-	if(d_buffer != NULL) {
-	  fft::free(d_buffer);
-	  d_buffer = NULL;
+	if(d_buffer_ptr != NULL) {
+	  fft::free(d_buffer_ptr);
+	  d_buffer_ptr = NULL;
 	}
 
 	// Free the taps if already allocated
@@ -89,8 +89,15 @@ namespace gr {
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
 
-	d_buffer = fft::malloc_float(2*d_ntaps);
-	memset(d_buffer, 0, 2*d_ntaps*sizeof(float));
+	// We allocate enough to be able to look back and forth
+	// d_naligned beyond the buffer boundaries and make sure these
+	// are zeroed out (or they may be nan, which will cause
+	// problems). We then set d_buffer to the position in the
+	// d_buffer_ptr such that we only touch the internally
+	// allocated space.
+	d_buffer_ptr = fft::malloc_float(2*(d_ntaps + d_naligned));
+	memset(d_buffer_ptr, 0, 2*(d_ntaps + d_naligned)*sizeof(float));
+	d_buffer = d_buffer_ptr + d_naligned;
 
 	// Allocate aligned taps
 	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
@@ -186,7 +193,7 @@ namespace gr {
 	d_align = volk_get_alignment();
 	d_naligned = d_align / sizeof(gr_complex);
 
-	d_buffer = NULL;
+	d_buffer_ptr = NULL;
 	d_aligned_taps = NULL;
 	set_taps(taps);
 
@@ -196,9 +203,9 @@ namespace gr {
 
       fir_filter_with_buffer_ccc::~fir_filter_with_buffer_ccc()
       {
-	if(d_buffer != NULL) {
-	  fft::free(d_buffer);
-	  d_buffer = NULL;
+	if(d_buffer_ptr != NULL) {
+	  fft::free(d_buffer_ptr);
+	  d_buffer_ptr = NULL;
 	}
 	
 	// Free aligned taps
@@ -217,9 +224,9 @@ namespace gr {
       void
       fir_filter_with_buffer_ccc::set_taps(const std::vector<gr_complex> &taps)
       {
-	if(d_buffer != NULL) {
-	  fft::free(d_buffer);
-	  d_buffer = NULL;
+	if(d_buffer_ptr != NULL) {
+	  fft::free(d_buffer_ptr);
+	  d_buffer_ptr = NULL;
 	}
 
 	// Free the taps if already allocated
@@ -235,8 +242,15 @@ namespace gr {
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
 
-	d_buffer = fft::malloc_complex(2*d_ntaps);
-	memset(d_buffer, 0, 2*d_ntaps*sizeof(gr_complex));
+	// We allocate enough to be able to look back and forth
+	// d_naligned beyond the buffer boundaries and make sure these
+	// are zeroed out (or they may be nan, which will cause
+	// problems). We then set d_buffer to the position in the
+	// d_buffer_ptr such that we only touch the internally
+	// allocated space.
+	d_buffer_ptr = fft::malloc_complex(2*(d_ntaps + d_naligned));
+	memset(d_buffer_ptr, 0, 2*(d_ntaps + d_naligned)*sizeof(gr_complex));
+	d_buffer = d_buffer_ptr + d_naligned;
 
 	// Allocate aligned taps
 	d_aligned_taps = (gr_complex**)malloc(d_naligned*sizeof(gr_complex**));
@@ -332,7 +346,7 @@ namespace gr {
 	d_align = volk_get_alignment();
 	d_naligned = d_align / sizeof(gr_complex);
 
-	d_buffer = NULL;
+	d_buffer_ptr = NULL;
 	d_aligned_taps = NULL;
 	set_taps(taps);
 
@@ -342,9 +356,9 @@ namespace gr {
 
       fir_filter_with_buffer_ccf::~fir_filter_with_buffer_ccf()
       {
-	if(d_buffer != NULL) {
-	  fft::free(d_buffer);
-	  d_buffer = NULL;
+	if(d_buffer_ptr != NULL) {
+	  fft::free(d_buffer_ptr);
+	  d_buffer_ptr = NULL;
 	}
 	
 	// Free aligned taps
@@ -363,9 +377,9 @@ namespace gr {
       void
       fir_filter_with_buffer_ccf::set_taps(const std::vector<float> &taps)
       {
-	if(d_buffer != NULL) {
-	  fft::free(d_buffer);
-	  d_buffer = NULL;
+	if(d_buffer_ptr != NULL) {
+	  fft::free(d_buffer_ptr);
+	  d_buffer_ptr = NULL;
 	}
 
 	// Free the taps if already allocated
@@ -381,8 +395,15 @@ namespace gr {
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
 
-	d_buffer = fft::malloc_complex(2*d_ntaps);
-	memset(d_buffer, 0, 2*d_ntaps*sizeof(gr_complex));
+	// We allocate enough to be able to look back and forth
+	// d_naligned beyond the buffer boundaries and make sure these
+	// are zeroed out (or they may be nan, which will cause
+	// problems). We then set d_buffer to the position in the
+	// d_buffer_ptr such that we only touch the internally
+	// allocated space.
+	d_buffer_ptr = fft::malloc_complex(2*(d_ntaps + d_naligned));
+	memset(d_buffer_ptr, 0, 2*(d_ntaps + d_naligned)*sizeof(gr_complex));
+	d_buffer = d_buffer_ptr + d_naligned;
 
 	// Allocate aligned taps
 	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float**));
