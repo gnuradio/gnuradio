@@ -146,7 +146,7 @@ namespace gr {
 	      new kernel::fir_filter_with_buffer_fff(f1_taps);
 
 	    // zero the output, then do the filtering
-	    memset(actual_output, 0, sizeof(actual_output));
+	    memset(actual_output, 0, OUTPUT_LEN*sizeof(o_type));
 	    f1->filterNdec(actual_output, input, ol/decimate, decimate);
 
 	    // check results
