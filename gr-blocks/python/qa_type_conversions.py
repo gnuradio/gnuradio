@@ -127,6 +127,16 @@ class test_type_conversions(gr_unittest.TestCase):
         self.tb.run()
         self.assertFloatTuplesAlmostEqual(expected_data, dst.data(), 5)
 
+    def test_complex_to_mag_squared(self):
+        src_data = (1+2j, 3-4j, 5+6j, 7-8j, -9+10j)
+        expected_data = (5.0, 25.0, 61.0, 113.0, 181.0)
+        src = gr.vector_source_c(src_data)
+        op = blocks_swig.complex_to_mag_squared()
+        dst = gr.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_type_conversions, "test_type_conversions.xml")

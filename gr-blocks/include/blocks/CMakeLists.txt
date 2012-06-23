@@ -91,6 +91,7 @@ install(FILES
     complex_to_imag.h
     complex_to_real.h
     complex_to_mag.h
+    complex_to_mag_squared.h
     multiply_cc.h
     multiply_ff.h
     multiply_const_cc.h
