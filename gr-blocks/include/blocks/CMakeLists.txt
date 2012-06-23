@@ -88,6 +88,7 @@ install(FILES
     char_to_short.h
     complex_to_interleaved_short.h
     complex_to_float.h
+    complex_to_imag.h
     complex_to_real.h
     multiply_cc.h
     multiply_ff.h
