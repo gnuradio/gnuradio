@@ -22,7 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import blocks_swig
-import math
+from math import sqrt, atan2
 
 class test_type_conversions(gr_unittest.TestCase):
 
@@ -119,7 +119,7 @@ class test_type_conversions(gr_unittest.TestCase):
 
     def test_complex_to_mag(self):
         src_data = (1+2j, 3-4j, 5+6j, 7-8j, -9+10j)
-        expected_data = (math.sqrt(5), math.sqrt(25), math.sqrt(61), math.sqrt(113), math.sqrt(181))
+        expected_data = (sqrt(5), sqrt(25), sqrt(61), sqrt(113), sqrt(181))
         src = gr.vector_source_c(src_data)
         op = blocks_swig.complex_to_mag()
         dst = gr.vector_sink_f()
@@ -137,6 +137,16 @@ class test_type_conversions(gr_unittest.TestCase):
         self.tb.run()
         self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
 
+    def test_complex_to_arg(self):
+        src_data = (1+2j, 3-4j, 5+6j, 7-8j, -9+10j)
+        expected_data = (atan2(2, 1), atan2(-4,3), atan2(6, 5), atan2(-8, 7), atan2(10,-9))
+        src = gr.vector_source_c(src_data)
+        op = blocks_swig.complex_to_arg()
+        dst = gr.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(expected_data, dst.data(), 2)
+        print dst.data()
 
 if __name__ == '__main__':
     gr_unittest.run(test_type_conversions, "test_type_conversions.xml")
