@@ -60,6 +60,7 @@ public slots:
   void setXaxis(double min, double max);
   void setTitle(int which, QString title);
   void setColor(int which, QString color);
+  void setLineWidth(int which, int width);
 
   QString title(int which);
 

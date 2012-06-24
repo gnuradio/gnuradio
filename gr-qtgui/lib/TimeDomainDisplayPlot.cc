@@ -242,7 +242,17 @@ TimeDomainDisplayPlot::title(int which)
 void
 TimeDomainDisplayPlot::setColor(int which, QString color)
 {
-  _plot_curve[which]->setPen(QPen(color));
+  QPen pen(_plot_curve[which]->pen());
+  pen.setColor(color);
+  _plot_curve[which]->setPen(pen);
+}
+
+void
+TimeDomainDisplayPlot::setLineWidth(int which, int width)
+{
+  QPen pen(_plot_curve[which]->pen());
+  pen.setWidth(width);
+  _plot_curve[which]->setPen(pen);
 }
 
 void TimeDomainDisplayPlot::replot()

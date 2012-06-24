@@ -140,6 +140,7 @@ public slots:
 
   void setTitle(int which, const QString &title);
   void setColor(int which, const QString &color);
+  void setLineWidth(int which, int width);
 
   void setGrid(bool on);
   void setGridOn();

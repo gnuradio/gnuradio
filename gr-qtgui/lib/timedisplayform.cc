@@ -49,7 +49,6 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   _grid = new QwtPlotGrid();
   _grid->setPen(QPen(QColor(Qt::gray)));
 
-
   // Create a set of actions for the menu
   _grid_on_act = new QAction("Grid On", this);
   _grid_on_act->setStatusTip(tr("Toggle Grid on"));
@@ -232,6 +231,13 @@ void
 TimeDisplayForm::setColor(int which, const QString &color)
 {
   _timeDomainDisplayPlot->setColor(which, color);
+  _timeDomainDisplayPlot->replot();
+}
+
+void
+TimeDisplayForm::setLineWidth(int which, int width)
+{
+  _timeDomainDisplayPlot->setLineWidth(which, width);
   _timeDomainDisplayPlot->replot();
 }
 
