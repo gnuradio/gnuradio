@@ -69,7 +69,7 @@ namespace gr {
        * \param decimation set the integer decimation rate
        * \param taps a vector/list of taps of type @TAP_TYPE@
        */
-      static FILTER_API sptr make(int decimation,
+      static sptr make(int decimation,
 				  const std::vector<@TAP_TYPE@> &taps);
 
       virtual void set_taps(const std::vector<@TAP_TYPE@> &taps) = 0;

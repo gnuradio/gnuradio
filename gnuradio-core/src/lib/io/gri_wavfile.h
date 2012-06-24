@@ -29,20 +29,15 @@
 /*!
  * \brief Read signal information from a given WAV file.
  *
- * \p fp File pointer to an opened, empty file.
- * \p sample_rate Stores the sample rate [S/s]
- * \p nchans      Number of channels
- * \p bytes_per_sample Bytes per sample, can either be 1 or 2 (corresponding to
- *         8 or 16 bit samples, respectively)
- * \p first_sample_pos Number of the first byte containing a sample. Use this
- *         with fseek() to jump from the end of the file to the first sample
- *         when in repeat mode.
- * \p samples_per_chan Number of samples per channel
- * \p normalize_fac The normalization factor with which you need to divide the
- *         integer values of the samples to get them within [-1;1]
- * \p normalize_shift The value by which the sample values need to be shifted
- *         after normalization (reason being, 8-bit WAV files store samples as
- *         unsigned char and 16-bit as signed short int)
+ * \param[in]  fp          File pointer to an opened, empty file.
+ * \param[out] sample_rate Stores the sample rate [S/s]
+ * \param[out] nchans      Number of channels
+ * \param[out] bytes_per_sample Bytes per sample, can either be 1 or 2 (corresponding o
+ *                              8 or 16 bit samples, respectively)
+ * \param[out] first_sample_pos Number of the first byte containing a sample. Use this
+ *                              with fseek() to jump from the end of the file to the
+ *                              first sample when in repeat mode.
+ * \param[out] samples_per_chan Number of samples per channel
  * \return True on a successful read, false if the file could not be read or is
  *         not a valid WAV file.
  */
@@ -94,8 +89,8 @@ gri_wav_write_sample(FILE *fp, short int sample, int bytes_per_sample);
  * shouldn't happen), you  need to fseek() to the end of the file (or
  * whereever).
  *
- * \p fp File pointer to an open WAV file with a blank header
- * \p byte_count Length of all samples written to the file in bytes.
+ * \param[in] fp         File pointer to an open WAV file with a blank header
+ * \param[in] byte_count Length of all samples written to the file in bytes.
  */
 bool
 gri_wavheader_complete(FILE *fp, unsigned int byte_count);

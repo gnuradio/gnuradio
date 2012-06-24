@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <gr_io_signature.h>
 #include <stdexcept>
+#include <algorithm>
 #include <gr_complex.h>
 
 
@@ -64,8 +65,7 @@ int
 
   case GR_CONST_WAVE:
     t = (gr_complex) d_ampl + d_offset;
-    for (int i = 0; i < noutput_items; i++)	// FIXME unroll
-      optr[i] = t;
+    std::fill_n(optr, noutput_items, t);
     break;
 
   case GR_SIN_WAVE:
@@ -142,8 +142,7 @@ int
 
   case GR_CONST_WAVE:
     t = (@TYPE@) d_ampl + d_offset;
-    for (int i = 0; i < noutput_items; i++)	// FIXME unroll
-      optr[i] = t;
+    std::fill_n(optr, noutput_items, t);
     break;
 
   case GR_SIN_WAVE:

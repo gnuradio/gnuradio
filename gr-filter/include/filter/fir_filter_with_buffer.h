@@ -40,6 +40,7 @@ namespace gr {
       private:
 	std::vector<float> d_taps;
 	unsigned int  d_ntaps;
+	float        *d_buffer_ptr;
 	float        *d_buffer;
 	unsigned int  d_idx;
 	float       **d_aligned_taps;
@@ -136,6 +137,7 @@ namespace gr {
       private:
 	std::vector<gr_complex> d_taps;
 	unsigned int  d_ntaps;
+	gr_complex   *d_buffer_ptr;
 	gr_complex   *d_buffer;
 	unsigned int  d_idx;
 	gr_complex  **d_aligned_taps;
@@ -232,6 +234,7 @@ namespace gr {
       private:
 	std::vector<float> d_taps;
 	unsigned int  d_ntaps;
+	gr_complex   *d_buffer_ptr;
 	gr_complex   *d_buffer;
 	unsigned int  d_idx;
 	float       **d_aligned_taps;

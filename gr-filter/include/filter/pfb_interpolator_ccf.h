@@ -91,7 +91,7 @@ namespace gr {
        * \param taps    (vector/list of floats) The prototype filter to populate the filterbank. The taps
        *                                        should be generated at the interpolated sampling rate.
        */
-      static FILTER_API sptr make(unsigned int interp,
+      static sptr make(unsigned int interp,
 				  const std::vector<float> &taps);
 
       /*!

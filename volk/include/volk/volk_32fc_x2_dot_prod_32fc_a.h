@@ -18,40 +18,26 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const
   unsigned int n_2_ccomplex_blocks = num_bytes >> 4;
   unsigned int isodd = (num_bytes >> 3) &1;
 
-
-
   float sum0[2] = {0,0};
   float sum1[2] = {0,0};
   unsigned int i = 0;
 
-
   for(i = 0; i < n_2_ccomplex_blocks; ++i) {
-
-
     sum0[0] += in[0] * tp[0] - in[1] * tp[1];
     sum0[1] += in[0] * tp[1] + in[1] * tp[0];
     sum1[0] += in[2] * tp[2] - in[3] * tp[3];
     sum1[1] += in[2] * tp[3] + in[3] * tp[2];
 
-
     in += 4;
     tp += 4;
-
   }
-
 
   res[0] = sum0[0] + sum1[0];
   res[1] = sum0[1] + sum1[1];
 
-
-
   for(i = 0; i < isodd; ++i) {
-
-
     *result += input[(num_bytes >> 3) - 1] * taps[(num_bytes >> 3) - 1];
-
   }
-
 }
 
 #endif /*LV_HAVE_GENERIC*/
@@ -177,14 +163,8 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const 
      );
 
 
-  int getem = num_bytes % 16;
-
-
-  for(; getem > 0; getem -= 8) {
-
-
+  if(((num_bytes >> 3) & 1)) {
     *result += (input[(num_bytes >> 3) - 1] * taps[(num_bytes >> 3) - 1]);
-
   }
 
   return;
@@ -363,7 +343,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv
 
   dotProduct += ( dotProductVector[0] + dotProductVector[1] );
 
-  if((num_bytes >> 2) != 0) {
+  if(((num_bytes >> 3) & 1) != 0) {
     dotProduct += (*a) * (*b);
   }
 
@@ -377,9 +357,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv
 #include <smmintrin.h>
 
 static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
-  volk_32fc_x2_dot_prod_32fc_a_sse3(result, input, taps, num_bytes);
-  // SSE3 version runs twice as fast as the SSE4.1 version, so turning off SSE4 version for now
-   /*
+
     __m128 xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, real0, real1, im0, im1;
     float *p_input, *p_taps;
     __m64 *p_result;
@@ -442,11 +420,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const 
 
     }
 
-
-
-
     real1 = _mm_xor_ps(real1, (__m128)neg);
-
 
     im0 = _mm_add_ps(im0, im1);
     real0 = _mm_add_ps(real0, real1);
@@ -459,7 +433,6 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const 
 
     *result += input[i] * taps[i];
     }
-  */
 }
 
 #endif /*LV_HAVE_SSE4_1*/

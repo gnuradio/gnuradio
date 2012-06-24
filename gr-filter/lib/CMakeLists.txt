@@ -98,6 +98,7 @@ include_directories(
     ${GR_FFT_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${FFTW3F_INCLUDE_DIRS}
+    ${CPPUNIT_INCLUDE_DIRS}
 )
 
 link_directories(${FFT_LIBRARY_DIRS})
@@ -142,9 +143,9 @@ list(APPEND filter_sources
 list(APPEND filter_libs
     gnuradio-core
     gnuradio-fft
+    volk
     ${Boost_LIBRARIES}
     ${FFTW3F_LIBRARIES}
-    ${VOLK_LIBRARIES}
 )
 
 add_library(gnuradio-filter SHARED ${filter_sources})

@@ -33,6 +33,7 @@
 		<block>gr_message_sink</block>
 		<block>pad_sink</block>
 		<block>virtual_sink</block>
+		<block>gr_tag_debug</block>
 	</cat>
 	<cat>
 		<name>Operators</name>

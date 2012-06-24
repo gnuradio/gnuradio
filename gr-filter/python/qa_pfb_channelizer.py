@@ -70,10 +70,10 @@ class test_pfb_channelizer(gr_unittest.TestCase):
 
         # Adjusted phase rotations for data
         p0 = 0
-        p1 = 1.6335486
-        p2 = -3.01609
-        p3 = 3.01609
-        p4 = -1.6335486
+        p1 =  math.pi*0.51998885
+        p2 = -math.pi*0.96002233
+        p3 =  math.pi*0.96002233
+        p4 = -math.pi*0.51998885
 
         # Create known data as complex sinusoids at the different baseband freqs
         # the different channel numbering is due to channelizer output order.
@@ -94,11 +94,11 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         dst3_data = snks[3].data()
         dst4_data = snks[4].data()
 
-        self.assertComplexTuplesAlmostEqual(expected0_data[-Ntest:], dst0_data[-Ntest:], 4)
-        self.assertComplexTuplesAlmostEqual(expected1_data[-Ntest:], dst1_data[-Ntest:], 4)
-        self.assertComplexTuplesAlmostEqual(expected2_data[-Ntest:], dst2_data[-Ntest:], 4)
-        self.assertComplexTuplesAlmostEqual(expected3_data[-Ntest:], dst3_data[-Ntest:], 4)
-        self.assertComplexTuplesAlmostEqual(expected4_data[-Ntest:], dst4_data[-Ntest:], 4)
+        self.assertComplexTuplesAlmostEqual(expected0_data[-Ntest:], dst0_data[-Ntest:], 3)
+        self.assertComplexTuplesAlmostEqual(expected1_data[-Ntest:], dst1_data[-Ntest:], 3)
+        self.assertComplexTuplesAlmostEqual(expected2_data[-Ntest:], dst2_data[-Ntest:], 3)
+        self.assertComplexTuplesAlmostEqual(expected3_data[-Ntest:], dst3_data[-Ntest:], 3)
+        self.assertComplexTuplesAlmostEqual(expected4_data[-Ntest:], dst4_data[-Ntest:], 3)
 
 if __name__ == '__main__':
     gr_unittest.run(test_pfb_channelizer, "test_pfb_channelizer.xml")

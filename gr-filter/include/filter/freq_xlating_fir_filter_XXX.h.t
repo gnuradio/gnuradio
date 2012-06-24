@@ -72,7 +72,7 @@ namespace gr {
        * \param center_freq Center frequency of signal to down convert from (Hz)
        * \param sampling_freq Sampling rate of signal (in Hz)
        */
-      static FILTER_API sptr make(int decimation,
+      static sptr make(int decimation,
 				  const std::vector<@TAP_TYPE@> &taps,
 				  double center_freq,
 				  double sampling_freq);
