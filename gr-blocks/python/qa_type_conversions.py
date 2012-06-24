@@ -167,5 +167,30 @@ class test_type_conversions(gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(expected_data, dst.data())
 
+    def test_float_to_complex_1(self):
+        src_data = (1.0, 3.0, 5.0, 7.0, 9.0)
+        expected_data = (1+0j, 3+0j, 5+0j, 7+0j, 9+0j)
+        src = gr.vector_source_f(src_data)
+        op = blocks_swig.float_to_complex()
+        dst = gr.vector_sink_c()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
+
+    def test_float_to_complex_2(self):
+        src1_data = (1.0, 3.0, 5.0, 7.0, 9.0)
+        src2_data = (2.0, 4.0, 6.0, 8.0, 10.0)
+        expected_data = (1+2j, 3+4j, 5+6j, 7+8j, 9+10j)
+        src1 = gr.vector_source_f(src1_data)
+        src2 = gr.vector_source_f(src2_data)
+        op = blocks_swig.float_to_complex()
+        dst = gr.vector_sink_c()
+        self.tb.connect(src1, (op, 0))
+        self.tb.connect(src2, (op, 1))
+        self.tb.connect(op, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
+
+
 if __name__ == '__main__':
     gr_unittest.run(test_type_conversions, "test_type_conversions.xml")

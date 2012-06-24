@@ -94,6 +94,7 @@ install(FILES
     complex_to_mag_squared.h
     complex_to_arg.h
     float_to_char.h
+    float_to_complex.h
     multiply_cc.h
     multiply_ff.h
     multiply_const_cc.h

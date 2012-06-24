@@ -49,5 +49,6 @@
 		<block>blocks_complex_to_mag_squared</block>
 		<block>blocks_complex_to_arg</block>
 		<block>float_to_char</block>
+		<block>float_to_complex</block>
 	</cat>
 </cat>
