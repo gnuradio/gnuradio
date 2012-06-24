@@ -26,7 +26,7 @@
 
 #include <gr_io_signature.h>
 #include <digital_clock_recovery_mm_ff.h>
-#include <gri_mmse_fir_interpolator.h>
+#include <filter/mmse_fir_interpolator_ff.h>
 #include <stdexcept>
 
 #define DEBUG_CR_MM_FF	0		// must be defined as 0 or 1
@@ -52,7 +52,7 @@ digital_clock_recovery_mm_ff::digital_clock_recovery_mm_ff (float omega, float g
 	      gr_make_io_signature (1, 1, sizeof (float)),
 	      gr_make_io_signature (1, 1, sizeof (float))),
     d_mu (mu), d_gain_omega(gain_omega), d_gain_mu(gain_mu),
-    d_last_sample(0), d_interp(new gri_mmse_fir_interpolator()),
+    d_last_sample(0), d_interp(new gr::filter::mmse_fir_interpolator_ff()),
     d_logfile(0), d_omega_relative_limit(omega_relative_limit)
 {
   if (omega <  1)

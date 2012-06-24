@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2010,2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,7 +27,7 @@
 #include <gr_io_signature.h>
 #include <gr_prefs.h>
 #include <digital_clock_recovery_mm_cc.h>
-#include <gri_mmse_fir_interpolator_cc.h>
+#include <filter/mmse_fir_interpolator_cc.h>
 #include <stdexcept>
 #include <cstdio>
 
@@ -55,7 +55,7 @@ digital_clock_recovery_mm_cc::digital_clock_recovery_mm_cc (float omega, float g
 	      gr_make_io_signature2 (1, 2, sizeof (gr_complex), sizeof(float))),
     d_mu (mu), d_omega(omega), d_gain_omega(gain_omega), 
     d_omega_relative_limit(omega_relative_limit), 
-    d_gain_mu(gain_mu), d_last_sample(0), d_interp(new gri_mmse_fir_interpolator_cc()),
+    d_gain_mu(gain_mu), d_last_sample(0), d_interp(new gr::filter::mmse_fir_interpolator_cc()),
     d_verbose(gr_prefs::singleton()->get_bool("clock_recovery_mm_cc", "verbose", false)),
     d_p_2T(0), d_p_1T(0), d_p_0T(0), d_c_2T(0), d_c_1T(0), d_c_0T(0)
 {

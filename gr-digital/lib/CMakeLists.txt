@@ -23,6 +23,7 @@
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
 )
 

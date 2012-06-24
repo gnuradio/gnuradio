@@ -28,7 +28,7 @@
 #include <gr_math.h>
 #include <stdio.h>
 
-class gri_mmse_fir_interpolator;
+namespace gr { namespace filter { class mmse_fir_interpolator_ff; } }
 
 class digital_clock_recovery_mm_ff;
 typedef boost::shared_ptr<digital_clock_recovery_mm_ff> digital_clock_recovery_mm_ff_sptr;
@@ -87,7 +87,7 @@ protected:
   float                         d_gain_omega;	// gain for adjusting omega
   float                         d_gain_mu;	// gain for adjusting mu
   float                         d_last_sample;
-  gri_mmse_fir_interpolator 	*d_interp;
+  gr::filter::mmse_fir_interpolator_ff *d_interp;
   FILE				*d_logfile;
   float				d_omega_relative_limit;	// used to compute min and max omega
 

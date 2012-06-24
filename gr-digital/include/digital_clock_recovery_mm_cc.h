@@ -28,7 +28,7 @@
 #include <gr_complex.h>
 #include <gr_math.h>
 
-class gri_mmse_fir_interpolator_cc;
+namespace gr { namespace filter { class mmse_fir_interpolator_cc; } }
 
 class digital_clock_recovery_mm_cc;
 typedef boost::shared_ptr<digital_clock_recovery_mm_cc> digital_clock_recovery_mm_cc_sptr;
@@ -94,7 +94,7 @@ protected:
   float                         d_omega_mid;
   float                         d_gain_mu;
   gr_complex                    d_last_sample;
-  gri_mmse_fir_interpolator_cc 	*d_interp;
+  gr::filter::mmse_fir_interpolator_cc *d_interp;
   bool			        d_verbose;
 
   gr_complex                    d_p_2T;
