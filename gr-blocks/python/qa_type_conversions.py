@@ -146,7 +146,26 @@ class test_type_conversions(gr_unittest.TestCase):
         self.tb.connect(src, op, dst)
         self.tb.run()
         self.assertFloatTuplesAlmostEqual(expected_data, dst.data(), 2)
-        print dst.data()
+
+    def test_float_to_char_identity(self):
+        src_data = (1.0, 2.0, 3.0, 4.0, 5.0)
+        expected_data = (1, 2, 3, 4, 5)
+        src = gr.vector_source_f(src_data)
+        op = blocks_swig.float_to_char()
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertEqual(expected_data, dst.data())
+
+    def test_float_to_char_scale(self):
+        src_data = (1.0, 2.0, 3.0, 4.0, 5.0)
+        expected_data = (5, 10, 15, 20, 25)
+        src = gr.vector_source_f(src_data)
+        op = blocks_swig.float_to_char(1, 5)
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertEqual(expected_data, dst.data())
 
 if __name__ == '__main__':
     gr_unittest.run(test_type_conversions, "test_type_conversions.xml")

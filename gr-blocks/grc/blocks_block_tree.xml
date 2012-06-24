@@ -23,7 +23,7 @@
 
 <!--
 ###################################################
-##Block Tree for GR Digital blocks.
+##Block Tree for gr-blocks.
 ###################################################
  -->
 <cat>
@@ -48,5 +48,6 @@
 		<block>blocks_complex_to_mag</block>
 		<block>blocks_complex_to_mag_squared</block>
 		<block>blocks_complex_to_arg</block>
+		<block>float_to_char</block>
 	</cat>
 </cat>
