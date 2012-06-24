@@ -61,6 +61,8 @@ public slots:
   void setTitle(int which, QString title);
   void setColor(int which, QString color);
 
+  QString title(int which);
+
   void resizeSlot( QSize *s );
   void SetSampleRate(double sr, double units,
 		     const std::string &strunits);

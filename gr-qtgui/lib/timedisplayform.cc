@@ -37,6 +37,7 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(nplots, this);
   _layout->addWidget(_timeDomainDisplayPlot, 0, 0);
 
+  _nplots = nplots;
   _numRealDataPoints = 1024;
 
   setLayout(_layout);
@@ -50,22 +51,31 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
 
 
   // Create a set of actions for the menu
-  _gridOnAct = new QAction("Grid On", this);
-  _gridOnAct->setStatusTip(tr("Toggle Grid on"));
-  connect(_gridOnAct, SIGNAL(triggered()), this, SLOT(setGridOn()));
+  _grid_on_act = new QAction("Grid On", this);
+  _grid_on_act->setStatusTip(tr("Toggle Grid on"));
+  connect(_grid_on_act, SIGNAL(triggered()), this, SLOT(setGridOn()));
 
-  _gridOffAct = new QAction("Grid Off", this);
-  _gridOffAct->setStatusTip(tr("Toggle Grid off"));
-  connect(_gridOffAct, SIGNAL(triggered()), this, SLOT(setGridOff()));
+  _grid_off_act = new QAction("Grid Off", this);
+  _grid_off_act->setStatusTip(tr("Toggle Grid off"));
+  connect(_grid_off_act, SIGNAL(triggered()), this, SLOT(setGridOff()));
 
   // Create a pop-up menu for manipulating the figure
   _menu = new QMenu(this);
-  _menu->addAction(_gridOnAct);
-  _menu->addAction(_gridOffAct);
+  _menu->addAction(_grid_on_act);
+  _menu->addAction(_grid_off_act);
 
-  // Note: These must be done AFTER the menu is created.
-  // Set Up the Color Dialog Box
-  setupColorDiag();
+  for(int i = 0; i < _nplots; i++) {
+    _line_color_menu.push_back(new LineColorMenu(i, this));
+
+    for(int j = 0; j < _line_color_menu[i]->getNumActions(); j++) {
+      connect(_line_color_menu[i], SIGNAL(whichTrigger(int, const QString&)),
+	      this, SLOT(setColor(int, const QString&)));
+    }
+    
+    _lines_menu.push_back(new QMenu(_timeDomainDisplayPlot->title(i), this));
+    _lines_menu[i]->addMenu(_line_color_menu[i]);
+    _menu->addMenu(_lines_menu[i]);
+  }
 
   Reset();
 
@@ -138,6 +148,10 @@ TimeDisplayForm::mousePressEvent( QMouseEvent * e)
     plotrect.setTop(cvs.y()+cvs.width()+plt->spacing()+plt->canvasMargin(0));
 
     if(!plotrect.contains(e->pos())) {
+      // Update the line titles if changed externally
+      for(int i = 0; i < _nplots; i++) {
+	_lines_menu[i]->setTitle(_timeDomainDisplayPlot->title(i));
+      }
       _menu->exec(e->globalPos());
     }
   }
@@ -209,15 +223,16 @@ TimeDisplayForm::setUpdateTime(double t)
 }
 
 void
-TimeDisplayForm::setTitle(int which, QString title)
+TimeDisplayForm::setTitle(int which, const QString &title)
 {
   _timeDomainDisplayPlot->setTitle(which, title);
 }
 
 void
-TimeDisplayForm::setColor(int which, QString color)
+TimeDisplayForm::setColor(int which, const QString &color)
 {
   _timeDomainDisplayPlot->setColor(which, color);
+  _timeDomainDisplayPlot->replot();
 }
 
 void
@@ -245,60 +260,3 @@ TimeDisplayForm::setGridOff()
 {
   setGrid(false);
 }
-
-
-// CHANGE COLOR CONTROLS
-void
-TimeDisplayForm::setupColorDiag()
-{
-  // Create an action item for the menu
-  _colorAct = new QAction("Line Color", this);
-  _colorAct->setStatusTip(tr("Set line color"));
-  connect(_colorAct, SIGNAL(triggered()), this, SLOT(setLineColorAsk()));
-
-  // Add color box item to menu
-  _menu->addAction(_colorAct);
-
-  _color_diag = new QDialog(this);
-  _color_diag->setModal(true);
-
-  _color_comboBox = new QComboBox();
-  _color_comboBox->addItem(tr("Blue"));
-  _color_comboBox->addItem(tr("Red"));
-  _color_comboBox->addItem(tr("Green"));
-  _color_comboBox->addItem(tr("Black"));
-  _color_comboBox->addItem(tr("Cyan"));
-  _color_comboBox->addItem(tr("Magenta"));
-  _color_comboBox->addItem(tr("Yellow"));
-  _color_comboBox->addItem(tr("Gray"));
-  _color_comboBox->addItem(tr("Darkred"));
-  _color_comboBox->addItem(tr("Darkgreen"));
-  _color_comboBox->addItem(tr("Darkblue"));
-  _color_comboBox->addItem(tr("Darkgray"));
-
-  QGridLayout *layout = new QGridLayout(_color_diag);
-  QPushButton *btn_ok = new QPushButton(tr("OK"));
-  QPushButton *btn_cancel = new QPushButton(tr("Cancel"));
-
-  layout->addWidget(_color_comboBox, 0, 0, 1, 3);
-  layout->addWidget(btn_ok, 1, 0);
-  layout->addWidget(btn_cancel, 1, 1);
-
-  connect(btn_ok, SIGNAL(clicked()), this, SLOT(setLineColorGet()));
-  connect(btn_cancel, SIGNAL(clicked()), _color_diag, SLOT(close()));
-}
-
-void
-TimeDisplayForm::setLineColorAsk()
-{
-  _color_diag->show();
-}
-
-void
-TimeDisplayForm::setLineColorGet()
-{
-  setColor(0, _color_comboBox->currentText());
-  _timeDomainDisplayPlot->replot();
-  _color_diag->accept();
-}
-

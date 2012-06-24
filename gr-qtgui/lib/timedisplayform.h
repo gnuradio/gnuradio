@@ -33,8 +33,86 @@
 
 #include <qwt_plot_grid.h>
 #include <qwt_plot_layout.h>
-#include <qwt_legend.h>
-#include <qwt_legend_item.h>
+
+class LineColorMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  LineColorMenu(int which, QWidget *parent)
+    : QMenu("Line Color", parent), d_which(which)
+  {
+    d_act.push_back(new QAction("Blue", this));
+    d_act.push_back(new QAction("Red", this));
+    d_act.push_back(new QAction("Green", this));
+    d_act.push_back(new QAction("Black", this));
+    d_act.push_back(new QAction("Cyan", this));
+    d_act.push_back(new QAction("Magenta", this));
+    d_act.push_back(new QAction("Yellow", this));
+    d_act.push_back(new QAction("Gray", this));
+    d_act.push_back(new QAction("Dark Red", this));
+    d_act.push_back(new QAction("Dark Green", this));
+    d_act.push_back(new QAction("Dark Blue", this));
+    d_act.push_back(new QAction("Dark Gray", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getBlue()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getRed()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getGreen()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getBlack()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getCyan()));
+    connect(d_act[5], SIGNAL(triggered()), this, SLOT(getMagenta()));
+    connect(d_act[6], SIGNAL(triggered()), this, SLOT(getYellow()));
+    connect(d_act[7], SIGNAL(triggered()), this, SLOT(getGray()));
+    connect(d_act[8], SIGNAL(triggered()), this, SLOT(getDarkRed()));
+    connect(d_act[9], SIGNAL(triggered()), this, SLOT(getDarkGreen()));
+    connect(d_act[10], SIGNAL(triggered()), this, SLOT(getDarkBlue()));
+    connect(d_act[11], SIGNAL(triggered()), this, SLOT(getDarkGray()));
+
+    QListIterator<QAction*> i(d_act);
+    while(i.hasNext()) {
+      QAction *a = i.next();
+      addAction(a);
+    }
+  }
+
+  ~LineColorMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+  
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("LineColorMenu::getAction: which out of range.\n");
+  }
+
+signals:
+  void whichTrigger(int which, const QString &name);
+
+public slots:
+  void getBlue() { emit whichTrigger(d_which, "blue"); }
+  void getRed() { emit whichTrigger(d_which, "red"); }
+  void getGreen() { emit whichTrigger(d_which, "green"); }
+  void getBlack() { emit whichTrigger(d_which, "black"); }
+  void getCyan() { emit whichTrigger(d_which, "cyan"); }
+  void getMagenta() { emit whichTrigger(d_which, "magenta"); }
+  void getYellow() { emit whichTrigger(d_which, "yellow"); }
+  void getGray() { emit whichTrigger(d_which, "gray"); }
+  void getDarkRed() { emit whichTrigger(d_which, "darkred"); }
+  void getDarkGreen() { emit whichTrigger(d_which, "darkgreen"); }
+  void getDarkBlue() { emit whichTrigger(d_which, "darkblue"); }
+  void getDarkGray() { emit whichTrigger(d_which, "darkgray"); }
+
+private:
+  QList<QAction *> d_act;
+  int d_which;
+};
+
 
 class TimeDisplayForm : public QWidget
 {
@@ -60,15 +138,12 @@ public slots:
 
   void setUpdateTime(double t);
 
-  void setTitle(int which, QString title);
-  void setColor(int which, QString color);
+  void setTitle(int which, const QString &title);
+  void setColor(int which, const QString &color);
 
   void setGrid(bool on);
   void setGridOn();
   void setGridOff();
-
-  void setLineColorAsk();
-  void setLineColorGet();
 
 private slots:
   void newData( const TimeUpdateEvent* );
@@ -80,6 +155,7 @@ signals:
   void plotPointSelected(const QPointF p, int type);
 
 private:
+  int _nplots;
   uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
@@ -92,13 +168,11 @@ private:
   QwtPlotGrid *_grid;
 
   QMenu *_menu;
-  QAction *_gridOnAct;
-  QAction *_gridOffAct;
-  QAction *_colorAct;
+  QAction *_grid_on_act;
+  QAction *_grid_off_act;
 
-  void setupColorDiag();
-  QDialog *_color_diag;
-  QComboBox *_color_comboBox;
+  QList<QMenu*> _lines_menu;
+  QList<LineColorMenu*> _line_color_menu;
 
   QTimer *displayTimer;
   double d_update_time;

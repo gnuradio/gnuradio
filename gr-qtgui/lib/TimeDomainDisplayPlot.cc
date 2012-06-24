@@ -233,6 +233,12 @@ TimeDomainDisplayPlot::setTitle(int which, QString title)
   _plot_curve[which]->setTitle(title);
 }
 
+QString
+TimeDomainDisplayPlot::title(int which)
+{
+  return _plot_curve[which]->title().text();
+}
+
 void
 TimeDomainDisplayPlot::setColor(int which, QString color)
 {
