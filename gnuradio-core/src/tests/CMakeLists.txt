@@ -37,18 +37,10 @@ link_directories(${CPPUNIT_LIBRARY_DIRS})
 # Build benchmarks and non-registered tests
 ########################################################################
 set(tests_not_run #single source per test
-    benchmark_dotprod_fff.cc
-    benchmark_dotprod_fsf.cc
-    benchmark_dotprod_ccf.cc
-    benchmark_dotprod_fcc.cc
-    benchmark_dotprod_scc.cc
-    benchmark_dotprod_ccc.cc
     benchmark_nco.cc
     benchmark_vco.cc
     test_runtime.cc
     test_general.cc
-    test_filter.cc
-    #test_atsc.cc
     test_vmcircbuf.cc
 )
 

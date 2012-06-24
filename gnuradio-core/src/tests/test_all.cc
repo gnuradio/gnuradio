@@ -26,8 +26,6 @@
 #include <gr_unittests.h>
 #include <qa_runtime.h>
 #include <qa_general.h>
-#include <qa_filter.h>
-// #include <qa_atsc.h>
 
 // FIXME add atsc back in.
 
@@ -40,8 +38,6 @@ main (int argc, char **argv)
 
   runner.addTest (qa_runtime::suite ());
   runner.addTest (qa_general::suite ());
-  runner.addTest (qa_filter::suite ());
-  // runner.addTest (qa_atsc::suite ());
   runner.setOutputter(xmlout);
 
   bool was_successful = runner.run ("", false);

@@ -23,6 +23,4 @@
 from gnuradio_core_runtime import *
 from gnuradio_core_general import *
 from gnuradio_core_gengen import *
-from gnuradio_core_filter import *
 from gnuradio_core_io import *
-from gnuradio_core_hier import *
