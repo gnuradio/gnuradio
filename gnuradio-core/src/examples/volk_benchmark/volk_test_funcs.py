@@ -56,7 +56,7 @@ def insert_results(conn, tablename, nitems, iters, res):
     '''
     cols = "kernel, nitems, iters, avg, var, max, min"
     cmd = "INSERT INTO {0} ({1}) VALUES ('{2}', {3}, {4}, {5}, {6}, {7}, {8})".format(
-        tablename, cols, res["kernel"], nitems, iters, 
+        tablename, cols, res["kernel"], nitems, iters,
         res["avg"], res["var"], res["max"], res["min"])
     execute(conn, cmd)
 
@@ -71,7 +71,7 @@ def list_tables(conn):
     c.close()
 
     return t
-    
+
 def get_results(conn, tablename):
     '''
     Gets all results in tablename.
@@ -95,7 +95,7 @@ def get_results(conn, tablename):
         res.append(r)
 
     return res
-    
+
 
 class helper(gr.top_block):
     '''

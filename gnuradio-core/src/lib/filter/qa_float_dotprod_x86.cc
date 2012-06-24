@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -58,7 +58,7 @@ zero_floats (float *buf, unsigned n)
     buf[i] = 0.0;
 }
 
-float 
+float
 ref_float_dotprod (const float *input,
 		   const float *taps, unsigned n_4_float_blocks)
 {
@@ -83,10 +83,10 @@ ref_float_dotprod (const float *input,
   return sum0 + sum1 + sum2 + sum3;
 }
 
-void 
+void
 qa_float_dotprod_x86::setUp ()
 {
-  taps = (float *) calloc16Align (MAX_BLKS, 
+  taps = (float *) calloc16Align (MAX_BLKS,
 				  sizeof (float) * FLOATS_PER_BLK);
 
   input = (float *) calloc16Align (MAX_BLKS,
@@ -106,21 +106,21 @@ qa_float_dotprod_x86::tearDown ()
 }
 
 
-void 
+void
 qa_float_dotprod_x86::zb ()	// "zero both"
 {
   zero_floats (taps, MAX_BLKS * FLOATS_PER_BLK);
   zero_floats (input, MAX_BLKS * FLOATS_PER_BLK);
 }
 
-// 
-// t1 
+//
+// t1
 //
 
 void
 qa_float_dotprod_x86::t1_base (float_dotprod_t float_dotprod)
 {
-  
+
   // cerr << "Testing dump_xmm_regs\n";
   // dump_xmm_regs ();
 
@@ -134,40 +134,40 @@ qa_float_dotprod_x86::t1_base (float_dotprod_t float_dotprod)
   zb ();
   input[0] = 0.5;	taps[0] = 1.0;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (0.5, float_dotprod (input, taps, 1), ERR_DELTA);
-  
+
   zb ();
   input[1] = 2.0;	taps[1] = 1.0;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (2.0, float_dotprod (input, taps, 1), ERR_DELTA);
-  
+
   zb ();
   input[2] = 3.0;	taps[2] = 1.0;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (3.0, float_dotprod (input, taps, 1), ERR_DELTA);
-  
+
   zb ();
   input[3] = 4.0;	taps[3] = 1.0;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (4.0, float_dotprod (input, taps, 1), ERR_DELTA);
-  
+
   // vary each tap
 
   zb ();
   input[0] = 1.0;	taps[0] = 0.5;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (0.5, float_dotprod (input, taps, 1), ERR_DELTA);
-  
+
   zb ();
   input[0] = 1.0;	taps[0] = 2.0;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (2.0, float_dotprod (input, taps, 1), ERR_DELTA);
-  
+
   zb ();
   input[0] = 1.0;	taps[0] = 3.0;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (3.0, float_dotprod (input, taps, 1), ERR_DELTA);
-  
+
   zb ();
   input[0] = 1.0;	taps[0] = 4.0;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (4.0, float_dotprod (input, taps, 1), ERR_DELTA);
 }
 
-// 
-// t2 
+//
+// t2
 //
 void
 qa_float_dotprod_x86::t2_base (float_dotprod_t float_dotprod)
@@ -182,7 +182,7 @@ qa_float_dotprod_x86::t2_base (float_dotprod_t float_dotprod)
 
   input[4] = 19.0;	taps[4] = 23.0;
   CPPUNIT_ASSERT_DOUBLES_EQUAL (752.0, float_dotprod (input, taps, 2), ERR_DELTA);
-  
+
 }
 
 //
@@ -219,7 +219,7 @@ qa_float_dotprod_x86::t1_3dnow ()
     t1_base (float_dotprod_3dnow);
 }
 
-void 
+void
 qa_float_dotprod_x86::t2_3dnow ()
 {
   if (!gr_cpu::has_3dnow ()){
@@ -229,7 +229,7 @@ qa_float_dotprod_x86::t2_3dnow ()
     t2_base (float_dotprod_3dnow);
 }
 
-void 
+void
 qa_float_dotprod_x86::t3_3dnow ()
 {
   if (!gr_cpu::has_3dnow ()){
@@ -239,7 +239,7 @@ qa_float_dotprod_x86::t3_3dnow ()
     t3_base (float_dotprod_3dnow);
 }
 
-void 
+void
 qa_float_dotprod_x86::t1_sse ()
 {
   if (!gr_cpu::has_sse ()){
@@ -249,7 +249,7 @@ qa_float_dotprod_x86::t1_sse ()
     t1_base (float_dotprod_sse);
 }
 
-void 
+void
 qa_float_dotprod_x86::t2_sse ()
 {
   if (!gr_cpu::has_sse ()){
@@ -259,7 +259,7 @@ qa_float_dotprod_x86::t2_sse ()
     t2_base (float_dotprod_sse);
 }
 
-void 
+void
 qa_float_dotprod_x86::t3_sse ()
 {
   if (!gr_cpu::has_sse ()){

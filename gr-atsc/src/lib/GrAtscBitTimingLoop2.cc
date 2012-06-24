@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -45,7 +45,7 @@ GrAtscBitTimingLoop2::GrAtscBitTimingLoop2 ()
     perror ("loop.out");
     exit (1);
   }
-    
+
   fp_ps = fopen ("ps.out", "w");
   if (fp_ps == 0){
     perror ("ps.out");
@@ -70,7 +70,7 @@ GrAtscBitTimingLoop2::forecast(VrSampleRange output,
     inputs[i].size=output.size*decimation + history-1;
   }
   return 0;
-}  
+}
 
 inline float
 GrAtscBitTimingLoop2::filter_error (float e)
@@ -78,7 +78,7 @@ GrAtscBitTimingLoop2::filter_error (float e)
   return e;	// identity function
 }
 
-int 
+int
 GrAtscBitTimingLoop2::work (VrSampleRange output, void *ao[],
 			   VrSampleRange inputs[], void *ai[])
 {
@@ -89,8 +89,8 @@ GrAtscBitTimingLoop2::work (VrSampleRange output, void *ao[],
   // This is required because of our slightly variable decimation factor
   sync (output.index);
 
-  
-  // We are tasked with producing output.size output samples.  
+
+  // We are tasked with producing output.size output samples.
   // We will consume approximately 2 * output.size input samples.
 
 
@@ -117,7 +117,7 @@ GrAtscBitTimingLoop2::work (VrSampleRange output, void *ao[],
   for (k = 0; k < output.size; k++){
 
     left = right;
-    
+
     iType middle_raw = produce_sample (in, ii);
     iType middle_dc = dc.filter (middle_raw);
     middle = middle_raw - middle_dc;
@@ -127,7 +127,7 @@ GrAtscBitTimingLoop2::work (VrSampleRange output, void *ao[],
     right = right_raw - right_dc;
 
     if (use_right_p)	// produce our output
-      out[k] = right;	
+      out[k] = right;
     else
       out[k] = middle;
   }

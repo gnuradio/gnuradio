@@ -2,24 +2,24 @@
 # -*- python -*-
 #
 # Copyright 2003,2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from generate_utils import *
 
@@ -66,7 +66,7 @@ public:
   virtual ~gr_fir_sysconfig ();
 
 ''')
-    
+
     for sig in fir_signatures:
       out.write (('  virtual gr_fir_%s *create_gr_fir_%s (const std::vector<%s> &taps) = 0;\n' %
         (sig, sig, tap_type (sig))))
@@ -83,7 +83,7 @@ public:
 
 /*
  * This returns the single instance of the appropriate derived class.
- * This function must be defined only once in the system, and should be defined 
+ * This function must be defined only once in the system, and should be defined
  * in the platform specific code.
  */
 
@@ -93,7 +93,7 @@ gr_fir_sysconfig *gr_fir_sysconfig_singleton ();
 #endif /* INCLUDED_GR_FIR_SYSCONFIG_H */
 ''')
     out.close ()
-    
+
 
 # ----------------------------------------------------------------
 
@@ -121,7 +121,7 @@ gr_fir_sysconfig::~gr_fir_sysconfig ()
 }
 ''')
     out.close ()
-    
+
 
 # ----------------------------------------------------------------
 

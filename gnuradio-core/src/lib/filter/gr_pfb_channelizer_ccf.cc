@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -32,7 +32,7 @@
 #include <cstdio>
 #include <cstring>
 
-gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans, 
+gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 							 const std::vector<float> &taps,
 							 float oversample_rate)
 {
@@ -41,7 +41,7 @@ gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 }
 
 
-gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans, 
+gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
 						const std::vector<float> &taps,
 						float oversample_rate)
   : gr_block ("pfb_channelizer_ccf",
@@ -50,14 +50,14 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
     d_updated (false), d_numchans(numchans), d_oversample_rate(oversample_rate)
 {
   // The over sampling rate must be rationally related to the number of channels
-  // in that it must be N/i for i in [1,N], which gives an outputsample rate 
+  // in that it must be N/i for i in [1,N], which gives an outputsample rate
   // of [fs/N, fs] where fs is the input sample rate.
   // This tests the specified input sample rate to see if it conforms to this
   // requirement within a few significant figures.
   double intp = 0;
   double fltp = modf(numchans / oversample_rate, &intp);
   if(fltp != 0.0)
-    throw std::invalid_argument("gr_pfb_channelizer: oversample rate must be N/i for i in [1, N]"); 
+    throw std::invalid_argument("gr_pfb_channelizer: oversample rate must be N/i for i in [1, N]");
 
   set_relative_rate(1.0/intp);
 
@@ -96,8 +96,9 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
 
 gr_pfb_channelizer_ccf::~gr_pfb_channelizer_ccf ()
 {
-  delete [] d_idxlut; 
-  
+  delete d_fft;
+  delete [] d_idxlut;
+
   for(unsigned int i = 0; i < d_numchans; i++) {
     delete d_filters[i];
   }
@@ -122,7 +123,7 @@ gr_pfb_channelizer_ccf::set_taps (const std::vector<float> &taps)
   while((float)(tmp_taps.size()) < d_numchans*d_taps_per_filter) {
     tmp_taps.push_back(0.0);
   }
- 
+
   // Partition the filter
   for(i = 0; i < d_numchans; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
@@ -130,7 +131,7 @@ gr_pfb_channelizer_ccf::set_taps (const std::vector<float> &taps)
     for(j = 0; j < d_taps_per_filter; j++) {
       d_taps[i][j] = tmp_taps[i + j*d_numchans];  // add taps to channels in reverse order
     }
-    
+
     // Build a filter for each channel and add it's taps to it
     d_filters[i]->set_taps(d_taps[i]);
   }

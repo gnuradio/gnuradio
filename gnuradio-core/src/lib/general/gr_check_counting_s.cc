@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -64,7 +64,7 @@ gr_check_counting_s::check_16bit (int noutput_items,
 {
   for (int i = 0; i < noutput_items; i++){
     unsigned short  x = in[i];
-    
+
     switch (d_state){
 
     case SEARCHING:
@@ -115,7 +115,7 @@ gr_check_counting_s::check_32bit (int noutput_items,
     unsigned int  x_high16bits = in[i];
     unsigned int  x_low16bits = in[i+1];
     unsigned int  x = x_high16bits<<16 | x_low16bits;
-    
+
     switch (d_state){
 
     case SEARCHING:
@@ -176,7 +176,7 @@ gr_check_counting_s::enter_LOCKED ()
 void
 gr_check_counting_s::log_error (unsigned short expected, unsigned short actual)
 {
-  fprintf (stdout, 
+  fprintf (stdout,
 "gr_check_counting: expected %5d (0x%04x) got %5d (0x%04x) offset %8ld (0x%08lx)\n",
      expected, expected, actual, actual, d_total_shorts, d_total_shorts);
 }
@@ -184,7 +184,7 @@ gr_check_counting_s::log_error (unsigned short expected, unsigned short actual)
 void
 gr_check_counting_s::log_error_32bit (unsigned int expected, unsigned int actual)
 {
-  fprintf (stdout, 
+  fprintf (stdout,
 "gr_check_counting: expected %10d (0x%08x) got %10d (0x%08x) offset %8ld (0x%08lx)\n",
      expected, expected, actual, actual, d_total_shorts, d_total_shorts);
 }

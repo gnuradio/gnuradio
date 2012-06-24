@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Packet Sink
+###################################################
+ -->
+<block>
+	<name>Packet Sink</name>
+	<key>digital_packet_sink</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.packet_sink($sync_vector, $target_queue, $threshold)</make>
+	<param>
+		<name>Sync Vector</name>
+		<key>sync_vector</key>
+		<type>int_vector</type>
+	</param>
+	<param>
+		<name>Target Message Queue</name>
+		<key>target_queue</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Threshold</name>
+		<key>threshold</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+</block>

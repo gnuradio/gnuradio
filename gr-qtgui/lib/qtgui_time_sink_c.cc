@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -27,26 +27,27 @@
 #include <qtgui_time_sink_c.h>
 #include <gr_io_signature.h>
 #include <string.h>
+#include <volk/volk.h>
 
 #include <QTimer>
 
 qtgui_time_sink_c_sptr
-qtgui_make_time_sink_c (int size, double bw,
-			const std::string &name,
-			int nconnections,
-			QWidget *parent)
+qtgui_make_time_sink_c(int size, double bw,
+		       const std::string &name,
+		       int nconnections,
+		       QWidget *parent)
 {
-  return gnuradio::get_initial_sptr(new qtgui_time_sink_c (size, bw, name,
-							   nconnections, parent));
+  return gnuradio::get_initial_sptr
+    (new qtgui_time_sink_c(size, bw, name, nconnections, parent));
 }
 
-qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
-				      const std::string &name,
-				      int nconnections,
-				      QWidget *parent)
-  : gr_sync_block ("time_sink_c",
-		   gr_make_io_signature (nconnections, nconnections, sizeof(gr_complex)),
-		   gr_make_io_signature (0, 0, 0)),
+qtgui_time_sink_c::qtgui_time_sink_c(int size, double bw,
+				     const std::string &name,
+				     int nconnections,
+				     QWidget *parent)
+  : gr_sync_block("time_sink_c",
+		  gr_make_io_signature(nconnections, nconnections, sizeof(gr_complex)),
+		  gr_make_io_signature(0, 0, 0)),
     d_size(size), d_bandwidth(bw), d_name(name),
     d_nconnections(2*nconnections), d_parent(parent)
 {
@@ -59,7 +60,6 @@ qtgui_time_sink_c::qtgui_time_sink_c (int size, double bw,
   }
 
   initialize();
-  set_output_multiple(d_size);
 }
 
 qtgui_time_sink_c::~qtgui_time_sink_c()
@@ -119,8 +119,10 @@ qtgui_time_sink_c::set_time_domain_axis(double min, double max)
 void
 qtgui_time_sink_c::set_update_time(double t)
 {
-  d_update_time = t;
-  d_main_gui->setUpdateTime(d_update_time);
+  //convert update time to ticks
+  gruel::high_res_timer_type tps = gruel::high_res_timer_tps();
+  d_update_time = t * tps;
+  d_main_gui->setUpdateTime(t);
 }
 
 void
@@ -135,10 +137,16 @@ qtgui_time_sink_c::set_color(int which, const std::string &color)
   d_main_gui->setColor(which, color.c_str());
 }
 
+void
+qtgui_time_sink_c::set_resize(int width, int height)
+{
+  d_main_gui->resize(QSize(width, height));
+}
+
 int
-qtgui_time_sink_c::work (int noutput_items,
-			 gr_vector_const_void_star &input_items,
-			 gr_vector_void_star &output_items)
+qtgui_time_sink_c::work(int noutput_items,
+			gr_vector_const_void_star &input_items,
+			gr_vector_void_star &output_items)
 {
   int n=0, j=0, idx=0;
   const gr_complex *in = (const gr_complex*)input_items[idx];
@@ -147,11 +155,11 @@ qtgui_time_sink_c::work (int noutput_items,
     unsigned int datasize = noutput_items - i;
     unsigned int resid = d_size-d_index;
     idx = 0;
-    
+
     // If we have enough input for one full plot, do it
     if(datasize >= resid) {
       d_current_time = gruel::high_res_timer_now();
-      
+
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n+=2) {
 	in = (const gr_complex*)input_items[idx++];
@@ -159,32 +167,31 @@ qtgui_time_sink_c::work (int noutput_items,
 	  d_residbufs[n][d_index+k] = in[j+k].real();
 	  d_residbufs[n+1][d_index+k] = in[j+k].imag();
 	}
-      }	
+      }
 
       // Update the plot if its time
       if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
-	d_last_time = d_current_time;
+	d_last_time = gruel::high_res_timer_now();
 	d_qApplication->postEvent(d_main_gui,
-				  new TimeUpdateEvent(d_residbufs, d_size));	
+				  new TimeUpdateEvent(d_residbufs, d_size));
       }
-      
+
       d_index = 0;
       j += resid;
     }
+
     // Otherwise, copy what we received into the residbufs for next time
-    // because we set the output_multiple, this should never need to be called
     else {
-      assert(0);
       for(n = 0; n < d_nconnections; n+=2) {
 	in = (const gr_complex*)input_items[idx++];
-	for(unsigned int k = 0; k < resid; k++) {
+	for(unsigned int k = 0; k < datasize; k++) {
 	    d_residbufs[n][d_index+k] = in[j+k].real();
 	    d_residbufs[n+1][d_index+k] = in[j+k].imag();
 	}
       }
       d_index += datasize;
       j += datasize;
-    }   
+    }
   }
 
   return noutput_items;

@@ -21,7 +21,7 @@
 */
 static inline void volk_32f_s32f_power_32f_a_sse4_1(float* cVector, const float* aVector, const float power, unsigned int num_points){
   unsigned int number = 0;
-  
+
   float* cPtr = cVector;
   const float* aPtr = aVector;
 
@@ -33,22 +33,22 @@ static inline void volk_32f_s32f_power_32f_a_sse4_1(float* cVector, const float*
   __m128 negatedValues;
   __m128 negativeOneToPower = _mm_set_ps1(powf(-1, power));
   __m128 onesMask = _mm_set_ps1(1);
-  
+
   __m128 aVal, cVal;
   for(;number < quarterPoints; number++){
-    
+
     aVal = _mm_load_ps(aPtr);
     signMask = _mm_cmplt_ps(aVal, zeroValue);
     negatedValues = _mm_sub_ps(zeroValue, aVal);
     aVal = _mm_blendv_ps(aVal, negatedValues, signMask);
-    
+
     // powf4 doesn't support negative values in the base, so we mask them off and then apply the negative after
     cVal = powf4(aVal, vPower); // Takes each input value to the specified power
 
     cVal = _mm_mul_ps( _mm_blendv_ps(onesMask, negativeOneToPower, signMask), cVal);
 
     _mm_store_ps(cPtr,cVal); // Store the results back into the C container
-    
+
     aPtr += 4;
     cPtr += 4;
   }
@@ -78,7 +78,7 @@ static inline void volk_32f_s32f_power_32f_a_sse4_1(float* cVector, const float*
 */
 static inline void volk_32f_s32f_power_32f_a_sse(float* cVector, const float* aVector, const float power, unsigned int num_points){
   unsigned int number = 0;
-  
+
   float* cPtr = cVector;
   const float* aPtr = aVector;
 
@@ -90,22 +90,22 @@ static inline void volk_32f_s32f_power_32f_a_sse(float* cVector, const float* aV
   __m128 negatedValues;
   __m128 negativeOneToPower = _mm_set_ps1(powf(-1, power));
   __m128 onesMask = _mm_set_ps1(1);
-  
+
   __m128 aVal, cVal;
   for(;number < quarterPoints; number++){
-    
+
     aVal = _mm_load_ps(aPtr);
     signMask = _mm_cmplt_ps(aVal, zeroValue);
     negatedValues = _mm_sub_ps(zeroValue, aVal);
     aVal = _mm_or_ps(_mm_andnot_ps(signMask, aVal), _mm_and_ps(signMask, negatedValues) );
-    
+
     // powf4 doesn't support negative values in the base, so we mask them off and then apply the negative after
     cVal = powf4(aVal, vPower); // Takes each input value to the specified power
 
     cVal = _mm_mul_ps( _mm_or_ps( _mm_andnot_ps(signMask, onesMask), _mm_and_ps(signMask, negativeOneToPower) ), cVal);
 
     _mm_store_ps(cPtr,cVal); // Store the results back into the C container
-    
+
     aPtr += 4;
     cPtr += 4;
   }

@@ -36,7 +36,7 @@ def main():
 
     # Split it up into pieces
     channelizer = blks2.pfb_channelizer_ccf(nchans, proto_taps, 2)
-    
+
     # Put the pieces back together again
     syn_taps = [nchans*t for t in proto_taps]
     synthesizer = gr.pfb_synthesizer_ccf(nchans, syn_taps, True)
@@ -48,7 +48,7 @@ def main():
     # the channelizer)
     synthesizer.set_channel_map([ 0,  1,  2,  3,  4,
                                  15, 16, 17, 18, 19])
-    
+
     tb = gr.top_block()
     tb.connect(src, mod, chan, rrc, channelizer)
     tb.connect(rrc, src_snk)
@@ -59,14 +59,14 @@ def main():
 
         vsnk.append(gr.vector_sink_c())
         tb.connect((channelizer,i), vsnk[i])
-        
+
     tb.connect(synthesizer, snk)
     tb.run()
-    
+
     sin  = scipy.array(src_snk.data()[1000:])
     sout = scipy.array(snk.data()[1000:])
 
-    
+
     # Plot original signal
     fs_in = nchans*fs
     f1 = pylab.figure(1, figsize=(16,12), facecolor='w')
@@ -87,7 +87,7 @@ def main():
     s13.set_title("Constellation")
     s13.set_xlim([-2, 2])
     s13.set_ylim([-2, 2])
-    
+
     # Plot channels
     nrows = int(scipy.sqrt(nchans))
     ncols = int(scipy.ceil(float(nchans)/float(nrows)))
@@ -122,7 +122,7 @@ def main():
 
     pylab.show()
 
-    
+
 if __name__ == "__main__":
     try:
         main()

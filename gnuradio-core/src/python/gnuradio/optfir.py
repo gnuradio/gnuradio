@@ -1,23 +1,23 @@
 #
 # Copyright 2004,2005,2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 '''
 Routines for designing optimal FIR filters.
@@ -150,7 +150,7 @@ def high_pass (gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
     # In gr.remez, ntaps = n+1, so n must be even
     if((n+nextra_taps)%2 == 1):
         n += 1
-        
+
     # The remezord typically under-estimates the filter order, so add 2 taps by default
     taps = gr.remez (n + nextra_taps, fo, ao, w, "bandpass")
     return taps
@@ -210,7 +210,7 @@ def remezord (fcuts, mags, devs, fsamp = 2):
     fcuts = fcuts[:]
     mags = mags[:]
     devs = devs[:]
-    
+
     for i in range (len (fcuts)):
         fcuts[i] = float (fcuts[i]) / fsamp
 
@@ -224,11 +224,11 @@ def remezord (fcuts, mags, devs, fsamp = 2):
 
     if nf != 2 * (nbands - 1):
         raise ValueError, "Length of f must be 2 * len (mags) - 2"
-    
+
     for i in range (len (mags)):
         if mags[i] != 0:                        # if not stopband, get relative deviation
             devs[i] = devs[i] / mags[i]
-        
+
     # separate the passband and stopband edges
     f1 = fcuts[0::2]
     f2 = fcuts[1::2]
@@ -254,7 +254,7 @@ def remezord (fcuts, mags, devs, fsamp = 2):
             l = max (l, l1, l2)
 
     n = int (math.ceil (l)) - 1               # need order, not length for remez
-    
+
     # cook up remez compatible result
     ff = [0] + fcuts + [1]
     for i in range (1, len (ff) - 1):

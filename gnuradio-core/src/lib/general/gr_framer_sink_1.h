@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005,2006 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,7 +30,7 @@
 class gr_framer_sink_1;
 typedef boost::shared_ptr<gr_framer_sink_1> gr_framer_sink_1_sptr;
 
-GR_CORE_API gr_framer_sink_1_sptr 
+GR_CORE_API gr_framer_sink_1_sptr
 gr_make_framer_sink_1 (gr_msg_queue_sptr target_queue);
 
 /*!
@@ -41,7 +41,7 @@ gr_make_framer_sink_1 (gr_msg_queue_sptr target_queue);
  * output: none.  Pushes assembled packet into target queue
  *
  * The framer expects a fixed length header of 2 16-bit shorts
- * containing the payload length, followed by the payload.  If the 
+ * containing the payload length, followed by the payload.  If the
  * 2 16-bit shorts are not identical, this packet is ignored.  Better
  * algs are welcome.
  *
@@ -53,7 +53,7 @@ gr_make_framer_sink_1 (gr_msg_queue_sptr target_queue);
  */
 class GR_CORE_API gr_framer_sink_1 : public gr_sync_block
 {
-  friend GR_CORE_API gr_framer_sink_1_sptr 
+  friend GR_CORE_API gr_framer_sink_1_sptr
   gr_make_framer_sink_1 (gr_msg_queue_sptr target_queue);
 
  private:
@@ -80,7 +80,7 @@ class GR_CORE_API gr_framer_sink_1 : public gr_sync_block
   void enter_search();
   void enter_have_sync();
   void enter_have_header(int payload_len, int whitener_offset);
-  
+
   bool header_ok()
   {
     // confirm that two copies of header info are identical

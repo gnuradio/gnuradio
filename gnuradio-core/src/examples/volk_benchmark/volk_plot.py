@@ -29,7 +29,7 @@ def main():
                         default=None, metavar="table",
                         help='Show percent difference to the given type [default: %(default)s]')
     args = parser.parse_args()
-    
+
     # Set up global plotting properties
     matplotlib.rcParams['figure.subplot.bottom'] = 0.2
     matplotlib.rcParams['figure.subplot.top'] = 0.95
@@ -37,7 +37,7 @@ def main():
     matplotlib.rcParams['ytick.labelsize'] = 16
     matplotlib.rcParams['xtick.labelsize'] = 16
     matplotlib.rcParams['legend.fontsize'] = 18
-    
+
     # Get list of tables to compare
     conn = create_connection(args.database)
     tables = list_tables(conn)
@@ -64,7 +64,7 @@ def main():
             except ValueError:
                 tmp_regs[-1].append(r['kernel'])
 
-    # Get only those names that are common in all tables            
+    # Get only those names that are common in all tables
     name_reg = tmp_regs[0]
     for t in tmp_regs[1:]:
         name_reg = list(set(name_reg) & set(t))
@@ -97,7 +97,7 @@ def main():
                         norm_data.append(table_data[t][name]['min'])
                     elif(args.plot == 'mean'):
                         norm_data.append(table_data[t][name]['avg'])
-        
+
 
     # Plot the results
     x0 = xrange(len(name_reg))

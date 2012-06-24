@@ -110,6 +110,7 @@ class waterfall_plotter(grid_plotter_base):
 		self._counter = 0
 		self.set_num_lines(0)
 		self.set_color_mode(COLORS.keys()[0])
+		self.callback = None
 
 	def _init_waterfall(self):
 		"""
@@ -172,6 +173,13 @@ class waterfall_plotter(grid_plotter_base):
 		"""
 		return '%s: %s'%(self.x_label, common.eng_format(x_val, self.x_units))
 
+	def _call_callback(self, x_val, y_val):
+		if self.callback != None:
+			self.callback(x_val,y_val)
+	
+	def set_callback(self,callback):
+		self.callback = callback
+		
 	def _draw_legend(self):
 		"""
 		Draw the color scale legend.
@@ -204,7 +212,7 @@ class waterfall_plotter(grid_plotter_base):
 		Create the texture to fit the fft_size X num_lines.
 		@param flag the set/unset or update flag
 		"""
-		if flag is not None: 
+		if flag is not None:
 			self._resize_texture_flag = flag
 			return
 		if not self._resize_texture_flag: return

@@ -15,6 +15,7 @@
 #include <volk/volk_common.h>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits.hpp>
+#include <stdio.h>
 
 float uniform() {
   return 2.0 * ((float) rand() / RAND_MAX - 0.5);	// uniformly (-1, 1)
@@ -46,7 +47,7 @@ void load_random_data(void *data, volk_type_t type, unsigned int n) {
             case 4:
                 if(type.is_signed) ((int32_t *)data)[i] = (int32_t) scaled_rand;
                 else ((uint32_t *)data)[i] = (uint32_t) scaled_rand;
-            break;           
+            break;
             case 2:
                 if(type.is_signed) ((int16_t *)data)[i] = (int16_t) scaled_rand;
                 else ((uint16_t *)data)[i] = (uint16_t) scaled_rand;
@@ -69,7 +70,7 @@ static std::vector<std::string> get_arch_list(struct volk_func_desc desc) {
         //if(!(archs[i+1] & volk_get_lvarch())) continue; //this arch isn't available on this pc
         archlist.push_back(std::string(desc.indices[i]));
     }
-    
+
     return archlist;
 }
 
@@ -81,15 +82,15 @@ volk_type_t volk_type_from_string(std::string name) {
     type.is_signed = false;
     type.size = 0;
     type.str = name;
-    
+
     if(name.size() < 2) throw std::string("name too short to be a datatype");
-    
+
     //is it a scalar?
-    if(name[0] == 's') { 
+    if(name[0] == 's') {
         type.is_scalar = true;
         name = name.substr(1, name.size()-1);
     }
-    
+
     //get the data size
     size_t last_size_pos = name.find_last_of("0123456789");
     if(last_size_pos < 0) throw std::string("no size spec in type ").append(name);
@@ -98,7 +99,7 @@ volk_type_t volk_type_from_string(std::string name) {
 
     assert(((size % 8) == 0) && (size <= 64) && (size != 0));
     type.size = size/8; //in bytes
-    
+
     for(size_t i=last_size_pos+1; i < name.size(); i++) {
         switch (name[i]) {
         case 'f':
@@ -117,19 +118,19 @@ volk_type_t volk_type_from_string(std::string name) {
             throw;
         }
     }
-    
+
     return type;
 }
 
-static void get_signatures_from_name(std::vector<volk_type_t> &inputsig, 
-                                   std::vector<volk_type_t> &outputsig, 
+static void get_signatures_from_name(std::vector<volk_type_t> &inputsig,
+                                   std::vector<volk_type_t> &outputsig,
                                    std::string name) {
     boost::char_separator<char> sep("_");
     boost::tokenizer<boost::char_separator<char> > tok(name, sep);
     std::vector<std::string> toked;
     tok.assign(name);
     toked.assign(tok.begin(), tok.end());
-    
+
     assert(toked[0] == "volk");
     toked.erase(toked.begin());
 
@@ -143,7 +144,7 @@ static void get_signatures_from_name(std::vector<volk_type_t> &inputsig,
         try {
             type = volk_type_from_string(token);
             if(side == SIDE_NAME) side = SIDE_OUTPUT; //if this is the first one after the name...
-            
+
             if(side == SIDE_INPUT) inputsig.push_back(type);
             else outputsig.push_back(type);
         } catch (...){
@@ -160,7 +161,7 @@ static void get_signatures_from_name(std::vector<volk_type_t> &inputsig,
                 side = SIDE_NAME;
                 fn_name.append("_");
                 fn_name.append(token);
-            } 
+            }
             else if(side == SIDE_OUTPUT) {
                 if(token != toked.back()) throw; //the last token in the name is the alignment
             }
@@ -168,6 +169,7 @@ static void get_signatures_from_name(std::vector<volk_type_t> &inputsig,
     }
     //we don't need an output signature (some fn's operate on the input data, "in place"), but we do need at least one input!
     assert(inputsig.size() != 0);
+    
 }
 
 inline void run_cast_test1(volk_fn_1arg func, std::vector<void *> &buffs, unsigned int vlen, unsigned int iter, std::string arch) {
@@ -223,7 +225,7 @@ bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
             }
         }
     }
-    
+
     return fail;
 }
 
@@ -239,7 +241,7 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
             }
         }
     }
-    
+
     return fail;
 }
 
@@ -261,13 +263,14 @@ bool run_volk_tests(struct volk_func_desc desc,
                     lv_32fc_t scalar,
                     int vlen,
                     int iter,
-                    std::vector<std::string> *best_arch_vector = 0
+                    std::vector<std::string> *best_arch_vector = 0,
+                    std::string puppet_master_name = "NULL"
                    ) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
-    
+
     //first let's get a list of available architectures for the test
     std::vector<std::string> arch_list = get_arch_list(desc);
-    
+
     if(arch_list.size() < 2) {
         std::cout << "no architectures to test" << std::endl;
         return false;
@@ -286,9 +289,9 @@ bool run_volk_tests(struct volk_func_desc desc,
         if(inputsig[i].is_scalar) {
             inputsc.push_back(inputsig[i]);
             inputsig.erase(inputsig.begin() + i);
+            i -= 1;
         }
     }
-
     //for(int i=0; i<inputsig.size(); i++) std::cout << "Input: " << inputsig[i].str << std::endl;
     //for(int i=0; i<outputsig.size(); i++) std::cout << "Output: " << outputsig[i].str << std::endl;
     std::vector<void *> inbuffs;
@@ -299,7 +302,7 @@ bool run_volk_tests(struct volk_func_desc desc,
     for(size_t i=0; i<inbuffs.size(); i++) {
         load_random_data(inbuffs[i], inputsig[i], vlen);
     }
-    
+
     //ok let's make a vector of vector of void buffers, which holds the input/output vectors for each arch
     std::vector<std::vector<void *> > test_data;
     for(size_t i=0; i<arch_list.size(); i++) {
@@ -312,7 +315,7 @@ bool run_volk_tests(struct volk_func_desc desc,
         }
         test_data.push_back(arch_buffs);
     }
-    
+
     std::vector<volk_type_t> both_sigs;
     both_sigs.insert(both_sigs.end(), outputsig.begin(), outputsig.end());
     both_sigs.insert(both_sigs.end(), inputsig.begin(), inputsig.end());
@@ -326,7 +329,7 @@ bool run_volk_tests(struct volk_func_desc desc,
         switch(both_sigs.size()) {
             case 1:
                 if(inputsc.size() == 0) {
-                    run_cast_test1((volk_fn_1arg)(manual_func), test_data[i], vlen, iter, arch_list[i]); 
+                    run_cast_test1((volk_fn_1arg)(manual_func), test_data[i], vlen, iter, arch_list[i]);
                 } else if(inputsc.size() == 1 && inputsc[0].is_float) {
                     if(inputsc[0].is_complex) {
                         run_cast_test1_s32fc((volk_fn_1arg_s32fc)(manual_func), test_data[i], scalar, vlen, iter, arch_list[i]);
@@ -364,23 +367,23 @@ bool run_volk_tests(struct volk_func_desc desc,
                 throw "no function handler for this signature";
                 break;
         }
-        
+
         end = clock();
         double arch_time = (double)(end-start)/(double)CLOCKS_PER_SEC;
         std::cout << arch_list[i] << " completed in " << arch_time << "s" << std::endl;
 
         profile_times.push_back(arch_time);
     }
-    
+
     //and now compare each output to the generic output
     //first we have to know which output is the generic one, they aren't in order...
     size_t generic_offset=0;
-    for(size_t i=0; i<arch_list.size(); i++) 
+    for(size_t i=0; i<arch_list.size(); i++)
         if(arch_list[i] == "generic") generic_offset=i;
 
     //now compare
     //if(outputsig.size() == 0) outputsig = inputsig; //a hack, i know
-    
+
     bool fail = false;
     bool fail_global = false;
     std::vector<bool> arch_results;
@@ -438,7 +441,7 @@ bool run_volk_tests(struct volk_func_desc desc,
         }
         arch_results.push_back(!fail);
     }
-        
+
     double best_time = std::numeric_limits<double>::max();
     std::string best_arch = "generic";
     for(size_t i=0; i < arch_list.size(); i++) {
@@ -447,10 +450,15 @@ bool run_volk_tests(struct volk_func_desc desc,
             best_arch = arch_list[i];
         }
     }
-        
+
     std::cout << "Best arch: " << best_arch << std::endl;
     if(best_arch_vector) {
-        best_arch_vector->push_back(name + std::string(" ") + best_arch);
+        if(puppet_master_name == "NULL") {
+            best_arch_vector->push_back(name + std::string(" ") + best_arch);
+        }
+        else {
+            best_arch_vector->push_back(puppet_master_name + std::string(" ") + best_arch);
+        }
     }
 
     return fail_global;

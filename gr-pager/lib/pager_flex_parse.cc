@@ -1,18 +1,18 @@
 /*
  * Copyright 2004,2006,2007,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,7 +50,7 @@ int pager_flex_parse::work(int noutput_items,
     gr_vector_void_star &output_items)
 {
     const gr_int32 *in = (const gr_int32 *)input_items[0];
-    
+
     int i = 0;
     while (i < noutput_items) {
 	// Accumulate one whole frame's worth of data words (88 of them)
@@ -74,8 +74,8 @@ void pager_flex_parse::parse_capcode(gr_int32 aw1, gr_int32 aw2)
 {
     d_laddr = (aw1 < 0x008001L) ||
               (aw1 > 0x1E0000L) ||
-	      (aw1 > 0x1E7FFEL);	
-    
+	      (aw1 > 0x1E7FFEL);
+
     if (d_laddr)
         d_capcode = aw1+((aw2^0x001FFFFF)<<15)+0x1F9000;  // Don't ask
     else
@@ -95,7 +95,7 @@ void pager_flex_parse::parse_data()
     // Address start address is bits 9-8, plus one for offset
     int voffset = (biw >> 10) & 0x3f;
     int aoffset = ((biw >> 8) & 0x03) + 1;
-    
+
     //printf("BIW:%08X AW:%02i-%02i\n", biw, aoffset, voffset);
 
     // Iterate through pages and dispatch to appropriate handler
@@ -109,9 +109,9 @@ void pager_flex_parse::parse_data()
 	parse_capcode(d_datawords[i], d_datawords[i+1]);
         if (d_laddr)
            i++;
-                           
+
         if (d_capcode < 0)			// Invalid address, skip
-          continue;        
+          continue;
 
         // Parse vector information word for address @ offset 'i'
 	gr_int32 viw = d_datawords[j];
@@ -122,7 +122,7 @@ void pager_flex_parse::parse_data()
 	if (is_numeric_page(d_type))
             len &= 0x07;
         int mw2 = mw1+len;
-	    
+
 	if (mw1 == 0 && mw2 == 0)
 	    continue;				// Invalid VIW
 
@@ -135,7 +135,7 @@ void pager_flex_parse::parse_data()
 	d_payload.str("");
 	d_payload.setf(std::ios::showpoint);
 	d_payload << std::setprecision(6) << std::setw(7)
-		  << d_freq/1e6 << FIELD_DELIM 
+		  << d_freq/1e6 << FIELD_DELIM
 		  << std::setw(10) << d_capcode << FIELD_DELIM
 		  << flex_page_desc[d_type] << FIELD_DELIM;
 
@@ -167,7 +167,7 @@ void pager_flex_parse::parse_alphanumeric(int mw1, int mw2, int j)
 	frag = (d_datawords[j+1] >> 11) & 0x03;
 	cont = (d_datawords[j+1] >> 10) & 0x01;
 	mw2--;
-    }    
+    }
 
     //d_payload << frag << FIELD_DELIM;
     //d_payload << cont << FIELD_DELIM;
@@ -175,17 +175,17 @@ void pager_flex_parse::parse_alphanumeric(int mw1, int mw2, int j)
     for (int i = mw1; i <= mw2; i++) {
 	gr_int32 dw = d_datawords[i];
 	unsigned char ch;
-	
+
 	if (i > mw1 || frag != 0x03) {
 	    ch = dw & 0x7F;
 	    if (ch != 0x03)
 		d_payload << ch;
 	}
-	
+
 	ch = (dw >> 7) & 0x7F;
 	if (ch != 0x03)	// Fill
 	    d_payload << ch;
-	    	
+
 	ch = (dw >> 14) & 0x7F;
 	if (ch != 0x03)	// Fill
 	    d_payload << ch;
@@ -212,7 +212,7 @@ void pager_flex_parse::parse_numeric(int mw1, int mw2, int j)
 	count += 10;	// Skip 10 header bits for numbered numeric pages
     else
 	count += 2;	// Otherwise skip 2
-    
+
     for (int i = mw1; i <= mw2; i++) {
 	for (int k = 0; k < 21; k++) {
 	    // Shift LSB from data word into digit
@@ -226,7 +226,7 @@ void pager_flex_parse::parse_numeric(int mw1, int mw2, int j)
 		count = 4;
 	    }
 	}
-	
+
 	dw = d_datawords[i];
     }
 }

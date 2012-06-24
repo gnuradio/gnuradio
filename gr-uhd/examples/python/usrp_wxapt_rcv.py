@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, audio, blks2, uhd
 from gnuradio.eng_option import eng_option
@@ -57,10 +57,10 @@ class wxapt_rx_block (stdgui2.std_top_block):
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
-        
+
         self.frame = frame
         self.panel = panel
-        
+
         self.vol = 0
         self.state = "FREQ"
         self.freq = 0
@@ -102,7 +102,7 @@ class wxapt_rx_block (stdgui2.std_top_block):
 
         # sound card as final sink
         self.audio_sink = audio.sink (int (audio_rate), options.audio_output)
-        
+
         # now wire it all together
         self.connect (self.u, self.chan_filt, self.guts,
                       self.volume_control, self.audio_sink)
@@ -157,13 +157,13 @@ class wxapt_rx_block (stdgui2.std_top_block):
             vbox.Add (post_deemph_fft.win, 4, wx.EXPAND)
 
         if 1:
-            post_filt_fft = fftsink2.fft_sink_f (self.panel, title="Post Filter", 
+            post_filt_fft = fftsink2.fft_sink_f (self.panel, title="Post Filter",
                                                 fft_size=512, sample_rate=audio_rate,
                                                 y_per_div=10, ref_level=0)
             self.connect (self.guts.audio_filter, post_filt_fft)
             vbox.Add (post_filt_fft.win, 4, wx.EXPAND)
 
-        
+
         # control area form at bottom
         self.myform = myform = form.form()
 
@@ -224,7 +224,7 @@ class wxapt_rx_block (stdgui2.std_top_block):
             elif self.rot <=-3:
                 self.set_vol(self.vol - step)
                 self.rot += 3
-            
+
     def on_button (self, event):
         if event.value == 0:        # button up
             return
@@ -234,7 +234,7 @@ class wxapt_rx_block (stdgui2.std_top_block):
         else:
             self.state = "FREQ"
         self.update_status_bar ()
-        
+
 
     def set_vol (self, vol):
         g = self.volume_range()
@@ -242,7 +242,7 @@ class wxapt_rx_block (stdgui2.std_top_block):
         self.volume_control.set_k(10**(self.vol/10))
         self.myform['volume'].set_value(self.vol)
         self.update_status_bar ()
-                                        
+
     def set_freq(self, target_freq):
         """
         Set the center frequency we're interested in.
@@ -275,7 +275,7 @@ class wxapt_rx_block (stdgui2.std_top_block):
 
     def volume_range(self):
         return (-20.0, 0.0, 0.5)
-        
+
 
 if __name__ == '__main__':
     app = stdgui2.stdapp (wxapt_rx_block, "USRP WXAPT RX")

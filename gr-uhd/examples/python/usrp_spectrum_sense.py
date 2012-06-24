@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, eng_notation, window
 from gnuradio import audio
@@ -35,7 +35,7 @@ sys.stderr.write("Warning: this may have issues on some machines+Python version 
 class ThreadClass(threading.Thread):
     def run(self):
         return
-    
+
 class tune(gr.feval_dd):
     """
     This class allows C++ code to callback into python.
@@ -158,13 +158,13 @@ class my_top_block(gr.top_block):
         power = 0
         for tap in mywindow:
             power += tap*tap
-            
+
         c2mag = gr.complex_to_mag_squared(self.fft_size)
 
         # FIXME the log10 primitive is dog slow
         log = gr.nlog10_ff(10, self.fft_size,
                            -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
-		
+
         # Set the freq_step to 75% of the actual data throughput.
         # This allows us to discard the bins on both ends of the spectrum.
 
@@ -174,7 +174,7 @@ class my_top_block(gr.top_block):
         self.max_center_freq = self.min_center_freq + (nsteps * self.freq_step)
 
         self.next_freq = self.min_center_freq
-        
+
         tune_delay  = max(0, int(round(options.tune_delay * usrp_rate / self.fft_size)))  # in fft_frames
         dwell_delay = max(1, int(round(options.dwell_delay * usrp_rate / self.fft_size))) # in fft_frames
 
@@ -207,7 +207,7 @@ class my_top_block(gr.top_block):
             sys.exit(1)
 
         return target_freq
-                          
+
 
     def set_freq(self, target_freq):
         """
@@ -237,14 +237,14 @@ def main_loop(tb):
         print m.center_freq
 
         # FIXME do something useful with the data...
-        
+
         # m.data are the mag_squared of the fft output (they are in the
         # standard order.  I.e., bin 0 == DC.)
         # You'll probably want to do the equivalent of "fftshift" on them
         # m.raw_data is a string that contains the binary floats.
         # You could write this as binary to a file.
 
-    
+
 if __name__ == '__main__':
     t = ThreadClass()
     t.start()
@@ -253,6 +253,6 @@ if __name__ == '__main__':
     try:
         tb.start()
         main_loop(tb)
-        
+
     except KeyboardInterrupt:
         pass

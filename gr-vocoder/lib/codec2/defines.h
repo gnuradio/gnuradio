@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
 
-  FILE........: defines.h                                                     
-  AUTHOR......: David Rowe 
-  DATE CREATED: 23/4/93                                                       
-                                                                             
-  Defines and structures used throughout the codec.			     
-                                                                             
+  FILE........: defines.h
+  AUTHOR......: David Rowe
+  DATE CREATED: 23/4/93
+
+  Defines and structures used throughout the codec.
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -29,9 +29,9 @@
 #define __DEFINES__
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-				DEFINES                                       
-                                                                             
+
+				DEFINES
+
 \*---------------------------------------------------------------------------*/
 
 /* General defines */
@@ -58,9 +58,9 @@
 #define P_MAX    160		/* maximum pitch                        */
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-				TYPEDEFS                                      
-                                                                             
+
+				TYPEDEFS
+
 \*---------------------------------------------------------------------------*/
 
 /* Structure to hold model parameters for one frame */

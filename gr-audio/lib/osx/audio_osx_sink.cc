@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio.
  *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -144,10 +144,10 @@ audio_osx_sink::audio_osx_sink (int sample_rate,
   input.inputProcRefCon = this;
 
   err = AudioUnitSetProperty (d_OutputAU,
-			      kAudioUnitProperty_SetRenderCallback, 
+			      kAudioUnitProperty_SetRenderCallback,
 			      kAudioUnitScope_Input,
-			      0, 
-			      &input, 
+			      0,
+			      &input,
 			      sizeof (input));
   CheckErrorAndThrow (err, "AudioUnitSetProperty Render Callback", "audio_osx_sink::audio_osx_sink");
 
@@ -355,11 +355,11 @@ audio_osx_sink::work (int noutput_items,
 }
 
 OSStatus audio_osx_sink::AUOutputCallback
-(void *inRefCon, 
- AudioUnitRenderActionFlags *ioActionFlags, 
- const AudioTimeStamp *inTimeStamp, 
- UInt32 inBusNumber, 
- UInt32 inNumberFrames, 
+(void *inRefCon,
+ AudioUnitRenderActionFlags *ioActionFlags,
+ const AudioTimeStamp *inTimeStamp,
+ UInt32 inBusNumber,
+ UInt32 inNumberFrames,
  AudioBufferList *ioData)
 {
   audio_osx_sink* This = (audio_osx_sink*) inRefCon;

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -97,7 +97,7 @@ static void report_error( const char *msg1, const char *msg2 )
   return;
 }
 
-gr_udp_source::gr_udp_source(size_t itemsize, const char *host, 
+gr_udp_source::gr_udp_source(size_t itemsize, const char *host,
 			     unsigned short port, int payload_size,
 			     bool eof, bool wait)
   : gr_sync_block ("udp_source",
@@ -116,7 +116,7 @@ gr_udp_source::gr_udp_source(size_t itemsize, const char *host,
     report_error( "gr_udp_source WSAStartup", "can't open socket" );
   }
 #endif
-  
+
   // Set up the address stucture for the source address and port numbers
   // Get the source IP address from the host name
   struct addrinfo *ip_src;      // store the source IP address to use
@@ -186,10 +186,10 @@ gr_udp_source::gr_udp_source(size_t itemsize, const char *host,
 }
 
 gr_udp_source_sptr
-gr_make_udp_source (size_t itemsize, const char *ipaddr, 
+gr_make_udp_source (size_t itemsize, const char *ipaddr,
 		    unsigned short port, int payload_size, bool eof, bool wait)
 {
-  return gnuradio::get_initial_sptr(new gr_udp_source (itemsize, ipaddr, 
+  return gnuradio::get_initial_sptr(new gr_udp_source (itemsize, ipaddr,
 						port, payload_size, eof, wait));
 }
 
@@ -213,7 +213,7 @@ gr_udp_source::~gr_udp_source ()
 #endif
 }
 
-int 
+int
 gr_udp_source::work (int noutput_items,
 		     gr_vector_const_void_star &input_items,
 		     gr_vector_void_star &output_items)
@@ -233,13 +233,13 @@ gr_udp_source::work (int noutput_items,
     bytes_received = nbytes;
 
     #if SRC_VERBOSE
-    printf("\tTemp buff size: %d  offset: %d (bytes_received: %d) (noutput_items: %d)\n", 
+    printf("\tTemp buff size: %d  offset: %d (bytes_received: %d) (noutput_items: %d)\n",
 	   d_residual, d_temp_offset, bytes_received, noutput_items);
     #endif
 
     // Increment pointer
     out += bytes_received;
-    
+
     // Update indexing of amount of bytes left in the buffer
     d_residual -= nbytes;
     d_temp_offset += nbytes;
@@ -280,7 +280,7 @@ gr_udp_source::work (int noutput_items,
     // This is a non-blocking call with a timeout set in the constructor
     r = recv(d_socket, d_temp_buff, d_payload_size, 0);  // get the entire payload or the what's available
 
-    // If r > 0, round it down to a multiple of d_itemsize 
+    // If r > 0, round it down to a multiple of d_itemsize
     // (If sender is broken, don't propagate problem)
     if (r > 0)
       r = (r/d_itemsize) * d_itemsize;
@@ -289,7 +289,7 @@ gr_udp_source::work (int noutput_items,
     if(r == -1) {
       if( is_error(EAGAIN) ) {  // handle non-blocking call timeout
         #if SRC_VERBOSE
-	printf("UDP receive timed out\n"); 
+	printf("UDP receive timed out\n");
         #endif
 
 	if( d_wait ) {
@@ -324,12 +324,12 @@ gr_udp_source::work (int noutput_items,
     else {
       // Calculate the number of bytes we can take from the buffer in this call
       nbytes = std::min(r, total_bytes-bytes_received);
-      
+
       // adjust the total number of bytes we have to round down to nearest integer of an itemsize
-      nbytes -= ((bytes_received+nbytes) % d_itemsize);   
+      nbytes -= ((bytes_received+nbytes) % d_itemsize);
 
       // copy the number of bytes we want to look at here
-      memcpy(out, d_temp_buff, nbytes);    
+      memcpy(out, d_temp_buff, nbytes);
 
       d_residual = r - nbytes;                      // save the number of bytes stored
       d_temp_offset=nbytes;                         // reset buffer index
@@ -350,7 +350,7 @@ gr_udp_source::work (int noutput_items,
   }
 
   #if SRC_VERBOSE
-  printf("Total Bytes Received: %d (bytes_received / noutput_items = %d / %d)\n", 
+  printf("Total Bytes Received: %d (bytes_received / noutput_items = %d / %d)\n",
 	 bytes_received, bytes_received, noutput_items);
   #endif
 

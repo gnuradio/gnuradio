@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -36,7 +36,7 @@
 
 //FIXME  Eventually generalize this to fixed point
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 class gr_nco {
 public:
   gr_nco () : phase (0), phase_inc(0) {}
@@ -66,11 +66,11 @@ public:
 
   // increment current phase angle
 
-  void step () 
-  { 
-    phase += phase_inc; 
+  void step ()
+  {
+    phase += phase_inc;
     if (fabs (phase) > M_PI){
-      
+
       while (phase > M_PI)
 	phase -= 2*M_PI;
 
@@ -83,7 +83,7 @@ public:
   {
     phase += phase_inc * n;
     if (fabs (phase) > M_PI){
-      
+
       while (phase > M_PI)
 	phase -= 2*M_PI;
 
@@ -117,14 +117,14 @@ protected:
   double phase_inc;
 };
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 void
 gr_nco<o_type,i_type>::sincos (float *sinx, float *cosx) const
 {
   gr_sincosf (phase, sinx, cosx);
 }
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 void
 gr_nco<o_type,i_type>::sin (float *output, int noutput_items, double ampl)
 {
@@ -134,7 +134,7 @@ gr_nco<o_type,i_type>::sin (float *output, int noutput_items, double ampl)
   }
 }
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 void
 gr_nco<o_type,i_type>::cos (float *output, int noutput_items, double ampl)
 {
@@ -144,7 +144,7 @@ gr_nco<o_type,i_type>::cos (float *output, int noutput_items, double ampl)
   }
 }
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 void
 gr_nco<o_type,i_type>::sin (short *output, int noutput_items, double ampl)
 {
@@ -154,7 +154,7 @@ gr_nco<o_type,i_type>::sin (short *output, int noutput_items, double ampl)
   }
 }
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 void
 gr_nco<o_type,i_type>::cos (short *output, int noutput_items, double ampl)
 {
@@ -164,7 +164,7 @@ gr_nco<o_type,i_type>::cos (short *output, int noutput_items, double ampl)
   }
 }
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 void
 gr_nco<o_type,i_type>::sin (int *output, int noutput_items, double ampl)
 {
@@ -174,7 +174,7 @@ gr_nco<o_type,i_type>::sin (int *output, int noutput_items, double ampl)
   }
 }
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 void
 gr_nco<o_type,i_type>::cos (int *output, int noutput_items, double ampl)
 {
@@ -184,7 +184,7 @@ gr_nco<o_type,i_type>::cos (int *output, int noutput_items, double ampl)
   }
 }
 
-template<class o_type, class i_type> 
+template<class o_type, class i_type>
 void
 gr_nco<o_type,i_type>::sincos (gr_complex *output, int noutput_items, double ampl)
 {

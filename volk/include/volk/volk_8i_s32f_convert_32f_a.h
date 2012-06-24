@@ -17,7 +17,7 @@
 static inline void volk_8i_s32f_convert_32f_a_sse4_1(float* outputVector, const int8_t* inputVector, const float scalar, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int sixteenthPoints = num_points / 16;
-    
+
     float* outputVectorPtr = outputVector;
     const float iScalar = 1.0 / scalar;
     __m128 invScalar = _mm_set_ps1(iScalar);

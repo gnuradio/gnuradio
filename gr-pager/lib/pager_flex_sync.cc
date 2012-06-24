@@ -1,18 +1,18 @@
 /*
  * Copyright 2004,2006,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -36,7 +36,7 @@ pager_flex_sync_sptr pager_make_flex_sync()
     return gnuradio::get_initial_sptr(new pager_flex_sync());
 }
 
-// FLEX sync block takes input from sliced baseband stream [0-3] at specified 
+// FLEX sync block takes input from sliced baseband stream [0-3] at specified
 // channel rate.  Symbol timing is established based on receiving one of the
 // defined FLEX protocol synchronization words.  The block outputs one FLEX frame
 // worth of bits on each output phase for the data portion of the frame. Unused phases
@@ -75,7 +75,7 @@ bool pager_flex_sync::test_sync(unsigned char sym)
     //
     // Where BBBBBBBB is always 0xA6C6AAAA
     // and AAAA^CCCC is 0xFFFF
-    // 
+    //
     // Specific values of AAAA determine what bps and encoding the
     // packet is beyond the frame information word
     //
@@ -158,9 +158,9 @@ void pager_flex_sync::enter_sync2()
 	// We're here at the center of a 1600 baud bit
 	// So this hack puts the index and bit counter
 	// in the right place for 3200 bps.
-        d_index = d_index/2-d_spb/2;         
-	d_count = -1;                
-    }				     
+        d_index = d_index/2-d_spb/2;
+	d_count = -1;
+    }
 }
 
 void pager_flex_sync::enter_data()
@@ -177,7 +177,7 @@ void pager_flex_sync::parse_fiw()
     // Bits 31-28 are frame number related, but unknown function
     // This might be a checksum
     d_unknown2 = pageri_reverse_bits8((d_fiw >> 24) & 0xF0);
-	
+
     // Cycle is bits 27-24, reversed
     d_cycle = pageri_reverse_bits8((d_fiw >> 20) & 0xF0);
 
@@ -204,7 +204,7 @@ int pager_flex_sync::output_symbol(unsigned char sym)
     // At 1600 bps, 2-level, a single "phase" is transmitted with bit
     // value '0' using level '3' and bit value '1' using level '0'.
     //
-    // At 1600 bps, 4-level, a second "phase" is transmitted, and the 
+    // At 1600 bps, 4-level, a second "phase" is transmitted, and the
     // di-bits are encoded with a gray code:
     //
     // Symbol	Phase 1  Phase 2
@@ -220,9 +220,9 @@ int pager_flex_sync::output_symbol(unsigned char sym)
     // additionally two streams are interleaved on alternating symbols.
     // Thus, PHASE A (and PHASE B if 4-level) are decoded on one symbol,
     // then PHASE C (and PHASE D if 4-level) are decoded on the next.
-    
+
     int bits = 0;
-    
+
     if (d_baudrate == 1600) {
 	d_bit_a = (sym < 2);
 	if (d_levels == 4)
@@ -275,7 +275,7 @@ int pager_flex_sync::general_work(int noutput_items,
     while (i < ninputs && j < noutput_items) {
         unsigned char sym = *in++; i++;
 	d_index = (d_index+1) % d_spb;
-    
+
         switch (d_state) {
             case ST_IDLE:
 		// Continually compare the received symbol stream
@@ -283,14 +283,14 @@ int pager_flex_sync::general_work(int noutput_items,
                 if (test_sync(sym))
                     enter_syncing();
                 break;
-    
+
             case ST_SYNCING:
 		// Wait until we stop seeing sync, then calculate
 		// the center of the bit period (d_center)
                 if (!test_sync(sym))
                     enter_sync1();
                 break;
-    
+
             case ST_SYNC1:
 		// Skip 16 bits of dotting, then accumulate 32 bits
 		// of Frame Information Word.
@@ -300,11 +300,11 @@ int pager_flex_sync::general_work(int noutput_items,
 			// FIW is accumulated, call BCH to error correct it
 			pageri_bch3221(d_fiw);
 			parse_fiw();
-                        enter_sync2();  
+                        enter_sync2();
 		    }
                 }
                 break;
-    
+
             case ST_SYNC2:
 		// This part and the remainder of the frame are transmitted
 		// at either 1600 bps or 3200 bps based on the received
@@ -316,14 +316,14 @@ int pager_flex_sync::general_work(int noutput_items,
                         enter_data();
                 }
                 break;
-    
+
             case ST_DATA:
-		// The data portion of the frame is 1760 ms long at either 
+		// The data portion of the frame is 1760 ms long at either
 		// baudrate.  This is 2816 bits @ 1600 bps and 5632 bits @ 3200 bps.
 		// The output_symbol() routine decodes and doles out the bits
 		// to each of the four transmitted phases of FLEX interleaved codes.
                 if (d_index == d_center) {
-		    j += output_symbol(sym);		    
+		    j += output_symbol(sym);
                     if (++d_count == d_baudrate*1760/1000)
                         enter_idle();
 		}

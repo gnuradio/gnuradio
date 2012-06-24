@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2006,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 import math
@@ -53,7 +53,7 @@ class test_kludge_copy(gr_unittest.TestCase):
         self.tb.run()
         dst0_data = dst0.data()
         self.assertEqual(src0_data, dst0_data)
-	
+
     def test_002(self):
         # 2 input streams; 2 output streams
         src0_data = self.make_random_int_tuple(16000)
@@ -70,7 +70,7 @@ class test_kludge_copy(gr_unittest.TestCase):
         dst1_data = dst1.data()
         self.assertEqual(src0_data, dst0_data)
         self.assertEqual(src1_data, dst1_data)
-	
+
     # Note: this is disabled due to triggering bug in ticket:181
     # It only occurs with new top block code
     def xtest_003(self):
@@ -88,4 +88,4 @@ class test_kludge_copy(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_kludge_copy, "test_kludge_copy.xml")
-    
+

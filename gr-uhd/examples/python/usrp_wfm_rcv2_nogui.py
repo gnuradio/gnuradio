@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, optfir, audio, blks2, uhd
 from gnuradio.eng_option import eng_option
@@ -55,13 +55,13 @@ class wfm_rx_block (gr.top_block):
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
-        
+
         if abs(options.f1 - options.f2) > 5.5e6:
             print "Sorry, two stations must be within 5.5MHz of each other"
             raise SystemExit
 
         f = (options.f1, options.f2)
-        
+
         self.vol = .1
         self.state = "FREQ"
 
@@ -130,7 +130,7 @@ class wfm_rx_block (gr.top_block):
            tr = uhd.tune_request(f[n], rf_freq=mid_freq,
                                  rf_freq_policy=uhd.tune_request.POLICY_MANUAL)
            self.u.set_center_freq(tr, n)
-           
+
            # Set gain for each channel
            self.set_gain(options.gain, n)
 

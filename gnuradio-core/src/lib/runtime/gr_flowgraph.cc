@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -44,7 +44,7 @@ gr_flowgraph_sptr gr_make_flowgraph()
 gr_flowgraph::gr_flowgraph()
 {
 }
-  
+
 gr_flowgraph::~gr_flowgraph()
 {
 }
@@ -57,7 +57,7 @@ unique_vector(std::vector<T> v)
 {
   std::vector<T> result;
   std::insert_iterator<std::vector<T> > inserter(result, result.begin());
-  
+
   sort(v.begin(), v.end());
   unique_copy(v.begin(), v.end(), inserter);
   return result;
@@ -113,7 +113,7 @@ gr_flowgraph::validate()
     if (!((*p)->check_topology(ninputs, noutputs))) {
       std::stringstream msg;
       msg << "check topology failed on " << (*p)
-	  << " using ninputs=" << ninputs 
+	  << " using ninputs=" << ninputs
 	  << ", noutputs=" << noutputs;
       throw std::runtime_error(msg.str());
     }
@@ -194,7 +194,7 @@ gr_flowgraph::calc_used_ports(gr_basic_block_sptr block, bool check_inputs)
 {
   std::vector<int> tmp;
 
-  // Collect all seen ports 
+  // Collect all seen ports
   gr_edge_vector_t edges = calc_connections(block, check_inputs);
   for (gr_edge_viter_t p = edges.begin(); p != edges.end(); p++) {
     if (check_inputs == true)
@@ -259,7 +259,7 @@ gr_flowgraph::check_contiguity(gr_basic_block_sptr block,
   if (used_ports[nports-1]+1 != nports) {
     for (int i = 0; i < nports; i++) {
       if (used_ports[i] != i) {
-	msg << block << ": missing connection " 
+	msg << block << ": missing connection "
 	    << (check_inputs ? "to input port " : "from output port ")
 	    << i;
 	throw std::runtime_error(msg.str());
@@ -367,7 +367,7 @@ gr_flowgraph::calc_reachable_blocks(gr_basic_block_sptr block, gr_basic_block_ve
 }
 
 // Recursively mark all reachable blocks from given block and block list
-void 
+void
 gr_flowgraph::reachable_dfs_visit(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks)
 {
   // Mark the current one as visited
@@ -382,18 +382,18 @@ gr_flowgraph::reachable_dfs_visit(gr_basic_block_sptr block, gr_basic_block_vect
 }
 
 // Return a list of block adjacent to a given block along any edge
-gr_basic_block_vector_t 
+gr_basic_block_vector_t
 gr_flowgraph::calc_adjacent_blocks(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks)
 {
   gr_basic_block_vector_t tmp;
-    
+
   // Find any blocks that are inputs or outputs
   for (gr_edge_viter_t p = d_edges.begin(); p != d_edges.end(); p++) {
     if (p->src().block() == block)
       tmp.push_back(p->dst().block());
     if (p->dst().block() == block)
       tmp.push_back(p->src().block());
-  }    
+  }
 
   return unique_vector<gr_basic_block_sptr>(tmp);
 }
@@ -412,7 +412,7 @@ gr_flowgraph::topological_sort(gr_basic_block_vector_t &blocks)
   for (gr_basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
     if ((*p)->color() == gr_basic_block::WHITE)
       topological_dfs_visit(*p, result);
-  }    
+  }
 
   reverse(result.begin(), result.end());
   return result;
@@ -453,11 +453,11 @@ gr_flowgraph::topological_dfs_visit(gr_basic_block_sptr block, gr_basic_block_ve
 
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
     switch ((*p)->color()) {
-    case gr_basic_block::WHITE:           
+    case gr_basic_block::WHITE:
       topological_dfs_visit(*p, output);
       break;
 
-    case gr_basic_block::GREY:            
+    case gr_basic_block::GREY:
       throw std::runtime_error("flow graph has loops!");
 
     case gr_basic_block::BLACK:

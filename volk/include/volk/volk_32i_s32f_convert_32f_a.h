@@ -17,7 +17,7 @@
 static inline void volk_32i_s32f_convert_32f_a_sse2(float* outputVector, const int32_t* inputVector, const float scalar, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
-    
+
      float* outputVectorPtr = outputVector;
      const float iScalar = 1.0 / scalar;
     __m128 invScalar = _mm_set_ps1(iScalar);

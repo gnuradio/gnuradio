@@ -65,8 +65,8 @@ DIGITAL_API digital_fll_band_edge_cc_sptr digital_make_fll_band_edge_cc (float s
  * abs(x_l(t))^2 - abs(x_u(t))^2 = norm(x_l(t)) - norm(x_u(t)).
  *
  * In theory, the band-edge filter is the derivative of the matched
- * filter in frequency, (H_be(f) = \\frac{H(f)}{df}. In practice, this
- * comes down to a quarter sine wave at the point of the matched
+ * filter in frequency, (H_be(f) = frac{H(f)}{df}). In practice,
+ * this comes down to a quarter sine wave at the point of the matched
  * filter's rolloff (if it's a raised-cosine, the derivative of a
  * cosine is a sine).  Extend this sine by another quarter wave to
  * make a half wave around the band-edges is equivalent in time to the

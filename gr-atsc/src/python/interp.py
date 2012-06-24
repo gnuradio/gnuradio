@@ -1,31 +1,31 @@
 #!/usr/bin/env /usr/bin/python
 #
 # Copyright 2004,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-# 
+#
 # This module starts the atsc processing chain taking the captured
 # off-air signal created with:
 #
 #  uhd_rx_cfile.py  --samp-rate=6.4e6
 #                   -f <center of tv signal channel freq>
 #                   -g <appropriate gain for best signal / noise>
-# 
+#
 # All this module does is multiply the sample rate by 3, from 6.4e6 to
 # 19.2e6 complex samples / sec, then lowpass filter with a cutoff of 3.2MHz
 # and a transition band width of .5MHz.  Center of the tv channels is

@@ -2,7 +2,7 @@ Building and using gnuradio on windows (win32) using mingw
 
 Required tools and libraries
 
-MingW and Msys 
+MingW and Msys
 Download the latest stable version from the mingw site oand follow their installation instructions)
 
 Python for windows version 2.4 (or higher)

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -70,7 +70,7 @@ ref_dotprod (const i_type input[], const tap_type taps[], int ntaps)
   for (int i = 0; i < ntaps; i++) {
     sum += input[i] * taps[i];
   }
-      
+
   return sum;
 }
 
@@ -149,7 +149,7 @@ qa_gri_fir_filter_with_buffer_ccc::test_decimate(unsigned int decimate)
       // our reference implementation is using 80 bit floating point
       // arithmetic, while the SSE version is using 32 bit float point
       // arithmetic.
-      
+
       for (int o = 0; o < (int)(ol/decimate); o++){
 	CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected_output[o], actual_output[o],
 				       sqrt((float)n)*0.25*MAX_DATA*MAX_DATA * ERR_DELTA);

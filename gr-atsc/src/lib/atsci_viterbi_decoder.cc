@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -49,7 +49,7 @@ atsci_viterbi_decoder::atsci_viterbi_decoder ()
    * If anybody cares, it is possible to do it with less delay, but
    * this approach is at least somewhat understandable...
    */
-  
+
   // the -4 is for the 4 sync symbols
   int	fifo_size = ATSC_DATA_SEGMENT_LENGTH - 4 - viterbi[0].delay ();
   for (int i = 0; i < NCODERS; i++)
@@ -90,7 +90,7 @@ atsci_viterbi_decoder::decode (atsc_mpeg_packet_rs_encoded out[NCODERS],
   }
 
   memset (out_copy, 0, sizeof (out_copy));	// sanity check
-  
+
   // do the deed...
   decode_helper (out_copy, in_copy);
 
@@ -99,8 +99,8 @@ atsci_viterbi_decoder::decode (atsc_mpeg_packet_rs_encoded out[NCODERS],
     memcpy (&out[i].data[0],
 	    &out_copy[i * OUTPUT_SIZE/NCODERS],
 	    ATSC_MPEG_RS_ENCODED_LENGTH * sizeof (out_copy[0]));
-	    
-	    
+
+
     // adjust pipeline info to reflect 12 segment delay
     plinfo::delay (out[i].pli, in[i].pli, NCODERS);
   }
@@ -150,13 +150,13 @@ atsci_viterbi_decoder::decode_helper (unsigned char out[OUTPUT_SIZE],
 #undef VERBOSE
 
   // printf ("@@@ DIBITS @@@\n");
-  
+
   /* Now run each of the 12 Trellis encoders over their subset of
      the input symbols */
   for (encoder = 0; encoder < NCODERS; encoder++) {
     dbi = 0;			/* Reinitialize dibit index for new encoder */
     fifo_t	*dibit_fifo = fifo[encoder];
-    
+
     /* Feed all the incoming symbols into one encoder;
        pump them into the relevant dibits. */
     for (i = 0; i < enco_which_max; i++) {

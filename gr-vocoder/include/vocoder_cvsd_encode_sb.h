@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -125,16 +125,16 @@ private:
   vocoder_cvsd_encode_sb(short min_step, short max_step, double step_decay,
 			 double accum_decay, int K, int J,
 			 short pos_accum_max, short neg_accum_max);
-  
+
   //! Member functions required by the encoder/decoder
   //! \brief Rounding function specific to CVSD
   //! \return the input value rounded to the nearest integer
   int cvsd_round(double input);
-  
+
   //! \brief A power function specific to CVSD data formats
   //! \return (radix)^power, where radix and power are short integers
   unsigned int cvsd_pow (short radix, short power);
- 
+
   //! \brief Sums number of 1's in the input
   //! \return the number of 1s in the four bytes of an input unsigned integer
   unsigned char cvsd_bitwise_sum (unsigned int input);
@@ -147,7 +147,7 @@ private:
 
   int d_K; //!< \brief Size of shift register; the number of output bits remembered in shift register
   int d_J; //!< \brief Number of bits in the shift register that are equal; size of run of 1s, 0s
-  
+
   short d_pos_accum_max;
   short d_neg_accum_max;
 

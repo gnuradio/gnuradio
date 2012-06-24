@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -56,7 +56,7 @@ gr_vmcircbuf_mmap_tmpfile::gr_vmcircbuf_mmap_tmpfile (int size)
 
   int	seg_fd = -1;
   char	seg_name[1024];
-  
+
   static int s_seg_counter = 0;
 
 
@@ -121,7 +121,7 @@ gr_vmcircbuf_mmap_tmpfile::gr_vmcircbuf_mmap_tmpfile (int size)
 
   if (second_copy == MAP_FAILED){
     munmap(first_copy, size);					// cleanup
-    close (seg_fd);		
+    close (seg_fd);
     perror ("gr_vmcircbuf_mmap_tmpfile: mmap (2)");
     throw std::runtime_error ("gr_vmcircbuf_mmap_tmpfile");
   }
@@ -130,7 +130,7 @@ gr_vmcircbuf_mmap_tmpfile::gr_vmcircbuf_mmap_tmpfile (int size)
   if ((char *) second_copy != (char *) first_copy + size){
     munmap(first_copy, size);					// cleanup
     munmap(second_copy, size);
-    close (seg_fd);						
+    close (seg_fd);
     perror ("gr_vmcircbuf_mmap_tmpfile: non-contiguous second copy");
     throw std::runtime_error ("gr_vmcircbuf_mmap_tmpfile");
   }

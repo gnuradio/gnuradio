@@ -27,7 +27,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     enc = trellis.encoder_ss(f,0) # initial state = 0
     mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
 
-    
+
     # CHANNEL
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
@@ -38,9 +38,9 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     s2b = gr.packed_to_unpacked_ss(1,gr.GR_MSB_FIRST) # unpack shorts to bits
-    dst = gr.vector_sink_s(); 
-    #dst = gr.check_lfsr_32k_s(); 
-    
+    dst = gr.vector_sink_s();
+    #dst = gr.check_lfsr_32k_s();
+
 
     #tb.connect (src,src_head,s2fsmi,enc,mod)
     tb.connect (src,b2s,s2fsmi,enc,mod)
@@ -49,11 +49,11 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     tb.connect (add,metrics)
     #tb.connect (metrics,va,fsmi2s,dst)
     tb.connect (metrics,va,fsmi2s,s2b,dst)
-    
+
 
     tb.run()
-    
-    # A bit of cheating: run the program once and print the 
+
+    # A bit of cheating: run the program once and print the
     # final encoder state..
     # Then put it as the last argument in the viterbi block
     #print "final state = " , enc.ST()
@@ -99,7 +99,7 @@ def main():
     K=Kb/bitspersymbol # packet size in trellis steps
     modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
-    constellation = modulation[1] 
+    constellation = modulation[1]
     if len(constellation)/dimensionality != f.O():
         sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
         sys.exit (1)
@@ -109,7 +109,7 @@ def main():
         Es = Es + constellation[i]**2
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # calculate noise variance
-    
+
     tot_s=0 # total number of transmitted shorts
     terr_s=0 # total number of shorts in error
     terr_p=0 # total number of packets in error

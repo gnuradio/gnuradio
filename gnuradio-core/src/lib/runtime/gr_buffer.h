@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -97,14 +97,14 @@ class GR_CORE_API gr_buffer {
 
   /*!
    * \brief  Adds a new tag to the buffer.
-   * 
+   *
    * \param tag        the new tag
    */
   void add_item_tag(const gr_tag_t &tag);
 
   /*!
    * \brief  Removes all tags before \p max_time from buffer
-   * 
+   *
    * \param max_time        the time (item number) to trim up until.
    */
   void prune_tags(uint64_t max_time);
@@ -130,7 +130,7 @@ class GR_CORE_API gr_buffer {
   boost::weak_ptr<gr_block>		d_link;		// block that writes to this buffer
 
   //
-  // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags 
+  // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags
   // and the d_read_index's and d_abs_read_offset's in the buffer readers.
   //
   gruel::mutex				d_mutex;
@@ -139,7 +139,7 @@ class GR_CORE_API gr_buffer {
   bool					d_done;
   std::deque<gr_tag_t>                  d_item_tags;
   uint64_t                              d_last_min_items_read;
-  
+
   unsigned
   index_add (unsigned a, unsigned b)
   {
@@ -194,7 +194,7 @@ class GR_CORE_API gr_buffer {
  * \param nzero_preload -- number of zero items to "preload" into buffer.
  * \param link is the block that reads from the buffer using this gr_buffer_reader.
  */
-GR_CORE_API gr_buffer_reader_sptr 
+GR_CORE_API gr_buffer_reader_sptr
 gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload, gr_block_sptr link=gr_block_sptr());
 
 //! returns # of gr_buffers currently allocated
@@ -280,7 +280,7 @@ class GR_CORE_API gr_buffer_reader {
  private:
 
   friend class gr_buffer;
-  friend GR_CORE_API gr_buffer_reader_sptr 
+  friend GR_CORE_API gr_buffer_reader_sptr
   gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload, gr_block_sptr link);
 
 

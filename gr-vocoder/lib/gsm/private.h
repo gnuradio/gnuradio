@@ -82,10 +82,10 @@ extern longword gsm_L_asr  	P((longword a, int n));
 extern word	gsm_asr  	P((word a, int n));
 
 /*
- *  Inlined functions from add.h 
+ *  Inlined functions from add.h
  */
 
-/* 
+/*
  * #define GSM_MULT_R(a, b) (* word a, word b, !(a == b == MIN_WORD) *)	\
  *	(0x0FFFF & SASR(((longword)(a) * (longword)(b) + 16384), 15))
  */
@@ -170,10 +170,10 @@ extern void Gsm_Preprocess P((
 
 extern void Gsm_Encoding P((
 		struct gsm_state * S,
-		word	* e,	
-		word	* ep,	
+		word	* e,
+		word	* ep,
 		word	* xmaxc,
-		word	* Mc,	
+		word	* Mc,
 		word	* xMc));
 
 extern void Gsm_Short_Term_Analysis_Filter P((

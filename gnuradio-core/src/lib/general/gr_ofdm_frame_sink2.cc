@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2008,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -46,7 +46,7 @@ gr_ofdm_frame_sink2::enter_search()
   d_state = STATE_SYNC_SEARCH;
 
 }
-    
+
 inline void
 gr_ofdm_frame_sink2::enter_have_sync()
 {
@@ -81,7 +81,7 @@ gr_ofdm_frame_sink2::enter_have_header()
   d_packetlen_cnt = 0;
 
   if (VERBOSE)
-    fprintf(stderr, "@ enter_have_header (payload_len = %d) (offset = %d)\n", 
+    fprintf(stderr, "@ enter_have_header (payload_len = %d) (offset = %d)\n",
 	    d_packetlen, d_packet_whitener_offset);
 }
 
@@ -103,25 +103,25 @@ unsigned int gr_ofdm_frame_sink2::demapper(const gr_complex *in,
       d_nresid = 0;
       d_resid = 0;
     }
-    
+
     //while((d_byte_offset < 8) && (i < d_occupied_carriers)) {
     while((d_byte_offset < 8) && (i < d_subcarrier_map.size())) {
       //gr_complex sigrot = in[i]*carrier*d_dfe[i];
       gr_complex sigrot = in[d_subcarrier_map[i]]*carrier*d_dfe[i];
-      
+
       if(d_derotated_output != NULL){
 	d_derotated_output[i] = sigrot;
       }
-      
+
       unsigned char bits = d_constell->decision_maker(&sigrot);
 
       gr_complex closest_sym = d_constell->points()[bits];
-      
+
       accum_error += sigrot * conj(closest_sym);
 
       // FIX THE FOLLOWING STATEMENT
       if (norm(sigrot)> 0.001) d_dfe[i] +=  d_eq_gain*(closest_sym/sigrot-d_dfe[i]);
-      
+
       i++;
 
       if((8 - d_byte_offset) >= d_nbits) {
@@ -135,7 +135,7 @@ unsigned int gr_ofdm_frame_sink2::demapper(const gr_complex *in,
 	d_resid = bits >> (8-d_byte_offset);
 	d_byte_offset += (d_nbits - d_nresid);
       }
-      //printf("demod symbol: %.4f + j%.4f   bits: %x   partial_byte: %x   byte_offset: %d   resid: %x   nresid: %d\n", 
+      //printf("demod symbol: %.4f + j%.4f   bits: %x   partial_byte: %x   byte_offset: %d   resid: %x   nresid: %d\n",
       //     in[i-1].real(), in[i-1].imag(), bits, d_partial_byte, d_byte_offset, d_resid, d_nresid);
     }
 
@@ -154,10 +154,10 @@ unsigned int gr_ofdm_frame_sink2::demapper(const gr_complex *in,
   d_phase = d_phase + d_freq - d_phase_gain*angle;
   if (d_phase >= 2*M_PI) d_phase -= 2*M_PI;
   if (d_phase <0) d_phase += 2*M_PI;
-    
+
   //if(VERBOSE)
   //  std::cerr << angle << "\t" << d_freq << "\t" << d_phase << "\t" << std::endl;
-  
+
   return bytes_produced;
 }
 
@@ -180,7 +180,7 @@ gr_ofdm_frame_sink2::gr_ofdm_frame_sink2(gr_constellation_sptr constell,
 		   gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char)),
 		   gr_make_io_signature (1, 1, sizeof(gr_complex)*occupied_carriers)),
     d_constell(constell),
-    d_target_queue(target_queue), d_occupied_carriers(occupied_carriers), 
+    d_target_queue(target_queue), d_occupied_carriers(occupied_carriers),
     d_byte_offset(0), d_partial_byte(0),
     d_resid(0), d_nresid(0),d_phase(0),d_freq(0),d_phase_gain(phase_gain),d_freq_gain(freq_gain),
     d_eq_gain(0.05)
@@ -191,13 +191,13 @@ gr_ofdm_frame_sink2::gr_ofdm_frame_sink2(gr_constellation_sptr constell,
   std::string carriers = "FE7F";
 
   // A bit hacky to fill out carriers to occupied_carriers length
-  int diff = (d_occupied_carriers - 4*carriers.length()); 
+  int diff = (d_occupied_carriers - 4*carriers.length());
   while(diff > 7) {
     carriers.insert(0, "f");
     carriers.insert(carriers.length(), "f");
     diff -= 8;
   }
-  
+
   // if there's extras left to be processed
   // divide remaining to put on either side of current map
   // all of this is done to stick with the concept of a carrier map string that
@@ -207,7 +207,7 @@ gr_ofdm_frame_sink2::gr_ofdm_frame_sink2(gr_constellation_sptr constell,
   int diff_right=0;
 
   // dictionary to convert from integers to ascii hex representation
-  char abc[16] = {'0', '1', '2', '3', '4', '5', '6', '7', 
+  char abc[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
 		  '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
   if(diff > 0) {
     char c[2] = {0,0};
@@ -215,7 +215,7 @@ gr_ofdm_frame_sink2::gr_ofdm_frame_sink2(gr_constellation_sptr constell,
     diff_left = (int)ceil((float)diff/2.0f);  // number of carriers to put on the left side
     c[0] = abc[(1 << diff_left) - 1];         // convert to bits and move to ASCI integer
     carriers.insert(0, c);
-    
+
     diff_right = diff - diff_left;	      // number of carriers to put on the right side
     c[0] = abc[0xF^((1 << diff_right) - 1)];  // convert to bits and move to ASCI integer
     carriers.insert(carriers.length(), c);
@@ -235,7 +235,7 @@ gr_ofdm_frame_sink2::gr_ofdm_frame_sink2(gr_constellation_sptr constell,
       }
     }
   }
-  
+
   // make sure we stay in the limit currently imposed by the occupied_carriers
   if(d_subcarrier_map.size() > d_occupied_carriers) {
     throw std::invalid_argument("gr_ofdm_mapper_bcv: subcarriers allocated exceeds size of occupied carriers");
@@ -271,26 +271,26 @@ gr_ofdm_frame_sink2::work (int noutput_items,
     d_derotated_output = (gr_complex *)output_items[0];
   else
     d_derotated_output = NULL;
-  
+
   if (VERBOSE)
     fprintf(stderr,">>> Entering state machine\n");
 
   switch(d_state) {
-      
+
   case STATE_SYNC_SEARCH:    // Look for flag indicating beginning of pkt
     if (VERBOSE)
       fprintf(stderr,"SYNC Search, noutput=%d\n", noutput_items);
-    
+
     if (sig[0]) {  // Found it, set up for header decode
       enter_have_sync();
     }
     break;
 
   case STATE_HAVE_SYNC:
-    // only demod after getting the preamble signal; otherwise, the 
+    // only demod after getting the preamble signal; otherwise, the
     // equalizer taps will screw with the PLL performance
     bytes = demapper(&in[0], d_bytes_out);
-    
+
     if (VERBOSE) {
       if(sig[0])
 	printf("ERROR -- Found SYNC in HAVE_SYNC\n");
@@ -302,31 +302,31 @@ gr_ofdm_frame_sink2::work (int noutput_items,
     while(j < bytes) {
       d_header = (d_header << 8) | (d_bytes_out[j] & 0xFF);
       j++;
-      
+
       if (++d_headerbytelen_cnt == HEADERBYTELEN) {
-	
+
 	if (VERBOSE)
 	  fprintf(stderr, "got header: 0x%08x\n", d_header);
-	
+
 	// we have a full header, check to see if it has been received properly
 	if (header_ok()){
 	  enter_have_header();
-	  
+
 	  if (VERBOSE)
 	    printf("\nPacket Length: %d\n", d_packetlen);
-	  
+
 	  while((j < bytes) && (d_packetlen_cnt < d_packetlen)) {
 	    d_packet[d_packetlen_cnt++] = d_bytes_out[j++];
 	  }
-	  
+
 	  if(d_packetlen_cnt == d_packetlen) {
 	    gr_message_sptr msg =
 	      gr_make_message(0, d_packet_whitener_offset, 0, d_packetlen);
 	    memcpy(msg->msg(), d_packet, d_packetlen_cnt);
 	    d_target_queue->insert_tail(msg);		// send it
 	    msg.reset();  				// free it up
-	    
-	    enter_search();				
+
+	    enter_search();
 	  }
 	}
 	else {
@@ -335,7 +335,7 @@ gr_ofdm_frame_sink2::work (int noutput_items,
       }
     }
     break;
-      
+
   case STATE_HAVE_HEADER:
     bytes = demapper(&in[0], d_bytes_out);
 
@@ -344,30 +344,30 @@ gr_ofdm_frame_sink2::work (int noutput_items,
 	printf("ERROR -- Found SYNC in HAVE_HEADER at %d, length of %d\n", d_packetlen_cnt, d_packetlen);
       fprintf(stderr,"Packet Build\n");
     }
-    
+
     j = 0;
     while(j < bytes) {
       d_packet[d_packetlen_cnt++] = d_bytes_out[j++];
-      
+
       if (d_packetlen_cnt == d_packetlen){		// packet is filled
 	// build a message
 	// NOTE: passing header field as arg1 is not scalable
 	gr_message_sptr msg =
 	  gr_make_message(0, d_packet_whitener_offset, 0, d_packetlen_cnt);
 	memcpy(msg->msg(), d_packet, d_packetlen_cnt);
-	
+
 	d_target_queue->insert_tail(msg);		// send it
 	msg.reset();  				// free it up
-	
+
 	enter_search();
 	break;
       }
     }
     break;
-    
+
   default:
     assert(0);
-    
+
   } // switch
 
   return 1;

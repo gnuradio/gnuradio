@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, optfir, audio, blks2, uhd
 from gnuradio import eng_notation
@@ -55,7 +55,7 @@ class wfm_rx_block (gr.top_block):
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
-        
+
         self.state = "FREQ"
         self.freq = 0
 
@@ -99,7 +99,7 @@ class wfm_rx_block (gr.top_block):
         self.audio_sink = audio.sink(int(audio_rate),
                                      options.audio_output,
                                      False)  # ok_to_block
-        
+
         # now wire it all together
         self.connect (self.u, self.chan_filt, self.guts,
                       self.volume_control, self.audio_sink)
@@ -140,7 +140,7 @@ class wfm_rx_block (gr.top_block):
         @param target_freq: frequency in Hz
         @rypte: bool
         """
-        
+
         r = self.u.set_center_freq(target_freq)
 
         if r:
@@ -159,14 +159,14 @@ class wfm_rx_block (gr.top_block):
         msg = "Freq: %s  Volume:%f  Setting:%s" % (
             eng_notation.num_to_str(self.freq), self.vol, self.state)
         self._set_status_msg(msg, 1)
-        
+
     def _set_status_msg(self, msg, which=0):
         print msg
 
     def volume_range(self):
         return (-20.0, 0.0, 0.5)
 
-    
+
 if __name__ == '__main__':
     tb = wfm_rx_block()
     try:

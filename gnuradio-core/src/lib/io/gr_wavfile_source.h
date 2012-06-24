@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -51,7 +51,7 @@ private:
 
   FILE *d_fp;
   bool d_repeat;
-  
+
   unsigned d_sample_rate;
   int d_nchans;
   int d_bytes_per_sample;
@@ -60,7 +60,7 @@ private:
   unsigned d_sample_idx;
   int d_normalize_shift;
   int d_normalize_fac;
-  
+
   /*!
    * \brief Convert an integer sample value to a float value within [-1;1]
    */
@@ -68,7 +68,7 @@ private:
 
 public:
   ~gr_wavfile_source ();
-  
+
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,
 	   gr_vector_void_star &output_items);
@@ -83,7 +83,7 @@ public:
    * file header. Only 8 or 16 bit are supported here.
    */
   int bits_per_sample() const { return d_bytes_per_sample * 8; };
-  
+
   /*!
    * \brief Return the number of channels in the wav file as specified in
    * the wav file header. This is also the max number of outputs you can

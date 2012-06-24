@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         //buffering to occur
         if (fout == stdout) fflush(stdout);
         if (fin == stdin) fflush(stdin);
-          
+
  }
 
     codec2_destroy(codec2);

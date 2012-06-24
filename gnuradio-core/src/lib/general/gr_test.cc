@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2008,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -63,7 +63,7 @@ gr_test_sptr gr_make_test (const std::string &name,
     set_fixed_rate(fixed_rate);
   }
 
-int 
+int
 gr_test::general_work (int noutput_items,
 			    gr_vector_int &ninput_items,
 			    gr_vector_const_void_star &input_items,
@@ -109,7 +109,7 @@ gr_test::general_work (int noutput_items,
            case CONSUME_ALL_AVAILABLE_LIMIT_MAX:
              consume(i,std::min(ninput_items[i],d_max_consume));
              break;
-/*         //This could result in segfault, uncomment if you want to test this     
+/*         //This could result in segfault, uncomment if you want to test this
            case CONSUME_ALL_AVAILABLE_LIMIT_MIN:
              consume(i,std::max(ninput_items[i],d_max_consume));
              break;*/
@@ -136,12 +136,12 @@ gr_test::general_work (int noutput_items,
            //Touch every available output_item
            for(unsigned int k=0;k<d_sizeof_output_item;k++)
              out[j*d_sizeof_input_item+k]=0;
-         }       
+         }
        }
-     } 
+     }
      //Now copy input to output until max ninputs or max noutputs is reached
-     int common_nports=std::min(ninputs,noutputs); 
-     if(d_sizeof_output_item==d_sizeof_input_item)   
+     int common_nports=std::min(ninputs,noutputs);
+     if(d_sizeof_output_item==d_sizeof_input_item)
        for (int i = 0; i < common_nports; i++)
        {
          memcpy(output_items[i],input_items[i],noutput_items*d_sizeof_input_item);
@@ -154,7 +154,7 @@ gr_test::general_work (int noutput_items,
            case PRODUCE_NOUTPUT_ITEMS_LIMIT_MAX:
              noutput_items_produced=std::min(noutput_items,d_max_produce);
              break;
-/*         //This could result in segfault, uncomment if you want to test this         
+/*         //This could result in segfault, uncomment if you want to test this
              case PRODUCE_NOUTPUT_ITEMS_LIMIT_MIN:
              noutput_items_produced=std::max(noutput_items,d_min_produce);
              break;*/

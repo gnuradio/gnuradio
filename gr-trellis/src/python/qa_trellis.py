@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2004,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import math
 
@@ -111,9 +111,9 @@ class trellis_tb(gr.top_block):
         # packet size in shorts
         src_head = gr.head (gr.sizeof_short, packet_size/16)
         # unpack shorts to symbols compatible with the FSM input cardinality
-        s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol, gr.GR_MSB_FIRST) 
+        s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol, gr.GR_MSB_FIRST)
         # initial FSM state = 0
-        enc = trellis.encoder_ss(f, 0) 
+        enc = trellis.encoder_ss(f, 0)
         mod = gr.chunks_to_symbols_sc(constellation.points(), 1)
 
         # CHANNEL
@@ -122,14 +122,14 @@ class trellis_tb(gr.top_block):
 
         # RX
         # data preprocessing to generate metrics for Viterbi
-        metrics = trellis.constellation_metrics_cf(constellation.base(), digital_swig.TRELLIS_EUCLIDEAN) 
+        metrics = trellis.constellation_metrics_cf(constellation.base(), digital_swig.TRELLIS_EUCLIDEAN)
         # Put -1 if the Initial/Final states are not set.
         va = trellis.viterbi_s(f, K, 0, -1)
         # pack FSM input symbols to shorts
-        fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol, gr.GR_MSB_FIRST) 
+        fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol, gr.GR_MSB_FIRST)
         # check the output
         self.dst = gr.check_lfsr_32k_s()
-    
+
         self.connect (src, src_head, s2fsmi, enc, mod)
         self.connect (mod, (add, 0))
         self.connect (noise, (add, 1))

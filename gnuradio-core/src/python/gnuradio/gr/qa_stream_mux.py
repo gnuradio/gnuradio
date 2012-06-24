@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2004,2005,2007,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 
@@ -33,7 +33,7 @@ class test_stream_mux (gr_unittest.TestCase):
     def help_stream_2ff(self, N, stream_sizes):
         v0 = gr.vector_source_f(N*[1,], False)
         v1 = gr.vector_source_f(N*[2,], False)
-        
+
         mux = gr.stream_mux(gr.sizeof_float, stream_sizes)
 
         dst = gr.vector_sink_f ()
@@ -44,7 +44,7 @@ class test_stream_mux (gr_unittest.TestCase):
         self.tb.run ()
 
         return dst.data ()
-        
+
     def help_stream_ramp_2ff(self, N, stream_sizes):
         r1 = range(N)
         r2 = range(N)
@@ -52,7 +52,7 @@ class test_stream_mux (gr_unittest.TestCase):
 
         v0 = gr.vector_source_f(r1, False)
         v1 = gr.vector_source_f(r2, False)
-        
+
         mux = gr.stream_mux(gr.sizeof_float, stream_sizes)
 
         dst = gr.vector_sink_f ()
@@ -63,7 +63,7 @@ class test_stream_mux (gr_unittest.TestCase):
         self.tb.run ()
 
         return dst.data ()
-        
+
     def test_stream_2NN_ff(self):
         N = 40
         stream_sizes = [10, 10]
@@ -101,17 +101,17 @@ class test_stream_mux (gr_unittest.TestCase):
 
         result_data = self.help_stream_2ff(N, stream_sizes)
 
-        exp_data = (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+        exp_data = (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0)
-                
+
         self.assertEqual (exp_data, result_data)
 
 
@@ -122,13 +122,13 @@ class test_stream_mux (gr_unittest.TestCase):
 
         result_data = self.help_stream_2ff(N, stream_sizes)
 
-        exp_data = (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+        exp_data = (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
                     1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     2.0)
@@ -142,12 +142,12 @@ class test_stream_mux (gr_unittest.TestCase):
 
         result_data = self.help_stream_2ff(N, stream_sizes)
 
-        exp_data = (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
-                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+        exp_data = (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                    1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                     1.0, 1.0)
-      
+
         self.assertEqual (exp_data, result_data)
 
     def test_stream_20N_ff(self):
@@ -157,11 +157,11 @@ class test_stream_mux (gr_unittest.TestCase):
 
         result_data = self.help_stream_2ff(N, stream_sizes)
 
-        exp_data = (2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 
+        exp_data = (2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
                     2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
                     2.0, 2.0, 2.0)
-      
+
         self.assertEqual (exp_data, result_data)
 
 if __name__ == '__main__':

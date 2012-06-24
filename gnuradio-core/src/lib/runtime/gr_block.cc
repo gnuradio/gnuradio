@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -43,7 +43,7 @@ gr_block::gr_block (const std::string &name,
     d_tag_propagation_policy(TPP_ALL_TO_ALL)
 {
 }
-  
+
 gr_block::~gr_block ()
 {
 }
@@ -102,7 +102,7 @@ gr_block::set_unaligned (int na)
   d_unaligned = na;
 }
 
-void 
+void
 gr_block::set_is_unaligned (bool u)
 {
   d_is_unaligned = u;
@@ -113,7 +113,7 @@ gr_block::set_relative_rate (double relative_rate)
 {
   if (relative_rate < 0.0)
     throw std::invalid_argument ("gr_block::set_relative_rate");
-  
+
   d_relative_rate = relative_rate;
 }
 
@@ -149,7 +149,7 @@ gr_block::fixed_rate_noutput_to_ninput(int noutput)
 }
 
 uint64_t
-gr_block::nitems_read(unsigned int which_input) 
+gr_block::nitems_read(unsigned int which_input)
 {
   if(d_detail) {
     return d_detail->nitems_read(which_input);
@@ -161,7 +161,7 @@ gr_block::nitems_read(unsigned int which_input)
 }
 
 uint64_t
-gr_block::nitems_written(unsigned int which_output) 
+gr_block::nitems_written(unsigned int which_output)
 {
   if(d_detail) {
     return d_detail->nitems_written(which_output);
@@ -186,7 +186,7 @@ gr_block::get_tags_in_range(std::vector<gr_tag_t> &v,
 {
   d_detail->get_tags_in_range(v, which_output, start, end);
 }
-  
+
 void
 gr_block::get_tags_in_range(std::vector<gr_tag_t> &v,
 			    unsigned int which_output,

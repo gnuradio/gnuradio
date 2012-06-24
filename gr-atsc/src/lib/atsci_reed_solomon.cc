@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -60,7 +60,7 @@ atsci_reed_solomon::encode (atsc_mpeg_packet_rs_encoded &out, const atsc_mpeg_pa
   unsigned char tmp[K];
 
   assert ((int)(amount_of_pad + sizeof (in.data)) == K);
-  
+
   // add missing prefix zero padding to message
   memset (tmp, 0, amount_of_pad);
   memcpy (&tmp[amount_of_pad], in.data, sizeof (in.data));
@@ -79,14 +79,14 @@ atsci_reed_solomon::decode (atsc_mpeg_packet_no_sync &out, const atsc_mpeg_packe
   int		ncorrections;
 
   assert ((int)(amount_of_pad + sizeof (in.data)) == N);
-  
+
   // add missing prefix zero padding to message
   memset (tmp, 0, amount_of_pad);
   memcpy (&tmp[amount_of_pad], in.data, sizeof (in.data));
 
-  // correct message... 
+  // correct message...
   ncorrections = decode_rs_char (d_rs, tmp, 0, 0);
-  
+
   // copy corrected message to output, skipping prefix zero padding
   memcpy (out.data, &tmp[amount_of_pad], sizeof (out.data));
 

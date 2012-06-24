@@ -330,7 +330,7 @@ static void Cut_Calculation_of_the_LTP_parameters P5((st, d,dp,bc_out,Nc_out),
 	else scal = 6 - temp;
 
 	assert(scal >= 0);
-	ltp_cut = (longword)SASR(dmax, scal) * st->ltp_cut / 100; 
+	ltp_cut = (longword)SASR(dmax, scal) * st->ltp_cut / 100;
 
 
 	/*  Initialization of a working array wt
@@ -362,7 +362,7 @@ static void Cut_Calculation_of_the_LTP_parameters P5((st, d,dp,bc_out,Nc_out),
 		register float	a = lp[-8], b = lp[-7], c = lp[-6],
 				d = lp[-5], e = lp[-4], f = lp[-3],
 				g = lp[-2], h = lp[-1];
-		register float  E; 
+		register float  E;
 		register float  S0 = 0, S1 = 0, S2 = 0, S3 = 0, S4 = 0,
 				S5 = 0, S6 = 0, S7 = 0, S8 = 0;
 
@@ -528,7 +528,7 @@ static void Calculation_of_the_LTP_parameters P4((d,dp,bc_out,Nc_out),
 		register float	a = lp[-8], b = lp[-7], c = lp[-6],
 				d = lp[-5], e = lp[-4], f = lp[-3],
 				g = lp[-2], h = lp[-1];
-		register float  E; 
+		register float  E;
 		register float  S0 = 0, S1 = 0, S2 = 0, S3 = 0, S4 = 0,
 				S5 = 0, S6 = 0, S7 = 0, S8 = 0;
 
@@ -742,7 +742,7 @@ static void Fast_Calculation_of_the_LTP_parameters P4((d,dp,bc_out,Nc_out),
 		register float	a = lp[-8], b = lp[-7], c = lp[-6],
 				d = lp[-5], e = lp[-4], f = lp[-3],
 				g = lp[-2], h = lp[-1];
-		register float  E; 
+		register float  E;
 		register float  S0 = 0, S1 = 0, S2 = 0, S3 = 0, S4 = 0,
 				S5 = 0, S6 = 0, S7 = 0, S8 = 0;
 
@@ -860,7 +860,7 @@ static void Long_term_analysis_filtering P6((bc,Nc,dp,d,dpp,e),
 	case 0:	STEP(  3277 ); break;
 	case 1:	STEP( 11469 ); break;
 	case 2: STEP( 21299 ); break;
-	case 3: STEP( 32767 ); break; 
+	case 3: STEP( 32767 ); break;
 	}
 }
 
@@ -881,7 +881,7 @@ void Gsm_Long_Term_Predictor P7((S,d,dp,e,dpp,Nc,bc), 	/* 4x for 160 samples */
 	assert( dpp); assert( Nc ); assert( bc );
 
 #if defined(FAST) && defined(USE_FLOAT_MUL)
-	if (S->fast) 
+	if (S->fast)
 #if   defined (LTP_CUT)
 		if (S->ltp_cut)
 			Cut_Fast_Calculation_of_the_LTP_parameters(S,
@@ -889,7 +889,7 @@ void Gsm_Long_Term_Predictor P7((S,d,dp,e,dpp,Nc,bc), 	/* 4x for 160 samples */
 		else
 #endif /* LTP_CUT */
 			Fast_Calculation_of_the_LTP_parameters(d, dp, bc, Nc );
-	else 
+	else
 #endif /* FAST & USE_FLOAT_MUL */
 #ifdef LTP_CUT
 		if (S->ltp_cut)
@@ -930,7 +930,7 @@ void Gsm_Long_Term_Synthesis_Filtering P5((S,Ncr,bcr,erp,drp),
 	 */
 	brp = gsm_QLB[ bcr ];
 
-	/*  Computation of the reconstructed short term residual 
+	/*  Computation of the reconstructed short term residual
 	 *  signal drp[0..39]
 	 */
 	assert(brp != MIN_WORD);

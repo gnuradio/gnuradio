@@ -1,23 +1,23 @@
 #
 # Copyright 2003,2004 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 # misc utilities
 
@@ -41,7 +41,7 @@ class seq_with_cursor (object):
             self.index = initial_index
         else:
             raise exceptions.ValueError
-        
+
     def set_index_by_value(self, v):
         """
         Set index to the smallest value such that items[index] >= v.
@@ -52,7 +52,7 @@ class seq_with_cursor (object):
         more = True
         while cv < v and more:
             cv, more = self.next()      # side effect!
-        
+
     def next (self):
         new_index = self.index + 1
         if new_index < len (self.items):
@@ -74,4 +74,4 @@ class seq_with_cursor (object):
 
     def get_seq (self):
         return self.items[:]            # copy of items
-    
+

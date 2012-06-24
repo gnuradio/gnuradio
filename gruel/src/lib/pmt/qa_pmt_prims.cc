@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -173,7 +173,7 @@ qa_pmt_prims::test_pairs()
   CPPUNIT_ASSERT_EQUAL(s3, pmt_car(c1));
   CPPUNIT_ASSERT_EQUAL((size_t)1, pmt_length(c3));
   CPPUNIT_ASSERT_EQUAL((size_t)2, pmt_length(c2));
-  
+
   CPPUNIT_ASSERT_THROW(pmt_cdr(PMT_NIL), pmt_wrong_type);
   CPPUNIT_ASSERT_THROW(pmt_car(PMT_NIL), pmt_wrong_type);
   CPPUNIT_ASSERT_THROW(pmt_set_car(s1, PMT_NIL), pmt_wrong_type);
@@ -282,7 +282,7 @@ qa_pmt_prims::test_tuples()
   //std::cout << v << std::endl;
   //std::cout << t2 << std::endl;
 
-  
+
   t = pmt_make_tuple(s[0], s[1], s[2]);
   pmt_t list0 = pmt_list3(s[0], s[1], s[2]);
   CPPUNIT_ASSERT_EQUAL(size_t(3), pmt_length(list0));
@@ -346,11 +346,11 @@ qa_pmt_prims::test_misc()
   pmt_t p0 = pmt_cons(k0, v0);
   pmt_t p1 = pmt_cons(k1, v1);
   pmt_t p2 = pmt_cons(k2, v2);
-  
+
   pmt_t alist = pmt_cons(p0, pmt_cons(p1, pmt_cons(p2, PMT_NIL)));
   CPPUNIT_ASSERT(pmt_eq(p1, pmt_assv(k1, alist)));
   CPPUNIT_ASSERT(pmt_eq(PMT_F, pmt_assv(k3, alist)));
-  
+
   pmt_t keys = pmt_cons(k0, pmt_cons(k1, pmt_cons(k2, PMT_NIL)));
   pmt_t vals = pmt_cons(v0, pmt_cons(v1, pmt_cons(v2, PMT_NIL)));
   CPPUNIT_ASSERT(pmt_equal(keys, pmt_map(pmt_car, alist)));
@@ -372,7 +372,7 @@ qa_pmt_prims::test_dict()
   pmt_t v2 = mp("v2");
   pmt_t v3 = mp("v3");
   pmt_t not_found = pmt_cons(PMT_NIL, PMT_NIL);
-  
+
   CPPUNIT_ASSERT(!pmt_dict_has_key(dict, k0));
   dict = pmt_dict_add(dict, k0, v0);
   CPPUNIT_ASSERT(pmt_dict_has_key(dict, k0));

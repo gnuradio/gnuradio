@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 """
 Reads from a file and generates PAL TV pictures in black and white
@@ -99,7 +99,7 @@ class my_top_block(gr.top_block):
             parser.print_help()
             sys.stderr.write('You must specify the output. FILENAME or sdl \n');
             sys.exit(1)
-        
+
         filename = args[0]
 
         self.tv_freq_min = options.freq_min
@@ -120,7 +120,7 @@ class my_top_block(gr.top_block):
           # file is data source, capture with usr_rx_csfile.py
           self.filesource = gr.file_source(gr.sizeof_short,
                                            options.in_filename,
-                                           options.repeat) 
+                                           options.repeat)
           self.istoc = gr.interleaved_short_to_complex()
           self.connect(self.filesource,self.istoc)
           self.src=self.istoc
@@ -140,7 +140,7 @@ class my_top_block(gr.top_block):
           # Set the antenna
           if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
-          
+
           self.u.set_samp_rate(input_rate)
           dev_rate = self.u.get_samp_rate()
 
@@ -156,7 +156,7 @@ class my_top_block(gr.top_block):
           if not r:
               sys.stderr.write('Failed to set frequency\n')
               raise SystemExit, 1
-          
+
 
         self.agc = gr.agc_cc(1e-7,1.0,1.0) #1e-7
         self.am_demod = gr.complex_to_mag ()
@@ -194,9 +194,9 @@ class my_top_block(gr.top_block):
           print "You can use the imagemagick display tool to show the resulting imagesequence"
           print "use the following line to show the demodulated TV-signal:"
           print "display -depth 8 -size " +str(width)+ "x" + str(height) + " gray:" +filename
-          print "(Use the spacebar to advance to next frames)" 
+          print "(Use the spacebar to advance to next frames)"
           file_sink=gr.file_sink(gr.sizeof_char, filename)
-          self.dst =file_sink 
+          self.dst =file_sink
 
         if options.nframes is None:
             self.connect(self.src, self.agc)

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -32,10 +32,10 @@
 #include <iostream>
 #include "core_algorithms.h"
 
-  
+
 static const float INF = 1.0e9;
 
-@SPTR_NAME@ 
+@SPTR_NAME@
 trellis_make_@BASE_NAME@ (
   const fsm &FSMo, int STo0, int SToK,
   const fsm &FSMi, int STi0, int STiK,
@@ -76,7 +76,7 @@ trellis_make_@BASE_NAME@ (
 )
   : gr_block ("@BASE_NAME@",
 			  gr_make_io_signature (1, 1, sizeof (@I_TYPE@)),
-			  gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),  
+			  gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),
   d_FSMo (FSMo), d_STo0 (STo0), d_SToK (SToK),
   d_FSMi (FSMi), d_STi0 (STi0), d_STiK (STiK),
   d_INTERLEAVER (INTERLEAVER),
@@ -134,9 +134,9 @@ int
       d_FSMo, d_STo0, d_SToK,
       d_FSMi, d_STi0, d_STiK,
       d_INTERLEAVER, d_blocklength, d_repetitions,
-      p2min, 
-      d_D,d_TABLE, 
-      d_METRIC_TYPE, 
+      p2min,
+      d_D,d_TABLE,
+      d_METRIC_TYPE,
       d_scaling,
       &(in[n*d_blocklength*d_D]),&(out[n*d_blocklength])
     );

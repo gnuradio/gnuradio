@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2007,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 import random
@@ -40,7 +40,7 @@ class test_packing(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
         self.tb.connect(src, op)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op, dst)
 
@@ -57,7 +57,7 @@ class test_packing(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.packed_to_unpacked_bb(1, gr.GR_LSB_FIRST)
         self.tb.connect(src, op)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op, dst)
 
@@ -74,7 +74,7 @@ class test_packing(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.packed_to_unpacked_bb(3, gr.GR_LSB_FIRST)
         self.tb.connect(src, op)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op, dst)
 
@@ -91,7 +91,7 @@ class test_packing(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.packed_to_unpacked_bb(3, gr.GR_MSB_FIRST)
         self.tb.connect(src, op)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op, dst)
 
@@ -108,7 +108,7 @@ class test_packing(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
         self.tb.connect(src, op)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op, dst)
 
@@ -125,7 +125,7 @@ class test_packing(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
         self.tb.connect(src, op)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op, dst)
 
@@ -143,7 +143,7 @@ class test_packing(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.unpacked_to_packed_bb(3, gr.GR_LSB_FIRST)
         self.tb.connect(src, op)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op, dst)
 
@@ -160,7 +160,7 @@ class test_packing(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.unpacked_to_packed_bb(3, gr.GR_MSB_FIRST)
         self.tb.connect(src, op)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op, dst)
 
@@ -184,12 +184,12 @@ class test_packing(gr_unittest.TestCase):
         op1 = gr.packed_to_unpacked_bb(3, gr.GR_MSB_FIRST)
         op2 = gr.unpacked_to_packed_bb(3, gr.GR_MSB_FIRST)
         self.tb.connect(src, op1, op2)
-        
+
         dst = gr.vector_sink_b()
         self.tb.connect(op2, dst)
 
         self.tb.run()
-        
+
         self.assertEqual(expected_results[0:201], dst.data())
 
     def test_010(self):
@@ -233,10 +233,10 @@ class test_packing(gr_unittest.TestCase):
 
         self.tb.run()
         self.assertEqual(expected_results[0:201], dst.data())
-        
+
 
     # tests on shorts
-    
+
     def test_100a(self):
         """
         test short version
@@ -318,7 +318,7 @@ class test_packing(gr_unittest.TestCase):
         self.assertEqual(expected_results, dst.data())
 
     # tests on ints
-    
+
     def test_200a(self):
         """
         test int version
@@ -402,4 +402,4 @@ class test_packing(gr_unittest.TestCase):
 
 if __name__ == '__main__':
    gr_unittest.run(test_packing, "test_packing.xml")
-        
+

@@ -1,28 +1,28 @@
 #
 # Copyright 2002,2005 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 
 # input and taps are guarenteed to be 16 byte aligned.
 # n_2_ccomplex_blocks is != 0
-#	
+#
 #
 #  ccomplex_dotprod_generic (const float *input,
 #                         const float *taps, unsigned n_2_ccomplex_blocks, float *result)
@@ -31,20 +31,20 @@
 #    float sum1 = 0;
 #    float sum2 = 0;
 #    float sum3 = 0;
-#  
+#
 #    do {
 #
 #      sum0 += input[0] * taps[0] - input[1] * taps[1];
 #      sum1 += input[0] * taps[1] + input[1] * taps[0];
 #      sum2 += input[2] * taps[2] - input[3] * taps[3];
 #      sum3 += input[2] * taps[3] + input[3] * taps[2];
-#  
+#
 #      input += 4;
-#      taps += 4;  
-#  
+#      taps += 4;
+#
 #    } while (--n_2_ccomplex_blocks != 0);
-#  
-#  
+#
+#
 #    result[0] = sum0 + sum2;
 #    result[1] = sum1 + sum3;
 #  }
@@ -68,7 +68,7 @@ GLOB_SYMB(ccomplex_dotprod_sse):
 	mov	%rdx, %rax
 
 	xorps	%xmm6, %xmm6		# zero accumulators
-	
+
 	movaps	0(%rdi), %xmm0
 
 	xorps	%xmm7, %xmm7		# zero accumulators
@@ -83,9 +83,9 @@ GLOB_SYMB(ccomplex_dotprod_sse):
 	# 4 taps / loop
 	# something like ?? cycles / loop
 	#
-	
+
 	.p2align 4
-.Loop1:	
+.Loop1:
 
 # complex prod: C += A * B,  w/ temp Z & Y (or B), xmmPN=$0x8000000080000000
 #
@@ -146,10 +146,10 @@ GLOB_SYMB(ccomplex_dotprod_sse):
 	# We've handled the bulk of multiplies up to here.
 	# Let's sse if original n_2_ccomplex_blocks was odd.
 	# If so, we've got 2 more taps to do.
-	
+
 	and	$1, %rdx
 	je	.Leven
-	
+
 	# The count was odd, do 2 more taps.
 	# Note that we've already got mm0/mm2 preloaded
 	# from the main loop.

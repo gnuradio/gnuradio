@@ -1,18 +1,18 @@
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -48,7 +48,7 @@ public:
   {
     _dev = shd::xmini::multi_xmini::make(device_addr);
   }
-  
+
   void set_subdev_spec(const std::string &spec, size_t mboard)
   {
     return _dev->set_rx_subdev_spec(spec, mboard);
@@ -85,7 +85,7 @@ public:
     return _dev->set_rx_gain(gain, chan);
   }
 
-  void set_gain(double gain, const std::string &name, 
+  void set_gain(double gain, const std::string &name,
 		size_t chan)
   {
     return _dev->set_rx_gain(gain, name, chan);
@@ -100,7 +100,7 @@ public:
   {
     return _dev->get_rx_gain(name, chan);
   }
-  
+
   std::vector<std::string> get_gain_names(size_t chan)
   {
     return _dev->get_rx_gain_names(chan);
@@ -111,7 +111,7 @@ public:
     return _dev->get_rx_gain_range(chan);
   }
 
-  shd::gain_range_t get_gain_range(const std::string &name, 
+  shd::gain_range_t get_gain_range(const std::string &name,
 				   size_t chan)
   {
     return _dev->get_rx_gain_range(name, chan);
@@ -136,8 +136,8 @@ public:
   {
     return _dev->set_rx_bandwidth(bandwidth, chan);
   }
-  
-  shd::sensor_value_t get_dboard_sensor(const std::string &name, 
+
+  shd::sensor_value_t get_dboard_sensor(const std::string &name,
 					size_t chan)
   {
     return _dev->get_rx_sensor(name, chan);
@@ -147,18 +147,18 @@ public:
   {
     return _dev->get_rx_sensor_names(chan);
   }
-  
+
   shd::sensor_value_t get_mboard_sensor(const std::string &name,
 					size_t mboard)
   {
     return _dev->get_mboard_sensor(name, mboard);
   }
-  
+
   std::vector<std::string> get_mboard_sensor_names(size_t mboard)
   {
     return _dev->get_mboard_sensor_names(mboard);
   }
-  
+
   void set_clock_config(const shd::clock_config_t &clock_config,
 			size_t mboard)
   {
@@ -232,23 +232,23 @@ public:
 		    output_items, noutput_items, _metadata,
 		    _type, shd::device::RECV_MODE_ONE_PACKET, 1.0);
     }
-    
+
     //handle possible errors conditions
     switch(_metadata.error_code) {
     case shd::rx_metadata_t::ERROR_CODE_NONE:
       //TODO insert tag for time stamp
       break;
-      
+
     case shd::rx_metadata_t::ERROR_CODE_TIMEOUT:
       //Assume that the user called stop() on the flow graph.
       //However, a timeout can occur under error conditions.
       return WORK_DONE;
-      
+
     case shd::rx_metadata_t::ERROR_CODE_OVERFLOW:
       //ignore overflows and try work again
       //TODO insert tag for overflow
       return work(noutput_items, input_items, output_items);
-      
+
     default:
       std::cout << boost::format("SHD source block got error code 0x%x"
 				 ) % _metadata.error_code << std::endl;
@@ -257,7 +257,7 @@ public:
 
     return num_samps;
   }
-  
+
   bool start(void)
   {
     //setup a stream command that starts streaming slightly in the future
@@ -268,7 +268,7 @@ public:
     _dev->issue_stream_cmd(stream_cmd);
     return true;
   }
-  
+
   bool stop(void)
   {
     _dev->issue_stream_cmd(shd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);

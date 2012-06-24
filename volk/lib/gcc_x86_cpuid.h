@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008, 2009 Free Software Foundation, Inc.
+ * Copyright (C) 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
  *
  * This file is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -35,6 +35,8 @@
 #define bit_XSAVE	(1 << 26)
 #define bit_OSXSAVE	(1 << 27)
 #define bit_AVX		(1 << 28)
+#define bit_F16C	(1 << 29)
+#define bit_RDRND	(1 << 30)
 
 /* %edx */
 #define bit_CMPXCHG8B	(1 << 8)
@@ -47,14 +49,22 @@
 /* Extended Features */
 /* %ecx */
 #define bit_LAHF_LM	(1 << 0)
+#define bit_ABM		(1 << 5)
 #define bit_SSE4a	(1 << 6)
-#define bit_SSE5	(1 << 11)
+#define bit_XOP         (1 << 11)
+#define bit_LWP 	(1 << 15)
+#define bit_FMA4        (1 << 16)
+#define bit_TBM         (1 << 21)
 
 /* %edx */
+#define bit_MMXEXT	(1 << 22)
 #define bit_LM		(1 << 29)
 #define bit_3DNOWP	(1 << 30)
 #define bit_3DNOW	(1 << 31)
 
+/* Extended Features (%eax == 7) */
+#define bit_FSGSBASE	(1 << 0)
+#define bit_BMI		(1 << 3)
 
 #if defined(__i386__) && defined(__PIC__)
 /* %ebx may be the PIC register.  */
@@ -114,8 +124,8 @@ __get_cpuid_max (unsigned int __ext, unsigned int *__sig)
   unsigned int __eax, __ebx, __ecx, __edx;
 
 #ifndef __x86_64__
-#if __GNUC__ >= 3
   /* See if we can use cpuid.  On AMD64 we always can.  */
+#if __GNUC__ >= 3
   __asm__ ("pushf{l|d}\n\t"
 	   "pushf{l|d}\n\t"
 	   "pop{l}\t%0\n\t"

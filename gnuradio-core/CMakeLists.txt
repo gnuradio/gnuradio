@@ -1,17 +1,17 @@
 # Copyright 2010-2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
@@ -64,6 +64,7 @@ GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
 
 GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/gruel/src/swig
+    ${CMAKE_BINARY_DIR}/gruel/src/swig/
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/swig
     ${GNURADIO_CORE_INCLUDE_DIRS}
 )
@@ -109,7 +110,7 @@ CPACK_COMPONENT("core_swig"
 
 install(
     FILES gnuradio-core.conf
-    DESTINATION ${GR_PKG_CONF_DIR}
+    DESTINATION ${GR_PREFSDIR}
     COMPONENT "core_runtime"
 )
 

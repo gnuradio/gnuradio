@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,14 +30,14 @@
 #include <gr_io_signature.h>
 #include <cstdio>
 
-gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp, 
+gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp,
 							   const std::vector<float> &taps)
 {
   return gnuradio::get_initial_sptr(new gr_pfb_interpolator_ccf (interp, taps));
 }
 
 
-gr_pfb_interpolator_ccf::gr_pfb_interpolator_ccf (unsigned int interp, 
+gr_pfb_interpolator_ccf::gr_pfb_interpolator_ccf (unsigned int interp,
 						  const std::vector<float> &taps)
   : gr_sync_interpolator ("pfb_interpolator_ccf",
 			  gr_make_io_signature (1, 1, sizeof(gr_complex)),
@@ -84,7 +84,7 @@ gr_pfb_interpolator_ccf::set_taps (const std::vector<float> &taps)
   while((float)(tmp_taps.size()) < d_rate*d_taps_per_filter) {
     tmp_taps.push_back(0.0);
   }
-  
+
   // Partition the filter
   for(i = 0; i < d_rate; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
@@ -92,7 +92,7 @@ gr_pfb_interpolator_ccf::set_taps (const std::vector<float> &taps)
     for(j = 0; j < d_taps_per_filter; j++) {
       d_taps[i][j] = tmp_taps[i + j*d_rate];  // add taps to channels in reverse order
     }
-    
+
     // Build a filter for each channel and add it's taps to it
     d_filters[i]->set_taps(d_taps[i]);
   }
@@ -138,6 +138,6 @@ gr_pfb_interpolator_ccf::work (int noutput_items,
     }
     count++;
   }
-  
+
   return i;
 }

@@ -1,23 +1,23 @@
 #
 # Copyright 2005,2006 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr
 from gnuradio.blks2impl.fm_emph import fm_deemph
@@ -27,10 +27,10 @@ class wfm_rcv_pll(gr.hier_block2):
     def __init__ (self, demod_rate, audio_decimation):
         """
         Hierarchical block for demodulating a broadcast FM signal.
-        
+
         The input is the downconverted complex baseband signal (gr_complex).
         The output is two streams of the demodulated audio (float) 0=Left, 1=Right.
-        
+
         @param demod_rate: input sample rate of complex baseband input.
         @type demod_rate: float
         @param audio_decimation: how much to decimate demod_rate to get to audio.
@@ -43,7 +43,7 @@ class wfm_rcv_pll(gr.hier_block2):
         audio_rate = demod_rate / audio_decimation
 
 
-        # We assign to self so that outsiders can grab the demodulator 
+        # We assign to self so that outsiders can grab the demodulator
         # if they need to.  E.g., to plot its output.
         #
         # input: complex; output: float
@@ -54,7 +54,7 @@ class wfm_rcv_pll(gr.hier_block2):
         # input: float; output: float
         self.deemph_Left  = fm_deemph (audio_rate)
         self.deemph_Right = fm_deemph (audio_rate)
-        
+
         # compute FIR filter taps for audio filter
         width_of_transition_band = audio_rate / 32
         audio_coeffs = gr.firdes.low_pass (1.0 ,         # gain
@@ -75,7 +75,7 @@ class wfm_rcv_pll(gr.hier_block2):
                                                                    -18980,
                                                                    width_of_transition_band,
                                                                    gr.firdes.WIN_HAMMING)
-            
+
             #print "len stereo carrier filter = ",len(stereo_carrier_filter_coeffs)
             #print "stereo carrier filter ", stereo_carrier_filter_coeffs
             #print "width of transition band = ",width_of_transition_band, " audio rate = ", audio_rate
@@ -126,10 +126,10 @@ class wfm_rcv_pll(gr.hier_block2):
             loop_bw = 2*math.pi/100.0
             max_freq = -2.0*math.pi*18990/audio_rate;
             min_freq = -2.0*math.pi*19010/audio_rate;
-            
+
             self.stereo_carrier_pll_recovery = gr.pll_refout_cc(loop_bw, max_freq, min_freq);
-            #self.stereo_carrier_pll_recovery.squelch_enable(False) #pll_refout does not have squelch yet, so disabled for now 
-            
+            #self.stereo_carrier_pll_recovery.squelch_enable(False) #pll_refout does not have squelch yet, so disabled for now
+
 
             # set up mixer (multiplier) to get the L-R signal at baseband
 
@@ -140,7 +140,7 @@ class wfm_rcv_pll(gr.hier_block2):
             self.LmR_real = gr.complex_to_real();
             self.Make_Left = gr.add_ff();
             self.Make_Right = gr.sub_ff();
-            
+
             self.stereo_dsbsc_filter = gr.fir_filter_fcc(audio_decimation, stereo_dsbsc_filter_coeffs)
 
 
@@ -166,14 +166,14 @@ class wfm_rcv_pll(gr.hier_block2):
 
 	    # Make rds carrier by taking the squared pilot tone and multiplying by pilot tone
 	    self.connect (self.stereo_basebander,(self.rds_carrier_generator,0))
-            self.connect (self.stereo_carrier_pll_recovery,(self.rds_carrier_generator,1)) 
+            self.connect (self.stereo_carrier_pll_recovery,(self.rds_carrier_generator,1))
 	    # take signal, filter off rds,  send into mixer 0 channel
 	    self.connect (self.fm_demod,self.rds_signal_filter,(self.rds_signal_generator,0))
             # take rds_carrier_generator output and send into mixer 1 channel
 	    self.connect (self.rds_carrier_generator,(self.rds_signal_generator,1))
 	    # send basebanded rds signal and send into "processor" which for now is a null sink
 	    self.connect (self.rds_signal_generator,self_rds_signal_processor)
-	    
+
 
         if 1:
             # pick off the audio, L+R that is what we used to have and send it to the summer

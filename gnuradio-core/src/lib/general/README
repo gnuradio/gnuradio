@@ -87,12 +87,12 @@ TO DO
 * Move all the machine specific code to a subdirectory, then have
 configure symlink to the right directory.  This will allow us to build on
 any platform without choking.  There is generic code for all routines,
-only the machine dependent speedup will be lacking. 
+only the machine dependent speedup will be lacking.
 
 * Add an interface to gr_fir_util that will return a vector of all
 valid constructors with descriptive names for each i/o signature.
 This will allow the test code and benchmarking code to be blissfully
 ignorant of what platform they're running on.  The actual building of
 the vectors should be done bottom up through the gr_fir_sysconfig
-hierarchy. 
+hierarchy.
 

@@ -21,7 +21,7 @@
 
 """
 The following classes will be available through gnuradio.wxgui.forms:
-""" 
+"""
 
 ########################################################################
 # External Converters

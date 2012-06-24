@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                                                             
-  FILE........: phase.c                                           
-  AUTHOR......: David Rowe                                             
-  DATE CREATED: 1/2/09                                                 
-                                                                             
+
+  FILE........: phase.c
+  AUTHOR......: David Rowe
+  DATE CREATED: 1/2/09
+
   Functions for modelling and synthesising phase.
-                                                                             
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -22,7 +22,7 @@
   License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with this program; if not,see <http://www.gnu.org/licenses/>. 
+  along with this program; if not,see <http://www.gnu.org/licenses/>.
 */
 
 #include "defines.h"
@@ -101,14 +101,14 @@ void aks_to_H(
 
    phase_synth_zero_order()
 
-   Synthesises phases based on SNR and a rule based approach.  No phase 
+   Synthesises phases based on SNR and a rule based approach.  No phase
    parameters are required apart from the SNR (which can be reduced to a
    1 bit V/UV decision per frame).
 
    The phase of each harmonic is modelled as the phase of a LPC
    synthesis filter excited by an impulse.  Unlike the first order
    model the position of the impulse is not transmitted, so we create
-   an excitation pulse train using a rule based approach.  
+   an excitation pulse train using a rule based approach.
 
    Consider a pulse train with a pulse starting time n=0, with pulses
    repeated at a rate of Wo, the fundamental frequency.  A pulse train
@@ -149,10 +149,10 @@ void aks_to_H(
 
    This E[m] then gets passed through the LPC synthesis filter to
    determine the final harmonic phase.
-     
+
    Comparing to speech synthesised using original phases:
 
-   - Through headphones speech synthesised with this model is not as 
+   - Through headphones speech synthesised with this model is not as
      good. Through a loudspeaker it is very close to original phases.
 
    - If there are voicing errors, the speech can sound clicky or
@@ -207,21 +207,21 @@ void phase_synth_zero_order(
   G = 1.0;
   aks_to_H(model, aks, G, H, order);
 
-  /* 
+  /*
      Update excitation fundamental phase track, this sets the position
      of each pitch pulse during voiced speech.  After much experiment
      I found that using just this frame's Wo improved quality for UV
      sounds compared to interpolating two frames Wo like this:
-     
+
      ex_phase[0] += (*prev_Wo+mode->Wo)*N/2;
   */
-  
+
   ex_phase[0] += (model->Wo)*N;
   ex_phase[0] -= TWO_PI*floor(ex_phase[0]/TWO_PI + 0.5);
   r = TWO_PI/GLOTTAL_FFT_SIZE;
 
   for(m=1; m<=model->L; m++) {
-	  
+
       /* generate excitation */
 
       if (model->voiced) {
@@ -254,7 +254,7 @@ void phase_synth_zero_order(
       A_[m].imag = H[m].imag*Ex[m].real + H[m].real*Ex[m].imag;
 
       /* modify sinusoidal phase */
-   
+
       new_phi = atan2(A_[m].imag, A_[m].real+1E-12);
       model->phi[m] = new_phi;
   }

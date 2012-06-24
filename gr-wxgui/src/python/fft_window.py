@@ -127,7 +127,7 @@ class control_panel(wx.Panel):
 			parent.subscribe(USE_PERSISTENCE_KEY, widget.ShowItems)
                         #allways show initially, so room is reserved for them
 			widget.ShowItems(True) # (parent[USE_PERSISTENCE_KEY])
-		
+
                 parent.subscribe(USE_PERSISTENCE_KEY, self._update_layout)
 
 		#trace menu
@@ -201,7 +201,7 @@ class control_panel(wx.Panel):
           # Just ignore the key value we get
           # we only need to now that the visability or size of something has changed
           self.parent.Layout()
-          #self.parent.Fit()          
+          #self.parent.Fit()
 
 ##################################################
 # FFT window with plotter and control panel
@@ -300,6 +300,8 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		#initial update
 		self.update_grid()
 
+	def set_callback(self,callb):
+		self.plotter.set_callback(callb)
 
 	def autoscale(self, *args):
 		"""

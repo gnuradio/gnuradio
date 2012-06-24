@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,7 +30,7 @@
 /*!
  * \brief base class template for Infinite Impulse Response filter (IIR)
  */
-template<class i_type, class o_type, class tap_type> 
+template<class i_type, class o_type, class tap_type>
 class gri_iir {
 public:
   /*!
@@ -87,15 +87,15 @@ public:
   /*!
    * \brief install new taps.
    */
-  void set_taps (const std::vector<tap_type> &fftaps, 
+  void set_taps (const std::vector<tap_type> &fftaps,
 		 const std::vector<tap_type> &fbtaps) throw (std::invalid_argument)
-  { 
+  {
 
 
     d_latest_n = 0;
     d_latest_m = 0;
-    d_fftaps = fftaps; 
-    d_fbtaps = fbtaps; 
+    d_fftaps = fftaps;
+    d_fbtaps = fbtaps;
 
     int n = fftaps.size ();
     int m = fbtaps.size ();
@@ -123,7 +123,7 @@ protected:
 //
 // general case.  We may want to specialize this
 //
-template<class i_type, class o_type, class tap_type> 
+template<class i_type, class o_type, class tap_type>
 o_type
 gri_iir<i_type, o_type, tap_type>::filter (const i_type input)
 {
@@ -137,7 +137,7 @@ gri_iir<i_type, o_type, tap_type>::filter (const i_type input)
 
   int latest_n = d_latest_n;
   int latest_m = d_latest_m;
-  
+
   acc = d_fftaps[0] * input;
   for (i = 1; i < n; i ++)
     acc += (d_fftaps[i] * d_prev_input[latest_n + i]);
@@ -163,8 +163,8 @@ gri_iir<i_type, o_type, tap_type>::filter (const i_type input)
 }
 
 
-template<class i_type, class o_type, class tap_type> 
-void 
+template<class i_type, class o_type, class tap_type>
+void
 gri_iir<i_type, o_type, tap_type>::filter_n (o_type output[],
 					     const i_type input[],
 					     long n)

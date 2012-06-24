@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -44,7 +44,7 @@ GrAtscViterbiDecoder::GrAtscViterbiDecoder ()
 
   // any other init here.
 
-  // Let the bottom end know we must produce output in multiples of 12 segments.  
+  // Let the bottom end know we must produce output in multiples of 12 segments.
   setOutputSize (atsci_viterbi_decoder::NCODERS);
 }
 
@@ -59,7 +59,7 @@ GrAtscViterbiDecoder::~GrAtscViterbiDecoder ()
  * use a single input and output stream.
  */
 
-int 
+int
 GrAtscViterbiDecoder::work (VrSampleRange output, void *ao[],
 			    VrSampleRange inputs[], void *ai[])
 {
@@ -126,10 +126,10 @@ GrAtscViterbiDecoder::work (VrSampleRange output, void *ao[],
        << " output.size = " << output.size
        << " sum = " << output.index + output.size << endl;
 #endif
-  
+
   // Return the number of units we produced.
   // Note that for all intents and purposes, it is an error to
   // produce less than you are asked for.
 
-  return output.size;	
+  return output.size;
 }

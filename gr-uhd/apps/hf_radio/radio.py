@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 # GUI interactions and high level connections handled here.
 #
@@ -107,7 +107,7 @@ class radio_frame( ui_frame ):
         agc_ref = self.block.agc.offs.k()
         self.agc_ref.SetValue( str( agc_ref ) )
         self.agc_ref_s.SetValue( 5 )
-        
+
         self.fespectrum = fftsink2.fft_sink_c(
             self.fe_panel,
             fft_size=512,
@@ -138,7 +138,7 @@ class radio_frame( ui_frame ):
         r = r + 5
         self.agc_ref.SetValue( str( r ) )
         self.block.agc.offs.set_k( r )
-        
+
     def agc_ref_down( self, event ):
         self.agc_ref_s.SetValue( 5 )
         r = float( self.agc_ref.GetValue() )
@@ -184,7 +184,7 @@ class radio_frame( ui_frame ):
     def tune_evt( self, event ):
         f = self.freq_disp.GetValue()
         self.tune( f )
-        
+
     def tune( self, frequency ):
         self.freq_disp.SetValue( frequency )
         self.block.tune( frequency )
@@ -247,13 +247,13 @@ class radio_frame( ui_frame ):
 
     def event_pga( self, event ):
         self.block.src.set_gain(self.pga.GetValue())
-        
+
     def event_vol( self, event ):
         self.block.out.set( self.volume.GetValue()/20.0 )
 
     def set_usb( self, event ):
         self.block.demod.upper_sb()
-        
+
     def set_lsb( self, event ):
         self.block.demod.lower_sb()
 
@@ -310,9 +310,9 @@ def main():
 
     thread2 = Thread( target = rssi_function )
     thread2.start()
-      
+
     radio_obj.MainLoop()
-    
+
 
 if __name__ == "__main__":
     main()

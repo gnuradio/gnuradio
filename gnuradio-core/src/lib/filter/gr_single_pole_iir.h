@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002,2006 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -28,7 +28,7 @@
 /*!
  * \brief class template for single pole IIR filter
  */
-template<class o_type, class i_type, class tap_type> 
+template<class o_type, class i_type, class tap_type>
 class gr_single_pole_iir {
 public:
   /*!
@@ -58,7 +58,7 @@ public:
    * \brief install \p alpha as the current taps.
    */
   void set_taps (tap_type alpha)
-  { 
+  {
     if (alpha < 0 || alpha > 1)
       throw std::out_of_range ("Alpha must be in [0, 1]\n");
 
@@ -73,7 +73,7 @@ public:
   }
 
   o_type prev_output () const { return d_prev_output; }
-    
+
 protected:
   tap_type	d_alpha;
   tap_type	d_one_minus_alpha;
@@ -84,7 +84,7 @@ protected:
 //
 // general case.  We may want to specialize this
 //
-template<class o_type, class i_type, class tap_type> 
+template<class o_type, class i_type, class tap_type>
 o_type
 gr_single_pole_iir<o_type, i_type, tap_type>::filter (const i_type input)
 {
@@ -97,8 +97,8 @@ gr_single_pole_iir<o_type, i_type, tap_type>::filter (const i_type input)
 }
 
 
-template<class o_type, class i_type, class tap_type> 
-void 
+template<class o_type, class i_type, class tap_type>
+void
 gr_single_pole_iir<o_type, i_type, tap_type>::filterN (o_type output[],
 						       const i_type input[],
 						       unsigned long n)
@@ -112,7 +112,7 @@ gr_single_pole_iir<o_type, i_type, tap_type>::filterN (o_type output[],
 // Specialized case for gr_complex output and double taps
 // We need to have a gr_complexd type for the calculations and prev_output variable (in stead of double)
 
-template<class i_type> 
+template<class i_type>
 class gr_single_pole_iir<gr_complex, i_type, double>  {
 public:
   /*!
@@ -142,7 +142,7 @@ public:
    * \brief install \p alpha as the current taps.
    */
   void set_taps (double alpha)
-  { 
+  {
     if (alpha < 0 || alpha > 1)
       throw std::out_of_range ("Alpha must be in [0, 1]\n");
 
@@ -157,14 +157,14 @@ public:
   }
 
   gr_complexd prev_output () const { return d_prev_output; }
-    
+
 protected:
   double	d_alpha;
   double	d_one_minus_alpha;
   gr_complexd	d_prev_output;
 };
 
-template< class i_type> 
+template< class i_type>
 gr_complex
 gr_single_pole_iir<gr_complex, i_type, double>::filter (const i_type input)
 {
@@ -178,8 +178,8 @@ gr_single_pole_iir<gr_complex, i_type, double>::filter (const i_type input)
 
 //Do we need to specialize this, although it is the same as the general case?
 
-template<class i_type> 
-void 
+template<class i_type>
+void
 gr_single_pole_iir<gr_complex, i_type, double>::filterN (gr_complex output[],
 						       const i_type input[],
 						       unsigned long n)

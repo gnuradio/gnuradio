@@ -21,7 +21,7 @@ static inline void volk_32fc_deinterleave_imag_32f_a_sse(float* qBuffer, const l
 
   __m128 cplxValue1, cplxValue2, iValue;
   for(;number < quarterPoints; number++){
-      
+
     cplxValue1 = _mm_load_ps(complexVectorPtr);
     complexVectorPtr += 4;
 

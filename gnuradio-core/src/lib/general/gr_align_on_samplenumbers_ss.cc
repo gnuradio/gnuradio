@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -65,12 +65,12 @@ gr_align_on_samplenumbers_ss::gr_align_on_samplenumbers_ss (int nchan,int align_
   {
     set_output_multiple (d_align_interval*d_nchan*2);
   }
-    
+
 }
 
 gr_align_on_samplenumbers_ss::~gr_align_on_samplenumbers_ss()
 {
-  
+
 }
 void
 gr_align_on_samplenumbers_ss::forecast (int noutput_items, gr_vector_int &ninput_items_required)
@@ -126,7 +126,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
   {
     dcount=0;
     dprint=true;
-  } 
+  }
 #endif
   const size_t item_size = output_signature()->sizeof_stream_item (0);
   const unsigned ninputs = input_items.size();
@@ -144,7 +144,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
   int min_ninput_items=noutput_items;//numeric_limits<int>::max();
   int noutput_items_produced=0;
   for(unsigned int i=0;i<ninputs;i++)
-  { 
+  {
     d_state[i].ninput_items=ninput_items[i];
     d_state[i].ninput_items_used=0;
     min_ninput_items=std::min(ninput_items[i],min_ninput_items);
@@ -160,7 +160,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
       common_end=common_end*(d_nchan*2);
     }
     if (common_end<=0) break;
-    
+
     bool all_diffs_zero=true;
     //bool sync_found=false;
     int diff_comp_end_max=0;
@@ -210,7 +210,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
           d_state[i].sync_end_found=false;
          }
          d_in_presync=true;
-         d_state[i].sync_found=true;    
+         d_state[i].sync_found=true;
         } else
         {
           //d_in_presync=true;
@@ -220,9 +220,9 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
           else
             printf("presync NEXT with %i\n",i);
 #endif
-          d_state[i].sync_found=true;  
-          d_state[i].sync_end_found=false;  
-        }             
+          d_state[i].sync_found=true;
+          d_state[i].sync_end_found=false;
+        }
       } else
       {
         if(d_in_presync && d_state[i].sync_found)
@@ -314,11 +314,11 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
   {
     dcount=0;
     dprint=true;
-  } 
+  }
 #endif
   const size_t item_size = output_signature()->sizeof_stream_item (0);
   const unsigned ninputs = input_items.size();
-  
+
   int common_end=noutput_items;
   //int diff_min=INT_MAX;
   //int diff_max=INT_MIN;
@@ -344,7 +344,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
         ePrintf("Error: counter not continuous.\n ucounter_begin[%i]=%i +1 !=  ucounter_begin2=%i\n",i,d_state[i].ucounter_begin,ucounter_begin2);
       }
     }
-      
+
     //diff_comp[i]=ucounter[i]-ucounter[0];
     //diff_min=std::min(diff[i],diff_min);
     //diff_max=std::max(diff[i],diff_max);
@@ -390,7 +390,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
       tcPrintf("SYNC diff_end[%i]=%i ucounter_end[%i]=%i ucounter_begin[%i]=%i \n",i,d_state[i].diff_end,i,d_state[i].ucounter_end,i,d_state[i].ucounter_begin);
       tcPrintf("ucounter_end=%i < %i = ucounter_begin+(unsigned)(common_last/(d_nchan*2) \n",d_state[i].ucounter_end,d_state[i].ucounter_begin+(unsigned)(common_last/(d_nchan*2)));
 
-      printf("ucounter_end[%i]=%i ucounter_begin[%i]=%i\n",i,d_state[i].ucounter_end,i,d_state[i].ucounter_begin);      
+      printf("ucounter_end[%i]=%i ucounter_begin[%i]=%i\n",i,d_state[i].ucounter_end,i,d_state[i].ucounter_begin);
       int expected_sync_position=common_last - d_state[i].ucounter_end*(d_nchan*2);
       if(0==uin[expected_sync_position] && 0==uin[expected_sync_position+1])
       {
@@ -404,7 +404,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
     } else
     {
       tcPrintf("NOsync diff_end[%i]=%i ucounter_end[%i]=%i ucounter_begin[%i]=%i \n",i,d_state[i].diff_end,i,d_state[i].ucounter_end,i,d_state[i].ucounter_begin);
-#endif    
+#endif
     }
   }
   bool problem=false;
@@ -416,7 +416,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
         ePrintf("         You might want to swap master and slave.\n");
         ePrintf("          i=%i,d_state[i].diff_end+diff_comp_end_max=%i,d_state[i].diff_end=%i,diff_comp_end_max=%i,ucounter[i]=%i,ucounter[0]=%i\n",
                           i,d_state[i].diff_end+diff_comp_end_max,d_state[i].diff_end,diff_comp_end_max,d_state[i].ucounter_end,d_state[0].ucounter_end);
-        //ePrintf("        toconsume=%i\n",toconsume); 
+        //ePrintf("        toconsume=%i\n",toconsume);
       }
   if(sync_found || all_diffs_zero || problem)
   {
@@ -437,7 +437,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
   } else
   {
     //int minconsume=0;//common_end/(2*d_nchan*2);
-    //min_consume=min_consume*d_nchan*2;  
+    //min_consume=min_consume*d_nchan*2;
     for(unsigned int i=0;i<ninputs;i++)
     {
       int toconsume=std::min((d_state[i].diff_end+diff_comp_end_max)*d_nchan*2,ninput_items[i]);

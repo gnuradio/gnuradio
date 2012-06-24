@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -157,15 +157,15 @@ gr_circular_file::write (void *vdata, int nbytes)
   unsigned char *data = (unsigned char *) vdata;
   int	buffer_size = d_header[HD_BUFFER_SIZE];
   int	buffer_current = d_header[HD_BUFFER_CURRENT];
-  
+
   while (nbytes > 0){
     int n = std::min (nbytes, buffer_size - buffer_current);
     memcpy (d_buffer + buffer_current, data, n);
-    
+
     buffer_current += n;
     if (buffer_current >= buffer_size)
       buffer_current = 0;
-    
+
     data += n;
     nbytes -= n;
   }
@@ -181,7 +181,7 @@ gr_circular_file::read (void *vdata, int nbytes)
   int	buffer_current = d_header[HD_BUFFER_CURRENT];
   int	buffer_size = d_header[HD_BUFFER_SIZE];
   int	total = 0;
-  
+
   nbytes = std::min (nbytes, buffer_size - d_bytes_read);
 
   while (nbytes > 0){

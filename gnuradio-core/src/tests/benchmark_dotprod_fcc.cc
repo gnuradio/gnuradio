@@ -79,7 +79,7 @@ benchmark (fir_maker_t filter_maker, const char *implementation_name)
 
   std::vector<gr_complex> taps (&coeffs[0], &coeffs[NTAPS]);
   filter_t *f = filter_maker (taps);
-  
+
   // get starting CPU usage
 #ifdef HAVE_SYS_RESOURCE_H
   if (getrusage (RUSAGE_SELF, &rusage_start) < 0){

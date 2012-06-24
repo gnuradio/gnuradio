@@ -76,9 +76,9 @@ class gr_plot_filter(QtGui.QMainWindow):
                            "High Pass", "Root Raised Cosine", "Gaussian")
         self.optFilters = ("Low Pass", "Band Pass", "Complex Band Pass",
                            "Band Notch", "High Pass")
-        
+
         self.set_windowed()
-                
+
         # Initialize to LPF
         self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
 
@@ -211,19 +211,19 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.gausPage)
 
         self.design()
-        
+
     def changed_filter_design_type(self, design):
         if(design == "Equiripple"):
             self.set_equiripple()
         else:
             self.set_windowed()
-            
+
         self.design()
 
     def set_equiripple(self):
         # Stop sending the signal for this function
         self.gui.filterTypeComboBox.blockSignals(True)
-        
+
         self.equiripple = True
         self.gui.lpfPassBandRippleLabel.setVisible(True)
         self.gui.lpfPassBandRippleEdit.setVisible(True)
@@ -252,11 +252,11 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         # Tell gui its ok to start sending this signal again
         self.gui.filterTypeComboBox.blockSignals(False)
-        
+
     def set_windowed(self):
         # Stop sending the signal for this function
         self.gui.filterTypeComboBox.blockSignals(True)
-        
+
         self.equiripple = False
         self.gui.lpfPassBandRippleLabel.setVisible(False)
         self.gui.lpfPassBandRippleEdit.setVisible(False)
@@ -332,7 +332,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         if(ret):
             tb = sb - pb
-            
+
             taps = gr.firdes.low_pass_2(gain, fs, pb, tb,
                                         atten, wintype)
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -341,7 +341,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             return (taps, params, ret)
         else:
             return ([], [], ret)
-    
+
     def design_win_bpf(self, fs, gain, wintype):
         ret = True
         pb1,r = self.gui.startofBpfPassBandEdit.text().toDouble()
@@ -417,7 +417,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             tb = pb - sb
             taps = gr.firdes.high_pass_2(gain, fs, pb, tb,
-                                         atten, wintype)            
+                                         atten, wintype)
             params = {"fs": fs, "gain": gain, "wintype": wintype,
                       "filttype": "hpf", "sbend": sb, "pbstart": pb,
                       "atten": atten, "ntaps": len(taps)}
@@ -490,7 +490,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 return (taps, params, ret)
         else:
             return ([], [], ret)
-    
+
     def design_opt_bpf(self, fs, gain):
         ret = True
         pb1,r = self.gui.startofBpfPassBandEdit.text().toDouble()
@@ -631,15 +631,15 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.update_phase_curves()
         if(tab == 3):
             self.update_group_curves()
-        
+
     def get_fft(self, fs, taps, Npts):
         Ts = 1.0/fs
         fftpts = fftpack.fft(taps, Npts)
-        self.freq = scipy.arange(0, fs, 1.0/(Npts*Ts))        
+        self.freq = scipy.arange(0, fs, 1.0/(Npts*Ts))
         self.fftdB = 20.0*scipy.log10(abs(fftpts))
         self.fftDeg = scipy.unwrap(scipy.angle(fftpts))
         self.groupDelay = -scipy.diff(self.fftDeg)
-        
+
     def update_time_curves(self):
         ntaps = len(self.taps)
         if(ntaps > 0):
@@ -656,17 +656,17 @@ class gr_plot_filter(QtGui.QMainWindow):
                                            0, ntaps)
             self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
                                            ymin, ymax)
-            
+
             # Set the zoomer base to unzoom to the new axis
             self.timeZoomer.setZoomBase()
-            
+
             self.gui.timePlot.replot()
-        
+
     def update_freq_curves(self):
         npts = len(self.fftdB)
         if(npts > 0):
             self.freqcurve.setData(self.freq, self.fftdB)
-            
+
             # Reset the x-axis to the new time scale
             ymax = 1.5 * max(self.fftdB[0:npts/2])
             ymin = 1.1 * min(self.fftdB[0:npts/2])
@@ -676,10 +676,10 @@ class gr_plot_filter(QtGui.QMainWindow):
                                            xmin, xmax)
             self.gui.freqPlot.setAxisScale(self.gui.freqPlot.yLeft,
                                            ymin, ymax)
-            
+
             # Set the zoomer base to unzoom to the new axis
             self.freqZoomer.setZoomBase()
-            
+
             self.gui.freqPlot.replot()
 
 
@@ -687,7 +687,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         npts = len(self.fftDeg)
         if(npts > 0):
             self.phasecurve.setData(self.freq, self.fftDeg)
-            
+
             # Reset the x-axis to the new time scale
             ymax = 1.5 * max(self.fftDeg[0:npts/2])
             ymin = 1.1 * min(self.fftDeg[0:npts/2])
@@ -697,17 +697,17 @@ class gr_plot_filter(QtGui.QMainWindow):
                                             xmin, xmax)
             self.gui.phasePlot.setAxisScale(self.gui.phasePlot.yLeft,
                                             ymin, ymax)
-            
+
             # Set the zoomer base to unzoom to the new axis
             self.phaseZoomer.setZoomBase()
-            
+
             self.gui.phasePlot.replot()
 
     def update_group_curves(self):
         npts = len(self.groupDelay)
         if(npts > 0):
             self.groupcurve.setData(self.freq, self.groupDelay)
-            
+
             # Reset the x-axis to the new time scale
             ymax = 1.5 * max(self.groupDelay[0:npts/2])
             ymin = 1.1 * min(self.groupDelay[0:npts/2])
@@ -717,10 +717,10 @@ class gr_plot_filter(QtGui.QMainWindow):
                                             xmin, xmax)
             self.gui.groupPlot.setAxisScale(self.gui.groupPlot.yLeft,
                                             ymin, ymax)
-            
+
             # Set the zoomer base to unzoom to the new axis
             self.groupZoomer.setZoomBase()
-            
+
             self.gui.groupPlot.replot()
 
     def action_save_dialog(self):
@@ -732,7 +732,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                   ("Could not save to file: %s" % filename),
                                                   "&Ok")
             return
-            
+
         csvhandle = csv.writer(handle, delimiter=",")
         for k in self.params.keys():
             csvhandle.writerow([k, self.params[k]])
@@ -743,7 +743,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         filename = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
         if(len(filename) == 0):
             return
-        
+
         try:
             handle = open(filename, "rb")
         except IOError:
@@ -849,9 +849,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.update_freq_curves()
         self.update_phase_curves()
         self.update_group_curves()
-        
+
         self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
-        
+
 
 def setup_options():
     usage="%prog: [options] (input_filename)"

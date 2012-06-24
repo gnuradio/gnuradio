@@ -15,7 +15,7 @@
 static inline void volk_16i_convert_8i_a_sse2(int8_t* outputVector, const int16_t* inputVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int sixteenthPoints = num_points / 16;
-    
+
      int8_t* outputVectorPtr = outputVector;
     int16_t* inputPtr = (int16_t*)inputVector;
     __m128i inputVal1;
@@ -30,7 +30,7 @@ static inline void volk_16i_convert_8i_a_sse2(int8_t* outputVector, const int16_
 
       inputVal1 = _mm_srai_epi16(inputVal1, 8);
       inputVal2 = _mm_srai_epi16(inputVal2, 8);
-      
+
       ret = _mm_packs_epi16(inputVal1, inputVal2);
 
       _mm_store_si128((__m128i*)outputVectorPtr, ret);

@@ -16,13 +16,13 @@ void qa_16s_permute_and_scalar_add_aligned16::t1() {
 
 void qa_16s_permute_and_scalar_add_aligned16::t1() {
   const int vlen = 64;
-  
+
   unsigned int num_bytes = vlen << 1;
 
   volk_environment_init();
   clock_t start, end;
   double total;
-  
+
   __VOLK_ATTR_ALIGNED(16) short target[vlen];
   __VOLK_ATTR_ALIGNED(16) short target2[vlen];
   __VOLK_ATTR_ALIGNED(16) short src0[vlen];
@@ -43,7 +43,7 @@ void qa_16s_permute_and_scalar_add_aligned16::t1() {
   }
 
   printf("16s_permute_and_scalar_add_aligned\n");
-  
+
   start = clock();
   for(int i = 0; i < 100000; ++i) {
     volk_16s_permute_and_scalar_add_aligned16_manual(target, src0, permute_indexes, cntl0, cntl1, cntl2, cntl3, scalars, num_bytes, "generic");
@@ -53,24 +53,24 @@ void qa_16s_permute_and_scalar_add_aligned16::t1() {
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
 
   printf("generic_time: %f\n", total);
-  
+
   start = clock();
   for(int i = 0; i < 100000; ++i) {
     volk_16s_permute_and_scalar_add_aligned16_manual(target2, src0, permute_indexes, cntl0, cntl1, cntl2, cntl3, scalars, num_bytes, "sse2");
   }
   end = clock();
-  
+
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
 
   printf("sse2_time: %f\n", total);
-  
-  
+
+
   for(int i = 0; i < vlen; ++i) {
     //printf("generic... %d, sse2... %d\n", target[i], target2[i]);
   }
-  
+
   for(int i = 0; i < vlen; ++i) {
-    
+
     CPPUNIT_ASSERT(target[i] == target2[i]);
   }
 }

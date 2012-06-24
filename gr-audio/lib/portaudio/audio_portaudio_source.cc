@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in he hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -49,7 +49,7 @@ typedef float sample_t;
 // Number of portaudio buffers in the ringbuffer
 static const unsigned int N_BUFFERS = 4;
 
-static std::string 
+static std::string
 default_device_name ()
 {
   return gr_prefs::singleton()->get_string("audio_portaudio", "default_input_device", "");
@@ -59,7 +59,7 @@ void
 audio_portaudio_source::create_ringbuffer(void)
 {
   int bufsize_samples = d_portaudio_buffer_size_frames * d_input_parameters.channelCount;
-  
+
   if (d_verbose)
     fprintf(stderr, "ring buffer size  = %d frames\n",
 	    N_BUFFERS*bufsize_samples/d_input_parameters.channelCount);
@@ -101,7 +101,7 @@ portaudio_source_callback (const void *inputBuffer,
 	     inputBuffer,
 	     nframes_to_copy * nchan * sizeof(sample_t));
       self->d_writer->update_write_pointer(nframes_to_copy * nchan);
-	 
+
       // Tell the source thread there is new data in the ringbuffer.
       self->d_ringbuffer_ready = true;
     }
@@ -167,7 +167,7 @@ audio_portaudio_source::audio_portaudio_source(int sampling_rate,
   if (numDevices == 0)
     bail("no devices available", 0);
 
-  if (d_device_name.empty()) 
+  if (d_device_name.empty())
   {
     // FIXME Get smarter about picking something
     device = Pa_GetDefaultInputDevice();
@@ -178,7 +178,7 @@ audio_portaudio_source::audio_portaudio_source(int sampling_rate,
   else
   {
     bool found = false;
-    
+
     for (i=0;i<numDevices;i++) {
       deviceInfo = Pa_GetDeviceInfo( i );
       fprintf(stderr,"Testing device name: %s",deviceInfo->name);
@@ -257,7 +257,7 @@ audio_portaudio_source::check_topology (int ninputs, int noutputs)
     return false;
   }
 
-#if 0  
+#if 0
   const PaStreamInfo *psi = Pa_GetStreamInfo(d_stream);
 
   d_portaudio_buffer_size_frames = (int)(d_input_parameters.suggestedLatency  * psi->sampleRate);
@@ -309,7 +309,7 @@ audio_portaudio_source::work (int noutput_items,
 	  d_ringbuffer_cond.wait(guard);	// block here, then try again
 	continue;
       }
-      
+
       assert(k == 0);
 
       // There's no data and we're not allowed to block.
@@ -343,7 +343,7 @@ audio_portaudio_source::work (int noutput_items,
       gruel::scoped_lock guard(d_ringbuffer_mutex);
 
       int nf = std::min(noutput_items - k, nframes);
-      
+
       const float *p = (const float *) d_reader->read_pointer();
       for (int i = 0; i < nf; i++){
 	for (unsigned int c = 0; c < nchan; c++){

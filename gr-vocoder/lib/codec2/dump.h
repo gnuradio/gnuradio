@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-                                                                             
+
   FILE........: dump.h
-  AUTHOR......: David Rowe                                                          
-  DATE CREATED: 25/8/09                                                       
-                                                                             
+  AUTHOR......: David Rowe
+  DATE CREATED: 25/8/09
+
   Routines to dump data to text files for Octave analysis.
 
 \*---------------------------------------------------------------------------*/

@@ -80,12 +80,28 @@ class DoxyCompMem(Base):
         self._data['brief_description'] = bd
         self._data['detailed_description'] = dd        
 
+    def set_parameters(self, data):
+        vs = [ddc.value for ddc in data.detaileddescription.content_]
+        pls = []
+        for v in vs:
+            if hasattr(v, 'parameterlist'):
+                pls += v.parameterlist
+        pis = []
+        for pl in pls:
+            pis += pl.parameteritem
+        dpis = []
+        for pi in pis:
+            dpi = DoxyParameterItem(pi)
+            dpi._parse()
+            dpis.append(dpi)
+        self._data['params'] = dpis
+
+
 class DoxyCompound(DoxyCompMem):
     pass
 
 class DoxyMember(DoxyCompMem):
     pass
-    
 
 class DoxyFunction(DoxyMember):
 
@@ -98,10 +114,13 @@ class DoxyFunction(DoxyMember):
             return
         super(DoxyFunction, self)._parse()
         self.set_descriptions(self._parse_data)
-        self._data['params'] = []
-        prms = self._parse_data.param
-        for prm in prms:
-            self._data['params'].append(DoxyParam(prm))
+        self.set_parameters(self._parse_data)
+        if not self._data['params']:
+            # If the params weren't set by a comment then just grab the names.
+            self._data['params'] = []
+            prms = self._parse_data.param
+            for prm in prms:
+                self._data['params'].append(DoxyParam(prm))
 
     brief_description = property(lambda self: self.data()['brief_description'])
     detailed_description = property(lambda self: self.data()['detailed_description'])
@@ -121,9 +140,39 @@ class DoxyParam(DoxyMember):
         self.set_descriptions(self._parse_data)
         self._data['declname'] = self._parse_data.declname
 
+    @property
+    def description(self):
+        descriptions = []
+        if self.brief_description:
+            descriptions.append(self.brief_description)
+        if self.detailed_description:
+            descriptions.append(self.detailed_description)
+        return '\n\n'.join(descriptions)
+
     brief_description = property(lambda self: self.data()['brief_description'])
     detailed_description = property(lambda self: self.data()['detailed_description'])
-    declname = property(lambda self: self.data()['declname'])
+    name = property(lambda self: self.data()['declname'])
+
+class DoxyParameterItem(DoxyMember):
+    """A different representation of a parameter in Doxygen."""
+
+    def _parse(self):
+        if self._parsed:
+            return
+        super(DoxyParameterItem, self)._parse()
+        names = []
+        for nl in self._parse_data.parameternamelist:
+            for pn in nl.parametername:
+                names.append(description(pn))
+        # Just take first name
+        self._data['name'] = names[0]
+        # Get description
+        pd = description(self._parse_data.get_parameterdescription())
+        self._data['description'] = pd
+
+    description = property(lambda self: self.data()['description'])
+    name = property(lambda self: self.data()['name'])
+
 
 class DoxyClass(DoxyCompound):
     
@@ -139,12 +188,14 @@ class DoxyClass(DoxyCompound):
         if self._error:
             return
         self.set_descriptions(self._retrieved_data.compounddef)
+        self.set_parameters(self._retrieved_data.compounddef)
         # Sectiondef.kind tells about whether private or public.
         # We just ignore this for now.
         self.process_memberdefs()
 
     brief_description = property(lambda self: self.data()['brief_description'])
     detailed_description = property(lambda self: self.data()['detailed_description'])
+    params = property(lambda self: self.data()['params'])
 
 Base.mem_classes.append(DoxyClass)
         

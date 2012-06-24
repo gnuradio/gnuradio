@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -82,7 +82,7 @@ test_known_io (fir_maker_t maker)
 {
   vector<tap_type> t1a (&taps_1a[0], &taps_1a[NELEM (taps_1a)]);
   vector<tap_type> t1b (&taps_1b[0], &taps_1b[NELEM (taps_1b)]);
-  
+
   gr_fir_fff *f1 = maker (t1a);		// create filter
   CPPUNIT_ASSERT_EQUAL ((unsigned) 1, f1->ntaps ());	// check ntaps
 
@@ -93,7 +93,7 @@ test_known_io (fir_maker_t maker)
 
   f1->set_taps (t1b);			// set new taps
   CPPUNIT_ASSERT_EQUAL ((unsigned) 2, f1->ntaps ());	// check ntaps
-  
+
   // check filter output
   n = NELEM (input_1) - f1->ntaps () + 1;
   for (int i = 0; i < n; i++)
@@ -141,7 +141,7 @@ ref_dotprod (const i_type input[], const tap_type taps[], int ntaps)
 }
 
 static void
-test_random_io (fir_maker_t maker)  
+test_random_io (fir_maker_t maker)
 {
   const int	MAX_TAPS	= 32;
   const int	OUTPUT_LEN	= 17;
@@ -184,7 +184,7 @@ test_random_io (fir_maker_t maker)
       // our reference implementation is using 80 bit floating point
       // arithmetic, while the SSE version is using 32 bit float point
       // arithmetic.
-      
+
       for (int o = 0; o < ol; o++){
 	CPPUNIT_ASSERT_DOUBLES_EQUAL (expected_output[o], actual_output[o],
 				      fabs (expected_output[o]) * 9e-3);
@@ -200,7 +200,7 @@ static void
 for_each (void (*f)(fir_maker_t))
 {
   std::vector<gr_fir_fff_info>		info;
-  gr_fir_util::get_gr_fir_fff_info (&info);	// get all known fff implementations 
+  gr_fir_util::get_gr_fir_fff_info (&info);	// get all known fff implementations
 
   for (std::vector<gr_fir_fff_info>::iterator p = info.begin ();
        p != info.end ();

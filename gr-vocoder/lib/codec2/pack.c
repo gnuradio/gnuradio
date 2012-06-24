@@ -65,7 +65,7 @@ pack(
     bitArray[wordIndex] |=
      ((unsigned char)((field >> (fieldWidth - sliceWidth))
      << (bitsLeft - sliceWidth)));
-    
+
     *bitIndex = bI + sliceWidth;
     fieldWidth -= sliceWidth;
   } while ( fieldWidth != 0 );
@@ -91,7 +91,7 @@ unpack(
 			 bitsLeft < fieldWidth ? bitsLeft : fieldWidth;
 
     field |= (((bitArray[bI >> ShiftRight] >> (bitsLeft - sliceWidth)) & ((1 << sliceWidth) - 1)) << (fieldWidth - sliceWidth));
-    
+
     *bitIndex = bI + sliceWidth;
     fieldWidth -= sliceWidth;
   } while ( fieldWidth != 0 );

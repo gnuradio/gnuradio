@@ -1,4 +1,4 @@
 #!/bin/bash
 
-find . -name '*.py' | xargs grep -h -E '^(from|import)' | sort -u 
+find . -name '*.py' | xargs grep -h -E '^(from|import)' | sort -u
 

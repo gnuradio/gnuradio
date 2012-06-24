@@ -36,7 +36,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     va_out = trellis.viterbi_s(fo,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
-    
+
     tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
     tb.connect (mod,(add,0))
     tb.connect (noise,(add,1))
@@ -46,7 +46,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     tb.connect (siso_in,deinter,va_out,fsmi2s,dst)
 
     tb.run()
-    
+
     ntotal = dst.ntotal ()
     nright = dst.nright ()
     runlength = dst.runlength ()
@@ -76,7 +76,7 @@ def main(args):
     interleaver=trellis.interleaver(K,666) # construct a random interleaver
     modulation = fsm_utils.psk8 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
-    constellation = modulation[1] 
+    constellation = modulation[1]
     if len(constellation)/dimensionality != fi.O():
         sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
         sys.exit (1)
@@ -100,7 +100,7 @@ def main(args):
             print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
     # estimate of the (short or bit) error rate
     print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
-    
+
 
 
 if __name__ == '__main__':

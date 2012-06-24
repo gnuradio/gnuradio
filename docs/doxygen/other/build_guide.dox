@@ -19,13 +19,16 @@ components is determined by what the user requires from GNU Radio. If,
 for example, you do not use any Comedi-based hardware, do not worry
 about building gr-comedi.
 
+Before trying to build these from source, please try your system's
+installation tool (apt-get, pkg_install, YaST, yum, urpmi, etc.)
+first. Most recent systems have these packages available.
+
 \subsection dep_global Global Dependencies
 \li git                      http://code.google.com/p/msysgit
 \li cmake       (>= 2.6)     http://www.cmake.org/cmake/resources/software.html
 \li boost       (>= 1.35)    http://www.boostpro.com/download
 \li cppunit     (>= 1.9.14)  http://gaiacrtn.free.fr/cppunit/index.html
 \li fftw3f      (>= 3.0)     http://www.fftw.org/install/windows.html
-\li gsl	        (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
 
 \subsection dep_python Python Wrappers
 \li python      (>= 2.5)     http://www.python.org/download/
@@ -38,6 +41,9 @@ about building gr-comedi.
 \subsection dep_grc grc: The GNU Radio Companion
 \li Cheetah     (>= 2.0)     http://www.cheetahtemplate.org/
 \li pygtk       (>= 2.10)    http://www.pygtk.org/downloads.html
+
+\subsection dep_wavelet gr-wavelet: Collection of wavelet blocks
+\li gsl	        (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
 
 \subsection dep_gr_qtgui gr-qtgui: The QT-based Graphical User Interface
 \li qt	        (>= 4.4)     http://qt.nokia.com/downloads/
@@ -57,11 +63,15 @@ about building gr-comedi.
 \li audio-osx
 \li audio-windows
 
+It is not necessary to satisfy all of these dependencies; just the
+one(s) that are right for your system. On Linux, don't expect
+audio-osx and audio-windows to be either satisfied or built.
+
 \subsection dep_uhd uhd: The Ettus USRP Hardware Driver Interface
 \li uhd         (>= 3.0.0)   http://code.ettus.com/redmine/ettus/projects/uhd/wiki
 
 \subsection dep_shd shd: The Symplex Hardware Driver Interface
-\li shd         (>= 3.0.0)   
+\li shd         (>= 3.0.0)
 
 \subsection dep_gr_video_sdl gr-video-sdl: PAL and NTSC display
 \li SDL	        (>= 1.2.0)   http://www.libsdl.org/download-1.2.php
@@ -146,23 +156,3 @@ cmake -DCMAKE_CXX_FLAGS:STRING="-mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -g
       -DCMAKE_C_FLAGS:STRING="-mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -g" \
        <gr_source_dir>
 \endcode
-
-
-\section build_old_autotools Building Using Old Autotools Method
-
-As of version 3.5, we have moved to using Cmake as the default,
-preferred build system. If for some reason, Cmake fails on your
-system, GNU Radio still includes the old autotools build process as a
-parallel build method. To build:
-
-\code
-$ cd $(srcdir)
-$ ./bootstrap   // only if not building from a tarball
-$ cd $(builddir)
-$ $(srcdir)/configure [options]
-$ make [-jN]
-$ make check
-$ sudo make install
-\endcode
-
-*/

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005,2006,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -50,7 +50,7 @@ typedef jack_default_audio_sample_t sample_t;
 // TODO: make it to match at least the quantity of items passed to work()
 static const unsigned int N_BUFFERS = 16;
 
-static std::string 
+static std::string
 default_device_name ()
 {
   return gr_prefs::singleton()->get_string("audio_jack", "default_input_device", "gr_source");
@@ -78,7 +78,7 @@ jack_source_process (jack_nframes_t nframes, void *arg)
   // Tell the source thread there is data in the ringbuffer.
   // If it is already running, the lock will not be available.
   // We can't wait here in the process() thread, but we don't
-  // need to signal in that case, because the source thread will 
+  // need to signal in that case, because the source thread will
   // check for data availability.
 
   if (pthread_mutex_trylock (&self->d_jack_process_lock) == 0) {
@@ -131,8 +131,8 @@ audio_jack_source::audio_jack_source (int sampling_rate,
   // just decides to stop calling us.
 
   //jack_on_shutdown (d_jack_client, &jack_shutdown, (void*)this);
- 
-  d_jack_input_port = jack_port_register (d_jack_client, "in", 
+
+  d_jack_input_port = jack_port_register (d_jack_client, "in",
 					  JACK_DEFAULT_AUDIO_TYPE,
 					  JackPortIsInput, 0);
 
@@ -162,7 +162,7 @@ audio_jack_source::audio_jack_source (int sampling_rate,
 bool
 audio_jack_source::check_topology (int ninputs, int noutputs)
 {
-  // tell the JACK server that we are ready to roll 
+  // tell the JACK server that we are ready to roll
   if (jack_activate (d_jack_client))
     throw std::runtime_error ("audio_jack_source");
 
@@ -192,7 +192,7 @@ audio_jack_source::work (int noutput_items,
     unsigned int read_space;	// bytes
 
 #ifdef NO_PTHREAD
-    while ((read_space=jack_ringbuffer_read_space (d_ringbuffer)) < 
+    while ((read_space=jack_ringbuffer_read_space (d_ringbuffer)) <
 	   d_jack_buffer_size*sizeof(sample_t)) {
       usleep(1000000*((d_jack_buffer_size-read_space/sizeof(sample_t))/d_sampling_rate));
     }
@@ -200,7 +200,7 @@ audio_jack_source::work (int noutput_items,
     // JACK actually requires POSIX
 
     pthread_mutex_lock (&d_jack_process_lock);
-    while ((read_space=jack_ringbuffer_read_space (d_ringbuffer)) < 
+    while ((read_space=jack_ringbuffer_read_space (d_ringbuffer)) <
 		    d_jack_buffer_size*sizeof(sample_t)) {
 
       // wait until jack_source_process() signals more data

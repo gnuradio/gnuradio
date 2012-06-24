@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import eng_notation
 from gnuradio import gr
@@ -39,11 +39,11 @@ class uhd_burst_detector(gr.top_block):
         self.gain = options.gain
         self.threshold = options.threshold
         self.trigger = options.trigger
-        
+
         self.uhd_src = uhd.single_usrp_source(
             device_addr=self.uhd_addr,
             stream_args=uhd.stream_args('fc32'))
-        
+
         self.uhd_src.set_samp_rate(self.samp_rate)
         self.uhd_src.set_center_freq(self.freq, 0)
         self.uhd_src.set_gain(self.gain, 0)
@@ -70,7 +70,7 @@ class uhd_burst_detector(gr.top_block):
 
         # Use file sink burst tagger to capture bursts
         self.fsnk = gr.tagged_file_sink(gr.sizeof_gr_complex, self.samp_rate)
-        
+
 
         ##################################################
         # Connections
@@ -87,11 +87,11 @@ class uhd_burst_detector(gr.top_block):
             self.connect(self.uhd_src, self.det)
             self.connect(self.det, self.c2m, self.avg, self.scale, self.f2s)
             self.connect(self.f2s, (self.tagger, 1))
-        
+
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.uhd_src_0.set_samp_rate(self.samp_rate)
-            
+
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     parser.add_option("-T", "--trigger", action="store_true", default=False,
                       help="Use internal trigger instead of detector [default=%default]")
     (options, args) = parser.parse_args()
-    
+
     uhd_addr = options.address
 
     tb = uhd_burst_detector(uhd_addr, options)

@@ -31,15 +31,15 @@ class pubsub(dict):
 	self._publishers = { }
 	self._subscribers = { }
 	self._proxies = { }
-	
+
     def __missing__(self, key, value=None):
 	dict.__setitem__(self, key, value)
 	self._publishers[key] = None
 	self._subscribers[key] = []
 	self._proxies[key] = None
-	
+
     def __setitem__(self, key, val):
-	if not self.has_key(key): 
+	if not self.has_key(key):
 	    self.__missing__(key, val)
 	elif self._proxies[key] is not None:
 	    (p, newkey) = self._proxies[key]
@@ -68,7 +68,7 @@ class pubsub(dict):
             p.publish(newkey, publisher)
         else:
             self._publishers[key] = publisher
-	
+
     def subscribe(self, key, subscriber):
 	if not self.has_key(key): self.__missing__(key)
         if self._proxies[key] is not None:
@@ -76,14 +76,14 @@ class pubsub(dict):
             p.subscribe(newkey, subscriber)
         else:
             self._subscribers[key].append(subscriber)
-	
+
     def unpublish(self, key):
         if self._proxies[key] is not None:
             (p, newkey) = self._proxies[key]
             p.unpublish(newkey)
         else:
             self._publishers[key] = None
-	
+
     def unsubscribe(self, key, subscriber):
         if self._proxies[key] is not None:
             (p, newkey) = self._proxies[key]
@@ -94,7 +94,7 @@ class pubsub(dict):
     def proxy(self, key, p, newkey=None):
 	if not self.has_key(key): self.__missing__(key)
 	if newkey is None: newkey = key
-	self._proxies[key] = (p, newkey)	
+	self._proxies[key] = (p, newkey)
 
     def unproxy(self, key):
         self._proxies[key] = None
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     # The third is a lambda function
     o.subscribe('foo', lambda x: sys.stdout.write('val='+`x`+'\n'))
 
-    # Update key 'foo', will notify subscribers    
+    # Update key 'foo', will notify subscribers
     print "Updating 'foo' with three subscribers:"
     o['foo'] = 'bar';
 
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     # Update now will only trigger second and third subscriber
     print "Updating 'foo' after removing a subscriber:"
     o['foo'] = 'bar2';
-    
+
     # Publish a key as a function, in this case, a lambda function
     o.publish('baz', lambda : 42)
     print "Published value of 'baz':", o['baz']
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     # This will return None, as there is no publisher
     print "Value of 'baz' with no publisher:", o['baz']
-    
+
     # Set 'baz' key, it gets cached
     o['baz'] = 'bazzz'
 

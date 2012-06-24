@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, blks2
 import sys, math, time
@@ -45,7 +45,7 @@ class fmtx(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         fmtx = blks2.nbfm_tx (audio_rate, if_rate, max_dev=5e3, tau=75e-6)
-        
+
         # Local oscillator
         lo = gr.sig_source_c (if_rate,        # sample rate
                               gr.GR_SIN_WAVE, # waveform type
@@ -53,7 +53,7 @@ class fmtx(gr.hier_block2):
                               1.0,            # amplitude
                               0)              # DC Offset
         mixer = gr.multiply_cc ()
-    
+
         self.connect (self, fmtx, (mixer, 0))
         self.connect (lo, (mixer, 1))
         self.connect (mixer, self)
@@ -93,7 +93,7 @@ class fmtest(gr.top_block):
         bw = chspacing/2.0
         t_bw = chspacing/10.0
         self._chan_rate = self._if_rate / self._M
-        self._taps = gr.firdes.low_pass_2(1, self._if_rate, bw, t_bw, 
+        self._taps = gr.firdes.low_pass_2(1, self._if_rate, bw, t_bw,
                                           attenuation_dB=100,
                                           window=gr.firdes.WIN_BLACKMAN_hARRIS)
         tpc = math.ceil(float(len(self._taps)) /  float(self._M))
@@ -101,11 +101,11 @@ class fmtest(gr.top_block):
         print "Number of taps:     ", len(self._taps)
         print "Number of channels: ", self._M
         print "Taps per channel:   ", tpc
-        
+
         self.pfb = blks2.pfb_channelizer_ccf(self._M, self._taps)
-        
+
         self.connect(self.channel, self.pfb)
-        
+
         # Create a file sink for each of M output channels of the filter and connect it
         self.fmdet = list()
         self.squelch = list()
@@ -153,8 +153,8 @@ def main():
         X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
         f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
-        sp1_f.set_xlim([min(f_in), max(f_in)+1]) 
-        sp1_f.set_ylim([-120.0, 20.0]) 
+        sp1_f.set_xlim([min(f_in), max(f_in)+1])
+        sp1_f.set_ylim([-120.0, 20.0])
 
         sp1_f.set_title("Input Signal", weight="bold")
         sp1_f.set_xlabel("Frequency (Hz)")
@@ -162,7 +162,7 @@ def main():
 
         Ts = 1.0/fs
         Tmax = len(d)*Ts
-        
+
         t_in = scipy.arange(0, Tmax, Ts)
         x_in = scipy.array(d)
         sp1_t = fig1.add_subplot(2, 1, 2)
@@ -194,8 +194,8 @@ def main():
             #f_o = scipy.arange(-fs_o/2.0, fs_o/2.0, fs_o/float(X_o.size))
             f_o = scipy.arange(0, fs_o/2.0, fs_o/2.0/float(X_o.size))
             p2_f = sp2_f.plot(f_o, X_o, "b")
-            sp2_f.set_xlim([min(f_o), max(f_o)+0.1]) 
-            sp2_f.set_ylim([-120.0, 20.0]) 
+            sp2_f.set_xlim([min(f_o), max(f_o)+0.1])
+            sp2_f.set_ylim([-120.0, 20.0])
             sp2_f.grid(True)
 
             sp2_f.set_title(("Channel %d" % i), weight="bold")
@@ -211,8 +211,8 @@ def main():
             sp2_t = fig3.add_subplot(Nrows, Ncols, 1+i)
             p2_t = sp2_t.plot(t_o, x_t.real, "b")
             p2_t = sp2_t.plot(t_o, x_t.imag, "r")
-            sp2_t.set_xlim([min(t_o), max(t_o)+1]) 
-            sp2_t.set_ylim([-1, 1]) 
+            sp2_t.set_xlim([min(t_o), max(t_o)+1])
+            sp2_t.set_ylim([-1, 1])
 
             sp2_t.set_xlabel("Time (s)")
             sp2_t.set_ylabel("Amplitude")

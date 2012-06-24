@@ -30,10 +30,10 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     metrics_in = trellis.metrics_f(fi.O()*fo.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
     scale = gr.multiply_const_ff(1.0/N0)
     dec = trellis.pccc_decoder_s(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM)
- 
+
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
-    
+
     tb.connect (src,src_head,s2fsmi,enc,mod)
     #tb.connect (src,enc,mod)
     #tb.connect(enc,code)
@@ -42,9 +42,9 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     tb.connect (add,metrics_in,scale,dec,fsmi2s,dst)
 
     tb.run()
- 
+
     #print code.data()
-    
+
     ntotal = dst.ntotal ()
     nright = dst.nright ()
     runlength = dst.runlength ()
@@ -100,7 +100,7 @@ def main(args):
         Es = Es + constellation[i]**2
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # calculate noise variance
-    
+
     tot_s=0 # total number of transmitted shorts
     terr_s=0 # total number of shorts in error
     terr_p=0 # total number of packets in error

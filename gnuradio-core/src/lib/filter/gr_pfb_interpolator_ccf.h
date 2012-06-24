@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -29,7 +29,7 @@
 
 class gr_pfb_interpolator_ccf;
 typedef boost::shared_ptr<gr_pfb_interpolator_ccf> gr_pfb_interpolator_ccf_sptr;
-GR_CORE_API gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp, 
+GR_CORE_API gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp,
 							   const std::vector<float> &taps);
 
 class gr_fir_ccf;
@@ -41,7 +41,7 @@ class gr_fir_ccf;
  *
  * \ingroup filter_blk
  * \ingroup pfb_blk
- * 
+ *
  * This block takes in a signal stream and performs interger up-
  * sampling (interpolation) with a polyphase filterbank. The first
  * input is the integer specifying how much to interpolate by. The
@@ -62,7 +62,7 @@ class gr_fir_ccf;
  * output levels are the same as the input (this creates an overall
  * increase in power).
  *
- *      <B><EM>self._taps = gr.firdes.low_pass_2(interp, interp*fs, BW, TB, 
+ *      <B><EM>self._taps = gr.firdes.low_pass_2(interp, interp*fs, BW, TB,
  *           attenuation_dB=ATT, window=gr.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
  *
  * The PFB interpolator code takes the taps generated above and builds
@@ -105,12 +105,12 @@ class GR_CORE_API gr_pfb_interpolator_ccf : public gr_sync_interpolator
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank. The taps
    *                                        should be generated at the interpolated sampling rate.
    */
-  gr_pfb_interpolator_ccf (unsigned int interp, 
+  gr_pfb_interpolator_ccf (unsigned int interp,
 			   const std::vector<float> &taps);
-  
+
 public:
   ~gr_pfb_interpolator_ccf ();
-  
+
   /*!
    * Resets the filterbank's filter taps with the new prototype filter
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank. The taps
@@ -122,7 +122,7 @@ public:
    * Print all of the filterbank taps to screen.
    */
   void print_taps();
-  
+
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);

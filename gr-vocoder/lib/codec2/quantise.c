@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                                                             
+
   FILE........: quantise.c
-  AUTHOR......: David Rowe                                                     
-  DATE CREATED: 31/5/92                                                       
-                                                                             
-  Quantisation functions for the sinusoidal coder.  
-                                                                             
+  AUTHOR......: David Rowe
+  DATE CREATED: 31/5/92
+
+  Quantisation functions for the sinusoidal coder.
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -41,16 +41,16 @@
 #define LSP_DELTA1 0.01         /* grid spacing for LSP root searches */
 
 /*---------------------------------------------------------------------------*\
-									      
+
                           FUNCTION HEADERS
 
 \*---------------------------------------------------------------------------*/
 
-float speech_to_uq_lsps(float lsp[], float ak[], float Sn[], float w[], 
+float speech_to_uq_lsps(float lsp[], float ak[], float Sn[], float w[],
 			int order);
 
 /*---------------------------------------------------------------------------*\
-									      
+
                              FUNCTIONS
 
 \*---------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ int lsp_bits(int i) {
 
 #if VECTOR_QUANTISATION
 /*---------------------------------------------------------------------------*\
-									      
+
   quantise_uniform
 
   Simulates uniform quantising of a float.
@@ -146,7 +146,7 @@ long quantise(const float * cb, float vec[], float w[], int k, int m, float *se)
 }
 
 /*---------------------------------------------------------------------------*\
-									      
+
   lspd_quantise
 
   Scalar lsp difference quantiser.
@@ -154,10 +154,10 @@ long quantise(const float * cb, float vec[], float w[], int k, int m, float *se)
 \*---------------------------------------------------------------------------*/
 
 void lspd_quantise(
-  float lsp[], 
+  float lsp[],
   float lsp_[],
   int   order
-) 
+)
 {
     int   i,k,m;
     float lsp_hz[LPC_MAX];
@@ -183,8 +183,8 @@ void lspd_quantise(
 
     wt[0] = 1.0;
     for(i=0; i<order; i++) {
-	if (i) 
-	    dlsp[i] = lsp_hz[i] - lsp__hz[i-1];	    
+	if (i)
+	    dlsp[i] = lsp_hz[i] - lsp__hz[i-1];
 	else
 	    dlsp[0] = lsp_hz[0];
 
@@ -194,14 +194,14 @@ void lspd_quantise(
 	indexes[i] = quantise(cb, &dlsp[i], wt, k, m, &se);
  	dlsp_[i] = cb[indexes[i]*k];
 
-	if (i) 
+	if (i)
 	    lsp__hz[i] = lsp__hz[i-1] + dlsp_[i];
 	else
 	    lsp__hz[0] = dlsp_[0];
     }
     for(; i<order; i++)
     	lsp__hz[i] = lsp__hz[i-1] + dlsp[i];
-    
+
     /* convert back to radians */
 
     for(i=0; i<order; i++)
@@ -209,7 +209,7 @@ void lspd_quantise(
 }
 
 /*---------------------------------------------------------------------------*\
-									      
+
   lspd_vq_quantise
 
   Vector lsp difference quantiser.
@@ -217,10 +217,10 @@ void lspd_quantise(
 \*---------------------------------------------------------------------------*/
 
 void lspdvq_quantise(
-  float lsp[], 
+  float lsp[],
   float lsp_[],
   int   order
-) 
+)
 {
     int   i,k,m,ncb, nlsp;
     float dlsp[LPC_MAX];
@@ -243,8 +243,8 @@ void lspdvq_quantise(
     /* scalar quantise dLSPs 1,2,3,4,5 */
 
     for(i=0; i<5; i++) {
-	if (i) 
-	    dlsp[i] = (lsp[i] - lsp_[i-1])*4000.0/PI;	    
+	if (i)
+	    dlsp[i] = (lsp[i] - lsp_[i-1])*4000.0/PI;
 	else
 	    dlsp[0] = lsp[0]*4000.0/PI;
 
@@ -253,8 +253,8 @@ void lspdvq_quantise(
 	cb = lsp_cbdvq[i].cb;
 	index = quantise(cb, &dlsp[i], wt, k, m, &se);
  	dlsp_[i] = cb[index*k]*PI/4000.0;
-	
-	if (i) 
+
+	if (i)
 	    lsp_[i] = lsp_[i-1] + dlsp_[i];
 	else
 	    lsp_[0] = dlsp_[0];
@@ -330,7 +330,7 @@ void force_min_lsp_dist(float lsp[], int lpc_order)
 }
 
 /*---------------------------------------------------------------------------*\
-									      
+
   lpc_model_amplitudes
 
   Derive a LPC model for amplitude samples then estimate amplitude samples
@@ -342,7 +342,7 @@ void force_min_lsp_dist(float lsp[], int lpc_order)
 
 float lpc_model_amplitudes(
   float  Sn[],			/* Input frame of speech samples */
-  float  w[],			
+  float  w[],
   MODEL *model,			/* sinusoidal model parameters */
   int    order,                 /* LPC model order */
   int    lsp_quant,             /* optional LSP quantisation if non-zero */
@@ -353,7 +353,7 @@ float lpc_model_amplitudes(
   float R[LPC_MAX+1];
   float E;
   int   i,j;
-  float snr;	
+  float snr;
   float lsp[LPC_MAX];
   float lsp_hz[LPC_MAX];
   float lsp_[LPC_MAX];
@@ -368,11 +368,11 @@ float lpc_model_amplitudes(
     Wn[i] = Sn[i]*w[i];
   autocorrelate(Wn,R,M,order);
   levinson_durbin(R,ak,order);
-  
+
   E = 0.0;
   for(i=0; i<=order; i++)
       E += ak[i]*R[i];
- 
+
   for(i=0; i<order; i++)
       wt[i] = 1.0;
 
@@ -386,7 +386,7 @@ float lpc_model_amplitudes(
 
     for(i=0; i<order; i++)
 	lsp_hz[i] = (4000.0/PI)*lsp[i];
-    
+
     /* simple uniform scalar quantisers */
 
     for(i=0; i<10; i++) {
@@ -396,7 +396,7 @@ float lpc_model_amplitudes(
 	index = quantise(cb, &lsp_hz[i], wt, k, m, &se);
 	lsp_hz[i] = cb[index*k];
     }
-    
+
     /* experiment: simulating uniform quantisation error
     for(i=0; i<order; i++)
 	lsp[i] += PI*(12.5/4000.0)*(1.0 - 2.0*(float)rand()/RAND_MAX);
@@ -428,7 +428,7 @@ float lpc_model_amplitudes(
 	    lsp[i] = lsp[i-1] + PI*(75.0/4000.0);
     }
 
-    for(j=0; j<order; j++) 
+    for(j=0; j<order; j++)
 	lsp_[j] = lsp[j];
 
     lsp_to_lpc(lsp_, ak, order);
@@ -455,13 +455,13 @@ float lpc_model_amplitudes(
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                         
-   aks_to_M2()                                                             
-                                                                         
-   Transforms the linear prediction coefficients to spectral amplitude    
-   samples.  This function determines A(m) from the average energy per    
-   band using an FFT.                                                     
-                                                                        
+
+   aks_to_M2()
+
+   Transforms the linear prediction coefficients to spectral amplitude
+   samples.  This function determines A(m) from the average energy per
+   band using an FFT.
+
 \*---------------------------------------------------------------------------*/
 
 void aks_to_M2(
@@ -487,7 +487,7 @@ void aks_to_M2(
 
   for(i=0; i<FFT_DEC; i++) {
     Pw[i].real = 0.0;
-    Pw[i].imag = 0.0; 
+    Pw[i].imag = 0.0;
   }
 
   for(i=0; i<=order; i++)
@@ -499,7 +499,7 @@ void aks_to_M2(
   for(i=0; i<FFT_DEC/2; i++)
     Pw[i].real = E/(Pw[i].real*Pw[i].real + Pw[i].imag*Pw[i].imag);
 #ifdef DUMP
-  if (dump) 
+  if (dump)
       dump_Pw(Pw);
 #endif
 
@@ -523,10 +523,10 @@ void aks_to_M2(
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: encode_Wo()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: encode_Wo()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Encodes Wo using a WO_LEVELS quantiser.
 
@@ -548,10 +548,10 @@ int encode_Wo(float Wo)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: decode_Wo()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: decode_Wo()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Decodes Wo using a WO_LEVELS quantiser.
 
@@ -571,10 +571,10 @@ float decode_Wo(int index)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: speech_to_uq_lsps()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: speech_to_uq_lsps()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Analyse a windowed frame of time domain speech to determine LPCs
   which are the converted to LSPs for quantisation and transmission
@@ -584,7 +584,7 @@ float decode_Wo(int index)
 
 float speech_to_uq_lsps(float lsp[],
 			float ak[],
-		        float Sn[], 
+		        float Sn[],
 		        float w[],
 		        int   order
 )
@@ -598,19 +598,19 @@ float speech_to_uq_lsps(float lsp[],
 	Wn[i] = Sn[i]*w[i];
     autocorrelate(Wn, R, M, order);
     levinson_durbin(R, ak, order);
-  
+
     E = 0.0;
     for(i=0; i<=order; i++)
 	E += ak[i]*R[i];
- 
+
     roots = lpc_to_lsp(ak, order, lsp, 5, LSP_DELTA1);
     if (roots != order) {
 	/* for some reason LSP roots could not be found   */
 	/* some alpha testers are reporting this condition */
 	fprintf(stderr, "LSP roots not found!\nroots = %d\n", roots);
 	for(i=0; i<=order; i++)
-	    fprintf(stderr, "a[%d] = %f\n", i, ak[i]);	
-	
+	    fprintf(stderr, "a[%d] = %f\n", i, ak[i]);
+
 	/* some benign LSP values we can use instead */
 	for(i=0; i<order; i++)
 	    lsp[i] = (PI/order)*(float)i;
@@ -620,10 +620,10 @@ float speech_to_uq_lsps(float lsp[],
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: encode_lsps()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: encode_lsps()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   From a vector of unquantised (floating point) LSPs finds the quantised
   LSP indexes.
@@ -643,7 +643,7 @@ void encode_lsps(int indexes[], float lsp[], int order)
 
     for(i=0; i<order; i++)
 	lsp_hz[i] = (4000.0/PI)*lsp[i];
-    
+
     /* simple uniform scalar quantisers */
 
     wt[0] = 1.0;
@@ -656,10 +656,10 @@ void encode_lsps(int indexes[], float lsp[], int order)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: decode_lsps()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: decode_lsps()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   From a vector of quantised LSP indexes, returns the quantised
   (floating point) LSPs.
@@ -685,10 +685,10 @@ void decode_lsps(float lsp[], int indexes[], int order)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: bw_expand_lsps()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: bw_expand_lsps()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Applies Bandwidth Expansion (BW) to a vector of LSPs.  Prevents any
   two LSPs getting too close together after quantisation.  We know
@@ -724,10 +724,10 @@ void bw_expand_lsps(float lsp[],
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: apply_lpc_correction()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: apply_lpc_correction()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Apply first harmonic LPC correction at decoder.  This helps improve
   low pitch males after LPC modelling, like hts1a and morig.
@@ -742,10 +742,10 @@ void apply_lpc_correction(MODEL *model)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: encode_energy()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: encode_energy()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Encodes LPC energy using an E_LEVELS quantiser.
 
@@ -768,10 +768,10 @@ int encode_energy(float e)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: decode_energy()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: decode_energy()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Decodes energy using a WO_BITS quantiser.
 
@@ -792,10 +792,10 @@ float decode_energy(int index)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: encode_amplitudes()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: encode_amplitudes()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Time domain LPC is used model the amplitudes which are then
   converted to LSPs and quantised.  So we don't actually encode the
@@ -804,10 +804,10 @@ float decode_energy(int index)
 
 \*---------------------------------------------------------------------------*/
 
-void encode_amplitudes(int    lsp_indexes[], 
+void encode_amplitudes(int    lsp_indexes[],
 		       int   *energy_index,
-		       MODEL *model, 
-		       float  Sn[], 
+		       MODEL *model,
+		       float  Sn[],
 		       float  w[])
 {
     float lsps[LPC_ORD];
@@ -820,19 +820,19 @@ void encode_amplitudes(int    lsp_indexes[],
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: decode_amplitudes()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 22/8/2010 
+
+  FUNCTION....: decode_amplitudes()
+  AUTHOR......: David Rowe
+  DATE CREATED: 22/8/2010
 
   Given the amplitude quantiser indexes recovers the harmonic
   amplitudes.
 
 \*---------------------------------------------------------------------------*/
 
-float decode_amplitudes(MODEL *model, 
+float decode_amplitudes(MODEL *model,
 			float  ak[],
-		        int    lsp_indexes[], 
+		        int    lsp_indexes[],
 		        int    energy_index,
 			float  lsps[],
 			float *e
@@ -844,7 +844,7 @@ float decode_amplitudes(MODEL *model,
     bw_expand_lsps(lsps, LPC_ORD);
     lsp_to_lpc(lsps, ak, LPC_ORD);
     *e = decode_energy(energy_index);
-    aks_to_M2(ak, LPC_ORD, model, *e, &snr, 1); 
+    aks_to_M2(ak, LPC_ORD, model, *e, &snr, 1);
     apply_lpc_correction(model);
 
     return snr;

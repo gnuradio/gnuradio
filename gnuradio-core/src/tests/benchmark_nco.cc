@@ -124,7 +124,7 @@ void native_sincos_vec (float *x, float *y)
   gr_nco<float,float>	nco;
 
   nco.set_freq (2 * M_PI / FREQ);
- 
+
   for (int i = 0; i < ITERATIONS/BLOCK_SIZE; i++){
     nco.sincos ((gr_complex*)x, BLOCK_SIZE);
   }
@@ -133,9 +133,9 @@ void native_sincos_vec (float *x, float *y)
 void fxpt_sincos_vec (float *x, float *y)
 {
   gr_fxpt_nco	nco;
-  
+
   nco.set_freq (2 * M_PI / FREQ);
-  
+
   for (int i = 0; i < ITERATIONS/BLOCK_SIZE; i++){
     nco.sincos ((gr_complex*)x, BLOCK_SIZE);
   }

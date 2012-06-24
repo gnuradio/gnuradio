@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -36,7 +36,7 @@ class gr_fir_fff;
  * Where Ts is the time between samples.
  *
  * Although mu, the fractional delay, is specified as a float, it is actually
- * quantized.  0.0 <= mu <= 1.0.  That is, mu is quantized in the interpolate 
+ * quantized.  0.0 <= mu <= 1.0.  That is, mu is quantized in the interpolate
  * method to 32nd's of a sample.
  *
  * For more information, in the GNU Radio source code, see:

@@ -34,7 +34,7 @@ static inline void volk_64u_byteswap_a_sse2(uint64_t* intsToSwap, unsigned int n
       output = _mm_or_si128(output, byte2);
       byte3 = _mm_and_si128(byte3, byte3mask);
       output = _mm_or_si128(output, byte3);
-      
+
       // Reorder the two words
       output = _mm_shuffle_epi32(output, _MM_SHUFFLE(2, 3, 0, 1));
 
@@ -42,17 +42,17 @@ static inline void volk_64u_byteswap_a_sse2(uint64_t* intsToSwap, unsigned int n
       _mm_store_si128((__m128i*)inputPtr, output);
       inputPtr += 4;
     }
-  
+
     // Byteswap any remaining points:
-    number = halfPoints*2;  
+    number = halfPoints*2;
     for(; number < num_points; number++){
       uint32_t output1 = *inputPtr;
       uint32_t output2 = inputPtr[1];
-      
+
       output1 = (((output1 >> 24) & 0xff) | ((output1 >> 8) & 0x0000ff00) | ((output1 << 8) & 0x00ff0000) | ((output1 << 24) & 0xff000000));
-      
+
       output2 = (((output2 >> 24) & 0xff) | ((output2 >> 8) & 0x0000ff00) | ((output2 << 8) & 0x00ff0000) | ((output2 << 24) & 0xff000000));
-      
+
       *inputPtr++ = output2;
       *inputPtr++ = output1;
     }
@@ -71,11 +71,11 @@ static inline void volk_64u_byteswap_a_generic(uint64_t* intsToSwap, unsigned in
   for(point = 0; point < num_points; point++){
     uint32_t output1 = *inputPtr;
     uint32_t output2 = inputPtr[1];
-    
+
     output1 = (((output1 >> 24) & 0xff) | ((output1 >> 8) & 0x0000ff00) | ((output1 << 8) & 0x00ff0000) | ((output1 << 24) & 0xff000000));
-    
+
     output2 = (((output2 >> 24) & 0xff) | ((output2 >> 8) & 0x0000ff00) | ((output2 << 8) & 0x00ff0000) | ((output2 << 24) & 0xff000000));
-    
+
     *inputPtr++ = output2;
     *inputPtr++ = output1;
   }

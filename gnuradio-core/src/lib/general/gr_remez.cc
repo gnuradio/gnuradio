@@ -95,7 +95,7 @@
  * double W[]        - Weight function on the dense grid [gridsize]
  *******************/
 
-static void 
+static void
 CreateDenseGrid (int r, int numtaps, int numband, const double bands[],
 		 const double des[], const double weight[], int gridsize,
 		 double Grid[], double D[], double W[],
@@ -148,7 +148,7 @@ CreateDenseGrid (int r, int numtaps, int numband, const double bands[],
  * Places Extremal Frequencies evenly throughout the dense grid.
  *
  *
- * INPUT: 
+ * INPUT:
  * ------
  * int r        - 1/2 the number of filter coefficients
  * int gridsize - Number of elements in the dense frequency grid
@@ -426,7 +426,7 @@ Search (int r, int Ext[],
          else if ((!up) && (E[foundExt[j]] > 0.0))
             up = 1;             /* switch to a maxima */
          else
-	 { 
+	 {
             alt = 0;
 	    // PAK: break now and you will delete the smallest overall
 	    // extremal.  If you want to delete the smallest of the
@@ -447,11 +447,11 @@ Search (int r, int Ext[],
          if (fabs(E[foundExt[k-1]]) < fabs(E[foundExt[0]]))
 	   /* Delete last extremal */
 	   l = k-1;
-	   // PAK: changed from l = foundExt[k-1]; 
+	   // PAK: changed from l = foundExt[k-1];
          else
 	   /* Delete first extremal */
 	   l = 0;
-	   // PAK: changed from l = foundExt[0];     
+	   // PAK: changed from l = foundExt[0];
       }
 
       for (j=l; j<k-1; j++)        /* Loop that does the deletion */
@@ -611,7 +611,7 @@ isDone (int r, int Ext[], double E[])
 
 static int
 remez (double h[], int numtaps,
-       int numband, const double bands[], 
+       int numband, const double bands[],
        const double des[], const double weight[],
        int type, int griddensity)
 {
@@ -689,7 +689,7 @@ remez (double h[], int numtaps,
          {
             c = cos(Pi * Grid[i]);
             D[i] /= c;
-            W[i] *= c; 
+            W[i] *= c;
          }
       }
    }
@@ -782,7 +782,7 @@ remez (double h[], int numtaps,
 
 
 static void
-punt (const std::string msg) 
+punt (const std::string msg)
 {
   std::cerr << msg << '\n';
   throw std::runtime_error (msg);
@@ -836,13 +836,13 @@ gr_remez (int order,
     for (int i = 0; i < numbands; i++)
       weight[i] = arg_weight [i];
   }
-  
+
   int itype = 0;
-  if (filter_type == "bandpass") 
+  if (filter_type == "bandpass")
     itype = BANDPASS;
-  else if (filter_type == "differentiator") 
+  else if (filter_type == "differentiator")
     itype = DIFFERENTIATOR;
-  else if (filter_type == "hilbert") 
+  else if (filter_type == "hilbert")
     itype = HILBERT;
   else
     punt ("gr_remez: unknown ftype '" + filter_type + "'");
@@ -960,8 +960,8 @@ Frequency is in the range (0, 1), with 1 being the nyquist frequency")
     }
   }
   if (nargin > 5) {
-    if (args(5).is_real_scalar() 
-	&& !args(4).is_real_scalar() 
+    if (args(5).is_real_scalar()
+	&& !args(4).is_real_scalar()
 	&& !args(3).is_real_scalar())
       density = NINT(args(4).double_value());
     else {
@@ -971,11 +971,11 @@ Frequency is in the range (0, 1), with 1 being the nyquist frequency")
   }
 
   int itype;
-  if (stype == "bandpass") 
+  if (stype == "bandpass")
     itype = BANDPASS;
-  else if (stype == "differentiator") 
+  else if (stype == "differentiator")
     itype = DIFFERENTIATOR;
-  else if (stype == "hilbert") 
+  else if (stype == "hilbert")
     itype = HILBERT;
   else {
     error("remez: unknown ftype '%s'", stype.data());

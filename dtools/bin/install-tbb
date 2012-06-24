@@ -20,7 +20,7 @@ includedir=${prefix}/include
 
 Name: tbb
 Description: Intel Threading Building Blocks
-Requires: 
+Requires:
 Version: 2.0
 Libs: -L${libdir} -ltbb -ltbbmalloc
 Cflags: -I${includedir}
@@ -35,7 +35,7 @@ includedir=${prefix}/include
 
 Name: tbb
 Description: Intel Threading Building Blocks
-Requires: 
+Requires:
 Version: 2.0
 Libs: -L${libdir} -ltbb_debug -ltbbmalloc_debug
 Cflags: -I${includedir}
@@ -51,7 +51,7 @@ def main():
       raise SystemExit, 1
 
    prefix = options.prefix
-   
+
    # are we installing 64-bit libs?
 
    is_64bit = False
@@ -66,7 +66,7 @@ def main():
       lib = 'lib64'
    else:
       lib = 'lib'
-      
+
    os.system('install -d ' + os.path.join(prefix, 'include/tbb'))
    os.system('install -d ' + os.path.join(prefix, 'include/tbb/machine'))
    os.system('install -d ' + os.path.join(prefix, lib))
@@ -79,10 +79,10 @@ def main():
    f = open(os.path.join(prefix, lib, 'pkgconfig', pkgconfig_filename), 'w')
    f.write(pkgconfig_file_contents % (prefix,))
    f.close()
-   
+
    f = open(os.path.join(prefix, lib, 'pkgconfig', debug_pkgconfig_filename), 'w')
    f.write(debug_pkgconfig_file_contents % (prefix,))
    f.close()
-   
+
 if __name__ == "__main__":
    main()

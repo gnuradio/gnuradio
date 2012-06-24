@@ -3,7 +3,7 @@
 function y = split_vect(vect,N)
   Z = floor(max(size(vect))/N);
   y = [];
-  if(size(vect)(1)>size(vect)(2)) 
+  if(size(vect)(1)>size(vect)(2))
     v = vect';
   else
     v = vect;

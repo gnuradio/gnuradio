@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -37,7 +37,7 @@
  * Create a new instance of vocoder_cvsd_encode_sb and return
  * a boost shared_ptr.  This is effectively the public constructor.
  */
-vocoder_cvsd_encode_sb_sptr 
+vocoder_cvsd_encode_sb_sptr
 vocoder_make_cvsd_encode_sb (short min_step, short max_step, double step_decay,
 			     double accum_decay,  int K, int J,
 			     short pos_accum_max, short neg_accum_max)
@@ -47,7 +47,7 @@ vocoder_make_cvsd_encode_sb (short min_step, short max_step, double step_decay,
 								pos_accum_max, neg_accum_max));
 }
 
-vocoder_cvsd_encode_sb::vocoder_cvsd_encode_sb (short min_step, short max_step, double step_decay, 
+vocoder_cvsd_encode_sb::vocoder_cvsd_encode_sb (short min_step, short max_step, double step_decay,
 						double accum_decay, int K, int J,
 						short pos_accum_max, short neg_accum_max)
   : gr_sync_decimator ("vocoder_cvsd_encode_sb",
@@ -55,10 +55,10 @@ vocoder_cvsd_encode_sb::vocoder_cvsd_encode_sb (short min_step, short max_step, 
 		       gr_make_io_signature (1, 1, sizeof (unsigned char)),
 		       8),
     d_min_step (min_step), d_max_step(max_step), d_step_decay(step_decay),
-    d_accum_decay(accum_decay), d_K(K), d_J(J), 
+    d_accum_decay(accum_decay), d_K(K), d_J(J),
     d_pos_accum_max(pos_accum_max), d_neg_accum_max(neg_accum_max),
-    d_accum(0), 
-    d_loop_counter(1), 
+    d_accum(0),
+    d_loop_counter(1),
     d_runner(0),
     d_stepsize(min_step)
 
@@ -77,7 +77,7 @@ unsigned char vocoder_cvsd_encode_sb::cvsd_bitwise_sum (unsigned int input)
 {
   unsigned int temp=input;
   unsigned char bits=0;
-  
+
   while(temp) {
     temp=temp&(temp-1);
     bits++;
@@ -90,7 +90,7 @@ int vocoder_cvsd_encode_sb::cvsd_round (double input)
   double temp;
   temp=input+0.5;
   temp=floor(temp);
-  
+
   return (int)temp;
 }
 
@@ -101,10 +101,10 @@ unsigned int vocoder_cvsd_encode_sb::cvsd_pow (short radix, short power)
   double output;
 
   output=pow(d_radix,i_power);
-  return ( (unsigned int) cvsd_round(output));  
+  return ( (unsigned int) cvsd_round(output));
 }
 
-int 
+int
 vocoder_cvsd_encode_sb::work (int noutput_items,
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
@@ -117,7 +117,7 @@ vocoder_cvsd_encode_sb::work (int noutput_items,
   unsigned char output_byte=0;	 // 1 bytes 0.255
   unsigned char bit_count=0;		 // 1 byte, 0 .. 255
   unsigned int mask=0;		 // 4 bytes, 0 .. 4,294,967,295
-  
+
   // Loop through each input data point
   for(i = 0; i < noutput_items*8; i++) {
     if((int)in[i] >= d_accum) {    // Note:  sign((data(n)-accum))
@@ -126,7 +126,7 @@ vocoder_cvsd_encode_sb::work (int noutput_items,
     else {
       output_bit=0;
     }
-    
+
     // Update Accum (i.e. the reference value)
     if (output_bit) {
       d_accum=d_accum+d_stepsize;
@@ -147,7 +147,7 @@ vocoder_cvsd_encode_sb::work (int noutput_items,
     else if(d_accum <= ((int) d_neg_accum_max)) {
       d_accum = (int) d_neg_accum_max;
     }
-		 
+
     // Update runner with the last output bit
     // Update Step Size
     if (d_loop_counter >= d_J) { // Run this only if you have >= J bits in your shift register
@@ -158,10 +158,10 @@ vocoder_cvsd_encode_sb::work (int noutput_items,
       }
       else {
 	// No runs of 1s and 0s
-	d_stepsize = std::max( (short)cvsd_round(d_stepsize*d_step_decay), d_min_step);     
+	d_stepsize = std::max( (short)cvsd_round(d_stepsize*d_step_decay), d_min_step);
       }
     }
-	     
+
     // Runner is a shift-register; shift left, add on newest output bit
     d_runner = (d_runner<<1) | ((unsigned int) output_bit);
 
@@ -169,7 +169,7 @@ vocoder_cvsd_encode_sb::work (int noutput_items,
     // If you have put in 8 bits, output it as a byte
     output_byte = (output_byte<<1) | output_bit;
     bit_count++;
-    
+
     if (d_loop_counter <= d_K) {
       d_loop_counter++;
     }
@@ -178,7 +178,7 @@ vocoder_cvsd_encode_sb::work (int noutput_items,
     if (bit_count==8) {
       // Read in short from the file
       *(out++) = output_byte;
-      
+
       // Reset the bit_count
       bit_count=0;
       output_byte=0;

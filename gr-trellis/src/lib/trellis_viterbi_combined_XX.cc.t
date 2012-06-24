@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,10 +30,10 @@
 #include <gr_io_signature.h>
 #include <assert.h>
 #include <iostream>
-  
+
 static const float INF = 1.0e9;
 
-@SPTR_NAME@ 
+@SPTR_NAME@
 trellis_make_@BASE_NAME@ (
     const fsm &FSM,
     int K,
@@ -56,7 +56,7 @@ trellis_make_@BASE_NAME@ (
     trellis_metric_type_t TYPE)
   : gr_block ("@BASE_NAME@",
 			  gr_make_io_signature (1, -1, sizeof (@I_TYPE@)),
-			  gr_make_io_signature (1, -1, sizeof (@O_TYPE@))),  
+			  gr_make_io_signature (1, -1, sizeof (@O_TYPE@))),
   d_FSM (FSM),
   d_K (K),
   d_S0 (S0),
@@ -71,7 +71,7 @@ trellis_make_@BASE_NAME@ (
 }
 
 
-void @NAME@::set_TABLE(const std::vector<@I_TYPE@> &table) 
+void @NAME@::set_TABLE(const std::vector<@I_TYPE@> &table)
 {
   d_TABLE = table;
 }
@@ -91,7 +91,7 @@ void
 
 
 /*
-void viterbi_algorithm_combined(int I, int S, int O, 
+void viterbi_algorithm_combined(int I, int S, int O,
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector< std::vector<int> > &PS,
@@ -102,7 +102,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
              const std::vector<@I_TYPE@> &TABLE,
              trellis_metric_type_t TYPE,
              const @I_TYPE@ *in, @O_TYPE@ *out)//,
-             //std::vector<int> &trace) 
+             //std::vector<int> &trace)
 {
   std::vector<int> trace(S*K);
   std::vector<float> alpha(S*2);
@@ -136,7 +136,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
           alpha[((alphai+1)%2)*S+j]=minm;
           if(minm<norm) norm=minm;
       }
-      for(int j=0;j<S;j++) 
+      for(int j=0;j<S;j++)
           alpha[((alphai+1)%2)*S+j]-=norm; // normalize total metrics so they do not explode
       alphai=(alphai+1)%2;
   }
@@ -157,7 +157,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
       out[k]= (@O_TYPE@) PI[st][i0];
       st=PS[st][i0];
   }
-  
+
   delete [] metric;
 
 }

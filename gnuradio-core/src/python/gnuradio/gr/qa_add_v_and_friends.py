@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2004,2007,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 
@@ -91,7 +91,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
         self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
-	
+
     def help_const_ii(self, src_data, exp_data, op):
 	src = gr.vector_source_i(src_data)
 	srcv = gr.stream_to_vector(gr.sizeof_int, len(src_data))
@@ -101,7 +101,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
         self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
-	
+
     def help_const_ff(self, src_data, exp_data, op):
 	src = gr.vector_source_f(src_data)
 	srcv = gr.stream_to_vector(gr.sizeof_float, len(src_data))
@@ -111,7 +111,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
         self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
-	
+
     def help_const_cc(self, src_data, exp_data, op):
 	src = gr.vector_source_c(src_data)
 	srcv = gr.stream_to_vector(gr.sizeof_gr_complex, len(src_data))
@@ -121,7 +121,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
         self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
-	
+
 
     def test_add_vss_one(self):
 	src1_data = (1,)
@@ -130,7 +130,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	expected_result = (6,)
 	op = gr.add_vss(1)
 	self.help_ss(1, (src1_data, src2_data, src3_data), expected_result, op)
-	
+
     def test_add_vss_five(self):
 	src1_data = (1, 2, 3, 4, 5)
 	src2_data = (6, 7, 8, 9, 10)
@@ -146,7 +146,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	expected_result = (6,)
 	op = gr.add_vii(1)
 	self.help_ii(1, (src1_data, src2_data, src3_data), expected_result, op)
-	
+
     def test_add_vii_five(self):
 	src1_data = (1, 2, 3, 4, 5)
 	src2_data = (6, 7, 8, 9, 10)
@@ -162,7 +162,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	expected_result = (6.0,)
 	op = gr.add_vff(1)
 	self.help_ff(1, (src1_data, src2_data, src3_data), expected_result, op)
-	
+
     def test_add_vff_five(self):
 	src1_data = (1.0, 2.0, 3.0, 4.0, 5.0)
 	src2_data = (6.0, 7.0, 8.0, 9.0, 10.0)
@@ -178,7 +178,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	expected_result = (9.0+12j,)
 	op = gr.add_vcc(1)
 	self.help_cc(1, (src1_data, src2_data, src3_data), expected_result, op)
-	
+
     def test_add_vcc_five(self):
 	src1_data = (1.0+2.0j, 3.0+4.0j, 5.0+6.0j, 7.0+8.0j, 9.0+10.0j)
 	src2_data = (11.0+12.0j, 13.0+14.0j, 15.0+16.0j, 17.0+18.0j, 19.0+20.0j)
@@ -243,7 +243,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	expected_result = (6,)
 	op = gr.multiply_vss(1)
 	self.help_ss(1, (src1_data, src2_data, src3_data), expected_result, op)
-	
+
     def test_multiply_vss_five(self):
 	src1_data = (1, 2, 3, 4, 5)
 	src2_data = (6, 7, 8, 9, 10)
@@ -259,7 +259,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	expected_result = (6,)
 	op = gr.multiply_vii(1)
 	self.help_ii(1, (src1_data, src2_data, src3_data), expected_result, op)
-	
+
     def test_multiply_vii_five(self):
 	src1_data = (1, 2, 3, 4, 5)
 	src2_data = (6, 7, 8, 9, 10)
@@ -275,7 +275,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	expected_result = (6.0,)
 	op = gr.multiply_vff(1)
 	self.help_ff(1, (src1_data, src2_data, src3_data), expected_result, op)
-	
+
     def test_multiply_vff_five(self):
 	src1_data = (1.0, 2.0, 3.0, 4.0, 5.0)
 	src2_data = (6.0, 7.0, 8.0, 9.0, 10.0)
@@ -291,7 +291,7 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	expected_result = (-85+20j,)
 	op = gr.multiply_vcc(1)
 	self.help_cc(1, (src1_data, src2_data, src3_data), expected_result, op)
-	
+
     def test_multiply_vcc_five(self):
 	src1_data = (1.0+2.0j, 3.0+4.0j, 5.0+6.0j, 7.0+8.0j, 9.0+10.0j)
 	src2_data = (11.0+12.0j, 13.0+14.0j, 15.0+16.0j, 17.0+18.0j, 19.0+20.0j)

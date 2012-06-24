@@ -28,17 +28,17 @@ static inline void volk_32fc_s32fc_multiply_32fc_a_sse3(lv_32fc_t* cVector, cons
     yh = _mm_set_ps1(lv_cimag(scalar));
 
     for(;number < halfPoints; number++){
-      
+
       x = _mm_load_ps((float*)a); // Load the ar + ai, br + bi as ar,ai,br,bi
-      
+
       tmp1 = _mm_mul_ps(x,yl); // tmp1 = ar*cr,ai*cr,br*dr,bi*dr
-      
+
       x = _mm_shuffle_ps(x,x,0xB1); // Re-arrange x to be ai,ar,bi,br
-      
+
       tmp2 = _mm_mul_ps(x,yh); // tmp2 = ai*ci,ar*ci,bi*di,br*di
-      
+
       z = _mm_addsub_ps(tmp1,tmp2); // ar*cr-ai*ci, ai*cr+ar*ci, br*dr-bi*di, bi*dr+br*di
-    
+
       _mm_store_ps((float*)c,z); // Store the results back into the C container
 
       a += 2;

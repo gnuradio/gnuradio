@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -99,7 +99,7 @@ gr_pll_carriertracking_cc::work (int noutput_items,
 
   float error;
   float t_imag, t_real;
-  
+
   for (int i = 0; i < noutput_items; i++){
     gr_sincosf(d_phase, &t_imag, &t_real);
     optr[i] = iptr[i] * gr_complex(t_real, -t_imag);
@@ -112,7 +112,7 @@ gr_pll_carriertracking_cc::work (int noutput_items,
 
     d_locksig = d_locksig * (1.0 - d_alpha) + \
       d_alpha*(iptr[i].real() * t_real + iptr[i].imag() * t_imag);
-    
+
     if ((d_squelch_enable) && !lock_detector())
       optr[i] = 0;
   }

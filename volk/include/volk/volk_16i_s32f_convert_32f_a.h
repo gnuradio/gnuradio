@@ -17,7 +17,7 @@
 static inline void volk_16i_s32f_convert_32f_a_sse4_1(float* outputVector, const int16_t* inputVector, const float scalar, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int eighthPoints = num_points / 8;
-    
+
      float* outputVectorPtr = outputVector;
     __m128 invScalar = _mm_set_ps1(1.0/scalar);
     int16_t* inputPtr = (int16_t*)inputVector;
@@ -36,7 +36,7 @@ static inline void volk_16i_s32f_convert_32f_a_sse4_1(float* outputVector, const
       // Convert the lower 4 values into 32 bit words
       inputVal = _mm_cvtepi16_epi32(inputVal);
       inputVal2 = _mm_cvtepi16_epi32(inputVal2);
-      
+
       ret = _mm_cvtepi32_ps(inputVal);
       ret = _mm_mul_ps(ret, invScalar);
       _mm_storeu_ps(outputVectorPtr, ret);
@@ -71,7 +71,7 @@ static inline void volk_16i_s32f_convert_32f_a_sse4_1(float* outputVector, const
 static inline void volk_16i_s32f_convert_32f_a_sse(float* outputVector, const int16_t* inputVector, const float scalar, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
-    
+
     float* outputVectorPtr = outputVector;
     __m128 invScalar = _mm_set_ps1(1.0/scalar);
     int16_t* inputPtr = (int16_t*)inputVector;
@@ -79,7 +79,7 @@ static inline void volk_16i_s32f_convert_32f_a_sse(float* outputVector, const in
 
     for(;number < quarterPoints; number++){
       ret = _mm_set_ps((float)(inputPtr[3]), (float)(inputPtr[2]), (float)(inputPtr[1]), (float)(inputPtr[0]));
-      
+
       ret = _mm_mul_ps(ret, invScalar);
       _mm_storeu_ps(outputVectorPtr, ret);
 

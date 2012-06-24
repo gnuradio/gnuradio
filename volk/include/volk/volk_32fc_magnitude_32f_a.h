@@ -59,7 +59,7 @@ static inline void volk_32fc_magnitude_32f_a_sse3(float* magnitudeVector, const 
 static inline void volk_32fc_magnitude_32f_a_sse(float* magnitudeVector, const lv_32fc_t* complexVector, unsigned int num_points){
     unsigned int number = 0;
     const unsigned int quarterPoints = num_points / 4;
-    
+
     const float* complexVectorPtr = (float*)complexVector;
     float* magnitudeVectorPtr = magnitudeVector;
 

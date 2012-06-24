@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -42,8 +42,8 @@ float min_star(float a, float b)
 
 
 
-template <class T> 
-void viterbi_algorithm(int I, int S, int O, 
+template <class T>
+void viterbi_algorithm(int I, int S, int O,
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector< std::vector<int> > &PS,
@@ -51,7 +51,7 @@ void viterbi_algorithm(int I, int S, int O,
              int K,
              int S0,int SK,
              const float *in, T *out)//,
-             //std::vector<int> &trace) 
+             //std::vector<int> &trace)
 {
   std::vector<int> trace(S*K);
   std::vector<float> alpha(S*2);
@@ -84,7 +84,7 @@ void viterbi_algorithm(int I, int S, int O,
           alpha[((alphai+1)%2)*S+j]=minm;
           if(minm<norm) norm=minm;
       }
-      for(int j=0;j<S;j++) 
+      for(int j=0;j<S;j++)
           alpha[((alphai+1)%2)*S+j]-=norm; // normalize total metrics so they do not explode
       alphai=(alphai+1)%2;
   }
@@ -190,7 +190,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
           alpha[((alphai+1)%2)*S+j]=minm;
           if(minm<norm) norm=minm;
       }
-      for(int j=0;j<S;j++) 
+      for(int j=0;j<S;j++)
           alpha[((alphai+1)%2)*S+j]-=norm; // normalize total metrics so they do not explode
       alphai=(alphai+1)%2;
   }
@@ -211,7 +211,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
       out[k]= (To) PI[st][i0];
       st=PS[st][i0];
   }
-  
+
   delete [] metric;
 
 }
@@ -415,7 +415,7 @@ void viterbi_algorithm_combined<gr_complex,int>(int I, int S, int O,
 //===============================================
 
 
-void siso_algorithm(int I, int S, int O, 
+void siso_algorithm(int I, int S, int O,
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector< std::vector<int> > &PS,
@@ -427,7 +427,7 @@ void siso_algorithm(int I, int S, int O,
              const float *priori, const float *prioro, float *post//,
              //std::vector<float> &alpha,
              //std::vector<float> &beta
-             ) 
+             )
 {
   float norm,mm,minm;
   std::vector<float> alpha(S*(K+1));
@@ -454,7 +454,7 @@ void siso_algorithm(int I, int S, int O,
           alpha[(k+1)*S+j]=minm;
           if(minm<norm) norm=minm;
       }
-      for(int j=0;j<S;j++) 
+      for(int j=0;j<S;j++)
           alpha[(k+1)*S+j]-=norm; // normalize total metrics so they do not explode
   }
 
@@ -468,7 +468,7 @@ void siso_algorithm(int I, int S, int O,
 
   for(int k=K-1;k>=0;k--) { // backward recursion
       norm=INF;
-      for(int j=0;j<S;j++) { 
+      for(int j=0;j<S;j++) {
           minm=INF;
           for(int i=0;i<I;i++) {
               int i0 = j*I+i;
@@ -517,8 +517,8 @@ if (POSTI && POSTO)
       for(int n=0;n<O;n++)
           post[k*(I+O)+I+n]-=norm; // normalize metrics
   }
-} 
-else if(POSTI) 
+}
+else if(POSTI)
 {
   for(int k=0;k<K;k++) { // input combining
       norm=INF;
@@ -563,7 +563,7 @@ else
 //===========================================================
 
 template <class T>
-void siso_algorithm_combined(int I, int S, int O, 
+void siso_algorithm_combined(int I, int S, int O,
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector< std::vector<int> > &PS,
@@ -576,7 +576,7 @@ void siso_algorithm_combined(int I, int S, int O,
              const std::vector<T> &TABLE,
              trellis_metric_type_t TYPE,
              const float *priori, const T *observations, float *post
-) 
+)
 {
   float norm,mm,minm;
   std::vector<float> alpha(S*(K+1));
@@ -605,7 +605,7 @@ void siso_algorithm_combined(int I, int S, int O,
           alpha[(k+1)*S+j]=minm;
           if(minm<norm) norm=minm;
       }
-      for(int j=0;j<S;j++) 
+      for(int j=0;j<S;j++)
           alpha[(k+1)*S+j]-=norm; // normalize total metrics so they do not explode
   }
 
@@ -619,7 +619,7 @@ void siso_algorithm_combined(int I, int S, int O,
 
   for(int k=K-1;k>=0;k--) { // backward recursion
       norm=INF;
-      for(int j=0;j<S;j++) { 
+      for(int j=0;j<S;j++) {
           minm=INF;
           for(int i=0;i<I;i++) {
               int i0 = j*I+i;
@@ -668,8 +668,8 @@ void siso_algorithm_combined(int I, int S, int O,
         for(int n=0;n<O;n++)
             post[k*(I+O)+I+n]-=norm; // normalize metrics
     }
-  } 
-  else if(POSTI) 
+  }
+  else if(POSTI)
   {
     for(int k=0;k<K;k++) { // input combining
         norm=INF;
@@ -828,7 +828,7 @@ for(int rep=0;rep<iterations;rep++) {
       //oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
     //}
     memcpy(&(oprioro[k*FSMi.I()]),&(iposti[ki*FSMi.I()]),FSMi.I()*sizeof(float));
-  } 
+  }
 
   // run outer SISO
 
@@ -849,10 +849,10 @@ for(int rep=0;rep<iterations;rep++) {
         //ipriori[ki*FSMi.I()+i]=oposto[k*FSMi.I()+i];
       //}
       memcpy(&(ipriori[ki*FSMi.I()]),&(oposto[k*FSMi.I()]),FSMi.I()*sizeof(float));
-    } 
+    }
   }
   else // produce posti but not posto
-    
+
     siso_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
              FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
              blocklength,
@@ -861,7 +861,7 @@ for(int rep=0;rep<iterations;rep++) {
              p2mymin,
              &(opriori[0]),  &(oprioro[0]), &(oposti[0])
     );
-   
+
     /*
     viterbi_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
              FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
@@ -1006,7 +1006,7 @@ void sccc_decoder(
         //oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
       //}
       memcpy(&(oprioro[k*FSMi.I()]),&(iposti[ki*FSMi.I()]),FSMi.I()*sizeof(float));
-    } 
+    }
 
     // run outer SISO
 
@@ -1027,10 +1027,10 @@ void sccc_decoder(
           //ipriori[ki*FSMi.I()+i]=oposto[k*FSMi.I()+i];
         //}
         memcpy(&(ipriori[ki*FSMi.I()]),&(oposto[k*FSMi.I()]),FSMi.I()*sizeof(float));
-      } 
+      }
     }
     else {// produce posti but not posto
-    
+
       siso_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
              FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
              blocklength,
@@ -1039,7 +1039,7 @@ void sccc_decoder(
              p2mymin,
              &(opriori[0]),  &(oprioro[0]), &(oposti[0])
       );
-   
+
       /*
       viterbi_algorithm(FSMo.I(),FSMo.S(),FSMo.O(),
              FSMo.NS(), FSMo.OS(), FSMo.PS(), FSMo.PI(),
@@ -1120,7 +1120,7 @@ void pccc_decoder(
   std::vector<float> priori2(blocklength*FSM2.I(),0.0);
   std::vector<float> prioro2(blocklength*FSM2.O());
   std::vector<float> posti2(blocklength*FSM2.I());
- 
+
   //generate prioro1,2 (metrics are not updated per iteration: this is not the best you can do...)
   for (int k=0;k<blocklength;k++) {
     //std::cout << k << std::endl;
@@ -1150,7 +1150,7 @@ void pccc_decoder(
              p2mymin,
              &(priori1[0]),  &(prioro1[0]), &(posti1[0])
     );
-   
+
     //for(int k=0;k<blocklength;k++){
       //for(int i=0;i<FSM1.I();i++)
         //std::cout << posti1[k*FSM1.I()+i] << ", ";
@@ -1164,7 +1164,7 @@ void pccc_decoder(
         //oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
       //}
       memcpy(&(priori2[k*FSM2.I()]),&(posti1[ki*FSM1.I()]),FSM1.I()*sizeof(float));
-    } 
+    }
 
     // run SISO 2
     siso_algorithm(FSM2.I(),FSM2.S(),FSM2.O(),
@@ -1272,7 +1272,7 @@ void pccc_decoder_combined(
     calc_metric(O, D, TABLE, &(observations[k*D]), &(cprioro[k*O]),METRIC_TYPE);
     cprioro[k*O] *= scaling;
   }
- 
+
   //generate prioro1,2 (metrics are not updated per iteration: this is not the best you can do...)
   for (int k=0;k<blocklength;k++) {
     //std::cout << k << std::endl;
@@ -1302,7 +1302,7 @@ void pccc_decoder_combined(
              p2mymin,
              &(priori1[0]),  &(prioro1[0]), &(posti1[0])
     );
-   
+
     //for(int k=0;k<blocklength;k++){
       //for(int i=0;i<FSM1.I();i++)
         //std::cout << posti1[k*FSM1.I()+i] << ", ";
@@ -1316,7 +1316,7 @@ void pccc_decoder_combined(
         //oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
       //}
       memcpy(&(priori2[k*FSM2.I()]),&(posti1[ki*FSM1.I()]),FSM1.I()*sizeof(float));
-    } 
+    }
 
     // run SISO 2
     siso_algorithm(FSM2.I(),FSM2.S(),FSM2.O(),

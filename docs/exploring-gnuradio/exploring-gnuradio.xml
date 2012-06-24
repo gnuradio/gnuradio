@@ -148,7 +148,7 @@ end may be eliminated altogether. One GNU Radio experimenter has
 listened to AM and shortwave broadcasts by connecting a 100-foot piece
 of wire directly to his 20M sample/sec ADC.</para>
 
-</sect1> 
+</sect1>
 
 <sect1 id="software"><title>On to the Software</title>
 
@@ -186,7 +186,7 @@ floats. One sine wave is at 350 Hz, and the other is at
 
 <para>audio.sink is a sink that writes its input to the sound card. It
 takes one or more streams of floats in the range -1 to +1 as its
-input. We connect the three blocks together using the 
+input. We connect the three blocks together using the
 <methodname>connect</methodname> method of the flow graph.</para>
 
 <para><methodname>connect</methodname> takes two parameters, the

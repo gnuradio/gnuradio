@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -37,6 +37,7 @@
 #include <gr_stream_to_vector.h>
 #include <gr_vector_to_stream.h>
 #include <gr_keep_one_in_n.h>
+#include <gr_keep_m_in_n.h>
 #include <gr_fft_vcc.h>
 #include <gr_fft_vfc.h>
 #include <gr_float_to_int.h>
@@ -100,6 +101,7 @@
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_unpack_k_bits_bb.h>
+#include <gr_pack_k_bits_bb.h>
 #include <gr_diff_phasor_cc.h>
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
@@ -133,10 +135,13 @@
 #include <complex_vec_test.h>
 #include <gr_annotator_alltoall.h>
 #include <gr_annotator_1to1.h>
+#include <gr_annotator_raw.h>
 #include <gr_burst_tagger.h>
 #include <gr_cpm.h>
 #include <gr_correlate_access_code_tag_bb.h>
 #include <gr_add_ff.h>
+#include <gr_vector_map.h>
+#include <gr_tag_debug.h>
 %}
 
 %include "gri_control_loop.i"
@@ -154,6 +159,7 @@
 %include "gr_stream_to_vector.i"
 %include "gr_vector_to_stream.i"
 %include "gr_keep_one_in_n.i"
+%include "gr_keep_m_in_n.i"
 %include "gr_fft_vcc.i"
 %include "gr_fft_vfc.i"
 %include "gr_float_to_int.i"
@@ -217,6 +223,7 @@
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_unpack_k_bits_bb.i"
+%include "gr_pack_k_bits_bb.i"
 %include "gr_diff_phasor_cc.i"
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"
@@ -250,7 +257,10 @@
 %include "complex_vec_test.i"
 %include "gr_annotator_alltoall.i"
 %include "gr_annotator_1to1.i"
+%include "gr_annotator_raw.i"
 %include "gr_burst_tagger.i"
 %include "gr_cpm.i"
 %include "gr_correlate_access_code_tag_bb.i"
 %include "gr_add_ff.i"
+%include "gr_vector_map.i"
+%include "gr_tag_debug.i"

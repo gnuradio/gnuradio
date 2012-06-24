@@ -16,7 +16,7 @@ void qa_16s_add_quad_aligned16::t1() {
 
 
 void qa_16s_add_quad_aligned16::t1() {
-  
+
   volk_environment_init();
   clock_t start, end;
   double total;
@@ -27,7 +27,7 @@ void qa_16s_add_quad_aligned16::t1() {
   __VOLK_ATTR_ALIGNED(16) short input2[vlen];
   __VOLK_ATTR_ALIGNED(16) short input3[vlen];
   __VOLK_ATTR_ALIGNED(16) short input4[vlen];
-  
+
   __VOLK_ATTR_ALIGNED(16) short output0[vlen];
   __VOLK_ATTR_ALIGNED(16) short output1[vlen];
   __VOLK_ATTR_ALIGNED(16) short output2[vlen];
@@ -48,13 +48,13 @@ void qa_16s_add_quad_aligned16::t1() {
     short minus3 = ((short) (rand() - (RAND_MAX/2))) >> 2;
     short plus4 = ((short) (rand() - (RAND_MAX/2))) >> 2;
     short minus4 = ((short) (rand() - (RAND_MAX/2))) >> 2;
-    
+
     input0[i] = plus0 - minus0;
     input1[i] = plus1 - minus1;
     input2[i] = plus2 - minus2;
     input3[i] = plus3 - minus3;
     input4[i] = plus4 - minus4;
-    
+
   }
   printf("16s_add_quad_aligned\n");
 
@@ -76,7 +76,7 @@ void qa_16s_add_quad_aligned16::t1() {
     //printf("inputs: %d, %d\n", input0[i*2], input0[i*2 + 1]);
     //printf("generic... %d, ssse3... %d\n", output0[i], output1[i]);
   }
-  
+
   for(int i = 0; i < vlen; ++i) {
     //printf("%d...%d\n", output0[i], output01[i]);
     CPPUNIT_ASSERT_EQUAL(output0[i], output01[i]);

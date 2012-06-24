@@ -84,7 +84,7 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		**kwargs #do not end with a comma
 	):
                 #ensure analog alpha
-                if persist_alpha is None: 
+                if persist_alpha is None:
                   actual_frame_rate=float(frame_rate)
                   analog_cutoff_freq=0.5 # Hertz
                   #calculate alpha from wanted cutoff freq
@@ -157,11 +157,11 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 				)
 		else:
 			for i in range(num_inputs):
-				c2f = gr.complex_to_float() 
+				c2f = gr.complex_to_float()
 				self.wxgui_connect((self, i), c2f)
 				for j in range(2):
 					self.connect(
-						(c2f, j), 
+						(c2f, j),
 						ac_couple_block(self.controller, common.index_key(AC_COUPLE_KEY, 2*i+j), SAMPLE_RATE_KEY),
 						(scope, 2*i+j),
 					)
@@ -187,7 +187,7 @@ class test_top_block (stdgui2.std_top_block):
 
         default_input_rate = 1e6
         if len(argv) > 1:
-            input_rate = int(argv[1]) 
+            input_rate = int(argv[1])
         else:
             input_rate = default_input_rate
 
@@ -202,12 +202,12 @@ class test_top_block (stdgui2.std_top_block):
             t_scale = .00003*default_input_rate/input_rate # old behavior
 
         print "input rate %s  v_scale %s  t_scale %s" % (input_rate,v_scale,t_scale)
-            
+
 
         # Generate a complex sinusoid
         ampl=1.0e3
         self.src0 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 25.1e3*input_rate/default_input_rate, ampl)
-        self.noise =gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 11.1*25.1e3*input_rate/default_input_rate, ampl/10) 
+        self.noise =gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 11.1*25.1e3*input_rate/default_input_rate, ampl/10)
         #self.noise =gr.noise_source_c(gr.GR_GAUSSIAN, ampl/10)
         self.combine=gr.add_cc()
 
@@ -223,7 +223,7 @@ class test_top_block (stdgui2.std_top_block):
         # self.connect("src0 throttle scope")
 	self.connect(self.src0,(self.combine,0))
         self.connect(self.noise,(self.combine,1))
-        self.connect(self.combine, self.thr, scope) 
+        self.connect(self.combine, self.thr, scope)
 
 def main ():
     app = stdgui2.stdapp (test_top_block, "O'Scope Test App")

@@ -1,31 +1,31 @@
 #!/usr/bin/env python
 #
 # Copyright 2003,2004,2005,2006,2007,2009,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gru, window
 from gnuradio.wxgui import stdgui2
 import wx
 import plot
 import numpy
-import math    
+import math
 
 DIV_LEVELS = (1, 2, 5, 10, 20)
 
@@ -33,7 +33,7 @@ default_fftsink_size = (640,240)
 default_fft_rate = gr.prefs().get_long('wxgui', 'fft_rate', 15)
 
 class fft_sink_base(object):
-    def __init__(self, input_is_real=False, baseband_freq=0, y_per_div=10, 
+    def __init__(self, input_is_real=False, baseband_freq=0, y_per_div=10,
                  y_divs=8, ref_level=50,
                  sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate,
@@ -73,7 +73,7 @@ class fft_sink_base(object):
         else:
             self.avg.set_taps(1.0)
         self.win.peak_vals = None
-        
+
     def set_peak_hold(self, enable):
         self.peak_hold = enable
         self.win.set_peak_hold(enable)
@@ -98,7 +98,7 @@ class fft_sink_base(object):
 
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
-        
+
 
 class fft_sink_f(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
@@ -116,17 +116,17 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
                                peak_hold=peak_hold,use_persistence=use_persistence,persist_alpha=persist_alpha)
-                               
+
         self.s2p = gr.stream_to_vector(gr.sizeof_float, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_float * self.fft_size,
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
-        
+
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = gr.fft_vfc(self.fft_size, True, mywindow)
         power = 0
         for tap in mywindow:
             power += tap*tap
-            
+
         self.c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = gr.single_pole_iir_filter_ff(1.0, self.fft_size)
 
@@ -135,7 +135,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                -10*math.log10(self.fft_size)                # Adjust for number of bins
                                -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
                                -20*math.log10(ref_scale/2))                # Adjust for reference scale
-                               
+
         self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 
@@ -165,13 +165,13 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
         self.s2p = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
-        
+
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = gr.fft_vcc(self.fft_size, True, mywindow)
         power = 0
         for tap in mywindow:
             power += tap*tap
-            
+
         self.c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = gr.single_pole_iir_filter_ff(1.0, self.fft_size)
 
@@ -180,7 +180,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                 -10*math.log10(self.fft_size)                # Adjust for number of bins
                                 -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
                                 -20*math.log10(ref_scale/2))                # Adjust for reference scale
-                                
+
         self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 
@@ -203,7 +203,7 @@ class DataEvent(wx.PyEvent):
         self.SetEventType (myDATA_EVENT)
         self.data = data
 
-    def Clone (self): 
+    def Clone (self):
         self.__class__ (self.GetId())
 
 
@@ -231,20 +231,20 @@ class input_watcher (gru.msgq_runner):
         del de
 
 class control_panel(wx.Panel):
-    
-    class LabelText(wx.StaticText):    
+
+    class LabelText(wx.StaticText):
         def __init__(self, window, label):
             wx.StaticText.__init__(self, window, -1, label)
             font = self.GetFont()
             font.SetWeight(wx.FONTWEIGHT_BOLD)
             font.SetUnderlined(True)
             self.SetFont(font)
-    
+
     def __init__(self, parent):
         self.parent = parent
-        wx.Panel.__init__(self, parent, -1, style=wx.SIMPLE_BORDER)    
+        wx.Panel.__init__(self, parent, -1, style=wx.SIMPLE_BORDER)
         control_box = wx.BoxSizer(wx.VERTICAL)
-        
+
         #checkboxes for average and peak hold
         control_box.AddStretchSpacer()
         control_box.Add(self.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
@@ -255,9 +255,9 @@ class control_panel(wx.Panel):
         self.use_persistence_check_box.Bind(wx.EVT_CHECKBOX, parent.on_use_persistence)
         control_box.Add(self.use_persistence_check_box, 0, wx.EXPAND)
         self.peak_hold_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Peak Hold")
-        self.peak_hold_check_box.Bind(wx.EVT_CHECKBOX, parent.on_peak_hold) 
+        self.peak_hold_check_box.Bind(wx.EVT_CHECKBOX, parent.on_peak_hold)
         control_box.Add(self.peak_hold_check_box, 0, wx.EXPAND)
-       
+
         #radio buttons for div size
         control_box.AddStretchSpacer()
         control_box.Add(self.LabelText(self, 'Set dB/div'), 0, wx.ALIGN_CENTER)
@@ -269,12 +269,12 @@ class control_panel(wx.Panel):
             self.radio_buttons.append(radio_button)
             radio_box.Add(radio_button, 0, wx.ALIGN_LEFT)
         control_box.Add(radio_box, 0, wx.EXPAND)
-        
+
         #ref lvl buttons
         control_box.AddStretchSpacer()
         control_box.Add(self.LabelText(self, 'Adj Ref Lvl'), 0, wx.ALIGN_CENTER)
         control_box.AddSpacer(2)
-        button_box = wx.BoxSizer(wx.HORIZONTAL)        
+        button_box = wx.BoxSizer(wx.HORIZONTAL)
         self.ref_plus_button = wx.Button(self, -1, '+', style=wx.BU_EXACTFIT)
         self.ref_plus_button.Bind(wx.EVT_BUTTON, parent.on_incr_ref_level)
         button_box.Add(self.ref_plus_button, 0, wx.ALIGN_CENTER)
@@ -287,7 +287,7 @@ class control_panel(wx.Panel):
         self.SetSizerAndFit(control_box)
         #update
         self.update()
-        
+
     def update(self):
         """
         Read the state of the fft plot settings and update the control panel.
@@ -296,14 +296,14 @@ class control_panel(wx.Panel):
         self.average_check_box.SetValue(self.parent.fftsink.average)
         self.use_persistence_check_box.SetValue(self.parent.fftsink.use_persistence)
         self.peak_hold_check_box.SetValue(self.parent.fftsink.peak_hold)
-        #update radio buttons    
+        #update radio buttons
         try:
             index = list(DIV_LEVELS).index(self.parent.fftsink.y_per_div)
             self.radio_buttons[index].SetValue(True)
         except: pass
-        
+
     def on_radio_button_change(self, evt):
-        selected_radio_button = filter(lambda rb: rb.GetValue(), self.radio_buttons)[0] 
+        selected_radio_button = filter(lambda rb: rb.GetValue(), self.radio_buttons)[0]
         index = self.radio_buttons.index(selected_radio_button)
         self.parent.fftsink.set_y_per_div(DIV_LEVELS[index])
 
@@ -311,41 +311,41 @@ class fft_window (wx.Panel):
     def __init__ (self, fftsink, parent, id = -1,
                   pos = wx.DefaultPosition, size = wx.DefaultSize,
                   style = wx.DEFAULT_FRAME_STYLE, name = ""):
-        
+
         self.fftsink = fftsink
-        #init panel and plot 
-        wx.Panel.__init__(self, parent, -1)                  
-        self.plot = plot.PlotCanvas(self, id, pos, size, style, name)       
+        #init panel and plot
+        wx.Panel.__init__(self, parent, -1)
+        self.plot = plot.PlotCanvas(self, id, pos, size, style, name)
         #setup the box with plot and controls
         self.control_panel = control_panel(self)
         main_box = wx.BoxSizer (wx.HORIZONTAL)
         main_box.Add (self.plot, 1, wx.EXPAND)
         main_box.Add (self.control_panel, 0, wx.EXPAND)
         self.SetSizerAndFit(main_box)
-        
+
         self.peak_hold = False
         self.peak_vals = None
 
         self.use_persistence=False
         self.persist_alpha=0.2
 
-        
+
         self.plot.SetEnableGrid (True)
         # self.SetEnableZoom (True)
         # self.SetBackgroundColour ('black')
-        
+
         self.build_popup_menu()
         self.set_baseband_freq(self.fftsink.baseband_freq)
-                
+
         EVT_DATA_EVENT (self, self.set_data)
         wx.EVT_CLOSE (self, self.on_close_window)
         self.plot.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
         self.plot.Bind(wx.EVT_MOTION, self.evt_motion)
-        
+
         self.input_watcher = input_watcher(fftsink.msgq, fftsink.fft_size, self)
 
     def set_scale(self, freq):
-        x = max(abs(self.fftsink.sample_rate), abs(self.fftsink.baseband_freq))        
+        x = max(abs(self.fftsink.sample_rate), abs(self.fftsink.baseband_freq))
         if x >= 1e9:
             self._scale_factor = 1e-9
             self._units = "GHz"
@@ -364,7 +364,7 @@ class fft_window (wx.Panel):
             self.peak_vals = None
         self.set_scale(baseband_freq)
         self.fftsink.set_baseband_freq(baseband_freq)
-        
+
     def on_close_window (self, event):
         print "fft_window:on_close_window"
         self.keep_running = False
@@ -381,7 +381,7 @@ class fft_window (wx.Panel):
                 self.peak_vals = numpy.maximum(dB, self.peak_vals)
 
         if self.fftsink.input_is_real:     # only plot 1/2 the points
-            x_vals = ((numpy.arange (L/2) * (self.fftsink.sample_rate 
+            x_vals = ((numpy.arange (L/2) * (self.fftsink.sample_rate
                        * self._scale_factor / L))
                       + self.fftsink.baseband_freq * self._scale_factor)
             self._points = numpy.zeros((len(x_vals), 2), numpy.float64)
@@ -415,7 +415,7 @@ class fft_window (wx.Panel):
         ymax = self.fftsink.ref_level
         ymin = self.fftsink.ref_level - self.fftsink.y_per_div * self.fftsink.y_divs
         y_range = ymin, ymax
-        self.plot.Draw (graphics, xAxis=x_range, yAxis=y_range, step=self.fftsink.y_per_div)        
+        self.plot.Draw (graphics, xAxis=x_range, yAxis=y_range, step=self.fftsink.y_per_div)
 
     def set_use_persistence(self, enable):
         self.use_persistence = enable
@@ -489,7 +489,7 @@ class fft_window (wx.Panel):
     def evt_motion(self, event):
         if not hasattr(self, "_points"):
             return # Got here before first window data update
-            
+
         # Clip to plotted values
         (ux, uy) = self.plot.GetXY(event)      # Scaled position
         x_vals = numpy.array(self._points[:,0])
@@ -510,7 +510,7 @@ class fft_window (wx.Panel):
         tip.Enable(True)
         tip.SetDelay(0)
         self.SetToolTip(tip)
-        
+
     def build_popup_menu(self):
         self.id_incr_ref_level = wx.NewId()
         self.id_decr_ref_level = wx.NewId()
@@ -524,7 +524,7 @@ class fft_window (wx.Panel):
         self.id_average = wx.NewId()
         self.id_use_persistence = wx.NewId()
         self.id_peak_hold = wx.NewId()
-        
+
         self.plot.Bind(wx.EVT_MENU, self.on_average, id=self.id_average)
         self.plot.Bind(wx.EVT_MENU, self.on_use_persistence, id=self.id_use_persistence)
         self.plot.Bind(wx.EVT_MENU, self.on_peak_hold, id=self.id_peak_hold)
@@ -537,7 +537,7 @@ class fft_window (wx.Panel):
         self.plot.Bind(wx.EVT_MENU, self.on_y_per_div, id=self.id_y_per_div_5)
         self.plot.Bind(wx.EVT_MENU, self.on_y_per_div, id=self.id_y_per_div_10)
         self.plot.Bind(wx.EVT_MENU, self.on_y_per_div, id=self.id_y_per_div_20)
-        
+
         # make a menu
         menu = wx.Menu()
         self.popup_menu = menu

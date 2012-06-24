@@ -1,19 +1,19 @@
 /* -*- C++ -*- */
 /*
  * Copyright 2002,2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -112,7 +112,7 @@ class gr_firdes {
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,
 	     double beta = 6.76			// used only with Kaiser
-	     ) throw(std::out_of_range); 
+	     ) throw(std::out_of_range);
 
   /*!
    * \brief use "window method" to design a high-pass FIR filter
@@ -166,7 +166,7 @@ class gr_firdes {
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,
 	     double beta = 6.76			// used only with Kaiser
-	     ) throw(std::out_of_range); 
+	     ) throw(std::out_of_range);
 
 
   /*!
@@ -222,7 +222,7 @@ class gr_firdes {
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,	// used only with Kaiser
 	     double beta = 6.76
-	     ) throw(std::out_of_range); 
+	     ) throw(std::out_of_range);
 
 
   /*!
@@ -321,7 +321,7 @@ class gr_firdes {
 	   win_type windowtype = WIN_RECTANGULAR,
 	   double beta = 6.76
 	   ) throw(std::out_of_range);
-   
+
   /*!
    * \brief design a Root Cosine FIR Filter (do we need a window?)
    *
@@ -348,13 +348,13 @@ class gr_firdes {
    */
   static std::vector<float>
   gaussian (double gain,
-	    double spb,       
+	    double spb,
 	    double bt,              // Bandwidth to bitrate ratio
 	    int ntaps) throw(std::out_of_range);
 
   /*!
    * Return window given type, ntaps and optional beta.
    */
-  static std::vector<float> gr_firdes::window (win_type type, int ntaps, double beta) 
+  static std::vector<float> gr_firdes::window (win_type type, int ntaps, double beta)
     throw(std::runtime_error);
 };

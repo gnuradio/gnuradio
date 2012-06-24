@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
 import math
 
 default_access_code = '\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC'
@@ -53,7 +53,7 @@ class test_correlate_access_code(gr_unittest.TestCase):
         src_data = (1, 0, 1, 1, 1, 1, 0, 1, 1) + pad + (0,) * 7
         expected_result = pad + (1, 0, 1, 1, 3, 1, 0, 1, 1, 2) + (0,) * 6
         src = gr.vector_source_b (src_data)
-        op = digital_swig.correlate_access_code_bb("1011", 0)
+        op = digital.correlate_access_code_bb("1011", 0)
         dst = gr.vector_sink_b ()
         self.tb.connect (src, op, dst)
         self.tb.run ()
@@ -70,13 +70,28 @@ class test_correlate_access_code(gr_unittest.TestCase):
         src_data = code + (1, 0, 1, 1) + pad
         expected_result = pad + code + (3, 0, 1, 1)
         src = gr.vector_source_b (src_data)
-        op = digital_swig.correlate_access_code_bb(access_code, 0)
+        op = digital.correlate_access_code_bb(access_code, 0)
         dst = gr.vector_sink_b ()
         self.tb.connect (src, op, dst)
         self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (expected_result, result_data)
         
+    def test_003(self):
+        code = tuple(string_to_1_0_list(default_access_code))
+        access_code = to_1_0_string(code)
+        pad = (0,) * 64
+        #print code
+        #print access_code
+        src_data = code + (1, 0, 1, 1) + pad
+        expected_result = code + (1, 0, 1, 1) + pad
+        src = gr.vector_source_b (src_data)
+        op = digital.correlate_access_code_tag_bb(access_code, 0, "test")
+        dst = gr.vector_sink_b ()
+        self.tb.connect (src, op, dst)
+        self.tb.run ()
+        result_data = dst.data ()
+        self.assertEqual (expected_result, result_data)
         
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 Here we have several test programs for use with the gr-trellis implementation.
-Documentation can be found in 
+Documentation can be found in
 http://gnuradio.utah.edu/svn/gnuradio/trunk/gr-trellis/doc/gr-trellis.html
 
 fsm_utils.py contains several useful functions.
@@ -28,8 +28,8 @@ number of packets in error
 estimated packet error rate
 number of transmitted shorts (or symbols, or bits, depending on the specific program)
 number of shorts (or symbols, or bits) in error
-estimated short (or symbol, or bit) error rate 
+estimated short (or symbol, or bit) error rate
 
-for instance, the final number 1.10e-03 is the error rate estimate by sending 1000 
-packets of 1024 shorts each, using an 1/2 4-state convolutional code 
+for instance, the final number 1.10e-03 is the error rate estimate by sending 1000
+packets of 1024 shorts each, using an 1/2 4-state convolutional code
 and QPSK modulation through an AWGN with Es/N0 = 6.0 dB

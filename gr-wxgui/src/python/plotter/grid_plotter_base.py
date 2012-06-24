@@ -78,14 +78,26 @@ class grid_plotter_base(plotter_base):
 	def set_point_label_coordinate(self, coor):
 		"""
 		Set the point label coordinate.
-		@param coor the coordinate x, y tuple or None 
+		@param coor the coordinate x, y tuple or None
 		"""
 		self.lock()
 		self._point_label_coordinate = coor
 		self._point_label_cache.changed(True)
 		self.update()
 		self.unlock()
-
+		
+	def call_freq_callback(self, coor):
+		x, y = self._point_label_coordinate
+		if x < self.padding_left or x > self.width-self.padding_right: return
+		if y < self.padding_top or y > self.height-self.padding_bottom: return
+		#scale to window bounds
+		x_win_scalar = float(x - self.padding_left)/(self.width-self.padding_left-self.padding_right)
+		y_win_scalar = float((self.height - y) - self.padding_bottom)/(self.height-self.padding_top-self.padding_bottom)
+		#scale to grid bounds
+		x_val = x_win_scalar*(self.x_max-self.x_min) + self.x_min
+		y_val = y_win_scalar*(self.y_max-self.y_min) + self.y_min
+		self._call_callback(x_val, y_val)
+		
 	def enable_grid_aspect_ratio(self, enable=None):
 		"""
 		Enable/disable the grid aspect ratio.

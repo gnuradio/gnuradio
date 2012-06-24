@@ -56,7 +56,7 @@ int gsm_option P3((r, opt, val), gsm r, int opt, int * val)
 
 	case GSM_OPT_WAV49:
 
-#ifdef WAV49 
+#ifdef WAV49
 		result = r->wav_fmt;
 		if (val) r->wav_fmt = !!*val;
 #endif

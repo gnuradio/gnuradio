@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2007,2008,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -48,21 +48,21 @@ private:
   friend GR_CORE_API gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
 						 gr_io_signature_sptr input_signature,
 						 gr_io_signature_sptr output_signature);
-  
+
   /*!
    * \brief Private implementation details of gr_hier_block2
    */
   gr_hier_block2_detail *d_detail;
-    
-protected: 
+
+protected:
   gr_hier_block2 (void){} //allows pure virtual interface sub-classes
   gr_hier_block2(const std::string &name,
 		 gr_io_signature_sptr input_signature,
 		 gr_io_signature_sptr output_signature);
-  
+
 public:
   virtual ~gr_hier_block2();
-  
+
   /*!
    * \brief typedef for object returned from self().
    *
@@ -90,11 +90,11 @@ public:
   /*!
    * \brief Add gr-blocks or hierarchical blocks to internal graph and wire together
    *
-   * This adds (if not done earlier by another connect) a pair of gr-blocks or 
-   * hierarchical blocks to the internal flowgraph, and wires the specified output 
+   * This adds (if not done earlier by another connect) a pair of gr-blocks or
+   * hierarchical blocks to the internal flowgraph, and wires the specified output
    * port to the specified input port.
    */
-  void connect(gr_basic_block_sptr src, int src_port, 
+  void connect(gr_basic_block_sptr src, int src_port,
 	       gr_basic_block_sptr dst, int dst_port);
 
   /*!

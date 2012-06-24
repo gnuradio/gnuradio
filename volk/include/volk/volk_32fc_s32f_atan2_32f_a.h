@@ -27,14 +27,14 @@ static inline void volk_32fc_s32f_atan2_32f_a_sse4_1(float* outputVector,  const
   const float invNormalizeFactor = 1.0 / normalizeFactor;
 
 #ifdef LV_HAVE_LIB_SIMDMATH
-  const unsigned int quarterPoints = num_points / 4;    
+  const unsigned int quarterPoints = num_points / 4;
   __m128 testVector = _mm_set_ps1(2*M_PI);
   __m128 correctVector = _mm_set_ps1(M_PI);
   __m128 vNormalizeFactor = _mm_set_ps1(invNormalizeFactor);
   __m128 phase;
   __m128 complex1, complex2, iValue, qValue;
   __m128 keepMask;
-    
+
   for (; number < quarterPoints; number++) {
     // Load IQ data:
     complex1 = _mm_load_ps(complexVectorPtr);
@@ -42,15 +42,15 @@ static inline void volk_32fc_s32f_atan2_32f_a_sse4_1(float* outputVector,  const
     complex2 = _mm_load_ps(complexVectorPtr);
     complexVectorPtr += 4;
     // Deinterleave IQ data:
-    iValue = _mm_shuffle_ps(complex1, complex2, _MM_SHUFFLE(2,0,2,0)); 
-    qValue = _mm_shuffle_ps(complex1, complex2, _MM_SHUFFLE(3,1,3,1)); 
+    iValue = _mm_shuffle_ps(complex1, complex2, _MM_SHUFFLE(2,0,2,0));
+    qValue = _mm_shuffle_ps(complex1, complex2, _MM_SHUFFLE(3,1,3,1));
     // Arctan to get phase:
     phase = atan2f4(qValue, iValue);
     // When Q = 0 and I < 0, atan2f4 sucks and returns 2pi vice pi.
     // Compare to 2pi:
     keepMask = _mm_cmpneq_ps(phase,testVector);
     phase = _mm_blendv_ps(correctVector, phase, keepMask);
-    // done with above correction.      
+    // done with above correction.
     phase = _mm_mul_ps(phase, vNormalizeFactor);
     _mm_store_ps((float*)outPtr, phase);
     outPtr += 4;
@@ -89,7 +89,7 @@ static inline void volk_32fc_s32f_atan2_32f_a_sse(float* outputVector,  const lv
   const float invNormalizeFactor = 1.0 / normalizeFactor;
 
 #ifdef LV_HAVE_LIB_SIMDMATH
-  const unsigned int quarterPoints = num_points / 4;    
+  const unsigned int quarterPoints = num_points / 4;
   __m128 testVector = _mm_set_ps1(2*M_PI);
   __m128 correctVector = _mm_set_ps1(M_PI);
   __m128 vNormalizeFactor = _mm_set_ps1(invNormalizeFactor);
@@ -97,7 +97,7 @@ static inline void volk_32fc_s32f_atan2_32f_a_sse(float* outputVector,  const lv
   __m128 complex1, complex2, iValue, qValue;
   __m128 mask;
   __m128 keepMask;
-    
+
   for (; number < quarterPoints; number++) {
     // Load IQ data:
     complex1 = _mm_load_ps(complexVectorPtr);
@@ -105,8 +105,8 @@ static inline void volk_32fc_s32f_atan2_32f_a_sse(float* outputVector,  const lv
     complex2 = _mm_load_ps(complexVectorPtr);
     complexVectorPtr += 4;
     // Deinterleave IQ data:
-    iValue = _mm_shuffle_ps(complex1, complex2, _MM_SHUFFLE(2,0,2,0)); 
-    qValue = _mm_shuffle_ps(complex1, complex2, _MM_SHUFFLE(3,1,3,1)); 
+    iValue = _mm_shuffle_ps(complex1, complex2, _MM_SHUFFLE(2,0,2,0));
+    qValue = _mm_shuffle_ps(complex1, complex2, _MM_SHUFFLE(3,1,3,1));
     // Arctan to get phase:
     phase = atan2f4(qValue, iValue);
     // When Q = 0 and I < 0, atan2f4 sucks and returns 2pi vice pi.
@@ -115,7 +115,7 @@ static inline void volk_32fc_s32f_atan2_32f_a_sse(float* outputVector,  const lv
     phase = _mm_and_ps(phase, keepMask);
     mask = _mm_andnot_ps(keepMask, correctVector);
     phase = _mm_or_ps(phase, mask);
-    // done with above correction.      
+    // done with above correction.
     phase = _mm_mul_ps(phase, vNormalizeFactor);
     _mm_store_ps((float*)outPtr, phase);
     outPtr += 4;

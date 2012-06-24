@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	printf("usage: %s InputRawSpeechFile OutputRawSpeechFile\n", argv[0]);
 	exit(1);
     }
- 
+
     if ( (fin = fopen(argv[1],"rb")) == NULL ) {
 	fprintf(stderr, "Error opening input speech file: %s: %s.\n",
          argv[1], strerror(errno));
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
     codec2 = codec2_create();
 
-    while(fread(buf, sizeof(short), CODEC2_SAMPLES_PER_FRAME, fin) == 
+    while(fread(buf, sizeof(short), CODEC2_SAMPLES_PER_FRAME, fin) ==
 	  CODEC2_SAMPLES_PER_FRAME) {
 	codec2_encode(codec2, bits, buf);
 	codec2_decode(codec2, buf, bits);

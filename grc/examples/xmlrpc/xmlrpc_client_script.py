@@ -13,7 +13,7 @@ for i in range(10):
 	new_freq = random.uniform(0, 5000)
 	new_ampl = random.uniform(0, 2)
 	new_offset = random.uniform(-1, 1)
-	#set new values 
+	#set new values
 	time.sleep(1)
 	s.set_freq(new_freq)
 	time.sleep(1)

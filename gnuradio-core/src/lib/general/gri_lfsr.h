@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -32,9 +32,9 @@
  * \ingroup misc
  *
  * Generates a maximal length pseudo-random sequence of length 2^degree-1
- * 
+ *
  * Constructor: gri_lfsr(int mask, int seed, int reg_len);
- *  
+ *
  *      mask - polynomial coefficients representing the locations
  *             of feedback taps from a shift register which are xor'ed
  *             together to form the new high order bit.
@@ -48,32 +48,32 @@
  *             durring initialization.   Low order bit corresponds
  *             to x^0 coefficient -- the first to be shifted as output.
  *
- *   reg_len - specifies the length of the feedback shift register 
+ *   reg_len - specifies the length of the feedback shift register
  *             to be used.   Durring each iteration, the register
  *             is rightshifted one and the new bit is placed in bit reg_len.
  *             reg_len should generally be at least order(mask) + 1
  *
  *
- * see http://en.wikipedia.org/wiki/Linear_feedback_shift_register 
+ * see http://en.wikipedia.org/wiki/Linear_feedback_shift_register
  * for more explanation.
  *
  *
  *
  *  next_bit() - Standard LFSR operation
- * 
+ *
  *      Perform one cycle of the LFSR.  The output bit is taken from
  *      the shift register LSB.  The shift register MSB is assigned from
  *      the modulo 2 sum of the masked shift register.
- *             
+ *
  *  next_bit_scramble(unsigned char input) - Scramble an input stream
- * 
+ *
  *      Perform one cycle of the LFSR.  The output bit is taken from
  *      the shift register LSB.  The shift register MSB is assigned from
  *      the modulo 2 sum of the masked shift register and the input LSB.
  *
  *  next_bit_descramble(unsigned char input) - Descramble an input stream
  *
- *      Perform one cycle of the LFSR.  The output bit is taken from 
+ *      Perform one cycle of the LFSR.  The output bit is taken from
  *      the modulo 2 sum of the masked shift register and the input LSB.
  *      The shift register MSB is assigned from the LSB of the input.
  *
@@ -101,8 +101,8 @@ class GR_CORE_API gri_lfsr
  public:
 
   gri_lfsr(uint32_t mask, uint32_t seed, uint32_t reg_len)
-    : d_shift_register(seed), 
-      d_mask(mask), 
+    : d_shift_register(seed),
+      d_mask(mask),
       d_seed(seed),
       d_shift_register_length(reg_len)
   {

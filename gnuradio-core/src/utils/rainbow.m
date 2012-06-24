@@ -16,7 +16,7 @@
 
 ## -*- texinfo -*-
 ## @deftypefn {Function File} {} rainbow (@var{n})
-## Create color colormap. 
+## Create color colormap.
 ## (red through yellow, green, cyan,blue,magenta to red)
 ## The argument @var{n} should be a scalar.  If it
 ## is omitted, the length of the current colormap or 64 is assumed.
@@ -42,7 +42,7 @@ function map = rainbow (number)
   endif
 
   if (number == 1)
-    map = [1, 0, 0];  
+    map = [1, 0, 0];
   elseif (number > 1)
     h = linspace (0, 1, number)';
     map = hsv2rgb ([h, ones(number, 1), ones(number, 1)]);

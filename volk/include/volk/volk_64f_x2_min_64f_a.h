@@ -23,12 +23,12 @@ static inline void volk_64f_x2_min_64f_a_sse2(double* cVector, const double* aVe
 
     __m128d aVal, bVal, cVal;
     for(;number < halfPoints; number++){
-      
-      aVal = _mm_load_pd(aPtr); 
+
+      aVal = _mm_load_pd(aPtr);
       bVal = _mm_load_pd(bPtr);
-      
-      cVal = _mm_min_pd(aVal, bVal); 
-      
+
+      cVal = _mm_min_pd(aVal, bVal);
+
       _mm_store_pd(cPtr,cVal); // Store the results back into the C container
 
       aPtr += 2;

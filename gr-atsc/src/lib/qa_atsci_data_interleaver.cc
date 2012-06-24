@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -62,7 +62,7 @@ qa_atsci_data_interleaver::print_packet (FILE *fp,
   for (int i = 0; i < 8; i++)
     fprintf (fp, "%02X", p[i]);
 
-  
+
   fprintf (fp, "  ...  ");
   p = &in.data[191];
   for (int i = 0; i < 8; i++)
@@ -102,7 +102,7 @@ qa_atsci_data_interleaver::t0 ()
   atsc_mpeg_packet_rs_encoded	zero;
 
   memset (&zero, 0, sizeof (zero));
-  
+
   for (int frame = 0; frame < 4; frame++){
     for (int field = 0; field < 2; field++){
       for (int segment = 0; segment < 312; segment++, counter++){
@@ -149,9 +149,9 @@ qa_atsci_data_interleaver::t1 ()
   atsc_mpeg_packet_rs_encoded	zero;
 
   memset (&zero, 0, sizeof (zero));
-  
+
   static const int NCRAP = 13;
-  
+
   // push NCRAP segments of crap into the interleaver,
   // but don't change the deinterleaver state
 
@@ -164,7 +164,7 @@ qa_atsci_data_interleaver::t1 ()
 
   // now run the normal test.
   // we should get good segments after NCRAP + 52
-  
+
   int starting_counter = 3141;
   counter = starting_counter;
 

@@ -12,5 +12,5 @@ namespace std
   public:
     T		*p;
   };
-  
+
 } // namespace std

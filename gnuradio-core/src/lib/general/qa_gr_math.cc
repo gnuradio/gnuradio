@@ -1,18 +1,18 @@
 /*
  * Copyright 2008 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -44,7 +44,7 @@ qa_gr_math::test_binary_slicer1 ()
     y = gr_branchless_binary_slicer(x[i]);
     //printf("in: %f   out: %d   desired: %d\n", x[i], y, z[i]);
 
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);    
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);
   }
 }
 
@@ -52,7 +52,7 @@ void
 qa_gr_math::test_quad_0deg_slicer1 ()
 {
   gr_complex x[4] = {gr_complex(1, 0),
-		     gr_complex(0, 1), 
+		     gr_complex(0, 1),
 		     gr_complex(-1, 0),
 		     gr_complex(0, -1)};
 
@@ -71,7 +71,7 @@ qa_gr_math::test_quad_0deg_slicer1 ()
   for (unsigned int i = 0; i < 4; i++) {
     y = gr_branchless_quad_0deg_slicer(x[i]);
     //printf("in: %.4f+j%.4f   out: %d   desired: %d\n", x[i].real(), x[i].imag(), y, z[i]);
-    
+
     CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);
   }
 }
@@ -80,10 +80,10 @@ void
 qa_gr_math::test_quad_45deg_slicer1 ()
 {
   gr_complex x[4] = {gr_complex(0.707, 0.707),
-		     gr_complex(-0.707, 0.707), 
+		     gr_complex(-0.707, 0.707),
 		     gr_complex(-0.707, -0.707),
 		     gr_complex(0.707, -0.707)};
-  
+
   unsigned int z[4] = {0, 1, 2, 3};
   unsigned int y;
 

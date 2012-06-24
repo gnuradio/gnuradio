@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2006,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gru, eng_notation, optfir
 from gnuradio import audio
@@ -41,14 +41,14 @@ class wfm_rx_block (gr.top_block):
         if len(args) != 2:
             parser.print_help()
             sys.exit(1)
-        
+
         input_filename = args[0]
         output_filename = args[1]
 
         self.vol = 0
-        
+
         # build graph
-        
+
         self.src = gr.file_source(gr.sizeof_gr_complex, input_filename, False)
 
         adc_rate = 64e6                             # 64 MS/s
@@ -84,7 +84,7 @@ class wfm_rx_block (gr.top_block):
             sink = audio.sink (int (audio_rate),
                                options.audio_output,
                                False)   # ok_to_block
-        
+
         # now wire it all together
         self.connect (self.src, chan_filt, self.guts)
         self.connect ((self.guts, 0), self.volume_control_l, (sink, 0))
@@ -117,7 +117,7 @@ class wfm_rx_block (gr.top_block):
 
     def volume_range(self):
         return (-20.0, 0.0, 0.5)
-        
+
 
 if __name__ == '__main__':
     tb = wfm_rx_block()

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -81,7 +81,7 @@ gr_single_threaded_scheduler::run ()
 
 void
 gr_single_threaded_scheduler::stop ()
-{ 
+{
   if (0)
     std::cout << "gr_singled_threaded_scheduler::stop() "
 	      << this << std::endl;
@@ -206,7 +206,7 @@ gr_single_threaded_scheduler::main_loop ()
 	//if (ninput_items[i] == 0 && d->input(i)->done())
 	if (ninput_items[i] < m->output_multiple() && d->input(i)->done())
 	  goto were_done;
-	
+
 	max_items_avail = std::max (max_items_avail, ninput_items[i]);
       }
 
@@ -345,7 +345,7 @@ gr_single_threaded_scheduler::main_loop ()
       goto next_block;
     }
     assert (0);
-    
+
   were_done:
     LOG(*d_log << "  were_done\n");
     d->set_done (true);

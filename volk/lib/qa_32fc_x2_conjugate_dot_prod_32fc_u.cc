@@ -7,7 +7,7 @@
 
 #define assertcomplexEqual(expected, actual, delta)			\
   CPPUNIT_ASSERT_DOUBLES_EQUAL (std::real(expected), std::real(actual), fabs(std::real(expected)) * delta); \
-  CPPUNIT_ASSERT_DOUBLES_EQUAL (std::imag(expected), std::imag(actual), fabs(std::imag(expected))* delta);	
+  CPPUNIT_ASSERT_DOUBLES_EQUAL (std::imag(expected), std::imag(actual), fabs(std::imag(expected))* delta);
 
 #define	ERR_DELTA	(1e-4)
 
@@ -35,7 +35,7 @@ void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
 
   std::complex<float>* input;
   std::complex<float>* taps;
-  
+
   std::complex<float>* result_generic;
   std::complex<float>* result;
 
@@ -43,19 +43,19 @@ void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
   ret = posix_memalign((void**)&taps, 16, vlen << 3);
   ret = posix_memalign((void**)&result_generic, 16, 8);
   ret = posix_memalign((void**)&result, 16, 8);
-  
+
 
   result_generic[0] = std::complex<float>(0,0);
   result[0] = std::complex<float>(0,0);
 
   random_floats((float*)input, vlen * 2);
   random_floats((float*)taps, vlen * 2);
-  
-  
+
+
 
   volk_32fc_x2_conjugate_dot_prod_32fc_u_manual(result_generic, input, taps, vlen * 8,  "generic");
 
-  
+
   volk_32fc_x2_conjugate_dot_prod_32fc_u_manual(result, input, taps, vlen * 8, "sse");
 
   printf("32fc_x2_conjugate_dot_prod_32fc_u\n");
@@ -67,7 +67,7 @@ void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
   free(taps);
   free(result_generic);
   free(result);
-  
+
 }
 
 
@@ -87,13 +87,13 @@ random_floats (float *buf, unsigned n)
 
 void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
   const int vlen = 789743;
-  
+
   volk_environment_init();
   int ret;
 
   std::complex<float>* input;
   std::complex<float>* taps;
-  
+
   std::complex<float>* result_generic;
   std::complex<float>* result;
 
@@ -101,19 +101,19 @@ void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
   ret = posix_memalign((void**)&taps, 16, vlen << 3);
   ret = posix_memalign((void**)&result_generic, 16, 8);
   ret = posix_memalign((void**)&result, 16, 8);
-  
+
 
   result_generic[0] = std::complex<float>(0,0);
   result[0] = std::complex<float>(0,0);
 
   random_floats((float*)input, vlen * 2);
   random_floats((float*)taps, vlen * 2);
-  
-  
+
+
 
   volk_32fc_x2_conjugate_dot_prod_32fc_u_manual(result_generic, input, taps, vlen * 8,  "generic");
 
-  
+
   volk_32fc_x2_conjugate_dot_prod_32fc_u_manual(result, input, taps, vlen * 8, "sse_32");
 
   printf("32fc_x2_conjugate_dot_prod_32fc_u\n");
@@ -125,7 +125,7 @@ void qa_32fc_x2_conjugate_dot_prod_32fc_u::t1() {
   free(taps);
   free(result_generic);
   free(result);
-  
+
 }
 
 

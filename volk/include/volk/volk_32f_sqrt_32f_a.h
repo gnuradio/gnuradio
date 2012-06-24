@@ -22,11 +22,11 @@ static inline void volk_32f_sqrt_32f_a_sse(float* cVector, const float* aVector,
 
     __m128 aVal, cVal;
     for(;number < quarterPoints; number++){
-      
-      aVal = _mm_load_ps(aPtr); 
-      
-      cVal = _mm_sqrt_ps(aVal); 
-      
+
+      aVal = _mm_load_ps(aPtr);
+
+      cVal = _mm_sqrt_ps(aVal);
+
       _mm_store_ps(cPtr,cVal); // Store the results back into the C container
 
       aPtr += 4;

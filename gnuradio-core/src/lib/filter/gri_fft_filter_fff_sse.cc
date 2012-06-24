@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -32,7 +32,7 @@
 #include <xmmintrin.h>
 #include <fftw3.h>
 
-gri_fft_filter_fff_sse::gri_fft_filter_fff_sse (int decimation, 
+gri_fft_filter_fff_sse::gri_fft_filter_fff_sse (int decimation,
 							const std::vector<float> &taps)
   : d_fftsize(-1), d_decimation(decimation), d_fwdfft(0), d_invfft(0)
 {
@@ -64,7 +64,7 @@ gri_fft_filter_fff_sse::set_taps (const std::vector<float> &taps)
   gr_complex *out = d_fwdfft->get_outbuf();
 
   float scale = 1.0 / d_fftsize;
-  
+
   // Compute forward xform of taps.
   // Copy taps into first ntaps slots, then pad with zeros
   for (i = 0; i < d_ntaps; i++)
@@ -78,7 +78,7 @@ gri_fft_filter_fff_sse::set_taps (const std::vector<float> &taps)
   // now copy output to d_xformed_taps
   for (i = 0; i < d_fftsize/2+1; i++)
     d_xformed_taps[i] = out[i];
-  
+
   return d_nsamples;
 }
 
@@ -118,7 +118,7 @@ gri_fft_filter_fff_sse::filter (int nitems, const float *input, float *output)
   int ninput_items = nitems * d_decimation;
 
   for (int i = 0; i < ninput_items; i += d_nsamples){
-    
+
     memcpy(d_fwdfft->get_inbuf(), &input[i], d_nsamples * sizeof(float));
 
     for (j = d_nsamples; j < d_fftsize; j++)
@@ -135,7 +135,7 @@ gri_fft_filter_fff_sse::filter (int nitems, const float *input, float *output)
     for (j = 0; j < d_fftsize; j+=4) {	// filter in the freq domain
       x0 = _mm_load_ps(&a[j]);
       t0 = _mm_load_ps(&b[j]);
-      
+
       t1 = _mm_shuffle_ps(t0, t0, _MM_SHUFFLE(3, 3, 1, 1));
       t0 = _mm_shuffle_ps(t0, t0, _MM_SHUFFLE(2, 2, 0, 0));
       t1 = _mm_mul_ps(t1, m);
@@ -148,7 +148,7 @@ gri_fft_filter_fff_sse::filter (int nitems, const float *input, float *output)
 
       _mm_store_ps(&c[j], x2);
     }
-    
+
     // Finish off the last one; do the complex multiply as floats
     j = d_fftsize/2;
     c[j] = (a[j] * b[j]) - (a[j+1] * b[j+1]);

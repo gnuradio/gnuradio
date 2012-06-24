@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2006 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -27,7 +27,7 @@
 #include <gr_squelch_base_ff.h>
 #include <gr_io_signature.h>
 
-gr_squelch_base_ff::gr_squelch_base_ff(const char *name, int ramp, bool gate) : 
+gr_squelch_base_ff::gr_squelch_base_ff(const char *name, int ramp, bool gate) :
 	gr_block(name,
 	         gr_make_io_signature(1, 1, sizeof(float)),
 	         gr_make_io_signature(1, 1, sizeof(float)))
@@ -55,7 +55,7 @@ int gr_squelch_base_ff::general_work(int noutput_items,
     // Adjust envelope based on current state
     switch(d_state) {
       case ST_MUTED:
-        if (!mute()) 
+        if (!mute())
           d_state = d_ramp ? ST_ATTACK : ST_UNMUTED; // If not ramping, go straight to unmuted
         break;
 
@@ -78,7 +78,7 @@ int gr_squelch_base_ff::general_work(int noutput_items,
 	  d_state = ST_MUTED;
         break;
     };
-       
+
     // If unmuted, copy input times envelope to output
     // Otherwise, if not gating, copy zero to output
     if (d_state != ST_MUTED)

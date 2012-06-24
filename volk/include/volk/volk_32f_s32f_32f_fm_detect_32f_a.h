@@ -46,7 +46,7 @@ static inline void volk_32f_s32f_32f_fm_detect_32f_a_sse(float* outputVector, co
     inPtr++;
     outPtr++;
   }
-    
+
   for (; number < quarterPoints; number++) {
     // Load data
     next3old1 = _mm_loadu_ps((float*) (inPtr-1));
@@ -65,7 +65,7 @@ static inline void volk_32f_s32f_32f_fm_detect_32f_a_sse(float* outputVector, co
     _mm_store_ps(outPtr,next3old1); // Store the results back into the output
     outPtr += 4;
   }
-    
+
   for (number = (4 > (quarterPoints*4) ? 4 : (4 * quarterPoints)); number < num_points; number++) {
     *outPtr = *(inPtr) - *(inPtr-1);
     if (*outPtr >  bound) *outPtr -= 2*bound;
@@ -73,7 +73,7 @@ static inline void volk_32f_s32f_32f_fm_detect_32f_a_sse(float* outputVector, co
     inPtr++;
     outPtr++;
   }
-    
+
   *saveValue = inputVector[num_points-1];
 }
 #endif /* LV_HAVE_SSE */
@@ -94,14 +94,14 @@ static inline void volk_32f_s32f_32f_fm_detect_32f_a_generic(float* outputVector
   unsigned int number = 0;
   float* outPtr = outputVector;
   const float* inPtr = inputVector;
-      
+
   // Do the first 1 by hand since we're going in from the saveValue:
   *outPtr = *inPtr - *saveValue;
   if (*outPtr >  bound) *outPtr -= 2*bound;
   if (*outPtr < -bound) *outPtr += 2*bound;
   inPtr++;
   outPtr++;
-    
+
   for (number = 1; number < num_points; number++) {
     *outPtr = *(inPtr) - *(inPtr-1);
     if (*outPtr >  bound) *outPtr -= 2*bound;
@@ -109,7 +109,7 @@ static inline void volk_32f_s32f_32f_fm_detect_32f_a_generic(float* outputVector
     inPtr++;
     outPtr++;
   }
-    
+
   *saveValue = inputVector[num_points-1];
 }
 #endif /* LV_HAVE_GENERIC */

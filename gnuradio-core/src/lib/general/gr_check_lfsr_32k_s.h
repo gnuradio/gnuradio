@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -53,7 +53,7 @@ class GR_CORE_API gr_check_lfsr_32k_s : public gr_sync_block
 
   state			d_state;
   unsigned int		d_history;		// bitmask of decisions
-  
+
   long			d_ntotal;		// total number of shorts
   long			d_nright;		// # of correct shorts
   long			d_runlength;		// # of correct shorts in a row
@@ -64,7 +64,7 @@ class GR_CORE_API gr_check_lfsr_32k_s : public gr_sync_block
 
 
   gr_check_lfsr_32k_s ();
-  
+
   void enter_SEARCHING ();
   void enter_MATCH0 ();
   void enter_MATCH1 ();
@@ -76,7 +76,7 @@ class GR_CORE_API gr_check_lfsr_32k_s : public gr_sync_block
     d_nright++;
     d_runlength++;
   }
-  
+
   void wrong (){
     d_history = (d_history << 1) | 0x0;
     d_runlength = 0;

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -70,11 +70,11 @@ atsci_single_viterbi::decode(float input)
     float min_metric = fabs(input - was_sent[index + 0]) +
       path_metrics[phase][transition_table[index + 0]];
 
-    for (unsigned int symbol_sent = 1; symbol_sent < 4; symbol_sent++) 
-      if( (fabs(input-was_sent[index+symbol_sent]) + 
+    for (unsigned int symbol_sent = 1; symbol_sent < 4; symbol_sent++)
+      if( (fabs(input-was_sent[index+symbol_sent]) +
 	   path_metrics[phase][transition_table[index+symbol_sent]])
 	  < min_metric) {
-	min_metric = fabs(input-was_sent[index+symbol_sent]) + 
+	min_metric = fabs(input-was_sent[index+symbol_sent]) +
 	  path_metrics[phase][transition_table[index+symbol_sent]];
 	min_metric_symb = symbol_sent;
       }

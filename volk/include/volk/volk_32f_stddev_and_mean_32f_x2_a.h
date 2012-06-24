@@ -31,7 +31,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_sse4_1(float* stddev, float
     __m128 aVal1, aVal2, aVal3, aVal4;
     __m128 cVal1, cVal2, cVal3, cVal4;
     for(;number < sixteenthPoints; number++) {
-      aVal1 = _mm_load_ps(aPtr); aPtr += 4;   
+      aVal1 = _mm_load_ps(aPtr); aPtr += 4;
       cVal1 = _mm_dp_ps(aVal1, aVal1, 0xF1);
       accumulator = _mm_add_ps(accumulator, aVal1);  // accumulator += x
 
@@ -54,7 +54,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_sse4_1(float* stddev, float
       squareAccumulator = _mm_add_ps(squareAccumulator, cVal1); // squareAccumulator += x^2
     }
     _mm_store_ps(meanBuffer,accumulator); // Store the results back into the C container
-    _mm_store_ps(squareBuffer,squareAccumulator); // Store the results back into the C container  
+    _mm_store_ps(squareBuffer,squareAccumulator); // Store the results back into the C container
     newMean = meanBuffer[0];
     newMean += meanBuffer[1];
     newMean += meanBuffer[2];
@@ -63,7 +63,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_sse4_1(float* stddev, float
     returnValue += squareBuffer[1];
     returnValue += squareBuffer[2];
     returnValue += squareBuffer[3];
-  
+
     number = sixteenthPoints * 16;
     for(;number < num_points; number++){
       returnValue += (*aPtr) * (*aPtr);
@@ -110,7 +110,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_sse(float* stddev, float* m
       aPtr += 4;
     }
     _mm_store_ps(meanBuffer,accumulator); // Store the results back into the C container
-    _mm_store_ps(squareBuffer,squareAccumulator); // Store the results back into the C container  
+    _mm_store_ps(squareBuffer,squareAccumulator); // Store the results back into the C container
     newMean = meanBuffer[0];
     newMean += meanBuffer[1];
     newMean += meanBuffer[2];
@@ -119,7 +119,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_sse(float* stddev, float* m
     returnValue += squareBuffer[1];
     returnValue += squareBuffer[2];
     returnValue += squareBuffer[3];
-  
+
     number = quarterPoints * 4;
     for(;number < num_points; number++){
       returnValue += (*aPtr) * (*aPtr);
@@ -149,7 +149,7 @@ static inline void volk_32f_stddev_and_mean_32f_x2_a_generic(float* stddev, floa
   if(num_points > 0){
     const float* aPtr = inputBuffer;
     unsigned int number = 0;
-    
+
     for(number = 0; number < num_points; number++){
       returnValue += (*aPtr) * (*aPtr);
       newMean += *aPtr++;

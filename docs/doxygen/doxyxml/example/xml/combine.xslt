@@ -1,4 +1,4 @@
-<!-- XSLT script to combine the generated output into a single file. 
+<!-- XSLT script to combine the generated output into a single file.
      If you have xsltproc you could use:
      xsltproc combine.xslt index.xml >all.xml
 -->

@@ -87,7 +87,7 @@
 #define FCD_CMD_APP_RESET            255 // Reset to bootloader
 
 
-typedef enum 
+typedef enum
 {
 	TLGE_N5_0DB=0,
 	TLGE_N2_5DB=1,

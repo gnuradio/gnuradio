@@ -57,7 +57,7 @@ typedef gsm_byte 		gsm_frame[33];		/* 33 * 8 bits	 */
 #define GSM_SAMPLES_PER_FRAME	160
 
 extern gsm  gsm_create 	GSM_P((void));
-extern void gsm_destroy GSM_P((gsm));	
+extern void gsm_destroy GSM_P((gsm));
 
 extern int  gsm_print   GSM_P((FILE *, gsm, gsm_byte  *));
 extern int  gsm_option  GSM_P((gsm, int, int *));

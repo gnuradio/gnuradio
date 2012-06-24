@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -42,7 +42,7 @@ class GR_CORE_API gr_simple_correlator : public gr_block
 {
   static const int OVERSAMPLE = 8;
   enum state_t { ST_LOOKING, ST_UNDER_THRESHOLD, ST_LOCKED };
-  
+
   int	  	 d_payload_bytesize;
   state_t	 d_state;
   unsigned int	 d_osi;				// over sample index [0,OVERSAMPLE-1]
@@ -78,7 +78,7 @@ class GR_CORE_API gr_simple_correlator : public gr_block
   void enter_locked ();
   void enter_under_threshold ();
   void enter_looking ();
-  
+
   static int add_index (int a, int b)
   {
     int t = a + b;
@@ -97,7 +97,7 @@ class GR_CORE_API gr_simple_correlator : public gr_block
     return t;
   }
 
-  
+
  public:
   ~gr_simple_correlator ();
 

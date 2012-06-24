@@ -4,7 +4,7 @@
   AUTHOR......: David Rowe
   DATE CREATED: 21/8/2010
 
-  Codec2 fully quantised encoder and decoder functions.  If you want use 
+  Codec2 fully quantised encoder and decoder functions.  If you want use
   codec2, the codec2_xxx functions are for you.
 
 \*---------------------------------------------------------------------------*/
@@ -45,16 +45,16 @@
 #include "codec2_internal.h"
 
 /*---------------------------------------------------------------------------*\
-                                                       
+
                                 FUNCTIONS
 
 \*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: codec2_create	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 21/8/2010 
+
+  FUNCTION....: codec2_create
+  AUTHOR......: David Rowe
+  DATE CREATED: 21/8/2010
 
   Create and initialise an instance of the codec.  Returns a pointer
   to the codec states or NULL on failure.  One set of states is
@@ -106,10 +106,10 @@ void *codec2_create()
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: codec2_create	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 21/8/2010 
+
+  FUNCTION....: codec2_create
+  AUTHOR......: David Rowe
+  DATE CREATED: 21/8/2010
 
   Destroy an instance of the codec.
 
@@ -118,7 +118,7 @@ void *codec2_create()
 void codec2_destroy(void *codec2_state)
 {
     CODEC2 *c2;
-    
+
     assert(codec2_state != NULL);
     c2 = (CODEC2*)codec2_state;
     nlp_destroy(c2->nlp);
@@ -126,12 +126,12 @@ void codec2_destroy(void *codec2_state)
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: codec2_encode	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 21/8/2010 
 
-  Encodes 160 speech samples (20ms of speech) into 51 bits.  
+  FUNCTION....: codec2_encode
+  AUTHOR......: David Rowe
+  DATE CREATED: 21/8/2010
+
+  Encodes 160 speech samples (20ms of speech) into 51 bits.
 
   The codec2 algorithm actually operates internally on 10ms (80
   sample) frames, so we run the encoding algorithm twice.  On the
@@ -148,7 +148,7 @@ void codec2_destroy(void *codec2_state)
     Wo (fundamental frequnecy)      7
     Voicing (10ms update)           2
     TOTAL                          51
- 
+
 \*---------------------------------------------------------------------------*/
 
 void codec2_encode(void *codec2_state, unsigned char * bits, short speech[])
@@ -174,13 +174,13 @@ void codec2_encode(void *codec2_state, unsigned char * bits, short speech[])
 
     analyse_one_frame(c2, &model, &speech[N]);
     voiced2 = model.voiced;
-    
+
     Wo_index = encode_Wo(model.Wo);
-    encode_amplitudes(lsp_indexes, 
+    encode_amplitudes(lsp_indexes,
 		      &energy_index,
-		      &model, 
-		       c2->Sn, 
-		       c2->w);   
+		      &model,
+		       c2->Sn,
+		       c2->w);
     memset(bits, '\0', ((CODEC2_BITS_PER_FRAME + 7) / 8));
     pack(bits, &nbit, Wo_index, WO_BITS);
     for(i=0; i<LPC_ORD; i++) {
@@ -189,15 +189,15 @@ void codec2_encode(void *codec2_state, unsigned char * bits, short speech[])
     pack(bits, &nbit, energy_index, E_BITS);
     pack(bits, &nbit, voiced1, 1);
     pack(bits, &nbit, voiced2, 1);
-    
+
     assert(nbit == CODEC2_BITS_PER_FRAME);
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: codec2_decode	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 21/8/2010 
+
+  FUNCTION....: codec2_decode
+  AUTHOR......: David Rowe
+  DATE CREATED: 21/8/2010
 
   Decodes frames of 51 bits into 160 samples (20ms) of speech.
 
@@ -239,7 +239,7 @@ void codec2_decode(void *codec2_state, short speech[],
     model.Wo = decode_Wo(Wo_index);
     model.L = PI/model.Wo;
     memset(&model.A, 0, (model.L+1)*sizeof(model.A[0]));
-    decode_amplitudes(&model, 
+    decode_amplitudes(&model,
 		      ak,
 		      lsp_indexes,
 		      energy_index,
@@ -270,10 +270,10 @@ void codec2_decode(void *codec2_state, short speech[],
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: synthesise_one_frame()	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 23/8/2010 
+
+  FUNCTION....: synthesise_one_frame()
+  AUTHOR......: David Rowe
+  DATE CREATED: 23/8/2010
 
   Synthesise 80 speech samples (10ms) from model parameters.
 
@@ -299,14 +299,14 @@ void synthesise_one_frame(CODEC2 *c2, short speech[], MODEL *model, float ak[])
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: analyse_one_frame()   
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 23/8/2010 
+
+  FUNCTION....: analyse_one_frame()
+  AUTHOR......: David Rowe
+  DATE CREATED: 23/8/2010
 
   Extract sinusoidal model parameters from 80 speech samples (10ms of
   speech).
- 
+
 \*---------------------------------------------------------------------------*/
 
 void analyse_one_frame(CODEC2 *c2, MODEL *model, short speech[])

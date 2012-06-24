@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -66,7 +66,7 @@ audio_oss_sink::audio_oss_sink (int sampling_rate,
     throw std::runtime_error ("audio_oss_sink");
   }
 
-  double CHUNK_TIME = 
+  double CHUNK_TIME =
     std::max(0.001, gr_prefs::singleton()->get_double("audio_oss", "latency", 0.005));
 
   d_chunk_size = (int) (d_sampling_rate * CHUNK_TIME);
@@ -121,7 +121,7 @@ audio_oss_sink::work (int noutput_items,
 		      gr_vector_void_star &output_items)
 {
   const float  *f0, *f1;
-  
+
   switch (input_items.size ()){
 
   case 1:		// mono input
@@ -138,7 +138,7 @@ audio_oss_sink::work (int noutput_items,
 	perror ("audio_oss_sink: write");
     }
     break;
-    
+
   case 2:		// stereo input
 
     f0 = (const float *) input_items[0];

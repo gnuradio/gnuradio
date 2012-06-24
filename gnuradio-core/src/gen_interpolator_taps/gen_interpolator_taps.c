@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -38,7 +38,7 @@ extern double global_B;
 extern double prax2_ (double (fct)(double x[], int *ntaps),
 		      double initv[], int *ntaps, double result[]);
 
-static void 
+static void
 usage (char *name)
 {
   fprintf (stderr, "usage: %s [-v] [-n <nsteps>] [-t <ntaps>] [-B <bw>]\n", name);
@@ -49,7 +49,7 @@ static void
 printline (double x[], int ntaps, int imu, int nsteps)
 {
   int	i;
-  
+
   printf ("  { ");
   for (i = 0; i < ntaps; i++){
     printf ("%12.5e", x[i]);
@@ -60,7 +60,7 @@ printline (double x[], int ntaps, int imu, int nsteps)
   }
 }
 
-int 
+int
 main (int argc, char **argv)
 {
   double	xx[MAX_NSTEPS+1][MAX_NTAPS];
@@ -87,11 +87,11 @@ main (int argc, char **argv)
     case 'B':
       global_B = strtod (optarg, 0);
       break;
-      
+
     case 'v':
       verbose = 1;
       break;
-      
+
     default:
       usage (argv[0]);
       break;
@@ -107,7 +107,7 @@ main (int argc, char **argv)
     fprintf (stderr, "%s: nsteps must be < %d\n", argv[0], MAX_NSTEPS);
     exit (1);
   }
-    
+
   if ((ntaps & 1) != 0){
     fprintf (stderr, "%s: ntaps must be even\n", argv[0]);
     exit (1);
@@ -122,9 +122,9 @@ main (int argc, char **argv)
     fprintf (stderr, "%s: bandwidth must be in the range (0, 0.5)\n", argv[0]);
     exit (1);
   }
-    
+
   step_size = 1.0/nsteps;
-  
+
   // the optimizer chokes on the two easy cases (0/N and N/N).  We do them by hand...
 
   for (i = 0; i < ntaps; i++)
@@ -172,14 +172,14 @@ main (int argc, char **argv)
   printf ("static const int	NTAPS     = %4d;\n", ntaps);
   printf ("static const int	NSTEPS    = %4d;\n", nsteps);
   printf ("static const double	BANDWIDTH = %g;\n\n", global_B);
-  
+
   printf ("static const float taps[NSTEPS+1][NTAPS] = {\n");
   printf ("  //    -4            -3            -2            -1             0             1             2             3                mu\n");
 
 
   for (i = 0; i <= nsteps; i++)
     printline (xx[i], ntaps, i, nsteps);
-  
+
   printf ("};\n\n");
 
   return 0;

@@ -42,7 +42,7 @@ class GR_QTGUI_API QwtPickerDblClickPointMachine: public QwtPickerMachine
 public:
   QwtPickerDblClickPointMachine();
   ~QwtPickerDblClickPointMachine();
-  
+
 #if QWT_VERSION < 0x060000
   virtual CommandList
 #else

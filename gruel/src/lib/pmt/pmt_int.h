@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -38,15 +38,8 @@ namespace pmt {
 class GRUEL_API pmt_base : boost::noncopyable {
   mutable boost::detail::atomic_count count_;
 
-public:
-  static void default_deleter(pmt_base *p){
-    delete p;
-  }
-
-  boost::function<void(pmt_base *)> deleter_;
-
 protected:
-  pmt_base() : count_(0), deleter_(&pmt::pmt_base::default_deleter) {};
+  pmt_base() : count_(0) {};
   virtual ~pmt_base();
 
 public:
@@ -101,7 +94,7 @@ class pmt_symbol : public pmt_base
 {
   std::string	d_name;
   pmt_t		d_next;
-  
+
 public:
   pmt_symbol(const std::string &name);
   //~pmt_symbol(){}

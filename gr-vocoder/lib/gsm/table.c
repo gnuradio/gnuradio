@@ -51,7 +51,7 @@ word gsm_QLB[4] = {  3277,    11469,	21299,	   32767	};
 word gsm_H[11] = {-134, -374, 0, 2054, 5741, 8192, 5741, 2054, 0, -374, -134 };
 
 
-/*   Table 4.5 	 Normalized inverse mantissa used to compute xM/xmax 
+/*   Table 4.5 	 Normalized inverse mantissa used to compute xM/xmax
  */
 /* i		 	0        1    2      3      4      5     6      7   */
 word gsm_NRFAC[8] = { 29128, 26215, 23832, 21846, 20165, 18725, 17476, 16384 };

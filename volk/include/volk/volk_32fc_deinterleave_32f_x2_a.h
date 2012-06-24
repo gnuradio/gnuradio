@@ -19,10 +19,10 @@ static inline void volk_32fc_deinterleave_32f_x2_a_sse(float* iBuffer, float* qB
   float* qBufferPtr = qBuffer;
 
   unsigned int number = 0;
-  const unsigned int quarterPoints = num_points / 4;    
+  const unsigned int quarterPoints = num_points / 4;
   __m128 cplxValue1, cplxValue2, iValue, qValue;
   for(;number < quarterPoints; number++){
-      
+
     cplxValue1 = _mm_load_ps(complexVectorPtr);
     complexVectorPtr += 4;
 

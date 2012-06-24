@@ -78,7 +78,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         dst_data = self.vsnk_frq.data()[N:]
 
         expected_result = len(dst_data)* [-0.20,]
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 4)
+        self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 4)
 
 if __name__ == '__main__':
     gr_unittest.run(test_fll_band_edge_cc, "test_fll_band_edge_cc.xml")

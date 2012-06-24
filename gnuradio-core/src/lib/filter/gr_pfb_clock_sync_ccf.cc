@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -67,10 +67,10 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float loop_bw,
 
   // Set the damping factor for a critically damped system
   d_damping = sqrtf(2.0f)/2.0f;
-  
+
   // Set the bandwidth, which will then call update_gains()
   set_loop_bandwidth(loop_bw);
-  
+
   // Store the last filter between calls to work
   // The accumulator keeps track of overflow to increment the stride correctly.
   // set it here to the fractional difference based on the initial phaes
@@ -119,23 +119,23 @@ gr_pfb_clock_sync_ccf::check_topology(int ninputs, int noutputs)
 
 
 void
-gr_pfb_clock_sync_ccf::set_loop_bandwidth(float bw) 
+gr_pfb_clock_sync_ccf::set_loop_bandwidth(float bw)
 {
   if(bw < 0) {
     throw std::out_of_range ("gr_pfb_clock_sync_cc: invalid bandwidth. Must be >= 0.");
   }
-  
+
   d_loop_bw = bw;
   update_gains();
 }
 
 void
-gr_pfb_clock_sync_ccf::set_damping_factor(float df) 
+gr_pfb_clock_sync_ccf::set_damping_factor(float df)
 {
   if(df < 0 || df > 1.0) {
     throw std::out_of_range ("gr_pfb_clock_sync_cc: invalid damping factor. Must be in [0,1].");
   }
-  
+
   d_damping = df;
   update_gains();
 }
@@ -217,7 +217,7 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
 
   // Create d_numchan vectors to store each channel's taps
   ourtaps.resize(d_nfilters);
-  
+
   // Make a vector of the taps plus fill it out with 0's to fill
   // each polyphase filter with exactly d_taps_per_filter
   std::vector<float> tmp_taps;
@@ -225,7 +225,7 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
   while((float)(tmp_taps.size()) < d_nfilters*d_taps_per_filter) {
     tmp_taps.push_back(0.0);
   }
-  
+
   // Partition the filter
   for(i = 0; i < d_nfilters; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
@@ -235,7 +235,7 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
       //ourtaps[d_nfilters - 1 - i][j] = tmp_taps[i + j*d_nfilters];
       ourtaps[i][j] = tmp_taps[i + j*d_nfilters];
     }
-    
+
     // Build a filter for each channel and add it's taps to it
     //ourfilter[i]->set_taps(ourtaps[d_nfilters-1-i]);
     ourfilter[i]->set_taps(ourtaps[i]);
@@ -293,7 +293,7 @@ gr_pfb_clock_sync_ccf::get_taps_as_string()
     str << d_taps[i][j] << "],";
   }
   str << " ]" << std::endl;
-  
+
   return str.str();
 }
 
@@ -318,13 +318,13 @@ gr_pfb_clock_sync_ccf::get_diff_taps_as_string()
   return str.str();
 }
 
-std::vector< std::vector<float> > 
+std::vector< std::vector<float> >
 gr_pfb_clock_sync_ccf::get_taps()
 {
   return d_taps;
 }
 
-std::vector< std::vector<float> > 
+std::vector< std::vector<float> >
 gr_pfb_clock_sync_ccf::get_diff_taps()
 {
   return d_dtaps;
@@ -366,7 +366,7 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     outrate = (float*)output_items[2];
     outk = (float*)output_items[3];
   }
-  
+
   if (d_updated) {
     d_updated = false;
     return 0;		     // history requirements may have changed.
@@ -382,7 +382,7 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   while((i < noutput_items) && (count < nrequired)) {
     while(d_out_idx < d_osps) {
       d_filtnum = (int)floor(d_k);
-      
+
       // Keep the current filter number in [0, d_nfilters]
       // If we've run beyond the last filter, wrap around and go to next sample
       // If we've go below 0, wrap around and go to previous sample
@@ -396,11 +396,11 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 	d_filtnum += d_nfilters;
 	count -= 1;
       }
-      
+
       out[i+d_out_idx] = d_filters[d_filtnum]->filter(&in[count+d_out_idx]);
       d_k = d_k + d_rate_i + d_rate_f; // update phase
       d_out_idx++;
-      
+
       if(output_items.size() == 4) {
 	err[i] = d_error;
 	outrate[i] = d_rate_f;
@@ -423,12 +423,12 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     error_r = out[i].real() * diff.real();
     error_i = out[i].imag() * diff.imag();
     d_error = (error_i + error_r) / 2.0;       // average error from I&Q channel
-    
+
     // Run the control loop to update the current phase (k) and
     // tracking rate estimates based on the error value
     d_rate_f = d_rate_f + d_beta*d_error;
-    d_k = d_k + d_alpha*d_error; 
-    
+    d_k = d_k + d_alpha*d_error;
+
     // Keep our rate within a good range
     d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
 

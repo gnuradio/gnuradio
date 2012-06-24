@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2010,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the tewavelet of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -78,7 +78,7 @@ wavelet_wavelet_ff_impl::work(int noutput_items,
   for (int count = 0; count < noutput_items; count++) {
     for (int i = 0; i < d_size; i++)
       d_temp[i] = in[i];
-    
+
     if (d_forward)
       gsl_wavelet_transform_forward(d_wavelet,
 				    d_temp,
@@ -91,7 +91,7 @@ wavelet_wavelet_ff_impl::work(int noutput_items,
 				    1,
 				    d_size,
 				    d_workspace);
-    
+
     for (int i = 0; i < d_size; i++)
       out[i] = d_temp[i];
 

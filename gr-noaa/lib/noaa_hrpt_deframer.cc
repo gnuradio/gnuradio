@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -86,7 +86,7 @@ noaa_hrpt_deframer::general_work(int noutput_items,
       switch (d_state) {
       case ST_IDLE:
 	d_shifter = (d_shifter << 1) | bit; // MSB transmitted first
-	
+
 	if ((d_shifter & 0x0FFFFFFFFFFFFFFFLL) == HRPT_MINOR_FRAME_SYNC) {
 	  out[j++] = HRPT_SYNC1;
 	  out[j++] = HRPT_SYNC2;
@@ -97,7 +97,7 @@ noaa_hrpt_deframer::general_work(int noutput_items,
 	  enter_synced();
 	}
 	break;
-	
+
       case ST_SYNCED:
 	d_word = (d_word << 1) | bit; // MSB transmitted first
 	if (--d_bit_count == 0) {
@@ -109,7 +109,7 @@ noaa_hrpt_deframer::general_work(int noutput_items,
 	  }
 	}
 	break;
-	
+
       default:
 	throw std::runtime_error("noaa_hrpt_deframer: bad state\n");
       }

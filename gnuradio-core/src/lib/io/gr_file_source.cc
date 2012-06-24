@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -56,7 +56,7 @@ gr_file_source::gr_file_source (size_t itemsize, const char *filename, bool repe
     d_itemsize (itemsize), d_fp (0), d_repeat (repeat)
 {
   // we use "open" to use to the O_LARGEFILE flag
-  
+
   int fd;
   if ((fd = open (filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0){
     perror (filename);
@@ -82,7 +82,7 @@ gr_file_source::~gr_file_source ()
   fclose ((FILE *) d_fp);
 }
 
-int 
+int
 gr_file_source::work (int noutput_items,
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
@@ -93,7 +93,7 @@ gr_file_source::work (int noutput_items,
 
   while (size) {
     i = fread(o, d_itemsize, size, (FILE *) d_fp);
-    
+
     size -= i;
     o += i * d_itemsize;
 

@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 DESC_KEY = 'desc'
 SAMP_RATE_KEY = 'samp_rate'
@@ -85,7 +85,7 @@ class top_block(gr.top_block, pubsub):
         self.subscribe(TYPE_KEY, self.set_waveform)
 
         #force update on pubsub keys
-        for key in (SAMP_RATE_KEY, GAIN_KEY, TX_FREQ_KEY, 
+        for key in (SAMP_RATE_KEY, GAIN_KEY, TX_FREQ_KEY,
                     AMPLITUDE_KEY, WAVEFORM_FREQ_KEY,
                     WAVEFORM_OFFSET_KEY, WAVEFORM2_FREQ_KEY):
             self[key] = self[key]
@@ -110,19 +110,19 @@ class top_block(gr.top_block, pubsub):
         # Setup USRP Configuration value
         try:
             usrp_info = self._u.get_usrp_info()
-            mboard_id = usrp_info.get("mboard_id").split(" ")[0]
+            mboard_id = usrp_info.get("mboard_id")
             mboard_serial = usrp_info.get("mboard_serial")
             if mboard_serial == "":
                 mboard_serial = "no serial"
-            dboard_id = usrp_info.get("tx_id").split(" ")[0].split(",")[0]
+            dboard_subdev_name = usrp_info.get("tx_subdev_name")
             dboard_serial = usrp_info.get("tx_serial")
             if dboard_serial == "":
                 dboard_serial = "no serial"
             subdev = self._u.get_subdev_spec()
             antenna = self._u.get_antenna()
-            
+
             desc_key_str = "Motherboard: %s [%s]\n" % (mboard_id, mboard_serial)
-            desc_key_str += "Daughterboard: %s [%s]\n" % (dboard_id, dboard_serial)
+            desc_key_str += "Daughterboard: %s [%s]\n" % (dboard_subdev_name, dboard_serial)
             desc_key_str += "Subdev: %s\n" % subdev
             desc_key_str += "Antenna: %s" % antenna
         except:
@@ -172,7 +172,7 @@ class top_block(gr.top_block, pubsub):
             self._src2.set_sampling_freq(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
         else:
             return True # Waveform not yet set
-        
+
         if self._verbose:
             print "Set sample rate to:", sr
 
@@ -211,7 +211,7 @@ class top_block(gr.top_block, pubsub):
                 print "Tx RF frequency:  %sHz" % (n2s(tr.actual_rf_freq),)
                 print "Tx DSP frequency: %sHz" % (n2s(tr.actual_dsp_freq),)
         elif self._verbose:
-            print "Failed to set freq." 
+            print "Failed to set freq."
         return tr
 
     def set_waveform_freq(self, freq):
@@ -313,7 +313,7 @@ class top_block(gr.top_block, pubsub):
             self._src.set_k(amplitude)
         else:
             return True # Waveform not yet set
-        
+
         if self._verbose:
             print "Set amplitude to:", amplitude
         return True
@@ -342,7 +342,7 @@ def get_options():
     parser.add_option("--sine", dest="type", action="store_const", const=gr.GR_SIN_WAVE,
                       help="Generate a carrier modulated by a complex sine wave",
                       default=gr.GR_SIN_WAVE)
-    parser.add_option("--const", dest="type", action="store_const", const=gr.GR_CONST_WAVE, 
+    parser.add_option("--const", dest="type", action="store_const", const=gr.GR_CONST_WAVE,
                       help="Generate a constant carrier")
     parser.add_option("--offset", type="eng_float", default=0,
                       help="Set waveform phase offset to OFFSET [default=%default]")
@@ -371,7 +371,7 @@ def get_options():
 def test_main():
     if gr.enable_realtime_scheduling() != gr.RT_OK:
         print "Note: failed to enable realtime scheduling, continuing"
-    
+
     # Grab command line options and create top block
     try:
         (options, args) = get_options()

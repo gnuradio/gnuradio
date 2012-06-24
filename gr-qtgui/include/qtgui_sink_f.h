@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -78,7 +78,7 @@ private:
   double d_center_freq;
   double d_bandwidth;
   std::string d_name;
-  
+
   bool d_shift;
   gri_fft_complex *d_fft;
 
@@ -91,13 +91,13 @@ private:
   double d_update_time;
 
   QWidget *d_parent;
-  SpectrumGUIClass *d_main_gui; 
+  SpectrumGUIClass *d_main_gui;
 
   void windowreset();
   void buildwindow();
   void fftresize();
   void fft(float *data_out, const float *data_in, int size);
-  
+
 public:
   ~qtgui_sink_f();
   void exec_();

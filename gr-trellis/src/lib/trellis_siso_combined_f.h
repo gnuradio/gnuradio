@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -40,7 +40,7 @@ TRELLIS_API trellis_siso_combined_f_sptr trellis_make_siso_combined_f (
     int SK,		// final state (put -1 if not specified)
     bool POSTI,		// true if you want a-posteriori info about the input symbols to be mux-ed in the output
     bool POSTO,		// true if you want a-posteriori info about the output symbols to be mux-ed in the output
-    trellis_siso_type_t d_SISO_TYPE, // perform "min-sum" or "sum-product" combining 
+    trellis_siso_type_t d_SISO_TYPE, // perform "min-sum" or "sum-product" combining
     int D,
     const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE

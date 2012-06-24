@@ -44,7 +44,7 @@ def make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,typ
       else:
         tb.connect (siso_in[it],deinter[it],siso_out[it])
         tb.connect (inter[it],(siso_in[it],0))
-   
+
     return (metrics_in,siso_out[IT-1])
 
 
@@ -64,25 +64,25 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,tot_constellat
     # CHANNEL
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
-    
+
     # RX
-    (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM) 
+    (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM)
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s(); 
-    
+    dst = gr.check_lfsr_32k_s();
+
     tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
     tb.connect (mod,(add,0))
     tb.connect (noise,(add,1))
     tb.connect (add,head)
     tb.connect (tail,fsmi2s,dst)
-    
+
     tb.run()
 
     ntotal = dst.ntotal ()
     nright = dst.nright ()
     runlength = dst.runlength ()
-    #print ntotal,nright,runlength 
-    
+    #print ntotal,nright,runlength
+
     return (ntotal,ntotal-nright)
 
 

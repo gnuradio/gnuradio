@@ -85,7 +85,7 @@ gr_wavfile_source::gr_wavfile_source (const char *filename, bool repeat)
 			   d_samples_per_chan)) {
     throw std::runtime_error("is not a valid wav file");
   }
-  
+
   if (d_samples_per_chan == 0) {
     throw std::runtime_error("WAV file does not contain any samples");
   }
@@ -134,7 +134,7 @@ gr_wavfile_source::work(int noutput_items,
 
       d_sample_idx = 0;
     }
-    
+
     for (int chan = 0; chan < d_nchans; chan++) {
       sample = gri_wav_read_sample(d_fp, d_bytes_per_sample);
 
@@ -144,7 +144,7 @@ gr_wavfile_source::work(int noutput_items,
     }
 
     d_sample_idx++;
-    
+
     // OK, EOF is not necessarily an error. But we're not going to
     // deal with handling corrupt wav files, so if they give us any
     // trouble they won't be processed. Serves them bloody right.
@@ -156,7 +156,7 @@ gr_wavfile_source::work(int noutput_items,
       return i;
     }
   }
-  
+
   return noutput_items;
 }
 

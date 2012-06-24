@@ -1,19 +1,19 @@
 ;;; -*-scheme-*-
 ;;;
 ;;; Copyright 2007 Free Software Foundation, Inc.
-;;; 
+;;;
 ;;; This file is part of GNU Radio
-;;; 
+;;;
 ;;; GNU Radio is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
 ;;; the Free Software Foundation; either version 3, or (define at your option)
 ;;; any later version.
-;;; 
+;;;
 ;;; GNU Radio is distributed in the hope that it will be useful,
 ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
-;;; 
+;;;
 ;;; You should have received a copy of the GNU General Public License along
 ;;; with this program; if not, write to the Free Software Foundation, Inc.,
 ;;; 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -33,6 +33,8 @@
 (define pst-dict		#x09)   ; untagged-int32 n; followed by n key/value tuples
 
 (define pst-uniform-vector	#x0a)
+(define pst-uint64	#x0b)
+(define pst-tuple	#x0c)
 
 ;; u8, s8, u16, s16, u32, s32, u64, s64, f32, f64, c32, c64
 ;;

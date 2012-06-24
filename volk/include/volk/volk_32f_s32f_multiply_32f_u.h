@@ -23,11 +23,11 @@ static inline void volk_32f_s32f_multiply_32f_u_sse(float* cVector, const float*
     __m128 aVal, bVal, cVal;
     bVal = _mm_set_ps1(scalar);
     for(;number < quarterPoints; number++){
-      
-      aVal = _mm_loadu_ps(aPtr); 
-      
-      cVal = _mm_mul_ps(aVal, bVal); 
-      
+
+      aVal = _mm_loadu_ps(aPtr);
+
+      cVal = _mm_mul_ps(aVal, bVal);
+
       _mm_storeu_ps(cPtr,cVal); // Store the results back into the C container
 
       aPtr += 4;
@@ -60,11 +60,11 @@ static inline void volk_32f_s32f_multiply_32f_u_avx(float* cVector, const float*
     __m256 aVal, bVal, cVal;
     bVal = _mm256_set1_ps(scalar);
     for(;number < eighthPoints; number++){
-      
-      aVal = _mm256_loadu_ps(aPtr); 
-      
-      cVal = _mm256_mul_ps(aVal, bVal); 
-      
+
+      aVal = _mm256_loadu_ps(aPtr);
+
+      cVal = _mm256_mul_ps(aVal, bVal);
+
       _mm256_storeu_ps(cPtr,cVal); // Store the results back into the C container
 
       aPtr += 8;

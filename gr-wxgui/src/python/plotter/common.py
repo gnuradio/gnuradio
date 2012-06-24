@@ -103,6 +103,7 @@ class point_label_thread(threading.Thread, mutex):
 		self._plotter.Bind(wx.EVT_MOTION, lambda evt: self.enqueue(evt.GetPosition()))
 		self._plotter.Bind(wx.EVT_LEAVE_WINDOW, lambda evt: self.enqueue(None))
 		self._plotter.Bind(wx.EVT_RIGHT_DOWN, lambda evt: plotter.enable_point_label(not plotter.enable_point_label()))
+		self._plotter.Bind(wx.EVT_LEFT_DOWN, lambda evt: plotter.call_freq_callback(evt.GetPosition()))
 		#start the thread
 		threading.Thread.__init__(self)
 		self.start()
@@ -115,7 +116,7 @@ class point_label_thread(threading.Thread, mutex):
 	def run(self):
 		last_ts = time.time()
 		last_coor = coor = None
-		try: 
+		try:
 			while True:
 				time.sleep(1.0/30.0)
 				self.lock()

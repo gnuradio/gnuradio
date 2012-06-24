@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,12 +30,12 @@
 class gr_udp_source;
 typedef boost::shared_ptr<gr_udp_source> gr_udp_source_sptr;
 
-GR_CORE_API gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *host, 
+GR_CORE_API gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *host,
 				      unsigned short port,
 				      int payload_size=1472,
 				      bool eof=true, bool wait=true);
 
-/*! 
+/*!
  * \brief Read stream from an UDP socket.
  * \ingroup source_blk
  *
@@ -56,7 +56,7 @@ GR_CORE_API gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *h
 class GR_CORE_API gr_udp_source : public gr_sync_block
 {
   friend GR_CORE_API gr_udp_source_sptr gr_make_udp_source(size_t itemsize,
-					       const char *host, 
+					       const char *host,
 					       unsigned short port,
 					       int payload_size,
 					       bool eof, bool wait);
@@ -74,7 +74,7 @@ class GR_CORE_API gr_udp_source : public gr_sync_block
  protected:
   /*!
    * \brief UDP Source Constructor
-   * 
+   *
    * \param itemsize     The size (in bytes) of the item datatype
    * \param host         The name or IP address of the receiving host; can be
    *                     NULL, None, or "0.0.0.0" to allow reading from any

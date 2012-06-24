@@ -67,7 +67,7 @@ class BlockTreeWindow(gtk.VBox):
 		#setup the search
 		self.treeview.set_enable_search(True)
 		self.treeview.set_search_equal_func(self._handle_search)
-		#try to enable the tooltips (available in pygtk 2.12 and above) 
+		#try to enable the tooltips (available in pygtk 2.12 and above)
 		try: self.treeview.set_tooltip_column(DOC_INDEX)
 		except: pass
 		#setup drag and drop

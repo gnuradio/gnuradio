@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -92,7 +92,7 @@ static void report_error( const char *msg1, const char *msg2 )
   return;
 }
 
-gr_udp_sink::gr_udp_sink (size_t itemsize, 
+gr_udp_sink::gr_udp_sink (size_t itemsize,
 			  const char *host, unsigned short port,
 			  int payload_size, bool eof)
   : gr_sync_block ("udp_sink",
@@ -133,11 +133,11 @@ gr_udp_sink::gr_udp_sink (size_t itemsize,
 // public constructor that returns a shared_ptr
 
 gr_udp_sink_sptr
-gr_make_udp_sink (size_t itemsize, 
+gr_make_udp_sink (size_t itemsize,
 		  const char *host, unsigned short port,
 		  int payload_size, bool eof)
 {
-  return gnuradio::get_initial_sptr(new gr_udp_sink (itemsize, 
+  return gnuradio::get_initial_sptr(new gr_udp_sink (itemsize,
 					    host, port,
 					    payload_size, eof));
 }
@@ -163,7 +163,7 @@ gr_udp_sink::~gr_udp_sink ()
 #endif
 }
 
-int 
+int
 gr_udp_sink::work (int noutput_items,
 		   gr_vector_const_void_star &input_items,
 		   gr_vector_void_star &output_items)
@@ -180,7 +180,7 @@ gr_udp_sink::work (int noutput_items,
 
   while(bytes_sent <  total_size) {
     bytes_to_send = std::min((ssize_t)d_payload_size, (total_size-bytes_sent));
-  
+
     if(d_connected) {
       r = send(d_socket, (in+bytes_sent), bytes_to_send, 0);
       if(r == -1) {         // error on send command
@@ -195,7 +195,7 @@ gr_udp_sink::work (int noutput_items,
     else
       r = bytes_to_send;  // discarded for lack of connection
     bytes_sent += r;
-    
+
     #if SNK_VERBOSE
     printf("\tbyte sent: %d bytes\n", r);
     #endif

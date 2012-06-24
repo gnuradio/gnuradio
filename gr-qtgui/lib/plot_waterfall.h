@@ -18,7 +18,7 @@ class QwtColorMap;
   A waterfall displays threedimenional data, where the 3rd dimension
   ( the intensity ) is displayed using colors. The colors are calculated
   from the values using a color map.
-  
+
   \sa QwtRasterData, QwtColorMap
 */
 
@@ -50,11 +50,11 @@ public:
 protected:
 #if QWT_VERSION < 0x060000
     QImage renderImage(const QwtScaleMap &xMap,
-		       const QwtScaleMap &yMap, 
+		       const QwtScaleMap &yMap,
 		       const QwtDoubleRect &rect) const;
 #else
     QImage renderImage(const QwtScaleMap &xMap,
-		       const QwtScaleMap &yMap, 
+		       const QwtScaleMap &yMap,
 		       const QRectF &rect,
 		       const QSize &size=QSize(0,0)) const;
 #endif

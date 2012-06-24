@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -41,7 +41,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _realFFTDataPoints = new double[_numRealDataPoints];
   _averagedValues = new double[_numRealDataPoints];
   _historyVector = new std::vector<double*>;
-  
+
   _timeDomainDisplayPlot->setTitle(0, "real");
   _timeDomainDisplayPlot->setTitle(1, "imag");
 
@@ -55,14 +55,14 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   
   _peakFrequency = 0;
   _peakAmplitude = -HUGE_VAL;
-  
+
   _noiseFloorAmplitude = -HUGE_VAL;
 
-  connect(_waterfallDisplayPlot, SIGNAL(UpdatedLowerIntensityLevel(const double)), 
+  connect(_waterfallDisplayPlot, SIGNAL(UpdatedLowerIntensityLevel(const double)),
   	  _frequencyDisplayPlot, SLOT(SetLowerIntensityLevel(const double)));
-  connect(_waterfallDisplayPlot, SIGNAL(UpdatedUpperIntensityLevel(const double)), 
+  connect(_waterfallDisplayPlot, SIGNAL(UpdatedUpperIntensityLevel(const double)),
    	  _frequencyDisplayPlot, SLOT(SetUpperIntensityLevel(const double)));
-  
+
   _frequencyDisplayPlot->SetLowerIntensityLevel(-200);
   _frequencyDisplayPlot->SetUpperIntensityLevel(-200);
 
@@ -88,13 +88,13 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   // Connect double click signals up
   connect(_frequencyDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
   	  this, SLOT(onFFTPlotPointSelected(const QPointF)));
-  
+
   connect(_waterfallDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
   	  this, SLOT(onWFallPlotPointSelected(const QPointF)));
-  
+
   connect(_timeDomainDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
   	  this, SLOT(onTimePlotPointSelected(const QPointF)));
-  
+
   connect(_constellationDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
   	  this, SLOT(onConstPlotPointSelected(const QPointF)));
 }
@@ -120,12 +120,12 @@ SpectrumDisplayForm::~SpectrumDisplayForm()
 }
 
 void
-SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem, 
-				const uint64_t numFFTDataPoints, 
+SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem,
+				const uint64_t numFFTDataPoints,
 				const uint64_t numTimeDomainDataPoints )
 {
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
-  
+
   if(newSystem != NULL){
     _system = newSystem;
     _systemSpecifiedFlag = true;
@@ -243,18 +243,18 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   if(lastOfMultipleUpdatesFlag){
     int tabindex = SpectrumTypeTab->currentIndex();
     if(tabindex == d_plot_fft) {
-      _frequencyDisplayPlot->PlotNewData(_averagedValues, numFFTDataPoints, 
-					 _noiseFloorAmplitude, _peakFrequency, 
+      _frequencyDisplayPlot->PlotNewData(_averagedValues, numFFTDataPoints,
+					 _noiseFloorAmplitude, _peakFrequency,
 					 _peakAmplitude, d_update_time);
     }
     if(tabindex == d_plot_time) {
-      _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints, 
+      _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints,
 					  numTimeDomainDataPoints,
 					  d_update_time);
     }
     if(tabindex == d_plot_constellation) {
-      _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
-					     imagTimeDomainDataPoints, 
+      _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints,
+					     imagTimeDomainDataPoints,
 					     numTimeDomainDataPoints,
 					     d_update_time);
     }
@@ -262,12 +262,12 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     // Don't update the repeated data for the waterfall
     if(!repeatDataFlag){
       if(tabindex == d_plot_waterfall) {
-	_waterfallDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
-					   d_update_time, dataTimestamp, 
+	_waterfallDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints,
+					   d_update_time, dataTimestamp,
 					   spectrumUpdateEvent->getDroppedFFTFrames());
       }
     }
-    
+
     // Tell the system the GUI has been updated
     if(_systemSpecifiedFlag){
       _system->SetLastGUIUpdateTime(generatedTimestamp);
@@ -391,12 +391,12 @@ void
 SpectrumDisplayForm::TabChanged(int index)
 {
   // This might be dangerous to call this with NULL
-  resizeEvent(NULL);  
+  resizeEvent(NULL);
 }
 
 void
 SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
-				       const double newStartFrequency, 
+				       const double newStartFrequency,
 				       const double newStopFrequency)
 {
   double fdiff;
@@ -414,7 +414,7 @@ SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
     double units3  = std::max(floor(units10 / 3.0), 0.0);
     double units = pow(10, (units10-fmod(units10, 3.0)));
     int iunit = static_cast<int>(units3);
-    
+
     _startFrequency = newStartFrequency;
     _stopFrequency = newStopFrequency;
     _centerFrequency = newCenterFrequency;
@@ -501,15 +501,15 @@ SpectrumDisplayForm::ResizeBuffers( const uint64_t numFFTDataPoints,
     _numRealDataPoints = numFFTDataPoints;
     delete[] _realFFTDataPoints;
     delete[] _averagedValues;
-    
+
     _realFFTDataPoints = new double[_numRealDataPoints];
     _averagedValues = new double[_numRealDataPoints];
     memset(_realFFTDataPoints, 0x0, _numRealDataPoints*sizeof(double));
-    
+
     const int historySize = _historyVector->size();
     SetAverageCount(0); // Clear the existing history
     SetAverageCount(historySize);
-    
+
     Reset();
   }
 }
@@ -632,7 +632,7 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
     }
     QMessageBox::information(this, "Low Intensity Color Selection", "In the next window, select the low intensity color for the waterfall display",  QMessageBox::Ok);
     lowIntensityColor = QColorDialog::getColor(lowIntensityColor, this);
-    
+
     // Select the High Intensity Color
     highIntensityColor = _waterfallDisplayPlot->GetUserDefinedHighIntensityColor();
     if(!highIntensityColor.isValid()){
@@ -641,7 +641,7 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
     QMessageBox::information(this, "High Intensity Color Selection", "In the next window, select the high intensity color for the waterfall display",  QMessageBox::Ok);
     highIntensityColor = QColorDialog::getColor(highIntensityColor, this);
   }
-  
+
   _waterfallDisplayPlot->SetIntensityColorMapType(newType, lowIntensityColor, highIntensityColor);
 }
 

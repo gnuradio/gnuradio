@@ -24,7 +24,7 @@ multiplication of a vector of floating point numbers (each item in the
 vector is multiplied by the same value). This kernel has the following
 proto-kernels that are defined for 'generic,' 'avx,' 'sse,' and 'orc.'
 
-\code 
+\code
     void volk_32f_s32f_multiply_32f_a_generic
     void volk_32f_s32f_multiply_32f_a_sse
     void volk_32f_s32f_multiply_32f_a_avx
@@ -63,7 +63,7 @@ calls with:
 \code
   const int alignment_multiple =
     volk_get_alignment() / output_item_size;
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 \endcode
 
 The Volk function 'volk_get_alignment' provides the alignment of the

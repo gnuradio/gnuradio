@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008 Free Software Foundation, Inc.
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -35,12 +35,12 @@ GR_CORE_API gr_decode_ccsds_27_fb_sptr gr_make_decode_ccsds_27_fb();
 
 /*! \brief A rate 1/2, k=7 convolutional decoder for the CCSDS standard
  * \ingroup ecc
- *  
+ *
  * This block performs soft-decision convolutional decoding using the Viterbi
  * algorithm.
- *  
- * The input is a stream of (possibly noise corrupted) floating point values 
- * nominally spanning [-1.0, 1.0], representing the encoded channel symbols 
+ *
+ * The input is a stream of (possibly noise corrupted) floating point values
+ * nominally spanning [-1.0, 1.0], representing the encoded channel symbols
  * 0 (-1.0) and 1 (1.0), with erased symbols at 0.0.
  *
  * The output is MSB first packed bytes of decoded values.
@@ -66,7 +66,7 @@ private:
   unsigned char d_viterbi_in[16];
 
   int d_count;
-      
+
 public:
   ~gr_decode_ccsds_27_fb();
 

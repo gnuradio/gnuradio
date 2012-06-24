@@ -11,10 +11,10 @@
 static inline void volk_64u_popcnt_a_generic(uint64_t* ret, const uint64_t value) {
 
   //const uint32_t* valueVector = (const uint32_t*)&value;
-  
+
   // This is faster than a lookup table
   //uint32_t retVal = valueVector[0];
-  uint32_t retVal = (uint32_t)(value && 0x00000000FFFFFFFF);
+  uint32_t retVal = (uint32_t)(value & 0x00000000FFFFFFFF);
 
   retVal = (retVal & 0x55555555) + (retVal >> 1 & 0x55555555);
   retVal = (retVal & 0x33333333) + (retVal >> 2 & 0x33333333);
@@ -24,7 +24,7 @@ static inline void volk_64u_popcnt_a_generic(uint64_t* ret, const uint64_t value
   uint64_t retVal64  = retVal;
 
   //retVal = valueVector[1];
-  retVal = (uint32_t)((value && 0xFFFFFFFF00000000) >> 31);
+  retVal = (uint32_t)((value & 0xFFFFFFFF00000000) >> 31);
   retVal = (retVal & 0x55555555) + (retVal >> 1 & 0x55555555);
   retVal = (retVal & 0x33333333) + (retVal >> 2 & 0x33333333);
   retVal = (retVal + (retVal >> 4)) & 0x0F0F0F0F;

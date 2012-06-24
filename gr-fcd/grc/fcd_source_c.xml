@@ -12,14 +12,14 @@ self.$(id).set_lna_gain($lna)
 #if $mixer() != +12.0
 self.$(id).set_mixer_gain($mixer)
 #end if
-#if $ppm() != 115
+#if $ppm() != -120
 self.$(id).set_freq_corr($ppm)
 #end if
 #if ($dci() != 0.0) or ($dcq() != 0.0)
 self.$(id).set_dc_corr($dci,$dcq)
 #end if
 #if ($iq_phase() != 0.0) or ($iq_gain() != 1.0)
-self.$(id).set_iq_corr($iq_phase,$iq_gain)
+self.$(id).set_iq_corr($iq_gain,$iq_phase)
 #end if
 self.$(id).set_freq($freq)
     </make>

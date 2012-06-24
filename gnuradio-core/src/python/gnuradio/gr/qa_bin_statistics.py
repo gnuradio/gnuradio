@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2006,2007,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 import random
@@ -44,7 +44,7 @@ class counter(gr.feval_dd):
         t = self.count
         self.count = self.count + self.step_size
         return t
-        
+
 
 class counter3(gr.feval_dd):
     def __init__(self, f, step_size):
@@ -62,7 +62,7 @@ class counter3(gr.feval_dd):
         except Exception, e:
             print "Exception: ", e
         return t
-        
+
 def foobar3(new_t):
     #print "foobar3: new_t =", new_t
     pass
@@ -84,7 +84,7 @@ class counter4(gr.feval_dd):
         except Exception, e:
             print "Exception: ", e
         return t
-        
+
 
 class parse_msg(object):
     def __init__(self, msg):
@@ -122,7 +122,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
                                     9, 10, 11, 12,
                                     13, 14, 15, 16
                                     )])
-                            
+
         src = gr.vector_source_f(src_data, False)
         s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
         stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
@@ -150,7 +150,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         expected_results = tuple([float(x) for x in
                                   ( 9, 10, 11, 12)])
-                            
+
         src = gr.vector_source_f(src_data, False)
         s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
         stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
@@ -180,7 +180,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         expected_results = tuple([float(x) for x in
                                   ( 9, 10, 11, 12)])
-                            
+
         src = gr.vector_source_f(src_data, False)
         s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
         stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
@@ -196,7 +196,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
     def foobar4(self, new_t):
         #print "foobar4: new_t =", new_t
         pass
-        
+
     def xtest_004(self):
         vlen = 4
         tune = counter4(self, 1)
@@ -213,7 +213,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         expected_results = tuple([float(x) for x in
                                   ( 9, 10, 11, 12)])
-                            
+
         src = gr.vector_source_f(src_data, False)
         s2v = gr.stream_to_vector(gr.sizeof_float, vlen)
         stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)

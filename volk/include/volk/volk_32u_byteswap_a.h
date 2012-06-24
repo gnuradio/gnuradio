@@ -39,9 +39,9 @@ static inline void volk_32u_byteswap_a_sse2(uint32_t* intsToSwap, unsigned int n
     _mm_store_si128((__m128i*)inputPtr, output);
     inputPtr += 4;
   }
-  
+
   // Byteswap any remaining points:
-  number = quarterPoints*4;  
+  number = quarterPoints*4;
   for(; number < num_points; number++){
     uint32_t outputVal = *inputPtr;
     outputVal = (((outputVal >> 24) & 0xff) | ((outputVal >> 8) & 0x0000ff00) | ((outputVal << 8) & 0x00ff0000) | ((outputVal << 24) & 0xff000000));
@@ -64,7 +64,7 @@ static inline void volk_32u_byteswap_a_generic(uint32_t* intsToSwap, unsigned in
   for(point = 0; point < num_points; point++){
     uint32_t output = *inputPtr;
     output = (((output >> 24) & 0xff) | ((output >> 8) & 0x0000ff00) | ((output << 8) & 0x00ff0000) | ((output << 24) & 0xff000000));
-    
+
     *inputPtr = output;
     inputPtr++;
   }

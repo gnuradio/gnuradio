@@ -31,9 +31,9 @@ static inline void volk_16u_byteswap_a_sse2(uint16_t* intsToSwap, unsigned int n
     inputPtr += 8;
   }
 
-  
+
   // Byteswap any remaining points:
-  number = eighthPoints*8;  
+  number = eighthPoints*8;
   for(; number < num_points; number++){
     uint16_t outputVal = *inputPtr;
     outputVal = (((outputVal >> 8) & 0xff) | ((outputVal << 8) & 0xff00));

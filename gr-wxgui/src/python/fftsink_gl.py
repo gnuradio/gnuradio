@@ -63,14 +63,14 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 		#ensure avg alpha
 		if avg_alpha is None: avg_alpha = 2.0/fft_rate
                 #ensure analog alpha
-                if persist_alpha is None: 
+                if persist_alpha is None:
                   actual_fft_rate=float(sample_rate/fft_size)/float(max(1,int(float((sample_rate/fft_size)/fft_rate))))
                   #print "requested_fft_rate ",fft_rate
                   #print "actual_fft_rate    ",actual_fft_rate
                   analog_cutoff_freq=0.5 # Hertz
                   #calculate alpha from wanted cutoff freq
                   persist_alpha = 1.0 - math.exp(-2.0*math.pi*analog_cutoff_freq/actual_fft_rate)
-                  
+
 		#init
 		gr.hier_block2.__init__(
 			self,
@@ -127,6 +127,9 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 		setattr(self.win, 'set_peak_hold', getattr(self, 'set_peak_hold')) #BACKWARDS
 		#connect
 		self.wxgui_connect(self, fft, sink)
+		
+	def set_callback(self,callb):
+		self.win.set_callback(callb)
 
 class fft_sink_f(_fft_sink_base):
 	_fft_chain = blks2.logpwrfft_f

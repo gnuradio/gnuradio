@@ -1,23 +1,23 @@
 #
 # Copyright 2006,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gru, optfir, blks2
 from math import pi
@@ -27,7 +27,7 @@ class flex_demod(gr.hier_block2):
     """
     FLEX pager protocol demodulation block.
 
-    This block demodulates a band-limited, complex down-converted baseband 
+    This block demodulates a band-limited, complex down-converted baseband
     channel into FLEX protocol frames.
 
     """
@@ -40,7 +40,7 @@ class flex_demod(gr.hier_block2):
         k = 25000/(2*pi*1600)        # 4800 Hz max deviation
         quad = gr.quadrature_demod_cf(k)
 	self.connect(self, quad)
-	
+
         rsamp = blks2.rational_resampler_fff(16, 25)
         self.slicer = pager_swig.slicer_fb(5e-6) # DC removal averaging filter constant
 	self.sync = pager_swig.flex_sync()
@@ -61,4 +61,3 @@ class flex_demod(gr.hier_block2):
 
     def dc_offset(self):
 	return self.slicer.dc_offset()
-		    

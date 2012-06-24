@@ -69,7 +69,7 @@ static void Autocorrelation P2((s, L_ACF),
 			float_s[k] = (float)	\
 				(s[k] = GSM_MULT_R(s[k], 16384 >> (n-1)));\
 		break;
-# else 
+# else
 #   define SCALE(n)	\
 	case n: for (k = 0; k <= 159; k++) \
 			s[k] = GSM_MULT_R( s[k], 16384 >> (n-1) );\
@@ -133,13 +133,13 @@ static void Autocorrelation P2((s, L_ACF),
 		STEP(5); STEP(6); STEP(7); STEP(8);
 	}
 
-	for (k = 9; k--; L_ACF[k] <<= 1) ; 
+	for (k = 9; k--; L_ACF[k] <<= 1) ;
 
 	}
 	/*   Rescaling of the array s[0..159]
 	 */
 	if (scalauto > 0) {
-		assert(scalauto <= 4); 
+		assert(scalauto <= 4);
 		for (k = 160; k--; *s++ <<= scalauto) ;
 	}
 }
@@ -224,7 +224,7 @@ static void Reflection_coefficients P2( (L_ACF, r),
 		assert(*r >= 0);
 		if (P[1] > 0) *r = -*r;		/* r[n] = sub(0, r[n]) */
 		assert (*r != MIN_WORD);
-		if (n == 8) return; 
+		if (n == 8) return;
 
 		/*  Schur recursion
 		 */
@@ -294,7 +294,7 @@ static void Quantization_and_coding P1((LAR),
 
 	/*  This procedure needs four tables; the following equations
 	 *  give the optimum scaling for the constants:
-	 *  
+	 *
 	 *  A[0..7] = integer( real_A[0..7] * 1024 )
 	 *  B[0..7] = integer( real_B[0..7] *  512 )
 	 *  MAC[0..7] = maximum of the LARc[0..7]

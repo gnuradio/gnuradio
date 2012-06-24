@@ -335,7 +335,7 @@ class Param(_Param, _GUIParam):
 		# Stream ID Type
 		#########################
 		elif t == 'stream_id':
-			#get a list of all stream ids used in the virtual sinks 
+			#get a list of all stream ids used in the virtual sinks
 			ids = [param.get_value() for param in filter(
 				lambda p: p.get_parent().is_virtual_sink(),
 				self.get_all_params(t),

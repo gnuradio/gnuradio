@@ -88,7 +88,7 @@ longword gsm_L_sub P2((a,b), longword a, longword b)
 	}
 	else if (b <= 0) return a - b;
 	else {
-		/* a<0, b>0 */  
+		/* a<0, b>0 */
 
 		ulongword A = (ulongword)-(a + 1) + b;
 		return A >= MAX_LONGWORD ? MIN_LONGWORD : -(longword)A - 1;
@@ -120,7 +120,7 @@ word gsm_norm P1((a), longword a )
  * variable L_var1 for positive values on the interval
  *
  * with minimum of
- * minimum of 1073741824  (01000000000000000000000000000000) and 
+ * minimum of 1073741824  (01000000000000000000000000000000) and
  * maximum of 2147483647  (01111111111111111111111111111111)
  *
  *
@@ -141,7 +141,7 @@ word gsm_norm P1((a), longword a )
 		a = ~a;
 	}
 
-	return    a & 0xffff0000 
+	return    a & 0xffff0000
 		? ( a & 0xff000000
 		  ?  -1 + bitoff[ 0xFF & (a >> 24) ]
 		  :   7 + bitoff[ 0xFF & (a >> 16) ] )
@@ -194,7 +194,7 @@ word gsm_asr P2((a,n), word a, int n)
 #	endif
 }
 
-/* 
+/*
  *  (From p. 46, end of section 4.2.5)
  *
  *  NOTE: The following lines gives [sic] one correct implementation

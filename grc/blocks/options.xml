@@ -125,6 +125,19 @@ else: self.stop(); self.wait()</callback>
 		</option>
 	</param>
 	<param>
+		<name>Max Number of Output</name>
+		<key>max_nouts</key>
+		<value>0</value>
+		<type>int</type>
+		<hide>#if $generate_options() == 'hb'
+all#slurp
+#elif $max_nouts()
+none#slurp
+#else
+part#slurp
+#end if</hide>
+	</param>
+	<param>
 		<name>Realtime Scheduling</name>
 		<key>realtime_scheduling</key>
 		<value></value>
@@ -169,5 +182,9 @@ For example, an id of my_block will generate the file my_block.py and class my_b
 The category parameter determines the placement of the block in the block selection window. \
 The category only applies when creating hier blocks. \
 To put hier blocks into the root category, enter / for the category.
+
+The Max Number of Output is the maximum number of output items allowed for any block \
+in the flowgraph; to disable this set the max_nouts equal to 0.\
+Use this to adjust the maximum latency a flowgraph can exhibit.
 	</doc>
 </block>

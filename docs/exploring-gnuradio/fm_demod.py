@@ -21,10 +21,10 @@ def build_graph (freq1, freq2):
     audio_rate = quad_rate / audio_decimation
 
     fg = gr.flow_graph ()
-    
+
     # use high speed ADC as input source
     src = high_speed_adc (fg, input_rate)
-    
+
     # compute FIR filter taps for channel selection
     channel_coeffs = \
       gr.firdes.low_pass (1.0,          # gain
@@ -39,9 +39,9 @@ def build_graph (freq1, freq2):
                                       channel_coeffs,
                                       freq1,        # 1st station freq
                                       input_rate)
-    
+
     (head1, tail1) = build_pipeline (fg, quad_rate, audio_decimation)
-    
+
     # sound card as final sink
     audio_sink = audio.sink (int (audio_rate))
 
@@ -67,7 +67,7 @@ def build_graph (freq1, freq2):
         fg.connect (src, chan_filter2)
         fg.connect (chan_filter2, head2)
         fg.connect (tail2, (audio_sink, 1))
-    
+
     return fg
 
 def build_pipeline (fg, quad_rate, audio_decimation):
@@ -99,7 +99,7 @@ def build_pipeline (fg, quad_rate, audio_decimation):
 
     fg.connect (fm_demod, audio_filter)
     return ((fm_demod, 0), (audio_filter, 0))
-    
+
 
 def main (args):
     nargs = len (args)
@@ -136,10 +136,10 @@ def main (args):
         target_freq = (freq1 + freq2) / 2
         actual_freq = rf_front_end.set_RF_freq (target_freq)
         #actual_freq = target_freq
-        
+
         fg = build_graph (IF_freq + freq1 - actual_freq,
                           IF_freq + freq2 - actual_freq)
-    
+
     fg.start ()        # fork thread(s) and return
     raw_input ('Press Enter to quit: ')
     fg.stop ()

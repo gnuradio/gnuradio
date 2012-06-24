@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -40,7 +40,7 @@ class convolutional_interleaver {
 
   //! reset interleaver (flushes contents and resets commutator)
   void reset ();
-  
+
   //! sync interleaver (resets commutator, but doesn't flush fifos)
   void sync () { m_commutator = 0; }
 
@@ -79,7 +79,7 @@ convolutional_interleaver<symbol_type>::convolutional_interleaver (
   m_fifo_size_incr = fifo_size_incr;
 
   m_fifo.resize (nbanks);
-  
+
   if (interleave_p){	// configure as interleaver
     for (int i = 0; i < nbanks; i++)
       m_fifo[i] = new interleaver_fifo<symbol_type>(i * fifo_size_incr);

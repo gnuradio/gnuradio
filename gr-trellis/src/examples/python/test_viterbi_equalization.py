@@ -21,26 +21,26 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,tot_constellation,N0,seed):
     # CHANNEL
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
-    
+
     # RX
     metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
     va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s(); 
-    
+    dst = gr.check_lfsr_32k_s();
+
     tb.connect (src,src_head,s2fsmi,enc,mod)
     tb.connect (mod,(add,0))
     tb.connect (noise,(add,1))
     tb.connect (add,metrics)
     tb.connect (metrics,va,fsmi2s,dst)
-    
+
     tb.run()
 
     ntotal = dst.ntotal ()
     nright = dst.nright ()
     runlength = dst.runlength ()
-    #print ntotal,nright,runlength 
-    
+    #print ntotal,nright,runlength
+
     return (ntotal,ntotal-nright)
 
 

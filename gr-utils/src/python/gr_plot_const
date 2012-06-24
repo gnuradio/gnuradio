@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2008,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 try:
     import scipy
@@ -53,11 +53,11 @@ class draw_constellation:
         self.fig = figure(1, figsize=(16, 9), facecolor='w')
         rcParams['xtick.labelsize'] = self.axis_font_size
         rcParams['ytick.labelsize'] = self.axis_font_size
-        
+
         self.text_file     = figtext(0.10, 0.95, ("File: %s" % filename), weight="heavy", size=16)
         self.text_file_pos = figtext(0.10, 0.90, "File Position: ", weight="heavy", size=16)
         self.text_block    = figtext(0.40, 0.90, ("Block Size: %d" % self.block_length),
-                                     weight="heavy", size=16)        
+                                     weight="heavy", size=16)
         self.text_sr       = figtext(0.60, 0.90, ("Sample Rate: %.2f" % self.sample_rate),
                                      weight="heavy", size=16)
         self.make_plots()
@@ -90,7 +90,7 @@ class draw_constellation:
             if(len(iq) > 0):
                 self.reals = scipy.array([r.real for r in iq])
                 self.imags = scipy.array([i.imag for i in iq])
-                
+
                 self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
                 return True
             else:
@@ -102,7 +102,7 @@ class draw_constellation:
         self.hfile.seek(self.sizeof_data*self.start, 1)
 
         r = self.get_data()
-        
+
         # Subplot for real and imaginary parts of signal
         self.sp_iq = self.fig.add_subplot(2,1,1, position=[0.075, 0.2, 0.4, 0.6])
         self.sp_iq.set_title(("I&Q"), fontsize=self.title_font_size, fontweight="bold")
@@ -141,7 +141,7 @@ class draw_constellation:
         self.plot_const[0].set_data([self.reals, self.imags])
         self.sp_const.axis([-2, 2, -2, 2])
         draw()
-        
+
     def zoom(self, event):
         newxlim = scipy.array(self.sp_iq.get_xlim())
         curxlim = scipy.array(self.xlim)
@@ -163,7 +163,7 @@ class draw_constellation:
 
         if(find(event.key, forward_valid_keys)):
             self.step_forward()
-            
+
         elif(find(event.key, backward_valid_keys)):
             self.step_backward()
 
@@ -195,16 +195,16 @@ class draw_constellation:
         r = self.get_data()
         if(r):
             self.update_plots()
-    
-        
+
+
     def mouse_button_callback(self, event):
         x, y = event.xdata, event.ydata
-        
+
         if x is not None and y is not None:
             if(event.inaxes == self.sp_iq):
                 self.indx = searchsorted(self.time, [x])
                 self.set_trace(self.indx)
-                
+
 
     def set_trace(self, indx):
         self.plot_iq[2].set_data(self.time[indx], self.reals[indx])
@@ -212,13 +212,13 @@ class draw_constellation:
         self.plot_const[1].set_data(self.reals[indx], self.imags[indx])
         draw()
 
-            
+
 def find(item_in, list_search):
     try:
 	return list_search.index(item_in) != None
     except ValueError:
 	return False
-	
+
 
 def main():
     usage="%prog: [options] input_filename"
@@ -231,7 +231,7 @@ def main():
                       help="Specify where to start in the file [default=%default]")
     parser.add_option("-R", "--sample-rate", type="float", default=1.0,
                       help="Set the sampler rate of the data [default=%default]")
-    
+
     (options, args) = parser.parse_args ()
     if len(args) != 1:
         parser.print_help()
@@ -245,6 +245,6 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-    
+
 
 

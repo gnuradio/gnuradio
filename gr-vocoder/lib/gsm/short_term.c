@@ -73,7 +73,7 @@ static void Decoding_of_the_coded_Log_Area_Ratios P2((LARc,LARpp),
 }
 
 /* 4.2.9 */
-/* Computation of the quantized reflection coefficients 
+/* Computation of the quantized reflection coefficients
  */
 
 /* 4.2.9.1  Interpolation of the LARpp[1..8] to get the LARp[1..8]

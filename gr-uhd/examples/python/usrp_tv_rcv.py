@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 """
 Realtime capture and display of analog Tv stations.
@@ -95,7 +95,7 @@ class tv_rx_block (stdgui2.std_top_block):
         if not ((len(args) == 1) or (len(args) == 0)):
             parser.print_help()
             sys.exit(1)
-        
+
         if len(args) == 1:
           filename = args[0]
         else:
@@ -103,7 +103,7 @@ class tv_rx_block (stdgui2.std_top_block):
 
         self.frame = frame
         self.panel = panel
-        
+
         self.contrast = options.contrast
         self.brightness = options.brightness
         self.state = "FREQ"
@@ -136,7 +136,7 @@ class tv_rx_block (stdgui2.std_top_block):
           # Set the subdevice spec
           if(options.spec):
             self.u.set_subdev_spec(options.spec, 0)
-            
+
           # Set the antenna
           if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
@@ -151,7 +151,7 @@ class tv_rx_block (stdgui2.std_top_block):
 
           self.src=self.u
 
-        self.gain = options.gain        
+        self.gain = options.gain
 
         f2uc=gr.float_to_uchar()
 
@@ -189,10 +189,10 @@ class tv_rx_block (stdgui2.std_top_block):
           print "use the following line to show the demodulated TV-signal:"
           print "display -depth 8 -size " +str(width)+ "x" + str(height) \
               + " gray:" + options.out_filename
-          print "(Use the spacebar to advance to next frames)" 
+          print "(Use the spacebar to advance to next frames)"
           options.repeat=False
           file_sink=gr.file_sink(gr.sizeof_char, options.out_filename)
-          self.dst =file_sink 
+          self.dst =file_sink
 
         self.agc=gr.agc_cc(1e-7,1.0,1.0) #1e-7
         self.am_demod = gr.complex_to_mag ()
@@ -219,7 +219,7 @@ class tv_rx_block (stdgui2.std_top_block):
           self.tv_sync_adv=gr.tv_sync_adv(usrp_rate, 0, False, False,
                                           0.0, 255.0, 0.01, 1.0, 0.0, False)
           self.connect (self.src, self.am_demod, self.invert_and_scale,
-                        self.tv_sync_adv, s2f, f2uc, self.dst) 
+                        self.tv_sync_adv, s2f, f2uc, self.dst)
 
         elif process_type=='do_nullsink':
           #self.connect (self.src, self.am_demod,self.invert_and_scale,f2uc,video_sink)
@@ -229,16 +229,16 @@ class tv_rx_block (stdgui2.std_top_block):
         elif process_type=='do_tv_sync_corr':
           frame_size=width*height #int(usrp_rate/25.0)
           nframes=10# 32
-          search_window=20*nframes 
+          search_window=20*nframes
           debug=False
           video_alpha=0.3 #0.1
           corr_alpha=0.3
-          
+
           #Note: this block is not yet in cvs
           tv_corr=gr.tv_correlator_ff(frame_size,nframes, search_window,
-                                      video_alpha, corr_alpha,debug) 
+                                      video_alpha, corr_alpha,debug)
           shift=gr.add_const_ff(-0.7)
-          
+
           self.connect (self.src, self.agc, self.am_demod, tv_corr,
                         self.invert_and_scale, self.set_blacklevel,
                         f2uc, self.dst)
@@ -248,7 +248,7 @@ class tv_rx_block (stdgui2.std_top_block):
           self.connect(src_vertical_bars, f2uc, self.dst)
 
         self._build_gui(vbox, usrp_rate, usrp_rate, usrp_rate)
- 
+
 
         frange = self.u.get_freq_range()
         if(frange.start() > self.tv_freq_max or frange.stop() <  self.tv_freq_min):
@@ -290,13 +290,13 @@ class tv_rx_block (stdgui2.std_top_block):
             vbox.Add (post_demod_fft.win, 4, wx.EXPAND)
 
         if 0:
-            post_filt_fft = fftsink.fft_sink_f (self, self.panel, title="Post Filter", 
+            post_filt_fft = fftsink.fft_sink_f (self, self.panel, title="Post Filter",
                                                 fft_size=512, sample_rate=audio_rate,
                                                 y_per_div=10, ref_level=-40)
             self.connect (self.set_blacklevel, post_filt)
             vbox.Add (fft_win4, 4, wx.EXPAND)
 
-        
+
         # control area form at bottom
         self.myform = myform = form.form()
 
@@ -373,7 +373,7 @@ class tv_rx_block (stdgui2.std_top_block):
             elif self.rot <=-3:
                 self.set_brightness(self.brightness - step)
                 self.rot += 3
-            
+
     def on_button (self, event):
         if event.value == 0:        # button up
             return
@@ -385,7 +385,7 @@ class tv_rx_block (stdgui2.std_top_block):
         else:
             self.state = "FREQ"
         self.update_status_bar ()
-        
+
 
     def set_contrast (self, contrast):
         self.contrast = contrast
@@ -398,7 +398,7 @@ class tv_rx_block (stdgui2.std_top_block):
         self.set_blacklevel.set_k(self.brightness +255.0)
         self.myform['brightness'].set_value(self.brightness)
         self.update_status_bar ()
-                                        
+
     def set_freq(self, target_freq):
         """
         Set the center frequency we're interested in.
@@ -430,13 +430,13 @@ class tv_rx_block (stdgui2.std_top_block):
         self.myform['gain'].set_value(gain)     # update displayed value
         self.u.set_gain(gain)
         self.update_status_bar()
-        
+
     def update_status_bar (self):
       msg = "Setting:%s Contrast:%r Brightness:%r Gain: %r" % \
           (self.state, self.contrast,self.brightness,self.gain)
       self._set_status_msg(msg, 1)
         #self.src_fft.set_baseband_freq(self.freq)
-        
+
 
 if __name__ == '__main__':
     app = stdgui2.stdapp (tv_rx_block, "USRP TV RX black-and-white")

@@ -18,17 +18,17 @@ static inline void volk_32fc_deinterleave_real_64f_a_sse2(double* iBuffer, const
   const float* complexVectorPtr = (float*)complexVector;
   double* iBufferPtr = iBuffer;
 
-  const unsigned int halfPoints = num_points / 2;    
+  const unsigned int halfPoints = num_points / 2;
   __m128 cplxValue, fVal;
   __m128d dVal;
   for(;number < halfPoints; number++){
-      
+
     cplxValue = _mm_load_ps(complexVectorPtr);
     complexVectorPtr += 4;
 
     // Arrange in i1i2i1i2 format
     fVal = _mm_shuffle_ps(cplxValue, cplxValue, _MM_SHUFFLE(2,0,2,0));
-    dVal = _mm_cvtps_pd(fVal); 
+    dVal = _mm_cvtps_pd(fVal);
     _mm_store_pd(iBufferPtr, dVal);
 
     iBufferPtr += 2;

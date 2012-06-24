@@ -1,7 +1,7 @@
 /* -*- c++-*- */
 /*
  * Copyright 2001,2003,2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
  *
  * GNU Radio is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -166,7 +166,7 @@ microtune_4702::set_RF_freq (double target_freq, double *p_actual_freq)
 /*!
  * \returns true iff PLL is locked
  */
-bool 
+bool
 microtune_4702::pll_locked_p ()
 {
   // FIXME

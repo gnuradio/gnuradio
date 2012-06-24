@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -37,9 +37,9 @@
 #include <stdexcept>
 #include <iostream>
 
-@SPTR_NAME@ 
+@SPTR_NAME@
 gr_make_@BASE_NAME@ (unsigned interpolation,
-		     unsigned decimation, 
+		     unsigned decimation,
 		     const std::vector<@TAP_TYPE@> &taps)
 {
   return gnuradio::get_initial_sptr (new @NAME@ (interpolation, decimation, taps));
@@ -64,7 +64,7 @@ gr_make_@BASE_NAME@ (unsigned interpolation,
   set_output_multiple (1);
 
   std::vector<@TAP_TYPE@>	dummy_taps;
-  
+
   for (unsigned i = 0; i < interpolation; i++)
     d_firs[i] = gr_fir_util::create_@FIR_TYPE@ (dummy_taps);
 
@@ -108,14 +108,14 @@ void
   std::vector< std::vector <@TAP_TYPE@> > xtaps (nfilters);
 
   for (int n = 0; n < nfilters; n++)
-    xtaps[n].resize (nt);  
+    xtaps[n].resize (nt);
 
   for (int i = 0; i < (int) taps.size(); i++)
     xtaps[i % nfilters][i / nfilters] = taps[i];
 
   for (int n = 0; n < nfilters; n++)
     d_firs[n]->set_taps (xtaps[n]);
-  
+
   set_history (nt);
   d_updated = false;
 

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -42,7 +42,7 @@ gr_feedforward_agc_cc::gr_feedforward_agc_cc (int nsamples, float reference)
 {
   if (nsamples < 1)
     throw std::invalid_argument("gr_feedforward_agc_cc: nsamples must be >= 1");
-  
+
   set_history(nsamples);
 }
 
@@ -78,7 +78,7 @@ gr_feedforward_agc_cc::work(int noutput_items,
   gr_complex *out = (gr_complex *) output_items[0];
   int	nsamples = d_nsamples;
   float gain;
-  
+
   for (int i = 0; i < noutput_items; i++){
     //float max_env = 1e-12;	// avoid divide by zero
     float max_env = 1e-4;	// avoid divide by zero, indirectly set max gain

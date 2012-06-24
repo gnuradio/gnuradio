@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,10 +30,10 @@
 #include <gr_io_signature.h>
 #include <assert.h>
 #include <iostream>
-  
+
 static const float INF = 1.0e9;
 
-@SPTR_NAME@ 
+@SPTR_NAME@
 trellis_make_@BASE_NAME@ (
     const fsm &FSM,
     int K,
@@ -50,7 +50,7 @@ trellis_make_@BASE_NAME@ (
     int SK)
   : gr_block ("@BASE_NAME@",
 			  gr_make_io_signature (1, -1, sizeof (float)),
-			  gr_make_io_signature (1, -1, sizeof (@TYPE@))),  
+			  gr_make_io_signature (1, -1, sizeof (@TYPE@))),
   d_FSM (FSM),
   d_K (K),
   d_S0 (S0),
@@ -89,7 +89,7 @@ void viterbi_algorithm<@O_TYPE@>(int I, int S, int O,
 
 /* Moved it to "core_algorithms.cc" */
 /*
-void viterbi_algorithm(int I, int S, int O, 
+void viterbi_algorithm(int I, int S, int O,
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector< std::vector<int> > &PS,
@@ -97,7 +97,7 @@ void viterbi_algorithm(int I, int S, int O,
              int K,
              int S0,int SK,
              const float *in, @TYPE@ *out)//,
-             //std::vector<int> &trace) 
+             //std::vector<int> &trace)
 {
   std::vector<int> trace(S*K);
   std::vector<float> alpha(S*2);
@@ -130,7 +130,7 @@ void viterbi_algorithm(int I, int S, int O,
           alpha[((alphai+1)%2)*S+j]=minm;
           if(minm<norm) norm=minm;
       }
-      for(int j=0;j<S;j++) 
+      for(int j=0;j<S;j++)
           alpha[((alphai+1)%2)*S+j]-=norm; // normalize total metrics so they do not explode
       alphai=(alphai+1)%2;
   }

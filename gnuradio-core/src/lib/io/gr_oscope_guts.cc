@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2005 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -65,7 +65,7 @@ decr_bi (int buffer_index, int mx)                // decrement buffer index
 
 gr_oscope_guts::gr_oscope_guts (double sample_rate, gr_msg_queue_sptr msgq)
   : d_nchannels (1),
-    d_msgq (msgq), 
+    d_msgq (msgq),
     d_trigger_mode (gr_TRIG_MODE_AUTO),
     d_trigger_slope (gr_TRIG_SLOPE_POS),
     d_trigger_channel (0),
@@ -115,7 +115,7 @@ gr_oscope_guts::process_sample (const float *channel_data)
     return;
 
   d_decimator_count = d_decimator_count_init;
-  
+
   if (d_trigger_mode != gr_TRIG_MODE_STRIPCHART)
   {
 	  for (int i = 0; i < d_nchannels; i++)
@@ -198,7 +198,7 @@ gr_oscope_guts::found_trigger ()
 {
 	int mx = d_trigger_mode == gr_TRIG_MODE_STRIPCHART ? OUTPUT_RECORD_SIZE*SCHART_MULT :
 		OUTPUT_RECORD_SIZE;
-		
+
   float prev_sample = d_buffer[d_trigger_channel][decr_bi(d_obi, mx)];
   float new_sample = d_buffer[d_trigger_channel][d_obi];
 
@@ -241,15 +241,15 @@ void
 gr_oscope_guts::write_output_records ()
 {
 	int mx;
-	
-	mx = d_trigger_mode == gr_TRIG_MODE_STRIPCHART ? 
+
+	mx = d_trigger_mode == gr_TRIG_MODE_STRIPCHART ?
 		OUTPUT_RECORD_SIZE*SCHART_MULT : OUTPUT_RECORD_SIZE;
-		
+
   // if the output queue if full, drop the data like its hot.
   if (d_msgq->full_p())
     return;
     // Build a message to hold the output records
-  gr_message_sptr msg = 
+  gr_message_sptr msg =
     gr_make_message(0,                                         // msg type
             d_nchannels,                                       // arg1 for other side
             mx,                                // arg2 for other side
@@ -427,7 +427,7 @@ int
 gr_oscope_guts::get_samples_per_output_record () const
 {
 	int mx;
-	
+
 	mx = OUTPUT_RECORD_SIZE;
 	if (d_trigger_mode == gr_TRIG_MODE_STRIPCHART)
 	{

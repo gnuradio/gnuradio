@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Single Pole IIR Filter
+###################################################
+ -->
+<block>
+	<name>Single Pole IIR Filter</name>
+	<key>single_pole_iir_filter_xx</key>
+	<import>from gnuradio import filter</import>
+	<make>filter.single_pole_iir_filter_$(type.fcn)($alpha, $vlen)</make>
+	<callback>set_taps($alpha)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

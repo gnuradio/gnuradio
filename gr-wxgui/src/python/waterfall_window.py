@@ -159,7 +159,7 @@ class control_panel(wx.Panel):
 		self.parent[FRAME_RATE_KEY] *= 0.75
 		if self.parent[FRAME_RATE_KEY] < 1.0:
 			self.parent[FRAME_RATE_KEY] = 1.0
-		
+
 		if self.parent[FRAME_RATE_KEY] == old_rate:
 			self.parent[DECIMATION_KEY] += 1
 	def _on_decr_time_scale(self, event):
@@ -238,6 +238,9 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		#initial update
 		self.update_grid()
 
+	def set_callback(self,callb):
+		self.plotter.set_callback(callb)
+		
 	def autoscale(self, *args):
 		"""
 		Autoscale the waterfall plot to the last frame.
@@ -268,7 +271,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		#plot the fft
 		self.plotter.set_samples(
 			samples=samples,
-			minimum=self[REF_LEVEL_KEY] - self[DYNAMIC_RANGE_KEY], 
+			minimum=self[REF_LEVEL_KEY] - self[DYNAMIC_RANGE_KEY],
 			maximum=self[REF_LEVEL_KEY],
 		)
 		#update the plotter

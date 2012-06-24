@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,7 +30,7 @@
 #include <gr_io_signature.h>
 #include <iostream>
 
-@SPTR_NAME@ 
+@SPTR_NAME@
 trellis_make_@BASE_NAME@ (
   const fsm &FSM1, int ST1,
   const fsm &FSM2, int ST2,
@@ -64,13 +64,13 @@ trellis_make_@BASE_NAME@ (
 
 
 
-int 
+int
 @NAME@::work (int noutput_items,
 			gr_vector_const_void_star &input_items,
 			gr_vector_void_star &output_items)
 {
   assert(noutput_items%d_blocklength ==0);
-  for (int b = 0 ; b<noutput_items/d_blocklength; b++) { 
+  for (int b = 0 ; b<noutput_items/d_blocklength; b++) {
     const @I_TYPE@ *in = (const @I_TYPE@ *) input_items[0]+b*d_blocklength;
     @O_TYPE@ *out = (@O_TYPE@ *) output_items[0]+b*d_blocklength;
 

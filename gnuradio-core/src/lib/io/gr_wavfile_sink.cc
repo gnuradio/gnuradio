@@ -80,7 +80,7 @@ gr_wavfile_sink::gr_wavfile_sink(const char *filename,
   }
   d_bytes_per_sample = bits_per_sample / 8;
   d_bytes_per_sample_new = d_bytes_per_sample;
-  
+
   if (!open(filename)) {
     throw std::runtime_error ("can't open file");
   }
@@ -106,7 +106,7 @@ bool
 gr_wavfile_sink::open(const char* filename)
 {
   gruel::scoped_lock guard(d_mutex);
-  
+
   // we use the open system call to get access to the O_LARGEFILE flag.
   int fd;
   if ((fd = ::open (filename,
@@ -120,14 +120,14 @@ gr_wavfile_sink::open(const char* filename)
     fclose(d_new_fp);
     d_new_fp = 0;
   }
-  
+
   if ((d_new_fp = fdopen (fd, "wb")) == NULL) {
     perror (filename);
     ::close(fd);  // don't leak file descriptor if fdopen fails.
     return false;
   }
   d_updated = true;
-  
+
   if (!gri_wavheader_write(d_new_fp,
 			   d_sample_rate,
 			   d_nchans,
@@ -135,7 +135,7 @@ gr_wavfile_sink::open(const char* filename)
     fprintf(stderr, "[%s] could not write to WAV file\n", __FILE__);
     exit(-1);
   }
-  
+
   return true;
 }
 
@@ -144,19 +144,19 @@ void
 gr_wavfile_sink::close()
 {
   gruel::scoped_lock guard(d_mutex);
-  
+
   if (!d_fp)
     return;
-  
+
   close_wav();
 }
 
 void gr_wavfile_sink::close_wav()
 {
   unsigned int byte_count = d_sample_count * d_bytes_per_sample;
-  
+
   gri_wavheader_complete(d_fp, byte_count);
-  
+
   fclose(d_fp);
   d_fp = NULL;
 }
@@ -179,29 +179,29 @@ gr_wavfile_sink::work (int noutput_items,
 {
   float **in = (float **) &input_items[0];
   int n_in_chans = input_items.size();
-  
+
   short int sample_buf_s;
-  
+
   int nwritten;
-  
+
   gruel::scoped_lock guard(d_mutex);     // hold mutex for duration of this block
   do_update();	// update: d_fp is reqd
   if (!d_fp)	// drop output on the floor
     return noutput_items;
-  
+
   for (nwritten = 0; nwritten < noutput_items; nwritten++) {
     for (int chan = 0; chan < d_nchans; chan++) {
       // Write zeros to channels which are in the WAV file
       // but don't have any inputs here
       if (chan < n_in_chans) {
-	sample_buf_s = 
+	sample_buf_s =
 	  convert_to_short(in[chan][nwritten]);
       } else {
 	sample_buf_s = 0;
       }
-      
+
       gri_wav_write_sample(d_fp, sample_buf_s, d_bytes_per_sample);
-      
+
       if (feof(d_fp) || ferror(d_fp)) {
 	fprintf(stderr, "[%s] file i/o error\n", __FILE__);
 	close();
@@ -210,7 +210,7 @@ gr_wavfile_sink::work (int noutput_items,
       d_sample_count++;
     }
   }
-  
+
   return nwritten;
 }
 
@@ -225,7 +225,7 @@ gr_wavfile_sink::convert_to_short(float sample)
   } else if (sample < d_min_sample_val) {
     sample = d_min_sample_val;
   }
-  
+
   return (short int) boost::math::iround(sample);
 }
 
@@ -254,7 +254,7 @@ gr_wavfile_sink::do_update()
   if (!d_updated) {
     return;
   }
-  
+
   if (d_fp) {
     close_wav();
   }
@@ -275,6 +275,6 @@ gr_wavfile_sink::do_update()
     d_normalize_fac  = d_max_sample_val;
     d_normalize_shift = 0;
   }
-  
+
   d_updated = false;
 }

@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                        
+
   FILE........: globals.c
-  AUTHOR......: David Rowe                                                          
-  DATE CREATED: 11/5/94                          
-                                                                             
-  Globals for sinusoidal speech coder.		      
-                                                                             
+  AUTHOR......: David Rowe
+  DATE CREATED: 11/5/94
+
+  Globals for sinusoidal speech coder.
+
 \*---------------------------------------------------------------------------*/
 
 /*

@@ -70,11 +70,11 @@ class bert_receiver(gr.hier_block2):
                                             freq_bw, timing_bw, phase_bw,
                                             verbose, log)
 
-        self._symbol_rate = self._bitrate * self._demod.bits_per_symbol()
+        self._symbol_rate = self._bitrate / self._demod.bits_per_symbol()
         self._sample_rate = self._symbol_rate * samples_per_symbol
 
         # Add an SNR probe on the demodulated constellation
-        self._snr_probe = gr.probe_mpsk_snr_c(10.0/self._symbol_rate)
+        self._snr_probe = digital.probe_mpsk_snr_est_c(digital.SNR_EST_M2M4, alpha=10.0/self._symbol_rate)
         self.connect(self._demod.time_recov, self._snr_probe)
         
         # Descramble BERT sequence.  A channel error will create 3 incorrect bits

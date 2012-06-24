@@ -103,36 +103,36 @@ extern int g723_40_decoder(
 
 extern int
 quantize(
-	 int		d,	
-	 int		y,	
-	short		*table,	
+	 int		d,
+	 int		y,
+	short		*table,
 	int		size);
 extern int reconstruct(int,int,int);void
 
 extern update(
-	int		code_size,	
-	int		y,		
-	int		wi,		
-	int		fi,		
-	int		dq,		
-	int		sr,		
-	int		dqsez,		
+	int		code_size,
+	int		y,
+	int		wi,
+	int		fi,
+	int		dq,
+	int		sr,
+	int		dqsez,
 	struct g72x_state *state_ptr);
 extern int
 tandem_adjust_alaw(
-	int		sr,	
-	int		se,	
-	int		y,	
-	int		i,	
+	int		sr,
+	int		se,
+	int		y,
+	int		i,
 	int		sign,
 	short		*qtab);
 
 extern int
 tandem_adjust_ulaw(
-	int		sr,	
-	int		se,	
-	int		y,	
-	int		i,	
+	int		sr,
+	int		se,
+	int		y,
+	int		i,
 	int		sign,
 	short		*qtab);
 

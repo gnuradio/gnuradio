@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -28,11 +28,13 @@
 #include <WaterfallDisplayPlot.h>
 #include <TimeDomainDisplayPlot.h>
 #include <ConstellationDisplayPlot.h>
-#include <QtGui/QApplication>
-#include <QtGui/QGridLayout>
-#include <QValidator>
-#include <QTimer>
+#include <QtGui/QtGui>
 #include <vector>
+
+#include <qwt_plot_grid.h>
+#include <qwt_plot_layout.h>
+#include <qwt_legend.h>
+#include <qwt_legend_item.h>
 
 class TimeDisplayForm : public QWidget
 {
@@ -41,12 +43,14 @@ class TimeDisplayForm : public QWidget
   public:
   TimeDisplayForm(int nplots=1, QWidget* parent = 0);
   ~TimeDisplayForm();
-  
+
   void Reset();
-  
+
 public slots:
   void resizeEvent( QResizeEvent * e );
   void customEvent( QEvent * e );
+  void mousePressEvent( QMouseEvent * e);
+
   void setFrequencyRange( const double newCenterFrequency,
 			  const double newStartFrequency,
 			  const double newStopFrequency );
@@ -58,6 +62,13 @@ public slots:
 
   void setTitle(int which, QString title);
   void setColor(int which, QString color);
+
+  void setGrid(bool on);
+  void setGridOn();
+  void setGridOff();
+
+  void setLineColorAsk();
+  void setLineColorGet();
 
 private slots:
   void newData( const TimeUpdateEvent* );
@@ -77,7 +88,18 @@ private:
   bool _systemSpecifiedFlag;
   double _startFrequency;
   double _stopFrequency;
-  
+
+  QwtPlotGrid *_grid;
+
+  QMenu *_menu;
+  QAction *_gridOnAct;
+  QAction *_gridOffAct;
+  QAction *_colorAct;
+
+  void setupColorDiag();
+  QDialog *_color_diag;
+  QComboBox *_color_comboBox;
+
   QTimer *displayTimer;
   double d_update_time;
 };

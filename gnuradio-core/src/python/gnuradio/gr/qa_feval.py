@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2006,2007,2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gr_unittest
 
@@ -59,7 +59,7 @@ class test_feval(gr_unittest.TestCase):
         actual_result = tuple([gr.feval_dd_example(f, x) for x in src_data])
         self.assertEqual(expected_result, actual_result)
 
-        
+
     def test_ll_1(self):
         f = my_add2_ll()
         src_data =        (0, 1, 2, 3, 4)
@@ -92,7 +92,7 @@ class test_feval(gr_unittest.TestCase):
         # this is python -> C++ -> python and back again...
         actual_result = tuple([gr.feval_cc_example(f, x) for x in src_data])
         self.assertEqual(expected_result, actual_result)
-        
+
     def test_void_1(self):
         # this is all in python
         f = my_feval()

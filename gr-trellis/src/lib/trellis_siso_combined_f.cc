@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -29,10 +29,10 @@
 #include <stdexcept>
 #include <assert.h>
 #include <iostream>
-  
+
 static const float INF = 1.0e9;
 
-trellis_siso_combined_f_sptr 
+trellis_siso_combined_f_sptr
 trellis_make_siso_combined_f (
     const fsm &FSM,
     int K,
@@ -61,7 +61,7 @@ trellis_siso_combined_f::trellis_siso_combined_f (
     trellis_metric_type_t TYPE)
   : gr_block ("siso_combined_f",
 			  gr_make_io_signature (1, -1, sizeof (float)),
-			  gr_make_io_signature (1, -1, sizeof (float))),  
+			  gr_make_io_signature (1, -1, sizeof (float))),
   d_FSM (FSM),
   d_K (K),
   d_S0 (S0),
@@ -76,7 +76,7 @@ trellis_siso_combined_f::trellis_siso_combined_f (
   //d_beta(FSM.S()*(K+1))
 {
     int multiple;
-    if (d_POSTI && d_POSTO) 
+    if (d_POSTI && d_POSTO)
         multiple = d_FSM.I()+d_FSM.O();
     else if(d_POSTI)
         multiple = d_FSM.I();
@@ -88,14 +88,14 @@ trellis_siso_combined_f::trellis_siso_combined_f (
     set_output_multiple (d_K*multiple);
     //what is the meaning of relative rate for a block with 2 inputs?
     //set_relative_rate ( multiple / ((double) d_FSM.I()) );
-    // it turns out that the above gives problems in the scheduler, so 
+    // it turns out that the above gives problems in the scheduler, so
     // let's try (assumption O>I)
     //set_relative_rate ( multiple / ((double) d_FSM.O()) );
     // I am tempted to automate like this
     if(d_FSM.I() <= d_D)
       set_relative_rate ( multiple / ((double) d_D) );
     else
-      set_relative_rate ( multiple / ((double) d_FSM.I()) ); 
+      set_relative_rate ( multiple / ((double) d_FSM.I()) );
 }
 
 
@@ -111,7 +111,7 @@ trellis_siso_combined_f::forecast (int noutput_items, gr_vector_int &ninput_item
       multiple = d_FSM.O();
   else
       throw std::runtime_error ("Not both POSTI and POSTO can be false.");
-  //printf("forecast: Multiple = %d\n",multiple); 
+  //printf("forecast: Multiple = %d\n",multiple);
   assert (noutput_items % (d_K*multiple) == 0);
   int input_required1 =  d_FSM.I() * (noutput_items/multiple) ;
   int input_required2 =  d_D * (noutput_items/multiple) ;
@@ -142,7 +142,7 @@ inline float min_star(float a, float b)
   return (a <= b ? a : b)-log(1+exp(a <= b ? a-b : b-a));
 }
 
-void siso_algorithm_combined(int I, int S, int O, 
+void siso_algorithm_combined(int I, int S, int O,
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector< std::vector<int> > &PS,
@@ -157,7 +157,7 @@ void siso_algorithm_combined(int I, int S, int O,
              const float *priori, const float *observations, float *post//,
              //std::vector<float> &alpha,
              //std::vector<float> &beta
-             ) 
+             )
 {
   float norm,mm,minm;
   std::vector<float> alpha(S*(K+1));
@@ -186,7 +186,7 @@ void siso_algorithm_combined(int I, int S, int O,
           alpha[(k+1)*S+j]=minm;
           if(minm<norm) norm=minm;
       }
-      for(int j=0;j<S;j++) 
+      for(int j=0;j<S;j++)
           alpha[(k+1)*S+j]-=norm; // normalize total metrics so they do not explode
   }
 
@@ -200,7 +200,7 @@ void siso_algorithm_combined(int I, int S, int O,
 
   for(int k=K-1;k>=0;k--) { // backward recursion
       norm=INF;
-      for(int j=0;j<S;j++) { 
+      for(int j=0;j<S;j++) {
           minm=INF;
           for(int i=0;i<I;i++) {
               int i0 = j*I+i;
@@ -249,8 +249,8 @@ void siso_algorithm_combined(int I, int S, int O,
         for(int n=0;n<O;n++)
             post[k*(I+O)+I+n]-=norm; // normalize metrics
     }
-  } 
-  else if(POSTI) 
+  }
+  else if(POSTI)
   {
     for(int k=0;k<K;k++) { // input combining
         norm=INF;
@@ -306,7 +306,7 @@ trellis_siso_combined_f::general_work (int noutput_items,
 {
   assert (input_items.size() == 2*output_items.size());
   int nstreams = output_items.size();
-  //printf("general_work:Streams:  %d\n",nstreams); 
+  //printf("general_work:Streams:  %d\n",nstreams);
   int multiple;
   if (d_POSTI && d_POSTO)
       multiple = d_FSM.I()+d_FSM.O();
@@ -319,11 +319,11 @@ trellis_siso_combined_f::general_work (int noutput_items,
 
   assert (noutput_items % (d_K*multiple) == 0);
   int nblocks = noutput_items / (d_K*multiple);
-  //printf("general_work:Blocks:  %d\n",nblocks); 
+  //printf("general_work:Blocks:  %d\n",nblocks);
   //for(int i=0;i<ninput_items.size();i++)
       //printf("general_work:Input items available:  %d\n",ninput_items[i]);
 
-  float (*p2min)(float, float) = NULL; 
+  float (*p2min)(float, float) = NULL;
   if(d_SISO_TYPE == TRELLIS_MIN_SUM)
     p2min = &min;
   else if(d_SISO_TYPE == TRELLIS_SUM_PRODUCT)

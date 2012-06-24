@@ -145,7 +145,7 @@ SpectrumWindowResetEvent::~SpectrumWindowResetEvent()
 {
 }
 
-SpectrumFrequencyRangeEvent::SpectrumFrequencyRangeEvent(const double centerFreq, 
+SpectrumFrequencyRangeEvent::SpectrumFrequencyRangeEvent(const double centerFreq,
 							 const double startFreq,
 							 const double stopFreq)
   : QEvent(QEvent::Type(SpectrumFrequencyRangeEventType))

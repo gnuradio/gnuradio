@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-                                                                             
+
   FILE........: sine.c
-  AUTHOR......: David Rowe                                           
+  AUTHOR......: David Rowe
   DATE CREATED: 19/8/2010
-                                                                             
+
   Sinusoidal analysis and synthesis functions.
-                                                                             
+
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -26,9 +26,9 @@
 */
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-				INCLUDES                                      
-                                                                             
+
+				INCLUDES
+
 \*---------------------------------------------------------------------------*/
 
 #include <stdlib.h>
@@ -42,25 +42,25 @@
 #define HPF_BETA 0.125
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-				HEADERS                                     
-                                                                             
+
+				HEADERS
+
 \*---------------------------------------------------------------------------*/
 
-void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, 
+void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax,
 			 float pstep);
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-				FUNCTIONS                                     
-                                                                             
+
+				FUNCTIONS
+
 \*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: make_analysis_window	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 11/5/94 
+
+  FUNCTION....: make_analysis_window
+  AUTHOR......: David Rowe
+  DATE CREATED: 11/5/94
 
   Init function that generates the time domain analysis window and it's DFT.
 
@@ -72,15 +72,15 @@ void make_analysis_window(float w[],COMP W[])
   COMP  temp;
   int   i,j;
 
-  /* 
+  /*
      Generate Hamming window centered on M-sample pitch analysis window
-  
+
   0            M/2           M-1
   |-------------|-------------|
         |-------|-------|
             NW samples
 
-     All our analysis/synthsis is centred on the M/2 sample.               
+     All our analysis/synthsis is centred on the M/2 sample.
   */
 
   m = 0.0;
@@ -92,7 +92,7 @@ void make_analysis_window(float w[],COMP W[])
   }
   for(i=M/2+NW/2; i<M; i++)
     w[i] = 0.0;
- 
+
   /* Normalise - makes freq domain amplitude estimation straight
      forward */
 
@@ -101,7 +101,7 @@ void make_analysis_window(float w[],COMP W[])
     w[i] *= m;
   }
 
-  /* 
+  /*
      Generate DFT of analysis window, used for later processing.  Note
      we modulo FFT_ENC shift the time domain window w[], this makes the
      imaginary part of the DFT W[] equal to zero as the shifted w[] is
@@ -112,13 +112,13 @@ void make_analysis_window(float w[],COMP W[])
      |-------------------------|
 
       ----\               /----
-           \             / 
+           \             /
             \           /          <- shifted version of window w[n]
              \         /
               \       /
                -------
 
-     |---------|     |---------|      
+     |---------|     |---------|
        NW/2              NW/2
   */
 
@@ -133,8 +133,8 @@ void make_analysis_window(float w[],COMP W[])
 
   fft(&W[0].real,FFT_ENC,-1);         /* "Numerical Recipes in C" FFT */
 
-  /* 
-      Re-arrange W[] to be symmetrical about FFT_ENC/2.  Makes later 
+  /*
+      Re-arrange W[] to be symmetrical about FFT_ENC/2.  Makes later
       analysis convenient.
 
    Before:
@@ -142,21 +142,21 @@ void make_analysis_window(float w[],COMP W[])
 
      0                 FFT_ENC-1
      |----------|---------|
-     __                   _       
-       \                 /          
-        \_______________/      
+     __                   _
+       \                 /
+        \_______________/
 
    After:
 
      0                 FFT_ENC-1
      |----------|---------|
-               ___                        
-              /   \                
-     ________/     \_______     
+               ___
+              /   \
+     ________/     \_______
 
   */
-       
-      
+
+
   for(i=0; i<FFT_ENC/2; i++) {
     temp.real = W[i].real;
     temp.imag = W[i].imag;
@@ -169,15 +169,15 @@ void make_analysis_window(float w[],COMP W[])
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: hpf	     
-  AUTHOR......: David Rowe			      
+
+  FUNCTION....: hpf
+  AUTHOR......: David Rowe
   DATE CREATED: 16 Nov 2010
 
   High pass filter with a -3dB point of about 160Hz.
 
     y(n) = -HPF_BETA*y(n-1) + x(n) - x(n-1)
- 
+
 \*---------------------------------------------------------------------------*/
 
 float hpf(float x, float states[])
@@ -189,10 +189,10 @@ float hpf(float x, float states[])
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: dft_speech	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 27/5/94 
+
+  FUNCTION....: dft_speech
+  AUTHOR......: David Rowe
+  DATE CREATED: 27/5/94
 
   Finds the DFT of the current speech input speech frame.
 
@@ -201,7 +201,7 @@ float hpf(float x, float states[])
 void dft_speech(COMP Sw[], float Sn[], float w[])
 {
   int i;
-  
+
   for(i=0; i<FFT_ENC; i++) {
     Sw[i].real = 0.0;
     Sw[i].imag = 0.0;
@@ -209,7 +209,7 @@ void dft_speech(COMP Sw[], float Sn[], float w[])
 
   /* Centre analysis window on time axis, we need to arrange input
      to FFT this way to make FFT phases correct */
-  
+
   /* move 2nd half to start of FFT input vector */
 
   for(i=0; i<NW/2; i++)
@@ -224,10 +224,10 @@ void dft_speech(COMP Sw[], float Sn[], float w[])
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                     
-  FUNCTION....: two_stage_pitch_refinement			
+
+  FUNCTION....: two_stage_pitch_refinement
   AUTHOR......: David Rowe
-  DATE CREATED: 27/5/94				
+  DATE CREATED: 27/5/94
 
   Refines the current pitch estimate using the harmonic sum pitch
   estimation technique.
@@ -236,7 +236,7 @@ void dft_speech(COMP Sw[], float Sn[], float w[])
 
 void two_stage_pitch_refinement(MODEL *model, COMP Sw[])
 {
-  float pmin,pmax,pstep;	/* pitch refinment minimum, maximum and step */ 
+  float pmin,pmax,pstep;	/* pitch refinment minimum, maximum and step */
 
   /* Coarse refinement */
 
@@ -244,16 +244,16 @@ void two_stage_pitch_refinement(MODEL *model, COMP Sw[])
   pmin = TWO_PI/model->Wo - 5;
   pstep = 1.0;
   hs_pitch_refinement(model,Sw,pmin,pmax,pstep);
-  
+
   /* Fine refinement */
-  
+
   pmax = TWO_PI/model->Wo + 1;
   pmin = TWO_PI/model->Wo - 1;
   pstep = 0.25;
   hs_pitch_refinement(model,Sw,pmin,pmax,pstep);
-  
+
   /* Limit range */
-  
+
   if (model->Wo < TWO_PI/P_MAX)
     model->Wo = TWO_PI/P_MAX;
   if (model->Wo > TWO_PI/P_MIN)
@@ -263,20 +263,20 @@ void two_stage_pitch_refinement(MODEL *model, COMP Sw[])
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                
- FUNCTION....: hs_pitch_refinement				
- AUTHOR......: David Rowe			
- DATE CREATED: 27/5/94							     
-									  
- Harmonic sum pitch refinement function.			   
-									    
- pmin   pitch search range minimum	    
- pmax	pitch search range maximum	    
- step   pitch search step size		    
- model	current pitch estimate in model.Wo  
-									    
- model 	refined pitch estimate in model.Wo  
-									     
+
+ FUNCTION....: hs_pitch_refinement
+ AUTHOR......: David Rowe
+ DATE CREATED: 27/5/94
+
+ Harmonic sum pitch refinement function.
+
+ pmin   pitch search range minimum
+ pmax	pitch search range maximum
+ step   pitch search step size
+ model	current pitch estimate in model.Wo
+
+ model 	refined pitch estimate in model.Wo
+
 \*---------------------------------------------------------------------------*/
 
 void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, float pstep)
@@ -289,14 +289,14 @@ void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, float 
   float Em;		/* mamimum energy */
   float r;		/* number of rads/bin */
   float p;		/* current pitch */
-  
+
   /* Initialisation */
-  
+
   model->L = PI/model->Wo;	/* use initial pitch est. for L */
   Wom = model->Wo;
   Em = 0.0;
   r = TWO_PI/FFT_ENC;
-  
+
   /* Determine harmonic sum for a range of Wo values */
 
   for(p=pmin; p<=pmax; p+=pstep) {
@@ -308,10 +308,10 @@ void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, float 
     for(m=1; m<=model->L; m++) {
       b = floor(m*Wo/r + 0.5);
       E += Sw[b].real*Sw[b].real + Sw[b].imag*Sw[b].imag;
-    }  
+    }
 
     /* Compare to see if this is a maximum */
-    
+
     if (E > Em) {
       Em = E;
       Wom = Wo;
@@ -322,13 +322,13 @@ void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, float 
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-  FUNCTION....: estimate_amplitudes 			      
-  AUTHOR......: David Rowe		
-  DATE CREATED: 27/5/94			       
-									      
-  Estimates the complex amplitudes of the harmonics.    
-									      
+
+  FUNCTION....: estimate_amplitudes
+  AUTHOR......: David Rowe
+  DATE CREATED: 27/5/94
+
+  Estimates the complex amplitudes of the harmonics.
+
 \*---------------------------------------------------------------------------*/
 
 void estimate_amplitudes(MODEL *model, COMP Sw[], COMP W[])
@@ -369,14 +369,14 @@ void estimate_amplitudes(MODEL *model, COMP Sw[], COMP W[])
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-  est_voicing_mbe()          
-                                                                             
+
+  est_voicing_mbe()
+
   Returns the error of the MBE cost function for a fiven F0.
 
   Note: I think a lot of the operations below can be simplified as
   W[].imag = 0 and has been normalised such that den always equals 1.
-                                                                             
+
 \*---------------------------------------------------------------------------*/
 
 float est_voicing_mbe(
@@ -393,7 +393,7 @@ float est_voicing_mbe(
     int   offset;         /* centers Hw[] about current harmonic */
     float den;            /* denominator of Am expression */
     float error;          /* accumulated error between original and synthesised */
-    float Wo;            
+    float Wo;
     float sig, snr;
     float elow, ehigh, eratio;
     float dF0, sixty;
@@ -445,16 +445,16 @@ float est_voicing_mbe(
 	    error += Ew[m].imag*Ew[m].imag;
 	}
     }
-    
+
     snr = 10.0*log10(sig/error);
     if (snr > V_THRESH)
 	model->voiced = 1;
     else
 	model->voiced = 0;
- 
+
     /* post processing, helps clean up some voicing errors ------------------*/
 
-    /* 
+    /*
        Determine the ratio of low freancy to high frequency energy,
        voiced speech tends to be dominated by low frequency energy,
        unvoiced by high frequency. This measure can be used to
@@ -488,7 +488,7 @@ float est_voicing_mbe(
 	/* If pitch is jumping about it's likely this is UV */
 
 	dF0 = (model->Wo - prev_Wo)*FS/TWO_PI;
-	if (fabs(dF0) > 15.0) 
+	if (fabs(dF0) > 15.0)
 	    model->voiced = 0;
 
 	/* A common source of Type 2 errors is the pitch estimator
@@ -507,10 +507,10 @@ float est_voicing_mbe(
 }
 
 /*---------------------------------------------------------------------------*\
-                                                       
-  FUNCTION....: make_synthesis_window	     
-  AUTHOR......: David Rowe			      
-  DATE CREATED: 11/5/94 
+
+  FUNCTION....: make_synthesis_window
+  AUTHOR......: David Rowe
+  DATE CREATED: 11/5/94
 
   Init function that generates the trapezoidal (Parzen) sythesis window.
 
@@ -539,15 +539,15 @@ void make_synthesis_window(float Pn[])
 }
 
 /*---------------------------------------------------------------------------*\
-                                                                             
-  FUNCTION....: synthesise 			      
-  AUTHOR......: David Rowe		
-  DATE CREATED: 20/2/95		       
-									      
+
+  FUNCTION....: synthesise
+  AUTHOR......: David Rowe
+  DATE CREATED: 20/2/95
+
   Synthesise a speech signal in the frequency domain from the
   sinusodal model parameters.  Uses overlap-add with a trapezoidal
   window to smoothly interpolate betwen frames.
-									      
+
 \*---------------------------------------------------------------------------*/
 
 void synthesise(
@@ -579,7 +579,7 @@ void synthesise(
       gives better results for synthesis frames greater than 10ms.  Inverse
       FFT synthesis using a 512 pt FFT works well for 10ms window.  I think
       (but am not sure) that the problem is realted to the quantisation of
-      the harmonic frequencies to the FFT bin size, e.g. there is a 
+      the harmonic frequencies to the FFT bin size, e.g. there is a
       8000/512 Hz step between FFT bins.  For some reason this makes
       the speech from longer frame > 10ms sound poor.  The effect can also
       be seen when synthesising test signals like single sine waves, some
@@ -619,7 +619,7 @@ void synthesise(
 	}
  	for(i=N-1,j=0; i<2*N; i++,j++)
 	    Sw_[j].real += 2.0*model->A[l]*cos(j*model->Wo*l + model->phi[l]);
-    }	
+    }
 #endif
 
     /* Overlap add to previous samples */

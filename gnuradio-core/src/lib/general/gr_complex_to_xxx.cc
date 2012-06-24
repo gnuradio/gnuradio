@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2008,2010,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -45,7 +45,7 @@ gr_complex_to_float::gr_complex_to_float (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -106,7 +106,7 @@ gr_complex_to_real::gr_complex_to_real (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -126,7 +126,7 @@ gr_complex_to_real::work (int noutput_items,
   else {
     volk_32fc_deinterleave_real_32f_a(out, in, noi);
   }
-  
+
   return noutput_items;
 }
 
@@ -146,7 +146,7 @@ gr_complex_to_imag::gr_complex_to_imag (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -186,7 +186,7 @@ gr_complex_to_mag::gr_complex_to_mag (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -220,7 +220,7 @@ gr_complex_to_mag_squared::gr_complex_to_mag_squared (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int
@@ -258,7 +258,7 @@ gr_complex_to_arg::gr_complex_to_arg (unsigned int vlen)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(float);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 int

@@ -1,23 +1,23 @@
 #
 # Copyright 2009 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import wx
 from gnuradio import gr
@@ -47,7 +47,7 @@ class top_panel(wx.Panel):
             p = wx.Panel(self)
             p.SetSize((640,480))
             vbox.Add(p, 1, wx.EXPAND)
-            
+
         self.SetSizer(vbox)
         self.SetAutoLayout(True)
         vbox.Fit(self)
@@ -62,7 +62,7 @@ class top_panel(wx.Panel):
 # Top-level window frame with menu and status bars.
 #
 class top_frame(wx.Frame):
-    def __init__ (self, top_block, gui, options, args, 
+    def __init__ (self, top_block, gui, options, args,
                   title, nstatus, start, realtime):
 
         wx.Frame.__init__(self, None, -1, title)
@@ -109,11 +109,11 @@ class top_frame(wx.Frame):
 
 
 #
-# Top-level wxPython application object.  User creates or subclasses this 
+# Top-level wxPython application object.  User creates or subclasses this
 # in their GUI script.
 #
 class app(wx.App):
-    def __init__ (self, top_block=None, gui=None, options=None, args=None, 
+    def __init__ (self, top_block=None, gui=None, options=None, args=None,
                   title="GNU Radio", nstatus=1, start=False, realtime=False):
         self.top_block = top_block
         self.gui = gui

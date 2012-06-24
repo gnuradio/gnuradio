@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004-2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -126,13 +126,13 @@ audio_oss_source::work (int noutput_items,
   const int bytes_per_item = shorts_per_item * sizeof (short);
 
   // To minimize latency, never return more than CHUNK_TIME
-  // worth of samples per call to work.  
+  // worth of samples per call to work.
 
   noutput_items = std::min (noutput_items, d_chunk_size);
 
   int	base = 0;
   int	ntogo = noutput_items;
-  
+
   while (ntogo > 0){
     int nbytes = std::min (ntogo, d_chunk_size) * bytes_per_item;
     int result_nbytes = read (d_fd, d_buffer, nbytes);
@@ -158,7 +158,7 @@ audio_oss_source::work (int noutput_items,
 	}
 	break;
 
-      case 2:			// stereo output	
+      case 2:			// stereo output
 	for (int i = 0; i < result_nitems; i++){
 	  f0[base+i] = d_buffer[2*i+0] * (1.0 / 32767);
 	  f1[base+i] = d_buffer[2*i+1] * (1.0 / 32767);

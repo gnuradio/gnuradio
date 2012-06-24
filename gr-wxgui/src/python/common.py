@@ -121,7 +121,7 @@ def _register_access_method(destination, controller, key):
 	def set(value): controller[key] = value
 	setattr(destination, 'set_'+key, set)
 	def get(): return controller[key]
-	setattr(destination, 'get_'+key, get) 
+	setattr(destination, 'get_'+key, get)
 
 def register_access_methods(destination, controller):
 	"""

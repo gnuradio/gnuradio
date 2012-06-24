@@ -75,7 +75,7 @@
 		<vlen>$vlen</vlen>
 	</source>
         <doc>
-Interleaver size is given in blocks. 
-One Symbol = (in/out type) * (vector length) 
+Interleaver size is given in blocks.
+One Symbol = (in/out type) * (vector length)
         </doc>
 </block>

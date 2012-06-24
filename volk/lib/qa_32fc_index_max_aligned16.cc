@@ -33,36 +33,36 @@ void qa_32fc_index_max_aligned16::t1(){
 
 
 void qa_32fc_index_max_aligned16::t1(){
- 
+
   const int vlen = VEC_LEN;
-  
+
   volk_environment_init();
   int ret;
-  
+
   unsigned int* target;
   unsigned int* target_generic;
   std::complex<float>* src0 ;
-  
-  
+
+
   unsigned int i_target;
   target = &i_target;
   unsigned int i_target_generic;
   target_generic = &i_target_generic;
   ret = posix_memalign((void**)&src0, 16, vlen << 3);
-  
+
   random_floats((float*)src0, vlen * 2);
-  
+
   printf("32fc_index_max_aligned16\n");
 
   clock_t start, end;
   double total;
-  
-  
+
+
   start = clock();
   for(int k = 0; k < NUM_ITERS; ++k) {
     volk_32fc_index_max_aligned16_manual(target_generic, src0, vlen << 3, "generic");
   }
-  end = clock();  
+  end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("generic time: %f\n", total);
 
@@ -70,19 +70,19 @@ void qa_32fc_index_max_aligned16::t1(){
   for(int k = 0; k < NUM_ITERS; ++k) {
   volk_32fc_index_max_aligned16_manual(target, src0, vlen << 3, "sse3");
   }
-  
-  end = clock();  
+
+  end = clock();
   total = (double)(end-start)/(double)CLOCKS_PER_SEC;
   printf("sse3 time: %f\n", total);
 
-  
-  
-  
+
+
+
   printf("generic: %u, sse3: %u\n", target_generic[0], target[0]);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(target_generic[0], target[0], 1.1);
-  
 
-  
+
+
   free(src0);
 }
 

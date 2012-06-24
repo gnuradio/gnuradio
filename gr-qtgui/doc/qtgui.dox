@@ -60,7 +60,7 @@ class grclass(gr.top_block):
     self.snk = qtgui.sink_c(1024,           #fftsize
     	       		    samp_rate,      #bw
 			    "QT GUI Plot")  #name
-			     
+
     self.snk_win = sip.wrapinstance(self.snk.pyqwidget(), Qt.QWidget)
     self.snk_win.show()
 

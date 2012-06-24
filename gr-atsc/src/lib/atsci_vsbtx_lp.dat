@@ -3,9 +3,9 @@
  * FILTER TYPE:LOW PASS                       1H
  * PASSBAND RIPPLE IN -dB            -.0100
  * STOPBAND RIPPLE IN -dB          -76.0000
- * PASSBAND CUTOFF FREQUENCY    .250000     HERTZ              
- * STOPBAND CUTOFF FREQUENCY    .360000     HERTZ              
- * SAMPLING FREQUENCY           1.00000     HERTZ              
+ * PASSBAND CUTOFF FREQUENCY    .250000     HERTZ
+ * STOPBAND CUTOFF FREQUENCY    .360000     HERTZ
+ * SAMPLING FREQUENCY           1.00000     HERTZ
  */
 /*
  * gain of 2

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -72,7 +72,7 @@ gr_tagged_file_sink::~gr_tagged_file_sink ()
 {
 }
 
-int 
+int
 gr_tagged_file_sink::work (int noutput_items,
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
@@ -112,7 +112,7 @@ gr_tagged_file_sink::work (int noutput_items,
 			    pmt::pmt_string_to_symbol("time"));
 	  if(time_tags.size() > 0) {
 	    const gr_tag_t tag = time_tags[time_tags.size()-1];
-	    
+
 	    uint64_t time_nitems = tag.offset;
 
 	    // Get time based on last time tag from USRP
@@ -139,13 +139,13 @@ gr_tagged_file_sink::work (int noutput_items,
 	    //std::cout << "   time: " << d_timeval << std::endl;
 	  }
 	  d_last_N = N;
-	  
+
 	  std::stringstream filename;
 	  filename.setf(std::ios::fixed, std::ios::floatfield);
 	  filename.precision(8);
 	  filename << "file" << d_n << "_" << d_timeval << ".dat";
 	  d_n++;
-	  
+
 	  int fd;
 	  if ((fd = ::open (filename.str().c_str(),
 			    O_WRONLY|O_CREAT|O_TRUNC|OUR_O_LARGEFILE|OUR_O_BINARY,
@@ -153,7 +153,7 @@ gr_tagged_file_sink::work (int noutput_items,
 	    perror (filename.str().c_str());
 	    return -1;
 	  }
-	  
+
 	  // FIXME:
 	  //if ((d_handle = fdopen (fd, d_is_binary ? "wb" : "w")) == NULL){
 	  if ((d_handle = fdopen (fd, "wb")) == NULL){
@@ -166,7 +166,7 @@ gr_tagged_file_sink::work (int noutput_items,
 	  d_state = IN_BURST;
 	  break;
 	}
-	
+
 	vitr++;
       }
       if(d_state == NOT_IN_BURST)

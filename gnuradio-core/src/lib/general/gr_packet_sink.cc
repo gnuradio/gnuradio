@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -48,7 +48,7 @@ gr_packet_sink::enter_search()
   d_state = STATE_SYNC_SEARCH;
   d_shift_reg = 0;
 }
-    
+
 inline void
 gr_packet_sink::enter_have_sync()
 {
@@ -108,13 +108,13 @@ gr_packet_sink::work (int noutput_items,
 {
   float *inbuf = (float *) input_items[0];
   int count=0;
-  
+
   if (VERBOSE)
     fprintf(stderr,">>> Entering state machine\n"),fflush(stderr);
 
   while (count<noutput_items) {
     switch(d_state) {
-      
+
     case STATE_SYNC_SEARCH:    // Look for sync vector
       if (VERBOSE)
 	fprintf(stderr,"SYNC Search, noutput=%d\n",noutput_items),fflush(stderr);
@@ -164,7 +164,7 @@ gr_packet_sink::work (int noutput_items,
 	}
       }
       break;
-      
+
     case STATE_HAVE_HEADER:
       if (VERBOSE)
 	fprintf(stderr,"Packet Build\n"),fflush(stderr);
@@ -174,7 +174,7 @@ gr_packet_sink::work (int noutput_items,
 	  d_packet_byte = (d_packet_byte << 1) | 1;
 	else
 	  d_packet_byte = d_packet_byte << 1;
-	
+
 	if (d_packet_byte_index++ == 7) {	  	// byte is full so move to next byte
 	  d_packet[d_packetlen_cnt++] = d_packet_byte;
 	  d_packet_byte_index = 0;
@@ -182,7 +182,7 @@ gr_packet_sink::work (int noutput_items,
 	  if (d_packetlen_cnt == d_packetlen){		// packet is filled
 
 	    // build a message
-	    gr_message_sptr msg = gr_make_message(0, 0, 0, d_packetlen_cnt);  	    
+	    gr_message_sptr msg = gr_make_message(0, 0, 0, d_packetlen_cnt);
 	    memcpy(msg->msg(), d_packet, d_packetlen_cnt);
 
 	    d_target_queue->insert_tail(msg);		// send it
@@ -204,4 +204,4 @@ gr_packet_sink::work (int noutput_items,
 
   return noutput_items;
 }
-  
+

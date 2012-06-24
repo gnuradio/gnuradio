@@ -23,12 +23,12 @@ static inline void volk_32f_x2_min_32f_a_sse(float* cVector, const float* aVecto
 
     __m128 aVal, bVal, cVal;
     for(;number < quarterPoints; number++){
-      
-      aVal = _mm_load_ps(aPtr); 
+
+      aVal = _mm_load_ps(aPtr);
       bVal = _mm_load_ps(bPtr);
-      
-      cVal = _mm_min_ps(aVal, bVal); 
-      
+
+      cVal = _mm_min_ps(aVal, bVal);
+
       _mm_store_ps(cPtr,cVal); // Store the results back into the C container
 
       aPtr += 4;

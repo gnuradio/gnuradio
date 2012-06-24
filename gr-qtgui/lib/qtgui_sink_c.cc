@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -56,7 +56,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 	      gr_make_io_signature (1, -1, sizeof(gr_complex)),
 	      gr_make_io_signature (0, 0, 0)),
     d_fftsize(fftsize),
-    d_wintype((gr_firdes::win_type)(wintype)), 
+    d_wintype((gr_firdes::win_type)(wintype)),
     d_center_freq(fc), d_bandwidth(bw), d_name(name),
     d_plotfreq(plotfreq), d_plotwaterfall(plotwaterfall),
     d_plottime(plottime), d_plotconst(plotconst),
@@ -66,7 +66,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 
   // Perform fftshift operation;
   // this is usually desired when plotting
-  d_shift = true;  
+  d_shift = true;
 
   d_fft = new gri_fft_complex (d_fftsize, true);
 
@@ -113,16 +113,16 @@ qtgui_sink_c::initialize()
   }
 
   uint64_t maxBufferSize = 32768;
-  d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize, 
-				    d_center_freq, 
-				    -d_bandwidth/2.0, 
+  d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize,
+				    d_center_freq,
+				    -d_bandwidth/2.0,
 				    d_bandwidth/2.0);
 
   d_main_gui->SetDisplayTitle(d_name);
   d_main_gui->SetFFTSize(d_fftsize);
   d_main_gui->SetWindowType((int)d_wintype);
 
-  d_main_gui->OpenSpectrumWindow(d_parent, 
+  d_main_gui->OpenSpectrumWindow(d_parent,
 				 d_plotfreq, d_plotwaterfall,
 				 d_plottime, d_plotconst);
 
@@ -155,12 +155,12 @@ qtgui_sink_c::pyqwidget()
 }
 
 void
-qtgui_sink_c::set_frequency_range(const double centerfreq, 
+qtgui_sink_c::set_frequency_range(const double centerfreq,
 				  const double bandwidth)
 {
   d_center_freq = centerfreq;
   d_bandwidth = bandwidth;
-  d_main_gui->SetFrequencyRange(d_center_freq, 
+  d_main_gui->SetFrequencyRange(d_center_freq,
 				-d_bandwidth/2.0,
 				d_bandwidth/2.0);
 }
@@ -178,7 +178,7 @@ qtgui_sink_c::set_constellation_axis(double xmin, double xmax,
   d_main_gui->SetConstellationAxis(xmin, xmax, ymin, ymax);
 }
 
-void 
+void
 qtgui_sink_c::set_constellation_pen_size(int size)
 {
   d_main_gui->SetConstellationPenSize(size);
@@ -212,10 +212,10 @@ qtgui_sink_c::fft(float *data_out, const gr_complex *data_in, int size)
   volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(), size, 1.0, size);
 }
 
-void 
+void
 qtgui_sink_c::windowreset()
 {
-  gr_firdes::win_type newwintype = (gr_firdes::win_type)d_main_gui->GetWindowType();  
+  gr_firdes::win_type newwintype = (gr_firdes::win_type)d_main_gui->GetWindowType();
   if(d_wintype != newwintype) {
     d_wintype = newwintype;
     buildwindow();
@@ -249,7 +249,7 @@ qtgui_sink_c::fftresize()
     // (throws away any currently held data, but who cares?) 
     d_fftsize = newfftsize;
     d_index = 0;
-    
+
     // Reset window to reflect new size
     buildwindow();
 
@@ -288,7 +288,7 @@ qtgui_sink_c::general_work (int noutput_items,
     // If we have enough input for one full FFT, do it
     if(datasize >= resid) {
       const gruel::high_res_timer_type currentTime = gruel::high_res_timer_now();
-      
+
       // Fill up residbuf with d_fftsize number of items
       memcpy(d_residbuf+d_index, &in[j], sizeof(gr_complex)*resid);
       d_index = 0;
@@ -306,7 +306,7 @@ qtgui_sink_c::general_work (int noutput_items,
       memcpy(d_residbuf+d_index, &in[j], sizeof(gr_complex)*datasize);
       d_index += datasize;
       j += datasize;
-    }   
+    }
   }
 
   consume_each(j);

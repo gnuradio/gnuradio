@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2003,2004,2006,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, gru, eng_notation
 from gnuradio.wxgui import stdgui2
@@ -42,7 +42,7 @@ class scope_sink_f(gr.hier_block2):
 
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
         self.guts = gr.oscope_sink_f(sample_rate, msgq)
-        for i in range(num_inputs):        
+        for i in range(num_inputs):
           self.connect((self, i), (self.guts, i))
 
         self.win = scope_window(win_info (msgq, sample_rate, frame_decim,
@@ -63,16 +63,16 @@ class scope_sink_c(gr.hier_block2):
 
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
         self.guts = gr.oscope_sink_f(sample_rate, msgq)
-        for i in range(num_inputs):      
-	        c2f = gr.complex_to_float()  
+        for i in range(num_inputs):
+	        c2f = gr.complex_to_float()
 	        self.connect((self, i), c2f)
 	        self.connect((c2f, 0), (self.guts, 2*i+0))
 	        self.connect((c2f, 1), (self.guts, 2*i+1))
-        
+
         self.win = scope_window(win_info(msgq, sample_rate, frame_decim,
                                          v_scale, t_scale, self.guts, title), parent)
         self.win.info.xy = xy_mode
-        
+
     def set_sample_rate(self, sample_rate):
         self.guts.set_sample_rate(sample_rate)
         self.win.info.set_sample_rate(sample_rate)
@@ -132,7 +132,7 @@ v_scale_list = [ # counts / div, LARGER gains are SMALLER /div, appear EARLIER
     1.0e+4 # 10000 /div, USRP full scale is -/+ 32767
     ]
 
-    
+
 wxDATA_EVENT = wx.NewEventType()
 
 def EVT_DATA_EVENT(win, func):
@@ -144,12 +144,12 @@ class DataEvent(wx.PyEvent):
         self.SetEventType (wxDATA_EVENT)
         self.data = data
 
-    def Clone (self): 
+    def Clone (self):
         self.__class__ (self.GetId())
 
 
 class win_info (object):
-    __slots__ = ['msgq', 'sample_rate', 'frame_decim', 'v_scale', 
+    __slots__ = ['msgq', 'sample_rate', 'frame_decim', 'v_scale',
                  'scopesink', 'title',
                  'time_scale_cursor', 'v_scale_cursor', 'marker', 'xy',
                  'autorange', 'running']
@@ -178,7 +178,7 @@ class win_info (object):
 
     def set_sample_rate(self, sample_rate):
         self.sample_rate = sample_rate
-        
+
     def get_sample_rate (self):
         return self.sample_rate
 
@@ -202,31 +202,31 @@ class input_watcher (gru.msgq_runner):
     def handle_msg(self, msg):
         if self.iscan == 0:            # only display at frame_decim
             self.iscan = self.frame_decim
-            
+
             nchan = int(msg.arg1())    # number of channels of data in msg
             nsamples = int(msg.arg2()) # number of samples in each channel
-            
+
             s = msg.to_string()      # get the body of the msg as a string
-            
+
             bytes_per_chan = nsamples * gr.sizeof_float
-            
+
             records = []
             for ch in range (nchan):
-                
+
                 start = ch * bytes_per_chan
                 chan_data = s[start:start+bytes_per_chan]
                 rec = numpy.fromstring (chan_data, numpy.float32)
                 records.append (rec)
-            
+
             # print "nrecords = %d, reclen = %d" % (len (records),nsamples)
-            
+
             de = DataEvent (records)
             wx.PostEvent (self.event_receiver, de)
             records = []
             del de
 
         self.iscan -= 1
-    
+
 
 class scope_window (wx.Panel):
 
@@ -248,7 +248,7 @@ class scope_window (wx.Panel):
         self.SetAutoLayout (True)
         self.sizer.Fit (self)
         self.set_autorange(self.info.autorange)
-        
+
 
     # second row of control buttons etc. appears BELOW control_box
     def make_control2_box (self):
@@ -339,14 +339,14 @@ class scope_window (wx.Panel):
         ctrlbox.Add (self.xy_choice, 0, wx.ALIGN_CENTER)
 
         return ctrlbox
-    
+
     _marker_choices = ['line', 'plus', 'dot']
 
     def update_timebase_label (self):
         time_per_div = self.info.get_time_per_div ()
         s = ' ' + eng_notation.num_to_str (time_per_div) + 's/div'
         self.time_base_label.SetLabel (s)
-        
+
     def decr_timebase (self, evt):
         self.info.time_scale_cursor.prev ()
         self.update_timebase_label ()
@@ -359,7 +359,7 @@ class scope_window (wx.Panel):
         volts_per_div = self.info.get_volts_per_div ()
         s = ' ' + eng_notation.num_to_str (volts_per_div) + '/div' # Not V/div
         self.v_scale_label.SetLabel (s)
-        
+
     def decr_v_scale (self, evt):
         self.info.v_scale_cursor.prev ()
         self.update_v_scale_label ()
@@ -367,7 +367,7 @@ class scope_window (wx.Panel):
     def incr_v_scale (self, evt):
         self.info.v_scale_cursor.next ()
         self.update_v_scale_label ()
-        
+
     def marker_choice_event (self, evt):
         s = evt.GetString ()
         self.set_marker (s)
@@ -388,13 +388,13 @@ class scope_window (wx.Panel):
             self.autorange_checkbox.SetValue(False)
             self.inc_v_button.Enable(True)
             self.dec_v_button.Enable(True)
-            
+
     def autorange_checkbox_event(self, evt):
         if evt.Checked():
             self.set_autorange(True)
         else:
             self.set_autorange(False)
-            
+
     def set_marker (self, s):
         self.info.set_marker (s)        # set info for drawing routines
         i = self.marker_choice.FindString (s)
@@ -409,7 +409,7 @@ class scope_window (wx.Panel):
 
     def set_format_plus (self):
         self.set_marker ('plus')
-        
+
     def xy_choice_event (self, evt):
         s = evt.GetString ()
         self.info.xy = s == 'X:Y'
@@ -430,19 +430,19 @@ class scope_window (wx.Panel):
             sink.set_trigger_mode (gr.gr_TRIG_MODE_FREE)
         else:
             assert 0, "Bad trig_mode_choice string"
-    
+
     def set_trig_level50 (self, evt):
         self.info.scopesink.set_trigger_level_auto ()
 
     def run_stop (self, evt):
         self.info.running = not self.info.running
-        
+
 
 class graph_window (plot.PlotCanvas):
 
     channel_colors = ['BLUE', 'RED',
                       'CYAN', 'MAGENTA', 'GREEN', 'YELLOW']
-    
+
     def __init__ (self, info, parent, id = -1,
                   pos = wx.DefaultPosition, size = (640, 240),
                   style = wx.DEFAULT_FRAME_STYLE, name = ""):
@@ -453,7 +453,7 @@ class graph_window (plot.PlotCanvas):
         self.SetEnableZoom (True)
         self.SetEnableLegend(True)
         # self.SetBackgroundColour ('black')
-        
+
         self.info = info;
         self.y_range = None
         self.x_range = None
@@ -468,11 +468,11 @@ class graph_window (plot.PlotCanvas):
 
     def channel_color (self, ch):
         return self.channel_colors[ch % len(self.channel_colors)]
-       
+
     def format_data (self, evt):
         if not self.info.running:
             return
-        
+
         if self.info.xy:
             self.format_xy_data (evt)
             return
@@ -545,7 +545,7 @@ class graph_window (plot.PlotCanvas):
         points = numpy.zeros ((len(records[0]), 2), numpy.float32)
         points[:,0] = records[0]
         points[:,1] = records[1]
-        
+
         self.SetXUseScopeTicks (False)
 
         m = info.get_marker ()
@@ -607,7 +607,7 @@ class test_top_block (stdgui2.std_top_block):
         stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         if len(argv) > 1:
-            frame_decim = int(argv[1]) 
+            frame_decim = int(argv[1])
         else:
             frame_decim = 1
 
@@ -622,7 +622,7 @@ class test_top_block (stdgui2.std_top_block):
             t_scale = None  # old behavior
 
         print "frame decim %s  v_scale %s  t_scale %s" % (frame_decim,v_scale,t_scale)
-            
+
         input_rate = 1e6
 
         # Generate a complex sinusoid
@@ -639,7 +639,7 @@ class test_top_block (stdgui2.std_top_block):
 
         # Ultimately this will be
         # self.connect("src0 throttle scope")
-	self.connect(self.src0, self.thr, scope) 
+	self.connect(self.src0, self.thr, scope)
 
 def main ():
     app = stdgui2.stdapp (test_top_block, "O'Scope Test App")

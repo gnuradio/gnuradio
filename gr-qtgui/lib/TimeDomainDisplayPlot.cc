@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -68,7 +68,7 @@ public:
   virtual ~TimeDomainDisplayZoomer(){
 
   }
-  
+
   virtual void updateTrackerText(){
     updateDisplay();
   }
@@ -115,7 +115,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 #else
   QwtPainter::setPolylineSplitting(false);
 #endif
-  
+
 #if QWT_VERSION < 0x060000
   // We don't need the cache here
   canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
@@ -124,7 +124,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
-  canvas()->setPalette(palette);  
+  canvas()->setPalette(palette);
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   setXaxis(0, _numPoints);
@@ -155,7 +155,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 #else
     _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
 #endif
-}
+  }
 
   _sampleRate = 1;
   _resetXAxisPoints();
@@ -200,7 +200,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   legendDisplay->setItemMode(QwtLegend::CheckableItem);
   insertLegend(legendDisplay);
 
-  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ), 
+  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ),
 	  this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
@@ -272,7 +272,7 @@ void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
 	_plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
 #endif
       }
-      
+
       setXaxis(0, numDataPoints);
       _resetXAxisPoints();
     }
@@ -306,6 +306,7 @@ void TimeDomainDisplayPlot::_resetXAxisPoints()
 void TimeDomainDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
   plotItem->setVisible(!on);
+  replot();
 }
 
 void
@@ -316,7 +317,7 @@ TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
   if(newsr != _sampleRate) {
     _sampleRate = sr/units;
     _resetXAxisPoints();
-    
+
     // While we could change the displayed sigfigs based on the unit being
     // displayed, I think it looks better by just setting it to 4 regardless.
     //double display_units = ceil(log10(units)/2.0);

@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr
 import sys
@@ -111,7 +111,7 @@ class control_box(QtGui.QWidget):
         except ValueError:
             print "Bad amplitude value entered"
 
-        
+
     def freq2EditText(self):
         try:
             newfreq = float(self.freq2Edit.text())
@@ -138,7 +138,7 @@ class my_top_block(gr.top_block):
         fftsize = 2048
 
         self.qapp = QtGui.QApplication(sys.argv)
-        
+
         src1 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
         src  = gr.add_cc()
@@ -167,10 +167,10 @@ class my_top_block(gr.top_block):
         self.main_box = dialog_box(pyWin, self.ctrl_win)
 
         self.main_box.show()
-        
+
 if __name__ == "__main__":
     tb = my_top_block();
     tb.start()
     tb.qapp.exec_()
     tb.stop()
-    
+

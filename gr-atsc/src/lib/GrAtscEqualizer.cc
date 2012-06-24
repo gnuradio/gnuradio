@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -28,7 +28,7 @@
 typedef float		dataType;
 typedef atsc::syminfo	tagType;
 
-static const int NUMBER_OF_OUTPUTS = 2;	// # of output streams 
+static const int NUMBER_OF_OUTPUTS = 2;	// # of output streams
 
 
 GrAtscEqualizer::GrAtscEqualizer (atsci_equalizer *equalizer)
@@ -36,7 +36,7 @@ GrAtscEqualizer::GrAtscEqualizer (atsci_equalizer *equalizer)
 {
   // due to limitation of runtime, all inputs must be the same size
   assert (sizeof (dataType) == sizeof (tagType));
-  
+
   d_equalizer = equalizer;
 
   // 1 + number of extra input elements at which we look.  This is
@@ -63,19 +63,19 @@ GrAtscEqualizer::~GrAtscEqualizer ()
 
 int
 GrAtscEqualizer::forecast (VrSampleRange output,
-			   VrSampleRange inputs[]) 
+			   VrSampleRange inputs[])
 {
   assert (numberInputs == 2);
-  
+
   int ntaps = d_equalizer->ntaps ();
   int npretaps = d_equalizer->npretaps ();
-  
+
   assert (ntaps >= 1);
   assert (npretaps >= 0 && npretaps < ntaps);
-  
+
   inputs[0].index = output.index;		// the equalizer data
   inputs[0].size  = output.size + ntaps - 1;	// history on data
-  
+
   // FIXME if there's a problem, it's probably on the next line...
   int offset = ntaps - npretaps - 1;
 
@@ -85,19 +85,19 @@ GrAtscEqualizer::forecast (VrSampleRange output,
   inputs[1].size = output.size;			// N.B., no extra history on tags
 
   return 0;
-}  
+}
 
 /*
  * This is the real work horse.  We consume 2 input streams
  * and produce 2 output streams.
  */
 
-int 
+int
 GrAtscEqualizer::work (VrSampleRange output, void *ao[],
 		       VrSampleRange inputs[], void *ai[])
 {
   // assert (numberInputs == 2);
-  
+
   // If we have state that persists across invocations (e.g., we have
   // instance variables that we modify), we must use the sync method
   // to indicate to the scheduler that our output must be computed in

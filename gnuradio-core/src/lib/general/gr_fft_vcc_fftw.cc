@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2007,2008,2010 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -79,15 +79,15 @@ gr_fft_vcc_fftw::work (int noutput_items,
   int count = 0;
 
   while (count++ < noutput_items){
-    
+
     // copy input into optimally aligned buffer
-    
+
     if (d_window.size()){
       gr_complex *dst = d_fft->get_inbuf();
       if(!d_forward && d_shift){
         unsigned int offset = (!d_forward && d_shift)?(d_fft_size/2):0;
         int fft_m_offset = d_fft_size - offset;
-        for (int i = 0; i < offset; i++)		// apply window
+        for (unsigned int i = 0; i < offset; i++)		// apply window
             dst[i+fft_m_offset] = in[i] * d_window[i];
         for (unsigned int i = offset; i < d_fft_size; i++)		// apply window
             dst[i-offset] = in[i] * d_window[i];
@@ -107,10 +107,10 @@ gr_fft_vcc_fftw::work (int noutput_items,
 	memcpy (d_fft->get_inbuf(), in, input_data_size);
       }
     }
-    
+
     // compute the fft
     d_fft->execute ();
-    
+
     // copy result to our output
     if(d_forward && d_shift) {  // apply a fft shift on the data
       unsigned int len = (unsigned int)(ceil(d_fft_size/2.0));
@@ -120,11 +120,11 @@ gr_fft_vcc_fftw::work (int noutput_items,
     else {
       memcpy (out, d_fft->get_outbuf (), output_data_size);
     }
-    
+
     in  += d_fft_size;
     out += d_fft_size;
   }
-  
+
   return noutput_items;
 }
 

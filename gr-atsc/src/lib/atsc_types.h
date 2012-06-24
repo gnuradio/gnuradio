@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2001,2006 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -33,7 +33,7 @@
  *
  * Not all modules need all the info
  */
-class plinfo {	
+class plinfo {
 public:
   plinfo () : _flags (0), _segno (0) { }
 
@@ -108,7 +108,7 @@ public:
    * confirm that \p X is plausible
    */
   static void sanity_check (const plinfo &in);
-  
+
 
 protected:
   unsigned short	_flags;		// bitmask
@@ -213,7 +213,7 @@ class atsc_data_segment {
 
 /*!
  * Contains 832 bipolar floating point symbols.
- * Nominal values are +/- {1, 3, 5, 7}.  
+ * Nominal values are +/- {1, 3, 5, 7}.
  * This data type represents the input to the viterbi decoder.
  */
 

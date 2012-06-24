@@ -1,34 +1,34 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 # This code lifted from various parts of www.scipy.org -eb 2005-01-24
 
 # Copyright (c) 2001, 2002 Enthought, Inc.
-# 
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 #   a. Redistributions of source code must retain the above copyright notice,
 #      this list of conditions and the following disclaimer.
 #   b. Redistributions in binary form must reproduce the above copyright
@@ -37,8 +37,8 @@
 #   c. Neither the name of the Enthought nor the names of its contributors
 #      may be used to endorse or promote products derived from this software
 #      without specific prior written permission.
-# 
-# 
+#
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -50,7 +50,7 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 # DAMAGE.
-# 
+#
 
 __all__ = ['freqz']
 
@@ -62,7 +62,7 @@ def atleast_1d(*arys):
     """ Force a sequence of arrays to each be at least 1D.
 
          Description:
-            Force an array to be at least 1D.  If an array is 0D, the 
+            Force an array to be at least 1D.  If an array is 0D, the
             array is converted to a single row of values.  Otherwise,
             the array is unaltered.
          Arguments:
@@ -73,7 +73,7 @@ def atleast_1d(*arys):
     res = []
     for ary in arys:
         ary = asarray(ary)
-        if len(ary.shape) == 0: 
+        if len(ary.shape) == 0:
             result = numpy.array([ary[0]])
         else:
             result = ary
@@ -147,7 +147,7 @@ class poly1d:
 
     def __coerce__(self,other):
         return None
-    
+
     def __repr__(self):
         vals = repr(self.coeffs)
         vals = vals[6:-1]
@@ -177,14 +177,14 @@ class poly1d:
                     newstr = ''
                 elif coefstr == '1':
                     newstr = 'x'
-                else:                    
+                else:
                     newstr = '%s x' % (coefstr,)
             else:
                 if coefstr == '0':
                     newstr = ''
                 elif coefstr == '1':
                     newstr = 'x**%d' % (power,)
-                else:                    
+                else:
                     newstr = '%s x**%d' % (coefstr, power)
 
             if k > 0:
@@ -198,7 +198,7 @@ class poly1d:
             else:
                 thestr = newstr
         return _raise_power(thestr)
-        
+
 
     def __call__(self, val):
         return polyval(self.coeffs, val)
@@ -215,12 +215,12 @@ class poly1d:
             return poly1d(other * self.coeffs)
         else:
             other = poly1d(other)
-            return poly1d(polymul(self.coeffs, other.coeffs))        
-    
+            return poly1d(polymul(self.coeffs, other.coeffs))
+
     def __add__(self, other):
         other = poly1d(other)
-        return poly1d(polyadd(self.coeffs, other.coeffs))        
-        
+        return poly1d(polyadd(self.coeffs, other.coeffs))
+
     def __radd__(self, other):
         other = poly1d(other)
         return poly1d(polyadd(self.coeffs, other.coeffs))
@@ -267,7 +267,7 @@ class poly1d:
             return self.order
         else:
             return self.__dict__[key]
-        
+
     def __getitem__(self, val):
         ind = self.order - val
         if val > self.order:
@@ -306,7 +306,7 @@ def freqz(b, a, worN=None, whole=0, plot=None):
            jw  B(e)    b[0] + b[1]e + .... + b[m]e
         H(e) = ---- = ------------------------------------
                   jw               -jw            -jnw
-               A(e)    a[0] + a[2]e + .... + a[n]e             
+               A(e)    a[0] + a[2]e + .... + a[n]e
 
     Inputs:
 

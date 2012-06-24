@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2008,2010 Free Software Foundation, Inc.
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -25,7 +25,7 @@
 #include <gr_decode_ccsds_27_fb.h>
 #include <gr_io_signature.h>
 
-gr_decode_ccsds_27_fb_sptr 
+gr_decode_ccsds_27_fb_sptr
 gr_make_decode_ccsds_27_fb()
 {
   return gnuradio::get_initial_sptr(new gr_decode_ccsds_27_fb());
@@ -49,7 +49,7 @@ gr_decode_ccsds_27_fb::~gr_decode_ccsds_27_fb()
 {
 }
 
-int 
+int
 gr_decode_ccsds_27_fb::work(int noutput_items,
 			    gr_vector_const_void_star &input_items,
 			    gr_vector_void_star &output_items)
@@ -65,20 +65,20 @@ gr_decode_ccsds_27_fb::work(int noutput_items,
     else if (sample < 0.0)
 	sample = 0.0;
     unsigned char sym = (unsigned char)(floor(sample));
-    
+
     d_viterbi_in[d_count % 4] = sym;
     if ((d_count % 4) == 3) {
       // Every fourth symbol, perform butterfly operation
       viterbi_butterfly2(d_viterbi_in, d_mettab, d_state0, d_state1);
-      
+
       // Every sixteenth symbol, read out a byte
       if (d_count % 16 == 11) {
-	// long metric = 
+	// long metric =
 	viterbi_get_output(d_state0, out++);
 	// printf("%li\n", *(out-1), metric);
       }
     }
-    
+
     d_count++;
   }
 
