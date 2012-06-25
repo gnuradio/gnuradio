@@ -55,6 +55,7 @@
 #include "blocks/divide_cc.h"
 #include "blocks/float_to_char.h"
 #include "blocks/float_to_complex.h"
+#include "blocks/float_to_int.h"
 #include "blocks/multiply_ss.h"
 #include "blocks/multiply_ii.h"
 #include "blocks/multiply_ff.h"
@@ -100,6 +101,7 @@
 %include "blocks/divide_cc.h"
 %include "blocks/float_to_char.h"
 %include "blocks/float_to_complex.h"
+%include "blocks/float_to_int.h"
 %include "blocks/multiply_ss.h"
 %include "blocks/multiply_ii.h"
 %include "blocks/multiply_ff.h"
@@ -144,6 +146,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_complex);
+GR_SWIG_BLOCK_MAGIC2(blocks, float_to_int);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ff);

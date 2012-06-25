@@ -38,7 +38,7 @@
 		<block>blocks_sub_xx</block>
 	</cat>
 	<cat>
-	        <name>Type Conversions</name>
+	        <name>Stream Type Conversions</name>
 		<block>blocks_char_to_float</block>
 		<block>blocks_char_to_short</block>
 		<block>blocks_complex_to_interleaved_short</block>
@@ -48,7 +48,8 @@
 		<block>blocks_complex_to_mag</block>
 		<block>blocks_complex_to_mag_squared</block>
 		<block>blocks_complex_to_arg</block>
-		<block>float_to_char</block>
-		<block>float_to_complex</block>
+		<block>blocks_float_to_char</block>
+		<block>blocks_float_to_complex</block>
+		<block>blocks_float_to_int</block>
 	</cat>
 </cat>

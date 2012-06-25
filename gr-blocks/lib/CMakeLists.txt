@@ -77,7 +77,7 @@ macro(expand_cc_h_impl root)
   set_source_files_properties(${expanded_files_h_impl}
     PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
   )
-  
+
   #install rules for the generated cc files
   list(APPEND generated_sources ${expanded_files_cc_impl})  
 endmacro(expand_cc_h_impl)
@@ -129,6 +129,8 @@ list(APPEND gr_blocks_sources
     complex_to_arg_impl.cc
     float_to_char_impl.cc
     float_to_complex_impl.cc
+    float_array_to_int.cc
+    float_to_int_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
     multiply_const_cc_impl.cc
