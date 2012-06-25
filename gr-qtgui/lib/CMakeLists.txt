@@ -23,6 +23,7 @@
 set(qtgui_moc_hdrs
     spectrumdisplayform.h
     timedisplayform.h
+    form_menus.h
     FrequencyDisplayPlot.h
     TimeDomainDisplayPlot.h
     WaterfallDisplayPlot.h
@@ -104,6 +105,7 @@ install(FILES
     plot_waterfall.h
     spectrumdisplayform.h
     timedisplayform.h
+    form_menus.h
     SpectrumGUIClass.h
     spectrumUpdateEvents.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
