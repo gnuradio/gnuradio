@@ -88,18 +88,20 @@ private:
   int						d_pending_flag;
 
   void enter_idle();
-  void enter_preamble();
   void enter_first_payload();
   void enter_payload();
   
 
 public:
   ~digital_ofdm_insert_preamble();
+  void enter_preamble();
 
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);
+  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+
 };
 
 #endif /* INCLUDED_DIGITAL_OFDM_INSERT_PREAMBLE_H */

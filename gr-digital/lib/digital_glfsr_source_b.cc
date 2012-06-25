@@ -26,7 +26,7 @@
 #endif
 
 #include <digital_glfsr_source_b.h>
-#include <gri_glfsr.h>
+#include <digital_impl_glfsr.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 
@@ -50,8 +50,8 @@ digital_glfsr_source_b::digital_glfsr_source_b(int degree, bool repeat,
   d_length = (unsigned int)((1ULL << degree)-1);
 
   if (mask == 0)
-    mask = gri_glfsr::glfsr_mask(degree);
-  d_glfsr = new gri_glfsr(mask, seed);
+    mask = digital_impl_glfsr::glfsr_mask(degree);
+  d_glfsr = new digital_impl_glfsr(mask, seed);
 }
 
 digital_glfsr_source_b::~digital_glfsr_source_b()

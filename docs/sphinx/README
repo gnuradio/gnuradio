@@ -48,7 +48,7 @@ examples.
    under the "Slicing and Dicing Streams" subheading.
    Edit file gnuradio/docs/sphinx/source/gr/slicedice_blk.rst and add
    the line
-   >.. autoblock:: gnuradio.gr.myslicer
+   >.. autooldblock:: gnuradio.gr.myslicer
 
 2) Adding a new python hierarchical block gnuradio.digital.mymod
    Edit file gnruadio/docs/sphinx/source/digital/index.rst and add the
@@ -63,7 +63,10 @@ examples.
    a python hierarchical signal processing block so that it can format
    it appropriately.
 
-The process for documenting objects that are not signal processing blocks is
-similar but rather than using the 'autoblock' and 'autopyblock' directives
-the standard sphinx directives such as 'autofunction' and 'autoclass' can
-be used.
+The process for documenting objects that are not signal processing
+blocks is similar but rather than using the 'autooldblock', and
+'autopyblock' directives the standard sphinx directives such as
+'autofunction' and 'autoclass' can be used.
+
+Finally for signal processing blocks using the 3.7 style the directive
+'autoblock' rather than 'autooldblock' can be used.

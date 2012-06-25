@@ -13,7 +13,6 @@
 		<block>gr_noise_source_x</block>
 		<block>gr_vector_source_x</block>
 		<block>random_source_x</block>
-		<block>gr_glfsr_source_x</block>
 		<block>gr_null_source</block>
 		<block>gr_file_source</block>
 		<block>blks2_tcp_source</block>
@@ -34,6 +33,7 @@
 		<block>gr_message_sink</block>
 		<block>pad_sink</block>
 		<block>virtual_sink</block>
+		<block>gr_tag_debug</block>
 	</cat>
 	<cat>
 		<name>Operators</name>
@@ -61,6 +61,7 @@
 
 		<block>gr_fft_vxx</block>
 		<block>blks2_logpwrfft_x</block>
+		<block>gr_vector_insert_x</block>
 	</cat>
 	<cat>
 		<name>Type Conversions</name>
@@ -114,8 +115,7 @@
 		<block>gr_unpacked_to_packed_xx</block>
 		<block>gr_packed_to_unpacked_xx</block>
 		<block>gr_unpack_k_bits_bb</block>
-		<block>gr_chunks_to_symbols_xx</block>
-		<block>gr_map_bb</block>
+		<block>gr_pack_k_bits_bb</block>
 	</cat>
 	<cat>
 		<name>Synchronizers</name>
@@ -127,9 +127,7 @@
 		<block>gr_pll_freqdet_cf</block>
 		<block>gr_pll_refout_cc</block>
 
-		<block>gr_pn_correlator_cc</block>
 		<block>gr_simple_correlator</block>
-		<block>gr_simple_framer</block>
 
 		<block>blks2_packet_decoder</block>
 		<block>blks2_packet_encoder</block>
@@ -183,6 +181,7 @@
 		<block>blks2_rational_resampler_xxx</block>
 		<block>gr_fractional_interpolator_xx</block>
 		<block>gr_keep_one_in_n</block>
+		<block>gr_keep_m_in_n</block>
 		<block>gr_moving_average_xx</block>
 		<block>gr_iqcomp_cc</block>
 		<block>gr_dc_blocker</block>
@@ -194,11 +193,6 @@
 		<block>gr_phase_modulator_fc</block>
 		<block>gr_quadrature_demod_cf</block>
 		<block>gr_cpfsk_bc</block>
-
-		<block>gr_diff_phasor_cc</block>
-
-		<block>gr_diff_encoder_bb</block>
-		<block>gr_diff_decoder_bb</block>
 
 		<block>blks2_wfm_tx</block>
 		<block>blks2_wfm_rcv</block>
@@ -222,15 +216,8 @@
 		<block>gr_decode_ccsds_27_fb</block>
 	</cat>
 	<cat>
-		<name>Line Coding</name>
-		<block>gr_scrambler_bb</block>
-		<block>gr_descrambler_bb</block>
-		<block>gr_additive_scrambler_bb</block>
-	</cat>
-	<cat>
 		<name>Probes</name>
 		<block>gr_probe_avg_mag_sqrd_x</block>
-		<block>gr_probe_density_b</block>
 		<block>gr_probe_signal_f</block>
 	</cat>
 	<cat>

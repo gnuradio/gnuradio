@@ -89,7 +89,7 @@ def run_test(seed,blocksize):
 	# Blocks
 	##################################################
 	random_source_x_0 = gr.vector_source_b(data.tolist(), False)
-	gr_chunks_to_symbols_xx_0 = gr.chunks_to_symbols_bf((-1, 1), 1)
+	digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bf((-1, 1), 1)
 	gr_interp_fir_filter_xxx_0 = gr.interp_fir_filter_fff(Q, p)
 	gr_frequency_modulator_fc_0 = gr.frequency_modulator_fc(2*math.pi*h*(1.0/Q))
 
@@ -111,8 +111,8 @@ def run_test(seed,blocksize):
 	##################################################
 	# Connections
 	##################################################
-	tb.connect((random_source_x_0, 0), (gr_chunks_to_symbols_xx_0, 0))
-	tb.connect((gr_chunks_to_symbols_xx_0, 0), (gr_interp_fir_filter_xxx_0, 0))
+	tb.connect((random_source_x_0, 0), (digital_chunks_to_symbols_xx_0, 0))
+	tb.connect((digital_chunks_to_symbols_xx_0, 0), (gr_interp_fir_filter_xxx_0, 0))
 	tb.connect((gr_interp_fir_filter_xxx_0, 0), (gr_frequency_modulator_fc_0, 0))
 	tb.connect((gr_frequency_modulator_fc_0, 0), (gr_add_vxx_0, 0))
 	tb.connect((gr_noise_source_x_0, 0), (gr_add_vxx_0, 1))

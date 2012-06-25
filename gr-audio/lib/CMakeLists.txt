@@ -150,4 +150,4 @@ add_library(gnuradio-audio SHARED ${gr_audio_sources})
 target_link_libraries(gnuradio-audio ${gr_audio_libs})
 GR_LIBRARY_FOO(gnuradio-audio RUNTIME_COMPONENT "audio_runtime" DEVEL_COMPONENT "audio_devel")
 
-install(FILES ${gr_audio_confs} DESTINATION ${GR_PKG_CONF_DIR} COMPONENT "audio_runtime")
+install(FILES ${gr_audio_confs} DESTINATION ${GR_PREFSDIR} COMPONENT "audio_runtime")

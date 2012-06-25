@@ -44,8 +44,8 @@ digital_pn_correlator_cc::digital_pn_correlator_cc(int degree,
 {
   d_len = (unsigned int)((1ULL << degree)-1);
   if (mask == 0)
-    mask = gri_glfsr::glfsr_mask(degree);
-  d_reference = new gri_glfsr(mask, seed);
+    mask = digital_impl_glfsr::glfsr_mask(degree);
+  d_reference = new digital_impl_glfsr(mask, seed);
   for (int i = 0; i < d_len; i++)	// initialize to last value in sequence
     d_pn = 2.0*d_reference->next_bit()-1.0;
 }

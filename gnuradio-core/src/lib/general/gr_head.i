@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,5 +28,6 @@ class gr_head : public gr_block {
   gr_head();
 public:
   void reset();
+  void set_length(int nitems);
 };
 

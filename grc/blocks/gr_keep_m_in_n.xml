@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Keep M in N
+###################################################
+ -->
+<block>
+	<name>Keep M in N</name>
+	<key>gr_keep_m_in_n</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.keep_m_in_n($type.size, $m, $n, $offset)</make>
+    <callback>set_offset($offset)</callback>
+    <callback>set_m($m)</callback>
+    <callback>set_n($n)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>M</name>
+		<key>m</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>N</name>
+		<key>n</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>initial offset</name>
+		<key>offset</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<check>$n &gt; 0</check>
+	<check>$m &gt; 0</check>
+	<check>$m &lt; $n</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>1</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>1</vlen>
+	</source>
+</block>

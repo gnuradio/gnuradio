@@ -75,7 +75,7 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
-    DESTINATION ${GR_PKG_CONF_DIR}
+    DESTINATION ${GR_PREFSDIR}
     COMPONENT "grc"
 )
 

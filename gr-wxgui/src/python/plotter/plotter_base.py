@@ -189,7 +189,10 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
                 if self.use_persistence:
                   if self.clear_accum:
                     #GL.glClear(GL.GL_ACCUM_BUFFER_BIT)
-                    GL.glAccum(GL.GL_LOAD, 1.0)
+                    try:
+                        GL.glAccum(GL.GL_LOAD, 1.0)
+                    except:
+						pass
                     self.clear_accum=False
 
                   GL.glAccum(GL.GL_MULT, 1.0-self.persist_alpha)

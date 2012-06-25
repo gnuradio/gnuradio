@@ -19,7 +19,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
     s2fsmi=gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
     s2p = gr.stream_to_streams(gr.sizeof_short,P) # serial to parallel
     enc = trellis.encoder_ss(f,0) # initiali state = 0
-    mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
+    mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
     add=[]

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -51,6 +51,7 @@ class GR_CORE_API gr_head : public gr_sync_block
 		 gr_vector_void_star &output_items);
 
   void reset() { d_ncopied_items = 0; }
+  void set_length(int nitems) { d_nitems = nitems; }
 };
 
 GR_CORE_API gr_head_sptr

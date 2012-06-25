@@ -18,12 +18,6 @@
 #include <gr_add_vff.h>
 #include <gr_add_vii.h>
 #include <gr_add_vss.h>
-#include <gr_chunks_to_symbols_bc.h>
-#include <gr_chunks_to_symbols_bf.h>
-#include <gr_chunks_to_symbols_ic.h>
-#include <gr_chunks_to_symbols_if.h>
-#include <gr_chunks_to_symbols_sc.h>
-#include <gr_chunks_to_symbols_sf.h>
 #include <gr_divide_cc.h>
 #include <gr_divide_ff.h>
 #include <gr_divide_ii.h>
@@ -100,12 +94,6 @@
 %include <gr_add_vff.i>
 %include <gr_add_vii.i>
 %include <gr_add_vss.i>
-%include <gr_chunks_to_symbols_bc.i>
-%include <gr_chunks_to_symbols_bf.i>
-%include <gr_chunks_to_symbols_ic.i>
-%include <gr_chunks_to_symbols_if.i>
-%include <gr_chunks_to_symbols_sc.i>
-%include <gr_chunks_to_symbols_sf.i>
 %include <gr_divide_cc.i>
 %include <gr_divide_ff.i>
 %include <gr_divide_ii.i>

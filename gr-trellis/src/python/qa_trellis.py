@@ -114,7 +114,7 @@ class trellis_tb(gr.top_block):
         s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol, gr.GR_MSB_FIRST)
         # initial FSM state = 0
         enc = trellis.encoder_ss(f, 0)
-        mod = gr.chunks_to_symbols_sc(constellation.points(), 1)
+        mod = digital_swig.chunks_to_symbols_sc(constellation.points(), 1)
 
         # CHANNEL
         add = gr.add_cc()

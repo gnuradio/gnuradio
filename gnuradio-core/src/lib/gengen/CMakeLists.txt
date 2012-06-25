@@ -82,13 +82,14 @@ endmacro(expand_h_cc_i)
 # Invoke macro to generate various sources
 ########################################################################
 expand_h_cc_i(gr_vector_source_X   b s i f c)
+expand_h_cc_i(gr_vector_insert_X   b)
 expand_h_cc_i(gr_vector_sink_X     b s i f c)
 expand_h_cc_i(gr_noise_source_X      s i f c)
 expand_h_cc_i(gr_sig_source_X        s i f c)
 expand_h_cc_i(gr_probe_signal_X    b s i f c)
 expand_h_cc_i(gr_probe_signal_vX    b s i f c)
 
-expand_h_cc_i(gr_add_const_XX           ss ii ff cc sf)
+expand_h_cc_i(gr_add_const_XX           bb ss ii ff cc sf)
 expand_h_cc_i(gr_multiply_const_XX      ss ii)
 expand_h_cc_i(gr_add_XX                 ss ii cc)
 expand_h_cc_i(gr_sub_XX                 ss ii ff cc)
@@ -100,7 +101,6 @@ expand_h_cc_i(gr_multiply_const_vXX     ss ii ff cc)
 expand_h_cc_i(gr_integrate_XX           ss ii ff cc)
 expand_h_cc_i(gr_moving_average_XX      ss ii ff cc)
 
-expand_h_cc_i(gr_chunks_to_symbols_XX         bf bc sf sc if ic)
 expand_h_cc_i(gr_unpacked_to_packed_XX        bb ss ii)
 expand_h_cc_i(gr_packed_to_unpacked_XX        bb ss ii)
 expand_h_cc_i(gr_xor_XX                       bb ss ii)

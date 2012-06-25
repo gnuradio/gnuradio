@@ -15,6 +15,7 @@ def setup(sp):
     sp.connect('autodoc-process-signature', fix_signature)
     sp.connect('autodoc-process-docstring', remove_lines)
     # Add node to autodocument signal-processing blocks.
+    sp.add_autodocumenter(OldBlockDocumenter)
     sp.add_autodocumenter(BlockDocumenter)
     sp.add_autodocumenter(PyBlockDocumenter)
 
@@ -105,14 +106,47 @@ common_block_members =[
     'thisown',
     'to_basic_block',
     'unique_id',
+    'make',
     ]
 
-class BlockDocumenter(FunctionDocumenter):
+class OldBlockDocumenter(FunctionDocumenter):
     """
     Specialized Documenter subclass for gnuradio blocks.
 
     It merges together the documentation for the generator function (e.g. gr.head)
     with the wrapped sptr (e.g. gr.gr_head_sptr) to keep the documentation
+    tidier.
+    """
+    objtype = 'oldblock'
+    directivetype = 'function'
+    # Don't want to use this for generic functions for give low priority.
+    priority = -10 
+    
+    def __init__(self, *args, **kwargs):
+        super(OldBlockDocumenter, self).__init__(*args, **kwargs)
+        # Get class name
+        bits = self.name.split('.')
+        if len(bits) != 3 or bits[0] != 'gnuradio':
+            raise ValueError("expected name to be of form gnuradio.x.y but it is {0}".format(self.name)) 
+        sptr_name = 'gnuradio.{0}.{0}_{1}_sptr'.format(bits[1], bits[2])
+        # Create a Class Documenter to create documentation for the classes members.
+        self.classdoccer = ClassDocumenter(self.directive, sptr_name, indent=self.content_indent)
+        self.classdoccer.doc_as_attr = False
+        self.classdoccer.real_modname = self.classdoccer.get_real_modname()
+        self.classdoccer.options.members = ALL
+        self.classdoccer.options.exclude_members = common_block_members
+        self.classdoccer.parse_name()
+        self.classdoccer.import_object()
+
+    def document_members(self, *args, **kwargs):
+        return self.classdoccer.document_members(*args, **kwargs)
+
+class BlockDocumenter(FunctionDocumenter):
+    """
+    Specialized Documenter subclass for new style gnuradio blocks.
+
+    It merges together the documentation for the generator function (e.g. wavelet.squash_ff)
+    with the wrapped sptr (e.g. wavelet.squash_ff_sptr) to keep the documentation
     tidier.
     """
     objtype = 'block'
@@ -123,12 +157,10 @@ class BlockDocumenter(FunctionDocumenter):
     def __init__(self, *args, **kwargs):
         super(BlockDocumenter, self).__init__(*args, **kwargs)
         # Get class name
-        bits = self.name.split('.')
-        if len(bits) != 3 or bits[0] != 'gnuradio':
-            raise ValueError("expected name to be of form gnuradio.x.y but it is {0}".format(self.name)) 
-        sptr_name = 'gnuradio.{0}.{0}_{1}_sptr'.format(bits[1], bits[2])
+        sptr_name = self.name + '_sptr'
         # Create a Class Documenter to create documentation for the classes members.
         self.classdoccer = ClassDocumenter(self.directive, sptr_name, indent=self.content_indent)
+        self.classdoccer.doc_as_attr = False
         self.classdoccer.real_modname = self.classdoccer.get_real_modname()
         self.classdoccer.options.members = ALL
         self.classdoccer.options.exclude_members = common_block_members

@@ -157,14 +157,20 @@ def qam_constellation(constellation_points=_def_constellation_points,
     else:
         raise ValueError("Mod code is not implemented for QAM")
     if differential:
-        points = make_differential_constellation(constellation_points, gray_coded)
+        points = make_differential_constellation(constellation_points, gray_coded=False)
     else:
         points = make_non_differential_constellation(constellation_points, gray_coded)
     side = int(sqrt(constellation_points))
     width = 2.0/(side-1)
-    # No pre-diff code
-    # Should add one so that we can gray-code the quadrant bits too.
-    pre_diff_code = []
+    # For differential and gray-coded then gray-code the first two
+    # bits with a pre_diff_code.
+    # FIXME: It would be good to have a test to make sure that gray-coded constellations
+    # are really gray-coded.  Perhaps by checking on the correlation between bit-errors.
+    if differential and gray_coded:
+        m = constellation_points
+        pre_diff_code = range(0, m/2) + range(3*m/4, m) + range(m/2, 3*m/4)
+    else:
+        pre_diff_code = []
     constellation = digital_swig.constellation_rect(points, pre_diff_code, 4,
                                                     side, side, width, width)
     return constellation
