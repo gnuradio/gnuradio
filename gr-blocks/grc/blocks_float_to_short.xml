@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Float to Short:
+###################################################
+ -->
+<block>
+	<name>Float To Short</name>
+	<key>blocks_float_to_short</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.float_to_short($vlen, $scale)</make>
+	<callback>set_scale($scale)</callback>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Scale</name>
+		<key>scale</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>short</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

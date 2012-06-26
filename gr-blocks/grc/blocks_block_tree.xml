@@ -51,5 +51,6 @@
 		<block>blocks_float_to_char</block>
 		<block>blocks_float_to_complex</block>
 		<block>blocks_float_to_int</block>
+		<block>blocks_float_to_short</block>
 	</cat>
 </cat>
