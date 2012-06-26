@@ -512,4 +512,33 @@ FrequencyDisplayPlot::OnPickerPointSelected6(const QPointF & p)
   emit plotPointSelected(point);
 }
 
+void
+FrequencyDisplayPlot::setTitle(int which, QString title)
+{
+  _fft_plot_curve->setTitle(title);
+}
+
+QString
+FrequencyDisplayPlot::title(int which)
+{
+  return _fft_plot_curve->title().text();
+}
+
+void
+FrequencyDisplayPlot::setColor(int which, QString color)
+{
+  QPen pen(_fft_plot_curve->pen());
+  pen.setColor(color);
+  _fft_plot_curve->setPen(pen);
+}
+
+void
+FrequencyDisplayPlot::setLineWidth(int which, int width)
+{
+  QPen pen(_fft_plot_curve->pen());
+  pen.setWidth(width);
+  _fft_plot_curve->setPen(pen);
+}
+
+
 #endif /* FREQUENCY_DISPLAY_PLOT_C */

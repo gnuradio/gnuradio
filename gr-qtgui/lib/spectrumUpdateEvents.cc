@@ -179,6 +179,8 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 
 
 /***************************************************************************/
+
+
 TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
 				 const uint64_t numTimeDomainDataPoints)
   : QEvent(QEvent::Type(SpectrumUpdateEventType))
@@ -217,6 +219,50 @@ uint64_t
 TimeUpdateEvent::getNumTimeDomainDataPoints() const
 {
   return _numTimeDomainDataPoints;
+}
+
+
+/***************************************************************************/
+
+
+FreqUpdateEvent::FreqUpdateEvent(const std::vector<double*> dataPoints,
+				 const uint64_t numDataPoints)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(numDataPoints < 1) {
+    _numDataPoints = 1;
+  }
+  else {
+    _numDataPoints = numDataPoints;
+  }
+
+  _nplots = dataPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _dataPoints.push_back(new double[_numDataPoints]);
+    if(numDataPoints > 0) {
+      memcpy(_dataPoints[i], dataPoints[i],
+	     _numDataPoints*sizeof(double));
+    }
+  }
+}
+
+FreqUpdateEvent::~FreqUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _dataPoints[i];
+  }
+}
+
+const std::vector<double*>
+FreqUpdateEvent::getPoints() const
+{
+  return _dataPoints;
+}
+
+uint64_t
+FreqUpdateEvent::getNumDataPoints() const
+{
+  return _numDataPoints;
 }
 
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

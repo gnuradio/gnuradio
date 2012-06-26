@@ -86,6 +86,12 @@ public slots:
   void OnPickerPointSelected(const QwtDoublePoint & p);
   void OnPickerPointSelected6(const QPointF & p);
 
+  void setTitle(int which, QString title);
+  void setColor(int which, QString color);
+  void setLineWidth(int which, int width);
+
+  QString title(int which);
+
 signals:
   void plotPointSelected(const QPointF p);
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2011 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,19 +22,30 @@
 
 %include "gnuradio.i"
 
-//load generated python docstrings
-%include "qtgui_swig_doc.i"
-
 %{
-#include "qtgui_sink_c.h"
-#include "qtgui_sink_f.h"
-#include "qtgui_time_sink_c.h"
-#include "qtgui_time_sink_f.h"
-#include "qtgui_freq_sink_c.h"
+#include <qtgui_freq_sink_c.h>
 %}
 
-%include "qtgui_sink_c.i"
-%include "qtgui_sink_f.i"
-%include "qtgui_time_sink_c.i"
-%include "qtgui_time_sink_f.i"
-%include "qtgui_freq_sink_c.i"
+GR_SWIG_BLOCK_MAGIC(qtgui,freq_sink_c)
+
+qtgui_freq_sink_c_sptr
+qtgui_make_freq_sink_c(int size, int wintype,
+		       double fc, double bw,
+		       const std::string &name,
+		       QWidget *parent=NULL);
+
+class qtgui_freq_sink_c : public gr_sync_block
+{
+public:
+  void exec_();
+  PyObject* pyqwidget();
+
+  void set_frequency_range(const double centerfreq, const double bandwidth);
+  void set_fft_power_db(double min, double max);
+
+  void set_update_time(double t);
+  void set_title(int which, const std::string &title);
+  void set_color(int which, const std::string &color);
+
+  void set_resize(int width, int height);
+};
