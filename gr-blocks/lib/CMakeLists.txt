@@ -132,6 +132,8 @@ list(APPEND gr_blocks_sources
     float_array_to_int.cc
     float_to_int_impl.cc
     float_to_short_impl.cc
+    float_array_to_uchar.cc
+    float_to_uchar_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
     multiply_const_cc_impl.cc

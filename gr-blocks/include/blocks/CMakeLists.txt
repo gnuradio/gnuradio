@@ -97,6 +97,7 @@ install(FILES
     float_to_complex.h
     float_to_int.h
     float_to_short.h
+    float_to_uchar.h
     multiply_cc.h
     multiply_ff.h
     multiply_const_cc.h
