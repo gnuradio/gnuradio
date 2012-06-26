@@ -26,6 +26,11 @@
 #include <FrequencyDisplayPlot.h>
 
 #include "qtgui_types.h"
+#include <qwt_scale_draw.h>
+#include <qwt_legend.h>
+#include <qwt_legend_item.h>
+#include <QColor>
+#include <iostream>
 
 /***********************************************************************
  * Widget to provide mouse pointer coordinate text
@@ -68,8 +73,8 @@ private:
 /***********************************************************************
  * Main frequency display plotter widget
  **********************************************************************/
-FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
-  : QwtPlot(parent)
+FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
+  : QwtPlot(parent), _nplots(nplots)
 {
   _startFrequency = 0;
   _stopFrequency = 4000;
@@ -81,7 +86,6 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   _useCenterFrequencyFlag = false;
 
   _numPoints = 1024;
-  _dataPoints = new double[_numPoints];
   _minFFTPoints = new double[_numPoints];
   _maxFFTPoints = new double[_numPoints];
   _xAxisPoints = new double[_numPoints];
@@ -112,16 +116,27 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   setAxisScale(QwtPlot::yLeft, _minYAxis, _maxYAxis);
   setAxisTitle(QwtPlot::yLeft, "Power (dB)");
 
+  QList<QColor> colors;
+  colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
+	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
+	 << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
+	 << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
+
   // Automatically deleted when parent is deleted
-  _fft_plot_curve = new QwtPlotCurve("Power Spectrum");
-  _fft_plot_curve->attach(this);
-  _fft_plot_curve->setPen(QPen(Qt::blue));
+  for(int i = 0; i < _nplots; i++) {
+    _dataPoints.push_back(new double[_numPoints]);
+    memset(_dataPoints[i], 0x0, _numPoints*sizeof(double));
+
+    _fft_plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
+    _fft_plot_curve[i]->attach(this);
+    _fft_plot_curve[i]->setPen(QPen(colors[i]));
 
 #if QWT_VERSION < 0x060000
-  _fft_plot_curve->setRawData(_xAxisPoints, _dataPoints, _numPoints);
+    _fft_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
 #else
-  _fft_plot_curve->setRawSamples(_xAxisPoints, _dataPoints, _numPoints);
+    _fft_plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
 #endif
+  }
 
   _min_fft_plot_curve = new QwtPlotCurve("Minimum Power");
   _min_fft_plot_curve->attach(this);
@@ -157,7 +172,6 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   _upper_intensity_marker->setLinePen(QPen(Qt::green, 0, Qt::DotLine));
   _upper_intensity_marker->attach(this);
 
-  memset(_dataPoints, 0x0, _numPoints*sizeof(double));
   memset(_xAxisPoints, 0x0, _numPoints*sizeof(double));
 
   for(int64_t number = 0; number < _numPoints; number++){
@@ -246,11 +260,29 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 
   // Do this after the zoomer has been built
   _resetXAxisPoints();
+
+  // Set up a legend
+  QwtLegend* legendDisplay = new QwtLegend(this);
+  legendDisplay->setItemMode(QwtLegend::CheckableItem);
+  insertLegend(legendDisplay);
+
+  // Turn off min/max hold plots in legend
+  QWidget *w;
+  w= legendDisplay->find(_min_fft_plot_curve);
+  ((QwtLegendItem*)w)->setChecked(true);
+  w = legendDisplay->find(_max_fft_plot_curve);
+  ((QwtLegendItem*)w)->setChecked(true);
+
+  connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool)),
+	  this, SLOT(LegendEntryChecked(QwtPlotItem *, bool)));
+    
 }
 
 FrequencyDisplayPlot::~FrequencyDisplayPlot()
 {
-  delete[] _dataPoints;
+  for(int i = 0; i < _nplots; i++)
+    delete [] _dataPoints[i];
+
   delete[] _maxFFTPoints;
   delete[] _minFFTPoints;
   delete[] _xAxisPoints;
@@ -345,13 +377,15 @@ FrequencyDisplayPlot::replot()
 }
 
 void
-FrequencyDisplayPlot::resizeSlot( QSize *s )
+FrequencyDisplayPlot::resizeSlot(QSize *s)
 {
-  resize(s->width(), s->height());
+  // -10 is to spare some room for the legend and x-axis label
+  resize(s->width()-10, s->height()-10);
 }
 
 void
-FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDataPoints,
+FrequencyDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
+				  const int64_t numDataPoints,
 				  const double noiseFloorAmplitude, const double peakFrequency,
 				  const double peakAmplitude, const double timeInterval)
 {
@@ -362,21 +396,87 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
     if(numDataPoints != _numPoints) {
       _numPoints = numDataPoints;
 
-      delete[] _dataPoints;
       delete[] _minFFTPoints;
       delete[] _maxFFTPoints;
       delete[] _xAxisPoints;
-      _dataPoints = new double[_numPoints];
       _xAxisPoints = new double[_numPoints];
       _minFFTPoints = new double[_numPoints];
       _maxFFTPoints = new double[_numPoints];
 
+      for(int i = 0; i < _nplots; i++) {
+	delete[] _dataPoints[i];
+	_dataPoints[i] = new double[_numPoints];
+
 #if QWT_VERSION < 0x060000
-      _fft_plot_curve->setRawData(_xAxisPoints, _dataPoints, _numPoints);
+	_fft_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+	_min_fft_plot_curve->setRawData(_xAxisPoints, _minFFTPoints, _numPoints);
+	_max_fft_plot_curve->setRawData(_xAxisPoints, _maxFFTPoints, _numPoints);
+#else
+	_fft_plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+	_min_fft_plot_curve->setRawSamples(_xAxisPoints, _minFFTPoints, _numPoints);
+	_max_fft_plot_curve->setRawSamples(_xAxisPoints, _maxFFTPoints, _numPoints);
+#endif
+      }
+
+      _resetXAxisPoints();
+      ClearMaxData();
+      ClearMinData();
+    }
+
+    for(int i = 0; i < _nplots; i++) {
+      memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
+    }
+
+    for(int64_t point = 0; point < numDataPoints; point++){
+      if(dataPoints[0][point] < _minFFTPoints[point]){
+	_minFFTPoints[point] = dataPoints[0][point];
+      }
+      if(dataPoints[0][point] > _maxFFTPoints[point]){
+	_maxFFTPoints[point] = dataPoints[0][point];
+      }
+    }
+
+    _noiseFloorAmplitude = noiseFloorAmplitude;
+    _peakFrequency = peakFrequency;
+    _peakAmplitude = peakAmplitude;
+
+    SetUpperIntensityLevel(_peakAmplitude);
+
+    replot();
+
+    _lastReplot = gruel::high_res_timer_now();
+  }
+}
+
+void
+FrequencyDisplayPlot::PlotNewData(const double* dataPoints,
+				  const int64_t numDataPoints,
+				  const double noiseFloorAmplitude, const double peakFrequency,
+				  const double peakAmplitude, const double timeInterval)
+{
+  // Only update plot if there is data and if the time interval has elapsed
+  if((numDataPoints > 0) &&
+	(gruel::high_res_timer_now() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
+
+    if(numDataPoints != _numPoints) {
+      _numPoints = numDataPoints;
+
+      delete[] _minFFTPoints;
+      delete[] _maxFFTPoints;
+      delete[] _xAxisPoints;
+      _xAxisPoints = new double[_numPoints];
+      _minFFTPoints = new double[_numPoints];
+      _maxFFTPoints = new double[_numPoints];
+
+      delete[] _dataPoints[0];
+      _dataPoints[0] = new double[_numPoints];
+
+#if QWT_VERSION < 0x060000
+      _fft_plot_curve[0]->setRawData(_xAxisPoints, _dataPoints[0], _numPoints);
       _min_fft_plot_curve->setRawData(_xAxisPoints, _minFFTPoints, _numPoints);
       _max_fft_plot_curve->setRawData(_xAxisPoints, _maxFFTPoints, _numPoints);
 #else
-      _fft_plot_curve->setRawSamples(_xAxisPoints, _dataPoints, _numPoints);
+      _fft_plot_curve[0]->setRawSamples(_xAxisPoints, _dataPoints[0], _numPoints);
       _min_fft_plot_curve->setRawSamples(_xAxisPoints, _minFFTPoints, _numPoints);
       _max_fft_plot_curve->setRawSamples(_xAxisPoints, _maxFFTPoints, _numPoints);
 #endif
@@ -386,7 +486,7 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
       ClearMinData();
     }
 
-    memcpy(_dataPoints, dataPoints, numDataPoints*sizeof(double));
+    memcpy(_dataPoints[0], dataPoints, numDataPoints*sizeof(double));
     for(int64_t point = 0; point < numDataPoints; point++){
       if(dataPoints[point] < _minFFTPoints[point]){
 	_minFFTPoints[point] = dataPoints[point];
@@ -471,13 +571,13 @@ FrequencyDisplayPlot::SetUpperIntensityLevel(const double upperIntensityLevel)
 }
 
 void
-FrequencyDisplayPlot::SetTraceColour (QColor c)
+FrequencyDisplayPlot::SetTraceColour(QColor c)
 {
-  _fft_plot_curve->setPen(QPen(c));
+  _fft_plot_curve[0]->setPen(QPen(c));
 }
 
 void
-FrequencyDisplayPlot::SetBGColour (QColor c)
+FrequencyDisplayPlot::SetBGColour(QColor c)
 {
   QPalette palette;
   palette.setColor(canvas()->backgroundRole(), c);
@@ -485,7 +585,7 @@ FrequencyDisplayPlot::SetBGColour (QColor c)
 }
 
 void
-FrequencyDisplayPlot::ShowCFMarker (const bool show)
+FrequencyDisplayPlot::ShowCFMarker(const bool show)
 {
   if (show)
     _markerCF->show();
@@ -512,32 +612,38 @@ FrequencyDisplayPlot::OnPickerPointSelected6(const QPointF & p)
   emit plotPointSelected(point);
 }
 
+void FrequencyDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
+{
+  plotItem->setVisible(!on);
+  replot();
+}
+
 void
 FrequencyDisplayPlot::setTitle(int which, QString title)
 {
-  _fft_plot_curve->setTitle(title);
+  _fft_plot_curve[which]->setTitle(title);
 }
 
 QString
 FrequencyDisplayPlot::title(int which)
 {
-  return _fft_plot_curve->title().text();
+  return _fft_plot_curve[which]->title().text();
 }
 
 void
 FrequencyDisplayPlot::setColor(int which, QString color)
 {
-  QPen pen(_fft_plot_curve->pen());
+  QPen pen(_fft_plot_curve[which]->pen());
   pen.setColor(color);
-  _fft_plot_curve->setPen(pen);
+  _fft_plot_curve[which]->setPen(pen);
 }
 
 void
 FrequencyDisplayPlot::setLineWidth(int which, int width)
 {
-  QPen pen(_fft_plot_curve->pen());
+  QPen pen(_fft_plot_curve[which]->pen());
   pen.setWidth(width);
-  _fft_plot_curve->setPen(pen);
+  _fft_plot_curve[which]->setPen(pen);
 }
 
 

@@ -47,7 +47,7 @@ class FrequencyDisplayPlot:public QwtPlot{
   Q_OBJECT
 
 public:
-  FrequencyDisplayPlot(QWidget*);
+  FrequencyDisplayPlot(int nplots, QWidget*);
   virtual ~FrequencyDisplayPlot();
 
   void SetFrequencyRange(const double, const double,
@@ -57,7 +57,13 @@ public:
   double GetStartFrequency()const;
   double GetStopFrequency()const;
 
-  void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
+  void PlotNewData(const std::vector<double*> dataPoints,
+		   const int64_t numDataPoints,
+		   const double noiseFloorAmplitude, const double peakFrequency,
+		   const double peakAmplitude, const double timeInterval);
+
+  void PlotNewData(const double* dataPoints,
+		   const int64_t numDataPoints,
 		   const double noiseFloorAmplitude, const double peakFrequency,
 		   const double peakAmplitude, const double timeInterval);
 
@@ -74,6 +80,9 @@ public:
   void SetTraceColour (QColor);
   void SetBGColour (QColor c);
   void ShowCFMarker (const bool);
+
+protected slots:
+  void LegendEntryChecked(QwtPlotItem* plotItem, bool on);
 
 public slots:
   void resizeSlot( QSize *e );
@@ -106,7 +115,8 @@ private:
   double _maxYAxis;
   double _minYAxis;
 
-  QwtPlotCurve* _fft_plot_curve;
+  int _nplots;
+  std::vector<QwtPlotCurve*> _fft_plot_curve;
   QwtPlotCurve* _min_fft_plot_curve;
   QwtPlotCurve* _max_fft_plot_curve;
 
@@ -124,7 +134,7 @@ private:
 
   QwtPlotMagnifier *_magnifier;
 
-  double* _dataPoints;
+  std::vector<double*> _dataPoints;
   double* _xAxisPoints;
   int     _xAxisMultiplier;
 

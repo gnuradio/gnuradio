@@ -34,7 +34,7 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   _intValidator->setBottom(0);
 
   _layout = new QGridLayout(this);
-  _freqDisplayPlot = new FrequencyDisplayPlot(this);
+  _freqDisplayPlot = new FrequencyDisplayPlot(nplots, this);
   _layout->addWidget(_freqDisplayPlot, 0, 0);
 
   _nplots = nplots;
@@ -43,7 +43,7 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   setLayout(_layout);
 
   // Set the initial plot size
-  resize(QSize(800, 600));
+  resize(QSize(1000, 600));
 
   // Set up a grid that can be turned on/off
   _grid = new QwtPlotGrid();
@@ -115,7 +115,7 @@ FreqDisplayForm::newData(const FreqUpdateEvent *freqUpdateEvent)
   const std::vector<double*> dataPoints = freqUpdateEvent->getPoints();
   const uint64_t numDataPoints = freqUpdateEvent->getNumDataPoints();
 
-  _freqDisplayPlot->PlotNewData(dataPoints[0],
+  _freqDisplayPlot->PlotNewData(dataPoints,
 				numDataPoints,
 				0, 0, 0, d_update_time);
 }

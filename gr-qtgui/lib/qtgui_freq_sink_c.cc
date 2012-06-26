@@ -35,17 +35,20 @@ qtgui_freq_sink_c_sptr
 qtgui_make_freq_sink_c(int fftsize, int wintype,
 		       double fc, double bw,
 		       const std::string &name,
+		       int nconnections,
 		       QWidget *parent)
 {
   return gnuradio::get_initial_sptr
     (new qtgui_freq_sink_c(fftsize, wintype,
 			   fc, bw, name,
+			   nconnections,
 			   parent));
 }
 
 qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
 				     double fc, double bw,
 				     const std::string &name,
+				     int nconnections,
 				     QWidget *parent)
   : gr_sync_block("freq_sink_c",
 		  gr_make_io_signature(1, -1, sizeof(gr_complex)),
@@ -53,7 +56,7 @@ qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
     d_fftsize(fftsize),
     d_wintype((gr_firdes::win_type)(wintype)),
     d_center_freq(fc), d_bandwidth(bw), d_name(name),
-    d_parent(parent)
+    d_nconnections(nconnections), d_parent(parent)
 {
   d_main_gui = NULL;
 
@@ -62,8 +65,6 @@ qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
   d_shift = true;
 
   d_fft = new gri_fft_complex(d_fftsize, true);
-
-  d_nconnections = 1;
 
   d_index = 0;
   for(int i = 0; i < d_nconnections; i++) {
@@ -106,7 +107,7 @@ qtgui_freq_sink_c::initialize()
     d_qApplication = new QApplication(argc, argv);
   }
 
-  d_main_gui = new FreqDisplayForm(1, d_parent);
+  d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
@@ -259,12 +260,17 @@ qtgui_freq_sink_c::work(int noutput_items,
     // If we have enough input for one full FFT, do it
     if(datasize >= resid) {
 
-      // Fill up residbuf with d_fftsize number of items
-      memcpy(d_residbufs[0]+d_index, &in[j], sizeof(gr_complex)*resid);
       float *fbuf = new float[d_fftsize];
-      fft(fbuf, d_residbufs[0], d_fftsize);
-      for(int x=0; x < d_fftsize; x++)
-	d_magbufs[0][x] = (double)fbuf[x];
+      for(int n = 0; n < d_nconnections; n++) {
+	// Fill up residbuf with d_fftsize number of items
+	in = (const gr_complex*)input_items[n];
+	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*resid);
+
+	fft(fbuf, d_residbufs[n], d_fftsize);
+	for(int x=0; x < d_fftsize; x++)
+	  d_magbufs[n][x] = (double)fbuf[x];
+      }
+      delete [] fbuf;
       
       if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	d_last_time = gruel::high_res_timer_now();
@@ -277,7 +283,10 @@ qtgui_freq_sink_c::work(int noutput_items,
     }
     // Otherwise, copy what we received into the residbuf for next time
     else {
-      memcpy(d_residbufs[0]+d_index, &in[j], sizeof(gr_complex)*datasize);
+      for(int n = 0; n < d_nconnections; n++) {
+	in = (const gr_complex*)input_items[n];
+	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*datasize);
+      }
       d_index += datasize;
       j += datasize;
     }

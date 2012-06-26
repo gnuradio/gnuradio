@@ -38,6 +38,7 @@ GR_QTGUI_API qtgui_freq_sink_c_sptr
 qtgui_make_freq_sink_c(int fftsize, int wintype,
 		       double fc, double bw,
 		       const std::string &name,
+		       int nconnections=1,
 		       QWidget *parent=NULL);
 
 /*!
@@ -58,11 +59,13 @@ private:
     qtgui_make_freq_sink_c(int fftsize, int wintype,
 			   double fc, double bw,
 			   const std::string &name,
+			   int nconnections,
 			   QWidget *parent);
 
   qtgui_freq_sink_c(int size, int wintype,
 		    double fc, double bw,
 		    const std::string &name,
+		    int nconnections,
 		    QWidget *parent=NULL);
 
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);

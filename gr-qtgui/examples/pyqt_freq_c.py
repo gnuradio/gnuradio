@@ -146,11 +146,12 @@ class my_top_block(gr.top_block):
         thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.freq_sink_c(npts, gr.firdes.WIN_BLACKMAN_hARRIS,
                                       0, Rs,
-                                      "Complex Time Example")
+                                      "Complex Time Example", 2)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
         self.connect(src,  channel, thr, (self.snk1, 0))
+        self.connect(src1,  (self.snk1, 1))
 
         self.ctrl_win = control_box()
         self.ctrl_win.attach_signal1(src1)
