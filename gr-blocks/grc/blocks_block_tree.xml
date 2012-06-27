@@ -53,5 +53,6 @@
 		<block>blocks_float_to_int</block>
 		<block>blocks_float_to_short</block>
 		<block>blocks_float_to_uchar</block>
+		<block>blocks_int_to_float</block>
 	</cat>
 </cat>

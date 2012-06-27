@@ -241,6 +241,26 @@ class test_type_conversions(gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(expected_data, dst.data())
 
+    def test_int_to_float_identity(self):
+        src_data = (1, 2, 3, 4, 5)
+        expected_data = (1.0, 2.0, 3.0, 4.0, 5.0)
+        src = gr.vector_source_i(src_data)
+        op = blocks_swig.int_to_float()
+        dst = gr.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
+
+    def test_int_to_float_scale(self):
+        src_data = (1, 2, 3, 4, 5)
+        expected_data = (0.2, 0.4, 0.6, 0.8, 1.0)
+        src = gr.vector_source_i(src_data)
+        op = blocks_swig.int_to_float(1, 5)
+        dst = gr.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_type_conversions, "test_type_conversions.xml")

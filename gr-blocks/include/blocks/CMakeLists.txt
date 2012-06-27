@@ -98,6 +98,7 @@ install(FILES
     float_to_int.h
     float_to_short.h
     float_to_uchar.h
+    int_to_float.h
     multiply_cc.h
     multiply_ff.h
     multiply_const_cc.h
