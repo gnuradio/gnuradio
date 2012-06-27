@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2002,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,30 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H
-#define INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include <blocks/api.h>
-#include <gr_sync_interpolator.h>
+#include "interleaved_short_array_to_complex.h"
+#include <assert.h>
 
-namespace gr {
-  namespace blocks {
+void
+interleaved_short_array_to_complex (const short *in,
+				    gr_complex *out, int nsamples)
+{
+  assert (nsamples % 2 == 0);
 
-    /*!
-     * \brief Convert stream of complex to a stream of interleaved shorts
-     * \ingroup converter_blk
-     */
-    class BLOCKS_API complex_to_interleaved_short : virtual public gr_sync_interpolator
-    {
-    public:
-      
-      // gr::blocks::complex_to_interleaved_short::sptr
-      typedef boost::shared_ptr<complex_to_interleaved_short> sptr;
-
-      static sptr make();
-    };
-
-  } /* namespace blocks */
-} /* namespace gr */
-
-#endif /* INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H */
+  for (int i = 0; i < nsamples/2; i++){
+    out[i] = gr_complex (in[i*2 + 0], in[i*2 + 1]);
+  }
+}

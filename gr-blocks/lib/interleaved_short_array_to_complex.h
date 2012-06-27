@@ -20,30 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H
-#define INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H
+#ifndef INCLUDED_INTERLEAVED_SHORT_ARRAY_TO_COMPLEX_H
+#define INCLUDED_INTERLEAVED_SHORT_ARRAY_TO_COMPLEX_H
 
 #include <blocks/api.h>
-#include <gr_sync_interpolator.h>
+#include <gr_complex.h>
 
-namespace gr {
-  namespace blocks {
+/*
+ * convert array of interleaved shorts to complex.
+ * the shorts contains real, imaginary, real, imaginary...
+ * nsamples is the number of shorts; it must be even.
+ */
+BLOCKS_API void interleaved_short_array_to_complex (const short *in, gr_complex *out, int nsamples);
 
-    /*!
-     * \brief Convert stream of complex to a stream of interleaved shorts
-     * \ingroup converter_blk
-     */
-    class BLOCKS_API complex_to_interleaved_short : virtual public gr_sync_interpolator
-    {
-    public:
-      
-      // gr::blocks::complex_to_interleaved_short::sptr
-      typedef boost::shared_ptr<complex_to_interleaved_short> sptr;
-
-      static sptr make();
-    };
-
-  } /* namespace blocks */
-} /* namespace gr */
-
-#endif /* INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H */
+#endif /* INCLUDED_INTERLEAVED_SHORT_ARRAY_TO_COMPLEX_H */

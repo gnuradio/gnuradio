@@ -261,6 +261,16 @@ class test_type_conversions(gr_unittest.TestCase):
         self.tb.run()
         self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
 
+    def test_interleaved_short_to_complex(self):
+        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+        expected_data = (1+2j, 3+4j, 5+6j, 7+8j, 9+10j)
+        src = gr.vector_source_s(src_data)
+        op = blocks_swig.interleaved_short_to_complex()
+        dst = gr.vector_sink_c()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertEqual(expected_data, dst.data())
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_type_conversions, "test_type_conversions.xml")

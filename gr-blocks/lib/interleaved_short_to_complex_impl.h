@@ -20,30 +20,26 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H
-#define INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H
+#ifndef INCLUDED_INTERLEAVED_SHORT_TO_COMPLEX_IMPL_H
+#define INCLUDED_INTERLEAVED_SHORT_TO_COMPLEX_IMPL_H
 
-#include <blocks/api.h>
-#include <gr_sync_interpolator.h>
+#include <blocks/interleaved_short_to_complex.h>
 
 namespace gr {
   namespace blocks {
 
-    /*!
-     * \brief Convert stream of complex to a stream of interleaved shorts
-     * \ingroup converter_blk
-     */
-    class BLOCKS_API complex_to_interleaved_short : virtual public gr_sync_interpolator
+    class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to_complex
     {
     public:
-      
-      // gr::blocks::complex_to_interleaved_short::sptr
-      typedef boost::shared_ptr<complex_to_interleaved_short> sptr;
+      interleaved_short_to_complex_impl();
 
-      static sptr make();
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
+   
 
-#endif /* INCLUDED_BLOCKS_COMPLEX_TO_INTERLEAVED_SHORT_H */
+#endif /* INCLUDED_INTERLEAVED_SHORT_TO_COMPLEX_IMPL_H */

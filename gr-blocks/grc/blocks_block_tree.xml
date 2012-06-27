@@ -29,7 +29,7 @@
 <cat>
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
-		<name>Math Operations</name>
+		<name>Math Operations (New) </name>
 		<block>blocks_add_xx</block>
 		<block>blocks_add_const_vxx</block>
 		<block>blocks_divide_xx</block>
@@ -38,7 +38,7 @@
 		<block>blocks_sub_xx</block>
 	</cat>
 	<cat>
-	        <name>Stream Type Conversions</name>
+	        <name>Stream Type Conversions (New) </name>
 		<block>blocks_char_to_float</block>
 		<block>blocks_char_to_short</block>
 		<block>blocks_complex_to_interleaved_short</block>
@@ -54,5 +54,6 @@
 		<block>blocks_float_to_short</block>
 		<block>blocks_float_to_uchar</block>
 		<block>blocks_int_to_float</block>
+		<block>blocks_interleaved_short_to_complex</block>
 	</cat>
 </cat>
