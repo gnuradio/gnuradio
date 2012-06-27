@@ -98,6 +98,8 @@ public slots:
   void setTitle(int which, QString title);
   void setColor(int which, QString color);
   void setLineWidth(int which, int width);
+  void setLineStyle(int which, Qt::PenStyle style);
+  void setLineMarker(int which, QwtSymbol::Style marker);
 
   QString title(int which);
 

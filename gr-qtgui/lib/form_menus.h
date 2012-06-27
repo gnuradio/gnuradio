@@ -26,6 +26,7 @@
 #include <stdexcept>
 #include <vector>
 #include <QtGui/QtGui>
+#include <qwt_symbol.h>
 
 class LineColorMenu: public QMenu
 {
@@ -177,6 +178,163 @@ public slots:
   void getEight() { emit whichTrigger(d_which, 8); }
   void getNine()  { emit whichTrigger(d_which, 9); }
   void getTen()   { emit whichTrigger(d_which, 10); }
+
+private:
+  QList<QAction *> d_act;
+  int d_which;
+};
+
+
+/********************************************************************/
+
+
+class LineStyleMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  LineStyleMenu(int which, QWidget *parent)
+    : QMenu("Line Style", parent), d_which(which)
+  {
+    d_act.push_back(new QAction("None", this));
+    d_act.push_back(new QAction("Solid", this));
+    d_act.push_back(new QAction("Dash", this));
+    d_act.push_back(new QAction("Dots", this));
+    d_act.push_back(new QAction("Dash-Dot", this));
+    d_act.push_back(new QAction("Dash-Dot-Dot", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getNone()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getSolid()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getDash()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getDots()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getDashDot()));
+    connect(d_act[5], SIGNAL(triggered()), this, SLOT(getDashDotDot()));
+
+    QListIterator<QAction*> i(d_act);
+    while(i.hasNext()) {
+      QAction *a = i.next();
+      addAction(a);
+    }
+  }
+
+  ~LineStyleMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+  
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("LineStyleMenu::getAction: which out of range.\n");
+  }
+
+signals:
+  void whichTrigger(int which, Qt::PenStyle);
+
+public slots:
+  void getNone()      { emit whichTrigger(d_which, Qt::NoPen); }
+  void getSolid()      { emit whichTrigger(d_which, Qt::SolidLine); }
+  void getDash()       { emit whichTrigger(d_which, Qt::DashLine); }
+  void getDots()       { emit whichTrigger(d_which, Qt::DotLine); }
+  void getDashDot()    { emit whichTrigger(d_which, Qt::DashDotLine); }
+  void getDashDotDot() { emit whichTrigger(d_which, Qt::DashDotDotLine); }
+
+private:
+  QList<QAction *> d_act;
+  int d_which;
+};
+
+
+/********************************************************************/
+
+
+class LineMarkerMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  LineMarkerMenu(int which, QWidget *parent)
+    : QMenu("Line Marker", parent), d_which(which)
+  {
+    d_act.push_back(new QAction("None", this));
+    d_act.push_back(new QAction("Circle", this));
+    d_act.push_back(new QAction("Rectangle", this));
+    d_act.push_back(new QAction("Diamond", this));
+    d_act.push_back(new QAction("Triangle", this));
+    d_act.push_back(new QAction("Down Triangle", this));
+    d_act.push_back(new QAction("Left Triangle", this));
+    d_act.push_back(new QAction("Right Triangle", this));
+    d_act.push_back(new QAction("Cross", this));
+    d_act.push_back(new QAction("X-Cross", this));
+    d_act.push_back(new QAction("Horiz. Line", this));
+    d_act.push_back(new QAction("Vert. Line", this));
+    d_act.push_back(new QAction("Star 1", this));
+    d_act.push_back(new QAction("Star 2", this));
+    d_act.push_back(new QAction("Hexagon", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getNone()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getCircle()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getRect()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getDiamond()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getTriangle()));
+    connect(d_act[5], SIGNAL(triggered()), this, SLOT(getDTriangle()));
+    connect(d_act[6], SIGNAL(triggered()), this, SLOT(getLTriangle()));
+    connect(d_act[7], SIGNAL(triggered()), this, SLOT(getRTriangle()));
+    connect(d_act[8], SIGNAL(triggered()), this, SLOT(getCross()));
+    connect(d_act[9], SIGNAL(triggered()), this, SLOT(getXCross()));
+    connect(d_act[10], SIGNAL(triggered()), this, SLOT(getHLine()));
+    connect(d_act[11], SIGNAL(triggered()), this, SLOT(getVLine()));
+    connect(d_act[12], SIGNAL(triggered()), this, SLOT(getStar1()));
+    connect(d_act[13], SIGNAL(triggered()), this, SLOT(getStar2()));
+    connect(d_act[14], SIGNAL(triggered()), this, SLOT(getHexagon()));
+
+    QListIterator<QAction*> i(d_act);
+    while(i.hasNext()) {
+      QAction *a = i.next();
+      addAction(a);
+    }
+  }
+
+  ~LineMarkerMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+  
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("LineMarkerMenu::getAction: which out of range.\n");
+  }
+
+signals:
+  void whichTrigger(int which, QwtSymbol::Style);
+
+public slots:
+  void getNone()      { emit whichTrigger(d_which, QwtSymbol::NoSymbol); }
+  void getCircle()    { emit whichTrigger(d_which, QwtSymbol::Ellipse); }
+  void getRect()      { emit whichTrigger(d_which, QwtSymbol::Rect); }
+  void getDiamond()   { emit whichTrigger(d_which, QwtSymbol::Diamond); }
+  void getTriangle()  { emit whichTrigger(d_which, QwtSymbol::Triangle); }
+  void getDTriangle() { emit whichTrigger(d_which, QwtSymbol::DTriangle); }
+  void getLTriangle() { emit whichTrigger(d_which, QwtSymbol::LTriangle); }
+  void getRTriangle() { emit whichTrigger(d_which, QwtSymbol::RTriangle); }
+  void getCross()     { emit whichTrigger(d_which, QwtSymbol::Cross); }
+  void getXCross()    { emit whichTrigger(d_which, QwtSymbol::XCross); }
+  void getHLine()     { emit whichTrigger(d_which, QwtSymbol::HLine); }
+  void getVLine()     { emit whichTrigger(d_which, QwtSymbol::VLine); }
+  void getStar1()     { emit whichTrigger(d_which, QwtSymbol::Star1); }
+  void getStar2()     { emit whichTrigger(d_which, QwtSymbol::Star2); }
+  void getHexagon()   { emit whichTrigger(d_which, QwtSymbol::Hexagon); }
 
 private:
   QList<QAction *> d_act;

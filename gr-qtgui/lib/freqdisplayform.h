@@ -63,6 +63,8 @@ public slots:
   void setTitle(int which, const QString &title);
   void setColor(int which, const QString &color);
   void setLineWidth(int which, int width);
+  void setLineStyle(int which, Qt::PenStyle style);
+  void setLineMarker(int which, QwtSymbol::Style style);
 
   void setGrid(bool on);
   void setGridOn();
@@ -99,6 +101,8 @@ private:
   QList<LineTitleAction*> _line_title_act;
   QList<LineColorMenu*> _line_color_menu;
   QList<LineWidthMenu*> _line_width_menu;
+  QList<LineStyleMenu*> _line_style_menu;
+  QList<LineMarkerMenu*> _line_marker_menu;
 
   QTimer *displayTimer;
   double d_update_time;

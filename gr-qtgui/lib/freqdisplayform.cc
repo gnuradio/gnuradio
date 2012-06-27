@@ -67,6 +67,8 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
     _line_title_act.push_back(new LineTitleAction(i, this));
     _line_color_menu.push_back(new LineColorMenu(i, this));
     _line_width_menu.push_back(new LineWidthMenu(i, this));
+    _line_style_menu.push_back(new LineStyleMenu(i, this));
+    _line_marker_menu.push_back(new LineMarkerMenu(i, this));
 
     connect(_line_title_act[i], SIGNAL(whichTrigger(int, const QString&)),
 	    this, SLOT(setTitle(int, const QString&)));
@@ -81,10 +83,22 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
 	      this, SLOT(setLineWidth(int, int)));
     }
     
+    for(int j = 0; j < _line_style_menu[i]->getNumActions(); j++) {
+      connect(_line_style_menu[i], SIGNAL(whichTrigger(int, Qt::PenStyle)),
+	      this, SLOT(setLineStyle(int, Qt::PenStyle)));
+    }
+
+    for(int j = 0; j < _line_marker_menu[i]->getNumActions(); j++) {
+      connect(_line_marker_menu[i], SIGNAL(whichTrigger(int, QwtSymbol::Style)),
+	      this, SLOT(setLineMarker(int, QwtSymbol::Style)));
+    }
+    
     _lines_menu.push_back(new QMenu(_freqDisplayPlot->title(i), this));
     _lines_menu[i]->addAction(_line_title_act[i]);
     _lines_menu[i]->addMenu(_line_color_menu[i]);
     _lines_menu[i]->addMenu(_line_width_menu[i]);
+    _lines_menu[i]->addMenu(_line_style_menu[i]);
+    _lines_menu[i]->addMenu(_line_marker_menu[i]);
     _menu->addMenu(_lines_menu[i]);
   }
 
@@ -268,6 +282,20 @@ void
 FreqDisplayForm::setLineWidth(int which, int width)
 {
   _freqDisplayPlot->setLineWidth(which, width);
+  _freqDisplayPlot->replot();
+}
+
+void
+FreqDisplayForm::setLineStyle(int which, Qt::PenStyle style)
+{
+  _freqDisplayPlot->setLineStyle(which, style);
+  _freqDisplayPlot->replot();
+}
+
+void
+FreqDisplayForm::setLineMarker(int which, QwtSymbol::Style marker)
+{
+  _freqDisplayPlot->setLineMarker(which, marker);
   _freqDisplayPlot->replot();
 }
 

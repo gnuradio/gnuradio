@@ -28,6 +28,7 @@
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
 #include <QColor>
+#include <cmath>
 #include <iostream>
 
 class TimePrecisionClass
@@ -150,6 +151,12 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
     _plot_curve[i]->attach(this);
     _plot_curve[i]->setPen(QPen(colors[i]));
 
+    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol);
+    symbol->setPen(QPen(colors[i]));
+    symbol->setColor(colors[i]);
+    symbol->setSize(7, 7);
+    _plot_curve[i]->setSymbol(symbol);
+    
 #if QWT_VERSION < 0x060000
     _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
 #else
@@ -242,17 +249,45 @@ TimeDomainDisplayPlot::title(int which)
 void
 TimeDomainDisplayPlot::setColor(int which, QString color)
 {
+  // Set the color of the pen
   QPen pen(_plot_curve[which]->pen());
   pen.setColor(color);
   _plot_curve[which]->setPen(pen);
+
+  // And set the color of the markers
+  QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+  sym->setColor(color);
+  _plot_curve[which]->setSymbol(sym);
 }
 
 void
 TimeDomainDisplayPlot::setLineWidth(int which, int width)
 {
+  // Set the new line width
   QPen pen(_plot_curve[which]->pen());
   pen.setWidth(width);
   _plot_curve[which]->setPen(pen);
+
+  // Scale the marker size proportionally
+  QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+  sym->setSize(7+10*log10(width), 7+10*log10(width));
+  _plot_curve[which]->setSymbol(sym);
+}
+
+void
+TimeDomainDisplayPlot::setLineStyle(int which, Qt::PenStyle style)
+{
+  QPen pen(_plot_curve[which]->pen());
+  pen.setStyle(style);
+  _plot_curve[which]->setPen(pen);
+}
+
+void
+TimeDomainDisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
+{
+  QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+  sym->setStyle(marker);
+  _plot_curve[which]->setSymbol(sym);
 }
 
 void TimeDomainDisplayPlot::replot()

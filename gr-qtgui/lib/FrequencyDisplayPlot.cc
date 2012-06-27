@@ -131,6 +131,12 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
     _fft_plot_curve[i]->attach(this);
     _fft_plot_curve[i]->setPen(QPen(colors[i]));
 
+    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol);
+    symbol->setPen(QPen(colors[i]));
+    symbol->setColor(colors[i]);
+    symbol->setSize(7, 7);
+    _fft_plot_curve[i]->setSymbol(symbol);
+    
 #if QWT_VERSION < 0x060000
     _fft_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
 #else
@@ -633,17 +639,45 @@ FrequencyDisplayPlot::title(int which)
 void
 FrequencyDisplayPlot::setColor(int which, QString color)
 {
+  // Set the color of the pen
   QPen pen(_fft_plot_curve[which]->pen());
   pen.setColor(color);
   _fft_plot_curve[which]->setPen(pen);
+
+  // And set the color of the markers
+  QwtSymbol *sym = (QwtSymbol*)_fft_plot_curve[which]->symbol();
+  sym->setColor(color);
+  _fft_plot_curve[which]->setSymbol(sym);
 }
 
 void
 FrequencyDisplayPlot::setLineWidth(int which, int width)
 {
+  // Set the new line width
   QPen pen(_fft_plot_curve[which]->pen());
   pen.setWidth(width);
   _fft_plot_curve[which]->setPen(pen);
+
+  // Scale the marker size proportionally
+  QwtSymbol *sym = (QwtSymbol*)_fft_plot_curve[which]->symbol();
+  sym->setSize(7+10*log10(width), 7+10*log10(width));
+  _fft_plot_curve[which]->setSymbol(sym);
+}
+
+void
+FrequencyDisplayPlot::setLineStyle(int which, Qt::PenStyle style)
+{
+  QPen pen(_fft_plot_curve[which]->pen());
+  pen.setStyle(style);
+  _fft_plot_curve[which]->setPen(pen);
+}
+
+void
+FrequencyDisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
+{
+  QwtSymbol *sym = (QwtSymbol*)_fft_plot_curve[which]->symbol();
+  sym->setStyle(marker);
+  _fft_plot_curve[which]->setSymbol(sym);
 }
 
 

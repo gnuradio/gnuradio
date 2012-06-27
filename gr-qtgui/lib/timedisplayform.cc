@@ -67,6 +67,8 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
     _line_title_act.push_back(new LineTitleAction(i, this));
     _line_color_menu.push_back(new LineColorMenu(i, this));
     _line_width_menu.push_back(new LineWidthMenu(i, this));
+    _line_style_menu.push_back(new LineStyleMenu(i, this));
+    _line_marker_menu.push_back(new LineMarkerMenu(i, this));
 
     connect(_line_title_act[i], SIGNAL(whichTrigger(int, const QString&)),
 	    this, SLOT(setTitle(int, const QString&)));
@@ -80,11 +82,23 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
       connect(_line_width_menu[i], SIGNAL(whichTrigger(int, int)),
 	      this, SLOT(setLineWidth(int, int)));
     }
+
+    for(int j = 0; j < _line_style_menu[i]->getNumActions(); j++) {
+      connect(_line_style_menu[i], SIGNAL(whichTrigger(int, Qt::PenStyle)),
+	      this, SLOT(setLineStyle(int, Qt::PenStyle)));
+    }
+
+    for(int j = 0; j < _line_marker_menu[i]->getNumActions(); j++) {
+      connect(_line_marker_menu[i], SIGNAL(whichTrigger(int, QwtSymbol::Style)),
+	      this, SLOT(setLineMarker(int, QwtSymbol::Style)));
+    }
     
     _lines_menu.push_back(new QMenu(_timeDomainDisplayPlot->title(i), this));
     _lines_menu[i]->addAction(_line_title_act[i]);
     _lines_menu[i]->addMenu(_line_color_menu[i]);
     _lines_menu[i]->addMenu(_line_width_menu[i]);
+    _lines_menu[i]->addMenu(_line_style_menu[i]);
+    _lines_menu[i]->addMenu(_line_marker_menu[i]);
     _menu->addMenu(_lines_menu[i]);
   }
 
@@ -250,6 +264,20 @@ void
 TimeDisplayForm::setLineWidth(int which, int width)
 {
   _timeDomainDisplayPlot->setLineWidth(which, width);
+  _timeDomainDisplayPlot->replot();
+}
+
+void
+TimeDisplayForm::setLineStyle(int which, Qt::PenStyle style)
+{
+  _timeDomainDisplayPlot->setLineStyle(which, style);
+  _timeDomainDisplayPlot->replot();
+}
+
+void
+TimeDisplayForm::setLineMarker(int which, QwtSymbol::Style marker)
+{
+  _timeDomainDisplayPlot->setLineMarker(which, marker);
   _timeDomainDisplayPlot->replot();
 }
 
