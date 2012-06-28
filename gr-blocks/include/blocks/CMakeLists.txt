@@ -99,11 +99,12 @@ install(FILES
     float_to_short.h
     float_to_uchar.h
     int_to_float.h
-    interleaved_complex_to_short.h
+    interleaved_short_to_complex.h
     multiply_cc.h
     multiply_ff.h
     multiply_const_cc.h
     multiply_const_ff.h
+    short_to_char.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"
 )

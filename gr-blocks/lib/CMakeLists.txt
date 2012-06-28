@@ -141,6 +141,7 @@ list(APPEND gr_blocks_sources
     multiply_ff_impl.cc
     multiply_const_cc_impl.cc
     multiply_const_ff_impl.cc
+    short_to_char_impl.cc
 )
 
 list(APPEND blocks_libs

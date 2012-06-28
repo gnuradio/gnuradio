@@ -55,5 +55,6 @@
 		<block>blocks_float_to_uchar</block>
 		<block>blocks_int_to_float</block>
 		<block>blocks_interleaved_short_to_complex</block>
+		<block>blocks_short_to_char</block>
 	</cat>
 </cat>

@@ -271,6 +271,16 @@ class test_type_conversions(gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(expected_data, dst.data())
 
+    def test_short_to_char(self):
+        src_data = (256, 512, 768, 1024, 1280)
+        expected_data = (1, 2, 3, 4, 5)
+        src = gr.vector_source_s(src_data)
+        op = blocks_swig.short_to_char()
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertEqual(expected_data, dst.data())
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_type_conversions, "test_type_conversions.xml")
