@@ -143,6 +143,8 @@ list(APPEND gr_blocks_sources
     multiply_const_ff_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
+    uchar_array_to_float.cc
+    uchar_to_float_impl.cc
 )
 
 list(APPEND blocks_libs

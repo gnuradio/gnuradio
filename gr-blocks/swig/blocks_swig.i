@@ -78,6 +78,7 @@
 #include "blocks/sub_ss.h"
 #include "blocks/sub_ii.h"
 #include "blocks/sub_cc.h"
+#include "blocks/uchar_to_float.h"
 %}
 
 %include "blocks/add_ff.h"
@@ -130,6 +131,7 @@
 %include "blocks/sub_ss.h"
 %include "blocks/sub_ii.h"
 %include "blocks/sub_cc.h"
+%include "blocks/uchar_to_float.h"
 
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ss);
@@ -181,3 +183,4 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, uchar_to_float);
