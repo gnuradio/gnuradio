@@ -64,6 +64,8 @@ public slots:
   void setLineStyle(int which, Qt::PenStyle style);
   void setLineMarker(int which, QwtSymbol::Style marker);
 
+  void setStop(bool on);
+
   QString title(int which);
 
   void resizeSlot( QSize *s );
@@ -102,6 +104,8 @@ private:
   double _sampleRate;
 
   int64_t _numPoints;
+
+  bool _stop;
 };
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_HPP */

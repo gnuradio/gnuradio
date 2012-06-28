@@ -50,18 +50,20 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   _grid->setPen(QPen(QColor(Qt::gray)));
 
   // Create a set of actions for the menu
-  _grid_on_act = new QAction("Grid On", this);
-  _grid_on_act->setStatusTip(tr("Toggle Grid on"));
-  connect(_grid_on_act, SIGNAL(triggered()), this, SLOT(setGridOn()));
+  _stop_act = new QAction("Stop", this);
+  _stop_act->setStatusTip(tr("Start/Stop"));
+  connect(_stop_act, SIGNAL(triggered()), this, SLOT(setStop()));
+  _stop_state = false;
 
-  _grid_off_act = new QAction("Grid Off", this);
-  _grid_off_act->setStatusTip(tr("Toggle Grid off"));
-  connect(_grid_off_act, SIGNAL(triggered()), this, SLOT(setGridOff()));
+  _grid_act = new QAction("Grid On", this);
+  _grid_act->setStatusTip(tr("Toggle Grid on/off"));
+  connect(_grid_act, SIGNAL(triggered()), this, SLOT(setGrid()));
+  _grid_state = false;
 
   // Create a pop-up menu for manipulating the figure
   _menu = new QMenu(this);
-  _menu->addAction(_grid_on_act);
-  _menu->addAction(_grid_off_act);
+  _menu->addAction(_stop_act);
+  _menu->addAction(_grid_act);
 
   for(int i = 0; i < _nplots; i++) {
     _line_title_act.push_back(new LineTitleAction(i, this));
@@ -173,6 +175,16 @@ TimeDisplayForm::mousePressEvent( QMouseEvent * e)
     plotrect.setTop(cvs.y()+cvs.width()+plt->spacing()+plt->canvasMargin(0));
 
     if(!plotrect.contains(e->pos())) {
+      if(_stop_state == false)
+	_stop_act->setText(tr("Stop"));
+      else
+	_stop_act->setText(tr("Start"));
+
+      if(_grid_state == false)
+	_grid_act->setText(tr("Grid On"));
+      else
+	_grid_act->setText(tr("Grid Off"));
+
       // Update the line titles if changed externally
       for(int i = 0; i < _nplots; i++) {
 	_lines_menu[i]->setTitle(_timeDomainDisplayPlot->title(i));
@@ -282,27 +294,49 @@ TimeDisplayForm::setLineMarker(int which, QwtSymbol::Style marker)
 }
 
 void
-TimeDisplayForm::setGrid(bool on)
+TimeDisplayForm::setStop(bool on)
 {
-  if(on) {
+  if(!on) {
     // will auto-detach if already attached.
-    _grid->attach(_timeDomainDisplayPlot);
-    
+    _timeDomainDisplayPlot->setStop(false);
+    _stop_state = false;
   }
   else {
-    _grid->detach();
+    _timeDomainDisplayPlot->setStop(true);
+    _stop_state = true;
   }
   _timeDomainDisplayPlot->replot();
 }
 
 void
-TimeDisplayForm::setGridOn()
+TimeDisplayForm::setStop()
 {
-  setGrid(true);
+  if(_stop_state == false)
+    setStop(true);
+  else
+    setStop(false);
 }
 
 void
-TimeDisplayForm::setGridOff()
+TimeDisplayForm::setGrid(bool on)
 {
-  setGrid(false);
+  if(on) {
+    // will auto-detach if already attached.
+    _grid->attach(_timeDomainDisplayPlot);
+    _grid_state = true;
+  }
+  else {
+    _grid->detach();
+    _grid_state = false;
+  }
+  _timeDomainDisplayPlot->replot();
+}
+
+void
+TimeDisplayForm::setGrid()
+{
+  if(_grid_state == false)
+    setGrid(true);
+  else
+    setGrid(false);
 }

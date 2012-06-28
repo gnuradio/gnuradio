@@ -96,7 +96,7 @@ private:
 };
 
 TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
-  : QwtPlot(parent), _nplots(nplots)
+  : QwtPlot(parent), _nplots(nplots), _stop(false)
 {
   resize(parent->width(), parent->height());
 
@@ -290,6 +290,12 @@ TimeDomainDisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
   _plot_curve[which]->setSymbol(sym);
 }
 
+void
+TimeDomainDisplayPlot::setStop(bool on)
+{
+  _stop = on;  
+}
+
 void TimeDomainDisplayPlot::replot()
 {
   QwtPlot::replot();
@@ -306,33 +312,35 @@ void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
 					const int64_t numDataPoints,
 					const double timeInterval)
 {
-  if((numDataPoints > 0)) {
-    if(numDataPoints != _numPoints){
-      _numPoints = numDataPoints;
+  if(!_stop) {
+    if((numDataPoints > 0)) {
+      if(numDataPoints != _numPoints){
+	_numPoints = numDataPoints;
 
-      delete[] _xAxisPoints;
-      _xAxisPoints = new double[_numPoints];
+	delete[] _xAxisPoints;
+	_xAxisPoints = new double[_numPoints];
 
-      for(int i = 0; i < _nplots; i++) {
-	delete[] _dataPoints[i];
-	_dataPoints[i] = new double[_numPoints];
+	for(int i = 0; i < _nplots; i++) {
+	  delete[] _dataPoints[i];
+	  _dataPoints[i] = new double[_numPoints];
 
 #if QWT_VERSION < 0x060000
-	_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+	  _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
 #else
-	_plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+	  _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
 #endif
+	}
+
+	setXaxis(0, numDataPoints);
+	_resetXAxisPoints();
       }
 
-      setXaxis(0, numDataPoints);
-      _resetXAxisPoints();
-    }
+      for(int i = 0; i < _nplots; i++) {
+	memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
+      }
 
-    for(int i = 0; i < _nplots; i++) {
-      memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
+      replot();
     }
-
-    replot();
   }
 }
 

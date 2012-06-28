@@ -66,9 +66,11 @@ public slots:
   void setLineStyle(int which, Qt::PenStyle style);
   void setLineMarker(int which, QwtSymbol::Style style);
 
+  void setStop(bool on);
+  void setStop();
+
   void setGrid(bool on);
-  void setGridOn();
-  void setGridOff();
+  void setGrid();
 
 private slots:
   void newData( const TimeUpdateEvent* );
@@ -93,8 +95,12 @@ private:
   QwtPlotGrid *_grid;
 
   QMenu *_menu;
-  QAction *_grid_on_act;
-  QAction *_grid_off_act;
+
+  QAction *_stop_act;
+  bool _stop_state;
+  QAction *_grid_act;
+  bool _grid_state;
+
 
   QList<QMenu*> _lines_menu;
   QList<LineTitleAction*> _line_title_act;
