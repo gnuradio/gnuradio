@@ -99,7 +99,7 @@ FreqDisplayForm::SetFrequencyRange(const double newCenterFrequency,
     getPlot()->SetFrequencyRange(_startFrequency,
 				 _stopFrequency,
 				 centerFrequency,
-				 false,
+				 true,
 				 units, strunits[iunit]);
   }
 }

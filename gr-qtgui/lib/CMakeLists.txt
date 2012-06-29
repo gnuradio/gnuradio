@@ -63,6 +63,7 @@ set(qtgui_srcs
     qtgui_time_sink_c.cc
     qtgui_time_sink_f.cc
     qtgui_freq_sink_c.cc
+    qtgui_freq_sink_f.cc
     qtgui_util.cc
 )
 

@@ -24,34 +24,34 @@
 #include <config.h>
 #endif
 
-#include <qtgui_freq_sink_c.h>
+#include <qtgui_freq_sink_f.h>
 #include <gr_io_signature.h>
 #include <string.h>
 
 #include <QTimer>
 #include <volk/volk.h>
 
-qtgui_freq_sink_c_sptr
-qtgui_make_freq_sink_c(int fftsize, int wintype,
+qtgui_freq_sink_f_sptr
+qtgui_make_freq_sink_f(int fftsize, int wintype,
 		       double fc, double bw,
 		       const std::string &name,
 		       int nconnections,
 		       QWidget *parent)
 {
   return gnuradio::get_initial_sptr
-    (new qtgui_freq_sink_c(fftsize, wintype,
+    (new qtgui_freq_sink_f(fftsize, wintype,
 			   fc, bw, name,
 			   nconnections,
 			   parent));
 }
 
-qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
+qtgui_freq_sink_f::qtgui_freq_sink_f(int fftsize, int wintype,
 				     double fc, double bw,
 				     const std::string &name,
 				     int nconnections,
 				     QWidget *parent)
-  : gr_sync_block("freq_sink_c",
-		  gr_make_io_signature(1, -1, sizeof(gr_complex)),
+  : gr_sync_block("freq_sink_f",
+		  gr_make_io_signature(1, -1, sizeof(float)),
 		  gr_make_io_signature(0, 0, 0)),
     d_fftsize(fftsize),
     d_wintype((gr_firdes::win_type)(wintype)),
@@ -68,7 +68,7 @@ qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
 
   d_index = 0;
   for(int i = 0; i < d_nconnections; i++) {
-    d_residbufs.push_back(new gr_complex[d_fftsize]);
+    d_residbufs.push_back(new float[d_fftsize]);
     d_magbufs.push_back(new double[d_fftsize]);
   }
 
@@ -77,7 +77,7 @@ qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
   initialize();
 }
 
-qtgui_freq_sink_c::~qtgui_freq_sink_c()
+qtgui_freq_sink_f::~qtgui_freq_sink_f()
 {
   for(int i = 0; i < d_nconnections; i++) {
     delete [] d_residbufs[i];
@@ -87,7 +87,7 @@ qtgui_freq_sink_c::~qtgui_freq_sink_c()
 }
 
 void
-qtgui_freq_sink_c::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+qtgui_freq_sink_f::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned int ninputs = ninput_items_required.size();
   for (unsigned int i = 0; i < ninputs; i++) {
@@ -96,7 +96,7 @@ qtgui_freq_sink_c::forecast(int noutput_items, gr_vector_int &ninput_items_requi
 }
 
 void
-qtgui_freq_sink_c::initialize()
+qtgui_freq_sink_f::initialize()
 {
   if(qApp != NULL) {
     d_qApplication = qApp;
@@ -108,9 +108,6 @@ qtgui_freq_sink_c::initialize()
   }
 
   d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
-  d_main_gui->SetFrequencyRange(d_center_freq,
-				d_center_freq - d_bandwidth/2.0,
-				d_center_freq + d_bandwidth/2.0);
 
   // initialize update time to 10 times a second
   set_update_time(0.1);
@@ -118,19 +115,19 @@ qtgui_freq_sink_c::initialize()
 }
 
 void
-qtgui_freq_sink_c::exec_()
+qtgui_freq_sink_f::exec_()
 {
   d_qApplication->exec();
 }
 
 QWidget*
-qtgui_freq_sink_c::qwidget()
+qtgui_freq_sink_f::qwidget()
 {
   return d_main_gui;
 }
 
 PyObject*
-qtgui_freq_sink_c::pyqwidget()
+qtgui_freq_sink_f::pyqwidget()
 {
   PyObject *w = PyLong_FromVoidPtr((void*)d_main_gui);
   PyObject *retarg = Py_BuildValue("N", w);
@@ -138,7 +135,7 @@ qtgui_freq_sink_c::pyqwidget()
 }
 
 void
-qtgui_freq_sink_c::set_frequency_range(const double centerfreq,
+qtgui_freq_sink_f::set_frequency_range(const double centerfreq,
 				       const double bandwidth)
 {
   d_center_freq = centerfreq;
@@ -149,13 +146,13 @@ qtgui_freq_sink_c::set_frequency_range(const double centerfreq,
 }
 
 void
-qtgui_freq_sink_c::set_fft_power_db(double min, double max)
+qtgui_freq_sink_f::set_fft_power_db(double min, double max)
 {
   d_main_gui->SetFrequencyAxis(min, max);
 }
 
 void
-qtgui_freq_sink_c::set_update_time(double t)
+qtgui_freq_sink_f::set_update_time(double t)
 {
   //convert update time to ticks
   gruel::high_res_timer_type tps = gruel::high_res_timer_tps();
@@ -164,48 +161,41 @@ qtgui_freq_sink_c::set_update_time(double t)
 }
 
 void
-qtgui_freq_sink_c::set_title(int which, const std::string &title)
+qtgui_freq_sink_f::set_title(int which, const std::string &title)
 {
   d_main_gui->setTitle(which, title.c_str());
 }
 
 void
-qtgui_freq_sink_c::set_color(int which, const std::string &color)
+qtgui_freq_sink_f::set_color(int which, const std::string &color)
 {
   d_main_gui->setColor(which, color.c_str());
 }
 
 void
-qtgui_freq_sink_c::set_resize(int width, int height)
+qtgui_freq_sink_f::set_resize(int width, int height)
 {
   d_main_gui->resize(QSize(width, height));
 }
 
 void
-qtgui_freq_sink_c::fft(float *data_out, const gr_complex *data_in, int size)
+qtgui_freq_sink_f::fft(float *data_out, const float *data_in, int size)
 {
+  // float to complex conversion
+  gr_complex *dst = d_fft->get_inbuf();
+  for (int i = 0; i < size; i++)
+    dst[i] = data_in[i];
+
   if(d_window.size()) {
-    volk_32fc_32f_multiply_32fc_a(d_fft->get_inbuf(), data_in, &d_window.front(), size);
-  }
-  else {
-    memcpy(d_fft->get_inbuf(), data_in, sizeof(gr_complex)*size);
+    volk_32fc_32f_multiply_32fc_a(d_fft->get_inbuf(), dst, &d_window.front(), size);
   }
 
   d_fft->execute();     // compute the fft
-
   volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(), size, 1.0, size);
-
-  // Perform shift operation
-  unsigned int len = (unsigned int)(floor(size/2.0));
-  float *tmp = (float*)malloc(sizeof(float)*len);
-  memcpy(tmp, &data_out[0], sizeof(float)*len);
-  memcpy(&data_out[0], &data_out[len], sizeof(float)*(size - len));
-  memcpy(&data_out[size - len], tmp, sizeof(float)*len);
-  free(tmp);
 }
 
 void
-qtgui_freq_sink_c::windowreset()
+qtgui_freq_sink_f::windowreset()
 {
   //gr_firdes::win_type newwintype = (gr_firdes::win_type)d_main_gui->GetWindowType();
   //if(d_wintype != newwintype) {
@@ -215,7 +205,7 @@ qtgui_freq_sink_c::windowreset()
 }
 
 void
-qtgui_freq_sink_c::buildwindow()
+qtgui_freq_sink_f::buildwindow()
 {
   d_window.clear();
   if(d_wintype != 0) {
@@ -224,7 +214,7 @@ qtgui_freq_sink_c::buildwindow()
 }
 
 void
-qtgui_freq_sink_c::fftresize()
+qtgui_freq_sink_f::fftresize()
 {
   int newfftsize = d_fftsize;
 
@@ -235,7 +225,7 @@ qtgui_freq_sink_c::fftresize()
       delete [] d_residbufs[i];
       delete [] d_magbufs[i];
 
-      d_residbufs.push_back(new gr_complex[newfftsize]);
+      d_residbufs.push_back(new float[newfftsize]);
       d_magbufs.push_back(new double[newfftsize]);
     }
 
@@ -254,12 +244,12 @@ qtgui_freq_sink_c::fftresize()
 }
 
 int
-qtgui_freq_sink_c::work(int noutput_items,
+qtgui_freq_sink_f::work(int noutput_items,
 			gr_vector_const_void_star &input_items,
 			gr_vector_void_star &output_items)
 {
   int j=0;
-  const gr_complex *in = (const gr_complex*)input_items[0];
+  const float *in = (const float*)input_items[0];
 
   // Update the FFT size from the application
   fftresize();
@@ -275,8 +265,8 @@ qtgui_freq_sink_c::work(int noutput_items,
       float *fbuf = new float[d_fftsize];
       for(int n = 0; n < d_nconnections; n++) {
 	// Fill up residbuf with d_fftsize number of items
-	in = (const gr_complex*)input_items[n];
-	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*resid);
+	in = (const float*)input_items[n];
+	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(float)*resid);
 
 	fft(fbuf, d_residbufs[n], d_fftsize);
 	for(int x=0; x < d_fftsize; x++)
@@ -296,8 +286,8 @@ qtgui_freq_sink_c::work(int noutput_items,
     // Otherwise, copy what we received into the residbuf for next time
     else {
       for(int n = 0; n < d_nconnections; n++) {
-	in = (const gr_complex*)input_items[n];
-	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*datasize);
+	in = (const float*)input_items[n];
+	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(float)*datasize);
       }
       d_index += datasize;
       j += datasize;

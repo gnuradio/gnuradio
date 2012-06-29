@@ -139,18 +139,17 @@ class my_top_block(gr.top_block):
 
         self.qapp = QtGui.QApplication(sys.argv)
 
-        src1 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
-        src2 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
-        src  = gr.add_cc()
-        channel = gr.channel_model(0.01)
-        thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
-        self.snk1 = qtgui.freq_sink_c(npts, gr.firdes.WIN_BLACKMAN_hARRIS,
+        src1 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
+        src2 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
+        src  = gr.add_ff()
+        thr = gr.throttle(gr.sizeof_float, 100*npts)
+        self.snk1 = qtgui.freq_sink_f(npts, gr.firdes.WIN_BLACKMAN_hARRIS,
                                       0, Rs,
-                                      "Complex Freq Example", 2)
+                                      "Real freq Example", 3)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
-        self.connect(src,  channel, thr, (self.snk1, 0))
+        self.connect(src,  thr, (self.snk1, 0))
         self.connect(src1,  (self.snk1, 1))
         self.connect(src2,  (self.snk1, 2))
 
