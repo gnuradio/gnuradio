@@ -127,6 +127,7 @@ list(APPEND gr_blocks_sources
     complex_to_mag_impl.cc
     complex_to_mag_squared_impl.cc
     complex_to_arg_impl.cc
+    conjugate_cc_impl.cc
     float_to_char_impl.cc
     float_to_complex_impl.cc
     float_array_to_int.cc

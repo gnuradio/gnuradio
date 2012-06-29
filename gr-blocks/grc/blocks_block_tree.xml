@@ -36,6 +36,7 @@
 		<block>blocks_multiply_xx</block>
 		<block>blocks_multiply_const_vxx</block>
 		<block>blocks_sub_xx</block>
+		<block>blocks_conjugate_cc</block>
 	</cat>
 	<cat>
 	        <name>Stream Type Conversions (New) </name>
