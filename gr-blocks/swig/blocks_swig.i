@@ -60,6 +60,10 @@
 #include "blocks/float_to_short.h"
 #include "blocks/float_to_uchar.h"
 #include "blocks/int_to_float.h"
+#include "blocks/integrate_ss.h"
+#include "blocks/integrate_ii.h"
+#include "blocks/integrate_ff.h"
+#include "blocks/integrate_cc.h"
 #include "blocks/interleaved_short_to_complex.h"
 #include "blocks/multiply_ss.h"
 #include "blocks/multiply_ii.h"
@@ -114,6 +118,10 @@
 %include "blocks/float_to_short.h"
 %include "blocks/float_to_uchar.h"
 %include "blocks/int_to_float.h"
+%include "blocks/integrate_ss.h"
+%include "blocks/integrate_ii.h"
+%include "blocks/integrate_ff.h"
+%include "blocks/integrate_cc.h"
 %include "blocks/interleaved_short_to_complex.h"
 %include "blocks/multiply_ss.h"
 %include "blocks/multiply_ii.h"
@@ -167,6 +175,10 @@ GR_SWIG_BLOCK_MAGIC2(blocks, float_to_int);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_uchar);
 GR_SWIG_BLOCK_MAGIC2(blocks, int_to_float);
+GR_SWIG_BLOCK_MAGIC2(blocks, integrate_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, integrate_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, integrate_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, integrate_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, interleaved_short_to_complex);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
