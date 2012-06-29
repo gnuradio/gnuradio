@@ -27,91 +27,22 @@
 #include <iostream>
 
 TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
-  : QWidget(parent)
+  : DisplayForm(nplots, parent)
 {
-  _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
 
   _layout = new QGridLayout(this);
-  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(nplots, this);
-  _layout->addWidget(_timeDomainDisplayPlot, 0, 0);
-
-  _nplots = nplots;
-  _numRealDataPoints = 1024;
-
+  _displayPlot = new TimeDomainDisplayPlot(nplots, this);
+  _layout->addWidget(_displayPlot, 0, 0);
   setLayout(_layout);
 
-  // Set the initial plot size
-  resize(QSize(800, 600));
-
-  // Set up a grid that can be turned on/off
-  _grid = new QwtPlotGrid();
-  _grid->setPen(QPen(QColor(Qt::gray)));
-
-  // Create a set of actions for the menu
-  _stop_act = new QAction("Stop", this);
-  _stop_act->setStatusTip(tr("Start/Stop"));
-  connect(_stop_act, SIGNAL(triggered()), this, SLOT(setStop()));
-  _stop_state = false;
-
-  _grid_act = new QAction("Grid On", this);
-  _grid_act->setStatusTip(tr("Toggle Grid on/off"));
-  connect(_grid_act, SIGNAL(triggered()), this, SLOT(setGrid()));
-  _grid_state = false;
-
-  // Create a pop-up menu for manipulating the figure
-  _menu = new QMenu(this);
-  _menu->addAction(_stop_act);
-  _menu->addAction(_grid_act);
-
-  for(int i = 0; i < _nplots; i++) {
-    _line_title_act.push_back(new LineTitleAction(i, this));
-    _line_color_menu.push_back(new LineColorMenu(i, this));
-    _line_width_menu.push_back(new LineWidthMenu(i, this));
-    _line_style_menu.push_back(new LineStyleMenu(i, this));
-    _line_marker_menu.push_back(new LineMarkerMenu(i, this));
-
-    connect(_line_title_act[i], SIGNAL(whichTrigger(int, const QString&)),
-	    this, SLOT(setTitle(int, const QString&)));
-
-    for(int j = 0; j < _line_color_menu[i]->getNumActions(); j++) {
-      connect(_line_color_menu[i], SIGNAL(whichTrigger(int, const QString&)),
-	      this, SLOT(setColor(int, const QString&)));
-    }
-
-    for(int j = 0; j < _line_width_menu[i]->getNumActions(); j++) {
-      connect(_line_width_menu[i], SIGNAL(whichTrigger(int, int)),
-	      this, SLOT(setLineWidth(int, int)));
-    }
-
-    for(int j = 0; j < _line_style_menu[i]->getNumActions(); j++) {
-      connect(_line_style_menu[i], SIGNAL(whichTrigger(int, Qt::PenStyle)),
-	      this, SLOT(setLineStyle(int, Qt::PenStyle)));
-    }
-
-    for(int j = 0; j < _line_marker_menu[i]->getNumActions(); j++) {
-      connect(_line_marker_menu[i], SIGNAL(whichTrigger(int, QwtSymbol::Style)),
-	      this, SLOT(setLineMarker(int, QwtSymbol::Style)));
-    }
-    
-    _lines_menu.push_back(new QMenu(_timeDomainDisplayPlot->title(i), this));
-    _lines_menu[i]->addAction(_line_title_act[i]);
-    _lines_menu[i]->addMenu(_line_color_menu[i]);
-    _lines_menu[i]->addMenu(_line_width_menu[i]);
-    _lines_menu[i]->addMenu(_line_style_menu[i]);
-    _lines_menu[i]->addMenu(_line_marker_menu[i]);
-    _menu->addMenu(_lines_menu[i]);
-  }
+  _numRealDataPoints = 1024;
 
   Reset();
 
-  // Create a timer to update plots at the specified rate
-  displayTimer = new QTimer(this);
-  connect(displayTimer, SIGNAL(timeout()), this, SLOT(updateGuiTimer()));
-
-  connect(_timeDomainDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
-	  this, SLOT(onTimePlotPointSelected(const QPointF)));
+  connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
+	  this, SLOT(onPlotPointSelected(const QPointF)));
 }
 
 TimeDisplayForm::~TimeDisplayForm()
@@ -120,90 +51,32 @@ TimeDisplayForm::~TimeDisplayForm()
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
   delete _intValidator;
-
-  displayTimer->stop();
-  delete displayTimer;
 }
 
-void
-TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
+TimeDomainDisplayPlot*
+TimeDisplayForm::getPlot()
 {
-  const std::vector<double*> timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
-  const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
-
-  _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints,
-				      numTimeDomainDataPoints,
-				      d_update_time);
+  return ((TimeDomainDisplayPlot*)_displayPlot);
 }
 
 void
-TimeDisplayForm::resizeEvent( QResizeEvent *e )
+TimeDisplayForm::newData(const QEvent* updateEvent)
 {
-  QSize s = size();
-  emit _timeDomainDisplayPlot->resizeSlot(&s);
+  TimeUpdateEvent *tevent = (TimeUpdateEvent*)updateEvent;
+  const std::vector<double*> dataPoints = tevent->getTimeDomainPoints();
+  const uint64_t numDataPoints = tevent->getNumTimeDomainDataPoints();
+
+  getPlot()->PlotNewData(dataPoints,
+			 numDataPoints,
+			 d_update_time);
 }
 
 void
-TimeDisplayForm::customEvent( QEvent * e)
+TimeDisplayForm::customEvent(QEvent * e)
 {
   if(e->type() == TimeUpdateEvent::Type()) {
-    TimeUpdateEvent* timeUpdateEvent = (TimeUpdateEvent*)e;
-    newData(timeUpdateEvent);
+    newData(e);
   }
-  //else if(e->type() == SpectrumWindowCaptionEventType){
-  //setWindowTitle(((SpectrumWindowCaptionEvent*)e)->getLabel());
-  //}
-  //else if(e->type() == 10009){
-  //Reset();
-  //if(_systemSpecifiedFlag){
-  //  _system->ResetPendingGUIUpdateEvents();
-  //}
-  //}
-}
-
-void
-TimeDisplayForm::mousePressEvent( QMouseEvent * e)
-{
-  if(e->button() == Qt::RightButton) {
-    QwtPlotLayout *plt = _timeDomainDisplayPlot->plotLayout();
-    QRectF cvs = plt->canvasRect();
-    
-    QRect plotrect;
-    plotrect.setLeft(cvs.x()-plt->spacing()-plt->canvasMargin(0));
-    plotrect.setRight(cvs.x()+cvs.width()+plt->spacing()+plt->canvasMargin(0));
-    plotrect.setBottom(cvs.y()-plt->spacing()-plt->canvasMargin(0));
-    plotrect.setTop(cvs.y()+cvs.width()+plt->spacing()+plt->canvasMargin(0));
-
-    if(!plotrect.contains(e->pos())) {
-      if(_stop_state == false)
-	_stop_act->setText(tr("Stop"));
-      else
-	_stop_act->setText(tr("Start"));
-
-      if(_grid_state == false)
-	_grid_act->setText(tr("Grid On"));
-      else
-	_grid_act->setText(tr("Grid Off"));
-
-      // Update the line titles if changed externally
-      for(int i = 0; i < _nplots; i++) {
-	_lines_menu[i]->setTitle(_timeDomainDisplayPlot->title(i));
-      }
-      _menu->exec(e->globalPos());
-    }
-  }
-}
-
-void
-TimeDisplayForm::updateGuiTimer()
-{
-  _timeDomainDisplayPlot->canvas()->update();
-}
-
-void
-TimeDisplayForm::onTimePlotPointSelected(const QPointF p)
-{
-  emit plotPointSelected(p, 3);
 }
 
 void
@@ -222,121 +95,14 @@ TimeDisplayForm::setFrequencyRange(const double newCenterFrequency,
 
     _startFrequency = newStartFrequency;
     _stopFrequency = newStopFrequency;
-
-    _timeDomainDisplayPlot->SetSampleRate(_stopFrequency - _startFrequency,
-					  units, strtime[iunit]);
+    
+    getPlot()->SetSampleRate(_stopFrequency - _startFrequency,
+			     units, strtime[iunit]);
   }
-}
-
-void
-TimeDisplayForm::Reset()
-{
-}
-
-
-void
-TimeDisplayForm::closeEvent( QCloseEvent *e )
-{
-  //if(_systemSpecifiedFlag){
-  //  _system->SetWindowOpenFlag(false);
-  //}
-
-  qApp->processEvents();
-
-  QWidget::closeEvent(e);
 }
 
 void
 TimeDisplayForm::setTimeDomainAxis(double min, double max)
 {
-  _timeDomainDisplayPlot->setYaxis(min, max);
-}
-
-void
-TimeDisplayForm::setUpdateTime(double t)
-{
-  d_update_time = t;
-  displayTimer->start(d_update_time);
-}
-
-void
-TimeDisplayForm::setTitle(int which, const QString &title)
-{
-  _timeDomainDisplayPlot->setTitle(which, title);
-}
-
-void
-TimeDisplayForm::setColor(int which, const QString &color)
-{
-  _timeDomainDisplayPlot->setColor(which, color);
-  _timeDomainDisplayPlot->replot();
-}
-
-void
-TimeDisplayForm::setLineWidth(int which, int width)
-{
-  _timeDomainDisplayPlot->setLineWidth(which, width);
-  _timeDomainDisplayPlot->replot();
-}
-
-void
-TimeDisplayForm::setLineStyle(int which, Qt::PenStyle style)
-{
-  _timeDomainDisplayPlot->setLineStyle(which, style);
-  _timeDomainDisplayPlot->replot();
-}
-
-void
-TimeDisplayForm::setLineMarker(int which, QwtSymbol::Style marker)
-{
-  _timeDomainDisplayPlot->setLineMarker(which, marker);
-  _timeDomainDisplayPlot->replot();
-}
-
-void
-TimeDisplayForm::setStop(bool on)
-{
-  if(!on) {
-    // will auto-detach if already attached.
-    _timeDomainDisplayPlot->setStop(false);
-    _stop_state = false;
-  }
-  else {
-    _timeDomainDisplayPlot->setStop(true);
-    _stop_state = true;
-  }
-  _timeDomainDisplayPlot->replot();
-}
-
-void
-TimeDisplayForm::setStop()
-{
-  if(_stop_state == false)
-    setStop(true);
-  else
-    setStop(false);
-}
-
-void
-TimeDisplayForm::setGrid(bool on)
-{
-  if(on) {
-    // will auto-detach if already attached.
-    _grid->attach(_timeDomainDisplayPlot);
-    _grid_state = true;
-  }
-  else {
-    _grid->detach();
-    _grid_state = false;
-  }
-  _timeDomainDisplayPlot->replot();
-}
-
-void
-TimeDisplayForm::setGrid()
-{
-  if(_grid_state == false)
-    setGrid(true);
-  else
-    setGrid(false);
+  getPlot()->setYaxis(min, max);
 }

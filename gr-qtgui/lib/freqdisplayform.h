@@ -28,12 +28,9 @@
 #include <QtGui/QtGui>
 #include <vector>
 
-#include <qwt_plot_grid.h>
-#include <qwt_plot_layout.h>
+#include "displayform.h"
 
-#include "form_menus.h"
-
-class FreqDisplayForm : public QWidget
+class FreqDisplayForm : public DisplayForm
 {
   Q_OBJECT
 
@@ -41,71 +38,25 @@ class FreqDisplayForm : public QWidget
   FreqDisplayForm(int nplots=1, QWidget* parent = 0);
   ~FreqDisplayForm();
 
-  void Reset();
+  FrequencyDisplayPlot* getPlot();
 
 public slots:
-  void resizeEvent(QResizeEvent *e);
   void customEvent(QEvent *e);
-  void mousePressEvent(QMouseEvent *e);
-
-  void setFrequencyRange(const double newCenterFrequency,
-			 const double newStartFrequency,
-			 const double newStopFrequency);
-  void closeEvent(QCloseEvent *e);
-
-  void setUpdateTime(double t);
 
   void SetFrequencyRange(const double newCenterFrequency,
 			 const double newStartFrequency,
 			 const double newStopFrequency);
   void SetFrequencyAxis(double min, double max);
 
-  void setTitle(int which, const QString &title);
-  void setColor(int which, const QString &color);
-  void setLineWidth(int which, int width);
-  void setLineStyle(int which, Qt::PenStyle style);
-  void setLineMarker(int which, QwtSymbol::Style style);
-
-  void setGrid(bool on);
-  void setGridOn();
-  void setGridOff();
-
 private slots:
-  void newData(const FreqUpdateEvent *freqUpdateEvent);
-  void updateGuiTimer();
-
-  void onFFTPlotPointSelected(const QPointF p);
-
-signals:
-  void plotPointSelected(const QPointF p, int type);
+  void newData(const QEvent *updateEvent);
 
 private:
-  int _nplots;
   uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
-  QGridLayout *_layout;
-  FrequencyDisplayPlot* _freqDisplayPlot;
-  bool _systemSpecifiedFlag;
   double _startFrequency;
   double _stopFrequency;
-  double _centerFrequency;
-
-  QwtPlotGrid *_grid;
-
-  QMenu *_menu;
-  QAction *_grid_on_act;
-  QAction *_grid_off_act;
-
-  QList<QMenu*> _lines_menu;
-  QList<LineTitleAction*> _line_title_act;
-  QList<LineColorMenu*> _line_color_menu;
-  QList<LineWidthMenu*> _line_width_menu;
-  QList<LineStyleMenu*> _line_style_menu;
-  QList<LineMarkerMenu*> _line_marker_menu;
-
-  QTimer *displayTimer;
-  double d_update_time;
 };
 
 #endif /* FREQ_DISPLAY_FORM_H */

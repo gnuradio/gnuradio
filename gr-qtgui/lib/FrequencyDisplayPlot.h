@@ -25,25 +25,12 @@
 
 #include <stdint.h>
 #include <cstdio>
-#include <qwt_plot.h>
-#include <qwt_painter.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_curve.h>
-#include <qwt_scale_engine.h>
-#include <qwt_scale_widget.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_marker.h>
-#include <qwt_plot_magnifier.h>
-#include <gruel/high_res_timer.h>
-#include <qwt_symbol.h>
+#include <vector>
 #include <qtgui_util.h>
+#include "DisplayPlot.h"
 
-#if QWT_VERSION >= 0x060000
-#include <qwt_compat.h>
-#endif
-
-class FrequencyDisplayPlot:public QwtPlot{
+class FrequencyDisplayPlot: public DisplayPlot
+{
   Q_OBJECT
 
 public:
@@ -73,7 +60,7 @@ public:
   void SetMaxFFTVisible(const bool);
   void SetMinFFTVisible(const bool);
 
-  virtual void replot();
+  void replot();
 
   void set_yaxis(double min, double max);
 
@@ -81,75 +68,43 @@ public:
   void SetBGColour (QColor c);
   void ShowCFMarker (const bool);
 
-protected slots:
-  void LegendEntryChecked(QwtPlotItem* plotItem, bool on);
-
 public slots:
-  void resizeSlot( QSize *e );
   void SetLowerIntensityLevel(const double);
   void SetUpperIntensityLevel(const double);
 
-  // Because of the preprocessing of slots in QT, these are no
-  // easily separated by the version check. Make one for each
-  // version until it's worked out.
   void OnPickerPointSelected(const QwtDoublePoint & p);
   void OnPickerPointSelected6(const QPointF & p);
 
-  void setTitle(int which, QString title);
-  void setColor(int which, QString color);
-  void setLineWidth(int which, int width);
-  void setLineStyle(int which, Qt::PenStyle style);
-  void setLineMarker(int which, QwtSymbol::Style marker);
-
-  QString title(int which);
-
-signals:
-  void plotPointSelected(const QPointF p);
-
-protected:
-
 private:
-
   void _resetXAxisPoints();
+
+  std::vector<double*> _dataPoints;
+
+  QwtPlotCurve* _min_fft_plot_curve;
+  QwtPlotCurve* _max_fft_plot_curve;
 
   double _startFrequency;
   double _stopFrequency;
   double _maxYAxis;
   double _minYAxis;
 
-  int _nplots;
-  std::vector<QwtPlotCurve*> _fft_plot_curve;
-  QwtPlotCurve* _min_fft_plot_curve;
-  QwtPlotCurve* _max_fft_plot_curve;
-
   QwtPlotMarker* _lower_intensity_marker;
   QwtPlotMarker* _upper_intensity_marker;
-
-  QwtPlotPanner* _panner;
-  QwtPlotZoomer* _zoomer;
 
   QwtPlotMarker *_markerPeakAmplitude;
   QwtPlotMarker *_markerNoiseFloorAmplitude;
   QwtPlotMarker *_markerCF;
 
-  QwtDblClickPlotPicker *_picker;
-
-  QwtPlotMagnifier *_magnifier;
-
-  std::vector<double*> _dataPoints;
   double* _xAxisPoints;
   int     _xAxisMultiplier;
 
   double* _minFFTPoints;
   double* _maxFFTPoints;
-  int64_t _numPoints;
 
   double _peakFrequency;
   double _peakAmplitude;
 
   double _noiseFloorAmplitude;
-
-  gruel::high_res_timer_type _lastReplot;
 
   bool _useCenterFrequencyFlag;
 };

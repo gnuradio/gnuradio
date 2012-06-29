@@ -22,9 +22,11 @@
 ########################################################################
 set(qtgui_moc_hdrs
     spectrumdisplayform.h
+    displayform.h
     timedisplayform.h
     freqdisplayform.h
     form_menus.h
+    DisplayPlot.h
     FrequencyDisplayPlot.h
     TimeDomainDisplayPlot.h
     WaterfallDisplayPlot.h
@@ -43,12 +45,14 @@ endif(NOT EXISTS ${spectrum_ui_hdr})
 set(qtgui_srcs
     ${qtgui_moc_srcs}
     ${qtgui_ui_hdrs}
+    DisplayPlot.cc
     FrequencyDisplayPlot.cc
     TimeDomainDisplayPlot.cc
     WaterfallDisplayPlot.cc
     waterfallGlobalData.cc
     ConstellationDisplayPlot.cc
     spectrumdisplayform.cc
+    displayform.cc
     timedisplayform.cc
     freqdisplayform.cc
     SpectrumGUIClass.cc
@@ -100,6 +104,7 @@ GR_LIBRARY_FOO(gnuradio-qtgui RUNTIME_COMPONENT "qtgui_runtime" DEVEL_COMPONENT 
 # Install the header files
 ########################################################################
 install(FILES
+    DisplayPlot.h
     FrequencyDisplayPlot.h
     TimeDomainDisplayPlot.h
     WaterfallDisplayPlot.h
@@ -107,6 +112,7 @@ install(FILES
     ConstellationDisplayPlot.h
     plot_waterfall.h
     spectrumdisplayform.h
+    displayform.h
     timedisplayform.h
     freqdisplayform.h
     form_menus.h
