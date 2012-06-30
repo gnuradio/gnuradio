@@ -104,6 +104,7 @@ install(FILES
     interleaved_short_to_complex.h
     multiply_cc.h
     multiply_ff.h
+    multiply_conjugate_cc.h
     multiply_const_cc.h
     multiply_const_ff.h
     short_to_char.h

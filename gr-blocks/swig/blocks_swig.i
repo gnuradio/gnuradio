@@ -69,6 +69,7 @@
 #include "blocks/multiply_ii.h"
 #include "blocks/multiply_ff.h"
 #include "blocks/multiply_cc.h"
+#include "blocks/multiply_conjugate_cc.h"
 #include "blocks/multiply_const_ss.h"
 #include "blocks/multiply_const_ii.h"
 #include "blocks/multiply_const_ff.h"
@@ -127,6 +128,7 @@
 %include "blocks/multiply_ii.h"
 %include "blocks/multiply_ff.h"
 %include "blocks/multiply_cc.h"
+%include "blocks/multiply_conjugate_cc.h"
 %include "blocks/multiply_const_ss.h"
 %include "blocks/multiply_const_ii.h"
 %include "blocks/multiply_const_ff.h"
@@ -184,6 +186,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_conjugate_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_ff);
