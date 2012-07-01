@@ -78,6 +78,7 @@
 #include "blocks/multiply_const_vii.h"
 #include "blocks/multiply_const_vff.h"
 #include "blocks/multiply_const_vcc.h"
+#include "blocks/nlog10_ff.h"
 #include "blocks/short_to_char.h"
 #include "blocks/short_to_float.h"
 #include "blocks/sub_ff.h"
@@ -137,6 +138,7 @@
 %include "blocks/multiply_const_vii.h"
 %include "blocks/multiply_const_vff.h"
 %include "blocks/multiply_const_vcc.h"
+%include "blocks/nlog10_ff.h"
 %include "blocks/short_to_char.h"
 %include "blocks/short_to_float.h"
 %include "blocks/sub_ff.h"
@@ -195,6 +197,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vff);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vcc);
+GR_SWIG_BLOCK_MAGIC2(blocks, nlog10_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ff);

@@ -107,6 +107,7 @@ install(FILES
     multiply_conjugate_cc.h
     multiply_const_cc.h
     multiply_const_ff.h
+    nlog10_ff.h
     short_to_char.h
     short_to_float.h
     uchar_to_float.h

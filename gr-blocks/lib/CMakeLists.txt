@@ -144,6 +144,7 @@ list(APPEND gr_blocks_sources
     multiply_conjugate_cc_impl.cc
     multiply_const_cc_impl.cc
     multiply_const_ff_impl.cc
+    nlog10_ff_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
     uchar_array_to_float.cc
