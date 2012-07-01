@@ -420,7 +420,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const 
 
     }
 
-    real1 = _mm_xor_ps(real1, (__m128)neg);
+    real1 = _mm_xor_ps(real1, bit128_p(&neg)->float_vec);
 
     im0 = _mm_add_ps(im0, im1);
     real0 = _mm_add_ps(real0, real1);

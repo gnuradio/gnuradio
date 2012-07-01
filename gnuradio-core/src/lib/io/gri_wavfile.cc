@@ -27,33 +27,45 @@
 #include <gri_wavfile.h>
 #include <cstring>
 #include <stdint.h>
-#include <boost/asio.hpp>
+#include <boost/detail/endian.hpp> //BOOST_BIG_ENDIAN
 
 # define VALID_COMPRESSION_TYPE 0x0001
 
-// WAV files are always little-endian, so we need some byte switching macros
-
 // Basically, this is the opposite of htonx() and ntohx()
-#ifdef WORDS_BIGENDIAN
+// Define host to/from worknet (little endian) short and long
+#ifdef BOOST_BIG_ENDIAN
 
-static inline uint32_t host_to_wav(uint32_t x) { return htonl(x); }
-static inline uint16_t host_to_wav(uint16_t x) { return htons(x); }
-static inline int16_t  host_to_wav(int16_t x)  { return htons(x); }
-static inline uint32_t wav_to_host(uint32_t x) { return ntohl(x); }
-static inline uint16_t wav_to_host(uint16_t x) { return ntohs(x); }
-static inline int16_t  wav_to_host(int16_t x)  { return ntohs(x); }
+    static inline uint16_t __gri_wav_bs16(uint16_t x)
+    {
+        return (x>>8) | (x<<8);
+    }
+
+    static inline uint32_t __gri_wav_bs32(uint32_t x)
+    {
+        return (uint32_t(__gri_wav_bs16(uint16_t(x&0xfffful)))<<16) | (__gri_wav_bs16(uint16_t(x>>16)));
+    }
+
+    #define htowl(x) __gri_wav_bs32(x)
+    #define wtohl(x) __gri_wav_bs32(x)
+    #define htows(x) __gri_wav_bs16(x)
+    #define wtohs(x) __gri_wav_bs16(x)
 
 #else
 
-static inline uint32_t host_to_wav(uint32_t x) { return x; }
-static inline uint16_t host_to_wav(uint16_t x) { return x; }
-static inline int16_t  host_to_wav(int16_t x)  { return x; }
-static inline uint32_t wav_to_host(uint32_t x) { return x; }
-static inline uint16_t wav_to_host(uint16_t x) { return x; }
-static inline int16_t  wav_to_host(int16_t x)  { return x; }
+    #define htowl(x) uint32_t(x)
+    #define wtohl(x) uint32_t(x)
+    #define htows(x) uint16_t(x)
+    #define wtohs(x) uint16_t(x)
 
-#endif // WORDS_BIGENDIAN
+#endif // BOOST_BIG_ENDIAN
 
+// WAV files are always little-endian, so we need some byte switching macros
+static inline uint32_t host_to_wav(uint32_t x) { return htowl(x); }
+static inline uint16_t host_to_wav(uint16_t x) { return htows(x); }
+static inline int16_t  host_to_wav(int16_t x)  { return htows(x); }
+static inline uint32_t wav_to_host(uint32_t x) { return wtohl(x); }
+static inline uint16_t wav_to_host(uint16_t x) { return wtohs(x); }
+static inline int16_t  wav_to_host(int16_t x)  { return wtohs(x); }
 
 bool
 gri_wavheader_parse(FILE *fp,
