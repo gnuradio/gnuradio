@@ -183,6 +183,7 @@ set(gr_core_general_triple_threats
     gr_agc2_ff
     gr_align_on_samplenumbers_ss
     gr_bin_statistics_f
+    gr_block_gateway
     gr_bytes_to_syms
     gr_char_to_float
     gr_char_to_short
