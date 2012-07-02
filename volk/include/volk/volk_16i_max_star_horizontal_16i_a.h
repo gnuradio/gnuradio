@@ -13,7 +13,9 @@
 #include<emmintrin.h>
 #include<tmmintrin.h>
 
-static inline  void volk_16i_max_star_horizontal_16i_a_ssse3(int16_t* target, int16_t* src0, unsigned int num_bytes) {
+static inline  void volk_16i_max_star_horizontal_16i_a_ssse3(int16_t* target, int16_t* src0, unsigned int num_points) {
+
+  const unsigned int num_bytes = num_points*2;
 
   const static uint8_t shufmask0[16] = {0x00, 0x01, 0x04, 0x05, 0x08, 0x09, 0x0c, 0x0d, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
   const static uint8_t shufmask1[16] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x01, 0x04, 0x05, 0x08, 0x09, 0x0c, 0x0d};
@@ -110,7 +112,9 @@ static inline  void volk_16i_max_star_horizontal_16i_a_ssse3(int16_t* target, in
 
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_16i_max_star_horizontal_16i_a_generic(int16_t* target, int16_t* src0, unsigned int num_bytes) {
+static inline void volk_16i_max_star_horizontal_16i_a_generic(int16_t* target, int16_t* src0, unsigned int num_points) {
+
+	const unsigned int num_bytes = num_points*2;
 
 	int i = 0;
 

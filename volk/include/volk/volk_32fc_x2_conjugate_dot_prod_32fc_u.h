@@ -8,7 +8,9 @@
 #ifdef LV_HAVE_GENERIC
 
 
-static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+  const unsigned int num_bytes = num_points*8;
 
   float * res = (float*) result;
   float * in = (float*) input;
@@ -64,7 +66,9 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_generic(lv_32fc_t* res
 #include <mmintrin.h>
 
 
-static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+  unsigned int num_bytes = num_points*8;
 
   // Variable never used?
   //__VOLK_ATTR_ALIGNED(16) static const uint32_t conjugator[4]= {0x00000000, 0x80000000, 0x00000000, 0x80000000};

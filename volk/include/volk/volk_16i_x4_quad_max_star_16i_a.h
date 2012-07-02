@@ -13,10 +13,9 @@
 
 #include<emmintrin.h>
 
-static inline  void volk_16i_x4_quad_max_star_16i_a_sse2(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_bytes) {
+static inline  void volk_16i_x4_quad_max_star_16i_a_sse2(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_points) {
 
-
-
+	const unsigned int num_bytes = num_points*2;
 
 	int i = 0;
 
@@ -168,7 +167,9 @@ static inline  void volk_16i_x4_quad_max_star_16i_a_sse2(short* target, short* s
 
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_16i_x4_quad_max_star_16i_a_generic(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_bytes) {
+static inline void volk_16i_x4_quad_max_star_16i_a_generic(short* target, short* src0, short* src1, short* src2, short* src3, unsigned int num_points) {
+
+	const unsigned int num_bytes = num_points*2;
 
 	int i = 0;
 

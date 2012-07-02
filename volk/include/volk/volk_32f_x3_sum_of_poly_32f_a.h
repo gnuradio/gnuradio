@@ -13,8 +13,9 @@
 #include<xmmintrin.h>
 #include<pmmintrin.h>
 
-static inline void volk_32f_x3_sum_of_poly_32f_a_sse3(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_bytes) {
+static inline void volk_32f_x3_sum_of_poly_32f_a_sse3(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_points) {
 
+  const unsigned int num_bytes = num_points*4;
 
   float result = 0.0;
   float fst = 0.0;
@@ -100,9 +101,9 @@ static inline void volk_32f_x3_sum_of_poly_32f_a_sse3(float* target, float* src0
 
 #ifdef LV_HAVE_GENERIC
 
-static inline void volk_32f_x3_sum_of_poly_32f_a_generic(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_bytes) {
+static inline void volk_32f_x3_sum_of_poly_32f_a_generic(float* target, float* src0, float* center_point_array, float* cutoff, unsigned int num_points) {
 
-
+  const unsigned int num_bytes = num_points*4;
 
   float result = 0.0;
   float fst = 0.0;
