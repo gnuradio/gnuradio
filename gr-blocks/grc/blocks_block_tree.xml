@@ -44,6 +44,7 @@
 	<cat>
 		<name>Boolean Operations (New) </name>
 		<block>blocks_and_xx.xml</block>
+		<block>blocks_and_const_xx.xml</block>
 	</cat>
 	<cat>
 	        <name>Stream Type Conversions (New) </name>

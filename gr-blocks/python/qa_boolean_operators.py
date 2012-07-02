@@ -110,6 +110,39 @@ class test_boolean_operators (gr_unittest.TestCase):
         op = blocks_swig.and_ii ()
         self.help_ii ((src1_data, src2_data),
                       expected_result, op)
+
+    def test_and_const_ss (self):
+        src_data =        (1,  2,  3,  0x5004,   0x1150)
+        expected_result = (0,  2,  2,  0x5000,   0x1100)
+        src = gr.vector_source_s(src_data)
+        op = blocks_swig.and_const_ss (0x55AA)
+        dst = gr.vector_sink_s()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertEqual(dst.data(), expected_result)
+
+    def test_and_const_bb (self):
+        src_data =        (1,  2, 3,  0x50,   0x11)
+        expected_result = (0,  2, 2,  0x00,   0x00)
+        src = gr.vector_source_b(src_data)
+        op = blocks_swig.and_const_bb (0xAA)
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertEqual(dst.data(), expected_result)
+
+
+    def test_and_const_ii (self):
+        src_data =        (1,  2,  3,  0x5004,   0x1150)
+        expected_result = (0,  2,  2,  0x5000,   0x1100)
+        src = gr.vector_source_i(src_data)
+        op = blocks_swig.and_const_ii (0x55AA)
+        dst = gr.vector_sink_i()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        self.assertEqual(dst.data(), expected_result)
+
+
     """
     def test_or_ss (self):
         src1_data =       (1,  2,  3,  0x5004,   0x1150)

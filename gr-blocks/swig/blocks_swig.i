@@ -43,6 +43,9 @@
 #include "blocks/and_bb.h"
 #include "blocks/and_ss.h"
 #include "blocks/and_ii.h"
+#include "blocks/and_const_bb.h"
+#include "blocks/and_const_ss.h"
+#include "blocks/and_const_ii.h"
 #include "blocks/char_to_float.h"
 #include "blocks/char_to_short.h"
 #include "blocks/complex_to_interleaved_short.h"
@@ -106,6 +109,9 @@
 %include "blocks/and_bb.h"
 %include "blocks/and_ss.h"
 %include "blocks/and_ii.h"
+%include "blocks/and_const_bb.h"
+%include "blocks/and_const_ss.h"
+%include "blocks/and_const_ii.h"
 %include "blocks/char_to_float.h"
 %include "blocks/char_to_short.h"
 %include "blocks/complex_to_interleaved_short.h"
@@ -168,6 +174,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vcc);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, and_const_bb);
+GR_SWIG_BLOCK_MAGIC2(blocks, and_const_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, and_const_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_interleaved_short);
