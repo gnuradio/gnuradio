@@ -67,7 +67,6 @@ function(GR_SWIG_MAKE_DOCS output_file)
         #call doxygen on the Doxyfile + input headers
         add_custom_command(
             OUTPUT ${OUTPUT_DIRECTORY}/xml/index.xml
-	           ${OUTPUT_DIRECTORY}/xml/combine.xslt
             DEPENDS ${input_files} ${GR_SWIG_DOCS_SOURCE_DEPS} ${tag_deps}
             COMMAND ${DOXYGEN_EXECUTABLE} ${OUTPUT_DIRECTORY}/Doxyfile
             COMMENT "Generating doxygen xml for ${name} docs"
@@ -81,6 +80,7 @@ function(GR_SWIG_MAKE_DOCS output_file)
                 ${CMAKE_SOURCE_DIR}/docs/doxygen/swig_doc.py
                 ${OUTPUT_DIRECTORY}/xml
                 ${output_file}
+            COMMENT "Generating python docstrings for ${name}"
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/doxygen
         )
 
