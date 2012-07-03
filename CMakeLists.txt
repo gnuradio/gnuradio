@@ -211,9 +211,6 @@ CPACK_COMPONENT("volk_devel"
 add_subdirectory(volk)
 endif(ENABLE_VOLK)
 
-
-GR_VMCIRCBUF()
-
 ########################################################################
 # Distribute the README file
 ########################################################################
