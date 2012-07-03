@@ -169,27 +169,27 @@ class test_boolean_operators (gr_unittest.TestCase):
         self.help_ii ((src1_data, src2_data),
                       expected_result, op)
 
+    """                      
     def test_not_ss (self):
         src1_data =       (1,      2,      3,       0x5004,   0x1150)
         expected_result = (~1,     ~2,      ~3,       ~0x5004,   ~0x1150)
-        op = gr.not_ss ()
+        op = blocks_swig.not_ss ()
         self.help_ss ((((src1_data),)),
                       expected_result, op)
 
     def test_not_bb (self):
         src1_data =       (1,     2,    2,     3,     0x04,   0x50)
         expected_result = (0xFE,  0xFD, 0xFD,  0xFC,  0xFB,   0xAF)
-        op = gr.not_bb ()
+        op = blocks_swig.not_bb ()
         self.help_bb (((src1_data), ),
                       expected_result, op)
 
     def test_not_ii (self):
         src1_data =       (1,    2,  3,  0x50005004,   0x11001150)
         expected_result = (~1 , ~2, ~3, ~0x50005004,  ~0x11001150)
-        op = gr.not_ii ()
+        op = blocks_swig.not_ii ()
         self.help_ii (((src1_data),),
                       expected_result, op)
-    """
 
 
 if __name__ == '__main__':
