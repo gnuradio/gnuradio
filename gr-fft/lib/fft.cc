@@ -62,6 +62,12 @@ namespace gr {
       return (float*)fftwf_malloc(sizeof(float)*size);
     }
 
+    double *
+    malloc_double(int size)
+    {
+      return (double*)fftwf_malloc(sizeof(double)*size);
+    }
+
     void
     free(void *b)
     {

@@ -30,17 +30,21 @@
 #include <gr_complex.h>
 #include <boost/thread.hpp>
 
-/*! \brief Helper function for allocating complex fft buffers
+/*! \brief Helper function for allocating complex* buffers
  */
-gr_complex* gri_fft_malloc_complex(int size);
+GR_CORE_API gr_complex* gri_fft_malloc_complex(int size);
 
-/*! \brief Helper function for allocating float fft buffers
+/*! \brief Helper function for allocating float* buffers
  */
-float* gri_fft_malloc_float(int size);
+GR_CORE_API float* gri_fft_malloc_float(int size);
+
+/*! \brief Helper function for allocating double* buffers
+ */
+GR_CORE_API double* gri_fft_malloc_double(int size);
 
 /*! \brief Helper function for freeing fft buffers
  */
-void gri_fft_free(void *b);
+GR_CORE_API void gri_fft_free(void *b);
 
 
 /*!
