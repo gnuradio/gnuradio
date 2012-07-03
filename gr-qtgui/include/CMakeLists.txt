@@ -26,6 +26,7 @@ install(FILES
     qtgui_time_sink_f.h
     qtgui_freq_sink_c.h
     qtgui_freq_sink_f.h
+    qtgui_const_sink_c.h
     qtgui_sink_c.h
     qtgui_sink_f.h
     qtgui_util.h

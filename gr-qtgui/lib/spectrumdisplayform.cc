@@ -36,7 +36,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _frequencyDisplayPlot = new FrequencyDisplayPlot(1, FrequencyPlotDisplayFrame);
   _waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(2, TimeDomainDisplayFrame);
-  _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
+  _constellationDisplayPlot = new ConstellationDisplayPlot(1, ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
   _realFFTDataPoints = new double[_numRealDataPoints];
   _averagedValues = new double[_numRealDataPoints];

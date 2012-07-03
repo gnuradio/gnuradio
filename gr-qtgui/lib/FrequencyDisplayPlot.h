@@ -49,6 +49,7 @@ public:
 		   const double noiseFloorAmplitude, const double peakFrequency,
 		   const double peakAmplitude, const double timeInterval);
 
+  // Old method to be removed
   void PlotNewData(const double* dataPoints,
 		   const int64_t numDataPoints,
 		   const double noiseFloorAmplitude, const double peakFrequency,

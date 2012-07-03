@@ -148,4 +148,35 @@ private:
 };
 
 
+/********************************************************************/
+
+
+class ConstUpdateEvent: public QEvent
+{
+public:
+  ConstUpdateEvent(const std::vector<double*> realDataPoints,
+		   const std::vector<double*> imagDataPoints,
+		   const uint64_t numDataPoints);
+
+  ~ConstUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getRealPoints() const;
+  const std::vector<double*> getImagPoints() const;
+  uint64_t getNumDataPoints() const;
+  bool getRepeatDataFlag() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _realDataPoints;
+  std::vector<double*> _imagDataPoints;
+  uint64_t _numDataPoints;
+};
+
+
 #endif /* SPECTRUM_UPDATE_EVENTS_H */

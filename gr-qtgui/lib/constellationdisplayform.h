@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,25 +20,37 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+#ifndef CONSTELLATION_DISPLAY_FORM_H
+#define CONSTELLATION_DISPLAY_FORM_H
 
-//load generated python docstrings
-%include "qtgui_swig_doc.i"
+#include <spectrumUpdateEvents.h>
+#include <ConstellationDisplayPlot.h>
+#include <QtGui/QtGui>
+#include <vector>
 
-%{
-#include "qtgui_sink_c.h"
-#include "qtgui_sink_f.h"
-#include "qtgui_time_sink_c.h"
-#include "qtgui_time_sink_f.h"
-#include "qtgui_freq_sink_c.h"
-#include "qtgui_freq_sink_f.h"
-#include "qtgui_const_sink_c.h"
-%}
+#include "displayform.h"
 
-%include "qtgui_sink_c.i"
-%include "qtgui_sink_f.i"
-%include "qtgui_time_sink_c.i"
-%include "qtgui_time_sink_f.i"
-%include "qtgui_freq_sink_c.i"
-%include "qtgui_freq_sink_f.i"
-%include "qtgui_const_sink_c.i"
+class ConstellationDisplayForm : public DisplayForm
+{
+  Q_OBJECT
+
+public:
+  ConstellationDisplayForm(int nplots=1, QWidget* parent = 0);
+  ~ConstellationDisplayForm();
+
+  ConstellationDisplayPlot* getPlot();
+
+public slots:
+  void customEvent(QEvent * e);
+
+  // add set x/y axis
+
+private slots:
+  void newData(const QEvent*);
+
+private:
+  uint64_t _numRealDataPoints;
+  QIntValidator* _intValidator;
+};
+
+#endif /* CONSTELLATION_DISPLAY_FORM_H */

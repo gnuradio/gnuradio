@@ -25,6 +25,7 @@ set(qtgui_moc_hdrs
     displayform.h
     timedisplayform.h
     freqdisplayform.h
+    constellationdisplayform.h
     form_menus.h
     DisplayPlot.h
     FrequencyDisplayPlot.h
@@ -55,6 +56,7 @@ set(qtgui_srcs
     displayform.cc
     timedisplayform.cc
     freqdisplayform.cc
+    constellationdisplayform.cc
     SpectrumGUIClass.cc
     spectrumUpdateEvents.cc
     plot_waterfall.cc
@@ -64,6 +66,7 @@ set(qtgui_srcs
     qtgui_time_sink_f.cc
     qtgui_freq_sink_c.cc
     qtgui_freq_sink_f.cc
+    qtgui_const_sink_c.cc
     qtgui_util.cc
 )
 
@@ -116,6 +119,7 @@ install(FILES
     displayform.h
     timedisplayform.h
     freqdisplayform.h
+    constellationdisplayform.h
     form_menus.h
     SpectrumGUIClass.h
     spectrumUpdateEvents.h

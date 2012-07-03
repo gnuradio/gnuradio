@@ -265,4 +265,59 @@ FreqUpdateEvent::getNumDataPoints() const
   return _numDataPoints;
 }
 
+
+/***************************************************************************/
+
+
+ConstUpdateEvent::ConstUpdateEvent(const std::vector<double*> realDataPoints,
+				   const std::vector<double*> imagDataPoints,
+				   const uint64_t numDataPoints)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(numDataPoints < 1) {
+    _numDataPoints = 1;
+  }
+  else {
+    _numDataPoints = numDataPoints;
+  }
+
+  _nplots = realDataPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _realDataPoints.push_back(new double[_numDataPoints]);
+    _imagDataPoints.push_back(new double[_numDataPoints]);
+    if(numDataPoints > 0) {
+      memcpy(_realDataPoints[i], realDataPoints[i],
+	     _numDataPoints*sizeof(double));
+      memcpy(_imagDataPoints[i], imagDataPoints[i],
+	     _numDataPoints*sizeof(double));
+    }
+  }
+}
+
+ConstUpdateEvent::~ConstUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _realDataPoints[i];
+    delete[] _imagDataPoints[i];
+  }
+}
+
+const std::vector<double*>
+ConstUpdateEvent::getRealPoints() const
+{
+  return _realDataPoints;
+}
+
+const std::vector<double*>
+ConstUpdateEvent::getImagPoints() const
+{
+  return _imagDataPoints;
+}
+
+uint64_t
+ConstUpdateEvent::getNumDataPoints() const
+{
+  return _numDataPoints;
+}
+
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

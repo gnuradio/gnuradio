@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2008-2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,6 +27,7 @@
 
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
+#include <QColor>
 #include <iostream>
 
 class ConstellationDisplayZoomer: public QwtPlotZoomer
@@ -56,34 +57,13 @@ protected:
   }
 };
 
-ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
-  : QwtPlot(parent)
+ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
+  : DisplayPlot(nplots, parent)
 {
-  _lastReplot = 0;
-
   resize(parent->width(), parent->height());
 
   _numPoints = 1024;
   _penSize = 5;
-  _realDataPoints = new double[_numPoints];
-  _imagDataPoints = new double[_numPoints];
-
-  // Disable polygon clipping
-#if QWT_VERSION < 0x060000
-  QwtPainter::setDeviceClipping(false);
-#else
-  QwtPainter::setPolylineSplitting(false);
-#endif
-
-#if QWT_VERSION < 0x060000
-  // We don't need the cache here
-  canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
-  canvas()->setPaintAttribute(QwtPlotCanvas::PaintPacked, false);
-#endif
-
-  QPalette palette;
-  palette.setColor(canvas()->backgroundRole(), QColor("white"));
-  canvas()->setPalette(palette);
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   set_xaxis(-2.0, 2.0);
@@ -92,21 +72,6 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   set_yaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Quadrature");
-
-  // Automatically deleted when parent is deleted
-  _plot_curve = new QwtPlotCurve("Constellation Points");
-  _plot_curve->attach(this);
-  _plot_curve->setPen(QPen(Qt::blue, _penSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-  _plot_curve->setStyle(QwtPlotCurve::Dots);
-
-#if QWT_VERSION < 0x060000
-  _plot_curve->setRawData(_realDataPoints, _imagDataPoints, _numPoints);
-#else
-  _plot_curve->setRawSamples(_realDataPoints, _imagDataPoints, _numPoints);
-#endif
-
-  memset(_realDataPoints, 0x0, _numPoints*sizeof(double));
-  memset(_imagDataPoints, 0x0, _numPoints*sizeof(double));
 
   _zoomer = new ConstellationDisplayZoomer(canvas());
 
@@ -119,55 +84,55 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
 			   Qt::RightButton);
 
-  _panner = new QwtPlotPanner(canvas());
-  _panner->setAxisEnabled(QwtPlot::yRight, false);
-  _panner->setMouseButton(Qt::MidButton);
-
-  // Avoid jumping when labels with more/less digits
-  // appear/disappear when scrolling vertically
-
-  const QFontMetrics fm(axisWidget(QwtPlot::yLeft)->font());
-  QwtScaleDraw *sd = axisScaleDraw(QwtPlot::yLeft);
-  sd->setMinimumExtent( fm.width("100.00") );
-
   const QColor c(Qt::darkRed);
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
 
-  // emit the position of clicks on widget
-  _picker = new QwtDblClickPlotPicker(canvas());
+  QList<QColor> colors;
+  colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
+	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
+	 << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
+	 << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
+
+  // Setup dataPoints and plot vectors
+  // Automatically deleted when parent is deleted
+  for(int i = 0; i < _nplots; i++) {
+    _realDataPoints.push_back(new double[_numPoints]);
+    _imagDataPoints.push_back(new double[_numPoints]);
+    memset(_realDataPoints[i], 0x0, _numPoints*sizeof(double));
+    memset(_imagDataPoints[i], 0x0, _numPoints*sizeof(double));
+
+    _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
+    _plot_curve[i]->attach(this);
+    _plot_curve[i]->setPen(QPen(colors[i]));
+    
+    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol);
+    symbol->setPen(QPen(colors[i]));
+    symbol->setColor(colors[i]);
+    symbol->setSize(7, 7);
+    _plot_curve[i]->setSymbol(symbol);
+
+    setLineStyle(i, Qt::NoPen);
+    setLineMarker(i, QwtSymbol::Ellipse);
 
 #if QWT_VERSION < 0x060000
-  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
-	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+    _plot_curve[i]->setRawData(_realDataPoints[i], _imagDataPoints[i], _numPoints);
 #else
-  _picker->setStateMachine(new QwtPickerDblClickPointMachine());
-  connect(_picker, SIGNAL(selected(const QPointF &)),
-	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
+    _plot_curve[i]->setRawSamples(_realDataPoints[i], _imagDataPoints[i], _numPoints);
 #endif
-
-  connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool ) ),
-	  this, SLOT(LegendEntryChecked(QwtPlotItem *, bool ) ));
+  }
 }
 
 ConstellationDisplayPlot::~ConstellationDisplayPlot()
 {
-  delete[] _realDataPoints;
-  delete[] _imagDataPoints;
+  for(int i = 0; i < _nplots; i++) {
+    delete [] _realDataPoints[i];
+    delete [] _imagDataPoints[i];
+  }
 
   // _fft_plot_curves deleted when parent deleted
   // _zoomer and _panner deleted when parent deleted
 }
-
-void
-ConstellationDisplayPlot::set_pen_size(int size)
-{
-  if(size > 0 && size < 30){
-    _penSize = size;
-    _plot_curve->setPen(QPen(Qt::blue, _penSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-  }
-}
-
 
 void
 ConstellationDisplayPlot::set_xaxis(double min, double max)
@@ -189,69 +154,72 @@ ConstellationDisplayPlot::set_axis(double xmin, double xmax,
   set_yaxis(ymin, ymax);
 }
 
-void ConstellationDisplayPlot::replot()
-{
-  QwtPlot::replot();
-}
-
 void
-ConstellationDisplayPlot::resizeSlot( QSize *s )
+ConstellationDisplayPlot::set_pen_size(int size)
 {
-  resize(s->width(), s->height());
-}
-
-void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
-					   const double* imagDataPoints,
-					   const int64_t numDataPoints,
-					   const double timeInterval)
-{
-  if((numDataPoints > 0) &&
-     (gruel::high_res_timer_now() - _lastReplot > timeInterval*gruel::high_res_timer_tps())) {
-
-    if(numDataPoints != _numPoints){
-      _numPoints = numDataPoints;
-
-      delete[] _realDataPoints;
-      delete[] _imagDataPoints;
-      _realDataPoints = new double[_numPoints];
-      _imagDataPoints = new double[_numPoints];
-
-#if QWT_VERSION < 0x060000
-      _plot_curve->setRawData(_realDataPoints, _imagDataPoints, _numPoints);
-#else
-      _plot_curve->setRawSamples(_realDataPoints, _imagDataPoints, _numPoints);
-#endif
+  if(size > 0 && size < 30){
+    _penSize = size;
+    for(int i = 0; i < _nplots; i++) {
+      _plot_curve[i]->setPen(QPen(Qt::blue, _penSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     }
-
-    memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
-    memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
-
-    replot();
-
-    _lastReplot = gruel::high_res_timer_now();
   }
 }
 
 void
-ConstellationDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
+ConstellationDisplayPlot::replot()
 {
-  plotItem->setVisible(!on);
+  QwtPlot::replot();
+}
+
+
+void
+ConstellationDisplayPlot::PlotNewData(const std::vector<double*> realDataPoints,
+				      const std::vector<double*> imagDataPoints,
+				      const int64_t numDataPoints,
+				      const double timeInterval)
+{
+  if(!_stop) {
+    if((numDataPoints > 0)) {
+      if(numDataPoints != _numPoints) {
+	_numPoints = numDataPoints;
+      
+	for(int i = 0; i < _nplots; i++) {
+	  delete [] _realDataPoints[i];
+	  delete [] _imagDataPoints[i];
+	  _realDataPoints[i] = new double[_numPoints];
+	  _imagDataPoints[i] = new double[_numPoints];
+
+#if QWT_VERSION < 0x060000
+	  _plot_curve[i]->setRawData(_realDataPoints[i], _imagDataPoints[i], _numPoints);
+#else
+	  _plot_curve[i]->setRawSamples(_realDataPoints[i], _imagDataPoints[i], _numPoints);
+#endif
+	}
+      }
+
+      for(int i = 0; i < _nplots; i++) {
+	memcpy(_realDataPoints[i], realDataPoints[i], numDataPoints*sizeof(double));
+	memcpy(_imagDataPoints[i], imagDataPoints[i], numDataPoints*sizeof(double));
+      }
+
+      replot();
+
+    }
+  }
 }
 
 void
-ConstellationDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
+				      const double* imagDataPoints,
+				      const int64_t numDataPoints,
+				      const double timeInterval)
 {
-  QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
-  emit plotPointSelected(point);
-}
-
-void
-ConstellationDisplayPlot::OnPickerPointSelected6(const QPointF & p)
-{
-  QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
-  emit plotPointSelected(point);
+  std::vector<double*> vecRealDataPoints;
+  std::vector<double*> vecImagDataPoints;
+  vecRealDataPoints.push_back((double*)realDataPoints);
+  vecImagDataPoints.push_back((double*)imagDataPoints);
+  PlotNewData(vecRealDataPoints, vecImagDataPoints,
+	      numDataPoints, timeInterval);
 }
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_C */
