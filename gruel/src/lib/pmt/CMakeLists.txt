@@ -1,4 +1,4 @@
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -52,6 +52,8 @@ ADD_FILE_DEPENDENCIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc
     ${PMT_SERIAL_TAGS_H}
 )
+
+add_custom_target(pmt_generated DEPENDS ${PMT_SERIAL_TAGS_H})
 
 ########################################################################
 # Generate other pmt stuff
