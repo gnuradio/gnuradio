@@ -98,6 +98,7 @@ expand_cc_h_impl(multiply_const_vXX ss ii ff cc)
 expand_cc_h_impl(not_XX             bb ss ii)
 expand_cc_h_impl(or_XX              bb ss ii)
 expand_cc_h_impl(sub_XX             ss ii ff cc)
+expand_cc_h_impl(xor_XX             bb ss ii)
 
 ########################################################################
 # Setup the include and linker paths

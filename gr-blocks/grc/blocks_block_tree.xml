@@ -47,6 +47,7 @@
 		<block>blocks_and_const_xx.xml</block>
 		<block>blocks_not_xx.xml</block>
 		<block>blocks_or_xx.xml</block>
+		<block>blocks_xor_xx.xml</block>
 	</cat>
 	<cat>
 	        <name>Stream Type Conversions (New) </name>

@@ -60,12 +60,12 @@ class test_boolean_operators (gr_unittest.TestCase):
         self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (exp_data, result_data)
-    """
+
     def test_xor_ss (self):
         src1_data =       (1,  2,  3,  0x5004,   0x1150)
         src2_data =       (8,  2,  1 , 0x0508,   0x1105)
         expected_result = (9,  0,  2,  0x550C,   0x0055)
-        op = gr.xor_ss ()
+        op = blocks_swig.xor_ss ()
         self.help_ss ((src1_data, src2_data),
                       expected_result, op)
 
@@ -73,7 +73,7 @@ class test_boolean_operators (gr_unittest.TestCase):
         src1_data =       (1,  2,  3,  4,   0x50)
         src2_data =       (8,  2,  1 , 8,   0x05)
         expected_result = (9,  0,  2,  0xC, 0x55)
-        op = gr.xor_bb ()
+        op = blocks_swig.xor_bb ()
         self.help_bb ((src1_data, src2_data),
                       expected_result, op)
 
@@ -82,10 +82,11 @@ class test_boolean_operators (gr_unittest.TestCase):
         src1_data =       (1,  2,  3,  0x5000004,   0x11000050)
         src2_data =       (8,  2,  1 , 0x0500008,   0x11000005)
         expected_result = (9,  0,  2,  0x550000C,   0x00000055)
-        op = gr.xor_ii ()
+        op = blocks_swig.xor_ii ()
         self.help_ii ((src1_data, src2_data),
                       expected_result, op)
-    """
+
+
     def test_and_ss (self):
         src1_data =       (1,  2,  3,  0x5004,   0x1150)
         src2_data =       (8,  2,  1 , 0x0508,   0x1105)
