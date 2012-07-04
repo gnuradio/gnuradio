@@ -143,12 +143,11 @@ class test_boolean_operators (gr_unittest.TestCase):
         self.assertEqual(dst.data(), expected_result)
 
 
-    """
     def test_or_ss (self):
         src1_data =       (1,  2,  3,  0x5004,   0x1150)
         src2_data =       (8,  2,  1 , 0x0508,   0x1105)
         expected_result = (9,  2,  3,  0x550C,   0x1155)
-        op = gr.or_ss ()
+        op = blocks_swig.or_ss ()
         self.help_ss ((src1_data, src2_data),
                       expected_result, op)
 
@@ -157,7 +156,7 @@ class test_boolean_operators (gr_unittest.TestCase):
         src2_data =       (8,  2, 2,  1 , 0x08,   0x05)
         src3_data =       (8,  2, 1,  1 , 0x08,   0x05)
         expected_result = (9,  2, 3,  3,  0x0C,   0x55)
-        op = gr.or_bb ()
+        op = blocks_swig.or_bb ()
         self.help_bb ((src1_data, src2_data, src3_data),
                       expected_result, op)
 
@@ -165,11 +164,10 @@ class test_boolean_operators (gr_unittest.TestCase):
         src1_data =       (1,  2,  3,  0x50005004,   0x11001150)
         src2_data =       (8,  2,  1 , 0x05000508,   0x11001105)
         expected_result = (9,  2,  3,  0x5500550C,   0x11001155)
-        op = gr.or_ii ()
+        op = blocks_swig.or_ii ()
         self.help_ii ((src1_data, src2_data),
                       expected_result, op)
 
-    """                      
     def test_not_ss (self):
         src1_data =       (1,      2,      3,       0x5004,   0x1150)
         expected_result = (~1,     ~2,      ~3,       ~0x5004,   ~0x1150)

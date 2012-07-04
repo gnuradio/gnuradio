@@ -75,6 +75,7 @@ expand_h(multiply_XX        ss ii)
 expand_h(multiply_const_XX  ss ii)
 expand_h(multiply_const_vXX ss ii ff cc)
 expand_h(not_XX             bb ss ii)
+expand_h(or_XX              bb ss ii)
 expand_h(sub_XX             ss ii ff cc)
 
 add_custom_target(blocks_generated_includes DEPENDS

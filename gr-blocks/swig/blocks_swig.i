@@ -88,6 +88,9 @@
 #include "blocks/not_bb.h"
 #include "blocks/not_ss.h"
 #include "blocks/not_ii.h"
+#include "blocks/or_bb.h"
+#include "blocks/or_ss.h"
+#include "blocks/or_ii.h"
 #include "blocks/short_to_char.h"
 #include "blocks/short_to_float.h"
 #include "blocks/sub_ff.h"
@@ -157,6 +160,9 @@
 %include "blocks/not_bb.h"
 %include "blocks/not_ss.h"
 %include "blocks/not_ii.h"
+%include "blocks/or_bb.h"
+%include "blocks/or_ss.h"
+%include "blocks/or_ii.h"
 %include "blocks/short_to_char.h"
 %include "blocks/short_to_float.h"
 %include "blocks/sub_ff.h"
@@ -225,6 +231,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, nlog10_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
+GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ff);
