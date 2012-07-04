@@ -82,6 +82,9 @@ include_directories(
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${FFTW3F_INCLUDE_DIRS})
+link_directories(${FFTW3F_LIBRARY_DIRS})
+
 include_directories(${QWT_INCLUDE_DIRS})
 link_directories(${QWT_LIBRARY_DIRS})
 
@@ -97,6 +100,7 @@ list(APPEND qtgui_libs
     ${QT_LIBRARIES}
     ${QWT_LIBRARIES}
     ${PYTHON_LIBRARIES}
+    ${FFTW3F_LIBRARIES}
 )
 
 add_definitions(-DQWT_DLL) #setup QWT library linkage

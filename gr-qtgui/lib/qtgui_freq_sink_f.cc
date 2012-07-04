@@ -68,8 +68,8 @@ qtgui_freq_sink_f::qtgui_freq_sink_f(int fftsize, int wintype,
 
   d_index = 0;
   for(int i = 0; i < d_nconnections; i++) {
-    d_residbufs.push_back(new float[d_fftsize]);
-    d_magbufs.push_back(new double[d_fftsize]);
+    d_residbufs.push_back(gri_fft_malloc_float(d_fftsize));
+    d_magbufs.push_back(gri_fft_malloc_double(d_fftsize));
   }
 
   buildwindow();
@@ -80,8 +80,8 @@ qtgui_freq_sink_f::qtgui_freq_sink_f(int fftsize, int wintype,
 qtgui_freq_sink_f::~qtgui_freq_sink_f()
 {
   for(int i = 0; i < d_nconnections; i++) {
-    delete [] d_residbufs[i];
-    delete [] d_magbufs[i];
+    gri_fft_free(d_residbufs[i]);
+    gri_fft_free(d_magbufs[i]);
   }
   delete d_fft;
 }
@@ -222,11 +222,11 @@ qtgui_freq_sink_f::fftresize()
 
     // Resize residbuf and replace data
     for(int i = 0; i < d_nconnections; i++) {
-      delete [] d_residbufs[i];
-      delete [] d_magbufs[i];
+      gri_fft_free(d_residbufs[i]);
+      gri_fft_free(d_magbufs[i]);
 
-      d_residbufs.push_back(new float[newfftsize]);
-      d_magbufs.push_back(new double[newfftsize]);
+      d_residbufs.push_back(gri_fft_malloc_float(newfftsize));
+      d_magbufs.push_back(gri_fft_malloc_double(newfftsize));
     }
 
     // Set new fft size and reset buffer index 
@@ -262,17 +262,16 @@ qtgui_freq_sink_f::work(int noutput_items,
     // If we have enough input for one full FFT, do it
     if(datasize >= resid) {
 
-      float *fbuf = new float[d_fftsize];
+      float *fbuf = gri_fft_malloc_float(d_fftsize);
       for(int n = 0; n < d_nconnections; n++) {
 	// Fill up residbuf with d_fftsize number of items
 	in = (const float*)input_items[n];
 	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(float)*resid);
 
 	fft(fbuf, d_residbufs[n], d_fftsize);
-	for(int x=0; x < d_fftsize; x++)
-	  d_magbufs[n][x] = (double)fbuf[x];
+	volk_32f_convert_64f_a(d_magbufs[n], fbuf, d_fftsize);
       }
-      delete [] fbuf;
+      gri_fft_free(fbuf);
       
       if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	d_last_time = gruel::high_res_timer_now();

@@ -27,6 +27,7 @@
 #include <qtgui_time_sink_f.h>
 #include <gr_io_signature.h>
 #include <string.h>
+#include <volk/volk.h>
 
 #include <QTimer>
 
@@ -55,18 +56,22 @@ qtgui_time_sink_f::qtgui_time_sink_f (int size, double bw,
   d_index = 0;
 
   for(int i = 0; i < d_nconnections; i++) {
-    d_residbufs.push_back(new double[d_size]);
+    d_residbufs.push_back(gri_fft_malloc_double(d_size));
   }
 
+  // Set alignment properties for VOLK
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(gr_complex);
+  set_alignment(std::max(1,alignment_multiple));
+
   initialize();
-  set_output_multiple(d_size);
 }
 
 qtgui_time_sink_f::~qtgui_time_sink_f()
 {
   // d_main_gui is a qwidget destroyed with its parent
   for(int i = 0; i < d_nconnections; i++) {
-    delete [] d_residbufs[i];
+    gri_fft_free(d_residbufs[i]);
   }
 }
 
@@ -155,8 +160,13 @@ qtgui_time_sink_f::work (int noutput_items,
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n++) {
 	in = (const float*)input_items[idx++];
-	for(unsigned int k = 0; k < resid; k++) {
-	  d_residbufs[n][d_index+k] = in[j+k];
+	if(is_unaligned()) {
+	  volk_32f_convert_64f_u(d_residbufs[n],
+				 &in[j], resid);
+	}
+	else {
+	  volk_32f_convert_64f_a(d_residbufs[n],
+				 &in[j], resid);
 	}
       }
 
@@ -173,11 +183,15 @@ qtgui_time_sink_f::work (int noutput_items,
     // Otherwise, copy what we received into the residbufs for next time
     // because we set the output_multiple, this should never need to be called
     else {
-      assert(0);
       for(n = 0; n < d_nconnections; n++) {
 	in = (const float*)input_items[idx++];
-	for(unsigned int k = 0; k < resid; k++) {
-	  d_residbufs[n][d_index+k] = in[j+k];
+	if(is_unaligned()) {
+	  volk_32f_convert_64f_u(&d_residbufs[n][d_index],
+				 &in[j], datasize);
+	}
+	else {
+	  volk_32f_convert_64f_a(&d_residbufs[n][d_index],
+				 &in[j], datasize);
 	}
       }
       d_index += datasize;

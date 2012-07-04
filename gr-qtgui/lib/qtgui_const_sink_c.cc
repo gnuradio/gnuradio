@@ -56,9 +56,14 @@ qtgui_const_sink_c::qtgui_const_sink_c(int size,
   d_index = 0;
 
   for(int i = 0; i < d_nconnections; i++) {
-    d_residbufs_real.push_back(new double[d_size]);
-    d_residbufs_imag.push_back(new double[d_size]);
+    d_residbufs_real.push_back(gri_fft_malloc_double(d_size));
+    d_residbufs_imag.push_back(gri_fft_malloc_double(d_size));
   }
+
+  // Set alignment properties for VOLK
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(gr_complex);
+  set_alignment(std::max(1,alignment_multiple));
 
   initialize();
 }
@@ -67,8 +72,8 @@ qtgui_const_sink_c::~qtgui_const_sink_c()
 {
   // d_main_gui is a qwidget destroyed with its parent
   for(int i = 0; i < d_nconnections; i++) {
-    delete [] d_residbufs_real[i];
-    delete [] d_residbufs_imag[i];
+    gri_fft_free(d_residbufs_real[i]);
+    gri_fft_free(d_residbufs_imag[i]);
   }
 }
 
@@ -159,9 +164,15 @@ qtgui_const_sink_c::work(int noutput_items,
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n++) {
 	in = (const gr_complex*)input_items[idx++];
-	for(unsigned int k = 0; k < resid; k++) {
-	  d_residbufs_real[n][d_index+k] = (double)in[j+k].real();
-	  d_residbufs_imag[n][d_index+k] = (double)in[j+k].imag();
+	if(is_unaligned()) {
+	  volk_32fc_deinterleave_64f_x2_u(d_residbufs_real[n],
+					  d_residbufs_imag[n],
+					  &in[j], resid);
+	}
+	else {
+	  volk_32fc_deinterleave_64f_x2_a(d_residbufs_real[n],
+					  d_residbufs_imag[n],
+					  &in[j], resid);
 	}
       }
 
@@ -182,9 +193,15 @@ qtgui_const_sink_c::work(int noutput_items,
     else {
       for(n = 0; n < d_nconnections; n++) {
 	in = (const gr_complex*)input_items[idx++];
-	for(unsigned int k = 0; k < datasize; k++) {
-	    d_residbufs_real[n][d_index+k] = in[j+k].real();
-	    d_residbufs_imag[n][d_index+k] = in[j+k].imag();
+	if(is_unaligned()) {
+	  volk_32fc_deinterleave_64f_x2_u(&d_residbufs_real[n][d_index],
+					  &d_residbufs_imag[n][d_index],
+					  &in[j], resid);
+	}
+	else {
+	  volk_32fc_deinterleave_64f_x2_a(&d_residbufs_real[n][d_index],
+					  &d_residbufs_imag[n][d_index],
+					  &in[j], resid);
 	}
       }
       d_index += datasize;
