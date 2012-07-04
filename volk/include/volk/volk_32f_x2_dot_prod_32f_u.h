@@ -87,9 +87,6 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* 
   number = sixteenthPoints*16;
   for(;number < num_points; number++){
     dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
   }
 
   *result = dotProduct;
