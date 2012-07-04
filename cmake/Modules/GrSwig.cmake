@@ -105,12 +105,15 @@ endfunction(GR_SWIG_MAKE_DOCS)
 macro(GR_SWIG_MAKE name)
     set(ifiles ${ARGN})
 
+    list(APPEND GR_SWIG_TARGET_DEPS ${GR_SWIG_LIBRARIES})
+
     #do swig doc generation if specified
     if (GR_SWIG_DOC_FILE)
         set(GR_SWIG_DOCS_SOURCE_DEPS ${GR_SWIG_SOURCE_DEPS})
         set(GR_SWIG_DOCS_TAREGT_DEPS ${GR_SWIG_TARGET_DEPS})
         GR_SWIG_MAKE_DOCS(${GR_SWIG_DOC_FILE} ${GR_SWIG_DOC_DIRS})
-        list(APPEND GR_SWIG_SOURCE_DEPS ${GR_SWIG_DOC_FILE})
+        add_custom_target(${name}_swig_doc DEPENDS ${GR_SWIG_DOC_FILE})
+        list(APPEND GR_SWIG_TARGET_DEPS ${name}_swig_doc)
     endif()
 
     #append additional include directories

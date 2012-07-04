@@ -37,6 +37,10 @@ ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
     ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
 )
 
+add_custom_target(general_generated DEPENDS
+    ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
+)
+
 ########################################################################
 # Handle the generated constants
 ########################################################################

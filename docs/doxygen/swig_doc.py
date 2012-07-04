@@ -1,5 +1,5 @@
 #
-# Copyright 2010,2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -232,25 +232,7 @@ def make_block2_entry(di, block):
             params=make_func.params))
     return "\n\n".join(output)
 
-def wait_if_necessary(tries, swigdocfilename, item=None):
-    if item is not None:
-        extra = ', item {0}'.format(item.name())
-    else:
-        extra = ''
-    if(tries < 3):
-        # May not be built just yet; sleep and try again
-        sys.stderr.write("XML parsing problem with file {0}{1}, retrying.\n".format(
-                swigdocfilename, extra))
-        time.sleep(1)
-        tries += 1
-        return tries, True
-    else:
-        # if we've given it three tries, give up and raise an error
-        sys.stderr.write("XML parsing error with file {0}{1}. giving up.\n".format(
-                swigdocfilename, extra))
-        return tries, False
-
-def make_swig_interface_file(di, swigdocfilename, custom_output=None, tries=0):
+def make_swig_interface_file(di, swigdocfilename, custom_output=None):
     
     output = ["""
 /*
@@ -264,50 +246,32 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None, tries=0):
         output.append(custom_output)
 
     # Create docstrings for the blocks.
-    while(1):
-        try:
-            blocks = di.in_category(Block)
-            blocks2 = di.in_category(Block2)
-        except:
-            tries, try_again = wait_if_necessary(tries, swigdocfilename)
-            if not try_again:
-                raise
-        else:
-            break
+    blocks = di.in_category(Block)
+    blocks2 = di.in_category(Block2)
+
     make_funcs = set([])
     for block in blocks:
-        while(1):
-            try:
-                make_func = di.get_member(make_name(block.name()), DoxyFunction)
-                # Don't want to risk writing to output twice.
-                if make_func.name() not in make_funcs:
-                    make_funcs.add(make_func.name())
-                    output.append(make_block_entry(di, block))
-            except block.ParsingError:
-                sys.stderr.write('Parsing error for block {0}\n'.format(block.name()))
-            except:
-                tries, try_again = wait_if_necessary(tries, swigdocfilename, block)
-                if not try_again:
-                    raise
-            else:
-                break
+        try:
+            make_func = di.get_member(make_name(block.name()), DoxyFunction)
+            # Don't want to risk writing to output twice.
+            if make_func.name() not in make_funcs:
+                make_funcs.add(make_func.name())
+                output.append(make_block_entry(di, block))
+        except block.ParsingError:
+            sys.stderr.write('Parsing error for block {0}\n'.format(block.name()))
+            raise
+
     for block in blocks2:
-        while(1):
-            try:
-                make_func = block.get_member('make', DoxyFunction)
-                make_func_name = block.name() +'::make'
-                # Don't want to risk writing to output twice.
-                if make_func_name not in make_funcs:
-                    make_funcs.add(make_func_name)
-                    output.append(make_block2_entry(di, block))
-            except block.ParsingError:
-                sys.stderr.write('Parsing error for block {0}\n'.format(block.name()))
-            except:
-                tries, try_again = wait_if_necessary(tries, swigdocfilename, block)
-                if not try_again:
-                    raise
-            else:
-                break        
+        try:
+            make_func = block.get_member('make', DoxyFunction)
+            make_func_name = block.name() +'::make'
+            # Don't want to risk writing to output twice.
+            if make_func_name not in make_funcs:
+                make_funcs.add(make_func_name)
+                output.append(make_block2_entry(di, block))
+        except block.ParsingError:
+            sys.stderr.write('Parsing error for block {0}\n'.format(block.name()))
+            raise
 
     # Create docstrings for functions
     # Don't include the make functions since they have already been dealt with.
@@ -359,16 +323,4 @@ if __name__ == "__main__":
     custom_output = "\n\n".join(output)
 
     # Generate the docstrings interface file.
-    # If parsing error on NoSuchMember, try again by rereading everything.
-    # Give up after 3 tries.
-    tries = 0
-    while(1):
-        try:
-            make_swig_interface_file(di, swigdocfilename, custom_output=custom_output, tries=tries)
-        except:
-            tries, try_again = wait_if_necessary(tries, swigdocfilename)
-            if not try_again:
-                raise
-        else:
-            break
-        
+    make_swig_interface_file(di, swigdocfilename, custom_output=custom_output)
