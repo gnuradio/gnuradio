@@ -71,4 +71,8 @@
 		<block>blocks_short_to_float</block>
 		<block>blocks_uchar_to_float</block>
 	</cat>
+	<cat>
+	        <name>Stream Operations (New) </name>
+		<block>blocks_deinterleave.xml</block>
+	</cat>
 </cat>

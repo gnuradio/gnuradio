@@ -56,6 +56,7 @@
 #include "blocks/complex_to_mag_squared.h"
 #include "blocks/complex_to_arg.h"
 #include "blocks/conjugate_cc.h"
+#include "blocks/deinterleave.h"
 #include "blocks/divide_ff.h"
 #include "blocks/divide_ss.h"
 #include "blocks/divide_ii.h"
@@ -131,6 +132,7 @@
 %include "blocks/complex_to_mag_squared.h"
 %include "blocks/complex_to_arg.h"
 %include "blocks/conjugate_cc.h"
+%include "blocks/deinterleave.h"
 %include "blocks/divide_ff.h"
 %include "blocks/divide_ss.h"
 %include "blocks/divide_ii.h"
@@ -205,6 +207,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_mag);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_mag_squared);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_arg);
 GR_SWIG_BLOCK_MAGIC2(blocks, conjugate_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, deinterleave);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);
