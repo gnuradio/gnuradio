@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2008-2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,18 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef WATERFALL_DISPLAY_PLOT_HPP
-#define WATERFALL_DISPLAY_PLOT_HPP
+#ifndef WATERFALL_DISPLAY_PLOT_H
+#define WATERFALL_DISPLAY_PLOT_H
 
 #include <stdint.h>
 #include <cstdio>
-#include <qwt_plot.h>
+#include <vector>
 #include <qwt_plot_spectrogram.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
 #include <qtgui_util.h>
-#include <waterfallGlobalData.h>
-
+#include "DisplayPlot.h"
+#include "waterfallGlobalData.h"
 #include <gruel/high_res_timer.h>
 
 #if QWT_VERSION < 0x060000
@@ -40,11 +38,12 @@
 #include <qwt_compat.h>
 #endif
 
-class WaterfallDisplayPlot:public QwtPlot{
+class WaterfallDisplayPlot: public DisplayPlot
+{
   Q_OBJECT
 
 public:
-  WaterfallDisplayPlot(QWidget*);
+  WaterfallDisplayPlot(int nplots, QWidget*);
   virtual ~WaterfallDisplayPlot();
 
   void Reset();
@@ -53,21 +52,30 @@ public:
 			 const double, const bool,
 			 const double units=1000.0,
 			 const std::string &strunits = "kHz");
-  double GetStartFrequency()const;
-  double GetStopFrequency()const;
+  double GetStartFrequency() const;
+  double GetStopFrequency() const;
 
-  void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
-		   const double timePerFFT, const gruel::high_res_timer_type timestamp,
+  void PlotNewData(const std::vector<double*> dataPoints,
+		   const int64_t numDataPoints,
+		   const double timePerFFT,
+		   const gruel::high_res_timer_type timestamp,
+		   const int droppedFrames);
+
+  // to be removed
+  void PlotNewData(const double* dataPoints,
+		   const int64_t numDataPoints,
+		   const double timePerFFT,
+		   const gruel::high_res_timer_type timestamp,
 		   const int droppedFrames);
 
   void SetIntensityRange(const double minIntensity, const double maxIntensity);
 
-  virtual void replot(void);
+  void replot(void);
 
-  int GetIntensityColorMapType()const;
-  void SetIntensityColorMapType( const int, const QColor, const QColor );
-  const QColor GetUserDefinedLowIntensityColor()const;
-  const QColor GetUserDefinedHighIntensityColor()const;
+  int GetIntensityColorMapType(int) const;
+  void SetIntensityColorMapType(const int, const int, const QColor, const QColor);
+  const QColor GetUserDefinedLowIntensityColor() const;
+  const QColor GetUserDefinedHighIntensityColor() const;
 
   enum{
     INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR = 0,
@@ -77,21 +85,9 @@ public:
     INTENSITY_COLOR_MAP_TYPE_USER_DEFINED = 4
   };
 
-public slots:
-  void resizeSlot( QSize *s );
-
-  // Because of the preprocessing of slots in QT, these are no
-  // easily separated by the version check. Make one for each
-  // version until it's worked out.
-  void OnPickerPointSelected(const QwtDoublePoint & p);
-  void OnPickerPointSelected6(const QPointF & p);
-
 signals:
   void UpdatedLowerIntensityLevel(const double);
   void UpdatedUpperIntensityLevel(const double);
-  void plotPointSelected(const QPointF p);
-
-protected:
 
 private:
   void _UpdateIntensityRangeDisplay();
@@ -100,28 +96,21 @@ private:
   double _stopFrequency;
   int    _xAxisMultiplier;
 
-  QwtPlotPanner* _panner;
-  QwtPlotZoomer* _zoomer;
-
-  QwtPlotPicker *_picker;
-
-  WaterfallData *d_data;
+  std::vector<WaterfallData*> d_data;
 
 #if QWT_VERSION < 0x060000
-  PlotWaterfall *d_spectrogram;
+  std::vector<PlotWaterfall*> d_spectrogram;
 #else
-  QwtPlotSpectrogram *d_spectrogram;
+  std::vector<QwtPlotSpectrogram*> d_spectrogram;
 #endif
 
   gruel::high_res_timer_type _lastReplot;
 
   bool _useCenterFrequencyFlag;
 
-  int64_t _numPoints;
-
-  int _intensityColorMapType;
+  std::vector<int> _intensityColorMapType;
   QColor _userDefinedLowIntensityColor;
   QColor _userDefinedHighIntensityColor;
 };
 
-#endif /* WATERFALL_DISPLAY_PLOT_HPP */
+#endif /* WATERFALL_DISPLAY_PLOT_H */

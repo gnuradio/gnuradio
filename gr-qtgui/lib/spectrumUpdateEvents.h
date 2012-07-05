@@ -179,4 +179,37 @@ private:
 };
 
 
+/********************************************************************/
+
+
+class WaterfallUpdateEvent: public QEvent
+{
+public:
+  WaterfallUpdateEvent(const std::vector<double*> dataPoints,
+		       const uint64_t numDataPoints,
+		       const gruel::high_res_timer_type dataTimestamp);
+
+  ~WaterfallUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getPoints() const;
+  uint64_t getNumDataPoints() const;
+  bool getRepeatDataFlag() const;
+
+  gruel::high_res_timer_type getDataTimestamp() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _dataPoints;
+  uint64_t _numDataPoints;
+
+  gruel::high_res_timer_type _dataTimestamp;
+};
+
+
 #endif /* SPECTRUM_UPDATE_EVENTS_H */

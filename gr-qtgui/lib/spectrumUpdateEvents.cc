@@ -320,4 +320,57 @@ ConstUpdateEvent::getNumDataPoints() const
   return _numDataPoints;
 }
 
+
+/***************************************************************************/
+
+
+WaterfallUpdateEvent::WaterfallUpdateEvent(const std::vector<double*> dataPoints,
+					   const uint64_t numDataPoints,
+					   const gruel::high_res_timer_type dataTimestamp)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(numDataPoints < 1) {
+    _numDataPoints = 1;
+  }
+  else {
+    _numDataPoints = numDataPoints;
+  }
+
+  _nplots = dataPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _dataPoints.push_back(new double[_numDataPoints]);
+    if(numDataPoints > 0) {
+      memcpy(_dataPoints[i], dataPoints[i],
+	     _numDataPoints*sizeof(double));
+    }
+  }
+
+  _dataTimestamp = dataTimestamp;
+}
+
+WaterfallUpdateEvent::~WaterfallUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _dataPoints[i];
+  }
+}
+
+const std::vector<double*>
+WaterfallUpdateEvent::getPoints() const
+{
+  return _dataPoints;
+}
+
+uint64_t
+WaterfallUpdateEvent::getNumDataPoints() const
+{
+  return _numDataPoints;
+}
+
+gruel::high_res_timer_type
+WaterfallUpdateEvent::getDataTimestamp() const
+{
+  return _dataTimestamp;
+}
+
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

@@ -27,6 +27,8 @@ install(FILES
     qtgui_freq_sink_c.h
     qtgui_freq_sink_f.h
     qtgui_const_sink_c.h
+    qtgui_waterfall_sink_c.h
+    qtgui_waterfall_sink_f.h
     qtgui_sink_c.h
     qtgui_sink_f.h
     qtgui_util.h

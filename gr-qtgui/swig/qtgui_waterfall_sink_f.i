@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,27 +22,30 @@
 
 %include "gnuradio.i"
 
-//load generated python docstrings
-%include "qtgui_swig_doc.i"
-
 %{
-#include "qtgui_sink_c.h"
-#include "qtgui_sink_f.h"
-#include "qtgui_time_sink_c.h"
-#include "qtgui_time_sink_f.h"
-#include "qtgui_freq_sink_c.h"
-#include "qtgui_freq_sink_f.h"
-#include "qtgui_const_sink_c.h"
-#include "qtgui_waterfall_sink_c.h"
-#include "qtgui_waterfall_sink_f.h"
+#include <qtgui_waterfall_sink_f.h>
 %}
 
-%include "qtgui_sink_c.i"
-%include "qtgui_sink_f.i"
-%include "qtgui_time_sink_c.i"
-%include "qtgui_time_sink_f.i"
-%include "qtgui_freq_sink_c.i"
-%include "qtgui_freq_sink_f.i"
-%include "qtgui_const_sink_c.i"
-%include "qtgui_waterfall_sink_c.i"
-%include "qtgui_waterfall_sink_f.i"
+GR_SWIG_BLOCK_MAGIC(qtgui,waterfall_sink_f)
+
+qtgui_waterfall_sink_f_sptr
+qtgui_make_waterfall_sink_f(int size, int wintype,
+			    double fc, double bw,
+			    const std::string &name,
+			    int nconnections=1,
+			    QWidget *parent=NULL);
+
+class qtgui_waterfall_sink_f : public gr_sync_block
+{
+public:
+  void exec_();
+  PyObject* pyqwidget();
+
+  void set_frequency_range(const double centerfreq, const double bandwidth);
+
+  void set_update_time(double t);
+  void set_title(int which, const std::string &title);
+  void set_color(int which, const std::string &color);
+
+  void set_resize(int width, int height);
+};
