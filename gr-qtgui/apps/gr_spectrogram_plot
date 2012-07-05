@@ -60,9 +60,9 @@ class my_top_block(gr.top_block):
 
         self.skip = gr.skiphead(gr.sizeof_gr_complex, self._start)
         self.head = gr.head(gr.sizeof_gr_complex, self._nsamps)
-        self.gui_snk = qtgui.freq_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                         self._center_freq, self._samp_rate,
-                                         "GNU Radio PSD Plot", self._nsigs)
+        self.gui_snk = qtgui.waterfall_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                              self._center_freq, self._samp_rate,
+                                              "GNU Radio Spectrogram Plot", self._nsigs)
         n = 0
         self.srcs = list()
         for f in filelist:
@@ -75,7 +75,7 @@ class my_top_block(gr.top_block):
                 self.srcs.append(gr.file_source(gr.sizeof_gr_complex, f))
 
             # Set default labels based on file names
-            self.gui_snk.set_title(n, "{0}".format(f))
+            #self.gui_snk.set_title(n, "{0}".format(f))
             n += 1
 
         self.connect(self.srcs[0], self.skip)
@@ -93,7 +93,7 @@ class my_top_block(gr.top_block):
 	pyWin.show()        
 
 def main():
-    description = "Plots the PSDs of a list of files."
+    description = "Plots the spectrogram (waterfall) of a list of files."
     parser = OptionParser(option_class=eng_option, description=description,
                           conflict_handler="resolve")
     parser.add_option("-N", "--nsamples", type="int", default=None,

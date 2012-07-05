@@ -66,6 +66,8 @@ class my_top_block(gr.top_block):
         for i,s in enumerate(self.srcs[1:]):
             self.connect(s, (self.gui_snk, i+1))
 
+        self.gui_snk.set_update_time(0);
+
         # Get Python Qt references
         pyQt  = self.gui_snk.pyqwidget()
         pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
@@ -99,6 +101,7 @@ def main():
             if(os.path.exists(f)):
                 filesizes.append(os.path.getsize(f) / gr.sizeof_gr_complex)
         nsamples = max(filesizes)
+        print nsamples
 
     tb = my_top_block(filelist, options.sample_rate,
                       options.start, nsamples);
