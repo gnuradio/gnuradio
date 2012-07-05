@@ -108,6 +108,7 @@ qtgui_freq_sink_c::initialize()
   }
 
   d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
+  d_main_gui->SetFFTSize(d_fftsize);
   d_main_gui->SetFrequencyRange(d_center_freq,
 				d_center_freq - d_bandwidth/2.0,
 				d_center_freq + d_bandwidth/2.0);
@@ -226,17 +227,18 @@ qtgui_freq_sink_c::buildwindow()
 void
 qtgui_freq_sink_c::fftresize()
 {
-  int newfftsize = d_fftsize;
+  gruel::scoped_lock lock(d_mutex);
+
+  int newfftsize = d_main_gui->GetFFTSize();
 
   if(newfftsize != d_fftsize) {
-
     // Resize residbuf and replace data
     for(int i = 0; i < d_nconnections; i++) {
       gri_fft_free(d_residbufs[i]);
       gri_fft_free(d_magbufs[i]);
 
-      d_residbufs.push_back(gri_fft_malloc_complex(newfftsize));
-      d_magbufs.push_back(gri_fft_malloc_double(newfftsize));
+      d_residbufs[i] = gri_fft_malloc_complex(newfftsize);
+      d_magbufs[i] = gri_fft_malloc_double(newfftsize);
     }
 
     // Set new fft size and reset buffer index 

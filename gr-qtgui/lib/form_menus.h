@@ -356,38 +356,38 @@ public:
     d_diag = new QDialog(parent);
     d_diag->setModal(true);
 
-    d_name = new QLineEdit();
+    d_text = new QLineEdit();
 
     QGridLayout *layout = new QGridLayout(d_diag);
     QPushButton *btn_ok = new QPushButton(tr("OK"));
     QPushButton *btn_cancel = new QPushButton(tr("Cancel"));
 
-    layout->addWidget(d_name, 0, 0);
+    layout->addWidget(d_text, 0, 0, 1, 2);
     layout->addWidget(btn_ok, 1, 0);
     layout->addWidget(btn_cancel, 1, 1);
 
-    connect(btn_ok, SIGNAL(clicked()), this, SLOT(getName()));
+    connect(btn_ok, SIGNAL(clicked()), this, SLOT(getText()));
     connect(btn_cancel, SIGNAL(clicked()), d_diag, SLOT(close()));
 
-    connect(this, SIGNAL(triggered()), this, SLOT(getNameDiag()));
+    connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
   }
 
   ~LineTitleAction()
   {}
   
 signals:
-  void whichTrigger(int which, const QString &name);
+  void whichTrigger(int which, const QString &text);
 
 public slots:
-  void getNameDiag()
+  void getTextDiag()
   {
     d_diag->exec();
   }
 
 private slots:
-  void getName()
+  void getText()
   { 
-    emit whichTrigger(d_which, d_name->text());
+    emit whichTrigger(d_which, d_text->text());
     d_diag->accept();
   }
 
@@ -395,7 +395,150 @@ private:
   int d_which;
 
   QDialog *d_diag;
-  QLineEdit *d_name;
+  QLineEdit *d_text;
 };
+
+
+/********************************************************************/
+
+
+class OtherAction: public QAction
+{
+  Q_OBJECT
+
+public:
+  OtherAction(QWidget *parent)
+    : QAction("Other", parent)
+  {
+    d_diag = new QDialog(parent);
+    d_diag->setModal(true);
+
+    d_text = new QLineEdit();
+
+    QGridLayout *layout = new QGridLayout(d_diag);
+    QPushButton *btn_ok = new QPushButton(tr("OK"));
+    QPushButton *btn_cancel = new QPushButton(tr("Cancel"));
+
+    layout->addWidget(d_text, 0, 0, 1, 2);
+    layout->addWidget(btn_ok, 1, 0);
+    layout->addWidget(btn_cancel, 1, 1);
+
+    connect(btn_ok, SIGNAL(clicked()), this, SLOT(getText()));
+    connect(btn_cancel, SIGNAL(clicked()), d_diag, SLOT(close()));
+
+    connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
+  }
+
+  ~OtherAction()
+  {}
+
+signals:
+  void whichTrigger(const QString &text);
+
+public slots:
+  void getTextDiag()
+  {
+    d_diag->exec();
+  }
+
+private slots:
+  void getText()
+  { 
+    emit whichTrigger(d_text->text());
+    d_diag->accept();
+  }
+
+private:
+  QDialog *d_diag;
+  QLineEdit *d_text;
+};
+
+
+class FFTSizeMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  FFTSizeMenu(QWidget *parent)
+    : QMenu("FFT Size", parent)
+  {
+    d_act.push_back(new QAction("32", this));
+    d_act.push_back(new QAction("64", this));
+    d_act.push_back(new QAction("128", this));
+    d_act.push_back(new QAction("256", this));
+    d_act.push_back(new QAction("512", this));
+    d_act.push_back(new QAction("1024", this));
+    d_act.push_back(new QAction("2048", this));
+    d_act.push_back(new QAction("4096", this));
+    d_act.push_back(new QAction("8192", this));
+    d_act.push_back(new QAction("16384", this));
+    d_act.push_back(new QAction("32768", this));
+    d_act.push_back(new OtherAction(this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(get05()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(get06()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(get07()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(get08()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(get09()));
+    connect(d_act[5], SIGNAL(triggered()), this, SLOT(get10()));
+    connect(d_act[6], SIGNAL(triggered()), this, SLOT(get11()));
+    connect(d_act[7], SIGNAL(triggered()), this, SLOT(get12()));
+    connect(d_act[8], SIGNAL(triggered()), this, SLOT(get13()));
+    connect(d_act[9], SIGNAL(triggered()), this, SLOT(get14()));
+    connect(d_act[10], SIGNAL(triggered()), this, SLOT(get15()));
+    connect(d_act[11], SIGNAL(whichTrigger(const QString&)),
+	     this, SLOT(getOther(const QString&)));
+
+     QListIterator<QAction*> i(d_act);
+     while(i.hasNext()) {
+       QAction *a = i.next();
+       addAction(a);
+     }
+   }
+
+   ~FFTSizeMenu()
+   {}
+
+   int getNumActions() const
+   {
+     return d_act.size();
+   }
+
+   QAction * getAction(int which)
+   {
+     if(which < d_act.size())
+       return d_act[which];
+     else
+       throw std::runtime_error("FFTSizeMenu::getAction: which out of range.\n");
+   }
+
+ signals:
+   void whichTrigger(int size);
+
+ public slots:
+   void get05() { emit whichTrigger(32); }
+   void get06() { emit whichTrigger(64); }
+   void get07() { emit whichTrigger(128); }
+   void get08() { emit whichTrigger(256); }
+   void get09() { emit whichTrigger(512); }
+   void get10() { emit whichTrigger(1024); }
+   void get11() { emit whichTrigger(2048); }
+   void get12() { emit whichTrigger(4096); }
+   void get13() { emit whichTrigger(8192); }
+   void get14() { emit whichTrigger(16384); }
+   void get15() { emit whichTrigger(32768); }
+   void getOther(const QString &str) 
+   {
+     int value = str.toInt();
+     emit whichTrigger(value);
+   }
+
+private:
+  QList<QAction *> d_act;
+  OtherAction *d_other;
+};
+
+/********************************************************************/
+
 
 #endif /* FORM_MENUS_H */

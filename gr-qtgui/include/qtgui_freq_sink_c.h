@@ -30,6 +30,7 @@
 #include <gri_fft.h>
 #include <qapplication.h>
 #include <freqdisplayform.h>
+#include <gruel/thread.h>
 
 class qtgui_freq_sink_c;
 typedef boost::shared_ptr<qtgui_freq_sink_c> qtgui_freq_sink_c_sptr;
@@ -71,6 +72,8 @@ private:
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
   void initialize();
+
+  gruel::mutex d_mutex;
 
   int d_fftsize;
   gr_firdes::win_type d_wintype;

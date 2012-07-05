@@ -38,6 +38,11 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   setLayout(_layout);
 
   _numRealDataPoints = 1024;
+  
+  FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
+  _menu->addMenu(sizemenu);
+  connect(sizemenu, SIGNAL(whichTrigger(int)),
+	  this, SLOT(SetFFTSize(const int)));
 
   Reset();
 
@@ -76,6 +81,18 @@ FreqDisplayForm::customEvent( QEvent * e)
   if(e->type() == FreqUpdateEvent::Type()) {
     newData(e);
   }
+}
+
+int
+FreqDisplayForm::GetFFTSize() const
+{
+  return _fftsize;
+}
+
+void
+FreqDisplayForm::SetFFTSize(const int newsize)
+{
+  _fftsize = newsize;
 }
 
 void
