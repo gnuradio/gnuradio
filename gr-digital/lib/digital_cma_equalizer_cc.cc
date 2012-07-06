@@ -25,22 +25,55 @@
 #endif
 
 #include <digital_cma_equalizer_cc.h>
+#include <gr_io_signature.h>
 #include <cstdio>
 
 digital_cma_equalizer_cc_sptr
 digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps)
 {
-  return gnuradio::get_initial_sptr(new digital_cma_equalizer_cc(num_taps, modulus,
-								 mu, sps));
+  return gnuradio::get_initial_sptr
+    (new digital_cma_equalizer_cc(num_taps, modulus, mu, sps));
 }
 
 digital_cma_equalizer_cc::digital_cma_equalizer_cc(int num_taps, float modulus,
 						   float mu, int sps)
-  : gr_adaptive_fir_ccc("cma_equalizer_cc", sps,
-			std::vector<gr_complex>(num_taps, gr_complex(0,0)))
+  : gr_sync_decimator("cma_equalizer_cc",
+		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		      sps),
+    gr::filter::kernel::adaptive_fir_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0,0)))
 {
   set_modulus(modulus);
   set_gain(mu);
   if (num_taps > 0)
     d_taps[0] = 1.0;
+}
+
+
+int
+digital_cma_equalizer_cc::work(int noutput_items,
+			       gr_vector_const_void_star &input_items,
+			       gr_vector_void_star &output_items)
+{
+  gr_complex *in = (gr_complex *)input_items[0];
+  gr_complex *out = (gr_complex *)output_items[0];
+
+  if(d_updated) {
+    gr::filter::kernel::fir_filter_ccc::set_taps(d_new_taps);
+    set_history(d_ntaps);
+    d_updated = false;
+    return 0;		     // history requirements may have changed.
+  }
+
+  // Call base class filtering function that uses
+  // overloaded error and update_tap functions.
+  if(decimation() == 1) {
+    filterN(out, in, noutput_items);
+  }
+  else {
+    filterNdec(out, in, noutput_items,
+	       decimation());
+  }
+
+  return noutput_items;
 }

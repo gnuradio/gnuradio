@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,15 +25,21 @@
 #endif
 
 #include <digital_kurtotic_equalizer_cc.h>
+#include <gr_io_signature.h>
 
 digital_kurtotic_equalizer_cc_sptr
 digital_make_kurtotic_equalizer_cc(int num_taps, float mu)
 {
-  return gnuradio::get_initial_sptr(new digital_kurtotic_equalizer_cc(num_taps, mu));
+  return gnuradio::get_initial_sptr
+    (new digital_kurtotic_equalizer_cc(num_taps, mu));
 }
 
 digital_kurtotic_equalizer_cc::digital_kurtotic_equalizer_cc(int num_taps, float mu)
-  : gr_adaptive_fir_ccc("kurtotic_equalizer_cc", 1, std::vector<gr_complex>(num_taps))
+  : gr_sync_decimator("kurtotic_equalizer_cc",
+		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		      1),
+    gr::filter::kernel::adaptive_fir_ccc(1, std::vector<gr_complex>(num_taps, gr_complex(0,0)))
 {
   set_gain(mu);
   if (num_taps > 0)
@@ -49,3 +55,30 @@ digital_kurtotic_equalizer_cc::digital_kurtotic_equalizer_cc(int num_taps, float
   d_u = gr_complex(0,0);
 }
 
+int
+digital_kurtotic_equalizer_cc::work(int noutput_items,
+				    gr_vector_const_void_star &input_items,
+				    gr_vector_void_star &output_items)
+{
+  gr_complex *in = (gr_complex *)input_items[0];
+  gr_complex *out = (gr_complex *)output_items[0];
+
+  if(d_updated) {
+    gr::filter::kernel::fir_filter_ccc::set_taps(d_new_taps);
+    set_history(d_ntaps);
+    d_updated = false;
+    return 0;		     // history requirements may have changed.
+  }
+
+  // Call base class filtering function that uses
+  // overloaded error and update_tap functions.
+  if(decimation() == 1) {
+    filterN(out, in, noutput_items);
+  }
+  else {
+    filterNdec(out, in, noutput_items,
+	       decimation());
+  }
+
+  return noutput_items;
+}

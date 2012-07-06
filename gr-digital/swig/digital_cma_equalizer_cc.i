@@ -22,15 +22,12 @@
 
 GR_SWIG_BLOCK_MAGIC(digital,cma_equalizer_cc)
 
-// retrieve info on the base class, without generating wrappers since
-// the base class has a pure virual method.
-%import "gr_adaptive_fir_ccc.i"
-
 digital_cma_equalizer_cc_sptr
 digital_make_cma_equalizer_cc(int num_taps, float modulus,
 			      float mu, int sps);
 
-class digital_cma_equalizer_cc : public gr_adaptive_fir_ccc
+class digital_cma_equalizer_cc :
+  public gr::filter::kernel::adaptive_fir_ccc
 {
 private:
   digital_cma_equalizer_cc(int num_taps, float modulus,

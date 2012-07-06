@@ -25,7 +25,7 @@ GR_SWIG_BLOCK_MAGIC(digital,lms_dd_equalizer_cc)
 
 // retrieve info on the base class, without generating wrappers since
 // the base class has a pure virual method.
-%import "gr_adaptive_fir_ccc.i"
+//%import "gr_adaptive_fir_ccc.i"
 
 
 digital_lms_dd_equalizer_cc_sptr

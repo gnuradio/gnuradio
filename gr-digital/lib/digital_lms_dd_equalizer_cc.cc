@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,26 +33,25 @@ digital_lms_dd_equalizer_cc_sptr
 digital_make_lms_dd_equalizer_cc(int num_taps, float mu, int sps,
 				 digital_constellation_sptr cnst)
 {
-  return gnuradio::get_initial_sptr(new digital_lms_dd_equalizer_cc(num_taps, mu,
-								    sps, cnst));
+  return gnuradio::get_initial_sptr
+    (new digital_lms_dd_equalizer_cc(num_taps, mu, sps, cnst));
 }
 
 digital_lms_dd_equalizer_cc::digital_lms_dd_equalizer_cc(int num_taps, float mu,
 							 int sps,
 							 digital_constellation_sptr cnst)
-  : gr_adaptive_fir_ccc("lms_dd_equalizer_cc", sps,
-			std::vector<gr_complex>(num_taps, gr_complex(0,0))),
-    d_taps(num_taps), d_cnst(cnst)
+  : gr_sync_decimator("lms_dd_equalizer_cc",
+		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		      sps),
+    gr::filter::kernel::adaptive_fir_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0,0))),
+    d_cnst(cnst)
 {
   set_gain(mu);
   if (num_taps > 0)
     d_taps[num_taps/2] = 1.0;
 }
 
-
-
-
-/*
 int
 digital_lms_dd_equalizer_cc::work (int noutput_items,
 				   gr_vector_const_void_star &input_items,
@@ -82,4 +81,3 @@ digital_lms_dd_equalizer_cc::work (int noutput_items,
 
   return noutput_items;
 }
-*/

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,9 +24,11 @@
 #define	INCLUDED_DIGITAL_KURTOTIC_EQUALIZER_CC_H
 
 #include <digital_api.h>
-#include <gr_adaptive_fir_ccc.h>
+#include <gr_sync_decimator.h>
+#include <filter/adaptive_fir.h>
 #include <gr_math.h>
 #include <iostream>
+#include <stdexcept>
 
 class digital_kurtotic_equalizer_cc;
 typedef boost::shared_ptr<digital_kurtotic_equalizer_cc> digital_kurtotic_equalizer_cc_sptr;
@@ -39,11 +41,14 @@ digital_make_kurtotic_equalizer_cc(int num_taps, float mu);
  * \ingroup eq_blk
  * \ingroup digital
  *
+ * WARNING: This block does not yet work.
+ *
  * "Y. Guo, J. Zhao, Y. Sun, "Sign kurtosis maximization based blind
  * equalization algorithm," IEEE Conf. on Control, Automation,
  * Robotics and Vision, Vol. 3, Dec. 2004, pp. 2052 - 2057."
  */
-class DIGITAL_API digital_kurtotic_equalizer_cc : public gr_adaptive_fir_ccc
+class DIGITAL_API digital_kurtotic_equalizer_cc :
+  public gr_sync_decimator, public gr::filter::kernel::adaptive_fir_ccc
 {
 private:
   float d_mu;
@@ -51,8 +56,9 @@ private:
   gr_complex d_q, d_u;
   float d_alpha_p, d_alpha_q, d_alpha_m;
   
-  friend DIGITAL_API digital_kurtotic_equalizer_cc_sptr digital_make_kurtotic_equalizer_cc(int num_taps,
-									       float mu);
+  friend DIGITAL_API digital_kurtotic_equalizer_cc_sptr
+    digital_make_kurtotic_equalizer_cc(int num_taps, float mu);
+
   digital_kurtotic_equalizer_cc(int num_taps, float mu);
 
   gr_complex sign(gr_complex x)
@@ -108,6 +114,12 @@ public:
       throw std::out_of_range("digital_kurtotic_equalizer::set_gain: Gain value must be >= 0");
     d_mu = mu;
   }
+
+  float gain() const { return d_mu; }
+
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };
 
 #endif

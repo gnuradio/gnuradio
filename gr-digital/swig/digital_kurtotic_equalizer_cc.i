@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,7 +24,7 @@ GR_SWIG_BLOCK_MAGIC(digital,kurtotic_equalizer_cc)
 
 // retrieve info on the base class, without generating wrappers since
 // the base class has a pure virual method.
-%import "gr_adaptive_fir_ccc.i"
+//%import "gr_adaptive_fir_ccc.i"
 
 digital_kurtotic_equalizer_cc_sptr
 digital_make_kurtotic_equalizer_cc(int num_taps,
@@ -32,9 +32,7 @@ digital_make_kurtotic_equalizer_cc(int num_taps,
 
 class digital_kurtotic_equalizer_cc : public gr_adaptive_fir_ccc
 {
-private:
-  digital_kurtotic_equalizer_cc(int num_taps, float mu);
-
 public:
   void set_gain(float mu);
+  float gain() const;
 };

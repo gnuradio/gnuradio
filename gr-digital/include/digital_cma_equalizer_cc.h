@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,9 +24,11 @@
 #define	INCLUDED_DIGITAL_CMA_EQUALIZER_CC_H
 
 #include <digital_api.h>
-#include <gr_adaptive_fir_ccc.h>
+#include <gr_sync_decimator.h>
+#include <filter/adaptive_fir.h>
 #include <gr_math.h>
 #include <iostream>
+#include <stdexcept>
 
 class digital_cma_equalizer_cc;
 typedef boost::shared_ptr<digital_cma_equalizer_cc> digital_cma_equalizer_cc_sptr;
@@ -45,21 +47,23 @@ digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps);
  * Two-Dimensional Data Communication Systems," IEEE Transactions on
  * Communications, Vol. 28, No. 11, pp. 1867 - 1875, 1980."
  */
-class DIGITAL_API digital_cma_equalizer_cc : public gr_adaptive_fir_ccc
+class DIGITAL_API digital_cma_equalizer_cc :
+  public gr_sync_decimator, public gr::filter::kernel::adaptive_fir_ccc
 {
 private:
   float d_modulus;
   float d_mu;
   
-  friend DIGITAL_API digital_cma_equalizer_cc_sptr digital_make_cma_equalizer_cc(int num_taps,
-								     float modulus,
-								     float mu,
-								     int sps);
+  friend DIGITAL_API digital_cma_equalizer_cc_sptr
+    digital_make_cma_equalizer_cc(int num_taps,
+				  float modulus,
+				  float mu,
+				  int sps);
   digital_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps);
 
 protected:
 
-  virtual gr_complex error(const gr_complex &out) 
+  gr_complex error(const gr_complex &out) 
   { 
     gr_complex error = out*(norm(out) - d_modulus);
     float re = gr_clip(error.real(), 1.0);
@@ -67,7 +71,7 @@ protected:
     return gr_complex(re, im);
   }
 
-  virtual void update_tap(gr_complex &tap, const gr_complex &in) 
+  void update_tap(gr_complex &tap, const gr_complex &in) 
   {
     // Hn+1 = Hn - mu*conj(Xn)*zn*(|zn|^2 - 1)
     tap -= d_mu*conj(in)*d_error;
@@ -98,6 +102,10 @@ public:
       throw std::out_of_range("digital_cma_equalizer::set_modulus: Modulus value must be >= 0");
     d_modulus = mod;
   }
+
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };
 
 #endif
