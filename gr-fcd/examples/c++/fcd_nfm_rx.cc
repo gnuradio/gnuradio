@@ -33,8 +33,8 @@
 
 // Include header files for each block used in flowgraph
 #include <gr_top_block.h>
-#include <gr_firdes.h>
-#include <gr_fir_filter_ccf.h>
+#include <filter/firdes.h>
+#include <filter/fir_filter_ccf.h>
 #include <gr_quadrature_demod_cf.h>
 #include <gr_audio_sink.h>
 #include <fcd_source_c.h>
@@ -85,8 +85,8 @@ int main(int argc, char **argv)
     fcd->set_lna_gain(gain);
 
     // Low pass filter
-    std::vector<float> taps = gr_firdes::low_pass(1.0, 96000, 5000.0, 1000.0);
-    gr_fir_filter_ccf_sptr filter = gr_make_fir_filter_ccf (2, taps);
+    std::vector<float> taps = gr::filter::firdes::low_pass(1.0, 96000, 5000.0, 1000.0);
+    gr::filter::fir_filter_ccf::sptr filter = gr::filter::fir_filter_ccf::make (2, taps);
 
     // FM demodulator
     // gain = sample_rate / (2*pi*max_dev)

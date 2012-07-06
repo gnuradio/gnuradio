@@ -23,6 +23,7 @@
 include(GrPython)
 include(GrSwig)
 
+set(GR_SWIG_TARGET_DEPS pmt_generated)
 set(GR_SWIG_INCLUDE_DIRS ${GRUEL_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
 set(GR_SWIG_LIBRARIES gruel)
 
@@ -43,3 +44,5 @@ install(
     DESTINATION ${GR_INCLUDE_DIR}/gruel/swig
     COMPONENT "gruel_swig"
 )
+
+add_custom_target(pmt_swig DEPENDS ${SWIG_MODULE_pmt_swig_REAL_NAME})
