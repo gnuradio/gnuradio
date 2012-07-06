@@ -41,11 +41,13 @@ class FreqDisplayForm : public DisplayForm
   FrequencyDisplayPlot* getPlot();
 
   int GetFFTSize() const;
+  float GetFFTAverage() const;
 
 public slots:
   void customEvent(QEvent *e);
 
   void SetFFTSize(const int);
+  void SetFFTAverage(const float);
 
   void SetFrequencyRange(const double newCenterFrequency,
 			 const double newStartFrequency,
@@ -63,6 +65,7 @@ private:
   double _stopFrequency;
 
   int _fftsize;
+  float _fftavg;
 };
 
 #endif /* FREQ_DISPLAY_FORM_H */

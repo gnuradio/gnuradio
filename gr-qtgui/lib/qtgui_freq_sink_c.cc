@@ -53,7 +53,7 @@ qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
   : gr_sync_block("freq_sink_c",
 		  gr_make_io_signature(1, -1, sizeof(gr_complex)),
 		  gr_make_io_signature(0, 0, 0)),
-    d_fftsize(fftsize),
+    d_fftsize(fftsize), d_fftavg(1.0),
     d_wintype((gr_firdes::win_type)(wintype)),
     d_center_freq(fc), d_bandwidth(bw), d_name(name),
     d_nconnections(nconnections), d_parent(parent)
@@ -65,6 +65,7 @@ qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
   d_shift = true;
 
   d_fft = new gri_fft_complex(d_fftsize, true);
+  d_fbuf = gri_fft_malloc_float(d_fftsize);
 
   d_index = 0;
   for(int i = 0; i < d_nconnections; i++) {
@@ -84,6 +85,7 @@ qtgui_freq_sink_c::~qtgui_freq_sink_c()
     gri_fft_free(d_magbufs[i]);
   }
   delete d_fft;
+  delete d_fbuf;
 }
 
 void
@@ -136,6 +138,32 @@ qtgui_freq_sink_c::pyqwidget()
   PyObject *w = PyLong_FromVoidPtr((void*)d_main_gui);
   PyObject *retarg = Py_BuildValue("N", w);
   return retarg;
+}
+
+void
+qtgui_freq_sink_c::set_fft_size(const int fftsize)
+{
+  d_fftsize = fftsize;
+  d_main_gui->SetFFTSize(fftsize);
+}
+
+int
+qtgui_freq_sink_c::fft_size() const
+{
+  return d_fftsize;
+}
+ 
+void
+qtgui_freq_sink_c::set_fft_average(const float fftavg)
+{
+  d_fftavg = fftavg;
+  d_main_gui->SetFFTAverage(fftavg);
+}
+
+float
+qtgui_freq_sink_c::fft_average() const
+{
+  return d_fftavg;
 }
 
 void
@@ -230,6 +258,7 @@ qtgui_freq_sink_c::fftresize()
   gruel::scoped_lock lock(d_mutex);
 
   int newfftsize = d_main_gui->GetFFTSize();
+  d_fftavg = d_main_gui->GetFFTAverage();
 
   if(newfftsize != d_fftsize) {
     // Resize residbuf and replace data
@@ -239,6 +268,8 @@ qtgui_freq_sink_c::fftresize()
 
       d_residbufs[i] = gri_fft_malloc_complex(newfftsize);
       d_magbufs[i] = gri_fft_malloc_double(newfftsize);
+
+      memset(d_magbufs[i], 0, newfftsize*sizeof(double));
     }
 
     // Set new fft size and reset buffer index 
@@ -252,6 +283,9 @@ qtgui_freq_sink_c::fftresize()
     // Reset FFTW plan for new size
     delete d_fft;
     d_fft = new gri_fft_complex(d_fftsize, true);
+    
+    gri_fft_free(d_fbuf);
+    d_fbuf = gri_fft_malloc_float(d_fftsize);
   }
 }
 
@@ -274,16 +308,18 @@ qtgui_freq_sink_c::work(int noutput_items,
     // If we have enough input for one full FFT, do it
     if(datasize >= resid) {
 
-      float *fbuf = gri_fft_malloc_float(d_fftsize);
       for(int n = 0; n < d_nconnections; n++) {
 	// Fill up residbuf with d_fftsize number of items
 	in = (const gr_complex*)input_items[n];
 	memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*resid);
 
-	fft(fbuf, d_residbufs[n], d_fftsize);
-	volk_32f_convert_64f_a(d_magbufs[n], fbuf, d_fftsize);
+	fft(d_fbuf, d_residbufs[n], d_fftsize);
+	for(int x = 0; x < d_fftsize; x++) {
+	  d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
+	}
+	
+	//volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
       }
-      gri_fft_free(fbuf);
       
       if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	d_last_time = gruel::high_res_timer_now();

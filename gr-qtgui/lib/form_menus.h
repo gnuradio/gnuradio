@@ -454,6 +454,9 @@ private:
 };
 
 
+/********************************************************************/
+
+
 class FFTSizeMenu: public QMenu
 {
   Q_OBJECT
@@ -537,6 +540,74 @@ private:
   QList<QAction *> d_act;
   OtherAction *d_other;
 };
+
+
+/********************************************************************/
+
+
+class FFTAverageMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  FFTAverageMenu(QWidget *parent)
+    : QMenu("FFT Average", parent)
+  {
+    d_act.push_back(new QAction("Off", this));
+    d_act.push_back(new QAction("High", this));
+    d_act.push_back(new QAction("Medium", this));
+    d_act.push_back(new QAction("Low", this));
+    d_act.push_back(new OtherAction(this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getOff()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getHigh()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getMedium()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getLow()));
+    connect(d_act[4], SIGNAL(whichTrigger(const QString&)),
+	     this, SLOT(getOther(const QString&)));
+
+     QListIterator<QAction*> i(d_act);
+     while(i.hasNext()) {
+       QAction *a = i.next();
+       addAction(a);
+     }
+   }
+
+   ~FFTAverageMenu()
+   {}
+
+   int getNumActions() const
+   {
+     return d_act.size();
+   }
+
+   QAction * getAction(int which)
+   {
+     if(which < d_act.size())
+       return d_act[which];
+     else
+       throw std::runtime_error("FFTSizeMenu::getAction: which out of range.\n");
+   }
+
+ signals:
+   void whichTrigger(float alpha);
+
+ public slots:
+   void getOff() { emit whichTrigger(1.0); }
+   void getHigh() { emit whichTrigger(0.05); }
+   void getMedium() { emit whichTrigger(0.1); }
+   void getLow() { emit whichTrigger(0.2); }
+   void getOther(const QString &str) 
+   {
+     float value = str.toFloat();
+     emit whichTrigger(value);
+   }
+
+private:
+  QList<QAction *> d_act;
+  OtherAction *d_other;
+};
+
 
 /********************************************************************/
 

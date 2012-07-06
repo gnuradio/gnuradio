@@ -30,6 +30,7 @@
 #include <gri_fft.h>
 #include <qapplication.h>
 #include <freqdisplayform.h>
+#include <gruel/thread.h>
 
 class qtgui_freq_sink_f;
 typedef boost::shared_ptr<qtgui_freq_sink_f> qtgui_freq_sink_f_sptr;
@@ -72,7 +73,10 @@ private:
 
   void initialize();
 
+  gruel::mutex d_mutex;
+
   int d_fftsize;
+  float d_fftavg;
   gr_firdes::win_type d_wintype;
   std::vector<float> d_window;
   double d_center_freq;
@@ -86,6 +90,7 @@ private:
   int d_index;
   std::vector<float*> d_residbufs;
   std::vector<double*> d_magbufs;
+  float *d_fbuf;
 
   QWidget *d_parent;
   FreqDisplayForm *d_main_gui;
@@ -103,6 +108,11 @@ public:
   void exec_();
   QWidget*  qwidget();
   PyObject* pyqwidget();
+
+  void set_fft_size(const int fftsize);
+  int fft_size() const;
+  void set_fft_average(const float fftavg);
+  float fft_average() const;
 
   void set_frequency_range(const double centerfreq, const double bandwidth);
   void set_fft_power_db(double min, double max);

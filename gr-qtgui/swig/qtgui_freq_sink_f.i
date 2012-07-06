@@ -41,6 +41,11 @@ public:
   void exec_();
   PyObject* pyqwidget();
 
+  void set_fft_size(const int fftsize);
+  int fft_size() const;
+  void set_fft_average(const float fftavg);
+  float fft_average() const;
+
   void set_frequency_range(const double centerfreq, const double bandwidth);
   void set_fft_power_db(double min, double max);
 

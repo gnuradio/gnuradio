@@ -76,6 +76,7 @@ private:
   gruel::mutex d_mutex;
 
   int d_fftsize;
+  float d_fftavg;
   gr_firdes::win_type d_wintype;
   std::vector<float> d_window;
   double d_center_freq;
@@ -83,12 +84,14 @@ private:
   std::string d_name;
   int d_nconnections;
 
+  
   bool d_shift;
   gri_fft_complex *d_fft;
 
   int d_index;
   std::vector<gr_complex*> d_residbufs;
   std::vector<double*> d_magbufs;
+  float *d_fbuf;
 
   QWidget *d_parent;
   FreqDisplayForm *d_main_gui;
@@ -106,6 +109,11 @@ public:
   void exec_();
   QWidget*  qwidget();
   PyObject* pyqwidget();
+
+  void set_fft_size(const int fftsize);
+  int fft_size() const;
+  void set_fft_average(const float fftavg);
+  float fft_average() const;
 
   void set_frequency_range(const double centerfreq, const double bandwidth);
   void set_fft_power_db(double min, double max);
