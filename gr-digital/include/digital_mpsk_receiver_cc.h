@@ -29,8 +29,8 @@
 #include <gr_block.h>
 #include <gr_complex.h>
 #include <fstream>
+#include <filter/mmse_fir_interpolator_cc.h>
 
-class gri_mmse_fir_interpolator_cc;
 
 class digital_mpsk_receiver_cc;
 typedef boost::shared_ptr<digital_mpsk_receiver_cc> digital_mpsk_receiver_cc_sptr;
@@ -298,7 +298,7 @@ private:
 
 
   //! get interpolated value
-  gri_mmse_fir_interpolator_cc 	*d_interp;
+  gr::filter::mmse_fir_interpolator_cc *d_interp;
   
   //! delay line length.
   static const unsigned int DLLEN = 8;
@@ -310,11 +310,11 @@ private:
   unsigned int d_dl_idx;
 
   friend DIGITAL_API digital_mpsk_receiver_cc_sptr
-  digital_make_mpsk_receiver_cc (unsigned int M, float theta,
-				 float loop_bw,
-				 float fmin, float fmax,
-				 float mu, float gain_mu, 
-				 float omega, float gain_omega, float omega_rel);
+  digital_make_mpsk_receiver_cc(unsigned int M, float theta,
+				float loop_bw,
+				float fmin, float fmax,
+				float mu, float gain_mu, 
+				float omega, float gain_omega, float omega_rel);
 };
 
 #endif

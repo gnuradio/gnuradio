@@ -30,7 +30,7 @@
 #include <stdexcept>
 #include <gr_math.h>
 #include <gr_expj.h>
-#include <gri_mmse_fir_interpolator_cc.h>
+#include <filter/mmse_fir_interpolator_cc.h>
 
 
 #define M_TWOPI (2*M_PI)
@@ -70,7 +70,7 @@ digital_mpsk_receiver_cc::digital_mpsk_receiver_cc (unsigned int M, float theta,
     d_omega_rel(omega_rel), d_max_omega(0), d_min_omega(0),
     d_p_2T(0), d_p_1T(0), d_p_0T(0), d_c_2T(0), d_c_1T(0), d_c_0T(0)
 {
-  d_interp = new gri_mmse_fir_interpolator_cc();
+  d_interp = new gr::filter::mmse_fir_interpolator_cc();
   d_dl_idx = 0;
 
   set_omega(omega);

@@ -35,7 +35,7 @@ class digital_pfb_clock_sync_ccf : public gr_block
  public:
   void set_taps(const std::vector<float> &taps,
 		std::vector< std::vector<float> > &ourtaps,
-		std::vector<gr_fir_ccf*> &ourfilter);
+		std::vector<gr::filter::kernel::fir_filter_ccf*> &ourfilter);
 
   std::vector< std::vector<float> > get_taps();
   std::vector< std::vector<float> > get_diff_taps();

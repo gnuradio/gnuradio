@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
+from gnuradio import filter
 import digital_swig as digital
 import random, cmath
 
@@ -62,7 +63,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
             1.0,             # symbol rate
             excess_bw,       # excess bandwidth (roll-off factor)
             ntaps)
-        self.rrc_filter = gr.pfb_arb_resampler_ccf(sps, rrc_taps)
+        self.rrc_filter = filter.pfb_arb_resampler_ccf(sps, rrc_taps)
 
         self.snk = gr.vector_sink_c()
 
@@ -115,7 +116,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
             1.0,             # symbol rate
             excess_bw,       # excess bandwidth (roll-off factor)
             ntaps)
-        self.rrc_filter = gr.pfb_arb_resampler_fff(sps, rrc_taps)
+        self.rrc_filter = filter.pfb_arb_resampler_fff(sps, rrc_taps)
 
         self.snk = gr.vector_sink_f()
 
