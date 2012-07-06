@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010,2012 Free Software Foundation, Inc.
  * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ digital_cpmmod_bc::digital_cpmmod_bc(gr_cpm::cpm_type type, float h,
 		   gr_make_io_signature2(1, 1, sizeof(gr_complex), sizeof(float))),
     d_taps(gr_cpm::phase_response(type, samples_per_sym, L, beta)),
     d_char_to_float(gr_make_char_to_float()),
-    d_pulse_shaper(gr_make_interp_fir_filter_fff(samples_per_sym, d_taps)),
+    d_pulse_shaper(gr::filter::interp_fir_filter_fff::make(samples_per_sym, d_taps)),
     d_fm(gr_make_frequency_modulator_fc(M_PI * h))
 {
   switch (type) {

@@ -53,8 +53,9 @@ digital_make_gmskmod_bc(unsigned samples_per_sym=2,
  */
 class DIGITAL_API digital_gmskmod_bc : public digital_cpmmod_bc
 {
-  friend DIGITAL_API digital_gmskmod_bc_sptr digital_make_gmskmod_bc(unsigned samples_per_sym,
-							 double bt, unsigned L);
+  friend DIGITAL_API digital_gmskmod_bc_sptr
+    digital_make_gmskmod_bc(unsigned samples_per_sym,
+			    double bt, unsigned L);
   digital_gmskmod_bc(unsigned samples_per_sym,
 		     double bt, unsigned L);
 };
