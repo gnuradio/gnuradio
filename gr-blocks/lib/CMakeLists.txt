@@ -143,6 +143,7 @@ list(APPEND gr_blocks_sources
     float_array_to_uchar.cc
     float_to_uchar_impl.cc
     int_to_float_impl.cc
+    interleave_impl.cc
     interleaved_short_array_to_complex.cc
     interleaved_short_to_complex_impl.cc
     multiply_cc_impl.cc

@@ -32,14 +32,13 @@ class test_interleave (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    """
     def test_int_001 (self):
         lenx = 64
         src0 = gr.vector_source_f (range (0, lenx, 4))
         src1 = gr.vector_source_f (range (1, lenx, 4))
         src2 = gr.vector_source_f (range (2, lenx, 4))
         src3 = gr.vector_source_f (range (3, lenx, 4))
-        op = gr.interleave (gr.sizeof_float)
+        op = blocks_swig.interleave (gr.sizeof_float)
         dst = gr.vector_sink_f ()
 
         self.tb.connect (src0, (op, 0))
@@ -51,7 +50,7 @@ class test_interleave (gr_unittest.TestCase):
         expected_result = tuple (range (lenx))
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
-    """
+
     def test_deint_001 (self):
         lenx = 64
         src = gr.vector_source_f (range (lenx))

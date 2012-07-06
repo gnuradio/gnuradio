@@ -107,6 +107,7 @@ install(FILES
     float_to_short.h
     float_to_uchar.h
     int_to_float.h
+    interleave.h
     interleaved_short_to_complex.h
     multiply_cc.h
     multiply_ff.h
