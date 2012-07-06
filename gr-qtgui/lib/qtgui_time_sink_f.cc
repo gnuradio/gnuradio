@@ -124,8 +124,10 @@ qtgui_time_sink_f::set_time_domain_axis(double min, double max)
 void
 qtgui_time_sink_f::set_update_time(double t)
 {
-  d_update_time = t;
-  d_main_gui->setUpdateTime(d_update_time);
+  //convert update time to ticks
+  gruel::high_res_timer_type tps = gruel::high_res_timer_tps();
+  d_update_time = t * tps;
+  d_main_gui->setUpdateTime(t);
 }
 
 void
@@ -155,24 +157,23 @@ qtgui_time_sink_f::work (int noutput_items,
 
     // If we have enough input for one full plot, do it
     if(datasize >= resid) {
-      d_current_time = gruel::high_res_timer_now();
 
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n++) {
 	in = (const float*)input_items[idx++];
 	if(is_unaligned()) {
-	  volk_32f_convert_64f_u(d_residbufs[n],
+	  volk_32f_convert_64f_u(&d_residbufs[n][d_index],
 				 &in[j], resid);
 	}
 	else {
-	  volk_32f_convert_64f_a(d_residbufs[n],
+	  volk_32f_convert_64f_a(&d_residbufs[n][d_index],
 				 &in[j], resid);
 	}
       }
 
       // Update the plot if its time
       if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
-	d_last_time = d_current_time;
+	d_last_time = gruel::high_res_timer_now();
 	d_qApplication->postEvent(d_main_gui,
 				  new TimeUpdateEvent(d_residbufs, d_size));
       }

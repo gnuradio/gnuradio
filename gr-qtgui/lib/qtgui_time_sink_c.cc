@@ -163,19 +163,18 @@ qtgui_time_sink_c::work(int noutput_items,
 
     // If we have enough input for one full plot, do it
     if(datasize >= resid) {
-      d_current_time = gruel::high_res_timer_now();
 
       // Fill up residbufs with d_size number of items
       for(n = 0; n < d_nconnections; n+=2) {
 	in = (const gr_complex*)input_items[idx++];
 	if(is_unaligned()) {
-	  volk_32fc_deinterleave_64f_x2_u(d_residbufs[n],
-					  d_residbufs[n+1],
+	  volk_32fc_deinterleave_64f_x2_u(&d_residbufs[n][d_index],
+					  &d_residbufs[n+1][d_index],
 					  &in[j], resid);
 	}
 	else {
-	  volk_32fc_deinterleave_64f_x2_a(d_residbufs[n],
-					  d_residbufs[n+1],
+	  volk_32fc_deinterleave_64f_x2_a(&d_residbufs[n][d_index],
+					  &d_residbufs[n+1][d_index],
 					  &in[j], resid);
 	}
       }
@@ -198,7 +197,7 @@ qtgui_time_sink_c::work(int noutput_items,
 	if(is_unaligned()) {
 	  volk_32fc_deinterleave_64f_x2_u(&d_residbufs[n][d_index],
 					  &d_residbufs[n+1][d_index],
-					  &in[j], resid);
+					  &in[j], datasize);
 	}
 	else {
 	  volk_32fc_deinterleave_64f_x2_a(&d_residbufs[n][d_index],

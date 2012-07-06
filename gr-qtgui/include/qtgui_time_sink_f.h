@@ -70,12 +70,10 @@ private:
   int d_index;
   std::vector<double*> d_residbufs;
 
-  double d_update_time;
-
   QWidget *d_parent;
   TimeDisplayForm *d_main_gui;
 
-  gruel::high_res_timer_type d_current_time;
+  gruel::high_res_timer_type d_update_time;
   gruel::high_res_timer_type d_last_time;
 
 public:
