@@ -40,8 +40,14 @@ class WaterfallDisplayForm : public DisplayForm
 
   WaterfallDisplayPlot* getPlot();
 
+  int GetFFTSize() const;
+  float GetFFTAverage() const;
+
 public slots:
   void customEvent(QEvent *e);
+
+  void SetFFTSize(const int);
+  void SetFFTAverage(const float);
 
   void SetFrequencyRange(const double newCenterFrequency,
 			 const double newStartFrequency,
@@ -59,6 +65,9 @@ private:
 
   double _startFrequency;
   double _stopFrequency;
+
+  int _fftsize;
+  float _fftavg;
 };
 
 #endif /* WATERFALL_DISPLAY_FORM_H */

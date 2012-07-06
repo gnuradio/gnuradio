@@ -108,6 +108,7 @@ qtgui_waterfall_sink_f::initialize()
   }
 
   d_main_gui = new WaterfallDisplayForm(d_nconnections, d_parent);
+  d_main_gui->SetFFTSize(d_fftsize);
   d_main_gui->SetFrequencyRange(d_center_freq,
 				d_center_freq - d_bandwidth/2.0,
 				d_center_freq + d_bandwidth/2.0);

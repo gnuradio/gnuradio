@@ -176,6 +176,10 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
     d_spectrogram[i]->setColorMap(new ColorMap_MultiColor());
 #endif
 
+    // a hack around the fact that we aren't using plot curves for the
+    // spectrogram plots.
+    _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
+
     d_spectrogram[i]->attach(this);
 
     _intensityColorMapType.push_back(colormaps[i%colormaps.size()]);

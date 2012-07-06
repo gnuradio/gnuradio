@@ -38,6 +38,17 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   setLayout(_layout);
 
   _numRealDataPoints = 1024;
+  _fftsize = 1024;
+  _fftavg = 1.0;
+
+  FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
+  FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
+  _menu->addMenu(sizemenu);
+  _menu->addMenu(avgmenu);
+  connect(sizemenu, SIGNAL(whichTrigger(int)),
+	  this, SLOT(SetFFTSize(const int)));
+  connect(avgmenu, SIGNAL(whichTrigger(float)),
+	  this, SLOT(SetFFTAverage(const float)));
 
   Reset();
 
@@ -76,6 +87,30 @@ WaterfallDisplayForm::customEvent( QEvent * e)
   if(e->type() == WaterfallUpdateEvent::Type()) {
     newData(e);
   }
+}
+
+int
+WaterfallDisplayForm::GetFFTSize() const
+{
+  return _fftsize;
+}
+
+float
+WaterfallDisplayForm::GetFFTAverage() const
+{
+  return _fftavg;
+}
+
+void
+WaterfallDisplayForm::SetFFTSize(const int newsize)
+{
+  _fftsize = newsize;
+}
+
+void
+WaterfallDisplayForm::SetFFTAverage(const float newavg)
+{
+  _fftavg = newavg;
 }
 
 void
