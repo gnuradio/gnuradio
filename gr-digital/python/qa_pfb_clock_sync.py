@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-from gnuradio import filter
+import filter_swig as filter
 import digital_swig as digital
 import random, cmath
 

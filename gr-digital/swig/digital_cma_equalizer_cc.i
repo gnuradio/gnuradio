@@ -27,7 +27,7 @@ digital_make_cma_equalizer_cc(int num_taps, float modulus,
 			      float mu, int sps);
 
 class digital_cma_equalizer_cc :
-  public gr::filter::kernel::adaptive_fir_ccc
+  public gr_sync_decimator, public gr::filter::kernel::adaptive_fir_ccc
 {
 private:
   digital_cma_equalizer_cc(int num_taps, float modulus,

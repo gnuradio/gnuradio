@@ -30,7 +30,8 @@ digital_kurtotic_equalizer_cc_sptr
 digital_make_kurtotic_equalizer_cc(int num_taps,
 				   float mu);
 
-class digital_kurtotic_equalizer_cc : public gr_adaptive_fir_ccc
+class digital_kurtotic_equalizer_cc :
+  public gr_sync_decimator, public gr::filter::kernel::adaptive_fir_ccc
 {
 public:
   void set_gain(float mu);

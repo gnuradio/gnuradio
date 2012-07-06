@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
 
 class test_lms_dd_equalizer(gr_unittest.TestCase):
 
@@ -33,7 +33,7 @@ class test_lms_dd_equalizer(gr_unittest.TestCase):
     	
     def transform(self, src_data, gain, const):
 	SRC = gr.vector_source_c(src_data, False)
-	EQU = digital_swig.lms_dd_equalizer_cc(4, gain, 1, const.base())
+	EQU = digital.lms_dd_equalizer_cc(4, gain, 1, const.base())
 	DST = gr.vector_sink_c()
 	self.tb.connect(SRC, EQU, DST)
 	self.tb.run()
@@ -41,7 +41,7 @@ class test_lms_dd_equalizer(gr_unittest.TestCase):
 
     def test_001_identity(self):
     	# Constant modulus signal so no adjustments
-        const = digital_swig.constellation_qpsk()
+        const = digital.constellation_qpsk()
 	src_data = const.points()*1000
 
         N = 100 # settling time

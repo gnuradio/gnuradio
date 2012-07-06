@@ -29,6 +29,7 @@ from gnuradio import gr
 from modulation_utils import extract_kwargs_from_options_for_class
 from utils import mod_codes
 import digital_swig as digital
+import filter_swig as filter
 import math
 
 # default values (used in __init__ and add_options)
@@ -141,8 +142,8 @@ class generic_mod(gr.hier_block2):
             1.0,             # symbol rate
             self._excess_bw, # excess bandwidth (roll-off factor)
             ntaps)
-        self.rrc_filter = gr.pfb_arb_resampler_ccf(self._samples_per_symbol,
-                                                   self.rrc_taps)
+        self.rrc_filter = filter.pfb_arb_resampler_ccf(self._samples_per_symbol,
+                                                       self.rrc_taps)
 
 	# Connect
         blocks = [self, self.bytes2chunks]

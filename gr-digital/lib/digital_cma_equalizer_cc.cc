@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,6 +26,7 @@
 
 #include <digital_cma_equalizer_cc.h>
 #include <gr_io_signature.h>
+#include <volk/volk.h>
 #include <cstdio>
 
 digital_cma_equalizer_cc_sptr
@@ -47,6 +48,10 @@ digital_cma_equalizer_cc::digital_cma_equalizer_cc(int num_taps, float modulus,
   set_gain(mu);
   if (num_taps > 0)
     d_taps[0] = 1.0;
+
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(gr_complex);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 
@@ -65,15 +70,22 @@ digital_cma_equalizer_cc::work(int noutput_items,
     return 0;		     // history requirements may have changed.
   }
 
-  // Call base class filtering function that uses
-  // overloaded error and update_tap functions.
-  if(decimation() == 1) {
-    filterN(out, in, noutput_items);
-  }
-  else {
-    filterNdec(out, in, noutput_items,
-	       decimation());
+  int j = 0, k, l = d_taps.size();
+  for(int i = 0; i < noutput_items; i++) {
+    out[i] = filter(&in[j]);
+
+    // Adjust taps
+    d_error = error(out[i]);
+    for(k = 0; k < l; k++) {
+      update_tap(d_taps[l-k-1], in[j+k]);
+    }
+
+    j += decimation();
   }
 
+  std::cout << std::endl;
+  std::cout << "noutput_items: " << noutput_items << std::endl;
+  std::cout << "nitems_read: " << nitems_read(0) << std::endl;
+  std::cout << "nitems_written: " << nitems_written(0) << std::endl;
   return noutput_items;
 }
