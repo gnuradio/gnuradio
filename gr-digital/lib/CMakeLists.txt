@@ -140,6 +140,7 @@ list(APPEND gr_digital_sources
 
 list(APPEND digital_libs
     gnuradio-core
+    gnuradio-filter
     ${Boost_LIBRARIES}
 )
 
