@@ -43,7 +43,7 @@ namespace gr {
 			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 			  decimation),
-	kernel::fir_filter_ccc(decimation, taps),
+	kernel::adaptive_fir_ccc(decimation, taps),
 	d_updated(false)
     {
       set_history(d_ntaps);

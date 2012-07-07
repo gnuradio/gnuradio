@@ -24,13 +24,14 @@
 #define	INCLUDED_FILTER_ADAPTIVE_FIR_CCF_IMPL_H
 
 #include <filter/adaptive_fir_ccf.h>
-#include <filter/fir_filter.h>
+#include <filter/adaptive_fir.h>
 #include <gr_types.h>
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API adaptive_fir_ccf_impl : public adaptive_fir_ccf, public kernel::fir_filter_ccf
+    class FILTER_API adaptive_fir_ccf_impl :
+      public adaptive_fir_ccf, public kernel::adaptive_fir_ccf
     {
     private:
       std::vector<float> d_new_taps;
