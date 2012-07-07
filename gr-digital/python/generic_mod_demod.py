@@ -29,8 +29,12 @@ from gnuradio import gr
 from modulation_utils import extract_kwargs_from_options_for_class
 from utils import mod_codes
 import digital_swig as digital
-import filter_swig as filter
 import math
+
+try:
+    from gnuradio import filter
+except ImportError:
+    import filter_swig as filter
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2
