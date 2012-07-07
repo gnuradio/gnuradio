@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from gnuradio import gr, digital
+from gnuradio import gr, digital, filter
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -28,8 +28,8 @@ class example_costas(gr.top_block):
         data = scipy.exp(1j*poffset) * data
 
         self.src = gr.vector_source_c(data.tolist(), False)
-        self.rrc = gr.interp_fir_filter_ccf(sps, rrc_taps)
-        self.chn = gr.channel_model(noise, foffset, toffset)
+        self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
+        self.chn = filter.channel_model(noise, foffset, toffset)
         self.cst = digital.costas_loop_cc(bw, 2)
 
         self.vsnk_src = gr.vector_sink_c()
