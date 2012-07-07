@@ -33,7 +33,7 @@ namespace gr {
 
       adaptive_fir_ccc::adaptive_fir_ccc(int decimation,
 					 const std::vector<gr_complex> &taps)
-	: kernel::fir_filter_ccc(decimation, taps)
+	: fir_filter_ccc(decimation, taps)
       {
       }
 
@@ -41,45 +41,19 @@ namespace gr {
       {
       }
 
-      void
-      adaptive_fir_ccc::set_taps(const std::vector<gr_complex> &taps)
-      {
-	d_new_taps = taps;
-	d_updated = true;
-      }
-      
-      std::vector<gr_complex>
-      adaptive_fir_ccc::taps() const
-      {
-	return kernel::fir_filter_ccc::taps();
-      }   
-
 
       /**************************************************************/
 
 
       adaptive_fir_ccf::adaptive_fir_ccf(int decimation,
 					 const std::vector<float> &taps)
-	: kernel::fir_filter_ccf(decimation, taps)
+	: fir_filter_ccf(decimation, taps)
       {
       }
 
       adaptive_fir_ccf::~adaptive_fir_ccf()
       {
       }
-
-      void
-      adaptive_fir_ccf::set_taps(const std::vector<float> &taps)
-      {
-	d_new_taps = taps;
-	d_updated = true;
-      }
-      
-      std::vector<float>
-      adaptive_fir_ccf::taps() const
-      {
-	return kernel::fir_filter_ccf::taps();
-      }   
 
     } /* namespace kernel */
   } /* namespace filter */

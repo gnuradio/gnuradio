@@ -45,9 +45,6 @@ namespace gr {
 			 const std::vector<gr_complex> &taps);
 	~adaptive_fir_ccc();
 
-	void set_taps(const std::vector<gr_complex> &taps);
-	std::vector<gr_complex> taps() const;
-
       protected:
 	// Override to calculate error signal per output
 	virtual gr_complex error(const gr_complex &out) = 0;
@@ -55,8 +52,6 @@ namespace gr {
 	// Override to calculate new weight from old, corresponding input
 	virtual void update_tap(gr_complex &tap, const gr_complex &in) = 0;
 
-	std::vector<gr_complex> d_new_taps;
-	bool d_updated;
 	gr_complex d_error;
       };
 
@@ -76,9 +71,6 @@ namespace gr {
 			 const std::vector<float> &taps);
 	~adaptive_fir_ccf();
 
-	void set_taps(const std::vector<float> &taps);
-	std::vector<float> taps() const;
-
       protected:
 	// Override to calculate error signal per output
 	virtual float error(const gr_complex &out) = 0;
@@ -86,8 +78,6 @@ namespace gr {
 	// Override to calculate new weight from old, corresponding input
 	virtual void update_tap(float &tap, const gr_complex &in) = 0;
 
-	std::vector<float> d_new_taps;
-	bool d_updated;
 	float d_error;
       };
 
