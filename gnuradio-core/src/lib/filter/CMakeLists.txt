@@ -36,7 +36,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_rotator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sincos.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_goertzel.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_single_pole_iir.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )
