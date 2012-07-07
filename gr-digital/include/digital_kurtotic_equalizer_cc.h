@@ -93,10 +93,6 @@ protected:
       (sign(d_u) * (nrm*cnj - 2.0f*d_p*cnj - conj(d_q)*out) -
        abs(d_u)*cnj);
 
-    //std::cout << "out: " << out << "   p: " << d_p << "   q: " << d_q;
-    //std::cout << "   m: " << d_m << "   u: " << d_u << std::endl;
-    //std::cout << "error: " << F << std::endl;
-    
     float re = gr_clip(F.real(), 1.0);
     float im = gr_clip(F.imag(), 1.0);
     return gr_complex(re, im);

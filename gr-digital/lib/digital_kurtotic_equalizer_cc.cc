@@ -26,6 +26,7 @@
 
 #include <digital_kurtotic_equalizer_cc.h>
 #include <gr_io_signature.h>
+#include <volk/volk.h>
 
 digital_kurtotic_equalizer_cc_sptr
 digital_make_kurtotic_equalizer_cc(int num_taps, float mu)
@@ -44,6 +45,7 @@ digital_kurtotic_equalizer_cc::digital_kurtotic_equalizer_cc(int num_taps, float
   set_gain(mu);
   if (num_taps > 0)
     d_taps[0] = 1.0;
+  set_taps(d_taps);
 
   d_alpha_p = 0.01;
   d_alpha_q = 0.01;
@@ -53,6 +55,11 @@ digital_kurtotic_equalizer_cc::digital_kurtotic_equalizer_cc(int num_taps, float
   d_m = 0.0f;
   d_q = gr_complex(0,0);
   d_u = gr_complex(0,0);
+
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(gr_complex);
+  set_alignment(std::max(1,alignment_multiple));
+  set_history(num_taps+1);
 }
 
 int
@@ -63,21 +70,17 @@ digital_kurtotic_equalizer_cc::work(int noutput_items,
   gr_complex *in = (gr_complex *)input_items[0];
   gr_complex *out = (gr_complex *)output_items[0];
 
-  if(d_updated) {
-    gr::filter::kernel::fir_filter_ccc::set_taps(d_new_taps);
-    set_history(d_ntaps);
-    d_updated = false;
-    return 0;		     // history requirements may have changed.
-  }
+  int j = 0, k, l = d_taps.size();
+  for(int i = 0; i < noutput_items; i++) {
+    out[i] = filter(&in[j]);
 
-  // Call base class filtering function that uses
-  // overloaded error and update_tap functions.
-  if(decimation() == 1) {
-    filterN(out, in, noutput_items);
-  }
-  else {
-    filterNdec(out, in, noutput_items,
-	       decimation());
+    // Adjust taps
+    d_error = error(out[i]);
+    for(k = 0; k < l; k++) {
+      update_tap(d_taps[l-k-1], in[j+k]);
+    }
+
+    j += decimation();
   }
 
   return noutput_items;

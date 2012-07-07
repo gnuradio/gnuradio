@@ -33,9 +33,9 @@ class digital_lms_dd_equalizer_cc;
 typedef boost::shared_ptr<digital_lms_dd_equalizer_cc> digital_lms_dd_equalizer_cc_sptr;
 
 DIGITAL_API digital_lms_dd_equalizer_cc_sptr
-digital_make_lms_dd_equalizer_cc (int num_taps,
-				  float mu, int sps,
-				  digital_constellation_sptr cnst);
+digital_make_lms_dd_equalizer_cc(int num_taps,
+				 float mu, int sps,
+				 digital_constellation_sptr cnst);
 								   
 /*!
  * \brief Least-Mean-Square Decision Directed Equalizer (complex in/out)
@@ -80,16 +80,15 @@ private:
 				     digital_constellation_sptr cnst);
   
   float	d_mu;
-  std::vector<gr_complex>  d_taps;
   digital_constellation_sptr d_cnst;
 
-  digital_lms_dd_equalizer_cc (int num_taps,
-			       float mu, int sps,
-			       digital_constellation_sptr cnst);
+  digital_lms_dd_equalizer_cc(int num_taps,
+			      float mu, int sps,
+			      digital_constellation_sptr cnst);
 
 protected:
 
-  virtual gr_complex error(const gr_complex &out) 
+  gr_complex error(const gr_complex &out) 
   { 
     gr_complex decision, error;
     d_cnst->map_to_points(d_cnst->decision_maker(&out), &decision);
@@ -97,7 +96,7 @@ protected:
     return error;
   }
 
-  virtual void update_tap(gr_complex &tap, const gr_complex &in) 
+  void update_tap(gr_complex &tap, const gr_complex &in) 
   {
     tap += d_mu*conj(in)*d_error;
   }

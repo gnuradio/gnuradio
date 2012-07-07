@@ -44,7 +44,11 @@ class test_cma_equalizer_fir(gr_unittest.TestCase):
 	src_data      = (1+0j, 0+1j, -1+0j, 0-1j)*1000
 	expected_data = src_data
 	result = self.transform(src_data)
-	self.assertComplexTuplesAlmostEqual(expected_data, result)
+
+        # only test last N samples to allow for settling. Also adjust
+        # for a 1 sample delay in the filter.
+        N = -500
+        self.assertComplexTuplesAlmostEqual(expected_data[N:-1], result[N+1:])
 
 if __name__ == "__main__":
     gr_unittest.run(test_cma_equalizer_fir, "test_cma_equalizer_fir.xml")

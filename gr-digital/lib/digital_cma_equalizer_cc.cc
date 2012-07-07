@@ -27,7 +27,6 @@
 #include <digital_cma_equalizer_cc.h>
 #include <gr_io_signature.h>
 #include <volk/volk.h>
-#include <cstdio>
 
 digital_cma_equalizer_cc_sptr
 digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps)
@@ -48,10 +47,12 @@ digital_cma_equalizer_cc::digital_cma_equalizer_cc(int num_taps, float modulus,
   set_gain(mu);
   if (num_taps > 0)
     d_taps[0] = 1.0;
+  set_taps(d_taps);
 
   const int alignment_multiple =
     volk_get_alignment() / sizeof(gr_complex);
   set_alignment(std::max(1,alignment_multiple));
+  set_history(num_taps+1);
 }
 
 
@@ -63,29 +64,19 @@ digital_cma_equalizer_cc::work(int noutput_items,
   gr_complex *in = (gr_complex *)input_items[0];
   gr_complex *out = (gr_complex *)output_items[0];
 
-  if(d_updated) {
-    gr::filter::kernel::fir_filter_ccc::set_taps(d_new_taps);
-    set_history(d_ntaps);
-    d_updated = false;
-    return 0;		     // history requirements may have changed.
-  }
-
-  int j = 0, k, l = d_taps.size();
+  int j = 0;
+  size_t l = d_taps.size();
   for(int i = 0; i < noutput_items; i++) {
     out[i] = filter(&in[j]);
 
     // Adjust taps
     d_error = error(out[i]);
-    for(k = 0; k < l; k++) {
+    for(size_t k = 0; k < l; k++) {
       update_tap(d_taps[l-k-1], in[j+k]);
     }
 
     j += decimation();
   }
 
-  std::cout << std::endl;
-  std::cout << "noutput_items: " << noutput_items << std::endl;
-  std::cout << "nitems_read: " << nitems_read(0) << std::endl;
-  std::cout << "nitems_written: " << nitems_written(0) << std::endl;
   return noutput_items;
 }
