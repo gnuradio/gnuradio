@@ -73,6 +73,7 @@
 #include "blocks/integrate_cc.h"
 #include "blocks/interleave.h"
 #include "blocks/interleaved_short_to_complex.h"
+#include "blocks/keep_one_in_n.h"
 #include "blocks/multiply_ss.h"
 #include "blocks/multiply_ii.h"
 #include "blocks/multiply_ff.h"
@@ -150,6 +151,7 @@
 %include "blocks/integrate_cc.h"
 %include "blocks/interleave.h"
 %include "blocks/interleaved_short_to_complex.h"
+%include "blocks/keep_one_in_n.h"
 %include "blocks/multiply_ss.h"
 %include "blocks/multiply_ii.h"
 %include "blocks/multiply_ff.h"
@@ -226,6 +228,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, integrate_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, integrate_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, interleave);
 GR_SWIG_BLOCK_MAGIC2(blocks, interleaved_short_to_complex);
+GR_SWIG_BLOCK_MAGIC2(blocks, keep_one_in_n);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ff);

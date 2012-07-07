@@ -75,5 +75,6 @@
 	        <name>Stream Operations (New) </name>
 		<block>blocks_deinterleave.xml</block>
 		<block>blocks_interleave.xml</block>
+		<block>blocks_keep_one_in_n.xml</block>
 	</cat>
 </cat>
