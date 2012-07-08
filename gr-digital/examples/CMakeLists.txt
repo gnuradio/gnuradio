@@ -71,6 +71,7 @@ install(
     demod/pam_timing.grc
     demod/ber_simulation.grc
     demod/dpsk_loopback.grc   
+    demod/gfsk_loopback.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
     COMPONENT "digital_python"
 )
