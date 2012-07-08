@@ -118,8 +118,7 @@ namespace gr {
       
       if(map.size() > 0) {
 	unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
-	unsigned int min = (unsigned int)*std::min_element(map.begin(), map.end());
-	if((max >= d_nfilts) || (min < 0)) {
+	if(max >= d_nfilts) {
 	  throw std::invalid_argument("pfb_channelizer_ccf_impl::set_channel_map: map range out of bounds.\n");
 	}
 	d_channel_map = map;
