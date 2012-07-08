@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,8 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
+import filter_swig as filter
 import random, cmath
 
 class test_mpsk_receiver(gr_unittest.TestCase):
@@ -39,36 +40,48 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         loop_bw = cmath.pi/100.0
         fmin = -0.5
         fmax = 0.5
-        mu = 0.25
+        mu = 0.5
         gain_mu = 0.01
         omega = 2
         gain_omega = 0.001
         omega_rel = 0.001
 
-        self.test = digital_swig.mpsk_receiver_cc(M, theta, loop_bw,
-                                                  fmin, fmax, mu, gain_mu,
-                                                  omega, gain_omega,
-                                                  omega_rel)
+        self.test = digital.mpsk_receiver_cc(M, theta, loop_bw,
+                                             fmin, fmax, mu, gain_mu,
+                                             omega, gain_omega,
+                                             omega_rel)
         
-        data = 1000*[complex(1,0), complex(1,0), complex(-1,0), complex(-1,0)]
+        data = 10000*[complex(1,0), complex(-1,0)]
+        #data = [2*random.randint(0,1)-1 for x in xrange(10000)]
         self.src = gr.vector_source_c(data, False)
         self.snk = gr.vector_sink_c()
 
-        self.tb.connect(self.src, self.test, self.snk)
+        # pulse shaping interpolation filter
+        nfilts = 32
+        excess_bw = 0.35
+        ntaps = 11 * int(omega*nfilts)
+        rrc_taps0 = gr.firdes.root_raised_cosine(
+            nfilts, nfilts, 1.0, excess_bw, ntaps)
+        rrc_taps1 = gr.firdes.root_raised_cosine(
+            1, omega, 1.0, excess_bw, 11*omega)
+        self.rrc0 = filter.pfb_arb_resampler_ccf(omega, rrc_taps0)
+        self.rrc1 = filter.fir_filter_ccf(1, rrc_taps1)
+
+        self.tb.connect(self.src, self.rrc0, self.rrc1, self.test, self.snk)
         self.tb.run()
         
-        expected_result = 1000*[complex(-0.5,0), complex(0.5,0)]
+        expected_result = [0.5*d for d in data]
         dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
-        Ncmp = 100
+        Ncmp = 1000
         len_e = len(expected_result)
         len_d = len(dst_data)
-        expected_result = expected_result[len_e - Ncmp:]
+        expected_result = expected_result[len_e - Ncmp-1:-1]
         dst_data = dst_data[len_d - Ncmp:]
-
+        
         #for e,d in zip(expected_result, dst_data):
-        #    print e, d
+        #    print "{0:+.02f}  {1:+.02f}".format(e, d)
         
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 1)
 
@@ -77,43 +90,55 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         # Test QPSK sync
         M = 4
         theta = 0
-        loop_bw = 2*cmath.pi/100.0
+        loop_bw = cmath.pi/100.0
         fmin = -0.5
         fmax = 0.5
-        mu = 0.25
+        mu = 0.5
         gain_mu = 0.01
         omega = 2
-        gain_omega = 0.001
+        gain_omega = 0.01
         omega_rel = 0.001
 
-        self.test = digital_swig.mpsk_receiver_cc(M, theta, loop_bw,
-                                                  fmin, fmax, mu, gain_mu,
-                                                  omega, gain_omega,
-                                                  omega_rel)
+        self.test = digital.mpsk_receiver_cc(M, theta, loop_bw,
+                                             fmin, fmax, mu, gain_mu,
+                                             omega, gain_omega,
+                                             omega_rel)
 
-        data = 1000*[complex( 0.707,  0.707), complex( 0.707,  0.707),
-                     complex(-0.707,  0.707), complex(-0.707,  0.707),
-                     complex(-0.707, -0.707), complex(-0.707, -0.707),
-                     complex( 0.707, -0.707), complex( 0.707, -0.707)]
+        data = 10000*[complex( 0.707,  0.707),
+                     complex(-0.707,  0.707), 
+                     complex(-0.707, -0.707), 
+                     complex( 0.707, -0.707)]
+        data = [0.5*d for d in data]
         self.src = gr.vector_source_c(data, False)
         self.snk = gr.vector_sink_c()
 
-        self.tb.connect(self.src, self.test, self.snk)
+        # pulse shaping interpolation filter
+        nfilts = 32
+        excess_bw = 0.35
+        ntaps = 11 * int(omega*nfilts)
+        rrc_taps0 = gr.firdes.root_raised_cosine(
+            nfilts, nfilts, 1.0, excess_bw, ntaps)
+        rrc_taps1 = gr.firdes.root_raised_cosine(
+            1, omega, 1.0, excess_bw, 11*omega)
+        self.rrc0 = filter.pfb_arb_resampler_ccf(omega, rrc_taps0)
+        self.rrc1 = filter.fir_filter_ccf(1, rrc_taps1)
+
+        self.tb.connect(self.src, self.rrc0, self.rrc1, self.test, self.snk)
         self.tb.run()
         
-        expected_result = 1000*[complex(0, -1.0), complex(1.0, 0),
-                                complex(0, 1.0), complex(-1.0, 0)]
+        expected_result = 10000*[complex(0, -0.5), complex(+0.5, 0),
+                                 complex(0, +0.5), complex(-0.5, 0)]
         dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
-        Ncmp = 100
+        Ncmp = 1000
         len_e = len(expected_result)
         len_d = len(dst_data)
         expected_result = expected_result[len_e - Ncmp:]
         dst_data = dst_data[len_d - Ncmp:]
 
         #for e,d in zip(expected_result, dst_data):
-        #    print e, d
+        #    print "{0:+.02f}  {1:+.02f}".format(e, d)
 
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 1)
 
