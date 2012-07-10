@@ -54,7 +54,7 @@ VOLK_RUN_TESTS(volk_32fc_x2_square_dist_32f_a, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32fc_x2_s32f_square_dist_scalar_mult_32f_a, 1e-4, 10, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_x2_divide_32f_a, 1e-4, 0, 20460, 1);
 VOLK_RUN_TESTS(volk_32f_x2_dot_prod_32f_a, 1e-4, 0, 204600, 1);
-//VOLK_RUN_TESTS(volk_32f_x2_dot_prod_32f_u, 1e-4, 0, 204600, 1);
+VOLK_RUN_TESTS(volk_32f_x2_dot_prod_32f_u, 1e-4, 0, 204600, 1);
 VOLK_RUN_TESTS(volk_32f_x2_dot_prod_16i_a, 1e-4, 0, 204600, 1);
 //VOLK_RUN_TESTS(volk_32f_s32f_32f_fm_detect_32f_a, 1e-4, 2046, 10000);
 VOLK_RUN_TESTS(volk_32f_index_max_16u_a, 3, 0, 20460, 1);
