@@ -145,16 +145,14 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
     _plot_curve[i]->attach(this);
     _plot_curve[i]->setPen(QPen(colors[i]));
 
-    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol);
-    symbol->setPen(QPen(colors[i]));
-    symbol->setColor(colors[i]);
-    symbol->setSize(7, 7);
-    _plot_curve[i]->setSymbol(symbol);
+    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]), QPen(colors[i]), QSize(7,7));
     
 #if QWT_VERSION < 0x060000
     _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+    _plot_curve[i]->setSymbol(*symbol);
 #else
     _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+    _plot_curve[i]->setSymbol(symbol);
 #endif
   }
 

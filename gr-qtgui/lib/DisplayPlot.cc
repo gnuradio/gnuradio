@@ -125,9 +125,14 @@ DisplayPlot::setColor(int which, QString color)
   _plot_curve[which]->setPen(pen);
 
   // And set the color of the markers
+#if QWT_VERSION < 0x060000
+  _plot_curve[which]->setBrush(QBrush(QColor(color)));
+#else
   QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
   sym->setColor(color);
+  sym->setPen(pen);
   _plot_curve[which]->setSymbol(sym);
+#endif
 }
 
 void
@@ -139,9 +144,15 @@ DisplayPlot::setLineWidth(int which, int width)
   _plot_curve[which]->setPen(pen);
 
   // Scale the marker size proportionally
+#if QWT_VERSION < 0x060000
+  QwtSymbol *sym = (QwtSymbol*)&_plot_curve[which]->symbol()
+  sym->setSize(7+10*log10(width), 7+10*log10(width));
+  _plot_curve[which]->setSymbol(*sym);
+#else
   QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
   sym->setSize(7+10*log10(width), 7+10*log10(width));
   _plot_curve[which]->setSymbol(sym);
+#endif
 }
 
 void
