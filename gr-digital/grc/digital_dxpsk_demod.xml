@@ -86,12 +86,6 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Omega Relative Limit</name>
-		<key>omega_relative_limit</key>
-		<value>0.005</value>
-		<type>real</type>
-	</param>
-	<param>
 		<name>Gray Code</name>
 		<key>gray_coded</key>
 		<value>True</value>
