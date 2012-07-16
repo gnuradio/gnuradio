@@ -60,7 +60,8 @@ static inline void volk_16u_byteswap_u_generic(uint16_t* intsToSwap, unsigned in
 }
 #endif /* LV_HAVE_GENERIC */
 
-#ifdef LV_HAVE_ORC
+//#ifdef LV_HAVE_ORC
+#if 0
 /*!
   \brief Byteswaps (in-place) an unaligned vector of int16_t's.
   \param intsToSwap The vector of data to byte swap
