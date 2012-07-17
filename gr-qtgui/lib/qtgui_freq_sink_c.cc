@@ -64,13 +64,13 @@ qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
   // this is usually desired when plotting
   d_shift = true;
 
-  d_fft = new gri_fft_complex(d_fftsize, true);
-  d_fbuf = gri_fft_malloc_float(d_fftsize);
+  d_fft = new gr::fft::fft_complex(d_fftsize, true);
+  d_fbuf = gr::fft::malloc_float(d_fftsize);
 
   d_index = 0;
   for(int i = 0; i < d_nconnections; i++) {
-    d_residbufs.push_back(gri_fft_malloc_complex(d_fftsize));
-    d_magbufs.push_back(gri_fft_malloc_double(d_fftsize));
+    d_residbufs.push_back(gr::fft::malloc_complex(d_fftsize));
+    d_magbufs.push_back(gr::fft::malloc_double(d_fftsize));
   }
 
   buildwindow();
@@ -81,8 +81,8 @@ qtgui_freq_sink_c::qtgui_freq_sink_c(int fftsize, int wintype,
 qtgui_freq_sink_c::~qtgui_freq_sink_c()
 {
   for(int i = 0; i < d_nconnections; i++) {
-    gri_fft_free(d_residbufs[i]);
-    gri_fft_free(d_magbufs[i]);
+    gr::fft::free(d_residbufs[i]);
+    gr::fft::free(d_magbufs[i]);
   }
   delete d_fft;
   delete d_fbuf;
@@ -263,11 +263,11 @@ qtgui_freq_sink_c::fftresize()
   if(newfftsize != d_fftsize) {
     // Resize residbuf and replace data
     for(int i = 0; i < d_nconnections; i++) {
-      gri_fft_free(d_residbufs[i]);
-      gri_fft_free(d_magbufs[i]);
+      gr::fft::free(d_residbufs[i]);
+      gr::fft::free(d_magbufs[i]);
 
-      d_residbufs[i] = gri_fft_malloc_complex(newfftsize);
-      d_magbufs[i] = gri_fft_malloc_double(newfftsize);
+      d_residbufs[i] = gr::fft::malloc_complex(newfftsize);
+      d_magbufs[i] = gr::fft::malloc_double(newfftsize);
 
       memset(d_magbufs[i], 0, newfftsize*sizeof(double));
     }
@@ -282,10 +282,10 @@ qtgui_freq_sink_c::fftresize()
 
     // Reset FFTW plan for new size
     delete d_fft;
-    d_fft = new gri_fft_complex(d_fftsize, true);
+    d_fft = new gr::fft::fft_complex(d_fftsize, true);
     
-    gri_fft_free(d_fbuf);
-    d_fbuf = gri_fft_malloc_float(d_fftsize);
+    gr::fft::free(d_fbuf);
+    d_fbuf = gr::fft::malloc_float(d_fftsize);
   }
 }
 

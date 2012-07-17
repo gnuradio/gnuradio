@@ -27,4 +27,4 @@ sinks.
 # The presence of this file turns this directory into a Python package
 
 from qtgui_swig import *
-import qtgui_swig as qtgui # to preserve the old interface
+#import qtgui_swig as qtgui # to preserve the old interface

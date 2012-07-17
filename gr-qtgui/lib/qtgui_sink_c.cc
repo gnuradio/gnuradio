@@ -30,6 +30,7 @@
 
 #include <QTimer>
 #include <volk/volk.h>
+#include <fft/fft.h>
 
 qtgui_sink_c_sptr
 qtgui_make_sink_c (int fftsize, int wintype,
@@ -68,7 +69,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
   // this is usually desired when plotting
   d_shift = true;
 
-  d_fft = new gri_fft_complex (d_fftsize, true);
+  d_fft = new gr::fft::fft_complex (d_fftsize, true);
 
   d_index = 0;
   d_residbuf = new gr_complex[d_fftsize];
@@ -255,7 +256,7 @@ qtgui_sink_c::fftresize()
 
     // Reset FFTW plan for new size
     delete d_fft;
-    d_fft = new gri_fft_complex (d_fftsize, true);
+    d_fft = new gr::fft::fft_complex (d_fftsize, true);
   }
 }
 

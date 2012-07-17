@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <string.h>
 #include <volk/volk.h>
+#include <fft/fft.h>
 
 #include <QTimer>
 
@@ -56,8 +57,8 @@ qtgui_const_sink_c::qtgui_const_sink_c(int size,
   d_index = 0;
 
   for(int i = 0; i < d_nconnections; i++) {
-    d_residbufs_real.push_back(gri_fft_malloc_double(d_size));
-    d_residbufs_imag.push_back(gri_fft_malloc_double(d_size));
+    d_residbufs_real.push_back(gr::fft::malloc_double(d_size));
+    d_residbufs_imag.push_back(gr::fft::malloc_double(d_size));
   }
 
   // Set alignment properties for VOLK
@@ -72,8 +73,8 @@ qtgui_const_sink_c::~qtgui_const_sink_c()
 {
   // d_main_gui is a qwidget destroyed with its parent
   for(int i = 0; i < d_nconnections; i++) {
-    gri_fft_free(d_residbufs_real[i]);
-    gri_fft_free(d_residbufs_imag[i]);
+    gr::fft::free(d_residbufs_real[i]);
+    gr::fft::free(d_residbufs_imag[i]);
   }
 }
 

@@ -64,12 +64,12 @@ qtgui_waterfall_sink_c::qtgui_waterfall_sink_c(int fftsize, int wintype,
   // this is usually desired when plotting
   d_shift = true;
 
-  d_fft = new gri_fft_complex(d_fftsize, true);
+  d_fft = new gr::fft::fft_complex(d_fftsize, true);
 
   d_index = 0;
   for(int i = 0; i < d_nconnections; i++) {
-    d_residbufs.push_back(gri_fft_malloc_complex(d_fftsize));
-    d_magbufs.push_back(gri_fft_malloc_double(d_fftsize));
+    d_residbufs.push_back(gr::fft::malloc_complex(d_fftsize));
+    d_magbufs.push_back(gr::fft::malloc_double(d_fftsize));
   }
 
   buildwindow();
@@ -80,8 +80,8 @@ qtgui_waterfall_sink_c::qtgui_waterfall_sink_c(int fftsize, int wintype,
 qtgui_waterfall_sink_c::~qtgui_waterfall_sink_c()
 {
   for(int i = 0; i < d_nconnections; i++) {
-    gri_fft_free(d_residbufs[i]);
-    gri_fft_free(d_magbufs[i]);
+    gr::fft::free(d_residbufs[i]);
+    gr::fft::free(d_magbufs[i]);
   }
   delete d_fft;
 }
@@ -227,11 +227,11 @@ qtgui_waterfall_sink_c::fftresize()
 
     // Resize residbuf and replace data
     for(int i = 0; i < d_nconnections; i++) {
-      gri_fft_free(d_residbufs[i]);
-      gri_fft_free(d_magbufs[i]);
+      gr::fft::free(d_residbufs[i]);
+      gr::fft::free(d_magbufs[i]);
 
-      d_residbufs[i] = gri_fft_malloc_complex(newfftsize);
-      d_magbufs[i] = gri_fft_malloc_double(newfftsize);
+      d_residbufs[i] = gr::fft::malloc_complex(newfftsize);
+      d_magbufs[i] = gr::fft::malloc_double(newfftsize);
     }
 
     // Set new fft size and reset buffer index 
@@ -244,7 +244,7 @@ qtgui_waterfall_sink_c::fftresize()
 
     // Reset FFTW plan for new size
     delete d_fft;
-    d_fft = new gri_fft_complex(d_fftsize, true);
+    d_fft = new gr::fft::fft_complex(d_fftsize, true);
   }
 }
 
@@ -267,7 +267,7 @@ qtgui_waterfall_sink_c::work(int noutput_items,
     // If we have enough input for one full FFT, do it
     if(datasize >= resid) {
 
-      float *fbuf = gri_fft_malloc_float(d_fftsize);
+      float *fbuf = gr::fft::malloc_float(d_fftsize);
       for(int n = 0; n < d_nconnections; n++) {
 	// Fill up residbuf with d_fftsize number of items
 	in = (const gr_complex*)input_items[n];
@@ -276,7 +276,7 @@ qtgui_waterfall_sink_c::work(int noutput_items,
 	fft(fbuf, d_residbufs[n], d_fftsize);
 	volk_32f_convert_64f_a(d_magbufs[n], fbuf, d_fftsize);
       }
-      gri_fft_free(fbuf);
+      gr::fft::free(fbuf);
       
       if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	d_last_time = gruel::high_res_timer_now();

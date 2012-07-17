@@ -79,6 +79,7 @@ set(qtgui_srcs
 ########################################################################
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
     ${GR_QTGUI_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
 )
@@ -100,6 +101,7 @@ include_directories(${PYTHON_INCLUDE_PATH}) #deprecated for dirs (cmake 2.6)
 ########################################################################
 list(APPEND qtgui_libs
     gnuradio-core
+    gnuradio-fft
     volk
     ${QT_LIBRARIES}
     ${QWT_LIBRARIES}

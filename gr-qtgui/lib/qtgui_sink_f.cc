@@ -68,7 +68,7 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
   // this is usually desired when plotting
   d_shift = true;
 
-  d_fft = new gri_fft_complex (d_fftsize, true);
+  d_fft = new gr::fft::fft_complex (d_fftsize, true);
 
   d_index = 0;
   d_residbuf = new float[d_fftsize];
@@ -251,7 +251,7 @@ qtgui_sink_f::fftresize()
 
     // Reset FFTW plan for new size
     delete d_fft;
-    d_fft = new gri_fft_complex (d_fftsize, true);
+    d_fft = new gr::fft::fft_complex (d_fftsize, true);
   }
 }
 

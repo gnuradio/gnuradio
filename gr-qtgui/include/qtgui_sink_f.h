@@ -27,7 +27,7 @@
 #include <gr_qtgui_api.h>
 #include <gr_block.h>
 #include <gr_firdes.h>
-#include <gri_fft.h>
+#include <fft/fft.h>
 #include <qapplication.h>
 #include "SpectrumGUIClass.h"
 
@@ -80,7 +80,7 @@ private:
   std::string d_name;
 
   bool d_shift;
-  gri_fft_complex *d_fft;
+  gr::fft::fft_complex *d_fft;
 
   int d_index;
   float *d_residbuf;

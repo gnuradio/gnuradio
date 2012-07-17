@@ -27,7 +27,7 @@
 #include <gr_qtgui_api.h>
 #include <gr_block.h>
 #include <gr_firdes.h>
-#include <gri_fft.h>
+#include <fft/fft.h>
 #include <qapplication.h>
 #include <gruel/high_res_timer.h>
 #include "SpectrumGUIClass.h"
@@ -83,7 +83,7 @@ private:
   bool d_update_active;
 
   bool d_shift;
-  gri_fft_complex *d_fft;
+  gr::fft::fft_complex *d_fft;
 
   int d_index;
   gr_complex *d_residbuf;

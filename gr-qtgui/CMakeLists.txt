@@ -47,6 +47,7 @@ GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
     QT4_FOUND
     QWT_FOUND
     ENABLE_GR_CORE
+    ENABLE_GR_FFT
     PYTHONLIBS_FOUND
     ${qt_gui_python_deps}
 )

@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import qtgui_swig
+import qtgui_swig as qtgui
 
 class test_qtgui(gr_unittest.TestCase):
 
@@ -33,15 +33,15 @@ class test_qtgui(gr_unittest.TestCase):
 
     def test01 (self):
         # Test to make sure we can instantiate the sink
-        self.qtsnk = qtgui_swig.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                       0, 1, "Test",
-                                       True, True, True, True)
+        self.qtsnk = qtgui.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                  0, 1, "Test",
+                                  True, True, True, True)
 
     def test02 (self):
         # Test to make sure we can instantiate the sink
-        self.qtsnk = qtgui_swig.sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                       0, 1, "Test",
-                                       True, True, True, True)
+        self.qtsnk = qtgui.sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                  0, 1, "Test",
+                                  True, True, True, True)
 
 
 if __name__ == '__main__':

@@ -27,7 +27,7 @@
 #include <gr_qtgui_api.h>
 #include <gr_sync_block.h>
 #include <gr_firdes.h>
-#include <gri_fft.h>
+#include <fft/fft.h>
 #include <qapplication.h>
 #include <waterfalldisplayform.h>
 
@@ -81,7 +81,7 @@ private:
   int d_nconnections;
 
   bool d_shift;
-  gri_fft_complex *d_fft;
+  gr::fft::fft_complex *d_fft;
 
   int d_index;
   std::vector<gr_complex*> d_residbufs;
