@@ -59,7 +59,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,tot_constellat
     inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)
     enc_in = trellis.encoder_ss(fi,0) # initial state = 0
     # essentially here we implement the combination of modulation and channel as a memoryless modulation (the memory induced by the channel is hidden in the innner FSM)
-    mod = gr.chunks_to_symbols_sf(tot_constellation,dimensionality)
+    mod = digital.chunks_to_symbols_sf(tot_constellation,dimensionality)
 
     # CHANNEL
     add = gr.add_ff()

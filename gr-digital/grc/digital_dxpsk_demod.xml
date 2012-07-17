@@ -23,7 +23,7 @@
 
 <!--
 ###################################################
-##DPSK2 Mod - 2, 4, 8
+##DPSK2 Mod - 2, 4
 ###################################################
  -->
 <block>
@@ -86,15 +86,8 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Omega Relative Limit</name>
-		<key>omega_relative_limit</key>
-		<value>0.005</value>
-		<type>real</type>
-	</param>
-	<param>
 		<name>Gray Code</name>
 		<key>mod_code</key>
-		<value>True</value>
 		<type>enum</type>
 		<option>
 			<name>Yes</name>

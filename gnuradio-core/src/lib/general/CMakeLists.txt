@@ -37,6 +37,10 @@ ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
     ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
 )
 
+add_custom_target(general_generated DEPENDS
+    ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
+)
+
 ########################################################################
 # Handle the generated constants
 ########################################################################
@@ -81,7 +85,6 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_int.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_glfsr.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_int_to_float.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_short_to_float.cc
@@ -101,7 +104,6 @@ list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_nco.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_vco.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_math.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gri_lfsr.cc
 )
 
 ########################################################################
@@ -140,7 +142,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_glfsr.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h
@@ -176,14 +177,12 @@ endif(ENABLE_PYTHON)
 set(gr_core_general_triple_threats
     complex_vec_test
     gr_add_ff
-    gr_additive_scrambler_bb
     gr_agc_cc
     gr_agc_ff
     gr_agc2_cc
     gr_agc2_ff
     gr_align_on_samplenumbers_ss
     gr_bin_statistics_f
-    gr_bytes_to_syms
     gr_char_to_float
     gr_char_to_short
     gr_check_counting_s
@@ -196,9 +195,6 @@ set(gr_core_general_triple_threats
     gr_cpm
     gr_ctcss_squelch_ff
     gr_decode_ccsds_27_fb
-    gr_diff_decoder_bb
-    gr_diff_encoder_bb
-    gr_diff_phasor_cc
     gr_dpll_bb
     gr_deinterleave
     gr_delay
@@ -216,9 +212,6 @@ set(gr_core_general_triple_threats
     gr_float_to_uchar
     gr_fmdet_cf
     gr_frequency_modulator_fc
-    gr_framer_sink_1
-    gr_glfsr_source_b
-    gr_glfsr_source_f
     gr_head
     gr_int_to_float
     gr_interleave
@@ -228,7 +221,6 @@ set(gr_core_general_triple_threats
     gr_keep_m_in_n
     gr_kludge_copy
     gr_lfsr_32k_source_s
-    gr_map_bb
     gr_multiply_cc
     gr_multiply_ff
     gr_multiply_const_cc
@@ -239,13 +231,11 @@ set(gr_core_general_triple_threats
     gr_null_sink
     gr_null_source
     gr_pa_2x2_phase_combiner
-    gr_packet_sink
     gr_peak_detector2_fb
     gr_phase_modulator_fc
     gr_pll_carriertracking_cc
     gr_pll_freqdet_cf
     gr_pll_refout_cc
-    gr_pn_correlator_cc
     gr_prefs
     gr_probe_avg_mag_sqrd_c
     gr_probe_avg_mag_sqrd_cf
@@ -262,7 +252,6 @@ set(gr_core_general_triple_threats
     gr_short_to_float
     gr_short_to_char
     gr_simple_correlator
-    gr_simple_framer
     gr_simple_squelch_cc
     gr_skiphead
     gr_squelch_base_cc
@@ -284,14 +273,10 @@ set(gr_core_general_triple_threats
     gr_vector_to_streams
     gr_unpack_k_bits_bb
     gr_pack_k_bits_bb
-    gr_descrambler_bb
-    gr_scrambler_bb
-    gr_probe_density_b
     gr_annotator_alltoall
     gr_annotator_1to1
     gr_annotator_raw
     gr_burst_tagger
-    gr_correlate_access_code_tag_bb
     gr_tag_debug
 )
 

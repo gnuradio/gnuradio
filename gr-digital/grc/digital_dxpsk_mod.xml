@@ -23,7 +23,7 @@
 
 <!--
 ###################################################
-## DPSK Mod - 2, 4, 8
+## DPSK Mod - 2, 4
 ###################################################
  -->
 <block>
@@ -49,10 +49,6 @@
 			<name>DQPSK</name>
 			<key>dqpsk</key>
 		</option>
-		<option>
-			<name>D8PSK</name>
-			<key>d8psk</key>
-		</option>
 	</param>
 	<param>
 		<name>Samples/Symbol</name>
@@ -69,7 +65,6 @@
 	<param>
 		<name>Gray Code</name>
 		<key>mod_code</key>
-		<value>"gray"</value>
 		<type>enum</type>
 		<option>
 			<name>Yes</name>

@@ -43,7 +43,7 @@ class bert_transmit(gr.hier_block2):
         
         # Create BERT data bit stream	
 	self._bits = gr.vector_source_b([1,], True)      # Infinite stream of ones
-        self._scrambler = gr.scrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit scrambler
+        self._scrambler = digital.scrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit scrambler
 
         self._mod = digital.generic_mod(constellation, samples_per_symbol,
                                         differential, excess_bw, gray_coded,

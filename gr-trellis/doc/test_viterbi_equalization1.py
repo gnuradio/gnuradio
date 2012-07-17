@@ -23,7 +23,7 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
         packet[i] = 0
         packet[len(packet)-i-1] = 0
     src = gr.vector_source_s(packet,False)
-    mod = gr.chunks_to_symbols_sf(modulation[1],modulation[0])
+    mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
 
     # CHANNEL
     isi = gr.fir_filter_fff(1,channel)

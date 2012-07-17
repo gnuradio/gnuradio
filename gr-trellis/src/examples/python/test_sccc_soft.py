@@ -22,7 +22,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     enc_out = trellis.encoder_ss(fo,0) # initial state = 0
     inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)
     enc_in = trellis.encoder_ss(fi,0) # initial state = 0
-    mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
+    mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
     add = gr.add_ff()

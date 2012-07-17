@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Apr  3 18:03:52 2012</timestamp>
+  <timestamp>Thu Jul  5 16:26:53 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -17,11 +17,11 @@
     </param>
     <param>
       <key>author</key>
-      <value>Example</value>
+      <value>GNU Radio</value>
     </param>
     <param>
       <key>description</key>
-      <value>gnuradio flow graph</value>
+      <value>Encode a signal into a packet, modulate, demodulate, decode and show it's the same data.</value>
     </param>
     <param>
       <key>window_size</key>
@@ -42,6 +42,10 @@
     <param>
       <key>run</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
     </param>
     <param>
       <key>realtime_scheduling</key>
@@ -72,7 +76,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 170)</value>
+      <value>(11, 120)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -127,38 +131,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(12, 257)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_throttle</key>
-    <param>
-      <key>id</key>
-      <value>gr_throttle_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>samples_per_second</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(225, 174)</value>
+      <value>(13, 188)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -201,7 +174,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(203, 8)</value>
+      <value>(184, 9)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -209,10 +182,53 @@
     </param>
   </block>
   <block>
-    <key>blks2_packet_decoder</key>
+    <key>digital_dxpsk_mod</key>
     <param>
       <key>id</key>
-      <value>blks2_packet_decoder_0</value>
+      <value>digital_dxpsk_mod_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>dbpsk</value>
+    </param>
+    <param>
+      <key>samples_per_symbol</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>excess_bw</key>
+      <value>0.35</value>
+    </param>
+    <param>
+      <key>gray_coded</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>verbose</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>log</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(745, 16)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_throttle</key>
+    <param>
+      <key>id</key>
+      <value>gr_throttle_0_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -223,16 +239,59 @@
       <value>float</value>
     </param>
     <param>
+      <key>samples_per_second</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(358, 39)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blks2_packet_encoder</key>
+    <param>
+      <key>id</key>
+      <value>blks2_packet_encoder_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>samples_per_symbol</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>bits_per_symbol</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>access_code</key>
       <value></value>
     </param>
     <param>
-      <key>threshold</key>
-      <value>-1</value>
+      <key>pad_for_usrp</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>payload_length</key>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(551, 65)</value>
+      <value>(541, 9)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -243,7 +302,7 @@
     <key>digital_dxpsk_demod</key>
     <param>
       <key>id</key>
-      <value>digital_dxpsk_demod_0</value>
+      <value>digital_dxpsk_demod_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -295,61 +354,18 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(639, 254)</value>
+      <value>(746, 135)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
   </block>
   <block>
-    <key>digital_dxpsk_mod</key>
+    <key>blks2_packet_decoder</key>
     <param>
       <key>id</key>
-      <value>digital_dxpsk_mod_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>dbpsk</value>
-    </param>
-    <param>
-      <key>samples_per_symbol</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>excess_bw</key>
-      <value>0.35</value>
-    </param>
-    <param>
-      <key>gray_coded</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>verbose</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>log</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(421, 294)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blks2_packet_encoder</key>
-    <param>
-      <key>id</key>
-      <value>blks2_packet_encoder_0</value>
+      <value>blks2_packet_decoder_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -360,32 +376,20 @@
       <value>float</value>
     </param>
     <param>
-      <key>samples_per_symbol</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>bits_per_symbol</key>
-      <value>1</value>
-    </param>
-    <param>
       <key>access_code</key>
       <value></value>
     </param>
     <param>
-      <key>pad_for_usrp</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>payload_length</key>
-      <value>0</value>
+      <key>threshold</key>
+      <value>-1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 286)</value>
+      <value>(545, 187)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
   </block>
   <block>
@@ -456,16 +460,34 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(760, 41)</value>
+      <value>(184, 165)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
   </block>
   <connection>
-    <source_block_id>gr_sig_source_x_0</source_block_id>
-    <sink_block_id>gr_throttle_0_0</sink_block_id>
+    <source_block_id>blks2_packet_decoder_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blks2_packet_encoder_0</source_block_id>
+    <sink_block_id>digital_dxpsk_mod_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_dxpsk_mod_1</source_block_id>
+    <sink_block_id>digital_dxpsk_demod_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_dxpsk_demod_1</source_block_id>
+    <sink_block_id>blks2_packet_decoder_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -476,26 +498,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blks2_packet_decoder_0</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_dxpsk_demod_0</source_block_id>
-    <sink_block_id>blks2_packet_decoder_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_dxpsk_mod_0</source_block_id>
-    <sink_block_id>digital_dxpsk_demod_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blks2_packet_encoder_0</source_block_id>
-    <sink_block_id>digital_dxpsk_mod_0</sink_block_id>
+    <source_block_id>gr_sig_source_x_0</source_block_id>
+    <sink_block_id>gr_throttle_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

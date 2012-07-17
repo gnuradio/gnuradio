@@ -1,4 +1,4 @@
-# Copyright 2008, 2009 Free Software Foundation, Inc.
+# Copyright 2008, 2009, 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -158,7 +158,7 @@ class packet_decoder(gr.hier_block2):
 		#blocks
 		msgq = gr.msg_queue(DEFAULT_MSGQ_LIMIT) #holds packets from the PHY
 		correlator = digital.correlate_access_code_bb(self._access_code, self._threshold)
-		framer_sink = gr.framer_sink_1(msgq)
+		framer_sink = digital.framer_sink_1(msgq)
 		#initialize hier2
 		gr.hier_block2.__init__(
 			self,

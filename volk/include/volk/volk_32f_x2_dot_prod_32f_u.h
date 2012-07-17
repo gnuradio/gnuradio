@@ -48,14 +48,14 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* 
 
   for(;number < sixteenthPoints; number++){
 
-    a0Val = _mm_load_ps(aPtr);
-    a1Val = _mm_load_ps(aPtr+4);
-    a2Val = _mm_load_ps(aPtr+8);
-    a3Val = _mm_load_ps(aPtr+12);
-    b0Val = _mm_load_ps(bPtr);
-    b1Val = _mm_load_ps(bPtr+4);
-    b2Val = _mm_load_ps(bPtr+8);
-    b3Val = _mm_load_ps(bPtr+12);
+    a0Val = _mm_loadu_ps(aPtr);
+    a1Val = _mm_loadu_ps(aPtr+4);
+    a2Val = _mm_loadu_ps(aPtr+8);
+    a3Val = _mm_loadu_ps(aPtr+12);
+    b0Val = _mm_loadu_ps(bPtr);
+    b1Val = _mm_loadu_ps(bPtr+4);
+    b2Val = _mm_loadu_ps(bPtr+8);
+    b3Val = _mm_loadu_ps(bPtr+12);
 
     c0Val = _mm_mul_ps(a0Val, b0Val);
     c1Val = _mm_mul_ps(a1Val, b1Val);
@@ -86,9 +86,6 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse( float* result, const  float* 
 
   number = sixteenthPoints*16;
   for(;number < num_points; number++){
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
-    dotProduct += ((*aPtr++) * (*bPtr++));
     dotProduct += ((*aPtr++) * (*bPtr++));
   }
 
@@ -121,14 +118,14 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse3(float * result, const float *
 
   for(;number < sixteenthPoints; number++){
 
-    a0Val = _mm_load_ps(aPtr);
-    a1Val = _mm_load_ps(aPtr+4);
-    a2Val = _mm_load_ps(aPtr+8);
-    a3Val = _mm_load_ps(aPtr+12);
-    b0Val = _mm_load_ps(bPtr);
-    b1Val = _mm_load_ps(bPtr+4);
-    b2Val = _mm_load_ps(bPtr+8);
-    b3Val = _mm_load_ps(bPtr+12);
+    a0Val = _mm_loadu_ps(aPtr);
+    a1Val = _mm_loadu_ps(aPtr+4);
+    a2Val = _mm_loadu_ps(aPtr+8);
+    a3Val = _mm_loadu_ps(aPtr+12);
+    b0Val = _mm_loadu_ps(bPtr);
+    b1Val = _mm_loadu_ps(bPtr+4);
+    b2Val = _mm_loadu_ps(bPtr+8);
+    b3Val = _mm_loadu_ps(bPtr+12);
 
     c0Val = _mm_mul_ps(a0Val, b0Val);
     c1Val = _mm_mul_ps(a1Val, b1Val);
@@ -187,15 +184,15 @@ static inline void volk_32f_x2_dot_prod_32f_u_sse4_1(float * result, const float
 
   for(;number < sixteenthPoints; number++){
 
-    aVal1 = _mm_load_ps(aPtr); aPtr += 4;
-    aVal2 = _mm_load_ps(aPtr); aPtr += 4;
-    aVal3 = _mm_load_ps(aPtr); aPtr += 4;
-    aVal4 = _mm_load_ps(aPtr); aPtr += 4;
+    aVal1 = _mm_loadu_ps(aPtr); aPtr += 4;
+    aVal2 = _mm_loadu_ps(aPtr); aPtr += 4;
+    aVal3 = _mm_loadu_ps(aPtr); aPtr += 4;
+    aVal4 = _mm_loadu_ps(aPtr); aPtr += 4;
 
-    bVal1 = _mm_load_ps(bPtr); bPtr += 4;
-    bVal2 = _mm_load_ps(bPtr); bPtr += 4;
-    bVal3 = _mm_load_ps(bPtr); bPtr += 4;
-    bVal4 = _mm_load_ps(bPtr); bPtr += 4;
+    bVal1 = _mm_loadu_ps(bPtr); bPtr += 4;
+    bVal2 = _mm_loadu_ps(bPtr); bPtr += 4;
+    bVal3 = _mm_loadu_ps(bPtr); bPtr += 4;
+    bVal4 = _mm_loadu_ps(bPtr); bPtr += 4;
 
     cVal1 = _mm_dp_ps(aVal1, bVal1, 0xF1);
     cVal2 = _mm_dp_ps(aVal2, bVal2, 0xF2);

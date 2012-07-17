@@ -131,7 +131,7 @@ class cpm_mod(gr.hier_block2):
  
  
 	# Turn it into symmetric PAM data.
-        self.pam = gr.chunks_to_symbols_bf(self.sym_alphabet,1)
+        self.pam = digital_swig.chunks_to_symbols_bf(self.sym_alphabet,1)
 
         # Generate pulse (sum of taps = samples_per_symbol/2)
         if cpm_type == 0: # CPFSK
