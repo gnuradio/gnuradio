@@ -65,8 +65,9 @@ class bert_receiver(gr.hier_block2):
         
         self._bitrate = bitrate
 
-        self._demod = digital.generic_demod(constellation, samples_per_symbol,
-                                            differential, excess_bw, gray_coded,
+        self._demod = digital.generic_demod(constellation, differential, 
+                                            samples_per_symbol,
+                                            gray_coded, excess_bw,
                                             freq_bw, timing_bw, phase_bw,
                                             verbose, log)
 
