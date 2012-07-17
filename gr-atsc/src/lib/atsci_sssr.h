@@ -29,8 +29,8 @@
 
 #include <atsc_api.h>
 #include <atsc_consts.h>
-#include <gri_mmse_fir_interpolator.h>
-#include <gr_single_pole_iir.h>
+#include <filter/mmse_fir_interpolator_ff.h>
+#include <filter/single_pole_iir.h>
 #include <cstdio>
 
 /*
@@ -195,8 +195,8 @@ public:
  */
 
 class ATSC_API atsci_interpolator {
-  gri_mmse_fir_interpolator	d_interp;
-  gr_single_pole_iir<float,float,float> d_loop;	// ``VCO'' loop filter
+  gr::filter::mmse_fir_interpolator_ff d_interp;
+  gr::filter::single_pole_iir<float,float,float> d_loop; // ``VCO'' loop filter
   double			d_nominal_ratio_of_rx_clock_to_symbol_freq; // FREQ
   double			d_w;	// ratio of PERIOD of Tx to Rx clocks
   double			d_mu;	// fractional delay [0,1]
