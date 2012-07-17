@@ -27,11 +27,7 @@
 #include <digital_api.h>
 #include <gr_sync_block.h>
 #include <gri_control_loop.h>
-#include <gr_fir_util.h>
-#include <gr_fir_ccc.h>
-
-typedef gr_fir_ccc* (*fir_maker_t)(const std::vector<gr_complex> &taps);
-typedef gr_fir_ccc  filter_t;
+#include <filter/fir_filter.h>
 
 class digital_fll_band_edge_cc;
 typedef boost::shared_ptr<digital_fll_band_edge_cc> digital_fll_band_edge_cc_sptr;
@@ -116,10 +112,10 @@ class DIGITAL_API digital_fll_band_edge_cc :
   std::vector<gr_complex> d_taps_lower;
   std::vector<gr_complex> d_taps_upper;
   bool			  d_updated;
-  filter_t*               d_filter_lower;
-  filter_t*               d_filter_upper;
   std::vector<gr_complex> d_output_hist;
   std::vector<gr_complex> d_fllbuffer;
+  gr::filter::kernel::fir_filter_ccc* d_filter_lower;
+  gr::filter::kernel::fir_filter_ccc* d_filter_upper;
 
   /*!
    * Build the FLL
