@@ -32,6 +32,11 @@ import numpy
 from pprint import pprint
 import inspect
 
+try:
+    from gnuradio import filter
+except ImportError:
+    import filter_swig as filter
+
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2
 _def_sensitivity = 1
@@ -94,7 +99,7 @@ class gfsk_mod(gr.hier_block2):
 	#sensitivity = (pi / 2) / samples_per_symbol	# phase change per bit = pi / 2
 
 	# Turn it into NRZ data.
-	self.nrz = gr.bytes_to_syms()
+	self.nrz = digital.bytes_to_syms()
 
 	# Form Gaussian filter
         # Generate Gaussian response (Needs to be convolved with window below).
@@ -107,7 +112,7 @@ class gfsk_mod(gr.hier_block2):
 
 	self.sqwave = (1,) * samples_per_symbol       # rectangular window
 	self.taps = numpy.convolve(numpy.array(self.gaussian_taps),numpy.array(self.sqwave))
-	self.gaussian_filter = gr.interp_fir_filter_fff(samples_per_symbol, self.taps)
+	self.gaussian_filter = filter.interp_fir_filter_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
 	self.fmmod = gr.frequency_modulator_fc(sensitivity)
