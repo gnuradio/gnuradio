@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, window
+from gnuradio import gr, gru, window, filter
 from gnuradio.wxgui import stdgui2
 import wx
 import plot
@@ -128,7 +128,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
             power += tap*tap
 
         self.c2mag = gr.complex_to_mag(self.fft_size)
-        self.avg = gr.single_pole_iir_filter_ff(1.0, self.fft_size)
+        self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
         self.log = gr.nlog10_ff(20, self.fft_size,
@@ -173,7 +173,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
             power += tap*tap
 
         self.c2mag = gr.complex_to_mag(self.fft_size)
-        self.avg = gr.single_pole_iir_filter_ff(1.0, self.fft_size)
+        self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
         self.log = gr.nlog10_ff(20, self.fft_size,
