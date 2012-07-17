@@ -25,6 +25,7 @@ from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+from gnuradio import filter
 from gnuradio import digital
 from gnuradio import vocoder
 
@@ -84,7 +85,7 @@ class my_top_block(gr.top_block):
             self.sink = gr.null_sink(gr.sizeof_gr_complex)
             rrate = 1
 
-        self.resampler = blks2.pfb_arb_resampler_ccf(rrate)
+        self.resampler = filter.pfb.arb_resampler_ccf(rrate)
             
 	self.connect(self.audio_rx)
 	self.connect(self.txpath, self.resampler, self.sink)

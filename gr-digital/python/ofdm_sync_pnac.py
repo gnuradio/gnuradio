@@ -24,6 +24,11 @@ import math
 from numpy import fft
 from gnuradio import gr
 
+try:
+    from gnuradio import filter
+except ImportError:
+    import filter_swig as filter
+
 class ofdm_sync_pnac(gr.hier_block2):
     def __init__(self, fft_length, cp_length, kstime, logging=False):
         """
@@ -59,7 +64,7 @@ class ofdm_sync_pnac(gr.hier_block2):
         # cross-correlate with the known symbol
         kstime = [k.conjugate() for k in kstime[0:fft_length//2]]
         kstime.reverse()
-        self.crosscorr_filter = gr.fir_filter_ccc(1, kstime)
+        self.crosscorr_filter = filter.fir_filter_ccc(1, kstime)
         
         # Create a delay line
         self.delay = gr.delay(gr.sizeof_gr_complex, fft_length/2)
@@ -71,7 +76,7 @@ class ofdm_sync_pnac(gr.hier_block2):
         # Create a moving sum filter for the input
         self.mag = gr.complex_to_mag_squared()
         movingsum_taps = (fft_length//1)*[1.0,]
-        self.power = gr.fir_filter_fff(1,movingsum_taps)
+        self.power = filter.fir_filter_fff(1,movingsum_taps)
      
         # Get magnitude (peaks) and angle (phase/freq error)
         self.c2mag = gr.complex_to_mag_squared()

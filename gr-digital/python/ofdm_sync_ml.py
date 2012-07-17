@@ -23,6 +23,11 @@
 import math
 from gnuradio import gr
 
+try:
+    from gnuradio import filter
+except ImportError:
+    import filter_swig as filter
+
 class ofdm_sync_ml(gr.hier_block2):
     def __init__(self, fft_length, cp_length, snr, kstime, logging):
         ''' Maximum Likelihood OFDM synchronizer:
@@ -57,7 +62,7 @@ class ofdm_sync_ml(gr.hier_block2):
         self.adder = gr.add_ff()
 
         moving_sum_taps = [rho/2 for i in range(cp_length)]
-        self.moving_sum_filter = gr.fir_filter_fff(1,moving_sum_taps)
+        self.moving_sum_filter = filter.fir_filter_fff(1,moving_sum_taps)
         
         self.connect(self.input,self.magsqrd1)
         self.connect(self.delay,self.magsqrd2)
@@ -71,7 +76,7 @@ class ofdm_sync_ml(gr.hier_block2):
         self.mixer = gr.multiply_cc();
 
         movingsum2_taps = [1.0 for i in range(cp_length)]
-        self.movingsum2 = gr.fir_filter_ccf(1,movingsum2_taps)
+        self.movingsum2 = filter.fir_filter_ccf(1,movingsum2_taps)
         
         # Correlator data handler
         self.c2mag = gr.complex_to_mag()
@@ -115,7 +120,7 @@ class ofdm_sync_ml(gr.hier_block2):
         # to readjust the timing in the middle of the packet or we ruin the equalizer settings.
         kstime = [k.conjugate() for k in kstime]
         kstime.reverse()
-        self.kscorr = gr.fir_filter_ccc(1, kstime)
+        self.kscorr = filter.fir_filter_ccc(1, kstime)
         self.corrmag = gr.complex_to_mag_squared()
         self.div = gr.divide_ff()
 
