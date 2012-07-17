@@ -135,6 +135,12 @@ if(NOT CROSSCOMPILE_MULTILIB AND CPU_IS_x86)
     if (${SIZEOF_CPU} EQUAL 32)
         OVERRULE_ARCH(64 "CPU width is 32 bits")
     endif()
+
+    #MSVC 64 bit does not have MMX, overrule it
+    if (${SIZEOF_CPU} EQUAL 64 AND MSVC)
+        OVERRULE_ARCH(mmx "No MMX for Win64")
+    endif()
+
 endif()
 
 ########################################################################
@@ -159,7 +165,7 @@ execute_process(
 # When this occurs, eliminate the redundant machines
 # to avoid unnecessary compilation of subset machines.
 ########################################################################
-foreach(arch orc 64 32)
+foreach(arch mmx orc 64 32)
     foreach(machine_name ${available_machines})
         string(REPLACE "_${arch}" "" machine_name_no_arch ${machine_name})
         if (${machine_name} STREQUAL ${machine_name_no_arch})
