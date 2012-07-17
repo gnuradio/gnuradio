@@ -126,15 +126,15 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         self.tb.connect(self.src, self.rrc0, self.rrc1, self.test, self.snk)
         self.tb.run()
         
-        expected_result = 10000*[complex(0, -0.5), complex(+0.5, 0),
-                                 complex(0, +0.5), complex(-0.5, 0)]
+        expected_result = 10000*[complex(0, +0.5), complex(-0.5, 0),
+                                 complex(0, -0.5), complex(+0.5, 0)]
         dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
         Ncmp = 1000
         len_e = len(expected_result)
         len_d = len(dst_data)
-        expected_result = expected_result[len_e - Ncmp:]
+        expected_result = expected_result[len_e - Ncmp - 1:-1]
         dst_data = dst_data[len_d - Ncmp:]
 
         #for e,d in zip(expected_result, dst_data):
