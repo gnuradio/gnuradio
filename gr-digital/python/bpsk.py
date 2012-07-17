@@ -116,8 +116,7 @@ class dbpsk_mod(bpsk_mod):
         It exists purely to simplify generation of the block in grc.
 	"""
 
-        super(dbpsk_mod, self).__init__(differential=True,
-                                        *args, **kwargs)
+        super(dbpsk_mod, self).__init__(*args, **kwargs)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           DBPSK demodulator
@@ -140,8 +139,7 @@ class dbpsk_demod(bpsk_demod):
         It exists purely to simplify generation of the block in grc.
         """
 
-        super(dbpsk_demod, self).__init__(differential=True,
-                                          *args, **kwargs)
+        super(dbpsk_demod, self).__init__(*args, **kwargs)
 
 #
 # Add these to the mod/demod registry

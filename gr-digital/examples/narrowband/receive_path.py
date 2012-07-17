@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
+from gnuradio import gr, gru, filter
 from gnuradio import eng_notation
 from gnuradio import digital
 
@@ -61,12 +61,12 @@ class receive_path(gr.hier_block2):
         
         # Design filter to get actual channel we want
         sw_decim = 1
-        chan_coeffs = gr.firdes.low_pass (1.0,                  # gain
-                                          sw_decim * self.samples_per_symbol(), # sampling rate
-                                          self._chbw_factor,    # midpoint of trans. band
-                                          0.5,                  # width of trans. band
-                                          gr.firdes.WIN_HANN)   # filter type
-        self.channel_filter = gr.fft_filter_ccc(sw_decim, chan_coeffs)
+        chan_coeffs = filter.firdes.low_pass(1.0,                  # gain
+                                             sw_decim * self.samples_per_symbol(), # sampling rate
+                                             self._chbw_factor,    # midpoint of trans. band
+                                             0.5,                  # width of trans. band
+                                             gr.firdes.WIN_HANN)   # filter type
+        self.channel_filter = filter.fft_filter_ccc(sw_decim, chan_coeffs)
         
         # receiver
         self.packet_receiver = \
