@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,17 +21,17 @@
 # Install the header files
 ########################################################################
 install(FILES
-    gr_qtgui_api.h
-    qtgui_time_sink_c.h
-    qtgui_time_sink_f.h
-    qtgui_freq_sink_c.h
-    qtgui_freq_sink_f.h
-    qtgui_const_sink_c.h
-    qtgui_waterfall_sink_c.h
-    qtgui_waterfall_sink_f.h
-    qtgui_sink_c.h
-    qtgui_sink_f.h
-    qtgui_util.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    api.h
+    time_sink_c.h
+    time_sink_f.h
+    freq_sink_c.h
+    freq_sink_f.h
+    const_sink_c.h
+#    qtgui_waterfall_sink_c.h
+#    qtgui_waterfall_sink_f.h
+#    qtgui_sink_c.h
+#    qtgui_sink_f.h
+    utils.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/qtgui
     COMPONENT "qtgui_devel"
 )

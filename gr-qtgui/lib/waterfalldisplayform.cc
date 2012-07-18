@@ -101,6 +101,12 @@ WaterfallDisplayForm::GetFFTAverage() const
   return _fftavg;
 }
 
+gr::filter::firdes::win_type
+WaterfallDisplayForm::GetFFTWindowType() const
+{
+  return _fftwintype;
+}
+
 void
 WaterfallDisplayForm::SetFFTSize(const int newsize)
 {
@@ -111,6 +117,12 @@ void
 WaterfallDisplayForm::SetFFTAverage(const float newavg)
 {
   _fftavg = newavg;
+}
+
+void
+WaterfallDisplayForm::SetFFTWindowType(const gr::filter::firdes::win_type newwin)
+{
+  _fftwintype = newwin;
 }
 
 void

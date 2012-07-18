@@ -62,15 +62,15 @@ set(qtgui_srcs
     SpectrumGUIClass.cc
     spectrumUpdateEvents.cc
     plot_waterfall.cc
-    qtgui_sink_c.cc
-    qtgui_sink_f.cc
-    qtgui_time_sink_c.cc
-    qtgui_time_sink_f.cc
-    qtgui_freq_sink_c.cc
-    qtgui_freq_sink_f.cc
-    qtgui_const_sink_c.cc
-    qtgui_waterfall_sink_c.cc
-    qtgui_waterfall_sink_f.cc
+#    qtgui_sink_c.cc
+#    qtgui_sink_f.cc
+    time_sink_c_impl.cc
+    time_sink_f_impl.cc
+    freq_sink_c_impl.cc
+    freq_sink_f_impl.cc
+    const_sink_c_impl.cc
+    waterfall_sink_c_impl.cc
+    waterfall_sink_f_impl.cc
     qtgui_util.cc
 )
 
@@ -80,6 +80,7 @@ set(qtgui_srcs
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
     ${GR_QTGUI_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
 )
@@ -102,6 +103,7 @@ include_directories(${PYTHON_INCLUDE_PATH}) #deprecated for dirs (cmake 2.6)
 list(APPEND qtgui_libs
     gnuradio-core
     gnuradio-fft
+    gnuradio-filter
     volk
     ${QT_LIBRARIES}
     ${QWT_LIBRARIES}

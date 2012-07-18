@@ -1,6 +1,5 @@
-/* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,32 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+#ifndef INCLUDED_QTGUI_API_H
+#define INCLUDED_QTGUI_API_H
 
-%{
-#include <qtgui_waterfall_sink_f.h>
-%}
+#include <gruel/attributes.h>
 
-GR_SWIG_BLOCK_MAGIC(qtgui,waterfall_sink_f)
+#ifdef gnuradio_qtgui_EXPORTS
+#  define QTGUI_API __GR_ATTR_EXPORT
+#else
+#  define QTGUI_API __GR_ATTR_IMPORT
+#endif
 
-qtgui_waterfall_sink_f_sptr
-qtgui_make_waterfall_sink_f(int size, int wintype,
-			    double fc, double bw,
-			    const std::string &name,
-			    int nconnections=1,
-			    QWidget *parent=NULL);
-
-class qtgui_waterfall_sink_f : public gr_sync_block
-{
-public:
-  void exec_();
-  PyObject* pyqwidget();
-
-  void set_frequency_range(const double centerfreq, const double bandwidth);
-
-  void set_update_time(double t);
-  void set_title(int which, const std::string &title);
-  void set_color(int which, const std::string &color);
-
-  void set_resize(int width, int height);
-};
+#endif /* INCLUDED_QTGUI_API_H */

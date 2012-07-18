@@ -26,7 +26,6 @@
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <qtgui_util.h>
 #include "DisplayPlot.h"
 
 class TimeDomainDisplayPlot: public DisplayPlot

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,15 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QTGUI_UTIL_H
-#define INCLUDED_QTGUI_UTIL_H
+#ifndef INCLUDED_QTGUI_UTILS_H
+#define INCLUDED_QTGUI_UTILS_H
 
 #include <qevent.h>
-#include <gr_qtgui_api.h>
+#include <qtgui/api.h>
 #include <qwt_plot_picker.h>
 #include <qwt_picker_machine.h>
 
-class GR_QTGUI_API QwtDblClickPlotPicker: public QwtPlotPicker
+class QTGUI_API QwtDblClickPlotPicker: public QwtPlotPicker
 {
 public:
     QwtDblClickPlotPicker(QwtPlotCanvas *);
@@ -37,7 +37,7 @@ public:
     virtual QwtPickerMachine * stateMachine(int) const;
 };
 
-class GR_QTGUI_API QwtPickerDblClickPointMachine: public QwtPickerMachine
+class QTGUI_API QwtPickerDblClickPointMachine: public QwtPickerMachine
 {
 public:
   QwtPickerDblClickPointMachine();
@@ -52,4 +52,4 @@ public:
 				  const QEvent *e);
 };
 
-#endif /* INCLUDED_QTGUI_UTIL_H */
+#endif /* INCLUDED_QTGUI_UTILS_H */

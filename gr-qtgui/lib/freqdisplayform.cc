@@ -101,6 +101,12 @@ FreqDisplayForm::GetFFTAverage() const
   return _fftavg;
 }
 
+gr::filter::firdes::win_type
+FreqDisplayForm::GetFFTWindowType() const
+{
+  return _fftwintype;
+}
+
 void
 FreqDisplayForm::SetFFTSize(const int newsize)
 {
@@ -112,6 +118,12 @@ FreqDisplayForm::SetFFTAverage(const float newavg)
 {
   _fftavg = newavg;
   getPlot()->replot();
+}
+
+void
+FreqDisplayForm::SetFFTWindowType(const gr::filter::firdes::win_type newwin)
+{
+  _fftwintype = newwin;
 }
 
 void

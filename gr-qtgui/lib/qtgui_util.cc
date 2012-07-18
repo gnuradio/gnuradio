@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <qtgui_util.h>
+#include <qtgui/utils.h>
 #include <QDebug>
 
 QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()

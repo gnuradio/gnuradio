@@ -20,29 +20,39 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#define QTGUI_API
+
 %include "gnuradio.i"
 
 //load generated python docstrings
 %include "qtgui_swig_doc.i"
 
 %{
-#include "qtgui_sink_c.h"
-#include "qtgui_sink_f.h"
-#include "qtgui_time_sink_c.h"
-#include "qtgui_time_sink_f.h"
-#include "qtgui_freq_sink_c.h"
-#include "qtgui_freq_sink_f.h"
-#include "qtgui_const_sink_c.h"
-#include "qtgui_waterfall_sink_c.h"
-#include "qtgui_waterfall_sink_f.h"
+//#include "qtgui/sink_c.h"
+//#include "qtgui/sink_f.h"
+#include "qtgui/time_sink_c.h"
+#include "qtgui/time_sink_f.h"
+#include "qtgui/freq_sink_c.h"
+#include "qtgui/freq_sink_f.h"
+#include "qtgui/const_sink_c.h"
+#include "qtgui/waterfall_sink_c.h"
+#include "qtgui/waterfall_sink_f.h"
 %}
 
-%include "qtgui_sink_c.i"
-%include "qtgui_sink_f.i"
-%include "qtgui_time_sink_c.i"
-%include "qtgui_time_sink_f.i"
-%include "qtgui_freq_sink_c.i"
-%include "qtgui_freq_sink_f.i"
-%include "qtgui_const_sink_c.i"
-%include "qtgui_waterfall_sink_c.i"
-%include "qtgui_waterfall_sink_f.i"
+//%include "qtgui/sink_c.i"
+//%include "qtgui/sink_f.i"
+%include "qtgui/time_sink_c.h"
+%include "qtgui/time_sink_f.h"
+%include "qtgui/freq_sink_c.h"
+%include "qtgui/freq_sink_f.h"
+%include "qtgui/const_sink_c.h"
+%include "qtgui/waterfall_sink_c.h"
+%include "qtgui/waterfall_sink_f.h"
+
+GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, freq_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, freq_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, const_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, waterfall_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, waterfall_sink_f);

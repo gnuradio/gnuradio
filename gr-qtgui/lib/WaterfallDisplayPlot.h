@@ -27,7 +27,6 @@
 #include <cstdio>
 #include <vector>
 #include <qwt_plot_spectrogram.h>
-#include <qtgui_util.h>
 #include "DisplayPlot.h"
 #include "waterfallGlobalData.h"
 #include <gruel/high_res_timer.h>

@@ -27,6 +27,7 @@
 #include <FrequencyDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
+#include <filter/firdes.h>
 
 #include "displayform.h"
 
@@ -42,12 +43,14 @@ class FreqDisplayForm : public DisplayForm
 
   int GetFFTSize() const;
   float GetFFTAverage() const;
+  gr::filter::firdes::win_type GetFFTWindowType() const;
 
 public slots:
   void customEvent(QEvent *e);
 
   void SetFFTSize(const int);
   void SetFFTAverage(const float);
+  void SetFFTWindowType(const gr::filter::firdes::win_type);
 
   void SetFrequencyRange(const double newCenterFrequency,
 			 const double newStartFrequency,
@@ -66,6 +69,7 @@ private:
 
   int _fftsize;
   float _fftavg;
+  gr::filter::firdes::win_type _fftwintype;
 };
 
 #endif /* FREQ_DISPLAY_FORM_H */
