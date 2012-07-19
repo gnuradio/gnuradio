@@ -98,7 +98,6 @@ include_directories(
     ${GR_FFT_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${FFTW3F_INCLUDE_DIRS}
-    ${CPPUNIT_INCLUDE_DIRS}
 )
 
 link_directories(${FFT_LIBRARY_DIRS})
@@ -157,22 +156,30 @@ add_dependencies(gnuradio-filter gnuradio-fft filter_generated_includes filter_g
 ########################################################################
 # QA C++ Code for gr-filter
 ########################################################################
-list(APPEND test_gr_filter_sources
+if(ENABLE_TESTING)
+  include(GrTest)
+
+  include_directories(${CPPUNIT_INCLUDE_DIRS})
+  link_directories(${CPPUNIT_LIBRARY_DIRS})
+
+  list(APPEND test_gr_filter_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_filter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_filter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_firdes.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_fir_filter_with_buffer.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_cc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_ff.cc
-)
+    )
 
-add_executable(test-gr-filter ${test_gr_filter_sources})
-target_link_libraries(
-  test-gr-filter
-  gnuradio-core
-  gnuradio-filter 
-  ${CPPUNIT_LIBRARIES}
-  ${Boost_LIBRARIES}
-)
+  add_executable(test-gr-filter ${test_gr_filter_sources})
 
-GR_ADD_TEST(test_gr_filter test-gr-filter)
+  target_link_libraries(
+    test-gr-filter
+    gnuradio-core
+    gnuradio-filter 
+    ${Boost_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+  )
+
+  GR_ADD_TEST(test_gr_filter test-gr-filter)
+endif(ENABLE_TESTING)
