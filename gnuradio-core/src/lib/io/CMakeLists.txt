@@ -87,6 +87,7 @@ set(gr_core_io_triple_threats
     gr_file_descriptor_source
     gr_message_sink
     gr_message_source
+    gr_message_burst_source
     microtune_xxxx_eval_board
     microtune_4702_eval_board
     microtune_4937_eval_board
