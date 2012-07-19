@@ -109,6 +109,7 @@ install(FILES
     int_to_float.h
     interleave.h
     interleaved_short_to_complex.h
+    keep_m_in_n.h
     keep_one_in_n.h
     multiply_cc.h
     multiply_ff.h

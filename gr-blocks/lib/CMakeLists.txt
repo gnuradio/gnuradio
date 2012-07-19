@@ -146,6 +146,7 @@ list(APPEND gr_blocks_sources
     interleave_impl.cc
     interleaved_short_array_to_complex.cc
     interleaved_short_to_complex_impl.cc
+    keep_m_in_n_impl.cc
     keep_one_in_n_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
