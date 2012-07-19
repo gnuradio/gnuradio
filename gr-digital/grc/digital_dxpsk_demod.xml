@@ -36,7 +36,7 @@
 	freq_bw=$freq_bw,
 	phase_bw=$phase_bw,
 	timing_bw=$timing_bw,
-	mod_code=$mod_code,
+	gray_coded=$gray_coded,
 	verbose=$verbose,
 	log=$log
 )</make>
@@ -86,23 +86,17 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Omega Relative Limit</name>
-		<key>omega_relative_limit</key>
-		<value>0.005</value>
-		<type>real</type>
-	</param>
-	<param>
 		<name>Gray Code</name>
-		<key>mod_code</key>
+		<key>gray_coded</key>
 		<value>True</value>
 		<type>enum</type>
 		<option>
 			<name>Yes</name>
-			<key>"gray"</key>
+			<key>True</key>
 		</option>
 		<option>
 			<name>No</name>
-			<key>"none"</key>
+			<key>False</key>
 		</option>
 	</param>
 	<param>

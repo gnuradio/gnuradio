@@ -1,5 +1,5 @@
 #
-# Copyright 2003-2012 Free Software Foundation, Inc.
+# Copyright 2003,2004,2006,2008,2009,2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -44,7 +44,6 @@ from gnuradio_core import *
 from exceptions import *
 from hier_block2 import *
 from top_block import *
-from gateway import basic_block, sync_block, decim_block, interp_block
 
 if _RTLD_GLOBAL != 0:
     sys.setdlopenflags(_dlopenflags)             # Restore original flags

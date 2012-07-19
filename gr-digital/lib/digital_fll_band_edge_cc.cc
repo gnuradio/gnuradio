@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009-2011 Free Software Foundation, Inc.
+ * Copyright 2009-2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -50,37 +50,38 @@ digital_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
 
 static int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
 static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
-digital_fll_band_edge_cc::digital_fll_band_edge_cc (float samps_per_sym, float rolloff,
-						    int filter_size, float bandwidth)
-  : gr_sync_block ("fll_band_edge_cc",
-		   gr_make_io_signature (1, 1, sizeof(gr_complex)),
-		   gr_make_io_signaturev (1, 4, iosig)),
+digital_fll_band_edge_cc::digital_fll_band_edge_cc(float samps_per_sym, float rolloff,
+						   int filter_size, float bandwidth)
+  : gr_sync_block("fll_band_edge_cc",
+		  gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		  gr_make_io_signaturev(1, 4, iosig)),
     gri_control_loop(bandwidth, M_TWOPI*(2.0/samps_per_sym), -M_TWOPI*(2.0/samps_per_sym)),
-    d_updated (false)
+    d_updated(false)
 {
   // Initialize samples per symbol
   if(samps_per_sym <= 0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid number of sps. Must be > 0.");
+    throw std::out_of_range("digital_fll_band_edge_cc: invalid number of sps. Must be > 0.");
   }
   d_sps = samps_per_sym;
   
   // Initialize rolloff factor
   if(rolloff < 0 || rolloff > 1.0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
+    throw std::out_of_range("digital_fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
   }
   d_rolloff = rolloff;
   
   // Initialize filter length
   if(filter_size <= 0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid filter size. Must be > 0.");
+    throw std::out_of_range("digital_fll_band_edge_cc: invalid filter size. Must be > 0.");
   }
   d_filter_size = filter_size;
   
   // Build the band edge filters
   design_filter(d_sps, d_rolloff, d_filter_size);
+  d_output_hist.resize(filter_size,0);
 }
 
-digital_fll_band_edge_cc::~digital_fll_band_edge_cc ()
+digital_fll_band_edge_cc::~digital_fll_band_edge_cc()
 {
 }
 
@@ -93,7 +94,7 @@ void
 digital_fll_band_edge_cc::set_samples_per_symbol(float sps)
 {
   if(sps <= 0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid number of sps. Must be > 0.");
+    throw std::out_of_range("digital_fll_band_edge_cc: invalid number of sps. Must be > 0.");
   }
   d_sps = sps;
   design_filter(d_sps, d_rolloff, d_filter_size);
@@ -103,7 +104,7 @@ void
 digital_fll_band_edge_cc::set_rolloff(float rolloff)
 {
   if(rolloff < 0 || rolloff > 1.0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
+    throw std::out_of_range("digital_fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
   }
   d_rolloff = rolloff;
   design_filter(d_sps, d_rolloff, d_filter_size);
@@ -113,7 +114,7 @@ void
 digital_fll_band_edge_cc::set_filter_size(int filter_size)
 {
   if(filter_size <= 0) {
-    throw std::out_of_range ("digital_fll_band_edge_cc: invalid filter size. Must be > 0.");
+    throw std::out_of_range("digital_fll_band_edge_cc: invalid filter size. Must be > 0.");
   }
   d_filter_size = filter_size;
   design_filter(d_sps, d_rolloff, d_filter_size);
@@ -185,6 +186,8 @@ digital_fll_band_edge_cc::design_filter(float samps_per_sym,
 
   // Set the history to ensure enough input items for each filter
   set_history(filter_size+1);
+	d_filter_upper = gr_fir_util::create_gr_fir_ccc(d_taps_upper);
+	d_filter_lower = gr_fir_util::create_gr_fir_ccc(d_taps_lower);
 }
 
 void
@@ -206,23 +209,25 @@ digital_fll_band_edge_cc::print_taps()
 }
 
 int
-digital_fll_band_edge_cc::work (int noutput_items,
-				gr_vector_const_void_star &input_items,
-				gr_vector_void_star &output_items)
+digital_fll_band_edge_cc::work(int noutput_items,
+			       gr_vector_const_void_star &input_items,
+			       gr_vector_void_star &output_items)
 {
-  const gr_complex *in  = (const gr_complex *) input_items[0];
-  gr_complex *out = (gr_complex *) output_items[0];
+  const gr_complex *in = (const gr_complex*)input_items[0];
+  gr_complex *out = (gr_complex*)output_items[0];
 
+  d_fllbuffer.reserve(d_filter_size+noutput_items);
+	
   float *frq = NULL;
   float *phs = NULL;
   float *err = NULL;
   if(output_items.size() == 4) {
-    frq = (float *) output_items[1];
-    phs = (float *) output_items[2];
-    err = (float *) output_items[3];
+    frq = (float*)output_items[1];
+    phs = (float*)output_items[2];
+    err = (float*)output_items[3];
   }
 
-  if (d_updated) {
+  if(d_updated) {
     d_updated = false;
     return 0;		     // history requirements may have changed.
   }
@@ -231,17 +236,19 @@ digital_fll_band_edge_cc::work (int noutput_items,
   float error;
   gr_complex nco_out;
   gr_complex out_upper, out_lower;
+  gr_complex out_uppersse, out_lowersse;
+  copy( d_output_hist.begin(), d_output_hist.end(), d_fllbuffer.begin());
+
   for(i = 0; i < noutput_items; i++) {
     nco_out = gr_expj(d_phase);
-    out[i+d_filter_size-1] = in[i] * nco_out;
-
+    d_fllbuffer[i+d_filter_size] = in[i] * nco_out;
     // Perform the dot product of the output with the filters
     out_upper = 0;
     out_lower = 0;
-    for(int k = 0; k < d_filter_size; k++) {
-      out_upper += d_taps_upper[k] * out[i+k];
-      out_lower += d_taps_lower[k] * out[i+k];
-    }
+
+    out_upper = d_filter_lower->filter(&d_fllbuffer[i]);
+    out_lower = d_filter_upper->filter(&d_fllbuffer[i]);
+    
     error = norm(out_lower) - norm(out_upper);
 
     advance_loop(error);
@@ -254,6 +261,11 @@ digital_fll_band_edge_cc::work (int noutput_items,
       err[i] = error;
     }
   }
+
+  copy(d_fllbuffer.begin(), d_fllbuffer.begin()+noutput_items, out);
+  copy(d_fllbuffer.begin()+noutput_items,
+       d_fllbuffer.begin()+noutput_items+d_filter_size,
+       d_output_hist.begin());
 
   return noutput_items;
 }

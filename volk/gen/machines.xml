@@ -10,7 +10,7 @@
 </machine>
 
 <machine name="sse">
-<archs>generic 32|64| mmx sse orc|</archs>
+<archs>generic 32|64| mmx| sse orc|</archs>
 </machine>
 -->
 
@@ -20,7 +20,7 @@
 
 <!-- trailing | bar means generate without either for MSVC -->
 <machine name="sse2">
-<archs>generic 32|64| mmx sse sse2 orc|</archs>
+<archs>generic 32|64| mmx| sse sse2 orc|</archs>
 </machine>
 
 <machine name="sse3">
@@ -45,7 +45,7 @@
 
 <!-- trailing | bar means generate without either for MSVC -->
 <machine name="avx">
-<archs>generic 32|64| mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 popcount avx orc|</archs>
+<archs>generic 32|64| mmx| sse sse2 sse3 ssse3 sse4_1 sse4_2 popcount avx orc|</archs>
 </machine>
 
 <machine name="altivec">

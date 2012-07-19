@@ -31,6 +31,7 @@ from qam import *
 from bpsk import *
 from qpsk import *
 from gmsk import *
+from gfsk import *
 from cpm import *
 from pkt import *
 from crc import *
