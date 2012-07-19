@@ -77,5 +77,6 @@
 		<block>blocks_interleave.xml</block>
 		<block>blocks_keep_m_in_n.xml</block>
 		<block>blocks_keep_one_in_n.xml</block>
+		<block>blocks_repeat.xml</block>
 	</cat>
 </cat>
