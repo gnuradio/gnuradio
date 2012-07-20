@@ -92,7 +92,7 @@ namespace gr {
       }
 
       d_main_gui = new ConstellationDisplayForm(d_nconnections, d_parent);
-
+      d_main_gui->SetNPoints(d_size);
       // initialize update time to 10 times a second
       set_update_time(0.1);
       d_last_time = 0;
@@ -163,6 +163,32 @@ namespace gr {
       d_main_gui->resize(QSize(width, height));
     }
 
+    void
+    const_sink_c_impl::npoints_resize()
+    {
+      gruel::scoped_lock lock(d_mutex);
+
+      int newsize = d_main_gui->GetNPoints();
+
+      if(newsize != d_size) {
+	// Resize residbuf and replace data
+	for(int i = 0; i < d_nconnections; i++) {
+	  fft::free(d_residbufs_real[i]);
+	  fft::free(d_residbufs_imag[i]);
+	  d_residbufs_real[i] = fft::malloc_double(newsize);
+	  d_residbufs_imag[i] = fft::malloc_double(newsize);
+
+	  memset(d_residbufs_real[i], 0, newsize*sizeof(double));
+	  memset(d_residbufs_imag[i], 0, newsize*sizeof(double));
+	}
+
+	// Set new size and reset buffer index 
+	// (throws away any currently held data, but who cares?) 
+	d_size = newsize;
+	d_index = 0;
+      }
+    }
+
     int
     const_sink_c_impl::work(int noutput_items,
 			    gr_vector_const_void_star &input_items,
@@ -170,6 +196,8 @@ namespace gr {
     {
       int n=0, j=0, idx=0;
       const gr_complex *in = (const gr_complex*)input_items[idx];
+
+      npoints_resize();
 
       for(int i=0; i < noutput_items; i+=d_size) {
 	unsigned int datasize = noutput_items - i;
@@ -182,16 +210,9 @@ namespace gr {
 	  // Fill up residbufs with d_size number of items
 	  for(n = 0; n < d_nconnections; n++) {
 	    in = (const gr_complex*)input_items[idx++];
-	    if(is_unaligned()) {
-	      volk_32fc_deinterleave_64f_x2_u(&d_residbufs_real[n][d_index],
-					      &d_residbufs_imag[n][d_index],
-					      &in[j], resid);
-	    }
-	    else {
-	      volk_32fc_deinterleave_64f_x2_a(&d_residbufs_real[n][d_index],
-					      &d_residbufs_imag[n][d_index],
-					      &in[j], resid);
-	    }
+	    volk_32fc_deinterleave_64f_x2_u(&d_residbufs_real[n][d_index],
+					    &d_residbufs_imag[n][d_index],
+					    &in[j], resid);
 	  }
 
 	  // Update the plot if its time
@@ -211,23 +232,16 @@ namespace gr {
 	else {
 	  for(n = 0; n < d_nconnections; n++) {
 	    in = (const gr_complex*)input_items[idx++];
-	    if(is_unaligned()) {
-	      volk_32fc_deinterleave_64f_x2_u(&d_residbufs_real[n][d_index],
-					      &d_residbufs_imag[n][d_index],
-					      &in[j], datasize);
-	    }
-	    else {
-	      volk_32fc_deinterleave_64f_x2_a(&d_residbufs_real[n][d_index],
-					      &d_residbufs_imag[n][d_index],
-					      &in[j], datasize);
-	    }
+	    volk_32fc_deinterleave_64f_x2_u(&d_residbufs_real[n][d_index],
+					    &d_residbufs_imag[n][d_index],
+					    &in[j], datasize);
 	  }
 	  d_index += datasize;
 	  j += datasize;
 	}
       }
 
-      return noutput_items;
+      return j;
     }
 
   } /* namespace qtgui */

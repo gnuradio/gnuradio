@@ -36,6 +36,8 @@ namespace gr {
     private:
       void initialize();
 
+      gruel::mutex d_mutex;
+
       int d_size;
       std::string d_name;
       int d_nconnections;
@@ -49,6 +51,8 @@ namespace gr {
 
       gruel::high_res_timer_type d_update_time;
       gruel::high_res_timer_type d_last_time;
+
+      void npoints_resize();
 
     public:
       const_sink_c_impl(int size,

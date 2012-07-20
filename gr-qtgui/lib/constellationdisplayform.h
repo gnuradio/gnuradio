@@ -40,8 +40,11 @@ public:
 
   ConstellationDisplayPlot* getPlot();
 
+  int GetNPoints() const;
+
 public slots:
   void customEvent(QEvent * e);
+  void SetNPoints(const int);
 
   // add set x/y axis
 
@@ -49,8 +52,8 @@ private slots:
   void newData(const QEvent*);
 
 private:
-  uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
+  int d_npoints;
 };
 
 #endif /* CONSTELLATION_DISPLAY_FORM_H */

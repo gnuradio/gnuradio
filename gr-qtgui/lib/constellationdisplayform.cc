@@ -37,7 +37,10 @@ ConstellationDisplayForm::ConstellationDisplayForm(int nplots, QWidget* parent)
   _layout->addWidget(_displayPlot, 0, 0);
   setLayout(_layout);
 
-  _numRealDataPoints = 1024;
+  NPointsMenu *nptsmenu = new NPointsMenu(this);
+  _menu->addAction(nptsmenu);
+  connect(nptsmenu, SIGNAL(whichTrigger(int)),
+	  this, SLOT(SetNPoints(const int)));
 
   Reset();
 
@@ -79,4 +82,16 @@ ConstellationDisplayForm::customEvent(QEvent * e)
   if(e->type() == ConstUpdateEvent::Type()) {
     newData(e);
   }
+}
+
+int
+ConstellationDisplayForm::GetNPoints() const
+{
+  return d_npoints;
+}
+
+void
+ConstellationDisplayForm::SetNPoints(const int npoints)
+{
+  d_npoints = npoints;
 }
