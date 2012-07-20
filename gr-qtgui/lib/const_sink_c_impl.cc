@@ -33,10 +33,11 @@
 namespace gr {
   namespace qtgui {
     
-    const_sink_c::sptr const_sink_c::make(int size,
-					  const std::string &name,
-					  int nconnections,
-					  QWidget *parent)
+    const_sink_c::sptr
+    const_sink_c::make(int size,
+		       const std::string &name,
+		       int nconnections,
+		       QWidget *parent)
     {
       return gnuradio::get_initial_sptr
 	(new const_sink_c_impl(size, name, nconnections, parent));
@@ -57,8 +58,8 @@ namespace gr {
       d_index = 0;
 
       for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs_real.push_back(gr::fft::malloc_double(d_size));
-	d_residbufs_imag.push_back(gr::fft::malloc_double(d_size));
+	d_residbufs_real.push_back(fft::malloc_double(d_size));
+	d_residbufs_imag.push_back(fft::malloc_double(d_size));
       }
 
       // Set alignment properties for VOLK
@@ -73,8 +74,8 @@ namespace gr {
     {
       // d_main_gui is a qwidget destroyed with its parent
       for(int i = 0; i < d_nconnections; i++) {
-	gr::fft::free(d_residbufs_real[i]);
-	gr::fft::free(d_residbufs_imag[i]);
+	fft::free(d_residbufs_real[i]);
+	fft::free(d_residbufs_imag[i]);
       }
     }
 

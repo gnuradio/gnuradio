@@ -27,10 +27,10 @@ install(FILES
     freq_sink_c.h
     freq_sink_f.h
     const_sink_c.h
-#    qtgui_waterfall_sink_c.h
-#    qtgui_waterfall_sink_f.h
-#    qtgui_sink_c.h
-#    qtgui_sink_f.h
+    waterfall_sink_c.h
+    waterfall_sink_f.h
+    sink_c.h
+    sink_f.h
     utils.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/qtgui
     COMPONENT "qtgui_devel"

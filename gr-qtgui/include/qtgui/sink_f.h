@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,35 +20,39 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QTGUI_WATERFALL_SINK_F_H
-#define INCLUDED_QTGUI_WATERFALL_SINK_F_H
+#ifndef INCLUDED_QTGUI_SINK_F_H
+#define INCLUDED_QTGUI_SINK_F_H
 
 #include <qtgui/api.h>
-#include <gr_sync_block.h>
+#include <gr_block.h>
 
 #include <Python.h>
 #include <qapplication.h>
 #include <qwt_symbol.h>
 
+
 namespace gr {
   namespace qtgui {
 
     /*!
-     * \brief A graphical sink to display multiple signals on a
-     * waterfall (spectrogram) plot.
+     * \brief A graphical sink to display freq, spec, and time.
      * \ingroup qtgui_blk
      *
-     * This is a QT-based graphical sink the takes set of a floating
-     * point streams and plots a waterfall (spectrogram) plot.
+     * This is a QT-based graphical sink the takes a float stream and
+     * plots it. The default action is to plot the signal as a PSD (FFT),
+     * spectrogram (waterfall), and time domain plots. The plots may be
+     * turned off by setting the appropriate boolean value in the
+     * constructor to False.
      */
-    class QTGUI_API waterfall_sink_f : virtual public gr_sync_block
+
+    class QTGUI_API sink_f : virtual public gr_block
     {
     public:
-      // gr::qtgui::waterfall_sink_f::sptr
-      typedef boost::shared_ptr<waterfall_sink_f> sptr;
+      // gr::qtgui::sink_f::sptr
+      typedef boost::shared_ptr<sink_f> sptr;
 
       /*!
-       * \brief Build a floating point waterfall sink.
+       * \brief Build a floating point qtgui sink.
        *
        * \param size size of the FFT to compute and display
        * \param wintype type of window to apply (see filter/firdes.h)
@@ -58,10 +62,11 @@ namespace gr {
        * \param nconnections number of signals connected to sink
        * \param parent a QWidget parent object, if any
        */
-      static sptr make(int size, int wintype,
+      static sptr make(int fftsize, int wintype,
 		       double fc, double bw,
 		       const std::string &name,
-		       int nconnections,
+		       bool plotfreq, bool plotwaterfall,
+		       bool plottime, bool plotconst,
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
@@ -69,20 +74,17 @@ namespace gr {
 
       virtual void set_fft_size(const int fftsize) = 0;
       virtual int fft_size() const = 0;
-      virtual void set_fft_average(const float fftavg) = 0;
-      virtual float fft_average() const = 0;
 
       virtual void set_frequency_range(const double centerfreq,
 				       const double bandwidth) = 0;
+      virtual void set_fft_power_db(double min, double max) = 0;
+
+      //void set_time_domain_axis(double min, double max);
+      //void set_constellation_axis(double xmin, double xmax,
+      //                            double ymin, double ymax);
+      //void set_constellation_pen_size(int size);
 
       virtual void set_update_time(double t) = 0;
-      virtual void set_title(int which, const std::string &title) = 0;
-      virtual void set_color(int which, const std::string &color) = 0;
-      virtual void set_line_width(int which, int width) = 0;
-      virtual void set_line_style(int which, Qt::PenStyle style) = 0;
-      virtual void set_line_marker(int which, QwtSymbol::Style marker) = 0;
-
-      virtual void set_size(int width, int height) = 0;
 
       QApplication *d_qApplication;
     };
@@ -90,4 +92,4 @@ namespace gr {
   } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_WATERFALL_SINK_F_H */
+#endif /* INCLUDED_QTGUI_SINK_F_H */

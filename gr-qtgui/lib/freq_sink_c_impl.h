@@ -52,7 +52,7 @@ namespace gr {
       int d_nconnections;
 
       bool d_shift;
-      gr::fft::fft_complex *d_fft;
+      fft::fft_complex *d_fft;
 
       int d_index;
       std::vector<gr_complex*> d_residbufs;

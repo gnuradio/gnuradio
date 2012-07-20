@@ -28,16 +28,16 @@
 #include <gr_io_signature.h>
 #include <string.h>
 #include <volk/volk.h>
-#include <fft/fft.h>
 
 namespace gr {
   namespace qtgui {
 
-    freq_sink_f::sptr freq_sink_f::make(int fftsize, int wintype,
-					double fc, double bw,
-					const std::string &name,
-					int nconnections,
-					QWidget *parent)
+    freq_sink_f::sptr
+    freq_sink_f::make(int fftsize, int wintype,
+		      double fc, double bw,
+		      const std::string &name,
+		      int nconnections,
+		      QWidget *parent)
     {
       return gnuradio::get_initial_sptr
 	(new freq_sink_f_impl(fftsize, wintype,
@@ -65,13 +65,13 @@ namespace gr {
       // this is usually desired when plotting
       d_shift = true;
 
-      d_fft = new gr::fft::fft_complex(d_fftsize, true);
-      d_fbuf = gr::fft::malloc_float(d_fftsize);
+      d_fft = new fft::fft_complex(d_fftsize, true);
+      d_fbuf = fft::malloc_float(d_fftsize);
 
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs.push_back(gr::fft::malloc_float(d_fftsize));
-	d_magbufs.push_back(gr::fft::malloc_double(d_fftsize));
+	d_residbufs.push_back(fft::malloc_float(d_fftsize));
+	d_magbufs.push_back(fft::malloc_double(d_fftsize));
       }
 
       buildwindow();
@@ -82,11 +82,11 @@ namespace gr {
     freq_sink_f_impl::~freq_sink_f_impl()
     {
       for(int i = 0; i < d_nconnections; i++) {
-	gr::fft::free(d_residbufs[i]);
-	gr::fft::free(d_magbufs[i]);
+	fft::free(d_residbufs[i]);
+	fft::free(d_magbufs[i]);
       }
       delete d_fft;
-      gr::fft::free(d_fbuf);
+      fft::free(d_fbuf);
     }
 
     void
@@ -282,11 +282,11 @@ namespace gr {
       if(newfftsize != d_fftsize) {
 	// Resize residbuf and replace data
 	for(int i = 0; i < d_nconnections; i++) {
-	  gr::fft::free(d_residbufs[i]);
-	  gr::fft::free(d_magbufs[i]);
+	  fft::free(d_residbufs[i]);
+	  fft::free(d_magbufs[i]);
 
-	  d_residbufs[i] = gr::fft::malloc_float(newfftsize);
-	  d_magbufs[i] = gr::fft::malloc_double(newfftsize);
+	  d_residbufs[i] = fft::malloc_float(newfftsize);
+	  d_magbufs[i] = fft::malloc_double(newfftsize);
 
 	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
@@ -301,10 +301,10 @@ namespace gr {
 
 	// Reset FFTW plan for new size
 	delete d_fft;
-	d_fft = new gr::fft::fft_complex(d_fftsize, true);
+	d_fft = new fft::fft_complex(d_fftsize, true);
 
-	gr::fft::free(d_fbuf);
-	d_fbuf = gr::fft::malloc_float(d_fftsize);
+	fft::free(d_fbuf);
+	d_fbuf = fft::malloc_float(d_fftsize);
       }
     }
 

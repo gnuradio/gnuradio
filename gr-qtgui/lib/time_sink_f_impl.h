@@ -24,7 +24,6 @@
 #define INCLUDED_QTGUI_TIME_SINK_F_IMPL_H
 
 #include <qtgui/time_sink_f.h>
-#include <fft/fft.h>
 #include <timedisplayform.h>
 #include <gruel/high_res_timer.h>
 

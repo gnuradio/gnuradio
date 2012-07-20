@@ -62,8 +62,8 @@ set(qtgui_srcs
     SpectrumGUIClass.cc
     spectrumUpdateEvents.cc
     plot_waterfall.cc
-#    qtgui_sink_c.cc
-#    qtgui_sink_f.cc
+    sink_c_impl.cc
+    sink_f_impl.cc
     time_sink_c_impl.cc
     time_sink_f_impl.cc
     freq_sink_c_impl.cc

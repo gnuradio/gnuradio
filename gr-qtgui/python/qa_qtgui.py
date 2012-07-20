@@ -31,18 +31,41 @@ class test_qtgui(gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test01 (self):
-        # Test to make sure we can instantiate the sink
+    # Tests to make sure we can instantiate the sink
+    def test01(self):
         self.qtsnk = qtgui.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
                                   0, 1, "Test",
                                   True, True, True, True)
 
-    def test02 (self):
-        # Test to make sure we can instantiate the sink
+    def test02(self):
         self.qtsnk = qtgui.sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
                                   0, 1, "Test",
                                   True, True, True, True)
 
+    def test03(self):
+        self.qtsnk = qtgui.time_sink_c(1024, 1, "Test", 1)
+
+    def test04(self):
+        self.qtsnk = qtgui.time_sink_f(1024, 1, "Test", 1)
+
+    def test05(self):
+        self.qtsnk = qtgui.freq_sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                       0, 1, "Test", 1)
+
+    def test06(self):
+        self.qtsnk = qtgui.freq_sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                       0, 1, "Test", 1)
+
+    def test07(self):
+        self.qtsnk = qtgui.waterfall_sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                            0, 1, "Test", 1)
+
+    def test08(self):
+        self.qtsnk = qtgui.waterfall_sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                            0, 1, "Test", 1)
+
+    def test09(self):
+        self.qtsnk = qtgui.const_sink_c(1024, "Test", 1)
 
 if __name__ == '__main__':
     gr_unittest.run(test_qtgui, "test_qtgui.xml")

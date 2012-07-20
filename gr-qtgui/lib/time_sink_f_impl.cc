@@ -30,15 +30,14 @@
 #include <volk/volk.h>
 #include <fft/fft.h>
 
-#include <QTimer>
-
 namespace gr {
   namespace qtgui {
     
-    time_sink_f::sptr time_sink_f::make(int size, double bw,
-					const std::string &name,
-					int nconnections,
-					QWidget *parent)
+    time_sink_f::sptr
+    time_sink_f::make(int size, double bw,
+		      const std::string &name,
+		      int nconnections,
+		      QWidget *parent)
     {
       return gnuradio::get_initial_sptr
 	(new time_sink_f_impl(size, bw, name, nconnections, parent));
@@ -59,7 +58,7 @@ namespace gr {
       d_index = 0;
 
       for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs.push_back(gr::fft::malloc_double(d_size));
+	d_residbufs.push_back(fft::malloc_double(d_size));
       }
 
       // Set alignment properties for VOLK
@@ -74,7 +73,7 @@ namespace gr {
     {
       // d_main_gui is a qwidget destroyed with its parent
       for(int i = 0; i < d_nconnections; i++) {
-	gr::fft::free(d_residbufs[i]);
+	fft::free(d_residbufs[i]);
       }
     }
 

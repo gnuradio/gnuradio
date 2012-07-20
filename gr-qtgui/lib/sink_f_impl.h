@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,21 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QTGUI_WATERFALL_SINK_F_IMPL_H
-#define INCLUDED_QTGUI_WATERFALL_SINK_F_IMPL_H
+#ifndef INCLUDED_QTGUI_SINK_F_IMPL_H
+#define INCLUDED_QTGUI_SINK_F_IMPL_H
 
-
-#include <qtgui/waterfall_sink_f.h>
+#include <qtgui/sink_f.h>
 #include <filter/firdes.h>
 #include <fft/fft.h>
 #include <gruel/high_res_timer.h>
-#include <gruel/thread.h>
-#include <waterfalldisplayform.h>
+#include <SpectrumGUIClass.h>
 
 namespace gr {
   namespace qtgui {
 
-    class QTGUI_API waterfall_sink_f_impl : public waterfall_sink_f
+    class QTGUI_API sink_f_impl : public sink_f
     {
     private:
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
@@ -42,26 +40,25 @@ namespace gr {
       void initialize();
 
       int d_fftsize;
-      float d_fftavg;
       filter::firdes::win_type d_wintype;
       std::vector<float> d_window;
       double d_center_freq;
       double d_bandwidth;
       std::string d_name;
-      int d_nconnections;
 
       bool d_shift;
       fft::fft_complex *d_fft;
 
       int d_index;
-      std::vector<float*> d_residbufs;
-      std::vector<double*> d_magbufs;
+      float *d_residbuf;
+      float *d_magbuf;
+
+      bool d_plotfreq, d_plotwaterfall, d_plottime, d_plotconst;
+
+      double d_update_time;
 
       QWidget *d_parent;
-      WaterfallDisplayForm *d_main_gui;
-
-      gruel::high_res_timer_type d_update_time;
-      gruel::high_res_timer_type d_last_time;
+      SpectrumGUIClass *d_main_gui;
 
       void windowreset();
       void buildwindow();
@@ -69,12 +66,13 @@ namespace gr {
       void fft(float *data_out, const float *data_in, int size);
 
     public:
-      waterfall_sink_f_impl(int size, int wintype,
-		       double fc, double bw,
-		       const std::string &name,
-		       int nconnections,
-		       QWidget *parent=NULL);
-      ~waterfall_sink_f_impl();
+      sink_f_impl(int fftsize, int wintype,
+		  double fc, double bw,
+		  const std::string &name,
+		  bool plotfreq, bool plotwaterfall,
+		  bool plottime, bool plotconst,
+		  QWidget *parent);
+      ~sink_f_impl();
 
       void exec_();
       QWidget*  qwidget();
@@ -82,26 +80,25 @@ namespace gr {
 
       void set_fft_size(const int fftsize);
       int fft_size() const;
-      void set_fft_average(const float fftavg);
-      float fft_average() const;
 
-      void set_frequency_range(const double centerfreq, const double bandwidth);
+      void set_frequency_range(const double centerfreq,
+			       const double bandwidth);
+      void set_fft_power_db(double min, double max);
+
+      //void set_time_domain_axis(double min, double max);
+      //void set_constellation_axis(double xmin, double xmax,
+      //                            double ymin, double ymax);
+      //void set_constellation_pen_size(int size);
 
       void set_update_time(double t);
-      void set_title(int which, const std::string &title);
-      void set_color(int which, const std::string &color);
-      void set_line_width(int which, int width);
-      void set_line_style(int which, Qt::PenStyle style);
-      void set_line_marker(int which, QwtSymbol::Style marker);
 
-      void set_size(int width, int height);
-
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      int general_work(int noutput_items,
+		       gr_vector_int &ninput_items,
+		       gr_vector_const_void_star &input_items,
+		       gr_vector_void_star &output_items);
     };
 
   } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_WATERFALL_SINK_F_IMPL_H */
+#endif /* INCLUDED_QTGUI_SINK_F_IMPL_H */

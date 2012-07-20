@@ -65,12 +65,12 @@ namespace gr {
       // this is usually desired when plotting
       d_shift = true;
 
-      d_fft = new gr::fft::fft_complex(d_fftsize, true);
+      d_fft = new fft::fft_complex(d_fftsize, true);
 
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs.push_back(gr::fft::malloc_complex(d_fftsize));
-	d_magbufs.push_back(gr::fft::malloc_double(d_fftsize));
+	d_residbufs.push_back(fft::malloc_complex(d_fftsize));
+	d_magbufs.push_back(fft::malloc_double(d_fftsize));
       }
 
       buildwindow();
@@ -81,8 +81,8 @@ namespace gr {
     waterfall_sink_c_impl::~waterfall_sink_c_impl()
     {
       for(int i = 0; i < d_nconnections; i++) {
-	gr::fft::free(d_residbufs[i]);
-	gr::fft::free(d_magbufs[i]);
+	fft::free(d_residbufs[i]);
+	fft::free(d_magbufs[i]);
       }
       delete d_fft;
     }
@@ -274,11 +274,11 @@ namespace gr {
 
 	// Resize residbuf and replace data
 	for(int i = 0; i < d_nconnections; i++) {
-	  gr::fft::free(d_residbufs[i]);
-	  gr::fft::free(d_magbufs[i]);
+	  fft::free(d_residbufs[i]);
+	  fft::free(d_magbufs[i]);
 
-	  d_residbufs[i] = gr::fft::malloc_complex(newfftsize);
-	  d_magbufs[i] = gr::fft::malloc_double(newfftsize);
+	  d_residbufs[i] = fft::malloc_complex(newfftsize);
+	  d_magbufs[i] = fft::malloc_double(newfftsize);
 	}
 
 	// Set new fft size and reset buffer index 
@@ -291,7 +291,7 @@ namespace gr {
 
 	// Reset FFTW plan for new size
 	delete d_fft;
-	d_fft = new gr::fft::fft_complex(d_fftsize, true);
+	d_fft = new fft::fft_complex(d_fftsize, true);
       }
     }
 
@@ -314,7 +314,7 @@ namespace gr {
 	// If we have enough input for one full FFT, do it
 	if(datasize >= resid) {
 
-	  float *fbuf = gr::fft::malloc_float(d_fftsize);
+	  float *fbuf = fft::malloc_float(d_fftsize);
 	  for(int n = 0; n < d_nconnections; n++) {
 	    // Fill up residbuf with d_fftsize number of items
 	    in = (const gr_complex*)input_items[n];
@@ -323,7 +323,7 @@ namespace gr {
 	    fft(fbuf, d_residbufs[n], d_fftsize);
 	    volk_32f_convert_64f_a(d_magbufs[n], fbuf, d_fftsize);
 	  }
-	  gr::fft::free(fbuf);
+	  fft::free(fbuf);
       
 	  if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	    d_last_time = gruel::high_res_timer_now();

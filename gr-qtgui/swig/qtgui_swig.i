@@ -28,8 +28,8 @@
 %include "qtgui_swig_doc.i"
 
 %{
-//#include "qtgui/sink_c.h"
-//#include "qtgui/sink_f.h"
+#include "qtgui/sink_c.h"
+#include "qtgui/sink_f.h"
 #include "qtgui/time_sink_c.h"
 #include "qtgui/time_sink_f.h"
 #include "qtgui/freq_sink_c.h"
@@ -39,8 +39,8 @@
 #include "qtgui/waterfall_sink_f.h"
 %}
 
-//%include "qtgui/sink_c.i"
-//%include "qtgui/sink_f.i"
+%include "qtgui/sink_c.h"
+%include "qtgui/sink_f.h"
 %include "qtgui/time_sink_c.h"
 %include "qtgui/time_sink_f.h"
 %include "qtgui/freq_sink_c.h"
@@ -49,6 +49,8 @@
 %include "qtgui/waterfall_sink_c.h"
 %include "qtgui/waterfall_sink_f.h"
 
+GR_SWIG_BLOCK_MAGIC2(qtgui, sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, freq_sink_c);
