@@ -31,6 +31,10 @@ except ImportError:
     print "Error: Program requires PyQt4 and gr-qtgui."
     sys.exit(1)
 
+import os
+print os.getpid()
+raw_input()
+    
 class dialog_box(QtGui.QWidget):
     def __init__(self, display, control):
         QtGui.QWidget.__init__(self, None)

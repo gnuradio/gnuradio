@@ -43,12 +43,16 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
+  FFTWindowMenu *winmenu = new FFTWindowMenu(this);
   _menu->addMenu(sizemenu);
   _menu->addMenu(avgmenu);
+  _menu->addMenu(winmenu);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(SetFFTSize(const int)));
   connect(avgmenu, SIGNAL(whichTrigger(float)),
 	  this, SLOT(SetFFTAverage(const float)));
+  connect(winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
+	  this, SLOT(SetFFTWindowType(const gr::filter::firdes::win_type)));
 
   Reset();
 

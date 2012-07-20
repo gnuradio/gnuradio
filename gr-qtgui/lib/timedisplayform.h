@@ -40,6 +40,8 @@ class TimeDisplayForm : public DisplayForm
 
   TimeDomainDisplayPlot* getPlot();
 
+  int GetNPoints() const;
+
 public slots:
   void customEvent(QEvent * e);
 
@@ -47,16 +49,18 @@ public slots:
 			 const double newStartFrequency,
 			 const double newStopFrequency);
   void setTimeDomainAxis(double min, double max);
+  void SetNPoints(const int);
 
 private slots:
   void newData(const QEvent*);
 
 private:
-  uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
   double _startFrequency;
   double _stopFrequency;
+
+  int d_npoints;
 };
 
 #endif /* TIME_DISPLAY_FORM_H */

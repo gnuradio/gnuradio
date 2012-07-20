@@ -25,6 +25,7 @@
 
 #include <qtgui/time_sink_f.h>
 #include <timedisplayform.h>
+#include <gruel/thread.h>
 #include <gruel/high_res_timer.h>
 
 namespace gr {
@@ -34,6 +35,8 @@ namespace gr {
     {
     private:
       void initialize();
+
+      gruel::mutex d_mutex;
 
       int d_size;
       double d_bandwidth;
@@ -48,6 +51,8 @@ namespace gr {
 
       gruel::high_res_timer_type d_update_time;
       gruel::high_res_timer_type d_last_time;
+
+      void npoints_resize();
 
     public:
       time_sink_f_impl(int size, double bw,

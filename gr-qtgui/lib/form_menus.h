@@ -27,6 +27,7 @@
 #include <vector>
 #include <QtGui/QtGui>
 #include <qwt_symbol.h>
+#include <filter/firdes.h>
 
 class LineColorMenu: public QMenu
 {
@@ -606,6 +607,129 @@ public:
 private:
   QList<QAction *> d_act;
   OtherAction *d_other;
+};
+
+
+/********************************************************************/
+
+
+class FFTWindowMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  FFTWindowMenu(QWidget *parent)
+    : QMenu("FFT Window", parent)
+  {
+    d_act.push_back(new QAction("None", this));
+    d_act.push_back(new QAction("Hamming", this));
+    d_act.push_back(new QAction("Hann", this));
+    d_act.push_back(new QAction("Blackman", this));
+    d_act.push_back(new QAction("Blackman-harris", this));
+    d_act.push_back(new QAction("Rectangular", this));
+    d_act.push_back(new QAction("Kaiser", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getNone()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getHamming()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getHann()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getBlackman()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getBlackmanharris()));
+    connect(d_act[5], SIGNAL(triggered()), this, SLOT(getRectangular()));
+    connect(d_act[6], SIGNAL(triggered()), this, SLOT(getKaiser()));
+
+    QListIterator<QAction*> i(d_act);
+    while(i.hasNext()) {
+      QAction *a = i.next();
+      addAction(a);
+    }
+  }
+
+  ~FFTWindowMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+  
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("FFTWindowMenu::getAction: which out of range.\n");
+  }
+
+signals:
+  void whichTrigger(const gr::filter::firdes::win_type type);
+
+public slots:
+  void getNone() { emit whichTrigger(gr::filter::firdes::WIN_NONE); }
+  void getHamming() { emit whichTrigger(gr::filter::firdes::WIN_HAMMING); }
+  void getHann() { emit whichTrigger(gr::filter::firdes::WIN_HANN); }
+  void getBlackman() { emit whichTrigger(gr::filter::firdes::WIN_BLACKMAN); }
+  void getBlackmanharris() { emit whichTrigger(gr::filter::firdes::WIN_BLACKMAN_hARRIS); }
+  void getRectangular() { emit whichTrigger(gr::filter::firdes::WIN_RECTANGULAR); }
+  void getKaiser() { emit whichTrigger(gr::filter::firdes::WIN_KAISER); }
+
+private:
+  QList<QAction *> d_act;
+  int d_which;
+};
+
+
+/********************************************************************/
+
+
+class NPointsMenu: public QAction
+{
+  Q_OBJECT
+
+public:
+  NPointsMenu(QWidget *parent)
+    : QAction("Number of Points", parent)
+  {
+    d_diag = new QDialog(parent);
+    d_diag->setModal(true);
+
+    d_text = new QLineEdit();
+
+    QGridLayout *layout = new QGridLayout(d_diag);
+    QPushButton *btn_ok = new QPushButton(tr("OK"));
+    QPushButton *btn_cancel = new QPushButton(tr("Cancel"));
+
+    layout->addWidget(d_text, 0, 0, 1, 2);
+    layout->addWidget(btn_ok, 1, 0);
+    layout->addWidget(btn_cancel, 1, 1);
+
+    connect(btn_ok, SIGNAL(clicked()), this, SLOT(getText()));
+    connect(btn_cancel, SIGNAL(clicked()), d_diag, SLOT(close()));
+
+    connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
+  }
+
+  ~NPointsMenu()
+  {}
+
+signals:
+  void whichTrigger(const int npts);
+
+public slots:
+  void getTextDiag()
+  {
+    d_diag->show();
+  }
+
+private slots:
+  void getText()
+  { 
+    emit whichTrigger(d_text->text().toInt());
+    d_diag->accept();
+  }
+
+private:
+  QDialog *d_diag;
+  QLineEdit *d_text;
 };
 
 

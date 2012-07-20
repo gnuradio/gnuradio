@@ -256,7 +256,7 @@ namespace gr {
     waterfall_sink_f_impl::buildwindow()
     {
       d_window.clear();
-      if(d_wintype != 0) {
+      if(d_wintype != filter::firdes::WIN_NONE) {
 	d_window = filter::firdes::window(d_wintype, d_fftsize, 6.76);
       }
     }
