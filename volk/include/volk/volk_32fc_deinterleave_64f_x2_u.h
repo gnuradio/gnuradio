@@ -26,18 +26,18 @@ static inline void volk_32fc_deinterleave_64f_x2_u_sse2(double* iBuffer, double*
 
     for(;number < halfPoints; number++){
 
-      cplxValue = _mm_load_ps(complexVectorPtr);
+      cplxValue = _mm_loadu_ps(complexVectorPtr);
       complexVectorPtr += 4;
 
       // Arrange in i1i2i1i2 format
       fVal = _mm_shuffle_ps(cplxValue, cplxValue, _MM_SHUFFLE(2,0,2,0));
       dVal = _mm_cvtps_pd(fVal);
-      _mm_store_pd(iBufferPtr, dVal);
+      _mm_storeu_pd(iBufferPtr, dVal);
 
       // Arrange in q1q2q1q2 format
       fVal = _mm_shuffle_ps(cplxValue, cplxValue, _MM_SHUFFLE(3,1,3,1));
       dVal = _mm_cvtps_pd(fVal);
-      _mm_store_pd(qBufferPtr, dVal);
+      _mm_storeu_pd(qBufferPtr, dVal);
 
       iBufferPtr += 2;
       qBufferPtr += 2;
