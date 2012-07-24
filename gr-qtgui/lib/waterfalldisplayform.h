@@ -59,6 +59,8 @@ public slots:
   void SetIntensityRange(const double minIntensity,
 			 const double maxIntensity);
 
+  void AutoScale();
+
 private slots:
   void newData(const QEvent *updateEvent);
 
@@ -72,6 +74,9 @@ private:
   int _fftsize;
   float _fftavg;
   gr::filter::firdes::win_type _fftwintype;
+
+  double _min_val;
+  double _max_val;
 };
 
 #endif /* WATERFALL_DISPLAY_FORM_H */

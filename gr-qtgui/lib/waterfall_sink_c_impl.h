@@ -55,6 +55,7 @@ namespace gr {
       int d_index;
       std::vector<gr_complex*> d_residbufs;
       std::vector<double*> d_magbufs;
+      float *d_fbuf;
 
       QWidget *d_parent;
       WaterfallDisplayForm *d_main_gui;

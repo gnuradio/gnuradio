@@ -66,11 +66,15 @@ namespace gr {
       d_shift = true;
 
       d_fft = new fft::fft_complex(d_fftsize, true);
+      d_fbuf = fft::malloc_float(d_fftsize);
+      memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back(fft::malloc_complex(d_fftsize));
 	d_magbufs.push_back(fft::malloc_double(d_fftsize));
+	memset(d_residbufs[i], 0, d_fftsize*sizeof(float));
+	memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
       }
 
       buildwindow();
@@ -85,6 +89,7 @@ namespace gr {
 	fft::free(d_magbufs[i]);
       }
       delete d_fft;
+      fft::free(d_fbuf);
     }
 
     void
@@ -269,6 +274,7 @@ namespace gr {
     waterfall_sink_c_impl::fftresize()
     {
       int newfftsize = d_main_gui->GetFFTSize();
+      d_fftavg = d_main_gui->GetFFTAverage();
 
       if(newfftsize != d_fftsize) {
 
@@ -279,6 +285,9 @@ namespace gr {
 
 	  d_residbufs[i] = fft::malloc_complex(newfftsize);
 	  d_magbufs[i] = fft::malloc_double(newfftsize);
+
+	  memset(d_residbufs[i], 0, newfftsize*sizeof(gr_complex));
+	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
 
 	// Set new fft size and reset buffer index 
@@ -292,6 +301,10 @@ namespace gr {
 	// Reset FFTW plan for new size
 	delete d_fft;
 	d_fft = new fft::fft_complex(d_fftsize, true);
+
+	fft::free(d_fbuf);
+	d_fbuf = fft::malloc_float(d_fftsize);
+	memset(d_fbuf, 0, d_fftsize*sizeof(float));
       }
     }
 
@@ -314,16 +327,17 @@ namespace gr {
 	// If we have enough input for one full FFT, do it
 	if(datasize >= resid) {
 
-	  float *fbuf = fft::malloc_float(d_fftsize);
 	  for(int n = 0; n < d_nconnections; n++) {
 	    // Fill up residbuf with d_fftsize number of items
 	    in = (const gr_complex*)input_items[n];
 	    memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*resid);
 
-	    fft(fbuf, d_residbufs[n], d_fftsize);
-	    volk_32f_convert_64f_a(d_magbufs[n], fbuf, d_fftsize);
+	    fft(d_fbuf, d_residbufs[n], d_fftsize);
+	    for(int x = 0; x < d_fftsize; x++) {
+	      d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
+	    }
+	    //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
 	  }
-	  fft::free(fbuf);
       
 	  if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
 	    d_last_time = gruel::high_res_timer_now();
@@ -347,7 +361,7 @@ namespace gr {
 	}
       }
 
-      return noutput_items;
+      return j;
     }
 
   } /* namespace qtgui */

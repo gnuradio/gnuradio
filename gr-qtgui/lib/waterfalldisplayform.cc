@@ -41,12 +41,20 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   _fftsize = 1024;
   _fftavg = 1.0;
 
+  _min_val =  1000;
+  _max_val = -1000;
+
+  QAction *autoscale_act = new QAction("Auto Scale", this);
+  autoscale_act->setStatusTip(tr("Autoscale intensity range"));
+  connect(autoscale_act, SIGNAL(triggered()), this, SLOT(AutoScale()));
+
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
   FFTWindowMenu *winmenu = new FFTWindowMenu(this);
   _menu->addMenu(sizemenu);
   _menu->addMenu(avgmenu);
   _menu->addMenu(winmenu);
+  _menu->addAction(autoscale_act);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(SetFFTSize(const int)));
   connect(avgmenu, SIGNAL(whichTrigger(float)),
@@ -81,6 +89,18 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
   const std::vector<double*> dataPoints = event->getPoints();
   const uint64_t numDataPoints = event->getNumDataPoints();
   const gruel::high_res_timer_type dataTimestamp = event->getDataTimestamp();
+
+  _min_val =  1000;
+  _max_val = -1000;
+  for(size_t i=0; i < dataPoints.size(); i++) {
+    double *min_val = std::min_element(&dataPoints[i][0], &dataPoints[i][numDataPoints-1]);
+    double *max_val = std::max_element(&dataPoints[i][0], &dataPoints[i][numDataPoints-1]);
+    if(*min_val < _min_val)
+      _min_val = *min_val;
+    if(*max_val > _max_val)
+      _max_val = *max_val;
+  }
+
   getPlot()->PlotNewData(dataPoints, numDataPoints,
 			 d_update_time, dataTimestamp, 0);
 }
@@ -160,4 +180,13 @@ WaterfallDisplayForm::SetIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
   getPlot()->SetIntensityRange(minIntensity, maxIntensity);
+}
+
+void
+WaterfallDisplayForm::AutoScale()
+{
+  double min_int = _min_val - 5;
+  double max_int = _max_val + 10;
+
+  getPlot()->SetIntensityRange(min_int, max_int);
 }
