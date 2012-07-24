@@ -67,11 +67,15 @@ namespace gr {
 
       d_fft = new fft::fft_complex(d_fftsize, true);
       d_fbuf = fft::malloc_float(d_fftsize);
+      memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back(fft::malloc_float(d_fftsize));
 	d_magbufs.push_back(fft::malloc_double(d_fftsize));
+
+	memset(d_residbufs[i], 0, d_fftsize*sizeof(float));
+	memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
       }
 
       buildwindow();
@@ -288,6 +292,7 @@ namespace gr {
 	  d_residbufs[i] = fft::malloc_float(newfftsize);
 	  d_magbufs[i] = fft::malloc_double(newfftsize);
 
+	  memset(d_residbufs[i], 0, newfftsize*sizeof(float));
 	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
 
@@ -305,6 +310,7 @@ namespace gr {
 
 	fft::free(d_fbuf);
 	d_fbuf = fft::malloc_float(d_fftsize);
+	memset(d_fbuf, 0, d_fftsize*sizeof(float));
       }
     }
 
@@ -359,7 +365,7 @@ namespace gr {
 	}
       }
 
-      return noutput_items;
+      return j;
     }
 
   } /* namespace qtgui */

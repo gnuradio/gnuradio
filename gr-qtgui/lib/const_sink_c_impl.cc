@@ -60,6 +60,8 @@ namespace gr {
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs_real.push_back(fft::malloc_double(d_size));
 	d_residbufs_imag.push_back(fft::malloc_double(d_size));
+	memset(d_residbufs_real[i], 0, d_size*sizeof(double));
+	memset(d_residbufs_imag[i], 0, d_size*sizeof(double));
       }
 
       // Set alignment properties for VOLK
