@@ -59,6 +59,10 @@ public slots:
   void SetIntensityRange(const double minIntensity,
 			 const double maxIntensity);
 
+  void SetColorMap(const int newType,
+		   const QColor lowColor,
+		   const QColor highColor);
+
   void AutoScale();
 
 private slots:

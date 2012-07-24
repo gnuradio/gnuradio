@@ -24,6 +24,7 @@
 #include <QColorDialog>
 #include <QMessageBox>
 #include <spectrumdisplayform.h>
+#include "qtgui_types.h"
 
 SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   : QWidget(parent)
@@ -624,7 +625,7 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
 {
   QColor lowIntensityColor;
   QColor highIntensityColor;
-  if(newType == WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED){
+  if(newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED){
     // Select the Low Intensity Color
     lowIntensityColor = _waterfallDisplayPlot->GetUserDefinedLowIntensityColor();
     if(!lowIntensityColor.isValid()){

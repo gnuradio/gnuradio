@@ -51,9 +51,11 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
   FFTWindowMenu *winmenu = new FFTWindowMenu(this);
+  ColorMapMenu *colormenu = new ColorMapMenu(this);
   _menu->addMenu(sizemenu);
   _menu->addMenu(avgmenu);
   _menu->addMenu(winmenu);
+  _menu->addMenu(colormenu);
   _menu->addAction(autoscale_act);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(SetFFTSize(const int)));
@@ -61,6 +63,8 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 	  this, SLOT(SetFFTAverage(const float)));
   connect(winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
 	  this, SLOT(SetFFTWindowType(const gr::filter::firdes::win_type)));
+  connect(colormenu, SIGNAL(whichTrigger(const int, const QColor&, const QColor&)),
+	  this, SLOT(SetColorMap(const int, const QColor&, const QColor&)));
 
   Reset();
 
@@ -173,6 +177,15 @@ WaterfallDisplayForm::SetFrequencyRange(const double newCenterFrequency,
 				 true,
 				 units, strunits[iunit]);
   }
+}
+
+void
+WaterfallDisplayForm::SetColorMap(const int newType,
+				  const QColor lowColor,
+				  const QColor highColor)
+{
+  getPlot()->SetIntensityColorMapType(0, newType,
+				      lowColor, highColor);
 }
 
 void

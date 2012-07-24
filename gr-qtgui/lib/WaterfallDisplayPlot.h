@@ -76,14 +76,6 @@ public:
   const QColor GetUserDefinedLowIntensityColor() const;
   const QColor GetUserDefinedHighIntensityColor() const;
 
-  enum{
-    INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR = 0,
-    INTENSITY_COLOR_MAP_TYPE_WHITE_HOT = 1,
-    INTENSITY_COLOR_MAP_TYPE_BLACK_HOT = 2,
-    INTENSITY_COLOR_MAP_TYPE_INCANDESCENT = 3,
-    INTENSITY_COLOR_MAP_TYPE_USER_DEFINED = 4
-  };
-
 signals:
   void UpdatedLowerIntensityLevel(const double);
   void UpdatedUpperIntensityLevel(const double);

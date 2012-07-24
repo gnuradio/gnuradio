@@ -21,7 +21,6 @@
  */
 
 #include <cmath>
-#include <QColorDialog>
 #include <QMessageBox>
 #include <constellationdisplayform.h>
 #include <iostream>

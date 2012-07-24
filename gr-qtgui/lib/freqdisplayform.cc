@@ -21,7 +21,6 @@
  */
 
 #include <cmath>
-#include <QColorDialog>
 #include <QMessageBox>
 #include <freqdisplayform.h>
 #include <iostream>

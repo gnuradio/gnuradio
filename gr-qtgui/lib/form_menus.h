@@ -28,6 +28,7 @@
 #include <QtGui/QtGui>
 #include <qwt_symbol.h>
 #include <filter/firdes.h>
+#include "qtgui_types.h"
 
 class LineColorMenu: public QMenu
 {
@@ -454,6 +455,69 @@ private:
   QLineEdit *d_text;
 };
 
+/********************************************************************/
+
+
+class OtherDualAction: public QAction
+{
+  Q_OBJECT
+
+public:
+  OtherDualAction(QString label0, QString label1, QWidget *parent)
+    : QAction("Other", parent)
+  {
+    d_diag = new QDialog(parent);
+    d_diag->setModal(true);
+
+    d_text0 = new QLineEdit();
+    d_text1 = new QLineEdit();
+    
+    QLabel *_label0 = new QLabel(label0);
+    QLabel *_label1 = new QLabel(label1);
+
+    QGridLayout *layout = new QGridLayout(d_diag);
+    QPushButton *btn_ok = new QPushButton(tr("OK"));
+    QPushButton *btn_cancel = new QPushButton(tr("Cancel"));
+
+    layout->addWidget(_label0, 0, 0, 1, 2);
+    layout->addWidget(_label1, 1, 0, 1, 2);
+
+    layout->addWidget(d_text0, 0, 1, 1, 2);
+    layout->addWidget(d_text1, 1, 1, 1, 2);
+    layout->addWidget(btn_ok, 2, 0);
+    layout->addWidget(btn_cancel, 2, 1);
+
+    connect(btn_ok, SIGNAL(clicked()), this, SLOT(getText()));
+    connect(btn_cancel, SIGNAL(clicked()), d_diag, SLOT(close()));
+
+    connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
+  }
+
+  ~OtherDualAction()
+  {}
+
+signals:
+  void whichTrigger(const QString &text0, const QString &text1);
+
+public slots:
+  void getTextDiag()
+  {
+    d_diag->exec();
+  }
+
+private slots:
+  void getText()
+  { 
+    emit whichTrigger(d_text0->text(), d_text1->text());
+    d_diag->accept();
+  }
+
+private:
+  QDialog *d_diag;
+  QLineEdit *d_text0;
+  QLineEdit *d_text1;
+};
+
 
 /********************************************************************/
 
@@ -730,6 +794,85 @@ private slots:
 private:
   QDialog *d_diag;
   QLineEdit *d_text;
+};
+
+
+/********************************************************************/
+
+
+class ColorMapMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  ColorMapMenu(QWidget *parent)
+    : QMenu("Color Map", parent)
+  {
+    d_act.push_back(new QAction("Multi-Color", this));
+    d_act.push_back(new QAction("White Hot", this));
+    d_act.push_back(new QAction("Black Hot", this));
+    d_act.push_back(new QAction("Incandescent", this));
+    d_act.push_back(new QAction("Other", this));
+    //d_act.push_back(new OtherDualAction("Min Intensity: ", "Max Intensity: ", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getMultiColor()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getWhiteHot()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getBlackHot()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getIncandescent()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getOther()));
+
+     QListIterator<QAction*> i(d_act);
+     while(i.hasNext()) {
+       QAction *a = i.next();
+       addAction(a);
+     }
+
+     d_max_value = QColor("white");
+     d_min_value = QColor("white");
+   }
+
+   ~ColorMapMenu()
+   {}
+
+   int getNumActions() const
+   {
+     return d_act.size();
+   }
+
+   QAction * getAction(int which)
+   {
+     if(which < d_act.size())
+       return d_act[which];
+     else
+       throw std::runtime_error("ColorMapMenu::getAction: which out of range.\n");
+   }
+
+ signals:
+  void whichTrigger(const int type, const QColor &min_color=QColor(),
+		    const QColor &max_color=QColor());
+
+ public slots:
+  void getMultiColor() { emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR); }
+  void getWhiteHot() { emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_WHITE_HOT); }
+  void getBlackHot() { emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_BLACK_HOT); }
+  void getIncandescent() { emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_INCANDESCENT); }
+  //void getOther(const QString &min_str, const QString &max_str)
+  void getOther()
+  {
+    QMessageBox::information(this, "Set low and high intensities",
+       "In the next windows, select the low and then the high intensity colors.",
+       QMessageBox::Ok);
+    d_min_value = QColorDialog::getColor(d_min_value, this);
+    d_max_value = QColorDialog::getColor(d_max_value, this);
+
+    emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_USER_DEFINED,
+		      d_min_value, d_max_value);
+  }
+
+private:
+  QList<QAction *> d_act;
+  OtherDualAction *d_other;
+  QColor d_max_value, d_min_value;
 };
 
 
