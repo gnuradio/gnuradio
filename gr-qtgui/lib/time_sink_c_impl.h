@@ -72,6 +72,7 @@ namespace gr {
       void set_line_width(int which, int width);
       void set_line_style(int which, Qt::PenStyle style);
       void set_line_marker(int which, QwtSymbol::Style marker);
+      void set_nsamps(const int size);
 
       void set_size(int width, int height);
 

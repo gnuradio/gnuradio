@@ -74,6 +74,7 @@ namespace gr {
       virtual void set_line_width(int which, int width) = 0;
       virtual void set_line_style(int which, Qt::PenStyle style) = 0;
       virtual void set_line_marker(int which, QwtSymbol::Style marker) = 0;
+      virtual void set_nsamps(const int newsize) = 0;
 
       virtual void set_size(int width, int height) = 0;
 
