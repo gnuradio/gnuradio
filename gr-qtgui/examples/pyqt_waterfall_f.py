@@ -145,7 +145,7 @@ class my_top_block(gr.top_block):
         thr = gr.throttle(gr.sizeof_float, 100*npts)
         self.snk1 = qtgui.waterfall_sink_f(npts, gr.firdes.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
-                                           "Real Waterfall Example", 1)
+                                           "Real Waterfall Example")
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))

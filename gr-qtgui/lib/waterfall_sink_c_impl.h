@@ -72,7 +72,6 @@ namespace gr {
       waterfall_sink_c_impl(int size, int wintype,
 			    double fc, double bw,
 			    const std::string &name,
-			    int nconnections,
 			    QWidget *parent=NULL);
       ~waterfall_sink_c_impl();
 
@@ -88,11 +87,11 @@ namespace gr {
       void set_frequency_range(const double centerfreq, const double bandwidth);
 
       void set_update_time(double t);
-      void set_title(int which, const std::string &title);
-      void set_color(int which, const std::string &color);
-      void set_line_width(int which, int width);
-      void set_line_style(int which, Qt::PenStyle style);
-      void set_line_marker(int which, QwtSymbol::Style marker);
+      void set_title(const std::string &title);
+      void set_color(const std::string &color);
+      void set_line_width(int width);
+      void set_line_style(Qt::PenStyle style);
+      void set_line_marker(QwtSymbol::Style marker);
 
       void set_size(int width, int height);
 

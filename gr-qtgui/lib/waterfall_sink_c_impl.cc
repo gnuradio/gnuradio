@@ -36,20 +36,17 @@ namespace gr {
     waterfall_sink_c::make(int fftsize, int wintype,
 			   double fc, double bw,
 			   const std::string &name,
-			   int nconnections,
 			   QWidget *parent)
     {
       return gnuradio::get_initial_sptr
 	(new waterfall_sink_c_impl(fftsize, wintype,
 				   fc, bw, name,
-				   nconnections,
 				   parent));
     }
 
     waterfall_sink_c_impl::waterfall_sink_c_impl(int fftsize, int wintype,
 						 double fc, double bw,
 						 const std::string &name,
-						 int nconnections,
 						 QWidget *parent)
       : gr_sync_block("waterfall_sink_c",
 		      gr_make_io_signature(1, -1, sizeof(gr_complex)),
@@ -57,7 +54,7 @@ namespace gr {
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
-	d_nconnections(nconnections), d_parent(parent)
+	d_nconnections(1), d_parent(parent)
     {
       d_main_gui = NULL;
 
@@ -192,33 +189,33 @@ namespace gr {
     }
 
     void
-    waterfall_sink_c_impl::set_title(int which, const std::string &title)
+    waterfall_sink_c_impl::set_title(const std::string &title)
     {
-      d_main_gui->setTitle(which, title.c_str());
+      d_main_gui->setTitle(0, title.c_str());
     }
 
     void
-    waterfall_sink_c_impl::set_color(int which, const std::string &color)
+    waterfall_sink_c_impl::set_color(const std::string &color)
     {
-      d_main_gui->setColor(which, color.c_str());
+      d_main_gui->setColor(0, color.c_str());
     }
 
     void
-    waterfall_sink_c_impl::set_line_width(int which, int width)
+    waterfall_sink_c_impl::set_line_width(int width)
     {
-      d_main_gui->setLineWidth(which, width);
+      d_main_gui->setLineWidth(0, width);
     }
 
     void
-    waterfall_sink_c_impl::set_line_style(int which, Qt::PenStyle style)
+    waterfall_sink_c_impl::set_line_style(Qt::PenStyle style)
     {
-      d_main_gui->setLineStyle(which, style);
+      d_main_gui->setLineStyle(0, style);
     }
 
     void
-    waterfall_sink_c_impl::set_line_marker(int which, QwtSymbol::Style marker)
+    waterfall_sink_c_impl::set_line_marker(QwtSymbol::Style marker)
     {
-      d_main_gui->setLineMarker(which, marker);
+      d_main_gui->setLineMarker(0, marker);
     }
 
     void
@@ -239,7 +236,8 @@ namespace gr {
 
       d_fft->execute();     // compute the fft
 
-      volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(), size, 1.0, size);
+      volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(),
+						     size, 1.0, size);
 
       // Perform shift operation
       unsigned int len = (unsigned int)(floor(size/2.0));

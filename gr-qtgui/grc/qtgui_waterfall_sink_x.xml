@@ -18,7 +18,6 @@ qtgui.$(type.fcn)(
 	$fc, \#fc
 	$bw, \#bw
 	$name, \#name
-	$nconnections \#number of inputs
 )
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
@@ -96,13 +95,6 @@ $(gui_hint()($win))</make>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Number of Inputs</name>
-		<key>nconnections</key>
-		<value>1</value>
-		<type>int</type>
-		<hide>part</hide>
-	</param>
-	<param>
 		<name>GUI Hint</name>
 		<key>gui_hint</key>
 		<value></value>
@@ -112,7 +104,7 @@ $(gui_hint()($win))</make>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
-		<nports>$nconnections</nports>
+		<nports>1</nports>
 	</sink>
 	<doc>
 The GUI hint can be used to position the widget within the application. \

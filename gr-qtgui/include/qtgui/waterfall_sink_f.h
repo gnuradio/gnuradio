@@ -40,6 +40,14 @@ namespace gr {
      *
      * This is a QT-based graphical sink the takes set of a floating
      * point streams and plots a waterfall (spectrogram) plot.
+     *
+     * Note that unlike the other qtgui sinks, this one does not
+     * support multiple input streams. We have yet to figure out a
+     * good way to display multiple, independent signals on this kind
+     * of a plot. If there are any suggestions or examples of this, we
+     * would love to see them. Otherwise, to display multiple signals
+     * here, it's probably best to sum the signals together and
+     * connect that here.
      */
     class QTGUI_API waterfall_sink_f : virtual public gr_sync_block
     {
@@ -55,13 +63,11 @@ namespace gr {
        * \param fc center frequency of signal (use for x-axis labels)
        * \param bw bandwidth of signal (used to set x-axis labels)
        * \param name title for the plot
-       * \param nconnections number of signals connected to sink
        * \param parent a QWidget parent object, if any
        */
       static sptr make(int size, int wintype,
 		       double fc, double bw,
 		       const std::string &name,
-		       int nconnections,
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
@@ -76,11 +82,11 @@ namespace gr {
 				       const double bandwidth) = 0;
 
       virtual void set_update_time(double t) = 0;
-      virtual void set_title(int which, const std::string &title) = 0;
-      virtual void set_color(int which, const std::string &color) = 0;
-      virtual void set_line_width(int which, int width) = 0;
-      virtual void set_line_style(int which, Qt::PenStyle style) = 0;
-      virtual void set_line_marker(int which, QwtSymbol::Style marker) = 0;
+      virtual void set_title(const std::string &title) = 0;
+      virtual void set_color(const std::string &color) = 0;
+      virtual void set_line_width(int width) = 0;
+      virtual void set_line_style(Qt::PenStyle style) = 0;
+      virtual void set_line_marker(QwtSymbol::Style marker) = 0;
 
       virtual void set_size(int width, int height) = 0;
 
