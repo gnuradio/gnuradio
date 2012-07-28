@@ -33,8 +33,14 @@ except ImportError:
     print "Error: Program requires PyQt4 and gr-qtgui."
     sys.exit(1)
 
-import scipy
+try:
+    import scipy
+except ImportError:
+    print "Error: Scipy required (www.scipy.org)."
+    sys.exit(1)
 
+from plot_form import *
+    
 def read_samples_and_pad(filename, start, in_size, min_size):
     # Read in_size number of samples from file
     fhandle = open(filename, 'r')
@@ -49,46 +55,9 @@ def read_samples_and_pad(filename, start, in_size, min_size):
 
     return data
 
-class dialog_box(QtGui.QWidget):
-    def __init__(self, top_block):
-        QtGui.QWidget.__init__(self, None)
-
-        self.top_block = top_block
-        
-        self.setWindowTitle('GNU Radio PSD Plot')
-
-        self.start_form = QtGui.QFormLayout()
-        self.start_edit = QtGui.QLineEdit(self)
-        self.start_edit.setMinimumWidth(100)
-        self.start_edit.setText(QtCore.QString("%1").arg(top_block._start))
-        self.start_form.addRow("Start:", self.start_edit)
-        self.connect(self.start_edit, QtCore.SIGNAL("editingFinished()"),
-                     self.update_points)
-
-        end = top_block._start + top_block._nsamps
-        self.end_form = QtGui.QFormLayout()
-        self.end_edit = QtGui.QLineEdit(self)
-        self.end_edit.setMinimumWidth(100)
-        self.end_edit.setText(QtCore.QString("%1").arg(end))
-        self.end_form.addRow("End:", self.end_edit)
-        self.connect(self.end_edit, QtCore.SIGNAL("editingFinished()"),
-                     self.update_points)
-
-        self.layout = QtGui.QGridLayout(self)
-        self.layout.addWidget(top_block.get_gui(), 0,0,1,2)
-        self.layout.addLayout(self.start_form, 1,0,1,1)
-        self.layout.addLayout(self.end_form, 1,1,1,1)
-
-        self.resize(800, 500)
-
-    def update_points(self):
-        newstart = self.start_edit.text().toUInt()[0]
-        newend = self.end_edit.text().toUInt()[0]
-        newnsamps = newend - newstart
-        self.top_block.reset(newstart, newnsamps)
-
 class my_top_block(gr.top_block):
-    def __init__(self, filelist, fc, samp_rate, psdsize, start, nsamples, avg=1.0):
+    def __init__(self, filelist, fc, samp_rate, psdsize, start,
+                 nsamples, max_nsamples, avg=1.0):
         gr.top_block.__init__(self)
 
         self._filelist = filelist
@@ -96,13 +65,17 @@ class my_top_block(gr.top_block):
         self._samp_rate = samp_rate
         self._psd_size = psdsize
         self._start = start
-        self._nsamps = nsamples
+        self._max_nsamps = max_nsamples
         self._nsigs = len(self._filelist)
         self._avg = avg
 
+        if(nsamples is None):
+            self._nsamps = max_nsamples
+        else:
+            self._nsamps = nsamples
+
         self.qapp = QtGui.QApplication(sys.argv)
 
-        self.head = gr.head(gr.sizeof_gr_complex, max(self._psd_size, self._nsamps))
         self.gui_snk = qtgui.freq_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
                                          self._center_freq, self._samp_rate,
                                          "GNU Radio PSD Plot", self._nsigs)
@@ -117,8 +90,7 @@ class my_top_block(gr.top_block):
             self.gui_snk.set_title(n, "{0}".format(f))
             n += 1
 
-        self.connect(self.srcs[0], self.head)
-        self.connect(self.head, (self.gui_snk, 0))
+        self.connect(self.srcs[0], (self.gui_snk, 0))
 
         for i,s in enumerate(self.srcs[1:]):
             self.connect(s, (self.gui_snk, i+1))
@@ -139,8 +111,6 @@ class my_top_block(gr.top_block):
 
         self._start = newstart
         self._nsamps = newnsamps
-        self.head.set_length(self._nsamps)
-        self.head.reset()
 
         for s,f in zip(self.srcs, self._filelist):
             data = read_samples_and_pad(f, self._start,
@@ -173,29 +143,27 @@ def main():
 
     filelist = list(args)
 
-    # Use the user-specified number of samples for all files if given;
-    # otherwise, find the number of samples in all files and use the
-    # largest value for everyone.
     nsamples = options.nsamples
-    if(nsamples is None):
-        filesizes = []
-        for f in filelist:
-            if(os.path.exists(f)):
-                filesizes.append(os.path.getsize(f) / gr.sizeof_gr_complex)
-        nsamples = max(filesizes) - options.start
+
+    # Find the smallest number of samples in all files and use that as
+    # a maximum value possible.
+    filesizes = []
+    for f in filelist:
+        if(os.path.exists(f)):
+            filesizes.append(os.path.getsize(f) / gr.sizeof_gr_complex)
+    max_nsamples = min(filesizes)
 
     tb = my_top_block(filelist,
                       options.center_frequency, options.sample_rate,
                       options.psd_size,
-                      options.start, nsamples,
+                      options.start, nsamples, max_nsamples,
                       options.average);
 
-    main_box = dialog_box(tb)
+    main_box = dialog_box(tb, 'GNU Radio PSD Plot')
     main_box.show()
 
-    tb.start()
+    tb.run()
     tb.qapp.exec_()
-    tb.stop()
 
 if __name__ == "__main__":
     try:

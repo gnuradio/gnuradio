@@ -33,19 +33,31 @@ except ImportError:
     print "Error: Program requires PyQt4 and gr-qtgui."
     sys.exit(1)
 
-import scipy
+try:
+    import scipy
+except ImportError:
+    print "Error: Scipy required (www.scipy.org)."
+    sys.exit(1)
 
-def read_samples_and_buffer(filename, size):
+from plot_form import *
+
+def read_samples_and_pad(filename, start, in_size, min_size):
+    # Read in_size number of samples from file
     fhandle = open(filename, 'r')
-    data = scipy.fromfile(fhandle, dtype=scipy.complex64, count=size)
-    print len(data)
+    fhandle.seek(start*gr.sizeof_gr_complex, 0)
+    data = scipy.fromfile(fhandle, dtype=scipy.complex64, count=in_size)
     data = data.tolist()
-    data += (10*size - len(data)) * [complex(0,0)]
     fhandle.close()
+
+    # If we have to, append 0's to create min_size samples of data
+    if(len(data) < min_size):
+        data += (min_size - len(data)) * [complex(0,0)]
+
     return data
 
 class my_top_block(gr.top_block):
-    def __init__(self, filelist, fc, samp_rate, psdsize, start, nsamples):
+    def __init__(self, filelist, fc, samp_rate, psdsize, start,
+                 nsamples, max_nsamples, avg=1.0):
         gr.top_block.__init__(self)
 
         self._filelist = filelist
@@ -53,44 +65,59 @@ class my_top_block(gr.top_block):
         self._samp_rate = samp_rate
         self._psd_size = psdsize
         self._start = start
-        self._nsamps = nsamples
+        self._max_nsamps = max_nsamples
         self._nsigs = len(self._filelist)
+        self._avg = avg
+
+        if(nsamples is None):
+            self._nsamps = max_nsamples
+        else:
+            self._nsamps = nsamples
 
         self.qapp = QtGui.QApplication(sys.argv)
 
         self.skip = gr.skiphead(gr.sizeof_gr_complex, self._start)
-        self.head = gr.head(gr.sizeof_gr_complex, self._nsamps)
+        self.add = gr.add_cc()
         self.gui_snk = qtgui.waterfall_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
                                               self._center_freq, self._samp_rate,
-                                              "GNU Radio Spectrogram Plot", self._nsigs)
+                                              "GNU Radio Spectrogram Plot")
         n = 0
         self.srcs = list()
         for f in filelist:
-            # If we don't have enough data to create a full plot, read
-            # into a vector source and pad
-            if(self._nsamps < self._psd_size):
-                data = read_samples_and_buffer(f, self._psd_size)
-                self.srcs.append(gr.vector_source_c(data))
-            else:
-                self.srcs.append(gr.file_source(gr.sizeof_gr_complex, f))
-
-            # Set default labels based on file names
-            #self.gui_snk.set_title(n, "{0}".format(f))
+            data = read_samples_and_pad(f, self._start,
+                                        self._nsamps, self._psd_size)
+            self.srcs.append(gr.vector_source_c(data))
             n += 1
 
-        self.connect(self.srcs[0], self.skip)
-        self.connect(self.skip, self.head)
-        self.connect(self.head, (self.gui_snk, 0))
+        self.connect(self.add, self.skip)
+        self.connect(self.skip, (self.gui_snk, 0))
 
-        for i,s in enumerate(self.srcs[1:]):
-            self.connect(s, (self.gui_snk, i+1))
+        for i,s in enumerate(self.srcs):
+            self.connect(s, (self.add, i))
 
         self.gui_snk.set_update_time(0);
+        self.gui_snk.set_fft_average(self._avg)
 
         # Get Python Qt references
-        pyQt  = self.gui_snk.pyqwidget()
-        pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
-	pyWin.show()        
+        pyQt = self.gui_snk.pyqwidget()
+        self.pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
+
+    def get_gui(self):
+        return self.pyWin
+
+    def reset(self, newstart, newnsamps):
+        self.stop()
+        self.wait()
+
+        self._start = newstart
+        self._nsamps = newnsamps
+
+        for s,f in zip(self.srcs, self._filelist):
+            data = read_samples_and_pad(f, self._start,
+                                        self._nsamps, self._psd_size)
+            s.set_data(data)
+
+        self.start()
 
 def main():
     description = "Plots the spectrogram (waterfall) of a list of files."
@@ -106,6 +133,8 @@ def main():
                       help="Set the center frequency of the signal [default=%default]")
     parser.add_option("-r", "--sample-rate", type="eng_float", default=1.0,
                       help="Set the sample rate of the signal [default=%default]")
+    parser.add_option("-a", "--average", type="float", default=1.0,
+                      help="Set amount of averaging (smaller=more averaging) [default=%default]")
     (options, args) = parser.parse_args()
 
     if(len(args) < 1):
@@ -114,24 +143,27 @@ def main():
 
     filelist = list(args)
 
-    # Use the user-specified number of samples for all files if given;
-    # otherwise, find the number of samples in all files and use the
-    # largest value for everyone.
     nsamples = options.nsamples
-    if(nsamples is None):
-        filesizes = []
-        for f in filelist:
-            if(os.path.exists(f)):
-                filesizes.append(os.path.getsize(f) / gr.sizeof_gr_complex)
-        nsamples = max(filesizes)
+
+    # Find the smallest number of samples in all files and use that as
+    # a maximum value possible.
+    filesizes = []
+    for f in filelist:
+        if(os.path.exists(f)):
+            filesizes.append(os.path.getsize(f) / gr.sizeof_gr_complex)
+    max_nsamples = min(filesizes)
 
     tb = my_top_block(filelist,
                       options.center_frequency, options.sample_rate,
                       options.psd_size,
-                      options.start, nsamples);
-    tb.start()
+                      options.start, nsamples, max_nsamples,
+                      options.average);
+
+    main_box = dialog_box(tb, 'GNU Radio Spectrogram Plot')
+    main_box.show()
+
+    tb.run()
     tb.qapp.exec_()
-    tb.stop()
 
 if __name__ == "__main__":
     try:

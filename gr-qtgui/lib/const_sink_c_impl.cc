@@ -166,11 +166,9 @@ namespace gr {
     }
 
     void
-    const_sink_c_impl::npoints_resize()
+    const_sink_c_impl::set_nsamps(const int newsize)
     {
       gruel::scoped_lock lock(d_mutex);
-
-      int newsize = d_main_gui->GetNPoints();
 
       if(newsize != d_size) {
 	// Resize residbuf and replace data
@@ -188,7 +186,16 @@ namespace gr {
 	// (throws away any currently held data, but who cares?) 
 	d_size = newsize;
 	d_index = 0;
+
+	d_main_gui->SetNPoints(d_size);
       }
+    }
+
+    void
+    const_sink_c_impl::npoints_resize()
+    {
+      int newsize = d_main_gui->GetNPoints();
+      set_nsamps(newsize);
     }
 
     int
