@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2008-2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,6 +28,7 @@
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
 #include <QColor>
+#include <cmath>
 #include <iostream>
 
 class TimePrecisionClass
@@ -80,11 +81,12 @@ public:
 
 protected:
   using QwtPlotZoomer::trackerText;
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const
+  virtual QwtText trackerText( const QPoint& p ) const
   {
-    QwtText t(QString("%1 %2, %3 V").arg(p.x(), 0, 'f', GetTimePrecision()).
+    QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+    QwtText t(QString("%1 %2, %3 V").arg(dp.x(), 0, 'f', GetTimePrecision()).
 	      arg(_unitType.c_str()).
-	      arg(p.y(), 0, 'f', 4));
+	      arg(dp.y(), 0, 'f', 4));
 
     return t;
   }
@@ -93,11 +95,13 @@ private:
   std::string _unitType;
 };
 
-TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
-  : QwtPlot(parent), _nplots(nplots)
-{
-  resize(parent->width(), parent->height());
 
+/***********************************************************************
+ * Main Time domain plotter widget
+ **********************************************************************/
+TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
+  : DisplayPlot(nplots, parent)
+{
   _numPoints = 1024;
   _xAxisPoints = new double[_numPoints];
   memset(_xAxisPoints, 0x0, _numPoints*sizeof(double));
@@ -108,22 +112,14 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
 #endif
 
-  // Disable polygon clipping
-#if QWT_VERSION < 0x060000
-  QwtPainter::setDeviceClipping(false);
-#else
-  QwtPainter::setPolylineSplitting(false);
-#endif
+  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
+			   Qt::RightButton, Qt::ControlModifier);
+  _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
+			   Qt::RightButton);
 
-#if QWT_VERSION < 0x060000
-  // We don't need the cache here
-  canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
-  canvas()->setPaintAttribute(QwtPlotCanvas::PaintPacked, false);
-#endif
-
-  QPalette palette;
-  palette.setColor(canvas()->backgroundRole(), QColor("white"));
-  canvas()->setPalette(palette);
+  const QColor c(Qt::darkRed);
+  _zoomer->setRubberBandPen(c);
+  _zoomer->setTrackerPen(c);
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   setXaxis(0, _numPoints);
@@ -149,57 +145,19 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
     _plot_curve[i]->attach(this);
     _plot_curve[i]->setPen(QPen(colors[i]));
 
+    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]), QPen(colors[i]), QSize(7,7));
+    
 #if QWT_VERSION < 0x060000
     _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+    _plot_curve[i]->setSymbol(*symbol);
 #else
     _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+    _plot_curve[i]->setSymbol(symbol);
 #endif
-}
+  }
 
   _sampleRate = 1;
   _resetXAxisPoints();
-
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			   Qt::RightButton, Qt::ControlModifier);
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
-			   Qt::RightButton);
-
-  _panner = new QwtPlotPanner(canvas());
-  _panner->setAxisEnabled(QwtPlot::yRight, false);
-  _panner->setMouseButton(Qt::MidButton);
-
-  // emit the position of clicks on widget
-  _picker = new QwtDblClickPlotPicker(canvas());
-
-#if QWT_VERSION < 0x060000
-  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
-	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
-#else
-  connect(_picker, SIGNAL(selected(const QPointF &)),
-	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
-#endif
-
-  // Configure magnify on mouse wheel
-  _magnifier = new QwtPlotMagnifier(canvas());
-  _magnifier->setAxisEnabled(QwtPlot::xBottom, false);
-
-  // Avoid jumping when labels with more/less digits
-  // appear/disappear when scrolling vertically
-
-  const QFontMetrics fm(axisWidget(QwtPlot::yLeft)->font());
-  QwtScaleDraw *sd = axisScaleDraw(QwtPlot::yLeft);
-  sd->setMinimumExtent( fm.width("100.00") );
-
-  const QColor c(Qt::darkRed);
-  _zoomer->setRubberBandPen(c);
-  _zoomer->setTrackerPen(c);
-
-  QwtLegend* legendDisplay = new QwtLegend(this);
-  legendDisplay->setItemMode(QwtLegend::CheckableItem);
-  insertLegend(legendDisplay);
-
-  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ),
-	  this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
 TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
@@ -212,74 +170,45 @@ TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
 }
 
 void
-TimeDomainDisplayPlot::setYaxis(double min, double max)
-{
-  setAxisScale(QwtPlot::yLeft, min, max);
-  _zoomer->setZoomBase();
-}
-
-void
-TimeDomainDisplayPlot::setXaxis(double min, double max)
-{
-  setAxisScale(QwtPlot::xBottom, min, max);
-  _zoomer->setZoomBase();
-}
-
-void
-TimeDomainDisplayPlot::setTitle(int which, QString title)
-{
-  _plot_curve[which]->setTitle(title);
-}
-
-void
-TimeDomainDisplayPlot::setColor(int which, QString color)
-{
-  _plot_curve[which]->setPen(QPen(color));
-}
-
-void TimeDomainDisplayPlot::replot()
+TimeDomainDisplayPlot::replot()
 {
   QwtPlot::replot();
 }
 
 void
-TimeDomainDisplayPlot::resizeSlot( QSize *s )
+TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
+				   const int64_t numDataPoints,
+				   const double timeInterval)
 {
-  // -10 is to spare some room for the legend and x-axis label
-  resize(s->width()-10, s->height()-10);
-}
+  if(!_stop) {
+    if((numDataPoints > 0)) {
+      if(numDataPoints != _numPoints){
+	_numPoints = numDataPoints;
 
-void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
-					const int64_t numDataPoints,
-					const double timeInterval)
-{
-  if((numDataPoints > 0)) {
-    if(numDataPoints != _numPoints){
-      _numPoints = numDataPoints;
+	delete[] _xAxisPoints;
+	_xAxisPoints = new double[_numPoints];
 
-      delete[] _xAxisPoints;
-      _xAxisPoints = new double[_numPoints];
-
-      for(int i = 0; i < _nplots; i++) {
-	delete[] _dataPoints[i];
-	_dataPoints[i] = new double[_numPoints];
+	for(int i = 0; i < _nplots; i++) {
+	  delete[] _dataPoints[i];
+	  _dataPoints[i] = new double[_numPoints];
 
 #if QWT_VERSION < 0x060000
-	_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+	  _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
 #else
-	_plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+	  _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
 #endif
+	}
+
+	setXaxis(0, numDataPoints);
+	_resetXAxisPoints();
       }
 
-      setXaxis(0, numDataPoints);
-      _resetXAxisPoints();
-    }
+      for(int i = 0; i < _nplots; i++) {
+	memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
+      }
 
-    for(int i = 0; i < _nplots; i++) {
-      memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
+      replot();
     }
-
-    replot();
   }
 }
 
@@ -301,11 +230,6 @@ void TimeDomainDisplayPlot::_resetXAxisPoints()
   _zoomer->zoom(0);
 }
 
-void TimeDomainDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
-{
-  plotItem->setVisible(!on);
-}
-
 void
 TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
 				     const std::string &strunits)
@@ -323,23 +247,6 @@ TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
     ((TimeDomainDisplayZoomer*)_zoomer)->SetTimePrecision(display_units);
     ((TimeDomainDisplayZoomer*)_zoomer)->SetUnitType(strunits);
   }
-}
-
-
-void
-TimeDomainDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
-{
-  QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
-  emit plotPointSelected(point);
-}
-
-void
-TimeDomainDisplayPlot::OnPickerPointSelected6(const QPointF & p)
-{
-  QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
-  emit plotPointSelected(point);
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

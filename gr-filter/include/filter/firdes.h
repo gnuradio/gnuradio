@@ -40,6 +40,7 @@ namespace gr {
     public:
             
       enum win_type {
+	WIN_NONE = -1,	 // don't use a window
 	WIN_HAMMING = 0,	// max attenuation 53 dB
 	WIN_HANN = 1,	// max attenuation 44 dB
 	WIN_BLACKMAN = 2,	// max attenuation 74 dB

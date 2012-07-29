@@ -24,12 +24,11 @@ from gnuradio import gr
 from gnuradio import uhd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.qtgui import qtgui
 from optparse import OptionParser
 import sys
 
 try:
-    from gnuradio.qtgui import qtgui
+    from gnuradio import qtgui
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:

@@ -51,7 +51,7 @@ while the GUI is alive.
 
 \code
 from PyQt4 import Qt
-from gnuradio.qtgui import qtgui
+from gnuradio import qtgui
 import sys, sip
 
 class grclass(gr.top_block):

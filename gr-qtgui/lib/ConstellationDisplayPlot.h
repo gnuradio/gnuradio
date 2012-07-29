@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2008-2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,43 +20,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef CONSTELLATION_DISPLAY_PLOT_HPP
-#define CONSTELLATION_DISPLAY_PLOT_HPP
+#ifndef CONSTELLATION_DISPLAY_PLOT_H
+#define CONSTELLATION_DISPLAY_PLOT_H
 
 #include <stdint.h>
 #include <cstdio>
-#include <qwt_plot.h>
-#include <qwt_painter.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_curve.h>
-#include <qwt_scale_engine.h>
-#include <qwt_scale_widget.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_marker.h>
-#include <gruel/high_res_timer.h>
-#include <qwt_symbol.h>
-#include <qtgui_util.h>
+#include <vector>
+#include "DisplayPlot.h"
 
-#if QWT_VERSION >= 0x060000
-#include <qwt_point_3d.h>  // doesn't seem necessary, but is...
-#include <qwt_compat.h>
-#endif
-
-class ConstellationDisplayPlot : public QwtPlot
+class ConstellationDisplayPlot : public DisplayPlot
 {
   Q_OBJECT
 
 public:
-  ConstellationDisplayPlot(QWidget*);
+  ConstellationDisplayPlot(int nplots, QWidget*);
   virtual ~ConstellationDisplayPlot();
 
+  void PlotNewData(const std::vector<double*> realDataPoints,
+		   const std::vector<double*> imagDataPoints,
+		   const int64_t numDataPoints,
+		   const double timeInterval);
+
+  // Old method to be removed
   void PlotNewData(const double* realDataPoints,
 		   const double* imagDataPoints,
 		   const int64_t numDataPoints,
 		   const double timeInterval);
 
-  virtual void replot();
+  void replot();
 
   void set_xaxis(double min, double max);
   void set_yaxis(double min, double max);
@@ -65,37 +56,13 @@ public:
   void set_pen_size(int size);
 
 public slots:
-  void resizeSlot( QSize *s );
-
-  // Because of the preprocessing of slots in QT, these are no
-  // easily separated by the version check. Make one for each
-  // version until it's worked out.
-  void OnPickerPointSelected(const QwtDoublePoint & p);
-  void OnPickerPointSelected6(const QPointF & p);
-
-signals:
-  void plotPointSelected(const QPointF p);
-
-protected slots:
-  void LegendEntryChecked(QwtPlotItem *plotItem, bool on);
-
-protected:
+  // set axis
 
 private:
-  QwtPlotCurve* _plot_curve;
+  std::vector<double*> _realDataPoints;
+  std::vector<double*> _imagDataPoints;
 
-  QwtPlotPanner* _panner;
-  QwtPlotZoomer* _zoomer;
-
-  QwtDblClickPlotPicker *_picker;
-
-  double* _realDataPoints;
-  double* _imagDataPoints;
-
-  gruel::high_res_timer_type _lastReplot;
-
-  int64_t _numPoints;
   int64_t _penSize;
 };
 
-#endif /* CONSTELLATION_DISPLAY_PLOT_HPP */
+#endif /* CONSTELLATION_DISPLAY_PLOT_H */

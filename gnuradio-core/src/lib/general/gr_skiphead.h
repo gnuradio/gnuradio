@@ -51,6 +51,26 @@ class GR_CORE_API gr_skiphead : public gr_block
 
  public:
 
+  /*!
+   * \brief Sets number of items to skip; resets current skip count to 0.
+   */
+  void set_nitems_to_skip(uint64_t nitems_to_skip);
+
+  /*!
+   * \brief Gets the number of items to skip.
+   */
+  uint64_t nitems_to_skip() const;
+
+  /*!
+   * \brief Gets the number of items already skipped.
+   */
+  uint64_t nitems_skiped() const;
+
+  /*!
+   * \brief Resets number of items skipped to 0.
+   */
+  void reset();
+
   int general_work(int noutput_items,
 		   gr_vector_int &ninput_items,
 		   gr_vector_const_void_star &input_items,

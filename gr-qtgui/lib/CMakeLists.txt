@@ -22,7 +22,13 @@
 ########################################################################
 set(qtgui_moc_hdrs
     spectrumdisplayform.h
+    displayform.h
     timedisplayform.h
+    freqdisplayform.h
+    constellationdisplayform.h
+    waterfalldisplayform.h
+    form_menus.h
+    DisplayPlot.h
     FrequencyDisplayPlot.h
     TimeDomainDisplayPlot.h
     WaterfallDisplayPlot.h
@@ -41,20 +47,30 @@ endif(NOT EXISTS ${spectrum_ui_hdr})
 set(qtgui_srcs
     ${qtgui_moc_srcs}
     ${qtgui_ui_hdrs}
+    DisplayPlot.cc
     FrequencyDisplayPlot.cc
     TimeDomainDisplayPlot.cc
     WaterfallDisplayPlot.cc
     waterfallGlobalData.cc
     ConstellationDisplayPlot.cc
     spectrumdisplayform.cc
+    displayform.cc
     timedisplayform.cc
+    freqdisplayform.cc
+    constellationdisplayform.cc
+    waterfalldisplayform.cc
     SpectrumGUIClass.cc
     spectrumUpdateEvents.cc
     plot_waterfall.cc
-    qtgui_sink_c.cc
-    qtgui_sink_f.cc
-    qtgui_time_sink_c.cc
-    qtgui_time_sink_f.cc
+    sink_c_impl.cc
+    sink_f_impl.cc
+    time_sink_c_impl.cc
+    time_sink_f_impl.cc
+    freq_sink_c_impl.cc
+    freq_sink_f_impl.cc
+    const_sink_c_impl.cc
+    waterfall_sink_c_impl.cc
+    waterfall_sink_f_impl.cc
     qtgui_util.cc
 )
 
@@ -63,11 +79,17 @@ set(qtgui_srcs
 ########################################################################
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
     ${GR_QTGUI_INCLUDE_DIRS}
+    ${VOLK_INCLUDE_DIRS}
 )
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
+
+include_directories(${FFTW3F_INCLUDE_DIRS})
+link_directories(${FFTW3F_LIBRARY_DIRS})
 
 include_directories(${QWT_INCLUDE_DIRS})
 link_directories(${QWT_LIBRARY_DIRS})
@@ -80,9 +102,13 @@ include_directories(${PYTHON_INCLUDE_PATH}) #deprecated for dirs (cmake 2.6)
 ########################################################################
 list(APPEND qtgui_libs
     gnuradio-core
+    gnuradio-fft
+    gnuradio-filter
+    volk
     ${QT_LIBRARIES}
     ${QWT_LIBRARIES}
     ${PYTHON_LIBRARIES}
+    ${FFTW3F_LIBRARIES}
 )
 
 add_definitions(-DQWT_DLL) #setup QWT library linkage
@@ -94,6 +120,7 @@ GR_LIBRARY_FOO(gnuradio-qtgui RUNTIME_COMPONENT "qtgui_runtime" DEVEL_COMPONENT 
 # Install the header files
 ########################################################################
 install(FILES
+    DisplayPlot.h
     FrequencyDisplayPlot.h
     TimeDomainDisplayPlot.h
     WaterfallDisplayPlot.h
@@ -101,7 +128,12 @@ install(FILES
     ConstellationDisplayPlot.h
     plot_waterfall.h
     spectrumdisplayform.h
+    displayform.h
     timedisplayform.h
+    freqdisplayform.h
+    constellationdisplayform.h
+    waterfalldisplayform.h
+    form_menus.h
     SpectrumGUIClass.h
     spectrumUpdateEvents.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio

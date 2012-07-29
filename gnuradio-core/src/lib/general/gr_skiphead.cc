@@ -41,6 +41,31 @@ gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip)
   return gnuradio::get_initial_sptr(new gr_skiphead (itemsize, nitems_to_skip));
 }
 
+void
+gr_skiphead::set_nitems_to_skip(uint64_t nitems_to_skip)
+{
+  d_nitems_to_skip = nitems_to_skip;
+  reset();
+}
+
+uint64_t
+gr_skiphead::nitems_to_skip() const
+{
+  return d_nitems_to_skip;
+}
+
+uint64_t
+gr_skiphead::nitems_skiped() const
+{
+  return d_nitems;
+}
+
+void
+gr_skiphead::reset()
+{
+  d_nitems = 0;
+}
+
 int
 gr_skiphead::general_work(int noutput_items,
 			  gr_vector_int &ninput_items_ignored,

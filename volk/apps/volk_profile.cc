@@ -46,6 +46,7 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32fc_x2_conjugate_dot_prod_32fc_u, 1e-4, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32fc_deinterleave_32f_x2_a, 1e-4, 0, 204600, 1000, &results);
     VOLK_PROFILE(volk_32fc_deinterleave_64f_x2_a, 1e-4, 0, 204600, 1000, &results);
+    VOLK_PROFILE(volk_32fc_deinterleave_64f_x2_u, 1e-4, 0, 204600, 1000, &results);
     VOLK_PROFILE(volk_32fc_s32f_deinterleave_real_16i_a, 0, 32768, 204600, 10000, &results);
     VOLK_PROFILE(volk_32fc_deinterleave_imag_32f_a, 1e-4, 0, 204600, 5000, &results);
     VOLK_PROFILE(volk_32fc_deinterleave_real_32f_a, 1e-4, 0, 204600, 5000, &results);

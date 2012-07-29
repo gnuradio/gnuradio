@@ -8,7 +8,6 @@
 <block>
 	<name>QT GUI Range</name>
 	<key>variable_qtgui_range</key>
-	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<import>import PyQt4.Qwt5 as Qwt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>

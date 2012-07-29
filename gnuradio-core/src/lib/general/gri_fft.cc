@@ -59,6 +59,12 @@ gri_fft_malloc_float(int size)
   return (float*)fftwf_malloc(sizeof(float)*size);
 }
 
+double *
+gri_fft_malloc_double(int size)
+{
+  return (double*)fftwf_malloc(sizeof(double)*size);
+}
+
 void
 gri_fft_free(void *b)
 {

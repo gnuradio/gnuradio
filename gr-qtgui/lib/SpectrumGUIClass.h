@@ -62,7 +62,7 @@ public:
   double GetStopFrequency();
   double GetCenterFrequency();
 
-  void UpdateWindow(const bool, const std::complex<float>*,
+  void UpdateWindow(const bool, const float*,
 		    const uint64_t, const float*,
 		    const uint64_t, const float*,
 		    const uint64_t,
@@ -122,7 +122,7 @@ private:
 
   SpectrumDisplayForm* _spectrumDisplayForm;
 
-  std::complex<float>* _fftPoints;
+  float* _fftPoints;
   double* _realTimeDomainPoints;
   double* _imagTimeDomainPoints;
 };

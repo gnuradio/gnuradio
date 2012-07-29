@@ -22,9 +22,14 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,skiphead);
 
-gr_skiphead_sptr gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
+gr_skiphead_sptr gr_make_skiphead(size_t itemsize,
+				  uint64_t nitems_to_skip);
 
-class gr_skiphead : public gr_block {
-  friend gr_skiphead_sptr gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
-  gr_skiphead (size_t itemsize, uint64_t nitems_to_skip);
+class gr_skiphead : public gr_block
+{
+public:
+  void set_nitems_to_skip(uint64_t nitems_to_skip);
+  uint64_t nitems_to_skip() const;
+  uint64_t nitems_skiped() const;
+  void reset();
 };
