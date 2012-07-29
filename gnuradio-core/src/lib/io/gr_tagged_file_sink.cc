@@ -82,7 +82,7 @@ gr_tagged_file_sink::work (int noutput_items,
   uint64_t start_N = nitems_read(0);
   uint64_t end_N = start_N + (uint64_t)(noutput_items);
   pmt::pmt_t bkey = pmt::pmt_string_to_symbol("burst");
-  //pmt::pmt_t tkey = pmt::pmt_string_to_symbol("time"); // use gr_tags::key_time
+  pmt::pmt_t tkey = pmt::pmt_string_to_symbol("rx_time"); // use gr_tags::key_time
 
   std::vector<gr_tag_t> all_tags;
   get_tags_in_range(all_tags, 0, start_N, end_N);
@@ -90,6 +90,20 @@ gr_tagged_file_sink::work (int noutput_items,
   std::sort(all_tags.begin(), all_tags.end(), gr_tag_t::offset_compare);
 
   std::vector<gr_tag_t>::iterator vitr = all_tags.begin();
+
+  // Look for a time tag and initialize d_timeval.
+  std::vector<gr_tag_t> time_tags_outer;
+  get_tags_in_range(time_tags_outer, 0, start_N, end_N, tkey);
+  if (time_tags_outer.size() > 0) {
+    const gr_tag_t tag = time_tags_outer[0];
+    uint64_t offset = tag.offset;
+    pmt::pmt_t time = tag.value;
+    uint64_t tsecs = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(time, 0));
+    double tfrac = pmt::pmt_to_double(pmt::pmt_tuple_ref(time, 1));
+    double delta = (double)offset / d_sample_rate;
+    d_timeval = (double)tsecs + tfrac + delta;
+    d_last_N = offset;
+  }
 
   int idx = 0, idx_stop = 0;
   while(idx < noutput_items) {
@@ -108,8 +122,7 @@ gr_tagged_file_sink::work (int noutput_items,
 	  // to new time based on sample rate of this block.
 	  std::vector<gr_tag_t> time_tags;
 	  //get_tags_in_range(time_tags, 0, d_last_N, N, gr_tags::key_time);
-	  get_tags_in_range(time_tags, 0, d_last_N, N,
-			    pmt::pmt_string_to_symbol("time"));
+	  get_tags_in_range(time_tags, 0, d_last_N, N, tkey);
 	  if(time_tags.size() > 0) {
 	    const gr_tag_t tag = time_tags[time_tags.size()-1];
 
@@ -117,7 +130,7 @@ gr_tagged_file_sink::work (int noutput_items,
 
 	    // Get time based on last time tag from USRP
 	    pmt::pmt_t time = tag.value;
-	    int tsecs = pmt::pmt_to_long(pmt::pmt_tuple_ref(time, 0));
+	    uint64_t tsecs = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(time, 0));
 	    double tfrac = pmt::pmt_to_double(pmt::pmt_tuple_ref(time, 1));
 
 	    // Get new time from last time tag + difference in time to when
@@ -143,7 +156,7 @@ gr_tagged_file_sink::work (int noutput_items,
 	  std::stringstream filename;
 	  filename.setf(std::ios::fixed, std::ios::floatfield);
 	  filename.precision(8);
-	  filename << "file" << d_n << "_" << d_timeval << ".dat";
+	  filename << "file" << d_unique_id << "_" << d_n << "_" << d_timeval << ".dat";
 	  d_n++;
 
 	  int fd;
