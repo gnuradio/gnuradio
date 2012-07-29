@@ -251,6 +251,14 @@ namespace gr {
       d_fft->execute();     // compute the fft
       volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(),
 						     size, 1.0, size);
+
+      // Perform shift operation
+      unsigned int len = (unsigned int)(floor(size/2.0));
+      float *tmp = (float*)malloc(sizeof(float)*len);
+      memcpy(tmp, &data_out[0], sizeof(float)*len);
+      memcpy(&data_out[0], &data_out[len], sizeof(float)*(size - len));
+      memcpy(&data_out[size - len], tmp, sizeof(float)*len);
+      free(tmp);
     }
 
     void
