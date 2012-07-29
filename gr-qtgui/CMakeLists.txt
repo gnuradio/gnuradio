@@ -115,6 +115,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python)
     add_subdirectory(examples)
+    add_subdirectory(apps)
 endif(ENABLE_PYTHON)
 
 ########################################################################

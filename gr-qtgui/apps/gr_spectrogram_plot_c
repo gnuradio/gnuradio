@@ -39,8 +39,11 @@ except ImportError:
     print "Error: Scipy required (www.scipy.org)."
     sys.exit(1)
 
-from plot_form import *
-    
+try:
+    from gnuradio.qtgui.plot_form import *
+except ImportError:
+    from plot_form import *
+
 def read_samples_and_pad(filename, start, in_size, min_size):
     # Read in_size number of samples from file
     fhandle = open(filename, 'r')
@@ -76,24 +79,24 @@ class my_top_block(gr.top_block):
 
         self.qapp = QtGui.QApplication(sys.argv)
 
-        self.gui_snk = qtgui.freq_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                         self._center_freq, self._samp_rate,
-                                         "GNU Radio PSD Plot", self._nsigs)
+        self.skip = gr.skiphead(gr.sizeof_gr_complex, self._start)
+        self.add = gr.add_cc()
+        self.gui_snk = qtgui.waterfall_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                              self._center_freq, self._samp_rate,
+                                              "GNU Radio Spectrogram Plot")
         n = 0
         self.srcs = list()
         for f in filelist:
             data = read_samples_and_pad(f, self._start,
                                         self._nsamps, self._psd_size)
             self.srcs.append(gr.vector_source_c(data))
-
-            # Set default labels based on file names
-            self.gui_snk.set_title(n, "{0}".format(f))
             n += 1
 
-        self.connect(self.srcs[0], (self.gui_snk, 0))
+        self.connect(self.add, self.skip)
+        self.connect(self.skip, (self.gui_snk, 0))
 
-        for i,s in enumerate(self.srcs[1:]):
-            self.connect(s, (self.gui_snk, i+1))
+        for i,s in enumerate(self.srcs):
+            self.connect(s, (self.add, i))
 
         self.gui_snk.set_update_time(0);
         self.gui_snk.set_fft_average(self._avg)
@@ -120,7 +123,7 @@ class my_top_block(gr.top_block):
         self.start()
 
 def main():
-    description = "Plots the PSDs of a list of files."
+    description = "Plots the spectrogram (waterfall) of a list of files. Files are a binary list of complex floats."
     parser = OptionParser(option_class=eng_option, description=description,
                           conflict_handler="resolve")
     parser.add_option("-N", "--nsamples", type="int", default=None,
@@ -159,7 +162,7 @@ def main():
                       options.start, nsamples, max_nsamples,
                       options.average);
 
-    main_box = dialog_box(tb, 'GNU Radio PSD Plot')
+    main_box = dialog_box(tb, 'GNU Radio Spectrogram Plot')
     main_box.show()
 
     tb.run()
