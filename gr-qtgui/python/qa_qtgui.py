@@ -58,11 +58,11 @@ class test_qtgui(gr_unittest.TestCase):
 
     def test07(self):
         self.qtsnk = qtgui.waterfall_sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                            0, 1, "Test", 1)
+                                            0, 1, "Test")
 
     def test08(self):
         self.qtsnk = qtgui.waterfall_sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                            0, 1, "Test", 1)
+                                            0, 1, "Test")
 
     def test09(self):
         self.qtsnk = qtgui.const_sink_c(1024, "Test", 1)
