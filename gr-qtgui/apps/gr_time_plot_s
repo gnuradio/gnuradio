@@ -85,7 +85,8 @@ class gr_time_plot_f(gr.top_block):
             self.cnvrt.append(gr.short_to_float(1, self._scale))
 
             # Set default labels based on file names
-            self.gui_snk.set_title(n, "{0}".format(f))
+            fname = f.split("/")[-1]
+            self.gui_snk.set_title(n, "{0}".format(fname))
             n += 1
 
         self.connect(self.srcs[0], self.cnvrt[0], self.skip)
