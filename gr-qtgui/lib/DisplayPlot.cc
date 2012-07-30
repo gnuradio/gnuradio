@@ -145,7 +145,7 @@ DisplayPlot::setLineWidth(int which, int width)
 
   // Scale the marker size proportionally
 #if QWT_VERSION < 0x060000
-  QwtSymbol *sym = (QwtSymbol*)&_plot_curve[which]->symbol()
+  QwtSymbol *sym = (QwtSymbol*)&_plot_curve[which]->symbol();
   sym->setSize(7+10*log10(width), 7+10*log10(width));
   _plot_curve[which]->setSymbol(*sym);
 #else
@@ -166,9 +166,15 @@ DisplayPlot::setLineStyle(int which, Qt::PenStyle style)
 void
 DisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
 {
+#if QWT_VERSION < 0x060000
+  QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+  sym.setStyle(marker);
+  _plot_curve[which]->setSymbol(sym);
+#else
   QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
   sym->setStyle(marker);
   _plot_curve[which]->setSymbol(sym);
+#endif
 }
 
 void
