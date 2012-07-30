@@ -39,7 +39,10 @@ except ImportError:
     print "Error: Scipy required (www.scipy.org)."
     sys.exit(1)
 
-from plot_form import *
+try:
+    from gnuradio.qtgui.plot_form import *
+except ImportError:
+    from plot_form import *
 
 def read_samples(filename, start, in_size):
     # Read in_size number of samples from file
