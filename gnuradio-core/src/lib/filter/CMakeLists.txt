@@ -210,6 +210,9 @@ elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
         ${CMAKE_CURRENT_SOURCE_DIR}/qa_dotprod_powerpc.cc
     )
 elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm")
+    if(have_mfpu_neon)
+        add_definitions(-DHAVE_MFPU_NEON)
+    endif()
     list(APPEND gnuradio_core_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/sysconfig_armv7_a.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_fir_sysconfig_armv7_a.cc
