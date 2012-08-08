@@ -37,7 +37,7 @@ gr_p2_round_down(size_t x, size_t pow2)
 }
 
 
-#if 0
+#ifndef HAVE_MFPU_NEON
 
 void
 dotprod_ccf_armv7_a(const float *a, const float *b, float *res, size_t n)

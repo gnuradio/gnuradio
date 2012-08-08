@@ -37,7 +37,7 @@
   excess_bw=$excess_bw,
   phase_bw=$phase_bw,
   timing_bw=$timing_bw,
-  gray_coded=$gray_coded,
+  mod_code=$mod_code,
   verbose=$verbose,
   log=$log,
   )</make>
@@ -93,7 +93,7 @@
   </param>
   <param>
     <name>Gray Code</name>
-    <key>gray_coded</key>
+    <key>mod_code</key>
     <type>enum</type>
     <option>
       <name>Yes</name>

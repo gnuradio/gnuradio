@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Polyphase Filter based Clock Sync
+###################################################
+ -->
+<block>
+	<name>Polyphase Clock Sync</name>
+	<key>digital_pfb_clock_sync_xxx</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.pfb_clock_sync_$(type)($sps, $alpha, $taps, $filter_size, $init_phase, $max_dev, $osps)
+self.$(id).set_beta($beta)</make>
+	<callback>set_taps($taps)</callback>
+	<callback>set_alpha($alpha)</callback>
+	<callback>set_beta($beta)</callback>
+
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex->Complex (Real Taps)</name>
+			<key>ccf</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+			<opt>taps:real_vector</opt>
+		</option>
+		<option>
+			<name>Float->Float (Real Taps)</name>
+			<key>fff</key>
+			<opt>input:float</opt>
+			<opt>output:float</opt>
+			<opt>taps:real_vector</opt>
+		</option>
+	</param>
+
+	<param>
+		<name>Samples/Symbol</name>
+		<key>sps</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Beta</name>
+		<key>beta</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Filter Size</name>
+		<key>filter_size</key>
+		<value>32</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Initial Phase</name>
+		<key>init_phase</key>
+		<value>16</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Maximum Rate Deviation</name>
+		<key>max_dev</key>
+		<value>1.5</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Output SPS</name>
+		<key>osps</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+	<source>
+		<name>err</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+	<source>
+		<name>rate</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+	<source>
+		<name>phase</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+</block>

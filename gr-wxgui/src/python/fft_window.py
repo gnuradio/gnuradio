@@ -300,6 +300,8 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		#initial update
 		self.update_grid()
 
+	def set_callback(self,callb):
+		self.plotter.set_callback(callb)
 
 	def autoscale(self, *args):
 		"""

@@ -40,7 +40,7 @@ namespace gr {
        * \brief Goertzel single-bin DFT calculation.
        * \ingroup dft_blk
        */
-      static FFT_API sptr make(int rate, int len, float freq);
+      static sptr make(int rate, int len, float freq);
 
       virtual void set_freq (float freq) = 0;
 

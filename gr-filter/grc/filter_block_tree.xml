@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright 2012 Free Software Foundation, Inc.
+ 
+ This file is part of GNU Radio
+ 
+ GNU Radio is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3, or (at your option)
+ any later version.
+ 
+ GNU Radio is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with GNU Radio; see the file COPYING.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street,
+ Boston, MA 02110-1301, USA.
+-->
+
+<!--
+###################################################
+##Block Tree for GR Filter blocks.
+###################################################
+ -->
+<cat>
+	<name></name> <!-- Blank for Root Name -->
+	<cat>
+		<name>Filters</name>
+		<block>dc_blocker_xx</block>
+		<block>fft_filter_xxx</block>
+		<block>fir_filter_xxx</block>
+		<block>filter_delay_fc</block>
+		<block>fractional_interpolator_xx</block>
+		<block>freq_xlating_fir_filter_xxx</block>
+		<block>hilbert_fc</block>
+		<block>iir_filter_ffd</block>
+		<block>interp_fir_filter_xxx</block>
+		<block>pfb_arb_resampler_xxx</block>
+		<block>pfb_channelizer_ccf</block>
+		<block>pfb_decimator_ccf</block>
+		<block>pfb_interpolator_ccf</block>
+		<block>pfb_synthesizer_ccf</block>
+		<block>rational_resampler_base_xxx</block>
+		<block>single_pole_iir_filter_xx</block>
+		<block>channel_model</block>
+	</cat>
+</cat>

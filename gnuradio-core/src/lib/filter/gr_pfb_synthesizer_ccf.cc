@@ -74,6 +74,7 @@ gr_pfb_synthesizer_ccf::gr_pfb_synthesizer_ccf
 
 gr_pfb_synthesizer_ccf::~gr_pfb_synthesizer_ccf ()
 {
+  delete d_fft;
   for(unsigned int i = 0; i < d_twox*d_numchans; i++) {
     delete d_filters[i];
   }

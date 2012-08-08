@@ -37,6 +37,10 @@ ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
     ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
 )
 
+add_custom_target(general_generated DEPENDS
+    ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
+)
+
 ########################################################################
 # Handle the generated constants
 ########################################################################
@@ -47,9 +51,6 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
 message(STATUS "Loading build date ${BUILD_DATE} into gr_constants...")
 
 message(STATUS "Loading version ${VERSION} into gr_constants...")
-
-file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}"     SYSCONFDIR)
-file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/${GR_PKG_CONF_DIR}" GR_PREFSDIR)
 
 #double escape for windows backslash path separators
 string(REPLACE "\\" "\\\\" prefix ${prefix})
@@ -228,6 +229,7 @@ set(gr_core_general_triple_threats
     gr_interleaved_short_to_complex
     gr_iqcomp_cc
     gr_keep_one_in_n
+    gr_keep_m_in_n
     gr_kludge_copy
     gr_lfsr_32k_source_s
     gr_map_bb
@@ -281,16 +283,20 @@ set(gr_core_general_triple_threats
     gr_transcendental
     gr_uchar_to_float
     gr_vco_f
+    gr_vector_map
     gr_vector_to_stream
     gr_vector_to_streams
     gr_unpack_k_bits_bb
+    gr_pack_k_bits_bb
     gr_descrambler_bb
     gr_scrambler_bb
     gr_probe_density_b
     gr_annotator_alltoall
     gr_annotator_1to1
+    gr_annotator_raw
     gr_burst_tagger
     gr_correlate_access_code_tag_bb
+    gr_tag_debug
 )
 
 foreach(file_tt ${gr_core_general_triple_threats})

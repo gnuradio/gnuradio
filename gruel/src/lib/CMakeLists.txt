@@ -80,8 +80,14 @@ list(APPEND gruel_sources
     thread_group.cc
 )
 
+list(APPEND gruel_libs ${Boost_LIBRARIES})
+
+if(HAVE_PTHREAD_SETSCHEDPARAM)
+    list(APPEND gruel_libs pthread)
+endif()
+
 add_library(gruel SHARED ${gruel_sources})
-target_link_libraries(gruel ${Boost_LIBRARIES})
+target_link_libraries(gruel ${gruel_libs})
 GR_LIBRARY_FOO(gruel RUNTIME_COMPONENT "gruel_runtime" DEVEL_COMPONENT "gruel_devel")
 
 ########################################################################

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Probe Density
+###################################################
+ -->
+<block>
+	<name>Probe Density</name>
+	<key>digital_probe_density_b</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.probe_density_b($alpha)</make>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Probe Rate</name>
+		<key>probe_rate</key>
+		<value>10</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+</block>

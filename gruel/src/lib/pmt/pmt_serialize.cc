@@ -79,7 +79,6 @@ serialize_untagged_f64(double i, std::streambuf &sb)
 }
 
 
-#if 0
 // always writes big-endian
 static bool
 serialize_untagged_u64(uint64_t i, std::streambuf &sb)
@@ -93,7 +92,6 @@ serialize_untagged_u64(uint64_t i, std::streambuf &sb)
   sb.sputc((i >>  8) & 0xff);
   return sb.sputc((i >> 0) & 0xff) != std::streambuf::traits_type::eof();
 }
-#endif
 
 // ----------------------------------------------------------------
 // input primitives
@@ -152,7 +150,6 @@ deserialize_untagged_u32(uint32_t *ip, std::streambuf &sb)
   return t != std::streambuf::traits_type::eof();
 }
 
-#if 0
 // always reads big-endian
 static bool
 deserialize_untagged_u64(uint64_t *ip, std::streambuf &sb)
@@ -181,7 +178,6 @@ deserialize_untagged_u64(uint64_t *ip, std::streambuf &sb)
   *ip = i;
   return t != std::streambuf::traits_type::eof();
 }
-#endif
 
 static bool
 deserialize_untagged_f64(double *ip, std::streambuf &sb)
@@ -215,6 +211,24 @@ deserialize_untagged_f64(double *ip, std::streambuf &sb)
 
   *ip = iu.id;
   return t != std::streambuf::traits_type::eof();
+}
+
+static bool
+deserialize_tuple(pmt_t *tuple, std::streambuf &sb)
+{
+    uint32_t nitems;
+    bool ok = deserialize_untagged_u32(&nitems, sb);
+    pmt_t list(PMT_NIL);
+    for(uint32_t i=0; i<nitems; i++){   
+        pmt_t item = pmt_deserialize( sb );
+        if(pmt_eq(list, PMT_NIL)){
+            list = pmt_list1(item);
+        } else {
+            list = pmt_list_add(list, item);
+        }
+    }
+    (*tuple) = pmt_to_tuple(list);
+    return ok;
 }
 
 
@@ -260,7 +274,13 @@ pmt_serialize(pmt_t obj, std::streambuf &sb)
   }
 
   if (pmt_is_number(obj)){
-
+    
+    if (pmt_is_uint64(obj)){
+        uint64_t i = pmt_to_uint64(obj);
+        ok = serialize_untagged_u8(PST_UINT64, sb);
+        ok &= serialize_untagged_u64(i, sb);
+        return ok;
+        } else 
     if (pmt_is_integer(obj)){
       long i = pmt_to_long(obj);
       if (sizeof(long) > 4){
@@ -298,6 +318,16 @@ pmt_serialize(pmt_t obj, std::streambuf &sb)
   if (pmt_is_dict(obj))
     throw pmt_notimplemented("pmt_serialize (dict)", obj);
 
+  if (pmt_is_tuple(obj)){
+    size_t tuple_len = pmt::pmt_length(obj);
+    ok = serialize_untagged_u8(PST_TUPLE, sb);
+    ok &= serialize_untagged_u32(tuple_len, sb);
+    for(size_t i=0; i<tuple_len; i++){
+        ok &= pmt_serialize(pmt_tuple_ref(obj, i), sb);
+    }
+    return ok;
+  }
+  //throw pmt_notimplemented("pmt_serialize (tuple)", obj);
 
   throw pmt_notimplemented("pmt_serialize (?)", obj);
 }
@@ -315,7 +345,7 @@ pmt_deserialize(std::streambuf &sb)
   //uint8_t	u8;
   uint16_t	u16;
   uint32_t	u32;
-  //uint32_t	u64;
+  uint64_t	u64;
   double	f64;
   static char   tmpbuf[1024];
 
@@ -347,6 +377,11 @@ pmt_deserialize(std::streambuf &sb)
       goto error;
     return pmt_from_long((int32_t) u32);
 
+  case PST_UINT64:
+    if(!deserialize_untagged_u64(&u64, sb))
+        goto error;
+    return pmt_from_uint64(u64);
+
   case PST_PAIR:
     return parse_pair(sb);
 
@@ -361,6 +396,15 @@ pmt_deserialize(std::streambuf &sb)
     if(!deserialize_untagged_f64(&r, sb) && !deserialize_untagged_f64(&i, sb))
       goto error;
     return pmt_make_rectangular( r,i );
+    }
+    
+  case PST_TUPLE:
+    {
+    pmt_t tuple;
+    if(!deserialize_tuple(&tuple, sb)){
+      goto error;
+    }
+    return tuple;
     }
 
   case PST_VECTOR:

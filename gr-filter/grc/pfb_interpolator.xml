@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Polyphase Interpolator
+###################################################
+ -->
+<block>
+	<name>Polyphase Interpolator</name>
+	<key>pfb_interpolator_ccf</key>
+	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>filter.pfb.interpolator_ccf(
+	  $interp,
+	  $taps)
+	</make>
+           <callback>set_taps($taps)</callback>
+	<param>
+		<name>Interpolation</name>
+		<key>interp</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<value>None</value>
+		<type>real_vector</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

@@ -76,7 +76,7 @@ install(
 ########################################################################
 install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-wxgui.conf
-    DESTINATION ${GR_PKG_CONF_DIR}
+    DESTINATION ${GR_PREFSDIR}
     COMPONENT "wxgui"
 )
 

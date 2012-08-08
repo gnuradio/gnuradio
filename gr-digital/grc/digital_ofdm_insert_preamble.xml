@@ -48,10 +48,16 @@
 	<sink>
 		<name>flag</name>
 		<type>byte</type>
+        <optional>1</optional>
 	</sink>
 	<source>
 		<name>out</name>
 		<type>complex</type>
 		<vlen>$fft_length</vlen>
+	</source>
+	<source>
+		<name>flag</name>
+		<type>byte</type>
+        <optional>1</optional>
 	</source>
 </block>

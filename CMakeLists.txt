@@ -41,7 +41,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    6)
-set(VERSION_INFO_MINOR_VERSION 1)
+set(VERSION_INFO_MINOR_VERSION 2)
 set(VERSION_INFO_MAINT_VERSION git)
 include(GrVersion) #setup version info
 
@@ -107,6 +107,8 @@ set(GR_PKG_CONF_DIR     ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d)
 set(GR_LIBEXEC_DIR      libexec)
 set(GR_PKG_LIBEXEC_DIR  ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME})
 set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
+set(SYSCONFDIR          "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
+set(GR_PREFSDIR         ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d)
 
 ########################################################################
 # Variables replaced when configuring the package config files
@@ -115,6 +117,8 @@ file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}"           prefix)
 file(TO_NATIVE_PATH "\${prefix}"                        exec_prefix)
 file(TO_NATIVE_PATH "\${exec_prefix}/${GR_LIBRARY_DIR}" libdir)
 file(TO_NATIVE_PATH "\${prefix}/${GR_INCLUDE_DIR}"      includedir)
+file(TO_NATIVE_PATH "${SYSCONFDIR}"                     SYSCONFDIR)
+file(TO_NATIVE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
 
 ########################################################################
 # Create uninstall target
@@ -207,9 +211,6 @@ CPACK_COMPONENT("volk_devel"
 add_subdirectory(volk)
 endif(ENABLE_VOLK)
 
-
-GR_VMCIRCBUF()
-
 ########################################################################
 # Distribute the README file
 ########################################################################
@@ -229,6 +230,7 @@ add_subdirectory(gnuradio-core)
 add_subdirectory(grc)
 
 add_subdirectory(gr-fft)
+add_subdirectory(gr-filter)
 add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)

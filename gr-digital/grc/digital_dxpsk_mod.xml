@@ -70,7 +70,7 @@
 		<name>Gray Code</name>
 		<key>gray_coded</key>
 		<value>True</value>
-		<type>bool</type>
+		<type>enum</type>
 		<option>
 			<name>Yes</name>
 			<key>True</key>

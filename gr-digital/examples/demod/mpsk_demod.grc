@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Apr  3 18:01:57 2012</timestamp>
+  <timestamp>Thu Jul  5 16:28:45 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -42,6 +42,10 @@
     <param>
       <key>run</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
     </param>
     <param>
       <key>realtime_scheduling</key>
@@ -403,6 +407,10 @@
     <param>
       <key>notebook</key>
       <value>notebook, 1</value>
+    </param>
+    <param>
+      <key>freqvar</key>
+      <value>None</value>
     </param>
     <param>
       <key>_coordinate</key>
