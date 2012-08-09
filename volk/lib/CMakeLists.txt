@@ -55,6 +55,17 @@ if(NOT DEFINED COMPILER_NAME)
 endif()
 
 ########################################################################
+# Special clang flag so flag checks can fail
+########################################################################
+if(COMPILER_NAME MATCHES "GNU")
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("-Werror=unused-command-line-argument" HAVE_WERROR_UNUSED_CMD_LINE_ARG)
+    if(HAVE_WERROR_UNUSED_CMD_LINE_ARG)
+        set(VOLK_FLAG_CHECK_FLAGS "-Werror=unused-command-line-argument")
+    endif()
+endif()
+
+########################################################################
 # detect x86 flavor of CPU
 ########################################################################
 if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(i.86|x86|x86_64|amd64)$")
@@ -82,7 +93,9 @@ macro(check_arch arch_name)
             COMMAND ${PYTHON_EXECUTABLE} -c "import re; print(re.sub('\\W', '_', '${have_flag}'))"
             OUTPUT_VARIABLE have_flag OUTPUT_STRIP_TRAILING_WHITESPACE
         )
+        set(CMAKE_REQUIRED_FLAGS VOLK_FLAG_CHECK_FLAGS)
         CHECK_CXX_COMPILER_FLAG(${flag} ${have_flag})
+        unset(CMAKE_REQUIRED_FLAGS)
         if (NOT ${have_flag})
             set(have_${arch_name} FALSE)
         endif()
