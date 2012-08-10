@@ -23,12 +23,13 @@
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
 )
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
-
 
 ########################################################################
 # generate helper scripts to expand templated files
@@ -95,8 +96,8 @@ list(APPEND gr_digital_sources
     #impl_mpsk_snr_est.cc
     additive_scrambler_bb_impl.cc
     binary_slicer_fb_impl.cc
-    #clock_recovery_mm_cc_impl.cc
-    #clock_recovery_mm_ff_impl.cc
+    clock_recovery_mm_cc_impl.cc
+    clock_recovery_mm_ff_impl.cc
     #cma_equalizer_cc_impl.cc
     #constellation_impl.cc
     #constellation_receiver_cb_impl.cc

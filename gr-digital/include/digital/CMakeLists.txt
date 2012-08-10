@@ -80,8 +80,8 @@ install(FILES
 #    impl_mpsk_snr_est.h
     additive_scrambler_bb.h
     binary_slicer_fb.h
-#    clock_recovery_mm_cc.h
-#    clock_recovery_mm_ff.h
+    clock_recovery_mm_cc.h
+    clock_recovery_mm_ff.h
 #    cma_equalizer_cc.h
 #    cpmmod_bc.h
 #    constellation.h
