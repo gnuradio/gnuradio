@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2011 Free Software Foundation, Inc.
+ * Copyright 2006,2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,31 +23,33 @@
 #ifndef INCLUDED_DIGITAL_BINARY_SLICER_FB_H
 #define INCLUDED_DIGITAL_BINARY_SLICER_FB_H
 
-#include <digital_api.h>
+#include <digital/api.h>
 #include <gr_sync_block.h>
 
-class digital_binary_slicer_fb;
-typedef boost::shared_ptr<digital_binary_slicer_fb> digital_binary_slicer_fb_sptr;
+namespace gr {
+  namespace digital {
+    
+    /*!
+     * \brief slice float binary symbol outputting 1 bit output
+     * \ingroup converter_blk
+     * \ingroup digital
+     *
+     * x <  0 --> 0
+     * x >= 0 --> 1
+     */
+    class DIGITAL_API binary_slicer_fb : virtual public gr_sync_block
+    {
+    public:
+      // gr::digital::binary_slicer_fb::sptr
+      typedef boost::shared_ptr<binary_slicer_fb> sptr;
 
-DIGITAL_API digital_binary_slicer_fb_sptr digital_make_binary_slicer_fb ();
+      /*!
+       * \brief Make binary symbol slicer block.
+       */
+      sptr make();
+    };
 
-/*!
- * \brief slice float binary symbol outputting 1 bit output
- * \ingroup converter_blk
- * \ingroup digital
- *
- * x <  0 --> 0
- * x >= 0 --> 1
- */
-class DIGITAL_API digital_binary_slicer_fb : public gr_sync_block
-{
-  friend DIGITAL_API digital_binary_slicer_fb_sptr digital_make_binary_slicer_fb ();
-  digital_binary_slicer_fb ();
+  } /* namespace digital */
+} /* namespace gr */
 
- public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
-};
-
-#endif
+#endif /* INCLUDED_DIGITAL_BINARY_SLICER_FB_H */

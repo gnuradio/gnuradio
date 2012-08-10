@@ -29,7 +29,7 @@
 namespace gr {
   namespace digital {
     
-    class DIGITAL_API additive_scrambler_bb_impl
+    class additive_scrambler_bb_impl
       : public additive_scrambler_bb
     {
     private:

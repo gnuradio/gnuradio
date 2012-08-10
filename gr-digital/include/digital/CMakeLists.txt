@@ -79,8 +79,7 @@ install(FILES
 #    impl_glfsr.h
 #    impl_mpsk_snr_est.h
     additive_scrambler_bb.h
-#    binary_slicer_fb.h
-#    bytes_to_syms.h
+    binary_slicer_fb.h
 #    clock_recovery_mm_cc.h
 #    clock_recovery_mm_ff.h
 #    cma_equalizer_cc.h

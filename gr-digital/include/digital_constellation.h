@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_CONSTELLATION_H
 #define	INCLUDED_DIGITAL_CONSTELLATION_H
 
-#include <digital_api.h>
+#include <digital/api.h>
 #include <vector>
 #include <math.h>
 #include <gr_complex.h>

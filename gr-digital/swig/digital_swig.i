@@ -39,9 +39,12 @@
 
 %{
 #include "digital/additive_scrambler_bb.h"
+#include "digital/binary_slicer_fb.h"
 %}
 
 %include "digital/additive_scrambler_bb.h"
+%include "digital/binary_slicer_fb.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
 

@@ -70,5 +70,4 @@ namespace gr {
   } /* namespace digital */
 } /* namespace gr */
 
-
 #endif /* INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_H */
