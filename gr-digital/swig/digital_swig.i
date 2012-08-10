@@ -42,14 +42,17 @@
 #include "digital/binary_slicer_fb.h"
 #include "digital/clock_recovery_mm_cc.h"
 #include "digital/clock_recovery_mm_ff.h"
+#include "digital/cma_equalizer_cc.h"
 %}
 
 %include "digital/additive_scrambler_bb.h"
 %include "digital/binary_slicer_fb.h"
 %include "digital/clock_recovery_mm_cc.h"
 %include "digital/clock_recovery_mm_ff.h"
+%include "digital/cma_equalizer_cc.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
 GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_ff);
+GR_SWIG_BLOCK_MAGIC2(digital, cma_equalizer_cc);

@@ -61,6 +61,8 @@ namespace gr {
      */
     class FILTER_API adaptive_fir_ccc : virtual public gr_sync_decimator
     {
+    protected:
+      
     public:
       // gr::filter::adaptive_fir_ccc::sptr
       typedef boost::shared_ptr<adaptive_fir_ccc> sptr;
@@ -73,7 +75,7 @@ namespace gr {
        * \param taps (complex) filter taps
        */
       static sptr make(const char *name, int decimation,
-				  const std::vector<gr_complex> &taps);
+		       const std::vector<gr_complex> &taps);
 
       virtual void set_taps(const std::vector<gr_complex> &taps) = 0;
       virtual std::vector<gr_complex> taps() const = 0;

@@ -82,7 +82,7 @@ install(FILES
     binary_slicer_fb.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
-#    cma_equalizer_cc.h
+    cma_equalizer_cc.h
 #    cpmmod_bc.h
 #    constellation.h
 #    constellation_receiver_cb.h

@@ -98,7 +98,7 @@ list(APPEND gr_digital_sources
     binary_slicer_fb_impl.cc
     clock_recovery_mm_cc_impl.cc
     clock_recovery_mm_ff_impl.cc
-    #cma_equalizer_cc_impl.cc
+    cma_equalizer_cc_impl.cc
     #constellation_impl.cc
     #constellation_receiver_cb_impl.cc
     #constellation_decoder_cb_impl.cc
