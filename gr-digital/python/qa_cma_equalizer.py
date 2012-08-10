@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
 
 class test_cma_equalizer_fir(gr_unittest.TestCase):
 
@@ -33,7 +33,7 @@ class test_cma_equalizer_fir(gr_unittest.TestCase):
     	
     def transform(self, src_data):
 	SRC = gr.vector_source_c(src_data, False)
-	EQU = digital_swig.cma_equalizer_cc(4, 1.0, .001, 1)
+	EQU = digital.cma_equalizer_cc(4, 1.0, .001, 1)
 	DST = gr.vector_sink_c()
 	self.tb.connect(SRC, EQU, DST)
 	self.tb.run()
@@ -44,7 +44,11 @@ class test_cma_equalizer_fir(gr_unittest.TestCase):
 	src_data      = (1+0j, 0+1j, -1+0j, 0-1j)*1000
 	expected_data = src_data
 	result = self.transform(src_data)
-	self.assertComplexTuplesAlmostEqual(expected_data, result)
+
+        # only test last N samples to allow for settling. Also adjust
+        # for a 1 sample delay in the filter.
+        N = -500
+        self.assertComplexTuplesAlmostEqual(expected_data[N:-1], result[N+1:])
 
 if __name__ == "__main__":
     gr_unittest.run(test_cma_equalizer_fir, "test_cma_equalizer_fir.xml")

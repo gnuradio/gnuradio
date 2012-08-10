@@ -24,6 +24,11 @@ import math
 from numpy import fft
 from gnuradio import gr
 
+try:
+    from gnuradio import filter
+except ImportError:
+    import filter_swig as filter
+
 class ofdm_sync_pn(gr.hier_block2):
     def __init__(self, fft_length, cp_length, logging=False):
         """
@@ -51,19 +56,19 @@ class ofdm_sync_pn(gr.hier_block2):
         # Create a moving sum filter for the corr output
         if 1:
             moving_sum_taps = [1.0 for i in range(fft_length//2)]
-            self.moving_sum_filter = gr.fir_filter_ccf(1,moving_sum_taps)
+            self.moving_sum_filter = filter.fir_filter_ccf(1,moving_sum_taps)
         else:
             moving_sum_taps = [complex(1.0,0.0) for i in range(fft_length//2)]
-            self.moving_sum_filter = gr.fft_filter_ccc(1,moving_sum_taps)
+            self.moving_sum_filter = filter.fft_filter_ccc(1,moving_sum_taps)
 
         # Create a moving sum filter for the input
         self.inputmag2 = gr.complex_to_mag_squared()
         movingsum2_taps = [1.0 for i in range(fft_length//2)]
 
         if 1:
-            self.inputmovingsum = gr.fir_filter_fff(1,movingsum2_taps)
+            self.inputmovingsum = filter.fir_filter_fff(1,movingsum2_taps)
         else:
-            self.inputmovingsum = gr.fft_filter_fff(1,movingsum2_taps)
+            self.inputmovingsum = filter.fft_filter_fff(1,movingsum2_taps)
 
         self.square = gr.multiply_ff()
         self.normalize = gr.divide_ff()
@@ -100,7 +105,7 @@ class ofdm_sync_pn(gr.hier_block2):
 
         # Create a moving sum filter for the corr output
         matched_filter_taps = [1.0/cp_length for i in range(cp_length)]
-        self.matched_filter = gr.fir_filter_fff(1,matched_filter_taps)
+        self.matched_filter = filter.fir_filter_fff(1,matched_filter_taps)
         self.connect(self.normalize, self.matched_filter)
         
         self.connect(self.matched_filter, self.sub1, self.pk_detect)

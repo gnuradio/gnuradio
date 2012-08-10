@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,59 +27,57 @@
 #include <digital_lms_dd_equalizer_cc.h>
 #include <gr_io_signature.h>
 #include <gr_misc.h>
-#include <iostream>
+#include <volk/volk.h>
 
 digital_lms_dd_equalizer_cc_sptr
 digital_make_lms_dd_equalizer_cc(int num_taps, float mu, int sps,
 				 digital_constellation_sptr cnst)
 {
-  return gnuradio::get_initial_sptr(new digital_lms_dd_equalizer_cc(num_taps, mu,
-								    sps, cnst));
+  return gnuradio::get_initial_sptr
+    (new digital_lms_dd_equalizer_cc(num_taps, mu, sps, cnst));
 }
 
 digital_lms_dd_equalizer_cc::digital_lms_dd_equalizer_cc(int num_taps, float mu,
 							 int sps,
 							 digital_constellation_sptr cnst)
-  : gr_adaptive_fir_ccc("lms_dd_equalizer_cc", sps,
-			std::vector<gr_complex>(num_taps, gr_complex(0,0))),
-    d_taps(num_taps), d_cnst(cnst)
+  : gr_sync_decimator("lms_dd_equalizer_cc",
+		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		      sps),
+    gr::filter::kernel::adaptive_fir_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0,0))),
+    d_cnst(cnst)
 {
   set_gain(mu);
-  if (num_taps > 0)
-    d_taps[num_taps/2] = 1.0;
+  if(num_taps > 0)
+    d_taps[0] = 1.0;
+  set_taps(d_taps);
+
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(gr_complex);
+  set_alignment(std::max(1,alignment_multiple));
+  set_history(num_taps+1);
 }
 
-
-
-
-/*
 int
-digital_lms_dd_equalizer_cc::work (int noutput_items,
-				   gr_vector_const_void_star &input_items,
-				   gr_vector_void_star &output_items)
+digital_lms_dd_equalizer_cc::work(int noutput_items,
+				  gr_vector_const_void_star &input_items,
+				  gr_vector_void_star &output_items)
 {
-  const gr_complex *in = (const gr_complex *) input_items[0];
-  gr_complex *out = (gr_complex *) output_items[0];
-  
-  gr_complex acc, decision, error;
+  const gr_complex *in = (const gr_complex *)input_items[0];
+  gr_complex *out = (gr_complex *)output_items[0];
 
+  int j = 0;
+  size_t l = d_taps.size();
   for(int i = 0; i < noutput_items; i++) {
-    acc = 0;
+    out[i] = filter(&in[j]);
 
-    // Compute output
-    for (size_t j=0; j < d_taps.size(); j++) 
-      acc += in[i+j] * conj(d_taps[j]);
-    
-    d_cnst->map_to_points(d_cnst->decision_maker(&acc), &decision);
-    error = decision - acc;
-    
-    //  Update taps
-    for (size_t j=0; j < d_taps.size(); j++)
-      d_taps[j] += d_mu * conj(error) * in[i+j];
-    
-    out[i] = acc;
+    d_error = error(out[i]);
+    for(size_t k=0; k < l; k++) {
+      update_tap(d_taps[k], in[i+k]);
+    }
+
+    j += decimation();
   }
 
   return noutput_items;
 }
-*/

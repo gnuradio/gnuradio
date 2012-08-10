@@ -21,7 +21,8 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
+import filter_swig as filter
 import random, math
 
 class test_fll_band_edge_cc(gr_unittest.TestCase):
@@ -49,14 +50,14 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         random.seed(0)
         data = [2.0*random.randint(0, 2) - 1.0 for i in xrange(200)]
         self.src = gr.vector_source_c(data, False)
-        self.rrc = gr.interp_fir_filter_ccf(sps, rrc_taps)
+        self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
 
         # Mix symbols with a complex sinusoid to spin them
         self.nco = gr.sig_source_c(1, gr.GR_SIN_WAVE, foffset, 1)
         self.mix = gr.multiply_cc()
 
         # FLL will despin the symbols to an arbitrary phase
-        self.fll = digital_swig.fll_band_edge_cc(sps, rolloff, ntaps, bw)
+        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw)
 
         # Create sinks for all outputs of the FLL
         # we will only care about the freq and error outputs

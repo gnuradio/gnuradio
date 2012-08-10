@@ -28,7 +28,7 @@ Demodulation is not included since the generic_mod_demod
 from gnuradio import gr
 from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
 from utils import mod_codes
-import digital_swig
+import digital_swig as digital
 import modulation_utils
 
 # The default encoding (e.g. gray-code, set-partition)
@@ -41,7 +41,7 @@ _def_mod_code = mod_codes.GRAY_CODE
 def qpsk_constellation(mod_code=_def_mod_code): 
     if mod_code != mod_codes.GRAY_CODE:
         raise ValueError("This QPSK mod/demod works only for gray-coded constellations.")
-    return digital_swig.constellation_qpsk()
+    return digital.constellation_qpsk()
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QPSK modulator
@@ -62,12 +62,12 @@ class qpsk_mod(generic_mod):
         
         pre_diff_code = True
         if not differential:
-            constellation = digital_swig.constellation_qpsk()
+            constellation = digital.constellation_qpsk()
             if mod_code != mod_codes.GRAY_CODE:
                 raise ValueError("This QPSK mod/demod works only for gray-coded constellations.")
         else:
-            constellation = digital_swig.constellation_dqpsk()
-            if mod_code not in (mod_codes.GRAY_CODE or mod_codes.NO_CODE):
+            constellation = digital.constellation_dqpsk()
+            if mod_code not in set([mod_codes.GRAY_CODE, mod_codes.NO_CODE]):
                 raise ValueError("That mod_code is not supported for DQPSK mod/demod.")
             if mod_code == mod_codes.NO_CODE:
                 pre_diff_code = False
@@ -98,12 +98,12 @@ class qpsk_demod(generic_demod):
 
         pre_diff_code = True
         if not differential:
-            constellation = digital_swig.constellation_qpsk()
+            constellation = digital.constellation_qpsk()
             if mod_code != mod_codes.GRAY_CODE:
                 raise ValueError("This QPSK mod/demod works only for gray-coded constellations.")
         else:
-            constellation = digital_swig.constellation_dqpsk()
-            if mod_code not in (mod_codes.GRAY_CODE or mod_codes.NO_CODE):
+            constellation = digital.constellation_dqpsk()
+            if mod_code not in set([mod_codes.GRAY_CODE, mod_codes.NO_CODE]):
                 raise ValueError("That mod_code is not supported for DQPSK mod/demod.")
             if mod_code == mod_codes.NO_CODE:
                 pre_diff_code = False
@@ -121,7 +121,7 @@ class qpsk_demod(generic_demod):
 def dqpsk_constellation(mod_code=_def_mod_code):
     if mod_code != mod_codes.GRAY_CODE:
         raise ValueError("The DQPSK constellation is only generated for gray_coding.  But it can be used for non-grayed coded modulation if one doesn't use the pre-differential code.")
-    return digital_swig.constellation_dqpsk()
+    return digital.constellation_dqpsk()
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           DQPSK modulator
@@ -138,7 +138,7 @@ class dqpsk_mod(qpsk_mod):
 
         See generic_mod block for list of parameters.
 	"""
-        super(dqpsk_mod, self).__init__(mod_code, differential=True,
+        super(dqpsk_mod, self).__init__(mod_code,
                                         *args, **kwargs)
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -158,7 +158,7 @@ class dqpsk_demod(qpsk_demod):
 
         See generic_demod block for list of parameters.
         """
-        super(dqpsk_demod, self).__init__(mod_code, differential=True,
+        super(dqpsk_demod, self).__init__(mod_code,
                                           *args, **kwargs)
 
 #

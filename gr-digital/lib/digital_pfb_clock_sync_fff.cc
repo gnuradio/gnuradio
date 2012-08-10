@@ -28,8 +28,6 @@
 #include <cmath>
 
 #include <digital_pfb_clock_sync_fff.h>
-#include <gr_fir_fff.h>
-#include <gr_fir_util.h>
 #include <gr_io_signature.h>
 #include <gr_math.h>
 
@@ -82,14 +80,14 @@ digital_pfb_clock_sync_fff::digital_pfb_clock_sync_fff (double sps, float loop_b
   d_rate_f = d_rate - (float)d_rate_i;
   d_filtnum = (int)floor(d_k);
 
-  d_filters = std::vector<gr_fir_fff*>(d_nfilters);
-  d_diff_filters = std::vector<gr_fir_fff*>(d_nfilters);
+  d_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters);
+  d_diff_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters);
 
   // Create an FIR filter for each channel and zero out the taps
   std::vector<float> vtaps(0, d_nfilters);
   for(int i = 0; i < d_nfilters; i++) {
-    d_filters[i] = gr_fir_util::create_gr_fir_fff(vtaps);
-    d_diff_filters[i] = gr_fir_util::create_gr_fir_fff(vtaps);
+    d_filters[i] = new kernel::fir_filter_fff(1, vtaps);
+    d_diff_filters[i] = new kernel::fir_filter_fff(1, vtaps);
   }
 
   // Now, actually set the filters' taps
@@ -208,7 +206,7 @@ digital_pfb_clock_sync_fff::update_gains()
 void
 digital_pfb_clock_sync_fff::set_taps (const std::vector<float> &newtaps,
 				      std::vector< std::vector<float> > &ourtaps,
-				      std::vector<gr_fir_fff*> &ourfilter)
+				      std::vector<kernel::fir_filter_fff*> &ourfilter)
 {
   int i,j;
 

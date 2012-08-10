@@ -1,6 +1,6 @@
-/* -*- c -*- */
+/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,34 +21,40 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
-#include <gr_complex.h>
-#include "complex_dotprod_generic.h"
+
+#include <filter/adaptive_fir.h>
+#include <gr_io_signature.h>
+
+namespace gr {
+  namespace filter {
+    namespace kernel {
+
+      adaptive_fir_ccc::adaptive_fir_ccc(int decimation,
+					 const std::vector<gr_complex> &taps)
+	: fir_filter_ccc(decimation, taps)
+      {
+      }
+
+      adaptive_fir_ccc::~adaptive_fir_ccc()
+      {
+      }
 
 
-void
-complex_dotprod_generic (const short *input,
-		       const float *taps, unsigned n_2_complex_blocks,
-		       float *result)
-{
-  gr_complex sum0(0,0);
-  gr_complex sum1(0,0);
-
-  do {
-    const gr_complex tap0(taps[0], taps[1]);
-    const gr_complex tap1(taps[2], taps[3]);
-
-    sum0 += (float)input[0] * tap0;
-    sum1 += (float)input[1] * tap1;
-
-    input += 4;
-    taps += 8;
-
-  } while (--n_2_complex_blocks != 0);
+      /**************************************************************/
 
 
-  sum0 += sum1;
-  result[0] = sum0.real();
-  result[1] = sum0.imag();
-}
+      adaptive_fir_ccf::adaptive_fir_ccf(int decimation,
+					 const std::vector<float> &taps)
+	: fir_filter_ccf(decimation, taps)
+      {
+      }
+
+      adaptive_fir_ccf::~adaptive_fir_ccf()
+      {
+      }
+
+    } /* namespace kernel */
+  } /* namespace filter */
+} /* namespace gr */

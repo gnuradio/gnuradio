@@ -33,9 +33,9 @@ digital_make_pfb_clock_sync_fff(double sps, float loop_bw,
 class digital_pfb_clock_sync_fff : public gr_block
 {
  public:
-  void set_taps (const std::vector<float> &taps,
-		 std::vector< std::vector<float> > &ourtaps,
-		 std::vector<gr_fir_fff*> &ourfilter);
+  void set_taps(const std::vector<float> &taps,
+		std::vector< std::vector<float> > &ourtaps,
+		std::vector<gr::filter::kernel::fir_filter_fff*> &ourfilter);
 
   std::vector< std::vector<float> > get_taps();
   std::vector< std::vector<float> > get_diff_taps();

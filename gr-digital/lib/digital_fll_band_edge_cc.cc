@@ -40,11 +40,12 @@ float sinc(float x)
 }
 
 digital_fll_band_edge_cc_sptr
-digital_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
-			       int filter_size, float bandwidth)
+digital_make_fll_band_edge_cc(float samps_per_sym, float rolloff,
+			      int filter_size, float bandwidth)
 {
-  return gnuradio::get_initial_sptr(new digital_fll_band_edge_cc (samps_per_sym, rolloff,
-								  filter_size, bandwidth));
+  return gnuradio::get_initial_sptr
+    (new digital_fll_band_edge_cc(samps_per_sym, rolloff,
+				  filter_size, bandwidth));
 }
 
 
@@ -186,8 +187,8 @@ digital_fll_band_edge_cc::design_filter(float samps_per_sym,
 
   // Set the history to ensure enough input items for each filter
   set_history(filter_size+1);
-	d_filter_upper = gr_fir_util::create_gr_fir_ccc(d_taps_upper);
-	d_filter_lower = gr_fir_util::create_gr_fir_ccc(d_taps_lower);
+  d_filter_upper = new gr::filter::kernel::fir_filter_ccc(1, d_taps_upper);
+  d_filter_lower = new gr::filter::kernel::fir_filter_ccc(1, d_taps_lower);
 }
 
 void

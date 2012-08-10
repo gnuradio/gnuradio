@@ -48,7 +48,7 @@ namespace gr {
 					   double epsilon,
 					   const std::vector<gr_complex> &taps,
 					   double noise_seed)
-      : gr_hier_block2("gr_channel_model",
+      : gr_hier_block2("channel_model",
 		       gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		       gr_make_io_signature(1, 1, sizeof(gr_complex)))
     {

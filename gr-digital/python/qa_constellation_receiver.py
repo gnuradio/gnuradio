@@ -24,7 +24,8 @@ import random
 
 from gnuradio import gr, blks2, gr_unittest
 from utils import mod_codes, alignment
-import digital_swig, packet_utils
+import packet_utils
+import filter_swig as filter
 from generic_mod_demod import generic_mod, generic_demod
 
 from qa_constellation import tested_constellations, twod_constell
@@ -130,9 +131,9 @@ class rec_test_tb (gr.top_block):
         mod = generic_mod(constellation, differential=differential)
         # Channel
         if freq_offset:
-            channel = gr.channel_model(NOISE_VOLTAGE, FREQUENCY_OFFSET, TIMING_OFFSET)
+            channel = filter.channel_model(NOISE_VOLTAGE, FREQUENCY_OFFSET, TIMING_OFFSET)
         else:
-            channel = gr.channel_model(NOISE_VOLTAGE, 0, TIMING_OFFSET)            
+            channel = filter.channel_model(NOISE_VOLTAGE, 0, TIMING_OFFSET)            
         # Receiver Blocks
         if freq_offset:
             demod = generic_demod(constellation, differential=differential,

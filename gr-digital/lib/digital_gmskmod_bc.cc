@@ -32,7 +32,8 @@ digital_gmskmod_bc_sptr
 digital_make_gmskmod_bc(unsigned samples_per_sym,
 			double bt, unsigned L)
 {
-  return gnuradio::get_initial_sptr(new digital_gmskmod_bc(samples_per_sym, bt, L));
+  return gnuradio::get_initial_sptr
+    (new digital_gmskmod_bc(samples_per_sym, bt, L));
 }
 
 

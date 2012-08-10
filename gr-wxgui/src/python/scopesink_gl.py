@@ -24,7 +24,7 @@
 ##################################################
 import scope_window
 import common
-from gnuradio import gr
+from gnuradio import gr, filter
 from pubsub import pubsub
 from constants import *
 import math
@@ -43,7 +43,7 @@ class ac_couple_block(gr.hier_block2):
 			gr.io_signature(1, 1, gr.sizeof_float),
 		)
 		#blocks
-		lpf = gr.single_pole_iir_filter_ff(0.0)
+		lpf = filter.single_pole_iir_filter_ff(0.0)
 		sub = gr.sub_ff()
 		mute = gr.mute_ff()
 		#connect

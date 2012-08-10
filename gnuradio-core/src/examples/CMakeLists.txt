@@ -19,6 +19,5 @@
 
 add_subdirectory(mp-sched)
 add_subdirectory(network)
-add_subdirectory(pfb)
 add_subdirectory(tags)
 add_subdirectory(volk_benchmark)

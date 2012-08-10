@@ -22,6 +22,7 @@
 ########################################################################
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ATSC_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -95,6 +96,7 @@ list(APPEND gr_atsc_sources
 )
 
 list(APPEND atsc_libs
+    gnuradio-filter
     gnuradio-core
     ${Boost_LIBRARIES}
 )

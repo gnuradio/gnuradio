@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010 Free Software Foundation, Inc.
+ * Copyright 2010,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,10 +26,9 @@
 #include <digital_api.h>
 #include <gr_hier_block2.h>
 #include <gr_char_to_float.h>
-#include <gr_interp_fir_filter_fff.h>
 #include <gr_frequency_modulator_fc.h>
 #include <gr_cpm.h>
-
+#include <filter/interp_fir_filter_fff.h>
 
 class digital_cpmmod_bc;
 typedef boost::shared_ptr<digital_cpmmod_bc> digital_cpmmod_bc_sptr;
@@ -81,7 +80,7 @@ class DIGITAL_API digital_cpmmod_bc : public gr_hier_block2
   
   std::vector<float> d_taps;
   gr_char_to_float_sptr d_char_to_float;
-  gr_interp_fir_filter_fff_sptr d_pulse_shaper;
+  gr::filter::interp_fir_filter_fff::sptr d_pulse_shaper;
   gr_frequency_modulator_fc_sptr d_fm;
   
 protected:

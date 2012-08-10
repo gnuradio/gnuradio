@@ -23,22 +23,18 @@
 
 GR_SWIG_BLOCK_MAGIC(digital,lms_dd_equalizer_cc)
 
-// retrieve info on the base class, without generating wrappers since
-// the base class has a pure virual method.
-%import "gr_adaptive_fir_ccc.i"
-
-
 digital_lms_dd_equalizer_cc_sptr
-digital_make_lms_dd_equalizer_cc (int num_taps,
-				  float mu, int sps,
-				  digital_constellation_sptr cnst);
+digital_make_lms_dd_equalizer_cc(int num_taps,
+				 float mu, int sps,
+				 digital_constellation_sptr cnst);
 
-class digital_lms_dd_equalizer_cc : public gr_sync_block
+class digital_lms_dd_equalizer_cc :
+    public gr_sync_decimator, public gr::filter::kernel::adaptive_fir_ccc
 {
 private:
-  digital_lms_dd_equalizer_cc (int num_taps,
-			       float mu, int sps,
-			       digital_constellation_sptr cnst);
+  digital_lms_dd_equalizer_cc(int num_taps,
+			      float mu, int sps,
+			      digital_constellation_sptr cnst);
 
 public:
   float get_gain();

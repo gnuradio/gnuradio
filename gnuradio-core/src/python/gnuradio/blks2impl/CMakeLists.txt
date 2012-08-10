@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,17 +22,12 @@ include(GrPython)
 GR_PYTHON_INSTALL(FILES
     __init__.py
     am_demod.py
-    channel_model.py
     filterbank.py
     fm_demod.py
     fm_emph.py
     logpwrfft.py
     nbfm_rx.py
     nbfm_tx.py
-    pfb_arb_resampler.py
-    pfb_channelizer.py
-    pfb_decimator.py
-    pfb_interpolator.py
     rational_resampler.py
     standard_squelch.py
     stream_to_vector_decimator.py

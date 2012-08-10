@@ -21,6 +21,7 @@
 # Setup the include and linker paths
 ########################################################################
 include_directories(
+    ${VOLK_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
@@ -138,7 +139,9 @@ list(APPEND gr_digital_sources
 )
 
 list(APPEND digital_libs
+    volk
     gnuradio-core
+    gnuradio-filter
     ${Boost_LIBRARIES}
 )
 

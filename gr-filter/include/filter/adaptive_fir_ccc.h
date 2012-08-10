@@ -25,7 +25,6 @@
 
 #include <filter/api.h>
 #include <gr_sync_decimator.h>
-#include <filter/fir_filter.h>
 
 namespace gr {
   namespace filter {

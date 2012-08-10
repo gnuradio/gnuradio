@@ -71,6 +71,8 @@ foreach(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
         ${CMAKE_BINARY_DIR}/gr-digital/python
         ${CMAKE_BINARY_DIR}/gr-digital/swig
+        ${CMAKE_BINARY_DIR}/gr-filter/python
+        ${CMAKE_BINARY_DIR}/gr-filter/swig
     )
     set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core gnuradio-digital)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})

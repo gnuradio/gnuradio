@@ -33,7 +33,6 @@ GR_INCLUDE_SUBDIRECTORY(general)
 GR_INCLUDE_SUBDIRECTORY(gengen)
 GR_INCLUDE_SUBDIRECTORY(reed-solomon)
 GR_INCLUDE_SUBDIRECTORY(io)
-GR_INCLUDE_SUBDIRECTORY(hier)
 
 list(APPEND gnuradio_core_sources bug_work_around_6.cc)
 list(APPEND test_gnuradio_core_sources bug_work_around_6.cc)

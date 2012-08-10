@@ -26,6 +26,9 @@
 
 #include <digital_api.h>
 #include <gr_block.h>
+#include <filter/fir_filter.h>
+
+using namespace gr::filter;
 
 class digital_pfb_clock_sync_fff;
 typedef boost::shared_ptr<digital_pfb_clock_sync_fff> digital_pfb_clock_sync_fff_sptr;
@@ -36,8 +39,6 @@ digital_make_pfb_clock_sync_fff(double sps, float gain,
 				float init_phase=0,
 				float max_rate_deviation=1.5,
 				int osps=1);
-
-class gr_fir_fff;
 
 /*!
  * \class digital_pfb_clock_sync_fff
@@ -183,12 +184,12 @@ class DIGITAL_API digital_pfb_clock_sync_fff : public gr_block
   float                             d_alpha;
   float                             d_beta;
 
-  int                               d_nfilters;
-  int                               d_taps_per_filter;
-  std::vector<gr_fir_fff*>          d_filters;
-  std::vector<gr_fir_fff*>          d_diff_filters;
-  std::vector< std::vector<float> > d_taps;
-  std::vector< std::vector<float> > d_dtaps;
+  int                                  d_nfilters;
+  int                                  d_taps_per_filter;
+  std::vector<kernel::fir_filter_fff*> d_filters;
+  std::vector<kernel::fir_filter_fff*> d_diff_filters;
+  std::vector< std::vector<float> >    d_taps;
+  std::vector< std::vector<float> >    d_dtaps;
 
   float                             d_k;
   float                             d_rate;
@@ -230,7 +231,7 @@ public:
    */
   void set_taps(const std::vector<float> &taps,
 		std::vector< std::vector<float> > &ourtaps,
-		std::vector<gr_fir_fff*> &ourfilter);
+		std::vector<kernel::fir_filter_fff*> &ourfilter);
 
   /*!
    * Returns all of the taps of the matched filter

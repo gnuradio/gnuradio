@@ -24,7 +24,7 @@
 ##################################################
 import number_window
 import common
-from gnuradio import gr, blks2
+from gnuradio import gr, blks2, filter
 from pubsub import pubsub
 from constants import *
 
@@ -74,11 +74,11 @@ class _number_sink_base(gr.hier_block2, common.wxgui_hb):
 		if self._real:
 			mult = gr.multiply_const_ff(factor)
 			add = gr.add_const_ff(ref_level)
-			avg = gr.single_pole_iir_filter_ff(1.0)
+			avg = filter.single_pole_iir_filter_ff(1.0)
 		else:
 			mult = gr.multiply_const_cc(factor)
 			add = gr.add_const_cc(ref_level)
-			avg = gr.single_pole_iir_filter_cc(1.0)
+			avg = filter.single_pole_iir_filter_cc(1.0)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(self._item_size, msgq, True)
 		#controller

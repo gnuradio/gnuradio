@@ -45,7 +45,7 @@ set(GR_SWIG_LIBRARIES gnuradio-core)
 
 set(GR_SWIG_TARGET_DEPS general_generated gengen_generated filter_generated pmt_swig)
 
-foreach(what runtime general gengen filter io hier)
+foreach(what runtime general gengen io)
     SET(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${what}_swig_doc.i)
     SET(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../${what} ${CMAKE_CURRENT_BINARY_DIR}/../${what})
     GR_SWIG_MAKE(gnuradio_core_${what} gnuradio_core_${what}.i)

@@ -23,7 +23,7 @@ from math import pi
 from gnuradio import gr
 import gnuradio.gr.gr_threading as _threading
 import packet_utils
-import digital_swig
+import digital_swig as digital
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ class demod_pkts(gr.hier_block2):
             threshold = 12              # FIXME raise exception
 
         self._rcvd_pktq = gr.msg_queue()          # holds packets from the PHY
-        self.correlator = digital_swig.correlate_access_code_bb(access_code, threshold)
+        self.correlator = digital.correlate_access_code_bb(access_code, threshold)
 
         self.framer_sink = digital.framer_sink_1(self._rcvd_pktq)
         self.connect(self, self._demodulator, self.correlator, self.framer_sink)
