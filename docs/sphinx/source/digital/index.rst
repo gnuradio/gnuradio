@@ -25,6 +25,24 @@ Signal Processing Blocks
    gnuradio.digital.gmskmod_bc
    gnuradio.digital.probe_mpsk_snr_est_c
    gnuradio.digital.cpmmod_bc
+   gnuradio.digital.glfsr_source_b
+   gnuradio.digital.glfsr_source_f
+   gnuradio.digital.framer_sink_1
+   gnuradio.digital.additive_scrambler_bb
+   gnuradio.digital.descrambler_bb
+   gnuradio.digital.diff_decoder_bb
+   gnuradio.digital.diff_encoder_bb
+   gnuradio.digital.map_bb
+   gnuradio.digital.scrambler_bb
+   gnuradio.digital.pn_correlator_cc
+   gnuradio.digital.simple_framer
+   gnuradio.digital.bytes_to_syms
+   gnuradio.digital.chunks_to_symbols_bc
+   gnuradio.digital.chunks_to_symbols_bf
+   gnuradio.digital.chunks_to_symbols_ic
+   gnuradio.digital.chunks_to_symbols_if
+   gnuradio.digital.chunks_to_symbols_sc
+   gnuradio.digital.chunks_to_symbols_sf
    gnuradio.digital.generic_demod
    gnuradio.digital.generic_mod
    gnuradio.digital.bpsk.dbpsk_demod

@@ -1,8 +1,6 @@
 gnuradio.gr: Signal Sources
 ===========================
 
-.. autooldblock:: gnuradio.gr.glfsr_source_b
-.. autooldblock:: gnuradio.gr.glfsr_source_f
 .. autooldblock:: gnuradio.gr.lfsr_32k_source_s
 .. autooldblock:: gnuradio.gr.null_source
 .. autooldblock:: gnuradio.gr.noise_source_c
