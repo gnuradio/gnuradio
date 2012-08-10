@@ -17,7 +17,6 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-
 ########################################################################
 # generate helper scripts to expand templated files
 ########################################################################
@@ -36,7 +35,7 @@ if __name__ == '__main__':
     root, inp = sys.argv[1:3]
     for sig in sys.argv[3:]:
         name = re.sub ('X+', sig, root)
-        d = build_utils.standard_dict(name, sig, 'digital')
+        d = build_utils.standard_dict2(name, sig, 'digital')
         build_utils.expand_template(d, inp)
 
 ")
@@ -64,8 +63,8 @@ endmacro(expand_h)
 
 ########################################################################
 # Invoke macro to generate various sources
-########################################################################
-expand_h(digital_chunks_to_symbols_XX         bf bc sf sc if ic)
+#######################################################################
+#expand_h(chunks_to_symbols_XX         bf bc sf sc if ic)
 
 add_custom_target(digital_generated_includes DEPENDS
     ${generated_includes}
@@ -75,55 +74,55 @@ add_custom_target(digital_generated_includes DEPENDS
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
-    digital_api.h
-    digital_impl_glfsr.h
-    digital_impl_mpsk_snr_est.h
-    digital_additive_scrambler_bb.h
-    digital_binary_slicer_fb.h
-    digital_bytes_to_syms.h
-    digital_clock_recovery_mm_cc.h
-    digital_clock_recovery_mm_ff.h
-    digital_cma_equalizer_cc.h
-    digital_cpmmod_bc.h
-    digital_constellation.h
-    digital_constellation_receiver_cb.h
-    digital_constellation_decoder_cb.h
-    digital_correlate_access_code_bb.h
-    digital_correlate_access_code_tag_bb.h
-    digital_costas_loop_cc.h
-    digital_crc32.h
-    digital_descrambler_bb.h
-    digital_diff_decoder_bb.h
-    digital_diff_encoder_bb.h
-    digital_diff_phasor_cc.h
-    digital_framer_sink_1.h
-    digital_fll_band_edge_cc.h
-    digital_glfsr_source_b.h
-    digital_glfsr_source_f.h
-    digital_gmskmod_bc.h
-    digital_lms_dd_equalizer_cc.h
-    digital_kurtotic_equalizer_cc.h
-    digital_map_bb.h
-    digital_metric_type.h
-    digital_mpsk_receiver_cc.h
-    digital_mpsk_snr_est_cc.h
-    digital_ofdm_cyclic_prefixer.h
-    digital_ofdm_frame_acquisition.h
-    digital_ofdm_frame_sink.h
-    digital_ofdm_insert_preamble.h
-    digital_ofdm_mapper_bcv.h
-    digital_ofdm_sampler.h
-    digital_packet_sink.h
-    digital_pfb_clock_sync_ccf.h
-    digital_pfb_clock_sync_fff.h
-    digital_pn_correlator_cc.h
-    digital_probe_density_b.h
-    digital_probe_mpsk_snr_est_c.h
-    digital_scrambler_bb.h
-    digital_simple_framer.h
-    digital_simple_framer_sync.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    ${digital_generated_includes}
+    api.h
+#    impl_glfsr.h
+#    impl_mpsk_snr_est.h
+    additive_scrambler_bb.h
+#    binary_slicer_fb.h
+#    bytes_to_syms.h
+#    clock_recovery_mm_cc.h
+#    clock_recovery_mm_ff.h
+#    cma_equalizer_cc.h
+#    cpmmod_bc.h
+#    constellation.h
+#    constellation_receiver_cb.h
+#    constellation_decoder_cb.h
+#    correlate_access_code_bb.h
+#    correlate_access_code_tag_bb.h
+#    costas_loop_cc.h
+#    crc32.h
+#    descrambler_bb.h
+#    diff_decoder_bb.h
+#    diff_encoder_bb.h
+#    diff_phasor_cc.h
+#    framer_sink_1.h
+#    fll_band_edge_cc.h
+#    glfsr_source_b.h
+#    glfsr_source_f.h
+#    gmskmod_bc.h
+#    lms_dd_equalizer_cc.h
+#    kurtotic_equalizer_cc.h
+#    map_bb.h
+#    metric_type.h
+#    mpsk_receiver_cc.h
+#    mpsk_snr_est_cc.h
+#    ofdm_cyclic_prefixer.h
+#    ofdm_frame_acquisition.h
+#    ofdm_frame_sink.h
+#    ofdm_insert_preamble.h
+#    ofdm_mapper_bcv.h
+#    ofdm_sampler.h
+#    packet_sink.h
+#    pfb_clock_sync_ccf.h
+#    pfb_clock_sync_fff.h
+#    pn_correlator_cc.h
+#    probe_density_b.h
+#    probe_mpsk_snr_est_c.h
+#    scrambler_bb.h
+#    simple_framer.h
+#    simple_framer_sync.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )
 
