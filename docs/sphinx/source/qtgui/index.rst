@@ -3,7 +3,7 @@ gnuradio.qtgui
 
 .. automodule:: gnuradio.qtgui
 
-.. autooldblock:: gnuradio.qtgui.sink_c
-.. autooldblock:: gnuradio.qtgui.sink_f
-.. autooldblock:: gnuradio.qtgui.time_sink_c
-.. autooldblock:: gnuradio.qtgui.time_sink_f
+.. autoblock:: gnuradio.qtgui.sink_c
+.. autoblock:: gnuradio.qtgui.sink_f
+.. autoblock:: gnuradio.qtgui.time_sink_c
+.. autoblock:: gnuradio.qtgui.time_sink_f
