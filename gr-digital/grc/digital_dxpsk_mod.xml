@@ -65,7 +65,6 @@
 	<param>
 		<name>Gray Code</name>
 		<key>mod_code</key>
-		<value>"gray"</value>
 		<type>enum</type>
 		<option>
 			<name>Yes</name>

@@ -46,7 +46,11 @@ GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
     Boost_FOUND
     QT4_FOUND
     QWT_FOUND
+    ENABLE_GRUEL
+    ENABLE_VOLK
     ENABLE_GR_CORE
+    ENABLE_GR_FFT
+    ENABLE_GR_FILTER
     PYTHONLIBS_FOUND
     ${qt_gui_python_deps}
 )
@@ -103,7 +107,7 @@ CPACK_COMPONENT("qtgui_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include)
+add_subdirectory(include/qtgui)
 add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)
@@ -111,6 +115,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python)
     add_subdirectory(examples)
+    add_subdirectory(apps)
 endif(ENABLE_PYTHON)
 
 ########################################################################

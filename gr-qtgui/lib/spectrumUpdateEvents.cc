@@ -3,7 +3,7 @@
 
 #include <spectrumUpdateEvents.h>
 
-SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
+SpectrumUpdateEvent::SpectrumUpdateEvent(const float* fftPoints,
 					 const uint64_t numFFTDataPoints,
 					 const double* realTimeDomainPoints,
 					 const double* imagTimeDomainPoints,
@@ -13,7 +13,7 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
 					 const bool lastOfMultipleUpdateFlag,
 					 const gruel::high_res_timer_type generatedTimestamp,
 					 const int droppedFFTFrames)
-  : QEvent(QEvent::Type(10005))
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
 {
   if(numFFTDataPoints < 1) {
     _numFFTDataPoints = 1;
@@ -29,9 +29,9 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
     _numTimeDomainDataPoints = numTimeDomainDataPoints;
   }
 
-  _fftPoints = new std::complex<float>[_numFFTDataPoints];
-  _fftPoints[0] = std::complex<float>(0,0);
-  memcpy(_fftPoints, fftPoints, numFFTDataPoints*sizeof(std::complex<float>));
+  _fftPoints = new float[_numFFTDataPoints];
+  _fftPoints[0] = 0;
+  memcpy(_fftPoints, fftPoints, numFFTDataPoints*sizeof(float));
 
   _realDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
   memset(_realDataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(double));
@@ -60,7 +60,7 @@ SpectrumUpdateEvent::~SpectrumUpdateEvent()
   delete[] _imagDataTimeDomainPoints;
 }
 
-const std::complex<float>*
+const float*
 SpectrumUpdateEvent::getFFTPoints() const
 {
   return _fftPoints;
@@ -121,7 +121,7 @@ SpectrumUpdateEvent::getDroppedFFTFrames() const
 }
 
 SpectrumWindowCaptionEvent::SpectrumWindowCaptionEvent(const QString& newLbl)
-  : QEvent(QEvent::Type(10008))
+  : QEvent(QEvent::Type(SpectrumWindowCaptionEventType))
 {
   _labelString = newLbl;
 }
@@ -137,7 +137,7 @@ SpectrumWindowCaptionEvent::getLabel()
 }
 
 SpectrumWindowResetEvent::SpectrumWindowResetEvent()
-  : QEvent(QEvent::Type(10009))
+  : QEvent(QEvent::Type(SpectrumWindowResetEventType))
 {
 }
 
@@ -148,7 +148,7 @@ SpectrumWindowResetEvent::~SpectrumWindowResetEvent()
 SpectrumFrequencyRangeEvent::SpectrumFrequencyRangeEvent(const double centerFreq,
 							 const double startFreq,
 							 const double stopFreq)
-  : QEvent(QEvent::Type(10010))
+  : QEvent(QEvent::Type(SpectrumFrequencyRangeEventType))
 {
   _centerFrequency = centerFreq;
   _startFrequency = startFreq;
@@ -179,10 +179,11 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 
 
 /***************************************************************************/
-#include <iostream>
+
+
 TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
 				 const uint64_t numTimeDomainDataPoints)
-  : QEvent(QEvent::Type(10005))
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
 {
   if(numTimeDomainDataPoints < 1) {
     _numTimeDomainDataPoints = 1;
@@ -218,6 +219,158 @@ uint64_t
 TimeUpdateEvent::getNumTimeDomainDataPoints() const
 {
   return _numTimeDomainDataPoints;
+}
+
+
+/***************************************************************************/
+
+
+FreqUpdateEvent::FreqUpdateEvent(const std::vector<double*> dataPoints,
+				 const uint64_t numDataPoints)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(numDataPoints < 1) {
+    _numDataPoints = 1;
+  }
+  else {
+    _numDataPoints = numDataPoints;
+  }
+
+  _nplots = dataPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _dataPoints.push_back(new double[_numDataPoints]);
+    if(numDataPoints > 0) {
+      memcpy(_dataPoints[i], dataPoints[i],
+	     _numDataPoints*sizeof(double));
+    }
+  }
+}
+
+FreqUpdateEvent::~FreqUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _dataPoints[i];
+  }
+}
+
+const std::vector<double*>
+FreqUpdateEvent::getPoints() const
+{
+  return _dataPoints;
+}
+
+uint64_t
+FreqUpdateEvent::getNumDataPoints() const
+{
+  return _numDataPoints;
+}
+
+
+/***************************************************************************/
+
+
+ConstUpdateEvent::ConstUpdateEvent(const std::vector<double*> realDataPoints,
+				   const std::vector<double*> imagDataPoints,
+				   const uint64_t numDataPoints)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(numDataPoints < 1) {
+    _numDataPoints = 1;
+  }
+  else {
+    _numDataPoints = numDataPoints;
+  }
+
+  _nplots = realDataPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _realDataPoints.push_back(new double[_numDataPoints]);
+    _imagDataPoints.push_back(new double[_numDataPoints]);
+    if(numDataPoints > 0) {
+      memcpy(_realDataPoints[i], realDataPoints[i],
+	     _numDataPoints*sizeof(double));
+      memcpy(_imagDataPoints[i], imagDataPoints[i],
+	     _numDataPoints*sizeof(double));
+    }
+  }
+}
+
+ConstUpdateEvent::~ConstUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _realDataPoints[i];
+    delete[] _imagDataPoints[i];
+  }
+}
+
+const std::vector<double*>
+ConstUpdateEvent::getRealPoints() const
+{
+  return _realDataPoints;
+}
+
+const std::vector<double*>
+ConstUpdateEvent::getImagPoints() const
+{
+  return _imagDataPoints;
+}
+
+uint64_t
+ConstUpdateEvent::getNumDataPoints() const
+{
+  return _numDataPoints;
+}
+
+
+/***************************************************************************/
+
+
+WaterfallUpdateEvent::WaterfallUpdateEvent(const std::vector<double*> dataPoints,
+					   const uint64_t numDataPoints,
+					   const gruel::high_res_timer_type dataTimestamp)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(numDataPoints < 1) {
+    _numDataPoints = 1;
+  }
+  else {
+    _numDataPoints = numDataPoints;
+  }
+
+  _nplots = dataPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _dataPoints.push_back(new double[_numDataPoints]);
+    if(numDataPoints > 0) {
+      memcpy(_dataPoints[i], dataPoints[i],
+	     _numDataPoints*sizeof(double));
+    }
+  }
+
+  _dataTimestamp = dataTimestamp;
+}
+
+WaterfallUpdateEvent::~WaterfallUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _dataPoints[i];
+  }
+}
+
+const std::vector<double*>
+WaterfallUpdateEvent::getPoints() const
+{
+  return _dataPoints;
+}
+
+uint64_t
+WaterfallUpdateEvent::getNumDataPoints() const
+{
+  return _numDataPoints;
+}
+
+gruel::high_res_timer_type
+WaterfallUpdateEvent::getDataTimestamp() const
+{
+  return _dataTimestamp;
 }
 
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

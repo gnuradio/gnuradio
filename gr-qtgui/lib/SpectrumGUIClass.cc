@@ -27,6 +27,7 @@
 //Added by qt3to4:
 #include <QEvent>
 #include <QCustomEvent>
+#include <volk/volk.h>
 
 const long SpectrumGUIClass::MAX_FFT_SIZE = 32768;
 const long SpectrumGUIClass::MIN_FFT_SIZE = 256;
@@ -88,13 +89,12 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
   if(!_windowOpennedFlag){
 
     if(!_fftBuffersCreatedFlag){
-      _fftPoints = new std::complex<float>[_dataPoints];
+      _fftPoints = new float[_dataPoints];
       _realTimeDomainPoints = new double[_dataPoints];
       _imagTimeDomainPoints = new double[_dataPoints];
       _fftBuffersCreatedFlag = true;
-
-
-      memset(_fftPoints, 0x0, _dataPoints*sizeof(std::complex<float>));
+      
+      memset(_fftPoints, 0x0, _dataPoints*sizeof(float));
       memset(_realTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
       memset(_imagTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
     }
@@ -223,7 +223,7 @@ SpectrumGUIClass::GetCenterFrequency()
 
 void
 SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
-			       const std::complex<float>* fftBuffer,
+			       const float* fftBuffer,
 			       const uint64_t inputBufferSize,
 			       const float* realTimeDomainData,
 			       const uint64_t realTimeDomainDataSize,
@@ -242,9 +242,11 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
 
   if(updateDisplayFlag){
     if((fftBuffer != NULL) && (bufferSize > 0)){
-      memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(std::complex<float>));
+      memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(float));
     }
 
+    //ALL OF THIS SHIT SHOULD BE COMBINED WITH THE FFTSHIFT
+    //USE VOLK_32FC_DEINTERLEAVE_64F_X2_A TO GET REAL/IMAG FROM COMPLEX32
     // Can't do a memcpy since ths is going from float to double data type
     if((realTimeDomainData != NULL) && (realTimeDomainDataSize > 0)){
       const float* realTimeDomainDataPtr = realTimeDomainData;
@@ -252,24 +254,18 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
       double* realTimeDomainPointsPtr = _realTimeDomainPoints;
       timeDomainBufferSize = realTimeDomainDataSize;
 
-      memset( _imagTimeDomainPoints, 0x0, realTimeDomainDataSize*sizeof(double));
-      for( uint64_t number = 0; number < realTimeDomainDataSize; number++){
+      memset(_imagTimeDomainPoints, 0x0, realTimeDomainDataSize*sizeof(double));
+      for(uint64_t number = 0; number < realTimeDomainDataSize; number++){
 	*realTimeDomainPointsPtr++ = *realTimeDomainDataPtr++;
       }
     }
 
-    // Can't do a memcpy since ths is going from float to double data type
     if((complexTimeDomainData != NULL) && (complexTimeDomainDataSize > 0)){
-      const float* complexTimeDomainDataPtr = complexTimeDomainData;
-
-      double* realTimeDomainPointsPtr = _realTimeDomainPoints;
-      double* imagTimeDomainPointsPtr = _imagTimeDomainPoints;
-
+      volk_32fc_deinterleave_64f_x2_a(_realTimeDomainPoints,
+                                      _imagTimeDomainPoints,
+				      (const lv_32fc_t *)complexTimeDomainData,
+				      complexTimeDomainDataSize);
       timeDomainBufferSize = complexTimeDomainDataSize;
-      for( uint64_t number = 0; number < complexTimeDomainDataSize; number++){
-	*realTimeDomainPointsPtr++ = *complexTimeDomainDataPtr++;
-	*imagTimeDomainPointsPtr++ = *complexTimeDomainDataPtr++;
-      }
     }
   }
 

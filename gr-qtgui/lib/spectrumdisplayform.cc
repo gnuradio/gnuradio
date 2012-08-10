@@ -24,6 +24,7 @@
 #include <QColorDialog>
 #include <QMessageBox>
 #include <spectrumdisplayform.h>
+#include "qtgui_types.h"
 
 SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   : QWidget(parent)
@@ -33,10 +34,10 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
-  _frequencyDisplayPlot = new FrequencyDisplayPlot(FrequencyPlotDisplayFrame);
-  _waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
+  _frequencyDisplayPlot = new FrequencyDisplayPlot(1, FrequencyPlotDisplayFrame);
+  _waterfallDisplayPlot = new WaterfallDisplayPlot(1, WaterfallPlotDisplayFrame);
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(2, TimeDomainDisplayFrame);
-  _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
+  _constellationDisplayPlot = new ConstellationDisplayPlot(1, ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
   _realFFTDataPoints = new double[_numRealDataPoints];
   _averagedValues = new double[_numRealDataPoints];
@@ -48,13 +49,11 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   AvgLineEdit->setRange(0, 500);                 // Set range of Average box value from 0 to 500
   MinHoldCheckBox_toggled( false );
   MaxHoldCheckBox_toggled( false );
-
-  WaterfallMaximumIntensityWheel->setRange(-200, 0);
-  WaterfallMaximumIntensityWheel->setTickCnt(50);
-  WaterfallMinimumIntensityWheel->setRange(-200, 0);
-  WaterfallMinimumIntensityWheel->setTickCnt(50);
-  WaterfallMinimumIntensityWheel->setValue(-200);
-
+  
+  WaterfallMaximumIntensitySlider->setRange(-200, 0);
+  WaterfallMinimumIntensitySlider->setRange(-200, 0);
+  WaterfallMinimumIntensitySlider->setValue(-200);
+  
   _peakFrequency = 0;
   _peakAmplitude = -HUGE_VAL;
 
@@ -137,11 +136,57 @@ SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem,
   }
 }
 
+/***********************************************************************
+ * This is kind of gross because we're combining three operations:
+ * Conversion from float to double (which is what the plotter wants)
+ * Finding the peak and mean
+ * Doing the "FFT shift" to put 0Hz at the center of the plot
+ * I feel like this might want to be part of the sink block
+ **********************************************************************/
+static void fftshift_and_sum(double *outFFT, const float *inFFT, uint64_t num_points, double &sum_mean, double &peak_ampl, int &peak_bin) {
+  const float* inptr = inFFT+num_points/2;
+  double* outptr = outFFT;
+
+  sum_mean = 0;
+  peak_ampl = -HUGE_VAL;
+  peak_bin = 0;
+
+  // Run this twice to perform the fftshift operation on the data here as well
+  for(uint64_t point = 0; point < num_points/2; point++){
+    float pt = (*inptr);
+    *outptr = pt;
+    if(*outptr > peak_ampl) {
+      peak_bin = point;
+      peak_ampl = *outptr;
+    }
+    sum_mean += *outptr;
+    
+    inptr++;
+    outptr++;
+  }
+  
+  // This loop takes the first half of the input data and puts it in the 
+  // second half of the plotted data
+  inptr = inFFT;
+  for(uint64_t point = 0; point < num_points/2; point++){
+    float pt = (*inptr);
+    *outptr = pt;
+    if(*outptr > peak_ampl) {
+      peak_bin = point;
+      peak_ampl = *outptr;
+    }
+    sum_mean += *outptr;
+
+    inptr++;
+    outptr++;
+  }
+}
+
 void
 SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdateEvent)
 {
   //_lastSpectrumEvent = (SpectrumUpdateEvent)(*spectrumUpdateEvent);
-  const std::complex<float>* complexDataPoints = spectrumUpdateEvent->getFFTPoints();
+  const float* fftMagDataPoints = spectrumUpdateEvent->getFFTPoints();
   const uint64_t numFFTDataPoints = spectrumUpdateEvent->getNumFFTDataPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
   const gruel::high_res_timer_type dataTimestamp = spectrumUpdateEvent->getDataTimestamp();
@@ -158,68 +203,34 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   // REMEMBER: The dataTimestamp is NOT valid when the repeat data flag is true...
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
 
-  // Calculate the Magnitude of the complex point
-  const std::complex<float>* complexDataPointsPtr = complexDataPoints+numFFTDataPoints/2;
-  double* realFFTDataPointsPtr = _realFFTDataPoints;
-
-  double sumMean = 0.0;
-  double localPeakAmplitude = -HUGE_VAL;
-  double localPeakFrequency = 0.0;
   const double fftBinSize = (_stopFrequency-_startFrequency) /
     static_cast<double>(numFFTDataPoints);
 
-  // Run this twice to perform the fftshift operation on the data here as well
-  std::complex<float> scaleFactor = std::complex<float>((float)numFFTDataPoints);
-  for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    std::complex<float> pt = (*complexDataPointsPtr) / scaleFactor;
-    *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
-
-    if(*realFFTDataPointsPtr > localPeakAmplitude) {
-      localPeakFrequency = static_cast<float>(point) * fftBinSize;
-      localPeakAmplitude = *realFFTDataPointsPtr;
-    }
-    sumMean += *realFFTDataPointsPtr;
-
-    complexDataPointsPtr++;
-    realFFTDataPointsPtr++;
-  }
-
-  // This loop takes the first half of the input data and puts it in the
-  // second half of the plotted data
-  complexDataPointsPtr = complexDataPoints;
-  for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    std::complex<float> pt = (*complexDataPointsPtr) / scaleFactor;
-    *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
-
-    if(*realFFTDataPointsPtr > localPeakAmplitude) {
-      localPeakFrequency = static_cast<float>(point) * fftBinSize;
-      localPeakAmplitude = *realFFTDataPointsPtr;
-    }
-    sumMean += *realFFTDataPointsPtr;
-
-    complexDataPointsPtr++;
-    realFFTDataPointsPtr++;
-  }
+  //this does the fftshift, conversion to double, and calculation of sum, peak amplitude, peak freq.
+  double sum_mean, peak_ampl;
+  int peak_bin;
+  fftshift_and_sum(_realFFTDataPoints, fftMagDataPoints, numFFTDataPoints, sum_mean, peak_ampl, peak_bin);
+  double peak_freq = peak_bin * fftBinSize;
 
   // Don't update the averaging history if this is repeated data
   if(!repeatDataFlag){
     _AverageHistory(_realFFTDataPoints);
 
     // Only use the local info if we are not repeating data
-    _peakAmplitude = localPeakAmplitude;
-    _peakFrequency = localPeakFrequency;
+    _peakAmplitude = peak_ampl;
+    _peakFrequency = peak_freq;
 
     // calculate the spectral mean
     // +20 because for the comparison below we only want to throw out bins
     // that are significantly higher (and would, thus, affect the mean more)
-    const double meanAmplitude = (sumMean / numFFTDataPoints) + 20.0;
+    const double meanAmplitude = (sum_mean / numFFTDataPoints) + 20.0;
 
     // now throw out any bins higher than the mean
-    sumMean = 0.0;
+    sum_mean = 0.0;
     uint64_t newNumDataPoints = numFFTDataPoints;
     for(uint64_t number = 0; number < numFFTDataPoints; number++){
       if (_realFFTDataPoints[number] <= meanAmplitude)
-        sumMean += _realFFTDataPoints[number];
+        sum_mean += _realFFTDataPoints[number];
       else
         newNumDataPoints--;
     }
@@ -227,7 +238,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     if (newNumDataPoints == 0)             // in the odd case that all
       _noiseFloorAmplitude = meanAmplitude; // amplitudes are equal!
     else
-      _noiseFloorAmplitude = sumMean / newNumDataPoints;
+      _noiseFloorAmplitude = sum_mean / newNumDataPoints;
   }
 
   if(lastOfMultipleUpdatesFlag){
@@ -296,26 +307,26 @@ SpectrumDisplayForm::customEvent( QEvent * e)
       FFTSizeComboBox->setCurrentIndex(_system->GetFFTSizeIndex());
     }
 
-    waterfallMinimumIntensityChangedCB(WaterfallMinimumIntensityWheel->value());
-    waterfallMaximumIntensityChangedCB(WaterfallMaximumIntensityWheel->value());
+    waterfallMinimumIntensityChangedCB(WaterfallMinimumIntensitySlider->value());
+    waterfallMaximumIntensityChangedCB(WaterfallMaximumIntensitySlider->value());
 
     // Clear any previous display
     Reset();
   }
-  else if(e->type() == 10005){
+  else if(e->type() == SpectrumUpdateEventType){
     SpectrumUpdateEvent* spectrumUpdateEvent = (SpectrumUpdateEvent*)e;
     newFrequencyData(spectrumUpdateEvent);
   }
-  else if(e->type() == 10008){
+  else if(e->type() == SpectrumWindowCaptionEventType){
     setWindowTitle(((SpectrumWindowCaptionEvent*)e)->getLabel());
   }
-  else if(e->type() == 10009){
+  else if(e->type() == SpectrumWindowResetEventType){
     Reset();
     if(_systemSpecifiedFlag){
       _system->ResetPendingGUIUpdateEvents();
     }
   }
-  else if(e->type() == 10010){
+  else if(e->type() == SpectrumFrequencyRangeEventType){
     _startFrequency = ((SpectrumFrequencyRangeEvent*)e)->GetStartFrequency();
     _stopFrequency = ((SpectrumFrequencyRangeEvent*)e)->GetStopFrequency();
     _centerFrequency  = ((SpectrumFrequencyRangeEvent*)e)->GetCenterFrequency();
@@ -535,7 +546,7 @@ SpectrumDisplayForm::closeEvent( QCloseEvent *e )
 
   qApp->processEvents();
 
-  QWidget::closeEvent(e);
+  QWidget::closeEvent(e); //equivalent to e->accept()
 }
 
 
@@ -558,30 +569,30 @@ SpectrumDisplayForm::UseRFFrequenciesCB( bool useRFFlag )
 void
 SpectrumDisplayForm::waterfallMaximumIntensityChangedCB( double newValue )
 {
-  if(newValue > WaterfallMinimumIntensityWheel->value()){
+  if(newValue > WaterfallMinimumIntensitySlider->value()){
     WaterfallMaximumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
   }
   else{
-    WaterfallMaximumIntensityWheel->setValue(WaterfallMinimumIntensityWheel->value());
+    WaterfallMinimumIntensitySlider->setValue(newValue - 2);
   }
 
-  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensityWheel->value(),
-					   WaterfallMaximumIntensityWheel->value());
+  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensitySlider->value(),
+					   WaterfallMaximumIntensitySlider->value());
 }
 
 
 void
 SpectrumDisplayForm::waterfallMinimumIntensityChangedCB( double newValue )
 {
-  if(newValue < WaterfallMaximumIntensityWheel->value()){
+  if(newValue < WaterfallMaximumIntensitySlider->value()){
     WaterfallMinimumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
   }
   else{
-    WaterfallMinimumIntensityWheel->setValue(WaterfallMaximumIntensityWheel->value());
+    WaterfallMaximumIntensitySlider->setValue(newValue + 2);
   }
 
-  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensityWheel->value(),
-					   WaterfallMaximumIntensityWheel->value());
+  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensitySlider->value(),
+					   WaterfallMaximumIntensitySlider->value());
 }
 
 void
@@ -597,15 +608,15 @@ void
 SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
 {
   double minimumIntensity = _noiseFloorAmplitude - 5;
-  if(minimumIntensity < WaterfallMinimumIntensityWheel->minValue()){
-    minimumIntensity = WaterfallMinimumIntensityWheel->minValue();
+  if(minimumIntensity < WaterfallMinimumIntensitySlider->minValue()){
+    minimumIntensity = WaterfallMinimumIntensitySlider->minValue();
   }
-  WaterfallMinimumIntensityWheel->setValue(minimumIntensity);
+  WaterfallMinimumIntensitySlider->setValue(minimumIntensity);
   double maximumIntensity = _peakAmplitude + 10;
-  if(maximumIntensity > WaterfallMaximumIntensityWheel->maxValue()){
-    maximumIntensity = WaterfallMaximumIntensityWheel->maxValue();
+  if(maximumIntensity > WaterfallMaximumIntensitySlider->maxValue()){
+    maximumIntensity = WaterfallMaximumIntensitySlider->maxValue();
   }
-  WaterfallMaximumIntensityWheel->setValue(maximumIntensity);
+  WaterfallMaximumIntensitySlider->setValue(maximumIntensity);
   waterfallMaximumIntensityChangedCB(maximumIntensity);
 }
 
@@ -614,7 +625,7 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
 {
   QColor lowIntensityColor;
   QColor highIntensityColor;
-  if(newType == WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED){
+  if(newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED){
     // Select the Low Intensity Color
     lowIntensityColor = _waterfallDisplayPlot->GetUserDefinedLowIntensityColor();
     if(!lowIntensityColor.isValid()){
@@ -632,7 +643,7 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
     highIntensityColor = QColorDialog::getColor(highIntensityColor, this);
   }
 
-  _waterfallDisplayPlot->SetIntensityColorMapType(newType, lowIntensityColor, highIntensityColor);
+  _waterfallDisplayPlot->SetIntensityColorMapType(0, newType, lowIntensityColor, highIntensityColor);
 }
 
 void

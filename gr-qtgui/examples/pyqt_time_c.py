@@ -145,13 +145,13 @@ class my_top_block(gr.top_block):
         channel = gr.channel_model(0.01)
         thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.time_sink_c(npts, Rs,
-                                      "Complex Time Example", 3)
+                                      "Complex Time Example", 1)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
         self.connect(src,  channel, thr, (self.snk1, 0))
-        self.connect(src1, (self.snk1, 1))
-        self.connect(src2, (self.snk1, 2))
+        #self.connect(src1, (self.snk1, 1))
+        #self.connect(src2, (self.snk1, 2))
 
         self.ctrl_win = control_box()
         self.ctrl_win.attach_signal1(src1)
@@ -169,13 +169,15 @@ class my_top_block(gr.top_block):
                       pyWin, QtCore.SLOT("setTitle(int, QString)"))
         pyWin.emit(QtCore.SIGNAL("setTitle(int, QString)"), 0, "Re{sum}")
         self.snk1.set_title(1, "Im{Sum}")
-        self.snk1.set_title(2, "Re{src1}")
-        self.snk1.set_title(3, "Im{src1}")
-        self.snk1.set_title(4, "Re{src2}")
-        self.snk1.set_title(5, "Im{src2}")
+        #self.snk1.set_title(2, "Re{src1}")
+        #self.snk1.set_title(3, "Im{src1}")
+        #self.snk1.set_title(4, "Re{src2}")
+        #self.snk1.set_title(5, "Im{src2}")
 
         # Can also set the color of a curve
         #self.snk1.set_color(5, "blue")
+
+        self.snk1.set_update_time(0.5)
 
         #pyWin.show()
         self.main_box = dialog_box(pyWin, self.ctrl_win)

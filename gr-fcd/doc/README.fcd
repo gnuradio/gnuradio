@@ -1,7 +1,7 @@
 This is the gr-fcd package. It contains a source block for the
 FunCube Dongle hardware.
 
-The Python namespace is in gnuradio.qtgui, which would be normally
+The Python namespace is in gnuradio.fcd, which would be normally
 imported as:
 
     from gnuradio import fcd

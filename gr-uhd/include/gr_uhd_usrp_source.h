@@ -60,10 +60,16 @@ class uhd_usrp_source;
  *
  * The following tag keys will be produced by the work function:
  *  - pmt::pmt_string_to_symbol("rx_time")
+ *  - pmt::pmt_string_to_symbol("rx_rate")
+ *  - pmt::pmt_string_to_symbol("rx_freq")
  *
  * The timstamp tag value is a pmt tuple of the following:
  * (uint64 seconds, and double fractional seconds).
  * A timestamp tag is produced at start() and after overflows.
+ *
+ * The sample rate and center frequency tags are doubles,
+ * representing the sample rate in Sps and frequency in Hz.
+ * These tags are produced upon the user changing parameters.
  *
  * See the UHD manual for more detailed documentation:
  * http://code.ettus.com/redmine/ettus/projects/uhd/wiki

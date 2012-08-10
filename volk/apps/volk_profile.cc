@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
     //VOLK_PROFILE(volk_16i_permute_and_scalar_add_a, 1e-4, 0, 2046, 10000, &results);
     //VOLK_PROFILE(volk_16i_x4_quad_max_star_16i_a, 1e-4, 0, 2046, 10000, &results);
     VOLK_PROFILE(volk_16u_byteswap_a, 0, 0, 204600, 10000, &results);
+    VOLK_PROFILE(volk_16u_byteswap_u, 0, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_16i_32fc_dot_prod_32fc_a, 1e-4, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_accumulator_s32f_a, 1e-4, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_x2_add_32f_a, 1e-4, 0, 204600, 10000, &results);
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32fc_x2_conjugate_dot_prod_32fc_u, 1e-4, 0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32fc_deinterleave_32f_x2_a, 1e-4, 0, 204600, 1000, &results);
     VOLK_PROFILE(volk_32fc_deinterleave_64f_x2_a, 1e-4, 0, 204600, 1000, &results);
+    VOLK_PROFILE(volk_32fc_deinterleave_64f_x2_u, 1e-4, 0, 204600, 1000, &results);
     VOLK_PROFILE(volk_32fc_s32f_deinterleave_real_16i_a, 0, 32768, 204600, 10000, &results);
     VOLK_PROFILE(volk_32fc_deinterleave_imag_32f_a, 1e-4, 0, 204600, 5000, &results);
     VOLK_PROFILE(volk_32fc_deinterleave_real_32f_a, 1e-4, 0, 204600, 5000, &results);

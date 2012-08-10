@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,34 +21,30 @@
  */
 
 #include <cmath>
-#include <QColorDialog>
 #include <QMessageBox>
 #include <timedisplayform.h>
 #include <iostream>
 
 TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
-  : QWidget(parent)
+  : DisplayForm(nplots, parent)
 {
-  _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
 
   _layout = new QGridLayout(this);
-  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(nplots, this);
-  _layout->addWidget(_timeDomainDisplayPlot, 0, 0);
-
-  _numRealDataPoints = 1024;
-
+  _displayPlot = new TimeDomainDisplayPlot(nplots, this);
+  _layout->addWidget(_displayPlot, 0, 0);
   setLayout(_layout);
+
+  NPointsMenu *nptsmenu = new NPointsMenu(this);
+  _menu->addAction(nptsmenu);
+  connect(nptsmenu, SIGNAL(whichTrigger(int)),
+	  this, SLOT(SetNPoints(const int)));
 
   Reset();
 
-  // Create a timer to update plots at the specified rate
-  displayTimer = new QTimer(this);
-  connect(displayTimer, SIGNAL(timeout()), this, SLOT(updateGuiTimer()));
-
-  connect(_timeDomainDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
-	  this, SLOT(onTimePlotPointSelected(const QPointF)));
+  connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
+	  this, SLOT(onPlotPointSelected(const QPointF)));
 }
 
 TimeDisplayForm::~TimeDisplayForm()
@@ -57,57 +53,32 @@ TimeDisplayForm::~TimeDisplayForm()
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
   delete _intValidator;
+}
 
-  displayTimer->stop();
-  delete displayTimer;
+TimeDomainDisplayPlot*
+TimeDisplayForm::getPlot()
+{
+  return ((TimeDomainDisplayPlot*)_displayPlot);
 }
 
 void
-TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
+TimeDisplayForm::newData(const QEvent* updateEvent)
 {
-  const std::vector<double*> timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
-  const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
+  TimeUpdateEvent *tevent = (TimeUpdateEvent*)updateEvent;
+  const std::vector<double*> dataPoints = tevent->getTimeDomainPoints();
+  const uint64_t numDataPoints = tevent->getNumTimeDomainDataPoints();
 
-  _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints,
-				      numTimeDomainDataPoints,
-				      d_update_time);
+  getPlot()->PlotNewData(dataPoints,
+			 numDataPoints,
+			 d_update_time);
 }
 
 void
-TimeDisplayForm::resizeEvent( QResizeEvent *e )
+TimeDisplayForm::customEvent(QEvent * e)
 {
-  QSize s = size();
-  emit _timeDomainDisplayPlot->resizeSlot(&s);
-}
-
-void
-TimeDisplayForm::customEvent( QEvent * e)
-{
-  if(e->type() == 10005) {
-    TimeUpdateEvent* timeUpdateEvent = (TimeUpdateEvent*)e;
-    newData(timeUpdateEvent);
+  if(e->type() == TimeUpdateEvent::Type()) {
+    newData(e);
   }
-  //else if(e->type() == 10008){
-  //setWindowTitle(((SpectrumWindowCaptionEvent*)e)->getLabel());
-  //}
-  //else if(e->type() == 10009){
-  //Reset();
-  //if(_systemSpecifiedFlag){
-  //  _system->ResetPendingGUIUpdateEvents();
-  //}
-  //}
-}
-
-void
-TimeDisplayForm::updateGuiTimer()
-{
-  _timeDomainDisplayPlot->canvas()->update();
-}
-
-void
-TimeDisplayForm::onTimePlotPointSelected(const QPointF p)
-{
-  emit plotPointSelected(p, 3);
 }
 
 void
@@ -126,52 +97,26 @@ TimeDisplayForm::setFrequencyRange(const double newCenterFrequency,
 
     _startFrequency = newStartFrequency;
     _stopFrequency = newStopFrequency;
-
-    _timeDomainDisplayPlot->SetSampleRate(_stopFrequency - _startFrequency,
-					  units, strtime[iunit]);
+    
+    getPlot()->SetSampleRate(_stopFrequency - _startFrequency,
+			     units, strtime[iunit]);
   }
-}
-
-void
-TimeDisplayForm::Reset()
-{
-}
-
-
-void
-TimeDisplayForm::closeEvent( QCloseEvent *e )
-{
-  //if(_systemSpecifiedFlag){
-  //  _system->SetWindowOpenFlag(false);
-  //}
-
-  qApp->processEvents();
-
-  QWidget::closeEvent(e);
 }
 
 void
 TimeDisplayForm::setTimeDomainAxis(double min, double max)
 {
-  _timeDomainDisplayPlot->setYaxis(min, max);
+  getPlot()->setYaxis(min, max);
+}
+
+int
+TimeDisplayForm::GetNPoints() const
+{
+  return d_npoints;
 }
 
 void
-TimeDisplayForm::setUpdateTime(double t)
+TimeDisplayForm::SetNPoints(const int npoints)
 {
-  d_update_time = t;
-  // QTimer class takes millisecond input
-  displayTimer->start(d_update_time*1000);
-}
-
-void
-TimeDisplayForm::setTitle(int which, QString title)
-{
-  _timeDomainDisplayPlot->setTitle(which, title);
-}
-
-void
-TimeDisplayForm::setColor(int which, QString color)
-{
-  _timeDomainDisplayPlot->setColor(which, color);
+  d_npoints = npoints;
 }

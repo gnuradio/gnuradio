@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##QT GUI Sink
+###################################################
+ -->
+<block>
+	<name>QT GUI Waterfall Sink</name>
+	<key>qtgui_waterfall_sink_x</key>
+	<import>from PyQt4 import Qt</import>
+	<import>from gnuradio import qtgui</import>
+	<import>from gnuradio.gr import firdes</import>
+	<import>import sip</import>
+	<make>#set $win = 'self._%s_win'%$id
+qtgui.$(type.fcn)(
+	$fftsize, \#size
+	$wintype, \#wintype
+	$fc, \#fc
+	$bw, \#bw
+	$name, \#name
+)
+self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
+$(gui_hint()($win))</make>
+        <callback>set_frequency_range($fc, $bw)</callback>
+	<callback>set_update_time($t)</callback>
+	<callback>set_title($which, $title)</callback>
+	<callback>set_color($which, $color)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>complex</value>
+		<type>enum</type>
+		<option><name>Complex</name><key>complex</key><opt>fcn:waterfall_sink_c</opt></option>
+		<option><name>Float</name><key>float</key><opt>fcn:waterfall_sink_f</opt></option>
+	</param>
+	<param>
+		<name>Name</name>
+		<key>name</key>
+		<value>QT GUI Plot</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>FFT Size</name>
+		<key>fftsize</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Window Type</name>
+		<key>wintype</key>
+		<value>firdes.WIN_BLACKMAN_hARRIS</value>
+		<type>int</type>
+		<hide>part</hide>
+		<option>
+			<name>Blackman-harris</name>
+			<key>firdes.WIN_BLACKMAN_hARRIS</key>
+		</option>
+		<option>
+			<name>Hamming</name>
+			<key>firdes.WIN_HAMMING</key>
+		</option>
+		<option>
+			<name>Hann</name>
+			<key>firdes.WIN_HANN</key>
+		</option>
+		<option>
+			<name>Blackman</name>
+			<key>firdes.WIN_BLACKMAN</key>
+		</option>
+		<option>
+			<name>Rectangular</name>
+			<key>firdes.WIN_RECTANGULAR</key>
+		</option>
+		<option>
+			<name>Kaiser</name>
+			<key>firdes.WIN_KAISER</key>
+		</option>
+	</param>
+	<param>
+		<name>Center Frequency (Hz)</name>
+		<key>fc</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Bandwidth (Hz)</name>
+		<key>bw</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Update Rate</name>
+		<key>rate</key>
+		<value>10</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<nports>1</nports>
+	</sink>
+	<doc>
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>

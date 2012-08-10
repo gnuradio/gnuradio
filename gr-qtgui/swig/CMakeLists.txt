@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,9 +23,12 @@
 include(GrPython)
 include(GrSwig)
 
+set(GR_SWIG_TARGET_DEPS core_swig)
+
 set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GR_QTGUI_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
     ${QWT_INCLUDE_DIRS}
 )
 
@@ -44,10 +47,6 @@ GR_SWIG_INSTALL(
 
 install(FILES
     qtgui_swig.i
-    qtgui_sink_c.i
-    qtgui_sink_f.i
-    qtgui_time_sink_c.i
-    qtgui_time_sink_f.i
     ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "qtgui_swig"

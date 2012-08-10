@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Apr  3 18:11:51 2012</timestamp>
+  <timestamp>Thu Jul  5 15:57:06 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -44,6 +44,10 @@
       <value>True</value>
     </param>
     <param>
+      <key>max_nouts</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>realtime_scheduling</key>
       <value></value>
     </param>
@@ -57,10 +61,41 @@
     </param>
   </block>
   <block>
-    <key>gr_noise_source_x</key>
+    <key>gr_throttle</key>
     <param>
       <key>id</key>
-      <value>gr_noise_source_x</value>
+      <value>gr_throttle</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>samples_per_second</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(284, 24)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_add_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_add_xx</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -71,20 +106,39 @@
       <value>complex</value>
     </param>
     <param>
-      <key>noise_type</key>
-      <value>gr.GR_GAUSSIAN</value>
+      <key>num_inputs</key>
+      <value>2</value>
     </param>
     <param>
-      <key>amp</key>
-      <value>noise</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>42</value>
+      <key>vlen</key>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(235, 379)</value>
+      <value>(486, 151)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_constellation_decoder_cb</key>
+    <param>
+      <key>id</key>
+      <value>digital_constellation_decoder_cb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>constellation</key>
+      <value>const.base()</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(618, 164)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -171,65 +225,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1062, 11)</value>
+      <value>(791, 228)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_throttle</key>
-    <param>
-      <key>id</key>
-      <value>gr_throttle</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>samples_per_second</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(397, 27)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>50e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(20, 168)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
   </block>
   <block>
@@ -248,7 +248,53 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(138, 168)</value>
+      <value>(18, 373)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>const</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>digital.qpsk_constellation()</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(116, 310)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100e3</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(16, 308)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -271,7 +317,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>"Constellation: "+str(const)</value>
+      <value>"Constellation: "+str(const.arity()) + "-PSK"</value>
     </param>
     <param>
       <key>samp_rate</key>
@@ -323,7 +369,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(828, 368)</value>
+      <value>(623, 228)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -331,10 +377,41 @@
     </param>
   </block>
   <block>
-    <key>gr_add_xx</key>
+    <key>blks2_error_rate</key>
     <param>
       <key>id</key>
-      <value>gr_add_xx</value>
+      <value>blks2_error_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>'BER'</value>
+    </param>
+    <param>
+      <key>win_size</key>
+      <value>int(1e7)</value>
+    </param>
+    <param>
+      <key>bits_per_symbol</key>
+      <value>const.bits_per_symbol()</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(720, 25)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_noise_source_x</key>
+    <param>
+      <key>id</key>
+      <value>gr_noise_source_x</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -345,124 +422,20 @@
       <value>complex</value>
     </param>
     <param>
-      <key>num_inputs</key>
-      <value>2</value>
+      <key>noise_type</key>
+      <value>gr.GR_GAUSSIAN</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>amp</key>
+      <value>1.0 / math.sqrt(2.0 * const.bits_per_symbol() * 10**(EbN0/10))</value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(652, 395)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_constellation_decoder_cb</key>
-    <param>
-      <key>id</key>
-      <value>digital_constellation_decoder_cb_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>constellation</key>
-      <value>const.base()</value>
+      <key>seed</key>
+      <value>42</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(693, 205)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>const</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>digital.qpsk_constellation()</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(16, 461)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>const_points</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>const.points()</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(17, 532)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>random_source_x</key>
-    <param>
-      <key>id</key>
-      <value>random_source_x</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>len(const_points)</value>
-    </param>
-    <param>
-      <key>num_samps</key>
-      <value>1000000</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(15, 244)</value>
+      <value>(16, 224)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -489,7 +462,7 @@
     </param>
     <param>
       <key>symbol_table</key>
-      <value>const_points</value>
+      <value>const.points()</value>
     </param>
     <param>
       <key>dimension</key>
@@ -501,38 +474,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(367, 260)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blks2_error_rate</key>
-    <param>
-      <key>id</key>
-      <value>blks2_error_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>'BER'</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value>1000000</value>
-    </param>
-    <param>
-      <key>bits_per_symbol</key>
-      <value>int(math.log(len(const_points))/math.log(2))</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(670, 41)</value>
+      <value>(240, 140)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -543,7 +485,7 @@
     <key>variable_slider</key>
     <param>
       <key>id</key>
-      <value>noise</value>
+      <value>EbN0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -551,23 +493,23 @@
     </param>
     <param>
       <key>label</key>
-      <value>AWGN Noise</value>
+      <value>Eb/N0 (dB)</value>
     </param>
     <param>
       <key>value</key>
-      <value>0.10</value>
+      <value>10</value>
     </param>
     <param>
       <key>min</key>
-      <value>0</value>
+      <value>-10</value>
     </param>
     <param>
       <key>max</key>
-      <value>1</value>
+      <value>200</value>
     </param>
     <param>
       <key>num_steps</key>
-      <value>100</value>
+      <value>211</value>
     </param>
     <param>
       <key>style</key>
@@ -587,7 +529,46 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(268, 481)</value>
+      <value>(311, 309)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>random_source_x</key>
+    <param>
+      <key>id</key>
+      <value>random_source_x</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>const.arity()</value>
+    </param>
+    <param>
+      <key>num_samps</key>
+      <value>10000000</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(17, 125)</value>
     </param>
     <param>
       <key>_rotation</key>

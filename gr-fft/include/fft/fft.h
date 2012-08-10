@@ -35,14 +35,18 @@ namespace gr {
   namespace fft {
 
 
-    /*! \brief Helper function for allocating complex fft buffers
+    /*! \brief Helper function for allocating complex* buffers
      */
     FFT_API gr_complex* malloc_complex(int size);
 
-    /*! \brief Helper function for allocating float fft buffers
+    /*! \brief Helper function for allocating float* buffers
      */
     FFT_API float* malloc_float(int size);
     
+    /*! \brief Helper function for allocating double* buffers
+     */
+    FFT_API double* malloc_double(int size);
+
     /*! \brief Helper function for freeing fft buffers
      */
     FFT_API void free(void *b);

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,17 +24,13 @@
 #define TIME_DISPLAY_FORM_H
 
 #include <spectrumUpdateEvents.h>
-#include <FrequencyDisplayPlot.h>
-#include <WaterfallDisplayPlot.h>
 #include <TimeDomainDisplayPlot.h>
-#include <ConstellationDisplayPlot.h>
-#include <QtGui/QApplication>
-#include <QtGui/QGridLayout>
-#include <QValidator>
-#include <QTimer>
+#include <QtGui/QtGui>
 #include <vector>
 
-class TimeDisplayForm : public QWidget
+#include "displayform.h"
+
+class TimeDisplayForm : public DisplayForm
 {
   Q_OBJECT
 
@@ -42,44 +38,29 @@ class TimeDisplayForm : public QWidget
   TimeDisplayForm(int nplots=1, QWidget* parent = 0);
   ~TimeDisplayForm();
 
-  void Reset();
+  TimeDomainDisplayPlot* getPlot();
+
+  int GetNPoints() const;
 
 public slots:
-  void resizeEvent( QResizeEvent * e );
-  void customEvent( QEvent * e );
-  void setFrequencyRange( const double newCenterFrequency,
-			  const double newStartFrequency,
-			  const double newStopFrequency );
-  void closeEvent( QCloseEvent * e );
+  void customEvent(QEvent * e);
 
+  void setFrequencyRange(const double newCenterFrequency,
+			 const double newStartFrequency,
+			 const double newStopFrequency);
   void setTimeDomainAxis(double min, double max);
-
-  void setUpdateTime(double t);
-
-  void setTitle(int which, QString title);
-  void setColor(int which, QString color);
+  void SetNPoints(const int);
 
 private slots:
-  void newData( const TimeUpdateEvent* );
-  void updateGuiTimer();
-
-  void onTimePlotPointSelected(const QPointF p);
-
-signals:
-  void plotPointSelected(const QPointF p, int type);
+  void newData(const QEvent*);
 
 private:
-  uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
-  QGridLayout *_layout;
-  TimeDomainDisplayPlot* _timeDomainDisplayPlot;
-  bool _systemSpecifiedFlag;
   double _startFrequency;
   double _stopFrequency;
 
-  QTimer *displayTimer;
-  double d_update_time;
+  int d_npoints;
 };
 
 #endif /* TIME_DISPLAY_FORM_H */

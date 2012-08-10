@@ -8,7 +8,6 @@
 <block>
 	<name>QT GUI Check Box</name>
 	<key>variable_qtgui_check_box</key>
-	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $win = '_%s_check_box'%$id

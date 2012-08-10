@@ -8,7 +8,6 @@
 <block>
 	<name>QT GUI Label</name>
 	<key>variable_qtgui_label</key>
-	<category>QT GUI Widgets</category>
 	<import>from PyQt4 import Qt</import>
 	<import>from gnuradio import eng_notation</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>

@@ -8,10 +8,15 @@
 #include <vector>
 #include <gruel/high_res_timer.h>
 
+static const int SpectrumUpdateEventType = 10005;
+static const int SpectrumWindowCaptionEventType = 10008;
+static const int SpectrumWindowResetEventType = 10009;
+static const int SpectrumFrequencyRangeEventType = 10010;
+
 class SpectrumUpdateEvent:public QEvent{
 
 public:
-  SpectrumUpdateEvent(const std::complex<float>* fftPoints,
+  SpectrumUpdateEvent(const float* fftPoints,
 		      const uint64_t numFFTDataPoints,
 		      const double* realTimeDomainPoints,
 		      const double* imagTimeDomainPoints,
@@ -24,7 +29,7 @@ public:
 
   ~SpectrumUpdateEvent();
 
-  const std::complex<float>* getFFTPoints() const;
+  const float* getFFTPoints() const;
   const double* getRealTimeDomainPoints() const;
   const double* getImagTimeDomainPoints() const;
   uint64_t getNumFFTDataPoints() const;
@@ -38,7 +43,7 @@ public:
 protected:
 
 private:
-  std::complex<float>* _fftPoints;
+  float* _fftPoints;
   double* _realDataTimeDomainPoints;
   double* _imagDataTimeDomainPoints;
   uint64_t _numFFTDataPoints;
@@ -103,12 +108,107 @@ public:
   uint64_t getNumTimeDomainDataPoints() const;
   bool getRepeatDataFlag() const;
 
+  static QEvent::Type Type()
+      { return QEvent::Type(SpectrumUpdateEventType); }
+
 protected:
 
 private:
   size_t _nplots;
   std::vector<double*> _dataTimeDomainPoints;
   uint64_t _numTimeDomainDataPoints;
+};
+
+
+/********************************************************************/
+
+
+class FreqUpdateEvent: public QEvent
+{
+public:
+  FreqUpdateEvent(const std::vector<double*> dataPoints,
+		  const uint64_t numDataPoints);
+
+  ~FreqUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getPoints() const;
+  uint64_t getNumDataPoints() const;
+  bool getRepeatDataFlag() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _dataPoints;
+  uint64_t _numDataPoints;
+};
+
+
+/********************************************************************/
+
+
+class ConstUpdateEvent: public QEvent
+{
+public:
+  ConstUpdateEvent(const std::vector<double*> realDataPoints,
+		   const std::vector<double*> imagDataPoints,
+		   const uint64_t numDataPoints);
+
+  ~ConstUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getRealPoints() const;
+  const std::vector<double*> getImagPoints() const;
+  uint64_t getNumDataPoints() const;
+  bool getRepeatDataFlag() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _realDataPoints;
+  std::vector<double*> _imagDataPoints;
+  uint64_t _numDataPoints;
+};
+
+
+/********************************************************************/
+
+
+class WaterfallUpdateEvent: public QEvent
+{
+public:
+  WaterfallUpdateEvent(const std::vector<double*> dataPoints,
+		       const uint64_t numDataPoints,
+		       const gruel::high_res_timer_type dataTimestamp);
+
+  ~WaterfallUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getPoints() const;
+  uint64_t getNumDataPoints() const;
+  bool getRepeatDataFlag() const;
+
+  gruel::high_res_timer_type getDataTimestamp() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _dataPoints;
+  uint64_t _numDataPoints;
+
+  gruel::high_res_timer_type _dataTimestamp;
 };
 
 

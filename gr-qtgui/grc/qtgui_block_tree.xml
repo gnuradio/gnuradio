@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright 2012 Free Software Foundation, Inc.
+ 
+ This file is part of GNU Radio
+ 
+ GNU Radio is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3, or (at your option)
+ any later version.
+ 
+ GNU Radio is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with GNU Radio; see the file COPYING.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street,
+ Boston, MA 02110-1301, USA.
+-->
+
+<!--
+###################################################
+##Block Tree for GR QTGUI blocks.
+###################################################
+ -->
+<cat>
+	<name></name> <!-- Blank for Root Name -->
+	<cat>
+		<name>QT GUI Sinks</name>
+		<block>qtgui_sink_x</block>
+		<block>qtgui_freq_sink_x</block>
+		<block>qtgui_time_sink_x</block>
+		<block>qtgui_const_sink_x</block>
+		<block>qtgui_waterfall_sink_x</block>
+	</cat>
+	<cat>
+		<name>QT GUI Widgets</name>
+		<block>qtgui_tab_widget</block>
+		<block>variable_qtgui_range</block>
+		<block>variable_qtgui_chooser</block>
+		<block>variable_qtgui_check_box</block>
+		<block>variable_qtgui_entry</block>
+		<block>variable_qtgui_label</block>
+	</cat>
+</cat>
