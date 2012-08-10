@@ -20,6 +20,5 @@
 #
 
 '''
-This is the gr-wxgui package. This package provides a GUI interface
-using the Wx backend.
+Provides a GUI interface using the Wx backend.
 '''

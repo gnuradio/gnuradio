@@ -21,4 +21,8 @@
 
 # The presence of this file turns this directory into a Python package
 
+'''
+Provides a GUI interface using the Qt backend.
+'''
+
 from qtgui_swig import *
