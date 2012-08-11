@@ -51,7 +51,7 @@ namespace gr {
       // gr::digital::cma_equalizer_cc::sptr
       typedef boost::shared_ptr<cma_equalizer_cc> sptr;
 
-      sptr make(int num_taps, float modulus, float mu, int sps);
+      static sptr make(int num_taps, float modulus, float mu, int sps);
 
       virtual float gain() = 0;
       virtual void set_gain(float mu) = 0;

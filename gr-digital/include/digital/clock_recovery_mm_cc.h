@@ -50,9 +50,9 @@ namespace gr {
       // gr::digital::clock_recovery_mm_cc::sptr
       typedef boost::shared_ptr<clock_recovery_mm_cc> sptr;
 
-      sptr make(float omega, float gain_omega,
-		float mu, float gain_mu,
-		float omega_relative_limi);
+      static sptr make(float omega, float gain_omega,
+		       float mu, float gain_mu,
+		       float omega_relative_limi);
 
       virtual float mu() const = 0;
       virtual float omega() const = 0;

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
 import random, cmath
 
 class test_clock_recovery_mm(gr_unittest.TestCase):
@@ -40,9 +40,9 @@ class test_clock_recovery_mm(gr_unittest.TestCase):
         gain_mu = 0.01
         omega_rel_lim = 0.001
 
-        self.test = digital_swig.clock_recovery_mm_cc(omega, gain_omega,
-                                                      mu, gain_mu,
-                                                      omega_rel_lim)
+        self.test = digital.clock_recovery_mm_cc(omega, gain_omega,
+                                                 mu, gain_mu,
+                                                 omega_rel_lim)
         
         data = 100*[complex(1, 1),]
         self.src = gr.vector_source_c(data, False)
@@ -75,9 +75,9 @@ class test_clock_recovery_mm(gr_unittest.TestCase):
         gain_mu = 0.01
         omega_rel_lim = 0.001
 
-        self.test = digital_swig.clock_recovery_mm_ff(omega, gain_omega,
-                                                      mu, gain_mu,
-                                                      omega_rel_lim)
+        self.test = digital.clock_recovery_mm_ff(omega, gain_omega,
+                                                 mu, gain_mu,
+                                                 omega_rel_lim)
         
         data = 100*[1,]
         self.src = gr.vector_source_f(data, False)
@@ -110,9 +110,9 @@ class test_clock_recovery_mm(gr_unittest.TestCase):
         gain_mu = 0.1
         omega_rel_lim = 0.0001
 
-        self.test = digital_swig.clock_recovery_mm_cc(omega, gain_omega,
-                                                      mu, gain_mu,
-                                                      omega_rel_lim)
+        self.test = digital.clock_recovery_mm_cc(omega, gain_omega,
+                                                 mu, gain_mu,
+                                                 omega_rel_lim)
         
         data = 1000*[complex(1, 1), complex(1, 1), complex(-1, -1), complex(-1, -1)]
         self.src = gr.vector_source_c(data, False)
@@ -145,9 +145,9 @@ class test_clock_recovery_mm(gr_unittest.TestCase):
         gain_mu = 0.1
         omega_rel_lim = 0.001
 
-        self.test = digital_swig.clock_recovery_mm_ff(omega, gain_omega,
-                                                      mu, gain_mu,
-                                                      omega_rel_lim)
+        self.test = digital.clock_recovery_mm_ff(omega, gain_omega,
+                                                 mu, gain_mu,
+                                                 omega_rel_lim)
         
         data = 1000*[1, 1, -1, -1]
         self.src = gr.vector_source_f(data, False)

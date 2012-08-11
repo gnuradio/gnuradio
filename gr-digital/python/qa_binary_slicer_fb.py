@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
 import math, random
 
 class test_binary_slicer_fb (gr_unittest.TestCase):
@@ -36,18 +36,18 @@ class test_binary_slicer_fb (gr_unittest.TestCase):
 	expected_result = ( 0, 1,  0,  0, 1, 1,  0,  0,  0, 1, 1, 1,  0, 1, 1, 1, 1)
   	src_data =        (-1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1)
         src_data = [s + (1 - random.random()) for s in src_data] # add some noise
-        src = gr.vector_source_f (src_data)
-        op = digital_swig.binary_slicer_fb ()
-        dst = gr.vector_sink_b ()
+        src = gr.vector_source_f(src_data)
+        op = digital.binary_slicer_fb()
+        dst = gr.vector_sink_b()
 
-        self.tb.connect (src, op)
-        self.tb.connect (op, dst)
-        self.tb.run ()               # run the graph and wait for it to finish
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()               # run the graph and wait for it to finish
 
-        actual_result = dst.data ()  # fetch the contents of the sink
+        actual_result = dst.data()  # fetch the contents of the sink
 	#print "actual result", actual_result
 	#print "expected result", expected_result
-        self.assertFloatTuplesAlmostEqual (expected_result, actual_result)
+        self.assertFloatTuplesAlmostEqual(expected_result, actual_result)
 
 
 if __name__ == '__main__':

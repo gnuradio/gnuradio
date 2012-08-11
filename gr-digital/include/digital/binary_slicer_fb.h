@@ -46,7 +46,7 @@ namespace gr {
       /*!
        * \brief Make binary symbol slicer block.
        */
-      sptr make();
+      static sptr make();
     };
 
   } /* namespace digital */
