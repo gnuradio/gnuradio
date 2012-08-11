@@ -37,12 +37,18 @@
 
 //%include <gri_control_loop.i>
 
+// Used in the constellation objects
+%template(unsigned_int_vector) std::vector<unsigned int>;
+
 %{
 #include "digital/additive_scrambler_bb.h"
 #include "digital/binary_slicer_fb.h"
 #include "digital/clock_recovery_mm_cc.h"
 #include "digital/clock_recovery_mm_ff.h"
 #include "digital/cma_equalizer_cc.h"
+#include "digital/constellation.h"
+#include "digital/constellation_receiver_cb.h"
+#include "digital/constellation_decoder_cb.h"
 %}
 
 %include "digital/additive_scrambler_bb.h"
@@ -50,9 +56,17 @@
 %include "digital/clock_recovery_mm_cc.h"
 %include "digital/clock_recovery_mm_ff.h"
 %include "digital/cma_equalizer_cc.h"
+%include "digital/constellation.h"
+%include "digital/constellation_receiver_cb.h"
+%include "digital/constellation_decoder_cb.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
 GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_ff);
 GR_SWIG_BLOCK_MAGIC2(digital, cma_equalizer_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, constellation_receiver_cb);
+GR_SWIG_BLOCK_MAGIC2(digital, constellation_decoder_cb);
+
+// Properly package up constellation objects
+%include "constellation.i"

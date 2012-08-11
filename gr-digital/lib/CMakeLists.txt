@@ -91,8 +91,9 @@ endmacro(expand_cc)
 ########################################################################
 # Setup library
 ########################################################################
-list(APPEND gr_digital_sources
+list(APPEND digital_sources
     ${generated_sources}
+    constellation.cc
     #impl_glfsr.cc
     #impl_mpsk_snr_est.cc
     additive_scrambler_bb_impl.cc
@@ -100,9 +101,8 @@ list(APPEND gr_digital_sources
     clock_recovery_mm_cc_impl.cc
     clock_recovery_mm_ff_impl.cc
     cma_equalizer_cc_impl.cc
-    #constellation_impl.cc
-    #constellation_receiver_cb_impl.cc
-    #constellation_decoder_cb_impl.cc
+    constellation_receiver_cb_impl.cc
+    constellation_decoder_cb_impl.cc
     #correlate_access_code_bb_impl.cc
     #correlate_access_code_tag_bb_impl.cc
     #costas_loop_cc_impl.cc
@@ -145,8 +145,7 @@ list(APPEND digital_libs
     ${Boost_LIBRARIES}
 )
 
-add_library(gnuradio-digital SHARED ${gr_digital_sources})
+add_library(gnuradio-digital SHARED ${digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
 GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
-
-add_dependencies(gnuradio-digital digital_generated_includes digital_generated_swigs)
+add_dependencies(gnuradio-digital digital_generated_includes digital_generated_swigs gnuradio-filter)

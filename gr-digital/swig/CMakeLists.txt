@@ -29,13 +29,10 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
 )
 
-# Setup swig docs to depend on includes and pull in from build directory
-set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter)
-set(GR_SWIG_TARGET_DEPS digital_generated_includes core_swig)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
-set(GR_SWIG_LIBRARIES gnuradio-digital)
+set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter)
 
 GR_SWIG_MAKE(digital_swig digital_swig.i)
 

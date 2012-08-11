@@ -84,9 +84,9 @@ install(FILES
     clock_recovery_mm_ff.h
     cma_equalizer_cc.h
 #    cpmmod_bc.h
-#    constellation.h
-#    constellation_receiver_cb.h
-#    constellation_decoder_cb.h
+    constellation.h
+    constellation_receiver_cb.h
+    constellation_decoder_cb.h
 #    correlate_access_code_bb.h
 #    correlate_access_code_tag_bb.h
 #    costas_loop_cc.h

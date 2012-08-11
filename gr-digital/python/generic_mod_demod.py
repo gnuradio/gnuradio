@@ -113,7 +113,7 @@ class generic_mod(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
-        self._constellation = constellation.base()
+        self._constellation = constellation
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._differential = differential
@@ -258,7 +258,7 @@ class generic_demod(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
 				
-        self._constellation = constellation.base()
+        self._constellation = constellation
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._phase_bw = phase_bw
