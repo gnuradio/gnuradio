@@ -19,44 +19,42 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+
 #ifndef INCLUDED_GR_MAP_BB_H
 #define INCLUDED_GR_MAP_BB_H
 
-#include <digital_api.h>
+#include <digital/api.h>
 #include <gr_sync_block.h>
 
-class digital_map_bb;
-typedef boost::shared_ptr<digital_map_bb> digital_map_bb_sptr;
+namespace gr {
+  namespace digital {
 
-DIGITAL_API digital_map_bb_sptr
-digital_make_map_bb(const std::vector<int> &map);
+    /*!
+     * \brief output[i] = map[input[i]]
+     * \ingroup coding_blk
+     *
+     * This block maps an incoming signal to the value in the map.
+     * The block expects that the incoming signal has a maximum
+     * value of len(map)-1.
+     *
+     * -> output[i] = map[input[i]]
+     *
+     * \param map a vector of integers.
+     */
 
-/*!
- * \brief output[i] = map[input[i]]
- * \ingroup coding_blk
- *
- * This block maps an incoming signal to the value in the map.
- * The block expects that the incoming signal has a maximum
- * value of len(map)-1.
- *
- * -> output[i] = map[input[i]]
- *
- * \param map a vector of integers.
- */
+    class DIGITAL_API map_bb : virtual public gr_sync_block
+    {
+    public:
+      // gr::digital::map_bb::sptr
+      typedef boost::shared_ptr<map_bb> sptr;
+      
+      static sptr make(const std::vector<int> &map);
 
-class DIGITAL_API digital_map_bb : public gr_sync_block
-{
-  friend DIGITAL_API digital_map_bb_sptr
-    digital_make_map_bb(const std::vector<int> &map);
+      virtual void set_map(const std::vector<int> &map) = 0;
+      virtual std::vector<int> map() const = 0;
+    };
 
-  unsigned char d_map[0x100];
-
-  digital_map_bb(const std::vector<int> &map);
-
-public:
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
-};
+  } /* namespace digital */
+} /* namespace gr */
 
 #endif /* INCLUDED_GR_MAP_BB_H */

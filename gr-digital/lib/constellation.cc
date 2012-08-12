@@ -266,6 +266,10 @@ namespace gr {
     {
     }
 
+    constellation_sector::~constellation_sector()
+    {
+    }
+
     unsigned int
     constellation_sector::decision_maker(const gr_complex *sample)
     {
@@ -316,6 +320,10 @@ namespace gr {
       d_width_real_sectors(width_real_sectors), d_width_imag_sectors(width_imag_sectors)
     {
       find_sector_values();
+    }
+
+    constellation_rect::~constellation_rect()
+    {
     }
 
     unsigned int

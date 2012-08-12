@@ -25,7 +25,7 @@ from cmath import exp, pi, log
 
 from gnuradio import gr, gr_unittest, blks2
 from utils import mod_codes
-import digital_swig
+import digital_swig as digital
 
 # import from local folder
 import psk
@@ -50,7 +50,7 @@ def twod_constell():
               (-1+0j), (0-1j))
     rot_sym = 2
     dim = 2
-    return digital_swig.constellation_calcdist(points, [], rot_sym, dim)
+    return digital.constellation_calcdist(points, [], rot_sym, dim)
 
 def threed_constell():
     oned_points = ((1+0j), (0+1j), (-1+0j), (0-1j))
@@ -62,7 +62,7 @@ def threed_constell():
                 points += [oned_points[ia], oned_points[ib], oned_points[ic]]
     rot_sym = 4
     dim = 3
-    return digital_swig.constellation_calcdist(points, [], rot_sym, dim)
+    return digital.constellation_calcdist(points, [], rot_sym, dim)
 
 tested_constellation_info = (
     (psk.psk_constellation,
@@ -85,10 +85,10 @@ tested_constellation_info = (
       'mod_code': tested_mod_codes, 
       'differential': (False,)},
      False, None),
-    (digital_swig.constellation_bpsk, {}, True, None),
-    (digital_swig.constellation_qpsk, {}, False, None),
-    (digital_swig.constellation_dqpsk, {}, True, None),
-    (digital_swig.constellation_8psk, {}, False, None),
+    (digital.constellation_bpsk, {}, True, None),
+    (digital.constellation_qpsk, {}, False, None),
+    (digital.constellation_dqpsk, {}, True, None),
+    (digital.constellation_8psk, {}, False, None),
     (twod_constell, {}, True, None),
     (threed_constell, {}, True, None),
     )
@@ -123,7 +123,7 @@ def tested_constellations():
                     break
             
 
-class test_constellation (gr_unittest.TestCase):
+class test_constellation(gr_unittest.TestCase):
 
     src_length = 256
 
@@ -151,7 +151,7 @@ class test_constellation (gr_unittest.TestCase):
                 data = dst.data()
                 # Don't worry about cut off data for now.
                 first = constellation.bits_per_symbol()
-                self.assertEqual (self.src_data[first:len(data)], data[first:])
+                self.assertEqual(self.src_data[first:len(data)], data[first:])
 
 
 class mod_demod(gr.hier_block2):
@@ -173,8 +173,7 @@ class mod_demod(gr.hier_block2):
         self.blocks = [self]
         # We expect a stream of unpacked bits.
         # First step is to pack them.
-        self.blocks.append(
-            gr.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST))
+        self.blocks.append(gr.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST))
         # Second step we unpack them such that we have k bits in each byte where
         # each constellation symbol hold k bits.
         self.blocks.append(
@@ -183,13 +182,13 @@ class mod_demod(gr.hier_block2):
         # Apply any pre-differential coding
         # Gray-coding is done here if we're also using differential coding.
         if self.constellation.apply_pre_diff_code():
-            self.blocks.append(digital_swig.map_bb(self.constellation.pre_diff_code()))
+            self.blocks.append(digital.map_bb(self.constellation.pre_diff_code()))
         # Differential encoding.
         if self.differential:
-            self.blocks.append(digital_swig.diff_encoder_bb(arity))
+            self.blocks.append(digital.diff_encoder_bb(arity))
         # Convert to constellation symbols.
-        self.blocks.append(digital_swig.chunks_to_symbols_bc(self.constellation.points(),
-                                                             self.constellation.dimensionality()))
+        self.blocks.append(digital.chunks_to_symbols_bc(self.constellation.points(),
+                                                        self.constellation.dimensionality()))
         # CHANNEL
         # Channel just consists of a rotation to check differential coding.
         if rotation is not None:
@@ -197,13 +196,13 @@ class mod_demod(gr.hier_block2):
 
         # RX
         # Convert the constellation symbols back to binary values.
-        self.blocks.append(digital_swig.constellation_decoder_cb(self.constellation.base()))
+        self.blocks.append(digital.constellation_decoder_cb(self.constellation.base()))
         # Differential decoding.
         if self.differential:
-            self.blocks.append(digital_swig.diff_decoder_bb(arity))
+            self.blocks.append(digital.diff_decoder_bb(arity))
         # Decode any pre-differential coding.
         if self.constellation.apply_pre_diff_code():
-            self.blocks.append(digital_swig.map_bb(
+            self.blocks.append(digital.map_bb(
                 mod_codes.invert_code(self.constellation.pre_diff_code())))
         # unpack the k bit vector into a stream of bits            
         self.blocks.append(gr.unpack_k_bits_bb(
@@ -214,7 +213,6 @@ class mod_demod(gr.hier_block2):
         self.blocks.append(self)
 
         self.connect(*self.blocks)
-
         
 if __name__ == '__main__':
     gr_unittest.run(test_constellation, "test_constellation.xml")

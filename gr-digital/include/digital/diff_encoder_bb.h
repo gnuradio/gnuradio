@@ -20,37 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_DIFF_DECODER_BB_H
-#define INCLUDED_GR_DIFF_DECODER_BB_H
+#ifndef INCLUDED_GR_DIFF_ENCODER_BB_H
+#define INCLUDED_GR_DIFF_ENCODER_BB_H
 
-#include <digital_api.h>
+#include <digital/api.h>
 #include <gr_sync_block.h>
 
-class digital_diff_decoder_bb;
-typedef boost::shared_ptr<digital_diff_decoder_bb> digital_diff_decoder_bb_sptr;
+namespace gr {
+  namespace digital {
 
-DIGITAL_API digital_diff_decoder_bb_sptr
-digital_make_diff_decoder_bb(unsigned int modulus);
+    /*!
+     * \brief Differential decoder: y[0] = (x[0] + y[-1]) % M
+     * \ingroup coding_blk
+     *
+     * Uses current and previous symbols and the alphabet modulus to
+     * perform differential encoding.
+     */
+    class DIGITAL_API diff_encoder_bb : virtual public gr_sync_block
+    {
+    public:
+      // gr::digital::diff_encoder_bb::sptr
+      typedef boost::shared_ptr<diff_encoder_bb> sptr;
 
-/*!
- * \brief y[0] = (x[0] - x[-1]) % M
- * \ingroup coding_blk
- *
- * Uses current and previous symbols and the alphabet modulus to
- * perform differential decoding.
- */
-class DIGITAL_API digital_diff_decoder_bb : public gr_sync_block
-{
-  friend DIGITAL_API digital_diff_decoder_bb_sptr
-    digital_make_diff_decoder_bb(unsigned int modulus);
-  digital_diff_decoder_bb(unsigned int modulus);
+      /*!
+       * \brief Make differential encoder block.
+       */
+      static sptr make(unsigned int modulus);
+    };
 
-  unsigned int d_modulus;
+  } /* namespace digital */
+} /* namespace gr */
 
- public:
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
-};
-
-#endif
+#endif /* INCLUDED_GR_DIFF_ENCODER_BB_H */

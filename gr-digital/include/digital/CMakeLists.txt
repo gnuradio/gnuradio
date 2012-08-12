@@ -64,7 +64,7 @@ endmacro(expand_h)
 ########################################################################
 # Invoke macro to generate various sources
 #######################################################################
-#expand_h(chunks_to_symbols_XX         bf bc sf sc if ic)
+expand_h(chunks_to_symbols_XX     bf bc sf sc if ic)
 
 add_custom_target(digital_generated_includes DEPENDS
     ${generated_includes}
@@ -92,17 +92,17 @@ install(FILES
 #    costas_loop_cc.h
 #    crc32.h
 #    descrambler_bb.h
-#    diff_decoder_bb.h
-#    diff_encoder_bb.h
-#    diff_phasor_cc.h
+    diff_decoder_bb.h
+    diff_encoder_bb.h
+    diff_phasor_cc.h
 #    framer_sink_1.h
-#    fll_band_edge_cc.h
+    fll_band_edge_cc.h
 #    glfsr_source_b.h
 #    glfsr_source_f.h
 #    gmskmod_bc.h
 #    lms_dd_equalizer_cc.h
 #    kurtotic_equalizer_cc.h
-#    map_bb.h
+    map_bb.h
 #    metric_type.h
 #    mpsk_receiver_cc.h
 #    mpsk_snr_est_cc.h
@@ -113,8 +113,8 @@ install(FILES
 #    ofdm_mapper_bcv.h
 #    ofdm_sampler.h
 #    packet_sink.h
-#    pfb_clock_sync_ccf.h
-#    pfb_clock_sync_fff.h
+    pfb_clock_sync_ccf.h
+    pfb_clock_sync_fff.h
 #    pn_correlator_cc.h
 #    probe_density_b.h
 #    probe_mpsk_snr_est_c.h

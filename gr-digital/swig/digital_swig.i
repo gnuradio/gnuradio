@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -49,6 +49,19 @@
 #include "digital/constellation.h"
 #include "digital/constellation_receiver_cb.h"
 #include "digital/constellation_decoder_cb.h"
+#include "digital/diff_decoder_bb.h"
+#include "digital/diff_encoder_bb.h"
+#include "digital/diff_phasor_cc.h"
+#include "digital/chunks_to_symbols_bf.h"
+#include "digital/chunks_to_symbols_bc.h"
+#include "digital/chunks_to_symbols_sf.h"
+#include "digital/chunks_to_symbols_sc.h"
+#include "digital/chunks_to_symbols_if.h"
+#include "digital/chunks_to_symbols_ic.h"
+#include "digital/map_bb.h"
+#include "digital/fll_band_edge_cc.h"
+#include "digital/pfb_clock_sync_ccf.h"
+#include "digital/pfb_clock_sync_fff.h"
 %}
 
 %include "digital/additive_scrambler_bb.h"
@@ -59,6 +72,19 @@
 %include "digital/constellation.h"
 %include "digital/constellation_receiver_cb.h"
 %include "digital/constellation_decoder_cb.h"
+%include "digital/diff_decoder_bb.h"
+%include "digital/diff_encoder_bb.h"
+%include "digital/diff_phasor_cc.h"
+%include "digital/chunks_to_symbols_bf.h"
+%include "digital/chunks_to_symbols_bc.h"
+%include "digital/chunks_to_symbols_sf.h"
+%include "digital/chunks_to_symbols_sc.h"
+%include "digital/chunks_to_symbols_if.h"
+%include "digital/chunks_to_symbols_ic.h"
+%include "digital/map_bb.h"
+%include "digital/fll_band_edge_cc.h"
+%include "digital/pfb_clock_sync_ccf.h"
+%include "digital/pfb_clock_sync_fff.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
@@ -67,6 +93,19 @@ GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_ff);
 GR_SWIG_BLOCK_MAGIC2(digital, cma_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_receiver_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_decoder_cb);
+GR_SWIG_BLOCK_MAGIC2(digital, diff_decoder_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, diff_encoder_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, diff_phasor_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bf);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bc);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_sf);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_sc);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_if);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_ic);
+GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, fll_band_edge_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_ccf);
+GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_fff);
 
 // Properly package up constellation objects
 %include "constellation.i"

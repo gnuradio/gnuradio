@@ -50,9 +50,8 @@ if __name__ == '__main__':
     root, inp = sys.argv[1:3]
     for sig in sys.argv[3:]:
         name = re.sub ('X+', sig, root)
-        d = build_utils.standard_dict(name, sig, 'digital')
+        d = build_utils.standard_impl_dict2(name, sig, 'digital')
         build_utils.expand_template(d, inp)
-
 ")
 
 macro(expand_cc root)
@@ -62,16 +61,25 @@ macro(expand_cc root)
   foreach(sig ${ARGN})
     string(REGEX REPLACE "X+" ${sig} name ${root})
     list(APPEND expanded_files_cc ${CMAKE_CURRENT_BINARY_DIR}/${name}.cc)
-    list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/../include/${name}.h)
+    list(APPEND expanded_files_h  ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
   endforeach(sig)
   
-  #create a command to generate the files
+  #create a command to generate the source files
   add_custom_command(
     OUTPUT ${expanded_files_cc}
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.cc.t
     COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}.cc.t ${ARGN}
+  )
+
+  #create a command to generate the header file
+  add_custom_command(
+    OUTPUT ${expanded_files_h}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+    ${root} ${root}.h.t ${ARGN}
   )
   
   #make source files depends on headers to force generation
@@ -81,12 +89,14 @@ macro(expand_cc root)
   
   #install rules for the generated cc files
   list(APPEND generated_sources ${expanded_files_cc})  
+  list(APPEND generated_headers ${expanded_files_h})  
 endmacro(expand_cc)
+
 
 ########################################################################
 # Invoke macro to generate various sources
 ########################################################################
-#expand_cc(digital_chunks_to_symbols_XX         bf bc sf sc if ic)
+expand_cc(chunks_to_symbols_XX_impl     bf bc sf sc if ic)
 
 ########################################################################
 # Setup library
@@ -109,17 +119,17 @@ list(APPEND digital_sources
     #cpmmod_bc_impl.cc
     #crc32_impl.cc
     #descrambler_bb_impl.cc
-    #diff_decoder_bb_impl.cc
-    #diff_encoder_bb_impl.cc
-    #diff_phasor_cc_impl.cc
-    #fll_band_edge_cc_impl.cc
+    diff_decoder_bb_impl.cc
+    diff_encoder_bb_impl.cc
+    diff_phasor_cc_impl.cc
+    fll_band_edge_cc_impl.cc
     #framer_sink_1_impl.cc
     #glfsr_source_b_impl.cc
     #glfsr_source_f_impl.cc
     #gmskmod_bc_impl.cc
     #lms_dd_equalizer_cc_impl.cc
     #kurtotic_equalizer_cc_impl.cc
-    #map_bb_impl.cc
+    map_bb_impl.cc
     #mpsk_receiver_cc_impl.cc
     #mpsk_snr_est_cc_impl.cc
     #ofdm_cyclic_prefixer_impl.cc
@@ -129,8 +139,8 @@ list(APPEND digital_sources
     #ofdm_mapper_bcv_impl.cc
     #ofdm_sampler_impl.cc
     #packet_sink_impl.cc
-    #pfb_clock_sync_ccf_impl.cc
-    #pfb_clock_sync_fff_impl.cc
+    pfb_clock_sync_ccf_impl.cc
+    pfb_clock_sync_fff_impl.cc
     #pn_correlator_cc_impl.cc
     #probe_density_b_impl.cc
     #probe_mpsk_snr_est_c_impl.cc

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,19 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef INCLUDED_GR_DIFF_PHASOR_CC_IMPL_H
+#define INCLUDED_GR_DIFF_PHASOR_CC_IMPL_H
 
-GR_SWIG_BLOCK_MAGIC(digital,@BASE_NAME@);
+#include <digital/diff_phasor_cc.h>
+#include <gr_sync_block.h>
 
-@SPTR_NAME@ digital_make_@BASE_NAME@
-(const std::vector<@O_TYPE@> &symbol_table, const int D = 1);
+namespace gr {
+  namespace digital {
 
-class @NAME@ : public gr_sync_interpolator
-{
-private:
-  @NAME@ (const std::vector<@O_TYPE@> &symbol_table, const int D = 1);
+    class diff_phasor_cc_impl : public diff_phasor_cc
+    {
+    public:
+      diff_phasor_cc_impl();
+      ~diff_phasor_cc_impl();
 
-public:
-  int D () const { return d_D; }
-  std::vector<@O_TYPE@> symbol_table () const { return d_symbol_table; }
-};
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_DIFF_PHASOR_CC_IMPL_H */

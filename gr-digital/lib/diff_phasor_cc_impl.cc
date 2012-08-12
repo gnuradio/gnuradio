@@ -24,38 +24,46 @@
 #include "config.h"
 #endif
 
-#include <digital_diff_phasor_cc.h>
+#include "diff_phasor_cc_impl.h"
 #include <gr_io_signature.h>
 
-digital_diff_phasor_cc_sptr
-digital_make_diff_phasor_cc ()
-{
-  return gnuradio::get_initial_sptr(new digital_diff_phasor_cc());
-}
+namespace gr {
+  namespace digital {
 
-digital_diff_phasor_cc::digital_diff_phasor_cc ()
-  : gr_sync_block ("diff_phasor_cc",
-		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
-		   gr_make_io_signature (1, 1, sizeof (gr_complex)))
-{
-  set_history(2);
-}
+    diff_phasor_cc::sptr
+    diff_phasor_cc::make()
+    {
+      return gnuradio::get_initial_sptr
+	(new diff_phasor_cc_impl());
+    }
 
+    diff_phasor_cc_impl::diff_phasor_cc_impl()
+      : gr_sync_block("diff_phasor_cc",
+		   gr_make_io_signature(1, 1, sizeof(gr_complex)),
+		   gr_make_io_signature(1, 1, sizeof(gr_complex)))
+    {
+      set_history(2);
+    }
 
-digital_diff_phasor_cc::~digital_diff_phasor_cc(){}
+    diff_phasor_cc_impl::~diff_phasor_cc_impl()
+    {
+    }
 
-int
-digital_diff_phasor_cc::work (int noutput_items,
+    int
+    diff_phasor_cc_impl::work(int noutput_items,
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
-{
-  gr_complex const *in = (const gr_complex *) input_items[0];
-  gr_complex *out = (gr_complex *) output_items[0];
-  in += 1; // ensure that i - 1 is valid.
+    {
+      gr_complex const *in = (const gr_complex*)input_items[0];
+      gr_complex *out = (gr_complex*)output_items[0];
+      in += 1; // ensure that i - 1 is valid.
 
-  for(int i = 0; i < noutput_items; i++) {
-    out[i] = in[i] * conj(in[i-1]);
-  }
+      for(int i = 0; i < noutput_items; i++) {
+	out[i] = in[i] * conj(in[i-1]);
+      }
 
-  return noutput_items;
-}
+      return noutput_items;
+    }
+
+  } /* namespace digital */
+} /* namespace gr */

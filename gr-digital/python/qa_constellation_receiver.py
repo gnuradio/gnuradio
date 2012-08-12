@@ -105,7 +105,7 @@ class test_constellation_receiver (gr_unittest.TestCase):
             self.assertTrue(correct > REQ_CORRECT)
             
 
-class rec_test_tb (gr.top_block):
+class rec_test_tb(gr.top_block):
     """
     Takes a constellation an runs a generic modulation, channel,
     and generic demodulation.

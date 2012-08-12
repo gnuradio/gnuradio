@@ -296,7 +296,7 @@ class generic_demod(gr.hier_block2):
         fmin = -0.25
         fmax = 0.25
         self.receiver = digital.constellation_receiver_cb(
-            self._constellation, self._phase_bw,
+            self._constellation.base(), self._phase_bw,
             fmin, fmax)
 
         # Do differential decoding based on phase change of symbols

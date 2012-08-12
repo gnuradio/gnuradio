@@ -20,11 +20,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,diff_phasor_cc)
+#ifndef INCLUDED_GR_MAP_BB_IMPL_H
+#define INCLUDED_GR_MAP_BB_IMPL_H
 
-digital_diff_phasor_cc_sptr
-digital_make_diff_phasor_cc();
+#include <digital/map_bb.h>
+#include <gruel/thread.h>
 
-class digital_diff_phasor_cc : public gr_sync_block
-{
-};
+namespace gr {
+  namespace digital {
+
+    class map_bb_impl : public map_bb
+    {
+    private:
+      unsigned char d_map[0x100];
+      gruel::mutex d_mutex;
+
+    public:
+      map_bb_impl(const std::vector<int> &map);
+      ~map_bb_impl();
+
+      void set_map(const std::vector<int> &map);
+      std::vector<int> map() const;
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_MAP_BB_IMPL_H */

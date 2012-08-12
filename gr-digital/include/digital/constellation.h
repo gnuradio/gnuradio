@@ -191,6 +191,8 @@ namespace gr {
 			   unsigned int dimensionality,
 			   unsigned int n_sectors);
 
+      ~constellation_sector();
+
       unsigned int decision_maker(const gr_complex *sample);
 
     protected:
@@ -238,6 +240,7 @@ namespace gr {
 					   unsigned int imag_sectors,
 					   float width_real_sectors,
 					   float width_imag_sectors);
+      ~constellation_rect();
 
     protected:
       unsigned int get_sector(const gr_complex *sample);

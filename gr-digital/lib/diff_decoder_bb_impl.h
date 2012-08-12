@@ -20,12 +20,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,map_bb);
+#ifndef INCLUDED_GR_DIFF_DECODER_BB_IMPL_H
+#define INCLUDED_GR_DIFF_DECODER_BB_IMPL_H
 
-digital_map_bb_sptr
-digital_make_map_bb(const std::vector<int> &map);
+#include <digital/diff_decoder_bb.h>
+#include <gr_sync_block.h>
 
-class digital_map_bb : public gr_sync_block
-{
-};
+namespace gr {
+  namespace digital {
 
+    class diff_decoder_bb_impl : public diff_decoder_bb
+    {
+    public:
+      diff_decoder_bb_impl(unsigned int modulus);
+      ~diff_decoder_bb_impl();
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+
+    private:
+      unsigned int d_modulus;
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_DIFF_DECODER_BB_IMPL_H */

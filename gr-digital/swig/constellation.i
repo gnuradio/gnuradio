@@ -20,10 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
+%template(constellation_sptr) boost::shared_ptr<gr::digital::constellation>;
+
 %template(constellation_calcdist_sptr) boost::shared_ptr<gr::digital::constellation_calcdist>;
 %pythoncode %{
 constellation_calcdist_sptr.__repr__ = lambda self: "<constellation calcdist (m=%d)>" % (len(self.points()))
 constellation_calcdist = constellation_calcdist.make;
+%}
+
+%template(constellation_rect_sptr) boost::shared_ptr<gr::digital::constellation_rect>;
+%pythoncode %{
+constellation_rect_sptr.__repr__ = lambda self: "<constellation rect (m=%d)>" % (len(self.points()))
+constellation_rect = constellation_rect.make;
 %}
 
 %template(constellation_psk_sptr) boost::shared_ptr<gr::digital::constellation_psk>;
