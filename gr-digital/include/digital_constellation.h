@@ -209,6 +209,19 @@ class DIGITAL_API digital_constellation_sector : public digital_constellation
 /* digital_constellation_rect                               */
 /************************************************************/
 
+class digital_constellation_rect;
+typedef boost::shared_ptr<digital_constellation_rect> digital_constellation_rect_sptr;
+
+// public constructor
+DIGITAL_API digital_constellation_rect_sptr 
+digital_make_constellation_rect (std::vector<gr_complex> constellation,
+				 std::vector<unsigned int> pre_diff_code,
+				 unsigned int rotational_symmetry,
+				 unsigned int real_sectors,
+				 unsigned int imag_sectors,
+				 float width_real_sectors,
+				 float width_imag_sectors);
+
 /*!
  * \brief Rectangular digital constellation
  * \ingroup digital
@@ -223,20 +236,6 @@ class DIGITAL_API digital_constellation_sector : public digital_constellation
  * Works for any generic constellation provided sectors are not too
  * large.
  */
-
-class digital_constellation_rect;
-typedef boost::shared_ptr<digital_constellation_rect> digital_constellation_rect_sptr;
-
-// public constructor
-DIGITAL_API digital_constellation_rect_sptr 
-digital_make_constellation_rect (std::vector<gr_complex> constellation,
-				 std::vector<unsigned int> pre_diff_code,
-				 unsigned int rotational_symmetry,
-				 unsigned int real_sectors,
-				 unsigned int imag_sectors,
-				 float width_real_sectors,
-				 float width_imag_sectors);
-
 class DIGITAL_API digital_constellation_rect : public digital_constellation_sector
 {
  public:
@@ -288,7 +287,7 @@ digital_make_constellation_psk (std::vector<gr_complex> constellation,
 				unsigned int n_sectors);
 
 /*! 
- * \brief digital_constellation_psk
+ * \brief Digital Constellation for PSK.
  * \ingroup digital
  *
  * Constellation space is divided into pie slices sectors.

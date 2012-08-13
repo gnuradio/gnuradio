@@ -101,14 +101,15 @@ Modulation Utilties
    :nosignatures:
 
    gnuradio.digital.utils.gray_code.gray_code
-   gnuradio.digital.utils.mod_codes.GRAY_CODE
-   gnuradio.digital.utils.mod_codes.NO_CODE
    gnuradio.digital.modulation_utils.add_type_1_constellation
    gnuradio.digital.modulation_utils.add_type_1_demod
    gnuradio.digital.modulation_utils.add_type_1_mod
    gnuradio.digital.modulation_utils.type_1_constellations
    gnuradio.digital.modulation_utils.type_1_demods
    gnuradio.digital.modulation_utils.type_1_mods
+
+.. gnuradio.digital.utils.mod_codes.GRAY_CODE
+.. gnuradio.digital.utils.mod_codes.NO_CODE
 
 Packet Utilities
 ----------------

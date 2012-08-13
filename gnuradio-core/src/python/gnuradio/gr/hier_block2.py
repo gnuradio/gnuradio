@@ -31,7 +31,9 @@ from gnuradio_core import hier_block2_swig
 #
 class hier_block2(object):
     """
-    Python wrapper around the C++ hierarchical block implementation.
+    Subclass this to create a python hierarchical block.
+
+    This is a python wrapper around the C++ hierarchical block implementation.
     Provides convenience functions and allows proper Python subclassing.
     """
 

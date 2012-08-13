@@ -30,6 +30,7 @@ import digital_swig
 import modulation_utils
 from utils import mod_codes, gray_code
 from generic_mod_demod import generic_mod, generic_demod
+from generic_mod_demod import shared_mod_args, shared_demod_args
 
 # Default number of points in constellation.
 _def_constellation_points = 4
@@ -81,21 +82,24 @@ def psk_constellation(m=_def_constellation_points, mod_code=_def_mod_code,
 # /////////////////////////////////////////////////////////////////////////////
 
 class psk_mod(generic_mod):
+    """
+    Hierarchical block for RRC-filtered PSK modulation.
+    
+    The input is a byte stream (unsigned char) and the
+    output is the complex modulated signal at baseband.
+    
+    Args:
+        constellation_points: Number of constellation points (must be a power of two) (integer).
+        mod_code: Whether to use a gray_code (digital.mod_codes.GRAY_CODE) or not (digital.mod_codes.NO_CODE).
+        differential: Whether to use differential encoding (boolean).
+    """
+    # See generic_mod for additional arguments
+    __doc__ += shared_mod_args
 
     def __init__(self, constellation_points=_def_constellation_points,
                  mod_code=_def_mod_code,
                  differential=_def_differential,
                  *args, **kwargs):
-
-        """
-	Hierarchical block for RRC-filtered PSK modulation.
-
-	The input is a byte stream (unsigned char) and the
-	output is the complex modulated signal at baseband.
-
-        See generic_mod block for list of parameters.
-	"""
-
         constellation = psk_constellation(constellation_points, mod_code, differential)
         super(psk_mod, self).__init__(constellation, differential, *args, **kwargs)
 
@@ -106,20 +110,23 @@ class psk_mod(generic_mod):
 
 class psk_demod(generic_demod):
 
+    """
+    Hierarchical block for RRC-filtered PSK modulation.
+    
+    The input is a byte stream (unsigned char) and the
+    output is the complex modulated signal at baseband.
+
+    Args:
+        constellation_points: Number of constellation points (must be a power of two) (integer).
+        mod_code: Whether to use a gray_code (digital.mod_codes.GRAY_CODE) or not (digital.mod_codes.NO_CODE).
+        differential: Whether to use differential encoding (boolean).
+    """
+    # See generic_mod for additional arguments
+    __doc__ += shared_mod_args
     def __init__(self, constellation_points=_def_constellation_points,
                  mod_code=_def_mod_code,
                  differential=_def_differential,
                  *args, **kwargs):
-
-        """
-	Hierarchical block for RRC-filtered PSK modulation.
-
-	The input is a byte stream (unsigned char) and the
-	output is the complex modulated signal at baseband.
-
-        See generic_demod block for list of parameters.
-        """
-
         constellation = psk_constellation(constellation_points, mod_code, differential)
         super(psk_demod, self).__init__(constellation, differential, *args, **kwargs)
 
