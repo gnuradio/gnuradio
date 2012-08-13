@@ -20,16 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,glfsr_source_f);
+#ifndef INCLUDED_GR_GLFSR_SOURCE_B_IMPL_H
+#define INCLUDED_GR_GLFSR_SOURCE_B_IMPL_H
 
-digital_glfsr_source_f_sptr
-digital_make_glfsr_source_f(int degree, bool repeat=true,
-			    int mask=0, int seed=1)
-  throw (std::runtime_error);
+#include <digital/glfsr_source_b.h>
+#include <digital/glfsr.h>
 
-class digital_glfsr_source_f : public gr_sync_block
-{
-public:
-  unsigned int period() const;
-  int mask() const;
-};
+namespace gr {
+  namespace digital {
+
+    class glfsr_source_b_impl : public glfsr_source_b
+    {
+    private:
+      glfsr *d_glfsr;
+
+      bool d_repeat;
+      unsigned int d_index;
+      unsigned int d_length;
+
+    public:
+      glfsr_source_b_impl(int degree, bool repeat=true,
+			  int mask=0, int seed=1);
+      ~glfsr_source_b_impl();
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+
+      unsigned int period() const { return d_length; }
+      int mask() const;
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_GLFSR_SOURCE_B_IMPL_H */

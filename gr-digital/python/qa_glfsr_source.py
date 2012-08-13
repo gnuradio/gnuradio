@@ -25,10 +25,10 @@ import digital_swig as digital
 
 class test_glfsr_source(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def test_000_make_b(self):

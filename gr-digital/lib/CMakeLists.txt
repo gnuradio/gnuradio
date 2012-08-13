@@ -104,7 +104,7 @@ expand_cc(chunks_to_symbols_XX_impl     bf bc sf sc if ic)
 list(APPEND digital_sources
     ${generated_sources}
     constellation.cc
-    #impl_glfsr.cc
+    glfsr.cc
     #impl_mpsk_snr_est.cc
     additive_scrambler_bb_impl.cc
     binary_slicer_fb_impl.cc
@@ -113,9 +113,9 @@ list(APPEND digital_sources
     cma_equalizer_cc_impl.cc
     constellation_receiver_cb_impl.cc
     constellation_decoder_cb_impl.cc
-    #correlate_access_code_bb_impl.cc
-    #correlate_access_code_tag_bb_impl.cc
-    #costas_loop_cc_impl.cc
+    correlate_access_code_bb_impl.cc
+    correlate_access_code_tag_bb_impl.cc
+    costas_loop_cc_impl.cc
     #cpmmod_bc_impl.cc
     #crc32_impl.cc
     #descrambler_bb_impl.cc
@@ -124,8 +124,8 @@ list(APPEND digital_sources
     diff_phasor_cc_impl.cc
     fll_band_edge_cc_impl.cc
     #framer_sink_1_impl.cc
-    #glfsr_source_b_impl.cc
-    #glfsr_source_f_impl.cc
+    glfsr_source_b_impl.cc
+    glfsr_source_f_impl.cc
     #gmskmod_bc_impl.cc
     #lms_dd_equalizer_cc_impl.cc
     #kurtotic_equalizer_cc_impl.cc
@@ -141,7 +141,7 @@ list(APPEND digital_sources
     #packet_sink_impl.cc
     pfb_clock_sync_ccf_impl.cc
     pfb_clock_sync_fff_impl.cc
-    #pn_correlator_cc_impl.cc
+    pn_correlator_cc_impl.cc
     #probe_density_b_impl.cc
     #probe_mpsk_snr_est_c_impl.cc
     #scrambler_bb_impl.cc

@@ -20,13 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,pn_correlator_cc)
+#ifndef INCLUDED_GR_GLFSR_SOURCE_F_IMPL_H
+#define INCLUDED_GR_GLFSR_SOURCE_F_IMPL_H
 
-digital_pn_correlator_cc_sptr
-digital_make_pn_correlator_cc(int degree, int mask=0, int seed=1);
+#include <digital/glfsr_source_f.h>
+#include <digital/glfsr.h>
 
-class digital_pn_correlator_cc : public gr_sync_decimator
-{
- protected:
-  digital_pn_correlator_cc();
-};
+namespace gr {
+  namespace digital {
+
+    class glfsr_source_f_impl : public glfsr_source_f
+    {
+    private:
+      glfsr *d_glfsr;
+
+      bool d_repeat;
+      unsigned int d_index;
+      unsigned int d_length;
+
+    public:
+      glfsr_source_f_impl(int degree, bool repeat=true,
+			 int mask=0, int seed=1);
+      ~glfsr_source_f_impl();
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+
+      unsigned int period() const { return d_length; }
+      int mask() const;
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_GLFSR_SOURCE_F_IMPL_H */

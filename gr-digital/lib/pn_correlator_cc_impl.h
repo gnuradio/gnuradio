@@ -20,38 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DIGITAL_IMPL_GLFSR_H
-#define INCLUDED_DIGITAL_IMPL_GLFSR_H
+#ifndef INCLUDED_GR_PN_CORRELATOR_CC_IMPL_H
+#define INCLUDED_GR_PN_CORRELATOR_CC_IMPL_H
 
-#include <digital_api.h>
+#include <digital/pn_correlator_cc.h>
+#include <digital/glfsr.h>
 
-/*!
- * \brief Galois Linear Feedback Shift Register using specified polynomial mask
- * \ingroup misc
- *
- * Generates a maximal length pseudo-random sequence of length 2^degree-1
- */
+namespace gr {
+  namespace digital {
 
-class DIGITAL_API digital_impl_glfsr
-{
- private:
-  int d_shift_register;
-  int d_mask;
+    class pn_correlator_cc_impl : public pn_correlator_cc
+    {
+    private:
+      int    d_len;
+      float  d_pn;
+      glfsr *d_reference;
 
- public:
+    public:
+      pn_correlator_cc_impl(int degree, int mask=0, int seed=1);
+      ~pn_correlator_cc_impl();
+      
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
 
-  digital_impl_glfsr(int mask, int seed) { d_shift_register = seed; d_mask = mask; }
-  static int glfsr_mask(int degree);
+  } /* namespace digital */
+} /* namespace gr */
 
-  unsigned char next_bit() {
-    unsigned char bit = d_shift_register & 1;
-    d_shift_register >>= 1;
-    if (bit)
-      d_shift_register ^= d_mask;
-    return bit;
-  }
-
-  int mask() const { return d_mask; }
-};
-
-#endif /* INCLUDED_DIGITAL_IMPL_GLFSR_H */
+#endif /* INCLUDED_GR_PN_CORRELATOR_CC_IMPL_H */

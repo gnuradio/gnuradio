@@ -76,7 +76,7 @@ add_custom_target(digital_generated_includes DEPENDS
 install(FILES
     ${digital_generated_includes}
     api.h
-#    impl_glfsr.h
+    glfsr.h
 #    impl_mpsk_snr_est.h
     additive_scrambler_bb.h
     binary_slicer_fb.h
@@ -87,9 +87,9 @@ install(FILES
     constellation.h
     constellation_receiver_cb.h
     constellation_decoder_cb.h
-#    correlate_access_code_bb.h
-#    correlate_access_code_tag_bb.h
-#    costas_loop_cc.h
+    correlate_access_code_bb.h
+    correlate_access_code_tag_bb.h
+    costas_loop_cc.h
 #    crc32.h
 #    descrambler_bb.h
     diff_decoder_bb.h
@@ -97,8 +97,8 @@ install(FILES
     diff_phasor_cc.h
 #    framer_sink_1.h
     fll_band_edge_cc.h
-#    glfsr_source_b.h
-#    glfsr_source_f.h
+    glfsr_source_b.h
+    glfsr_source_f.h
 #    gmskmod_bc.h
 #    lms_dd_equalizer_cc.h
 #    kurtotic_equalizer_cc.h
@@ -115,7 +115,7 @@ install(FILES
 #    packet_sink.h
     pfb_clock_sync_ccf.h
     pfb_clock_sync_fff.h
-#    pn_correlator_cc.h
+    pn_correlator_cc.h
 #    probe_density_b.h
 #    probe_mpsk_snr_est_c.h
 #    scrambler_bb.h

@@ -52,13 +52,13 @@ class test_correlate_access_code(gr_unittest.TestCase):
         #           0  0  0  1  0  0  0  1
         src_data = (1, 0, 1, 1, 1, 1, 0, 1, 1) + pad + (0,) * 7
         expected_result = pad + (1, 0, 1, 1, 3, 1, 0, 1, 1, 2) + (0,) * 6
-        src = gr.vector_source_b (src_data)
+        src = gr.vector_source_b(src_data)
         op = digital.correlate_access_code_bb("1011", 0)
-        dst = gr.vector_sink_b ()
-        self.tb.connect (src, op, dst)
-        self.tb.run ()
-        result_data = dst.data ()
-        self.assertEqual (expected_result, result_data)
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
 
 
     def test_002(self):
@@ -69,13 +69,13 @@ class test_correlate_access_code(gr_unittest.TestCase):
         #print access_code
         src_data = code + (1, 0, 1, 1) + pad
         expected_result = pad + code + (3, 0, 1, 1)
-        src = gr.vector_source_b (src_data)
+        src = gr.vector_source_b(src_data)
         op = digital.correlate_access_code_bb(access_code, 0)
-        dst = gr.vector_sink_b ()
-        self.tb.connect (src, op, dst)
-        self.tb.run ()
-        result_data = dst.data ()
-        self.assertEqual (expected_result, result_data)
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
         
     def test_003(self):
         code = tuple(string_to_1_0_list(default_access_code))
@@ -85,14 +85,13 @@ class test_correlate_access_code(gr_unittest.TestCase):
         #print access_code
         src_data = code + (1, 0, 1, 1) + pad
         expected_result = code + (1, 0, 1, 1) + pad
-        src = gr.vector_source_b (src_data)
+        src = gr.vector_source_b(src_data)
         op = digital.correlate_access_code_tag_bb(access_code, 0, "test")
-        dst = gr.vector_sink_b ()
-        self.tb.connect (src, op, dst)
-        self.tb.run ()
-        result_data = dst.data ()
-        self.assertEqual (expected_result, result_data)
-        
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
 
 if __name__ == '__main__':
     gr_unittest.run(test_correlate_access_code, "test_correlate_access_code.xml")
