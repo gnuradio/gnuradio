@@ -62,9 +62,11 @@ class error_rate(gr.hier_block2):
 	def __init__(self, type='BER', win_size=default_win_size, bits_per_symbol=2):
 		"""
 		Error rate constructor.
-		@param type a string 'BER' or 'SER'
-		@param win_size the number of samples to calculate over
-		@param bits_per_symbol the number of information bits per symbol (BER only)
+		
+		Args:
+		    type: a string 'BER' or 'SER'
+		    win_size: the number of samples to calculate over
+		    bits_per_symbol: the number of information bits per symbol (BER only)
 		"""
 		#init
 		gr.hier_block2.__init__(

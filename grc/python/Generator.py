@@ -35,8 +35,10 @@ class Generator(object):
 		"""
 		Initialize the generator object.
 		Determine the file to generate.
-		@param flow_graph the flow graph object
-		@param file_path the path to write the file to
+		
+		Args:
+		    flow_graph: the flow graph object
+		    file_path: the path to write the file to
 		"""
 		self._flow_graph = flow_graph
 		self._generate_options = self._flow_graph.get_option('generate_options')
@@ -72,7 +74,9 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 	def get_popen(self):
 		"""
 		Execute this python flow graph.
-		@return a popen object
+		
+		Returns:
+		    a popen object
 		"""
 		#extract the path to the python executable
 		python_exe = sys.executable
@@ -95,7 +99,9 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 	def __str__(self):
 		"""
 		Convert the flow graph to python code.
-		@return a string of python code
+		
+		Returns:
+		    a string of python code
 		"""
 		title = self._flow_graph.get_option('title') or self._flow_graph.get_option('id').replace('_', ' ').title()
 		imports = self._flow_graph.get_imports()

@@ -33,8 +33,12 @@ def handle_key_press(event):
 	"""
 	Call the action associated with the key press event.
 	Both the key value and the mask must have a match.
-	@param event a gtk key press event
-	@return true if handled
+	
+	Args:
+	    event: a gtk key press event
+	
+	Returns:
+	    true if handled
 	"""
 	_used_mods_mask = reduce(lambda x, y: x | y, [mod_mask for keyval, mod_mask in _actions_keypress_dict], NO_MODS_MASK)
 	#extract the key value and the consumed modifiers
@@ -63,8 +67,10 @@ class Action(gtk.Action):
 	def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None):
 		"""
 		Create a new Action instance.
-		@param key_presses a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
-		@param the regular gtk.Action parameters (defaults to None)
+		
+		Args:
+		    key_presses: a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
+		    the: regular gtk.Action parameters (defaults to None)
 		"""
 		if name is None: name = label
 		gtk.Action.__init__(self,

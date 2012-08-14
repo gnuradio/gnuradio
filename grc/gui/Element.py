@@ -40,8 +40,12 @@ class Element(object):
 		"""
 		Is this element horizontal?
 		If rotation is None, use this element's rotation.
-		@param rotation the optional rotation
-		@return true if rotation is horizontal
+		
+		Args:
+		    rotation: the optional rotation
+		
+		Returns:
+		    true if rotation is horizontal
 		"""
 		rotation = rotation or self.get_rotation()
 		return rotation in (0, 180)
@@ -50,8 +54,12 @@ class Element(object):
 		"""
 		Is this element vertical?
 		If rotation is None, use this element's rotation.
-		@param rotation the optional rotation
-		@return true if rotation is vertical
+		
+		Args:
+		    rotation: the optional rotation
+		
+		Returns:
+		    true if rotation is vertical
 		"""
 		rotation = rotation or self.get_rotation()
 		return rotation in (90, 270)
@@ -74,10 +82,12 @@ class Element(object):
 	def draw(self, gc, window, border_color, bg_color):
 		"""
 		Draw in the given window.
-		@param gc the graphics context
-		@param window the gtk window to draw on
-		@param border_color the color for lines and rectangle borders
-		@param bg_color the color for the inside of the rectangle
+		
+		Args:
+		    gc: the graphics context
+		    window: the gtk window to draw on
+		    border_color: the color for lines and rectangle borders
+		    bg_color: the color for the inside of the rectangle
 		"""
 		X,Y = self.get_coordinate()
 		for (rX,rY),(W,H) in self._areas_list:
@@ -94,7 +104,9 @@ class Element(object):
 	def rotate(self, rotation):
 		"""
 		Rotate all of the areas by 90 degrees.
-		@param rotation multiple of 90 degrees
+		
+		Args:
+		    rotation: multiple of 90 degrees
 		"""
 		self.set_rotation((self.get_rotation() + rotation)%360)
 
@@ -106,41 +118,53 @@ class Element(object):
 	def set_coordinate(self, coor):
 		"""
 		Set the reference coordinate.
-		@param coor the coordinate tuple (x,y)
+		
+		Args:
+		    coor: the coordinate tuple (x,y)
 		"""
 		self.coor = coor
 
 	def get_parent(self):
 		"""
 		Get the parent of this element.
-		@return the parent
+		
+		Returns:
+		    the parent
 		"""
 		return self.parent
 
 	def set_highlighted(self, highlighted):
 		"""
 		Set the highlight status.
-		@param highlighted true to enable highlighting
+		
+		Args:
+		    highlighted: true to enable highlighting
 		"""
 		self.highlighted = highlighted
 
 	def is_highlighted(self):
 		"""
 		Get the highlight status.
-		@return true if highlighted
+		
+		Returns:
+		    true if highlighted
 		"""
 		return self.highlighted
 
 	def get_coordinate(self):
 		"""Get the coordinate.
-		@return the coordinate tuple (x,y)
+		
+		Returns:
+		    the coordinate tuple (x,y)
 		"""
 		return self.coor
 
 	def move(self, delta_coor):
 		"""
 		Move the element by adding the delta_coor to the current coordinate.
-		@param delta_coor (delta_x,delta_y) tuple
+		
+		Args:
+		    delta_coor: (delta_x,delta_y) tuple
 		"""
 		deltaX, deltaY = delta_coor
 		X, Y = self.get_coordinate()
@@ -154,8 +178,10 @@ class Element(object):
 		A positive width is to the right of the coordinate.
 		A positive height is above the coordinate.
 		The area is associated with a rotation.
-		@param rel_coor (x,y) offset from this element's coordinate
-		@param area (width,height) tuple
+		
+		Args:
+		    rel_coor: (x,y) offset from this element's coordinate
+		    area: (width,height) tuple
 		"""
 		self._areas_list.append((rel_coor, area))
 
@@ -165,8 +191,10 @@ class Element(object):
 		A line is defined by 2 relative coordinates.
 		Lines must be horizontal or vertical.
 		The line is associated with a rotation.
-		@param rel_coor1 relative (x1,y1) tuple
-		@param rel_coor2 relative (x2,y2) tuple
+		
+		Args:
+		    rel_coor1: relative (x1,y1) tuple
+		    rel_coor2: relative (x2,y2) tuple
 		"""
 		self._lines_list.append((rel_coor1, rel_coor2))
 
@@ -178,9 +206,13 @@ class Element(object):
 		Both coordinates specified:
 			Is this element within the rectangular region defined by both coordinates?
 			ie: do any area corners or line endpoints fall within the region?
-		@param coor the selection coordinate, tuple x, y
-		@param coor_m an additional selection coordinate.
-		@return self if one of the areas/lines encompasses coor, else None.
+		
+		Args:
+		    coor: the selection coordinate, tuple x, y
+		    coor_m: an additional selection coordinate.
+		
+		Returns:
+		    self if one of the areas/lines encompasses coor, else None.
 		"""
 		#function to test if p is between a and b (inclusive)
 		in_between = lambda p, a, b: p >= min(a, b) and p <= max(a, b)
@@ -215,14 +247,18 @@ class Element(object):
 	def get_rotation(self):
 		"""
 		Get the rotation in degrees.
-		@return the rotation
+		
+		Returns:
+		    the rotation
 		"""
 		return self.rotation
 
 	def set_rotation(self, rotation):
 		"""
 		Set the rotation in degrees.
-		@param rotation the rotation"""
+		
+		Args:
+		    rotation: the rotation"""
 		if rotation not in POSSIBLE_ROTATIONS:
 			raise Exception('"%s" is not one of the possible rotations: (%s)'%(rotation, POSSIBLE_ROTATIONS))
 		self.rotation = rotation

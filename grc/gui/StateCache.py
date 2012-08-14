@@ -30,7 +30,9 @@ class StateCache(object):
 	def __init__(self, initial_state):
 		"""
 		StateCache constructor.
-		@param initial_state the intial state (nested data)
+		
+		Args:
+		    initial_state: the intial state (nested data)
 		"""
 		self.states = [None] * STATE_CACHE_SIZE #fill states
 		self.current_state_index = 0
@@ -43,7 +45,9 @@ class StateCache(object):
 		"""
 		Save a new state.
 		Place the new state at the next index and add one to the number of previous states.
-		@param state the new state
+		
+		Args:
+		    state: the new state
 		"""
 		self.current_state_index = (self.current_state_index + 1)%STATE_CACHE_SIZE
 		self.states[self.current_state_index] = state
@@ -55,7 +59,9 @@ class StateCache(object):
 	def get_current_state(self):
 		"""
 		Get the state at the current index.
-		@return the current state (nested data)
+		
+		Returns:
+		    the current state (nested data)
 		"""
 		self.update_actions()
 		return self.states[self.current_state_index]
@@ -63,7 +69,9 @@ class StateCache(object):
 	def get_prev_state(self):
 		"""
 		Get the previous state and decrement the current index.
-		@return the previous state or None
+		
+		Returns:
+		    the previous state or None
 		"""
 		if self.num_prev_states > 0:
 			self.current_state_index = (self.current_state_index + STATE_CACHE_SIZE -1)%STATE_CACHE_SIZE
@@ -75,7 +83,9 @@ class StateCache(object):
 	def get_next_state(self):
 		"""
 		Get the nest state and increment the current index.
-		@return the next state or None
+		
+		Returns:
+		    the next state or None
 		"""
 		if self.num_next_states > 0:
 			self.current_state_index = (self.current_state_index + 1)%STATE_CACHE_SIZE

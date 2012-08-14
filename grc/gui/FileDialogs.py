@@ -79,8 +79,10 @@ class FileDialogHelper(gtk.FileChooserDialog):
 		FileDialogHelper contructor.
 		Create a save or open dialog with cancel and ok buttons.
 		Use standard settings: no multiple selection, local files only, and the * filter.
-		@param action gtk.FILE_CHOOSER_ACTION_OPEN or gtk.FILE_CHOOSER_ACTION_SAVE
-		@param title the title of the dialog (string)
+		
+		Args:
+		    action: gtk.FILE_CHOOSER_ACTION_OPEN or gtk.FILE_CHOOSER_ACTION_SAVE
+		    title: the title of the dialog (string)
 		"""
 		ok_stock = {gtk.FILE_CHOOSER_ACTION_OPEN : 'gtk-open', gtk.FILE_CHOOSER_ACTION_SAVE : 'gtk-save'}[action]
 		gtk.FileChooserDialog.__init__(self, title, None, action, ('gtk-cancel', gtk.RESPONSE_CANCEL, ok_stock, gtk.RESPONSE_OK))
@@ -94,7 +96,9 @@ class FileDialog(FileDialogHelper):
 	def __init__(self, current_file_path=''):
 		"""
 		FileDialog constructor.
-		@param current_file_path the current directory or path to the open flow graph
+		
+		Args:
+		    current_file_path: the current directory or path to the open flow graph
 		"""
 		if not current_file_path: current_file_path = path.join(DEFAULT_FILE_PATH, NEW_FLOGRAPH_TITLE + Preferences.file_extension())
 		if self.type == OPEN_FLOW_GRAPH:
@@ -115,7 +119,9 @@ class FileDialog(FileDialogHelper):
 	def add_and_set_filter(self, filter):
 		"""
 		Add the gtk file filter to the list of filters and set it as the default file filter.
-		@param filter a gtk file filter.
+		
+		Args:
+		    filter: a gtk file filter.
 		"""
 		self.add_filter(filter)
 		self.set_filter(filter)
@@ -126,7 +132,9 @@ class FileDialog(FileDialogHelper):
 		If this is a save dialog and the file name is missing the extension, append the file extension.
 		If the file name with the extension already exists, show a overwrite dialog.
 		If this is an open dialog, return a list of filenames.
-		@return the complete file path
+		
+		Returns:
+		    the complete file path
 		"""
 		if gtk.FileChooserDialog.run(self) != gtk.RESPONSE_OK: return None #response was cancel
 		#############################################
@@ -164,7 +172,9 @@ class FileDialog(FileDialogHelper):
 	def run(self):
 		"""
 		Get the filename and destroy the dialog.
-		@return the filename or None if a close/cancel occured.
+		
+		Returns:
+		    the filename or None if a close/cancel occured.
 		"""
 		filename = self.get_rectified_filename()
 		self.destroy()

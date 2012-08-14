@@ -26,8 +26,12 @@ class FlowGraph(Element):
 	def __init__(self, platform):
 		"""
 		Make a flow graph from the arguments.
-		@param platform a platforms with blocks and contrcutors
-		@return the flow graph object
+		
+		Args:
+		    platform: a platforms with blocks and contrcutors
+		
+		Returns:
+		    the flow graph object
 		"""
 		#initialize
 		Element.__init__(self, platform)
@@ -37,8 +41,12 @@ class FlowGraph(Element):
 	def _get_unique_id(self, base_id=''):
 		"""
 		Get a unique id starting with the base id.
-		@param base_id the id starts with this and appends a count
-		@return a unique id
+		
+		Args:
+		    base_id: the id starts with this and appends a count
+		
+		Returns:
+		    a unique id
 		"""
 		index = 0
 		while True:
@@ -53,8 +61,12 @@ class FlowGraph(Element):
 		"""
 		Get the option for a given key.
 		The option comes from the special options block.
-		@param key the param key for the options block
-		@return the value held by that param
+		
+		Args:
+		    key: the param key for the options block
+		
+		Returns:
+		    the value held by that param
 		"""
 		return self._options_block.get_param(key).get_evaluated()
 
@@ -71,7 +83,9 @@ class FlowGraph(Element):
 		"""
 		Get a list of all the elements.
 		Always ensure that the options block is in the list (only once).
-		@return the element list
+		
+		Returns:
+		    the element list
 		"""
 		options_block_count = self._elements.count(self._options_block)
 		if not options_block_count:
@@ -83,14 +97,18 @@ class FlowGraph(Element):
 	def get_enabled_blocks(self):
 		"""
 		Get a list of all blocks that are enabled.
-		@return a list of blocks
+		
+		Returns:
+		    a list of blocks
 		"""
 		return filter(lambda b: b.get_enabled(), self.get_blocks())
 
 	def get_enabled_connections(self):
 		"""
 		Get a list of all connections that are enabled.
-		@return a list of connections
+		
+		Returns:
+		    a list of connections
 		"""
 		return filter(lambda c: c.get_enabled(), self.get_connections())
 
@@ -98,8 +116,12 @@ class FlowGraph(Element):
 		"""
 		Get a new block of the specified key.
 		Add the block to the list of elements.
-		@param key the block key
-		@return the new block or None if not found
+		
+		Args:
+		    key: the block key
+		
+		Returns:
+		    the new block or None if not found
 		"""
 		if key not in self.get_parent().get_block_keys(): return None
 		block = self.get_parent().get_new_block(self, key)
@@ -109,10 +131,14 @@ class FlowGraph(Element):
 	def connect(self, porta, portb):
 		"""
 		Create a connection between porta and portb.
-		@param porta a port
-		@param portb another port
+		
+		Args:
+		    porta: a port
+		    portb: another port
 		@throw Exception bad connection
-		@return the new connection
+		
+		Returns:
+		    the new connection
 		"""
 		connection = self.get_parent().Connection(flow_graph=self, porta=porta, portb=portb)
 		self.get_elements().append(connection)
@@ -138,7 +164,9 @@ class FlowGraph(Element):
 	def evaluate(self, expr):
 		"""
 		Evaluate the expression.
-		@param expr the string expression
+		
+		Args:
+		    expr: the string expression
 		@throw NotImplementedError
 		"""
 		raise NotImplementedError
@@ -150,7 +178,9 @@ class FlowGraph(Element):
 		"""
 		Export this flow graph to nested data.
 		Export all block and connection data.
-		@return a nested data odict
+		
+		Returns:
+		    a nested data odict
 		"""
 		import time
 		n = odict()
@@ -164,7 +194,9 @@ class FlowGraph(Element):
 		Import blocks and connections into this flow graph.
 		Clear this flowgraph of all previous blocks and connections.
 		Any blocks or connections in error will be ignored.
-		@param n the nested data odict
+		
+		Args:
+		    n: the nested data odict
 		"""
 		#remove previous elements
 		self._elements = list()

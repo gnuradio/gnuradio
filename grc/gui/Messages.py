@@ -26,14 +26,18 @@ MESSENGERS_LIST = list()
 def register_messenger(messenger):
 	"""
 	Append the given messenger to the list of messengers.
-	@param messenger a method thats takes a string
+	
+	Args:
+	    messenger: a method thats takes a string
 	"""
 	MESSENGERS_LIST.append(messenger)
 
 def send(message):
 	"""
 	Give the message to each of the messengers.
-	@param message a message string
+	
+	Args:
+	    message: a message string
 	"""
 	for messenger in MESSENGERS_LIST: messenger(message)
 

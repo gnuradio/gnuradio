@@ -26,11 +26,13 @@ class selector(gr.hier_block2):
 	def __init__(self, item_size, num_inputs, num_outputs, input_index, output_index):
 		"""
 		Selector constructor.
-		@param item_size the size of the gr data stream in bytes
-		@param num_inputs the number of inputs (integer)
-		@param num_outputs the number of outputs (integer)
-		@param input_index the index for the source data
-		@param output_index the index for the destination data
+		
+		Args:
+		    item_size: the size of the gr data stream in bytes
+		    num_inputs: the number of inputs (integer)
+		    num_outputs: the number of outputs (integer)
+		    input_index: the index for the source data
+		    output_index: the index for the destination data
 		"""
 		gr.hier_block2.__init__(
 			self, 'selector',
@@ -54,7 +56,9 @@ class selector(gr.hier_block2):
 	def _indexes_valid(self):
 		"""
 		Are the input and output indexes within range of the number of inputs and outputs?
-		@return true if input index and output index are in range
+		
+		Returns:
+		    true if input index and output index are in range
 		"""
 		return self.input_index in range(self.num_inputs) and self.output_index in range(self.num_outputs)
 
@@ -84,7 +88,9 @@ class selector(gr.hier_block2):
 	def set_input_index(self, input_index):
 		"""
 		Change the block to the new input index if the index changed.
-		@param input_index the new input index
+		
+		Args:
+		    input_index: the new input index
 		"""
 		if self.input_index != input_index:
 			self.lock()
@@ -96,7 +102,9 @@ class selector(gr.hier_block2):
 	def set_output_index(self, output_index):
 		"""
 		Change the block to the new output index if the index changed.
-		@param output_index the new output index
+		
+		Args:
+		    output_index: the new output index
 		"""
 		if self.output_index != output_index:
 			self.lock()
@@ -111,8 +119,10 @@ class valve(selector):
 	def __init__(self, item_size, open):
 		"""
 		Constructor for valve.
-		@param item_size the size of the gr data stream in bytes
-		@param open true if initial valve state is open
+		
+		Args:
+		    item_size: the size of the gr data stream in bytes
+		    open: true if initial valve state is open
 		"""
 		if open: output_index = -1
 		else: output_index = 0
@@ -121,7 +131,9 @@ class valve(selector):
 	def set_open(self, open):
 		"""
 		Callback to set open state.
-		@param open true to set valve state to open
+		
+		Args:
+		    open: true to set valve state to open
 		"""
 		if open: output_index = -1
 		else: output_index = 0

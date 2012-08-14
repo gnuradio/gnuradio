@@ -70,11 +70,13 @@ class packet_encoder(gr.hier_block2):
 	def __init__(self, samples_per_symbol, bits_per_symbol, access_code='', pad_for_usrp=True):
 		"""
 		packet_mod constructor.
-		@param samples_per_symbol number of samples per symbol
-		@param bits_per_symbol number of bits per symbol
-		@param access_code AKA sync vector
-		@param pad_for_usrp If true, packets are padded such that they end up a multiple of 128 samples
-		@param payload_length number of bytes in a data-stream slice
+		
+		Args:
+		    samples_per_symbol: number of samples per symbol
+		    bits_per_symbol: number of bits per symbol
+		    access_code: AKA sync vector
+		    pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples
+		    payload_length: number of bytes in a data-stream slice
 		"""
 		#setup parameters
 		self._samples_per_symbol = samples_per_symbol
@@ -102,7 +104,9 @@ class packet_encoder(gr.hier_block2):
 	def send_pkt(self, payload):
 		"""
 		Wrap the payload in a packet and push onto the message queue.
-		@param payload string, data to send
+		
+		Args:
+		    payload: string, data to send
 		"""
 		packet = packet_utils.make_packet(
 			payload,
@@ -142,9 +146,11 @@ class packet_decoder(gr.hier_block2):
 	def __init__(self, access_code='', threshold=-1, callback=None):
 		"""
 		packet_demod constructor.
-		@param access_code AKA sync vector
-		@param threshold detect access_code with up to threshold bits wrong (0 -> use default)
-		@param callback a function of args: ok, payload
+		
+		Args:
+		    access_code: AKA sync vector
+		    threshold: detect access_code with up to threshold bits wrong (0 -> use default)
+		    callback: a function of args: ok, payload
 		"""
 		#access code
 		if not access_code: #get access code

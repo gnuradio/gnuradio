@@ -84,9 +84,11 @@ class Port(_Port, _GUIPort):
 	def __init__(self, block, n, dir):
 		"""
 		Make a new port from nested data.
-		@param block the parent element
-		@param n the nested odict
-		@param dir the direction
+		
+		Args:
+		    block: the parent element
+		    n: the nested odict
+		    dir: the direction
 		"""
 		self._n = n
 		if n['type'] == 'msg': n['key'] = 'msg'
@@ -163,7 +165,9 @@ class Port(_Port, _GUIPort):
 		"""
 		Get the vector length.
 		If the evaluation of vlen cannot be cast to an integer, return 1.
-		@return the vector length or 1
+		
+		Returns:
+		    the vector length or 1
 		"""
 		vlen = self.get_parent().resolve_dependencies(self._vlen)
 		try: return int(self.get_parent().get_parent().evaluate(vlen))
@@ -174,7 +178,9 @@ class Port(_Port, _GUIPort):
 		Get the number of ports.
 		If already blank, return a blank
 		If the evaluation of nports cannot be cast to an integer, return 1.
-		@return the number of ports or 1
+		
+		Returns:
+		    the number of ports or 1
 		"""
 		nports = self.get_parent().resolve_dependencies(self._nports)
 		#return blank if nports is blank
@@ -190,7 +196,9 @@ class Port(_Port, _GUIPort):
 		"""
 		Get the color that represents this port's type.
 		Codes differ for ports where the vec length is 1 or greater than 1.
-		@return a hex color code.
+		
+		Returns:
+		    a hex color code.
 		"""
 		try:
 			color = Constants.TYPE_TO_COLOR[self.get_type()]

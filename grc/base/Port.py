@@ -24,9 +24,11 @@ class Port(Element):
 	def __init__(self, block, n, dir):
 		"""
 		Make a new port from nested data.
-		@param block the parent element
-		@param n the nested odict
-		@param dir the direction source or sink
+		
+		Args:
+		    block: the parent element
+		    n: the nested odict
+		    dir: the direction source or sink
 		"""
 		#build the port
 		Element.__init__(self, block)
@@ -69,7 +71,9 @@ class Port(Element):
 	def get_connections(self):
 		"""
 		Get all connections that use this port.
-		@return a list of connection objects
+		
+		Returns:
+		    a list of connection objects
 		"""
 		connections = self.get_parent().get_parent().get_connections()
 		connections = filter(lambda c: c.get_source() is self or c.get_sink() is self, connections)
@@ -78,6 +82,8 @@ class Port(Element):
 	def get_enabled_connections(self):
 		"""
 		Get all enabled connections that use this port.
-		@return a list of connection objects
+		
+		Returns:
+		    a list of connection objects
 		"""
 		return filter(lambda c: c.get_enabled(), self.get_connections())
