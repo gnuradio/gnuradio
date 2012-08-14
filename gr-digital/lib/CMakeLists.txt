@@ -118,7 +118,7 @@ list(APPEND digital_sources
     costas_loop_cc_impl.cc
     #cpmmod_bc_impl.cc
     #crc32_impl.cc
-    #descrambler_bb_impl.cc
+    descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
     diff_phasor_cc_impl.cc
@@ -144,7 +144,7 @@ list(APPEND digital_sources
     pn_correlator_cc_impl.cc
     #probe_density_b_impl.cc
     #probe_mpsk_snr_est_c_impl.cc
-    #scrambler_bb_impl.cc
+    scrambler_bb_impl.cc
     #simple_framer_impl.cc
 )
 

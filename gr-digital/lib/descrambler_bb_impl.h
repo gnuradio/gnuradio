@@ -20,11 +20,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,scrambler_bb);
+#ifndef INCLUDED_GR_DESCRAMBLER_BB_IMPL_H
+#define INCLUDED_GR_DESCRAMBLER_BB_IMPL_H
 
-digital_scrambler_bb_sptr
-digital_make_scrambler_bb(int mask, int seed, int len);
+#include <digital/descrambler_bb.h>
+#include <gri_lfsr.h>
 
-class digital_scrambler_bb : public gr_sync_block
-{
-};
+namespace gr {
+  namespace digital {
+
+    class descrambler_bb_impl : public descrambler_bb
+    {
+    private:
+      gri_lfsr d_lfsr;
+
+    public:
+      descrambler_bb_impl(int mask, int seed, int len);
+      ~descrambler_bb_impl();
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_DESCRAMBLER_BB_IMPL_H */

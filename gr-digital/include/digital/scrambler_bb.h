@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2008,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,41 +20,37 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_IMPL_H
-#define INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_IMPL_H
+#ifndef INCLUDED_GR_SCRAMBLER_BB_H
+#define INCLUDED_GR_SCRAMBLER_BB_H
 
-#include <digital/additive_scrambler_bb.h>
-#include <gri_lfsr.h>
+#include <digital/api.h>
+#include <gr_sync_block.h>
 
 namespace gr {
   namespace digital {
-    
-    class additive_scrambler_bb_impl
-      : public additive_scrambler_bb
+
+    /*!
+     * Scramble an input stream using an LFSR.  This block works on
+     * the LSB only of the input data stream, i.e., on an "unpacked
+     * binary" stream, and produces the same format on its output.
+     *
+     * \param mask     Polynomial mask for LFSR
+     * \param seed     Initial shift register contents
+     * \param len      Shift register length
+     *
+     * \ingroup coding_blk
+     */
+
+    class DIGITAL_API scrambler_bb : virtual public gr_sync_block
     {
-    private:
-      gri_lfsr d_lfsr;
-      int      d_count;
-      int      d_bits;
-      int      d_len;
-      int      d_seed;
-
     public:
-      additive_scrambler_bb_impl(int mask, int seed,
-				 int len, int count=0);
-      ~additive_scrambler_bb_impl();
+      // gr::digital::scrambler_bb::sptr
+      typedef boost::shared_ptr<scrambler_bb> sptr;
 
-      int mask() const;
-      int seed() const;
-      int len() const;
-      int count() const;
-      
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      static sptr make(int mask, int seed, int len);
     };
 
   } /* namespace digital */
 } /* namespace gr */
 
-#endif /* INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_IMPL_H */
+#endif /* INCLUDED_GR_SCRAMBLER_BB_H */

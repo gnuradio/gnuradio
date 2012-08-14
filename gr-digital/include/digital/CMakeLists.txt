@@ -91,7 +91,7 @@ install(FILES
     correlate_access_code_tag_bb.h
     costas_loop_cc.h
 #    crc32.h
-#    descrambler_bb.h
+    descrambler_bb.h
     diff_decoder_bb.h
     diff_encoder_bb.h
     diff_phasor_cc.h
@@ -118,7 +118,7 @@ install(FILES
     pn_correlator_cc.h
 #    probe_density_b.h
 #    probe_mpsk_snr_est_c.h
-#    scrambler_bb.h
+    scrambler_bb.h
 #    simple_framer.h
 #    simple_framer_sync.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital

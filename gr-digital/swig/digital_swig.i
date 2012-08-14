@@ -58,6 +58,7 @@
 #include "digital/correlate_access_code_bb.h"
 #include "digital/correlate_access_code_tag_bb.h"
 #include "digital/costas_loop_cc.h"
+#include "digital/descrambler_bb.h"
 #include "digital/diff_decoder_bb.h"
 #include "digital/diff_encoder_bb.h"
 #include "digital/diff_phasor_cc.h"
@@ -68,6 +69,7 @@
 #include "digital/pfb_clock_sync_ccf.h"
 #include "digital/pfb_clock_sync_fff.h"
 #include "digital/pn_correlator_cc.h"
+#include "digital/scrambler_bb.h"
 %}
 
 %include "digital/additive_scrambler_bb.h"
@@ -87,6 +89,7 @@
 %include "digital/correlate_access_code_bb.h"
 %include "digital/correlate_access_code_tag_bb.h"
 %include "digital/costas_loop_cc.h"
+%include "digital/descrambler_bb.h"
 %include "digital/diff_decoder_bb.h"
 %include "digital/diff_encoder_bb.h"
 %include "digital/diff_phasor_cc.h"
@@ -97,6 +100,7 @@
 %include "digital/pfb_clock_sync_ccf.h"
 %include "digital/pfb_clock_sync_fff.h"
 %include "digital/pn_correlator_cc.h"
+%include "digital/scrambler_bb.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
@@ -114,6 +118,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, constellation_decoder_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, costas_loop_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, descrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_decoder_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_encoder_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_phasor_cc);
@@ -124,6 +129,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_ccf);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_fff);
 GR_SWIG_BLOCK_MAGIC2(digital, pn_correlator_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, scrambler_bb);
 
 // Properly package up constellation objects
 %include "constellation.i"

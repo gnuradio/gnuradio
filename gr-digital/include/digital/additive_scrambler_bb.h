@@ -59,7 +59,7 @@ namespace gr {
        * processed, the shift register is reset to the seed value.
        * This allows processing fixed length vectors of samples.
        */
-      static sptr make(int mask, int seed, int len, int count);
+      static sptr make(int mask, int seed, int len, int count=0);
 
       virtual int mask() const = 0;
       virtual int seed() const = 0;
