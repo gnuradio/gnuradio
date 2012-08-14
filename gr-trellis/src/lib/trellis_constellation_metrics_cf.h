@@ -25,13 +25,13 @@
 
 #include <trellis_api.h>
 #include <gr_block.h>
-#include <digital_constellation.h>
-#include <digital_metric_type.h>
+#include <digital/constellation.h>
+#include <digital/metric_type.h>
 
 class trellis_constellation_metrics_cf;
 typedef boost::shared_ptr<trellis_constellation_metrics_cf> trellis_constellation_metrics_cf_sptr;
 
-TRELLIS_API trellis_constellation_metrics_cf_sptr trellis_make_constellation_metrics_cf (digital_constellation_sptr constellation, trellis_metric_type_t TYPE);
+TRELLIS_API trellis_constellation_metrics_cf_sptr trellis_make_constellation_metrics_cf (gr::digital::constellation_sptr constellation, trellis_metric_type_t TYPE);
 
 /*!
  * \brief Evaluate metrics for use by the Viterbi algorithm.
@@ -47,14 +47,14 @@ class TRELLIS_API trellis_constellation_metrics_cf : public gr_block
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);
  protected:
-  trellis_constellation_metrics_cf (digital_constellation_sptr constellation, trellis_metric_type_t TYPE);
+  trellis_constellation_metrics_cf (gr::digital::constellation_sptr constellation, trellis_metric_type_t TYPE);
 
  private:
-  digital_constellation_sptr d_constellation;
+  gr::digital::constellation_sptr d_constellation;
   trellis_metric_type_t d_TYPE;
   unsigned int d_O;
   unsigned int d_D;
-  friend TRELLIS_API trellis_constellation_metrics_cf_sptr trellis_make_constellation_metrics_cf (digital_constellation_sptr constellation, trellis_metric_type_t TYPE);
+  friend TRELLIS_API trellis_constellation_metrics_cf_sptr trellis_make_constellation_metrics_cf (gr::digital::constellation_sptr constellation, trellis_metric_type_t TYPE);
 
 };
 

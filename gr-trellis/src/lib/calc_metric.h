@@ -25,7 +25,7 @@
 
 #include <vector>
 #include <gr_complex.h>
-#include <digital_metric_type.h>
+#include <digital/metric_type.h>
 
 
 template <class T>

@@ -103,7 +103,7 @@ install(FILES
 #    lms_dd_equalizer_cc.h
 #    kurtotic_equalizer_cc.h
     map_bb.h
-#    metric_type.h
+    metric_type.h
     mpsk_receiver_cc.h
     mpsk_snr_est_cc.h
 #    ofdm_cyclic_prefixer.h

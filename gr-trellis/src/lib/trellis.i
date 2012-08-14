@@ -32,7 +32,7 @@
 #include "trellis_siso_f.h"
 #include "trellis_siso_combined_f.h"
 #include "trellis_constellation_metrics_cf.h"
-#include "digital_constellation.h"
+#include "digital/constellation.h"
 %}
 
 
@@ -50,8 +50,8 @@
 
 %include "trellis_generated.i"
 
-%import "digital_metric_type.h"
-%import "digital_constellation.i"
+%import "digital/metric_type.h"
+%import "constellation.i"
 
  //%pythoncode %{
  //  from gnuradio.gr import TRELLIS_EUCLIDEAN, TRELLIS_HARD_SYMBOL, TRELLIS_HARD_BIT

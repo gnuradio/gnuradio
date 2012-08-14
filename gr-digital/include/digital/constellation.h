@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_CONSTELLATION_H
 
 #include <digital/api.h>
-#include <digital_metric_type.h>
+#include <digital/metric_type.h>
 #include <boost/enable_shared_from_this.hpp>
 #include <gr_complex.h>
 #include <vector>

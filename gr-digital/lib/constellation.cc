@@ -26,7 +26,6 @@
 
 #include <gr_io_signature.h>
 #include <digital/constellation.h>
-#include <digital_metric_type.h>
 #include <gr_math.h>
 #include <gr_complex.h>
 #include <math.h>
