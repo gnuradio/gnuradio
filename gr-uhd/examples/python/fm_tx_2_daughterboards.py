@@ -184,8 +184,9 @@ class my_top_block(gr.top_block):
         """
         Set the center frequency we're interested in.
 
-        @param side: 0 = side A, 1 = side B
-        @param target_freq: frequency in Hz
+        Args:
+            side: 0 = side A, 1 = side B
+            target_freq: frequency in Hz
         @rtype: bool
         """
 

@@ -252,7 +252,8 @@ class wfm_rx_block (stdgui2.std_top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
 

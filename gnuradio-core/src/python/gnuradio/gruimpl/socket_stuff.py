@@ -27,9 +27,12 @@ import sys
 
 def tcp_connect_or_die(sock_addr):
     """
-    @param sock_addr: (host, port) to connect to
-    @type sock_addr: tuple
-    @returns: socket or exits
+    
+    Args:
+        sock_addr: (host, port) to connect to (tuple)
+    
+    Returns:
+        : socket or exits
     """
     s = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -42,9 +45,12 @@ def tcp_connect_or_die(sock_addr):
 
 def udp_connect_or_die(sock_addr):
     """
-    @param sock_addr: (host, port) to connect to
-    @type sock_addr: tuple
-    @returns: socket or exits
+    
+    Args:
+        sock_addr: (host, port) to connect to (tuple)
+    
+    Returns:
+        : socket or exits
     """
     s = socket.socket (socket.AF_INET, socket.SOCK_DGRAM)
     try:

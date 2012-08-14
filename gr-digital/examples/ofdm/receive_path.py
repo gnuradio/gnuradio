@@ -77,8 +77,8 @@ class receive_path(gr.hier_block2):
         """
         Set carrier threshold.
 
-        @param threshold_in_db: set detection threshold
-        @type threshold_in_db:  float (dB)
+        Args:
+            threshold_in_db: set detection threshold (float (dB))
         """
         self.probe.set_threshold(threshold_in_db)
     

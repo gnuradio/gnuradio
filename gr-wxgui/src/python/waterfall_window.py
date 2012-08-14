@@ -61,7 +61,9 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-		@param parent the wx parent window
+		
+		Args:
+		    parent: the wx parent window
 		"""
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
@@ -259,7 +261,9 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		If complex, reorder the fft samples so the negative bins come first.
 		If real, keep take only the positive bins.
 		Send the data to the plotter.
-		@param msg the fft array as a character array
+		
+		Args:
+		    msg: the fft array as a character array
 		"""
 		if not self[RUNNING_KEY]: return
 		#convert to floating point numbers

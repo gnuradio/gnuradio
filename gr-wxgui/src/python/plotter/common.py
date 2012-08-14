@@ -30,8 +30,12 @@ import wx
 def get_exp(num):
 	"""
 	Get the exponent of the number in base 10.
-	@param num the floating point number
-	@return the exponent as an integer
+
+        Args:
+	    num: the floating point number
+
+        Returns:
+	    the exponent as an integer
 	"""
 	if num == 0: return 0
 	return int(math.floor(math.log10(abs(num))))
@@ -41,8 +45,12 @@ def get_si_components(num):
 	Get the SI units for the number.
 	Extract the coeff and exponent of the number.
 	The exponent will be a multiple of 3.
-	@param num the floating point number
-	@return the tuple coeff, exp, prefix
+
+        Args:
+	    num: the floating point number
+
+        Returns:
+	    the tuple coeff, exp, prefix
 	"""
 	num = float(num)
 	exp = get_exp(num)
@@ -65,8 +73,12 @@ def get_si_components(num):
 def sci_format(num):
 	"""
 	Format a floating point number into scientific notation.
-	@param num the number to format
-	@return a label string
+        
+        Args:
+	    num: the number to format
+
+        Returns:
+	    a label string
 	"""
 	coeff, exp, prefix = get_si_components(num)
 	if -3 <= exp < 3: return '%g'%num
@@ -75,9 +87,13 @@ def sci_format(num):
 def eng_format(num, units=''):
 	"""
 	Format a floating point number into engineering notation.
-	@param num the number to format
-	@param units the units to append
-	@return a label string
+	
+	Args:
+	    num: the number to format
+	    units: the units to append
+	
+	Returns:
+	    a label string
 	"""
 	coeff, exp, prefix = get_si_components(num)
 	if -3 <= exp < 3: return '%g'%num

@@ -33,20 +33,14 @@ class fm_demod_cf(gr.hier_block2):
     deemphasis. Low pass filtering is done on the resultant signal. It
     produces an output float strem in the range of [-1.0, +1.0].
 
-    @param channel_rate:  incoming sample rate of the FM baseband
-    @type sample_rate: integer
-    @param deviation: maximum FM deviation (default = 5000)
-    @type deviation: float
-    @param audio_decim: input to output decimation rate
-    @type audio_decim: integer
-    @param audio_pass: audio low pass filter passband frequency
-    @type audio_pass: float
-    @param audio_stop: audio low pass filter stop frequency
-    @type audio_stop: float
-    @param gain: gain applied to audio output (default = 1.0)
-    @type gain: float
-    @param tau: deemphasis time constant (default = 75e-6), specify 'None'
-       to prevent deemphasis
+    Args:
+        channel_rate: incoming sample rate of the FM baseband (integer)
+        deviation: maximum FM deviation (default = 5000) (float)
+        audio_decim: input to output decimation rate (integer)
+        audio_pass: audio low pass filter passband frequency (float)
+        audio_stop: audio low pass filter stop frequency (float)
+        gain: gain applied to audio output (default = 1.0) (float)
+        tau: deemphasis time constant (default = 75e-6), specify 'None' to prevent deemphasis
     """
     def __init__(self, channel_rate, audio_decim, deviation,
                  audio_pass, audio_stop, gain=1.0, tau=75e-6):
@@ -79,10 +73,9 @@ class demod_20k0f3e_cf(fm_demod_cf):
     channel conforming to 20K0F3E emission standards, outputting
     floats in the range [-1.0, +1.0].
 
-    @param sample_rate:  incoming sample rate of the FM baseband
-    @type sample_rate: integer
-    @param audio_decim: input to output decimation rate
-    @type audio_decim: integer
+    Args:
+        sample_rate: incoming sample rate of the FM baseband (integer)
+        audio_decim: input to output decimation rate (integer)
     """
     def __init__(self, channel_rate, audio_decim):
         fm_demod_cf.__init__(self, channel_rate, audio_decim,
@@ -98,10 +91,9 @@ class demod_200kf3e_cf(fm_demod_cf):
     channel conforming to 200KF3E emission standards, outputting
     floats in the range [-1.0, +1.0].
 
-    @param sample_rate:  incoming sample rate of the FM baseband
-    @type sample_rate: integer
-    @param audio_decim: input to output decimation rate
-    @type audio_decim: integer
+    Args:
+        sample_rate: incoming sample rate of the FM baseband (integer)
+        audio_decim: input to output decimation rate (integer)
     """
     def __init__(self, channel_rate, audio_decim):
 	fm_demod_cf.__init__(self, channel_rate, audio_decim,

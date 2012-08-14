@@ -30,14 +30,11 @@ class am_demod_cf(gr.hier_block2):
     filtering to the audio output. It produces a float stream in the
     range [-1.0, +1.0].
 
-    @param channel_rate:  incoming sample rate of the AM baseband
-    @type sample_rate: integer
-    @param audio_decim: input to output decimation rate
-    @type audio_decim: integer
-    @param audio_pass: audio low pass filter passband frequency
-    @type audio_pass: float
-    @param audio_stop: audio low pass filter stop frequency
-    @type audio_stop: float
+    Args:
+        channel_rate: incoming sample rate of the AM baseband (integer)
+        audio_decim: input to output decimation rate (integer)
+        audio_pass: audio low pass filter passband frequency (float)
+        audio_stop: audio low pass filter stop frequency (float)
     """
     def __init__(self, channel_rate, audio_decim, audio_pass, audio_stop):
 	gr.hier_block2.__init__(self, "am_demod_cf",
@@ -64,10 +61,9 @@ class demod_10k0a3e_cf(am_demod_cf):
     This block demodulates an AM channel conformant to 10K0A3E emission
     standards, such as broadcast band AM transmissions.
 
-    @param channel_rate:  incoming sample rate of the AM baseband
-    @type sample_rate: integer
-    @param audio_decim: input to output decimation rate
-    @type audio_decim: integer
+    Args:
+        channel_rate: incoming sample rate of the AM baseband (integer)
+        audio_decim: input to output decimation rate (integer)
     """
     def __init__(self, channel_rate, audio_decim):
     	am_demod_cf.__init__(self, channel_rate, audio_decim,

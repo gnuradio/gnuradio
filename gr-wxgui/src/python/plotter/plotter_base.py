@@ -37,7 +37,9 @@ class gl_cache(object):
 	def __init__(self, draw):
 		"""
 		Create a new cache.
-		@param draw a function to draw gl stuff
+
+                Args:
+		    draw: a function to draw gl stuff
 		"""
 		self.changed(True)
 		self._draw = draw
@@ -84,7 +86,9 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		Initialize the GLCanvas with double buffering.
 		Initialize various plotter flags.
 		Bind the paint and size events.
-		@param parent the parent widgit
+
+                Args:
+		    parent: the parent widgit
 		"""
 		attribList = (wx.glcanvas.WX_GL_DOUBLEBUFFER, wx.glcanvas.WX_GL_RGBA)
 		wx.glcanvas.GLCanvas.__init__(self, parent, attribList=attribList);
@@ -111,7 +115,9 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		"""
 		Create a new gl cache.
 		Register its draw and init function.
-		@return the new cache object
+
+                Returns:
+		    the new cache object
 		"""
 		cache = gl_cache(draw_fcn)
 		self.register_init(cache.init)

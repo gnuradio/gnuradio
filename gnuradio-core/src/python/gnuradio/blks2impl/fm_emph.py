@@ -43,10 +43,10 @@ class fm_deemph(gr.hier_block2):
 
     def __init__(self, fs, tau=75e-6):
         """
-        @param fs: sampling frequency in Hz
-        @type fs: float
-        @param tau: Time constant in seconds (75us in US, 50us in EUR)
-        @type tau: float
+        
+        Args:
+            fs: sampling frequency in Hz (float)
+            tau: Time constant in seconds (75us in US, 50us in EUR) (float)
         """
         gr.hier_block2.__init__(self, "fm_deemph",
 				gr.io_signature(1, 1, gr.sizeof_float), # Input signature
@@ -126,10 +126,10 @@ class fm_preemph(gr.hier_block2):
     """
     def __init__(self, fs, tau=75e-6):
         """
-        @param fs: sampling frequency in Hz
-        @type fs: float
-        @param tau: Time constant in seconds (75us in US, 50us in EUR)
-        @type tau: float
+        
+        Args:
+            fs: sampling frequency in Hz (float)
+            tau: Time constant in seconds (75us in US, 50us in EUR) (float)
         """
 
 	gr.hier_block2.__init__(self, "fm_deemph",

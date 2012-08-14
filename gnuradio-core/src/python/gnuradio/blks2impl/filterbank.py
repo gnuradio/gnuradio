@@ -45,8 +45,9 @@ class synthesis_filterbank(gr.hier_block2):
         Takes M complex streams in, produces single complex stream out
         that runs at M times the input sample rate
 
-        @param mpoints: number of freq bins/interpolation factor/subbands
-        @param taps:    filter taps for subband filter
+        Args:
+            mpoints: number of freq bins/interpolation factor/subbands
+            taps: filter taps for subband filter
 
         The channel spacing is equal to the input sample rate.
         The total bandwidth and output sample rate are equal the input
@@ -128,8 +129,9 @@ class analysis_filterbank(gr.hier_block2):
         Takes 1 complex stream in, produces M complex streams out
         that runs at 1/M times the input sample rate
 
-        @param mpoints: number of freq bins/interpolation factor/subbands
-        @param taps:    filter taps for subband filter
+        Args:
+            mpoints: number of freq bins/interpolation factor/subbands
+            taps: filter taps for subband filter
 
         Same channel to frequency mapping as described above.
         """

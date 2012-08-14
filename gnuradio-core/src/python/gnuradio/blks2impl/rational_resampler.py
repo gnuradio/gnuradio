@@ -28,13 +28,12 @@ def design_filter(interpolation, decimation, fractional_bw):
     Given the interpolation rate, decimation rate and a fractional bandwidth,
     design a set of taps.
 
-    @param interpolation: interpolation factor
-    @type  interpolation: integer > 0
-    @param decimation: decimation factor
-    @type  decimation: integer > 0
-    @param fractional_bw: fractional bandwidth in (0, 0.5)  0.4 works well.
-    @type  fractional_bw: float
-    @returns: sequence of numbers
+    Args:
+        interpolation: interpolation factor (integer > 0)
+        decimation: decimation factor (integer > 0)
+        fractional_bw: fractional bandwidth in (0, 0.5)  0.4 works well. (float)
+    Returns:
+        : sequence of numbers
     """
 
     if fractional_bw >= 0.5 or fractional_bw <= 0:
@@ -69,14 +68,11 @@ class _rational_resampler_base(gr.hier_block2):
         If neither is specified, a reasonable default, 0.4, is used as
         the fractional_bw.
 
-        @param interpolation: interpolation factor
-        @type  interpolation: integer > 0
-        @param decimation: decimation factor
-        @type  decimation: integer > 0
-        @param taps: optional filter coefficients
-        @type  taps: sequence
-        @param fractional_bw: fractional bandwidth in (0, 0.5), measured at final freq (use 0.4)
-        @type  fractional_bw: float
+        Args:
+            interpolation: interpolation factor (integer > 0)
+            decimation: decimation factor (integer > 0)
+            taps: optional filter coefficients (sequence)
+            fractional_bw: fractional bandwidth in (0, 0.5), measured at final freq (use 0.4) (float)
         """
 
         if not isinstance(interpolation, int) or interpolation < 1:

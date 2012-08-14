@@ -31,9 +31,11 @@ class top_block_gui(gr.top_block):
 		"""
 		Initialize the gr top block.
 		Create the wx gui elements.
-		@param title the main window title
-		@param size the main window size tuple in pixels
-		@param icon the file path to an icon or None
+		
+		Args:
+		    title: the main window title
+		    size: the main window size tuple in pixels
+		    icon: the file path to an icon or None
 		"""
 		#initialize
 		gr.top_block.__init__(self)

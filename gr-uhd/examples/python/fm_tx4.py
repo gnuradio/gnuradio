@@ -179,7 +179,8 @@ class fm_tx_block(stdgui2.std_top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
 
         Tuning is a two step process.  First we ask the front-end to

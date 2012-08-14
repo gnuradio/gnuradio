@@ -108,9 +108,13 @@ class bar_plotter(grid_plotter_base):
 		Get the text the will populate the point label.
 		Give X and Y values for the current point.
 		Give values for the channel at the X coordinate.
-		@param x_val the current x value
-		@param y_val the current y value
-		@return a string with newlines
+
+                Args:
+		    x_val: the current x value
+		    y_val: the current y value
+
+                Returns:
+		    a string with newlines
 		"""
 		if len(self._bars) == 0: return ''
 		scalar = float(len(self._bars)-1)/(self.x_max - self.x_min)
@@ -130,9 +134,11 @@ class bar_plotter(grid_plotter_base):
 	def set_bars(self, bars, bar_width, color_spec):
 		"""
 		Set the bars.
-		@param bars a list of bars
-		@param bar_width the fractional width of the bar, between 0 and 1
-		@param color_spec the color tuple
+
+                Args:
+		    bars: a list of bars
+		    bar_width: the fractional width of the bar, between 0 and 1
+		    color_spec: the color tuple
 		"""
 		self.lock()
 		self._bars = bars

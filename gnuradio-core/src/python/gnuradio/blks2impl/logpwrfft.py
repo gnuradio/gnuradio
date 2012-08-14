@@ -32,13 +32,15 @@ class _logpwrfft_base(gr.hier_block2):
         """
         Create an log10(abs(fft)) stream chain.
         Provide access to the setting the filter and sample rate.
-        @param sample_rate        Incoming stream sample rate
-        @param fft_size                Number of FFT bins
-        @param ref_scale        Sets 0 dB value input amplitude
-        @param frame_rate        Output frame rate
-        @param avg_alpha        FFT averaging (over time) constant [0.0-1.0]
-        @param average                Whether to average [True, False]
-        @param win              the window taps generation function
+        
+        Args:
+            sample_rate: Incoming stream sample rate
+            fft_size: Number of FFT bins
+            ref_scale: Sets 0 dB value input amplitude
+            frame_rate: Output frame rate
+            avg_alpha: FFT averaging (over time) constant [0.0-1.0]
+            average: Whether to average [True, False]
+            win: the window taps generation function
         """
         gr.hier_block2.__init__(self, self._name,
                                 gr.io_signature(1, 1, self._item_size),          # Input signature
@@ -70,28 +72,36 @@ class _logpwrfft_base(gr.hier_block2):
     def set_decimation(self, decim):
         """
         Set the decimation on stream decimator.
-        @param decim the new decimation
+        
+        Args:
+            decim: the new decimation
         """
         self._sd.set_decimation(decim)
 
     def set_vec_rate(self, vec_rate):
         """
         Set the vector rate on stream decimator.
-        @param vec_rate the new vector rate
+        
+        Args:
+            vec_rate: the new vector rate
         """
         self._sd.set_vec_rate(vec_rate)
 
     def set_sample_rate(self, sample_rate):
         """
         Set the new sampling rate
-        @param sample_rate the new rate
+        
+        Args:
+            sample_rate: the new rate
         """
         self._sd.set_sample_rate(sample_rate)
 
     def set_average(self, average):
         """
         Set the averaging filter on/off.
-        @param average true to set averaging on
+        
+        Args:
+            average: true to set averaging on
         """
         self._average = average
         if self._average:
@@ -102,7 +112,9 @@ class _logpwrfft_base(gr.hier_block2):
     def set_avg_alpha(self, avg_alpha):
         """
         Set the average alpha and set the taps if average was on.
-        @param avg_alpha the new iir filter tap
+        
+        Args:
+            avg_alpha: the new iir filter tap
         """
         self._avg_alpha = avg_alpha
         self.set_average(self._average)

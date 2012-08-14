@@ -90,11 +90,13 @@ class _form_base(pubsub, wx.BoxSizer):
 		Bind the update handler to the widget for data events.
 		This ensures that the gui thread handles updating widgets.
 		Setup the pusub triggers for external and internal.
-		@param widget the main widget
-		@param label the optional label
-		@param flag additional flags for widget
-		@param label_prop the proportion for the label
-		@param widget_prop the proportion for the widget
+
+                Args:
+		    widget: the main widget
+		    label: the optional label
+		    flag: additional flags for widget
+		    label_prop: the proportion for the label
+		    widget_prop: the proportion for the widget
 		"""
 		#setup data event
 		widget.Bind(EVT_DATA, lambda x: self._update(x.data))
@@ -184,18 +186,20 @@ class _slider_base(_form_base):
 class static_text(_form_base):
 	"""
 	A text box form.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param label title label for this widget (optional)
-	@param width the width of the form in px
-	@param bold true to bold-ify the text (default=False)
-	@param units a suffix to add after the text
-	@param converter forms.str_converter(), int_converter(), float_converter()...
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    label: title label for this widget (optional)
+	    width: the width of the form in px
+	    bold: true to bold-ify the text (default=False)
+	    units: a suffix to add after the text
+	    converter: forms.str_converter(), int_converter(), float_converter()...
 	"""
 	def __init__(self, label='', width=-1, bold=False, units='', converter=converters.str_converter(), **kwargs):
 		self._units = units
@@ -214,16 +218,18 @@ class static_text(_form_base):
 class text_box(_form_base):
 	"""
 	A text box form.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param label title label for this widget (optional)
-	@param width the width of the form in px
-	@param converter forms.str_converter(), int_converter(), float_converter()...
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    label: title label for this widget (optional)
+	    width: the width of the form in px
+	    converter: forms.str_converter(), int_converter(), float_converter()...
 	"""
 	def __init__(self, label='', width=-1, converter=converters.eval_converter(), **kwargs):
 		_form_base.__init__(self, converter=converter, **kwargs)
@@ -249,21 +255,23 @@ class text_box(_form_base):
 class slider(_slider_base):
 	"""
 	A generic linear slider.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param label title label for this widget (optional)
-	@param length the length of the slider in px (optional)
-	@param style wx.SL_HORIZONTAL or wx.SL_VERTICAL (default=horizontal)
-	@param minimum the minimum value
-	@param maximum the maximum value
-	@param num_steps the number of slider steps (or specify step_size)
-	@param step_size the step between slider jumps (or specify num_steps)
-	@param cast a cast function, int, or float (default=float)
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    label: title label for this widget (optional)
+	    length: the length of the slider in px (optional)
+	    style: wx.SL_HORIZONTAL or wx.SL_VERTICAL (default=horizontal)
+	    minimum: the minimum value
+	    maximum: the maximum value
+	    num_steps: the number of slider steps (or specify step_size)
+	    step_size: the step between slider jumps (or specify num_steps)
+	    cast: a cast function, int, or float (default=float)
 	"""
 	def __init__(self, minimum=-100, maximum=100, num_steps=100, step_size=None, cast=float, **kwargs):
 		assert step_size or num_steps
@@ -275,21 +283,23 @@ class log_slider(_slider_base):
 	"""
 	A generic logarithmic slider.
 	The sliders min and max values are base**min_exp and base**max_exp.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param label title label for this widget (optional)
-	@param length the length of the slider in px (optional)
-	@param style wx.SL_HORIZONTAL or wx.SL_VERTICAL (default=horizontal)
-	@param min_exp the minimum exponent
-	@param max_exp the maximum exponent
-	@param base the exponent base in base**exp
-	@param num_steps the number of slider steps (or specify step_size)
-	@param step_size the exponent step size (or specify num_steps)
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    label: title label for this widget (optional)
+	    length: the length of the slider in px (optional)
+	    style: wx.SL_HORIZONTAL or wx.SL_VERTICAL (default=horizontal)
+	    min_exp: the minimum exponent
+	    max_exp: the maximum exponent
+	    base: the exponent base in base**exp
+	    num_steps: the number of slider steps (or specify step_size)
+	    step_size: the exponent step size (or specify num_steps)
 	"""
 	def __init__(self, min_exp=0, max_exp=1, base=10, num_steps=100, step_size=None, **kwargs):
 		assert step_size or num_steps
@@ -304,20 +314,22 @@ class gauge(_form_base):
 	"""
 	A gauge bar.
 	The gauge displays floating point values between the minimum and maximum.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param label title label for this widget (optional)
-	@param length the length of the slider in px (optional)
-	@param style wx.GA_HORIZONTAL or wx.GA_VERTICAL (default=horizontal)
-	@param minimum the minimum value
-	@param maximum the maximum value
-	@param num_steps the number of slider steps (or specify step_size)
-	@param step_size the step between slider jumps (or specify num_steps)
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    label: title label for this widget (optional)
+	    length: the length of the slider in px (optional)
+	    style: wx.GA_HORIZONTAL or wx.GA_VERTICAL (default=horizontal)
+	    minimum: the minimum value
+	    maximum: the maximum value
+	    num_steps: the number of slider steps (or specify step_size)
+	    step_size: the step between slider jumps (or specify num_steps)
 	"""
 	def __init__(self, label='', length=-1, minimum=-100, maximum=100, num_steps=100, step_size=None, style=wx.GA_HORIZONTAL, **kwargs):
 		assert step_size or num_steps
@@ -338,16 +350,18 @@ class gauge(_form_base):
 class check_box(_form_base):
 	"""
 	Create a check box form.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param true the value for form when checked (default=True)
-	@param false the value for form when unchecked (default=False)
-	@param label title label for this widget (optional)
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    true: the value for form when checked (default=True)
+	    false: the value for form when unchecked (default=False)
+	    label: title label for this widget (optional)
 	"""
 	def __init__(self, label='', true=True, false=False, **kwargs):
 		_form_base.__init__(self, converter=converters.bool_converter(true=true, false=false), **kwargs)
@@ -364,17 +378,19 @@ class check_box(_form_base):
 class drop_down(_chooser_base):
 	"""
 	Create a drop down menu form.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param choices list of possible values
-	@param labels list of labels for each choice (default=choices)
-	@param label title label for this widget (optional)
-	@param width the form width in px (optional)
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    choices: list of possible values
+	    labels: list of labels for each choice (default=choices)
+	    label: title label for this widget (optional)
+	    width: the form width in px (optional)
 	"""
 	def __init__(self, label='', width=-1, **kwargs):
 		_chooser_base.__init__(self, **kwargs)
@@ -394,18 +410,18 @@ class drop_down(_chooser_base):
 class button(_chooser_base):
 	"""
 	Create a multi-state button.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param choices list of possible values
-	@param labels list of labels for each choice (default=choices)
-	@param width the width of the button in pixels (optional)
-	@param style style arguments (optional)
-	@param label title label for this widget (optional)
+	    parent the parent widget
+	    sizer add this widget to sizer if provided (optional)
+	    proportion the proportion when added to the sizer (default=0)
+	    flag the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps the pubsub object (optional)
+	    key the pubsub key (optional)
+	    value the default value (optional)
+	    choices list of possible values
+	    labels list of labels for each choice (default=choices)
+	    width the width of the button in pixels (optional)
+	    style style arguments (optional)
+	    label title label for this widget (optional)
 	"""
 	def __init__(self, label='', style=0, width=-1, **kwargs):
 		_chooser_base.__init__(self, **kwargs)
@@ -420,17 +436,19 @@ class toggle_button(button):
 	"""
 	Create a dual-state button.
 	This button will alternate between True and False when clicked.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param width the width of the button in pixels (optional)
-	@param style style arguments (optional)
-	@param true_label the button's label in the true state
-	@param false_label the button's label in the false state
+        
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    width: the width of the button in pixels (optional)
+	    style: style arguments (optional)
+	    true_label: the button's label in the true state
+	    false_label: the button's label in the false state
 	"""
 	def __init__(self, true_label='On (click to stop)', false_label='Off (click to start)', **kwargs):
 		button.__init__(self, choices=[True, False], labels=[true_label, false_label], **kwargs)
@@ -440,16 +458,18 @@ class single_button(toggle_button):
 	Create a single state button.
 	This button will callback() when clicked.
 	For use when state holding is not important.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param width the width of the button in pixels (optional)
-	@param style style arguments (optional)
-	@param label the button's label
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value: the default value (optional)
+	    width: the width of the button in pixels (optional)
+	    style: style arguments (optional)
+	    label: the button's label
 	"""
 	def __init__(self, label='click for callback', **kwargs):
 		toggle_button.__init__(self, true_label=label, false_label=label, value=True, **kwargs)
@@ -460,18 +480,20 @@ class single_button(toggle_button):
 class radio_buttons(_chooser_base):
 	"""
 	Create a radio button form.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param ps the pubsub object (optional)
-	@param key the pubsub key (optional)
-	@param value the default value (optional)
-	@param choices list of possible values
-	@param labels list of labels for each choice (default=choices)
-	@param major_dimension the number of rows/cols (default=auto)
-	@param label title label for this widget (optional)
-	@param style useful style args: wx.RA_HORIZONTAL, wx.RA_VERTICAL, wx.NO_BORDER (default=wx.RA_HORIZONTAL)
+
+        Args:
+	    parent: the parent widget
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    ps: the pubsub object (optional)
+	    key: the pubsub key (optional)
+	    value the default value (optional)
+	    choices: list of possible values
+	    labels: list of labels for each choice (default=choices)
+	    major_dimension: the number of rows/cols (default=auto)
+	    label: title label for this widget (optional)
+	    style: useful style args: wx.RA_HORIZONTAL, wx.RA_VERTICAL, wx.NO_BORDER (default=wx.RA_HORIZONTAL)
 	"""
 	def __init__(self, style=wx.RA_HORIZONTAL, label='', major_dimension=0, **kwargs):
 		_chooser_base.__init__(self, **kwargs)

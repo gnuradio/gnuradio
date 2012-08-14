@@ -344,7 +344,8 @@ class transmit_path(gr.hier_block2):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
         r = self.u.set_center_freq(target_freq)
@@ -464,7 +465,8 @@ class receive_path(gr.hier_block2):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
         r = self.u.set_center_freq(target_freq)

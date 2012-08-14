@@ -76,8 +76,8 @@ class vector_source_ts(gr.hier_block2):
         """
         Pad tranport stream packets to 256 bytes and reformat appropriately.
 
-        @param ts: MPEG transport stream.
-        @type  ts: sequence of ints in [0,255]; len(ts) % 188 == 0
+        Args:
+            ts: MPEG transport stream. (sequence of ints in [0,255]; len(ts) % 188 == 0)
         """
 
         src = gr.vector_source_b(pad_transport_stream(ts))

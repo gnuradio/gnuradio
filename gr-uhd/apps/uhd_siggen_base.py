@@ -151,7 +151,9 @@ class top_block(gr.top_block, pubsub):
     def _set_tx_amplitude(self, ampl):
         """
         Sets the transmit amplitude sent to the USRP
-        @param ampl the amplitude or None for automatic
+        
+        Args:
+            ampl: the amplitude or None for automatic
         """
         ampl_range = self[AMPL_RANGE_KEY]
         if ampl is None:

@@ -84,7 +84,9 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-		@param parent the wx parent window
+                
+                Args:
+		    parent: the wx parent window
 		"""
 		WIDTH = 90
 		self.parent = parent
@@ -526,7 +528,9 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		Handle the message from the scope sink message queue.
 		Plot the list of arrays of samples onto the grid.
 		Each samples array gets its own channel.
-		@param msg the time domain data as a character array
+
+                Args:
+		    msg: the time domain data as a character array
 		"""
 		if not self[RUNNING_KEY]: return
 		#check time elapsed

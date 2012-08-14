@@ -74,11 +74,10 @@ def extract_kwargs_from_options(function, excluded_args, options):
     but in that case the default provided in the __init__ argument
     list will be used since there is no kwargs entry.)
 
-    @param function: the function whose parameter list will be examined
-    @param excluded_args: function arguments that are NOT to be added to the dictionary
-    @type excluded_args: sequence of strings
-    @param options: result of command argument parsing
-    @type options: optparse.Values
+    Args:
+        function: the function whose parameter list will be examined
+        excluded_args: function arguments that are NOT to be added to the dictionary (sequence of strings)
+        options: result of command argument parsing (optparse.Values)
     """
     
     # Try this in C++ ;)

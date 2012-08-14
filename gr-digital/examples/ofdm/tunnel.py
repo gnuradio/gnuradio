@@ -146,8 +146,9 @@ class cs_mac(object):
         """
         Invoked by thread associated with PHY to pass received packet up.
 
-        @param ok: bool indicating whether payload CRC was OK
-        @param payload: contents of the packet (string)
+        Args:
+            ok: bool indicating whether payload CRC was OK
+            payload: contents of the packet (string)
         """
         if self.verbose:
             print "Rx: ok = %r  len(payload) = %4d" % (ok, len(payload))

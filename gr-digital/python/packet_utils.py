@@ -107,13 +107,12 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     """
     Build a packet, given access code, payload, and whitener offset
 
-    @param payload:               packet payload, len [0, 4096]
-    @param samples_per_symbol:    samples per symbol (needed for padding calculation)
-    @type  samples_per_symbol:    int
-    @param bits_per_symbol:       (needed for padding calculation)
-    @type bits_per_symbol:        int
-    @param access_code:           string of ascii 0's and 1's
-    @param whitener_offset        offset into whitener string to use [0-16)
+    Args:
+        payload: packet payload, len [0, 4096]
+        samples_per_symbol: samples per symbol (needed for padding calculation) (int)
+        bits_per_symbol: (needed for padding calculation) (int)
+        access_code: string of ascii 0's and 1's
+        whitener_offset: offset into whitener string to use [0-16)
     
     Packet will have access code at the beginning, followed by length, payload
     and finally CRC-32.
@@ -156,13 +155,13 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     we want to pad so that after modulation the resulting packet
     is a multiple of 128 samples.
 
-    @param ptk_byte_len: len in bytes of packet, not including padding.
-    @param samples_per_symbol: samples per bit (1 bit / symbolwidth GMSK)
-    @type samples_per_symbol: int
-    @param bits_per_symbol: bits per symbol (log2(modulation order))
-    @type bits_per_symbol: int
+    Args:
+        ptk_byte_len: len in bytes of packet, not including padding.
+        samples_per_symbol: samples per bit (1 bit / symbolwidth GMSK) (int)
+        bits_per_symbol: bits per symbol (log2(modulation order)) (int)
 
-    @returns number of bytes of padding to append.
+    Returns:
+        number of bytes of padding to append.
     """
     modulus = 128
     byte_modulus = gru.lcm(modulus/8, samples_per_symbol) * bits_per_symbol / samples_per_symbol
@@ -176,7 +175,8 @@ def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=True
     """
     Return (ok, payload)
 
-    @param whitened_payload_with_crc: string
+    Args:
+        whitened_payload_with_crc: string
     """
 
     if dewhitening:

@@ -28,7 +28,8 @@ def make_fake_transport_stream_packet(npkts):
     """
     Return a sequence of 8-bit ints that represents an MPEG Transport Stream packet.
 
-    @param npkts: how many 188-byte packets to return
+    Args:
+        npkts: how many 188-byte packets to return
 
     FYI, each ATSC Data Frame contains two Data Fields, each of which contains
     312 data segments.  Each transport stream packet maps to a data segment.

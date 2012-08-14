@@ -48,13 +48,15 @@ import wx
 class static_box_sizer(wx.StaticBoxSizer):
 	"""
 	A box sizer with label and border.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param label title label for this widget (optional)
-	@param bold true to boldify the label
-	@param orient the sizer orientation wx.VERTICAL or wx.HORIZONTAL (default=wx.VERTICAL)
+        
+        Args:
+	    parent: the parent widget
+            sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
+	    label: title label for this widget (optional)
+	    bold: true to boldify the label
+	    orient: the sizer orientation wx.VERTICAL or wx.HORIZONTAL (default=wx.VERTICAL)
 	"""
 	def __init__(self, parent, label='', bold=False, sizer=None, orient=wx.VERTICAL, proportion=0, flag=wx.EXPAND):
 		box = wx.StaticBox(parent=parent, label=label)
@@ -65,20 +67,17 @@ class static_box_sizer(wx.StaticBoxSizer):
 class incr_decr_buttons(wx.BoxSizer):
 	"""
 	A horizontal box sizer with a increment and a decrement button.
-	@param parent the parent widget
-	@param sizer add this widget to sizer if provided (optional)
-	@param proportion the proportion when added to the sizer (default=0)
-	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
-	@param label title label for this widget (optional)
-	@param on_incr the callback for pressing the + button
-	@param on_decr the callback for pressing the - button
+
+        Args:
+	    parent: the parent widget
+	    on_incr: the callback for pressing the + button
+	    on_decr: the callback for pressing the - button
+	    label: title label for this widget (optional)
+	    sizer: add this widget to sizer if provided (optional)
+	    proportion: the proportion when added to the sizer (default=0)
+	    flag: the flag argument when added to the sizer (default=wx.EXPAND)
 	"""
 	def __init__(self, parent, on_incr, on_decr, label='', sizer=None, proportion=0, flag=wx.EXPAND):
-		"""
-		@param parent the parent window
-		@param on_incr the event handler for increment
-		@param on_decr the event handler for decrement
-		"""
 		wx.BoxSizer.__init__(self, wx.HORIZONTAL)
 		buttons_box = wx.BoxSizer(wx.HORIZONTAL)
 		self._incr_button = wx.Button(parent, label='+', style=wx.BU_EXACTFIT)

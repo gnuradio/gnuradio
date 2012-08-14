@@ -6,11 +6,10 @@ def slider(parent, min, max, callback):
     """
     Return a wx.Slider object.
 
-    @param min: minimum slider value
-    @type min: float
-    @param max: maximum slider value
-    @type max: float
-    @param callback: function of one arg invoked when slider moves.
+    Args:
+        min: minimum slider value (float)
+        max: maximum slider value (float)
+        callback: function of one arg invoked when slider moves.
     @rtype: wx.Slider
     """
     new_id = wx.NewId()

@@ -78,7 +78,9 @@ class grid_plotter_base(plotter_base):
 	def set_point_label_coordinate(self, coor):
 		"""
 		Set the point label coordinate.
-		@param coor the coordinate x, y tuple or None
+                
+                Args:
+		    coor: the coordinate x, y tuple or None
 		"""
 		self.lock()
 		self._point_label_coordinate = coor
@@ -103,8 +105,12 @@ class grid_plotter_base(plotter_base):
 		Enable/disable the grid aspect ratio.
 		If enabled, enforce the aspect ratio on the padding:
 			horizontal_padding:vertical_padding == width:height
-		@param enable true to enable
-		@return the enable state when None
+
+                Args:
+		    enable: true to enable
+
+                Returns:
+		    the enable state when None
 		"""
 		if enable is None: return self._enable_grid_aspect_ratio
 		self.lock()
@@ -115,8 +121,12 @@ class grid_plotter_base(plotter_base):
 	def enable_point_label(self, enable=None):
 		"""
 		Enable/disable the point label.
-		@param enable true to enable
-		@return the enable state when None
+
+                Args:
+		    enable: true to enable
+
+                Returns:
+		    the enable state when None
 		"""
 		if enable is None: return self._enable_point_label
 		self.lock()
@@ -127,7 +137,9 @@ class grid_plotter_base(plotter_base):
 	def set_title(self, title):
 		"""
 		Set the title.
-		@param title the title string
+
+                Args:
+		    title the title string
 		"""
 		self.lock()
 		self.title = title
@@ -137,8 +149,10 @@ class grid_plotter_base(plotter_base):
 	def set_x_label(self, x_label, x_units=''):
 		"""
 		Set the x label and units.
-		@param x_label the x label string
-		@param x_units the x units string
+
+                Args:
+		    x_label: the x label string
+		    x_units: the x units string
 		"""
 		self.lock()
 		self.x_label = x_label
@@ -149,8 +163,10 @@ class grid_plotter_base(plotter_base):
 	def set_y_label(self, y_label, y_units=''):
 		"""
 		Set the y label and units.
-		@param y_label the y label string
-		@param y_units the y units string
+
+                Args:
+		    y_label: the y label string
+		    y_units: the y units string
 		"""
 		self.lock()
 		self.y_label = y_label
@@ -161,10 +177,12 @@ class grid_plotter_base(plotter_base):
 	def set_x_grid(self, minimum, maximum, step, scale=False):
 		"""
 		Set the x grid parameters.
-		@param minimum the left-most value
-		@param maximum the right-most value
-		@param step the grid spacing
-		@param scale true to scale the x grid
+
+                Args:
+		    minimum: the left-most value
+		    maximum: the right-most value
+		    step: the grid spacing
+		    scale: true to scale the x grid
 		"""
 		self.lock()
 		self.x_min = float(minimum)
@@ -183,10 +201,12 @@ class grid_plotter_base(plotter_base):
 	def set_y_grid(self, minimum, maximum, step, scale=False):
 		"""
 		Set the y grid parameters.
-		@param minimum the bottom-most value
-		@param maximum the top-most value
-		@param step the grid spacing
-		@param scale true to scale the y grid
+
+                Args:
+		    minimum: the bottom-most value
+		    maximum: the top-most value
+		    step: the grid spacing
+		    scale: true to scale the y grid
 		"""
 		self.lock()
 		self.y_min = float(minimum)
@@ -305,9 +325,13 @@ class grid_plotter_base(plotter_base):
 	def _get_tick_label(self, tick, unit):
 		"""
 		Format the tick value and create a gl text.
-		@param tick the floating point tick value
-		@param unit the axis unit
-		@return the tick label text
+
+                Args:
+		    tick: the floating point tick value
+		    unit: the axis unit
+
+                Returns:
+		    the tick label text
 		"""
 		if unit: tick_str = common.sci_format(tick)
 		else: tick_str = common.eng_format(tick)
@@ -316,11 +340,15 @@ class grid_plotter_base(plotter_base):
 	def _get_ticks(self, min, max, step, scalar):
 		"""
 		Determine the positions for the ticks.
-		@param min the lower bound
-		@param max the upper bound
-		@param step the grid spacing
-		@param scalar the grid scaling
-		@return a list of tick positions between min and max
+
+                Args:
+		    min: the lower bound
+		    max: the upper bound
+		    step: the grid spacing
+		    scalar: the grid scaling
+
+                Returns:
+		    a list of tick positions between min and max
 		"""
 		#cast to float
 		min = float(min)
@@ -340,8 +368,12 @@ class grid_plotter_base(plotter_base):
 	def enable_grid_lines(self, enable=None):
 		"""
 		Enable/disable the grid lines.
-		@param enable true to enable
-		@return the enable state when None
+                
+                Args:
+		    enable: true to enable
+
+                Returns:
+		    the enable state when None
 		"""
 		if enable is None: return self._enable_grid_lines
 		self.lock()
@@ -352,8 +384,10 @@ class grid_plotter_base(plotter_base):
 	def _draw_grid_line(self, coor1, coor2):
 		"""
 		Draw a dashed line from coor1 to coor2.
-		@param corr1 a tuple of x, y
-		@param corr2 a tuple of x, y
+
+                Args:
+		    corr1: a tuple of x, y
+		    corr2: a tuple of x, y
 		"""
 		if not self.enable_grid_lines(): return
 		length = math.sqrt((coor1[0] - coor2[0])**2 + (coor1[1] - coor2[1])**2)
@@ -372,11 +406,13 @@ class grid_plotter_base(plotter_base):
 		"""
 		Draw a rectangle on the x, y plane.
 		X and Y are the top-left corner.
-		@param x the left position of the rectangle
-		@param y the top position of the rectangle
-		@param width the width of the rectangle
-		@param height the height of the rectangle
-		@param fill true to color inside of rectangle
+
+                Args:
+		    x: the left position of the rectangle
+		    y: the top position of the rectangle
+		    width: the width of the rectangle
+		    height: the height of the rectangle
+		    fill: true to color inside of rectangle
 		"""
 		GL.glBegin(fill and GL.GL_QUADS or GL.GL_LINE_LOOP)
 		GL.glVertex2f(x, y)
