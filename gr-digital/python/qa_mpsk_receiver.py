@@ -23,17 +23,17 @@
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import filter_swig as filter
-import random, cmath
+import random, cmath, time
 
 class test_mpsk_receiver(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test01 (self):
+    def test01(self):
         # Test BPSK sync
         M = 2
         theta = 0
@@ -60,9 +60,9 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         nfilts = 32
         excess_bw = 0.35
         ntaps = 11 * int(omega*nfilts)
-        rrc_taps0 = gr.firdes.root_raised_cosine(
+        rrc_taps0 = filter.firdes.root_raised_cosine(
             nfilts, nfilts, 1.0, excess_bw, ntaps)
-        rrc_taps1 = gr.firdes.root_raised_cosine(
+        rrc_taps1 = filter.firdes.root_raised_cosine(
             1, omega, 1.0, excess_bw, 11*omega)
         self.rrc0 = filter.pfb_arb_resampler_ccf(omega, rrc_taps0)
         self.rrc1 = filter.fir_filter_ccf(1, rrc_taps1)
@@ -83,7 +83,7 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         #for e,d in zip(expected_result, dst_data):
         #    print "{0:+.02f}  {1:+.02f}".format(e, d)
         
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 1)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 1)
 
 
     def test02 (self):
@@ -116,9 +116,9 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         nfilts = 32
         excess_bw = 0.35
         ntaps = 11 * int(omega*nfilts)
-        rrc_taps0 = gr.firdes.root_raised_cosine(
+        rrc_taps0 = filter.firdes.root_raised_cosine(
             nfilts, nfilts, 1.0, excess_bw, ntaps)
-        rrc_taps1 = gr.firdes.root_raised_cosine(
+        rrc_taps1 = filter.firdes.root_raised_cosine(
             1, omega, 1.0, excess_bw, 11*omega)
         self.rrc0 = filter.pfb_arb_resampler_ccf(omega, rrc_taps0)
         self.rrc1 = filter.fir_filter_ccf(1, rrc_taps1)
@@ -128,7 +128,9 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         
         expected_result = 10000*[complex(0, +0.5), complex(-0.5, 0),
                                  complex(0, -0.5), complex(+0.5, 0)]
-        dst_data = self.snk.data()
+
+        # get data after a settling period
+        dst_data = self.snk.data()[100:]
 
         # Only compare last Ncmp samples
         Ncmp = 1000
@@ -140,7 +142,7 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         #for e,d in zip(expected_result, dst_data):
         #    print "{0:+.02f}  {1:+.02f}".format(e, d)
 
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 1)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 1)
 
 if __name__ == '__main__':
     gr_unittest.run(test_mpsk_receiver, "test_mpsk_receiver.xml")

@@ -65,6 +65,7 @@
 #include "digital/glfsr_source_b.h"
 #include "digital/glfsr_source_f.h"
 #include "digital/map_bb.h"
+#include "digital/mpsk_receiver_cc.h"
 #include "digital/mpsk_snr_est_cc.h"
 #include "digital/pfb_clock_sync_ccf.h"
 #include "digital/pfb_clock_sync_fff.h"
@@ -100,6 +101,7 @@
 %include "digital/glfsr_source_b.h"
 %include "digital/glfsr_source_f.h"
 %include "digital/map_bb.h"
+%include "digital/mpsk_receiver_cc.h"
 %include "digital/mpsk_snr_est_cc.h"
 %include "digital/pfb_clock_sync_ccf.h"
 %include "digital/pfb_clock_sync_fff.h"
@@ -132,6 +134,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, fll_band_edge_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_b);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_f);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_ccf);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_fff);

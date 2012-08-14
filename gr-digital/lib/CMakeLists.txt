@@ -130,7 +130,7 @@ list(APPEND digital_sources
     #lms_dd_equalizer_cc_impl.cc
     #kurtotic_equalizer_cc_impl.cc
     map_bb_impl.cc
-    #mpsk_receiver_cc_impl.cc
+    mpsk_receiver_cc_impl.cc
     mpsk_snr_est_cc_impl.cc
     #ofdm_cyclic_prefixer_impl.cc
     #ofdm_frame_acquisition_impl.cc
