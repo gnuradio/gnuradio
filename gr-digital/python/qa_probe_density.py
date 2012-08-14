@@ -34,37 +34,37 @@ class test_probe_density(gr_unittest.TestCase):
     def test_001(self):
         src_data = [0, 1, 0, 1]
         expected_data = 1
-        src = gr.vector_source_b (src_data)
+        src = gr.vector_source_b(src_data)
         op = digital.probe_density_b(1)
         self.tb.connect (src, op)
         self.tb.run ()
 
         result_data = op.density()
-        self.assertEqual (expected_data, result_data)
+        self.assertEqual(expected_data, result_data)
 
 
     def test_002(self):
         src_data = [1, 1, 1, 1]
         expected_data = 1
-        src = gr.vector_source_b (src_data)
+        src = gr.vector_source_b(src_data)
         op = digital.probe_density_b(0.01)
-        self.tb.connect (src, op)
-        self.tb.run ()
+        self.tb.connect(src, op)
+        self.tb.run()
 
         result_data = op.density()
-        self.assertEqual (expected_data, result_data)
+        self.assertEqual(expected_data, result_data)
 
     def test_003(self):
         src_data = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
         expected_data = 0.95243
-        src = gr.vector_source_b (src_data)
+        src = gr.vector_source_b(src_data)
         op = digital.probe_density_b(0.01)
-        self.tb.connect (src, op)
-        self.tb.run ()
+        self.tb.connect(src, op)
+        self.tb.run()
 
         result_data = op.density()
         print result_data
-        self.assertAlmostEqual (expected_data, result_data, 5)
+        self.assertAlmostEqual(expected_data, result_data, 5)
 
 if __name__ == '__main__':
     gr_unittest.run(test_probe_density, "test_probe_density.xml")

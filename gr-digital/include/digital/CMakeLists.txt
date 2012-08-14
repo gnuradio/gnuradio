@@ -77,7 +77,7 @@ install(FILES
     ${digital_generated_includes}
     api.h
     glfsr.h
-#    impl_mpsk_snr_est.h
+    mpsk_snr_est.h
     additive_scrambler_bb.h
     binary_slicer_fb.h
     clock_recovery_mm_cc.h
@@ -105,7 +105,7 @@ install(FILES
     map_bb.h
 #    metric_type.h
 #    mpsk_receiver_cc.h
-#    mpsk_snr_est_cc.h
+    mpsk_snr_est_cc.h
 #    ofdm_cyclic_prefixer.h
 #    ofdm_frame_acquisition.h
 #    ofdm_frame_sink.h
@@ -116,8 +116,8 @@ install(FILES
     pfb_clock_sync_ccf.h
     pfb_clock_sync_fff.h
     pn_correlator_cc.h
-#    probe_density_b.h
-#    probe_mpsk_snr_est_c.h
+    probe_density_b.h
+    probe_mpsk_snr_est_c.h
     scrambler_bb.h
 #    simple_framer.h
 #    simple_framer_sync.h

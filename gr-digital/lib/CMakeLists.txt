@@ -105,7 +105,7 @@ list(APPEND digital_sources
     ${generated_sources}
     constellation.cc
     glfsr.cc
-    #impl_mpsk_snr_est.cc
+    mpsk_snr_est.cc
     additive_scrambler_bb_impl.cc
     binary_slicer_fb_impl.cc
     clock_recovery_mm_cc_impl.cc
@@ -131,7 +131,7 @@ list(APPEND digital_sources
     #kurtotic_equalizer_cc_impl.cc
     map_bb_impl.cc
     #mpsk_receiver_cc_impl.cc
-    #mpsk_snr_est_cc_impl.cc
+    mpsk_snr_est_cc_impl.cc
     #ofdm_cyclic_prefixer_impl.cc
     #ofdm_frame_acquisition_impl.cc
     #ofdm_frame_sink_impl.cc
@@ -142,8 +142,8 @@ list(APPEND digital_sources
     pfb_clock_sync_ccf_impl.cc
     pfb_clock_sync_fff_impl.cc
     pn_correlator_cc_impl.cc
-    #probe_density_b_impl.cc
-    #probe_mpsk_snr_est_c_impl.cc
+    probe_density_b_impl.cc
+    probe_mpsk_snr_est_c_impl.cc
     scrambler_bb_impl.cc
     #simple_framer_impl.cc
 )

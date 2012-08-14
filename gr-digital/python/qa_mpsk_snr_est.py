@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,94 +29,93 @@ def get_cplx():
 def get_n_cplx():
     return complex(random.random()-0.5, random.random()-0.5)
 
-class test_mpsk_snr_est (gr_unittest.TestCase):
-    def setUp (self):
-        self.tb = gr.top_block ()
+class test_mpsk_snr_est(gr_unittest.TestCase):
+    def setUp(self):
+        self.tb = gr.top_block()
 
         random.seed(0) # make repeatable
         N = 10000
         self._noise = [get_n_cplx() for i in xrange(N)]
         self._bits = [get_cplx() for i in xrange(N)]
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def mpsk_snr_est_setup (self, op):
+    def mpsk_snr_est_setup(self, op):
         result = []
         for i in xrange(1,6):
             src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
             
-            src = gr.vector_source_c (src_data)
-            dst = gr.null_sink (gr.sizeof_gr_complex)
+            src = gr.vector_source_c(src_data)
+            dst = gr.null_sink(gr.sizeof_gr_complex)
 
-            tb = gr.top_block ()
-            tb.connect (src, op)
-            tb.connect (op, dst)
-            tb.run ()               # run the graph and wait for it to finish
+            tb = gr.top_block()
+            tb.connect(src, op)
+            tb.connect(op, dst)
+            tb.run()               # run the graph and wait for it to finish
 
             result.append(op.snr())
         return result
             
-    def test_mpsk_snr_est_simple (self):
+    def test_mpsk_snr_est_simple(self):
 	expected_result = [11.48, 5.91, 3.30, 2.08, 1.46]
 
         N = 10000
         alpha = 0.001
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SIMPLE, N, alpha)
+        op = digital.mpsk_snr_est_cc(digital.SNR_EST_SIMPLE, N, alpha)
 
         actual_result = self.mpsk_snr_est_setup(op)
-        self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
+        self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
-    def test_mpsk_snr_est_skew (self):
+    def test_mpsk_snr_est_skew(self):
 	expected_result = [11.48, 5.91, 3.30, 2.08, 1.46]
 
         N = 10000
         alpha = 0.001
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SKEW, N, alpha)
+        op = digital.mpsk_snr_est_cc(digital.SNR_EST_SKEW, N, alpha)
 
         actual_result = self.mpsk_snr_est_setup(op)
-        self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
+        self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
-    def test_mpsk_snr_est_m2m4 (self):
+    def test_mpsk_snr_est_m2m4(self):
 	expected_result = [11.02, 6.20, 4.98, 5.16, 5.66]
 
         N = 10000
         alpha = 0.001
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_M2M4, N, alpha)
+        op = digital.mpsk_snr_est_cc(digital.SNR_EST_M2M4, N, alpha)
 
         actual_result = self.mpsk_snr_est_setup(op)
-        self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
+        self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
     def test_mpsk_snr_est_svn (self):
 	expected_result = [10.90, 6.00, 4.76, 4.97, 5.49]
 
         N = 10000
         alpha = 0.001
-        op = digital.mpsk_snr_est_cc (digital.SNR_EST_SVR, N, alpha)
+        op = digital.mpsk_snr_est_cc(digital.SNR_EST_SVR, N, alpha)
 
         actual_result = self.mpsk_snr_est_setup(op)
-        self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
+        self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
-    def test_probe_mpsk_snr_est_m2m4 (self):
+    def test_probe_mpsk_snr_est_m2m4(self):
 	expected_result = [11.02, 6.20, 4.98, 5.16, 5.66]
 
         actual_result = []
         for i in xrange(1,6):
             src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
             
-            src = gr.vector_source_c (src_data)
+            src = gr.vector_source_c(src_data)
 
             N = 10000
             alpha = 0.001
-            op = digital.probe_mpsk_snr_est_c (digital.SNR_EST_M2M4, N, alpha)
+            op = digital.probe_mpsk_snr_est_c(digital.SNR_EST_M2M4, N, alpha)
 
-            tb = gr.top_block ()
-            tb.connect (src, op)
-            tb.run ()               # run the graph and wait for it to finish
+            tb = gr.top_block()
+            tb.connect(src, op)
+            tb.run()               # run the graph and wait for it to finish
 
             actual_result.append(op.snr())
-        self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 2)
-
+        self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
 if __name__ == '__main__':
     # Test various SNR estimators; we're not using a Gaussian

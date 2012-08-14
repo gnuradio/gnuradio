@@ -26,14 +26,12 @@
 //load generated python docstrings
 %include "digital_swig_doc.i"
 
-//#if SWIGPYTHON
 //enum snr_est_type_t {
 //  SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
 //  SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
 //  SNR_EST_M2M4,	        // 2nd & 4th moment est (>= 1 dB)
 //  SNR_EST_SVR           // SVR-based est (>= 0dB)
 //};
-//#endif
 
 //%include <gri_control_loop.i>
 
@@ -41,6 +39,7 @@
 %template(unsigned_int_vector) std::vector<unsigned int>;
 
 %{
+#include "digital/mpsk_snr_est.h"
 #include "digital/additive_scrambler_bb.h"
 #include "digital/binary_slicer_fb.h"
 #include "digital/chunks_to_symbols_bf.h"
@@ -66,12 +65,16 @@
 #include "digital/glfsr_source_b.h"
 #include "digital/glfsr_source_f.h"
 #include "digital/map_bb.h"
+#include "digital/mpsk_snr_est_cc.h"
 #include "digital/pfb_clock_sync_ccf.h"
 #include "digital/pfb_clock_sync_fff.h"
 #include "digital/pn_correlator_cc.h"
+#include "digital/probe_density_b.h"
+#include "digital/probe_mpsk_snr_est_c.h"
 #include "digital/scrambler_bb.h"
 %}
 
+%include "digital/mpsk_snr_est.h"
 %include "digital/additive_scrambler_bb.h"
 %include "digital/binary_slicer_fb.h"
 %include "digital/chunks_to_symbols_bf.h"
@@ -97,9 +100,12 @@
 %include "digital/glfsr_source_b.h"
 %include "digital/glfsr_source_f.h"
 %include "digital/map_bb.h"
+%include "digital/mpsk_snr_est_cc.h"
 %include "digital/pfb_clock_sync_ccf.h"
 %include "digital/pfb_clock_sync_fff.h"
 %include "digital/pn_correlator_cc.h"
+%include "digital/probe_density_b.h"
+%include "digital/probe_mpsk_snr_est_c.h"
 %include "digital/scrambler_bb.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
@@ -126,9 +132,12 @@ GR_SWIG_BLOCK_MAGIC2(digital, fll_band_edge_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_b);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_f);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_ccf);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_fff);
 GR_SWIG_BLOCK_MAGIC2(digital, pn_correlator_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, probe_density_b);
+GR_SWIG_BLOCK_MAGIC2(digital, probe_mpsk_snr_est_c);
 GR_SWIG_BLOCK_MAGIC2(digital, scrambler_bb);
 
 // Properly package up constellation objects
