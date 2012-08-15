@@ -101,8 +101,8 @@ install(FILES
     glfsr_source_b.h
     glfsr_source_f.h
 #    gmskmod_bc.h
-#    lms_dd_equalizer_cc.h
-#    kurtotic_equalizer_cc.h
+    kurtotic_equalizer_cc.h
+    lms_dd_equalizer_cc.h
     map_bb.h
     metric_type.h
     mpsk_receiver_cc.h

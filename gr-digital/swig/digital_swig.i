@@ -66,6 +66,8 @@
 #include "digital/framer_sink_1.h"
 #include "digital/glfsr_source_b.h"
 #include "digital/glfsr_source_f.h"
+#include "digital/kurtotic_equalizer_cc.h"
+#include "digital/lms_dd_equalizer_cc.h"
 #include "digital/map_bb.h"
 #include "digital/mpsk_receiver_cc.h"
 #include "digital/mpsk_snr_est_cc.h"
@@ -106,6 +108,8 @@
 %include "digital/framer_sink_1.h"
 %include "digital/glfsr_source_b.h"
 %include "digital/glfsr_source_f.h"
+%include "digital/kurtotic_equalizer_cc.h"
+%include "digital/lms_dd_equalizer_cc.h"
 %include "digital/map_bb.h"
 %include "digital/mpsk_receiver_cc.h"
 %include "digital/mpsk_snr_est_cc.h"
@@ -142,6 +146,8 @@ GR_SWIG_BLOCK_MAGIC2(digital, fll_band_edge_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, framer_sink_1);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_b);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_f);
+GR_SWIG_BLOCK_MAGIC2(digital, kurtotic_equalizer_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, lms_dd_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);

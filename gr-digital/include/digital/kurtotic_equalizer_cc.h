@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DIGITAL_CMA_EQUALIZER_CC_H
-#define	INCLUDED_DIGITAL_CMA_EQUALIZER_CC_H
+#ifndef INCLUDED_DIGITAL_KURTOTIC_EQUALIZER_CC_H
+#define	INCLUDED_DIGITAL_KURTOTIC_EQUALIZER_CC_H
 
 #include <digital/api.h>
 #include <gr_sync_decimator.h>
@@ -30,36 +30,34 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief Implements constant modulus adaptive filter on complex stream
+     * \brief Implements a kurtosis-based adaptive equalizer on complex stream
      * \ingroup eq_blk
      * \ingroup digital
      *
-     * The error value and tap update equations (for p=2) can be found in:
+     * WARNING: This block does not yet work.
      *
-     * "D. Godard, "Self-Recovering Equalization and Carrier Tracking
-     * in Two-Dimensional Data Communication Systems," IEEE
-     * Transactions on Communications, Vol. 28, No. 11, pp. 1867 -
-     * 1875, 1980."
+     * "Y. Guo, J. Zhao, Y. Sun, "Sign kurtosis maximization based blind
+     * equalization algorithm," IEEE Conf. on Control, Automation,
+     * Robotics and Vision, Vol. 3, Dec. 2004, pp. 2052 - 2057."
      */
-    class DIGITAL_API cma_equalizer_cc: virtual public gr_sync_decimator
+    class DIGITAL_API kurtotic_equalizer_cc :
+      virtual public gr_sync_decimator
     {
     protected:
       virtual gr_complex error(const gr_complex &out) = 0;
       virtual void update_tap(gr_complex &tap, const gr_complex &in) = 0;
   
     public:
-      // gr::digital::cma_equalizer_cc::sptr
-      typedef boost::shared_ptr<cma_equalizer_cc> sptr;
+      // gr::digital::kurtotic_equalizer_cc::sptr
+      typedef boost::shared_ptr<kurtotic_equalizer_cc> sptr;
 
-      static sptr make(int num_taps, float modulus, float mu, int sps);
+      static sptr make(int num_taps, float mu);
 
       virtual float gain() const = 0;
       virtual void set_gain(float mu) = 0;
-      virtual float modulus() const = 0;
-      virtual void set_modulus(float mod) = 0;
     };
 
   } /* namespace digital */
 } /* namespace gr */
 
-#endif /* INCLUDED_DIGITAL_CMA_EQUALIZER_CC_H */
+#endif /* INCLUDED_DIGITAL_KURTOTIC_EQUALIZER_CC_H */

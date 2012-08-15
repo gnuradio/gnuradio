@@ -24,45 +24,55 @@
 #include "config.h"
 #endif
 
-#include "cma_equalizer_cc_impl.h"
+#include "kurtotic_equalizer_cc_impl.h"
 #include <gr_io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace digital {
 
-    cma_equalizer_cc::sptr
-    cma_equalizer_cc::make(int num_taps, float modulus, float mu, int sps)
+    kurtotic_equalizer_cc::sptr
+    kurtotic_equalizer_cc::make(int num_taps, float mu)
     {
       return gnuradio::get_initial_sptr
-	(new cma_equalizer_cc_impl(num_taps, modulus, mu, sps));
+	(new kurtotic_equalizer_cc_impl(num_taps, mu));
     }
 
-    cma_equalizer_cc_impl::cma_equalizer_cc_impl(int num_taps, float modulus,
-						 float mu, int sps)
-      : gr_sync_decimator("cma_equalizer_cc",
+    kurtotic_equalizer_cc_impl::kurtotic_equalizer_cc_impl(int num_taps, float mu)
+      : gr_sync_decimator("kurtotic_equalizer_cc",
 			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
-			  sps),
-	filter::kernel::fir_filter_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0,0))),
-	d_updated(false), d_error(gr_complex(0,0))
+			  1),
+	filter::kernel::fir_filter_ccc(1, std::vector<gr_complex>(num_taps, gr_complex(0,0)))
     {
-      set_modulus(modulus);
       set_gain(mu);
       if(num_taps > 0)
 	d_taps[0] = 1.0;
       set_taps(d_taps);
 
+      d_alpha_p = 0.01;
+      d_alpha_q = 0.01;
+      d_alpha_m = 0.01;
+
+      d_p = 0.0f;
+      d_m = 0.0f;
+      d_q = gr_complex(0,0);
+      d_u = gr_complex(0,0);
+
+      const int alignment_multiple =
+	volk_get_alignment() / sizeof(gr_complex);
+      set_alignment(std::max(1,alignment_multiple));
       set_history(num_taps+1);
     }
 
-    cma_equalizer_cc_impl::~cma_equalizer_cc_impl()
+    kurtotic_equalizer_cc_impl::~kurtotic_equalizer_cc_impl()
     {
     }
 
     int
-    cma_equalizer_cc_impl::work(int noutput_items,
-				gr_vector_const_void_star &input_items,
-				gr_vector_void_star &output_items)
+    kurtotic_equalizer_cc_impl::work(int noutput_items,
+				     gr_vector_const_void_star &input_items,
+				     gr_vector_void_star &output_items)
     {
       gr_complex *in = (gr_complex *)input_items[0];
       gr_complex *out = (gr_complex *)output_items[0];
@@ -73,7 +83,7 @@ namespace gr {
 
 	// Adjust taps
 	d_error = error(out[i]);
-	for (k = 0; k < l; k++) {
+	for(k = 0; k < l; k++) {
 	  update_tap(d_taps[l-k-1], in[j+k]);
 	}
 

@@ -20,72 +20,62 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DIGITAL_CMA_EQUALIZER_CC_IMPL_H
-#define	INCLUDED_DIGITAL_CMA_EQUALIZER_CC_IMPL_H
+#ifndef INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_IMPL_H
+#define INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_IMPL_H
 
-#include <digital/cma_equalizer_cc.h>
+#include <digital/lms_dd_equalizer_cc.h>
 #include <filter/fir_filter.h>
-#include <gr_math.h>
 #include <stdexcept>
 
 namespace gr {
   namespace digital {
 
-    class cma_equalizer_cc_impl
-      : public cma_equalizer_cc, filter::kernel::fir_filter_ccc
+    class lms_dd_equalizer_cc_impl
+      : public lms_dd_equalizer_cc, filter::kernel::fir_filter_ccc
     {
     private:
       std::vector<gr_complex> d_new_taps;
       bool d_updated;
       gr_complex d_error;
 
-      float d_modulus;
       float d_mu;
+      constellation_sptr d_cnst;
 
     protected:
       gr_complex error(const gr_complex &out) 
       { 
-	gr_complex error = out*(norm(out) - d_modulus);
-	float re = gr_clip(error.real(), 1.0);
-	float im = gr_clip(error.imag(), 1.0);
-	return gr_complex(re, im);
+	gr_complex decision, error;
+	d_cnst->map_to_points(d_cnst->decision_maker(&out), &decision);
+	error = decision - out;
+	return error;
       }
 
       void update_tap(gr_complex &tap, const gr_complex &in) 
       {
-	// Hn+1 = Hn - mu*conj(Xn)*zn*(|zn|^2 - 1)
-	tap -= d_mu*conj(in)*d_error;
+	tap += d_mu*conj(in)*d_error;
       }
-  
+
     public:
-      cma_equalizer_cc_impl(int num_taps, float modulus, float mu, int sps);
-      ~cma_equalizer_cc_impl();
+      lms_dd_equalizer_cc_impl(int num_taps,
+			       float mu, int sps,
+			       constellation_sptr cnst);
+      ~lms_dd_equalizer_cc_impl();
 
       float gain() const
       {
 	return d_mu;
       }
-
-      void set_gain(float mu) 
+  
+      void set_gain(float mu)
       {
 	if(mu < 0.0f || mu > 1.0f) {
-	  throw std::out_of_range("cma_equalizer::set_gain: Gain value must be in [0,1]");
+	  throw std::out_of_range("lms_dd_equalizer_impl::set_mu: Gain value must in [0, 1]");
 	}
-	d_mu = mu;
+	else {
+	  d_mu = mu;
+	}
       }
-    
-      float modulus() const
-      {
-	return d_modulus;
-      }
-
-      void set_modulus(float mod) 
-      {
-	if(mod < 0)
-	  throw std::out_of_range("cma_equalizer::set_modulus: Modulus value must be >= 0");
-	d_modulus = mod;
-      }
-
+  
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);
@@ -94,4 +84,4 @@ namespace gr {
   } /* namespace digital */
 } /* namespace gr */
 
-#endif /* INCLUDED_DIGITAL_CMA_EQUALIZER_CC_IMPL_H */
+#endif /* INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_IMPL_H */

@@ -127,8 +127,8 @@ list(APPEND digital_sources
     glfsr_source_b_impl.cc
     glfsr_source_f_impl.cc
     #gmskmod_bc_impl.cc
-    #lms_dd_equalizer_cc_impl.cc
-    #kurtotic_equalizer_cc_impl.cc
+    kurtotic_equalizer_cc_impl.cc
+    lms_dd_equalizer_cc_impl.cc
     map_bb_impl.cc
     mpsk_receiver_cc_impl.cc
     mpsk_snr_est_cc_impl.cc
