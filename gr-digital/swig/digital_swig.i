@@ -69,6 +69,7 @@
 #include "digital/map_bb.h"
 #include "digital/mpsk_receiver_cc.h"
 #include "digital/mpsk_snr_est_cc.h"
+#include "digital/packet_sink.h"
 #include "digital/pfb_clock_sync_ccf.h"
 #include "digital/pfb_clock_sync_fff.h"
 #include "digital/pn_correlator_cc.h"
@@ -108,6 +109,7 @@
 %include "digital/map_bb.h"
 %include "digital/mpsk_receiver_cc.h"
 %include "digital/mpsk_snr_est_cc.h"
+%include "digital/packet_sink.h"
 %include "digital/pfb_clock_sync_ccf.h"
 %include "digital/pfb_clock_sync_fff.h"
 %include "digital/pn_correlator_cc.h"
@@ -143,6 +145,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_f);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, packet_sink);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_ccf);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_fff);
 GR_SWIG_BLOCK_MAGIC2(digital, pn_correlator_cc);

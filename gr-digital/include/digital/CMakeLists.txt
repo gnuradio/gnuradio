@@ -113,7 +113,7 @@ install(FILES
 #    ofdm_insert_preamble.h
 #    ofdm_mapper_bcv.h
 #    ofdm_sampler.h
-#    packet_sink.h
+    packet_sink.h
     pfb_clock_sync_ccf.h
     pfb_clock_sync_fff.h
     pn_correlator_cc.h

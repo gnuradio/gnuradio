@@ -138,7 +138,7 @@ list(APPEND digital_sources
     #ofdm_insert_preamble_impl.cc
     #ofdm_mapper_bcv_impl.cc
     #ofdm_sampler_impl.cc
-    #packet_sink_impl.cc
+    packet_sink_impl.cc
     pfb_clock_sync_ccf_impl.cc
     pfb_clock_sync_fff_impl.cc
     pn_correlator_cc_impl.cc
