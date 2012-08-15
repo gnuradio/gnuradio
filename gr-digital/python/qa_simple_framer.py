@@ -24,15 +24,15 @@ from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import math
 
-class test_simple_framer (gr_unittest.TestCase):
+class test_simple_framer(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_simple_framer_001 (self):
+    def test_simple_framer_001(self):
         src_data = (0x00, 0x11, 0x22, 0x33,
                     0x44, 0x55, 0x66, 0x77,
                     0x88, 0x99, 0xaa, 0xbb,
@@ -44,15 +44,14 @@ class test_simple_framer (gr_unittest.TestCase):
             0xac, 0xdd, 0xa4, 0xe2, 0xf2, 0x8c, 0x20, 0xfc, 0x02, 0x88, 0x99, 0xaa, 0xbb, 0x55,
             0xac, 0xdd, 0xa4, 0xe2, 0xf2, 0x8c, 0x20, 0xfc, 0x03, 0xcc, 0xdd, 0xee, 0xff, 0x55)
 
-        src = gr.vector_source_b (src_data)
-        op = digital.simple_framer (4)
-        dst = gr.vector_sink_b ()
-        self.tb.connect (src, op)
-        self.tb.connect (op, dst)
-        self.tb.run ()
-        result_data = dst.data ()
-        self.assertEqual (expected_result, result_data)
-
+        src = gr.vector_source_b(src_data)
+        op = digital.simple_framer(4)
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
 
 if __name__ == '__main__':
     gr_unittest.run(test_simple_framer, "test_simple_framer.xml")

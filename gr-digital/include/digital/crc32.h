@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2011 Free Software Foundation, Inc.
+ * Copyright 2005,2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,29 +23,35 @@
 #ifndef INCLUDED_DIGITAL_CRC32_H
 #define INCLUDED_DIGITAL_CRC32_H
 
-#include <digital_api.h>
+#include <digital/api.h>
 #include <string>
 #include <gr_types.h>
 
-/*!
- * \brief update running CRC-32
- * \ingroup digital
- *
- * Update a running CRC with the bytes buf[0..len-1] The CRC should be
- * initialized to all 1's, and the transmitted value is the 1's
- * complement of the final running CRC.  The resulting CRC should be
- * transmitted in big endian order.
- */
-DIGITAL_API unsigned int 
-digital_update_crc32(unsigned int crc, const unsigned char *buf, size_t len);
+namespace gr {
+  namespace digital {
 
-DIGITAL_API unsigned int 
-digital_update_crc32(unsigned int crc, const std::string buf);
+    /*!
+     * \brief update running CRC-32
+     * \ingroup digital
+     *
+     * Update a running CRC with the bytes buf[0..len-1] The CRC
+     * should be initialized to all 1's, and the transmitted value is
+     * the 1's complement of the final running CRC.  The resulting CRC
+     * should be transmitted in big endian order.
+     */
+    DIGITAL_API unsigned int 
+    update_crc32(unsigned int crc, const unsigned char *buf, size_t len);
 
-DIGITAL_API unsigned int 
-digital_crc32(const unsigned char *buf, size_t len);
+    DIGITAL_API unsigned int 
+    update_crc32(unsigned int crc, const std::string buf);
 
-DIGITAL_API unsigned int 
-digital_crc32(const std::string buf);
+    DIGITAL_API unsigned int 
+    crc32(const unsigned char *buf, size_t len);
+
+    DIGITAL_API unsigned int 
+    crc32(const std::string buf);
+
+  } /* namespace digital */
+} /* namespace gr */
 
 #endif /* INCLUDED_CRC32_H */

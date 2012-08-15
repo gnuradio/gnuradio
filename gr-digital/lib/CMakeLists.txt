@@ -104,6 +104,7 @@ expand_cc(chunks_to_symbols_XX_impl     bf bc sf sc if ic)
 list(APPEND digital_sources
     ${generated_sources}
     constellation.cc
+    crc32.cc
     glfsr.cc
     mpsk_snr_est.cc
     additive_scrambler_bb_impl.cc
@@ -117,13 +118,12 @@ list(APPEND digital_sources
     correlate_access_code_tag_bb_impl.cc
     costas_loop_cc_impl.cc
     #cpmmod_bc_impl.cc
-    #crc32_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
     diff_phasor_cc_impl.cc
     fll_band_edge_cc_impl.cc
-    #framer_sink_1_impl.cc
+    framer_sink_1_impl.cc
     glfsr_source_b_impl.cc
     glfsr_source_f_impl.cc
     #gmskmod_bc_impl.cc
@@ -145,7 +145,7 @@ list(APPEND digital_sources
     probe_density_b_impl.cc
     probe_mpsk_snr_est_c_impl.cc
     scrambler_bb_impl.cc
-    #simple_framer_impl.cc
+    simple_framer_impl.cc
 )
 
 list(APPEND digital_libs

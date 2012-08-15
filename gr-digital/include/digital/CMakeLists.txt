@@ -76,26 +76,27 @@ add_custom_target(digital_generated_includes DEPENDS
 install(FILES
     ${digital_generated_includes}
     api.h
+    constellation.h
+    crc32.h
     glfsr.h
     mpsk_snr_est.h
+    simple_framer_sync.h
     additive_scrambler_bb.h
     binary_slicer_fb.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
     cma_equalizer_cc.h
 #    cpmmod_bc.h
-    constellation.h
     constellation_receiver_cb.h
     constellation_decoder_cb.h
     correlate_access_code_bb.h
     correlate_access_code_tag_bb.h
     costas_loop_cc.h
-#    crc32.h
     descrambler_bb.h
     diff_decoder_bb.h
     diff_encoder_bb.h
     diff_phasor_cc.h
-#    framer_sink_1.h
+    framer_sink_1.h
     fll_band_edge_cc.h
     glfsr_source_b.h
     glfsr_source_f.h
@@ -119,8 +120,7 @@ install(FILES
     probe_density_b.h
     probe_mpsk_snr_est_c.h
     scrambler_bb.h
-#    simple_framer.h
-#    simple_framer_sync.h
+    simple_framer.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )

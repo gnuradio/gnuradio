@@ -57,11 +57,13 @@
 #include "digital/correlate_access_code_bb.h"
 #include "digital/correlate_access_code_tag_bb.h"
 #include "digital/costas_loop_cc.h"
+#include "digital/crc32.h"
 #include "digital/descrambler_bb.h"
 #include "digital/diff_decoder_bb.h"
 #include "digital/diff_encoder_bb.h"
 #include "digital/diff_phasor_cc.h"
 #include "digital/fll_band_edge_cc.h"
+#include "digital/framer_sink_1.h"
 #include "digital/glfsr_source_b.h"
 #include "digital/glfsr_source_f.h"
 #include "digital/map_bb.h"
@@ -73,6 +75,7 @@
 #include "digital/probe_density_b.h"
 #include "digital/probe_mpsk_snr_est_c.h"
 #include "digital/scrambler_bb.h"
+#include "digital/simple_framer.h"
 %}
 
 %include "digital/mpsk_snr_est.h"
@@ -93,11 +96,13 @@
 %include "digital/correlate_access_code_bb.h"
 %include "digital/correlate_access_code_tag_bb.h"
 %include "digital/costas_loop_cc.h"
+%include "digital/crc32.h"
 %include "digital/descrambler_bb.h"
 %include "digital/diff_decoder_bb.h"
 %include "digital/diff_encoder_bb.h"
 %include "digital/diff_phasor_cc.h"
 %include "digital/fll_band_edge_cc.h"
+%include "digital/framer_sink_1.h"
 %include "digital/glfsr_source_b.h"
 %include "digital/glfsr_source_f.h"
 %include "digital/map_bb.h"
@@ -109,6 +114,7 @@
 %include "digital/probe_density_b.h"
 %include "digital/probe_mpsk_snr_est_c.h"
 %include "digital/scrambler_bb.h"
+%include "digital/simple_framer.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
@@ -131,6 +137,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, diff_decoder_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_encoder_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_phasor_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, fll_band_edge_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, framer_sink_1);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_b);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_f);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
@@ -142,6 +149,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, pn_correlator_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, probe_density_b);
 GR_SWIG_BLOCK_MAGIC2(digital, probe_mpsk_snr_est_c);
 GR_SWIG_BLOCK_MAGIC2(digital, scrambler_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, simple_framer);
 
 // Properly package up constellation objects
 %include "constellation.i"
