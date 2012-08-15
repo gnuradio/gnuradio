@@ -35,6 +35,8 @@
 
 //%include <gri_control_loop.i>
 
+%include "gr_cpm.h"
+
 // Used in the constellation objects
 %template(unsigned_int_vector) std::vector<unsigned int>;
 
@@ -57,6 +59,7 @@
 #include "digital/correlate_access_code_bb.h"
 #include "digital/correlate_access_code_tag_bb.h"
 #include "digital/costas_loop_cc.h"
+#include "digital/cpmmod_bc.h"
 #include "digital/crc32.h"
 #include "digital/descrambler_bb.h"
 #include "digital/diff_decoder_bb.h"
@@ -99,6 +102,7 @@
 %include "digital/correlate_access_code_bb.h"
 %include "digital/correlate_access_code_tag_bb.h"
 %include "digital/costas_loop_cc.h"
+%include "digital/cpmmod_bc.h"
 %include "digital/crc32.h"
 %include "digital/descrambler_bb.h"
 %include "digital/diff_decoder_bb.h"
@@ -138,6 +142,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, constellation_decoder_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, costas_loop_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, cpmmod_bc);
 GR_SWIG_BLOCK_MAGIC2(digital, descrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_decoder_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_encoder_bb);
@@ -159,6 +164,8 @@ GR_SWIG_BLOCK_MAGIC2(digital, probe_density_b);
 GR_SWIG_BLOCK_MAGIC2(digital, probe_mpsk_snr_est_c);
 GR_SWIG_BLOCK_MAGIC2(digital, scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_framer);
+
+GR_SWIG_BLOCK_MAGIC_FACTORY(digital, cpmmod_bc, gmskmod_bc);
 
 // Properly package up constellation objects
 %include "constellation.i"

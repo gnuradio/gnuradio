@@ -117,7 +117,7 @@ list(APPEND digital_sources
     correlate_access_code_bb_impl.cc
     correlate_access_code_tag_bb_impl.cc
     costas_loop_cc_impl.cc
-    #cpmmod_bc_impl.cc
+    cpmmod_bc_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
@@ -126,7 +126,6 @@ list(APPEND digital_sources
     framer_sink_1_impl.cc
     glfsr_source_b_impl.cc
     glfsr_source_f_impl.cc
-    #gmskmod_bc_impl.cc
     kurtotic_equalizer_cc_impl.cc
     lms_dd_equalizer_cc_impl.cc
     map_bb_impl.cc

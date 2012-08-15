@@ -86,7 +86,7 @@ install(FILES
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
     cma_equalizer_cc.h
-#    cpmmod_bc.h
+    cpmmod_bc.h
     constellation_receiver_cb.h
     constellation_decoder_cb.h
     correlate_access_code_bb.h
@@ -100,7 +100,6 @@ install(FILES
     fll_band_edge_cc.h
     glfsr_source_b.h
     glfsr_source_f.h
-#    gmskmod_bc.h
     kurtotic_equalizer_cc.h
     lms_dd_equalizer_cc.h
     map_bb.h

@@ -21,15 +21,15 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
 import numpy
 
 class test_cpm(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def do_check_phase_shift(self, type, name):
@@ -37,7 +37,7 @@ class test_cpm(gr_unittest.TestCase):
         L = 1
         in_bits = (1,) * 20
         src = gr.vector_source_b(in_bits, False)
-        cpm = digital_swig.cpmmod_bc(type, 0.5, sps, L)
+        cpm = digital.cpmmod_bc(type, 0.5, sps, L)
         arg = gr.complex_to_arg()
         sink = gr.vector_sink_f()
 
@@ -68,7 +68,7 @@ class test_cpm(gr_unittest.TestCase):
         bt = 0.3
         in_bits = (1,) * 20
         src = gr.vector_source_b(in_bits, False)
-        gmsk = digital_swig.gmskmod_bc(sps, bt, L)
+        gmsk = digital.gmskmod_bc(sps, L, bt)
         arg = gr.complex_to_arg()
         sink = gr.vector_sink_f()
 

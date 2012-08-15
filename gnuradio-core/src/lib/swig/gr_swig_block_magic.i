@@ -48,3 +48,11 @@ BASE_NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), 
 BASE_NAME = BASE_NAME.make;
 %}
 %enddef
+
+%define GR_SWIG_BLOCK_MAGIC_FACTORY(PKG, BASE_NAME, FACTORY)
+%template(FACTORY ## _sptr) boost::shared_ptr<gr:: ## PKG ## :: ## BASE_NAME>;
+%pythoncode %{
+FACTORY ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id())
+FACTORY = BASE_NAME ## _make_ ## FACTORY;
+%}
+%enddef
