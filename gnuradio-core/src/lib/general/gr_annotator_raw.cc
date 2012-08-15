@@ -55,7 +55,7 @@ void gr_annotator_raw::add_tag(uint64_t offset, pmt_t key, pmt_t val)
   gruel::scoped_lock l(d_mutex);
 
   gr_tag_t tag;
-  tag.srcid = pmt::pmt_intern(d_name);
+  tag.srcid = pmt::pmt_intern(name());
   tag.key = key;
   tag.value = val;
   tag.offset = offset;
