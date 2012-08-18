@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010,2011 Free Software Foundation, Inc.
+# Copyright 2007,2010-2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,14 +22,14 @@
 
 from gnuradio import gr, gr_unittest
 from pprint import pprint
-import digital_swig
+import digital_swig as digital
 
-class test_ofdm_insert_preamble (gr_unittest.TestCase):
+class test_ofdm_insert_preamble(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def helper(self, v0, v1, fft_length, preamble):
@@ -41,7 +41,7 @@ class test_ofdm_insert_preamble (gr_unittest.TestCase):
 
         # print "len(v) = %d" % (len(v))
 
-        op = digital_swig.ofdm_insert_preamble(fft_length, preamble)
+        op = digital.ofdm_insert_preamble(fft_length, preamble)
 
         v2s = gr.vector_to_stream(gr.sizeof_gr_complex, fft_length)
         dst0 = gr.vector_sink_c()
@@ -105,7 +105,6 @@ class test_ofdm_insert_preamble (gr_unittest.TestCase):
             p.append(tuple(t))
             v += t
 
-        
         r = self.helper(v, npayloads*[1], fft_length, preamble)
 
         self.assertEqual(r[0], tuple(npayloads*[1, 0]))
@@ -174,7 +173,6 @@ class test_ofdm_insert_preamble (gr_unittest.TestCase):
                                 p0, p1, p[10], p[11],
                                 p0, p1, p[12], p[13],
                                 p0, p1, p[14], p[15]))
-
 
 if __name__ == '__main__':
     gr_unittest.run(test_ofdm_insert_preamble, "test_ofdm_insert_preamble.xml")

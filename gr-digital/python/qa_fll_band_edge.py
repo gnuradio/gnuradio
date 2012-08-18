@@ -27,13 +27,13 @@ import random, math
 
 class test_fll_band_edge_cc(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test01 (self):
+    def test01(self):
         sps = 4
         rolloff = 0.35
         bw = 2*math.pi/100.0
@@ -79,7 +79,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         dst_data = self.vsnk_frq.data()[N:]
 
         expected_result = len(dst_data)* [-0.20,]
-        self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 4)
+        self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 4)
 
 if __name__ == '__main__':
     gr_unittest.run(test_fll_band_edge_cc, "test_fll_band_edge_cc.xml")

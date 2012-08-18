@@ -24,15 +24,15 @@ from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import math, random
 
-class test_binary_slicer_fb (gr_unittest.TestCase):
+class test_binary_slicer_fb(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_binary_slicer_fb (self):
+    def test_binary_slicer_fb(self):
 	expected_result = ( 0, 1,  0,  0, 1, 1,  0,  0,  0, 1, 1, 1,  0, 1, 1, 1, 1)
   	src_data =        (-1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1)
         src_data = [s + (1 - random.random()) for s in src_data] # add some noise

@@ -27,13 +27,13 @@ import random, cmath
 
 class test_pfb_clock_sync(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test01 (self):
+    def test01(self):
         # Test BPSK sync
         excess_bw = 0.35
 
@@ -83,10 +83,10 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         #for e,d in zip(expected_result, dst_data):
         #    print e, d
         
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 1)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 1)
 
 
-    def test02 (self):
+    def test02(self):
         # Test real BPSK sync
         excess_bw = 0.35
 
@@ -136,7 +136,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         #for e,d in zip(expected_result, dst_data):
         #    print e, d
         
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 1)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 1)
 
 
 if __name__ == '__main__':

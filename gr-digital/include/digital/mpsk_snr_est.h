@@ -42,12 +42,12 @@ namespace gr {
      * \li SNR_EST_M2M4:    2nd & 4th moment est (>= 1 dB)
      * \li SNR_EST_SVR:     SVR-based est (>= 0dB)
      */
-    enum snr_est_type_t {
+    typedef enum {
       SNR_EST_SIMPLE = 0,   // Simple estimator (>= 7 dB)
       SNR_EST_SKEW,	    // Skewness-base est (>= 5 dB)
       SNR_EST_M2M4,         // 2nd & 4th moment est (>= 1 dB)
       SNR_EST_SVR           // SVR-based est (>= 0dB)
-    };
+    } snr_est_type_t;
 
     /*! \brief A parent class for SNR estimators, specifically for
      *  M-PSK signals in AWGN channels.

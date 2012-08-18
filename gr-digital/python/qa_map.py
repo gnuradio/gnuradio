@@ -34,14 +34,14 @@ class test_map(gr_unittest.TestCase):
     def helper(self, symbols):
         src_data = [0, 1, 2, 3, 0, 1, 2, 3]
         expected_data = map(lambda x: symbols[x], src_data)
-        src = gr.vector_source_b (src_data)
+        src = gr.vector_source_b(src_data)
         op = digital.map_bb(symbols)
-        dst = gr.vector_sink_b ()
-        self.tb.connect (src, op, dst)
-        self.tb.run ()
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
 
         result_data = list(dst.data())
-        self.assertEqual (expected_data, result_data)
+        self.assertEqual(expected_data, result_data)
 
     def test_001(self):
         symbols = [0, 0, 0, 0]

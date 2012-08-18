@@ -63,11 +63,11 @@ class test_framker_sink(gr_unittest.TestCase):
 
         self.tb.connect(src, correlator, framer_sink)
         self.tb.connect(correlator, vsnk)
-        self.tb.run ()
+        self.tb.run()
 
         result_data = rcvd_pktq.delete_head()
         result_data = result_data.to_string()
-        self.assertEqual (expected_data, result_data)
+        self.assertEqual(expected_data, result_data)
 
     def test_002(self):
 
@@ -87,11 +87,11 @@ class test_framker_sink(gr_unittest.TestCase):
 
         self.tb.connect(src, correlator, framer_sink)
         self.tb.connect(correlator, vsnk)
-        self.tb.run ()
+        self.tb.run()
 
         result_data = rcvd_pktq.delete_head()
         result_data = result_data.to_string()
-        self.assertEqual (expected_data, result_data)
+        self.assertEqual(expected_data, result_data)
 
 if __name__ == '__main__':
     gr_unittest.run(test_framker_sink, "test_framker_sink.xml")

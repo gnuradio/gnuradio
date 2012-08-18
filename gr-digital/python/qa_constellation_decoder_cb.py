@@ -24,15 +24,15 @@ from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import math
 
-class test_constellation_decoder (gr_unittest.TestCase):
+class test_constellation_decoder(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_constellation_decoder_cb_bpsk (self):
+    def test_constellation_decoder_cb_bpsk(self):
         cnst = digital.constellation_bpsk()
   	src_data =        (0.5 + 0.5j,  0.1 - 1.2j, -0.8 - 0.1j, -0.45 + 0.8j,
                            0.8 + 1.0j, -0.5 + 0.1j,  0.1 - 1.2j)
@@ -51,7 +51,7 @@ class test_constellation_decoder (gr_unittest.TestCase):
 	#print "expected result", expected_result
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result)
 
-    def _test_constellation_decoder_cb_qpsk (self):
+    def _test_constellation_decoder_cb_qpsk(self):
         cnst = digital.constellation_qpsk()
   	src_data =        (0.5 + 0.5j,  0.1 - 1.2j, -0.8 - 0.1j, -0.45 + 0.8j,
                            0.8 + 1.0j, -0.5 + 0.1j,  0.1 - 1.2j)

@@ -36,8 +36,8 @@ class test_probe_density(gr_unittest.TestCase):
         expected_data = 1
         src = gr.vector_source_b(src_data)
         op = digital.probe_density_b(1)
-        self.tb.connect (src, op)
-        self.tb.run ()
+        self.tb.connect(src, op)
+        self.tb.run()
 
         result_data = op.density()
         self.assertEqual(expected_data, result_data)

@@ -23,9 +23,15 @@
 #ifndef INCLUDED_DIGITAL_METRIC_TYPE_H
 #define INCLUDED_DIGITAL_METRIC_TYPE_H
 
-typedef enum {
-  TRELLIS_EUCLIDEAN = 200, TRELLIS_HARD_SYMBOL, TRELLIS_HARD_BIT
-} trellis_metric_type_t;
+namespace gr {
+  namespace digital {
+
+    typedef enum {
+      TRELLIS_EUCLIDEAN = 200, TRELLIS_HARD_SYMBOL, TRELLIS_HARD_BIT
+    } trellis_metric_type_t;
+    
+  } /* namespace digital */
+} /* namespace gr */
 
 #endif /* INCLUDED_DIGITAL_METRIC_TYPE_H */
 

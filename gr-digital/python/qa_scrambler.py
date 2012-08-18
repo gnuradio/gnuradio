@@ -25,7 +25,7 @@ import digital_swig as digital
 
 class test_scrambler(gr_unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         self.tb = gr.top_block()
 
     def tearDown(self):

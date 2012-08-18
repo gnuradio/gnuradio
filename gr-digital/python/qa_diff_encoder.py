@@ -32,12 +32,12 @@ def make_random_int_tuple(L, min, max):
     return tuple(result)
 
 
-class test_diff_encoder (gr_unittest.TestCase):
+class test_diff_encoder(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def test_diff_encdec_000(self):

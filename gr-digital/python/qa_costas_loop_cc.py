@@ -21,22 +21,23 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig, psk
+import digital_swig as digital
+import psk
 import random, cmath
 
 class test_costas_loop_cc(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test01 (self):
+    def test01(self):
         # test basic functionality by setting all gains to 0
         natfreq = 0.0
         order = 2
-        self.test = digital_swig.costas_loop_cc(natfreq, order)
+        self.test = digital.costas_loop_cc(natfreq, order)
 
         data = 100*[complex(1,0),]
         self.src = gr.vector_source_c(data, False)
@@ -47,13 +48,13 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         
         expected_result = data
         dst_data = self.snk.data()
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 5)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 5)
 
-    def test02 (self):
+    def test02(self):
         # Make sure it doesn't diverge given perfect data
         natfreq = 0.25
         order = 2
-        self.test = digital_swig.costas_loop_cc(natfreq, order)
+        self.test = digital.costas_loop_cc(natfreq, order)
 
         data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
         self.src = gr.vector_source_c(data, False)
@@ -65,13 +66,13 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         expected_result = data
         dst_data = self.snk.data()
 
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 5)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 5)
 
-    def test03 (self):
+    def test03(self):
         # BPSK Convergence test with static rotation
         natfreq = 0.25
         order = 2
-        self.test = digital_swig.costas_loop_cc(natfreq, order)
+        self.test = digital.costas_loop_cc(natfreq, order)
 
         rot = cmath.exp(0.2j) # some small rotation
         data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
@@ -90,13 +91,13 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         
         # generously compare results; the loop will converge near to, but
         # not exactly on, the target data
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 2)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 2)
 
-    def test04 (self):
+    def test04(self):
         # QPSK Convergence test with static rotation
         natfreq = 0.25
         order = 4
-        self.test = digital_swig.costas_loop_cc(natfreq, order)
+        self.test = digital.costas_loop_cc(natfreq, order)
 
         rot = cmath.exp(0.2j) # some small rotation
         data = [complex(2*random.randint(0,1)-1, 2*random.randint(0,1)-1)
@@ -116,13 +117,13 @@ class test_costas_loop_cc(gr_unittest.TestCase):
 
         # generously compare results; the loop will converge near to, but
         # not exactly on, the target data
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 2)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 2)
 
-    def test05 (self):
+    def test05(self):
         # 8PSK Convergence test with static rotation
         natfreq = 0.25
         order = 8
-        self.test = digital_swig.costas_loop_cc(natfreq, order)
+        self.test = digital.costas_loop_cc(natfreq, order)
 
         rot = cmath.exp(-cmath.pi/8.0j) # rotate to match Costas rotation
         const = psk.psk_constellation(order)
@@ -145,7 +146,7 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         
 	# generously compare results; the loop will converge near to, but
         # not exactly on, the target data
-        self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 2)
+        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 2)
 
 if __name__ == '__main__':
     gr_unittest.run(test_costas_loop_cc, "test_costas_loop_cc.xml")

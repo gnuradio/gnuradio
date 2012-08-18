@@ -25,10 +25,10 @@ import digital_swig as digital
 
 class test_chunks_to_symbols(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def test_bc_001(self):

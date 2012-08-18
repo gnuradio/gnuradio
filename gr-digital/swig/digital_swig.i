@@ -26,21 +26,13 @@
 //load generated python docstrings
 %include "digital_swig_doc.i"
 
-//enum snr_est_type_t {
-//  SNR_EST_SIMPLE = 0,	// Simple estimator (>= 7 dB)
-//  SNR_EST_SKEW,	        // Skewness-base est (>= 5 dB)
-//  SNR_EST_M2M4,	        // 2nd & 4th moment est (>= 1 dB)
-//  SNR_EST_SVR           // SVR-based est (>= 0dB)
-//};
-
-//%include <gri_control_loop.i>
-
 %include "gr_cpm.h"
 
 // Used in the constellation objects
 %template(unsigned_int_vector) std::vector<unsigned int>;
 
 %{
+#include "digital/metric_type.h"
 #include "digital/mpsk_snr_est.h"
 #include "digital/additive_scrambler_bb.h"
 #include "digital/binary_slicer_fb.h"
@@ -90,6 +82,7 @@
 #include "digital/simple_framer.h"
 %}
 
+%include "digital/metric_type.h"
 %include "digital/mpsk_snr_est.h"
 %include "digital/additive_scrambler_bb.h"
 %include "digital/binary_slicer_fb.h"

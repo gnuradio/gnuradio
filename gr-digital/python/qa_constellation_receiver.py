@@ -52,7 +52,7 @@ FREQ_BW = 2*math.pi/100.0
 PHASE_BW = 2*math.pi/100.0
 
 
-class test_constellation_receiver (gr_unittest.TestCase):
+class test_constellation_receiver(gr_unittest.TestCase):
     
     # We ignore the first half of the output data since often it takes
     # a while for the receiver to lock on.

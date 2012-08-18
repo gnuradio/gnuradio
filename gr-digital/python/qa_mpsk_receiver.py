@@ -86,7 +86,7 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 1)
 
 
-    def test02 (self):
+    def test02(self):
         # Test QPSK sync
         M = 4
         theta = 0
@@ -96,7 +96,7 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         mu = 0.5
         gain_mu = 0.01
         omega = 2
-        gain_omega = 0.01
+        gain_omega = 0.001
         omega_rel = 0.001
 
         self.test = digital.mpsk_receiver_cc(M, theta, loop_bw,
@@ -126,11 +126,11 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         self.tb.connect(self.src, self.rrc0, self.rrc1, self.test, self.snk)
         self.tb.run()
         
-        expected_result = 10000*[complex(0, +0.5), complex(-0.5, 0),
-                                 complex(0, -0.5), complex(+0.5, 0)]
+        expected_result = 10000*[complex(-0.5, +0.0), complex(+0.0, -0.5),
+                                 complex(+0.5, +0.0), complex(+0.0, +0.5)]
 
         # get data after a settling period
-        dst_data = self.snk.data()[100:]
+        dst_data = self.snk.data()[200:]
 
         # Only compare last Ncmp samples
         Ncmp = 1000

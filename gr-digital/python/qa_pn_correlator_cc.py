@@ -26,7 +26,7 @@ import digital_swig as digital
 class test_pn_correlator_cc(gr_unittest.TestCase):
 
     def setUp(self):
-        self.tb = gr.top_block ()
+        self.tb = gr.top_block()
 
     def tearDown(self):
         self.tb = None

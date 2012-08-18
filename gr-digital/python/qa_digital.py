@@ -21,14 +21,14 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
 
 class test_digital(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
 if __name__ == '__main__':
