@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2011 Free Software Foundation, Inc.
+ * Copyright 2004-2006,2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,18 +20,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,ofdm_insert_preamble);
+#ifndef INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_IMPL_H
+#define INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_IMPL_H
 
-digital_ofdm_insert_preamble_sptr
-digital_make_ofdm_insert_preamble(int fft_length,
-				  const std::vector<std::vector<gr_complex> > &preamble);
+#include <digital/ofdm_cyclic_prefixer.h>
 
+namespace gr {
+  namespace digital {
+    
+    class ofdm_cyclic_prefixer_impl : public ofdm_cyclic_prefixer
+    {
+    private:
+      size_t d_input_size;
+      size_t d_output_size;
 
-class digital_ofdm_insert_preamble : public gr_block
-{
- protected:
-  digital_ofdm_insert_preamble(int fft_length,
-			       const std::vector<std::vector<gr_complex> > &preamble);
- public:
-   void enter_preamble();
-};
+    public:
+      ofdm_cyclic_prefixer_impl(size_t input_size, size_t output_size);
+      ~ofdm_cyclic_prefixer_impl();
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_IMPL_H */

@@ -106,12 +106,12 @@ install(FILES
     metric_type.h
     mpsk_receiver_cc.h
     mpsk_snr_est_cc.h
-#    ofdm_cyclic_prefixer.h
-#    ofdm_frame_acquisition.h
-#    ofdm_frame_sink.h
-#    ofdm_insert_preamble.h
-#    ofdm_mapper_bcv.h
-#    ofdm_sampler.h
+    ofdm_cyclic_prefixer.h
+    ofdm_frame_acquisition.h
+    ofdm_frame_sink.h
+    ofdm_insert_preamble.h
+    ofdm_mapper_bcv.h
+    ofdm_sampler.h
     packet_sink.h
     pfb_clock_sync_ccf.h
     pfb_clock_sync_fff.h

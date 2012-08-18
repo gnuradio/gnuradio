@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2011 Free Software Foundation, Inc.
+ * Copyright 2007,2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,27 +20,31 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,ofdm_mapper_bcv);
+#ifndef INCLUDED_DIGITAL_OFDM_SAMPLER_H
+#define INCLUDED_DIGITAL_OFDM_SAMPLER_H
 
-digital_ofdm_mapper_bcv_sptr 
-digital_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation,
-			      unsigned int msgq_limit,
-			      unsigned int bits_per_symbol, 
-			      unsigned int fft_length) throw(std::exception);
+#include <digital/api.h>
+#include <gr_sync_block.h>
 
+namespace gr {
+  namespace digital {
+    
+    /*!
+     * \brief does the rest of the OFDM stuff
+     * \ingroup ofdm_blk
+     */
+    class DIGITAL_API ofdm_sampler : virtual public gr_block
+    {
+    public:
+      // gr::digital::ofdm_sampler::sptr
+      typedef boost::shared_ptr<ofdm_sampler> sptr;
 
-class digital_ofdm_mapper_bcv : public gr_sync_block
-{
- protected:
-  digital_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation,
-			   unsigned int msgq_limit,
-			   unsigned int bits_per_symbol,
-			   unsigned int fft_length);
-  
- public:
-  gr_msg_queue_sptr msgq();
-  
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
-};
+      static sptr make(unsigned int fft_length, 
+		       unsigned int symbol_length,
+		       unsigned int timeout);
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_DIGITAL_OFDM_SAMPLER_H */

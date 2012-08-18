@@ -131,12 +131,12 @@ list(APPEND digital_sources
     map_bb_impl.cc
     mpsk_receiver_cc_impl.cc
     mpsk_snr_est_cc_impl.cc
-    #ofdm_cyclic_prefixer_impl.cc
-    #ofdm_frame_acquisition_impl.cc
-    #ofdm_frame_sink_impl.cc
-    #ofdm_insert_preamble_impl.cc
-    #ofdm_mapper_bcv_impl.cc
-    #ofdm_sampler_impl.cc
+    ofdm_cyclic_prefixer_impl.cc
+    ofdm_frame_acquisition_impl.cc
+    ofdm_frame_sink_impl.cc
+    ofdm_insert_preamble_impl.cc
+    ofdm_mapper_bcv_impl.cc
+    ofdm_sampler_impl.cc
     packet_sink_impl.cc
     pfb_clock_sync_ccf_impl.cc
     pfb_clock_sync_fff_impl.cc
