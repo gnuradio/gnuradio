@@ -34,6 +34,7 @@ class GR_CORE_API gri_control_loop
   float d_alpha, d_beta;
 
  public:
+  gri_control_loop() {};
   gri_control_loop(float loop_bw, float max_freq, float min_freq);
   virtual ~gri_control_loop();
 
