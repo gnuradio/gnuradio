@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr
+from gnuradio import gr, filter
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -45,7 +45,7 @@ class my_top_block(gr.top_block):
 
         self.src = gr.file_source(gr.sizeof_gr_complex, ifile)
         #self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
-        self.channel = gr.channel_model(noise_voltage, frequency_offset,
+        self.channel = filter.channel_model(noise_voltage, frequency_offset,
                                         time_offset, noise_seed=random.randint(0,100000))
         self.phase = gr.multiply_const_cc(complex(math.cos(phase_offset),
                                                   math.sin(phase_offset)))

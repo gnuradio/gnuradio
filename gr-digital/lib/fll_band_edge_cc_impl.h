@@ -31,7 +31,7 @@ namespace gr {
   namespace digital {
 
     class fll_band_edge_cc_impl :
-      public fll_band_edge_cc, gri_control_loop
+      public fll_band_edge_cc
     {
     private:
       float                   d_sps;

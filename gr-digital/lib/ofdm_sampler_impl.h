@@ -43,7 +43,7 @@ namespace gr {
     public:
       ofdm_sampler_impl(unsigned int fft_length, 
 			unsigned int symbol_length,
-			unsigned int timeout);
+			unsigned int timeout=1000);
       ~ofdm_sampler_impl();
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);

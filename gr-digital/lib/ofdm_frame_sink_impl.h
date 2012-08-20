@@ -92,7 +92,7 @@ namespace gr {
 			   const std::vector<unsigned char> &sym_value_out,
 			   gr_msg_queue_sptr target_queue,
 			   unsigned int occupied_tones,
-			   float phase_gain, float freq_gain);
+			   float phase_gain=0.25, float freq_gain=0.25*0.25/4);
       ~ofdm_frame_sink_impl();
 
       int work(int noutput_items,

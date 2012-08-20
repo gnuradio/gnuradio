@@ -25,6 +25,7 @@
 
 #include <digital/api.h>
 #include <gr_sync_block.h>
+#include <gri_control_loop.h>
 
 namespace gr {
   namespace digital {
@@ -81,7 +82,9 @@ namespace gr {
      * linear phase. Otherwise, the variance of the error will be very
      * large.
      */
-    class DIGITAL_API fll_band_edge_cc : virtual public gr_sync_block
+    class DIGITAL_API fll_band_edge_cc
+      : virtual public gr_sync_block,
+        virtual public gri_control_loop
     {
     public:
       // gr::digital::fll_band_edge_cc::sptr

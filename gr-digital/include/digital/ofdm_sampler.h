@@ -41,7 +41,7 @@ namespace gr {
 
       static sptr make(unsigned int fft_length, 
 		       unsigned int symbol_length,
-		       unsigned int timeout);
+		       unsigned int timeout=1000);
     };
 
   } /* namespace digital */

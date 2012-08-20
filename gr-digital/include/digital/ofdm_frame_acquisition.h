@@ -68,7 +68,7 @@ namespace gr {
       static sptr make(unsigned int occupied_carriers, unsigned int fft_length,
 		       unsigned int cplen,
 		       const std::vector<gr_complex> &known_symbol, 
-		       unsigned int max_fft_shift_len);
+		       unsigned int max_fft_shift_len=4);
   
       /*!
        * \brief Return an estimate of the SNR of the channel

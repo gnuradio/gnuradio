@@ -53,7 +53,6 @@ GR_PYTHON_INSTALL(PROGRAMS
     ofdm/benchmark_rx.py
     ofdm/benchmark_tx.py
     ofdm/gr_plot_ofdm.py
-    ofdm/ofdm_mod_demod_test.py
     ofdm/receive_path.py
     ofdm/transmit_path.py
     ofdm/tunnel.py
