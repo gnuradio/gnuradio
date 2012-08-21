@@ -60,7 +60,6 @@
 
 		<block>gr_conjugate_cc</block>
 
-		<block>gr_fft_vxx</block>
 		<block>blks2_logpwrfft_x</block>
 		<block>gr_vector_insert_x</block>
 	</cat>
@@ -120,7 +119,6 @@
 	</cat>
 	<cat>
 		<name>Synchronizers</name>
-		<block>gr_pfb_clock_sync_xxx</block>
 
 		<block>gr_mpsk_sync_cc</block>
 
@@ -173,11 +171,9 @@
 		<!-- Polyphase filters -->
 		<block>blks2_pfb_arb_resampler_ccf</block>
 		<block>blks2_pfb_channelizer_ccf</block>
-		<block>gr_pfb_synthesizer_ccf</block>
 		<!-- Other filters -->
 		<block>gr_single_pole_iir_filter_xx</block>
 		<block>gr_hilbert_fc</block>
-		<block>gr_goertzel_fc</block>
 		<block>gr_rational_resampler_base_xxx</block>
 		<block>blks2_rational_resampler_xxx</block>
 		<block>gr_fractional_interpolator_xx</block>

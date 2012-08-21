@@ -71,7 +71,6 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_circular_file.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_count_bits.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fast_atan2f.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_fft_vcc_fftw.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.cc
@@ -115,7 +114,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_count_bits.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_expj.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_fft_vcc_fftw.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt_nco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt_vco.h
@@ -202,8 +200,6 @@ set(gr_core_general_triple_threats
     gr_fake_channel_coder_pp
     gr_feedforward_agc_cc
     gr_feval
-    gr_fft_vcc
-    gr_fft_vfc
     gr_firdes
     gr_float_to_char
     gr_float_to_complex
