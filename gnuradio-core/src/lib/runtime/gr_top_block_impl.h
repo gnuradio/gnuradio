@@ -42,7 +42,7 @@ public:
   ~gr_top_block_impl();
 
   // Create and start scheduler threads
-  void start(int max_noutput_items=100000);
+  void start(int max_noutput_items=100000000);
 
   // Signal scheduler threads to stop
   void stop();

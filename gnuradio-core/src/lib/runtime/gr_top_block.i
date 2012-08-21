@@ -38,7 +38,7 @@ private:
 public:
   ~gr_top_block();
 
-  void start(int max_noutput_items=100000) throw (std::runtime_error);
+  void start(int max_noutput_items=100000000) throw (std::runtime_error);
   void stop();
   //void wait();
   //void run() throw (std::runtime_error);

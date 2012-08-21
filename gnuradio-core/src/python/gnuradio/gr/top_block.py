@@ -93,13 +93,13 @@ class top_block(object):
             raise RuntimeError("top_block: invalid state--did you forget to call gr.top_block.__init__ in a derived class?")
 	return getattr(self._tb, name)
 
-    def start(self, max_noutput_items=100000):
+    def start(self, max_noutput_items=10000000):
     	self._tb.start(max_noutput_items)
 
     def stop(self):
     	self._tb.stop()
 
-    def run(self, max_noutput_items=100000):
+    def run(self, max_noutput_items=10000000):
         self.start(max_noutput_items)
         self.wait()
 
