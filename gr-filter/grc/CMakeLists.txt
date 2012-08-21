@@ -19,23 +19,23 @@
 
 install(FILES
     filter_block_tree.xml
-    dc_blocker_xx.xml
-    fft_filter_xxx.xml
-    fir_filter_xxx.xml
-    filter_delay_fc.xml
-    fractional_interpolator_xx.xml
-    freq_xlating_fir_filter_xxx.xml
-    hilbert_fc.xml
-    iir_filter_ffd.xml
-    interp_fir_filter_xxx.xml
-    pfb_arb_resampler.xml
-    pfb_channelizer.xml
-    pfb_decimator.xml
-    pfb_interpolator.xml
-    pfb_synthesizer.xml
-    rational_resampler_base_xxx.xml
-    single_pole_iir_filter_xx.xml
-    channel_model.xml
+    filter_dc_blocker_xx.xml
+    filter_fft_filter_xxx.xml
+    filter_fir_filter_xxx.xml
+    filter_filter_delay_fc.xml
+    filter_fractional_interpolator_xx.xml
+    filter_freq_xlating_fir_filter_xxx.xml
+    filter_hilbert_fc.xml
+    filter_iir_filter_ffd.xml
+    filter_interp_fir_filter_xxx.xml
+    filter_pfb_arb_resampler.xml
+    filter_pfb_channelizer.xml
+    filter_pfb_decimator.xml
+    filter_pfb_interpolator.xml
+    filter_pfb_synthesizer.xml
+    filter_rational_resampler_base_xxx.xml
+    filter_single_pole_iir_filter_xx.xml
+    filter_channel_model.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "filter_python"
 )
