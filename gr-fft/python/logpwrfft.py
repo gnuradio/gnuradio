@@ -20,8 +20,16 @@
 #
 
 from gnuradio import gr, window
-from stream_to_vector_decimator import stream_to_vector_decimator
-import math
+from gnuradio.blks2 import stream_to_vector_decimator
+import sys, math
+
+import fft_swig as fft
+
+try:
+    from gnuradio import filter
+except ImportError:
+    sys.stderr.write('fft.logpwrfft required gr-filter.\n')
+    sys.exit(1)
 
 class _logpwrfft_base(gr.hier_block2):
     """
@@ -55,7 +63,7 @@ class _logpwrfft_base(gr.hier_block2):
         window_power = sum(map(lambda x: x*x, fft_window))
 
         c2magsq = gr.complex_to_mag_squared(fft_size)
-        self._avg = gr.single_pole_iir_filter_ff(1.0, fft_size)
+        self._avg = filter.single_pole_iir_filter_ff(1.0, fft_size)
         self._log = gr.nlog10_ff(10, fft_size,
                                  -20*math.log10(fft_size)              # Adjust for number of bins
                                  -10*math.log10(window_power/fft_size) # Adjust for windowing loss
@@ -143,7 +151,7 @@ class logpwrfft_f(_logpwrfft_base):
         """
         _name = "logpwrfft_f"
         _item_size = gr.sizeof_float
-        _fft_block = (gr.fft_vfc, )
+        _fft_block = (fft.fft_vfc, )
 
 class logpwrfft_c(_logpwrfft_base):
         """
@@ -151,5 +159,5 @@ class logpwrfft_c(_logpwrfft_base):
         """
         _name = "logpwrfft_c"
         _item_size = gr.sizeof_gr_complex
-        _fft_block = (gr.fft_vcc, )
+        _fft_block = (fft.fft_vcc, )
 

@@ -24,7 +24,7 @@
 
 # See gnuradio-examples/python/digital for examples
 
-from gnuradio import gr, blks2
+from gnuradio import gr, filter
 from math import pi
 import numpy
 
@@ -153,7 +153,7 @@ class cpm_mod(gr.hier_block2):
         else:
             raise TypeError, ("cpm_type must be an integer in {0,1,2,3}, is %r" % (cpm_type,))
 
-        self.filter = blks2.pfb_arb_resampler_fff(samples_per_symbol, self.taps)
+        self.filter = filter.pfb.arb_resampler_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
 	self.fmmod = gr.frequency_modulator_fc(sensitivity)

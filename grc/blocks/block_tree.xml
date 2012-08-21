@@ -60,7 +60,6 @@
 
 		<block>gr_conjugate_cc</block>
 
-		<block>blks2_logpwrfft_x</block>
 		<block>gr_vector_insert_x</block>
 	</cat>
 	<cat>

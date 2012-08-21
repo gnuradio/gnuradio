@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Log Power FFT</name>
-	<key>blks2_logpwrfft_x</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.logpwrfft_$(type.fcn)(
+	<key>logpwrfft_x</key>
+	<import>from gnuradio import fft</import>
+	<make>fft.logpwrfft_$(type.fcn)(
 	sample_rate=$sample_rate,
 	fft_size=$fft_size,
 	ref_scale=$ref_scale,

@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, window, filter
+from gnuradio import gr, gru, window, fft, filter
 from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
@@ -91,7 +91,7 @@ class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
         mywindow = window.blackmanharris(self.fft_size)
-        self.fft = gr.fft_vfc(self.fft_size, True, mywindow)
+        self.fft = fft.fft_vfc(self.fft_size, True, mywindow)
         self.c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
         self.log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
@@ -122,7 +122,7 @@ class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
         mywindow = window.blackmanharris(self.fft_size)
-        self.fft = gr.fft_vcc(self.fft_size, True, mywindow)
+        self.fft = fft.fft_vcc(self.fft_size, True, mywindow)
         self.c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
         self.log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))

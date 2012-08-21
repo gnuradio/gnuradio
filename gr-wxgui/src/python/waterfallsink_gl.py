@@ -24,7 +24,7 @@
 ##################################################
 import waterfall_window
 import common
-from gnuradio import gr, blks2
+from gnuradio import gr, fft
 from pubsub import pubsub
 from constants import *
 
@@ -117,12 +117,12 @@ class _waterfall_sink_base(gr.hier_block2, common.wxgui_hb):
 		self.win.set_callback(callb)
 		
 class waterfall_sink_f(_waterfall_sink_base):
-	_fft_chain = blks2.logpwrfft_f
+	_fft_chain = fft.logpwrfft_f
 	_item_size = gr.sizeof_float
 	_real = True
 
 class waterfall_sink_c(_waterfall_sink_base):
-	_fft_chain = blks2.logpwrfft_c
+	_fft_chain = fft.logpwrfft_c
 	_item_size = gr.sizeof_gr_complex
 	_real = False
 

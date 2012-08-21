@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, window, filter
+from gnuradio import gr, gru, window, fft, filter
 from gnuradio.wxgui import stdgui2
 import wx
 import plot
@@ -122,7 +122,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
         mywindow = window.blackmanharris(self.fft_size)
-        self.fft = gr.fft_vfc(self.fft_size, True, mywindow)
+        self.fft = fft.fft_vfc(self.fft_size, True, mywindow)
         power = 0
         for tap in mywindow:
             power += tap*tap
@@ -167,7 +167,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
         mywindow = window.blackmanharris(self.fft_size)
-        self.fft = gr.fft_vcc(self.fft_size, True, mywindow)
+        self.fft = fft.fft_vcc(self.fft_size, True, mywindow)
         power = 0
         for tap in mywindow:
             power += tap*tap
