@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis, digital
+from gnuradio import trellis, digital, filter
 from gnuradio import eng_notation
 import math
 import sys
@@ -64,7 +64,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
     mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
 
     # CHANNEL
-    isi = gr.fir_filter_fff(1,channel)
+    isi = filter.fir_filter_fff(1,channel)
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 

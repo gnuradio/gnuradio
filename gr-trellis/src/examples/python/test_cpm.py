@@ -8,7 +8,7 @@
 ##################################################
 
 from gnuradio import gr
-from gnuradio import trellis, digital
+from gnuradio import trellis, digital, filter
 from gnuradio.gr import firdes
 from grc_gnuradio import blks2 as grc_blks2
 import math
@@ -45,7 +45,7 @@ def run_test(seed,blocksize):
         BT=0.3;
         tt=numpy.arange(0,L*Q)/(1.0*Q)-L/2.0;
         #print tt
-        p=(0.5*scipy.stats.erfc(2*math.pi*BT*(tt-0.5)/math.sqrt(math.log(2.0))/math.sqrt(2.0))-0.5*scipy.stats.erfc(2*math.pi*BT*(tt+0.5)/math.sqrt(math.log(2.0))/math.sqrt(2.0)))/2.0;
+        p=(0.5*scipy.special.erfc(2*math.pi*BT*(tt-0.5)/math.sqrt(math.log(2.0))/math.sqrt(2.0))-0.5*scipy.special.erfc(2*math.pi*BT*(tt+0.5)/math.sqrt(math.log(2.0))/math.sqrt(2.0)))/2.0;
         p=p/sum(p)*Q/2.0;
         #print p
         q=numpy.cumsum(p)/Q;
@@ -90,7 +90,7 @@ def run_test(seed,blocksize):
 	##################################################
 	random_source_x_0 = gr.vector_source_b(data.tolist(), False)
 	digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bf((-1, 1), 1)
-	gr_interp_fir_filter_xxx_0 = gr.interp_fir_filter_fff(Q, p)
+	gr_interp_fir_filter_xxx_0 = filter.interp_fir_filter_fff(Q, p)
 	gr_frequency_modulator_fc_0 = gr.frequency_modulator_fc(2*math.pi*h*(1.0/Q))
 
 	gr_add_vxx_0 = gr.add_vcc(1)
@@ -99,8 +99,8 @@ def run_test(seed,blocksize):
 	gr_multiply_vxx_0 = gr.multiply_vcc(1)
 	gr_sig_source_x_0 = gr.sig_source_c(Q, gr.GR_COS_WAVE, -f0T, 1, 0)
         # only works for N=2, do it manually for N>2...
-	gr_fir_filter_xxx_0_0 = gr.fir_filter_ccc(Q, MF[0].conjugate())
-	gr_fir_filter_xxx_0_0_0 = gr.fir_filter_ccc(Q, MF[1].conjugate())
+	gr_fir_filter_xxx_0_0 = filter.fir_filter_ccc(Q, MF[0].conjugate())
+	gr_fir_filter_xxx_0_0_0 = filter.fir_filter_ccc(Q, MF[1].conjugate())
 	gr_streams_to_stream_0 = gr.streams_to_stream(gr.sizeof_gr_complex*1, int(N))
 	gr_skiphead_0 = gr.skiphead(gr.sizeof_gr_complex*1, int(N*(1+0)))
 	viterbi = trellis.viterbi_combined_cb(f, head+blocksize+tail, 0, -1, int(N),
