@@ -27,14 +27,15 @@
 
 
 template <class T>
-void calc_metric(int O, int D, const std::vector<T> &TABLE, const T *in, float *metric, trellis_metric_type_t type)
+void calc_metric(int O, int D, const std::vector<T> &TABLE, const T *in,
+		 float *metric, gr::digital::trellis_metric_type_t type)
 {
   float minm = FLT_MAX;
   int minmi = 0;
 
 
   switch (type){
-  case TRELLIS_EUCLIDEAN:
+  case gr::digital::TRELLIS_EUCLIDEAN:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -45,7 +46,7 @@ void calc_metric(int O, int D, const std::vector<T> &TABLE, const T *in, float *
       }
     }
     break;
-  case TRELLIS_HARD_SYMBOL:
+  case gr::digital::TRELLIS_HARD_SYMBOL:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -63,7 +64,7 @@ void calc_metric(int O, int D, const std::vector<T> &TABLE, const T *in, float *
       metric[o] = (o==minmi?0.0:1.0);
     }
     break;
-  case TRELLIS_HARD_BIT:
+  case gr::digital::TRELLIS_HARD_BIT:
     throw std::runtime_error ("Invalid metric type (not yet implemented).");
     break;
   default:
@@ -74,23 +75,27 @@ void calc_metric(int O, int D, const std::vector<T> &TABLE, const T *in, float *
 
 
 template
-void calc_metric<short>(int O, int D, const std::vector<short> &TABLE, const short *in, float *metric, trellis_metric_type_t type);
+void calc_metric<short>(int O, int D, const std::vector<short> &TABLE, const short *in,
+			float *metric, gr::digital::trellis_metric_type_t type);
 
 template
-void calc_metric<int>(int O, int D, const std::vector<int> &TABLE, const int *in, float *metric, trellis_metric_type_t type);
+void calc_metric<int>(int O, int D, const std::vector<int> &TABLE, const int *in,
+		      float *metric, gr::digital::trellis_metric_type_t type);
 
 template
-void calc_metric<float>(int O, int D, const std::vector<float> &TABLE, const float *in, float *metric, trellis_metric_type_t type);
+void calc_metric<float>(int O, int D, const std::vector<float> &TABLE, const float *in,
+			float *metric, gr::digital::trellis_metric_type_t type);
 
 
 /*
-void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *in, float *metric, trellis_metric_type_t type)
+void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *in,
+                 float *metric, gr::digital::trellis_metric_type_t type)
 {
   float minm = FLT_MAX;
   int minmi = 0;
 
   switch (type){
-  case TRELLIS_EUCLIDEAN:
+  case gr::digital::TRELLIS_EUCLIDEAN:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -99,7 +104,7 @@ void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *in,
       }
     }
     break;
-  case TRELLIS_HARD_SYMBOL:
+  case gr::digital::TRELLIS_HARD_SYMBOL:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -115,7 +120,7 @@ void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *in,
       metric[o] = (o==minmi?0.0:1.0);
     }
     break;
-  case TRELLIS_HARD_BIT:
+  case gr::digital::TRELLIS_HARD_BIT:
     throw std::runtime_error ("Invalid metric type (not yet implemented).");
     break;
   default:
@@ -124,13 +129,14 @@ void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *in,
 }
 
 
-void calc_metric(int O, int D, const std::vector<int> &TABLE, const int *in, float *metric, trellis_metric_type_t type)
+void calc_metric(int O, int D, const std::vector<int> &TABLE, const int *in,
+                 float *metric, gr::digital::trellis_metric_type_t type)
 {
   float minm = FLT_MAX;
   int minmi = 0;
 
   switch (type){
-  case TRELLIS_EUCLIDEAN:
+  case gr::digital::TRELLIS_EUCLIDEAN:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -139,7 +145,7 @@ void calc_metric(int O, int D, const std::vector<int> &TABLE, const int *in, flo
       }
     }
     break;
-  case TRELLIS_HARD_SYMBOL:
+  case gr::digital::TRELLIS_HARD_SYMBOL:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -155,7 +161,7 @@ void calc_metric(int O, int D, const std::vector<int> &TABLE, const int *in, flo
       metric[o] = (o==minmi?0.0:1.0);
     }
     break;
-  case TRELLIS_HARD_BIT:
+  case gr::digital::TRELLIS_HARD_BIT:
     throw std::runtime_error ("Invalid metric type (not yet implemented).");
     break;
   default:
@@ -165,13 +171,14 @@ void calc_metric(int O, int D, const std::vector<int> &TABLE, const int *in, flo
 
 
 
-void calc_metric(int O, int D, const std::vector<float> &TABLE, const float *in, float *metric, trellis_metric_type_t type)
+void calc_metric(int O, int D, const std::vector<float> &TABLE, const float *in,
+                 float *metric, gr::digital::trellis_metric_type_t type)
 {
   float minm = FLT_MAX;
   int minmi = 0;
 
   switch (type){
-  case TRELLIS_EUCLIDEAN:
+  case gr::digital::TRELLIS_EUCLIDEAN:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -180,7 +187,7 @@ void calc_metric(int O, int D, const std::vector<float> &TABLE, const float *in,
       }
     }
     break;
-  case TRELLIS_HARD_SYMBOL:
+  case gr::digital::TRELLIS_HARD_SYMBOL:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -196,7 +203,7 @@ void calc_metric(int O, int D, const std::vector<float> &TABLE, const float *in,
       metric[o] = (o==minmi?0.0:1.0);
     }
     break;
-  case TRELLIS_HARD_BIT:
+  case gr::digital::TRELLIS_HARD_BIT:
     throw std::runtime_error ("Invalid metric type (not yet implemented).");
     break;
   default:
@@ -209,14 +216,15 @@ void calc_metric(int O, int D, const std::vector<float> &TABLE, const float *in,
 
 
 
-void calc_metric(int O, int D, const std::vector<gr_complex> &TABLE, const gr_complex *in, float *metric, trellis_metric_type_t type)
+void calc_metric(int O, int D, const std::vector<gr_complex> &TABLE, const gr_complex *in,
+		 float *metric, gr::digital::trellis_metric_type_t type)
 {
   float minm = FLT_MAX;
   int minmi = 0;
 
 
   switch (type){
-  case TRELLIS_EUCLIDEAN:
+  case gr::digital::TRELLIS_EUCLIDEAN:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -225,7 +233,7 @@ void calc_metric(int O, int D, const std::vector<gr_complex> &TABLE, const gr_co
       }
     }
     break;
-  case TRELLIS_HARD_SYMBOL:
+  case gr::digital::TRELLIS_HARD_SYMBOL:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;
       for (int m=0;m<D;m++) {
@@ -241,7 +249,7 @@ void calc_metric(int O, int D, const std::vector<gr_complex> &TABLE, const gr_co
       metric[o] = (o==minmi?0.0:1.0);
     }
     break;
-  case TRELLIS_HARD_BIT:
+  case gr::digital::TRELLIS_HARD_BIT:
     throw std::runtime_error ("Invalid metric type (not yet implemented).");
     break;
   default:

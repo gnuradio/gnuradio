@@ -32,7 +32,7 @@ trellis_siso_combined_f_sptr trellis_make_siso_combined_f (
     trellis_siso_type_t SISO_TYPE,
     int D,
     const std::vector<float> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 
 class trellis_siso_combined_f : public gr_block
@@ -48,7 +48,7 @@ private:
     trellis_siso_type_t SISO_TYPE,
     int D,
     const std::vector<float> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 public:
     fsm FSM () const { return d_FSM; }
@@ -60,5 +60,5 @@ public:
     trellis_siso_type_t SISO_TYPE () const { return d_SISO_TYPE; }
     int D () const { return d_D; }
     std::vector<float> TABLE () const { return d_TABLE; }
-    trellis_metric_type_t TYPE () const { return d_TYPE; }
+    gr::digital::trellis_metric_type_t TYPE () const { return d_TYPE; }
 };

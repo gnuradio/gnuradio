@@ -41,7 +41,7 @@ TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     int SK,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 
 /*!
@@ -55,7 +55,7 @@ class TRELLIS_API @NAME@ : public gr_block
   int d_SK;
   int d_D;
   std::vector<@I_TYPE@> d_TABLE;
-  trellis_metric_type_t d_TYPE;
+  gr::digital::trellis_metric_type_t d_TYPE;
   //std::vector<int> d_trace;
 
   friend TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
@@ -65,7 +65,7 @@ class TRELLIS_API @NAME@ : public gr_block
     int SK,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 
   @NAME@ (
@@ -75,7 +75,7 @@ class TRELLIS_API @NAME@ : public gr_block
     int SK,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 
 public:
@@ -85,7 +85,7 @@ public:
   int SK () const { return d_SK; }
   int D () const { return d_D; }
   std::vector<@I_TYPE@> TABLE () const { return d_TABLE; }
-  trellis_metric_type_t TYPE () const { return d_TYPE; }
+  gr::digital::trellis_metric_type_t TYPE () const { return d_TYPE; }
   //std::vector<int> trace () const { return d_trace; }
   void set_TABLE (const std::vector<@I_TYPE@> &table);
   void forecast (int noutput_items,

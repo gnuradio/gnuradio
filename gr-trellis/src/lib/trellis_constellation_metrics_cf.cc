@@ -30,17 +30,17 @@
 #include <stdexcept>
 #include <iostream>
 
-
-
 trellis_constellation_metrics_cf_sptr
-trellis_make_constellation_metrics_cf (gr::digital::constellation_sptr constellation, trellis_metric_type_t TYPE)
+trellis_make_constellation_metrics_cf(constellation_sptr constellation,
+				      trellis_metric_type_t TYPE)
 {
-  return gnuradio::get_initial_sptr (new trellis_constellation_metrics_cf (constellation, TYPE));
+  return gnuradio::get_initial_sptr
+    (new trellis_constellation_metrics_cf(constellation, TYPE));
 }
 
 
-
-trellis_constellation_metrics_cf::trellis_constellation_metrics_cf (gr::digital::constellation_sptr constellation, trellis_metric_type_t TYPE)
+trellis_constellation_metrics_cf::trellis_constellation_metrics_cf(constellation_sptr constellation,
+								   trellis_metric_type_t TYPE)
   : gr_block ("constellation_metrics_cf",
 	      gr_make_io_signature (1, -1, sizeof (gr_complex)),
 	      gr_make_io_signature (1, -1, sizeof (float))),
@@ -54,7 +54,7 @@ trellis_constellation_metrics_cf::trellis_constellation_metrics_cf (gr::digital:
 }
 
 void
-trellis_constellation_metrics_cf::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+trellis_constellation_metrics_cf::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 {
   assert (noutput_items % d_O == 0);
   unsigned int input_required =  d_D * noutput_items / d_O;
@@ -66,10 +66,10 @@ trellis_constellation_metrics_cf::forecast (int noutput_items, gr_vector_int &ni
 
 
 int
-trellis_constellation_metrics_cf::general_work (int noutput_items,
-				gr_vector_int &ninput_items,
-				gr_vector_const_void_star &input_items,
-				gr_vector_void_star &output_items)
+trellis_constellation_metrics_cf::general_work(int noutput_items,
+					       gr_vector_int &ninput_items,
+					       gr_vector_const_void_star &input_items,
+					       gr_vector_void_star &output_items)
 {
 
   assert (noutput_items % d_O == 0);

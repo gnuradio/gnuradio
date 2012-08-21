@@ -29,7 +29,7 @@ from gnuradio import gr, gr_unittest, blks2
 import trellis
 
 import os
-import digital_swig
+import digital_swig as digital
 
 fsm_args = {"awgn1o2_4": (2, 4, 4,
                           (0, 2, 0, 2, 1, 3, 1, 3),
@@ -39,8 +39,8 @@ fsm_args = {"awgn1o2_4": (2, 4, 4,
             "nothing": (2, 1, 2, (0, 0), (0, 1)),
             }
 
-constells = {2: digital_swig.constellation_bpsk(),
-             4: digital_swig.constellation_qpsk(),
+constells = {2: digital.constellation_bpsk(),
+             4: digital.constellation_qpsk(),
              }
 
 class test_trellis (gr_unittest.TestCase):
@@ -114,7 +114,7 @@ class trellis_tb(gr.top_block):
         s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol, gr.GR_MSB_FIRST)
         # initial FSM state = 0
         enc = trellis.encoder_ss(f, 0)
-        mod = digital_swig.chunks_to_symbols_sc(constellation.points(), 1)
+        mod = digital.chunks_to_symbols_sc(constellation.points(), 1)
 
         # CHANNEL
         add = gr.add_cc()
@@ -122,7 +122,7 @@ class trellis_tb(gr.top_block):
 
         # RX
         # data preprocessing to generate metrics for Viterbi
-        metrics = trellis.constellation_metrics_cf(constellation.base(), digital_swig.TRELLIS_EUCLIDEAN)
+        metrics = trellis.constellation_metrics_cf(constellation.base(), digital.TRELLIS_EUCLIDEAN)
         # Put -1 if the Initial/Final states are not set.
         va = trellis.viterbi_s(f, K, 0, -1)
         # pack FSM input symbols to shorts

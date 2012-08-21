@@ -31,7 +31,7 @@ GR_SWIG_BLOCK_MAGIC(trellis,@BASE_NAME@);
     int SK,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 
 class @NAME@ : public gr_block
@@ -44,7 +44,7 @@ private:
     int SK,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 public:
     fsm FSM () const { return d_FSM; }
@@ -53,7 +53,7 @@ public:
     int SK () const { return d_SK; }
     int D () const { return d_D; }
     std::vector<@I_TYPE@> TABLE () const { return d_TABLE; }
-    trellis_metric_type_t TYPE () const { return d_TYPE; }
+    gr::digital::trellis_metric_type_t TYPE () const { return d_TYPE; }
     //std::vector<short> trace () const { return d_trace; }
     void set_TABLE (const std::vector<@I_TYPE@> &table);
 };

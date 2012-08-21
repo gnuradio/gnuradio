@@ -45,7 +45,7 @@ TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
   trellis_siso_type_t SISO_TYPE, // perform "min-sum" or "sum-product" combining
   int D,
   const std::vector<@I_TYPE@> &TABLE,
-  trellis_metric_type_t METRIC_TYPE,
+  gr::digital::trellis_metric_type_t METRIC_TYPE,
   float scaling
 );
 
@@ -67,7 +67,7 @@ class TRELLIS_API @NAME@ : public gr_block
   trellis_siso_type_t d_SISO_TYPE;
   int d_D;
   std::vector<@I_TYPE@> d_TABLE;
-  trellis_metric_type_t d_METRIC_TYPE;
+  gr::digital::trellis_metric_type_t d_METRIC_TYPE;
   float d_scaling;
   std::vector<float> d_buffer;
 
@@ -80,7 +80,7 @@ class TRELLIS_API @NAME@ : public gr_block
     trellis_siso_type_t SISO_TYPE,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t METRIC_TYPE,
+    gr::digital::trellis_metric_type_t METRIC_TYPE,
     float scaling
   );
 
@@ -93,7 +93,7 @@ class TRELLIS_API @NAME@ : public gr_block
     trellis_siso_type_t SISO_TYPE,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t METRIC_TYPE,
+    gr::digital::trellis_metric_type_t METRIC_TYPE,
     float scaling
   );
 
@@ -109,7 +109,7 @@ public:
   int repetitions () const { return d_repetitions; }
   int D () const { return d_D; }
   std::vector<@I_TYPE@> TABLE () const { return d_TABLE; }
-  trellis_metric_type_t METRIC_TYPE () const { return d_METRIC_TYPE; }
+  gr::digital::trellis_metric_type_t METRIC_TYPE () const { return d_METRIC_TYPE; }
   trellis_siso_type_t SISO_TYPE () const { return d_SISO_TYPE; }
   float scaling () const { return d_scaling; }
   void set_scaling (float scaling);

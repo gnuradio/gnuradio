@@ -154,7 +154,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<Ti> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const Ti *in, To *out
 )
 {
@@ -231,7 +231,7 @@ void viterbi_algorithm_combined<short,unsigned char>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<short> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const short *in, unsigned char *out
 );
 
@@ -245,7 +245,7 @@ void viterbi_algorithm_combined<int,unsigned char>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<int> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const int *in, unsigned char *out
 );
 
@@ -259,7 +259,7 @@ void viterbi_algorithm_combined<float,unsigned char>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<float> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *in, unsigned char *out
 );
 
@@ -273,7 +273,7 @@ void viterbi_algorithm_combined<gr_complex,unsigned char>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<gr_complex> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const gr_complex *in, unsigned char *out
 );
 
@@ -289,7 +289,7 @@ void viterbi_algorithm_combined<short,short>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<short> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const short *in, short *out
 );
 
@@ -303,7 +303,7 @@ void viterbi_algorithm_combined<int,short>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<int> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const int *in, short *out
 );
 
@@ -317,7 +317,7 @@ void viterbi_algorithm_combined<float,short>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<float> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *in, short *out
 );
 
@@ -331,7 +331,7 @@ void viterbi_algorithm_combined<gr_complex,short>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<gr_complex> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const gr_complex *in, short *out
 );
 
@@ -347,7 +347,7 @@ void viterbi_algorithm_combined<short,int>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<short> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const short *in, int *out
 );
 
@@ -361,7 +361,7 @@ void viterbi_algorithm_combined<int,int>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<int> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const int *in, int *out
 );
 
@@ -375,7 +375,7 @@ void viterbi_algorithm_combined<float,int>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<float> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *in, int *out
 );
 
@@ -389,7 +389,7 @@ void viterbi_algorithm_combined<gr_complex,int>(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<gr_complex> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const gr_complex *in, int *out
 );
 
@@ -574,7 +574,7 @@ void siso_algorithm_combined(int I, int S, int O,
              float (*p2mymin)(float,float),
              int D,
              const std::vector<T> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *priori, const T *observations, float *post
 )
 {
@@ -726,7 +726,7 @@ void siso_algorithm_combined<short>(int I, int S, int O,
              float (*p2mymin)(float,float),
              int D,
              const std::vector<short> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *priori, const short *observations, float *post
 );
 
@@ -742,7 +742,7 @@ void siso_algorithm_combined<int>(int I, int S, int O,
              float (*p2mymin)(float,float),
              int D,
              const std::vector<int> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *priori, const int *observations, float *post
 );
 
@@ -758,7 +758,7 @@ void siso_algorithm_combined<float>(int I, int S, int O,
              float (*p2mymin)(float,float),
              int D,
              const std::vector<float> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *priori, const float *observations, float *post
 );
 
@@ -774,7 +774,7 @@ void siso_algorithm_combined<gr_complex>(int I, int S, int O,
              float (*p2mymin)(float,float),
              int D,
              const std::vector<gr_complex> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *priori, const gr_complex *observations, float *post
 );
 
@@ -787,7 +787,7 @@ void sccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<Ti> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const Ti *observations, To *data
 )
@@ -900,7 +900,7 @@ void sccc_decoder_combined<float,unsigned char>(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const float *observations, unsigned char *data
 );
@@ -912,7 +912,7 @@ void sccc_decoder_combined<float,short>(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const float *observations, short *data
 );
@@ -924,7 +924,7 @@ void sccc_decoder_combined<float,int>(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const float *observations, int *data
 );
@@ -936,7 +936,7 @@ void sccc_decoder_combined<gr_complex,unsigned char>(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const gr_complex *observations, unsigned char *data
 );
@@ -948,7 +948,7 @@ void sccc_decoder_combined<gr_complex,short>(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const gr_complex *observations, short *data
 );
@@ -960,7 +960,7 @@ void sccc_decoder_combined<gr_complex,int>(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const gr_complex *observations, int *data
 );
@@ -1247,7 +1247,7 @@ void pccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<Ti> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const Ti *observations, To *data
 )
@@ -1366,7 +1366,7 @@ void pccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const float *observations, unsigned char *data
 );
@@ -1379,7 +1379,7 @@ void pccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const float *observations, short *data
 );
@@ -1392,7 +1392,7 @@ void pccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<float> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const float *observations, int *data
 );
@@ -1405,7 +1405,7 @@ void pccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const gr_complex *observations, unsigned char *data
 );
@@ -1418,7 +1418,7 @@ void pccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const gr_complex *observations, short *data
 );
@@ -1431,7 +1431,7 @@ void pccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<gr_complex> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const gr_complex *observations, int *data
 );

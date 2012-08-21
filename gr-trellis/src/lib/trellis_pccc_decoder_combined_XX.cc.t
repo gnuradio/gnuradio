@@ -45,7 +45,7 @@ trellis_make_@BASE_NAME@ (
   trellis_siso_type_t SISO_TYPE,
   int D,
   const std::vector<@I_TYPE@> &TABLE,
-  trellis_metric_type_t METRIC_TYPE,
+  gr::digital::trellis_metric_type_t METRIC_TYPE,
   float scaling
 )
 {
@@ -71,7 +71,7 @@ trellis_make_@BASE_NAME@ (
   trellis_siso_type_t SISO_TYPE,
   int D,
   const std::vector<@I_TYPE@> &TABLE,
-  trellis_metric_type_t METRIC_TYPE,
+  gr::digital::trellis_metric_type_t METRIC_TYPE,
   float scaling
 )
   : gr_block ("@BASE_NAME@",

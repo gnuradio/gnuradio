@@ -148,6 +148,7 @@ list(APPEND gr_trellis_sources
 
 list(APPEND trellis_libs
     gnuradio-core
+    gnuradio-digital
     ${Boost_LIBRARIES}
 )
 

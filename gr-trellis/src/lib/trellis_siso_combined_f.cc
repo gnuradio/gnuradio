@@ -43,7 +43,7 @@ trellis_make_siso_combined_f (
     trellis_siso_type_t SISO_TYPE,
     int D,
     const std::vector<float> &TABLE,
-    trellis_metric_type_t TYPE)
+    gr::digital::trellis_metric_type_t TYPE)
 {
   return gnuradio::get_initial_sptr(new trellis_siso_combined_f (FSM,K,S0,SK,POSTI,POSTO,SISO_TYPE,D,TABLE,TYPE));
 }
@@ -58,7 +58,7 @@ trellis_siso_combined_f::trellis_siso_combined_f (
     trellis_siso_type_t SISO_TYPE,
     int D,
     const std::vector<float> &TABLE,
-    trellis_metric_type_t TYPE)
+    gr::digital::trellis_metric_type_t TYPE)
   : gr_block ("siso_combined_f",
 			  gr_make_io_signature (1, -1, sizeof (float)),
 			  gr_make_io_signature (1, -1, sizeof (float))),
@@ -153,7 +153,7 @@ void siso_algorithm_combined(int I, int S, int O,
              float (*p2mymin)(float,float),
              int D,
              const std::vector<float> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *priori, const float *observations, float *post//,
              //std::vector<float> &alpha,
              //std::vector<float> &beta

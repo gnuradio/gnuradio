@@ -29,17 +29,19 @@
 
 
 template <class T>
-void calc_metric(int O, int D, const std::vector<T> &TABLE, const T *in, float *metric, trellis_metric_type_t type);
+void calc_metric(int O, int D, const std::vector<T> &TABLE, const T *in,
+		 float *metric, gr::digital::trellis_metric_type_t type);
 
 /*
-void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *in, float *metric, trellis_metric_type_t type);
+void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *in, float *metric, gr::digital::trellis_metric_type_t type);
 
-void calc_metric(int O, int D, const std::vector<int> &TABLE, const int *in, float *metric, trellis_metric_type_t type);
+void calc_metric(int O, int D, const std::vector<int> &TABLE, const int *in, float *metric, gr::digital::trellis_metric_type_t type);
 
-void calc_metric(int O, int D, const std::vector<float> &TABLE, const float *in, float *metric, trellis_metric_type_t type);
+void calc_metric(int O, int D, const std::vector<float> &TABLE, const float *in, float *metric, gr::digital::trellis_metric_type_t type);
 */
 
-void calc_metric(int O, int D, const std::vector<gr_complex> &TABLE, const gr_complex *in, float *metric, trellis_metric_type_t type);
+void calc_metric(int O, int D, const std::vector<gr_complex> &TABLE, const gr_complex *in,
+		 float *metric, gr::digital::trellis_metric_type_t type);
 
 
 

@@ -41,7 +41,7 @@ trellis_make_@BASE_NAME@ (
     int SK,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t TYPE)
+    gr::digital::trellis_metric_type_t TYPE)
 {
   return gnuradio::get_initial_sptr (new @NAME@ (FSM,K,S0,SK,D,TABLE,TYPE));
 }
@@ -53,10 +53,10 @@ trellis_make_@BASE_NAME@ (
     int SK,
     int D,
     const std::vector<@I_TYPE@> &TABLE,
-    trellis_metric_type_t TYPE)
+    gr::digital::trellis_metric_type_t TYPE)
   : gr_block ("@BASE_NAME@",
-			  gr_make_io_signature (1, -1, sizeof (@I_TYPE@)),
-			  gr_make_io_signature (1, -1, sizeof (@O_TYPE@))),
+	      gr_make_io_signature (1, -1, sizeof (@I_TYPE@)),
+	      gr_make_io_signature (1, -1, sizeof (@O_TYPE@))),
   d_FSM (FSM),
   d_K (K),
   d_S0 (S0),
@@ -100,7 +100,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<@I_TYPE@> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const @I_TYPE@ *in, @O_TYPE@ *out)//,
              //std::vector<int> &trace)
 {

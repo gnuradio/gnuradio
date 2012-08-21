@@ -94,13 +94,10 @@ CPACK_COMPONENT("trellis_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src/lib)
+add_subdirectory(src)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)
     add_subdirectory(grc)
-    add_subdirectory(src/python)
-    add_subdirectory(src/examples/python)
-    add_subdirectory(src/examples/grc)
 endif(ENABLE_PYTHON)
 
 ########################################################################

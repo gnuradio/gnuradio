@@ -55,7 +55,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
              int S0,int SK,
              int D,
              const std::vector<Ti> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const Ti *in, To *out
 );
 
@@ -86,7 +86,7 @@ void siso_algorithm_combined(int I, int S, int O,
              float (*p2mymin)(float,float),
              int D,
              const std::vector<T> &TABLE,
-             trellis_metric_type_t TYPE,
+             gr::digital::trellis_metric_type_t TYPE,
              const float *priori, const T *observations, float *post
 );
 
@@ -108,7 +108,7 @@ void sccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<Ti> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const Ti *observations, To *data
 );
@@ -129,7 +129,7 @@ void pccc_decoder_combined(
       const interleaver &INTERLEAVER, int blocklength, int iterations,
       float (*p2mymin)(float,float),
       int D, const std::vector<Ti> &TABLE,
-      trellis_metric_type_t METRIC_TYPE,
+      gr::digital::trellis_metric_type_t METRIC_TYPE,
       float scaling,
       const Ti *observations, To *data
 );

@@ -43,7 +43,7 @@ TRELLIS_API trellis_siso_combined_f_sptr trellis_make_siso_combined_f (
     trellis_siso_type_t d_SISO_TYPE, // perform "min-sum" or "sum-product" combining
     int D,
     const std::vector<float> &TABLE,
-    trellis_metric_type_t TYPE
+    gr::digital::trellis_metric_type_t TYPE
 );
 
 /*!
@@ -60,7 +60,7 @@ class TRELLIS_API trellis_siso_combined_f : public gr_block
   trellis_siso_type_t d_SISO_TYPE;
   int d_D;
   std::vector<float> d_TABLE;
-  trellis_metric_type_t d_TYPE;
+  gr::digital::trellis_metric_type_t d_TYPE;
   //std::vector<float> d_alpha;
   //std::vector<float> d_beta;
 
@@ -74,7 +74,7 @@ class TRELLIS_API trellis_siso_combined_f : public gr_block
     trellis_siso_type_t d_SISO_TYPE,
     int D,
     const std::vector<float> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 
   trellis_siso_combined_f (
@@ -87,7 +87,7 @@ class TRELLIS_API trellis_siso_combined_f : public gr_block
     trellis_siso_type_t d_SISO_TYPE,
     int D,
     const std::vector<float> &TABLE,
-    trellis_metric_type_t TYPE);
+    gr::digital::trellis_metric_type_t TYPE);
 
 
 public:
@@ -100,7 +100,7 @@ public:
   trellis_siso_type_t SISO_TYPE () const { return d_SISO_TYPE; }
   int D () const { return d_D; }
   std::vector<float> TABLE () const { return d_TABLE; }
-  trellis_metric_type_t TYPE () const { return d_TYPE; }
+  gr::digital::trellis_metric_type_t TYPE () const { return d_TYPE; }
   void forecast (int noutput_items,
                  gr_vector_int &ninput_items_required);
   int general_work (int noutput_items,

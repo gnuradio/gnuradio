@@ -24,17 +24,19 @@
 
 GR_SWIG_BLOCK_MAGIC(trellis,@BASE_NAME@);
 
-@SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D, const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
+@SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D, const std::vector<@I_TYPE@> &TABLE,
+				      gr::digital::trellis_metric_type_t TYPE);
 
 class @NAME@ : public gr_block
 {
 private:
-  @NAME@ (int O, int D, const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
+  @NAME@ (int O, int D, const std::vector<@I_TYPE@> &TABLE,
+	  gr::digital::trellis_metric_type_t TYPE);
 
 public:
   int O () const { return d_O; }
   int D () const { return d_D; }
-  trellis_metric_type_t TYPE () const { return d_TYPE; }
+  gr::digital::trellis_metric_type_t TYPE () const { return d_TYPE; }
   void set_TABLE (const std::vector<@I_TYPE@> &table);
   std::vector<@I_TYPE@> TABLE () const { return d_TABLE; }
 };

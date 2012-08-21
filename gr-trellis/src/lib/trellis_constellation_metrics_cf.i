@@ -20,14 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// WARNING: this file is machine generated.  Edits will be over written
-
 GR_SWIG_BLOCK_MAGIC(trellis,constellation_metrics_cf);
 
-trellis_constellation_metrics_cf_sptr trellis_make_constellation_metrics_cf (gr::digital::constellation_sptr constellation, trellis_metric_type_t TYPE);
+trellis_constellation_metrics_cf_sptr
+trellis_make_constellation_metrics_cf(gr::digital::constellation_sptr constellation,
+				      gr::digital::trellis_metric_type_t TYPE);
 
 class trellis_constellation_metrics_cf : public gr_block
 {
-private:
-  trellis_constellation_metrics_cf (gr::digital::constellation_sptr constellation, trellis_metric_type_t TYPE);
 };
