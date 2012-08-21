@@ -151,37 +151,17 @@
 	</cat>
 	<cat>
 		<name>Filters</name>
-		<!-- FIR convenience filters -->
-		<block>low_pass_filter</block>
-		<block>high_pass_filter</block>
-		<block>band_pass_filter</block>
-		<block>band_reject_filter</block>
-		<block>root_raised_cosine_filter</block>
 		<!-- Filters that take taps as arguments -->
-		<block>gr_fir_filter_xxx</block>
-		<block>gr_interp_fir_filter_xxx</block>
-		<block>gr_fft_filter_xxx</block>
-		<block>gr_freq_xlating_fir_filter_xxx</block>
-		<block>gr_iir_filter_ffd</block>
-		<block>gr_filter_delay_fc</block>
-		<block>gr_channel_model</block>
-		<!-- Filter banks -->
 		<block>blks2_synthesis_filterbank</block>
 		<block>blks2_analysis_filterbank</block>
 		<!-- Polyphase filters -->
 		<block>blks2_pfb_arb_resampler_ccf</block>
 		<block>blks2_pfb_channelizer_ccf</block>
 		<!-- Other filters -->
-		<block>gr_single_pole_iir_filter_xx</block>
-		<block>gr_hilbert_fc</block>
-		<block>gr_rational_resampler_base_xxx</block>
 		<block>blks2_rational_resampler_xxx</block>
-		<block>gr_fractional_interpolator_xx</block>
 		<block>gr_keep_one_in_n</block>
 		<block>gr_keep_m_in_n</block>
 		<block>gr_moving_average_xx</block>
-		<block>gr_iqcomp_cc</block>
-		<block>gr_dc_blocker</block>
 	</cat>
 	<cat>
 		<name>Modulators</name>

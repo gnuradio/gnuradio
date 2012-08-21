@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##High Pass Filter: Custom wrapper
+##Low Pass Filter: Custom wrapper
 ###################################################
  -->
 <block>
-	<name>High Pass Filter</name>
-	<key>high_pass_filter</key>
-	<import>from gnuradio import gr</import>
-	<import>from gnuradio.gr import firdes</import>
-	<make>gr.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.high_pass(
+	<name>Low Pass Filter</name>
+	<key>low_pass_filter</key>
+	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>filter.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.low_pass(
 	$gain, $samp_rate, $cutoff_freq, $width, $win, $beta))</make>
-	<callback>set_taps(firdes.high_pass($gain, $samp_rate, $cutoff_freq, $width, $win, $beta))</callback>
+	<callback>set_taps(firdes.low_pass($gain, $samp_rate, $cutoff_freq, $width, $win, $beta))</callback>
 	<param>
 		<name>FIR Type</name>
 		<key>type</key>

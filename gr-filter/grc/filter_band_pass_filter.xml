@@ -7,9 +7,9 @@
 <block>
 	<name>Band Pass Filter</name>
 	<key>band_pass_filter</key>
-	<import>from gnuradio import gr</import>
-	<import>from gnuradio.gr import firdes</import>
-	<make>gr.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.$(type.fcn)(
+	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>filter.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.$(type.fcn)(
 	$gain, $samp_rate, $low_cutoff_freq, $high_cutoff_freq, $width, $win, $beta))</make>
 	<callback>set_taps(firdes.$(type.fcn)($gain, $samp_rate, $low_cutoff_freq, $high_cutoff_freq, $width, $win, $beta))</callback>
 	<param>

@@ -36,6 +36,11 @@ install(FILES
     filter_rational_resampler_base_xxx.xml
     filter_single_pole_iir_filter_xx.xml
     filter_channel_model.xml
+    filter_low_pass_filter.xml
+    filter_high_pass_filter.xml
+    filter_band_pass_filter.xml
+    filter_band_reject_filter.xml
+    filter_root_raised_cosine_filter.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "filter_python"
 )

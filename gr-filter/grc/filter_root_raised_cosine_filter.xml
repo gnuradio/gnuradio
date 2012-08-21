@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Band Reject Filter: Custom wrapper
+##Root Raised Cosine Filter: Custom wrapper
 ###################################################
  -->
 <block>
-	<name>Band Reject Filter</name>
-	<key>band_reject_filter</key>
-	<import>from gnuradio import gr</import>
-	<import>from gnuradio.gr import firdes</import>
-	<make>gr.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.band_reject(
-	$gain, $samp_rate, $low_cutoff_freq, $high_cutoff_freq, $width, $win, $beta))</make>
-	<callback>set_taps(firdes.band_reject($gain, $samp_rate, $low_cutoff_freq, $high_cutoff_freq, $width, $win, $beta))</callback>
+	<name>Root Raised Cosine Filter</name>
+	<key>root_raised_cosine_filter</key>
+	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>filter.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.root_raised_cosine(
+	$gain, $samp_rate, $sym_rate, $alpha, $ntaps))</make>
+	<callback>set_taps(firdes.root_raised_cosine($gain, $samp_rate, $sym_rate, $alpha, $ntaps))</callback>
 	<param>
 		<name>FIR Type</name>
 		<key>type</key>
@@ -68,51 +68,22 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Low Cutoff Freq</name>
-		<key>low_cutoff_freq</key>
+		<name>Symbol Rate</name>
+		<key>sym_rate</key>
+		<value>1.0</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>High Cutoff Freq</name>
-		<key>high_cutoff_freq</key>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<value>0.35</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Transition Width</name>
-		<key>width</key>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Window</name>
-		<key>win</key>
-		<value>firdes.WIN_HAMMING</value>
+		<name>Num Taps</name>
+		<key>ntaps</key>
+		<value>11*samp_rate</value>
 		<type>int</type>
-		<option>
-			<name>Hamming</name>
-			<key>firdes.WIN_HAMMING</key>
-		</option>
-		<option>
-			<name>Hann</name>
-			<key>firdes.WIN_HANN</key>
-		</option>
-		<option>
-			<name>Blackman</name>
-			<key>firdes.WIN_BLACKMAN</key>
-		</option>
-		<option>
-			<name>Rectangular</name>
-			<key>firdes.WIN_RECTANGULAR</key>
-		</option>
-		<option>
-			<name>Kaiser</name>
-			<key>firdes.WIN_KAISER</key>
-		</option>
-	</param>
-	<param>
-		<name>Beta</name>
-		<key>beta</key>
-		<value>6.76</value>
-		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>
@@ -125,8 +96,6 @@
 	<doc>
 This filter is a convenience wrapper for an fir filter and a firdes taps generating function.
 
-Sample rate, cutoff frequency, and transition width are in Hertz.
-
-The beta paramater only applies to the Kaiser window.
+Sample rate in Hertz.
 	</doc>
 </block>

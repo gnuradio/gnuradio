@@ -30,6 +30,13 @@
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
 		<name>Filters</name>
+		<!-- FIR convenience filters -->
+		<block>low_pass_filter</block>
+		<block>high_pass_filter</block>
+		<block>band_pass_filter</block>
+		<block>band_reject_filter</block>
+		<block>root_raised_cosine_filter</block>
+		<!-- Regular Filter Blocks -->
 		<block>dc_blocker_xx</block>
 		<block>fft_filter_xxx</block>
 		<block>fir_filter_xxx</block>
