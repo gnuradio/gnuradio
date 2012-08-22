@@ -91,7 +91,7 @@ namespace gr {
       typedef boost::shared_ptr<fll_band_edge_cc> sptr;
 
       /*!
-       * Build the FLL
+       * Make an FLL block.
        *
        * \param samps_per_sym (float) number of samples per symbol
        * \param rolloff (float) Rolloff (excess bandwidth) of signal filter

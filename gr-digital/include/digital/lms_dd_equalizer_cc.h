@@ -75,6 +75,16 @@ namespace gr {
       // gr::digital::lms_dd_equalizer_cc::sptr
       typedef boost::shared_ptr<lms_dd_equalizer_cc> sptr;
 
+      /*!
+       * Make an LMS decision-directed equalizer
+       *
+       * \param num_taps Numer of taps in the equalizer (channel size)
+       * \param mu Gain of the update loop
+       * \param sps Number of samples per symbol of the input signal
+       * \param cnst A constellation derived from class
+       * 'constellation'. Use base() method to get a shared pointer to
+       * this base class type.
+       */
       static sptr make(int num_taps,
 		       float mu, int sps,
 		       constellation_sptr cnst);

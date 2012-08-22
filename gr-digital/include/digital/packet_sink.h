@@ -31,7 +31,8 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief process received bits looking for packet sync, header, and process bits into packet
+     * \brief process received bits looking for packet sync, header,
+     * and process bits into packet
      * \ingroup sink_blk
      *
      * input: stream of symbols to be sliced.
@@ -50,10 +51,6 @@ namespace gr {
      * 2-level modulations such as BPSK or GMSK. The block can
      * generally be replaced with a correlate access code and frame
      * sink blocks.
-     *
-     * \param sync_vector The synchronization vector as a vector of 1's and 0's.
-     * \param target_queue The message queue that packets are sent to.
-     * \param threshold Number of bits that can be incorrect in the \p sync_vector.
      */
     class DIGITAL_API packet_sink : virtual public gr_sync_block
     {
@@ -70,7 +67,7 @@ namespace gr {
        */
       static sptr make(const std::vector<unsigned char>& sync_vector,
 		       gr_msg_queue_sptr target_queue,
-		       int threshold);
+		       int threshold=-1);
 
       //! return true if we detect carrier
       virtual bool carrier_sensed() const = 0;

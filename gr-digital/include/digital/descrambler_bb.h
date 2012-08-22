@@ -30,15 +30,12 @@ namespace gr {
   namespace digital {
 
     /*!
+     * \brief Descramber an input stream using an LFSR.
+     * \ingroup coding_blk
+     *
      * Descramble an input stream using an LFSR. This block works on
      * the LSB only of the input data stream, i.e., on an "unpacked
      * binary" stream, and produces the same format on its output.
-     *
-     * \param mask     Polynomial mask for LFSR
-     * \param seed     Initial shift register contents
-     * \param len      Shift register length
-     *
-     * \ingroup coding_blk
      */
     class DIGITAL_API descrambler_bb : virtual public gr_sync_block
     {
@@ -46,6 +43,15 @@ namespace gr {
       // gr::digital::descrambler_bb::sptr
       typedef boost::shared_ptr<descrambler_bb> sptr;
 
+      /*!
+       * Descramble an input stream using an LFSR. This block works on
+       * the LSB only of the input data stream, i.e., on an "unpacked
+       * binary" stream, and produces the same format on its output.
+       *
+       * \param mask     Polynomial mask for LFSR
+       * \param seed     Initial shift register contents
+       * \param len      Shift register length
+       */
       static sptr make(int mask, int seed, int len);
     };
 

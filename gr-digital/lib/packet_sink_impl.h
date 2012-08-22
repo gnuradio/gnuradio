@@ -76,7 +76,7 @@ namespace gr {
     public:
       packet_sink_impl(const std::vector<unsigned char>& sync_vector,
 		       gr_msg_queue_sptr target_queue,
-		       int threshold);
+		       int threshold=-1);
       ~packet_sink_impl();
 
       int work(int noutput_items,

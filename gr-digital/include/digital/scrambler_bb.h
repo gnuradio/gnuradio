@@ -30,23 +30,26 @@ namespace gr {
   namespace digital {
 
     /*!
-     * Scramble an input stream using an LFSR.  This block works on
-     * the LSB only of the input data stream, i.e., on an "unpacked
-     * binary" stream, and produces the same format on its output.
-     *
-     * \param mask     Polynomial mask for LFSR
-     * \param seed     Initial shift register contents
-     * \param len      Shift register length
-     *
+     * \breif Scramble an input stream using an LFSR.
      * \ingroup coding_blk
+     *
+     * This block works on the LSB only of the input data stream,
+     * i.e., on an "unpacked binary" stream, and produces the same
+     * format on its output.
      */
-
     class DIGITAL_API scrambler_bb : virtual public gr_sync_block
     {
     public:
       // gr::digital::scrambler_bb::sptr
       typedef boost::shared_ptr<scrambler_bb> sptr;
 
+      /*!
+       * Make a scramber block.
+       *
+       * \param mask     Polynomial mask for LFSR
+       * \param seed     Initial shift register contents
+       * \param len      Shift register length
+       */
       static sptr make(int mask, int seed, int len);
     };
 

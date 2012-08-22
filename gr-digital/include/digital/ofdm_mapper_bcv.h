@@ -33,10 +33,11 @@ namespace gr {
     /*!
      * \brief take a stream of bytes in and map to a vector of complex
      * constellation points suitable for IFFT input to be used in an
-     * ofdm modulator.  Abstract class must be subclassed with
-     * specific mapping.
+     * ofdm modulator.
      * \ingroup modulation_blk
      * \ingroup ofdm_blk
+     *
+     * Abstract class must be subclassed with specific mapping.
      */
     class DIGITAL_API ofdm_mapper_bcv : virtual public gr_sync_block
     {
@@ -44,6 +45,14 @@ namespace gr {
       // gr::digital::ofdm_mapper_bcv::sptr
       typedef boost::shared_ptr<ofdm_mapper_bcv> sptr;
 
+      /*!
+       * Make an OFDM mapper block.
+       *
+       * \param sym_position vector of OFDM carrier symbols in complex space
+       * \param msgq_limit limit on number of messages the queue can store
+       * \param occupied_carriers The number of subcarriers with data in the received symbol
+       * \param fft_length The size of the FFT vector (occupied_carriers + unused carriers)
+       */
       static sptr make(const std::vector<gr_complex> &constellation,
 		       unsigned msgq_limit, 
 		       unsigned occupied_carriers,

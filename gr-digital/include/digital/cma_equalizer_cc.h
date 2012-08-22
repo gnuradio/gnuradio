@@ -36,10 +36,10 @@ namespace gr {
      *
      * The error value and tap update equations (for p=2) can be found in:
      *
-     * "D. Godard, "Self-Recovering Equalization and Carrier Tracking
+     * D. Godard, "Self-Recovering Equalization and Carrier Tracking
      * in Two-Dimensional Data Communication Systems," IEEE
      * Transactions on Communications, Vol. 28, No. 11, pp. 1867 -
-     * 1875, 1980."
+     * 1875, 1980.
      */
     class DIGITAL_API cma_equalizer_cc: virtual public gr_sync_decimator
     {
@@ -51,6 +51,14 @@ namespace gr {
       // gr::digital::cma_equalizer_cc::sptr
       typedef boost::shared_ptr<cma_equalizer_cc> sptr;
 
+      /*!
+       * Make a CMA Equalizer block
+       *
+       * \param num_taps Numer of taps in the equalizer (channel size)
+       * \param modulus Modulus of the modulated signals
+       * \param mu Gain of the update loop
+       * \param sps Number of samples per symbol of the input signal
+       */
       static sptr make(int num_taps, float modulus, float mu, int sps);
 
       virtual float gain() const = 0;

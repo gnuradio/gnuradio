@@ -165,13 +165,12 @@ namespace gr {
        *                           with (default = 0).
        * \param max_rate_deviation (float) Distance from 0 d_rate can get (default = 1.5).
        * \param osps (int) The number of output samples per symbol (default=1).
-       *
        */
       static sptr make(double sps, float loop_bw,
 		       const std::vector<float> &taps,
-		       unsigned int filter_size,
-		       float init_phase,
-		       float max_rate_deviation,
+		       unsigned int filter_size=32,
+		       float init_phase=0,
+		       float max_rate_deviation=1.5,
 		       int osps=1);
 
       /*! \brief update the system gains from omega and eta

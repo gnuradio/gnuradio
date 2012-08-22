@@ -168,9 +168,9 @@ namespace gr {
        */
       static sptr make(double sps, float gain,
 		       const std::vector<float> &taps,
-		       unsigned int filter_size,
-		       float init_phase,
-		       float max_rate_deviation,
+		       unsigned int filter_size=32,
+		       float init_phase=0,
+		       float max_rate_deviation=1.5,
 		       int osps=1);
 
       /*! \brief update the system gains from omega and eta

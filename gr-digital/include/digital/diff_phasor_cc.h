@@ -44,6 +44,9 @@ namespace gr {
       // gr::digital::diff_phasor_cc::sptr
       typedef boost::shared_ptr<diff_phasor_cc> sptr;
 
+      /*!
+       * Make a differential phasor decoding block.
+       */
       static sptr make();
     };
 

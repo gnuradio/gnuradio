@@ -48,6 +48,16 @@ namespace gr {
       // gr::digital::ofdm_frame_sink::sptr
       typedef boost::shared_ptr<ofdm_frame_sink> sptr;
 
+      /*!
+       * Make an OFDM frame sink block.
+       *
+       * \param sym_position vector of OFDM carrier symbols in complex space
+       * \param sym_value vector of bit mapped from the complex symbol space
+       * \param target_queue message queue for the packets to go into
+       * \param occupied_carriers The number of subcarriers with data in the received symbol
+       * \param phase_gain gain of the phase tracking loop
+       * \param freq_gain gain of the frequency tracking loop
+       */
       static sptr make(const std::vector<gr_complex> &sym_position, 
 		       const std::vector<unsigned char> &sym_value_out,
 		       gr_msg_queue_sptr target_queue,

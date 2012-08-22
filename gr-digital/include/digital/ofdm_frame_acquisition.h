@@ -56,7 +56,7 @@ namespace gr {
       typedef boost::shared_ptr<ofdm_frame_acquisition> sptr;
 
       /*! 
-       * Build an OFDM correlator and equalizer.
+       * Make an OFDM correlator and equalizer.
        *
        * \param occupied_carriers   The number of subcarriers with data in the received symbol
        * \param fft_length          The size of the FFT vector (occupied_carriers + unused carriers)

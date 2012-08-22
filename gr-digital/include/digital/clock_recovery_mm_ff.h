@@ -47,6 +47,15 @@ namespace gr {
       // gr::digital::clock_recovery_mm_ff::sptr
       typedef boost::shared_ptr<clock_recovery_mm_ff> sptr;
 
+      /*!
+       * Make a M&M clock recovery block.
+       *
+       * \param omega Initial estimate of samples per symbol
+       * \param gain_omega Gain setting for omega update loop
+       * \param mu Initial estimate of phase of sample
+       * \param gain_mu Gain setting for mu update loop
+       * \param omega_relative_limit limit on omega
+       */
       static sptr make(float omega, float gain_omega,
 		       float mu, float gain_mu,
 		       float omega_relative_limit);

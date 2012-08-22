@@ -43,11 +43,11 @@ namespace gr {
       // gr::digital::simple_framer::sptr
       typedef boost::shared_ptr<simple_framer> sptr;
 
-    /*!
-     * Make a simple_framer block.
-     *
-     * \param payload_bytesize The size of the payload in bytes.
-     */
+      /*!
+       * Make a simple_framer block.
+       *
+       * \param payload_bytesize The size of the payload in bytes.
+       */
       static sptr make(int payload_bytesize);
     };
 

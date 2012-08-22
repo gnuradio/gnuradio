@@ -64,6 +64,12 @@ namespace gr {
       // gr::digital::ofdm_insert_preamble::sptr
       typedef boost::shared_ptr<ofdm_insert_preamble> sptr;
       
+      /*!
+       * Make an OFDM preamble inserter block.
+       *
+       * \param fft_length length of each symbol in samples.
+       * \param preamble   vector of symbols that represent the pre-modulated preamble.
+       */
       static sptr make(int fft_length,
 		       const std::vector<std::vector<gr_complex> > &preamble);
 

@@ -35,6 +35,9 @@ namespace gr {
      * \ingroup coding_blk
      * \ingroup digital
      *
+     * Decode a constellation's points from a complex space to
+     * (unpacked) bits based on the map of the \p consetllation
+     * object.
      */
     class DIGITAL_API constellation_decoder_cb
       : virtual public gr_block
@@ -45,6 +48,10 @@ namespace gr {
 
       /*!
        * \brief Make constellation decoder block.
+       *
+       * \param constellation A constellation derived from class
+       * 'constellation'. Use base() method to get a shared pointer to
+       * this base class type.
        */
       static sptr make(constellation_sptr constellation);
     };

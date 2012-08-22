@@ -43,8 +43,8 @@ namespace gr {
 
     public:
       mpsk_snr_est_cc_impl(snr_est_type_t type,
-			   int tag_nsamples,
-			   double alpha);
+			   int tag_nsamples=10000,
+			   double alpha=0.001);
       ~mpsk_snr_est_cc_impl();
 
       int work(int noutput_items,

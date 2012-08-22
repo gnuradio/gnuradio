@@ -63,8 +63,8 @@ namespace gr {
        *  calculations.
        */
       static sptr make(snr_est_type_t type,
-		       int msg_nsamples,
-		       double alpha);
+		       int msg_nsamples=10000,
+		       double alpha=0.001);
 
       //! Return the estimated signal-to-noise ratio in decibels
       virtual double snr() = 0;

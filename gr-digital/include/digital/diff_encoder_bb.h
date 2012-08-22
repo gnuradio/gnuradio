@@ -43,7 +43,9 @@ namespace gr {
       typedef boost::shared_ptr<diff_encoder_bb> sptr;
 
       /*!
-       * \brief Make differential encoder block.
+       * Make a differntial encoder block.
+       *
+       * \param modulus Modulus of code's alphabet
        */
       static sptr make(unsigned int modulus);
     };

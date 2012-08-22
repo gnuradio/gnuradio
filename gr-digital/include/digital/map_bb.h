@@ -38,16 +38,18 @@ namespace gr {
      * value of len(map)-1.
      *
      * -> output[i] = map[input[i]]
-     *
-     * \param map a vector of integers.
      */
-
     class DIGITAL_API map_bb : virtual public gr_sync_block
     {
     public:
       // gr::digital::map_bb::sptr
       typedef boost::shared_ptr<map_bb> sptr;
       
+      /*!
+       * Make a map block.
+       *
+       * \param map a vector of integers that maps x to map[x].
+       */
       static sptr make(const std::vector<int> &map);
 
       virtual void set_map(const std::vector<int> &map) = 0;

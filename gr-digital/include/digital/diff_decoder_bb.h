@@ -42,6 +42,11 @@ namespace gr {
       // gr::digital::diff_decoder_bb::sptr
       typedef boost::shared_ptr<diff_decoder_bb> sptr;
       
+      /*!
+       * Make a differntial decoder block.
+       *
+       * \param modulus Modulus of code's alphabet
+       */
       static sptr make(unsigned int modulus);
     };
 

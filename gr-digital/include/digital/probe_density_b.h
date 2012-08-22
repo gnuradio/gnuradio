@@ -34,9 +34,6 @@ namespace gr {
      *
      * If you send this block a stream of unpacked bytes, it will tell
      * you what the bit density is.
-     *
-     * \param alpha  Average filter constant
-     *
      */
     class DIGITAL_API probe_density_b : virtual public gr_sync_block
     {
@@ -44,6 +41,12 @@ namespace gr {
       // gr::digital::probe_density_b::sptr
       typedef boost::shared_ptr<probe_density_b> sptr;
 
+      /*!
+       * Make a density probe block.
+       *
+       * \param alpha  Average filter constant
+       *
+       */
       static sptr make(double alpha);
 
       /*!

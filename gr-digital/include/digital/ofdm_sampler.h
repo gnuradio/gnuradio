@@ -39,6 +39,13 @@ namespace gr {
       // gr::digital::ofdm_sampler::sptr
       typedef boost::shared_ptr<ofdm_sampler> sptr;
 
+      /*!
+       * Make an OFDM sampler block.
+       *
+       * \param fft_length The size of the FFT vector (occupied_carriers + unused carriers)
+       * \param symbol_length Length of the full symbol (fft_length + CP length)
+       * \param timeout timeout in samples when we stop looking for a symbol after initial ack.
+       */
       static sptr make(unsigned int fft_length, 
 		       unsigned int symbol_length,
 		       unsigned int timeout=1000);

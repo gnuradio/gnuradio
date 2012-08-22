@@ -41,8 +41,8 @@ namespace gr {
 
     public:
       probe_mpsk_snr_est_c_impl(snr_est_type_t type,
-				int msg_nsamples,
-				double alpha);
+				int msg_nsamples=10000,
+				double alpha=0.001);
 
       ~probe_mpsk_snr_est_c_impl();
 

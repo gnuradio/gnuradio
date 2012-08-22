@@ -41,6 +41,13 @@ namespace gr {
       // gr::digital::ofdm_cyclic_prefixer::sptr
       typedef boost::shared_ptr<ofdm_cyclic_prefixer> sptr;
 
+      /*!
+       * Make an OFDM cyclic prefix adder block.
+       *
+       * \param input_size size of the input symbol
+       * \param output_size output of the symbol
+       *        (CP len = output_size - input_size)
+       */
       static sptr make(size_t input_size, size_t output_size);
     };
 

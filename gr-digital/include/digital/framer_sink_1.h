@@ -55,6 +55,8 @@ namespace gr {
 
       /*!
        * Make a framer_sink_1 block.
+       *
+       * \param target_queue The message queue where frames go.
        */
       static sptr make(gr_msg_queue_sptr target_queue);
     };

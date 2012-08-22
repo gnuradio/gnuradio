@@ -58,15 +58,15 @@ namespace gr {
        *  Parameters:
        *
        *  \param type: the type of estimator to use \ref ref_snr_est_types
-       *  "snr_est_type_t" for details about the available types.
+       *  "snr_est_type_t" for details about the available types
        *  \param tag_nsamples: after this many samples, a tag containing
        *  the SNR (key='snr') will be sent
        *  \param alpha: the update rate of internal running average
-       *  calculations.
+       *  calculations
        */
       static sptr make(snr_est_type_t type,
-		       int tag_nsamples,
-		       double alpha);
+		       int tag_nsamples=10000,
+		       double alpha=0.001);
 
       //! Return the estimated signal-to-noise ratio in decibels
       virtual double snr() = 0;
