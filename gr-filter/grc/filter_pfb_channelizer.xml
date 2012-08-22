@@ -7,9 +7,9 @@
 <block>
 	<name>Polyphase Channelizer</name>
 	<key>pfb_channelizer_ccf</key>
-	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import pfb</import>
 	<import>from gnuradio.filter import firdes</import>
-	<make>filter.pfb.channelizer_ccf(
+	<make>pfb.channelizer_ccf(
 	  $nchans,
 	  $taps,
 	  $osr,
@@ -29,7 +29,7 @@ self.$(id).set_channel_map($ch_map)
 	<param>
 		<name>Taps</name>
 		<key>taps</key>
-		<value>None</value>
+		<value></value>
 		<type>real_vector</type>
 	</param>
 	<param>

@@ -7,11 +7,12 @@
 <block>
 	<name>Polyphase Interpolator</name>
 	<key>pfb_interpolator_ccf</key>
-	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import pfb</import>
 	<import>from gnuradio.filter import firdes</import>
-	<make>filter.pfb.interpolator_ccf(
+	<make>pfb.interpolator_ccf(
 	  $interp,
-	  $taps)
+	  $taps,
+	  $atten)
 	</make>
            <callback>set_taps($taps)</callback>
 	<param>
@@ -22,8 +23,14 @@
 	<param>
 		<name>Taps</name>
 		<key>taps</key>
-		<value>None</value>
+		<value></value>
 		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Attenuation</name>
+		<key>atten</key>
+		<value>100</value>
+		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>

@@ -39,7 +39,7 @@ class channelizer_ccf(gr.hier_block2):
         self._nchans = numchans
         self._oversample_rate = oversample_rate
 
-        if taps is not None:
+        if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
             # Create a filter that covers the full bandwidth of the input signal
@@ -91,7 +91,7 @@ class interpolator_ccf(gr.hier_block2):
         self._interp = interp
         self._taps = taps
 
-        if taps is not None:
+        if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
             # Create a filter that covers the full bandwidth of the input signal
@@ -133,7 +133,7 @@ class decimator_ccf(gr.hier_block2):
         self._decim = decim
         self._channel = channel
 
-        if taps is not None:
+        if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
             # Create a filter that covers the full bandwidth of the input signal
@@ -182,7 +182,7 @@ class arb_resampler_ccf(gr.hier_block2):
         self._rate = rate
         self._size = flt_size
 
-        if taps is not None:
+        if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
             # Create a filter that covers the full bandwidth of the input signal
@@ -235,7 +235,7 @@ class arb_resampler_fff(gr.hier_block2):
         self._rate = rate
         self._size = flt_size
 
-        if taps is not None:
+        if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
             # Create a filter that covers the full bandwidth of the input signal

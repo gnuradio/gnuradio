@@ -150,12 +150,6 @@
 	</cat>
 	<cat>
 		<name>Filters</name>
-		<!-- Filters that take taps as arguments -->
-		<block>blks2_synthesis_filterbank</block>
-		<block>blks2_analysis_filterbank</block>
-		<!-- Polyphase filters -->
-		<block>blks2_pfb_arb_resampler_ccf</block>
-		<block>blks2_pfb_channelizer_ccf</block>
 		<!-- Other filters -->
 		<block>blks2_rational_resampler_xxx</block>
 		<block>gr_keep_one_in_n</block>

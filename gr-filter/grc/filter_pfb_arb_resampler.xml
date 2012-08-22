@@ -7,12 +7,13 @@
 <block>
 	<name>Polyphase Arbitrary Resampler</name>
 	<key>pfb_arb_resampler_xxx</key>
-	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import pfb</import>
 	<import>from gnuradio.filter import firdes</import>
-	<make>filter.pfb_arb_resampler_$(type)(
+	<make>pfb.arb_resampler_$(type)(
 	  $rrate,
 	  $taps,
-	  $nfilts)
+	  $nfilts,
+	  $atten)
 	</make>
            <callback>set_taps($taps)</callback>
 	<param>
@@ -49,6 +50,12 @@
 		<key>nfilts</key>
 		<value>32</value>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Stop-band Attenuation</name>
+		<key>atten</key>
+		<value>100</value>
+		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>

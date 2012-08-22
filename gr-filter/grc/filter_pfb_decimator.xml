@@ -7,12 +7,13 @@
 <block>
 	<name>Polyphase Decimator</name>
 	<key>pfb_decimator_ccf</key>
-	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import pfb</import>
 	<import>from gnuradio.filter import firdes</import>
-	<make>filter.pfb_decimator_ccf(
+	<make>pfb.decimator_ccf(
 	  $decim,
 	  $taps,
-	  $channel)
+	  $channel,
+	  $atten)
 	</make>
            <callback>set_taps($taps)</callback>
 	<param>
@@ -23,7 +24,7 @@
 	<param>
 		<name>Taps</name>
 		<key>taps</key>
-		<value>None</value>
+		<value></value>
 		<type>real_vector</type>
 	</param>
 	<param>
@@ -31,6 +32,12 @@
 		<key>channel</key>
 		<value>0</value>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Stop-band Attenuation</name>
+		<key>atten</key>
+		<value>100</value>
+		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>
