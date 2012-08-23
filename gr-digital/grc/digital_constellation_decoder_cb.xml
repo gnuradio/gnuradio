@@ -6,7 +6,7 @@
  -->
 <block>
 	<name>Constellation Decoder</name>
-	<key>digital_constellation_decoder_cb</key>
+	<key>constellation_decoder_cb</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.constellation_decoder_cb($constellation)</make>
 	<param>

@@ -35,10 +35,10 @@ namespace gr {
     class cpmmod_bc_impl : public cpmmod_bc
     {
     private:
-      unsigned d_type;
+      int d_type;
       float d_index;
-      unsigned d_sps;
-      unsigned d_length;
+      int d_sps;
+      int d_length;
       double d_beta;
 
     protected:
@@ -50,15 +50,15 @@ namespace gr {
     public:
       cpmmod_bc_impl(const std::string &name,
 		     gr_cpm::cpm_type type, float h,
-		     unsigned samples_per_sym,
-		     unsigned L, double beta=0.3);
+		     int samples_per_sym,
+		     int L, double beta=0.3);
       ~cpmmod_bc_impl();
 
       std::vector<float> taps() const;
-      unsigned type() const;
+      int type() const;
       float index() const;
-      unsigned samples_per_sym() const;
-      unsigned length() const;
+      int samples_per_sym() const;
+      int length() const;
       double beta() const;
     };
 

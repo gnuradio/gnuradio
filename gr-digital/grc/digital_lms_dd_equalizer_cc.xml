@@ -6,7 +6,7 @@
  -->
 <block>
 	<name>LMS DD Equalizer</name>
-	<key>digital_lms_dd_equalizer_cc</key>
+	<key>lms_dd_equalizer_cc</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.lms_dd_equalizer_cc($num_taps, $mu, $sps, $cnst)</make>
 	<callback>set_gain($mu)</callback>

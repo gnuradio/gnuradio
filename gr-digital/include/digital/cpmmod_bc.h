@@ -72,8 +72,8 @@ namespace gr {
        *             pulses, this is the 3 dB time-bandwidth product.
        */
       static sptr make(gr_cpm::cpm_type type, float h,
-		       unsigned samples_per_sym,
-		       unsigned L, double beta=0.3);
+		       int samples_per_sym,
+		       int L, double beta=0.3);
 
       /*!
        * Make GMSK modulator block.
@@ -89,23 +89,23 @@ namespace gr {
        * \param beta For LSRC, this is the rolloff factor. For Gaussian
        *             pulses, this is the 3 dB time-bandwidth product.
        */
-      static sptr make_gmskmod_bc(unsigned samples_per_sym=2,
-				  unsigned L=4, double beta=0.3);
+      static sptr make_gmskmod_bc(int samples_per_sym=2,
+				  int L=4, double beta=0.3);
 
       //! Return the phase response FIR taps
       virtual std::vector<float> taps() const = 0;
 
       //! Return the type of CPM modulator
-      virtual unsigned type() const = 0;
+      virtual int type() const = 0;
 
       //! Return the modulation index of the modulator.
       virtual float index() const = 0;
 
       //! Return the number of samples per symbol
-      virtual unsigned samples_per_sym() const = 0;
+      virtual int samples_per_sym() const = 0;
 
       //! Return the length of the phase duration (in symbols)
-      virtual unsigned length() const = 0;
+      virtual int length() const = 0;
 
       //! Return the value of beta for the modulator
       virtual double beta() const = 0;

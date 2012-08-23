@@ -30,8 +30,8 @@ namespace gr {
 
     cpmmod_bc::sptr
     cpmmod_bc::make(gr_cpm::cpm_type type, float h,
-		    unsigned samples_per_sym,
-		    unsigned L, double beta)
+		    int samples_per_sym,
+		    int L, double beta)
     {
       return gnuradio::get_initial_sptr
 	(new cpmmod_bc_impl("cpmmod_bc",
@@ -41,8 +41,8 @@ namespace gr {
     }
 
     cpmmod_bc::sptr
-    cpmmod_bc::make_gmskmod_bc(unsigned samples_per_sym,
-				unsigned L, double beta)
+    cpmmod_bc::make_gmskmod_bc(int samples_per_sym,
+			       int L, double beta)
     {
       return gnuradio::get_initial_sptr
 	(new cpmmod_bc_impl("gmskmod_bc",
@@ -53,8 +53,8 @@ namespace gr {
 
     cpmmod_bc_impl::cpmmod_bc_impl(const std::string &name,
 				   gr_cpm::cpm_type type, float h,
-				   unsigned samples_per_sym,
-				   unsigned L, double beta)
+				   int samples_per_sym,
+				   int L, double beta)
       : gr_hier_block2(name,
 		       gr_make_io_signature(1, 1, sizeof(char)),
 		       gr_make_io_signature2(1, 1, sizeof(gr_complex), sizeof(float))),
@@ -92,7 +92,7 @@ namespace gr {
       return d_taps;
     }
 
-    unsigned
+    int
     cpmmod_bc_impl::type() const
     {
       return d_type;
@@ -104,13 +104,13 @@ namespace gr {
       return d_index;
     }
 
-    unsigned
+    int
     cpmmod_bc_impl::samples_per_sym() const
     {
       return d_sps;
     }
 
-    unsigned
+    int
     cpmmod_bc_impl::length() const
     {
       return d_length;

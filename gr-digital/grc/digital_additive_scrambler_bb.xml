@@ -6,7 +6,7 @@
  -->
 <block>
 	<name>Additive Scrambler</name>
-	<key>digital_additive_scrambler_bb</key>
+	<key>additive_scrambler_bb</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.additive_scrambler_bb($mask, $seed, $len, $count)</make>
 	<param>
