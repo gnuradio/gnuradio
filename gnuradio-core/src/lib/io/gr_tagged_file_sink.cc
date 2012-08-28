@@ -156,7 +156,7 @@ gr_tagged_file_sink::work (int noutput_items,
 	  std::stringstream filename;
 	  filename.setf(std::ios::fixed, std::ios::floatfield);
 	  filename.precision(8);
-	  filename << "file" << d_unique_id << "_" << d_n << "_" << d_timeval << ".dat";
+	  filename << "file" << unique_id() << "_" << d_n << "_" << d_timeval << ".dat";
 	  d_n++;
 
 	  int fd;
