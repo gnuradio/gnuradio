@@ -28,10 +28,14 @@ def _get_sock_fd(addr, port, server):
 	Get the file descriptor for the socket.
 	As a client, block on connect, dup the socket descriptor.
 	As a server, block on accept, dup the client descriptor.
-	@param addr the ip address string
-	@param port the tcp port number
-	@param server true for server mode, false for client mode
-	@return the file descriptor number
+	
+	Args:
+	    addr: the ip address string
+	    port: the tcp port number
+	    server: true for server mode, false for client mode
+	
+	Returns:
+	    the file descriptor number
 	"""
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	if server:

@@ -21,8 +21,6 @@ Signal Sources
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.glfsr_source_b
-   gnuradio.gr.glfsr_source_f
    gnuradio.gr.lfsr_32k_source_s
    gnuradio.gr.null_source
    gnuradio.gr.noise_source_c
@@ -53,9 +51,7 @@ Signal Sinks
    gnuradio.gr.bin_statistics_f
    gnuradio.gr.check_counting_s
    gnuradio.gr.check_lfsr_32k_s
-   gnuradio.gr.framer_sink_1
    gnuradio.gr.null_sink
-   gnuradio.gr.packet_sink
    gnuradio.gr.probe_avg_mag_sqrd_c
    gnuradio.gr.probe_avg_mag_sqrd_cf
    gnuradio.gr.probe_avg_mag_sqrd_f
@@ -210,14 +206,8 @@ Information Coding and Decoding
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.additive_scrambler_bb
-   gnuradio.gr.descrambler_bb
-   gnuradio.gr.diff_decoder_bb
-   gnuradio.gr.diff_encoder_bb
    gnuradio.gr.fake_channel_encoder_pp
    gnuradio.gr.fake_channel_decoder_pp
-   gnuradio.gr.map_bb
-   gnuradio.gr.scrambler_bb
 
 Synchronization
 ^^^^^^^^^^^^^^^
@@ -228,9 +218,7 @@ Synchronization
    gnuradio.gr.pll_carriertracking_cc
    gnuradio.gr.pll_freqdet_cf
    gnuradio.gr.pll_refout_cc
-   gnuradio.gr.pn_correlator_cc
    gnuradio.gr.simple_correlator
-   gnuradio.gr.simple_framer
 
 Type Conversions
 ^^^^^^^^^^^^^^^^
@@ -238,7 +226,6 @@ Type Conversions
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.bytes_to_syms
    gnuradio.gr.char_to_float
    gnuradio.gr.complex_to_interleaved_short
    gnuradio.gr.complex_to_float
@@ -255,12 +242,6 @@ Type Conversions
    gnuradio.gr.short_to_float
    gnuradio.gr.uchar_to_float
    gnuradio.gr.unpack_k_bits_bb
-   gnuradio.gr.chunks_to_symbols_bc
-   gnuradio.gr.chunks_to_symbols_bf
-   gnuradio.gr.chunks_to_symbols_ic
-   gnuradio.gr.chunks_to_symbols_if
-   gnuradio.gr.chunks_to_symbols_sc
-   gnuradio.gr.chunks_to_symbols_sf
    gnuradio.gr.packed_to_unpacked_bb
    gnuradio.gr.packed_to_unpacked_ii
    gnuradio.gr.packed_to_unpacked_ss

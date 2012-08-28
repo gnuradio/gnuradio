@@ -23,8 +23,12 @@ def _extract(key):
 	"""
 	Extract the documentation from the python __doc__ strings.
 	If multiple modules match, combine the docs.
-	@param key the block key
-	@return a string with documentation
+	
+	Args:
+	    key: the block key
+	
+	Returns:
+	    a string with documentation
 	"""
 	#extract matches
 	try:
@@ -48,8 +52,12 @@ _docs_cache = dict()
 def extract(key):
 	"""
 	Call the private extract and cache the result.
-	@param key the block key
-	@return a string with documentation
+	
+	Args:
+	    key: the block key
+	
+	Returns:
+	    a string with documentation
 	"""
 	if not _docs_cache.has_key(key):
 		_docs_cache[key] = _extract(key)

@@ -43,7 +43,8 @@ def check_subdev (option, opt, value):
     """
     Value has the form: (A|B)(:0|1)?
 
-    @returns a 2-tuple (0|1, 0|1)
+    Returns:
+        a 2-tuple (0|1, 0|1)
     """
     d = { 'A' : (0, 0), 'A:0' : (0, 0), 'A:1' : (0, 1), 'A:2' : (0, 2),
           'B' : (1, 0), 'B:0' : (1, 0), 'B:1' : (1, 1), 'B:2' : (1, 2) }

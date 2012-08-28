@@ -47,8 +47,8 @@ class uhd_input(gr.hier_block2):
         """
         Set the center frequency.
 
-        @param target_freq: frequency in Hz
-        @type: bool
+        Args:
+            target_freq: frequency in Hz
         """
         r = self.src.set_center_freq(target_freq, 0)
 

@@ -54,8 +54,12 @@ def expr_split(expr):
 	Split up an expression by non alphanumeric characters, including underscore.
 	Leave strings in-tact.
 	#TODO ignore escaped quotes, use raw strings.
-	@param expr an expression string
-	@return a list of string tokens that form expr
+	
+	Args:
+	    expr: an expression string
+	
+	Returns:
+	    a list of string tokens that form expr
 	"""
 	toks = list()
 	tok = ''
@@ -78,9 +82,13 @@ def expr_split(expr):
 def expr_replace(expr, replace_dict):
 	"""
 	Search for vars in the expression and add the prepend.
-	@param expr an expression string
-	@param replace_dict a dict of find:replace
-	@return a new expression with the prepend
+	
+	Args:
+	    expr: an expression string
+	    replace_dict: a dict of find:replace
+	
+	Returns:
+	    a new expression with the prepend
 	"""
 	expr_splits = expr_split(expr)
 	for i, es in enumerate(expr_splits):
@@ -91,9 +99,13 @@ def expr_replace(expr, replace_dict):
 def get_variable_dependencies(expr, vars):
 	"""
 	Return a set of variables used in this expression.
-	@param expr an expression string
-	@param vars a list of variable names
-	@return a subset of vars used in the expression
+	
+	Args:
+	    expr: an expression string
+	    vars: a list of variable names
+	
+	Returns:
+	    a subset of vars used in the expression
 	"""
 	expr_toks = expr_split(expr)
 	return set(filter(lambda v: v in expr_toks, vars))
@@ -101,8 +113,12 @@ def get_variable_dependencies(expr, vars):
 def get_graph(exprs):
 	"""
 	Get a graph representing the variable dependencies
-	@param exprs a mapping of variable name to expression
-	@return a graph of variable deps
+	
+	Args:
+	    exprs: a mapping of variable name to expression
+	
+	Returns:
+	    a graph of variable deps
 	"""
 	vars = exprs.keys()
 	#get dependencies for each expression, load into graph
@@ -116,8 +132,12 @@ def get_graph(exprs):
 def sort_variables(exprs):
 	"""
 	Get a list of variables in order of dependencies.
-	@param exprs a mapping of variable name to expression
-	@return a list of variable names
+	
+	Args:
+	    exprs: a mapping of variable name to expression
+	
+	Returns:
+	    a list of variable names
 	@throws Exception circular dependencies
 	"""
 	var_graph = get_graph(exprs)
@@ -136,10 +156,14 @@ def sort_variables(exprs):
 def sort_objects(objects, get_id, get_expr):
 	"""
 	Sort a list of objects according to their expressions.
-	@param objects the list of objects to sort
-	@param get_id the function to extract an id from the object
-	@param get_expr the function to extract an expression from the object
-	@return a list of sorted objects
+	
+	Args:
+	    objects: the list of objects to sort
+	    get_id: the function to extract an id from the object
+	    get_expr: the function to extract an expression from the object
+	
+	Returns:
+	    a list of sorted objects
 	"""
 	id2obj = dict([(get_id(obj), obj) for obj in objects])
 	#map obj id to expression code

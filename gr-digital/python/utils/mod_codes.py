@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# Constants used to represent what coding to use.
 GRAY_CODE = 'gray'
 SET_PARTITION_CODE = 'set-partition'
 NO_CODE = 'none'

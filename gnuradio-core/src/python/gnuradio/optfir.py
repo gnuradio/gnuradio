@@ -32,18 +32,20 @@ from gnuradio import gr
 
 remez = gr.remez
 
-# ----------------------------------------------------------------
-
-##  Builds a low pass filter.
-#   @param gain  Filter gain in the passband (linear)
-#   @param Fs    Sampling rate (sps)
-#   @param freq1 End of pass band (in Hz)
-#   @param freq2 Start of stop band (in Hz)
-#   @param passband_ripple_db Pass band ripple in dB (should be small, < 1)
-#   @param stopband_atten_db  Stop band attenuation in dB (should be large, >= 60)
-#   @param nextra_taps  Extra taps to use in the filter (default=2)
 def low_pass (gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
               nextra_taps=2):
+    """
+    Builds a low pass filter.
+    
+    Args:
+        gain: Filter gain in the passband (linear)
+        Fs: Sampling rate (sps)
+        freq1: End of pass band (in Hz)
+        freq2: Start of stop band (in Hz)
+        passband_ripple_db: Pass band ripple in dB (should be small, < 1)
+        stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
+        nextra_taps: Extra taps to use in the filter (default=2)
+    """
     passband_dev = passband_ripple_to_dev (passband_ripple_db)
     stopband_dev = stopband_atten_to_dev (stopband_atten_db)
     desired_ampls = (gain, 0)
@@ -53,19 +55,23 @@ def low_pass (gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
     taps = gr.remez (n + nextra_taps, fo, ao, w, "bandpass")
     return taps
 
-##  Builds a band pass filter.
-#   @param gain  Filter gain in the passband (linear)
-#   @param Fs    Sampling rate (sps)
-#   @param freq_sb1 End of stop band (in Hz)
-#   @param freq_pb1 Start of pass band (in Hz)
-#   @param freq_pb2 End of pass band (in Hz)
-#   @param freq_sb2 Start of stop band (in Hz)
-#   @param passband_ripple_db Pass band ripple in dB (should be small, < 1)
-#   @param stopband_atten_db  Stop band attenuation in dB (should be large, >= 60)
-#   @param nextra_taps  Extra taps to use in the filter (default=2)
 def band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
                passband_ripple_db, stopband_atten_db,
                nextra_taps=2):
+    """
+    Builds a band pass filter.
+    
+    Args:
+        gain: Filter gain in the passband (linear)
+        Fs: Sampling rate (sps)
+        freq_sb1: End of stop band (in Hz)
+        freq_pb1: Start of pass band (in Hz)
+        freq_pb2: End of pass band (in Hz)
+        freq_sb2: Start of stop band (in Hz)
+        passband_ripple_db: Pass band ripple in dB (should be small, < 1)
+        stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
+        nextra_taps: Extra taps to use in the filter (default=2)
+    """
     passband_dev = passband_ripple_to_dev (passband_ripple_db)
     stopband_dev = stopband_atten_to_dev (stopband_atten_db)
     desired_ampls = (0, gain, 0)
@@ -78,20 +84,24 @@ def band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
     return taps
 
 
-##  Builds a band pass filter with complex taps by making an LPF and
-#   spinning it up to the right center frequency
-#   @param gain  Filter gain in the passband (linear)
-#   @param Fs    Sampling rate (sps)
-#   @param freq_sb1 End of stop band (in Hz)
-#   @param freq_pb1 Start of pass band (in Hz)
-#   @param freq_pb2 End of pass band (in Hz)
-#   @param freq_sb2 Start of stop band (in Hz)
-#   @param passband_ripple_db Pass band ripple in dB (should be small, < 1)
-#   @param stopband_atten_db  Stop band attenuation in dB (should be large, >= 60)
-#   @param nextra_taps  Extra taps to use in the filter (default=2)
 def complex_band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
                        passband_ripple_db, stopband_atten_db,
                        nextra_taps=2):
+    """
+    Builds a band pass filter with complex taps by making an LPF and
+    spinning it up to the right center frequency
+    
+    Args:
+        gain: Filter gain in the passband (linear)
+        Fs: Sampling rate (sps)
+        freq_sb1: End of stop band (in Hz)
+        freq_pb1: Start of pass band (in Hz)
+        freq_pb2: End of pass band (in Hz)
+        freq_sb2: Start of stop band (in Hz)
+        passband_ripple_db: Pass band ripple in dB (should be small, < 1)
+        stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
+        nextra_taps: Extra taps to use in the filter (default=2)
+    """
     center_freq = (freq_pb2 + freq_pb1) / 2.0
     lp_pb = (freq_pb2 - center_freq)/1.0
     lp_sb = freq_sb2 - center_freq
@@ -102,20 +112,24 @@ def complex_band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
     return taps
 
 
-##  Builds a band reject filter
-#   spinning it up to the right center frequency
-#   @param gain  Filter gain in the passband (linear)
-#   @param Fs    Sampling rate (sps)
-#   @param freq_pb1 End of pass band (in Hz)
-#   @param freq_sb1 Start of stop band (in Hz)
-#   @param freq_sb2 End of stop band (in Hz)
-#   @param freq_pb2 Start of pass band (in Hz)
-#   @param passband_ripple_db Pass band ripple in dB (should be small, < 1)
-#   @param stopband_atten_db  Stop band attenuation in dB (should be large, >= 60)
-#   @param nextra_taps  Extra taps to use in the filter (default=2)
 def band_reject (gain, Fs, freq_pb1, freq_sb1, freq_sb2, freq_pb2,
                  passband_ripple_db, stopband_atten_db,
                  nextra_taps=2):
+    """
+    Builds a band reject filter
+    spinning it up to the right center frequency
+    
+    Args:
+        gain: Filter gain in the passband (linear)
+        Fs: Sampling rate (sps)
+        freq_pb1: End of pass band (in Hz)
+        freq_sb1: Start of stop band (in Hz)
+        freq_sb2: End of stop band (in Hz)
+        freq_pb2: Start of pass band (in Hz)
+        passband_ripple_db: Pass band ripple in dB (should be small, < 1)
+        stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
+        nextra_taps: Extra taps to use in the filter (default=2)
+    """
     passband_dev = passband_ripple_to_dev (passband_ripple_db)
     stopband_dev = stopband_atten_to_dev (stopband_atten_db)
     desired_ampls = (gain, 0, gain)
@@ -131,16 +145,20 @@ def band_reject (gain, Fs, freq_pb1, freq_sb1, freq_sb2, freq_pb2,
     return taps
 
 
-##  Builds a high pass filter.
-#   @param gain  Filter gain in the passband (linear)
-#   @param Fs    Sampling rate (sps)
-#   @param freq1 End of stop band (in Hz)
-#   @param freq2 Start of pass band (in Hz)
-#   @param passband_ripple_db Pass band ripple in dB (should be small, < 1)
-#   @param stopband_atten_db  Stop band attenuation in dB (should be large, >= 60)
-#   @param nextra_taps  Extra taps to use in the filter (default=2)
 def high_pass (gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
                nextra_taps=2):
+    """
+    Builds a high pass filter.
+    
+    Args:
+        gain: Filter gain in the passband (linear)
+        Fs: Sampling rate (sps)
+        freq1: End of stop band (in Hz)
+        freq2: Start of pass band (in Hz)
+        passband_ripple_db: Pass band ripple in dB (should be small, < 1)
+        stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
+        nextra_taps: Extra taps to use in the filter (default=2)
+    """
     passband_dev = passband_ripple_to_dev (passband_ripple_db)
     stopband_dev = stopband_atten_to_dev (stopband_atten_db)
     desired_ampls = (0, 1)

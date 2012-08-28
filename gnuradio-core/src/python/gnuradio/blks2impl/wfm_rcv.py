@@ -31,10 +31,9 @@ class wfm_rcv(gr.hier_block2):
         The input is the downconverted complex baseband signal (gr_complex).
         The output is the demodulated audio (float).
 
-        @param quad_rate: input sample rate of complex baseband input.
-        @type quad_rate: float
-        @param audio_decimation: how much to decimate quad_rate to get to audio.
-        @type audio_decimation: integer
+        Args:
+            quad_rate: input sample rate of complex baseband input. (float)
+            audio_decimation: how much to decimate quad_rate to get to audio. (integer)
         """
 	gr.hier_block2.__init__(self, "wfm_rcv",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature

@@ -46,8 +46,10 @@ class BlockTreeWindow(gtk.VBox):
 		Create a tree view of the possible blocks in the platform.
 		The tree view nodes will be category names, the leaves will be block names.
 		A mouse double click or button press action will trigger the add block event.
-		@param platform the particular platform will all block prototypes
-		@param get_flow_graph get the selected flow graph
+		
+		Args:
+		    platform: the particular platform will all block prototypes
+		    get_flow_graph: get the selected flow graph
 		"""
 		gtk.VBox.__init__(self)
 		self.platform = platform
@@ -97,8 +99,10 @@ class BlockTreeWindow(gtk.VBox):
 		"""
 		Add a block with category to this selection window.
 		Add only the category when block is None.
-		@param category the category list or path string
-		@param block the block object or None
+		
+		Args:
+		    category: the category list or path string
+		    block: the block object or None
 		"""
 		if isinstance(category, str): category = category.split('/')
 		category = tuple(filter(lambda x: x, category)) #tuple is hashable
@@ -124,7 +128,9 @@ class BlockTreeWindow(gtk.VBox):
 	def _get_selected_block_key(self):
 		"""
 		Get the currently selected block key.
-		@return the key of the selected block or a empty string
+		
+		Returns:
+		    the key of the selected block or a empty string
 		"""
 		selection = self.treeview.get_selection()
 		treestore, iter = selection.get_selected()

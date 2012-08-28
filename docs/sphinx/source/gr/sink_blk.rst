@@ -4,9 +4,7 @@ gnuradio.gr: Signal Sinks
 .. autooldblock:: gnuradio.gr.bin_statistics_f
 .. autooldblock:: gnuradio.gr.check_counting_s
 .. autooldblock:: gnuradio.gr.check_lfsr_32k_s
-.. autooldblock:: gnuradio.gr.framer_sink_1
 .. autooldblock:: gnuradio.gr.null_sink
-.. autooldblock:: gnuradio.gr.packet_sink
 .. autooldblock:: gnuradio.gr.probe_avg_mag_sqrd_c
 .. autooldblock:: gnuradio.gr.probe_avg_mag_sqrd_cf
 .. autooldblock:: gnuradio.gr.probe_avg_mag_sqrd_f

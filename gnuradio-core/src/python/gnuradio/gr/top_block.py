@@ -85,6 +85,12 @@ class _top_block_waiter(_threading.Thread):
 # method in gr_top_block
 #
 class top_block(object):
+    """
+    Top-level hierarchical block representing a flow-graph.
+
+    This is a python wrapper around the C++ implementation to allow
+    python subclassing.
+    """
     def __init__(self, name="top_block"):
 	self._tb = top_block_swig(name)
 

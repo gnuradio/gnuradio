@@ -64,8 +64,12 @@ class wxgui_hb(object):
 		"""
 		Create a function that will cache the visibility flag,
 		and only call the handler when that flag changes.
-		@param handler the function to call on a change
-		@return a function of 1 argument
+		
+		Args:
+		    handler: the function to call on a change
+		
+		Returns:
+		    a function of 1 argument
 		"""
 		cache = [None]
 		def callback(visible):
@@ -84,8 +88,10 @@ class wxgui_hb(object):
 		Bind a handler to a window when its visibility changes.
 		Specifically, call the handler when the window visibility changes.
 		This condition is checked on every update ui event.
-		@param win the wx window
-		@param handler a function of 1 param
+		
+		Args:
+		    win: the wx window
+		    handler: a function of 1 param
 		"""
 		#is the window visible in the hierarchy
 		def is_wx_window_visible(my_win):
@@ -126,8 +132,10 @@ def _register_access_method(destination, controller, key):
 def register_access_methods(destination, controller):
 	"""
 	Register setter and getter functions in the destination object for all keys in the controller.
-	@param destination the object to get new setter and getter methods
-	@param controller the pubsub controller
+	
+	Args:
+	    destination: the object to get new setter and getter methods
+	    controller: the pubsub controller
 	"""
 	for key in controller.keys(): _register_access_method(destination, controller, key)
 
@@ -164,8 +172,12 @@ import math
 def get_exp(num):
 	"""
 	Get the exponent of the number in base 10.
-	@param num the floating point number
-	@return the exponent as an integer
+	
+	Args:
+	    num: the floating point number
+	
+	Returns:
+	    the exponent as an integer
 	"""
 	if num == 0: return 0
 	return int(math.floor(math.log10(abs(num))))
@@ -173,8 +185,12 @@ def get_exp(num):
 def get_clean_num(num):
 	"""
 	Get the closest clean number match to num with bases 1, 2, 5.
-	@param num the number
-	@return the closest number
+	
+	Args:
+	    num: the number
+	
+	Returns:
+	    the closest number
 	"""
 	if num == 0: return 0
 	sign = num > 0 and 1 or -1
@@ -185,8 +201,12 @@ def get_clean_num(num):
 def get_clean_incr(num):
 	"""
 	Get the next higher clean number with bases 1, 2, 5.
-	@param num the number
-	@return the next higher number
+	
+	Args:
+	    num: the number
+	
+	Returns:
+	    the next higher number
 	"""
 	num = get_clean_num(num)
 	exp = get_exp(num)
@@ -203,8 +223,12 @@ def get_clean_incr(num):
 def get_clean_decr(num):
 	"""
 	Get the next lower clean number with bases 1, 2, 5.
-	@param num the number
-	@return the next lower number
+	
+	Args:
+	    num: the number
+	
+	Returns:
+	    the next lower number
 	"""
 	num = get_clean_num(num)
 	exp = get_exp(num)
@@ -221,8 +245,12 @@ def get_clean_decr(num):
 def get_min_max(samples):
 	"""
 	Get the minimum and maximum bounds for an array of samples.
-	@param samples the array of real values
-	@return a tuple of min, max
+	
+	Args:
+	    samples: the array of real values
+	
+	Returns:
+	    a tuple of min, max
 	"""
 	factor = 2.0
 	mean = numpy.average(samples)
@@ -235,8 +263,12 @@ def get_min_max(samples):
 def get_min_max_fft(fft_samps):
 	"""
 	Get the minimum and maximum bounds for an array of fft samples.
-	@param samples the array of real values
-	@return a tuple of min, max
+	
+	Args:
+	    samples: the array of real values
+	
+	Returns:
+	    a tuple of min, max
 	"""
 	#get the peak level (max of the samples)
 	peak_level = numpy.max(fft_samps)

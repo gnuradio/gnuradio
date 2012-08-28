@@ -3,6 +3,6 @@ gnuradio.wavelet
 
 .. automodule:: gnuradio.wavelet
 
-.. autooldblock:: gnuradio.wavelet.squash_ff
-.. autooldblock:: gnuradio.wavelet.wavelet_ff
-.. autooldblock:: gnuradio.wavelet.wvps_ff
+.. autoblock:: gnuradio.wavelet.squash_ff
+.. autoblock:: gnuradio.wavelet.wavelet_ff
+.. autoblock:: gnuradio.wavelet.wvps_ff

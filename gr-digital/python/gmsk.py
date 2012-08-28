@@ -59,28 +59,25 @@ _def_omega_relative_limit = 0.005
 # /////////////////////////////////////////////////////////////////////////////
 
 class gmsk_mod(gr.hier_block2):
+    """
+    Hierarchical block for Gaussian Minimum Shift Key (GMSK)
+    modulation.
+    
+    The input is a byte stream (unsigned char) and the
+    output is the complex modulated signal at baseband.
+    
+    Args:
+        samples_per_symbol: samples per baud >= 2 (integer)
+        bt: Gaussian filter bandwidth * symbol time (float)
+        verbose: Print information about modulator? (boolean)
+        debug: Print modulation data to files? (boolean)
+    """
 
     def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
                  bt=_def_bt,
                  verbose=_def_verbose,
                  log=_def_log):
-        """
-	Hierarchical block for Gaussian Minimum Shift Key (GMSK)
-	modulation.
-
-	The input is a byte stream (unsigned char) and the
-	output is the complex modulated signal at baseband.
-
-	@param samples_per_symbol: samples per baud >= 2
-	@type samples_per_symbol: integer
-	@param bt: Gaussian filter bandwidth * symbol time
-	@type bt: float
-        @param verbose: Print information about modulator?
-        @type verbose: bool
-        @param debug: Print modualtion data to files?
-        @type debug: bool       
-	"""
 
 	gr.hier_block2.__init__(self, "gmsk_mod",
 				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
@@ -174,7 +171,23 @@ class gmsk_mod(gr.hier_block2):
 # /////////////////////////////////////////////////////////////////////////////
 
 class gmsk_demod(gr.hier_block2):
-
+    """
+    Hierarchical block for Gaussian Minimum Shift Key (GMSK)
+    demodulation.
+    
+    The input is the complex modulated signal at baseband.
+    The output is a stream of bits packed 1 bit per byte (the LSB)
+    
+    Args:
+        samples_per_symbol: samples per baud (integer)
+        verbose: Print information about modulator? (boolean)
+        log: Print modualtion data to files? (boolean)
+        gain_mu: controls rate of mu adjustment (float)
+        mu: fractional delay [0.0, 1.0] (float)
+        omega_relative_limit: sets max variation in omega (float)
+        freq_error: bit rate error as a fraction (float)
+    """
+    
     def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
                  gain_mu=_def_gain_mu,
@@ -183,31 +196,6 @@ class gmsk_demod(gr.hier_block2):
                  freq_error=_def_freq_error,
                  verbose=_def_verbose,
                  log=_def_log):
-        """
-	Hierarchical block for Gaussian Minimum Shift Key (GMSK)
-	demodulation.
-
-	The input is the complex modulated signal at baseband.
-	The output is a stream of bits packed 1 bit per byte (the LSB)
-
-	@param samples_per_symbol: samples per baud
-	@type samples_per_symbol: integer
-        @param verbose: Print information about modulator?
-        @type verbose: bool
-        @param log: Print modualtion data to files?
-        @type log: bool 
-
-        Clock recovery parameters.  These all have reasonble defaults.
-        
-        @param gain_mu: controls rate of mu adjustment
-        @type gain_mu: float
-        @param mu: fractional delay [0.0, 1.0]
-        @type mu: float
-        @param omega_relative_limit: sets max variation in omega
-        @type omega_relative_limit: float, typically 0.000200 (200 ppm)
-        @param freq_error: bit rate error as a fraction
-        @param float
-	"""
 
 	gr.hier_block2.__init__(self, "gmsk_demod",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature

@@ -71,7 +71,9 @@ class transmit_path(gr.hier_block2):
     def set_tx_amplitude(self, ampl):
         """
         Sets the transmit amplitude sent to the USRP in volts
-        @param: ampl 0 <= ampl < 1.
+        
+        Args:
+            : ampl 0 <= ampl < 1.
         """
         self._tx_amplitude = max(0.0, min(ampl, 1))
         self.amp.set_k(self._tx_amplitude)

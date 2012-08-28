@@ -79,8 +79,10 @@ class FlowGraph(Element):
 	def add_new_block(self, key, coor=None):
 		"""
 		Add a block of the given key to this flow graph.
-		@param key the block key
-		@param coor an optional coordinate or None for random
+		
+		Args:
+		    key: the block key
+		    coor: an optional coordinate or None for random
 		"""
 		id = self._get_unique_id(key)
 		#calculate the position coordinate
@@ -103,7 +105,9 @@ class FlowGraph(Element):
 	def copy_to_clipboard(self):
 		"""
 		Copy the selected blocks and connections into the clipboard.
-		@return the clipboard
+		
+		Returns:
+		    the clipboard
 		"""
 		#get selected blocks
 		blocks = self.get_selected_blocks()
@@ -129,7 +133,9 @@ class FlowGraph(Element):
 	def paste_from_clipboard(self, clipboard):
 		"""
 		Paste the blocks and connections from the clipboard.
-		@param clipboard the nested data of blocks, connections
+		
+		Args:
+		    clipboard: the nested data of blocks, connections
 		"""
 		selected = set()
 		(x_min, y_min), blocks_n, connections_n = clipboard
@@ -177,24 +183,36 @@ class FlowGraph(Element):
 	def type_controller_modify_selected(self, direction):
 		"""
 		Change the registered type controller for the selected signal blocks.
-		@param direction +1 or -1
-		@return true for change
+		
+		Args:
+		    direction: +1 or -1
+		
+		Returns:
+		    true for change
 		"""
 		return any([sb.type_controller_modify(direction) for sb in self.get_selected_blocks()])
 
 	def port_controller_modify_selected(self, direction):
 		"""
 		Change port controller for the selected signal blocks.
-		@param direction +1 or -1
-		@return true for changed
+		
+		Args:
+		    direction: +1 or -1
+		
+		Returns:
+		    true for changed
 		"""
 		return any([sb.port_controller_modify(direction) for sb in self.get_selected_blocks()])
 
 	def enable_selected(self, enable):
 		"""
 		Enable/disable the selected blocks.
-		@param enable true to enable
-		@return true if changed
+		
+		Args:
+		    enable: true to enable
+		
+		Returns:
+		    true if changed
 		"""
 		changed = False
 		for selected_block in self.get_selected_blocks():
@@ -206,7 +224,9 @@ class FlowGraph(Element):
 	def move_selected(self, delta_coordinate):
 		"""
 		Move the element and by the change in coordinates.
-		@param delta_coordinate the change in coordinates
+		
+		Args:
+		    delta_coordinate: the change in coordinates
 		"""
 		for selected_block in self.get_selected_blocks():
 			selected_block.move(delta_coordinate)
@@ -215,8 +235,12 @@ class FlowGraph(Element):
 	def rotate_selected(self, rotation):
 		"""
 		Rotate the selected blocks by multiples of 90 degrees.
-		@param rotation the rotation in degrees
-		@return true if changed, otherwise false.
+		
+		Args:
+		    rotation: the rotation in degrees
+		
+		Returns:
+		    true if changed, otherwise false.
 		"""
 		if not self.get_selected_blocks(): return False
 		#initialize min and max coordinates
@@ -241,7 +265,9 @@ class FlowGraph(Element):
 	def remove_selected(self):
 		"""
 		Remove selected elements
-		@return true if changed.
+		
+		Returns:
+		    true if changed.
 		"""
 		changed = False
 		for selected_element in self.get_selected_elements():
@@ -325,9 +351,13 @@ class FlowGraph(Element):
 		Iterate though the elements backwards since top elements are at the end of the list.
 		If an element is selected, place it at the end of the list so that is is drawn last,
 		and hence on top. Update the selected port information.
-		@param coor the coordinate of the mouse click
-		@param coor_m the coordinate for multi select
-		@return the selected blocks and connections or an empty list
+		
+		Args:
+		    coor: the coordinate of the mouse click
+		    coor_m: the coordinate for multi select
+		
+		Returns:
+		    the selected blocks and connections or an empty list
 		"""
 		selected_port = None
 		selected = set()
@@ -353,7 +383,9 @@ class FlowGraph(Element):
 	def get_selected_connections(self):
 		"""
 		Get a group of selected connections.
-		@return sub set of connections in this flow graph
+		
+		Returns:
+		    sub set of connections in this flow graph
 		"""
 		selected = set()
 		for selected_element in self.get_selected_elements():
@@ -363,7 +395,9 @@ class FlowGraph(Element):
 	def get_selected_blocks(self):
 		"""
 		Get a group of selected blocks.
-		@return sub set of blocks in this flow graph
+		
+		Returns:
+		    sub set of blocks in this flow graph
 		"""
 		selected = set()
 		for selected_element in self.get_selected_elements():
@@ -373,21 +407,27 @@ class FlowGraph(Element):
 	def get_selected_block(self):
 		"""
 		Get the selected block when a block or port is selected.
-		@return a block or None
+		
+		Returns:
+		    a block or None
 		"""
 		return self.get_selected_blocks() and self.get_selected_blocks()[0] or None
 
 	def get_selected_elements(self):
 		"""
 		Get the group of selected elements.
-		@return sub set of elements in this flow graph
+		
+		Returns:
+		    sub set of elements in this flow graph
 		"""
 		return self._selected_elements
 
 	def get_selected_element(self):
 		"""
 		Get the selected element.
-		@return a block, port, or connection or None
+		
+		Returns:
+		    a block, port, or connection or None
 		"""
 		return self.get_selected_elements() and self.get_selected_elements()[0] or None
 

@@ -28,8 +28,12 @@ def get_title_label(title):
 	"""
 	Get a title label for the params window.
 	The title will be bold, underlined, and left justified.
-	@param title the text of the title
-	@return a gtk object
+	
+	Args:
+	    title: the text of the title
+	
+	Returns:
+	    a gtk object
 	"""
 	label = gtk.Label()
 	label.set_markup('\n<b><span underline="low">%s</span>:</b>\n'%title)
@@ -45,7 +49,9 @@ class PropsDialog(gtk.Dialog):
 	def __init__(self, block):
 		"""
 		Properties dialog contructor.
-		@param block a block instance
+		
+		Args:
+		    block: a block instance
 		"""
 		self._hash = 0
 		LABEL_SPACING = 7
@@ -94,7 +100,9 @@ class PropsDialog(gtk.Dialog):
 		To the props dialog, the hide setting of 'none' and 'part' are identical.
 		Therfore, the props dialog only cares if the hide setting is/not 'all'.
 		Make a hash that uniquely represents the params' state.
-		@return true if changed
+		
+		Returns:
+		    true if changed
 		"""
 		old_hash = self._hash
 		#create a tuple of things from each param that affects the params box
@@ -153,7 +161,9 @@ class PropsDialog(gtk.Dialog):
 		"""
 		Handle key presses from the keyboard.
 		Call the ok response when enter is pressed.
-		@return false to forward the keypress
+		
+		Returns:
+		    false to forward the keypress
 		"""
 		if event.keyval == gtk.keysyms.Return:
 			self.response(gtk.RESPONSE_ACCEPT)
@@ -163,7 +173,9 @@ class PropsDialog(gtk.Dialog):
 	def run(self):
 		"""
 		Run the dialog and get its response.
-		@return true if the response was accept
+		
+		Returns:
+		    true if the response was accept
 		"""
 		response = gtk.Dialog.run(self)
 		self.destroy()

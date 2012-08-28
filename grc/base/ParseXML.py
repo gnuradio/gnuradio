@@ -29,8 +29,10 @@ class XMLSyntaxError(Exception):
 def validate_dtd(xml_file, dtd_file=None):
 	"""
 	Validate an xml file against its dtd.
-	@param xml_file the xml file
-	@param dtd_file the optional dtd file
+	
+	Args:
+	    xml_file: the xml file
+	    dtd_file: the optional dtd file
 	@throws Exception validation fails
 	"""
 	#perform parsing, use dtd validation if dtd file is not specified
@@ -45,8 +47,12 @@ def validate_dtd(xml_file, dtd_file=None):
 def from_file(xml_file):
 	"""
 	Create nested data from an xml file using the from xml helper.
-	@param xml_file the xml file path
-	@return the nested data
+	
+	Args:
+	    xml_file: the xml file path
+	
+	Returns:
+	    the nested data
 	"""
 	xml = etree.parse(xml_file).getroot()
 	return _from_file(xml)
@@ -54,8 +60,12 @@ def from_file(xml_file):
 def _from_file(xml):
 	"""
 	Recursivly parse the xml tree into nested data format.
-	@param xml the xml tree
-	@return the nested data
+	
+	Args:
+	    xml: the xml tree
+	
+	Returns:
+	    the nested data
 	"""
 	tag = xml.tag
 	if not len(xml):
@@ -73,8 +83,10 @@ def _from_file(xml):
 def to_file(nested_data, xml_file):
 	"""
 	Write an xml file and use the to xml helper method to load it.
-	@param nested_data the nested data
-	@param xml_file the xml file path
+	
+	Args:
+	    nested_data: the nested data
+	    xml_file: the xml file path
 	"""
 	xml = _to_file(nested_data)[0]
 	open(xml_file, 'w').write(etree.tostring(xml, xml_declaration=True, pretty_print=True))
@@ -82,8 +94,12 @@ def to_file(nested_data, xml_file):
 def _to_file(nested_data):
 	"""
 	Recursivly parse the nested data into xml tree format.
-	@param nested_data the nested data
-	@return the xml tree filled with child nodes
+	
+	Args:
+	    nested_data: the nested data
+	
+	Returns:
+	    the xml tree filled with child nodes
 	"""
 	nodes = list()
 	for key, values in nested_data.iteritems():

@@ -60,7 +60,9 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-		@param parent the wx parent window
+
+                Args:
+		    parent: the wx parent window
 		"""
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
@@ -174,7 +176,9 @@ class const_window(wx.Panel, pubsub.pubsub):
 	def handle_msg(self, msg):
 		"""
 		Plot the samples onto the complex grid.
-		@param msg the array of complex samples
+
+                Args:
+		    msg: the array of complex samples
 		"""
 		if not self[RUNNING_KEY]: return
 		#convert to complex floating point numbers

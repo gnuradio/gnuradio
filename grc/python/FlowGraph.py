@@ -35,10 +35,14 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 	def _eval(self, code, namespace, namespace_hash):
 		"""
 		Evaluate the code with the given namespace.
-		@param code a string with python code
-		@param namespace a dict representing the namespace
-		@param namespace_hash a unique hash for the namespace
-		@return the resultant object
+		
+		Args:
+		    code: a string with python code
+		    namespace: a dict representing the namespace
+		    namespace_hash: a unique hash for the namespace
+		
+		Returns:
+		    the resultant object
 		"""
 		if not code: raise Exception, 'Cannot evaluate empty statement.'
 		my_hash = hash(code) ^ namespace_hash
@@ -51,8 +55,12 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 	def get_io_signaturev(self, direction):
 		"""
 		Get a list of io signatures for this flow graph.
-		@param direction a string of 'in' or 'out'
-		@return a list of dicts with: type, label, vlen, size
+		
+		Args:
+		    direction: a string of 'in' or 'out'
+		
+		Returns:
+		    a list of dicts with: type, label, vlen, size
 		"""
 		sorted_pads = {
 			'in': self.get_pad_sources(),
@@ -69,7 +77,9 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 	def get_pad_sources(self):
 		"""
 		Get a list of pad source blocks sorted by id order.
-		@return a list of pad source blocks in this flow graph
+		
+		Returns:
+		    a list of pad source blocks in this flow graph
 		"""
 		pads = filter(lambda b: b.get_key() == 'pad_source', self.get_enabled_blocks())
 		return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
@@ -77,7 +87,9 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 	def get_pad_sinks(self):
 		"""
 		Get a list of pad sink blocks sorted by id order.
-		@return a list of pad sink blocks in this flow graph
+		
+		Returns:
+		    a list of pad sink blocks in this flow graph
 		"""
 		pads = filter(lambda b: b.get_key() == 'pad_sink', self.get_enabled_blocks())
 		return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
@@ -85,7 +97,9 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 	def get_imports(self):
 		"""
 		Get a set of all import statments in this flow graph namespace.
-		@return a set of import statements
+		
+		Returns:
+		    a set of import statements
 		"""
 		imports = sum([block.get_imports() for block in self.get_enabled_blocks()], [])
 		imports = sorted(set(imports))
@@ -95,7 +109,9 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		"""
 		Get a list of all variables in this flow graph namespace.
 		Exclude paramterized variables.
-		@return a sorted list of variable blocks in order of dependency (indep -> dep)
+		
+		Returns:
+		    a sorted list of variable blocks in order of dependency (indep -> dep)
 		"""
 		variables = filter(lambda b: _variable_matcher.match(b.get_key()), self.get_enabled_blocks())
 		return expr_utils.sort_objects(variables, lambda v: v.get_id(), lambda v: v.get_var_make())
@@ -103,7 +119,9 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 	def get_parameters(self):
 		"""
 		Get a list of all paramterized variables in this flow graph namespace.
-		@return a list of paramterized variables
+		
+		Returns:
+		    a list of paramterized variables
 		"""
 		parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.get_enabled_blocks())
 		return parameters
@@ -118,9 +136,13 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 	def evaluate(self, expr):
 		"""
 		Evaluate the expression.
-		@param expr the string expression
+		
+		Args:
+		    expr: the string expression
 		@throw Exception bad expression
-		@return the evaluated data
+		
+		Returns:
+		    the evaluated data
 		"""
 		if self._renew_eval_ns:
 			self._renew_eval_ns = False

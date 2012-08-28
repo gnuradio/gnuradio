@@ -79,6 +79,21 @@ def add_common_options(parser):
 # /////////////////////////////////////////////////////////////////////////////
 
 class generic_mod(gr.hier_block2):
+    """
+    Hierarchical block for RRC-filtered differential generic modulation.
+    
+    The input is a byte stream (unsigned char) and the
+    output is the complex modulated signal at baseband.
+
+    Args:
+        constellation: determines the modulation type (gnuradio.digital.digital_constellation)
+        samples_per_symbol: samples per baud >= 2 (float)
+        differential: whether to use differential encoding (boolean)
+        pre_diff_code: whether to use apply a pre-differential mapping (boolean)
+        excess_bw: Root-raised cosine filter excess bandwidth (float)
+        verbose: Print information about modulator? (boolean)
+        log: Log modulation data to files? (boolean)
+    """
 
     def __init__(self, constellation,
                  differential=_def_differential,
@@ -87,27 +102,6 @@ class generic_mod(gr.hier_block2):
                  excess_bw=_def_excess_bw,
                  verbose=_def_verbose,
                  log=_def_log):
-        """
-	Hierarchical block for RRC-filtered differential generic modulation.
-
-	The input is a byte stream (unsigned char) and the
-	output is the complex modulated signal at baseband.
-        
-	@param constellation: determines the modulation type
-	@type constellation: gnuradio.digital.gr_constellation
-	@param samples_per_symbol: samples per baud >= 2
-	@type samples_per_symbol: float
-	@param differential: whether to use differential encoding
-	@type differential: boolean
-	@param pre_diff_code: whether to use apply a pre-differential mapping
-	@type pre_diff_code: boolean
-	@param excess_bw: Root-raised cosine filter excess bandwidth
-	@type excess_bw: float
-        @param verbose: Print information about modulator?
-        @type verbose: bool
-        @param log: Log modulation data to files?
-        @type log: bool
-	"""
 
 	gr.hier_block2.__init__(self, "generic_mod",
 				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
@@ -215,6 +209,24 @@ class generic_mod(gr.hier_block2):
 # /////////////////////////////////////////////////////////////////////////////
 
 class generic_demod(gr.hier_block2):
+    """
+    Hierarchical block for RRC-filtered differential generic demodulation.
+    
+    The input is the complex modulated signal at baseband.
+    The output is a stream of bits packed 1 bit per byte (LSB)
+    
+    Args:
+        constellation: determines the modulation type (gnuradio.digital.digital_constellation)
+        samples_per_symbol: samples per baud >= 2 (float)
+        differential: whether to use differential encoding (boolean)
+        pre_diff_code: whether to use apply a pre-differential mapping (boolean)
+        excess_bw: Root-raised cosine filter excess bandwidth (float)
+        freq_bw: loop filter lock-in bandwidth (float)
+        timing_bw: timing recovery loop lock-in bandwidth (float)
+        phase_bw: phase recovery loop bandwidth (float)
+        verbose: Print information about modulator? (boolean)
+        log: Log modulation data to files? (boolean)
+    """
 
     def __init__(self, constellation,
                  differential=_def_differential,
@@ -226,33 +238,6 @@ class generic_demod(gr.hier_block2):
                  phase_bw=_def_phase_bw,
                  verbose=_def_verbose,
                  log=_def_log):
-        """
-	Hierarchical block for RRC-filtered differential generic demodulation.
-
-	The input is the complex modulated signal at baseband.
-	The output is a stream of bits packed 1 bit per byte (LSB)
-
-	@param constellation: determines the modulation type
-	@type constellation: gnuradio.digital.gr_constellation
-	@param samples_per_symbol: samples per symbol >= 2
-	@type samples_per_symbol: float
-	@param differential: whether to use differential encoding
-	@type differential: boolean
-	@param pre_diff_code: whether to use apply a pre-differential mapping
-	@type pre_diff_code: boolean
-	@param excess_bw: Root-raised cosine filter excess bandwidth
-	@type excess_bw: float
-        @param freq_bw: loop filter lock-in bandwidth
-        @type freq_bw: float
-        @param timing_bw: timing recovery loop lock-in bandwidth
-        @type timing_bw: float
-        @param phase_bw: phase recovery loop bandwidth
-        @type phase_bw: float
-        @param verbose: Print information about modulator?
-        @type verbose: bool
-        @param debug: Print modualtion data to files?
-        @type debug: bool
-	"""
         
 	gr.hier_block2.__init__(self, "generic_demod",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
@@ -399,3 +384,17 @@ class generic_demod(gr.hier_block2):
         return extract_kwargs_from_options_for_class(cls, options)
     extract_kwargs_from_options=classmethod(extract_kwargs_from_options)
 
+shared_demod_args = """    samples_per_symbol: samples per baud >= 2 (float)
+        excess_bw: Root-raised cosine filter excess bandwidth (float)
+        freq_bw: loop filter lock-in bandwidth (float)
+        timing_bw: timing recovery loop lock-in bandwidth (float)
+        phase_bw: phase recovery loop bandwidth (float)
+        verbose: Print information about modulator? (boolean)
+        log: Log modulation data to files? (boolean)
+"""
+
+shared_mod_args = """    samples_per_symbol: samples per baud >= 2 (float)
+        excess_bw: Root-raised cosine filter excess bandwidth (float)
+        verbose: Print information about modulator? (boolean)
+        log: Log modulation data to files? (boolean)
+"""

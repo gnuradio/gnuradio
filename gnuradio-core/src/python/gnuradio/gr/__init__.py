@@ -21,6 +21,10 @@
 
 # The presence of this file turns this directory into a Python package
 
+"""
+Core contents.
+"""
+
 # This is the main GNU Radio python module.
 # We pull the swig output and the other modules into the gnuradio.gr namespace
 

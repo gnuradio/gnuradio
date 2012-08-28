@@ -67,8 +67,12 @@ class channel_plotter(grid_plotter_base):
 	def enable_legend(self, enable=None):
 		"""
 		Enable/disable the legend.
-		@param enable true to enable
-		@return the enable state when None
+
+                Args:
+		    enable: true to enable
+
+                Returns:
+		    the enable state when None
 		"""
 		if enable is None: return self._enable_legend
 		self.lock()
@@ -128,9 +132,13 @@ class channel_plotter(grid_plotter_base):
 		Get the text the will populate the point label.
 		Give X and Y values for the current point.
 		Give values for the channel at the X coordinate.
-		@param x_val the current x value
-		@param y_val the current y value
-		@return a string with newlines
+
+                Args:
+		    x_val: the current x value
+		    y_val: the current y value
+
+                Returns:
+		    a string with newlines
 		"""
 		#create text
 		label_str = '%s: %s\n%s: %s'%(
@@ -186,7 +194,9 @@ class channel_plotter(grid_plotter_base):
 	def clear_waveform(self, channel):
 		"""
 		Remove a waveform from the list of waveforms.
-		@param channel the channel key
+
+                Args:
+		    channel: the channel key
 		"""
 		self.lock()
 		if channel in self._channels.keys():
@@ -198,11 +208,13 @@ class channel_plotter(grid_plotter_base):
 	def set_waveform(self, channel, samples=[], color_spec=(0, 0, 0), marker=None, trig_off=0):
 		"""
 		Set the waveform for a given channel.
-		@param channel the channel key
-		@param samples the waveform samples
-		@param color_spec the 3-tuple for line color
-		@param marker None for line
-		@param trig_off fraction of sample for trigger offset
+
+                Args:
+		    channel: the channel key
+		    samples: the waveform samples
+		    color_spec: the 3-tuple for line color
+		    marker: None for line
+		    trig_off: fraction of sample for trigger offset
 		"""
 		self.lock()
 		if channel not in self._channels.keys(): self._legend_cache.changed(True)

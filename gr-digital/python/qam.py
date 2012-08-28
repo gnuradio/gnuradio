@@ -27,6 +27,7 @@ from math import pi, sqrt, log
 
 from gnuradio import gr
 from generic_mod_demod import generic_mod, generic_demod
+from generic_mod_demod import shared_mod_args, shared_demod_args
 from utils.gray_code import gray_code
 from utils import mod_codes
 import modulation_utils
@@ -180,20 +181,24 @@ def qam_constellation(constellation_points=_def_constellation_points,
 # /////////////////////////////////////////////////////////////////////////////
 
 class qam_mod(generic_mod):
+    """
+    Hierarchical block for RRC-filtered QAM modulation.
+    
+    The input is a byte stream (unsigned char) and the
+    output is the complex modulated signal at baseband.
+    
+    Args:
+        constellation_points: Number of constellation points (must be a power of four) (integer).
+        mod_code: Whether to use a gray_code (digital.mod_codes.GRAY_CODE) or not (digital.mod_codes.NO_CODE).
+        differential: Whether to use differential encoding (boolean).
+    """
+    # See generic_mod for additional arguments
+    __doc__ += shared_mod_args
 
     def __init__(self, constellation_points=_def_constellation_points,
                  differential=_def_differential,
                  mod_code=_def_mod_code,
                  *args, **kwargs):
-
-        """
-	Hierarchical block for RRC-filtered QAM modulation.
-
-	The input is a byte stream (unsigned char) and the
-	output is the complex modulated signal at baseband.
-
-        See generic_mod block for list of parameters.
-	"""
 
         constellation = qam_constellation(constellation_points, differential, mod_code)
         # We take care of the gray coding in the constellation generation so it doesn't 
@@ -207,20 +212,24 @@ class qam_mod(generic_mod):
 # /////////////////////////////////////////////////////////////////////////////
 
 class qam_demod(generic_demod):
+    """
+    Hierarchical block for RRC-filtered QAM modulation.
+    
+    The input is a byte stream (unsigned char) and the
+    output is the complex modulated signal at baseband.
+    
+    Args:
+        constellation_points: Number of constellation points (must be a power of four) (integer).
+        mod_code: Whether to use a gray_code (digital.mod_codes.GRAY_CODE) or not (digital.mod_codes.NO_CODE).
+        differential: Whether to use differential encoding (boolean).
+    """
+    # See generic_demod for additional arguments
+    __doc__ += shared_mod_args
 
     def __init__(self, constellation_points=_def_constellation_points,
                  differential=_def_differential,
                  mod_code=_def_mod_code,
                  *args, **kwargs):
-
-        """
-	Hierarchical block for RRC-filtered QAM modulation.
-
-	The input is a byte stream (unsigned char) and the
-	output is the complex modulated signal at baseband.
-
-        See generic_demod block for list of parameters.
-        """
         constellation = qam_constellation(constellation_points, differential, mod_code)
         # We take care of the gray coding in the constellation generation so it doesn't 
         # need to be done in the block.

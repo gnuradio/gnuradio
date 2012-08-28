@@ -29,10 +29,12 @@ class stream_to_vector_decimator(gr.hier_block2):
     def __init__(self, item_size, sample_rate, vec_rate, vec_len):
         """
         Create the block chain.
-        @param item_size the number of bytes per sample
-        @param sample_rate the rate of incoming samples
-        @param vec_rate the rate of outgoing vectors (same units as sample_rate)
-        @param vec_len the length of the outgoing vectors in items
+        
+        Args:
+            item_size: the number of bytes per sample
+            sample_rate: the rate of incoming samples
+            vec_rate: the rate of outgoing vectors (same units as sample_rate)
+            vec_len: the length of the outgoing vectors in items
         """
         self._vec_rate = vec_rate
         self._vec_len = vec_len
@@ -50,7 +52,9 @@ class stream_to_vector_decimator(gr.hier_block2):
     def set_sample_rate(self, sample_rate):
         """
         Set the new sampling rate and update the decimator.
-        @param sample_rate the new rate
+        
+        Args:
+            sample_rate: the new rate
         """
         self._sample_rate = sample_rate
         self._update_decimator()
@@ -58,7 +62,9 @@ class stream_to_vector_decimator(gr.hier_block2):
     def set_vec_rate(self, vec_rate):
         """
         Set the new vector rate and update the decimator.
-        @param vec_rate the new rate
+        
+        Args:
+            vec_rate: the new rate
         """
         self._vec_rate = vec_rate
         self._update_decimator()
@@ -66,7 +72,9 @@ class stream_to_vector_decimator(gr.hier_block2):
     def set_decimation(self, decim):
         """
         Set the decimation parameter directly.
-        @param decim the new decimation
+        
+        Args:
+            decim: the new decimation
         """
         self._decim = max(1, int(round(decim)))
         self.one_in_n.set_n(self._decim)

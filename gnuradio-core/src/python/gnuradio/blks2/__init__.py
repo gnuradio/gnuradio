@@ -18,6 +18,9 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
+"""
+Miscellaneous contents implemented in python.
+"""
 
 import glob
 import os.path

@@ -106,8 +106,10 @@ class Port(Element):
 	def draw(self, gc, window):
 		"""
 		Draw the socket with a label.
-		@param gc the graphics context
-		@param window the gtk window to draw on
+		
+		Args:
+		    gc: the graphics context
+		    window: the gtk window to draw on
 		"""
 		Element.draw(
 			self, gc, window, bg_color=self._bg_color,
@@ -123,7 +125,9 @@ class Port(Element):
 	def get_connector_coordinate(self):
 		"""
 		Get the coordinate where connections may attach to.
-		@return the connector coordinate (x, y) tuple
+		
+		Returns:
+		    the connector coordinate (x, y) tuple
 		"""
 		x,y = self._connector_coordinate
 		X,Y = self.get_coordinate()
@@ -134,7 +138,9 @@ class Port(Element):
 		Get the direction that the socket points: 0,90,180,270.
 		This is the rotation degree if the socket is an output or
 		the rotation degree + 180 if the socket is an input.
-		@return the direction in degrees
+		
+		Returns:
+		    the direction in degrees
 		"""
 		if self.is_source(): return self.get_rotation()
 		elif self.is_sink(): return (self.get_rotation() + 180)%360
@@ -143,48 +149,62 @@ class Port(Element):
 		"""
 		Get the length of the connector.
 		The connector length increases as the port index changes.
-		@return the length in pixels
+		
+		Returns:
+		    the length in pixels
 		"""
 		return self._connector_length
 
 	def get_rotation(self):
 		"""
 		Get the parent's rotation rather than self.
-		@return the parent's rotation
+		
+		Returns:
+		    the parent's rotation
 		"""
 		return self.get_parent().get_rotation()
 
 	def move(self, delta_coor):
 		"""
 		Move the parent rather than self.
-		@param delta_corr the (delta_x, delta_y) tuple
+		
+		Args:
+		    delta_corr: the (delta_x, delta_y) tuple
 		"""
 		self.get_parent().move(delta_coor)
 
 	def rotate(self, direction):
 		"""
 		Rotate the parent rather than self.
-		@param direction degrees to rotate
+		
+		Args:
+		    direction: degrees to rotate
 		"""
 		self.get_parent().rotate(direction)
 
 	def get_coordinate(self):
 		"""
 		Get the parent's coordinate rather than self.
-		@return the parents coordinate
+		
+		Returns:
+		    the parents coordinate
 		"""
 		return self.get_parent().get_coordinate()
 
 	def set_highlighted(self, highlight):
 		"""
 		Set the parent highlight rather than self.
-		@param highlight true to enable highlighting
+		
+		Args:
+		    highlight: true to enable highlighting
 		"""
 		self.get_parent().set_highlighted(highlight)
 
 	def is_highlighted(self):
 		"""
 		Get the parent's is highlight rather than self.
-		@return the parent's highlighting status
+		
+		Returns:
+		    the parent's highlighting status
 		"""
 		return self.get_parent().is_highlighted()

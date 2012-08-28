@@ -19,8 +19,7 @@
 # 
 
 '''
-This is the gr-digital package. It contains all of the blocks,
-utilities, and examples for doing digital modulation and demodulation.
+Blocks and utilities for digital modulation and demodulation.
 '''
 
 # The presence of this file turns this directory into a Python package

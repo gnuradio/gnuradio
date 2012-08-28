@@ -35,17 +35,21 @@ class Platform(_Element):
 		license='', website=None, colors=[]):
 		"""
 		Make a platform from the arguments.
-		@param name the platform name
-		@param version the version string
-		@param key the unique platform key
-		@param block_paths the file paths to blocks in this platform
-		@param block_dtd the dtd validator for xml block wrappers
-		@param default_flow_graph the default flow graph file path
-		@param generator the generator class for this platform
-		@param colors a list of title, color_spec tuples
-		@param license a multi-line license (first line is copyright)
-		@param website the website url for this platform
-		@return a platform object
+		
+		Args:
+		    name: the platform name
+		    version: the version string
+		    key: the unique platform key
+		    block_paths: the file paths to blocks in this platform
+		    block_dtd: the dtd validator for xml block wrappers
+		    default_flow_graph: the default flow graph file path
+		    generator: the generator class for this platform
+		    colors: a list of title, color_spec tuples
+		    license: a multi-line license (first line is copyright)
+		    website: the website url for this platform
+		
+		Returns:
+		    a platform object
 		"""
 		_Element.__init__(self)
 		self._name = name
@@ -100,8 +104,12 @@ class Platform(_Element):
 		"""
 		Parse a saved flow graph file.
 		Ensure that the file exists, and passes the dtd check.
-		@param flow_graph_file the flow graph file
-		@return nested data
+		
+		Args:
+		    flow_graph_file: the flow graph file
+		
+		Returns:
+		    nested data
 		@throws exception if the validation fails
 		"""
 		flow_graph_file = flow_graph_file or self._default_flow_graph
@@ -114,7 +122,9 @@ class Platform(_Element):
 		Load a block tree with categories and blocks.
 		Step 1: Load all blocks from the xml specification.
 		Step 2: Load blocks with builtin category specifications.
-		@param block_tree the block tree object
+		
+		Args:
+		    block_tree: the block tree object
 		"""
 		#recursive function to load categories and blocks
 		def load_category(cat_n, parent=[]):

@@ -73,14 +73,11 @@ class gfsk_mod(gr.hier_block2):
 	The input is a byte stream (unsigned char) and the
 	output is the complex modulated signal at baseband.
 
-	@param samples_per_symbol: samples per baud >= 2
-	@type samples_per_symbol: integer
-	@param bt: Gaussian filter bandwidth * symbol time
-	@type bt: float
-        @param verbose: Print information about modulator?
-        @type verbose: bool
-        @param debug: Print modualtion data to files?
-        @type debug: bool       
+        Args:
+            samples_per_symbol: samples per baud >= 2 (integer)
+            bt: Gaussian filter bandwidth * symbol time (float)
+            verbose: Print information about modulator? (bool)
+            debug: Print modualtion data to files? (bool)
 	"""
 
 	gr.hier_block2.__init__(self, "gfsk_mod",
@@ -195,23 +192,19 @@ class gfsk_demod(gr.hier_block2):
 	The input is the complex modulated signal at baseband.
 	The output is a stream of bits packed 1 bit per byte (the LSB)
 
-	@param samples_per_symbol: samples per baud
-	@type samples_per_symbol: integer
-        @param verbose: Print information about modulator?
-        @type verbose: bool
-        @param log: Print modualtion data to files?
-        @type log: bool 
+        Args:
+            samples_per_symbol: samples per baud (integer)
+            verbose: Print information about modulator? (bool)
+            log: Print modualtion data to files? (bool)
 
         Clock recovery parameters.  These all have reasonble defaults.
         
-        @param gain_mu: controls rate of mu adjustment
-        @type gain_mu: float
-        @param mu: fractional delay [0.0, 1.0]
-        @type mu: float
-        @param omega_relative_limit: sets max variation in omega
-        @type omega_relative_limit: float, typically 0.000200 (200 ppm)
-        @param freq_error: bit rate error as a fraction
-        @param float
+        Args:
+            gain_mu: controls rate of mu adjustment (float)
+            mu: fractional delay [0.0, 1.0] (float)
+            omega_relative_limit: sets max variation in omega (float, typically 0.000200 (200 ppm))
+            freq_error: bit rate error as a fraction
+            float: 
 	"""
 
 	gr.hier_block2.__init__(self, "gfsk_demod",

@@ -54,9 +54,13 @@ class Block(Element):
 	def __init__(self, flow_graph, n):
 		"""
 		Make a new block from nested data.
-		@param flow graph the parent element
-		@param n the nested odict
-		@return block a new block
+		
+		Args:
+		    flow: graph the parent element
+		    n: the nested odict
+		
+		Returns:
+		    block a new block
 		"""
 		#build the block
 		Element.__init__(self, flow_graph)
@@ -118,7 +122,9 @@ class Block(Element):
 	def get_enabled(self):
 		"""
 		Get the enabled state of the block.
-		@return true for enabled
+		
+		Returns:
+		    true for enabled
 		"""
 		try: return eval(self.get_param('_enabled').get_value())
 		except: return True
@@ -126,7 +132,9 @@ class Block(Element):
 	def set_enabled(self, enabled):
 		"""
 		Set the enabled state of the block.
-		@param enabled true for enabled
+		
+		Args:
+		    enabled: true for enabled
 		"""
 		self.get_param('_enabled').set_value(str(enabled))
 
@@ -169,8 +177,12 @@ class Block(Element):
 	def resolve_dependencies(self, tmpl):
 		"""
 		Resolve a paramater dependency with cheetah templates.
-		@param tmpl the string with dependencies
-		@return the resolved value
+		
+		Args:
+		    tmpl: the string with dependencies
+		
+		Returns:
+		    the resolved value
 		"""
 		tmpl = str(tmpl)
 		if '$' not in tmpl: return tmpl
@@ -184,8 +196,12 @@ class Block(Element):
 	def type_controller_modify(self, direction):
 		"""
 		Change the type controller.
-		@param direction +1 or -1
-		@return true for change
+		
+		Args:
+		    direction: +1 or -1
+		
+		Returns:
+		    true for change
 		"""
 		changed = False
 		type_param = None
@@ -209,8 +225,12 @@ class Block(Element):
 	def port_controller_modify(self, direction):
 		"""
 		Change the port controller.
-		@param direction +1 or -1
-		@return true for change
+		
+		Args:
+		    direction: +1 or -1
+		
+		Returns:
+		    true for change
 		"""
 		return False
 
@@ -220,7 +240,9 @@ class Block(Element):
 	def export_data(self):
 		"""
 		Export this block's params to nested data.
-		@return a nested data odict
+		
+		Returns:
+		    a nested data odict
 		"""
 		n = odict()
 		n['key'] = self.get_key()
@@ -235,7 +257,9 @@ class Block(Element):
 		call rewrite, and repeat the load until the params stick.
 		This call to rewrite will also create any dynamic ports
 		that are needed for the connections creation phase.
-		@param n the nested data odict
+		
+		Args:
+		    n: the nested data odict
 		"""
 		get_hash = lambda: hash(tuple(map(hash, self.get_params())))
 		my_hash = 0

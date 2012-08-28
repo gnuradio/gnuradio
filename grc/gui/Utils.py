@@ -29,10 +29,12 @@ def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTE
 	Load the destination pixmap with a rotated version of the source pixmap.
 	The source pixmap will be loaded into a pixbuf, rotated, and drawn to the destination pixmap.
 	The pixbuf is a client-side drawable, where a pixmap is a server-side drawable.
-	@param gc the graphics context
-	@param src_pixmap the source pixmap
-	@param dst_pixmap the destination pixmap
-	@param angle the angle to rotate by
+	
+	Args:
+	    gc: the graphics context
+	    src_pixmap: the source pixmap
+	    dst_pixmap: the destination pixmap
+	    angle: the angle to rotate by
 	"""
 	width, height = src_pixmap.get_size()
 	pixbuf = gtk.gdk.Pixbuf(
@@ -47,9 +49,13 @@ def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTE
 def get_rotated_coordinate(coor, rotation):
 	"""
 	Rotate the coordinate by the given rotation.
-	@param coor the coordinate x, y tuple
-	@param rotation the angle in degrees
-	@return the rotated coordinates
+	
+	Args:
+	    coor: the coordinate x, y tuple
+	    rotation: the angle in degrees
+	
+	Returns:
+	    the rotated coordinates
 	"""
 	#handles negative angles
 	rotation = (rotation + 360)%360
@@ -68,9 +74,13 @@ def get_rotated_coordinate(coor, rotation):
 def get_angle_from_coordinates((x1,y1), (x2,y2)):
 	"""
 	Given two points, calculate the vector direction from point1 to point2, directions are multiples of 90 degrees.
-	@param (x1,y1) the coordinate of point 1
-	@param (x2,y2) the coordinate of point 2
-	@return the direction in degrees
+	
+	Args:
+	    (x1,y1): the coordinate of point 1
+	    (x2,y2): the coordinate of point 2
+	
+	Returns:
+	    the direction in degrees
 	"""
 	if y1 == y2:#0 or 180
 		if x2 > x1: return 0
@@ -83,8 +93,12 @@ def parse_template(tmpl_str, **kwargs):
 	"""
 	Parse the template string with the given args.
 	Pass in the xml encode method for pango escape chars.
-	@param tmpl_str the template as a string
-	@return a string of the parsed template
+	
+	Args:
+	    tmpl_str: the template as a string
+	
+	Returns:
+	    a string of the parsed template
 	"""
 	kwargs['encode'] = gobject.markup_escape_text
 	return str(Template(tmpl_str, kwargs))

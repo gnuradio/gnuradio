@@ -32,10 +32,9 @@ class wfm_rcv_fmdet(gr.hier_block2):
         (gr_complex).  The output is two streams of the demodulated
         audio (float) 0=Left, 1=Right.
 
-        @param demod_rate: input sample rate of complex baseband input.
-        @type demod_rate: float
-        @param audio_decimation: how much to decimate demod_rate to get to audio.
-        @type audio_decimation: integer
+        Args:
+            demod_rate: input sample rate of complex baseband input. (float)
+            audio_decimation: how much to decimate demod_rate to get to audio. (integer)
         """
 	gr.hier_block2.__init__(self, "wfm_rcv_fmdet",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature

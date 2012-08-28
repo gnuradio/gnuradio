@@ -48,7 +48,9 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-		@param parent the wx parent window
+		
+		Args:
+		    parent: the wx parent window
 		"""
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
@@ -134,7 +136,9 @@ class histo_window(wx.Panel, pubsub.pubsub):
 	def handle_msg(self, msg):
 		"""
 		Handle the message from the fft sink message queue.
-		@param msg the frame as a character array
+		
+		Args:
+		    msg: the frame as a character array
 		"""
 		if not self[RUNNING_KEY]: return
 		#convert to floating point numbers

@@ -357,7 +357,8 @@ class receive_path(gr.hier_block2):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
 

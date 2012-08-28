@@ -69,7 +69,9 @@ class Block(Element):
 	def get_coordinate(self):
 		"""
 		Get the coordinate from the position param.
-		@return the coordinate tuple (x, y) or (0, 0) if failure
+		
+		Returns:
+		    the coordinate tuple (x, y) or (0, 0) if failure
 		"""
 		try: #should evaluate to tuple
 			coor = eval(self.get_param('_coordinate').get_value())
@@ -91,14 +93,18 @@ class Block(Element):
 	def set_coordinate(self, coor):
 		"""
 		Set the coordinate into the position param.
-		@param coor the coordinate tuple (x, y)
+		
+		Args:
+		    coor: the coordinate tuple (x, y)
 		"""
 		self.get_param('_coordinate').set_value(str(coor))
 
 	def get_rotation(self):
 		"""
 		Get the rotation from the position param.
-		@return the rotation in degrees or 0 if failure
+		
+		Returns:
+		    the rotation in degrees or 0 if failure
 		"""
 		try: #should evaluate to dict
 			rotation = eval(self.get_param('_rotation').get_value())
@@ -110,7 +116,9 @@ class Block(Element):
 	def set_rotation(self, rot):
 		"""
 		Set the rotation into the position param.
-		@param rot the rotation in degrees
+		
+		Args:
+		    rot: the rotation in degrees
 		"""
 		self.get_param('_rotation').set_value(str(rot))
 
@@ -171,8 +179,10 @@ class Block(Element):
 	def draw(self, gc, window):
 		"""
 		Draw the signal block with label and inputs/outputs.
-		@param gc the graphics context
-		@param window the gtk window to draw on
+		
+		Args:
+		    gc: the graphics context
+		    window: the gtk window to draw on
 		"""
 		x, y = self.get_coordinate()
 		#draw main block
@@ -191,9 +201,13 @@ class Block(Element):
 	def what_is_selected(self, coor, coor_m=None):
 		"""
 		Get the element that is selected.
-		@param coor the (x,y) tuple
-		@param coor_m the (x_m, y_m) tuple
-		@return this block, a port, or None
+		
+		Args:
+		    coor: the (x,y) tuple
+		    coor_m: the (x_m, y_m) tuple
+		
+		Returns:
+		    this block, a port, or None
 		"""
 		for port in self.get_ports():
 			port_selected = port.what_is_selected(coor, coor_m)

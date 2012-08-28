@@ -44,14 +44,12 @@ class mod_pkts(gr.hier_block2):
         Packets to be sent are enqueued by calling send_pkt.
         The output is the complex modulated signal at baseband.
 
-        @param modulator: instance of modulator class (gr_block or hier_block2)
-        @type modulator: complex baseband out
-        @param access_code: AKA sync vector
-        @type access_code: string of 1's and 0's between 1 and 64 long
-        @param msgq_limit: maximum number of messages in message queue
-        @type msgq_limit: int
-        @param pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples
-        @param use_whitener_offset: If true, start of whitener XOR string is incremented each packet
+        Args:
+            modulator: instance of modulator class (gr_block or hier_block2) (complex baseband out)
+            access_code: AKA sync vector (string of 1's and 0's between 1 and 64 long)
+            msgq_limit: maximum number of messages in message queue (int)
+            pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples
+            use_whitener_offset: If true, start of whitener XOR string is incremented each packet
         
         See gmsk_mod for remaining parameters
         """
@@ -79,8 +77,8 @@ class mod_pkts(gr.hier_block2):
         """
         Send the payload.
 
-        @param payload: data to send
-        @type payload: string
+        Args:
+            payload: data to send (string)
         """
         if eof:
             msg = gr.message(1) # tell self._pkt_input we're not sending any more packets
@@ -116,14 +114,11 @@ class demod_pkts(gr.hier_block2):
 	The input is the complex modulated signal at baseband.
         Demodulated packets are sent to the handler.
 
-        @param demodulator: instance of demodulator class (gr_block or hier_block2)
-        @type demodulator: complex baseband in
-        @param access_code: AKA sync vector
-        @type access_code: string of 1's and 0's
-        @param callback:  function of two args: ok, payload
-        @type callback: ok: bool; payload: string
-        @param threshold: detect access_code with up to threshold bits wrong (-1 -> use default)
-        @type threshold: int
+        Args:
+            demodulator: instance of demodulator class (gr_block or hier_block2) (complex baseband in)
+            access_code: AKA sync vector (string of 1's and 0's)
+            callback: function of two args: ok, payload (ok: bool; payload: string)
+            threshold: detect access_code with up to threshold bits wrong (-1 -> use default) (int)
 	"""
 
 	gr.hier_block2.__init__(self, "demod_pkts",

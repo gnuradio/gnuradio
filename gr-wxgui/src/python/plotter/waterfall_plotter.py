@@ -49,8 +49,12 @@ def _get_rbga(red_pts, green_pts, blue_pts, alpha_pts=[(0, 0), (1, 0)]):
 	The x and y values of the coordinates range from 0 to 1.
 	The coordinates must be specified so that x increases with the index value.
 	Resulting values are calculated along the line formed between 2 coordinates.
-	@param *_pts an array of x,y coordinates for each color element
-	@return array of rbga values (4 bytes) each
+
+        Args:
+	    red_pts, green_pts, blue_pts, alpha_pts: an array of x,y coordinates for each color element
+
+        Returns:
+	    array of rbga values (4 bytes) each
 	"""
 	def _fcn(x, pw):
 		for (x1, y1), (x2, y2) in zip(pw, pw[1:]):
@@ -167,9 +171,13 @@ class waterfall_plotter(grid_plotter_base):
 		"""
 		Get the text the will populate the point label.
 		Give the X value for the current point.
-		@param x_val the current x value
-		@param y_val the current y value
-		@return a value string with units
+
+                Args:
+		    x_val: the current x value
+		    y_val: the current y value
+
+                Returns:
+		    a value string with units
 		"""
 		return '%s: %s'%(self.x_label, common.eng_format(x_val, self.x_units))
 
@@ -210,7 +218,9 @@ class waterfall_plotter(grid_plotter_base):
 	def _resize_texture(self, flag=None):
 		"""
 		Create the texture to fit the fft_size X num_lines.
-		@param flag the set/unset or update flag
+
+                Args:
+		    flag: the set/unset or update flag
 		"""
 		if flag is not None:
 			self._resize_texture_flag = flag
@@ -229,7 +239,9 @@ class waterfall_plotter(grid_plotter_base):
 		Set the color mode.
 		New samples will be converted to the new color mode.
 		Old samples will not be recolorized.
-		@param color_mode the new color mode string
+
+                Args:
+		    color_mode: the new color mode string
 		"""
 		self.lock()
 		if color_mode in COLORS.keys():
@@ -242,7 +254,9 @@ class waterfall_plotter(grid_plotter_base):
 		"""
 		Set number of lines.
 		Powers of two only.
-		@param num_lines the new number of lines
+
+                Args:
+		    num_lines: the new number of lines
 		"""
 		self.lock()
 		self._num_lines = num_lines
@@ -254,9 +268,11 @@ class waterfall_plotter(grid_plotter_base):
 		"""
 		Set the samples to the waterfall.
 		Convert the samples to color data.
-		@param samples the array of floats
-		@param minimum the minimum value to scale
-		@param maximum the maximum value to scale
+
+                Args:
+		    samples: the array of floats
+		    minimum: the minimum value to scale
+		    maximum: the maximum value to scale
 		"""
 		self.lock()
 		#set the min, max values

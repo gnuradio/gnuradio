@@ -50,9 +50,11 @@ class odict(DictMixin):
 		"""
 		Insert the new key, value entry after the entry given by the position key.
 		If the positional key is None, insert at the end.
-		@param pos_key the positional key
-		@param key the key for the new entry
-		@param val the value for the new entry
+		
+		Args:
+		    pos_key: the positional key
+		    key: the key for the new entry
+		    val: the value for the new entry
 		"""
 		index = (pos_key is None) and len(self._keys) or self._keys.index(pos_key)
 		if key in self._keys: raise KeyError('Cannot insert, key "%s" already exists'%str(key))
@@ -63,9 +65,11 @@ class odict(DictMixin):
 		"""
 		Insert the new key, value entry before the entry given by the position key.
 		If the positional key is None, insert at the begining.
-		@param pos_key the positional key
-		@param key the key for the new entry
-		@param val the value for the new entry
+		
+		Args:
+		    pos_key: the positional key
+		    key: the key for the new entry
+		    val: the value for the new entry
 		"""
 		index = (pos_key is not None) and self._keys.index(pos_key) or 0
 		if key in self._keys: raise KeyError('Cannot insert, key "%s" already exists'%str(key))
@@ -75,8 +79,12 @@ class odict(DictMixin):
 	def find(self, key):
 		"""
 		Get the value for this key if exists.
-		@param key the key to search for
-		@return the value or None
+		
+		Args:
+		    key: the key to search for
+		
+		Returns:
+		    the value or None
 		"""
 		if self.has_key(key): return self[key]
 		return None
@@ -84,8 +92,12 @@ class odict(DictMixin):
 	def findall(self, key):
 		"""
 		Get a list of values for this key.
-		@param key the key to search for
-		@return a list of values or empty list
+		
+		Args:
+		    key: the key to search for
+		
+		Returns:
+		    a list of values or empty list
 		"""
 		obj = self.find(key)
 		if obj is None: obj = list()

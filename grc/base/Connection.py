@@ -25,11 +25,15 @@ class Connection(Element):
 	def __init__(self, flow_graph, porta, portb):
 		"""
 		Make a new connection given the parent and 2 ports.
-		@param flow_graph the parent of this element
-		@param porta a port (any direction)
-		@param portb a port (any direction)
+		
+		Args:
+		    flow_graph: the parent of this element
+		    porta: a port (any direction)
+		    portb: a port (any direction)
 		@throws Error cannot make connection
-		@return a new connection
+		
+		Returns:
+		    a new connection
 		"""
 		Element.__init__(self, flow_graph)
 		source = sink = None
@@ -70,7 +74,9 @@ class Connection(Element):
 	def get_enabled(self):
 		"""
 		Get the enabled state of this connection.
-		@return true if source and sink blocks are enabled
+		
+		Returns:
+		    true if source and sink blocks are enabled
 		"""
 		return self.get_source().get_parent().get_enabled() and \
 			self.get_sink().get_parent().get_enabled()
@@ -87,7 +93,9 @@ class Connection(Element):
 	def export_data(self):
 		"""
 		Export this connection's info.
-		@return a nested data odict
+		
+		Returns:
+		    a nested data odict
 		"""
 		n = odict()
 		n['source_block_id'] = self.get_source().get_parent().get_id()
