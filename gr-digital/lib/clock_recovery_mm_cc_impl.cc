@@ -29,6 +29,7 @@
 #include <gr_prefs.h>
 #include <gr_math.h>
 #include <stdexcept>
+#include <iostream>
 
 namespace gr {
   namespace digital {
