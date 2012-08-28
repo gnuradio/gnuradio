@@ -41,13 +41,13 @@ namespace gr {
       unsigned int       d_header;		// header bits
       int                d_headerbytelen_cnt;	// how many so far
 
-      unsigned char      *d_bytes_out;          // hold the current bytes produced by the demapper    
+      char              *d_bytes_out;           // hold the current bytes produced by the demapper    
 
-      unsigned int       d_occupied_carriers;
+      int                d_occupied_carriers;
       unsigned int       d_byte_offset;
       unsigned int       d_partial_byte;
 
-      unsigned char      d_packet[MAX_PKT_LEN];    // assembled payload
+      char               d_packet[MAX_PKT_LEN];    // assembled payload
       int 	         d_packetlen;              // length of packet
       int                d_packet_whitener_offset; // offset into whitener string to use
       int		 d_packetlen_cnt;          // how many so far
@@ -55,11 +55,11 @@ namespace gr {
       gr_complex * d_derotated_output;  // Pointer to output stream to send deroated symbols out
 
       std::vector<gr_complex>    d_sym_position;
-      std::vector<unsigned char> d_sym_value_out;
+      std::vector<char>          d_sym_value_out;
       std::vector<gr_complex>    d_dfe;
       unsigned int d_nbits;
 
-      unsigned char d_resid;
+      char d_resid;
       unsigned int d_nresid;
       float d_phase;
       float d_freq;
@@ -80,18 +80,18 @@ namespace gr {
 	return ((d_header >> 16) ^ (d_header & 0xffff)) == 0;
       }
   
-      unsigned char slicer(const gr_complex x);
+      char slicer(const gr_complex x);
       unsigned int demapper(const gr_complex *in,
-			    unsigned char *out);
+			    char *out);
 
       bool set_sym_value_out(const std::vector<gr_complex> &sym_position, 
-			     const std::vector<unsigned char> &sym_value_out);
+			     const std::vector<char> &sym_value_out);
 
     public:
       ofdm_frame_sink_impl(const std::vector<gr_complex> &sym_position, 
-			   const std::vector<unsigned char> &sym_value_out,
+			   const std::vector<char> &sym_value_out,
 			   gr_msg_queue_sptr target_queue,
-			   unsigned int occupied_tones,
+			   int occupied_tones,
 			   float phase_gain=0.25, float freq_gain=0.25*0.25/4);
       ~ofdm_frame_sink_impl();
 

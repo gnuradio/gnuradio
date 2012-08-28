@@ -42,7 +42,7 @@ namespace gr {
 
     // Base Constellation Class
     constellation::constellation(std::vector<gr_complex> constell,
-				 std::vector<unsigned int> pre_diff_code,
+				 std::vector<int> pre_diff_code,
 				 unsigned int rotational_symmetry,
 				 unsigned int dimensionality) :
       d_constellation(constell),
@@ -227,7 +227,7 @@ namespace gr {
 
     constellation_calcdist::sptr 
     constellation_calcdist::make(std::vector<gr_complex> constell,
-				 std::vector<unsigned int> pre_diff_code,
+				 std::vector<int> pre_diff_code,
 				 unsigned int rotational_symmetry,
 				 unsigned int dimensionality)
     {
@@ -237,7 +237,7 @@ namespace gr {
     }
 
     constellation_calcdist::constellation_calcdist(std::vector<gr_complex> constell,
-						   std::vector<unsigned int> pre_diff_code,
+						   std::vector<int> pre_diff_code,
 						   unsigned int rotational_symmetry,
 						   unsigned int dimensionality)
       : constellation(constell, pre_diff_code, rotational_symmetry, dimensionality)
@@ -256,7 +256,7 @@ namespace gr {
 
 
     constellation_sector::constellation_sector(std::vector<gr_complex> constell,
-					       std::vector<unsigned int> pre_diff_code,
+					       std::vector<int> pre_diff_code,
 					       unsigned int rotational_symmetry,
 					       unsigned int dimensionality,
 					       unsigned int n_sectors) :
@@ -293,7 +293,7 @@ namespace gr {
 
     constellation_rect::sptr
     constellation_rect::make(std::vector<gr_complex> constell,
-			     std::vector<unsigned int> pre_diff_code,
+			     std::vector<int> pre_diff_code,
 			     unsigned int rotational_symmetry,
 			     unsigned int real_sectors,
 			     unsigned int imag_sectors,
@@ -309,7 +309,7 @@ namespace gr {
     }
 
     constellation_rect::constellation_rect(std::vector<gr_complex> constell,
-					   std::vector<unsigned int> pre_diff_code,
+					   std::vector<int> pre_diff_code,
 					   unsigned int rotational_symmetry,
 					   unsigned int real_sectors, unsigned int imag_sectors,
 					   float width_real_sectors, float width_imag_sectors) :
@@ -367,7 +367,7 @@ namespace gr {
 
     constellation_psk::sptr 
     constellation_psk::make(std::vector<gr_complex> constell, 
-			    std::vector<unsigned int> pre_diff_code,
+			    std::vector<int> pre_diff_code,
 			    unsigned int n_sectors)
     {
       return constellation_psk::sptr(new constellation_psk
@@ -376,7 +376,7 @@ namespace gr {
     }
 
     constellation_psk::constellation_psk(std::vector<gr_complex> constell,
-					 std::vector<unsigned int> pre_diff_code,
+					 std::vector<int> pre_diff_code,
 					 unsigned int n_sectors) :
       constellation_sector(constell, pre_diff_code, constell.size(), 1, n_sectors)
     {

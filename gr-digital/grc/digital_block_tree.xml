@@ -30,26 +30,52 @@
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
                 <name>Coding</name>
-		<block>additive_scrambler_bb</block>
+		<block>digital_additive_scrambler_bb</block>
+		<block>digital_descrambler_bb</block>
+		<block>digital_scrambler_bb</block>
 	</cat>
 	<cat>
                 <name>Converters</name>
-		<block>binary_slicer_fb</block>
+		<block>digital_binary_slicer_fb</block>
+		<block>digital_chunks_to_symbols_xx</block>
+		<block>digital_diff_decoder_bb</block>
+		<block>digital_diff_encoder_bb</block>
+		<block>digital_diff_phasor_cc</block>
+		<block>digital_map_bb</block>
 	</cat>
 	<cat>
                 <name>Digital</name>
-		<block>constellation_decoder_cb</block>
-		<block>constellation_receiver_cb</block>
+		<block>digital_constellation_decoder_cb</block>
+		<block>digital_constellation_receiver_cb</block>
+		<block>digital_correlate_access_code_bb</block>
+		<block>digital_correlate_access_code_tag_bb</block>
+		<block>digital_framer_sink_1</block>
+		<block>digital_mpsk_snr_est_cc</block>
+		<block>digital_mpsk_receiver_cc</block>
+		<block>digital_packet_sink</block>
+		<block>digital_pn_correlator_cc</block>
+		<block>digital_simple_framer</block>
+	</cat>
+	<cat>
+	        <name>Probes</name>
+		<block>digital_probe_density_b</block>
+		<block>digital_probe_mpsk_snr_est_c</block>
+	</cat>
+	<cat>
+	        <name>Sources</name>
+		<block>digital_glfsr_source_x</block>
 	</cat>
 	<cat>
                 <name>Synchronizers</name>
-		<block>clock_recovery_mm_xx</block>
-		<block>pfb_clock_sync_xxx</block>
+		<block>digital_clock_recovery_mm_xx</block>
+		<block>digital_costas_loop_cc</block>
+		<block>digital_fll_band_edge_cc</block>
+		<block>digital_pfb_clock_sync_xxx</block>
 	</cat>
 	<cat>
                 <name>Equalizers</name>
-		<block>cma_equalizer_cc</block>
-		<block>lms_dd_equalizer_cc</block>
+		<block>digital_cma_equalizer_cc</block>
+		<block>digital_lms_dd_equalizer_cc</block>
 	</cat>
 	<cat>
 		<name>Digital Modulators</name>
@@ -70,6 +96,7 @@
 		<block>digital_ofdm_demod</block>
 		<block>digital_ofdm_cyclic_prefixer</block>
 		<block>digital_ofdm_frame_acquisition</block>
+		<block>digital_ofdm_frame_sink</block>
 		<block>digital_ofdm_insert_preamble</block>
 		<block>digital_ofdm_sampler</block>
 		<block>digital_ofdm_sync_pn</block>

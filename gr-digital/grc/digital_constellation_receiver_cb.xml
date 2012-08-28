@@ -6,7 +6,7 @@
  -->
 <block>
 	<name>Constellation Receiver</name>
-	<key>constellation_receiver_cb</key>
+	<key>digital_constellation_receiver_cb</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.constellation_receiver_cb($constellation, $loop_bw, $fmin, $fmax)</make>
 	<param>

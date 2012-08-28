@@ -59,9 +59,9 @@ namespace gr {
        * \param freq_gain gain of the frequency tracking loop
        */
       static sptr make(const std::vector<gr_complex> &sym_position, 
-		       const std::vector<unsigned char> &sym_value_out,
+		       const std::vector<char> &sym_value_out,
 		       gr_msg_queue_sptr target_queue,
-		       unsigned int occupied_tones,
+		       int occupied_tones,
 		       float phase_gain=0.25, float freq_gain=0.25*0.25/4);
     };
 

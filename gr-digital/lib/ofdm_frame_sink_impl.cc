@@ -86,7 +86,7 @@ namespace gr {
 		d_packetlen, d_packet_whitener_offset);
     }
 
-    unsigned char
+    char
     ofdm_frame_sink_impl::slicer(const gr_complex x)
     {
       unsigned int table_size = d_sym_value_out.size();
@@ -105,7 +105,7 @@ namespace gr {
     }
 
     unsigned int ofdm_frame_sink_impl::demapper(const gr_complex *in,
-						unsigned char *out)
+						char *out)
     {
       unsigned int i=0, bytes_produced=0;
       gr_complex carrier;
@@ -131,7 +131,7 @@ namespace gr {
 	    d_derotated_output[i] = sigrot;
 	  }
       
-	  unsigned char bits = slicer(sigrot);
+	  char bits = slicer(sigrot);
 
 	  gr_complex closest_sym = d_sym_position[bits];
       
@@ -185,9 +185,9 @@ namespace gr {
 
     ofdm_frame_sink::sptr
     ofdm_frame_sink::make(const std::vector<gr_complex> &sym_position, 
-			  const std::vector<unsigned char> &sym_value_out,
+			  const std::vector<char> &sym_value_out,
 			  gr_msg_queue_sptr target_queue,
-			  unsigned int occupied_carriers,
+			  int occupied_carriers,
 			  float phase_gain, float freq_gain)
     {
       return gnuradio::get_initial_sptr
@@ -197,9 +197,9 @@ namespace gr {
     }
 
     ofdm_frame_sink_impl::ofdm_frame_sink_impl(const std::vector<gr_complex> &sym_position, 
-					       const std::vector<unsigned char> &sym_value_out,
+					       const std::vector<char> &sym_value_out,
 					       gr_msg_queue_sptr target_queue,
-					       unsigned int occupied_carriers,
+					       int occupied_carriers,
 					       float phase_gain, float freq_gain)
       : gr_sync_block("ofdm_frame_sink",
 		      gr_make_io_signature2(2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char)),
@@ -247,7 +247,8 @@ namespace gr {
       // because we are only dealing with the occupied_carriers
       // at this point, the diff_left in the following compensates
       // for any offset from the 0th carrier introduced
-      unsigned int i,j,k;
+      int i;
+      unsigned int j,k;
       for(i = 0; i < (d_occupied_carriers/4)+diff_left; i++) {
 	char c = carriers[i];
 	for(j = 0; j < 4; j++) {
@@ -259,11 +260,11 @@ namespace gr {
       }
   
       // make sure we stay in the limit currently imposed by the occupied_carriers
-      if(d_subcarrier_map.size() > d_occupied_carriers) {
+      if(d_subcarrier_map.size() > (size_t)d_occupied_carriers) {
 	throw std::invalid_argument("ofdm_frame_sink_impl: subcarriers allocated exceeds size of occupied carriers");
       }
 
-      d_bytes_out = new unsigned char[d_occupied_carriers];
+      d_bytes_out = new char[d_occupied_carriers];
       d_dfe.resize(occupied_carriers);
       fill(d_dfe.begin(), d_dfe.end(), gr_complex(1.0,0.0));
 
@@ -279,7 +280,7 @@ namespace gr {
 
     bool
     ofdm_frame_sink_impl::set_sym_value_out(const std::vector<gr_complex> &sym_position, 
-					    const std::vector<unsigned char> &sym_value_out)
+					    const std::vector<char> &sym_value_out)
     {
       if(sym_position.size() != sym_value_out.size())
 	return false;

@@ -17,61 +17,61 @@
 	<param>
 		<name>M</name>
 		<key>M</key>
-        <value>4</value>
+		<value>4</value>
 		<type>int</type>
 	</param>
 	<param>
 		<name>Theta</name>
 		<key>theta</key>
-        <value>0</value>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Loop Bandwidth</name>
 		<key>w</key>
-        <value>cmath.pi/100.0</value>
+		<value>cmath.pi/100.0</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Min Freq</name>
 		<key>fmin</key>
-        <value>-0.5</value>
+		<value>-0.5</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Max Freq</name>
 		<key>fmax</key>
-        <value>0.5</value>
+		<value>0.5</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Mu</name>
 		<key>mu</key>
-        <value>0.25</value>
+		<value>0.25</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Gain Mu</name>
 		<key>gain_mu</key>
-        <value>0.01</value>
+		<value>0.01</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Omega</name>
 		<key>omega</key>
-        <value>2</value>
+		<value>2</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Gain Omega</name>
 		<key>gain_omega</key>
-        <value>0.001</value>
+		<value>0.001</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Omega Relative Limit</name>
 		<key>omega_relative_limit</key>
-        <value>0.001</value>
+		<value>0.001</value>
 		<type>real</type>
 	</param>
 	<sink>

@@ -61,7 +61,7 @@ namespace gr {
     {
     public:
       constellation(std::vector<gr_complex> constell,
-		    std::vector<unsigned int> pre_diff_code,
+		    std::vector<int> pre_diff_code,
 		    unsigned int rotational_symmetry,
 		    unsigned int dimensionality);
       constellation();
@@ -98,7 +98,7 @@ namespace gr {
       //! Whether to apply an encoding before doing differential encoding. (e.g. gray coding)
       void set_pre_diff_code(bool a) { d_apply_pre_diff_code = a;}
       //! Returns the encoding to apply before differential encoding.
-      std::vector<unsigned int> pre_diff_code() { return d_pre_diff_code;}
+      std::vector<int> pre_diff_code() { return d_pre_diff_code;}
       //! Returns the order of rotational symmetry.
       unsigned int rotational_symmetry() { return d_rotational_symmetry;}
       //! Returns the number of complex numbers in a single symbol.
@@ -121,7 +121,7 @@ namespace gr {
 
     protected:
       std::vector<gr_complex> d_constellation;
-      std::vector<unsigned int> d_pre_diff_code; 
+      std::vector<int> d_pre_diff_code; 
       bool d_apply_pre_diff_code;
       unsigned int d_rotational_symmetry;
       unsigned int d_dimensionality;
@@ -152,7 +152,7 @@ namespace gr {
 
       // public constructor
       static sptr make(std::vector<gr_complex> constell,
-		       std::vector<unsigned int> pre_diff_code,
+		       std::vector<int> pre_diff_code,
 		       unsigned int rotational_symmetry,
 		       unsigned int dimensionality);
 
@@ -163,7 +163,7 @@ namespace gr {
 
     private:
       constellation_calcdist(std::vector<gr_complex> constell,
-			     std::vector<unsigned int> pre_diff_code,
+			     std::vector<int> pre_diff_code,
 			     unsigned int rotational_symmetry,
 			     unsigned int dimensionality);
     };
@@ -186,7 +186,7 @@ namespace gr {
     public:
 
       constellation_sector(std::vector<gr_complex> constell,
-			   std::vector<unsigned int> pre_diff_code,
+			   std::vector<int> pre_diff_code,
 			   unsigned int rotational_symmetry,
 			   unsigned int dimensionality,
 			   unsigned int n_sectors);
@@ -203,7 +203,7 @@ namespace gr {
       unsigned int n_sectors;
 
     private:
-      std::vector<unsigned int> sector_values;
+      std::vector<int> sector_values;
     };
 
     /************************************************************/
@@ -234,7 +234,7 @@ namespace gr {
 
       // public constructor
       static constellation_rect::sptr make(std::vector<gr_complex> constell,
-					   std::vector<unsigned int> pre_diff_code,
+					   std::vector<int> pre_diff_code,
 					   unsigned int rotational_symmetry,
 					   unsigned int real_sectors,
 					   unsigned int imag_sectors,
@@ -254,7 +254,7 @@ namespace gr {
       float d_width_imag_sectors;
 
       constellation_rect(std::vector<gr_complex> constell,
-			 std::vector<unsigned int> pre_diff_code,
+			 std::vector<int> pre_diff_code,
 			 unsigned int rotational_symmetry,
 			 unsigned int real_sectors,
 			 unsigned int imag_sectors,
@@ -286,7 +286,7 @@ namespace gr {
 
       // public constructor
       static sptr make(std::vector<gr_complex> constell,
-		       std::vector<unsigned int> pre_diff_code,
+		       std::vector<int> pre_diff_code,
 		       unsigned int n_sectors);
 
       ~constellation_psk();
@@ -298,7 +298,7 @@ namespace gr {
 
     private:
       constellation_psk(std::vector<gr_complex> constell,
-			std::vector<unsigned int> pre_diff_code,
+			std::vector<int> pre_diff_code,
 			unsigned int n_sectors);
     };
 

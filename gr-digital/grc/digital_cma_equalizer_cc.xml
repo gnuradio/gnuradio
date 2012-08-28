@@ -6,7 +6,7 @@
  -->
 <block>
 	<name>CMA Equalizer</name>
-	<key>cma_equalizer_cc</key>
+	<key>digital_cma_equalizer_cc</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.cma_equalizer_cc($num_taps, $modulus, $mu, $sps)</make>
 	<callback>set_gain($mu)</callback>
