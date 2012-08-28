@@ -54,12 +54,15 @@ namespace gr {
       /*!
        * \brief Build a floating point qtgui sink.
        *
-       * \param size size of the FFT to compute and display
+       * \param fftsize size of the FFT to compute and display
        * \param wintype type of window to apply (see filter/firdes.h)
        * \param fc center frequency of signal (use for x-axis labels)
        * \param bw bandwidth of signal (used to set x-axis labels)
        * \param name title for the plot
-       * \param nconnections number of signals connected to sink
+       * \param plotfreq Toggle frequency plot on/off
+       * \param plotwaterfall Toggle waterfall plot on/off
+       * \param plottime Toggle time plot on/off
+       * \param plotconst Toggle constellation plot on/off
        * \param parent a QWidget parent object, if any
        */
       static sptr make(int fftsize, int wintype,

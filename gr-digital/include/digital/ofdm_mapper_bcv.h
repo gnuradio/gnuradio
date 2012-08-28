@@ -48,7 +48,7 @@ namespace gr {
       /*!
        * Make an OFDM mapper block.
        *
-       * \param sym_position vector of OFDM carrier symbols in complex space
+       * \param constellation vector of OFDM carrier symbols in complex space
        * \param msgq_limit limit on number of messages the queue can store
        * \param occupied_carriers The number of subcarriers with data in the received symbol
        * \param fft_length The size of the FFT vector (occupied_carriers + unused carriers)

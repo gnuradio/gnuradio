@@ -52,9 +52,9 @@ namespace gr {
        * Make an OFDM frame sink block.
        *
        * \param sym_position vector of OFDM carrier symbols in complex space
-       * \param sym_value vector of bit mapped from the complex symbol space
+       * \param sym_value_out vector of bit mapped from the complex symbol space
        * \param target_queue message queue for the packets to go into
-       * \param occupied_carriers The number of subcarriers with data in the received symbol
+       * \param occupied_tones The number of subcarriers with data in the received symbol
        * \param phase_gain gain of the phase tracking loop
        * \param freq_gain gain of the frequency tracking loop
        */

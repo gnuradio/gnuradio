@@ -91,6 +91,6 @@ channels.
 NOTE: you need the Scipy and Matplotlib Python modules installed to
 run this example.
 
-\include gnuradio-core/src/examples/pfb/channelize.py
+\include gr-filter/examples/channelize.py
 
 */

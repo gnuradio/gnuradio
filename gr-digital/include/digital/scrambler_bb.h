@@ -30,7 +30,7 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \breif Scramble an input stream using an LFSR.
+     * \brief Scramble an input stream using an LFSR.
      * \ingroup coding_blk
      *
      * This block works on the LSB only of the input data stream,

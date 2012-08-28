@@ -52,7 +52,7 @@ namespace gr {
       /*!
        * \brief Build a floating point PSD sink.
        *
-       * \param size size of the FFT to compute and display
+       * \param fftsize size of the FFT to compute and display
        * \param wintype type of window to apply (see filter/firdes.h)
        * \param fc center frequency of signal (use for x-axis labels)
        * \param bw bandwidth of signal (used to set x-axis labels)

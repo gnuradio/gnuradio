@@ -56,7 +56,7 @@ namespace gr {
      *
      * The output signal will be the basebanded and decimated signal
      * from that channel. This concept is very similar to the PFB
-     * channelizer (see #gr_pfb_channelizer_ccf) where only a single
+     * channelizer (see #gr::filter::pfb_channelizer_ccf) where only a single
      * channel is extracted at a time.
      *
      * The filter's taps should be based on the sampling rate before
