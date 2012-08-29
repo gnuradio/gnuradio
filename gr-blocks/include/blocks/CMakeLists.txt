@@ -120,6 +120,7 @@ install(FILES
     repeat.h
     short_to_char.h
     short_to_float.h
+    stream_mux.h
     uchar_to_float.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"

@@ -78,5 +78,6 @@
 		<block>blocks_keep_m_in_n.xml</block>
 		<block>blocks_keep_one_in_n.xml</block>
 		<block>blocks_repeat.xml</block>
+		<block>stream_mux.xml</block>
 	</cat>
 </cat>
