@@ -93,7 +93,9 @@ macro(check_arch arch_name)
             COMMAND ${PYTHON_EXECUTABLE} -c "import re; print(re.sub('\\W', '_', '${have_flag}'))"
             OUTPUT_VARIABLE have_flag OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        set(CMAKE_REQUIRED_FLAGS VOLK_FLAG_CHECK_FLAGS)
+        if(VOLK_FLAG_CHECK_FLAGS)
+            set(CMAKE_REQUIRED_FLAGS VOLK_FLAG_CHECK_FLAGS)
+        endif()
         CHECK_CXX_COMPILER_FLAG(${flag} ${have_flag})
         unset(CMAKE_REQUIRED_FLAGS)
         if (NOT ${have_flag})
