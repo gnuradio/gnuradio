@@ -44,18 +44,23 @@ $(' | '.join(['(1 << LV_%s)'%a.name.upper() for a in $archs]))#slurp
 #end def
 
 ########################################################################
-#def make_tag_str_list($tags)
-{$(', '.join(['"%s"'%a for a in $tags]))}#slurp
+#def make_impl_name_list($impls)
+{$(', '.join(['"%s"'%i.name for i in $impls]))}#slurp
 #end def
 
 ########################################################################
-#def make_tag_have_list($deps)
-{$(', '.join([' | '.join(['(1 << LV_%s)'%a.upper() for a in d]) for d in $deps]))}#slurp
+#def make_impl_align_list($impls)
+{$(', '.join(['true' if i.is_aligned else 'false' for i in $impls]))}#slurp
 #end def
 
 ########################################################################
-#def make_tag_kern_list($name, $tags)
-{$(', '.join(['%s_%s'%($name, a) for a in $tags]))}#slurp
+#def make_impl_deps_list($impls)
+{$(', '.join([' | '.join(['(1 << LV_%s)'%d.upper() for d in i.deps]) for i in $impls]))}#slurp
+#end def
+
+########################################################################
+#def make_impl_fcn_list($name, $impls)
+{$(', '.join(['%s_%s'%($name, i.name) for i in $impls]))}#slurp
 #end def
 
 struct volk_machine volk_machine_$(this_machine.name) = {
@@ -63,11 +68,12 @@ struct volk_machine volk_machine_$(this_machine.name) = {
     "$this_machine.name",
     $this_machine.alignment,
     #for $kern in $kernels
-        #set $taglist, $tagdeps = $kern.get_tags($arch_names)
-    "$kern.name",
-    $make_tag_str_list($taglist),
-    $make_tag_have_list($tagdeps),
-    $make_tag_kern_list($kern.name, $taglist),
-    $(len($taglist)),
+        #set $impls = $kern.get_impls($arch_names)
+    "$kern.name",                                   ##//kernel name
+    $make_impl_name_list($impls),                   ##//list of kernel implementations by name
+    $make_impl_deps_list($impls),                   ##//list of arch dependencies per implementation
+    $make_impl_align_list($impls),                  ##//alignment required? for each implementation
+    $make_impl_fcn_list($kern.name, $impls),        ##//pointer to each implementation
+    $(len($impls)),                                 ##//number of implementations listed here
     #end for
 };

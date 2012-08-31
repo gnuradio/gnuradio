@@ -21,7 +21,7 @@ volk_type_t volk_type_from_string(std::string);
 float uniform(void);
 void random_floats(float *buf, unsigned n);
 
-bool run_volk_tests(struct volk_func_desc, void(*)(), std::string, float, lv_32fc_t, int, int, std::vector<std::string> *, std::string);
+bool run_volk_tests(volk_func_desc_t, void(*)(), std::string, float, lv_32fc_t, int, int, std::vector<std::string> *, std::string);
 
 
 #define VOLK_RUN_TESTS(func, tol, scalar, len, iter) BOOST_AUTO_TEST_CASE(func##_test) { BOOST_CHECK_EQUAL(run_volk_tests(func##_get_func_desc(), (void (*)())func##_manual, std::string(#func), tol, scalar, len, iter, 0, "NULL"), 0); }

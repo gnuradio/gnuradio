@@ -2,7 +2,6 @@
 <grammar>
 
 <arch name="generic"> <!-- name is required-->
-  <alignment>1</alignment>
 </arch>
 
 <arch name="altivec">

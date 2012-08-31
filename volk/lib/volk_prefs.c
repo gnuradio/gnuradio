@@ -7,7 +7,8 @@
 //#include <Windows.h>
 //#endif
 
-void get_config_path(char *path) {
+void volk_get_config_path(char *path)
+{
     const char *suffix = "/.volk/volk_config";
     char *home = NULL;
     if (home == NULL) home = getenv("HOME");
@@ -20,38 +21,30 @@ void get_config_path(char *path) {
     strcat(path, suffix);
 }
 
-//passing by reference in C can (***********)
-int load_preferences(struct volk_arch_pref **prefs) {
+size_t volk_load_preferences(volk_arch_pref_t **prefs_res)
+{
     FILE *config_file;
-    char path[512], line[512], function[128], arch[32];
-    int n_arch_prefs = 0;
-    struct volk_arch_pref *t_pref;
+    char path[512], line[512];
+    size_t n_arch_prefs = 0;
+    volk_arch_pref_t *prefs = NULL;
 
     //get the config path
-    get_config_path(path);
+    volk_get_config_path(path);
     if (path == NULL) return n_arch_prefs; //no prefs found
     config_file = fopen(path, "r");
     if(!config_file) return n_arch_prefs; //no prefs found
 
-    while(fgets(line, 512, config_file) != NULL) {
-        if(sscanf(line, "%s %s", function, arch) == 2 && !strncmp(function, "volk_", 5)) {
+    //reset the file pointer and write the prefs into volk_arch_prefs
+    while(fgets(line, sizeof(line), config_file) != NULL)
+    {
+        prefs = (volk_arch_pref_t *) realloc(prefs, (n_arch_prefs+1) * sizeof(*prefs));
+        volk_arch_pref_t *p = prefs + n_arch_prefs;
+        if(sscanf(line, "%s %s %s", p->name, p->impl_a, p->impl_u) == 3 && !strncmp(p->name, "volk_", 5))
+        {
             n_arch_prefs++;
         }
     }
-
-    //now allocate the memory required for volk_arch_prefs
-    (*prefs) = (struct volk_arch_pref *) malloc(n_arch_prefs * sizeof(struct volk_arch_pref));
-    t_pref = (*prefs);
-
-    //reset the file pointer and write the prefs into volk_arch_prefs
-    rewind(config_file);
-    while(fgets(line, 512, config_file) != NULL) {
-        if(sscanf(line, "%s %s", function, arch) == 2 && !strncmp(function, "volk_", 5)) {
-            strncpy(t_pref->name, function, 128);
-            strncpy(t_pref->arch, arch, 32);
-            t_pref++;
-        }
-    }
     fclose(config_file);
+    *prefs_res = prefs;
     return n_arch_prefs;
 }

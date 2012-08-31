@@ -24,201 +24,186 @@ import re
 import sys
 import glob
 
-from volk_arch_defs import archs
-
-remove_after_underscore = re.compile("_.*");
-space_remove = re.compile(" ");
-leading_space_remove = re.compile("^ *");
-replace_arch = re.compile(", const char\* arch");
-replace_bracket = re.compile(" {");
-replace_volk = re.compile("volk");
-
-def strip_trailing(tostrip, stripstr):
-    lindex = tostrip.rfind(stripstr)
-    tostrip = tostrip[0:lindex] + tostrip[lindex:len(tostrip)].replace(stripstr, "");
-    return tostrip
-
-srcdir = os.path.dirname(os.path.dirname(__file__))
-hdr_files = glob.glob(os.path.join(srcdir, "include/volk/*.h"))
-
-datatypes = [];
-functions = [];
-
-for line in hdr_files:
-    subline = re.search(".*_(a|u)\.h.*", os.path.basename(line))
-    if subline:
-        subsubline = re.search("(?<=volk_).*", subline.group(0));
-        if subsubline:
-            dtype = remove_after_underscore.sub("", subsubline.group(0));
-            subdtype = re.search("[0-9]+[A-z]+", dtype);
-            if subdtype:
-                datatypes.append(subdtype.group(0));
-
-
-datatypes = set(datatypes);
-
-for line in hdr_files:
-    for dt in datatypes:
-        if dt in line:
-            subline = re.search("(volk_" + dt +"_.*(a|u).*\.h)", line);
-            if subline:
-
-                subsubline = re.search(".+(?=\.h)", subline.group(0));
-                functions.append(subsubline.group(0));
-
-archs_or = "("
-for arch in archs:
-    archs_or = archs_or + arch.name.upper() + "|";
-archs_or = archs_or[0:len(archs_or)-1];
-archs_or = archs_or + ")";
-
-taglist = [];
-fcountlist = [];
-arched_arglist = [];
-retlist = [];
-my_arglist = [];
-my_argtypelist = [];
-for func in functions:
-    tags = [];
-    fcount = [];
-    infile_source = open(os.path.join(srcdir, 'include', 'volk', func + ".h"))
-    begun_name = 0;
-    begun_paren = 0;
-    sourcefile = infile_source.readlines();
-    infile_source.close();
-    for line in sourcefile:
-#FIXME: make it work for multiple #if define()s
-        archline = re.search("^\#if.*?LV_HAVE_" + archs_or + ".*", line);
-        if archline:
-            arch = archline.group(0);
-            archline = re.findall(archs_or + "(?=( |\n|&))", line);
-            if archline:
-                archsublist = [];
-                for tup in archline:
-                    archsublist.append(tup[0]);
-                fcount.append(archsublist);
-        testline = re.search("static inline.*?" + func, line);
-        if (not testline):
-            continue
-        tagline = re.search(func + "_.+", line);
-        if tagline:
-            tag = re.search("(?<=" + func + "_)\w+(?= *\()",line);
-            if tag:
-                tag = re.search("\w+", tag.group(0));
-                if tag:
-                    tags.append(tag.group(0));
-
-
-        if begun_name == 0:
-            retline = re.search(".+(?=" + func + ")", line);
-            if retline:
-                ret = retline.group(0);
-
-
-
-
-            subline = re.search(func + ".*", line);
-            if subline:
-                subsubline = re.search("\(.*?\)", subline.group(0));
-                if subsubline:
-                    args = subsubline.group(0);
-
-                else:
-                    begun_name = 1;
-                    subsubline = re.search("\(.*", subline.group(0));
-                    if subsubline:
-                        args = subsubline.group(0);
-                        begun_paren = 1;
+########################################################################
+# Strip comments from a c/cpp file.
+# Input is code string, output is code string without comments.
+# http://stackoverflow.com/questions/241327/python-snippet-to-remove-c-and-c-comments
+########################################################################
+def comment_remover(text):
+    def replacer(match):
+        s = match.group(0)
+        if s.startswith('/'):
+            return ""
         else:
-            if begun_paren == 1:
-                subline = re.search(".*?\)", line);
-                if subline:
-                    args = args + subline.group(0);
-                    begun_name = 0;
-                    begun_paren = 0;
-                else:
-                    subline = re.search(".*", line);
-                    args = args + subline.group(0);
-            else:
-                subline = re.search("\(.*?\)", line);
-                if subline:
-                    args = subline.group(0);
-                    begun_name = 0;
-                else:
-                    subline = re.search("\(.*", line);
-                    if subline:
-                        args = subline.group(0);
-                        begun_paren = 1;
+            return s
+    pattern = re.compile(
+        r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"',
+        re.DOTALL | re.MULTILINE
+    )
+    return re.sub(pattern, replacer, text)
 
-    replace = re.compile("static ");
-    ret = replace.sub("", ret);
-    replace = re.compile("inline ");
-    ret = replace.sub("", ret);
-    arched_args = args[args.find('(')+1:args.find(')')]
+########################################################################
+# Split code into nested sections according to ifdef preprocessor macros
+########################################################################
+def split_into_nested_ifdef_sections(code):
+    sections = list()
+    section = ''
+    header = 'text'
+    in_section_depth = 0
+    for i, line in enumerate(code.splitlines()):
+        m = re.match('^(\s*)#(\s*)(\w+)(.*)$', line)
+        line_is = 'normal'
+        if m:
+            p0, p1, fcn, stuff = m.groups()
+            if fcn in ('if', 'ifndef', 'ifdef'): line_is = 'if'
+            if fcn in ('else', 'elif'): line_is = 'else'
+            if fcn in ('endif',): line_is = 'end'
 
-    remove = re.compile('\)|\(|{');
-    rargs = remove.sub("", args);
-    sargs = rargs.split(',');
+        if line_is == 'if': in_section_depth += 1
+        if line_is == 'end': in_section_depth -= 1
 
+        if in_section_depth == 1 and line_is == 'if':
+            sections.append((header, section))
+            section = ''
+            header = line
+            continue
 
+        if in_section_depth == 1 and line_is == 'else':
+            sections.append((header, section))
+            section = ''
+            header = line
+            continue
 
-    margs = [];
-    atypes = [];
-    for arg in sargs:
-        temp = arg.split(" ");
-        margs.append(temp[-1]);
-        replace = re.compile(" " + temp[-1]);
-        atypes.append(replace.sub("", arg));
+        if in_section_depth == 0 and line_is == 'end':
+            sections.append((header, section))
+            section = ''
+            header = 'text'
+            continue
 
+        section += line + '\n'
 
-    my_args = ""
-    arg_types = ""
-    for arg in range(0, len(margs) - 1):
-        this_arg = leading_space_remove.sub("", margs[arg]);
-        my_args = my_args + this_arg + ", ";
-        this_type = leading_space_remove.sub("", atypes[arg]);
-        arg_types = arg_types + this_type + ", ";
+    sections.append((header, section)) #and pack remainder into sections
+    sections = [sec for sec in sections if sec[1].strip()] #filter empty sections
 
-    this_arg = leading_space_remove.sub("", margs[-1]);
-    my_args = my_args + this_arg;
-    this_type = leading_space_remove.sub("", atypes[-1]);
-    arg_types = arg_types + this_type;
-    my_argtypelist.append(arg_types);
+    #recurse into non-text sections to fill subsections
+    for i, (header, section) in enumerate(sections):
+        if header == 'text': continue
+        sections[i] = (header, split_into_nested_ifdef_sections(section))
 
-    if(ret[-1] != ' '):
-        ret = ret + ' ';
+    return sections
 
-    arched_arglist.append(arched_args); #!!!!!!!!!!!
-    my_arglist.append(my_args) #!!!!!!!!!!!!!!!!!
-    retlist.append(ret);
-    fcountlist.append(fcount);
-    taglist.append(tags);
+########################################################################
+# Recursive print of sections to test code above
+########################################################################
+def print_sections(sections, indent = '  '):
+    for header, body in sections:
+        if header == 'text':
+            print indent, ('\n'+indent).join(body.splitlines())
+            continue
+        print indent.replace(' ', '-') + '>', header
+        print_sections(body, indent + '  ')
 
-class kernel_class:
-    def __init__(self, index):
-        self.name = functions[index]
-        self.pname = self.name.replace('volk_', 'p_')
-        self.rettype = retlist[index]
-        self.arglist_defs = my_argtypelist[index]
-        self.arglist_namedefs = arched_arglist[index]
-        self.arglist_names = my_arglist[index]
-        self._tagdeps = fcountlist[index]
-        self._taglist = taglist[index]
+########################################################################
+# Flatten a section to just body text
+########################################################################
+def flatten_section_text(sections):
+    output = ''
+    for hdr, bdy in sections:
+        if hdr != 'text': output += flatten_section_text(bdy)
+        else: output += bdy
+    return output
 
-    def get_tags(self, archs):
-        def is_in(x): return x.lower() in archs
-        taglist = list()
-        tagdeps = list()
-        for i in range(len(self._tagdeps)):
-            if all(map(is_in, self._tagdeps[i])):
-                taglist.append(self._taglist[i])
-                tagdeps.append(self._tagdeps[i])
-        return taglist, tagdeps
+########################################################################
+# Extract kernel info from section, represent as an implementation
+########################################################################
+class impl_class:
+    def __init__(self, kern_name, header, body):
+        #extract LV_HAVE_*
+        self.deps = set(map(str.lower, re.findall('LV_HAVE_(\w+)', header)))
+        #extract function suffix and args
+        body = flatten_section_text(body)
+        try:
+            fcn_matcher = re.compile('^.*(%s\\w*)\\s*\\((.*)$'%kern_name, re.DOTALL | re.MULTILINE)
+            body = body.split('{')[0].rsplit(')', 1)[0] #get the part before the open ){ bracket
+            m = fcn_matcher.match(body)
+            impl_name, the_rest = m.groups()
+            self.name = impl_name.replace(kern_name+'_', '')
+            self.args = list()
+            fcn_args = the_rest.split(',')
+            for fcn_arg in fcn_args:
+                arg_matcher = re.compile('^\s*(.*\\W)\s*(\w+)\s*$', re.DOTALL | re.MULTILINE)
+                m = arg_matcher.match(fcn_arg)
+                arg_type, arg_name = m.groups()
+                self.args.append((arg_type, arg_name))
+        except Exception as ex:
+            raise Exception, 'I cant parse the function prototype from: %s in %s\n%s'%(kern_name, body, ex)
+
+        assert self.name
+        self.is_aligned = self.name.startswith('a_')
 
     def __repr__(self):
         return self.name
 
-kernels = map(kernel_class, range(len(retlist)))
+########################################################################
+# Get sets of LV_HAVE_* from the code
+########################################################################
+def extract_lv_haves(code):
+    haves = list()
+    for line in code.splitlines():
+        if not line.strip().startswith('#'): continue
+        have_set = set(map(str.lower, re.findall('LV_HAVE_(\w+)', line)))
+        if have_set: haves.append(have_set)
+    return haves
+
+########################################################################
+# Represent a processing kernel, parse from file
+########################################################################
+class kernel_class:
+    def __init__(self, kernel_file):
+        self.name = os.path.splitext(os.path.basename(kernel_file))[0]
+        self.pname = self.name.replace('volk_', 'p_')
+        code = open(kernel_file, 'r').read()
+        code = comment_remover(code)
+        sections = split_into_nested_ifdef_sections(code)
+        self._impls = list()
+        for header, section in sections:
+            if 'ifndef' not in header.lower(): continue
+            for sub_hdr, body in section:
+                if 'if' not in sub_hdr.lower(): continue
+                if 'LV_HAVE_' not in sub_hdr: continue
+                self._impls.append(impl_class(
+                    kern_name=self.name, header=sub_hdr, body=body,
+                ))
+        assert(self._impls)
+        self.has_dispatcher = False
+        for impl in self._impls:
+            if impl.name == 'dispatcher':
+                self._impls.remove(impl)
+                self.has_dispatcher = True
+                break
+        self.args = self._impls[0].args
+        self.arglist_types = ', '.join([a[0] for a in self.args])
+        self.arglist_full = ', '.join(['%s %s'%a for a in self.args])
+        self.arglist_names = ', '.join([a[1] for a in self.args])
+
+    def get_impls(self, archs):
+        archs = set(archs)
+        impls = list()
+        for impl in self._impls:
+            if impl.deps.intersection(archs) == impl.deps:
+                impls.append(impl)
+        return impls
+
+    def __repr__(self):
+        return self.name
+
+########################################################################
+# Extract information from the VOLK kernels
+########################################################################
+__file__ = os.path.abspath(__file__)
+srcdir = os.path.dirname(os.path.dirname(__file__))
+kernel_files = glob.glob(os.path.join(srcdir, "kernels", "volk", "*.h"))
+kernels = map(kernel_class, kernel_files)
 
 if __name__ == '__main__':
     print kernels
