@@ -10,7 +10,9 @@
 #ifdef LV_HAVE_GENERIC
 
 
-static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+  const unsigned int num_bytes = num_points*8;
 
   float * res = (float*) result;
   float * in = (float*) input;
@@ -46,8 +48,9 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const
 #if LV_HAVE_SSE && LV_HAVE_64
 
 
-static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
 
+  const unsigned int num_bytes = num_points*8;
 
   asm
     (
@@ -175,11 +178,11 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const 
 
 #if LV_HAVE_SSE && LV_HAVE_32
 
-static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
-
-  volk_32fc_x2_dot_prod_32fc_a_generic(result, input, taps, num_bytes);
+static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+  volk_32fc_x2_dot_prod_32fc_a_generic(result, input, taps, num_points);
 
 #if 0
+  const unsigned int num_bytes = num_points*8;
   asm volatile
     (
      "	#pushl	%%ebp\n\t"
@@ -299,8 +302,9 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const 
 
 #include <pmmintrin.h>
 
-static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
 
+  const unsigned int num_bytes = num_points*8;
 
   lv_32fc_t dotProduct;
   memset(&dotProduct, 0x0, 2*sizeof(float));
@@ -356,7 +360,9 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv
 
 #include <smmintrin.h>
 
-static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_bytes) {
+static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+    const unsigned int num_bytes = num_points*8;
 
     __m128 xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, real0, real1, im0, im1;
     float *p_input, *p_taps;

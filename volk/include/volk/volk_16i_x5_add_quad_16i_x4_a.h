@@ -13,7 +13,9 @@
 #include<xmmintrin.h>
 #include<emmintrin.h>
 
-static inline  void volk_16i_x5_add_quad_16i_x4_a_sse2(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_bytes) {
+static inline  void volk_16i_x5_add_quad_16i_x4_a_sse2(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_points) {
+
+  const unsigned int num_bytes = num_points*2;
 
   __m128i xmm0, xmm1, xmm2, xmm3, xmm4;
   __m128i *p_target0, *p_target1, *p_target2, *p_target3,  *p_src0, *p_src1, *p_src2, *p_src3, *p_src4;
@@ -113,7 +115,9 @@ static inline  void volk_16i_x5_add_quad_16i_x4_a_sse2(short* target0, short* ta
 
 #ifdef LV_HAVE_GENERIC
 
-static inline void volk_16i_x5_add_quad_16i_x4_a_generic(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_bytes) {
+static inline void volk_16i_x5_add_quad_16i_x4_a_generic(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_points) {
+
+	const unsigned int num_bytes = num_points*2;
 
 	int i = 0;
 

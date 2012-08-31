@@ -9,8 +9,9 @@
 #include<xmmintrin.h>
 #include<pmmintrin.h>
 
-static inline void volk_32fc_x2_square_dist_32f_a_sse3(float* target, lv_32fc_t* src0, lv_32fc_t* points, unsigned int num_bytes) {
+static inline void volk_32fc_x2_square_dist_32f_a_sse3(float* target, lv_32fc_t* src0, lv_32fc_t* points, unsigned int num_points) {
 
+  const unsigned int num_bytes = num_points*8;
 
   __m128 xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7;
 
@@ -92,7 +93,10 @@ static inline void volk_32fc_x2_square_dist_32f_a_sse3(float* target, lv_32fc_t*
 #endif /*LV_HAVE_SSE3*/
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_32fc_x2_square_dist_32f_a_generic(float* target, lv_32fc_t* src0, lv_32fc_t* points, unsigned int num_bytes) {
+static inline void volk_32fc_x2_square_dist_32f_a_generic(float* target, lv_32fc_t* src0, lv_32fc_t* points, unsigned int num_points) {
+
+  const unsigned int num_bytes = num_points*8;
+
   lv_32fc_t diff;
   float sq_dist;
   unsigned int i = 0;

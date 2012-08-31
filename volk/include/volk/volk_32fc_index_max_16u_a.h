@@ -11,9 +11,9 @@
 #include<pmmintrin.h>
 
 
-static inline void volk_32fc_index_max_16u_a_sse3(unsigned int* target, lv_32fc_t* src0, unsigned int num_bytes) {
+static inline void volk_32fc_index_max_16u_a_sse3(unsigned int* target, lv_32fc_t* src0, unsigned int num_points) {
 
-
+  const unsigned int num_bytes = num_points*8;
 
   union bit128 holderf;
   union bit128 holderi;
@@ -189,7 +189,10 @@ static inline void volk_32fc_index_max_16u_a_sse3(unsigned int* target, lv_32fc_
 #endif /*LV_HAVE_SSE3*/
 
 #ifdef LV_HAVE_GENERIC
-static inline void volk_32fc_index_max_16u_a_generic(unsigned int* target, lv_32fc_t* src0, unsigned int num_bytes) {
+static inline void volk_32fc_index_max_16u_a_generic(unsigned int* target, lv_32fc_t* src0, unsigned int num_points) {
+
+  const unsigned int num_bytes = num_points*8;
+
   float sq_dist = 0.0;
   float max = 0.0;
   unsigned int index = 0;

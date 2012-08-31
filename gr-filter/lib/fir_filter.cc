@@ -424,7 +424,7 @@ namespace gr {
 
 	volk_32fc_x2_dot_prod_32fc_a(d_output, ar,
 				     d_aligned_taps[al],
-				     (d_ntaps+al)*sizeof(gr_complex));
+				     (d_ntaps+al));
 	return *d_output;
       }
       
