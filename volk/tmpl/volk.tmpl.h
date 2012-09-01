@@ -75,9 +75,6 @@ extern VOLK_API $kern.pname $(kern.name)_a;
 //! A function pointer to the fastest unaligned implementation
 extern VOLK_API $kern.pname $(kern.name)_u;
 
-//! A function pointer to the generic implementation
-extern VOLK_API $kern.pname $(kern.name)_g;
-
 //! Call into a specific implementation given by name
 extern VOLK_API void $(kern.name)_manual($kern.arglist_full, const char* impl_name);
 

@@ -111,16 +111,8 @@ static inline void __init_$(kern.name)(void)
     $(kern.name)_a = get_machine()->$(kern.name)_impls[index_a];
     $(kern.name)_u = get_machine()->$(kern.name)_impls[index_u];
 
-    size_t i;
-    for (i = 0; i < n_impls; i++){
-        if (strcmp("generic", impl_names[i]) == 0){
-            $(kern.name)_g = get_machine()->$(kern.name)_impls[i];
-        }
-    }
-
     assert($(kern.name)_a);
     assert($(kern.name)_u);
-    assert($(kern.name)_g);
 
     $(kern.name) = &__$(kern.name)_d;
 }
@@ -137,12 +129,6 @@ static inline void __$(kern.name)_u($kern.arglist_full)
     $(kern.name)_u($kern.arglist_names);
 }
 
-static inline void __$(kern.name)_g($kern.arglist_full)
-{
-    __init_$(kern.name)();
-    $(kern.name)_g($kern.arglist_names);
-}
-
 static inline void __$(kern.name)($kern.arglist_full)
 {
     __init_$(kern.name)();
@@ -151,7 +137,6 @@ static inline void __$(kern.name)($kern.arglist_full)
 
 $kern.pname $(kern.name)_a = &__$(kern.name)_a;
 $kern.pname $(kern.name)_u = &__$(kern.name)_u;
-$kern.pname $(kern.name)_g = &__$(kern.name)_g;
 $kern.pname $(kern.name)   = &__$(kern.name);
 
 void $(kern.name)_manual($kern.arglist_full, const char* impl_name)
