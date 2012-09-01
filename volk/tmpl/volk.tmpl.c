@@ -67,6 +67,7 @@ bool volk_is_aligned(const void *ptr)
     return ((intptr_t)(ptr) & __alignment_mask) == 0;
 }
 
+#define LV_HAVE_GENERIC
 #define LV_HAVE_DISPATCHER
 
 #for $kern in $kernels
