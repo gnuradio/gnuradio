@@ -124,6 +124,7 @@ install(FILES
     stream_to_streams.h
     stream_to_vector.h
     streams_to_stream.h
+    streams_to_vector.h
     uchar_to_float.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"

@@ -102,6 +102,7 @@
 #include "blocks/stream_to_streams.h"
 #include "blocks/stream_to_vector.h"
 #include "blocks/streams_to_stream.h"
+#include "blocks/streams_to_vector.h"
 #include "blocks/sub_ff.h"
 #include "blocks/sub_ss.h"
 #include "blocks/sub_ii.h"
@@ -186,6 +187,7 @@
 %include "blocks/stream_to_streams.h"
 %include "blocks/stream_to_vector.h"
 %include "blocks/streams_to_stream.h"
+%include "blocks/streams_to_vector.h"
 %include "blocks/sub_ff.h"
 %include "blocks/sub_ss.h"
 %include "blocks/sub_ii.h"
@@ -269,6 +271,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, stream_mux);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_streams);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_vector);
 GR_SWIG_BLOCK_MAGIC2(blocks, streams_to_stream);
+GR_SWIG_BLOCK_MAGIC2(blocks, streams_to_vector);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
