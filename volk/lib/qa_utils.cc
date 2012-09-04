@@ -63,12 +63,12 @@ void load_random_data(void *data, volk_type_t type, unsigned int n) {
     }
 }
 
-static std::vector<std::string> get_arch_list(struct volk_func_desc desc) {
+static std::vector<std::string> get_arch_list(volk_func_desc_t desc) {
     std::vector<std::string> archlist;
 
-    for(int i = 0; i < desc.n_archs; i++) {
+    for(size_t i = 0; i < desc.n_impls; i++) {
         //if(!(archs[i+1] & volk_get_lvarch())) continue; //this arch isn't available on this pc
-        archlist.push_back(std::string(desc.indices[i]));
+        archlist.push_back(std::string(desc.impl_names[i]));
     }
 
     return archlist;
@@ -256,7 +256,7 @@ public:
 private: std::list<std::vector<char> > _mems;
 };
 
-bool run_volk_tests(struct volk_func_desc desc,
+bool run_volk_tests(volk_func_desc_t desc,
                     void (*manual_func)(),
                     std::string name,
                     float tol,
@@ -442,22 +442,32 @@ bool run_volk_tests(struct volk_func_desc desc,
         arch_results.push_back(!fail);
     }
 
-    double best_time = std::numeric_limits<double>::max();
-    std::string best_arch = "generic";
-    for(size_t i=0; i < arch_list.size(); i++) {
-        if((profile_times[i] < best_time) && arch_results[i]) {
-            best_time = profile_times[i];
-            best_arch = arch_list[i];
+    double best_time_a = std::numeric_limits<double>::max();
+    double best_time_u = std::numeric_limits<double>::max();
+    std::string best_arch_a = "generic";
+    std::string best_arch_u = "generic";
+    for(size_t i=0; i < arch_list.size(); i++)
+    {
+        if((profile_times[i] < best_time_u) && arch_results[i] && desc.impl_alignment[i] == 0)
+        {
+            best_time_u = profile_times[i];
+            best_arch_u = arch_list[i];
+        }
+        if((profile_times[i] < best_time_a) && arch_results[i])
+        {
+            best_time_a = profile_times[i];
+            best_arch_a = arch_list[i];
         }
     }
 
-    std::cout << "Best arch: " << best_arch << std::endl;
+    std::cout << "Best aligned arch: " << best_arch_a << std::endl;
+    std::cout << "Best unaligned arch: " << best_arch_u << std::endl;
     if(best_arch_vector) {
         if(puppet_master_name == "NULL") {
-            best_arch_vector->push_back(name + std::string(" ") + best_arch);
+            best_arch_vector->push_back(name + " " + best_arch_a + " " + best_arch_u);
         }
         else {
-            best_arch_vector->push_back(puppet_master_name + std::string(" ") + best_arch);
+            best_arch_vector->push_back(puppet_master_name + " " + best_arch_a + " " + best_arch_u);
         }
     }
 
