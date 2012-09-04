@@ -109,7 +109,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
 
         self.tb.run()
         self.assertEqual(expected_results, dst.data())
-    """
+
     def test_004(self):
 
         #Test vector_to_streams.
@@ -132,7 +132,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
 
         self.tb.run()
         self.assertEqual(expected_results, dst.data())
-    """
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_pipe_fittings, "test_pipe_fittings.xml")

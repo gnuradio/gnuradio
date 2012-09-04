@@ -84,5 +84,6 @@
 		<block>streams_to_stream.xml</block>
 		<block>streams_to_vector.xml</block>
 		<block>vector_to_stream.xml</block>
+		<block>vector_to_streams.xml</block>
 	</cat>
 </cat>
