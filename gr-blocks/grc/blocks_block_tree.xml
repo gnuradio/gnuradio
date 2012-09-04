@@ -83,5 +83,6 @@
 		<block>stream_to_vector.xml</block>
 		<block>streams_to_stream.xml</block>
 		<block>streams_to_vector.xml</block>
+		<block>vector_to_stream.xml</block>
 	</cat>
 </cat>

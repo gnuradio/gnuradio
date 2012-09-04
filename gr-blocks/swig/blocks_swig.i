@@ -108,6 +108,7 @@
 #include "blocks/sub_ii.h"
 #include "blocks/sub_cc.h"
 #include "blocks/uchar_to_float.h"
+#include "blocks/vector_to_stream.h"
 #include "blocks/xor_bb.h"
 #include "blocks/xor_ss.h"
 #include "blocks/xor_ii.h"
@@ -193,6 +194,7 @@
 %include "blocks/sub_ii.h"
 %include "blocks/sub_cc.h"
 %include "blocks/uchar_to_float.h"
+%include "blocks/vector_to_stream.h"
 %include "blocks/xor_bb.h"
 %include "blocks/xor_ss.h"
 %include "blocks/xor_ii.h"
@@ -277,6 +279,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, uchar_to_float);
+GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_ii);
