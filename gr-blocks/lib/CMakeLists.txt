@@ -160,6 +160,7 @@ list(APPEND gr_blocks_sources
     stream_mux_impl.cc
     stream_to_streams_impl.cc
     stream_to_vector_impl.cc
+    streams_to_stream_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
 )

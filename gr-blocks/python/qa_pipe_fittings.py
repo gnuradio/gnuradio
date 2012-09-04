@@ -64,7 +64,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
 
         for d in range(n):
             self.assertEqual(expected_results[d], dsts[d].data())
-    """
+
     def test_002(self):
 
         # Test streams_to_stream (using stream_to_streams).
@@ -87,6 +87,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(expected_results, dst.data())
 
+    """
     def test_003(self):
 
         #Test streams_to_vector (using stream_to_streams & vector_to_stream).

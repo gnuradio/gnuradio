@@ -81,5 +81,6 @@
 		<block>stream_mux.xml</block>
 		<block>stream_to_streams.xml</block>
 		<block>stream_to_vector.xml</block>
+		<block>streams_to_stream.xml</block>
 	</cat>
 </cat>
