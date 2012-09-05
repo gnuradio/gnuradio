@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, filter
 import sys
 
 try:
@@ -142,7 +142,7 @@ class my_top_block(gr.top_block):
         src1 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
         src  = gr.add_cc()
-        channel = gr.channel_model(0.01)
+        channel = filter.channel_model(0.01)
         thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.time_sink_c(npts, Rs,
                                       "Complex Time Example", 1)

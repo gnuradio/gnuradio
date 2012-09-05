@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru
+from gnuradio import gr, gru, filter
 
 _plot = None
 
@@ -105,7 +105,7 @@ class rational_resampler_fff(_rational_resampler_base):
         Rational resampling polyphase FIR filter with
         float input, float output and float taps.
         """
-        _rational_resampler_base.__init__(self, gr.rational_resampler_base_fff,
+        _rational_resampler_base.__init__(self, filter.rational_resampler_base_fff,
 				          interpolation, decimation, taps, fractional_bw)
 
 class rational_resampler_ccf(_rational_resampler_base):
@@ -114,7 +114,7 @@ class rational_resampler_ccf(_rational_resampler_base):
         Rational resampling polyphase FIR filter with
         complex input, complex output and float taps.
         """
-        _rational_resampler_base.__init__(self, gr.rational_resampler_base_ccf,
+        _rational_resampler_base.__init__(self, filter.rational_resampler_base_ccf,
                                           interpolation, decimation, taps, fractional_bw)
 
 class rational_resampler_ccc(_rational_resampler_base):
@@ -123,5 +123,5 @@ class rational_resampler_ccc(_rational_resampler_base):
         Rational resampling polyphase FIR filter with
         complex input, complex output and complex taps.
         """
-        _rational_resampler_base.__init__(self, gr.rational_resampler_base_ccc,
+        _rational_resampler_base.__init__(self, filter.rational_resampler_base_ccc,
                                           interpolation, decimation, taps, fractional_bw)

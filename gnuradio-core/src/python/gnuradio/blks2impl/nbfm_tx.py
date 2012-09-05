@@ -20,7 +20,7 @@
 #
 
 import math
-from gnuradio import gr, optfir
+from gnuradio import gr, optfir, filter
 from gnuradio.blks2impl.fm_emph import fm_preemph
 
 #from gnuradio import ctcss
@@ -66,7 +66,7 @@ class nbfm_tx(gr.hier_block2):
                                            40)              # stopband atten dB
 
             #print "len(interp_taps) =", len(interp_taps)
-            self.interpolator = gr.interp_fir_filter_fff (interp_factor, interp_taps)
+            self.interpolator = filter.interp_fir_filter_fff (interp_factor, interp_taps)
 
         self.preemph = fm_preemph (quad_rate, tau=tau)
 

@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blks2
-from gnuradio import filter
+from gnuradio import gr, blks2, filter
 import sys, math, time
 
 try:
@@ -84,7 +83,7 @@ class fmtest(gr.top_block):
 
         self.head = gr.head(gr.sizeof_gr_complex, self._nsamples)
         self.snk_tx = gr.vector_sink_c()
-        self.channel = blks2.channel_model(0.1)
+        self.channel = filter.channel_model(0.1)
 
         self.connect(self.sum, self.head, self.channel, self.snk_tx)
 

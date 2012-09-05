@@ -64,7 +64,7 @@ def main():
 
     src = gr.vector_source_b(data.astype(scipy.uint8).tolist(), False)
     mod = digital.bpsk_mod(samples_per_symbol=2)
-    chan = gr.channel_model(npwr)
+    chan = filter.channel_model(npwr)
     rrc = filter.fft_filter_ccc(1, rrc_taps)
 
     # Split it up into pieces

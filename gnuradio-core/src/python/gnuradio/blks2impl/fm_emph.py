@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, filter
 import math
 
 
@@ -68,7 +68,7 @@ class fm_deemph(gr.hier_block2):
             global plot1
             plot1 = gru.gnuplot_freqz (gru.freqz (btaps, ataps), fs, True)
 
-        deemph = gr.iir_filter_ffd(btaps, ataps)
+        deemph = filter.iir_filter_ffd(btaps, ataps)
 	self.connect(self, deemph, self)
 
 #
@@ -147,5 +147,5 @@ class fm_preemph(gr.hier_block2):
             global plot2
             plot2 = gru.gnuplot_freqz (gru.freqz (btaps, ataps), fs, True)
 
-        preemph = gr.iir_filter_ffd(btaps, ataps)
+        preemph = filter.iir_filter_ffd(btaps, ataps)
 	self.connect(self, preemph, self)

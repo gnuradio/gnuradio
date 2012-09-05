@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, filter
 import sys
 
 try:
@@ -142,7 +142,7 @@ class my_top_block(gr.top_block):
         src1 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f1, 0.5, 0)
         src2 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f2, 0.5, 0)
         src  = gr.add_cc()
-        channel = gr.channel_model(0.001)
+        channel = filter.channel_model(0.001)
         thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.const_sink_c(npts, "Constellation Example", 1)
 
