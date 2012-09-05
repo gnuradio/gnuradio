@@ -64,6 +64,8 @@
 		<block>gr_fft_vxx</block>
 		<block>blks2_logpwrfft_x</block>
 		<block>gr_vector_insert_x</block>
+
+        <block>gr_endian_swap</block>
 	</cat>
 	<cat>
 		<name>Type Conversions</name>

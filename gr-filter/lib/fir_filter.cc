@@ -34,7 +34,7 @@ namespace gr {
 				     const std::vector<float> &taps)
       {
 	d_align = volk_get_alignment();
-	d_naligned = d_align / sizeof(float);
+	d_naligned = std::max((size_t)1, d_align / sizeof(float));
 
 	d_aligned_taps = NULL;
 	set_taps(taps);
@@ -139,7 +139,7 @@ namespace gr {
 				     const std::vector<float> &taps)
       {
 	d_align = volk_get_alignment();
-	d_naligned = d_align / sizeof(gr_complex);
+	d_naligned = std::max((size_t)1, d_align / sizeof(gr_complex));
 
 	d_aligned_taps = NULL;
 	set_taps(taps);
@@ -246,7 +246,7 @@ namespace gr {
 				     const std::vector<gr_complex> &taps)
       {
 	d_align = volk_get_alignment();
-	d_naligned = d_align / sizeof(float);
+	d_naligned = std::max((size_t)1, d_align / sizeof(float));
 
 	d_aligned_taps = NULL;
 	set_taps(taps);
@@ -352,7 +352,7 @@ namespace gr {
 				     const std::vector<gr_complex> &taps)
       {
 	d_align = volk_get_alignment();
-	d_naligned = d_align / sizeof(gr_complex);
+	d_naligned = std::max((size_t)1, d_align / sizeof(gr_complex));
 
 	d_aligned_taps = NULL;
 	set_taps(taps);
@@ -457,7 +457,7 @@ namespace gr {
 				     const std::vector<gr_complex> &taps)
       {
 	d_align = volk_get_alignment();
-	d_naligned = d_align / sizeof(short);
+	d_naligned = std::max((size_t)1, d_align / sizeof(short));
 
 	d_aligned_taps = NULL;
 	set_taps(taps);
@@ -563,7 +563,7 @@ namespace gr {
 				     const std::vector<float> &taps)
       {
 	d_align = volk_get_alignment();
-	d_naligned = d_align / sizeof(float);
+	d_naligned = std::max((size_t)1, d_align / sizeof(float));
 
 	d_aligned_taps = NULL;
 	set_taps(taps);
