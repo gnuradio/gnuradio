@@ -29,6 +29,10 @@
 <cat>
  	<name></name> <!-- Blank for Root Name -->
 	<cat>
+	        <name>Sources (New)</name>
+		<block>blocks_file_source</block>
+	</cat>
+	<cat>
 		<name>Math Operations (New) </name>
 		<block>blocks_add_xx</block>
 		<block>blocks_add_const_vxx</block>

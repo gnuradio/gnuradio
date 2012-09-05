@@ -101,6 +101,7 @@ install(FILES
     complex_to_arg.h
     conjugate_cc.h
     deinterleave.h
+    file_source.h
     float_to_char.h
     float_to_complex.h
     float_to_int.h
