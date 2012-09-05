@@ -27,6 +27,7 @@ import ConfigParser
 import os
 import os.path
 import sys
+import glob
 
 
 def _user_prefs_filename():
@@ -53,18 +54,18 @@ class _prefs(_prefs_base):
     invoke the methods in this python class.
     """
     def __init__(self):
-	_prefs_base.__init__(self)
-	self.cp = ConfigParser.RawConfigParser()
-	self.__getattr__ = lambda self, name: getattr(self.cp, name)
+        _prefs_base.__init__(self)
+        self.cp = ConfigParser.RawConfigParser()
+        self.__getattr__ = lambda self, name: getattr(self.cp, name)
 
     def _sys_prefs_filenames(self):
         dir = _sys_prefs_dirname()
         try:
-            fnames = os.listdir(dir)
+            fnames = glob.glob(os.path.join(dir, '*.conf'))
         except (IOError, OSError):
             return []
         fnames.sort()
-        return [os.path.join(dir, f) for f in fnames]
+        return fnames
 
     def _read_files(self):
         filenames = self._sys_prefs_filenames()
