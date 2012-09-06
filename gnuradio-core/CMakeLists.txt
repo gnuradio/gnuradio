@@ -115,7 +115,7 @@ configure_file(
 @ONLY)
 
 install(
-    FILES gnuradio-core.conf
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.conf
     DESTINATION ${GR_PREFSDIR}
     COMPONENT "core_runtime"
 )

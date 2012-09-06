@@ -87,7 +87,6 @@ endmacro(expand_cc)
 # Invoke macro to generate various sources
 ########################################################################
 expand_cc(digital_chunks_to_symbols_XX         bf bc sf sc if ic)
->>>>>>> master
 
 ########################################################################
 # Setup library
