@@ -26,12 +26,12 @@
  * file included in your .cc file.
  */
 
-/************************************************
-* Johns Hopkins University Applied Physics Lab
-* Author: Mark Plett  (Adapted from gr_how_t0_write_a_block_3.2
+/*******************************************************************************
+* Copyright 2011 Johns Hopkins University Applied Physics Lab
+* Author: Mark Plett 
 * Description:
-*   This block is a pass through to exercise the logging module gr.error_logger.
-**************************************************/
+*   The gr_log module wraps the log4cxx library for logging in gnuradio.
+*******************************************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h" 
@@ -47,18 +47,18 @@ void
 logger_load_config(const std::string &config_filename)
 {
   if(config_filename.size() == 0) {
-    BasicConfigurator::configure();
+    log4cxx::BasicConfigurator::configure();
   }
   else if(config_filename.find(".xml") != std::string::npos) {
-    DOMConfigurator::configure(config_filename);
+    log4cxx::xml::DOMConfigurator::configure(config_filename);
   }
   else {
-    PropertyConfigurator::configure(config_filename);
+    log4cxx::PropertyConfigurator::configure(config_filename);
   }
 }
 
 void
-logger_set_level(LoggerPtr logger, const std::string &level)
+logger_set_level(log4cxx::LoggerPtr logger, const std::string &level)
 {
   std::string nocase = level;
   std::transform(level.begin(), level.end(), nocase.begin(), ::tolower);
@@ -84,9 +84,29 @@ logger_set_level(LoggerPtr logger, const std::string &level)
 }
 
 void
-logger_set_level(LoggerPtr logger, log4cxx::LevelPtr level)
+logger_set_level(log4cxx::LoggerPtr logger, log4cxx::LevelPtr level)
 {
   logger->setLevel(level);
+}
+
+void 
+logger_get_level(log4cxx::LoggerPtr logger,std::string &level)
+{
+  log4cxx::LevelPtr levelPtr = logger->getLevel();
+  if(levelPtr == log4cxx::Level::getOff()) level = "off";
+  if(levelPtr == log4cxx::Level::getAll()) level = "all";
+  if(levelPtr == log4cxx::Level::getTrace()) level = "trace";
+  if(levelPtr == log4cxx::Level::getDebug()) level = "debug";
+  if(levelPtr == log4cxx::Level::getInfo()) level = "info";
+  if(levelPtr == log4cxx::Level::getWarn()) level = "warn";
+  if(levelPtr == log4cxx::Level::getError()) level = "error";
+  if(levelPtr == log4cxx::Level::getFatal()) level = "fatal";
+};
+
+void 
+logger_get_level(log4cxx::LoggerPtr logger,log4cxx::LevelPtr level)
+{
+  level = logger->getLevel();
 }
 
 #endif /* ENABLE_GR_LOG */

@@ -38,7 +38,7 @@
   <appender name="errLogRootConsoleAppender" class="org.apache.log4j.ConsoleAppender">    
     <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="errLoggerRoot :%-5p %c{1} - %m%n"/>
+            <param name="ConversionPattern" value="grlog :%-5p %c{1} - %m%n"/>
         </layout>
   </appender>
 
