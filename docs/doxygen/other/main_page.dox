@@ -14,7 +14,7 @@ the <a href="http://gnuradio.squarespace.com" target="_blank"><b>GNU Radio blog<
 
 \section build Building GNU Radio
 
-See the \ref page_build page for details about the project's
+See the \ref build_guide page for details about the project's
 dependencies and build process.
 
 

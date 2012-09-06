@@ -43,7 +43,7 @@ gr_float_to_int::gr_float_to_int (size_t vlen, float scale)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(int);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 float

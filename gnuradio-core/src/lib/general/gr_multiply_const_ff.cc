@@ -40,9 +40,9 @@ gr_multiply_const_ff::gr_multiply_const_ff (float k, size_t vlen)
 		   gr_make_io_signature (1, 1, sizeof (float)*vlen)),
     d_k(k), d_vlen(vlen)
 {
- const int alignment_multiple =
-   volk_get_alignment() / sizeof(float);
- set_alignment(alignment_multiple);
+  const int alignment_multiple =
+    volk_get_alignment() / sizeof(float);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 float

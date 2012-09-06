@@ -42,7 +42,7 @@ gr_float_to_char::gr_float_to_char (size_t vlen, float scale)
 {
   const int alignment_multiple =
     volk_get_alignment() / sizeof(char);
-  set_alignment(alignment_multiple);
+  set_alignment(std::max(1,alignment_multiple));
 }
 
 float

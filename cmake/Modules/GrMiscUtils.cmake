@@ -209,32 +209,6 @@ function(GR_GEN_TARGET_DEPS name var)
     endif()
 endfunction(GR_GEN_TARGET_DEPS)
 
-
-########################################################################
-# Control availability of vmcircbuf methods.
-# For now, only allows disabling of shm methods, which cause uncatchable
-#    segmentation faults on Cygwin with gcc 4.x (x <= 5)
-# Usage:
-#   GR_VMCIRCBUF()
-#
-# Will set TRY_SHM_VMCIRCBUF to 1 by default except on Windows machines.
-# Can manually set with -DTRY_SHM_VMCIRCBUF=0|1
-########################################################################
-function(GR_VMCIRCBUF)
-  if(WIN32)
-    OPTION(TRY_SHM_VMCIRCBUF "Try SHM VMCIRCBUF" OFF)
-  else(WIN32)
-    OPTION(TRY_SHM_VMCIRCBUF "Try SHM VMCIRCBUF" ON)
-  endif(WIN32)
-
-  message(STATUS "TRY_SHM_VMCIRCBUF set to ${TRY_SHM_VMCIRCBUF}.")
-
-  if(TRY_SHM_VMCIRCBUF)
-    add_definitions( -DTRY_SHM_VMCIRCBUF )
-  endif(TRY_SHM_VMCIRCBUF)
-endfunction(GR_VMCIRCBUF)
-
-
 ########################################################################
 # Control use of gr_log
 # Usage:

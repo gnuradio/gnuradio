@@ -1,4 +1,4 @@
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -53,6 +53,8 @@ ADD_FILE_DEPENDENCIES(
     ${PMT_SERIAL_TAGS_H}
 )
 
+add_custom_target(pmt_generated DEPENDS ${PMT_SERIAL_TAGS_H})
+
 ########################################################################
 # Generate other pmt stuff
 ########################################################################
@@ -67,7 +69,7 @@ add_custom_command(
         ${CMAKE_CURRENT_SOURCE_DIR}/unv_template.h.t
         ${CMAKE_CURRENT_SOURCE_DIR}/unv_template.cc.t
         ${CMAKE_CURRENT_SOURCE_DIR}/unv_qa_template.cc.t
-    COMMAND ${PYTHON_EXECUTABLE} -B -c
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} -c
     \"import os,sys\;srcdir='${CMAKE_CURRENT_SOURCE_DIR}'\;sys.path.append(srcdir)\;os.environ['srcdir']=srcdir\;from generate_unv import main\;main()\"
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )

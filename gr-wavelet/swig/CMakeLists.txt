@@ -23,6 +23,8 @@
 include(GrPython)
 include(GrSwig)
 
+set(GR_SWIG_TARGET_DEPS core_swig)
+
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_WAVELET_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
@@ -30,7 +32,7 @@ set(GR_SWIG_INCLUDE_DIRS
 )
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/wavelet_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/wavelet)
 
 set(GR_SWIG_LIBRARIES gnuradio-wavelet ${GSL_LDFLAGS})
 

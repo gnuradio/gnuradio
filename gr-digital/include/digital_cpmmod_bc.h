@@ -74,9 +74,10 @@ digital_make_cpmmod_bc(int type, float h,
  */
 class DIGITAL_API digital_cpmmod_bc : public gr_hier_block2
 {
-  friend DIGITAL_API digital_cpmmod_bc_sptr digital_make_cpmmod_bc(int type, float h,
-						       unsigned samples_per_sym,
-						       unsigned L, double beta);
+  friend DIGITAL_API digital_cpmmod_bc_sptr
+    digital_make_cpmmod_bc(int type, float h,
+			   unsigned samples_per_sym,
+			   unsigned L, double beta);
   
   std::vector<float> d_taps;
   gr_char_to_float_sptr d_char_to_float;

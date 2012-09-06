@@ -41,9 +41,9 @@ digital_make_cma_equalizer_cc(int num_taps, float modulus, float mu, int sps);
  *
  * The error value and tap update equations (for p=2) can be found in:
  *
- * D. Godard, "Self-Recovering Equalization and Carrier Tracking in
+ * "D. Godard, "Self-Recovering Equalization and Carrier Tracking in
  * Two-Dimensional Data Communication Systems," IEEE Transactions on
- * Communications, Vol. 28, No. 11, pp. 1867 - 1875, 1980,
+ * Communications, Vol. 28, No. 11, pp. 1867 - 1875, 1980."
  */
 class DIGITAL_API digital_cma_equalizer_cc : public gr_adaptive_fir_ccc
 {

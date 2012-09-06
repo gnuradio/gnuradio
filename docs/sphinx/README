@@ -1,0 +1,72 @@
+INTRODUCTION
+The Sphinx documentation system uses the fully installed Python tree
+to build a set of documents (generally in HTML). In GNU Radio, the
+documentation system is done through Doxygen in the public header
+(/include/foo.h) files. Doxygen first builds its documentation files,
+then the swig_docs program uses Doxygen's XML output and smashed the
+documentation from each header file into the SWIG'd Python
+block. Basically, using a single documentation markup, Doxygen, we
+expose the documentation strings in both the Doxygen-built manual and
+within the Python blocks themselves.
+
+Sphinx takes this process one step farther by reading the docstrings
+of all Python blocks and creating its own manual. This has two
+benefits. First, the Sphinx documentation looks nice and is formatted
+in such a way that Python users of GNU Radio can easy see the module
+structure and hierarchy. It also not only takes the Doxygen
+documentation from C++, but it also allows us to take any Python files
+and include their documentation. 
+
+The end result is two manuals: one for Python and one for C++ users
+without having to duplicate comments, markup, or documentation.
+
+
+BUILDING THE SPHINX MANUAL
+Building the Sphinx docs takes some manual intervention as it
+requires GNU Radio to already be installed. So first follow the steps
+to build and install GNU Radio.
+
+In the build directory, a helper file is created called
+run_sphinx_build.sh. This is a Linux shell script that runs the
+sphinx-build command with all of the normal settings and important
+directories preloaded. For non Linux systems, it should be easy to
+pull out the executable and options to run it by hand.
+
+The run_sphinx_build.sh outputs the manual into
+$builddir/docs/sphinx/sphinx_out. Open up the index.html file in a
+browser to view it.
+
+ADDING NEW CONTENT TO THE SPHINX MANUAL
+Although the content of the sphinx manual is automatically generated,
+new blocks are not automatically added to the generated documentation.
+The procedure for adding new content is best illustrated with two
+examples.
+
+1) Adding a new C++ signal processing block gnuradio.gr.myslicer
+   Edit file gnuradio/docs/sphinx/source/gr/index.rst and add the line
+   >   gnuradio.gr.myslicer
+   under the "Slicing and Dicing Streams" subheading.
+   Edit file gnuradio/docs/sphinx/source/gr/slicedice_blk.rst and add
+   the line
+   >.. autooldblock:: gnuradio.gr.myslicer
+
+2) Adding a new python hierarchical block gnuradio.digital.mymod
+   Edit file gnruadio/docs/sphinx/source/digital/index.rst and add the
+   line
+   >   gnuradio.digital.mymod
+   under the "Signal Processing Blocks" subheading.
+   Edit file gnuradio/docs/sphinx/source/digital/blocks.rst and add
+   the line
+   >.. autopyblock:: gnuradio.digital.mymod
+   Notice that the 'autopyblock' directive is used rather than the
+   'autoblock' directive.  This lets sphinx know that it is displaying
+   a python hierarchical signal processing block so that it can format
+   it appropriately.
+
+The process for documenting objects that are not signal processing
+blocks is similar but rather than using the 'autooldblock', and
+'autopyblock' directives the standard sphinx directives such as
+'autofunction' and 'autoclass' can be used.
+
+Finally for signal processing blocks using the 3.7 style the directive
+'autoblock' rather than 'autooldblock' can be used.

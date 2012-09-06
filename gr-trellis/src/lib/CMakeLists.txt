@@ -191,7 +191,7 @@ if(ENABLE_PYTHON)
         trellis_siso_combined_f.i
         trellis_constellation_metrics_cf.i
         ${CMAKE_CURRENT_BINARY_DIR}/trellis_generated.i
-	${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i
+        ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i
         DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
         COMPONENT "trellis_swig"
     )
@@ -201,6 +201,8 @@ if(ENABLE_PYTHON)
 ########################################################################
 include(GrPython)
 include(GrSwig)
+
+set(GR_SWIG_TARGET_DEPS core_swig)
 
 set(GR_SWIG_SOURCE_DEPS
     ${generated_trellis_includes}

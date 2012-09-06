@@ -244,12 +244,20 @@ if __name__ == '__main__':
 	#end if
 	#if $generate_options == 'wx_gui'
 	tb = $(class_name)($(', '.join($params_eq_list)))
+		#if $flow_graph.get_option('max_nouts')
+	tb.Run($flow_graph.get_option('run'), $flow_graph.get_option('max_nouts'))
+		#else
 	tb.Run($flow_graph.get_option('run'))
+		#end if
 	#elif $generate_options == 'qt_gui'
 	qapp = Qt.QApplication(sys.argv)
 	tb = $(class_name)($(', '.join($params_eq_list)))
 	#if $flow_graph.get_option('run')
+		#if $flow_graph.get_option('max_nouts')
+	tb.start($flow_graph.get_option('max_nouts'))
+		#else
 	tb.start()
+		#end if
 	#end if
 	tb.show()
 	qapp.exec_()
@@ -258,11 +266,19 @@ if __name__ == '__main__':
 	tb = $(class_name)($(', '.join($params_eq_list)))
 		#set $run_options = $flow_graph.get_option('run_options')
 		#if $run_options == 'prompt'
+			#if $flow_graph.get_option('max_nouts')
+	tb.start($flow_graph.get_option('max_nouts'))
+			#else
 	tb.start()
+			#end if
 	raw_input('Press Enter to quit: ')
 	tb.stop()
 		#elif $run_options == 'run'
+			#if $flow_graph.get_option('max_nouts')
+	tb.run($flow_graph.get_option('max_nouts'))
+			#else
 	tb.run()
+			#end if
 		#end if
 	#end if
 #end if

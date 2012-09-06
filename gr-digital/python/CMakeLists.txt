@@ -30,6 +30,7 @@ GR_PYTHON_INSTALL(
     crc.py
     generic_mod_demod.py
     gmsk.py
+    gfsk.py
     modulation_utils.py
     ofdm.py
     ofdm_packet_utils.py

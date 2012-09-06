@@ -1,0 +1,326 @@
+/*! \page build_guide Build Instructions and Information
+
+\section dependencies Dependencies
+
+The list of GNU Radio dependencies and the minimum required versions,
+if any, to build the various GNU Radio components.
+
+Most of these components do not need to be individually compiled or
+installed. Instead, rely on your operating system's package manager or
+binary installation process (the <b>apt-get</b> system in Debian and
+Ubuntu, <b>yum</b> in RedHat and Fedora, etc.). GNU Radio tries to keep an
+up-to-date build guide for the majority of the supported operating
+systems on gnuradio.org
+(http://gnuradio.org/redmine/projects/gnuradio/wiki/BuildGuide).
+
+Not all dependencies are required for all components, and not all
+components are required for a given installation. The list of required
+components is determined by what the user requires from GNU Radio. If,
+for example, you do not use any Comedi-based hardware, do not worry
+about building gr-comedi.
+
+Before trying to build these from source, please try your system's
+installation tool (apt-get, pkg_install, YaST, yum, urpmi, etc.)
+first. Most recent systems have these packages available.
+
+\subsection dep_global Global Dependencies
+\li git                      http://code.google.com/p/msysgit
+\li cmake       (>= 2.6)     http://www.cmake.org/cmake/resources/software.html
+\li boost       (>= 1.35)    http://www.boostpro.com/download
+\li cppunit     (>= 1.9.14)  http://gaiacrtn.free.fr/cppunit/index.html
+\li fftw3f      (>= 3.0)     http://www.fftw.org/install/windows.html
+
+\subsection dep_python Python Wrappers
+\li python      (>= 2.5)     http://www.python.org/download/
+\li swig        (>= 1.3.31)  http://www.swig.org/download.html
+\li numpy       (>= 1.1.0)   http://sourceforge.net/projects/numpy/files/NumPy/
+
+\subsection dep_docs docs: Building the documentation
+\li doxygen     (>= 1.5)     http://www.stack.nl/~dimitri/doxygen/download.html
+
+\subsection dep_grc grc: The GNU Radio Companion
+\li Cheetah     (>= 2.0)     http://www.cheetahtemplate.org/
+\li pygtk       (>= 2.10)    http://www.pygtk.org/downloads.html
+
+\subsection dep_wavelet gr-wavelet: Collection of wavelet blocks
+\li gsl	        (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
+
+\subsection dep_gr_qtgui gr-qtgui: The QT-based Graphical User Interface
+\li qt	        (>= 4.4)     http://qt.nokia.com/downloads/
+\li qwt         (>= 5.2)     http://sourceforge.net/projects/qwt/
+\li pyqt        (>= 4.4)     http://www.riverbankcomputing.co.uk/software/pyqt/download
+\li pyqwt       (>= 5.2)     http://pyqwt.sourceforge.net/download.html
+
+\subsection dep_gr_wxgui gr-wxgui: The WX-based Graphical User Interface
+\li wxpython    (>= 2.8)     http://www.wxpython.org/
+\li python-lxml (>= 1.3.6)   http://lxml.de/
+
+\subsection dep_gr_audio gr-audio: Audio Subsystems (system/OS dependent)
+\li audio-alsa  (>= 0.9)     http://www.alsa-project.org
+\li audio-jack  (>= 0.8)     http://jackaudio.org/
+\li portaduio   (>= 19)      http://www.portaudio.com/
+\li audio-oss   (>= 1.0)     http://www.opensound.com/oss.html
+\li audio-osx
+\li audio-windows
+
+It is not necessary to satisfy all of these dependencies; just the
+one(s) that are right for your system. On Linux, don't expect
+audio-osx and audio-windows to be either satisfied or built.
+
+\subsection dep_uhd uhd: The Ettus USRP Hardware Driver Interface
+\li uhd         (>= 3.0.0)   http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+
+\subsection dep_shd shd: The Symplex Hardware Driver Interface
+\li shd         (>= 3.0.0)
+
+\subsection dep_gr_video_sdl gr-video-sdl: PAL and NTSC display
+\li SDL	        (>= 1.2.0)   http://www.libsdl.org/download-1.2.php
+
+\subsection dep_gr_comedi gr-comedi: Comedi hardware interface
+\li comedilib   (>= 0.8)     http://www.comedi.org/
+
+
+
+\section build_gr_cmake Building GNU Radio
+
+GNU Radio is built using the Cmake build system
+(http://www.cmake.org/). The standard build method is as follows:
+
+\code
+$ mkdir $(builddir)
+$ cd $(builddir)
+$ cmake [OPTIONS] $(srcdir)
+$ make
+$ make test
+$ sudo make install
+\endcode
+
+The \$(builddir) is the directory in which the code is built. This
+<b>cannot</b> be the same path as where the source code resides. Often,
+\$(builddir) is \$(srcdir)/build.
+
+\subsection Cmake Options
+
+Options can be used to specify where to find various library or
+include file dependencies that are not automatically being found
+(-DCMAKE_PREFIX_PATH) or set the prefix
+(-DCMAKE_INSTALL_PREFIX=(dir)).
+
+Components can also be enabled and disabled through the options. For a
+component named *gr-comp*, the option to disable would look like:
+-DENABLE_GR_COMP=off. The "off" could also be "false" or "no", and
+cmake is not case sensitive about these options. Similarly, "true",
+"on", or "yes" will turn this component on. All components are enabled
+by default.
+
+An example is -DENABLE_PYTHON=False turns off building any Python or
+Swigging components. The result will be the GNU Radio libraries and
+C++ programs/applications/examples. No Python or GRC files will be
+built or installed.
+
+The -DENABLE_DEFAULT=False can be used to disable all
+components. Individual components can then be selectively turned back
+on. For example, just buidling the Volk and Gruel libraries can be
+done with this:
+
+\code
+cmake -DENABLE_DEFAULT=Off -DENABLE_VOLK=True -DENABLE_GRUEL=True <srcdir>
+\endcode
+
+
+The build type allows you to specify the build as a debug or release
+version. Each type sets different flags for different purposes. To set
+the build type, use:
+
+\code
+-DCMAKE_BUILD_TYPE="Release"|"Debug"
+\endcode
+
+If not specified, the "Release" mode is the defaulted to.
+
+"Release" mode sets the '-O3' optimization flag.
+
+"Debug" mode sets '-g -O2' flags to export debug symbols and reduce
+the optimization to make the libraries easier to debug and step
+through.
+
+
+\subsection build_gr_cmake_e100 Building for the E100
+
+To build GNU Radio on the Ettus Research E100 embedded platforms,
+Cmake has to know that the processors uses the NEON extensions. Use
+the
+
+\code
+cmake -DCMAKE_CXX_FLAGS:STRING="-mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -g" \
+      -DCMAKE_C_FLAGS:STRING="-mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -g" \
+       <gr_source_dir>
+\endcode
+
+*/
+
+
+
+/*! \page volk_guide Instructions for using Volk in GNU Radio
+
+\section volk_intro Introduction
+
+Volk is the Vector-Optimized Library of Kernels. It is a library that
+contains kernels of hand-written SIMD code for different mathematical
+operations. Since each SIMD architecture can be greatly different and
+no compiler has yet come along to handle vectorization properly or
+highly efficiently, Volk approaches the problem differently. For each
+architecture or platform that a developer wishes to vectorize for, a
+new proto-kernel is added to Volk. At runtime, Volk will select the
+correct proto-kernel. In this way, the users of Volk call a kernel for
+performing the operation that is platform/architecture agnostic. This
+allows us to write portable SIMD code.
+
+Volk kernels are always defined with a 'generic' proto-kernel, which
+is written in plain C. With the generic kernel, the kernel becomes
+portable to any platform. Kernels are then extended by adding
+proto-kernels for new platforms in which they are desired.
+
+A good example of a Volk kernel with multiple proto-kernels defined is
+the volk_32f_s32f_multiply_32f_a. This kernel implements a scalar
+multiplication of a vector of floating point numbers (each item in the
+vector is multiplied by the same value). This kernel has the following
+proto-kernels that are defined for 'generic,' 'avx,' 'sse,' and 'orc.'
+
+\code
+    void volk_32f_s32f_multiply_32f_a_generic
+    void volk_32f_s32f_multiply_32f_a_sse
+    void volk_32f_s32f_multiply_32f_a_avx
+    void volk_32f_s32f_multiply_32f_a_orc
+\endcode
+
+These proto-kernels means that on platforms with AVX support, Volk can
+select this option or the SSE option, depending on which is faster. On
+other platforms, the ORC SIMD compiler might provide a solution. If
+all else fails, Volk can fall back on the generic proto-kernel, which
+will always work.
+
+Just a note on ORC. ORC is a SIMD compiler library that uses a generic
+assembly-like language for SIMD commands. Based on the available SIMD
+architecture of a system, it will try and compile a good
+solution. Tests show that the results of ORC proto-kernels are
+generally better than the generic versions but often not as good as
+the hand-tuned proto-kernels for a specific SIMD architecture. This
+is, of course, to be expected, and ORC provides a nice intermediary
+step to performance improvements until a specific hand-tuned
+proto-kernel can be made for a given platform.
+
+See <a
+href="http://gnuradio.org/redmine/projects/gnuradio/wiki/Volk">Volk on
+gnuradio.org</a> for details on the Volk naming scheme.
+
+
+\section volk_alignment Setting and Using Memory Alignment Information
+
+For Volk to work as best as possible, we want to use memory-aligned
+SIMD calls, which means we have to have some way of knowing and
+controlling the alignment of the buffers passed to gr_block's work
+function. We set the alignment requirement for SIMD aligned memory
+calls with:
+
+\code
+  const int alignment_multiple =
+    volk_get_alignment() / output_item_size;
+  set_alignment(std::max(1,alignment_multiple));
+\endcode
+
+The Volk function 'volk_get_alignment' provides the alignment of the
+the machine architecture. We then base the alignment on the number of
+output items required to maintain the alignment, so we divide the
+number of alignment bytes by the number of bytes in an output items
+(sizeof(float), sizeof(gr_complex), etc.). This value is then set per
+block with the 'set_alignment' function.
+
+Because the scheduler tries to optimize throughput, the number of
+items available per call to work will change and depends on the
+availability of the read and write buffers. This means that it
+sometimes cannot produce a buffer that is properly memory
+aligned. This is an inevitable consequence of the scheduler
+system. Instead of requiring alignment, the scheduler enforces the
+alignment as much as possible, and when a buffer becomes unaligned,
+the scheduler will work to correct it as much as possible. If a
+block's buffers are unaligned, then, the scheduler sets a flag to
+indicate as much so that the block can then decide what best to
+do. The next section discusses the use of the aligned/unaligned
+information in a gr_block's work function.
+
+
+\section volk_work Using Alignment Properties in Work()
+
+The buffers passed to work/general_work in a gr_block are not
+guaranteed to be aligned, but they will mostly be aligned whenever
+possible. When not aligned, the 'is_unaligned()' flag will be set. So
+a block can know if its buffers are aligned and make the right
+decisions. This looks like:
+
+\code
+int
+gr_some_block::work (int noutput_items,
+		     gr_vector_const_void_star &input_items,
+		     gr_vector_void_star &output_items)
+{
+  const float *in = (const float *) input_items[0];
+  float *out = (float *) output_items[0];
+
+  if(is_unaligned()) {
+    // do something with unaligned data. This can either be a manual
+    // handling of the items or a call to an unaligned Volk function.
+    volk_32f_something_32f_u(out, in, noutput_items);
+  }
+  else {
+    // Buffers are aligned; can call the aligned Volk function.
+    volk_32f_something_32f_a(out, in, noutput_items);
+  }
+
+  return noutput_items;
+}
+\endcode
+
+
+
+\section volk_tuning Tuning Volk Performance
+
+VOLK comes with a profiler that will build a config file for the best
+SIMD architecture for your processor. Run volk_profile that is
+installed into $PREFIX/bin. This program tests all known VOLK kernels
+for each architecture supported by the processor. When finished, it
+will write to $HOME/.volk/volk_config the best architecture for the
+VOLK function. This file is read when using a function to know the
+best version of the function to execute.
+
+\subsection volk_hand_tuning Hand-Tuning Performance
+
+If you know a particular architecture works best for your processor,
+you can specify the particular architecture to use in the VOLK
+preferences file: $HOME/.volk/volk_config
+
+The file looks like:
+
+\code
+    volk_<FUNCTION_NAME> <ARCHITECTURE>
+\endcode
+
+Where the "FUNCTION_NAME" is the particular function that you want to
+over-ride the default value and "ARCHITECTURE" is the VOLK SIMD
+architecture to use (generic, sse, sse2, sse3, avx, etc.). For
+example, the following config file tells VOLK to use SSE3 for the
+aligned and unaligned versions of a function that multiplies two
+complex streams together.
+
+\code
+    volk_32fc_x2_multiply_32fc_a sse3
+    volk_32fc_x2_multiply_32fc_u sse3
+\endcode
+
+\b Tip: if benchmarking GNU Radio blocks, it can be useful to have a
+volk_config file that sets all architectures to 'generic' as a way to
+test the vectorized versus non-vectorized implementations.
+
+*/
+
+

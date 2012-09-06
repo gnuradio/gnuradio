@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Differential Phasor
+###################################################
+ -->
+<block>
+	<name>Differential Phasor</name>
+	<key>digital_diff_phasor_cc</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.diff_phasor_cc()</make>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

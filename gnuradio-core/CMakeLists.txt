@@ -64,6 +64,7 @@ GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
 
 GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/gruel/src/swig
+    ${CMAKE_BINARY_DIR}/gruel/src/swig/
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/swig
     ${GNURADIO_CORE_INCLUDE_DIRS}
 )
@@ -114,8 +115,8 @@ configure_file(
 @ONLY)
 
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.conf
-    DESTINATION ${GR_PKG_CONF_DIR}
+    FILES gnuradio-core.conf
+    DESTINATION ${GR_PREFSDIR}
     COMPONENT "core_runtime"
 )
 

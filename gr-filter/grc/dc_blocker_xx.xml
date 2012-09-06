@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DC Blocker
+###################################################
+ -->
+<block>
+	<name>DC Blocker</name>
+	<key>dc_blocker_xx</key>
+	<import>from gnuradio import filter</import>
+	<make>filter.dc_blocker_$(type)($length, $long_form)</make>
+	<!-- <callback>set_length($length)</callback> -->
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex->Complex</name>
+			<key>cc</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+		</option>
+		<option>
+			<name>Float->Float</name>
+			<key>ff</key>
+			<opt>input:float</opt>
+			<opt>output:float</opt>
+		</option>
+	</param>
+	<param>
+		<name>Length</name>
+		<key>length</key>
+		<value>32</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Long Form</name>
+		<key>long_form</key>
+		<value>True</value>
+		<type>bool</type>
+	</param>
+
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+</block>

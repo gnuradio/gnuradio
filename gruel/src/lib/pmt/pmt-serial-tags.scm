@@ -33,6 +33,8 @@
 (define pst-dict		#x09)   ; untagged-int32 n; followed by n key/value tuples
 
 (define pst-uniform-vector	#x0a)
+(define pst-uint64	#x0b)
+(define pst-tuple	#x0c)
 
 ;; u8, s8, u16, s16, u32, s32, u64, s64, f32, f64, c32, c64
 ;;

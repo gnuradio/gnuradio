@@ -37,6 +37,7 @@
 #include <gr_stream_to_vector.h>
 #include <gr_vector_to_stream.h>
 #include <gr_keep_one_in_n.h>
+#include <gr_keep_m_in_n.h>
 #include <gr_fft_vcc.h>
 #include <gr_fft_vfc.h>
 #include <gr_float_to_int.h>
@@ -59,6 +60,7 @@
 #include <gr_complex_to_interleaved_short.h>
 #include <gr_interleaved_short_to_complex.h>
 //#include <gr_endianness.h>
+#include <gr_endian_swap.h>
 #include <gr_firdes.h>
 #include <gr_interleave.h>
 #include <gr_deinterleave.h>
@@ -100,6 +102,7 @@
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_unpack_k_bits_bb.h>
+#include <gr_pack_k_bits_bb.h>
 #include <gr_diff_phasor_cc.h>
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
@@ -133,10 +136,13 @@
 #include <complex_vec_test.h>
 #include <gr_annotator_alltoall.h>
 #include <gr_annotator_1to1.h>
+#include <gr_annotator_raw.h>
 #include <gr_burst_tagger.h>
 #include <gr_cpm.h>
 #include <gr_correlate_access_code_tag_bb.h>
 #include <gr_add_ff.h>
+#include <gr_vector_map.h>
+#include <gr_tag_debug.h>
 %}
 
 %include "gri_control_loop.i"
@@ -154,6 +160,7 @@
 %include "gr_stream_to_vector.i"
 %include "gr_vector_to_stream.i"
 %include "gr_keep_one_in_n.i"
+%include "gr_keep_m_in_n.i"
 %include "gr_fft_vcc.i"
 %include "gr_fft_vfc.i"
 %include "gr_float_to_int.i"
@@ -175,6 +182,7 @@
 %include "gr_complex_to_xxx.i"
 %include "gr_complex_to_interleaved_short.i"
 //%include "gr_endianness.i"
+%include "gr_endian_swap.i"
 %include "gr_interleaved_short_to_complex.i"
 %include "gr_firdes.i"
 %include "gr_interleave.i"
@@ -217,6 +225,7 @@
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_unpack_k_bits_bb.i"
+%include "gr_pack_k_bits_bb.i"
 %include "gr_diff_phasor_cc.i"
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"
@@ -250,7 +259,10 @@
 %include "complex_vec_test.i"
 %include "gr_annotator_alltoall.i"
 %include "gr_annotator_1to1.i"
+%include "gr_annotator_raw.i"
 %include "gr_burst_tagger.i"
 %include "gr_cpm.i"
 %include "gr_correlate_access_code_tag_bb.i"
 %include "gr_add_ff.i"
+%include "gr_vector_map.i"
+%include "gr_tag_debug.i"

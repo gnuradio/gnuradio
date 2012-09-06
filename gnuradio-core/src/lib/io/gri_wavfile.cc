@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,110 +27,45 @@
 #include <gri_wavfile.h>
 #include <cstring>
 #include <stdint.h>
+#include <boost/detail/endian.hpp> //BOOST_BIG_ENDIAN
 
 # define VALID_COMPRESSION_TYPE 0x0001
 
+// Basically, this is the opposite of htonx() and ntohx()
+// Define host to/from worknet (little endian) short and long
+#ifdef BOOST_BIG_ENDIAN
+
+    static inline uint16_t __gri_wav_bs16(uint16_t x)
+    {
+        return (x>>8) | (x<<8);
+    }
+
+    static inline uint32_t __gri_wav_bs32(uint32_t x)
+    {
+        return (uint32_t(__gri_wav_bs16(uint16_t(x&0xfffful)))<<16) | (__gri_wav_bs16(uint16_t(x>>16)));
+    }
+
+    #define htowl(x) __gri_wav_bs32(x)
+    #define wtohl(x) __gri_wav_bs32(x)
+    #define htows(x) __gri_wav_bs16(x)
+    #define wtohs(x) __gri_wav_bs16(x)
+
+#else
+
+    #define htowl(x) uint32_t(x)
+    #define wtohl(x) uint32_t(x)
+    #define htows(x) uint16_t(x)
+    #define wtohs(x) uint16_t(x)
+
+#endif // BOOST_BIG_ENDIAN
+
 // WAV files are always little-endian, so we need some byte switching macros
-
-// FIXME: Use libgruel versions
-
-#ifdef WORDS_BIGENDIAN
-
-#ifdef HAVE_BYTESWAP_H
-#include <byteswap.h>
-#else
-#warning Using non-portable code (likely wrong other than ILP32).
-
-static inline short int
-bswap_16 (unsigned short int x)
-{
-  return ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8));
-}
-
-static inline unsigned int
-bswap_32 (unsigned int x)
-{
-  return ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8)	\
-	  | (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24));
-}
-#endif // HAVE_BYTESWAP_H
-
-static inline uint32_t
-host_to_wav(uint32_t x)
-{
-  return bswap_32(x);
-}
-
-static inline uint16_t
-host_to_wav(uint16_t x)
-{
-  return bswap_16(x);
-}
-
-static inline int16_t
-host_to_wav(int16_t x)
-{
-  return bswap_16(x);
-}
-
-static inline uint32_t
-wav_to_host(uint32_t x)
-{
-  return bswap_32(x);
-}
-
-static inline uint16_t
-wav_to_host(uint16_t x)
-{
-  return bswap_16(x);
-}
-
-static inline int16_t
-wav_to_host(int16_t x)
-{
-  return bswap_16(x);
-}
-
-#else
-
-static inline uint32_t
-host_to_wav(uint32_t x)
-{
-  return x;
-}
-
-static inline uint16_t
-host_to_wav(uint16_t x)
-{
-  return x;
-}
-
-static inline int16_t
-host_to_wav(int16_t x)
-{
-  return x;
-}
-
-static inline uint32_t
-wav_to_host(uint32_t x)
-{
-  return x;
-}
-
-static inline uint16_t
-wav_to_host(uint16_t x)
-{
-  return x;
-}
-
-static inline int16_t
-wav_to_host(int16_t x)
-{
-  return x;
-}
-
-#endif // WORDS_BIGENDIAN
-
+static inline uint32_t host_to_wav(uint32_t x) { return htowl(x); }
+static inline uint16_t host_to_wav(uint16_t x) { return htows(x); }
+static inline int16_t  host_to_wav(int16_t x)  { return htows(x); }
+static inline uint32_t wav_to_host(uint32_t x) { return wtohl(x); }
+static inline uint16_t wav_to_host(uint16_t x) { return wtohs(x); }
+static inline int16_t  wav_to_host(int16_t x)  { return wtohs(x); }
 
 bool
 gri_wavheader_parse(FILE *fp,
@@ -225,12 +160,15 @@ gri_wavheader_parse(FILE *fp,
 short int
 gri_wav_read_sample(FILE *fp, int bytes_per_sample)
 {
-  int16_t buf = 0;
-  size_t fresult;
+  int16_t buf_16bit;
 
-  fresult = fread(&buf, bytes_per_sample, 1, fp);
-
-  return (short) wav_to_host(buf);
+  if(!fread(&buf_16bit, bytes_per_sample, 1, fp)) {
+    return 0;
+  }
+  if(bytes_per_sample == 1) {
+    return (short) buf_16bit;
+  }
+  return (short)wav_to_host(buf_16bit);
 }
 
 

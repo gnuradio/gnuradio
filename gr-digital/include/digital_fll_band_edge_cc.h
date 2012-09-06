@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2011 Free Software Foundation, Inc.
+ * Copyright 2009,2011,2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,13 +27,19 @@
 #include <digital_api.h>
 #include <gr_sync_block.h>
 #include <gri_control_loop.h>
+#include <gr_fir_util.h>
+#include <gr_fir_ccc.h>
+
+typedef gr_fir_ccc* (*fir_maker_t)(const std::vector<gr_complex> &taps);
+typedef gr_fir_ccc  filter_t;
 
 class digital_fll_band_edge_cc;
 typedef boost::shared_ptr<digital_fll_band_edge_cc> digital_fll_band_edge_cc_sptr;
-DIGITAL_API digital_fll_band_edge_cc_sptr digital_make_fll_band_edge_cc (float samps_per_sym,
-							     float rolloff,
-							     int filter_size,
-							     float bandwidth);
+DIGITAL_API digital_fll_band_edge_cc_sptr
+digital_make_fll_band_edge_cc(float samps_per_sym,
+			      float rolloff,
+			      int filter_size,
+			      float bandwidth);
 
 /*!
  * \class digital_fll_band_edge_cc
@@ -65,8 +71,8 @@ DIGITAL_API digital_fll_band_edge_cc_sptr digital_make_fll_band_edge_cc (float s
  * abs(x_l(t))^2 - abs(x_u(t))^2 = norm(x_l(t)) - norm(x_u(t)).
  *
  * In theory, the band-edge filter is the derivative of the matched
- * filter in frequency, (H_be(f) = \\frac{H(f)}{df}. In practice, this
- * comes down to a quarter sine wave at the point of the matched
+ * filter in frequency, (H_be(f) = frac{H(f)}{df}). In practice,
+ * this comes down to a quarter sine wave at the point of the matched
  * filter's rolloff (if it's a raised-cosine, the derivative of a
  * cosine is a sine).  Extend this sine by another quarter wave to
  * make a half wave around the band-edges is equivalent in time to the
@@ -86,7 +92,8 @@ DIGITAL_API digital_fll_band_edge_cc_sptr digital_make_fll_band_edge_cc (float s
  *
  */
 
-class DIGITAL_API digital_fll_band_edge_cc : public gr_sync_block, public gri_control_loop
+class DIGITAL_API digital_fll_band_edge_cc :
+  public gr_sync_block, public gri_control_loop
 {
  private:
   /*!
@@ -96,10 +103,11 @@ class DIGITAL_API digital_fll_band_edge_cc : public gr_sync_block, public gri_co
    * \param filter_size      (int)   Size (in taps) of the filter
    * \param bandwidth        (float) Loop bandwidth
    */
-  friend DIGITAL_API digital_fll_band_edge_cc_sptr digital_make_fll_band_edge_cc (float samps_per_sym,
-								      float rolloff,
-								      int filter_size,
-								      float bandwidth);
+  friend DIGITAL_API digital_fll_band_edge_cc_sptr
+    digital_make_fll_band_edge_cc(float samps_per_sym,
+				  float rolloff,
+				  int filter_size,
+				  float bandwidth);
 
   float                   d_sps;
   float                   d_rolloff;
@@ -108,6 +116,10 @@ class DIGITAL_API digital_fll_band_edge_cc : public gr_sync_block, public gri_co
   std::vector<gr_complex> d_taps_lower;
   std::vector<gr_complex> d_taps_upper;
   bool			  d_updated;
+  filter_t*               d_filter_lower;
+  filter_t*               d_filter_upper;
+  std::vector<gr_complex> d_output_hist;
+  std::vector<gr_complex> d_fllbuffer;
 
   /*!
    * Build the FLL
@@ -130,7 +142,7 @@ class DIGITAL_API digital_fll_band_edge_cc : public gr_sync_block, public gri_co
   void design_filter(float samps_per_sym, float rolloff, int filter_size);
 
 public:
-  ~digital_fll_band_edge_cc ();
+  ~digital_fll_band_edge_cc();
 
   /*******************************************************************
     SET FUNCTIONS
@@ -206,9 +218,9 @@ public:
    */
   void print_taps();
    
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };
 
 #endif

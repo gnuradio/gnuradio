@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,7 +23,8 @@
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_INCLUDE_DIRS ${GRUEL_INCLUDE_DIRS})
+set(GR_SWIG_TARGET_DEPS pmt_generated)
+set(GR_SWIG_INCLUDE_DIRS ${GRUEL_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
 set(GR_SWIG_LIBRARIES gruel)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/pmt_swig_doc.i)
@@ -43,3 +44,5 @@ install(
     DESTINATION ${GR_INCLUDE_DIR}/gruel/swig
     COMPONENT "gruel_swig"
 )
+
+add_custom_target(pmt_swig DEPENDS ${SWIG_MODULE_pmt_swig_REAL_NAME})

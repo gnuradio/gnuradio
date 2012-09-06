@@ -70,6 +70,8 @@ if(ENABLE_PYTHON)
 include(GrPython)
 include(GrSwig)
 
+set(GR_SWIG_TARGET_DEPS core_swig)
+
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_COMEDI_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}

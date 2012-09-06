@@ -32,4 +32,6 @@ class digital_ofdm_insert_preamble : public gr_block
  protected:
   digital_ofdm_insert_preamble(int fft_length,
 			       const std::vector<std::vector<gr_complex> > &preamble);
+ public:
+   void enter_preamble();
 };
