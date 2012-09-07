@@ -150,11 +150,11 @@ DisplayPlot::setLineWidth(int which, int width)
   // Scale the marker size proportionally
 #if QWT_VERSION < 0x060000
   QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
-  sym.setSize(7+10*log10(width), 7+10*log10(width));
+  sym.setSize(7+10*log10(1.0*width), 7+10*log10(1.0*width));
   _plot_curve[which]->setSymbol(sym);
 #else
   QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
-  sym->setSize(7+10*log10(width), 7+10*log10(width));
+  sym->setSize(7+10*log10(1.0*width), 7+10*log10(1.0*width));
   _plot_curve[which]->setSymbol(sym);
 #endif
 }
