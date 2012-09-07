@@ -41,7 +41,7 @@ namespace gr {
        * spectral points, using gsl interpolation
        * \ingroup misc
        */
-      static WAVELET_API sptr make(const std::vector<float> &igrid,
+      static sptr make(const std::vector<float> &igrid,
 				   const std::vector<float> &ogrid);
     };
 

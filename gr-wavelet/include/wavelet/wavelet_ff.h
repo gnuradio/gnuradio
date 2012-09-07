@@ -40,7 +40,7 @@ namespace gr {
        * \brief compute wavelet transform using gsl routines
        * \ingroup wavelet_blk
        */
-      static WAVELET_API sptr make(int size = 1024,
+      static sptr make(int size = 1024,
 				   int order = 20,
 				   bool forward = true);
     };
