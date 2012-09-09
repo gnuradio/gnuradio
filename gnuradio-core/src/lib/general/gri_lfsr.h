@@ -82,7 +82,7 @@
  *
  */
 
-class GR_CORE_API gri_lfsr
+class /*GR_CORE_API*/ gri_lfsr
 {
  private:
   uint32_t d_shift_register;

@@ -42,7 +42,7 @@ namespace gr {
        * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
        * \ingroup wavelet_blk
        */
-      static WAVELET_API sptr make(int ilen);
+      static sptr make(int ilen);
     };
 
   } /* namespace wavelet */
