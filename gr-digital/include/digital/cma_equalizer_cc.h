@@ -61,6 +61,8 @@ namespace gr {
        */
       static sptr make(int num_taps, float modulus, float mu, int sps);
 
+      virtual void set_taps(const std::vector<gr_complex> &taps) = 0;
+      virtual std::vector<gr_complex> taps() const = 0;
       virtual float gain() const = 0;
       virtual void set_gain(float mu) = 0;
       virtual float modulus() const = 0;

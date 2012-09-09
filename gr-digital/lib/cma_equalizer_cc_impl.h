@@ -43,23 +43,15 @@ namespace gr {
       float d_mu;
 
     protected:
-      gr_complex error(const gr_complex &out) 
-      { 
-	gr_complex error = out*(norm(out) - d_modulus);
-	float re = gr_clip(error.real(), 1.0);
-	float im = gr_clip(error.imag(), 1.0);
-	return gr_complex(re, im);
-      }
-
-      void update_tap(gr_complex &tap, const gr_complex &in) 
-      {
-	// Hn+1 = Hn - mu*conj(Xn)*zn*(|zn|^2 - 1)
-	tap -= d_mu*conj(in)*d_error;
-      }
+      gr_complex error(const gr_complex &out);
+      void update_tap(gr_complex &tap, const gr_complex &in);
   
     public:
       cma_equalizer_cc_impl(int num_taps, float modulus, float mu, int sps);
       ~cma_equalizer_cc_impl();
+
+      void set_taps(const std::vector<gr_complex> &taps);
+      std::vector<gr_complex> taps() const;
 
       float gain() const
       {

@@ -42,24 +42,17 @@ namespace gr {
       constellation_sptr d_cnst;
 
     protected:
-      gr_complex error(const gr_complex &out) 
-      { 
-	gr_complex decision, error;
-	d_cnst->map_to_points(d_cnst->decision_maker(&out), &decision);
-	error = decision - out;
-	return error;
-      }
-
-      void update_tap(gr_complex &tap, const gr_complex &in) 
-      {
-	tap += d_mu*conj(in)*d_error;
-      }
+      gr_complex error(const gr_complex &out);
+      void update_tap(gr_complex &tap, const gr_complex &in);
 
     public:
       lms_dd_equalizer_cc_impl(int num_taps,
 			       float mu, int sps,
 			       constellation_sptr cnst);
       ~lms_dd_equalizer_cc_impl();
+
+      void set_taps(const std::vector<gr_complex> &taps);
+      std::vector<gr_complex> taps() const;
 
       float gain() const
       {

@@ -48,10 +48,8 @@ class test_lms_dd_equalizer(gr_unittest.TestCase):
 	expected_data = src_data[N:]
 	result = self.transform(src_data, 0.1, const)[N:]
 
-        # only test last N samples to allow for settling. Also adjust
-        # for a 1 sample delay in the filter.
         N = -500
-        self.assertComplexTuplesAlmostEqual(expected_data[N:-1], result[N+1:])
+        self.assertComplexTuplesAlmostEqual(expected_data[N:], result[N:], 5)
 
 if __name__ == "__main__":
     gr_unittest.run(test_lms_dd_equalizer, "test_lms_dd_equalizer.xml")

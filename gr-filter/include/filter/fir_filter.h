@@ -39,6 +39,7 @@ namespace gr {
 	~fir_filter_fff();
 
 	void set_taps(const std::vector<float> &taps);
+	void update_tap(float t, unsigned int index);
 	std::vector<float> taps() const;
 	unsigned int ntaps() const;
 	
@@ -70,6 +71,7 @@ namespace gr {
 	~fir_filter_ccf();
 
 	void set_taps(const std::vector<float> &taps);
+	void update_tap(float t, unsigned int index);
 	std::vector<float> taps() const;
 	unsigned int ntaps() const;
 
@@ -101,6 +103,7 @@ namespace gr {
 	~fir_filter_fcc();
 
 	void set_taps(const std::vector<gr_complex> &taps);
+	void update_tap(gr_complex t, unsigned int index);
 	std::vector<gr_complex> taps() const;
 	unsigned int ntaps() const;
 
@@ -132,6 +135,7 @@ namespace gr {
 	~fir_filter_ccc();
 
 	void set_taps(const std::vector<gr_complex> &taps);
+	void update_tap(gr_complex t, unsigned int index);
 	std::vector<gr_complex> taps() const;
 	unsigned int ntaps() const;
 
@@ -163,6 +167,7 @@ namespace gr {
 	~fir_filter_scc();
 
 	void set_taps(const std::vector<gr_complex> &taps);
+	void update_tap(gr_complex t, unsigned int index);
 	std::vector<gr_complex> taps() const;
 	unsigned int ntaps() const;
 
@@ -194,6 +199,7 @@ namespace gr {
 	~fir_filter_fsf();
 
 	void set_taps(const std::vector<float> &taps);
+	void update_tap(float t, unsigned int index);
 	std::vector<float> taps() const;
 	unsigned int ntaps() const;
 

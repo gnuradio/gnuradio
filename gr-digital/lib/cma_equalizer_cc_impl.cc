@@ -30,6 +30,8 @@
 namespace gr {
   namespace digital {
 
+    using namespace filter::kernel;
+
     cma_equalizer_cc::sptr
     cma_equalizer_cc::make(int num_taps, float modulus, float mu, int sps)
     {
@@ -43,20 +45,50 @@ namespace gr {
 			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 			  sps),
-	filter::kernel::fir_filter_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0,0))),
+	fir_filter_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0,0))),
+	d_new_taps(num_taps, gr_complex(0,0)),
 	d_updated(false), d_error(gr_complex(0,0))
     {
       set_modulus(modulus);
       set_gain(mu);
       if(num_taps > 0)
-	d_taps[0] = 1.0;
-      set_taps(d_taps);
+	d_new_taps[0] = 1.0;
+      fir_filter_ccc::set_taps(d_new_taps);
 
-      set_history(num_taps+1);
+      set_history(num_taps);
     }
 
     cma_equalizer_cc_impl::~cma_equalizer_cc_impl()
     {
+    }
+
+    void
+    cma_equalizer_cc_impl::set_taps(const std::vector<gr_complex> &taps)
+    {
+      d_new_taps = taps;
+      d_updated = true;
+    }
+
+    std::vector<gr_complex>
+    cma_equalizer_cc_impl::taps() const
+    {
+      return d_taps;
+    }
+
+    gr_complex
+    cma_equalizer_cc_impl::error(const gr_complex &out)
+    { 
+      gr_complex error = out*(norm(out) - d_modulus);
+      float re = gr_clip(error.real(), 1.0);
+      float im = gr_clip(error.imag(), 1.0);
+      return gr_complex(re, im);
+    }
+
+    void
+    cma_equalizer_cc_impl::update_tap(gr_complex &tap, const gr_complex &in)
+    {
+      // Hn+1 = Hn - mu*conj(Xn)*zn*(|zn|^2 - 1)
+      tap -= d_mu*conj(in)*d_error;
     }
 
     int
@@ -64,17 +96,29 @@ namespace gr {
 				gr_vector_const_void_star &input_items,
 				gr_vector_void_star &output_items)
     {
-      gr_complex *in = (gr_complex *)input_items[0];
+      const gr_complex *in = (const gr_complex *)input_items[0];
       gr_complex *out = (gr_complex *)output_items[0];
 
-      int j = 0, k, l = d_taps.size();
+      if(d_updated) {
+	d_taps = d_new_taps;
+	set_history(d_taps.size());
+	d_updated = false;
+	return 0;		     // history requirements may have changed.
+      }
+
+      int j = 0;
+      size_t k, l = d_taps.size();
       for(int i = 0; i < noutput_items; i++) {
 	out[i] = filter(&in[j]);
 
 	// Adjust taps
 	d_error = error(out[i]);
-	for (k = 0; k < l; k++) {
-	  update_tap(d_taps[l-k-1], in[j+k]);
+	for(k = 0; k < l; k++) {
+	  // Update tap locally from error.
+	  update_tap(d_taps[k], in[j+k]);
+
+	  // Update aligned taps in filter object.
+	  fir_filter_ccc::update_tap(d_taps[k], k);
 	}
 
 	j += decimation();

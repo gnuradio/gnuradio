@@ -83,7 +83,16 @@ namespace gr {
 	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
-      
+
+      void
+      fir_filter_fff::update_tap(float t, unsigned int index)
+      {
+	d_taps[index] = t;
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i][i+index] = t;
+	}
+      }
+
       std::vector<float>
       fir_filter_fff::taps() const
       {
@@ -189,6 +198,15 @@ namespace gr {
 	}
       }
       
+      void
+      fir_filter_ccf::update_tap(float t, unsigned int index)
+      {
+	d_taps[index] = t;
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i][i+index] = t;
+	}
+      }
+
       std::vector<float>
       fir_filter_ccf::taps() const
       {
@@ -296,6 +314,16 @@ namespace gr {
 	}
       }
       
+      void
+      fir_filter_fcc::update_tap(gr_complex t, unsigned int index)
+      {
+	d_taps[index] = t;
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i][i+index] = t;
+	}
+      }
+
+
       std::vector<gr_complex>
       fir_filter_fcc::taps() const
       {
@@ -402,6 +430,15 @@ namespace gr {
 	}
       }
       
+      void
+      fir_filter_ccc::update_tap(gr_complex t, unsigned int index)
+      {
+	d_taps[index] = t;
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i][i+index] = t;
+	}
+      }
+
       std::vector<gr_complex>
       fir_filter_ccc::taps() const
       {
@@ -507,6 +544,15 @@ namespace gr {
 	}
       }
       
+      void
+      fir_filter_scc::update_tap(gr_complex t, unsigned int index)
+      {
+	d_taps[index] = t;
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i][i+index] = t;
+	}
+      }
+
       std::vector<gr_complex>
       fir_filter_scc::taps() const
       {
@@ -613,6 +659,15 @@ namespace gr {
 	}
       }
       
+      void
+      fir_filter_fsf::update_tap(float t, unsigned int index)
+      {
+	d_taps[index] = t;
+	for(int i = 0; i < d_naligned; i++) {
+	  d_aligned_taps[i][i+index] = t;
+	}
+      }
+
       std::vector<float>
       fir_filter_fsf::taps() const
       {
