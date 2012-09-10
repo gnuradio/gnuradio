@@ -94,7 +94,7 @@ macro(check_arch arch_name)
             OUTPUT_VARIABLE have_flag OUTPUT_STRIP_TRAILING_WHITESPACE
         )
         if(VOLK_FLAG_CHECK_FLAGS)
-            set(CMAKE_REQUIRED_FLAGS VOLK_FLAG_CHECK_FLAGS)
+            set(CMAKE_REQUIRED_FLAGS ${VOLK_FLAG_CHECK_FLAGS})
         endif()
         CHECK_CXX_COMPILER_FLAG(${flag} ${have_flag})
         unset(CMAKE_REQUIRED_FLAGS)
