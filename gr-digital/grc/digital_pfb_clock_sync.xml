@@ -8,11 +8,9 @@
 	<name>Polyphase Clock Sync</name>
 	<key>digital_pfb_clock_sync_xxx</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.pfb_clock_sync_$(type)($sps, $alpha, $taps, $filter_size, $init_phase, $max_dev, $osps)
-self.$(id).set_beta($beta)</make>
+	<make>digital.pfb_clock_sync_$(type)($sps, $loop_bw, $taps, $filter_size, $init_phase, $max_dev, $osps)</make>
 	<callback>set_taps($taps)</callback>
-	<callback>set_alpha($alpha)</callback>
-	<callback>set_beta($beta)</callback>
+	<callback>set_loop_bandwidth($alpha)</callback>
 
 	<param>
 		<name>Type</name>
@@ -40,13 +38,8 @@ self.$(id).set_beta($beta)</make>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Alpha</name>
-		<key>alpha</key>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Beta</name>
-		<key>beta</key>
+		<name>Loop Bandwidth</name>
+		<key>loop_bw</key>
 		<type>real</type>
 	</param>
 	<param>
