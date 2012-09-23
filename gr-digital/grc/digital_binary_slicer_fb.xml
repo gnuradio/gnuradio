@@ -6,7 +6,7 @@
  -->
 <block>
 	<name>Binary Slicer</name>
-	<key>binary_slicer_fb</key>
+	<key>digital_binary_slicer_fb</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.binary_slicer_fb()</make>
 	<sink>
