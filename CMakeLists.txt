@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -234,6 +234,7 @@ add_subdirectory(gr-filter)
 add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)
+add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-noaa)
 add_subdirectory(gr-pager)
