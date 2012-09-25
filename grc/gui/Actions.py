@@ -273,3 +273,8 @@ BLOCK_INC_TYPE = Action(
 BLOCK_DEC_TYPE = Action(
 	keypresses=(gtk.keysyms.Up, NO_MODS_MASK),
 )
+RELOAD_BLOCKS = Action(
+	label='Reload _Blocks',
+	tooltip='Reload Blocks',
+	stock_id=gtk.STOCK_REFRESH
+)

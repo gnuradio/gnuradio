@@ -49,6 +49,8 @@ TOOLBAR_LIST = (
 	None,
 	Actions.BLOCK_ENABLE,
 	Actions.BLOCK_DISABLE,
+    None,
+    Actions.RELOAD_BLOCKS,
 )
 
 ##The list of actions and categories for the menu bar.
