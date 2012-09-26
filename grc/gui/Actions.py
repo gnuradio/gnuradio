@@ -278,3 +278,8 @@ RELOAD_BLOCKS = Action(
 	tooltip='Reload Blocks',
 	stock_id=gtk.STOCK_REFRESH
 )
+OPEN_HIER = Action(
+	label='Open H_ier',
+	tooltip='Open the source of the selected hierarchical block',
+	stock_id=gtk.STOCK_JUMP_TO,
+)

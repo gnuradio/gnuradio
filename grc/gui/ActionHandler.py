@@ -307,6 +307,11 @@ class ActionHandler:
 			self.platform.loadblocks()
 			self.main_window.btwin.clear();
 			self.platform.load_block_tree(self.main_window.btwin);
+		elif action == Actions.OPEN_HIER:
+			bn = [];
+			for b in self.get_flow_graph().get_selected_blocks():
+				if b._grc_source:
+				    self.main_window.new_page(b._grc_source, show=True);
 		else: print '!!! Action "%s" not handled !!!'%action
 		##################################################
 		# Global Actions for all States
@@ -324,6 +329,7 @@ class ActionHandler:
 		#update enable/disable
 		Actions.BLOCK_ENABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.BLOCK_DISABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.OPEN_HIER.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.RELOAD_BLOCKS.set_sensitive(True)
 		#set the exec and stop buttons
 		self.update_exec_stop()
