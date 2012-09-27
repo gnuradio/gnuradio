@@ -29,7 +29,9 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/function.hpp>
 #include <gr_msg_accepter.h>
+#include <gr_io_signature.h>
 #include <string>
+#include <iostream>
 
 /*!
  * \brief The abstract base class for all signal processing blocks.
@@ -73,6 +75,8 @@ protected:
     gr_io_signature_sptr d_output_signature;
     long                 d_unique_id;
     vcolor               d_color;
+    std::vector<long>    d_max_output_buffer;
+    std::vector<long>    d_min_output_buffer;
 
     gr_basic_block(void){} //allows pure virtual interface sub-classes
 
@@ -104,7 +108,21 @@ public:
     gr_io_signature_sptr input_signature() const  { return d_input_signature; }
     gr_io_signature_sptr output_signature() const { return d_output_signature; }
     gr_basic_block_sptr to_basic_block(); // Needed for Python type coercion
-
+    long max_output_buffer(size_t i){ return d_max_output_buffer.size()>i?d_max_output_buffer[i]:d_max_output_buffer[0]; }
+    void set_max_output_buffer(long max_output_buffer){ 
+        for(int i=0; i<output_signature()->max_streams(); i++){
+            set_max_output_buffer(max_output_buffer, i);
+        }
+    }
+    void set_max_output_buffer(long max_output_buffer, int port){ d_max_output_buffer[port] = max_output_buffer; }
+    long min_output_buffer(size_t i){ return d_min_output_buffer.size()>i?d_min_output_buffer[i]:d_min_output_buffer[0]; }
+    void set_min_output_buffer(long min_output_buffer){ 
+        for(int i=0; i<output_signature()->max_streams(); i++){
+            set_min_output_buffer(min_output_buffer, i);
+        }
+    }
+    void set_min_output_buffer(long min_output_buffer, int port){ d_min_output_buffer[port] = min_output_buffer; }
+    
     /*!
      * \brief Confirm that ninputs and noutputs is an acceptable combination.
      *

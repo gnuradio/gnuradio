@@ -114,6 +114,21 @@ gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
   // ensure we have a buffer at least twice their decimation factor*output_multiple
   gr_basic_block_vector_t blocks = calc_downstream_blocks(block, port);
 
+
+  // limit buffer size if indicated
+  if(block->max_output_buffer(port) > 0){
+//    std::cout << "constraining output items to " << block->max_output_buffer(port) << "\n";
+    nitems = std::min((long)nitems, (long)block->max_output_buffer(port));
+    nitems -= nitems%grblock->output_multiple();
+    if( nitems < 1 )
+      throw std::runtime_error("problems allocating a buffer with the given max output buffer constraint!");
+  } else if(block->min_output_buffer(port) > 0){
+    nitems = std::max((long)nitems, (long)block->min_output_buffer(port));
+    nitems -= nitems%grblock->output_multiple();
+    if( nitems < 1 )
+      throw std::runtime_error("problems allocating a buffer with the given min output buffer constraint!");
+  }
+
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
     gr_block_sptr dgrblock = cast_to_block_sptr(*p);
     if (!dgrblock)
@@ -125,6 +140,7 @@ gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
     nitems = std::max(nitems, static_cast<int>(2*(decimation*multiple+history)));
   }
 
+//  std::cout << "gr_make_buffer(" << nitems << ", " << item_size << ", " << grblock << "\n";
   return gr_make_buffer(nitems, item_size, grblock);
 }
 
