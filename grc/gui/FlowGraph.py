@@ -63,6 +63,7 @@ class FlowGraph(Element):
 			Actions.BLOCK_ENABLE,
 			Actions.BLOCK_DISABLE,
 			Actions.BLOCK_PARAM_MODIFY,
+			Actions.OPEN_HIER,
 		]: self._context_menu.append(action.create_menu_item())
 
 	###########################################################################

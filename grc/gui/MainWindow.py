@@ -93,7 +93,8 @@ class MainWindow(gtk.Window):
 		#flow_graph_box.pack_start(self.scrolled_window)
 		self.flow_graph_vpaned.pack1(self.notebook)
 		self.hpaned.pack1(self.flow_graph_vpaned)
-		self.hpaned.pack2(BlockTreeWindow(platform, self.get_flow_graph), False) #dont allow resize
+		self.btwin = BlockTreeWindow(platform, self.get_flow_graph);
+		self.hpaned.pack2(self.btwin, False) #dont allow resize
 		#create the reports window
 		self.text_display = TextDisplay()
 		#house the reports in a scrolled window
@@ -177,6 +178,8 @@ class MainWindow(gtk.Window):
 		try: #try to load from file
 			if file_path: Messages.send_start_load(file_path)
 			flow_graph = self._platform.get_new_flow_graph()
+			flow_graph.grc_file_path = file_path;
+			#print flow_graph
 			page = NotebookPage(
 				self,
 				flow_graph=flow_graph,

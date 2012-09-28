@@ -55,6 +55,7 @@ class ActionHandler:
 		self.clipboard = None
 		for action in Actions.get_all_actions(): action.connect('activate', self._handle_action)
 		#setup the main window
+		self.platform = platform;
 		self.main_window = MainWindow(platform)
 		self.main_window.connect('delete-event', self._quit)
 		self.main_window.connect('key-press-event', self._handle_key_press)
@@ -308,6 +309,15 @@ class ActionHandler:
 				except: print "could not kill process: %d"%self.get_page().get_proc().pid
 		elif action == Actions.PAGE_CHANGE: #pass and run the global actions
 			pass
+		elif action == Actions.RELOAD_BLOCKS:
+			self.platform.loadblocks()
+			self.main_window.btwin.clear();
+			self.platform.load_block_tree(self.main_window.btwin);
+		elif action == Actions.OPEN_HIER:
+			bn = [];
+			for b in self.get_flow_graph().get_selected_blocks():
+				if b._grc_source:
+				    self.main_window.new_page(b._grc_source, show=True);
 		else: print '!!! Action "%s" not handled !!!'%action
 		##################################################
 		# Global Actions for all States
@@ -325,6 +335,8 @@ class ActionHandler:
 		#update enable/disable
 		Actions.BLOCK_ENABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.BLOCK_DISABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.OPEN_HIER.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.RELOAD_BLOCKS.set_sensitive(True)
 		#set the exec and stop buttons
 		self.update_exec_stop()
 		#saved status

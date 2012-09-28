@@ -71,6 +71,7 @@ class Block(Element):
 		self._name = n.find('name')
 		self._key = n.find('key')
 		self._category = n.find('category') or ''
+		self._grc_source = n.find('grc_source') or ''
 		self._block_wrapper_path = n.find('block_wrapper_path')
 		#create the param objects
 		self._params = list()
