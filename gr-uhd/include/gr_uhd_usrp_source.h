@@ -129,6 +129,19 @@ public:
     virtual void set_start_time(const uhd::time_spec_t &time) = 0;
 
     /*!
+     * *Advanced use only:*
+     * Issue a stream command to all channels in this source block.
+     *
+     * This method is intended to override the default "always on" behavior.
+     * After starting the flow graph, the user should call stop() on this block,
+     * then issue any desired arbitrary stream_cmd_t structs to the device.
+     * The USRP will be able to enqueue several stream commands in the FPGA.
+     *
+     * \param cmd the stream command to issue to all source channels
+     */
+    virtual void issue_stream_cmd(const uhd::stream_cmd_t &cmd) = 0;
+
+    /*!
      * Returns identifying information about this USRP's configuration.
      * Returns motherboard ID, name, and serial.
      * Returns daughterboard RX ID, subdev name and spec, serial, and antenna.

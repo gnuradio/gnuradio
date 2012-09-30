@@ -269,8 +269,9 @@ gr_udp_source::work (int noutput_items,
     else if(r == 0 ) {  // timed out
       if( d_wait ) {
 	// Allow boost thread interrupt, then try again
-	boost::this_thread::interruption_point();
-	continue;
+	//boost::this_thread::interruption_point();
+	//continue;
+	return 0;
       }
       else
 	return -1;
@@ -294,8 +295,9 @@ gr_udp_source::work (int noutput_items,
 
 	if( d_wait ) {
 	  // Allow boost thread interrupt, then try again
-	  boost::this_thread::interruption_point();
-	  continue;
+	  //boost::this_thread::interruption_point();
+	  //continue;
+	  return 0;
 	}
 	else
 	  return -1;
