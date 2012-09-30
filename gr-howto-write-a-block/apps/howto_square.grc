@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu Nov 12 11:26:07 2009</timestamp>
+  <timestamp>Sun Sep 30 13:32:27 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -44,6 +44,10 @@
       <value>True</value>
     </param>
     <param>
+      <key>max_nouts</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>realtime_scheduling</key>
       <value></value>
     </param>
@@ -72,7 +76,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 170)</value>
+      <value>(176, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -138,8 +142,16 @@
       <value></value>
     </param>
     <param>
+      <key>trig_mode</key>
+      <value>gr.gr_TRIG_MODE_AUTO</value>
+    </param>
+    <param>
+      <key>y_axis_label</key>
+      <value>Counts</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(691, 222)</value>
+      <value>(645, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -158,7 +170,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(709, 344)</value>
+      <value>(484, 163)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -189,7 +201,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(497, 340)</value>
+      <value>(272, 159)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -224,7 +236,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(246, 332)</value>
+      <value>(21, 151)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -290,8 +302,16 @@
       <value></value>
     </param>
     <param>
+      <key>trig_mode</key>
+      <value>gr.gr_TRIG_MODE_AUTO</value>
+    </param>
+    <param>
+      <key>y_axis_label</key>
+      <value>Counts</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(869, 324)</value>
+      <value>(644, 150)</value>
     </param>
     <param>
       <key>_rotation</key>

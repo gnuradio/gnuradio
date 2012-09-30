@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -69,7 +69,7 @@ endif()
 include(GrPlatform) #define LIB_SUFFIX
 set(GR_RUNTIME_DIR      bin)
 set(GR_LIBRARY_DIR      lib${LIB_SUFFIX})
-set(GR_INCLUDE_DIR      include)
+set(GR_INCLUDE_DIR      include/howto)
 set(GR_DATA_DIR         share)
 set(GR_PKG_DATA_DIR     ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME})
 set(GR_DOC_DIR          ${GR_DATA_DIR}/doc)
@@ -85,6 +85,7 @@ set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
 ########################################################################
 find_package(Gruel)
 find_package(GnuradioCore)
+find_package(CppUnit)
 
 if(NOT GRUEL_FOUND)
     message(FATAL_ERROR "Gruel required to compile howto")
@@ -94,6 +95,10 @@ if(NOT GNURADIO_CORE_FOUND)
     message(FATAL_ERROR "GnuRadio Core required to compile howto")
 endif()
 
+if(NOT CPPUNIT_FOUND)
+    message(FATAL_ERROR "CppUnit required to compile howto")
+endif()
+
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
@@ -101,12 +106,14 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include
     ${Boost_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${CPPUNIT_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
 )
 
 link_directories(
     ${Boost_LIBRARY_DIRS}
     ${GRUEL_LIBRARY_DIRS}
+    ${CPPUNIT_LIBRARY_DIRS}
     ${GNURADIO_CORE_LIBRARY_DIRS}
 )
 
@@ -129,7 +136,7 @@ add_custom_target(uninstall
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include)
+add_subdirectory(include/howto)
 add_subdirectory(lib)
 add_subdirectory(swig)
 add_subdirectory(python)

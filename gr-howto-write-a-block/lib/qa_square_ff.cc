@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,12 +21,12 @@
 
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(qa_howto_square_ff_t1){
+BOOST_AUTO_TEST_CASE(qa_square_ff_t1){
     BOOST_CHECK_EQUAL(2 + 2, 4);
     // TODO BOOST_* test macros here
 }
 
-BOOST_AUTO_TEST_CASE(qa_howto_square_ff_t2){
+BOOST_AUTO_TEST_CASE(qa_square_ff_t2){
     BOOST_CHECK_EQUAL(2 + 2, 4);
     // TODO BOOST_* test macros here
 }

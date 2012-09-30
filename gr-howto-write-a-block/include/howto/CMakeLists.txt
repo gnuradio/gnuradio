@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,8 +21,8 @@
 # Install public header files
 ########################################################################
 install(FILES
-    howto_api.h
-    howto_square_ff.h
-    howto_square2_ff.h
+    api.h
+    square_ff.h
+    square2_ff.h
     DESTINATION include/howto
 )

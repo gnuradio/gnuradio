@@ -2,10 +2,9 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Howto Square
-# Generated: Thu Nov 12 11:26:07 2009
+# Generated: Sun Sep 30 13:32:52 2012
 ##################################################
 
-import howto
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio.eng_option import eng_option
@@ -13,6 +12,7 @@ from gnuradio.gr import firdes
 from gnuradio.wxgui import scopesink2
 from grc_gnuradio import wxgui as grc_wxgui
 from optparse import OptionParser
+import howto
 import wx
 
 class howto_square(grc_wxgui.top_block_gui):
@@ -28,18 +28,9 @@ class howto_square(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
-		self.sink = scopesink2.scope_sink_f(
-			self.GetWin(),
-			title="Input",
-			sample_rate=samp_rate,
-			v_scale=20,
-			v_offset=0,
-			t_scale=0.002,
-			ac_couple=False,
-			xy_mode=False,
-			num_inputs=1,
-		)
-		self.Add(self.sink.win)
+		self.thr = gr.throttle(gr.sizeof_float*1, samp_rate)
+		self.src = gr.vector_source_f(([float(n)-50 for n in range(100)]), True, 1)
+		self.sqr = howto.square_ff()
 		self.sink2 = scopesink2.scope_sink_f(
 			self.GetWin(),
 			title="Output",
@@ -50,11 +41,24 @@ class howto_square(grc_wxgui.top_block_gui):
 			ac_couple=False,
 			xy_mode=False,
 			num_inputs=1,
+			trig_mode=gr.gr_TRIG_MODE_AUTO,
+			y_axis_label="Counts",
 		)
 		self.Add(self.sink2.win)
-		self.sqr = howto.square_ff()
-		self.src = gr.vector_source_f(([float(n)-50 for n in range(100)]), True, 1)
-		self.thr = gr.throttle(gr.sizeof_float*1, samp_rate)
+		self.sink = scopesink2.scope_sink_f(
+			self.GetWin(),
+			title="Input",
+			sample_rate=samp_rate,
+			v_scale=20,
+			v_offset=0,
+			t_scale=0.002,
+			ac_couple=False,
+			xy_mode=False,
+			num_inputs=1,
+			trig_mode=gr.gr_TRIG_MODE_AUTO,
+			y_axis_label="Counts",
+		)
+		self.Add(self.sink.win)
 
 		##################################################
 		# Connections
@@ -63,6 +67,11 @@ class howto_square(grc_wxgui.top_block_gui):
 		self.connect((self.src, 0), (self.thr, 0))
 		self.connect((self.thr, 0), (self.sink, 0))
 		self.connect((self.sqr, 0), (self.sink2, 0))
+
+# QT sink close method reimplementation
+
+	def get_samp_rate(self):
+		return self.samp_rate
 
 	def set_samp_rate(self, samp_rate):
 		self.samp_rate = samp_rate
