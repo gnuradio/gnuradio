@@ -338,8 +338,8 @@ public:
 
         //If receive resulted in a timeout condition:
         //We now receive a single packet with a large timeout.
-        while (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT){
-            if (boost::this_thread::interruption_requested()) return WORK_DONE;
+        if (_metadata.error_code == uhd::rx_metadata_t::ERROR_CODE_TIMEOUT)
+        {
             num_samps = _rx_stream->recv(
                 output_items, noutput_items, _metadata, 0.1, true/*one pkt*/
             );
@@ -377,9 +377,8 @@ public:
             break;
 
         case uhd::rx_metadata_t::ERROR_CODE_TIMEOUT:
-            //Assume that the user called stop() on the flow graph.
-            //However, a timeout can occur under error conditions.
-            return WORK_DONE;
+            //its ok to timeout, perhaps the user is doing finite streaming
+            return 0;
 
         case uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
             _tag_now = true;
