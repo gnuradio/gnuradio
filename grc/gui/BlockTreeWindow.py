@@ -92,6 +92,11 @@ class BlockTreeWindow(gtk.VBox):
 		#initialize
 		self._update_add_button()
 
+	def clear(self):
+		self.treestore.clear();
+		self._categories = {tuple(): None}
+
+
 	############################################################
 	## Block Tree Methods
 	############################################################

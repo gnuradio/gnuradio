@@ -449,6 +449,7 @@ gr_block_executor::run_one_iteration()
     // We didn't produce any output even though we called general_work.
     // We have (most likely) consumed some input.
 
+    /*
     // If this is a source, it's broken.
     if (d->source_p()){
       std::cerr << "gr_block_executor: source " << m
@@ -456,6 +457,7 @@ gr_block_executor::run_one_iteration()
       // FIXME maybe we ought to raise an exception...
       goto were_done;
     }
+    */
 
     // Have the caller try again...
     return READY_NO_OUTPUT;
