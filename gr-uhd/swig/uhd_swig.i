@@ -76,6 +76,8 @@
 
 %include <uhd/types/time_spec.hpp>
 
+%include <uhd/types/stream_cmd.hpp>
+
 %include <uhd/types/clock_config.hpp>
 
 %include <uhd/types/metadata.hpp>

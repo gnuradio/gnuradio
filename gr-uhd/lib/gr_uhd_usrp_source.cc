@@ -402,6 +402,11 @@ public:
         _stream_now = false;
     }
 
+    void issue_stream_cmd(const uhd::stream_cmd_t &cmd)
+    {
+        _dev->issue_stream_cmd(cmd);
+    }
+
     bool start(void){
         #ifdef GR_UHD_USE_STREAM_API
         _rx_stream = _dev->get_rx_stream(_stream_args);
