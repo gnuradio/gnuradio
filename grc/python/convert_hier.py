@@ -73,6 +73,7 @@ def convert_hier(flow_graph, python_file):
 		block_n['source'].append(source_n)
 	#doc data
 	block_n['doc'] = "%s\n%s\n%s"%(block_author, block_desc, python_file)
+	block_n['grc_source'] = "%s"%(flow_graph.grc_file_path)
 	#write the block_n to file
 	xml_file = python_file + '.xml'
 	ParseXML.to_file({'block': block_n}, xml_file)
