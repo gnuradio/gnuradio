@@ -37,4 +37,24 @@
 		<name>out</name>
 		<type>byte</type>
 	</source>
+	<source>
+		<name>error</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+	<source>
+		<name>phase</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+	<source>
+		<name>frequency</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+	<source>
+		<name>symbol</name>
+		<type>gr_complex</type>
+		<optional>1</optional>
+	</source>
 </block>
