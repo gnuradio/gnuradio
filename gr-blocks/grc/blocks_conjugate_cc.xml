@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Complex Conjugate
+###################################################
+ -->
+<block>
+	<name>Complex Conjugate</name>
+	<key>blocks_conjugate_cc</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.conjugate_cc()</make>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

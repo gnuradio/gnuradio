@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Multiply Conjugate Block:
+##	2 complex inputs, 1 complex output
+###################################################
+ -->
+<block>
+	<name>Multiply Conjugate</name>
+	<key>blocks_multiply_conjugate_cc</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.multiply_conjugate_cc($vlen)</make>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in0</name>
+		<type>complex</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<sink>
+		<name>in1</name>
+		<type>complex</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

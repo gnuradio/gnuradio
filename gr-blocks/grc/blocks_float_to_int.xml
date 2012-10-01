@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Float to Int:
+###################################################
+ -->
+<block>
+	<name>Float To Int</name>
+	<key>blocks_float_to_int</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.float_to_int($vlen, $scale)</make>
+	<callback>set_scale($scale)</callback>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Scale</name>
+		<key>scale</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>int</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

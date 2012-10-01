@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Char to Float:
+###################################################
+ -->
+<block>
+	<name>Char To Float</name>
+	<key>blocks_char_to_float</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.char_to_float($vlen, $scale)</make>
+	<callback>set_scale($scale)</callback>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Scale</name>
+		<key>scale</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

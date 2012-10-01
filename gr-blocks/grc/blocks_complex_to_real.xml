@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Complex to Float:
+##	one or two output streams
+###################################################
+ -->
+<block>
+	<name>Complex To Float</name>
+	<key>blocks_complex_to_float</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.complex_to_float($vlen)</make>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>re</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</source>
+	<source>
+		<name>im</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+		<optional>1</optional>
+	</source>
+</block>
