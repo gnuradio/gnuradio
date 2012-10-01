@@ -126,6 +126,9 @@ namespace gr {
       unsigned int d_rotational_symmetry;
       unsigned int d_dimensionality;
       unsigned int d_arity;
+      //! The factor by which the user given constellation points were
+      //! scaled by to achieve an average amplitude of 1.
+      float d_scalefactor;
 
       float get_distance(unsigned int index, const gr_complex *sample);
       unsigned int get_closest_point(const gr_complex *sample);
