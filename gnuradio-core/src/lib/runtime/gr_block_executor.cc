@@ -206,7 +206,7 @@ gr_block_executor::run_one_iteration()
 
     // determine the minimum available output space
     noutput_items = min_available_space (d, m->output_multiple ());
-    noutput_items = std::min(noutput_items, d_max_noutput_items);
+    noutput_items = std::min(noutput_items, max_noutput_items);
     LOG(*d_log << " source\n  noutput_items = " << noutput_items << std::endl);
     if (noutput_items == -1)		// we're done
       goto were_done;
@@ -251,7 +251,7 @@ gr_block_executor::run_one_iteration()
     // take a swag at how much output we can sink
     noutput_items = (int) (max_items_avail * m->relative_rate ());
     noutput_items = round_down (noutput_items, m->output_multiple ());
-    noutput_items = std::min(noutput_items, d_max_noutput_items);
+    noutput_items = std::min(noutput_items, max_noutput_items);
     LOG(*d_log << "  max_items_avail = " << max_items_avail << std::endl);
     LOG(*d_log << "  noutput_items = " << noutput_items << std::endl);
 

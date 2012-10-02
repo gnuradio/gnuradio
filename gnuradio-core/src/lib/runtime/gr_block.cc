@@ -40,6 +40,8 @@ gr_block::gr_block (const std::string &name,
     d_relative_rate (1.0),
     d_history(1),
     d_fixed_rate(false),
+    d_max_noutput_items_set(false),
+    d_max_noutput_items(0),
     d_tag_propagation_policy(TPP_ALL_TO_ALL)
 {
 }
@@ -206,6 +208,35 @@ void
 gr_block::set_tag_propagation_policy(tag_propagation_policy_t p)
 {
   d_tag_propagation_policy = p;
+}
+
+
+int
+gr_block::max_noutput_items()
+{
+  return d_max_noutput_items;
+}
+
+void
+gr_block::set_max_noutput_items(int m)
+{
+  if(m <= 0)
+    throw std::runtime_error("gr_block::set_max_noutput_items: value for max_noutput_items must be greater than 0.\n");
+
+  d_max_noutput_items = m;
+  d_max_noutput_items_set = true;
+}
+
+void
+gr_block::unset_max_noutput_items()
+{
+  d_max_noutput_items_set = false;
+}
+
+bool
+gr_block::is_set_max_noutput_items()
+{
+  return d_max_noutput_items_set;
 }
 
 std::ostream&

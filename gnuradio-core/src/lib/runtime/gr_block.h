@@ -251,6 +251,43 @@ class GR_CORE_API gr_block : public gr_basic_block {
    */
   void set_tag_propagation_policy(tag_propagation_policy_t p);
 
+  /*!
+   * \brief Return the maximum number of output items this block will
+   * handle during a call to work.
+   */
+  int max_noutput_items();
+
+  /*!
+   * \brief Set the maximum number of ouput items htis block will
+   * handle during a call to work.
+   *
+   * \param m the maximum noutput_items this block will handle.
+   */
+  void set_max_noutput_items(int m);
+
+  /*!
+   * \brief Clear the switch for using the max_noutput_items value of this block.
+   *
+   * When is_set_max_noutput_items() returns 'true', the scheduler
+   * will use the value returned by max_noutput_items() to limit the
+   * size of the number of items possible for this block's work
+   * function. If is_set_max_notput_items() returns 'false', then the
+   * scheduler ignores the internal value and uses the value set
+   * globally in the top_block.
+   *
+   * Use this value to clear the 'is_set' flag so the scheduler will
+   * ignore this. Use the set_max_noutput_items(m) call to both set a
+   * new value for max_noutput_items and to reenable its use in the
+   * scheduler.
+   */
+  void unset_max_noutput_items();
+
+  /*!
+   * \brief Ask the block if the flag is or is not set to use the
+   * internal value of max_noutput_items during a call to work.
+   */
+  bool is_set_max_noutput_items();
+
   // ----------------------------------------------------------------------------
 
  private:
@@ -263,6 +300,8 @@ class GR_CORE_API gr_block : public gr_basic_block {
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
+  bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
+  int                   d_max_noutput_items;         // value of max_noutput_items for this block
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
 
  protected:
