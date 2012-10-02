@@ -108,20 +108,28 @@ public:
     gr_io_signature_sptr input_signature() const  { return d_input_signature; }
     gr_io_signature_sptr output_signature() const { return d_output_signature; }
     gr_basic_block_sptr to_basic_block(); // Needed for Python type coercion
-    long max_output_buffer(size_t i){ return d_max_output_buffer.size()>i?d_max_output_buffer[i]:d_max_output_buffer[0]; }
+    long max_output_buffer(size_t i) {
+      if(d_max_output_buffer.size() <= i)
+	throw std::invalid_argument("gr_basic_block::max_output_buffer: port out of range.");
+      return d_max_output_buffer[i];
+    }
     void set_max_output_buffer(long max_output_buffer){ 
         for(int i=0; i<output_signature()->max_streams(); i++){
             set_max_output_buffer(max_output_buffer, i);
         }
     }
-    void set_max_output_buffer(long max_output_buffer, int port){ d_max_output_buffer[port] = max_output_buffer; }
-    long min_output_buffer(size_t i){ return d_min_output_buffer.size()>i?d_min_output_buffer[i]:d_min_output_buffer[0]; }
+    void set_max_output_buffer(int port, long max_output_buffer){ d_max_output_buffer[port] = max_output_buffer; }
+    long min_output_buffer(size_t i) {
+      if(d_min_output_buffer.size() <= i)
+	throw std::invalid_argument("gr_basic_block::min_output_buffer: port out of range.");
+      return d_min_output_buffer[i];
+    }
     void set_min_output_buffer(long min_output_buffer){ 
         for(int i=0; i<output_signature()->max_streams(); i++){
             set_min_output_buffer(min_output_buffer, i);
         }
     }
-    void set_min_output_buffer(long min_output_buffer, int port){ d_min_output_buffer[port] = min_output_buffer; }
+    void set_min_output_buffer(int port, long min_output_buffer){ d_min_output_buffer[port] = min_output_buffer; }
     
     /*!
      * \brief Confirm that ninputs and noutputs is an acceptable combination.
