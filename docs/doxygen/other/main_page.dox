@@ -152,7 +152,7 @@ To set the output buffer size of a block, you simply call:
 
 \code
      tb.blk0.set_max_output_buffer(2000)
-     tb.blk1.set_max_output_buffer(2000,1)
+     tb.blk1.set_max_output_buffer(1, 2000)
      tb.start()
      print tb.blk1.max_output_buffer(0)
      print tb.blk1.max_output_buffer(1)
