@@ -88,6 +88,9 @@ gr_flat_flowgraph::allocate_block_detail(gr_basic_block_sptr block)
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "Allocated buffer for output " << block << ":" << i << std::endl;
     detail->set_output(i, buffer);
+
+    // Update the block's max_output_buffer based on what was actually allocated.
+    block->set_max_output_buffer(i, buffer->bufsize());
   }
 
   return detail;
