@@ -50,6 +50,12 @@ namespace pmt {
 
   //! Make pmt long
   static inline pmt_t
+  mp(long long unsigned x){
+    return pmt_from_long(x);
+  }
+
+  //! Make pmt long
+  static inline pmt_t
   mp(int x){
     return pmt_from_long(x);
   }
