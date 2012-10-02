@@ -139,6 +139,56 @@ the FIR filter, which can receive up to 2000 items.
      tb.run(1000)
 \endcode
 
+In some situations, you might actually want to restrict the size of
+the buffer itself. This can help to prevent a buffer who is blocked
+for data from just increasing the amount of items in its buffer, which
+will then cause an increased latency for new samples. You can set the
+size of an output buffer for each output port for every block. 
+
+WARNING: This is an advanced feature in GNU Radio and should not be
+used without a full understanding of this concept as explained below.
+
+To set the output buffer size of a block, you simply call:
+
+\code
+     tb.blk0.set_max_output_buffer(2000)
+     tb.blk1.set_max_output_buffer(2000,1)
+     tb.start()
+     print tb.blk1.max_output_buffer(0)
+     print tb.blk1.max_output_buffer(1)
+\endcode
+
+In the above example, all ports of blk0 are set to a buffer size of
+2000 in _items_ (not bytes), and blk1 only sets the size for output
+port 1, any and all other ports use the default. The third and fourth
+lines just print out the buffer sizes for ports 0 and 1 of blk1. This
+is done after start() is called because the values are updated based
+on what is actually allocated to the block's buffers.
+
+NOTES:
+
+1. Buffer length assignment is done once at runtime (i.e., when run()
+or start() is called). So to set the max buffer lengths, the
+set_max_output_buffer calls must be done before this.
+
+2. Once the flowgraph is started, the buffer lengths for a block are
+set and cannot be dynamically changed, even during a
+lock()/unlock(). If you need to change the buffer size, you will have
+to delete the block and rebuild it, and therefore must disconnect and
+reconnect the blocks.
+
+3. This can affect throughput. Large buffers are designed to improve
+the efficiency and speed of the program at the expense of
+latency. Limiting the size of the buffer may decrease performance.
+
+4. The real buffer size is actually based on a minimum granularity of
+the system. Typically, this is a page size, which is typically 4096
+bytes. This means that any buffer size that is specified with this
+command will get rounded up to the nearest granularity (e.g., page)
+size. When calling max_output_buffer(port) after the flowgraph is
+started, you will get how many items were actually allocated in the
+buffer, which may be different than what was initially specified.
+
 
 \section reconfigure Reconfiguring Flowgraphs
 
