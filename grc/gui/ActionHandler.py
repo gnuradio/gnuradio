@@ -264,6 +264,7 @@ class ActionHandler:
 			else:
 				try:
 					ParseXML.to_file(self.get_flow_graph().export_data(), self.get_page().get_file_path())
+                                        self.get_flow_graph().grc_file_path = self.get_page().get_file_path()
 					self.get_page().set_saved(True)
 				except IOError:
 					Messages.send_fail_save(self.get_page().get_file_path())
