@@ -84,10 +84,14 @@ gr_flat_flowgraph::allocate_block_detail(gr_basic_block_sptr block)
     std::cout << "Creating block detail for " << block << std::endl;
 
   for (int i = 0; i < noutputs; i++) {
+    block->expand_minmax_buffer(i);
     gr_buffer_sptr buffer = allocate_buffer(block, i);
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "Allocated buffer for output " << block << ":" << i << std::endl;
     detail->set_output(i, buffer);
+
+    // Update the block's max_output_buffer based on what was actually allocated.
+    block->set_max_output_buffer(i, buffer->bufsize());
   }
 
   return detail;
@@ -114,6 +118,21 @@ gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
   // ensure we have a buffer at least twice their decimation factor*output_multiple
   gr_basic_block_vector_t blocks = calc_downstream_blocks(block, port);
 
+  // limit buffer size if indicated
+  if(block->max_output_buffer(port) > 0) {
+//    std::cout << "constraining output items to " << block->max_output_buffer(port) << "\n";
+    nitems = std::min((long)nitems, (long)block->max_output_buffer(port));
+    nitems -= nitems%grblock->output_multiple();
+    if( nitems < 1 )
+      throw std::runtime_error("problems allocating a buffer with the given max output buffer constraint!");
+  }
+  else if(block->min_output_buffer(port) > 0) {
+    nitems = std::max((long)nitems, (long)block->min_output_buffer(port));
+    nitems -= nitems%grblock->output_multiple();
+    if( nitems < 1 )
+      throw std::runtime_error("problems allocating a buffer with the given min output buffer constraint!");
+  }
+
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
     gr_block_sptr dgrblock = cast_to_block_sptr(*p);
     if (!dgrblock)
@@ -125,6 +144,7 @@ gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
     nitems = std::max(nitems, static_cast<int>(2*(decimation*multiple+history)));
   }
 
+//  std::cout << "gr_make_buffer(" << nitems << ", " << item_size << ", " << grblock << "\n";
   return gr_make_buffer(nitems, item_size, grblock);
 }
 
@@ -267,10 +287,10 @@ gr_flat_flowgraph::setup_buffer_alignment(gr_block_sptr block)
   for(int i = 0; i < block->detail()->ninputs(); i++) {
     void *r = (void*)block->detail()->input(i)->read_pointer();
     unsigned long int ri = (unsigned long int)r % alignment;
-    //std::cout << "reader: " << r << "  alignment: " << ri << std::endl;
+    //std::cerr << "reader: " << r << "  alignment: " << ri << std::endl;
     if(ri != 0) {
       size_t itemsize = block->detail()->input(i)->get_sizeof_item();
-      block->detail()->input(i)->update_read_pointer(ri/itemsize);
+      block->detail()->input(i)->update_read_pointer(alignment-ri/itemsize);
     }
     block->set_unaligned(0);
     block->set_is_unaligned(false);
@@ -279,10 +299,10 @@ gr_flat_flowgraph::setup_buffer_alignment(gr_block_sptr block)
   for(int i = 0; i < block->detail()->noutputs(); i++) {
     void *w = (void*)block->detail()->output(i)->write_pointer();
     unsigned long int wi = (unsigned long int)w % alignment;
-    size_t itemsize = block->detail()->output(i)->get_sizeof_item();
-    //std::cout << "writer: " << w << "  alignment: " << wi << std::endl;
+    //std::cerr << "writer: " << w << "  alignment: " << wi << std::endl;
     if(wi != 0) {
-      block->detail()->output(i)->update_write_pointer(wi/itemsize);
+      size_t itemsize = block->detail()->output(i)->get_sizeof_item();
+      block->detail()->output(i)->update_write_pointer(alignment-wi/itemsize);
     }
     block->set_unaligned(0);
     block->set_is_unaligned(false);

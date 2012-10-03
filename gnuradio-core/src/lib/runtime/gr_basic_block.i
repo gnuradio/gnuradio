@@ -42,6 +42,12 @@ public:
     long unique_id() const;
     gr_basic_block_sptr to_basic_block();
     bool check_topology (int ninputs, int noutputs);
+    long max_output_buffer(int i);
+    void set_max_output_buffer(long max_output_buffer);
+    void set_max_output_buffer(int port, long max_output_buffer);
+    long min_output_buffer(int i);
+    void set_min_output_buffer(long min_output_buffer);
+    void set_min_output_buffer(int port, long min_output_buffer);
 };
 
 %rename(block_ncurrently_allocated) gr_basic_block_ncurrently_allocated;

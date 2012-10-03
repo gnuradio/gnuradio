@@ -45,7 +45,9 @@ gr_basic_block::gr_basic_block(const std::string &name,
     d_input_signature(input_signature),
     d_output_signature(output_signature),
     d_unique_id(s_next_id++),
-    d_color(WHITE)
+    d_color(WHITE),
+    d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
+    d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
 {
     s_ncurrently_allocated++;
 }
