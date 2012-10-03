@@ -153,6 +153,134 @@ class ActionHandler:
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
+                ##################################################
+                # Create heir block 
+                ##################################################
+		elif action == Actions.BLOCK_CREATE_HIER:
+
+                        # keeping track of coordinates for pasting later
+                        coords = self.get_flow_graph().get_selected_blocks()[0].get_coordinate()
+                        x,y = coords
+                        x_min = x 
+                        y_min = y
+
+                        pads = [];
+                        params = [];
+
+                        # Save the state of the leaf blocks
+                        for block in self.get_flow_graph().get_selected_blocks():
+
+                            # Check for string variables within the blocks
+                            for param in block.get_params():
+                                for variable in self.get_flow_graph().get_variables():
+                                    # If a block parameter exists that is a variable, create a parameter for it
+                                    if param.get_value() == variable.get_id():
+                                        params.append(param.get_value())
+                                for flow_param in self.get_flow_graph().get_parameters():
+                                    # If a block parameter exists that is a parameter, create a parameter for it
+                                    if param.get_value() == flow_param.get_id():
+                                        params.append(param.get_value())
+           
+                          
+                            # keep track of x,y mins for pasting later 
+                            (x,y) = block.get_coordinate()
+                            if x < x_min:
+                                x_min = x
+                            if y < y_min:
+                                y_min = y
+
+                            for connection in block.get_connections():
+
+                                # Get id of connected blocks
+                                source_id = connection.get_source().get_parent().get_id()
+                                sink_id = connection.get_sink().get_parent().get_id()
+                                
+                                # If connected block is not in the list of selected blocks create a pad for it 
+                                if self.get_flow_graph().get_block(source_id) not in self.get_flow_graph().get_selected_blocks():
+                                    pads.append({'key': connection.get_sink().get_key(), 'coord': connection.get_source().get_coordinate(), 'block_id' : block.get_id(), 'direction': 'source'})
+
+                                if self.get_flow_graph().get_block(sink_id) not in self.get_flow_graph().get_selected_blocks():
+                                    pads.append({'key': connection.get_source().get_key(), 'coord': connection.get_sink().get_coordinate(), 'block_id' : block.get_id(), 'direction': 'sink'})
+
+
+                        # Copy the selected blocks and paste them into a new page
+                        #   then move the flowgraph to a reasonable position
+			Actions.BLOCK_COPY()
+			self.main_window.new_page()
+                        Actions.BLOCK_PASTE()
+                        coords = (x_min,y_min)
+                        self.get_flow_graph().move_selected(coords)
+
+
+                        # Set flow graph to heir block type
+                        top_block  = self.get_flow_graph().get_block("top_block")
+                        top_block.get_param('generate_options').set_value('hb')
+
+                        # this needs to be a unique name
+                        top_block.get_param('id').set_value('new_heir')
+
+                        # Remove the default samp_rate variable block that is created
+                        remove_me  = self.get_flow_graph().get_block("samp_rate")
+                        self.get_flow_graph().remove_element(remove_me) 
+
+
+                        # Add the param blocks along the top of the window
+                        x_pos = 150
+                        for param in params:
+                            param_id = self.get_flow_graph().add_new_block('parameter',(x_pos,10))
+                            param_block = self.get_flow_graph().get_block(param_id)
+                            param_block.get_param('id').set_value(param)
+                            x_pos = x_pos + 100
+
+                        for pad in pads:
+                            # Add the pad sources and sinks within the new heir block
+                            if pad['direction'] == 'sink':
+
+                                # Add new PAD_SINK block to the canvas
+                                pad_id = self.get_flow_graph().add_new_block('pad_sink', pad['coord'])
+
+                                # setup the references to the sink and source
+                                pad_block = self.get_flow_graph().get_block(pad_id)
+                                pad_sink = pad_block.get_sinks()[0]
+
+                                source_block = self.get_flow_graph().get_block(pad['block_id'])
+                                source = source_block.get_source(pad['key'])
+
+                                # Ensure the port types match
+                                while pad_sink.get_type() != source.get_type():
+
+                                    # Special case for some blocks that have non-standard type names, e.g. uhd
+                                    if pad_sink.get_type() == 'complex' and source.get_type() == 'fc32':
+                                        break;
+                                    pad_block.type_controller_modify(1)
+
+                                # Connect the pad to the proper sinks
+                                new_connection = self.get_flow_graph().connect(source,pad_sink)
+
+                            elif pad['direction'] == 'source':
+                                pad_id = self.get_flow_graph().add_new_block('pad_source', pad['coord'])
+
+                                # setup the references to the sink and source
+                                pad_block = self.get_flow_graph().get_block(pad_id)
+                                pad_source = pad_block.get_sources()[0]
+
+                                sink_block = self.get_flow_graph().get_block(pad['block_id'])
+                                sink = sink_block.get_sink(pad['key'])
+
+                                # Ensure the port types match
+                                while sink.get_type() != pad_source.get_type():
+                                    # Special case for some blocks that have non-standard type names, e.g. uhd
+                                    if pad_source.get_type() == 'complex' and sink.get_type() == 'fc32':
+                                        break;
+                                    pad_block.type_controller_modify(1)
+
+                                # Connect the pad to the proper sinks
+                                new_connection = self.get_flow_graph().connect(pad_source,sink)
+
+                        # update the new heir block flow graph 
+		        self.get_flow_graph().update()
+                               
+
 		##################################################
 		# Move/Rotate/Delete/Create
 		##################################################
@@ -330,6 +458,7 @@ class ActionHandler:
 		#update enable/disable
 		Actions.BLOCK_ENABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.BLOCK_DISABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.BLOCK_CREATE_HIER.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.OPEN_HIER.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.RELOAD_BLOCKS.set_sensitive(True)
 		#set the exec and stop buttons

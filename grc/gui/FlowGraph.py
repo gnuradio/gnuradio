@@ -63,6 +63,7 @@ class FlowGraph(Element):
 			Actions.BLOCK_ENABLE,
 			Actions.BLOCK_DISABLE,
 			Actions.BLOCK_PARAM_MODIFY,
+			Actions.BLOCK_CREATE_HIER,
 			Actions.OPEN_HIER,
 		]: self._context_menu.append(action.create_menu_item())
 
@@ -97,6 +98,8 @@ class FlowGraph(Element):
 		block.set_rotation(0)
 		block.get_param('id').set_value(id)
 		Actions.ELEMENT_CREATE()
+
+                return id
 
 	###########################################################################
 	# Copy Paste
