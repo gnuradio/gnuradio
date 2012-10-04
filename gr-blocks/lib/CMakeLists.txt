@@ -18,6 +18,11 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
+# Setup compatibility checks and defines
+########################################################################
+include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
+
+########################################################################
 # generate helper scripts to expand templated files
 ########################################################################
 include(GrPython)
@@ -171,6 +176,7 @@ list(APPEND gr_blocks_sources
 
 list(APPEND blocks_libs
     gnuradio-core
+    volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
 )
