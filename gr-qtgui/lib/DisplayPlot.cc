@@ -186,6 +186,33 @@ DisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
 }
 
 void
+DisplayPlot::setMarkerAlpha(int which, int alpha)
+{
+  // Get the pen color
+  QPen pen(_plot_curve[which]->pen());
+  QColor color = pen.color();
+
+  // Set new alpha and update pen
+  color.setAlpha(alpha);
+  pen.setColor(color);
+  _plot_curve[which]->setPen(pen);
+
+  // And set the new color for the markers
+#if QWT_VERSION < 0x060000
+  //_plot_curve[which]->setBrush(QBrush(QColor(color)));
+  _plot_curve[which]->setPen(pen);
+
+  QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+  setLineMarker(which, sym.style());
+#else
+  QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+  sym->setColor(color);
+  sym->setPen(pen);
+  _plot_curve[which]->setSymbol(sym);
+#endif
+}
+
+void
 DisplayPlot::setStop(bool on)
 {
   _stop = on;  

@@ -64,6 +64,7 @@ public slots:
   void setLineWidth(int which, int width);
   void setLineStyle(int which, Qt::PenStyle style);
   void setLineMarker(int which, QwtSymbol::Style marker);
+  void setMarkerAlpha(int which, int alpha);
 
   void setStop(bool on);
 

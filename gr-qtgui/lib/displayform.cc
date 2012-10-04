@@ -55,6 +55,7 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
     _line_width_menu.push_back(new LineWidthMenu(i, this));
     _line_style_menu.push_back(new LineStyleMenu(i, this));
     _line_marker_menu.push_back(new LineMarkerMenu(i, this));
+    _marker_alpha_menu.push_back(new MarkerAlphaMenu(i, this));
 
     connect(_line_title_act[i], SIGNAL(whichTrigger(int, const QString&)),
 	    this, SLOT(setTitle(int, const QString&)));
@@ -78,6 +79,11 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
       connect(_line_marker_menu[i], SIGNAL(whichTrigger(int, QwtSymbol::Style)),
 	      this, SLOT(setLineMarker(int, QwtSymbol::Style)));
     }
+
+    for(int j = 0; j < _marker_alpha_menu[i]->getNumActions(); j++) {
+      connect(_marker_alpha_menu[i], SIGNAL(whichTrigger(int, int)),
+	      this, SLOT(setMarkerAlpha(int, int)));
+    }
     
     _lines_menu.push_back(new QMenu(tr(""), this));
     _lines_menu[i]->addAction(_line_title_act[i]);
@@ -85,6 +91,7 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
     _lines_menu[i]->addMenu(_line_width_menu[i]);
     _lines_menu[i]->addMenu(_line_style_menu[i]);
     _lines_menu[i]->addMenu(_line_marker_menu[i]);
+    _lines_menu[i]->addMenu(_marker_alpha_menu[i]);
     _menu->addMenu(_lines_menu[i]);
   }
 
@@ -208,6 +215,13 @@ void
 DisplayForm::setLineMarker(int which, QwtSymbol::Style marker)
 {
   _displayPlot->setLineMarker(which, marker);
+  _displayPlot->replot();
+}
+
+void
+DisplayForm::setMarkerAlpha(int which, int alpha)
+{
+  _displayPlot->setMarkerAlpha(which, alpha);
   _displayPlot->replot();
 }
 

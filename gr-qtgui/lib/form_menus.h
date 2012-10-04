@@ -347,6 +347,65 @@ private:
 /********************************************************************/
 
 
+class MarkerAlphaMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  MarkerAlphaMenu(int which, QWidget *parent)
+    : QMenu("Line Transparency", parent), d_which(which)
+  {
+    d_act.push_back(new QAction("None", this));
+    d_act.push_back(new QAction("Low", this));
+    d_act.push_back(new QAction("Medium", this));
+    d_act.push_back(new QAction("High", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getNone()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getLow()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getMedium()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getHigh()));
+
+    QListIterator<QAction*> i(d_act);
+    while(i.hasNext()) {
+      QAction *a = i.next();
+      addAction(a);
+    }
+  }
+
+  ~MarkerAlphaMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+  
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("MarkerAlphaMenu::getAction: which out of range.\n");
+  }
+
+signals:
+  void whichTrigger(int which, int);
+
+public slots:
+  void getNone()   { emit whichTrigger(d_which, 255); }
+  void getLow()    { emit whichTrigger(d_which, 200); }
+  void getMedium() { emit whichTrigger(d_which, 125); }
+  void getHigh()   { emit whichTrigger(d_which, 50); }
+
+private:
+  QList<QAction *> d_act;
+  int d_which;
+};
+
+
+/********************************************************************/
+
+
 class LineTitleAction: public QAction
 {
   Q_OBJECT

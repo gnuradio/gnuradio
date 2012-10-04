@@ -58,6 +58,7 @@ public slots:
   void setLineWidth(int which, int width);
   void setLineStyle(int which, Qt::PenStyle style);
   void setLineMarker(int which, QwtSymbol::Style style);
+  void setMarkerAlpha(int which, int alpha);
 
   void setStop(bool on);
   void setStop();
@@ -96,6 +97,7 @@ protected:
   QList<LineWidthMenu*> _line_width_menu;
   QList<LineStyleMenu*> _line_style_menu;
   QList<LineMarkerMenu*> _line_marker_menu;
+  QList<MarkerAlphaMenu*> _marker_alpha_menu;
 
   QTimer *d_displayTimer;
   double d_update_time;
