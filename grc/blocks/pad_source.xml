@@ -43,12 +43,32 @@
 			<key>byte</key>
 			<opt>size:gr.sizeof_char</opt>
 		</option>
+		<option>
+			<name>Wildcard</name>
+			<key></key>
+			<opt>size:0</opt>
+		</option>
 	</param>
 	<param>
 		<name>Vec Length</name>
 		<key>vlen</key>
 		<value>1</value>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Optional</name>
+		<key>optional</key>
+		<value>False</value>
+		<type>bool</type>
+		<hide>part</hide>
+		<option>
+			<name>Optional</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Required</name>
+			<key>False</key>
+		</option>
 	</param>
 	<check>$vlen &gt; 0</check>
 	<source>

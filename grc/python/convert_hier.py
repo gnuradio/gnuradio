@@ -62,6 +62,7 @@ def convert_hier(flow_graph, python_file):
 		sink_n['name'] = input_sig['label']
 		sink_n['type'] = input_sig['type']
 		sink_n['vlen'] = input_sig['vlen']
+		if input_sig['optional']: sink_n['optional'] = '1'
 		block_n['sink'].append(sink_n)
 	#source data
 	block_n['source'] = list()
@@ -70,6 +71,7 @@ def convert_hier(flow_graph, python_file):
 		source_n['name'] = output_sig['label']
 		source_n['type'] = output_sig['type']
 		source_n['vlen'] = output_sig['vlen']
+		if output_sig['optional']: source_n['optional'] = '1'
 		block_n['source'].append(source_n)
 	#doc data
 	block_n['doc'] = "%s\n%s\n%s"%(block_author, block_desc, python_file)
