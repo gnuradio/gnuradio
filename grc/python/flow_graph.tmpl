@@ -91,9 +91,9 @@ class $(class_name)(gr.hier_block2):
 	#if len($io_sigs) == 0
 gr.io_signature(0, 0, 0)#slurp
 	#elif len($io_sigs) == 1
-gr.io_signature(0, 1, $size_strs[0])#slurp
+gr.io_signature(1, 1, $size_strs[0])#slurp
 	#else
-gr.io_signaturev(0, $(len($io_sigs)), [$(', '.join($size_strs))])#slurp
+gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])#slurp
 	#end if
 #end def
 
