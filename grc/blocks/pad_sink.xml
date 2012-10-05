@@ -43,6 +43,11 @@
 			<key>byte</key>
 			<opt>size:gr.sizeof_char</opt>
 		</option>
+		<option>
+			<name>Wildcard</name>
+			<key></key>
+			<opt>size:0</opt>
+		</option>
 	</param>
 	<param>
 		<name>Vec Length</name>
