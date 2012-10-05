@@ -64,6 +64,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 			'type': str(pad.get_param('type').get_evaluated()),
 			'vlen': str(pad.get_param('vlen').get_evaluated()),
 			'size': pad.get_param('type').get_opt('size'),
+			'optional': bool(pad.get_param('optional').get_evaluated()),
 		} for pad in sorted_pads]
 
 	def get_pad_sources(self):
