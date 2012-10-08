@@ -55,8 +55,8 @@ public:
             const pmt::pmt_t &value = rx_time_tag.value;
 
             std::cout << boost::format("Full seconds %u, Frac seconds %f, abs sample offset %u")
-                % pmt::pmt_to_uint64(pmt_tuple_ref(value, 0))
-                % pmt::pmt_to_double(pmt_tuple_ref(value, 1))
+                % pmt::pmt_to_uint64(pmt::pmt_tuple_ref(value, 0))
+                % pmt::pmt_to_double(pmt::pmt_tuple_ref(value, 1))
                 % offset
             << std::endl;
         }
