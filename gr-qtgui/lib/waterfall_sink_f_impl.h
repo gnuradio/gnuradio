@@ -88,8 +88,8 @@ namespace gr {
       void set_frequency_range(const double centerfreq, const double bandwidth);
 
       void set_update_time(double t);
-      void set_title(const std::string &title);
-      void set_color(const std::string &color);
+      void set_line_label(const std::string &label);
+      void set_line_color(const std::string &color);
       void set_line_width(int width);
       void set_line_style(Qt::PenStyle style);
       void set_line_marker(QwtSymbol::Style marker);

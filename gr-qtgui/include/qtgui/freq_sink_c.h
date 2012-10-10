@@ -78,13 +78,15 @@ namespace gr {
       virtual void set_fft_power_db(double min, double max) = 0;
 
       virtual void set_update_time(double t) = 0;
-      virtual void set_title(int which, const std::string &title) = 0;
-      virtual void set_color(int which, const std::string &color) = 0;
+      virtual void set_line_label(int which, const std::string &label) = 0;
+      virtual void set_line_color(int which, const std::string &color) = 0;
       virtual void set_line_width(int which, int width) = 0;
       virtual void set_line_style(int which, Qt::PenStyle style) = 0;
       virtual void set_line_marker(int which, QwtSymbol::Style marker) = 0;
 
       virtual void set_size(int width, int height) = 0;
+
+      virtual void reset() = 0;
 
       QApplication *d_qApplication;
     };

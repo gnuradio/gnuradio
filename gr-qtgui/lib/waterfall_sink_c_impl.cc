@@ -189,15 +189,15 @@ namespace gr {
     }
 
     void
-    waterfall_sink_c_impl::set_title(const std::string &title)
+    waterfall_sink_c_impl::set_line_label(const std::string &label)
     {
-      d_main_gui->setTitle(0, title.c_str());
+      d_main_gui->setLineLabel(0, label.c_str());
     }
 
     void
-    waterfall_sink_c_impl::set_color(const std::string &color)
+    waterfall_sink_c_impl::set_line_color(const std::string &color)
     {
-      d_main_gui->setColor(0, color.c_str());
+      d_main_gui->setLineColor(0, color.c_str());
     }
 
     void

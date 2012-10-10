@@ -59,8 +59,8 @@ public:
 public slots:
   void setYaxis(double min, double max);
   void setXaxis(double min, double max);
-  void setTitle(int which, QString title);
-  void setColor(int which, QString color);
+  void setLineLabel(int which, QString label);
+  void setLineColor(int which, QString color);
   void setLineWidth(int which, int width);
   void setLineStyle(int which, Qt::PenStyle style);
   void setLineMarker(int which, QwtSymbol::Style marker);
@@ -68,7 +68,7 @@ public slots:
 
   void setStop(bool on);
 
-  QString title(int which);
+  QString lineLabel(int which);
 
   void resizeSlot(QSize *s);
 

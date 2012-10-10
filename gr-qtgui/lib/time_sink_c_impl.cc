@@ -134,15 +134,15 @@ namespace gr {
     }
 
     void
-    time_sink_c_impl::set_title(int which, const std::string &title)
+    time_sink_c_impl::set_line_label(int which, const std::string &label)
     {
-      d_main_gui->setTitle(which, title.c_str());
+      d_main_gui->setLineLabel(which, label.c_str());
     }
 
     void
-    time_sink_c_impl::set_color(int which, const std::string &color)
+    time_sink_c_impl::set_line_color(int which, const std::string &color)
     {
-      d_main_gui->setColor(which, color.c_str());
+      d_main_gui->setLineColor(which, color.c_str());
     }
 
     void
@@ -197,6 +197,18 @@ namespace gr {
     {
       int newsize = d_main_gui->GetNPoints();
       set_nsamps(newsize);
+    }
+
+    int
+    time_sink_c_impl::nsamps() const
+    {
+      return d_size;
+    }
+
+    void
+    time_sink_c_impl::reset()
+    {
+      d_index = 0;
     }
 
     int

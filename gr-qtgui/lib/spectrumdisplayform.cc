@@ -43,8 +43,8 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _averagedValues = new double[_numRealDataPoints];
   _historyVector = new std::vector<double*>;
 
-  _timeDomainDisplayPlot->setTitle(0, "real");
-  _timeDomainDisplayPlot->setTitle(1, "imag");
+  _timeDomainDisplayPlot->setLineLabel(0, "real");
+  _timeDomainDisplayPlot->setLineLabel(1, "imag");
 
   AvgLineEdit->setRange(0, 500);                 // Set range of Average box value from 0 to 500
   MinHoldCheckBox_toggled( false );

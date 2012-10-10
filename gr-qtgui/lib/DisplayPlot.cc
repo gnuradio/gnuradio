@@ -105,19 +105,19 @@ DisplayPlot::setXaxis(double min, double max)
 }
 
 void
-DisplayPlot::setTitle(int which, QString title)
+DisplayPlot::setLineLabel(int which, QString label)
 {
-  _plot_curve[which]->setTitle(title);
+  _plot_curve[which]->setTitle(label);
 }
 
 QString
-DisplayPlot::title(int which)
+DisplayPlot::lineLabel(int which)
 {
   return _plot_curve[which]->title().text();
 }
 
 void
-DisplayPlot::setColor(int which, QString color)
+DisplayPlot::setLineColor(int which, QString color)
 {
   // Set the color of the pen
   QPen pen(_plot_curve[which]->pen());

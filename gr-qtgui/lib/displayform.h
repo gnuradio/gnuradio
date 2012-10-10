@@ -53,8 +53,8 @@ public slots:
 
   void setUpdateTime(double t);
 
-  void setTitle(int which, const QString &title);
-  void setColor(int which, const QString &color);
+  void setLineLabel(int which, const QString &label);
+  void setLineColor(int which, const QString &color);
   void setLineWidth(int which, int width);
   void setLineStyle(int which, Qt::PenStyle style);
   void setLineMarker(int which, QwtSymbol::Style style);

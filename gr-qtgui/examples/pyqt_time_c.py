@@ -165,14 +165,14 @@ class my_top_block(gr.top_block):
         pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
 
         # Example of using signal/slot to set the title of a curve
-        pyWin.connect(pyWin, QtCore.SIGNAL("setTitle(int, QString)"),
-                      pyWin, QtCore.SLOT("setTitle(int, QString)"))
-        pyWin.emit(QtCore.SIGNAL("setTitle(int, QString)"), 0, "Re{sum}")
-        self.snk1.set_title(1, "Im{Sum}")
-        #self.snk1.set_title(2, "Re{src1}")
-        #self.snk1.set_title(3, "Im{src1}")
-        #self.snk1.set_title(4, "Re{src2}")
-        #self.snk1.set_title(5, "Im{src2}")
+        pyWin.connect(pyWin, QtCore.SIGNAL("setLineLabel(int, QString)"),
+                      pyWin, QtCore.SLOT("setLineLabel(int, QString)"))
+        pyWin.emit(QtCore.SIGNAL("setLineLabel(int, QString)"), 0, "Re{sum}")
+        self.snk1.set_line_label(1, "Im{Sum}")
+        #self.snk1.set_line_label(2, "Re{src1}")
+        #self.snk1.set_line_label(3, "Im{src1}")
+        #self.snk1.set_line_label(4, "Re{src2}")
+        #self.snk1.set_line_label(5, "Im{src2}")
 
         # Can also set the color of a curve
         #self.snk1.set_color(5, "blue")

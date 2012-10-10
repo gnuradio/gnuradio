@@ -91,13 +91,15 @@ namespace gr {
       void set_fft_power_db(double min, double max);
 
       void set_update_time(double t);
-      void set_title(int which, const std::string &title);
-      void set_color(int which, const std::string &color);
+      void set_line_label(int which, const std::string &label);
+      void set_line_color(int which, const std::string &color);
       void set_line_width(int which, int width);
       void set_line_style(int which, Qt::PenStyle style);
       void set_line_marker(int which, QwtSymbol::Style marker);
 
       void set_size(int width, int height);
+
+      void reset();
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

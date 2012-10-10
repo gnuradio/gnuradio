@@ -58,11 +58,11 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
     _marker_alpha_menu.push_back(new MarkerAlphaMenu(i, this));
 
     connect(_line_title_act[i], SIGNAL(whichTrigger(int, const QString&)),
-	    this, SLOT(setTitle(int, const QString&)));
+	    this, SLOT(setLineLabel(int, const QString&)));
 
     for(int j = 0; j < _line_color_menu[i]->getNumActions(); j++) {
       connect(_line_color_menu[i], SIGNAL(whichTrigger(int, const QString&)),
-	      this, SLOT(setColor(int, const QString&)));
+	      this, SLOT(setLineColor(int, const QString&)));
     }
 
     for(int j = 0; j < _line_width_menu[i]->getNumActions(); j++) {
@@ -145,7 +145,7 @@ DisplayForm::mousePressEvent( QMouseEvent * e)
 
       // Update the line titles if changed externally
       for(int i = 0; i < _nplots; i++) {
-	_lines_menu[i]->setTitle(_displayPlot->title(i));
+	_lines_menu[i]->setTitle(_displayPlot->lineLabel(i));
       }
       _menu->exec(e->globalPos());
     }
@@ -185,15 +185,15 @@ DisplayForm::setUpdateTime(double t)
 }
 
 void
-DisplayForm::setTitle(int which, const QString &title)
+DisplayForm::setLineLabel(int which, const QString &label)
 {
-  _displayPlot->setTitle(which, title);
+  _displayPlot->setLineLabel(which, label);
 }
 
 void
-DisplayForm::setColor(int which, const QString &color)
+DisplayForm::setLineColor(int which, const QString &color)
 {
-  _displayPlot->setColor(which, color);
+  _displayPlot->setLineColor(which, color);
   _displayPlot->replot();
 }
 

@@ -199,15 +199,15 @@ namespace gr {
     }
 
     void
-    freq_sink_c_impl::set_title(int which, const std::string &title)
+    freq_sink_c_impl::set_line_label(int which, const std::string &label)
     {
-      d_main_gui->setTitle(which, title.c_str());
+      d_main_gui->setLineLabel(which, label.c_str());
     }
 
     void
-    freq_sink_c_impl::set_color(int which, const std::string &color)
+    freq_sink_c_impl::set_line_color(int which, const std::string &color)
     {
-      d_main_gui->setColor(which, color.c_str());
+      d_main_gui->setLineColor(which, color.c_str());
     }
 
     void
@@ -232,6 +232,12 @@ namespace gr {
     freq_sink_c_impl::set_size(int width, int height)
     {
       d_main_gui->resize(QSize(width, height));
+    }
+
+    void
+    freq_sink_c_impl::reset()
+    {
+      d_index = 0;
     }
 
     void
