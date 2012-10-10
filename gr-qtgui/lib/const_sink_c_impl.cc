@@ -94,7 +94,7 @@ namespace gr {
       }
 
       d_main_gui = new ConstellationDisplayForm(d_nconnections, d_parent);
-      d_main_gui->SetNPoints(d_size);
+      d_main_gui->setNPoints(d_size);
       // initialize update time to 10 times a second
       set_update_time(0.1);
       d_last_time = 0;
@@ -118,6 +118,18 @@ namespace gr {
       PyObject *w = PyLong_FromVoidPtr((void*)d_main_gui);
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
+    }
+
+    void
+    const_sink_c_impl::set_y_axis(double min, double max)
+    {
+      d_main_gui->setYaxis(min, max);
+    }
+
+    void
+    const_sink_c_impl::set_x_axis(double min, double max)
+    {
+      d_main_gui->setXaxis(min, max);
     }
 
     void
@@ -193,14 +205,14 @@ namespace gr {
 	d_size = newsize;
 	d_index = 0;
 
-	d_main_gui->SetNPoints(d_size);
+	d_main_gui->setNPoints(d_size);
       }
     }
 
     void
     const_sink_c_impl::npoints_resize()
     {
-      int newsize = d_main_gui->GetNPoints();
+      int newsize = d_main_gui->getNPoints();
       set_nsamps(newsize);
     }
 

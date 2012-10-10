@@ -729,7 +729,7 @@ SpectrumDisplayForm::SetConstellationPenSize(int size)
 void
 SpectrumDisplayForm::SetFrequencyAxis(double min, double max)
 {
-  _frequencyDisplayPlot->set_yaxis(min, max);
+  _frequencyDisplayPlot->setYaxis(min, max);
 }
 
 void

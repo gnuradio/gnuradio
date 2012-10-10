@@ -65,7 +65,7 @@ namespace gr {
       virtual void exec_() = 0;
       virtual PyObject* pyqwidget() = 0;
 
-      virtual void set_time_domain_axis(double min, double max) = 0;
+      virtual void set_y_axis(double min, double max) = 0;
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
       virtual void set_line_label(int which, const std::string &line) = 0;

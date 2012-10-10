@@ -88,7 +88,7 @@ namespace gr {
       float fft_average() const;
 
       void set_frequency_range(const double centerfreq, const double bandwidth);
-      void set_fft_power_db(double min, double max);
+      void set_y_axis(double min, double max);
 
       void set_update_time(double t);
       void set_title(const std::string &title);

@@ -16,6 +16,8 @@ qtgui.$(type.fcn)(
 	$name, \#name
 	$nconnections \#number of inputs
 )
+self.$(id).set_y_axis($ymin, $ymax)
+self.$(id).set_x_axis($xmin, $xmax)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
         <callback>set_resize($width, $height)</callback>
@@ -41,6 +43,34 @@ $(gui_hint()($win))</make>
 		<key>size</key>
 		<value>1024</value>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Y min</name>
+		<key>ymin</key>
+		<value>-2</value>
+		<type>real</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Y max</name>
+		<key>ymax</key>
+		<value>2</value>
+		<type>real</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>X min</name>
+		<key>xmin</key>
+		<value>-2</value>
+		<type>real</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>X max</name>
+		<key>xmax</key>
+		<value>2</value>
+		<type>real</type>
+		<hide>part</hide>
 	</param>
 	<param>
 		<name>Number of Inputs</name>

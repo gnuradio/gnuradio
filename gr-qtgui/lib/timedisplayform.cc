@@ -39,7 +39,7 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   NPointsMenu *nptsmenu = new NPointsMenu(this);
   _menu->addAction(nptsmenu);
   connect(nptsmenu, SIGNAL(whichTrigger(int)),
-	  this, SLOT(SetNPoints(const int)));
+	  this, SLOT(setNPoints(const int)));
 
   Reset();
 
@@ -104,19 +104,19 @@ TimeDisplayForm::setFrequencyRange(const double newCenterFrequency,
 }
 
 void
-TimeDisplayForm::setTimeDomainAxis(double min, double max)
+TimeDisplayForm::setYaxis(double min, double max)
 {
   getPlot()->setYaxis(min, max);
 }
 
 int
-TimeDisplayForm::GetNPoints() const
+TimeDisplayForm::getNPoints() const
 {
   return d_npoints;
 }
 
 void
-TimeDisplayForm::SetNPoints(const int npoints)
+TimeDisplayForm::setNPoints(const int npoints)
 {
   d_npoints = npoints;
 }

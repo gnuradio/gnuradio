@@ -115,9 +115,9 @@ namespace gr {
       }
 
       d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
-      d_main_gui->SetFFTSize(d_fftsize);
-      d_main_gui->SetFFTWindowType(d_wintype);
-      d_main_gui->SetFrequencyRange(d_center_freq,
+      d_main_gui->setFFTSize(d_fftsize);
+      d_main_gui->setFFTWindowType(d_wintype);
+      d_main_gui->setFrequencyRange(d_center_freq,
 				    d_center_freq - d_bandwidth/2.0,
 				    d_center_freq + d_bandwidth/2.0);
 
@@ -150,7 +150,7 @@ namespace gr {
     freq_sink_f_impl::set_fft_size(const int fftsize)
     {
       d_fftsize = fftsize;
-      d_main_gui->SetFFTSize(fftsize);
+      d_main_gui->setFFTSize(fftsize);
     }
 
     int
@@ -163,7 +163,7 @@ namespace gr {
     freq_sink_f_impl::set_fft_average(const float fftavg)
     {
       d_fftavg = fftavg;
-      d_main_gui->SetFFTAverage(fftavg);
+      d_main_gui->setFFTAverage(fftavg);
     }
 
     float
@@ -178,15 +178,15 @@ namespace gr {
     {
       d_center_freq = centerfreq;
       d_bandwidth = bandwidth;
-      d_main_gui->SetFrequencyRange(d_center_freq,
+      d_main_gui->setFrequencyRange(d_center_freq,
 				    -d_bandwidth/2.0,
 				    d_bandwidth/2.0);
     }
 
     void
-    freq_sink_f_impl::set_fft_power_db(double min, double max)
+    freq_sink_f_impl::set_y_axis(double min, double max)
     {
-      d_main_gui->SetFrequencyAxis(min, max);
+      d_main_gui->setYaxis(min, max);
     }
 
     void
@@ -279,7 +279,7 @@ namespace gr {
       gruel::scoped_lock lock(d_mutex);
 
       filter::firdes::win_type newwintype;
-      newwintype = d_main_gui->GetFFTWindowType();
+      newwintype = d_main_gui->getFFTWindowType();
       if(d_wintype != newwintype) {
         d_wintype = newwintype;
         buildwindow();
@@ -300,8 +300,8 @@ namespace gr {
     {
       gruel::scoped_lock lock(d_mutex);
 
-      int newfftsize = d_main_gui->GetFFTSize();
-      d_fftavg = d_main_gui->GetFFTAverage();
+      int newfftsize = d_main_gui->getFFTSize();
+      d_fftavg = d_main_gui->getFFTAverage();
 
       if(newfftsize != d_fftsize) {
 	// Resize residbuf and replace data

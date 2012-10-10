@@ -75,7 +75,7 @@ namespace gr {
       virtual float fft_average() const = 0;
 
       virtual void set_frequency_range(const double centerfreq, const double bandwidth) = 0;
-      virtual void set_fft_power_db(double min, double max) = 0;
+      virtual void set_y_axis(double min, double max) = 0;
 
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;

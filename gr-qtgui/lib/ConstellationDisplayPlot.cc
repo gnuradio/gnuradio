@@ -65,14 +65,6 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
   _numPoints = 1024;
   _penSize = 5;
 
-  setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
-  set_xaxis(-2.0, 2.0);
-  setAxisTitle(QwtPlot::xBottom, "In-phase");
-
-  setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  set_yaxis(-2.0, 2.0);
-  setAxisTitle(QwtPlot::yLeft, "Quadrature");
-
   _zoomer = new ConstellationDisplayZoomer(canvas());
 
 #if QWT_VERSION < 0x060000
@@ -87,6 +79,15 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
   const QColor c(Qt::darkRed);
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
+
+  setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
+  set_xaxis(-2.0, 2.0);
+  setAxisTitle(QwtPlot::xBottom, "In-phase");
+
+  setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
+  set_yaxis(-2.0, 2.0);
+  setAxisTitle(QwtPlot::yLeft, "Quadrature");
+  updateAxes();
 
   QList<QColor> colors;
   colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
@@ -135,13 +136,13 @@ ConstellationDisplayPlot::~ConstellationDisplayPlot()
 void
 ConstellationDisplayPlot::set_xaxis(double min, double max)
 {
-  setAxisScale(QwtPlot::xBottom, min, max);
+  setXaxis(min, max);
 }
 
 void
 ConstellationDisplayPlot::set_yaxis(double min, double max)
 {
-  setAxisScale(QwtPlot::yLeft, min, max);
+  setYaxis(min, max);
 }
 
 void

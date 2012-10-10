@@ -18,12 +18,14 @@ qtgui.$(type.fcn)(
 	$name, \#name
 	$nconnections \#number of inputs
 )
+self.$(id).set_y_axis($ymin, $ymax)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
         <callback>set_time_domain_axis($min, $max)</callback>
 	<callback>set_update_time($t)</callback>
 	<callback>set_title($which, $title)</callback>
 	<callback>set_color($which, $color)</callback>
+	<callback>set_y_axis($ymin, $ymax)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -49,6 +51,20 @@ $(gui_hint()($win))</make>
 		<key>bw</key>
 		<value>samp_rate</value>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Y min</name>
+		<key>ymin</key>
+		<value>-1</value>
+		<type>real</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Y max</name>
+		<key>ymax</key>
+		<value>1</value>
+		<type>real</type>
+		<hide>part</hide>
 	</param>
 	<param>
 		<name>Number of Inputs</name>

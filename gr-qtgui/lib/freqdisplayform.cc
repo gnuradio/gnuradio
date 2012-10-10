@@ -47,11 +47,11 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   _menu->addMenu(avgmenu);
   _menu->addMenu(winmenu);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
-	  this, SLOT(SetFFTSize(const int)));
+	  this, SLOT(setFFTSize(const int)));
   connect(avgmenu, SIGNAL(whichTrigger(float)),
-	  this, SLOT(SetFFTAverage(const float)));
+	  this, SLOT(setFFTAverage(const float)));
   connect(winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
-	  this, SLOT(SetFFTWindowType(const gr::filter::firdes::win_type)));
+	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
 
   Reset();
 
@@ -93,44 +93,44 @@ FreqDisplayForm::customEvent( QEvent * e)
 }
 
 int
-FreqDisplayForm::GetFFTSize() const
+FreqDisplayForm::getFFTSize() const
 {
   return _fftsize;
 }
 
 float
-FreqDisplayForm::GetFFTAverage() const
+FreqDisplayForm::getFFTAverage() const
 {
   return _fftavg;
 }
 
 gr::filter::firdes::win_type
-FreqDisplayForm::GetFFTWindowType() const
+FreqDisplayForm::getFFTWindowType() const
 {
   return _fftwintype;
 }
 
 void
-FreqDisplayForm::SetFFTSize(const int newsize)
+FreqDisplayForm::setFFTSize(const int newsize)
 {
   _fftsize = newsize;
 }
 
 void
-FreqDisplayForm::SetFFTAverage(const float newavg)
+FreqDisplayForm::setFFTAverage(const float newavg)
 {
   _fftavg = newavg;
   getPlot()->replot();
 }
 
 void
-FreqDisplayForm::SetFFTWindowType(const gr::filter::firdes::win_type newwin)
+FreqDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
 {
   _fftwintype = newwin;
 }
 
 void
-FreqDisplayForm::SetFrequencyRange(const double newCenterFrequency,
+FreqDisplayForm::setFrequencyRange(const double newCenterFrequency,
 				   const double newStartFrequency,
 				   const double newStopFrequency)
 {
@@ -156,7 +156,7 @@ FreqDisplayForm::SetFrequencyRange(const double newCenterFrequency,
 }
 
 void
-FreqDisplayForm::SetFrequencyAxis(double min, double max)
+FreqDisplayForm::setYaxis(double min, double max)
 {
-  getPlot()->set_yaxis(min, max);
+  getPlot()->setYaxis(min, max);
 }

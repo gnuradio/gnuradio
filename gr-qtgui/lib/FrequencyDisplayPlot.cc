@@ -239,7 +239,7 @@ FrequencyDisplayPlot::~FrequencyDisplayPlot()
 }
 
 void
-FrequencyDisplayPlot::set_yaxis(double min, double max)
+FrequencyDisplayPlot::setYaxis(double min, double max)
 {
   // Get the new max/min values for the plot
   _minYAxis = min;

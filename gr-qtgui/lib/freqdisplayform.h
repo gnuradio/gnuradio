@@ -41,21 +41,21 @@ class FreqDisplayForm : public DisplayForm
 
   FrequencyDisplayPlot* getPlot();
 
-  int GetFFTSize() const;
-  float GetFFTAverage() const;
-  gr::filter::firdes::win_type GetFFTWindowType() const;
+  int getFFTSize() const;
+  float getFFTAverage() const;
+  gr::filter::firdes::win_type getFFTWindowType() const;
 
 public slots:
   void customEvent(QEvent *e);
 
-  void SetFFTSize(const int);
-  void SetFFTAverage(const float);
-  void SetFFTWindowType(const gr::filter::firdes::win_type);
+  void setFFTSize(const int);
+  void setFFTAverage(const float);
+  void setFFTWindowType(const gr::filter::firdes::win_type);
 
-  void SetFrequencyRange(const double newCenterFrequency,
+  void setFrequencyRange(const double newCenterFrequency,
 			 const double newStartFrequency,
 			 const double newStopFrequency);
-  void SetFrequencyAxis(double min, double max);
+  void setYaxis(double min, double max);
 
 private slots:
   void newData(const QEvent *updateEvent);

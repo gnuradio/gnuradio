@@ -20,6 +20,7 @@ qtgui.$(type.fcn)(
 	$name, \#name
 	$nconnections \#number of inputs
 )
+self.$(id).set_y_axis($ymin, $ymax)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
         <callback>set_frequency_range($fc, $bw)</callback>
@@ -94,6 +95,20 @@ $(gui_hint()($win))</make>
 		<key>rate</key>
 		<value>10</value>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Y min</name>
+		<key>ymin</key>
+		<value>-140</value>
+		<type>real</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Y max</name>
+		<key>ymax</key>
+		<value>10</value>
+		<type>real</type>
+		<hide>part</hide>
 	</param>
 	<param>
 		<name>Number of Inputs</name>

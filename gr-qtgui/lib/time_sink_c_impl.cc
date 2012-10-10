@@ -91,7 +91,7 @@ namespace gr {
       }
 
       d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
-      d_main_gui->SetNPoints(d_size);
+      d_main_gui->setNPoints(d_size);
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
@@ -119,9 +119,9 @@ namespace gr {
     }
 
     void
-    time_sink_c_impl::set_time_domain_axis(double min, double max)
+    time_sink_c_impl::set_y_axis(double min, double max)
     {
-      d_main_gui->setTimeDomainAxis(min, max);
+      d_main_gui->setYaxis(min, max);
     }
 
     void
@@ -194,14 +194,14 @@ namespace gr {
 	d_size = newsize;
 	d_index = 0;
 
-	d_main_gui->SetNPoints(d_size);
+	d_main_gui->setNPoints(d_size);
       }
     }
 
     void
     time_sink_c_impl::npoints_resize()
     {
-      int newsize = d_main_gui->GetNPoints();
+      int newsize = d_main_gui->getNPoints();
       set_nsamps(newsize);
     }
 

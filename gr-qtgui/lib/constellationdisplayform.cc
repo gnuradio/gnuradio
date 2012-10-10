@@ -39,7 +39,7 @@ ConstellationDisplayForm::ConstellationDisplayForm(int nplots, QWidget* parent)
   NPointsMenu *nptsmenu = new NPointsMenu(this);
   _menu->addAction(nptsmenu);
   connect(nptsmenu, SIGNAL(whichTrigger(int)),
-	  this, SLOT(SetNPoints(const int)));
+	  this, SLOT(setNPoints(const int)));
 
   Reset();
 
@@ -84,13 +84,25 @@ ConstellationDisplayForm::customEvent(QEvent * e)
 }
 
 int
-ConstellationDisplayForm::GetNPoints() const
+ConstellationDisplayForm::getNPoints() const
 {
   return d_npoints;
 }
 
 void
-ConstellationDisplayForm::SetNPoints(const int npoints)
+ConstellationDisplayForm::setNPoints(const int npoints)
 {
   d_npoints = npoints;
+}
+
+void
+ConstellationDisplayForm::setYaxis(double min, double max)
+{
+  getPlot()->set_yaxis(min, max);
+}
+
+void
+ConstellationDisplayForm::setXaxis(double min, double max)
+{
+  getPlot()->set_xaxis(min, max);
 }
