@@ -67,6 +67,7 @@ namespace gr {
 
       virtual void set_time_domain_axis(double min, double max) = 0;
       virtual void set_update_time(double t) = 0;
+      virtual void set_title(const std::string &title) = 0;
       virtual void set_line_label(int which, const std::string &line) = 0;
       virtual void set_line_color(int which, const std::string &color) = 0;
       virtual void set_line_width(int which, int width) = 0;

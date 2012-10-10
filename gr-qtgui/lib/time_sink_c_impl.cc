@@ -134,6 +134,12 @@ namespace gr {
     }
 
     void
+    time_sink_c_impl::set_title(const std::string &title)
+    {
+      d_main_gui->setTitle(title.c_str());
+    }
+
+    void
     time_sink_c_impl::set_line_label(int which, const std::string &label)
     {
       d_main_gui->setLineLabel(which, label.c_str());

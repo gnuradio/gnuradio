@@ -185,6 +185,12 @@ DisplayForm::setUpdateTime(double t)
 }
 
 void
+DisplayForm::setTitle(const QString &title)
+{
+  _displayPlot->setTitle(title);
+}
+
+void
 DisplayForm::setLineLabel(int which, const QString &label)
 {
   _displayPlot->setLineLabel(which, label);

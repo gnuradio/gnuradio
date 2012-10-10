@@ -83,6 +83,7 @@ namespace gr {
 				       const double bandwidth) = 0;
 
       virtual void set_update_time(double t) = 0;
+      virtual void set_title(const std::string &title) = 0;
       virtual void set_line_label(const std::string &line) = 0;
       virtual void set_line_color(const std::string &color) = 0;
       virtual void set_line_width(int width) = 0;

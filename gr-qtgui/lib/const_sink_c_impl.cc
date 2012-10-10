@@ -129,13 +129,11 @@ namespace gr {
       d_main_gui->setUpdateTime(t);
     }
 
-    /*
     void
     const_sink_c_impl::set_title(const std::string &title)
     {
       d_main_gui->setTitle(title.c_str());
     }
-    */
 
     void
     const_sink_c_impl::set_line_label(int which, const std::string &label)

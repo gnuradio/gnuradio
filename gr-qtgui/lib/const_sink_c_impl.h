@@ -66,7 +66,7 @@ namespace gr {
       PyObject* pyqwidget();
 
       void set_update_time(double t);
-      //void set_title(const std::string &title);
+      void set_title(const std::string &title);
       void set_line_label(int which, const std::string &label);
       void set_line_color(int which, const std::string &color);
       void set_line_width(int which, int width);
