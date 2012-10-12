@@ -82,24 +82,19 @@ TimeDisplayForm::customEvent(QEvent * e)
 }
 
 void
-TimeDisplayForm::setFrequencyRange(const double newCenterFrequency,
-				   const double newStartFrequency,
-				   const double newStopFrequency)
+TimeDisplayForm::setSampleRate(const double samprate)
 {
-  double fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
-
-  if(fdiff > 0) {
+  if(samprate > 0) {
     std::string strtime[4] = {"sec", "ms", "us", "ns"};
-    double units10 = floor(log10(fdiff));
+    double units10 = floor(log10(samprate));
     double units3  = std::max(floor(units10 / 3.0), 0.0);
     double units = pow(10, (units10-fmod(units10, 3.0)));
     int iunit = static_cast<int>(units3);
 
-    _startFrequency = newStartFrequency;
-    _stopFrequency = newStopFrequency;
-    
-    getPlot()->SetSampleRate(_stopFrequency - _startFrequency,
-			     units, strtime[iunit]);
+    getPlot()->SetSampleRate(samprate, units, strtime[iunit]);
+  }
+  else {
+    throw std::runtime_error("TimeDisplayForm: samprate must be > 0.\n");
   }
 }
 

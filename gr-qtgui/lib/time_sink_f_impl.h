@@ -39,7 +39,7 @@ namespace gr {
       gruel::mutex d_mutex;
 
       int d_size;
-      double d_bandwidth;
+      double d_samp_rate;
       std::string d_name;
       int d_nconnections;
 
@@ -55,7 +55,7 @@ namespace gr {
       void npoints_resize();
 
     public:
-      time_sink_f_impl(int size, double bw,
+      time_sink_f_impl(int size, double samp_rate,
 		       const std::string &name,
 		       int nconnections,
 		       QWidget *parent=NULL);
@@ -74,6 +74,7 @@ namespace gr {
       void set_line_style(int which, Qt::PenStyle style);
       void set_line_marker(int which, QwtSymbol::Style marker);
       void set_nsamps(const int newsize);
+      void set_samp_rate(const double samp_rate);
 
       void set_size(int width, int height);
 

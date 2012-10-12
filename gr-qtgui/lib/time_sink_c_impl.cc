@@ -34,23 +34,23 @@ namespace gr {
   namespace qtgui {
     
     time_sink_c::sptr
-    time_sink_c::make(int size, double bw,
+    time_sink_c::make(int size, double samp_rate,
 		      const std::string &name,
 		      int nconnections,
 		      QWidget *parent)
     {
       return gnuradio::get_initial_sptr
-	(new time_sink_c_impl(size, bw, name, nconnections, parent));
+	(new time_sink_c_impl(size, samp_rate, name, nconnections, parent));
     }
 
-    time_sink_c_impl::time_sink_c_impl(int size, double bw,
+    time_sink_c_impl::time_sink_c_impl(int size, double samp_rate,
 				       const std::string &name,
 				       int nconnections,
 				       QWidget *parent)
       : gr_sync_block("time_sink_c",
 		      gr_make_io_signature(nconnections, nconnections, sizeof(gr_complex)),
 		      gr_make_io_signature(0, 0, 0)),
-	d_size(size), d_bandwidth(bw), d_name(name),
+	d_size(size), d_samp_rate(samp_rate), d_name(name),
 	d_nconnections(2*nconnections), d_parent(parent)
     {
       d_main_gui = NULL;
@@ -92,6 +92,7 @@ namespace gr {
 
       d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
       d_main_gui->setNPoints(d_size);
+      d_main_gui->setSampleRate(d_samp_rate);
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
@@ -196,6 +197,14 @@ namespace gr {
 
 	d_main_gui->setNPoints(d_size);
       }
+    }
+
+    void
+    time_sink_c_impl::set_samp_rate(const double samp_rate)
+    {
+      gruel::scoped_lock lock(d_mutex);
+      d_samp_rate = samp_rate;
+      d_main_gui->setSampleRate(d_samp_rate);
     }
 
     void

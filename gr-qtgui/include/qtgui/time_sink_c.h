@@ -54,12 +54,12 @@ namespace gr {
        * \brief Build complex time sink
        *
        * \param size number of points to plot at once
-       * \param bw bandwidth of signal (used to set x-axis labels)
+       * \param samp_rate sample rate (used to set x-axis labels)
        * \param name title for the plot
        * \param nconnections number of signals connected to sink
        * \param parent a QWidget parent object, if any
        */
-      static sptr make(int size, double bw,
+      static sptr make(int size, double samp_rate,
 		       const std::string &name,
 		       int nconnections,
 		       QWidget *parent=NULL);
@@ -76,6 +76,7 @@ namespace gr {
       virtual void set_line_style(int which, Qt::PenStyle style) = 0;
       virtual void set_line_marker(int which, QwtSymbol::Style marker) = 0;
       virtual void set_nsamps(const int newsize) = 0;
+      virtual void set_samp_rate(const double samp_rate) = 0;
 
       virtual void set_size(int width, int height) = 0;
 

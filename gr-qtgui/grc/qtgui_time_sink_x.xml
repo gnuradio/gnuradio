@@ -14,7 +14,7 @@
 	<make>#set $win = 'self._%s_win'%$id
 qtgui.$(type.fcn)(
 	$size, \#size
-	$bw, \#bw
+	$srate, \#samp_rate
 	$name, \#name
 	$nconnections \#number of inputs
 )
@@ -26,6 +26,7 @@ $(gui_hint()($win))</make>
 	<callback>set_title($which, $title)</callback>
 	<callback>set_color($which, $color)</callback>
 	<callback>set_y_axis($ymin, $ymax)</callback>
+	<callback>set_samp_rate($srate)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -47,8 +48,8 @@ $(gui_hint()($win))</make>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Bandwidth (Hz)</name>
-		<key>bw</key>
+		<name>Sample Rate</name>
+		<key>srate</key>
 		<value>samp_rate</value>
 		<type>real</type>
 	</param>

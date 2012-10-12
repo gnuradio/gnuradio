@@ -45,9 +45,7 @@ class TimeDisplayForm : public DisplayForm
 public slots:
   void customEvent(QEvent * e);
 
-  void setFrequencyRange(const double newCenterFrequency,
-			 const double newStartFrequency,
-			 const double newStopFrequency);
+  void setSampleRate(const double samprate);
   void setYaxis(double min, double max);
   void setNPoints(const int);
 
