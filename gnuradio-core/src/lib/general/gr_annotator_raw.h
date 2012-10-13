@@ -25,7 +25,7 @@
 
 #include <gr_core_api.h>
 #include <gr_sync_block.h>
-#include <gruel/pmt.h>
+#include <gr_tags.h>
 #include <gruel/thread.h>
 
 class gr_annotator_raw;
