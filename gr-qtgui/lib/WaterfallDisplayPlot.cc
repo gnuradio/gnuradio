@@ -469,10 +469,34 @@ WaterfallDisplayPlot::SetIntensityColorMapType(const int which,
   }
 }
 
+void
+WaterfallDisplayPlot::SetIntensityColorMapType1(int newType)
+{
+  SetIntensityColorMapType(0, newType, _userDefinedLowIntensityColor, _userDefinedHighIntensityColor);
+}
+
+int
+WaterfallDisplayPlot::GetIntensityColorMapType1() const
+{
+  return GetIntensityColorMapType(0);
+}
+
+void
+WaterfallDisplayPlot::SetUserDefinedLowIntensityColor(QColor c)
+{
+  _userDefinedLowIntensityColor = c;
+}
+
 const QColor
 WaterfallDisplayPlot::GetUserDefinedLowIntensityColor() const
 {
   return _userDefinedLowIntensityColor;
+}
+
+void
+WaterfallDisplayPlot::SetUserDefinedHighIntensityColor(QColor c)
+{
+  _userDefinedHighIntensityColor = c;
 }
 
 const QColor

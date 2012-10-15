@@ -193,7 +193,8 @@ DisplayForm::setTitle(int which, const QString &title)
 void
 DisplayForm::setColor(int which, const QString &color)
 {
-  _displayPlot->setColor(which, color);
+  QColor c = QColor(color);
+  _displayPlot->setColor(which, c);
   _displayPlot->replot();
 }
 
