@@ -40,7 +40,7 @@ SEED = 1239
 # We need this many to let the frequency recovery block converge.
 DATA_LENGTH = 2000
 # Test fails if fraction of output that is correct is less than this.
-REQ_CORRECT = 0.7
+REQ_CORRECT = 0.9
 
 # CHANNEL PARAMETERS
 NOISE_VOLTAGE = 0.01

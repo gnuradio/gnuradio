@@ -53,7 +53,7 @@ namespace gr {
 								   float loop_bw, float fmin, float fmax)
       : gr_block("constellation_receiver_cb",
 		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		 gr_make_io_signaturev(1, 4, iosig)),
+		 gr_make_io_signaturev(1, 5, iosig)),
 	gri_control_loop(loop_bw, fmax, fmin),
 	d_constellation(constellation),
 	d_current_const_point(0)
@@ -97,10 +97,12 @@ namespace gr {
       gr_complex sample, nco;
 
       float *out_err = 0, *out_phase = 0, *out_freq = 0;
-      if(output_items.size() == 4) {
+      gr_complex *out_symbol;
+      if(output_items.size() == 5) {
 	out_err = (float*)output_items[1];
 	out_phase = (float*)output_items[2];
 	out_freq = (float*)output_items[3];
+	out_symbol = (gr_complex*)output_items[4];
       }
 
       while((i < noutput_items) && (i < ninput_items[0])) {
@@ -113,10 +115,11 @@ namespace gr {
 
 	out[i] = sym_value;
 
-	if(output_items.size() == 4) {
+	if(output_items.size() == 5) {
 	  out_err[i] = phase_error;
 	  out_phase[i] = d_phase;
 	  out_freq[i] = d_freq;
+	  out_symbol[i] = sample;
 	}
 	i++;
       }
