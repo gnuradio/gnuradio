@@ -120,6 +120,9 @@ public:
   unsigned int d_rotational_symmetry;
   unsigned int d_dimensionality;
   unsigned int d_arity;
+  // The orignal constellation points were multiplied by this factor to get a
+  // constellation with average magnitude 1.
+  float d_scalefactor;
 
   float get_distance(unsigned int index, const gr_complex *sample);
   unsigned int get_closest_point(const gr_complex *sample);
