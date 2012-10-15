@@ -54,7 +54,7 @@
 	</source>
 	<source>
 		<name>symbol</name>
-		<type>gr_complex</type>
+		<type>complex</type>
 		<optional>1</optional>
 	</source>
 </block>
