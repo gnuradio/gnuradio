@@ -28,8 +28,12 @@
 
 %{
 #include "analog/cpm.h"
+#include "analog/ctcss_squelch_ff.h"
+#include "analog/squelch_base_ff.h"
 %}
 
 %include "analog/cpm.h"
+%include "analog/ctcss_squelch_ff.h"
+%include "analog/squelch_base_ff.h"
 
-//GR_SWIG_BLOCK_MAGIC2();
+GR_SWIG_BLOCK_MAGIC2(analog, ctcss_squelch_ff);
