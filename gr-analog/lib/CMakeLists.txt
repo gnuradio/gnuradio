@@ -104,8 +104,14 @@ endmacro(expand_cc)
 list(APPEND analog_sources
     ${generated_sources}
     cpm.cc
+    squelch_base_cc_impl.cc
     squelch_base_ff_impl.cc
+    agc_cc_impl.cc
+    agc_ff_impl.cc
+    agc2_cc_impl.cc
+    agc2_ff_impl.cc
     ctcss_squelch_ff_impl.cc
+    feedforward_agc_cc_impl.cc
 )
 
 list(APPEND analog_libs

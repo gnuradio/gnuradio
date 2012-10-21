@@ -77,8 +77,16 @@ install(FILES
     ${analog_generated_includes}
     api.h
     cpm.h
-    ctcss_squelch_ff.h
+    agc.h
+    agc2.h
     squelch_base_ff.h
+    agc_cc.h
+    agc_ff.h
+    agc2_cc.h
+    agc2_ff.h
+    ctcss_squelch_cc.h
+    ctcss_squelch_ff.h
+    feedforward_agc_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )
