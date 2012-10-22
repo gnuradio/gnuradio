@@ -84,7 +84,7 @@ install(FILES
     agc_ff.h
     agc2_cc.h
     agc2_ff.h
-    ctcss_squelch_cc.h
+    cpfsk_bc.h
     ctcss_squelch_ff.h
     feedforward_agc_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog

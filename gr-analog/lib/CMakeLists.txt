@@ -110,6 +110,7 @@ list(APPEND analog_sources
     agc_ff_impl.cc
     agc2_cc_impl.cc
     agc2_ff_impl.cc
+    cpfsk_bc_impl.cc
     ctcss_squelch_ff_impl.cc
     feedforward_agc_cc_impl.cc
 )
