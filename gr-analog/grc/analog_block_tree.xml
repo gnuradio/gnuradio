@@ -27,5 +27,17 @@
 ###################################################
  -->
 <cat>
-	<name></name> <!-- Blank for Root Name -->
+  <name></name> <!-- Blank for Root Name -->
+  <cat>
+    <name>Level Controls</name>
+    <block>analog_agc_xx</block>
+    <block>analog_agc2_xx</block>
+    <block>analog_feedforward_agc_cc</block>
+    <block>analog_ctcss_squelch_ff</block>
+    <block>analog_dpll_bb</block>
+  </cat>
+  <cat>
+    <name>Modulators</name>
+    <block>analog_cpfsk_bc</block>
+  </cat>
 </cat>
