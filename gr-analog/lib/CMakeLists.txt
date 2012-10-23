@@ -114,6 +114,7 @@ list(APPEND analog_sources
     ctcss_squelch_ff_impl.cc
     dpll_bb_impl.cc
     feedforward_agc_cc_impl.cc
+    fmdet_cf_impl.cc
 )
 
 list(APPEND analog_libs
