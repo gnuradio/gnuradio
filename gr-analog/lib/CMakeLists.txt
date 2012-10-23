@@ -112,6 +112,7 @@ list(APPEND analog_sources
     agc2_ff_impl.cc
     cpfsk_bc_impl.cc
     ctcss_squelch_ff_impl.cc
+    dpll_bb_impl.cc
     feedforward_agc_cc_impl.cc
 )
 
