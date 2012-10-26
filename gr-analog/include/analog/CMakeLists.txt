@@ -64,7 +64,7 @@ endmacro(expand_h)
 ########################################################################
 # Invoke macro to generate various sources
 #######################################################################
-#expand_h(block     bf bc sf sc if ic)
+expand_h(noise_source_X     s i f c)
 
 add_custom_target(analog_generated_includes DEPENDS
     ${generated_includes}

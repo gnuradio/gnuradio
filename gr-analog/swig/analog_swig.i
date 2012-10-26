@@ -28,6 +28,7 @@
 
 %{
 #include "analog/cpm.h"
+#include "analog/noise_type.h"
 #include "analog/agc_cc.h"
 #include "analog/agc_ff.h"
 #include "analog/agc2_cc.h"
@@ -38,11 +39,16 @@
 #include "analog/feedforward_agc_cc.h"
 #include "analog/fmdet_cf.h"
 #include "analog/frequency_modulator_fc.h"
+#include "analog/noise_source_s.h"
+#include "analog/noise_source_i.h"
+#include "analog/noise_source_f.h"
+#include "analog/noise_source_c.h"
 #include "analog/squelch_base_cc.h"
 #include "analog/squelch_base_ff.h"
 %}
 
 %include "analog/cpm.h"
+%include "analog/noise_type.h"
 %include "analog/agc_cc.h"
 %include "analog/agc_ff.h"
 %include "analog/agc2_cc.h"
@@ -53,6 +59,10 @@
 %include "analog/feedforward_agc_cc.h"
 %include "analog/fmdet_cf.h"
 %include "analog/frequency_modulator_fc.h"
+%include "analog/noise_source_s.h"
+%include "analog/noise_source_i.h"
+%include "analog/noise_source_f.h"
+%include "analog/noise_source_c.h"
 %include "analog/squelch_base_cc.h"
 %include "analog/squelch_base_ff.h"
 
@@ -66,3 +76,7 @@ GR_SWIG_BLOCK_MAGIC2(analog, dpll_bb);
 GR_SWIG_BLOCK_MAGIC2(analog, feedforward_agc_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, fmdet_cf);
 GR_SWIG_BLOCK_MAGIC2(analog, frequency_modulator_fc);
+GR_SWIG_BLOCK_MAGIC2(analog, noise_source_s);
+GR_SWIG_BLOCK_MAGIC2(analog, noise_source_i);
+GR_SWIG_BLOCK_MAGIC2(analog, noise_source_f);
+GR_SWIG_BLOCK_MAGIC2(analog, noise_source_c);

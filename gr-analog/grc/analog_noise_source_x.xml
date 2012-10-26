@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Noise Source
+###################################################
+ -->
+<block>
+	<name>Noise Source</name>
+	<key>gr_noise_source_x</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.noise_source_$(type.fcn)($noise_type, $amp, $seed)</make>
+	<callback>set_type($noise_type)</callback>
+	<callback>set_amplitude($amp)</callback>
+	<param>
+		<name>Output Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:i</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+	</param>
+	<param>
+		<name>Noise Type</name>
+		<key>noise_type</key>
+		<value>gr.GR_GAUSSIAN</value>
+		<type>int</type>
+		<option>
+			<name>Uniform</name>
+			<key>gr.GR_UNIFORM</key>
+		</option>
+		<option>
+			<name>Gaussian</name>
+			<key>gr.GR_GAUSSIAN</key>
+		</option>
+		<option>
+			<name>Laplacian</name>
+			<key>gr.GR_LAPLACIAN</key>
+		</option>
+		<option>
+			<name>Impulse</name>
+			<key>gr.GR_IMPULSE</key>
+		</option>
+	</param>
+	<param>
+		<name>Amplitude</name>
+		<key>amp</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Seed</name>
+		<key>seed</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

@@ -96,7 +96,7 @@ endmacro(expand_cc)
 ########################################################################
 # Invoke macro to generate various sources
 ########################################################################
-#expand_cc(block     bf bc sf sc if ic)
+expand_cc(noise_source_X_impl     s i f c)
 
 ########################################################################
 # Setup library
