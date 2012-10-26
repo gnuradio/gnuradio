@@ -37,6 +37,7 @@
 #include "analog/dpll_bb.h"
 #include "analog/feedforward_agc_cc.h"
 #include "analog/fmdet_cf.h"
+#include "analog/frequency_modulator_fc.h"
 #include "analog/squelch_base_cc.h"
 #include "analog/squelch_base_ff.h"
 %}
@@ -51,6 +52,7 @@
 %include "analog/dpll_bb.h"
 %include "analog/feedforward_agc_cc.h"
 %include "analog/fmdet_cf.h"
+%include "analog/frequency_modulator_fc.h"
 %include "analog/squelch_base_cc.h"
 %include "analog/squelch_base_ff.h"
 
@@ -63,3 +65,4 @@ GR_SWIG_BLOCK_MAGIC2(analog, ctcss_squelch_ff);
 GR_SWIG_BLOCK_MAGIC2(analog, dpll_bb);
 GR_SWIG_BLOCK_MAGIC2(analog, feedforward_agc_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, fmdet_cf);
+GR_SWIG_BLOCK_MAGIC2(analog, frequency_modulator_fc);

@@ -88,7 +88,8 @@ install(FILES
     ctcss_squelch_ff.h
     dpll_bb.h
     feedforward_agc_cc.h
-    fmdet_cf.j
+    fmdet_cf.h
+    frequency_modulator_fc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )

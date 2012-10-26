@@ -115,6 +115,7 @@ list(APPEND analog_sources
     dpll_bb_impl.cc
     feedforward_agc_cc_impl.cc
     fmdet_cf_impl.cc
+    frequency_modulator_fc_impl.cc
 )
 
 list(APPEND analog_libs
