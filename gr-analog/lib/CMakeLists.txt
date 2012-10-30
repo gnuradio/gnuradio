@@ -27,6 +27,8 @@ include_directories(
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 include_directories(${Boost_INCLUDE_DIRS})
@@ -136,3 +138,32 @@ add_library(gnuradio-analog SHARED ${analog_sources})
 target_link_libraries(gnuradio-analog ${analog_libs})
 GR_LIBRARY_FOO(gnuradio-analog RUNTIME_COMPONENT "analog_runtime" DEVEL_COMPONENT "analog_devel")
 add_dependencies(gnuradio-analog analog_generated_includes analog_generated_swigs gnuradio-filter)
+
+
+########################################################################
+# QA C++ Code for gr-filter
+########################################################################
+if(ENABLE_TESTING)
+  include(GrTest)
+
+  include_directories(${CPPUNIT_INCLUDE_DIRS})
+  link_directories(${CPPUNIT_LIBRARY_DIRS})
+
+  list(APPEND test_gr_analog_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_analog.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_analog.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_sincos.cc
+    )
+
+  add_executable(test-gr-analog ${test_gr_analog_sources})
+
+  target_link_libraries(
+    test-gr-analog
+    gnuradio-core
+    gnuradio-analog 
+    ${Boost_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+  )
+
+  GR_ADD_TEST(test_gr_analog test-gr-analog)
+endif(ENABLE_TESTING)
