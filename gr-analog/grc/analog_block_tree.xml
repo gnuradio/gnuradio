@@ -42,4 +42,8 @@
     <block>analog_frequency_modulator_fc</block>
     <block>analog_phase_modulator_fc</block>
   </cat>
+  <cat>
+    <name>Sources</name>
+    <block>analog_noise_source_x</block>
+  </cat>
 </cat>
