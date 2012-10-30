@@ -22,6 +22,7 @@
 #define ANALOG_API
 
 %include "gnuradio.i"
+%include "stdint.i"
 
 //load generated python docstrings
 %include "analog_swig_doc.i"
@@ -51,6 +52,7 @@
 #include "analog/probe_avg_mag_sqrd_c.h"
 #include "analog/probe_avg_mag_sqrd_cf.h"
 #include "analog/probe_avg_mag_sqrd_f.h"
+#include "analog/sincos.h"
 #include "analog/squelch_base_cc.h"
 #include "analog/squelch_base_ff.h"
 %}
@@ -79,6 +81,7 @@
 %include "analog/probe_avg_mag_sqrd_c.h"
 %include "analog/probe_avg_mag_sqrd_cf.h"
 %include "analog/probe_avg_mag_sqrd_f.h"
+%include "analog/sincos.h"
 %include "analog/squelch_base_cc.h"
 %include "analog/squelch_base_ff.h"
 
