@@ -94,6 +94,9 @@ install(FILES
     pll_carriertracking_cc.h
     pll_freqdet_cf.h
     pll_refout_cc.h
+    probe_avg_mag_sqrd_c.h
+    probe_avg_mag_sqrd_cf.h
+    probe_avg_mag_sqrd_f.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )

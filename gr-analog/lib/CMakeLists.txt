@@ -120,6 +120,9 @@ list(APPEND analog_sources
     pll_carriertracking_cc_impl.cc
     pll_freqdet_cf_impl.cc
     pll_refout_cc_impl.cc
+    probe_avg_mag_sqrd_c_impl.cc
+    probe_avg_mag_sqrd_cf_impl.cc
+    probe_avg_mag_sqrd_f_impl.cc
 )
 
 list(APPEND analog_libs

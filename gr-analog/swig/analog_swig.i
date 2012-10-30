@@ -47,6 +47,9 @@
 #include "analog/pll_carriertracking_cc.h"
 #include "analog/pll_freqdet_cf.h"
 #include "analog/pll_refout_cc.h"
+#include "analog/probe_avg_mag_sqrd_c.h"
+#include "analog/probe_avg_mag_sqrd_cf.h"
+#include "analog/probe_avg_mag_sqrd_f.h"
 #include "analog/squelch_base_cc.h"
 #include "analog/squelch_base_ff.h"
 %}
@@ -71,6 +74,9 @@
 %include "analog/pll_carriertracking_cc.h"
 %include "analog/pll_freqdet_cf.h"
 %include "analog/pll_refout_cc.h"
+%include "analog/probe_avg_mag_sqrd_c.h"
+%include "analog/probe_avg_mag_sqrd_cf.h"
+%include "analog/probe_avg_mag_sqrd_f.h"
 %include "analog/squelch_base_cc.h"
 %include "analog/squelch_base_ff.h"
 
@@ -92,3 +98,6 @@ GR_SWIG_BLOCK_MAGIC2(analog, phase_modulator_fc);
 GR_SWIG_BLOCK_MAGIC2(analog, pll_carriertracking_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, pll_freqdet_cf);
 GR_SWIG_BLOCK_MAGIC2(analog, pll_refout_cc);
+GR_SWIG_BLOCK_MAGIC2(analog, probe_avg_mag_sqrd_c);
+GR_SWIG_BLOCK_MAGIC2(analog, probe_avg_mag_sqrd_cf);
+GR_SWIG_BLOCK_MAGIC2(analog, probe_avg_mag_sqrd_f);
