@@ -35,10 +35,11 @@
     <block>analog_feedforward_agc_cc</block>
     <block>analog_ctcss_squelch_ff</block>
     <block>analog_dpll_bb</block>
-    <block>analog_frequency_modulator_fc</block>
   </cat>
   <cat>
     <name>Modulators</name>
     <block>analog_cpfsk_bc</block>
+    <block>analog_frequency_modulator_fc</block>
+    <block>analog_phase_modulator_fc</block>
   </cat>
 </cat>

@@ -90,6 +90,7 @@ install(FILES
     feedforward_agc_cc.h
     fmdet_cf.h
     frequency_modulator_fc.h
+    phase_modulator_fc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )
