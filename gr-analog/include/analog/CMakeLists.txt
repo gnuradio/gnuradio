@@ -91,6 +91,9 @@ install(FILES
     fmdet_cf.h
     frequency_modulator_fc.h
     phase_modulator_fc.h
+    pll_carriertracking_cc.h
+    pll_freqdet_cf.h
+    pll_refout_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )

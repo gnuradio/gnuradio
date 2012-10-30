@@ -144,6 +144,17 @@ gri_control_loop::set_phase(float phase)
     d_phase += M_TWOPI;
 }
 
+void
+gri_control_loop::set_max_freq(float freq)
+{
+  d_max_freq = freq;
+}
+
+void
+gri_control_loop::set_min_freq(float freq)
+{
+  d_min_freq = freq;
+}
 
 /*******************************************************************
     GET FUNCTIONS
@@ -184,4 +195,16 @@ float
 gri_control_loop::get_phase() const
 {
   return d_phase;
+}
+
+float
+gri_control_loop::get_max_freq() const
+{
+  return d_max_freq;
+}
+
+float
+gri_control_loop::get_min_freq() const
+{
+  return d_min_freq;
 }
