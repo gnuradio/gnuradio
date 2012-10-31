@@ -141,9 +141,9 @@ class GR_CORE_API gri_control_loop
   void set_beta(float beta);
 
   /*!
-   * \brief Set the Costas loop's frequency.
+   * \brief Set the control loop's frequency.
    *
-   * Set's the Costas Loop's frequency. While this is normally updated by the
+   * Set's the control loop's frequency. While this is normally updated by the
    * inner loop of the algorithm, it could be useful to manually initialize,
    * set, or reset this under certain circumstances.
    *
@@ -153,9 +153,9 @@ class GR_CORE_API gri_control_loop
   void set_frequency(float freq);
 
   /*!
-   * \brief Set the Costas loop's phase.
+   * \brief Set the control loop's phase.
    *
-   * Set's the Costas Loop's phase. While this is normally updated by the
+   * Set's the control loop's phase. While this is normally updated by the
    * inner loop of the algorithm, it could be useful to manually initialize,
    * set, or reset this under certain circumstances.
    *
@@ -164,6 +164,23 @@ class GR_CORE_API gri_control_loop
    */
   void set_phase(float phase);
 
+  /*!
+   * \brief Set the control loop's maximum frequency.
+   *
+   * Set the maximum frequency the control loop can track. 
+   *
+   * \param freq    (float) new max frequency
+   */
+  void set_max_freq(float freq);
+
+  /*!
+   * \brief Set the control loop's minimum frequency.
+   *
+   * Set the minimum frequency the control loop can track. 
+   *
+   * \param freq    (float) new min frequency
+   */
+  void set_min_freq(float freq);
 
   /*******************************************************************
     GET FUNCTIONS
@@ -190,14 +207,24 @@ class GR_CORE_API gri_control_loop
   float get_beta() const;
 
   /*!
-   * \brief Get the Costas loop's frequency estimate
+   * \brief Get the control loop's frequency estimate
    */
   float get_frequency() const;
 
   /*!
-   * \brief Get the Costas loop's phase estimate
+   * \brief Get the control loop's phase estimate
    */
   float get_phase() const;
+
+  /*!
+   * \brief Get the control loop's maximum frequency.
+   */
+  float get_max_freq() const;
+
+  /*!
+   * \brief Get the control loop's minimum frequency.
+   */
+  float get_min_freq() const;
 };
 
 #endif /* GRI_CONTROL_LOOP */

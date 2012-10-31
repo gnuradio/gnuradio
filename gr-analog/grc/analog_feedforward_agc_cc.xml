@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Feed Forward AGC
+###################################################
+ -->
+<block>
+	<name>Feed Forward AGC</name>
+	<key>analog_feedforward_agc_cc</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.feedforward_agc_cc($num_samples, $reference)</make>
+	<param>
+		<name>Num Samples</name>
+		<key>num_samples</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Reference</name>
+		<key>reference</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

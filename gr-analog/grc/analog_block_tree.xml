@@ -27,5 +27,34 @@
 ###################################################
  -->
 <cat>
-	<name></name> <!-- Blank for Root Name -->
+  <name></name> <!-- Blank for Root Name -->
+  <cat>
+    <name>Level Controls</name>
+    <block>analog_agc_xx</block>
+    <block>analog_agc2_xx</block>
+    <block>analog_dpll_bb</block>
+    <block>analog_feedforward_agc_cc</block>
+    <block>analog_ctcss_squelch_ff</block>
+    <block>analog_pwr_squelch_xx</block>
+    <block>analog_simple_squelch_cc</block>
+    <block>analog_rail_ff</block>
+  </cat>
+  <cat>
+    <name>Modulators</name>
+    <block>analog_cpfsk_bc</block>
+    <block>analog_frequency_modulator_fc</block>
+    <block>analog_phase_modulator_fc</block>
+    <block>analog_quadrature_demod_cf</block>
+  </cat>
+  <cat>
+    <name>Sources</name>
+    <block>analog_sig_source_x</block>
+    <block>analog_noise_source_x</block>
+  </cat>
+  <cat>
+    <name>Synchronizers</name>
+    <block>analog_pll_carriertracking_cc</block>
+    <block>analog_pll_freqdet_cf</block>
+    <block>analog_pll_refout_cc</block>
+  </cat>
 </cat>
