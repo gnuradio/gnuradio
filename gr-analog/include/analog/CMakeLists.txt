@@ -100,6 +100,7 @@ install(FILES
     probe_avg_mag_sqrd_f.h
     pwr_squelch_cc.h
     pwr_squelch_ff.h
+    quadrature_demod_cf.h
     rail_ff.h
     rotator.h
     sig_source_waveform.h

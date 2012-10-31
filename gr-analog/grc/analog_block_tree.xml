@@ -44,6 +44,7 @@
     <block>analog_cpfsk_bc</block>
     <block>analog_frequency_modulator_fc</block>
     <block>analog_phase_modulator_fc</block>
+    <block>analog_quadrature_demod_cf</block>
   </cat>
   <cat>
     <name>Sources</name>

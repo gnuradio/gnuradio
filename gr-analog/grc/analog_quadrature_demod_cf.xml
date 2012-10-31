@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Quadrature Demodulator
+###################################################
+ -->
+<block>
+	<name>Quadrature Demod</name>
+	<key>analog_quadrature_demod_cf</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.quadrature_demod_cf($gain)</make>
+	<callback>set_gain($gain)</callback>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>
