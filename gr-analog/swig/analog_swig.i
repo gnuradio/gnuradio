@@ -58,6 +58,7 @@
 #include "analog/sig_source_f.h"
 #include "analog/sig_source_c.h"
 #include "analog/sig_source_waveform.h"
+#include "analog/simple_squelch_cc.h"
 #include "analog/squelch_base_cc.h"
 #include "analog/squelch_base_ff.h"
 %}
@@ -92,6 +93,7 @@
 %include "analog/sig_source_f.h"
 %include "analog/sig_source_c.h"
 %include "analog/sig_source_waveform.h"
+%include "analog/simple_squelch_cc.h"
 %include "analog/squelch_base_cc.h"
 %include "analog/squelch_base_ff.h"
 
@@ -120,3 +122,4 @@ GR_SWIG_BLOCK_MAGIC2(analog, sig_source_s);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_i);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_f);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_c);
+GR_SWIG_BLOCK_MAGIC2(analog, simple_squelch_cc);

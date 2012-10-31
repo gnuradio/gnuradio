@@ -100,6 +100,7 @@ install(FILES
     probe_avg_mag_sqrd_f.h
     rotator.h
     sig_source_waveform.h
+    simple_squelch_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )
