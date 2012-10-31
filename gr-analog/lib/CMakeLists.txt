@@ -153,6 +153,7 @@ if(ENABLE_TESTING)
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_analog.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_analog.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_sincos.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_rotator.cc
     )
 
   add_executable(test-gr-analog ${test_gr_analog_sources})

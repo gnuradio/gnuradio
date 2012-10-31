@@ -97,6 +97,7 @@ install(FILES
     probe_avg_mag_sqrd_c.h
     probe_avg_mag_sqrd_cf.h
     probe_avg_mag_sqrd_f.h
+    rotator.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )
