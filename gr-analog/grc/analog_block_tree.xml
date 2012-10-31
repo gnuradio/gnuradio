@@ -37,6 +37,7 @@
     <block>analog_ctcss_squelch_ff</block>
     <block>analog_pwr_squelch_xx</block>
     <block>analog_simple_squelch_cc</block>
+    <block>analog_rail_ff</block>
   </cat>
   <cat>
     <name>Modulators</name>
