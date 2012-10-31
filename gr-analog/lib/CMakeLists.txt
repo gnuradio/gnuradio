@@ -126,6 +126,8 @@ list(APPEND analog_sources
     probe_avg_mag_sqrd_c_impl.cc
     probe_avg_mag_sqrd_cf_impl.cc
     probe_avg_mag_sqrd_f_impl.cc
+    pwr_squelch_cc_impl.cc
+    pwr_squelch_ff_impl.cc
     simple_squelch_cc_impl.cc
 )
 

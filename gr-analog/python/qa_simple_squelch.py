@@ -46,7 +46,6 @@ class test_simple_squelch(gr_unittest.TestCase):
         self.assertEqual(thr2, t)
 
     def test_simple_squelch_002(self):
-        # Test runtime, gate=True
         alpha = 0.0001
         thr = -25
 
@@ -63,7 +62,7 @@ class test_simple_squelch(gr_unittest.TestCase):
         expected_result[0:20] = 20*[0,]
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 4)
+        self.assertComplexTuplesAlmostEqual(expected_result, result_data, 4)
 
 if __name__ == '__main__':
     gr_unittest.run(test_simple_squelch, "test_simple_squelch.xml")

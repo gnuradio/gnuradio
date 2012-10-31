@@ -52,6 +52,8 @@
 #include "analog/probe_avg_mag_sqrd_c.h"
 #include "analog/probe_avg_mag_sqrd_cf.h"
 #include "analog/probe_avg_mag_sqrd_f.h"
+#include "analog/pwr_squelch_cc.h"
+#include "analog/pwr_squelch_ff.h"
 #include "analog/sincos.h"
 #include "analog/sig_source_s.h"
 #include "analog/sig_source_i.h"
@@ -87,6 +89,8 @@
 %include "analog/probe_avg_mag_sqrd_c.h"
 %include "analog/probe_avg_mag_sqrd_cf.h"
 %include "analog/probe_avg_mag_sqrd_f.h"
+%include "analog/pwr_squelch_cc.h"
+%include "analog/pwr_squelch_ff.h"
 %include "analog/sincos.h"
 %include "analog/sig_source_s.h"
 %include "analog/sig_source_i.h"
@@ -118,6 +122,8 @@ GR_SWIG_BLOCK_MAGIC2(analog, pll_refout_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, probe_avg_mag_sqrd_c);
 GR_SWIG_BLOCK_MAGIC2(analog, probe_avg_mag_sqrd_cf);
 GR_SWIG_BLOCK_MAGIC2(analog, probe_avg_mag_sqrd_f);
+GR_SWIG_BLOCK_MAGIC2(analog, pwr_squelch_cc);
+GR_SWIG_BLOCK_MAGIC2(analog, pwr_squelch_ff);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_s);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_i);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_f);

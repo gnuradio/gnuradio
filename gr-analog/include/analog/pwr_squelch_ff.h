@@ -20,37 +20,56 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ANALOG_SQUELCH_BASE_CC_H
-#define INCLUDED_ANALOG_SQUELCH_BASE_CC_H
+#ifndef INCLUDED_ANALOG_PWR_SQUELCH_FF_H
+#define INCLUDED_ANALOG_PWR_SQUELCH_FF_H
 
 #include <analog/api.h>
-#include <gr_block.h>
+#include <analog/squelch_base_ff.h>
+#include <cmath>
 
 namespace gr {
   namespace analog {
-
+    
     /*!
-     * \brief basic squelch block; to be subclassed for other squelches.
+     * \brief gate or zero output when input power below threshold
      * \ingroup level_blk
      */
-    class ANALOG_API squelch_base_cc : virtual public gr_block
+    class ANALOG_API pwr_squelch_ff :
+      public squelch_base_ff, virtual public gr_block
     {
     protected:
-      virtual void update_state(const gr_complex &sample) = 0;
+      virtual void update_state(const float &in) = 0;
       virtual bool mute() const = 0;
 
     public:
-      squelch_base_cc() {};
+      // gr::analog::pwr_squelch_ff::sptr
+      typedef boost::shared_ptr<pwr_squelch_ff> sptr;
+      
+      /*!
+       * \brief Make power-based squelch block.
+       *
+       * \param db threshold (in dB) for power squelch
+       * \param alpha Gain of averaging filter
+       * \param ramp
+       * \param gate 
+       */
+      static sptr make(double db, double alpha=0.0001,
+		       int ramp=0, bool gate=false);
+
+      virtual std::vector<float> squelch_range() const = 0;
+
+      virtual double threshold() const = 0;
+      virtual void set_threshold(double db) = 0;
+      virtual void set_alpha(double alpha) = 0;
+
       virtual int ramp() const = 0;
       virtual void set_ramp(int ramp) = 0;
       virtual bool gate() const = 0;
       virtual void set_gate(bool gate) = 0;
       virtual bool unmuted() const = 0;
-
-      virtual std::vector<float> squelch_range() const = 0;
     };
 
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* INCLUDED_ANALOG_SQUELCH_BASE_CC_H */
+#endif /* INCLUDED_ANALOG_PWR_SQUELCH_FF_H */
