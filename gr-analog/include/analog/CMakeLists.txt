@@ -65,6 +65,7 @@ endmacro(expand_h)
 # Invoke macro to generate various sources
 #######################################################################
 expand_h(noise_source_X     s i f c)
+expand_h(sig_source_X       s i f c)
 
 add_custom_target(analog_generated_includes DEPENDS
     ${generated_includes}
@@ -98,6 +99,7 @@ install(FILES
     probe_avg_mag_sqrd_cf.h
     probe_avg_mag_sqrd_f.h
     rotator.h
+    sig_source_waveform.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )
