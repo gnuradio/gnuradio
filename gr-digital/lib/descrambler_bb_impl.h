@@ -24,7 +24,7 @@
 #define INCLUDED_GR_DESCRAMBLER_BB_IMPL_H
 
 #include <digital/descrambler_bb.h>
-#include <gri_lfsr.h>
+#include <analog/lfsr.h>
 
 namespace gr {
   namespace digital {
@@ -32,7 +32,7 @@ namespace gr {
     class descrambler_bb_impl : public descrambler_bb
     {
     private:
-      gri_lfsr d_lfsr;
+      analog::lfsr d_lfsr;
 
     public:
       descrambler_bb_impl(int mask, int seed, int len);

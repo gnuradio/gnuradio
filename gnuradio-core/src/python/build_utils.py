@@ -212,7 +212,7 @@ def standard_impl_dict2 (name, code3, package):
     d = {}
     d['NAME'] = name
     d['IMPL_NAME'] = name
-    d['BASE_NAME'] = name.rstrip("_impl")
+    d['BASE_NAME'] = name.rstrip("impl").rstrip("_")
     d['GUARD_NAME'] = 'INCLUDED_%s_%s_H' % (package.upper(), name.upper())
     d['WARNING'] = 'WARNING: this file is machine generated. Edits will be overwritten'
     d['COPYRIGHT'] = copyright

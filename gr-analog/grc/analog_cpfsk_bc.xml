@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##CPFSK
+###################################################
+ -->
+<block>
+	<name>CPFSK</name>
+	<key>analog_cpfsk_bc</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.cpfsk_bc($k, $amplitude, $samples_per_symbol)</make>
+	<callback>set_amplitude($amplitude)</callback>
+	<param>
+		<name>K</name>
+		<key>k</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Amplitude</name>
+		<key>amplitude</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Samples/Symbol</name>
+		<key>samples_per_symbol</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

@@ -23,6 +23,7 @@
 include_directories(
     ${VOLK_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
@@ -157,4 +158,6 @@ list(APPEND digital_libs
 add_library(gnuradio-digital SHARED ${digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
 GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
-add_dependencies(gnuradio-digital digital_generated_includes digital_generated_swigs gnuradio-filter)
+add_dependencies(gnuradio-digital
+  digital_generated_includes digital_generated_swigs
+  gnuradio-filter gnuradio-analog)
