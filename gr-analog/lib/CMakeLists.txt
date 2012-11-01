@@ -131,6 +131,7 @@ list(APPEND analog_sources
     quadrature_demod_cf_impl.cc
     rail_ff_impl.cc
     simple_squelch_cc_impl.cc
+    sincos.cc
 )
 
 list(APPEND analog_libs
@@ -174,3 +175,11 @@ if(ENABLE_TESTING)
 
   GR_ADD_TEST(test_gr_analog test-gr-analog)
 endif(ENABLE_TESTING)
+
+CHECK_CXX_SOURCE_COMPILES("
+    #define _GNU_SOURCE
+    #include <math.h>
+    int main(){double x, sin, cos; sincos(x, &sin, &cos); return 0;}
+    " HAVE_SINCOS
+)
+GR_ADD_COND_DEF(HAVE_SINCOS)
