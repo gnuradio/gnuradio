@@ -27,18 +27,10 @@
 
 namespace gr {
   namespace analog {
-    
-#ifdef __cplusplus
-extern "C" {
-#endif
 
   // compute sine and cosine at the same time
   ANALOG_API void sincos(double x, double *sin, double *cos);
   ANALOG_API void sincosf(float x, float *sin, float *cos);
-
-#ifdef __cplusplus
-};
-#endif
 
   } /* namespace analog */
 } /* namespace gr */

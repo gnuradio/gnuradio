@@ -84,3 +84,6 @@ namespace gr {
     }
 
 #endif
+
+  } /* namespace analog */
+} /* namespace gr */
