@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gru, uhd, optfir, audio, blks2
+from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -159,10 +160,10 @@ class app_top_block(gr.top_block):
 				  int(channel_rate/20),  # 50ms rise/fall
 				  False)		 # Zero, not gate output
 
-	AGC = gr.agc_cc(1.0/channel_rate,  # Time constant
-			1.0,     	   # Reference power
-			1.0,               # Initial gain
-			1.0)		   # Maximum gain
+	AGC = analog.agc_cc(1.0/channel_rate,  # Time constant
+                            1.0,     	       # Reference power
+                            1.0,               # Initial gain
+                            1.0)	       # Maximum gain
 
 	DEMOD = demod(channel_rate, audio_decim)
 

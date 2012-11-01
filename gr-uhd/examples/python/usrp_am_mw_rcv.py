@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, eng_notation, optfir
+from gnuradio import analog
 from gnuradio import audio
 from gnuradio import uhd
 from gnuradio import blks2
@@ -113,7 +114,7 @@ class wfm_rx_block (stdgui2.std_top_block):
         else:
           self.chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
 
-        self.agc = gr.agc_cc(0.1, 1, 1, 100000)
+        self.agc = analog.agc_cc(0.1, 1, 1, 100000)
         self.am_demod = gr.complex_to_mag()
         self.volume_control = gr.multiply_const_ff(self.vol)
 

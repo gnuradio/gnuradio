@@ -35,6 +35,7 @@ development but not yet in cvs.
 """
 
 from gnuradio import gr, eng_notation
+from gnuradio import analog
 from gnuradio import audio
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
@@ -158,7 +159,7 @@ class my_top_block(gr.top_block):
               raise SystemExit, 1
 
 
-        self.agc = gr.agc_cc(1e-7,1.0,1.0) #1e-7
+        self.agc = analog.agc_cc(1e-7,1.0,1.0) #1e-7
         self.am_demod = gr.complex_to_mag ()
         self.set_blacklevel = gr.add_const_ff(options.brightness +255.0)
         self.invert_and_scale = gr.multiply_const_ff (-options.contrast *128.0*255.0/(200.0))

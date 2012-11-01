@@ -1,13 +1,8 @@
 gnuradio.gr: Signal Level Control (AGC)
 =======================================
 
-.. autooldblock:: gnuradio.gr.agc2_cc
-.. autooldblock:: gnuradio.gr.agc2_ff
-.. autooldblock:: gnuradio.gr.agc_cc
-.. autooldblock:: gnuradio.gr.agc_ff
 .. autooldblock:: gnuradio.gr.ctcss_squelch_ff
 .. autooldblock:: gnuradio.gr.dpll_bb
-.. autooldblock:: gnuradio.gr.feedforward_agc_cc
 .. autooldblock:: gnuradio.gr.peak_detector2_fb
 .. autooldblock:: gnuradio.gr.pwr_squelch_cc
 .. autooldblock:: gnuradio.gr.pwr_squelch_ff

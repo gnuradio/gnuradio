@@ -127,10 +127,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_test_types.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_vco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc_cc.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc_ff.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc2_cc.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc2_ff.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_char_to_float.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
@@ -159,10 +155,6 @@ if(ENABLE_PYTHON)
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/general.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.i
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc_cc.i
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc_ff.i
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc2_cc.i
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_agc2_ff.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
@@ -175,10 +167,6 @@ endif(ENABLE_PYTHON)
 set(gr_core_general_triple_threats
     complex_vec_test
     gr_add_ff
-    gr_agc_cc
-    gr_agc_ff
-    gr_agc2_cc
-    gr_agc2_ff
     gr_align_on_samplenumbers_ss
     gr_bin_statistics_f
     gr_char_to_float
@@ -199,7 +187,6 @@ set(gr_core_general_triple_threats
     gr_encode_ccsds_27_bb
     gr_endian_swap
     gr_fake_channel_coder_pp
-    gr_feedforward_agc_cc
     gr_feval
     gr_firdes
     gr_float_to_char
