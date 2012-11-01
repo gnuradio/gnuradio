@@ -28,29 +28,10 @@ Core contents.
 # This is the main GNU Radio python module.
 # We pull the swig output and the other modules into the gnuradio.gr namespace
 
-# Temporary workaround for ticket:181.
-# Use leading underscores to avoid namespace pollution
-import sys
-_RTLD_GLOBAL = 0
-try:
-    from dl import RTLD_GLOBAL as _RTLD_GLOBAL
-except ImportError:
-    try:
-	from DLFCN import RTLD_GLOBAL as _RTLD_GLOBAL
-    except ImportError:
-	pass
-
-if _RTLD_GLOBAL != 0:
-    _dlopenflags = sys.getdlopenflags()
-    sys.setdlopenflags(_dlopenflags|_RTLD_GLOBAL)
-
 from gnuradio_core import *
 from exceptions import *
 from hier_block2 import *
 from top_block import *
-
-if _RTLD_GLOBAL != 0:
-    sys.setdlopenflags(_dlopenflags)             # Restore original flags
 
 # create a couple of aliases
 serial_to_parallel = stream_to_vector
