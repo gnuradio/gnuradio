@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2007 Free Software Foundation, Inc.
+# Copyright 2006,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, optfir
+from gnuradio import gr, analog, filter
 from gnuradio.blks2impl.fm_emph import fm_deemph
 from math import pi
 
@@ -49,15 +49,15 @@ class fm_demod_cf(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
 
 	k = channel_rate/(2*pi*deviation)
-	QUAD = gr.quadrature_demod_cf(k)
+	QUAD = analog.quadrature_demod_cf(k)
 
-	audio_taps = optfir.low_pass(gain, 	   # Filter gain
-	                             channel_rate, # Sample rate
-				     audio_pass,   # Audio passband
-				     audio_stop,   # Audio stopband
-				     0.1, 	   # Passband ripple
-				     60)	   # Stopband attenuation
-	LPF = gr.fir_filter_fff(audio_decim, audio_taps)
+	audio_taps = filter.optfir.low_pass(gain, 	 # Filter gain
+                                           channel_rate, # Sample rate
+                                           audio_pass,   # Audio passband
+                                           audio_stop,   # Audio stopband
+                                           0.1, 	 # Passband ripple
+                                           60)	         # Stopband attenuation
+	LPF = filter.fir_filter_fff(audio_decim, audio_taps)
 
 	if tau is not None:
 	    DEEMPH = fm_deemph(channel_rate, tau)

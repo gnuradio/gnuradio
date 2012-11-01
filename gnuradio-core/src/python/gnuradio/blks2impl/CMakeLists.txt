@@ -21,19 +21,9 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
-    am_demod.py
     filterbank.py
-    fm_demod.py
-    fm_emph.py
-    nbfm_rx.py
-    nbfm_tx.py
     rational_resampler.py
-    standard_squelch.py
     stream_to_vector_decimator.py
-    wfm_rcv.py
-    wfm_rcv_fmdet.py
-    wfm_rcv_pll.py
-    wfm_tx.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/blks2impl
     COMPONENT "core_python"
 )

@@ -81,6 +81,8 @@ import os, wx, sys, math
 import wx.lib.evtmgr as em
 from gnuradio.wxgui import powermate, fftsink2
 from gnuradio import gr, audio, eng_notation
+from gnuradio import analog
+from gnuradio import filter
 from gnuradio.eng_option import eng_option
 from gnuradio import uhd
 from optparse import OptionParser
@@ -272,23 +274,23 @@ class MyFrame(wx.Frame):
            self.tb.connect (self.src, radio_file)
 
 	# 2nd DDC
-        xlate_taps = gr.firdes.low_pass ( \
-           1.0, input_rate, 16e3, 4e3, gr.firdes.WIN_HAMMING )
-        self.xlate = gr.freq_xlating_fir_filter_ccf ( \
+        xlate_taps = filter.firdes.low_pass ( \
+           1.0, input_rate, 16e3, 4e3, filter.firdes.WIN_HAMMING )
+        self.xlate = filter.freq_xlating_fir_filter_ccf ( \
            fir_decim, xlate_taps, self.tune_offset, input_rate )
 
 	# Complex Audio filter
-        audio_coeffs = gr.firdes.complex_band_pass (
+        audio_coeffs = filter.firdes.complex_band_pass (
                 1.0,    # gain
                 self.af_sample_rate, # sample rate
                 -3000,    # low cutoff
                 0,   # high cutoff
                 100,    # transition
-                gr.firdes.WIN_HAMMING)  # window
+                filter.firdes.WIN_HAMMING)  # window
 	self.slider_fcutoff_hi.SetValue(0)
 	self.slider_fcutoff_lo.SetValue(-3000)
 
-        self.audio_filter = gr.fir_filter_ccc(1, audio_coeffs)
+        self.audio_filter = filter.fir_filter_ccc(1, audio_coeffs)
 
 	# Main +/- 16Khz spectrum display
         self.fft = fftsink2.fft_sink_c(self.panel_2, fft_size=512,
@@ -307,10 +309,10 @@ class MyFrame(wx.Frame):
 	# AM branch
 	self.sel_am = gr.multiply_const_cc(0)
 	# the following frequencies turn out to be in radians/sample
-	# gr.pll_refout_cc(alpha,beta,min_freq,max_freq)
+	# analog.pll_refout_cc(alpha,beta,min_freq,max_freq)
 	# suggested alpha = X, beta = .25 * X * X
-	pll = gr.pll_refout_cc(.5,.0625,(2.*math.pi*7.5e3/self.af_sample_rate),
-                                (2.*math.pi*6.5e3/self.af_sample_rate))
+	pll = analog.pll_refout_cc(.5,.0625,(2.*math.pi*7.5e3/self.af_sample_rate),
+                                    (2.*math.pi*6.5e3/self.af_sample_rate))
 	self.pll_carrier_scale = gr.multiply_const_cc(complex(10,0))
 	am_det = gr.multiply_cc()
 	# these are for converting +7.5kHz to -7.5kHz
@@ -322,15 +324,15 @@ class MyFrame(wx.Frame):
 	phaser2 = gr.multiply_const_ff(-1)
 
 	# filter for pll generated carrier
-        pll_carrier_coeffs = gr.firdes.complex_band_pass (
+        pll_carrier_coeffs = filter.firdes.complex_band_pass (
                 2.0,    # gain
                 self.af_sample_rate, # sample rate
                 7400,    # low cutoff
                 7600,   # high cutoff
                 100,    # transition
-                gr.firdes.WIN_HAMMING)  # window
+                filter.firdes.WIN_HAMMING)  # window
 
-        self.pll_carrier_filter = gr.fir_filter_ccc (1, pll_carrier_coeffs)
+        self.pll_carrier_filter = filter.fir_filter_ccc (1, pll_carrier_coeffs)
 
 	self.sel_sb = gr.multiply_const_ff(1)
 	combine = gr.add_ff()
@@ -610,13 +612,13 @@ class MyFrame(wx.Frame):
 
     # Calculate taps and apply
     def filter(self):
-        audio_coeffs = gr.firdes.complex_band_pass (
+        audio_coeffs = filter.firdes.complex_band_pass (
                 1.0,    # gain
                 self.af_sample_rate, # sample rate
                 self.slider_fcutoff_lo.GetValue(),   # low cutoff
                 self.slider_fcutoff_hi.GetValue(),   # high cutoff
                 100,    # transition
-                gr.firdes.WIN_HAMMING)  # window
+                filter.firdes.WIN_HAMMING)  # window
         self.audio_filter.set_taps(audio_coeffs)
 
     def set_lsb(self, event):

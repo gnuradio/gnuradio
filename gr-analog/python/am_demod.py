@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2007 Free Software Foundation, Inc.
+# Copyright 2006,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,7 +19,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, optfir
+from gnuradio import gr
+from gnuradio import filter
 
 class am_demod_cf(gr.hier_block2):
     """
@@ -44,13 +45,13 @@ class am_demod_cf(gr.hier_block2):
 	MAG = gr.complex_to_mag()
 	DCR = gr.add_const_ff(-1.0)
 
-	audio_taps = optfir.low_pass(0.5, 	   # Filter gain
-	                             channel_rate, # Sample rate
-				     audio_pass,   # Audio passband
-				     audio_stop,   # Audio stopband
-				     0.1, 	   # Passband ripple
-				     60)	   # Stopband attenuation
-	LPF = gr.fir_filter_fff(audio_decim, audio_taps)
+	audio_taps = filter.optfir.low_pass(0.5, 	  # Filter gain
+                                            channel_rate, # Sample rate
+                                            audio_pass,   # Audio passband
+                                            audio_stop,   # Audio stopband
+                                            0.1, 	  # Passband ripple
+                                            60)	          # Stopband attenuation
+	LPF = filter.fir_filter_fff(audio_decim, audio_taps)
 
 	self.connect(self, MAG, DCR, LPF, self)
 

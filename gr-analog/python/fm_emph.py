@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2007 Free Software Foundation, Inc.
+# Copyright 2005,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,7 +21,6 @@
 
 from gnuradio import gr, filter
 import math
-
 
 #
 #           1
@@ -53,7 +52,7 @@ class fm_deemph(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
 
         w_p = 1/tau
-        w_pp = math.tan (w_p / (fs * 2)) # prewarped analog freq
+        w_pp = math.tan(w_p / (fs * 2)) # prewarped analog freq
 
         a1 = (w_pp - 1)/(w_pp + 1)
         b0 = w_pp/(1 + w_pp)
@@ -66,7 +65,7 @@ class fm_deemph(gr.hier_block2):
             print "btaps =", btaps
             print "ataps =", ataps
             global plot1
-            plot1 = gru.gnuplot_freqz (gru.freqz (btaps, ataps), fs, True)
+            plot1 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
         deemph = filter.iir_filter_ffd(btaps, ataps)
 	self.connect(self, deemph, self)
@@ -145,7 +144,7 @@ class fm_preemph(gr.hier_block2):
             print "btaps =", btaps
             print "ataps =", ataps
             global plot2
-            plot2 = gru.gnuplot_freqz (gru.freqz (btaps, ataps), fs, True)
+            plot2 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
         preemph = filter.iir_filter_ffd(btaps, ataps)
 	self.connect(self, preemph, self)

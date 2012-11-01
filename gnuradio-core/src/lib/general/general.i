@@ -76,11 +76,7 @@
 #include <gr_conjugate_cc.h>
 #include <gr_vco_f.h>
 #include <gr_threshold_ff.h>
-#include <gr_dpll_bb.h>
 #include <gr_fmdet_cf.h>
-#include <gr_pll_freqdet_cf.h>
-#include <gr_pll_refout_cc.h>
-#include <gr_pll_carriertracking_cc.h>
 #include <gr_probe_avg_mag_sqrd_c.h>
 #include <gr_probe_avg_mag_sqrd_cf.h>
 #include <gr_probe_avg_mag_sqrd_f.h>
@@ -176,11 +172,7 @@
 %include "gr_conjugate_cc.i"
 %include "gr_vco_f.i"
 %include "gr_threshold_ff.i"
-%include "gr_dpll_bb.i"
 %include "gr_fmdet_cf.i"
-%include "gr_pll_freqdet_cf.i"
-%include "gr_pll_refout_cc.i"
-%include "gr_pll_carriertracking_cc.i"
 %include "gr_probe_avg_mag_sqrd_c.i"
 %include "gr_probe_avg_mag_sqrd_cf.i"
 %include "gr_probe_avg_mag_sqrd_f.i"

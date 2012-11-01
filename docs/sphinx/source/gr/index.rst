@@ -215,9 +215,6 @@ Synchronization
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.pll_carriertracking_cc
-   gnuradio.gr.pll_freqdet_cf
-   gnuradio.gr.pll_refout_cc
    gnuradio.gr.simple_correlator
 
 Type Conversions
@@ -256,7 +253,6 @@ Signal Level Control (AGC)
    :nosignatures:
 
    gnuradio.gr.ctcss_squelch_ff
-   gnuradio.gr.dpll_bb
    gnuradio.gr.peak_detector2_fb
    gnuradio.gr.pwr_squelch_cc
    gnuradio.gr.pwr_squelch_ff

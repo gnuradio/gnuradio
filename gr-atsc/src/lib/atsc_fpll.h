@@ -25,10 +25,12 @@
 #include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <gr_nco.h>
-#include <gr_single_pole_iir.h>
-#include <gri_agc_ff.h>
+#include <filter/single_pole_iir.h>
+#include <analog/agc.h>
 #include <stdio.h>
 #include <atsci_diag_output.h>
+
+using namespace gr;
 
 class atsc_fpll;
 typedef boost::shared_ptr<atsc_fpll> atsc_fpll_sptr;
@@ -68,9 +70,9 @@ public:
   double                        initial_phase;
   bool                          debug_no_update;
   gr_nco<float,float>           nco;
-  gri_agc_ff                    agc;    // automatic gain control
-  gr_single_pole_iir<float,float,float> afci;
-  gr_single_pole_iir<float,float,float> afcq;
+  analog::kernel::agc_ff        agc;    // automatic gain control
+  filter::single_pole_iir<float,float,float> afci;
+  filter::single_pole_iir<float,float,float> afcq;
 
 
 };

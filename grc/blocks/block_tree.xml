@@ -123,10 +123,6 @@
 
 		<block>gr_mpsk_sync_cc</block>
 
-		<block>gr_pll_carriertracking_cc</block>
-		<block>gr_pll_freqdet_cf</block>
-		<block>gr_pll_refout_cc</block>
-
 		<block>gr_simple_correlator</block>
 
 		<block>blks2_packet_decoder</block>
@@ -134,7 +130,6 @@
 	</cat>
 	<cat>
 		<name>Level Controls</name>
-		<block>gr_dpll_bb</block>
 		<block>gr_peak_detector_xb</block>
 		<block>gr_peak_detector2_fb</block>
 		<block>gr_sample_and_hold_xx</block>

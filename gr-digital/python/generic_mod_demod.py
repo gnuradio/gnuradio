@@ -25,7 +25,7 @@
 Generic modulation and demodulation.
 """
 
-from gnuradio import gr, analog
+from gnuradio import gr
 from modulation_utils import extract_kwargs_from_options_for_class
 from utils import mod_codes
 import digital_swig as digital
@@ -35,6 +35,11 @@ try:
     from gnuradio import filter
 except ImportError:
     import filter_swig as filter
+
+try:
+    from gnuradio import analog
+except ImportError:
+    import analog_swig as analog
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2

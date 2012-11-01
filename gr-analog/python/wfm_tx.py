@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,15 +20,15 @@
 #
 
 import math
-from gnuradio import gr, optfir, filter
-from gnuradio.blks2impl.fm_emph import fm_preemph
+from gnuradio import gr
+from gnuradio import filter
+from gnuradio import analog
+from fm_emph import fm_preemph
 
-#from gnuradio import ctcss
-
-class nbfm_tx(gr.hier_block2):
-    def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=5e3):
+class wfm_tx(gr.hier_block2):
+    def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=75e3):
         """
-        Narrow Band FM Transmitter.
+        Wide Band FM Transmitter.
 
         Takes a single float input stream of audio samples in the range [-1,+1]
         and produces a single FM modulated complex baseband output.
@@ -37,12 +37,11 @@ class nbfm_tx(gr.hier_block2):
             audio_rate: sample rate of audio stream, >= 16k (integer)
             quad_rate: sample rate of output stream (integer)
             tau: preemphasis time constant (default 75e-6) (float)
-            max_dev: maximum deviation in Hz (default 5e3) (float)
+            max_dev: maximum deviation in Hz (default 75e3) (float)
 
         quad_rate must be an integer multiple of audio_rate.
         """
-
-	gr.hier_block2.__init__(self, "nbfm_tx",
+	gr.hier_block2.__init__(self, "wfm_tx",
 				gr.io_signature(1, 1, gr.sizeof_float),      # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
@@ -58,32 +57,22 @@ class nbfm_tx(gr.hier_block2):
 
         if do_interp:
             interp_factor = quad_rate / audio_rate
-            interp_taps = optfir.low_pass (interp_factor,   # gain
-                                           quad_rate,       # Fs
-                                           4500,            # passband cutoff
-                                           7000,            # stopband cutoff
-                                           0.1,  	    # passband ripple dB
-                                           40)              # stopband atten dB
+            interp_taps = filter.optfir.low_pass(interp_factor,   # gain
+                                                 quad_rate,       # Fs
+                                                 16000,           # passband cutoff
+                                                 18000,           # stopband cutoff
+                                                 0.1,   	  # passband ripple dB
+                                                 40)              # stopband atten dB
 
-            #print "len(interp_taps) =", len(interp_taps)
+            print "len(interp_taps) =", len(interp_taps)
             self.interpolator = filter.interp_fir_filter_fff (interp_factor, interp_taps)
 
-        self.preemph = fm_preemph (quad_rate, tau=tau)
+        self.preemph = fm_preemph(quad_rate, tau=tau)
 
         k = 2 * math.pi * max_dev / quad_rate
-        self.modulator = gr.frequency_modulator_fc (k)
+        self.modulator = analog.frequency_modulator_fc (k)
 
         if do_interp:
-            self.connect (self, self.interpolator, self.preemph, self.modulator, self)
+            self.connect(self, self.interpolator, self.preemph, self.modulator, self)
         else:
             self.connect(self, self.preemph, self.modulator, self)
-
-
-class ctcss_gen_f(gr.hier_block2):
-    def __init__(self, sample_rate, tone_freq):
-	gr.hier_block2.__init__(self, "ctcss_gen_f",
-				gr.io_signature(0, 0, 0),               # Input signature
-				gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
-
-        self.plgen = gr.sig_source_f(sample_rate, gr.GR_SIN_WAVE, tone_freq, 0.1, 0.0)
-	self.connect(self.plgen, self)

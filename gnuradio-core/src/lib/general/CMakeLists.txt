@@ -180,7 +180,6 @@ set(gr_core_general_triple_threats
     gr_cpm
     gr_ctcss_squelch_ff
     gr_decode_ccsds_27_fb
-    gr_dpll_bb
     gr_deinterleave
     gr_delay
     gr_encode_ccsds_27_bb
@@ -216,9 +215,6 @@ set(gr_core_general_triple_threats
     gr_pa_2x2_phase_combiner
     gr_peak_detector2_fb
     gr_phase_modulator_fc
-    gr_pll_carriertracking_cc
-    gr_pll_freqdet_cf
-    gr_pll_refout_cc
     gr_prefs
     gr_probe_avg_mag_sqrd_c
     gr_probe_avg_mag_sqrd_cf

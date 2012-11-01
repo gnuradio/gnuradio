@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2007 Free Software Foundation, Inc.
+# Copyright 2005,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, analog, filter
 from gnuradio.blks2impl.fm_emph import fm_deemph
 import math
 
@@ -50,19 +50,19 @@ class wfm_rcv(gr.hier_block2):
         # if they need to.  E.g., to plot its output.
         #
         # input: complex; output: float
-        self.fm_demod = gr.quadrature_demod_cf (fm_demod_gain)
+        self.fm_demod = analog.quadrature_demod_cf(fm_demod_gain)
 
         # input: float; output: float
-        self.deemph = fm_deemph (audio_rate)
+        self.deemph = fm_deemph(audio_rate)
 
         # compute FIR filter taps for audio filter
         width_of_transition_band = audio_rate / 32
-        audio_coeffs = gr.firdes.low_pass (1.0,         # gain
-                                           quad_rate,      # sampling rate
-                                           audio_rate/2 - width_of_transition_band,
-                                           width_of_transition_band,
-                                           gr.firdes.WIN_HAMMING)
+        audio_coeffs = filter.firdes.low_pass(1.0,            # gain
+                                              quad_rate,      # sampling rate
+                                              audio_rate/2 - width_of_transition_band,
+                                              width_of_transition_band,
+                                              filter.firdes.WIN_HAMMING)
         # input: float; output: float
-        self.audio_filter = gr.fir_filter_fff (audio_decimation, audio_coeffs)
+        self.audio_filter = filter.fir_filter_fff(audio_decimation, audio_coeffs)
 
         self.connect (self, self.fm_demod, self.audio_filter, self.deemph, self)
