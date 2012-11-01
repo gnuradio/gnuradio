@@ -135,7 +135,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_int.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h
