@@ -86,7 +86,7 @@ namespace gr {
      * See http://en.wikipedia.org/wiki/Scrambler for operation of these
      * last two functions (see multiplicative scrambler.)
      */
-    class ANALOG_API lfsr
+    class lfsr
     {
     private:
       uint32_t d_shift_register;

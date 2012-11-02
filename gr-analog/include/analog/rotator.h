@@ -29,7 +29,7 @@
 namespace gr {
   namespace analog {
 
-    class ANALOG_API rotator
+    class rotator
     {
     private:
       gr_complex	d_phase;
