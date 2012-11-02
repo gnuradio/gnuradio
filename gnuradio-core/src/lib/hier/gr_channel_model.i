@@ -26,7 +26,7 @@ gr_channel_model_sptr gr_make_channel_model(double noise_voltage=0.0,
 					    double frequency_offset=0.0,
 					    double epsilon=1.0,
 					    const std::vector<gr_complex> &taps=std::vector<gr_complex>(1, 1),
-					    double noise_seed=3021);
+					    double noise_seed=0);
 
 class gr_channel_model : public gr_hier_block2
 {
