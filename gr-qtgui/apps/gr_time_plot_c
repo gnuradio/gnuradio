@@ -86,8 +86,8 @@ class my_top_block(gr.top_block):
 
             # Set default labels based on file names
             fname = f.split("/")[-1]
-            self.gui_snk.set_title(n, "Re{{{0}}}".format(fname))
-            self.gui_snk.set_title(n+1, "Im{{{0}}}".format(fname))
+            self.gui_snk.set_line_label(n, "Re{{{0}}}".format(fname))
+            self.gui_snk.set_line_label(n+1, "Im{{{0}}}".format(fname))
             n += 2
 
         self.connect(self.srcs[0], self.skip)
