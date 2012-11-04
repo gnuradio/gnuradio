@@ -44,6 +44,6 @@ foreach(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gr-pager/swig
     )
     set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core gnuradio-pager)
-    GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
