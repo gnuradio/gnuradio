@@ -60,10 +60,29 @@ class dialog_box(QtGui.QWidget):
                      self.update_points)
 
         self.layout = QtGui.QGridLayout(self)
-        self.layout.addWidget(top_block.get_gui(), 0,0,1,2)
-        self.layout.addLayout(self.start_form, 1,0,1,1)
-        self.layout.addLayout(self.end_form, 1,1,1,1)
+        self.layout.addWidget(top_block.get_gui(), 1,0,1,2)
+        self.layout.addLayout(self.start_form, 2,0,1,1)
+        self.layout.addLayout(self.end_form, 2,1,1,1)
 
+        # Create a save action
+        self.save_act = QtGui.QAction("Save", self)
+        self.save_act.setShortcut(QtGui.QKeySequence.Save)
+        self.connect(self.save_act, QtCore.SIGNAL("triggered()"),
+                     self.save_figure)
+
+        # Create an exit action
+        self.exit_act = QtGui.QAction("Exit", self)
+        self.exit_act.setShortcut(QtGui.QKeySequence.Close)
+        self.connect(self.exit_act, QtCore.SIGNAL("triggered()"),
+                     self.close)
+
+        # Create a menu for the window
+        self.menu = QtGui.QToolBar("Menu", self)
+        self.menu.addAction(self.save_act)
+        self.menu.addAction(self.exit_act)
+
+        self.layout.addWidget(self.menu, 0,0,1,2)
+        
         self.resize(800, 500)
 
     def update_points(self):
@@ -80,3 +99,29 @@ class dialog_box(QtGui.QWidget):
                 self.top_block.reset(newstart, newnsamps)
         self._start = newstart
         self._end = newend
+
+    def save_figure(self):
+        qpix = QtGui.QPixmap.grabWidget(self.top_block.pyWin)
+        types = "JPEG file (*.jpg);;" + \
+            "Portable Network Graphics file (*.png);;" + \
+            "Bitmap file (*.bmp);;" + \
+            "TIFF file (*.tiff)"
+        filebox = QtGui.QFileDialog(self, "Save Image", "./", types)
+        filebox.setViewMode(QtGui.QFileDialog.Detail)
+        if(filebox.exec_()):
+            filename = filebox.selectedFiles()[0]
+            filetype = filebox.selectedNameFilter()
+        else:
+            return
+
+        if(filetype.contains(".jpg")):
+            qpix.save(filename, "JPEG");
+        elif(filetype.contains(".png")):
+            qpix.save(filename, "PNG");
+        elif(filetype.contains(".bmp")):
+            qpix.save(filename, "BMP");
+        elif(filetype.contains(".tiff")):
+            qpix.save(filename, "TIFF");
+        else:
+            qpix.save(filename, "JPEG");
+
