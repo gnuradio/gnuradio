@@ -22,8 +22,12 @@
 import math
 from gnuradio import gr
 from gnuradio import filter
-from gnuradio import analog
-import fm_deemph
+from fm_emph import fm_deemph
+
+try:
+    from gnuradio import analog
+except ImportError:
+    import analog_swig as analog
 
 class nbfm_rx(gr.hier_block2):
     def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=5e3):

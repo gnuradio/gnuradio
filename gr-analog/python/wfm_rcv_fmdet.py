@@ -19,9 +19,14 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, filter, analog
-from gnuradio.blks2impl.fm_emph import fm_deemph
+from gnuradio import gr, filter
+from fm_emph import fm_deemph
 import math
+
+try:
+    from gnuradio import analog
+except ImportError:
+    import analog_swig as analog
 
 class wfm_rcv_fmdet(gr.hier_block2):
     def __init__ (self, demod_rate, audio_decimation):
