@@ -57,4 +57,8 @@
     <block>analog_pll_freqdet_cf</block>
     <block>analog_pll_refout_cc</block>
   </cat>
+  <cat>
+    <name>Probes</name>
+    <block>analog_probe_avg_mag_sqrd_x</block>
+  </cat>
 </cat>
