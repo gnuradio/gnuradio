@@ -23,7 +23,7 @@
 import random
 from cmath import exp, pi, log
 
-from gnuradio import gr, gr_unittest, blks2
+from gnuradio import gr, gr_unittest
 from utils import mod_codes
 import digital_swig as digital
 

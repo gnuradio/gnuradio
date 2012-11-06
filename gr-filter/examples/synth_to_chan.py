@@ -25,15 +25,21 @@ from gnuradio import filter
 import sys
 
 try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
+try:
     import scipy
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 def main():
@@ -46,8 +52,8 @@ def main():
     sigs = list()
     fmtx = list()
     for fi in freqs:
-        s = gr.sig_source_f(fs, gr.GR_SIN_WAVE, fi, 1)
-        fm = blks2.nbfm_tx (fs, 4*fs, max_dev=10000, tau=75e-6)
+        s = analog.sig_source_f(fs, gr.GR_SIN_WAVE, fi, 1)
+        fm = analog.nbfm_tx(fs, 4*fs, max_dev=10000, tau=75e-6)
         sigs.append(s)
         fmtx.append(fm)
 
@@ -62,7 +68,7 @@ def main():
 
     noise_level = 0.01
     head = gr.head(gr.sizeof_gr_complex, N)
-    noise = gr.noise_source_c(gr.GR_GAUSSIAN, noise_level)
+    noise = analog.noise_source_c(gr.GR_GAUSSIAN, noise_level)
     addnoise = gr.add_cc()
     snk_synth = gr.vector_sink_c()
 

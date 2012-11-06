@@ -20,22 +20,28 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blks2
+from gnuradio import gr
 from gnuradio import filter
 import sys, time
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
     from pylab import mlab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class pfb_top_block(gr.top_block):
@@ -59,7 +65,7 @@ class pfb_top_block(gr.top_block):
 
         repeated = True
         if(repeated):
-            self.vco_input = gr.sig_source_f(self._fs, gr.GR_SIN_WAVE, 0.25, 110)
+            self.vco_input = analog.sig_source_f(self._fs, analog.GR_SIN_WAVE, 0.25, 110)
         else:
             amp = 100
             data = scipy.arange(0, amp, amp/float(self._N))

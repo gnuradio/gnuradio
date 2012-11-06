@@ -22,7 +22,7 @@
 
 import random
 
-from gnuradio import gr, blks2, gr_unittest
+from gnuradio import gr, gr_unittest
 from utils import mod_codes, alignment
 import packet_utils
 import filter_swig as filter

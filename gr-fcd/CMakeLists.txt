@@ -36,6 +36,7 @@ if (LINUX)
         Boost_FOUND
         ENABLE_GR_CORE
         ENABLE_GR_AUDIO
+        ENABLE_GR_ANALOG
         LIBUSB_FOUND
     )
 else()

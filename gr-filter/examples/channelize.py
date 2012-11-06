@@ -20,22 +20,28 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blks2
+from gnuradio import gr
 from gnuradio import filter
 import sys, time
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
     from pylab import mlab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class pfb_top_block(gr.top_block):
@@ -66,7 +72,7 @@ class pfb_top_block(gr.top_block):
         freqs = [-70, -50, -30, -10, 10, 20, 40, 60, 80]
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*self._fs
-            self.signals.append(gr.sig_source_c(self._ifs, gr.GR_SIN_WAVE, f, 1))
+            self.signals.append(analog.sig_source_c(self._ifs, analog.GR_SIN_WAVE, f, 1))
             self.connect(self.signals[i], (self.add,i))
 
         self.head = gr.head(gr.sizeof_gr_complex, self._N)

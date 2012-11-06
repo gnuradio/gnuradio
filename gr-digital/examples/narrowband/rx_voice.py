@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks2, audio, uhd
+from gnuradio import gr, audio, uhd
+from gnuradio import filter
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -75,7 +76,7 @@ class my_top_block(gr.top_block):
             audio_rate = self.audio_tx.sample_rate
             usrp_rate = self.source.get_sample_rate()
             rrate = audio_rate / usrp_rate
-            self.resampler = blks2.pfb_arb_resampler_ccf(rrate)
+            self.resampler = filter.pfb.arb_resampler_ccf(rrate)
             
             self.connect(self.source, self.resampler, self.rxpath)
 

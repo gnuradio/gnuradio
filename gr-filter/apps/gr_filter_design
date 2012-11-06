@@ -2,7 +2,8 @@
 
 import sys, os, re, csv
 from optparse import OptionParser
-from gnuradio import gr, blks2, eng_notation
+from gnuradio import gr, eng_notation
+from gnuradio import filter
 
 try:
     import scipy
@@ -477,8 +478,8 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         if(ret):
             try:
-                taps = blks2.optfir.low_pass(gain, fs, pb, sb,
-                                             ripple, atten)
+                taps = filter.optfir.low_pass(gain, fs, pb, sb,
+                                              ripple, atten)
             except RuntimeError, e:
                 reply = QtGui.QMessageBox.information(self, "Filter did not converge",
                                                       e.args[0], "&Ok")
@@ -508,8 +509,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             sb1 = pb1 - tb
             sb2 = pb2 + tb
             try:
-                taps = blks2.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
-                                              ripple, atten)
+                taps = filter.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
+                                               ripple, atten)
             except RuntimeError, e:
                 reply = QtGui.QMessageBox.information(self, "Filter did not converge",
                                                       e.args[0], "&Ok")
@@ -541,8 +542,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             sb1 = pb1 - tb
             sb2 = pb2 + tb
             try:
-                taps = blks2.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
-                                                      ripple, atten)
+                taps = filter.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
+                                                       ripple, atten)
             except RuntimeError, e:
                 reply = QtGui.QMessageBox.information(self, "Filter did not converge",
                                                       e.args[0], "&Ok")
@@ -573,8 +574,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             pb1 = sb1 - tb
             pb2 = sb2 + tb
             try:
-                taps = blks2.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
-                                                ripple, atten)
+                taps = filter.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
+                                                 ripple, atten)
             except RuntimeError, e:
                 reply = QtGui.QMessageBox.information(self, "Filter did not converge",
                                                       e.args[0], "&Ok")
@@ -601,8 +602,8 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         if(r):
             try:
-                taps = blks2.optfir.high_pass(gain, fs, sb, pb,
-                                              atten, ripple)
+                taps = filter.optfir.high_pass(gain, fs, sb, pb,
+                                               atten, ripple)
             except RuntimeError, e:
                 reply = QtGui.QMessageBox.information(self, "Filter did not converge",
                                                       e.args[0], "&Ok")

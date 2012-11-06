@@ -92,10 +92,10 @@ resampler to take care of the difference.
     actual_rate = self.u.get_samp_rate()
     resample = desired_rate / actual_rate
 
-    # Use the blks2 version and pass only the resample factor.
+    # Use the filter.pfb version and pass only the resample factor.
     # This block builds a half-band filter for you
 
-    self.resampler = blks2.pfb_arb_resampler_ccf(resample)
+    self.resampler = filter.pfb.arb_resampler_ccf(resample)
 \endcode
 
 */

@@ -25,7 +25,8 @@ import sys
 import wx
 from optparse import OptionParser
 
-from gnuradio import gr, audio, blks2, uhd
+from gnuradio import gr, audio, uhd
+from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import stdgui2, fftsink2, scopesink2, slider, form
 
@@ -317,15 +318,15 @@ class transmit_path(gr.hier_block2):
         audio_taps = convolve(array(lpf),array(hpf))
         self.audio_filt = gr.fir_filter_fff(1,audio_taps)
 
-        self.pl = blks2.ctcss_gen_f(self.audio_rate,123.0)
+        self.pl = analog.ctcss_gen_f(self.audio_rate,123.0)
         self.add_pl = gr.add_ff()
         self.connect(self.pl,(self.add_pl,1))
 
-        self.fmtx = blks2.nbfm_tx(self.audio_rate, self.if_rate)
+        self.fmtx = analog.nbfm_tx(self.audio_rate, self.if_rate)
         self.amp = gr.multiply_const_cc (self.normal_gain)
 
         rrate = dev_rate / self.if_rate
-        self.resamp = blks2.pfb_arb_resampler_ccf(rrate)
+        self.resamp = filter.pfb.arb_resampler_ccf(rrate)
 
         self.connect(self.audio, self.audio_amp, self.audio_filt,
                      (self.add_pl,0), self.fmtx, self.amp,
@@ -395,23 +396,23 @@ class receive_path(gr.hier_block2):
                                           gr.firdes.WIN_HANN) # filter type
 
         rrate = self.quad_rate / dev_rate
-        self.resamp = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
+        self.resamp = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)
 
         # instantiate the guts of the single channel receiver
-        self.fmrx = blks2.nbfm_rx(self.audio_rate, self.quad_rate)
+        self.fmrx = analog.nbfm_rx(self.audio_rate, self.quad_rate)
 
         # standard squelch block
-        self.squelch = blks2.standard_squelch(self.audio_rate)
+        self.squelch = analog.standard_squelch(self.audio_rate)
 
         # audio gain / mute block
         self._audio_gain = gr.multiply_const_ff(1.0)
 
         # sound card as final sink
-        audio_sink = audio.sink (int(self.audio_rate), audio_output)
+        audio_sink = audio.sink(int(self.audio_rate), audio_output)
 
         # now wire it all together
-        self.connect (self.u, self.resamp, self.fmrx, self.squelch,
-                      self._audio_gain, audio_sink)
+        self.connect(self.u, self.resamp, self.fmrx, self.squelch,
+                     self._audio_gain, audio_sink)
 
         if gain is None:
             # if no gain was specified, use the mid-point in dB
