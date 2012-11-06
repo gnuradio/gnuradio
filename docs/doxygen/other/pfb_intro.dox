@@ -64,9 +64,9 @@ defined to use a sample rate of \p filter_size times the signal's
 sampling rate.
 
 A helpful wrapper for the arbitrary resampler is found in
-<b>gnuradio-core/src/python/gnuradio/blks2impl/pfb_arb_resampler.py</b>,
-which is exposed in Python as <b>blks2.pfb_arb_resampler_ccf</b> and
-<b>blks2.pfb_arb_resampler_fff</b>. This block is set up so that the
+<b>gr-filter/python/pfb.py</b>,
+which is exposed in Python as <b>filter.pfb.arb_resampler_ccf</b> and
+<b>filter.pfb.arb_resampler_fff</b>. This block is set up so that the
 user only needs to pass it the real number \p rate as the resampling
 rate. With just this information, this hierarchical block
 automatically creates a filter that fully passes the signal bandwidth

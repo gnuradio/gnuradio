@@ -249,12 +249,8 @@ Signal Level Control (AGC)
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.ctcss_squelch_ff
    gnuradio.gr.peak_detector2_fb
-   gnuradio.gr.pwr_squelch_cc
-   gnuradio.gr.pwr_squelch_ff
    gnuradio.gr.regenerate_bb
-   gnuradio.gr.simple_squelch_cc
    gnuradio.gr.mute_cc
    gnuradio.gr.mute_ff
    gnuradio.gr.mute_ii

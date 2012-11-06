@@ -64,7 +64,7 @@ class nbfm_rx(gr.hier_block2):
             raise ValueError, "quad_rate is not an integer multiple of audio_rate"
 
         squelch_threshold = 20		# dB
-        #self.squelch = gr.simple_squelch_cc(squelch_threshold, 0.001)
+        #self.squelch = analog.simple_squelch_cc(squelch_threshold, 0.001)
 
         # FM Demodulator  input: complex; output: float
         k = quad_rate/(2*math.pi*max_dev)
@@ -79,7 +79,7 @@ class nbfm_rx(gr.hier_block2):
                                             quad_rate,      # sampling rate
                                             2.7e3,          # Audio LPF cutoff
                                             0.5e3,          # Transition band
-                                            gr.firdes.WIN_HAMMING)  # filter type
+                                            filter.firdes.WIN_HAMMING)  # filter type
 
         print "len(audio_taps) =", len(audio_taps)
 

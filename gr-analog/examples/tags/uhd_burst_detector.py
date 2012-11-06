@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import filter, analog
 from gnuradio import uhd
 from gnuradio import window
 from gnuradio.eng_option import eng_option
@@ -49,7 +50,7 @@ class uhd_burst_detector(gr.top_block):
         self.uhd_src.set_gain(self.gain, 0)
 
         taps = firdes.low_pass_2(1, 1, 0.4, 0.1, 60)
-        self.chanfilt = gr.fir_filter_ccc(10, taps)
+        self.chanfilt = filter.fir_filter_ccc(10, taps)
         self.tagger = gr.burst_tagger(gr.sizeof_gr_complex)
 
         # Dummy signaler to collect a burst on known periods
@@ -58,11 +59,11 @@ class uhd_burst_detector(gr.top_block):
 
         # Energy detector to get signal burst
         ## use squelch to detect energy
-        self.det  = gr.simple_squelch_cc(self.threshold, 0.01)
+        self.det  = analog.simple_squelch_cc(self.threshold, 0.01)
         ## convert to mag squared (float)
         self.c2m = gr.complex_to_mag_squared()
         ## average to debounce
-        self.avg = gr.single_pole_iir_filter_ff(0.01)
+        self.avg = filter.single_pole_iir_filter_ff(0.01)
         ## rescale signal for conversion to short
         self.scale = gr.multiply_const_ff(2**16)
         ## signal input uses shorts

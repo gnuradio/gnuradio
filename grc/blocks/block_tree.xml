@@ -135,10 +135,6 @@
 		<block>gr_sample_and_hold_xx</block>
 
 		<block>gr_mute_xx</block>
-		<block>gr_simple_squelch_cc</block>
-		<block>blks2_standard_squelch</block>
-		<block>gr_pwr_squelch_xx</block>
-		<block>gr_ctcss_squelch_ff</block>
 		<block>gr_threshold_ff</block>
 	</cat>
 	<cat>

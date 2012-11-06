@@ -61,7 +61,6 @@
 #include <gr_interleave.h>
 #include <gr_deinterleave.h>
 #include <gr_delay.h>
-#include <gr_simple_squelch_cc.h>
 #include <gr_rms_cf.h>
 #include <gr_rms_ff.h>
 #include <gr_nlog10_ff.h>
@@ -92,9 +91,6 @@
 #include <gr_multiply_const_ff.h>
 #include <gr_multiply_conjugate_cc.h>
 #include <gr_feval.h>
-#include <gr_pwr_squelch_cc.h>
-#include <gr_pwr_squelch_ff.h>
-#include <gr_ctcss_squelch_ff.h>
 #include <gr_bin_statistics_f.h>
 #include <gr_peak_detector2_fb.h>
 #include <gr_repeat.h>
@@ -154,7 +150,6 @@
 %include "gr_interleave.i"
 %include "gr_deinterleave.i"
 %include "gr_delay.i"
-%include "gr_simple_squelch_cc.i"
 %include "gr_rms_cf.i"
 %include "gr_rms_ff.i"
 %include "gr_nlog10_ff.i"
@@ -185,9 +180,6 @@
 %include "gr_multiply_const_ff.i"
 %include "gr_multiply_conjugate_cc.i"
 %include "gr_feval.i"
-%include "gr_pwr_squelch_cc.i"
-%include "gr_pwr_squelch_ff.i"
-%include "gr_ctcss_squelch_ff.i"
 %include "gr_bin_statistics_f.i"
 %include "gr_peak_detector2_fb.i"
 %include "gr_repeat.i"

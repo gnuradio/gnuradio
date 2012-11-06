@@ -178,7 +178,6 @@ set(gr_core_general_triple_threats
     gr_copy
     gr_cpfsk_bc
     gr_cpm
-    gr_ctcss_squelch_ff
     gr_decode_ccsds_27_fb
     gr_deinterleave
     gr_delay
@@ -216,8 +215,6 @@ set(gr_core_general_triple_threats
     gr_peak_detector2_fb
     gr_phase_modulator_fc
     gr_prefs
-    gr_pwr_squelch_cc
-    gr_pwr_squelch_ff
     gr_quadrature_demod_cf
     gr_rail_ff
     gr_regenerate_bb
@@ -228,10 +225,7 @@ set(gr_core_general_triple_threats
     gr_short_to_float
     gr_short_to_char
     gr_simple_correlator
-    gr_simple_squelch_cc
     gr_skiphead
-    gr_squelch_base_cc
-    gr_squelch_base_ff
     gr_stream_mux
     gr_stream_to_streams
     gr_stream_to_vector

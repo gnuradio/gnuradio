@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Standard Squelch</name>
-	<key>blks2_standard_squelch</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.standard_squelch(audio_rate=$audio_rate)
+	<key>analog_standard_squelch</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.standard_squelch(audio_rate=$audio_rate)
 self.$(id).set_threshold($threshold)</make>
 	<callback>set_threshold($threshold)</callback>
 	<param>
