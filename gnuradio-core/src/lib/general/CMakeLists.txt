@@ -216,9 +216,6 @@ set(gr_core_general_triple_threats
     gr_peak_detector2_fb
     gr_phase_modulator_fc
     gr_prefs
-    gr_probe_avg_mag_sqrd_c
-    gr_probe_avg_mag_sqrd_cf
-    gr_probe_avg_mag_sqrd_f
     gr_pwr_squelch_cc
     gr_pwr_squelch_ff
     gr_quadrature_demod_cf

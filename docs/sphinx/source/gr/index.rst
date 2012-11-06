@@ -52,9 +52,6 @@ Signal Sinks
    gnuradio.gr.check_counting_s
    gnuradio.gr.check_lfsr_32k_s
    gnuradio.gr.null_sink
-   gnuradio.gr.probe_avg_mag_sqrd_c
-   gnuradio.gr.probe_avg_mag_sqrd_cf
-   gnuradio.gr.probe_avg_mag_sqrd_f
    gnuradio.gr.probe_signal_f
    gnuradio.gr.vector_sink_b
    gnuradio.gr.vector_sink_c

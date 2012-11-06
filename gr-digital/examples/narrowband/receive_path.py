@@ -23,6 +23,7 @@
 from gnuradio import gr, gru, filter
 from gnuradio import eng_notation
 from gnuradio import digital
+from gnuradio import analog
 
 import copy
 import sys
@@ -78,7 +79,7 @@ class receive_path(gr.hier_block2):
         # Carrier Sensing Blocks
         alpha = 0.001
         thresh = 30   # in dB, will have to adjust
-        self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
+        self.probe = analog.probe_avg_mag_sqrd_c(thresh,alpha)
 
         # Display some information about the setup
         if self._verbose:

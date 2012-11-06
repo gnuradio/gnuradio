@@ -77,9 +77,6 @@
 #include <gr_vco_f.h>
 #include <gr_threshold_ff.h>
 #include <gr_fmdet_cf.h>
-#include <gr_probe_avg_mag_sqrd_c.h>
-#include <gr_probe_avg_mag_sqrd_cf.h>
-#include <gr_probe_avg_mag_sqrd_f.h>
 #include <gr_regenerate_bb.h>
 #include <gr_pa_2x2_phase_combiner.h>
 #include <gr_kludge_copy.h>
@@ -173,9 +170,6 @@
 %include "gr_vco_f.i"
 %include "gr_threshold_ff.i"
 %include "gr_fmdet_cf.i"
-%include "gr_probe_avg_mag_sqrd_c.i"
-%include "gr_probe_avg_mag_sqrd_cf.i"
-%include "gr_probe_avg_mag_sqrd_f.i"
 %include "gr_regenerate_bb.i"
 %include "gr_pa_2x2_phase_combiner.i"
 %include "gr_kludge_copy.i"
