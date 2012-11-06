@@ -21,10 +21,15 @@
 #
 
 from gnuradio import gr
-from gnuradio import analog
 from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 #import os
 #print os.getpid()

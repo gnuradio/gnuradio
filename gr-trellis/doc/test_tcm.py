@@ -2,12 +2,18 @@
 
 from gnuradio import gr
 from gnuradio import audio
-from gnuradio import trellis, digital, analog
+from gnuradio import trellis, digital
 from gnuradio import eng_notation
 import math
 import sys
 import random
 import fsm_utils
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     tb = gr.top_block ()

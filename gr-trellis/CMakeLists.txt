@@ -29,7 +29,6 @@ include(GrComponent)
 GR_REGISTER_COMPONENT("gr-trellis" ENABLE_GR_TRELLIS
     Boost_FOUND
     ENABLE_GR_CORE
-    ENABLE_GR_ANALOG
     ENABLE_GR_DIGITAL
 )
 

@@ -2,14 +2,17 @@
 
 from gnuradio import gr
 from gnuradio import trellis, digital
-from gnuradio import analog
 from gnuradio import eng_notation
 import math
 import sys
 import random
 import fsm_utils
 
-
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 def make_rx(tb,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,type):
     metrics_in = trellis.metrics_f(fi.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner Viterbi

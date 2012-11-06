@@ -29,7 +29,6 @@ include(GrComponent)
 GR_REGISTER_COMPONENT("gr-audio" ENABLE_GR_AUDIO
     Boost_FOUND
     ENABLE_GR_CORE
-    ENABLE_GR_ANALOG
 )
 
 GR_SET_GLOBAL(GR_AUDIO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -88,13 +87,16 @@ CPACK_COMPONENT("audio_swig"
 add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(doc)
-add_subdirectory(examples/c++)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(grc)
     add_subdirectory(examples/python)
     add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
+
+if(ENABLE_GR_ANALOG)
+  add_subdirectory(examples/c++)
+endif(ENABLE_GR_ANALOG)
 
 ########################################################################
 # Create Pkg Config File

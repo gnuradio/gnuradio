@@ -9,12 +9,17 @@
 
 from gnuradio import gr
 from gnuradio import trellis, digital, filter
-from gnuradio import analog
 from grc_gnuradio import blks2 as grc_blks2
 import math
 import numpy
 import fsm_utils
 from gnuradio import trellis
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
 	import scipy.stats

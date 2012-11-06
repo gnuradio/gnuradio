@@ -22,10 +22,15 @@
 
 from gnuradio import gr, gru
 from gnuradio import audio
-from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import os
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 class my_top_block(gr.top_block):
 
