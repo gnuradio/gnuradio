@@ -25,17 +25,23 @@ from gnuradio import filter
 import sys, time
 
 try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
+try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
     from pylab import mlab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class pfb_top_block(gr.top_block):
@@ -65,7 +71,7 @@ class pfb_top_block(gr.top_block):
         self.add = gr.add_cc()
         freqs = [10, 20, 2040]
         for i in xrange(len(freqs)):
-            self.signals.append(gr.sig_source_c(self._fs, gr.GR_SIN_WAVE, freqs[i], 1))
+            self.signals.append(analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freqs[i], 1))
             self.connect(self.signals[i], (self.add,i))
 
         self.head = gr.head(gr.sizeof_gr_complex, self._N)

@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
+import analog_swig as analog
 from vocoder_swig import *
 from cvsd import *
 
@@ -95,7 +96,7 @@ class test_cvsd_vocoder (gr_unittest.TestCase):
                          -0.16035343706607819, 0.014823081903159618,
                          0.16282452642917633, 0.33802291750907898)
 
-        src = gr.sig_source_f(sample_rate, gr.GR_SIN_WAVE, 200, 1, 0)
+        src = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 200, 1, 0)
         head = gr.head(gr.sizeof_float, 100)
         src_scale = gr.multiply_const_ff(scale_factor)
 

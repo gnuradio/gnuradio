@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,6 +23,7 @@
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import filter_swig as filter
+import analog_swig as analog
 import random, math
 
 class test_fll_band_edge_cc(gr_unittest.TestCase):
@@ -40,7 +41,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         ntaps = 45
         
         # Create pulse shape filter
-        rrc_taps = gr.firdes.root_raised_cosine(
+        rrc_taps = filter.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
         # The frequency offset to correct
@@ -53,7 +54,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
 
         # Mix symbols with a complex sinusoid to spin them
-        self.nco = gr.sig_source_c(1, gr.GR_SIN_WAVE, foffset, 1)
+        self.nco = analog.sig_source_c(1, analog.GR_SIN_WAVE, foffset, 1)
         self.mix = gr.multiply_cc()
 
         # FLL will despin the symbols to an arbitrary phase

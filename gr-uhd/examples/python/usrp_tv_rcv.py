@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -244,8 +244,8 @@ class tv_rx_block (stdgui2.std_top_block):
                         self.invert_and_scale, self.set_blacklevel,
                         f2uc, self.dst)
         else: # process_type=='do_test_image':
-          src_vertical_bars = gr.sig_source_f (usrp_rate, gr.GR_SIN_WAVE,
-                                               10.0 *usrp_rate/320, 255,128)
+          src_vertical_bars = analog.sig_source_f(usrp_rate, analog.GR_SIN_WAVE,
+                                                  10.0 *usrp_rate/320, 255,128)
           self.connect(src_vertical_bars, f2uc, self.dst)
 
         self._build_gui(vbox, usrp_rate, usrp_rate, usrp_rate)

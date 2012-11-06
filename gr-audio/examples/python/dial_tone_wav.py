@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2008,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,6 +23,7 @@
 # GNU Radio example program to record a dial tone to a WAV file
 
 from gnuradio import gr
+from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -45,8 +46,8 @@ class my_top_block(gr.top_block):
         sample_rate = int(options.sample_rate)
         ampl = 0.1
 
-        src0 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 350, ampl)
-        src1 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 440, ampl)
+        src0 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 350, ampl)
+        src1 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 440, ampl)
 	head0 = gr.head(gr.sizeof_float, int(options.samples))
 	head1 = gr.head(gr.sizeof_float, int(options.samples))
 	dst = gr.wavfile_sink(args[0], 2, int(options.sample_rate), 16)

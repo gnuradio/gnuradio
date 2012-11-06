@@ -4,7 +4,7 @@
   2
   3  from gnuradio import gr
   4  from gnuradio import audio
-  5  from gnuradio import trellis
+  5  from gnuradio import trellis, digital, analog
   6  from gnuradio import eng_notation
   7  import math
   8  import sys
@@ -23,7 +23,7 @@
  21
  22      # CHANNEL
  23      add = gr.add_ff()
- 24      noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+ 24      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
  25
  26      # RX
  27      metrics = trellis.metrics_f(f.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi

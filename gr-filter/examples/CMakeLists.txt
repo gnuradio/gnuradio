@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(PROGRAMS
     fft_filter_ccc.py
     fir_filter_ccc.py
     fir_filter_fff.py
-    fmtest.py
     interpolate.py
     reconstruction.py
     resampler.py

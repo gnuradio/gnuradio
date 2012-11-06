@@ -2,6 +2,7 @@
 
 from gnuradio import gr
 from gnuradio import trellis, digital
+from gnuradio import analog
 from gnuradio import eng_notation
 import math
 import sys
@@ -63,7 +64,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,tot_constellat
 
     # CHANNEL
     add = gr.add_ff()
-    noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX
     (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM)

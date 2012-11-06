@@ -1,5 +1,5 @@
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,7 +24,8 @@
 ##################################################
 import histo_window
 import common
-from gnuradio import gr, blks2
+from gnuradio import gr
+from gnuradio import analog
 from pubsub import pubsub
 from constants import *
 
@@ -94,17 +95,17 @@ class test_app_block (stdgui2.std_top_block):
         # build our flow graph
         input_rate = 20.48e3
 
-        src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
-        #src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1)
+        src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 2e3, 1)
+        #src2 = analog.sig_source_f(input_rate, analog.GR_CONST_WAVE, 5.75e3, 1)
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
-        sink2 = histo_sink_f (panel, title="Data", num_bins=31, frame_size=1000)
-        vbox.Add (sink2.win, 1, wx.EXPAND)
+        sink2 = histo_sink_f(panel, title="Data", num_bins=31, frame_size=1000)
+        vbox.Add(sink2.win, 1, wx.EXPAND)
 
         self.connect(src2, thr2, sink2)
 
 def main ():
-    app = stdgui2.stdapp (test_app_block, "Histo Sink Test App")
-    app.MainLoop ()
+    app = stdgui2.stdapp(test_app_block, "Histo Sink Test App")
+    app.MainLoop()
 
 if __name__ == '__main__':
-    main ()
+    main()

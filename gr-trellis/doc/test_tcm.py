@@ -2,7 +2,7 @@
 
 from gnuradio import gr
 from gnuradio import audio
-from gnuradio import trellis, digital
+from gnuradio import trellis, digital, analog
 from gnuradio import eng_notation
 import math
 import sys
@@ -21,7 +21,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
 
     # CHANNEL
     add = gr.add_ff()
-    noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX
     metrics = trellis.metrics_f(f.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi

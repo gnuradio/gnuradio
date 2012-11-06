@@ -21,6 +21,7 @@ include(GrPython)
 
 # Base stuff
 GR_PYTHON_INSTALL(PROGRAMS
+    fmtest.py
     DESTINATION ${GR_PKG_ANALOG_EXAMPLES_DIR}
     COMPONENT "analog_python"
 )

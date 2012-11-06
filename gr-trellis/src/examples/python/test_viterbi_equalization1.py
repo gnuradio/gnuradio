@@ -2,6 +2,7 @@
 
 from gnuradio import gr
 from gnuradio import trellis, digital, filter
+from gnuradio import analog
 from gnuradio import eng_notation
 import math
 import sys
@@ -27,7 +28,7 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     # CHANNEL
     isi = filter.fir_filter_fff(1,channel)
     add = gr.add_ff()
-    noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX
     skip = gr.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols

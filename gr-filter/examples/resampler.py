@@ -25,15 +25,21 @@ from gnuradio import filter
 import sys
 
 try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
+try:
     import scipy
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class mytb(gr.top_block):
@@ -46,8 +52,8 @@ class mytb(gr.top_block):
         # Creating our own taps
         taps = gr.firdes.low_pass_2(32, 32, 0.25, 0.1, 80)
 
-        self.src = gr.sig_source_c(fs_in, gr.GR_SIN_WAVE, fc, 1)
-        #self.src = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src = analog.sig_source_c(fs_in, analog..GR_SIN_WAVE, fc, 1)
+        #self.src = analog..noise_source_c(analog..GR_GAUSSIAN, 1)
         self.head = gr.head(gr.sizeof_gr_complex, N)
 
         # A resampler with our taps

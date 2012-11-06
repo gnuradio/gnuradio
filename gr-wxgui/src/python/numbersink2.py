@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,6 +25,7 @@
 import number_window
 import common
 from gnuradio import gr, blks2, filter
+from gnuradio import analog
 from pubsub import pubsub
 from constants import *
 
@@ -134,38 +135,38 @@ class number_sink_c(_number_sink_base):
 import wx
 from gnuradio.wxgui import stdgui2
 
-class test_app_flow_graph (stdgui2.std_top_block):
+class test_app_flow_graph(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
 
         # build our flow graph
         input_rate = 20.48e3
 
         # Generate a real and complex sinusoids
-        src1 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 2.21e3, 1)
-        src2 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 2.21e3, 1)
+        src1 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 2.21e3, 1)
+        src2 = analog.sig_source_c(input_rate, analog.GR_SIN_WAVE, 2.21e3, 1)
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
         thr1 = gr.throttle(gr.sizeof_float, input_rate)
         thr2 = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        sink1 = number_sink_f (panel, unit='V',label="Real Data", avg_alpha=0.001,
-                            sample_rate=input_rate, minval=-1, maxval=1,
-                            ref_level=0, decimal_places=3)
-        vbox.Add (sink1.win, 1, wx.EXPAND)
-        sink2 = number_sink_c (panel, unit='V',label="Complex Data", avg_alpha=0.001,
-                            sample_rate=input_rate, minval=-1, maxval=1,
-                            ref_level=0, decimal_places=3)
-        vbox.Add (sink2.win, 1, wx.EXPAND)
+        sink1 = number_sink_f(panel, unit='V',label="Real Data", avg_alpha=0.001,
+			      sample_rate=input_rate, minval=-1, maxval=1,
+			      ref_level=0, decimal_places=3)
+        vbox.Add(sink1.win, 1, wx.EXPAND)
+        sink2 = number_sink_c(panel, unit='V',label="Complex Data", avg_alpha=0.001,
+			      sample_rate=input_rate, minval=-1, maxval=1,
+			      ref_level=0, decimal_places=3)
+        vbox.Add(sink2.win, 1, wx.EXPAND)
 
-        self.connect (src1, thr1, sink1)
-        self.connect (src2, thr2, sink2)
+        self.connect(src1, thr1, sink1)
+        self.connect(src2, thr2, sink2)
 
 def main ():
-    app = stdgui2.stdapp (test_app_flow_graph, "Number Sink Test App")
-    app.MainLoop ()
+    app = stdgui2.stdapp(test_app_flow_graph, "Number Sink Test App")
+    app.MainLoop()
 
 if __name__ == '__main__':
-    main ()
+    main()
 

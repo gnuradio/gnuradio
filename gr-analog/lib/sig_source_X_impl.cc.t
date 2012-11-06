@@ -211,7 +211,7 @@ namespace gr {
 #endif
 
       default:
-	throw std::runtime_error("gr_sig_source: invalid waveform");
+	throw std::runtime_error("analog::sig_source: invalid waveform");
       }
 
       return noutput_items;

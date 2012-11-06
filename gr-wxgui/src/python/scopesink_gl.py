@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2010 Free Software Foundation, Inc.
+# Copyright 2008,2010,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -206,18 +206,20 @@ class test_top_block (stdgui2.std_top_block):
 
         # Generate a complex sinusoid
         ampl=1.0e3
-        self.src0 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 25.1e3*input_rate/default_input_rate, ampl)
-        self.noise =gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 11.1*25.1e3*input_rate/default_input_rate, ampl/10)
-        #self.noise =gr.noise_source_c(gr.GR_GAUSSIAN, ampl/10)
-        self.combine=gr.add_cc()
+        self.src0 = analog.sig_source_c(input_rate, gr.GR_SIN_WAVE,
+					25.1e3*input_rate/default_input_rate, ampl)
+        self.noise = analog.sig_source_c (input_rate, analog.GR_SIN_WAVE,
+					  11.1*25.1e3*input_rate/default_input_rate, ampl/10)
+        #self.noise = analog.noise_source_c(analog.GR_GAUSSIAN, ampl/10)
+        self.combine = analog.add_cc()
 
         # We add this throttle block so that this demo doesn't suck down
         # all the CPU available.  You normally wouldn't use it...
         self.thr = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        scope = scope_sink_c (panel,"Secret Data",sample_rate=input_rate,
-                              v_scale=v_scale, t_scale=t_scale)
-        vbox.Add (scope.win, 1, wx.EXPAND)
+        scope = scope_sink_c(panel,"Secret Data",sample_rate=input_rate,
+			     v_scale=v_scale, t_scale=t_scale)
+        vbox.Add(scope.win, 1, wx.EXPAND)
 
         # Ultimately this will be
         # self.connect("src0 throttle scope")
@@ -226,8 +228,8 @@ class test_top_block (stdgui2.std_top_block):
         self.connect(self.combine, self.thr, scope)
 
 def main ():
-    app = stdgui2.stdapp (test_top_block, "O'Scope Test App")
-    app.MainLoop ()
+    app = stdgui2.stdapp(test_top_block, "O'Scope Test App")
+    app.MainLoop()
 
 if __name__ == '__main__':
-    main ()
+    main()

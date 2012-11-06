@@ -9,6 +9,7 @@ from PyQt4 import Qt
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import qtgui
+from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
 from optparse import OptionParser
@@ -58,7 +59,7 @@ class howto_square_qt(gr.top_block, Qt.QWidget):
 		self.howto_square_ff_0 = howto.square_ff()
 		self.howto_square2_ff_0 = howto.square2_ff()
 		self.gr_throttle_0 = gr.throttle(gr.sizeof_float*1, samp_rate)
-		self.gr_sig_source_x_0 = gr.sig_source_f(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
+		self.gr_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 1000, 1, 0)
 
 		##################################################
 		# Connections

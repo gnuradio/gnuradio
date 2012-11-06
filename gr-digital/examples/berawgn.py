@@ -36,6 +36,7 @@ magnitude below what you chose for N_BITS.
 import math
 import numpy
 from gnuradio import gr, digital
+from gnuradio import analog
 
 try:
     from scipy.special import erfc
@@ -92,9 +93,9 @@ class BERAWGNSimu(gr.top_block):
         src   = gr.vector_source_b(data, False)
         mod   = digital.chunks_to_symbols_bc((self.const.points()), 1)
         add   = gr.add_vcc()
-        noise = gr.noise_source_c(gr.GR_GAUSSIAN,
-                                  self.EbN0_to_noise_voltage(EbN0),
-                                  RAND_SEED)
+        noise = analog.noise_source_c(analog.GR_GAUSSIAN,
+                                      self.EbN0_to_noise_voltage(EbN0),
+                                      RAND_SEED)
         demod = digital.constellation_decoder_cb(self.const.base())
         ber   = BitErrors(self.const.bits_per_symbol())
         self.sink  = gr.vector_sink_f()

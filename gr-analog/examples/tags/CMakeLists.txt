@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,14 +17,11 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include_directories(${GR_AUDIO_INCLUDE_DIRS})
-include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
-include_directories(${GR_ANALOG_INCLUDE_DIRS})
-add_executable(dial_tone dial_tone.cc)
-target_link_libraries(dial_tone gnuradio-audio gnuradio-analog)
+include(GrPython)
 
-INSTALL(TARGETS
-    dial_tone
-    DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
-    COMPONENT "audio_examples"
+GR_PYTHON_INSTALL(PROGRAMS
+  uhd_burst_detector.py
+  DESTINATION ${GR_PKG_DATA_DIR}/examples/tags
+  COMPONENT "core_python"
 )
+

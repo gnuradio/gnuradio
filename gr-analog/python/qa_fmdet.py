@@ -62,7 +62,7 @@ class test_fmdet_cf(gr_unittest.TestCase):
     # block is saying, not what the values should actually be.
     def est_fmdet_cf_002(self):
         N = 100
-        src = gr.sig_source_c(1, gr.GR_SIN_WAVE, 0.2, 1)
+        src = analog.sig_source_c(1, analog.GR_SIN_WAVE, 0.2, 1)
         head = gr.head(gr.sizeof_gr_complex, N)
         op = analog.fmdet_cf(1, 0.1, 0.3, 0.1)
         dst = gr.vector_sink_f()

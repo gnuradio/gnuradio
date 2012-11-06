@@ -21,7 +21,6 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
   test_file_tags.py
-  uhd_burst_detector.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/tags
   COMPONENT "core_python"
 )

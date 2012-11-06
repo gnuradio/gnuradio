@@ -105,8 +105,8 @@ class test_agc (gr_unittest.TestCase):
             (1.26766037940979-0.92100900411605835j))
 
         sampling_freq = 100
-        src1 = gr.sig_source_c(sampling_freq, gr.GR_SIN_WAVE,
-                                sampling_freq * 0.10, 100.0)
+        src1 = analog.sig_source_c(sampling_freq, analog.GR_SIN_WAVE,
+                                   sampling_freq * 0.10, 100.0)
         dst1 = gr.vector_sink_c()
         head = gr.head(gr.sizeof_gr_complex, int (5*sampling_freq * 0.10))
 
@@ -193,8 +193,8 @@ class test_agc (gr_unittest.TestCase):
             -3.3931560516357422)
 
         sampling_freq = 100
-        src1 = gr.sig_source_f (sampling_freq, gr.GR_SIN_WAVE,
-                                sampling_freq * 0.10, 100.0)
+        src1 = analog.sig_source_f(sampling_freq, analog.GR_SIN_WAVE,
+                                   sampling_freq * 0.10, 100.0)
         dst1 = gr.vector_sink_f ()
         head = gr.head (gr.sizeof_float, int (5*sampling_freq * 0.10))
 
@@ -283,8 +283,8 @@ class test_agc (gr_unittest.TestCase):
                          (0.80901449918746948-0.5877833366394043j))
 
         sampling_freq = 100
-        src1 = gr.sig_source_c(sampling_freq, gr.GR_SIN_WAVE,
-                                sampling_freq * 0.10, 100)
+        src1 = analog.sig_source_c(sampling_freq, analog.GR_SIN_WAVE,
+                                   sampling_freq * 0.10, 100)
         dst1 = gr.vector_sink_c()
         head = gr.head(gr.sizeof_gr_complex, int(5*sampling_freq * 0.10))
 
@@ -373,8 +373,8 @@ class test_agc (gr_unittest.TestCase):
              -0.61937344074249268)
 
         sampling_freq = 100
-        src1 = gr.sig_source_f(sampling_freq, gr.GR_SIN_WAVE,
-                               sampling_freq * 0.10, 100)
+        src1 = analog.sig_source_f(sampling_freq, analog.GR_SIN_WAVE,
+                                   sampling_freq * 0.10, 100)
         dst1 = gr.vector_sink_f()
         head = gr.head(gr.sizeof_float, int(5*sampling_freq * 0.10))
 
@@ -449,8 +449,8 @@ class test_agc (gr_unittest.TestCase):
                          (0.80901449918746948-0.5877833366394043j))
 
         sampling_freq = 100
-        src1 = gr.sig_source_c(sampling_freq, gr.GR_SIN_WAVE,
-                               sampling_freq * 0.10, 100)
+        src1 = analog.sig_source_c(sampling_freq, analog.GR_SIN_WAVE,
+                                   sampling_freq * 0.10, 100)
         dst1 = gr.vector_sink_c()
         head = gr.head(gr.sizeof_gr_complex, int(5*sampling_freq * 0.10))
 

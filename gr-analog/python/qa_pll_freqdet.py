@@ -141,7 +141,7 @@ class test_pll_freqdet(gr_unittest.TestCase):
         maxf = 1
         minf = -1
 
-        src = gr.sig_source_c(sampling_freq, gr.GR_COS_WAVE, freq, 1.0)
+        src = analog.sig_source_c(sampling_freq, analog.GR_COS_WAVE, freq, 1.0)
         pll = analog.pll_freqdet_cf(loop_bw, maxf, minf)
         head = gr.head(gr.sizeof_float, int (freq))
         dst = gr.vector_sink_f()

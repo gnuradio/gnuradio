@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005,2007,2008 Free Software Foundation, Inc.
+# Copyright 2003-2007,2008,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gru, window, fft, filter
+from gnuradio import analog
 from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
@@ -391,7 +392,7 @@ def next_down(v, seq):
 
 class test_top_block (stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
 
         fft_size = 512
 
@@ -399,30 +400,30 @@ class test_top_block (stdgui2.std_top_block):
         input_rate = 20.000e3
 
         # Generate a complex sinusoid
-        self.src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 5.75e3, 1000)
-        #src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1000)
+        self.src1 = analog.sig_source_c(input_rate, analog.GR_SIN_WAVE, 5.75e3, 1000)
+        #src1 = analog.sig_source_c(input_rate, analog.GR_CONST_WAVE, 5.75e3, 1000)
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
         self.thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        sink1 = waterfall_sink_c (panel, title="Complex Data", fft_size=fft_size,
-                                  sample_rate=input_rate, baseband_freq=100e3)
+        sink1 = waterfall_sink_c(panel, title="Complex Data", fft_size=fft_size,
+                                 sample_rate=input_rate, baseband_freq=100e3)
 	self.connect(self.src1, self.thr1, sink1)
-        vbox.Add (sink1.win, 1, wx.EXPAND)
+        vbox.Add(sink1.win, 1, wx.EXPAND)
 
         # generate a real sinusoid
-        self.src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 5.75e3, 1000)
+        self.src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 5.75e3, 1000)
         self.thr2 = gr.throttle(gr.sizeof_float, input_rate)
-        sink2 = waterfall_sink_f (panel, title="Real Data", fft_size=fft_size,
-                                  sample_rate=input_rate, baseband_freq=100e3)
+        sink2 = waterfall_sink_f(panel, title="Real Data", fft_size=fft_size,
+                                 sample_rate=input_rate, baseband_freq=100e3)
 	self.connect(self.src2, self.thr2, sink2)
-        vbox.Add (sink2.win, 1, wx.EXPAND)
+        vbox.Add(sink2.win, 1, wx.EXPAND)
 
 
 def main ():
-    app = stdgui2.stdapp (test_top_block, "Waterfall Sink Test App")
-    app.MainLoop ()
+    app = stdgui2.stdapp(test_top_block, "Waterfall Sink Test App")
+    app.MainLoop()
 
 if __name__ == '__main__':
-    main ()
+    main()

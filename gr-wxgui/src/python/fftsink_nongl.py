@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005,2006,2007,2009,2010 Free Software Foundation, Inc.
+# Copyright 2003-2007,2009,2010,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gru, window, fft, filter
+from gnuradio import analog
 from gnuradio.wxgui import stdgui2
 import wx
 import plot
@@ -604,33 +605,33 @@ class test_app_block (stdgui2.std_top_block):
         input_rate = 100*20.48e3
 
         # Generate a complex sinusoid
-        #src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
-        src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
+        #src1 = analog.sig_source_c(input_rate, analog.GR_SIN_WAVE, 100*2e3, 1)
+        src1 = analog.sig_source_c(input_rate, analog.GR_CONST_WAVE, 100*5.75e3, 1)
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
         thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        sink1 = fft_sink_c (panel, title="Complex Data", fft_size=fft_size,
-                            sample_rate=input_rate, baseband_freq=100e3,
-                            ref_level=0, y_per_div=20, y_divs=10)
-        vbox.Add (sink1.win, 1, wx.EXPAND)
+        sink1 = fft_sink_c(panel, title="Complex Data", fft_size=fft_size,
+                           sample_rate=input_rate, baseband_freq=100e3,
+                           ref_level=0, y_per_div=20, y_divs=10)
+        vbox.Add(sink1.win, 1, wx.EXPAND)
 
         self.connect(src1, thr1, sink1)
 
-        #src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
-        src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
+        #src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 100*2e3, 1)
+        src2 = analog.sig_source_f(input_rate, analog.GR_CONST_WAVE, 100*5.75e3, 1)
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
-        sink2 = fft_sink_f (panel, title="Real Data", fft_size=fft_size*2,
-                            sample_rate=input_rate, baseband_freq=100e3,
-                            ref_level=0, y_per_div=20, y_divs=10)
-        vbox.Add (sink2.win, 1, wx.EXPAND)
+        sink2 = fft_sink_f(panel, title="Real Data", fft_size=fft_size*2,
+                           sample_rate=input_rate, baseband_freq=100e3,
+                           ref_level=0, y_per_div=20, y_divs=10)
+        vbox.Add(sink2.win, 1, wx.EXPAND)
 
         self.connect(src2, thr2, sink2)
 
 def main ():
-    app = stdgui2.stdapp (test_app_block, "FFT Sink Test App")
-    app.MainLoop ()
+    app = stdgui2.stdapp(test_app_block, "FFT Sink Test App")
+    app.MainLoop()
 
 if __name__ == '__main__':
     main ()

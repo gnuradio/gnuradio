@@ -39,6 +39,7 @@ TYPE_KEY = 'type'
 def setter(ps, key, val): ps[key] = val
 
 from gnuradio import gr, gru, uhd, eng_notation
+from gnuradio import analog
 from gnuradio.gr.pubsub import pubsub
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -239,28 +240,28 @@ class top_block(gr.top_block, pubsub):
     def set_waveform(self, type):
         self.lock()
         self.disconnect_all()
-        if type == gr.GR_SIN_WAVE or type == gr.GR_CONST_WAVE:
-            self._src = gr.sig_source_c(self[SAMP_RATE_KEY],      # Sample rate
-                                        type,                # Waveform type
-                                        self[WAVEFORM_FREQ_KEY], # Waveform frequency
-                                        self[AMPLITUDE_KEY],     # Waveform amplitude
-                                        self[WAVEFORM_OFFSET_KEY])        # Waveform offset
-        elif type == gr.GR_GAUSSIAN or type == gr.GR_UNIFORM:
-            self._src = gr.noise_source_c(type, self[AMPLITUDE_KEY])
+        if type == analog.GR_SIN_WAVE or type == analog.GR_CONST_WAVE:
+            self._src = analog.sig_source_c(self[SAMP_RATE_KEY],      # Sample rate
+                                            type,                # Waveform type
+                                            self[WAVEFORM_FREQ_KEY], # Waveform frequency
+                                            self[AMPLITUDE_KEY],     # Waveform amplitude
+                                            self[WAVEFORM_OFFSET_KEY])        # Waveform offset
+        elif type == analog.GR_GAUSSIAN or type == analog.GR_UNIFORM:
+            self._src = analog.noise_source_c(type, self[AMPLITUDE_KEY])
         elif type == "2tone":
-            self._src1 = gr.sig_source_c(self[SAMP_RATE_KEY],
-                                         gr.GR_SIN_WAVE,
-                                         self[WAVEFORM_FREQ_KEY],
-                                         self[AMPLITUDE_KEY]/2.0,
-                                         0)
+            self._src1 = analog.sig_source_c(self[SAMP_RATE_KEY],
+                                             analog.GR_SIN_WAVE,
+                                             self[WAVEFORM_FREQ_KEY],
+                                             self[AMPLITUDE_KEY]/2.0,
+                                             0)
             if(self[WAVEFORM2_FREQ_KEY] is None):
                 self[WAVEFORM2_FREQ_KEY] = -self[WAVEFORM_FREQ_KEY]
 
-            self._src2 = gr.sig_source_c(self[SAMP_RATE_KEY],
-                                         gr.GR_SIN_WAVE,
-                                         self[WAVEFORM2_FREQ_KEY],
-                                         self[AMPLITUDE_KEY]/2.0,
-                                         0)
+            self._src2 = analog.sig_source_c(self[SAMP_RATE_KEY],
+                                             analog.GR_SIN_WAVE,
+                                             self[WAVEFORM2_FREQ_KEY],
+                                             self[AMPLITUDE_KEY]/2.0,
+                                             0)
             self._src = gr.add_cc()
             self.connect(self._src1,(self._src,0))
             self.connect(self._src2,(self._src,1))
@@ -272,12 +273,12 @@ class top_block(gr.top_block, pubsub):
             if self[WAVEFORM2_FREQ_KEY] is None:
                 self[WAVEFORM2_FREQ_KEY] = 0.1
 
-            self._src1 = gr.sig_source_f(self[SAMP_RATE_KEY],
-                                         gr.GR_TRI_WAVE,
-                                         self[WAVEFORM2_FREQ_KEY],
-                                         1.0,
-                                         -0.5)
-            self._src2 = gr.frequency_modulator_fc(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
+            self._src1 = analog.sig_source_f(self[SAMP_RATE_KEY],
+                                             analog.GR_TRI_WAVE,
+                                             self[WAVEFORM2_FREQ_KEY],
+                                             1.0,
+                                             -0.5)
+            self._src2 = analog.frequency_modulator_fc(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
             self._src = gr.multiply_const_cc(self[AMPLITUDE_KEY])
             self.connect(self._src1,self._src2,self._src)
         else:
@@ -288,7 +289,7 @@ class top_block(gr.top_block, pubsub):
 
         if self._verbose:
             print "Set baseband modulation to:", waveforms[type]
-            if type == gr.GR_SIN_WAVE:
+            if type == analog.GR_SIN_WAVE:
                 print "Modulation frequency: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),)
                 print "Initial phase:", self[WAVEFORM_OFFSET_KEY]
             elif type == "2tone":
@@ -306,7 +307,7 @@ class top_block(gr.top_block, pubsub):
                 print "Amplitude out of range:", amplitude
             return False
 
-        if self[TYPE_KEY] in (gr.GR_SIN_WAVE, gr.GR_CONST_WAVE, gr.GR_GAUSSIAN, gr.GR_UNIFORM):
+        if self[TYPE_KEY] in (analog.GR_SIN_WAVE, analog.GR_CONST_WAVE, analog.GR_GAUSSIAN, analog.GR_UNIFORM):
             self._src.set_amplitude(amplitude)
         elif self[TYPE_KEY] == "2tone":
             self._src1.set_amplitude(amplitude/2.0)
@@ -341,16 +342,16 @@ def get_options():
                       help="Set baseband waveform frequency to FREQ [default=%default]")
     parser.add_option("-y", "--waveform2-freq", type="eng_float", default=None,
                       help="Set 2nd waveform frequency to FREQ [default=%default]")
-    parser.add_option("--sine", dest="type", action="store_const", const=gr.GR_SIN_WAVE,
+    parser.add_option("--sine", dest="type", action="store_const", const=analog.GR_SIN_WAVE,
                       help="Generate a carrier modulated by a complex sine wave",
-                      default=gr.GR_SIN_WAVE)
-    parser.add_option("--const", dest="type", action="store_const", const=gr.GR_CONST_WAVE,
+                      default=analog.GR_SIN_WAVE)
+    parser.add_option("--const", dest="type", action="store_const", const=analog.GR_CONST_WAVE,
                       help="Generate a constant carrier")
     parser.add_option("--offset", type="eng_float", default=0,
                       help="Set waveform phase offset to OFFSET [default=%default]")
-    parser.add_option("--gaussian", dest="type", action="store_const", const=gr.GR_GAUSSIAN,
+    parser.add_option("--gaussian", dest="type", action="store_const", const=analog.GR_GAUSSIAN,
                       help="Generate Gaussian random output")
-    parser.add_option("--uniform", dest="type", action="store_const", const=gr.GR_UNIFORM,
+    parser.add_option("--uniform", dest="type", action="store_const", const=analog.GR_UNIFORM,
                       help="Generate Uniform random output")
     parser.add_option("--2tone", dest="type", action="store_const", const="2tone",
                       help="Generate Two Tone signal for IMD testing")

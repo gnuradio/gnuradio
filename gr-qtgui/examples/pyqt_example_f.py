@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -28,7 +28,13 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    sys.stderr.write("Error: Program requires PyQt4 and gr-qtgui.\n")
+    sys.exit(1)
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
     sys.exit(1)
 
 class dialog_box(QtGui.QWidget):
@@ -139,11 +145,11 @@ class my_top_block(gr.top_block):
 
         self.qapp = QtGui.QApplication(sys.argv)
 
-        src1 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
-        src2 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
+        src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
+        src2 = analg.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
         src  = gr.add_ff()
         thr = gr.throttle(gr.sizeof_float, 100*fftsize)
-        noise = gr.noise_source_f(gr.GR_GAUSSIAN, 0.001)
+        noise = analog.noise_source_f(analog.GR_GAUSSIAN, 0.001)
         add = gr.add_ff()
         self.snk1 = qtgui.sink_f(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                  0, Rs,

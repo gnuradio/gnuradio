@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2008-2010,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,6 +27,7 @@ from __future__ import division
 import fft_window
 import common
 from gnuradio import gr, fft
+from gnuradio import analog
 from pubsub import pubsub
 from constants import *
 import math
@@ -150,7 +151,7 @@ from gnuradio.wxgui import stdgui2
 
 class test_app_block (stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
 
         fft_size = 256
 
@@ -158,44 +159,44 @@ class test_app_block (stdgui2.std_top_block):
         input_rate = 2048.0e3
 
         #Generate some noise
-        noise =gr.noise_source_c(gr.GR_UNIFORM, 1.0/10)
+        noise = analog.noise_source_c(analog.GR_UNIFORM, 1.0/10)
 
         # Generate a complex sinusoid
-        #src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
-        src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 57.50e3, 1)
+        #src1 = analog.sig_source_c(input_rate, analog.GR_SIN_WAVE, 2e3, 1)
+        src1 = analog.sig_source_c(input_rate, analog.GR_CONST_WAVE, 57.50e3, 1)
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
         thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        sink1 = fft_sink_c (panel, title="Complex Data", fft_size=fft_size,
-                            sample_rate=input_rate, baseband_freq=100e3,
-                            ref_level=0, y_per_div=20, y_divs=10)
-        vbox.Add (sink1.win, 1, wx.EXPAND)
+        sink1 = fft_sink_c(panel, title="Complex Data", fft_size=fft_size,
+			   sample_rate=input_rate, baseband_freq=100e3,
+			   ref_level=0, y_per_div=20, y_divs=10)
+        vbox.Add(sink1.win, 1, wx.EXPAND)
 
-        combine1=gr.add_cc()
+        combine1 = gr.add_cc()
         self.connect(src1, (combine1,0))
         self.connect(noise,(combine1,1))
         self.connect(combine1,thr1, sink1)
 
-        #src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
-        src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 57.50e3, 1)
+        #src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 2e3, 1)
+        src2 = analog.sig_source_f (input_rate, analog.GR_CONST_WAVE, 57.50e3, 1)
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
-        sink2 = fft_sink_f (panel, title="Real Data", fft_size=fft_size*2,
-                            sample_rate=input_rate, baseband_freq=100e3,
-                            ref_level=0, y_per_div=20, y_divs=10)
-        vbox.Add (sink2.win, 1, wx.EXPAND)
+        sink2 = fft_sink_f(panel, title="Real Data", fft_size=fft_size*2,
+			   sample_rate=input_rate, baseband_freq=100e3,
+			   ref_level=0, y_per_div=20, y_divs=10)
+        vbox.Add(sink2.win, 1, wx.EXPAND)
 
-        combine2=gr.add_ff()
-        c2f2=gr.complex_to_float()
+        combine2 = gr.add_ff()
+        c2f2 = gr.complex_to_float()
 
         self.connect(src2, (combine2,0))
         self.connect(noise,c2f2,(combine2,1))
         self.connect(combine2, thr2,sink2)
 
 def main ():
-    app = stdgui2.stdapp (test_app_block, "FFT Sink Test App")
-    app.MainLoop ()
+    app = stdgui2.stdapp(test_app_block, "FFT Sink Test App")
+    app.MainLoop()
 
 if __name__ == '__main__':
-    main ()
+    main()

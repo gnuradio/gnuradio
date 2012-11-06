@@ -95,6 +95,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(python)
     add_subdirectory(grc)
     add_subdirectory(examples)
+    add_subdirectory(examples/tags)
 endif(ENABLE_PYTHON)
 
 ########################################################################

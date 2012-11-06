@@ -27,6 +27,7 @@ outputs single precision complex float values or complex short values
 """
 
 from gnuradio import gr, eng_notation
+from gnuradio import analog
 from gnuradio import shd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -39,8 +40,9 @@ class shd_siggen(gr.top_block):
     def __init__(self, options):
         gr.top_block.__init__(self)
 
-        self._src = gr.sig_source_c(options.samp_rate, gr.GR_SIN_WAVE,
-                                    200, 1)
+        self._src = analog.sig_source_c(options.samp_rate,
+                                        analog.GR_SIN_WAVE,
+                                        200, 1)
 
         self._snk = shd.smini_sink(device_addr=options.address,
                                    io_type=shd.io_type.COMPLEX_FLOAT32,
