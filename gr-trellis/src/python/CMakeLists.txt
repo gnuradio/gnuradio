@@ -21,6 +21,7 @@
 # Handle the unit tests
 ########################################################################
 if(ENABLE_TESTING)
+include(GrPython)
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")
 foreach(py_qa_test_file ${py_qa_test_files})
@@ -32,6 +33,6 @@ foreach(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gr-trellis/src/lib
     )
     set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core gnuradio-digital gnuradio-trellis)
-    GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
