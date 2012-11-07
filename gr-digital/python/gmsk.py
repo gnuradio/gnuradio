@@ -2,7 +2,7 @@
 # GMSK modulation and demodulation.  
 #
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005-2007,2012 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,6 +25,7 @@
 # See gnuradio-examples/python/digital for examples
 
 from gnuradio import gr
+from gnuradio import analog
 import modulation_utils
 import digital_swig as digital
 from math import pi
@@ -101,7 +102,7 @@ class gmsk_mod(gr.hier_block2):
 
 	# Form Gaussian filter
         # Generate Gaussian response (Needs to be convolved with window below).
-	self.gaussian_taps = gr.firdes.gaussian(
+	self.gaussian_taps = filter.firdes.gaussian(
 		1,		       # gain
 		samples_per_symbol,    # symbol_rate
 		bt,		       # bandwidth * symbol time
@@ -113,7 +114,7 @@ class gmsk_mod(gr.hier_block2):
 	self.gaussian_filter = filter.interp_fir_filter_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
-	self.fmmod = gr.frequency_modulator_fc(sensitivity)
+	self.fmmod = analog.frequency_modulator_fc(sensitivity)
 		
         if verbose:
             self._print_verbage()
@@ -220,7 +221,7 @@ class gmsk_demod(gr.hier_block2):
 
 	# Demodulate FM
 	sensitivity = (pi / 2) / samples_per_symbol
-	self.fmdemod = gr.quadrature_demod_cf(1.0 / sensitivity)
+	self.fmdemod = analog.quadrature_demod_cf(1.0 / sensitivity)
 
 	# the clock recovery block tracks the symbol clock and resamples as needed.
 	# the output of the block is a stream of soft symbols (float)

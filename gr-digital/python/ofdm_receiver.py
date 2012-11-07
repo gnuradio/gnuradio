@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006, 2007, 2008 Free Software Foundation, Inc.
+# Copyright 2006-2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,6 +23,7 @@
 import math
 from numpy import fft
 from gnuradio import gr
+from gnuradio import analog
 
 import digital_swig as digital
 from ofdm_sync_pn import ofdm_sync_pn
@@ -119,7 +120,7 @@ class ofdm_receiver(gr.hier_block2):
 
         # Set up blocks
 
-        self.nco = gr.frequency_modulator_fc(nco_sensitivity)         # generate a signal proportional to frequency error of sync block
+        self.nco = analog.frequency_modulator_fc(nco_sensitivity)         # generate a signal proportional to frequency error of sync block
         self.sigmix = gr.multiply_cc()
         self.sampler = digital.ofdm_sampler(fft_length, fft_length+cp_length)
         self.fft_demod = gr.fft_vcc(fft_length, True, win, True)

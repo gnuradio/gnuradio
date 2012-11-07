@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Aug 20 19:52:22 2012</timestamp>
+  <timestamp>Tue Nov  6 20:52:00 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -61,37 +61,6 @@
     </param>
   </block>
   <block>
-    <key>gr_throttle</key>
-    <param>
-      <key>id</key>
-      <value>gr_throttle_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>samples_per_second</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(413, 50)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -131,49 +100,6 @@
     <param>
       <key>_coordinate</key>
       <value>(15, 338)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_sig_source_x</key>
-    <param>
-      <key>id</key>
-      <value>gr_sig_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>waveform</key>
-      <value>gr.GR_COS_WAVE</value>
-    </param>
-    <param>
-      <key>freq</key>
-      <value>freq</value>
-    </param>
-    <param>
-      <key>amp</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>offset</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(215, 18)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -281,8 +207,16 @@
       <value>1024</value>
     </param>
     <param>
-      <key>bw</key>
+      <key>srate</key>
       <value>samp_rate</value>
+    </param>
+    <param>
+      <key>ymin</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>ymax</key>
+      <value>1</value>
     </param>
     <param>
       <key>nconnections</key>
@@ -295,139 +229,6 @@
     <param>
       <key>_coordinate</key>
       <value>(906, 122)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>qtgui_time_sink_x</key>
-    <param>
-      <key>id</key>
-      <value>qtgui_time_sink_x_1_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>QT GUI Plot</value>
-    </param>
-    <param>
-      <key>size</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>bw</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>nconnections</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(888, 386)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_gfsk_mod</key>
-    <param>
-      <key>id</key>
-      <value>digital_gfsk_mod_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>samples_per_symbol</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>sensitivity</key>
-      <value>fm_sensitivity</value>
-    </param>
-    <param>
-      <key>bt</key>
-      <value>0.35</value>
-    </param>
-    <param>
-      <key>verbose</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>log</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(456, 277)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_gfsk_demod</key>
-    <param>
-      <key>id</key>
-      <value>digital_gfsk_demod_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>samples_per_symbol</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>sensitivity</key>
-      <value>fm_sensitivity</value>
-    </param>
-    <param>
-      <key>gain_mu</key>
-      <value>0.175</value>
-    </param>
-    <param>
-      <key>mu</key>
-      <value>0.5</value>
-    </param>
-    <param>
-      <key>omega_relative_limit</key>
-      <value>0.005</value>
-    </param>
-    <param>
-      <key>freq_error</key>
-      <value>0.0</value>
-    </param>
-    <param>
-      <key>verbose</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>log</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(670, 253)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -478,64 +279,6 @@
     </param>
   </block>
   <block>
-    <key>digital_gmsk_mod</key>
-    <param>
-      <key>id</key>
-      <value>digital_gmsk_mod_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>samples_per_symbol</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>bt</key>
-      <value>0.35</value>
-    </param>
-    <param>
-      <key>verbose</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>log</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(342, 457)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_quadrature_demod_cf</key>
-    <param>
-      <key>id</key>
-      <value>gr_quadrature_demod_cf_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(679, 402)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>blks2_packet_decoder</key>
     <param>
       <key>id</key>
@@ -567,10 +310,84 @@
     </param>
   </block>
   <block>
-    <key>digital_gmsk_demod</key>
+    <key>gr_throttle</key>
     <param>
       <key>id</key>
-      <value>digital_gmsk_demod_0</value>
+      <value>gr_throttle_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>samples_per_second</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(413, 50)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>analog_sig_source_x</key>
+    <param>
+      <key>id</key>
+      <value>analog_sig_source_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>waveform</key>
+      <value>analog.GR_COS_WAVE</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>freq</value>
+    </param>
+    <param>
+      <key>amp</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(214, 18)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_gfsk_demod</key>
+    <param>
+      <key>id</key>
+      <value>digital_gfsk_demod_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -578,7 +395,11 @@
     </param>
     <param>
       <key>samples_per_symbol</key>
-      <value>2</value>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>sensitivity</key>
+      <value>fm_sensitivity</value>
     </param>
     <param>
       <key>gain_mu</key>
@@ -606,19 +427,126 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(622, 498)</value>
+      <value>(670, 253)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
   </block>
-  <connection>
-    <source_block_id>gr_sig_source_x_0</source_block_id>
-    <sink_block_id>gr_throttle_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
+  <block>
+    <key>digital_gfsk_mod</key>
+    <param>
+      <key>id</key>
+      <value>digital_gfsk_mod_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>samples_per_symbol</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>sensitivity</key>
+      <value>fm_sensitivity</value>
+    </param>
+    <param>
+      <key>bt</key>
+      <value>0.35</value>
+    </param>
+    <param>
+      <key>verbose</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>log</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(456, 277)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>qtgui_time_sink_x</key>
+    <param>
+      <key>id</key>
+      <value>qtgui_time_sink_x_1_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>QT GUI Plot</value>
+    </param>
+    <param>
+      <key>size</key>
+      <value>1024</value>
+    </param>
+    <param>
+      <key>srate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>ymin</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>ymax</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>nconnections</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(888, 386)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>analog_quadrature_demod_cf</key>
+    <param>
+      <key>id</key>
+      <value>analog_quadrature_demod_cf_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(673, 403)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>blks2_packet_encoder_0</source_block_id>
     <sink_block_id>digital_gfsk_mod_0</sink_block_id>
@@ -628,12 +556,6 @@
   <connection>
     <source_block_id>gr_throttle_0_0</source_block_id>
     <sink_block_id>blks2_packet_encoder_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_gfsk_mod_0</source_block_id>
-    <sink_block_id>gr_quadrature_demod_cf_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -656,32 +578,20 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_quadrature_demod_cf_0</source_block_id>
+    <source_block_id>analog_sig_source_x_0</source_block_id>
+    <sink_block_id>gr_throttle_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_gfsk_mod_0</source_block_id>
+    <sink_block_id>analog_quadrature_demod_cf_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>analog_quadrature_demod_cf_0</source_block_id>
     <sink_block_id>qtgui_time_sink_x_1_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blks2_packet_encoder_0</source_block_id>
-    <sink_block_id>digital_gmsk_mod_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_gmsk_mod_0</source_block_id>
-    <sink_block_id>digital_gmsk_demod_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_gmsk_mod_0</source_block_id>
-    <sink_block_id>gr_quadrature_demod_cf_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_gmsk_demod_0</source_block_id>
-    <sink_block_id>blks2_packet_decoder_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

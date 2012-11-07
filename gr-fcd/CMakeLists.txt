@@ -110,8 +110,11 @@ if(ENABLE_PYTHON)
     add_subdirectory(grc)
     add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
-add_subdirectory(examples/c++)
 add_subdirectory(doc)
+
+if(ENABLE_GR_ANALOG)
+  add_subdirectory(examples/c++)
+endif(ENABLE_GR_ANALOG)
 
 ########################################################################
 # Create Pkg Config File

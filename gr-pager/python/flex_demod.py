@@ -19,7 +19,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, optfir, blks2
+from gnuradio import gr, gru, blks2
+from gnuradio import analog
 from math import pi
 import pager_swig
 
@@ -38,7 +39,7 @@ class flex_demod(gr.hier_block2):
 				gr.io_signature(0,0,0))
 
         k = 25000/(2*pi*1600)        # 4800 Hz max deviation
-        quad = gr.quadrature_demod_cf(k)
+        quad = analog.quadrature_demod_cf(k)
 	self.connect(self, quad)
 
         rsamp = blks2.rational_resampler_fff(16, 25)

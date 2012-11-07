@@ -148,21 +148,6 @@
 	<cat>
 		<name>Modulators</name>
 		<block>gr_vco_f</block>
-		<block>gr_frequency_modulator_fc</block>
-		<block>gr_phase_modulator_fc</block>
-		<block>gr_quadrature_demod_cf</block>
-
-		<block>blks2_wfm_tx</block>
-		<block>blks2_wfm_rcv</block>
-		<block>blks2_wfm_rcv_pll</block>
-
-		<block>blks2_nbfm_tx</block>
-		<block>blks2_nbfm_rx</block>
-
-		<block>blks2_am_demod_cf</block>
-		<block>blks2_fm_demod_cf</block>
-		<block>blks2_fm_deemph</block>
-		<block>blks2_fm_preemph</block>
 	</cat>
 	<cat>
 		<name>Error Correction</name>

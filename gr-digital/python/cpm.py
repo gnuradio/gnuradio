@@ -25,6 +25,7 @@
 # See gnuradio-examples/python/digital for examples
 
 from gnuradio import gr, filter
+from gnuradio import analog
 from math import pi
 import numpy
 
@@ -126,7 +127,7 @@ class cpm_mod(gr.hier_block2):
         if cpm_type == 0: # CPFSK
             self.taps= (1.0/self._symbols_per_pulse/2,) * self.ntaps
         elif cpm_type == 1: # GMSK
-            gaussian_taps = gr.firdes.gaussian(
+            gaussian_taps = filter.firdes.gaussian(
                 1.0/2,                     # gain
                 samples_per_symbol,    # symbol_rate
                 bt,                    # bandwidth * symbol time
@@ -145,7 +146,7 @@ class cpm_mod(gr.hier_block2):
         self.filter = filter.pfb.arb_resampler_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
-	self.fmmod = gr.frequency_modulator_fc(sensitivity)
+	self.fmmod = analog.frequency_modulator_fc(sensitivity)
 		
         if verbose:
             self._print_verbage()

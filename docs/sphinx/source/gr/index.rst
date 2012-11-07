@@ -179,23 +179,6 @@ Mathematics
    gnuradio.gr.xor_ii
    gnuradio.gr.xor_ss
 
-Modulation
-^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.frequency_modulator_fc
-   gnuradio.gr.phase_modulator_fc
-
-Demodulation
-^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.quadrature_demod_cf
-
 Information Coding and Decoding
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

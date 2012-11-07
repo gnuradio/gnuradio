@@ -35,7 +35,7 @@
 #include <gr_top_block.h>
 #include <filter/firdes.h>
 #include <filter/fir_filter_ccf.h>
-#include <gr_quadrature_demod_cf.h>
+#include <analog/quadrature_demod_cf.h>
 #include <gr_audio_sink.h>
 #include <fcd_source_c.h>
 
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 
     // FM demodulator
     // gain = sample_rate / (2*pi*max_dev)
-    gr_quadrature_demod_cf_sptr demod = gr_make_quadrature_demod_cf (rate/(2.0*pi*5000.0));
+    analog::quadrature_demod_cf::sptr demod = analog::quadrature_demod_cf::make(rate/(2.0*pi*5000.0));
 
     // Audio sink
     audio_sink::sptr sink = audio_make_sink(rate);

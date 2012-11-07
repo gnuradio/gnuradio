@@ -188,7 +188,6 @@ set(gr_core_general_triple_threats
     gr_float_to_int
     gr_float_to_short
     gr_float_to_uchar
-    gr_frequency_modulator_fc
     gr_head
     gr_int_to_float
     gr_interleave
@@ -209,10 +208,7 @@ set(gr_core_general_triple_threats
     gr_null_source
     gr_pa_2x2_phase_combiner
     gr_peak_detector2_fb
-    gr_phase_modulator_fc
     gr_prefs
-    gr_quadrature_demod_cf
-    gr_rail_ff
     gr_regenerate_bb
     gr_remez
     gr_rms_cf

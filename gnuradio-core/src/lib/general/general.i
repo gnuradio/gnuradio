@@ -28,7 +28,6 @@
 #include <gr_null_source.h>
 #include <gr_head.h>
 #include <gr_skiphead.h>
-#include <gr_quadrature_demod_cf.h>
 #include <gr_remez.h>
 #include <gr_float_to_complex.h>
 #include <gr_check_counting_s.h>
@@ -48,8 +47,6 @@
 #include <gr_char_to_float.h>
 #include <gr_char_to_short.h>
 #include <gr_uchar_to_float.h>
-#include <gr_frequency_modulator_fc.h>
-#include <gr_phase_modulator_fc.h>
 #include <gr_simple_correlator.h>
 #include <gr_align_on_samplenumbers_ss.h>
 #include <gr_complex_to_xxx.h>
@@ -95,7 +92,6 @@
 #include <gr_repeat.h>
 #include <gr_encode_ccsds_27_bb.h>
 #include <gr_decode_ccsds_27_fb.h>
-#include <gr_rail_ff.h>
 #include <gr_stretch_ff.h>
 #include <gr_copy.h>
 #include <complex_vec_test.h>
@@ -114,7 +110,6 @@
 %include "gr_null_source.i"
 %include "gr_head.i"
 %include "gr_skiphead.i"
-%include "gr_quadrature_demod_cf.i"
 %include "gr_remez.i"
 %include "gr_float_to_complex.i"
 %include "gr_check_counting_s.i"
@@ -134,8 +129,6 @@
 %include "gr_char_to_float.i"
 %include "gr_char_to_short.i"
 %include "gr_uchar_to_float.i"
-%include "gr_frequency_modulator_fc.i"
-%include "gr_phase_modulator_fc.i"
 %include "gr_simple_correlator.i"
 %include "gr_align_on_samplenumbers_ss.i"
 %include "gr_complex_to_xxx.i"
@@ -181,7 +174,6 @@
 %include "gr_repeat.i"
 %include "gr_encode_ccsds_27_bb.i"
 %include "gr_decode_ccsds_27_fb.i"
-%include "gr_rail_ff.i"
 %include "gr_stretch_ff.i"
 %include "gr_copy.i"
 %include "complex_vec_test.i"
