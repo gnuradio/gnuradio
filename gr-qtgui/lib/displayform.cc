@@ -22,6 +22,8 @@
 
 #include <displayform.h>
 #include <iostream>
+#include <QPixmap>
+#include <QFileDialog>
 
 DisplayForm::DisplayForm(int nplots, QWidget* parent)
   : QWidget(parent), _nplots(nplots), _systemSpecifiedFlag(false)
@@ -94,6 +96,12 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
     _lines_menu[i]->addMenu(_marker_alpha_menu[i]);
     _menu->addMenu(_lines_menu[i]);
   }
+
+
+  _save_act = new QAction("Save", this);
+  _save_act->setStatusTip(tr("Save Figure"));
+  connect(_save_act, SIGNAL(triggered()), this, SLOT(saveFigure()));
+  _menu->addAction(_save_act);
 
   Reset();
 
@@ -277,4 +285,41 @@ DisplayForm::setGrid()
     setGrid(true);
   else
     setGrid(false);
+}
+
+void
+DisplayForm::saveFigure()
+{
+  QPixmap qpix = QPixmap::grabWidget(this);
+
+  QString types = QString(tr("JPEG file (*.jpg);;Portable Network Graphics file (*.png);;Bitmap file (*.bmp);;TIFF file (*.tiff)"));
+
+  QString filename, filetype;
+  QFileDialog *filebox = new QFileDialog(0, "Save Image", "./", types);
+  filebox->setViewMode(QFileDialog::Detail);
+  if(filebox->exec()) {
+    filename = filebox->selectedFiles()[0];
+    filetype = filebox->selectedNameFilter();
+  }
+  else {
+    return;
+  }
+
+  if(filetype.contains(".jpg")) {
+    qpix.save(filename, "JPEG");
+  }
+  else if(filetype.contains(".png")) {
+    qpix.save(filename, "PNG");
+  }
+  else if(filetype.contains(".bmp")) {
+    qpix.save(filename, "BMP");
+  }
+  else if(filetype.contains(".tiff")) {
+    qpix.save(filename, "TIFF");
+  }
+  else {
+    qpix.save(filename, "JPEG");
+  }
+
+  delete filebox;
 }
