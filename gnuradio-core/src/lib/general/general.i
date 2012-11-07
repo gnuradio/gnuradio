@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2004-2010 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -75,7 +75,6 @@
 #include <gr_conjugate_cc.h>
 #include <gr_vco_f.h>
 #include <gr_threshold_ff.h>
-#include <gr_fmdet_cf.h>
 #include <gr_regenerate_bb.h>
 #include <gr_pa_2x2_phase_combiner.h>
 #include <gr_kludge_copy.h>
@@ -94,7 +93,6 @@
 #include <gr_bin_statistics_f.h>
 #include <gr_peak_detector2_fb.h>
 #include <gr_repeat.h>
-#include <gr_cpfsk_bc.h>
 #include <gr_encode_ccsds_27_bb.h>
 #include <gr_decode_ccsds_27_fb.h>
 #include <gr_rail_ff.h>
@@ -105,7 +103,6 @@
 #include <gr_annotator_1to1.h>
 #include <gr_annotator_raw.h>
 #include <gr_burst_tagger.h>
-#include <gr_cpm.h>
 #include <gr_vector_map.h>
 #include <gr_add_ff.h>
 #include <gr_tag_debug.h>
@@ -164,7 +161,6 @@
 %include "gr_conjugate_cc.i"
 %include "gr_vco_f.i"
 %include "gr_threshold_ff.i"
-%include "gr_fmdet_cf.i"
 %include "gr_regenerate_bb.i"
 %include "gr_pa_2x2_phase_combiner.i"
 %include "gr_kludge_copy.i"
@@ -183,7 +179,6 @@
 %include "gr_bin_statistics_f.i"
 %include "gr_peak_detector2_fb.i"
 %include "gr_repeat.i"
-%include "gr_cpfsk_bc.i"
 %include "gr_encode_ccsds_27_bb.i"
 %include "gr_decode_ccsds_27_fb.i"
 %include "gr_rail_ff.i"
@@ -194,7 +189,6 @@
 %include "gr_annotator_1to1.i"
 %include "gr_annotator_raw.i"
 %include "gr_burst_tagger.i"
-%include "gr_cpm.i"
 %include "gr_vector_map.i"
 %include "gr_add_ff.i"
 %include "gr_tag_debug.i"

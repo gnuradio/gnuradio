@@ -97,7 +97,6 @@ list(APPEND gnuradio_core_sources
 list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_general.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_circular_file.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_cpm.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_firdes.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_nco.cc
@@ -176,8 +175,6 @@ set(gr_core_general_triple_threats
     gr_complex_to_xxx
     gr_conjugate_cc
     gr_copy
-    gr_cpfsk_bc
-    gr_cpm
     gr_decode_ccsds_27_fb
     gr_deinterleave
     gr_delay
@@ -191,7 +188,6 @@ set(gr_core_general_triple_threats
     gr_float_to_int
     gr_float_to_short
     gr_float_to_uchar
-    gr_fmdet_cf
     gr_frequency_modulator_fc
     gr_head
     gr_int_to_float

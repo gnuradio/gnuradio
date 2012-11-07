@@ -185,7 +185,6 @@ Modulation
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.cpfsk_bc
    gnuradio.gr.frequency_modulator_fc
    gnuradio.gr.phase_modulator_fc
 

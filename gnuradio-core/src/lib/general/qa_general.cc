@@ -28,7 +28,6 @@
 #include <qa_general.h>
 #include <qa_gr_firdes.h>
 #include <qa_gr_circular_file.h>
-#include <qa_gr_cpm.h>
 #include <qa_gr_fxpt.h>
 #include <qa_gr_fxpt_nco.h>
 #include <qa_gr_fxpt_vco.h>
@@ -41,7 +40,6 @@ qa_general::suite ()
 
   s->addTest (qa_gr_firdes::suite ());
   s->addTest (qa_gr_circular_file::suite ());
-  s->addTest (qa_gr_cpm::suite ());
   s->addTest (qa_gr_fxpt::suite ());
   s->addTest (qa_gr_fxpt_nco::suite ());
   s->addTest (qa_gr_fxpt_vco::suite ());

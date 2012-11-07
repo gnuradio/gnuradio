@@ -151,7 +151,6 @@
 		<block>gr_frequency_modulator_fc</block>
 		<block>gr_phase_modulator_fc</block>
 		<block>gr_quadrature_demod_cf</block>
-		<block>gr_cpfsk_bc</block>
 
 		<block>blks2_wfm_tx</block>
 		<block>blks2_wfm_rcv</block>
