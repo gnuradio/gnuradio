@@ -33,7 +33,7 @@ set(GR_SWIG_INCLUDE_DIRS
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
-set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter)
+set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter gnuradio-analog)
 
 GR_SWIG_MAKE(digital_swig digital_swig.i)
 

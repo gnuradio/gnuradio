@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import analog_swig as analog
 import numpy
 
 class test_cpm(gr_unittest.TestCase):
@@ -51,16 +52,16 @@ class test_cpm(gr_unittest.TestCase):
                                           msg="Phase shift was not correct for CPM method " + name)
 
     def test_001_lrec(self):
-        self.do_check_phase_shift(gr.cpm.LRC, 'LREC')
+        self.do_check_phase_shift(analog.cpm.LRC, 'LREC')
 
     def test_001_lrc(self):
-        self.do_check_phase_shift(gr.cpm.LRC, 'LRC')
+        self.do_check_phase_shift(analog.cpm.LRC, 'LRC')
 
     def test_001_lsrc(self):
-        self.do_check_phase_shift(gr.cpm.LSRC, 'LSRC')
+        self.do_check_phase_shift(analog.cpm.LSRC, 'LSRC')
 
     def test_001_ltfm(self):
-        self.do_check_phase_shift(gr.cpm.TFM, 'TFM')
+        self.do_check_phase_shift(analog.cpm.TFM, 'TFM')
 
     def test_001_lgmsk(self):
         sps = 2
@@ -82,7 +83,7 @@ class test_cpm(gr_unittest.TestCase):
                                           msg="Phase shift was not correct for GMSK")
 
     def test_phase_response(self):
-        phase_response = gr.cpm.phase_response(gr.cpm.LREC, 2, 4)
+        phase_response = analog.cpm.phase_response(analog.cpm.LREC, 2, 4)
         self.assertAlmostEqual(numpy.sum(phase_response), 1)
 
 
