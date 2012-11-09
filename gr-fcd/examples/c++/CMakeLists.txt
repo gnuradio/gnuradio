@@ -21,9 +21,10 @@ include_directories(${GR_FCD_INCLUDE_DIRS})
 include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
 include_directories(${GR_FILTER_INCLUDE_DIRS})
 include_directories(${GR_AUDIO_INCLUDE_DIRS})
+include_directories(${GR_ANALOG_INCLUDE_DIRS})
 
 add_executable(fcd_nfm_rx fcd_nfm_rx.cc)
-target_link_libraries(fcd_nfm_rx gnuradio-fcd gnuradio-filter)
+target_link_libraries(fcd_nfm_rx gnuradio-fcd gnuradio-filter gnuradio-analog)
 
 INSTALL(TARGETS
     fcd_nfm_rx

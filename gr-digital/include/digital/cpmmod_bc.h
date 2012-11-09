@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <gr_hier_block2.h>
-#include <gr_cpm.h>
+#include <analog/cpm.h>
 
 namespace gr {
   namespace digital {
@@ -71,7 +71,7 @@ namespace gr {
        * \param beta For LSRC, this is the rolloff factor. For Gaussian
        *             pulses, this is the 3 dB time-bandwidth product.
        */
-      static sptr make(gr_cpm::cpm_type type, float h,
+      static sptr make(analog::cpm::cpm_type type, float h,
 		       int samples_per_sym,
 		       int L, double beta=0.3);
 

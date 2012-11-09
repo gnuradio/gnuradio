@@ -52,8 +52,8 @@ class mytb(gr.top_block):
         # Creating our own taps
         taps = gr.firdes.low_pass_2(32, 32, 0.25, 0.1, 80)
 
-        self.src = analog.sig_source_c(fs_in, analog..GR_SIN_WAVE, fc, 1)
-        #self.src = analog..noise_source_c(analog..GR_GAUSSIAN, 1)
+        self.src = analog.sig_source_c(fs_in, analog.GR_SIN_WAVE, fc, 1)
+        #self.src = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
         self.head = gr.head(gr.sizeof_gr_complex, N)
 
         # A resampler with our taps

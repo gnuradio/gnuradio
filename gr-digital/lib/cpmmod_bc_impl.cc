@@ -29,13 +29,13 @@ namespace gr {
   namespace digital {
 
     cpmmod_bc::sptr
-    cpmmod_bc::make(gr_cpm::cpm_type type, float h,
+    cpmmod_bc::make(analog::cpm::cpm_type type, float h,
 		    int samples_per_sym,
 		    int L, double beta)
     {
       return gnuradio::get_initial_sptr
 	(new cpmmod_bc_impl("cpmmod_bc",
-			    (gr_cpm::cpm_type)type,
+			    (analog::cpm::cpm_type)type,
 			    h, samples_per_sym,
 			    L, beta));
     }
@@ -46,30 +46,30 @@ namespace gr {
     {
       return gnuradio::get_initial_sptr
 	(new cpmmod_bc_impl("gmskmod_bc",
-			    gr_cpm::GAUSSIAN, 0.5,
+			    analog::cpm::GAUSSIAN, 0.5,
 			    samples_per_sym,
 			    L, beta));
     }
 
     cpmmod_bc_impl::cpmmod_bc_impl(const std::string &name,
-				   gr_cpm::cpm_type type, float h,
+				   analog::cpm::cpm_type type, float h,
 				   int samples_per_sym,
 				   int L, double beta)
       : gr_hier_block2(name,
 		       gr_make_io_signature(1, 1, sizeof(char)),
 		       gr_make_io_signature2(1, 1, sizeof(gr_complex), sizeof(float))),
 	d_type(type), d_index(h), d_sps(samples_per_sym), d_length(L), d_beta(beta),
-	d_taps(gr_cpm::phase_response(type, samples_per_sym, L, beta)),
+	d_taps(analog::cpm::phase_response(type, samples_per_sym, L, beta)),
 	d_char_to_float(gr_make_char_to_float()),
-	d_pulse_shaper(gr::filter::interp_fir_filter_fff::make(samples_per_sym, d_taps)),
-	d_fm(gr_make_frequency_modulator_fc(M_PI * h))
+	d_pulse_shaper(filter::interp_fir_filter_fff::make(samples_per_sym, d_taps)),
+	d_fm(analog::frequency_modulator_fc::make(M_PI * h))
     {
       switch(type) {
-      case gr_cpm::LRC:
-      case gr_cpm::LSRC:
-      case gr_cpm::LREC:
-      case gr_cpm::TFM:
-      case gr_cpm::GAUSSIAN:
+      case analog::cpm::LRC:
+      case analog::cpm::LSRC:
+      case analog::cpm::LREC:
+      case analog::cpm::TFM:
+      case analog::cpm::GAUSSIAN:
 	break;
     
       default:

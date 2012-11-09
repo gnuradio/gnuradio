@@ -26,7 +26,6 @@
 #include <digital/cpmmod_bc.h>
 #include <gr_char_to_float.h>
 #include <analog/frequency_modulator_fc.h>
-#include <gr_cpm.h>
 #include <filter/interp_fir_filter_fff.h>
 
 namespace gr {
@@ -45,11 +44,11 @@ namespace gr {
       std::vector<float> d_taps;
       gr_char_to_float_sptr d_char_to_float;
       gr::filter::interp_fir_filter_fff::sptr d_pulse_shaper;
-      analog::frequency_modulator_fc_sptr d_fm;
+      analog::frequency_modulator_fc::sptr d_fm;
   
     public:
       cpmmod_bc_impl(const std::string &name,
-		     gr_cpm::cpm_type type, float h,
+		     analog::cpm::cpm_type type, float h,
 		     int samples_per_sym,
 		     int L, double beta=0.3);
       ~cpmmod_bc_impl();

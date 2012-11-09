@@ -20,13 +20,14 @@
  */
 
 #define DIGITAL_API
+#define ANALOG_API
 
 %include "gnuradio.i"
 
 //load generated python docstrings
 %include "digital_swig_doc.i"
 
-%include "gr_cpm.h"
+%include "analog/cpm.h"
 
 %include "gri_control_loop.h"
 
