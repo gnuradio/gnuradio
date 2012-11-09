@@ -102,7 +102,6 @@ install(FILES
     pwr_squelch_ff.h
     quadrature_demod_cf.h
     rail_ff.h
-    rotator.h
     sig_source_waveform.h
     simple_squelch_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
