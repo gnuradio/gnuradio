@@ -23,6 +23,7 @@
 #define ANALOG_API
 
 %include "gnuradio.i"
+%include "stdint.i"
 
 //load generated python docstrings
 %include "digital_swig_doc.i"
@@ -37,6 +38,7 @@
 %{
 #include "digital/metric_type.h"
 #include "digital/mpsk_snr_est.h"
+#include "digital/lfsr.h"
 #include "digital/additive_scrambler_bb.h"
 #include "digital/binary_slicer_fb.h"
 #include "digital/chunks_to_symbols_bf.h"
@@ -87,6 +89,7 @@
 
 %include "digital/metric_type.h"
 %include "digital/mpsk_snr_est.h"
+%include "digital/lfsr.h"
 %include "digital/additive_scrambler_bb.h"
 %include "digital/binary_slicer_fb.h"
 %include "digital/chunks_to_symbols_bf.h"

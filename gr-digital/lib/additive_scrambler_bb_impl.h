@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_IMPL_H
 
 #include <digital/additive_scrambler_bb.h>
-#include <analog/lfsr.h>
+#include <digital/lfsr.h>
 
 namespace gr {
   namespace digital {
@@ -33,7 +33,7 @@ namespace gr {
       : public additive_scrambler_bb
     {
     private:
-      analog::lfsr d_lfsr;
+      digital::lfsr d_lfsr;
       int      d_count;
       int      d_bits;
       int      d_len;

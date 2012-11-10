@@ -20,15 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ANALOG_LFSR_H
-#define INCLUDED_ANALOG_LFSR_H
+#ifndef INCLUDED_DIGITAL_LFSR_H
+#define INCLUDED_DIGITAL_LFSR_H
 
-#include <analog/api.h>
+#include <digital/api.h>
 #include <stdexcept>
 #include <stdint.h>
 
 namespace gr {
-  namespace analog {
+  namespace digital {
 
     /*!
      * \brief Fibonacci Linear Feedback Shift Register using specified
@@ -38,7 +38,7 @@ namespace gr {
      * Generates a maximal length pseudo-random sequence of length
      * 2^degree-1
      *
-     * Constructor: analog::lfsr(int mask, int seed, int reg_len);
+     * Constructor: digital::lfsr(int mask, int seed, int reg_len);
      *
      * \param mask - polynomial coefficients representing the
      *             locations of feedback taps from a shift register
@@ -156,7 +156,7 @@ namespace gr {
       int mask() const { return d_mask; }
     };
 
-  } /* namespace analog */
+  } /* namespace digital */
 } /* namespace gr */
 
-#endif /* INCLUDED_ANALOG_LFSR_H */
+#endif /* INCLUDED_DIGITAL_LFSR_H */

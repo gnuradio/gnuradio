@@ -25,7 +25,7 @@
 
 #include <digital/scrambler_bb.h>
 #include <gr_sync_block.h>
-#include <analog/lfsr.h>
+#include <digital/lfsr.h>
 
 namespace gr {
   namespace digital {
@@ -33,7 +33,7 @@ namespace gr {
     class scrambler_bb_impl : public scrambler_bb
     {
     private:
-      analog::lfsr d_lfsr;
+      digital::lfsr d_lfsr;
 
     public:
       scrambler_bb_impl(int mask, int seed, int len);

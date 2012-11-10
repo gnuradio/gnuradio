@@ -78,6 +78,7 @@ install(FILES
     api.h
     constellation.h
     crc32.h
+    lfsr.h
     glfsr.h
     mpsk_snr_est.h
     simple_framer_sync.h

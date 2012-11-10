@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import analog_swig as analog
+import digital_swig as digital
 import math
 
 
@@ -35,7 +35,7 @@ class test_lfsr(gr_unittest.TestCase):
 
     def test_lfsr_001(self):
         reglen = 8
-        l = analog.lfsr(1, 1, reglen)
+        l = digital.lfsr(1, 1, reglen)
 
         result_data = []
         for i in xrange(4*(reglen+1)):
