@@ -26,6 +26,7 @@ import copy
 #import pygsl.wavelet as wavelet # FIXME: pygsl not checked for in config
 import math
 import wavelet_swig
+import analog_swig as analog
 
 def sqr(x):
     return x*x
@@ -66,7 +67,7 @@ class test_classify(gr_unittest.TestCase):
         trg_data = src_data * 0.5
         src = gr.vector_source_f(src_data)
         dst = gr.vector_sink_f()
-        rail = gr.rail_ff(-0.5, 0.5)
+        rail = analog.rail_ff(-0.5, 0.5)
         self.tb.connect(src, rail)
         self.tb.connect(rail, dst)
         self.tb.run()
