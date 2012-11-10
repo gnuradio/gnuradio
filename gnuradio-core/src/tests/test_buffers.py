@@ -25,8 +25,13 @@ from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-import time
+import time, math
 import sys
+
+def sig_source_f(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.sin(2.*math.pi*freq*x), t)
+    return y
 
 # Test script to test setting up the buffers using gr_test
 # For very large buffers it will fail when you hit the circbuf memory limit.
@@ -60,10 +65,11 @@ class my_graph(gr.top_block):
 
         sample_rate = int(options.sample_rate)
         ampl = 0.1
-
-        src0 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 350, ampl)
-
         nsamples=int(sample_rate * seconds) #1 seconds
+
+        data = sig_source_f(sample_rate, 350, ampl, nsamples)
+        src0 = gr.vector_source_f(data)
+
         # gr.test (const std::string &name=std::string("gr_test"),
         # int min_inputs=1, int max_inputs=1, unsigned int sizeof_input_item=1,
         # int min_outputs=1, int max_outputs=1, unsigned int sizeof_output_item=1,
@@ -93,9 +99,8 @@ class my_graph(gr.top_block):
         #unsigned int history=1,unsigned int output_multiple=1,double relative_rate=1.0,
         #bool fixed_rate=false
         dst = audio.sink (sample_rate, options.audio_output)
-        head= gr.head(gr.sizeof_float, nsamples)
 
-        self.connect (src0,test,head,(dst, 0))
+        self.connect (src0,test,(dst, 0))
 
 
 if __name__ == '__main__':

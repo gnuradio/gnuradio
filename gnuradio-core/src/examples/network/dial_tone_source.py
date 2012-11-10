@@ -23,14 +23,20 @@
 from gnuradio import gr
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+import sys
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("This example required gr-analog.\n")
 
 class dial_tone_source(gr.top_block):
     def __init__(self, host, port, pkt_size, sample_rate, eof):
         gr.top_block.__init__(self, "dial_tone_source")
 
         amplitude = 0.3
-        src0 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 350, amplitude)
-        src1 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 440, amplitude)
+        src0 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 350, amplitude)
+        src1 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 440, amplitude)
         add = gr.add_ff()
 
         # Throttle needed here to account for the other side's audio card sampling rate

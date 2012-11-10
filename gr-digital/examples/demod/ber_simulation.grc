@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jul 16 21:09:12 2012</timestamp>
+  <timestamp>Sat Nov 10 15:31:44 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -354,41 +354,6 @@
     </param>
   </block>
   <block>
-    <key>gr_noise_source_x</key>
-    <param>
-      <key>id</key>
-      <value>gr_noise_source_x</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>noise_type</key>
-      <value>gr.GR_GAUSSIAN</value>
-    </param>
-    <param>
-      <key>amp</key>
-      <value>1.0 / math.sqrt(2.0 * const.bits_per_symbol() * 10**(EbN0/10))</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>42</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(16, 224)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable_slider</key>
     <param>
       <key>id</key>
@@ -522,6 +487,29 @@
     </param>
   </block>
   <block>
+    <key>digital_constellation_decoder_cb</key>
+    <param>
+      <key>id</key>
+      <value>digital_constellation_decoder_cb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>constellation</key>
+      <value>const.base()</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(622, 164)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>gr_add_xx</key>
     <param>
       <key>id</key>
@@ -553,22 +541,34 @@
     </param>
   </block>
   <block>
-    <key>digital_constellation_decoder_cb</key>
+    <key>analog_noise_source_x</key>
     <param>
       <key>id</key>
-      <value>digital_constellation_decoder_cb_0</value>
+      <value>analog_noise_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>constellation</key>
-      <value>const.base()</value>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>noise_type</key>
+      <value>analog.GR_GAUSSIAN</value>
+    </param>
+    <param>
+      <key>amp</key>
+      <value>1.0/math.sqrt(2.0 * const.bits_per_symbol() * 10*(EbN0/10))</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>-42</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(622, 164)</value>
+      <value>(16, 224)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -586,12 +586,6 @@
     <sink_block_id>blks2_error_rate</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_noise_source_x</source_block_id>
-    <sink_block_id>gr_add_xx</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>random_source_x</source_block_id>
@@ -628,5 +622,11 @@
     <sink_block_id>gr_add_xx</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>analog_noise_source_x_0</source_block_id>
+    <sink_block_id>gr_add_xx</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
   </connection>
 </flow_graph>

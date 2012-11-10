@@ -2,14 +2,14 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Howto Square Qt
-# Generated: Sun Sep 30 13:32:52 2012
+# Generated: Sat Nov 10 15:23:43 2012
 ##################################################
 
 from PyQt4 import Qt
+from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import qtgui
-from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
 from optparse import OptionParser
@@ -50,16 +50,17 @@ class howto_square_qt(gr.top_block, Qt.QWidget):
 		##################################################
 		self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
 			1024, #size
-			samp_rate, #bw
+			samp_rate, #samp_rate
 			"QT GUI Plot", #name
 			3 #number of inputs
 		)
+		self.qtgui_time_sink_x_0.set_y_axis(-1, 1)
 		self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
 		self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
 		self.howto_square_ff_0 = howto.square_ff()
 		self.howto_square2_ff_0 = howto.square2_ff()
 		self.gr_throttle_0 = gr.throttle(gr.sizeof_float*1, samp_rate)
-		self.gr_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 1000, 1, 0)
+		self.analog_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 1000, 1, 0)
 
 		##################################################
 		# Connections
@@ -67,9 +68,9 @@ class howto_square_qt(gr.top_block, Qt.QWidget):
 		self.connect((self.howto_square2_ff_0, 0), (self.qtgui_time_sink_x_0, 0))
 		self.connect((self.gr_throttle_0, 0), (self.howto_square2_ff_0, 0))
 		self.connect((self.gr_throttle_0, 0), (self.howto_square_ff_0, 0))
-		self.connect((self.gr_sig_source_x_0, 0), (self.gr_throttle_0, 0))
 		self.connect((self.gr_throttle_0, 0), (self.qtgui_time_sink_x_0, 1))
 		self.connect((self.howto_square_ff_0, 0), (self.qtgui_time_sink_x_0, 2))
+		self.connect((self.analog_sig_source_x_0, 0), (self.gr_throttle_0, 0))
 
 # QT sink close method reimplementation
 	def closeEvent(self, event):
@@ -82,7 +83,8 @@ class howto_square_qt(gr.top_block, Qt.QWidget):
 
 	def set_samp_rate(self, samp_rate):
 		self.samp_rate = samp_rate
-		self.gr_sig_source_x_0.set_sampling_freq(self.samp_rate)
+		self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+		self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
