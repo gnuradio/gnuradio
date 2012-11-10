@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr, filter
+from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -30,7 +31,7 @@ class example_fir_filter_ccc(gr.top_block):
         taps = filter.firdes.low_pass_2(1, self._fs, self._bw, self._tw, self._at)
         print "Num. Taps: ", len(taps)
 
-        self.src  = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src  = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
         self.head = gr.head(gr.sizeof_gr_complex, self._nsamps)
 
         self.filt0 = filter.fir_filter_ccc(self._decim, taps)

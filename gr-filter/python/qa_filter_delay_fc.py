@@ -24,6 +24,16 @@ from gnuradio import gr, gr_unittest
 import filter_swig as filter
 import math
 
+def sin_source_f(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.sin(2.*math.pi*freq*x), t)
+    return y
+
+def cos_source_f(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.cos(2.*math.pi*freq*x), t)
+    return y
+
 class test_filter_delay_fc(gr_unittest.TestCase):
 
     def setUp(self):
@@ -102,18 +112,17 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         sampling_freq = 100
 
         ntaps = 51
-        src1 = gr.sig_source_f(sampling_freq, gr.GR_SIN_WAVE,
-                               sampling_freq * 0.10, 1.0)
-        head = gr.head(gr.sizeof_float, int(ntaps + sampling_freq * 0.10))
+        N = int(ntaps + sampling_freq * 0.10)
+        data = sin_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
+        src1 = gr.vector_source_f(data)
         dst2 = gr.vector_sink_c()
 
         # calculate taps
         taps = filter.firdes_hilbert(ntaps)
         hd = filter.filter_delay_fc(taps)
 
-        tb.connect(src1, head)
-        tb.connect(head, hd)
-        tb.connect(hd,dst2)
+        tb.connect(src1, hd)
+        tb.connect(hd, dst2)
 
         tb.run()
 
@@ -194,19 +203,17 @@ class test_filter_delay_fc(gr_unittest.TestCase):
 
         sampling_freq = 100
         ntaps = 51
-        src1 = gr.sig_source_f(sampling_freq, gr.GR_SIN_WAVE,
-                               sampling_freq * 0.10, 1.0)
-        head = gr.head(gr.sizeof_float, int(ntaps + sampling_freq * 0.10))
+        N = int(ntaps + sampling_freq * 0.10)
+        data = sin_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
+        src1 = gr.vector_source_f(data)
         dst2 = gr.vector_sink_c()
-
 
         # calculate taps
         taps = filter.firdes_hilbert(ntaps)
         hd = filter.filter_delay_fc(taps)
 
-        tb.connect(src1, head)
-        tb.connect(head, (hd,0))
-        tb.connect(head, (hd,1))
+        tb.connect(src1, (hd,0))
+        tb.connect(src1, (hd,1))
         tb.connect(hd,dst2)
         tb.run()
 
@@ -287,23 +294,20 @@ class test_filter_delay_fc(gr_unittest.TestCase):
 
         sampling_freq = 100
         ntaps = 51
+        N = int(ntaps + sampling_freq * 0.10)
 
-        src1 = gr.sig_source_f(sampling_freq, gr.GR_SIN_WAVE,sampling_freq * 0.10, 1.0)
-        src2 = gr.sig_source_f(sampling_freq, gr.GR_COS_WAVE,sampling_freq * 0.10, 1.0)
-
-        head1 = gr.head(gr.sizeof_float, int(ntaps + sampling_freq * 0.10))
-        head2 = gr.head(gr.sizeof_float, int(ntaps + sampling_freq * 0.10))
+        data1 = sin_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
+        data2 = cos_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
+        src1 = gr.vector_source_f(data1)
+        src2 = gr.vector_source_f(data2)
 
         taps = filter.firdes_hilbert(ntaps)
         hd = filter.filter_delay_fc(taps)
 
         dst2 = gr.vector_sink_c()
 
-        tb.connect(src1, head1)
-        tb.connect(src2, head2)
-
-        tb.connect(head1, (hd,0))
-        tb.connect(head2, (hd,1))
+        tb.connect(src1, (hd,0))
+        tb.connect(src2, (hd,1))
         tb.connect(hd, dst2)
 
         tb.run()

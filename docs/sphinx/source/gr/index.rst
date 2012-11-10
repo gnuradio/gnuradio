@@ -23,14 +23,6 @@ Signal Sources
 
    gnuradio.gr.lfsr_32k_source_s
    gnuradio.gr.null_source
-   gnuradio.gr.noise_source_c
-   gnuradio.gr.noise_source_f
-   gnuradio.gr.noise_source_i
-   gnuradio.gr.noise_source_s
-   gnuradio.gr.sig_source_c
-   gnuradio.gr.sig_source_f
-   gnuradio.gr.sig_source_i
-   gnuradio.gr.sig_source_s
    gnuradio.gr.vector_source_b
    gnuradio.gr.vector_source_c
    gnuradio.gr.vector_source_f

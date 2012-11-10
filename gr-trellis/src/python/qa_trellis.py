@@ -30,6 +30,7 @@ import trellis
 
 import os
 import digital_swig as digital
+import analog_swig as analog
 
 fsm_args = {"awgn1o2_4": (2, 4, 4,
                           (0, 2, 0, 2, 1, 3, 1, 3),
@@ -118,7 +119,7 @@ class trellis_tb(gr.top_block):
 
         # CHANNEL
         add = gr.add_cc()
-        noise = gr.noise_source_c(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+        noise = analog.noise_source_c(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
         # RX
         # data preprocessing to generate metrics for Viterbi

@@ -8,9 +8,6 @@
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
 		<name>Sources</name>
-		<block>const_source_x</block>
-		<block>gr_sig_source_x</block>
-		<block>gr_noise_source_x</block>
 		<block>gr_vector_source_x</block>
 		<block>random_source_x</block>
 		<block>gr_null_source</block>

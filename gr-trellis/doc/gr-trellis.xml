@@ -598,7 +598,7 @@ r_k=(rk1,rk2,...,rkD).
 <programlisting>
  22      # CHANNEL
  23      add = gr.add_ff()
- 24      noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+ 24      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 </programlisting>
 
 
@@ -815,7 +815,7 @@ The modulated symbols are filtered by the ISI channel and AWGN with appropriate 
  28      # CHANNEL
  29      isi = gr.fir_filter_fff(1,channel)
  30      add = gr.add_ff()
- 31      noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+ 31      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 </programlisting>
 
 

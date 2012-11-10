@@ -32,8 +32,6 @@ ss_signatures = ['s', 'i', 'f', 'c']
 ss_roots = [
     'gr_vector_source_X',
     'gr_vector_sink_X',
-    'gr_noise_source_X',
-    'gr_sig_source_X',
     'gr_probe_signal_X',
     'gr_probe_signal_vX'
     ]

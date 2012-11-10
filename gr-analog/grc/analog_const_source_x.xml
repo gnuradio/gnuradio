@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Constant Source</name>
-	<key>const_source_x</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.sig_source_$(type.fcn)(0, gr.GR_CONST_WAVE, 0, 0, $const)</make>
+	<key>analog_const_source_x</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.sig_source_$(type.fcn)(0, analog.GR_CONST_WAVE, 0, 0, $const)</make>
 	<callback>set_offset($const)</callback>
 	<param>
 		<name>Output Type</name>

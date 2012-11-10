@@ -24,6 +24,12 @@ from gnuradio import gr, gr_unittest
 import filter_swig as filter
 import math
 
+def sig_source_c(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x), t)
+    return y
+
 class test_pfb_synthesizer(gr_unittest.TestCase):
 
     def setUp(self):
@@ -45,16 +51,16 @@ class test_pfb_synthesizer(gr_unittest.TestCase):
         signals = list()
         freqs = [0, 100, 200, -200, -100]
         for i in xrange(len(freqs)):
-            signals.append(gr.sig_source_c(fs, gr.GR_SIN_WAVE, freqs[i], 1))
+            data = sig_source_c(fs, freqs[i], 1, N)
+            signals.append(gr.vector_source_c(data))
 
-        head = gr.head(gr.sizeof_gr_complex, N)
         pfb = filter.pfb_synthesizer_ccf(M, taps)
         snk = gr.vector_sink_c()
 
         for i in xrange(M):
             self.tb.connect(signals[i], (pfb,i))
 
-        self.tb.connect(pfb, head, snk)
+        self.tb.connect(pfb, snk)
 
         self.tb.run() 
 

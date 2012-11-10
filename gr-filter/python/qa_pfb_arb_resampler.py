@@ -24,6 +24,17 @@ from gnuradio import gr, gr_unittest
 import filter_swig as filter
 import math
 
+def sig_source_c(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x), t)
+    return y
+
+def sig_source_f(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.sin(2.*math.pi*freq*x), t)
+    return y
+
 class test_pfb_arb_resampler(gr_unittest.TestCase):
 
     def setUp(self):
@@ -43,12 +54,12 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
                                         window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         freq = 100
-        signal = gr.sig_source_f(fs, gr.GR_SIN_WAVE, freq, 1)
-        head = gr.head(gr.sizeof_float, N)
+        data = sig_source_f(fs, freq, 1, N)
+        signal = gr.vector_source_f(data)
         pfb = filter.pfb_arb_resampler_fff(rrate, taps)
         snk = gr.vector_sink_f()
 
-        self.tb.connect(signal, head, pfb, snk)
+        self.tb.connect(signal, pfb, snk)
         self.tb.run() 
 
         Ntest = 50
@@ -72,12 +83,12 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
                                         window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         freq = 100
-        signal = gr.sig_source_c(fs, gr.GR_SIN_WAVE, freq, 1)
-        head = gr.head(gr.sizeof_gr_complex, N)
+        data = sig_source_c(fs, freq, 1, N)
+        signal = gr.vector_source_c(data)
         pfb = filter.pfb_arb_resampler_ccf(rrate, taps)
         snk = gr.vector_sink_c()
 
-        self.tb.connect(signal, head, pfb, snk)
+        self.tb.connect(signal, pfb, snk)
         self.tb.run() 
 
         Ntest = 50

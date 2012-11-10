@@ -38,10 +38,6 @@
 #include <gr_mute_ff.h>
 #include <gr_mute_ii.h>
 #include <gr_mute_ss.h>
-#include <gr_noise_source_c.h>
-#include <gr_noise_source_f.h>
-#include <gr_noise_source_i.h>
-#include <gr_noise_source_s.h>
 #include <gr_packed_to_unpacked_bb.h>
 #include <gr_packed_to_unpacked_ii.h>
 #include <gr_packed_to_unpacked_ss.h>
@@ -55,10 +51,6 @@
 #include <gr_probe_signal_vi.h>
 #include <gr_probe_signal_vf.h>
 #include <gr_probe_signal_vc.h>
-#include <gr_sig_source_c.h>
-#include <gr_sig_source_f.h>
-#include <gr_sig_source_i.h>
-#include <gr_sig_source_s.h>
 #include <gr_sub_cc.h>
 #include <gr_sub_ff.h>
 #include <gr_sub_ii.h>
@@ -114,10 +106,6 @@
 %include <gr_mute_ff.i>
 %include <gr_mute_ii.i>
 %include <gr_mute_ss.i>
-%include <gr_noise_source_c.i>
-%include <gr_noise_source_f.i>
-%include <gr_noise_source_i.i>
-%include <gr_noise_source_s.i>
 %include <gr_packed_to_unpacked_bb.i>
 %include <gr_packed_to_unpacked_ii.i>
 %include <gr_packed_to_unpacked_ss.i>
@@ -131,10 +119,6 @@
 %include <gr_probe_signal_vi.i>
 %include <gr_probe_signal_vf.i>
 %include <gr_probe_signal_vc.i>
-%include <gr_sig_source_c.i>
-%include <gr_sig_source_f.i>
-%include <gr_sig_source_i.i>
-%include <gr_sig_source_s.i>
 %include <gr_sub_cc.i>
 %include <gr_sub_ff.i>
 %include <gr_sub_ii.i>

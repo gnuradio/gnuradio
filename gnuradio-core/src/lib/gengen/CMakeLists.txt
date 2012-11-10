@@ -84,8 +84,6 @@ endmacro(expand_h_cc_i)
 expand_h_cc_i(gr_vector_source_X   b s i f c)
 expand_h_cc_i(gr_vector_insert_X   b)
 expand_h_cc_i(gr_vector_sink_X     b s i f c)
-expand_h_cc_i(gr_noise_source_X      s i f c)
-expand_h_cc_i(gr_sig_source_X        s i f c)
 expand_h_cc_i(gr_probe_signal_X    b s i f c)
 expand_h_cc_i(gr_probe_signal_vX    b s i f c)
 
@@ -155,8 +153,6 @@ list(APPEND gnuradio_core_sources
 install(FILES
     ${generated_gengen_includes}
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_endianness.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_noise_type.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sig_source_waveform.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )

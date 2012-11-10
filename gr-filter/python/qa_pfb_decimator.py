@@ -24,6 +24,12 @@ from gnuradio import gr, gr_unittest
 import filter_swig as filter
 import math
 
+def sig_source_c(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x), t)
+    return y
+
 class test_pfb_decimator(gr_unittest.TestCase):
 
     def setUp(self):
@@ -48,7 +54,8 @@ class test_pfb_decimator(gr_unittest.TestCase):
         freqs = [-200, -100, 0, 100, 200]
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*fs
-            signals.append(gr.sig_source_c(ifs, gr.GR_SIN_WAVE, f, 1))
+            data = sig_source_c(ifs, f, 1, N)
+            signals.append(gr.vector_source_c(data))
             self.tb.connect(signals[i], (add,i))
 
         head = gr.head(gr.sizeof_gr_complex, N)
@@ -85,23 +92,23 @@ class test_pfb_decimator(gr_unittest.TestCase):
         channel = 1      # Extract channel 0
 
         taps = filter.firdes.low_pass_2(1, ifs, fs/2, fs/10,
-                                    attenuation_dB=80,
-                                    window=filter.firdes.WIN_BLACKMAN_hARRIS)
+                                        attenuation_dB=80,
+                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
         add = gr.add_cc()
         freqs = [-200, -100, 0, 100, 200]
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*fs
-            signals.append(gr.sig_source_c(ifs, gr.GR_SIN_WAVE, f, 1))
+            data = sig_source_c(ifs, f, 1, N)
+            signals.append(gr.vector_source_c(data))
             self.tb.connect(signals[i], (add,i))
 
-        head = gr.head(gr.sizeof_gr_complex, N)
         s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, M)
         pfb = filter.pfb_decimator_ccf(M, taps, channel)
         snk = gr.vector_sink_c()
 
-        self.tb.connect(add, head, s2ss)
+        self.tb.connect(add, s2ss)
         for i in xrange(M):
             self.tb.connect((s2ss,i), (pfb,i))
         self.tb.connect(pfb, snk)
@@ -114,9 +121,9 @@ class test_pfb_decimator(gr_unittest.TestCase):
 
         # Create known data as complex sinusoids for the baseband freq
         # of the extracted channel is due to decimator output order.
-        phase = 6.15746
+        phase = 6.1575
         expected_data = map(lambda x: math.cos(2.*math.pi*freqs[3]*x+phase) + \
-                                       1j*math.sin(2.*math.pi*freqs[3]*x+phase), t)
+                                1j*math.sin(2.*math.pi*freqs[3]*x+phase), t)
         dst_data = snk.data()
 
         self.assertComplexTuplesAlmostEqual(expected_data[-Ntest:], dst_data[-Ntest:], 4)

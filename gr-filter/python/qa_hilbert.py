@@ -24,6 +24,11 @@ from gnuradio import gr, gr_unittest
 import filter_swig as filter
 import math
 
+def sig_source_f(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.sin(2.*math.pi*freq*x), t)
+    return y
+
 class test_hilbert(gr_unittest.TestCase):
 
     def setUp(self):
@@ -99,15 +104,14 @@ class test_hilbert(gr_unittest.TestCase):
                             (0.5877838134765625         +0.80908381938934326j),
                             (3.218399768911695e-08      +1.0000815391540527j))
 
+        
+        N = int(ntaps + sampling_freq * 0.10)
+        data = sig_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
+        src1 = gr.vector_source_f(data)
 
-        src1 = gr.sig_source_f(sampling_freq, gr.GR_SIN_WAVE,
-                               sampling_freq * 0.10, 1.0)
-
-        head = gr.head(gr.sizeof_float, int (ntaps + sampling_freq * 0.10))
         hilb = filter.hilbert_fc(ntaps)
         dst1 = gr.vector_sink_c()
-        tb.connect(src1, head)
-        tb.connect(head, hilb)
+        tb.connect(src1, hilb)
         tb.connect(hilb, dst1)
         tb.run()
         dst_data = dst1.data()

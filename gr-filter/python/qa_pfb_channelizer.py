@@ -24,6 +24,12 @@ from gnuradio import gr, gr_unittest
 import filter_swig as filter
 import math
 
+def sig_source_c(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x), t)
+    return y
+
 class test_pfb_channelizer(gr_unittest.TestCase):
 
     def setUp(self):
@@ -47,14 +53,14 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         freqs = [-200, -100, 0, 100, 200]
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*fs
-            signals.append(gr.sig_source_c(ifs, gr.GR_SIN_WAVE, f, 1))
+            data = sig_source_c(ifs, f, 1, N)
+            signals.append(gr.vector_source_c(data))
             self.tb.connect(signals[i], (add,i))
 
-        head = gr.head(gr.sizeof_gr_complex, N)
         s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, M)
         pfb = filter.pfb_channelizer_ccf(M, taps, 1)
 
-        self.tb.connect(add, head, s2ss)
+        self.tb.connect(add, s2ss)
 
         snks = list()
         for i in xrange(M):

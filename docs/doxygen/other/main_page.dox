@@ -62,7 +62,7 @@ done. A single source and sink are used with a FIR filter between
 them.
 
 \code
-    from gnuradio import gr, filter
+    from gnuradio import gr, filter, analog
     
     class my_topblock(gr.top_block):
         def __init__(self):
@@ -71,7 +71,7 @@ them.
             amp = 1
             taps = filter.firdes.low_pass(1, 1, 0.1, 0.01)
             
-            self.src = gr.noise_source_c(gr.GR_GAUSSIAN, amp)
+            self.src = analog.noise_source_c(gr.GR_GAUSSIAN, amp)
             self.flt = filter.fir_filter_ccf(1, taps)
             self.snk = gr.null_sink(gr.sizeof_gr_complex)
     
@@ -203,19 +203,19 @@ running and processing data, performing the reconfiguration, and then
 restarting the graph by unlocking it.
 
 The following example code shows a graph that first adds two
-gr_noise_source_c blocks and then replaces the gr_add_cc block with a
+analog::noise_source_c blocks and then replaces the gr_add_cc block with a
 gr_sub_cc block to then subtract the sources.
 
 \code
-from gnuradio import gr
+from gnuradio import gr, analog
 import time
 
 class mytb(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        self.src0 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
-        self.src1 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src0 = analog.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src1 = analog.noise_source_c(gr.GR_GAUSSIAN, 1)
         self.add  = gr.add_cc()
         self.sub  = gr.sub_cc()
         self.head = gr.head(gr.sizeof_gr_complex, 1000000)
@@ -262,15 +262,15 @@ The following example expands the previous example but sets and resets
 the max noutput_items both locally and globally.
 
 \code
-from gnuradio import gr
+from gnuradio import gr, analog
 import time
 
 class mytb(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        self.src0 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
-        self.src1 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src0 = analog.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src1 = analog.noise_source_c(gr.GR_GAUSSIAN, 1)
         self.add  = gr.add_cc()
         self.sub  = gr.sub_cc()
         self.head = gr.head(gr.sizeof_gr_complex, 1000000)
