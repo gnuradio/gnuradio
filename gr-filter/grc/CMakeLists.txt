@@ -35,7 +35,6 @@ install(FILES
     filter_pfb_synthesizer.xml
     filter_rational_resampler_base_xxx.xml
     filter_single_pole_iir_filter_xx.xml
-    filter_channel_model.xml
     filter_low_pass_filter.xml
     filter_high_pass_filter.xml
     filter_band_pass_filter.xml

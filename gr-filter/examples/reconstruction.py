@@ -24,6 +24,12 @@ from gnuradio import gr, digital
 from gnuradio import filter
 
 try:
+    from gnuradio import channels
+except ImportError:
+    print "Error: Program requires gr-channels."
+    sys.exit(1)
+
+try:
     import scipy
     from scipy import fftpack
 except ImportError:

@@ -20,31 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FILTER_CHANNEL_MODEL_IMPL_H
-#define INCLUDED_FILTER_CHANNEL_MODEL_IMPL_H
+#ifndef INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
+#define INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
 
 #include <gr_top_block.h>
-#include <gr_sig_source_c.h>
 #include <gr_add_cc.h>
 #include <gr_multiply_cc.h>
-#include <gr_noise_source_c.h>
-#include <filter/channel_model.h>
+#include <analog/sig_source_c.h>
+#include <analog/noise_source_c.h>
+#include <channels/channel_model.h>
 #include <filter/fractional_interpolator_cc.h>
 #include <filter/fir_filter_ccc.h>
 
 namespace gr {
-  namespace filter {
+  namespace channels {
 
-    class FILTER_API channel_model_impl : public channel_model
+    class CHANNELS_API channel_model_impl : public channel_model
     {
     private:
-      gr_sig_source_c_sptr d_freq_offset;
       gr_add_cc_sptr d_noise_adder;
-      gr_noise_source_c_sptr d_noise;
       gr_multiply_cc_sptr d_mixer_offset;
 
-      fractional_interpolator_cc::sptr d_timing_offset;
-      fir_filter_ccc::sptr d_multipath;
+      analog::sig_source_c::sptr d_freq_offset;
+      analog::noise_source_c::sptr d_noise;
+
+      filter::fractional_interpolator_cc::sptr d_timing_offset;
+      filter::fir_filter_ccc::sptr d_multipath;
 
       std::vector<gr_complex> d_taps;
 
@@ -68,7 +69,7 @@ namespace gr {
       double timing_offset() const;
     };
 
-  } /* namespace filter */
+  } /* namespace channels */
 } /* namespace gr */
 
-#endif /* INCLUDED_FILTER_CHANNEL_MODEL_IMPL_H */
+#endif /* INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H */

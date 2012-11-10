@@ -6,10 +6,10 @@
  -->
 <block>
 	<name>Channel Model</name>
-	<key>channel_model</key>
-	<import>from gnuradio import filter</import>
-	<import>from gnuradio.filter import firdes</import>
-	<make>filter.channel_model(
+	<key>channels_channel_model</key>
+	<import>from gnuradio import channels</import>
+	<import>from gnuradio.channels import firdes</import>
+	<make>channels.channel_model(
 	noise_voltage=$noise_voltage,
 	frequency_offset=$freq_offset,
 	epsilon=$epsilon,

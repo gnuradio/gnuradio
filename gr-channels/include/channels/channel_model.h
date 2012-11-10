@@ -20,15 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FILTER_CHANNEL_MODEL_H
-#define INCLUDED_FILTER_CHANNEL_MODEL_H
+#ifndef INCLUDED_CHANNELS_CHANNEL_MODEL_H
+#define INCLUDED_CHANNELS_CHANNEL_MODEL_H
 
-#include <filter/api.h>
+#include <channels/api.h>
 #include <gr_hier_block2.h>
 #include <gr_types.h>
 
 namespace gr {
-  namespace filter {
+  namespace channels {
     
     /*!
      * \brief channel simulator
@@ -44,10 +44,10 @@ namespace gr {
      * Multipath can be approximated in this model by using a FIR
      * filter representation of a multipath delay profile..
      */
-    class FILTER_API channel_model : virtual public gr_hier_block2
+    class CHANNELS_API channel_model : virtual public gr_hier_block2
     {
     public:
-      // gr::filter::channel_model::sptr
+      // gr::channels::channel_model::sptr
       typedef boost::shared_ptr<channel_model> sptr;
 
       /*! \brief Build the channel simulator.
@@ -81,7 +81,7 @@ namespace gr {
       virtual double timing_offset() const = 0;
     };
 
-  } /* namespace filter */
+  } /* namespace channels */
 } /* namespace gr */
 
-#endif /* INCLUDED_FILTER_CHANNEL_MODEL_H */
+#endif /* INCLUDED_CHANNELS_CHANNEL_MODEL_H */

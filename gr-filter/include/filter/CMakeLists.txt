@@ -110,7 +110,6 @@ install(FILES
     pfb_synthesizer_ccf.h
     single_pole_iir_filter_cc.h
     single_pole_iir_filter_ff.h
-    channel_model.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
     COMPONENT "filter_devel"
 )

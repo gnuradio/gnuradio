@@ -25,7 +25,7 @@
 #include <iostream>
 
 namespace gr {
-  namespace filter {
+  namespace channels {
     
     channel_model::sptr
     channel_model::make(double noise_voltage,
@@ -57,13 +57,15 @@ namespace gr {
 	d_taps.push_back(0);
       }
 
-      d_timing_offset = fractional_interpolator_cc::make(0, epsilon);
+      d_timing_offset = filter::fractional_interpolator_cc::make(0, epsilon);
 
-      d_multipath = fir_filter_ccc::make(1, d_taps);
+      d_multipath = filter::fir_filter_ccc::make(1, d_taps);
 
       d_noise_adder = gr_make_add_cc();
-      d_noise = gr_make_noise_source_c(GR_GAUSSIAN, noise_voltage, noise_seed);
-      d_freq_offset = gr_make_sig_source_c(1, GR_SIN_WAVE, frequency_offset, 1.0, 0.0);
+      d_noise = analog::noise_source_c::make(analog::GR_GAUSSIAN,
+					     noise_voltage, noise_seed);
+      d_freq_offset = analog::sig_source_c::make(1, analog::GR_SIN_WAVE,
+						 frequency_offset, 1.0, 0.0);
       d_mixer_offset = gr_make_multiply_cc();
 
       connect(self(), 0, d_timing_offset, 0);
@@ -131,5 +133,5 @@ namespace gr {
       return d_timing_offset->interp_ratio();
     }
 
-  } /* namespace filter */
+  } /* namespace channels */
 } /* namespace gr */

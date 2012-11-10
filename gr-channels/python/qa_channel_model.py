@@ -21,7 +21,8 @@
 #
 
 from gnuradio import gr, gr_unittest
-import filter_swig as filter
+import analog_swig as analog
+import channels_swig as channels
 import math
 
 class test_channel_model(gr_unittest.TestCase):
@@ -37,9 +38,9 @@ class test_channel_model(gr_unittest.TestCase):
         fs = 1000        # baseband sampling rate
         freq = 100
 
-        signal = gr.sig_source_c(fs, gr.GR_SIN_WAVE, freq, 1)
+        signal = analog.sig_source_c(fs, gr.GR_SIN_WAVE, freq, 1)
         head = gr.head(gr.sizeof_gr_complex, N)
-        op = filter.channel_model(0.0, 0.0, 1.0, [1,], 0)
+        op = channels.channel_model(0.0, 0.0, 1.0, [1,], 0)
         snk = gr.vector_sink_c()
         snk1 = gr.vector_sink_c()
 
