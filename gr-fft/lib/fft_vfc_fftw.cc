@@ -45,7 +45,7 @@ namespace gr {
 			       const std::vector<float> &window,
 			       int nthreads)
       : gr_sync_block("fft_vfc_fftw",
-		      gr_make_io_signature(1, 1, fft_size * sizeof(gr_complex)),
+		      gr_make_io_signature(1, 1, fft_size * sizeof(float)),
 		      gr_make_io_signature(1, 1, fft_size * sizeof(gr_complex))),
 	d_fft_size(fft_size), d_forward(forward)
     {
