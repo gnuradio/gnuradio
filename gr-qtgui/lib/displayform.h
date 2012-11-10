@@ -67,6 +67,8 @@ public slots:
   void setGrid(bool on);
   void setGrid();
 
+  void saveFigure();
+
 private slots:
   virtual void newData(const QEvent*) = 0;
   void updateGuiTimer();
@@ -99,6 +101,8 @@ protected:
   QList<LineStyleMenu*> _line_style_menu;
   QList<LineMarkerMenu*> _line_marker_menu;
   QList<MarkerAlphaMenu*> _marker_alpha_menu;
+
+  QAction *_save_act;
 
   QTimer *d_displayTimer;
   double d_update_time;
