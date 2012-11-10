@@ -26,6 +26,7 @@ from gnuradio import gr, gr_unittest
 from utils import mod_codes, alignment
 import packet_utils
 import filter_swig as filter
+import analog_swig as analog
 from generic_mod_demod import generic_mod, generic_demod
 
 from qa_constellation import tested_constellations, twod_constell
@@ -38,7 +39,7 @@ SEED = 1239
 # TESTING PARAMETERS
 # The number of symbols to test with.
 # We need this many to let the frequency recovery block converge.
-DATA_LENGTH = 2000
+DATA_LENGTH = 1000
 # Test fails if fraction of output that is correct is less than this.
 REQ_CORRECT = 0.7
 
@@ -51,6 +52,28 @@ TIMING_OFFSET = 1.0
 FREQ_BW = 2*math.pi/100.0
 PHASE_BW = 2*math.pi/100.0
 
+class channel_model(gr.hier_block2):
+    def __init__(self, noise_voltage, freq, timing):
+	gr.hier_block2.__init__(self, "channel_model",
+				gr.io_signature(1, 1, gr.sizeof_gr_complex),
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex))
+        
+
+        timing_offset = filter.fractional_interpolator_cc(0, timing)
+        noise_adder = gr.add_cc()
+        noise = analog.noise_source_c(analog.GR_GAUSSIAN,
+                                      noise_voltage, 0)
+        freq_offset = analog.sig_source_c(1, analog.GR_SIN_WAVE,
+                                          freq, 1.0, 0.0)
+        mixer_offset = gr.multiply_cc();
+
+        self.connect(self, timing_offset)
+        self.connect(timing_offset, (mixer_offset,0))
+        self.connect(freq_offset, (mixer_offset,1))
+        self.connect(mixer_offset, (noise_adder,1))
+        self.connect(noise, (noise_adder,0))
+        self.connect(noise_adder, self)
+        
 
 class test_constellation_receiver(gr_unittest.TestCase):
     
@@ -131,9 +154,9 @@ class rec_test_tb(gr.top_block):
         mod = generic_mod(constellation, differential=differential)
         # Channel
         if freq_offset:
-            channel = filter.channel_model(NOISE_VOLTAGE, FREQUENCY_OFFSET, TIMING_OFFSET)
+            channel = channel_model(NOISE_VOLTAGE, FREQUENCY_OFFSET, TIMING_OFFSET)
         else:
-            channel = filter.channel_model(NOISE_VOLTAGE, 0, TIMING_OFFSET)            
+            channel = channel_model(NOISE_VOLTAGE, 0, TIMING_OFFSET)            
         # Receiver Blocks
         if freq_offset:
             demod = generic_demod(constellation, differential=differential,

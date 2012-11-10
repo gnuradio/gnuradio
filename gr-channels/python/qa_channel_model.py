@@ -38,7 +38,7 @@ class test_channel_model(gr_unittest.TestCase):
         fs = 1000        # baseband sampling rate
         freq = 100
 
-        signal = analog.sig_source_c(fs, gr.GR_SIN_WAVE, freq, 1)
+        signal = analog.sig_source_c(fs, analog.GR_SIN_WAVE, freq, 1)
         head = gr.head(gr.sizeof_gr_complex, N)
         op = channels.channel_model(0.0, 0.0, 1.0, [1,], 0)
         snk = gr.vector_sink_c()
