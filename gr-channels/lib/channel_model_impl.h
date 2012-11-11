@@ -24,8 +24,8 @@
 #define INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
 
 #include <gr_top_block.h>
-#include <gr_add_cc.h>
-#include <gr_multiply_cc.h>
+#include <blocks/add_cc.h>
+#include <blocks/multiply_cc.h>
 #include <analog/sig_source_c.h>
 #include <analog/noise_source_c.h>
 #include <channels/channel_model.h>
@@ -38,8 +38,8 @@ namespace gr {
     class CHANNELS_API channel_model_impl : public channel_model
     {
     private:
-      gr_add_cc_sptr d_noise_adder;
-      gr_multiply_cc_sptr d_mixer_offset;
+      blocks::add_cc::sptr d_noise_adder;
+      blocks::multiply_cc::sptr d_mixer_offset;
 
       analog::sig_source_c::sptr d_freq_offset;
       analog::noise_source_c::sptr d_noise;

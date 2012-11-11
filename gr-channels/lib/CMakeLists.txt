@@ -24,6 +24,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_CHANNELS_INCLUDE_DIRS}
@@ -44,6 +45,7 @@ list(APPEND channels_libs
     gnuradio-core
     gnuradio-filter
     gnuradio-analog
+    gnuradio-blocks
     ${Boost_LIBRARIES}
 )
 
@@ -52,4 +54,4 @@ target_link_libraries(gnuradio-channels ${channels_libs})
 GR_LIBRARY_FOO(gnuradio-channels RUNTIME_COMPONENT "channels_runtime" DEVEL_COMPONENT "channels_devel")
 add_dependencies(gnuradio-channels
   channels_generated_includes channels_generated_swigs
-  gnuradio-core gnuradio-filter gnuradio-analog)
+  gnuradio-core gnuradio-filter gnuradio-analog gnuradio-blocks)
