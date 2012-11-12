@@ -30,7 +30,7 @@
  * \brief Numerically Controlled Oscillator (NCO)
  * \ingroup misc
  */
-class GR_CORE_API gr_fxpt_nco {
+class /*GR_CORE_API*/ gr_fxpt_nco {
   gr_uint32	d_phase;
   gr_int32	d_phase_inc;
 
