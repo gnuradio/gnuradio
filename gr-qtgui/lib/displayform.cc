@@ -207,7 +207,8 @@ DisplayForm::setLineLabel(int which, const QString &label)
 void
 DisplayForm::setLineColor(int which, const QString &color)
 {
-  _displayPlot->setLineColor(which, color);
+  QColor c = QColor(color);
+  _displayPlot->setLineColor(which, c);
   _displayPlot->replot();
 }
 

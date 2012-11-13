@@ -41,6 +41,11 @@ class WaterfallDisplayPlot: public DisplayPlot
 {
   Q_OBJECT
 
+  Q_PROPERTY ( int intensity_color_map_type1 READ GetIntensityColorMapType1 WRITE SetIntensityColorMapType1 )
+  Q_PROPERTY ( QColor low_intensity_color READ GetUserDefinedLowIntensityColor WRITE SetUserDefinedLowIntensityColor )
+  Q_PROPERTY ( QColor high_intensity_color READ GetUserDefinedHighIntensityColor WRITE SetUserDefinedHighIntensityColor )
+  
+
 public:
   WaterfallDisplayPlot(int nplots, QWidget*);
   virtual ~WaterfallDisplayPlot();
@@ -72,9 +77,15 @@ public:
   void replot(void);
 
   int GetIntensityColorMapType(int) const;
-  void SetIntensityColorMapType(const int, const int, const QColor, const QColor);
+  int GetIntensityColorMapType1() const;
   const QColor GetUserDefinedLowIntensityColor() const;
   const QColor GetUserDefinedHighIntensityColor() const;
+
+public slots:
+  void SetIntensityColorMapType(const int, const int, const QColor, const QColor);
+  void SetIntensityColorMapType1(int);
+  void SetUserDefinedLowIntensityColor(QColor);
+  void SetUserDefinedHighIntensityColor(QColor);
 
 signals:
   void UpdatedLowerIntensityLevel(const double);

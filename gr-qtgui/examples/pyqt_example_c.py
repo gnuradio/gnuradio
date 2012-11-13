@@ -144,6 +144,10 @@ class my_top_block(gr.top_block):
         fftsize = 2048
 
         self.qapp = QtGui.QApplication(sys.argv)
+        ss = open('dark.qss')
+        sstext = ss.read()
+        ss.close()
+        self.qapp.setStyleSheet(sstext)
 
         src1 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
