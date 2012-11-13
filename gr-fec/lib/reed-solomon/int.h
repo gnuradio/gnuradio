@@ -5,10 +5,10 @@
  */
 #define DTYPE int
 
-#include <gr_core_api.h>
+#include <fec/api.h>
 
 /* Reed-Solomon codec control block */
-struct GR_CORE_API rs {
+struct FEC_API rs {
   unsigned int mm;   /* Bits per symbol */
   unsigned int nn;   /* Symbols per block (= (1<<mm)-1) */
   int *alpha_to;      /* log lookup table */
@@ -45,11 +45,11 @@ static inline int modnn(struct rs *rs,int x){
 #define INIT_RS init_rs_int
 #define FREE_RS free_rs_int
 
-GR_CORE_API void ENCODE_RS(void *p,DTYPE *data,DTYPE *parity);
-GR_CORE_API int DECODE_RS(void *p,DTYPE *data,int *eras_pos,int no_eras);
+FEC_API void ENCODE_RS(void *p,DTYPE *data,DTYPE *parity);
+FEC_API int DECODE_RS(void *p,DTYPE *data,int *eras_pos,int no_eras);
 void *INIT_RS(unsigned int symsize,unsigned int gfpoly,unsigned int fcr,
 		   unsigned int prim,unsigned int nroots);
-GR_CORE_API void FREE_RS(void *p);
+FEC_API void FREE_RS(void *p);
 
 
 

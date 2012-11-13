@@ -175,10 +175,8 @@ set(gr_core_general_triple_threats
     gr_complex_to_xxx
     gr_conjugate_cc
     gr_copy
-    gr_decode_ccsds_27_fb
     gr_deinterleave
     gr_delay
-    gr_encode_ccsds_27_bb
     gr_endian_swap
     gr_fake_channel_coder_pp
     gr_feval

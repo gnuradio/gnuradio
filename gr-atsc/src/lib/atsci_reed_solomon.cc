@@ -25,7 +25,7 @@
 #include <string.h>
 
 extern "C" {
-#include "rs.h"
+#include <rs.h>
 }
 
 static const int rs_init_symsize =     8;

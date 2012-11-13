@@ -151,9 +151,6 @@
 		<cat>
 			<name>Trellis</name>
 		</cat>
-
-		<block>gr_encode_ccsds_27_bb</block>
-		<block>gr_decode_ccsds_27_fb</block>
 	</cat>
 	<cat>
 		<name>Probes</name>

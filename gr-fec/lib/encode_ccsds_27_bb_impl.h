@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,12 +20,28 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,encode_ccsds_27_bb);
+#ifndef INCLUDED_FEC_ENCODE_CCSDS_27_BB_IMPL_H
+#define INCLUDED_FEC_ENCODE_CCSDS_27_BB_IMPL_H
 
-gr_encode_ccsds_27_bb_sptr gr_make_encode_ccsds_27_bb ();
+#include <fec/encode_ccsds_27_bb.h>
 
-class gr_encode_ccsds_27_bb : public gr_sync_interpolator
-{
-private:
-  gr_encode_ccsds_27_bb();
-};
+namespace gr {
+  namespace fec {
+
+    class FEC_API encode_ccsds_27_bb_impl : public encode_ccsds_27_bb
+    {
+    private:
+      unsigned char d_encstate;
+
+    public:
+      encode_ccsds_27_bb_impl();
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace fec */
+} /* namespace gr */
+
+#endif /* INCLUDED_FEC_ENCODE_CCSDS_27_BB_IMPL_H */

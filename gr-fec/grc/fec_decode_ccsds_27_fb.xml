@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Decode CCSDS 27</name>
-	<key>gr_decode_ccsds_27_fb</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.decode_ccsds_27_fb()</make>
+	<key>fec_decode_ccsds_27_fb</key>
+	<import>from gnuradio import fec</import>
+	<make>fec.decode_ccsds_27_fb()</make>
 	<sink>
 		<name>in</name>
 		<type>float</type>

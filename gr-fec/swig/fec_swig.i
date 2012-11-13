@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,12 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,decode_ccsds_27_fb);
+#define FEC_API
 
-gr_decode_ccsds_27_fb_sptr gr_make_decode_ccsds_27_fb ();
+%include "gnuradio.i"
 
-class gr_decode_ccsds_27_fb : public gr_sync_decimator
-{
-private:
-  gr_decode_ccsds_27_fb();
-};
+//load generated python docstrings
+%include "fec_swig_doc.i"
+
+%{
+#include "fec/decode_ccsds_27_fb.h"
+#include "fec/encode_ccsds_27_bb.h"
+%}
+
+%include "fec/decode_ccsds_27_fb.h"
+%include "fec/encode_ccsds_27_bb.h"
+
+GR_SWIG_BLOCK_MAGIC2(fec, decode_ccsds_27_fb);
+GR_SWIG_BLOCK_MAGIC2(fec, encode_ccsds_27_bb);
