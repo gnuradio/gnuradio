@@ -134,9 +134,11 @@ DisplayPlot::setColor(int which, QColor color)
     setLineMarker(which, sym.style());
 #else
     QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
-    sym->setColor(color);
-    sym->setPen(pen);
-    _plot_curve[which]->setSymbol(sym);
+    if(sym) {
+      sym->setColor(color);
+      sym->setPen(pen);
+      _plot_curve[which]->setSymbol(sym);
+    }
 #endif
   }
 }
@@ -261,8 +263,10 @@ DisplayPlot::setLineWidth(int which, int width)
     _plot_curve[which]->setSymbol(sym);
 #else
     QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
-    sym->setSize(7+10*log10(1.0*width), 7+10*log10(1.0*width));
-    _plot_curve[which]->setSymbol(sym);
+    if(sym) {
+      sym->setSize(7+10*log10(1.0*width), 7+10*log10(1.0*width));
+      _plot_curve[which]->setSymbol(sym);
+    }
 #endif
   }
 }
@@ -310,8 +314,10 @@ DisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
     _plot_curve[which]->setSymbol(sym);
 #else
     QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
-    sym->setStyle(marker);
-    _plot_curve[which]->setSymbol(sym);
+    if(sym) {
+      sym->setStyle(marker);
+      _plot_curve[which]->setSymbol(sym);
+    }
 #endif
   }
 }
@@ -319,9 +325,16 @@ DisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
 const QwtSymbol::Style
 DisplayPlot::getLineMarker(int which) const
 {
-  if (which < _nplots) {
-    return _plot_curve[which]->symbol().style();
-  } else {
+  if(which < _nplots) {
+#if QWT_VERSION < 0x060000
+    QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+    return sym.style();
+#else
+    QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+    return sym->style();
+#endif
+  }
+  else {
     return QwtSymbol::NoSymbol;
   }
 }
@@ -345,9 +358,11 @@ DisplayPlot::setMarkerAlpha(int which, int alpha)
     setLineMarker(which, sym.style());
 #else
     QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
-    sym->setColor(color);
-    sym->setPen(pen);
-    _plot_curve[which]->setSymbol(sym);
+    if(sym) {
+      sym->setColor(color);
+      sym->setPen(pen);
+      _plot_curve[which]->setSymbol(sym);
+    }
 #endif
   }
 }
