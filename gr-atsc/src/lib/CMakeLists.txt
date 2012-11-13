@@ -24,6 +24,7 @@ include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
+    ${GR_FEC_INCLUDE_DIRS}
     ${GR_ATSC_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -101,6 +102,7 @@ list(APPEND atsc_libs
     gnuradio-analog
     gnuradio-core
     ${Boost_LIBRARIES}
+    gnuradio-fec
 )
 
 add_library(gnuradio-atsc SHARED ${gr_atsc_sources})
@@ -133,7 +135,7 @@ list(APPEND test_atsci_sources
 )
 
 include(GrTest)
-set(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel volk)
+set(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel volk gnuradio-fec)
 add_executable(test_atsci ${test_atsci_sources} test_atsci.cc)
 target_link_libraries(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)

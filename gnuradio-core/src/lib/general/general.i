@@ -90,8 +90,6 @@
 #include <gr_bin_statistics_f.h>
 #include <gr_peak_detector2_fb.h>
 #include <gr_repeat.h>
-#include <gr_encode_ccsds_27_bb.h>
-#include <gr_decode_ccsds_27_fb.h>
 #include <gr_stretch_ff.h>
 #include <gr_copy.h>
 #include <complex_vec_test.h>
@@ -172,8 +170,6 @@
 %include "gr_bin_statistics_f.i"
 %include "gr_peak_detector2_fb.i"
 %include "gr_repeat.i"
-%include "gr_encode_ccsds_27_bb.i"
-%include "gr_decode_ccsds_27_fb.i"
 %include "gr_stretch_ff.i"
 %include "gr_copy.i"
 %include "complex_vec_test.i"

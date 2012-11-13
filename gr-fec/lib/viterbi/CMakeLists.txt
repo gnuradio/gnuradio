@@ -43,16 +43,16 @@ endif(MSVC)
 ########################################################################
 # Append gnuradio-core library sources
 ########################################################################
-list(APPEND gnuradio_core_sources ${viterbi_sources})
+list(APPEND gnuradio_fec_sources ${viterbi_sources})
 
 ########################################################################
 # Install runtime headers
 ########################################################################
-install(
-    FILES ${CMAKE_CURRENT_SOURCE_DIR}/viterbi.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "core_devel"
-)
+#install(
+#    FILES ${CMAKE_CURRENT_SOURCE_DIR}/viterbi.h
+#    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
+#    COMPONENT "fec_devel"
+#)
 
 ########################################################################
 # Create some text executables (not registered tests)
