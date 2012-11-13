@@ -30,7 +30,7 @@
  * \brief Voltage Controlled Oscillator (VCO)
  * \ingroup misc
  */
-class GR_CORE_API gr_fxpt_vco {
+class /*GR_CORE_API*/ gr_fxpt_vco {
   gr_int32	d_phase;
 
 public:
