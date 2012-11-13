@@ -53,7 +53,7 @@ namespace gr {
        * \param seed seed for random generators. Note that for uniform and
        * Gaussian distributions, this should be a negative number.
        */
-      static sptr make(noise_type_t type, float ampl, long seed);
+      static sptr make(noise_type_t type, float ampl, long seed=0);
 
       virtual void set_type(noise_type_t type) = 0;
       virtual void set_amplitude(float ampl) = 0;

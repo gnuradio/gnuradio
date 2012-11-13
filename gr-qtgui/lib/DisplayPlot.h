@@ -179,8 +179,7 @@ public slots:
   void setYaxis(double min, double max);
   void setXaxis(double min, double max);
   void setLineLabel(int which, QString label);
-  void setLineColor(int which, QString color);
-
+  void setLineColor(int which, QColor color);
   QColor getLineColor(int which) const;
   void setLineWidth(int which, int width);
   int getLineWidth(int which) const;

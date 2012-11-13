@@ -119,7 +119,7 @@ DisplayPlot::lineLabel(int which)
 }
 
 void
-DisplayPlot::setLineColor(int which, QString color)
+DisplayPlot::setLineColor(int which, QColor color)
 {
   if (which < _nplots) {
     // Set the color of the pen
@@ -153,7 +153,7 @@ DisplayPlot::getLineColor(int which) const {
 
 // Use a preprocessor macro to create a bunch of hooks for Q_PROPERTY and hence the stylesheet.
 #define SETUPLINE(i, im1) \
-    void DisplayPlot::setLineColor ## i (QColor c) {setColor(im1, c);} \
+    void DisplayPlot::setLineColor ## i (QColor c) {setLineColor(im1, c);} \
     const QColor DisplayPlot::getLineColor ## i () const {return getLineColor(im1);} \
     void DisplayPlot::setLineWidth ## i (int width) {setLineWidth(im1, width);} \
     int DisplayPlot::getLineWidth ## i () const {return getLineWidth(im1);} \

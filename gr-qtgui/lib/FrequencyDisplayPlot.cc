@@ -114,7 +114,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 #else
     _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
 #endif
-    setColor(i, default_colors[i]);
+    setLineColor(i, default_colors[i]);
   }
   
   _min_fft_plot_curve = new QwtPlotCurve("Minimum Power");

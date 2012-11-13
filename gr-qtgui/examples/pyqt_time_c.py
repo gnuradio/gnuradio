@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, filter
+from gnuradio import gr
 import sys
 
 try:
@@ -35,6 +35,12 @@ try:
     from gnuradio import analog
 except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
+try:
+    from gnuradio import channels
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-channels.\n")
     sys.exit(1)
 
 class dialog_box(QtGui.QWidget):
@@ -152,7 +158,7 @@ class my_top_block(gr.top_block):
         src1 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
         src  = gr.add_cc()
-        channel = filter.channel_model(0.01)
+        channel = channels.channel_model(0.01)
         thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.time_sink_c(npts, Rs,
                                       "Complex Time Example", 1)

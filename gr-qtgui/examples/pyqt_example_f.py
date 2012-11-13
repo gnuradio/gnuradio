@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, filter
 import sys
 
 try:
@@ -146,12 +146,12 @@ class my_top_block(gr.top_block):
         self.qapp = QtGui.QApplication(sys.argv)
 
         src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
-        src2 = analg.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
+        src2 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
         src  = gr.add_ff()
         thr = gr.throttle(gr.sizeof_float, 100*fftsize)
         noise = analog.noise_source_f(analog.GR_GAUSSIAN, 0.001)
         add = gr.add_ff()
-        self.snk1 = qtgui.sink_f(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk1 = qtgui.sink_f(fftsize, filter.firdes.WIN_BLACKMAN_hARRIS,
                                  0, Rs,
                                  "Float Signal Example",
                                  True, True, True, False)
