@@ -27,10 +27,17 @@
 
 #if __GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ >= 4
     #define __popcnt __builtin_popcount
-#elif HAVE_INTRIN_H
-    #include <intrin.h> //defines __popcnt
 #else
-    #error no popcnt for your compiler, add one here
+    inline unsigned __popcnt(unsigned num)
+    {
+        unsigned pop = 0;
+        while(num)
+        {
+            if (num & 0x1) pop++;
+            num >>= 1;
+        }
+        return pop;
+    }
 #endif
 
 int volk_get_index(
