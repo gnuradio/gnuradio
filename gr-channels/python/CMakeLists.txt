@@ -38,7 +38,7 @@ list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-analog/python
     ${CMAKE_BINARY_DIR}/gr-analog/swig
 )
-list(APPEND GR_TEST_TARGET_DEPS gnuradio-channels)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-channels gnuradio-analog gnuradio-blocks)
 
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")

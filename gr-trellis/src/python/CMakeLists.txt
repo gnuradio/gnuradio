@@ -27,7 +27,7 @@ list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-digital/swig
     ${CMAKE_BINARY_DIR}/gr-trellis/src/lib
 )
-list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog gnuradio-digital gnuradio-trellis)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog gnuradio-digital gnuradio-trellis gnuradio-filter)
 
 include(GrPython)
 include(GrTest)

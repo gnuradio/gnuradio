@@ -71,7 +71,7 @@ list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-analog/python
     ${CMAKE_BINARY_DIR}/gr-analog/swig
 )
-list(APPEND GR_TEST_TARGET_DEPS gnuradio-digital gnuradio-filter gnuradio-fft)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-digital gnuradio-filter gnuradio-fft gnuradio-analog)
 
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")
