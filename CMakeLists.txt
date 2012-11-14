@@ -229,6 +229,9 @@ add_subdirectory(gruel)
 add_subdirectory(gnuradio-core)
 add_subdirectory(grc)
 
+#the following dependency libraries are needed by all gr modules:
+list(APPEND GR_TEST_TARGET_DEPS volk gruel gnuradio-core)
+
 add_subdirectory(gr-fft)
 add_subdirectory(gr-filter)
 add_subdirectory(gr-atsc)

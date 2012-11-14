@@ -109,7 +109,7 @@ foreach(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
         ${CMAKE_BINARY_DIR}/gr-comedi/src
     )
-    set(GR_TEST_TARGET_DEPS gruel gnuradio-core gnuradio-comedi)
+    list(APPEND GR_TEST_TARGET_DEPS gnuradio-comedi)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING AND ENABLE_PYTHON)
