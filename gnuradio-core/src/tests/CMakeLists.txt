@@ -55,7 +55,7 @@ endforeach(test_not_run_src)
 # Set the test environment so the build libs will be found under MSVC.
 ########################################################################
 include(GrTest)
-set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core test-gnuradio-core)
+list(APPEND GR_TEST_TARGET_DEPS test-gnuradio-core)
 add_executable(gr_core_test_all test_all.cc)
 target_link_libraries(gr_core_test_all test-gnuradio-core)
 GR_ADD_TEST(gr-core-test-all gr_core_test_all)

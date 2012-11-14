@@ -62,21 +62,21 @@ GR_PYTHON_INSTALL(
 # Handle the unit tests
 ########################################################################
 if(ENABLE_TESTING)
+
+list(APPEND GR_TEST_PYTHON_DIRS
+    ${CMAKE_BINARY_DIR}/gr-digital/python
+    ${CMAKE_BINARY_DIR}/gr-digital/swig
+    ${CMAKE_BINARY_DIR}/gr-filter/python
+    ${CMAKE_BINARY_DIR}/gr-filter/swig
+    ${CMAKE_BINARY_DIR}/gr-analog/python
+    ${CMAKE_BINARY_DIR}/gr-analog/swig
+)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-digital gnuradio-filter gnuradio-fft)
+
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")
 foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    set(GR_TEST_PYTHON_DIRS
-        ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
-        ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
-        ${CMAKE_BINARY_DIR}/gr-digital/python
-        ${CMAKE_BINARY_DIR}/gr-digital/swig
-        ${CMAKE_BINARY_DIR}/gr-filter/python
-        ${CMAKE_BINARY_DIR}/gr-filter/swig
-        ${CMAKE_BINARY_DIR}/gr-analog/python
-        ${CMAKE_BINARY_DIR}/gr-analog/swig
-    )
-    set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core gnuradio-digital)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)

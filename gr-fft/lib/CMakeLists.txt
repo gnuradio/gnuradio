@@ -29,7 +29,6 @@ include_directories(
     ${FFTW3F_INCLUDE_DIRS}
 )
 
-link_directories(${FFT_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
@@ -47,9 +46,13 @@ list(APPEND fft_sources
 list(APPEND fft_libs
     gnuradio-core
     ${Boost_LIBRARIES}
-    ${FFT_LIBRARIES}
     ${FFTW3F_LIBRARIES}
 )
+
+if(FFTW3F_THREADS_LIBRARIES)
+    list(APPEND fft_libs ${FFTW3F_THREADS_LIBRARIES})
+    add_definitions("-DFFTW3F_THREADS")
+endif()
 
 add_library(gnuradio-fft SHARED ${fft_sources})
 target_link_libraries(gnuradio-fft ${fft_libs})

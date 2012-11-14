@@ -135,7 +135,7 @@ list(APPEND test_atsci_sources
 )
 
 include(GrTest)
-set(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel volk gnuradio-fec)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-fec)
 add_executable(test_atsci ${test_atsci_sources} test_atsci.cc)
 target_link_libraries(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)

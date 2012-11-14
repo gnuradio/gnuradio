@@ -50,7 +50,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
@@ -66,7 +66,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 	
@@ -164,7 +164,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
@@ -180,7 +180,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 	
@@ -280,7 +280,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
@@ -296,7 +296,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 	
@@ -396,7 +396,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
@@ -412,7 +412,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 	
@@ -510,7 +510,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
@@ -526,7 +526,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 	
@@ -625,7 +625,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
@@ -641,7 +641,7 @@ namespace gr {
 	  for(int i = 0; i < d_naligned; i++) {
 	    fft::free(d_aligned_taps[i]);
 	  }
-	  fft::free(d_aligned_taps);
+	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 	
