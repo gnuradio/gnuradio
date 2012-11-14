@@ -100,7 +100,6 @@ include_directories(
     ${FFTW3F_INCLUDE_DIRS}
 )
 
-link_directories(${FFT_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
