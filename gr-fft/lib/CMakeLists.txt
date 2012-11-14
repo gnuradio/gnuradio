@@ -49,6 +49,11 @@ list(APPEND fft_libs
     ${FFTW3F_LIBRARIES}
 )
 
+if(FFTW3F_THREADS_LIBRARIES)
+    list(APPEND fft_libs ${FFTW3F_THREADS_LIBRARIES})
+    add_definitions("-DFFTW3F_THREADS")
+endif()
+
 add_library(gnuradio-fft SHARED ${fft_sources})
 target_link_libraries(gnuradio-fft ${fft_libs})
 GR_LIBRARY_FOO(gnuradio-fft RUNTIME_COMPONENT "fft_runtime" DEVEL_COMPONENT "fft_devel")
