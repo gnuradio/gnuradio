@@ -173,6 +173,8 @@ if(ENABLE_TESTING)
     ${CPPUNIT_LIBRARIES}
   )
 
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog gnuradio-filter gnuradio-fft)
+
   GR_ADD_TEST(test_gr_analog test-gr-analog)
 endif(ENABLE_TESTING)
 
