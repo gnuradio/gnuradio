@@ -97,11 +97,9 @@ include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
-    ${FFTW3F_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
-link_directories(${FFTW3F_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
@@ -143,7 +141,6 @@ list(APPEND filter_libs
     gnuradio-fft
     volk
     ${Boost_LIBRARIES}
-    ${FFTW3F_LIBRARIES}
 )
 
 add_library(gnuradio-filter SHARED ${filter_sources})
