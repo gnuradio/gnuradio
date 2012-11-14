@@ -33,7 +33,6 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
 )
 
-link_directories(${FEC_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
@@ -47,7 +46,6 @@ list(APPEND gnuradio_fec_sources
 list(APPEND gnuradio_fec_libs
     gnuradio-core
     ${Boost_LIBRARIES}
-    ${FEC_LIBRARIES}
 )
 
 add_library(gnuradio-fec SHARED ${gnuradio_fec_sources})
