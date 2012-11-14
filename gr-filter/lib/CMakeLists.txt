@@ -173,10 +173,12 @@ if(ENABLE_TESTING)
 
   add_executable(test-gr-filter ${test_gr_filter_sources})
 
+  list(APPEND GR_TEST_TARGET_DEPS test-gr-filter gnuradio-filter gnuradio-fft)
+
   target_link_libraries(
     test-gr-filter
     gnuradio-core
-    gnuradio-filter 
+    gnuradio-filter
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
   )
