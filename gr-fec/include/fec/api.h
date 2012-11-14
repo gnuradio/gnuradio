@@ -24,7 +24,7 @@
 
 #include <gruel/attributes.h>
 
-#ifdef gnuradio_blocks_EXPORTS
+#ifdef gnuradio_fec_EXPORTS
 #  define FEC_API __GR_ATTR_EXPORT
 #else
 #  define FEC_API __GR_ATTR_IMPORT
