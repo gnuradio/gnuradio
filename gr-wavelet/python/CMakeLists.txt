@@ -31,17 +31,17 @@ GR_PYTHON_INSTALL(
 # Handle the unit tests
 ########################################################################
 if(ENABLE_TESTING)
+
+list(APPEND GR_TEST_PYTHON_DIRS
+    ${CMAKE_BINARY_DIR}/gr-wavelet/python
+    ${CMAKE_BINARY_DIR}/gr-wavelet/swig
+)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-wavelet)
+
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")
 foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    set(GR_TEST_PYTHON_DIRS
-        ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
-        ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
-        ${CMAKE_BINARY_DIR}/gr-wavelet/python
-        ${CMAKE_BINARY_DIR}/gr-wavelet/swig
-    )
-    list(APPEND GR_TEST_TARGET_DEPS gnuradio-wavelet)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)

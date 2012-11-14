@@ -231,6 +231,10 @@ add_subdirectory(grc)
 
 #the following dependency libraries are needed by all gr modules:
 list(APPEND GR_TEST_TARGET_DEPS volk gruel gnuradio-core)
+list(APPEND GR_TEST_PYTHON_DIRS
+    ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
+    ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
+)
 
 add_subdirectory(gr-fft)
 add_subdirectory(gr-filter)
