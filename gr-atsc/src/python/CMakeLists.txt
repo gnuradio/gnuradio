@@ -47,7 +47,7 @@ if(ENABLE_TESTING)
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-atsc/src/lib
 )
-list(APPEND GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-fec)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-fec gnuradio-filter gnuradio-analog gnuradio-fft)
 
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")

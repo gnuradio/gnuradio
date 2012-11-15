@@ -214,7 +214,7 @@ set(GR_SWIG_INCLUDE_DIRS
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-set(GR_SWIG_LIBRARIES gnuradio-trellis gnuradio-digital gnuradio-analog)
+set(GR_SWIG_LIBRARIES gnuradio-trellis gnuradio-digital gnuradio-analog gnuradio-fft)
 GR_SWIG_MAKE(trellis trellis.i)
 
 GR_SWIG_INSTALL(
