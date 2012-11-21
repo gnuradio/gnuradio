@@ -36,6 +36,12 @@ namespace gr {
      * This filter uses the Direct Form I implementation, where
      * \p fftaps contains the feed-forward taps, and \p fbtaps the feedback ones.
      *
+     * \p oldstyle: The old style of the IIR filter uses feedback
+     * taps that are negative of what most definitions use (scipy
+     * and Matlab among them). This parameter keeps using the old
+     * GNU Radio style and is set to TRUE by default. When taps
+     * generated from scipy, Matlab, or gr_filter_design, use the
+     * new style by setting this to FALSE.
      *
      * The input and output satisfy a difference equation of the form
      \htmlonly
@@ -59,9 +65,6 @@ namespace gr {
      H(z) = \ frac{\sum_{k=0}^{M} b_k z^{-k}}{1 - \sum_{k=1}^{N} a_k z^{-k}}
      \endxmlonly
 
-     * Note that some texts define the system function with a + in the
-     * denominator. If you're using that convention, you'll need to
-     * negate the feedback taps.
      */
     class FILTER_API iir_filter_ffd : virtual public gr_sync_block
     {
@@ -70,7 +73,8 @@ namespace gr {
       typedef boost::shared_ptr<iir_filter_ffd> sptr;
 
       static sptr make(const std::vector<double> &fftaps,
-				  const std::vector<double> &fbtaps);
+		       const std::vector<double> &fbtaps,
+		       bool oldstyle=true);
 
       virtual void set_taps(const std::vector<double> &fftaps,
 			    const std::vector<double> &fbtaps) = 0;

@@ -39,7 +39,8 @@ namespace gr {
 
     public:
       iir_filter_ffd_impl(const std::vector<double> &fftaps,
-			  const std::vector<double> &fbtaps);
+			  const std::vector<double> &fbtaps,
+			  bool oldstyle=true);
       ~iir_filter_ffd_impl();
 
       void set_taps(const std::vector<double> &fftaps,

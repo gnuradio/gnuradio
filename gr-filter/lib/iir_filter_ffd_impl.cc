@@ -32,21 +32,23 @@ namespace gr {
     
     iir_filter_ffd::sptr
     iir_filter_ffd::make(const std::vector<double> &fftaps,
-			 const std::vector<double> &fbtaps)
+			 const std::vector<double> &fbtaps,
+			 bool oldstyle)
     {
-      return gnuradio::get_initial_sptr(new iir_filter_ffd_impl(fftaps, fbtaps));
+      return gnuradio::get_initial_sptr
+	(new iir_filter_ffd_impl(fftaps, fbtaps, oldstyle));
     }
 
     iir_filter_ffd_impl::iir_filter_ffd_impl(const std::vector<double> &fftaps,
-					     const std::vector<double> &fbtaps)
+					     const std::vector<double> &fbtaps,
+					     bool oldstyle)
 
       : gr_sync_block("iir_filter_ffd",
 		      gr_make_io_signature(1, 1, sizeof (float)),
 		      gr_make_io_signature(1, 1, sizeof (float))),
 	d_updated(false)
     {
-      d_iir = new kernel::iir_filter<float,float,double>(fftaps, fbtaps);
-      //d_iir = new gri_iir<float,float,double>(fftaps, fbtaps);
+      d_iir = new kernel::iir_filter<float,float,double>(fftaps, fbtaps, oldstyle);
     }
 
     iir_filter_ffd_impl::~iir_filter_ffd_impl()

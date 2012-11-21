@@ -46,6 +46,13 @@ namespace gr {
 	 *
 	 * \p fftaps and \p fbtaps must have equal numbers of taps
 	 *
+	 * \p oldstyle: The old style of the IIR filter uses feedback
+	 * taps that are negative of what most definitions use (scipy
+	 * and Matlab among them). This parameter keeps using the old
+	 * GNU Radio style and is set to TRUE by default. When taps
+	 * generated from scipy, Matlab, or gr_filter_design, use the
+	 * new style by setting this to FALSE.
+	 *
 	 * The input and output satisfy a difference equation of the form
 
 	 \f[
@@ -57,14 +64,13 @@ namespace gr {
 	 \f[
 	 H(z) = \frac{\sum_{k=0}^{N} b_k z^{-k}}{1 - \sum_{k=1}^{M} a_k z^{-k}}
 	 \f]
-
-	 * Note that some texts define the system function with a + in
-	 * the denominator. If you're using that convention, you'll
-	 * need to negate the feedback taps.
 	 */
 	iir_filter(const std::vector<tap_type>& fftaps,
-		   const std::vector<tap_type>& fbtaps) throw (std::invalid_argument)
+		   const std::vector<tap_type>& fbtaps,
+		   bool oldstyle=true)
+	  throw (std::invalid_argument)
 	{
+	  d_oldstyle = oldstyle;
 	  set_taps(fftaps, fbtaps);
 	}
 
@@ -94,27 +100,36 @@ namespace gr {
 	 * \brief install new taps.
 	 */
 	void set_taps(const std::vector<tap_type> &fftaps,
-		      const std::vector<tap_type> &fbtaps) throw (std::invalid_argument)
+		      const std::vector<tap_type> &fbtaps)
+	  throw (std::invalid_argument)
 	{
 	  d_latest_n = 0;
 	  d_latest_m = 0;
 	  d_fftaps = fftaps;
-	  d_fbtaps = fbtaps;
 
+	  if(d_oldstyle) {
+	    d_fbtaps = fbtaps;
+	  }
+	  else {
+	    // New style negates taps a[1:N-1] to fit with most IIR
+	    // tap generating programs.
+	    d_fbtaps.resize(fbtaps.size());
+	    d_fbtaps[0] = fbtaps[0];
+	    for(size_t i = 1; i < fbtaps.size(); i++) {
+	      d_fbtaps[i] = -fbtaps[i];
+	    }
+	  }
+	  
 	  int n = fftaps.size();
 	  int m = fbtaps.size();
-	  d_prev_input.resize(2 * n);
-	  d_prev_output.resize(2 * m);
-
-	  for(int i = 0; i < 2 * n; i++) {
-	    d_prev_input[i] = 0;
-	  }
-	  for(int i = 0; i < 2 * m; i++) {
-	    d_prev_output[i] = 0;
-	  }
+	  d_prev_input.clear();
+	  d_prev_output.clear();
+	  d_prev_input.resize(2 * n, 0);
+	  d_prev_output.resize(2 * m, 0);
 	}
 
       protected:
+	bool                    d_oldstyle;
 	std::vector<tap_type>	d_fftaps;
 	std::vector<tap_type>	d_fbtaps;
 	int 			d_latest_n;
