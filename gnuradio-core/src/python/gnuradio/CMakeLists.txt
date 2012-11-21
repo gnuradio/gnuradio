@@ -32,6 +32,7 @@ GR_PYTHON_INSTALL(FILES
     gr_unittest.py
     gr_xmlrunner.py
     optfir.py
+    parse_file_metadata.py
     window.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio
     COMPONENT "core_python"
