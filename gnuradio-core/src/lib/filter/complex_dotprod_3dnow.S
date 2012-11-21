@@ -53,7 +53,7 @@
 #include "assembly.h"
 
 	.file	"complex_dotprod_3dnow.S"
-	.version	"01.01"
+//	.version	"01.01"
 .text
 	.p2align 4
 .globl GLOB_SYMB(complex_dotprod_3dnow)

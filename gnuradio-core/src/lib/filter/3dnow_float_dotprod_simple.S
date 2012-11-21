@@ -52,7 +52,7 @@
 
 
 	.file	"3dnow_float_dotprod_simple.s"
-	.version	"01.01"
+//	.version	"01.01"
 .text
 	.p2align 4
 .globl sse_float_dotprod

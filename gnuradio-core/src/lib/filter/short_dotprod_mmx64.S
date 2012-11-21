@@ -37,7 +37,7 @@
 
 
 	.file	"short_dotprod_mmx64.S"
-	.version	"01.01"
+//	.version	"01.01"
 .text
 	.p2align 3
 .globl GLOB_SYMB(short_dotprod_mmx)
