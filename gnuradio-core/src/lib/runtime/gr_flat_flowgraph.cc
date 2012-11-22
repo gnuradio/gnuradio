@@ -79,25 +79,24 @@ gr_flat_flowgraph::allocate_block_detail(gr_basic_block_sptr block)
   int ninputs = calc_used_ports(block, true).size();
   int noutputs = calc_used_ports(block, false).size();
   gr_block_detail_sptr detail = gr_make_block_detail(ninputs, noutputs);
+
   gr_block_sptr grblock = cast_to_block_sptr(block);
+  if(!grblock)
+    throw std::runtime_error("allocate_block_detail found non-gr_block");
 
   if (GR_FLAT_FLOWGRAPH_DEBUG)
     std::cout << "Creating block detail for " << block << std::endl;
 
   for (int i = 0; i < noutputs; i++) {
-    if(grblock) {
-      grblock->expand_minmax_buffer(i);
-    }
+    grblock->expand_minmax_buffer(i);
 
     gr_buffer_sptr buffer = allocate_buffer(block, i);
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "Allocated buffer for output " << block << ":" << i << std::endl;
     detail->set_output(i, buffer);
 
-    if(grblock) {
-      // Update the block's max_output_buffer based on what was actually allocated.
-      grblock->set_max_output_buffer(i, buffer->bufsize());
-    }
+    // Update the block's max_output_buffer based on what was actually allocated.
+    grblock->set_max_output_buffer(i, buffer->bufsize());
   }
 
   return detail;
