@@ -56,13 +56,13 @@ namespace gr {
 	 * The input and output satisfy a difference equation of the form
 
 	 \f[
-	 y[n] - \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
+	 y[n] \pm \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
 	 \f]
 
 	 * with the corresponding rational system function
 
 	 \f[
-	 H(z) = \frac{\sum_{k=0}^{N} b_k z^{-k}}{1 - \sum_{k=1}^{M} a_k z^{-k}}
+	 H(z) = \frac{\sum_{k=0}^{N} b_k z^{-k}}{1 \pm \sum_{k=1}^{M} a_k z^{-k}}
 	 \f]
 	 */
 	iir_filter(const std::vector<tap_type>& fftaps,
