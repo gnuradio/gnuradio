@@ -80,18 +80,23 @@ gr_flat_flowgraph::allocate_block_detail(gr_basic_block_sptr block)
   int noutputs = calc_used_ports(block, false).size();
   gr_block_detail_sptr detail = gr_make_block_detail(ninputs, noutputs);
 
+  gr_block_sptr grblock = cast_to_block_sptr(block);
+  if(!grblock)
+    throw std::runtime_error("allocate_block_detail found non-gr_block");
+
   if (GR_FLAT_FLOWGRAPH_DEBUG)
     std::cout << "Creating block detail for " << block << std::endl;
 
   for (int i = 0; i < noutputs; i++) {
-    block->expand_minmax_buffer(i);
+    grblock->expand_minmax_buffer(i);
+
     gr_buffer_sptr buffer = allocate_buffer(block, i);
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "Allocated buffer for output " << block << ":" << i << std::endl;
     detail->set_output(i, buffer);
 
     // Update the block's max_output_buffer based on what was actually allocated.
-    block->set_max_output_buffer(i, buffer->bufsize());
+    grblock->set_max_output_buffer(i, buffer->bufsize());
   }
 
   return detail;
@@ -119,15 +124,15 @@ gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
   gr_basic_block_vector_t blocks = calc_downstream_blocks(block, port);
 
   // limit buffer size if indicated
-  if(block->max_output_buffer(port) > 0) {
+  if(grblock->max_output_buffer(port) > 0) {
 //    std::cout << "constraining output items to " << block->max_output_buffer(port) << "\n";
-    nitems = std::min((long)nitems, (long)block->max_output_buffer(port));
+    nitems = std::min((long)nitems, (long)grblock->max_output_buffer(port));
     nitems -= nitems%grblock->output_multiple();
     if( nitems < 1 )
       throw std::runtime_error("problems allocating a buffer with the given max output buffer constraint!");
   }
-  else if(block->min_output_buffer(port) > 0) {
-    nitems = std::max((long)nitems, (long)block->min_output_buffer(port));
+  else if(grblock->min_output_buffer(port) > 0) {
+    nitems = std::max((long)nitems, (long)grblock->min_output_buffer(port));
     nitems -= nitems%grblock->output_multiple();
     if( nitems < 1 )
       throw std::runtime_error("problems allocating a buffer with the given min output buffer constraint!");

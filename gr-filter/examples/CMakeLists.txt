@@ -30,9 +30,15 @@ GR_PYTHON_INSTALL(PROGRAMS
     interpolate.py
     reconstruction.py
     resampler.py
-    resampler_demo.grc
     synth_filter.py
     synth_to_chan.py
+    DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
+    COMPONENT "filter_python"
+)
+
+install(
+    FILES
+    resampler_demo.grc
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
     COMPONENT "filter_python"
 )

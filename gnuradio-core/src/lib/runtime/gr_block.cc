@@ -42,7 +42,9 @@ gr_block::gr_block (const std::string &name,
     d_fixed_rate(false),
     d_max_noutput_items_set(false),
     d_max_noutput_items(0),
-    d_tag_propagation_policy(TPP_ALL_TO_ALL)
+    d_tag_propagation_policy(TPP_ALL_TO_ALL),
+    d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
+    d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
 {
 }
 
