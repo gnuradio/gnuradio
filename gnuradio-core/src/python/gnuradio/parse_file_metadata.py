@@ -32,7 +32,7 @@ strt  Start of data (or size of header) in bytes
 size  Size of data in bytes
 '''
 
-HEADER_LENGTH = 109
+HEADER_LENGTH = 117
 ftype_to_string = {gr.GR_FILE_BYTE: "bytes",
                    gr.GR_FILE_SHORT: "short",
                    gr.GR_FILE_INT: "int",
@@ -49,7 +49,7 @@ ftype_to_size = {gr.GR_FILE_BYTE: gr.sizeof_char,
                  gr.GR_FILE_FLOAT: gr.sizeof_float,
                  gr.GR_FILE_DOUBLE: gr.sizeof_double}
 
-def parse_header(p, VERBOSE=False):
+def parse_header(p, hdr_start, VERBOSE=False):
     dump = gr.PMT_NIL
 
     info = dict()
@@ -59,10 +59,10 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT SAMPLE RATE
-    if(gr.pmt_dict_has_key(p, gr.pmt_string_to_symbol("sr"))):
-        r = gr.pmt_dict_ref(p, gr.pmt_string_to_symbol("sr"), dump)
+    if(gr.pmt_dict_has_key(p, gr.pmt_string_to_symbol("rx_rate"))):
+        r = gr.pmt_dict_ref(p, gr.pmt_string_to_symbol("rx_rate"), dump)
         samp_rate = gr.pmt_to_double(r)
-        info["sr"] = samp_rate
+        info["rx_rate"] = samp_rate
         if(VERBOSE):
             print "Sample Rate: {0} sps".format(samp_rate)
     else:
@@ -70,14 +70,14 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT TIME STAMP
-    if(gr.pmt_dict_has_key(p, gr.pmt_string_to_symbol("time"))):
-        r = gr.pmt_dict_ref(p, gr.pmt_string_to_symbol("time"), dump)
+    if(gr.pmt_dict_has_key(p, gr.pmt_string_to_symbol("rx_time"))):
+        r = gr.pmt_dict_ref(p, gr.pmt_string_to_symbol("rx_time"), dump)
         pmt_secs = gr.pmt_tuple_ref(r, 0)
         pmt_fracs = gr.pmt_tuple_ref(r, 1)
         secs = float(gr.pmt_to_uint64(pmt_secs))
         fracs = gr.pmt_to_double(pmt_fracs)
-        t = secs + fracs/(1e9)
-        info["time"] = t
+        t = secs + fracs
+        info["rx_time"] = t
         if(VERBOSE):
             print "Seconds: {0}".format(t)
     else:
@@ -107,14 +107,15 @@ def parse_header(p, VERBOSE=False):
         sys.stderr.write("Could not find key 'cplx': invalid or corrupt data file.\n")
         sys.exit(1)
 
-    # EXTRACT HEADER LENGTH
+    # EXTRACT WHERE CURRENT SEGMENT STARTS
     if(gr.pmt_dict_has_key(p, gr.pmt_string_to_symbol("strt"))):
         r = gr.pmt_dict_ref(p, gr.pmt_string_to_symbol("strt"), dump)
-        hdr_len = gr.pmt_to_uint64(r)
-        info["strt"] = hdr_len
+        seg_start = gr.pmt_to_uint64(r)
+        info["strt"] = seg_start
         if(VERBOSE):
-            print "Header Length: {0} bytes".format(hdr_len)
-            print "Extra Header? {0}".format(hdr_len > HEADER_LENGTH)
+            print "Segment Start: {0} bytes".format(seg_start)
+            print "Header Length: {0}".format((seg_start-hdr_start))
+            print "Extra Header? {0}".format((seg_start-hdr_start) > HEADER_LENGTH)
     else:
         sys.stderr.write("Could not find key 'strt': invalid or corrupt data file.\n")
         sys.exit(1)

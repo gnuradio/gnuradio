@@ -8,7 +8,7 @@
 	<name>File Meta Sink</name>
 	<key>gr_file_meta_sink</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.file_meta_sink($type.size*$vlen, $file, $samp_rate, $type.dtype, $type.cplx)
+	<make>gr.file_meta_sink($type.size*$vlen, $file, $samp_rate, $rel_rate, $type.dtype, $type.cplx)
 self.$(id).set_unbuffered($unbuffered)</make>
 	<callback>set_unbuffered($unbuffered)</callback>
 	<callback>open($file)</callback>
@@ -62,6 +62,12 @@ self.$(id).set_unbuffered($unbuffered)</make>
 		<name>Sample Rate</name>
 		<key>samp_rate</key>
 		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Relative Rate Change</name>
+		<key>rel_rate</key>
+		<value>1</value>
 		<type>real</type>
 	</param>
 	<param>

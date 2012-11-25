@@ -46,34 +46,71 @@ typedef boost::shared_ptr<gr_file_meta_sink> gr_file_meta_sink_sptr;
 
 GR_CORE_API gr_file_meta_sink_sptr
 gr_make_file_meta_sink(size_t itemsize, const char *filename,
-		       double samp_rate, gr_file_types type, bool complex,
+		       double samp_rate, double relative_rate,
+		       gr_file_types type, bool complex,
 		       const std::string &extra_dict="");
 
 /*!
- * \brief Write stream to file.
+ * \brief Write stream to file with meta-data headers.
  * \ingroup sink_blk
+ *
+ * These files represent data as binary information in between
+ * meta-data headers. The headers contain information about the type
+ * of data and properties of the data in the next segment of
+ * samples. The information includes:
+ *
+ *   rx_rate (double): sample rate of data.
+ *   rx_time (uint64_t, double): time stamp of first sample in segment.
+ *   type (gr_file_types as int32_t): data type.
+ *   cplx (bool): Is data complex?
+ *   strt (uint64_t): Starting byte of data in this segment.
+ *   size (uint64_t): Size in bytes of data in this segment.
+ *
+ * Tags can be sent to the file to update the information, which will
+ * create a new header. Headers are found by searching from the first
+ * header (at position 0 in the file) and reading where the data
+ * segment starts plus the data segment size. Following will either be
+ * a new header or EOF.
  */
-
 class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_base
 {
-  
+  /*!
+   * \brief Create a meta-data file sink.
+   *
+   * \param itemsize (size_t): Size of data type.
+   * \param filename (string): Name of file to write data to.
+   * \param samp_rate (double): Sample rate of data. If sample rate will be
+   *    set by a tag, such as rx_tag from a UHD source, this is
+   *    basically ignored.
+   * \param relative_rate (double): Rate chance from source of sample
+   *    rate tag to sink.
+   * \param type (gr_file_types): Data type (int, float, etc.)
+   * \param complex (bool): If data stream is complex
+   * \param extra_dict (string): a serialized PMT dictionary of extra
+   *    information. Currently not supported.
+   */
   friend GR_CORE_API gr_file_meta_sink_sptr
     gr_make_file_meta_sink(size_t itemsize, const char *filename,
-			   double samp_rate, gr_file_types type, bool complex,
+			   double samp_rate, double relative_rate,
+			   gr_file_types type, bool complex,
 			   const std::string &extra_dict);
 
  private:
   size_t d_itemsize;
+  double d_relative_rate;
+  uint64_t d_total_seg_size;
   pmt_t d_header;
   pmt_t d_extra_dict;
 
  protected:
   gr_file_meta_sink(size_t itemsize, const char *filename,
-		    double samp_rate, gr_file_types type, bool complex,
+		    double samp_rate, double relative_rate,
+		    gr_file_types type, bool complex,
 		    const std::string &extra_dict);
 
-
   void write_header(pmt_t header);
+  bool update_header(pmt_t key, pmt_t value);
+  uint64_t get_last_header_loc();
 
  public:
   ~gr_file_meta_sink();
