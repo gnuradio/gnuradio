@@ -30,8 +30,8 @@ namespace gr {
 
     class BLOCKS_API keep_m_in_n_impl : public keep_m_in_n
     {
-      int d_n;
       int d_m;
+      int d_n;
       int d_count;
       int d_offset;
       int d_itemsize;
