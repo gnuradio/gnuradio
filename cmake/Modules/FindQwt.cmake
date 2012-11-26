@@ -11,6 +11,7 @@ find_path (QWT_INCLUDE_DIRS
 	/usr/include/qwt-qt4
 	/usr/include/qwt
 	/opt/local/include/qwt
+    /opt/local/lib/qwt.framework/Headers
 	/sw/include/qwt
 )
 
@@ -20,6 +21,7 @@ find_library (QWT_LIBRARIES
 	/usr/local/lib
 	/usr/lib
 	/opt/local/lib
+    /opt/local/lib/qwt.framework
 	/sw/lib
 )
 
