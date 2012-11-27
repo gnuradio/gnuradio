@@ -60,26 +60,43 @@ gr_file_meta_sink::gr_file_meta_sink(size_t itemsize, const char *filename,
   pmt_t timestamp = pmt_make_tuple(pmt_from_uint64(0),
 				   pmt_from_double(0));
 
+  // handle extra dictionary
+  d_extra = pmt_make_dict();
+  if(extra_dict.size() > 0) {
+    pmt_t extras = pmt_deserialize_str(extra_dict);
+    pmt_t keys = pmt_dict_keys(extras);
+    pmt_t vals = pmt_dict_values(extras);
+    size_t nitems = pmt_length(keys);
+    for(size_t i = 0; i < nitems; i++) {
+      d_extra = pmt_dict_add(d_extra,
+			     pmt_nth(i, keys),
+			     pmt_nth(i, vals));
+    }
+  }
+
+  d_extra_size = pmt_serialize_str(d_extra).size();
+
   d_header = pmt_make_dict();
   d_header = pmt_dict_add(d_header, mp("rx_rate"), mp(samp_rate));
   d_header = pmt_dict_add(d_header, mp("rx_time"), timestamp);
   d_header = pmt_dict_add(d_header, mp("type"), pmt_from_long(type));
   d_header = pmt_dict_add(d_header, mp("cplx"), complex ? PMT_T : PMT_F);
-  d_header = pmt_dict_add(d_header, mp("strt"), pmt_from_uint64(HEADER_SIZE));
+  d_header = pmt_dict_add(d_header, mp("strt"), pmt_from_uint64(HEADER_SIZE+d_extra_size));
   d_header = pmt_dict_add(d_header, mp("size"), pmt_from_uint64(0));
-  // handle extra dictionary
 
-  write_header(d_header);
+  write_header(d_header, d_extra);
 }
 
 void
-gr_file_meta_sink::write_header(pmt_t header)
+gr_file_meta_sink::write_header(pmt_t header, pmt_t extra)
 {
   do_update();
 
   std::string header_str = pmt_serialize_str(header);
-  if(header_str.size() != HEADER_SIZE)
-      throw std::runtime_error("file_meta_sink: header is wrong size.\n");
+  std::string extra_str = pmt_serialize_str(extra);
+
+  if((header_str.size() != HEADER_SIZE) && (extra_str.size() != d_extra_size))
+      throw std::runtime_error("file_meta_sink: header or extras is wrong size.\n");
 
   size_t nwritten = 0;
   while(nwritten < header_str.size()) {
@@ -89,6 +106,17 @@ gr_file_meta_sink::write_header(pmt_t header)
     if((count == 0) && (ferror(d_fp))) {
       fclose(d_fp);
       throw std::runtime_error("file_meta_sink: error writing header to file.\n");
+    }
+  }
+
+  nwritten = 0;
+  while(nwritten < extra_str.size()) {
+    std::string sub = extra_str.substr(nwritten);
+    int count = fwrite(sub.c_str(), sizeof(char), sub.size(), d_fp);
+    nwritten += count;
+    if((count == 0) && (ferror(d_fp))) {
+      fclose(d_fp);
+      throw std::runtime_error("file_meta_sink: error writing extra to file.\n");
     }
   }
 }
@@ -107,6 +135,10 @@ gr_file_meta_sink::update_header(pmt_t key, pmt_t value)
     d_header = pmt_dict_add(d_header, key, value);
     return true;
   }
+  else if(pmt_dict_has_key(d_extra, key)) {
+    d_extra = pmt_dict_add(d_extra, key, value);
+    return true;
+  }
   else {
     return false;
   }
@@ -118,7 +150,7 @@ gr_file_meta_sink::get_last_header_loc()
   uint64_t loc = 0;
   pmt_t v = pmt_dict_ref(d_header, mp("strt"), PMT_NIL);
   if(!pmt_eq(v, PMT_NIL))
-    loc = pmt_to_uint64(v) - HEADER_SIZE;
+    loc = pmt_to_uint64(v) - (HEADER_SIZE+d_extra_size);
   return loc;
 }
 
@@ -135,7 +167,7 @@ gr_file_meta_sink::~gr_file_meta_sink()
   //std::cerr << "  Segment Size: " << seg_size << std::endl;
   if(update_header(mp("size"), s)) {
     fseek(d_fp, loc, SEEK_SET);
-    write_header(d_header);
+    write_header(d_header, d_extra);
   }
 }
 
@@ -164,7 +196,7 @@ gr_file_meta_sink::work(int noutput_items,
     if(itr->offset == 0) {
       if(update_header(itr->key, itr->value)) {
 	fseek(d_fp, 0, SEEK_SET);
-	write_header(d_header);
+	write_header(d_header, d_extra);
       }
     }
     else {
@@ -178,7 +210,7 @@ gr_file_meta_sink::work(int noutput_items,
       //std::cerr << "  segment size is:       " << seg_size << std::endl;    
       if(update_header(mp("size"), s)) {
 	fseek(d_fp, loc, SEEK_SET);
-	write_header(d_header);
+	write_header(d_header, d_extra);
       }
 
       if(update_header(itr->key, itr->value)) {
@@ -192,14 +224,14 @@ gr_file_meta_sink::work(int noutput_items,
 	  // of creating a new header per tag.
 	  uint64_t seg_start = loc;
 	  if(seg_size != 0)
-	    seg_start += HEADER_SIZE + seg_size;
-	  pmt_t s = pmt_from_uint64(seg_start + HEADER_SIZE);
+	    seg_start += HEADER_SIZE + d_extra_size + seg_size + 1;
+	  pmt_t s = pmt_from_uint64(seg_start + HEADER_SIZE + d_extra_size);
 	  if(update_header(mp("strt"), s)) {
 	    //std::cerr << "Adding new header" << std::endl;
 	    //std::cerr << "  new header start at: " << seg_start-HEADER_SIZE << std::endl;
 	    //std::cerr << "  new seg start at:    " << seg_start << std::endl;
 	    fseek(d_fp, seg_start, SEEK_SET);
-	    write_header(d_header);
+	    write_header(d_header, d_extra);
 	  }
 	}
       }

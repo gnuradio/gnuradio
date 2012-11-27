@@ -46,8 +46,8 @@ typedef boost::shared_ptr<gr_file_meta_sink> gr_file_meta_sink_sptr;
 
 GR_CORE_API gr_file_meta_sink_sptr
 gr_make_file_meta_sink(size_t itemsize, const char *filename,
-		       double samp_rate, double relative_rate,
-		       gr_file_types type, bool complex,
+		       double samp_rate=1, double relative_rate=1,
+		       gr_file_types type=GR_FILE_FLOAT, bool complex=true,
 		       const std::string &extra_dict="");
 
 /*!
@@ -100,15 +100,16 @@ class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_
   double d_relative_rate;
   uint64_t d_total_seg_size;
   pmt_t d_header;
-  pmt_t d_extra_dict;
+  pmt_t d_extra;
+  size_t d_extra_size;
 
  protected:
   gr_file_meta_sink(size_t itemsize, const char *filename,
-		    double samp_rate, double relative_rate,
-		    gr_file_types type, bool complex,
-		    const std::string &extra_dict);
+		    double samp_rate=1, double relative_rate=1,
+		    gr_file_types type=GR_FILE_FLOAT, bool complex=true,
+		    const std::string &extra_dict="");
 
-  void write_header(pmt_t header);
+  void write_header(pmt_t header, pmt_t extra);
   bool update_header(pmt_t key, pmt_t value);
   uint64_t get_last_header_loc();
 

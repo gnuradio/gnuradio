@@ -112,10 +112,12 @@ def parse_header(p, hdr_start, VERBOSE=False):
         r = gr.pmt_dict_ref(p, gr.pmt_string_to_symbol("strt"), dump)
         seg_start = gr.pmt_to_uint64(r)
         info["strt"] = seg_start
+        info["extra_len"] = seg_start - hdr_start - HEADER_LENGTH
+        info["has_extra"] = info["extra_len"] > 0
         if(VERBOSE):
             print "Segment Start: {0} bytes".format(seg_start)
-            print "Header Length: {0}".format((seg_start-hdr_start))
-            print "Extra Header? {0}".format((seg_start-hdr_start) > HEADER_LENGTH)
+            print "Extra Length: {0}".format((info["extra_len"]))
+            print "Extra Header? {0}".format(info["has_extra"])
     else:
         sys.stderr.write("Could not find key 'strt': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -139,5 +141,23 @@ def parse_header(p, hdr_start, VERBOSE=False):
     else:
         sys.stderr.write("Could not find key 'size': invalid or corrupt data file.\n")
         sys.exit(1)
+
+    return info
+
+# IF THERE IS EXTRA DATA, PULL OUT THE DICTIONARY AND PARSE IT
+def parse_extra_dict(p, info, VERBOSE=False):
+    if(gr.pmt_is_dict(p) is False):
+        sys.stderr.write("Extra header is not a PMT dictionary: invalid or corrupt data file.\n")
+        sys.exit(1)
+
+    items = gr.pmt_dict_items(p)
+    nitems = gr.pmt_length(items)
+    for i in xrange(nitems):
+        item = gr.pmt_nth(i, items)
+        key = gr.pmt_symbol_to_string(gr.pmt_car(item))
+        val = gr.pmt_to_double(gr.pmt_cdr(item))
+        info[key] = val
+        if(VERBOSE):
+            print "{0}: {1}".format(key, val)
 
     return info

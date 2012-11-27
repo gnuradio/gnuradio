@@ -29,6 +29,7 @@ from gnuradio import parse_file_metadata
 def main(filename):
     handle = open(filename, "rb")
 
+    nheaders = 0
     nread = 0
     while(True):
         # read out next header bytes
@@ -45,12 +46,27 @@ def main(filename):
             sys.exit(1)
         #gr.pmt_print(header)
 
+        print "HEADER {0}".format(nheaders)
         info = parse_file_metadata.parse_header(header, hdr_start, True)
-        print "\n\n"
 
-        nread += info['nbytes'] + parse_file_metadata.HEADER_LENGTH
+        if(info["extra_len"] > 0):
+            extra_str = handle.read(info["extra_len"])
+            if(len(extra_str) == 0):
+                break
 
+            try:
+                extra = gr.pmt_deserialize_str(extra_str)
+            except RuntimeError:
+                sys.stderr.write("Could not deserialize extras: invalid or corrupt data file.\n")
+                sys.exit(1)
+
+            print "\nExtra Header:"
+            extra_info = parse_file_metadata.parse_extra_dict(extra, info, True)
+        
+        nheaders += 1
+        nread += info['nbytes'] + parse_file_metadata.HEADER_LENGTH + info["extra_len"] + 1
         handle.seek(nread, 0)
+        print "\n\n"
 
 if __name__ == "__main__":
     usage="%prog: [options] filename"
