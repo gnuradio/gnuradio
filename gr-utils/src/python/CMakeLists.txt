@@ -49,6 +49,7 @@ GR_PYTHON_INSTALL(
     gr_plot_iq
     gr_plot_short
     gr_plot_qt
+    grcc
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "utils"
 )
