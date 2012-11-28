@@ -167,6 +167,7 @@ set(gr_core_general_triple_threats
     gr_add_ff
     gr_align_on_samplenumbers_ss
     gr_bin_statistics_f
+    gr_block_gateway
     gr_char_to_float
     gr_char_to_short
     gr_check_counting_s

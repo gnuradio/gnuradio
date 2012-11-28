@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2006,2008,2009,2010 Free Software Foundation, Inc.
+# Copyright 2003-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -32,6 +32,7 @@ from gnuradio_core import *
 from exceptions import *
 from hier_block2 import *
 from top_block import *
+from gateway import basic_block, sync_block, decim_block, interp_block
 
 # create a couple of aliases
 serial_to_parallel = stream_to_vector
