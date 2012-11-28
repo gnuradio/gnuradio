@@ -39,6 +39,10 @@ public:
   void connect(gr_basic_block_sptr block);
   void connect(gr_basic_block_sptr src, int src_port,
 	       gr_basic_block_sptr dst, int dst_port);
+  void msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
+	       gr_basic_block_sptr dst, pmt::pmt_t dstport);
+  void msg_disconnect(gr_basic_block_sptr src, pmt::pmt_t srcport,
+	       gr_basic_block_sptr dst, pmt::pmt_t dstport);
   void disconnect(gr_basic_block_sptr block);
   void disconnect(gr_basic_block_sptr, int src_port,
 		  gr_basic_block_sptr, int dst_port);

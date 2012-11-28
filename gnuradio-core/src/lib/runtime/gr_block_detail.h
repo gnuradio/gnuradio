@@ -85,11 +85,6 @@ class GR_CORE_API gr_block_detail {
    */
   void produce_each (int how_many_items);
 
-  /*!
-   * Accept msg, place in queue, arrange for thread to be awakened if it's not already.
-   */
-  void _post(pmt::pmt_t msg);
-
   // Return the number of items read on input stream which_input
   uint64_t nitems_read(unsigned int which_input);
 

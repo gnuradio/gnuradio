@@ -1325,6 +1325,22 @@ pmt_list_add(pmt_t list, const pmt_t& item)
 }
 
 pmt_t
+pmt_list_rm(pmt_t list, const pmt_t& item)
+{
+  if(pmt_is_pair(list)){
+    pmt_t left = pmt_car(list);
+    pmt_t right = pmt_cdr(list);
+    if(!pmt_equal(left, item)){
+        return pmt_cons(left, pmt_list_rm(right, item));
+        } else {
+        return pmt_list_rm(right, item);
+        }
+    } else {
+      return list;
+    }
+}
+
+pmt_t
 pmt_caar(pmt_t pair)
 {
   return (pmt_car(pmt_car(pair)));

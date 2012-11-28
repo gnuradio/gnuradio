@@ -31,6 +31,9 @@ class Connection(_Connection, _GUIConnection):
 	def is_msg(self):
 		return self.get_source().get_type() == self.get_sink().get_type() == 'msg'
 
+	def is_message(self):
+		return self.get_source().get_type() == self.get_sink().get_type() == 'message'
+
 	def validate(self):
 		"""
 		Validate the connections.

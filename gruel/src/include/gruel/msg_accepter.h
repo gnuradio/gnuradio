@@ -43,7 +43,7 @@ namespace gruel {
      * call will not wait for the message either to arrive at the
      * destination or to be received.
      */
-    virtual void post(pmt::pmt_t msg) = 0;
+    virtual void post(pmt::pmt_t which_port, pmt::pmt_t msg) = 0;
   };
 
   typedef boost::shared_ptr<msg_accepter> msg_accepter_sptr;

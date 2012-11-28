@@ -123,6 +123,12 @@ class top_block(object):
 		for i in range (1, len (points)):
         	    self._connect(points[i-1], points[i])
 
+    def msg_connect(self, src, srcport, dst, dstport):
+        self.primitive_msg_connect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
+    
+    def msg_disconnect(self, src, srcport, dst, dstport):
+        self.primitive_msg_disconnect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
+
     def _connect(self, src, dst):
         (src_block, src_port) = self._coerce_endpoint(src)
         (dst_block, dst_port) = self._coerce_endpoint(dst)
