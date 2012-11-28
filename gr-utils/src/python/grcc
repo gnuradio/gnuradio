@@ -30,6 +30,7 @@ import os, sys
 
 class grcc:
     def __init__(self, grcfile, out_dir):
+        self.out_dir = out_dir
         self.platform = Platform()
         data = self.platform.parse_flow_graph(grcfile)
 
@@ -37,8 +38,12 @@ class grcc:
         self.fg.import_data(data)
         self.fg.validate()
 
-        gen = self.platform.get_generator()(self.fg, out_dir)
-        gen.write()
+        self.gen = self.platform.get_generator()(self.fg, out_dir)
+        self.gen.write()
+
+    def exec_program(self):
+        progname = self.fg.get_option('id')
+        os.system("{0}/{1}.py".format(self.out_dir, progname))
         
 if __name__ == "__main__":
     usage="%prog: [options] filename"
@@ -47,6 +52,8 @@ if __name__ == "__main__":
     parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
     parser.add_option("-d", "--directory", type="string", default='{0}/.grc_gnuradio/'.format(os.environ["HOME"]),
                       help="Specify the directory to output the compile program [default=%default]")
+    parser.add_option("-e", "--execute", action="store_true", default=False,
+                      help="Run the program after compiling [default=%default]")
     (options, args) = parser.parse_args ()
 
     if(len(args) != 1):
@@ -54,3 +61,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     g = grcc(args[0], options.directory+"/")
+
+    if(options.execute):
+        g.exec_program()
