@@ -729,6 +729,10 @@ GRUEL_API pmt_t pmt_list6(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, con
  */
 GRUEL_API pmt_t pmt_list_add(pmt_t list, const pmt_t& item);
 
+/*!
+ * \brief Return \p list with \p item removed from it.
+ */
+GRUEL_API pmt_t pmt_list_rm(pmt_t list, const pmt_t& item);
 
 /*
  * ------------------------------------------------------------------------
@@ -804,6 +808,15 @@ GRUEL_API std::string pmt_serialize_str(pmt_t obj);
  * \brief Provide a simple string generating interface to pmt's deserialize function
  */
 GRUEL_API pmt_t pmt_deserialize_str(std::string str);
+
+/*!
+ * \brief Provide a comparator function object to allow pmt use in stl types
+ */
+class pmt_comperator {
+    public:
+        bool operator()(pmt::pmt_t const& p1, pmt::pmt_t const& p2) const
+            { return pmt::pmt_eqv(p1,p2)?false:p1.get()>p2.get(); }
+    };
 
 } /* namespace pmt */
 

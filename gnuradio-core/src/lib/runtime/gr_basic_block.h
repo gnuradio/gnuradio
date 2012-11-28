@@ -30,7 +30,11 @@
 #include <boost/function.hpp>
 #include <gr_msg_accepter.h>
 #include <string>
+#include <deque>
+#include <map>
 #include <gr_io_signature.h>
+#include <gruel/thread.h>
+#include <boost/foreach.hpp>
 
 /*!
  * \brief The abstract base class for all signal processing blocks.
@@ -54,14 +58,23 @@ private:
      * The thread-safety guarantees mentioned in set_msg_handler are implemented
      * by the callers of this method.
      */
-    void dispatch_msg(pmt::pmt_t msg)
+    void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
     {
-      if (d_msg_handler)	// Is there a handler?
-	d_msg_handler(msg);	// Yes, invoke it.
+        // AA Update this
+      if (d_msg_handlers.find(which_port) != d_msg_handlers.end()) // Is there a handler?
+        d_msg_handlers[which_port](msg); // Yes, invoke it.
     };
 
-    msg_handler_t	 d_msg_handler;
+    //msg_handler_t	 d_msg_handler;
+    typedef std::map<pmt::pmt_t , msg_handler_t, pmt::pmt_comperator> d_msg_handlers_t;
+    d_msg_handlers_t d_msg_handlers;
    
+    typedef std::deque<pmt::pmt_t>    msg_queue_t;
+    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::pmt_comperator>    msg_queue_map_t;
+    msg_queue_map_t msg_queue;
+    gruel::mutex          mutex;          //< protects all vars
+
+
 protected:
     friend class gr_flowgraph;
     friend class gr_flat_flowgraph; // TODO: will be redundant
@@ -73,6 +86,9 @@ protected:
     gr_io_signature_sptr d_input_signature;
     gr_io_signature_sptr d_output_signature;
     long                 d_unique_id;
+    long                 d_symbolic_id;
+    std::string          d_symbol_name;
+    std::string          d_symbol_alias;
     vcolor               d_color;
 
     gr_basic_block(void){} //allows pure virtual interface sub-classes
@@ -98,13 +114,65 @@ protected:
     void set_color(vcolor color) { d_color = color; }
     vcolor color() const { return d_color; }
 
+    // Message passing interface
+    std::vector<pmt::pmt_t> message_inputs;
+    pmt::pmt_t message_subscribers;
+
 public:
     virtual ~gr_basic_block();
     long unique_id() const { return d_unique_id; }
+    long symbolic_id() const { return d_symbolic_id; }
     std::string name() const { return d_name; }
+    std::string symbol_name() const { return d_symbol_name; }
     gr_io_signature_sptr input_signature() const  { return d_input_signature; }
     gr_io_signature_sptr output_signature() const { return d_output_signature; }
     gr_basic_block_sptr to_basic_block(); // Needed for Python type coercion
+    bool alias_set() { return !d_symbol_alias.empty(); }
+    std::string alias(){ return alias_set()?d_symbol_alias:symbol_name(); }
+    pmt::pmt_t alias_pmt(){ return pmt::pmt_intern(alias()); }
+    void set_block_alias(std::string name);
+
+    // ** Message passing interface **
+    void message_port_register_in(pmt::pmt_t port_id);
+    void message_port_register_out(pmt::pmt_t port_id);
+    void message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg);
+    void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
+    void message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target);
+
+  /*!
+   * Accept msg, place in queue, arrange for thread to be awakened if it's not already.
+   */
+  void _post(pmt::pmt_t which_port, pmt::pmt_t msg);
+
+
+    //! is the queue empty?
+    //bool empty_p(const pmt::pmt_t &which_port) const { return msg_queue[which_port].empty(); }
+    bool empty_p(pmt::pmt_t which_port) { return msg_queue[which_port].empty(); }
+    bool empty_p() { 
+        bool rv = true;
+        BOOST_FOREACH(msg_queue_map_t::value_type &i, msg_queue){ rv &= msg_queue[i.first].empty(); }
+        return rv;
+        }
+
+    //| Acquires and release the mutex
+    void insert_tail( pmt::pmt_t which_port, pmt::pmt_t msg);
+    /*!
+     * \returns returns pmt at head of queue or pmt_t() if empty.
+     */
+    pmt::pmt_t delete_head_nowait( pmt::pmt_t which_port);
+    /*!
+     * \returns returns pmt at head of queue or pmt_t() if empty.
+     * Caller must already be holding the mutex
+     */
+    pmt::pmt_t delete_head_nowait_already_holding_mutex( pmt::pmt_t which_port);
+
+    msg_queue_t::iterator get_iterator(pmt::pmt_t which_port){
+        return msg_queue[which_port].begin();
+        }
+    void erase_msg(pmt::pmt_t which_port, msg_queue_t::iterator it){
+        msg_queue[which_port].erase(it);
+        }
+
 
     /*!
      * \brief Confirm that ninputs and noutputs is an acceptable combination.
@@ -147,8 +215,13 @@ public:
      * If the block inherits from gr_hier_block2, the runtime system will
      * ensure that no reentrant calls are made to msg_handler.
      */
-    template <typename T> void set_msg_handler(T msg_handler){
-      d_msg_handler = msg_handler_t(msg_handler);
+    //template <typename T> void set_msg_handler(T msg_handler){
+    //  d_msg_handler = msg_handler_t(msg_handler);
+    //}
+    template <typename T> void set_msg_handler(pmt::pmt_t which_port, T msg_handler){
+      if(msg_queue.find(which_port) == msg_queue.end()){ 
+            throw std::runtime_error("attempt to set_msg_handler() on bad input message port!"); }
+      d_msg_handlers[which_port] = msg_handler_t(msg_handler);
     }
 };
 

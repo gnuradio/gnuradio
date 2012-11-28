@@ -39,9 +39,6 @@ struct GR_CORE_API gr_tpb_detail {
   bool				output_changed;
   gruel::condition_variable	output_cond;
 
-private:
-  std::deque<pmt::pmt_t>	msg_queue;
-
 public:
   gr_tpb_detail()
     : input_changed(false), output_changed(false) { }
@@ -55,6 +52,12 @@ public:
   //! Called by us to notify both upstream and downstream
   void notify_neighbors(gr_block_detail *d);
 
+  //! Called by pmt msg posters
+  void notify_msg(){
+    input_cond.notify_one();
+    output_cond.notify_one();
+    }
+
   //! Called by us
   void clear_changed()
   {
@@ -62,23 +65,6 @@ public:
     input_changed = false;
     output_changed = false;
   }
-
-  //! is the queue empty?
-  bool empty_p() const { return msg_queue.empty(); }
-
-  //| Acquires and release the mutex
-  void insert_tail(pmt::pmt_t msg);
-
-  /*!
-   * \returns returns pmt at head of queue or pmt_t() if empty.
-   */
-  pmt::pmt_t delete_head_nowait();
-
-  /*!
-   * \returns returns pmt at head of queue or pmt_t() if empty.
-   * Caller must already be holding the mutex
-   */
-  pmt::pmt_t delete_head_nowait_already_holding_mutex();
 
 private:
 
