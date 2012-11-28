@@ -107,8 +107,17 @@ set(GR_PKG_CONF_DIR     ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d)
 set(GR_LIBEXEC_DIR      libexec)
 set(GR_PKG_LIBEXEC_DIR  ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME})
 set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
-set(SYSCONFDIR          "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
+
+# Special exception if prefix is /usr so we don't make a /usr/etc.
+string(COMPARE EQUAL ${CMAKE_INSTALL_PREFIX} "/usr" isusr)
+if(isusr)
+  set(SYSCONFDIR          "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
+else(isusr)
+  set(SYSCONFDIR          "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
+endif(isusr)
+
 set(GR_PREFSDIR         ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d)
+
 
 ########################################################################
 # Variables replaced when configuring the package config files
