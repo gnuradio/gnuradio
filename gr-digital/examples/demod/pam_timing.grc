@@ -5,7 +5,7 @@
     <key>options</key>
     <param>
       <key>id</key>
-      <value>top_block</value>
+      <value>pam_timing</value>
     </param>
     <param>
       <key>_enabled</key>

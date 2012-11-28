@@ -5,7 +5,7 @@
     <key>options</key>
     <param>
       <key>id</key>
-      <value>ber_sim</value>
+      <value>ber_simulation</value>
     </param>
     <param>
       <key>_enabled</key>
