@@ -160,6 +160,7 @@ list(APPEND gr_blocks_sources
     multiply_const_cc_impl.cc
     multiply_const_ff_impl.cc
     nlog10_ff_impl.cc
+    patterned_interleaver_impl.cc
     repeat_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
