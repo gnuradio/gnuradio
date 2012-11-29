@@ -22,7 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 try:
-    import blocks_swig
+    import blocks_swig as blocks
 except:
     from gnuradio import blocks
 import math
