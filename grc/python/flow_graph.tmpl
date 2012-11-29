@@ -192,6 +192,17 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 		self.connect($make_port_sig($source), $make_port_sig($sink))
 	#end if
 #end for
+########################################################
+##Create Asynch Message Connections
+########################################################
+#if $messages2
+		$DIVIDER
+		# Asynch Message Connections
+		$DIVIDER
+#end if
+#for $msg in $messages2
+		self.msg_connect(self.$msg.get_source().get_parent().get_id(), "$msg.get_source().get_name()", self.$msg.get_sink().get_parent().get_id(), "$msg.get_sink().get_name()")
+#end for
 
 ########################################################
 # QT sink close method reimplementation
