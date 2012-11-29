@@ -127,6 +127,12 @@ gr_block_detail::produce_each (int how_many_items)
 }
 
 
+void
+gr_block_detail::_post(pmt_t msg)
+{
+  d_tpb.insert_tail(msg);
+}
+
 uint64_t
 gr_block_detail::nitems_read(unsigned int which_input)
 {

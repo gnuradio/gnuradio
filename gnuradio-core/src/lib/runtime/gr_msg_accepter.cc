@@ -41,12 +41,12 @@ gr_msg_accepter::~gr_msg_accepter()
 }
 
 void
-gr_msg_accepter::post(pmt_t which_port, pmt_t msg)
+gr_msg_accepter::post(pmt_t msg)
 {
   // Notify derived class, handled case by case
   gr_block *p = dynamic_cast<gr_block *>(this);
   if (p) {
-    p->_post(which_port,msg);
+    p->detail()->_post(msg);
     return;
   }
   gr_hier_block2 *p2 = dynamic_cast<gr_hier_block2 *>(this);

@@ -68,3 +68,43 @@ gr_tpb_detail::notify_neighbors(gr_block_detail *d)
   notify_upstream(d);
 }
 
+void
+gr_tpb_detail::insert_tail(pmt::pmt_t msg)
+{
+  gruel::scoped_lock guard(mutex);
+
+  msg_queue.push_back(msg);
+
+  // wake up thread if BLKD_IN or BLKD_OUT
+  input_cond.notify_one();
+  output_cond.notify_one();
+}
+
+pmt_t
+gr_tpb_detail::delete_head_nowait()
+{
+  gruel::scoped_lock guard(mutex);
+
+  if (empty_p())
+    return pmt_t();
+
+  pmt_t m(msg_queue.front());
+  msg_queue.pop_front();
+
+  return m;
+}
+
+/*
+ * Caller must already be holding the mutex
+ */
+pmt_t
+gr_tpb_detail::delete_head_nowait_already_holding_mutex()
+{
+  if (empty_p())
+    return pmt_t();
+
+  pmt_t m(msg_queue.front());
+  msg_queue.pop_front();
+
+  return m;
+}

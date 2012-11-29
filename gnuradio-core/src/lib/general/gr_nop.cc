@@ -40,8 +40,7 @@ gr_nop::gr_nop (size_t sizeof_stream_item)
     d_nmsgs_recvd(0)
 {
   // Arrange to have count_received_msgs called when messages are received.
-  message_port_register_in(pmt::mp("port"));
-  set_msg_handler(pmt::mp("port"), boost::bind(&gr_nop::count_received_msgs, this, _1));
+  set_msg_handler(boost::bind(&gr_nop::count_received_msgs, this, _1));
 }
 
 // Trivial message handler that just counts them.

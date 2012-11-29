@@ -36,7 +36,7 @@ public:
   gr_msg_accepter();
   ~gr_msg_accepter();
 
-  void post(pmt::pmt_t which_port, pmt::pmt_t msg);
+  void post(pmt::pmt_t msg);
 
 };
 

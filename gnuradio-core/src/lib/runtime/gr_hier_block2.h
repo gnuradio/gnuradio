@@ -98,21 +98,6 @@ public:
 	       gr_basic_block_sptr dst, int dst_port);
 
   /*!
-   * \brief Add gr-blocks or hierarchical blocks to internal graph and wire together
-   *
-   * This adds (if not done earlier by another connect) a pair of gr-blocks or
-   * hierarchical blocks to the internal message port subscription
-   */
-  void msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
-	       gr_basic_block_sptr dst, pmt::pmt_t dstport);
-  void msg_connect(gr_basic_block_sptr src, std::string srcport,
-	       gr_basic_block_sptr dst, std::string dstport);
-  void msg_disconnect(gr_basic_block_sptr src, pmt::pmt_t srcport,
-	       gr_basic_block_sptr dst, pmt::pmt_t dstport);
-  void msg_disconnect(gr_basic_block_sptr src, std::string srcport,
-	       gr_basic_block_sptr dst, std::string dstport);
-
-  /*!
    * \brief Remove a gr-block or hierarchical block from the internal flowgraph.
    *
    * This removes a gr-block or hierarchical block from the internal flowgraph,

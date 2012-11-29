@@ -37,14 +37,11 @@ protected:
 public:
     virtual ~gr_basic_block();
     std::string name() const;
-    std::string symbol_name() const;
     gr_io_signature_sptr input_signature() const;
     gr_io_signature_sptr output_signature() const;
     long unique_id() const;
     gr_basic_block_sptr to_basic_block();
     bool check_topology (int ninputs, int noutputs);
-    std::string alias();
-    void set_block_alias(std::string name);
 };
 
 %rename(block_ncurrently_allocated) gr_basic_block_ncurrently_allocated;

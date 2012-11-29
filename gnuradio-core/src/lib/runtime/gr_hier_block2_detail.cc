@@ -144,28 +144,6 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
 }
 
 void
-gr_hier_block2_detail::msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
-                               gr_basic_block_sptr dst, pmt::pmt_t dstport)
-{
-  if (GR_HIER_BLOCK2_DETAIL_DEBUG)
-    std::cout << "connecting message port..." << std::endl;
-    
-  // register the subscription
-  src->message_port_sub(srcport, pmt::pmt_cons(dst->alias_pmt(), dstport));
-}
-
-void
-gr_hier_block2_detail::msg_disconnect(gr_basic_block_sptr src, pmt::pmt_t srcport,
-                               gr_basic_block_sptr dst, pmt::pmt_t dstport)
-{
-  if (GR_HIER_BLOCK2_DETAIL_DEBUG)
-    std::cout << "disconnecting message port..." << std::endl;
-    
-  // register the subscription
-  src->message_port_unsub(srcport, pmt::pmt_cons(dst->alias_pmt(), dstport));
-}
-
-void
 gr_hier_block2_detail::disconnect(gr_basic_block_sptr block)
 {
   // Check on singleton list
