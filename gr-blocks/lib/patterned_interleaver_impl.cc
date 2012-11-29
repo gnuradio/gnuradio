@@ -63,14 +63,14 @@ namespace gr {
       
       for(size_t i=0; i<nblks; i++){
         for(size_t j=0; j<d_pattern.size(); j++){
-          memcpy(oo, ii[j], d_itemsize);
+          memcpy(oo, ii[d_pattern[j]], d_itemsize);
           oo += d_itemsize;
-          ii[j] += d_itemsize;
+          ii[d_pattern[j]] += d_itemsize;
           }
         }
             
-      for(size_t i=0; i<d_pattern.size(); i++){
-        consume(i, d_pattern[i]*nblks );
+      for(size_t i=0; i<d_counts.size(); i++){
+        consume(i, d_counts[i]*nblks );
       }
       return nblks*d_pattern.size();
     }
