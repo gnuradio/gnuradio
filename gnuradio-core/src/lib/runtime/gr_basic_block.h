@@ -115,7 +115,6 @@ protected:
     vcolor color() const { return d_color; }
 
     // Message passing interface
-    std::vector<pmt::pmt_t> message_inputs;
     pmt::pmt_t message_subscribers;
 
 public:
@@ -139,15 +138,18 @@ public:
     void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
     void message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target);
 
-  /*!
-   * Accept msg, place in queue, arrange for thread to be awakened if it's not already.
-   */
-  void _post(pmt::pmt_t which_port, pmt::pmt_t msg);
-
+    /*!
+     * Accept msg, place in queue, arrange for thread to be awakened if it's not already.
+     */
+    void _post(pmt::pmt_t which_port, pmt::pmt_t msg);
 
     //! is the queue empty?
     //bool empty_p(const pmt::pmt_t &which_port) const { return msg_queue[which_port].empty(); }
-    bool empty_p(pmt::pmt_t which_port) { return msg_queue[which_port].empty(); }
+    bool empty_p(pmt::pmt_t which_port) { 
+        if(msg_queue.find(which_port) == msg_queue.end())
+            throw std::runtime_error("port does not exist!");
+        return msg_queue[which_port].empty(); 
+        }
     bool empty_p() { 
         bool rv = true;
         BOOST_FOREACH(msg_queue_map_t::value_type &i, msg_queue){ rv &= msg_queue[i.first].empty(); }
@@ -160,11 +162,6 @@ public:
      * \returns returns pmt at head of queue or pmt_t() if empty.
      */
     pmt::pmt_t delete_head_nowait( pmt::pmt_t which_port);
-    /*!
-     * \returns returns pmt at head of queue or pmt_t() if empty.
-     * Caller must already be holding the mutex
-     */
-    pmt::pmt_t delete_head_nowait_already_holding_mutex( pmt::pmt_t which_port);
 
     msg_queue_t::iterator get_iterator(pmt::pmt_t which_port){
         return msg_queue[which_port].begin();
