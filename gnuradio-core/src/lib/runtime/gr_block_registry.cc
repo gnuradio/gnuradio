@@ -1,5 +1,9 @@
 #include <gr_basic_block.h>
 #include <gr_block_registry.h>
+#include <gr_tpb_detail.h>
+#include <gr_block_detail.h>
+#include <gr_block.h>
+#include <stdio.h>
 
 gr_block_registry global_block_registry;
 
@@ -55,4 +59,18 @@ gr_basic_block_sptr gr_block_registry::block_lookup(pmt::pmt_t symbol){
     return blk->shared_from_this();
 }
 
+
+void gr_block_registry::register_primitive(std::string blk, gr_block* ref){
+    primitive_map[blk] = ref;
+}
+
+void gr_block_registry::unregister_primitive(std::string blk){
+    primitive_map.erase(primitive_map.find(blk));
+}
+
+void gr_block_registry::notify_blk(std::string blk){
+    if(primitive_map.find(blk) == primitive_map.end()){ return; }
+    if(primitive_map[blk]->detail().get())
+        primitive_map[blk]->detail()->d_tpb.notify_msg();
+}
 

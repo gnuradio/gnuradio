@@ -52,6 +52,7 @@ gr_basic_block::gr_basic_block(const std::string &name,
     d_color(WHITE),
     message_subscribers(pmt::pmt_make_dict())
 {
+    mutex.unlock();
     s_ncurrently_allocated++;
 }
 
@@ -130,7 +131,7 @@ void
 gr_basic_block::_post(pmt_t which_port, pmt_t msg)
 {
   insert_tail(which_port, msg);
-  //notify_msg();
+  global_block_registry.notify_blk(alias());
 }
 
 void
@@ -151,8 +152,9 @@ gr_basic_block::delete_head_nowait(pmt::pmt_t which_port)
 {
   gruel::scoped_lock guard(mutex);
 
-  if (empty_p(which_port))
-    return pmt_t();
+  if (empty_p(which_port)){
+    return pmt::pmt_t();
+    }
 
   pmt_t m(msg_queue[which_port].front());
   msg_queue[which_port].pop_front();
@@ -160,18 +162,4 @@ gr_basic_block::delete_head_nowait(pmt::pmt_t which_port)
   return m;
 }
 
-/*
- * Caller must already be holding the mutex
- */
-pmt_t
-gr_basic_block::delete_head_nowait_already_holding_mutex(pmt::pmt_t which_port)
-{
-  if (empty_p(which_port))
-    return pmt_t();
-
-  pmt_t m(msg_queue[which_port].front());
-  msg_queue[which_port].pop_front();
-
-  return m;
-}
 

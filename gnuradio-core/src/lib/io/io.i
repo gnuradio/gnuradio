@@ -45,6 +45,10 @@
 #include <gr_wavfile_sink.h>
 #include <gr_wavfile_source.h>
 #include <gr_tagged_file_sink.h>
+#include <gr_pdu_to_tagged_stream.h>
+#include <gr_tagged_stream_to_pdu.h>
+#include <gr_message_debug.h>
+#include <gr_pdu.h>
 %}
 
 %include "gr_file_sink_base.i"
@@ -67,4 +71,8 @@
 %include "gr_wavfile_sink.i"
 %include "gr_wavfile_source.i"
 %include "gr_tagged_file_sink.i"
+%include "gr_pdu_to_tagged_stream.i"
+%include "gr_tagged_stream_to_pdu.i"
+%include "gr_message_debug.i"
+%include "gr_pdu.i"
 

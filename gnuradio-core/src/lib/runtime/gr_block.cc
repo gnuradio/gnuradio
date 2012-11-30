@@ -28,6 +28,7 @@
 #include <gr_block_detail.h>
 #include <stdexcept>
 #include <iostream>
+#include <gr_block_registry.h>
 
 gr_block::gr_block (const std::string &name,
 		    gr_io_signature_sptr input_signature,
@@ -46,10 +47,12 @@ gr_block::gr_block (const std::string &name,
     d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
     d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
 {
+    global_block_registry.register_primitive(alias(), this);
 }
 
 gr_block::~gr_block ()
 {
+    global_block_registry.unregister_primitive(alias());
 }
 
 // stub implementation:  1:1
