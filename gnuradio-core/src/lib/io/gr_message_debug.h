@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,7 +24,7 @@
 #define INCLUDED_GR_MESSAGE_DEBUG_H
 
 #include <gr_core_api.h>
-#include <gr_sync_block.h>
+#include <gr_block.h>
 #include <gr_message.h>
 #include <gr_msg_queue.h>
 
@@ -34,10 +34,10 @@ typedef boost::shared_ptr<gr_message_debug> gr_message_debug_sptr;
 GR_CORE_API gr_message_debug_sptr gr_make_message_debug ();
 
 /*!
- * \brief Gather received items into messages and insert into msgq
+ * \brief Print received messages to stdout
  * \ingroup sink_blk
  */
-class GR_CORE_API gr_message_debug : public gr_sync_block
+class GR_CORE_API gr_message_debug : public gr_block
 {
  private:
   friend GR_CORE_API gr_message_debug_sptr
@@ -50,10 +50,6 @@ class GR_CORE_API gr_message_debug : public gr_sync_block
 
  public:
   ~gr_message_debug ();
-
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
 };
 
 #endif /* INCLUDED_GR_MESSAGE_DEBUG_H */

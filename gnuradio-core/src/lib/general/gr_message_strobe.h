@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,7 +24,7 @@
 #define INCLUDED_GR_MESSAGE_STROBE_H
 
 #include <gr_core_api.h>
-#include <gr_sync_block.h>
+#include <gr_block.h>
 #include <gr_message.h>
 #include <gr_msg_queue.h>
 
@@ -34,14 +34,15 @@ typedef boost::shared_ptr<gr_message_strobe> gr_message_strobe_sptr;
 GR_CORE_API gr_message_strobe_sptr gr_make_message_strobe (pmt::pmt_t msg, float period_ms);
 
 /*!
- * \brief Gather received items into messages and insert into msgq
- * \ingroup sink_blk
+ * \brief Send message at defined interval
+ * \ingroup msg_blk
  */
-class GR_CORE_API gr_message_strobe : public gr_sync_block
+class GR_CORE_API gr_message_strobe : public gr_block
 {
  private:
   friend GR_CORE_API gr_message_strobe_sptr
   gr_make_message_strobe(pmt::pmt_t msg, float period_ms);
+
   boost::shared_ptr<boost::thread> d_thread;
   bool d_finished;
   float d_period_ms;
@@ -56,10 +57,6 @@ class GR_CORE_API gr_message_strobe : public gr_sync_block
   ~gr_message_strobe ();
 
   void set_msg(pmt::pmt_t msg){ d_msg = msg; }
-
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
 };
 
 #endif /* INCLUDED_GR_MESSAGE_STROBE_H */

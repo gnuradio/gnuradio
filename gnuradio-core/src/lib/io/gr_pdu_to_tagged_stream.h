@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -42,7 +42,7 @@ class GR_CORE_API gr_pdu_to_tagged_stream : public gr_sync_block
 {
  private:
   gr_pdu_vector_type    d_vectortype;
-  size_t	 	        d_itemsize;
+  size_t 	        d_itemsize;
   std::vector<uint8_t>  d_remain;
 
   friend GR_CORE_API gr_pdu_to_tagged_stream_sptr
