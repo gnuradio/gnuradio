@@ -251,3 +251,12 @@ operator << (std::ostream& os, const gr_block *m)
   return os;
 }
 
+int
+gr_block::general_work(int noutput_items,
+		       gr_vector_int &ninput_items,
+		       gr_vector_const_void_star &input_items,
+		       gr_vector_void_star &output_items)
+{
+  throw std::runtime_error("gr_block::general_work() not implemented");
+  return 0;
+}

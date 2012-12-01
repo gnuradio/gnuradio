@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,6 +28,7 @@
 #include <gr_block_registry.h>
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 using namespace pmt;
 
@@ -79,6 +80,7 @@ gr_basic_block::set_block_alias(std::string name)
 //  - register a new input message port
 void gr_basic_block::message_port_register_in(pmt::pmt_t port_id){
     msg_queue[port_id] = msg_queue_t();
+    msg_queue_ready[port_id] = boost::shared_ptr<boost::condition_variable>(new boost::condition_variable());
     }
 
 //  - register a new output message port
@@ -131,7 +133,6 @@ void
 gr_basic_block::_post(pmt_t which_port, pmt_t msg)
 {
   insert_tail(which_port, msg);
-  global_block_registry.notify_blk(alias());
 }
 
 void
@@ -139,12 +140,16 @@ gr_basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
 {
   gruel::scoped_lock guard(mutex);
 
+    if( (msg_queue.find(which_port) == msg_queue.end()) || (msg_queue_ready.find(which_port) == msg_queue_ready.end())){
+        std::cout << "target port = " << pmt::pmt_symbol_to_string(which_port) << std::endl;
+        throw std::runtime_error("attempted to insert_tail on invalid queue!");
+    }
+
   msg_queue[which_port].push_back(msg);
+  msg_queue_ready[which_port]->notify_one();
 
   // wake up thread if BLKD_IN or BLKD_OUT
-  //input_cond.notify_one();
-  //output_cond.notify_one();
-  // TODO: reconsider the need for notification of input and output conditions!
+  global_block_registry.notify_blk(alias());
 }
 
 pmt_t
@@ -159,6 +164,20 @@ gr_basic_block::delete_head_nowait(pmt::pmt_t which_port)
   pmt_t m(msg_queue[which_port].front());
   msg_queue[which_port].pop_front();
 
+  return m;
+}
+
+pmt_t
+gr_basic_block::delete_head_blocking(pmt::pmt_t which_port)
+{
+  gruel::scoped_lock guard(mutex);
+
+  while (empty_p(which_port)){
+    msg_queue_ready[which_port]->wait(guard);
+    }
+
+  pmt_t m(msg_queue[which_port].front());
+  msg_queue[which_port].pop_front();
   return m;
 }
 

@@ -70,11 +70,6 @@ void qa_set_msg_handler::t0()
     send(nop, port, mp(mp("example-msg"), mp(i)));
   }
 
-  // And send a message to null_source to confirm that the default
-  // message handling action (which should be a nop) doesn't dump
-  // core.
-  send(src, port, mp(mp("example-msg"), mp(0)));
-
   // Give the messages a chance to be processed
   boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 

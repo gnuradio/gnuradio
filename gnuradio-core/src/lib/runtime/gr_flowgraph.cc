@@ -180,6 +180,11 @@ gr_flowgraph::calc_used_blocks()
 {
   gr_basic_block_vector_t tmp;
 
+  // make sure free standing message blocks are included
+  for (gr_basic_block_vector_t::iterator it=d_msgblocks.begin(); it!=d_msgblocks.end(); it++){
+    tmp.push_back(*it);
+  }
+
   // Collect all blocks in the edge list
   for (gr_edge_viter_t p = d_edges.begin(); p != d_edges.end(); p++) {
     tmp.push_back(p->src().block());
@@ -470,5 +475,9 @@ gr_flowgraph::topological_dfs_visit(gr_basic_block_sptr block, gr_basic_block_ve
 
   block->set_color(gr_basic_block::BLACK);
   output.push_back(block);
+}
+
+void gr_flowgraph::add_msg_block(gr_basic_block_sptr blk){
+    d_msgblocks.push_back(blk);
 }
 

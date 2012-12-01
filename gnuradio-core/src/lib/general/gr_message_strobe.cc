@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_message_debug.h>
+#include <gr_message_strobe.h>
 #include <gr_io_signature.h>
 #include <cstdio>
 #include <errno.h>
@@ -37,37 +37,47 @@
 
 // public constructor that returns a shared_ptr
 
-gr_message_debug_sptr
-gr_make_message_debug ()
+gr_message_strobe_sptr
+gr_make_message_strobe (pmt::pmt_t msg, float period_ms)
 {
-  return gnuradio::get_initial_sptr(new gr_message_debug());
+  return gnuradio::get_initial_sptr(new gr_message_strobe(msg, period_ms));
 }
 
-void gr_message_debug::print(pmt::pmt_t msg){
-    std::cout << "******* MESSAGE DEBUG PRINT ********\n";
-    pmt::pmt_print(msg);
-    std::cout << "************************************\n";
-}
-
-
-gr_message_debug::gr_message_debug ()
-  : gr_sync_block("message_debug",
+gr_message_strobe::gr_message_strobe (pmt::pmt_t msg, float period_ms)
+  : gr_sync_block("message_strobe",
 		  gr_make_io_signature(0, 0, 0),
-		  gr_make_io_signature(0, 0, 0))
+		  gr_make_io_signature(0, 0, 0)),
+    d_finished(false),
+    d_period_ms(period_ms),
+    d_msg(msg)
 {
-    message_port_register_in(pmt::mp("print"));
-    set_msg_handler(pmt::mp("print"), boost::bind(&gr_message_debug::print, this, _1));
+    message_port_register_out(pmt::mp("strobe"));
+    d_thread = boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(&gr_message_strobe::run, this)));
+
+    message_port_register_in(pmt::mp("set_msg"));
+    set_msg_handler(pmt::mp("set_msg"), boost::bind(&gr_message_strobe::set_msg, this, _1));
 }
 
-gr_message_debug::~gr_message_debug()
+gr_message_strobe::~gr_message_strobe()
 {
+    d_finished = true;
+    d_thread->interrupt();
+    d_thread->join();
+}
+
+void gr_message_strobe::run(){
+    while(!d_finished) {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(d_period_ms)); 
+        if(d_finished){ return; }
+//        std::cout << "strobing...\n";
+        message_port_pub( pmt::mp("strobe"), d_msg );
+    } 
 }
 
 int
-gr_message_debug::work(int noutput_items,
+gr_message_strobe::work(int noutput_items,
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
 {
-  printf("gr_message_debug::work\n");
   return 0; // FIXME: replace with default NOP work function in gr_block
 }
