@@ -152,6 +152,14 @@ gr_hier_block2_detail::msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
     
   // register the subscription
   src->message_port_sub(srcport, pmt::pmt_cons(dst->alias_pmt(), dstport));
+
+  // add block uniquely to list to internal blocks
+  if (std::find(d_blocks.begin(), d_blocks.end(), dst) == d_blocks.end()){
+    d_blocks.push_back(dst);
+    }
+
+  // make sure we instantiate a thread for this block
+  d_fg->add_msg_block(dst);
 }
 
 void
@@ -449,6 +457,7 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
       }
     }
   }
+  sfg->d_msgblocks = d_fg->d_msgblocks;
 
   // Construct unique list of blocks used either in edges, inputs,
   // outputs, or by themselves.  I still hate STL.

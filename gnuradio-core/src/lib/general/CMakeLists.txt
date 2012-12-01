@@ -239,6 +239,7 @@ set(gr_core_general_triple_threats
     gr_annotator_raw
     gr_burst_tagger
     gr_tag_debug
+    gr_message_strobe
 )
 
 foreach(file_tt ${gr_core_general_triple_threats})

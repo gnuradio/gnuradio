@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Message Debug
+###################################################
+ -->
+<block>
+	<name>Message Debug</name>
+	<key>gr_message_debug</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.message_debug()</make>
+	<sink>
+		<name>print</name>
+		<type>message</type>
+        <optional>1</optional>
+	</sink>
+</block>

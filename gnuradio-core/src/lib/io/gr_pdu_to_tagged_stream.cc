@@ -77,7 +77,8 @@ gr_pdu_to_tagged_stream::work(int noutput_items,
   if(noutput_items > 0){
 
     // grab a message if one exists
-    pmt::pmt_t msg( delete_head_nowait( pdu_port_id ) );
+    //pmt::pmt_t msg( delete_head_nowait( pdu_port_id ) );
+    pmt::pmt_t msg( delete_head_blocking( pdu_port_id ) );
     if(msg.get() == NULL ){
         return nout;
         }
@@ -87,8 +88,8 @@ gr_pdu_to_tagged_stream::work(int noutput_items,
         throw std::runtime_error("received a malformed pdu message!");
         }
    
-    printf("got a msg\n");
-    pmt::pmt_print(msg);
+//    printf("got a msg\n");
+//    pmt::pmt_print(msg);
  
     // grab the components of the pdu message
     pmt::pmt_t meta(pmt::pmt_car(msg)); // make sure this is NIL || Dict ?

@@ -35,6 +35,7 @@
 #include <gr_io_signature.h>
 #include <gruel/thread.h>
 #include <boost/foreach.hpp>
+#include <boost/thread/condition_variable.hpp>
 
 /*!
  * \brief The abstract base class for all signal processing blocks.
@@ -72,6 +73,9 @@ private:
     typedef std::deque<pmt::pmt_t>    msg_queue_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::pmt_comperator>    msg_queue_map_t;
     msg_queue_map_t msg_queue;
+//    boost::condition_variable msg_queue_ready;
+    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::pmt_comperator> msg_queue_ready;
+
     gruel::mutex          mutex;          //< protects all vars
 
 
@@ -162,6 +166,11 @@ public:
      * \returns returns pmt at head of queue or pmt_t() if empty.
      */
     pmt::pmt_t delete_head_nowait( pmt::pmt_t which_port);
+
+    /*!
+     * \returns returns pmt at head of queue or pmt_t() if empty.
+     */
+    pmt::pmt_t delete_head_blocking( pmt::pmt_t which_port);
 
     msg_queue_t::iterator get_iterator(pmt::pmt_t which_port){
         return msg_queue[which_port].begin();

@@ -110,6 +110,8 @@ public:
   void disconnect(gr_basic_block_sptr src_block, int src_port,
 		  gr_basic_block_sptr dst_block, int dst_port);
 
+  void add_msg_block(gr_basic_block_sptr blk);
+
   // Validate connectivity, raise exception if invalid
   void validate();
 
@@ -128,6 +130,7 @@ public:
   // Return vector of vectors of disjointly connected blocks, topologically
   // sorted.
   std::vector<gr_basic_block_vector_t> partition();
+  gr_basic_block_vector_t d_msgblocks;
 
 protected:
   gr_basic_block_vector_t d_blocks;

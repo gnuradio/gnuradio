@@ -32,7 +32,7 @@ using namespace pmt;
 gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_items)
   : d_exec(block, max_noutput_items)
 {
-  // std::cerr << "gr_tpb_thread_body: " << block << std::endl;
+  //std::cerr << "gr_tpb_thread_body: " << block << std::endl;
 
   gr_block_detail *d = block->detail().get();
   gr_block_executor::state s;
@@ -53,7 +53,12 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_item
     }
 
     d->d_tpb.clear_changed();
-    s = d_exec.run_one_iteration();
+    // run one iteration if we are a connected stream block
+    if(d->noutputs() >0 || d->ninputs()>0){
+        s = d_exec.run_one_iteration();
+    } else {
+        s = gr_block_executor::BLKD_IN;
+    }
 
     switch(s){
     case gr_block_executor::READY:		// Tell neighbors we made progress.
