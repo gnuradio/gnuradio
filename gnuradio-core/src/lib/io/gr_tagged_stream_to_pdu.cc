@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2010 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,8 +34,6 @@
 #include <stdexcept>
 #include <string.h>
 
-
-
 // public constructor that returns a shared_ptr
 
 gr_tagged_stream_to_pdu_sptr
@@ -51,18 +49,18 @@ gr_tagged_stream_to_pdu::gr_tagged_stream_to_pdu (gr_pdu_vector_type t)
     d_vectortype(t), d_itemsize(gr_pdu_itemsize(t)), d_inpdu(false),
     d_pdu_meta(pmt::PMT_NIL), d_pdu_vector(pmt::PMT_NIL)
 {
-    message_port_register_out(pdu_port_id);
+  message_port_register_out(pdu_port_id);
 }
 
 gr_tagged_stream_to_pdu::~gr_tagged_stream_to_pdu()
 {
-    printf("destructor running\n");
+  printf("destructor running\n");
 }
 
 int
 gr_tagged_stream_to_pdu::work(int noutput_items,
-			gr_vector_const_void_star &input_items,
-			gr_vector_void_star &output_items)
+			      gr_vector_const_void_star &input_items,
+			      gr_vector_void_star &output_items)
 {
   const uint8_t *in = (const uint8_t*) input_items[0];
   uint64_t abs_N = nitems_read(0);

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2010 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -44,9 +44,9 @@ gr_make_message_strobe (pmt::pmt_t msg, float period_ms)
 }
 
 gr_message_strobe::gr_message_strobe (pmt::pmt_t msg, float period_ms)
-  : gr_sync_block("message_strobe",
-		  gr_make_io_signature(0, 0, 0),
-		  gr_make_io_signature(0, 0, 0)),
+  : gr_block("message_strobe",
+	     gr_make_io_signature(0, 0, 0),
+	     gr_make_io_signature(0, 0, 0)),
     d_finished(false),
     d_period_ms(period_ms),
     d_msg(msg)
@@ -69,15 +69,7 @@ void gr_message_strobe::run(){
     while(!d_finished) {
         boost::this_thread::sleep(boost::posix_time::milliseconds(d_period_ms)); 
         if(d_finished){ return; }
-//        std::cout << "strobing...\n";
+
         message_port_pub( pmt::mp("strobe"), d_msg );
     } 
-}
-
-int
-gr_message_strobe::work(int noutput_items,
-		      gr_vector_const_void_star &input_items,
-		      gr_vector_void_star &output_items)
-{
-  return 0; // FIXME: replace with default NOP work function in gr_block
 }

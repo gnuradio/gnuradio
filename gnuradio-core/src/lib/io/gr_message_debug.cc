@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2010 Free Software Foundation, Inc.
+ * Copyright 2005,2010,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -51,9 +51,9 @@ void gr_message_debug::print(pmt::pmt_t msg){
 
 
 gr_message_debug::gr_message_debug ()
-  : gr_sync_block("message_debug",
-		  gr_make_io_signature(0, 0, 0),
-		  gr_make_io_signature(0, 0, 0))
+  : gr_block("message_debug",
+	     gr_make_io_signature(0, 0, 0),
+	     gr_make_io_signature(0, 0, 0))
 {
     message_port_register_in(pmt::mp("print"));
     set_msg_handler(pmt::mp("print"), boost::bind(&gr_message_debug::print, this, _1));
@@ -61,13 +61,4 @@ gr_message_debug::gr_message_debug ()
 
 gr_message_debug::~gr_message_debug()
 {
-}
-
-int
-gr_message_debug::work(int noutput_items,
-		      gr_vector_const_void_star &input_items,
-		      gr_vector_void_star &output_items)
-{
-  printf("gr_message_debug::work\n");
-  return 0; // FIXME: replace with default NOP work function in gr_block
 }
