@@ -53,7 +53,7 @@ namespace gr {
        * \ingroup converter_blk
        *
        * \param itemsize the item size of the stream
-       * \param length   a vector (list/tuple) specifying the number of
+       * \param lengths  a vector (list/tuple) specifying the number of
        *                 items from each stream the mux together.
        *                 Warning: this requires that at least as many items
        *                 per stream are available or the system will wait
