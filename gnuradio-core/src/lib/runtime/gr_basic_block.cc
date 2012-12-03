@@ -53,7 +53,6 @@ gr_basic_block::gr_basic_block(const std::string &name,
     d_color(WHITE),
     message_subscribers(pmt::pmt_make_dict())
 {
-    mutex.unlock();
     s_ncurrently_allocated++;
 }
 
