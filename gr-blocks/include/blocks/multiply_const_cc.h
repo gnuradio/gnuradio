@@ -46,6 +46,7 @@ namespace gr {
       /*!
        * \brief Create an instance of multiply_const_cc
        * \param k complex multiplicative constant
+       * \param vlen Vector length of incoming stream
        */
       static sptr make(gr_complex k, size_t vlen=1);
       

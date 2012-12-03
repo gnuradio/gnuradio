@@ -46,6 +46,7 @@ namespace gr {
       /*!
        * \brief Create an instance of multiply_const_ff
        * \param k real multiplicative constant
+       * \param vlen Vector length of incoming stream
        */
       static sptr make(float k, size_t vlen=1);
       

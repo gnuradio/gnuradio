@@ -21,8 +21,9 @@
 #
 
 from gnuradio import gr, gr_unittest
-from gruel import pmt
-import time;
+import pmt
+import time
+
 class test_pdu(gr_unittest.TestCase):
 
     def setUp(self):
