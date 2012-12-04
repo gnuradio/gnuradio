@@ -236,7 +236,7 @@ qa_atsci_single_viterbi::t1 ()
 
 	// FIXME, should we be able to tell how many errs too?
         if (differs) {
-	  const int ERRTOL = 12;		/* Or relate to delay? */
+	  //const int ERRTOL = 12;		/* Or relate to delay? */
 	  int shouldfix = 1;
 	  //int lasti = -ERRTOL;
 
