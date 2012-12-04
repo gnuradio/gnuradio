@@ -24,7 +24,10 @@ add_subdirectory(gru)
 add_subdirectory(gruimpl)
 add_subdirectory(blks2)
 add_subdirectory(blks2impl)
+
+if(ENABLE_GR_CTRLPORT)
 add_subdirectory(ctrlport)
+endif(ENABLE_GR_CTRLPORT)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
