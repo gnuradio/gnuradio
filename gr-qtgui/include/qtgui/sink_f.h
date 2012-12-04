@@ -23,10 +23,9 @@
 #ifndef INCLUDED_QTGUI_SINK_F_H
 #define INCLUDED_QTGUI_SINK_F_H
 
+#include <Python.h>
 #include <qtgui/api.h>
 #include <gr_block.h>
-
-#include <Python.h>
 #include <qapplication.h>
 #include <qwt_symbol.h>
 
