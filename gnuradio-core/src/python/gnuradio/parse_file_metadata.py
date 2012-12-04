@@ -32,7 +32,8 @@ strt  Start of data (or size of header) in bytes
 size  Size of data in bytes
 '''
 
-HEADER_LENGTH = 117
+HEADER_LENGTH = gr.METADATA_HEADER_SIZE
+
 ftype_to_string = {gr.GR_FILE_BYTE: "bytes",
                    gr.GR_FILE_SHORT: "short",
                    gr.GR_FILE_INT: "int",
@@ -56,6 +57,16 @@ def parse_header(p, hdr_start, VERBOSE=False):
 
     if(gr.pmt_is_dict(p) is False):
         sys.stderr.write("Header is not a PMT dictionary: invalid or corrupt data file.\n")
+        sys.exit(1)
+
+    # GET FILE FORMAT VERSION NUMBER
+    if(gr.pmt_dict_has_key(p, gr.pmt_string_to_symbol("version"))):
+        r = gr.pmt_dict_ref(p, gr.pmt_string_to_symbol("version"), dump)
+        version = gr.pmt_to_long(r)
+        if(VERBOSE):
+            print "Version Number: {0}".format(version)
+    else:
+        sys.stderr.write("Could not find key 'sr': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT SAMPLE RATE

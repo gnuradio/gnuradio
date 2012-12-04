@@ -22,6 +22,9 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,file_meta_sink)
 
+const char METADATA_VERSION = 0;
+const size_t METADATA_HEADER_SIZE = 134;
+
 enum gr_file_types {
   GR_FILE_BYTE=0,
   GR_FILE_CHAR=0,
@@ -37,6 +40,7 @@ gr_file_meta_sink_sptr
 gr_make_file_meta_sink(size_t itemsize, const char *filename,
 		       double samp_rate=1, double relative_rate=1,
 		       gr_file_types type=GR_FILE_FLOAT, bool complex=true,
+		       size_t max_segment_size=1000000,
 		       const std::string & extra_dict="");
 
 class gr_file_meta_sink : public gr_sync_block, public gr_file_sink_base
@@ -45,6 +49,7 @@ class gr_file_meta_sink : public gr_sync_block, public gr_file_sink_base
   gr_file_meta_sink(size_t itemsize, const char *filename,
 		    double samp_rate, double relative_rate,
 		    gr_file_types type, bool complex,
+		    size_t max_segment_size,
 		    const std::string & extra_dict);
 
  public:

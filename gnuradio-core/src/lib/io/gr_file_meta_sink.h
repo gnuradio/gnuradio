@@ -30,6 +30,9 @@
 
 using namespace pmt;
 
+const char METADATA_VERSION = 0;
+const size_t METADATA_HEADER_SIZE = 134;
+
 enum gr_file_types {
   GR_FILE_BYTE=0,
   GR_FILE_CHAR=0,
@@ -48,6 +51,7 @@ GR_CORE_API gr_file_meta_sink_sptr
 gr_make_file_meta_sink(size_t itemsize, const char *filename,
 		       double samp_rate=1, double relative_rate=1,
 		       gr_file_types type=GR_FILE_FLOAT, bool complex=true,
+		       size_t max_segment_size=1000000,
 		       const std::string &extra_dict="");
 
 /*!
@@ -86,6 +90,8 @@ class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_
    *    rate tag to sink.
    * \param type (gr_file_types): Data type (int, float, etc.)
    * \param complex (bool): If data stream is complex
+   * \param max_segment_size (size_t): Length of a single segment
+   *    before the header is repeated (in items).
    * \param extra_dict (string): a serialized PMT dictionary of extra
    *    information. Currently not supported.
    */
@@ -93,12 +99,14 @@ class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_
     gr_make_file_meta_sink(size_t itemsize, const char *filename,
 			   double samp_rate, double relative_rate,
 			   gr_file_types type, bool complex,
+			   size_t max_segment_size,
 			   const std::string &extra_dict);
 
  private:
   size_t d_itemsize;
   double d_relative_rate;
-  uint64_t d_total_seg_size;
+  size_t d_max_seg_size;
+  size_t d_total_seg_size;
   pmt_t d_header;
   pmt_t d_extra;
   size_t d_extra_size;
@@ -107,14 +115,19 @@ class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_
   gr_file_meta_sink(size_t itemsize, const char *filename,
 		    double samp_rate=1, double relative_rate=1,
 		    gr_file_types type=GR_FILE_FLOAT, bool complex=true,
+		    size_t max_segment_size=1000000,
 		    const std::string &extra_dict="");
 
   void write_header(pmt_t header, pmt_t extra);
   bool update_header(pmt_t key, pmt_t value);
+  void update_last_header();
+  void write_and_update();
   uint64_t get_last_header_loc();
 
  public:
   ~gr_file_meta_sink();
+
+  //FIXME: add setters/getters for properties.
 
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,
