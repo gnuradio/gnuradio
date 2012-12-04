@@ -33,6 +33,10 @@ include_directories(
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+if(ENABLE_GR_CTRLPORT)
+  GR_ADD_COND_DEF(ENABLE_GR_CTRLPORT)
+endif(ENABLE_GR_CTRLPORT)
+
 ########################################################################
 # generate helper scripts to expand templated files
 ########################################################################
@@ -156,9 +160,10 @@ list(APPEND digital_libs
     ${Boost_LIBRARIES}
 )
 
+
 add_library(gnuradio-digital SHARED ${digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
 GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
-add_dependencies(gnuradio-digital
+add_dependencies(gnuradio-digital 
   digital_generated_includes digital_generated_swigs
-  gnuradio-filter gnuradio-analog)
+  gnuradio-core gnuradio-filter gnuradio-analog)

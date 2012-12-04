@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+import sys, time, random, numpy
 from gnuradio import gr, gr_unittest
 
 class test_nlog10(gr_unittest.TestCase):

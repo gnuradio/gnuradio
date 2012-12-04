@@ -242,6 +242,17 @@ set(gr_core_general_triple_threats
     gr_message_strobe
 )
 
+if(ENABLE_GR_CTRLPORT)
+
+add_definitions(-DENABLE_GR_CTRLPORT=1)
+
+list(APPEND gr_core_general_triple_threats
+    gr_ctrlport_probe_c
+    gr_ctrlport_probe2_c
+)
+endif(ENABLE_GR_CTRLPORT)
+
+
 foreach(file_tt ${gr_core_general_triple_threats})
     list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.cc)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio COMPONENT "core_devel")

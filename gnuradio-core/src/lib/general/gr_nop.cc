@@ -39,6 +39,8 @@ gr_nop::gr_nop (size_t sizeof_stream_item)
 	      gr_make_io_signature (0, -1, sizeof_stream_item)),
     d_nmsgs_recvd(0)
 {
+  set_rpc();
+
   // Arrange to have count_received_msgs called when messages are received.
   message_port_register_in(pmt::mp("port"));
   set_msg_handler(pmt::mp("port"), boost::bind(&gr_nop::count_received_msgs, this, _1));
@@ -63,4 +65,26 @@ gr_nop::general_work (int noutput_items,
     consume (i, ninput_items[i]);
 
   return noutput_items;
+}
+
+void
+gr_nop::set_rpc()
+{
+#ifdef ENABLE_GR_CTRLPORT
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_nop, int>(
+      d_name, "test", this, unique_id(),
+      &gr_nop::ctrlport_test,
+      pmt::mp(-256), pmt::mp(255), pmt::mp(0),
+      "", "Simple testing variable",
+      RPC_PRIVLVL_MIN, DISPNULL)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_set<gr_nop, int>(
+      d_name, "test", this, unique_id(),
+      &gr_nop::set_ctrlport_test,
+      pmt::mp(-256), pmt::mp(255), pmt::mp(0),
+      "", "Simple testing variable",
+      RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* ENABLE_GR_CTRLPORT */
 }

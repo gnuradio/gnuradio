@@ -69,6 +69,19 @@ GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
 )
 
 ########################################################################
+# Register controlport component
+########################################################################
+
+FIND_PACKAGE(ICE)
+
+GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
+    Boost_FOUND
+    ICE_FOUND
+    ENABLE_GRUEL
+    ENABLE_GR_CORE
+)
+
+########################################################################
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_CORE)
@@ -139,5 +152,35 @@ install(
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "core_devel"
 )
+
+
+########################################################################
+# Setup ControlPort preferences file and installation information
+########################################################################
+if(ENABLE_GR_CTRLPORT)
+
+GR_SET_GLOBAL(GR_CTRLPORT_INCLUDE_DIRS
+    ${GR_CTRLPORT_INCLUDE_DIRS}
+    ${ICE_INCLUDE_DIR}
+)
+
+SET(GR_PKG_CTRL_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/ctrlport)
+
+SET(GR_PKG_CTRL_SLICE_DIR ${GR_PKG_DATA_DIR}/ctrlport)
+file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_CTRL_SLICE_DIR} slicedir)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/ctrlport.conf
+@ONLY)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/ctrlport.conf
+    DESTINATION ${GR_PREFSDIR}
+    COMPONENT "core_runtime"
+)
+
+endif(ENABLE_GR_CTRLPORT)
+
 
 endif(ENABLE_GR_CORE)

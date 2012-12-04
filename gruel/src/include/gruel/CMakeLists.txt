@@ -26,6 +26,7 @@ install(FILES
     high_res_timer.h
     msg_accepter.h
     msg_accepter_msgq.h
+    msg_producer.h
     msg_queue.h
     msg_passing.h
     pmt.h

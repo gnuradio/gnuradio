@@ -135,6 +135,7 @@ class test_cpp_py_binding(gr_unittest.TestCase):
         self.src = gr.vector_source_c(data)
         self.p1 = gr.ctrlport_probe_c("aaa","C++ exported variable")
         self.p2 = gr.ctrlport_probe_c("bbb","C++ exported variable")
+        probe_name = self.p2.name() + str(self.p2.unique_id())
 
         self.tb.connect(self.src, self.p1)
         self.tb.connect(self.src, self.p2)
@@ -157,7 +158,7 @@ class test_cpp_py_binding(gr_unittest.TestCase):
         radio = GNURadio.ControlPortPrx.checkedCast(base)
 
         # Get all exported knobs
-        ret = radio.get([])
+        ret = radio.get([probe_name + "::bbb"])
         for name in ret.keys():
             result = ret[name].value
             self.assertEqual(result, expected_result)

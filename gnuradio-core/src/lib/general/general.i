@@ -183,3 +183,16 @@
 %include "gr_tag_debug.i"
 %include "gr_block_gateway.i"
 %include "gr_message_strobe.i"
+
+
+#ifdef ENABLE_GR_CTRLPORT
+
+%{
+#include <gr_ctrlport_probe_c.h>
+#include <gr_ctrlport_probe2_c.h>
+%}
+
+%include "gr_ctrlport_probe_c.i"
+%include "gr_ctrlport_probe2_c.i"
+
+#endif /* ENABLE_GR_CTRLPORT */

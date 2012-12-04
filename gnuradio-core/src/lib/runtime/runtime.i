@@ -67,3 +67,42 @@
 %include <gr_sync_decimator.i>
 %include <gr_sync_interpolator.i>
 %include <gr_top_block.i>
+
+
+#ifdef ENABLE_GR_CTRLPORT
+
+%template(StrVector) std::vector<std::string>;
+
+%{
+#include <rpcmanager.h>
+#include <rpcserver_booter_base.h>
+#include <rpcserver_booter_aggregator.h>
+#include <pycallback_object.h>
+#include <rpccallbackregister_base.h>
+%}
+
+%include <rpcmanager.h>
+%include <rpcserver_booter_base.h>
+%include <rpcserver_booter_aggregator.h>
+%include <pycallback_object.h>
+%include <rpccallbackregister_base.h>
+
+// Attach a new python callback method to Python function
+%extend pycallback_object {
+  // Set a Python function object as a callback function
+  // Note : PyObject *pyfunc is remapped with a typempap
+  void activate(PyObject *pyfunc)
+  {
+    self->set_callback(pyfunc);
+    Py_INCREF(pyfunc);
+  }
+}
+
+%template(RPC_get_string)   pycallback_object<std::string>;
+%template(RPC_get_int)      pycallback_object<int>;
+%template(RPC_get_float)    pycallback_object<float>;
+%template(RPC_get_double)   pycallback_object<double>;
+%template(RPC_get_vector_float)    pycallback_object<std::vector<float> >;
+%template(RPC_get_vector_gr_complex)    pycallback_object<std::vector<gr_complex> >;
+
+#endif /* ENABLE_GR_CTRLPORT */

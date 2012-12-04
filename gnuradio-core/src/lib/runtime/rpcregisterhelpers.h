@@ -40,7 +40,7 @@ public:
     _source(source), _func(func) {;}
   ~rpcextractor_base() {;}
 
-  void post(pmt::pmt_t msg) {
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg) {
     throw std::runtime_error("rpcextractor_base: no post defined for this data type.\n");
   }
 
@@ -101,7 +101,7 @@ public:
     : rpcextractor_base<T,double>(source, func)
   {;}
 
-  void post(pmt::pmt_t msg)
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,double>::_source->*rpcextractor_base<T,double>::_func)
       (pmt::pmt_to_double(msg));
@@ -116,7 +116,7 @@ public:
     : rpcextractor_base<T,float>(source, func)
   {;}
 
-  void post(pmt::pmt_t msg)
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,float>::_source->*rpcextractor_base<T,float>::_func)
       (pmt::pmt_to_double(msg));
@@ -131,7 +131,7 @@ public:
     : rpcextractor_base<T,long>(source, func)
   {;}
 
-  void post(pmt::pmt_t msg)
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,long>::_source->*rpcextractor_base<T,long>::_func)
       (pmt::pmt_to_long(msg));
@@ -146,7 +146,7 @@ public:
     : rpcextractor_base<T,int>(source, func)
   {;}
 
-  void post(pmt::pmt_t msg)
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,int>::_source->*rpcextractor_base<T,int>::_func)
       (pmt::pmt_to_long(msg));
@@ -161,7 +161,7 @@ public:
     : rpcextractor_base<T,bool>(source, func)
   {;}
 
-  void post(pmt::pmt_t msg)
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,bool>::_source->*rpcextractor_base<T,bool>::_func)
       (pmt::pmt_to_bool(msg));
@@ -177,7 +177,7 @@ public:
     : rpcextractor_base<T,std::complex<double> >(source, func)
   {;}
 
-  void post(pmt::pmt_t msg)
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,std::complex<double> >::
      _source->*rpcextractor_base<T,std::complex<double> >::_func)(pmt::pmt_to_complex(msg));
@@ -193,7 +193,7 @@ public:
     : rpcextractor_base<T,std::string>(source, func)
   {;}
 
-  void post(pmt::pmt_t msg)
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,std::string>::
      _source->*rpcextractor_base<T,std::string>::_func)(pmt::pmt_symbol_to_string(msg)); 

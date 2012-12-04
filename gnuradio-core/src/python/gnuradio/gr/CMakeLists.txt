@@ -47,6 +47,7 @@ foreach(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_SOURCE_DIR}/gruel/src/python
         ${CMAKE_BINARY_DIR}/gruel/src/swig
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
+        ${CMAKE_BINARY_DIR}/gnuradio-core/src/python/ctrlport
         ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
     )
     set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core)
