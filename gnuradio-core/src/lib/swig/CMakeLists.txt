@@ -25,10 +25,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 set(GR_SWIG_INCLUDE_DIRS
-    ${Boost_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${GRUEL_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
 )
 set(GR_SWIG_LIBRARIES gnuradio-core)
 
