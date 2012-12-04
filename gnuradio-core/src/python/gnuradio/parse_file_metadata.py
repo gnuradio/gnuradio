@@ -50,7 +50,7 @@ ftype_to_size = {gr.GR_FILE_BYTE: gr.sizeof_char,
                  gr.GR_FILE_FLOAT: gr.sizeof_float,
                  gr.GR_FILE_DOUBLE: gr.sizeof_double}
 
-def parse_header(p, hdr_start, VERBOSE=False):
+def parse_header(p, VERBOSE=False):
     dump = gr.PMT_NIL
 
     info = dict()
@@ -122,13 +122,13 @@ def parse_header(p, hdr_start, VERBOSE=False):
     if(gr.pmt_dict_has_key(p, gr.pmt_string_to_symbol("strt"))):
         r = gr.pmt_dict_ref(p, gr.pmt_string_to_symbol("strt"), dump)
         seg_start = gr.pmt_to_uint64(r)
-        info["strt"] = seg_start
-        info["extra_len"] = seg_start - hdr_start - HEADER_LENGTH
+        info["hdr_len"] = seg_start
+        info["extra_len"] = seg_start - HEADER_LENGTH
         info["has_extra"] = info["extra_len"] > 0
         if(VERBOSE):
-            print "Segment Start: {0} bytes".format(seg_start)
-            print "Extra Length: {0}".format((info["extra_len"]))
-            print "Extra Header? {0}".format(info["has_extra"])
+            print "Header Length: {0} bytes".format(info["hdr_len"])
+            print "Extra Length:  {0}".format((info["extra_len"]))
+            print "Extra Header?  {0}".format(info["has_extra"])
     else:
         sys.stderr.write("Could not find key 'strt': invalid or corrupt data file.\n")
         sys.exit(1)

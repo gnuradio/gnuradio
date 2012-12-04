@@ -151,15 +151,13 @@ gr_file_meta_sink::update_last_header()
 {
   // Update the last header info with the number of samples this
   // block represents.
+  size_t hdrlen = METADATA_HEADER_SIZE+d_extra_size;
   size_t seg_size = d_itemsize*d_total_seg_size;
-  uint64_t loc = get_last_header_loc();
   pmt_t s = pmt_from_uint64(seg_size);
-  //std::cerr << "Found Tag at: " << itr->offset*d_itemsize << std::endl;
-  //std::cerr << "  last header starts at: " << loc << std::endl;
-  //std::cerr << "  segment size is:       " << seg_size << std::endl;    
   if(update_header(mp("size"), s)) {
-    fseek(d_fp, loc, SEEK_SET);
+    fseek(d_fp, -seg_size-hdrlen, SEEK_CUR);
     write_header(d_header, d_extra);
+    fseek(d_fp, seg_size, SEEK_CUR);
   }
 }
 
@@ -168,36 +166,17 @@ gr_file_meta_sink::write_and_update()
 {
   // New header, so set current size of chunk to 0 and start of chunk
   // based on current index + header size.
-  uint64_t loc = get_last_header_loc();
+  //uint64_t loc = get_last_header_loc();
   pmt_t s = pmt_from_uint64(0);
-  size_t seg_size = d_itemsize*d_total_seg_size;
   if(update_header(mp("size"), s)) {
     // If we have multiple tags on the same offset, this makes
     // sure we just overwrite the same header each time instead
     // of creating a new header per tag.
-    uint64_t seg_start = loc;
-    if(seg_size != 0)
-      seg_start += METADATA_HEADER_SIZE + d_extra_size + seg_size + 1;
-    s = pmt_from_uint64(seg_start + METADATA_HEADER_SIZE + d_extra_size);
+    s = pmt_from_uint64(METADATA_HEADER_SIZE + d_extra_size);
     if(update_header(mp("strt"), s)) {
-      //std::cerr << "Adding new header" << std::endl;
-      //std::cerr << "  new header start at: " << seg_start-METADATA_HEADER_SIZE << std::endl;
-      //std::cerr << "  new seg start at:    " << seg_start << std::endl;
-      fseek(d_fp, seg_start, SEEK_SET);
       write_header(d_header, d_extra);
-      d_total_seg_size = 0;
     }
   }
-}
-
-uint64_t
-gr_file_meta_sink::get_last_header_loc()
-{
-  uint64_t loc = 0;
-  pmt_t v = pmt_dict_ref(d_header, mp("strt"), PMT_NIL);
-  if(!pmt_eq(v, PMT_NIL))
-    loc = pmt_to_uint64(v) - (METADATA_HEADER_SIZE+d_extra_size);
-  return loc;
 }
 
 gr_file_meta_sink::~gr_file_meta_sink()
@@ -254,6 +233,7 @@ gr_file_meta_sink::work(int noutput_items,
     if(d_total_seg_size == d_max_seg_size) {
       update_last_header();
       write_and_update();
+      d_total_seg_size = 0;
     }
   }
 
