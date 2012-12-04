@@ -73,9 +73,22 @@ GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
 ########################################################################
 
 FIND_PACKAGE(ICE)
+FIND_PACKAGE(SWIG)
+
+if(SWIG_FOUND)
+    set(SWIG_VERSION_CHECK FALSE)
+    if("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
+        set(SWIG_VERSION_CHECK TRUE)
+    else("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
+      message(STATUS "")
+      message(STATUS "Ctrlport requires SWIG version >= 2.0")
+    endif()
+endif(SWIG_FOUND)
 
 GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
     Boost_FOUND
+    SWIG_FOUND
+    SWIG_VERSION_CHECK
     ICE_FOUND
     ENABLE_GRUEL
     ENABLE_GR_CORE
@@ -159,8 +172,13 @@ install(
 ########################################################################
 if(ENABLE_GR_CTRLPORT)
 
-GR_SET_GLOBAL(GR_CTRLPORT_INCLUDE_DIRS
-    ${GR_CTRLPORT_INCLUDE_DIRS}
+GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${ICE_INCLUDE_DIR}
+)
+
+GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
+    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${ICE_INCLUDE_DIR}
 )
 
