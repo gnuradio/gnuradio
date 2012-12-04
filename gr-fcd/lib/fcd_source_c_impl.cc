@@ -176,7 +176,7 @@ void fcd_source_c_impl::set_lna_gain(float gain)
 // Set mixer gain
 void fcd_source_c_impl::set_mixer_gain(float gain)
 {
-    FCD_MODE_ENUM fme;
+    __GR_ATTR_UNUSED FCD_MODE_ENUM fme;
     unsigned char g;
 
     if ( gain > 4.0 ) {

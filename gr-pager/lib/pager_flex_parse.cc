@@ -156,16 +156,16 @@ void pager_flex_parse::parse_data()
 void pager_flex_parse::parse_alphanumeric(int mw1, int mw2, int j)
 {
     int frag;
-    bool cont;
+    //bool cont;
 
     if (!d_laddr) {
 	frag = (d_datawords[mw1] >> 11) & 0x03;
-	cont = (d_datawords[mw1] >> 10) & 0x01;
+	//cont = (d_datawords[mw1] >> 10) & 0x01;
 	mw1++;
     }
     else {
 	frag = (d_datawords[j+1] >> 11) & 0x03;
-	cont = (d_datawords[j+1] >> 10) & 0x01;
+	//cont = (d_datawords[j+1] >> 10) & 0x01;
 	mw2--;
     }
 
