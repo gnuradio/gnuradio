@@ -69,10 +69,46 @@ endif()
 # Link against libvolk
 list(APPEND gnuradio_core_libs volk)
 
-add_library(gnuradio-core SHARED ${gnuradio_core_sources})
+if(ENABLE_GR_CTRLPORT)
+
+########################################################################
+# Run ICE To compile Slice files
+########################################################################
+EXECUTE_PROCESS(
+   COMMAND "${ICE_SLICE2CPP}" "-I${CMAKE_CURRENT_SOURCE_DIR}/runtime"
+       "--output-dir=${CMAKE_CURRENT_BINARY_DIR}"
+       "${CMAKE_CURRENT_SOURCE_DIR}/runtime/gnuradio.ice"
+   )
+
+# Append generated file in build directory
+list(APPEND gnuradio_core_generated_sources 
+    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio.cpp
+)
+
+list(APPEND gnuradio_core_generated_includes 
+    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio.h
+)
+
+########################################################################
+# Add controlport stuff to gnuradio-core
+########################################################################
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+list(APPEND gnuradio_core_libs
+  ${ICE_LIBRARIES}
+)
+
+endif(ENABLE_GR_CTRLPORT)
+
+add_library(gnuradio-core SHARED ${gnuradio_core_sources} ${gnuradio_core_generated_sources})
 target_link_libraries(gnuradio-core ${gnuradio_core_libs})
 GR_LIBRARY_FOO(gnuradio-core RUNTIME_COMPONENT "core_runtime" DEVEL_COMPONENT "core_devel")
 set_target_properties(gnuradio-core PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
+ADD_DEPENDENCIES(gnuradio-core
+  gnuradio_core_generated_sources
+  gnuradio_core_generated_includes
+  gnuradio_core_generated_swigs)
 
 ########################################################################
 # Setup executables

@@ -25,6 +25,9 @@ GR_SWIG_BLOCK_MAGIC(gr,nop)
 gr_nop_sptr gr_make_nop (size_t sizeof_stream_item);
 
 class gr_nop : public gr_block {
+public:
+  int  ctrlport_test();
+  void set_ctrlport_test(int x);
 private:
   gr_nop (size_t sizeof_stream_item);
 };

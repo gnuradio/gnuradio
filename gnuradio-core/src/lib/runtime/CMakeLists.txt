@@ -90,6 +90,20 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_select_handler.cc
 )
 
+if(ENABLE_GR_CTRLPORT)
+list(APPEND gnuradio_core_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/ice_application_base.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_ice.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_ice.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_aggregator.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_aggregator.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_selector.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcpmtconverters_ice.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcmanager.cc
+)
+endif(ENABLE_GR_CTRLPORT)
+
+
 ########################################################################
 # Append gnuradio-core test sources
 ########################################################################
@@ -156,6 +170,28 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )
+
+
+if(ENABLE_GR_CTRLPORT)
+ADD_DEFINITIONS(-DGR_CTRLPORT)
+INSTALL(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/ice_application_base.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ice_server_template.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpccallbackregister_base.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcmanager_base.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcmanager.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcpmtconverters_ice.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcregisterhelpers.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_aggregator.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_base.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_aggregator.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_base.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_ice.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_selector.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    COMPONENT "core_devel"
+)
+endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
 # Install swig headers

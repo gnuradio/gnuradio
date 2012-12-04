@@ -49,6 +49,8 @@ namespace gr {
 
       std::vector<gr_complex> d_taps;
 
+      void setup_rpc();
+
     public:
       channel_model_impl(double noise_voltage,
 			 double frequency_offset,

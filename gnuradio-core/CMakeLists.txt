@@ -69,6 +69,32 @@ GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
 )
 
 ########################################################################
+# Register controlport component
+########################################################################
+
+FIND_PACKAGE(ICE)
+FIND_PACKAGE(SWIG)
+
+if(SWIG_FOUND)
+    set(SWIG_VERSION_CHECK FALSE)
+    if("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
+        set(SWIG_VERSION_CHECK TRUE)
+    else("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
+      message(STATUS "")
+      message(STATUS "Ctrlport requires SWIG version >= 2.0")
+    endif()
+endif(SWIG_FOUND)
+
+GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
+    Boost_FOUND
+    SWIG_FOUND
+    SWIG_VERSION_CHECK
+    ICE_FOUND
+    ENABLE_GRUEL
+    ENABLE_GR_CORE
+)
+
+########################################################################
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_CORE)
@@ -139,5 +165,40 @@ install(
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "core_devel"
 )
+
+
+########################################################################
+# Setup ControlPort preferences file and installation information
+########################################################################
+if(ENABLE_GR_CTRLPORT)
+
+GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${ICE_INCLUDE_DIR}
+)
+
+GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
+    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${ICE_INCLUDE_DIR}
+)
+
+SET(GR_PKG_CTRL_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/ctrlport)
+
+SET(GR_PKG_CTRL_SLICE_DIR ${GR_PKG_DATA_DIR}/ctrlport)
+file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_CTRL_SLICE_DIR} slicedir)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/ctrlport.conf
+@ONLY)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/ctrlport.conf
+    DESTINATION ${GR_PREFSDIR}
+    COMPONENT "core_runtime"
+)
+
+endif(ENABLE_GR_CTRLPORT)
+
 
 endif(ENABLE_GR_CORE)

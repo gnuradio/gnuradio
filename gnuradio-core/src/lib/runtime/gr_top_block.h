@@ -123,6 +123,8 @@ public:
   void set_max_noutput_items(int nmax);
 
   gr_top_block_sptr to_top_block(); // Needed for Python type coercion
+
+  void setup_rpc();
 };
 
 inline gr_top_block_sptr cast_to_top_block_sptr(gr_basic_block_sptr block) {

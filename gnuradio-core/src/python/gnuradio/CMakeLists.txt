@@ -24,6 +24,7 @@ add_subdirectory(gru)
 add_subdirectory(gruimpl)
 add_subdirectory(blks2)
 add_subdirectory(blks2impl)
+add_subdirectory(ctrlport)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py

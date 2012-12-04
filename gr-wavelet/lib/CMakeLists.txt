@@ -53,3 +53,6 @@ list(APPEND wavelet_libs
 add_library(gnuradio-wavelet SHARED ${gr_wavelet_sources})
 target_link_libraries(gnuradio-wavelet ${wavelet_libs})
 GR_LIBRARY_FOO(gnuradio-wavelet RUNTIME_COMPONENT "wavelet_runtime" DEVEL_COMPONENT "wavelet_devel")
+add_dependencies(gnuradio-wavelet
+  wavelet_generated_includes wavelet_generated_swigs
+  gnuradio-core)

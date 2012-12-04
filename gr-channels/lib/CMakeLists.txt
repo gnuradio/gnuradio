@@ -33,6 +33,10 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+endif(ENABLE_GR_CTRLPORT)
+
 ########################################################################
 # Setup library
 ########################################################################

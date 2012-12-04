@@ -32,6 +32,13 @@ set(GR_SWIG_INCLUDE_DIRS
 )
 set(GR_SWIG_LIBRARIES gnuradio-core)
 
+if(ENABLE_GR_CTRLPORT)
+  list(APPEND GR_SWIG_FLAGS -DGR_CTRLPORT)
+  list(APPEND GR_SWIG_LIBRARIES
+    ${ICE_LIBRARIES}
+    )
+endif(ENABLE_GR_CTRLPORT)
+
 ########################################################################
 # Build and install the swig targets
 ########################################################################
@@ -42,7 +49,8 @@ set(GR_SWIG_LIBRARIES gnuradio-core)
 # X86_64, g++'s resident set size was 650MB!
 # ----------------------------------------------------------------
 
-set(GR_SWIG_TARGET_DEPS general_generated gengen_generated filter_generated pmt_swig)
+set(GR_SWIG_TARGET_DEPS gnuradio_core_generated_sources
+  general_generated gengen_generated filter_generated pmt_swig)
 
 foreach(what runtime general gengen io)
     SET(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${what}_swig_doc.i)

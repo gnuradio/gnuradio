@@ -37,6 +37,10 @@
 #include <boost/foreach.hpp>
 #include <boost/thread/condition_variable.hpp>
 
+#ifdef GR_CTRLPORT
+#include <rpcregisterhelpers.h>
+#endif
+
 /*!
  * \brief The abstract base class for all signal processing blocks.
  * \ingroup internal
@@ -94,6 +98,8 @@ protected:
     std::string          d_symbol_name;
     std::string          d_symbol_alias;
     vcolor               d_color;
+
+    std::vector<boost::any> d_rpc_vars; // container for all RPC variables
 
     gr_basic_block(void){} //allows pure virtual interface sub-classes
 
@@ -229,6 +235,35 @@ public:
             throw std::runtime_error("attempt to set_msg_handler() on bad input message port!"); }
       d_msg_handlers[which_port] = msg_handler_t(msg_handler);
     }
+
+#ifdef GR_CTRLPORT
+    /*!
+     * \brief Add an RPC variable (get or set).
+     *
+     * Using controlport, we create new getters/setters and need to
+     * store them. Each block has a vector to do this, and these never
+     * need to be accessed again once they are registered with the RPC
+     * backend. This function takes a
+     * boost::shared_sptr<rpcbasic_base> so that when the block is
+     * deleted, all RPC registered variables are cleaned up.
+     *
+     * \param s an rpcbasic_sptr of the new RPC variable register to store.
+     */
+    void add_rpc_variable(rpcbasic_sptr s)
+    {
+      d_rpc_vars.push_back(s);
+    }
+#endif /* GR_CTRLPORT */
+
+    /*!
+     * \brief Set up the RPC registered variables.
+     *
+     * This must be overloaded by a block that wants to use
+     * controlport. This is where rpcbasic_register_{get,set} pointers
+     * are created, which then get wrapped as shared pointers
+     * (rpcbasic_sptr(...)) and stored using add_rpc_variable.
+     */
+    virtual void setup_rpc() {};
 };
 
 inline bool operator<(gr_basic_block_sptr lhs, gr_basic_block_sptr rhs)

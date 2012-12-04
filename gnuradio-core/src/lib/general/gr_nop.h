@@ -42,8 +42,12 @@ class GR_CORE_API gr_nop : public gr_block
   friend GR_CORE_API gr_nop_sptr gr_make_nop (size_t sizeof_stream_item);
   gr_nop (size_t sizeof_stream_item);
 
+  std::vector<boost::any> d_rpc_vars;
+  void set_rpc();
+
 protected:
   int	d_nmsgs_recvd;
+  int   d_ctrlport_test;
 
   // Method that just counts any received messages.
   void count_received_msgs(pmt::pmt_t msg);
@@ -56,6 +60,8 @@ protected:
 
   int nmsgs_received() const { return d_nmsgs_recvd; }
 
+  int  ctrlport_test() { return d_ctrlport_test; }
+  void set_ctrlport_test(int x) { d_ctrlport_test = x; }
 };
 
 #endif /* INCLUDED_GR_NOP_H */
