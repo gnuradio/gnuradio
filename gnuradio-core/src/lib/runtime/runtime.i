@@ -71,21 +71,52 @@
 
 #ifdef ENABLE_GR_CTRLPORT
 
+enum DisplayType { 
+  DISPNULL, 
+  DISPTIMESERIESF,
+  DISPTIMESERIESC,
+  DISPXYSCATTER,
+  DISPXYLINE
+};
+
+enum priv_lvl_t {
+  RPC_PRIVLVL_ALL = 0,
+  RPC_PRIVLVL_MIN = 9,
+  RPC_PRIVLVL_NONE = 10
+};
+
+enum KnobType {
+  KNOBBOOL,       KNOBCHAR,       KNOBINT,        KNOBFLOAT,
+  KNOBDOUBLE,     KNOBSTRING,     KNOBLONG,       KNOBVECBOOL,
+  KNOBVECCHAR,    KNOBVECINT,     KNOBVECFLOAT,   KNOBVECDOUBLE,
+  KNOBVECSTRING,  KNOBVECLONG
+};
+
 %template(StrVector) std::vector<std::string>;
 
 %{
-#include <rpcmanager.h>
 #include <rpcserver_booter_base.h>
 #include <rpcserver_booter_aggregator.h>
 #include <pycallback_object.h>
-#include <rpccallbackregister_base.h>
 %}
 
-%include <rpcmanager.h>
 %include <rpcserver_booter_base.h>
 %include <rpcserver_booter_aggregator.h>
 %include <pycallback_object.h>
-%include <rpccallbackregister_base.h>
+
+// Declare this class here but without the nested templated class
+// inside (replaces include of rpcmanager.h)
+class GR_CORE_API rpcmanager : public virtual rpcmanager_base
+{
+ public:
+  rpcmanager();
+  ~rpcmanager();
+
+  static rpcserver_booter_base* get();
+
+  static void register_booter(rpcserver_booter_base* booter);
+};
+
 
 // Attach a new python callback method to Python function
 %extend pycallback_object {
