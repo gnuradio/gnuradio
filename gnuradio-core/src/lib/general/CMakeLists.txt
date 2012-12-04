@@ -243,9 +243,7 @@ set(gr_core_general_triple_threats
 )
 
 if(ENABLE_GR_CTRLPORT)
-
-add_definitions(-DENABLE_GR_CTRLPORT=1)
-
+ADD_DEFINITIONS(-DGR_CTRLPORT)
 list(APPEND gr_core_general_triple_threats
     gr_ctrlport_probe_c
     gr_ctrlport_probe2_c

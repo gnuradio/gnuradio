@@ -69,7 +69,7 @@
 %include <gr_top_block.i>
 
 
-#ifdef ENABLE_GR_CTRLPORT
+#ifdef GR_CTRLPORT
 
 enum DisplayType { 
   DISPNULL, 
@@ -136,4 +136,4 @@ class GR_CORE_API rpcmanager : public virtual rpcmanager_base
 %template(RPC_get_vector_float)    pycallback_object<std::vector<float> >;
 %template(RPC_get_vector_gr_complex)    pycallback_object<std::vector<gr_complex> >;
 
-#endif /* ENABLE_GR_CTRLPORT */
+#endif /* GR_CTRLPORT */

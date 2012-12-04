@@ -27,6 +27,10 @@
 #include <gr_io_signature.h>
 #include <boost/bind.hpp>
 
+#ifdef GR_CTRLPORT
+#include <rpcregisterhelpers.h>
+#endif
+
 gr_nop_sptr
 gr_make_nop (size_t sizeof_stream_item)
 {
@@ -70,7 +74,7 @@ gr_nop::general_work (int noutput_items,
 void
 gr_nop::set_rpc()
 {
-#ifdef ENABLE_GR_CTRLPORT
+#ifdef GR_CTRLPORT
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_nop, int>(
       d_name, "test", this, unique_id(),
@@ -86,5 +90,5 @@ gr_nop::set_rpc()
       pmt::mp(-256), pmt::mp(255), pmt::mp(0),
       "", "Simple testing variable",
       RPC_PRIVLVL_MIN, DISPNULL)));
-#endif /* ENABLE_GR_CTRLPORT */
+#endif /* GR_CTRLPORT */
 }

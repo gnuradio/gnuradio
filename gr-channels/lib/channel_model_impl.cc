@@ -138,7 +138,7 @@ namespace gr {
     void
     channel_model_impl::setup_rpc()
     {
-#ifdef ENABLE_GR_CTRLPORT
+#ifdef GR_CTRLPORT
       add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_get<channel_model_impl, double>(
 	  d_name, "noise", this, unique_id(),
@@ -196,7 +196,7 @@ namespace gr {
 	  pmt::mp(0.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	  "", "Timing Offset",
 	  RPC_PRIVLVL_MIN, DISPNULL)));
-#endif /* ENABLE_GR_CTRLPORT */
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace channels */

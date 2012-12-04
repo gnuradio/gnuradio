@@ -37,7 +37,7 @@
 #include <boost/foreach.hpp>
 #include <boost/thread/condition_variable.hpp>
 
-#ifdef ENABLE_GR_CTRLPORT
+#ifdef GR_CTRLPORT
 #include <rpcregisterhelpers.h>
 #endif
 
@@ -236,7 +236,7 @@ public:
       d_msg_handlers[which_port] = msg_handler_t(msg_handler);
     }
 
-#ifdef ENABLE_GR_CTRLPORT
+#ifdef GR_CTRLPORT
     /*!
      * \brief Add an RPC variable (get or set).
      *
@@ -253,7 +253,7 @@ public:
     {
       d_rpc_vars.push_back(s);
     }
-#endif /* ENABLE_GR_CTRLPORT */
+#endif /* GR_CTRLPORT */
 
     /*!
      * \brief Set up the RPC registered variables.

@@ -99,8 +99,6 @@ list(APPEND gnuradio_core_libs
   ${ICE_LIBRARIES}
 )
 
-GR_ADD_COND_DEF(ENABLE_GR_CTRLPORT)
-
 endif(ENABLE_GR_CTRLPORT)
 
 add_library(gnuradio-core SHARED ${gnuradio_core_sources} ${gnuradio_core_generated_sources})

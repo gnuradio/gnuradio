@@ -458,7 +458,7 @@ namespace gr {
     void
     pfb_clock_sync_ccf_impl::setup_rpc()
     {
-#ifdef ENABLE_GR_CTRLPORT
+#ifdef GR_CTRLPORT
       // Getters
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf_impl, float>(
@@ -500,7 +500,7 @@ namespace gr {
 	      pmt::mp(0.0f), pmt::mp(1.0f), pmt::mp(0.0f),
 	      "", "Loop bandwidth",
 	      RPC_PRIVLVL_MIN, DISPNULL)));
-#endif /* ENABLE_GR_CTRLPORT */
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace digital */

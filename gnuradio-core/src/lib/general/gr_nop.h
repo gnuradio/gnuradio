@@ -27,10 +27,6 @@
 #include <gr_block.h>
 #include <stddef.h>			// size_t
 
-#ifdef ENABLE_GR_CTRLPORT
-#include <rpcregisterhelpers.h>
-#endif
-
 class gr_nop;
 typedef boost::shared_ptr<gr_nop> gr_nop_sptr;
 

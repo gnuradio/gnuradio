@@ -27,10 +27,6 @@
 #include <gr_basic_block.h>
 #include <gr_tags.h>
 
-#ifdef ENABLE_GR_CTRLPORT
-#include <rpcregisterhelpers.h>
-#endif
-
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
  * \ingroup base_blk
