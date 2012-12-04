@@ -1,0 +1,38 @@
+/*! \page page_filter filter Signal Processing Blocks
+
+\section Introduction
+
+This is the gr-ctroport package. It is a tool to create distributed
+contol applications for GNU Radio. It provides blocks that can be
+connected to an output stream to plot the signal remotely. It also
+provides an API that allows blocks to export variables that can be
+set, monitored, and plotted remotely.
+
+The Python namespace is in gnuradio.ctrlport, which would be normally
+imported as:
+
+\code
+    from gnuradio import ctrlport
+\endcode
+
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+\code
+    help(ctrlport)
+\endcode
+
+\section Dependencies
+
+ControlPort requires ZeroC's ICE and associated
+libraries/headers/programs. ICE is generally installed into the
+standard paths if using a software repo (like apt-get, yum, etc.). If
+installed by hand, GNU Radio assumes ICE is installed into
+/opt/Ice-3.4.2. If this is not the case, you can tell GNU Radio where
+to find ICE by passing to cmake the following:
+
+    -DICE_MANUAL_INSTALL_PATH=<your path here>
+
+*/
