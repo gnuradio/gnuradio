@@ -51,8 +51,8 @@ gr_file_meta_sink::gr_file_meta_sink(size_t itemsize, const char *filename,
   : gr_sync_block("file_meta_sink",
 		  gr_make_io_signature(1, 1, itemsize),
 		  gr_make_io_signature(0, 0, 0)),
-    gr_file_sink_base(filename, true),
-    d_itemsize(itemsize), d_relative_rate(relative_rate),
+    gr_file_sink_base(filename, true), d_itemsize(itemsize),
+    d_samp_rate(samp_rate), d_relative_rate(relative_rate),
     d_max_seg_size(max_segment_size), d_total_seg_size(0)
 {
   if(!open(filename))
@@ -129,8 +129,8 @@ gr_file_meta_sink::update_header(pmt_t key, pmt_t value)
   // Special handling caveat to transform rate from radio source into
   // the rate at this sink.
   if(pmt_eq(key, mp("rx_rate"))) {
-    double rate = pmt_to_double(value);
-    value = pmt_from_double(rate*d_relative_rate);
+    d_samp_rate = pmt_to_double(value);
+    value = pmt_from_double(d_samp_rate*d_relative_rate);
   }
 
   if(pmt_dict_has_key(d_header, key)) {
@@ -179,6 +179,32 @@ gr_file_meta_sink::write_and_update()
   }
 }
 
+void
+gr_file_meta_sink::update_rx_time()
+{
+  pmt_t rx_time = pmt_string_to_symbol("rx_time");
+  pmt_t r = pmt_dict_ref(d_header, rx_time, PMT_NIL);
+  uint64_t secs = pmt_to_uint64(pmt_tuple_ref(r, 0));
+  double fracs = pmt_to_double(pmt_tuple_ref(r, 1));
+  double diff = d_total_seg_size / (d_samp_rate*d_relative_rate);
+
+  //std::cerr << "old secs:  " << secs << std::endl;
+  //std::cerr << "old fracs: " << fracs << std::endl;
+  //std::cerr << "seg size:  " << d_total_seg_size << std::endl;
+  //std::cerr << "diff:      " << diff << std::endl;
+
+  fracs += diff;
+  uint64_t new_secs = static_cast<uint64_t>(fracs);
+  secs += new_secs;
+  fracs -= new_secs;
+
+  //std::cerr << "new secs:  " << secs << std::endl;
+  //std::cerr << "new fracs: " << fracs << std::endl << std::endl;
+
+  r = pmt_make_tuple(pmt_from_uint64(secs), pmt_from_double(fracs));
+  d_header = pmt_dict_add(d_header, rx_time, r);
+}	  
+
 gr_file_meta_sink::~gr_file_meta_sink()
 {
   update_last_header();
@@ -215,14 +241,6 @@ gr_file_meta_sink::work(int noutput_items,
     else {
       int item_offset = (int)(itr->offset - abs_N);
 
-      std::cerr << "New tag found with absolute index: " << itr->offset
-		<< " and relative index: " << item_offset << std::endl;
-      std::cerr << "Current segment size: " << d_total_seg_size << std::endl;
-      std::cerr << "Tag key: " << pmt_symbol_to_string(itr->key) << std::endl;
-      std::cerr << "Tag Val: ";
-      pmt_print(itr->value);
-      std::cerr << std::endl;
-
       // Write date to file up to the next tag location
       while(nwritten < item_offset) {
 	size_t towrite = std::min(d_max_seg_size - d_total_seg_size,
@@ -240,6 +258,7 @@ gr_file_meta_sink::work(int noutput_items,
 	if((d_total_seg_size == d_max_seg_size) &&
 	   (nwritten < item_offset)) {
 	  update_last_header();
+	  update_rx_time();
 	  write_and_update();
 	  d_total_seg_size = 0;
 	}
@@ -272,6 +291,7 @@ gr_file_meta_sink::work(int noutput_items,
     d_total_seg_size += count;
     if(d_total_seg_size == d_max_seg_size) {
       update_last_header();
+      update_rx_time();
       write_and_update();
       d_total_seg_size = 0;
     }
