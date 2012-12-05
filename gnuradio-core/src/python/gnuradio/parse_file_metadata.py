@@ -75,7 +75,7 @@ def parse_header(p, VERBOSE=False):
         samp_rate = gr.pmt_to_double(r)
         info["rx_rate"] = samp_rate
         if(VERBOSE):
-            print "Sample Rate: {0} sps".format(samp_rate)
+            print "Sample Rate: {0:.2f} sps".format(samp_rate)
     else:
         sys.stderr.write("Could not find key 'sr': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -90,7 +90,7 @@ def parse_header(p, VERBOSE=False):
         t = secs + fracs
         info["rx_time"] = t
         if(VERBOSE):
-            print "Seconds: {0}".format(t)
+            print "Seconds: {0:.6f}".format(t)
     else:
         sys.stderr.write("Could not find key 'time': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -169,6 +169,6 @@ def parse_extra_dict(p, info, VERBOSE=False):
         val = gr.pmt_to_double(gr.pmt_cdr(item))
         info[key] = val
         if(VERBOSE):
-            print "{0}: {1}".format(key, val)
+            print "{0}: {1:.4f}".format(key, val)
 
     return info
