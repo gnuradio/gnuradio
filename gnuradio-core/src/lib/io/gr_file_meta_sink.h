@@ -120,7 +120,7 @@ class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_
 		    const std::string &extra_dict="");
 
   void write_header(pmt_t header, pmt_t extra);
-  bool update_header(pmt_t key, pmt_t value);
+  void update_header(pmt_t key, pmt_t value);
   void update_last_header();
   void write_and_update();
   void update_rx_time();

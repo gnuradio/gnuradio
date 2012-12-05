@@ -123,7 +123,7 @@ gr_file_meta_sink::write_header(pmt_t header, pmt_t extra)
   }
 }
 
-bool
+void
 gr_file_meta_sink::update_header(pmt_t key, pmt_t value)
 {
   // Special handling caveat to transform rate from radio source into
@@ -133,16 +133,17 @@ gr_file_meta_sink::update_header(pmt_t key, pmt_t value)
     value = pmt_from_double(d_samp_rate*d_relative_rate);
   }
 
+  // If the tag is not part of the standard header, we put it into the
+  // extra data, which either updates the current dictionary or adds a
+  // new item.
   if(pmt_dict_has_key(d_header, key)) {
     d_header = pmt_dict_add(d_header, key, value);
-    return true;
-  }
-  else if(pmt_dict_has_key(d_extra, key)) {
-    d_extra = pmt_dict_add(d_extra, key, value);
-    return true;
   }
   else {
-    return false;
+    d_extra = pmt_dict_add(d_extra, key, value);
+    d_extra_size = pmt_serialize_str(d_extra).size();
+    d_header = pmt_dict_add(d_header, mp("strt"),
+			    pmt_from_uint64(METADATA_HEADER_SIZE+d_extra_size));
   }
 }
 
@@ -154,11 +155,10 @@ gr_file_meta_sink::update_last_header()
   size_t hdrlen = METADATA_HEADER_SIZE+d_extra_size;
   size_t seg_size = d_itemsize*d_total_seg_size;
   pmt_t s = pmt_from_uint64(seg_size);
-  if(update_header(mp("size"), s)) {
-    fseek(d_fp, -seg_size-hdrlen, SEEK_CUR);
-    write_header(d_header, d_extra);
-    fseek(d_fp, seg_size, SEEK_CUR);
-  }
+  update_header(mp("size"), s);
+  fseek(d_fp, -seg_size-hdrlen, SEEK_CUR);
+  write_header(d_header, d_extra);
+  fseek(d_fp, seg_size, SEEK_CUR);
 }
 
 void
@@ -168,15 +168,14 @@ gr_file_meta_sink::write_and_update()
   // based on current index + header size.
   //uint64_t loc = get_last_header_loc();
   pmt_t s = pmt_from_uint64(0);
-  if(update_header(mp("size"), s)) {
-    // If we have multiple tags on the same offset, this makes
-    // sure we just overwrite the same header each time instead
-    // of creating a new header per tag.
-    s = pmt_from_uint64(METADATA_HEADER_SIZE + d_extra_size);
-    if(update_header(mp("strt"), s)) {
-      write_header(d_header, d_extra);
-    }
-  }
+  update_header(mp("size"), s);
+
+  // If we have multiple tags on the same offset, this makes
+  // sure we just overwrite the same header each time instead
+  // of creating a new header per tag.
+  s = pmt_from_uint64(METADATA_HEADER_SIZE + d_extra_size);
+  update_header(mp("strt"), s);
+  write_header(d_header, d_extra);
 }
 
 void
@@ -233,10 +232,9 @@ gr_file_meta_sink::work(int noutput_items,
     // Special case where info is carried on the first tag, so we just
     // overwrite the first header.
     if(itr->offset == 0) {
-      if(update_header(itr->key, itr->value)) {
-	fseek(d_fp, 0, SEEK_SET);
-	write_header(d_header, d_extra);
-      }
+      update_header(itr->key, itr->value);
+      fseek(d_fp, 0, SEEK_SET);
+      write_header(d_header, d_extra);
     }
     else {
       int item_offset = (int)(itr->offset - abs_N);
@@ -266,14 +264,13 @@ gr_file_meta_sink::work(int noutput_items,
 
       if(d_total_seg_size > 0) {
 	update_last_header();
-	if(update_header(itr->key, itr->value)) {
-	  write_and_update();
-	  d_total_seg_size = 0;
-	}
+	update_header(itr->key, itr->value);
+	write_and_update();
+	d_total_seg_size = 0;
       }
       else {
-	if(update_header(itr->key, itr->value))
-	  update_last_header();
+	update_header(itr->key, itr->value);
+	update_last_header();
       }
     }
   }
