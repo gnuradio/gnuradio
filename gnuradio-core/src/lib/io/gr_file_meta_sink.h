@@ -122,7 +122,6 @@ class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_
   bool update_header(pmt_t key, pmt_t value);
   void update_last_header();
   void write_and_update();
-  uint64_t get_last_header_loc();
 
  public:
   ~gr_file_meta_sink();

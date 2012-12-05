@@ -213,13 +213,53 @@ gr_file_meta_sink::work(int noutput_items,
       }
     }
     else {
-      update_last_header();
-      if(update_header(itr->key, itr->value)) {
-	write_and_update();
+      int item_offset = (int)(itr->offset - abs_N);
+
+      std::cerr << "New tag found with absolute index: " << itr->offset
+		<< " and relative index: " << item_offset << std::endl;
+      std::cerr << "Current segment size: " << d_total_seg_size << std::endl;
+      std::cerr << "Tag key: " << pmt_symbol_to_string(itr->key) << std::endl;
+      std::cerr << "Tag Val: ";
+      pmt_print(itr->value);
+      std::cerr << std::endl;
+
+      // Write date to file up to the next tag location
+      while(nwritten < item_offset) {
+	size_t towrite = std::min(d_max_seg_size - d_total_seg_size,
+				  (size_t)(item_offset - nwritten));
+	int count = fwrite(inbuf, d_itemsize, towrite, d_fp);
+	if(count == 0)	// FIXME add error handling
+	  break;
+	nwritten += count;
+	inbuf += count * d_itemsize;
+
+	d_total_seg_size += count;
+
+	// Only add a new header if we are not at the position of the
+	// next tag
+	if((d_total_seg_size == d_max_seg_size) &&
+	   (nwritten < item_offset)) {
+	  update_last_header();
+	  write_and_update();
+	  d_total_seg_size = 0;
+	}
+      }
+
+      if(d_total_seg_size > 0) {
+	update_last_header();
+	if(update_header(itr->key, itr->value)) {
+	  write_and_update();
+	  d_total_seg_size = 0;
+	}
+      }
+      else {
+	if(update_header(itr->key, itr->value))
+	  update_last_header();
       }
     }
   }
 
+  // Finish up the rest of the data after tags
   while(nwritten < noutput_items) {
     size_t towrite = std::min(d_max_seg_size - d_total_seg_size,
 			      (size_t)(noutput_items - nwritten));
