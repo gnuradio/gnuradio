@@ -43,20 +43,49 @@ gr_make_message_debug ()
   return gnuradio::get_initial_sptr(new gr_message_debug());
 }
 
-void gr_message_debug::print(pmt::pmt_t msg){
-    std::cout << "******* MESSAGE DEBUG PRINT ********\n";
-    pmt::pmt_print(msg);
-    std::cout << "************************************\n";
+void
+gr_message_debug::print(pmt::pmt_t msg)
+{
+  std::cout << "******* MESSAGE DEBUG PRINT ********\n";
+  pmt::pmt_print(msg);
+  std::cout << "************************************\n";
 }
 
+void
+gr_message_debug::store(pmt::pmt_t msg)
+{
+  gruel::scoped_lock guard(d_mutex);
+  d_messages.push_back(msg);
+}
 
-gr_message_debug::gr_message_debug ()
+int
+gr_message_debug::num_messages()
+{
+  return (int)d_messages.size();
+}
+
+pmt::pmt_t
+gr_message_debug::get_message(int i)
+{
+  gruel::scoped_lock guard(d_mutex);
+
+  if((size_t)i >= d_messages.size()) {
+    throw std::runtime_error("gr_message_debug: index for message out of bounds.\n");
+  }
+
+  return d_messages[i];
+}
+
+gr_message_debug::gr_message_debug()
   : gr_block("message_debug",
 	     gr_make_io_signature(0, 0, 0),
 	     gr_make_io_signature(0, 0, 0))
 {
     message_port_register_in(pmt::mp("print"));
     set_msg_handler(pmt::mp("print"), boost::bind(&gr_message_debug::print, this, _1));
+
+    message_port_register_in(pmt::mp("store"));
+    set_msg_handler(pmt::mp("store"), boost::bind(&gr_message_debug::store, this, _1));
 }
 
 gr_message_debug::~gr_message_debug()
