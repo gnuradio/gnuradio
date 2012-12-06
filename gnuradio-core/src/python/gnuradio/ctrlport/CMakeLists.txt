@@ -20,28 +20,16 @@
 ########################################################################
 include(GrPython)
 
-ADD_CUSTOM_COMMAND(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/../../gnuradio_ice.py
-         ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/__init__.py
-	 ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/Booter/__init__.py
-  COMMAND ${ICE_SLICE2PY} -I${CMAKE_CURRENT_SOURCE_DIR}/../../../lib/runtime
-          --output-dir=${CMAKE_CURRENT_BINARY_DIR}/../../
-          ${CMAKE_CURRENT_SOURCE_DIR}/../../../lib/runtime/gnuradio.ice
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../../../lib/runtime/gnuradio.ice
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-  COMMENT "Slicing gnuradio.slice"
+EXECUTE_PROCESS(
+  COMMAND ${ICE_SLICE2PY} -I${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/runtime
+          --output-dir=${CMAKE_BINARY_DIR}/gnuradio-core/src/python
+          ${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/runtime/gnuradio.ice
 )
 
-ADD_CUSTOM_COMMAND(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/frontend_ice.py
-         ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/Frontend/__init__.py
-  COMMAND ${ICE_SLICE2PY} -I${CMAKE_CURRENT_SOURCE_DIR}/../../../lib/runtime
-          --output-dir=${CMAKE_CURRENT_BINARY_DIR}/../../
-          ${CMAKE_CURRENT_SOURCE_DIR}/../../../lib/runtime/frontend.ice
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../../../lib/runtime/frontend.ice
-          ${CMAKE_CURRENT_BINARY_DIR}/../../gnuradio_ice.py
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-  COMMENT "Slicing frontend.slice"
+EXECUTE_PROCESS(
+  COMMAND ${ICE_SLICE2PY} -I${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/runtime
+          --output-dir=${CMAKE_BINARY_DIR}/gnuradio-core/src/python
+          ${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/runtime/frontend.ice
 )
 
 GR_PYTHON_INSTALL(
@@ -57,8 +45,8 @@ GR_PYTHON_INSTALL(
 # information.
 GR_PYTHON_INSTALL(
     FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/../../gnuradio_ice.py
-    ${CMAKE_CURRENT_BINARY_DIR}/../../frontend_ice.py
+    ${CMAKE_BINARY_DIR}/gnuradio-core/src/python/gnuradio_ice.py
+    ${CMAKE_BINARY_DIR}/gnuradio-core/src/python/frontend_ice.py
     DESTINATION ${GR_PYTHON_DIR}
     COMPONENT "core_python"
 )
