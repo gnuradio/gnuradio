@@ -43,6 +43,27 @@ class test_pdu(gr_unittest.TestCase):
 
         dbg = gr.message_debug()
 
+        # Test that the right number of ports exist.
+        pi = dbg.message_ports_in()
+        po = dbg.message_ports_out()
+        self.assertEqual(pmt.pmt_length(pi), 2)
+        self.assertEqual(pmt.pmt_length(po), 0)
+
+        pi = snk3.message_ports_in()
+        po = snk3.message_ports_out()
+        self.assertEqual(pmt.pmt_length(pi), 0)
+        self.assertEqual(pmt.pmt_length(po), 1)
+
+        #print "Message Debug input ports: "
+        #pmt.pmt_print(pi)
+        #print "Message Debug output ports: "
+        #pmt.pmt_print(po)
+        
+        #print "Stream to PDU input ports: "
+        #pmt.pmt_print(pi)
+        #print "Stream to PDU output ports: "
+        #pmt.pmt_print(po)
+
         self.tb.connect(src, snk)
         self.tb.connect(src, snk2)
         self.tb.connect(src, snk3)

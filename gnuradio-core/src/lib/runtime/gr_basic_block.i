@@ -48,6 +48,8 @@ public:
     std::string alias();
     void set_block_alias(std::string name);
     void _post(pmt_t which_port, pmt_t msg);
+    pmt_t message_ports_in();
+    pmt_t message_ports_out();
 };
 
 %rename(block_ncurrently_allocated) gr_basic_block_ncurrently_allocated;

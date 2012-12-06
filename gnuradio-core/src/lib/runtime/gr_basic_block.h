@@ -72,6 +72,7 @@ private:
    
     typedef std::deque<pmt::pmt_t>    msg_queue_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::pmt_comperator>    msg_queue_map_t;
+    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::pmt_comperator>::iterator msg_queue_map_itr;
     msg_queue_map_t msg_queue;
 //    boost::condition_variable msg_queue_ready;
     std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::pmt_comperator> msg_queue_ready;
@@ -141,6 +142,22 @@ public:
     void message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg);
     void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
     void message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target);
+
+    /*!
+     * \brief Get input message port names.
+     *
+     * Returns the available input message ports for a block. The
+     * return object is a PMT vector that is filled with PMT symbols.
+     */
+    pmt::pmt_t message_ports_in();
+
+    /*!
+     * \brief Get output message port names.
+     *
+     * Returns the available output message ports for a block. The
+     * return object is a PMT vector that is filled with PMT symbols.
+     */
+    pmt::pmt_t message_ports_out();
 
     /*!
      * Accept msg, place in queue, arrange for thread to be awakened if it's not already.

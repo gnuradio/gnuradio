@@ -77,56 +77,101 @@ gr_basic_block::set_block_alias(std::string name)
 // ** Message passing interface **
 
 //  - register a new input message port
-void gr_basic_block::message_port_register_in(pmt::pmt_t port_id){
-    msg_queue[port_id] = msg_queue_t();
-    msg_queue_ready[port_id] = boost::shared_ptr<boost::condition_variable>(new boost::condition_variable());
-    }
+void
+gr_basic_block::message_port_register_in(pmt::pmt_t port_id)
+{
+  if(!pmt::pmt_is_symbol(port_id)) {
+    throw std::runtime_error("message_port_register_in: bad port id");
+  }
+  msg_queue[port_id] = msg_queue_t();
+  msg_queue_ready[port_id] = boost::shared_ptr<boost::condition_variable>(new boost::condition_variable());
+}
+
+pmt::pmt_t
+gr_basic_block::message_ports_in()
+{
+  pmt::pmt_t port_names = pmt::pmt_make_vector(msg_queue.size(), pmt::PMT_NIL);
+  msg_queue_map_itr itr = msg_queue.begin();
+  for(size_t i = 0; i < msg_queue.size(); i++) {
+    pmt::pmt_vector_set(port_names, i, (*itr).first);
+    itr++;
+  }
+  return port_names;
+}
 
 //  - register a new output message port
-void gr_basic_block::message_port_register_out(pmt::pmt_t port_id){
-    if(!pmt::pmt_is_symbol(port_id)){ throw std::runtime_error("bad port id"); }
-    if(pmt::pmt_dict_has_key(message_subscribers, port_id)){ throw std::runtime_error("port already in use"); }
-    message_subscribers = pmt::pmt_dict_add(message_subscribers, port_id, pmt::PMT_NIL);
-    }
+void
+gr_basic_block::message_port_register_out(pmt::pmt_t port_id)
+{
+  if(!pmt::pmt_is_symbol(port_id)) {
+    throw std::runtime_error("message_port_register_out: bad port id");
+  }
+  if(pmt::pmt_dict_has_key(message_subscribers, port_id)) {
+    throw std::runtime_error("message_port_register_out: port already in use");
+  }
+  message_subscribers = pmt::pmt_dict_add(message_subscribers, port_id, pmt::PMT_NIL);
+}
+
+pmt::pmt_t
+gr_basic_block::message_ports_out()
+{
+  size_t len = pmt::pmt_length(message_subscribers);
+  pmt::pmt_t port_names = pmt::pmt_make_vector(len, pmt::PMT_NIL);
+  pmt::pmt_t keys = pmt::pmt_dict_keys(message_subscribers);
+  for(size_t i = 0; i < len; i++) {
+    pmt::pmt_vector_set(port_names, i, pmt::pmt_nth(i, keys));
+  }
+  return port_names;
+}
 
 //  - publish a message on a message port
-void gr_basic_block::message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg){
-    if(!pmt::pmt_dict_has_key(message_subscribers, port_id)){ throw std::runtime_error("port does not exist"); }
-    pmt::pmt_t currlist = pmt::pmt_dict_ref(message_subscribers,port_id,pmt::PMT_NIL);
-    // iterate through subscribers on port
-    while( pmt::pmt_is_pair(currlist) ){
-        pmt::pmt_t target = pmt::pmt_car(currlist);
+void gr_basic_block::message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg)
+{
+  if(!pmt::pmt_dict_has_key(message_subscribers, port_id)) {
+    throw std::runtime_error("port does not exist");
+  }
+  
+  pmt::pmt_t currlist = pmt::pmt_dict_ref(message_subscribers, port_id, pmt::PMT_NIL);
+  // iterate through subscribers on port
+  while(pmt::pmt_is_pair(currlist)) {
+    pmt::pmt_t target = pmt::pmt_car(currlist);
 
-        pmt::pmt_t block = pmt::pmt_car(target);
-        pmt::pmt_t port = pmt::pmt_cdr(target);
+    pmt::pmt_t block = pmt::pmt_car(target);
+    pmt::pmt_t port = pmt::pmt_cdr(target);
     
-        currlist = pmt::pmt_cdr(currlist);
-        gr_basic_block_sptr blk = global_block_registry.block_lookup(block);
-        //blk->post(msg);
-        blk->post(port, msg);
-        }
-    }
+    currlist = pmt::pmt_cdr(currlist);
+    gr_basic_block_sptr blk = global_block_registry.block_lookup(block);
+    //blk->post(msg);
+    blk->post(port, msg);
+  }
+}
 
 //  - subscribe to a message port
-void gr_basic_block::message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target){
-    if(!pmt::pmt_dict_has_key(message_subscribers, port_id)){ 
-        std::stringstream ss;
-        ss << "Port does not exist: \"" << pmt::pmt_write_string(port_id) << "\" on block: " << pmt::pmt_write_string(target) << std::endl;
-        throw std::runtime_error(ss.str());
-    }
-    pmt::pmt_t currlist = pmt::pmt_dict_ref(message_subscribers,port_id,pmt::PMT_NIL);
-    message_subscribers = pmt::pmt_dict_add(message_subscribers,port_id,pmt::pmt_list_add(currlist,target));
-    }
+void gr_basic_block::message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target)
+{
+  if(!pmt::pmt_dict_has_key(message_subscribers, port_id)) {
+    std::stringstream ss;
+    ss << "Port does not exist: \"" << pmt::pmt_write_string(port_id)
+       << "\" on block: " << pmt::pmt_write_string(target) << std::endl;
+    throw std::runtime_error(ss.str());
+  }
+  
+  pmt::pmt_t currlist = pmt::pmt_dict_ref(message_subscribers,port_id,pmt::PMT_NIL);
+  message_subscribers = pmt::pmt_dict_add(message_subscribers,port_id,pmt::pmt_list_add(currlist,target));
+}
 
-void gr_basic_block::message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target){
-    if(!pmt::pmt_dict_has_key(message_subscribers, port_id)){ 
-        std::stringstream ss;
-        ss << "Port does not exist: \"" << pmt::pmt_write_string(port_id) << "\" on block: " << pmt::pmt_write_string(target) << std::endl;
-        throw std::runtime_error(ss.str());
-    }
-    pmt::pmt_t currlist = pmt::pmt_dict_ref(message_subscribers,port_id,pmt::PMT_NIL);
-    message_subscribers = pmt::pmt_dict_add(message_subscribers,port_id,pmt::pmt_list_rm(currlist,target));
-    }
+void gr_basic_block::message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target)
+{
+  if(!pmt::pmt_dict_has_key(message_subscribers, port_id)) {
+    std::stringstream ss;
+    ss << "Port does not exist: \"" << pmt::pmt_write_string(port_id)
+       << "\" on block: " << pmt::pmt_write_string(target) << std::endl;
+    throw std::runtime_error(ss.str());
+  }
+
+  pmt::pmt_t currlist = pmt::pmt_dict_ref(message_subscribers,port_id,pmt::PMT_NIL);
+  message_subscribers = pmt::pmt_dict_add(message_subscribers,port_id,pmt::pmt_list_rm(currlist,target));
+}
 
 void
 gr_basic_block::_post(pmt_t which_port, pmt_t msg)
