@@ -79,6 +79,8 @@ gr_file_sink_base::open(const char *filename)
     perror (filename);
     return false;
   }
+  std::cerr << "OPENING NEW FILE: " << filename << std::endl;
+  std::cerr << "FD: " << fd << std::endl;
 
   if (d_new_fp){		// if we've already got a new one open, close it
     fclose(d_new_fp);
@@ -89,6 +91,8 @@ gr_file_sink_base::open(const char *filename)
     perror (filename);
     ::close(fd);		// don't leak file descriptor if fdopen fails.
   }
+
+  std::cerr << "D_NEW_FD: " << d_new_fp << std::endl;
 
   d_updated = true;
   return d_new_fp != 0;

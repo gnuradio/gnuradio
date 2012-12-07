@@ -52,7 +52,8 @@ gr_make_file_meta_sink(size_t itemsize, const char *filename,
 		       double samp_rate=1, double relative_rate=1,
 		       gr_file_types type=GR_FILE_FLOAT, bool complex=true,
 		       size_t max_segment_size=1000000,
-		       const std::string &extra_dict="");
+		       const std::string &extra_dict="",
+		       bool detached_header=false);
 
 /*!
  * \brief Write stream to file with meta-data headers.
@@ -76,7 +77,7 @@ gr_make_file_meta_sink(size_t itemsize, const char *filename,
  * segment starts plus the data segment size. Following will either be
  * a new header or EOF.
  */
-class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_base
+class GR_CORE_API gr_file_meta_sink : public gr_sync_block
 {
   /*!
    * \brief Create a meta-data file sink.
@@ -94,15 +95,24 @@ class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_
    *    before the header is repeated (in items).
    * \param extra_dict (string): a serialized PMT dictionary of extra
    *    information. Currently not supported.
+   * \param detached_header (bool): Set to true to store the header
+   *    info in a separate file (named filename.hdr)
    */
   friend GR_CORE_API gr_file_meta_sink_sptr
     gr_make_file_meta_sink(size_t itemsize, const char *filename,
 			   double samp_rate, double relative_rate,
 			   gr_file_types type, bool complex,
 			   size_t max_segment_size,
-			   const std::string &extra_dict);
+			   const std::string &extra_dict,
+			   bool detached_header);
 
  private:
+  enum meta_state_t {
+    STATE_INLINE=0,
+    STATE_DETACHED
+  };
+
+
   size_t d_itemsize;
   double d_samp_rate;
   double d_relative_rate;
@@ -111,22 +121,43 @@ class GR_CORE_API gr_file_meta_sink : public gr_sync_block, public gr_file_sink_
   pmt_t d_header;
   pmt_t d_extra;
   size_t d_extra_size;
+  bool d_updated;
+  bool d_unbuffered;
+
+  boost::mutex d_mutex;
+  FILE *d_new_fp, *d_new_hdr_fp;
+  FILE *d_fp, *d_hdr_fp;
+  meta_state_t d_state;
 
  protected:
   gr_file_meta_sink(size_t itemsize, const char *filename,
 		    double samp_rate=1, double relative_rate=1,
 		    gr_file_types type=GR_FILE_FLOAT, bool complex=true,
 		    size_t max_segment_size=1000000,
-		    const std::string &extra_dict="");
+		    const std::string &extra_dict="",
+		    bool detached_header=false);
 
-  void write_header(pmt_t header, pmt_t extra);
+  void write_header(FILE *fp, pmt_t header, pmt_t extra);
   void update_header(pmt_t key, pmt_t value);
   void update_last_header();
+  void update_last_header_inline();
+  void update_last_header_detached();
   void write_and_update();
   void update_rx_time();
 
+  bool _open(FILE **fp, const char *filename);
+
  public:
   ~gr_file_meta_sink();
+
+  bool open(const char *filename);
+  void close();
+  void do_update();
+
+  void set_unbuffered(bool unbuffered)
+  {
+    d_unbuffered = unbuffered;
+  }
 
   //FIXME: add setters/getters for properties.
 

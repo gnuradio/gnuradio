@@ -41,7 +41,8 @@ gr_make_file_meta_sink(size_t itemsize, const char *filename,
 		       double samp_rate=1, double relative_rate=1,
 		       gr_file_types type=GR_FILE_FLOAT, bool complex=true,
 		       size_t max_segment_size=1000000,
-		       const std::string & extra_dict="");
+		       const std::string & extra_dict="",
+		       bool detached_header=false);
 
 class gr_file_meta_sink : public gr_sync_block, public gr_file_sink_base
 {
@@ -50,7 +51,8 @@ class gr_file_meta_sink : public gr_sync_block, public gr_file_sink_base
 		    double samp_rate, double relative_rate,
 		    gr_file_types type, bool complex,
 		    size_t max_segment_size,
-		    const std::string & extra_dict);
+		    const std::string & extra_dict,
+		    bool detached_header);
 
  public:
   ~gr_file_meta_sink();
