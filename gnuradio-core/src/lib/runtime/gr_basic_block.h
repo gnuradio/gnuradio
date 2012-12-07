@@ -97,7 +97,9 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   std::string          d_symbol_name;
   std::string          d_symbol_alias;
   vcolor               d_color;
+
   msg_queue_map_t msg_queue;
+  std::vector<boost::any> d_rpc_vars; // container for all RPC variables
   
   gr_basic_block(void){} //allows pure virtual interface sub-classes
   
