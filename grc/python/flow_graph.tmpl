@@ -189,6 +189,7 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 		self.connect($make_port_sig($source), $make_port_sig($sink))
 	#end if
 #end for
+
 ########################################################
 ##Create Asynch Message Connections
 ########################################################
@@ -198,7 +199,21 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 		$DIVIDER
 #end if
 #for $msg in $messages2
-		self.msg_connect(self.$msg.get_source().get_parent().get_id(), "$msg.get_source().get_name()", self.$msg.get_sink().get_parent().get_id(), "$msg.get_sink().get_name()")
+		#set $sr = $msg.get_source()
+		#set $source = "self.%s"%($sr.get_parent().get_id())
+		#set $source_port = $sr.get_name();
+		#if $sr.get_parent().get_key() == "pad_source"
+			#set $source = "self"
+			#set $source_port = $sr.get_parent().get_param("label").get_value();
+		#end if
+		#set $sk = $msg.get_sink()
+		#set $sink = "self.%s"%($sk.get_parent().get_id())
+		#set $sink_port = $sk.get_name();
+		#if $sk.get_parent().get_key() == "pad_sink"
+			#set $sink = "self"
+			#set $sink_port = $sk.get_parent().get_param("label").get_value();
+		#end if
+		self.msg_connect($source, "$source_port", $sink, "$sink_port")
 #end for
 
 ########################################################

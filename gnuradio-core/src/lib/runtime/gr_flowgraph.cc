@@ -149,6 +149,16 @@ gr_flowgraph::check_valid_port(gr_io_signature_sptr sig, int port)
   }
 }
 
+void 
+gr_flowgraph::check_valid_port(const gr_msg_endpoint &e)
+{
+    if (GR_FLOWGRAPH_DEBUG)
+        std::cout << "check_valid_port( " << e.block() << ", " << e.port() << ")\n";
+
+    if(!e.block()->has_msg_port(e.port()))
+        throw std::invalid_argument("invalid msg port in connect() or disconnect()");
+}
+
 void
 gr_flowgraph::check_dst_not_used(const gr_endpoint &dst)
 {
@@ -181,8 +191,10 @@ gr_flowgraph::calc_used_blocks()
   gr_basic_block_vector_t tmp;
 
   // make sure free standing message blocks are included
-  for (gr_basic_block_vector_t::iterator it=d_msgblocks.begin(); it!=d_msgblocks.end(); it++){
-    tmp.push_back(*it);
+  for (gr_msg_edge_viter_t p = d_msg_edges.begin(); p != d_msg_edges.end(); p++) {
+//  for now only blocks receiving messages get a thread context - uncomment to allow senders to also obtain one
+//    tmp.push_back(p->src().block());
+    tmp.push_back(p->dst().block());
   }
 
   // Collect all blocks in the edge list
@@ -477,7 +489,27 @@ gr_flowgraph::topological_dfs_visit(gr_basic_block_sptr block, gr_basic_block_ve
   output.push_back(block);
 }
 
-void gr_flowgraph::add_msg_block(gr_basic_block_sptr blk){
-    d_msgblocks.push_back(blk);
+void gr_flowgraph::connect(const gr_msg_endpoint &src, const gr_msg_endpoint &dst){
+  check_valid_port(src);
+  check_valid_port(dst);
+  for (gr_msg_edge_viter_t p = d_msg_edges.begin(); p != d_msg_edges.end(); p++) {
+    if(p->src() == src && p->dst() == dst){ 
+        throw std::runtime_error("connect called on already connected edge!");
+        }
+    }
+  d_msg_edges.push_back(gr_msg_edge(src,dst));
 }
+
+void gr_flowgraph::disconnect(const gr_msg_endpoint &src, const gr_msg_endpoint &dst){
+  check_valid_port(src);
+  check_valid_port(dst);
+  for (gr_msg_edge_viter_t p = d_msg_edges.begin(); p != d_msg_edges.end(); p++) {
+    if(p->src() == src && p->dst() == dst){
+        d_msg_edges.erase(p);
+        return;
+        }
+  }
+  throw std::runtime_error("disconnect called on non-connected edge!");
+}
+
 

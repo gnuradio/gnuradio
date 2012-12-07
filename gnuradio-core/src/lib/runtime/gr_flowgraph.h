@@ -52,6 +52,31 @@ inline bool gr_endpoint::operator==(const gr_endpoint &other) const
 	  d_port == other.d_port);
 }
 
+class GR_CORE_API gr_msg_endpoint
+{
+private:
+  gr_basic_block_sptr d_basic_block;
+  pmt::pmt_t d_port;
+  bool d_is_hier;
+public:
+  gr_msg_endpoint() : d_basic_block(), d_port(pmt::PMT_NIL) { }
+  gr_msg_endpoint(gr_basic_block_sptr block, pmt::pmt_t port, bool is_hier=false){ d_basic_block = block; d_port = port; d_is_hier = is_hier;}
+  gr_basic_block_sptr block() const { return d_basic_block; }
+  pmt::pmt_t port() const { return d_port; }
+  bool is_hier() const { return d_is_hier; }
+  void set_hier(bool h) { d_is_hier = h; }
+
+  bool operator==(const gr_msg_endpoint &other) const;
+
+};
+
+inline bool gr_msg_endpoint::operator==(const gr_msg_endpoint &other) const
+{
+  return (d_basic_block == other.d_basic_block &&
+	  pmt::pmt_equal(d_port, other.d_port));
+}
+
+
 // Hold vectors of gr_endpoint objects
 typedef std::vector<gr_endpoint> gr_endpoint_vector_t;
 typedef std::vector<gr_endpoint>::iterator gr_endpoint_viter_t;
@@ -75,10 +100,34 @@ private:
   gr_endpoint d_dst;
 };
 
+
 // Hold vectors of gr_edge objects
 typedef std::vector<gr_edge> gr_edge_vector_t;
 typedef std::vector<gr_edge>::iterator gr_edge_viter_t;
 
+
+/*!
+ *\brief Class representing a msg connection between to graph msg endpoints
+ *
+ */
+class GR_CORE_API gr_msg_edge
+{
+public:
+  gr_msg_edge() : d_src(), d_dst() { };
+  gr_msg_edge(const gr_msg_endpoint &src, const gr_msg_endpoint &dst) : d_src(src), d_dst(dst) { }
+  ~gr_msg_edge() {}
+
+  const gr_msg_endpoint &src() const { return d_src; }
+  const gr_msg_endpoint &dst() const { return d_dst; }
+
+private:
+  gr_msg_endpoint d_src;
+  gr_msg_endpoint d_dst;
+};
+
+// Hold vectors of gr_edge objects
+typedef std::vector<gr_msg_edge> gr_msg_edge_vector_t;
+typedef std::vector<gr_msg_edge>::iterator gr_msg_edge_viter_t;
 
 // Create a shared pointer to a heap allocated flowgraph
 // (types defined in gr_runtime_types.h)
@@ -110,7 +159,11 @@ public:
   void disconnect(gr_basic_block_sptr src_block, int src_port,
 		  gr_basic_block_sptr dst_block, int dst_port);
 
-  void add_msg_block(gr_basic_block_sptr blk);
+  // Connect two msg endpoints
+  void connect(const gr_msg_endpoint &src, const gr_msg_endpoint &dst);
+  
+  // Disconnect two msg endpoints
+  void disconnect(const gr_msg_endpoint &src, const gr_msg_endpoint &dst);
 
   // Validate connectivity, raise exception if invalid
   void validate();
@@ -120,6 +173,9 @@ public:
 
   // Return vector of edges
   const gr_edge_vector_t &edges() const { return d_edges; }
+  
+  // Return vector of msg edges
+  const gr_msg_edge_vector_t &msg_edges() const { return d_msg_edges; }
 
   // Return vector of connected blocks
   gr_basic_block_vector_t calc_used_blocks();
@@ -130,11 +186,11 @@ public:
   // Return vector of vectors of disjointly connected blocks, topologically
   // sorted.
   std::vector<gr_basic_block_vector_t> partition();
-  gr_basic_block_vector_t d_msgblocks;
 
 protected:
   gr_basic_block_vector_t d_blocks;
   gr_edge_vector_t d_edges;
+  gr_msg_edge_vector_t d_msg_edges;
 
   gr_flowgraph();
   std::vector<int> calc_used_ports(gr_basic_block_sptr block, bool check_inputs);
@@ -146,6 +202,7 @@ protected:
 private:
 
   void check_valid_port(gr_io_signature_sptr sig, int port);
+  void check_valid_port(const gr_msg_endpoint &e);
   void check_dst_not_used(const gr_endpoint &dst);
   void check_type_match(const gr_endpoint &src, const gr_endpoint &dst);
   gr_edge_vector_t calc_connections(gr_basic_block_sptr block, bool check_inputs); // false=use outputs

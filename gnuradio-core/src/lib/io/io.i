@@ -49,6 +49,8 @@
 #include <gr_tagged_stream_to_pdu.h>
 #include <gr_message_debug.h>
 #include <gr_pdu.h>
+#include <gr_tuntap_pdu.h>
+#include <gr_socket_pdu.h>
 %}
 
 %include "gr_file_sink_base.i"
@@ -75,4 +77,7 @@
 %include "gr_tagged_stream_to_pdu.i"
 %include "gr_message_debug.i"
 %include "gr_pdu.i"
+%include "gr_tuntap_pdu.i"
+%include "gr_socket_pdu.i"
+
 

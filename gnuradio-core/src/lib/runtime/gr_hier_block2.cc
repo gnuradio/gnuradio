@@ -44,7 +44,9 @@ gr_hier_block2::gr_hier_block2(const std::string &name,
                                gr_io_signature_sptr input_signature,
                                gr_io_signature_sptr output_signature)
   : gr_basic_block(name, input_signature, output_signature),
-    d_detail(new gr_hier_block2_detail(this))
+    d_detail(new gr_hier_block2_detail(this)),
+    hier_message_ports_in(pmt::PMT_NIL),
+    hier_message_ports_out(pmt::PMT_NIL)
 {
   // This bit of magic ensures that self() works in the constructors of derived classes.
   gnuradio::detail::sptr_magic::create_and_stash_initial_sptr(this);
@@ -140,6 +142,7 @@ gr_hier_block2::unlock()
 {
   d_detail->unlock();
 }
+
 
 gr_flat_flowgraph_sptr
 gr_hier_block2::flatten() const

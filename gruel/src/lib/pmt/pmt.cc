@@ -1340,6 +1340,22 @@ pmt_list_rm(pmt_t list, const pmt_t& item)
     }
 }
 
+bool
+pmt_list_has(pmt_t list, const pmt_t& item)
+{
+  if(pmt_is_pair(list)){
+    pmt_t left = pmt_car(list);
+    pmt_t right = pmt_cdr(list);
+    if(pmt_equal(left,item))
+        return true;
+    return pmt_list_has(right, item);   
+  } else {
+    if(pmt_is_null(list))
+        return false;
+    throw std::runtime_error("list contains invalid format!");
+  }
+}
+
 pmt_t
 pmt_caar(pmt_t pair)
 {
