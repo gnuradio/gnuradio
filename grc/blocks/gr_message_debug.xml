@@ -19,4 +19,9 @@
 		<type>message</type>
 		<optional>1</optional>
 	</sink>
+	<sink>
+		<name>print_pdu_verbose</name>
+		<type>message</type>
+        <optional>1</optional>
+	</sink>
 </block>

@@ -61,6 +61,7 @@ private:
   gr_endpoint_vector_t d_outputs;             // Single internal endpoint per external output
   gr_basic_block_vector_t d_blocks;
 
+
   void connect_input(int my_port, int port, gr_basic_block_sptr block);
   void connect_output(int my_port, int port, gr_basic_block_sptr block);
   void disconnect_input(int my_port, int port, gr_basic_block_sptr block);

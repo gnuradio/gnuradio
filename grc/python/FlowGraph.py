@@ -66,6 +66,8 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 			'in': self.get_pad_sources(),
 			'out': self.get_pad_sinks(),
 		}[direction]
+        # we only want stream ports
+		sorted_pads = filter(lambda b: b.get_param('type').get_evaluated() != 'message', sorted_pads);
 		#load io signature
 		return [{
 			'label': str(pad.get_param('label').get_evaluated()),
@@ -94,6 +96,14 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		"""
 		pads = filter(lambda b: b.get_key() == 'pad_sink', self.get_enabled_blocks())
 		return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
+
+	def get_msg_pad_sources(self):
+		ps = self.get_pad_sources();
+		return filter(lambda b: b.get_param('type').get_evaluated() == 'message', ps);
+
+	def get_msg_pad_sinks(self):
+		ps = self.get_pad_sinks();
+		return filter(lambda b: b.get_param('type').get_evaluated() == 'message', ps);
 
 	def get_imports(self):
 		"""

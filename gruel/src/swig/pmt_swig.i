@@ -701,6 +701,11 @@ pmt_t pmt_list_add(pmt_t list, const pmt_t& item);
  */
 pmt_t pmt_list_rm(pmt_t list, const pmt_t& item);
 
+/*!
+ * \brief Return bool of \p list contains \p item
+ */
+bool pmt_list_has(pmt_t list, const pmt_t& item);
+
 /*
  * ------------------------------------------------------------------------
  *			     read / write

@@ -734,6 +734,12 @@ GRUEL_API pmt_t pmt_list_add(pmt_t list, const pmt_t& item);
  */
 GRUEL_API pmt_t pmt_list_rm(pmt_t list, const pmt_t& item);
 
+/*!
+ * \brief Return bool of \p list contains \p item
+ */
+GRUEL_API bool pmt_list_has(pmt_t list, const pmt_t& item);
+
+
 /*
  * ------------------------------------------------------------------------
  *			     read / write

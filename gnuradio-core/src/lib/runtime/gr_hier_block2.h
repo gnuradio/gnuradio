@@ -166,6 +166,39 @@ public:
   gr_flat_flowgraph_sptr flatten() const;
 
   gr_hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
+
+  bool has_msg_port(pmt::pmt_t which_port){
+    return message_port_is_hier(which_port) || gr_basic_block::has_msg_port(which_port);
+    }   
+  
+  bool message_port_is_hier(pmt::pmt_t port_id){
+    return message_port_is_hier_in(port_id) || message_port_is_hier_out(port_id);
+    }
+  bool message_port_is_hier_in(pmt::pmt_t port_id){
+    return pmt::pmt_list_has(hier_message_ports_in, port_id);
+    }
+  bool message_port_is_hier_out(pmt::pmt_t port_id){
+    return pmt::pmt_list_has(hier_message_ports_out, port_id);
+    }
+
+  pmt::pmt_t hier_message_ports_in;
+  pmt::pmt_t hier_message_ports_out;
+
+  void message_port_register_hier_in(pmt::pmt_t port_id){
+    if(pmt::pmt_list_has(hier_message_ports_in, port_id))
+        throw std::invalid_argument("hier msg in port by this name already registered");
+    if(msg_queue.find(port_id) != msg_queue.end())
+        throw std::invalid_argument("block already has a primitive input port by this name");
+    hier_message_ports_in = pmt::pmt_list_add(hier_message_ports_in, port_id);
+    }
+  void message_port_register_hier_out(pmt::pmt_t port_id){
+    if(pmt::pmt_list_has(hier_message_ports_out, port_id))
+        throw std::invalid_argument("hier msg out port by this name already registered");
+    if(pmt::pmt_dict_has_key(message_subscribers, port_id))
+        throw std::invalid_argument("block already has a primitive output port by this name");
+    hier_message_ports_out = pmt::pmt_list_add(hier_message_ports_out, port_id);
+    }
+
 };
 
 inline gr_hier_block2_sptr cast_to_hier_block2_sptr(gr_basic_block_sptr block) {

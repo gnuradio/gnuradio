@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2005 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,20 +20,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef GR_PDU_H
-#define GR_PDU_H
+GR_SWIG_BLOCK_MAGIC(gr,socket_pdu);
 
-#include <gr_complex.h>
-#include <gruel/pmt.h>
+%ignore tcp_connection;
 
-#define pdu_port_id     pmt::mp("pdus")
-#define pdu_length_tag  pmt::mp("pdu_length")
+%{
+#include <gr_socket_pdu.h>
+%}
 
-enum gr_pdu_vector_type { BYTE, FLOAT, COMPLEX };
+%include "gr_stream_pdu_base.h"
+%include "gr_socket_pdu.h"
 
-size_t gr_pdu_itemsize(gr_pdu_vector_type type);
-bool gr_pdu_type_matches(gr_pdu_vector_type type, pmt::pmt_t v);
-pmt::pmt_t gr_pdu_make_vector(gr_pdu_vector_type type, const uint8_t* buf, size_t items);
-gr_pdu_vector_type type_from_pmt(pmt::pmt_t vector);
-
-#endif

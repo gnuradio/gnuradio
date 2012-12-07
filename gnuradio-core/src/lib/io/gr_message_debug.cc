@@ -58,6 +58,30 @@ gr_message_debug::store(pmt::pmt_t msg)
   d_messages.push_back(msg);
 }
 
+void
+gr_message_debug::print_verbose(pmt::pmt_t msg)
+{
+  pmt::pmt_t meta = pmt::pmt_car(msg);
+  pmt::pmt_t vector = pmt::pmt_cdr(msg);
+  std::cout << "* MESSAGE DEBUG PRINT PDU VERBOSE *\n";
+  pmt::pmt_print(meta);
+  size_t len = pmt::pmt_length(vector);
+  std::cout << "pdu_length = " << len << std::endl;
+  std::cout << "contents = " << std::endl;
+  size_t offset(0);
+  const uint8_t* d = (const uint8_t*) pmt_uniform_vector_elements(vector, offset);
+  for(size_t i=0; i<len; i+=16){
+    printf("%04x: ", i);
+    for(size_t j=i; j<std::min(i+16,len); j++){
+      printf("%02x ",d[j] );
+    }
+
+    std::cout << std::endl;
+  }
+
+  std::cout << "***********************************\n";
+}
+
 int
 gr_message_debug::num_messages()
 {
@@ -81,11 +105,11 @@ gr_message_debug::gr_message_debug()
 	     gr_make_io_signature(0, 0, 0),
 	     gr_make_io_signature(0, 0, 0))
 {
-    message_port_register_in(pmt::mp("print"));
-    set_msg_handler(pmt::mp("print"), boost::bind(&gr_message_debug::print, this, _1));
-
-    message_port_register_in(pmt::mp("store"));
-    set_msg_handler(pmt::mp("store"), boost::bind(&gr_message_debug::store, this, _1));
+  message_port_register_in(pmt::mp("print"));
+  set_msg_handler(pmt::mp("print"), boost::bind(&gr_message_debug::print, this, _1));
+  
+  message_port_register_in(pmt::mp("store"));
+  set_msg_handler(pmt::mp("store"), boost::bind(&gr_message_debug::store, this, _1));
 }
 
 gr_message_debug::~gr_message_debug()

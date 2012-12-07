@@ -55,6 +55,7 @@ class GR_CORE_API gr_message_debug : public gr_block
    * \param msg A pmt message passed from the scheduler's message handling.
    */
   void print(pmt::pmt_t msg);
+  void print_verbose(pmt::pmt_t msg);
 
   /*!
    * \brief Messages received in this port are stored in a vector.

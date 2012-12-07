@@ -40,6 +40,8 @@ gr_hier_block2_sptr gr_make_hier_block2(const std::string name,
 %rename(primitive_disconnect) gr_hier_block2::disconnect;
 %rename(primitive_msg_connect) gr_hier_block2::msg_connect;
 %rename(primitive_msg_disconnect) gr_hier_block2::msg_disconnect;
+%rename(primitive_message_port_register_hier_in) gr_hier_block2::message_port_register_hier_in;
+%rename(primitive_message_port_register_hier_out) gr_hier_block2::message_port_register_hier_out;
 
 class gr_hier_block2 : public gr_basic_block
 {
@@ -77,6 +79,10 @@ public:
   void disconnect_all();
   void lock();
   void unlock();
+
+  void message_port_register_hier_in(pmt::pmt_t port_id);
+  void message_port_register_hier_out(pmt::pmt_t port_id);
+
 
   gr_hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
 };
