@@ -20,7 +20,11 @@
 #
 
 from gnuradio_core import hier_block2_swig
-from gruel import pmt
+
+try:
+    import pmt
+except ImportError:
+    from gruel import pmt
 
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.

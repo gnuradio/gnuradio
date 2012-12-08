@@ -233,6 +233,7 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
     {
       d_rpc_vars.push_back(s);
     }
+#endif /* GR_CTRLPORT */
 
     /*!
      * \brief Set up the RPC registered variables.
@@ -243,7 +244,6 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
      * (rpcbasic_sptr(...)) and stored using add_rpc_variable.
      */
     virtual void setup_rpc() {};
-#endif /* GR_CTRLPORT */
   
   /*!
    * \brief Confirm that ninputs and noutputs is an acceptable combination.
