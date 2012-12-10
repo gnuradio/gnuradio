@@ -19,7 +19,8 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(PROGRAMS
+install(
+  FILES
   strobe.grc
   DESTINATION ${GR_PKG_DATA_DIR}/examples/msg_passing
   COMPONENT "core_python"
