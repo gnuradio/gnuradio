@@ -24,4 +24,3 @@ GR_PYTHON_INSTALL(PROGRAMS
   DESTINATION ${GR_PKG_DATA_DIR}/examples/tags
   COMPONENT "core_python"
 )
-
