@@ -232,6 +232,8 @@ install(
 ########################################################################
 list(APPEND GR_TEST_TARGET_DEPS volk gruel gnuradio-core)
 list(APPEND GR_TEST_PYTHON_DIRS
+    ${CMAKE_SOURCE_DIR}/gruel/src/python
+    ${CMAKE_BINARY_DIR}/gruel/src/swig
     ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
     ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
 )
