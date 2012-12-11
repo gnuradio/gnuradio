@@ -498,6 +498,8 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
     std::cout << "Flattening msg connections: " << std::endl;
 
+
+  std::vector<std::pair<gr_msg_endpoint, bool> > resolved_endpoints;
   for(q = msg_edges.begin(); q != msg_edges.end(); q++) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << boost::format(" flattening edge ( %s, %s, %d) -> ( %s, %s, %d)\n") % q->src().block() % q->src().port() % q->src().is_hier() % q->dst().block() % q->dst().port() % q->dst().is_hier();
@@ -509,6 +511,7 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
         if (GR_HIER_BLOCK2_DETAIL_DEBUG)
           std::cout << boost::format("  resolve hier output (%s, %s)") % q->dst().block() % q->dst().port() << std::endl;
         sfg->replace_endpoint( q->dst(), q->src(), true );
+        resolved_endpoints.push_back(std::pair<gr_msg_endpoint, bool>(q->dst(),true));
         normal_connection = false;
         }
 
@@ -516,6 +519,7 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
         if (GR_HIER_BLOCK2_DETAIL_DEBUG)
           std::cout << boost::format("  resolve hier input (%s, %s)") % q->src().block() % q->src().port() << std::endl;
         sfg->replace_endpoint( q->src(), q->dst(), false );
+        resolved_endpoints.push_back(std::pair<gr_msg_endpoint, bool>(q->src(),false));
         normal_connection = false;
         } 
 
@@ -523,6 +527,9 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
     if(normal_connection){
         sfg->connect( q->src(), q->dst() );
         } 
+    }
+    for(std::vector<std::pair<gr_msg_endpoint, bool> >::iterator it = resolved_endpoints.begin(); it != resolved_endpoints.end(); it++){
+        sfg->clear_endpoint( (*it).first, (*it).second );
     }
 
 /*  // connect primitive edges in the new fg
