@@ -49,24 +49,14 @@
 #define	OUR_O_LARGEFILE 0
 #endif
 
-gr_file_source::gr_file_source (size_t itemsize, const char *filename, bool repeat)
-  : gr_sync_block ("file_source",
-		   gr_make_io_signature (0, 0, 0),
-		   gr_make_io_signature (1, 1, itemsize)),
-    d_itemsize (itemsize), d_fp (0), d_repeat (repeat)
+gr_file_source::gr_file_source(size_t itemsize, const char *filename, bool repeat)
+  : gr_sync_block("file_source",
+		  gr_make_io_signature (0, 0, 0),
+		  gr_make_io_signature (1, 1, itemsize)),
+    d_itemsize(itemsize), d_fp(0), d_new_fp (0), d_repeat(repeat),
+    d_updated(false)
 {
-  // we use "open" to use to the O_LARGEFILE flag
-
-  int fd;
-  if ((fd = open (filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0){
-    perror (filename);
-    throw std::runtime_error ("can't open file");
-  }
-
-  if ((d_fp = fdopen (fd, "rb")) == NULL){
-    perror (filename);
-    throw std::runtime_error ("can't open file");
-  }
+  open(filename, repeat);
 }
 
 // public constructor that returns a shared_ptr
@@ -79,7 +69,11 @@ gr_make_file_source (size_t itemsize, const char *filename, bool repeat)
 
 gr_file_source::~gr_file_source ()
 {
-  fclose ((FILE *) d_fp);
+  close();
+  if(d_fp) {
+    fclose(d_fp);
+    d_fp = 0;
+  }
 }
 
 int
@@ -91,6 +85,11 @@ gr_file_source::work (int noutput_items,
   int i;
   int size = noutput_items;
 
+  do_update();       // update d_fp is reqd
+  if(d_fp == NULL)
+    throw std::runtime_error("work with file not open");
+
+  boost::mutex::scoped_lock lock(fp_mutex); // hold for the rest of this function
   while (size) {
     i = fread(o, d_itemsize, size, (FILE *) d_fp);
 
@@ -129,5 +128,64 @@ gr_file_source::work (int noutput_items,
 bool
 gr_file_source::seek (long seek_point, int whence)
 {
-   return fseek ((FILE *) d_fp, seek_point * d_itemsize, whence) == 0;
+  // obtain exclusive access for duration of this function
+  boost::mutex::scoped_lock lock(fp_mutex);
+  return fseek((FILE *) d_fp, seek_point * d_itemsize, whence) == 0;
+}
+
+void
+gr_file_source::open(const char *filename, bool repeat)
+{
+  // obtain exclusive access for duration of this function
+  boost::mutex::scoped_lock     lock(fp_mutex);
+
+  int fd;
+
+  // we use "open" to use to the O_LARGEFILE flag
+  if((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
+    perror(filename);
+    throw std::runtime_error("can't open file");
+  }
+
+  if(d_new_fp) {
+    fclose(d_new_fp);
+    d_new_fp = 0;
+  }
+
+  if((d_new_fp = fdopen (fd, "rb")) == NULL) {
+    perror(filename);
+    ::close(fd);	// don't leak file descriptor if fdopen fails
+    throw std::runtime_error("can't open file");
+  }
+
+  d_updated = true;
+  d_repeat = repeat;
+}
+
+void
+gr_file_source::close()
+{
+  // obtain exclusive access for duration of this function
+  boost::mutex::scoped_lock lock(fp_mutex);
+
+  if(d_new_fp != NULL) {
+    fclose(d_new_fp);
+    d_new_fp = NULL;
+  }
+  d_updated = true;
+}
+
+void
+gr_file_source::do_update()
+{
+  if(d_updated) {
+    boost::mutex::scoped_lock lock(fp_mutex); // hold while in scope
+
+    if(d_fp)
+      fclose(d_fp);
+
+    d_fp = d_new_fp;                    // install new file pointer
+    d_new_fp = 0;
+    d_updated = false;
+  }
 }

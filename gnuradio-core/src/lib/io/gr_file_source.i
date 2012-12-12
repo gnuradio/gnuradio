@@ -40,4 +40,6 @@ class gr_file_source : public gr_sync_block
   ~gr_file_source ();
 
   bool seek (long seek_point, int whence);
+  void open (const char *filename, bool repeat);
+  void close();
 };
