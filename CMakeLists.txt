@@ -50,6 +50,13 @@ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
 
 ########################################################################
+# Environment setup
+########################################################################
+IF(NOT DEFINED BOOST_ROOT)
+    SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
+ENDIF()
+
+########################################################################
 # Import executables from a native build (for cross compiling)
 # http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
 ########################################################################
@@ -225,6 +232,8 @@ install(
 ########################################################################
 list(APPEND GR_TEST_TARGET_DEPS volk gruel gnuradio-core)
 list(APPEND GR_TEST_PYTHON_DIRS
+    ${CMAKE_SOURCE_DIR}/gruel/src/python
+    ${CMAKE_BINARY_DIR}/gruel/src/swig
     ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
     ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
 )

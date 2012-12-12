@@ -126,5 +126,5 @@ gr_file_sink_base::do_update()
 void
 gr_file_sink_base::set_unbuffered(bool unbuffered)
 {
-	d_unbuffered = unbuffered;
+  d_unbuffered = unbuffered;
 }

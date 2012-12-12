@@ -93,6 +93,7 @@
 #include "blocks/not_bb.h"
 #include "blocks/not_ss.h"
 #include "blocks/not_ii.h"
+#include "blocks/patterned_interleaver.h"
 #include "blocks/or_bb.h"
 #include "blocks/or_ss.h"
 #include "blocks/or_ii.h"
@@ -181,6 +182,7 @@
 %include "blocks/not_bb.h"
 %include "blocks/not_ss.h"
 %include "blocks/not_ii.h"
+%include "blocks/patterned_interleaver.h"
 %include "blocks/or_bb.h"
 %include "blocks/or_ss.h"
 %include "blocks/or_ii.h"
@@ -268,6 +270,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, nlog10_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, patterned_interleaver);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);

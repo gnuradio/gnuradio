@@ -86,6 +86,7 @@ gr_pfb_arb_resampler_ccf::~gr_pfb_arb_resampler_ccf ()
 {
   for(unsigned int i = 0; i < d_int_rate; i++) {
     delete d_filters[i];
+    delete d_diff_filters[i];
   }
 }
 

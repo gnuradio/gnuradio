@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2004-2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -143,6 +143,7 @@
 #include <gr_add_ff.h>
 #include <gr_vector_map.h>
 #include <gr_tag_debug.h>
+#include <gr_message_strobe.h>
 %}
 
 %include "gri_control_loop.i"
@@ -266,3 +267,5 @@
 %include "gr_add_ff.i"
 %include "gr_vector_map.i"
 %include "gr_tag_debug.i"
+%include "gr_block_gateway.i"
+%include "gr_message_strobe.i"

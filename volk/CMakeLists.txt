@@ -38,12 +38,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake) #location for custom "M
 # Environment setup
 ########################################################################
 IF(NOT DEFINED BOOST_ROOT)
-    SET(BOOST_ROOT "")
+    SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
 ENDIF()
-SET(BOOST_ROOT ${BOOST_ROOT} CACHE STRING "Modify search path for Boost components")
-
-#after caching user-defined value, make sure to add the install prefix
-SET(BOOST_ROOT ${BOOST_ROOT}:${CMAKE_INSTALL_PREFIX})
 
 IF(NOT DEFINED CROSSCOMPILE_MULTILIB)
     SET(CROSSCOMPILE_MULTILIB "")
@@ -76,6 +72,10 @@ set(Boost_ADDITIONAL_VERSIONS
     "1.65.0" "1.65" "1.66.0" "1.66" "1.67.0" "1.67" "1.68.0" "1.68" "1.69.0" "1.69"
 )
 find_package(Boost COMPONENTS unit_test_framework)
+
+if(NOT Boost_FOUND)
+    message(FATAL_ERROR "VOLK Requires boost to build")
+endif()
 
 find_package(ORC)
 

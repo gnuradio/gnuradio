@@ -38,6 +38,15 @@
 		<block>virtual_sink</block>
 		<block>gr_tag_debug</block>
 	</cat>
+    <cat>
+        <name>Message Tools</name>
+        <block>gr_message_debug</block>
+        <block>gr_message_strobe</block>
+        <block>gr_pdu_to_tagged_stream</block>
+        <block>gr_tagged_stream_to_pdu</block>
+        <block>gr_tuntap_pdu</block>
+        <block>gr_socket_pdu</block>
+    </cat>
 	<cat>
 		<name>Operators</name>
 		<block>gr_add_xx</block>

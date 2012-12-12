@@ -191,6 +191,32 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 #end for
 
 ########################################################
+##Create Asynch Message Connections
+########################################################
+#if $messages2
+		$DIVIDER
+		# Asynch Message Connections
+		$DIVIDER
+#end if
+#for $msg in $messages2
+		#set $sr = $msg.get_source()
+		#set $source = "self.%s"%($sr.get_parent().get_id())
+		#set $source_port = $sr.get_name();
+		#if $sr.get_parent().get_key() == "pad_source"
+			#set $source = "self"
+			#set $source_port = $sr.get_parent().get_param("label").get_value();
+		#end if
+		#set $sk = $msg.get_sink()
+		#set $sink = "self.%s"%($sk.get_parent().get_id())
+		#set $sink_port = $sk.get_name();
+		#if $sk.get_parent().get_key() == "pad_sink"
+			#set $sink = "self"
+			#set $sink_port = $sk.get_parent().get_param("label").get_value();
+		#end if
+		self.msg_connect($source, "$source_port", $sink, "$sink_port")
+#end for
+
+########################################################
 ##Create Callbacks
 ##	Write a set method for this variable that calls the callbacks
 ########################################################

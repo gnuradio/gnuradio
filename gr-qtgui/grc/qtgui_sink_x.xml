@@ -24,6 +24,7 @@ qtgui.$(type.fcn)(
 	$plottime, \#plottime
 	$plotconst, \#plotconst
 )
+self.$(id).set_update_time(1.0 / $rate)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
 	<callback>set_frequency_range($fc, $bw)</callback>
@@ -132,6 +133,12 @@ $(gui_hint()($win))</make>
 		<value></value>
 		<type>gui_hint</type>
 		<hide>part</hide>
+	</param>
+	<param>
+		<name>Update Rate</name>
+		<key>rate</key>
+		<value>10</value>
+		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>

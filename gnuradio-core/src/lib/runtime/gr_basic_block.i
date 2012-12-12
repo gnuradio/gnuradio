@@ -23,6 +23,8 @@
 class gr_basic_block;
 typedef boost::shared_ptr<gr_basic_block> gr_basic_block_sptr;
 %template(gr_basic_block_sptr) boost::shared_ptr<gr_basic_block>;
+%include "pmt_swig.i"
+using namespace pmt;
 
 // support vectors of these...
 namespace std {
@@ -37,17 +39,17 @@ protected:
 public:
     virtual ~gr_basic_block();
     std::string name() const;
+    std::string symbol_name() const;
     gr_io_signature_sptr input_signature() const;
     gr_io_signature_sptr output_signature() const;
     long unique_id() const;
     gr_basic_block_sptr to_basic_block();
     bool check_topology (int ninputs, int noutputs);
-    long max_output_buffer(int i);
-    void set_max_output_buffer(long max_output_buffer);
-    void set_max_output_buffer(int port, long max_output_buffer);
-    long min_output_buffer(int i);
-    void set_min_output_buffer(long min_output_buffer);
-    void set_min_output_buffer(int port, long min_output_buffer);
+    std::string alias();
+    void set_block_alias(std::string name);
+    void _post(pmt_t which_port, pmt_t msg);
+    pmt_t message_ports_in();
+    pmt_t message_ports_out();
 };
 
 %rename(block_ncurrently_allocated) gr_basic_block_ncurrently_allocated;

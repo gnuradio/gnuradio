@@ -472,7 +472,7 @@ class qa_pmt_msg_accepter_nop : public gruel::msg_accepter {
 public:
   qa_pmt_msg_accepter_nop(){};
   ~qa_pmt_msg_accepter_nop();
-  void post(pmt_t){};
+  void post(pmt_t,pmt_t){};
 };
 
 qa_pmt_msg_accepter_nop::~qa_pmt_msg_accepter_nop(){}
@@ -495,9 +495,10 @@ qa_pmt_prims::test_msg_accepter()
   CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(p0),  pmt_wrong_type);
 
   // just confirm interfaces on send are OK
-  gruel::send(ma0.get(), sym);
-  gruel::send(ma0, sym);
-  gruel::send(p1, sym);
+  pmt_t port(pmt_intern("port"));
+  gruel::send(ma0.get(), port, sym);
+  gruel::send(ma0, port, sym);
+  gruel::send(p1, port, sym);
 
 }
 

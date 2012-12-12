@@ -39,10 +39,10 @@ namespace gr {
       : gr_block("keep_m_in_n",
 		 gr_make_io_signature (1, 1, itemsize),
 		 gr_make_io_signature (1, 1, itemsize)),
-	d_itemsize(itemsize),
 	d_m(m),
 	d_n(n),
-	d_offset(offset)
+	d_offset(offset),
+	d_itemsize(itemsize)
     {
       // sanity checking
       assert(d_m > 0);

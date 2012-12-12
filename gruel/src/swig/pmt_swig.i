@@ -696,6 +696,15 @@ pmt_t pmt_list6(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& 
  */
 pmt_t pmt_list_add(pmt_t list, const pmt_t& item);
 
+/*!
+ * \brief Return \p list with \p item removed
+ */
+pmt_t pmt_list_rm(pmt_t list, const pmt_t& item);
+
+/*!
+ * \brief Return bool of \p list contains \p item
+ */
+bool pmt_list_has(pmt_t list, const pmt_t& item);
 
 /*
  * ------------------------------------------------------------------------

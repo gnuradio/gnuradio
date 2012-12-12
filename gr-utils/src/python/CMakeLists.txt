@@ -51,6 +51,7 @@ GR_PYTHON_INSTALL(
     gr_plot_qt
     gr_filter_design
     gr_read_file_metadata
+    grcc
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "utils"
 )

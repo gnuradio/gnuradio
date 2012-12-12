@@ -44,7 +44,9 @@ gr_hier_block2::gr_hier_block2(const std::string &name,
                                gr_io_signature_sptr input_signature,
                                gr_io_signature_sptr output_signature)
   : gr_basic_block(name, input_signature, output_signature),
-    d_detail(new gr_hier_block2_detail(this))
+    d_detail(new gr_hier_block2_detail(this)),
+    hier_message_ports_in(pmt::PMT_NIL),
+    hier_message_ports_out(pmt::PMT_NIL)
 {
   // This bit of magic ensures that self() works in the constructors of derived classes.
   gnuradio::detail::sptr_magic::create_and_stash_initial_sptr(this);
@@ -81,6 +83,36 @@ gr_hier_block2::connect(gr_basic_block_sptr src, int src_port,
 }
 
 void
+gr_hier_block2::msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
+                        gr_basic_block_sptr dst, pmt::pmt_t dstport)
+{
+  if(!pmt::pmt_is_symbol(srcport)){throw std::runtime_error("bad port id"); }
+  d_detail->msg_connect(src, srcport, dst, dstport);
+}
+
+void
+gr_hier_block2::msg_connect(gr_basic_block_sptr src, std::string srcport,
+                        gr_basic_block_sptr dst, std::string dstport)
+{
+  d_detail->msg_connect(src, pmt::mp(srcport), dst, pmt::mp(dstport));
+}
+
+void
+gr_hier_block2::msg_disconnect(gr_basic_block_sptr src, pmt::pmt_t srcport,
+                        gr_basic_block_sptr dst, pmt::pmt_t dstport)
+{
+  if(!pmt::pmt_is_symbol(srcport)){throw std::runtime_error("bad port id"); }
+  d_detail->msg_disconnect(src, srcport, dst, dstport);
+}
+
+void
+gr_hier_block2::msg_disconnect(gr_basic_block_sptr src, std::string srcport,
+                        gr_basic_block_sptr dst, std::string dstport)
+{
+  d_detail->msg_disconnect(src, pmt::mp(srcport), dst, pmt::mp(dstport));
+}
+
+void
 gr_hier_block2::disconnect(gr_basic_block_sptr block)
 {
   d_detail->disconnect(block);
@@ -110,6 +142,7 @@ gr_hier_block2::unlock()
 {
   d_detail->unlock();
 }
+
 
 gr_flat_flowgraph_sptr
 gr_hier_block2::flatten() const
