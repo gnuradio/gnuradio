@@ -134,8 +134,19 @@ int gr_tuntap_pdu::tun_alloc(char *dev, int flags) {
 
 #else //if not linux
 
-boost::shared_ptr<gr_block> gr_make_tuntap_pdu (std::string dev, int MTU){
-    boost::shared_ptr<gr_block> rv;
+// Just a stub class and factory function for swig.
+class gr_tuntap_pdu
+{
+private:
+  gr_tuntap_pdu() {};
+public:
+  ~gr_tuntap_pdu() {};
+};
+
+gr_block_sptr
+gr_make_tuntap_pdu(std::string dev, int MTU)
+{
+    gr_block_sptr rv;
     throw std::runtime_error("tuntap only implemented on linux");
     return rv;
 }

@@ -59,7 +59,7 @@ class GR_CORE_API gr_tuntap_pdu : public gr_stream_pdu_base
 
 #else // if not linux
 
-GR_CORE_API boost::shared_ptr<gr_block> gr_make_tuntap_pdu (std::string dev, int MTU=0);
+GR_CORE_API gr_block_sptr gr_make_tuntap_pdu (std::string dev, int MTU=0);
 
 #endif
 
