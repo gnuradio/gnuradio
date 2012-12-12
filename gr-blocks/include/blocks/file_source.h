@@ -40,6 +40,21 @@ namespace gr {
       // gr::blocks::file_source::sptr
       typedef boost::shared_ptr<file_source> sptr;
 
+      /*!
+       * \brief Create a file source.
+       *
+       * Opens \p filename as a source of items into a flowgraph. The
+       * data is expected to be in binary format, item after item. The
+       * \p itemsize of the block determines the conversion from bits
+       * to items.
+       *
+       * If \p repeat is turned on, the file will repeat the file after
+       * it's reached the end.
+       *
+       * \param itemsize	the size of each item in the file, in bytes
+       * \param filename	name of the file to source from
+       * \param repeat	repeat file from start
+       */
       static sptr make(size_t itemsize, const char *filename, bool repeat = false);
 
       /*!
@@ -49,6 +64,19 @@ namespace gr {
        * \param whence	one of SEEK_SET, SEEK_CUR, SEEK_END (man fseek)
        */
       virtual bool seek(long seek_point, int whence) = 0;
+
+      /*!
+       * \brief Opens a new file.
+       *
+       * \param filename	name of the file to source from
+       * \param repeat	repeat file from start
+       */
+      virtual void open(const char *filename, bool repeat) = 0;
+
+      /*!
+       * \brief Close the file handle.
+       */
+      virtual void close() = 0;
     };
 
   } /* namespace blocks */
