@@ -362,6 +362,22 @@ gr_flat_flowgraph::make_block_vector(gr_basic_block_vector_t &blocks)
 }
 
 
+void gr_flat_flowgraph::clear_endpoint(const gr_msg_endpoint &e, bool is_src){
+    for(size_t i=0; i<d_msg_edges.size(); i++){
+        if(is_src){
+            if(d_msg_edges[i].src() == e){
+                d_msg_edges.erase(d_msg_edges.begin() + i);
+                i--;
+            }
+        } else {
+            if(d_msg_edges[i].dst() == e){
+                d_msg_edges.erase(d_msg_edges.begin() + i);
+                i--;
+            }
+        }
+    }
+}
+
 void gr_flat_flowgraph::replace_endpoint(const gr_msg_endpoint &e, const gr_msg_endpoint &r, bool is_src){
     size_t n_replr(0);
     if(GR_FLAT_FLOWGRAPH_DEBUG)
@@ -369,16 +385,19 @@ void gr_flat_flowgraph::replace_endpoint(const gr_msg_endpoint &e, const gr_msg_
     for(size_t i=0; i<d_msg_edges.size(); i++){
         if(is_src){
             if(d_msg_edges[i].src() == e){
-                d_msg_edges[i] = gr_msg_edge(r, d_msg_edges[i].dst() );
+                if(GR_FLAT_FLOWGRAPH_DEBUG)
+                    std::cout << boost::format("gr_flat_flowgraph::replace_endpoint() flattening to ( %s, %s )\n") % r.block()% d_msg_edges[i].dst().block();
+                d_msg_edges.push_back( gr_msg_edge(r, d_msg_edges[i].dst() ) );
                 n_replr++;
             }
         } else {
             if(d_msg_edges[i].dst() == e){
-                d_msg_edges[i] = gr_msg_edge(d_msg_edges[i].src(), r );
+                if(GR_FLAT_FLOWGRAPH_DEBUG)
+                    std::cout << boost::format("gr_flat_flowgraph::replace_endpoint() flattening to ( %s, %s )\n") % r.block()% d_msg_edges[i].dst().block();
+                d_msg_edges.push_back( gr_msg_edge(d_msg_edges[i].src(), r ) );
                 n_replr++;
             }
         }
     }
-//    std::cout << "n_repl = " << n_repl <<"\n";
 }
 

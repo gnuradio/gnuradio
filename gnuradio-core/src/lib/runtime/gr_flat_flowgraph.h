@@ -58,6 +58,7 @@ public:
   static gr_block_vector_t make_block_vector(gr_basic_block_vector_t &blocks);
 
   void replace_endpoint(const gr_msg_endpoint &e, const gr_msg_endpoint &r, bool is_src);
+  void clear_endpoint(const gr_msg_endpoint &e, bool is_src);
 
 private:
   gr_flat_flowgraph();
