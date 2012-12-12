@@ -36,7 +36,8 @@ if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
-set(GR_SWIG_TARGET_DEPS digital_generated_includes core_swig)
+# Setup swig docs to depend on includes and pull in from build directory
+set(GR_SWIG_TARGET_DEPS digital_generated_includes)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 

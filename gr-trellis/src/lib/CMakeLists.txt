@@ -199,8 +199,6 @@ if(ENABLE_PYTHON)
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_TARGET_DEPS core_swig)
-
 set(GR_SWIG_SOURCE_DEPS
     ${generated_trellis_includes}
     ${generated_trellis_swigs}
