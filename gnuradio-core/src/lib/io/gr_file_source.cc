@@ -111,8 +111,9 @@ gr_file_source::work (int noutput_items,
       break;
 
     if (fseek ((FILE *) d_fp, 0, SEEK_SET) == -1) {
-      fprintf(stderr, "[%s] fseek failed\n", __FILE__);
-      exit(-1);
+      std::stringstream s;
+      s << "[" << __FILE__ << "]" << " fseek failed" << std::endl;
+      throw std::runtime_error(s.str());
     }
   }
 

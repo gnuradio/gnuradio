@@ -42,8 +42,6 @@ gr_file_sink::gr_file_sink(size_t itemsize, const char *filename)
     gr_file_sink_base(filename, true),
     d_itemsize(itemsize)
 {
-  if (!open(filename))
-    throw std::runtime_error ("can't open file");
 }
 
 gr_file_sink::~gr_file_sink ()
@@ -55,23 +53,32 @@ gr_file_sink::work (int noutput_items,
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items)
 {
-  char *inbuf = (char *) input_items[0];
+  char *inbuf = (char*)input_items[0];
   int  nwritten = 0;
 
   do_update();				// update d_fp is reqd
 
-  if (!d_fp)
+  if(!d_fp)
     return noutput_items;		// drop output on the floor
 
-  while (nwritten < noutput_items){
-    int count = fwrite (inbuf, d_itemsize, noutput_items - nwritten, d_fp);
-    if (count == 0)	// FIXME add error handling
-      break;
+  while(nwritten < noutput_items) {
+    int count = fwrite(inbuf, d_itemsize, noutput_items - nwritten, d_fp);
+    if(count == 0) {
+      if(ferror(d_fp)) {
+	std::stringstream s;
+	s << "file_sink write failed with error " << fileno(d_fp) << std::endl;
+	throw std::runtime_error(s.str());
+      }
+      else { // is EOF
+	break;
+      }
+    }
     nwritten += count;
     inbuf += count * d_itemsize;
   }
-  if (d_unbuffered)
-	  fflush (d_fp);
+
+  if(d_unbuffered)
+    fflush (d_fp);
 
   return nwritten;
 }
