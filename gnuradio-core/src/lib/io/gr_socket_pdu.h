@@ -30,8 +30,6 @@
 #include <gr_stream_pdu_base.h>
 #include <boost/asio.hpp>
 
-#include <linux/if_tun.h>
-
 class gr_socket_pdu;
 typedef boost::shared_ptr<gr_socket_pdu> gr_socket_pdu_sptr;
 
