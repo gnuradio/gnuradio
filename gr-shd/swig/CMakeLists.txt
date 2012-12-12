@@ -25,8 +25,6 @@ include(GrSwig)
 
 set(GR_SWIG_FLAGS -DGR_HAVE_SHD) #needed to parse shd_swig.i
 
-set(GR_SWIG_TARGET_DEPS core_swig)
-
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_SHD_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}

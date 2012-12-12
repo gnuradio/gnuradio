@@ -25,8 +25,6 @@ include(GrSwig)
 
 set(GR_SWIG_FLAGS -DGR_HAVE_UHD) #needed to parse uhd_swig.i
 
-set(GR_SWIG_TARGET_DEPS core_swig)
-
 set(GR_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GR_UHD_INCLUDE_DIRS}
