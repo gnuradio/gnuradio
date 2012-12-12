@@ -8,7 +8,7 @@
 	<name>File Meta Sink</name>
 	<key>gr_file_meta_sink</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.file_meta_sink($type.size*$vlen, $file, $samp_rate, $rel_rate, $type.dtype, $type.cplx)
+	<make>gr.file_meta_sink($type.size*$vlen, $file, $samp_rate, $rel_rate, $type.dtype, $type.cplx, $max_seg_size, $extra_dict, $detached)
 self.$(id).set_unbuffered($unbuffered)</make>
 	<callback>set_unbuffered($unbuffered)</callback>
 	<callback>open($file)</callback>
@@ -77,6 +77,31 @@ self.$(id).set_unbuffered($unbuffered)</make>
 		<type>int</type>
 	</param>
 	<param>
+		<name>Max Seg. Size</name>
+		<key>max_seg_size</key>
+		<value>1000000</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Extra Dict.</name>
+		<key>extra_dict</key>
+		<value>""</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Detached</name>
+		<key>detached</key>
+		<value>False</value>
+		<type>bool</type>
+		<option>
+		  <name>Off</name>
+		  <key>False</key>
+		</option>
+		<option>
+		  <name>On</name>
+		  <key>True</key>
+		</option>
+	</param>	<param>
 		<name>Unbuffered</name>
 		<key>unbuffered</key>
 		<value>False</value>
@@ -90,7 +115,6 @@ self.$(id).set_unbuffered($unbuffered)</make>
 				<key>True</key>
 		</option>
 	</param>
-
 	<check>$vlen &gt; 0</check>
 	<sink>
 		<name>in</name>
