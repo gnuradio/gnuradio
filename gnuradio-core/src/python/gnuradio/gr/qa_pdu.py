@@ -63,6 +63,7 @@ class test_pdu(gr_unittest.TestCase):
         #pmt.pmt_print(pi)
         #print "Stream to PDU output ports: "
         #pmt.pmt_print(po)
+        time.sleep(0.1)
 
         self.tb.connect(src, snk)
         self.tb.connect(src, snk2)
