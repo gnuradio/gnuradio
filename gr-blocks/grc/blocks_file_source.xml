@@ -9,6 +9,7 @@
 	<key>blocks_file_source</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.file_source($type.size*$vlen, $file, $repeat)</make>
+	<callback>open($file, $repeat)</callback>
 	<param>
 		<name>File</name>
 		<key>file</key>
