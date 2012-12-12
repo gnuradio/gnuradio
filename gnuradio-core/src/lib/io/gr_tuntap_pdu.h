@@ -59,6 +59,14 @@ class GR_CORE_API gr_tuntap_pdu : public gr_stream_pdu_base
 
 #else // if not linux
 
+class gr_tuntap_pdu
+{
+private:
+  gr_tuntap_pdu() {};
+public:
+  ~gr_tuntap_pdu() {};
+};
+
 GR_CORE_API gr_block_sptr gr_make_tuntap_pdu (std::string dev, int MTU=0);
 
 #endif

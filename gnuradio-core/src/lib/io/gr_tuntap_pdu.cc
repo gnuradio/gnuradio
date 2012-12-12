@@ -134,15 +134,6 @@ int gr_tuntap_pdu::tun_alloc(char *dev, int flags) {
 
 #else //if not linux
 
-// Just a stub class and factory function for swig.
-class gr_tuntap_pdu
-{
-private:
-  gr_tuntap_pdu() {};
-public:
-  ~gr_tuntap_pdu() {};
-};
-
 gr_block_sptr
 gr_make_tuntap_pdu(std::string dev, int MTU)
 {
