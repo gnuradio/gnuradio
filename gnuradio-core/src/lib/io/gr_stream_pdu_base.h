@@ -28,9 +28,6 @@
 #include <gr_message.h>
 #include <gr_msg_queue.h>
 
-#include <linux/if_tun.h>
-
-
 /*!
  * \brief Gather received items into messages and insert into msgq
  * \ingroup sink_blk
