@@ -90,15 +90,12 @@ gr_file_meta_source::gr_file_meta_source(const char *filename,
 
   pmt_t hdr = PMT_NIL, extras = PMT_NIL;
   if(read_header(hdr, extras))
-    parse_header(hdr);
+    parse_header(hdr, 0, d_tags);
   else
     throw std::runtime_error("file_meta_source: could not read header.\n");
 
   // Set output signature based on itemsize info in header
   set_output_signature(gr_make_io_signature(1, 1, d_itemsize));
-
-  // Convert from bytes to items
-  d_seg_size /= d_itemsize;
 }
 
 gr_file_meta_source::~gr_file_meta_source()
@@ -183,19 +180,39 @@ gr_file_meta_source::read_header(pmt_t &hdr, pmt_t &extras)
 }
 
 void
-gr_file_meta_source::parse_header(pmt_t hdr)
+gr_file_meta_source::parse_header(pmt_t hdr, uint64_t offset,
+				  std::vector<gr_tag_t> &tags)
 {
+  pmt_t r, key;
+
   // GET SAMPLE RATE
-  if(pmt_dict_has_key(hdr, pmt_string_to_symbol("rx_rate"))) {
-    d_samp_rate = pmt_to_double(pmt_dict_ref(hdr, pmt_string_to_symbol("rx_rate"), PMT_NIL));
+  key = pmt_string_to_symbol("rx_rate");
+  if(pmt_dict_has_key(hdr, key)) {
+    r = pmt_dict_ref(hdr, key, PMT_NIL);
+    d_samp_rate = pmt_to_double(r);
+
+    gr_tag_t t;
+    t.offset = offset;
+    t.key = key;
+    t.value = r;
+    t.srcid = alias_pmt();
+    tags.push_back(t);
   }
   else {
     throw std::runtime_error("file_meta_source: Could not extract sample rate.\n");
   }
 
   // GET TIME STAMP
-  if(pmt_dict_has_key(hdr, pmt_string_to_symbol("rx_time"))) {
-    d_time_stamp = pmt_dict_ref(hdr, pmt_string_to_symbol("rx_time"), PMT_NIL);
+  key = pmt_string_to_symbol("rx_time");
+  if(pmt_dict_has_key(hdr, key)) {
+    d_time_stamp = pmt_dict_ref(hdr, key, PMT_NIL);
+
+    gr_tag_t t;
+    t.offset = offset;
+    t.key = key;
+    t.value = d_time_stamp;
+    t.srcid = alias_pmt();
+    tags.push_back(t);
   }
   else {
     throw std::runtime_error("file_meta_source: Could not extract time stamp.\n");
@@ -230,9 +247,12 @@ gr_file_meta_source::parse_header(pmt_t hdr)
     throw std::runtime_error("file_meta_source: Could not extract complex indicator.\n");
   }
 
-  // GET FIRST SEGMENT SIZE
+  // GET SEGMENT SIZE
   if(pmt_dict_has_key(hdr, pmt_string_to_symbol("size"))) {
     d_seg_size = pmt_to_uint64(pmt_dict_ref(hdr, pmt_string_to_symbol("size"), PMT_NIL));
+
+    // Convert from bytes to items
+    d_seg_size /= d_itemsize;
   }
   else {
     throw std::runtime_error("file_meta_source: Could not extract segment size.\n");
@@ -329,12 +349,13 @@ gr_file_meta_source::work(int noutput_items,
 {
   // We've reached the end of a segment; parse the next header and get
   // the new tags to send and set the next segment size.
-  if((d_seg_size == 0) && (!feof(d_fp))) {
+  if(d_seg_size == 0) {
     pmt_t hdr=PMT_NIL, extras=PMT_NIL;
     if(read_header(hdr, extras))
-      parse_header(hdr);
-    else
+      parse_header(hdr, nitems_written(0), d_tags);
+    else {
       return -1;
+    }
   }
 
   char *out = (char*)output_items[0];
@@ -345,6 +366,12 @@ gr_file_meta_source::work(int noutput_items,
   do_update();       // update d_fp is reqd
   if(d_fp == NULL)
     throw std::runtime_error("work with file not open");
+
+  // Push all tags onto the stream and remove them from the vector
+  while(!d_tags.empty()) {
+    add_item_tag(0, d_tags.back());
+    d_tags.pop_back();
+  }
 
   gruel::scoped_lock lock(d_mutex); // hold for the rest of this function
   while(size) {

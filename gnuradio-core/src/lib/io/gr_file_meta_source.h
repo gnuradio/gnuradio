@@ -25,6 +25,7 @@
 
 #include <gr_core_api.h>
 #include <gr_sync_block.h>
+#include <gr_tags.h>
 #include <gruel/pmt.h>
 #include <gruel/thread.h>
 #include <cstdio>
@@ -92,6 +93,8 @@ class GR_CORE_API gr_file_meta_source : public gr_sync_block
   FILE *d_fp, *d_hdr_fp;
   meta_state_t d_state;
 
+  std::vector<gr_tag_t> d_tags;
+
  protected:
   gr_file_meta_source(const char *filename,
 		      bool repeat=false,
@@ -100,7 +103,8 @@ class GR_CORE_API gr_file_meta_source : public gr_sync_block
 
   bool _open(FILE **fp, const char *filename);
   bool read_header(pmt_t &hdr, pmt_t &extras);
-  void parse_header(pmt_t hdr);
+  void parse_header(pmt_t hdr, uint64_t offset,
+		    std::vector<gr_tag_t> &tags);
 
  public:
   ~gr_file_meta_source();
