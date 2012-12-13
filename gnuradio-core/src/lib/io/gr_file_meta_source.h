@@ -105,6 +105,8 @@ class GR_CORE_API gr_file_meta_source : public gr_sync_block
   bool read_header(pmt_t &hdr, pmt_t &extras);
   void parse_header(pmt_t hdr, uint64_t offset,
 		    std::vector<gr_tag_t> &tags);
+  void parse_extras(pmt_t extras, uint64_t offset,
+		    std::vector<gr_tag_t> &tags);
 
  public:
   ~gr_file_meta_source();

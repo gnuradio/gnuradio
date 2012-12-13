@@ -89,8 +89,10 @@ gr_file_meta_source::gr_file_meta_source(const char *filename,
   do_update();
 
   pmt_t hdr = PMT_NIL, extras = PMT_NIL;
-  if(read_header(hdr, extras))
+  if(read_header(hdr, extras)) {
     parse_header(hdr, 0, d_tags);
+    parse_extras(extras, 0, d_tags);
+  }
   else
     throw std::runtime_error("file_meta_source: could not read header.\n");
 
@@ -259,6 +261,27 @@ gr_file_meta_source::parse_header(pmt_t hdr, uint64_t offset,
   }
 }
 
+void
+gr_file_meta_source::parse_extras(pmt_t extras, uint64_t offset,
+				  std::vector<gr_tag_t> &tags)
+{
+  pmt_t item, key, val;
+
+  size_t nitems = pmt_length(extras);
+  for(size_t i = 0; i < nitems; i++) {
+    item = pmt_nth(i, extras);
+    key = pmt_car(item);
+    val = pmt_cdr(item);
+
+    gr_tag_t t;
+    t.offset = offset;
+    t.key = key;
+    t.value = val;
+    t.srcid = alias_pmt();
+    tags.push_back(t);
+  }
+}
+
 bool
 gr_file_meta_source::open(const char *filename)
 {
@@ -351,8 +374,10 @@ gr_file_meta_source::work(int noutput_items,
   // the new tags to send and set the next segment size.
   if(d_seg_size == 0) {
     pmt_t hdr=PMT_NIL, extras=PMT_NIL;
-    if(read_header(hdr, extras))
+    if(read_header(hdr, extras)) {
       parse_header(hdr, nitems_written(0), d_tags);
+      parse_extras(extras, nitems_written(0), d_tags);
+    }
     else {
       return -1;
     }
