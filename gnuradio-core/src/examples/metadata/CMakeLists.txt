@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,10 +17,12 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-add_subdirectory(metadata)
-add_subdirectory(mp-sched)
-add_subdirectory(msg_passing)
-add_subdirectory(network)
-add_subdirectory(pfb)
-add_subdirectory(tags)
-add_subdirectory(volk_benchmark)
+include(GrPython)
+
+install(
+  FILES
+  file_metadata_sink.grc
+  file_metadata_source.grc
+  DESTINATION ${GR_PKG_DATA_DIR}/examples/metadata
+  COMPONENT "core_python"
+)
