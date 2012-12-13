@@ -88,6 +88,7 @@ set(gr_core_io_triple_threats
     gr_file_meta_sink
     gr_file_sink_base
     gr_file_source
+    gr_file_meta_source
     gr_file_descriptor_sink
     gr_file_descriptor_source
     gr_message_debug
