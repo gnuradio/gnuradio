@@ -44,7 +44,7 @@ gr_make_file_meta_sink(size_t itemsize, const char *filename,
 		       const std::string & extra_dict="",
 		       bool detached_header=false);
 
-class gr_file_meta_sink : public gr_sync_block, public gr_file_sink_base
+class gr_file_meta_sink : public gr_sync_block
 {
  protected:
   gr_file_meta_sink(size_t itemsize, const char *filename,
@@ -57,24 +57,7 @@ class gr_file_meta_sink : public gr_sync_block, public gr_file_sink_base
  public:
   ~gr_file_meta_sink();
 
-  enum file_types {
-    FILE_BYTE=0,
-    FILE_CHAR=0,
-    FILE_SHORT,
-    FILE_INT,
-    FILE_LONG,
-    FILE_LONG_LONG,
-    FILE_FLOAT,
-    FILE_DOUBLE,
-  };
-
-  /*!
-   * \brief open filename and begin output to it.
-   */
   bool open(const char *filename);
-
-  /*!
-   * \brief close current output file.
-   */
   void close();
+  void set_unbuffered(bool unbuffered);
 };

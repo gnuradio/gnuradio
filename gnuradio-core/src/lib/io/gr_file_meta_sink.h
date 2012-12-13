@@ -25,8 +25,8 @@
 
 #include <gr_core_api.h>
 #include <gr_sync_block.h>
-#include <gr_file_sink_base.h>
 #include <gruel/pmt.h>
+#include <cstdio>
 
 using namespace pmt;
 
