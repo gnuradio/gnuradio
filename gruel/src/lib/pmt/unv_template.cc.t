@@ -87,6 +87,13 @@ pmt_init_@TAG@vector(size_t k, const @TYPE@ *data)
   return pmt_t(new pmt_@TAG@vector(k, data));
 }
 
+pmt_t
+pmt_init_@TAG@vector(size_t k, const std::vector< @TYPE@ > &data)
+{
+  
+  return pmt_t(new pmt_@TAG@vector(k, &data[0]));
+}
+
 @TYPE@
 pmt_@TAG@vector_ref(pmt_t vector, size_t k)
 {
