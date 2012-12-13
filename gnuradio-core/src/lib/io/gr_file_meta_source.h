@@ -64,7 +64,7 @@ class GR_CORE_API gr_file_meta_source : public gr_sync_block
    * \brief Create a meta-data file source.
    *
    * \param filename (string): Name of file to write data to.
-   * \param repeate (bool): Repeats file when EOF is found.
+   * \param repeat (bool): Repeats file when EOF is found.
    * \param detached_header (bool): Set to true if header
    *    info is stored in a separate file (usually named filename.hdr)
    * \param hdr_filename (string): Name of detached header file if used.
