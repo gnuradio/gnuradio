@@ -37,7 +37,7 @@ enum gr_file_types {
 };
 
 gr_file_meta_sink_sptr
-gr_make_file_meta_sink(size_t itemsize, const char *filename,
+gr_make_file_meta_sink(size_t itemsize, const std::string &filename,
 		       double samp_rate=1, double relative_rate=1,
 		       gr_file_types type=GR_FILE_FLOAT, bool complex=true,
 		       size_t max_segment_size=1000000,
@@ -47,7 +47,7 @@ gr_make_file_meta_sink(size_t itemsize, const char *filename,
 class gr_file_meta_sink : public gr_sync_block
 {
  protected:
-  gr_file_meta_sink(size_t itemsize, const char *filename,
+  gr_file_meta_sink(size_t itemsize, const std::string &filename,
 		    double samp_rate, double relative_rate,
 		    gr_file_types type, bool complex,
 		    size_t max_segment_size,
@@ -57,7 +57,7 @@ class gr_file_meta_sink : public gr_sync_block
  public:
   ~gr_file_meta_sink();
 
-  bool open(const char *filename);
+  bool open(const std::string &filename);
   void close();
   void set_unbuffered(bool unbuffered);
 };

@@ -50,7 +50,7 @@
 #endif
 
 gr_file_meta_sink_sptr
-gr_make_file_meta_sink(size_t itemsize, const char *filename,
+gr_make_file_meta_sink(size_t itemsize, const std::string &filename,
 		       double samp_rate, double relative_rate,
 		       gr_file_types type, bool complex,
 		       size_t max_segment_size,
@@ -66,7 +66,7 @@ gr_make_file_meta_sink(size_t itemsize, const char *filename,
 			   detached_header));
 }
 
-gr_file_meta_sink::gr_file_meta_sink(size_t itemsize, const char *filename,
+gr_file_meta_sink::gr_file_meta_sink(size_t itemsize, const std::string &filename,
 				     double samp_rate, double relative_rate,
 				     gr_file_types type, bool complex,
 				     size_t max_segment_size,
@@ -149,16 +149,15 @@ gr_file_meta_sink::~gr_file_meta_sink()
 }
 
 bool
-gr_file_meta_sink::open(const char *filename)
+gr_file_meta_sink::open(const std::string &filename)
 {
   bool ret = true;
   if(d_state == STATE_DETACHED) {
-    std::stringstream s;
-    s << filename << ".hdr";
-    ret = _open(&d_new_hdr_fp, s.str().c_str());
+    std::string s = filename + ".hdr";
+    ret = _open(&d_new_hdr_fp, s.c_str());
   }
 
-  ret = ret && _open(&d_new_fp, filename);
+  ret = ret && _open(&d_new_fp, filename.c_str());
   d_updated = true;
   return ret;
 }
