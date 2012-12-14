@@ -131,8 +131,6 @@ gr_file_meta_sink::gr_file_meta_sink(size_t itemsize, const std::string &filenam
 
 gr_file_meta_sink::~gr_file_meta_sink()
 {
-  update_last_header();
-
   close();
 
   if(d_fp) {
@@ -196,6 +194,8 @@ void
 gr_file_meta_sink::close()
 {
   gruel::scoped_lock guard(d_mutex); // hold mutex for duration of this function
+  update_last_header();
+
   if(d_state == STATE_DETACHED) {
     if(d_new_hdr_fp) {
       fclose(d_new_hdr_fp);
