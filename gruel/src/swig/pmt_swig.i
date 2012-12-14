@@ -55,8 +55,8 @@ namespace std {
   %template()	  vector<uint32_t>;
   %template()	  vector<float>;
   %template()	  vector<double>;
-  %template()	  vector< complex<float> >;
-  %template()	  vector< complex<double> >;
+  %template()	  vector< std::complex<float> >;
+  %template()	  vector< std::complex<double> >;
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -410,8 +410,8 @@ pmt_t pmt_init_u32vector(size_t k, const std::vector<uint32_t> &data);
 pmt_t pmt_init_s32vector(size_t k, const std::vector<int32_t> &data);
 pmt_t pmt_init_f32vector(size_t k, const std::vector<float> &data);
 pmt_t pmt_init_f64vector(size_t k, const std::vector<double> &data);
-pmt_t pmt_init_c32vector(size_t k, const std::vector< std::complex<float> > &data);
-pmt_t pmt_init_c64vector(size_t k, const std::vector< std::complex<double> > &data);
+pmt_t pmt_init_c32vector(size_t k, const std::vector<std::complex<float> > &data);
+pmt_t pmt_init_c64vector(size_t k, const std::vector<std::complex<double> > &data);
 
 uint8_t  pmt_u8vector_ref(pmt_t v, size_t k);
 int8_t   pmt_s8vector_ref(pmt_t v, size_t k);

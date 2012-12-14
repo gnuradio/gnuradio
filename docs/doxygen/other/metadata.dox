@@ -301,17 +301,17 @@ file. A QT GUI time sink is used to look at the signal as well.
 The following shows a simple way of creating extra metadata for a
 metadata file. This example is just showing how we can insert a date
 into the metadata to keep track of later. The date in this case is
-encoded as day|month|year.
+encoded as a vector of uint16 with [day, month, year].
 
 \code
   from gruel import pmt
 
   key = pmt.pmt_intern("date")
-  val = pmt.pmt_from_uint64(13122012)
+  val = pmt.pmt_init_u16vector(3, [13,12,2012])
 
   extras = pmt.pmt_make_dict()
   extras = pmt.pmt_dict_add(extras, key, val)
-  extras_str = pmt.pmt_serialize_str(extrasa)
+  extras_str = pmt.pmt_serialize_str(extras)
   self.sink = gr.file_meta_sink(gr.sizeof_gr_complex,
                                 "/tmp/metadat_file.out",
 				 samp_rate, 1,

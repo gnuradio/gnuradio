@@ -433,9 +433,9 @@ GRUEL_API pmt_t pmt_init_f32vector(size_t k, const std::vector<float> &data);
 GRUEL_API pmt_t pmt_init_f64vector(size_t k, const double *data);
 GRUEL_API pmt_t pmt_init_f64vector(size_t k, const std::vector<double> &data);
 GRUEL_API pmt_t pmt_init_c32vector(size_t k, const std::complex<float> *data);
-GRUEL_API pmt_t pmt_init_c32vector(size_t k, const std::vector< std::complex<float> > &data);
+GRUEL_API pmt_t pmt_init_c32vector(size_t k, const std::vector<std::complex<float> > &data);
 GRUEL_API pmt_t pmt_init_c64vector(size_t k, const std::complex<double> *data);
-GRUEL_API pmt_t pmt_init_c64vector(size_t k, const std::vector< std::complex<double> > &data);
+GRUEL_API pmt_t pmt_init_c64vector(size_t k, const std::vector<std::complex<double> > &data);
 
 GRUEL_API uint8_t  pmt_u8vector_ref(pmt_t v, size_t k);
 GRUEL_API int8_t   pmt_s8vector_ref(pmt_t v, size_t k);

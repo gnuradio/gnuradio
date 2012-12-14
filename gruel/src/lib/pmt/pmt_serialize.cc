@@ -309,11 +309,192 @@ pmt_serialize(pmt_t obj, std::streambuf &sb)
 
   }
 
-  if (pmt_is_vector(obj))
-    throw pmt_notimplemented("pmt_serialize (vector)", obj);
+  if (pmt_is_vector(obj)) {
+    size_t vec_len = pmt::pmt_length(obj);
+    ok = serialize_untagged_u8(PST_VECTOR, sb);
+    ok &= serialize_untagged_u32(vec_len, sb);
+    for(size_t i=0; i<vec_len; i++) {
+      ok &= pmt_serialize(pmt_vector_ref(obj, i), sb);
+    }
+    return ok;
+  }
 
-  if (pmt_is_uniform_vector(obj))
-    throw pmt_notimplemented("pmt_serialize (uniform-vector)", obj);
+  if (pmt_is_uniform_vector(obj)) {
+    size_t npad = 1;
+    size_t vec_len = pmt::pmt_length(obj);
+
+    if(pmt_is_u8vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_U8, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_u8(pmt_u8vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_s8vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_S8, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_u8(pmt_s8vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_u16vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_U16, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_u16(pmt_u16vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_s16vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_S16, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_u16(pmt_s16vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_u32vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_U32, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_u32(pmt_u32vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_s32vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_S32, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_u32(pmt_s32vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_u64vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_U64, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_u64(pmt_u64vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_s64vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_S64, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_u64(pmt_s64vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_f32vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_F32, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_f64(pmt_f32vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_f64vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_F64, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	ok &= serialize_untagged_f64(pmt_f64vector_ref(obj, i), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_c32vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_C32, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	std::complex<float> c = pmt_c32vector_ref(obj, i);
+	ok &= serialize_untagged_f64(c.real(), sb);
+	ok &= serialize_untagged_f64(c.imag(), sb);
+      }
+      return ok;
+    }
+
+    if(pmt_is_c64vector(obj)) {
+      ok = serialize_untagged_u8(PST_UNIFORM_VECTOR, sb);
+      ok &= serialize_untagged_u8(UVI_C64, sb);
+      ok &= serialize_untagged_u32(vec_len, sb);
+      ok &= serialize_untagged_u8(npad, sb);
+      for(size_t i=0; i<npad; i++) {
+	ok &= serialize_untagged_u8(0, sb);
+      }
+      for(size_t i=0; i<vec_len; i++) {
+	std::complex<double> c = pmt_c64vector_ref(obj, i);
+	ok &= serialize_untagged_f64(c.real(), sb);
+	ok &= serialize_untagged_f64(c.imag(), sb);
+      }
+      return ok;
+    }
+  }
 
   if (pmt_is_dict(obj))
     throw pmt_notimplemented("pmt_serialize (dict)", obj);
@@ -342,7 +523,7 @@ pmt_t
 pmt_deserialize(std::streambuf &sb)
 {
   uint8_t	tag;
-  //uint8_t	u8;
+  uint8_t	u8;
   uint16_t	u16;
   uint32_t	u32;
   uint64_t	u64;
@@ -408,8 +589,159 @@ pmt_deserialize(std::streambuf &sb)
     }
 
   case PST_VECTOR:
-  case PST_DICT:
+    {
+    uint32_t nitems;
+    if(!deserialize_untagged_u32(&nitems, sb))
+      goto error;
+    pmt_t vec = pmt_make_vector(nitems, PMT_NIL);
+    for(uint32_t i=0; i<nitems; i++) {
+      pmt_t item = pmt_deserialize(sb);
+      pmt_vector_set(vec, i, item);
+    }
+    return vec;
+    }
+
   case PST_UNIFORM_VECTOR:
+    {
+      uint8_t utag, npad;
+      uint32_t nitems;
+
+      if(!deserialize_untagged_u8(&utag, sb))
+	return PMT_EOF;
+
+      if(!deserialize_untagged_u32(&nitems, sb))
+	goto error;
+      
+      deserialize_untagged_u8(&npad, sb);
+      for(size_t i; i < npad; i++)
+	deserialize_untagged_u8(&u8, sb);
+
+      switch(utag) {
+      case(UVI_U8):
+	{
+	  pmt_t vec = pmt_make_u8vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_u8(&u8, sb);
+	    pmt_u8vector_set(vec, i, u8);
+	  }
+	  return vec;
+	}
+      case(UVI_S8):
+	{
+	  pmt_t vec = pmt_make_s8vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_u8(&u8, sb);
+	    pmt_s8vector_set(vec, i, u8);
+	  }
+	  return vec;
+	}
+      case(UVI_U16):
+	{
+	  pmt_t vec = pmt_make_u16vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_u16(&u16, sb);
+	    pmt_u16vector_set(vec, i, u16);
+	  }
+	  return vec;
+	}
+      case(UVI_S16):
+	{
+	  pmt_t vec = pmt_make_s16vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_u16(&u16, sb);
+	    pmt_s16vector_set(vec, i, u16);
+	  }
+	  return vec;
+	}
+      case(UVI_U32):
+	{
+	  pmt_t vec = pmt_make_u32vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_u32(&u32, sb);
+	    pmt_u32vector_set(vec, i, u32);
+	  }
+	  return vec;
+	}
+      case(UVI_S32):
+	{
+	  pmt_t vec = pmt_make_s32vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_u32(&u32, sb);
+	    pmt_s32vector_set(vec, i, u32);
+	  }
+	  return vec;
+	}
+      case(UVI_U64):
+	{
+	  pmt_t vec = pmt_make_u64vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_u64(&u64, sb);
+	    pmt_u64vector_set(vec, i, u64);
+	  }
+	  return vec;
+	}
+      case(UVI_S64):
+	{
+	  pmt_t vec = pmt_make_s64vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_u64(&u64, sb);
+	    pmt_s64vector_set(vec, i, u64);
+	  }
+	  return vec;
+	}
+      case(UVI_F32):
+	{
+	  pmt_t vec = pmt_make_f32vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_f64(&f64, sb);
+	    pmt_f32vector_set(vec, i, static_cast<float>(f64));
+	  }
+	  return vec;
+	}
+      case(UVI_F64):
+	{
+	  pmt_t vec = pmt_make_f64vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    deserialize_untagged_f64(&f64, sb);
+	    pmt_f64vector_set(vec, i, f64);
+	  }
+	  return vec;
+	}
+      case(UVI_C32):
+	{
+	  pmt_t vec = pmt_make_c32vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    std::complex<float> c;
+	    deserialize_untagged_f64(&f64, sb);
+	    c.real(static_cast<float>(f64));
+	    deserialize_untagged_f64(&f64, sb);
+	    c.imag(static_cast<float>(f64));
+	    pmt_c32vector_set(vec, i, c);
+	  }
+	  return vec;
+	}
+
+      case(UVI_C64):
+	{
+	  pmt_t vec = pmt_make_c64vector(nitems, 0);
+	  for(uint32_t i=0; i<nitems; i++) {
+	    std::complex<double> c;
+	    deserialize_untagged_f64(&f64, sb);
+	    c.real(f64);
+	    deserialize_untagged_f64(&f64, sb);
+	    c.imag(f64);
+	    pmt_c64vector_set(vec, i, c);
+	  }
+	  return vec;
+	}
+
+      default:
+	throw pmt_exception("pmt_deserialize: malformed input stream, tag value = ",
+			    pmt_from_long(tag));
+      }
+    }
+
+  case PST_DICT:
   case PST_COMMENT:
     throw pmt_notimplemented("pmt_deserialize: tag value = ",
 			     pmt_from_long(tag));
