@@ -96,6 +96,17 @@ def parse_header(p, VERBOSE=False):
         sys.stderr.write("Could not find key 'time': invalid or corrupt data file.\n")
         sys.exit(1)
 
+    # EXTRACT ITEM SIZE
+    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("size"))):
+        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("size"), dump)
+        dsize = pmt.pmt_to_long(r)
+        info["size"] = dsize
+        if(VERBOSE):
+            print "Item size: {0}".format(dsize)
+    else:
+        sys.stderr.write("Could not find key 'size': invalid or corrupt data file.\n")
+        sys.exit(1)
+
     # EXTRACT DATA TYPE
     if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("type"))):
         r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("type"), dump)
@@ -135,15 +146,11 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT SIZE OF DATA
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("size"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("size"), dump)
+    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("bytes"))):
+        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("bytes"), dump)
         nbytes = pmt.pmt_to_uint64(r)
 
-        # Multiply itemsize by 2 if complex
-        if(cplx): mult=2
-        else: mult=1
-
-        nitems = nbytes/(ftype_to_size[dtype]*mult)
+        nitems = nbytes/dsize
         info["nitems"] = nitems
         info["nbytes"] = nbytes
 

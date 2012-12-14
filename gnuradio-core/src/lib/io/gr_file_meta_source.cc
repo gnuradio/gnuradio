@@ -228,38 +228,17 @@ gr_file_meta_source::parse_header(pmt_t hdr, uint64_t offset,
     throw std::runtime_error("file_meta_source: Could not extract time stamp.\n");
   }
 
-  // GET DATA TYPE
-  if(pmt_dict_has_key(hdr, pmt_string_to_symbol("type"))) {
-    int t = pmt_to_long(pmt_dict_ref(hdr, pmt_string_to_symbol("type"), PMT_NIL));
-    switch(t) {
-    case(GR_FILE_CHAR): d_itemsize = sizeof(char); break;
-    case(GR_FILE_SHORT): d_itemsize = sizeof(short); break;
-    case(GR_FILE_INT): d_itemsize = sizeof(int); break;
-    case(GR_FILE_LONG): d_itemsize = sizeof(long int); break;
-    case(GR_FILE_LONG_LONG): d_itemsize = sizeof(long long int); break;
-    case(GR_FILE_FLOAT): d_itemsize = sizeof(float); break;
-    case(GR_FILE_DOUBLE): d_itemsize = sizeof(double); break;
-    default:
-      throw std::runtime_error("file_meta_source: Could not determine data type size.\n");
-    }
+  // GET ITEM SIZE OF DATA
+  if(pmt_dict_has_key(hdr, pmt_string_to_symbol("size"))) {
+    d_itemsize = pmt_to_long(pmt_dict_ref(hdr, pmt_string_to_symbol("size"), PMT_NIL));
   }
   else {
-    throw std::runtime_error("file_meta_source: Could not extract data type.\n");
-  }
-
-  // GET COMPLEX INDICATOR
-  if(pmt_dict_has_key(hdr, pmt_string_to_symbol("cplx"))) {
-    bool cplx = pmt_to_bool(pmt_dict_ref(hdr, pmt_string_to_symbol("cplx"), PMT_NIL));
-    if(cplx)
-      d_itemsize *= 2;
-  }
-  else {
-    throw std::runtime_error("file_meta_source: Could not extract complex indicator.\n");
+    throw std::runtime_error("file_meta_source: Could not extract item size.\n");
   }
 
   // GET SEGMENT SIZE
-  if(pmt_dict_has_key(hdr, pmt_string_to_symbol("size"))) {
-    d_seg_size = pmt_to_uint64(pmt_dict_ref(hdr, pmt_string_to_symbol("size"), PMT_NIL));
+  if(pmt_dict_has_key(hdr, pmt_string_to_symbol("bytes"))) {
+    d_seg_size = pmt_to_uint64(pmt_dict_ref(hdr, pmt_string_to_symbol("bytes"), PMT_NIL));
 
     // Convert from bytes to items
     d_seg_size /= d_itemsize;

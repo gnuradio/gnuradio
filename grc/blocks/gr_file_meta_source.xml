@@ -80,9 +80,15 @@
 		<value></value>
 		<type>file_open</type>
 	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
 	<source>
 		<name>out</name>
 		<type>$type</type>
-		<vlen>1</vlen>
+		<vlen>$vlen</vlen>
 	</source>
 </block>

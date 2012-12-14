@@ -23,7 +23,7 @@
 GR_SWIG_BLOCK_MAGIC(gr,file_meta_sink)
 
 const char METADATA_VERSION = 0;
-const size_t METADATA_HEADER_SIZE = 134;
+const size_t METADATA_HEADER_SIZE = 149;
 
 enum gr_file_types {
   GR_FILE_BYTE=0,

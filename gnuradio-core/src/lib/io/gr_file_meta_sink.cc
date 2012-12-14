@@ -116,10 +116,11 @@ gr_file_meta_sink::gr_file_meta_sink(size_t itemsize, const std::string &filenam
   d_header = pmt_dict_add(d_header, mp("version"), mp(METADATA_VERSION));
   d_header = pmt_dict_add(d_header, mp("rx_rate"), mp(samp_rate));
   d_header = pmt_dict_add(d_header, mp("rx_time"), timestamp);
+  d_header = pmt_dict_add(d_header, mp("size"), pmt_from_long(d_itemsize));
   d_header = pmt_dict_add(d_header, mp("type"), pmt_from_long(type));
   d_header = pmt_dict_add(d_header, mp("cplx"), complex ? PMT_T : PMT_F);
   d_header = pmt_dict_add(d_header, mp("strt"), pmt_from_uint64(METADATA_HEADER_SIZE+d_extra_size));
-  d_header = pmt_dict_add(d_header, mp("size"), pmt_from_uint64(0));
+  d_header = pmt_dict_add(d_header, mp("bytes"), pmt_from_uint64(0));
 
   do_update();
 
@@ -305,7 +306,7 @@ gr_file_meta_sink::update_last_header_inline()
   size_t hdrlen = pmt_to_uint64(pmt_dict_ref(d_header, mp("strt"), PMT_NIL));
   size_t seg_size = d_itemsize*d_total_seg_size;
   pmt_t s = pmt_from_uint64(seg_size);
-  update_header(mp("size"), s);
+  update_header(mp("bytes"), s);
   update_header(mp("strt"), pmt_from_uint64(METADATA_HEADER_SIZE+d_extra_size));
   fseek(d_fp, -seg_size-hdrlen, SEEK_CUR);
   write_header(d_fp, d_header, d_extra);
@@ -320,7 +321,7 @@ gr_file_meta_sink::update_last_header_detached()
   size_t hdrlen = pmt_to_uint64(pmt_dict_ref(d_header, mp("strt"), PMT_NIL));
   size_t seg_size = d_itemsize*d_total_seg_size;
   pmt_t s = pmt_from_uint64(seg_size);
-  update_header(mp("size"), s);
+  update_header(mp("bytes"), s);
   update_header(mp("strt"), pmt_from_uint64(METADATA_HEADER_SIZE+d_extra_size));
   fseek(d_hdr_fp, -hdrlen, SEEK_CUR);
   write_header(d_hdr_fp, d_header, d_extra);
@@ -333,7 +334,7 @@ gr_file_meta_sink::write_and_update()
   // based on current index + header size.
   //uint64_t loc = get_last_header_loc();
   pmt_t s = pmt_from_uint64(0);
-  update_header(mp("size"), s);
+  update_header(mp("bytes"), s);
 
   // If we have multiple tags on the same offset, this makes
   // sure we just overwrite the same header each time instead

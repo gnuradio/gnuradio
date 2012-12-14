@@ -16,9 +16,9 @@ Metadata files have headers that carry information about a segment of
 data within the file. The header structure is described in detail in
 the next section. A metadata file always starts with a header that
 describes the basic structure of the data. It contains information
-about the data type, if it's complex, the sample rate of the segment,
-the time stamp of the first sample of the segment, and information
-regarding the header size and segment size.
+about the item size, data type, if it's complex, the sample rate of
+the segment, the time stamp of the first sample of the segment, and
+information regarding the header size and segment size.
 
 Headers have two main tags associated with them:
 
@@ -190,10 +190,11 @@ must be the same length and structure. As of now, we only have version
 - version: (char) version number (usually set to METADATA_VERSION)
 - rx_rate: (double) Stream's sample rate
 - rx_time: (pmt_t pair - (uint64_t, double)) Time stamp (format from UHD)
+- size: (int) item size in bytes - reflects vector length if any.
 - type: (int) data type (enum below)
 - cplx: (bool) true if data is complex
 - strt: (uint64_t) start of data relative to current header
-- size: (uint64_t) size of following data segment
+- bytes: (uint64_t) size of following data segment in bytes
 
 The data types are indicated by an integer value from the following
 enumeration type:
