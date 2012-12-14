@@ -261,6 +261,8 @@ gr_file_meta_sink::write_header(FILE *fp, pmt_t header, pmt_t extra)
       throw std::runtime_error("file_meta_sink: error writing extra to file.\n");
     }
   }
+
+  fflush(fp);
 }
 
 void
