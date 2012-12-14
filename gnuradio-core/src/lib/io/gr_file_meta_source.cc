@@ -50,10 +50,10 @@
 #endif
 
 gr_file_meta_source_sptr
-gr_make_file_meta_source(const char *filename,
+gr_make_file_meta_source(const std::string &filename,
 			 bool repeat,
 			 bool detached_header,
-			 const char *hdr_filename)
+			 const std::string &hdr_filename)
 {
   return gnuradio::get_initial_sptr
     (new gr_file_meta_source(filename,
@@ -62,10 +62,10 @@ gr_make_file_meta_source(const char *filename,
 			     hdr_filename));
 }
 
-gr_file_meta_source::gr_file_meta_source(const char *filename,
+gr_file_meta_source::gr_file_meta_source(const std::string &filename,
 					 bool repeat,
 					 bool detached_header,
-					 const char *hdr_filename)
+					 const std::string &hdr_filename)
   : gr_sync_block("file_meta_source",
 		  gr_make_io_signature(0, 0, 0),
 		  gr_make_io_signature(1, 1, 1)),
@@ -78,12 +78,13 @@ gr_file_meta_source::gr_file_meta_source(const char *filename,
   d_hdr_fp = 0;
   d_new_hdr_fp = 0;
 
-  if(detached_header == true)
+  if(detached_header == true) {
     d_state = STATE_DETACHED;
+  }
   else
     d_state = STATE_INLINE;
 
-  if(!open(filename))
+  if(!open(filename, hdr_filename))
     throw std::runtime_error("file_meta_source: can't open file\n");
 
   do_update();
@@ -120,15 +121,22 @@ gr_file_meta_source::~gr_file_meta_source()
 bool
 gr_file_meta_source::read_header(pmt_t &hdr, pmt_t &extras)
 {
+  // Select which file handle to read from.
+  FILE *fp;
+  if(d_state == STATE_DETACHED)
+    fp = d_hdr_fp;
+  else
+    fp = d_fp;
+
   size_t ret;
   size_t size = 0;
   std::string str;
   char *hdr_buffer = new char[METADATA_HEADER_SIZE];
   while(size < METADATA_HEADER_SIZE) {
-    ret = fread(&hdr_buffer[size], sizeof(char), METADATA_HEADER_SIZE-size, d_fp);
+    ret = fread(&hdr_buffer[size], sizeof(char), METADATA_HEADER_SIZE-size, fp);
     if(ret == 0) {
       delete [] hdr_buffer;
-      if(feof(d_fp))
+      if(feof(fp))
 	return false;
       else {
 	std::stringstream s;
@@ -157,10 +165,10 @@ gr_file_meta_source::read_header(pmt_t &hdr, pmt_t &extras)
     size = 0;
     hdr_buffer = new char[extra_len];
     while(size < extra_len) {
-      ret = fread(&hdr_buffer[size], sizeof(char), extra_len-size, d_fp);
+      ret = fread(&hdr_buffer[size], sizeof(char), extra_len-size, fp);
       if(ret == 0) {
 	delete [] hdr_buffer;
-	if(feof(d_fp))
+	if(feof(fp))
 	  return false;
 	else {
 	  std::stringstream s;
@@ -283,16 +291,20 @@ gr_file_meta_source::parse_extras(pmt_t extras, uint64_t offset,
 }
 
 bool
-gr_file_meta_source::open(const char *filename)
+gr_file_meta_source::open(const std::string &filename,
+			  const std::string &hdr_filename)
 {
   bool ret = true;
   if(d_state == STATE_DETACHED) {
-    std::stringstream s;
-    s << filename << ".hdr";
-    ret = _open(&d_new_hdr_fp, s.str().c_str());
+    std::string s;
+    if(hdr_filename == "")
+      s = filename + ".hdr";
+    else
+      s = hdr_filename;
+    ret = _open(&d_new_hdr_fp, s.c_str());
   }
 
-  ret = ret && _open(&d_new_fp, filename);
+  ret = ret && _open(&d_new_fp, filename.c_str());
   d_updated = true;
   return ret;
 }

@@ -36,10 +36,10 @@ class gr_file_meta_source;
 typedef boost::shared_ptr<gr_file_meta_source> gr_file_meta_source_sptr;
 
 GR_CORE_API gr_file_meta_source_sptr
-gr_make_file_meta_source(const char *filename,
+gr_make_file_meta_source(const std::string &filename,
 			 bool repeat=false,
 			 bool detached_header=false,
-			 const char *hdr_filename="");
+			 const std::string &hdr_filename="");
 
 /*!
  * \brief Reads stream from file with meta-data headers. Headers are
@@ -68,12 +68,14 @@ class GR_CORE_API gr_file_meta_source : public gr_sync_block
    * \param detached_header (bool): Set to true if header
    *    info is stored in a separate file (usually named filename.hdr)
    * \param hdr_filename (string): Name of detached header file if used.
+   *    Defaults to 'filename.hdr' if detached_header is true but this
+   *    field is an empty string.
    */
   friend GR_CORE_API gr_file_meta_source_sptr
-    gr_make_file_meta_source(const char *filename,
+    gr_make_file_meta_source(const std::string &filename,
 			     bool repeat,
 			     bool detached_header,
-			     const char *hdr_filename);
+			     const std::string &hdr_filename);
 
  private:
   enum meta_state_t {
@@ -96,10 +98,10 @@ class GR_CORE_API gr_file_meta_source : public gr_sync_block
   std::vector<gr_tag_t> d_tags;
 
  protected:
-  gr_file_meta_source(const char *filename,
+  gr_file_meta_source(const std::string &filename,
 		      bool repeat=false,
 		      bool detached_header=false,
-		      const char *hdr_filename="");
+		      const std::string &hdr_filename="");
 
   bool _open(FILE **fp, const char *filename);
   bool read_header(pmt_t &hdr, pmt_t &extras);
@@ -111,7 +113,8 @@ class GR_CORE_API gr_file_meta_source : public gr_sync_block
  public:
   ~gr_file_meta_source();
 
-  bool open(const char *filename);
+  bool open(const std::string &filename,
+	    const std::string &hdr_filename="");
   void close();
   void do_update();
 

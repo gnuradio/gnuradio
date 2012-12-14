@@ -23,22 +23,23 @@
 GR_SWIG_BLOCK_MAGIC(gr,file_meta_source)
 
 gr_file_meta_source_sptr
-gr_make_file_meta_source(const char *filename,
+gr_make_file_meta_source(const std::string &filename,
 			 bool repeat=false,
 			 bool detached_header=false,
-			 const char *hdr_filename="");
+			 const std::string &hdr_filename="");
 
 class gr_file_meta_source : public gr_sync_block
 {
  protected:
-  gr_file_meta_source(const char *filename,
+  gr_file_meta_source(const std::string &filename,
 		      bool repeat,
 		      bool detached_header,
-		      const char *hdr_filename);
+		      const std::string &hdr_filename);
 
  public:
   ~gr_file_meta_source();
 
-  bool open(const char *filename);
+  bool open(const std::string &filename,
+	    const std::string &hdr_filename="");
   void close();
 };
