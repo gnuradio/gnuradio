@@ -80,10 +80,10 @@ gr_tag_debug::work(int noutput_items,
     get_tags_in_range(d_tags, i, abs_N, end_N);
 
     if(d_display) {
-      std::cout << "Input Stream: " << i << std::endl;
+      std::cout << "Input Stream: " << std::setw(2) << std::setfill('0') << i << std::setfill(' ') << std::endl;
       for(d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
 	std::cout << std::setw(10) << "Offset: " << d_tags_itr->offset
-		  << std::setw(10) << "Source: " << pmt::pmt_symbol_to_string(d_tags_itr->srcid)
+		  << std::setw(10) << "Source: " << (pmt::pmt_is_symbol(d_tags_itr->srcid) ?  pmt::pmt_symbol_to_string(d_tags_itr->srcid) : "n/a")
 		  << std::setw(10) << "Key: " << pmt::pmt_symbol_to_string(d_tags_itr->key)
 		  << std::setw(10) << "Value: ";
 	pmt::pmt_print(d_tags_itr->value);
@@ -98,3 +98,4 @@ gr_tag_debug::work(int noutput_items,
 
   return noutput_items;
 }
+
