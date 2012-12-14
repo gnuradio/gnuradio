@@ -23,8 +23,8 @@
 import sys
 from optparse import OptionParser
 
-from gnuradio import gr
-from gnuradio import parse_file_metadata
+from gruel import pmt
+from gnuradio.blocks import parse_file_metadata
 
 def main(filename, detached=False):
     handle = open(filename, "rb")
@@ -40,7 +40,7 @@ def main(filename, detached=False):
 
         # Convert from string to PMT (should be a dictionary)
         try:
-            header = gr.pmt_deserialize_str(header_str)
+            header = pmt.pmt_deserialize_str(header_str)
         except RuntimeError:
             sys.stderr.write("Could not deserialize header: invalid or corrupt data file.\n")
             sys.exit(1)
@@ -54,7 +54,7 @@ def main(filename, detached=False):
                 break
 
             try:
-                extra = gr.pmt_deserialize_str(extra_str)
+                extra = pmt.pmt_deserialize_str(extra_str)
             except RuntimeError:
                 sys.stderr.write("Could not deserialize extras: invalid or corrupt data file.\n")
                 sys.exit(1)

@@ -29,8 +29,6 @@
 		<block>gr_vector_sink_x</block>
 		<block>gr_null_sink</block>
 		<block>gr_file_sink</block>
-		<block>gr_file_meta_source</block>
-		<block>gr_file_meta_sink</block>
 		<block>blks2_tcp_sink</block>
 		<block>gr_udp_sink</block>
 		<block>gr_wavfile_sink</block>

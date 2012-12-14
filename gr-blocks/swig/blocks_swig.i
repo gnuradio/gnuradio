@@ -62,6 +62,8 @@
 #include "blocks/divide_ii.h"
 #include "blocks/divide_cc.h"
 #include "blocks/file_source.h"
+#include "blocks/file_meta_sink.h"
+#include "blocks/file_meta_source.h"
 #include "blocks/float_to_char.h"
 #include "blocks/float_to_complex.h"
 #include "blocks/float_to_int.h"
@@ -147,6 +149,8 @@
 %include "blocks/conjugate_cc.h"
 %include "blocks/deinterleave.h"
 %include "blocks/file_source.h"
+%include "blocks/file_meta_sink.h"
+%include "blocks/file_meta_source.h"
 %include "blocks/divide_ff.h"
 %include "blocks/divide_ss.h"
 %include "blocks/divide_ii.h"
@@ -239,6 +243,8 @@ GR_SWIG_BLOCK_MAGIC2(blocks, divide_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, file_source);
+GR_SWIG_BLOCK_MAGIC2(blocks, file_meta_sink);
+GR_SWIG_BLOCK_MAGIC2(blocks, file_meta_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_complex);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_int);

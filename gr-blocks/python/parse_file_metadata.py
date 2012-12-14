@@ -24,6 +24,11 @@ import sys
 from gnuradio import gr
 from gruel import pmt
 
+try:
+    import blocks_swig as blocks
+except:
+    from gnuradio import blocks
+
 '''
 sr    Sample rate (samples/second)
 time  Time as uint64(secs), double(fractional secs)
@@ -33,23 +38,23 @@ strt  Start of data (or size of header) in bytes
 size  Size of data in bytes
 '''
 
-HEADER_LENGTH = gr.METADATA_HEADER_SIZE
+HEADER_LENGTH = blocks.METADATA_HEADER_SIZE
 
-ftype_to_string = {gr.GR_FILE_BYTE: "bytes",
-                   gr.GR_FILE_SHORT: "short",
-                   gr.GR_FILE_INT: "int",
-                   gr.GR_FILE_LONG: "long",
-                   gr.GR_FILE_LONG_LONG: "long long",
-                   gr.GR_FILE_FLOAT: "float",
-                   gr.GR_FILE_DOUBLE: "double" }
+ftype_to_string = {blocks.GR_FILE_BYTE: "bytes",
+                   blocks.GR_FILE_SHORT: "short",
+                   blocks.GR_FILE_INT: "int",
+                   blocks.GR_FILE_LONG: "long",
+                   blocks.GR_FILE_LONG_LONG: "long long",
+                   blocks.GR_FILE_FLOAT: "float",
+                   blocks.GR_FILE_DOUBLE: "double" }
 
-ftype_to_size = {gr.GR_FILE_BYTE: gr.sizeof_char,
-                 gr.GR_FILE_SHORT: gr.sizeof_short,
-                 gr.GR_FILE_INT: gr.sizeof_int,
-                 gr.GR_FILE_LONG: gr.sizeof_int,
-                 gr.GR_FILE_LONG_LONG: 2*gr.sizeof_int,
-                 gr.GR_FILE_FLOAT: gr.sizeof_float,
-                 gr.GR_FILE_DOUBLE: gr.sizeof_double}
+ftype_to_size = {blocks.GR_FILE_BYTE: gr.sizeof_char,
+                 blocks.GR_FILE_SHORT: gr.sizeof_short,
+                 blocks.GR_FILE_INT: gr.sizeof_int,
+                 blocks.GR_FILE_LONG: gr.sizeof_int,
+                 blocks.GR_FILE_LONG_LONG: 2*gr.sizeof_int,
+                 blocks.GR_FILE_FLOAT: gr.sizeof_float,
+                 blocks.GR_FILE_DOUBLE: gr.sizeof_double}
 
 def parse_header(p, VERBOSE=False):
     dump = pmt.PMT_NIL

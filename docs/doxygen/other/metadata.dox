@@ -9,8 +9,8 @@ the system state such as sample rate or if a receiver's frequency are
 not conveyed with the data in the file itself. Header of metadata
 solve this problem.
 
-We write metadata files using gr_file_meta_sink and read metadata
-files using gr_file_meta_source.
+We write metadata files using blocks::file_meta_sink and read metadata
+files using blocks::file_meta_source.
 
 Metadata files have headers that carry information about a segment of
 data within the file. The header structure is described in detail in
@@ -88,12 +88,12 @@ keep the sample times exact.
 
 \subsection implementation Implementation
 
-Metadata files are created using gr_file_meta_sink. The default
+Metadata files are created using file_meta_sink. The default
 behavior is to create a single file with inline headers as
 metadata. An option can be set to switch to detached header mode.
 
 Metadata file are read into a flowgraph using
-gr_file_meta_source. This source reads a metadata file, inline by
+file_meta_source. This source reads a metadata file, inline by
 default with a settable option to use detached headers. The data from
 the segments is converted into a standard streaming output. The
 'rx_rate' and 'rx_time' and all key:value pairs in the extra header
@@ -250,13 +250,13 @@ manipulating metadata files. There is a general parser in Python that
 will convert the PMT header and extra header into Python
 dictionaries. This utility is:
 
-- gnuradio-core/src/python/gnuradio/parse_file_metadata.py
+- gr-blocks/python/parse_file_metadata.py
 
 This program is installed into the Python directory under the
 'gnuradio' module, so it can be accessed with:
 
 \code
-from gnuradio import parse_file_metadata
+from gnuradio.blocks import parse_file_metadata
 \endcode
 
 It defines HEADER_LENGTH as the static length of the metadata header
@@ -284,12 +284,14 @@ data with '.hdr' appended to it.
 
 Examples are located in:
 
-- gnuradio-core/src/examples/metadata
+- gr-blocks/examples/metadata
 
-Currently, there are two GRC example programs.
+Currently, there are a few GRC example programs.
 
 - file_metadata_sink: create a metadata file from UHD samples.
 - file_metadata_source: read the metadata file as input to a simple graph.
+- file_metadata_vector_sink: create a metadata file from UHD samples.
+- file_metadata_vector_source: read the metadata file as input to a simple graph.
 
 The file sink example can be switched to use a signal source instead
 of a UHD source, but no extra tagged data is used in this mode.
@@ -298,6 +300,9 @@ The file source example pushes the data stream to a new raw file while
 a tag debugger block prints out any tags observed in the metedata
 file. A QT GUI time sink is used to look at the signal as well.
 
+The versions with 'vector' in the name are similar except they use
+vectors of data.
+
 The following shows a simple way of creating extra metadata for a
 metadata file. This example is just showing how we can insert a date
 into the metadata to keep track of later. The date in this case is
@@ -305,6 +310,7 @@ encoded as a vector of uint16 with [day, month, year].
 
 \code
   from gruel import pmt
+  from gnuradio import blocks
 
   key = pmt.pmt_intern("date")
   val = pmt.pmt_init_u16vector(3, [13,12,2012])
@@ -312,11 +318,11 @@ encoded as a vector of uint16 with [day, month, year].
   extras = pmt.pmt_make_dict()
   extras = pmt.pmt_dict_add(extras, key, val)
   extras_str = pmt.pmt_serialize_str(extras)
-  self.sink = gr.file_meta_sink(gr.sizeof_gr_complex,
-                                "/tmp/metadat_file.out",
-				 samp_rate, 1,
-				 gr.GR_FILE_FLOAT, True,
-				 1000000, extra_str, False)
+  self.sink = blocks.file_meta_sink(gr.sizeof_gr_complex,
+                                    "/tmp/metadat_file.out",
+				    samp_rate, 1,
+				    blocks.GR_FILE_FLOAT, True,
+				    1000000, extra_str, False)
 
 \endcode
 

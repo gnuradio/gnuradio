@@ -31,6 +31,11 @@
 	<cat>
 	        <name>Sources (New)</name>
 		<block>blocks_file_source</block>
+		<block>blocks_file_meta_source</block>
+	</cat>
+	<cat>
+	        <name>Sinks (New)</name>
+		<block>blocks_file_meta_sink</block>
 	</cat>
 	<cat>
 		<name>Math Operations (New) </name>

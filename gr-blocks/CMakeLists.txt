@@ -85,6 +85,7 @@ if(ENABLE_PYTHON)
      add_subdirectory(swig)
      add_subdirectory(grc)
      add_subdirectory(doc)
+     add_subdirectory(examples)
 endif(ENABLE_PYTHON)
 
 ########################################################################

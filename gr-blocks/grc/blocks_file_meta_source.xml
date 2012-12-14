@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>File Meta Source</name>
-	<key>gr_file_meta_source</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.file_meta_source($file, $repeat, $detached, $hdr_file)</make>
+	<key>blocks_file_meta_source</key>
+	<import>from gnuradio import gr, blocks</import>
+	<make>blocks.file_meta_source($file, $repeat, $detached, $hdr_file)</make>
 	<callback>open($file, $repeat)</callback>
 	<param>
 		<name>Output Type</name>

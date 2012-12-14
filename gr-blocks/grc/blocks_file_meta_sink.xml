@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>File Meta Sink</name>
-	<key>gr_file_meta_sink</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.file_meta_sink($type.size*$vlen, $file, $samp_rate, $rel_rate, $type.dtype, $type.cplx, $max_seg_size, $extra_dict, $detached)
+	<key>blocks_file_meta_sink</key>
+	<import>from gnuradio import gr, blocks</import>
+	<make>blocks.file_meta_sink($type.size*$vlen, $file, $samp_rate, $rel_rate, $type.dtype, $type.cplx, $max_seg_size, $extra_dict, $detached)
 self.$(id).set_unbuffered($unbuffered)</make>
 	<callback>set_unbuffered($unbuffered)</callback>
 	<callback>open($file)</callback>
@@ -26,35 +26,35 @@ self.$(id).set_unbuffered($unbuffered)</make>
 			<name>Complex</name>
 			<key>complex</key>
 			<opt>size:gr.sizeof_gr_complex</opt>
-			<opt>dtype:gr.GR_FILE_FLOAT</opt>
+			<opt>dtype:blocks.GR_FILE_FLOAT</opt>
 			<opt>cplx:True</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>float</key>
 			<opt>size:gr.sizeof_float</opt>
-			<opt>dtype:gr.GR_FILE_FLOAT</opt>
+			<opt>dtype:blocks.GR_FILE_FLOAT</opt>
 			<opt>cplx:False</opt>
 		</option>
 		<option>
 			<name>Int</name>
 			<key>int</key>
 			<opt>size:gr.sizeof_int</opt>
-			<opt>dtype:gr.GR_FILE_INT</opt>
+			<opt>dtype:blocks.GR_FILE_INT</opt>
 			<opt>cplx:False</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
 			<opt>size:gr.sizeof_short</opt>
-			<opt>dtype:gr.GR_FILE_SHORT</opt>
+			<opt>dtype:blocks.GR_FILE_SHORT</opt>
 			<opt>cplx:False</opt>
 		</option>
 		<option>
 			<name>Byte</name>
 			<key>byte</key>
 			<opt>size:gr.sizeof_char</opt>
-			<opt>dtype:gr.GR_FILE_BYTE</opt>
+			<opt>dtype:blocks.GR_FILE_BYTE</opt>
 			<opt>cplx:False</opt>
 		</option>
 	</param>

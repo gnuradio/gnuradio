@@ -27,9 +27,7 @@
 #endif
 
 #include <gr_file_sink.h>
-#include <gr_file_meta_sink.h>
 #include <gr_file_source.h>
-#include <gr_file_meta_source.h>
 #include <gr_file_descriptor_sink.h>
 #include <gr_file_descriptor_source.h>
 #include <gr_histo_sink_f.h>
@@ -57,9 +55,7 @@
 
 %include "gr_file_sink_base.i"
 %include "gr_file_sink.i"
-%include "gr_file_meta_sink.i"
 %include "gr_file_source.i"
-%include "gr_file_meta_source.i"
 %include "gr_file_descriptor_sink.i"
 %include "gr_file_descriptor_source.i"
 %include "gr_histo_sink.i"

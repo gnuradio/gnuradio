@@ -21,7 +21,8 @@
 #
 
 from gnuradio import gr, gr_unittest
-from gnuradio import parse_file_metadata
+import parse_file_metadata
+import blocks_swig as blocks
 import pmt
 import os, time
 
@@ -46,10 +47,10 @@ class test_file_metadata(gr_unittest.TestCase):
 
         src = gr.sig_source_c(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
         head = gr.head(gr.sizeof_gr_complex, 1000)
-        fsnk = gr.file_meta_sink(gr.sizeof_gr_complex, outfile,
-                                 samp_rate, 1, 
-                                 gr.GR_FILE_FLOAT, True,
-                                 1000000, extras_str, detached)
+        fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
+                                     samp_rate, 1, 
+                                     blocks.GR_FILE_FLOAT, True,
+                                     1000000, extras_str, detached)
         fsnk.set_unbuffered(True)
 
 	self.tb.connect(src, head, fsnk)
@@ -86,7 +87,7 @@ class test_file_metadata(gr_unittest.TestCase):
         # Test file metadata source
         # Create a new sig source to start from the beginning
         src2 = gr.sig_source_c(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
-        fsrc = gr.file_meta_source(outfile, False)
+        fsrc = blocks.file_meta_source(outfile, False)
         vsnk = gr.vector_sink_c()
         tsnk = gr.tag_debug(gr.sizeof_gr_complex, "QA")
         ssnk = gr.vector_sink_c()
@@ -125,10 +126,10 @@ class test_file_metadata(gr_unittest.TestCase):
 
         src = gr.sig_source_c(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
         head = gr.head(gr.sizeof_gr_complex, 1000)
-        fsnk = gr.file_meta_sink(gr.sizeof_gr_complex, outfile,
-                                 samp_rate, 1, 
-                                 gr.GR_FILE_FLOAT, True,
-                                 1000000, extras_str, detached)
+        fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
+                                     samp_rate, 1, 
+                                     blocks.GR_FILE_FLOAT, True,
+                                     1000000, extras_str, detached)
         fsnk.set_unbuffered(True)
 
 	self.tb.connect(src, head, fsnk)
@@ -166,7 +167,7 @@ class test_file_metadata(gr_unittest.TestCase):
         # Test file metadata source
         # Create a new sig source to start from the beginning
         src2 = gr.sig_source_c(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
-        fsrc = gr.file_meta_source(outfile, False, detached, outfile_hdr)
+        fsrc = blocks.file_meta_source(outfile, False, detached, outfile_hdr)
         vsnk = gr.vector_sink_c()
         tsnk = gr.tag_debug(gr.sizeof_gr_complex, "QA")
         ssnk = gr.vector_sink_c()

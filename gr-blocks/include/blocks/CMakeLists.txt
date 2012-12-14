@@ -102,6 +102,8 @@ install(FILES
     conjugate_cc.h
     deinterleave.h
     file_source.h
+    file_meta_sink.h
+    file_meta_source.h
     float_to_char.h
     float_to_complex.h
     float_to_int.h
