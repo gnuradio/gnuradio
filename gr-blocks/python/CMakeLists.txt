@@ -23,6 +23,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
+    parse_file_metadata.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocks
     COMPONENT "blocks_python"
 )

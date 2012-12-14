@@ -38,6 +38,27 @@
 //load generated python docstrings
 %include "pmt_swig_doc.i"
 
+%include <std_complex.i>
+%include <std_vector.i>
+%include <stl.i>
+
+namespace std {
+  %template()	  vector<unsigned char>;
+  %template()	  vector<uint8_t>;
+  %template()	  vector<char>;
+  %template()	  vector<int8_t>;
+  %template()	  vector<short>;
+  %template()	  vector<uint16_t>;
+  %template()	  vector<int16_t>;
+  %template()	  vector<int>;
+  %template()	  vector<int32_t>;
+  %template()	  vector<uint32_t>;
+  %template()	  vector<float>;
+  %template()	  vector<double>;
+  %template()	  vector< std::complex<float> >;
+  %template()	  vector< std::complex<double> >;
+};
+
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler
 ////////////////////////////////////////////////////////////////////////
@@ -380,16 +401,17 @@ pmt_t pmt_make_f64vector(size_t k, double fill);
 pmt_t pmt_make_c32vector(size_t k, std::complex<float> fill);
 pmt_t pmt_make_c64vector(size_t k, std::complex<double> fill);
 
-pmt_t pmt_init_u8vector(size_t k, const uint8_t *data);
-pmt_t pmt_init_s8vector(size_t k, const int8_t *data);
-pmt_t pmt_init_u16vector(size_t k, const uint16_t *data);
-pmt_t pmt_init_s16vector(size_t k, const int16_t *data);
-pmt_t pmt_init_u32vector(size_t k, const uint32_t *data);
-pmt_t pmt_init_s32vector(size_t k, const int32_t *data);
-pmt_t pmt_init_f32vector(size_t k, const float *data);
-pmt_t pmt_init_f64vector(size_t k, const double *data);
-pmt_t pmt_init_c32vector(size_t k, const std::complex<float> *data);
-pmt_t pmt_init_c64vector(size_t k, const std::complex<double> *data);
+
+pmt_t pmt_init_u8vector(size_t k, const std::vector<uint8_t> &data);
+pmt_t pmt_init_s8vector(size_t k, const std::vector<int8_t> &data);
+pmt_t pmt_init_u16vector(size_t k, const std::vector<uint16_t> &data);
+pmt_t pmt_init_s16vector(size_t k, const std::vector<int16_t> &data);
+pmt_t pmt_init_u32vector(size_t k, const std::vector<uint32_t> &data);
+pmt_t pmt_init_s32vector(size_t k, const std::vector<int32_t> &data);
+pmt_t pmt_init_f32vector(size_t k, const std::vector<float> &data);
+pmt_t pmt_init_f64vector(size_t k, const std::vector<double> &data);
+pmt_t pmt_init_c32vector(size_t k, const std::vector<std::complex<float> > &data);
+pmt_t pmt_init_c64vector(size_t k, const std::vector<std::complex<double> > &data);
 
 uint8_t  pmt_u8vector_ref(pmt_t v, size_t k);
 int8_t   pmt_s8vector_ref(pmt_t v, size_t k);

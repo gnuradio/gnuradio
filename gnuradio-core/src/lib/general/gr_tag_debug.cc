@@ -65,10 +65,11 @@ gr_tag_debug::work(int noutput_items,
 {
   gruel::scoped_lock l(d_mutex);
 
+  std::stringstream sout;
   if(d_display) {
-    std::cout << std::endl
-	      << "----------------------------------------------------------------------";
-    std::cout << std::endl << "Tag Debug: " << d_name << std::endl;
+    sout << std::endl
+	 << "----------------------------------------------------------------------";
+    sout << std::endl << "Tag Debug: " << d_name << std::endl;
   }
 
   uint64_t abs_N, end_N;
@@ -80,20 +81,23 @@ gr_tag_debug::work(int noutput_items,
     get_tags_in_range(d_tags, i, abs_N, end_N);
 
     if(d_display) {
-      std::cout << "Input Stream: " << i << std::endl;
+      sout << "Input Stream: " << i << std::endl;
       for(d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
-	std::cout << std::setw(10) << "Offset: " << d_tags_itr->offset
-		  << std::setw(10) << "Source: " << pmt::pmt_symbol_to_string(d_tags_itr->srcid)
-		  << std::setw(10) << "Key: " << pmt::pmt_symbol_to_string(d_tags_itr->key)
-		  << std::setw(10) << "Value: ";
-	pmt::pmt_print(d_tags_itr->value);
+	sout << std::setw(10) << "Offset: " << d_tags_itr->offset
+	     << std::setw(10) << "Source: " << pmt::pmt_symbol_to_string(d_tags_itr->srcid)
+	     << std::setw(10) << "Key: " << pmt::pmt_symbol_to_string(d_tags_itr->key)
+	     << std::setw(10) << "Value: ";
+	sout << d_tags_itr->value << std::endl;
       }
     }
   }
 
   if(d_display) {
-    std::cout << "----------------------------------------------------------------------";
-    std::cout << std::endl;
+    sout << "----------------------------------------------------------------------";
+    sout << std::endl;
+
+    if(d_tags.size() > 0)
+      std::cout << sout.str();
   }
 
   return noutput_items;

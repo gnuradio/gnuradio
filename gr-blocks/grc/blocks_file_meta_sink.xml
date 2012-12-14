@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##File Meta Sink
+###################################################
+ -->
+<block>
+	<name>File Meta Sink</name>
+	<key>blocks_file_meta_sink</key>
+	<import>from gnuradio import gr, blocks</import>
+	<make>blocks.file_meta_sink($type.size*$vlen, $file, $samp_rate, $rel_rate, $type.dtype, $type.cplx, $max_seg_size, $extra_dict, $detached)
+self.$(id).set_unbuffered($unbuffered)</make>
+	<callback>set_unbuffered($unbuffered)</callback>
+	<callback>open($file)</callback>
+	<param>
+		<name>File</name>
+		<key>file</key>
+		<value></value>
+		<type>file_save</type>
+	</param>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+			<opt>dtype:blocks.GR_FILE_FLOAT</opt>
+			<opt>cplx:True</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+			<opt>dtype:blocks.GR_FILE_FLOAT</opt>
+			<opt>cplx:False</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+			<opt>dtype:blocks.GR_FILE_INT</opt>
+			<opt>cplx:False</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+			<opt>dtype:blocks.GR_FILE_SHORT</opt>
+			<opt>cplx:False</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+			<opt>dtype:blocks.GR_FILE_BYTE</opt>
+			<opt>cplx:False</opt>
+		</option>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Relative Rate Change</name>
+		<key>rel_rate</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Max Seg. Size</name>
+		<key>max_seg_size</key>
+		<value>1000000</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Extra Dict.</name>
+		<key>extra_dict</key>
+		<value>""</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Detached</name>
+		<key>detached</key>
+		<value>False</value>
+		<type>bool</type>
+		<option>
+		  <name>Off</name>
+		  <key>False</key>
+		</option>
+		<option>
+		  <name>On</name>
+		  <key>True</key>
+		</option>
+	</param>	<param>
+		<name>Unbuffered</name>
+		<key>unbuffered</key>
+		<value>False</value>
+		<type>bool</type>
+		<option>
+				<name>Off</name>
+				<key>False</key>
+		</option>
+		<option>
+				<name>On</name>
+				<key>True</key>
+		</option>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</sink>
+</block>

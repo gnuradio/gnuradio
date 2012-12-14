@@ -32,6 +32,7 @@
 #include <stdint.h>
 #include <iosfwd>
 #include <stdexcept>
+#include <vector>
 
 namespace gruel {
   class msg_accepter;
@@ -412,17 +413,29 @@ GRUEL_API pmt_t pmt_make_c32vector(size_t k, std::complex<float> fill);
 GRUEL_API pmt_t pmt_make_c64vector(size_t k, std::complex<double> fill);
 
 GRUEL_API pmt_t pmt_init_u8vector(size_t k, const uint8_t *data);
+GRUEL_API pmt_t pmt_init_u8vector(size_t k, const std::vector<uint8_t> &data);
 GRUEL_API pmt_t pmt_init_s8vector(size_t k, const int8_t *data);
+GRUEL_API pmt_t pmt_init_s8vector(size_t k, const std::vector<int8_t> &data);
 GRUEL_API pmt_t pmt_init_u16vector(size_t k, const uint16_t *data);
+GRUEL_API pmt_t pmt_init_u16vector(size_t k, const std::vector<uint16_t> &data);
 GRUEL_API pmt_t pmt_init_s16vector(size_t k, const int16_t *data);
+GRUEL_API pmt_t pmt_init_s16vector(size_t k, const std::vector<int16_t> &data);
 GRUEL_API pmt_t pmt_init_u32vector(size_t k, const uint32_t *data);
+GRUEL_API pmt_t pmt_init_u32vector(size_t k, const std::vector<uint32_t> &data);
 GRUEL_API pmt_t pmt_init_s32vector(size_t k, const int32_t *data);
+GRUEL_API pmt_t pmt_init_s32vector(size_t k, const std::vector<int32_t> &data);
 GRUEL_API pmt_t pmt_init_u64vector(size_t k, const uint64_t *data);
+GRUEL_API pmt_t pmt_init_u64vector(size_t k, const std::vector<uint64_t> &data);
 GRUEL_API pmt_t pmt_init_s64vector(size_t k, const int64_t *data);
+GRUEL_API pmt_t pmt_init_s64vector(size_t k, const std::vector<int64_t> &data);
 GRUEL_API pmt_t pmt_init_f32vector(size_t k, const float *data);
+GRUEL_API pmt_t pmt_init_f32vector(size_t k, const std::vector<float> &data);
 GRUEL_API pmt_t pmt_init_f64vector(size_t k, const double *data);
+GRUEL_API pmt_t pmt_init_f64vector(size_t k, const std::vector<double> &data);
 GRUEL_API pmt_t pmt_init_c32vector(size_t k, const std::complex<float> *data);
+GRUEL_API pmt_t pmt_init_c32vector(size_t k, const std::vector<std::complex<float> > &data);
 GRUEL_API pmt_t pmt_init_c64vector(size_t k, const std::complex<double> *data);
+GRUEL_API pmt_t pmt_init_c64vector(size_t k, const std::vector<std::complex<double> > &data);
 
 GRUEL_API uint8_t  pmt_u8vector_ref(pmt_t v, size_t k);
 GRUEL_API int8_t   pmt_s8vector_ref(pmt_t v, size_t k);
