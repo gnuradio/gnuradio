@@ -24,7 +24,13 @@ from gnuradio import gr, gr_unittest
 import parse_file_metadata
 import blocks_swig as blocks
 import pmt
-import os, time
+import os, math
+
+def sig_source_c(samp_rate, freq, amp, N):
+    t = map(lambda x: float(x)/samp_rate, xrange(N))
+    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x), t)
+    return y
 
 class test_file_metadata(gr_unittest.TestCase):
 
@@ -35,6 +41,7 @@ class test_file_metadata(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
+        N = 1000
 	outfile = "test_out.dat"
 
         detached = False
@@ -45,15 +52,15 @@ class test_file_metadata(gr_unittest.TestCase):
         extras = pmt.pmt_dict_add(extras, key, val)
         extras_str = pmt.pmt_serialize_str(extras)
 
-        src = gr.sig_source_c(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
-        head = gr.head(gr.sizeof_gr_complex, 1000)
+        data = sig_source_c(samp_rate, 1000, 1, N)
+        src  = gr.vector_source_c(data)
         fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
                                      samp_rate, 1, 
                                      blocks.GR_FILE_FLOAT, True,
                                      1000000, extras_str, detached)
         fsnk.set_unbuffered(True)
 
-	self.tb.connect(src, head, fsnk)
+	self.tb.connect(src, fsnk)
 	self.tb.run()
         fsnk.close()
 
@@ -67,6 +74,7 @@ class test_file_metadata(gr_unittest.TestCase):
         except RuntimeError:
             self.assertFalse()
 
+        print header
         info = parse_file_metadata.parse_header(header, False)
 
         extra_str = handle.read(info["extra_len"])
@@ -85,17 +93,15 @@ class test_file_metadata(gr_unittest.TestCase):
 
 
         # Test file metadata source
-        # Create a new sig source to start from the beginning
-        src2 = gr.sig_source_c(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
+        src.rewind()
         fsrc = blocks.file_meta_source(outfile, False)
         vsnk = gr.vector_sink_c()
         tsnk = gr.tag_debug(gr.sizeof_gr_complex, "QA")
         ssnk = gr.vector_sink_c()
-        head.reset()
-        self.tb.disconnect(src, head, fsnk)
+        self.tb.disconnect(src, fsnk)
         self.tb.connect(fsrc, vsnk)
         self.tb.connect(fsrc, tsnk)
-        self.tb.connect(src2, head, ssnk)
+        self.tb.connect(src, ssnk)
         self.tb.run()
 
         # Test to make sure tags with 'samp_rate' and 'rx_rate' keys
@@ -113,6 +119,7 @@ class test_file_metadata(gr_unittest.TestCase):
 	os.remove(outfile)
 
     def test_002(self):
+        N = 1000
 	outfile = "test_out.dat"
 	outfile_hdr = "test_out.dat.hdr"
 
@@ -124,15 +131,15 @@ class test_file_metadata(gr_unittest.TestCase):
         extras = pmt.pmt_dict_add(extras, key, val)
         extras_str = pmt.pmt_serialize_str(extras)
 
-        src = gr.sig_source_c(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
-        head = gr.head(gr.sizeof_gr_complex, 1000)
+        data = sig_source_c(samp_rate, 1000, 1, N)
+        src  = gr.vector_source_c(data)
         fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
                                      samp_rate, 1, 
                                      blocks.GR_FILE_FLOAT, True,
                                      1000000, extras_str, detached)
         fsnk.set_unbuffered(True)
 
-	self.tb.connect(src, head, fsnk)
+	self.tb.connect(src, fsnk)
 	self.tb.run()
         fsnk.close()
 
@@ -165,17 +172,15 @@ class test_file_metadata(gr_unittest.TestCase):
 
 
         # Test file metadata source
-        # Create a new sig source to start from the beginning
-        src2 = gr.sig_source_c(samp_rate, gr.GR_COS_WAVE, 1000, 1, 0)
+        src.rewind()
         fsrc = blocks.file_meta_source(outfile, False, detached, outfile_hdr)
         vsnk = gr.vector_sink_c()
         tsnk = gr.tag_debug(gr.sizeof_gr_complex, "QA")
         ssnk = gr.vector_sink_c()
-        head.reset()
-        self.tb.disconnect(src, head, fsnk)
+        self.tb.disconnect(src, fsnk)
         self.tb.connect(fsrc, vsnk)
         self.tb.connect(fsrc, tsnk)
-        self.tb.connect(src2, head, ssnk)
+        self.tb.connect(src, ssnk)
         self.tb.run()
 
         # Test to make sure tags with 'samp_rate' and 'rx_rate' keys

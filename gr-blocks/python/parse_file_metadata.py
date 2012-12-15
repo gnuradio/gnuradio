@@ -22,11 +22,16 @@
 
 import sys
 from gnuradio import gr
-from gruel import pmt
+
+try:
+    import pmt
+except ImportError:
+    from gruel import pmt
+
 
 try:
     import blocks_swig as blocks
-except:
+except ImportError:
     from gnuradio import blocks
 
 '''
@@ -72,7 +77,7 @@ def parse_header(p, VERBOSE=False):
         if(VERBOSE):
             print "Version Number: {0}".format(version)
     else:
-        sys.stderr.write("Could not find key 'sr': invalid or corrupt data file.\n")
+        sys.stderr.write("Could not find key 'version': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT SAMPLE RATE
