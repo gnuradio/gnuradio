@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright 2009,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -20,8 +18,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import filter_design 
-import sys
+from PyQt4 import QtGui, QtCore, Qt
 
-# Call filter desgin main function
-filter_design.main(sys.argv)
+class BandGraphicsView(QtGui.QGraphicsView):
+    def resizeEvent(self, event):
+        self.setAlignment(Qt.Qt.AlignCenter)
+        self.fitInView(self.scene().itemsBoundingRect(), QtCore.Qt.KeepAspectRatio)
+        self.scale(1.3,1.3)
+        self.setViewportMargins(10,10,10,10)
