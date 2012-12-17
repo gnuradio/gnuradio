@@ -1004,7 +1004,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                     (self.b,self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ','').lower(),
                                                        analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
                 except StandardError, e:
-                                reply = QtGui.QMessageBox.information(self, "IIR desing error",
+                                reply = QtGui.QMessageBox.information(self, "IIR design error",
                                                                       e.args[0], "&Ok")
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
                 iirparams = { "filttype": iirft[iirftype],"bandtype": iirabbr[iirbtype], "filtord": order, "paramtype":paramtype[sanalog[atype]],
@@ -1014,7 +1014,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                     (self.b,self.a) = signal.iirdesign(params[0], params[1], params[2],
                                              params[3], analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
                 except StandardError, e:
-                                reply = QtGui.QMessageBox.information(self, "IIR desing error",
+                                reply = QtGui.QMessageBox.information(self, "IIR design error",
                                                                       e.args[0], "&Ok")
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
                 #Create params
