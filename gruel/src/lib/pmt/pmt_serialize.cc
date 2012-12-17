@@ -711,12 +711,12 @@ pmt_deserialize(std::streambuf &sb)
 	{
 	  pmt_t vec = pmt_make_c32vector(nitems, 0);
 	  for(uint32_t i=0; i<nitems; i++) {
-	    std::complex<float> c;
+	    float re, im;
 	    deserialize_untagged_f64(&f64, sb);
-	    c.real(static_cast<float>(f64));
+	    re = static_cast<float>(f64);
 	    deserialize_untagged_f64(&f64, sb);
-	    c.imag(static_cast<float>(f64));
-	    pmt_c32vector_set(vec, i, c);
+	    im = static_cast<float>(f64);
+	    pmt_c32vector_set(vec, i, std::complex<float>(re, im));
 	  }
 	  return vec;
 	}
@@ -725,12 +725,12 @@ pmt_deserialize(std::streambuf &sb)
 	{
 	  pmt_t vec = pmt_make_c64vector(nitems, 0);
 	  for(uint32_t i=0; i<nitems; i++) {
-	    std::complex<double> c;
+	    double re, im;
 	    deserialize_untagged_f64(&f64, sb);
-	    c.real(f64);
+	    re = f64;
 	    deserialize_untagged_f64(&f64, sb);
-	    c.imag(f64);
-	    pmt_c64vector_set(vec, i, c);
+	    im = f64;
+	    pmt_c64vector_set(vec, i, std::complex<double>(re, im));
 	  }
 	  return vec;
 	}
