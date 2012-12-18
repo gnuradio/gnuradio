@@ -1,4 +1,4 @@
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,7 +19,6 @@
 #
 
 import scipy
-from gnuradio import gr
 from gnuradio import filter 
 from PyQt4 import QtGui
 
@@ -37,8 +36,8 @@ def design_win_lpf(fs, gain, wintype, mainwin):
         tb = sb - pb
 
         try:
-            taps = gr.firdes.low_pass_2(gain, fs, pb, tb,
-                                    atten, wintype)
+            taps = filter.firdes.low_pass_2(gain, fs, pb, tb,
+                                            atten, wintype)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
@@ -64,8 +63,8 @@ def design_win_bpf(fs, gain, wintype, mainwin):
 
     if(ret):
         try:
-            taps = gr.firdes.band_pass_2(gain, fs, pb1, pb2, tb,
-                                     atten, wintype)
+            taps = filter.firdes.band_pass_2(gain, fs, pb1, pb2, tb,
+                                             atten, wintype)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
@@ -91,8 +90,8 @@ def design_win_cbpf(fs, gain, wintype, mainwin):
 
     if(ret):
         try:
-            taps = gr.firdes.complex_band_pass_2(gain, fs, pb1, pb2, tb,
-                                             atten, wintype)
+            taps = filter.firdes.complex_band_pass_2(gain, fs, pb1, pb2, tb,
+                                                     atten, wintype)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
@@ -118,8 +117,8 @@ def design_win_bnf(fs, gain, wintype, mainwin):
 
     if(ret):
         try:
-            taps = gr.firdes.band_reject_2(gain, fs, pb1, pb2, tb,
-                                           atten, wintype)
+            taps = filter.firdes.band_reject_2(gain, fs, pb1, pb2, tb,
+                                               atten, wintype)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
@@ -144,8 +143,8 @@ def design_win_hpf(fs, gain, wintype, mainwin):
     if(ret):
         tb = pb - sb
         try:
-            taps = gr.firdes.high_pass_2(gain, fs, pb, tb,
-                                         atten, wintype)
+            taps = filter.firdes.high_pass_2(gain, fs, pb, tb,
+                                             atten, wintype)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
@@ -163,12 +162,12 @@ def design_win_hb(fs, gain, wintype, mainwin):
     ret = r and ret
     trwidth,r = mainwin.gui.firhbtrEdit.text().toDouble()
     ret = r and ret
-    filtwin = { gr.firdes.WIN_HAMMING : 'hamming',
-                gr.firdes.WIN_HANN : 'hanning',
-                gr.firdes.WIN_BLACKMAN : 'blackman',
-                gr.firdes.WIN_RECTANGULAR: 'boxcar',
-                gr.firdes.WIN_KAISER: ('kaiser', 4.0),
-                gr.firdes.WIN_BLACKMAN_hARRIS: 'blackmanharris'}
+    filtwin = { filter.firdes.WIN_HAMMING : 'hamming',
+                filter.firdes.WIN_HANN : 'hanning',
+                filter.firdes.WIN_BLACKMAN : 'blackman',
+                filter.firdes.WIN_RECTANGULAR: 'boxcar',
+                filter.firdes.WIN_KAISER: ('kaiser', 4.0),
+                filter.firdes.WIN_BLACKMAN_hARRIS: 'blackmanharris'}
     if int(filtord) & 1:
         reply = QtGui.QMessageBox.information(mainwin, "Filter order should be even",
                                               "Filter order should be even","&Ok")
@@ -194,8 +193,8 @@ def design_win_rrc(fs, gain, wintype, mainwin):
 
     if(ret):
         try:
-            taps = gr.firdes.root_raised_cosine(gain, fs, sr,
-                                            alpha, ntaps)
+            taps = filter.firdes.root_raised_cosine(gain, fs, sr,
+                                                    alpha, ntaps)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
@@ -219,7 +218,7 @@ def design_win_gaus(fs, gain, wintype, mainwin):
     if(ret):
         spb = fs / sr
         try:
-            taps = gr.firdes.gaussian(gain, spb, bt, ntaps)
+            taps = filter.firdes.gaussian(gain, spb, bt, ntaps)
 
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
@@ -247,7 +246,7 @@ def design_opt_lpf(fs, gain, mainwin):
     if(ret):
         try:
             taps = filter.optfir.low_pass(gain, fs, pb, sb,
-                                         ripple, atten)
+                                          ripple, atten)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
@@ -278,7 +277,7 @@ def design_opt_bpf(fs, gain, mainwin):
         sb2 = pb2 + tb
         try:
             taps = filter.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
-                                          ripple, atten)
+                                           ripple, atten)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
@@ -311,7 +310,7 @@ def design_opt_cbpf(fs, gain, mainwin):
         sb2 = pb2 + tb
         try:
             taps = filter.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
-                                                  ripple, atten)
+                                                   ripple, atten)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
@@ -343,7 +342,7 @@ def design_opt_bnf(fs, gain, mainwin):
         pb2 = sb2 + tb
         try:
             taps = filter.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
-                                            ripple, atten)
+                                             ripple, atten)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
@@ -398,7 +397,7 @@ def design_opt_hpf(fs, gain, mainwin):
     if(ret):
         try:
             taps = filter.optfir.high_pass(gain, fs, sb, pb,
-                                          atten, ripple)
+                                           atten, ripple)
         except RuntimeError, e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")

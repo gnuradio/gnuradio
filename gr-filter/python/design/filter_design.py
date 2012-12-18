@@ -1,4 +1,4 @@
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 import sys, os, re, csv, copy
 import warnings
 from optparse import OptionParser
+from gnuradio import filter
 
 try:
     import scipy
@@ -42,37 +43,37 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-    from gnuradio.pyqt_filter_stacked import Ui_MainWindow
+    from gnuradio.filter.pyqt_filter_stacked import Ui_MainWindow
 except ImportError:
     print "Could not import from pyqt_filter_stacked. Please build with \"pyuic4 pyqt_filter_stacked.ui -o pyqt_filter_stacked.py\""
     raise SystemExit, 1
 
 try:
-    from gnuradio.banditems import * 
+    from gnuradio.filter.banditems import * 
 except ImportError:
     print "Could not import from banditems. Please check whether banditems.py is in the library path"
     raise SystemExit, 1
 
 try:
-    from gnuradio.polezero_plot import * 
+    from gnuradio.filter.polezero_plot import * 
 except ImportError:
     print "Could not import from polezero_plot. Please check whether polezero_plot.py is in the library path"
     raise SystemExit, 1
 
 try:
-    from gnuradio.idealbanditems import * 
+    from gnuradio.filter.idealbanditems import * 
 except ImportError:
     print "Could not import from idealbanditems. Please check whether idealbanditems.py is in the library path"
     raise SystemExit, 1
 
 try:
-    from gnuradio.api_object import * 
+    from gnuradio.filter.api_object import * 
 except ImportError:
     print "Could not import from api_object. Please check whether api_object.py is in the library path"
     raise SystemExit, 1
 
 try:
-    from gnuradio.fir_design import * 
+    from gnuradio.filter.fir_design import * 
 except ImportError:
     print "Could not import from fir_design. Please check whether fir_design.py is in the library path"
     raise SystemExit, 1
@@ -623,12 +624,12 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.gui.nTapsEdit.setText("0")
 
-        self.filterWindows = {"Hamming Window" : gr.firdes.WIN_HAMMING,
-                              "Hann Window" : gr.firdes.WIN_HANN,
-                              "Blackman Window" : gr.firdes.WIN_BLACKMAN,
-                              "Rectangular Window" : gr.firdes.WIN_RECTANGULAR,
-                              "Kaiser Window" : gr.firdes.WIN_KAISER,
-                              "Blackman-harris Window" : gr.firdes.WIN_BLACKMAN_hARRIS}
+        self.filterWindows = {"Hamming Window" : filter.firdes.WIN_HAMMING,
+                              "Hann Window" : filter.firdes.WIN_HANN,
+                              "Blackman Window" : filter.firdes.WIN_BLACKMAN,
+                              "Rectangular Window" : filter.firdes.WIN_RECTANGULAR,
+                              "Kaiser Window" : filter.firdes.WIN_KAISER,
+                              "Blackman-harris Window" : filter.firdes.WIN_BLACKMAN_hARRIS}
         self.EQUIRIPPLE_FILT = 6 # const for equiripple filter window types
         self.show()
 

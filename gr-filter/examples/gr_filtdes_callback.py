@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import filter_design
+from gnuradio.filter import filter_design
 import sys
 
 '''
