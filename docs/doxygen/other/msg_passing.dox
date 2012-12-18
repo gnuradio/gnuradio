@@ -26,6 +26,9 @@ communicate back and forth between external applications and GNU
 Radio. The new message passing interface handles these cases, although
 it does so on an asynchronous basis.
 
+The message passing interface heavily relies on Polymorphic Types
+(PMTs) in GNU Radio. For further information about these data
+structures, see the page \ref page_pmt.
 
 \section api Message Passing API
 
