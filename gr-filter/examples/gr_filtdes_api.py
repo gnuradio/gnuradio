@@ -20,8 +20,18 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import filter_design 
+from gnuradio import filter_design
 import sys
 
-# Call filter desgin main function
-filter_design.main(sys.argv)
+'''
+API Blocking call 
+returns filter taps for FIR filter design
+returns b,a for IIR filter design
+''' 
+filtobj = filter_design.launch(sys.argv)
+
+# Displaying all filter paramters
+print "Filter Count:", filtobj.get_filtercount()  
+print "Filter type:", filtobj.get_restype()
+print "Filter params", filtobj.get_params()
+print "Filter Coefficients", filtobj.get_taps()

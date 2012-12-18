@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-#
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,10 +16,19 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
 
-from gnuradio import filter_design 
-import sys
+########################################################################
+include(GrPython)
 
-# Call filter desgin main function
-filter_design.main(sys.argv)
+GR_PYTHON_INSTALL(
+    FILES
+	bandgraphicsview.py
+	banditems.py
+	icons_rc.py
+	idealbanditems.py
+	polezero_plot.py
+	pyqt_filter_stacked.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio
+    COMPONENT "filter_python"
+)
+

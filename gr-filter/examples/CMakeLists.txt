@@ -32,6 +32,9 @@ GR_PYTHON_INSTALL(PROGRAMS
     resampler.py
     synth_filter.py
     synth_to_chan.py
+    gr_filtdes_api.py
+    gr_filtdes_callback.py
+    gr_filtdes_restrict.py
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
     COMPONENT "filter_python"
 )
