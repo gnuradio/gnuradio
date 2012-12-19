@@ -118,6 +118,18 @@ pmt_@TAG@vector_elements(pmt_t vector, size_t &len)
   return _@TAG@vector(vector)->elements(len);
 }
 
+const std::vector< @TYPE@ >
+pmt_@TAG@vector_elements(pmt_t vector)
+{
+  if (!vector->is_@TAG@vector())
+    throw pmt_wrong_type("pmt_@TAG@vector_elements", vector);
+  size_t len;
+  const @TYPE@ *array = _@TAG@vector(vector)->elements(len);
+  const std::vector< @TYPE@ > vec(array, array+len);
+  return vec;
+}
+
+
 @TYPE@ *
 pmt_@TAG@vector_writable_elements(pmt_t vector, size_t &len)
 {
