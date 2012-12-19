@@ -155,6 +155,20 @@ class GR_CORE_API gr_block_detail {
 			 uint64_t abs_end,
 			 const pmt::pmt_t &key);
 
+  /*!
+   * \brief Set core affinity of block to the cores in the vector mask.
+   *
+   * \param mask a vector of unsigned ints of the core numbers available to this block.
+   */
+  void set_processor_affinity(const std::vector<unsigned int> &mask);
+
+  /*!
+   * \brief Unset core affinity.
+   */
+  void unset_processor_affinity();
+
+  bool                               threaded;  // set if thread is currently running.
+  gruel::gr_thread_t                 thread;    // portable thread handle
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
 

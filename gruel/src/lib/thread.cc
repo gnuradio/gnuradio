@@ -118,13 +118,16 @@ namespace gruel {
   }
 
   void
-  thread_bind_to_processor(gr_thread_t thread, const std::vector<unsigned int> &mask)
+  thread_bind_to_processor(const std::vector<unsigned int> &mask)
   {
     // Not implemented on OSX
   }
 
   void
   thread_bind_to_processor(gr_thread_t thread, const std::vector<unsigned int> &mask)
+  {
+    // Not implemented on OSX
+  }
 
   void
   thread_unbind()

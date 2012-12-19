@@ -1,0 +1,65 @@
+/*! \page page_affinity Block Thread Affinity
+
+\section intro Introduction
+
+In the thread-per-block scheduler, you can set the block's core
+affinity. Each block can be pinned to a group cores or be set back
+to use the standard kernel scheduler.
+
+The implementation is done by adding new functions to the GRUEL
+library:
+
+\code
+  gr_thread_t get_current_thread_id();
+  void thread_bind_to_processor(unsigned int n);
+  void thread_bind_to_processor(const std::vector<unsigned int> &mask);
+  void thread_bind_to_processor(gr_thread_t thread, unsigned int n);
+  void thread_bind_to_processor(gr_thread_t thread, const std::vector<unsigned int> &mask);
+  void thread_unbind();
+  void thread_unbind(gr_thread_t thread);
+\endcode
+
+The ability to set a thread's affinity to a core or groups of cores is
+not implemented in the Boost thread library, and so we have made our
+own portability library. In particular, the gruel::gr_thread_t type is
+defined as the thread type for the given system. The other functions
+are designed to be portable as well by calling the specific
+implementation for the thread affinity for a particular platform.
+
+There are functions to set a thread to a group of cores. If the thread
+is not given, the current thread is used. If a single number is
+passed, only that core is set (this is equivalent to a core mask with
+just a single value).
+
+Similarly, there are functions to unset the affinity. This practically
+implements the setting of the thread's affinity to all possible
+cores. Again, the function that does not take a thread argument unsets
+the affinity for the current thread.
+
+
+\section api GNU Radio Block API
+
+Each block has two new data members:
+
+- threaded: a boolean value that is true if the block is attached to a
+  thread.
+- thread: a gruel::gr_thread_t handle to the block's thread.
+
+A block can set and unset it's affinity at any time using the
+following member functions:
+
+- gr_block::set_processor_affinity(const std::vector<unsigned int> &mask)
+- gr_block::unset_processor_affinity()
+
+Where \p mask is a vector of core numbers to set the thread's affinity
+to.
+
+The current core affinity can be retrieved using the member function:
+ 
+- gr_block::processor_affinity()
+
+When set before the flowgraph is started, the scheduler will set the
+thread's affinity when it is started. When already running, the
+block's affinity will be immediately set.
+
+*/
