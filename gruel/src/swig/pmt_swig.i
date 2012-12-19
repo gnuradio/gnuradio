@@ -441,37 +441,23 @@ void pmt_c64vector_set(pmt_t v, size_t k, std::complex<double> x);
 
 // Return const pointers to the elements
 
-const void *pmt_uniform_vector_elements(pmt_t v, size_t &len);  //< works with any; len is in bytes
+%apply size_t & INOUT { size_t &len };
 
-const uint8_t  *pmt_u8vector_elements(pmt_t v, size_t &len);  //< len is in elements
-const int8_t   *pmt_s8vector_elements(pmt_t v, size_t &len);  //< len is in elements
-const uint16_t *pmt_u16vector_elements(pmt_t v, size_t &len); //< len is in elements
-const int16_t  *pmt_s16vector_elements(pmt_t v, size_t &len); //< len is in elements
-const uint32_t *pmt_u32vector_elements(pmt_t v, size_t &len); //< len is in elements
-const int32_t  *pmt_s32vector_elements(pmt_t v, size_t &len); //< len is in elements
-const uint64_t *pmt_u64vector_elements(pmt_t v, size_t &len); //< len is in elements
-const int64_t  *pmt_s64vector_elements(pmt_t v, size_t &len); //< len is in elements
-const float    *pmt_f32vector_elements(pmt_t v, size_t &len); //< len is in elements
-const double   *pmt_f64vector_elements(pmt_t v, size_t &len); //< len is in elements
-const std::complex<float>  *pmt_c32vector_elements(pmt_t v, size_t &len); //< len is in elements
-const std::complex<double> *pmt_c64vector_elements(pmt_t v, size_t &len); //< len is in elements
+// works with any; len is in bytes
+// Returns an opaque Python type
+const void *pmt_uniform_vector_elements(pmt_t v, size_t &len);  
 
-// Return non-const pointers to the elements
-
-void *pmt_uniform_vector_writable_elements(pmt_t v, size_t &len);  //< works with any; len is in bytes
-
-uint8_t  *pmt_u8vector_writable_elements(pmt_t v, size_t &len);  //< len is in elements
-int8_t   *pmt_s8vector_writable_elements(pmt_t v, size_t &len);  //< len is in elements
-uint16_t *pmt_u16vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int16_t  *pmt_s16vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-uint32_t *pmt_u32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int32_t  *pmt_s32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-uint64_t *pmt_u64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int64_t  *pmt_s64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-float    *pmt_f32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-double   *pmt_f64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-std::complex<float>  *pmt_c32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-std::complex<double> *pmt_c64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
+// Returns a Python tuple
+const std::vector<uint8_t>  pmt_u8vector_elements(pmt_t v);
+const std::vector<int8_t>   pmt_s8vector_elements(pmt_t v);
+const std::vector<uint16_t> pmt_u16vector_elements(pmt_t v);
+const std::vector<int16_t>  pmt_s16vector_elements(pmt_t v);
+const std::vector<uint32_t> pmt_u32vector_elements(pmt_t v);
+const std::vector<int32_t>  pmt_s32vector_elements(pmt_t v);
+const std::vector<float>    pmt_f32vector_elements(pmt_t v);
+const std::vector<double>   pmt_f64vector_elements(pmt_t v);
+const std::vector<std::complex<float> > pmt_c32vector_elements(pmt_t v);
+const std::vector<std::complex<double> > pmt_c64vector_elements(pmt_t v);
 
 /*
  * ------------------------------------------------------------------------
