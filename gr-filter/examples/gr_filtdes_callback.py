@@ -22,11 +22,18 @@
 
 from gnuradio.filter import filter_design
 import sys
+try:
+    from PyQt4 import Qt, QtCore, QtGui
+except ImportError:
+    print "Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)"
+    raise SystemExit, 1
 
 '''
 Callback example
 Function called when "design" button is pressed
 or pole-zero plot is changed
+launch function returns gr_filter_design mainwindow 
+object when callback is not None
 '''
 def print_params(filtobj):
     print "Filter Count:", filtobj.get_filtercount()
@@ -34,4 +41,8 @@ def print_params(filtobj):
     print "Filter params", filtobj.get_params()
     print "Filter Coefficients", filtobj.get_taps()
 
-filter_design.launch(sys.argv, print_params)
+app = Qt.QApplication(sys.argv)
+#launch function returns gr_filter_design mainwindow object
+main_win = filter_design.launch(sys.argv, print_params)
+main_win.show()
+app.exec_()
