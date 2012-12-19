@@ -2298,7 +2298,7 @@ def main(args):
     (options, args) = parser.parse_args ()
 
     app = Qt.QApplication(args)
-    gplt = gr_plot_filter(app, options)
+    gplt = gr_plot_filter(options)
     app.exec_()
 
 if __name__ == '__main__':
