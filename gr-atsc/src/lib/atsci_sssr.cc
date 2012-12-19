@@ -145,6 +145,8 @@ atsci_sssr::update (sssr::sample_t sample_in,	 // input
 
   int bit = boost::math::signbit (sample_in);
   if (bit != 0)
+    bit = 0;
+  else
     bit = 1;
   int corr_out = d_correlator.update (bit);
   int weight = sipp (corr_out);
