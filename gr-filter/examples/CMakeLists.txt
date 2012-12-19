@@ -35,6 +35,7 @@ GR_PYTHON_INSTALL(PROGRAMS
     gr_filtdes_api.py
     gr_filtdes_callback.py
     gr_filtdes_restrict.py
+    gr_filtdes_live_upd.py
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
     COMPONENT "filter_python"
 )

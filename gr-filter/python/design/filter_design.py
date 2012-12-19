@@ -86,7 +86,7 @@ except AttributeError:
 
 # Gnuradio Filter design tool main window
 class gr_plot_filter(QtGui.QMainWindow):
-    def __init__(self, qapp, options, callback=None, restype=""):
+    def __init__(self, options, callback=None, restype=""):
         QtGui.QWidget.__init__(self, None)
         self.gui = Ui_MainWindow()
         self.callback = callback
@@ -2026,8 +2026,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         if self.iir:
             fcoeff="b = "+str(self.b.tolist())+"\na = "+str(self.a.tolist())
         else:
-            for t in self.taps:
-		        fcoeff=fcoeff+str(t)+"\n"
+            fcoeff="taps = "+str(self.taps.tolist())
         self.gui.filterCoeff.setText(Qt.QString(fcoeff))
         self.gui.mfilterCoeff.setText(Qt.QString(fcoeff))
 
@@ -2278,25 +2277,28 @@ def launch(args, callback=None, restype=""):
     parser = setup_options()
     (options, args) = parser.parse_args ()
 
-
-    app = Qt.QApplication(args)
-    gplt = gr_plot_filter(app, options, callback, restype)
-    app.exec_()
-    if gplt.iir:
-        retobj = ApiObject()
-        retobj.update_all("iir", gplt.params, (gplt.b, gplt.a), 1)
-        return retobj 
+    if callback == None:
+        app = Qt.QApplication(args)
+        gplt = gr_plot_filter(options, callback, restype)
+        app.exec_()
+        if gplt.iir:
+            retobj = ApiObject()
+            retobj.update_all("iir", gplt.params, (gplt.b, gplt.a), 1)
+            return retobj 
+        else:
+            retobj = ApiObject()
+            retobj.update_all("fir", gplt.params, gplt.taps, 1)
+            return retobj 
     else:
-        retobj = ApiObject()
-        retobj.update_all("fir", gplt.params, gplt.taps, 1)
-        return retobj 
+        gplt = gr_plot_filter(options, callback, restype)
+        return gplt 
 
 def main(args):
     parser = setup_options()
     (options, args) = parser.parse_args ()
 
     app = Qt.QApplication(args)
-    gplt = gr_plot_filter(app, options)
+    gplt = gr_plot_filter(options)
     app.exec_()
 
 if __name__ == '__main__':
