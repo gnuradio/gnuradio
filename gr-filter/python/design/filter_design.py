@@ -2026,8 +2026,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         if self.iir:
             fcoeff="b = "+str(self.b.tolist())+"\na = "+str(self.a.tolist())
         else:
-            for t in self.taps:
-		        fcoeff=fcoeff+str(t)+"\n"
+            fcoeff="taps = "+str(self.taps.tolist())
         self.gui.filterCoeff.setText(Qt.QString(fcoeff))
         self.gui.mfilterCoeff.setText(Qt.QString(fcoeff))
 
