@@ -212,6 +212,8 @@ bool pmt_is_complex(pmt_t obj);
 //! Return a complex number constructed of the given real and imaginary parts.
 pmt_t pmt_make_rectangular(double re, double im);
 
+pmt_t pmt_from_complex(const std::complex<double> &z);
+
 /*!
  * If \p z is complex, real or integer, return the closest complex<double>.
  * Otherwise, raise the wrong_type exception.
