@@ -223,6 +223,12 @@ GRUEL_API bool pmt_is_complex(pmt_t obj);
 //! Return a complex number constructed of the given real and imaginary parts.
 GRUEL_API pmt_t pmt_make_rectangular(double re, double im);
 
+//! Return a complex number constructed of the given real and imaginary parts.
+GRUEL_API pmt_t pmt_from_complex(double re, double im);
+
+//! Return a complex number constructed of the given a complex number.
+GRUEL_API pmt_t pmt_from_complex(const std::complex<double> &z);
+
 /*!
  * If \p z is complex, real or integer, return the closest complex<double>.
  * Otherwise, raise the wrong_type exception.
@@ -479,6 +485,20 @@ GRUEL_API const float    *pmt_f32vector_elements(pmt_t v, size_t &len); //< len 
 GRUEL_API const double   *pmt_f64vector_elements(pmt_t v, size_t &len); //< len is in elements
 GRUEL_API const std::complex<float>  *pmt_c32vector_elements(pmt_t v, size_t &len); //< len is in elements
 GRUEL_API const std::complex<double> *pmt_c64vector_elements(pmt_t v, size_t &len); //< len is in elements
+
+// len is in elements
+GRUEL_API const std::vector<uint8_t>  pmt_u8vector_elements(pmt_t v);
+GRUEL_API const std::vector<int8_t>   pmt_s8vector_elements(pmt_t v);
+GRUEL_API const std::vector<uint16_t> pmt_u16vector_elements(pmt_t v);
+GRUEL_API const std::vector<int16_t>  pmt_s16vector_elements(pmt_t v);
+GRUEL_API const std::vector<uint32_t> pmt_u32vector_elements(pmt_t v);
+GRUEL_API const std::vector<int32_t>  pmt_s32vector_elements(pmt_t v);
+GRUEL_API const std::vector<uint64_t> pmt_u64vector_elements(pmt_t v);
+GRUEL_API const std::vector<int64_t>  pmt_s64vector_elements(pmt_t v);
+GRUEL_API const std::vector<float>    pmt_f32vector_elements(pmt_t v);
+GRUEL_API const std::vector<double>   pmt_f64vector_elements(pmt_t v);
+GRUEL_API const std::vector<std::complex<float> > pmt_c32vector_elements(pmt_t v);
+GRUEL_API const std::vector<std::complex<double> > pmt_c64vector_elements(pmt_t v);
 
 // Return non-const pointers to the elements
 

@@ -134,12 +134,24 @@ qa_pmt_prims::test_complexes()
 {
   pmt_t p1 = pmt_make_rectangular(2, -3);
   pmt_t m1 = pmt_make_rectangular(-3, 2);
+  pmt_t p2 = pmt_from_complex(2, -3);
+  pmt_t m2 = pmt_from_complex(-3, 2);
+  pmt_t p3 = pmt_from_complex(std::complex<double>(2, -3));
+  pmt_t m3 = pmt_from_complex(std::complex<double>(-3, 2));
   CPPUNIT_ASSERT(!pmt_is_complex(PMT_T));
   CPPUNIT_ASSERT(pmt_is_complex(p1));
   CPPUNIT_ASSERT(pmt_is_complex(m1));
+  CPPUNIT_ASSERT(pmt_is_complex(p2));
+  CPPUNIT_ASSERT(pmt_is_complex(m2));
+  CPPUNIT_ASSERT(pmt_is_complex(p3));
+  CPPUNIT_ASSERT(pmt_is_complex(m3));
   CPPUNIT_ASSERT_THROW(pmt_to_complex(PMT_T), pmt_wrong_type);
   CPPUNIT_ASSERT_EQUAL(std::complex<double>(2, -3), pmt_to_complex(p1));
   CPPUNIT_ASSERT_EQUAL(std::complex<double>(-3, 2), pmt_to_complex(m1));
+  CPPUNIT_ASSERT_EQUAL(std::complex<double>(2, -3), pmt_to_complex(p2));
+  CPPUNIT_ASSERT_EQUAL(std::complex<double>(-3, 2), pmt_to_complex(m2));
+  CPPUNIT_ASSERT_EQUAL(std::complex<double>(2, -3), pmt_to_complex(p3));
+  CPPUNIT_ASSERT_EQUAL(std::complex<double>(-3, 2), pmt_to_complex(m3));
   CPPUNIT_ASSERT_EQUAL(std::complex<double>(1.0, 0), pmt_to_complex(pmt_from_long(1)));
   CPPUNIT_ASSERT_EQUAL(std::complex<double>(1.0, 0), pmt_to_complex(pmt_from_double(1.0)));
 }

@@ -388,7 +388,17 @@ pmt_is_complex(pmt_t x)
 pmt_t
 pmt_make_rectangular(double re, double im)
 {
+  return pmt_from_complex(re, im);
+}
+
+pmt_t pmt_from_complex(double re, double im)
+{
   return pmt_t(new pmt_complex(std::complex<double>(re, im)));
+}
+
+pmt_t pmt_from_complex(const std::complex<double> &z)
+{
+  return pmt_t(new pmt_complex(z));
 }
 
 std::complex<double>
