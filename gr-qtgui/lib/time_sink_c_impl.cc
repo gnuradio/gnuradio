@@ -78,6 +78,12 @@ namespace gr {
       }
     }
 
+    bool
+    time_sink_c_impl::check_topology(int ninputs, int noutputs)
+    {
+      return 2*ninputs == d_nconnections;
+    }
+
     void
     time_sink_c_impl::initialize()
     {

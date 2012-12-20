@@ -76,6 +76,8 @@ namespace gr {
 		       QWidget *parent=NULL);
       ~waterfall_sink_f_impl();
 
+      bool check_topology(int ninputs, int noutputs);
+
       void exec_();
       QWidget*  qwidget();
       PyObject* pyqwidget();

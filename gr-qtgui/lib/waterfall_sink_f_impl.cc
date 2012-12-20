@@ -89,6 +89,12 @@ namespace gr {
       fft::free(d_fbuf);
     }
 
+    bool
+    waterfall_sink_f_impl::check_topology(int ninputs, int noutputs)
+    {
+      return ninputs == d_nconnections;
+    }
+
     void
     waterfall_sink_f_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {

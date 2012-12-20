@@ -74,6 +74,8 @@ namespace gr {
 		  QWidget *parent);
       ~sink_f_impl();
 
+      bool check_topology(int ninputs, int noutputs);
+
       void exec_();
       QWidget*  qwidget();
       PyObject* pyqwidget();

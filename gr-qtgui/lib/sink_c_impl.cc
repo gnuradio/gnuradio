@@ -89,6 +89,12 @@ namespace gr {
       delete d_fft;
     }
 
+    bool
+    sink_c_impl::check_topology(int ninputs, int noutputs)
+    {
+      return ninputs == 1;
+    }
+
     void
     sink_c_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {

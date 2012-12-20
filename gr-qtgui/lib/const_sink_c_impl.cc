@@ -81,6 +81,12 @@ namespace gr {
       }
     }
 
+    bool
+    const_sink_c_impl::check_topology(int ninputs, int noutputs)
+    {
+      return ninputs == d_nconnections;
+    }
+
     void
     const_sink_c_impl::initialize()
     {
