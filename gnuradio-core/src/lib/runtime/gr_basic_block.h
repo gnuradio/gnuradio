@@ -72,13 +72,13 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   };
   
   //msg_handler_t	 d_msg_handler;
-  typedef std::map<pmt::pmt_t , msg_handler_t, pmt::pmt_comperator> d_msg_handlers_t;
+  typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comperator> d_msg_handlers_t;
   d_msg_handlers_t d_msg_handlers;
   
   typedef std::deque<pmt::pmt_t>    msg_queue_t;
-  typedef std::map<pmt::pmt_t, msg_queue_t, pmt::pmt_comperator>    msg_queue_map_t;
-  typedef std::map<pmt::pmt_t, msg_queue_t, pmt::pmt_comperator>::iterator msg_queue_map_itr;
-  std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::pmt_comperator> msg_queue_ready;
+  typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comperator>    msg_queue_map_t;
+  typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comperator>::iterator msg_queue_map_itr;
+  std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comperator> msg_queue_ready;
   
   gruel::mutex          mutex;          //< protects all vars
   
@@ -138,7 +138,7 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   gr_basic_block_sptr to_basic_block(); // Needed for Python type coercion
   bool alias_set() { return !d_symbol_alias.empty(); }
   std::string alias(){ return alias_set()?d_symbol_alias:symbol_name(); }
-  pmt::pmt_t alias_pmt(){ return pmt::pmt_intern(alias()); }
+  pmt::pmt_t alias_pmt(){ return pmt::intern(alias()); }
   void set_block_alias(std::string name);
   
   // ** Message passing interface **
@@ -210,7 +210,7 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
     if(msg_queue.find(which_port) != msg_queue.end()){
       return true;
     }
-    if(pmt::pmt_dict_has_key(message_subscribers, which_port)){
+    if(pmt::dict_has_key(message_subscribers, which_port)){
       return true;
     }
     return false;

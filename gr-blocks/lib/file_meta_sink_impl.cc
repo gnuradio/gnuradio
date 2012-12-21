@@ -97,34 +97,34 @@ namespace gr {
       if(!open(filename))
 	throw std::runtime_error("file_meta_sink: can't open file\n");
 
-      pmt_t timestamp = pmt_make_tuple(pmt_from_uint64(0),
-				       pmt_from_double(0));
+      pmt::pmt_t timestamp = pmt::make_tuple(pmt::from_uint64(0),
+					     pmt::from_double(0));
 
       // handle extra dictionary
-      d_extra = pmt_make_dict();
+      d_extra = pmt::make_dict();
       if(extra_dict.size() > 0) {
-	pmt_t extras = pmt_deserialize_str(extra_dict);
-	pmt_t keys = pmt_dict_keys(extras);
-	pmt_t vals = pmt_dict_values(extras);
-	size_t nitems = pmt_length(keys);
+	pmt::pmt_t extras = pmt::deserialize_str(extra_dict);
+	pmt::pmt_t keys = pmt::dict_keys(extras);
+	pmt::pmt_t vals = pmt::dict_values(extras);
+	size_t nitems = pmt::length(keys);
 	for(size_t i = 0; i < nitems; i++) {
-	  d_extra = pmt_dict_add(d_extra,
-				 pmt_nth(i, keys),
-				 pmt_nth(i, vals));
+	  d_extra = pmt::dict_add(d_extra,
+				  pmt::nth(i, keys),
+				  pmt::nth(i, vals));
 	}
       }
 
-      d_extra_size = pmt_serialize_str(d_extra).size();
+      d_extra_size = pmt::serialize_str(d_extra).size();
 
-      d_header = pmt_make_dict();
-      d_header = pmt_dict_add(d_header, mp("version"), mp(METADATA_VERSION));
-      d_header = pmt_dict_add(d_header, mp("rx_rate"), mp(samp_rate));
-      d_header = pmt_dict_add(d_header, mp("rx_time"), timestamp);
-      d_header = pmt_dict_add(d_header, mp("size"), pmt_from_long(d_itemsize));
-      d_header = pmt_dict_add(d_header, mp("type"), pmt_from_long(type));
-      d_header = pmt_dict_add(d_header, mp("cplx"), complex ? PMT_T : PMT_F);
-      d_header = pmt_dict_add(d_header, mp("strt"), pmt_from_uint64(METADATA_HEADER_SIZE+d_extra_size));
-      d_header = pmt_dict_add(d_header, mp("bytes"), pmt_from_uint64(0));
+      d_header = pmt::make_dict();
+      d_header = pmt::dict_add(d_header, pmt::mp("version"), pmt::mp(METADATA_VERSION));
+      d_header = pmt::dict_add(d_header, pmt::mp("rx_rate"), pmt::mp(samp_rate));
+      d_header = pmt::dict_add(d_header, pmt::mp("rx_time"), timestamp);
+      d_header = pmt::dict_add(d_header, pmt::mp("size"), pmt::from_long(d_itemsize));
+      d_header = pmt::dict_add(d_header, pmt::mp("type"), pmt::from_long(type));
+      d_header = pmt::dict_add(d_header, pmt::mp("cplx"), complex ? pmt::PMT_T : pmt::PMT_F);
+      d_header = pmt::dict_add(d_header, pmt::mp("strt"), pmt::from_uint64(METADATA_HEADER_SIZE+d_extra_size));
+      d_header = pmt::dict_add(d_header, mp("bytes"), pmt::from_uint64(0));
 
       do_update();
 
@@ -237,10 +237,10 @@ namespace gr {
     }
 
     void
-    file_meta_sink_impl::write_header(FILE *fp, pmt_t header, pmt_t extra)
+    file_meta_sink_impl::write_header(FILE *fp, pmt::pmt_t header, pmt::pmt_t extra)
     {
-      std::string header_str = pmt_serialize_str(header);
-      std::string extra_str = pmt_serialize_str(extra);
+      std::string header_str = pmt::serialize_str(header);
+      std::string extra_str = pmt::serialize_str(extra);
 
       if((header_str.size() != METADATA_HEADER_SIZE) && (extra_str.size() != d_extra_size))
 	throw std::runtime_error("file_meta_sink: header or extras is wrong size.\n");
@@ -271,24 +271,24 @@ namespace gr {
     }
 
     void
-    file_meta_sink_impl::update_header(pmt_t key, pmt_t value)
+    file_meta_sink_impl::update_header(pmt::pmt_t key, pmt::pmt_t value)
     {
       // Special handling caveat to transform rate from radio source into
       // the rate at this sink.
-      if(pmt_eq(key, mp("rx_rate"))) {
-	d_samp_rate = pmt_to_double(value);
-	value = pmt_from_double(d_samp_rate*d_relative_rate);
+      if(pmt::eq(key, mp("rx_rate"))) {
+	d_samp_rate = pmt::to_double(value);
+	value = pmt::from_double(d_samp_rate*d_relative_rate);
       }
 
       // If the tag is not part of the standard header, we put it into the
       // extra data, which either updates the current dictionary or adds a
       // new item.
-      if(pmt_dict_has_key(d_header, key)) {
-	d_header = pmt_dict_add(d_header, key, value);
+      if(pmt::dict_has_key(d_header, key)) {
+	d_header = pmt::dict_add(d_header, key, value);
       }
       else {
-	d_extra = pmt_dict_add(d_extra, key, value);
-	d_extra_size = pmt_serialize_str(d_extra).size();
+	d_extra = pmt::dict_add(d_extra, key, value);
+	d_extra_size = pmt::serialize_str(d_extra).size();
       }
     }
 
@@ -307,11 +307,11 @@ namespace gr {
       // Update the last header info with the number of samples this
       // block represents.
 
-      size_t hdrlen = pmt_to_uint64(pmt_dict_ref(d_header, mp("strt"), PMT_NIL));
+      size_t hdrlen = pmt::to_uint64(pmt::dict_ref(d_header, mp("strt"), pmt::PMT_NIL));
       size_t seg_size = d_itemsize*d_total_seg_size;
-      pmt_t s = pmt_from_uint64(seg_size);
+      pmt::pmt_t s = pmt::from_uint64(seg_size);
       update_header(mp("bytes"), s);
-      update_header(mp("strt"), pmt_from_uint64(METADATA_HEADER_SIZE+d_extra_size));
+      update_header(mp("strt"), pmt::from_uint64(METADATA_HEADER_SIZE+d_extra_size));
       fseek(d_fp, -seg_size-hdrlen, SEEK_CUR);
       write_header(d_fp, d_header, d_extra);
       fseek(d_fp, seg_size, SEEK_CUR);
@@ -322,11 +322,11 @@ namespace gr {
     {
       // Update the last header info with the number of samples this
       // block represents.
-      size_t hdrlen = pmt_to_uint64(pmt_dict_ref(d_header, mp("strt"), PMT_NIL));
+      size_t hdrlen = pmt::to_uint64(pmt::dict_ref(d_header, mp("strt"), pmt::PMT_NIL));
       size_t seg_size = d_itemsize*d_total_seg_size;
-      pmt_t s = pmt_from_uint64(seg_size);
+      pmt::pmt_t s = pmt::from_uint64(seg_size);
       update_header(mp("bytes"), s);
-      update_header(mp("strt"), pmt_from_uint64(METADATA_HEADER_SIZE+d_extra_size));
+      update_header(mp("strt"), pmt::from_uint64(METADATA_HEADER_SIZE+d_extra_size));
       fseek(d_hdr_fp, -hdrlen, SEEK_CUR);
       write_header(d_hdr_fp, d_header, d_extra);
     }
@@ -337,13 +337,13 @@ namespace gr {
       // New header, so set current size of chunk to 0 and start of chunk
       // based on current index + header size.
       //uint64_t loc = get_last_header_loc();
-      pmt_t s = pmt_from_uint64(0);
+      pmt::pmt_t s = pmt::from_uint64(0);
       update_header(mp("bytes"), s);
 
       // If we have multiple tags on the same offset, this makes
       // sure we just overwrite the same header each time instead
       // of creating a new header per tag.
-      s = pmt_from_uint64(METADATA_HEADER_SIZE + d_extra_size);
+      s = pmt::from_uint64(METADATA_HEADER_SIZE + d_extra_size);
       update_header(mp("strt"), s);
 
       if(d_state == STATE_DETACHED)
@@ -355,10 +355,10 @@ namespace gr {
     void
     file_meta_sink_impl::update_rx_time()
     {
-      pmt_t rx_time = pmt_string_to_symbol("rx_time");
-      pmt_t r = pmt_dict_ref(d_header, rx_time, PMT_NIL);
-      uint64_t secs = pmt_to_uint64(pmt_tuple_ref(r, 0));
-      double fracs = pmt_to_double(pmt_tuple_ref(r, 1));
+      pmt::pmt_t rx_time = pmt::string_to_symbol("rx_time");
+      pmt::pmt_t r = pmt::dict_ref(d_header, rx_time, pmt::PMT_NIL);
+      uint64_t secs = pmt::to_uint64(pmt::tuple_ref(r, 0));
+      double fracs = pmt::to_double(pmt::tuple_ref(r, 1));
       double diff = d_total_seg_size / (d_samp_rate*d_relative_rate);
 
       //std::cerr << "old secs:  " << secs << std::endl;
@@ -374,8 +374,8 @@ namespace gr {
       //std::cerr << "new secs:  " << secs << std::endl;
       //std::cerr << "new fracs: " << fracs << std::endl << std::endl;
 
-      r = pmt_make_tuple(pmt_from_uint64(secs), pmt_from_double(fracs));
-      d_header = pmt_dict_add(d_header, rx_time, r);
+      r = pmt::make_tuple(pmt::from_uint64(secs), pmt::from_double(fracs));
+      d_header = pmt::dict_add(d_header, rx_time, r);
     }
 
     int

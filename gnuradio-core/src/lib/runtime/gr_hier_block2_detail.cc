@@ -154,7 +154,7 @@ gr_hier_block2_detail::msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
     
   // register the subscription
 // this is done later...
-//  src->message_port_sub(srcport, pmt::pmt_cons(dst->alias_pmt(), dstport));
+//  src->message_port_sub(srcport, pmt::cons(dst->alias_pmt(), dstport));
 
   // add block uniquely to list to internal blocks
   if (std::find(d_blocks.begin(), d_blocks.end(), dst) == d_blocks.end()){
@@ -196,7 +196,7 @@ gr_hier_block2_detail::msg_disconnect(gr_basic_block_sptr src, pmt::pmt_t srcpor
     std::cout << "disconnecting message port..." << std::endl;
     
   // unregister the subscription - if already subscribed
-  src->message_port_unsub(srcport, pmt::pmt_cons(dst->alias_pmt(), dstport));
+  src->message_port_unsub(srcport, pmt::cons(dst->alias_pmt(), dstport));
 
   // remove edge for this message connection
   bool hier_out = (d_owner == src.get()) && src->message_port_is_hier_out(srcport);;

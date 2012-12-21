@@ -114,8 +114,8 @@ void tcp_connection::handle_read(const boost::system::error_code& error/*error*/
   {
     if(!error)
     {
-        pmt::pmt_t vector = pmt::pmt_init_u8vector(bytes_transferred, (const uint8_t*)&buf[0]);
-        pmt::pmt_t pdu = pmt::pmt_cons( pmt::PMT_NIL, vector);
+        pmt::pmt_t vector = pmt::init_u8vector(bytes_transferred, (const uint8_t*)&buf[0]);
+        pmt::pmt_t pdu = pmt::cons( pmt::PMT_NIL, vector);
 
         d_block->message_port_pub( pmt::mp("pdus"), pdu );
 
@@ -131,27 +131,27 @@ void tcp_connection::handle_read(const boost::system::error_code& error/*error*/
 
 
 void gr_socket_pdu::tcp_server_send(pmt::pmt_t msg){
-    pmt::pmt_t vector = pmt::pmt_cdr(msg);
+    pmt::pmt_t vector = pmt::cdr(msg);
     for(size_t i=0; i<d_tcp_connections.size(); i++){
         d_tcp_connections[i]->send(vector);
     }
 }
 
 void gr_socket_pdu::tcp_client_send(pmt::pmt_t msg){
-    pmt::pmt_t vector = pmt::pmt_cdr(msg);
-    size_t len = pmt::pmt_length(vector);
+    pmt::pmt_t vector = pmt::cdr(msg);
+    size_t len = pmt::length(vector);
     size_t offset(0);
     boost::array<char, 10000> txbuf;
-    memcpy(&txbuf[0], pmt::pmt_uniform_vector_elements(vector, offset), len);
+    memcpy(&txbuf[0], pmt::uniform_vector_elements(vector, offset), len);
     _tcp_socket->send(boost::asio::buffer(txbuf,len));
 }
 
 void gr_socket_pdu::udp_send(pmt::pmt_t msg){
-    pmt::pmt_t vector = pmt::pmt_cdr(msg);
-    size_t len = pmt::pmt_length(vector);
+    pmt::pmt_t vector = pmt::cdr(msg);
+    size_t len = pmt::length(vector);
     size_t offset(0);
     boost::array<char, 10000> txbuf;
-    memcpy(&txbuf[0], pmt::pmt_uniform_vector_elements(vector, offset), len);
+    memcpy(&txbuf[0], pmt::uniform_vector_elements(vector, offset), len);
     if(_udp_endpoint_other.address().to_string() != "0.0.0.0")
         _udp_socket->send_to(boost::asio::buffer(txbuf,len), _udp_endpoint_other);
 }

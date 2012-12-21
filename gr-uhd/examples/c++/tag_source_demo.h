@@ -53,26 +53,26 @@ public:
     }
 
     void make_time_tag(const uint64_t tag_count){;
-        const pmt::pmt_t key = pmt::pmt_string_to_symbol("tx_time");
-        const pmt::pmt_t value = pmt::pmt_make_tuple(
-            pmt::pmt_from_uint64(_time_secs),
-            pmt::pmt_from_double(_time_fracs)
+        const pmt::pmt_t key = pmt::string_to_symbol("tx_time");
+        const pmt::pmt_t value = pmt::make_tuple(
+            pmt::from_uint64(_time_secs),
+            pmt::from_double(_time_fracs)
         );
-        const pmt::pmt_t srcid = pmt::pmt_string_to_symbol(this->name());
+        const pmt::pmt_t srcid = pmt::string_to_symbol(this->name());
         this->add_item_tag(0/*chan0*/, tag_count, key, value, srcid);
     }
 
     void make_sob_tag(const uint64_t tag_count){
-        const pmt::pmt_t key = pmt::pmt_string_to_symbol("tx_sob");
+        const pmt::pmt_t key = pmt::string_to_symbol("tx_sob");
         const pmt::pmt_t value = pmt::PMT_T;
-        const pmt::pmt_t srcid = pmt::pmt_string_to_symbol(this->name());
+        const pmt::pmt_t srcid = pmt::string_to_symbol(this->name());
         this->add_item_tag(0/*chan0*/, tag_count, key, value, srcid);
     }
 
     void make_eob_tag(const uint64_t tag_count){;
-        const pmt::pmt_t key = pmt::pmt_string_to_symbol("tx_eob");
+        const pmt::pmt_t key = pmt::string_to_symbol("tx_eob");
         const pmt::pmt_t value = pmt::PMT_T;
-        const pmt::pmt_t srcid = pmt::pmt_string_to_symbol(this->name());
+        const pmt::pmt_t srcid = pmt::string_to_symbol(this->name());
         this->add_item_tag(0/*chan0*/, tag_count, key, value, srcid);
     }
 

@@ -78,7 +78,7 @@ gr_flat_flowgraph::setup_connections()
         std::cout << boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
                     i->src().block() % i->src().port() %
                     i->dst().block() % i->dst().port();
-    i->src().block()->message_port_sub( i->src().port(), pmt::pmt_cons(i->dst().block()->alias_pmt(), i->dst().port()) );
+    i->src().block()->message_port_sub( i->src().port(), pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()) );
     }
 
 }

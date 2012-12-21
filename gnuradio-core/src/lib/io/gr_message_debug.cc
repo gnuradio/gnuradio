@@ -47,7 +47,7 @@ void
 gr_message_debug::print(pmt::pmt_t msg)
 {
   std::cout << "******* MESSAGE DEBUG PRINT ********\n";
-  pmt::pmt_print(msg);
+  pmt::print(msg);
   std::cout << "************************************\n";
 }
 
@@ -61,15 +61,15 @@ gr_message_debug::store(pmt::pmt_t msg)
 void
 gr_message_debug::print_verbose(pmt::pmt_t msg)
 {
-  pmt::pmt_t meta = pmt::pmt_car(msg);
-  pmt::pmt_t vector = pmt::pmt_cdr(msg);
+  pmt::pmt_t meta = pmt::car(msg);
+  pmt::pmt_t vector = pmt::cdr(msg);
   std::cout << "* MESSAGE DEBUG PRINT PDU VERBOSE *\n";
-  pmt::pmt_print(meta);
-  size_t len = pmt::pmt_length(vector);
+  pmt::print(meta);
+  size_t len = pmt::length(vector);
   std::cout << "pdu_length = " << len << std::endl;
   std::cout << "contents = " << std::endl;
   size_t offset(0);
-  const uint8_t* d = (const uint8_t*) pmt_uniform_vector_elements(vector, offset);
+  const uint8_t* d = (const uint8_t*) uniform_vector_elements(vector, offset);
   for(size_t i=0; i<len; i+=16){
     printf("%04x: ", i);
     for(size_t j=i; j<std::min(i+16,len); j++){

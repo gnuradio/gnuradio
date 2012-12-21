@@ -167,9 +167,9 @@ namespace gr {
         rpcbasic_sptr(new rpcbasic_register_get<channel_model_impl, std::vector<gr_complex> >(
 	  d_name, "taps", this, unique_id(),
 	  &channel_model_impl::taps,
-	  pmt::pmt_make_c32vector(0,-10),
-	  pmt::pmt_make_c32vector(0,10),
-	  pmt::pmt_make_c32vector(0,0),
+	  pmt::make_c32vector(0,-10),
+	  pmt::make_c32vector(0,10),
+	  pmt::make_c32vector(0,0),
 	  "", "Multipath taps",
 	  RPC_PRIVLVL_MIN, DISPTIMESERIESC)));
 

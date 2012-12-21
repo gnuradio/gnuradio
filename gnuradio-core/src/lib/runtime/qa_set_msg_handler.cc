@@ -37,8 +37,6 @@
 
 #define VERBOSE 0
 
-using namespace pmt;
-
 /*
  * The gr_nop block has been instrumented so that it counts
  * the number of messages sent to it.  We use this feature
@@ -65,9 +63,9 @@ void qa_set_msg_handler::t0()
   tb->start();
 
   // Send them...
-  pmt_t port(pmt_intern("port"));
+  pmt::pmt_t port(pmt::intern("port"));
   for (int i = 0; i < NMSGS; i++){
-    send(nop, port, mp(mp("example-msg"), mp(i)));
+    send(nop, port, pmt::mp(pmt::mp("example-msg"), pmt::mp(i)));
   }
 
   // Give the messages a chance to be processed

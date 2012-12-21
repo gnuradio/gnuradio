@@ -27,8 +27,6 @@
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
 
-using namespace pmt;
-
 static long s_ncurrently_allocated = 0;
 
 long
@@ -146,8 +144,8 @@ gr_block_detail::nitems_written(unsigned int which_output)
 void
 gr_block_detail::add_item_tag(unsigned int which_output, const gr_tag_t &tag)
 {
-  if(!pmt_is_symbol(tag.key)) {
-    throw pmt_wrong_type("gr_block_detail::add_item_tag key", tag.key);
+  if(!pmt::is_symbol(tag.key)) {
+    throw pmt::wrong_type("gr_block_detail::add_item_tag key", tag.key);
   }
   else {
     // Add tag to gr_buffer's deque tags
@@ -170,7 +168,7 @@ gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
 				   unsigned int which_input,
 				   uint64_t abs_start,
 				   uint64_t abs_end,
-				   const pmt_t &key)
+				   const pmt::pmt_t &key)
 {
   std::vector<gr_tag_t> found_items;
 
@@ -180,11 +178,11 @@ gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
   d_input[which_input]->get_tags_in_range(found_items, abs_start, abs_end);
 
   // Filter further by key name
-  pmt_t itemkey;
+  pmt::pmt_t itemkey;
   std::vector<gr_tag_t>::iterator itr;
   for(itr = found_items.begin(); itr != found_items.end(); itr++) {
     itemkey = (*itr).key;
-    if(pmt_eqv(key, itemkey)) {
+    if(pmt::eqv(key, itemkey)) {
       v.push_back(*itr);
     }
   }

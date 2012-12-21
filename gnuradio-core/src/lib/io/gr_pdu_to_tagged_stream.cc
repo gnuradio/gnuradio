@@ -84,46 +84,46 @@ gr_pdu_to_tagged_stream::work(int noutput_items,
         }
 
     // make sure type is valid
-    if(!pmt::pmt_is_pair(msg)){
+    if(!pmt::is_pair(msg)){
         throw std::runtime_error("received a malformed pdu message!");
         }
    
 //    printf("got a msg\n");
-//    pmt::pmt_print(msg);
+//    pmt::print(msg);
  
     // grab the components of the pdu message
-    pmt::pmt_t meta(pmt::pmt_car(msg)); // make sure this is NIL || Dict ?
-    pmt::pmt_t vect(pmt::pmt_cdr(msg)); // make sure this is a vector?
+    pmt::pmt_t meta(pmt::car(msg)); // make sure this is NIL || Dict ?
+    pmt::pmt_t vect(pmt::cdr(msg)); // make sure this is a vector?
 
     // compute offset for output tag
     uint64_t offset = nitems_written(0) + nout;
 
     // add a tag for pdu length
-    add_item_tag(0, offset, pdu_length_tag, pmt::pmt_from_long( pmt::pmt_length(vect) ), pmt::mp(alias()));
+    add_item_tag(0, offset, pdu_length_tag, pmt::from_long( pmt::length(vect) ), pmt::mp(alias()));
 
     // if we recieved metadata add it as tags
-    if( !pmt_eq(meta, pmt::PMT_NIL) ){
-        pmt::pmt_t pair(pmt::pmt_dict_keys( meta ));
-        while( !pmt_eq(pair, pmt::PMT_NIL) ){
-            pmt::pmt_t k(pmt::pmt_cdr(pair));
-            pmt::pmt_t v(pmt::pmt_dict_ref(meta, k, pmt::PMT_NIL));
+    if( !eq(meta, pmt::PMT_NIL) ){
+        pmt::pmt_t pair(pmt::dict_keys( meta ));
+        while( !eq(pair, pmt::PMT_NIL) ){
+            pmt::pmt_t k(pmt::cdr(pair));
+            pmt::pmt_t v(pmt::dict_ref(meta, k, pmt::PMT_NIL));
             add_item_tag(0, offset, k, v, pmt::mp(alias()));
             }
         }
 
     // copy vector output
-    size_t ncopy = std::min((size_t)noutput_items, (size_t)pmt::pmt_length(vect));
-    size_t nsave = pmt::pmt_length(vect) - ncopy;
+    size_t ncopy = std::min((size_t)noutput_items, (size_t)pmt::length(vect));
+    size_t nsave = pmt::length(vect) - ncopy;
  
     // copy output
     size_t io(0);
     nout += ncopy;
-    memcpy(out, pmt_uniform_vector_elements(vect,io), ncopy*d_itemsize);
+    memcpy(out, uniform_vector_elements(vect,io), ncopy*d_itemsize);
 
     // save leftover items if needed for next work call
     if(nsave > 0){
         d_remain.resize(nsave*d_itemsize, 0);
-        memcpy(&d_remain[0], pmt_uniform_vector_elements(vect,ncopy), nsave*d_itemsize);
+        memcpy(&d_remain[0], uniform_vector_elements(vect,ncopy), nsave*d_itemsize);
         }
     
   }

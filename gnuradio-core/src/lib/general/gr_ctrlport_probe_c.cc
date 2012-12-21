@@ -43,9 +43,9 @@ gr_ctrlport_probe_c::gr_ctrlport_probe_c(const std::string &id,
 		  gr_make_io_signature(0, 0, 0)),
     d_ptr(NULL), d_ptrLen(0),
     d_const_rpc(d_name, id.c_str(), this, unique_id(), &gr_ctrlport_probe_c::get, 
-		pmt::pmt_make_c32vector(0,-2),
-		pmt::pmt_make_c32vector(0,2),
-		pmt::pmt_make_c32vector(0,0), 
+		pmt::make_c32vector(0,-2),
+		pmt::make_c32vector(0,2),
+		pmt::make_c32vector(0,0), 
 		"volts", desc.c_str(), RPC_PRIVLVL_MIN, DISPXYSCATTER)
 {
 }

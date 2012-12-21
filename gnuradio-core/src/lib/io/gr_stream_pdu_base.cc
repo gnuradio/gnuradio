@@ -73,19 +73,19 @@ void gr_stream_pdu_base::run(){
         if(not wait_ready()){ continue; }   
         const int result = read( d_fd, &d_rxbuf[0], d_rxbuf.size() );
         if(result <= 0){ throw std::runtime_error("gr_stream_pdu_base, bad socket read!"); }
-        pmt::pmt_t vector = pmt::pmt_init_u8vector(result, &d_rxbuf[0]);       
-        pmt::pmt_t pdu = pmt::pmt_cons( pmt::PMT_NIL, vector);
+        pmt::pmt_t vector = pmt::init_u8vector(result, &d_rxbuf[0]);       
+        pmt::pmt_t pdu = pmt::cons( pmt::PMT_NIL, vector);
         message_port_pub(rxport, pdu);
     } 
 }
 
 void gr_stream_pdu_base::send(pmt::pmt_t msg){
-    pmt::pmt_t vector = pmt::pmt_cdr(msg);
+    pmt::pmt_t vector = pmt::cdr(msg);
     size_t offset(0);
     size_t itemsize(gr_pdu_itemsize(type_from_pmt(vector)));
-    int len( pmt::pmt_length(vector)*itemsize );
+    int len( pmt::length(vector)*itemsize );
     
-    const int rv = write(d_fd, pmt::pmt_uniform_vector_elements(vector, offset), len);
+    const int rv = write(d_fd, pmt::uniform_vector_elements(vector, offset), len);
     if(rv != len){
         std::cerr << boost::format("WARNING: gr_stream_pdu_base::send(pdu) write failed! (d_fd=%d, len=%d, rv=%d)")
                             % d_fd % len % rv << std::endl;

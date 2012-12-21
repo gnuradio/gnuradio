@@ -86,7 +86,7 @@ void
 gr_hier_block2::msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
                         gr_basic_block_sptr dst, pmt::pmt_t dstport)
 {
-  if(!pmt::pmt_is_symbol(srcport)){throw std::runtime_error("bad port id"); }
+  if(!pmt::is_symbol(srcport)){throw std::runtime_error("bad port id"); }
   d_detail->msg_connect(src, srcport, dst, dstport);
 }
 
@@ -101,7 +101,7 @@ void
 gr_hier_block2::msg_disconnect(gr_basic_block_sptr src, pmt::pmt_t srcport,
                         gr_basic_block_sptr dst, pmt::pmt_t dstport)
 {
-  if(!pmt::pmt_is_symbol(srcport)){throw std::runtime_error("bad port id"); }
+  if(!pmt::is_symbol(srcport)){throw std::runtime_error("bad port id"); }
   d_detail->msg_disconnect(src, srcport, dst, dstport);
 }
 
