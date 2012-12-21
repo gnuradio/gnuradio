@@ -40,13 +40,7 @@ ss_roots = [
 reg_signatures = ['ss', 'ii', 'ff', 'cc']
 
 reg_roots = [
-    'gr_add_const_XX',
-    'gr_sub_XX',
-    'gr_divide_XX',
     'gr_mute_XX',
-    'gr_add_const_vXX',
-    'gr_multiply_const_vXX',
-    'gr_integrate_XX',
     'gr_moving_average_XX',
     ]
 
@@ -54,18 +48,10 @@ reg_roots = [
 others = (
     ('gr_unpacked_to_packed_XX',    ('bb','ss','ii')),
     ('gr_packed_to_unpacked_XX',    ('bb','ss','ii')),
-    ('gr_xor_XX',                   ('bb','ss','ii')),
-    ('gr_and_XX',                   ('bb','ss','ii')),
-    ('gr_and_const_XX',             ('bb','ss','ii')),
-    ('gr_or_XX',                    ('bb','ss','ii')),
-    ('gr_not_XX',                   ('bb','ss','ii')),
     ('gr_sample_and_hold_XX',       ('bb','ss','ii','ff')),
     ('gr_argmax_XX',                ('fs','is','ss')),
     ('gr_max_XX',                   ('ff','ii','ss')),
     ('gr_peak_detector_XX',         ('fb','ib','sb')),
-    ('gr_multiply_XX',              ('ss','ii')),
-    ('gr_multiply_const_XX',        ('ss','ii')),
-    ('gr_add_XX',                   ('ss','cc','ii'))
     )
 
 
@@ -79,7 +65,6 @@ def expand_h_cc_i (root, sig):
 
 
 def generate ():
-    expand_h_cc_i ('gr_add_const_XX', 'sf')     # for MC4020
     expand_h_cc_i ('gr_vector_sink_X', 'b')
     expand_h_cc_i ('gr_vector_source_X', 'b')
     expand_h_cc_i ('gr_probe_signal_X', 'b')

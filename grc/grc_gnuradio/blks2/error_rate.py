@@ -21,6 +21,7 @@
 default_win_size = 1000
 
 from gnuradio import gr
+from gnuradio import blocks
 import gnuradio.gr.gr_threading as _threading
 import numpy
 
@@ -82,7 +83,7 @@ class error_rate(gr.hier_block2):
 		self._msgq_source = msg_source.msgq()
 		msgq_sink = gr.msg_queue(2)
 		msg_sink = gr.message_sink(gr.sizeof_char, msgq_sink, False) #False -> blocking
-		inter = gr.interleave(gr.sizeof_char)
+		inter = blocks.interleave(gr.sizeof_char)
 		#start thread
 		self._num_errs = 0
 		self._err_index = 0

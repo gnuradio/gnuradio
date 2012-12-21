@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, audio, uhd
+from gnuradio import gr, audio, uhdf
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio.eng_option import eng_option
@@ -107,8 +108,8 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.lchan_filt = filter.pfb.arb_resampler_fff(chan_rate)
 
         # FIXME rework {add,multiply}_const_* to handle multiple streams
-        self.volume_control_l = gr.multiply_const_ff(self.vol)
-        self.volume_control_r = gr.multiply_const_ff(self.vol)
+        self.volume_control_l = blocks.multiply_const_ff(self.vol)
+        self.volume_control_r = blocks.multiply_const_ff(self.vol)
 
         # sound card as final sink
         self.audio_sink = audio.sink(int (audio_rate),

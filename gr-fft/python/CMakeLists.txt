@@ -36,6 +36,8 @@ if(ENABLE_TESTING)
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-fft/python
     ${CMAKE_BINARY_DIR}/gr-fft/swig
+    ${CMAKE_BINARY_DIR}/gr-blocks/python
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig
 )
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-fft)
 

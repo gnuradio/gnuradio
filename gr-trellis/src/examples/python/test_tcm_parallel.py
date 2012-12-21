@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis, digital
+from gnuradio import trellis, digital, blocks
 from gnuradio import eng_notation
 import math
 import sys
@@ -22,7 +22,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
     src = gr.lfsr_32k_source_s()
     src_head = gr.head (gr.sizeof_short,Kb/16*P) # packet size in shorts
     s2fsmi=gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
-    s2p = gr.stream_to_streams(gr.sizeof_short,P) # serial to parallel
+    s2p = blocks.stream_to_streams(gr.sizeof_short,P) # serial to parallel
     enc = trellis.encoder_ss(f,0) # initiali state = 0
     mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
@@ -30,13 +30,13 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
     add=[]
     noise=[]
     for i in range(P):
-        add.append(gr.add_ff())
+        add.append(blocks.add_ff())
         noise.append(analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed))
 
     # RX
     metrics = trellis.metrics_f(f.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
     va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
-    p2s = gr.streams_to_stream(gr.sizeof_short,P) # parallel to serial
+    p2s = block.streams_to_stream(gr.sizeof_short,P) # parallel to serial
     fsmi2s=gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
 

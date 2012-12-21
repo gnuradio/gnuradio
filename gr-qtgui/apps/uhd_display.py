@@ -21,6 +21,8 @@
 #
 
 from gnuradio import gr
+from gnuradio import filter
+from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -198,14 +200,14 @@ class my_top_block(gr.top_block):
                                 True, True, True, False)
 
         # Set up internal amplifier
-        self.amp = gr.multiply_const_cc(0.0)
+        self.amp = blocks.multiply_const_cc(0.0)
         self.set_amplifier_gain(100)
 
         # Create a single-pole IIR filter to remove DC
         #   but don't connect it yet
         self.dc_gain = 0.001
-        self.dc = gr.single_pole_iir_filter_cc(self.dc_gain)
-        self.dc_sub = gr.sub_cc()
+        self.dc = filter.single_pole_iir_filter_cc(self.dc_gain)
+        self.dc_sub = blocks.sub_cc()
 
         self.connect(self.u, self.amp, self.snk)
 

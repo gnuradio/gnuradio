@@ -70,6 +70,8 @@ list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-filter/swig
     ${CMAKE_BINARY_DIR}/gr-analog/python
     ${CMAKE_BINARY_DIR}/gr-analog/swig
+    ${CMAKE_BINARY_DIR}/gr-blocks/python
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig
 )
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-digital gnuradio-filter gnuradio-fft gnuradio-analog)
 

@@ -4,7 +4,7 @@
   2
   3  from gnuradio import gr
   4  from gnuradio import audio
-  5  from gnuradio import trellis, digital, analog
+  5  from gnuradio import trellis, digital, analog, blocks
   6  from gnuradio import eng_notation
   7  import math
   8  import sys
@@ -22,7 +22,7 @@
  20      mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
  21
  22      # CHANNEL
- 23      add = gr.add_ff()
+ 23      add = blocks.add_ff()
  24      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
  25
  26      # RX

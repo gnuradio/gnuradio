@@ -21,6 +21,7 @@
 
 import math
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 
 class standard_squelch(gr.hier_block2):
@@ -29,23 +30,23 @@ class standard_squelch(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_float), # Input signature
 				gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
 
-        self.input_node = gr.add_const_ff(0)          # FIXME kludge
+        self.input_node = blocks.add_const_ff(0)          # FIXME kludge
 
         self.low_iir = filter.iir_filter_ffd((0.0193,0,-0.0193),(1,1.9524,-0.9615))
-        self.low_square = gr.multiply_ff()
+        self.low_square = blocks.multiply_ff()
         self.low_smooth = filter.single_pole_iir_filter_ff(1/(0.01*audio_rate))   # 100ms time constant
 
         self.hi_iir = filter.iir_filter_ffd((0.0193,0,-0.0193),(1,1.3597,-0.9615))
-        self.hi_square = gr.multiply_ff()
+        self.hi_square = blocks.multiply_ff()
         self.hi_smooth = filter.single_pole_iir_filter_ff(1/(0.01*audio_rate))
 
-        self.sub = gr.sub_ff();
-        self.add = gr.add_ff();
+        self.sub = blocks.sub_ff();
+        self.add = blocks.add_ff();
         self.gate = gr.threshold_ff(0.3,0.43,0)
         self.squelch_lpf = filter.single_pole_iir_filter_ff(1/(0.01*audio_rate))
 
-        self.div = gr.divide_ff()
-        self.squelch_mult = gr.multiply_ff()
+        self.div = blocks.divide_ff()
+        self.squelch_mult = blocks.multiply_ff()
 
 	self.connect(self, self.input_node)
         self.connect(self.input_node, (self.squelch_mult, 0))

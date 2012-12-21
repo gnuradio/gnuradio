@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blks2
+from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys
 
@@ -69,7 +70,7 @@ def main():
     noise_level = 0.01
     head = gr.head(gr.sizeof_gr_complex, N)
     noise = analog.noise_source_c(gr.GR_GAUSSIAN, noise_level)
-    addnoise = gr.add_cc()
+    addnoise = blocks.add_cc()
     snk_synth = gr.vector_sink_c()
 
     tb = gr.top_block()

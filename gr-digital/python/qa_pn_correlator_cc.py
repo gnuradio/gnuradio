@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 
 class test_pn_correlator_cc(gr_unittest.TestCase):
 
@@ -39,7 +40,7 @@ class test_pn_correlator_cc(gr_unittest.TestCase):
         length = 2**degree-1
         src = digital.glfsr_source_f(degree)
         head = gr.head(gr.sizeof_float, length*length)
-        f2c = gr.float_to_complex()
+        f2c = blocks.float_to_complex()
         corr = digital.pn_correlator_cc(degree)
         dst = gr.vector_sink_c()
         self.tb.connect(src, head, f2c, corr, dst)

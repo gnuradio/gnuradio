@@ -33,6 +33,8 @@
 # then at 0 with edges at -3.2MHz and 3.2MHz.
 
 from gnuradio import gr
+from gnuradio import blocks
+from gnuradio import filter
 import sys, os
 
 def graph (args):
@@ -46,17 +48,18 @@ def graph (args):
 	sys.stderr.write('usage: interp.py input_file\n')
 	sys.exit (1)
 
-    tb = gr.top_block ()
+    tb = gr.top_block()
 
-    srcf = gr.file_source (gr.sizeof_short,infile)
-    s2ss = gr.stream_to_streams(gr.sizeof_short,2)
-    s2f1 = gr.short_to_float()
-    s2f2 = gr.short_to_float()
-    src0 = gr.float_to_complex()
+    srcf = gr.file_source(gr.sizeof_short,infile)
+    s2ss = blocks.stream_to_streams(gr.sizeof_short,2)
+    s2f1 = blocks.short_to_float()
+    s2f2 = blocks.short_to_float()
+    src0 = blocks.float_to_complex()
 
 
-    lp_coeffs = gr.firdes.low_pass ( 3, 19.2e6, 3.2e6, .5e6, gr.firdes.WIN_HAMMING )
-    lp = gr.interp_fir_filter_ccf ( 3, lp_coeffs )
+    lp_coeffs = filter.firdes.low_pass(3, 19.2e6, 3.2e6, .5e6,
+                                       filter.firdes.WIN_HAMMING)
+    lp = filter.interp_fir_filter_ccf(3, lp_coeffs)
 
     file = gr.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 

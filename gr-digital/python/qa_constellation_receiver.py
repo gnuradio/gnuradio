@@ -27,6 +27,7 @@ from utils import mod_codes, alignment
 import packet_utils
 import filter_swig as filter
 import analog_swig as analog
+import blocks_swig as blocks
 from generic_mod_demod import generic_mod, generic_demod
 
 from qa_constellation import tested_constellations, twod_constell
@@ -60,12 +61,12 @@ class channel_model(gr.hier_block2):
         
 
         timing_offset = filter.fractional_interpolator_cc(0, timing)
-        noise_adder = gr.add_cc()
+        noise_adder = blocks.add_cc()
         noise = analog.noise_source_c(analog.GR_GAUSSIAN,
                                       noise_voltage, 0)
         freq_offset = analog.sig_source_c(1, analog.GR_SIN_WAVE,
                                           freq, 1.0, 0.0)
-        mixer_offset = gr.multiply_cc();
+        mixer_offset = blocks.multiply_cc();
 
         self.connect(self, timing_offset)
         self.connect(timing_offset, (mixer_offset,0))

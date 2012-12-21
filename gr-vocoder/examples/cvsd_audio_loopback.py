@@ -20,8 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blks2
+from gnuradio import gr
 from gnuradio import audio
+from gnuradio import blocks
+from gnuradio import filter
 from gnuradio import vocoder
 
 def build_graph():
@@ -30,18 +32,18 @@ def build_graph():
 
     tb = gr.top_block()
     src = audio.source(sample_rate, "plughw:0,0")
-    src_scale = gr.multiply_const_ff(scale_factor)
+    src_scale = blocks.multiply_const_ff(scale_factor)
 
-    interp = blks2.rational_resampler_fff(8, 1)
-    f2s = gr.float_to_short ()
+    interp = filter.rational_resampler_fff(8, 1)
+    f2s = blocks.float_to_short()
 
     enc = vocoder.cvsd_encode_sb()
     dec = vocoder.cvsd_decode_bs()
 
-    s2f = gr.short_to_float ()
-    decim = blks2.rational_resampler_fff(1, 8)
+    s2f = blocks.short_to_float()
+    decim = filter.rational_resampler_fff(1, 8)
 
-    sink_scale = gr.multiply_const_ff(1.0/scale_factor)
+    sink_scale = blocks.multiply_const_ff(1.0/scale_factor)
     sink = audio.sink(sample_rate, "plughw:0,0")
 
     tb.connect(src, src_scale, interp, f2s, enc)

@@ -37,6 +37,7 @@ import math
 import numpy
 from gnuradio import gr, digital
 from gnuradio import analog
+from gnuradio import blocks
 
 try:
     from scipy.special import erfc
@@ -70,16 +71,16 @@ class BitErrors(gr.hier_block2):
                 gr.io_signature(1, 1, gr.sizeof_int))
 
         # Bit comparison
-        comp = gr.xor_bb()
+        comp = blocks.xor_bb()
         intdump_decim = 100000
         if N_BITS < intdump_decim:
             intdump_decim = int(N_BITS)
         self.connect(self,
                      comp,
                      gr.unpack_k_bits_bb(bits_per_byte),
-                     gr.uchar_to_float(),
-                     gr.integrate_ff(intdump_decim),
-                     gr.multiply_const_ff(1.0/N_BITS),
+                     blocks.uchar_to_float(),
+                     blocks.integrate_ff(intdump_decim),
+                     blocks.multiply_const_ff(1.0/N_BITS),
                      self)
         self.connect((self, 1), (comp, 1))
 
@@ -92,7 +93,7 @@ class BERAWGNSimu(gr.top_block):
         data = map(int, numpy.random.randint(0, self.const.arity(), N_BITS/self.const.bits_per_symbol()))
         src   = gr.vector_source_b(data, False)
         mod   = digital.chunks_to_symbols_bc((self.const.points()), 1)
-        add   = gr.add_vcc()
+        add   = blocks.add_vcc()
         noise = analog.noise_source_c(analog.GR_GAUSSIAN,
                                       self.EbN0_to_noise_voltage(EbN0),
                                       RAND_SEED)

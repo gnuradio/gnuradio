@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis, digital
+from gnuradio import trellis, digital, blocks
 from gnuradio import eng_notation
 import math
 import sys
@@ -28,7 +28,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
-    add = gr.add_ff()
+    add = blocks.add_ff()
     noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX

@@ -8,7 +8,7 @@
 ##################################################
 
 from gnuradio import gr
-from gnuradio import trellis, digital, filter
+from gnuradio import trellis, digital, filter, blocks
 from grc_gnuradio import blks2 as grc_blks2
 import math
 import numpy
@@ -98,15 +98,15 @@ def run_test(seed,blocksize):
 	gr_interp_fir_filter_xxx_0 = filter.interp_fir_filter_fff(Q, p)
 	gr_frequency_modulator_fc_0 = analog.frequency_modulator_fc(2*math.pi*h*(1.0/Q))
 
-	gr_add_vxx_0 = gr.add_vcc(1)
+	gr_add_vxx_0 = blocks.add_vcc(1)
 	gr_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, (N0/2.0)**0.5, -long(seed))
 
-	gr_multiply_vxx_0 = gr.multiply_vcc(1)
+	gr_multiply_vxx_0 = blocks.multiply_vcc(1)
 	gr_sig_source_x_0 = analog.sig_source_c(Q, analog.GR_COS_WAVE, -f0T, 1, 0)
         # only works for N=2, do it manually for N>2...
 	gr_fir_filter_xxx_0_0 = filter.fir_filter_ccc(Q, MF[0].conjugate())
 	gr_fir_filter_xxx_0_0_0 = filter.fir_filter_ccc(Q, MF[1].conjugate())
-	gr_streams_to_stream_0 = gr.streams_to_stream(gr.sizeof_gr_complex*1, int(N))
+	gr_streams_to_stream_0 = blocks.streams_to_stream(gr.sizeof_gr_complex*1, int(N))
 	gr_skiphead_0 = gr.skiphead(gr.sizeof_gr_complex*1, int(N*(1+0)))
 	viterbi = trellis.viterbi_combined_cb(f, head+blocksize+tail, 0, -1, int(N),
 					      constellation, digital.TRELLIS_EUCLIDEAN)

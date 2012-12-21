@@ -20,7 +20,7 @@
 #
 
 from gnuradio import gr, window
-from gnuradio.blks2 import stream_to_vector_decimator
+from gnuradio import blocks
 import sys, math
 
 import fft_swig as fft
@@ -54,10 +54,10 @@ class _logpwrfft_base(gr.hier_block2):
                                 gr.io_signature(1, 1, self._item_size),          # Input signature
                                 gr.io_signature(1, 1, gr.sizeof_float*fft_size)) # Output signature
 
-        self._sd = stream_to_vector_decimator(item_size=self._item_size,
-                                              sample_rate=sample_rate,
-                                              vec_rate=frame_rate,
-                                              vec_len=fft_size)
+        self._sd = blocks.stream_to_vector_decimator(item_size=self._item_size,
+                                                     sample_rate=sample_rate,
+                                                     vec_rate=frame_rate,
+                                                     vec_len=fft_size)
 
         if win is None: win = window.blackmanharris
         fft_window = win(fft_size)
@@ -66,10 +66,10 @@ class _logpwrfft_base(gr.hier_block2):
 
         c2magsq = gr.complex_to_mag_squared(fft_size)
         self._avg = filter.single_pole_iir_filter_ff(1.0, fft_size)
-        self._log = gr.nlog10_ff(10, fft_size,
-                                 -20*math.log10(fft_size)              # Adjust for number of bins
-                                 -10*math.log10(window_power/fft_size) # Adjust for windowing loss
-                                 -20*math.log10(ref_scale/2))      # Adjust for reference scale
+        self._log = blocks.nlog10_ff(10, fft_size,
+                                     -20*math.log10(fft_size)              # Adjust for number of bins
+                                     -10*math.log10(window_power/fft_size) # Adjust for windowing loss
+                                     -20*math.log10(ref_scale/2))      # Adjust for reference scale
         self.connect(self, self._sd, fft, c2magsq, self._avg, self._log, self)
 
         self._average = average

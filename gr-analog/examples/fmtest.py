@@ -20,7 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, filter
+from gnuradio import gr
+from gnuradio import blocks
+from gnuradio import filter
 from gnuradio import analog
 import sys, math, time
 
@@ -53,7 +55,7 @@ class fmtx(gr.hier_block2):
                                  lo_freq,            # frequency
                                  1.0,                # amplitude
                                  0)                  # DC Offset
-        mixer = gr.multiply_cc()
+        mixer = blocks.multiply_cc()
 
         self.connect(self, fmtx, (mixer, 0))
         self.connect(lo, (mixer, 1))
@@ -75,7 +77,7 @@ class fmtest(gr.top_block):
         self._if_rate = 4*self._N*self._audio_rate
 
         # Create a signal source and frequency modulate it
-        self.sum = gr.add_cc()
+        self.sum = blocks.add_cc()
         for n in xrange(self._N):
             sig = analog.sig_source_f(self._audio_rate, analog.GR_SIN_WAVE, freq[n], 0.5)
             fm = fmtx(f_lo[n], self._audio_rate, self._if_rate)

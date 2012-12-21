@@ -83,6 +83,7 @@ from gnuradio.wxgui import powermate, fftsink2
 from gnuradio import gr, audio, eng_notation
 from gnuradio import analog
 from gnuradio import filter
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from gnuradio import uhd
 from optparse import OptionParser
@@ -258,10 +259,10 @@ class MyFrame(wx.Frame):
            self.tune_offset = 2200 # 2200 works for 3.5-4Mhz band
 
            # convert rf data in interleaved short int form to complex
-           s2ss = gr.stream_to_streams(gr.sizeof_short,2)
-           s2f1 = gr.short_to_float()
-           s2f2 = gr.short_to_float()
-           src_f2c = gr.float_to_complex()
+           s2ss = blocks.stream_to_streams(gr.sizeof_short,2)
+           s2f1 = blocks.short_to_float()
+           s2f2 = blocks.short_to_float()
+           src_f2c = blocks.float_to_complex()
            self.tb.connect(self.src,s2ss)
            self.tb.connect((s2ss,0),s2f1)
            self.tb.connect((s2ss,1),s2f2)
@@ -307,21 +308,21 @@ class MyFrame(wx.Frame):
         c2f = gr.complex_to_float()
 
 	# AM branch
-	self.sel_am = gr.multiply_const_cc(0)
+	self.sel_am = blocks.multiply_const_cc(0)
 	# the following frequencies turn out to be in radians/sample
 	# analog.pll_refout_cc(alpha,beta,min_freq,max_freq)
 	# suggested alpha = X, beta = .25 * X * X
 	pll = analog.pll_refout_cc(.5,.0625,(2.*math.pi*7.5e3/self.af_sample_rate),
                                     (2.*math.pi*6.5e3/self.af_sample_rate))
-	self.pll_carrier_scale = gr.multiply_const_cc(complex(10,0))
-	am_det = gr.multiply_cc()
+	self.pll_carrier_scale = blocks.multiply_const_cc(complex(10,0))
+	am_det = blocks.multiply_cc()
 	# these are for converting +7.5kHz to -7.5kHz
-	# for some reason gr.conjugate_cc() adds noise ??
+	# for some reason blocks.conjugate_cc() adds noise ??
 	c2f2 = gr.complex_to_float()
 	c2f3 = gr.complex_to_float()
-	f2c = gr.float_to_complex()
-	phaser1 = gr.multiply_const_ff(1)
-	phaser2 = gr.multiply_const_ff(-1)
+	f2c = blocks.float_to_complex()
+	phaser1 = blocks.multiply_const_ff(1)
+	phaser2 = blocks.multiply_const_ff(-1)
 
 	# filter for pll generated carrier
         pll_carrier_coeffs = filter.firdes.complex_band_pass (
@@ -334,16 +335,16 @@ class MyFrame(wx.Frame):
 
         self.pll_carrier_filter = filter.fir_filter_ccc (1, pll_carrier_coeffs)
 
-	self.sel_sb = gr.multiply_const_ff(1)
-	combine = gr.add_ff()
+	self.sel_sb = blocks.multiply_const_ff(1)
+	combine = blocks.add_ff()
 
 	#AGC
-	sqr1 = gr.multiply_ff()
-	intr = gr.iir_filter_ffd ( [.004, 0], [0, .999] )
-	offset = gr.add_const_ff(1)
-	agc = gr.divide_ff()
+	sqr1 = blocks.multiply_ff()
+	intr = filter.iir_filter_ffd( [.004, 0], [0, .999] )
+	offset = blocks.add_const_ff(1)
+	agc = blocks.divide_ff()
 
-        self.scale = gr.multiply_const_ff(0.00001)
+        self.scale = blocks.multiply_const_ff(0.00001)
         dst = audio.sink(long(self.af_sample_rate),
                          options.audio_output)
 
@@ -375,8 +376,8 @@ class MyFrame(wx.Frame):
 
 	if SAVE_AUDIO_TO_FILE:
 	  f_out = gr.file_sink(gr.sizeof_short,options.audio_file)
-	  sc1 = gr.multiply_const_ff(64000)
-	  f2s1 = gr.float_to_short()
+	  sc1 = blocks.multiply_const_ff(64000)
+	  f2s1 = blocks.float_to_short()
 	  self.tb.connect(agc,sc1,f2s1,f_out)
 
         self.tb.start()

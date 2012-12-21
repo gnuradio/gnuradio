@@ -31,6 +31,7 @@ import trellis
 import os
 import digital_swig as digital
 import analog_swig as analog
+import blocks_swig as blocks
 
 fsm_args = {"awgn1o2_4": (2, 4, 4,
                           (0, 2, 0, 2, 1, 3, 1, 3),
@@ -118,7 +119,7 @@ class trellis_tb(gr.top_block):
         mod = digital.chunks_to_symbols_sc(constellation.points(), 1)
 
         # CHANNEL
-        add = gr.add_cc()
+        add = blocks.add_cc()
         noise = analog.noise_source_c(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
         # RX

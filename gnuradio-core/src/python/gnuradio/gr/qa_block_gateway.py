@@ -158,6 +158,26 @@ class fc32_to_f32_2(gr.sync_block):
         output_items[0][::,1] = numpy.imag(input_items[0])
         return len(output_items[0])
 
+class vector_to_stream(gr.interp_block):
+    def __init__(self, itemsize, nitems_per_block):
+        gr.interp_block.__init__(
+            self,
+            name = "vector_to_stream",
+            in_sig = [(itemsize, nitems_per_block)],
+            out_sig = [itemsize],
+            interp = nitems_per_block
+        )
+        self.block_size = nitems_per_block
+
+    def work(self, input_items, output_items):
+        n = 0
+        for i in xrange(len(input_items[0])):
+            for j in xrange(self.block_size):
+                output_items[0][n] = input_items[0][i][j]
+                n += 1
+      
+        return len(output_items[0])
+
 class test_block_gateway(gr_unittest.TestCase):
 
     def test_add_f32(self):
@@ -224,7 +244,7 @@ class test_block_gateway(gr_unittest.TestCase):
         tb = gr.top_block()
         src = gr.vector_source_c([1+2j, 3+4j, 5+6j, 7+8j, 9+10j], False)
         convert = fc32_to_f32_2()
-        v2s = gr.vector_to_stream(gr.sizeof_float, 2)
+        v2s = vector_to_stream(numpy.float32, 2)
         sink = gr.vector_sink_f()
         tb.connect(src, convert, v2s, sink)
         tb.run()

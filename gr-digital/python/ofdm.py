@@ -22,6 +22,7 @@
 
 import math
 from gnuradio import gr, fft
+from gnuradio import blocks
 import digital_swig as digital
 import ofdm_packet_utils
 from ofdm_receiver import ofdm_receiver
@@ -107,7 +108,7 @@ class ofdm_mod(gr.hier_block2):
         self.ifft = fft.fft_vcc(self._fft_length, False, win, True)
         self.cp_adder = digital.ofdm_cyclic_prefixer(self._fft_length,
                                                      symbol_length)
-        self.scale = gr.multiply_const_cc(1.0 / math.sqrt(self._fft_length))
+        self.scale = blocks.multiply_const_cc(1.0 / math.sqrt(self._fft_length))
         
         self.connect((self._pkt_input, 0), (self.preambles, 0))
         self.connect((self._pkt_input, 1), (self.preambles, 1))

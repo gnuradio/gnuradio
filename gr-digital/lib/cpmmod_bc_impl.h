@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_CPMMOD_BC_IMPL_H
 
 #include <digital/cpmmod_bc.h>
-#include <gr_char_to_float.h>
+#include <blocks/char_to_float.h>
 #include <analog/frequency_modulator_fc.h>
 #include <filter/interp_fir_filter_fff.h>
 
@@ -42,7 +42,7 @@ namespace gr {
 
     protected:
       std::vector<float> d_taps;
-      gr_char_to_float_sptr d_char_to_float;
+      gr::blocks::char_to_float::sptr d_char_to_float;
       gr::filter::interp_fir_filter_fff::sptr d_pulse_shaper;
       analog::frequency_modulator_fc::sptr d_fm;
   

@@ -40,6 +40,7 @@ def setter(ps, key, val): ps[key] = val
 
 from gnuradio import gr, gru, uhd, eng_notation
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.gr.pubsub import pubsub
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -262,7 +263,7 @@ class top_block(gr.top_block, pubsub):
                                              self[WAVEFORM2_FREQ_KEY],
                                              self[AMPLITUDE_KEY]/2.0,
                                              0)
-            self._src = gr.add_cc()
+            self._src = blocks.add_cc()
             self.connect(self._src1,(self._src,0))
             self.connect(self._src2,(self._src,1))
         elif type == "sweep":
@@ -279,7 +280,7 @@ class top_block(gr.top_block, pubsub):
                                              1.0,
                                              -0.5)
             self._src2 = analog.frequency_modulator_fc(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
-            self._src = gr.multiply_const_cc(self[AMPLITUDE_KEY])
+            self._src = blocks.multiply_const_cc(self[AMPLITUDE_KEY])
             self.connect(self._src1,self._src2,self._src)
         else:
             raise RuntimeError("Unknown waveform type")

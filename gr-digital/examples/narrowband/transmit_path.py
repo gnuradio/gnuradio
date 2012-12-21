@@ -21,6 +21,7 @@
 
 from gnuradio import gr
 from gnuradio import eng_notation
+from gnuradio import blocks
 from gnuradio import digital
 
 import copy
@@ -58,7 +59,7 @@ class transmit_path(gr.hier_block2):
                              msgq_limit=4,
                              pad_for_usrp=True)
 
-        self.amp = gr.multiply_const_cc(1)
+        self.amp = blocks.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
 
         # Display some information about the setup

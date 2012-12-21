@@ -28,6 +28,7 @@ import fft_window
 import common
 from gnuradio import gr, fft
 from gnuradio import analog
+from gnuradio import blocks
 from pubsub import pubsub
 from constants import *
 import math
@@ -174,7 +175,7 @@ class test_app_block (stdgui2.std_top_block):
 			   ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add(sink1.win, 1, wx.EXPAND)
 
-        combine1 = gr.add_cc()
+        combine1 = blocks.add_cc()
         self.connect(src1, (combine1,0))
         self.connect(noise,(combine1,1))
         self.connect(combine1,thr1, sink1)
@@ -187,7 +188,7 @@ class test_app_block (stdgui2.std_top_block):
 			   ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add(sink2.win, 1, wx.EXPAND)
 
-        combine2 = gr.add_ff()
+        combine2 = blocks.add_ff()
         c2f2 = gr.complex_to_float()
 
         self.connect(src2, (combine2,0))

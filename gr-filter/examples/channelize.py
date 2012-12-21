@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys, time
 
@@ -68,7 +69,7 @@ class pfb_top_block(gr.top_block):
         #   freqs lists the frequencies of the signals that get stored
         #   in the list "signals", which then get summed together
         self.signals = list()
-        self.add = gr.add_cc()
+        self.add = blocks.add_cc()
         freqs = [-70, -50, -30, -10, 10, 20, 40, 60, 80]
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*self._fs

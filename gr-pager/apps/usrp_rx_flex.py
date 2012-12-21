@@ -5,9 +5,9 @@
 # Generated: Thu Oct 29 11:03:16 2009
 ##################################################
 
-from gnuradio import blks2
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import filter
 from gnuradio import pager
 from gnuradio import window
 from gnuradio.eng_option import eng_option
@@ -185,7 +185,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.pager_flex_deinterleave_0_1_0 = pager.flex_deinterleave()
 		self.pager_flex_sync_0 = pager.flex_sync()
 		self.pager_slicer_fb_0 = pager.slicer_fb(1e-6)
-		self.resampler = blks2.rational_resampler_fff(
+		self.resampler = filter.rational_resampler_fff(
 			interpolation=bb_interp,
 			decimation=bb_decim,
 			taps=([1.0/ma_ntaps,]*ma_ntaps*bb_interp),

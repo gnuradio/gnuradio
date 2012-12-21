@@ -33,6 +33,7 @@ Side B is 350 + 440 Hz tones.
 from gnuradio import gr, uhd
 from gnuradio import filter
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.eng_notation import num_to_str, str_to_num
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -78,7 +79,7 @@ class example_signal_1(gr.hier_block2):
                                    440,                # frequency
                                    1.0,                # amplitude
                                    0)                  # DC Offset
-        sum = gr.add_cc()
+        sum = blocks.add_cc()
         self.connect(src0, (sum, 0))
         self.connect(src1, (sum, 1))
         self.connect(sum, self)
@@ -154,7 +155,7 @@ class my_top_block(gr.top_block):
         sig0 = example_signal_0(self.usrp_rate)
         sig1 = example_signal_1(self.usrp_rate)
 
-        intl = gr.interleave(gr.sizeof_gr_complex)
+        intl = blocks.interleave(gr.sizeof_gr_complex)
         self.connect(sig0, (intl, 0))
         self.connect(sig1, (intl, 1))
 

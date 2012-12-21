@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis, digital, filter
+from gnuradio import trellis, digital, filter, blocks
 from gnuradio import eng_notation
 import math
 import sys
@@ -15,7 +15,7 @@ except ImportError:
     sys.exit(1)
 
 def make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
-    scale = gr.multiply_const_ff(math.sqrt(1.0/N0))
+    scale = blocks.multiply_const_ff(math.sqrt(1.0/N0))
     gnd = gr.vector_source_f([0],True);
 
     inter=[]
@@ -69,7 +69,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
 
     # CHANNEL
     isi = filter.fir_filter_fff(1,channel)
-    add = gr.add_ff()
+    add = blocks.add_ff()
     noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX

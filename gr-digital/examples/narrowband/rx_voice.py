@@ -26,6 +26,7 @@ from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import vocoder
 
@@ -51,8 +52,8 @@ class audio_tx(gr.hier_block2):
         self.sample_rate = sample_rate = 8000
         self.packet_src = gr.message_source(33)
         voice_decoder = vocoder.gsm_fr_decode_ps()
-        s2f = gr.short_to_float ()
-        sink_scale = gr.multiply_const_ff(1.0/32767.)
+        s2f = blocks.short_to_float()
+        sink_scale = blocks.multiply_const_ff(1.0/32767.)
         audio_sink = audio.sink(sample_rate, audio_output_dev)
         self.connect(self.packet_src, voice_decoder, s2f, sink_scale, audio_sink)
         

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003-2007,2008,2012 Free Software Foundation, Inc.
+# Copyright 2003-2008,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gru, window, fft, filter
+from gnuradio import blocks
 from gnuradio import analog
 from gnuradio.wxgui import stdgui2
 import wx
@@ -88,14 +89,14 @@ class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
                                average=average, avg_alpha=avg_alpha, title=title)
 
         self.s2p = gr.serial_to_parallel(gr.sizeof_float, self.fft_size)
-        self.one_in_n = gr.keep_one_in_n(gr.sizeof_float * self.fft_size,
-                                         max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
+        self.one_in_n = blocks.keep_one_in_n(gr.sizeof_float * self.fft_size,
+                                             max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = fft.fft_vfc(self.fft_size, True, mywindow)
         self.c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
-        self.log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
+        self.log = blocks.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
         self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 	self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 
@@ -119,14 +120,14 @@ class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
                                      average=average, avg_alpha=avg_alpha, title=title)
 
         self.s2p = gr.serial_to_parallel(gr.sizeof_gr_complex, self.fft_size)
-        self.one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
-                                         max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
+        self.one_in_n = blocks.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
+                                             max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = fft.fft_vcc(self.fft_size, True, mywindow)
         self.c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
-        self.log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
+        self.log = blocks.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
         self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 	self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 

@@ -2,7 +2,7 @@
 
 from gnuradio import gr
 from gnuradio import audio
-from gnuradio import trellis, digital
+from gnuradio import trellis, digital, filter, blocks
 from gnuradio import eng_notation
 import math
 import sys
@@ -32,8 +32,8 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
 
     # CHANNEL
-    isi = gr.fir_filter_fff(1,channel)
-    add = gr.add_ff()
+    isi = filter.fir_filter_fff(1,channel)
+    add = blocks.add_ff()
     noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX

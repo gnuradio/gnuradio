@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, filter
+from gnuradio import blocks
 import sys
 
 try:
@@ -148,7 +149,7 @@ class my_top_block(gr.top_block):
 
         src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
-        src  = gr.add_ff()
+        src  = blocks.add_ff()
         thr = gr.throttle(gr.sizeof_float, 100*npts)
         self.snk1 = qtgui.freq_sink_f(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
                                       0, Rs,

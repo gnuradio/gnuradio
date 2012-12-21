@@ -60,7 +60,7 @@ namespace gr {
 		       gr_make_io_signature2(1, 1, sizeof(gr_complex), sizeof(float))),
 	d_type(type), d_index(h), d_sps(samples_per_sym), d_length(L), d_beta(beta),
 	d_taps(analog::cpm::phase_response(type, samples_per_sym, L, beta)),
-	d_char_to_float(gr_make_char_to_float()),
+	d_char_to_float(blocks::char_to_float::make()),
 	d_pulse_shaper(filter::interp_fir_filter_fff::make(samples_per_sym, d_taps)),
 	d_fm(analog::frequency_modulator_fc::make(M_PI * h))
     {

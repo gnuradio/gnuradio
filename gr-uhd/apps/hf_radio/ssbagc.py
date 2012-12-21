@@ -43,6 +43,8 @@
 # M. Revnell 2006-Jan
 
 from gnuradio import gr
+from gnuradio import blocks
+from gnuradio import filter
 
 class agc( gr.hier_block2 ):
     def __init__( self ):
@@ -50,13 +52,13 @@ class agc( gr.hier_block2 ):
                                 gr.io_signature(1,1,gr.sizeof_float),
                                 gr.io_signature(1,1,gr.sizeof_float))
 
-        self.split = gr.multiply_const_ff( 1 )
-        self.sqr   = gr.multiply_ff( )
-        self.int0  = gr.iir_filter_ffd( [.004, 0], [0, .999] )
-        self.offs  = gr.add_const_ff( -30 )
-        self.gain  = gr.multiply_const_ff( 70 )
-        self.log   = gr.nlog10_ff( 10, 1 )
-        self.agc   = gr.divide_ff( )
+        self.split = blocks.multiply_const_ff( 1 )
+        self.sqr   = blocks.multiply_ff( )
+        self.int0  = filter.iir_filter_ffd( [.004, 0], [0, .999] )
+        self.offs  = blocks.add_const_ff( -30 )
+        self.gain  = blocks.multiply_const_ff( 70 )
+        self.log   = blocks.nlog10_ff( 10, 1 )
+        self.agc   = blocks.divide_ff( )
 
         self.connect(self,       self.split)
         self.connect(self.split, (self.agc, 0))

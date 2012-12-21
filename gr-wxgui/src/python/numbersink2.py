@@ -24,8 +24,9 @@
 ##################################################
 import number_window
 import common
-from gnuradio import gr, blks2, filter
+from gnuradio import gr, filter
 from gnuradio import analog
+from gnuradio import blocks
 from pubsub import pubsub
 from constants import *
 
@@ -66,19 +67,19 @@ class _number_sink_base(gr.hier_block2, common.wxgui_hb):
 			gr.io_signature(0, 0, 0),
 		)
 		#blocks
-		sd = blks2.stream_to_vector_decimator(
+		sd = blocks.stream_to_vector_decimator(
 			item_size=self._item_size,
 			sample_rate=sample_rate,
 			vec_rate=number_rate,
 			vec_len=1,
 		)
 		if self._real:
-			mult = gr.multiply_const_ff(factor)
-			add = gr.add_const_ff(ref_level)
+			mult = blocks.multiply_const_ff(factor)
+			add = blocks.add_const_ff(ref_level)
 			avg = filter.single_pole_iir_filter_ff(1.0)
 		else:
-			mult = gr.multiply_const_cc(factor)
-			add = gr.add_const_cc(ref_level)
+			mult = blocks.multiply_const_cc(factor)
+			add = blocks.add_const_cc(ref_level)
 			avg = filter.single_pole_iir_filter_cc(1.0)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(self._item_size, msgq, True)

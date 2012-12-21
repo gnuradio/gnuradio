@@ -48,6 +48,7 @@ except:
   print "realtime SDL video output window will not be available"
 from gnuradio import uhd
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui2, fftsink2, form
@@ -124,7 +125,7 @@ class tv_rx_block (stdgui2.std_top_block):
         if not ((filename is None) or (filename=="usrp")):
           # file is data source
           self.filesource = gr.file_source(gr.sizeof_short,filename,options.repeat)
-          self.istoc = gr.interleaved_short_to_complex()
+          self.istoc = blocks.interleaved_short_to_complex()
           self.connect(self.filesource,self.istoc)
           self.src=self.istoc
 
@@ -154,7 +155,7 @@ class tv_rx_block (stdgui2.std_top_block):
 
         self.gain = options.gain
 
-        f2uc=gr.float_to_uchar()
+        f2uc = blocks.float_to_uchar()
 
         # sdl window as final sink
         if not (options.pal or options.ntsc):
@@ -197,8 +198,8 @@ class tv_rx_block (stdgui2.std_top_block):
 
         self.agc = analog.agc_cc(1e-7,1.0,1.0) #1e-7
         self.am_demod = gr.complex_to_mag ()
-        self.set_blacklevel=gr.add_const_ff(0.0)
-        self.invert_and_scale = gr.multiply_const_ff (0.0) #-self.contrast *128.0*255.0/(200.0)
+        self.set_blacklevel = blocks.add_const_ff(0.0)
+        self.invert_and_scale = blocks.multiply_const_ff (0.0) #-self.contrast *128.0*255.0/(200.0)
 
         # now wire it all together
         #sample_rate=options.width*options.height*options.framerate
@@ -238,7 +239,7 @@ class tv_rx_block (stdgui2.std_top_block):
           #Note: this block is not yet in cvs
           tv_corr=gr.tv_correlator_ff(frame_size,nframes, search_window,
                                       video_alpha, corr_alpha,debug)
-          shift=gr.add_const_ff(-0.7)
+          shift = blocks.add_const_ff(-0.7)
 
           self.connect (self.src, self.agc, self.am_demod, tv_corr,
                         self.invert_and_scale, self.set_blacklevel,

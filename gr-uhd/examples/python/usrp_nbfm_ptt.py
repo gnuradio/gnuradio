@@ -27,6 +27,7 @@ from optparse import OptionParser
 
 from gnuradio import gr, audio, uhd
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import stdgui2, fftsink2, scopesink2, slider, form
 
@@ -301,7 +302,7 @@ class transmit_path(gr.hier_block2):
         self.normal_gain = 32000
 
         self.audio = audio.source(int(self.audio_rate), audio_input)
-        self.audio_amp = gr.multiply_const_ff(self.audio_gain)
+        self.audio_amp = blocks.multiply_const_ff(self.audio_gain)
 
         lpf = gr.firdes.low_pass (1,                  # gain
                                   self.audio_rate,    # sampling rate
@@ -319,11 +320,11 @@ class transmit_path(gr.hier_block2):
         self.audio_filt = gr.fir_filter_fff(1,audio_taps)
 
         self.pl = analog.ctcss_gen_f(self.audio_rate,123.0)
-        self.add_pl = gr.add_ff()
+        self.add_pl = blocks.add_ff()
         self.connect(self.pl,(self.add_pl,1))
 
         self.fmtx = analog.nbfm_tx(self.audio_rate, self.if_rate)
-        self.amp = gr.multiply_const_cc (self.normal_gain)
+        self.amp = blocks.multiply_const_cc (self.normal_gain)
 
         rrate = dev_rate / self.if_rate
         self.resamp = filter.pfb.arb_resampler_ccf(rrate)
@@ -405,7 +406,7 @@ class receive_path(gr.hier_block2):
         self.squelch = analog.standard_squelch(self.audio_rate)
 
         # audio gain / mute block
-        self._audio_gain = gr.multiply_const_ff(1.0)
+        self._audio_gain = blocks.multiply_const_ff(1.0)
 
         # sound card as final sink
         audio_sink = audio.sink(int(self.audio_rate), audio_output)

@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, eng_notation, window
+from gnuradio import blocks
 from gnuradio import audio
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
@@ -151,7 +152,7 @@ class my_top_block(gr.top_block):
         self.u.set_samp_rate(usrp_rate)
         dev_rate = self.u.get_samp_rate()
 
-	s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
+	s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
 
         mywindow = window.blackmanharris(self.fft_size)
         fft = gr.fft_vcc(self.fft_size, True, mywindow)
@@ -162,8 +163,8 @@ class my_top_block(gr.top_block):
         c2mag = gr.complex_to_mag_squared(self.fft_size)
 
         # FIXME the log10 primitive is dog slow
-        log = gr.nlog10_ff(10, self.fft_size,
-                           -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
+        log = blocks.nlog10_ff(10, self.fft_size,
+                               -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
 
         # Set the freq_step to 75% of the actual data throughput.
         # This allows us to discard the bins on both ends of the spectrum.

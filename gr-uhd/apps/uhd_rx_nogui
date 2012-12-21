@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, uhd, audio, blks2
+from gnuradio import gr, gru, uhd, audio
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio import eng_notation
@@ -184,7 +184,7 @@ class app_top_block(gr.top_block):
 	    out_lcm = gru.lcm(audio_rate, options.output_rate)
 	    out_interp = int(out_lcm // audio_rate)
 	    out_decim = int(out_lcm // options.output_rate)
-	    RSAMP = blks2.rational_resampler_fff(out_interp, out_decim)
+	    RSAMP = filter.rational_resampler_fff(out_interp, out_decim)
 	    self.connect(tail, RSAMP)
 	    tail = RSAMP
 

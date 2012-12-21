@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys, time
 
@@ -86,7 +87,7 @@ class pfb_top_block(gr.top_block):
         # Create a couple of signals at different frequencies
         self.signal1 = analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freq1, 0.5)
         self.signal2 = analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freq2, 0.5)
-        self.signal = gr.add_cc()
+        self.signal = blocks.add_cc()
 
         self.head = gr.head(gr.sizeof_gr_complex, self._N)
 

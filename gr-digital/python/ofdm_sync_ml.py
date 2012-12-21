@@ -28,6 +28,11 @@ try:
 except ImportError:
     import filter_swig as filter
 
+try:
+    from gnuradio import blocks
+except ImportError:
+    import blocks_swig as blocks
+
 class ofdm_sync_ml(gr.hier_block2):
     def __init__(self, fft_length, cp_length, snr, kstime, logging):
         ''' Maximum Likelihood OFDM synchronizer:
@@ -40,7 +45,7 @@ class ofdm_sync_ml(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature2(2, 2, gr.sizeof_float, gr.sizeof_char)) # Output signature
 
-        self.input = gr.add_const_cc(0)
+        self.input = blocks.add_const_cc(0)
 
         SNR = 10.0**(snr/10.0)
         rho = SNR / (SNR + 1.0)
@@ -59,7 +64,7 @@ class ofdm_sync_ml(gr.hier_block2):
         # magnitude squared blocks
         self.magsqrd1 = gr.complex_to_mag_squared()
         self.magsqrd2 = gr.complex_to_mag_squared()
-        self.adder = gr.add_ff()
+        self.adder = blocks.add_ff()
 
         moving_sum_taps = [rho/2 for i in range(cp_length)]
         self.moving_sum_filter = filter.fir_filter_fff(1,moving_sum_taps)
@@ -72,8 +77,8 @@ class ofdm_sync_ml(gr.hier_block2):
         
 
         # Correlation from ML Sync
-        self.conjg = gr.conjugate_cc();
-        self.mixer = gr.multiply_cc();
+        self.conjg = blocks.conjugate_cc();
+        self.mixer = blocks.multiply_cc();
 
         movingsum2_taps = [1.0 for i in range(cp_length)]
         self.movingsum2 = filter.fir_filter_ccf(1,movingsum2_taps)
@@ -87,12 +92,12 @@ class ofdm_sync_ml(gr.hier_block2):
         self.connect(self.movingsum2,self.angle)
 
         # ML Sync output arg, need to find maximum point of this
-        self.diff = gr.sub_ff()
+        self.diff = blocks.sub_ff()
         self.connect(self.c2mag,(self.diff,0))
         self.connect(self.moving_sum_filter,(self.diff,1))
 
         #ML measurements input to sampler block and detect
-        self.f2c = gr.float_to_complex()
+        self.f2c = blocks.float_to_complex()
         self.pk_detect = gr.peak_detector_fb(0.2, 0.25, 30, 0.0005)
         self.sample_and_hold = gr.sample_and_hold_ff()
 
@@ -122,7 +127,7 @@ class ofdm_sync_ml(gr.hier_block2):
         kstime.reverse()
         self.kscorr = filter.fir_filter_ccc(1, kstime)
         self.corrmag = gr.complex_to_mag_squared()
-        self.div = gr.divide_ff()
+        self.div = blocks.divide_ff()
 
         # The output signature of the correlation has a few spikes because the rest of the
         # system uses the repeated preamble symbol. It needs to work that generically if 
@@ -131,9 +136,9 @@ class ofdm_sync_ml(gr.hier_block2):
         # identify the proper peak and remove other products in this cross-correlation
         self.threshold_factor = 0.1
         self.slice = gr.threshold_ff(self.threshold_factor, self.threshold_factor, 0)
-        self.f2b = gr.float_to_char()
-        self.b2f = gr.char_to_float()
-        self.mul = gr.multiply_ff()
+        self.f2b = blocks.float_to_char()
+        self.b2f = blocks.char_to_float()
+        self.mul = blocks.multiply_ff()
         
         # Normalize the power of the corr output by the energy. This is not really needed
         # and could be removed for performance, but it makes for a cleaner signal.

@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, blks2
+from gnuradio import gr, gru
 from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -29,6 +29,12 @@ try:
     from gnuradio import analog
 except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
+try:
+    from gnuradio import blocks
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-blocks.\n")
     sys.exit(1)
 
 class my_top_block(gr.top_block):
@@ -59,7 +65,7 @@ class my_top_block(gr.top_block):
 
         ampl = 0.1
         src0 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 650, ampl)
-        rr = blks2.rational_resampler_fff(interp, decim)
+        rr = blocks.rational_resampler_fff(interp, decim)
         dst = audio.sink(output_rate, options.audio_output)
         self.connect(src0, rr, (dst, 0))
 

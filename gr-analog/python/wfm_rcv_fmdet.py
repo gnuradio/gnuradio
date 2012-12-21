@@ -19,7 +19,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, filter
+from gnuradio import gr
+from gnuradio import blocks
+from gnuradio import filter
 from fm_emph import fm_deemph
 import math
 
@@ -111,7 +113,7 @@ class wfm_rcv_fmdet(gr.hier_block2):
 
             # carrier is twice the picked off carrier so arrange to do
             # a commplex multiply
-            self.stereo_carrier_generator = gr.multiply_cc();
+            self.stereo_carrier_generator = blocks.multiply_cc();
 
             # Pick off the rds signal
             stereo_rds_filter_coeffs = \
@@ -128,8 +130,8 @@ class wfm_rcv_fmdet(gr.hier_block2):
 	    self.rds_signal_filter = \
                 filter.fir_filter_fcc(audio_decimation,
                                       stereo_rds_filter_coeffs)
-	    self.rds_carrier_generator = gr.multiply_cc();
-	    self.rds_signal_generator = gr.multiply_cc();
+	    self.rds_carrier_generator = blocks.multiply_cc();
+	    self.rds_signal_generator = blocks.multiply_cc();
 	    self_rds_signal_processor = gr.null_sink(gr.sizeof_gr_complex);
 
             loop_bw = 2*math.pi/100.0
@@ -146,14 +148,14 @@ class wfm_rcv_fmdet(gr.hier_block2):
             # set up mixer (multiplier) to get the L-R signal at
             # baseband
 
-            self.stereo_basebander = gr.multiply_cc();
+            self.stereo_basebander = blocks.multiply_cc();
 
             # pick off the real component of the basebanded L-R
             # signal.  The imaginary SHOULD be zero
 
             self.LmR_real = gr.complex_to_real();
-            self.Make_Left = gr.add_ff();
-            self.Make_Right = gr.sub_ff();
+            self.Make_Left = blocks.add_ff();
+            self.Make_Right = blocks.sub_ff();
 
             self.stereo_dsbsc_filter = \
                 filter.fir_filter_fcc(audio_decimation,

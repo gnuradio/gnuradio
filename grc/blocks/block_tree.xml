@@ -44,27 +44,11 @@
     </cat>
 	<cat>
 		<name>Operators</name>
-		<block>gr_add_xx</block>
-		<block>gr_sub_xx</block>
-		<block>gr_multiply_xx</block>
-		<block>gr_divide_xx</block>
-		<block>gr_nlog10_ff</block>
 		<block>gr_transcendental</block>
-		<block>gr_add_const_vxx</block>
-		<block>gr_multiply_const_vxx</block>
-		<block>gr_and_const_xx</block>
-
-		<block>gr_not_xx</block>
-		<block>gr_and_xx</block>
-		<block>gr_or_xx</block>
-		<block>gr_xor_xx</block>
 
 		<block>gr_max_xx</block>
 		<block>gr_argmax_xx</block>
 		<block>gr_rms_xx</block>
-		<block>gr_integrate_xx</block>
-
-		<block>gr_conjugate_cc</block>
 
 		<block>gr_vector_insert_x</block>
 
@@ -79,42 +63,11 @@
 		<block>gr_complex_to_imag</block>
 
 		<block>gr_complex_to_float</block>
-		<block>gr_float_to_complex</block>
-
-		<block>gr_float_to_int</block>
-		<block>gr_float_to_short</block>
-		<block>gr_short_to_float</block>
-		<block>gr_short_to_char</block>
-
-		<block>gr_int_to_float</block>
-
-		<block>gr_float_to_char</block>
-		<block>gr_char_to_float</block>
-		<block>gr_char_to_short</block>
-
-		<block>gr_float_to_uchar</block>
-		<block>gr_uchar_to_float</block>
 
 		<block>gr_complex_to_interleaved_short</block>
-		<block>gr_interleaved_short_to_complex</block>
 	</cat>
 	<cat>
 		<name>Stream Conversions</name>
-		<block>gr_interleave</block>
-		<block>gr_deinterleave</block>
-
-		<block>gr_streams_to_stream</block>
-		<block>gr_stream_to_streams</block>
-
-		<block>gr_streams_to_vector</block>
-		<block>gr_vector_to_streams</block>
-
-		<block>gr_stream_to_vector</block>
-		<block>gr_vector_to_stream</block>
-
-		<block>blks2_stream_to_vector_decimator</block>
-
-		<block>gr_stream_mux</block>
 		<block>gr_burst_tagger</block>
 	</cat>
 	<cat>
@@ -146,9 +99,6 @@
 	<cat>
 		<name>Filters</name>
 		<!-- Other filters -->
-		<block>blks2_rational_resampler_xxx</block>
-		<block>gr_keep_one_in_n</block>
-		<block>gr_keep_m_in_n</block>
 		<block>gr_moving_average_xx</block>
 	</cat>
 	<cat>
@@ -179,7 +129,6 @@
 
 		<block>gr_throttle</block>
 		<block>gr_delay</block>
-		<block>gr_repeat</block>
 
 		<block>blks2_selector</block>
 		<block>blks2_valve</block>
