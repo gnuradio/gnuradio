@@ -24,6 +24,7 @@
 #include "config.h"
 #endif
 
+#include <ciso646>
 #include <gr_stream_pdu_base.h>
 #include <gr_io_signature.h>
 #include <cstdio>
@@ -35,7 +36,12 @@
 #include <string.h>
 #include <iostream>
 #include <gr_pdu.h>
+#include <boost/asio.hpp>
 #include <boost/format.hpp>
+
+#ifdef HAVE_IO_H
+#include <io.h>
+#endif
 
 static const long timeout_us = 100*1000; //100ms
 

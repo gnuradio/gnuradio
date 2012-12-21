@@ -28,6 +28,7 @@
 #include <gr_message.h>
 #include <gr_msg_queue.h>
 #include <gr_stream_pdu_base.h>
+#include <boost/array.hpp>
 #include <boost/asio.hpp>
 
 class gr_socket_pdu;

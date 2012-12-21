@@ -24,7 +24,7 @@
 #include <gr_pdu.h>
 %}
 
-enum gr_pdu_vector_type { BYTE, FLOAT, COMPLEX };
+enum gr_pdu_vector_type { pdu_byte, pdu_float, pdu_complex };
 
 
 
