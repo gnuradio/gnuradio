@@ -29,7 +29,7 @@
 #define pdu_port_id     pmt::mp("pdus")
 #define pdu_length_tag  pmt::mp("pdu_length")
 
-enum gr_pdu_vector_type { BYTE, FLOAT, COMPLEX };
+enum gr_pdu_vector_type { pdu_byte, pdu_float, pdu_complex };
 
 size_t gr_pdu_itemsize(gr_pdu_vector_type type);
 bool gr_pdu_type_matches(gr_pdu_vector_type type, pmt::pmt_t v);
