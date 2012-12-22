@@ -36,8 +36,8 @@ class test_pdu(gr_unittest.TestCase):
         # Just run some data through and make sure it doesn't puke.
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-        src = gr.pdu_to_tagged_stream(gr.BYTE)
-        snk3 = gr.tagged_stream_to_pdu(gr.BYTE)
+        src = gr.pdu_to_tagged_stream(gr.pdu_byte)
+        snk3 = gr.tagged_stream_to_pdu(gr.pdu_byte)
         snk2 = gr.vector_sink_b()
         snk = gr.tag_debug(1, "test")
 
