@@ -46,23 +46,23 @@ class test_pdu(gr_unittest.TestCase):
         # Test that the right number of ports exist.
         pi = dbg.message_ports_in()
         po = dbg.message_ports_out()
-        self.assertEqual(pmt.pmt_length(pi), 2)
-        self.assertEqual(pmt.pmt_length(po), 0)
+        self.assertEqual(pmt.length(pi), 2)
+        self.assertEqual(pmt.length(po), 0)
 
         pi = snk3.message_ports_in()
         po = snk3.message_ports_out()
-        self.assertEqual(pmt.pmt_length(pi), 0)
-        self.assertEqual(pmt.pmt_length(po), 1)
+        self.assertEqual(pmt.length(pi), 0)
+        self.assertEqual(pmt.length(po), 1)
 
         #print "Message Debug input ports: "
-        #pmt.pmt_print(pi)
+        #pmt.print(pi)
         #print "Message Debug output ports: "
-        #pmt.pmt_print(po)
+        #pmt.print(po)
         
         #print "Stream to PDU input ports: "
-        #pmt.pmt_print(pi)
+        #pmt.print(pi)
         #print "Stream to PDU output ports: "
-        #pmt.pmt_print(po)
+        #pmt.print(po)
         time.sleep(0.1)
 
         self.tb.connect(src, snk)
@@ -73,12 +73,12 @@ class test_pdu(gr_unittest.TestCase):
         self.tb.start()
 
         # make our reference and message pmts
-        port = pmt.pmt_intern("pdus")
-        msg = pmt.pmt_cons( pmt.PMT_NIL, pmt.pmt_make_u8vector(16, 0xFF) )
+        port = pmt.intern("pdus")
+        msg = pmt.cons( pmt.PMT_NIL, pmt.make_u8vector(16, 0xFF) )
         
         #print "printing port & msg"
-        #pmt.pmt_print(port)
-        #pmt.pmt_print(msg)
+        #print(port)
+        #print(msg)
 
         # post the message
         src.to_basic_block()._post( port, msg )
@@ -94,13 +94,13 @@ class test_pdu(gr_unittest.TestCase):
         # Get the vector of data from the message sink
         # Convert the message PMT as a pair into its vector
         result_msg = dbg.get_message(0)
-        msg_vec = pmt.pmt_cdr(result_msg)
-        pmt.pmt_print(msg_vec)
+        msg_vec = pmt.cdr(result_msg)
+        print(msg_vec)
 
         # Convert the PMT vector into a Python list
         msg_data = []
         for i in xrange(16):
-            msg_data.append(pmt.pmt_u8vector_ref(msg_vec, i))
+            msg_data.append(pmt.u8vector_ref(msg_vec, i))
 
         actual_data = 16*[0xFF,]
         self.assertEqual(actual_data, list(result_data))
