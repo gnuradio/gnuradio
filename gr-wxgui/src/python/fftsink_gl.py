@@ -29,6 +29,7 @@ import common
 from gnuradio import gr, fft
 from gnuradio import analog
 from gnuradio import blocks
+from gnuradio.fft import logpwrfft
 from pubsub import pubsub
 from constants import *
 import math
@@ -134,12 +135,12 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 		self.win.set_callback(callb)
 
 class fft_sink_f(_fft_sink_base):
-	_fft_chain = fft.logpwrfft_f
+	_fft_chain = logpwrfft.logpwrfft_f
 	_item_size = gr.sizeof_float
 	_real = True
 
 class fft_sink_c(_fft_sink_base):
-	_fft_chain = fft.logpwrfft_c
+	_fft_chain = logpwrfft.logpwrfft_c
 	_item_size = gr.sizeof_gr_complex
 	_real = False
 

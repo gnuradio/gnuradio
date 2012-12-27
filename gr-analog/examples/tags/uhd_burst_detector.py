@@ -24,7 +24,7 @@ from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import filter, analog, blocks
 from gnuradio import uhd
-from gnuradio import window
+from gnuradio.fft import window
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
 from optparse import OptionParser
