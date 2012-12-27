@@ -24,6 +24,7 @@ GR_PYTHON_INSTALL(
     FILES
     __init__.py
     logpwrfft.py
+    window.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fft
     COMPONENT "fft_python"
 )

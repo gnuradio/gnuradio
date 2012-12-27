@@ -29,3 +29,6 @@ from filterbank import *
 from rational_resampler import *
 import pfb
 import optfir
+
+# Pull this into the filter module
+from gnuradio.fft import window
