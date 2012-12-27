@@ -88,10 +88,8 @@ class my_top_block(gr.top_block):
         pyWin.show()
 
     def update_filter(self, filtobj):
-        print "Filter Count:", filtobj.get_filtercount()
         print "Filter type:", filtobj.get_restype()
         print "Filter params", filtobj.get_params()
-        print "Filter Coefficients", filtobj.get_taps()
         self.filt.set_taps(filtobj.get_taps())
 
 if __name__ == "__main__":
