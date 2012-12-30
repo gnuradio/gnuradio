@@ -1077,7 +1077,13 @@ class gr_plot_filter(QtGui.QMainWindow):
         Ts = 1.0/fs
         fftpts = fftpack.fft(taps, Npts)
         self.freq = scipy.arange(0, fs, 1.0/(Npts*Ts))
-        self.fftdB = 20.0*scipy.log10(abs(fftpts))
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            self.fftdB = 20.0*scipy.log10(abs(fftpts))
+            if any(self.fftdB == float('-inf')):
+                sys.stderr.write('Filter design failed (taking log10 of 0).\n')
+                self.fftdB = scipy.zeros([len(fftpts)])
+
         self.fftDeg = scipy.unwrap(scipy.angle(fftpts))
         self.groupDelay = -scipy.diff(self.fftDeg)
         self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
