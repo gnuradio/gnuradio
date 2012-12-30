@@ -30,10 +30,6 @@ class test_kludged_imports (gr_unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_blks_import(self):
-        # make sure that this somewhat magic import works
-        from gnuradio import blks2
-
     def test_gru_import(self):
         # make sure that this somewhat magic import works
         from gnuradio import gru
