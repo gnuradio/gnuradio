@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -48,6 +48,6 @@ CPACK_COMPONENT("utils"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src/python)
+add_subdirectory(python)
 
 endif(ENABLE_GR_UTILS)
