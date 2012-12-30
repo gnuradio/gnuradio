@@ -21,6 +21,8 @@
 #
 
 from gnuradio import gr, atsc
+from gnuradio import blocks
+from gnuradio import filter
 import math, os
 
 def main():
@@ -38,7 +40,7 @@ def main():
 	# 1/2 as wide because we're designing lp filter
 	symbol_rate = atsc.ATSC_SYMBOL_RATE/2.
 	NTAPS = 279
-	tt = gr.firdes.root_raised_cosine (1.0, input_rate, symbol_rate, .115, NTAPS)
+	tt = filter.firdes.root_raised_cosine (1.0, input_rate, symbol_rate, .115, NTAPS)
   # heterodyne the low pass coefficients up to the specified bandpass
   # center frequency.  Note that when we do this, the filter bandwidth
   # is effectively twice the low pass (2.69 * 2 = 5.38) and hence
@@ -47,7 +49,7 @@ def main():
 	t=[]
 	for i in range(len(tt)):
 	  t += [tt[i] * 2. * math.cos(arg * i)]
-	rrc = gr.fir_filter_fff(1, t)
+	rrc = filter.fir_filter_fff(1, t)
 
 	fpll = atsc.fpll()
 
@@ -55,17 +57,17 @@ def main():
 	lower_edge = 6e6 - 0.31e6
 	upper_edge = IF_freq - 3e6 + pilot_freq
 	transition_width = upper_edge - lower_edge
-	lp_coeffs = gr.firdes.low_pass (1.0,
+	lp_coeffs = filter.firdes.low_pass (1.0,
 			   input_rate,
 			   (lower_edge + upper_edge) * 0.5,
                            transition_width,
-                           gr.firdes.WIN_HAMMING);
+                           filter.firdes.WIN_HAMMING);
 
-	lp_filter = gr.fir_filter_fff (1,lp_coeffs)
+	lp_filter = filter.fir_filter_fff (1,lp_coeffs)
 
 	alpha = 1e-5
-	iir = gr.single_pole_iir_filter_ff(alpha)
-	remove_dc = gr.sub_ff()
+	iir = filter.single_pole_iir_filter_ff(alpha)
+	remove_dc = blocks.sub_ff()
 
 	out = gr.file_sink(gr.sizeof_float,"/tmp/atsc_pipe_3")
 	# out = gr.file_sink(gr.sizeof_float,"/mnt/sata/atsc_data_float")

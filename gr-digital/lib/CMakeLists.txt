@@ -23,6 +23,7 @@
 include_directories(
     ${VOLK_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
@@ -156,6 +157,7 @@ list(APPEND digital_libs
     volk
     gnuradio-core
     gnuradio-filter
+    gnuradio-blocks
     gnuradio-analog
     ${Boost_LIBRARIES}
 )

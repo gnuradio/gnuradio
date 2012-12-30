@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Nov 10 15:37:00 2012</timestamp>
+  <timestamp>Thu Dec 27 13:49:53 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -185,10 +185,10 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_xx</key>
+    <key>blocks_multiply_xx</key>
     <param>
       <key>id</key>
-      <value>gr_multiply_xx_2_0</value>
+      <value>blocks_multiply_xx_2_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -216,10 +216,10 @@
     </param>
   </block>
   <block>
-    <key>gr_short_to_float</key>
+    <key>blocks_short_to_float</key>
     <param>
       <key>id</key>
-      <value>gr_short_to_float_1_0</value>
+      <value>blocks_short_to_float_1_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -597,10 +597,10 @@
     </param>
   </block>
   <block>
-    <key>gr_sub_xx</key>
+    <key>blocks_sub_xx</key>
     <param>
       <key>id</key>
-      <value>gr_sub_xx_0</value>
+      <value>blocks_sub_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -733,10 +733,10 @@
     </param>
   </block>
   <block>
-    <key>gr_add_xx</key>
+    <key>blocks_add_xx</key>
     <param>
       <key>id</key>
-      <value>gr_add_xx_1</value>
+      <value>blocks_add_xx_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -765,37 +765,37 @@
   </block>
   <connection>
     <source_block_id>random_source_x_0</source_block_id>
-    <sink_block_id>gr_sub_xx_0</sink_block_id>
+    <sink_block_id>blocks_sub_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_xx_1</source_block_id>
+    <source_block_id>blocks_add_xx_1</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_multiply_xx_2_0</source_block_id>
-    <sink_block_id>gr_short_to_float_1_0</sink_block_id>
+    <source_block_id>blocks_multiply_xx_2_0</source_block_id>
+    <sink_block_id>blocks_short_to_float_1_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_short_to_float_1_0</source_block_id>
+    <source_block_id>blocks_short_to_float_1_0</source_block_id>
     <sink_block_id>wxgui_numbersink2_3_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_sub_xx_0</source_block_id>
-    <sink_block_id>gr_multiply_xx_2_0</sink_block_id>
+    <source_block_id>blocks_sub_xx_0</source_block_id>
+    <sink_block_id>blocks_multiply_xx_2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_sub_xx_0</source_block_id>
-    <sink_block_id>gr_multiply_xx_2_0</sink_block_id>
+    <source_block_id>blocks_sub_xx_0</source_block_id>
+    <sink_block_id>blocks_multiply_xx_2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -812,20 +812,20 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_xx_1</source_block_id>
+    <source_block_id>blocks_add_xx_1</source_block_id>
     <sink_block_id>trellis_pccc_decoder_combined_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>trellis_pccc_decoder_combined_xx_0</source_block_id>
-    <sink_block_id>gr_sub_xx_0</sink_block_id>
+    <sink_block_id>blocks_sub_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>analog_noise_source_x_0</source_block_id>
-    <sink_block_id>gr_add_xx_1</sink_block_id>
+    <sink_block_id>blocks_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -837,7 +837,7 @@
   </connection>
   <connection>
     <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
-    <sink_block_id>gr_add_xx_1</sink_block_id>
+    <sink_block_id>blocks_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

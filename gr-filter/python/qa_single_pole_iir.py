@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 
 class test_single_pole_iir_filter(gr_unittest.TestCase):
 
@@ -58,9 +59,9 @@ class test_single_pole_iir_filter(gr_unittest.TestCase):
         src_data = (0, 1000, 2000, 3000, 4000, 5000)
         expected_result = (0, 125, 250, 484.375, 718.75, 1048.828125)
         src = gr.vector_source_f(src_data)
-        s2p = gr.serial_to_parallel(gr.sizeof_float, block_size)
+        s2p = blocks.stream_to_vector(gr.sizeof_float, block_size)
         op = filter.single_pole_iir_filter_ff (0.125, block_size)
-        p2s = gr.parallel_to_serial(gr.sizeof_float, block_size)
+        p2s = blocks.vector_to_stream(gr.sizeof_float, block_size)
         dst = gr.vector_sink_f()
         self.tb.connect(src, s2p, op, p2s, dst)
         self.tb.run()
@@ -100,9 +101,9 @@ class test_single_pole_iir_filter(gr_unittest.TestCase):
                            complex(484.375,-484.375), complex(718.75,-718.75),
                            complex(1048.828125,-1048.828125))
         src = gr.vector_source_c(src_data)
-        s2p = gr.serial_to_parallel(gr.sizeof_gr_complex, block_size)
+        s2p = blocks.stream_to_vector(gr.sizeof_gr_complex, block_size)
         op = filter.single_pole_iir_filter_cc(0.125, block_size)
-        p2s = gr.parallel_to_serial(gr.sizeof_gr_complex, block_size)
+        p2s = blocks.vector_to_stream(gr.sizeof_gr_complex, block_size)
         dst = gr.vector_sink_c()
         self.tb.connect(src, s2p, op, p2s, dst)
         self.tb.run()

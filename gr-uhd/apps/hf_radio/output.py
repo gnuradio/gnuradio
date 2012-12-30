@@ -24,6 +24,7 @@
 # M. Revnell 2005-Dec
 
 from gnuradio import gr, gru
+from gnuradio import blocks
 from gnuradio import audio
 
 class output( gr.hier_block2 ):
@@ -32,7 +33,7 @@ class output( gr.hier_block2 ):
                                 gr.io_signature(1,1,gr.sizeof_float),
                                 gr.io_signature(0,0,0))
 
-        self.vol = gr.multiply_const_ff( 0.1 )
+        self.vol = blocks.multiply_const_ff( 0.1 )
         self.out = audio.sink( int(rate), device )
 
         self.connect( self, self.vol, self.out )

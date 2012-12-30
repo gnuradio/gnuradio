@@ -24,7 +24,8 @@
 ##################################################
 import const_window
 import common
-from gnuradio import gr, blks2
+from gnuradio import gr
+from gnuradio import blocks
 from pubsub import pubsub
 from constants import *
 import sys
@@ -68,7 +69,7 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 			gr.io_signature(0, 0, 0),
 		)
 		#blocks
-		sd = blks2.stream_to_vector_decimator(
+		sd = blocks.stream_to_vector_decimator(
 			item_size=gr.sizeof_gr_complex,
 			sample_rate=sample_rate,
 			vec_rate=frame_rate,

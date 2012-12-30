@@ -26,7 +26,7 @@
 #include <fcd.h>
 #include <fcdhidcmd.h> // needed for extended API
 #include <gr_io_signature.h>
-#include <gr_float_to_complex.h>
+#include <blocks/float_to_complex.h>
 #include <gruel/attributes.h>
 
 //#include <iostream>
@@ -53,13 +53,13 @@ fcd_source_c_impl::fcd_source_c_impl(const std::string device_name)
     d_freq_corr(-120),
     d_freq_req(0)
 {
-  gr_float_to_complex_sptr f2c;
+  gr::blocks::float_to_complex::sptr f2c;
 
   /* Audio source; sample rate fixed at 96kHz */
   fcd = audio_make_source(96000, device_name, true);
 
   /* block to convert stereo audio to a complex stream */
-  f2c = gr_make_float_to_complex(1);
+  f2c = gr::blocks::float_to_complex::make(1);
 
   connect(fcd, 0, f2c, 0);
   connect(fcd, 1, f2c, 1);

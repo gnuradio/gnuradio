@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, audio, uhd
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio.eng_option import eng_option
@@ -100,7 +101,7 @@ class wxapt_rx_block (stdgui2.std_top_block):
 
         self.guts = analog.wfm_rcv(demod_rate, audio_decim)
 
-        self.volume_control = gr.multiply_const_ff(self.vol)
+        self.volume_control = blocks.multiply_const_ff(self.vol)
 
         # sound card as final sink
         self.audio_sink = audio.sink(int (audio_rate), options.audio_output)

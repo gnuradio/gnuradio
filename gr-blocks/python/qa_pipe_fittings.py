@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import blocks_swig
+import blocks_swig as blocks
 
 def calc_expected_result(src_data, n):
     assert (len(src_data) % n) == 0
@@ -51,7 +51,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
         expected_results = calc_expected_result(src_data, n)
         #print "expected results: ", expected_results
         src = gr.vector_source_i(src_data)
-        op = gr.stream_to_streams(gr.sizeof_int, n)
+        op = blocks.stream_to_streams(gr.sizeof_int, n)
         self.tb.connect(src, op)
 
         dsts = []
@@ -75,8 +75,8 @@ class test_pipe_fittings(gr_unittest.TestCase):
         expected_results = src_data
 
         src = gr.vector_source_i(src_data)
-        op1 = gr.stream_to_streams(gr.sizeof_int, n)
-        op2 = gr.streams_to_stream(gr.sizeof_int, n)
+        op1 = blocks.stream_to_streams(gr.sizeof_int, n)
+        op2 = blocks.streams_to_stream(gr.sizeof_int, n)
         dst = gr.vector_sink_i()
 
         self.tb.connect(src, op1)
@@ -97,9 +97,9 @@ class test_pipe_fittings(gr_unittest.TestCase):
         expected_results = src_data
 
         src = gr.vector_source_i(src_data)
-        op1 = gr.stream_to_streams(gr.sizeof_int, n)
-        op2 = gr.streams_to_vector(gr.sizeof_int, n)
-        op3 = gr.vector_to_stream(gr.sizeof_int, n)
+        op1 = blocks.stream_to_streams(gr.sizeof_int, n)
+        op2 = blocks.streams_to_vector(gr.sizeof_int, n)
+        op3 = blocks.vector_to_stream(gr.sizeof_int, n)
         dst = gr.vector_sink_i()
 
         self.tb.connect(src, op1)
@@ -120,9 +120,9 @@ class test_pipe_fittings(gr_unittest.TestCase):
         expected_results = src_data
 
         src = gr.vector_source_i(src_data)
-        op1 = gr.stream_to_vector(gr.sizeof_int, n)
-        op2 = gr.vector_to_streams(gr.sizeof_int, n)
-        op3 = gr.streams_to_stream(gr.sizeof_int, n)
+        op1 = blocks.stream_to_vector(gr.sizeof_int, n)
+        op2 = blocks.vector_to_streams(gr.sizeof_int, n)
+        op3 = blocks.streams_to_stream(gr.sizeof_int, n)
         dst = gr.vector_sink_i()
 
         self.tb.connect(src, op1, op2)

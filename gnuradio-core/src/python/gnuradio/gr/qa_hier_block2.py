@@ -1,6 +1,34 @@
 #!/usr/bin/env python
 
 from gnuradio import gr, gr_unittest
+import numpy
+
+class add_ff(gr.sync_block):
+    def __init__(self):
+        gr.sync_block.__init__(
+            self,
+            name = "add_ff",
+            in_sig = [numpy.float32, numpy.float32],
+            out_sig = [numpy.float32],
+        )
+
+    def work(self, input_items, output_items):
+        output_items[0][:] = input_items[0] + input_items[1]
+        return len(output_items[0])
+
+class multiply_const_ff(gr.sync_block):
+    def __init__(self, k):
+        gr.sync_block.__init__(
+            self,
+            name = "multiply_ff",
+            in_sig = [numpy.float32],
+            out_sig = [numpy.float32],
+        )
+        self.k = k
+
+    def work(self, input_items, output_items):
+        output_items[0][:] = map(lambda x: self.k*x, input_items[0])
+        return len(output_items[0])
 
 class test_hier_block2(gr_unittest.TestCase):
 
@@ -327,9 +355,9 @@ class test_hier_block2(gr_unittest.TestCase):
         hb = gr.hier_block2("hb",
                             gr.io_signature(1, 1, gr.sizeof_float),
                             gr.io_signature(1, 1, gr.sizeof_float))
-        m1 = gr.multiply_const_ff(1.0)
-        m2 = gr.multiply_const_ff(2.0)
-        add = gr.add_ff()
+        m1 = multiply_const_ff(1.0)
+        m2 = multiply_const_ff(2.0)
+        add = add_ff()
         hb.connect(hb, m1)       # m1 is connected to hb external input #0
         hb.connect(hb, m2)       # m2 is also connected to hb external input #0
         hb.connect(m1, (add, 0))
@@ -350,9 +378,9 @@ class test_hier_block2(gr_unittest.TestCase):
                             gr.io_signature(1, 1, gr.sizeof_float),
                             gr.io_signature(1, 1, gr.sizeof_float))
 
-        m1 = gr.multiply_const_ff(1.0)
-        m2 = gr.multiply_const_ff(2.0)
-        add = gr.add_ff()
+        m1 = multiply_const_ff(1.0)
+        m2 = multiply_const_ff(2.0)
+        add = add_ff()
         hb2.connect(hb2, m1)       # m1 is connected to hb2 external input #0
         hb2.connect(hb2, m2)       # m2 is also connected to hb2 external input #0
         hb2.connect(m1, (add, 0))

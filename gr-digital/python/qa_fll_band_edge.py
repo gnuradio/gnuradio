@@ -23,6 +23,7 @@
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import filter_swig as filter
+import blocks_swig as blocks
 import analog_swig as analog
 import random, math
 
@@ -55,7 +56,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
 
         # Mix symbols with a complex sinusoid to spin them
         self.nco = analog.sig_source_c(1, analog.GR_SIN_WAVE, foffset, 1)
-        self.mix = gr.multiply_cc()
+        self.mix = blocks.multiply_cc()
 
         # FLL will despin the symbols to an arbitrary phase
         self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw)

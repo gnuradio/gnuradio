@@ -25,7 +25,7 @@ import atsc                    # qa code needs to run without being installed
 #from gnuradio import atsc
 from atsc_utils import *
 import sys
-
+import blocks_swig as blocks
 
 class memoize(object):
     def __init__(self, thunk):
@@ -81,7 +81,7 @@ class vector_source_ts(gr.hier_block2):
         """
 
         src = gr.vector_source_b(pad_transport_stream(ts))
-        s2v = gr.stream_to_vector(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
+        s2v = blocks.stream_to_vector(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
 
 	gr.hier_block2.__init__(self, "vector_source_ts",
 				gr.io_signature(0, 0, 0),
@@ -97,7 +97,7 @@ class vector_sink_ts(gr.hier_block2):
         """
         """
 
-        v2s = gr.vector_to_stream(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
+        v2s = blocks.vector_to_stream(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
         self.sink = gr.vector_sink_b()
 	gr.hier_block2.__init__(self, "vector_sink_ts",
 				v2s.input_signature(),

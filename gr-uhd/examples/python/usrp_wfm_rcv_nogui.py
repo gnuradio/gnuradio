@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, optfir, audio, uhd
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio import eng_notation
@@ -95,7 +96,7 @@ class wfm_rx_block (gr.top_block):
 
         self.guts = analog.wfm_rcv(demod_rate, audio_decim)
 
-        self.volume_control = gr.multiply_const_ff(1)
+        self.volume_control = blocks.multiply_const_ff(1)
 
         # sound card as final sink
         self.audio_sink = audio.sink(int(audio_rate),

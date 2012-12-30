@@ -94,5 +94,6 @@
 		<block>blocks_streams_to_vector</block>
 		<block>blocks_vector_to_stream</block>
 		<block>blocks_vector_to_streams</block>
+		<block>blocks_stream_to_vector_decimator</block>
 	</cat>
 </cat>

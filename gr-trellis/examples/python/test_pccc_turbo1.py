@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
-from gnuradio import trellis, digital
+from gnuradio import trellis, digital, blocks
 from gnuradio import eng_notation
 import math
 import sys
@@ -28,12 +28,12 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
-    add = gr.add_ff()
+    add = blocks.add_ff()
     noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX
     metrics_in = trellis.metrics_f(fi.O()*fo.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
-    scale = gr.multiply_const_ff(1.0/N0)
+    scale = blocks.multiply_const_ff(1.0/N0)
     dec = trellis.pccc_decoder_s(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM)
 
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts

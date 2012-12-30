@@ -8,7 +8,7 @@
 	<name>FFT</name>
 	<key>fft_vxx</key>
 	<import>from gnuradio import fft</import>
-	<import>from gnuradio import window</import>
+	<import>from gnuradio.fft import window</import>
 	<make>#if $type() == "complex"
 fft.fft_vcc($fft_size, $forward, $window, $shift, $nthreads)
 #else

@@ -51,6 +51,7 @@ OFDM.
 
 
 from gnuradio import gr, audio, uhd
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio.eng_option import eng_option
@@ -180,7 +181,7 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
 	# Create deemphasis block that is applied after SCA demodulation
         self.deemph = analog.fm_deemph(audio_rate, sca_tau)
 
-        self.volume_control = gr.multiply_const_ff(self.vol)
+        self.volume_control = blocks.multiply_const_ff(self.vol)
 
         # sound card as final sink
         self.audio_sink = audio.sink(int (audio_rate),

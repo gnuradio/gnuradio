@@ -26,6 +26,7 @@ from cmath import exp, pi, log
 from gnuradio import gr, gr_unittest
 from utils import mod_codes
 import digital_swig as digital
+import blocks_swig as blocks
 
 # import from local folder
 import psk
@@ -192,7 +193,7 @@ class mod_demod(gr.hier_block2):
         # CHANNEL
         # Channel just consists of a rotation to check differential coding.
         if rotation is not None:
-            self.blocks.append(gr.multiply_const_cc(rotation))
+            self.blocks.append(blocks.multiply_const_cc(rotation))
 
         # RX
         # Convert the constellation symbols back to binary values.

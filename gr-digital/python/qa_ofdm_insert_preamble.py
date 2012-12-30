@@ -23,6 +23,7 @@
 from gnuradio import gr, gr_unittest
 from pprint import pprint
 import digital_swig as digital
+import blocks_swig as blocks
 
 class test_ofdm_insert_preamble(gr_unittest.TestCase):
 
@@ -37,13 +38,13 @@ class test_ofdm_insert_preamble(gr_unittest.TestCase):
         src0 = gr.vector_source_c(v0)
         src1 = gr.vector_source_b(v1)
         
-        s2v = gr.stream_to_vector(gr.sizeof_gr_complex, fft_length)
+        s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, fft_length)
 
         # print "len(v) = %d" % (len(v))
 
         op = digital.ofdm_insert_preamble(fft_length, preamble)
 
-        v2s = gr.vector_to_stream(gr.sizeof_gr_complex, fft_length)
+        v2s = blocks.vector_to_stream(gr.sizeof_gr_complex, fft_length)
         dst0 = gr.vector_sink_c()
         dst1 = gr.vector_sink_b()
 

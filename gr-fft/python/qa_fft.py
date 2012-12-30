@@ -21,6 +21,7 @@
 
 from gnuradio import gr, gr_unittest
 import fft_swig as fft
+import blocks_swig as blocks
 import sys
 import random
 
@@ -87,9 +88,9 @@ class test_fft(gr_unittest.TestCase):
                            (1646.539306640625-1694.1956787109375j))
 
         src = gr.vector_source_c(src_data)
-        s2v = gr.stream_to_vector(gr.sizeof_gr_complex, fft_size)
+        s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, fft_size)
         op  = fft.fft_vcc(fft_size, True, [], False)
-        v2s = gr.vector_to_stream(gr.sizeof_gr_complex, fft_size)
+        v2s = blocks.vector_to_stream(gr.sizeof_gr_complex, fft_size)
         dst = gr.vector_sink_c()
         tb.connect(src, s2v, op, v2s, dst)
         tb.run()
@@ -141,9 +142,9 @@ class test_fft(gr_unittest.TestCase):
         expected_result = tuple([complex(primes[2*i], primes[2*i+1]) for i in range(fft_size)])
 
         src = gr.vector_source_c(src_data)
-        s2v = gr.stream_to_vector(gr.sizeof_gr_complex, fft_size)
+        s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, fft_size)
         op  = fft.fft_vcc(fft_size, False, [], False)
-        v2s = gr.vector_to_stream(gr.sizeof_gr_complex, fft_size)
+        v2s = blocks.vector_to_stream(gr.sizeof_gr_complex, fft_size)
         dst = gr.vector_sink_c()
         tb.connect(src, s2v, op, v2s, dst)
         tb.run()
@@ -199,9 +200,9 @@ class test_fft(gr_unittest.TestCase):
         nthreads = 2
 
         src = gr.vector_source_c(src_data)
-        s2v = gr.stream_to_vector(gr.sizeof_gr_complex, fft_size)
+        s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, fft_size)
         op  = fft.fft_vcc(fft_size, False, [], False, nthreads)
-        v2s = gr.vector_to_stream(gr.sizeof_gr_complex, fft_size)
+        v2s = blocks.vector_to_stream(gr.sizeof_gr_complex, fft_size)
         dst = gr.vector_sink_c()
         tb.connect(src, s2v, op, v2s, dst)
         tb.run()

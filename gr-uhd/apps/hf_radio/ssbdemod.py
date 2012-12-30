@@ -32,6 +32,7 @@
 # M. Revnell Jan 06
 
 from gnuradio import gr
+from gnuradio import blocks
 
 class ssb_demod( gr.hier_block2 ):
     def __init__( self, if_rate, af_rate ):
@@ -64,10 +65,10 @@ class ssb_demod( gr.hier_block2 ):
         self.lpf = gr.fir_filter_fff(
             1, self.audio_taps )
 
-        self.sum   = gr.add_ff( )
-        self.am_sel = gr.multiply_const_ff( 0 )
-        self.sb_sel = gr.multiply_const_ff( 1 )
-        self.mixer  = gr.add_ff()
+        self.sum   = blocks.add_ff( )
+        self.am_sel = blocks.multiply_const_ff( 0 )
+        self.sb_sel = blocks.multiply_const_ff( 1 )
+        self.mixer  = blocks.add_ff()
         self.am_det = gr.complex_to_mag()
 
         self.connect(self,             self.xlate)

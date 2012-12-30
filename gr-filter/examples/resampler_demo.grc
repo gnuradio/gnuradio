@@ -511,7 +511,7 @@
     </param>
   </block>
   <block>
-    <key>gr_add_const_vxx</key>
+    <key>blocks_add_const_vxx</key>
     <param>
       <key>id</key>
       <value>adder</value>

@@ -25,6 +25,7 @@ from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import digital
 from gnuradio import vocoder
@@ -50,8 +51,8 @@ class audio_rx(gr.hier_block2):
 				gr.io_signature(0, 0, 0)) # Output signature
         self.sample_rate = sample_rate = 8000
         src = audio.source(sample_rate, audio_input_dev)
-        src_scale = gr.multiply_const_ff(32767)
-        f2s = gr.float_to_short()
+        src_scale = blocks.multiply_const_ff(32767)
+        f2s = blocks.float_to_short()
         voice_coder = vocoder.gsm_fr_encode_sp()
         self.packets_from_encoder = gr.msg_queue()
         packet_sink = gr.message_sink(33, self.packets_from_encoder, False)

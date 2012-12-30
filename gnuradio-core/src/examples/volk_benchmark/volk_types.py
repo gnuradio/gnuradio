@@ -1,62 +1,49 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
+from gnuradio import blocks
 import argparse
 from volk_test_funcs import *
 
 ######################################################################
 
 def float_to_char(N):
-    op = gr.float_to_char()
+    op = blocks.float_to_char()
     tb = helper(N, op, gr.sizeof_float, gr.sizeof_char, 1, 1)
     return tb
 
 ######################################################################
 
 def float_to_int(N):
-    op = gr.float_to_int()
+    op = blocks.float_to_int()
     tb = helper(N, op, gr.sizeof_float, gr.sizeof_int, 1, 1)
     return tb
 
 ######################################################################
 
 def float_to_short(N):
-    op = gr.float_to_short()
+    op = blocks.float_to_short()
     tb = helper(N, op, gr.sizeof_float, gr.sizeof_short, 1, 1)
     return tb
 
 ######################################################################
 
 def short_to_float(N):
-    op = gr.short_to_float()
+    op = blocks.short_to_float()
     tb = helper(N, op, gr.sizeof_short, gr.sizeof_float, 1, 1)
     return tb
 
 ######################################################################
 
 def short_to_char(N):
-    op = gr.short_to_char()
+    op = blocks.short_to_char()
     tb = helper(N, op, gr.sizeof_short, gr.sizeof_char, 1, 1)
     return tb
 
 ######################################################################
 
-def char_to_short(N):
-    op = gr.char_to_short()
-    tb = helper(N, op, gr.sizeof_char, gr.sizeof_short, 1, 1)
-    return tb
-
-######################################################################
-
-def char_to_float(N):
-    op = gr.char_to_float()
-    tb = helper(N, op, gr.sizeof_char, gr.sizeof_float, 1, 1)
-    return tb
-
-######################################################################
-
 def int_to_float(N):
-    op = gr.int_to_float()
+    op = blocks.int_to_float()
     tb = helper(N, op, gr.sizeof_int, gr.sizeof_float, 1, 1)
     return tb
 

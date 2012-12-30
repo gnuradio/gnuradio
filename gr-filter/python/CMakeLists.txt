@@ -23,6 +23,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
+    filterbank.py
     optfir.py
     pfb.py
     rational_resampler.py
@@ -38,6 +39,8 @@ if(ENABLE_TESTING)
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-filter/python
     ${CMAKE_BINARY_DIR}/gr-filter/swig
+    ${CMAKE_BINARY_DIR}/gr-blocks/python
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig
 )
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-filter gnuradio-fft)
 

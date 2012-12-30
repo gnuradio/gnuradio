@@ -26,6 +26,7 @@ GR_INCLUDE_SUBDIRECTORY(fcd)
 include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_FCD_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GR_AUDIO_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/hid
     ${CMAKE_CURRENT_SOURCE_DIR}/fcd
@@ -44,6 +45,7 @@ list(APPEND gr_fcd_sources
 
 list(APPEND fcd_libs
     gnuradio-core
+    gnuradio-blocks
     gnuradio-audio
     ${Boost_LIBRARIES}
 )

@@ -46,6 +46,8 @@ if(ENABLE_TESTING)
 
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-atsc/src/lib
+    ${CMAKE_BINARY_DIR}/gr-blocks/python
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig
 )
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-fec gnuradio-filter gnuradio-analog gnuradio-fft)
 

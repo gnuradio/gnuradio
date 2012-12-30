@@ -201,7 +201,7 @@ buffer, which may be different than what was initially specified.
 It is possible to reconfigure the flowgraph at runtime. The
 reconfiguration is meant for changes in the flowgraph structure, not
 individual parameter settings of the blocks. For example, changing the
-constant in a gr_add_const_cc block can be done while the flowgraph is
+constant in a gr::blocks::add_const_cc block can be done while the flowgraph is
 running using the 'set_k(k)' method.
 
 Reconfiguration is done by locking the flowgraph, which stops it from
@@ -209,21 +209,22 @@ running and processing data, performing the reconfiguration, and then
 restarting the graph by unlocking it.
 
 The following example code shows a graph that first adds two
-analog::noise_source_c blocks and then replaces the gr_add_cc block with a
-gr_sub_cc block to then subtract the sources.
+gr::analog::noise_source_c blocks and then replaces the
+gr::blocks::add_cc block with a gr::blocks::sub_cc block to then
+subtract the sources.
 
 \code
-from gnuradio import gr, analog
+from gnuradio import gr, analog, blocks
 import time
 
 class mytb(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        self.src0 = analog.noise_source_c(gr.GR_GAUSSIAN, 1)
-        self.src1 = analog.noise_source_c(gr.GR_GAUSSIAN, 1)
-        self.add  = gr.add_cc()
-        self.sub  = gr.sub_cc()
+        self.src0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+        self.src1 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+        self.add  = blocks.add_cc()
+        self.sub  = blocks.sub_cc()
         self.head = gr.head(gr.sizeof_gr_complex, 1000000)
         self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
 
@@ -268,17 +269,17 @@ The following example expands the previous example but sets and resets
 the max noutput_items both locally and globally.
 
 \code
-from gnuradio import gr, analog
+from gnuradio import gr, analog, blocks
 import time
 
 class mytb(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        self.src0 = analog.noise_source_c(gr.GR_GAUSSIAN, 1)
-        self.src1 = analog.noise_source_c(gr.GR_GAUSSIAN, 1)
-        self.add  = gr.add_cc()
-        self.sub  = gr.sub_cc()
+        self.src0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+        self.src1 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+        self.add  = blocks.add_cc()
+        self.sub  = blocks.sub_cc()
         self.head = gr.head(gr.sizeof_gr_complex, 1000000)
         self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
 

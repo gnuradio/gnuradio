@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys, time
 
@@ -74,7 +75,7 @@ class pfb_top_block(gr.top_block):
         # Build a VCO controlled by either the sinusoid or single chirp tone
         # Then convert this to a complex signal
         self.vco = gr.vco_f(self._fs, 225, 1)
-        self.f2c = gr.float_to_complex()
+        self.f2c = blocks.float_to_complex()
 
         self.head = gr.head(gr.sizeof_gr_complex, self._N)
 

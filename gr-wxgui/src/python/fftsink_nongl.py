@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gru, window, fft, filter
+from gnuradio import blocks
 from gnuradio import analog
 from gnuradio.wxgui import stdgui2
 import wx
@@ -118,9 +119,9 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                average=average, avg_alpha=avg_alpha, title=title,
                                peak_hold=peak_hold,use_persistence=use_persistence,persist_alpha=persist_alpha)
 
-        self.s2p = gr.stream_to_vector(gr.sizeof_float, self.fft_size)
-        self.one_in_n = gr.keep_one_in_n(gr.sizeof_float * self.fft_size,
-                                         max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
+        self.s2p = blocks.stream_to_vector(gr.sizeof_float, self.fft_size)
+        self.one_in_n = blocks.keep_one_in_n(gr.sizeof_float * self.fft_size,
+                                             max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = fft.fft_vfc(self.fft_size, True, mywindow)
@@ -132,10 +133,10 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
-        self.log = gr.nlog10_ff(20, self.fft_size,
-                               -10*math.log10(self.fft_size)                # Adjust for number of bins
-                               -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
-                               -20*math.log10(ref_scale/2))                # Adjust for reference scale
+        self.log = blocks.nlog10_ff(20, self.fft_size,
+                                    -10*math.log10(self.fft_size)       # Adjust for number of bins
+                                    -10*math.log10(power/self.fft_size) # Adjust for windowing loss
+                                    -20*math.log10(ref_scale/2))        # Adjust for reference scale
 
         self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
@@ -150,7 +151,8 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size, peak_hold=False, use_persistence=False,persist_alpha=0.2, **kwargs):
+                 title='', size=default_fftsink_size, peak_hold=False,
+                 use_persistence=False, persist_alpha=0.2, **kwargs):
 
         gr.hier_block2.__init__(self, "fft_sink_c",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex),
@@ -163,9 +165,9 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                average=average, avg_alpha=avg_alpha, title=title,
                                peak_hold=peak_hold, use_persistence=use_persistence,persist_alpha=persist_alpha)
 
-        self.s2p = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
-        self.one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
-                                         max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
+        self.s2p = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
+        self.one_in_n = blocks.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
+                                             max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = fft.fft_vcc(self.fft_size, True, mywindow)
@@ -177,10 +179,10 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
-        self.log = gr.nlog10_ff(20, self.fft_size,
-                                -10*math.log10(self.fft_size)                # Adjust for number of bins
-                                -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
-                                -20*math.log10(ref_scale/2))                # Adjust for reference scale
+        self.log = blocks.nlog10_ff(20, self.fft_size,
+                                    -10*math.log10(self.fft_size)        # Adjust for number of bins
+                                    -10*math.log10(power/self.fft_size)  # Adjust for windowing loss
+                                    -20*math.log10(ref_scale/2))         # Adjust for reference scale
 
         self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)

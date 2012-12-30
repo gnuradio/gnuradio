@@ -22,7 +22,8 @@
 
 from gnuradio import gr, gru, eng_notation, optfir
 from gnuradio import audio
-from gnuradio import blks2
+from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
@@ -70,12 +71,12 @@ class wfm_rx_block (gr.top_block):
         chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
 
 
-        #self.guts = blks2.wfm_rcv (demod_rate, audio_decimation)
-        self.guts = blks2.wfm_rcv_pll (demod_rate, audio_decimation)
+        #self.guts = analog.wfm_rcv (demod_rate, audio_decimation)
+        self.guts = analog.wfm_rcv_pll (demod_rate, audio_decimation)
 
         # FIXME rework {add,multiply}_const_* to handle multiple streams
-        self.volume_control_l = gr.multiply_const_ff(self.vol)
-        self.volume_control_r = gr.multiply_const_ff(self.vol)
+        self.volume_control_l = blocks.multiply_const_ff(self.vol)
+        self.volume_control_r = blocks.multiply_const_ff(self.vol)
 
         # wave file as final sink
         if 1:

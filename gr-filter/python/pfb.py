@@ -24,6 +24,11 @@ from gnuradio import gr
 import filter_swig as filter
 import optfir
 
+try:
+    from gnuradio import blocks
+except ImportError:
+    import blocks_swig as blocks
+
 class channelizer_ccf(gr.hier_block2):
     '''
     Make a Polyphase Filter channelizer (complex in, complex out, floating-point taps)
@@ -60,7 +65,7 @@ class channelizer_ccf(gr.hier_block2):
                     if(ripple >= 1.0):
                         raise RuntimeError("optfir could not generate an appropriate filter.")
 
-        self.s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, self._nchans)
+        self.s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, self._nchans)
         self.pfb = filter.pfb_channelizer_ccf(self._nchans, self._taps,
                                               self._oversample_rate)
         self.connect(self, self.s2ss)
@@ -154,7 +159,7 @@ class decimator_ccf(gr.hier_block2):
                     if(ripple >= 1.0):
                         raise RuntimeError("optfir could not generate an appropriate filter.")
 
-        self.s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, self._decim)
+        self.s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, self._decim)
         self.pfb = filter.pfb_decimator_ccf(self._decim, self._taps, self._channel)
 
         self.connect(self, self.s2ss)

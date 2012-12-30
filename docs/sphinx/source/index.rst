@@ -11,13 +11,10 @@ Core Framework
 
    gnuradio.gr
    gnuradio.digital
-   gnuradio.blks2
    gnuradio.audio
    gnuradio.trellis
    gnuradio.wavelet
    gnuradio.fft
-   gnuradio.window
-   gnuradio.optfir
    gnuradio.gr_unittest
    gnuradio.qtgui
    gnuradio.wxgui
@@ -27,14 +24,11 @@ Core Framework
 
    gnuradio.gr <gr/index>
    gnuradio.digital <digital/index>
-   gnuradio.blks2 <blks2/index>
    gnuradio.audio <audio/index>
    gnuradio.gr_unittest <gr_unittest/index>
-   gnuradio.optfir <optfir/index>
    gnuradio.trellis <trellis/index>
    gnuradio.wavelet <wavelet>
    gnuradio.fft <fft>
-   gnuradio.window <window/index>
    gnuradio.qtgui <qtgui/index>
    gnuradio.wxgui <wxgui/index>
 

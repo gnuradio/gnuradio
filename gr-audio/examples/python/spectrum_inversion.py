@@ -28,6 +28,7 @@
 
 from gnuradio import gr
 from gnuradio import audio
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -54,7 +55,7 @@ class my_top_block(gr.top_block):
 
 	vec1 = [1, -1]
 	vsource = gr.vector_source_f(vec1, True)
-	multiply = gr.multiply_ff()
+	multiply = blocks.multiply_ff()
 
 	self.connect(src, (multiply, 0))
 	self.connect(vsource, (multiply, 1))

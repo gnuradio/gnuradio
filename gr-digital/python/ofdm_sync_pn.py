@@ -29,6 +29,11 @@ try:
 except ImportError:
     import filter_swig as filter
 
+try:
+    from gnuradio import blocks
+except ImportError:
+    import blocks_swig as blocks
+
 class ofdm_sync_pn(gr.hier_block2):
     def __init__(self, fft_length, cp_length, logging=False):
         """
@@ -42,7 +47,7 @@ class ofdm_sync_pn(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature2(2, 2, gr.sizeof_float, gr.sizeof_char)) # Output signature
 
-        self.input = gr.add_const_cc(0)
+        self.input = blocks.add_const_cc(0)
 
         # PN Sync
 
@@ -50,8 +55,8 @@ class ofdm_sync_pn(gr.hier_block2):
         self.delay = gr.delay(gr.sizeof_gr_complex, fft_length/2)
 
         # Correlation from ML Sync
-        self.conjg = gr.conjugate_cc();
-        self.corr = gr.multiply_cc();
+        self.conjg = blocks.conjugate_cc();
+        self.corr = blocks.multiply_cc();
 
         # Create a moving sum filter for the corr output
         if 1:
@@ -70,8 +75,8 @@ class ofdm_sync_pn(gr.hier_block2):
         else:
             self.inputmovingsum = filter.fft_filter_fff(1,movingsum2_taps)
 
-        self.square = gr.multiply_ff()
-        self.normalize = gr.divide_ff()
+        self.square = blocks.multiply_ff()
+        self.normalize = blocks.divide_ff()
      
         # Get magnitude (peaks) and angle (phase/freq error)
         self.c2mag = gr.complex_to_mag_squared()
@@ -80,7 +85,7 @@ class ofdm_sync_pn(gr.hier_block2):
         self.sample_and_hold = gr.sample_and_hold_ff()
 
         #ML measurements input to sampler block and detect
-        self.sub1 = gr.add_const_ff(-1)
+        self.sub1 = blocks.add_const_ff(-1)
         self.pk_detect = gr.peak_detector_fb(0.20, 0.20, 30, 0.001)
         #self.pk_detect = gr.peak_detector2_fb(9)
 

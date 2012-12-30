@@ -22,9 +22,9 @@
 
 from gnuradio import eng_notation
 from gnuradio import gr
-from gnuradio import filter, analog
+from gnuradio import filter, analog, blocks
 from gnuradio import uhd
-from gnuradio import window
+from gnuradio.fft import window
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
 from optparse import OptionParser
@@ -65,9 +65,9 @@ class uhd_burst_detector(gr.top_block):
         ## average to debounce
         self.avg = filter.single_pole_iir_filter_ff(0.01)
         ## rescale signal for conversion to short
-        self.scale = gr.multiply_const_ff(2**16)
+        self.scale = blocks.multiply_const_ff(2**16)
         ## signal input uses shorts
-        self.f2s = gr.float_to_short()
+        self.f2s = blocks.float_to_short()
 
         # Use file sink burst tagger to capture bursts
         self.fsnk = gr.tagged_file_sink(gr.sizeof_gr_complex, self.samp_rate)

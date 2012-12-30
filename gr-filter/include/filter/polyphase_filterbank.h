@@ -63,13 +63,13 @@ namespace gr {
        * must come from its own input stream. So the channelizer must
        * be provided with <EM>M</EM> streams where the input stream
        * has been deinterleaved. This is most easily done using the
-       * gr_stream_to_streams block.
+       * gr::blocks::stream_to_streams block.
        *
        * The output is then produced as a vector, where index
        * <EM>i</EM> in the vector is the next sample from the
        * <EM>i</EM>th channel. This is most easily handled by sending
-       * the output to a gr_vector_to_streams block to handle the
-       * conversion and passing <EM>M</EM> streams out.
+       * the output to a gr::blocks::vector_to_streams block to handle
+       * the conversion and passing <EM>M</EM> streams out.
        *
        * The input and output formatting is done using a hier_block2
        * called pfb_channelizer_ccf. This can take in a single stream

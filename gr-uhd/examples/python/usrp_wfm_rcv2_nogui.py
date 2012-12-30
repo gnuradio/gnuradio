@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, audio, uhd
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio.eng_option import eng_option
@@ -115,7 +116,7 @@ class wfm_rx_block (gr.top_block):
         for n in range(2):
            chan_filt = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)
            guts = analog.wfm_rcv(demod_rate, audio_decim)
-           volume_control = gr.multiply_const_ff(self.vol)
+           volume_control = blocks.multiply_const_ff(self.vol)
 
            #self.connect((self.di, n), chan_filt)
            self.connect((self.u, n), chan_filt)

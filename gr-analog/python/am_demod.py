@@ -20,6 +20,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 
 class am_demod_cf(gr.hier_block2):
@@ -43,7 +44,7 @@ class am_demod_cf(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_float))      # Input signature
 
 	MAG = gr.complex_to_mag()
-	DCR = gr.add_const_ff(-1.0)
+	DCR = blocks.add_const_ff(-1.0)
 
 	audio_taps = filter.optfir.low_pass(0.5, 	  # Filter gain
                                             channel_rate, # Sample rate

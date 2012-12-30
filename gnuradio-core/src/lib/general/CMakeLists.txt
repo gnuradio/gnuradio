@@ -76,18 +76,9 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss_generic.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_char_to_float.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_char.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_int.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_int_to_float.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_short_to_float.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_uchar_to_float.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.c
 )
 
@@ -126,20 +117,11 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_test_types.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_vco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_char_to_float.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_char.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_int.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_short.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_float_to_uchar.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_interleaved_short_to_complex.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_int_to_float.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_short_to_float.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_uchar_to_float.h
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.h
     ${CMAKE_CURRENT_SOURCE_DIR}/random.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
@@ -164,44 +146,23 @@ endif(ENABLE_PYTHON)
 ########################################################################
 set(gr_core_general_triple_threats
     complex_vec_test
-    gr_add_ff
     gr_align_on_samplenumbers_ss
     gr_bin_statistics_f
     gr_block_gateway
-    gr_char_to_float
-    gr_char_to_short
     gr_check_counting_s
     gr_check_lfsr_32k_s
     gr_complex_to_interleaved_short
     gr_complex_to_xxx
-    gr_conjugate_cc
     gr_copy
-    gr_deinterleave
     gr_delay
     gr_endian_swap
     gr_fake_channel_coder_pp
     gr_feval
     gr_firdes
-    gr_float_to_char
-    gr_float_to_complex
-    gr_float_to_int
-    gr_float_to_short
-    gr_float_to_uchar
     gr_head
-    gr_int_to_float
-    gr_interleave
-    gr_interleaved_short_to_complex
     gr_iqcomp_cc
-    gr_keep_one_in_n
-    gr_keep_m_in_n
     gr_kludge_copy
     gr_lfsr_32k_source_s
-    gr_multiply_cc
-    gr_multiply_ff
-    gr_multiply_const_cc
-    gr_multiply_const_ff
-    gr_multiply_conjugate_cc
-    gr_nlog10_ff
     gr_nop
     gr_null_sink
     gr_null_source
@@ -212,26 +173,15 @@ set(gr_core_general_triple_threats
     gr_remez
     gr_rms_cf
     gr_rms_ff
-    gr_repeat
-    gr_short_to_float
-    gr_short_to_char
     gr_simple_correlator
     gr_skiphead
-    gr_stream_mux
-    gr_stream_to_streams
-    gr_stream_to_vector
-    gr_streams_to_stream
-    gr_streams_to_vector
     gr_stretch_ff
     gr_test
     gr_threshold_ff
     gr_throttle
     gr_transcendental
-    gr_uchar_to_float
     gr_vco_f
     gr_vector_map
-    gr_vector_to_stream
-    gr_vector_to_streams
     gr_unpack_k_bits_bb
     gr_pack_k_bits_bb
     gr_annotator_alltoall

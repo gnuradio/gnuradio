@@ -85,7 +85,7 @@ class gr_time_plot_f(gr.top_block):
         for f in filelist:
             data = read_samples(f, self._start, self._nsamps)
             self.srcs.append(gr.vector_source_s(data))
-            self.cnvrt.append(gr.short_to_float(1, self._scale))
+            self.cnvrt.append(blocks.short_to_float(1, self._scale))
 
             # Set default labels based on file names
             fname = f.split("/")[-1]

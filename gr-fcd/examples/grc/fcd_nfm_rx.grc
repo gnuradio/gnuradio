@@ -379,10 +379,10 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_const_vxx</key>
+    <key>blocks_multiply_const_vxx</key>
     <param>
       <key>id</key>
-      <value>gr_multiply_const_vxx_1</value>
+      <value>blocks_multiply_const_vxx_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -997,20 +997,20 @@
     </param>
   </block>
   <connection>
-    <source_block_id>gr_multiply_const_vxx_1</source_block_id>
+    <source_block_id>blocks_multiply_const_vxx_1</source_block_id>
     <sink_block_id>audio_sink</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_multiply_const_vxx_1</source_block_id>
+    <source_block_id>blocks_multiply_const_vxx_1</source_block_id>
     <sink_block_id>audio_sink</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>nbfm_normal</source_block_id>
-    <sink_block_id>gr_multiply_const_vxx_1</sink_block_id>
+    <sink_block_id>blocks_multiply_const_vxx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

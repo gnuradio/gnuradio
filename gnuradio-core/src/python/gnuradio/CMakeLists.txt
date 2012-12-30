@@ -22,8 +22,6 @@ include(GrPython)
 add_subdirectory(gr)
 add_subdirectory(gru)
 add_subdirectory(gruimpl)
-add_subdirectory(blks2)
-add_subdirectory(blks2impl)
 
 if(ENABLE_GR_CTRLPORT)
 add_subdirectory(ctrlport)
@@ -35,8 +33,6 @@ GR_PYTHON_INSTALL(FILES
     eng_option.py
     gr_unittest.py
     gr_xmlrunner.py
-    optfir.py
-    window.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio
     COMPONENT "core_python"
 )

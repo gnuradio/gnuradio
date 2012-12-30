@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, audio, uhd
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio.eng_option import eng_option
@@ -304,7 +305,7 @@ class receive_path(gr.hier_block2):
         self.fmrx = analog.nbfm_rx(self.audio_rate, self.quad_rate)
 
         # audio gain / mute block
-        self._audio_gain = gr.multiply_const_ff(1.0)
+        self._audio_gain = blocks.multiply_const_ff(1.0)
 
         # sound card as final sink
         audio_sink = audio.sink (int(self.audio_rate), audio_output)

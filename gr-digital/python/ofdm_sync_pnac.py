@@ -29,6 +29,11 @@ try:
 except ImportError:
     import filter_swig as filter
 
+try:
+    from gnuradio import blocks
+except ImportError:
+    import blocks_swig as blocks
+
 class ofdm_sync_pnac(gr.hier_block2):
     def __init__(self, fft_length, cp_length, kstime, logging=False):
         """
@@ -55,7 +60,7 @@ class ofdm_sync_pnac(gr.hier_block2):
                                 gr.io_signature2(2, 2, gr.sizeof_float, gr.sizeof_char)) # Output signature
 
             
-        self.input = gr.add_const_cc(0)
+        self.input = blocks.add_const_cc(0)
 
         symbol_length = fft_length + cp_length
 
@@ -70,8 +75,8 @@ class ofdm_sync_pnac(gr.hier_block2):
         self.delay = gr.delay(gr.sizeof_gr_complex, fft_length/2)
 
         # Correlation from ML Sync
-        self.conjg = gr.conjugate_cc();
-        self.corr = gr.multiply_cc();
+        self.conjg = blocks.conjugate_cc();
+        self.corr = blocks.multiply_cc();
 
         # Create a moving sum filter for the input
         self.mag = gr.complex_to_mag_squared()
@@ -81,13 +86,13 @@ class ofdm_sync_pnac(gr.hier_block2):
         # Get magnitude (peaks) and angle (phase/freq error)
         self.c2mag = gr.complex_to_mag_squared()
         self.angle = gr.complex_to_arg()
-        self.compare = gr.sub_ff()
+        self.compare = blocks.sub_ff()
         
         self.sample_and_hold = gr.sample_and_hold_ff()
 
         #ML measurements input to sampler block and detect
         self.threshold = gr.threshold_ff(0,0,0)      # threshold detection might need to be tweaked
-        self.peaks = gr.float_to_char()
+        self.peaks = blocksx.float_to_char()
 
         self.connect(self, self.input)
 

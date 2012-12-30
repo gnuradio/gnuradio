@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import os, sys
@@ -81,7 +82,7 @@ class my_top_block(gr.top_block):
         self.qapp = QtGui.QApplication(sys.argv)
 
         self.skip = gr.skiphead(gr.sizeof_float, self._start)
-        self.add = gr.add_ff()
+        self.add = blocks.add_ff()
         self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
                                               self._center_freq, self._samp_rate,
                                               "GNU Radio Spectrogram Plot")
@@ -92,7 +93,7 @@ class my_top_block(gr.top_block):
             data = read_samples_and_pad(f, self._start,
                                         self._nsamps, self._psd_size)
             self.srcs.append(gr.vector_source_i(data))
-            self.cnvrt.append(gr.int_to_float(1, self._scale))
+            self.cnvrt.append(blocks.int_to_float(1, self._scale))
             n += 1
 
         self.connect(self.add, self.skip)

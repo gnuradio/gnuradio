@@ -116,7 +116,7 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         self.agc = analog.agc_cc(0.1, 1, 1, 100000)
         self.am_demod = gr.complex_to_mag()
-        self.volume_control = gr.multiply_const_ff(self.vol)
+        self.volume_control = blocks.multiply_const_ff(self.vol)
 
         audio_filt_coeffs = filter.firdes.low_pass_2(1,          # gain
                                                      demod_rate, # sampling rate

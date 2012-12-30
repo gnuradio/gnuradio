@@ -25,6 +25,7 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
 
+from gnuradio import blocks
 from gnuradio import digital
 
 # from current dir
@@ -90,7 +91,7 @@ class tx_psk_block(gr.top_block):
                                           verbose=options.verbose,
                                           log=options.log)
 
-        self.amp = gr.multiply_const_cc(options.amplitude)
+        self.amp = blocks.multiply_const_cc(options.amplitude)
 	self.connect(self._transmitter, self.amp, self._sink)
 
 

@@ -35,6 +35,7 @@ audio_to_file.py
 from gnuradio import gr, eng_notation
 from gnuradio import uhd
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import math
@@ -70,7 +71,7 @@ class pipeline(gr.hier_block2):
                                  lo_freq,            # frequency
                                  1.0,                # amplitude
                                  0)                  # DC Offset
-        mixer = gr.multiply_cc()
+        mixer = blocks.multiply_cc()
 
         self.connect(src, fmtx, (mixer, 0))
         self.connect(lo, (mixer, 1))
@@ -141,7 +142,7 @@ class fm_tx_block(stdgui2.std_top_block):
         self.set_gain(options.gain)
         self.set_freq(options.freq)
 
-        self.sum = gr.add_cc ()
+        self.sum = blocks.add_cc ()
 
         # Instantiate N NBFM channels
         step = 25e3
@@ -153,7 +154,7 @@ class fm_tx_block(stdgui2.std_top_block):
                          self.audio_rate, self.usrp_rate)
             self.connect(t, (self.sum, i))
 
-        self.gain = gr.multiply_const_cc (1.0 / options.nchannels)
+        self.gain = blocks.multiply_const_cc (1.0 / options.nchannels)
 
         # connect it all
         self.connect (self.sum, self.gain)

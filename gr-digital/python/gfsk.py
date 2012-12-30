@@ -26,6 +26,7 @@
 
 from gnuradio import gr
 from gnuradio import analog
+from gnuradio import blocks
 import modulation_utils
 import digital_swig as digital
 from math import pi
@@ -118,7 +119,7 @@ class gfsk_mod(gr.hier_block2):
 	self.fmmod = frequency.frequency_modulator_fc(sensitivity)
 
 	# small amount of output attenuation to prevent clipping USRP sink
-	self.amp = gr.multiply_const_cc(0.999)
+	self.amp = blocks.multiply_const_cc(0.999)
 		
         if verbose:
             self._print_verbage()

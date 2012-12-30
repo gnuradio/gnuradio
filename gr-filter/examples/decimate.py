@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys, time
 
@@ -68,7 +69,7 @@ class pfb_top_block(gr.top_block):
         # We create a list of freqs, and a sine wave is generated and added to the source
         # for each one of these frequencies.
         self.signals = list()
-        self.add = gr.add_cc()
+        self.add = blocks.add_cc()
         freqs = [10, 20, 2040]
         for i in xrange(len(freqs)):
             self.signals.append(analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freqs[i], 1))

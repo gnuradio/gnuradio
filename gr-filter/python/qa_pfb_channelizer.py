@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 import math
 
 def sig_source_c(samp_rate, freq, amp, N):
@@ -49,7 +50,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
                                         window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
-        add = gr.add_cc()
+        add = blocks.add_cc()
         freqs = [-200, -100, 0, 100, 200]
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*fs
@@ -57,7 +58,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
             signals.append(gr.vector_source_c(data))
             self.tb.connect(signals[i], (add,i))
 
-        s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, M)
+        s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, M)
         pfb = filter.pfb_channelizer_ccf(M, taps, 1)
 
         self.tb.connect(add, s2ss)

@@ -25,6 +25,7 @@
 import scope_window
 import common
 from gnuradio import gr, filter
+from gnuradio import blocks
 from pubsub import pubsub
 from constants import *
 import math
@@ -44,7 +45,7 @@ class ac_couple_block(gr.hier_block2):
 		)
 		#blocks
 		lpf = filter.single_pole_iir_filter_ff(0.0)
-		sub = gr.sub_ff()
+		sub = blocks.sub_ff()
 		mute = gr.mute_ff()
 		#connect
 		self.connect(self, sub, self)

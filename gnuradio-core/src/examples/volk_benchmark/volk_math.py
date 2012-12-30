@@ -1,12 +1,18 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
+from gnuradio import blocks
 import argparse
 from volk_test_funcs import *
 
+try:
+    from gnuradio import blocks
+except ImportError:
+    sys.stderr.write("This example requires gr-blocks.\n")
+
 def multiply_const_cc(N):
     k = 3.3
-    op = gr.multiply_const_cc(k)
+    op = blocks.multiply_const_cc(k)
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 1, 1)
     return tb
 
@@ -14,35 +20,35 @@ def multiply_const_cc(N):
 
 def multiply_const_ff(N):
     k = 3.3
-    op = gr.multiply_const_ff(k)
+    op = blocks.multiply_const_ff(k)
     tb = helper(N, op, gr.sizeof_float, gr.sizeof_float, 1, 1)
     return tb
 
 ######################################################################
 
 def multiply_cc(N):
-    op = gr.multiply_cc(1)
+    op = blocks.multiply_cc(1)
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 2, 1)
     return tb
 
 ######################################################################
 
 def multiply_ff(N):
-    op = gr.multiply_ff()
+    op = blocks.multiply_ff()
     tb = helper(N, op, gr.sizeof_float, gr.sizeof_float, 2, 1)
     return tb
 
 ######################################################################
 
 def add_ff(N):
-    op = gr.add_ff()
+    op = blocks.add_ff()
     tb = helper(N, op, gr.sizeof_float, gr.sizeof_float, 2, 1)
     return tb
 
 ######################################################################
 
 def conjugate_cc(N):
-    op = gr.conjugate_cc()
+    op = blocks.conjugate_cc()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 1, 1)
     return tb
 
@@ -50,7 +56,7 @@ def conjugate_cc(N):
 
 def multiply_conjugate_cc(N):
     try:
-        op = gr.multiply_conjugate_cc()
+        op = blocks.multiply_conjugate_cc()
         tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_gr_complex, 2, 1)
         return tb
 
@@ -60,8 +66,8 @@ def multiply_conjugate_cc(N):
                 gr.hier_block2.__init__(self, "s",
                                         gr.io_signature(2, 2, gr.sizeof_gr_complex),
                                         gr.io_signature(1, 1, gr.sizeof_gr_complex))
-                conj = gr.conjugate_cc()
-                mult = gr.multiply_cc()
+                conj = blocks.conjugate_cc()
+                mult = blocks.multiply_cc()
                 self.connect((self,0), (mult,0))
                 self.connect((self,1), conj, (mult,1))
                 self.connect(mult, self)

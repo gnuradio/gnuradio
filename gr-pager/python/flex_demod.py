@@ -19,8 +19,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, blks2
+from gnuradio import gr
 from gnuradio import analog
+from gnuradio import filter
 from math import pi
 import pager_swig
 
@@ -42,7 +43,7 @@ class flex_demod(gr.hier_block2):
         quad = analog.quadrature_demod_cf(k)
 	self.connect(self, quad)
 
-        rsamp = blks2.rational_resampler_fff(16, 25)
+        rsamp = filter.rational_resampler_fff(16, 25)
         self.slicer = pager_swig.slicer_fb(5e-6) # DC removal averaging filter constant
 	self.sync = pager_swig.flex_sync()
 

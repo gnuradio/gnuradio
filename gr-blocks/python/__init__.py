@@ -25,8 +25,9 @@ processing blocks common to many flowgraphs.
 '''
 
 from blocks_swig import *
+from stream_to_vector_decimator import *
 
-#alias old gr_add_vXX and gr_multiply_vXX
+#alias old add_vXX and multiply_vXX
 add_vcc = add_cc
 add_vff = add_ff
 add_vii = add_ii

@@ -24,6 +24,7 @@ import math
 from numpy import fft
 from gnuradio import gr
 from gnuradio import analog
+from gnuradio import blocks
 
 import digital_swig as digital
 from ofdm_sync_pn import ofdm_sync_pn
@@ -108,7 +109,7 @@ class ofdm_receiver(gr.hier_block2):
         # for testing only; do not user over the air
         # remove filter and filter delay for this
         elif SYNC == "fixed":
-            self.chan_filt = gr.multiply_const_cc(1.0) 
+            self.chan_filt = blocks.multiply_const_cc(1.0) 
             nsymbols = 18      # enter the number of symbols per packet
             freq_offset = 0.0  # if you use a frequency offset, enter it here
             nco_sensitivity = -2.0/fft_length   # correct for fine frequency
@@ -121,7 +122,7 @@ class ofdm_receiver(gr.hier_block2):
         # Set up blocks
 
         self.nco = analog.frequency_modulator_fc(nco_sensitivity)         # generate a signal proportional to frequency error of sync block
-        self.sigmix = gr.multiply_cc()
+        self.sigmix = blocks.multiply_cc()
         self.sampler = digital.ofdm_sampler(fft_length, fft_length+cp_length)
         self.fft_demod = gr.fft_vcc(fft_length, True, win, True)
         self.ofdm_frame_acq = digital.ofdm_frame_acquisition(occupied_tones,

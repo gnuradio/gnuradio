@@ -28,6 +28,11 @@ try:
 except ImportError:
     import filter_swig as filter
 
+try:
+    from gnuradio import blocks
+except ImportError:
+    import blocks_swig as blocks
+
 class cvsd_encode_fb(gr.hier_block2):
     '''
     This is a wrapper for the CVSD encoder that performs interpolation and filtering
@@ -51,10 +56,10 @@ class cvsd_encode_fb(gr.hier_block2):
         scale_factor = 32000.0
         self.interp = resample
 
-        src_scale = gr.multiply_const_ff(scale_factor)
+        src_scale = blocks.multiply_const_ff(scale_factor)
         taps = filter.firdes.low_pass(self.interp, self.interp, bw, 2*bw)
         interp = filter.interp_fir_filter_fff(self.interp, taps)
-        f2s = gr.float_to_short()
+        f2s = blocks.float_to_short()
         enc = vocoder_swig.cvsd_encode_sb()
 
         self.connect(self, src_scale, interp, f2s, enc, self)
@@ -83,9 +88,9 @@ class cvsd_decode_bf(gr.hier_block2):
         self.decim = resample
 
         dec = vocoder_swig.cvsd_decode_bs()
-        s2f = gr.short_to_float()
+        s2f = blocks.short_to_float()
         taps = filter.firdes.low_pass(1, 1, bw, 2*bw)
         decim = filter.fir_filter_fff(self.decim, taps)
-        sink_scale = gr.multiply_const_ff(1.0/scale_factor)
+        sink_scale = blocks.multiply_const_ff(1.0/scale_factor)
 
         self.connect(self, dec, s2f, decim, sink_scale, self)

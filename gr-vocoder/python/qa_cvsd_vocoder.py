@@ -23,6 +23,8 @@
 from gnuradio import gr, gr_unittest
 from vocoder_swig import *
 from cvsd import *
+import blocks_swig as blocks
+import filter_swig as filter
 
 class test_cvsd_vocoder (gr_unittest.TestCase):
 
@@ -99,18 +101,18 @@ class test_cvsd_vocoder (gr_unittest.TestCase):
         # If we enable this, we can probably just create a sin with numpy.
         src = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 200, 1, 0)
         head = gr.head(gr.sizeof_float, 100)
-        src_scale = gr.multiply_const_ff(scale_factor)
+        src_scale = blocks.multiply_const_ff(scale_factor)
 
-        interp = blks2.rational_resampler_fff(8, 1)
-        f2s = gr.float_to_short ()
+        interp = filter.rational_resampler_fff(8, 1)
+        f2s = blocks.float_to_short()
 
         enc = cvsd_vocoder.encode_sb()
         dec = cvsd_vocoder.decode_bs()
 
-        s2f = gr.short_to_float ()
-        decim = blks2.rational_resampler_fff(1, 8)
+        s2f = blocks.short_to_float()
+        decim = filter.rational_resampler_fff(1, 8)
 
-        sink_scale = gr.multiply_const_ff(1.0/scale_factor)
+        sink_scale = blocks.multiply_const_ff(1.0/scale_factor)
         sink = gr.vector_sink_f()
 
         self.tb.connect(src, src_scale, interp, f2s, enc)

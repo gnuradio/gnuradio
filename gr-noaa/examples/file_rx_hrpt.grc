@@ -419,10 +419,10 @@
     </param>
   </block>
   <block>
-    <key>gr_interleaved_short_to_complex</key>
+    <key>blocks_interleaved_short_to_complex</key>
     <param>
       <key>id</key>
-      <value>gr_interleaved_short_to_complex_0</value>
+      <value>blocks_interleaved_short_to_complex_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -871,14 +871,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_interleaved_short_to_complex_0</source_block_id>
+    <source_block_id>blocks_interleaved_short_to_complex_0</source_block_id>
     <sink_block_id>agc</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>throttle</source_block_id>
-    <sink_block_id>gr_interleaved_short_to_complex_0</sink_block_id>
+    <sink_block_id>blocks_interleaved_short_to_complex_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

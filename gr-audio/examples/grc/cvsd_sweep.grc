@@ -204,7 +204,7 @@
     </param>
   </block>
   <block>
-    <key>gr_char_to_float</key>
+    <key>blocks_char_to_float</key>
     <param>
       <key>id</key>
       <value>c2f</value>
