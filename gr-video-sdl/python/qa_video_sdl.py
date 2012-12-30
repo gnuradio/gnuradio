@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import video_sdl
+import video_sdl_swig as video_sdl
 
 class test_video_sdl (gr_unittest.TestCase):
 

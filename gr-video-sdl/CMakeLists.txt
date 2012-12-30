@@ -35,7 +35,8 @@ GR_REGISTER_COMPONENT("gr-video-sdl" ENABLE_GR_VIDEO_SDL
 )
 
 GR_SET_GLOBAL(GR_VIDEO_SDL_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 ########################################################################
@@ -80,7 +81,12 @@ CPACK_COMPONENT("video_sdl_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src)
+add_subdirectory(include/video_sdl)
+add_subdirectory(lib)
+if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(python)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File
