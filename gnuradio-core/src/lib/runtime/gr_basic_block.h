@@ -148,9 +148,9 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
   void message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target);
   
-  virtual bool message_port_is_hier(pmt::pmt_t port_id) { std::cout << "is_hier\n"; return false; }
-  virtual bool message_port_is_hier_in(pmt::pmt_t port_id) { std::cout << "is_hier_in\n"; return false; }
-  virtual bool message_port_is_hier_out(pmt::pmt_t port_id) { std::cout << "is_hier_out\n"; return false; }
+  virtual bool message_port_is_hier(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier\n"; return false; }
+  virtual bool message_port_is_hier_in(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier_in\n"; return false; }
+  virtual bool message_port_is_hier_out(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier_out\n"; return false; }
   
   /*!
    * \brief Get input message port names.
@@ -258,7 +258,7 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
    * This check is in addition to the constraints specified by the input
    * and output gr_io_signatures.
    */
-  virtual bool check_topology(int ninputs, int noutputs) { return true; }
+  virtual bool check_topology(int ninputs, int noutputs) { (void) ninputs; (void) noutputs; return true; }
   
   /*!
    * \brief Set the callback that is fired when messages are available.
