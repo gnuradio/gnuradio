@@ -9,9 +9,9 @@ from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import filter
 from gnuradio import pager
-from gnuradio import window
 from gnuradio.eng_option import eng_option
-from gnuradio.gr import firdes
+from gnuradio.filter import window
+from gnuradio.filter import firdes
 from gnuradio.wxgui import fftsink2
 from gnuradio.wxgui import forms
 from gnuradio.wxgui import scopesink2

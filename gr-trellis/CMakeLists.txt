@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -29,13 +29,18 @@ include(GrComponent)
 GR_REGISTER_COMPONENT("gr-trellis" ENABLE_GR_TRELLIS
     Boost_FOUND
     ENABLE_GR_CORE
+    ENABLE_GR_ANALOG
     ENABLE_GR_BLOCKS
     ENABLE_GR_DIGITAL
 )
 
 GR_SET_GLOBAL(GR_TRELLIS_INCLUDE_DIRS
-    ${CMAKE_CURRENT_BINARY_DIR}/src/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
+GR_SET_GLOBAL(GR_TRELLIS_SWIG_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/swig
 )
 
 SET(GR_PKG_TRELLIS_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/trellis)
@@ -95,9 +100,14 @@ CPACK_COMPONENT("trellis_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src)
+add_subdirectory(include/trellis)
+add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(python)
+    add_subdirectory(examples/python)
+    add_subdirectory(examples/grc)
     add_subdirectory(grc)
 endif(ENABLE_PYTHON)
 

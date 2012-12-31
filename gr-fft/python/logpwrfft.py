@@ -19,11 +19,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, window
+from gnuradio import gr
 from gnuradio import blocks
 import sys, math
 
 import fft_swig as fft
+import window
 
 try:
     from gnuradio import filter

@@ -26,7 +26,7 @@
 
 from gnuradio import gr
 from gnuradio import analog
-from gnuradio import blocksx
+from gnuradio import blocks
 import modulation_utils
 import digital_swig as digital
 from math import pi

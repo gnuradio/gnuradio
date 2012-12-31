@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Nov 10 15:31:44 2012</timestamp>
+  <timestamp>Thu Dec 27 13:06:26 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -510,10 +510,10 @@
     </param>
   </block>
   <block>
-    <key>gr_add_xx</key>
+    <key>blocks_add_xx</key>
     <param>
       <key>id</key>
-      <value>gr_add_xx</value>
+      <value>blocks_add_xx</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -594,7 +594,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_xx</source_block_id>
+    <source_block_id>blocks_add_xx</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -606,7 +606,7 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_xx</source_block_id>
+    <source_block_id>blocks_add_xx</source_block_id>
     <sink_block_id>digital_constellation_decoder_cb_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -619,13 +619,13 @@
   </connection>
   <connection>
     <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
-    <sink_block_id>gr_add_xx</sink_block_id>
+    <sink_block_id>blocks_add_xx</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>analog_noise_source_x_0</source_block_id>
-    <sink_block_id>gr_add_xx</sink_block_id>
+    <sink_block_id>blocks_add_xx</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
