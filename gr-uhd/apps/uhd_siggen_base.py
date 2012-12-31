@@ -49,10 +49,10 @@ import math
 
 n2s = eng_notation.num_to_str
 
-waveforms = { gr.GR_SIN_WAVE   : "Complex Sinusoid",
-              gr.GR_CONST_WAVE : "Constant",
-              gr.GR_GAUSSIAN   : "Gaussian Noise",
-              gr.GR_UNIFORM    : "Uniform Noise",
+waveforms = { analog.GR_SIN_WAVE   : "Complex Sinusoid",
+              analog.GR_CONST_WAVE : "Constant",
+              analog.GR_GAUSSIAN   : "Gaussian Noise",
+              analog.GR_UNIFORM    : "Uniform Noise",
               "2tone"          : "Two Tone",
               "sweep"          : "Sweep" }
 
@@ -166,7 +166,7 @@ class top_block(gr.top_block, pubsub):
         self._u.set_samp_rate(sr)
         sr = self._u.get_samp_rate()
 
-        if self[TYPE_KEY] in (gr.GR_SIN_WAVE, gr.GR_CONST_WAVE):
+        if self[TYPE_KEY] in (analog.GR_SIN_WAVE, analog.GR_CONST_WAVE):
             self._src.set_sampling_freq(self[SAMP_RATE_KEY])
         elif self[TYPE_KEY] == "2tone":
             self._src1.set_sampling_freq(self[SAMP_RATE_KEY])
@@ -219,7 +219,7 @@ class top_block(gr.top_block, pubsub):
         return tr
 
     def set_waveform_freq(self, freq):
-        if self[TYPE_KEY] == gr.GR_SIN_WAVE:
+        if self[TYPE_KEY] == analog.GR_SIN_WAVE:
             self._src.set_frequency(freq)
         elif self[TYPE_KEY] == "2tone":
             self._src1.set_frequency(freq)

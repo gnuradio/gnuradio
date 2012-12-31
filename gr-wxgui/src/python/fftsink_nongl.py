@@ -20,10 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, window, fft, filter
+from gnuradio import gr, gru, fft, filter
 from gnuradio import blocks
 from gnuradio import analog
 from gnuradio.wxgui import stdgui2
+from gnuradio.filter import window
 import wx
 import plot
 import numpy

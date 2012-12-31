@@ -22,6 +22,7 @@
 
 import wx
 from gnuradio import gr, uhd
+from gnuradio import analog
 from gnuradio.gr.pubsub import pubsub
 from gnuradio.wxgui import gui, forms
 from gnuradio.uhd import uhd_siggen_base as uhd_siggen
@@ -58,7 +59,7 @@ class app_gui(pubsub):
         self.vbox.AddStretchSpacer()
         #callback to show/hide forms
         def set_type(type):
-            sine_bb_hbox.ShowItems(type == gr.GR_SIN_WAVE)
+            sine_bb_hbox.ShowItems(type == analog.GR_SIN_WAVE)
             sweep_bb_hbox.ShowItems(type == 'sweep')
             tone_bb_hbox.ShowItems(type == '2tone')
             self.vbox.Layout()
