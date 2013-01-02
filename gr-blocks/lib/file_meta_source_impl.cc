@@ -26,14 +26,12 @@
 
 #include "file_meta_source_impl.h"
 #include <gr_io_signature.h>
+#include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
-#include <cstdio>
-
-namespace gr {
-  namespace blocks {
+#include <stdio.h>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H
@@ -51,6 +49,11 @@ namespace gr {
 #else
 #define	OUR_O_LARGEFILE 0
 #endif
+
+
+namespace gr {
+  namespace blocks {
+
 
     file_meta_source::sptr
     file_meta_source::make(const std::string &filename,
