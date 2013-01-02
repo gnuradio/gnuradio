@@ -24,9 +24,11 @@ include(GrPython)
 include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
+    ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}/../include
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/blocks_swig_doc.i)

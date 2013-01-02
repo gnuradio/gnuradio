@@ -109,18 +109,20 @@ expand_cc_h_impl(xor_XX             bb ss ii)
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${VOLK_INCLUDE_DIRS}
-    ${GR_BLOCKS_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${VOLK_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
+# what are the following?
 include_directories(${BLOCKS_INCLUDE_DIRS})
 link_directories(${BLOCKS_LIBRARY_DIRS})
 
-include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################

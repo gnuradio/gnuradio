@@ -99,15 +99,15 @@ endif()
 ########################################################################
 include_directories(
     ${CMAKE_SOURCE_DIR}/include
-    ${Boost_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(
-    ${Boost_LIBRARY_DIRS}
-    ${GRUEL_LIBRARY_DIRS}
     ${GNURADIO_CORE_LIBRARY_DIRS}
+    ${GRUEL_LIBRARY_DIRS}
+    ${Boost_LIBRARY_DIRS}
 )
 
 # Set component parameters

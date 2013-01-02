@@ -21,17 +21,18 @@
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${VOLK_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GR_ANALOG_INCLUDE_DIRS}
-    ${GR_FFT_INCLUDE_DIRS}
-    ${GR_FILTER_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${GR_ANALOG_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${VOLK_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
-include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
