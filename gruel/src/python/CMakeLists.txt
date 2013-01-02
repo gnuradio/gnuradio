@@ -30,7 +30,7 @@ GR_PYTHON_INSTALL(
 
 GR_PYTHON_INSTALL(
     FILES pmt/__init__.py
-    DESTINATION ${GR_PYTHON_DIR}/gruel/pmt
+    DESTINATION ${GR_PYTHON_DIR}/pmt
     COMPONENT "gruel_python"
 )
 
